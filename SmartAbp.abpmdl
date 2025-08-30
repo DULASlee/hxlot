@@ -1,0 +1,105 @@
+{
+  "template": "app",
+  "imports": {
+    "Volo.Abp.LeptonXLiteTheme": {
+      "version": "4.1.1",
+      "isInstalled": true
+    },
+    "Volo.Abp.Account": {
+      "version": "9.1.1",
+      "isInstalled": true
+    },
+    "Volo.Abp.OpenIddict": {
+      "version": "9.1.1",
+      "isInstalled": true
+    },
+    "Volo.Abp.Identity": {
+      "version": "9.1.1",
+      "isInstalled": true
+    },
+    "Volo.Abp.TenantManagement": {
+      "version": "9.1.1",
+      "isInstalled": true
+    },
+    "Volo.Abp.SettingManagement": {
+      "version": "9.1.1",
+      "isInstalled": true
+    },
+    "Volo.Abp.PermissionManagement": {
+      "version": "9.1.1",
+      "isInstalled": true
+    },
+    "Volo.Abp.FeatureManagement": {
+      "version": "9.1.1",
+      "isInstalled": true
+    }
+  },
+  "folders": {
+    "items": {
+      "src": {},
+      "test": {}
+    }
+  },
+  "packages": {
+    "SmartAbp.Application": {
+      "path": "src/SmartAbp.Application/SmartAbp.Application.abppkg",
+      "folder": "src"
+    },
+    "SmartAbp.Application.Tests": {
+      "path": "test/SmartAbp.Application.Tests/SmartAbp.Application.Tests.abppkg",
+      "folder": "test"
+    },
+    "SmartAbp.Domain.Shared": {
+      "path": "src/SmartAbp.Domain.Shared/SmartAbp.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "SmartAbp.Application.Contracts": {
+      "path": "src/SmartAbp.Application.Contracts/SmartAbp.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "SmartAbp.HttpApi": {
+      "path": "src/SmartAbp.HttpApi/SmartAbp.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "SmartAbp.HttpApi.Client": {
+      "path": "src/SmartAbp.HttpApi.Client/SmartAbp.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "SmartAbp.Web": {
+      "path": "src/SmartAbp.Web/SmartAbp.Web.abppkg",
+      "folder": "src"
+    },
+    "SmartAbp.Web.Tests": {
+      "path": "test/SmartAbp.Web.Tests/SmartAbp.Web.Tests.abppkg",
+      "folder": "test"
+    },
+    "SmartAbp.EntityFrameworkCore.Tests": {
+      "path": "test/SmartAbp.EntityFrameworkCore.Tests/SmartAbp.EntityFrameworkCore.Tests.abppkg",
+      "folder": "test"
+    },
+    "SmartAbp.EntityFrameworkCore": {
+      "path": "src/SmartAbp.EntityFrameworkCore/SmartAbp.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "SmartAbp.TestBase": {
+      "path": "test/SmartAbp.TestBase/SmartAbp.TestBase.abppkg",
+      "folder": "test"
+    },
+    "SmartAbp.Domain.Tests": {
+      "path": "test/SmartAbp.Domain.Tests/SmartAbp.Domain.Tests.abppkg",
+      "folder": "test"
+    },
+    "SmartAbp.HttpApi.Client.ConsoleTestApp": {
+      "path": "test/SmartAbp.HttpApi.Client.ConsoleTestApp/SmartAbp.HttpApi.Client.ConsoleTestApp.abppkg",
+      "folder": "test"
+    },
+    "SmartAbp.DbMigrator": {
+      "path": "src/SmartAbp.DbMigrator/SmartAbp.DbMigrator.abppkg",
+      "folder": "src"
+    },
+    "SmartAbp.Domain": {
+      "path": "src/SmartAbp.Domain/SmartAbp.Domain.abppkg",
+      "folder": "src"
+    }
+  }
+}
