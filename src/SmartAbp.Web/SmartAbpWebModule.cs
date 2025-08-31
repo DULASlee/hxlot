@@ -51,6 +51,8 @@ using Volo.Abp.OpenIddict;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.SettingManagement.Web;
 using Volo.Abp.Studio.Client.AspNetCore;
+using SmartAbp.OpenIddict;
+using System.Linq;
 
 namespace SmartAbp.Web;
 
@@ -94,6 +96,12 @@ public class SmartAbpWebModule : AbpModule
                 options.AddAudiences("SmartAbp");
                 options.UseLocalServer();
                 options.UseAspNetCore();
+            });
+
+            // 添加自定义Claims处理器
+            builder.AddServer(options =>
+            {
+                options.AddEventHandler(SmartAbpOpenIddictClaimsHandler.Descriptor);
             });
         });
 
@@ -140,6 +148,7 @@ public class SmartAbpWebModule : AbpModule
         ConfigureUrls(configuration);
         ConfigureHealthChecks(context);
         ConfigureAuthentication(context);
+        ConfigureCors(context, configuration);
         ConfigureAutoMapper();
         ConfigureVirtualFileSystem(hostingEnvironment);
         ConfigureNavigationServices();
@@ -195,6 +204,33 @@ public class SmartAbpWebModule : AbpModule
         context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
         {
             options.IsDynamicClaimsEnabled = true;
+        });
+    }
+
+    private void ConfigureCors(ServiceConfigurationContext context, IConfiguration configuration)
+    {
+        context.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder =>
+            {
+                builder
+                    .WithOrigins(
+                        configuration["App:CorsOrigins"]?
+                            .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                            .Select(o => o.Trim().RemovePostFix("/"))
+                            .ToArray() ?? new[]
+                        {
+                            "http://localhost:11369", // Vue开发服务器
+                            "https://localhost:11369",
+                            "http://localhost:3000",
+                            "https://localhost:3000"
+                        }
+                    )
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                    .SetIsOriginAllowedToAllowWildcardSubdomains();
+            });
         });
     }
 
@@ -293,6 +329,7 @@ public class SmartAbpWebModule : AbpModule
         app.UseSpaStaticFiles();
         app.UseAbpStudioLink();
         app.UseRouting();
+        app.UseCors(); // 添加CORS中间件
         app.UseAbpSecurityHeaders();
         app.UseAuthentication();
         app.UseAbpOpenIddictValidation();

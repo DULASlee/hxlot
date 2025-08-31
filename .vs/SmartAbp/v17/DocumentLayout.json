@@ -1,0 +1,156 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\BAOBAB\\Baobab.SmartAbp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{554AD327-6DBA-4F8F-96F8-81CE7A0C863F}|src\\SmartAbp.Domain\\SmartAbp.Domain.csproj|d:\\baobab\\baobab.smartabp\\src\\smartabp.domain\\smartabp.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{554AD327-6DBA-4F8F-96F8-81CE7A0C863F}|src\\SmartAbp.Domain\\SmartAbp.Domain.csproj|solutionrelative:src\\smartabp.domain\\smartabp.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{554AD327-6DBA-4F8F-96F8-81CE7A0C863F}|src\\SmartAbp.Domain\\SmartAbp.Domain.csproj|d:\\baobab\\baobab.smartabp\\src\\smartabp.domain\\identity\\smartabpprofileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{554AD327-6DBA-4F8F-96F8-81CE7A0C863F}|src\\SmartAbp.Domain\\SmartAbp.Domain.csproj|solutionrelative:src\\smartabp.domain\\identity\\smartabpprofileservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{554AD327-6DBA-4F8F-96F8-81CE7A0C863F}|src\\SmartAbp.Domain\\SmartAbp.Domain.csproj|d:\\baobab\\baobab.smartabp\\src\\smartabp.domain\\openiddict\\smartabpopeniddictclaimshandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{554AD327-6DBA-4F8F-96F8-81CE7A0C863F}|src\\SmartAbp.Domain\\SmartAbp.Domain.csproj|solutionrelative:src\\smartabp.domain\\openiddict\\smartabpopeniddictclaimshandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C956DD76-69C8-4A9C-83EA-D17DF83340FD}|src\\SmartAbp.EntityFrameworkCore\\SmartAbp.EntityFrameworkCore.csproj|d:\\baobab\\baobab.smartabp\\src\\smartabp.entityframeworkcore\\smartabp.entityframeworkcore.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{C956DD76-69C8-4A9C-83EA-D17DF83340FD}|src\\SmartAbp.EntityFrameworkCore\\SmartAbp.EntityFrameworkCore.csproj|solutionrelative:src\\smartabp.entityframeworkcore\\smartabp.entityframeworkcore.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A94A50E-06DC-43C1-80B5-B662820EC3EB}|src\\SmartAbp.Application\\SmartAbp.Application.csproj|d:\\baobab\\baobab.smartabp\\src\\smartabp.application\\smartabp.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{1A94A50E-06DC-43C1-80B5-B662820EC3EB}|src\\SmartAbp.Application\\SmartAbp.Application.csproj|solutionrelative:src\\smartabp.application\\smartabp.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{100C3349-655C-1463-60C0-1CC4EA7D6734}|src\\SmartAbp.Web\\SmartAbp.Web.csproj|d:\\baobab\\baobab.smartabp\\src\\smartabp.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{100C3349-655C-1463-60C0-1CC4EA7D6734}|src\\SmartAbp.Web\\SmartAbp.Web.csproj|solutionrelative:src\\smartabp.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9379043E-BE15-F799-A06A-45BEAB39C322}|src\\SmartAbp.Vue\\smartabp.vue.esproj|d:\\baobab\\baobab.smartabp\\src\\smartabp.vue\\vite.config.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{9379043E-BE15-F799-A06A-45BEAB39C322}|src\\SmartAbp.Vue\\smartabp.vue.esproj|solutionrelative:src\\smartabp.vue\\vite.config.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SmartAbpProfileService.cs",
+              "DocumentMoniker": "D:\\BAOBAB\\Baobab.SmartAbp\\src\\SmartAbp.Domain\\Identity\\SmartAbpProfileService.cs",
+              "RelativeDocumentMoniker": "src\\SmartAbp.Domain\\Identity\\SmartAbpProfileService.cs",
+              "ToolTip": "D:\\BAOBAB\\Baobab.SmartAbp\\src\\SmartAbp.Domain\\Identity\\SmartAbpProfileService.cs",
+              "RelativeToolTip": "src\\SmartAbp.Domain\\Identity\\SmartAbpProfileService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-31T03:16:41.466Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SmartAbpOpenIddictClaimsHandler.cs",
+              "DocumentMoniker": "D:\\BAOBAB\\Baobab.SmartAbp\\src\\SmartAbp.Domain\\OpenIddict\\SmartAbpOpenIddictClaimsHandler.cs",
+              "RelativeDocumentMoniker": "src\\SmartAbp.Domain\\OpenIddict\\SmartAbpOpenIddictClaimsHandler.cs",
+              "ToolTip": "D:\\BAOBAB\\Baobab.SmartAbp\\src\\SmartAbp.Domain\\OpenIddict\\SmartAbpOpenIddictClaimsHandler.cs",
+              "RelativeToolTip": "src\\SmartAbp.Domain\\OpenIddict\\SmartAbpOpenIddictClaimsHandler.cs",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAowAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-31T03:14:03.646Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "SmartAbp.EntityFrameworkCore",
+              "DocumentMoniker": "D:\\BAOBAB\\Baobab.SmartAbp\\src\\SmartAbp.EntityFrameworkCore\\SmartAbp.EntityFrameworkCore.csproj",
+              "RelativeDocumentMoniker": "src\\SmartAbp.EntityFrameworkCore\\SmartAbp.EntityFrameworkCore.csproj",
+              "ToolTip": "D:\\BAOBAB\\Baobab.SmartAbp\\src\\SmartAbp.EntityFrameworkCore\\SmartAbp.EntityFrameworkCore.csproj",
+              "RelativeToolTip": "src\\SmartAbp.EntityFrameworkCore\\SmartAbp.EntityFrameworkCore.csproj",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-08-31T03:13:28.14Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "SmartAbp.Application",
+              "DocumentMoniker": "D:\\BAOBAB\\Baobab.SmartAbp\\src\\SmartAbp.Application\\SmartAbp.Application.csproj",
+              "RelativeDocumentMoniker": "src\\SmartAbp.Application\\SmartAbp.Application.csproj",
+              "ToolTip": "D:\\BAOBAB\\Baobab.SmartAbp\\src\\SmartAbp.Application\\SmartAbp.Application.csproj",
+              "RelativeToolTip": "src\\SmartAbp.Application\\SmartAbp.Application.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-08-31T03:13:17.745Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SmartAbp.Domain",
+              "DocumentMoniker": "D:\\BAOBAB\\Baobab.SmartAbp\\src\\SmartAbp.Domain\\SmartAbp.Domain.csproj",
+              "RelativeDocumentMoniker": "src\\SmartAbp.Domain\\SmartAbp.Domain.csproj",
+              "ToolTip": "D:\\BAOBAB\\Baobab.SmartAbp\\src\\SmartAbp.Domain\\SmartAbp.Domain.csproj",
+              "RelativeToolTip": "src\\SmartAbp.Domain\\SmartAbp.Domain.csproj",
+              "ViewState": "AgIAACIAAAAAAAAAAAAAACIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-08-31T03:12:26.465Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\BAOBAB\\Baobab.SmartAbp\\src\\SmartAbp.Web\\Program.cs",
+              "RelativeDocumentMoniker": "src\\SmartAbp.Web\\Program.cs",
+              "ToolTip": "D:\\BAOBAB\\Baobab.SmartAbp\\src\\SmartAbp.Web\\Program.cs",
+              "RelativeToolTip": "src\\SmartAbp.Web\\Program.cs",
+              "ViewState": "AgIAADoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-30T11:55:16.033Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "vite.config.ts",
+              "DocumentMoniker": "D:\\BAOBAB\\Baobab.SmartAbp\\src\\SmartAbp.Vue\\vite.config.ts",
+              "RelativeDocumentMoniker": "src\\SmartAbp.Vue\\vite.config.ts",
+              "ToolTip": "D:\\BAOBAB\\Baobab.SmartAbp\\src\\SmartAbp.Vue\\vite.config.ts",
+              "RelativeToolTip": "src\\SmartAbp.Vue\\vite.config.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2025-08-30T08:02:18.254Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 598,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{6324226f-61b6-4f28-92ee-18d4b5fe1e48}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
