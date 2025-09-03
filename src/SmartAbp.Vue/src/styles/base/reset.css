@@ -1,0 +1,108 @@
+/* 样式重置 - 统一浏览器默认样式 */
+
+/* 1. 使用更好的盒模型 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 2. 移除默认边距 */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* 3. 改善媒体元素的默认样式 */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 4. 移除表单元素的默认字体样式 */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* 5. 避免文本溢出 */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* 6. 改善行高 */
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 7. 改善表格样式 */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* 8. 移除列表样式 */
+ul,
+ol {
+  list-style: none;
+}
+
+/* 9. 移除链接默认样式 */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 10. 改善按钮样式 */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* 11. 改善表单元素样式 */
+input,
+textarea {
+  border: none;
+  outline: none;
+}
+
+/* 12. 隐藏滚动条但保持功能 */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* 13. 创建根堆叠上下文 */
+#root,
+#__next {
+  isolation: isolate;
+}
+
+/* 14. 改善焦点样式 */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* 15. 禁用iOS点击高亮 */
+* {
+  -webkit-tap-highlight-color: transparent;
+}

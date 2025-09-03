@@ -91,7 +91,18 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 
-const props = defineProps<{
+interface User {
+  id: number
+  username: string
+  name: string
+  department?: string
+  role?: string
+  phone?: string
+  status?: string
+  createTime?: string
+}
+
+defineProps<{
   userInfo: any
 }>()
 
@@ -103,7 +114,7 @@ const searchForm = reactive({
 })
 
 // 表格数据
-const userList = ref([
+const userList = ref<User[]>([
   {
     id: 1,
     username: 'admin',
@@ -145,7 +156,7 @@ const totalPages = computed(() => Math.ceil(total.value / pageSize.value))
 
 // 选择
 const selectAll = ref(false)
-const selectedUsers = ref([])
+const selectedUsers = ref<number[]>([])
 
 // 方法
 const handleSearch = () => {
@@ -168,36 +179,37 @@ const handleSelectAll = () => {
   }
 }
 
-const handleEdit = (user) => {
+const handleEdit = (user: User) => {
   alert(`编辑用户: ${user.name}`)
 }
 
-const handleDelete = (user) => {
+const handleDelete = (user: User) => {
   if (confirm(`确定要删除用户 ${user.name} 吗？`)) {
     console.log('删除用户:', user)
   }
 }
 
-const handleResetPassword = (user) => {
+const handleResetPassword = (user: User) => {
   if (confirm(`确定要重置用户 ${user.name} 的密码吗？`)) {
     console.log('重置密码:', user)
   }
 }
 
-const handlePageChange = (page) => {
+const handlePageChange = (page: number) => {
   currentPage.value = page
 }
 
-const getRoleTagClass = (role) => {
-  const roleMap = {
+const getRoleTagClass = (role?: string): string => {
+  const roleMap: Record<string, string> = {
     '超级管理员': 'tag-danger',
     '项目经理': 'tag-warning',
     '安全员': 'tag-info'
   }
-  return roleMap[role] || 'tag-default'
+  if (!role) return 'tag-default'
+  return roleMap[role] ?? 'tag-default'
 }
 
-const getStatusTagClass = (status) => {
+const getStatusTagClass = (status?: string): string => {
   return status === 'active' ? 'tag-success' : 'tag-danger'
 }
 

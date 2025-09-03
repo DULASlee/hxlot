@@ -107,14 +107,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
-const props = defineProps<{
-  userInfo: any
-}>()
+// Props definition (currently unused but may be needed for future enhancements)
+// const props = defineProps<{
+//   userInfo: any
+// }>()
+
+interface Role {
+  id: number
+  name: string
+  description?: string
+  permissions: number[]
+}
+
+interface ButtonItem {
+  id: number
+  name: string
+}
+
+interface MenuNode {
+  id: number
+  name: string
+  expanded?: boolean
+  children?: MenuNode[]
+  buttons?: ButtonItem[]
+}
 
 // 角色列表
-const roleList = ref([
+const roleList = ref<Role[]>([
   {
     id: 1,
     name: '超级管理员',
@@ -136,7 +157,7 @@ const roleList = ref([
 ])
 
 // 菜单权限树
-const menuTree = ref([
+const menuTree = ref<MenuNode[]>([
   {
     id: 1,
     name: '系统管理',
@@ -185,66 +206,70 @@ const menuTree = ref([
   }
 ])
 
-// 选中的角色
-const selectedRole = ref(null)
+ // 选中的角色
+ const selectedRole = ref<Role | null>(null)
 
 // 方法
-const selectRole = (role) => {
+const selectRole = (role: Role) => {
   selectedRole.value = role
 }
 
-const editRole = (role) => {
+const editRole = (role: Role) => {
   alert(`编辑角色: ${role.name}`)
 }
 
-const deleteRole = (role) => {
+const deleteRole = (role: Role) => {
   if (confirm(`确定要删除角色 ${role.name} 吗？`)) {
     console.log('删除角色:', role)
   }
 }
 
-const toggleNode = (node) => {
+const toggleNode = (node: MenuNode) => {
   node.expanded = !node.expanded
 }
 
-const isMenuChecked = (menu) => {
+const isMenuChecked = (menu: MenuNode): boolean => {
   if (!selectedRole.value) return false
-  return selectedRole.value.permissions.includes(menu.id)
+  const sr = selectedRole.value as Role
+  return sr.permissions.includes(menu.id)
 }
 
-const isButtonChecked = (button) => {
+const isButtonChecked = (button: ButtonItem): boolean => {
   if (!selectedRole.value) return false
-  return selectedRole.value.permissions.includes(button.id)
+  const sr = selectedRole.value as Role
+  return sr.permissions.includes(button.id)
 }
 
-const handleMenuCheck = (menu, event) => {
+const handleMenuCheck = (menu: MenuNode, event: Event) => {
   if (!selectedRole.value) return
 
-  const checked = event.target.checked
+  const checked = (event.target as HTMLInputElement).checked
+  const sr = selectedRole.value as Role
   if (checked) {
-    if (!selectedRole.value.permissions.includes(menu.id)) {
-      selectedRole.value.permissions.push(menu.id)
+    if (!sr.permissions.includes(menu.id)) {
+      sr.permissions.push(menu.id)
     }
   } else {
-    const index = selectedRole.value.permissions.indexOf(menu.id)
+    const index = sr.permissions.indexOf(menu.id)
     if (index > -1) {
-      selectedRole.value.permissions.splice(index, 1)
+      sr.permissions.splice(index, 1)
     }
   }
 }
 
-const handleButtonCheck = (button, event) => {
+const handleButtonCheck = (button: ButtonItem, event: Event) => {
   if (!selectedRole.value) return
 
-  const checked = event.target.checked
+  const checked = (event.target as HTMLInputElement).checked
+  const sr = selectedRole.value as Role
   if (checked) {
-    if (!selectedRole.value.permissions.includes(button.id)) {
-      selectedRole.value.permissions.push(button.id)
+    if (!sr.permissions.includes(button.id)) {
+      sr.permissions.push(button.id)
     }
   } else {
-    const index = selectedRole.value.permissions.indexOf(button.id)
+    const index = sr.permissions.indexOf(button.id)
     if (index > -1) {
-      selectedRole.value.permissions.splice(index, 1)
+      sr.permissions.splice(index, 1)
     }
   }
 }
@@ -268,7 +293,7 @@ const resetPermissions = () => {
 onMounted(() => {
   // 默认选中第一个角色
   if (roleList.value.length > 0) {
-    selectedRole.value = roleList.value[0]
+    selectedRole.value = roleList.value[0] as Role
   }
 })
 </script>
@@ -280,11 +305,14 @@ onMounted(() => {
   padding: clamp(16px, 4vw, 32px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   width: 100%;
-  height: 100%;
-  min-height: calc(100vh - 60px - clamp(36px, 4vh, 48px) - clamp(24px, 6vw, 48px));
+  /* 使用弹性伸缩，避免固定高度导致被父容器居中约束 */
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  /* 内容区内部滚动，避免整个页面出现额外空白或被限制为小盒子 */
+  overflow: auto;
+  box-sizing: border-box;
 }
 
 .page-header {

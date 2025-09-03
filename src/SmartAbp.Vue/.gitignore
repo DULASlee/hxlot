@@ -28,3 +28,22 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# IDE and Editor files
+.vs/
+.vscode/
+.idea/
+.cursor/
+.codebuddy/
+.specstory/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Project specific
+obj/
+bin/
+*.user
+*.suo
+*.cache

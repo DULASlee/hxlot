@@ -24,45 +24,85 @@ export interface TokenInfo {
   expires_at: number
 }
 
+export interface LoginCredentials {
+  username: string
+  password: string
+  tenantName?: string
+}
+
 // 响应式状态
 const isAuthenticated = ref<boolean>(false)
 const currentUser = ref<UserInfo | null>(null)
 const tokenInfo = ref<TokenInfo | null>(null)
 
-// 存储键名
-const TOKEN_KEY = 'smartabp_token'
-const USER_KEY = 'smartabp_user'
-const REFRESH_TOKEN_KEY = 'smartabp_refresh_token'
+// 存储键名（使用固定键名以确保持久化）
+const TOKEN_KEY = 'smartabp_token';
+const USER_KEY = 'smartabp_user';
+const REFRESH_TOKEN_KEY = 'smartabp_refresh_token';
 
 // API基础URL
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://localhost:44397'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : 'https://localhost:44379')
+const CLIENT_ID = import.meta.env.VITE_CLIENT_ID || 'SmartAbp_App'
+const SCOPE = import.meta.env.VITE_SCOPE || 'SmartAbp'
 
 /**
  * 认证服务类
  */
+
 export class AuthService {
+  private static instance: AuthService | null = null
+
+  /**
+   * 获取单例实例
+   */
+  static getInstance(): AuthService {
+    if (!AuthService.instance) {
+      AuthService.instance = new AuthService()
+    }
+    return AuthService.instance
+  }
+
+
   private refreshTimer: number | null = null
 
   /**
    * 登录
    */
-  async login(username: string, password: string, tenantName?: string): Promise<boolean> {
+  async login(usernameOrCredentials: string | {username: string, password: string, tenantName?: string}, password?: string, tenantName?: string): Promise<boolean> {
+    // 支持两种调用方式
+    let username: string;
+    let pwd: string;
+    let tenant: string | undefined;
+
+    // 检查是否传入了凭据对象
+    if (typeof usernameOrCredentials === 'object') {
+      username = usernameOrCredentials.username;
+      pwd = usernameOrCredentials.password;
+      tenant = usernameOrCredentials.tenantName;
+    } else {
+      // 使用传统参数方式
+      username = usernameOrCredentials;
+      pwd = password || '';
+      tenant = tenantName;
+    }
     try {
-      const loginData = new URLSearchParams({
-        grant_type: 'password',
-        username: username,
-        password: password,
-        client_id: 'SmartAbp_App',
-        scope: 'SmartAbp'
-      })
+      if (!username || !pwd) {
+        throw new Error('用户名或密码不能为空');
+      }
+      const loginData = new URLSearchParams();
+      loginData.append('grant_type', 'password');
+      loginData.append('username', username);
+      loginData.append('password', pwd);
+      loginData.append('client_id', CLIENT_ID);
+      loginData.append('scope', SCOPE);
 
       // 如果提供了租户名，添加到请求头
       const headers: Record<string, string> = {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
 
-      if (tenantName) {
-        headers['__tenant'] = tenantName
+      if (tenant) {
+        headers['__tenant'] = tenant
       }
 
       const response = await fetch(`${API_BASE_URL}/connect/token`, {
@@ -139,7 +179,7 @@ export class AuthService {
       const refreshData = new URLSearchParams({
         grant_type: 'refresh_token',
         refresh_token: currentToken.refresh_token,
-        client_id: 'SmartAbp_App'
+        client_id: CLIENT_ID
       })
 
       const response = await fetch(`${API_BASE_URL}/connect/token`, {
@@ -373,10 +413,58 @@ export class AuthService {
     }
     return {}
   }
+
+  /**
+   * 获取当前用户
+   */
+  getCurrentUser(): UserInfo | null {
+    return currentUser.value
+  }
+
+  /**
+   * 检查用户是否有指定权限
+   */
+  hasPermission(_permission: string): boolean {
+    const user = currentUser.value
+    if (!user || !isAuthenticated.value) {
+      return false
+    }
+    // 这里可以根据实际权限系统实现
+    // 暂时返回true，实际项目中需要根据用户角色和权限进行判断
+    return true
+  }
+
+  /**
+   * 检查用户是否有指定角色
+   */
+  hasRole(role: string): boolean {
+    const user = currentUser.value
+    if (!user || !isAuthenticated.value) {
+      return false
+    }
+    return user.roles.includes(role)
+  }
+
+  /**
+   * 验证token有效性
+   */
+  async validateToken(): Promise<boolean> {
+    if (!this.isTokenValid()) {
+      return false
+    }
+
+    // 尝试通过API验证token
+    try {
+      await this.fetchUserInfo()
+      return true
+    } catch {
+      return false
+    }
+  }
 }
 
 // 创建全局认证服务实例
-export const authService = new AuthService()
+export const authService = AuthService.getInstance()
 
 // 导出响应式状态
 export const useAuth = () => {
@@ -388,24 +476,4 @@ export const useAuth = () => {
   }
 }
 
-// 兼容性导出函数
-export const getStoredAuth = () => {
-  const token = localStorage.getItem(TOKEN_KEY)
-  const userInfo = localStorage.getItem(USER_KEY)
 
-  if (token && userInfo) {
-    return {
-      token: JSON.parse(token),
-      userInfo: JSON.parse(userInfo)
-    }
-  }
-
-  return null
-}
-
-export const clearAuth = async () => {
-  await authService.logout()
-}
-
-// 自动初始化
-authService.initialize()

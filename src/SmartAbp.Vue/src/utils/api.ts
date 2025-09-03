@@ -1,4 +1,5 @@
-import { authService } from './auth'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { useAuthStore } from '@/stores/auth'
 
 // API基础配置
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://localhost:44397'
@@ -7,131 +8,142 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://localhost:443
  * HTTP请求工具类
  */
 export class ApiService {
-  private baseURL: string
+  private axiosInstance: AxiosInstance
 
   constructor(baseURL: string = API_BASE_URL) {
-    this.baseURL = baseURL
-  }
-
-  /**
-   * 发送HTTP请求
-   */
-  async request<T = any>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`
-
-    // 合并默认配置
-    const config: RequestInit = {
+    this.axiosInstance = axios.create({
+      baseURL,
+      timeout: 10000,
       headers: {
-        'Content-Type': 'application/json',
-        ...authService.getAuthHeader(),
-        ...options.headers,
-      },
-      ...options,
-    }
-
-    try {
-      const response = await fetch(url, config)
-
-      // 处理401未授权错误
-      if (response.status === 401) {
-        // 尝试刷新Token
-        const refreshSuccess = await authService.refreshToken()
-        if (refreshSuccess) {
-          // 重新发送请求
-          config.headers = {
-            ...config.headers,
-            ...authService.getAuthHeader(),
-          }
-          const retryResponse = await fetch(url, config)
-          if (!retryResponse.ok) {
-            throw new Error(`HTTP ${retryResponse.status}: ${retryResponse.statusText}`)
-          }
-          return await this.parseResponse(retryResponse)
-        } else {
-          // 刷新失败，跳转到登录页
-          await authService.logout()
-          throw new Error('认证失败，请重新登录')
-        }
+        'Content-Type': 'application/json'
       }
+    })
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`)
-      }
-
-      return await this.parseResponse(response)
-    } catch (error) {
-      console.error('API请求失败:', error)
-      throw error
-    }
+    this.setupInterceptors()
   }
 
   /**
-   * 解析响应数据
+   * 设置请求和响应拦截器
    */
-  private async parseResponse<T>(response: Response): Promise<T> {
-    const contentType = response.headers.get('content-type')
+  private setupInterceptors() {
+    // 请求拦截器
+    this.axiosInstance.interceptors.request.use(
+      (config) => {
+        const authStore = useAuthStore()
+        const authHeader = authStore.getAuthHeader()
 
-    if (contentType && contentType.includes('application/json')) {
-      return await response.json()
+        if (authHeader.Authorization) {
+          config.headers.Authorization = authHeader.Authorization
+        }
+
+        return config
+      },
+      (error) => {
+        return Promise.reject(error)
+      }
+    )
+
+    // 响应拦截器
+    this.axiosInstance.interceptors.response.use(
+      (response: AxiosResponse) => {
+        return response
+      },
+      async (error) => {
+        const originalRequest = error.config
+
+        // 处理401未授权错误
+        if (error.response?.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true
+
+          const authStore = useAuthStore()
+
+          try {
+            // 尝试刷新Token
+            const refreshSuccess = await this.refreshToken()
+            if (refreshSuccess) {
+              // 重新发送原始请求
+              const authHeader = authStore.getAuthHeader()
+              if (authHeader.Authorization) {
+                originalRequest.headers.Authorization = authHeader.Authorization
+              }
+              return this.axiosInstance(originalRequest)
+            }
+          } catch (refreshError) {
+            // 刷新失败，清除认证信息
+            authStore.clearAuth()
+            // 可以在这里添加跳转到登录页的逻辑
+            throw new Error('认证失败，请重新登录')
+          }
+        }
+
+        return Promise.reject(error)
+      }
+    )
+  }
+
+  /**
+   * 刷新Token
+   */
+  private async refreshToken(): Promise<boolean> {
+    try {
+      const authStore = useAuthStore()
+      const refreshToken = authStore.refreshToken
+
+      if (!refreshToken) {
+        return false
+      }
+
+      const response = await axios.post(`${API_BASE_URL}/connect/token`, {
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken
+      })
+
+      const { access_token, refresh_token: newRefreshToken } = response.data
+      authStore.setToken(access_token, newRefreshToken)
+
+      return true
+    } catch (error) {
+      console.error('刷新Token失败:', error)
+      return false
     }
-
-    return (await response.text()) as unknown as T
   }
 
   /**
    * GET请求
    */
-  async get<T = any>(endpoint: string, params?: Record<string, any>): Promise<T> {
-    let url = endpoint
-
-    if (params) {
-      const searchParams = new URLSearchParams()
-      Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          searchParams.append(key, String(value))
-        }
-      })
-      url += `?${searchParams.toString()}`
-    }
-
-    return this.request<T>(url, { method: 'GET' })
+  async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.get<T>(url, config)
+    return response.data
   }
 
   /**
    * POST请求
    */
-  async post<T = any>(endpoint: string, data?: any): Promise<T> {
-    return this.request<T>(endpoint, {
-      method: 'POST',
-      body: data ? JSON.stringify(data) : undefined,
-    })
+  async post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.post<T>(url, data, config)
+    return response.data
   }
 
   /**
    * PUT请求
    */
-  async put<T = any>(endpoint: string, data?: any): Promise<T> {
-    return this.request<T>(endpoint, {
-      method: 'PUT',
-      body: data ? JSON.stringify(data) : undefined,
-    })
+  async put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.put<T>(url, data, config)
+    return response.data
   }
 
   /**
    * DELETE请求
    */
-  async delete<T = any>(endpoint: string): Promise<T> {
-    return this.request<T>(endpoint, { method: 'DELETE' })
+  async delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.delete<T>(url, config)
+    return response.data
   }
 
   /**
    * 上传文件
    */
-  async upload<T = any>(endpoint: string, file: File, additionalData?: Record<string, any>): Promise<T> {
+  async upload<T = any>(url: string, file: File, additionalData?: Record<string, any>): Promise<T> {
     const formData = new FormData()
     formData.append('file', file)
 
@@ -141,14 +153,20 @@ export class ApiService {
       })
     }
 
-    return this.request<T>(endpoint, {
-      method: 'POST',
-      body: formData,
+    const response = await this.axiosInstance.post<T>(url, formData, {
       headers: {
-        // 不设置Content-Type，让浏览器自动设置multipart/form-data边界
-        ...authService.getAuthHeader(),
-      },
+        'Content-Type': 'multipart/form-data'
+      }
     })
+
+    return response.data
+  }
+
+  /**
+   * 获取axios实例（用于更复杂的请求）
+   */
+  getInstance(): AxiosInstance {
+    return this.axiosInstance
   }
 }
 
@@ -162,4 +180,5 @@ export const api = {
   put: apiService.put.bind(apiService),
   delete: apiService.delete.bind(apiService),
   upload: apiService.upload.bind(apiService),
+  getInstance: apiService.getInstance.bind(apiService)
 }

@@ -1,0 +1,315 @@
+/* 默认经典蓝主题 */
+:root {
+  /* 主色调 */
+  --primary-color: #1e3a5f;
+  --primary-light: #e6f3ff;
+  --primary-dark: #0f1d2f;
+
+  /* 背景色 */
+  --bg-color: #ffffff;
+  --card-bg: #ffffff;
+  --header-bg: #ffffff;
+  --sidebar-bg: #001529;
+  --submenu-bg: #f8f9fa;
+  --content-bg: #f5f5f5;
+
+  /* 文字颜色 */
+  --text-color: #1f2329;
+  --text-secondary: #86909c;
+  --sidebar-text: rgba(255, 255, 255, 0.8);
+  --sidebar-text-hover: #ffffff;
+
+  /* 边框颜色 */
+  --border-color: #e5e6eb;
+  --border-light: #f2f3f5;
+
+  /* 悬停效果 */
+  --hover-bg: rgba(0, 0, 0, 0.05);
+  --sidebar-hover: rgba(255, 255, 255, 0.1);
+
+  /* Tab相关 */
+  --tab-bg: #ffffff;
+  --tab-active-bg: #ffffff;
+  --tab-inactive-bg: #f8f9fa;
+  --tab-hover-bg: #f2f3f5;
+
+  /* 阴影 */
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+  /* 滚动条 */
+  --scrollbar-track: #f5f5f5;
+  --scrollbar-thumb: #c1c1c1;
+  --scrollbar-thumb-hover: #a8a8a8;
+
+  /* 状态颜色 */
+  --success-color: #52c41a;
+  --warning-color: #faad14;
+  --danger-color: #ff4d4f;
+  --info-color: #1890ff;
+}
+
+/* 科技绿主题 */
+[data-theme="green"] {
+  /* 主色调 */
+  --primary-color: #00b96b;
+  --primary-light: #e6fff2;
+  --primary-dark: #006d3f;
+
+  /* 背景色 */
+  --bg-color: #f6ffed;
+  --card-bg: #ffffff;
+  --header-bg: #f6ffed;
+  --sidebar-bg: #002329;
+  --submenu-bg: #f0f9ff;
+  --content-bg: #f6ffed;
+
+  /* 文字颜色 */
+  --text-color: #1f2937;
+  --text-secondary: #6b7280;
+  --sidebar-text: rgba(255, 255, 255, 0.8);
+  --sidebar-text-hover: #ffffff;
+
+  /* 边框颜色 */
+  --border-color: #d1fae5;
+  --border-light: #ecfdf5;
+
+  /* 悬停效果 */
+  --hover-bg: rgba(0, 185, 107, 0.05);
+  --sidebar-hover: rgba(255, 255, 255, 0.1);
+
+  /* Tab相关 */
+  --tab-bg: #f6ffed;
+  --tab-active-bg: #ffffff;
+  --tab-inactive-bg: #ecfdf5;
+  --tab-hover-bg: #d1fae5;
+
+  /* 阴影 */
+  --shadow-light: 0 2px 8px rgba(0, 185, 107, 0.1);
+  --shadow-medium: 0 4px 16px rgba(0, 185, 107, 0.15);
+
+  /* 滚动条 */
+  --scrollbar-track: #ecfdf5;
+  --scrollbar-thumb: #86efac;
+  --scrollbar-thumb-hover: #4ade80;
+
+  /* 状态颜色 */
+  --success-color: #00b96b;
+  --warning-color: #faad14;
+  --danger-color: #ff4d4f;
+  --info-color: #1890ff;
+}
+
+/* 优雅紫主题 */
+[data-theme="purple"] {
+  /* 主色调 */
+  --primary-color: #722ed1;
+  --primary-light: #f9f0ff;
+  --primary-dark: #531dab;
+
+  /* 背景色 */
+  --bg-color: #faf5ff;
+  --card-bg: #ffffff;
+  --header-bg: #faf5ff;
+  --sidebar-bg: #2d1b69;
+  --submenu-bg: #f3e8ff;
+  --content-bg: #faf5ff;
+
+  /* 文字颜色 */
+  --text-color: #1f2937;
+  --text-secondary: #6b7280;
+  --sidebar-text: rgba(255, 255, 255, 0.8);
+  --sidebar-text-hover: #ffffff;
+
+  /* 边框颜色 */
+  --border-color: #e9d5ff;
+  --border-light: #f3e8ff;
+
+  /* 悬停效果 */
+  --hover-bg: rgba(114, 46, 209, 0.05);
+  --sidebar-hover: rgba(255, 255, 255, 0.1);
+
+  /* Tab相关 */
+  --tab-bg: #faf5ff;
+  --tab-active-bg: #ffffff;
+  --tab-inactive-bg: #f3e8ff;
+  --tab-hover-bg: #e9d5ff;
+
+  /* 阴影 */
+  --shadow-light: 0 2px 8px rgba(114, 46, 209, 0.1);
+  --shadow-medium: 0 4px 16px rgba(114, 46, 209, 0.15);
+
+  /* 滚动条 */
+  --scrollbar-track: #f3e8ff;
+  --scrollbar-thumb: #c4b5fd;
+  --scrollbar-thumb-hover: #a78bfa;
+
+  /* 状态颜色 */
+  --success-color: #52c41a;
+  --warning-color: #faad14;
+  --danger-color: #ff4d4f;
+  --info-color: #722ed1;
+}
+
+/* 暗黑主题 */
+[data-theme="dark"] {
+  /* 主色调 */
+  --primary-color: #4a90e2;
+  --primary-light: #1a2332;
+  --primary-dark: #6ba3f0;
+
+  /* 背景色 */
+  --bg-color: #1a1a2e;
+  --card-bg: #16213e;
+  --header-bg: #0f1419;
+  --sidebar-bg: #0f1419;
+  --submenu-bg: #1a1a2e;
+  --content-bg: #1a1a2e;
+
+  /* 文字颜色 */
+  --text-color: #ffffff;
+  --text-secondary: #a0a0a0;
+  --sidebar-text: rgba(255, 255, 255, 0.7);
+  --sidebar-text-hover: #ffffff;
+
+  /* 边框颜色 */
+  --border-color: #2a2a3e;
+  --border-light: #1f1f2e;
+
+  /* 悬停效果 */
+  --hover-bg: rgba(255, 255, 255, 0.1);
+  --sidebar-hover: rgba(255, 255, 255, 0.15);
+
+  /* Tab相关 */
+  --tab-bg: #16213e;
+  --tab-active-bg: #1a1a2e;
+  --tab-inactive-bg: #0f1419;
+  --tab-hover-bg: #2a2a3e;
+
+  /* 阴影 */
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.4);
+
+  /* 滚动条 */
+  --scrollbar-track: #2a2a3e;
+  --scrollbar-thumb: #4a4a5e;
+  --scrollbar-thumb-hover: #5a5a6e;
+
+  /* 状态颜色 */
+  --success-color: #73d13d;
+  --warning-color: #ffc53d;
+  --danger-color: #ff7875;
+  --info-color: #40a9ff;
+}
+
+/* 主题切换动画 */
+* {
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+/* 确保所有元素都能正确应用主题变量 */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* 输入框主题适配 */
+input, textarea, select {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+/* 按钮主题适配 */
+button {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+button:hover {
+  background-color: var(--hover-bg);
+}
+
+button.primary {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+button.primary:hover {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+/* 卡片主题适配 */
+.card {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-light);
+}
+
+/* 表格主题适配 */
+table {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+th {
+  background-color: var(--bg-color);
+  border-color: var(--border-color);
+}
+
+td {
+  border-color: var(--border-light);
+}
+
+tr:hover {
+  background-color: var(--hover-bg);
+}
+
+/* 模态框主题适配 */
+.modal {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  box-shadow: var(--shadow-medium);
+}
+
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .modal-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* 下拉菜单主题适配 */
+.dropdown {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-medium);
+}
+
+.dropdown-item:hover {
+  background-color: var(--hover-bg);
+}
+
+/* 工具提示主题适配 */
+.tooltip {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+}
+
+[data-theme="dark"] .tooltip {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}

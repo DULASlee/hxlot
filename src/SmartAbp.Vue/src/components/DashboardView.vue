@@ -81,25 +81,29 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
 
-const props = defineProps<{
+
+defineProps<{
   userInfo: any
 }>()
 </script>
 
 <style scoped>
-/* 完全响应式页面容器 */
+/* 完全响应式页面容器（已改为弹性伸缩，避免被父容器限制高度） */
 .page-container {
   background: white;
   border-radius: clamp(4px, 1vw, 8px);
   padding: clamp(16px, 4vw, 32px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   width: 100%;
-  min-height: calc(100vh - 60px - clamp(36px, 4vh, 48px) - clamp(24px, 6vw, 48px));
+  /* 使用弹性伸缩以填充父容器剩余空间 */
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  /* 内容内部滚动，避免整个页面被限制为小盒子 */
+  overflow: auto;
+  box-sizing: border-box;
 }
 
 .page-header {
