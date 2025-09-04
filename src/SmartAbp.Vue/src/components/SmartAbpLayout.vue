@@ -85,10 +85,7 @@
 
             <div v-if="item.children"
                  class="sub-menu"
-                 :class="{ 
-                   expanded: expandedMenus.includes(item.key), 
-                   collapsed: sidebarCollapsed 
-                 }"
+                 :class="{ collapsed: sidebarCollapsed }"
                  v-show="expandedMenus.includes(item.key)">
               <div v-for="child in item.children" :key="child.key"
                    class="sub-nav-link"
@@ -100,6 +97,48 @@
             </div>
           </div>
         </nav>
+      </aside>
+
+      <!-- 副菜单 -->
+      <aside v-if="!sidebarCollapsed" class="submenu-panel" :class="{ show: showSubmenu }">
+        <div class="submenu-header">
+          <h3>{{ submenuTitle }}</h3>
+          <button class="close-submenu" @click="closeSubmenu">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div class="submenu-content">
+          <template v-if="activeMenu === 'system'">
+            <div class="submenu-item" @click="router.push('/dashboard/system/users')">
+              <i class="fas fa-user"></i>
+              <span>用户管理</span>
+            </div>
+            <div class="submenu-item" @click="router.push('/dashboard/system/roles')">
+              <i class="fas fa-lock"></i>
+              <span>角色管理</span>
+            </div>
+            <div class="submenu-item" @click="router.push('/dashboard/system/permissions')">
+              <i class="fas fa-key"></i>
+              <span>权限管理</span>
+            </div>
+            <div class="submenu-item" @click="router.push('/dashboard/system/logs')">
+              <i class="fas fa-clipboard-list"></i>
+              <span>日志管理</span>
+            </div>
+          </template>
+
+          <template v-else-if="activeMenu === 'project'">
+            <div class="submenu-item" @click="router.push('/dashboard/projects/list')">
+              <i class="fas fa-list"></i>
+              <span>项目列表</span>
+            </div>
+            <div class="submenu-item" @click="router.push('/dashboard/projects/analysis')">
+              <i class="fas fa-chart-bar"></i>
+              <span>项目分析</span>
+            </div>
+          </template>
+        </div>
       </aside>
 
       <!-- 内容区域 -->
@@ -135,7 +174,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useThemeStore } from '@/stores/theme'
 
@@ -155,6 +194,9 @@ const openTabs = ref([
 ])
 const activeTab = ref('dashboard')
 
+// 副菜单状态
+const showSubmenu = ref(false)
+
 // 用户信息
 const userInfo = ref({
   name: '管理员',
@@ -163,6 +205,12 @@ const userInfo = ref({
 
 // 计算属性
 // const currentTheme = computed(() => themeStore.currentTheme)
+
+// 副菜单标题
+const submenuTitle = computed(() => {
+  const menu = menuItems.value.find(item => item.key === activeMenu.value)
+  return menu ? menu.title : ''
+})
 
 // 菜单配置
 const menuItems = ref([
@@ -177,9 +225,13 @@ const menuItems = ref([
     title: '系统管理',
     icon: 'fas fa-cogs',
     children: [
-      { key: 'users', title: '用户管理', icon: 'fas fa-users', path: '/dashboard/system/users' },
-      { key: 'roles', title: '角色管理', icon: 'fas fa-user-shield', path: '/dashboard/system/roles' },
-      { key: 'permissions', title: '权限管理', icon: 'fas fa-key', path: '/dashboard/system/permissions' }
+      { key: 'system-users', title: '用户管理', icon: 'fas fa-users', path: '/dashboard/system/users' },
+      { key: 'system-user', title: '用户管理(旧)', icon: 'fas fa-user', path: '/dashboard/system/user' },
+      { key: 'system-user-list', title: '用户列表', icon: 'fas fa-list', path: '/dashboard/system/user-list' },
+      { key: 'system-roles', title: '角色管理', icon: 'fas fa-user-shield', path: '/dashboard/system/roles' },
+      { key: 'system-user-roles', title: '用户角色', icon: 'fas fa-users-cog', path: '/dashboard/system/user-roles' },
+      { key: 'system-permissions', title: '权限管理', icon: 'fas fa-key', path: '/dashboard/system/permissions' },
+      { key: 'system-logs', title: '日志管理', icon: 'fas fa-clipboard-list', path: '/dashboard/system/logs' }
     ]
   },
   {
@@ -213,6 +265,22 @@ const closeAllDropdowns = () => {
   showUserDropdown.value = false
 }
 
+// 副菜单控制函数
+const toggleSubmenu = (menuId: string) => {
+  if (activeMenu.value === menuId && showSubmenu.value) {
+    // 如果点击的是当前激活的菜单，则关闭副菜单
+    showSubmenu.value = false
+  } else {
+    // 否则，激活该菜单并显示副菜单
+    activeMenu.value = menuId
+    showSubmenu.value = true
+  }
+}
+
+const closeSubmenu = () => {
+  showSubmenu.value = false
+}
+
 const setTheme = (theme: 'light' | 'dark' | 'tech' | 'auto') => {
   themeStore.setTheme(theme)
   showThemeMenu.value = false
@@ -224,25 +292,33 @@ const quickToggleDark = () => {
 
 const toggleMenu = (item: any) => {
   console.log('点击菜单项:', item)
-  
+
   if (item.children) {
     // 如果侧边栏收缩，先展开侧边栏
     if (sidebarCollapsed.value) {
       sidebarCollapsed.value = false
     }
-    
+
+    // 同时展开主菜单二级菜单和显示副菜单
     const index = expandedMenus.value.indexOf(item.key)
     if (index > -1) {
       expandedMenus.value.splice(index, 1)
+      // 如果收起主菜单二级菜单，也关闭副菜单
+      showSubmenu.value = false
     } else {
       expandedMenus.value.push(item.key)
+      // 展开主菜单二级菜单时，同时显示副菜单
+      toggleSubmenu(item.key)
     }
     console.log('更新后的展开菜单:', expandedMenus.value)
   } else {
+    // 如果是叶子菜单项，直接导航
     activeMenu.value = item.key
     activeSubMenu.value = ''
     addTab(item)
     router.push(item.path)
+    // 关闭副菜单
+    showSubmenu.value = false
   }
 }
 
@@ -358,10 +434,10 @@ watch(route, (newRoute) => {
 onMounted(() => {
   // 初始化主题
   themeStore.initTheme()
-  
+
   // 确保副菜单默认展开
   expandedMenus.value = ['system', 'projects']
-  
+
   // 调试日志
   console.log('组件挂载完成:', {
     sidebarCollapsed: sidebarCollapsed.value,
@@ -704,10 +780,6 @@ onMounted(() => {
   padding-left: 0;
 }
 
-.sub-menu.expanded {
-  display: block;
-}
-
 .sub-nav-link {
   display: flex;
   align-items: center;
@@ -854,6 +926,20 @@ onMounted(() => {
   .content-area {
     margin-left: 0;
   }
+
+  /* 移动端副菜单样式 */
+  .submenu-panel {
+    position: fixed;
+    left: 0;
+    top: 60px;
+    height: calc(100vh - 60px);
+    z-index: 999;
+    transform: translateX(-100%);
+  }
+
+  .submenu-panel.show {
+    transform: translateX(0);
+  }
 }
 
 /* 主题特定样式 */
@@ -903,5 +989,76 @@ onMounted(() => {
   --danger-color: var(--color-error, #ff4d4f);
   --error-light: var(--color-error-50, #fff2f0);
   --error-color: var(--color-error, #ff4d4f);
+}
+
+/* 副菜单样式 */
+.submenu-panel {
+  width: 240px;
+  background: var(--card-bg);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.submenu-panel:not(.show) {
+  display: none;
+}
+
+.submenu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--navbar-bg);
+}
+
+.submenu-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.close-submenu {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.close-submenu:hover {
+  background: var(--hover-bg);
+  color: var(--text-color);
+}
+
+.submenu-content {
+  padding: 10px 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.submenu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.submenu-item:hover {
+  background: var(--hover-bg);
+  color: var(--text-color);
+}
+
+.submenu-item i {
+  width: 16px;
+  text-align: center;
 }
 </style>
