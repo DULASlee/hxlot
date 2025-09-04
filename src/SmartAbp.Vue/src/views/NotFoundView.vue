@@ -31,8 +31,9 @@ const goBack = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  background: var(--color-bg-primary);
+  min-height: calc(100vh - 120px);
+  padding: 40px;
+  background: transparent;
 }
 
 .not-found-content {

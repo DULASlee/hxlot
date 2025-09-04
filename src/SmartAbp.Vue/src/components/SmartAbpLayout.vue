@@ -16,27 +16,29 @@
 
       <div class="navbar-right">
         <div class="theme-selector">
-          <button class="theme-btn" @click="quickToggleDark" title="一键切换暗黑模式">
-            <i :class="themeStore.isDark ? 'i-ep-sunny' : 'i-ep-moon'"></i>
-          </button>
           <button class="theme-btn" @click="toggleThemeMenu" title="主题选择">
-            <i class="i-ep-brush"></i>
+            <span class="theme-icon">{{ themeStore.isDark ? '🌙' : '☀️' }}</span>
           </button>
           <div v-if="showThemeMenu" class="theme-dropdown">
+            <div class="theme-option" @click="quickToggleDark" :class="{ active: false }">
+              <span class="theme-icon">{{ themeStore.isDark ? '☀️' : '🌙' }}</span>
+              <span>{{ themeStore.isDark ? '切换到浅色' : '切换到深色' }}</span>
+            </div>
+            <div class="theme-divider"></div>
             <div class="theme-option" @click="setTheme('light')" :class="{ active: themeStore.themeClass === 'light' }">
-              <i class="i-ep-sunny"></i>
+              <span class="theme-icon">☀️</span>
               <span>浅色主题</span>
             </div>
             <div class="theme-option" @click="setTheme('dark')" :class="{ active: themeStore.themeClass === 'dark' }">
-              <i class="i-ep-moon"></i>
+              <span class="theme-icon">🌙</span>
               <span>深色主题</span>
             </div>
             <div class="theme-option" @click="setTheme('tech')" :class="{ active: themeStore.themeClass === 'tech' }">
-              <i class="i-ep-cpu"></i>
+              <span class="theme-icon">🚀</span>
               <span>科技蓝</span>
             </div>
             <div class="theme-option" @click="setTheme('auto')" :class="{ active: themeStore.currentTheme === 'auto' }">
-              <i class="i-ep-monitor"></i>
+              <span class="theme-icon">💻</span>
               <span>跟随系统</span>
             </div>
           </div>
@@ -81,8 +83,13 @@
               </i>
             </div>
 
-            <div v-if="item.children && expandedMenus.includes(item.key) && !sidebarCollapsed"
-                 class="sub-menu">
+            <div v-if="item.children"
+                 class="sub-menu"
+                 :class="{ 
+                   expanded: expandedMenus.includes(item.key), 
+                   collapsed: sidebarCollapsed 
+                 }"
+                 v-show="expandedMenus.includes(item.key)">
               <div v-for="child in item.children" :key="child.key"
                    class="sub-nav-link"
                    :class="{ active: activeSubMenu === child.key }"
@@ -142,7 +149,7 @@ const showThemeMenu = ref(false)
 const showUserDropdown = ref(false)
 const activeMenu = ref('dashboard')
 const activeSubMenu = ref('')
-const expandedMenus = ref<string[]>([])
+const expandedMenus = ref<string[]>(['system', 'projects'])
 const openTabs = ref([
   { key: 'dashboard', title: '工作台', icon: 'fas fa-tachometer-alt', path: '/dashboard', closable: false }
 ])
@@ -170,9 +177,9 @@ const menuItems = ref([
     title: '系统管理',
     icon: 'fas fa-cogs',
     children: [
-      { key: 'users', title: '用户管理', icon: 'fas fa-users', path: '/system/users' },
-      { key: 'roles', title: '角色管理', icon: 'fas fa-user-shield', path: '/system/roles' },
-      { key: 'permissions', title: '权限管理', icon: 'fas fa-key', path: '/system/permissions' }
+      { key: 'users', title: '用户管理', icon: 'fas fa-users', path: '/dashboard/system/users' },
+      { key: 'roles', title: '角色管理', icon: 'fas fa-user-shield', path: '/dashboard/system/roles' },
+      { key: 'permissions', title: '权限管理', icon: 'fas fa-key', path: '/dashboard/system/permissions' }
     ]
   },
   {
@@ -180,8 +187,8 @@ const menuItems = ref([
     title: '项目管理',
     icon: 'fas fa-project-diagram',
     children: [
-      { key: 'project-list', title: '项目列表', icon: 'fas fa-list', path: '/projects/list' },
-      { key: 'project-analysis', title: '项目分析', icon: 'fas fa-chart-bar', path: '/projects/analysis' }
+      { key: 'project-list', title: '项目列表', icon: 'fas fa-list', path: '/dashboard/projects/list' },
+      { key: 'project-analysis', title: '项目分析', icon: 'fas fa-chart-bar', path: '/dashboard/projects/analysis' }
     ]
   }
 ])
@@ -216,13 +223,21 @@ const quickToggleDark = () => {
 }
 
 const toggleMenu = (item: any) => {
+  console.log('点击菜单项:', item)
+  
   if (item.children) {
+    // 如果侧边栏收缩，先展开侧边栏
+    if (sidebarCollapsed.value) {
+      sidebarCollapsed.value = false
+    }
+    
     const index = expandedMenus.value.indexOf(item.key)
     if (index > -1) {
       expandedMenus.value.splice(index, 1)
     } else {
       expandedMenus.value.push(item.key)
     }
+    console.log('更新后的展开菜单:', expandedMenus.value)
   } else {
     activeMenu.value = item.key
     activeSubMenu.value = ''
@@ -232,6 +247,7 @@ const toggleMenu = (item: any) => {
 }
 
 const selectSubMenu = (child: any) => {
+  console.log('点击子菜单项:', child)
   activeSubMenu.value = child.key
   addTab(child)
   router.push(child.path)
@@ -314,6 +330,7 @@ watch(route, (newRoute) => {
         if (child.path === path) {
           activeMenu.value = item.key
           activeSubMenu.value = child.key
+          // 确保父菜单在展开列表中，但不覆盖现有的展开状态
           if (!expandedMenus.value.includes(item.key)) {
             expandedMenus.value.push(item.key)
           }
@@ -322,6 +339,14 @@ watch(route, (newRoute) => {
       }
     }
   }
+
+  // 确保系统管理和项目管理菜单始终展开
+  const defaultExpanded = ['system', 'projects']
+  defaultExpanded.forEach(key => {
+    if (!expandedMenus.value.includes(key)) {
+      expandedMenus.value.push(key)
+    }
+  })
 
   // 更新活动标签
   const activeTabItem = openTabs.value.find(tab => tab.path === path)
@@ -333,6 +358,16 @@ watch(route, (newRoute) => {
 onMounted(() => {
   // 初始化主题
   themeStore.initTheme()
+  
+  // 确保副菜单默认展开
+  expandedMenus.value = ['system', 'projects']
+  
+  // 调试日志
+  console.log('组件挂载完成:', {
+    sidebarCollapsed: sidebarCollapsed.value,
+    expandedMenus: expandedMenus.value,
+    menuItems: menuItems.value
+  })
 })
 </script>
 
@@ -363,13 +398,12 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-right: auto;
 }
 
 .navbar-center {
   display: flex;
   align-items: center;
-  margin: 0 auto;
+  margin-left: 24px;
 }
 
 .navbar-right {
@@ -377,12 +411,6 @@ onMounted(() => {
   align-items: center;
   gap: 12px;
   margin-left: auto;
-}
-
-.navbar-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
 }
 
 .logo {
@@ -394,11 +422,6 @@ onMounted(() => {
   font-size: 20px;
   font-weight: 600;
   color: var(--primary-color);
-}
-
-.navbar-center {
-  display: flex;
-  align-items: center;
 }
 
 .nav-link {
@@ -414,12 +437,6 @@ onMounted(() => {
 .nav-link:hover {
   background-color: var(--hover-bg);
   color: var(--primary-color);
-}
-
-.navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
 }
 
 /* 主题选择器 */
@@ -444,6 +461,13 @@ onMounted(() => {
 .theme-btn:hover {
   background-color: var(--hover-bg);
   color: var(--primary-color);
+}
+
+.theme-icon {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .theme-dropdown {
@@ -477,6 +501,12 @@ onMounted(() => {
 .theme-option.active {
   background-color: var(--primary-color);
   color: white;
+}
+
+.theme-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 4px 0;
 }
 
 /* 图标按钮 */
@@ -662,6 +692,20 @@ onMounted(() => {
 .sub-menu {
   margin-top: 4px;
   padding-left: 20px;
+  transition: all 0.3s ease;
+  max-height: 1000px;
+  overflow: hidden;
+}
+
+/* 侧边栏收缩时的子菜单样式 */
+.sub-menu.collapsed {
+  display: none;
+  max-height: 0;
+  padding-left: 0;
+}
+
+.sub-menu.expanded {
+  display: block;
 }
 
 .sub-nav-link {
@@ -712,6 +756,7 @@ onMounted(() => {
   padding: 0 16px;
   overflow-x: auto;
   justify-content: flex-start;
+  gap: 0;
 }
 
 .tab-item {
@@ -726,7 +771,8 @@ onMounted(() => {
   white-space: nowrap;
   color: var(--text-secondary);
   background-color: transparent;
-  margin: 4px 2px 0 2px;
+  margin: 4px 2px 0 0;
+  flex-shrink: 0;
 }
 
 .tab-item:hover {
@@ -812,44 +858,50 @@ onMounted(() => {
 
 /* 主题特定样式 */
 .smart-abp-layout.light {
-  --bg-color: #f5f5f5;
-  --card-bg: #ffffff;
-  --navbar-bg: #ffffff;
-  --sidebar-bg: #ffffff;
-  --text-color: #333333;
-  --text-secondary: #666666;
-  --border-color: #e0e0e0;
-  --hover-bg: #f0f0f0;
-  --primary-color: #1890ff;
-  --primary-light: #e6f7ff;
-  --danger-color: #ff4d4f;
+  --bg-color: var(--color-bgTertiary, #f5f5f5);
+  --card-bg: var(--color-bgPrimary, #ffffff);
+  --navbar-bg: var(--color-bgPrimary, #ffffff);
+  --sidebar-bg: var(--color-bgPrimary, #ffffff);
+  --text-color: var(--color-textPrimary, #333333);
+  --text-secondary: var(--color-textSecondary, #666666);
+  --border-color: var(--color-borderPrimary, #e0e0e0);
+  --hover-bg: var(--color-bgSecondary, #f0f0f0);
+  --primary-color: var(--color-primary, #1890ff);
+  --primary-light: var(--color-primary-light, #e6f7ff);
+  --danger-color: var(--color-error, #ff4d4f);
+  --error-light: var(--color-error-50, #fff2f0);
+  --error-color: var(--color-error, #ff4d4f);
 }
 
 .smart-abp-layout.dark {
-  --bg-color: #141414;
-  --card-bg: #1f1f1f;
-  --navbar-bg: #1f1f1f;
-  --sidebar-bg: #1f1f1f;
-  --text-color: #ffffff;
-  --text-secondary: #a0a0a0;
-  --border-color: #303030;
-  --hover-bg: #262626;
-  --primary-color: #1890ff;
-  --primary-light: #111b26;
-  --danger-color: #ff4d4f;
+  --bg-color: var(--color-bgTertiary, #141414);
+  --card-bg: var(--color-bgPrimary, #1f1f1f);
+  --navbar-bg: var(--color-bgPrimary, #1f1f1f);
+  --sidebar-bg: var(--color-bgPrimary, #1f1f1f);
+  --text-color: var(--color-textPrimary, #ffffff);
+  --text-secondary: var(--color-textSecondary, #a0a0a0);
+  --border-color: var(--color-borderPrimary, #303030);
+  --hover-bg: var(--color-bgSecondary, #262626);
+  --primary-color: var(--color-primary, #4a90e2);
+  --primary-light: var(--color-primary-light, #111b26);
+  --danger-color: var(--color-error, #ff7875);
+  --error-light: var(--color-error-50, #2a1618);
+  --error-color: var(--color-error, #ff7875);
 }
 
 .smart-abp-layout.tech {
-  --bg-color: #0a0e1a;
-  --card-bg: #1a1f2e;
-  --navbar-bg: #1a1f2e;
-  --sidebar-bg: #1a1f2e;
-  --text-color: #e0e6ed;
-  --text-secondary: #8b949e;
-  --border-color: #30363d;
-  --hover-bg: #21262d;
-  --primary-color: #00d4ff;
-  --primary-light: #0d1117;
-  --danger-color: #f85149;
+  --bg-color: var(--color-bgTertiary, #d6ebff);
+  --card-bg: var(--color-bgPrimary, #f0f8ff);
+  --navbar-bg: var(--color-bgPrimary, #f0f8ff);
+  --sidebar-bg: var(--color-bgPrimary, #f0f8ff);
+  --text-color: var(--color-textPrimary, #002766);
+  --text-secondary: var(--color-textSecondary, #003d99);
+  --border-color: var(--color-borderPrimary, #b3d9ff);
+  --hover-bg: var(--color-bgSecondary, #e6f4ff);
+  --primary-color: var(--color-primary, #0066cc);
+  --primary-light: var(--color-primary-light, #e6f4ff);
+  --danger-color: var(--color-error, #ff4d4f);
+  --error-light: var(--color-error-50, #fff2f0);
+  --error-color: var(--color-error, #ff4d4f);
 }
 </style>

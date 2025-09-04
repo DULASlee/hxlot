@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import SmartAbpLayout from '../components/SmartAbpLayout.vue'
 import LoginView from '../views/Login.vue'
 import { authService } from '@/utils/auth'
@@ -19,7 +19,7 @@ const ProjectAnalysisView = () => import('../views/projects/ProjectAnalysisView.
 const PermissionsView = () => import('../views/system/PermissionsView.vue')
 const UsersView = () => import('../views/system/UsersView.vue')
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
@@ -169,15 +169,22 @@ const routes = [
         name: 'SystemTest',
         component: () => import('../views/TestView.vue'),
         meta: { title: '系统测试', icon: '🔧', menuKey: 'test-system' }
+      },
+      // 404页面 - 在主框架内显示
+      {
+        path: 'not-found/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: NotFoundView,
+        meta: { title: '页面未找到', menuKey: 'not-found' }
       }
     ]
   },
-  // 404页面
+  // 404页面 - 重定向到主框架内的404页面
   {
     path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: NotFoundView,
-    meta: { title: '页面未找到' }
+    redirect: (to) => {
+      return `/dashboard/not-found${to.path}`
+    }
   }
 ]
 
