@@ -1,5 +1,7 @@
 import './styles/main.css'
 import './styles/enterprise-theme.css'
+import './styles/design-system/index.css'
+import './styles/layouts/modern-layout.css'
 import './plugins/dayjs'
 
 import { createApp } from 'vue'
@@ -16,7 +18,7 @@ app.use(pinia).use(router)
 
 // 初始化主题
 const themeStore = useThemeStore()
-themeStore.initTheme()
+themeStore.init()
 
 // 初始化认证状态（使用TypeScript认证服务）
 try {

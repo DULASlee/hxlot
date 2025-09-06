@@ -1,0 +1,14 @@
+/* 设计令牌索引文件 */
+@import "./colors.css";
+@import "./spacing.css";
+@import "./typography.css";
+@import "./breakpoints.css";
+
+/* 现代化令牌扩展 */
+@import "./modern-colors.css";
+
+/*
+ * 这个文件导入所有设计令牌，作为设计系统的基础层。
+ * 设计令牌定义了系统中使用的所有基础变量，如颜色、间距、字体等。
+ * 这些令牌将被主题系统使用，以创建不同的主题变体。
+ */

@@ -1,0 +1,232 @@
+/* 按钮组件样式 */
+
+/* 基础按钮 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease-in-out;
+  gap: 0.5rem;
+}
+
+/* 按钮尺寸 */
+.btn-xs {
+  padding: 0.25rem 0.5rem;
+  font-size: var(--font-size-xs);
+  border-radius: var(--radius-sm);
+}
+
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: var(--font-size-xs);
+}
+
+.btn-md {
+  padding: 0.5rem 1rem;
+  font-size: var(--font-size-sm);
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: var(--font-size-base);
+}
+
+.btn-xl {
+  padding: 1rem 2rem;
+  font-size: var(--font-size-lg);
+  border-radius: var(--radius-lg);
+}
+
+/* 按钮变体 */
+.btn-primary {
+  color: var(--theme-button-primary-text);
+  background-color: var(--theme-button-primary-bg);
+  border-color: var(--theme-button-primary-border);
+}
+
+.btn-primary:hover {
+  background-color: var(--theme-button-primary-hover-bg);
+  border-color: var(--theme-button-primary-hover-border);
+}
+
+.btn-primary:active {
+  background-color: var(--theme-button-primary-active-bg);
+  border-color: var(--theme-button-primary-active-border);
+}
+
+.btn-secondary {
+  color: var(--theme-button-default-text);
+  background-color: var(--theme-button-default-bg);
+  border-color: var(--theme-button-default-border);
+}
+
+.btn-secondary:hover {
+  color: var(--theme-button-default-hover-text);
+  background-color: var(--theme-button-default-hover-bg);
+  border-color: var(--theme-button-default-hover-border);
+}
+
+.btn-secondary:active {
+  color: var(--theme-button-default-active-text);
+  background-color: var(--theme-button-default-active-bg);
+  border-color: var(--theme-button-default-active-border);
+}
+
+.btn-outline {
+  color: var(--theme-brand-primary);
+  background-color: transparent;
+  border-color: var(--theme-brand-primary);
+}
+
+.btn-outline:hover {
+  color: var(--theme-text-inverse);
+  background-color: var(--theme-brand-primary);
+  border-color: var(--theme-brand-primary);
+}
+
+.btn-text {
+  color: var(--theme-brand-primary);
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.btn-text:hover {
+  color: var(--theme-brand-primary-hover);
+  background-color: var(--theme-bg-hover);
+}
+
+/* 功能按钮 */
+.btn-success {
+  color: var(--theme-text-inverse);
+  background-color: var(--theme-success);
+  border-color: var(--theme-success);
+}
+
+.btn-success:hover {
+  background-color: var(--theme-success-hover);
+  border-color: var(--theme-success-hover);
+}
+
+.btn-warning {
+  color: var(--theme-text-inverse);
+  background-color: var(--theme-warning);
+  border-color: var(--theme-warning);
+}
+
+.btn-warning:hover {
+  background-color: var(--theme-warning-hover);
+  border-color: var(--theme-warning-hover);
+}
+
+.btn-danger {
+  color: var(--theme-text-inverse);
+  background-color: var(--theme-danger);
+  border-color: var(--theme-danger);
+}
+
+.btn-danger:hover {
+  background-color: var(--theme-danger-hover);
+  border-color: var(--theme-danger-hover);
+}
+
+.btn-info {
+  color: var(--theme-text-inverse);
+  background-color: var(--theme-info);
+  border-color: var(--theme-info);
+}
+
+.btn-info:hover {
+  background-color: var(--theme-info-hover);
+  border-color: var(--theme-info-hover);
+}
+
+/* 按钮状态 */
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.65;
+  pointer-events: none;
+  background-color: var(--theme-button-primary-disabled-bg);
+  color: var(--theme-button-primary-disabled-text);
+  border-color: var(--theme-button-primary-disabled-border);
+}
+
+.btn.loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn.loading::after {
+  content: "";
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  top: calc(50% - 0.5rem);
+  left: calc(50% - 0.5rem);
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: var(--theme-text-inverse);
+  animation: spin 0.75s infinite linear;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 按钮组 */
+.btn-group {
+  display: inline-flex;
+  position: relative;
+}
+
+.btn-group .btn {
+  position: relative;
+  flex: 1 1 auto;
+}
+
+.btn-group .btn:not(:first-child) {
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.btn-group .btn:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* 图标按钮 */
+.btn-icon {
+  padding: 0.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+}
+
+.btn-icon.btn-sm {
+  padding: 0.375rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+.btn-icon.btn-lg {
+  padding: 0.75rem;
+  width: 3.5rem;
+  height: 3.5rem;
+}

@@ -14,8 +14,8 @@
             <h3>当前主题状态</h3>
             <div class="status-info">
               <p><strong>当前主题:</strong> {{ themeStore.currentTheme }}</p>
-              <p><strong>是否暗黑:</strong> {{ themeStore.isDark ? '是' : '否' }}</p>
-              <p><strong>主题类名:</strong> {{ themeStore.themeClass }}</p>
+              <p><strong>是否暗黑:</strong> {{ themeStore.isDarkMode ? '是' : '否' }}</p>
+              <p><strong>主题类名:</strong> {{ themeStore.currentTheme }}</p>
             </div>
           </div>
 
@@ -32,7 +32,7 @@
               </button>
             </div>
             <button class="dark-toggle-btn" @click="toggleDark">
-              {{ themeStore.isDark ? '切换到浅色' : '切换到深色' }}
+              {{ themeStore.isDarkMode ? '切换到浅色' : '切换到深色' }}
             </button>
           </div>
         </div>
@@ -211,8 +211,8 @@ const switchTheme = (theme: string) => {
 }
 
 const toggleDark = () => {
-  themeStore.toggleTheme()
-  addLog(`一键暗黑切换: ${themeStore.isDark ? '暗黑模式' : '浅色模式'}`, 'success')
+  themeStore.toggleDarkMode()
+  addLog(`一键暗黑切换: ${themeStore.isDarkMode ? '暗黑模式' : '浅色模式'}`, 'success')
 }
 
 const testSidebar = () => {

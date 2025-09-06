@@ -5,4 +5,4 @@ export { useLogStore } from './logs'
 
 // 导出类型
 export type { UserInfo, LoginCredentials } from './auth'
-export type { ThemeMode } from './theme'
+// export type { ThemeMode } from './theme'

@@ -80,7 +80,7 @@
           跟随系统
         </label>
       </div>
-      <p>当前主题: {{ themeStore.themeClass }}</p>
+      <p>当前主题: {{ themeStore.currentTheme }}</p>
     </div>
 
     <!-- API测试 -->

@@ -1,74 +1,73 @@
-import { defineStore } from 'pinia'
-import { computed, watch } from 'vue'
-import { usePreferredDark, useStorage } from '@vueuse/core'
-
-export type ThemeMode = 'light' | 'dark' | 'tech' | 'auto'
+import { defineStore } from 'pinia';
+import { computed } from 'vue';
+import useDesignSystem, { ThemeType, THEMES } from '@/composables/useDesignSystem';
 
 export const useThemeStore = defineStore('theme', () => {
-  // 状态
-  const currentTheme = useStorage<ThemeMode>('smartabp_theme', 'light')
+  // 使用设计系统 composable
+  const {
+    theme,
+    isDarkMode,
+    isCurrentThemeDark,
+    setTheme: setThemeImpl,
+    toggleDarkMode: toggleDarkModeImpl,
+    getAvailableThemes,
+    getThemeToken,
+    setThemeToken,
+    applyTheme,
+    watchSystemTheme,
+    initTheme,
+  } = useDesignSystem();
 
-  // 计算属性
-  const preferredDark = usePreferredDark()
-  const isDark = computed(() => {
-    if (currentTheme.value === 'auto') {
-      return preferredDark.value
-    }
-    return currentTheme.value === 'dark' || currentTheme.value === 'tech'
-  })
+  // 当前主题
+  const currentTheme = computed({
+    get: () => theme.value,
+    set: (value: ThemeType) => setTheme(value),
+  });
 
-  // 返回需要挂到组件的主题类名
-  const themeClass = computed(() => {
-    if (currentTheme.value === 'auto') {
-      return preferredDark.value ? 'dark' : 'light'
-    }
-    return currentTheme.value
-  })
+  // 设置主题
+  const setTheme = (newTheme: ThemeType) => {
+    setThemeImpl(newTheme);
+  };
 
-  // 方法
-  const setTheme = (theme: ThemeMode) => {
-    currentTheme.value = theme
-    localStorage.setItem('smartabp_theme', theme)
-    applyTheme()
-  }
+  // 切换暗黑模式
+  const toggleDarkMode = () => {
+    toggleDarkModeImpl();
+  };
 
-  // 一键暗黑/还原
-  const toggleTheme = () => {
-    const newTheme: ThemeMode = isDark.value ? 'light' : 'dark'
-    setTheme(newTheme)
-  }
+  // 获取主题配置
+  const getThemeConfig = (themeValue: ThemeType) => {
+    return THEMES.find((t) => t.value === themeValue) || THEMES[0];
+  };
 
-  const applyTheme = () => {
-    const root = document.documentElement
-    // 清理旧主题类
-    root.classList.remove('light', 'dark', 'tech')
-    // 应用新主题类
-    root.classList.add(themeClass.value)
-    // 同步 data-theme 属性
-    root.setAttribute('data-theme', themeClass.value)
-    // 过渡动画
-    document.body.classList.add('theme-transitions')
-  }
+  // 当前主题配置
+  const currentThemeConfig = computed(() => {
+    return getThemeConfig(currentTheme.value);
+  });
 
   // 初始化主题
-  const initTheme = () => {
-    applyTheme()
-    // 响应式监听：主题模式与系统偏好变化时自动应用
-    watch([currentTheme, preferredDark], () => {
-      applyTheme()
-    })
-  }
+  const init = () => {
+    const cleanup = initTheme();
+    return cleanup;
+  };
 
   return {
     // 状态
     currentTheme,
-    // 计算属性
-    isDark,
-    themeClass,
+    isDarkMode,
+    isCurrentThemeDark,
+    currentThemeConfig,
+
     // 方法
     setTheme,
-    toggleTheme,
+    toggleDarkMode,
+    getAvailableThemes,
+    getThemeToken,
+    setThemeToken,
     applyTheme,
-    initTheme
-  }
-})
+    watchSystemTheme,
+    init,
+    getThemeConfig,
+  };
+});
+
+export default useThemeStore;

@@ -1,0 +1,122 @@
+/* 现代化颜色令牌扩展 */
+
+:root {
+  /* 扩展的主色调 */
+  --theme-brand-primary-rgb: 25, 118, 210;
+  --theme-brand-primary-alpha: rgba(25, 118, 210, 0.1);
+  --theme-brand-primary-light: rgba(25, 118, 210, 0.05);
+  --theme-brand-primary-lighter: rgba(25, 118, 210, 0.02);
+
+  /* 增强的背景色 */
+  --theme-bg-glass: rgba(255, 255, 255, 0.8);
+  --theme-bg-blur: rgba(255, 255, 255, 0.9);
+  --theme-bg-overlay: rgba(0, 0, 0, 0.6);
+  --theme-bg-modal: rgba(255, 255, 255, 0.95);
+
+  /* 边框增强 */
+  --theme-border-light: rgba(0, 0, 0, 0.08);
+  --theme-border-medium: rgba(0, 0, 0, 0.12);
+  --theme-border-strong: rgba(0, 0, 0, 0.16);
+
+  /* 阴影系统 */
+  --theme-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --theme-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --theme-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --theme-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --theme-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+  --theme-shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+
+  /* 渐变色 */
+  --theme-gradient-primary: linear-gradient(135deg, var(--theme-brand-primary), var(--theme-brand-primary-hover));
+  --theme-gradient-soft: linear-gradient(135deg, var(--theme-bg-component), var(--theme-bg-elevated));
+  --theme-gradient-subtle: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+
+  /* 新的半径值 */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-full: 9999px;
+
+  /* 动画时间 */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+
+  /* 缓动函数 */
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* 层级系统 */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-toast: 1080;
+}
+
+/* 暗黑模式扩展 */
+.theme-dark,
+[data-theme="dark"] {
+  --theme-brand-primary-rgb: 96, 165, 250;
+  --theme-brand-primary-alpha: rgba(96, 165, 250, 0.15);
+  --theme-brand-primary-light: rgba(96, 165, 250, 0.08);
+  --theme-brand-primary-lighter: rgba(96, 165, 250, 0.04);
+
+  --theme-bg-glass: rgba(31, 41, 55, 0.8);
+  --theme-bg-blur: rgba(31, 41, 55, 0.9);
+  --theme-bg-overlay: rgba(0, 0, 0, 0.8);
+  --theme-bg-modal: rgba(31, 41, 55, 0.95);
+
+  --theme-border-light: rgba(255, 255, 255, 0.1);
+  --theme-border-medium: rgba(255, 255, 255, 0.15);
+  --theme-border-strong: rgba(255, 255, 255, 0.2);
+
+  --theme-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --theme-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --theme-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+  --theme-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5), 0 4px 6px rgba(0, 0, 0, 0.3);
+  --theme-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.6), 0 10px 10px rgba(0, 0, 0, 0.4);
+  --theme-shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.7);
+}
+
+/* 科技蓝主题 */
+.theme-tech-blue,
+[data-theme="tech-blue"] {
+  --theme-brand-primary-rgb: 25, 118, 210;
+  --theme-brand-primary-alpha: rgba(25, 118, 210, 0.12);
+  --theme-bg-glass: rgba(13, 71, 161, 0.1);
+  --theme-gradient-primary: linear-gradient(135deg, #1976d2, #1565c0);
+}
+
+/* 深绿色主题 */
+.theme-deep-green,
+[data-theme="deep-green"] {
+  --theme-brand-primary-rgb: 46, 125, 50;
+  --theme-brand-primary-alpha: rgba(46, 125, 50, 0.12);
+  --theme-bg-glass: rgba(27, 94, 32, 0.1);
+  --theme-gradient-primary: linear-gradient(135deg, #2e7d32, #1b5e20);
+}
+
+/* 浅紫色主题 */
+.theme-light-purple,
+[data-theme="light-purple"] {
+  --theme-brand-primary-rgb: 126, 87, 194;
+  --theme-brand-primary-alpha: rgba(126, 87, 194, 0.12);
+  --theme-bg-glass: rgba(74, 20, 140, 0.1);
+  --theme-gradient-primary: linear-gradient(135deg, #7e57c2, #5e35b1);
+}
+
+/* 全局应用新的颜色系统 */
+* {
+  --current-shadow: var(--theme-shadow-sm);
+  --current-border: var(--theme-border-light);
+  --current-radius: var(--radius-md);
+}

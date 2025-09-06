@@ -1,0 +1,98 @@
+/* 响应式断点令牌 */
+:root {
+  /* 断点值 */
+  --breakpoint-xs: 0px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* 容器最大宽度 */
+  --container-max-width-xs: 100%;
+  --container-max-width-sm: 640px;
+  --container-max-width-md: 768px;
+  --container-max-width-lg: 1024px;
+  --container-max-width-xl: 1280px;
+  --container-max-width-2xl: 1536px;
+
+  /* 栅格系统 */
+  --grid-columns: 12;
+  --grid-gutter-width: 1.5rem;
+}
+
+/* 媒体查询工具类 */
+.hide-xs {
+  @media (max-width: 639px) {
+    display: none !important;
+  }
+}
+
+.hide-sm {
+  @media (min-width: 640px) and (max-width: 767px) {
+    display: none !important;
+  }
+}
+
+.hide-md {
+  @media (min-width: 768px) and (max-width: 1023px) {
+    display: none !important;
+  }
+}
+
+.hide-lg {
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    display: none !important;
+  }
+}
+
+.hide-xl {
+  @media (min-width: 1280px) and (max-width: 1535px) {
+    display: none !important;
+  }
+}
+
+.hide-2xl {
+  @media (min-width: 1536px) {
+    display: none !important;
+  }
+}
+
+/* 响应式容器 */
+.container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: var(--container-max-width-sm);
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: var(--container-max-width-md);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: var(--container-max-width-lg);
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: var(--container-max-width-xl);
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: var(--container-max-width-2xl);
+  }
+}

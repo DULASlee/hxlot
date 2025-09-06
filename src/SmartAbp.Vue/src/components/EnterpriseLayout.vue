@@ -20,7 +20,7 @@
         <div class="header-actions">
           <!-- 主题切换按钮 -->
           <button class="theme-toggle" @click="quickToggleDark">
-            <el-icon v-if="themeStore.isDark"><Moon /></el-icon>
+            <el-icon v-if="themeStore.isDarkMode"><Moon /></el-icon>
             <el-icon v-else><Sunny /></el-icon>
           </button>
 
@@ -331,7 +331,7 @@ const logout = () => {
 }
 
 const quickToggleDark = () => {
-  themeStore.toggleTheme()
+  themeStore.toggleDarkMode()
   console.log(`[菜单测试] 主题已切换: ${themeStore.currentTheme}`)
 }
 

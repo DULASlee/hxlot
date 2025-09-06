@@ -1,5 +1,5 @@
 <template>
-  <div class="smart-abp-layout" :class="themeStore.themeClass">
+  <div class="smart-abp-layout">
     <!-- 顶部导航栏 -->
     <header class="top-navbar">
       <div class="navbar-left">
@@ -15,34 +15,8 @@
       </nav>
 
       <div class="navbar-right">
-        <div class="theme-selector">
-          <button class="theme-btn" @click="toggleThemeMenu" title="主题选择">
-            <span class="theme-icon">{{ themeStore.isDark ? '🌙' : '☀️' }}</span>
-          </button>
-          <div v-if="showThemeMenu" class="theme-dropdown">
-            <div class="theme-option" @click="quickToggleDark" :class="{ active: false }">
-              <span class="theme-icon">{{ themeStore.isDark ? '☀️' : '🌙' }}</span>
-              <span>{{ themeStore.isDark ? '切换到浅色' : '切换到深色' }}</span>
-            </div>
-            <div class="theme-divider"></div>
-            <div class="theme-option" @click="setTheme('light')" :class="{ active: themeStore.themeClass === 'light' }">
-              <span class="theme-icon">☀️</span>
-              <span>浅色主题</span>
-            </div>
-            <div class="theme-option" @click="setTheme('dark')" :class="{ active: themeStore.themeClass === 'dark' }">
-              <span class="theme-icon">🌙</span>
-              <span>深色主题</span>
-            </div>
-            <div class="theme-option" @click="setTheme('tech')" :class="{ active: themeStore.themeClass === 'tech' }">
-              <span class="theme-icon">🚀</span>
-              <span>科技蓝</span>
-            </div>
-            <div class="theme-option" @click="setTheme('auto')" :class="{ active: themeStore.currentTheme === 'auto' }">
-              <span class="theme-icon">💻</span>
-              <span>跟随系统</span>
-            </div>
-          </div>
-        </div>
+        <!-- 集成新的主题切换器 -->
+        <ThemeSwitcher />
         <button class="icon-btn" @click="openSettings" title="设置">
           <i class="fas fa-cog"></i>
         </button>
@@ -111,11 +85,11 @@
         <div class="submenu-content">
           <template v-if="activeMenu === 'system'">
             <div class="submenu-item" @click="router.push('/dashboard/system/users')">
-              <i class="fas fa-user"></i>
+              <i class="fas fa-users"></i>
               <span>用户管理</span>
             </div>
             <div class="submenu-item" @click="router.push('/dashboard/system/roles')">
-              <i class="fas fa-lock"></i>
+              <i class="fas fa-user-shield"></i>
               <span>角色管理</span>
             </div>
             <div class="submenu-item" @click="router.push('/dashboard/system/permissions')">
@@ -123,18 +97,18 @@
               <span>权限管理</span>
             </div>
             <div class="submenu-item" @click="router.push('/dashboard/system/logs')">
-              <i class="fas fa-clipboard-list"></i>
+              <i class="fas fa-file-alt"></i>
               <span>日志管理</span>
             </div>
           </template>
 
-          <template v-else-if="activeMenu === 'project'">
+          <template v-else-if="activeMenu === 'projects'">
             <div class="submenu-item" @click="router.push('/dashboard/projects/list')">
-              <i class="fas fa-list"></i>
+              <i class="fas fa-tasks"></i>
               <span>项目列表</span>
             </div>
             <div class="submenu-item" @click="router.push('/dashboard/projects/analysis')">
-              <i class="fas fa-chart-bar"></i>
+              <i class="fas fa-chart-line"></i>
               <span>项目分析</span>
             </div>
           </template>
@@ -169,7 +143,7 @@
     </div>
 
     <!-- 遮罩层 -->
-    <div v-if="showThemeMenu || showUserDropdown" class="overlay" @click="closeAllDropdowns"></div>
+    <div v-if="showUserDropdown" class="overlay" @click="closeAllDropdowns"></div>
   </div>
 </template>
 
@@ -177,6 +151,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useThemeStore } from '@/stores/theme'
+import ThemeSwitcher from './ThemeSwitcher.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -184,7 +159,6 @@ const themeStore = useThemeStore()
 
 // 响应式数据
 const sidebarCollapsed = ref(false)
-const showThemeMenu = ref(false)
 const showUserDropdown = ref(false)
 const activeMenu = ref('dashboard')
 const activeSubMenu = ref('')
@@ -208,7 +182,7 @@ const userInfo = ref({
 
 // 副菜单标题
 const submenuTitle = computed(() => {
-  const menu = menuItems.value.find(item => item.key === activeMenu.value)
+  const menu = menuItems.value.find((item: any) => item.key === activeMenu.value)
   return menu ? menu.title : ''
 })
 
@@ -217,21 +191,21 @@ const menuItems = ref([
   {
     key: 'dashboard',
     title: '工作台',
-    icon: 'fas fa-tachometer-alt',
+    icon: 'fas fa-chart-pie',
     path: '/dashboard'
   },
   {
     key: 'system',
     title: '系统管理',
-    icon: 'fas fa-cogs',
+    icon: 'fas fa-cog',
     children: [
       { key: 'system-users', title: '用户管理', icon: 'fas fa-users', path: '/dashboard/system/users' },
-      { key: 'system-user', title: '用户管理(旧)', icon: 'fas fa-user', path: '/dashboard/system/user' },
-      { key: 'system-user-list', title: '用户列表', icon: 'fas fa-list', path: '/dashboard/system/user-list' },
+      { key: 'system-user', title: '用户管理(旧)', icon: 'fas fa-user-circle', path: '/dashboard/system/user' },
+      { key: 'system-user-list', title: '用户列表', icon: 'fas fa-list-ul', path: '/dashboard/system/user-list' },
       { key: 'system-roles', title: '角色管理', icon: 'fas fa-user-shield', path: '/dashboard/system/roles' },
       { key: 'system-user-roles', title: '用户角色', icon: 'fas fa-users-cog', path: '/dashboard/system/user-roles' },
       { key: 'system-permissions', title: '权限管理', icon: 'fas fa-key', path: '/dashboard/system/permissions' },
-      { key: 'system-logs', title: '日志管理', icon: 'fas fa-clipboard-list', path: '/dashboard/system/logs' }
+      { key: 'system-logs', title: '日志管理', icon: 'fas fa-file-alt', path: '/dashboard/system/logs' }
     ]
   },
   {
@@ -239,8 +213,8 @@ const menuItems = ref([
     title: '项目管理',
     icon: 'fas fa-project-diagram',
     children: [
-      { key: 'project-list', title: '项目列表', icon: 'fas fa-list', path: '/dashboard/projects/list' },
-      { key: 'project-analysis', title: '项目分析', icon: 'fas fa-chart-bar', path: '/dashboard/projects/analysis' }
+      { key: 'project-list', title: '项目列表', icon: 'fas fa-tasks', path: '/dashboard/projects/list' },
+      { key: 'project-analysis', title: '项目分析', icon: 'fas fa-chart-line', path: '/dashboard/projects/analysis' }
     ]
   }
 ])
@@ -250,18 +224,12 @@ const toggleSidebar = () => {
   sidebarCollapsed.value = !sidebarCollapsed.value
 }
 
-const toggleThemeMenu = () => {
-  showThemeMenu.value = !showThemeMenu.value
-  showUserDropdown.value = false
-}
 
 const toggleUserDropdown = () => {
   showUserDropdown.value = !showUserDropdown.value
-  showThemeMenu.value = false
 }
 
 const closeAllDropdowns = () => {
-  showThemeMenu.value = false
   showUserDropdown.value = false
 }
 
@@ -281,14 +249,6 @@ const closeSubmenu = () => {
   showSubmenu.value = false
 }
 
-const setTheme = (theme: 'light' | 'dark' | 'tech' | 'auto') => {
-  themeStore.setTheme(theme)
-  showThemeMenu.value = false
-}
-
-const quickToggleDark = () => {
-  themeStore.toggleTheme()
-}
 
 const toggleMenu = (item: any) => {
   console.log('点击菜单项:', item)
@@ -344,7 +304,7 @@ const addTab = (item: any) => {
 }
 
 const switchTab = (tabKey: string) => {
-  const tab = openTabs.value.find(t => t.key === tabKey)
+  const tab = openTabs.value.find((t: any) => t.key === tabKey)
   if (tab) {
     activeTab.value = tabKey
     router.push(tab.path)
@@ -352,7 +312,7 @@ const switchTab = (tabKey: string) => {
 }
 
 const closeTab = (tabKey: string) => {
-  const index = openTabs.value.findIndex(tab => tab.key === tabKey)
+  const index = openTabs.value.findIndex((tab: any) => tab.key === tabKey)
   if (index > -1) {
     openTabs.value.splice(index, 1)
 
@@ -390,7 +350,7 @@ const logout = () => {
 }
 
 // 监听路由变化，更新活动状态
-watch(route, (newRoute) => {
+watch(route, (newRoute: any) => {
   const path = newRoute.path
 
   // 更新活动菜单
@@ -425,7 +385,7 @@ watch(route, (newRoute) => {
   })
 
   // 更新活动标签
-  const activeTabItem = openTabs.value.find(tab => tab.path === path)
+  const activeTabItem = openTabs.value.find((tab: any) => tab.path === path)
   if (activeTabItem) {
     activeTab.value = activeTabItem.key
   }
@@ -433,7 +393,7 @@ watch(route, (newRoute) => {
 
 onMounted(() => {
   // 初始化主题
-  themeStore.initTheme()
+  themeStore.init()
 
   // 确保副菜单默认展开
   expandedMenus.value = ['system', 'projects']
@@ -453,21 +413,24 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition: all 0.3s ease;
+  background-color: var(--theme-bg-body);
+  color: var(--theme-text-primary);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* 顶部导航栏 */
 .top-navbar {
   display: flex;
   align-items: center;
-  height: 60px;
+  height: 64px;
   padding: 0 24px;
-  background-color: var(--navbar-bg);
-  border-bottom: 1px solid var(--border-color);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: var(--theme-header-bg);
+  border-bottom: 1px solid var(--theme-header-border);
+  box-shadow: var(--theme-header-shadow);
+  backdrop-filter: blur(8px);
   z-index: 1000;
+  position: relative;
 }
 
 .navbar-left {
@@ -495,24 +458,33 @@ onMounted(() => {
 }
 
 .brand-name {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--primary-color);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--theme-brand-primary);
+  letter-spacing: -0.02em;
 }
 
 .nav-link {
-  padding: 8px 16px;
+  padding: 10px 16px;
   margin: 0 4px;
-  color: var(--text-color);
+  color: var(--theme-header-text);
   text-decoration: none;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  border-radius: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
 }
 
 .nav-link:hover {
-  background-color: var(--hover-bg);
-  color: var(--primary-color);
+  background-color: var(--theme-bg-hover);
+  color: var(--theme-brand-primary);
+  transform: translateY(-1px);
+}
+
+.nav-link:active {
+  transform: translateY(0);
 }
 
 /* 主题选择器 */
@@ -590,19 +562,26 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   background-color: transparent;
-  color: var(--text-color);
+  color: var(--theme-text-secondary);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
 .icon-btn:hover {
-  background-color: var(--hover-bg);
-  color: var(--primary-color);
+  background-color: var(--theme-bg-hover);
+  color: var(--theme-brand-primary);
+  transform: scale(1.05);
+}
+
+.icon-btn:active {
+  transform: scale(0.95);
 }
 
 /* 用户菜单 */
@@ -610,15 +589,20 @@ onMounted(() => {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  border-radius: 8px;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-light);
 }
 
 .user-menu:hover {
-  background-color: var(--hover-bg);
+  background-color: var(--theme-bg-hover);
+  border-color: var(--theme-border-base);
+  transform: translateY(-1px);
+  box-shadow: var(--theme-shadow-sm);
 }
 
 .user-avatar {
@@ -644,26 +628,29 @@ onMounted(() => {
   right: 0;
   margin-top: 8px;
   padding: 8px;
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  min-width: 160px;
+  background-color: var(--theme-bg-elevated);
+  border: 1px solid var(--theme-border-base);
+  border-radius: 12px;
+  box-shadow: var(--theme-shadow-lg);
+  min-width: 180px;
   z-index: 1001;
+  backdrop-filter: blur(12px);
 }
 
 .user-dropdown a {
   display: block;
-  padding: 8px 12px;
-  color: var(--text-color);
+  padding: 10px 14px;
+  color: var(--theme-text-primary);
   text-decoration: none;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  border-radius: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
 }
 
 .user-dropdown a:hover {
-  background-color: var(--hover-bg);
-  color: var(--primary-color);
+  background-color: var(--theme-bg-hover);
+  color: var(--theme-brand-primary);
+  transform: translateX(4px);
 }
 
 /* 主容器 */
@@ -675,102 +662,135 @@ onMounted(() => {
 
 /* 侧边栏 */
 .sidebar {
-  width: 240px;
-  background-color: var(--sidebar-bg);
-  border-right: 1px solid var(--border-color);
-  transition: width 0.3s ease;
+  width: 260px;
+  background: var(--theme-sidebar-bg);
+  border-right: 1px solid var(--theme-sidebar-border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  backdrop-filter: blur(8px);
+  position: relative;
 }
 
 .sidebar.collapsed {
-  width: 60px;
+  width: 72px;
 }
 
 .sidebar-header {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  height: 48px;
-  padding: 0 16px;
-  border-bottom: 1px solid var(--border-color);
+  height: 56px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--theme-sidebar-border);
+  background: var(--theme-bg-component);
 }
 
 .collapse-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: transparent;
-  color: var(--text-color);
+  color: var(--theme-sidebar-text);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .collapse-btn:hover {
-  background-color: var(--hover-bg);
+  background-color: var(--theme-sidebar-hover-bg);
+  color: var(--theme-brand-primary);
+  transform: scale(1.1);
 }
 
 /* 侧边栏导航 */
 .sidebar-nav {
-  padding: 16px 8px;
+  padding: 20px 12px;
 }
 
 .nav-item {
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
-.nav-link {
+.sidebar-nav .nav-link {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: 8px;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  color: var(--text-color);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--theme-sidebar-text);
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent;
 }
 
-.nav-link:hover {
-  background-color: var(--hover-bg);
+.sidebar-nav .nav-link:hover {
+  background-color: var(--theme-sidebar-hover-bg);
+  color: var(--theme-text-primary);
+  border-color: var(--theme-border-light);
+  transform: translateX(2px);
 }
 
-.nav-link.active {
-  background-color: var(--primary-color);
-  color: white;
+.sidebar-nav .nav-link.active {
+  background: var(--theme-sidebar-active-bg);
+  color: var(--theme-sidebar-active-text);
+  border-color: var(--theme-brand-primary);
+  font-weight: 600;
+  box-shadow: var(--theme-shadow-sm);
 }
 
-.nav-link i {
+.sidebar-nav .nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 60%;
+  background: var(--theme-brand-primary);
+  border-radius: 0 2px 2px 0;
+}
+
+.sidebar-nav .nav-link i {
   width: 20px;
   text-align: center;
-  font-size: 16px;
+  font-size: 18px;
+  flex-shrink: 0;
 }
 
 .nav-text {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: inherit;
   white-space: nowrap;
+  flex: 1;
 }
 
 .expand-icon {
   margin-left: auto;
   font-size: 12px;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
 }
 
 .expand-icon.expanded {
   transform: rotate(180deg);
+  color: var(--theme-brand-primary);
 }
 
 /* 子菜单 */
 .sub-menu {
-  margin-top: 4px;
-  padding-left: 20px;
-  transition: all 0.3s ease;
+  margin-top: 6px;
+  padding-left: 24px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   max-height: 1000px;
   overflow: hidden;
+  border-left: 2px solid var(--theme-border-light);
+  margin-left: 10px;
 }
 
 /* 侧边栏收缩时的子菜单样式 */
@@ -778,34 +798,53 @@ onMounted(() => {
   display: none;
   max-height: 0;
   padding-left: 0;
+  border-left: none;
 }
 
 .sub-nav-link {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 16px;
-  border-radius: 6px;
+  padding: 10px 16px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  color: var(--text-secondary);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--theme-text-tertiary);
   font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  position: relative;
 }
 
 .sub-nav-link:hover {
-  background-color: var(--hover-bg);
-  color: var(--text-color);
+  background-color: var(--theme-sidebar-hover-bg);
+  color: var(--theme-text-primary);
+  transform: translateX(4px);
 }
 
 .sub-nav-link.active {
-  background-color: var(--primary-light);
-  color: var(--primary-color);
+  background-color: var(--theme-sidebar-active-bg);
+  color: var(--theme-sidebar-active-text);
+  font-weight: 600;
+}
+
+.sub-nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: -24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 16px;
+  background: var(--theme-brand-primary);
+  border-radius: 1px;
 }
 
 .sub-nav-link i {
   width: 16px;
   text-align: center;
   font-size: 14px;
+  flex-shrink: 0;
 }
 
 /* 内容区域 */
@@ -818,8 +857,9 @@ onMounted(() => {
 
 /* 标签页导航 */
 .tab-navigation {
-  background-color: var(--card-bg);
-  border-bottom: 1px solid var(--border-color);
+  background: var(--theme-bg-component);
+  border-bottom: 1px solid var(--theme-border-base);
+  backdrop-filter: blur(8px);
 }
 
 .tabs-container {
@@ -835,28 +875,44 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 16px;
-  border-radius: 6px 6px 0 0;
-  border-bottom: 2px solid transparent;
+  padding: 14px 18px;
+  border-radius: 8px 8px 0 0;
+  border-bottom: 3px solid transparent;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
-  color: var(--text-secondary);
+  color: var(--theme-text-tertiary);
   background-color: transparent;
   margin: 4px 2px 0 0;
   flex-shrink: 0;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
 }
 
 .tab-item:hover {
-  color: var(--text-color);
-  background-color: var(--hover-bg);
+  color: var(--theme-text-primary);
+  background-color: var(--theme-bg-hover);
+  transform: translateY(-1px);
 }
 
 .tab-item.active {
-  color: var(--primary-color);
-  background-color: var(--card-bg);
-  border-bottom-color: var(--primary-color);
-  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+  color: var(--theme-brand-primary);
+  background-color: var(--theme-bg-component);
+  border-bottom-color: var(--theme-brand-primary);
+  box-shadow: var(--theme-shadow-sm);
+  font-weight: 600;
+}
+
+.tab-item.active::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--theme-brand-primary), var(--theme-brand-primary-hover));
+  border-radius: 2px 2px 0 0;
 }
 
 .tab-title {
@@ -868,29 +924,32 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border: none;
   border-radius: 50%;
   background-color: transparent;
-  color: var(--text-secondary);
+  color: var(--theme-text-tertiary);
   cursor: pointer;
-  transition: all 0.2s ease;
-  margin-left: 4px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-left: 6px;
   font-size: 12px;
 }
 
 .tab-close:hover {
-  background-color: var(--error-light);
-  color: var(--error-color);
+  background-color: var(--theme-danger-light);
+  color: var(--theme-danger);
+  transform: scale(1.1);
 }
 
 /* 页面内容 */
 .page-content {
   flex: 1;
-  padding: 24px;
+  padding: 32px;
   overflow-y: auto;
-  background-color: var(--bg-color);
+  background: var(--theme-bg-base);
+  border-radius: 16px 0 0 0;
+  margin-top: 1px;
 }
 
 /* 遮罩层 */
@@ -900,8 +959,10 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
   z-index: 999;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* 响应式设计 */
@@ -942,64 +1003,64 @@ onMounted(() => {
   }
 }
 
-/* 主题特定样式 */
-.smart-abp-layout.light {
-  --bg-color: var(--color-bgTertiary, #f5f5f5);
-  --card-bg: var(--color-bgPrimary, #ffffff);
-  --navbar-bg: var(--color-bgPrimary, #ffffff);
-  --sidebar-bg: var(--color-bgPrimary, #ffffff);
-  --text-color: var(--color-textPrimary, #333333);
-  --text-secondary: var(--color-textSecondary, #666666);
-  --border-color: var(--color-borderPrimary, #e0e0e0);
-  --hover-bg: var(--color-bgSecondary, #f0f0f0);
-  --primary-color: var(--color-primary, #1890ff);
-  --primary-light: var(--color-primary-light, #e6f7ff);
-  --danger-color: var(--color-error, #ff4d4f);
-  --error-light: var(--color-error-50, #fff2f0);
-  --error-color: var(--color-error, #ff4d4f);
+/* 滚动条样式 */
+.sidebar-nav::-webkit-scrollbar,
+.submenu-content::-webkit-scrollbar,
+.page-content::-webkit-scrollbar {
+  width: 6px;
 }
 
-.smart-abp-layout.dark {
-  --bg-color: var(--color-bgTertiary, #141414);
-  --card-bg: var(--color-bgPrimary, #1f1f1f);
-  --navbar-bg: var(--color-bgPrimary, #1f1f1f);
-  --sidebar-bg: var(--color-bgPrimary, #1f1f1f);
-  --text-color: var(--color-textPrimary, #ffffff);
-  --text-secondary: var(--color-textSecondary, #a0a0a0);
-  --border-color: var(--color-borderPrimary, #303030);
-  --hover-bg: var(--color-bgSecondary, #262626);
-  --primary-color: var(--color-primary, #4a90e2);
-  --primary-light: var(--color-primary-light, #111b26);
-  --danger-color: var(--color-error, #ff7875);
-  --error-light: var(--color-error-50, #2a1618);
-  --error-color: var(--color-error, #ff7875);
+.sidebar-nav::-webkit-scrollbar-track,
+.submenu-content::-webkit-scrollbar-track,
+.page-content::-webkit-scrollbar-track {
+  background: var(--theme-scrollbar-track);
 }
 
-.smart-abp-layout.tech {
-  --bg-color: var(--color-bgTertiary, #d6ebff);
-  --card-bg: var(--color-bgPrimary, #f0f8ff);
-  --navbar-bg: var(--color-bgPrimary, #f0f8ff);
-  --sidebar-bg: var(--color-bgPrimary, #f0f8ff);
-  --text-color: var(--color-textPrimary, #002766);
-  --text-secondary: var(--color-textSecondary, #003d99);
-  --border-color: var(--color-borderPrimary, #b3d9ff);
-  --hover-bg: var(--color-bgSecondary, #e6f4ff);
-  --primary-color: var(--color-primary, #0066cc);
-  --primary-light: var(--color-primary-light, #e6f4ff);
-  --danger-color: var(--color-error, #ff4d4f);
-  --error-light: var(--color-error-50, #fff2f0);
-  --error-color: var(--color-error, #ff4d4f);
+.sidebar-nav::-webkit-scrollbar-thumb,
+.submenu-content::-webkit-scrollbar-thumb,
+.page-content::-webkit-scrollbar-thumb {
+  background: var(--theme-scrollbar-thumb);
+  border-radius: 3px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover,
+.submenu-content::-webkit-scrollbar-thumb:hover,
+.page-content::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-scrollbar-thumb-hover);
+}
+
+/* 动画优化 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* 焦点样式 */
+.nav-link:focus,
+.sub-nav-link:focus,
+.submenu-item:focus,
+.tab-item:focus,
+.icon-btn:focus,
+.collapse-btn:focus,
+.close-submenu:focus {
+  outline: 2px solid var(--theme-brand-primary);
+  outline-offset: 2px;
+  border-radius: 8px;
 }
 
 /* 副菜单样式 */
 .submenu-panel {
-  width: 240px;
-  background: var(--card-bg);
-  border-right: 1px solid var(--border-color);
+  width: 260px;
+  background: var(--theme-bg-component);
+  border-right: 1px solid var(--theme-border-base);
   display: flex;
   flex-direction: column;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--theme-shadow-sm);
 }
 
 .submenu-panel:not(.show) {
@@ -1010,34 +1071,51 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px;
-  border-bottom: 1px solid var(--border-color);
-  background: var(--navbar-bg);
+  padding: 20px;
+  border-bottom: 1px solid var(--theme-border-base);
+  background: var(--theme-header-bg);
+  position: relative;
+}
+
+.submenu-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--theme-brand-primary), transparent);
 }
 
 .submenu-header h3 {
   margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-color);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--theme-text-primary);
+  letter-spacing: -0.02em;
 }
 
 .close-submenu {
   background: none;
   border: none;
-  color: var(--text-secondary);
+  color: var(--theme-text-tertiary);
   cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .close-submenu:hover {
-  background: var(--hover-bg);
-  color: var(--text-color);
+  background: var(--theme-bg-hover);
+  color: var(--theme-text-primary);
+  transform: scale(1.1);
 }
 
 .submenu-content {
-  padding: 10px 0;
+  padding: 16px 0;
   flex: 1;
   overflow-y: auto;
 }
@@ -1045,20 +1123,45 @@ onMounted(() => {
 .submenu-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: 14px;
+  padding: 14px 20px;
   cursor: pointer;
-  color: var(--text-secondary);
-  transition: all 0.2s ease;
+  color: var(--theme-text-secondary);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  border-radius: 0 12px 12px 0;
+  margin: 2px 12px 2px 0;
+  position: relative;
 }
 
 .submenu-item:hover {
-  background: var(--hover-bg);
-  color: var(--text-color);
+  background: var(--theme-bg-hover);
+  color: var(--theme-text-primary);
+  transform: translateX(4px);
+}
+
+.submenu-item.active {
+  background: var(--theme-sidebar-active-bg);
+  color: var(--theme-sidebar-active-text);
+  font-weight: 600;
+}
+
+.submenu-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 60%;
+  background: var(--theme-brand-primary);
+  border-radius: 0 2px 2px 0;
 }
 
 .submenu-item i {
-  width: 16px;
+  width: 18px;
   text-align: center;
+  font-size: 16px;
+  flex-shrink: 0;
 }
 </style>

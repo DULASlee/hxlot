@@ -1,0 +1,246 @@
+/* 表单组件样式 */
+
+/* 表单容器 */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* 表单项 */
+.form-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* 表单标签 */
+.form-label {
+  display: inline-block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--theme-text-primary);
+  margin-bottom: 0.25rem;
+}
+
+/* 必填标记 */
+.form-required::after {
+  content: "*";
+  color: var(--theme-danger);
+  margin-left: 0.25rem;
+}
+
+/* 表单控件包装器 */
+.form-control-wrapper {
+  position: relative;
+}
+
+/* 表单控件 */
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.5;
+  color: var(--theme-input-text);
+  background-color: var(--theme-input-bg);
+  background-clip: padding-box;
+  border: 1px solid var(--theme-input-border);
+  border-radius: var(--radius-md);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+  color: var(--theme-input-text);
+  background-color: var(--theme-input-bg);
+  border-color: var(--theme-input-focus-border);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(var(--theme-brand-primary-rgb), 0.25);
+}
+
+.form-control::placeholder {
+  color: var(--theme-input-placeholder);
+  opacity: 1;
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+  background-color: var(--theme-input-disabled-bg);
+  opacity: 1;
+  cursor: not-allowed;
+  color: var(--theme-input-disabled-text);
+}
+
+/* 表单尺寸 */
+.form-control-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: var(--font-size-xs);
+  border-radius: var(--radius-sm);
+}
+
+.form-control-lg {
+  padding: 0.75rem 1rem;
+  font-size: var(--font-size-base);
+  border-radius: var(--radius-lg);
+}
+
+/* 表单帮助文本 */
+.form-help {
+  font-size: var(--font-size-xs);
+  color: var(--theme-text-tertiary);
+  margin-top: 0.25rem;
+}
+
+/* 表单错误文本 */
+.form-error {
+  font-size: var(--font-size-xs);
+  color: var(--theme-danger);
+  margin-top: 0.25rem;
+}
+
+/* 表单验证状态 */
+.form-item.has-error .form-control {
+  border-color: var(--theme-input-error-border);
+}
+
+.form-item.has-error .form-label {
+  color: var(--theme-input-error-text);
+}
+
+.form-item.has-success .form-control {
+  border-color: var(--theme-input-success-border);
+}
+
+.form-item.has-success .form-label {
+  color: var(--theme-input-success-text);
+}
+
+/* 表单动作区 */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* 水平表单布局 */
+.form-horizontal .form-item {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: start;
+  gap: 1rem;
+}
+
+.form-horizontal .form-label {
+  margin-top: 0.5rem;
+}
+
+.form-horizontal .form-actions {
+  grid-column: 2;
+}
+
+/* 表单组 */
+.form-group {
+  display: flex;
+  gap: 1rem;
+}
+
+/* 复选框和单选框 */
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-check-input {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.25rem;
+  vertical-align: top;
+  background-color: var(--theme-input-bg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: 1px solid var(--theme-input-border);
+  appearance: none;
+}
+
+.form-check-input[type="checkbox"] {
+  border-radius: 0.25rem;
+}
+
+.form-check-input[type="radio"] {
+  border-radius: 50%;
+}
+
+.form-check-input:checked {
+  background-color: var(--theme-brand-primary);
+  border-color: var(--theme-brand-primary);
+}
+
+.form-check-input:checked[type="checkbox"] {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+}
+
+.form-check-input:checked[type="radio"] {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e");
+}
+
+.form-check-label {
+  font-size: var(--font-size-sm);
+  color: var(--theme-text-primary);
+}
+
+/* 开关 */
+.form-switch {
+  padding-left: 2.5rem;
+}
+
+.form-switch .form-check-input {
+  width: 2rem;
+  height: 1rem;
+  margin-left: -2.5rem;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.25%29'/%3e%3c/svg%3e");
+  background-position: left center;
+  border-radius: 2rem;
+  transition: background-position 0.15s ease-in-out;
+}
+
+.form-switch .form-check-input:checked {
+  background-position: right center;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+}
+
+/* 表单栅格 */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -0.5rem;
+  margin-left: -0.5rem;
+}
+
+.form-col {
+  flex: 1 0 0%;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.form-col-auto {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.form-col-1 { flex: 0 0 8.333333%; max-width: 8.333333%; }
+.form-col-2 { flex: 0 0 16.666667%; max-width: 16.666667%; }
+.form-col-3 { flex: 0 0 25%; max-width: 25%; }
+.form-col-4 { flex: 0 0 33.333333%; max-width: 33.333333%; }
+.form-col-5 { flex: 0 0 41.666667%; max-width: 41.666667%; }
+.form-col-6 { flex: 0 0 50%; max-width: 50%; }
+.form-col-7 { flex: 0 0 58.333333%; max-width: 58.333333%; }
+.form-col-8 { flex: 0 0 66.666667%; max-width: 66.666667%; }
+.form-col-9 { flex: 0 0 75%; max-width: 75%; }
+.form-col-10 { flex: 0 0 83.333333%; max-width: 83.333333%; }
+.form-col-11 { flex: 0 0 91.666667%; max-width: 91.666667%; }
+.form-col-12 { flex: 0 0 100%; max-width: 100%; }

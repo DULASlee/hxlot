@@ -33,13 +33,13 @@
             <p>快速切换浅色和深色主题</p>
           </div>
           <button class="toggle-btn" @click="quickToggleDark">
-            <svg v-if="themeStore.isDark" viewBox="0 0 24 24">
+            <svg v-if="themeStore.isDarkMode" viewBox="0 0 24 24">
               <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1z"/>
             </svg>
             <svg v-else viewBox="0 0 24 24">
               <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
             </svg>
-            {{ themeStore.isDark ? '切换到浅色' : '切换到深色' }}
+            {{ themeStore.isDarkMode ? '切换到浅色' : '切换到深色' }}
           </button>
         </div>
       </div>
@@ -213,7 +213,7 @@ const selectTheme = (theme: string) => {
 }
 
 const quickToggleDark = () => {
-  themeStore.toggleTheme()
+  themeStore.toggleDarkMode()
   console.log(`快速切换主题: ${themeStore.currentTheme}`)
 }
 

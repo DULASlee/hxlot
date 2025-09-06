@@ -1,0 +1,391 @@
+/* 现代化SmartAbp布局增强样式 */
+
+/* 顶部导航栏优化 */
+.smart-abp-layout .top-navbar {
+  background: linear-gradient(135deg,
+    var(--theme-bg-navbar) 0%,
+    color-mix(in srgb, var(--theme-bg-navbar) 95%, var(--theme-brand-primary) 5%) 100%);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--theme-border-light, var(--theme-border-base));
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+  position: relative;
+  z-index: 100;
+}
+
+.smart-abp-layout .top-navbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--theme-brand-primary) 20%,
+    var(--theme-brand-primary) 80%,
+    transparent 100%);
+  opacity: 0.3;
+}
+
+/* Logo区域美化 */
+.smart-abp-layout .navbar-left {
+  gap: 24px;
+}
+
+.smart-abp-layout .logo {
+  width: 36px;
+  height: 36px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.smart-abp-layout .logo:hover {
+  transform: scale(1.05) rotate(3deg);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+}
+
+.smart-abp-layout .brand-name {
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--theme-brand-primary), var(--theme-brand-primary-hover));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+/* 导航链接优化 */
+.smart-abp-layout .navbar-center {
+  gap: 8px;
+}
+
+.smart-abp-layout .nav-link {
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.25px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.smart-abp-layout .nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--theme-bg-hover) 0%, var(--theme-bg-component) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 12px;
+}
+
+.smart-abp-layout .nav-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--theme-border-light, var(--theme-border-base));
+}
+
+.smart-abp-layout .nav-link:hover::before {
+  opacity: 1;
+}
+
+.smart-abp-layout .nav-link span {
+  position: relative;
+  z-index: 1;
+}
+
+/* 右侧操作区域 */
+.smart-abp-layout .navbar-right {
+  gap: 16px;
+}
+
+.smart-abp-layout .icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--theme-bg-component) 0%, var(--theme-bg-elevated) 100%);
+  border: 1px solid var(--theme-border-light, var(--theme-border-base));
+  color: var(--theme-text-secondary);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.smart-abp-layout .icon-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.smart-abp-layout .icon-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  color: var(--theme-brand-primary);
+  border-color: var(--theme-brand-primary);
+}
+
+.smart-abp-layout .icon-btn:hover::before {
+  transform: translateX(100%);
+}
+
+/* 用户菜单美化 */
+.smart-abp-layout .user-menu {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--theme-bg-component) 0%, var(--theme-bg-elevated) 100%);
+  border: 1px solid var(--theme-border-light, var(--theme-border-base));
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.smart-abp-layout .user-menu::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--theme-bg-hover) 0%, rgba(var(--theme-brand-primary-rgb, 25, 118, 210), 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.smart-abp-layout .user-menu:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-color: var(--theme-brand-primary);
+}
+
+.smart-abp-layout .user-menu:hover::before {
+  opacity: 1;
+}
+
+.smart-abp-layout .user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--theme-border-light, var(--theme-border-base));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.smart-abp-layout .user-menu:hover .user-avatar {
+  border-color: var(--theme-brand-primary);
+  box-shadow: 0 0 0 2px var(--theme-brand-primary-alpha, rgba(25, 118, 210, 0.2));
+}
+
+.smart-abp-layout .username {
+  font-weight: 600;
+  color: var(--theme-text-primary);
+  position: relative;
+  z-index: 1;
+}
+
+.smart-abp-layout .dropdown-icon {
+  color: var(--theme-text-tertiary);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.smart-abp-layout .user-menu:hover .dropdown-icon {
+  color: var(--theme-brand-primary);
+  transform: rotate(180deg);
+}
+
+/* 用户下拉菜单 */
+.smart-abp-layout .user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  background: linear-gradient(135deg, var(--theme-bg-elevated) 0%, var(--theme-bg-component) 100%);
+  border: 1px solid var(--theme-border-light, var(--theme-border-base));
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  transform: translateY(-10px) scale(0.95);
+  opacity: 0;
+  animation: dropdownEnter 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  z-index: 1000;
+}
+
+.smart-abp-layout .user-dropdown a {
+  display: block;
+  padding: 12px 18px;
+  color: var(--theme-text-primary);
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  border-radius: 8px;
+  margin: 4px 8px;
+}
+
+.smart-abp-layout .user-dropdown a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(135deg, var(--theme-brand-primary), var(--theme-brand-primary-hover));
+  border-radius: 0 2px 2px 0;
+  transform: scaleY(0);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.smart-abp-layout .user-dropdown a:hover {
+  background: linear-gradient(135deg, var(--theme-bg-hover) 0%, rgba(var(--theme-brand-primary-rgb, 25, 118, 210), 0.05) 100%);
+  transform: translateX(4px);
+  color: var(--theme-brand-primary);
+}
+
+.smart-abp-layout .user-dropdown a:hover::before {
+  transform: scaleY(1);
+}
+
+/* 侧边栏优化 */
+.smart-abp-layout .sidebar {
+  background: linear-gradient(135deg,
+    var(--theme-bg-sidebar, var(--theme-bg-component)) 0%,
+    color-mix(in srgb, var(--theme-bg-sidebar, var(--theme-bg-component)) 98%, var(--theme-brand-primary) 2%) 100%);
+  border-right: 1px solid var(--theme-border-light, var(--theme-border-base));
+  backdrop-filter: blur(8px);
+  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.04);
+}
+
+/* 标签页优化 */
+.smart-abp-layout .tabs-container {
+  background: linear-gradient(135deg, var(--theme-bg-component) 0%, var(--theme-bg-elevated) 100%);
+  border-bottom: 1px solid var(--theme-border-light, var(--theme-border-base));
+  backdrop-filter: blur(8px);
+}
+
+.smart-abp-layout .tab-item {
+  border-radius: 8px 8px 0 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.smart-abp-layout .tab-item::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--theme-brand-primary), var(--theme-brand-primary-hover));
+  transform: scaleX(0);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.smart-abp-layout .tab-item.active {
+  background: linear-gradient(135deg, var(--theme-bg-elevated) 0%, var(--theme-bg-component) 100%);
+  border-color: var(--theme-border-light, var(--theme-border-base));
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.smart-abp-layout .tab-item.active::before {
+  transform: scaleX(1);
+}
+
+.smart-abp-layout .tab-item:hover:not(.active) {
+  background: linear-gradient(135deg, var(--theme-bg-hover) 0%, var(--theme-bg-component) 100%);
+  transform: translateY(-1px);
+}
+
+/* 主内容区域 */
+.smart-abp-layout .main-content {
+  background: linear-gradient(135deg,
+    var(--theme-bg-base) 0%,
+    color-mix(in srgb, var(--theme-bg-base) 99%, var(--theme-brand-primary) 1%) 100%);
+}
+
+/* 响应式优化 */
+@media (max-width: 1024px) {
+  .smart-abp-layout .navbar-center {
+    gap: 4px;
+  }
+
+  .smart-abp-layout .nav-link {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .smart-abp-layout .navbar-right {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .smart-abp-layout .navbar-center {
+    display: none;
+  }
+
+  .smart-abp-layout .brand-name {
+    font-size: 20px;
+  }
+
+  .smart-abp-layout .user-dropdown {
+    right: -20px;
+    left: auto;
+    width: 180px;
+  }
+}
+
+/* 动画关键帧 */
+@keyframes dropdownEnter {
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* 全局动画增强 */
+.smart-abp-layout * {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 滚动条美化 */
+.smart-abp-layout ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.smart-abp-layout ::-webkit-scrollbar-track {
+  background: var(--theme-bg-component);
+  border-radius: 3px;
+}
+
+.smart-abp-layout ::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--theme-brand-primary), var(--theme-brand-primary-hover));
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.smart-abp-layout ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, var(--theme-brand-primary-hover), var(--theme-brand-primary));
+}

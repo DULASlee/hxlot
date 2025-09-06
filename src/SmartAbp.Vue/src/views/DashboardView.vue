@@ -128,11 +128,11 @@ const themeStore = useThemeStore()
 
 const testTheme = () => {
   console.log('当前主题:', themeStore.currentTheme)
-  console.log('是否暗黑模式:', themeStore.isDark)
-  console.log('主题类名:', themeStore.themeClass)
+  console.log('是否暗黑模式:', themeStore.isDarkMode)
+  console.log('主题类名:', themeStore.currentTheme)
 
   // 测试主题切换
-  themeStore.toggleTheme()
+  themeStore.toggleDarkMode()
 }
 </script>
 

@@ -1,0 +1,31 @@
+/* 设计系统主入口文件 */
+
+/* 导入设计令牌 */
+@import "./tokens/index.css";
+
+/* 导入主题系统 */
+@import "./themes/index.css";
+
+/* 导入组件样式 */
+@import "./components/index.css";
+
+/* 设计系统使用说明：
+ *
+ * 1. 在应用入口文件中导入此文件即可使用完整的设计系统
+ *    例如：import '@/styles/design-system/index.css';
+ *
+ * 2. 设计系统分为三个层次：
+ *    - 设计令牌（Tokens）：基础变量，如颜色、间距、字体等
+ *    - 主题（Themes）：基于设计令牌的主题变量，支持多主题切换
+ *    - 组件（Components）：基于主题变量的组件样式
+ *
+ * 3. 主题切换：
+ *    - 在根元素上设置 data-theme 属性或添加对应的主题类名
+ *    - 例如：<html data-theme="tech-blue"> 或 <html class="theme-tech-blue">
+ *    - 支持的主题：light（默认）、dark、tech-blue、deep-green、light-purple
+ *
+ * 4. 在组件中使用设计令牌和主题变量：
+ *    - 使用 CSS 变量语法：var(--变量名)
+ *    - 设计令牌示例：var(--color-primary-500), var(--spacing-4)
+ *    - 主题变量示例：var(--theme-brand-primary), var(--theme-bg-component)
+ */
