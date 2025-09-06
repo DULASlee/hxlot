@@ -1,0 +1,202 @@
+/* 主题别名映射 - 解决颜色割裂问题 */
+/* 将旧的 --color-* 变量映射到新的 --theme-* 变量，确保全局统一 */
+
+:root {
+  /* ===== 旧变量到新变量的别名映射 ===== */
+
+  /* 背景色别名 */
+  --color-bg-primary: var(--theme-bg-component);
+  --color-bg-secondary: var(--theme-bg-sunken);
+  --color-bg-tertiary: var(--theme-bg-body);
+  --color-bgPrimary: var(--theme-bg-component);
+  --color-bgSecondary: var(--theme-bg-sunken);
+  --color-bgTertiary: var(--theme-bg-body);
+  --bg-color: var(--theme-bg-body);
+  --card-bg: var(--theme-bg-component);
+  --navbar-bg: var(--theme-bg-navbar);
+  --sidebar-bg: var(--theme-bg-sidebar);
+
+  /* 文本色别名 */
+  --color-text-primary: var(--theme-text-primary);
+  --color-text-secondary: var(--theme-text-secondary);
+  --color-text-tertiary: var(--theme-text-tertiary);
+  --color-textPrimary: var(--theme-text-primary);
+  --color-textSecondary: var(--theme-text-secondary);
+  --text-color: var(--theme-text-primary);
+  --text-secondary: var(--theme-text-secondary);
+
+  /* 边框色别名 */
+  --color-border-primary: var(--theme-border-base);
+  --color-border-secondary: var(--theme-border-light);
+  --color-borderPrimary: var(--theme-border-base);
+  --border-color: var(--theme-border-base);
+
+  /* 品牌色别名 */
+  --color-primary: var(--theme-brand-primary);
+  --color-primary-500: var(--theme-brand-primary);
+  --color-primary-600: var(--theme-brand-primary-hover);
+  --color-primary-700: var(--theme-brand-primary-active);
+  --color-primary-light: var(--theme-brand-primary-light);
+  --color-primary-50: var(--theme-brand-primary-lighter);
+  --primary-color: var(--theme-brand-primary);
+  --primary-light: var(--theme-brand-primary-light);
+
+  /* 功能色别名 */
+  --color-success: var(--theme-success);
+  --color-success-500: var(--theme-success);
+  --color-success-50: var(--theme-success-light);
+  --color-warning: var(--theme-warning);
+  --color-warning-500: var(--theme-warning);
+  --color-warning-50: var(--theme-warning-light);
+  --color-error: var(--theme-danger);
+  --color-error-500: var(--theme-danger);
+  --color-error-50: var(--theme-danger-light);
+  --danger-color: var(--theme-danger);
+  --error-color: var(--theme-danger);
+  --error-light: var(--theme-danger-light);
+
+  /* 交互色别名 */
+  --hover-bg: var(--theme-bg-hover);
+  --color-primary-hover: var(--theme-brand-primary-hover);
+
+  /* 阴影别名 */
+  --shadow-sm: var(--theme-shadow-sm);
+  --shadow-md: var(--theme-shadow-md);
+  --shadow-lg: var(--theme-shadow-lg);
+
+  /* 滚动条别名 */
+  --scrollbar-track: var(--theme-scrollbar-track);
+  --scrollbar-thumb: var(--theme-scrollbar-thumb);
+  --scrollbar-thumb-hover: var(--theme-scrollbar-thumb-hover);
+}
+
+/* ===== 确保所有主题都有完整的别名 ===== */
+
+.theme-tech-blue,
+[data-theme="tech-blue"] {
+  /* 重写别名确保科技蓝主题完整性 */
+  --color-bg-primary: var(--theme-bg-component);
+  --color-bg-secondary: var(--theme-bg-sunken);
+  --color-bg-tertiary: var(--theme-bg-body);
+  --color-text-primary: var(--theme-text-primary);
+  --color-text-secondary: var(--theme-text-secondary);
+  --color-border-primary: var(--theme-border-base);
+  --color-primary: var(--theme-brand-primary);
+  --hover-bg: var(--theme-bg-hover);
+}
+
+.theme-deep-green,
+[data-theme="deep-green"] {
+  /* 重写别名确保深绿主题完整性 */
+  --color-bg-primary: var(--theme-bg-component);
+  --color-bg-secondary: var(--theme-bg-sunken);
+  --color-bg-tertiary: var(--theme-bg-body);
+  --color-text-primary: var(--theme-text-primary);
+  --color-text-secondary: var(--theme-text-secondary);
+  --color-border-primary: var(--theme-border-base);
+  --color-primary: var(--theme-brand-primary);
+  --hover-bg: var(--theme-bg-hover);
+}
+
+.theme-light-purple,
+[data-theme="light-purple"] {
+  /* 重写别名确保淡紫主题完整性 */
+  --color-bg-primary: var(--theme-bg-component);
+  --color-bg-secondary: var(--theme-bg-sunken);
+  --color-bg-tertiary: var(--theme-bg-body);
+  --color-text-primary: var(--theme-text-primary);
+  --color-text-secondary: var(--theme-text-secondary);
+  --color-border-primary: var(--theme-border-base);
+  --color-primary: var(--theme-brand-primary);
+  --hover-bg: var(--theme-bg-hover);
+}
+
+.theme-dark,
+[data-theme="dark"] {
+  /* 重写别名确保暗黑主题完整性 */
+  --color-bg-primary: var(--theme-bg-component);
+  --color-bg-secondary: var(--theme-bg-sunken);
+  --color-bg-tertiary: var(--theme-bg-body);
+  --color-text-primary: var(--theme-text-primary);
+  --color-text-secondary: var(--theme-text-secondary);
+  --color-border-primary: var(--theme-border-base);
+  --color-primary: var(--theme-brand-primary);
+  --hover-bg: var(--theme-bg-hover);
+}
+
+/* ===== 性能优化：移除通用选择器，避免不必要的重绘 ===== */
+/* 替换为具体的组件选择器，提高性能 */
+
+/* ===== 修复特定组件的颜色问题 ===== */
+.dashboard-view,
+.settings-view,
+.test-view,
+.page-content,
+.content-area {
+  background: var(--theme-bg-base) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+/* 修复卡片组件 */
+.stat-card,
+.test-card,
+.settings-section,
+.quick-actions,
+.system-status {
+  background: var(--theme-bg-component) !important;
+  border-color: var(--theme-border-base) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+/* 修复按钮组件 */
+.action-btn,
+.theme-btn,
+.btn-primary,
+.btn-secondary,
+button {
+  background: var(--theme-bg-component) !important;
+  border-color: var(--theme-border-base) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+.action-btn:hover,
+.theme-btn:hover,
+.btn-primary:hover,
+.btn-secondary:hover,
+button:hover {
+  background: var(--theme-bg-hover) !important;
+  border-color: var(--theme-brand-primary) !important;
+  color: var(--theme-brand-primary) !important;
+}
+
+/* 修复输入框组件 */
+.setting-input,
+.setting-select,
+.test-input,
+input,
+select {
+  background: var(--theme-bg-component) !important;
+  border-color: var(--theme-border-base) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+/* 修复表格样式 */
+table,
+.table {
+  background: var(--theme-bg-component) !important;
+  border-color: var(--theme-border-base) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+/* 修复状态指示器 */
+.status-indicator.success {
+  background: var(--theme-success) !important;
+}
+
+.status-indicator.warning {
+  background: var(--theme-warning) !important;
+}
+
+.status-indicator.error {
+  background: var(--theme-danger) !important;
+}

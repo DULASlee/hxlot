@@ -66,11 +66,59 @@ export function useDesignSystem() {
     return theme.value === 'dark';
   });
 
-  // 设置主题
+  // 主题预加载缓存
+  const themeCache = new Map<ThemeType, boolean>();
+
+  // 预加载主题样式
+  const preloadTheme = (themeType: ThemeType) => {
+    if (themeCache.has(themeType)) return;
+
+    // 创建临时元素预加载主题变量
+    const tempElement = document.createElement('div');
+    tempElement.className = `theme-${themeType}`;
+    tempElement.style.position = 'absolute';
+    tempElement.style.visibility = 'hidden';
+    tempElement.style.pointerEvents = 'none';
+    document.body.appendChild(tempElement);
+
+    // 强制浏览器计算样式
+    window.getComputedStyle(tempElement).backgroundColor;
+
+    // 移除临时元素并标记为已缓存
+    document.body.removeChild(tempElement);
+    themeCache.set(themeType, true);
+  };
+
+  // 优化的主题设置函数
   const setTheme = (newTheme: ThemeType) => {
-    theme.value = newTheme;
-    localStorage.setItem(THEME_STORAGE_KEY, newTheme);
-    applyTheme();
+    // 防抖处理，避免快速切换时的性能问题
+    if ((setTheme as any).debounceTimer) {
+      clearTimeout((setTheme as any).debounceTimer);
+    }
+
+    (setTheme as any).debounceTimer = setTimeout(() => {
+      if (theme.value !== newTheme) {
+        // 开始性能监控
+        const themeConfig = THEMES.find(t => t.value === newTheme);
+        const themeName = themeConfig?.name || newTheme;
+        performanceMonitor.measureThemeSwitch(themeName);
+
+        // 预加载新主题
+        preloadTheme(newTheme);
+
+        theme.value = newTheme;
+        localStorage.setItem(THEME_STORAGE_KEY, newTheme);
+        applyTheme();
+
+        // 在下一帧结束性能监控
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            performanceMonitor.endMeasurement(themeName);
+          }, 200); // 等待过渡动画完成
+        });
+      }
+      (setTheme as any).debounceTimer = null;
+    }, 16); // 约1帧的延迟，平滑切换
   };
 
   // 切换暗黑模式
@@ -99,30 +147,50 @@ export function useDesignSystem() {
     document.documentElement.style.setProperty(tokenName, value);
   };
 
-  // 应用主题到 DOM
+  // 高性能主题应用函数
   const applyTheme = () => {
-    // 移除所有主题类
-    THEMES.forEach((t) => {
-      document.documentElement.classList.remove(`theme-${t.value}`);
+    // 使用 requestAnimationFrame 优化DOM操作
+    requestAnimationFrame(() => {
+      const documentElement = document.documentElement;
+      const classList = documentElement.classList;
+
+      // 批量DOM操作，减少重排重绘
+      const currentThemeClass = `theme-${theme.value}`;
+      const hasCurrentClass = classList.contains(currentThemeClass);
+
+      if (!hasCurrentClass) {
+        // 使用更高效的类名切换
+        classList.forEach((className) => {
+          if (className.startsWith('theme-')) {
+            classList.remove(className);
+          }
+        });
+
+        // 添加新主题类和过渡类
+        classList.add(currentThemeClass, 'theme-transition');
+
+        // 设置 data-theme 属性
+        documentElement.setAttribute('data-theme', theme.value);
+
+        // 设置颜色方案
+        documentElement.style.colorScheme = isCurrentThemeDark.value ? 'dark' : 'light';
+
+        // 更新 meta theme-color（异步执行，避免阻塞）
+        setTimeout(() => {
+          const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+          if (metaThemeColor) {
+            const headerBg = getThemeToken('--theme-header-bg') ||
+                           (isCurrentThemeDark.value ? '#1f2937' : '#ffffff');
+            metaThemeColor.setAttribute('content', headerBg);
+          }
+        }, 0);
+
+        // 移除过渡类，避免后续操作触发不必要的动画
+        setTimeout(() => {
+          classList.remove('theme-transition');
+        }, 200);
+      }
     });
-
-    // 设置 data-theme 属性
-    document.documentElement.setAttribute('data-theme', theme.value);
-
-    // 添加当前主题类
-    document.documentElement.classList.add(`theme-${theme.value}`);
-
-    // 设置颜色方案
-    document.documentElement.style.colorScheme = isCurrentThemeDark.value ? 'dark' : 'light';
-
-    // 更新 meta theme-color
-    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (metaThemeColor) {
-      metaThemeColor.setAttribute(
-        'content',
-        getThemeToken('--theme-header-bg') || (isCurrentThemeDark.value ? '#1f2937' : '#ffffff')
-      );
-    }
   };
 
   // 监听系统主题变化（保留接口兼容性）
@@ -141,10 +209,57 @@ export function useDesignSystem() {
     applyTheme();
   });
 
+  // 性能监控
+  const performanceMonitor = {
+    startTime: 0,
+    endTime: 0,
+    measureThemeSwitch: (themeName: string) => {
+      performanceMonitor.startTime = performance.now();
+      console.log(`🎨 开始切换主题: ${themeName}`);
+    },
+    endMeasurement: (themeName: string) => {
+      performanceMonitor.endTime = performance.now();
+      const duration = performanceMonitor.endTime - performanceMonitor.startTime;
+      console.log(`✅ 主题切换完成: ${themeName}, 耗时: ${duration.toFixed(2)}ms`);
+
+      // 如果切换时间超过100ms，输出警告
+      if (duration > 100) {
+        console.warn(`⚠️ 主题切换较慢: ${duration.toFixed(2)}ms，建议优化`);
+      }
+    }
+  };
+
+  // 预加载所有主题（在空闲时间执行）
+  const preloadAllThemes = () => {
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(() => {
+        THEMES.forEach(themeConfig => {
+          if (themeConfig.value !== theme.value) {
+            preloadTheme(themeConfig.value);
+          }
+        });
+        console.log('🚀 所有主题预加载完成');
+      });
+    } else {
+      // 降级方案：使用setTimeout
+      setTimeout(() => {
+        THEMES.forEach(themeConfig => {
+          if (themeConfig.value !== theme.value) {
+            preloadTheme(themeConfig.value);
+          }
+        });
+        console.log('🚀 所有主题预加载完成');
+      }, 1000);
+    }
+  };
+
   // 初始化主题
   const initTheme = () => {
     // 设置初始主题
     applyTheme();
+
+    // 预加载其他主题
+    preloadAllThemes();
 
     // 监听系统主题变化
     const cleanup = watchSystemTheme();

@@ -176,12 +176,12 @@ const tabs = ref([
   { title: '工作台', path: '/dashboard', closable: false }
 ])
 
-// 主题配置
+// 主题配置 - 使用统一的主题系统
 const themes = [
-  { label: '浅色主题', value: 'light' },
-  { label: '深色主题', value: 'dark' },
-  { label: '科技蓝', value: 'blue' },
-  { label: '自动切换', value: 'auto' }
+  { label: '科技蓝', value: 'tech-blue' },
+  { label: '深绿色', value: 'deep-green' },
+  { label: '淡紫色', value: 'light-purple' },
+  { label: '暗黑模式', value: 'dark' }
 ]
 
 // 计算属性
@@ -236,8 +236,8 @@ const addTestTab = () => {
 }
 
 const closeAllTabs = () => {
-  const closableCount = tabs.value.filter(tab => tab.closable).length
-  tabs.value = tabs.value.filter(tab => !tab.closable)
+  const closableCount = tabs.value.filter((tab: any) => tab.closable).length
+  tabs.value = tabs.value.filter((tab: any) => !tab.closable)
   addLog(`关闭了 ${closableCount} 个标签页`, 'info')
 }
 

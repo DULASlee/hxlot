@@ -322,16 +322,45 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* 主题切换动画 */
+/* 主题切换动画优化 */
 :root {
-  transition: color-scheme 0.2s ease;
+  transition: color-scheme 0.15s ease;
 }
 
-* {
-  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+/* 只对需要过渡的元素应用动画，提高性能 */
+.theme-transition,
+[class*="theme-"],
+[data-theme] body,
+[data-theme] .dashboard-view,
+[data-theme] .settings-view,
+[data-theme] .test-view,
+[data-theme] .stat-card,
+[data-theme] .action-btn,
+[data-theme] .quick-actions,
+[data-theme] .system-status,
+[data-theme] .settings-section,
+[data-theme] .theme-switcher-button,
+[data-theme] .header-btn,
+[data-theme] .status-item,
+[data-theme] .nav-item,
+[data-theme] .submenu-item,
+[data-theme] .tab-item,
+[data-theme] .icon-btn,
+[data-theme] button,
+[data-theme] input,
+[data-theme] select,
+[data-theme] textarea {
+  transition: background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 高性能GPU加速过渡 */
+.theme-transition-gpu {
+  will-change: background-color, border-color, color, box-shadow;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* 减少动画的用户偏好 */
@@ -339,5 +368,11 @@ body {
   * {
     transition: none !important;
     animation: none !important;
+  }
+
+  .theme-transition,
+  .theme-transition-gpu {
+    transition: none !important;
+    will-change: auto !important;
   }
 }

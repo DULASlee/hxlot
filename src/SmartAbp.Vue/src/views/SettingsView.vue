@@ -1,14 +1,14 @@
 <template>
   <div class="settings-view">
     <div class="page-header">
-      <h1>系统设置</h1>
+      <h1><i class="fas fa-cog header-icon"></i>系统设置</h1>
       <p>配置系统参数和偏好设置</p>
     </div>
 
     <div class="settings-content">
       <!-- 主题设置 -->
       <div class="settings-section">
-        <h2>主题设置</h2>
+        <h2><i class="fas fa-palette section-icon"></i>主题设置</h2>
         <div class="setting-item">
           <div class="setting-info">
             <h3>界面主题</h3>
@@ -46,7 +46,7 @@
 
       <!-- 系统配置 -->
       <div class="settings-section">
-        <h2>系统配置</h2>
+        <h2><i class="fas fa-server section-icon"></i>系统配置</h2>
         <div class="setting-item">
           <div class="setting-info">
             <h3>系统名称</h3>
@@ -87,7 +87,7 @@
 
       <!-- 安全设置 -->
       <div class="settings-section">
-        <h2>安全设置</h2>
+        <h2><i class="fas fa-shield-alt section-icon"></i>安全设置</h2>
         <div class="setting-item">
           <div class="setting-info">
             <h3>会话超时</h3>
@@ -127,7 +127,7 @@
 
       <!-- 通知设置 -->
       <div class="settings-section">
-        <h2>通知设置</h2>
+        <h2><i class="fas fa-bell section-icon"></i>通知设置</h2>
         <div class="setting-item">
           <div class="setting-info">
             <h3>邮件通知</h3>
@@ -177,12 +177,12 @@ import { useThemeStore } from '../stores/theme'
 
 const themeStore = useThemeStore()
 
-// 主题配置
+// 主题配置 - 使用统一的主题系统
 const themes = [
-  { label: '浅色主题', value: 'light', color: '#ffffff' },
-  { label: '深色主题', value: 'dark', color: '#1a1a2e' },
-  { label: '科技蓝', value: 'blue', color: '#0066cc' },
-  { label: '自动切换', value: 'auto', color: 'linear-gradient(45deg, #ffffff 50%, #1a1a2e 50%)' }
+  { label: '科技蓝', value: 'tech-blue', color: '#0ea5e9' },
+  { label: '深绿色', value: 'deep-green', color: '#059669' },
+  { label: '淡紫色', value: 'light-purple', color: '#8b5cf6' },
+  { label: '暗黑模式', value: 'dark', color: '#1e293b' }
 ]
 
 // 系统设置
@@ -251,7 +251,7 @@ const resetSettings = () => {
       browser: true
     }
 
-    themeStore.setTheme('light')
+    themeStore.setTheme('tech-blue')
     console.log('设置已重置为默认值')
     alert('设置已重置为默认值！')
   }
@@ -271,8 +271,16 @@ const resetSettings = () => {
 .page-header h1 {
   font-size: 28px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-icon {
+  color: var(--theme-brand-primary);
+  font-size: 24px;
 }
 
 .page-header p {
@@ -297,10 +305,18 @@ const resetSettings = () => {
 .settings-section h2 {
   font-size: 20px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 20px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--color-border-primary);
+  border-bottom: 1px solid var(--theme-border-base);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-icon {
+  color: var(--theme-brand-primary);
+  font-size: 18px;
 }
 
 .setting-item {

@@ -1,25 +1,10 @@
 /* 主题系统索引文件 */
 
-/* 导入主题基础 */
+/* 导入主题基础 - 包含所有四个主题定义 */
 @import "./theme-base.css";
 
-/* 导入浅色主题（默认） */
-@import "./theme-light.css";
-
-/* 导入暗黑主题 */
-@import "./theme-dark.css";
-
-/* 导入科技蓝主题 */
-@import "./theme-tech-blue.css";
-
-/* 导入深绿色主题 */
-@import "./theme-deep-green.css";
-
-/* 导入浅紫色主题 */
-@import "./theme-light-purple.css";
-
-/* 导入侧边栏主题样式 */
-@import "./theme-sidebar.css";
+/* 导入主题别名映射 - 解决颜色割裂问题 */
+@import "./theme-aliases.css";
 
 /* 默认使用浅色主题 */
 :root {

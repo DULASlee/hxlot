@@ -161,6 +161,8 @@ const testApi = async () => {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+  background: var(--theme-bg-base);
+  color: var(--theme-text-primary);
 }
 
 .login-section,
@@ -169,8 +171,18 @@ const testApi = async () => {
 .api-section {
   margin-bottom: 30px;
   padding: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--theme-border-base);
   border-radius: 8px;
+  background: var(--theme-bg-component);
+  box-shadow: var(--theme-shadow-sm);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.login-section:hover,
+.user-section:hover,
+.theme-section:hover,
+.api-section:hover {
+  box-shadow: var(--theme-shadow-md);
 }
 
 .form-group {
@@ -180,81 +192,151 @@ const testApi = async () => {
 .form-group label {
   display: block;
   margin-bottom: 5px;
-  font-weight: bold;
+  font-weight: 600;
+  color: var(--theme-text-primary);
 }
 
 .form-group input {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 8px 12px;
+  border: 1px solid var(--theme-border-base);
+  border-radius: 6px;
+  background: var(--theme-bg-component);
+  color: var(--theme-text-primary);
+  font-size: 14px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--theme-brand-primary);
+  box-shadow: 0 0 0 3px var(--theme-brand-primary-light);
+}
+
+.form-group input::placeholder {
+  color: var(--theme-text-tertiary);
 }
 
 .login-btn,
 .logout-btn {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
+  background: var(--theme-brand-primary);
+  color: var(--theme-text-inverse);
+  padding: 12px 24px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.login-btn:hover,
+.logout-btn:hover {
+  background: var(--theme-brand-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--theme-shadow-md);
 }
 
 .login-btn:disabled {
-  background-color: #ccc;
+  background: var(--theme-text-disabled);
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .logout-btn {
-  background-color: #dc3545;
+  background: var(--theme-danger);
+}
+
+.logout-btn:hover {
+  background: var(--theme-danger-hover);
 }
 
 .theme-controls {
   display: flex;
   gap: 15px;
   margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 .theme-controls label {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--theme-border-base);
+  border-radius: 6px;
+  background: var(--theme-bg-sunken);
+  color: var(--theme-text-primary);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-controls label:hover {
+  background: var(--theme-bg-hover);
+  border-color: var(--theme-brand-primary);
+}
+
+.theme-controls input[type="radio"] {
+  accent-color: var(--theme-brand-primary);
 }
 
 .api-result {
   margin-top: 15px;
-  padding: 10px;
-  background-color: #f8f9fa;
-  border-radius: 4px;
-  font-family: monospace;
+  padding: 16px;
+  background: var(--theme-bg-sunken);
+  border: 1px solid var(--theme-border-base);
+  border-radius: 6px;
+  font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
   font-size: 12px;
+  color: var(--theme-text-secondary);
+  overflow-x: auto;
+}
+
+.user-info {
+  background: var(--theme-bg-sunken);
+  padding: 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
 }
 
 .user-info p {
-  margin: 5px 0;
+  margin: 8px 0;
+  color: var(--theme-text-secondary);
 }
 
-/* 深色主题样式 */
-:global(.dark) .auth-example {
-  color: #fff;
+.user-info strong {
+  color: var(--theme-text-primary);
+  font-weight: 600;
 }
 
-:global(.dark) .login-section,
-:global(.dark) .user-section,
-:global(.dark) .theme-section,
-:global(.dark) .api-section {
-  border-color: #555;
-  background-color: #2d2d2d;
+h2 {
+  color: var(--theme-text-primary);
+  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: 600;
 }
 
-:global(.dark) .form-group input {
-  background-color: #444;
-  border-color: #555;
-  color: #fff;
+h3 {
+  color: var(--theme-text-primary);
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 600;
 }
 
-:global(.dark) .api-result {
-  background-color: #444;
-  color: #fff;
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .auth-example {
+    padding: 16px;
+    margin: 0 16px;
+  }
+
+  .theme-controls {
+    flex-direction: column;
+  }
+
+  .theme-controls label {
+    width: 100%;
+  }
 }
 </style>

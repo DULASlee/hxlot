@@ -1,119 +1,181 @@
 <template>
   <div class="dashboard-view">
     <div class="dashboard-header">
-      <h1>SmartAbp 工作台</h1>
-      <p>欢迎使用 SmartAbp 企业管理系统</p>
+      <div class="header-content">
+        <div class="header-text">
+          <h1><i class="fas fa-tachometer-alt header-icon"></i>SmartAbp 工作台</h1>
+          <p>欢迎使用 SmartAbp 企业管理系统</p>
+        </div>
+        <div class="header-actions">
+          <button class="header-btn" @click="refreshDashboard">
+            <i class="fas fa-sync-alt"></i>
+            <span>刷新数据</span>
+          </button>
+          <button class="header-btn" @click="exportReport">
+            <i class="fas fa-download"></i>
+            <span>导出报告</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="dashboard-grid">
       <!-- 统计卡片 -->
       <div class="stat-cards">
-        <div class="stat-card">
+        <div class="stat-card users">
           <div class="stat-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M16 7c0-2.21-1.79-4-4-4S8 4.79 8 7s1.79 4 4 4 4-1.79 4-4zM12 14c-3.31 0-6 2.69-6 6v2h12v-2c0-3.31-2.69-6-6-6z"/>
-            </svg>
+            <i class="fas fa-users"></i>
           </div>
           <div class="stat-content">
             <div class="stat-number">1,234</div>
             <div class="stat-label">用户总数</div>
+            <div class="stat-trend">
+              <i class="fas fa-arrow-up trend-up"></i>
+              <span>+12% 本月</span>
+            </div>
           </div>
         </div>
 
-        <div class="stat-card">
+        <div class="stat-card projects">
           <div class="stat-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/>
-            </svg>
+            <i class="fas fa-project-diagram"></i>
           </div>
           <div class="stat-content">
             <div class="stat-number">56</div>
             <div class="stat-label">项目数量</div>
+            <div class="stat-trend">
+              <i class="fas fa-arrow-up trend-up"></i>
+              <span>+3 本周</span>
+            </div>
           </div>
         </div>
 
-        <div class="stat-card">
+        <div class="stat-card health">
           <div class="stat-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-            </svg>
+            <i class="fas fa-chart-line"></i>
           </div>
           <div class="stat-content">
             <div class="stat-number">89%</div>
             <div class="stat-label">系统健康度</div>
+            <div class="stat-trend">
+              <i class="fas fa-arrow-down trend-down"></i>
+              <span>-2% 今日</span>
+            </div>
           </div>
         </div>
 
-        <div class="stat-card">
+        <div class="stat-card logs">
           <div class="stat-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-            </svg>
+            <i class="fas fa-file-alt"></i>
           </div>
           <div class="stat-content">
             <div class="stat-number">2,456</div>
             <div class="stat-label">今日日志</div>
+            <div class="stat-trend">
+              <i class="fas fa-arrow-up trend-up"></i>
+              <span>+156 今日</span>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- 快速操作 -->
       <div class="quick-actions">
-        <h2>快速操作</h2>
+        <h2><i class="fas fa-bolt"></i>快速操作</h2>
         <div class="action-grid">
           <button class="action-btn" @click="$router.push('/system/users')">
-            <svg viewBox="0 0 24 24">
-              <path d="M16 7c0-2.21-1.79-4-4-4S8 4.79 8 7s1.79 4 4 4 4-1.79 4-4zM12 14c-3.31 0-6 2.69-6 6v2h12v-2c0-3.31-2.69-6-6-6z"/>
-            </svg>
-            <span>用户管理</span>
+            <i class="fas fa-users"></i>
+            <div class="action-content">
+              <span class="action-title">用户管理</span>
+              <span class="action-desc">管理系统用户</span>
+            </div>
           </button>
 
           <button class="action-btn" @click="$router.push('/projects/list')">
-            <svg viewBox="0 0 24 24">
-              <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/>
-            </svg>
-            <span>项目管理</span>
+            <i class="fas fa-project-diagram"></i>
+            <div class="action-content">
+              <span class="action-title">项目管理</span>
+              <span class="action-desc">查看项目列表</span>
+            </div>
           </button>
 
           <button class="action-btn" @click="$router.push('/system/logs')">
-            <svg viewBox="0 0 24 24">
-              <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-            </svg>
-            <span>系统日志</span>
+            <i class="fas fa-file-alt"></i>
+            <div class="action-content">
+              <span class="action-title">系统日志</span>
+              <span class="action-desc">查看系统日志</span>
+            </div>
           </button>
 
           <button class="action-btn" @click="testTheme">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 18c-.89 0-1.74-.19-2.5-.54C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.46C10.26 6.19 11.11 6 12 6a6 6 0 0 1 0 12z"/>
-            </svg>
-            <span>主题测试</span>
+            <i class="fas fa-palette"></i>
+            <div class="action-content">
+              <span class="action-title">主题测试</span>
+              <span class="action-desc">测试主题切换</span>
+            </div>
+          </button>
+
+          <button class="action-btn" @click="$router.push('/settings')">
+            <i class="fas fa-cog"></i>
+            <div class="action-content">
+              <span class="action-title">系统设置</span>
+              <span class="action-desc">配置系统参数</span>
+            </div>
+          </button>
+
+          <button class="action-btn" @click="$router.push('/dashboard/system/permissions')">
+            <i class="fas fa-shield-alt"></i>
+            <div class="action-content">
+              <span class="action-title">权限管理</span>
+              <span class="action-desc">管理用户权限</span>
+            </div>
           </button>
         </div>
       </div>
 
       <!-- 系统状态 -->
       <div class="system-status">
-        <h2>系统状态</h2>
+        <h2><i class="fas fa-server"></i>系统状态</h2>
         <div class="status-list">
           <div class="status-item">
-            <div class="status-indicator success"></div>
-            <span>数据库连接</span>
-            <span class="status-value">正常</span>
+            <div class="status-icon">
+              <i class="fas fa-database"></i>
+            </div>
+            <div class="status-info">
+              <span class="status-name">数据库连接</span>
+              <div class="status-indicator success"></div>
+            </div>
+            <span class="status-value success">正常</span>
           </div>
           <div class="status-item">
-            <div class="status-indicator success"></div>
-            <span>缓存服务</span>
-            <span class="status-value">正常</span>
+            <div class="status-icon">
+              <i class="fas fa-memory"></i>
+            </div>
+            <div class="status-info">
+              <span class="status-name">缓存服务</span>
+              <div class="status-indicator success"></div>
+            </div>
+            <span class="status-value success">正常</span>
           </div>
           <div class="status-item">
-            <div class="status-indicator warning"></div>
-            <span>磁盘空间</span>
-            <span class="status-value">75%</span>
+            <div class="status-icon">
+              <i class="fas fa-hdd"></i>
+            </div>
+            <div class="status-info">
+              <span class="status-name">磁盘空间</span>
+              <div class="status-indicator warning"></div>
+            </div>
+            <span class="status-value warning">75%</span>
           </div>
           <div class="status-item">
-            <div class="status-indicator success"></div>
-            <span>内存使用</span>
-            <span class="status-value">45%</span>
+            <div class="status-icon">
+              <i class="fas fa-microchip"></i>
+            </div>
+            <div class="status-info">
+              <span class="status-name">内存使用</span>
+              <div class="status-indicator success"></div>
+            </div>
+            <span class="status-value success">45%</span>
           </div>
         </div>
       </div>
@@ -134,6 +196,18 @@ const testTheme = () => {
   // 测试主题切换
   themeStore.toggleDarkMode()
 }
+
+const refreshDashboard = () => {
+  console.log('刷新仪表板数据...')
+  // 这里可以添加实际的数据刷新逻辑
+  alert('仪表板数据已刷新！')
+}
+
+const exportReport = () => {
+  console.log('导出报告...')
+  // 这里可以添加实际的报告导出逻辑
+  alert('报告导出功能开发中...')
+}
 </script>
 
 <style scoped>
@@ -144,19 +218,69 @@ const testTheme = () => {
 
 .dashboard-header {
   margin-bottom: 32px;
+  background: var(--theme-bg-component);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: var(--theme-shadow-sm);
 }
 
-.dashboard-header h1 {
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.header-text h1 {
   font-size: 28px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--theme-text-primary);
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.dashboard-header p {
+.header-icon {
+  color: var(--theme-brand-primary);
+  font-size: 24px;
+}
+
+.header-text p {
   font-size: 16px;
-  color: var(--color-text-secondary);
+  color: var(--theme-text-secondary);
   margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.header-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--theme-brand-primary);
+  color: var(--theme-text-inverse);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-btn:hover {
+  background: var(--theme-brand-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--theme-shadow-md);
+}
+
+.header-btn i {
+  font-size: 14px;
 }
 
 .dashboard-grid {
@@ -175,168 +299,316 @@ const testTheme = () => {
 .stat-card {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   padding: 24px;
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
+  background: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-base);
+  border-radius: 12px;
+  box-shadow: var(--theme-shadow-sm);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
 .stat-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+  box-shadow: var(--theme-shadow-lg);
+  transform: translateY(-4px);
 }
 
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--theme-brand-primary);
+  transition: all 0.3s ease;
+}
+
+.stat-card.users::before { background: var(--theme-brand-primary); }
+.stat-card.projects::before { background: var(--theme-success); }
+.stat-card.health::before { background: var(--theme-warning); }
+.stat-card.logs::before { background: var(--theme-info); }
+
 .stat-icon {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-primary-light);
-  border-radius: 8px;
-  color: var(--color-primary);
+  background: var(--theme-brand-primary-light);
+  border-radius: 12px;
+  color: var(--theme-brand-primary);
+  font-size: 24px;
+  flex-shrink: 0;
 }
 
-.stat-icon svg {
-  width: 24px;
-  height: 24px;
-  fill: currentColor;
+.stat-card.users .stat-icon {
+  background: var(--theme-brand-primary-light);
+  color: var(--theme-brand-primary);
+}
+
+.stat-card.projects .stat-icon {
+  background: var(--theme-success-light);
+  color: var(--theme-success);
+}
+
+.stat-card.health .stat-icon {
+  background: var(--theme-warning-light);
+  color: var(--theme-warning);
+}
+
+.stat-card.logs .stat-icon {
+  background: var(--theme-info-light);
+  color: var(--theme-info);
 }
 
 .stat-content {
   flex: 1;
+  min-width: 0;
 }
 
 .stat-number {
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--color-text-primary);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--theme-text-primary);
   margin-bottom: 4px;
+  line-height: 1.2;
 }
 
 .stat-label {
   font-size: 14px;
-  color: var(--color-text-secondary);
+  color: var(--theme-text-secondary);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.stat-trend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.trend-up {
+  color: var(--theme-success);
+}
+
+.trend-down {
+  color: var(--theme-danger);
+}
+
+.stat-trend span {
+  color: var(--theme-text-tertiary);
 }
 
 /* 快速操作 */
 .quick-actions {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
+  background: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-base);
+  border-radius: 12px;
   padding: 24px;
+  box-shadow: var(--theme-shadow-sm);
 }
 
 .quick-actions h2 {
   font-size: 20px;
   font-weight: 600;
-  color: var(--color-text-primary);
-  margin-bottom: 16px;
+  color: var(--theme-text-primary);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quick-actions h2 i {
+  color: var(--theme-brand-primary);
+  font-size: 18px;
 }
 
 .action-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
+  gap: 16px;
 }
 
 .action-btn {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: 6px;
-  color: var(--color-text-primary);
-  transition: all 0.3s ease;
+  gap: 16px;
+  padding: 20px;
+  background: var(--theme-bg-sunken);
+  border: 1px solid var(--theme-border-base);
+  border-radius: 10px;
+  color: var(--theme-text-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  text-align: left;
 }
 
 .action-btn:hover {
-  background: var(--color-primary-light);
-  color: var(--color-primary);
-  border-color: var(--color-primary);
+  background: var(--theme-bg-hover);
+  border-color: var(--theme-brand-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--theme-shadow-md);
 }
 
-.action-btn svg {
+.action-btn i {
+  font-size: 20px;
+  color: var(--theme-brand-primary);
+  flex-shrink: 0;
   width: 20px;
-  height: 20px;
-  fill: currentColor;
+  text-align: center;
 }
 
-.action-btn span {
+.action-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.action-title {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--theme-text-primary);
+}
+
+.action-desc {
+  font-size: 12px;
+  color: var(--theme-text-tertiary);
 }
 
 /* 系统状态 */
 .system-status {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
+  background: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-base);
+  border-radius: 12px;
   padding: 24px;
+  box-shadow: var(--theme-shadow-sm);
 }
 
 .system-status h2 {
   font-size: 20px;
   font-weight: 600;
-  color: var(--color-text-primary);
-  margin-bottom: 16px;
+  color: var(--theme-text-primary);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.system-status h2 i {
+  color: var(--theme-brand-primary);
+  font-size: 18px;
 }
 
 .status-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .status-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: var(--color-bg-secondary);
-  border-radius: 6px;
+  gap: 16px;
+  padding: 16px;
+  background: var(--theme-bg-sunken);
+  border: 1px solid var(--theme-border-light);
+  border-radius: 10px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.status-item:hover {
+  background: var(--theme-bg-hover);
+  border-color: var(--theme-border-base);
+}
+
+.status-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--theme-brand-primary-light);
+  border-radius: 8px;
+  color: var(--theme-brand-primary);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.status-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.status-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--theme-text-primary);
 }
 
 .status-indicator {
   width: 8px;
   height: 8px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .status-indicator.success {
-  background: var(--color-success-500);
+  background: var(--theme-success);
 }
 
 .status-indicator.warning {
-  background: var(--color-warning-500);
+  background: var(--theme-warning);
 }
 
 .status-indicator.error {
-  background: var(--color-error-500);
-}
-
-.status-item span:first-of-type {
-  flex: 1;
-  font-size: 14px;
-  color: var(--color-text-primary);
+  background: var(--theme-danger);
 }
 
 .status-value {
   font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.status-value.success {
+  color: var(--theme-success);
+  background: var(--theme-success-light);
+}
+
+.status-value.warning {
+  color: var(--theme-warning);
+  background: var(--theme-warning-light);
+}
+
+.status-value.error {
+  color: var(--theme-danger);
+  background: var(--theme-danger-light);
 }
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .dashboard-header h1 {
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-text h1 {
     font-size: 24px;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .stat-cards {
@@ -345,6 +617,18 @@ const testTheme = () => {
 
   .action-grid {
     grid-template-columns: 1fr;
+  }
+
+  .action-btn {
+    padding: 16px;
+  }
+
+  .status-item {
+    padding: 12px;
+  }
+
+  .stat-card {
+    padding: 20px;
   }
 }
 </style>
