@@ -1,7 +1,8 @@
 ---
-description: 
-globs: 
+description: SmartAbp交互反馈强制规则 - 确保沟通增强机制
+globs: ["**/*"]
 alwaysApply: true
+priority: 1100
 ---
 - 每次执行关键操作前，必须调用 @interactive-feedback 获取用户确认  
 
