@@ -205,8 +205,8 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { logger } from '@/utils/logger'
-import LogViewer from '@/components/LogViewer.vue'
-import LogDashboard from '@/components/LogDashboard.vue'
+import LogViewer from './LogViewer.vue'
+import LogDashboard from '@/views/log/LogDashboard.vue'
 
 const router = useRouter()
 

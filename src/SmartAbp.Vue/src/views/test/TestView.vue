@@ -156,7 +156,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useThemeStore } from '../stores/theme'
+import { useThemeStore } from '@/stores/theme'
 
 const router = useRouter()
 const themeStore = useThemeStore()

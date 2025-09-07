@@ -134,9 +134,9 @@ const jsonData = logExporter.exportLogs({
 &lt;script setup&gt;
 import { ref } from 'vue'
 import { logger } from '@/utils/logger'
-import LogViewer from '@/components/LogViewer.vue'
-import LogSearchFilter from '@/components/LogSearchFilter.vue'
-import LogDashboard from '@/components/LogDashboard.vue'
+import LogViewer from './LogViewer.vue'
+import LogSearchFilter from './LogSearchFilter.vue'
+import LogDashboard from '@/views/log/LogDashboard.vue'
 
 const logs = ref(logger.getLogs())
 
@@ -209,7 +209,7 @@ const handleFiltered = (filteredLogs) => {
 import { ElMessage } from 'element-plus'
 import { logger } from '@/utils/logger'
 import { logManager } from '@/utils/logManager'
-import LogDashboard from '@/components/LogDashboard.vue'
+import LogDashboard from '@/views/log/LogDashboard.vue'
 
 // 生成不同类型的日志
 const generateInfoLog = () => {

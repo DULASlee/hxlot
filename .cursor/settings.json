@@ -1,0 +1,24 @@
+{
+  // ===== 性能与稳定性优化 =====
+  "terminal.integrated.gpuAcceleration": "off",            // 关终端 GPU 加速，减少卡顿
+  "cursor.experimental.gpuRendering": false,               // 关整体 GPU 渲染，降低显存占用
+  "terminal.maxMemory": 2048,                              // 限制终端最大内存（MB）
+  "cursor.memoryAllocation": "medium",                     // 中等内存分配，防止爆掉
+  "workbench.editor.enablePreview": false,                 // 打开文件直接固定标签，减少频繁切换卡顿
+  "editor.linkedEditing": true,                            // 启用智能联动编辑（保留智能功能）
+  "editor.suggest.snippetsPreventQuickSuggestions": false, // 保留代码提示的即时性
+
+  // ===== 默认终端配置（Win11不卡方案） =====
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "terminal.integrated.profiles": {
+    "Git Bash": {
+      "path": "C:\\Program Files\\Git\\bin\\bash.exe"
+    },
+    "PowerShell": {
+      "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+    },
+    "Command Prompt": {
+      "path": "C:\\Windows\\System32\\cmd.exe"
+    }
+  }  
+}

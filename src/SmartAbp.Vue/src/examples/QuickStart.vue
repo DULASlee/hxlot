@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import { logger } from '@/utils/logger'
 import { logManager } from '@/utils/logManager'
-import LogViewer from '@/components/LogViewer.vue'
+import LogViewer from '@/views/log/LogViewer.vue'
 
 // 基础日志记录示例
 const logInfo = () => {
