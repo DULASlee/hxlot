@@ -7,7 +7,7 @@
 /* 副菜单样式已移入SmartAbpLayout.vue组件中 */
 
 /* 布局样式 - 使用设计系统 */
-@import './design-system/layouts/admin.css';
+/* @import './design-system/layouts/admin.css'; -- 临时注释，可能与SmartAbpLayout冲突 */
 @import './design-system/layouts/dashboard.css';
 
 /* 全局基础样式 */
