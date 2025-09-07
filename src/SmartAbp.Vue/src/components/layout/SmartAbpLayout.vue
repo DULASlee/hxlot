@@ -84,30 +84,30 @@
 
         <div class="submenu-content">
           <template v-if="activeMenu === 'system'">
-            <div class="submenu-item" @click="router.push('/dashboard/system/users')">
+            <div class="submenu-item" @click="router.push('/Admin/users')">
               <i class="fas fa-users"></i>
               <span>用户管理</span>
             </div>
-            <div class="submenu-item" @click="router.push('/dashboard/system/roles')">
+            <div class="submenu-item" @click="router.push('/Admin/roles')">
               <i class="fas fa-user-shield"></i>
               <span>角色管理</span>
             </div>
-            <div class="submenu-item" @click="router.push('/dashboard/system/permissions')">
+            <div class="submenu-item" @click="router.push('/Admin/permissions')">
               <i class="fas fa-key"></i>
               <span>权限管理</span>
             </div>
-            <div class="submenu-item" @click="router.push('/dashboard/system/logs')">
-              <i class="fas fa-file-alt"></i>
-              <span>日志管理</span>
+            <div class="submenu-item" @click="router.push('/Admin/settings')">
+              <i class="fas fa-cogs"></i>
+              <span>系统设置</span>
             </div>
           </template>
 
           <template v-else-if="activeMenu === 'projects'">
-            <div class="submenu-item" @click="router.push('/dashboard/projects/list')">
+            <div class="submenu-item" @click="router.push('/Project')">
               <i class="fas fa-tasks"></i>
               <span>项目列表</span>
             </div>
-            <div class="submenu-item" @click="router.push('/dashboard/projects/analysis')">
+            <div class="submenu-item" @click="router.push('/Project/analysis')">
               <i class="fas fa-chart-line"></i>
               <span>项目分析</span>
             </div>
@@ -199,13 +199,20 @@ const menuItems = ref([
     title: '系统管理',
     icon: 'fas fa-cog',
     children: [
-      { key: 'system-users', title: '用户管理', icon: 'fas fa-users', path: '/dashboard/system/users' },
-      { key: 'system-user', title: '用户管理(旧)', icon: 'fas fa-user-circle', path: '/dashboard/system/user' },
-      { key: 'system-user-list', title: '用户列表', icon: 'fas fa-list-ul', path: '/dashboard/system/user-list' },
-      { key: 'system-roles', title: '角色管理', icon: 'fas fa-user-shield', path: '/dashboard/system/roles' },
-      { key: 'system-user-roles', title: '用户角色', icon: 'fas fa-users-cog', path: '/dashboard/system/user-roles' },
-      { key: 'system-permissions', title: '权限管理', icon: 'fas fa-key', path: '/dashboard/system/permissions' },
-      { key: 'system-logs', title: '日志管理', icon: 'fas fa-file-alt', path: '/dashboard/system/logs' }
+      { key: 'system-users', title: '用户管理', icon: 'fas fa-users', path: '/Admin/users' },
+      { key: 'system-roles', title: '角色管理', icon: 'fas fa-user-shield', path: '/Admin/roles' },
+      { key: 'system-permissions', title: '权限管理', icon: 'fas fa-key', path: '/Admin/permissions' },
+      { key: 'system-settings', title: '系统设置', icon: 'fas fa-cogs', path: '/Admin/settings' }
+    ]
+  },
+  {
+    key: 'user-management',
+    title: '用户管理',
+    icon: 'fas fa-users',
+    children: [
+      { key: 'user-list', title: '用户列表', icon: 'fas fa-list-ul', path: '/User' },
+      { key: 'user-management', title: '用户管理', icon: 'fas fa-user-circle', path: '/User/management' },
+      { key: 'user-roles', title: '用户角色', icon: 'fas fa-users-cog', path: '/User/roles' }
     ]
   },
   {
@@ -213,8 +220,8 @@ const menuItems = ref([
     title: '项目管理',
     icon: 'fas fa-project-diagram',
     children: [
-      { key: 'project-list', title: '项目列表', icon: 'fas fa-tasks', path: '/dashboard/projects/list' },
-      { key: 'project-analysis', title: '项目分析', icon: 'fas fa-chart-line', path: '/dashboard/projects/analysis' }
+      { key: 'project-list', title: '项目列表', icon: 'fas fa-tasks', path: '/Project' },
+      { key: 'project-analysis', title: '项目分析', icon: 'fas fa-chart-line', path: '/Project/analysis' }
     ]
   }
 ])
@@ -332,7 +339,7 @@ const navigateToExternal = (name: string) => {
 }
 
 const openSettings = () => {
-  router.push('/settings')
+  router.push('/Admin/settings')
 }
 
 const goToProfile = () => {

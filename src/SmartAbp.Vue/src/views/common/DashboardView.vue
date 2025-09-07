@@ -83,7 +83,7 @@
       <div class="quick-actions">
         <h2><i class="fas fa-bolt"></i>快速操作</h2>
         <div class="action-grid">
-          <button class="action-btn" @click="$router.push('/system/users')">
+          <button class="action-btn" @click="$router.push('/Admin/users')">
             <i class="fas fa-users"></i>
             <div class="action-content">
               <span class="action-title">用户管理</span>
@@ -91,7 +91,7 @@
             </div>
           </button>
 
-          <button class="action-btn" @click="$router.push('/projects/list')">
+          <button class="action-btn" @click="$router.push('/Project')">
             <i class="fas fa-project-diagram"></i>
             <div class="action-content">
               <span class="action-title">项目管理</span>
@@ -99,7 +99,7 @@
             </div>
           </button>
 
-          <button class="action-btn" @click="$router.push('/system/logs')">
+          <button class="action-btn" @click="$router.push('/Log')">
             <i class="fas fa-file-alt"></i>
             <div class="action-content">
               <span class="action-title">系统日志</span>
@@ -115,7 +115,7 @@
             </div>
           </button>
 
-          <button class="action-btn" @click="$router.push('/settings')">
+          <button class="action-btn" @click="$router.push('/Admin/settings')">
             <i class="fas fa-cog"></i>
             <div class="action-content">
               <span class="action-title">系统设置</span>
@@ -123,7 +123,7 @@
             </div>
           </button>
 
-          <button class="action-btn" @click="$router.push('/dashboard/system/permissions')">
+          <button class="action-btn" @click="$router.push('/Admin/permissions')">
             <i class="fas fa-shield-alt"></i>
             <div class="action-content">
               <span class="action-title">权限管理</span>

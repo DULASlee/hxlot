@@ -26,7 +26,7 @@
     <!-- 功能导航卡片 -->
     <div class="feature-cards">
       <div class="card-grid">
-        <div class="feature-card" @click="navigateTo('/system/logs/dashboard')">
+        <div class="feature-card" @click="navigateTo('/Log/dashboard')">
           <div class="card-icon">📊</div>
           <div class="card-content">
             <h3>日志仪表板</h3>
@@ -45,7 +45,7 @@
           <div class="card-arrow">→</div>
         </div>
 
-        <div class="feature-card" @click="navigateTo('/system/logs/viewer')">
+        <div class="feature-card" @click="navigateTo('/Log/viewer')">
           <div class="card-icon">👁️</div>
           <div class="card-content">
             <h3>日志查看器</h3>

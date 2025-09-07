@@ -76,17 +76,17 @@
           <div class="test-card">
             <h3>系统管理页面</h3>
             <div class="nav-buttons">
-              <button @click="navigateTo('/system/users')">用户管理</button>
-              <button @click="navigateTo('/system/roles')">角色管理</button>
-              <button @click="navigateTo('/system/permissions')">权限管理</button>
+              <button @click="navigateTo('/Admin/users')">用户管理</button>
+              <button @click="navigateTo('/Admin/roles')">角色管理</button>
+              <button @click="navigateTo('/Admin/permissions')">权限管理</button>
             </div>
           </div>
 
           <div class="test-card">
             <h3>项目管理页面</h3>
             <div class="nav-buttons">
-              <button @click="navigateTo('/projects/list')">项目列表</button>
-              <button @click="navigateTo('/projects/analysis')">项目分析</button>
+              <button @click="navigateTo('/Project')">项目列表</button>
+              <button @click="navigateTo('/Project/analysis')">项目分析</button>
             </div>
           </div>
 
@@ -94,7 +94,7 @@
             <h3>其他页面</h3>
             <div class="nav-buttons">
               <button @click="navigateTo('/profile')">个人中心</button>
-              <button @click="navigateTo('/settings')">系统设置</button>
+              <button @click="navigateTo('/Admin/settings')">系统设置</button>
               <button @click="navigateTo('/dashboard')">返回工作台</button>
             </div>
           </div>
