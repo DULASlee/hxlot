@@ -1,0 +1,231 @@
+---
+description: SmartAbp架构合规性规则 - 强制架构一致性
+globs: ["src/**/*", "doc/**/*"]
+alwaysApply: true
+priority: 900
+---
+
+# 🏗️ SmartAbp架构合规性规则
+
+## 📋 强制架构原则
+
+### 1. 前端架构约束
+**Vue.js + TypeScript 项目结构：**
+
+```typescript
+// ✅ 强制使用：模块化导入
+import { ref, computed } from 'vue'
+import { useUserStore } from '@/stores/modules/user'
+import type { UserInfo } from '@/types/user'
+
+// ❌ 严禁：全局导入
+import * as Vue from 'vue'
+```
+
+### 2. 后端架构约束
+**ABP vNext 分层架构：**
+
+```csharp
+// ✅ 强制遵循：DDD分层
+namespace SmartAbp.Application.Users
+{
+    public class UserAppService : SmartAbpAppService, IUserAppService
+    {
+        // 正确的应用服务实现
+    }
+}
+
+// ❌ 严禁：跨层直接调用
+// 应用层直接调用基础设施层
+```
+
+## 🎯 目录结构强制性检查
+
+### 前端目录合规性
+```bash
+# 必须存在的目录结构
+src/SmartAbp.Vue/src/
+├── views/                     # ✅ 必须按模块分组
+│   ├── user/                 # ✅ 用户模块
+│   ├── project/              # ✅ 项目模块
+│   ├── log/                  # ✅ 日志模块
+│   ├── system/               # ✅ 系统模块
+│   └── common/               # ✅ 通用页面
+├── components/               # ✅ 必须按功能分组
+├── stores/modules/           # ✅ 必须模块化状态管理
+└── styles/design-system/     # ✅ 必须使用统一设计系统
+```
+
+### 禁止的目录结构
+```bash
+# ❌ 严禁的目录结构
+src/SmartAbp.Vue/src/
+├── views/all-views/          # ❌ 禁止扁平化堆积
+├── components/misc/          # ❌ 禁止杂项目录
+├── styles/themes/            # ❌ 禁止多套主题系统
+└── utils/helpers/            # ❌ 禁止模糊命名
+```
+
+## 🔗 依赖关系规则
+
+### 前端依赖层次
+```typescript
+// ✅ 允许的依赖关系
+Views → Components → Composables → Utils
+Stores → Services → Utils
+Components → Stores (通过composables)
+
+// ❌ 禁止的依赖关系
+Utils → Views           // ❌ 工具不能依赖视图
+Components → Views      // ❌ 组件不能依赖视图
+Services → Stores       // ❌ 服务不能依赖状态
+```
+
+### 后端依赖层次
+```csharp
+// ✅ 允许的依赖关系
+Web → HttpApi → Application → Domain
+EntityFrameworkCore → Domain
+
+// ❌ 禁止的依赖关系
+Domain → Application    // ❌ 域层不能依赖应用层
+Domain → Infrastructure // ❌ 域层不能依赖基础设施层
+```
+
+## 🎨 设计系统强制使用
+
+### CSS变量使用规范
+```css
+/* ✅ 强制使用：设计系统变量 */
+.user-card {
+  background: var(--theme-bg-component);
+  border: 1px solid var(--theme-border-base);
+  padding: var(--spacing-4);
+  border-radius: var(--radius-md);
+  color: var(--theme-text-primary);
+}
+
+/* ❌ 严禁使用：硬编码值 */
+.user-card {
+  background: #ffffff;     /* 禁止 */
+  border: 1px solid #e5e7eb; /* 禁止 */
+  padding: 16px;           /* 禁止 */
+  border-radius: 6px;      /* 禁止 */
+  color: #111827;          /* 禁止 */
+}
+```
+
+### 主题系统约束
+```typescript
+// ✅ 强制使用：统一主题管理
+import { useDesignSystem } from '@/composables/useDesignSystem'
+
+const { setTheme } = useDesignSystem()
+setTheme('tech-blue')  // 使用预定义主题
+
+// ❌ 严禁：自定义主题系统
+document.documentElement.style.setProperty('--color', '#custom')
+```
+
+## 📁 文件命名强制规范
+
+### Vue组件命名
+```typescript
+// ✅ 正确命名
+UserListView.vue          // 页面级组件
+UserCard.vue              // 业务组件
+BaseButton.vue            // 基础组件
+
+// ❌ 错误命名
+userList.vue              // 小写开头
+User_List.vue             // 下划线分隔
+userListComponent.vue     // 冗余后缀
+```
+
+### TypeScript文件命名
+```typescript
+// ✅ 正确命名
+userService.ts            // 服务文件
+userTypes.ts              // 类型定义
+useUser.ts                // 组合函数
+
+// ❌ 错误命名
+UserService.ts            // 大写开头
+user_service.ts           // 下划线分隔
+userServiceImpl.ts        // 冗余后缀
+```
+
+## 🔄 状态管理架构
+
+### Pinia Store结构
+```typescript
+// ✅ 强制使用：模块化Store
+// stores/modules/user.ts
+export const useUserStore = defineStore('user', () => {
+  // 状态
+  const users = ref<UserInfo[]>([])
+  const loading = ref(false)
+  
+  // 计算属性
+  const activeUsers = computed(() => ...)
+  
+  // 操作
+  const fetchUsers = async () => { ... }
+  
+  return { users, loading, activeUsers, fetchUsers }
+})
+
+// ❌ 严禁：全局Store
+// stores/index.ts 直接定义所有状态
+```
+
+## 🛡️ 类型安全强制要求
+
+### TypeScript严格模式
+```typescript
+// ✅ 强制使用：严格类型定义
+interface UserCreateRequest {
+  name: string
+  email: string
+  role: UserRole
+}
+
+const createUser = async (data: UserCreateRequest): Promise<UserInfo> => {
+  // 实现
+}
+
+// ❌ 严禁：any类型
+const createUser = async (data: any): Promise<any> => {
+  // 禁止使用any
+}
+```
+
+## 🚨 自动检查机制
+
+### 代码提交前检查
+```bash
+# 自动执行的检查序列
+1. 目录结构合规性检查
+2. 命名规范检查
+3. 依赖关系检查
+4. 设计系统使用检查
+5. 类型安全检查
+```
+
+### 违规自动处理
+- **轻微违规**: 自动修正 + 警告
+- **严重违规**: 阻止提交 + 强制修正
+- **重复违规**: 锁定文件 + 人工审核
+
+## 📊 合规性度量
+
+### 必须达到的指标
+- **目录结构合规率**: 100%
+- **命名规范合规率**: 100%
+- **设计系统使用率**: 100%
+- **类型覆盖率**: >95%
+- **重复代码率**: <5%
+
+---
+
+**🎯 架构一致性是项目成功的基石，违反架构规则将导致技术债务激增！**
