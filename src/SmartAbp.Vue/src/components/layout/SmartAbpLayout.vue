@@ -112,6 +112,21 @@
               <span>项目分析</span>
             </div>
           </template>
+
+          <template v-else-if="activeMenu === 'logs'">
+            <div class="submenu-item" @click="router.push('/Log')">
+              <i class="fas fa-list"></i>
+              <span>日志管理</span>
+            </div>
+            <div class="submenu-item" @click="router.push('/Log/viewer')">
+              <i class="fas fa-eye"></i>
+              <span>日志查看器</span>
+            </div>
+            <div class="submenu-item" @click="router.push('/Log/dashboard')">
+              <i class="fas fa-chart-bar"></i>
+              <span>日志仪表板</span>
+            </div>
+          </template>
         </div>
       </aside>
 
@@ -162,7 +177,7 @@ const sidebarCollapsed = ref(false)
 const showUserDropdown = ref(false)
 const activeMenu = ref('dashboard')
 const activeSubMenu = ref('')
-const expandedMenus = ref<string[]>(['system', 'projects'])
+const expandedMenus = ref<string[]>(['system', 'projects', 'logs'])
 const openTabs = ref([
   { key: 'dashboard', title: '工作台', icon: 'fas fa-tachometer-alt', path: '/dashboard', closable: false }
 ])
@@ -222,6 +237,16 @@ const menuItems = ref([
     children: [
       { key: 'project-list', title: '项目列表', icon: 'fas fa-tasks', path: '/Project' },
       { key: 'project-analysis', title: '项目分析', icon: 'fas fa-chart-line', path: '/Project/analysis' }
+    ]
+  },
+  {
+    key: 'logs',
+    title: '日志管理',
+    icon: 'fas fa-file-alt',
+    children: [
+      { key: 'log-management', title: '日志管理', icon: 'fas fa-list', path: '/Log' },
+      { key: 'log-viewer', title: '日志查看器', icon: 'fas fa-eye', path: '/Log/viewer' },
+      { key: 'log-dashboard', title: '日志仪表板', icon: 'fas fa-chart-bar', path: '/Log/dashboard' }
     ]
   }
 ])
@@ -384,7 +409,7 @@ watch(route, (newRoute: any) => {
   }
 
   // 确保系统管理和项目管理菜单始终展开
-  const defaultExpanded = ['system', 'projects']
+  const defaultExpanded = ['system', 'projects', 'logs']
   defaultExpanded.forEach(key => {
     if (!expandedMenus.value.includes(key)) {
       expandedMenus.value.push(key)
@@ -403,7 +428,7 @@ onMounted(() => {
   themeStore.init()
 
   // 确保副菜单默认展开
-  expandedMenus.value = ['system', 'projects']
+  expandedMenus.value = ['system', 'projects', 'logs']
 
   // 调试日志
   console.log('组件挂载完成:', {
