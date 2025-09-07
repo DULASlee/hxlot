@@ -1,10 +1,6 @@
 ---
-description: SmartAbp代码质量强制执行规则 - 零容错质量标准
-globs: ["src/**/*.{ts,vue,cs}", "**/*.{js,jsx,tsx}"]
 alwaysApply: true
-priority: 950
 ---
-
 # 🛡️ SmartAbp代码质量强制执行规则
 
 ## ⚡ 质量铁律（零容错）

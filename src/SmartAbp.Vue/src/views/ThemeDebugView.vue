@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useThemeStore } from '@/stores/theme'
 import type { ThemeType } from '@/composables/useDesignSystem'
 

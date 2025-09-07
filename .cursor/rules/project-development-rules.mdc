@@ -1,10 +1,6 @@
 ---
-description: SmartAbp项目开发铁律 - 最高优先级强制执行规则
-globs: ["**/*"]
 alwaysApply: true
-priority: 1000
 ---
-
 # 🚨 SmartAbp项目开发铁律（Cursor强制执行）
 
 ## ⚡ 开发铁律四大核心（强制执行）

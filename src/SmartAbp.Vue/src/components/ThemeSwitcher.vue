@@ -50,7 +50,7 @@ import { defineComponent, ref, computed, onMounted } from 'vue';
 // import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useThemeStore } from '@/stores/theme';
-import type { ThemeType } from '@/composables/useDesignSystem';
+// import type { ThemeType } from '@/composables/useDesignSystem';
 
 // 点击外部指令
 const vClickOutside = {

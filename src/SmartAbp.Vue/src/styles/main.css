@@ -4,8 +4,7 @@
 @import './base/reset.css';
 @import './base/variables.css';
 
-/* 主题系统 */
-@import './themes.css';
+/* 副菜单样式 */
 @import './submenu.css';
 
 /* 布局样式 */

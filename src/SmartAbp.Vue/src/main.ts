@@ -1,7 +1,5 @@
-import './styles/main.css'
-import './styles/enterprise-theme.css'
-import './styles/design-system/index.css'
-import './styles/layouts/modern-layout.css'
+import './styles/design-system/index.css'  // 统一设计系统
+import './styles/main.css'                 // 基础样式和工具类
 import './plugins/dayjs'
 
 import { createApp } from 'vue'
