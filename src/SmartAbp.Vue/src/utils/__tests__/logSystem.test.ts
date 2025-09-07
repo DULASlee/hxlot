@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { logger, LogLevel } from '../logger'
-import { logManager } from '../logManager'
-import { analyzeCurrentLogs } from '../logAnalyzer'
-import { logExporter, ExportFormat } from '../logExporter'
+import { logger, LogLevel } from '@/utils/logger'
+import { logManager } from '@/utils/logManager'
+import { analyzeCurrentLogs } from '@/utils/logAnalyzer'
+import { logExporter, ExportFormat } from '@/utils/logExporter'
 
 describe('日志系统集成测试', () => {
   beforeEach(() => {

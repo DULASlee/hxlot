@@ -4,7 +4,7 @@ import { beforeEach, vi, afterEach } from 'vitest'
 import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import router from '../router'
+import router from '@/router'
 
 // 创建测试应用
 const app = createApp({})

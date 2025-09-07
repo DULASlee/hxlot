@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import LoginForm from './auth/LoginForm.vue'
+import LoginForm from '@/components/auth/LoginForm.vue'
 import { nextTick } from 'vue'
 
 describe('LoginForm', () => {

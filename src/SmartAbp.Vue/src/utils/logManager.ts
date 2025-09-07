@@ -1,5 +1,5 @@
 import { ref, computed } from 'vue'
-import { logger, LogLevel } from './logger'
+import { logger, LogLevel } from '@/utils/logger'
 
 // 性能追踪器接口
 export interface PerformanceTracker {

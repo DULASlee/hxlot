@@ -1,5 +1,5 @@
-import { logger, LogLevel, type LogEntry } from './logger'
-import { logManager } from './logManager'
+import { logger, LogLevel, type LogEntry } from '@/utils/logger'
+import { logManager } from '@/utils/logManager'
 import dayjs from 'dayjs'
 
 // 分析结果接口

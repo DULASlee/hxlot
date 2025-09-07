@@ -1,19 +1,19 @@
 // 导入需要在函数中使用的模块
-import { logger, LogLevel } from './logger'
-import { logManager } from './logManager'
-import { analyzeCurrentLogs } from './logAnalyzer'
-import { logExporter } from './logExporter'
+import { logger, LogLevel } from '@/utils/logger'
+import { logManager } from '@/utils/logManager'
+import { analyzeCurrentLogs } from '@/utils/logAnalyzer'
+import { logExporter } from '@/utils/logExporter'
 
 // 导出日志系统核心功能
-export { logger, LogLevel, LOG_LEVEL_NAMES } from './logger'
-export { logManager, trackPerformance } from './logManager'
-export { logAnalyzer, analyzeCurrentLogs } from './logAnalyzer'
-export { logExporter, ExportFormat } from './logExporter'
+export { logger, LogLevel, LOG_LEVEL_NAMES } from '@/utils/logger'
+export { logManager, trackPerformance } from '@/utils/logManager'
+export { logAnalyzer, analyzeCurrentLogs } from '@/utils/logAnalyzer'
+export { logExporter, ExportFormat } from '@/utils/logExporter'
 
 // 导出类型
-export type { LogEntry, LogStats } from './logger'
-export type { PerformanceTracker, PerformanceStats, ErrorStats } from './logManager'
-export type { ExportConfig } from './logExporter'
+export type { LogEntry, LogStats } from '@/utils/logger'
+export type { PerformanceTracker, PerformanceStats, ErrorStats } from '@/utils/logManager'
+export type { ExportConfig } from '@/utils/logExporter'
 
 // 便捷的日志记录函数
 export const createLogger = () => logger

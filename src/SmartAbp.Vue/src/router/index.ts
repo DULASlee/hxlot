@@ -1,22 +1,22 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import SmartAbpLayout from '../components/layout/SmartAbpLayout.vue'
-import LoginView from '../views/auth/Login.vue'
+import SmartAbpLayout from '@/components/layout/SmartAbpLayout.vue'
+import LoginView from '@/views/auth/Login.vue'
 import { authService } from '@/utils/auth'
 
 // 动态导入页面组件
-const DashboardView = () => import('../views/common/DashboardView.vue')
-const UserManagement = () => import('../views/user/UserManagement.vue')
-const UserListView = () => import('../views/user/UserListView.vue')
-const UserRolesView = () => import('../views/user/UserRolesView.vue')
-const LoginTest = () => import('../views/auth/LoginTest.vue')
+const DashboardView = () => import('@/views/common/DashboardView.vue')
+const UserManagement = () => import('@/views/user/UserManagement.vue')
+const UserListView = () => import('@/views/user/UserListView.vue')
+const UserRolesView = () => import('@/views/user/UserRolesView.vue')
+const LoginTest = () => import('@/views/auth/LoginTest.vue')
 
 // 新增页面组件
-const ProfileView = () => import('../views/common/ProfileView.vue')
-const SettingsView = () => import('../views/common/SettingsView.vue')
-const ProjectListView = () => import('../views/project/ProjectListView.vue')
-const ProjectAnalysisView = () => import('../views/project/ProjectAnalysisView.vue')
-const PermissionsView = () => import('../views/system/PermissionsView.vue')
-const UsersView = () => import('../views/system/UsersView.vue')
+const ProfileView = () => import('@/views/common/ProfileView.vue')
+const SettingsView = () => import('@/views/common/SettingsView.vue')
+const ProjectListView = () => import('@/views/project/ProjectListView.vue')
+const ProjectAnalysisView = () => import('@/views/project/ProjectAnalysisView.vue')
+const PermissionsView = () => import('@/views/system/PermissionsView.vue')
+const UsersView = () => import('@/views/system/UsersView.vue')
 
 const routes: RouteRecordRaw[] = [
   // 登录页面
@@ -170,7 +170,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'roles',
         name: 'AdminRoles',
-        component: () => import('../views/system/RolesView.vue'),
+        component: () => import('@/views/system/RolesView.vue'),
         meta: { title: '角色管理', menuKey: 'admin-roles' }
       },
       {
@@ -201,7 +201,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'TestView',
-        component: () => import('../views/test/TestView.vue'),
+        component: () => import('@/views/test/TestView.vue'),
         meta: { title: '系统测试', menuKey: 'test-system' }
       },
       {
@@ -213,13 +213,13 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'theme',
         name: 'ThemeDemo',
-        component: () => import('../views/test/ThemeDemo.vue'),
+        component: () => import('@/views/test/ThemeDemo.vue'),
         meta: { title: '主题演示', menuKey: 'test-theme' }
       },
       {
         path: 'theme-debug',
         name: 'ThemeDebug',
-        component: () => import('../views/test/ThemeDebugView.vue'),
+        component: () => import('@/views/test/ThemeDebugView.vue'),
         meta: { title: '主题调试', menuKey: 'test-theme-debug' }
       }
     ]
@@ -257,7 +257,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        component: () => import('../views/common/HelpView.vue'),
+        component: () => import('@/views/common/HelpView.vue'),
         meta: { title: '帮助中心' }
       }
     ]

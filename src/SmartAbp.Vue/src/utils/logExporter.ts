@@ -1,6 +1,6 @@
-import { logger, type LogEntry, LogLevel } from './logger'
-import { logAnalyzer, type LogAnalysisResult } from './logAnalyzer'
-import { logManager } from './logManager'
+import { logger, type LogEntry, LogLevel } from '@/utils/logger'
+import { logAnalyzer, type LogAnalysisResult } from '@/utils/logAnalyzer'
+import { logManager } from '@/utils/logManager'
 import dayjs from 'dayjs'
 
 // 导出格式枚举
