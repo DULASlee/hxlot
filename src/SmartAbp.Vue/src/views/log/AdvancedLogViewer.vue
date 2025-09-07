@@ -149,11 +149,13 @@
               >
                 <template #default="{ row }">
                   <el-tag
+                    v-if="row && row.duration !== undefined"
                     :type="row.duration > 1000 ? 'danger' : row.duration > 500 ? 'warning' : 'success'"
                     size="small"
                   >
                     {{ row.duration?.toFixed(2) }}ms
                   </el-tag>
+                  <span v-else>-</span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -162,7 +164,7 @@
                 width="120"
               >
                 <template #default="{ row }">
-                  {{ formatTime(row.startTime) }}
+                  {{ row && row.startTime ? formatTime(row.startTime) : '-' }}
                 </template>
               </el-table-column>
             </el-table>
@@ -211,10 +213,10 @@
               >
                 <div class="error-header">
                   <el-tag type="danger" size="small">错误</el-tag>
-                  <span class="error-time">{{ formatDateTime(error.timestamp) }}</span>
+                  <span class="error-time">{{ error.timestamp ? formatDateTime(error.timestamp) : '-' }}</span>
                   <el-tag v-if="error.context" size="small" plain>{{ error.context }}</el-tag>
                 </div>
-                <div class="error-message">{{ error.error.message }}</div>
+                <div class="error-message">{{ error.error?.message || '未知错误' }}</div>
                 <div v-if="error.stackTrace" class="error-stack">
                   <el-collapse>
                     <el-collapse-item title="堆栈跟踪" name="stack">
@@ -269,13 +271,18 @@ const performanceEntries = computed(() => logManager.getPerformanceEntries().val
 const errorReports = computed(() => logManager.getErrorReports().value)
 
 const filteredPerformanceEntries = computed(() => {
-  let entries = performanceEntries.value.filter(e => e.duration !== undefined)
+  // 安全检查：确保performanceEntries.value存在且为数组
+  if (!performanceEntries.value || !Array.isArray(performanceEntries.value)) {
+    return []
+  }
+
+  let entries = performanceEntries.value.filter(e => e && e.duration !== undefined)
 
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     entries = entries.filter(e =>
-      e.name.toLowerCase().includes(query) ||
-      (e.category && e.category.toLowerCase().includes(query))
+      e && e.name && e.name.toLowerCase().includes(query) ||
+      (e && e.category && e.category.toLowerCase().includes(query))
     )
   }
 
@@ -283,13 +290,18 @@ const filteredPerformanceEntries = computed(() => {
 })
 
 const filteredErrorReports = computed(() => {
-  let reports = errorReports.value
+  // 安全检查：确保errorReports.value存在且为数组
+  if (!errorReports.value || !Array.isArray(errorReports.value)) {
+    return []
+  }
+
+  let reports = errorReports.value.filter(r => r && r.error) // 过滤无效数据
 
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     reports = reports.filter(r =>
-      r.error.message.toLowerCase().includes(query) ||
-      r.context?.toLowerCase().includes(query)
+      (r.error && r.error.message && r.error.message.toLowerCase().includes(query)) ||
+      (r.context && r.context.toLowerCase().includes(query))
     )
   }
 
