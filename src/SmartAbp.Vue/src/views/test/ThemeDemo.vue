@@ -158,7 +158,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useThemeStore } from '@/stores/theme';
+import { useThemeStore } from '@/stores';
 import type { ThemeType } from '@/composables/useDesignSystem';
 
 export default defineComponent({

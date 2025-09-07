@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import LoginTest from '../LoginTest.vue'
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '@/stores'
 import { authService } from '@/utils/auth'
 import { api } from '@/utils/api'
 

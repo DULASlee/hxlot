@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '@/stores'
 
 // API基础配置
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://localhost:44397'

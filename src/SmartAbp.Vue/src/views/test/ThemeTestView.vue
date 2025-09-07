@@ -92,7 +92,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useThemeStore } from '@/stores/theme'
+import { useThemeStore } from '@/stores'
 import type { ThemeType } from '@/composables/useDesignSystem'
 
 const themeStore = useThemeStore()

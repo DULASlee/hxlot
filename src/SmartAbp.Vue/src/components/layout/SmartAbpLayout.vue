@@ -150,7 +150,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useThemeStore } from '@/stores/theme'
+import { useThemeStore } from '@/stores'
 import ThemeSwitcher from '@/components/theme/ThemeSwitcher.vue'
 
 const router = useRouter()

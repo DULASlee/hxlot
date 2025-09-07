@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import { computed } from 'vue';
 import useDesignSystem, { ThemeType, THEMES } from '@/composables/useDesignSystem';
 
+export type ThemeMode = ThemeType;
+
 export const useThemeStore = defineStore('theme', () => {
   // 使用设计系统 composable
   const {

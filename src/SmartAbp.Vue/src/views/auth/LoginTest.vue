@@ -151,7 +151,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '@/stores'
 import { authService } from '@/utils/auth'
 import { api } from '@/utils/api'
 import dayjs from 'dayjs'

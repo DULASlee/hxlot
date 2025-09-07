@@ -76,7 +76,7 @@
 
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { useLogStore } from '@/stores/logs'
+import { useLogStore } from '@/stores'
 import { logger, LogLevel } from '@/utils/logger'
 import LogViewer from './LogViewer.vue'
 

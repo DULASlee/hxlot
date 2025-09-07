@@ -1,8 +1,14 @@
-// 导出所有stores
-export { useAuthStore } from './auth'
-export { useThemeStore } from './theme'
-export { useLogStore } from './logs'
+// 导出所有模块stores
+export { useAuthStore } from './modules/auth'
+export { useThemeStore } from './modules/theme'
+export { useLogStore } from './modules/log'
+export { useUserStore } from './modules/user'
+export { useProjectStore } from './modules/project'
+export { useSystemStore } from './modules/system'
 
 // 导出类型
-export type { UserInfo, LoginCredentials } from './auth'
-// export type { ThemeMode } from './theme'
+export type { UserInfo, LoginCredentials } from './modules/auth'
+export type { ThemeMode } from './modules/theme'
+export type { User, CreateUserRequest, UpdateUserRequest } from './modules/user'
+export type { Project, CreateProjectRequest, UpdateProjectRequest } from './modules/project'
+export type { SystemSettings, Permission, Role, SystemInfo } from './modules/system'

@@ -6,7 +6,7 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
-import { useThemeStore } from './stores/theme'
+import { useThemeStore } from './stores'
 import { authService } from '@/utils/auth'
 
 const app = createApp(App)
