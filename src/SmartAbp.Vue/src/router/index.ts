@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import AdminLayout from '../components/AdminLayout.vue'
 import SmartAbpLayout from '../components/SmartAbpLayout.vue'
 import LoginView from '../views/Login.vue'
 import { authService } from '@/utils/auth'
@@ -14,13 +13,13 @@ const LoginTest = () => import('../views/LoginTest.vue')
 // 新增页面组件
 const ProfileView = () => import('../views/ProfileView.vue')
 const SettingsView = () => import('../views/SettingsView.vue')
-const NotFoundView = () => import('../views/NotFoundView.vue')
 const ProjectListView = () => import('../views/projects/ProjectListView.vue')
 const ProjectAnalysisView = () => import('../views/projects/ProjectAnalysisView.vue')
 const PermissionsView = () => import('../views/system/PermissionsView.vue')
 const UsersView = () => import('../views/system/UsersView.vue')
 
 const routes: RouteRecordRaw[] = [
+  // 登录页面
   {
     path: '/login',
     name: 'Login',
@@ -33,287 +32,233 @@ const routes: RouteRecordRaw[] = [
     component: LoginTest,
     meta: { requiresAuth: false, title: '登录功能测试' }
   },
+  // 根路径重定向到工作台
   {
     path: '/',
     redirect: '/dashboard',
     meta: { requiresAuth: false }
   },
-  {
-    path: '/admin',
-    component: AdminLayout,
-    meta: {
-      requiresAuth: true,
-      requiredRoles: ['user'],
-      fallbackRoute: '/login'
-    },
-    children: [
-      {
-        path: '',
-        redirect: '/admin/dashboard'
-      },
-      {
-        path: 'dashboard',
-        name: 'AdminDashboard',
-        component: DashboardView,
-        meta: {
-          title: '仪表盘',
-          icon: 'fas fa-tachometer-alt',
-          menuKey: 'dashboard',
-          requiredRoles: ['user']
-        }
-      },
-      {
-        path: 'users',
-        name: 'AdminUsers',
-        component: () => import('../views/system/UsersView.vue'),
-        meta: { title: '用户管理', menuKey: 'users' },
-        children: [
-          {
-            path: 'list',
-            name: 'AdminUsersList',
-            component: UserListView,
-            meta: { title: '用户列表', menuKey: 'user-list' }
-          },
-          {
-            path: 'roles',
-            name: 'AdminUserRoles',
-            component: UserRolesView,
-            meta: { title: '角色管理', menuKey: 'user-roles' }
-          },
-          {
-            path: 'permissions',
-            name: 'AdminUserPermissions',
-            component: PermissionsView,
-            meta: { title: '权限管理', menuKey: 'user-permissions' }
-          }
-        ]
-      },
-      {
-        path: 'projects',
-        name: 'AdminProjects',
-        component: { template: '<router-view />' },
-        meta: { title: '项目管理', menuKey: 'projects' },
-        children: [
-          {
-            path: 'list',
-            name: 'AdminProjectsList',
-            component: ProjectListView,
-            meta: { title: '项目列表', menuKey: 'project-list' }
-          },
-          {
-            path: 'analysis',
-            name: 'AdminProjectsAnalysis',
-            component: ProjectAnalysisView,
-            meta: { title: '项目分析', menuKey: 'project-analysis' }
-          }
-        ]
-      },
-      {
-        path: 'logs',
-        name: 'AdminLogs',
-        component: () => import('@/views/LogManagement.vue'),
-        meta: {
-          title: '日志管理',
-          icon: 'fas fa-file-alt',
-          menuKey: 'logs',
-          description: '系统日志查看、分析和管理'
-        }
-      },
-      {
-        path: 'settings',
-        name: 'AdminSettings',
-        component: SettingsView,
-        meta: { title: '系统设置', menuKey: 'settings' }
-      },
-      {
-        path: 'help',
-        name: 'AdminHelp',
-        component: () => import('../views/HelpView.vue'),
-        meta: { title: '帮助中心', menuKey: 'help' }
-      },
-      {
-        path: 'profile',
-        name: 'AdminProfile',
-        component: ProfileView,
-        meta: { title: '个人中心', menuKey: 'profile' }
-      },
-      {
-        path: 'theme-demo',
-        name: 'ThemeDemo',
-        component: () => import('../views/ThemeDemo.vue'),
-        meta: { title: '主题演示', menuKey: 'theme-demo' }
-      }
-    ]
-  },
-  {
-    path: '/new-admin',
-    name: 'NewAdminLayout',
-    component: AdminLayout,
-    meta: { title: '新版管理后台', requiresAuth: true },
-    children: [
-      {
-        path: '',
-        redirect: '/new-admin/dashboard'
-      },
-      {
-        path: 'dashboard',
-        name: 'NewAdminDashboard',
-        component: DashboardView,
-        meta: { title: '仪表盘' }
-      },
-      {
-        path: 'theme-demo',
-        name: 'NewThemeDemo',
-        component: () => import('../views/ThemeDemo.vue'),
-        meta: { title: '主题演示' }
-      },
-      {
-        path: 'theme-debug',
-        name: 'ThemeDebug',
-        component: () => import('../views/ThemeDebugView.vue'),
-        meta: { title: '主题调试' }
-      }
-    ]
-  },
+  // 工作台页面
   {
     path: '/dashboard',
     component: SmartAbpLayout,
+    name: 'Dashboard',
     meta: {
+      title: '工作台',
+      icon: '📊',
       requiresAuth: true,
-      requiredRoles: ['user'], // 基础用户权限
-      fallbackRoute: '/login'  // 降级路由
+      requiredRoles: ['user']
     },
     children: [
       {
         path: '',
-        name: 'Dashboard',
         component: DashboardView,
-        meta: {
-          title: '工作台',
-          icon: '📊',
-          menuKey: 'dashboard',
-          requiredRoles: ['user']
-        }
-      },
+        meta: { title: '工作台' }
+      }
+    ]
+  },
+  // 用户管理模块
+  {
+    path: '/User',
+    component: SmartAbpLayout,
+    meta: {
+      title: '用户管理',
+      icon: '👥',
+      requiresAuth: true,
+      requiredRoles: ['user']
+    },
+    children: [
       {
-        path: 'index',
-        redirect: '/dashboard'
-      },
-      // 系统管理
-      {
-        path: 'system/users',
-        name: 'Users',
-        component: UsersView,
-        meta: { title: '用户管理', menuKey: 'system-users' }
-      },
-      {
-        path: 'system/user',
-        name: 'UserManagement',
-        component: UserManagement,
-        meta: { title: '用户管理', menuKey: 'system-user' }
-      },
-      {
-        path: 'system/user-list',
+        path: '',
         name: 'UserList',
         component: UserListView,
-        meta: { title: '用户列表', menuKey: 'system-user-list' }
+        meta: { title: '用户列表', menuKey: 'user-list' }
       },
       {
-        path: 'system/roles',
-        name: 'Roles',
-        component: () => import('../views/system/RolesView.vue'),
-        meta: { title: '角色管理', menuKey: 'system-roles' }
+        path: 'management',
+        name: 'UserManagement',
+        component: UserManagement,
+        meta: { title: '用户管理', menuKey: 'user-management' }
       },
       {
-        path: 'system/user-roles',
+        path: 'roles',
         name: 'UserRoles',
         component: UserRolesView,
-        meta: { title: '用户角色', menuKey: 'system-user-roles' }
-      },
+        meta: { title: '用户角色', menuKey: 'user-roles' }
+      }
+    ]
+  },
+  // 项目管理模块
+  {
+    path: '/Project',
+    component: SmartAbpLayout,
+    meta: {
+      title: '项目管理',
+      icon: '📁',
+      requiresAuth: true,
+      requiredRoles: ['user']
+    },
+    children: [
       {
-        path: 'system/permissions',
-        name: 'Permissions',
-        component: PermissionsView,
-        meta: { title: '权限管理', menuKey: 'system-permissions' }
-      },
-      {
-        path: 'system/logs',
-        name: 'LogManagement',
-        component: () => import('@/views/LogManagement.vue'),
-        meta: {
-          title: '日志管理',
-          icon: '📋',
-          menuKey: 'system-logs',
-          description: '系统日志查看、分析和管理'
-        }
-      },
-      {
-        path: 'system/logs/viewer',
-        name: 'LogViewer',
-        component: () => import('@/components/AdvancedLogViewer.vue'),
-        meta: {
-          title: '日志查看器',
-          icon: '👁️',
-          menuKey: 'system-logs-viewer',
-          parent: 'system-logs'
-        }
-      },
-      {
-        path: 'system/logs/dashboard',
-        name: 'LogDashboard',
-        component: () => import('@/components/LogDashboard.vue'),
-        meta: {
-          title: '日志仪表板',
-          icon: '📊',
-          menuKey: 'system-logs-dashboard',
-          parent: 'system-logs'
-        }
-      },
-      // 项目管理
-      {
-        path: 'projects/list',
+        path: '',
         name: 'ProjectList',
         component: ProjectListView,
         meta: { title: '项目列表', menuKey: 'project-list' }
       },
       {
-        path: 'projects/analysis',
+        path: 'analysis',
         name: 'ProjectAnalysis',
         component: ProjectAnalysisView,
         meta: { title: '项目分析', menuKey: 'project-analysis' }
-      },
-      // 个人中心
+      }
+    ]
+  },
+  // 日志管理模块
+  {
+    path: '/Log',
+    component: SmartAbpLayout,
+    meta: {
+      title: '日志管理',
+      icon: '📋',
+      requiresAuth: true,
+      requiredRoles: ['user']
+    },
+    children: [
       {
-        path: 'profile',
-        name: 'Profile',
-        component: ProfileView,
-        meta: { title: '个人中心', menuKey: 'profile' }
+        path: '',
+        name: 'LogList',
+        component: () => import('@/views/LogManagement.vue'),
+        meta: { title: '日志管理', menuKey: 'log-management' }
       },
-      // 系统设置
+      {
+        path: 'viewer',
+        name: 'LogViewer',
+        component: () => import('@/components/AdvancedLogViewer.vue'),
+        meta: { title: '日志查看器', menuKey: 'log-viewer' }
+      },
+      {
+        path: 'dashboard',
+        name: 'LogDashboard',
+        component: () => import('@/components/LogDashboard.vue'),
+        meta: { title: '日志仪表板', menuKey: 'log-dashboard' }
+      }
+    ]
+  },
+  // 系统管理模块
+  {
+    path: '/Admin',
+    component: SmartAbpLayout,
+    meta: {
+      title: '系统管理',
+      icon: '⚙️',
+      requiresAuth: true,
+      requiredRoles: ['admin']
+    },
+    children: [
+      {
+        path: '',
+        name: 'AdminDashboard',
+        component: DashboardView,
+        meta: { title: '系统概览', menuKey: 'admin-dashboard' }
+      },
+      {
+        path: 'users',
+        name: 'AdminUsers',
+        component: UsersView,
+        meta: { title: '用户管理', menuKey: 'admin-users' }
+      },
+      {
+        path: 'roles',
+        name: 'AdminRoles',
+        component: () => import('../views/system/RolesView.vue'),
+        meta: { title: '角色管理', menuKey: 'admin-roles' }
+      },
+      {
+        path: 'permissions',
+        name: 'AdminPermissions',
+        component: PermissionsView,
+        meta: { title: '权限管理', menuKey: 'admin-permissions' }
+      },
       {
         path: 'settings',
-        name: 'Settings',
+        name: 'AdminSettings',
         component: SettingsView,
-        meta: { title: '系统设置', menuKey: 'settings' }
+        meta: { title: '系统设置', menuKey: 'admin-settings' }
+      }
+    ]
+  },
+  // 测试页面
+  {
+    path: '/Test',
+    component: SmartAbpLayout,
+    meta: {
+      title: '测试功能',
+      icon: '🧪',
+      requiresAuth: true,
+      requiredRoles: ['user']
+    },
+    children: [
+      {
+        path: '',
+        name: 'TestView',
+        component: () => import('../views/TestView.vue'),
+        meta: { title: '系统测试', menuKey: 'test-system' }
       },
       {
-        path: 'test/login-test',
+        path: 'login',
         name: 'LoginTestPage',
         component: LoginTest,
-        meta: { title: '登录测试', icon: '🧪', menuKey: 'test-login' }
+        meta: { title: '登录测试', menuKey: 'test-login' }
       },
       {
-        path: 'test/system',
-        name: 'SystemTest',
-        component: () => import('../views/TestView.vue'),
-        meta: { title: '系统测试', icon: '🔧', menuKey: 'test-system' }
+        path: 'theme',
+        name: 'ThemeDemo',
+        component: () => import('../views/ThemeDemo.vue'),
+        meta: { title: '主题演示', menuKey: 'test-theme' }
       },
-      // 404页面 - 在主框架内显示
       {
-        path: 'not-found/:pathMatch(.*)*',
-        name: 'NotFound',
-        component: NotFoundView,
-        meta: { title: '页面未找到', menuKey: 'not-found' }
+        path: 'theme-debug',
+        name: 'ThemeDebug',
+        component: () => import('../views/ThemeDebugView.vue'),
+        meta: { title: '主题调试', menuKey: 'test-theme-debug' }
+      }
+    ]
+  },
+  // 个人中心
+  {
+    path: '/profile',
+    component: SmartAbpLayout,
+    name: 'Profile',
+    meta: {
+      title: '个人中心',
+      icon: '👤',
+      requiresAuth: true,
+      requiredRoles: ['user']
+    },
+    children: [
+      {
+        path: '',
+        component: ProfileView,
+        meta: { title: '个人中心' }
+      }
+    ]
+  },
+  // 帮助中心
+  {
+    path: '/help',
+    component: SmartAbpLayout,
+    name: 'Help',
+    meta: {
+      title: '帮助中心',
+      icon: '❓',
+      requiresAuth: true,
+      requiredRoles: ['user']
+    },
+    children: [
+      {
+        path: '',
+        component: () => import('../views/HelpView.vue'),
+        meta: { title: '帮助中心' }
       }
     ]
   },
@@ -338,10 +283,10 @@ router.beforeEach(async (to, from, next) => {
   // 检查用户是否已登录
   const isLoggedIn = authService.isTokenValid();
 
-  // 已登录用户尝试访问登录页：重定向到管理后台
+  // 已登录用户尝试访问登录页：重定向到工作台
   if (to.name === 'Login' && isLoggedIn) {
-    console.log('[路由守卫] 用户已登录，重定向到管理后台');
-    return next({ name: 'AdminDashboard' });
+    console.log('[路由守卫] 用户已登录，重定向到工作台');
+    return next({ name: 'Dashboard' });
   }
 
   // 需要认证但未登录：重定向到登录页
@@ -357,8 +302,8 @@ router.beforeEach(async (to, from, next) => {
   // 处理根路径：根据登录状态重定向
   if (to.path === '/') {
     if (isLoggedIn) {
-      console.log('[路由守卫] 根路径重定向到管理后台');
-      return next({ name: 'AdminDashboard' });
+      console.log('[路由守卫] 根路径重定向到工作台');
+      return next({ name: 'Dashboard' });
     } else {
       console.log('[路由守卫] 根路径重定向到登录页');
       return next({ name: 'Login' });
