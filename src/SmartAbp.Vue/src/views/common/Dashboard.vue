@@ -1,14 +1,13 @@
 <template>
-  <EnterpriseLayout>
+  <div class="dashboard-wrapper">
     <DashboardView :userInfo="userInfo" />
-  </EnterpriseLayout>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import EnterpriseLayout from '@/components/EnterpriseLayout.vue'
-import DashboardView from '@/components/DashboardView.vue'
+import DashboardView from '@/components/common/DashboardView.vue'
 
 const authStore = useAuthStore()
 
@@ -19,3 +18,11 @@ const userInfo = computed(() => authStore.userInfo || {
   roles: ['admin']
 })
 </script>
+
+<style scoped>
+.dashboard-wrapper {
+  padding: var(--spacing-4);
+  background: var(--theme-bg-component);
+  min-height: 100vh;
+}
+</style>

@@ -10,15 +10,10 @@
 
   // ===== 默认终端配置（Win11不卡方案） =====
   "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "terminal.integrated.profiles.windows": {"PowerShell": null},
   "terminal.integrated.profiles": {
     "Git Bash": {
       "path": "C:\\Program Files\\Git\\bin\\bash.exe"
-    },
-    "PowerShell": {
-      "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
-    },
-    "Command Prompt": {
-      "path": "C:\\Windows\\System32\\cmd.exe"
     }
   }  
 }

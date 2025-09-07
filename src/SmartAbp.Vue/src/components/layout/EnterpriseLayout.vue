@@ -230,7 +230,7 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useThemeStore } from '@/stores/theme'
-import { authService } from '../utils/auth'
+import { authService } from '@/utils/auth'
 
 // 路由
 const router = useRouter()

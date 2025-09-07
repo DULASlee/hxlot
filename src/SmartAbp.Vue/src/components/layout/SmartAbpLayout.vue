@@ -151,7 +151,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useThemeStore } from '@/stores/theme'
-import ThemeSwitcher from './ThemeSwitcher.vue'
+import ThemeSwitcher from '@/components/theme/ThemeSwitcher.vue'
 
 const router = useRouter()
 const route = useRoute()

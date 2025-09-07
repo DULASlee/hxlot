@@ -98,7 +98,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useAuthStore, useThemeStore } from '../stores'
+import { useAuthStore, useThemeStore } from '@/stores'
 import { authService } from '@/utils/auth'
 import { api } from '@/utils/api'
 

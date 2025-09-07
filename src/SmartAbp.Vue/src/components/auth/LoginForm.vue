@@ -170,7 +170,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watchEffect } from 'vue'
-import { useAuth } from '../utils/auth'
+import { useAuth } from '@/utils/auth'
 import { useRouter } from 'vue-router'
 import { debounce } from 'lodash-es'
 

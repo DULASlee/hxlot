@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import SmartAbpLayout from '../components/SmartAbpLayout.vue'
+import SmartAbpLayout from '../components/layout/SmartAbpLayout.vue'
 import LoginView from '../views/auth/Login.vue'
 import { authService } from '@/utils/auth'
 
 // 动态导入页面组件
 const DashboardView = () => import('../views/common/DashboardView.vue')
-const UserManagement = () => import('../components/UserManagement.vue')
-const UserListView = () => import('../components/UserListView.vue')
-const UserRolesView = () => import('../components/UserRolesView.vue')
+const UserManagement = () => import('../views/user/UserManagement.vue')
+const UserListView = () => import('../views/user/UserListView.vue')
+const UserRolesView = () => import('../views/user/UserRolesView.vue')
 const LoginTest = () => import('../views/auth/LoginTest.vue')
 
 // 新增页面组件
@@ -133,13 +133,13 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'viewer',
         name: 'LogViewer',
-        component: () => import('@/components/AdvancedLogViewer.vue'),
+        component: () => import('@/views/log/AdvancedLogViewer.vue'),
         meta: { title: '日志查看器', menuKey: 'log-viewer' }
       },
       {
         path: 'dashboard',
         name: 'LogDashboard',
-        component: () => import('@/components/LogDashboard.vue'),
+        component: () => import('@/views/log/LogDashboard.vue'),
         meta: { title: '日志仪表板', menuKey: 'log-dashboard' }
       }
     ]

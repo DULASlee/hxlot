@@ -267,7 +267,7 @@ import { defineComponent, ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useThemeStore } from '@/stores/theme';
-import ThemeSwitcher from './ThemeSwitcher.vue';
+import ThemeSwitcher from '@/components/theme/ThemeSwitcher.vue';
 
 // 菜单项接口
 interface MenuItem {
