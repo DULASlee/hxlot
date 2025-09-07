@@ -1,0 +1,273 @@
+/* Admin Layout System - 管理后台布局系统 */
+
+/* ========== 主布局容器 ========== */
+.admin-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: auto;
+  background-color: var(--color-bg-secondary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow: auto;
+  min-height: 0;
+}
+
+/* ========== 顶部导航栏 ========== */
+.admin-header {
+  height: var(--header-height, 60px);
+  min-height: var(--header-height, 60px);
+  background: linear-gradient(90deg, var(--color-primary-700, var(--surface-primary)) 0%, var(--color-primary-600, var(--surface-primary)) 100%);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-6);
+  box-shadow: var(--shadow-md, var(--shadow-sm));
+  position: relative;
+  z-index: var(--z-sticky);
+  flex-shrink: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  flex-shrink: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-5);
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  color: var(--color-text-inverse);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-lg);
+}
+
+.collapse-btn {
+  padding: var(--spacing-2);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.collapse-btn:hover {
+  background: var(--surface-secondary);
+  color: var(--text-primary);
+}
+
+.system-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-600);
+  margin: 0;
+}
+
+/* ========== 用户信息区域 ========== */
+.user-info-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  color: var(--color-text-inverse);
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--color-accent-500);
+}
+
+.user-name {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+}
+
+/* ========== 侧边栏 ========== */
+.admin-sidebar {
+  width: var(--sidebar-width, 250px);
+  min-width: var(--sidebar-width, 250px);
+  background: var(--color-bg-primary);
+  border-right: 1px solid var(--color-border);
+  height: calc(100vh - var(--header-height, 60px));
+  overflow-y: auto;
+  transition: all var(--transition-standard);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.admin-sidebar.collapsed {
+  width: var(--sidebar-collapsed-width, 70px);
+  min-width: var(--sidebar-collapsed-width, 70px);
+}
+
+.sidebar-menu {
+  padding: var(--spacing-4);
+}
+
+.menu-item {
+  margin-bottom: var(--spacing-2);
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  font-weight: var(--font-weight-medium);
+}
+
+.menu-link:hover {
+  background: var(--color-accent-50);
+  color: var(--color-primary-600);
+}
+
+.menu-link.active {
+  background: var(--color-primary-600);
+  color: var(--color-text-inverse);
+}
+
+.menu-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.menu-text {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ========== 折叠状态样式 ========== */
+.admin-sidebar.collapsed .menu-text,
+.admin-sidebar.collapsed .menu-arrow,
+.admin-sidebar.collapsed .submenu-text,
+.admin-sidebar.collapsed .menu-search {
+  display: none;
+}
+
+.admin-sidebar.collapsed .menu-item-header {
+  justify-content: center;
+}
+
+.admin-sidebar.collapsed .menu-submenu {
+  display: none;
+}
+
+.admin-sidebar.collapsed .menu-icon {
+  margin: 0 auto;
+}
+
+.admin-sidebar.collapsed .menu-link {
+  justify-content: center;
+  padding: var(--spacing-3);
+}
+
+/* ========== 主内容区域 ========== */
+.admin-main {
+  flex: 1;
+  padding: var(--spacing-6);
+  background: var(--color-bg-secondary);
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.admin-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ========== 响应式设计 ========== */
+@media (max-width: 1024px) {
+  .admin-sidebar {
+    position: fixed;
+    left: -250px;
+    z-index: var(--z-modal);
+    height: 100vh;
+    top: 0;
+  }
+
+  .admin-sidebar:not(.collapsed) {
+    left: 0;
+  }
+
+  .admin-sidebar.collapsed {
+    left: -70px;
+  }
+
+  .admin-header {
+    padding: 0 var(--spacing-4);
+  }
+
+  .admin-main {
+    padding: var(--spacing-4);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    height: 50px;
+    min-height: 50px;
+    padding: 0 var(--spacing-3);
+  }
+
+  .admin-main {
+    padding: var(--spacing-3);
+  }
+  
+  .user-info-container {
+    gap: var(--spacing-2);
+  }
+  
+  .user-name {
+    display: none;
+  }
+}
+
+/* ========== 深色模式适配 ========== */
+[data-theme="dark"] .admin-header {
+  background: linear-gradient(90deg, var(--color-primary-800) 0%, var(--color-primary-700) 100%);
+}
+
+[data-theme="dark"] .admin-sidebar {
+  background: var(--color-bg-primary-dark);
+  border-color: var(--color-border-dark);
+}
+
+[data-theme="dark"] .menu-link:hover {
+  background: var(--color-accent-900);
+}
+
+/* ========== 打印样式 ========== */
+@media print {
+  .admin-sidebar,
+  .admin-header {
+    display: none;
+  }
+  
+  .admin-main {
+    padding: 0;
+  }
+}

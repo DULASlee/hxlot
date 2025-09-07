@@ -6,13 +6,9 @@
 
 /* 副菜单样式已移入SmartAbpLayout.vue组件中 */
 
-/* 布局样式 */
-@import './layouts/responsive.css';
-@import './layouts/admin.css';
-
-/* 组件样式 */
-@import './components/user-management.css';
-@import './components/dashboard.css';
+/* 布局样式 - 使用设计系统 */
+@import './design-system/layouts/admin.css';
+@import './design-system/layouts/dashboard.css';
 
 /* 全局基础样式 */
 html {
