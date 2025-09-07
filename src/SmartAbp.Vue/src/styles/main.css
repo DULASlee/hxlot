@@ -4,8 +4,7 @@
 @import './base/reset.css';
 @import './base/variables.css';
 
-/* 副菜单样式 */
-@import './submenu.css';
+/* 副菜单样式已移入SmartAbpLayout.vue组件中 */
 
 /* 布局样式 */
 @import './layouts/responsive.css';
