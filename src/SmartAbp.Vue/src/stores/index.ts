@@ -5,6 +5,7 @@ export { useLogStore } from './modules/log'
 export { useUserStore } from './modules/user'
 export { useProjectStore } from './modules/project'
 export { useSystemStore } from './modules/system'
+export { useMenuStore } from './modules/menu'
 
 // 导出类型
 export type { UserInfo, LoginCredentials } from './modules/auth'

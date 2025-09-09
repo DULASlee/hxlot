@@ -46,10 +46,54 @@ export class DependencyResolver {
 }
 
 /**
- * ConflictDetector skeleton – 后续补充路由/Store/Policy 冲突检测
+ * ConflictDetector
+ * 用于检测 Manifest 集合中的路由名称 / 路由路径 / Store id / 权限策略 的冲突。
+ * 任何重复都会抛出异常，阻止代码生成。
  */
 export class ConflictDetector {
-  detect(_manifests: Manifest[]): void {
-    // TODO: 实现冲突检测逻辑
+  // 使用 Map 记录首次出现的位置，便于后续报错信息中指出冲突来源
+  private routeNames = new Map<string, string>()
+  private routePaths = new Map<string, string>()
+  private storeIds = new Map<string, string>()
+  private policies = new Map<string, string>()
+
+  detect(manifests: Manifest[]): void {
+    manifests.forEach((manifest) => {
+      // ==== 路由冲突检查 ====
+      manifest.routes.forEach((route) => {
+        // 路由名称
+        if (this.routeNames.has(route.name)) {
+          const first = this.routeNames.get(route.name)!
+          throw new Error(`路由名称冲突: "${route.name}" 在模块 "${first}" 和 "${manifest.name}" 中重复`)
+        }
+        this.routeNames.set(route.name, manifest.name)
+
+        // 路由路径（归一化处理末尾 /）
+        const normPath = route.path.replace(/\/+$/, '')
+        if (this.routePaths.has(normPath)) {
+          const first = this.routePaths.get(normPath)!
+          throw new Error(`路由路径冲突: "${normPath}" 在模块 "${first}" 和 "${manifest.name}" 中重复`)
+        }
+        this.routePaths.set(normPath, manifest.name)
+      })
+
+      // ==== Store id 冲突检查 ====
+      manifest.stores.forEach((store) => {
+        if (this.storeIds.has(store.id)) {
+          const first = this.storeIds.get(store.id)!
+          throw new Error(`Store id 冲突: "${store.id}" 在模块 "${first}" 和 "${manifest.name}" 中重复`)
+        }
+        this.storeIds.set(store.id, manifest.name)
+      })
+
+      // ==== 权限策略冲突检查 ====
+      manifest.policies.forEach((policy) => {
+        if (this.policies.has(policy)) {
+          const first = this.policies.get(policy)!
+          throw new Error(`权限策略冲突: "${policy}" 在模块 "${first}" 和 "${manifest.name}" 中重复`)
+        }
+        this.policies.set(policy, manifest.name)
+      })
+    })
   }
 }
