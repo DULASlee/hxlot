@@ -6,24 +6,24 @@
         <el-button-group>
           <el-button
             :type="viewMode === 'logs' ? 'primary' : ''"
-            @click="viewMode = 'logs'"
             size="small"
+            @click="viewMode = 'logs'"
           >
             <IconEpDocument />
             日志 ({{ logStats.total }})
           </el-button>
           <el-button
             :type="viewMode === 'performance' ? 'primary' : ''"
-            @click="viewMode = 'performance'"
             size="small"
+            @click="viewMode = 'performance'"
           >
             <IconEpTimer />
             性能 ({{ performanceStats.total }})
           </el-button>
           <el-button
             :type="viewMode === 'errors' ? 'primary' : ''"
-            @click="viewMode = 'errors'"
             size="small"
+            @click="viewMode = 'errors'"
           >
             <IconEpWarningFilled />
             错误 ({{ errorStats.total }})
@@ -70,9 +70,18 @@
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="export">导出数据</el-dropdown-item>
-              <el-dropdown-item command="diagnostic">诊断报告</el-dropdown-item>
-              <el-dropdown-item command="clear" divided>清空数据</el-dropdown-item>
+              <el-dropdown-item command="export">
+                导出数据
+              </el-dropdown-item>
+              <el-dropdown-item command="diagnostic">
+                诊断报告
+              </el-dropdown-item>
+              <el-dropdown-item
+                command="clear"
+                divided
+              >
+                清空数据
+              </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -80,9 +89,15 @@
     </div>
 
     <!-- 内容区域 -->
-    <div class="content-area" :style="{ height: contentHeight }">
+    <div
+      class="content-area"
+      :style="{ height: contentHeight }"
+    >
       <!-- 日志视图 -->
-      <div v-show="viewMode === 'logs'" class="view-panel">
+      <div
+        v-show="viewMode === 'logs'"
+        class="view-panel"
+      >
         <LogViewer
           :height="contentHeight"
           :auto-scroll="autoScroll"
@@ -91,16 +106,25 @@
       </div>
 
       <!-- 性能视图 -->
-      <div v-show="viewMode === 'performance'" class="view-panel">
+      <div
+        v-show="viewMode === 'performance'"
+        class="view-panel"
+      >
         <div class="performance-panel">
           <!-- 性能统计 -->
-          <el-card class="stats-card" shadow="never">
+          <el-card
+            class="stats-card"
+            shadow="never"
+          >
             <template #header>
               <span>性能统计</span>
             </template>
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-statistic title="总计" :value="performanceStats.total" />
+                <el-statistic
+                  title="总计"
+                  :value="performanceStats.total"
+                />
               </el-col>
               <el-col :span="6">
                 <el-statistic
@@ -130,7 +154,10 @@
           </el-card>
 
           <!-- 性能条目列表 -->
-          <el-card class="entries-card" shadow="never">
+          <el-card
+            class="entries-card"
+            shadow="never"
+          >
             <template #header>
               <span>性能条目</span>
             </template>
@@ -139,8 +166,16 @@
               height="300"
               size="small"
             >
-              <el-table-column prop="name" label="名称" min-width="150" />
-              <el-table-column prop="category" label="分类" width="100" />
+              <el-table-column
+                prop="name"
+                label="名称"
+                min-width="150"
+              />
+              <el-table-column
+                prop="category"
+                label="分类"
+                width="100"
+              />
               <el-table-column
                 prop="duration"
                 label="耗时"
@@ -173,16 +208,25 @@
       </div>
 
       <!-- 错误视图 -->
-      <div v-show="viewMode === 'errors'" class="view-panel">
+      <div
+        v-show="viewMode === 'errors'"
+        class="view-panel"
+      >
         <div class="error-panel">
           <!-- 错误统计 -->
-          <el-card class="stats-card" shadow="never">
+          <el-card
+            class="stats-card"
+            shadow="never"
+          >
             <template #header>
               <span>错误统计</span>
             </template>
             <el-row :gutter="16">
               <el-col :span="8">
-                <el-statistic title="错误总数" :value="errorStats.total" />
+                <el-statistic
+                  title="错误总数"
+                  :value="errorStats.total"
+                />
               </el-col>
               <el-col :span="16">
                 <div class="context-stats">
@@ -201,7 +245,10 @@
           </el-card>
 
           <!-- 错误列表 -->
-          <el-card class="entries-card" shadow="never">
+          <el-card
+            class="entries-card"
+            shadow="never"
+          >
             <template #header>
               <span>错误报告</span>
             </template>
@@ -212,14 +259,33 @@
                 class="error-item"
               >
                 <div class="error-header">
-                  <el-tag type="danger" size="small">错误</el-tag>
+                  <el-tag
+                    type="danger"
+                    size="small"
+                  >
+                    错误
+                  </el-tag>
                   <span class="error-time">{{ error.timestamp ? formatDateTime(error.timestamp) : '-' }}</span>
-                  <el-tag v-if="error.context" size="small" plain>{{ error.context }}</el-tag>
+                  <el-tag
+                    v-if="error.context"
+                    size="small"
+                    plain
+                  >
+                    {{ error.context }}
+                  </el-tag>
                 </div>
-                <div class="error-message">{{ error.error?.message || '未知错误' }}</div>
-                <div v-if="error.stackTrace" class="error-stack">
+                <div class="error-message">
+                  {{ error.error?.message || '未知错误' }}
+                </div>
+                <div
+                  v-if="error.stackTrace"
+                  class="error-stack"
+                >
                   <el-collapse>
-                    <el-collapse-item title="堆栈跟踪" name="stack">
+                    <el-collapse-item
+                      title="堆栈跟踪"
+                      name="stack"
+                    >
                       <pre class="stack-trace">{{ error.stackTrace }}</pre>
                     </el-collapse-item>
                   </el-collapse>

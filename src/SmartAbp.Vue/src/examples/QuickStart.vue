@@ -5,17 +5,42 @@
     <div class="demo-section">
       <h3>基础日志记录</h3>
       <div class="button-group">
-        <button @click="logInfo" class="btn-info">信息日志</button>
-        <button @click="logWarning" class="btn-warning">警告日志</button>
-        <button @click="logError" class="btn-error">错误日志</button>
+        <button
+          class="btn-info"
+          @click="logInfo"
+        >
+          信息日志
+        </button>
+        <button
+          class="btn-warning"
+          @click="logWarning"
+        >
+          警告日志
+        </button>
+        <button
+          class="btn-error"
+          @click="logError"
+        >
+          错误日志
+        </button>
       </div>
     </div>
 
     <div class="demo-section">
       <h3>性能追踪</h3>
       <div class="button-group">
-        <button @click="trackPerformance" class="btn-primary">开始性能测试</button>
-        <button @click="simulateApiCall" class="btn-secondary">模拟API调用</button>
+        <button
+          class="btn-primary"
+          @click="trackPerformance"
+        >
+          开始性能测试
+        </button>
+        <button
+          class="btn-secondary"
+          @click="simulateApiCall"
+        >
+          模拟API调用
+        </button>
       </div>
     </div>
 

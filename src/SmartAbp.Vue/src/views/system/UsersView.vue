@@ -9,15 +9,18 @@
       <div class="toolbar">
         <div class="search-box">
           <input
+            v-model="searchQuery"
             type="text"
             placeholder="搜索用户..."
-            v-model="searchQuery"
             class="search-input"
-          />
+          >
         </div>
-        <button class="btn-primary" @click="showAddUser = true">
+        <button
+          class="btn-primary"
+          @click="showAddUser = true"
+        >
           <svg viewBox="0 0 24 24">
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
           </svg>
           添加用户
         </button>
@@ -36,27 +39,48 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="user in filteredUsers" :key="user.id">
+            <tr
+              v-for="user in filteredUsers"
+              :key="user.id"
+            >
               <td>
                 <div class="user-info">
-                  <div class="user-avatar">{{ user.name.charAt(0) }}</div>
+                  <div class="user-avatar">
+                    {{ user.name.charAt(0) }}
+                  </div>
                   <span>{{ user.name }}</span>
                 </div>
               </td>
               <td>{{ user.email }}</td>
               <td>
-                <span class="role-tag" :class="user.role">{{ user.role }}</span>
+                <span
+                  class="role-tag"
+                  :class="user.role"
+                >{{ user.role }}</span>
               </td>
               <td>
-                <span class="status-tag" :class="user.status">
+                <span
+                  class="status-tag"
+                  :class="user.status"
+                >
                   {{ user.status === 'active' ? '活跃' : '禁用' }}
                 </span>
               </td>
               <td>{{ user.createdAt }}</td>
               <td>
                 <div class="actions">
-                  <button class="btn-sm" @click="editUser(user)">编辑</button>
-                  <button class="btn-sm danger" @click="deleteUser(user)">删除</button>
+                  <button
+                    class="btn-sm"
+                    @click="editUser(user)"
+                  >
+                    编辑
+                  </button>
+                  <button
+                    class="btn-sm danger"
+                    @click="deleteUser(user)"
+                  >
+                    删除
+                  </button>
                 </div>
               </td>
             </tr>
@@ -66,33 +90,64 @@
     </div>
 
     <!-- 添加用户模态框 -->
-    <div v-if="showAddUser" class="modal-overlay" @click="showAddUser = false">
-      <div class="modal" @click.stop>
+    <div
+      v-if="showAddUser"
+      class="modal-overlay"
+      @click="showAddUser = false"
+    >
+      <div
+        class="modal"
+        @click.stop
+      >
         <div class="modal-header">
           <h3>添加用户</h3>
-          <button @click="showAddUser = false">×</button>
+          <button @click="showAddUser = false">
+            ×
+          </button>
         </div>
         <div class="modal-body">
           <div class="form-group">
             <label>用户名</label>
-            <input type="text" v-model="newUser.name" />
+            <input
+              v-model="newUser.name"
+              type="text"
+            >
           </div>
           <div class="form-group">
             <label>邮箱</label>
-            <input type="email" v-model="newUser.email" />
+            <input
+              v-model="newUser.email"
+              type="email"
+            >
           </div>
           <div class="form-group">
             <label>角色</label>
             <select v-model="newUser.role">
-              <option value="admin">管理员</option>
-              <option value="user">普通用户</option>
-              <option value="guest">访客</option>
+              <option value="admin">
+                管理员
+              </option>
+              <option value="user">
+                普通用户
+              </option>
+              <option value="guest">
+                访客
+              </option>
             </select>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn-secondary" @click="showAddUser = false">取消</button>
-          <button class="btn-primary" @click="addUser">确定</button>
+          <button
+            class="btn-secondary"
+            @click="showAddUser = false"
+          >
+            取消
+          </button>
+          <button
+            class="btn-primary"
+            @click="addUser"
+          >
+            确定
+          </button>
         </div>
       </div>
     </div>

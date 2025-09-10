@@ -11,7 +11,9 @@
           <div class="avatar-circle">
             <span>{{ userInfo.name?.charAt(0) || 'U' }}</span>
           </div>
-          <button class="change-avatar-btn">更换头像</button>
+          <button class="change-avatar-btn">
+            更换头像
+          </button>
         </div>
 
         <div class="profile-info">
@@ -26,25 +28,47 @@
         <div class="form-grid">
           <div class="form-group">
             <label>用户名</label>
-            <input type="text" v-model="editForm.name" />
+            <input
+              v-model="editForm.name"
+              type="text"
+            >
           </div>
           <div class="form-group">
             <label>邮箱</label>
-            <input type="email" v-model="editForm.email" />
+            <input
+              v-model="editForm.email"
+              type="email"
+            >
           </div>
           <div class="form-group">
             <label>手机号</label>
-            <input type="tel" v-model="editForm.phone" />
+            <input
+              v-model="editForm.phone"
+              type="tel"
+            >
           </div>
           <div class="form-group">
             <label>部门</label>
-            <input type="text" v-model="editForm.department" />
+            <input
+              v-model="editForm.department"
+              type="text"
+            >
           </div>
         </div>
 
         <div class="form-actions">
-          <button class="btn-primary" @click="saveProfile">保存更改</button>
-          <button class="btn-secondary" @click="resetForm">重置</button>
+          <button
+            class="btn-primary"
+            @click="saveProfile"
+          >
+            保存更改
+          </button>
+          <button
+            class="btn-secondary"
+            @click="resetForm"
+          >
+            重置
+          </button>
         </div>
       </div>
 
@@ -56,7 +80,12 @@
               <h4>修改密码</h4>
               <p>定期更换密码以保护账户安全</p>
             </div>
-            <button class="btn-outline" @click="showChangePassword = true">修改密码</button>
+            <button
+              class="btn-outline"
+              @click="showChangePassword = true"
+            >
+              修改密码
+            </button>
           </div>
 
           <div class="security-item">
@@ -64,36 +93,66 @@
               <h4>两步验证</h4>
               <p>启用两步验证增强账户安全性</p>
             </div>
-            <button class="btn-outline">启用</button>
+            <button class="btn-outline">
+              启用
+            </button>
           </div>
         </div>
       </div>
     </div>
 
     <!-- 修改密码模态框 -->
-    <div v-if="showChangePassword" class="modal-overlay" @click="showChangePassword = false">
-      <div class="modal" @click.stop>
+    <div
+      v-if="showChangePassword"
+      class="modal-overlay"
+      @click="showChangePassword = false"
+    >
+      <div
+        class="modal"
+        @click.stop
+      >
         <div class="modal-header">
           <h3>修改密码</h3>
-          <button @click="showChangePassword = false">×</button>
+          <button @click="showChangePassword = false">
+            ×
+          </button>
         </div>
         <div class="modal-body">
           <div class="form-group">
             <label>当前密码</label>
-            <input type="password" v-model="passwordForm.current" />
+            <input
+              v-model="passwordForm.current"
+              type="password"
+            >
           </div>
           <div class="form-group">
             <label>新密码</label>
-            <input type="password" v-model="passwordForm.new" />
+            <input
+              v-model="passwordForm.new"
+              type="password"
+            >
           </div>
           <div class="form-group">
             <label>确认新密码</label>
-            <input type="password" v-model="passwordForm.confirm" />
+            <input
+              v-model="passwordForm.confirm"
+              type="password"
+            >
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn-secondary" @click="showChangePassword = false">取消</button>
-          <button class="btn-primary" @click="changePassword">确定</button>
+          <button
+            class="btn-secondary"
+            @click="showChangePassword = false"
+          >
+            取消
+          </button>
+          <button
+            class="btn-primary"
+            @click="changePassword"
+          >
+            确定
+          </button>
         </div>
       </div>
     </div>

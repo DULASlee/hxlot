@@ -51,44 +51,84 @@
 
       <div class="log-actions">
         <!-- 日志统计 -->
-        <el-popover placement="bottom" width="300" trigger="hover">
+        <el-popover
+          placement="bottom"
+          width="300"
+          trigger="hover"
+        >
           <template #reference>
-            <el-button size="small" type="info" plain>
+            <el-button
+              size="small"
+              type="info"
+              plain
+            >
               <IconEpDataAnalysis />
               统计 ({{ stats.total }})
             </el-button>
           </template>
           <div class="log-stats">
             <div class="stat-item">
-              <el-tag type="success" size="small">成功: {{ stats.success }}</el-tag>
+              <el-tag
+                type="success"
+                size="small"
+              >
+                成功: {{ stats.success }}
+              </el-tag>
             </div>
             <div class="stat-item">
-              <el-tag type="info" size="small">信息: {{ stats.info }}</el-tag>
+              <el-tag
+                type="info"
+                size="small"
+              >
+                信息: {{ stats.info }}
+              </el-tag>
             </div>
             <div class="stat-item">
-              <el-tag type="warning" size="small">警告: {{ stats.warn }}</el-tag>
+              <el-tag
+                type="warning"
+                size="small"
+              >
+                警告: {{ stats.warn }}
+              </el-tag>
             </div>
             <div class="stat-item">
-              <el-tag type="danger" size="small">错误: {{ stats.error }}</el-tag>
+              <el-tag
+                type="danger"
+                size="small"
+              >
+                错误: {{ stats.error }}
+              </el-tag>
             </div>
             <div class="stat-item">
-              <el-tag size="small">调试: {{ stats.debug }}</el-tag>
+              <el-tag size="small">
+                调试: {{ stats.debug }}
+              </el-tag>
             </div>
           </div>
         </el-popover>
 
         <!-- 导出按钮 -->
         <el-dropdown @command="handleExport">
-          <el-button size="small" type="primary" plain>
+          <el-button
+            size="small"
+            type="primary"
+            plain
+          >
             <IconEpDownload />
             导出
             <IconEpArrowDown />
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="json">JSON 格式</el-dropdown-item>
-              <el-dropdown-item command="csv">CSV 格式</el-dropdown-item>
-              <el-dropdown-item command="txt">文本格式</el-dropdown-item>
+              <el-dropdown-item command="json">
+                JSON 格式
+              </el-dropdown-item>
+              <el-dropdown-item command="csv">
+                CSV 格式
+              </el-dropdown-item>
+              <el-dropdown-item command="txt">
+                文本格式
+              </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -120,7 +160,10 @@
       class="log-container"
       :style="{ height: containerHeight }"
     >
-      <div v-if="filteredLogs.length === 0" class="empty-logs">
+      <div
+        v-if="filteredLogs.length === 0"
+        class="empty-logs"
+      >
         <el-empty description="暂无日志数据" />
       </div>
 
@@ -197,7 +240,9 @@
           v-if="expandedLogs.has(log.id) && log.data"
           class="log-data"
         >
-          <el-divider content-position="left">详细数据</el-divider>
+          <el-divider content-position="left">
+            详细数据
+          </el-divider>
           <pre class="log-data-content">{{ formatLogData(log.data) }}</pre>
         </div>
       </div>

@@ -12,11 +12,17 @@
         </p>
       </div>
       <div class="header-actions">
-        <button @click="refreshLogs" class="btn btn-primary">
+        <button
+          class="btn btn-primary"
+          @click="refreshLogs"
+        >
           <span class="btn-icon">🔄</span>
           刷新日志
         </button>
-        <button @click="exportLogs" class="btn btn-secondary">
+        <button
+          class="btn btn-secondary"
+          @click="exportLogs"
+        >
           <span class="btn-icon">📤</span>
           导出日志
         </button>
@@ -26,8 +32,13 @@
     <!-- 功能导航卡片 -->
     <div class="feature-cards">
       <div class="card-grid">
-        <div class="feature-card" @click="navigateTo('/Log/dashboard')">
-          <div class="card-icon">📊</div>
+        <div
+          class="feature-card"
+          @click="navigateTo('/Log/dashboard')"
+        >
+          <div class="card-icon">
+            📊
+          </div>
           <div class="card-content">
             <h3>日志仪表板</h3>
             <p>实时监控系统日志状态和统计信息</p>
@@ -42,11 +53,18 @@
               </span>
             </div>
           </div>
-          <div class="card-arrow">→</div>
+          <div class="card-arrow">
+            →
+          </div>
         </div>
 
-        <div class="feature-card" @click="navigateTo('/Log/viewer')">
-          <div class="card-icon">👁️</div>
+        <div
+          class="feature-card"
+          @click="navigateTo('/Log/viewer')"
+        >
+          <div class="card-icon">
+            👁️
+          </div>
           <div class="card-content">
             <h3>日志查看器</h3>
             <p>高级日志搜索、过滤和详细查看</p>
@@ -61,11 +79,18 @@
               </span>
             </div>
           </div>
-          <div class="card-arrow">→</div>
+          <div class="card-arrow">
+            →
+          </div>
         </div>
 
-        <div class="feature-card" @click="showAnalytics = true">
-          <div class="card-icon">📈</div>
+        <div
+          class="feature-card"
+          @click="showAnalytics = true"
+        >
+          <div class="card-icon">
+            📈
+          </div>
           <div class="card-content">
             <h3>性能分析</h3>
             <p>系统性能指标和趋势分析</p>
@@ -80,11 +105,18 @@
               </span>
             </div>
           </div>
-          <div class="card-arrow">→</div>
+          <div class="card-arrow">
+            →
+          </div>
         </div>
 
-        <div class="feature-card" @click="showSettings = true">
-          <div class="card-icon">⚙️</div>
+        <div
+          class="feature-card"
+          @click="showSettings = true"
+        >
+          <div class="card-icon">
+            ⚙️
+          </div>
           <div class="card-content">
             <h3>日志配置</h3>
             <p>日志级别、存储和清理策略配置</p>
@@ -99,7 +131,9 @@
               </span>
             </div>
           </div>
-          <div class="card-arrow">→</div>
+          <div class="card-arrow">
+            →
+          </div>
         </div>
       </div>
     </div>
@@ -107,42 +141,73 @@
     <!-- 快速概览 -->
     <div class="quick-overview">
       <div class="overview-section">
-        <h2 class="section-title">实时日志流</h2>
+        <h2 class="section-title">
+          实时日志流
+        </h2>
         <div class="log-stream">
-          <LogViewer :maxHeight="300" :showControls="false" />
+          <LogViewer
+            :max-height="300"
+            :show-controls="false"
+          />
         </div>
       </div>
 
       <div class="overview-section">
-        <h2 class="section-title">系统状态</h2>
+        <h2 class="section-title">
+          系统状态
+        </h2>
         <div class="system-status">
           <div class="status-grid">
             <div class="status-item">
-              <div class="status-icon healthy">✅</div>
+              <div class="status-icon healthy">
+                ✅
+              </div>
               <div class="status-info">
-                <div class="status-label">系统状态</div>
-                <div class="status-value">正常运行</div>
+                <div class="status-label">
+                  系统状态
+                </div>
+                <div class="status-value">
+                  正常运行
+                </div>
               </div>
             </div>
             <div class="status-item">
-              <div class="status-icon warning">⚠️</div>
+              <div class="status-icon warning">
+                ⚠️
+              </div>
               <div class="status-info">
-                <div class="status-label">内存使用</div>
-                <div class="status-value">{{ memoryUsage }}%</div>
+                <div class="status-label">
+                  内存使用
+                </div>
+                <div class="status-value">
+                  {{ memoryUsage }}%
+                </div>
               </div>
             </div>
             <div class="status-item">
-              <div class="status-icon info">ℹ️</div>
+              <div class="status-icon info">
+                ℹ️
+              </div>
               <div class="status-info">
-                <div class="status-label">磁盘空间</div>
-                <div class="status-value">{{ diskUsage }}%</div>
+                <div class="status-label">
+                  磁盘空间
+                </div>
+                <div class="status-value">
+                  {{ diskUsage }}%
+                </div>
               </div>
             </div>
             <div class="status-item">
-              <div class="status-icon success">🚀</div>
+              <div class="status-icon success">
+                🚀
+              </div>
               <div class="status-info">
-                <div class="status-label">运行时间</div>
-                <div class="status-value">{{ uptime }}</div>
+                <div class="status-label">
+                  运行时间
+                </div>
+                <div class="status-value">
+                  {{ uptime }}
+                </div>
               </div>
             </div>
           </div>
@@ -151,11 +216,23 @@
     </div>
 
     <!-- 性能分析弹窗 -->
-    <div v-if="showAnalytics" class="modal-overlay" @click="showAnalytics = false">
-      <div class="modal-content" @click.stop>
+    <div
+      v-if="showAnalytics"
+      class="modal-overlay"
+      @click="showAnalytics = false"
+    >
+      <div
+        class="modal-content"
+        @click.stop
+      >
         <div class="modal-header">
           <h3>性能分析</h3>
-          <button @click="showAnalytics = false" class="close-btn">×</button>
+          <button
+            class="close-btn"
+            @click="showAnalytics = false"
+          >
+            ×
+          </button>
         </div>
         <div class="modal-body">
           <LogDashboard />
@@ -164,35 +241,78 @@
     </div>
 
     <!-- 设置弹窗 -->
-    <div v-if="showSettings" class="modal-overlay" @click="showSettings = false">
-      <div class="modal-content" @click.stop>
+    <div
+      v-if="showSettings"
+      class="modal-overlay"
+      @click="showSettings = false"
+    >
+      <div
+        class="modal-content"
+        @click.stop
+      >
         <div class="modal-header">
           <h3>日志配置</h3>
-          <button @click="showSettings = false" class="close-btn">×</button>
+          <button
+            class="close-btn"
+            @click="showSettings = false"
+          >
+            ×
+          </button>
         </div>
         <div class="modal-body">
           <div class="settings-form">
             <div class="form-group">
               <label>日志级别</label>
-              <select v-model="logLevel" class="form-control">
-                <option value="debug">Debug</option>
-                <option value="info">Info</option>
-                <option value="warn">Warning</option>
-                <option value="error">Error</option>
+              <select
+                v-model="logLevel"
+                class="form-control"
+              >
+                <option value="debug">
+                  Debug
+                </option>
+                <option value="info">
+                  Info
+                </option>
+                <option value="warn">
+                  Warning
+                </option>
+                <option value="error">
+                  Error
+                </option>
               </select>
             </div>
             <div class="form-group">
               <label>保留天数</label>
-              <input v-model="retentionDays" type="number" class="form-control" min="1" max="365">
+              <input
+                v-model="retentionDays"
+                type="number"
+                class="form-control"
+                min="1"
+                max="365"
+              >
             </div>
             <div class="form-group">
               <label>自动清理</label>
-              <input v-model="autoCleanup" type="checkbox" class="form-checkbox">
+              <input
+                v-model="autoCleanup"
+                type="checkbox"
+                class="form-checkbox"
+              >
               <span class="checkbox-label">启用自动清理过期日志</span>
             </div>
             <div class="form-actions">
-              <button @click="saveSettings" class="btn btn-primary">保存设置</button>
-              <button @click="showSettings = false" class="btn btn-secondary">取消</button>
+              <button
+                class="btn btn-primary"
+                @click="saveSettings"
+              >
+                保存设置
+              </button>
+              <button
+                class="btn btn-secondary"
+                @click="showSettings = false"
+              >
+                取消
+              </button>
             </div>
           </div>
         </div>

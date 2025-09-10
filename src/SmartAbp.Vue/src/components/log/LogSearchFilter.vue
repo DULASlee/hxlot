@@ -16,8 +16,8 @@
           <el-button
             v-if="searchQuery"
             text
-            @click="toggleAdvancedSearch"
             :type="showAdvanced ? 'primary' : 'default'"
+            @click="toggleAdvancedSearch"
           >
             高级
           </el-button>
@@ -27,8 +27,14 @@
 
     <!-- 高级搜索面板 -->
     <el-collapse-transition>
-      <div v-show="showAdvanced" class="advanced-search">
-        <el-card shadow="never" class="search-panel">
+      <div
+        v-show="showAdvanced"
+        class="advanced-search"
+      >
+        <el-card
+          shadow="never"
+          class="search-panel"
+        >
           <div class="search-options">
             <!-- 时间范围 -->
             <div class="option-group">
@@ -48,7 +54,10 @@
             <!-- 日志级别 -->
             <div class="option-group">
               <label class="option-label">日志级别</label>
-              <el-checkbox-group v-model="selectedLevels" @change="handleLevelChange">
+              <el-checkbox-group
+                v-model="selectedLevels"
+                @change="handleLevelChange"
+              >
                 <el-checkbox
                   v-for="level in logLevels"
                   :key="level.value"
@@ -104,13 +113,22 @@
             <div class="option-group">
               <label class="option-label">搜索选项</label>
               <div class="search-options-checkboxes">
-                <el-checkbox v-model="searchOptions.caseSensitive" @change="handleSearch">
+                <el-checkbox
+                  v-model="searchOptions.caseSensitive"
+                  @change="handleSearch"
+                >
                   区分大小写
                 </el-checkbox>
-                <el-checkbox v-model="searchOptions.useRegex" @change="handleSearch">
+                <el-checkbox
+                  v-model="searchOptions.useRegex"
+                  @change="handleSearch"
+                >
                   正则表达式
                 </el-checkbox>
-                <el-checkbox v-model="searchOptions.searchInData" @change="handleSearch">
+                <el-checkbox
+                  v-model="searchOptions.searchInData"
+                  @change="handleSearch"
+                >
                   搜索数据字段
                 </el-checkbox>
               </div>
@@ -118,8 +136,15 @@
 
             <!-- 操作按钮 -->
             <div class="option-group">
-              <el-button @click="clearAllFilters">清空所有过滤器</el-button>
-              <el-button type="primary" @click="saveCurrentFilter">保存当前过滤器</el-button>
+              <el-button @click="clearAllFilters">
+                清空所有过滤器
+              </el-button>
+              <el-button
+                type="primary"
+                @click="saveCurrentFilter"
+              >
+                保存当前过滤器
+              </el-button>
             </div>
           </div>
         </el-card>
@@ -133,8 +158,8 @@
         :key="filter.name"
         :type="filter.active ? 'primary' : 'info'"
         :effect="filter.active ? 'dark' : 'plain'"
-        @click="applyQuickFilter(filter)"
         class="quick-filter-tag"
+        @click="applyQuickFilter(filter)"
       >
         {{ filter.label }}
       </el-tag>
@@ -142,7 +167,10 @@
 
     <!-- 搜索结果统计 -->
     <div class="search-stats">
-      <el-text size="small" type="info">
+      <el-text
+        size="small"
+        type="info"
+      >
         找到 {{ filteredCount }} 条记录
         <span v-if="searchQuery">，关键词: "{{ searchQuery }}"</span>
       </el-text>
@@ -172,13 +200,21 @@
         >
           <div class="filter-info">
             <h4>{{ filter.name }}</h4>
-            <p class="filter-description">{{ filter.description }}</p>
-            <el-text size="small" type="info">
+            <p class="filter-description">
+              {{ filter.description }}
+            </p>
+            <el-text
+              size="small"
+              type="info"
+            >
               保存时间: {{ dayjs(filter.createdAt).format('YYYY-MM-DD HH:mm') }}
             </el-text>
           </div>
           <div class="filter-actions">
-            <el-button size="small" @click="applySavedFilter(filter)">
+            <el-button
+              size="small"
+              @click="applySavedFilter(filter)"
+            >
               应用
             </el-button>
             <el-button
@@ -190,7 +226,10 @@
             </el-button>
           </div>
         </div>
-        <el-empty v-if="savedFilters.length === 0" description="暂无保存的过滤器" />
+        <el-empty
+          v-if="savedFilters.length === 0"
+          description="暂无保存的过滤器"
+        />
       </div>
     </el-drawer>
   </div>

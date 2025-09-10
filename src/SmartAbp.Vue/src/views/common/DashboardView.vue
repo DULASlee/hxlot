@@ -3,16 +3,22 @@
     <div class="dashboard-header">
       <div class="header-content">
         <div class="header-text">
-          <h1><i class="fas fa-tachometer-alt header-icon"></i>SmartAbp 工作台</h1>
+          <h1><i class="fas fa-tachometer-alt header-icon" />SmartAbp 工作台</h1>
           <p>欢迎使用 SmartAbp 企业管理系统</p>
         </div>
         <div class="header-actions">
-          <button class="header-btn" @click="refreshDashboard">
-            <i class="fas fa-sync-alt"></i>
+          <button
+            class="header-btn"
+            @click="refreshDashboard"
+          >
+            <i class="fas fa-sync-alt" />
             <span>刷新数据</span>
           </button>
-          <button class="header-btn" @click="exportReport">
-            <i class="fas fa-download"></i>
+          <button
+            class="header-btn"
+            @click="exportReport"
+          >
+            <i class="fas fa-download" />
             <span>导出报告</span>
           </button>
         </div>
@@ -24,13 +30,17 @@
       <div class="stat-cards">
         <div class="stat-card users">
           <div class="stat-icon">
-            <i class="fas fa-users"></i>
+            <i class="fas fa-users" />
           </div>
           <div class="stat-content">
-            <div class="stat-number">1,234</div>
-            <div class="stat-label">用户总数</div>
+            <div class="stat-number">
+              1,234
+            </div>
+            <div class="stat-label">
+              用户总数
+            </div>
             <div class="stat-trend">
-              <i class="fas fa-arrow-up trend-up"></i>
+              <i class="fas fa-arrow-up trend-up" />
               <span>+12% 本月</span>
             </div>
           </div>
@@ -38,13 +48,17 @@
 
         <div class="stat-card projects">
           <div class="stat-icon">
-            <i class="fas fa-project-diagram"></i>
+            <i class="fas fa-project-diagram" />
           </div>
           <div class="stat-content">
-            <div class="stat-number">56</div>
-            <div class="stat-label">项目数量</div>
+            <div class="stat-number">
+              56
+            </div>
+            <div class="stat-label">
+              项目数量
+            </div>
             <div class="stat-trend">
-              <i class="fas fa-arrow-up trend-up"></i>
+              <i class="fas fa-arrow-up trend-up" />
               <span>+3 本周</span>
             </div>
           </div>
@@ -52,13 +66,17 @@
 
         <div class="stat-card health">
           <div class="stat-icon">
-            <i class="fas fa-chart-line"></i>
+            <i class="fas fa-chart-line" />
           </div>
           <div class="stat-content">
-            <div class="stat-number">89%</div>
-            <div class="stat-label">系统健康度</div>
+            <div class="stat-number">
+              89%
+            </div>
+            <div class="stat-label">
+              系统健康度
+            </div>
             <div class="stat-trend">
-              <i class="fas fa-arrow-down trend-down"></i>
+              <i class="fas fa-arrow-down trend-down" />
               <span>-2% 今日</span>
             </div>
           </div>
@@ -66,13 +84,17 @@
 
         <div class="stat-card logs">
           <div class="stat-icon">
-            <i class="fas fa-file-alt"></i>
+            <i class="fas fa-file-alt" />
           </div>
           <div class="stat-content">
-            <div class="stat-number">2,456</div>
-            <div class="stat-label">今日日志</div>
+            <div class="stat-number">
+              2,456
+            </div>
+            <div class="stat-label">
+              今日日志
+            </div>
             <div class="stat-trend">
-              <i class="fas fa-arrow-up trend-up"></i>
+              <i class="fas fa-arrow-up trend-up" />
               <span>+156 今日</span>
             </div>
           </div>
@@ -81,50 +103,68 @@
 
       <!-- 快速操作 -->
       <div class="quick-actions">
-        <h2><i class="fas fa-bolt"></i>快速操作</h2>
+        <h2><i class="fas fa-bolt" />快速操作</h2>
         <div class="action-grid">
-          <button class="action-btn" @click="$router.push('/Admin/users')">
-            <i class="fas fa-users"></i>
+          <button
+            class="action-btn"
+            @click="$router.push('/Admin/users')"
+          >
+            <i class="fas fa-users" />
             <div class="action-content">
               <span class="action-title">用户管理</span>
               <span class="action-desc">管理系统用户</span>
             </div>
           </button>
 
-          <button class="action-btn" @click="$router.push('/Project')">
-            <i class="fas fa-project-diagram"></i>
+          <button
+            class="action-btn"
+            @click="$router.push('/Project')"
+          >
+            <i class="fas fa-project-diagram" />
             <div class="action-content">
               <span class="action-title">项目管理</span>
               <span class="action-desc">查看项目列表</span>
             </div>
           </button>
 
-          <button class="action-btn" @click="$router.push('/Log')">
-            <i class="fas fa-file-alt"></i>
+          <button
+            class="action-btn"
+            @click="$router.push('/Log')"
+          >
+            <i class="fas fa-file-alt" />
             <div class="action-content">
               <span class="action-title">系统日志</span>
               <span class="action-desc">查看系统日志</span>
             </div>
           </button>
 
-          <button class="action-btn" @click="testTheme">
-            <i class="fas fa-palette"></i>
+          <button
+            class="action-btn"
+            @click="testTheme"
+          >
+            <i class="fas fa-palette" />
             <div class="action-content">
               <span class="action-title">主题测试</span>
               <span class="action-desc">测试主题切换</span>
             </div>
           </button>
 
-          <button class="action-btn" @click="$router.push('/Admin/settings')">
-            <i class="fas fa-cog"></i>
+          <button
+            class="action-btn"
+            @click="$router.push('/Admin/settings')"
+          >
+            <i class="fas fa-cog" />
             <div class="action-content">
               <span class="action-title">系统设置</span>
               <span class="action-desc">配置系统参数</span>
             </div>
           </button>
 
-          <button class="action-btn" @click="$router.push('/Admin/permissions')">
-            <i class="fas fa-shield-alt"></i>
+          <button
+            class="action-btn"
+            @click="$router.push('/Admin/permissions')"
+          >
+            <i class="fas fa-shield-alt" />
             <div class="action-content">
               <span class="action-title">权限管理</span>
               <span class="action-desc">管理用户权限</span>
@@ -135,45 +175,45 @@
 
       <!-- 系统状态 -->
       <div class="system-status">
-        <h2><i class="fas fa-server"></i>系统状态</h2>
+        <h2><i class="fas fa-server" />系统状态</h2>
         <div class="status-list">
           <div class="status-item">
             <div class="status-icon">
-              <i class="fas fa-database"></i>
+              <i class="fas fa-database" />
             </div>
             <div class="status-info">
               <span class="status-name">数据库连接</span>
-              <div class="status-indicator success"></div>
+              <div class="status-indicator success" />
             </div>
             <span class="status-value success">正常</span>
           </div>
           <div class="status-item">
             <div class="status-icon">
-              <i class="fas fa-memory"></i>
+              <i class="fas fa-memory" />
             </div>
             <div class="status-info">
               <span class="status-name">缓存服务</span>
-              <div class="status-indicator success"></div>
+              <div class="status-indicator success" />
             </div>
             <span class="status-value success">正常</span>
           </div>
           <div class="status-item">
             <div class="status-icon">
-              <i class="fas fa-hdd"></i>
+              <i class="fas fa-hdd" />
             </div>
             <div class="status-info">
               <span class="status-name">磁盘空间</span>
-              <div class="status-indicator warning"></div>
+              <div class="status-indicator warning" />
             </div>
             <span class="status-value warning">75%</span>
           </div>
           <div class="status-item">
             <div class="status-icon">
-              <i class="fas fa-microchip"></i>
+              <i class="fas fa-microchip" />
             </div>
             <div class="status-info">
               <span class="status-name">内存使用</span>
-              <div class="status-indicator success"></div>
+              <div class="status-indicator success" />
             </div>
             <span class="status-value success">45%</span>
           </div>

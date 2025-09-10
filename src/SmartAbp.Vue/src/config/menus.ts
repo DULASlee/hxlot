@@ -393,6 +393,85 @@ export const menuConfig: MenuConfig = {
       ]
     },
 
+    // 代码生成模块
+    {
+      key: 'codegen',
+      title: '代码生成',
+      icon: 'fas fa-code',
+      type: 'folder',
+      order: 8,
+      visible: true,
+      requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
+      defaultExpanded: false,
+      description: '低代码引擎和代码生成工具',
+      children: [
+        {
+          key: 'lowcode-engine',
+          title: '低代码引擎',
+          icon: 'fas fa-cogs',
+          type: 'page',
+          path: '/CodeGen/engine',
+          component: '@/views/codegen/LowCodeEngineView.vue',
+          order: 1,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
+          closable: true,
+          meta: {
+            title: '低代码引擎控制台',
+            menuKey: 'lowcode-engine'
+          }
+        },
+        {
+          key: 'sfc-compiler',
+          title: 'SFC编译器',
+          icon: 'fas fa-file-code',
+          type: 'page',
+          path: '/CodeGen/sfc',
+          component: '@/views/codegen/SfcCompilerView.vue',
+          order: 2,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
+          closable: true,
+          meta: {
+            title: 'SFC编译器演示',
+            menuKey: 'sfc-compiler'
+          }
+        },
+        {
+          key: 'drag-drop-form',
+          title: '拖拽表单',
+          icon: 'fas fa-mouse-pointer',
+          type: 'page',
+          path: '/CodeGen/form',
+          component: '@/views/codegen/DragDropFormView.vue',
+          order: 3,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
+          closable: true,
+          meta: {
+            title: '拖拽表单开发器',
+            menuKey: 'drag-drop-form'
+          }
+        },
+        {
+          key: 'performance-monitor',
+          title: '性能监控',
+          icon: 'fas fa-tachometer-alt',
+          type: 'page',
+          path: '/CodeGen/performance',
+          component: '@/views/codegen/PerformanceDashboard.vue',
+          order: 4,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN, ROLES.GUEST],
+          closable: true,
+          meta: {
+            title: '性能监控中心',
+            menuKey: 'performance-monitor'
+          }
+        }
+      ]
+    },
+
     // 分割线
     {
       key: 'divider-3',

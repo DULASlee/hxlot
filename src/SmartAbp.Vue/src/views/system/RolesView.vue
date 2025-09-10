@@ -9,15 +9,18 @@
       <div class="toolbar">
         <div class="search-box">
           <input
+            v-model="searchQuery"
             type="text"
             placeholder="搜索角色..."
-            v-model="searchQuery"
             class="search-input"
-          />
+          >
         </div>
-        <button class="btn-primary" @click="showAddRole = true">
+        <button
+          class="btn-primary"
+          @click="showAddRole = true"
+        >
           <svg viewBox="0 0 24 24">
-            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
           </svg>
           添加角色
         </button>
@@ -36,10 +39,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="role in filteredRoles" :key="role.id">
+            <tr
+              v-for="role in filteredRoles"
+              :key="role.id"
+            >
               <td>
                 <div class="role-info">
-                  <div class="role-icon">{{ role.name.charAt(0) }}</div>
+                  <div class="role-icon">
+                    {{ role.name.charAt(0) }}
+                  </div>
                   <span>{{ role.name }}</span>
                 </div>
               </td>
@@ -53,9 +61,24 @@
               <td>{{ role.createdAt }}</td>
               <td>
                 <div class="actions">
-                  <button class="btn-sm" @click="editRole(role)">编辑</button>
-                  <button class="btn-sm" @click="viewPermissions(role)">权限</button>
-                  <button class="btn-sm danger" @click="deleteRole(role)">删除</button>
+                  <button
+                    class="btn-sm"
+                    @click="editRole(role)"
+                  >
+                    编辑
+                  </button>
+                  <button
+                    class="btn-sm"
+                    @click="viewPermissions(role)"
+                  >
+                    权限
+                  </button>
+                  <button
+                    class="btn-sm danger"
+                    @click="deleteRole(role)"
+                  >
+                    删除
+                  </button>
                 </div>
               </td>
             </tr>
@@ -65,20 +88,35 @@
     </div>
 
     <!-- 添加角色模态框 -->
-    <div v-if="showAddRole" class="modal-overlay" @click="showAddRole = false">
-      <div class="modal" @click.stop>
+    <div
+      v-if="showAddRole"
+      class="modal-overlay"
+      @click="showAddRole = false"
+    >
+      <div
+        class="modal"
+        @click.stop
+      >
         <div class="modal-header">
           <h3>添加角色</h3>
-          <button @click="showAddRole = false">×</button>
+          <button @click="showAddRole = false">
+            ×
+          </button>
         </div>
         <div class="modal-body">
           <div class="form-group">
             <label>角色名称</label>
-            <input type="text" v-model="newRole.name" />
+            <input
+              v-model="newRole.name"
+              type="text"
+            >
           </div>
           <div class="form-group">
             <label>角色描述</label>
-            <textarea v-model="newRole.description" rows="3"></textarea>
+            <textarea
+              v-model="newRole.description"
+              rows="3"
+            />
           </div>
           <div class="form-group">
             <label>权限分配</label>
@@ -89,28 +127,47 @@
                 class="permission-item"
               >
                 <input
+                  v-model="newRole.permissions"
                   type="checkbox"
                   :value="permission.id"
-                  v-model="newRole.permissions"
-                />
+                >
                 <span>{{ permission.name }}</span>
               </label>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn-secondary" @click="showAddRole = false">取消</button>
-          <button class="btn-primary" @click="addRole">确定</button>
+          <button
+            class="btn-secondary"
+            @click="showAddRole = false"
+          >
+            取消
+          </button>
+          <button
+            class="btn-primary"
+            @click="addRole"
+          >
+            确定
+          </button>
         </div>
       </div>
     </div>
 
     <!-- 权限详情模态框 -->
-    <div v-if="showPermissions" class="modal-overlay" @click="showPermissions = false">
-      <div class="modal" @click.stop>
+    <div
+      v-if="showPermissions"
+      class="modal-overlay"
+      @click="showPermissions = false"
+    >
+      <div
+        class="modal"
+        @click.stop
+      >
         <div class="modal-header">
           <h3>{{ selectedRole?.name }} - 权限详情</h3>
-          <button @click="showPermissions = false">×</button>
+          <button @click="showPermissions = false">
+            ×
+          </button>
         </div>
         <div class="modal-body">
           <div class="permissions-list">
@@ -124,7 +181,12 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn-primary" @click="showPermissions = false">关闭</button>
+          <button
+            class="btn-primary"
+            @click="showPermissions = false"
+          >
+            关闭
+          </button>
         </div>
       </div>
     </div>

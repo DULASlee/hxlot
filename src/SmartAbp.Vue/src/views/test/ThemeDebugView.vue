@@ -19,10 +19,17 @@
 
       <div class="css-variables">
         <h2>CSS变量值</h2>
-        <div v-for="variable in testVariables" :key="variable.name" class="variable-item">
+        <div
+          v-for="variable in testVariables"
+          :key="variable.name"
+          class="variable-item"
+        >
           <span class="variable-name">{{ variable.name }}:</span>
           <span class="variable-value">{{ variable.value }}</span>
-          <div class="variable-sample" :style="{ [variable.property]: variable.value }"></div>
+          <div
+            class="variable-sample"
+            :style="{ [variable.property]: variable.value }"
+          />
         </div>
       </div>
 
@@ -32,8 +39,8 @@
           <button 
             v-for="theme in themes" 
             :key="theme.value"
-            @click="changeTheme(theme.value)"
             :class="{ active: themeStore.currentTheme === theme.value }"
+            @click="changeTheme(theme.value)"
           >
             {{ theme.name }}
           </button>
@@ -45,25 +52,35 @@
               type="checkbox" 
               :checked="themeStore.isDarkMode" 
               @change="toggleDarkMode"
-            />
+            >
             暗黑模式
           </label>
         </div>
 
         <div class="manual-controls">
-          <button @click="manuallyApplyTheme">手动应用主题</button>
-          <button @click="forceRefresh">强制刷新状态</button>
+          <button @click="manuallyApplyTheme">
+            手动应用主题
+          </button>
+          <button @click="forceRefresh">
+            强制刷新状态
+          </button>
         </div>
       </div>
 
       <div class="visual-test">
         <h2>视觉测试</h2>
         <div class="test-card">
-          <div class="card-header">卡片标题</div>
+          <div class="card-header">
+            卡片标题
+          </div>
           <div class="card-body">
             <p>这是一段测试文本，用于验证主题颜色是否正确应用。</p>
-            <button class="test-button primary">主要按钮</button>
-            <button class="test-button secondary">次要按钮</button>
+            <button class="test-button primary">
+              主要按钮
+            </button>
+            <button class="test-button secondary">
+              次要按钮
+            </button>
           </div>
         </div>
       </div>

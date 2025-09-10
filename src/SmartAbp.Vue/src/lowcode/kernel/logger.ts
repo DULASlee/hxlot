@@ -152,7 +152,7 @@ export class StructuredLogger implements IStructuredLogger {
   private batchEntries: LogEntry[] = [];
   private batchSize = 100;
   private batchTimeout = 5000; // 5秒
-  private batchTimer?: NodeJS.Timeout;
+  private batchTimer?: number | ReturnType<typeof setTimeout>;
 
   private readonly levelNumbers: Record<LogLevel, number> = {
     debug: 0,
@@ -264,8 +264,8 @@ export class StructuredLogger implements IStructuredLogger {
       traceId: context.traceId || this.context.traceId,
       spanId: context.spanId || this.context.spanId,
       metadata: {
-        hostname: typeof process !== 'undefined' ? process.env.HOSTNAME : 'browser',
-        pid: typeof process !== 'undefined' ? process.pid : 0,
+        hostname: (typeof process !== 'undefined' && process?.env) ? (process.env.HOSTNAME ?? 'browser') : 'browser',
+        pid: (typeof process !== 'undefined' && typeof process.pid === 'number') ? process.pid : 0,
         version: '1.0.0'
       }
     };

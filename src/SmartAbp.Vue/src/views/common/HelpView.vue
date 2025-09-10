@@ -10,7 +10,7 @@
         <!-- 快速开始 -->
         <div class="help-card">
           <div class="help-card-header">
-            <i class="fas fa-rocket help-icon"></i>
+            <i class="fas fa-rocket help-icon" />
             <h3>快速开始</h3>
           </div>
           <div class="help-card-content">
@@ -26,7 +26,7 @@
         <!-- 用户管理 -->
         <div class="help-card">
           <div class="help-card-header">
-            <i class="fas fa-users help-icon"></i>
+            <i class="fas fa-users help-icon" />
             <h3>用户管理</h3>
           </div>
           <div class="help-card-content">
@@ -42,7 +42,7 @@
         <!-- 项目管理 -->
         <div class="help-card">
           <div class="help-card-header">
-            <i class="fas fa-project-diagram help-icon"></i>
+            <i class="fas fa-project-diagram help-icon" />
             <h3>项目管理</h3>
           </div>
           <div class="help-card-content">
@@ -58,7 +58,7 @@
         <!-- 系统设置 -->
         <div class="help-card">
           <div class="help-card-header">
-            <i class="fas fa-cog help-icon"></i>
+            <i class="fas fa-cog help-icon" />
             <h3>系统设置</h3>
           </div>
           <div class="help-card-content">
@@ -74,7 +74,7 @@
         <!-- 常见问题 -->
         <div class="help-card">
           <div class="help-card-header">
-            <i class="fas fa-question-circle help-icon"></i>
+            <i class="fas fa-question-circle help-icon" />
             <h3>常见问题</h3>
           </div>
           <div class="help-card-content">
@@ -90,7 +90,7 @@
         <!-- 联系支持 -->
         <div class="help-card">
           <div class="help-card-header">
-            <i class="fas fa-life-ring help-icon"></i>
+            <i class="fas fa-life-ring help-icon" />
             <h3>联系支持</h3>
           </div>
           <div class="help-card-content">
@@ -108,7 +108,10 @@
       <div class="help-documentation">
         <h2>详细文档</h2>
 
-        <div class="doc-section" id="getting-started">
+        <div
+          id="getting-started"
+          class="doc-section"
+        >
           <h3>新手指南</h3>
           <p>欢迎使用SmartAbp管理系统！本指南将帮助您快速上手。</p>
           <ol>
@@ -119,7 +122,10 @@
           </ol>
         </div>
 
-        <div class="doc-section" id="theme">
+        <div
+          id="theme"
+          class="doc-section"
+        >
           <h3>主题切换</h3>
           <p>系统支持多种主题模式：</p>
           <ul>
@@ -133,7 +139,10 @@
           <p>点击右上角的主题切换按钮即可快速切换主题。</p>
         </div>
 
-        <div class="doc-section" id="user-management">
+        <div
+          id="user-management"
+          class="doc-section"
+        >
           <h3>用户管理</h3>
           <p>用户管理模块包含以下功能：</p>
           <ul>

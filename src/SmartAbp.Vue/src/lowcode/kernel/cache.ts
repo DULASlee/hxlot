@@ -97,7 +97,7 @@ export class CacheManager implements ICacheManager {
   private readonly options: RequiredCacheManagerOptions;
   private readonly strategy: CacheStrategy;
   private readonly logger?: StructuredLogger;
-  private cleanupTimer?: NodeJS.Timeout;
+  private cleanupTimer?: number | ReturnType<typeof setTimeout>;
 
   constructor(options: CacheManagerOptions = {}) {
     this.options = {

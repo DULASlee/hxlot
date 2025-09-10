@@ -1,14 +1,14 @@
 <template>
   <div class="settings-view">
     <div class="page-header">
-      <h1><i class="fas fa-cog header-icon"></i>系统设置</h1>
+      <h1><i class="fas fa-cog header-icon" />系统设置</h1>
       <p>配置系统参数和偏好设置</p>
     </div>
 
     <div class="settings-content">
       <!-- 主题设置 -->
       <div class="settings-section">
-        <h2><i class="fas fa-palette section-icon"></i>主题设置</h2>
+        <h2><i class="fas fa-palette section-icon" />主题设置</h2>
         <div class="setting-item">
           <div class="setting-info">
             <h3>界面主题</h3>
@@ -21,7 +21,10 @@
               :class="['theme-option', { active: themeStore.currentTheme === theme.value }]"
               @click="selectTheme(theme.value)"
             >
-              <div class="theme-preview" :style="{ background: theme.color }"></div>
+              <div
+                class="theme-preview"
+                :style="{ background: theme.color }"
+              />
               <span>{{ theme.label }}</span>
             </button>
           </div>
@@ -32,12 +35,21 @@
             <h3>一键暗黑模式</h3>
             <p>快速切换浅色和深色主题</p>
           </div>
-          <button class="toggle-btn" @click="quickToggleDark">
-            <svg v-if="themeStore.isDarkMode" viewBox="0 0 24 24">
-              <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1z"/>
+          <button
+            class="toggle-btn"
+            @click="quickToggleDark"
+          >
+            <svg
+              v-if="themeStore.isDarkMode"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1z" />
             </svg>
-            <svg v-else viewBox="0 0 24 24">
-              <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
+            <svg
+              v-else
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z" />
             </svg>
             {{ themeStore.isDarkMode ? '切换到浅色' : '切换到深色' }}
           </button>
@@ -46,17 +58,17 @@
 
       <!-- 系统配置 -->
       <div class="settings-section">
-        <h2><i class="fas fa-server section-icon"></i>系统配置</h2>
+        <h2><i class="fas fa-server section-icon" />系统配置</h2>
         <div class="setting-item">
           <div class="setting-info">
             <h3>系统名称</h3>
             <p>自定义系统显示名称</p>
           </div>
           <input
-            type="text"
             v-model="systemSettings.name"
+            type="text"
             class="setting-input"
-          />
+          >
         </div>
 
         <div class="setting-item">
@@ -64,10 +76,19 @@
             <h3>默认语言</h3>
             <p>设置系统默认语言</p>
           </div>
-          <select v-model="systemSettings.language" class="setting-select">
-            <option value="zh-CN">简体中文</option>
-            <option value="en-US">English</option>
-            <option value="ja-JP">日本語</option>
+          <select
+            v-model="systemSettings.language"
+            class="setting-select"
+          >
+            <option value="zh-CN">
+              简体中文
+            </option>
+            <option value="en-US">
+              English
+            </option>
+            <option value="ja-JP">
+              日本語
+            </option>
           </select>
         </div>
 
@@ -76,30 +97,41 @@
             <h3>时区设置</h3>
             <p>设置系统时区</p>
           </div>
-          <select v-model="systemSettings.timezone" class="setting-select">
-            <option value="Asia/Shanghai">北京时间 (UTC+8)</option>
-            <option value="America/New_York">纽约时间 (UTC-5)</option>
-            <option value="Europe/London">伦敦时间 (UTC+0)</option>
-            <option value="Asia/Tokyo">东京时间 (UTC+9)</option>
+          <select
+            v-model="systemSettings.timezone"
+            class="setting-select"
+          >
+            <option value="Asia/Shanghai">
+              北京时间 (UTC+8)
+            </option>
+            <option value="America/New_York">
+              纽约时间 (UTC-5)
+            </option>
+            <option value="Europe/London">
+              伦敦时间 (UTC+0)
+            </option>
+            <option value="Asia/Tokyo">
+              东京时间 (UTC+9)
+            </option>
           </select>
         </div>
       </div>
 
       <!-- 安全设置 -->
       <div class="settings-section">
-        <h2><i class="fas fa-shield-alt section-icon"></i>安全设置</h2>
+        <h2><i class="fas fa-shield-alt section-icon" />安全设置</h2>
         <div class="setting-item">
           <div class="setting-info">
             <h3>会话超时</h3>
             <p>设置用户会话超时时间（分钟）</p>
           </div>
           <input
-            type="number"
             v-model="securitySettings.sessionTimeout"
+            type="number"
             class="setting-input"
             min="5"
             max="1440"
-          />
+          >
         </div>
 
         <div class="setting-item">
@@ -108,8 +140,11 @@
             <p>启用密码复杂度验证</p>
           </div>
           <label class="switch">
-            <input type="checkbox" v-model="securitySettings.passwordComplexity" />
-            <span class="slider"></span>
+            <input
+              v-model="securitySettings.passwordComplexity"
+              type="checkbox"
+            >
+            <span class="slider" />
           </label>
         </div>
 
@@ -119,23 +154,29 @@
             <p>记录用户登录日志</p>
           </div>
           <label class="switch">
-            <input type="checkbox" v-model="securitySettings.loginLog" />
-            <span class="slider"></span>
+            <input
+              v-model="securitySettings.loginLog"
+              type="checkbox"
+            >
+            <span class="slider" />
           </label>
         </div>
       </div>
 
       <!-- 通知设置 -->
       <div class="settings-section">
-        <h2><i class="fas fa-bell section-icon"></i>通知设置</h2>
+        <h2><i class="fas fa-bell section-icon" />通知设置</h2>
         <div class="setting-item">
           <div class="setting-info">
             <h3>邮件通知</h3>
             <p>启用系统邮件通知</p>
           </div>
           <label class="switch">
-            <input type="checkbox" v-model="notificationSettings.email" />
-            <span class="slider"></span>
+            <input
+              v-model="notificationSettings.email"
+              type="checkbox"
+            >
+            <span class="slider" />
           </label>
         </div>
 
@@ -145,8 +186,11 @@
             <p>启用系统短信通知</p>
           </div>
           <label class="switch">
-            <input type="checkbox" v-model="notificationSettings.sms" />
-            <span class="slider"></span>
+            <input
+              v-model="notificationSettings.sms"
+              type="checkbox"
+            >
+            <span class="slider" />
           </label>
         </div>
 
@@ -156,16 +200,29 @@
             <p>启用浏览器推送通知</p>
           </div>
           <label class="switch">
-            <input type="checkbox" v-model="notificationSettings.browser" />
-            <span class="slider"></span>
+            <input
+              v-model="notificationSettings.browser"
+              type="checkbox"
+            >
+            <span class="slider" />
           </label>
         </div>
       </div>
 
       <!-- 保存按钮 -->
       <div class="settings-actions">
-        <button class="btn-primary" @click="saveSettings">保存设置</button>
-        <button class="btn-secondary" @click="resetSettings">重置默认</button>
+        <button
+          class="btn-primary"
+          @click="saveSettings"
+        >
+          保存设置
+        </button>
+        <button
+          class="btn-secondary"
+          @click="resetSettings"
+        >
+          重置默认
+        </button>
       </div>
     </div>
   </div>

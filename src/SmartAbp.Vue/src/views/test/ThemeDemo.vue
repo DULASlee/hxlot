@@ -17,10 +17,10 @@
                 :key="theme.value"
                 class="theme-button"
                 :class="{ active: currentTheme === theme.value }"
-                @click="setTheme(theme.value as ThemeType)"
                 :style="{ backgroundColor: theme.color }"
+                @click="setTheme(theme.value as ThemeType)"
               >
-                <i :class="theme.icon"></i>
+                <i :class="theme.icon" />
                 {{ theme.label }}
               </button>
             </div>
@@ -33,7 +33,7 @@
               :class="{ active: isDarkMode }"
               @click="toggleDarkMode"
             >
-              <i :class="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
+              <i :class="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'" />
               {{ isDarkMode ? '切换到浅色' : '切换到暗黑' }}
             </button>
           </div>
@@ -47,15 +47,15 @@
             <h3>顶部导航栏</h3>
             <div class="navbar-preview">
               <div class="nav-item">
-                <i class="fas fa-home"></i>
+                <i class="fas fa-home" />
                 首页
               </div>
               <div class="nav-item active">
-                <i class="fas fa-tachometer-alt"></i>
+                <i class="fas fa-tachometer-alt" />
                 仪表盘
               </div>
               <div class="nav-item">
-                <i class="fas fa-users"></i>
+                <i class="fas fa-users" />
                 用户管理
               </div>
             </div>
@@ -65,26 +65,26 @@
             <h3>侧边栏菜单</h3>
             <div class="sidebar-preview">
               <div class="sidebar-item">
-                <i class="fas fa-tachometer-alt"></i>
+                <i class="fas fa-tachometer-alt" />
                 <span>仪表盘</span>
               </div>
               <div class="sidebar-item active">
-                <i class="fas fa-users"></i>
+                <i class="fas fa-users" />
                 <span>用户管理</span>
-                <i class="fas fa-chevron-down"></i>
+                <i class="fas fa-chevron-down" />
               </div>
               <div class="submenu">
                 <div class="submenu-item">
-                  <i class="fas fa-list"></i>
+                  <i class="fas fa-list" />
                   <span>用户列表</span>
                 </div>
                 <div class="submenu-item active">
-                  <i class="fas fa-user-tag"></i>
+                  <i class="fas fa-user-tag" />
                   <span>角色管理</span>
                 </div>
               </div>
               <div class="sidebar-item">
-                <i class="fas fa-project-diagram"></i>
+                <i class="fas fa-project-diagram" />
                 <span>项目管理</span>
               </div>
             </div>
@@ -93,11 +93,21 @@
           <div class="preview-card">
             <h3>UI组件</h3>
             <div class="components-preview">
-              <button class="btn btn-primary">主要按钮</button>
-              <button class="btn btn-secondary">次要按钮</button>
-              <button class="btn btn-success">成功按钮</button>
-              <button class="btn btn-warning">警告按钮</button>
-              <button class="btn btn-danger">危险按钮</button>
+              <button class="btn btn-primary">
+                主要按钮
+              </button>
+              <button class="btn btn-secondary">
+                次要按钮
+              </button>
+              <button class="btn btn-success">
+                成功按钮
+              </button>
+              <button class="btn btn-warning">
+                警告按钮
+              </button>
+              <button class="btn btn-danger">
+                危险按钮
+              </button>
 
               <div class="card-preview">
                 <h4>卡片标题</h4>
@@ -111,7 +121,10 @@
             <div class="form-preview">
               <div class="form-group">
                 <label>输入框</label>
-                <input type="text" placeholder="请输入内容" />
+                <input
+                  type="text"
+                  placeholder="请输入内容"
+                >
               </div>
               <div class="form-group">
                 <label>下拉选择</label>
@@ -123,7 +136,7 @@
               </div>
               <div class="form-group">
                 <label>文本域</label>
-                <textarea placeholder="请输入多行文本"></textarea>
+                <textarea placeholder="请输入多行文本" />
               </div>
             </div>
           </div>

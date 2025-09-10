@@ -15,7 +15,7 @@ import type {
 
 import { EventBus } from './events';
 import { CacheManager as CacheManagerImpl } from './cache';
-import { StructuredLogger as StructuredLoggerImpl } from './logger';
+import { createLowCodeLogger } from '../adapters/logger-adapter';
 import { PerformanceMonitor as PerformanceMonitorImpl } from './monitor';
 import { PluginManager, PluginContextImpl } from './plugins';
 
@@ -113,13 +113,17 @@ export class LowCodeKernel {
   private status: KernelStatus = 'initializing';
   private startTime = Date.now();
   private shutdownPromise?: Promise<void>;
+  private healthCheckInterval?: number | ReturnType<typeof setTimeout>;
 
   constructor(config: LowCodeKernelConfig = {}) {
     // 合并默认配置
     this.config = this.mergeConfig(config);
 
-    // 初始化核心组件
-    this.logger = new StructuredLoggerImpl(this.config.logging);
+    // 初始化核心组件 - 使用前端日志系统
+    this.logger = createLowCodeLogger({
+      module: 'kernel',
+      config: this.config.logging
+    });
     this.monitor = new PerformanceMonitorImpl(this.logger);
     this.eventBus = new EventBus(this.logger);
     this.cache = new CacheManagerImpl({
@@ -367,21 +371,53 @@ export class LowCodeKernel {
         options
       });
 
-      // 并发生成（可配置并发数）
-      const concurrency = Math.min(schemas.length, 5);
+      // 并发生成（可配置并发数，默认5；失败不中断）
+      const defaultConcurrency = 5;
+      const configuredConcurrency =
+        (options as any).concurrency ??
+        (this as any).config?.plugins?.concurrentGenerate ??
+        defaultConcurrency;
+
+      const concurrency = Math.max(1, Math.min(schemas.length, Number(configuredConcurrency) || defaultConcurrency));
+
       const results: Array<GenerationResult<T>> = [];
 
-      for (let i = 0; i < schemas.length; i += concurrency) {
-        const batch = schemas.slice(i, i + concurrency);
-        const batchPromises = batch.map(schema =>
-          this.generate<T>(schema, options)
-        );
+      // 简易并发限制器
+      let index = 0;
+      const workers: Promise<void>[] = [];
 
-        const batchResults = await Promise.all(batchPromises);
-        results.push(...batchResults);
+      const runWorker = async () => {
+        while (index < schemas.length) {
+          const current = index++;
+          const schema = schemas[current];
+
+          try {
+            const res = await this.generate<T>(schema, options);
+            results[current] = res;
+          } catch (err) {
+            // 捕获异常，不中断整体
+            results[current] = {
+              success: false,
+              error: err as Error,
+              metadata: {
+                pluginName: '',
+                duration: 0,
+                cacheHit: false,
+                validationPassed: false,
+                timestamp: Date.now()
+              }
+            } as GenerationResult<T>;
+          }
+        }
+      };
+
+      for (let i = 0; i < concurrency; i++) {
+        workers.push(runWorker());
       }
 
-      const successful = results.filter(r => r.success).length;
+      await Promise.allSettled(workers);
+
+      const successful = results.filter(r => r?.success).length;
       const duration = timer.end({
         status: 'success',
         successful: successful.toString(),
@@ -436,7 +472,7 @@ export class LowCodeKernel {
     return (
       health.pluginsCount > 0 &&
       health.readyPluginsCount === health.pluginsCount &&
-      cacheStats.hitRate > 0.5 // 缓存命中率 > 50%
+      cacheStats.hitRate > 50 // 缓存命中率 > 50% (CacheManager返回0-100的百分比)
     );
   }
 
@@ -547,7 +583,7 @@ export class LowCodeKernel {
 
   private setupHealthChecks(): void {
     // 定期健康检查
-    setInterval(() => {
+    this.healthCheckInterval = setInterval(() => {
       const health = this.getHealthInfo();
 
       this.monitor.recordGauge('kernel.uptime', health.uptime);
@@ -630,6 +666,15 @@ export class LowCodeKernel {
     try {
       // 关闭插件管理器
       await this.pluginManager.destroy();
+
+      // 清理健康检查interval
+      if (this.healthCheckInterval) {
+        clearInterval(this.healthCheckInterval);
+        this.healthCheckInterval = undefined;
+      }
+
+      // 尝试移除所有事件监听器，避免泄漏
+      (this.eventBus as any).removeAllListeners?.();
 
       // 销毁监控器
       this.monitor.destroy();

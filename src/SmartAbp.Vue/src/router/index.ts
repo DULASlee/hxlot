@@ -18,6 +18,12 @@ const ProjectAnalysisView = () => import('@/views/project/ProjectAnalysisView.vu
 const PermissionsView = () => import('@/views/system/PermissionsView.vue')
 const UsersView = () => import('@/views/system/UsersView.vue')
 
+// 代码生成模块组件
+const LowCodeEngineView = () => import('@/views/codegen/LowCodeEngineView.vue')
+const SfcCompilerView = () => import('@/views/codegen/SfcCompilerView.vue')
+const DragDropFormView = () => import('@/views/codegen/DragDropFormView.vue')
+const PerformanceDashboard = () => import('@/views/codegen/PerformanceDashboard.vue')
+
 const routes: RouteRecordRaw[] = [
   // 登录页面
   {
@@ -221,6 +227,47 @@ const routes: RouteRecordRaw[] = [
         name: 'ThemeDebug',
         component: () => import('@/views/test/ThemeDebugView.vue'),
         meta: { title: '主题调试', menuKey: 'test-theme-debug' }
+      }
+    ]
+  },
+  // 代码生成模块
+  {
+    path: '/CodeGen',
+    component: SmartAbpLayout,
+    meta: {
+      title: '代码生成',
+      icon: '⚡',
+      requiresAuth: true,
+      requiredRoles: ['user']
+    },
+    children: [
+      {
+        path: 'engine',
+        name: 'LowCodeEngine',
+        component: LowCodeEngineView,
+        meta: { title: '低代码引擎控制台', menuKey: 'lowcode-engine' }
+      },
+      {
+        path: 'sfc',
+        name: 'SfcCompiler',
+        component: SfcCompilerView,
+        meta: { title: 'SFC编译器演示', menuKey: 'sfc-compiler' }
+      },
+      {
+        path: 'form',
+        name: 'DragDropForm',
+        component: DragDropFormView,
+        meta: { title: '拖拽表单开发器', menuKey: 'drag-drop-form' }
+      },
+      {
+        path: 'performance',
+        name: 'PerformanceMonitor',
+        component: PerformanceDashboard,
+        meta: {
+          title: '性能监控中心',
+          menuKey: 'performance-monitor',
+          requiredRoles: ['admin']
+        }
       }
     ]
   },

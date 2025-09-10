@@ -1,4 +1,4 @@
-﻿# SmartAbp - ABP vNext + Vue.js SPA 集成项目
+﻿﻿# SmartAbp - ABP vNext + Vue.js SPA 集成项目
 
 ## 📖 项目简介
 
@@ -48,6 +48,7 @@
 > **⚡ 所有开发人员必须首先阅读并严格遵守以下铁律**
 
 - **[项目开发铁律](doc/项目开发铁律.md)** - 🔴 强制执行的开发规范
+- **[BUG修复铁律（绝对禁令）](doc/engineering-rules.md)** - 🔴 必须执行，CI/PR 检查项
 - **[编码规范](doc/编码规范.md)** - 🔴 技术实现标准
 
 ## 📚 文档索引

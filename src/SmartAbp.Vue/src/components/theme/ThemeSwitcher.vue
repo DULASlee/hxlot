@@ -1,18 +1,30 @@
 <template>
   <div class="theme-switcher">
     <!-- 主题切换下拉菜单 -->
-    <div class="theme-switcher-dropdown" v-click-outside="closeDropdown">
+    <div
+      v-click-outside="closeDropdown"
+      class="theme-switcher-dropdown"
+    >
       <button
         class="theme-switcher-button"
-        @click="toggleDropdown"
         title="切换主题"
+        @click="toggleDropdown"
       >
-        <i :class="currentThemeIcon" class="theme-icon"></i>
+        <i
+          :class="currentThemeIcon"
+          class="theme-icon"
+        />
         <span class="theme-name">{{ currentThemeName }}</span>
-        <i class="fas fa-chevron-down dropdown-arrow" :class="{ 'rotate-180': isDropdownOpen }"></i>
+        <i
+          class="fas fa-chevron-down dropdown-arrow"
+          :class="{ 'rotate-180': isDropdownOpen }"
+        />
       </button>
 
-      <div class="theme-dropdown-menu" v-if="isDropdownOpen">
+      <div
+        v-if="isDropdownOpen"
+        class="theme-dropdown-menu"
+      >
         <!-- 一键暗黑模式切换 -->
         <div class="theme-dropdown-item dark-mode-toggle">
           <span>暗黑模式</span>
@@ -21,12 +33,12 @@
               type="checkbox"
               :checked="isDarkMode"
               @change="toggleDarkMode"
-            />
-            <span class="toggle-slider"></span>
+            >
+            <span class="toggle-slider" />
           </label>
         </div>
 
-        <div class="theme-dropdown-divider"></div>
+        <div class="theme-dropdown-divider" />
 
         <!-- 主题选择列表 -->
         <div
@@ -36,9 +48,15 @@
           :class="{ 'active': currentTheme === theme.value }"
           @click="setTheme(theme.value)"
         >
-          <div class="theme-preview" :style="{ backgroundColor: theme.color }"></div>
+          <div
+            class="theme-preview"
+            :style="{ backgroundColor: theme.color }"
+          />
           <span>{{ theme.name }}</span>
-          <i class="fas fa-check" v-if="currentTheme === theme.value"></i>
+          <i
+            v-if="currentTheme === theme.value"
+            class="fas fa-check"
+          />
         </div>
       </div>
     </div>

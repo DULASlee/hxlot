@@ -255,7 +255,7 @@ export class RealtimePreviewManager {
    */
   private generateFormTemplate(fields: FormField[], config: any = {}): string {
     const formItems = fields.map(field => this.generateFieldTemplate(field)).join('\n    ');
-    
+
     // 使用config配置表单属性
     const labelWidth = config.labelWidth || '120px';
     const formSize = config.size || 'default';
@@ -277,7 +277,7 @@ export class RealtimePreviewManager {
       ${config.disabled ? 'disabled' : ''}
     >
       ${formItems}
-      
+
       <el-form-item class="form-actions">
         <el-button type="primary" @click="handleSubmit" ${config.submitLoading ? ':loading="submitLoading"' : ''}>
           ${submitText}
@@ -286,7 +286,7 @@ export class RealtimePreviewManager {
         <el-button @click="handleReset">
           ${resetText}
         </el-button>` : ''}
-        ${config.customButtons ? config.customButtons.map((btn: any) => 
+        ${config.customButtons ? config.customButtons.map((btn: any) =>
           `<el-button type="${btn.type || 'default'}" @click="handle${btn.name}">
             ${btn.text}
           </el-button>`

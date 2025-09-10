@@ -11,6 +11,46 @@ export interface Schema {
   [key: string]: any;
 }
 
+// ============= 元数据模型（P0） =============
+export interface RawMetadata {
+  // 宽松输入：来源于设计器/导入/扫描
+  id?: string;
+  version?: string;
+  type?: string;
+  [key: string]: any;
+}
+
+export interface UnifiedMetadata {
+  // 强约束、可版本化、稳定可哈希
+  id: string;
+  version: string;
+  type: 'component' | 'page' | 'layout' | 'module';
+  i18n?: Record<string, string>;
+  a11y?: Record<string, any>;
+  dependencies?: string[];
+  capabilities?: string[];
+  runtime?: {
+    auth?: { required?: boolean; roles?: string[] };
+    tenant?: { required?: boolean };
+    persist?: { router?: boolean; store?: boolean };
+    lazy?: boolean;
+    degrade?: boolean;
+  };
+  generator?: {
+    targets?: Array<'vue3' | 'react' | 'uniapp' | 'abp' | 'vite' | 'webpack'>;
+    qualityGates?: { type?: boolean; lint?: boolean; test?: boolean };
+  };
+  // 扩展信息
+  extra?: Record<string, any>;
+  // P1: 跨平台配置占位
+  platform?: {
+    vite?: Record<string, any>;
+    webpack?: Record<string, any>;
+    uniapp?: Record<string, any>;
+    abp?: Record<string, any>;
+  };
+}
+
 export interface GeneratedCode {
   code: string;
   sourceMap?: string;
@@ -113,6 +153,17 @@ export interface LowCodeEventMap {
   'performance:metric': PerformanceMetricEvent;
   'performance:alert': PerformanceAlertEvent;
 
+  // 元数据处理
+  'metadata:processed': MetadataProcessedEvent;
+  'metadata:error': MetadataErrorEvent;
+  'metadata:recovered': MetadataRecoveredEvent;
+
+  // 联邦加载事件
+  'load:start': FederationLoadStartEvent;
+  'load:success': FederationLoadSuccessEvent;
+  'load:error': FederationLoadErrorEvent;
+  'cache:cleanup': FederationCacheCleanupEvent;
+
   // 系统事件
   'system:ready': SystemReadyEvent;
   'system:shutdown': SystemShutdownEvent;
@@ -200,6 +251,54 @@ export interface PerformanceAlertEvent {
   threshold: number;
   actual: number;
   severity: 'warning' | 'critical';
+  timestamp: number;
+}
+
+// 联邦加载事件定义
+export interface FederationLoadStartEvent {
+  scope: string;
+  module: string;
+  url: string;
+  timestamp: number;
+}
+
+export interface FederationLoadSuccessEvent {
+  scope: string;
+  module: string;
+  loadTime: number;
+  loadMethod: 'esm' | 'script';
+  fromCache: boolean;
+  timestamp: number;
+}
+
+export interface FederationLoadErrorEvent {
+  scope: string;
+  module: string;
+  error: Error;
+  errorType: string;
+  timestamp: number;
+}
+
+export interface FederationCacheCleanupEvent {
+  removedCount: number;
+  timestamp: number;
+}
+
+export interface MetadataProcessedEvent {
+  key: string;
+  duration: number;
+  cacheHit: boolean;
+  timestamp: number;
+}
+
+export interface MetadataErrorEvent {
+  error: Error;
+  timestamp: number;
+}
+
+export interface MetadataRecoveredEvent {
+  duration: number;
+  strategy: 'minimal' | 'skip-ai' | 'use-cache';
   timestamp: number;
 }
 
@@ -343,6 +442,7 @@ export interface StructuredLogger {
   warn(message: string, context?: Record<string, any>): void;
   error(message: string, error?: Error, context?: Record<string, any>): void;
   fatal(message: string, error?: Error, context?: Record<string, any>): void;
+  success?(message: string, context?: Record<string, any>): void;
 
   // 上下文管理
   child(context: Record<string, any>): StructuredLogger;
@@ -350,6 +450,9 @@ export interface StructuredLogger {
 
   // 批量日志
   batch(entries: LogEntry[]): void;
+
+  // 性能追踪
+  trackOperation?<T>(name: string, operation: () => Promise<T> | T): Promise<T>;
 
   // 配置
   setLevel(level: LogLevel): void;

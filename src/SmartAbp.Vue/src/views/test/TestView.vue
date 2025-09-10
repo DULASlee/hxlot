@@ -31,7 +31,10 @@
                 {{ theme.label }}
               </button>
             </div>
-            <button class="dark-toggle-btn" @click="toggleDark">
+            <button
+              class="dark-toggle-btn"
+              @click="toggleDark"
+            >
               {{ themeStore.isDarkMode ? '切换到浅色' : '切换到深色' }}
             </button>
           </div>
@@ -50,8 +53,12 @@
               <p><strong>当前菜单:</strong> {{ activeMenu }}</p>
             </div>
             <div class="layout-buttons">
-              <button @click="testSidebar">切换侧边栏</button>
-              <button @click="testSubmenu">切换副菜单</button>
+              <button @click="testSidebar">
+                切换侧边栏
+              </button>
+              <button @click="testSubmenu">
+                切换副菜单
+              </button>
             </div>
           </div>
 
@@ -62,8 +69,12 @@
               <p><strong>标签数量:</strong> {{ tabs.length }}</p>
             </div>
             <div class="tab-buttons">
-              <button @click="addTestTab">添加测试标签</button>
-              <button @click="closeAllTabs">关闭所有标签</button>
+              <button @click="addTestTab">
+                添加测试标签
+              </button>
+              <button @click="closeAllTabs">
+                关闭所有标签
+              </button>
             </div>
           </div>
         </div>
@@ -76,26 +87,42 @@
           <div class="test-card">
             <h3>系统管理页面</h3>
             <div class="nav-buttons">
-              <button @click="navigateTo('/Admin/users')">用户管理</button>
-              <button @click="navigateTo('/Admin/roles')">角色管理</button>
-              <button @click="navigateTo('/Admin/permissions')">权限管理</button>
+              <button @click="navigateTo('/Admin/users')">
+                用户管理
+              </button>
+              <button @click="navigateTo('/Admin/roles')">
+                角色管理
+              </button>
+              <button @click="navigateTo('/Admin/permissions')">
+                权限管理
+              </button>
             </div>
           </div>
 
           <div class="test-card">
             <h3>项目管理页面</h3>
             <div class="nav-buttons">
-              <button @click="navigateTo('/Project')">项目列表</button>
-              <button @click="navigateTo('/Project/analysis')">项目分析</button>
+              <button @click="navigateTo('/Project')">
+                项目列表
+              </button>
+              <button @click="navigateTo('/Project/analysis')">
+                项目分析
+              </button>
             </div>
           </div>
 
           <div class="test-card">
             <h3>其他页面</h3>
             <div class="nav-buttons">
-              <button @click="navigateTo('/profile')">个人中心</button>
-              <button @click="navigateTo('/Admin/settings')">系统设置</button>
-              <button @click="navigateTo('/dashboard')">返回工作台</button>
+              <button @click="navigateTo('/profile')">
+                个人中心
+              </button>
+              <button @click="navigateTo('/Admin/settings')">
+                系统设置
+              </button>
+              <button @click="navigateTo('/dashboard')">
+                返回工作台
+              </button>
             </div>
           </div>
         </div>
@@ -109,17 +136,28 @@
             <h3>本地存储测试</h3>
             <div class="storage-test">
               <input
-                type="text"
                 v-model="testData"
+                type="text"
                 placeholder="输入测试数据"
                 class="test-input"
-              />
+              >
               <div class="storage-buttons">
-                <button @click="saveToStorage">保存到本地</button>
-                <button @click="loadFromStorage">从本地加载</button>
-                <button @click="clearStorage">清除数据</button>
+                <button @click="saveToStorage">
+                  保存到本地
+                </button>
+                <button @click="loadFromStorage">
+                  从本地加载
+                </button>
+                <button @click="clearStorage">
+                  清除数据
+                </button>
               </div>
-              <p v-if="storageResult" class="storage-result">{{ storageResult }}</p>
+              <p
+                v-if="storageResult"
+                class="storage-result"
+              >
+                {{ storageResult }}
+              </p>
             </div>
           </div>
 
@@ -128,7 +166,9 @@
             <div class="responsive-test">
               <p><strong>窗口宽度:</strong> {{ windowWidth }}px</p>
               <p><strong>设备类型:</strong> {{ deviceType }}</p>
-              <button @click="testResponsive">测试响应式</button>
+              <button @click="testResponsive">
+                测试响应式
+              </button>
             </div>
           </div>
         </div>
@@ -147,7 +187,12 @@
             <span class="log-message">{{ log.message }}</span>
           </div>
         </div>
-        <button @click="clearLogs" class="clear-logs-btn">清除日志</button>
+        <button
+          class="clear-logs-btn"
+          @click="clearLogs"
+        >
+          清除日志
+        </button>
       </div>
     </div>
   </div>

@@ -1,0 +1,30 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src/lowcode",
+    "outDir": "dist/lowcode",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": false,
+    "skipLibCheck": true,
+    "sourceMap": false,
+    "lib": ["ES2022", "DOM", "WebWorker"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node", "vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": [
+    "src/lowcode/**/*.ts",
+    "src/lowcode/**/*.tsx"
+  ],
+  "exclude": [
+    "src/lowcode/examples/**",
+    "src/lowcode/**/*.test.ts",
+    "src/lowcode/examples/unified-logging-example.ts",
+    "src/utils/**"
+  ]
+}

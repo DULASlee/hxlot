@@ -1,4 +1,10 @@
+/**
+ * 向后兼容的日志器 - 现在基于增强的日志系统
+ * @deprecated 建议使用 @/utils/logging 中的新日志系统
+ */
+
 import { ref, type Ref } from 'vue'
+import { logger as enhancedLogger, LogLevel as EnhancedLogLevel } from './logging'
 
 // 日志级别枚举
 export enum LogLevel {
@@ -52,82 +58,76 @@ export interface LogStats {
 // 日志订阅者类型
 type LogSubscriber = (logs: LogEntry[]) => void
 
-// 日志记录器类
+// 兼容性日志记录器类 - 包装增强日志系统
 class Logger {
-  private logs: Ref<LogEntry[]> = ref([])
+  private compatLogger = enhancedLogger.child({ source: 'legacy-logger' })
   private subscribers: LogSubscriber[] = []
-  private maxLogs = 1000
 
-  // 添加日志条目
-  private addLog(level: LogLevel, message: string, data?: any) {
-    const entry: LogEntry = {
-      id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      level,
-      message,
-      timestamp: Date.now(),
-      data
-    }
+  // 调试日志
+  debug(message: string, data?: any) {
+    this.compatLogger.debug(message, data)
+    this.notifySubscribers()
+  }
 
-    this.logs.value.push(entry)
+  // 信息日志
+  info(message: string, data?: any) {
+    this.compatLogger.info(message, data)
+    this.notifySubscribers()
+  }
 
-    // 限制日志数量
-    if (this.logs.value.length > this.maxLogs) {
-      this.logs.value.shift()
-    }
+  // 成功日志
+  success(message: string, data?: any) {
+    this.compatLogger.success(message, data)
+    this.notifySubscribers()
+  }
 
+  // 警告日志
+  warn(message: string, data?: any) {
+    this.compatLogger.warn(message, data)
+    this.notifySubscribers()
+  }
+
+  // 错误日志
+  error(message: string, data?: any) {
+    this.compatLogger.error(message, data)
     this.notifySubscribers()
   }
 
   // 通知订阅者
   private notifySubscribers() {
     this.subscribers.forEach(subscriber => {
-      subscriber(this.logs.value)
+      try {
+        subscriber(this.getLogs())
+      } catch (error) {
+        console.error('Logger subscriber error:', error)
+      }
     })
   }
 
-  // 调试日志
-  debug(message: string, data?: any) {
-    this.addLog(LogLevel.DEBUG, message, data)
-    console.debug(`[DEBUG] ${message}`, data)
-  }
-
-  // 信息日志
-  info(message: string, data?: any) {
-    this.addLog(LogLevel.INFO, message, data)
-    console.info(`[INFO] ${message}`, data)
-  }
-
-  // 成功日志
-  success(message: string, data?: any) {
-    this.addLog(LogLevel.SUCCESS, message, data)
-    console.log(`[SUCCESS] ${message}`, data)
-  }
-
-  // 警告日志
-  warn(message: string, data?: any) {
-    this.addLog(LogLevel.WARN, message, data)
-    console.warn(`[WARN] ${message}`, data)
-  }
-
-  // 错误日志
-  error(message: string, data?: any) {
-    this.addLog(LogLevel.ERROR, message, data)
-    console.error(`[ERROR] ${message}`, data)
-  }
-
-  // 获取所有日志
-  getLogs() {
-    return this.logs.value
+  // 获取所有日志 - 转换格式以保持兼容性
+  getLogs(): LogEntry[] {
+    const enhancedLogs = this.compatLogger.getLogs()
+    return enhancedLogs.map(log => ({
+      id: log.id,
+      level: this.mapEnhancedLogLevel(log.level),
+      message: log.message,
+      timestamp: log.timestamp,
+      category: log.context?.category || log.context?.module || log.source,
+      data: log.metadata,
+      source: log.source,
+      stack: log.metadata?.error?.stack
+    }))
   }
 
   // 获取日志的响应式引用
-  getLogsRef() {
-    return this.logs
+  getLogsRef(): Ref<LogEntry[]> {
+    // 创建响应式引用，实时转换增强日志格式
+    return ref(this.getLogs())
   }
 
   // 获取日志统计
   getStats(): LogStats {
-    const logs = this.logs.value
+    const logs = this.getLogs()
     return {
       total: logs.length,
       debug: logs.filter(log => log.level === LogLevel.DEBUG).length,
@@ -138,40 +138,33 @@ class Logger {
     }
   }
 
-  // 导出日志
-  export(format: 'json' | 'csv' | 'txt' = 'json'): string {
-    const logs = this.logs.value
-
-    switch (format) {
-      case 'json':
-        return JSON.stringify(logs, null, 2)
-      case 'csv':
-        const headers = ['时间', '级别', '消息', '分类', '数据']
-        const rows = logs.map(log => [
-          new Date(log.timestamp).toLocaleString(),
-          LOG_LEVEL_NAMES[log.level],
-          log.message,
-          log.category || '',
-          log.data ? JSON.stringify(log.data) : ''
-        ])
-        return [headers, ...rows].map(row => row.join(',')).join('\n')
-      case 'txt':
-        return logs.map(log =>
-          `[${new Date(log.timestamp).toLocaleString()}] ${LOG_LEVEL_NAMES[log.level]}: ${log.message}`
-        ).join('\n')
-      default:
-        return JSON.stringify(logs, null, 2)
+  // 映射增强日志级别到旧格式
+  private mapEnhancedLogLevel(level: number): LogLevel {
+    switch (level) {
+      case EnhancedLogLevel.DEBUG: return LogLevel.DEBUG
+      case EnhancedLogLevel.INFO: return LogLevel.INFO
+      case EnhancedLogLevel.SUCCESS: return LogLevel.SUCCESS
+      case EnhancedLogLevel.WARN: return LogLevel.WARN
+      case EnhancedLogLevel.ERROR:
+      case EnhancedLogLevel.FATAL:
+        return LogLevel.ERROR
+      default: return LogLevel.INFO
     }
+  }
+
+  // 导出日志 - 委托给增强日志系统
+  export(format: 'json' | 'csv' | 'txt' = 'json'): string {
+    return this.compatLogger.export(format)
   }
 
   // 清空日志
   clear() {
-    this.logs.value.splice(0, this.logs.value.length)
+    this.compatLogger.clear()
     this.notifySubscribers()
   }
 
   // 订阅日志变化
-  subscribe(callback: LogSubscriber) {
+  subscribe(callback: LogSubscriber): () => void {
     this.subscribers.push(callback)
     return () => {
       const index = this.subscribers.indexOf(callback)
@@ -183,14 +176,75 @@ class Logger {
 
   // 设置最大日志数量
   setMaxLogs(max: number) {
-    this.maxLogs = max
-    if (this.logs.value.length > max) {
-      this.logs.value.splice(0, this.logs.value.length - max)
-      this.notifySubscribers()
-    }
+    this.compatLogger.setMaxLogs(max)
+    this.notifySubscribers()
+  }
+
+  // 新增：访问增强日志系统的方法
+  getEnhancedLogger() {
+    return this.compatLogger
   }
 }
 
-// 创建全局日志实例
+// 创建全局日志实例 - 向后兼容
 export const logger = new Logger()
+
+// ============= 迁移提示和新API推荐 =============
+
+/**
+ * @deprecated 建议迁移到新的增强日志系统
+ *
+ * 旧API：
+ * import { logger } from '@/utils/logger'
+ * logger.info('消息', data)
+ *
+ * 新API：
+ * import { logger, createComponentLogger } from '@/utils/logging'
+ * const componentLogger = createComponentLogger('MyComponent')
+ * componentLogger.info('消息', data)
+ *
+ * 新API优势：
+ * - 传输器架构 (ConsoleTransport, FileTransport, NetworkTransport)
+ * - 结构化日志格式
+ * - 子日志器支持 logger.child({ component: 'Name' })
+ * - 性能追踪 logger.trackAsync()
+ * - 真正的文件写入
+ * - 批量处理优化
+ */
+
+// 便捷的迁移方法 - 直接暴露增强日志系统的功能
+export const enhanced = {
+  // 获取增强日志器
+  getLogger: () => enhancedLogger,
+
+  // 创建子日志器
+  child: (context: Record<string, any>) => enhancedLogger.child(context),
+
+  // 性能追踪
+  trackAsync: <T>(name: string, operation: () => Promise<T>, context?: Record<string, any>) =>
+    enhancedLogger.trackAsync(name, operation, context),
+
+  trackSync: <T>(name: string, operation: () => T, context?: Record<string, any>) =>
+    enhancedLogger.trackSync(name, operation, context),
+
+  // 导出诊断报告
+  exportDiagnostic: () => enhancedLogger.exportDiagnosticReport()
+}
+
+/**
+ * 快速迁移示例：
+ *
+ * // 旧方式
+ * logger.info('用户操作', { userId: 123, action: 'login' })
+ *
+ * // 新方式 (推荐)
+ * import { createComponentLogger } from '@/utils/logging'
+ * const userLogger = createComponentLogger('UserComponent')
+ * userLogger.info('用户操作', { userId: 123, action: 'login' })
+ *
+ * // 或者使用增强功能
+ * import { enhanced } from '@/utils/logger'
+ * const userLogger = enhanced.child({ component: 'UserComponent' })
+ * userLogger.info('用户操作', { userId: 123, action: 'login' })
+ */
 

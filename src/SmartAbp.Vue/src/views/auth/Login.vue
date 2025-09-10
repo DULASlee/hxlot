@@ -4,10 +4,18 @@
       <div class="login-card">
         <div class="login-header">
           <div class="logo">
-            <img src="/logo.svg" alt="SmartAbp Logo" class="logo-img" />
-            <h1 class="system-title">SmartAbp 企业管理系统</h1>
+            <img
+              src="/logo.svg"
+              alt="SmartAbp Logo"
+              class="logo-img"
+            >
+            <h1 class="system-title">
+              SmartAbp 企业管理系统
+            </h1>
           </div>
-          <p class="login-subtitle">欢迎登录系统</p>
+          <p class="login-subtitle">
+            欢迎登录系统
+          </p>
         </div>
 
         <LoginForm />

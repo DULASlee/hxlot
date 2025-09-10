@@ -226,14 +226,12 @@ export class PluginManager {
 
   constructor(
     private eventBus: EventBus,
-    _cache: CacheManager,
+    private cache: CacheManager,
     private logger: StructuredLogger,
     private monitor: PerformanceMonitor,
-    _config: any
+    private config: any
   ) {
-    // 标记未使用的参数
-    void _cache;
-    void _config;
+    // 所有参数都被使用，无需void标记
   }
 
   /**
@@ -255,13 +253,13 @@ export class PluginManager {
     }
 
     // 添加到依赖解析器
-    this.dependencyResolver.addPlugin(name, plugin.metadata.dependencies);
+    this.dependencyResolver.addPlugin(name, plugin.metadata.dependencies ?? []);
 
     // 创建插件信息
     const info: PluginInfo = {
       plugin,
       status: 'registered',
-      dependencies: plugin.metadata.dependencies,
+      dependencies: plugin.metadata.dependencies ?? [],
       dependents: []
     };
 
@@ -314,9 +312,21 @@ export class PluginManager {
       //   this
       // );
 
-      // 调用插件初始化
+      // 为插件创建上下文（可选传入）
+      const context = new PluginContextImpl(
+        this.eventBus,
+        this.cache,
+        this.logger.child({ plugin: name }),
+        this.monitor,
+        this.config,
+        this
+      );
+
+      // 调用插件初始化（兼容无参签名）
       if (info.plugin.onInit) {
-        await info.plugin.onInit();
+        await (info.plugin.onInit.length > 0
+          ? (info.plugin.onInit as (ctx?: PluginContext) => Promise<void>)(context)
+          : info.plugin.onInit());
       }
 
       const initTime = performance.now() - startTime;

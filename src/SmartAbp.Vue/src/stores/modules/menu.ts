@@ -59,10 +59,14 @@ export const useMenuStore = defineStore('menu', () => {
       token: !!authStore.token
     })
 
-    // 如果用户未认证，返回空菜单
+    // 未认证时以访客身份展示带有 GUEST 权限的菜单（仍需路由鉴权）
     if (!authStore.isAuthenticated) {
-      console.warn('🚫 用户未认证，返回空菜单')
-      return []
+      const guestUser = { roles: ['guest'] }
+      const filtered = menuFilter.filterMenus(menuConfig.menus, guestUser, {
+        filterHidden: true,
+        filterPermissions: true
+      })
+      return filtered
     }
 
     // 使用权限过滤器过滤菜单 - 传入用户信息

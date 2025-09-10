@@ -21,7 +21,8 @@ interface ListenerRegistry<T> {
 export class EventBus implements IEventBus {
   private listeners = new Map<keyof LowCodeEventMap, Set<ListenerRegistry<any>>>();
   private eventHistory = new Map<string, any[]>();
-  private isProcessing = new Set<keyof LowCodeEventMap>();
+  private eventQueue = new Map<keyof LowCodeEventMap, Array<{ data: any; resolve: () => void; reject: (err: Error) => void }>>();
+  private processingPromises = new Map<keyof LowCodeEventMap, Promise<void>>();
   private maxHistorySize = 1000;
   private logger?: StructuredLogger;
 
@@ -96,40 +97,99 @@ export class EventBus implements IEventBus {
     event: K,
     data: LowCodeEventMap[K]
   ): Promise<void> {
-    // 防止重入
-    if (this.isProcessing.has(event)) {
-      this.logger?.warn('Event emission skipped due to re-entrance', { event });
+    // 如果正在处理此事件，加入队列等待
+    if (this.processingPromises.has(event)) {
+      return this.enqueueEvent(event, data);
+    }
+
+    // 开始处理事件
+    const processingPromise = this.processEvent(event, data);
+    this.processingPromises.set(event, processingPromise);
+
+    try {
+      await processingPromise;
+    } finally {
+      this.processingPromises.delete(event);
+      // 处理队列中的下一个事件
+      await this.processEventQueue(event);
+    }
+  }
+
+  private async enqueueEvent<K extends keyof LowCodeEventMap>(
+    event: K,
+    data: LowCodeEventMap[K]
+  ): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (!this.eventQueue.has(event)) {
+        this.eventQueue.set(event, []);
+      }
+
+      this.eventQueue.get(event)!.push({
+        data,
+        resolve,
+        reject
+      });
+
+      this.logger?.debug('Event queued due to concurrent processing', {
+        event,
+        queueSize: this.eventQueue.get(event)!.length
+      });
+    });
+  }
+
+  private async processEvent<K extends keyof LowCodeEventMap>(
+    event: K,
+    data: LowCodeEventMap[K]
+  ): Promise<void> {
+    // 记录事件历史
+    this.recordEvent(event, data);
+
+    const listeners = this.listeners.get(event);
+    if (!listeners || listeners.size === 0) {
       return;
     }
 
-    this.isProcessing.add(event);
+    const promises: Promise<void>[] = [];
+
+    for (const registry of listeners) {
+      const promise = this.executeHandler(event, registry, data);
+      promises.push(promise);
+
+      // 如果是一次性监听器，执行后移除
+      if (registry.options.once) {
+        listeners.delete(registry);
+      }
+    }
+
+    // 等待所有处理器完成
+    await Promise.allSettled(promises);
+  }
+
+  private async processEventQueue<K extends keyof LowCodeEventMap>(
+    event: K
+  ): Promise<void> {
+    const queue = this.eventQueue.get(event);
+    if (!queue || queue.length === 0) {
+      return;
+    }
+
+    // 取出第一个排队的事件
+    const queuedEvent = queue.shift()!;
 
     try {
-      // 记录事件历史
-      this.recordEvent(event, data);
+      // 开始处理队列中的事件
+      const processingPromise = this.processEvent(event, queuedEvent.data);
+      this.processingPromises.set(event, processingPromise);
 
-      const listeners = this.listeners.get(event);
-      if (!listeners || listeners.size === 0) {
-        return;
-      }
+      await processingPromise;
+      queuedEvent.resolve();
 
-      const promises: Promise<void>[] = [];
-
-      for (const registry of listeners) {
-        const promise = this.executeHandler(event, registry, data);
-        promises.push(promise);
-
-        // 如果是一次性监听器，执行后移除
-        if (registry.options.once) {
-          listeners.delete(registry);
-        }
-      }
-
-      // 等待所有处理器完成
-      await Promise.allSettled(promises);
-
+    } catch (error) {
+      queuedEvent.reject(error as Error);
     } finally {
-      this.isProcessing.delete(event);
+      this.processingPromises.delete(event);
+      // 递归处理剩余队列
+      await this.processEventQueue(event);
     }
   }
 
@@ -147,7 +207,7 @@ export class EventBus implements IEventBus {
     for (const registry of listeners) {
       try {
         const result = registry.handler(data);
-        
+
         // 如果返回Promise，记录警告（同步模式不应该返回Promise）
         if (result instanceof Promise) {
           this.logger?.warn('Async handler in sync emit', { event });
@@ -178,7 +238,7 @@ export class EventBus implements IEventBus {
     }
 
     const allHistory: Array<{ event: string; data: any; timestamp: number }> = [];
-    
+
     for (const [eventName, events] of this.eventHistory) {
       allHistory.push(...events.map(data => ({ event: eventName, data, timestamp: data.timestamp })));
     }
@@ -204,11 +264,11 @@ export class EventBus implements IEventBus {
    */
   getListenerStats(): Record<string, number> {
     const stats: Record<string, number> = {};
-    
+
     for (const [event, listeners] of this.listeners) {
       stats[event as string] = listeners.size;
     }
-    
+
     return stats;
   }
 
@@ -232,7 +292,7 @@ export class EventBus implements IEventBus {
   ): Promise<void> {
     try {
       const result = registry.handler(data);
-      
+
       // 如果是Promise，等待完成
       if (result instanceof Promise) {
         await result;
@@ -277,7 +337,7 @@ export class EventBus implements IEventBus {
     data: LowCodeEventMap[K]
   ): void {
     const eventKey = event as string;
-    
+
     if (!this.eventHistory.has(eventKey)) {
       this.eventHistory.set(eventKey, []);
     }

@@ -226,6 +226,226 @@ const createUser = async (data: any): Promise<any> => {
 - **类型覆盖率**: >95%
 - **重复代码率**: <5%
 
+## 🚀 低代码引擎架构强制约束
+
+### 微内核架构分层约束
+**🔴 低代码引擎必须严格遵循微内核架构：**
+
+```typescript
+// ✅ 强制架构分层
+src/lowcode/
+├── kernel/                    # 🔥 微内核层 - 绝对稳定
+│   ├── core.ts               # 核心引擎（禁止修改核心接口）
+│   ├── types.ts              # 类型定义（向后兼容）
+│   ├── plugin-manager.ts     # 插件管理器
+│   └── schema-validator.ts   # Schema验证器
+├── plugins/                   # 🔥 插件层 - 沙箱隔离
+│   ├── vue3/                 # Vue3生成器插件
+│   ├── react/                # React生成器插件
+│   ├── abp/                  # ABP后端生成器插件
+│   ├── uniapp/               # UniApp跨端生成器插件
+│   └── common/               # 通用插件基础
+├── schemas/                   # 🔥 Schema层 - 严格验证
+│   ├── component.schema.json # 组件Schema定义
+│   ├── page.schema.json      # 页面Schema定义
+│   ├── api.schema.json       # API Schema定义
+│   └── validation/           # 验证器实现
+├── runtime/                   # 🔥 运行时层 - 执行环境
+│   ├── sandbox.ts            # 沙箱执行环境
+│   ├── monitor.ts            # 性能监控
+│   └── security.ts           # 安全控制
+└── examples/                  # 🔥 示例层 - 标准参考
+
+// ❌ 严禁的架构违规
+// plugins/ 直接调用其他 plugins/ = 禁止
+// runtime/ 直接修改 kernel/ = 禁止
+// examples/ 包含业务逻辑 = 禁止
+```
+
+### 低代码引擎依赖关系强制规则
+**🔴 严格的依赖层次约束：**
+
+```typescript
+// ✅ 允许的依赖关系
+kernel/ → (无外部依赖)           // 微内核完全自含
+plugins/ → kernel/              // 插件依赖内核
+runtime/ → kernel/ + plugins/   // 运行时依赖内核和插件
+schemas/ → kernel/              // Schema依赖内核验证
+examples/ → runtime/ + plugins/ // 示例依赖运行时和插件
+
+// ❌ 禁止的依赖关系
+kernel/ → plugins/              // ❌ 内核不能依赖插件
+kernel/ → runtime/              // ❌ 内核不能依赖运行时
+plugins/ → runtime/             // ❌ 插件不能依赖运行时
+schemas/ → plugins/             // ❌ Schema不能依赖具体插件
+plugins/vue3/ → plugins/react/ // ❌ 插件间不能直接依赖
+```
+
+### 低代码引擎接口强制标准
+**🔴 统一的插件接口约束：**
+
+```typescript
+// ✅ 强制实现的插件接口
+export interface CodegenPlugin<TSchema, TConfig, TResult> {
+  // 必需的元数据
+  readonly metadata: PluginMetadata;
+  
+  // 必需的生命周期方法
+  canHandle(schema: any): boolean;
+  validate(schema: TSchema): Promise<ValidationResult>;
+  generate(schema: TSchema, config: TConfig, context: PluginContext): Promise<TResult>;
+  
+  // 可选的生命周期方法
+  onInit?(): Promise<void>;
+  onDestroy?(): Promise<void>;
+  onError?(error: Error): Promise<void>;
+}
+
+// ✅ 强制的插件元数据结构
+export interface PluginMetadata {
+  name: string;                  // ✅ 必需：插件名称
+  version: string;               // ✅ 必需：版本号
+  description?: string;          // ✅ 可选：描述
+  author?: string;               // ✅ 可选：作者
+  dependencies: string[];        // ✅ 必需：依赖列表
+  peerDependencies: string[];    // ✅ 必需：对等依赖
+  target: FrameworkTarget[];     // ✅ 必需：目标框架
+  capabilities: PluginCapability[]; // ✅ 必需：能力声明
+}
+
+// ❌ 严禁的插件实现
+// 不实现必需方法的插件 = 禁止
+// 不声明依赖关系的插件 = 禁止
+// 不支持沙箱隔离的插件 = 禁止
+// 直接访问DOM/文件系统的插件 = 禁止
+```
+
+### 低代码引擎安全架构约束
+**🔴 沙箱隔离和安全边界：**
+
+```typescript
+// ✅ 强制的安全架构
+interface SecurityArchitecture {
+  // 插件沙箱隔离
+  pluginSandbox: {
+    isolatedContext: true,       // ✅ 隔离执行上下文
+    resourceLimits: {            // ✅ 资源限制
+      maxMemory: '50MB',
+      maxExecutionTime: '5s',
+      maxFileSize: '10MB'
+    },
+    permissionSystem: {          // ✅ 权限系统
+      fileAccess: 'sandboxed',
+      networkAccess: 'proxy',
+      systemAccess: 'denied'
+    }
+  };
+  
+  // 代码生成安全边界
+  codeGeneration: {
+    inputValidation: true,       // ✅ 输入验证
+    outputSanitization: true,    // ✅ 输出消毒
+    codeInjectionPrevention: true, // ✅ 代码注入防护
+    xssProtection: true          // ✅ XSS防护
+  };
+  
+  // Schema安全验证
+  schemaValidation: {
+    strictMode: true,            // ✅ 严格模式
+    additionalProperties: false, // ✅ 禁止额外属性
+    depthLimit: 10,              // ✅ 深度限制
+    sizeLimit: '1MB'             // ✅ 大小限制
+  };
+}
+
+// ❌ 严禁的安全违规
+// 插件直接访问宿主环境 = 禁止
+// 绕过输入验证 = 禁止
+// 生成包含安全漏洞的代码 = 禁止
+// 不经过沙箱直接执行代码 = 禁止
+```
+
+### 低代码引擎性能架构要求
+**🔴 性能优先的架构设计：**
+
+```typescript
+// ✅ 强制的性能架构
+interface PerformanceArchitecture {
+  // 代码生成性能
+  codeGeneration: {
+    maxGenerationTime: 156,      // ✅ 最大生成时间156ms
+    batchProcessing: true,       // ✅ 批量处理支持
+    incrementalGeneration: true, // ✅ 增量生成
+    caching: {                   // ✅ 缓存策略
+      schemaCache: true,
+      templateCache: true,
+      resultCache: true
+    }
+  };
+  
+  // 内存管理
+  memoryManagement: {
+    maxMemoryUsage: 200,         // ✅ 最大内存200MB
+    garbageCollection: 'auto',   // ✅ 自动垃圾回收
+    memoryLeakDetection: true,   // ✅ 内存泄漏检测
+    resourcePooling: true        // ✅ 资源池化
+  };
+  
+  // 并发处理
+  concurrency: {
+    maxConcurrentJobs: 100,      // ✅ 最大并发任务100
+    queueManagement: true,       // ✅ 队列管理
+    loadBalancing: true,         // ✅ 负载均衡
+    backpressure: true           // ✅ 背压控制
+  };
+}
+
+// ❌ 严禁的性能反模式
+// 同步阻塞的代码生成 = 禁止
+// 无限制的内存使用 = 禁止
+// 不支持取消的长时间操作 = 禁止
+// 没有缓存的重复计算 = 禁止
+```
+
+### 低代码引擎可扩展性架构
+**🔴 面向未来的可扩展设计：**
+
+```typescript
+// ✅ 强制的可扩展性架构
+interface ExtensibilityArchitecture {
+  // 插件扩展机制
+  pluginExtensions: {
+    hotReloading: true,          // ✅ 热重载支持
+    versionManagement: true,     // ✅ 版本管理
+    dependencyResolution: true,  // ✅ 依赖解析
+    apiVersioning: true          // ✅ API版本化
+  };
+  
+  // Schema扩展机制
+  schemaExtensions: {
+    customTypes: true,           // ✅ 自定义类型
+    inheritance: true,           // ✅ Schema继承
+    composition: true,           // ✅ Schema组合
+    backwardCompatibility: true  // ✅ 向后兼容
+  };
+  
+  // 运行时扩展机制
+  runtimeExtensions: {
+    middlewareSupport: true,     // ✅ 中间件支持
+    eventSystem: true,           // ✅ 事件系统
+    hookSystem: true,            // ✅ 钩子系统
+    configurationOverride: true // ✅ 配置覆盖
+  };
+}
+
+// ❌ 严禁的扩展性反模式
+// 硬编码的框架支持 = 禁止
+// 不支持版本化的API = 禁止
+// 破坏向后兼容性的更改 = 禁止
+// 不支持配置化的固定实现 = 禁止
+```
+
 ---
 
 **🎯 架构一致性是项目成功的基石，违反架构规则将导致技术债务激增！**
+**🚀 低代码引擎架构是智能化开发的基础，必须严格遵循微内核架构原则！**

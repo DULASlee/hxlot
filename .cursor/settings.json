@@ -15,5 +15,14 @@
     "Git Bash": {
       "path": "C:\\Program Files\\Git\\bin\\bash.exe"
     }
-  }  
+  },
+  "terminal.integrated.confirmOnExit": false,
+  "terminal.integrated.confirmOnKill": false,
+  "mcp.trustedTools": [
+  "serena",          // ← 你实际用的工具名
+  "serena-ai",
+  "sequential-thinking",
+  "interactive-feedback-mcp"
+],
+"mcp.confirmOnRun": false
 }

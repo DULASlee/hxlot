@@ -12,9 +12,9 @@
         <button 
           v-for="theme in availableThemes" 
           :key="theme.value"
-          @click="setTheme(theme.value as ThemeType)"
           :class="{ active: themeStore.currentTheme === theme.value }"
           class="theme-btn"
+          @click="setTheme(theme.value as ThemeType)"
         >
           {{ theme.label }}
         </button>
@@ -23,10 +23,10 @@
       <div class="dark-mode-control">
         <label>
           <input 
-            type="checkbox" 
             v-model="themeStore.isDarkMode" 
+            type="checkbox" 
             @change="themeStore.toggleDarkMode()"
-          />
+          >
           暗黑模式
         </label>
       </div>
@@ -38,28 +38,50 @@
       <div class="sample-card">
         <h3>颜色测试</h3>
         <div class="color-grid">
-          <div class="color-item bg-primary">主色</div>
-          <div class="color-item bg-component">组件背景</div>
-          <div class="color-item bg-elevated">提升背景</div>
-          <div class="color-item text-primary">主要文本</div>
-          <div class="color-item text-secondary">次要文本</div>
-          <div class="color-item border-base">边框</div>
+          <div class="color-item bg-primary">
+            主色
+          </div>
+          <div class="color-item bg-component">
+            组件背景
+          </div>
+          <div class="color-item bg-elevated">
+            提升背景
+          </div>
+          <div class="color-item text-primary">
+            主要文本
+          </div>
+          <div class="color-item text-secondary">
+            次要文本
+          </div>
+          <div class="color-item border-base">
+            边框
+          </div>
         </div>
       </div>
 
       <div class="sample-card">
         <h3>按钮测试</h3>
         <div class="button-group">
-          <button class="btn btn-primary">主要按钮</button>
-          <button class="btn btn-secondary">次要按钮</button>
-          <button class="btn btn-outline">边框按钮</button>
+          <button class="btn btn-primary">
+            主要按钮
+          </button>
+          <button class="btn btn-secondary">
+            次要按钮
+          </button>
+          <button class="btn btn-outline">
+            边框按钮
+          </button>
         </div>
       </div>
 
       <div class="sample-card">
         <h3>表单测试</h3>
         <div class="form-group">
-          <input type="text" placeholder="输入文本" class="form-input" />
+          <input
+            type="text"
+            placeholder="输入文本"
+            class="form-input"
+          >
           <select class="form-select">
             <option>选择选项</option>
             <option>选项1</option>

@@ -3,7 +3,10 @@
     <h2>认证状态示例</h2>
 
     <!-- 未登录状态 -->
-    <div v-if="!authStore.isAuthenticated" class="login-section">
+    <div
+      v-if="!authStore.isAuthenticated"
+      class="login-section"
+    >
       <h3>用户登录</h3>
       <form @submit.prevent="handleLogin">
         <div class="form-group">
@@ -13,7 +16,7 @@
             type="text"
             required
             placeholder="请输入用户名"
-          />
+          >
         </div>
         <div class="form-group">
           <label>密码:</label>
@@ -22,7 +25,7 @@
             type="password"
             required
             placeholder="请输入密码"
-          />
+          >
         </div>
         <button
           type="submit"
@@ -35,15 +38,24 @@
     </div>
 
     <!-- 已登录状态 -->
-    <div v-else class="user-section">
+    <div
+      v-else
+      class="user-section"
+    >
       <h3>用户信息</h3>
-      <div v-if="authStore.userInfo" class="user-info">
+      <div
+        v-if="authStore.userInfo"
+        class="user-info"
+      >
         <p><strong>用户ID:</strong> {{ authStore.userInfo.id }}</p>
         <p><strong>用户名:</strong> {{ authStore.userInfo.username }}</p>
         <p><strong>邮箱:</strong> {{ authStore.userInfo.email }}</p>
         <p><strong>角色:</strong> {{ authStore.userInfo.roles.join(', ') }}</p>
       </div>
-      <button @click="handleLogout" class="logout-btn">
+      <button
+        class="logout-btn"
+        @click="handleLogout"
+      >
         登出
       </button>
     </div>
@@ -54,29 +66,29 @@
       <div class="theme-controls">
         <label>
           <input
+            v-model="themeStore.currentTheme"
             type="radio"
             value="light"
-            v-model="themeStore.currentTheme"
             @change="handleThemeChange"
-          />
+          >
           浅色主题
         </label>
         <label>
           <input
+            v-model="themeStore.currentTheme"
             type="radio"
             value="dark"
-            v-model="themeStore.currentTheme"
             @change="handleThemeChange"
-          />
+          >
           深色主题
         </label>
         <label>
           <input
+            v-model="themeStore.currentTheme"
             type="radio"
             value="auto"
-            v-model="themeStore.currentTheme"
             @change="handleThemeChange"
-          />
+          >
           跟随系统
         </label>
       </div>
@@ -86,10 +98,16 @@
     <!-- API测试 -->
     <div class="api-section">
       <h3>API测试</h3>
-      <button @click="testApi" :disabled="isTestingApi">
+      <button
+        :disabled="isTestingApi"
+        @click="testApi"
+      >
         {{ isTestingApi ? '测试中...' : '测试API连接' }}
       </button>
-      <div v-if="apiResult" class="api-result">
+      <div
+        v-if="apiResult"
+        class="api-result"
+      >
         <pre>{{ apiResult }}</pre>
       </div>
     </div>

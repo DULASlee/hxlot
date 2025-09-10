@@ -4,7 +4,10 @@
     <div class="dashboard-header">
       <div class="header-left">
         <h2>日志仪表板</h2>
-        <el-text type="info" size="small">
+        <el-text
+          type="info"
+          size="small"
+        >
           实时监控系统日志和性能指标
         </el-text>
       </div>
@@ -31,65 +34,105 @@
 
     <!-- 统计卡片 -->
     <div class="stats-cards">
-      <el-card class="stat-card" shadow="hover">
+      <el-card
+        class="stat-card"
+        shadow="hover"
+      >
         <div class="stat-content">
           <div class="stat-icon error">
             <el-icon><Warning /></el-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ stats.errorCount }}</div>
-            <div class="stat-label">错误</div>
+            <div class="stat-value">
+              {{ stats.errorCount }}
+            </div>
+            <div class="stat-label">
+              错误
+            </div>
           </div>
         </div>
-        <div class="stat-trend" :class="{ increase: stats.errorTrend > 0 }">
+        <div
+          class="stat-trend"
+          :class="{ increase: stats.errorTrend > 0 }"
+        >
           <el-icon><TrendCharts /></el-icon>
           {{ stats.errorTrend > 0 ? '+' : '' }}{{ stats.errorTrend }}%
         </div>
       </el-card>
 
-      <el-card class="stat-card" shadow="hover">
+      <el-card
+        class="stat-card"
+        shadow="hover"
+      >
         <div class="stat-content">
           <div class="stat-icon warning">
             <el-icon><WarningFilled /></el-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ stats.warningCount }}</div>
-            <div class="stat-label">警告</div>
+            <div class="stat-value">
+              {{ stats.warningCount }}
+            </div>
+            <div class="stat-label">
+              警告
+            </div>
           </div>
         </div>
-        <div class="stat-trend" :class="{ increase: stats.warningTrend > 0 }">
+        <div
+          class="stat-trend"
+          :class="{ increase: stats.warningTrend > 0 }"
+        >
           <el-icon><TrendCharts /></el-icon>
           {{ stats.warningTrend > 0 ? '+' : '' }}{{ stats.warningTrend }}%
         </div>
       </el-card>
 
-      <el-card class="stat-card" shadow="hover">
+      <el-card
+        class="stat-card"
+        shadow="hover"
+      >
         <div class="stat-content">
           <div class="stat-icon performance">
             <el-icon><Odometer /></el-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ stats.avgResponseTime }}ms</div>
-            <div class="stat-label">平均响应时间</div>
+            <div class="stat-value">
+              {{ stats.avgResponseTime }}ms
+            </div>
+            <div class="stat-label">
+              平均响应时间
+            </div>
           </div>
         </div>
-        <div class="stat-trend" :class="{ increase: stats.performanceTrend > 0 }">
+        <div
+          class="stat-trend"
+          :class="{ increase: stats.performanceTrend > 0 }"
+        >
           <el-icon><TrendCharts /></el-icon>
           {{ stats.performanceTrend > 0 ? '+' : '' }}{{ stats.performanceTrend }}%
         </div>
       </el-card>
 
-      <el-card class="stat-card" shadow="hover">
+      <el-card
+        class="stat-card"
+        shadow="hover"
+      >
         <div class="stat-content">
           <div class="stat-icon health">
             <el-icon><CircleCheck /></el-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">{{ stats.healthScore }}/100</div>
-            <div class="stat-label">健康评分</div>
+            <div class="stat-value">
+              {{ stats.healthScore }}/100
+            </div>
+            <div class="stat-label">
+              健康评分
+            </div>
           </div>
         </div>
-        <div class="stat-trend" :class="{ increase: stats.healthTrend > 0 }">
+        <div
+          class="stat-trend"
+          :class="{ increase: stats.healthTrend > 0 }"
+        >
           <el-icon><TrendCharts /></el-icon>
           {{ stats.healthTrend > 0 ? '+' : '' }}{{ stats.healthTrend }}%
         </div>
@@ -101,26 +144,51 @@
       <!-- 左侧面板 -->
       <div class="left-panel">
         <!-- 日志级别分布图表 -->
-        <el-card class="chart-card" shadow="never">
+        <el-card
+          class="chart-card"
+          shadow="never"
+        >
           <template #header>
             <div class="card-header">
               <span>日志级别分布</span>
-              <el-select v-model="chartTimeRange" size="small" @change="updateCharts">
-                <el-option label="最近1小时" value="1h" />
-                <el-option label="最近24小时" value="24h" />
-                <el-option label="最近7天" value="7d" />
+              <el-select
+                v-model="chartTimeRange"
+                size="small"
+                @change="updateCharts"
+              >
+                <el-option
+                  label="最近1小时"
+                  value="1h"
+                />
+                <el-option
+                  label="最近24小时"
+                  value="24h"
+                />
+                <el-option
+                  label="最近7天"
+                  value="7d"
+                />
               </el-select>
             </div>
           </template>
-          <div ref="levelChartRef" class="chart-container"></div>
+          <div
+            ref="levelChartRef"
+            class="chart-container"
+          />
         </el-card>
 
         <!-- 时间趋势图表 -->
-        <el-card class="chart-card" shadow="never">
+        <el-card
+          class="chart-card"
+          shadow="never"
+        >
           <template #header>
             <span>日志时间趋势</span>
           </template>
-          <div ref="trendChartRef" class="chart-container"></div>
+          <div
+            ref="trendChartRef"
+            class="chart-container"
+          />
         </el-card>
       </div>
 
@@ -130,11 +198,14 @@
         <LogSearchFilter
           :logs="allLogs"
           @filtered="handleLogsFiltered"
-          @searchChanged="handleSearchChanged"
+          @search-changed="handleSearchChanged"
         />
 
         <!-- 日志查看器 -->
-        <el-card class="log-viewer-card" shadow="never">
+        <el-card
+          class="log-viewer-card"
+          shadow="never"
+        >
           <template #header>
             <div class="card-header">
               <span>日志记录 ({{ filteredLogs.length }})</span>
@@ -155,7 +226,10 @@
                     列表
                   </el-button>
                 </el-button-group>
-                <el-button size="small" @click="clearAllLogs">
+                <el-button
+                  size="small"
+                  @click="clearAllLogs"
+                >
                   <el-icon><Delete /></el-icon>
                   清空
                 </el-button>
@@ -173,7 +247,10 @@
         </el-card>
 
         <!-- 热点问题 -->
-        <el-card class="hotspots-card" shadow="never">
+        <el-card
+          class="hotspots-card"
+          shadow="never"
+        >
           <template #header>
             <span>热点问题</span>
           </template>
@@ -185,8 +262,12 @@
               :class="hotspot.type"
             >
               <div class="hotspot-info">
-                <div class="hotspot-message">{{ hotspot.message }}</div>
-                <div class="hotspot-count">出现 {{ hotspot.count }} 次</div>
+                <div class="hotspot-message">
+                  {{ hotspot.message }}
+                </div>
+                <div class="hotspot-count">
+                  出现 {{ hotspot.count }} 次
+                </div>
               </div>
               <el-tag
                 :type="hotspot.type === 'error' ? 'danger' : 'warning'"
@@ -195,7 +276,10 @@
                 {{ hotspot.type === 'error' ? '错误' : '警告' }}
               </el-tag>
             </div>
-            <el-empty v-if="hotspots.length === 0" description="暂无热点问题" />
+            <el-empty
+              v-if="hotspots.length === 0"
+              description="暂无热点问题"
+            />
           </div>
         </el-card>
       </div>
@@ -208,21 +292,38 @@
       width="600px"
       @close="resetExportForm"
     >
-      <el-form :model="exportForm" label-width="120px">
+      <el-form
+        :model="exportForm"
+        label-width="120px"
+      >
         <el-form-item label="导出格式">
           <el-radio-group v-model="exportForm.format">
-            <el-radio :label="ExportFormat.JSON">JSON</el-radio>
-            <el-radio :label="ExportFormat.CSV">CSV</el-radio>
-            <el-radio :label="ExportFormat.HTML">HTML</el-radio>
-            <el-radio :label="ExportFormat.TXT">TXT</el-radio>
+            <el-radio :label="ExportFormat.JSON">
+              JSON
+            </el-radio>
+            <el-radio :label="ExportFormat.CSV">
+              CSV
+            </el-radio>
+            <el-radio :label="ExportFormat.HTML">
+              HTML
+            </el-radio>
+            <el-radio :label="ExportFormat.TXT">
+              TXT
+            </el-radio>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item label="包含内容">
           <el-checkbox-group v-model="exportForm.includes">
-            <el-checkbox label="analysis">分析报告</el-checkbox>
-            <el-checkbox label="performance">性能数据</el-checkbox>
-            <el-checkbox label="errors">错误报告</el-checkbox>
+            <el-checkbox label="analysis">
+              分析报告
+            </el-checkbox>
+            <el-checkbox label="performance">
+              性能数据
+            </el-checkbox>
+            <el-checkbox label="errors">
+              错误报告
+            </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
 
@@ -249,8 +350,15 @@
       </el-form>
 
       <template #footer>
-        <el-button @click="showExportDialog = false">取消</el-button>
-        <el-button type="primary" @click="handleExport">导出</el-button>
+        <el-button @click="showExportDialog = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="handleExport"
+        >
+          导出
+        </el-button>
       </template>
     </el-dialog>
   </div>

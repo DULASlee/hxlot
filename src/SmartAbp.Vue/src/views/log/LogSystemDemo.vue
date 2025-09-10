@@ -6,30 +6,58 @@
     </div>
 
     <!-- 操作演示区域 -->
-    <el-card class="demo-section" shadow="never">
+    <el-card
+      class="demo-section"
+      shadow="never"
+    >
       <template #header>
         <h3>日志记录演示</h3>
       </template>
 
       <div class="demo-actions">
         <el-button-group>
-          <el-button @click="generateInfoLog">生成信息日志</el-button>
-          <el-button @click="generateSuccessLog" type="success">生成成功日志</el-button>
-          <el-button @click="generateWarningLog" type="warning">生成警告日志</el-button>
-          <el-button @click="generateErrorLog" type="danger">生成错误日志</el-button>
+          <el-button @click="generateInfoLog">
+            生成信息日志
+          </el-button>
+          <el-button
+            type="success"
+            @click="generateSuccessLog"
+          >
+            生成成功日志
+          </el-button>
+          <el-button
+            type="warning"
+            @click="generateWarningLog"
+          >
+            生成警告日志
+          </el-button>
+          <el-button
+            type="danger"
+            @click="generateErrorLog"
+          >
+            生成错误日志
+          </el-button>
         </el-button-group>
 
         <el-divider direction="vertical" />
 
         <el-button-group>
-          <el-button @click="simulateApiCall">模拟 API 调用</el-button>
-          <el-button @click="simulatePerformanceTest">性能测试</el-button>
-          <el-button @click="simulateErrorScenario">错误场景</el-button>
+          <el-button @click="simulateApiCall">
+            模拟 API 调用
+          </el-button>
+          <el-button @click="simulatePerformanceTest">
+            性能测试
+          </el-button>
+          <el-button @click="simulateErrorScenario">
+            错误场景
+          </el-button>
         </el-button-group>
 
         <el-divider direction="vertical" />
 
-        <el-button @click="generateBatchLogs">批量生成日志</el-button>
+        <el-button @click="generateBatchLogs">
+          批量生成日志
+        </el-button>
       </div>
     </el-card>
 
@@ -37,13 +65,19 @@
     <LogDashboard />
 
     <!-- 使用说明 -->
-    <el-card class="demo-section" shadow="never">
+    <el-card
+      class="demo-section"
+      shadow="never"
+    >
       <template #header>
         <h3>使用说明</h3>
       </template>
 
       <el-collapse>
-        <el-collapse-item title="基本日志记录" name="basic">
+        <el-collapse-item
+          title="基本日志记录"
+          name="basic"
+        >
           <div class="usage-content">
             <h4>在组件中使用日志记录：</h4>
             <pre><code>import { logger } from '@/utils/logger'
@@ -57,7 +91,10 @@ logger.debug('调试信息', 'debug', debugData)</code></pre>
           </div>
         </el-collapse-item>
 
-        <el-collapse-item title="性能跟踪" name="performance">
+        <el-collapse-item
+          title="性能跟踪"
+          name="performance"
+        >
           <div class="usage-content">
             <h4>使用性能跟踪功能：</h4>
             <pre><code>import { logManager, trackPerformance } from '@/utils/logManager'
@@ -75,7 +112,10 @@ const trackedApiCall = trackPerformance(apiCall, 'API调用', 'network')</code><
           </div>
         </el-collapse-item>
 
-        <el-collapse-item title="日志分析" name="analysis">
+        <el-collapse-item
+          title="日志分析"
+          name="analysis"
+        >
           <div class="usage-content">
             <h4>使用日志分析功能：</h4>
             <pre><code>import { logAnalyzer, analyzeCurrentLogs } from '@/utils/logAnalyzer'
@@ -94,7 +134,10 @@ logAnalyzer.setConfig({
           </div>
         </el-collapse-item>
 
-        <el-collapse-item title="日志导出" name="export">
+        <el-collapse-item
+          title="日志导出"
+          name="export"
+        >
           <div class="usage-content">
             <h4>导出日志数据：</h4>
             <pre><code>import { logExporter, ExportFormat } from '@/utils/logExporter'
@@ -115,7 +158,10 @@ const jsonData = logExporter.exportLogs({
           </div>
         </el-collapse-item>
 
-        <el-collapse-item title="组件集成" name="components">
+        <el-collapse-item
+          title="组件集成"
+          name="components"
+        >
           <div class="usage-content">
             <h4>在 Vue 组件中集成日志系统：</h4>
             <pre><code>&lt;template&gt;
@@ -150,7 +196,10 @@ const handleFiltered = (filteredLogs) => {
     </el-card>
 
     <!-- 最佳实践 -->
-    <el-card class="demo-section" shadow="never">
+    <el-card
+      class="demo-section"
+      shadow="never"
+    >
       <template #header>
         <h3>最佳实践建议</h3>
       </template>

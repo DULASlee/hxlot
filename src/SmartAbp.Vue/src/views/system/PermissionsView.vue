@@ -2,7 +2,9 @@
   <div class="permissions-management">
     <header class="page-header">
       <h1>{{ pageTitle }}</h1>
-      <p class="page-description">管理系统权限和权限分配</p>
+      <p class="page-description">
+        管理系统权限和权限分配
+      </p>
     </header>
     
     <main class="page-content">
@@ -10,7 +12,11 @@
         <template #header>
           <div class="card-header">
             <span>权限列表</span>
-            <el-button type="primary" size="small" @click="handleCreate">
+            <el-button
+              type="primary"
+              size="small"
+              @click="handleCreate"
+            >
               <el-icon><Plus /></el-icon>
               添加权限
             </el-button>

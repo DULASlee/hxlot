@@ -77,6 +77,7 @@ export interface PreviewContext {
 export class SfcCompilerEngine {
   private config: Required<SfcCompilerConfig>;
   private cache = new Map<string, CompiledSFC>();
+  private workerPool?: import('../../runtime/worker-pool').WorkerPool;
 
   constructor(config: SfcCompilerConfig = {}) {
     this.config = {
@@ -111,10 +112,47 @@ export class SfcCompilerEngine {
         throw new Error(`SFC解析错误: ${parseErrors.join(', ')}`);
       }
 
-      // 编译各个部分
-      const script = await this.compileScriptBlock(descriptor, filename, options);
-      const render = await this.compileTemplateBlock(descriptor, filename, options);
-      const styles = await this.compileStyleBlocks(descriptor, filename, options);
+      // 编译各个部分（优先使用Worker池并行编译脚本/模板/样式）
+      const useWorkers = typeof Worker !== 'undefined';
+
+      let script: string;
+      let render: string;
+      let styles: string[];
+
+      if (useWorkers) {
+        // 惰性初始化Worker池
+        if (!this.workerPool) {
+          const { WorkerPool } = await import('../../runtime/worker-pool');
+          const makeUrl = (p: string) => new URL(p, import.meta.url);
+          const createWorker = () => new Worker(makeUrl('../../runtime/workers/sfc.worker.ts'), { type: 'module' });
+          this.workerPool = new WorkerPool({ name: 'sfc', size:  Math.max(2, navigator?.hardwareConcurrency ? Math.min(4, navigator.hardwareConcurrency) : 2), timeoutMs: this.config.timeout }, createWorker);
+          // 暴露到全局以便仪表板读取（仅开发调试）
+          try { (globalThis as any).__sfcWorkerPool = this.workerPool } catch {}
+        }
+
+        const res = await this.workerPool.exec<{
+          sfc: string;
+          filename: string;
+          sourceMap?: boolean;
+          compilerOptions?: Record<string, any>;
+          preprocessOptions?: Record<string, any>;
+        }, { render: string; script: string; styles: string[]; exports: string[]; dependencies: string[] }>('compile', {
+          sfc,
+          filename,
+          sourceMap: options.sourceMap,
+          compilerOptions: options.compilerOptions,
+          preprocessOptions: options.preprocessOptions
+        });
+
+        script = res.script;
+        render = res.render;
+        styles = res.styles;
+      } else {
+        // 退化为主线程编译
+        script = await this.compileScriptBlock(descriptor, filename, options);
+        render = await this.compileTemplateBlock(descriptor, filename, options);
+        styles = await this.compileStyleBlocks(descriptor, filename, options);
+      }
 
       // 构建结果
       const result: CompiledSFC = {
@@ -428,9 +466,29 @@ export class SfcCompilerEngine {
   }
 
   private async executeInSandbox(moduleCode: string, context: PreviewContext): Promise<any> {
-    // 这里应该在安全的沙箱环境中执行代码
-    // 简化实现，实际应用中需要使用Worker或iframe
+    // 安全策略：
+    // - 生产环境默认禁用动态执行，避免 XSS/任意代码执行风险
+    // - 开发环境允许，仅用于本地预览并打印安全警告
+    const mode = (import.meta as any).env?.MODE || (typeof process !== 'undefined' ? (process.env?.NODE_ENV || 'development') : 'development');
+    const isProd = mode === 'production';
+
+    // 读取可选的安全开关（通过 context.data 或全局配置传入）
+    const enableSandbox = (context?.data && typeof context.data.enableSandbox === 'boolean')
+      ? context.data.enableSandbox
+      : false;
+
+    if (isProd && !enableSandbox) {
+      throw new Error('出于安全考虑，生产环境已禁用实时预览执行（new Function）。如需启用，请显式设置 enableSandbox=true，并采用 iframe/Worker 沙箱。');
+    }
+
     try {
+      if (isProd) {
+        // 生产模式且已显式允许，但仍打印强警告
+        console.warn('[SFC Preview] Production sandbox execution enabled by configuration. Ensure strict sandbox (iframe/Worker + CSP)!');
+      } else {
+        console.warn('[SFC Preview] Using dynamic execution (new Function) for development preview only.');
+      }
+
       const func = new Function('context', `
         ${moduleCode}
         return { default: typeof _sfc_main !== 'undefined' ? _sfc_main : {} };

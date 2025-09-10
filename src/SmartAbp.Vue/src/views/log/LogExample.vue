@@ -19,11 +19,33 @@
         <div class="example-section">
           <h4>基础日志记录</h4>
           <div class="button-group">
-            <el-button @click="logDebugExample">调试日志</el-button>
-            <el-button type="info" @click="logInfoExample">信息日志</el-button>
-            <el-button type="warning" @click="logWarnExample">警告日志</el-button>
-            <el-button type="danger" @click="logErrorExample">错误日志</el-button>
-            <el-button type="success" @click="logSuccessExample">成功日志</el-button>
+            <el-button @click="logDebugExample">
+              调试日志
+            </el-button>
+            <el-button
+              type="info"
+              @click="logInfoExample"
+            >
+              信息日志
+            </el-button>
+            <el-button
+              type="warning"
+              @click="logWarnExample"
+            >
+              警告日志
+            </el-button>
+            <el-button
+              type="danger"
+              @click="logErrorExample"
+            >
+              错误日志
+            </el-button>
+            <el-button
+              type="success"
+              @click="logSuccessExample"
+            >
+              成功日志
+            </el-button>
           </div>
         </div>
 
@@ -31,10 +53,18 @@
         <div class="example-section">
           <h4>分类日志记录</h4>
           <div class="button-group">
-            <el-button @click="logUserAction">用户操作</el-button>
-            <el-button @click="logApiCall">API 调用</el-button>
-            <el-button @click="logSystemEvent">系统事件</el-button>
-            <el-button @click="logPerformanceTest">性能测试</el-button>
+            <el-button @click="logUserAction">
+              用户操作
+            </el-button>
+            <el-button @click="logApiCall">
+              API 调用
+            </el-button>
+            <el-button @click="logSystemEvent">
+              系统事件
+            </el-button>
+            <el-button @click="logPerformanceTest">
+              性能测试
+            </el-button>
           </div>
         </div>
 
@@ -42,10 +72,22 @@
         <div class="example-section">
           <h4>日志统计</h4>
           <div class="stats-grid">
-            <el-statistic title="总日志数" :value="logStore.logStats.total" />
-            <el-statistic title="错误数" :value="logStore.errorCount" />
-            <el-statistic title="警告数" :value="logStore.warningCount" />
-            <el-statistic title="成功数" :value="logStore.logStats.success" />
+            <el-statistic
+              title="总日志数"
+              :value="logStore.logStats.total"
+            />
+            <el-statistic
+              title="错误数"
+              :value="logStore.errorCount"
+            />
+            <el-statistic
+              title="警告数"
+              :value="logStore.warningCount"
+            />
+            <el-statistic
+              title="成功数"
+              :value="logStore.logStats.success"
+            />
           </div>
         </div>
 
@@ -53,10 +95,21 @@
         <div class="example-section">
           <h4>日志操作</h4>
           <div class="button-group">
-            <el-button @click="exportLogs">导出日志</el-button>
-            <el-button @click="clearLogs" type="danger">清空日志</el-button>
-            <el-button @click="filterErrorLogs">只看错误</el-button>
-            <el-button @click="clearFilters">清除过滤</el-button>
+            <el-button @click="exportLogs">
+              导出日志
+            </el-button>
+            <el-button
+              type="danger"
+              @click="clearLogs"
+            >
+              清空日志
+            </el-button>
+            <el-button @click="filterErrorLogs">
+              只看错误
+            </el-button>
+            <el-button @click="clearFilters">
+              清除过滤
+            </el-button>
           </div>
         </div>
       </div>

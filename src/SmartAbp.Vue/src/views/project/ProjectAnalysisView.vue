@@ -11,48 +11,64 @@
         <div class="stat-card">
           <div class="stat-icon">
             <svg viewBox="0 0 24 24">
-              <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/>
+              <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z" />
             </svg>
           </div>
           <div class="stat-content">
-            <div class="stat-number">{{ totalProjects }}</div>
-            <div class="stat-label">总项目数</div>
+            <div class="stat-number">
+              {{ totalProjects }}
+            </div>
+            <div class="stat-label">
+              总项目数
+            </div>
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-icon">
             <svg viewBox="0 0 24 24">
-              <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+              <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
             </svg>
           </div>
           <div class="stat-content">
-            <div class="stat-number">{{ completedProjects }}</div>
-            <div class="stat-label">已完成</div>
+            <div class="stat-number">
+              {{ completedProjects }}
+            </div>
+            <div class="stat-label">
+              已完成
+            </div>
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-icon">
             <svg viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
             </svg>
           </div>
           <div class="stat-content">
-            <div class="stat-number">{{ activeProjects }}</div>
-            <div class="stat-label">进行中</div>
+            <div class="stat-number">
+              {{ activeProjects }}
+            </div>
+            <div class="stat-label">
+              进行中
+            </div>
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-icon">
             <svg viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
             </svg>
           </div>
           <div class="stat-content">
-            <div class="stat-number">{{ pausedProjects }}</div>
-            <div class="stat-label">已暂停</div>
+            <div class="stat-number">
+              {{ pausedProjects }}
+            </div>
+            <div class="stat-label">
+              已暂停
+            </div>
           </div>
         </div>
       </div>
@@ -65,15 +81,15 @@
             <div class="pie-chart">
               <div class="chart-legend">
                 <div class="legend-item">
-                  <div class="legend-color active"></div>
+                  <div class="legend-color active" />
                   <span>进行中 ({{ activeProjects }})</span>
                 </div>
                 <div class="legend-item">
-                  <div class="legend-color completed"></div>
+                  <div class="legend-color completed" />
                   <span>已完成 ({{ completedProjects }})</span>
                 </div>
                 <div class="legend-item">
-                  <div class="legend-color paused"></div>
+                  <div class="legend-color paused" />
                   <span>已暂停 ({{ pausedProjects }})</span>
                 </div>
               </div>
@@ -85,15 +101,23 @@
           <h3>项目进度趋势</h3>
           <div class="chart-container">
             <div class="progress-chart">
-              <div v-for="month in progressData" :key="month.name" class="progress-bar-item">
-                <div class="month-label">{{ month.name }}</div>
+              <div
+                v-for="month in progressData"
+                :key="month.name"
+                class="progress-bar-item"
+              >
+                <div class="month-label">
+                  {{ month.name }}
+                </div>
                 <div class="progress-bar">
                   <div
                     class="progress-fill"
                     :style="{ width: month.progress + '%' }"
-                  ></div>
+                  />
                 </div>
-                <div class="progress-value">{{ month.progress }}%</div>
+                <div class="progress-value">
+                  {{ month.progress }}%
+                </div>
               </div>
             </div>
           </div>
@@ -116,7 +140,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="project in projectDetails" :key="project.id">
+              <tr
+                v-for="project in projectDetails"
+                :key="project.id"
+              >
                 <td>
                   <div class="project-name">
                     <strong>{{ project.name }}</strong>
@@ -124,7 +151,10 @@
                   </div>
                 </td>
                 <td>
-                  <span class="status-badge" :class="project.status">
+                  <span
+                    class="status-badge"
+                    :class="project.status"
+                  >
                     {{ getStatusText(project.status) }}
                   </span>
                 </td>
@@ -134,7 +164,7 @@
                       <div
                         class="progress-fill"
                         :style="{ width: project.progress + '%' }"
-                      ></div>
+                      />
                     </div>
                     <span>{{ project.progress }}%</span>
                   </div>

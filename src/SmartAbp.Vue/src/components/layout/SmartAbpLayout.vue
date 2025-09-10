@@ -3,31 +3,71 @@
     <!-- 顶部导航栏 -->
     <header class="top-navbar">
       <div class="navbar-left">
-        <img src="/logo.svg" alt="SmartAbp" class="logo" />
+        <img
+          src="/logo.svg"
+          alt="SmartAbp"
+          class="logo"
+        >
         <span class="brand-name">SmartAbp</span>
       </div>
 
       <nav class="navbar-center">
-        <a href="#" class="nav-link" @click="navigateToExternal('智慧工地')">智慧工地</a>
-        <a href="#" class="nav-link" @click="navigateToExternal('MES')">MES</a>
-        <a href="#" class="nav-link" @click="navigateToExternal('系统配置')">系统配置</a>
-        <a href="#" class="nav-link" @click="navigateToExternal('APP')">APP</a>
+        <a
+          href="#"
+          class="nav-link"
+          @click="navigateToExternal('智慧工地')"
+        >智慧工地</a>
+        <a
+          href="#"
+          class="nav-link"
+          @click="navigateToExternal('MES')"
+        >MES</a>
+        <a
+          href="#"
+          class="nav-link"
+          @click="navigateToExternal('系统配置')"
+        >系统配置</a>
+        <a
+          href="#"
+          class="nav-link"
+          @click="navigateToExternal('APP')"
+        >APP</a>
       </nav>
 
       <div class="navbar-right">
         <!-- 集成新的主题切换器 -->
         <ThemeSwitcher />
-        <button class="icon-btn" @click="openSettings" title="设置">
-          <i class="fas fa-cog"></i>
+        <button
+          class="icon-btn"
+          title="设置"
+          @click="openSettings"
+        >
+          <i class="fas fa-cog" />
         </button>
-        <div class="user-menu" @click="toggleUserDropdown">
-          <img src="/logo.svg" alt="用户头像" class="user-avatar" />
+        <div
+          class="user-menu"
+          @click="toggleUserDropdown"
+        >
+          <img
+            src="/logo.svg"
+            alt="用户头像"
+            class="user-avatar"
+          >
           <span class="username">{{ userInfo.name || '用户' }}</span>
-          <i class="fas fa-chevron-down dropdown-icon"></i>
+          <i class="fas fa-chevron-down dropdown-icon" />
 
-          <div v-if="showUserDropdown" class="user-dropdown">
-            <a href="#" @click="goToProfile">个人信息</a>
-            <a href="#" @click="logout">退出登录</a>
+          <div
+            v-if="showUserDropdown"
+            class="user-dropdown"
+          >
+            <a
+              href="#"
+              @click="goToProfile"
+            >个人信息</a>
+            <a
+              href="#"
+              @click="logout"
+            >退出登录</a>
           </div>
         </div>
       </div>
@@ -36,36 +76,55 @@
     <!-- 主内容区域 -->
     <div class="main-container">
       <!-- 侧边栏 -->
-      <aside class="sidebar" :class="{ collapsed: sidebarCollapsed }">
+      <aside
+        class="sidebar"
+        :class="{ collapsed: sidebarCollapsed }"
+      >
         <div class="sidebar-header">
-          <button class="collapse-btn" @click="toggleSidebar">
-            <i :class="sidebarCollapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left'"></i>
+          <button
+            class="collapse-btn"
+            @click="toggleSidebar"
+          >
+            <i :class="sidebarCollapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left'" />
           </button>
         </div>
 
         <nav class="sidebar-nav">
-          <div v-for="item in menuItems" :key="item.key" class="nav-item">
+          <div
+            v-for="item in menuItems"
+            :key="item.key"
+            class="nav-item"
+          >
             <div
               class="nav-link"
               :class="{ active: activeMenu === item.key, 'has-children': item.children }"
               @click="toggleMenu(item)"
             >
-              <i :class="item.icon"></i>
-              <span v-if="!sidebarCollapsed" class="nav-text">{{ item.title }}</span>
-              <i v-if="item.children && !sidebarCollapsed"
-                 :class="['fas fa-chevron-down', 'expand-icon', { expanded: expandedMenus.includes(item.key) }]">
-              </i>
+              <i :class="item.icon" />
+              <span
+                v-if="!sidebarCollapsed"
+                class="nav-text"
+              >{{ item.title }}</span>
+              <i
+                v-if="item.children && !sidebarCollapsed"
+                :class="['fas fa-chevron-down', 'expand-icon', { expanded: expandedMenus.includes(item.key) }]"
+              />
             </div>
 
-            <div v-if="item.children"
-                 class="sub-menu"
-                 :class="{ collapsed: sidebarCollapsed }"
-                 v-show="expandedMenus.includes(item.key)">
-              <div v-for="child in item.children" :key="child.key"
-                   class="sub-nav-link"
-                   :class="{ active: activeSubMenu === child.key }"
-                   @click="selectSubMenu(child)">
-                <i :class="child.icon"></i>
+            <div
+              v-if="item.children"
+              v-show="expandedMenus.includes(item.key)"
+              class="sub-menu"
+              :class="{ collapsed: sidebarCollapsed }"
+            >
+              <div
+                v-for="child in item.children"
+                :key="child.key"
+                class="sub-nav-link"
+                :class="{ active: activeSubMenu === child.key }"
+                @click="selectSubMenu(child)"
+              >
+                <i :class="child.icon" />
                 <span class="nav-text">{{ child.title }}</span>
               </div>
             </div>
@@ -74,56 +133,90 @@
       </aside>
 
       <!-- 副菜单 -->
-      <aside v-if="!sidebarCollapsed" class="submenu-panel" :class="{ show: showSubmenu }">
+      <aside
+        v-if="!sidebarCollapsed"
+        class="submenu-panel"
+        :class="{ show: showSubmenu }"
+      >
         <div class="submenu-header">
           <h3>{{ submenuTitle }}</h3>
-          <button class="close-submenu" @click="closeSubmenu">
-            <i class="fas fa-times"></i>
+          <button
+            class="close-submenu"
+            @click="closeSubmenu"
+          >
+            <i class="fas fa-times" />
           </button>
         </div>
 
         <div class="submenu-content">
           <template v-if="activeMenu === 'system'">
-            <div class="submenu-item" @click="router.push('/Admin/users')">
-              <i class="fas fa-users"></i>
+            <div
+              class="submenu-item"
+              @click="router.push('/Admin/users')"
+            >
+              <i class="fas fa-users" />
               <span>用户管理</span>
             </div>
-            <div class="submenu-item" @click="router.push('/Admin/roles')">
-              <i class="fas fa-user-shield"></i>
+            <div
+              class="submenu-item"
+              @click="router.push('/Admin/roles')"
+            >
+              <i class="fas fa-user-shield" />
               <span>角色管理</span>
             </div>
-            <div class="submenu-item" @click="router.push('/Admin/permissions')">
-              <i class="fas fa-key"></i>
+            <div
+              class="submenu-item"
+              @click="router.push('/Admin/permissions')"
+            >
+              <i class="fas fa-key" />
               <span>权限管理</span>
             </div>
-            <div class="submenu-item" @click="router.push('/Admin/settings')">
-              <i class="fas fa-cogs"></i>
+            <div
+              class="submenu-item"
+              @click="router.push('/Admin/settings')"
+            >
+              <i class="fas fa-cogs" />
               <span>系统设置</span>
             </div>
           </template>
 
           <template v-else-if="activeMenu === 'projects'">
-            <div class="submenu-item" @click="router.push('/Project')">
-              <i class="fas fa-tasks"></i>
+            <div
+              class="submenu-item"
+              @click="router.push('/Project')"
+            >
+              <i class="fas fa-tasks" />
               <span>项目列表</span>
             </div>
-            <div class="submenu-item" @click="router.push('/Project/analysis')">
-              <i class="fas fa-chart-line"></i>
+            <div
+              class="submenu-item"
+              @click="router.push('/Project/analysis')"
+            >
+              <i class="fas fa-chart-line" />
               <span>项目分析</span>
             </div>
           </template>
 
           <template v-else-if="activeMenu === 'logs'">
-            <div class="submenu-item" @click="router.push('/Log')">
-              <i class="fas fa-list"></i>
+            <div
+              class="submenu-item"
+              @click="router.push('/Log')"
+            >
+              <i class="fas fa-list" />
               <span>日志管理</span>
             </div>
-            <div class="submenu-item" @click="router.push('/Log/viewer')">
-              <i class="fas fa-eye"></i>
+            <div
+              class="submenu-item"
+              @click="router.push('/Log/viewer')"
+            >
+              <i class="fas fa-eye" />
               <span>日志查看器</span>
             </div>
-            <div class="submenu-item" @click="router.push('/Log/dashboard')">
-              <i class="fas fa-chart-bar"></i>
+            <div
+              class="submenu-item"
+              @click="router.push('/Log/dashboard')"
+            >
+              <i class="fas fa-chart-bar" />
               <span>日志仪表板</span>
             </div>
           </template>
@@ -133,18 +226,26 @@
       <!-- 内容区域 -->
       <main class="content-area">
         <!-- 标签页导航 -->
-        <div class="tab-navigation" v-if="openTabs.length > 0">
+        <div
+          v-if="openTabs.length > 0"
+          class="tab-navigation"
+        >
           <div class="tabs-container">
-            <div v-for="tab in openTabs" :key="tab.key"
-                 class="tab-item"
-                 :class="{ active: activeTab === tab.key }"
-                 @click="switchTab(tab.key)">
-              <i :class="tab.icon"></i>
+            <div
+              v-for="tab in openTabs"
+              :key="tab.key"
+              class="tab-item"
+              :class="{ active: activeTab === tab.key }"
+              @click="switchTab(tab.key)"
+            >
+              <i :class="tab.icon" />
               <span class="tab-title">{{ tab.title }}</span>
-              <button v-if="tab.closable !== false"
-                      class="tab-close"
-                      @click.stop="closeTab(tab.key)">
-                <i class="fas fa-times"></i>
+              <button
+                v-if="tab.closable !== false"
+                class="tab-close"
+                @click.stop="closeTab(tab.key)"
+              >
+                <i class="fas fa-times" />
               </button>
             </div>
           </div>
@@ -158,7 +259,11 @@
     </div>
 
     <!-- 遮罩层 -->
-    <div v-if="showUserDropdown" class="overlay" @click="closeAllDropdowns"></div>
+    <div
+      v-if="showUserDropdown"
+      class="overlay"
+      @click="closeAllDropdowns"
+    />
   </div>
 </template>
 

@@ -1,43 +1,71 @@
 <template>
   <div class="page-container">
     <div class="page-header">
-      <h2 class="page-title">工作台</h2>
+      <h2 class="page-title">
+        工作台
+      </h2>
       <div class="page-actions">
-        <button class="btn btn-primary">刷新数据</button>
+        <button class="btn btn-primary">
+          刷新数据
+        </button>
       </div>
     </div>
 
     <!-- 统计卡片 -->
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-icon">👥</div>
+        <div class="stat-icon">
+          👥
+        </div>
         <div class="stat-content">
-          <div class="stat-value">1,234</div>
-          <div class="stat-label">在线用户</div>
+          <div class="stat-value">
+            1,234
+          </div>
+          <div class="stat-label">
+            在线用户
+          </div>
         </div>
       </div>
 
       <div class="stat-card">
-        <div class="stat-icon">🏗️</div>
+        <div class="stat-icon">
+          🏗️
+        </div>
         <div class="stat-content">
-          <div class="stat-value">56</div>
-          <div class="stat-label">活跃项目</div>
+          <div class="stat-value">
+            56
+          </div>
+          <div class="stat-label">
+            活跃项目
+          </div>
         </div>
       </div>
 
       <div class="stat-card">
-        <div class="stat-icon">⚠️</div>
+        <div class="stat-icon">
+          ⚠️
+        </div>
         <div class="stat-content">
-          <div class="stat-value">12</div>
-          <div class="stat-label">待处理告警</div>
+          <div class="stat-value">
+            12
+          </div>
+          <div class="stat-label">
+            待处理告警
+          </div>
         </div>
       </div>
 
       <div class="stat-card">
-        <div class="stat-icon">📊</div>
+        <div class="stat-icon">
+          📊
+        </div>
         <div class="stat-content">
-          <div class="stat-value">98.5%</div>
-          <div class="stat-label">系统可用性</div>
+          <div class="stat-value">
+            98.5%
+          </div>
+          <div class="stat-label">
+            系统可用性
+          </div>
         </div>
       </div>
     </div>
@@ -69,11 +97,21 @@
       <div class="info-card">
         <h3>系统功能</h3>
         <div class="feature-list">
-          <div class="feature-item">✅ JWT Token认证</div>
-          <div class="feature-item">✅ 多租户支持</div>
-          <div class="feature-item">✅ 企业级UI框架</div>
-          <div class="feature-item">✅ 响应式布局</div>
-          <div class="feature-item">✅ 权限管理</div>
+          <div class="feature-item">
+            ✅ JWT Token认证
+          </div>
+          <div class="feature-item">
+            ✅ 多租户支持
+          </div>
+          <div class="feature-item">
+            ✅ 企业级UI框架
+          </div>
+          <div class="feature-item">
+            ✅ 响应式布局
+          </div>
+          <div class="feature-item">
+            ✅ 权限管理
+          </div>
         </div>
       </div>
     </div>

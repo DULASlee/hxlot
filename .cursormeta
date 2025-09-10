@@ -1,0 +1,7 @@
+{
+  "model": "o3-mini-high",
+  "temperature": 0.2,
+  "max_tokens": 128000,
+  "allow_fallback": false,
+  "user_meta": "v1.0"
+}

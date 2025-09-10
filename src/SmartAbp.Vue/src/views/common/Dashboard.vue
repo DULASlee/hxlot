@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-wrapper">
-    <DashboardView :userInfo="userInfo" />
+    <DashboardView :user-info="userInfo" />
   </div>
 </template>
 

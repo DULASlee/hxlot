@@ -1,13 +1,21 @@
 <template>
   <div class="page-container">
     <div class="page-header">
-      <h2 class="page-title">用户管理</h2>
+      <h2 class="page-title">
+        用户管理
+      </h2>
       <div>
-        <button class="btn btn-primary" @click="addUser">
+        <button
+          class="btn btn-primary"
+          @click="addUser"
+        >
           <span>➕</span>
           <span>新增用户</span>
         </button>
-        <button class="btn btn-default" @click="exportUsers">
+        <button
+          class="btn btn-default"
+          @click="exportUsers"
+        >
           <span>↓</span>
           <span>导出</span>
         </button>
@@ -18,22 +26,51 @@
     <div class="search-bar">
       <div class="search-item">
         <label class="search-label">用户名：</label>
-        <input v-model="searchForm.username" type="text" placeholder="请输入用户名" class="search-input">
+        <input
+          v-model="searchForm.username"
+          type="text"
+          placeholder="请输入用户名"
+          class="search-input"
+        >
       </div>
       <div class="search-item">
         <label class="search-label">手机号：</label>
-        <input v-model="searchForm.phone" type="text" placeholder="请输入手机号" class="search-input">
+        <input
+          v-model="searchForm.phone"
+          type="text"
+          placeholder="请输入手机号"
+          class="search-input"
+        >
       </div>
       <div class="search-item">
         <label class="search-label">状态：</label>
-        <select v-model="searchForm.status" class="search-select">
-          <option value="">全部</option>
-          <option value="1">正常</option>
-          <option value="0">禁用</option>
+        <select
+          v-model="searchForm.status"
+          class="search-select"
+        >
+          <option value="">
+            全部
+          </option>
+          <option value="1">
+            正常
+          </option>
+          <option value="0">
+            禁用
+          </option>
         </select>
       </div>
-      <button class="btn btn-primary" @click="searchUsers">查询</button>
-      <button class="btn btn-default" @click="resetSearch">重置</button>
+      <button
+        class="btn btn-primary"
+        @click="searchUsers"
+      >
+        查询
+      </button>
+      <button
+        class="btn btn-default"
+        @click="resetSearch"
+      >
+        重置
+      </button>
     </div>
 
     <!-- 数据表格 -->
@@ -41,7 +78,11 @@
       <thead>
         <tr>
           <th style="width: 50px;">
-            <input type="checkbox" v-model="selectAll" @change="toggleSelectAll">
+            <input
+              v-model="selectAll"
+              type="checkbox"
+              @change="toggleSelectAll"
+            >
           </th>
           <th>用户名</th>
           <th>姓名</th>
@@ -50,40 +91,90 @@
           <th>手机号</th>
           <th>状态</th>
           <th>创建时间</th>
-          <th style="width: 180px;">操作</th>
+          <th style="width: 180px;">
+            操作
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="user in users" :key="user.id">
-          <td><input type="checkbox" v-model="selectedUsers" :value="user.id"></td>
+        <tr
+          v-for="user in users"
+          :key="user.id"
+        >
+          <td>
+            <input
+              v-model="selectedUsers"
+              type="checkbox"
+              :value="user.id"
+            >
+          </td>
           <td>{{ user.username }}</td>
           <td>{{ user.name }}</td>
           <td>{{ user.department }}</td>
           <td>
-            <span class="tag" :class="getRoleTagClass(user.role)">{{ user.role }}</span>
+            <span
+              class="tag"
+              :class="getRoleTagClass(user.role)"
+            >{{ user.role }}</span>
           </td>
           <td>{{ user.phone }}</td>
           <td>
-            <span class="tag" :class="getStatusTagClass(user.status)">{{ getStatusText(user.status) }}</span>
+            <span
+              class="tag"
+              :class="getStatusTagClass(user.status)"
+            >{{ getStatusText(user.status) }}</span>
           </td>
           <td>{{ formatDate(user.createTime) }}</td>
           <td>
-            <button class="btn btn-primary" style="padding: 4px 8px; font-size: 12px;" @click="editUser(user)">编辑</button>
-            <button class="btn btn-danger" style="padding: 4px 8px; font-size: 12px;" @click="deleteUser(user)">删除</button>
-            <button class="btn btn-default" style="padding: 4px 8px; font-size: 12px;" @click="resetPassword(user)">重置密码</button>
+            <button
+              class="btn btn-primary"
+              style="padding: 4px 8px; font-size: 12px;"
+              @click="editUser(user)"
+            >
+              编辑
+            </button>
+            <button
+              class="btn btn-danger"
+              style="padding: 4px 8px; font-size: 12px;"
+              @click="deleteUser(user)"
+            >
+              删除
+            </button>
+            <button
+              class="btn btn-default"
+              style="padding: 4px 8px; font-size: 12px;"
+              @click="resetPassword(user)"
+            >
+              重置密码
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
 
     <!-- 分页 -->
-    <div class="pagination" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <div
+      class="pagination"
+      style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;"
+    >
       <div style="color: var(--text-secondary);">
         共 {{ total }} 条记录，第 {{ currentPage }} / {{ totalPages }} 页
       </div>
       <div style="display: flex; gap: 8px;">
-        <button class="btn btn-default" :disabled="currentPage <= 1" @click="prevPage">上一页</button>
-        <button class="btn btn-default" :disabled="currentPage >= totalPages" @click="nextPage">下一页</button>
+        <button
+          class="btn btn-default"
+          :disabled="currentPage <= 1"
+          @click="prevPage"
+        >
+          上一页
+        </button>
+        <button
+          class="btn btn-default"
+          :disabled="currentPage >= totalPages"
+          @click="nextPage"
+        >
+          下一页
+        </button>
       </div>
     </div>
   </div>

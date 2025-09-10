@@ -218,7 +218,7 @@ export class PerformanceMonitor implements IPerformanceMonitor {
   private alertManager = new AlertManager();
   private logger?: StructuredLogger;
   private aggregationInterval = 60000; // 1分钟
-  private aggregationTimer?: NodeJS.Timeout;
+  private aggregationTimer?: number | ReturnType<typeof setTimeout>;
 
   constructor(logger?: StructuredLogger) {
     this.logger = logger;
@@ -348,7 +348,7 @@ export class PerformanceMonitor implements IPerformanceMonitor {
    * 记录内存使用情况
    */
   recordMemoryUsage(): void {
-    if (typeof process !== 'undefined' && process.memoryUsage) {
+    if (typeof process !== 'undefined' && typeof process.memoryUsage === 'function') {
       const memory = process.memoryUsage();
 
       this.recordGauge('memory.rss', memory.rss, {});
