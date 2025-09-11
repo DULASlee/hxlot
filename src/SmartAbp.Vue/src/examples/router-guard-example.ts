@@ -2,7 +2,7 @@ import router from '@/router'
 import { authService } from '@/utils/auth'
 
 // Minimal guard example for reference
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _from, next) => {
   const requiresAuth = to.matched.some(r => r.meta?.requiresAuth)
   if (!requiresAuth) return next()
 

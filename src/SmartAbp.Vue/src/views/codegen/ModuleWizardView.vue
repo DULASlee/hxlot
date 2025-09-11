@@ -169,9 +169,11 @@ const downloadManifest = async () => {
 }
 
 const buildManifest = () => {
+  const moduleKebab = form.moduleName
+  const basePath = `@/views/${moduleKebab.toLowerCase()}`
   return {
     $schema: 'https://smartabp/schema/module',
-    name: form.moduleName,
+    name: form.moduleName, // 要求PascalCase，默认已是User
     displayName: form.displayName,
     description: `${form.displayName} 模块（由向导生成）`,
     version: '1.0.0',
@@ -179,8 +181,27 @@ const buildManifest = () => {
     abpStyle: true,
     order: 100,
     dependsOn: [],
-    routes: [],
-    stores: [],
+    routes: [
+      {
+        name: `${form.moduleName}List`,
+        path: `/${form.moduleName}`,
+        component: `${basePath}/${form.moduleName}ListView.vue`,
+        meta: { title: `${form.displayName}列表`, menuKey: `${form.moduleName.toLowerCase()}-list` }
+      },
+      {
+        name: `${form.moduleName}Management`,
+        path: `/${form.moduleName}/management`,
+        component: `${basePath}/${form.moduleName}Management.vue`,
+        meta: { title: `${form.displayName}管理`, menuKey: `${form.moduleName.toLowerCase()}-management` }
+      }
+    ],
+    stores: [
+      {
+        symbol: `use${form.entityName}Store`,
+        id: `${form.moduleName.toLowerCase()}`,
+        modulePath: `@/stores/modules/${form.moduleName.toLowerCase()}`
+      }
+    ],
     policies: Object.values(form.permissions.operations || {}),
     lifecycle: {},
     features: { enableAuth: true, enableCache: true, enableI18n: true }
