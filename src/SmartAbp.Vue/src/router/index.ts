@@ -23,6 +23,7 @@ const LowCodeEngineView = () => import('@/views/codegen/LowCodeEngineView.vue')
 const SfcCompilerView = () => import('@/views/codegen/SfcCompilerView.vue')
 const DragDropFormView = () => import('@/views/codegen/DragDropFormView.vue')
 const PerformanceDashboard = () => import('@/views/codegen/PerformanceDashboard.vue')
+const ModuleWizardView = () => import('@/views/codegen/ModuleWizardView.vue')
 
 const routes: RouteRecordRaw[] = [
   // 登录页面
@@ -241,6 +242,12 @@ const routes: RouteRecordRaw[] = [
       requiredRoles: ['user']
     },
     children: [
+      {
+        path: 'wizard',
+        name: 'ModuleWizard',
+        component: ModuleWizardView,
+        meta: { title: '模块生成向导', menuKey: 'module-wizard' }
+      },
       {
         path: 'engine',
         name: 'LowCodeEngine',

@@ -406,6 +406,22 @@ export const menuConfig: MenuConfig = {
       description: '低代码引擎和代码生成工具',
       children: [
         {
+          key: 'module-wizard',
+          title: '模块向导',
+          icon: 'fas fa-magic',
+          type: 'page',
+          path: '/CodeGen/wizard',
+          component: '@/views/codegen/ModuleWizardView.vue',
+          order: 0,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
+          closable: true,
+          meta: {
+            title: '模块生成向导',
+            menuKey: 'module-wizard'
+          }
+        },
+        {
           key: 'lowcode-engine',
           title: '低代码引擎',
           icon: 'fas fa-cogs',
