@@ -564,3 +564,261 @@ export interface QueueStats {
   failed: number;
   throughput: number; // tasks/second
 }
+
+// ============= P0: 模块向导（Module Wizard）类型 =============
+
+export interface TemplateParameterOption {
+  label: string;
+  value: any;
+}
+
+export interface TemplateValidationRule {
+  type: 'required' | 'minLength' | 'maxLength' | 'pattern' | 'custom';
+  value?: any;
+  message: string;
+}
+
+export interface TemplateParameter {
+  name: string;
+  type: 'string' | 'number' | 'boolean' | 'select' | 'multiselect' | 'json';
+  label: string;
+  description?: string;
+  required: boolean;
+  default?: any;
+  options?: TemplateParameterOption[];
+  validation?: TemplateValidationRule[];
+}
+
+export interface PageTemplate {
+  name: string;
+  type: 'list' | 'detail' | 'form' | 'dashboard';
+  template: string;
+  parameters: string[];
+}
+
+export interface ComponentTemplate {
+  name: string;
+  type: 'form' | 'table' | 'filter' | 'card' | 'chart' | 'custom';
+  template: string;
+  parameters: string[];
+}
+
+export interface ServiceTemplate {
+  name: string;
+  template: string;
+  parameters: string[];
+}
+
+export interface StoreTemplate {
+  name: string;
+  template: string;
+  parameters: string[];
+}
+
+export interface RouteTemplate {
+  name: string;
+  template: string;
+  parameters: string[];
+}
+
+export interface PermissionTemplate {
+  name: string;
+  template: string;
+  parameters: string[];
+}
+
+export interface TemplatePackMetadata {
+  author: string;
+  tags: string[];
+  screenshots?: string[];
+  documentation?: string;
+}
+
+export interface TemplatePack {
+  id: string;
+  name: string;
+  version: string;
+  description: string;
+  category: 'crud' | 'dashboard' | 'workflow' | 'report' | 'custom';
+  templates: {
+    pages?: PageTemplate[];
+    components?: ComponentTemplate[];
+    services?: ServiceTemplate[];
+    stores?: StoreTemplate[];
+    routes?: RouteTemplate[];
+    permissions?: PermissionTemplate[];
+  };
+  parameters: TemplateParameter[];
+  dependencies: string[];
+  requiredPermissions?: string[];
+  metadata: TemplatePackMetadata;
+}
+
+// ============= 数据源与字段定义 =============
+
+export type FieldPrimitiveType = 'string' | 'number' | 'boolean' | 'date' | 'enum' | 'reference';
+
+export interface FieldValidationRule {
+  type: 'required' | 'min' | 'max' | 'minLength' | 'maxLength' | 'regex' | 'email' | 'custom';
+  value?: any;
+  message: string;
+}
+
+export interface FieldDefinition {
+  name: string;
+  type: FieldPrimitiveType;
+  label: string;
+  required?: boolean;
+  readonly?: boolean;
+  default?: any;
+  validation?: FieldValidationRule[];
+  options?: any; // 枚举选项、引用配置等
+}
+
+export interface OpenAPIConfig {
+  url: string;
+  entity: string;
+  operations: {
+    list?: string;
+    get?: string;
+    create?: string;
+    update?: string;
+    delete?: string;
+  };
+}
+
+export interface ManualConfig {
+  fields: FieldDefinition[];
+}
+
+export interface MockConfig {
+  recordCount: number;
+  fields: FieldDefinition[];
+}
+
+// ============= 功能与布局配置 =============
+
+export interface CRUDOperationsConfig {
+  create: boolean;
+  read: boolean;
+  update: boolean;
+  delete: boolean;
+}
+
+export interface CRUDConfig {
+  enabled: boolean;
+  operations: CRUDOperationsConfig;
+  batchOperations?: string[];
+  customActions?: CustomAction[];
+}
+
+export interface SearchConfig {
+  enabled: boolean;
+  fields: string[];
+  advancedSearch: boolean;
+}
+
+export interface ExportConfig {
+  enabled: boolean;
+  formats: Array<'excel' | 'csv' | 'pdf'>;
+  fields?: string[];
+}
+
+export interface PermissionConfig {
+  enabled: boolean;
+  prefix: string;
+  operations: Record<string, string>; // e.g. { create: 'Module.Create' }
+  customPermissions?: string[];
+}
+
+export interface ColumnDefinition {
+  field: string;
+  label: string;
+  type: 'text' | 'number' | 'date' | 'boolean' | 'tag' | 'image' | 'link' | 'custom';
+  width?: number;
+  sortable?: boolean;
+  filterable?: boolean;
+  formatter?: string;
+}
+
+export interface ActionDefinition {
+  type: 'button' | 'dropdown' | 'icon';
+  label: string;
+  action: string;
+  permission?: string;
+  variant?: 'primary' | 'secondary' | 'danger';
+  icon?: string;
+}
+
+export interface PaginationConfig {
+  enabled: boolean;
+  pageSize: number;
+  pageSizes: number[];
+}
+
+export interface SortingConfig {
+  enabled: boolean;
+  defaultField?: string;
+  defaultDirection?: 'asc' | 'desc';
+}
+
+export interface LayoutConfig {
+  type: 'table' | 'card' | 'tree' | 'kanban' | 'custom';
+  columns?: ColumnDefinition[];
+  actions?: ActionDefinition[];
+  pagination?: PaginationConfig;
+  sorting?: SortingConfig;
+}
+
+// ============= 模块Schema与向导状态 =============
+
+export interface ModuleSchema extends Schema {
+  type: 'module';
+  moduleName: string;
+  displayName: string;
+  description?: string;
+  dataSource: {
+    type: 'openapi' | 'manual' | 'mock';
+    config: OpenAPIConfig | ManualConfig | MockConfig;
+  };
+  features: {
+    crud?: CRUDConfig;
+    search?: SearchConfig;
+    export?: ExportConfig;
+    permissions?: PermissionConfig;
+  };
+  layout: LayoutConfig;
+  templatePack: string; // TemplatePack.id
+  generation: {
+    outputPath: string;
+    namespace: string;
+    generateTests: boolean;
+    generateDocs: boolean;
+  };
+}
+
+export interface WizardStep {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export interface WizardState {
+  currentStep: number;
+  totalSteps: number;
+  steps: WizardStep[];
+  data: Partial<ModuleSchema>;
+  history: Array<Partial<ModuleSchema>>;
+  canGoBack: boolean;
+  canGoNext: boolean;
+  isValid: boolean;
+  errors: string[];
+}
+
+export interface CustomAction {
+  name: string;
+  label: string;
+  icon?: string;
+  permission?: string;
+  handler: string; // 由生成的代码在运行时实现
+}
