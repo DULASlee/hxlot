@@ -91,14 +91,15 @@
 
         <nav class="sidebar-nav">
           <div
-            v-for="item in menuItems"
+            v-for="item in filteredMenus"
             :key="item.key"
             class="nav-item"
           >
             <div
               class="nav-link"
-              :class="{ active: activeMenu === item.key, 'has-children': item.children }"
-              @click="toggleMenu(item)"
+              :class="{ active: menuState.activeMenuKey === item.key, 'has-children': item.type === 'folder' && item.children }"
+              @click="handleMenuClick(item)
+              "
             >
               <i :class="item.icon" />
               <span
@@ -106,13 +107,13 @@
                 class="nav-text"
               >{{ item.title }}</span>
               <i
-                v-if="item.children && !sidebarCollapsed"
+                v-if="item.type === 'folder' && item.children && !sidebarCollapsed"
                 :class="['fas fa-chevron-down', 'expand-icon', { expanded: expandedMenus.includes(item.key) }]"
               />
             </div>
 
             <div
-              v-if="item.children"
+              v-if="item.type === 'folder' && item.children"
               v-show="expandedMenus.includes(item.key)"
               class="sub-menu"
               :class="{ collapsed: sidebarCollapsed }"
@@ -121,8 +122,8 @@
                 v-for="child in item.children"
                 :key="child.key"
                 class="sub-nav-link"
-                :class="{ active: activeSubMenu === child.key }"
-                @click="selectSubMenu(child)"
+                :class="{ active: menuState.activeSubMenuKey === child.key }"
+                @click="handleSubMenuClick(child)"
               >
                 <i :class="child.icon" />
                 <span class="nav-text">{{ child.title }}</span>
@@ -136,7 +137,7 @@
       <aside
         v-if="!sidebarCollapsed"
         class="submenu-panel"
-        :class="{ show: showSubmenu }"
+        :class="{ show: shouldShowSubmenu }"
       >
         <div class="submenu-header">
           <h3>{{ submenuTitle }}</h3>
@@ -149,77 +150,15 @@
         </div>
 
         <div class="submenu-content">
-          <template v-if="activeMenu === 'system'">
-            <div
-              class="submenu-item"
-              @click="router.push('/Admin/users')"
-            >
-              <i class="fas fa-users" />
-              <span>用户管理</span>
-            </div>
-            <div
-              class="submenu-item"
-              @click="router.push('/Admin/roles')"
-            >
-              <i class="fas fa-user-shield" />
-              <span>角色管理</span>
-            </div>
-            <div
-              class="submenu-item"
-              @click="router.push('/Admin/permissions')"
-            >
-              <i class="fas fa-key" />
-              <span>权限管理</span>
-            </div>
-            <div
-              class="submenu-item"
-              @click="router.push('/Admin/settings')"
-            >
-              <i class="fas fa-cogs" />
-              <span>系统设置</span>
-            </div>
-          </template>
-
-          <template v-else-if="activeMenu === 'projects'">
-            <div
-              class="submenu-item"
-              @click="router.push('/Project')"
-            >
-              <i class="fas fa-tasks" />
-              <span>项目列表</span>
-            </div>
-            <div
-              class="submenu-item"
-              @click="router.push('/Project/analysis')"
-            >
-              <i class="fas fa-chart-line" />
-              <span>项目分析</span>
-            </div>
-          </template>
-
-          <template v-else-if="activeMenu === 'logs'">
-            <div
-              class="submenu-item"
-              @click="router.push('/Log')"
-            >
-              <i class="fas fa-list" />
-              <span>日志管理</span>
-            </div>
-            <div
-              class="submenu-item"
-              @click="router.push('/Log/viewer')"
-            >
-              <i class="fas fa-eye" />
-              <span>日志查看器</span>
-            </div>
-            <div
-              class="submenu-item"
-              @click="router.push('/Log/dashboard')"
-            >
-              <i class="fas fa-chart-bar" />
-              <span>日志仪表板</span>
-            </div>
-          </template>
+          <div
+            v-for="sub in currentSubmenuItems"
+            :key="sub.key"
+            class="submenu-item"
+            @click="handleSubMenuClick(sub)"
+          >
+            <i :class="sub.icon" />
+            <span>{{ sub.title }}</span>
+          </div>
         </div>
       </aside>
 
@@ -268,28 +207,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useThemeStore } from '@/stores'
 import ThemeSwitcher from '@/components/theme/ThemeSwitcher.vue'
+import { useMenu } from '@/composables/useMenu'
 
 const router = useRouter()
-const route = useRoute()
 const themeStore = useThemeStore()
 
-// 响应式数据
+// 侧边栏显示
 const sidebarCollapsed = ref(false)
 const showUserDropdown = ref(false)
-const activeMenu = ref('dashboard')
-const activeSubMenu = ref('')
-const expandedMenus = ref<string[]>(['system', 'projects', 'logs'])
-const openTabs = ref([
-  { key: 'dashboard', title: '工作台', icon: 'fas fa-tachometer-alt', path: '/dashboard', closable: false }
-])
-const activeTab = ref('dashboard')
 
-// 副菜单状态
-const showSubmenu = ref(false)
+// 动态菜单系统
+const {
+  menuState,
+  filteredMenus,
+  submenuTitle,
+  currentSubmenuItems,
+  shouldShowSubmenu,
+  handleMenuClick,
+  handleSubMenuClick,
+  closeSubmenu,
+  switchTab,
+  closeTab
+} = useMenu()
+
+const expandedMenus = computed(() => menuState.value.expandedMenuKeys)
+const openTabs = computed(() => menuState.value.openTabs)
+const activeTab = computed(() => menuState.value.activeTab)
 
 // 用户信息
 const userInfo = ref({
@@ -297,70 +244,10 @@ const userInfo = ref({
   email: 'admin@smartabp.com'
 })
 
-// 计算属性
-// const currentTheme = computed(() => themeStore.currentTheme)
-
-// 副菜单标题
-const submenuTitle = computed(() => {
-  const menu = menuItems.value.find((item: any) => item.key === activeMenu.value)
-  return menu ? menu.title : ''
-})
-
-// 菜单配置
-const menuItems = ref([
-  {
-    key: 'dashboard',
-    title: '工作台',
-    icon: 'fas fa-chart-pie',
-    path: '/dashboard'
-  },
-  {
-    key: 'system',
-    title: '系统管理',
-    icon: 'fas fa-cog',
-    children: [
-      { key: 'system-users', title: '用户管理', icon: 'fas fa-users', path: '/Admin/users' },
-      { key: 'system-roles', title: '角色管理', icon: 'fas fa-user-shield', path: '/Admin/roles' },
-      { key: 'system-permissions', title: '权限管理', icon: 'fas fa-key', path: '/Admin/permissions' },
-      { key: 'system-settings', title: '系统设置', icon: 'fas fa-cogs', path: '/Admin/settings' }
-    ]
-  },
-  {
-    key: 'user-management',
-    title: '用户管理',
-    icon: 'fas fa-users',
-    children: [
-      { key: 'user-list', title: '用户列表', icon: 'fas fa-list-ul', path: '/User' },
-      { key: 'user-management', title: '用户管理', icon: 'fas fa-user-circle', path: '/User/management' },
-      { key: 'user-roles', title: '用户角色', icon: 'fas fa-users-cog', path: '/User/roles' }
-    ]
-  },
-  {
-    key: 'projects',
-    title: '项目管理',
-    icon: 'fas fa-project-diagram',
-    children: [
-      { key: 'project-list', title: '项目列表', icon: 'fas fa-tasks', path: '/Project' },
-      { key: 'project-analysis', title: '项目分析', icon: 'fas fa-chart-line', path: '/Project/analysis' }
-    ]
-  },
-  {
-    key: 'logs',
-    title: '日志管理',
-    icon: 'fas fa-file-alt',
-    children: [
-      { key: 'log-management', title: '日志管理', icon: 'fas fa-list', path: '/Log' },
-      { key: 'log-viewer', title: '日志查看器', icon: 'fas fa-eye', path: '/Log/viewer' },
-      { key: 'log-dashboard', title: '日志仪表板', icon: 'fas fa-chart-bar', path: '/Log/dashboard' }
-    ]
-  }
-])
-
 // 方法
 const toggleSidebar = () => {
   sidebarCollapsed.value = !sidebarCollapsed.value
 }
-
 
 const toggleUserDropdown = () => {
   showUserDropdown.value = !showUserDropdown.value
@@ -370,102 +257,8 @@ const closeAllDropdowns = () => {
   showUserDropdown.value = false
 }
 
-// 副菜单控制函数
-const toggleSubmenu = (menuId: string) => {
-  if (activeMenu.value === menuId && showSubmenu.value) {
-    // 如果点击的是当前激活的菜单，则关闭副菜单
-    showSubmenu.value = false
-  } else {
-    // 否则，激活该菜单并显示副菜单
-    activeMenu.value = menuId
-    showSubmenu.value = true
-  }
-}
-
-const closeSubmenu = () => {
-  showSubmenu.value = false
-}
-
-
-const toggleMenu = (item: any) => {
-  console.log('点击菜单项:', item)
-
-  if (item.children) {
-    // 如果侧边栏收缩，先展开侧边栏
-    if (sidebarCollapsed.value) {
-      sidebarCollapsed.value = false
-    }
-
-    // 同时展开主菜单二级菜单和显示副菜单
-    const index = expandedMenus.value.indexOf(item.key)
-    if (index > -1) {
-      expandedMenus.value.splice(index, 1)
-      // 如果收起主菜单二级菜单，也关闭副菜单
-      showSubmenu.value = false
-    } else {
-      expandedMenus.value.push(item.key)
-      // 展开主菜单二级菜单时，同时显示副菜单
-      toggleSubmenu(item.key)
-    }
-    console.log('更新后的展开菜单:', expandedMenus.value)
-  } else {
-    // 如果是叶子菜单项，直接导航
-    activeMenu.value = item.key
-    activeSubMenu.value = ''
-    addTab(item)
-    router.push(item.path)
-    // 关闭副菜单
-    showSubmenu.value = false
-  }
-}
-
-const selectSubMenu = (child: any) => {
-  console.log('点击子菜单项:', child)
-  activeSubMenu.value = child.key
-  addTab(child)
-  router.push(child.path)
-}
-
-const addTab = (item: any) => {
-  const existingTab = openTabs.value.find(tab => tab.key === item.key)
-  if (!existingTab) {
-    openTabs.value.push({
-      key: item.key,
-      title: item.title,
-      icon: item.icon,
-      path: item.path,
-      closable: item.key !== 'dashboard'
-    })
-  }
-  activeTab.value = item.key
-}
-
-const switchTab = (tabKey: string) => {
-  const tab = openTabs.value.find((t: any) => t.key === tabKey)
-  if (tab) {
-    activeTab.value = tabKey
-    router.push(tab.path)
-  }
-}
-
-const closeTab = (tabKey: string) => {
-  const index = openTabs.value.findIndex((tab: any) => tab.key === tabKey)
-  if (index > -1) {
-    openTabs.value.splice(index, 1)
-
-    // 如果关闭的是当前活动标签，切换到其他标签
-    if (activeTab.value === tabKey) {
-      const newActiveTab = openTabs.value[Math.max(0, index - 1)]
-      if (newActiveTab) {
-        switchTab(newActiveTab.key)
-      }
-    }
-  }
-}
-
 const navigateToExternal = (name: string) => {
   console.log(`导航到外部系统: ${name}`)
-  // 这里可以实现跳转到外部系统的逻辑
 }
 
 const openSettings = () => {
@@ -478,69 +271,13 @@ const goToProfile = () => {
 }
 
 const logout = () => {
-  // 清除认证信息
   localStorage.removeItem('smartabp_token')
   localStorage.removeItem('smartabp_user')
-
-  // 跳转到登录页
   router.push('/login')
 }
 
-// 监听路由变化，更新活动状态
-watch(route, (newRoute: any) => {
-  const path = newRoute.path
-
-  // 更新活动菜单
-  for (const item of menuItems.value) {
-    if (item.path === path) {
-      activeMenu.value = item.key
-      activeSubMenu.value = ''
-      break
-    }
-
-    if (item.children) {
-      for (const child of item.children) {
-        if (child.path === path) {
-          activeMenu.value = item.key
-          activeSubMenu.value = child.key
-          // 确保父菜单在展开列表中，但不覆盖现有的展开状态
-          if (!expandedMenus.value.includes(item.key)) {
-            expandedMenus.value.push(item.key)
-          }
-          break
-        }
-      }
-    }
-  }
-
-  // 确保系统管理和项目管理菜单始终展开
-  const defaultExpanded = ['system', 'projects', 'logs']
-  defaultExpanded.forEach(key => {
-    if (!expandedMenus.value.includes(key)) {
-      expandedMenus.value.push(key)
-    }
-  })
-
-  // 更新活动标签
-  const activeTabItem = openTabs.value.find((tab: any) => tab.path === path)
-  if (activeTabItem) {
-    activeTab.value = activeTabItem.key
-  }
-}, { immediate: true })
-
 onMounted(() => {
-  // 初始化主题
   themeStore.init()
-
-  // 确保副菜单默认展开
-  expandedMenus.value = ['system', 'projects', 'logs']
-
-  // 调试日志
-  console.log('组件挂载完成:', {
-    sidebarCollapsed: sidebarCollapsed.value,
-    expandedMenus: expandedMenus.value,
-    menuItems: menuItems.value
-  })
 })
 </script>
 
@@ -803,7 +540,8 @@ onMounted(() => {
   background: var(--theme-sidebar-bg);
   border-right: 1px solid var(--theme-sidebar-border);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   backdrop-filter: blur(8px);
   position: relative;
 }

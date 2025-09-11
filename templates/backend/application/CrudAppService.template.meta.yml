@@ -1,0 +1,60 @@
+name: "ABP CRUD应用服务"
+category: "backend/application"
+description: "标准的ABP CRUD应用服务实现模板，包含完整的增删改查操作"
+tags: ["abp", "crud", "service", "repository", "application"]
+scenarios:
+  - "用户管理模块"
+  - "产品管理模块"
+  - "订单管理模块"
+  - "分类管理模块"
+  - "系统配置管理"
+ai_triggers:
+  - "创建应用服务"
+  - "CRUD操作"
+  - "业务服务"
+  - "管理服务"
+  - "数据操作服务"
+  - "应用层服务"
+dependencies:
+  - "SmartAbpAppService"
+  - "IRepository"
+  - "AutoMapper"
+  - "Microsoft.AspNetCore.Authorization"
+parameters:
+  - name: "EntityName"
+    type: "string"
+    description: "实体名称（PascalCase），如：Product、User"
+    required: true
+    example: "Product"
+  - name: "entityName"
+    type: "string"
+    description: "实体名称（camelCase），如：product、user"
+    required: true
+    example: "product"
+  - name: "ModuleName"
+    type: "string"
+    description: "模块名称（PascalCase），如：Catalog、Identity"
+    required: true
+    example: "Catalog"
+permissions_required: true
+validation_rules:
+  - "实体必须继承Entity<Guid>"
+  - "需要定义相应的权限常量"
+  - "需要实现相应的DTO类"
+  - "需要配置AutoMapper映射"
+usage_examples:
+  - scenario: "产品管理"
+    parameters:
+      EntityName: "Product"
+      entityName: "product"
+      ModuleName: "Catalog"
+  - scenario: "用户管理"
+    parameters:
+      EntityName: "User"
+      entityName: "user"
+      ModuleName: "Identity"
+related_templates:
+  - "templates/backend/contracts/EntityDto.template.cs"
+  - "templates/backend/contracts/CreateEntityDto.template.cs"
+  - "templates/backend/contracts/UpdateEntityDto.template.cs"
+  - "templates/backend/contracts/CrudAppServiceInterface.template.cs"

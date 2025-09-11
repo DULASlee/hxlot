@@ -38,25 +38,32 @@
 </template>
 
 <script lang="ts">
+type ThemeKey = 'classic' | 'tech' | 'elegant' | 'dark'
+type ThemeVars = Record<string, string>
+
+function isThemeKey(value: string | null): value is ThemeKey {
+  return value === 'classic' || value === 'tech' || value === 'elegant' || value === 'dark'
+}
 export default {
   name: "SimpleThemeSwitcher",
   data() {
     return {
       showDropdown: false,
-      currentTheme: "classic",
+      currentTheme: "classic" as ThemeKey,
       themes: [
         { key: "classic", name: "经典蓝", color: "#2563eb" },
         { key: "tech", name: "科技绿", color: "#059669" },
         { key: "elegant", name: "优雅紫", color: "#7c3aed" },
         { key: "dark", name: "暗黑", color: "#1f2937" },
-      ],
+      ] as { key: ThemeKey; name: string; color: string }[],
     }
   },
   mounted() {
     // 从localStorage加载保存的主题
-    const savedTheme = localStorage.getItem("selectedTheme") || "classic"
-    this.currentTheme = savedTheme
-    this.applyTheme(savedTheme)
+    const savedTheme = localStorage.getItem("selectedTheme")
+    const themeToApply: ThemeKey = isThemeKey(savedTheme) ? savedTheme : 'classic'
+    this.currentTheme = themeToApply
+    this.applyTheme(themeToApply)
 
     // 点击外部关闭下拉菜单
     document.addEventListener("click", this.handleClickOutside)
@@ -69,17 +76,17 @@ export default {
       this.showDropdown = !this.showDropdown
     },
 
-    selectTheme(themeKey) {
+    selectTheme(themeKey: ThemeKey) {
       this.currentTheme = themeKey
       this.applyTheme(themeKey)
       this.showDropdown = false
     },
 
-    applyTheme(theme) {
+    applyTheme(theme: ThemeKey) {
       const root = document.documentElement
 
       // 直接设置CSS变量到根元素
-      const themeVars = this.getThemeVariables(theme)
+      const themeVars: ThemeVars = this.getThemeVariables(theme)
 
       // 清除之前的CSS变量
       Object.keys(themeVars).forEach((key) => {
@@ -97,8 +104,8 @@ export default {
       console.log(`主题已切换到: ${theme}`, themeVars)
     },
 
-    getThemeVariables(theme) {
-      const themes = {
+    getThemeVariables(theme: ThemeKey): ThemeVars {
+      const themes: Record<ThemeKey, ThemeVars> = {
         classic: {
           "--primary-color": "#2563eb",
           "--primary-hover": "#1d4ed8",
@@ -184,8 +191,8 @@ export default {
       return themes[theme] || themes.classic
     },
 
-    handleClickOutside(event) {
-      if (!this.$el.contains(event.target)) {
+    handleClickOutside(event: MouseEvent) {
+      if (event.target && !this.$el.contains(event.target as Node)) {
         this.showDropdown = false
       }
     },

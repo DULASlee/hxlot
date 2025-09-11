@@ -1,0 +1,56 @@
+name: "Pinia实体状态管理"
+category: "frontend/stores"
+description: "基于Pinia的实体状态管理Store，包含CRUD操作、缓存策略和错误处理"
+tags: ["pinia", "store", "state", "cache", "crud"]
+scenarios:
+  - "状态管理"
+  - "数据缓存"
+  - "API调用管理"
+  - "前端数据层"
+ai_triggers:
+  - "状态管理"
+  - "Pinia Store"
+  - "数据存储"
+  - "缓存管理"
+  - "状态store"
+  - "数据状态"
+dependencies:
+  - "Pinia"
+  - "Element Plus"
+  - "API服务层"
+parameters:
+  - name: "EntityName"
+    type: "string"
+    description: "实体名称（PascalCase），如：Product、User"
+    required: true
+    example: "Product"
+  - name: "entityName"
+    type: "string"
+    description: "实体名称（camelCase），如：product、user"
+    required: true
+    example: "product"
+  - name: "ModuleName"
+    type: "string"
+    description: "模块名称（PascalCase），如：Catalog、Identity"
+    required: true
+    example: "Catalog"
+permissions_required: false
+validation_rules:
+  - "需要定义相应的类型接口"
+  - "需要实现对应的API服务"
+  - "需要配置错误处理"
+usage_examples:
+  - scenario: "产品状态管理"
+    parameters:
+      EntityName: "Product"
+      entityName: "product"
+      ModuleName: "Catalog"
+  - scenario: "用户状态管理"
+    parameters:
+      EntityName: "User"
+      entityName: "user"
+      ModuleName: "Identity"
+related_templates:
+  - "templates/frontend/services/EntityService.template.ts"
+  - "templates/frontend/types/EntityTypes.template.ts"
+  - "templates/frontend/components/CrudManagement.template.vue"

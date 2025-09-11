@@ -1,0 +1,32 @@
+name: openapi-drift
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'src/SmartAbp.Web/**'
+      - 'src/SmartAbp.Vue/**'
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install deps
+        working-directory: src/SmartAbp.Vue
+        run: |
+          npm ci --no-audit --no-fund
+          npx --yes openapi-typescript-codegen --help >/dev/null 2>&1 || npm i -D openapi-typescript-codegen
+      - name: Generate API client
+        working-directory: src/SmartAbp.Vue
+        env:
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL || 'https://localhost:44379' }}
+        run: |
+          npm run gen:api:ci
+      - name: Check drift
+        working-directory: src/SmartAbp.Vue
+        run: |
+          npm run gen:api:check

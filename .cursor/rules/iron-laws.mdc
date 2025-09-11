@@ -1,0 +1,9 @@
+# Iron Laws (SmartAbp)
+
+- Discovery before coding: read doc/项目编程规则.md and doc/architecture/*; analyze existing code (Serena) to avoid duplication.
+- Plan before edit: use sequential-thinking; list steps, risks, verification points; proceed after approval (or document safe assumptions).
+- Quality gates after changes: type-check → lint → tests → build; zero tolerance for errors; fix root cause instead of suppressing.
+- Communication: use interactive-feedback to sync intent and progress; provide concise status updates and end-of-turn summaries.
+- Prohibitions: no deleting code to hide errors; no commenting out failing code; no `as any`; do not disable rules to pass checks.
+- Consistency for codegen/implementation: align with existing architecture (directories, router, stores, APIs, base classes/utils, design tokens). Never paste large cloud/web code or hardcode configs that break conventions. Define compatibility/fusion plan and self-check (no hardcoding/duplication; contracts pass). Low-code outputs go under appshell with AUTO-GENERATED banner; satisfy sandbox/security/cache/monitoring.
+- Cross-reference: details of generator outputs, plugin contracts, and performance/observability live in Project Rules.

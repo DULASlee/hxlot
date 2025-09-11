@@ -1,1 +1,4 @@
-npx lint-staged && npm run precommit-check
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+npm run precommit-check

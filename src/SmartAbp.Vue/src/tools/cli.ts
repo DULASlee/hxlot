@@ -55,9 +55,14 @@ async function generate() {
   const detector = new ConflictDetector()
   detector.detect(sortedManifests)
 
-  // 3. 写入代码
+  // 3. 写入代码（路由/Stores/生命周期/策略）
   const writer = new CodeWriter(ROOT_DIR)
-  await writer.writeRoutes(sortedManifests)
+  await Promise.all([
+    writer.writeRoutes(sortedManifests),
+    writer.writeStores(sortedManifests),
+    writer.writeLifecycles(sortedManifests),
+    writer.writePolicies(sortedManifests)
+  ])
 
   console.log(chalk.green(`✅ 代码生成完成，处理模块数量: ${sortedManifests.length}`))
 }

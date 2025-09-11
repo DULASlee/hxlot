@@ -1,0 +1,180 @@
+{
+  "version": "1.0.0",
+  "description": "SmartAbp项目代码模板库索引",
+  "lastUpdated": "2025-09-11T00:36:55.168Z",
+  "templates": [
+    {
+      "id": "backend-application-crudappservice",
+      "name": "CrudAppService.template",
+      "path": "templates/backend/application/CrudAppService.template.cs",
+      "category": "backend/application",
+      "type": "service",
+      "tags": [],
+      "scenarios": [],
+      "ai_triggers": [],
+      "dependencies": [],
+      "permissions_required": false
+    },
+    {
+      "id": "backend-contracts-createentitydto",
+      "name": "CreateEntityDto.template",
+      "path": "templates/backend/contracts/CreateEntityDto.template.cs",
+      "category": "backend/contracts",
+      "type": "dto",
+      "tags": [],
+      "scenarios": [],
+      "ai_triggers": [],
+      "dependencies": [],
+      "permissions_required": false
+    },
+    {
+      "id": "backend-contracts-crudappserviceinterface",
+      "name": "CrudAppServiceInterface.template",
+      "path": "templates/backend/contracts/CrudAppServiceInterface.template.cs",
+      "category": "backend/contracts",
+      "type": "service",
+      "tags": [],
+      "scenarios": [],
+      "ai_triggers": [],
+      "dependencies": [],
+      "permissions_required": false
+    },
+    {
+      "id": "backend-contracts-entitydto",
+      "name": "EntityDto.template",
+      "path": "templates/backend/contracts/EntityDto.template.cs",
+      "category": "backend/contracts",
+      "type": "dto",
+      "tags": [],
+      "scenarios": [],
+      "ai_triggers": [],
+      "dependencies": [],
+      "permissions_required": false
+    },
+    {
+      "id": "backend-contracts-getentitylistdto",
+      "name": "GetEntityListDto.template",
+      "path": "templates/backend/contracts/GetEntityListDto.template.cs",
+      "category": "backend/contracts",
+      "type": "dto",
+      "tags": [],
+      "scenarios": [],
+      "ai_triggers": [],
+      "dependencies": [],
+      "permissions_required": false
+    },
+    {
+      "id": "backend-contracts-updateentitydto",
+      "name": "UpdateEntityDto.template",
+      "path": "templates/backend/contracts/UpdateEntityDto.template.cs",
+      "category": "backend/contracts",
+      "type": "dto",
+      "tags": [],
+      "scenarios": [],
+      "ai_triggers": [],
+      "dependencies": [],
+      "permissions_required": false
+    },
+    {
+      "id": "frontend-components-crudmanagement",
+      "name": "Vue CRUD管理组件",
+      "path": "templates/frontend/components/CrudManagement.template.vue",
+      "category": "frontend/components",
+      "type": "component",
+      "tags": [
+        "crud",
+        "vue"
+      ],
+      "scenarios": [],
+      "ai_triggers": [
+        "CRUD操作",
+        "数据管理",
+        "管理页面",
+        "管理组件"
+      ],
+      "dependencies": [
+        "Vue 3"
+      ],
+      "permissions_required": true
+    },
+    {
+      "id": "frontend-stores-entitystore",
+      "name": "Pinia状态管理Store",
+      "path": "templates/frontend/stores/EntityStore.template.ts",
+      "category": "frontend/stores",
+      "type": "store",
+      "tags": [
+        "crud"
+      ],
+      "scenarios": [],
+      "ai_triggers": [
+        "CRUD操作",
+        "数据管理",
+        "管理页面",
+        "管理组件",
+        "状态管理",
+        "Pinia Store"
+      ],
+      "dependencies": [],
+      "permissions_required": false
+    }
+  ],
+  "categories": {
+    "backend": {
+      "application": "应用服务层",
+      "contracts": "契约层",
+      "domain": "领域层",
+      "httpapi": "HTTP API层",
+      "entityframework": "数据访问层"
+    },
+    "frontend": {
+      "components": "Vue组件",
+      "views": "页面视图",
+      "stores": "状态管理",
+      "services": "API服务",
+      "composables": "组合式函数"
+    },
+    "lowcode": {
+      "plugins": "插件开发",
+      "generators": "代码生成器",
+      "runtime": "运行时"
+    }
+  },
+  "ai_search_patterns": {
+    "crud_service": "templates/**/*crud*service*.template.*",
+    "management_page": "templates/**/components/*management*.template.vue",
+    "entity_store": "templates/**/stores/*store*.template.ts",
+    "dto_objects": "templates/**/contracts/*dto*.template.cs",
+    "vue_components": "templates/frontend/components/*.template.vue",
+    "abp_services": "templates/backend/application/*.template.cs"
+  },
+  "naming_conventions": {
+    "backend": {
+      "appService": "{EntityName}AppService",
+      "dto": "{EntityName}Dto",
+      "createDto": "Create{EntityName}Dto",
+      "updateDto": "Update{EntityName}Dto",
+      "interface": "I{EntityName}AppService"
+    },
+    "frontend": {
+      "component": "{EntityName}Management.vue",
+      "store": "use{EntityName}Store",
+      "service": "{entityName}Service",
+      "types": "{entityName}.ts"
+    },
+    "permissions": {
+      "group": "{ModuleName}",
+      "actions": [
+        "Default",
+        "Create",
+        "Edit",
+        "Delete"
+      ]
+    }
+  },
+  "statistics": {
+    "total_templates": 8,
+    "backend_templates": 6,
+    "frontend_templates": 2
+  }
+}

@@ -1,0 +1,74 @@
+name: "Vue CRUD管理组件"
+category: "frontend/components"
+description: "标准的Vue CRUD管理页面组件，包含列表展示、搜索、新增、编辑、删除功能"
+tags: ["vue", "crud", "management", "table", "form", "element-plus"]
+scenarios:
+  - "数据管理页面"
+  - "后台管理界面"
+  - "列表页面"
+  - "系统管理模块"
+ai_triggers:
+  - "管理页面"
+  - "CRUD页面"
+  - "数据表格"
+  - "管理组件"
+  - "列表管理"
+  - "数据管理"
+  - "后台页面"
+dependencies:
+  - "Vue 3"
+  - "Element Plus"
+  - "Vue Router"
+  - "Pinia"
+  - "@element-plus/icons-vue"
+parameters:
+  - name: "EntityName"
+    type: "string"
+    description: "实体名称（PascalCase），如：Product、User"
+    required: true
+    example: "Product"
+  - name: "entityName"
+    type: "string"
+    description: "实体名称（camelCase），如：product、user"
+    required: true
+    example: "product"
+  - name: "entityDisplayName"
+    type: "string"
+    description: "实体显示名称，如：产品、用户"
+    required: true
+    example: "产品"
+  - name: "ModuleName"
+    type: "string"
+    description: "模块名称（PascalCase），如：Catalog、Identity"
+    required: true
+    example: "Catalog"
+  - name: "kebab-case-name"
+    type: "string"
+    description: "短横线命名，如：product-management"
+    required: true
+    example: "product-management"
+permissions_required: true
+validation_rules:
+  - "需要配置相应的权限指令"
+  - "需要实现对应的Store"
+  - "需要定义相应的类型接口"
+  - "需要配置路由"
+usage_examples:
+  - scenario: "产品管理页面"
+    parameters:
+      EntityName: "Product"
+      entityName: "product"
+      entityDisplayName: "产品"
+      ModuleName: "Catalog"
+      kebab-case-name: "product-management"
+  - scenario: "用户管理页面"
+    parameters:
+      EntityName: "User"
+      entityName: "user"
+      entityDisplayName: "用户"
+      ModuleName: "Identity"
+      kebab-case-name: "user-management"
+related_templates:
+  - "templates/frontend/stores/EntityStore.template.ts"
+  - "templates/frontend/services/EntityService.template.ts"
+  - "templates/frontend/types/EntityTypes.template.ts"

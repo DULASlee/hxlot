@@ -1,0 +1,8 @@
+# SmartAbp Architecture (Authoritative Summary)
+
+- Backend: ABP vNext on .NET 8. Modules: Web → HttpApi → Application → Contracts → Domain → EFCore → DB. OpenIddict for auth. Conventional controllers expose app services under /api/*.
+- Frontend: Vue 3 + TS + Vite + Pinia + Vue Router + Element Plus. DevServer :11369. Prod build outputs to src/SmartAbp.Web/wwwroot/dist and is hosted by SmartAbp.Web.
+- Integration: Vite proxies /connect|/api|/swagger|/health-status to backend during dev. SPA hosted from Web in prod.
+- Authentication: Password/Refresh Token via OpenIddict; ProfileService enriches claims; client persists token, auto-refreshes, and fetches /api/account/my-profile.
+- Frontend key files: vite.config.ts, src/main.ts, src/router/index.ts, src/utils/auth.ts, src/utils/api.ts. Backend key files: Web/Program.cs, Web/SmartAbpWebModule.cs, EntityFrameworkCore/SmartAbpDbContext.cs.
+- Recommended front-end structure: feature-sliced core/* (config/http/auth/i18n/router/store/ui) + modules/<feature> with pages/components/services/stores/types/routes.ts/i18n, app/* for wiring.

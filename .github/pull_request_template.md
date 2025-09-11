@@ -1,29 +1,38 @@
-# Pull Request Checklist
+# PR Checklist (SmartAbp)
 
-请在提交前逐项确认（未满足项请勿提 PR）：
+## Summary
+- [ ] Purpose of this change (one-liner)
+- [ ] Scope of changes (files/modules)
 
-## 🚨 BUG修复铁律（绝对禁令）
-- [ ] 未删除代码来掩盖错误
-- [ ] 未使用 `as any` 绕过类型检查
-- [ ] 未用 `_parameter` 规避未使用参数警告
-- [ ] 未注释掉报错代码
-- [ ] 已深入分析错误根因（Root Cause），并提供功能性修复（非规避）
-- [ ] 已在描述中附上修复策略（Fix Strategy）、风险评估（Risk）与验证方式（Validation）
+## Root Cause & Fix Strategy (Required)
+- Root Cause:
+- Fix Strategy:
+- Risks & Mitigations:
 
-## ✅ 质量门禁（本地自检）
-- [ ] npm run type-check 通过（或 type-check:lowcode 对低代码子模块）
-- [ ] npm run lint --fix 通过
-- [ ] npm run test 或 npm run test:lowcode 通过
-- [ ] npm run build 通过（或 build:lowcode 对低代码子模块）
-- [ ] 无引入重复代码，遵循架构合规性规则
-- [ ] 文档已更新（如需），并链接到 doc/engineering-rules.md
+## Serena Evidence (Required)
+- [ ] mcp_serena_find_symbol results attached/summarized
+- [ ] mcp_serena_search_for_pattern results attached/summarized
+- [ ] mcp_serena_get_symbols_overview reviewed
+- Notes:
 
-## 变更说明
-- 背景与问题（Background/Issue）：
-- 根因分析（Root Cause）：
-- 修复策略（Fix Strategy）：
-- 风险与回滚预案（Risk & Rollback）：
-- 验证方式（Validation：用例、截图、指标）：
+## Compatibility & Fusion Plan (Required)
+- How this change aligns with existing: architecture directories, routing, stores, API services, base classes/utils, design tokens.
+- Reuse/extension vs re-implementation:
+- Contracts (routes/stores/services) validated:
 
-## 关联
-- 相关 Issue/任务编号：
+## Tests & Coverage (Required)
+- [ ] Unit/Component/E2E tests added/updated
+- Coverage diff (before → after):
+```
+<insert summary or screenshot>
+```
+
+## Safety Gates
+- [ ] Type-check passed
+- [ ] Lint passed
+- [ ] Tests passed (≥80% statements/lines, ≥75% branches)
+- [ ] Build passed
+
+## Notes (Rollback/Follow-ups)
+- Rollback plan:
+- Follow-up tasks:
