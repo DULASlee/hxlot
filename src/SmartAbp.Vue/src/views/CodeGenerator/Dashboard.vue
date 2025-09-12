@@ -7,7 +7,7 @@
         <p>Initializing Code Generator...</p>
       </div>
     </div>
-    
+
     <el-container v-else>
       <!-- Enhanced Header with Animation -->
       <el-header class="dashboard-header fade-in">
@@ -27,8 +27,8 @@
         </div>
         <!-- Progress Bar for Active Generations -->
         <div v-if="hasActiveGenerations" class="progress-container">
-          <el-progress 
-            :percentage="activeGenerationSessions[0]?.progressPercentage || 0" 
+          <el-progress
+            :percentage="activeGenerationSessions[0]?.progressPercentage || 0"
             :status="activeGenerationSessions[0]?.progressPercentage === 100 ? 'success' : 'active'"
             :stroke-width="4"
             striped
@@ -41,7 +41,7 @@
           </div>
         </div>
       </el-header>
-      
+
       <el-main>
         <el-row :gutter="20">
           <!-- Real-time Progress Tracking -->
@@ -53,7 +53,7 @@
                   {{ isConnectedToProgress ? 'Connected' : 'Disconnected' }}
                 </el-tag>
               </div>
-              
+
               <div v-for="session in activeGenerationSessions" :key="session.sessionId" class="progress-session">
                 <div class="session-header">
                   <h4>{{ session.generationType }} Generation</h4>
@@ -61,15 +61,15 @@
                     {{ session.status }}
                   </el-tag>
                 </div>
-                
-                <el-progress 
+
+                <el-progress
                   :percentage="session.progressPercentage"
                   :status="session.status === 'Error' ? 'exception' : (session.progressPercentage === 100 ? 'success' : 'active')"
                   :stroke-width="8"
                   striped
                   striped-flow
                 />
-                
+
                 <div class="session-details">
                   <p><strong>Step:</strong> {{ session.currentStep }}</p>
                   <p><strong>Files:</strong> {{ session.filesGenerated }}/{{ session.totalFiles || '?' }}</p>
@@ -115,7 +115,7 @@
               </el-button>
             </el-card>
           </el-col>
-          
+
           <!-- Quick Actions -->
           <el-col :span="24" :md="16">
             <el-card class="actions-card">
@@ -124,8 +124,8 @@
               </div>
               <el-row :gutter="16">
                 <el-col :span="12" :md="8" v-for="generator in generators" :key="generator.type">
-                  <el-button 
-                    @click="openGenerator(generator.type)" 
+                  <el-button
+                    @click="openGenerator(generator.type)"
                     :type="generator.color"
                     class="generator-button"
                     :loading="isGenerating === generator.type">
@@ -137,7 +137,7 @@
             </el-card>
           </el-col>
         </el-row>
-        
+
         <!-- Generator Forms -->
         <el-row :gutter="20" style="margin-top: 20px;">
           <el-col :span="24">
@@ -148,19 +148,19 @@
                   <i class="el-icon-close"></i>
                 </el-button>
               </div>
-              
+
               <!-- Entity Designer -->
               <div v-if="activeGenerator === 'entity'">
                 <EntityDesigner @entityGenerated="onEntityGenerated" />
               </div>
-              
+
               <!-- Enterprise Solution Generator Form -->
               <div v-if="activeGenerator === 'enterprise'">
                 <el-form :model="enterpriseForm" label-width="200px">
                   <el-form-item label="Solution Name">
                     <el-input v-model="enterpriseForm.solutionName" placeholder="e.g., ECommerceSolution"></el-input>
                   </el-form-item>
-                  
+
                   <el-form-item label="Components to Generate">
                     <el-checkbox-group v-model="enterpriseComponents">
                       <el-checkbox label="includeDdd">Domain-Driven Design (DDD)</el-checkbox>
@@ -175,7 +175,7 @@
                       <el-checkbox label="includeQuality">Code Quality</el-checkbox>
                     </el-checkbox-group>
                   </el-form-item>
-                  
+
                   <el-form-item>
                     <el-button @click="generateEnterpriseSolution" type="primary" :loading="isGenerating === 'enterprise'">
                       <i class="el-icon-magic-stick"></i> Generate Enterprise Solution
@@ -186,7 +186,7 @@
             </el-card>
           </el-col>
         </el-row>
-        
+
         <!-- Generation Results with Code Preview -->
         <el-row v-if="generationResult" style="margin-top: 20px;">
           <el-col :span="24">
@@ -197,7 +197,7 @@
                   {{ generationResult.success ? 'Success' : 'Failed' }}
                 </el-tag>
               </div>
-              
+
               <div v-if="generationResult.success">
                 <div class="result-summary">
                   <p><strong>Generated at:</strong> {{ formatDate(generationResult.generatedAt) }}</p>
@@ -205,10 +205,10 @@
                   <p><strong>Files generated:</strong> {{ generationResult.fileCount }}</p>
                   <p><strong>Lines of code:</strong> {{ generationResult.linesOfCode }}</p>
                 </div>
-                
+
                 <!-- Code Preview Component -->
                 <div class="code-preview-section">
-                  <CodePreview 
+                  <CodePreview
                     v-if="generationResult.data"
                     :code="getGeneratedCode()"
                     :files="getGeneratedFiles()"
@@ -217,12 +217,12 @@
                     :show-statistics="true"
                   />
                 </div>
-                
+
                 <el-button @click="downloadResult" type="success" style="margin-top: 10px;">
                   <i class="el-icon-download"></i> Download Generated Code
                 </el-button>
               </div>
-              
+
               <div v-else>
                 <el-alert
                   :title="generationResult.error"
@@ -241,9 +241,9 @@
 
 <script>
 // @ts-nocheck // Legacy view pending refactor to Composition API; excluded from P0/P2 quality path
-import { codeGeneratorApi } from '@/api/code-generator'
-import CodePreview from '@/components/CodeGenerator/CodePreview.vue'
-import EntityDesigner from '@/components/CodeGenerator/EntityDesigner.vue'
+import { codeGeneratorApi } from '@smartabp/lowcode-api'
+import CodePreview from '@smartabp/lowcode-designer/src/components/CodeGenerator/CodePreview.vue'
+import EntityDesigner from '@smartabp/lowcode-designer/src/components/CodeGenerator/EntityDesigner.vue'
 
 export default {
   name: 'CodeGeneratorDashboard',
@@ -257,7 +257,7 @@ export default {
       activeGenerator: null,
       isGenerating: false,
       generationResult: null,
-      
+
       generators: [
         { type: 'entity', name: 'Entity', icon: 'el-icon-document-add', color: 'primary' },
         { type: 'ddd', name: 'DDD Domain', icon: 'el-icon-collection', color: 'success' },
@@ -272,14 +272,14 @@ export default {
         { type: 'quality', name: 'Code Quality', icon: 'el-icon-medal', color: 'primary' },
         { type: 'enterprise', name: 'Full Solution', icon: 'el-icon-star-on', color: 'success' }
       ],
-      
-      
+
+
       // Add new form data
       dddForm: {
         moduleName: '',
         namespace: ''
       },
-      
+
       entityForm: {
         name: '',
         module: '',
@@ -291,14 +291,14 @@ export default {
         hasExtraProperties: true,
         properties: []
       },
-      
+
       enterpriseForm: {
         solutionName: ''
       },
-      
+
       enterpriseComponents: [
         'includeDdd',
-        'includeCqrs', 
+        'includeCqrs',
         'includeApplicationServices',
         'includeInfrastructure',
         'includeAspire',
@@ -309,18 +309,18 @@ export default {
         'includeQuality'
     }
   },
-  
+
   computed: {
     successRate() {
       if (!this.statistics || this.statistics.totalGenerations === 0) return 0
       return Math.round((this.statistics.successfulGenerations / this.statistics.totalGenerations) * 100)
     }
   },
-  
+
   async mounted() {
     await this.loadStatistics()
   },
-  
+
   methods: {
     async loadStatistics() {
       try {
@@ -329,22 +329,22 @@ export default {
         this.$message.error('Failed to load statistics: ' + error.message)
       }
     },
-    
+
     openGenerator(type) {
       this.activeGenerator = type
       this.generationResult = null
     },
-    
+
     closeGenerator() {
       this.activeGenerator = null
       this.generationResult = null
     },
-    
+
     getGeneratorTitle(type) {
       const generator = this.generators.find(g => g.type === type)
       return generator ? `Generate ${generator.name}` : 'Code Generator'
     },
-    
+
     addProperty() {
       this.entityForm.properties.push({
         name: '',
@@ -354,12 +354,12 @@ export default {
         description: ''
       })
     },
-    
+
     removeProperty(index) {
       this.entityForm.properties.splice(index, 1)
     },
-    
-    
+
+
     onEntityGenerated(result) {
       this.generationResult = {
         success: true,
@@ -370,11 +370,11 @@ export default {
         data: result,
         sessionId: result.sessionId
       }
-      
+
       this.$message.success('Entity generated successfully!')
       this.loadStatistics()
     },
-    
+
     async generateDdd() {
       this.isGenerating = 'ddd'
       try {
@@ -394,7 +394,7 @@ export default {
           useExtraProperties: true,
           defaultKeyType: 'Guid'
         })
-        
+
         this.generationResult = {
           success: true,
           generatedAt: result.generatedAt,
@@ -403,7 +403,7 @@ export default {
           linesOfCode: result.totalLinesOfCode || 0,
           data: result
         }
-        
+
         this.$message.success('DDD domain generated successfully!')
         await this.loadStatistics()
       } catch (error) {
@@ -417,7 +417,7 @@ export default {
         this.isGenerating = false
       }
     },
-    
+
     async generateEnterpriseSolution() {
       this.isGenerating = 'enterprise'
       try {
@@ -436,7 +436,7 @@ export default {
           telemetryDefinition: { moduleName: this.enterpriseForm.solutionName, namespace: `${this.enterpriseForm.solutionName}.Telemetry` },
           qualityDefinition: { moduleName: this.enterpriseForm.solutionName, namespace: `${this.enterpriseForm.solutionName}.Quality` }
         }
-        
+
         const result = await codeGeneratorApi.generateEnterpriseSolution(enterpriseRequest)
         this.generationResult = {
           success: result.isSuccess,
@@ -459,10 +459,10 @@ export default {
         this.isGenerating = false
       }
     },
-    
+
     downloadResult() {
       if (!this.generationResult?.data) return
-      
+
       const dataStr = JSON.stringify(this.generationResult.data, null, 2)
       const dataBlob = new Blob([dataStr], { type: 'application/json' })
       const url = URL.createObjectURL(dataBlob)
@@ -472,11 +472,11 @@ export default {
       link.click()
       URL.revokeObjectURL(url)
     },
-    
+
     formatDate(dateString) {
       return new Date(dateString).toLocaleString()
     },
-    
+
     formatTimeSpan(timeSpan) {
       if (!timeSpan) return 'N/A'
       if (timeSpan.totalMilliseconds !== undefined) {
@@ -484,7 +484,7 @@ export default {
       }
       return timeSpan.toString()
     },
-    
+
     formatBytes(bytes) {
       if (bytes === 0) return '0 Bytes'
       const k = 1024
@@ -492,53 +492,53 @@ export default {
       const i = Math.floor(Math.log(bytes) / Math.log(k))
       return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
     },
-    
+
     // Progress tracking methods
     getProgressForSession(sessionId) {
       return getSessionProgress(sessionId)
     },
-    
+
     formatProgressTime(milliseconds) {
       return formatElapsedTime(milliseconds)
     },
-    
+
     formatProgress(percentage) {
       return `${percentage}%`
     },
-    
+
     // Code preview methods
     getGeneratedCode() {
       if (!this.generationResult?.data) return ''
-      
+
       // For single code generation
       if (this.generationResult.data.code) {
         return this.generationResult.data.code
       }
-      
+
       // For multiple files, return the first file or main file
       const files = this.getGeneratedFiles()
       if (Object.keys(files).length > 0) {
-        const mainFile = Object.keys(files).find(key => 
-          key.toLowerCase().includes('aggregate') || 
+        const mainFile = Object.keys(files).find(key =>
+          key.toLowerCase().includes('aggregate') ||
           key.toLowerCase().includes('entity') ||
           key.toLowerCase().includes('command') ||
           key.toLowerCase().includes('service')
         )
         return files[mainFile || Object.keys(files)[0]] || ''
       }
-      
+
       return ''
     },
-    
+
     getGeneratedFiles() {
       if (!this.generationResult?.data?.files) return {}
       return this.generationResult.data.files
     },
-    
+
     getCodeLanguage() {
       const fileName = this.getGeneratedFileName()
       const extension = fileName.split('.').pop()?.toLowerCase()
-      
+
       const languageMap = {
         'cs': 'csharp',
         'ts': 'typescript',
@@ -548,16 +548,16 @@ export default {
         'xml': 'xml',
         'sql': 'sql'
       }
-      
+
       return languageMap[extension] || 'csharp'
     },
-    
+
     getGeneratedFileName() {
       const files = this.getGeneratedFiles()
       if (Object.keys(files).length > 0) {
         return Object.keys(files)[0]
       }
-      
+
       const generationType = this.activeGenerator || 'entity'
       return `Generated${generationType.charAt(0).toUpperCase() + generationType.slice(1)}.cs`
     }

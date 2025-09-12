@@ -19,12 +19,12 @@ const PermissionsView = () => import("@/views/system/PermissionsView.vue")
 const UsersView = () => import("@/views/system/UsersView.vue")
 
 // 代码生成模块组件
-const LowCodeEngineView = () => import("@/views/codegen/LowCodeEngineView.vue")
-const SfcCompilerView = () => import("@/views/codegen/SfcCompilerView.vue")
-const DragDropFormView = () => import("@/views/codegen/DragDropFormView.vue")
-const PerformanceDashboard = () => import("@/views/codegen/PerformanceDashboard.vue")
-const ModuleWizardView = () => import("@/views/codegen/ModuleWizardView.vue")
-const VisualDesignerView = () => import("@/views/codegen/VisualDesignerView.vue")
+const LowCodeEngineView = () => import("@smartabp/lowcode-designer/src/views/codegen/LowCodeEngineView.vue")
+const SfcCompilerView = () => import("@smartabp/lowcode-designer/src/views/codegen/SfcCompilerView.vue")
+const DragDropFormView = () => import("@smartabp/lowcode-designer/src/views/codegen/DragDropFormView.vue")
+const PerformanceDashboard = () => import("@smartabp/lowcode-designer/src/views/codegen/PerformanceDashboard.vue")
+const ModuleWizardView = () => import("@smartabp/lowcode-designer/src/views/codegen/ModuleWizardView.vue")
+const VisualDesignerView = () => import("@smartabp/lowcode-designer/src/views/VisualDesignerView.vue")
 
 const routes: RouteRecordRaw[] = [
   // 登录页面

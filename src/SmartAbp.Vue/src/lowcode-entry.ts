@@ -1,7 +1,8 @@
 /**
- * 低代码引擎主入口文件
- * 代理到已迁移的文件
+ * 低代码引擎主入口文件（兼容层）
+ * 统一代理到 packages 下的正式包导出
  */
 
-// 从新位置导入所有内容
-export * from "./lowcode"
+export * from "@smartabp/lowcode-core"
+export * from "@smartabp/lowcode-codegen"
+export * from "@smartabp/lowcode-ui-vue"

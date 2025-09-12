@@ -4,9 +4,9 @@
   "description": "SmartAbp项目代码模板库",
   "scripts": {
     "expert:preflight": "node tools/quality-assurance/preflight-enforcer.js",
-    "template:validate": "node src/SmartAbp.Vue/src/lowcode/tools/template-management/template-validator.cjs",
-    "template:index": "node src/SmartAbp.Vue/src/lowcode/tools/template-management/build-template-index.cjs",
-    "template:search": "node src/SmartAbp.Vue/src/lowcode/tools/template-management/template-search.cjs",
+    "template:validate": "node src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/template-validator.cjs",
+    "template:index": "node src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/build-template-index.cjs",
+    "template:search": "node src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/template-search.cjs",
     "approve:plan": "node tools/quality-assurance/approve-plan.js",
     "hooks:install": "node tools/quality-assurance/install-hooks.js",
     "predev": "npm run template:validate",

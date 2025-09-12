@@ -4,7 +4,7 @@ import vueDevtools from "vite-plugin-vue-devtools"
 import Icons from "unplugin-icons/vite"
 import { fileURLToPath, URL } from "node:url"
 import dns from "dns"
-import moduleWizardDev from "./src/plugins/moduleWizardDev"
+import moduleWizardDev from "@smartabp/lowcode-designer/src/dev/moduleWizardDev"
 
 // 保证 DNS 解析 localhost 时不过滤非匹配网卡
 dns.setDefaultResultOrder("verbatim")
