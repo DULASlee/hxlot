@@ -1,13 +1,4 @@
 #!/usr/bin/env sh
-. "$(dirname "$0")/_/husky.sh"
+# . "$(dirname -- "$0")/_/husky.sh"  <- DEPRECATED
 
-# 快速失败的最小门禁：类型检查 + Lint + 低代码测试
-# 可根据需要切换为更严格门禁（含 build）
-npm run type-check -ws --silent || exit 1
-npm run lint --silent || exit 1
-
-# 优先跑低代码相关测试，若你希望跑全量测试可替换为 `npm run test:run`
-npm run test:lowcode --silent || exit 1
-
-# 可选开启构建门禁（默认注释，可按团队决策开启）
-# npm run build --silent || exit 1
+npm run precommit-check

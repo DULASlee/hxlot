@@ -31,13 +31,13 @@
             <template #header>
               <span><el-icon><Setting /></el-icon> Entity Configuration</span>
             </template>
-            
+
             <el-form :model="entityModel" label-width="120px" size="small">
               <el-row :gutter="16">
                 <el-col :span="12">
                   <el-form-item label="Entity Name" required>
-                    <el-input 
-                      v-model="entityModel.name" 
+                    <el-input
+                      v-model="entityModel.name"
                       placeholder="e.g., Product, Customer"
                       @input="updateEntityName"
                     />
@@ -49,7 +49,7 @@
                   </el-form-item>
                 </el-col>
               </el-row>
-              
+
               <el-row :gutter="16">
                 <el-col :span="12">
                   <el-form-item label="Aggregate Root">
@@ -106,7 +106,7 @@
                   {{ entityModel.properties.length }} properties
                 </el-tag>
               </div>
-              
+
               <div
                 class="drop-zone"
                 :class="{ 'drag-over': isDragOver }"
@@ -146,7 +146,7 @@
                           {{ property.description }}
                         </div>
                       </div>
-                      
+
                       <div class="property-actions">
                         <el-button @click="editProperty(property)" size="small" type="primary" text>
                           <el-icon><Edit /></el-icon>
@@ -171,12 +171,12 @@
               <template #header>
                 <span><el-icon><Tools /></el-icon> Property Configuration</span>
               </template>
-              
+
               <el-form :model="selectedPropertyData" label-width="100px" size="small">
                 <el-form-item label="Name" required>
                   <el-input v-model="selectedPropertyData.name" />
                 </el-form-item>
-                
+
                 <el-form-item label="Type">
                   <el-select v-model="selectedPropertyData.type" style="width: 100%">
                     <el-option
@@ -193,18 +193,18 @@
                 </el-form-item>
 
                 <el-form-item v-if="isStringType(selectedPropertyData.type)" label="Max Length">
-                  <el-input-number 
-                    v-model="selectedPropertyData.maxLength" 
-                    :min="1" 
+                  <el-input-number
+                    v-model="selectedPropertyData.maxLength"
+                    :min="1"
                     :max="8000"
                     controls-position="right"
                   />
                 </el-form-item>
 
                 <el-form-item label="Description">
-                  <el-input 
-                    v-model="selectedPropertyData.description" 
-                    type="textarea" 
+                  <el-input
+                    v-model="selectedPropertyData.description"
+                    type="textarea"
                     :rows="2"
                   />
                 </el-form-item>
@@ -241,7 +241,7 @@
         :fileName="`${entityModel.name || 'Entity'}.cs`"
         :show-statistics="true"
       />
-      
+
       <template #footer>
         <el-button @click="closePreview">Close</el-button>
         <el-button @click="generateFromPreview" type="primary">
@@ -269,9 +269,9 @@ import {
 } from '@element-plus/icons-vue'
 import VueDraggable from 'vuedraggable'
 import CodePreview from './CodePreview.vue'
-import { codeGeneratorApi } from '@/api/code-generator'
-import { usePropertyDragDrop } from '@/composables/useDragDrop'
-import type { PropertyType, EntityProperty, EntityModel } from '@/types/entity-designer'
+import { codeGeneratorApi } from '@smartabp/lowcode-api'
+import { usePropertyDragDrop } from '@smartabp/lowcode-core/src/composables/useDragDrop'
+import type { PropertyType, EntityProperty, EntityModel } from '@smartabp/lowcode-core/src/types/entity-designer'
 
 // Drag and drop functionality
 const { registerEntityCanvas, startPropertyDrag, dragOver, dragLeave, drop } = usePropertyDragDrop()
@@ -427,7 +427,7 @@ const addPropertyFromType = (propertyType: PropertyType) => {
   }
 
   entityModel.properties.push(newProperty)
-  
+
   // Auto-select the new property for editing
   nextTick(() => {
     selectProperty(newProperty.id)
@@ -454,10 +454,10 @@ const duplicateProperty = (property: EntityProperty) => {
     id: `prop_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     name: `${property.name}Copy`
   }
-  
+
   const index = entityModel.properties.findIndex(p => p.id === property.id)
   entityModel.properties.splice(index + 1, 0, duplicated)
-  
+
   ElMessage.success('Property duplicated')
 }
 
@@ -466,11 +466,11 @@ const removeProperty = async (index: number) => {
     await ElMessageBox.confirm('Are you sure you want to remove this property?', 'Confirm Delete', {
       type: 'warning'
     })
-    
+
     entityModel.properties.splice(index, 1)
     selectedProperty.value = null
     selectedPropertyData.value = null
-    
+
     ElMessage.success('Property removed')
   } catch {
     // User cancelled
@@ -519,7 +519,7 @@ const clearDesigner = async () => {
     await ElMessageBox.confirm('Are you sure you want to clear the entire designer?', 'Confirm Clear', {
       type: 'warning'
     })
-    
+
     Object.assign(entityModel, {
       name: '',
       module: '',
@@ -531,11 +531,11 @@ const clearDesigner = async () => {
       isSoftDelete: true,
       hasExtraProperties: true
     })
-    
+
     entityFeatures.value = ['isAggregateRoot', 'isMultiTenant', 'isSoftDelete', 'hasExtraProperties']
     selectedProperty.value = null
     selectedPropertyData.value = null
-    
+
     ElMessage.success('Designer cleared')
   } catch {
     // User cancelled
@@ -561,7 +561,7 @@ const previewCodeMethod = async () => {
 const generateEntityCode = (): string => {
   const className = entityModel.name
   const namespace = entityModel.module ? `${entityModel.module}.Domain` : 'Domain'
-  
+
   let code = `using System;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.Domain.Entities.Auditing;
@@ -581,17 +581,17 @@ namespace ${namespace}
         /// <summary>
         /// ${prop.description || prop.name}
         /// </summary>`
-    
+
     if (prop.isRequired) {
       code += `
         [Required]`
     }
-    
+
     if (prop.maxLength) {
       code += `
         [StringLength(${prop.maxLength})]`
     }
-    
+
     code += `
         public virtual ${prop.type} ${prop.name} { get; set; }`
   })
@@ -622,7 +622,7 @@ const generateEntity = async () => {
   }
 
   isGenerating.value = true
-  
+
   try {
     const result = await codeGeneratorApi.generateEntity({
       name: entityModel.name,
@@ -644,10 +644,10 @@ const generateEntity = async () => {
     })
 
     ElMessage.success('Entity generated successfully!')
-    
+
     // Emit event to parent component
     emit('entityGenerated', result)
-    
+
   } catch (error) {
     ElMessage.error('Failed to generate entity: ' + (error as Error).message)
   } finally {
@@ -928,15 +928,15 @@ const emit = defineEmits<{
     grid-template-columns: 1fr;
     grid-template-rows: auto auto 1fr;
   }
-  
+
   .property-toolbox {
     order: 1;
   }
-  
+
   .entity-canvas {
     order: 3;
   }
-  
+
   .property-config {
     order: 2;
   }

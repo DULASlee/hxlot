@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@smartabp/lowcode-core": ["src/SmartAbp.Vue/packages/lowcode-core/src"],
+      "@smartabp/lowcode-designer": ["src/SmartAbp.Vue/packages/lowcode-designer/src"],
+      "@smartabp/lowcode-codegen": ["src/SmartAbp.Vue/packages/lowcode-codegen/src"],
+      "@smartabp/lowcode-api": ["src/SmartAbp.Vue/packages/lowcode-api/src"],
+      "@smartabp/lowcode-ui-vue": ["src/SmartAbp.Vue/packages/lowcode-ui-vue/src"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/SmartAbp.Vue/packages/**/*.ts",
+    "src/SmartAbp.Vue/packages/**/*.vue"
+  ],
+  "references": []
+}

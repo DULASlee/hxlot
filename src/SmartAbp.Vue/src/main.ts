@@ -79,9 +79,7 @@ import { createApp } from "vue"
 import { createPinia } from "pinia"
 import App from "./App.vue"
 import router from "./router"
-import { useThemeStore } from "./stores"
-import { authService } from "@/utils/auth"
-import { globalContentCache } from "@/lowcode/federation/content-cache"
+import { useDesignerStore } from "@smartabp/lowcode-designer/stores/designer"
 
 // Highlight.js for code syntax highlighting
 import hljs from "highlight.js/lib/core"

@@ -26,6 +26,11 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "@smartabp/lowcode-core": fileURLToPath(new URL("./packages/lowcode-core/src", import.meta.url)),
+      "@smartabp/lowcode-designer": fileURLToPath(new URL("./packages/lowcode-designer/src", import.meta.url)),
+      "@smartabp/lowcode-codegen": fileURLToPath(new URL("./packages/lowcode-codegen/src", import.meta.url)),
+      "@smartabp/lowcode-api": fileURLToPath(new URL("./packages/lowcode-api/src", import.meta.url)),
+      "@smartabp/lowcode-ui-vue": fileURLToPath(new URL("./packages/lowcode-ui-vue/src", import.meta.url))
     },
   },
   server: {
