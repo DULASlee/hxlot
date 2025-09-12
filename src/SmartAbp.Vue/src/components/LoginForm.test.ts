@@ -25,7 +25,7 @@ describe("LoginForm", () => {
     await nextTick()
 
     // 验证是否显示错误消息
-    const errorMessages = wrapper.findAll(".error-message")
+    const errorMessages = wrapper.findAll(".input-error, .error-alert")
     expect(errorMessages.length).toBeGreaterThan(0)
   })
 })

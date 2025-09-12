@@ -1,3 +1,10 @@
+---
+alwaysApply: true
+description: "SmartAbp低代码引擎规则"
+globs: ["**/*.ts", "**/*.vue", "**/*.js"]
+priority: 2
+---
+
 # SmartAbp 低代码引擎规则 (Low-Code Engine Rules)
 
 ## 🚀 全栈低代码引擎开发约束

@@ -1,3 +1,10 @@
+---
+alwaysApply: true
+description: "SmartAbp项目开发铁律"
+globs: ["**/*"]
+priority: 10
+---
+
 # 🚨 SmartAbp项目开发铁律（Cursor强制执行）
 
 ## ⚡ 开发铁律四大核心（强制执行）

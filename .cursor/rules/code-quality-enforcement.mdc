@@ -49,11 +49,13 @@ function processData(inputParam: string): ProcessedData {
 **🔴 每次代码修改后强制执行：**
 
 ```bash
-# 必须按顺序执行，全部通过才能继续
+# 必须按顺序执行，全部通过才能继续 (基于项目实际scripts)
+npm run type-check   # ❌ 任何类型错误 = 立即停止
+npm run lint         # ❌ 任何lint错误 = 立即停止  
+npm run test:coverage # ❌ 测试覆盖率<80% = 立即停止
 npm run build        # ❌ 任何构建错误 = 立即停止
-npm run type-check   # ❌ 任何类型错误 = 立即停止  
-npm run lint --fix   # ❌ 任何lint错误 = 立即停止
 npm run dev          # ❌ 运行时错误 = 立即停止
+npm run stylelint    # ❌ 样式规范错误 = 立即停止 (项目特有)
 ```
 
 ### 2. 代码重复检测
@@ -82,16 +84,26 @@ export function formatDate(date: Date): string {
 **🔴 强制启用所有严格检查：**
 
 ```json
-// tsconfig.json - 强制配置
+// tsconfig.json - 强制配置 (与项目实际配置同步)
 {
   "compilerOptions": {
-    "strict": true,                    // ✅ 必须启用
-    "noImplicitAny": true,            // ✅ 禁止隐式any
-    "strictNullChecks": true,         // ✅ 严格空值检查
-    "strictFunctionTypes": true,      // ✅ 严格函数类型
-    "noImplicitReturns": true,        // ✅ 必须显式返回
-    "noUnusedLocals": true,           // ✅ 禁止未使用变量
-    "noUnusedParameters": true        // ✅ 禁止未使用参数
+    "target": "ES2020",               // ✅ 与项目一致
+    "lib": ["ES2020", "DOM", "DOM.Iterable"], // ✅ 与项目一致
+    "module": "ESNext",               // ✅ 与项目一致
+    "moduleResolution": "bundler",    // ✅ 与项目一致
+    "strict": true,                   // ✅ 必须启用
+    "noImplicitAny": true,           // ✅ 禁止隐式any
+    "strictNullChecks": true,        // ✅ 严格空值检查
+    "strictFunctionTypes": true,     // ✅ 严格函数类型
+    "noImplicitReturns": true,       // ✅ 必须显式返回
+    "noUnusedLocals": true,          // ✅ 禁止未使用变量
+    "noUnusedParameters": true,      // ✅ 禁止未使用参数
+    "skipLibCheck": true,            // ✅ 与项目一致
+    "allowSyntheticDefaultImports": true, // ✅ 与项目一致
+    "resolveJsonModule": true,       // ✅ 与项目一致
+    "isolatedModules": true,         // ✅ Vite要求
+    "useDefineForClassFields": true, // ✅ 现代类字段语法
+    "noEmit": true                   // ✅ 仅类型检查，不输出
   }
 }
 ```
@@ -100,7 +112,7 @@ export function formatDate(date: Date): string {
 **🔴 强制执行的代码规范：**
 
 ```typescript
-// ✅ 强制使用：明确的类型定义
+// ✅ 强制使用：明确的类型定义 (符合项目代码风格)
 interface UserInfo {
   id: string
   name: string
@@ -109,16 +121,16 @@ interface UserInfo {
 }
 
 const user: UserInfo = {
-  id: '123',
-  name: 'John',
-  email: 'john@example.com',
-  createdAt: new Date()
+  id: "123",                          // ✅ 双引号 (与.prettierrc.json一致)
+  name: "John",                       // ✅ 双引号
+  email: "john@example.com",          // ✅ 双引号
+  createdAt: new Date(),              // ✅ 尾随逗号
 }
 
 // ❌ 严禁：类型推断的危险用法
 const user = {  // ❌ 没有明确类型
-  id: '123',
-  name: 'John'
+  id: "123",
+  name: "John"
 }
 ```
 
@@ -262,52 +274,66 @@ async function fetchUserData(userId: string): Promise<any> {
 
 ## 🧪 测试覆盖率要求
 
-### 强制测试覆盖率
+### 强制测试覆盖率 (基于Vitest 2.1.8配置)
 ```typescript
-// ✅ 必须达到的覆盖率指标
-// 函数覆盖率: >90%
-// 行覆盖率: >85%
-// 分支覆盖率: >80%
+// ✅ 必须达到的覆盖率指标 (与vitest.config.ts一致)
+// 函数覆盖率: >80%  (项目标准)
+// 行覆盖率: >80%    (项目标准)
+// 分支覆盖率: >80%  (项目标准)
+// 语句覆盖率: >80%  (项目标准)
 
 // ✅ 必须测试的函数类型
 // 1. 所有public方法
 // 2. 所有业务逻辑函数
 // 3. 所有API调用函数
 // 4. 所有数据转换函数
+// 5. 所有Vue组件的核心逻辑
 
-describe('UserService', () => {
-  it('should create user with valid data', async () => {
-    const userData = { name: 'John', email: 'john@test.com' }
+// ✅ Vitest测试示例 (符合项目规范)
+describe("UserService", () => {
+  it("should create user with valid data", async () => {
+    const userData = { name: "John", email: "john@test.com" }
     const result = await userService.create(userData)
     expect(result).toBeDefined()
     expect(result.id).toBeTruthy()
   })
   
-  it('should throw error for invalid email', async () => {
-    const userData = { name: 'John', email: 'invalid-email' }
+  it("should throw error for invalid email", async () => {
+    const userData = { name: "John", email: "invalid-email" }
     await expect(userService.create(userData))
-      .rejects.toThrow('Invalid email format')
+      .rejects.toThrow("Invalid email format")
+  })
+  
+  // ✅ Vue组件测试示例
+  it("should render user info correctly", () => {
+    const wrapper = mount(UserCard, {
+      props: { user: mockUser }
+    })
+    expect(wrapper.find(".user-name").text()).toBe(mockUser.name)
   })
 })
 ```
 
 ## 📊 性能要求
 
-### 强制性能标准
+### 强制性能标准 (基于Vue 3.5.13 + Vite 6.0.5)
 ```typescript
-// ✅ 必须满足的性能指标
+// ✅ 必须满足的性能指标 (现代Web标准)
+// First Contentful Paint: <1.5s
+// Largest Contentful Paint: <2.5s
+// Cumulative Layout Shift: <0.1
+// First Input Delay: <100ms
 // Vue组件渲染时间: <16ms (60fps)
 // API响应时间: <200ms
-// 页面加载时间: <2s
-// 包大小: <5MB
+// 初始包大小: <3MB (Vite优化后)
 
-// ✅ 强制使用：性能优化技术
-// 1. Vue组件懒加载
+// ✅ 强制使用：Vue 3性能优化技术
+// 1. Vue组件懒加载 (defineAsyncComponent)
 const UserManagement = defineAsyncComponent(
-  () => import('@/views/user/UserManagement.vue')
+  () => import("@/views/user/UserManagement.vue")
 )
 
-// 2. API请求去重
+// 2. API请求去重与缓存
 const userCache = new Map<string, Promise<UserInfo>>()
 const getUserById = (id: string): Promise<UserInfo> => {
   if (!userCache.has(id)) {
@@ -316,35 +342,59 @@ const getUserById = (id: string): Promise<UserInfo> => {
   return userCache.get(id)!
 }
 
-// 3. 计算属性缓存
+// 3. 计算属性缓存 (Vue 3响应式系统)
 const expensiveComputation = computed(() => {
   return heavyCalculation(props.data)  // 自动缓存
 })
+
+// 4. Pinia状态管理优化
+const useUserStore = defineStore("user", () => {
+  const users = ref<UserInfo[]>([])
+  
+  const getUserById = computed(() => {
+    return (id: string) => users.value.find(u => u.id === id)
+  })
+  
+  return { users, getUserById }
+})
+
+// 5. Element Plus按需导入 (减少包大小)
+import { ElButton, ElTable } from "element-plus"
 ```
 
 ## 🚨 自动质量检查
 
-### 代码提交前强制检查
+### 代码提交前强制检查 (基于Husky + lint-staged)
 ```bash
-# Git pre-commit钩子自动执行
-1. TypeScript类型检查 (tsc --noEmit)
-2. ESLint规范检查 (eslint --fix)
-3. 单元测试执行 (npm test)
-4. 构建验证 (npm run build)
-5. 性能测试 (npm run perf)
+#// Git pre-commit钩子自动执行 (与package.json scripts一致)
+1. TypeScript类型检查 (npm run type-check)
+2. ESLint规范检查 (npm run lint)
+3. Prettier格式化 (npm run format)
+4. 样式规范检查 (npm run stylelint)
+5. 单元测试执行 (npm run test:coverage)
+6. 构建验证 (npm run build)
+7. E2E测试 (npm run cypress:run) [可选]
 ```
 
-### 质量门禁
+### 质量门禁 (SmartAbp项目标准)
 ```typescript
 // 质量门禁标准 - 未达标禁止合并
 interface QualityGates {
-  buildSuccess: true,           // ✅ 构建必须成功
-  typeCheckPass: true,          // ✅ 类型检查必须通过
-  lintErrors: 0,                // ✅ Lint错误必须为0
-  testCoverage: '>85%',         // ✅ 测试覆盖率>85%
-  duplicatedCode: '<5%',        // ✅ 重复代码<5%
-  complexityScore: '<10',       // ✅ 圈复杂度<10
-  performanceScore: '>90'       // ✅ 性能分数>90
+  buildSuccess: true,           // ✅ Vite 6.0.5构建必须成功
+  typeCheckPass: true,          // ✅ TypeScript 8.41.0类型检查必须通过
+  lintErrors: 0,                // ✅ ESLint错误必须为0
+  stylelintErrors: 0,           // ✅ Stylelint错误必须为0 (项目特有)
+  lintWarnings: 0,              // ✅ ESLint警告必须为0
+  testCoverage: ">=80%",        // ✅ Vitest测试覆盖率≥80%
+  testsPassing: true,           // ✅ 所有测试必须通过
+  duplicatedCode: "<5%",        // ✅ 重复代码<5%
+  complexityScore: "<10",       // ✅ 圈复杂度<10
+  performanceScore: ">90",      // ✅ Lighthouse性能分数>90
+  accessibilityScore: ">90",    // ✅ 可访问性分数>90
+  bundleSize: "<3MB",           // ✅ 打包大小<3MB
+  noConsoleLog: true,           // ✅ 生产代码禁止console.log
+  noDebugger: true,             // ✅ 生产代码禁止debugger
+  noTodoComments: true          // ✅ 禁止TODO注释进入主分支
 }
 ```
 

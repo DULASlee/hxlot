@@ -1,3 +1,10 @@
+---
+alwaysApply: true
+description: "模板库强制使用规则"
+globs: ["**/*.cs", "**/*.ts", "**/*.vue"]
+priority: 9
+---
+
 # Template Library Enforcement Rules
 
 ## 🎯 MANDATORY TEMPLATE USAGE RULES

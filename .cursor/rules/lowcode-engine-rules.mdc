@@ -1,4 +1,11 @@
 
+---
+alwaysApply: true
+description: "SmartAbp低代码引擎开发强制规则"
+globs: ["**/*.ts", "**/*.vue", "**/*.js"]
+priority: 1
+---
+
 # 🚀 SmartAbp低代码引擎开发强制规则
 
 ## ⚡ 低代码引擎铁律（零容错）
@@ -7,22 +14,30 @@
 **🔴 严格遵循微内核架构分层：**
 
 ```typescript
-// ✅ 强制架构层次
-src/lowcode/
-├── kernel/                    # 🔥 微内核层 - 绝对稳定
-│   ├── core.ts               # 核心引擎
-│   ├── types.ts              # 类型定义
-│   └── index.ts              # 统一导出
-├── plugins/                   # 🔥 插件层 - 可扩展
-│   ├── vue3/                 # Vue3代码生成器
-│   ├── react/                # React代码生成器
-│   └── common/               # 通用插件
-├── schemas/                   # 🔥 Schema层 - 严格验证
-│   ├── component.schema.json  # 组件Schema
+// ✅ 强制架构层次 (基于项目实际结构)
+packages/
+├── lowcode-core/              # 🔥 微内核层 - 绝对稳定
+│   ├── src/
+│   │   ├── kernel/           # 核心引擎
+│   │   ├── types/            # 类型定义
+│   │   ├── runtime/          # 运行时环境
+│   │   └── index.ts          # 统一导出
+├── lowcode-plugins/           # 🔥 插件层 - 可扩展
+│   ├── vue3-generator/       # Vue3代码生成器
+│   ├── abp-generator/        # ABP后端生成器
+│   └── common-utils/         # 通用插件
+├── lowcode-schemas/           # 🔥 Schema层 - 严格验证
+│   ├── component.schema.json # 组件Schema
 │   ├── page.schema.json      # 页面Schema
 │   └── validation/           # 验证器
-├── examples/                  # 🔥 示例层 - 标准参考
-└── tests/                     # 🔥 测试层 - 100%覆盖
+├── lowcode-designer/          # 🔥 可视化设计器
+│   ├── src/components/       # 设计器组件
+│   ├── src/canvas/           # 画布实现
+│   └── src/panels/           # 面板组件
+└── lowcode-examples/          # 🔥 示例层 - 标准参考
+    ├── vue3-examples/        # Vue3示例
+    ├── abp-examples/         # ABP示例
+    └── tests/                # 🔥 测试层 - 100%覆盖
 
 // ❌ 严禁跨层直接调用
 // plugins/ 直接调用 schemas/ 内部实现 = 禁止
@@ -98,30 +113,48 @@ function compileVueComponent(descriptor: SFCDescriptor, options: CompileOptions)
 
 ### Vue3代码生成器强制要求
 ```typescript
-// ✅ 强制的Vue3生成器接口
+// ✅ 强制的Vue3生成器接口 (基于Vue 3.5.13 + TypeScript 8.41.0)
 export interface Vue3CodeGenerator {
   // 必须实现的核心方法
-  generate(schema: Vue3Schema): Vue3GeneratedCode;
-  validate(schema: Vue3Schema): ValidationResult;
-  optimize(code: string): string;
+  generate(schema: Vue3Schema): Vue3GeneratedCode
+  validate(schema: Vue3Schema): ValidationResult
+  optimize(code: string): string
   
-  // 必须支持的特性
+  // 必须支持的特性 (与项目技术栈一致)
   supportedFeatures: {
     compositionApi: true,        // ✅ 必须支持Composition API
-    typescript: true,            // ✅ 必须支持TypeScript
+    scriptSetup: true,           // ✅ 必须支持<script setup>
+    typescript: true,            // ✅ 必须支持TypeScript 8.41.0
     scoped: true,                // ✅ 必须支持Scoped样式
-    designSystem: true,          // ✅ 必须集成设计系统
+    elementPlus: true,           // ✅ 必须集成Element Plus 2.8.8
+    pinia: true,                 // ✅ 必须支持Pinia 3.0.3状态管理
+    vueRouter: true,             // ✅ 必须支持Vue Router
     i18n: true,                  // ✅ 必须支持国际化
-    accessibility: true          // ✅ 必须支持无障碍
-  };
+    accessibility: true,         // ✅ 必须支持无障碍
+    vueuse: true,                // ✅ 必须支持VueUse工具库
+    cssModules: true             // ✅ 必须支持CSS Modules
+  }
   
-  // 强制性能要求
+  // 强制性能要求 (基于项目实际标准)
   performanceConstraints: {
     maxGenerationTime: 156,      // 最大生成时间156ms
     maxOutputSize: 50 * 1024,    // 最大输出50KB
     maxComplexity: 10,           // 最大圈复杂度10
-    minTestCoverage: 90          // 最小测试覆盖率90%
-  };
+    minTestCoverage: 80,         // 最小测试覆盖率80% (基于Vitest 2.1.8)
+    viteCompatible: true,        // ✅ 必须兼容Vite 6.0.5
+    hmrSupport: true             // ✅ 必须支持热模块替换
+  }
+  
+  // 代码风格约束 (与.prettierrc.json一致)
+  codeStyle: {
+    quotes: "double",            // ✅ 双引号
+    semicolons: false,           // ✅ 无分号
+    trailingComma: "all",        // ✅ 尾随逗号
+    printWidth: 100,             // ✅ 行宽100字符
+    tabWidth: 2,                 // ✅ 缩进2空格
+    endOfLine: "lf",             // ✅ LF换行符
+    arrowParens: "always"        // ✅ 箭头函数参数括号 (项目配置)
+  }
 }
 
 // ❌ 严禁的生成器实现

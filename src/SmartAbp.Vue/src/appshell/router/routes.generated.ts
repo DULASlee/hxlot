@@ -1,4 +1,3 @@
-import type { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw } from "vue-router"
 
 export const generatedRoutes: RouteRecordRaw[] = []
-

@@ -4,7 +4,7 @@
 export async function runPreInit(_ctx: any) {
   try {
   } catch (error) {
-    console.error('[Lifecycle] Error in preInit:', error)
+    console.error("[Lifecycle] Error in preInit:", error)
     throw error
   }
 }
@@ -12,7 +12,7 @@ export async function runPreInit(_ctx: any) {
 export async function runInit(_ctx: any) {
   try {
   } catch (error) {
-    console.error('[Lifecycle] Error in init:', error)
+    console.error("[Lifecycle] Error in init:", error)
     throw error
   }
 }
@@ -20,7 +20,7 @@ export async function runInit(_ctx: any) {
 export async function runPostInit(_ctx: any) {
   try {
   } catch (error) {
-    console.error('[Lifecycle] Error in postInit:', error)
+    console.error("[Lifecycle] Error in postInit:", error)
     throw error
   }
 }
@@ -28,7 +28,7 @@ export async function runPostInit(_ctx: any) {
 export async function runBeforeMount(_ctx: any) {
   try {
   } catch (error) {
-    console.error('[Lifecycle] Error in beforeMount:', error)
+    console.error("[Lifecycle] Error in beforeMount:", error)
     throw error
   }
 }
@@ -36,7 +36,7 @@ export async function runBeforeMount(_ctx: any) {
 export async function runMounted(_ctx: any) {
   try {
   } catch (error) {
-    console.error('[Lifecycle] Error in mounted:', error)
+    console.error("[Lifecycle] Error in mounted:", error)
     throw error
   }
 }

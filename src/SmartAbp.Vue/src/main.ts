@@ -150,7 +150,11 @@ async function bootstrap() {
     if (cache?.enablePersistence) {
       await cache.enablePersistence("smartabp-content-cache", "entries")
       await cache.hydrateFromPersistence(2000)
-      cache.configureQuota?.({ quotaBytes: 100 * 1024 * 1024, highWatermark: 0.9, lowWatermark: 0.7 })
+      cache.configureQuota?.({
+        quotaBytes: 100 * 1024 * 1024,
+        highWatermark: 0.9,
+        lowWatermark: 0.7,
+      })
       console.info("[LowCode] 内容缓存持久化已启用并完成冷启动加载")
     }
   } catch (e) {

@@ -1,8 +1,8 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import type { EntityModel } from '@smartabp/lowcode-core'
+import { defineStore } from "pinia"
+import { ref } from "vue"
+import type { EntityModel } from "@smartabp/lowcode-core"
 
-export const useDesignerStore = defineStore('lowcodeDesigner', () => {
+export const useDesignerStore = defineStore("lowcodeDesigner", () => {
   const currentSchema = ref<EntityModel | null>(null)
   const history = ref<EntityModel[]>([])
 
@@ -20,6 +20,6 @@ export const useDesignerStore = defineStore('lowcodeDesigner', () => {
     currentSchema,
     history,
     setSchema,
-    updateSchema
+    updateSchema,
   }
 })

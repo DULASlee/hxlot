@@ -1,22 +1,57 @@
 {
   "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "jsx": "preserve",
+    "useDefineForClassFields": true,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@smartabp/lowcode-core": ["src/SmartAbp.Vue/packages/lowcode-core/src"],
-      "@smartabp/lowcode-designer": ["src/SmartAbp.Vue/packages/lowcode-designer/src"],
-      "@smartabp/lowcode-codegen": ["src/SmartAbp.Vue/packages/lowcode-codegen/src"],
-      "@smartabp/lowcode-api": ["src/SmartAbp.Vue/packages/lowcode-api/src"],
-      "@smartabp/lowcode-ui-vue": ["src/SmartAbp.Vue/packages/lowcode-ui-vue/src"]
-    }
+      "@/*": [
+        "src/SmartAbp.Vue/src/*",
+        "src/*"
+      ],
+      "@components/*": ["src/SmartAbp.Vue/src/components/*"],
+      "@stores/*": ["src/SmartAbp.Vue/src/stores/*"],
+      "@utils/*": ["src/SmartAbp.Vue/src/utils/*"],
+      "@assets/*": ["src/SmartAbp.Vue/src/assets/*"],
+      "@smartabp/lowcode-core": ["src/SmartAbp.Vue/packages/lowcode-core/src/index.ts"],
+      "@smartabp/lowcode-core/*": ["src/SmartAbp.Vue/packages/lowcode-core/src/*"],
+      "@smartabp/lowcode-designer": ["src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts"],
+      "@smartabp/lowcode-designer/*": ["src/SmartAbp.Vue/packages/lowcode-designer/src/*"],
+      "@smartabp/lowcode-codegen": ["src/SmartAbp.Vue/packages/lowcode-codegen/src/index.ts"],
+      "@smartabp/lowcode-codegen/*": ["src/SmartAbp.Vue/packages/lowcode-codegen/src/*"],
+      "@smartabp/lowcode-api": ["src/SmartAbp.Vue/packages/lowcode-api/src/index.ts"],
+      "@smartabp/lowcode-api/*": ["src/SmartAbp.Vue/packages/lowcode-api/src/*"],
+      "@smartabp/lowcode-ui-vue": ["src/SmartAbp.Vue/packages/lowcode-ui-vue/src/index.ts"],
+      "@smartabp/lowcode-ui-vue/*": ["src/SmartAbp.Vue/packages/lowcode-ui-vue/src/*"]
+    },
+    "types": ["vite/client"]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "src/SmartAbp.Vue/packages/**/*.ts",
-    "src/SmartAbp.Vue/packages/**/*.vue"
+    "src/SmartAbp.Vue/src/**/*.ts",
+    "src/SmartAbp.Vue/src/**/*.d.ts",
+    "src/SmartAbp.Vue/src/**/*.tsx",
+    "src/SmartAbp.Vue/src/**/*.vue",
+    "src/SmartAbp.Vue/packages/**/src/**/*.ts",
+    "src/SmartAbp.Vue/packages/**/src/**/*.vue"
   ],
   "references": []
 }

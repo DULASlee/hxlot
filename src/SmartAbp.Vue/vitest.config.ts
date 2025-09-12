@@ -30,6 +30,11 @@ export default defineConfig({
       "@stores": resolve(__dirname, "src/stores"),
       "@utils": resolve(__dirname, "src/utils"),
       "@assets": resolve(__dirname, "src/assets"),
+      "@smartabp/lowcode-core": resolve(__dirname, "packages/lowcode-core/src"),
+      "@smartabp/lowcode-designer": resolve(__dirname, "packages/lowcode-designer/src"),
+      "@smartabp/lowcode-codegen": resolve(__dirname, "packages/lowcode-codegen/src"),
+      "@smartabp/lowcode-api": resolve(__dirname, "packages/lowcode-api/src"),
+      "@smartabp/lowcode-ui-vue": resolve(__dirname, "packages/lowcode-ui-vue/src"),
     },
   },
 })

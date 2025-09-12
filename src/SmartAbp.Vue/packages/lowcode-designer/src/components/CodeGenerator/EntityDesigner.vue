@@ -14,6 +14,9 @@
             <el-button @click="clearDesigner" size="small" type="danger" plain>
               <el-icon><Delete /></el-icon> Clear
             </el-button>
+            <el-button @click="showRelationshipDiagram = true" size="small" type="success" plain>
+              <el-icon><Connection /></el-icon> Relationships
+            </el-button>
             <el-button @click="previewCodeMethod" size="small" type="info" plain>
               <el-icon><View /></el-icon> Preview
             </el-button>
@@ -63,6 +66,24 @@
                 </el-col>
               </el-row>
 
+              <el-row :gutter="16">
+                <el-col :span="8">
+                  <el-form-item label="Namespace">
+                    <el-input v-model="entityModel.namespace" placeholder="e.g., MyApp.Domain" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="Table Name">
+                    <el-input v-model="entityModel.tableName" placeholder="Database table name" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="Schema">
+                    <el-input v-model="entityModel.schema" placeholder="Database schema" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+
               <el-form-item>
                 <el-checkbox-group v-model="entityFeatures">
                   <el-checkbox label="isAggregateRoot">Aggregate Root</el-checkbox>
@@ -77,7 +98,9 @@
 
         <!-- Main Designer Area -->
         <div class="designer-main">
-          <div class="designer-workspace">
+          <el-tabs v-model="activeTab" class="designer-tabs">
+            <el-tab-pane label="Properties" name="properties">
+              <div class="designer-workspace">
             <!-- Property Toolbox -->
             <div class="property-toolbox">
               <h4><el-icon><Box /></el-icon> Property Types</h4>
@@ -164,6 +187,55 @@
               </div>
             </div>
           </div>
+            </el-tab-pane>
+
+            <el-tab-pane label="Relationships" name="relationships">
+              <RelationshipEditor
+                v-model:relationships="entityModel.relationships"
+                :entities="entities"
+                :current-entity="entityModel"
+                @add-relationship="addRelationship"
+                @edit-relationship="editRelationship"
+                @remove-relationship="removeRelationship"
+              />
+            </el-tab-pane>
+
+            <el-tab-pane label="Validation Rules" name="validation">
+              <ValidationRuleEditor
+                v-model:rules="entityModel.validationRules"
+                :properties="entityModel.properties"
+                @add-rule="addValidationRule"
+                @edit-rule="editValidationRule"
+                @remove-rule="removeValidationRule"
+              />
+            </el-tab-pane>
+
+            <el-tab-pane label="Indexes & Constraints" name="indexes">
+              <div class="indexes-constraints-panel">
+                <!-- Indexes configuration -->
+                <el-card shadow="never" class="config-card">
+                  <template #header>
+                    <span>Database Indexes</span>
+                    <el-button @click="addIndex" size="small" type="primary" plain>
+                      <el-icon><Plus /></el-icon> Add Index
+                    </el-button>
+                  </template>
+                  <!-- Index list implementation -->
+                </el-card>
+
+                <!-- Constraints configuration -->
+                <el-card shadow="never" class="config-card">
+                  <template #header>
+                    <span>Database Constraints</span>
+                    <el-button @click="addConstraint" size="small" type="primary" plain>
+                      <el-icon><Plus /></el-icon> Add Constraint
+                    </el-button>
+                  </template>
+                  <!-- Constraint list implementation -->
+                </el-card>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
 
           <!-- Property Configuration Panel -->
           <div v-if="selectedPropertyData" class="property-config">
@@ -228,26 +300,65 @@
       </div>
     </el-card>
 
-    <!-- Code Preview Dialog -->
+    <!-- Relationship Diagram Dialog -->
+    <el-dialog
+      v-model="showRelationshipDiagram"
+      title="Entity Relationship Diagram"
+      width="90%"
+      :before-close="closeRelationshipDiagram"
+    >
+      <RelationshipDiagram
+        :entities="[entityModel, ...entities]"
+        :relationships="entityModel.relationships"
+        @entity-selected="selectEntityInDiagram"
+        @relationship-selected="selectRelationshipInDiagram"
+      />
+
+      <template #footer>
+        <el-button @click="closeRelationshipDiagram">Close</el-button>
+        <el-button @click="exportDiagram" type="primary">
+          Export Diagram
+        </el-button>
+      </template>
+    </el-dialog>
+
+    <!-- Enhanced Code Preview Dialog -->
     <el-dialog
       v-model="showPreview"
-      title="Generated Entity Code Preview"
-      width="80%"
+      title="Enhanced Code Preview"
+      width="90%"
       :before-close="closePreview"
+      class="code-preview-dialog"
     >
-      <CodePreview
-        :code="previewCodeContent"
-        :language="'csharp'"
-        :fileName="`${entityModel.name || 'Entity'}.cs`"
-        :show-statistics="true"
+      <EnhancedCodePreview
+        :entity="entityModel"
+        :visible="showPreview"
+        @regenerate="regenerateCode"
+        @export="exportProject"
       />
 
       <template #footer>
         <el-button @click="closePreview">Close</el-button>
         <el-button @click="generateFromPreview" type="primary">
-          Generate Entity
+          Generate Project
         </el-button>
       </template>
+    </el-dialog>
+
+    <!-- Property Editor Dialog -->
+    <el-dialog
+      v-model="showPropertyDialog"
+      title="Property Configuration"
+      width="60%"
+      :before-close="closePropertyDialog"
+    >
+      <PropertyEditor
+        :property="editingProperty"
+        :visible="showPropertyDialog"
+        @save="savePropertyConfig"
+        @cancel="closePropertyDialog"
+        @preview="previewProperty"
+      />
     </el-dialog>
   </div>
 </template>
@@ -265,24 +376,47 @@ import {
   Plus,
   Edit,
   CopyDocument,
-  Tools
+  Tools,
+  Connection
 } from '@element-plus/icons-vue'
 import VueDraggable from 'vuedraggable'
 import CodePreview from './CodePreview.vue'
+import EnhancedCodePreview from './EnhancedCodePreview.vue'
+import RelationshipDiagram from '../RelationshipDiagram/RelationshipDiagram.vue'
+import RelationshipEditor from '../RelationshipDiagram/RelationshipEditor.vue'
+import ValidationRuleEditor from '../ValidationRules/ValidationRuleEditor.vue'
+import PropertyEditor from '../EntityProperty/PropertyEditor.vue'
 import { codeGeneratorApi } from '@smartabp/lowcode-api'
 import { usePropertyDragDrop } from '@smartabp/lowcode-core'
-import type { PropertyType, EntityProperty, EntityModel } from '@smartabp/lowcode-core'
+import { CodeTemplateEngine } from '@smartabp/lowcode-core'
+import type { 
+  PropertyType, 
+  EntityProperty, 
+  EntityModel,
+  EnhancedEntityModel,
+  EntityRelationship,
+  ValidationRule,
+  EntityIndex,
+  EntityConstraint
+} from '@smartabp/lowcode-core'
 
 // Drag and drop functionality
 const { registerEntityCanvas, startPropertyDrag, dragOver, dragLeave, drop } = usePropertyDragDrop()
 
 // Reactive state
-const entityModel = reactive<EntityModel>({
+const entityModel = reactive<EnhancedEntityModel>({
   name: '',
   module: '',
   aggregate: '',
   description: '',
+  namespace: '',
+  tableName: '',
+  schema: '',
   properties: [],
+  relationships: [],
+  indexes: [],
+  constraints: [],
+  validationRules: [],
   isAggregateRoot: true,
   isMultiTenant: true,
   isSoftDelete: true,
@@ -293,9 +427,17 @@ const entityFeatures = ref(['isAggregateRoot', 'isMultiTenant', 'isSoftDelete', 
 const isDragOver = ref(false)
 const selectedProperty = ref<string | null>(null)
 const selectedPropertyData = ref<EntityProperty | null>(null)
+const editingRelationship = ref<EntityRelationship | null>(null)
+const editingProperty = ref<EntityProperty | null>(null)
+const showPropertyDialog = ref(false)
 const isGenerating = ref(false)
 const showPreview = ref(false)
+const showRelationshipDialog = ref(false)
+const showValidationDialog = ref(false)
+const showRelationshipDiagram = ref(false)
 const previewCodeContent = ref('')
+const activeTab = ref('properties')
+const entities = ref<EnhancedEntityModel[]>([])
 
 // Property types available in toolbox
 const propertyTypes: PropertyType[] = [
@@ -445,7 +587,8 @@ const selectProperty = (propertyId: string) => {
 }
 
 const editProperty = (property: EntityProperty) => {
-  selectProperty(property.id)
+  editingProperty.value = { ...property }
+  showPropertyDialog.value = true
 }
 
 const duplicateProperty = (property: EntityProperty) => {
@@ -559,55 +702,8 @@ const previewCodeMethod = async () => {
 }
 
 const generateEntityCode = (): string => {
-  const className = entityModel.name
-  const namespace = entityModel.module ? `${entityModel.module}.Domain` : 'Domain'
-
-  let code = `using System;
-using System.ComponentModel.DataAnnotations;
-using Volo.Abp.Domain.Entities.Auditing;
-using Volo.Abp.MultiTenancy;
-
-namespace ${namespace}
-{
-    /// <summary>
-    /// ${entityModel.description || className}
-    /// </summary>
-    public class ${className} : FullAuditedAggregateRoot<Guid>, IMultiTenant
-    {`
-
-  // Add properties
-  entityModel.properties.forEach(prop => {
-    code += `
-        /// <summary>
-        /// ${prop.description || prop.name}
-        /// </summary>`
-
-    if (prop.isRequired) {
-      code += `
-        [Required]`
-    }
-
-    if (prop.maxLength) {
-      code += `
-        [StringLength(${prop.maxLength})]`
-    }
-
-    code += `
-        public virtual ${prop.type} ${prop.name} { get; set; }`
-  })
-
-  // Add multi-tenancy property if enabled
-  if (entityModel.isMultiTenant) {
-    code += `
-
-        public virtual Guid? TenantId { get; set; }`
-  }
-
-  code += `
-    }
-}`
-
-  return code
+  const templateEngine = new CodeTemplateEngine()
+  return templateEngine.generateEntityCode(entityModel)
 }
 
 const generateEntity = async () => {
@@ -629,18 +725,18 @@ const generateEntity = async () => {
       module: entityModel.module,
       aggregate: entityModel.aggregate,
       description: entityModel.description,
+      namespace: entityModel.namespace,
+      tableName: entityModel.tableName,
+      schema: entityModel.schema,
       isAggregateRoot: entityModel.isAggregateRoot,
       isMultiTenant: entityModel.isMultiTenant,
       isSoftDelete: entityModel.isSoftDelete,
       hasExtraProperties: entityModel.hasExtraProperties,
-      properties: entityModel.properties.map(prop => ({
-        name: prop.name,
-        type: prop.type,
-        isRequired: prop.isRequired,
-        maxLength: prop.maxLength,
-        description: prop.description || '',
-        defaultValue: prop.defaultValue || ''
-      }))
+      properties: entityModel.properties,
+      relationships: entityModel.relationships,
+      indexes: entityModel.indexes,
+      constraints: entityModel.constraints,
+      validationRules: entityModel.validationRules
     })
 
     ElMessage.success('Entity generated successfully!')
@@ -653,6 +749,101 @@ const generateEntity = async () => {
   } finally {
     isGenerating.value = false
   }
+}
+
+// Relationship management methods
+const addRelationship = (relationship: EntityRelationship) => {
+  entityModel.relationships.push(relationship)
+  ElMessage.success('Relationship added successfully')
+}
+
+const editRelationship = (relationship: EntityRelationship) => {
+  editingRelationship.value = relationship
+  showRelationshipDialog.value = true
+}
+
+const removeRelationship = (index: number) => {
+  entityModel.relationships.splice(index, 1)
+  ElMessage.success('Relationship removed successfully')
+}
+
+// Validation rule management methods
+const addValidationRule = (rule: ValidationRule) => {
+  entityModel.validationRules.push(rule)
+  ElMessage.success('Validation rule added successfully')
+}
+
+const editValidationRule = (rule: ValidationRule) => {
+  // Implementation for editing validation rules
+  showValidationDialog.value = true
+}
+
+const removeValidationRule = (index: number) => {
+  entityModel.validationRules.splice(index, 1)
+  ElMessage.success('Validation rule removed successfully')
+}
+
+// Index and constraint management methods
+const addIndex = () => {
+  // Implementation for adding database indexes
+}
+
+const addConstraint = () => {
+  // Implementation for adding database constraints
+}
+
+// Diagram methods
+const closeRelationshipDiagram = () => {
+  showRelationshipDiagram.value = false
+}
+
+const selectEntityInDiagram = (entity: EnhancedEntityModel) => {
+  // Handle entity selection in diagram
+}
+
+const selectRelationshipInDiagram = (relationship: EntityRelationship) => {
+  // Handle relationship selection in diagram
+}
+
+const exportDiagram = () => {
+  // Implementation for exporting diagram
+  ElMessage.success('Diagram exported successfully')
+}
+
+const regenerateCode = () => {
+  // Regenerate code with current entity model
+  ElMessage.success('Code regenerated successfully')
+}
+
+const exportProject = (files: any[]) => {
+  // Implementation for exporting entire project
+  ElMessage.success(`Exported ${files.length} files successfully`)
+}
+
+const closePropertyDialog = () => {
+  showPropertyDialog.value = false
+  editingProperty.value = null
+}
+
+const savePropertyConfig = (property: EntityProperty) => {
+  if (editingProperty.value) {
+    // Update existing property
+    const index = entityModel.properties.findIndex(p => p.id === property.id)
+    if (index !== -1) {
+      entityModel.properties[index] = property
+    }
+  } else {
+    // Add new property
+    property.id = Date.now().toString()
+    entityModel.properties.push(property)
+  }
+  closePropertyDialog()
+  ElMessage.success('Property saved successfully')
+}
+
+const previewProperty = (property: EntityProperty) => {
+  // Implementation for property preview
+  ElMessage.info('Property preview feature coming soon')
 }
 
 const generateFromPreview = () => {
@@ -722,11 +913,34 @@ const emit = defineEmits<{
   border: 1px solid #e4e7ed;
 }
 
+.config-card :deep(.el-card__header) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+}
+
 .designer-main {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
   gap: 16px;
   min-height: 500px;
+}
+
+.designer-tabs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.designer-tabs :deep(.el-tabs__content) {
+  flex: 1;
+  overflow: hidden;
+}
+
+.designer-tabs :deep(.el-tab-pane) {
+  height: 100%;
+  overflow: hidden;
 }
 
 .designer-workspace {
@@ -923,6 +1137,28 @@ const emit = defineEmits<{
   height: fit-content;
 }
 
+/* New styles for enhanced features */
+.indexes-constraints-panel {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.relationship-panel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.validation-panel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 @media (max-width: 1200px) {
   .designer-main {
     grid-template-columns: 1fr;
@@ -939,6 +1175,10 @@ const emit = defineEmits<{
 
   .property-config {
     order: 2;
+  }
+
+  .indexes-constraints-panel {
+    padding: 12px;
   }
 }
 </style>

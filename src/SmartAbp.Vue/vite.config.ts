@@ -26,11 +26,21 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "@smartabp/lowcode-core": fileURLToPath(new URL("./packages/lowcode-core/src", import.meta.url)),
-      "@smartabp/lowcode-designer": fileURLToPath(new URL("./packages/lowcode-designer/src", import.meta.url)),
-      "@smartabp/lowcode-codegen": fileURLToPath(new URL("./packages/lowcode-codegen/src", import.meta.url)),
-      "@smartabp/lowcode-api": fileURLToPath(new URL("./packages/lowcode-api/src", import.meta.url)),
-      "@smartabp/lowcode-ui-vue": fileURLToPath(new URL("./packages/lowcode-ui-vue/src", import.meta.url))
+      "@smartabp/lowcode-core": fileURLToPath(
+        new URL("./packages/lowcode-core/src", import.meta.url),
+      ),
+      "@smartabp/lowcode-designer": fileURLToPath(
+        new URL("./packages/lowcode-designer/src", import.meta.url),
+      ),
+      "@smartabp/lowcode-codegen": fileURLToPath(
+        new URL("./packages/lowcode-codegen/src", import.meta.url),
+      ),
+      "@smartabp/lowcode-api": fileURLToPath(
+        new URL("./packages/lowcode-api/src", import.meta.url),
+      ),
+      "@smartabp/lowcode-ui-vue": fileURLToPath(
+        new URL("./packages/lowcode-ui-vue/src", import.meta.url),
+      ),
     },
   },
   optimizeDeps: {
@@ -43,7 +53,7 @@ export default defineConfig({
       "echarts",
       "highlight.js",
       "@highlightjs/vue-plugin",
-      "dayjs"
+      "dayjs",
     ],
   },
   server: {
@@ -51,10 +61,7 @@ export default defineConfig({
     port: 11369,
     strictPort: true,
     watch: {
-      ignored: [
-        "**/packages/**/__tests__/**",
-        "**/packages/**/examples/**"
-      ]
+      ignored: ["**/packages/**/__tests__/**", "**/packages/**/examples/**"],
     },
     headers: {
       "Cache-Control": "no-store, no-cache, must-revalidate",
@@ -79,8 +86,8 @@ export default defineConfig({
           elementPlus: ["element-plus", "@element-plus/icons-vue"],
           echarts: ["echarts"],
           highlight: ["highlight.js", "@highlightjs/vue-plugin"],
-        }
-      }
-    }
+        },
+      },
+    },
   },
 })

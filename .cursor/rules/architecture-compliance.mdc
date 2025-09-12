@@ -9,7 +9,7 @@ priority: 900
 
 ## 📋 强制架构原则
 
-### 1. 前端架构约束 (Vue 3.5.13 + TypeScript 5.8)
+### 1. 前端架构约束 (Vue 3.5.13 + TypeScript 8.41.0)
 **Vue.js + TypeScript 项目结构：**
 
 ```typescript
@@ -42,8 +42,11 @@ export default {
 // ❌ 严禁：全局导入
 import * as Vue from "vue"
 
-// ❌ 严禁：单引号 (违反项目代码风格)
+// ❌ 严禁：单引号 (违反项目.prettierrc.json配置)
 import { ref } from 'vue' // 错误：应使用双引号
+
+// ❌ 严禁：分号结尾 (违反项目.prettierrc.json配置)
+import { ref } from "vue"; // 错误：不应使用分号
 ```
 
 ### 2. 后端架构约束 (ABP vNext + .NET)
@@ -170,7 +173,7 @@ Components → Stores (通过composables)
 Components → Element Plus组件
 Packages/Lowcode → Core → Utils → Types
 
-// ✅ 具体示例
+// ✅ 具体示例 (基于项目实际路径配置)
 // views/user/UserManagement.vue
 import { useUserStore } from "@/stores/modules/user"        // ✅ 视图使用Store
 import { UserCard } from "@/components/user/UserCard.vue"   // ✅ 视图使用组件
@@ -183,6 +186,11 @@ import type { UserInfo } from "@/types/user"                 // ✅ Store使用�
 // components/user/UserCard.vue
 import { useUserActions } from "@/composables/useUserActions" // ✅ 组件使用组合函数
 import { formatDate } from "@/utils/dateUtils"               // ✅ 组件使用工具函数
+
+// 低代码引擎包导入 (基于项目实际配置)
+import { LowcodeCore } from "@smartabp/lowcode-core"         // ✅ 低代码核心包
+import { Designer } from "@smartabp/lowcode-designer"       // ✅ 设计器包
+import { CodeGenerator } from "@smartabp/lowcode-codegen"   // ✅ 代码生成器包
 
 // ❌ 禁止的依赖关系
 Utils → Views           // ❌ 工具不能依赖视图
@@ -268,12 +276,12 @@ HttpApi → EntityFrameworkCore // ❌ API层不能直接依赖数据层
 
 ### Element Plus主题系统约束
 ```typescript
-// ✅ 强制使用：Element Plus主题配置
-// vite.config.ts 或 main.ts
+// ✅ 强制使用：Element Plus主题配置 (基于项目实际配置)
+// main.ts 中的配置
 import { ElConfigProvider } from "element-plus"
 import zhCn from "element-plus/dist/locale/zh-cn.mjs"
 
-// ✅ 正确的主题配置方式
+// ✅ 正确的主题配置方式 (无分号，符合.prettierrc.json)
 const app = createApp(App)
 app.use(ElementPlus, {
   locale: zhCn,
@@ -390,6 +398,10 @@ constants.ts              // 通用常量
 apiConstants.ts           // API常量
 routeConstants.ts         // 路由常量
 
+// ✅ 正确命名 (CLI工具 - 基于项目实际结构)
+cli.ts                    // CLI工具入口
+add-module.ts             // 模块添加工具
+
 // ❌ 错误命名
 UserService.ts            // 大写开头 (应为 userService.ts)
 user_service.ts           // 下划线分隔 (应为 userService.ts)
@@ -428,17 +440,17 @@ User_App_Service.cs       // 下划线分隔 (应为 UserAppService.cs)
 UserAppServiceImpl.cs     // 冗余后缀 (应为 UserAppService.cs)
 ```
 
-### 目录命名规范
-```bash
-# ✅ 正确的目录命名 (kebab-case for directories)
+### 正确的目录命名 (kebab-case for directories)
 src/views/user-management/     # 用户管理视图目录
 src/components/data-display/   # 数据展示组件目录
 src/composables/use-auth/      # 认证组合函数目录
 
-# ✅ 正确的包目录命名 (kebab-case)
+# ✅ 正确的包目录命名 (kebab-case - 基于项目实际结构)
 packages/lowcode-core/         # 低代码核心包
 packages/lowcode-designer/     # 低代码设计器包
 packages/lowcode-codegen/      # 低代码生成器包
+packages/lowcode-api/          # 低代码API包
+packages/lowcode-ui-vue/       # 低代码Vue UI组件库
 
 # ❌ 错误的目录命名
 src/views/UserManagement/      # PascalCase (应为 user-management)
@@ -447,6 +459,8 @@ src/components/dataDisplay/    # camelCase (应为 data-display)
 ```
 
 ## 🔄 状态管理架构 (Pinia 3.0.3 + TypeScript)
+
+// WHY: 更新版本号与package.json保持一致
 
 ### Pinia Store结构 (Composition API风格)
 ```typescript

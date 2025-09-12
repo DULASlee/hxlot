@@ -117,8 +117,9 @@ export class AuthService {
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error_description || "登录失败")
+        const errorData = await response.json().catch(() => ({}))
+        const message = (errorData && (errorData.error_description || errorData.error)) || "登录失败"
+        throw new Error(message)
       }
 
       const tokenData = await response.json()

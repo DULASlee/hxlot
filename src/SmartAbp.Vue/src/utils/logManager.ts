@@ -165,25 +165,27 @@ class LogManager {
       data?: any
     }>,
   ) {
-    entries.forEach((entry) => {
-      switch (entry.level) {
+    for (const e of entries) {
+      switch (e.level) {
         case LogLevel.DEBUG:
-          logger.debug(entry.message, entry.data)
+          logger.debug(e.message, { ...(e.data || {}), category: e.category })
           break
         case LogLevel.INFO:
-          logger.info(entry.message, entry.data)
+          logger.info(e.message, { ...(e.data || {}), category: e.category })
           break
         case LogLevel.SUCCESS:
-          logger.success(entry.message, entry.data)
+          logger.success(e.message, { ...(e.data || {}), category: e.category })
           break
         case LogLevel.WARN:
-          logger.warn(entry.message, entry.data)
+          logger.warn(e.message, { ...(e.data || {}), category: e.category })
           break
         case LogLevel.ERROR:
-          logger.error(entry.message, entry.data)
+          logger.error(e.message, { ...(e.data || {}), category: e.category })
           break
+        default:
+          logger.info(e.message, { ...(e.data || {}), category: e.category })
       }
-    })
+    }
   }
 
   // 导出诊断报告

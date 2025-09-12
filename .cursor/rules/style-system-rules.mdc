@@ -38,10 +38,10 @@ priority: 850
 **🔴 只允许使用预定义主题：**
 
 ```typescript
-// ✅ 允许的主题类型
+///* ✅ 允许的主题类型 (基于Element Plus 2.8.8)
 type ThemeType = 'tech-blue' | 'deep-green' | 'light-purple' | 'dark'
 
-// ✅ 正确的主题切换
+// ✅ 正确的主题切换 (基于项目路径别名配置)
 import { useDesignSystem } from '@/composables/useDesignSystem'
 const { setTheme } = useDesignSystem()
 setTheme('tech-blue')  // 使用预定义主题
@@ -105,12 +105,13 @@ src/SmartAbp.Vue/src/styles/
   --font-size-base: 1rem;
   --font-weight-medium: 500;
 }
-
-/* ✅ 第二层：主题语义变量 */
+```css
+/* ✅ 第二层：主题语义变量 (基于Element Plus 2.8.8主题系统) */
 .theme-tech-blue {
   --theme-brand-primary: var(--color-primary-500);
   --theme-bg-component: var(--color-gray-100);
   --theme-text-primary: var(--color-gray-900);
+  --el-color-primary: var(--color-primary-500);  /* Element Plus主题变量 */
 }
 
 /* ✅ 第三层：组件使用 */
@@ -326,7 +327,7 @@ div {                                /* ❌ 禁止标签选择器全局样式 */
 ### 自动样式检查
 ```bash
 # 强制执行的样式检查
-1. stylelint --config .stylelintrc    # CSS代码规范
+1. npm run stylelint              # CSS代码规范 (基于项目package.json)
 2. postcss --config postcss.config   # CSS处理和优化
 3. 设计系统变量使用率检查            # 确保使用率>95%
 4. 硬编码值检测                      # 检测并禁止硬编码

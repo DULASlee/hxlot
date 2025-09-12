@@ -45,8 +45,8 @@
             <el-table-column prop="label" label="显示名" width="180" />
             <el-table-column prop="type" label="类型" width="140" />
             <el-table-column prop="required" label="必填" width="100">
-              <template #default="{ row }">
-                <el-tag :type="row.required ? 'success' : 'info'">{{ row.required ? '是' : '否' }}</el-tag>
+              <template #default="scope">
+                <el-tag :type="scope.row?.required ? 'success' : 'info'">{{ scope.row?.required ? '是' : '否' }}</el-tag>
               </template>
             </el-table-column>
           </el-table>

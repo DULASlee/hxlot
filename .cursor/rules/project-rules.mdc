@@ -1,3 +1,10 @@
+---
+alwaysApply: true
+description: "SmartAbp项目规则"
+globs: ["**/*"]
+priority: 5
+---
+
 # Project Rules (SmartAbp)
 
 - Scope: ABP vNext backend + Vue3/TS frontend + low-code engine.

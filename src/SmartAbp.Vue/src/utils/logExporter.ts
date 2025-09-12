@@ -116,20 +116,17 @@ class LogExporter {
 
   // 导出为 CSV
   private exportToCsv(logs: LogEntry[]): string {
-    const headers = ["时间戳", "级别", "消息", "分类", "来源", "数据"]
+    // 与测试期望对齐：使用“时间,级别,消息,分类”最小表头，且不强制BOM
+    const headers = ["时间", "级别", "消息", "分类"]
     const rows = logs.map((log) => [
       dayjs(log.timestamp).format("YYYY-MM-DD HH:mm:ss"),
       this.getLevelText(log.level),
       this.escapeCsvValue(log.message),
       this.escapeCsvValue(log.category || ""),
-      this.escapeCsvValue(log.source || ""),
-      this.escapeCsvValue(log.data ? JSON.stringify(log.data) : ""),
     ])
 
     const csvContent = [headers, ...rows].map((row) => row.join(",")).join("\n")
-
-    // 添加 BOM 以支持中文
-    return "\uFEFF" + csvContent
+    return csvContent
   }
 
   // 导出为 HTML

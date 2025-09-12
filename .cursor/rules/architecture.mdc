@@ -1,12 +1,20 @@
+---
+alwaysApply: true
+description: "SmartAbp架构规则"
+globs: ["**/*.cs", "**/*.ts", "**/*.vue"]
+priority: 8
+---
+
 # SmartAbp 架构规则 (Architecture Rules)
 
 ## 🏛️ 企业级全栈低代码平台架构约束
 
 ### 核心架构原则
-- **前后端分离**: Vue 3 SPA + ABP Framework 后端
+- **前后端分离**: Vue 3.5.13 SPA + ABP vNext Framework 后端
 - **微内核+插件**: 低代码引擎采用可扩展插件架构
-- **Monorepo**: 前端低代码引擎独立包管理
-- **企业级模式**: DDD、CQRS、微服务支持
+- **Monorepo**: 前端低代码引擎独立包管理 (基于Vite 6.0.5)
+- **企业级模式**: DDD、CQRS、微服务支持 (.NET Aspire集成)
+- **TypeScript**: 严格类型检查 (TypeScript 8.41.0)
 
 ### 后端架构约束
 
@@ -87,18 +95,21 @@ interface LowCodePlugin {
 - **异步管道**: Channel<GenerationTask>高性能任务处理
 - **JIT预热**: RuntimeHelpers.PrepareMethod预编译关键路径
 
-#### 前端性能
+#### 前端性能 (基于Vite 6.0.5优化)
 - **Tree-shaking**: 支持按需引入减小bundle大小
 - **缓存策略**: 多级缓存(内存→本地存储→分布式)
 - **并发控制**: 批量生成默认并发不超过5
 - **Worker池**: 后台任务使用Web Worker处理
+- **构建优化**: Vite rollup优化 + Element Plus按需引入
+- **代码分割**: 动态导入实现路由级代码分割
 
 ### 部署架构约束
 
-#### 开发环境
-- **前端**: Vite DevServer (11369) + Monorepo构建
+#### 开发环境 (基于项目实际配置)
+- **前端**: Vite 6.0.5 DevServer (5173) + Monorepo构建
 - **后端**: SmartAbp.Web (44379) + 代码生成引擎
 - **代理配置**: Vite代理API请求到后端避免CORS
+- **开发工具**: Vue DevTools 7.6.4 + TypeScript 8.41.0
 
 #### 生产环境
 - **容器化**: Docker镜像包含完整前后端代码
@@ -132,11 +143,12 @@ interface LowCodePlugin {
 
 ### 质量门标准
 
-#### 代码质量
-- 插件代码覆盖率 ≥ 80%
-- 生成代码必须通过ESLint检查
-- 必须有完整的单元测试
-- TypeScript类型检查无错误
+#### 代码质量 (基于项目实际工具链)
+- 插件代码覆盖率 ≥ 80% (Vitest覆盖率报告)
+- 生成代码必须通过ESLint + Prettier检查
+- 必须有完整的单元测试 (Vitest + @vue/test-utils)
+- TypeScript类型检查无错误 (vue-tsc)
+- 代码风格: 无分号、双引号、2空格缩进 (符合.prettierrc.json)
 
 #### 性能标准
 - 单个插件生成时间 < 5秒

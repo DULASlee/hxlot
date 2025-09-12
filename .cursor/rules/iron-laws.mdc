@@ -1,3 +1,10 @@
+---
+alwaysApply: true
+description: "SmartAbp开发铁律"
+globs: ["**/*"]
+priority: 10
+---
+
 # Iron Laws (SmartAbp)
 
 - Discovery before coding: read doc/项目编程规则.md and doc/architecture/*; analyze existing code (Serena) to avoid duplication.

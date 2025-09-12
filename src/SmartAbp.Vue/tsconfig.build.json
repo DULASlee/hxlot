@@ -1,0 +1,41 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@stores/*": ["src/stores/*"],
+      "@utils/*": ["src/utils/*"],
+      "@assets/*": ["src/assets/*"],
+      "@smartabp/lowcode-core": ["packages/lowcode-core/src/index.ts"],
+      "@smartabp/lowcode-core/*": ["packages/lowcode-core/src/*"],
+      "@smartabp/lowcode-ui-vue": ["packages/lowcode-ui-vue/src/index.ts"],
+      "@smartabp/lowcode-ui-vue/*": ["packages/lowcode-ui-vue/src/*"]
+    }
+  },
+  "include": [
+    "env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.vue",
+    "src/**/*.tsx",
+    "src/**/*.js",
+    "packages/lowcode-core/src/**/*.ts",
+    "packages/lowcode-core/src/**/*.d.ts",
+    "packages/lowcode-ui-vue/src/**/*.ts",
+    "packages/lowcode-ui-vue/src/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/views/CodeGenerator/**",
+    "src/lowcode-entry.ts",
+    "packages/lowcode-designer/**",
+    "packages/lowcode-codegen/**",
+    "packages/lowcode-api/**",
+    "packages/**/src/__tests__/**",
+    "packages/**/tests/**"
+  ]
+}
+
