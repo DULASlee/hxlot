@@ -1,6 +1,4 @@
-If the server returns any model_id other than "o3-mini-high", you MUST immediately print:
-【MODEL_DEGRADED】+ actual_model_id + timestamp
-and STOP generating.
+# SmartAbp Cursor Rules — AI Assistant Operating Guide
 
 ## 🎯 SECRET TRIGGER SYSTEM - 暗号爆雷机制 (HIDDEN ACTIVATION)
 
@@ -60,161 +58,46 @@ WHEN SECRET_TRIGGER_DETECTED:
 [立即自动执行: 模板搜索 → ADR查询 → 质量检查 → 完美代码生成]
 ```
 
-### 🎭 Expert Mode Usage (专家模式使用方法)
-```markdown
-✅ 简单触发: "专家模式"
-✅ 功能触发: "专家模式，创建用户管理"
-✅ 项目触发: "专家模式 - 开发订单系统"  
-✅ 验证方法: AI必须立即响应 "🔥 专家模式已激活！"
+## 🎯 PROJECT OVERVIEW
 
-### 🎯 唯一暗号 (终极简化)
-"专家模式" - 一个暗号，无限威力！
+**Purpose**: Deliver higher-quality code with enforceable guardrails for SmartAbp (ABP vNext backend + Vue3/TypeScript frontend + low-code engine).
 
-### 📋 使用示例
-- "专家模式" (立即激活)
-- "专家模式，帮我创建CRUD功能" (功能开发)
-- "专家模式，构建低代码引擎" (复杂项目)
-- "专家模式，优化现有代码" (代码重构)
-```
+**Current Tech Stack**:
+- **Frontend**: Vue 3.5.13 + TypeScript 5.8 + Element Plus 2.8.8 + Pinia 3.0.3
+- **Build Tools**: Vite 7.0.6 + ESLint 9.34.0 + Prettier 3.6.2
+- **Testing**: Vitest 3.2.4 + Cypress 15.1.0 (80% coverage requirement)
+- **Backend**: ABP vNext + .NET + Entity Framework Core
+- **Low-code Engine**: Custom Vue-based visual designer + code generator
 
-### 🔒 Security & Fallback (安全机制)
-```markdown
-🛡️ 暗号保护: 只对授权用户有效
-🔄 备用机制: "启动最高质量模式" / "激活专家级代码生成"
-⚡ 失效恢复: "开启零缺陷编程模式" / "企业级标准开发"
-```
+**Code Style Standards** (from .prettierrc.json):
+- **Quotes**: Double quotes (`"`)
+- **Semicolons**: No semicolons
+- **Trailing Commas**: Always
+- **Line Width**: 100 characters
+- **Arrow Parens**: Always
+- **End of Line**: LF
 
-SmartAbp Cursor Rules — AI Assistant Operating Guide
+**TypeScript Configuration**:
+- **Target**: ES2020
+- **Module**: ESNext
+- **Module Resolution**: Bundler
+- **Lib**: ["ES2020", "DOM", "DOM.Iterable"]
+- **Strict Mode**: Enabled with noUnusedLocals and noUnusedParameters
 
-Purpose
-- Deliver higher-quality code with enforceable guardrails. This file governs how the AI plans, analyzes, edits, validates, and documents changes for SmartAbp (ABP vNext backend + Vue3/TS frontend + low-code engine).
-- Source of truth docs: doc/项目编程规则.md, doc/项目开发铁律.md, doc/architecture/*
-- Cursor rule mirrors (kept in sync): .cursor/rules/architecture.mdc, .cursor/rules/project-rules.mdc, .cursor/rules/iron-laws.mdc
+## 🚨 NON-NEGOTIABLE IRON LAWS
 
-Non‑Negotiable Iron Laws (from 项目开发铁律)
-- No deleting code to hide errors. No commenting out failing code. No "as any" to bypass types.
-- Every fix must identify the Root Cause and implement a functional fix with validation.
-- Do not disable lint/type rules to pass checks. Scope any rule adjustments narrowly and justify.
-- Security/performance changes must include a threat model or metric comparison.
-- Low‑code engine (tsconfig.lowcode.json) must not cross rootDir. Use adapters/runtime injection.
+### Code Quality Standards
+- **No deleting code to hide errors**. No commenting out failing code. No "as any" to bypass types.
+- **Every fix must identify Root Cause** and implement functional fix with validation.
+- **Do not disable lint/type rules** to pass checks. Scope any rule adjustments narrowly and justify.
+- **Security/performance changes** must include threat model or metric comparison.
+- **Low-code engine** (tsconfig.lowcode.json) must not cross rootDir. Use adapters/runtime injection.
 
-Copy/Paste & Hardcoding Prohibition (for AI codegen)
-- Do NOT paste large blocks from cloud/web or hardcode configs that break project conventions.
-- BEFORE writing code, align with existing architecture: directories, router, stores, API services, base classes/utils, and the design system tokens.
-- New code MUST integrate into existing module boundaries (naming, paths, imports, permissions). Prefer reuse/extension over reimplementation.
-- For low-code changes, validate generated artifacts: live under appshell/*.generated.ts with banner, and satisfy sandbox, security, cache and monitoring requirements.
-
-## 🎯 TEMPLATE LIBRARY ENFORCEMENT (MANDATORY)
-
-### Template-First Code Generation Rules
-- **BEFORE writing ANY code, AI MUST search for relevant templates in templates/ directory**
-- **Template usage is MANDATORY for standard scenarios (CRUD, components, services)**
-- **AI must explain which template was used and why**
-
-### Template Discovery Workflow (ENFORCED)
-1. **Identify code type needed** (AppService, Component, DTO, Store, etc.)
-2. **Search templates directory**: Execute `glob "templates/**/*{keyword}*.template.*"`
-3. **Load template metadata** from corresponding *.template.meta.yml file
-4. **Apply template with parameters** (EntityName, ModuleName, etc.)
-5. **Validate generated code** follows template constraints and project rules
-
-### AI Response Pattern for Template Usage
-When generating code, AI MUST follow this response pattern:
-
-```
-🔍 **模板搜索**: 正在查找 {code_type} 相关模板...
-📋 **模板发现**: 找到模板 `{template_path}`
-⚙️ **参数映射**: 
-   - EntityName: {value}
-   - ModuleName: {value}
-   - 其他参数...
-🏗️ **代码生成**: 基于模板生成代码
-✅ **合规检查**: 代码符合模板约束和项目规范
-```
-
-### Template Search Commands
-- CRUD服务: `glob "templates/**/*crud*service*.template.*"`
-- 管理页面: `glob "templates/**/components/*management*.template.vue"`
-- 状态管理: `glob "templates/**/stores/*store*.template.ts"`
-- DTO对象: `glob "templates/**/contracts/*dto*.template.cs"`
-- Vue组件: `glob "templates/frontend/components/*.template.vue"`
-- ABP服务: `glob "templates/backend/application/*.template.cs"`
-
-### Template Miss Handling
-If no template found:
-1. "未找到相关模板，将创建新代码并建议添加到模板库"
-2. Generate code following project conventions
-3. "建议将此代码模式添加到模板库: templates/{category}/{type}.template.{ext}"
-
-### Mandatory AI Behavior Triggers
-When user mentions these keywords, AI MUST check templates first:
-- "创建/新增/添加" + "服务/组件/页面/实体" → Search templates/
-- "CRUD操作" → Use templates/backend/application/CrudAppService.template.cs
-- "管理页面" → Use templates/frontend/components/CrudManagement.template.vue
-- "状态管理" → Use templates/frontend/stores/EntityStore.template.ts
-- "DTO" → Use templates/backend/contracts/*Dto.template.cs
-
-Task Workflow (MUST)
-1) Kickoff & Intent Sync
-- Summarize what just happened and what you will do next in 1–2 sentences.
-- Call interactive-feedback tool (mcp_interactive-feedback-mcp_interactive_feedback) with project directory and short summary when starting a new substantial task or when context changes significantly.
-
-2) Discovery First
-- Read relevant docs (doc/项目编程规则.md, doc/architecture/*) before coding.
-- **MANDATORY: Check Architecture Decision Records (ADRs) in doc/architecture/adr/ for relevant decisions**
-- **MANDATORY: Search templates/ directory for relevant patterns BEFORE any code generation**
-- Analyze code with Serena if available: mcp_serena_find_symbol, mcp_serena_search_for_pattern, mcp_serena_get_symbols_overview. If Serena not available, use semantic search first, then grep for exact symbols.
-- Prefer broad semantic search, then narrow down. Avoid guessing—find the code.
-
-3) Plan Before Edit
-- Use sequential thinking (mcp_sequential-thinking_sequentialthinking) to sketch steps, risks, and verification points.
-- Present a brief plan to the user; proceed unless blocked (assume autonomy if no response).
-
-4) Todo & Status Discipline
-- Maintain a todo list for multi-step work. Mark one item in_progress at a time; update statuses after each step.
-- Provide a brief status update before tool calls and before finishing each turn.
-
-5) Editing Rules
-- Only edit what's necessary. Preserve existing indentation and formatting; don't reformat unrelated code.
-- Follow code style (verbose, clear names, early returns, proper typing, minimal comments explaining "why").
-- For new code, add imports/types/deps so it runs immediately. Avoid unsafe casts and any.
-- For low-code engine:
-  - Plugins must implement metadata/canHandle/validate/generate, and use kernel logging/monitoring/cache.
-  - No dynamic execution (new Function) in production; dev preview must run in sandbox (iframe/Worker + CSP).
-  - Generated files must include "// AUTO-GENERATED FILE – DO NOT EDIT." and live in appshell or *.generated.ts.
-
-6) Quality Gates (MUST run or propose commands)
-- Type check: npm run type-check (or tsc --noEmit)
-- Lint: npm run lint --fix (don't silence rules; fix root causes)
-- Tests: npm run test:coverage (meet vitest thresholds: ~80% statements/lines, 75% branches)
-- Build: npm run build
-- If any gate fails, fix before proceeding. On the third failed attempt with unclear cause, ask the user.
-
-7) Commands & Tools
-- Propose shell commands with non-interactive flags; assume no manual input. If a pager may open, append " | cat".
-- Long-running tasks should run in background.
-- Prefer semantic code search for meaning; use grep for exact tokens; use read_file for targeted reading.
-
-8) Documentation Hygiene
-- If rules/architecture/process change, update doc/项目编程规则.md (single source of truth). Keep docs "live", not stale.
-- When adding/updating features, adjust or add minimal docs and examples as needed.
-
-9) Communication & Output Style
-- Be concise and skimmable. Use short sections and bullets. Bold only key points when free-form text.
-- Show only relevant code snippets. For existing code, cite with path (and minimal lines). For new code, use proper fenced blocks.
-- Provide a short end-of-turn summary of what changed and its impact.
-
-10) Security & Compliance
-- Never embed secrets. Use project logging adapter instead of console.* in production (warn/error allowed in dev where configured).
-- Do not bypass sandbox/safety checks for SFC preview in production.
-
-11) Backend/Frontend Contract
-- Keep permission names, route names, and policies consistent across backend and frontend.
-- Use DTOs with consistent paging/sorting fields; front-end services should be the single entry point.
-
-12) When Blocked
-- If external approval is required but the user is inactive, proceed with safest defaults after stating assumptions.
-- If essential information is missing and cannot be discovered by tools, ask a pointed question and pause edits.
+### Copy/Paste & Hardcoding Prohibition
+- **Do NOT paste large blocks** from cloud/web or hardcode configs that break project conventions.
+- **BEFORE writing code**, align with existing architecture: directories, router, stores, API services, base classes/utils, and design system tokens.
+- **New code MUST integrate** into existing module boundaries (naming, paths, imports, permissions).
+- **For low-code changes**, validate generated artifacts live under appshell/*.generated.ts with banner.
 
 ## 🚨 ENHANCED TEMPLATE LIBRARY ENFORCEMENT (CRITICAL PRIORITY)
 
@@ -238,6 +121,9 @@ read_file "templates/index.json"
 | "状态管理"、"Store"、"Pinia" | EntityStore | `templates/frontend/stores/EntityStore.template.ts` |
 | "DTO"、"数据传输对象" | EntityDto系列 | `templates/backend/contracts/*Dto.template.cs` |
 | "服务接口"、"应用服务接口" | ServiceInterface | `templates/backend/contracts/CrudAppServiceInterface.template.cs` |
+| "低代码插件"、"引擎插件" | LowCodePlugin | `templates/lowcode/plugins/LowCodePlugin.template.ts` |
+| "代码生成器"、"生成器" | CodeGenerator | `templates/lowcode/generators/CodeGenerator.template.ts` |
+| "运行时组件"、"低代码组件" | RuntimeComponent | `templates/lowcode/runtime/RuntimeComponent.template.vue` |
 
 #### Rule 3: Mandatory Response Protocol (EXACT FORMAT REQUIRED)
 **AI MUST respond in this EXACT format - NO DEVIATIONS:**
@@ -257,6 +143,9 @@ read_file "templates/index.json"
    - [x] 遵循项目命名约定
    - [x] 包含权限检查（如需要）
    - [x] 使用标准依赖注入
+   - [x] 符合Vue 3 Composition API规范
+   - [x] 遵循Element Plus组件规范
+   - [x] 符合TypeScript严格模式
 📄 **生成的代码**:
 [在此处输出完整的基于模板生成的代码]
 ```
@@ -265,76 +154,22 @@ read_file "templates/index.json"
 ```typescript
 // 标准模板参数 - 必须正确映射
 interface TemplateParameters {
-  EntityName: string;        // PascalCase: Product, User, Order
-  entityName: string;        // camelCase: product, user, order
-  ModuleName: string;        // 模块名: Catalog, Identity, Sales
-  entityDisplayName: string; // 显示名: 产品, 用户, 订单
+  EntityName: string        // PascalCase: Product, User, Order
+  entityName: string        // camelCase: product, user, order
+  ModuleName: string        // 模块名: Catalog, Identity, Sales
+  entityDisplayName: string // 显示名: 产品, 用户, 订单
+  "kebab-case-name": string // 短横线: product-management
 }
 ```
 
-#### Rule 5: Quality Validation Checklist (MANDATORY)
-**After code generation, AI MUST verify:**
-- [ ] Template was discovered and used (not written from scratch)
-- [ ] All template placeholders correctly replaced
-- [ ] Generated code follows ABP framework patterns
-- [ ] Naming conventions match project standards
-- [ ] Permission attributes added where required
-- [ ] Dependency injection properly implemented
-- [ ] Code is immediately runnable without errors
-
-#### Rule 6: Violation Consequences (AUTOMATIC REJECTION)
-**The following actions will result in AUTOMATIC CODE REJECTION:**
-- ❌ Skipping template search when templates exist
-- ❌ Writing code from scratch when relevant templates available
-- ❌ Ignoring template structure and conventions
-- ❌ Deviating from mandatory response format
-- ❌ Incorrect parameter mapping
-- ❌ Missing quality validation
-
-#### Rule 7: Exception Protocol (RARE CASES ONLY)
-**If template deviation is absolutely necessary:**
-1. **MUST state explicit reason** for deviation
-2. **MUST detail exact modifications** made to template
-3. **MUST ensure compliance** with project standards maintained
-4. **MUST suggest template updates** for future use
-
-#### Rule 8: Template Missing Protocol
-**If no relevant template exists:**
-```
-⚠️ **模板缺失警告**: 未找到 {需求类型} 相关模板
-🏗️ **临时解决方案**: 将基于现有项目代码规范生成代码
-💡 **改进建议**: 
-   - 建议路径: templates/{category}/{type}.template.{ext}
-   - 建议添加元数据文件: {type}.template.meta.yml
-   - 建议AI触发词: {suggested_triggers}
-🔄 **后续行动**: 生成代码后建议添加到模板库以供未来使用
-```
-
-### ENFORCEMENT MECHANISM
-
-#### Automatic Template Discovery Commands
+#### Rule 5: Automatic Template Discovery Commands
 **AI must execute these specific commands based on user input:**
 - 用户提及"CRUD" → `glob "templates/**/*crud*.template.*"`
 - 用户提及"管理" → `glob "templates/**/*management*.template.*"`
 - 用户提及"Store" → `glob "templates/**/*store*.template.*"`
 - 用户提及"DTO" → `glob "templates/**/*dto*.template.*"`
 - 用户提及"服务" → `glob "templates/**/*service*.template.*"`
-
-#### Template Index Consultation
-**Always check template index for metadata:**
-```bash
-read_file "templates/index.json"
-# Look for: ai_triggers, scenarios, dependencies, parameters
-```
-
-#### Success Metrics Tracking
-**AI should internally track:**
-- Template usage rate (target: >90%)
-- Code generation accuracy (target: >95%)
-- First-time compilation success (target: >90%)
-- User satisfaction with generated code
-
----
+- 用户提及"低代码" → `glob "templates/lowcode/**/*.template.*"`
 
 ## 🏛️ ARCHITECTURE DECISION RECORDS (ADR) COMPLIANCE (MANDATORY)
 
@@ -343,25 +178,22 @@ read_file "templates/index.json"
 - **ADR decisions are BINDING and must be followed in all code generation**
 - **When user asks "why" questions about technology choices, reference specific ADRs**
 
-### ADR Discovery Workflow (ENFORCED)
-1. **Check ADR index**: `read_file "doc/architecture/adr/index.json"`
-2. **Identify relevant ADRs** based on user request and AI triggers
-3. **Read specific ADR** for detailed guidance: `read_file "doc/architecture/adr/NNNN-title.md"`
-4. **Apply ADR decisions** in code generation and recommendations
-5. **Reference ADR** in explanations to user
-
 ### Mandatory ADR Consultation Triggers
 **When user mentions these topics, AI MUST check corresponding ADRs:**
 
 | 用户输入关键词 | 必须查阅的ADR | ADR文件 |
 |---|---|---|
 | "技术选型"、"框架选择"、"为什么用XXX" | 技术栈选择 | `0001-technology-stack-selection.md` |
-| "前端架构"、"Vue架构"、"组件设计" | 前端架构决策 | `0002-frontend-architecture-decisions.md` |
-| "后端架构"、"ABP架构"、"微服务" | 后端架构决策 | `0003-backend-architecture-decisions.md` |
-| "开发流程"、"工作流程"、"开发规范" | 开发工作流程决策 | `0004-development-workflow-decisions.md` |
-| "低代码"、"引擎架构"、"代码生成" | 低代码引擎架构 | `0005-lowcode-engine-architecture.md` |
-| "性能优化"、"性能问题"、"优化策略" | 性能优化策略 | `0009-performance-optimization.md` |
-| "设计模式"、"代码结构"、"最佳实践" | 设计模式应用 | `0010-design-patterns.md` |
+| "前端架构"、"Vue架构"、"组件设计" | 前端架构决策 | `0002-frontend-architecture.md` |
+| "后端架构"、"ABP架构"、"微服务" | 后端架构决策 | `0003-backend-architecture.md` |
+| "数据库设计"、"实体设计" | 数据库设计 | `0004-database-design.md` |
+| "认证"、"授权"、"权限" | 认证策略 | `0005-authentication-strategy.md` |
+| "缓存"、"性能优化" | 缓存策略 | `0006-caching-strategy.md` |
+| "日志"、"监控" | 日志策略 | `0007-logging-strategy.md` |
+| "错误处理"、"异常处理" | 错误处理 | `0008-error-handling.md` |
+| "性能优化"、"性能问题" | 性能优化 | `0009-performance-optimization.md` |
+| "设计模式"、"代码结构" | 设计模式应用 | `0010-design-patterns.md` |
+| "低代码"、"引擎架构" | 低代码引擎架构 | `0011-lowcode-engine-architecture.md` |
 
 ### ADR-Informed Response Protocol (EXACT FORMAT REQUIRED)
 **When ADR consultation is triggered, AI MUST respond in this format:**
@@ -381,39 +213,9 @@ read_file "templates/index.json"
 🏗️ **代码生成**: 基于ADR决策和模板生成代码
 ```
 
-### ADR Compliance Validation (MANDATORY)
-**After code generation, AI MUST verify:**
-- [ ] 技术选择符合ADR-0001技术栈决策
-- [ ] 架构设计遵循相关ADR指导
-- [ ] 设计模式应用符合ADR-0010规范
-- [ ] 性能考虑符合ADR-0009策略
-- [ ] 安全实现符合ADR-0005认证策略
-- [ ] 错误处理符合ADR-0008规范
-
-### ADR Reference Commands (AUTO-EXECUTE)
-**AI must execute these commands when triggered:**
-- 技术选型问题 → `read_file "doc/architecture/adr/0001-technology-stack-selection.md"`
-- 前端架构问题 → `read_file "doc/architecture/adr/0002-frontend-architecture-decisions.md"`
-- 后端架构问题 → `read_file "doc/architecture/adr/0003-backend-architecture-decisions.md"`
-- 开发流程问题 → `read_file "doc/architecture/adr/0004-development-workflow-decisions.md"`
-- 低代码引擎问题 → `read_file "doc/architecture/adr/0005-lowcode-engine-architecture.md"`
-- 性能优化需求 → `read_file "doc/architecture/adr/0009-performance-optimization.md"`
-- 设计模式应用 → `read_file "doc/architecture/adr/0010-design-patterns.md"`
-- 架构设计问题 → `read_file "doc/architecture/adr/README.md"` + 相关ADR
-
-### ADR Update Protocol
-**If ADR decisions need updating:**
-1. **MUST explain** why current ADR is insufficient
-2. **MUST propose** specific ADR amendments
-3. **MUST maintain** backward compatibility where possible
-4. **MUST document** migration path if breaking changes required
-
----
-
 ## 🔄 INCREMENTAL CODE GENERATION (MANDATORY)
 
 ### 增量生成触发规则
-
 当用户请求包含以下关键词时，AI必须启用增量生成模式：
 
 | 触发关键词 | 生成模式 | 必须执行的命令 |
@@ -423,45 +225,7 @@ read_file "templates/index.json"
 | "生成测试"、"添加测试" | 自动测试生成 | `node tools/incremental-generation/generators/test-generator.js --target={target_service}` |
 | "兼容"、"不破坏现有" | 兼容性分析 | `node tools/incremental-generation/scripts/validate-changes.js --type=compatibility` |
 
-### 强制执行的增量生成工作流
-
-#### 第一阶段：代码分析（必须执行）
-```bash
-# 1. 分析目标代码结构
-node tools/incremental-generation/scripts/analyze-codebase.js --target={target_file}
-
-# 2. 识别设计模式
-node tools/incremental-generation/analyzers/pattern-matcher.js --file={target_file}
-
-# 3. 分析依赖关系
-node tools/incremental-generation/analyzers/dependency-graph.js --scope={analysis_scope}
-```
-
-#### 第二阶段：策略选择（基于分析结果）
-- **CRUD扩展** → 使用 `service-extension` 策略
-- **UI组件扩展** → 使用 `component-extension` 策略  
-- **数据模型扩展** → 使用 `entity-extension` 策略
-- **API接口扩展** → 使用 `api-extension` 策略
-
-#### 第三阶段：增量生成（应用策略）
-```bash
-node tools/incremental-generation/scripts/generate-incremental.js --strategy={selected_strategy} --base={base_entity} --feature={new_feature}
-```
-
-#### 第四阶段：验证检查（必须执行）
-```bash
-# 兼容性检查
-node tools/incremental-generation/scripts/validate-changes.js --type=compatibility
-
-# 质量检查  
-node tools/incremental-generation/scripts/validate-changes.js --type=quality
-
-# 测试验证
-npm run test -- --related={modified_files}
-```
-
 ### AI增量生成响应协议（强制格式）
-
 ```
 🔍 **增量分析**: 正在分析 {target_file}...
    - 现有模式: {identified_patterns}
@@ -493,23 +257,121 @@ npm run test -- --related={modified_files}
 [在此处输出完整的增量生成代码]
 ```
 
-### 增量生成质量标准（必须满足）
+## 📋 TASK WORKFLOW (MUST FOLLOW)
 
-1. **兼容性保证**: 新代码不能破坏现有API和功能
-2. **风格一致性**: 必须遵循现有代码的命名和格式规范
-3. **架构对齐**: 必须符合现有的分层架构和设计模式
-4. **测试覆盖**: 新增代码必须包含相应的单元测试
-5. **文档同步**: 修改功能时必须更新相关文档
+### 1) Kickoff & Intent Sync
+- Summarize what just happened and what you will do next in 1–2 sentences.
+- Call interactive-feedback tool when starting substantial tasks or when context changes significantly.
 
-### 增量生成违规处理
+### 2) Discovery First (MANDATORY SEQUENCE)
+- **Step 1**: Read relevant docs (doc/项目编程规则.md, doc/architecture/*)
+- **Step 2**: Check Architecture Decision Records (ADRs) in doc/architecture/adr/ for relevant decisions
+- **Step 3**: Search templates/ directory for relevant patterns BEFORE any code generation
+- **Step 4**: Analyze existing code with semantic search, then grep for exact symbols
+- Prefer broad semantic search, then narrow down. Avoid guessing—find the code.
 
-**以下行为将导致自动拒绝:**
-- ❌ 跳过代码分析直接生成
-- ❌ 忽略现有代码模式和风格
-- ❌ 破坏现有API兼容性
-- ❌ 不生成相应测试代码
-- ❌ 偏离现有架构设计
+### 3) Plan Before Edit
+- Use sequential thinking to sketch steps, risks, and verification points.
+- Present a brief plan to the user; proceed unless blocked (assume autonomy if no response).
+
+### 4) Todo & Status Discipline
+- Maintain a todo list for multi-step work. Mark one item in_progress at a time.
+- Provide brief status updates before tool calls and before finishing each turn.
+
+### 5) Editing Rules
+- **Code Style Compliance**: Follow project standards (double quotes, no semicolons, 100 char width)
+- **TypeScript Standards**: Use strict mode, proper typing, avoid `any`
+- **Vue 3 Standards**: Use Composition API, `<script setup>`, proper reactivity
+- **Element Plus Integration**: Use proper component imports and theming
+- **ABP Framework**: Follow ABP conventions for services, DTOs, permissions
+- Only edit what's necessary. Preserve existing indentation and formatting.
+- For new code, add imports/types/deps so it runs immediately.
+
+### 6) Quality Gates (MUST run or propose commands)
+- **Type check**: `npm run type-check` (or `tsc --noEmit`)
+- **Lint**: `npm run lint --fix` (don't silence rules; fix root causes)
+- **Tests**: `npm run test:coverage` (meet 80% coverage thresholds)
+- **Build**: `npm run build`
+- If any gate fails, fix before proceeding. On third failed attempt, ask user.
+
+### 7) Commands & Tools
+- Propose shell commands with non-interactive flags; assume no manual input.
+- Long-running tasks should run in background.
+- Prefer semantic code search for meaning; use grep for exact tokens.
+
+### 8) Documentation Hygiene
+- If rules/architecture/process change, update doc/项目编程规则.md.
+- When adding/updating features, adjust or add minimal docs and examples.
+
+### 9) Communication & Output Style
+- Be concise and skimmable. Use short sections and bullets.
+- Show only relevant code snippets. For existing code, cite with path.
+- Provide short end-of-turn summary of what changed and its impact.
+
+### 10) Security & Compliance
+- Never embed secrets. Use project logging adapter instead of console.* in production.
+- Do not bypass sandbox/safety checks for SFC preview in production.
+
+### 11) Backend/Frontend Contract
+- Keep permission names, route names, and policies consistent across backend and frontend.
+- Use DTOs with consistent paging/sorting fields.
+
+## 🎯 FRAMEWORK-SPECIFIC GUIDELINES
+
+### Vue 3 + TypeScript Standards
+- **Composition API**: Always use `<script setup>` syntax
+- **Reactivity**: Use `ref()`, `reactive()`, `computed()` appropriately
+- **Props**: Define with `defineProps<T>()` with TypeScript interfaces
+- **Emits**: Define with `defineEmits<T>()` with proper typing
+- **Stores**: Use Pinia with TypeScript, follow naming convention `use{Entity}Store`
+- **Components**: Use PascalCase for component names, kebab-case for file names
+
+### Element Plus Integration
+- **Import Strategy**: Use auto-import from unplugin-vue-components
+- **Theming**: Follow project's design tokens and CSS variables
+- **Icons**: Use `@element-plus/icons-vue` with proper tree-shaking
+- **Form Validation**: Use Element Plus form validation with TypeScript
+
+### ABP Framework Standards
+- **Services**: Inherit from `SmartAbpAppService`, use `IRepository<T>`
+- **DTOs**: Follow naming convention: `{Entity}Dto`, `Create{Entity}Dto`, `Update{Entity}Dto`
+- **Permissions**: Use consistent permission names across backend/frontend
+- **Localization**: Use ABP localization system for all user-facing text
+
+### Low-code Engine Standards
+- **Plugins**: Implement `metadata`, `canHandle`, `validate`, `generate` methods
+- **Runtime**: Use sandbox execution (iframe/Worker + CSP) for dev preview
+- **Generated Files**: Include "// AUTO-GENERATED FILE – DO NOT EDIT." banner
+- **Monitoring**: Use kernel logging/monitoring/cache systems
+
+## 🚨 VIOLATION CONSEQUENCES (AUTOMATIC REJECTION)
+
+**The following actions will result in AUTOMATIC CODE REJECTION:**
+- ❌ Skipping template search when templates exist
+- ❌ Writing code from scratch when relevant templates available
+- ❌ Ignoring ADR decisions and architectural constraints
+- ❌ Not following project code style standards
+- ❌ Using single quotes instead of double quotes
+- ❌ Adding semicolons when project uses no-semicolon style
+- ❌ Exceeding 100 character line width
+- ❌ Using `any` type without justification
+- ❌ Not implementing proper TypeScript interfaces
+- ❌ Ignoring Vue 3 Composition API standards
+- ❌ Breaking Element Plus component integration
+- ❌ Not following ABP framework conventions
+- ❌ Bypassing quality gates (type-check, lint, test, build)
+
+## 🎯 SUCCESS METRICS
+
+**AI Performance Targets:**
+- **Template Usage Rate**: >90% for standard scenarios
+- **Code Generation Accuracy**: >95% first-time compilation success
+- **ADR Compliance**: 100% adherence to architectural decisions
+- **Quality Gate Pass Rate**: >90% without manual intervention
+- **Code Style Compliance**: 100% adherence to project standards
+- **Test Coverage**: Maintain >80% coverage for new code
+- **Build Success**: 100% successful builds after code generation
 
 ---
 
-**🎯 SUMMARY: Template library rules, ADR compliance, and incremental generation are MANDATORY and NON-NEGOTIABLE. AI must demonstrate template usage, ADR alignment, and incremental analysis in every code generation task. Failure to follow these rules constitutes a violation of project standards.**
+**🎯 SUMMARY: Template library rules, ADR compliance, incremental generation, and framework-specific standards are MANDATORY and NON-NEGOTIABLE. AI must demonstrate template usage, ADR alignment, code style compliance, and quality gate validation in every code generation task. Failure to follow these rules constitutes a violation of project standards.**

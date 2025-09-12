@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "description": "SmartAbp项目架构决策记录索引",
-  "lastUpdated": "2025-09-11T10:00:00.000Z",
+  "lastUpdated": "2025-09-12T00:00:00.000Z",
   "adrs": [
     {
       "id": "0001",
@@ -259,7 +259,7 @@
       "id": "0016",
       "title": "低代码引擎Monorepo重构架构",
       "path": "./0016-lowcode-engine-monorepo-refactoring.md",
-      "status": "提议",
+      "status": "已接受",
       "category": "架构重构",
       "tags": ["Monorepo", "包管理", "独立发包", "架构重构"],
       "createdDate": "2025-01-12",
@@ -275,7 +275,7 @@
         "模块化架构"
       ],
       "relatedADRs": ["0011", "0015", "0001"],
-      "summary": "将分散的低代码引擎代码重构为6个独立npm包的Monorepo架构决策"
+      "summary": "将分散的低代码引擎代码重构为6个独立npm包的Monorepo架构决策，并强制低代码代码存放于packages/@smartabp/lowcode-* 子包"
     }
   ],
   "categories": {
@@ -335,8 +335,8 @@
   },
   "statistics": {
     "totalADRs": 13,
-    "acceptedADRs": 12,
-    "proposedADRs": 1,
+    "acceptedADRs": 13,
+    "proposedADRs": 0,
     "deprecatedADRs": 0,
     "supersededADRs": 0,
     "categoryCounts": {

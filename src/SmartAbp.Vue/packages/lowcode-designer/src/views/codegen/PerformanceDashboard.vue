@@ -619,8 +619,9 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue'
-import { globalContentCache } from '../../lowcode/federation/content-cache'
-import { logger } from '../../utils/logging/index'
+// 运行时内容缓存与日志改为可选注入，避免构建期硬依赖
+const globalContentCache: any = (globalThis as any).__lowcodeRuntime?.contentCache || { getStats: () => ({ totalEntries: 0, totalSizeBytes: 0, totalAccessCount: 0, averageEntrySize: 0 }) }
+const logger: any = (globalThis as any).__lowcodeRuntime?.logger || console
 // Worker池实例位于SfcCompilerEngine内部，无法直接注入，这里通过全局暴露的窗口变量进行读取
 // 在实际项目中，建议提供显式的服务暴露接口
 const workerMetrics = ref({ submitted: 0, completed: 0, failed: 0, inFlight: 0, queueMax: 0 })

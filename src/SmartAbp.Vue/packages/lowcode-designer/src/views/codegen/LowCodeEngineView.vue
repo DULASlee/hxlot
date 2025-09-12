@@ -232,9 +232,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick, computed } from 'vue'
-import { logger } from '@/utils/logging'
-import { LowCodeKernel } from '@/lowcode/kernel/core'
-import { Vue3Plugin } from '@/lowcode/plugins/vue3/index'
+import { logger } from '../../../../../src/utils/logging'
+import { LowCodeKernel } from '../../../../lowcode-core/src'
+import { Vue3Plugin } from '../../../../lowcode-codegen/src'
 
 // 组件日志器
 const componentLogger = logger.child({ component: 'LowCodeEngineView' })

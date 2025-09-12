@@ -192,27 +192,27 @@ const generate = async () => {
   generating.value = true
   try {
     const manifest = buildManifest()
-    
+
     // 🔥 第一步：生成前端代码
     ElMessage.info('🎨 正在生成前端代码...')
     const frontendRes = await fetch('/__module-wizard/add', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
       body: JSON.stringify({ manifest, fields: form.fields })
     })
     const frontendJson = await frontendRes.json()
-    
+
     if (!frontendJson.ok) {
       ElMessage.error('前端代码生成失败: ' + (frontendJson.message || '未知错误'))
       return
     }
 
-    // 🚀 第二步：自动生成后端代码  
+    // 🚀 第二步：自动生成后端代码
     ElMessage.info('🏗️ 正在生成后端代码...')
     try {
       const backendRes = await fetch('/__module-wizard/backend', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
         body: JSON.stringify({
           name: form.entityName,
           module: form.moduleName,
@@ -236,7 +236,7 @@ const generate = async () => {
         ElMessage.success(`✅ 全栈代码生成完成！
 📁 前端: ${frontendJson.routes?.join(', ')}
 🏗️ 后端: ${form.entityName}AppService + DTOs + Repository`)
-        
+
         genReceipt.value = {
           ...frontendJson,
           backend: {
@@ -254,7 +254,7 @@ const generate = async () => {
       genReceipt.value = frontendJson
     }
 
-  } catch (e) {
+  } catch (e: any) {
     ElMessage.error('代码生成失败: ' + (e?.message || '未知错误'))
     console.error('Generation error:', e)
   } finally {
@@ -263,8 +263,8 @@ const generate = async () => {
 }
 
 // 🔧 字段类型映射辅助函数
-const mapFieldType = (frontendType) => {
-  const typeMap = {
+const mapFieldType = (frontendType: string) => {
+  const typeMap: Record<string, string> = {
     'string': 'string',
     'boolean': 'bool',
     'number': 'int',

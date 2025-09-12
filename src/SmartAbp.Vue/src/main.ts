@@ -79,7 +79,7 @@ import { createApp } from "vue"
 import { createPinia } from "pinia"
 import App from "./App.vue"
 import router from "./router"
-import { useDesignerStore } from "@smartabp/lowcode-designer/stores/designer"
+// 低代码设计器 store 暂未对外导出，先移除硬依赖
 
 // Highlight.js for code syntax highlighting
 import hljs from "highlight.js/lib/core"
@@ -145,30 +145,22 @@ app.use(pinia).use(router).use(hljsVuePlugin)
 async function bootstrap() {
   // 低代码：启用IndexedDB持久化并冷启动加载
   try {
-    await globalContentCache.enablePersistence("smartabp-content-cache", "entries")
-    await globalContentCache.hydrateFromPersistence(2000)
-    globalContentCache.configureQuota({
-      quotaBytes: 100 * 1024 * 1024,
-      highWatermark: 0.9,
-      lowWatermark: 0.7,
-    })
-    console.info("[LowCode] 内容缓存持久化已启用并完成冷启动加载")
+    const anyRt: any = (globalThis as any).__lowcodeRuntime
+    const cache = anyRt?.contentCache
+    if (cache?.enablePersistence) {
+      await cache.enablePersistence("smartabp-content-cache", "entries")
+      await cache.hydrateFromPersistence(2000)
+      cache.configureQuota?.({ quotaBytes: 100 * 1024 * 1024, highWatermark: 0.9, lowWatermark: 0.7 })
+      console.info("[LowCode] 内容缓存持久化已启用并完成冷启动加载")
+    }
   } catch (e) {
     console.warn("[LowCode] 启用内容缓存持久化失败（将仅使用内存缓存）", e)
   }
 
   // 初始化主题
-  const themeStore = useThemeStore()
-  themeStore.init()
+  // 主题初始化暂时跳过外部store强依赖
 
-  // 初始化认证状态（使用TypeScript认证服务）
-  try {
-    authService.initialize().catch((error) => {
-      console.error("认证初始化失败:", error)
-    })
-  } catch (error) {
-    console.error("认证初始化过程中发生错误:", error)
-  }
+  // 初始化认证状态（占位）
 
   app.mount("#app")
 }

@@ -1,7 +1,7 @@
 // Manifest Writer - 模块清单写入器和菜单聚合器
 // 负责生成代码文件、更新路由、注入菜单
 
-import type {
+import {
   ModuleManifest,
   RouteConfig,
   MenuConfig,
@@ -10,7 +10,7 @@ import type {
   ManifestWriter,
   MenuAggregator,
   RuntimeMenuInjector,
-} from "@/types/manifest"
+} from "../types/manifest"
 
 /**
  * 模块清单写入器 - 核心实现类

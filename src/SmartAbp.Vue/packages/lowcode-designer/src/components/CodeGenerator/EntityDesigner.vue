@@ -270,8 +270,8 @@ import {
 import VueDraggable from 'vuedraggable'
 import CodePreview from './CodePreview.vue'
 import { codeGeneratorApi } from '@smartabp/lowcode-api'
-import { usePropertyDragDrop } from '@smartabp/lowcode-core/src/composables/useDragDrop'
-import type { PropertyType, EntityProperty, EntityModel } from '@smartabp/lowcode-core/src/types/entity-designer'
+import { usePropertyDragDrop } from '@smartabp/lowcode-core'
+import type { PropertyType, EntityProperty, EntityModel } from '@smartabp/lowcode-core'
 
 // Drag and drop functionality
 const { registerEntityCanvas, startPropertyDrag, dragOver, dragLeave, drop } = usePropertyDragDrop()

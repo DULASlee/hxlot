@@ -3,8 +3,14 @@
  * 支持DesignerOverrideSchema格式和Vue SFC生成
  */
 
-import type { DesignerComponent } from '@/stores/designer'
-import type { DesignerOverrideSchema } from '../../views/codegen/designer/schema/override'
+import type { DesignerComponent } from '../../types/designer'
+// 临时占位：最小化 DesignerOverrideSchema 定义，避免断链
+export interface DesignerOverrideSchema {
+  metadata: { schemaVersion: string; moduleName: string; pageName: string; timestamp: string; author?: string }
+  selectors: { byBlockId?: Record<string, string>; byDataNodeId?: Record<string, string> }
+  operations: Array<any>
+  constraints?: { version: string; compatibility: string; checksum: string }
+}
 
 // 类型定义
 export interface ExportOptions {

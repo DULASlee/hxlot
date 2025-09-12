@@ -6,6 +6,60 @@
 - **目的**: 为全栈低代码引擎所有相关文件建立完整的Serena索引，支持重构和独立发包
 - **范围**: 60个文件，约11,000行代码
 
+## 📦 Monorepo Packages 索引（最新）
+
+> 自 2025-09 起，低代码引擎全部迁移至 `src/SmartAbp.Vue/packages/@smartabp/*`。以下为 Serena 的主索引入口。
+
+### @smartabp/lowcode-core（引擎内核）
+路径：`src/SmartAbp.Vue/packages/lowcode-core/src`
+- `kernel/`：`core.ts`、`types.ts`、`plugins.ts`
+- `runtime/`：`index.ts`、`worker-pool.ts`、`metadata/pipeline.ts`、`persistence/indexeddb.ts`、`workers/*.worker.ts`
+- `adapters/`：`logger-adapter.ts`
+- `federation/`：内容缓存与联邦化
+- `utils/`：`manifestWriter.ts`
+- `examples/`、`__tests__/`
+标签：`#packages` `#lowcode-core` `#engine-kernel` `#runtime-system` `#plugin-architecture`
+
+### @smartabp/lowcode-designer（可视化设计器）
+路径：`src/SmartAbp.Vue/packages/lowcode-designer/src`
+- 视图：`views/codegen/*`（`LowCodeEngineView.vue`、`SfcCompilerView.vue`、`PerformanceDashboard.vue`、`DragDropFormView.vue`、`ModuleWizardView.vue`）
+- 设计器主视图：`views/VisualDesignerView.vue`
+- 组件：`components/PropertyInspector.vue`、`components/DraggableComponent.vue`
+- 设计器Schema：`designer/schema/{exporter.ts, override.ts, reader.ts}`
+- 开发插件：`dev/moduleWizardDev.ts`
+- store：`stores/designer.ts`
+标签：`#packages` `#visual-designer` `#p2-designer` `#schema-system` `#module-wizard`
+
+### @smartabp/lowcode-codegen（代码生成引擎）
+路径：`src/SmartAbp.Vue/packages/lowcode-codegen/src`
+- 插件：`plugins/vue3/`、`plugins/sfc-compiler/`、`plugins/router-generator/`、`plugins/store-generator/`
+- 入口导出：`src/index.ts`
+标签：`#packages` `#code-generation` `#template-engine` `#compiler`
+
+### @smartabp/lowcode-api（API 客户端）
+路径：`src/SmartAbp.Vue/packages/lowcode-api/src`
+- `code-generator.ts`、`index.ts`
+标签：`#packages` `#api-client` `#code-generation-api`
+
+### @smartabp/lowcode-ui-vue（UI 组件，若存在）
+路径：`src/SmartAbp.Vue/packages/lowcode-ui-vue/src`
+- 组件与样式（按需补充）
+标签：`#packages` `#vue-components`
+
+检索示例：
+```
+# 查找核心内核与运行时
+serena search "path:packages/lowcode-core/src (core.ts OR worker-pool.ts)"
+
+# 查找设计器主视图与Schema工具
+serena search "path:packages/lowcode-designer/src (VisualDesignerView.vue OR designer/schema)"
+
+# 查找代码生成插件
+serena search "path:packages/lowcode-codegen/src/plugins (vue3 OR sfc-compiler OR router-generator OR store-generator)"
+```
+
+— 以上为最新的 Monorepo 包索引；以下章节保留旧版 `src/lowcode` 路径用于历史对照（将逐步淘汰）。
+
 ## 🏗️ **架构层级索引**
 
 ### 1️⃣ **核心引擎层 (Core Engine)**

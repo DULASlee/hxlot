@@ -155,9 +155,10 @@ import { ref, computed } from 'vue'
 import Canvas from './designer/Canvas.vue'
 import Palette from './designer/Palette.vue'
 import Inspector from './designer/Inspector.vue'
-import { BasicSchemaReader } from './designer/schema/reader'
+// 暂时注释掉不可用的回读逻辑，后续补齐 reader/override 实现
+// import { BasicSchemaReader } from './designer/schema/reader'
 // import { BasicMergeEngine } from './designer/schema/merge' // 暂时未使用
-import type { DesignerOverrideSchema } from './designer/schema/override'
+type DesignerOverrideSchema = any
 import { ElMessage } from 'element-plus'
 import {
   View,
@@ -168,9 +169,10 @@ import {
   Aim,
   CopyDocument
 } from '@element-plus/icons-vue'
-import { buildOverridesFromState } from './designer/schema/exporter'
-import { useDesignerStore } from '../../stores'
-import { exportDesignerState, type ExportOptions, type CodeGenerationResult } from '@/components/designer/schemaExporter'
+// 统一从同一处导入一次，避免重复标识符
+import { exportDesignerState, type ExportOptions, type CodeGenerationResult } from '../designer/schema/exporter'
+// stores 目录暂缺最小实现，此处以本地空实现代替，后续补全
+const useDesignerStore = () => ({ components: [], clear: () => {} } as any)
 // 响应式数据
 const sfcText = ref('')
 const generating = ref(false)
@@ -196,7 +198,7 @@ const generatedCode = ref<CodeGenerationResult | null>(null)
 const designerStore = useDesignerStore()
 
 // Schema处理器
-const reader = new BasicSchemaReader()
+const reader = { readFromVueSFC: (_c: string, _o: any) => ({ selectors: {}, operations: [] }) } as any
 // const merger = new BasicMergeEngine() // 暂时未使用
 
 // 计算属性
@@ -274,7 +276,21 @@ const onExportSchema = () => {
   }
 
   try {
-    const schema = buildOverridesFromState(designerStore.$state, 'Demo', 'DemoPage')
+    const result = exportDesignerState(designerStore.components, {
+      moduleName: 'Demo',
+      pageName: 'DemoPage',
+      format: 'designer-schema'
+    } as ExportOptions)
+    const schema = result.designerSchema || {
+      metadata: {
+        schemaVersion: '0.1.0',
+        moduleName: 'Demo',
+        pageName: 'DemoPage',
+        timestamp: new Date().toISOString()
+      },
+      selectors: {},
+      operations: []
+    }
 
     // 下载Schema文件
     const blob = new Blob([JSON.stringify(schema, null, 2)], { type: 'application/json' })

@@ -1,7 +1,7 @@
 # ADR-0016: 低代码引擎Monorepo重构架构决策
 
 ## 📋 **状态**
-- **状态**: 提议 (Proposed)
+- **状态**: 已接受 (Accepted)
 - **决策者**: SmartAbp 架构团队
 - **决策日期**: 2025-01-12
 - **影响范围**: 全栈低代码引擎架构
@@ -34,7 +34,7 @@ SmartAbp全栈低代码引擎目前面临以下架构问题：
 ### 核心决策
 **采用Monorepo架构重构全栈低代码引擎，将其拆分为6个独立的npm包。**
 
-### 目标架构
+### 目标架构（并强制目录约束）
 ```
 packages/
 ├── @smartabp/lowcode-core          # 🔧 引擎内核包
@@ -44,6 +44,8 @@ packages/
 ├── @smartabp/lowcode-tools         # 🛠️ 开发工具包
 └── @smartabp/lowcode-api           # 🌐 API客户端包
 ```
+
+【强制目录约束】所有低代码引擎相关代码（内核、插件、运行时、工具、UI、API、类型、示例、测试）必须置于上述 `packages/@smartabp/lowcode-*` 包中，主应用 `src/SmartAbp.Vue/src` 禁止新增或保留任何低代码引擎实现文件，仅允许通过包公开 API 使用。
 
 ### 包职责划分
 
