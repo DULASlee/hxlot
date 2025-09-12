@@ -1,200 +1,240 @@
-# AI编程模板库规则
+# AI编程模板库使用规则
+
+## 📋 概述
+
+本文档定义了AI在使用SmartAbp项目代码模板库时必须遵循的规则和工作流程，确保AI能够自动识别、选择和使用合适的代码模板。
 
 ## 🎯 核心原则
 
-**AI在SmartAbp项目中进行任何代码生成时，必须遵循"模板优先"原则**
+### 1. 模板优先原则
+- **强制要求**: AI在编写任何代码之前，必须首先检查是否存在相关的代码模板
+- **检查顺序**: 
+  1. 检查 `templates/` 目录下的模板索引
+  2. 根据用户需求匹配最合适的模板
+  3. 如果找到匹配模板，必须使用模板生成代码
+  4. 如果没有找到模板，才可以从零开始编写
 
-### 强制性规则
+### 2. 自动识别机制
+- AI必须能够识别用户请求中的关键词和上下文
+- 根据关键词自动匹配相应的模板类别
+- 支持模糊匹配和语义理解
 
-1. **模板检查优先级**: 在编写任何代码之前，AI必须首先搜索并检查项目模板库
-2. **模板使用强制性**: 如果存在相关模板，必须使用模板而不是从头编写
-3. **偏离说明义务**: 如果需要偏离模板，必须明确说明原因和修改内容
+### 3. 模板完整性
+- 使用模板时必须保持模板的完整结构
+- 不得随意删除或修改模板的核心框架
+- 只能替换模板中的占位符变量
 
-## 📋 AI编程工作流程
+## 🔍 模板识别工作流程
 
-### 第一步：模板发现（MANDATORY）
+### 步骤1: 需求分析
 ```
-🔍 执行模板搜索：
-- 使用 glob 搜索: templates/**/*.template.*
-- 根据用户需求匹配相关模板
-- 检查 templates/index.json 获取模板信息
-```
-
-### 第二步：模板选择（MANDATORY）
-```
-📋 模板匹配规则：
-- CRUD操作 → CrudAppService.template.cs + CrudManagement.template.vue
-- 实体DTO → EntityDto.template.cs, CreateEntityDto.template.cs, UpdateEntityDto.template.cs
-- 状态管理 → EntityStore.template.ts
-- 应用服务接口 → CrudAppServiceInterface.template.cs
+用户请求 → 关键词提取 → 场景识别 → 模板匹配
 ```
 
-### 第三步：参数映射（MANDATORY）
+### 步骤2: 模板检索
+1. **检查模板索引**: 读取 `templates/index.json`
+2. **关键词匹配**: 匹配 `aiTriggers` 字段
+3. **场景匹配**: 匹配 `scenarios` 字段
+4. **依赖检查**: 验证项目是否满足模板依赖
+
+### 步骤3: 模板选择
+- 如果找到多个匹配模板，选择最具体的模板
+- 优先选择完全匹配的模板
+- 考虑模板的适用场景和复杂度
+
+### 步骤4: 参数收集
+- 根据模板的 `parameters` 定义收集必要参数
+- 如果用户未提供必要参数，主动询问
+- 为可选参数提供合理的默认值
+
+### 步骤5: 代码生成
+- 使用模板生成基础代码结构
+- 替换所有占位符变量
+- 根据具体需求进行必要的定制
+
+## 📚 模板库结构
+
+### 当前可用模板类别
+
+#### 1. 后端开发模板 (`templates/backend/`)
+- **应用服务**: `application/CrudAppService.template.cs`
+- **数据传输对象**: `dtos/EntityDto.template.cs`
+- **接口定义**: `interfaces/IAppService.template.cs`
+- **领域实体**: `entities/Entity.template.cs`
+- **仓储接口**: `repositories/IRepository.template.cs`
+
+**AI触发关键词**:
 ```
-⚙️ 标准参数映射：
-- {{EntityName}}: 实体名称（PascalCase，如：Product, User, Order）
-- {{entityName}}: 实体名称（camelCase，如：product, user, order）
-- {{ModuleName}}: 模块名称（如：Catalog, Identity, Sales）
-- {{entityDisplayName}}: 实体显示名称（如：产品, 用户, 订单）
-```
-
-### 第四步：代码生成（MANDATORY）
-```
-🏗️ 基于模板生成代码：
-- 替换所有模板占位符
-- 保持模板的结构和约定
-- 添加模板来源注释
-```
-
-### 第五步：合规验证（MANDATORY）
-```
-✅ 验证生成的代码：
-- 符合ABP框架规范
-- 遵循项目命名约定
-- 包含必要的权限检查
-- 使用项目标准的依赖注入
-```
-
-## 🎯 AI触发词映射表
-
-| 用户输入关键词 | 必须使用的模板 | 模板路径 |
-|---|---|---|
-| "创建/新增/添加" + "服务/应用服务" | CrudAppService | templates/backend/application/CrudAppService.template.cs |
-| "CRUD操作/增删改查" | CrudAppService + CrudManagement | backend/application/ + frontend/components/ |
-| "管理页面/管理组件" | CrudManagement | templates/frontend/components/CrudManagement.template.vue |
-| "状态管理/Store" | EntityStore | templates/frontend/stores/EntityStore.template.ts |
-| "DTO/数据传输对象" | EntityDto系列 | templates/backend/contracts/*Dto.template.cs |
-| "服务接口/应用服务接口" | CrudAppServiceInterface | templates/backend/contracts/CrudAppServiceInterface.template.cs |
-
-## 📝 AI标准响应格式
-
-AI必须按照以下格式响应用户的编程请求：
-
-```markdown
-🔍 **模板搜索**: 正在查找 {需求类型} 相关模板...
-
-📋 **模板发现**: 
-- 找到模板: `{template_path}`
-- 模板类型: {template_type}
-- 适用场景: {scenarios}
-
-⚙️ **参数映射**: 
-- EntityName: {实体名称}
-- entityName: {实体名称小写}
-- ModuleName: {模块名称}
-- entityDisplayName: {显示名称}
-
-🏗️ **代码生成**: 基于模板 `{template_id}` 生成代码
-
-✅ **合规检查**: 
-- [x] 符合ABP框架规范
-- [x] 遵循项目命名约定
-- [x] 包含权限检查
-- [x] 使用标准依赖注入
-
-📄 **生成的代码**:
-[在此处输出基于模板生成的完整代码]
+- "创建服务"、"应用服务"、"CRUD服务"
+- "创建DTO"、"数据传输对象"
+- "创建实体"、"领域实体"
+- "创建接口"、"服务接口"
+- "创建仓储"、"数据仓储"
 ```
 
-## 🚫 禁止行为
+#### 2. 前端开发模板 (`templates/frontend/`)
+- **Vue组件**: `components/CrudManagement.template.vue`
+- **Pinia状态管理**: `stores/EntityStore.template.ts`
+- **API服务**: `services/ApiService.template.ts`
+- **类型定义**: `types/EntityTypes.template.ts`
 
-### 严格禁止的操作
-1. **跳过模板搜索**: 不允许直接编写代码而不检查模板
-2. **忽略现有模板**: 如果存在相关模板，不允许从头编写
-3. **随意修改模板结构**: 不允许大幅偏离模板的基本结构
-4. **省略响应格式**: 必须按照标准格式响应
-
-### 例外情况处理
-如果确实需要偏离模板，必须：
-1. 明确说明偏离的原因
-2. 详细描述修改的内容
-3. 确保修改后仍符合项目规范
-4. 建议是否需要更新模板库
-
-## 🔧 模板库维护规则
-
-### AI发现模板缺失时
-```markdown
-⚠️ **模板缺失**: 未找到 {需求类型} 相关模板
-
-🏗️ **临时方案**: 将基于项目现有代码规范生成代码
-
-💡 **建议**: 建议将此代码模式添加到模板库:
-- 建议路径: templates/{category}/{type}.template.{ext}
-- 建议元数据: {metadata_suggestions}
+**AI触发关键词**:
+```
+- "创建组件"、"Vue组件"、"管理页面"
+- "创建Store"、"状态管理"、"Pinia"
+- "创建API"、"接口服务"
+- "创建类型"、"TypeScript类型"
 ```
 
-### 模板改进建议
-AI在使用模板过程中，如果发现可以改进的地方，应该：
-1. 记录改进建议
-2. 说明改进的理由
-3. 提供具体的修改方案
+#### 3. 低代码引擎模板 (`templates/lowcode/`)
+- **引擎插件**: `plugins/LowCodePlugin.template.ts`
+- **代码生成器**: `generators/CodeGenerator.template.ts`
+- **运行时组件**: `runtime/RuntimeComponent.template.vue`
 
-## 📊 质量保证机制
+**AI触发关键词**:
+```
+- "创建插件"、"低代码插件"、"引擎插件"
+- "创建生成器"、"代码生成器"
+- "创建运行时组件"、"低代码组件"
+```
 
-### 代码生成质量检查清单
-- [ ] 使用了相关的项目模板
-- [ ] 正确映射了所有参数
-- [ ] 符合ABP框架规范
-- [ ] 遵循项目命名约定
-- [ ] 包含必要的权限检查
-- [ ] 使用了正确的依赖注入
-- [ ] 添加了适当的注释和文档
-- [ ] 包含了错误处理逻辑
+## 🤖 AI行为规范
 
-### 模板使用统计
-AI应该在每次使用模板后报告：
-- 使用的模板ID
-- 参数映射情况
-- 生成代码的质量评估
-- 用户满意度反馈
+### 必须执行的检查
 
-## 🎯 实施验证
+#### 1. 模板存在性检查
+```typescript
+// AI内部逻辑示例
+function checkTemplateAvailability(userRequest: string): Template | null {
+  const keywords = extractKeywords(userRequest)
+  const matchedTemplates = searchTemplates(keywords)
+  return selectBestMatch(matchedTemplates)
+}
+```
 
-### 测试场景
-为验证AI是否正确使用模板库，可以使用以下测试场景：
+#### 2. 强制模板使用
+```typescript
+// 如果找到匹配模板，必须使用
+if (template) {
+  return generateCodeFromTemplate(template, parameters)
+} else {
+  // 只有在没有模板时才从零开始
+  return generateCodeFromScratch(userRequest)
+}
+```
 
-1. **场景1**: "我需要创建一个产品管理模块"
-   - 预期: AI搜索CRUD相关模板
-   - 预期: 使用CrudAppService.template.cs
-   - 预期: 正确映射EntityName=Product
+### 参数处理规范
 
-2. **场景2**: "创建用户管理页面"
-   - 预期: AI搜索管理页面模板
-   - 预期: 使用CrudManagement.template.vue
-   - 预期: 正确映射entityDisplayName=用户
+#### 1. 必需参数验证
+- 检查所有 `required: true` 的参数
+- 如果缺少必需参数，主动询问用户
+- 不得使用空值或占位符作为必需参数
 
-3. **场景3**: "需要订单状态管理"
-   - 预期: AI搜索状态管理模板
-   - 预期: 使用EntityStore.template.ts
-   - 预期: 正确映射EntityName=Order
+#### 2. 默认值处理
+- 为可选参数提供合理的默认值
+- 默认值应符合项目的命名规范
+- 考虑上下文信息生成智能默认值
 
-## 📈 成功指标
+#### 3. 参数验证
+- 验证参数格式（如PascalCase、camelCase）
+- 检查参数的合理性和一致性
+- 确保参数符合模板的验证规则
 
-### 技术指标
-- 模板使用率 ≥ 90%
-- 代码规范符合率 ≥ 95%
-- 首次生成可运行率 ≥ 90%
+### 代码生成规范
 
-### 用户体验指标
-- 代码生成速度提升 ≥ 60%
-- 用户满意度 ≥ 85%
-- 代码维护成本降低 ≥ 40%
+#### 1. 占位符替换
+```typescript
+// 正确的占位符替换示例
+const code = template.content
+  .replace(/\{\{EntityName\}\}/g, entityName)
+  .replace(/\{\{entityName\}\}/g, camelCase(entityName))
+  .replace(/\{\{ENTITY_NAME\}\}/g, upperCase(entityName))
+```
 
-## 🔄 持续改进
+#### 2. 结构完整性
+- 保持模板的完整结构和注释
+- 不得删除模板中的重要方法或属性
+- 保留所有的错误处理和日志记录
 
-### 模板库更新机制
-1. 定期收集AI使用反馈
-2. 分析常见的代码生成需求
-3. 更新和扩展模板库
-4. 优化AI识别和使用机制
+#### 3. 项目适配
+- 根据项目的现有结构调整导入路径
+- 使用项目的编码规范和样式
+- 集成项目的公共组件和工具类
 
-### 规则优化
-1. 监控AI遵循规则的情况
-2. 收集用户对生成代码的反馈
-3. 持续优化触发词映射
-4. 改进响应格式和质量检查
+## 🔧 实际应用示例
+
+### 示例1: 创建CRUD服务
+
+**用户请求**: "创建一个产品管理的CRUD服务"
+
+**AI处理流程**:
+1. **关键词识别**: "CRUD服务" → 匹配后端应用服务模板
+2. **模板选择**: `templates/backend/application/CrudAppService.template.cs`
+3. **参数收集**: 
+   - EntityName: "Product"
+   - entityName: "product"
+   - EntityDescription: "产品"
+4. **代码生成**: 使用模板生成完整的ProductAppService
+
+### 示例2: 创建Vue管理页面
+
+**用户请求**: "创建订单管理页面"
+
+**AI处理流程**:
+1. **关键词识别**: "管理页面" → 匹配前端组件模板
+2. **模板选择**: `templates/frontend/components/CrudManagement.template.vue`
+3. **参数收集**:
+   - EntityName: "Order"
+   - entityName: "order"
+   - EntityDescription: "订单"
+4. **代码生成**: 生成完整的订单管理组件
+
+### 示例3: 创建低代码插件
+
+**用户请求**: "创建一个数据可视化插件"
+
+**AI处理流程**:
+1. **关键词识别**: "插件" → 匹配低代码插件模板
+2. **模板选择**: `templates/lowcode/plugins/LowCodePlugin.template.ts`
+3. **参数收集**:
+   - PluginName: "DataVisualization"
+   - pluginName: "dataVisualization"
+   - PluginDescription: "数据可视化插件"
+4. **代码生成**: 生成完整的插件代码
+
+## 📋 质量保证
+
+### 代码审查检查点
+1. **模板使用**: 确认使用了正确的模板
+2. **参数完整**: 所有占位符都已正确替换
+3. **结构完整**: 保持了模板的完整结构
+4. **项目适配**: 符合项目的编码规范
+5. **功能完整**: 包含了必要的业务逻辑
+
+### 错误处理
+- 如果模板不存在，明确告知用户并提供替代方案
+- 如果参数不足，主动询问而不是猜测
+- 如果生成失败，提供详细的错误信息
+
+## 🚀 持续改进
+
+### 模板反馈机制
+- 收集AI使用模板的频率和效果
+- 根据实际使用情况优化模板内容
+- 定期更新模板以适应新的技术栈
+
+### 新模板开发
+- 根据项目需求识别新的模板需求
+- 遵循现有模板的结构和规范
+- 确保新模板与现有模板的一致性
+
+## 📖 相关文档
+
+- [代码模板库完整指南](../templates/README.md)
+- [SmartAbp项目架构文档](./architecture/README.md)
+- [前端开发规范](./frontend-standards.md)
+- [后端开发规范](./backend-standards.md)
 
 ---
 
-**重要提醒**: 这些规则是强制性的，AI必须严格遵循。任何违反这些规则的行为都将被视为不符合项目要求。
+**重要提醒**: 本规则文档是AI编程的强制性指导文档，所有AI在处理SmartAbp项目的编程任务时都必须严格遵循这些规则。

@@ -20,25 +20,25 @@ export enum LogLevel {
   SUCCESS = 2,
   WARN = 3,
   ERROR = 4,
-  FATAL = 5
+  FATAL = 5,
 }
 
 export const LOG_LEVEL_NAMES = {
-  [LogLevel.DEBUG]: 'DEBUG',
-  [LogLevel.INFO]: 'INFO',
-  [LogLevel.SUCCESS]: 'SUCCESS',
-  [LogLevel.WARN]: 'WARN',
-  [LogLevel.ERROR]: 'ERROR',
-  [LogLevel.FATAL]: 'FATAL'
+  [LogLevel.DEBUG]: "DEBUG",
+  [LogLevel.INFO]: "INFO",
+  [LogLevel.SUCCESS]: "SUCCESS",
+  [LogLevel.WARN]: "WARN",
+  [LogLevel.ERROR]: "ERROR",
+  [LogLevel.FATAL]: "FATAL",
 }
 
 export const LOG_LEVEL_COLORS = {
-  [LogLevel.DEBUG]: '#909399',
-  [LogLevel.INFO]: '#409EFF',
-  [LogLevel.SUCCESS]: '#67C23A',
-  [LogLevel.WARN]: '#E6A23C',
-  [LogLevel.ERROR]: '#F56C6C',
-  [LogLevel.FATAL]: '#F56C6C'
+  [LogLevel.DEBUG]: "#909399",
+  [LogLevel.INFO]: "#409EFF",
+  [LogLevel.SUCCESS]: "#67C23A",
+  [LogLevel.WARN]: "#E6A23C",
+  [LogLevel.ERROR]: "#F56C6C",
+  [LogLevel.FATAL]: "#F56C6C",
 }
 
 /**
@@ -56,16 +56,18 @@ export interface LogTransport {
  * 控制台传输器
  */
 export class ConsoleTransport implements LogTransport {
-  name = 'console'
+  name = "console"
   level: LogLevel
   private enableColors: boolean
   private enableGrouping: boolean
 
-  constructor(options: {
-    level?: LogLevel
-    enableColors?: boolean
-    enableGrouping?: boolean
-  } = {}) {
+  constructor(
+    options: {
+      level?: LogLevel
+      enableColors?: boolean
+      enableGrouping?: boolean
+    } = {},
+  ) {
     this.level = options.level ?? LogLevel.DEBUG
     this.enableColors = options.enableColors ?? true
     this.enableGrouping = options.enableGrouping ?? false
@@ -109,9 +111,9 @@ export class ConsoleTransport implements LogTransport {
   private formatMessage(entry: LogEntry): string {
     const timestamp = new Date(entry.timestamp).toISOString()
     const level = LOG_LEVEL_NAMES[entry.level].padEnd(7)
-    const source = entry.source ? `[${entry.source}]` : ''
+    const source = entry.source ? `[${entry.source}]` : ""
 
-    if (this.enableColors && typeof window !== 'undefined') {
+    if (this.enableColors && typeof window !== "undefined") {
       return `%c${timestamp} [${level}] ${source} ${entry.message}`
     }
 
@@ -122,23 +124,23 @@ export class ConsoleTransport implements LogTransport {
     const args: any[] = []
 
     // 添加颜色样式（浏览器环境）
-    if (this.enableColors && typeof window !== 'undefined') {
+    if (this.enableColors && typeof window !== "undefined") {
       const color = LOG_LEVEL_COLORS[entry.level]
       args.push(`color: ${color}; font-weight: bold`)
     }
 
     // 添加上下文和元数据
     if (entry.context && Object.keys(entry.context).length > 0) {
-      args.push('\n📋 Context:', entry.context)
+      args.push("\n📋 Context:", entry.context)
     }
 
     if (entry.metadata && Object.keys(entry.metadata).length > 0) {
-      args.push('\n📊 Metadata:', entry.metadata)
+      args.push("\n📊 Metadata:", entry.metadata)
     }
 
     // 添加错误堆栈
     if (entry.stack) {
-      args.push('\n🔍 Stack:', entry.stack)
+      args.push("\n🔍 Stack:", entry.stack)
     }
 
     return args
@@ -149,7 +151,7 @@ export class ConsoleTransport implements LogTransport {
  * 文件传输器 - 真正的文件写入实现
  */
 export class FileTransport implements LogTransport {
-  name = 'file'
+  name = "file"
   level: LogLevel
   private filePath: string
   private maxFileSize: number
@@ -158,11 +160,7 @@ export class FileTransport implements LogTransport {
   private isWriting = false
   private batchTimeout?: number
 
-  constructor(options: {
-    level?: LogLevel
-    filePath: string
-    maxFileSize?: number
-  }) {
+  constructor(options: { level?: LogLevel; filePath: string; maxFileSize?: number }) {
     this.level = options.level ?? LogLevel.INFO
     this.filePath = options.filePath
     this.maxFileSize = options.maxFileSize ?? 10 * 1024 * 1024 // 10MB
@@ -195,7 +193,7 @@ export class FileTransport implements LogTransport {
     try {
       await this.writeEntries(entries)
     } catch (error) {
-      console.error('FileTransport write failed:', error)
+      console.error("FileTransport write failed:", error)
       // 重新加入队列
       this.writeQueue.unshift(...entries)
     } finally {
@@ -204,7 +202,7 @@ export class FileTransport implements LogTransport {
   }
 
   private async writeEntries(entries: LogEntry[]): Promise<void> {
-    const logLines = entries.map(entry => this.formatEntry(entry)).join('\n') + '\n'
+    const logLines = entries.map((entry) => this.formatEntry(entry)).join("\n") + "\n"
 
     // 检查文件大小
     if (this.currentSize + logLines.length > this.maxFileSize) {
@@ -212,7 +210,7 @@ export class FileTransport implements LogTransport {
     }
 
     // 在浏览器环境中使用不同的写入方式
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       await this.writeToIndexedDB(logLines)
     } else {
       // Node.js环境 (for SSR)
@@ -225,27 +223,27 @@ export class FileTransport implements LogTransport {
   private async writeToIndexedDB(content: string): Promise<void> {
     // 使用 IndexedDB 存储日志（浏览器环境）
     try {
-      const request = indexedDB.open('SmartAbpLogs', 1)
+      const request = indexedDB.open("SmartAbpLogs", 1)
 
       request.onupgradeneeded = () => {
         const db = request.result
-        if (!db.objectStoreNames.contains('logs')) {
-          const store = db.createObjectStore('logs', { keyPath: 'id', autoIncrement: true })
-          store.createIndex('timestamp', 'timestamp', { unique: false })
-          store.createIndex('level', 'level', { unique: false })
+        if (!db.objectStoreNames.contains("logs")) {
+          const store = db.createObjectStore("logs", { keyPath: "id", autoIncrement: true })
+          store.createIndex("timestamp", "timestamp", { unique: false })
+          store.createIndex("level", "level", { unique: false })
         }
       }
 
       return new Promise((resolve, reject) => {
         request.onsuccess = () => {
           const db = request.result
-          const transaction = db.transaction(['logs'], 'readwrite')
-          const store = transaction.objectStore('logs')
+          const transaction = db.transaction(["logs"], "readwrite")
+          const store = transaction.objectStore("logs")
 
           store.add({
             timestamp: Date.now(),
             content,
-            size: content.length
+            size: content.length,
           })
 
           transaction.oncomplete = () => resolve()
@@ -267,24 +265,24 @@ export class FileTransport implements LogTransport {
 
       // 清理旧日志 (保留最近100条)
       const keys = Object.keys(localStorage)
-        .filter(k => k.startsWith('smartabp_log_'))
+        .filter((k) => k.startsWith("smartabp_log_"))
         .sort()
 
       if (keys.length > 100) {
-        keys.slice(0, keys.length - 100).forEach(k => localStorage.removeItem(k))
+        keys.slice(0, keys.length - 100).forEach((k) => localStorage.removeItem(k))
       }
     } catch (error) {
-      console.warn('无法写入本地存储:', error)
+      console.warn("无法写入本地存储:", error)
     }
   }
 
   private async writeToFileSystem(content: string): Promise<void> {
     // Node.js 文件系统写入 (SSR环境)
-    if (typeof require !== 'undefined') {
-      const fs = require('fs')
+    if (typeof require !== "undefined") {
+      const fs = require("fs")
       // path 模块将在 ensureLogDirectory 方法中使用
 
-      await fs.promises.appendFile(this.filePath, content, 'utf8')
+      await fs.promises.appendFile(this.filePath, content, "utf8")
     }
   }
 
@@ -296,37 +294,37 @@ export class FileTransport implements LogTransport {
       source: entry.source,
       context: entry.context,
       metadata: entry.metadata,
-      stack: entry.stack
+      stack: entry.stack,
     }
 
     return JSON.stringify(formatted)
   }
 
   private async rotateFile(): Promise<void> {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-")
     const backupPath = `${this.filePath}.${timestamp}`
 
     try {
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         // 浏览器环境：导出当前日志到新的存储
         const currentLogs = await this.exportLogs()
         console.info(`日志文件已轮转，导出 ${currentLogs.length} 条记录`)
-      } else if (typeof require !== 'undefined') {
+      } else if (typeof require !== "undefined") {
         // Node.js环境：重命名文件
-        const fs = require('fs')
+        const fs = require("fs")
         await fs.promises.rename(this.filePath, backupPath)
       }
     } catch (error) {
-      console.error('日志文件轮转失败:', error)
+      console.error("日志文件轮转失败:", error)
     }
 
     this.currentSize = 0
   }
 
   private ensureLogDirectory(): void {
-    if (typeof require !== 'undefined') {
-      const fs = require('fs')
-      const path = require('path')
+    if (typeof require !== "undefined") {
+      const fs = require("fs")
+      const path = require("path")
       const dir = path.dirname(this.filePath)
 
       if (!fs.existsSync(dir)) {
@@ -349,21 +347,21 @@ export class FileTransport implements LogTransport {
 
   // 导出日志功能
   async exportLogs(): Promise<LogEntry[]> {
-    if (typeof window === 'undefined') return []
+    if (typeof window === "undefined") return []
 
     try {
       // 从 IndexedDB 导出
-      const request = indexedDB.open('SmartAbpLogs', 1)
+      const request = indexedDB.open("SmartAbpLogs", 1)
 
       return new Promise((resolve, reject) => {
         request.onsuccess = () => {
           const db = request.result
-          const transaction = db.transaction(['logs'], 'readonly')
-          const store = transaction.objectStore('logs')
+          const transaction = db.transaction(["logs"], "readonly")
+          const store = transaction.objectStore("logs")
           const getAll = store.getAll()
 
           getAll.onsuccess = () => {
-            const logs = getAll.result.map(item => JSON.parse(item.content))
+            const logs = getAll.result.map((item) => JSON.parse(item.content))
             resolve(logs)
           }
 
@@ -375,10 +373,10 @@ export class FileTransport implements LogTransport {
     } catch (error) {
       // 降级到 localStorage
       const keys = Object.keys(localStorage)
-        .filter(k => k.startsWith('smartabp_log_'))
+        .filter((k) => k.startsWith("smartabp_log_"))
         .sort()
 
-      return keys.map(key => JSON.parse(localStorage.getItem(key) || '{}'))
+      return keys.map((key) => JSON.parse(localStorage.getItem(key) || "{}"))
     }
   }
 }
@@ -387,15 +385,17 @@ export class FileTransport implements LogTransport {
  * 内存传输器 - 用于测试和调试
  */
 export class MemoryTransport implements LogTransport {
-  name = 'memory'
+  name = "memory"
   level: LogLevel
   private entries: LogEntry[] = []
   private maxEntries: number
 
-  constructor(options: {
-    level?: LogLevel
-    maxEntries?: number
-  } = {}) {
+  constructor(
+    options: {
+      level?: LogLevel
+      maxEntries?: number
+    } = {},
+  ) {
     this.level = options.level ?? LogLevel.DEBUG
     this.maxEntries = options.maxEntries ?? 1000
   }
@@ -428,7 +428,7 @@ export class MemoryTransport implements LogTransport {
  * 网络传输器 - 发送日志到远程服务器
  */
 export class NetworkTransport implements LogTransport {
-  name = 'network'
+  name = "network"
   level: LogLevel
   private endpoint: string
   private batchSize: number
@@ -471,14 +471,14 @@ export class NetworkTransport implements LogTransport {
 
     try {
       await fetch(this.endpoint, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ logs: batch, timestamp: Date.now() })
+        body: JSON.stringify({ logs: batch, timestamp: Date.now() }),
       })
     } catch (error) {
-      console.error('NetworkTransport send failed:', error)
+      console.error("NetworkTransport send failed:", error)
       // 重新加入队列头部
       this.queue.unshift(...batch)
     }

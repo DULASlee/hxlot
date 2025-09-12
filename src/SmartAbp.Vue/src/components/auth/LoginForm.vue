@@ -523,9 +523,9 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   background-image:
-    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
-    linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.02) 50%, transparent 60%);
+    radial-gradient(circle at 25% 25%, rgb(255 255 255 / 5%) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgb(255 255 255 / 3%) 0%, transparent 50%),
+    linear-gradient(45deg, transparent 40%, rgb(255 255 255 / 2%) 50%, transparent 60%);
   background-size: 400px 400px, 300px 300px, 200px 200px;
   animation: backgroundMove 20s ease-in-out infinite;
 }
@@ -536,7 +536,7 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgb(0 0 0 / 10%);
 }
 
 @keyframes backgroundMove {
@@ -556,15 +556,15 @@ onMounted(() => {
 
 /* 登录卡片 */
 .login-card {
-  background: rgba(255, 255, 255, 0.98);
+  background: rgb(255 255 255 / 98%);
   backdrop-filter: blur(20px);
   border-radius: 16px;
   box-shadow:
-    0 25px 50px rgba(0, 0, 0, 0.25),
-    0 0 0 1px rgba(255, 255, 255, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 25px 50px rgb(0 0 0 / 25%),
+    0 0 0 1px rgb(255 255 255 / 10%),
+    inset 0 1px 0 rgb(255 255 255 / 20%);
   padding: 48px 40px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgb(255 255 255 / 20%);
 }
 
 /* 登录头部 */
@@ -583,7 +583,7 @@ onMounted(() => {
   font-size: 28px;
   font-weight: 700;
   color: #1e3a5f;
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
   letter-spacing: -0.5px;
 }
 
@@ -636,14 +636,14 @@ onMounted(() => {
   font-size: 16px;
   font-weight: 500;
   color: #1f2937;
-  background: #ffffff;
+  background: #fff;
   transition: all 0.3s ease;
 }
 
 .form-input:focus {
   outline: none;
   border-color: #1e3a5f;
-  box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+  box-shadow: 0 0 0 3px rgb(30 58 95 / 10%);
 }
 
 .form-input:disabled {
@@ -712,7 +712,7 @@ onMounted(() => {
   height: 20px;
   border: 2px solid #d1d5db;
   border-radius: 6px;
-  background: #ffffff;
+  background: #fff;
   position: relative;
   transition: all 0.3s ease;
 }
@@ -782,12 +782,12 @@ onMounted(() => {
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+  box-shadow: 0 4px 12px rgb(30 58 95 / 30%);
 }
 
 .login-submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(30, 58, 95, 0.4);
+  box-shadow: 0 8px 25px rgb(30 58 95 / 40%);
   background: linear-gradient(135deg, #2a4d7a 0%, #3d6195 100%);
 }
 
@@ -799,13 +799,13 @@ onMounted(() => {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
-  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2);
+  box-shadow: 0 4px 12px rgb(30 58 95 / 20%);
 }
 
 .loading-spinner {
   width: 20px;
   height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgb(255 255 255 / 30%);
   border-top: 2px solid white;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -842,7 +842,7 @@ onMounted(() => {
 }
 
 /* 响应式设计 */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .login-wrapper {
     padding: 16px;
   }
@@ -862,7 +862,7 @@ onMounted(() => {
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .login-card {
     padding: 24px 20px;
   }

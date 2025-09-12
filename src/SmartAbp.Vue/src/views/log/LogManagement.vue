@@ -432,13 +432,13 @@ onMounted(() => {
   background: white;
   padding: 24px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
 
 .header-content .page-title {
   display: flex;
   align-items: center;
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
   font-size: 28px;
   font-weight: 600;
   color: #1a1a1a;
@@ -509,7 +509,7 @@ onMounted(() => {
   padding: 24px;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
   display: flex;
   align-items: center;
   gap: 16px;
@@ -517,7 +517,7 @@ onMounted(() => {
 
 .feature-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
 }
 
 .card-icon {
@@ -530,14 +530,14 @@ onMounted(() => {
 }
 
 .card-content h3 {
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
   font-size: 18px;
   font-weight: 600;
   color: #1a1a1a;
 }
 
 .card-content p {
-  margin: 0 0 12px 0;
+  margin: 0 0 12px;
   color: #666;
   font-size: 14px;
 }
@@ -588,11 +588,11 @@ onMounted(() => {
   background: white;
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
 
 .section-title {
-  margin: 0 0 20px 0;
+  margin: 0 0 20px;
   font-size: 20px;
   font-weight: 600;
   color: #1a1a1a;
@@ -647,11 +647,8 @@ onMounted(() => {
 
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -735,7 +732,7 @@ onMounted(() => {
 .form-control:focus {
   outline: none;
   border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  box-shadow: 0 0 0 2px rgb(0 123 255 / 25%);
 }
 
 .form-checkbox {
@@ -754,7 +751,7 @@ onMounted(() => {
   margin-top: 20px;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .page-header {
     flex-direction: column;
     gap: 16px;

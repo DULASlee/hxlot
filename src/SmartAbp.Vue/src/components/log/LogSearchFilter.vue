@@ -700,12 +700,12 @@ onMounted(() => {
 }
 
 .filter-info h4 {
-  margin: 0 0 5px 0;
+  margin: 0 0 5px;
   color: #303133;
 }
 
 .filter-description {
-  margin: 0 0 5px 0;
+  margin: 0 0 5px;
   color: #606266;
   font-size: 13px;
 }
@@ -715,7 +715,7 @@ onMounted(() => {
   gap: 8px;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .search-options {
     grid-template-columns: 1fr;
   }

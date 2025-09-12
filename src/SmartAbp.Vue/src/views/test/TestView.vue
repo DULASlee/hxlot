@@ -589,7 +589,7 @@ onUnmounted(() => {
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .test-grid {
     grid-template-columns: 1fr;
   }

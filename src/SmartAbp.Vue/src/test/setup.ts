@@ -1,10 +1,10 @@
-import { config } from '@vue/test-utils'
-import { createPinia, setActivePinia } from 'pinia'
-import { beforeEach, vi, afterEach } from 'vitest'
-import { createApp } from 'vue'
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import router from '@/router'
+import { config } from "@vue/test-utils"
+import { createPinia, setActivePinia } from "pinia"
+import { beforeEach, vi, afterEach } from "vitest"
+import { createApp } from "vue"
+import ElementPlus from "element-plus"
+import "element-plus/dist/index.css"
+import router from "@/router"
 
 // 创建测试应用
 const app = createApp({})
@@ -33,7 +33,7 @@ app.use(createPinia())
 app.use(router)
 
 // 模拟 matchMedia（用于主题测试）
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: vi.fn().mockImplementation((query: string) => ({
     matches: false,
@@ -56,7 +56,7 @@ const localStorageMock = {
   length: 0,
   key: vi.fn((_index: number) => null),
 }
-vi.stubGlobal('localStorage', localStorageMock)
+vi.stubGlobal("localStorage", localStorageMock)
 
 // 模拟 sessionStorage
 const sessionStorageMock = {
@@ -67,10 +67,10 @@ const sessionStorageMock = {
   length: 0,
   key: vi.fn((_index: number) => null),
 }
-vi.stubGlobal('sessionStorage', sessionStorageMock)
+vi.stubGlobal("sessionStorage", sessionStorageMock)
 
 // 模拟URL和浏览器导航API
-vi.stubGlobal('URL', {
+vi.stubGlobal("URL", {
   createObjectURL: vi.fn(),
   revokeObjectURL: vi.fn(),
 })

@@ -1,8 +1,8 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { useAuthStore } from '@/stores'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
+import { useAuthStore } from "@/stores"
 
 // API基础配置
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://localhost:44397'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://localhost:44397"
 
 /**
  * HTTP请求工具类
@@ -15,8 +15,8 @@ export class ApiService {
       baseURL,
       timeout: 10000,
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     })
 
     this.setupInterceptors()
@@ -40,7 +40,7 @@ export class ApiService {
       },
       (error) => {
         return Promise.reject(error)
-      }
+      },
     )
 
     // 响应拦截器
@@ -72,12 +72,12 @@ export class ApiService {
             // 刷新失败，清除认证信息
             authStore.clearAuth()
             // 可以在这里添加跳转到登录页的逻辑
-            throw new Error('认证失败，请重新登录')
+            throw new Error("认证失败，请重新登录")
           }
         }
 
         return Promise.reject(error)
-      }
+      },
     )
   }
 
@@ -94,8 +94,8 @@ export class ApiService {
       }
 
       const response = await axios.post(`${API_BASE_URL}/connect/token`, {
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken
+        grant_type: "refresh_token",
+        refresh_token: refreshToken,
       })
 
       const { access_token, refresh_token: newRefreshToken } = response.data
@@ -103,7 +103,7 @@ export class ApiService {
 
       return true
     } catch (error) {
-      console.error('刷新Token失败:', error)
+      console.error("刷新Token失败:", error)
       return false
     }
   }
@@ -145,7 +145,7 @@ export class ApiService {
    */
   async upload<T = any>(url: string, file: File, additionalData?: Record<string, any>): Promise<T> {
     const formData = new FormData()
-    formData.append('file', file)
+    formData.append("file", file)
 
     if (additionalData) {
       Object.entries(additionalData).forEach(([key, value]) => {
@@ -155,8 +155,8 @@ export class ApiService {
 
     const response = await this.axiosInstance.post<T>(url, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        "Content-Type": "multipart/form-data",
+      },
     })
 
     return response.data
@@ -180,5 +180,5 @@ export const api = {
   put: apiService.put.bind(apiService),
   delete: apiService.delete.bind(apiService),
   upload: apiService.upload.bind(apiService),
-  getInstance: apiService.getInstance.bind(apiService)
+  getInstance: apiService.getInstance.bind(apiService),
 }

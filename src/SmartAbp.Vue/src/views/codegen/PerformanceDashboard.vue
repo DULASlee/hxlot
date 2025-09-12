@@ -1120,7 +1120,7 @@ onMounted(() => {
 
 .metric-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
 }
 
 .metric-icon {
@@ -1653,13 +1653,13 @@ onMounted(() => {
   text-align: right;
 }
 
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
   .charts-section {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .page-header {
     flex-direction: column;
     align-items: flex-start;

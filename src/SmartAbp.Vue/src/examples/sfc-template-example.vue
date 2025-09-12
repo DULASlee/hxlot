@@ -22,6 +22,7 @@ const inc = () => { count.value++ }
   border: 1px solid var(--theme-border-base);
   border-radius: var(--radius-md);
 }
+
 .btn {
   background: var(--theme-brand-primary);
   color: var(--theme-text-inverse);

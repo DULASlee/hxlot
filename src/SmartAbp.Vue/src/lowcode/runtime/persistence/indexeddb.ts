@@ -12,12 +12,15 @@ export interface PersistRecord<TMeta = unknown> {
 export class IndexedDbStore<TMeta = unknown> {
   private constructor(
     private db: IDBDatabase,
-    private readonly storeName: string
+    private readonly storeName: string,
   ) {}
 
-  static async open<TMeta = unknown>(dbName: string, storeName: string): Promise<IndexedDbStore<TMeta>> {
-    if (typeof indexedDB === 'undefined') {
-      throw new Error('IndexedDB is not available in this environment')
+  static async open<TMeta = unknown>(
+    dbName: string,
+    storeName: string,
+  ): Promise<IndexedDbStore<TMeta>> {
+    if (typeof indexedDB === "undefined") {
+      throw new Error("IndexedDB is not available in this environment")
     }
 
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
@@ -26,38 +29,38 @@ export class IndexedDbStore<TMeta = unknown> {
       request.onupgradeneeded = () => {
         const db = request.result
         if (!db.objectStoreNames.contains(storeName)) {
-          db.createObjectStore(storeName, { keyPath: 'key' })
+          db.createObjectStore(storeName, { keyPath: "key" })
         }
       }
 
       request.onsuccess = () => resolve(request.result)
-      request.onerror = () => reject(request.error || new Error('Failed to open IndexedDB'))
+      request.onerror = () => reject(request.error || new Error("Failed to open IndexedDB"))
     })
 
     return new IndexedDbStore<TMeta>(db, storeName)
   }
 
   async put(key: string, value: Uint8Array, meta?: TMeta): Promise<void> {
-    await this.withStore('readwrite', (store) => store.put({ key, value, meta }))
+    await this.withStore("readwrite", (store) => store.put({ key, value, meta }))
   }
 
   async delete(key: string): Promise<void> {
-    await this.withStore('readwrite', (store) => store.delete(key))
+    await this.withStore("readwrite", (store) => store.delete(key))
   }
 
   async clear(): Promise<void> {
-    await this.withStore('readwrite', (store) => store.clear())
+    await this.withStore("readwrite", (store) => store.clear())
   }
 
   async get(key: string): Promise<PersistRecord<TMeta> | undefined> {
-    const result = await this.withStore('readonly', (store) => store.get(key))
+    const result = await this.withStore("readonly", (store) => store.get(key))
     return (result as PersistRecord<TMeta>) || undefined
   }
 
   async *iter(): AsyncGenerator<PersistRecord<TMeta>, void, void> {
     const db = this.db
     const storeName = this.storeName
-    const tx = db.transaction(storeName, 'readonly')
+    const tx = db.transaction(storeName, "readonly")
     const store = tx.objectStore(storeName)
 
     const cursorRequest = store.openCursor()
@@ -81,19 +84,20 @@ export class IndexedDbStore<TMeta = unknown> {
     })
   }
 
-  private withStore<T>(mode: IDBTransactionMode, fn: (store: IDBObjectStore) => IDBRequest): Promise<T> {
+  private withStore<T>(
+    mode: IDBTransactionMode,
+    fn: (store: IDBObjectStore) => IDBRequest,
+  ): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       const tx = this.db.transaction(this.storeName, mode)
       const store = tx.objectStore(this.storeName)
       const request = fn(store)
 
       request.onsuccess = () => resolve(request.result as T)
-      request.onerror = () => reject(request.error || new Error('IndexedDB request failed'))
+      request.onerror = () => reject(request.error || new Error("IndexedDB request failed"))
 
-      tx.onerror = () => reject(tx.error || new Error('IndexedDB transaction error'))
-      tx.onabort = () => reject(tx.error || new Error('IndexedDB transaction aborted'))
+      tx.onerror = () => reject(tx.error || new Error("IndexedDB transaction error"))
+      tx.onabort = () => reject(tx.error || new Error("IndexedDB transaction aborted"))
     })
   }
 }
-
-

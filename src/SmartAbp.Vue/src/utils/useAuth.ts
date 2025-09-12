@@ -1,6 +1,6 @@
-import { computed } from 'vue'
-import { useAuthStore } from '@/stores'
-import { authService, type LoginCredentials } from './auth'
+import { computed } from "vue"
+import { useAuthStore } from "@/stores"
+import { authService, type LoginCredentials } from "./auth"
 
 export function useAuth() {
   const authStore = useAuthStore()
@@ -66,7 +66,7 @@ export function useAuth() {
     hasRole,
     getAuthHeader,
     refreshToken,
-    validateToken
+    validateToken,
   }
 }
 

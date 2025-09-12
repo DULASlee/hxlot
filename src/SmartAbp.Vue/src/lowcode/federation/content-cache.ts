@@ -6,7 +6,7 @@
  * @author SmartAbp Team
  * @version 1.0.0
  */
-import { IndexedDbStore } from '../runtime/persistence/indexeddb'
+import { IndexedDbStore } from "../runtime/persistence/indexeddb"
 
 /**
  * 内容寻址缓存类
@@ -24,18 +24,16 @@ export class ContentAddressableCache {
    * 计算内容哈希（SHA256）
    */
   async keyOf(input: string | Uint8Array): Promise<string> {
-    const data = typeof input === 'string'
-      ? new TextEncoder().encode(input)
-      : input
+    const data = typeof input === "string" ? new TextEncoder().encode(input) : input
 
     // 使用Web Crypto API计算SHA256
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data)
     const hashArray = new Uint8Array(hashBuffer)
 
     // 转换为十六进制字符串
     return Array.from(hashArray)
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('')
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("")
   }
 
   /**
@@ -54,7 +52,7 @@ export class ContentAddressableCache {
       this.metaMap.set(key, {
         ...metadata,
         timestamp: Date.now(),
-        accessCount: 0
+        accessCount: 0,
       })
     }
     if (this.store) {
@@ -110,15 +108,18 @@ export class ContentAddressableCache {
       totalEntries: this.map.size,
       totalSizeBytes: totalSize,
       totalAccessCount: accessCount,
-      averageEntrySize: this.map.size > 0 ? totalSize / this.map.size : 0
+      averageEntrySize: this.map.size > 0 ? totalSize / this.map.size : 0,
     }
   }
 
   /**
    * 启用IndexedDB持久化
    */
-  async enablePersistence(dbName: string = 'smartabp-content-cache', storeName: string = 'entries'): Promise<void> {
-    if (typeof indexedDB === 'undefined') return
+  async enablePersistence(
+    dbName: string = "smartabp-content-cache",
+    storeName: string = "entries",
+  ): Promise<void> {
+    if (typeof indexedDB === "undefined") return
     this.store = await IndexedDbStore.open<CacheMetadata>(dbName, storeName)
     // 同步现有内存数据到磁盘
     for (const [key, value] of this.map) {
@@ -197,8 +198,9 @@ export class ContentAddressableCache {
     }
 
     // 按访问时间排序，删除最旧的
-    const entries = Array.from(this.metaMap.entries())
-      .sort((a, b) => (a[1].lastAccessTime || 0) - (b[1].lastAccessTime || 0))
+    const entries = Array.from(this.metaMap.entries()).sort(
+      (a, b) => (a[1].lastAccessTime || 0) - (b[1].lastAccessTime || 0),
+    )
 
     let removedCount = 0
     let currentSize = stats.totalSizeBytes
@@ -229,9 +231,17 @@ export class ContentAddressableCache {
   }
 
   /** 配置持久化配额与水位 */
-  configureQuota(options: { quotaBytes?: number; highWatermark?: number; lowWatermark?: number }): void {
+  configureQuota(options: {
+    quotaBytes?: number
+    highWatermark?: number
+    lowWatermark?: number
+  }): void {
     if (options.quotaBytes && options.quotaBytes > 0) this.quotaBytes = options.quotaBytes
-    if (options.highWatermark && options.lowWatermark && options.highWatermark > options.lowWatermark) {
+    if (
+      options.highWatermark &&
+      options.lowWatermark &&
+      options.highWatermark > options.lowWatermark
+    ) {
       this.highWatermark = Math.min(0.99, Math.max(0.5, options.highWatermark))
       this.lowWatermark = Math.min(this.highWatermark - 0.1, Math.max(0.3, options.lowWatermark))
     }
@@ -260,14 +270,14 @@ export class IncrementalCompilationCache {
   async generateCompilationKey(
     schema: any,
     pluginVersion: string,
-    options?: Record<string, any>
+    options?: Record<string, any>,
   ): Promise<string> {
     const schemaContent = JSON.stringify(schema, Object.keys(schema).sort())
     const schemaHash = await this._contentCache.keyOf(schemaContent)
 
     const optionsHash = options
       ? await this._contentCache.keyOf(JSON.stringify(options, Object.keys(options).sort()))
-      : 'no-options'
+      : "no-options"
 
     return `${schemaHash}:${pluginVersion}:${optionsHash}`
   }
@@ -278,7 +288,7 @@ export class IncrementalCompilationCache {
   async checkCompilation(
     schema: any,
     pluginVersion: string,
-    options?: Record<string, any>
+    options?: Record<string, any>,
   ): Promise<CompilationResult | null> {
     const key = await this.generateCompilationKey(schema, pluginVersion, options)
     const entry = this.compilationMap.get(key)
@@ -297,7 +307,7 @@ export class IncrementalCompilationCache {
       metadata: entry.metadata,
       fromCache: true,
       cacheKey: key,
-      compiledAt: entry.compiledAt
+      compiledAt: entry.compiledAt,
     }
   }
 
@@ -309,7 +319,7 @@ export class IncrementalCompilationCache {
     pluginVersion: string,
     compiledCode: string,
     metadata: any,
-    options?: Record<string, any>
+    options?: Record<string, any>,
   ): Promise<string> {
     const key = await this.generateCompilationKey(schema, pluginVersion, options)
     const codeBytes = new TextEncoder().encode(compiledCode)
@@ -317,19 +327,19 @@ export class IncrementalCompilationCache {
 
     // 存储编译产物
     this._contentCache.set(codeHash, codeBytes, {
-      type: 'compiled-code',
+      type: "compiled-code",
       size: codeBytes.byteLength,
       timestamp: Date.now(),
-      tags: ['compilation', pluginVersion]
+      tags: ["compilation", pluginVersion],
     })
 
     // 存储编译映射
     this.compilationMap.set(key, {
-      schemaHash: key.split(':')[0],
+      schemaHash: key.split(":")[0],
       pluginVersion,
       compiledCodeHash: codeHash,
       compiledAt: Date.now(),
-      metadata: metadata || {}
+      metadata: metadata || {},
     })
 
     return key
@@ -345,14 +355,15 @@ export class IncrementalCompilationCache {
       compilationEntries: this.compilationMap.size,
       contentCacheStats: contentStats,
       hitRatio: this.calculateHitRatio(),
-      memoryUsageBytes: this.calculateMemoryUsage()
+      memoryUsageBytes: this.calculateMemoryUsage(),
     }
   }
 
   /**
    * 清理过期缓存
    */
-  cleanup(maxAgeMs: number = 24 * 60 * 60 * 1000): number { // 默认24小时
+  cleanup(maxAgeMs: number = 24 * 60 * 60 * 1000): number {
+    // 默认24小时
     const now = Date.now()
     let removedCount = 0
 
@@ -440,21 +451,21 @@ export async function cacheCompiledCode(
   pluginVersion: string,
   code: string,
   metadata?: any,
-  options?: Record<string, any>
+  options?: Record<string, any>,
 ): Promise<string> {
   return await globalCompilationCache.cacheCompilation(
     schema,
     pluginVersion,
     code,
     metadata,
-    options
+    options,
   )
 }
 
 export async function getCachedCompilation(
   schema: any,
   pluginVersion: string,
-  options?: Record<string, any>
+  options?: Record<string, any>,
 ): Promise<CompilationResult | null> {
   return await globalCompilationCache.checkCompilation(schema, pluginVersion, options)
 }

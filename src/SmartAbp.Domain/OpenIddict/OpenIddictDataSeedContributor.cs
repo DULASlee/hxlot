@@ -101,8 +101,12 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                     "Impersonation"
                 },
                 scopes: commonScopes,
-                redirectUris: new List<string> { consoleAndAngularClientRootUrl },
-                postLogoutRedirectUris: new List<string> { consoleAndAngularClientRootUrl },
+                redirectUris: string.IsNullOrEmpty(consoleAndAngularClientRootUrl) 
+                    ? new List<string>() 
+                    : new List<string> { consoleAndAngularClientRootUrl },
+                postLogoutRedirectUris: string.IsNullOrEmpty(consoleAndAngularClientRootUrl) 
+                    ? new List<string>() 
+                    : new List<string> { consoleAndAngularClientRootUrl },
                 clientUri: consoleAndAngularClientRootUrl,
                 logoUri: "/images/clients/angular.svg"
             );
@@ -130,7 +134,9 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 grantTypes: new List<string> { OpenIddictConstants.GrantTypes.AuthorizationCode, },
                 scopes: commonScopes,
                 redirectUris: new List<string> { $"{swaggerRootUrl}/swagger/oauth2-redirect.html" },
-                clientUri: swaggerRootUrl.EnsureEndsWith('/') + "swagger",
+                clientUri: string.IsNullOrEmpty(swaggerRootUrl) 
+                    ? null 
+                    : swaggerRootUrl.EnsureEndsWith('/') + "swagger",
                 logoUri: "/images/clients/swagger.svg"
             );
         }

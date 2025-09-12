@@ -52,6 +52,7 @@
     <ProjectReference Include="..\SmartAbp.Application\SmartAbp.Application.csproj" />
     <ProjectReference Include="..\SmartAbp.HttpApi\SmartAbp.HttpApi.csproj" />
     <ProjectReference Include="..\SmartAbp.EntityFrameworkCore\SmartAbp.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\SmartAbp.CodeGenerator\SmartAbp.CodeGenerator.csproj" />
   </ItemGroup>
 
   <ItemGroup>

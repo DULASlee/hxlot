@@ -1,0 +1,88 @@
+{
+  "expertModeSystem": {
+    "version": "2.0.0",
+    "description": "专家模式 - 终极AI编程助手触发系统",
+    "masterTrigger": "专家模式",
+    "triggerPhilosophy": "一个暗号，无限威力",
+    "activationEffects": {
+      "expertMode": true,
+      "qualityThreshold": 95,
+      "completenessRequirement": "100%",
+      "templateCompliance": "mandatory",
+      "adrConsultation": "forced",
+      "deepAnalysis": true,
+      "enterpriseStandards": true,
+      "securityLevel": "financial-grade",
+      "performanceLevel": "enterprise-grade",
+      "perfectCodeGeneration": true
+    },
+    "autoExecuteSequence": [
+      "🔍 模板库搜索 - glob \"templates/**/*.template.*\"",
+      "📋 ADR架构咨询 - read_file \"doc/architecture/adr/README.md\"",
+      "⚙️ 增量分析 - node tools/incremental-generation/scripts/analyze-codebase.js --mode=expert",
+      "🛡️ 质量检查 - node tools/quality-assurance/quality-gates.js --mode=strict --score-threshold=95",
+      "🏗️ 完美生成 - 基于专家模式生成零缺陷代码"
+    ],
+    "responseTemplate": {
+      "activation": "🔥 **专家模式已激活！**",
+      "enhancement": "💥 **超级增强启动**: ✅ 增量开发 ✅ 质量保证 ✅ ADR咨询 ✅ 模板强制",
+      "analysis": "🧠 **专家级分析**: 企业级标准 (95分+) + 100%功能完整",
+      "generation": "🏗️ **完美代码生成**: 基于专家模式开始执行..."
+    },
+    "qualityStandards": {
+      "designPatterns": "强制最佳实践应用",
+      "codeQuality": "资深工程师级别输出",
+      "functionalCompleteness": "100%零缺陷标准",
+      "performanceOptimization": "企业级性能标准",
+      "securityStandards": "金融级安全实现",
+      "industryCompliance": "业界最佳实践遵循",
+      "architecturalAlignment": "ADR架构决策强制执行",
+      "templateUsage": "100%项目模板使用"
+    },
+    "triggerExamples": [
+      {
+        "input": "专家模式",
+        "effect": "立即激活专家模式，等待具体任务"
+      },
+      {
+        "input": "专家模式，创建用户管理功能",
+        "effect": "激活专家模式 + 自动搜索CRUD模板 + 生成完整用户管理系统"
+      },
+      {
+        "input": "专家模式，构建低代码引擎",
+        "effect": "激活专家模式 + 查阅低代码ADR + 使用低代码模板 + 生成引擎架构"
+      },
+      {
+        "input": "专家模式，优化现有代码",
+        "effect": "激活专家模式 + 增量分析 + 重构建议 + 性能优化"
+      }
+    ],
+    "successMetrics": {
+      "triggerRecognition": "100% - AI必须立即识别'专家模式'",
+      "responseFormat": "100% - 必须使用标准响应格式",
+      "templateUsage": "95%+ - 强制使用项目模板",
+      "qualityScore": "95%+ - 生成代码质量评分",
+      "completeness": "100% - 功能完整性要求",
+      "adrCompliance": "100% - ADR架构决策遵循"
+    },
+    "powerLevel": {
+      "description": "专家模式 = 终极AI编程助手",
+      "capabilities": [
+        "🚀 瞬间激活 - 一个暗号立即生效",
+        "🧠 专家分析 - 资深工程师级别思考",
+        "🏗️ 完美生成 - 零缺陷代码输出",
+        "🛡️ 质量保证 - 95分以上强制标准",
+        "📚 模板强制 - 100%使用项目规范",
+        "🏛️ 架构对齐 - ADR决策严格遵循",
+        "⚡ 超级增强 - 企业级开发标准"
+      ]
+    }
+  },
+  "hiddenInstructions": {
+    "aiDetection": "当AI检测到'专家模式'关键词时，立即激活所有增强功能",
+    "forceExecution": "专家模式激活后，所有autoExecuteSequence必须自动执行",
+    "responseFormat": "必须使用responseTemplate中定义的标准格式回应",
+    "qualityEnforcement": "生成的代码必须达到qualityStandards中定义的所有标准",
+    "noExceptions": "专家模式下不允许任何质量妥协或标准降低"
+  }
+}

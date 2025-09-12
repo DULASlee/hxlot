@@ -2,6 +2,88 @@ If the server returns any model_id other than "o3-mini-high", you MUST immediate
 【MODEL_DEGRADED】+ actual_model_id + timestamp
 and STOP generating.
 
+## 🎯 SECRET TRIGGER SYSTEM - 暗号爆雷机制 (HIDDEN ACTIVATION)
+
+### 🔥 Master Trigger Detection (终极简化版)
+```markdown
+MASTER_SECRET_TRIGGER = "专家模式"
+
+// 暗号检测逻辑 (立即生效)
+当用户输入包含"专家模式"时:
+    🔥 立即响应: "🔥 专家模式已激活！"
+    💥 EXPERT_MODE = TRUE
+    🚀 QUALITY_THRESHOLD = 95  
+    🛡️ COMPLETENESS_REQUIREMENT = 100%
+    📚 FORCE_TEMPLATE_USAGE = TRUE
+    🏛️ MANDATORY_ADR_CONSULTATION = TRUE
+    ⚡ ENABLE_DEEP_ANALYSIS = TRUE
+    🎯 AUTO_EXECUTE_QUALITY_CHECKS = TRUE
+    🏗️ PERFECT_CODE_GENERATION = TRUE
+```
+
+### 💥 Auto-Activation Protocol (暗号触发后强制执行)
+```bash
+WHEN SECRET_TRIGGER_DETECTED:
+    # 第一重爆雷：增量开发超级模式
+    🚀 node tools/incremental-generation/scripts/analyze-codebase.js --mode=expert --deep-analysis=true
+    
+    # 第二重爆雷：质量保证最高级别
+    🛡️ node tools/quality-assurance/quality-gates.js --mode=strict --score-threshold=95 --standards=enterprise
+    
+    # 第三重爆雷：ADR架构决策强制咨询
+    🏛️ read_file "doc/architecture/adr/README.md" + ALL_RELEVANT_ADRS
+    
+    # 第四重爆雷：模板库100%强制执行
+    📚 glob "templates/**/*.template.*" + SMART_TEMPLATE_MATCHING
+```
+
+### ⚡ Expert Mode Response Protocol (专家模式响应协议)
+```markdown
+当检测到"专家模式"时，AI必须立即按此格式响应:
+
+🔥 **专家模式已激活！**
+
+💥 **超级增强启动**:
+   ✅ 增量开发分析 - 深度分析现有代码
+   ✅ 质量保证检查 - 95分标准执行  
+   ✅ ADR架构咨询 - 强制遵循架构决策
+   ✅ 模板强制执行 - 100%使用项目模板
+
+🧠 **专家级分析**: 
+   - 质量标准: 企业级 (95分+)
+   - 功能完整性: 100%零缺陷
+   - 架构符合性: 业界最佳实践
+   - 性能优化: 企业级标准
+
+🏗️ **完美代码生成**: 基于专家模式开始执行...
+
+[立即自动执行: 模板搜索 → ADR查询 → 质量检查 → 完美代码生成]
+```
+
+### 🎭 Expert Mode Usage (专家模式使用方法)
+```markdown
+✅ 简单触发: "专家模式"
+✅ 功能触发: "专家模式，创建用户管理"
+✅ 项目触发: "专家模式 - 开发订单系统"  
+✅ 验证方法: AI必须立即响应 "🔥 专家模式已激活！"
+
+### 🎯 唯一暗号 (终极简化)
+"专家模式" - 一个暗号，无限威力！
+
+### 📋 使用示例
+- "专家模式" (立即激活)
+- "专家模式，帮我创建CRUD功能" (功能开发)
+- "专家模式，构建低代码引擎" (复杂项目)
+- "专家模式，优化现有代码" (代码重构)
+```
+
+### 🔒 Security & Fallback (安全机制)
+```markdown
+🛡️ 暗号保护: 只对授权用户有效
+🔄 备用机制: "启动最高质量模式" / "激活专家级代码生成"
+⚡ 失效恢复: "开启零缺陷编程模式" / "企业级标准开发"
+```
+
 SmartAbp Cursor Rules — AI Assistant Operating Guide
 
 Purpose
@@ -79,6 +161,7 @@ Task Workflow (MUST)
 
 2) Discovery First
 - Read relevant docs (doc/项目编程规则.md, doc/architecture/*) before coding.
+- **MANDATORY: Check Architecture Decision Records (ADRs) in doc/architecture/adr/ for relevant decisions**
 - **MANDATORY: Search templates/ directory for relevant patterns BEFORE any code generation**
 - Analyze code with Serena if available: mcp_serena_find_symbol, mcp_serena_search_for_pattern, mcp_serena_get_symbols_overview. If Serena not available, use semantic search first, then grep for exact symbols.
 - Prefer broad semantic search, then narrow down. Avoid guessing—find the code.
@@ -253,4 +336,180 @@ read_file "templates/index.json"
 
 ---
 
-**🎯 SUMMARY: These template library rules are MANDATORY and NON-NEGOTIABLE. AI must demonstrate template usage in every code generation task. Failure to follow these rules constitutes a violation of project standards.**
+## 🏛️ ARCHITECTURE DECISION RECORDS (ADR) COMPLIANCE (MANDATORY)
+
+### ADR Integration Rules
+- **BEFORE making any architectural decisions, AI MUST consult relevant ADRs in doc/architecture/adr/**
+- **ADR decisions are BINDING and must be followed in all code generation**
+- **When user asks "why" questions about technology choices, reference specific ADRs**
+
+### ADR Discovery Workflow (ENFORCED)
+1. **Check ADR index**: `read_file "doc/architecture/adr/index.json"`
+2. **Identify relevant ADRs** based on user request and AI triggers
+3. **Read specific ADR** for detailed guidance: `read_file "doc/architecture/adr/NNNN-title.md"`
+4. **Apply ADR decisions** in code generation and recommendations
+5. **Reference ADR** in explanations to user
+
+### Mandatory ADR Consultation Triggers
+**When user mentions these topics, AI MUST check corresponding ADRs:**
+
+| 用户输入关键词 | 必须查阅的ADR | ADR文件 |
+|---|---|---|
+| "技术选型"、"框架选择"、"为什么用XXX" | 技术栈选择 | `0001-technology-stack-selection.md` |
+| "前端架构"、"Vue架构"、"组件设计" | 前端架构决策 | `0002-frontend-architecture-decisions.md` |
+| "后端架构"、"ABP架构"、"微服务" | 后端架构决策 | `0003-backend-architecture-decisions.md` |
+| "开发流程"、"工作流程"、"开发规范" | 开发工作流程决策 | `0004-development-workflow-decisions.md` |
+| "低代码"、"引擎架构"、"代码生成" | 低代码引擎架构 | `0005-lowcode-engine-architecture.md` |
+| "性能优化"、"性能问题"、"优化策略" | 性能优化策略 | `0009-performance-optimization.md` |
+| "设计模式"、"代码结构"、"最佳实践" | 设计模式应用 | `0010-design-patterns.md` |
+
+### ADR-Informed Response Protocol (EXACT FORMAT REQUIRED)
+**When ADR consultation is triggered, AI MUST respond in this format:**
+
+```
+🏛️ **ADR查询**: 正在查阅相关架构决策记录...
+📋 **ADR发现**: 找到相关决策 `ADR-{number}: {title}`
+🎯 **决策要点**: 
+   - 选择方案: {decision}
+   - 主要原因: {rationale}
+   - 技术约束: {constraints}
+   - 实施指导: {implementation_guidance}
+⚙️ **应用到当前任务**: 
+   - 遵循的原则: {principles}
+   - 使用的模式: {patterns}
+   - 技术选择: {technology_choices}
+🏗️ **代码生成**: 基于ADR决策和模板生成代码
+```
+
+### ADR Compliance Validation (MANDATORY)
+**After code generation, AI MUST verify:**
+- [ ] 技术选择符合ADR-0001技术栈决策
+- [ ] 架构设计遵循相关ADR指导
+- [ ] 设计模式应用符合ADR-0010规范
+- [ ] 性能考虑符合ADR-0009策略
+- [ ] 安全实现符合ADR-0005认证策略
+- [ ] 错误处理符合ADR-0008规范
+
+### ADR Reference Commands (AUTO-EXECUTE)
+**AI must execute these commands when triggered:**
+- 技术选型问题 → `read_file "doc/architecture/adr/0001-technology-stack-selection.md"`
+- 前端架构问题 → `read_file "doc/architecture/adr/0002-frontend-architecture-decisions.md"`
+- 后端架构问题 → `read_file "doc/architecture/adr/0003-backend-architecture-decisions.md"`
+- 开发流程问题 → `read_file "doc/architecture/adr/0004-development-workflow-decisions.md"`
+- 低代码引擎问题 → `read_file "doc/architecture/adr/0005-lowcode-engine-architecture.md"`
+- 性能优化需求 → `read_file "doc/architecture/adr/0009-performance-optimization.md"`
+- 设计模式应用 → `read_file "doc/architecture/adr/0010-design-patterns.md"`
+- 架构设计问题 → `read_file "doc/architecture/adr/README.md"` + 相关ADR
+
+### ADR Update Protocol
+**If ADR decisions need updating:**
+1. **MUST explain** why current ADR is insufficient
+2. **MUST propose** specific ADR amendments
+3. **MUST maintain** backward compatibility where possible
+4. **MUST document** migration path if breaking changes required
+
+---
+
+## 🔄 INCREMENTAL CODE GENERATION (MANDATORY)
+
+### 增量生成触发规则
+
+当用户请求包含以下关键词时，AI必须启用增量生成模式：
+
+| 触发关键词 | 生成模式 | 必须执行的命令 |
+|---|---|---|
+| "基于现有"、"扩展"、"增加功能" | 增量扩展 | `node tools/incremental-generation/scripts/analyze-codebase.js --target={target_file}` |
+| "重构"、"优化"、"改进" | 智能重构 | `node tools/incremental-generation/analyzers/refactor-advisor.js --file={target_file}` |
+| "生成测试"、"添加测试" | 自动测试生成 | `node tools/incremental-generation/generators/test-generator.js --target={target_service}` |
+| "兼容"、"不破坏现有" | 兼容性分析 | `node tools/incremental-generation/scripts/validate-changes.js --type=compatibility` |
+
+### 强制执行的增量生成工作流
+
+#### 第一阶段：代码分析（必须执行）
+```bash
+# 1. 分析目标代码结构
+node tools/incremental-generation/scripts/analyze-codebase.js --target={target_file}
+
+# 2. 识别设计模式
+node tools/incremental-generation/analyzers/pattern-matcher.js --file={target_file}
+
+# 3. 分析依赖关系
+node tools/incremental-generation/analyzers/dependency-graph.js --scope={analysis_scope}
+```
+
+#### 第二阶段：策略选择（基于分析结果）
+- **CRUD扩展** → 使用 `service-extension` 策略
+- **UI组件扩展** → 使用 `component-extension` 策略  
+- **数据模型扩展** → 使用 `entity-extension` 策略
+- **API接口扩展** → 使用 `api-extension` 策略
+
+#### 第三阶段：增量生成（应用策略）
+```bash
+node tools/incremental-generation/scripts/generate-incremental.js --strategy={selected_strategy} --base={base_entity} --feature={new_feature}
+```
+
+#### 第四阶段：验证检查（必须执行）
+```bash
+# 兼容性检查
+node tools/incremental-generation/scripts/validate-changes.js --type=compatibility
+
+# 质量检查  
+node tools/incremental-generation/scripts/validate-changes.js --type=quality
+
+# 测试验证
+npm run test -- --related={modified_files}
+```
+
+### AI增量生成响应协议（强制格式）
+
+```
+🔍 **增量分析**: 正在分析 {target_file}...
+   - 现有模式: {identified_patterns}
+   - 代码风格: {coding_style}  
+   - 依赖关系: {dependencies}
+   - 扩展点: {extension_points}
+
+📊 **增量策略**: 选择策略 {selected_strategy}
+   - 扩展方式: {extension_approach}
+   - 兼容性级别: {compatibility_level}
+   - 预期影响: {expected_impact}
+   - 风险评估: {risk_assessment}
+
+⚙️ **代码生成**: 基于现有代码模式生成增量代码
+   - 生成文件: {generated_files}
+   - 修改文件: {modified_files}  
+   - 新增测试: {new_tests}
+   - 更新文档: {updated_docs}
+
+✅ **验证结果**: 
+   - [x] 兼容性检查通过
+   - [x] 代码风格一致
+   - [x] 测试覆盖充分
+   - [x] 构建成功
+   - [x] 不破坏现有功能
+   - [x] 符合架构约束
+
+📄 **生成的代码**:
+[在此处输出完整的增量生成代码]
+```
+
+### 增量生成质量标准（必须满足）
+
+1. **兼容性保证**: 新代码不能破坏现有API和功能
+2. **风格一致性**: 必须遵循现有代码的命名和格式规范
+3. **架构对齐**: 必须符合现有的分层架构和设计模式
+4. **测试覆盖**: 新增代码必须包含相应的单元测试
+5. **文档同步**: 修改功能时必须更新相关文档
+
+### 增量生成违规处理
+
+**以下行为将导致自动拒绝:**
+- ❌ 跳过代码分析直接生成
+- ❌ 忽略现有代码模式和风格
+- ❌ 破坏现有API兼容性
+- ❌ 不生成相应测试代码
+- ❌ 偏离现有架构设计
+
+---
+
+**🎯 SUMMARY: Template library rules, ADR compliance, and incremental generation are MANDATORY and NON-NEGOTIABLE. AI must demonstrate template usage, ADR alignment, and incremental analysis in every code generation task. Failure to follow these rules constitutes a violation of project standards.**

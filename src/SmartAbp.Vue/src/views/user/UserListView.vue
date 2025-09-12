@@ -304,7 +304,7 @@ onMounted(() => {
   background: white;
   border-radius: 8px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
   height: 100%;
 }
 
@@ -503,7 +503,7 @@ onMounted(() => {
   font-size: 14px;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .search-bar {
     flex-direction: column;
     gap: 12px;

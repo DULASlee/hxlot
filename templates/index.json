@@ -1,143 +1,470 @@
 {
   "version": "1.0.0",
   "description": "SmartAbp项目代码模板库索引",
-  "lastUpdated": "2025-09-11T00:36:55.168Z",
+  "lastUpdated": "2025-09-12T07:45:28.187Z",
   "templates": [
     {
       "id": "backend-application-crudappservice",
-      "name": "CrudAppService.template",
+      "name": "ABP CRUD应用服务",
       "path": "templates/backend/application/CrudAppService.template.cs",
+      "metadata": "templates/backend/application/CrudAppService.template.meta.yml",
       "category": "backend/application",
       "type": "service",
-      "tags": [],
-      "scenarios": [],
-      "ai_triggers": [],
-      "dependencies": [],
-      "permissions_required": false
+      "tags": [
+        "abp",
+        "crud",
+        "service",
+        "repository",
+        "application"
+      ],
+      "scenarios": [
+        "用户管理模块",
+        "产品管理模块",
+        "订单管理模块",
+        "分类管理模块",
+        "系统配置管理"
+      ],
+      "ai_triggers": [
+        "创建应用服务",
+        "CRUD操作",
+        "业务服务",
+        "管理服务",
+        "数据操作服务",
+        "应用层服务"
+      ],
+      "dependencies": [
+        "SmartAbpAppService",
+        "IRepository",
+        "AutoMapper",
+        "Microsoft.AspNetCore.Authorization"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "EntityName",
+          "type": "string",
+          "description": "实体名称（PascalCase），如：Product、User",
+          "required": true,
+          "example": "Product"
+        },
+        {
+          "name": "entityName",
+          "type": "string",
+          "description": "实体名称（camelCase），如：product、user",
+          "required": true,
+          "example": "product"
+        },
+        {
+          "name": "ModuleName",
+          "type": "string",
+          "description": "模块名称（PascalCase），如：Catalog、Identity",
+          "required": true,
+          "example": "Catalog"
+        }
+      ]
     },
     {
       "id": "backend-contracts-createentitydto",
       "name": "CreateEntityDto.template",
       "path": "templates/backend/contracts/CreateEntityDto.template.cs",
+      "metadata": null,
       "category": "backend/contracts",
       "type": "dto",
       "tags": [],
       "scenarios": [],
       "ai_triggers": [],
       "dependencies": [],
-      "permissions_required": false
+      "permissions_required": false,
+      "parameters": []
     },
     {
       "id": "backend-contracts-crudappserviceinterface",
       "name": "CrudAppServiceInterface.template",
       "path": "templates/backend/contracts/CrudAppServiceInterface.template.cs",
+      "metadata": null,
       "category": "backend/contracts",
       "type": "service",
       "tags": [],
       "scenarios": [],
       "ai_triggers": [],
       "dependencies": [],
-      "permissions_required": false
+      "permissions_required": false,
+      "parameters": []
     },
     {
       "id": "backend-contracts-entitydto",
       "name": "EntityDto.template",
       "path": "templates/backend/contracts/EntityDto.template.cs",
+      "metadata": null,
       "category": "backend/contracts",
       "type": "dto",
       "tags": [],
       "scenarios": [],
       "ai_triggers": [],
       "dependencies": [],
-      "permissions_required": false
+      "permissions_required": false,
+      "parameters": []
     },
     {
       "id": "backend-contracts-getentitylistdto",
       "name": "GetEntityListDto.template",
       "path": "templates/backend/contracts/GetEntityListDto.template.cs",
+      "metadata": null,
       "category": "backend/contracts",
       "type": "dto",
       "tags": [],
       "scenarios": [],
       "ai_triggers": [],
       "dependencies": [],
-      "permissions_required": false
+      "permissions_required": false,
+      "parameters": []
     },
     {
       "id": "backend-contracts-updateentitydto",
       "name": "UpdateEntityDto.template",
       "path": "templates/backend/contracts/UpdateEntityDto.template.cs",
+      "metadata": null,
       "category": "backend/contracts",
       "type": "dto",
       "tags": [],
       "scenarios": [],
       "ai_triggers": [],
       "dependencies": [],
-      "permissions_required": false
+      "permissions_required": false,
+      "parameters": []
     },
     {
       "id": "frontend-components-crudmanagement",
       "name": "Vue CRUD管理组件",
       "path": "templates/frontend/components/CrudManagement.template.vue",
+      "metadata": "templates/frontend/components/CrudManagement.template.meta.yml",
       "category": "frontend/components",
       "type": "component",
       "tags": [
+        "vue",
         "crud",
-        "vue"
+        "management",
+        "table",
+        "form",
+        "element-plus"
       ],
-      "scenarios": [],
+      "scenarios": [
+        "数据管理页面",
+        "后台管理界面",
+        "列表页面",
+        "系统管理模块"
+      ],
       "ai_triggers": [
-        "CRUD操作",
-        "数据管理",
         "管理页面",
-        "管理组件"
+        "CRUD页面",
+        "数据表格",
+        "管理组件",
+        "列表管理",
+        "数据管理",
+        "后台页面"
       ],
       "dependencies": [
-        "Vue 3"
+        "Vue 3",
+        "Element Plus",
+        "Vue Router",
+        "Pinia",
+        "@element-plus/icons-vue"
       ],
-      "permissions_required": true
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "EntityName",
+          "type": "string",
+          "description": "实体名称（PascalCase），如：Product、User",
+          "required": true,
+          "example": "Product"
+        },
+        {
+          "name": "entityName",
+          "type": "string",
+          "description": "实体名称（camelCase），如：product、user",
+          "required": true,
+          "example": "product"
+        },
+        {
+          "name": "entityDisplayName",
+          "type": "string",
+          "description": "实体显示名称，如：产品、用户",
+          "required": true,
+          "example": "产品"
+        },
+        {
+          "name": "ModuleName",
+          "type": "string",
+          "description": "模块名称（PascalCase），如：Catalog、Identity",
+          "required": true,
+          "example": "Catalog"
+        },
+        {
+          "name": "kebab-case-name",
+          "type": "string",
+          "description": "短横线命名，如：product-management",
+          "required": true,
+          "example": "product-management"
+        }
+      ]
     },
     {
       "id": "frontend-stores-entitystore",
-      "name": "Pinia状态管理Store",
+      "name": "Pinia实体状态管理",
       "path": "templates/frontend/stores/EntityStore.template.ts",
+      "metadata": "templates/frontend/stores/EntityStore.template.meta.yml",
       "category": "frontend/stores",
       "type": "store",
       "tags": [
+        "pinia",
+        "store",
+        "state",
+        "cache",
         "crud"
       ],
-      "scenarios": [],
-      "ai_triggers": [
-        "CRUD操作",
-        "数据管理",
-        "管理页面",
-        "管理组件",
+      "scenarios": [
         "状态管理",
-        "Pinia Store"
+        "数据缓存",
+        "API调用管理",
+        "前端数据层"
       ],
-      "dependencies": [],
-      "permissions_required": false
+      "ai_triggers": [
+        "状态管理",
+        "Pinia Store",
+        "数据存储",
+        "缓存管理",
+        "状态store",
+        "数据状态"
+      ],
+      "dependencies": [
+        "Pinia",
+        "Element Plus",
+        "API服务层"
+      ],
+      "permissions_required": false,
+      "parameters": [
+        {
+          "name": "EntityName",
+          "type": "string",
+          "description": "实体名称（PascalCase），如：Product、User",
+          "required": true,
+          "example": "Product"
+        },
+        {
+          "name": "entityName",
+          "type": "string",
+          "description": "实体名称（camelCase），如：product、user",
+          "required": true,
+          "example": "product"
+        },
+        {
+          "name": "ModuleName",
+          "type": "string",
+          "description": "模块名称（PascalCase），如：Catalog、Identity",
+          "required": true,
+          "example": "Catalog"
+        }
+      ]
+    },
+    {
+      "id": "lowcode-generators-codegenerator",
+      "name": "低代码引擎代码生成器",
+      "path": "templates/lowcode/generators/CodeGenerator.template.ts",
+      "metadata": "templates/lowcode/generators/CodeGenerator.template.meta.yml",
+      "category": "lowcode/generators",
+      "type": "typescript",
+      "tags": [
+        "lowcode",
+        "generator",
+        "codegen"
+      ],
+      "scenarios": [
+        "代码生成器开发",
+        "模板引擎",
+        "自动化代码生成"
+      ],
+      "ai_triggers": [
+        "创建生成器",
+        "代码生成器",
+        "低代码生成器",
+        "模板生成器",
+        "自动生成代码"
+      ],
+      "dependencies": [
+        "SmartAbp低代码内核",
+        "模板引擎"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "GeneratorName",
+          "type": "string",
+          "description": "生成器名称（PascalCase）",
+          "required": true,
+          "example": "VueComponent"
+        },
+        {
+          "name": "generatorName",
+          "type": "string",
+          "description": "生成器名称（camelCase）",
+          "required": true,
+          "example": "vueComponent"
+        },
+        {
+          "name": "GeneratorDescription",
+          "type": "string",
+          "description": "生成器功能描述",
+          "required": true,
+          "example": "Vue组件代码生成器"
+        },
+        {
+          "name": "TargetType",
+          "type": "string",
+          "description": "目标代码类型",
+          "required": true,
+          "example": "Vue组件"
+        }
+      ]
+    },
+    {
+      "id": "lowcode-plugins-lowcodeplugin",
+      "name": "低代码引擎插件",
+      "path": "templates/lowcode/plugins/LowCodePlugin.template.ts",
+      "metadata": "templates/lowcode/plugins/LowCodePlugin.template.meta.yml",
+      "category": "lowcode/plugins",
+      "type": "typescript",
+      "tags": [
+        "lowcode",
+        "plugin",
+        "engine"
+      ],
+      "scenarios": [
+        "插件开发",
+        "功能扩展",
+        "低代码引擎"
+      ],
+      "ai_triggers": [
+        "创建插件",
+        "低代码插件",
+        "引擎插件",
+        "插件开发",
+        "功能插件"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "SmartAbp低代码内核"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "PluginName",
+          "type": "string",
+          "description": "插件名称（PascalCase）",
+          "required": true,
+          "example": "DataVisualization"
+        },
+        {
+          "name": "pluginName",
+          "type": "string",
+          "description": "插件名称（camelCase）",
+          "required": true,
+          "example": "dataVisualization"
+        },
+        {
+          "name": "PluginDescription",
+          "type": "string",
+          "description": "插件功能描述",
+          "required": true,
+          "example": "数据可视化插件"
+        },
+        {
+          "name": "PluginVersion",
+          "type": "string",
+          "description": "插件版本号",
+          "required": false,
+          "default": "1.0.0",
+          "example": "1.0.0"
+        }
+      ]
+    },
+    {
+      "id": "lowcode-runtime-runtimecomponent",
+      "name": "低代码引擎运行时组件",
+      "path": "templates/lowcode/runtime/RuntimeComponent.template.vue",
+      "metadata": "templates/lowcode/runtime/RuntimeComponent.template.meta.yml",
+      "category": "lowcode/runtime",
+      "type": "component",
+      "tags": [
+        "lowcode",
+        "runtime",
+        "component",
+        "vue"
+      ],
+      "scenarios": [
+        "运行时组件开发",
+        "可视化组件",
+        "低代码组件库"
+      ],
+      "ai_triggers": [
+        "创建运行时组件",
+        "低代码组件",
+        "运行时组件",
+        "可视化组件",
+        "引擎组件"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "SmartAbp低代码运行时"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "ComponentName",
+          "type": "string",
+          "description": "组件名称（PascalCase）",
+          "required": true,
+          "example": "DataTable"
+        },
+        {
+          "name": "componentName",
+          "type": "string",
+          "description": "组件名称（camelCase）",
+          "required": true,
+          "example": "dataTable"
+        },
+        {
+          "name": "ComponentDescription",
+          "type": "string",
+          "description": "组件功能描述",
+          "required": true,
+          "example": "数据表格组件"
+        },
+        {
+          "name": "ComponentCategory",
+          "type": "string",
+          "description": "组件分类",
+          "required": false,
+          "default": "basic",
+          "example": "data-display"
+        }
+      ]
     }
   ],
   "categories": {
     "backend": {
-      "application": "应用服务层",
-      "contracts": "契约层",
-      "domain": "领域层",
-      "httpapi": "HTTP API层",
-      "entityframework": "数据访问层"
+      "application": "标准的ABP CRUD应用服务实现模板，包含完整的增删改查操作",
+      "contracts": "contracts"
     },
     "frontend": {
-      "components": "Vue组件",
-      "views": "页面视图",
-      "stores": "状态管理",
-      "services": "API服务",
-      "composables": "组合式函数"
+      "components": "标准的Vue CRUD管理页面组件，包含列表展示、搜索、新增、编辑、删除功能",
+      "stores": "基于Pinia的实体状态管理Store，包含CRUD操作、缓存策略和错误处理"
     },
     "lowcode": {
-      "plugins": "插件开发",
-      "generators": "代码生成器",
-      "runtime": "运行时"
+      "generators": "用于创建特定类型代码生成器的标准模板",
+      "plugins": "用于创建低代码引擎功能插件的标准模板",
+      "runtime": "用于创建可在低代码引擎中运行的Vue组件模板"
     }
   },
   "ai_search_patterns": {
@@ -146,7 +473,8 @@
     "entity_store": "templates/**/stores/*store*.template.ts",
     "dto_objects": "templates/**/contracts/*dto*.template.cs",
     "vue_components": "templates/frontend/components/*.template.vue",
-    "abp_services": "templates/backend/application/*.template.cs"
+    "abp_services": "templates/backend/application/*.template.cs",
+    "interfaces": "templates/backend/contracts/*Interface*.template.cs"
   },
   "naming_conventions": {
     "backend": {
@@ -154,7 +482,8 @@
       "dto": "{EntityName}Dto",
       "createDto": "Create{EntityName}Dto",
       "updateDto": "Update{EntityName}Dto",
-      "interface": "I{EntityName}AppService"
+      "interface": "I{EntityName}AppService",
+      "getListDto": "Get{EntityName}ListDto"
     },
     "frontend": {
       "component": "{EntityName}Management.vue",
@@ -173,7 +502,8 @@
     }
   },
   "statistics": {
-    "total_templates": 8,
+    "total_templates": 11,
+    "categories_count": 3,
     "backend_templates": 6,
     "frontend_templates": 2
   }

@@ -1,0 +1,51 @@
+name: "低代码引擎插件"
+category: "lowcode/plugins"
+description: "用于创建低代码引擎功能插件的标准模板"
+tags: 
+  - "lowcode"
+  - "plugin"
+  - "engine"
+scenarios:
+  - "插件开发"
+  - "功能扩展"
+  - "低代码引擎"
+ai_triggers:
+  - "创建插件"
+  - "低代码插件"
+  - "引擎插件"
+  - "插件开发"
+  - "功能插件"
+dependencies:
+  - "Vue 3"
+  - "SmartAbp低代码内核"
+permissions_required: false
+parameters:
+  - name: "PluginName"
+    type: "string"
+    description: "插件名称（PascalCase）"
+    required: true
+    example: "DataVisualization"
+  - name: "pluginName"
+    type: "string"
+    description: "插件名称（camelCase）"
+    required: true
+    example: "dataVisualization"
+  - name: "PluginDescription"
+    type: "string"
+    description: "插件功能描述"
+    required: true
+    example: "数据可视化插件"
+  - name: "PluginVersion"
+    type: "string"
+    description: "插件版本号"
+    required: false
+    default: "1.0.0"
+    example: "1.0.0"
+usage_examples:
+  - "数据可视化插件"
+  - "表单设计器插件"
+  - "图表组件插件"
+validation_rules:
+  - "插件名称必须符合PascalCase命名规范"
+  - "必须实现ILowCodePlugin接口"
+  - "必须包含完整的生命周期方法"

@@ -4,7 +4,7 @@
  * 完全兼容现有认证系统
  */
 
-import type { MenuItem, MenuFilterOptions } from '@/types/menu'
+import type { MenuItem, MenuFilterOptions } from "@/types/menu"
 
 /**
  * 菜单权限过滤器类
@@ -12,13 +12,13 @@ import type { MenuItem, MenuFilterOptions } from '@/types/menu'
  */
 export class MenuPermissionFilter {
   // 超级管理员用户名列表
-  private readonly SUPER_ADMIN_USERS = ['admin', 'admin666']
+  private readonly SUPER_ADMIN_USERS = ["admin", "admin666"]
 
   constructor() {
     // 不再依赖AuthService，直接使用authStore
   }
 
-      /**
+  /**
    * 检查用户是否为超级管理员
    */
   private isSuperAdmin(currentUser: any): boolean {
@@ -26,7 +26,7 @@ export class MenuPermissionFilter {
       return false
     }
 
-    const username = currentUser?.userName || ''
+    const username = currentUser?.userName || ""
     return this.SUPER_ADMIN_USERS.includes(username)
   }
 
@@ -53,7 +53,7 @@ export class MenuPermissionFilter {
 
     // 检查用户是否拥有所需角色中的任意一个
     const userRoles = currentUser?.roles || []
-    return menuItem.requiredRoles.some(role => userRoles.includes(role))
+    return menuItem.requiredRoles.some((role) => userRoles.includes(role))
   }
 
   /**
@@ -61,54 +61,52 @@ export class MenuPermissionFilter {
    * 递归处理文件夹菜单的子菜单
    */
   filterMenus(menus: MenuItem[], currentUser: any, options: MenuFilterOptions = {}): MenuItem[] {
-    const {
-      filterHidden = true,
-      filterPermissions = true,
-      customFilter
-    } = options
+    const { filterHidden = true, filterPermissions = true, customFilter } = options
 
-    return menus
-      .filter(menu => {
-        // 应用自定义过滤器
-        if (customFilter && !customFilter(menu)) {
-          return false
-        }
-
-        // 过滤隐藏菜单
-        if (filterHidden && !menu.visible) {
-          return false
-        }
-
-        // 过滤权限
-        if (filterPermissions && !this.canAccessMenuItem(menu, currentUser)) {
-          return false
-        }
-
-        return true
-      })
-      .map(menu => {
-        // 递归过滤子菜单
-        if (menu.type === 'folder' && menu.children) {
-          const filteredChildren = this.filterMenus(menu.children, currentUser, options)
-          return {
-            ...menu,
-            children: filteredChildren
+    return (
+      menus
+        .filter((menu) => {
+          // 应用自定义过滤器
+          if (customFilter && !customFilter(menu)) {
+            return false
           }
-        }
-        return menu
-      })
-      .filter(menu => {
-        // 如果文件夹菜单没有可访问的子菜单，则过滤掉该文件夹
-        if (menu.type === 'folder' && menu.children) {
-          return menu.children.length > 0
-        }
-        return true
-      })
-      // 按order排序
-      .sort((a, b) => a.order - b.order)
+
+          // 过滤隐藏菜单
+          if (filterHidden && !menu.visible) {
+            return false
+          }
+
+          // 过滤权限
+          if (filterPermissions && !this.canAccessMenuItem(menu, currentUser)) {
+            return false
+          }
+
+          return true
+        })
+        .map((menu) => {
+          // 递归过滤子菜单
+          if (menu.type === "folder" && menu.children) {
+            const filteredChildren = this.filterMenus(menu.children, currentUser, options)
+            return {
+              ...menu,
+              children: filteredChildren,
+            }
+          }
+          return menu
+        })
+        .filter((menu) => {
+          // 如果文件夹菜单没有可访问的子菜单，则过滤掉该文件夹
+          if (menu.type === "folder" && menu.children) {
+            return menu.children.length > 0
+          }
+          return true
+        })
+        // 按order排序
+        .sort((a, b) => a.order - b.order)
+    )
   }
 
-    /**
+  /**
    * 获取用户可访问的页面路径列表
    * 用于路由守卫检查
    */
@@ -116,11 +114,11 @@ export class MenuPermissionFilter {
     const paths: string[] = []
 
     const extractPaths = (menuItems: MenuItem[]) => {
-      menuItems.forEach(menu => {
+      menuItems.forEach((menu) => {
         if (this.canAccessMenuItem(menu, currentUser)) {
-          if (menu.type === 'page') {
+          if (menu.type === "page") {
             paths.push(menu.path)
-          } else if (menu.type === 'folder' && menu.children) {
+          } else if (menu.type === "folder" && menu.children) {
             extractPaths(menu.children)
           }
         }
@@ -140,7 +138,7 @@ export class MenuPermissionFilter {
     return accessiblePaths.includes(path)
   }
 
-      /**
+  /**
    * 根据用户角色获取默认展开的菜单keys
    * 超级管理员默认展开所有可访问的文件夹菜单
    * 普通管理员展开大部分功能菜单
@@ -150,11 +148,11 @@ export class MenuPermissionFilter {
     const expandedKeys: string[] = []
     const isSuperAdmin = this.isSuperAdmin(currentUser)
     const userRoles = currentUser?.roles || []
-    const isAdmin = userRoles.includes('admin')
+    const isAdmin = userRoles.includes("admin")
 
     const collectExpandedKeys = (menuItems: MenuItem[]) => {
-      menuItems.forEach(menu => {
-        if (menu.type === 'folder' && this.canAccessMenuItem(menu, currentUser)) {
+      menuItems.forEach((menu) => {
+        if (menu.type === "folder" && this.canAccessMenuItem(menu, currentUser)) {
           // 超级管理员展开所有可访问的文件夹
           if (isSuperAdmin) {
             expandedKeys.push(menu.key)
@@ -186,10 +184,10 @@ export class MenuPermissionFilter {
   findMenuByPath(path: string, menus: MenuItem[]): MenuItem | null {
     const findInMenus = (menuItems: MenuItem[]): MenuItem | null => {
       for (const menu of menuItems) {
-        if (menu.type === 'page' && menu.path === path) {
+        if (menu.type === "page" && menu.path === path) {
           return menu
         }
-        if (menu.type === 'folder' && menu.children) {
+        if (menu.type === "folder" && menu.children) {
           const found = findInMenus(menu.children)
           if (found) return found
         }
@@ -206,8 +204,8 @@ export class MenuPermissionFilter {
    */
   findParentMenu(menus: MenuItem[], targetKey: string): MenuItem | null {
     for (const menu of menus) {
-      if (menu.type === 'folder' && menu.children) {
-        const found = menu.children.find(child => child.key === targetKey)
+      if (menu.type === "folder" && menu.children) {
+        const found = menu.children.find((child) => child.key === targetKey)
         if (found) {
           return menu
         }
@@ -218,7 +216,7 @@ export class MenuPermissionFilter {
     return null
   }
 
-    /**
+  /**
    * 检查当前用户权限状态
    * 返回权限摘要信息，便于调试
    */
@@ -235,11 +233,9 @@ export class MenuPermissionFilter {
       user: currentUser,
       roles: currentUser?.roles || [],
       isSuperAdmin,
-      isAdmin: currentUser ? (currentUser.roles || []).includes('admin') : false,
-      isUser: currentUser ? (currentUser.roles || []).includes('user') : false,
-      hasSuperPermission: isSuperAdmin ? '*' : 'limited' // * 表示所有权限
+      isAdmin: currentUser ? (currentUser.roles || []).includes("admin") : false,
+      isUser: currentUser ? (currentUser.roles || []).includes("user") : false,
+      hasSuperPermission: isSuperAdmin ? "*" : "limited", // * 表示所有权限
     }
   }
 }
-
-

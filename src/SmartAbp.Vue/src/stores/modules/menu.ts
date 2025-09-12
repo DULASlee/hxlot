@@ -3,16 +3,16 @@
  * 基于现有 Pinia 模式，与 AuthStore 完全集成
  */
 
-import { defineStore } from 'pinia'
-import { ref, computed, watch } from 'vue'
-import { menuConfig } from '@/config/menus'
-import { MenuPermissionFilter } from '@/utils/menuFilter'
-import type { MenuItem, MenuRenderState, TabItem } from '@/types/menu'
-import { useAuthStore } from './auth'
+import { defineStore } from "pinia"
+import { ref, computed, watch } from "vue"
+import { menuConfig } from "@/config/menus"
+import { MenuPermissionFilter } from "@/utils/menuFilter"
+import type { MenuItem, MenuRenderState, TabItem } from "@/types/menu"
+import { useAuthStore } from "./auth"
 
 const menuFilter = new MenuPermissionFilter()
 
-export const useMenuStore = defineStore('menu', () => {
+export const useMenuStore = defineStore("menu", () => {
   // ===========================================
   // 依赖注入现有的认证store
   // ===========================================
@@ -24,21 +24,21 @@ export const useMenuStore = defineStore('menu', () => {
 
   // 菜单渲染状态
   const menuState = ref<MenuRenderState>({
-    activeMenuKey: 'dashboard',
-    activeSubMenuKey: '',
+    activeMenuKey: "dashboard",
+    activeSubMenuKey: "",
     expandedMenuKeys: [],
     showSubmenu: false,
     openTabs: [
       {
-        key: 'dashboard',
-        title: '工作台',
-        icon: 'fas fa-chart-pie',
-        path: '/dashboard',
-        closable: false
-      }
+        key: "dashboard",
+        title: "工作台",
+        icon: "fas fa-chart-pie",
+        path: "/dashboard",
+        closable: false,
+      },
     ],
-    activeTab: 'dashboard',
-    singleTabMode: false
+    activeTab: "dashboard",
+    singleTabMode: false,
   })
 
   // 菜单加载状态
@@ -51,20 +51,20 @@ export const useMenuStore = defineStore('menu', () => {
   // 计算属性
   // ===========================================
 
-    // 过滤后的菜单列表（基于用户权限）
+  // 过滤后的菜单列表（基于用户权限）
   const filteredMenus = computed(() => {
-    console.log('🍖 计算filteredMenus:', {
+    console.log("🍖 计算filteredMenus:", {
       isAuthenticated: authStore.isAuthenticated,
       userInfo: authStore.userInfo,
-      token: !!authStore.token
+      token: !!authStore.token,
     })
 
     // 未认证时以访客身份展示带有 GUEST 权限的菜单（仍需路由鉴权）
     if (!authStore.isAuthenticated) {
-      const guestUser = { roles: ['guest'] }
+      const guestUser = { roles: ["guest"] }
       const filtered = menuFilter.filterMenus(menuConfig.menus, guestUser, {
         filterHidden: true,
-        filterPermissions: true
+        filterPermissions: true,
       })
       return filtered
     }
@@ -72,10 +72,14 @@ export const useMenuStore = defineStore('menu', () => {
     // 使用权限过滤器过滤菜单 - 传入用户信息
     const filtered = menuFilter.filterMenus(menuConfig.menus, authStore.userInfo, {
       filterHidden: true,
-      filterPermissions: true
+      filterPermissions: true,
     })
 
-    console.log('✅ 过滤后的菜单数量:', filtered.length, filtered.map((m: MenuItem) => m.title))
+    console.log(
+      "✅ 过滤后的菜单数量:",
+      filtered.length,
+      filtered.map((m: MenuItem) => m.title),
+    )
     return filtered
   })
 
@@ -84,9 +88,9 @@ export const useMenuStore = defineStore('menu', () => {
     const map = new Map<string, MenuItem>()
 
     const collectMenus = (menus: MenuItem[]) => {
-      menus.forEach(menu => {
+      menus.forEach((menu) => {
         map.set(menu.key, menu)
-        if (menu.type === 'folder' && menu.children) {
+        if (menu.type === "folder" && menu.children) {
           collectMenus(menu.children)
         }
       })
@@ -108,12 +112,12 @@ export const useMenuStore = defineStore('menu', () => {
 
   // 副菜单标题
   const submenuTitle = computed(() => {
-    return activeMenu.value?.title || ''
+    return activeMenu.value?.title || ""
   })
 
   // 当前激活菜单的子菜单列表
   const currentSubmenuItems = computed(() => {
-    if (!activeMenu.value || activeMenu.value.type !== 'folder') {
+    if (!activeMenu.value || activeMenu.value.type !== "folder") {
       return []
     }
     return activeMenu.value.children || []
@@ -121,9 +125,11 @@ export const useMenuStore = defineStore('menu', () => {
 
   // 是否应该显示副菜单
   const shouldShowSubmenu = computed(() => {
-    return menuState.value.showSubmenu &&
-           currentSubmenuItems.value.length > 0 &&
-           activeMenu.value?.type === 'folder'
+    return (
+      menuState.value.showSubmenu &&
+      currentSubmenuItems.value.length > 0 &&
+      activeMenu.value?.type === "folder"
+    )
   })
 
   // 权限摘要信息（便于调试）
@@ -153,14 +159,14 @@ export const useMenuStore = defineStore('menu', () => {
               unwatch()
               setupDefaultMenuState()
             }
-          }
+          },
         )
       } else {
         setupDefaultMenuState()
       }
     } catch (err) {
-      error.value = err instanceof Error ? err.message : '初始化菜单失败'
-      console.error('初始化菜单失败:', err)
+      error.value = err instanceof Error ? err.message : "初始化菜单失败"
+      console.error("初始化菜单失败:", err)
     } finally {
       loading.value = false
     }
@@ -171,13 +177,16 @@ export const useMenuStore = defineStore('menu', () => {
    */
   const setupDefaultMenuState = () => {
     // 设置默认展开的菜单 - 传入用户信息
-    const defaultExpanded = menuFilter.getDefaultExpandedMenuKeys(filteredMenus.value, authStore.userInfo)
+    const defaultExpanded = menuFilter.getDefaultExpandedMenuKeys(
+      filteredMenus.value,
+      authStore.userInfo,
+    )
     menuState.value.expandedMenuKeys = defaultExpanded
 
-    console.log('菜单初始化完成:', {
+    console.log("菜单初始化完成:", {
       filteredMenusCount: filteredMenus.value.length,
       expandedMenus: defaultExpanded,
-      permissionSummary: permissionSummary.value
+      permissionSummary: permissionSummary.value,
     })
   }
 
@@ -222,14 +231,14 @@ export const useMenuStore = defineStore('menu', () => {
    */
   const setActiveMenu = (menuKey: string, subMenuKey?: string) => {
     menuState.value.activeMenuKey = menuKey
-    menuState.value.activeSubMenuKey = subMenuKey || ''
+    menuState.value.activeSubMenuKey = subMenuKey || ""
   }
 
   /**
    * 添加标签页
    */
   const addTab = (page: MenuItem) => {
-    if (page.type !== 'page') {
+    if (page.type !== "page") {
       return
     }
 
@@ -238,13 +247,13 @@ export const useMenuStore = defineStore('menu', () => {
       title: page.title,
       icon: page.icon,
       path: page.path,
-      closable: !menuState.value.singleTabMode
+      closable: !menuState.value.singleTabMode,
     }
 
     if (menuState.value.singleTabMode) {
       menuState.value.openTabs = [tab]
     } else {
-      const exists = menuState.value.openTabs.find(t => t.key === page.key)
+      const exists = menuState.value.openTabs.find((t) => t.key === page.key)
       if (!exists) {
         menuState.value.openTabs.push(tab)
       }
@@ -256,7 +265,7 @@ export const useMenuStore = defineStore('menu', () => {
    * 切换标签页
    */
   const switchTab = (tabKey: string) => {
-    const tab = menuState.value.openTabs.find(t => t.key === tabKey)
+    const tab = menuState.value.openTabs.find((t) => t.key === tabKey)
     if (tab) {
       menuState.value.activeTab = tabKey
       return tab.path
@@ -268,7 +277,7 @@ export const useMenuStore = defineStore('menu', () => {
    * 关闭标签页
    */
   const closeTab = (tabKey: string) => {
-    const index = menuState.value.openTabs.findIndex(tab => tab.key === tabKey)
+    const index = menuState.value.openTabs.findIndex((tab) => tab.key === tabKey)
     if (index > -1) {
       menuState.value.openTabs.splice(index, 1)
 
@@ -319,21 +328,21 @@ export const useMenuStore = defineStore('menu', () => {
    */
   const resetMenuState = () => {
     menuState.value = {
-      activeMenuKey: 'dashboard',
-      activeSubMenuKey: '',
+      activeMenuKey: "dashboard",
+      activeSubMenuKey: "",
       expandedMenuKeys: [],
       showSubmenu: false,
       openTabs: [
         {
-          key: 'dashboard',
-          title: '工作台',
-          icon: 'fas fa-chart-pie',
-          path: '/dashboard',
-          closable: false
-        }
+          key: "dashboard",
+          title: "工作台",
+          icon: "fas fa-chart-pie",
+          path: "/dashboard",
+          closable: false,
+        },
       ],
-      activeTab: 'dashboard',
-      singleTabMode: false
+      activeTab: "dashboard",
+      singleTabMode: false,
     }
   }
 
@@ -344,17 +353,25 @@ export const useMenuStore = defineStore('menu', () => {
     menuState.value.singleTabMode = !menuState.value.singleTabMode
     if (menuState.value.singleTabMode) {
       // 切换到单标签模式时，只保留当前活动标签
-      menuState.value.openTabs = [menuState.value.openTabs.find(t => t.key === menuState.value.activeTab) || { key: 'dashboard', title: '工作台', icon: 'fas fa-chart-pie', path: '/dashboard', closable: false }]
+      menuState.value.openTabs = [
+        menuState.value.openTabs.find((t) => t.key === menuState.value.activeTab) || {
+          key: "dashboard",
+          title: "工作台",
+          icon: "fas fa-chart-pie",
+          path: "/dashboard",
+          closable: false,
+        },
+      ]
     } else {
       // 切换回多标签模式时，恢复所有标签
       menuState.value.openTabs = [
         {
-          key: 'dashboard',
-          title: '工作台',
-          icon: 'fas fa-chart-pie',
-          path: '/dashboard',
-          closable: false
-        }
+          key: "dashboard",
+          title: "工作台",
+          icon: "fas fa-chart-pie",
+          path: "/dashboard",
+          closable: false,
+        },
       ]
     }
   }
@@ -365,24 +382,24 @@ export const useMenuStore = defineStore('menu', () => {
   watch(
     () => authStore.isAuthenticated,
     (newAuth, oldAuth) => {
-      console.log('🔄 认证状态变化:', {
+      console.log("🔄 认证状态变化:", {
         oldAuth,
         newAuth,
         userInfo: authStore.userInfo,
-        token: !!authStore.token
+        token: !!authStore.token,
       })
 
       if (newAuth) {
         // 用户登录，重新初始化菜单
-        console.log('✅ 用户已认证，重新初始化菜单')
+        console.log("✅ 用户已认证，重新初始化菜单")
         setupDefaultMenuState()
       } else {
         // 用户登出，重置菜单状态
-        console.log('❌ 用户未认证，重置菜单状态')
+        console.log("❌ 用户未认证，重置菜单状态")
         resetMenuState()
       }
     },
-    { immediate: true } // 立即执行一次
+    { immediate: true }, // 立即执行一次
   )
 
   // ===========================================
@@ -418,6 +435,6 @@ export const useMenuStore = defineStore('menu', () => {
     updateMenuStateByPath,
     resetMenuState,
     // 切换单标签模式
-    toggleSingleTabMode
+    toggleSingleTabMode,
   }
 })

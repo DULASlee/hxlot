@@ -3,19 +3,40 @@
   "version": "1.0.0",
   "description": "SmartAbp项目代码模板库",
   "scripts": {
-    "template:validate": "node scripts/template-validator.js",
-    "template:index": "node scripts/build-template-index.js",
-    "template:search": "node scripts/template-search.js",
+    "expert:preflight": "node tools/quality-assurance/preflight-enforcer.js",
+    "expert:auto": "node tools/quality-assurance/expert-auto.js",
+    "template:validate": "node src/SmartAbp.Vue/src/lowcode/tools/template-management/template-validator.cjs",
+    "template:index": "node src/SmartAbp.Vue/src/lowcode/tools/template-management/build-template-index.cjs",
+    "template:search": "node src/SmartAbp.Vue/src/lowcode/tools/template-management/template-search.cjs",
+    "expert:predev": "node tools/incremental-generation/scripts/analyze-codebase.js --mode expert",
+    "expert:verify": "node tools/quality-assurance/expert-aggregator.js",
+    "approve:plan": "node tools/quality-assurance/approve-plan.js",
+    "expert:postdev": "node tools/quality-assurance/quality-gates-cli.js --threshold 85 --directory src",
+    "hooks:install": "node tools/quality-assurance/install-hooks.js",
     "predev": "npm run template:validate",
-    "prebuild": "npm run template:validate"
+    "prebuild": "npm run template:validate",
+    "test:coverage": "vitest run --coverage",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "prepare": "husky install",
+    "precommit-check": "tsc --noEmit && cross-env ESLINT_USE_FLAT_CONFIG=false eslint -c .eslintrc.cjs . --fix && vitest run --coverage && vite build",
+    "codegen": "tsx src/tools/cli.ts generate",
+    "codegen:check": "tsx src/tools/cli.ts check",
+    "module:add": "tsx src/tools/add-module.ts --input",
+    "module:add:codegen": "tsx src/tools/add-module.ts --input --codegen",
+    "expert:auto": "node tools/quality-assurance/expert-auto.js",
+    "expert:finalize": "node tools/quality-assurance/expert-finalize.js",
+    "expert:verify": "npm run lint && npm run type-check && npm run test:coverage && npm run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.6.0",
-    "@modelcontextprotocol/server-sequential-thinking": "^0.1.0",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "chalk": "^4.1.2",
+    "semver": "^7.6.3",
+    "husky": "^9.1.4"
   },
   "keywords": [
     "smartabp",

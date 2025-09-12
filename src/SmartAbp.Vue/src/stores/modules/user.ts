@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { defineStore } from "pinia"
+import { ref, computed } from "vue"
 
 // 用户模块相关类型定义
 export interface User {
@@ -8,7 +8,7 @@ export interface User {
   email: string
   phone?: string
   avatar?: string
-  status: 'active' | 'inactive' | 'pending'
+  status: "active" | "inactive" | "pending"
   createdAt: string
   updatedAt: string
 }
@@ -28,7 +28,7 @@ export interface UpdateUserRequest {
   avatar?: string
 }
 
-export const useUserStore = defineStore('user', () => {
+export const useUserStore = defineStore("user", () => {
   // 状态
   const users = ref<User[]>([])
   const loading = ref(false)
@@ -36,9 +36,7 @@ export const useUserStore = defineStore('user', () => {
   const currentUser = ref<User | null>(null)
 
   // 计算属性
-  const activeUsers = computed(() => 
-    users.value.filter(user => user.status === 'active')
-  )
+  const activeUsers = computed(() => users.value.filter((user) => user.status === "active"))
 
   const userCount = computed(() => users.value.length)
 
@@ -53,7 +51,7 @@ export const useUserStore = defineStore('user', () => {
       // const response = await userApi.getUsers()
       // users.value = response.data
     } catch (err) {
-      error.value = '获取用户列表失败'
+      error.value = "获取用户列表失败"
       throw err
     } finally {
       loading.value = false
@@ -67,7 +65,7 @@ export const useUserStore = defineStore('user', () => {
       // users.value.push(response.data)
       // return response.data
     } catch (err) {
-      error.value = '创建用户失败'
+      error.value = "创建用户失败"
       throw err
     }
   }
@@ -82,7 +80,7 @@ export const useUserStore = defineStore('user', () => {
       // }
       // return response.data
     } catch (err) {
-      error.value = '更新用户失败'
+      error.value = "更新用户失败"
       throw err
     }
   }
@@ -93,13 +91,13 @@ export const useUserStore = defineStore('user', () => {
       // await userApi.deleteUser(userId)
       // users.value = users.value.filter(u => u.id !== userId)
     } catch (err) {
-      error.value = '删除用户失败'
+      error.value = "删除用户失败"
       throw err
     }
   }
 
   const getUserById = (userId: string) => {
-    return users.value.find(user => user.id === userId)
+    return users.value.find((user) => user.id === userId)
   }
 
   const setCurrentUser = (user: User | null) => {
@@ -116,12 +114,12 @@ export const useUserStore = defineStore('user', () => {
     loading,
     error,
     currentUser,
-    
+
     // 计算属性
     activeUsers,
     userCount,
     hasUsers,
-    
+
     // 方法
     fetchUsers,
     createUser,
@@ -129,6 +127,6 @@ export const useUserStore = defineStore('user', () => {
     deleteUser,
     getUserById,
     setCurrentUser,
-    clearError
+    clearError,
   }
 })

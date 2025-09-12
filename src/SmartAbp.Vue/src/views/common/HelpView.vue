@@ -302,7 +302,7 @@ export default defineComponent({
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .help-view {
     padding: 16px;
   }

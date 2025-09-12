@@ -395,7 +395,7 @@ export default defineComponent({
 }
 
 .submenu {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgb(0 0 0 / 10%);
 }
 
 .submenu-item {
@@ -466,7 +466,7 @@ export default defineComponent({
 }
 
 .card-preview h4 {
-  margin: 0 0 8px 0;
+  margin: 0 0 8px;
   color: var(--theme-text-primary);
 }
 
@@ -532,7 +532,7 @@ export default defineComponent({
   font-weight: 600;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .theme-demo {
     padding: 16px;
   }

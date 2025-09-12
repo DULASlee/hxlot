@@ -1,9 +1,3 @@
----
-description: SmartAbp低代码引擎开发强制规则 - P0-P3阶段完整规范
-globs: ["src/**/lowcode/**/*", "src/**/generator/**/*", "src/**/schema/**/*"]
-alwaysApply: true
-priority: 950
----
 
 # 🚀 SmartAbp低代码引擎开发强制规则
 
@@ -209,43 +203,32 @@ public interface IAbpCodeGenerator : ICodeGenerator
 // 生成不符合DDD分层的代码 = 禁止
 ```
 
-## 🎨 P2阶段：可视化设计器规范
+## 🎨 P2阶段：可视化设计器规范（细化）
 
-### 拖拽式设计器强制要求
-```typescript
-// ✅ 设计器核心功能约束
-interface VisualDesigner {
-  // 实时预览要求
-  realTimePreview: {
-    maxRenderTime: 100,          // ✅ 最大渲染时间100ms
-    maxMemoryUsage: 500,         // ✅ 最大内存500MB
-    frameRate: 60,               // ✅ 帧率60fps
-    responsiveness: true         // ✅ 响应式支持
-  };
-  
-  // CRDT实时协作
-  collaboration: {
-    maxConcurrentUsers: 50,      // ✅ 最大并发用户50
-    syncLatency: '<50ms',        // ✅ 同步延迟<50ms
-    conflictResolution: 'auto',  // ✅ 自动冲突解决
-    versionControl: true         // ✅ 版本控制
-  };
-  
-  // AI辅助设计
-  aiAssistant: {
-    codeOptimization: true,      // ✅ 代码优化
-    designSuggestions: true,     // ✅ 设计建议
-    accessibilityCheck: true,   // ✅ 无障碍检查
-    performanceAnalysis: true   // ✅ 性能分析
-  };
-}
+### 架构与数据约束（强制）
+- Schema 唯一来源：Designer 仅产出 Schema/overrides，禁止直接改写 *.generated.ts
+- 双向通道：支持从既有页面回读最小增量（Block 标记/元数据），生成前后保持一致性
+- 输出物：增量Schema + 变更回执（routes/menu/policies/files）+ snapshot 用于回滚
+- 与模板链对齐：调用既有 writers 生成 appshell 产物（router/store/lifecycle/policies/menu）
 
-// ❌ 严禁的设计器实现
-// 渲染延迟超过100ms = 禁止
-// 不支持实时协作 = 禁止
-// 不集成AI辅助功能 = 禁止
-// 不支持无障碍检查 = 禁止
-```
+### 预览与安全（强制）
+- 预览沙箱：iframe/Worker + 严格 CSP；只允许受控 postMessage 通道
+- 生产禁用动态执行（eval/new Function）；Designer 仅在开发态可启用可视化预览
+
+### 性能与协同（强制）
+- 实时预览渲染 ≤ 100ms；60fps；协同延迟 < 50ms；并发协作者 ≤ 50
+- 必须埋点：生成/预览/增量再生成（时延、错误、吞吐、内存）
+
+### 工作流（强制）
+- 生成前定制：Designer→导出增量Schema→生成→appshell注入→路由/菜单即时生效→回执
+- 生成后定制：载入路由→回读增量Schema→增量再生成→appshell更新→回执→可回滚
+- 契约与职责：P2 仅消费 Swagger/OpenAPI 契约，禁止生成后端接口；API 调用通过统一 Service/客户端封装并受漂移检测
+
+### 质量门（强制）
+- lint/type/test/build 必须绿；CI 漂移检测；Danger 校验回执必填（routes/menu/files）
+- Schema 桥接层：必须提供 DesignerOverrideSchema + SchemaReader + MergeEngine；生成的 *.vue 必须包含稳定锚点（Block 标记/数据属性）以支撑回读与合并
+
+> 参见 ADR-0015 可视化设计器架构决策。
 
 ## 📱 P3阶段：跨端代码生成器规范
 
@@ -462,6 +445,12 @@ interface LowCodeQualityGates {
 ### 违规等级处理
 - **严重违规**（安全漏洞、功能异常）→ 立即阻止，回滚到安全版本
 - **重要违规**（性能不达标、测试不足）→ 允许继续但必须限期修复
+- **一般违规**（代码规范、注释缺失）→ 警告提示，建议修复
+
+---
+
+**🚀 低代码引擎是智能化开发的核心，质量标准不可妥协！**
+**🔥 严格执行这些规则，确保生成高质量、高性能、高安全性的代码！**
 - **一般违规**（代码规范、注释缺失）→ 警告提示，建议修复
 
 ---

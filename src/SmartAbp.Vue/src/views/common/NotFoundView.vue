@@ -112,7 +112,7 @@ p {
   background: var(--color-bg-secondary);
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .error-code {
     font-size: 80px;
   }

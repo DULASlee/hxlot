@@ -596,13 +596,12 @@ onMounted(() => {
   background: var(--el-bg-color-page);
   padding: 8px;
   border-radius: 4px;
-  overflow-x: auto;
+  overflow: auto;
   max-height: 200px;
-  overflow-y: auto;
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .toolbar {
     flex-direction: column;
     gap: 12px;

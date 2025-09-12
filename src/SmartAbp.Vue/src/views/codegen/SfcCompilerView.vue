@@ -1268,7 +1268,7 @@ onMounted(() => {
   background: var(--theme-brand-primary-hover);
 }
 
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .compiler-workspace {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
@@ -1284,7 +1284,7 @@ onMounted(() => {
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .editor-results {
     grid-template-rows: 1fr;
     height: 600px;

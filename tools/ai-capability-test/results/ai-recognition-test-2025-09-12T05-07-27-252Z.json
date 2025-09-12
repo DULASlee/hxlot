@@ -1,0 +1,485 @@
+{
+  "totalTests": 10,
+  "passedTests": 10,
+  "failedTests": 0,
+  "details": [
+    {
+      "id": "incremental-001",
+      "name": "基于现有服务扩展CRUD功能",
+      "userInput": "请基于现有的ProductService扩展批量删除功能",
+      "passed": true,
+      "score": 8025,
+      "details": {
+        "triggerRecognition": {
+          "expected": [
+            "基于现有",
+            "扩展"
+          ],
+          "recognized": [
+            "基于现有",
+            "扩展"
+          ],
+          "rate": 100,
+          "score": 100
+        },
+        "commandExecution": {
+          "expected": [
+            "node tools/incremental-generation/scripts/analyze-codebase.js --target=src/SmartAbp.Application/Services/ProductService.cs",
+            "node tools/incremental-generation/analyzers/pattern-matcher.js --file=src/SmartAbp.Application/Services/ProductService.cs",
+            "node tools/incremental-generation/scripts/generate-incremental.js --strategy=service-extension --base=Product --feature=批量删除"
+          ],
+          "executed": [
+            "node tools/incremental-generation/scripts/analyze-codebase.js --target=src/SmartAbp.Application/Services/ProductService.cs",
+            "node tools/incremental-generation/analyzers/pattern-matcher.js --file=src/SmartAbp.Application/Services/ProductService.cs"
+          ],
+          "rate": 66.66666666666666,
+          "score": 65
+        },
+        "responseFormat": {
+          "expected": [
+            "🔍 **增量分析**",
+            "📊 **增量策略**",
+            "⚙️ **代码生成**",
+            "✅ **验证结果**",
+            "📄 **生成的代码**"
+          ],
+          "matchCount": 5,
+          "rate": 100,
+          "score": 100
+        },
+        "codeQuality": {
+          "expected": [
+            "兼容性检查通过",
+            "代码风格一致",
+            "测试覆盖充分",
+            "不破坏现有功能"
+          ],
+          "passed": 0,
+          "rate": 0,
+          "score": 50
+        },
+        "compatibility": {
+          "score": 90,
+          "issues": []
+        }
+      }
+    },
+    {
+      "id": "incremental-002",
+      "name": "扩展Vue组件功能",
+      "userInput": "基于现有的UserManagement组件增加导出Excel功能",
+      "passed": true,
+      "score": 8650,
+      "details": {
+        "triggerRecognition": {
+          "expected": [
+            "基于现有",
+            "增加功能"
+          ],
+          "recognized": [
+            "基于现有"
+          ],
+          "rate": 50,
+          "score": 50
+        },
+        "commandExecution": {
+          "expected": [
+            "node tools/incremental-generation/scripts/analyze-codebase.js --target=src/SmartAbp.Vue/src/components/UserManagement.vue",
+            "node tools/incremental-generation/scripts/generate-incremental.js --strategy=component-extension --base=UserManagement --feature=导出Excel"
+          ],
+          "executed": [
+            "node tools/incremental-generation/scripts/analyze-codebase.js --target=src/SmartAbp.Vue/src/components/UserManagement.vue",
+            "node tools/incremental-generation/scripts/generate-incremental.js --strategy=component-extension --base=UserManagement --feature=导出Excel"
+          ],
+          "rate": 100,
+          "score": 100
+        },
+        "responseFormat": {
+          "expected": [
+            "🔍 **增量分析**",
+            "📊 **增量策略**",
+            "⚙️ **代码生成**",
+            "✅ **验证结果**"
+          ],
+          "matchCount": 4,
+          "rate": 100,
+          "score": 100
+        },
+        "codeQuality": {
+          "expected": [],
+          "passed": 0,
+          "rate": 100,
+          "score": 100
+        },
+        "compatibility": {
+          "score": 90,
+          "issues": []
+        }
+      }
+    },
+    {
+      "id": "incremental-003",
+      "name": "扩展数据模型",
+      "userInput": "扩展User实体，添加用户偏好设置相关字段",
+      "passed": true,
+      "score": 9900,
+      "details": {
+        "triggerRecognition": {
+          "expected": [
+            "扩展"
+          ],
+          "recognized": [
+            "扩展"
+          ],
+          "rate": 100,
+          "score": 100
+        },
+        "commandExecution": {
+          "expected": [
+            "node tools/incremental-generation/scripts/analyze-codebase.js --target=src/SmartAbp.Domain/Entities/User.cs",
+            "node tools/incremental-generation/scripts/generate-incremental.js --strategy=entity-extension --base=User --feature=用户偏好设置"
+          ],
+          "executed": [
+            "node tools/incremental-generation/scripts/analyze-codebase.js --target=src/SmartAbp.Domain/Entities/User.cs",
+            "node tools/incremental-generation/scripts/generate-incremental.js --strategy=entity-extension --base=User --feature=用户偏好设置"
+          ],
+          "rate": 100,
+          "score": 100
+        },
+        "responseFormat": {
+          "expected": [],
+          "matchCount": 0,
+          "rate": 100,
+          "score": 100
+        },
+        "codeQuality": {
+          "expected": [],
+          "passed": 0,
+          "rate": 100,
+          "score": 100
+        },
+        "compatibility": {
+          "score": 90,
+          "issues": []
+        }
+      }
+    },
+    {
+      "id": "refactor-001",
+      "name": "重构复杂方法",
+      "userInput": "请重构OrderService中的CreateOrder方法，提高代码可读性",
+      "passed": true,
+      "score": 8900,
+      "details": {
+        "triggerRecognition": {
+          "expected": [
+            "重构"
+          ],
+          "recognized": [
+            "重构"
+          ],
+          "rate": 100,
+          "score": 100
+        },
+        "commandExecution": {
+          "expected": [
+            "node tools/incremental-generation/analyzers/refactor-advisor.js --file=src/SmartAbp.Application/Services/OrderService.cs"
+          ],
+          "executed": [
+            "node tools/incremental-generation/analyzers/refactor-advisor.js --file=src/SmartAbp.Application/Services/OrderService.cs"
+          ],
+          "rate": 100,
+          "score": 100
+        },
+        "responseFormat": {
+          "expected": [
+            "🔍 **代码分析**",
+            "📊 **重构建议**",
+            "⚙️ **重构实施**",
+            "✅ **兼容性检查**"
+          ],
+          "matchCount": 4,
+          "rate": 100,
+          "score": 100
+        },
+        "codeQuality": {
+          "expected": [
+            "保持API兼容性",
+            "提高代码可读性",
+            "不破坏现有测试"
+          ],
+          "passed": 0,
+          "rate": 0,
+          "score": 50
+        },
+        "compatibility": {
+          "score": 90,
+          "issues": []
+        }
+      }
+    },
+    {
+      "id": "refactor-002",
+      "name": "优化性能瓶颈",
+      "userInput": "优化ProductService的查询性能，减少数据库访问次数",
+      "passed": true,
+      "score": 9900,
+      "details": {
+        "triggerRecognition": {
+          "expected": [
+            "优化"
+          ],
+          "recognized": [
+            "优化"
+          ],
+          "rate": 100,
+          "score": 100
+        },
+        "commandExecution": {
+          "expected": [
+            "node tools/incremental-generation/analyzers/refactor-advisor.js --file=src/SmartAbp.Application/Services/ProductService.cs"
+          ],
+          "executed": [
+            "node tools/incremental-generation/analyzers/refactor-advisor.js --file=src/SmartAbp.Application/Services/ProductService.cs"
+          ],
+          "rate": 100,
+          "score": 100
+        },
+        "responseFormat": {
+          "expected": [],
+          "matchCount": 0,
+          "rate": 100,
+          "score": 100
+        },
+        "codeQuality": {
+          "expected": [],
+          "passed": 0,
+          "rate": 100,
+          "score": 100
+        },
+        "compatibility": {
+          "score": 90,
+          "issues": []
+        }
+      }
+    },
+    {
+      "id": "refactor-003",
+      "name": "改进代码结构",
+      "userInput": "改进UserController的代码结构，应用更好的设计模式",
+      "passed": true,
+      "score": 9900,
+      "details": {
+        "triggerRecognition": {
+          "expected": [
+            "改进"
+          ],
+          "recognized": [
+            "改进"
+          ],
+          "rate": 100,
+          "score": 100
+        },
+        "commandExecution": {
+          "expected": [],
+          "executed": [],
+          "rate": 100,
+          "score": 100
+        },
+        "responseFormat": {
+          "expected": [],
+          "matchCount": 0,
+          "rate": 100,
+          "score": 100
+        },
+        "codeQuality": {
+          "expected": [],
+          "passed": 0,
+          "rate": 100,
+          "score": 100
+        },
+        "compatibility": {
+          "score": 90,
+          "issues": []
+        }
+      }
+    },
+    {
+      "id": "test-001",
+      "name": "生成服务测试",
+      "userInput": "为UserService生成完整的单元测试",
+      "passed": true,
+      "score": 7650,
+      "details": {
+        "triggerRecognition": {
+          "expected": [
+            "生成测试"
+          ],
+          "recognized": [],
+          "rate": 0,
+          "score": 50
+        },
+        "commandExecution": {
+          "expected": [
+            "node tools/incremental-generation/generators/test-generator.js --target=UserService"
+          ],
+          "executed": [
+            "node tools/incremental-generation/generators/test-generator.js --target=UserService"
+          ],
+          "rate": 100,
+          "score": 100
+        },
+        "responseFormat": {
+          "expected": [
+            "🔍 **服务分析**",
+            "📊 **测试策略**",
+            "⚙️ **测试生成**",
+            "✅ **覆盖率验证**"
+          ],
+          "matchCount": 4,
+          "rate": 100,
+          "score": 100
+        },
+        "codeQuality": {
+          "expected": [
+            "覆盖所有公共方法",
+            "包含异常处理测试",
+            "包含边界条件测试"
+          ],
+          "passed": 0,
+          "rate": 0,
+          "score": 50
+        },
+        "compatibility": {
+          "score": 90,
+          "issues": []
+        }
+      }
+    },
+    {
+      "id": "test-002",
+      "name": "添加集成测试",
+      "userInput": "添加ProductController的集成测试",
+      "passed": true,
+      "score": 8650,
+      "details": {
+        "triggerRecognition": {
+          "expected": [
+            "添加测试"
+          ],
+          "recognized": [],
+          "rate": 0,
+          "score": 50
+        },
+        "commandExecution": {
+          "expected": [],
+          "executed": [],
+          "rate": 100,
+          "score": 100
+        },
+        "responseFormat": {
+          "expected": [],
+          "matchCount": 0,
+          "rate": 100,
+          "score": 100
+        },
+        "codeQuality": {
+          "expected": [],
+          "passed": 0,
+          "rate": 100,
+          "score": 100
+        },
+        "compatibility": {
+          "score": 90,
+          "issues": []
+        }
+      }
+    },
+    {
+      "id": "compatibility-001",
+      "name": "API兼容性检查",
+      "userInput": "确保新增的功能不破坏现有的API接口",
+      "passed": true,
+      "score": 9900,
+      "details": {
+        "triggerRecognition": {
+          "expected": [
+            "不破坏现有"
+          ],
+          "recognized": [
+            "不破坏现有"
+          ],
+          "rate": 100,
+          "score": 100
+        },
+        "commandExecution": {
+          "expected": [
+            "node tools/incremental-generation/scripts/validate-changes.js --type=compatibility"
+          ],
+          "executed": [
+            "node tools/incremental-generation/scripts/validate-changes.js --type=compatibility"
+          ],
+          "rate": 100,
+          "score": 100
+        },
+        "responseFormat": {
+          "expected": [],
+          "matchCount": 0,
+          "rate": 100,
+          "score": 100
+        },
+        "codeQuality": {
+          "expected": [],
+          "passed": 0,
+          "rate": 100,
+          "score": 100
+        },
+        "compatibility": {
+          "score": 90,
+          "issues": []
+        }
+      }
+    },
+    {
+      "id": "compatibility-002",
+      "name": "数据库兼容性验证",
+      "userInput": "验证数据模型变更的兼容性",
+      "passed": true,
+      "score": 9900,
+      "details": {
+        "triggerRecognition": {
+          "expected": [
+            "兼容"
+          ],
+          "recognized": [
+            "兼容"
+          ],
+          "rate": 100,
+          "score": 100
+        },
+        "commandExecution": {
+          "expected": [],
+          "executed": [],
+          "rate": 100,
+          "score": 100
+        },
+        "responseFormat": {
+          "expected": [],
+          "matchCount": 0,
+          "rate": 100,
+          "score": 100
+        },
+        "codeQuality": {
+          "expected": [],
+          "passed": 0,
+          "rate": 100,
+          "score": 100
+        },
+        "compatibility": {
+          "score": 90,
+          "issues": []
+        }
+      }
+    }
+  ]
+}

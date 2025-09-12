@@ -401,7 +401,7 @@ onMounted(() => {
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   min-width: 160px;
   z-index: 1001;
 }
@@ -540,8 +540,7 @@ onMounted(() => {
   background: var(--theme-sidebar-bg);
   border-right: 1px solid var(--theme-sidebar-border);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden auto;
   backdrop-filter: blur(8px);
   position: relative;
 }
@@ -823,25 +822,22 @@ onMounted(() => {
   padding: 32px;
   overflow-y: auto;
   background: var(--theme-bg-base);
-  border-radius: 16px 0 0 0;
+  border-radius: 16px 0 0;
   margin-top: 1px;
 }
 
 /* 遮罩层 */
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  inset: 0;
+  background: rgb(0 0 0 / 40%);
   backdrop-filter: blur(4px);
   z-index: 999;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .navbar-center {
     display: none;
   }

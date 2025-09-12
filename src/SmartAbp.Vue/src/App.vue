@@ -16,6 +16,7 @@
   margin: 0;
   padding: 0;
   height: 100vh;
+
   /* 修复：移除overflow: hidden，改为auto */
   overflow: auto;
 }
@@ -28,6 +29,7 @@ body {
   margin: 0;
   padding: 0;
   height: 100vh;
+
   /* 修复：移除overflow: hidden */
   overflow: auto;
 }

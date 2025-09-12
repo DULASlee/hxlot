@@ -1,0 +1,354 @@
+{
+  "version": "1.0.0",
+  "description": "SmartAbp项目架构决策记录索引",
+  "lastUpdated": "2025-09-11T10:00:00.000Z",
+  "adrs": [
+    {
+      "id": "0001",
+      "title": "技术栈选择",
+      "path": "./0001-technology-stack-selection.md",
+      "status": "已接受",
+      "category": "技术选型",
+      "tags": ["技术栈", "框架选择", "架构基础"],
+      "createdDate": "2025-09-11",
+      "lastUpdated": "2025-09-11",
+      "decisionMakers": ["架构团队"],
+      "impactScope": "整个项目的技术基础",
+      "aiTriggers": [
+        "技术选型",
+        "框架选择",
+        "技术栈",
+        "架构基础",
+        "技术决策"
+      ],
+      "relatedADRs": ["0002", "0003", "0011"],
+      "summary": "选择ASP.NET Core + ABP Framework作为后端，Vue.js 3作为前端的技术栈决策"
+    },
+    {
+      "id": "0002",
+      "title": "前端架构设计",
+      "path": "./0002-frontend-architecture.md",
+      "status": "已接受",
+      "category": "架构设计",
+      "tags": ["前端架构", "Vue.js", "组件设计"],
+      "createdDate": "2025-09-11",
+      "lastUpdated": "2025-09-11",
+      "decisionMakers": ["架构团队", "前端团队"],
+      "impactScope": "前端应用架构",
+      "aiTriggers": [
+        "前端架构",
+        "Vue架构",
+        "组件设计",
+        "前端结构",
+        "页面架构"
+      ],
+      "relatedADRs": ["0001", "0010"],
+      "summary": "基于Vue.js 3 + Composition API的前端架构设计决策"
+    },
+    {
+      "id": "0003",
+      "title": "后端架构设计",
+      "path": "./0003-backend-architecture.md",
+      "status": "已接受",
+      "category": "架构设计",
+      "tags": ["后端架构", "ABP Framework", "DDD", "微服务"],
+      "createdDate": "2025-09-11",
+      "lastUpdated": "2025-09-11",
+      "decisionMakers": ["架构团队", "后端团队"],
+      "impactScope": "后端服务架构",
+      "aiTriggers": [
+        "后端架构",
+        "ABP架构",
+        "领域驱动设计",
+        "微服务架构",
+        "服务设计"
+      ],
+      "relatedADRs": ["0001", "0004", "0010"],
+      "summary": "基于ABP Framework的DDD分层架构和微服务设计决策"
+    },
+    {
+      "id": "0004",
+      "title": "数据库设计",
+      "path": "./0004-database-design.md",
+      "status": "已接受",
+      "category": "数据设计",
+      "tags": ["数据库", "Entity Framework", "数据模型"],
+      "createdDate": "2025-09-11",
+      "lastUpdated": "2025-09-11",
+      "decisionMakers": ["架构团队", "数据库团队"],
+      "impactScope": "数据存储和访问",
+      "aiTriggers": [
+        "数据库设计",
+        "数据模型",
+        "实体设计",
+        "数据库架构",
+        "存储设计"
+      ],
+      "relatedADRs": ["0003", "0009"],
+      "summary": "使用Entity Framework Core的数据库设计和数据访问策略"
+    },
+    {
+      "id": "0005",
+      "title": "认证策略",
+      "path": "./0005-authentication-strategy.md",
+      "status": "已接受",
+      "category": "安全设计",
+      "tags": ["认证", "授权", "安全", "JWT"],
+      "createdDate": "2025-09-11",
+      "lastUpdated": "2025-09-11",
+      "decisionMakers": ["架构团队", "安全团队"],
+      "impactScope": "系统安全和用户认证",
+      "aiTriggers": [
+        "认证",
+        "授权",
+        "安全",
+        "登录",
+        "权限管理"
+      ],
+      "relatedADRs": ["0001", "0003"],
+      "summary": "基于OpenIddict + JWT的认证授权策略设计"
+    },
+    {
+      "id": "0006",
+      "title": "缓存策略",
+      "path": "./0006-caching-strategy.md",
+      "status": "已接受",
+      "category": "性能优化",
+      "tags": ["缓存", "Redis", "性能优化"],
+      "createdDate": "2025-09-11",
+      "lastUpdated": "2025-09-11",
+      "decisionMakers": ["架构团队", "性能团队"],
+      "impactScope": "系统性能和数据缓存",
+      "aiTriggers": [
+        "缓存",
+        "Redis",
+        "性能优化",
+        "数据缓存",
+        "缓存策略"
+      ],
+      "relatedADRs": ["0009", "0010"],
+      "summary": "多级缓存架构和Redis集群的缓存策略设计"
+    },
+    {
+      "id": "0007",
+      "title": "日志策略",
+      "path": "./0007-logging-strategy.md",
+      "status": "已接受",
+      "category": "运维监控",
+      "tags": ["日志", "监控", "ELK", "审计"],
+      "createdDate": "2025-09-11",
+      "lastUpdated": "2025-09-11",
+      "decisionMakers": ["架构团队", "运维团队"],
+      "impactScope": "系统监控和日志管理",
+      "aiTriggers": [
+        "日志",
+        "监控",
+        "审计",
+        "日志记录",
+        "系统监控"
+      ],
+      "relatedADRs": ["0008", "0009"],
+      "summary": "基于ELK Stack的日志收集、存储和分析策略"
+    },
+    {
+      "id": "0008",
+      "title": "错误处理",
+      "path": "./0008-error-handling.md",
+      "status": "已接受",
+      "category": "异常处理",
+      "tags": ["错误处理", "异常", "用户体验"],
+      "createdDate": "2025-09-11",
+      "lastUpdated": "2025-09-11",
+      "decisionMakers": ["架构团队", "开发团队"],
+      "impactScope": "系统稳定性和用户体验",
+      "aiTriggers": [
+        "错误处理",
+        "异常处理",
+        "错误管理",
+        "异常捕获",
+        "错误响应"
+      ],
+      "relatedADRs": ["0007", "0010"],
+      "summary": "统一的错误处理机制和用户友好的错误响应策略"
+    },
+    {
+      "id": "0009",
+      "title": "性能优化策略",
+      "path": "./0009-performance-optimization.md",
+      "status": "已接受",
+      "category": "性能优化",
+      "tags": ["性能优化", "缓存", "数据库优化", "前端优化"],
+      "createdDate": "2025-09-11",
+      "lastUpdated": "2025-09-11",
+      "decisionMakers": ["架构团队", "性能团队"],
+      "impactScope": "整个系统的性能表现",
+      "aiTriggers": [
+        "性能优化",
+        "性能问题",
+        "优化策略",
+        "性能提升",
+        "系统优化"
+      ],
+      "relatedADRs": ["0006", "0004", "0002"],
+      "summary": "全面的性能优化策略，包括前端、后端、数据库和系统架构优化"
+    },
+    {
+      "id": "0010",
+      "title": "设计模式应用",
+      "path": "./0010-design-patterns.md",
+      "status": "已接受",
+      "category": "代码设计",
+      "tags": ["设计模式", "代码质量", "架构模式"],
+      "createdDate": "2025-09-11",
+      "lastUpdated": "2025-09-11",
+      "decisionMakers": ["架构团队", "开发团队"],
+      "impactScope": "整个项目的代码结构和设计",
+      "aiTriggers": [
+        "设计模式",
+        "代码结构",
+        "架构模式",
+        "代码设计",
+        "最佳实践"
+      ],
+      "relatedADRs": ["0001", "0002", "0003"],
+      "summary": "项目中采用的设计模式及其应用场景和实施策略"
+    },
+    {
+      "id": "0011",
+      "title": "低代码引擎架构",
+      "path": "./0011-lowcode-engine-architecture.md",
+      "status": "已接受",
+      "category": "架构设计",
+      "tags": ["低代码", "引擎架构", "可视化设计"],
+      "createdDate": "2025-09-11",
+      "lastUpdated": "2025-09-11",
+      "decisionMakers": ["架构团队", "低代码团队"],
+      "impactScope": "低代码引擎的整体架构",
+      "aiTriggers": [
+        "低代码",
+        "引擎架构",
+        "可视化设计",
+        "代码生成",
+        "低代码平台"
+      ],
+      "relatedADRs": ["0001", "0002", "0010"],
+      "summary": "自研低代码引擎的架构设计和技术实现策略"
+    },
+    {
+      "id": "0015",
+      "title": "可视化设计器架构",
+      "path": "./0015-visual-designer-architecture.md",
+      "status": "已接受",
+      "category": "架构设计",
+      "tags": ["低代码", "可视化", "拖拽", "Schema"],
+      "createdDate": "2025-09-11",
+      "lastUpdated": "2025-09-11",
+      "decisionMakers": ["架构团队", "低代码团队"],
+      "impactScope": "低代码可视化设计子系统",
+      "aiTriggers": [
+        "可视化设计器",
+        "拖拽",
+        "所见即所得",
+        "Schema回写",
+        "增量再生成"
+      ],
+      "relatedADRs": ["0011", "0002"],
+      "summary": "P2可视化设计器的独立模块化架构、沙箱预览与Schema双向通道决策"
+    },
+    {
+      "id": "0016",
+      "title": "低代码引擎Monorepo重构架构",
+      "path": "./0016-lowcode-engine-monorepo-refactoring.md",
+      "status": "提议",
+      "category": "架构重构",
+      "tags": ["Monorepo", "包管理", "独立发包", "架构重构"],
+      "createdDate": "2025-01-12",
+      "lastUpdated": "2025-01-12",
+      "decisionMakers": ["架构团队"],
+      "impactScope": "全栈低代码引擎架构",
+      "aiTriggers": [
+        "Monorepo",
+        "独立发包",
+        "包管理",
+        "架构重构",
+        "代码拆分",
+        "模块化架构"
+      ],
+      "relatedADRs": ["0011", "0015", "0001"],
+      "summary": "将分散的低代码引擎代码重构为6个独立npm包的Monorepo架构决策"
+    }
+  ],
+  "categories": {
+    "技术选型": {
+      "description": "技术栈和框架选择相关的决策",
+      "adrs": ["0001"]
+    },
+    "架构设计": {
+      "description": "系统架构和设计相关的决策",
+      "adrs": ["0002", "0003", "0011", "0015"]
+    },
+    "架构重构": {
+      "description": "架构重构和模块化相关的决策",
+      "adrs": ["0016"]
+    },
+    "数据设计": {
+      "description": "数据库和数据模型设计相关的决策",
+      "adrs": ["0004"]
+    },
+    "安全设计": {
+      "description": "安全、认证和授权相关的决策",
+      "adrs": ["0005"]
+    },
+    "性能优化": {
+      "description": "性能优化和缓存策略相关的决策",
+      "adrs": ["0006", "0009"]
+    },
+    "运维监控": {
+      "description": "日志、监控和运维相关的决策",
+      "adrs": ["0007"]
+    },
+    "异常处理": {
+      "description": "错误处理和异常管理相关的决策",
+      "adrs": ["0008"]
+    },
+    "代码设计": {
+      "description": "代码结构和设计模式相关的决策",
+      "adrs": ["0010"]
+    }
+  },
+  "aiUsageGuidelines": {
+    "description": "AI使用ADR的指导原则",
+    "rules": [
+      "在做技术选型时，必须参考相关的ADR决策",
+      "生成代码时，应遵循ADR中定义的架构原则和设计模式",
+      "遇到性能问题时，应参考性能优化ADR中的策略",
+      "实施缓存时，应遵循缓存策略ADR的指导",
+      "处理错误时，应按照错误处理ADR的规范",
+      "应用设计模式时，应参考设计模式ADR的建议"
+    ],
+    "triggerPatterns": [
+      "当用户询问'为什么选择XXX技术'时，引用相关的技术选型ADR",
+      "当用户要求'优化性能'时，参考性能优化ADR",
+      "当用户提到'架构设计'时，参考相关的架构ADR",
+      "当用户询问'最佳实践'时，参考设计模式ADR"
+    ]
+  },
+  "statistics": {
+    "totalADRs": 13,
+    "acceptedADRs": 12,
+    "proposedADRs": 1,
+    "deprecatedADRs": 0,
+    "supersededADRs": 0,
+    "categoryCounts": {
+      "技术选型": 1,
+      "架构设计": 4,
+      "架构重构": 1,
+      "数据设计": 1,
+      "安全设计": 1,
+      "性能优化": 2,
+      "运维监控": 1,
+      "异常处理": 1,
+      "代码设计": 1
+    }
+  }
+}

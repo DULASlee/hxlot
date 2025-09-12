@@ -1,15 +1,15 @@
-import { logger, type LogEntry, LogLevel } from '@/utils/logger'
-import { logAnalyzer, type LogAnalysisResult } from '@/utils/logAnalyzer'
-import { logManager } from '@/utils/logManager'
-import dayjs from 'dayjs'
+import { logger, type LogEntry, LogLevel } from "@/utils/logger"
+import { logAnalyzer, type LogAnalysisResult } from "@/utils/logAnalyzer"
+import { logManager } from "@/utils/logManager"
+import dayjs from "dayjs"
 
 // 导出格式枚举
 export enum ExportFormat {
-  JSON = 'json',
-  CSV = 'csv',
-  HTML = 'html',
-  TXT = 'txt',
-  XML = 'xml'
+  JSON = "json",
+  CSV = "csv",
+  HTML = "html",
+  TXT = "txt",
+  XML = "xml",
 }
 
 // 导出配置
@@ -54,23 +54,22 @@ class LogExporter {
 
     // 时间范围过滤
     if (config.timeRange) {
-      filteredLogs = filteredLogs.filter(log =>
-        log.timestamp >= config.timeRange!.start.getTime() &&
-        log.timestamp <= config.timeRange!.end.getTime()
+      filteredLogs = filteredLogs.filter(
+        (log) =>
+          log.timestamp >= config.timeRange!.start.getTime() &&
+          log.timestamp <= config.timeRange!.end.getTime(),
       )
     }
 
     // 级别过滤
     if (config.levels && config.levels.length > 0) {
-      filteredLogs = filteredLogs.filter(log =>
-        config.levels!.includes(log.level)
-      )
+      filteredLogs = filteredLogs.filter((log) => config.levels!.includes(log.level))
     }
 
     // 分类过滤
     if (config.categories && config.categories.length > 0) {
-      filteredLogs = filteredLogs.filter(log =>
-        log.category && config.categories!.includes(log.category)
+      filteredLogs = filteredLogs.filter(
+        (log) => log.category && config.categories!.includes(log.category),
       )
     }
 
@@ -88,10 +87,10 @@ class LogExporter {
       metadata: {
         exportTime: new Date().toISOString(),
         totalEntries: logs.length,
-        format: 'JSON',
-        version: '1.0'
+        format: "JSON",
+        version: "1.0",
       },
-      logs
+      logs,
     }
 
     if (config.includeAnalysis) {
@@ -101,14 +100,14 @@ class LogExporter {
     if (config.includePerformance) {
       exportData.performance = {
         stats: logManager.getPerformanceStats(),
-        entries: logManager.getPerformanceEntries().value
+        entries: logManager.getPerformanceEntries().value,
       }
     }
 
     if (config.includeErrors) {
       exportData.errors = {
         stats: logManager.getErrorStats(),
-        reports: logManager.getErrorReports().value
+        reports: logManager.getErrorReports().value,
       }
     }
 
@@ -117,22 +116,20 @@ class LogExporter {
 
   // 导出为 CSV
   private exportToCsv(logs: LogEntry[]): string {
-    const headers = ['时间戳', '级别', '消息', '分类', '来源', '数据']
-    const rows = logs.map(log => [
-      dayjs(log.timestamp).format('YYYY-MM-DD HH:mm:ss'),
+    const headers = ["时间戳", "级别", "消息", "分类", "来源", "数据"]
+    const rows = logs.map((log) => [
+      dayjs(log.timestamp).format("YYYY-MM-DD HH:mm:ss"),
       this.getLevelText(log.level),
       this.escapeCsvValue(log.message),
-      this.escapeCsvValue(log.category || ''),
-      this.escapeCsvValue(log.source || ''),
-      this.escapeCsvValue(log.data ? JSON.stringify(log.data) : '')
+      this.escapeCsvValue(log.category || ""),
+      this.escapeCsvValue(log.source || ""),
+      this.escapeCsvValue(log.data ? JSON.stringify(log.data) : ""),
     ])
 
-    const csvContent = [headers, ...rows]
-      .map(row => row.join(','))
-      .join('\n')
+    const csvContent = [headers, ...rows].map((row) => row.join(",")).join("\n")
 
     // 添加 BOM 以支持中文
-    return '\uFEFF' + csvContent
+    return "\uFEFF" + csvContent
   }
 
   // 导出为 HTML
@@ -263,12 +260,12 @@ class LogExporter {
     <div class="container">
         <div class="header">
             <h1>日志导出报告</h1>
-            <p>导出时间: ${dayjs().format('YYYY-MM-DD HH:mm:ss')}</p>
+            <p>导出时间: ${dayjs().format("YYYY-MM-DD HH:mm:ss")}</p>
             <p>总计 ${logs.length} 条日志记录</p>
         </div>
 
         <div class="content">
-            ${analysis ? this.generateAnalysisSection(analysis) : ''}
+            ${analysis ? this.generateAnalysisSection(analysis) : ""}
 
             <div class="section">
                 <h2>日志详情</h2>
@@ -283,15 +280,19 @@ class LogExporter {
                         </tr>
                     </thead>
                     <tbody>
-                        ${logs.map(log => `
+                        ${logs
+                          .map(
+                            (log) => `
                             <tr>
-                                <td class="timestamp">${dayjs(log.timestamp).format('MM-DD HH:mm:ss')}</td>
+                                <td class="timestamp">${dayjs(log.timestamp).format("MM-DD HH:mm:ss")}</td>
                                 <td class="level-${this.getLevelClass(log.level)}">${this.getLevelText(log.level)}</td>
                                 <td class="message" title="${this.escapeHtml(log.message)}">${this.escapeHtml(log.message)}</td>
-                                <td>${this.escapeHtml(log.category || '-')}</td>
-                                <td>${this.escapeHtml(log.source || '-')}</td>
+                                <td>${this.escapeHtml(log.category || "-")}</td>
+                                <td>${this.escapeHtml(log.source || "-")}</td>
                             </tr>
-                        `).join('')}
+                        `,
+                          )
+                          .join("")}
                     </tbody>
                 </table>
             </div>
@@ -307,20 +308,22 @@ class LogExporter {
     const header = `
 日志导出报告
 ============
-导出时间: ${dayjs().format('YYYY-MM-DD HH:mm:ss')}
+导出时间: ${dayjs().format("YYYY-MM-DD HH:mm:ss")}
 总计条目: ${logs.length}
 导出格式: TXT
 
 `
 
-    const logEntries = logs.map(log => {
-      const timestamp = dayjs(log.timestamp).format('YYYY-MM-DD HH:mm:ss')
-      const level = this.getLevelText(log.level).padEnd(6)
-      const category = (log.category || '').padEnd(12)
-      const source = (log.source || '').padEnd(10)
+    const logEntries = logs
+      .map((log) => {
+        const timestamp = dayjs(log.timestamp).format("YYYY-MM-DD HH:mm:ss")
+        const level = this.getLevelText(log.level).padEnd(6)
+        const category = (log.category || "").padEnd(12)
+        const source = (log.source || "").padEnd(10)
 
-      return `[${timestamp}] ${level} [${category}] [${source}] ${log.message}`
-    }).join('\n')
+        return `[${timestamp}] ${level} [${category}] [${source}] ${log.message}`
+      })
+      .join("\n")
 
     return header + logEntries
   }
@@ -338,17 +341,21 @@ class LogExporter {
         <version>1.0</version>
     </metadata>
     <logs>
-        ${logs.map(log => `
+        ${logs
+          .map(
+            (log) => `
         <log>
             <timestamp>${new Date(log.timestamp).toISOString()}</timestamp>
             <level>${log.level}</level>
             <levelText>${this.getLevelText(log.level)}</levelText>
             <message><![CDATA[${log.message}]]></message>
-            <category><![CDATA[${log.category || ''}]]></category>
-            <source><![CDATA[${log.source || ''}]]></source>
-            ${log.data ? `<data><![CDATA[${JSON.stringify(log.data)}]]></data>` : ''}
+            <category><![CDATA[${log.category || ""}]]></category>
+            <source><![CDATA[${log.source || ""}]]></source>
+            ${log.data ? `<data><![CDATA[${JSON.stringify(log.data)}]]></data>` : ""}
         </log>
-        `).join('')}
+        `,
+          )
+          .join("")}
     </logs>
 </logExport>
     `
@@ -380,19 +387,27 @@ class LogExporter {
             </div>
         </div>
 
-        ${analysis.insights.criticalIssues.length > 0 ? `
+        ${
+          analysis.insights.criticalIssues.length > 0
+            ? `
         <h3>关键问题</h3>
         <ul>
-            ${analysis.insights.criticalIssues.map(issue => `<li style="color: #dc3545;">${issue}</li>`).join('')}
+            ${analysis.insights.criticalIssues.map((issue) => `<li style="color: #dc3545;">${issue}</li>`).join("")}
         </ul>
-        ` : ''}
+        `
+            : ""
+        }
 
-        ${analysis.insights.recommendations.length > 0 ? `
+        ${
+          analysis.insights.recommendations.length > 0
+            ? `
         <h3>建议</h3>
         <ul>
-            ${analysis.insights.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+            ${analysis.insights.recommendations.map((rec) => `<li>${rec}</li>`).join("")}
         </ul>
-        ` : ''}
+        `
+            : ""
+        }
     </div>
     `
   }
@@ -400,30 +415,42 @@ class LogExporter {
   // 获取级别文本
   private getLevelText(level: LogLevel): string {
     switch (level) {
-      case LogLevel.DEBUG: return '调试'
-      case LogLevel.INFO: return '信息'
-      case LogLevel.SUCCESS: return '成功'
-      case LogLevel.WARN: return '警告'
-      case LogLevel.ERROR: return '错误'
-      default: return '未知'
+      case LogLevel.DEBUG:
+        return "调试"
+      case LogLevel.INFO:
+        return "信息"
+      case LogLevel.SUCCESS:
+        return "成功"
+      case LogLevel.WARN:
+        return "警告"
+      case LogLevel.ERROR:
+        return "错误"
+      default:
+        return "未知"
     }
   }
 
   // 获取级别样式类
   private getLevelClass(level: LogLevel): string {
     switch (level) {
-      case LogLevel.DEBUG: return 'debug'
-      case LogLevel.INFO: return 'info'
-      case LogLevel.SUCCESS: return 'success'
-      case LogLevel.WARN: return 'warn'
-      case LogLevel.ERROR: return 'error'
-      default: return 'info'
+      case LogLevel.DEBUG:
+        return "debug"
+      case LogLevel.INFO:
+        return "info"
+      case LogLevel.SUCCESS:
+        return "success"
+      case LogLevel.WARN:
+        return "warn"
+      case LogLevel.ERROR:
+        return "error"
+      default:
+        return "info"
     }
   }
 
   // 转义 CSV 值
   private escapeCsvValue(value: string): string {
-    if (value.includes(',') || value.includes('"') || value.includes('\n')) {
+    if (value.includes(",") || value.includes('"') || value.includes("\n")) {
       return `"${value.replace(/"/g, '""')}"`
     }
     return value
@@ -431,7 +458,7 @@ class LogExporter {
 
   // 转义 HTML
   private escapeHtml(text: string): string {
-    const div = document.createElement('div')
+    const div = document.createElement("div")
     div.textContent = text
     return div.innerHTML
   }
@@ -440,15 +467,15 @@ class LogExporter {
   public downloadLogs(config: ExportConfig, filename?: string) {
     const content = this.exportLogs(config)
     const extension = config.format
-    const defaultFilename = `logs_${dayjs().format('YYYY-MM-DD_HH-mm-ss')}.${extension}`
+    const defaultFilename = `logs_${dayjs().format("YYYY-MM-DD_HH-mm-ss")}.${extension}`
     const finalFilename = filename || defaultFilename
 
     const blob = new Blob([content], {
-      type: this.getMimeType(config.format)
+      type: this.getMimeType(config.format),
     })
 
     const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
+    const link = document.createElement("a")
     link.href = url
     link.download = finalFilename
     document.body.appendChild(link)
@@ -461,17 +488,17 @@ class LogExporter {
   private getMimeType(format: ExportFormat): string {
     switch (format) {
       case ExportFormat.JSON:
-        return 'application/json;charset=utf-8'
+        return "application/json;charset=utf-8"
       case ExportFormat.CSV:
-        return 'text/csv;charset=utf-8'
+        return "text/csv;charset=utf-8"
       case ExportFormat.HTML:
-        return 'text/html;charset=utf-8'
+        return "text/html;charset=utf-8"
       case ExportFormat.TXT:
-        return 'text/plain;charset=utf-8'
+        return "text/plain;charset=utf-8"
       case ExportFormat.XML:
-        return 'application/xml;charset=utf-8'
+        return "application/xml;charset=utf-8"
       default:
-        return 'text/plain;charset=utf-8'
+        return "text/plain;charset=utf-8"
     }
   }
 
@@ -488,7 +515,8 @@ export const logExporter = new LogExporter()
 
 // 导出便捷方法
 export const exportLogs = (config: ExportConfig) => logExporter.exportLogs(config)
-export const downloadLogs = (config: ExportConfig, filename?: string) => logExporter.downloadLogs(config, filename)
+export const downloadLogs = (config: ExportConfig, filename?: string) =>
+  logExporter.downloadLogs(config, filename)
 export const previewExport = (config: ExportConfig) => logExporter.previewExport(config)
 
 // 预设配置
@@ -498,7 +526,7 @@ export const exportPresets = {
     format: ExportFormat.JSON,
     includeAnalysis: true,
     includePerformance: true,
-    includeErrors: true
+    includeErrors: true,
   } as ExportConfig,
 
   // 仅错误日志
@@ -507,16 +535,16 @@ export const exportPresets = {
     levels: [LogLevel.ERROR],
     includeAnalysis: false,
     includePerformance: false,
-    includeErrors: true
+    includeErrors: true,
   } as ExportConfig,
 
   // 性能报告
   performance: {
     format: ExportFormat.HTML,
-    categories: ['performance'],
+    categories: ["performance"],
     includeAnalysis: true,
     includePerformance: true,
-    includeErrors: false
+    includeErrors: false,
   } as ExportConfig,
 
   // 简单文本
@@ -525,6 +553,6 @@ export const exportPresets = {
     includeAnalysis: false,
     includePerformance: false,
     includeErrors: false,
-    maxEntries: 1000
-  } as ExportConfig
+    maxEntries: 1000,
+  } as ExportConfig,
 }

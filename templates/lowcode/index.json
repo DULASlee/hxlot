@@ -1,0 +1,198 @@
+{
+  "category": "lowcode",
+  "name": "低代码引擎开发模板",
+  "description": "SmartAbp低代码引擎开发的专业模板集合",
+  "version": "1.0.0",
+  "templates": [
+    {
+      "name": "LowCodePlugin",
+      "path": "plugins/LowCodePlugin.template.ts",
+      "metaPath": "plugins/LowCodePlugin.template.meta.yml",
+      "type": "typescript",
+      "category": "plugin",
+      "description": "低代码引擎插件开发模板",
+      "tags": ["lowcode", "plugin", "engine"],
+      "aiTriggers": [
+        "创建插件",
+        "低代码插件", 
+        "引擎插件",
+        "插件开发",
+        "功能插件"
+      ],
+      "scenarios": [
+        "插件开发",
+        "功能扩展", 
+        "低代码引擎"
+      ],
+      "dependencies": ["Vue 3", "SmartAbp低代码内核"],
+      "parameters": [
+        {
+          "name": "PluginName",
+          "type": "string",
+          "required": true,
+          "description": "插件名称（PascalCase）",
+          "example": "DataVisualization"
+        },
+        {
+          "name": "pluginName", 
+          "type": "string",
+          "required": true,
+          "description": "插件名称（camelCase）",
+          "example": "dataVisualization"
+        },
+        {
+          "name": "PluginDescription",
+          "type": "string", 
+          "required": true,
+          "description": "插件功能描述",
+          "example": "数据可视化插件"
+        },
+        {
+          "name": "PluginVersion",
+          "type": "string",
+          "required": false,
+          "default": "1.0.0",
+          "description": "插件版本号"
+        }
+      ]
+    },
+    {
+      "name": "CodeGenerator",
+      "path": "generators/CodeGenerator.template.ts",
+      "metaPath": "generators/CodeGenerator.template.meta.yml", 
+      "type": "typescript",
+      "category": "generator",
+      "description": "低代码引擎代码生成器模板",
+      "tags": ["lowcode", "generator", "codegen"],
+      "aiTriggers": [
+        "创建生成器",
+        "代码生成器",
+        "低代码生成器", 
+        "模板生成器",
+        "自动生成代码"
+      ],
+      "scenarios": [
+        "代码生成器开发",
+        "模板引擎",
+        "自动化代码生成"
+      ],
+      "dependencies": ["SmartAbp低代码内核", "模板引擎"],
+      "parameters": [
+        {
+          "name": "GeneratorName",
+          "type": "string",
+          "required": true,
+          "description": "生成器名称（PascalCase）",
+          "example": "VueComponent"
+        },
+        {
+          "name": "generatorName",
+          "type": "string", 
+          "required": true,
+          "description": "生成器名称（camelCase）",
+          "example": "vueComponent"
+        },
+        {
+          "name": "GeneratorDescription",
+          "type": "string",
+          "required": true, 
+          "description": "生成器功能描述",
+          "example": "Vue组件代码生成器"
+        },
+        {
+          "name": "TargetType",
+          "type": "string",
+          "required": true,
+          "description": "目标代码类型",
+          "example": "Vue组件"
+        }
+      ]
+    },
+    {
+      "name": "RuntimeComponent",
+      "path": "runtime/RuntimeComponent.template.vue",
+      "metaPath": "runtime/RuntimeComponent.template.meta.yml",
+      "type": "vue",
+      "category": "component", 
+      "description": "低代码引擎运行时组件模板",
+      "tags": ["lowcode", "runtime", "component", "vue"],
+      "aiTriggers": [
+        "创建运行时组件",
+        "低代码组件",
+        "运行时组件",
+        "可视化组件", 
+        "引擎组件"
+      ],
+      "scenarios": [
+        "运行时组件开发",
+        "可视化组件",
+        "低代码组件库"
+      ],
+      "dependencies": ["Vue 3", "Element Plus", "SmartAbp低代码运行时"],
+      "parameters": [
+        {
+          "name": "ComponentName",
+          "type": "string",
+          "required": true,
+          "description": "组件名称（PascalCase）", 
+          "example": "DataTable"
+        },
+        {
+          "name": "componentName",
+          "type": "string",
+          "required": true,
+          "description": "组件名称（camelCase）",
+          "example": "dataTable"
+        },
+        {
+          "name": "ComponentDescription", 
+          "type": "string",
+          "required": true,
+          "description": "组件功能描述",
+          "example": "数据表格组件"
+        },
+        {
+          "name": "ComponentCategory",
+          "type": "string",
+          "required": false,
+          "default": "basic",
+          "description": "组件分类",
+          "example": "data-display"
+        }
+      ]
+    }
+  ],
+  "aiRecognition": {
+    "enabled": true,
+    "keywords": [
+      "低代码",
+      "lowcode", 
+      "引擎",
+      "engine",
+      "插件",
+      "plugin",
+      "生成器", 
+      "generator",
+      "运行时",
+      "runtime",
+      "组件",
+      "component"
+    ],
+    "contextPatterns": [
+      "创建.*插件",
+      "开发.*生成器", 
+      "构建.*组件",
+      "低代码.*开发",
+      "引擎.*扩展"
+    ]
+  },
+  "validation": {
+    "rules": [
+      "所有模板必须包含AI_TEMPLATE_INFO注释",
+      "插件必须实现ILowCodePlugin接口",
+      "生成器必须实现ICodeGenerator接口", 
+      "运行时组件必须支持数据绑定",
+      "所有组件必须支持编辑和预览模式"
+    ]
+  }
+}

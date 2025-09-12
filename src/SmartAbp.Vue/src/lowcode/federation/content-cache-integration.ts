@@ -11,10 +11,10 @@ import {
   globalCompilationCache,
   computeContentHash,
   cacheCompiledCode,
-  getCachedCompilation
-} from './content-cache'
-import type { CodegenPlugin, GeneratedCode, PluginContext } from '../kernel/types'
-import type { RemoteSpec } from './types'
+  getCachedCompilation,
+} from "./content-cache"
+import type { CodegenPlugin, GeneratedCode, PluginContext } from "../kernel/types"
+import type { RemoteSpec } from "./types"
 
 /**
  * 增强的插件包装器，集成内容寻址缓存
@@ -22,16 +22,16 @@ import type { RemoteSpec } from './types'
 export class CachedPluginWrapper {
   constructor(
     private plugin: CodegenPlugin,
-    private enableIncrementalCache: boolean = true
+    private enableIncrementalCache: boolean = true,
   ) {}
 
   /**
    * 带缓存的代码生成
    */
-  async generate<TSchema extends import('../kernel/types').Schema = any>(
+  async generate<TSchema extends import("../kernel/types").Schema = any>(
     schema: TSchema,
     config: any,
-    context: PluginContext
+    context: PluginContext,
   ): Promise<GeneratedCode> {
     if (!this.enableIncrementalCache) {
       return await this.plugin.generate(schema, config, context)
@@ -42,7 +42,7 @@ export class CachedPluginWrapper {
     const compilationOptions = {
       config,
       target: this.plugin.metadata.target,
-      capabilities: this.plugin.metadata.capabilities
+      capabilities: this.plugin.metadata.capabilities,
     }
 
     // 检查增量缓存
@@ -58,8 +58,8 @@ export class CachedPluginWrapper {
           ...cached.metadata.codeMetadata,
           generatedAt: cached.compiledAt,
           fromCache: true,
-          cacheKey: cached.cacheKey
-        }
+          cacheKey: cached.cacheKey,
+        },
       }
     }
 
@@ -79,9 +79,9 @@ export class CachedPluginWrapper {
         dependencies: result.dependencies,
         codeMetadata: result.metadata,
         compilationTime,
-        pluginName: this.plugin.metadata.name
+        pluginName: this.plugin.metadata.name,
       },
-      compilationOptions
+      compilationOptions,
     )
 
     context.logger?.info(`编译完成并缓存: ${cacheKey} (${compilationTime}ms)`)
@@ -90,14 +90,14 @@ export class CachedPluginWrapper {
     result.metadata = {
       ...result.metadata,
       // fromCache: false, // 不直接添加到CodeMetadata，而是通过扩展处理
-      generatedAt: Date.now()
+      generatedAt: Date.now(),
     }
 
     // 添加额外的缓存元数据
     ;(result as any).cacheInfo = {
       fromCache: false,
       cacheKey,
-      compilationTime
+      compilationTime,
     }
 
     return result
@@ -147,7 +147,7 @@ export class CachedFederationLoader {
    */
   static async loadPluginWithContentCache(
     spec: RemoteSpec,
-    expectedContentHash?: string
+    expectedContentHash?: string,
   ): Promise<CodegenPlugin> {
     // 如果提供了预期的内容哈希，先检查缓存
     if (expectedContentHash) {
@@ -167,7 +167,7 @@ export class CachedFederationLoader {
     }
 
     // 回退到正常的federation加载
-    const { loadFederated } = await import('./index')
+    const { loadFederated } = await import("./index")
     const plugin = await loadFederated<CodegenPlugin>(spec)
 
     // 计算并缓存插件内容
@@ -184,7 +184,7 @@ export class CachedFederationLoader {
     // 安全的代码执行环境
     // 实际实现中需要更严格的沙箱
     const module = { exports: {} }
-    const func = new Function('module', 'exports', code)
+    const func = new Function("module", "exports", code)
     func(module, module.exports)
     return (module as any).exports.default || module.exports
   }
@@ -212,7 +212,7 @@ export class CacheManager {
       removedCompilations,
       removedContent,
       memoryFreed: before.memoryUsageBytes - after.memoryUsageBytes,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     }
   }
 
@@ -228,14 +228,14 @@ export class CacheManager {
       memoryUsage: {
         current: stats.memoryUsageBytes,
         limit: 100 * 1024 * 1024, // 100MB
-        utilization: stats.memoryUsageBytes / (100 * 1024 * 1024)
+        utilization: stats.memoryUsageBytes / (100 * 1024 * 1024),
       },
       performance: {
         hitRatio: stats.hitRatio,
         averageEntrySize: contentStats.averageEntrySize,
-        totalAccessCount: contentStats.totalAccessCount
+        totalAccessCount: contentStats.totalAccessCount,
       },
-      recommendations: this.generateRecommendations(stats)
+      recommendations: this.generateRecommendations(stats),
     }
   }
 
@@ -243,15 +243,15 @@ export class CacheManager {
     const recommendations: string[] = []
 
     if (stats.hitRatio < 0.5) {
-      recommendations.push('缓存命中率较低，建议检查缓存策略')
+      recommendations.push("缓存命中率较低，建议检查缓存策略")
     }
 
     if (stats.memoryUsageBytes > 80 * 1024 * 1024) {
-      recommendations.push('内存使用较高，建议执行缓存清理')
+      recommendations.push("内存使用较高，建议执行缓存清理")
     }
 
     if (stats.compilationEntries > 1000) {
-      recommendations.push('编译缓存条目过多，建议清理过期缓存')
+      recommendations.push("编译缓存条目过多，建议清理过期缓存")
     }
 
     return recommendations
@@ -266,7 +266,7 @@ export class CacheManager {
 export async function precompileCommonComponents(
   schemas: any[],
   plugins: CodegenPlugin[],
-  context: PluginContext
+  context: PluginContext,
 ): Promise<void> {
   console.log(`开始预编译 ${schemas.length} 个schema，使用 ${plugins.length} 个插件`)
 
@@ -275,22 +275,22 @@ export async function precompileCommonComponents(
     await cachedPlugin.warmupCache(schemas, {}, context)
   }
 
-  console.log('预编译完成')
+  console.log("预编译完成")
 }
 
 /**
  * 开发模式缓存调试
  */
 export function enableCacheDebug(): void {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     // 添加全局缓存统计到window对象
     ;(globalThis as any).__smartabp_cache__ = {
       getStats: () => globalCompilationCache.getStats(),
       cleanup: () => CacheManager.cleanup(),
-      healthReport: () => CacheManager.getHealthReport()
+      healthReport: () => CacheManager.getHealthReport(),
     }
 
-    console.log('缓存调试已启用，使用 window.__smartabp_cache__ 访问缓存工具')
+    console.log("缓存调试已启用，使用 window.__smartabp_cache__ 访问缓存工具")
   }
 }
 

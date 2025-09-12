@@ -887,7 +887,7 @@ onMounted(() => {
   background: var(--theme-bg-hover);
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .demo-controls {
     grid-template-columns: 1fr;
   }

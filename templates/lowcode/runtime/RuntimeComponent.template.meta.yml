@@ -1,0 +1,53 @@
+name: "低代码引擎运行时组件"
+category: "lowcode/runtime"
+description: "用于创建可在低代码引擎中运行的Vue组件模板"
+tags:
+  - "lowcode"
+  - "runtime"
+  - "component"
+  - "vue"
+scenarios:
+  - "运行时组件开发"
+  - "可视化组件"
+  - "低代码组件库"
+ai_triggers:
+  - "创建运行时组件"
+  - "低代码组件"
+  - "运行时组件"
+  - "可视化组件"
+  - "引擎组件"
+dependencies:
+  - "Vue 3"
+  - "Element Plus"
+  - "SmartAbp低代码运行时"
+permissions_required: false
+parameters:
+  - name: "ComponentName"
+    type: "string"
+    description: "组件名称（PascalCase）"
+    required: true
+    example: "DataTable"
+  - name: "componentName"
+    type: "string"
+    description: "组件名称（camelCase）"
+    required: true
+    example: "dataTable"
+  - name: "ComponentDescription"
+    type: "string"
+    description: "组件功能描述"
+    required: true
+    example: "数据表格组件"
+  - name: "ComponentCategory"
+    type: "string"
+    description: "组件分类"
+    required: false
+    default: "basic"
+    example: "data-display"
+usage_examples:
+  - "数据表格组件"
+  - "图表组件"
+  - "表单组件"
+validation_rules:
+  - "组件名称必须符合PascalCase命名规范"
+  - "必须支持运行时数据绑定"
+  - "必须支持编辑模式和预览模式"

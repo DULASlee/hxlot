@@ -515,11 +515,17 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { logger } from '@/utils/logging'
+import { useFullscreen } from '@/composables/useFullscreen'
 
 // 组件日志器
 const componentLogger = logger.child({ component: 'DragDropFormView' })
 
-// 组件库定义
+// 全屏功能
+const fullscreenApi = useFullscreen()
+const formDesignerRef = ref<HTMLElement>()
+onMounted(() => { if (formDesignerRef.value) fullscreenApi.setFullscreenElement(formDesignerRef.value); void fullscreenApi.isFullscreen.value })
+
+// 组件库定义 - 扩展更多控件
 const componentGroups = ref([
   {
     key: 'basic',
@@ -530,6 +536,14 @@ const componentGroups = ref([
       { type: 'input', name: '文本输入', description: '单行文本输入框', icon: 'fas fa-edit' },
       { type: 'textarea', name: '文本域', description: '多行文本输入框', icon: 'fas fa-align-left' },
       { type: 'number', name: '数字输入', description: '数字输入框', icon: 'fas fa-calculator' },
+      { type: 'password', name: '密码输入', description: '密码输入框', icon: 'fas fa-lock' },
+      { type: 'email', name: '邮箱输入', description: '邮箱输入框', icon: 'fas fa-envelope' },
+      { type: 'url', name: 'URL输入', description: 'URL输入框', icon: 'fas fa-link' },
+      { type: 'phone', name: '电话输入', description: '电话号码输入框', icon: 'fas fa-phone' },
+      { type: 'password', name: '密码输入', description: '密码输入框', icon: 'fas fa-lock' },
+      { type: 'email', name: '邮箱输入', description: '邮箱输入框', icon: 'fas fa-envelope' },
+      { type: 'url', name: 'URL输入', description: 'URL输入框', icon: 'fas fa-link' },
+      { type: 'phone', name: '电话输入', description: '电话号码输入框', icon: 'fas fa-phone' },
       { type: 'select', name: '选择器', description: '下拉选择框', icon: 'fas fa-caret-down' },
       { type: 'radio', name: '单选框', description: '单选按钮组', icon: 'fas fa-dot-circle' },
       { type: 'checkbox', name: '复选框', description: '复选框组', icon: 'fas fa-check-square' }
@@ -542,11 +556,81 @@ const componentGroups = ref([
     collapsed: false,
     components: [
       { type: 'date', name: '日期选择', description: '日期选择器', icon: 'fas fa-calendar' },
+      { type: 'datetime', name: '日期时间', description: '日期时间选择器', icon: 'fas fa-calendar-alt' },
+      { type: 'daterange', name: '日期范围', description: '日期范围选择器', icon: 'fas fa-calendar-week' },
+      { type: 'image-upload', name: '图片上传', description: '图片上传组件', icon: 'fas fa-image' },
+      { type: 'slider', name: '滑块', description: '数值滑块', icon: 'fas fa-sliders-h' },
+      { type: 'color', name: '颜色选择', description: '颜色选择器', icon: 'fas fa-palette' },
+      { type: 'cascader', name: '级联选择', description: '级联选择器', icon: 'fas fa-sitemap' },
       { type: 'time', name: '时间选择', description: '时间选择器', icon: 'fas fa-clock' },
+      { type: 'upload', name: '文件上传', description: '文件上传组件', icon: 'fas fa-cloud-upload-alt' }
+    ]
+  },
+  {
+    key: 'layout',
+    title: '布局组件',
+    icon: 'fas fa-th-large',
+    collapsed: false,
+    components: [
+      { type: 'divider', name: '分割线', description: '内容分割线', icon: 'fas fa-minus' },
+      { type: 'card', name: '卡片容器', description: '卡片布局容器', icon: 'fas fa-square' },
+      { type: 'tabs', name: '标签页', description: '标签页容器', icon: 'fas fa-folder' },
+      { type: 'collapse', name: '折叠面板', description: '可折叠内容面板', icon: 'fas fa-compress-alt' },
+      { type: 'grid', name: '栅格布局', description: '响应式栅格布局', icon: 'fas fa-th' },
+      { type: 'table', name: '数据表格', description: '数据展示表格', icon: 'fas fa-table' }
+    ]
+  },
+  {
+    key: 'business',
+    title: '业务组件',
+    icon: 'fas fa-briefcase',
+    collapsed: false,
+    components: [
+      { type: 'user-select', name: '用户选择', description: '用户选择器', icon: 'fas fa-users' },
+      { type: 'dept-select', name: '部门选择', description: '部门选择器', icon: 'fas fa-building' },
+      { type: 'role-select', name: '角色选择', description: '角色选择器', icon: 'fas fa-user-tag' },
+      { type: 'dict-select', name: '字典选择', description: '数据字典选择器', icon: 'fas fa-book' },
+      { type: 'region-select', name: '地区选择', description: '地区选择器', icon: 'fas fa-map-marker-alt' },
+      { type: 'rich-text', name: '富文本编辑', description: '富文本编辑器', icon: 'fas fa-edit' },
+      { type: 'code-editor', name: '代码编辑', description: '代码编辑器', icon: 'fas fa-code' },
+      { type: 'time', name: '时间选择', description: '时间选择器', icon: 'fas fa-clock' },
+      { type: 'daterange', name: '日期范围', description: '日期范围选择器', icon: 'fas fa-calendar-week' },
       { type: 'upload', name: '文件上传', description: '文件上传组件', icon: 'fas fa-cloud-upload-alt' },
+      { type: 'image-upload', name: '图片上传', description: '图片上传组件', icon: 'fas fa-image' },
       { type: 'switch', name: '开关', description: '开关切换', icon: 'fas fa-toggle-on' },
       { type: 'rate', name: '评分', description: '评分组件', icon: 'fas fa-star' },
-      { type: 'slider', name: '滑块', description: '数值滑块', icon: 'fas fa-sliders-h' }
+      { type: 'slider', name: '滑块', description: '数值滑块', icon: 'fas fa-sliders-h' },
+      { type: 'color', name: '颜色选择', description: '颜色选择器', icon: 'fas fa-palette' },
+      { type: 'cascader', name: '级联选择', description: '级联选择器', icon: 'fas fa-sitemap' }
+    ]
+  },
+  {
+    key: 'layout',
+    title: '布局组件',
+    icon: 'fas fa-th-large',
+    collapsed: false,
+    components: [
+      { type: 'divider', name: '分割线', description: '内容分割线', icon: 'fas fa-minus' },
+      { type: 'card', name: '卡片容器', description: '卡片布局容器', icon: 'fas fa-square' },
+      { type: 'tabs', name: '标签页', description: '标签页容器', icon: 'fas fa-folder' },
+      { type: 'collapse', name: '折叠面板', description: '可折叠内容面板', icon: 'fas fa-compress-alt' },
+      { type: 'grid', name: '栅格布局', description: '响应式栅格布局', icon: 'fas fa-th' },
+      { type: 'table', name: '数据表格', description: '数据展示表格', icon: 'fas fa-table' }
+    ]
+  },
+  {
+    key: 'business',
+    title: '业务组件',
+    icon: 'fas fa-briefcase',
+    collapsed: false,
+    components: [
+      { type: 'user-select', name: '用户选择', description: '用户选择器', icon: 'fas fa-users' },
+      { type: 'dept-select', name: '部门选择', description: '部门选择器', icon: 'fas fa-building' },
+      { type: 'role-select', name: '角色选择', description: '角色选择器', icon: 'fas fa-user-tag' },
+      { type: 'dict-select', name: '字典选择', description: '数据字典选择器', icon: 'fas fa-book' },
+      { type: 'region-select', name: '地区选择', description: '地区选择器', icon: 'fas fa-map-marker-alt' },
+      { type: 'rich-text', name: '富文本编辑', description: '富文本编辑器', icon: 'fas fa-edit' },
+      { type: 'code-editor', name: '代码编辑', description: '代码编辑器', icon: 'fas fa-code' }
     ]
   }
 ])
@@ -1096,7 +1180,7 @@ onMounted(() => {
   background: var(--theme-bg-hover);
   border-color: var(--theme-brand-primary);
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
 
 .component-item:active {
@@ -1282,7 +1366,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   font-size: var(--font-size-xs);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
 }
 
 .move-btn {
@@ -1472,11 +1556,8 @@ onMounted(() => {
 /* 预览模态框 */
 .preview-modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1565,13 +1646,13 @@ onMounted(() => {
   border: 1px solid var(--theme-border-base);
 }
 
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
   .form-designer {
     grid-template-columns: 250px 1fr 280px;
   }
 }
 
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .form-designer {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto 1fr;
@@ -1582,7 +1663,7 @@ onMounted(() => {
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .bottom-toolbar {
     flex-direction: column;
     gap: var(--spacing-3);

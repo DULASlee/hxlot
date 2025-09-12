@@ -382,7 +382,7 @@ const deleteProject = (project: Project) => {
 .btn-primary svg {
   width: 16px;
   height: 16px;
-  fill: currentColor;
+  fill: currentcolor;
 }
 
 .projects-grid {
@@ -401,7 +401,7 @@ const deleteProject = (project: Project) => {
 }
 
 .project-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
   transform: translateY(-2px);
 }
 
@@ -465,7 +465,7 @@ const deleteProject = (project: Project) => {
 .meta-item svg {
   width: 16px;
   height: 16px;
-  fill: currentColor;
+  fill: currentcolor;
 }
 
 .project-progress {
@@ -542,17 +542,14 @@ const deleteProject = (project: Project) => {
 .action-btn svg {
   width: 16px;
   height: 16px;
-  fill: currentColor;
+  fill: currentcolor;
 }
 
 /* 模态框样式 */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgb(0 0 0 / 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -565,7 +562,7 @@ const deleteProject = (project: Project) => {
   background: var(--color-bg-primary);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 20%);
 }
 
 .modal-header {
@@ -651,7 +648,7 @@ const deleteProject = (project: Project) => {
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .toolbar {
     flex-direction: column;
     gap: 16px;

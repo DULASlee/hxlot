@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { defineStore } from "pinia"
+import { ref, computed } from "vue"
 
 export interface UserInfo {
   id: string
@@ -14,10 +14,10 @@ export interface LoginCredentials {
   tenantName?: string
 }
 
-export const useAuthStore = defineStore('auth', () => {
+export const useAuthStore = defineStore("auth", () => {
   // 状态
-  const token = ref<string | null>(localStorage.getItem('access_token'))
-  const refreshToken = ref<string | null>(localStorage.getItem('refresh_token'))
+  const token = ref<string | null>(localStorage.getItem("access_token"))
+  const refreshToken = ref<string | null>(localStorage.getItem("refresh_token"))
   const userInfo = ref<UserInfo | null>(null)
   const isLoading = ref(false)
 
@@ -30,11 +30,11 @@ export const useAuthStore = defineStore('auth', () => {
   // 方法
   const setToken = (accessToken: string, refreshTokenValue?: string) => {
     token.value = accessToken
-    localStorage.setItem('access_token', accessToken)
+    localStorage.setItem("access_token", accessToken)
 
     if (refreshTokenValue) {
       refreshToken.value = refreshTokenValue
-      localStorage.setItem('refresh_token', refreshTokenValue)
+      localStorage.setItem("refresh_token", refreshTokenValue)
     }
   }
 
@@ -46,8 +46,8 @@ export const useAuthStore = defineStore('auth', () => {
     token.value = null
     refreshToken.value = null
     userInfo.value = null
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
+    localStorage.removeItem("access_token")
+    localStorage.removeItem("refresh_token")
   }
 
   const getAuthHeader = () => {
@@ -59,15 +59,15 @@ export const useAuthStore = defineStore('auth', () => {
       isLoading.value = true
 
       // 模拟API调用
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      if (credentials.username === 'admin' && credentials.password === '1q2w3E*') {
-        const mockToken = 'mock-jwt-token-' + Date.now()
+      if (credentials.username === "admin" && credentials.password === "1q2w3E*") {
+        const mockToken = "mock-jwt-token-" + Date.now()
         const mockUser: UserInfo = {
-          id: '1',
+          id: "1",
           username: credentials.username,
-          email: 'admin@example.com',
-          roles: ['admin']
+          email: "admin@example.com",
+          roles: ["admin"],
         }
 
         setToken(mockToken)
@@ -75,7 +75,7 @@ export const useAuthStore = defineStore('auth', () => {
 
         return { success: true, user: mockUser, token: mockToken }
       } else {
-        throw new Error('用户名或密码错误')
+        throw new Error("用户名或密码错误")
       }
     } catch (err) {
       throw err
@@ -103,6 +103,6 @@ export const useAuthStore = defineStore('auth', () => {
     clearAuth,
     getAuthHeader,
     login,
-    logout
+    logout,
   }
 })

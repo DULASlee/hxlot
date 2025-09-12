@@ -4,10 +4,10 @@
  * 整合菜单store和路由功能
  */
 
-import { computed, onMounted, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useMenuStore } from '@/stores'
-import type { MenuItem } from '@/types/menu'
+import { computed, onMounted, watch } from "vue"
+import { useRouter, useRoute } from "vue-router"
+import { useMenuStore } from "@/stores"
+import type { MenuItem } from "@/types/menu"
 
 /**
  * 菜单管理Composable
@@ -46,19 +46,19 @@ export function useMenu() {
    * 根据菜单类型执行不同的操作
    */
   const handleMenuClick = async (menuItem: MenuItem) => {
-    console.log('处理菜单点击:', menuItem)
+    console.log("处理菜单点击:", menuItem)
 
-    if (menuItem.type === 'folder') {
+    if (menuItem.type === "folder") {
       // 文件夹菜单：展开/收缩 + 显示副菜单
       menuStore.toggleMenuExpansion(menuItem.key)
       menuStore.toggleSubmenu(menuItem.key)
-    } else if (menuItem.type === 'page') {
+    } else if (menuItem.type === "page") {
       // 页面菜单：导航到页面
       await navigateToPage(menuItem)
       menuStore.closeSubmenu()
-    } else if (menuItem.type === 'external') {
+    } else if (menuItem.type === "external") {
       // 外部链接：打开新窗口/标签页
-      window.open(menuItem.url, menuItem.target || '_blank')
+      window.open(menuItem.url, menuItem.target || "_blank")
     }
   }
 
@@ -66,9 +66,9 @@ export function useMenu() {
    * 处理子菜单项点击
    */
   const handleSubMenuClick = async (subMenuItem: MenuItem) => {
-    console.log('处理子菜单点击:', subMenuItem)
+    console.log("处理子菜单点击:", subMenuItem)
 
-    if (subMenuItem.type === 'page') {
+    if (subMenuItem.type === "page") {
       await navigateToPage(subMenuItem)
       menuStore.setActiveMenu(menuStore.menuState.activeMenuKey, subMenuItem.key)
     }
@@ -78,7 +78,7 @@ export function useMenu() {
    * 导航到指定页面
    */
   const navigateToPage = async (menuItem: MenuItem) => {
-    if (menuItem.type !== 'page') {
+    if (menuItem.type !== "page") {
       return false
     }
 
@@ -92,7 +92,7 @@ export function useMenu() {
       console.log(`导航到页面: ${menuItem.title} (${menuItem.path})`)
       return true
     } catch (error) {
-      console.error('页面导航失败:', error)
+      console.error("页面导航失败:", error)
       return false
     }
   }
@@ -175,7 +175,7 @@ export function useMenu() {
       breadcrumbs.push({
         title: activeMenu.value.title,
         key: activeMenu.value.key,
-        icon: activeMenu.value.icon
+        icon: activeMenu.value.icon,
       })
     }
 
@@ -184,7 +184,7 @@ export function useMenu() {
       breadcrumbs.push({
         title: activeSubMenu.value.title,
         key: activeSubMenu.value.key,
-        icon: activeSubMenu.value.icon
+        icon: activeSubMenu.value.icon,
       })
     }
 
@@ -208,7 +208,7 @@ export function useMenu() {
   const canAccessMenu = (menuItem: MenuItem): boolean => {
     return menuStore.filteredMenus.some((menu: MenuItem) => {
       if (menu.key === menuItem.key) return true
-      if (menu.type === 'folder' && menu.children) {
+      if (menu.type === "folder" && menu.children) {
         return menu.children.some((child: MenuItem) => child.key === menuItem.key)
       }
       return false
@@ -224,10 +224,10 @@ export function useMenu() {
     let folderMenus = 0
 
     const countMenus = (menus: MenuItem[]) => {
-      menus.forEach(menu => {
+      menus.forEach((menu) => {
         totalMenus++
-        if (menu.type === 'page') pageMenus++
-        if (menu.type === 'folder') {
+        if (menu.type === "page") pageMenus++
+        if (menu.type === "folder") {
           folderMenus++
           if (menu.children) countMenus(menu.children)
         }
@@ -241,7 +241,7 @@ export function useMenu() {
       pages: pageMenus,
       folders: folderMenus,
       expandedFolders: menuState.value.expandedMenuKeys.length,
-      openTabs: menuState.value.openTabs.length
+      openTabs: menuState.value.openTabs.length,
     }
   })
 
@@ -255,7 +255,7 @@ export function useMenu() {
     (newPath) => {
       updateMenuFromRoute(newPath)
     },
-    { immediate: true }
+    { immediate: true },
   )
 
   // 组件挂载时初始化菜单
@@ -275,7 +275,7 @@ export function useMenu() {
     showSubmenu: menuState.value.showSubmenu,
     tabsCount: menuState.value.openTabs.length,
     permissionSummary: permissionSummary.value,
-    menuStats: getMenuStats.value
+    menuStats: getMenuStats.value,
   }))
 
   // 开发环境下输出调试信息
@@ -283,9 +283,9 @@ export function useMenu() {
     watch(
       debugInfo,
       (newDebugInfo) => {
-        console.log('🍖 Menu Debug Info:', newDebugInfo)
+        console.log("🍖 Menu Debug Info:", newDebugInfo)
       },
-      { deep: true }
+      { deep: true },
     )
   }
 
@@ -332,6 +332,6 @@ export function useMenu() {
     getMenuStats,
 
     // 调试信息 (开发环境)
-    debugInfo: import.meta.env.DEV ? debugInfo : null
+    debugInfo: import.meta.env.DEV ? debugInfo : null,
   }
 }

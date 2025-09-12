@@ -1,0 +1,112 @@
+{
+  "industryStandards": {
+    "frontend": {
+      "vue": {
+        "codingStandards": [
+          "Vue.js官方风格指南",
+          "TypeScript严格模式",
+          "ESLint + Prettier代码格式化",
+          "组件命名使用PascalCase",
+          "文件命名使用kebab-case",
+          "CSS类名使用BEM命名规范"
+        ],
+        "performanceStandards": [
+          "首屏加载时间 < 3秒",
+          "交互响应时间 < 100ms",
+          "Lighthouse性能评分 > 90",
+          "包体积优化，单个chunk < 250KB",
+          "图片懒加载和压缩优化"
+        ],
+        "accessibilityStandards": [
+          "WCAG 2.1 AA级别合规",
+          "键盘导航完全支持",
+          "屏幕阅读器兼容",
+          "颜色对比度 > 4.5:1",
+          "语义化HTML标签使用"
+        ]
+      },
+      "security": [
+        "XSS攻击防护",
+        "CSRF攻击防护",
+        "内容安全策略(CSP)",
+        "HTTPS强制使用",
+        "敏感数据加密存储"
+      ]
+    },
+    "backend": {
+      "abp": {
+        "architectureStandards": [
+          "领域驱动设计(DDD)",
+          "CQRS命令查询分离",
+          "事件驱动架构",
+          "微服务架构模式",
+          "依赖注入容器使用"
+        ],
+        "codingStandards": [
+          "C#编码规范",
+          "异步编程最佳实践",
+          "SOLID原则遵循",
+          "单元测试覆盖率 > 80%",
+          "代码注释和文档完整"
+        ]
+      },
+      "api": {
+        "restfulStandards": [
+          "HTTP方法正确使用",
+          "状态码标准化",
+          "URL设计RESTful",
+          "版本控制策略",
+          "统一响应格式"
+        ],
+        "securityStandards": [
+          "JWT令牌认证",
+          "OAuth 2.0授权",
+          "API限流和熔断",
+          "输入参数验证",
+          "SQL注入防护"
+        ]
+      },
+      "database": {
+        "designStandards": [
+          "第三范式设计",
+          "索引优化策略",
+          "分库分表规划",
+          "读写分离架构",
+          "数据备份策略"
+        ]
+      }
+    },
+    "testing": {
+      "frontend": [
+        "单元测试(Jest/Vitest)",
+        "组件测试(Vue Test Utils)",
+        "E2E测试(Cypress/Playwright)",
+        "视觉回归测试",
+        "性能测试"
+      ],
+      "backend": [
+        "单元测试(xUnit)",
+        "集成测试",
+        "API测试",
+        "负载测试",
+        "安全测试"
+      ]
+    },
+    "deployment": {
+      "cicd": [
+        "自动化构建",
+        "自动化测试",
+        "代码质量检查",
+        "安全扫描",
+        "自动化部署"
+      ],
+      "monitoring": [
+        "应用性能监控(APM)",
+        "日志聚合分析",
+        "错误追踪",
+        "业务指标监控",
+        "告警机制"
+      ]
+    }
+  }
+}

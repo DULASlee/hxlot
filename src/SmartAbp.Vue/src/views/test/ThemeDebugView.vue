@@ -205,12 +205,12 @@ onMounted(() => {
 
 .debug-panel h1 {
   color: var(--theme-brand-primary, #0ea5e9);
-  margin: 0 0 24px 0;
+  margin: 0 0 24px;
 }
 
 .debug-panel h2 {
   color: var(--theme-text-primary, #111827);
-  margin: 0 0 16px 0;
+  margin: 0 0 16px;
   font-size: 20px;
   border-bottom: 2px solid var(--theme-border-base, #e5e7eb);
   padding-bottom: 8px;
@@ -221,11 +221,11 @@ onMounted(() => {
 .css-variables,
 .controls,
 .visual-test {
-  background: var(--theme-bg-component, #ffffff);
+  background: var(--theme-bg-component, #fff);
   border: 1px solid var(--theme-border-base, #e5e7eb);
   border-radius: 12px;
   padding: 24px;
-  box-shadow: var(--theme-shadow-sm, 0 1px 2px 0 rgba(0, 0, 0, 0.05));
+  box-shadow: var(--theme-shadow-sm, 0 1px 2px 0 rgb(0 0 0 / 5%));
 }
 
 .current-state p,
@@ -279,20 +279,20 @@ onMounted(() => {
   padding: 8px 16px;
   border: 1px solid var(--theme-border-base, #e5e7eb);
   border-radius: 6px;
-  background: var(--theme-bg-component, #ffffff);
+  background: var(--theme-bg-component, #fff);
   color: var(--theme-text-primary, #111827);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .theme-buttons button:hover {
-  background: var(--theme-bg-hover, rgba(0, 0, 0, 0.04));
+  background: var(--theme-bg-hover, rgb(0 0 0 / 4%));
   border-color: var(--theme-brand-primary, #0ea5e9);
 }
 
 .theme-buttons button.active {
   background: var(--theme-brand-primary, #0ea5e9);
-  color: var(--theme-text-inverse, #ffffff);
+  color: var(--theme-text-inverse, #fff);
   border-color: var(--theme-brand-primary, #0ea5e9);
 }
 
@@ -319,7 +319,7 @@ onMounted(() => {
   border: 1px solid var(--theme-brand-primary, #0ea5e9);
   border-radius: 6px;
   background: var(--theme-brand-primary, #0ea5e9);
-  color: var(--theme-text-inverse, #ffffff);
+  color: var(--theme-text-inverse, #fff);
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease;
@@ -334,7 +334,7 @@ onMounted(() => {
   border: 1px solid var(--theme-border-base, #e5e7eb);
   border-radius: 8px;
   overflow: hidden;
-  background: var(--theme-bg-component, #ffffff);
+  background: var(--theme-bg-component, #fff);
 }
 
 .card-header {
@@ -350,7 +350,7 @@ onMounted(() => {
 }
 
 .card-body p {
-  margin: 0 0 16px 0;
+  margin: 0 0 16px;
   color: var(--theme-text-secondary, #374151);
   line-height: 1.6;
 }
@@ -366,7 +366,7 @@ onMounted(() => {
 
 .test-button.primary {
   background: var(--theme-brand-primary, #0ea5e9);
-  color: var(--theme-text-inverse, #ffffff);
+  color: var(--theme-text-inverse, #fff);
   border: 1px solid var(--theme-brand-primary, #0ea5e9);
 }
 
@@ -376,13 +376,13 @@ onMounted(() => {
 }
 
 .test-button.secondary {
-  background: var(--theme-bg-component, #ffffff);
+  background: var(--theme-bg-component, #fff);
   color: var(--theme-text-primary, #111827);
   border: 1px solid var(--theme-border-base, #e5e7eb);
 }
 
 .test-button.secondary:hover {
-  background: var(--theme-bg-hover, rgba(0, 0, 0, 0.04));
+  background: var(--theme-bg-hover, rgb(0 0 0 / 4%));
   border-color: var(--theme-brand-primary, #0ea5e9);
   color: var(--theme-brand-primary, #0ea5e9);
 }

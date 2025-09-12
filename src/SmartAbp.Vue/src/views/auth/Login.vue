@@ -50,7 +50,7 @@ import LoginForm from '@/components/auth/LoginForm.vue'
 .login-card {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgb(0 0 0 / 10%);
   padding: 40px;
   text-align: center;
 }
@@ -97,7 +97,7 @@ import LoginForm from '@/components/auth/LoginForm.vue'
   margin: 0;
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .login-card {
     padding: 30px 20px;
   }

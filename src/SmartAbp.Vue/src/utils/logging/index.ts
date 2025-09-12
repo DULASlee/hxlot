@@ -4,8 +4,8 @@
  */
 
 // 核心导出
-export { EnhancedLogger, createLogger, createModuleLogger } from './enhanced-logger'
-export type { LogTransport, LogEntry } from './transports'
+export { EnhancedLogger, createLogger, createModuleLogger } from "./enhanced-logger"
+export type { LogTransport, LogEntry } from "./transports"
 export {
   LogLevel,
   LOG_LEVEL_NAMES,
@@ -13,14 +13,14 @@ export {
   ConsoleTransport,
   FileTransport,
   MemoryTransport,
-  NetworkTransport
-} from './transports'
+  NetworkTransport,
+} from "./transports"
 
 // 性能追踪集成
-export { logManager, trackPerformance, type PerformanceTracker } from '../logManager'
+export { logManager, trackPerformance, type PerformanceTracker } from "../logManager"
 
-import { createLogger } from './enhanced-logger'
-import { ConsoleTransport, FileTransport, LogLevel } from './transports'
+import { createLogger } from "./enhanced-logger"
+import { ConsoleTransport, FileTransport, LogLevel } from "./transports"
 
 /**
  * 全局日志器实例 - 向后兼容
@@ -28,46 +28,51 @@ import { ConsoleTransport, FileTransport, LogLevel } from './transports'
 export const logger = createLogger({
   level: LogLevel.DEBUG,
   context: {
-    source: 'smartabp',
-    version: '1.0.0'
+    source: "smartabp",
+    version: "1.0.0",
   },
   transports: [
     new ConsoleTransport({
       level: LogLevel.DEBUG,
       enableColors: true,
-      enableGrouping: true
+      enableGrouping: true,
     }),
-    ...(process.env.NODE_ENV === 'production' ? [
-      new FileTransport({
-        level: LogLevel.WARN,
-        filePath: 'logs/smartabp-app.log'
-      })
-    ] : [])
+    ...(process.env.NODE_ENV === "production"
+      ? [
+          new FileTransport({
+            level: LogLevel.WARN,
+            filePath: "logs/smartabp-app.log",
+          }),
+        ]
+      : []),
   ],
   enableBatching: true,
   batchSize: 10,
-  batchTimeout: 100
+  batchTimeout: 100,
 })
 
 /**
  * 低代码引擎专用日志器
  */
-export const lowcodeLogger = logger.child({
-  module: 'lowcode-engine',
-  source: 'lowcode'
-}, {
-  transports: [
-    new ConsoleTransport({
-      level: LogLevel.DEBUG,
-      enableColors: true,
-      enableGrouping: true
-    }),
-    new FileTransport({
-      level: LogLevel.INFO,
-      filePath: 'logs/lowcode-engine.log'
-    })
-  ]
-})
+export const lowcodeLogger = logger.child(
+  {
+    module: "lowcode-engine",
+    source: "lowcode",
+  },
+  {
+    transports: [
+      new ConsoleTransport({
+        level: LogLevel.DEBUG,
+        enableColors: true,
+        enableGrouping: true,
+      }),
+      new FileTransport({
+        level: LogLevel.INFO,
+        filePath: "logs/lowcode-engine.log",
+      }),
+    ],
+  },
+)
 
 /**
  * 创建应用程序日志器
@@ -75,7 +80,7 @@ export const lowcodeLogger = logger.child({
 export function createAppLogger(appName: string) {
   return logger.child({
     app: appName,
-    source: 'application'
+    source: "application",
   })
 }
 
@@ -85,7 +90,7 @@ export function createAppLogger(appName: string) {
 export function createComponentLogger(componentName: string) {
   return logger.child({
     component: componentName,
-    source: 'component'
+    source: "component",
   })
 }
 
@@ -95,7 +100,7 @@ export function createComponentLogger(componentName: string) {
 export function createServiceLogger(serviceName: string) {
   return logger.child({
     service: serviceName,
-    source: 'service'
+    source: "service",
   })
 }
 
@@ -105,7 +110,7 @@ export function createServiceLogger(serviceName: string) {
 export function createPluginLogger(pluginName: string) {
   return logger.child({
     plugin: pluginName,
-    source: 'plugin'
+    source: "plugin",
   })
 }
 
@@ -117,8 +122,10 @@ export const log = {
   info: (message: string, data?: any) => logger.info(message, data),
   success: (message: string, data?: any) => logger.success(message, data),
   warn: (message: string, data?: any) => logger.warn(message, data),
-  error: (message: string, error?: Error | string, data?: any) => logger.error(message, error, data),
-  fatal: (message: string, error?: Error | string, data?: any) => logger.fatal(message, error, data)
+  error: (message: string, error?: Error | string, data?: any) =>
+    logger.error(message, error, data),
+  fatal: (message: string, error?: Error | string, data?: any) =>
+    logger.fatal(message, error, data),
 }
 
 /**
@@ -129,7 +136,7 @@ export const perf = {
   trackAsync: <T>(name: string, operation: () => Promise<T>, context?: Record<string, any>) =>
     logger.trackAsync(name, operation, context),
   trackSync: <T>(name: string, operation: () => T, context?: Record<string, any>) =>
-    logger.trackSync(name, operation, context)
+    logger.trackSync(name, operation, context),
 }
 
 /**
@@ -137,24 +144,24 @@ export const perf = {
  */
 export const system = {
   startup: (details: Record<string, any>) => {
-    const systemLogger = logger.child({ type: 'system-event' })
-    systemLogger.info('System startup', details)
+    const systemLogger = logger.child({ type: "system-event" })
+    systemLogger.info("System startup", details)
   },
 
   shutdown: (details: Record<string, any>) => {
-    const systemLogger = logger.child({ type: 'system-event' })
-    systemLogger.info('System shutdown', details)
+    const systemLogger = logger.child({ type: "system-event" })
+    systemLogger.info("System shutdown", details)
   },
 
   error: (message: string, error: Error, context?: Record<string, any>) => {
-    const systemLogger = logger.child({ type: 'system-error' })
+    const systemLogger = logger.child({ type: "system-error" })
     systemLogger.error(`System Error: ${message}`, error, context)
   },
 
   security: (event: string, details: Record<string, any>) => {
-    const securityLogger = logger.child({ type: 'security-event' })
+    const securityLogger = logger.child({ type: "security-event" })
     securityLogger.warn(`Security Event: ${event}`, details)
-  }
+  },
 }
 
 /**
@@ -162,19 +169,19 @@ export const system = {
  */
 export const userActivity = {
   login: (userId: string, details: Record<string, any>) => {
-    const activityLogger = logger.child({ type: 'user-activity', userId })
-    activityLogger.info('User login', details)
+    const activityLogger = logger.child({ type: "user-activity", userId })
+    activityLogger.info("User login", details)
   },
 
   logout: (userId: string, details: Record<string, any>) => {
-    const activityLogger = logger.child({ type: 'user-activity', userId })
-    activityLogger.info('User logout', details)
+    const activityLogger = logger.child({ type: "user-activity", userId })
+    activityLogger.info("User logout", details)
   },
 
   action: (userId: string, action: string, details: Record<string, any>) => {
-    const activityLogger = logger.child({ type: 'user-activity', userId })
+    const activityLogger = logger.child({ type: "user-activity", userId })
     activityLogger.info(`User action: ${action}`, details)
-  }
+  },
 }
 
 /**
@@ -182,16 +189,22 @@ export const userActivity = {
  */
 export const api = {
   request: (url: string, method: string, details?: Record<string, any>) => {
-    const apiLogger = logger.child({ type: 'api-request' })
+    const apiLogger = logger.child({ type: "api-request" })
     apiLogger.info(`API Request: ${method} ${url}`, details)
   },
 
-  response: (url: string, method: string, status: number, duration: number, details?: Record<string, any>) => {
-    const apiLogger = logger.child({ type: 'api-response' })
+  response: (
+    url: string,
+    method: string,
+    status: number,
+    duration: number,
+    details?: Record<string, any>,
+  ) => {
+    const apiLogger = logger.child({ type: "api-response" })
     const metadata = {
       status,
       duration,
-      ...details
+      ...details,
     }
 
     if (status >= 400) {
@@ -204,9 +217,9 @@ export const api = {
   },
 
   error: (url: string, method: string, error: Error, details?: Record<string, any>) => {
-    const apiLogger = logger.child({ type: 'api-error' })
+    const apiLogger = logger.child({ type: "api-error" })
     apiLogger.error(`API Error: ${method} ${url}`, error, details)
-  }
+  },
 }
 
 /**
@@ -214,33 +227,33 @@ export const api = {
  */
 export const database = {
   query: (sql: string, duration: number, details?: Record<string, any>) => {
-    const dbLogger = logger.child({ type: 'database-query' })
-    dbLogger.debug('Database query executed', {
+    const dbLogger = logger.child({ type: "database-query" })
+    dbLogger.debug("Database query executed", {
       sql: sql.substring(0, 200), // 限制SQL长度
       duration,
-      ...details
+      ...details,
     })
   },
 
   slowQuery: (sql: string, duration: number, threshold = 1000, details?: Record<string, any>) => {
     if (duration > threshold) {
-      const dbLogger = logger.child({ type: 'database-slow-query' })
-      dbLogger.warn('Slow database query detected', {
+      const dbLogger = logger.child({ type: "database-slow-query" })
+      dbLogger.warn("Slow database query detected", {
         sql: sql.substring(0, 200),
         duration,
         threshold,
-        ...details
+        ...details,
       })
     }
   },
 
   error: (sql: string, error: Error, details?: Record<string, any>) => {
-    const dbLogger = logger.child({ type: 'database-error' })
-    dbLogger.error('Database query failed', error, {
+    const dbLogger = logger.child({ type: "database-error" })
+    dbLogger.error("Database query failed", error, {
       sql: sql.substring(0, 200),
-      ...details
+      ...details,
     })
-  }
+  },
 }
 
 /**
@@ -253,44 +266,46 @@ export function initLogging(config?: {
   networkEndpoint?: string
   logDirectory?: string
 }) {
-  logger.info('Initializing SmartAbp logging system', config)
+  logger.info("Initializing SmartAbp logging system", config)
 
   // 在生产环境启用网络日志传输
   if (config?.enableNetworkLogging && config.networkEndpoint) {
-    const { NetworkTransport } = require('./transports')
-    logger.addTransport(new NetworkTransport({
-      level: LogLevel.ERROR,
-      endpoint: config.networkEndpoint,
-      batchSize: 20,
-      flushInterval: 10000 // 10秒
-    }))
+    const { NetworkTransport } = require("./transports")
+    logger.addTransport(
+      new NetworkTransport({
+        level: LogLevel.ERROR,
+        endpoint: config.networkEndpoint,
+        batchSize: 20,
+        flushInterval: 10000, // 10秒
+      }),
+    )
   }
 
   // 设置全局错误处理
-  if (typeof window !== 'undefined') {
-    window.addEventListener('error', (event) => {
-      system.error('Uncaught Error', new Error(event.message), {
+  if (typeof window !== "undefined") {
+    window.addEventListener("error", (event) => {
+      system.error("Uncaught Error", new Error(event.message), {
         filename: event.filename,
         lineno: event.lineno,
-        colno: event.colno
+        colno: event.colno,
       })
     })
 
-    window.addEventListener('unhandledrejection', (event) => {
-      system.error('Unhandled Promise Rejection', new Error(event.reason), {
-        type: 'unhandled-rejection'
+    window.addEventListener("unhandledrejection", (event) => {
+      system.error("Unhandled Promise Rejection", new Error(event.reason), {
+        type: "unhandled-rejection",
       })
     })
   }
 
-  logger.info('SmartAbp logging system initialized successfully')
+  logger.info("SmartAbp logging system initialized successfully")
 }
 
 /**
  * 清理日志系统资源
  */
 export async function cleanupLogging() {
-  logger.info('Cleaning up logging system')
+  logger.info("Cleaning up logging system")
   await logger.flush()
   await logger.destroy()
 }
@@ -315,7 +330,7 @@ export function useLogger(context?: Record<string, any>) {
     fatal: componentLogger.fatal.bind(componentLogger),
     startTimer: componentLogger.startTimer.bind(componentLogger),
     trackAsync: componentLogger.trackAsync.bind(componentLogger),
-    trackSync: componentLogger.trackSync.bind(componentLogger)
+    trackSync: componentLogger.trackSync.bind(componentLogger),
   }
 }
 
@@ -330,21 +345,21 @@ export function usePerformanceTracking(context?: Record<string, any>) {
     trackAsync: <T>(name: string, operation: () => Promise<T>) =>
       perfLogger.trackAsync(name, operation, context),
     trackSync: <T>(name: string, operation: () => T) =>
-      perfLogger.trackSync(name, operation, context)
+      perfLogger.trackSync(name, operation, context),
   }
 }
 
 // ============= 默认初始化 =============
 
 // 在模块加载时进行基本初始化
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   // 浏览器环境
   initLogging({
-    level: process.env.NODE_ENV === 'development' ? LogLevel.DEBUG : LogLevel.INFO,
+    level: process.env.NODE_ENV === "development" ? LogLevel.DEBUG : LogLevel.INFO,
     enableFileLogging: true,
-    logDirectory: 'logs'
+    logDirectory: "logs",
   })
 } else {
   // Node.js 环境
-  logger.info('Logging system loaded in Node.js environment')
+  logger.info("Logging system loaded in Node.js environment")
 }

@@ -18,19 +18,24 @@ type LogTransport = {
   write?: (entry: unknown) => void
 }
 
-const logManager = __lowcodeRuntime.logManager as { startPerformanceTracking?: Function; endPerformanceTracking?: Function } | undefined
+const logManager = __lowcodeRuntime.logManager as
+  | { startPerformanceTracking?: Function; endPerformanceTracking?: Function }
+  | undefined
 
 // trackPerformance 类型声明：在运行时动态获取，避免编译期依赖
-import type { StructuredLogger as KernelLogger, LogLevel as KernelLogLevel, LogEntry as KernelLogEntry } from '../kernel/types'
+import type {
+  StructuredLogger as KernelLogger,
+  LogLevel as KernelLogLevel,
+  LogEntry as KernelLogEntry,
+} from "../kernel/types"
 
 /**
  * 映射 lowcode 的 LogLevel 到前端日志系统 LogLevel
  */
 function mapLevelToFrontend(level: KernelLogLevel): number {
   // 保持与宿主日志系统级别的数值一致
-  return (level as unknown) as number
+  return level as unknown as number
 }
-
 
 type EnhancedLoggerLike = {
   debug: (message: string, context?: Record<string, any>) => void
@@ -49,20 +54,30 @@ type EnhancedLoggerLike = {
   getLogs?: () => any[]
   getStats?: () => any
 }
-type EnhancedLoggerFactory = (opts: { level?: number; context?: Record<string, any>; transports?: LogTransport[] }) => { logger: EnhancedLoggerLike }
-const getEnhancedLoggerFactory = __lowcodeRuntime.getEnhancedLoggerFactory as EnhancedLoggerFactory | undefined
+type EnhancedLoggerFactory = (opts: {
+  level?: number
+  context?: Record<string, any>
+  transports?: LogTransport[]
+}) => { logger: EnhancedLoggerLike }
+const getEnhancedLoggerFactory = __lowcodeRuntime.getEnhancedLoggerFactory as
+  | EnhancedLoggerFactory
+  | undefined
 
 export class LoggerAdapter implements KernelLogger {
   private base: EnhancedLoggerLike
 
-  constructor(options?: { level?: KernelLogLevel; context?: Record<string, any>; transports?: LogTransport[] }) {
+  constructor(options?: {
+    level?: KernelLogLevel
+    context?: Record<string, any>
+    transports?: LogTransport[]
+  }) {
     const transports = (options?.transports ?? []) as LogTransport[]
     const factory = getEnhancedLoggerFactory
     if (factory) {
       const { logger } = factory({
         level: options?.level !== undefined ? mapLevelToFrontend(options.level) : undefined,
         context: options?.context,
-        transports
+        transports,
       })
       this.base = logger
     } else {
@@ -79,7 +94,7 @@ export class LoggerAdapter implements KernelLogger {
         removeTransport: (_n: string) => {},
         getTransports: () => [],
         setLevel: (_: number) => {},
-        getLevel: () => 1
+        getLevel: () => 1,
       }
     }
   }
@@ -129,7 +144,7 @@ export class LoggerAdapter implements KernelLogger {
     ;(adapter as any).base = child
     // 复制传输器（若必要）
     const transports = this.base.getTransports?.() ?? []
-    transports.forEach(t => adapter.addTransport(t))
+    transports.forEach((t) => adapter.addTransport(t))
     return adapter
   }
 
@@ -148,7 +163,7 @@ export class LoggerAdapter implements KernelLogger {
       } else if (level === 3) {
         this.base.warn(e.message, ctx)
       } else {
-        (this.base as any).error(e.message, undefined, ctx)
+        ;(this.base as any).error(e.message, undefined, ctx)
       }
     }
   }
@@ -156,7 +171,7 @@ export class LoggerAdapter implements KernelLogger {
   // 级别
   setLevel(level: KernelLogLevel): void {
     if ((this.base as any).setLevel) {
-      (this.base as any).setLevel(mapLevelToFrontend(level))
+      ;(this.base as any).setLevel(mapLevelToFrontend(level))
     } else {
       // 退化处理：创建一个新 logger 并替换内部引用
       const currentCtx = (this.base as any).context ?? {}
@@ -167,12 +182,12 @@ export class LoggerAdapter implements KernelLogger {
         const { logger } = factory({
           level: mapLevelToFrontend(level),
           context: currentCtx,
-          transports: transports as LogTransport[]
+          transports: transports as LogTransport[],
         })
         this.base = logger
       } else {
         // 后备：记录无法切换级别
-        this.base.warn?.('logger factory not available; level not changed', { targetLevel: level })
+        this.base.warn?.("logger factory not available; level not changed", { targetLevel: level })
       }
     }
   }
@@ -180,17 +195,17 @@ export class LoggerAdapter implements KernelLogger {
     if ((this.base as any).getLevel) {
       const lvUnknown = (this.base as any).getLevel() as unknown
       const lvNum = (lvUnknown as number) ?? 1
-      return (lvNum as unknown) as KernelLogLevel
+      return lvNum as unknown as KernelLogLevel
     }
     // 无 getLevel 时，返回 INFO 作为保守默认
-    return (1 as unknown) as KernelLogLevel
+    return 1 as unknown as KernelLogLevel
   }
 
   // 传输器
   addTransport(_transport: LogTransport): void {
     // 在低代码独立构建中跳过具体 transport 接线，交由运行时注入的 logger 决定
-    if (typeof (this.base as any).addTransport === 'function') {
-      (this.base as any).addTransport(_transport)
+    if (typeof (this.base as any).addTransport === "function") {
+      ;(this.base as any).addTransport(_transport)
     }
   }
   removeTransport(name: string): void {
@@ -199,8 +214,6 @@ export class LoggerAdapter implements KernelLogger {
   getTransports(): LogTransport[] {
     return this.base.getTransports ? this.base.getTransports() : []
   }
-
-
 
   // 扩展：导出、清理、统计（如果 EnhancedLogger 支持）
   clear(): void {
@@ -214,10 +227,17 @@ export class LoggerAdapter implements KernelLogger {
   }
 
   // 性能追踪：映射到 logManager
-  startTimer(name: string, context?: Record<string, any>): { stop: () => void; id: string } | undefined {
+  startTimer(
+    name: string,
+    context?: Record<string, any>,
+  ): { stop: () => void; id: string } | undefined {
     try {
-      if (!logManager?.startPerformanceTracking || !logManager?.endPerformanceTracking) return undefined
-      const tracker = (logManager.startPerformanceTracking as any)(name, context?.category || 'lowcode')
+      if (!logManager?.startPerformanceTracking || !logManager?.endPerformanceTracking)
+        return undefined
+      const tracker = (logManager.startPerformanceTracking as any)(
+        name,
+        context?.category || "lowcode",
+      )
       return {
         id: tracker.id,
         stop: () => (logManager.endPerformanceTracking as any)(tracker.id),
@@ -230,9 +250,15 @@ export class LoggerAdapter implements KernelLogger {
   // 操作跟踪：使用 trackPerformance 函数
   async trackOperation<T>(name: string, fn: () => Promise<T> | T): Promise<T> {
     // 动态读取全局注入，避免模块初始化时快照造成的失效
-    const rt = (globalThis as unknown as { __lowcodeRuntime?: { trackPerformance?: <R>(n: string, f: () => Promise<R> | R) => Promise<R> } }).__lowcodeRuntime
+    const rt = (
+      globalThis as unknown as {
+        __lowcodeRuntime?: {
+          trackPerformance?: <R>(n: string, f: () => Promise<R> | R) => Promise<R>
+        }
+      }
+    ).__lowcodeRuntime
     const tpf = rt?.trackPerformance
-    if (typeof tpf === 'function') {
+    if (typeof tpf === "function") {
       return await tpf(name, fn)
     }
     return await Promise.resolve().then(fn)
@@ -240,7 +266,10 @@ export class LoggerAdapter implements KernelLogger {
 }
 
 // 工厂：创建内核/插件日志器
-export function createLowCodeLogger(context?: Record<string, any>, level?: KernelLogLevel): KernelLogger {
+export function createLowCodeLogger(
+  context?: Record<string, any>,
+  level?: KernelLogLevel,
+): KernelLogger {
   return new LoggerAdapter({ context, level })
 }
 export function createPluginLogger(pluginName: string, extra?: Record<string, any>): KernelLogger {

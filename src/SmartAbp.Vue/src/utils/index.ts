@@ -1,19 +1,19 @@
 // 导入需要在函数中使用的模块
-import { logger, LogLevel } from '@/utils/logger'
-import { logManager } from '@/utils/logManager'
-import { analyzeCurrentLogs } from '@/utils/logAnalyzer'
-import { logExporter } from '@/utils/logExporter'
+import { logger, LogLevel } from "@/utils/logger"
+import { logManager } from "@/utils/logManager"
+import { analyzeCurrentLogs } from "@/utils/logAnalyzer"
+import { logExporter } from "@/utils/logExporter"
 
 // 导出日志系统核心功能
-export { logger, LogLevel, LOG_LEVEL_NAMES } from '@/utils/logger'
-export { logManager, trackPerformance } from '@/utils/logManager'
-export { logAnalyzer, analyzeCurrentLogs } from '@/utils/logAnalyzer'
-export { logExporter, ExportFormat } from '@/utils/logExporter'
+export { logger, LogLevel, LOG_LEVEL_NAMES } from "@/utils/logger"
+export { logManager, trackPerformance } from "@/utils/logManager"
+export { logAnalyzer, analyzeCurrentLogs } from "@/utils/logAnalyzer"
+export { logExporter, ExportFormat } from "@/utils/logExporter"
 
 // 导出类型
-export type { LogEntry, LogStats } from '@/utils/logger'
-export type { PerformanceTracker, PerformanceStats, ErrorStats } from '@/utils/logManager'
-export type { ExportConfig } from '@/utils/logExporter'
+export type { LogEntry, LogStats } from "@/utils/logger"
+export type { PerformanceTracker, PerformanceStats, ErrorStats } from "@/utils/logManager"
+export type { ExportConfig } from "@/utils/logExporter"
 
 // 便捷的日志记录函数
 export const createLogger = () => logger
@@ -46,12 +46,14 @@ export const endTracking = (trackingId: string) => {
 }
 
 // 批量日志记录
-export const logBatch = (entries: Array<{
-  level: any
-  message: string
-  category?: string
-  data?: any
-}>) => logManager.logBatch(entries)
+export const logBatch = (
+  entries: Array<{
+    level: any
+    message: string
+    category?: string
+    data?: any
+  }>,
+) => logManager.logBatch(entries)
 
 // 清理日志
 export const clearLogs = () => {
@@ -68,10 +70,10 @@ export const getLogStats = () => {
     success: logs.filter((log: any) => log.level === LogLevel.SUCCESS).length,
     warn: logs.filter((log: any) => log.level === LogLevel.WARN).length,
     error: logs.filter((log: any) => log.level === LogLevel.ERROR).length,
-    debug: logs.filter((log: any) => log.level === LogLevel.DEBUG).length
+    debug: logs.filter((log: any) => log.level === LogLevel.DEBUG).length,
   }
 }
 
 // 导出认证相关
-export { authService } from './auth'
-export { useAuth } from './useAuth'
+export { authService } from "./auth"
+export { useAuth } from "./useAuth"

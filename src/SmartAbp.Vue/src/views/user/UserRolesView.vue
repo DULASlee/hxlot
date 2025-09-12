@@ -374,13 +374,15 @@ onMounted(() => {
   background: white;
   border-radius: clamp(4px, 1vw, 8px);
   padding: clamp(16px, 4vw, 32px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
   width: 100%;
+
   /* 使用弹性伸缩，避免固定高度导致被父容器居中约束 */
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
   flex-direction: column;
+
   /* 内容区内部滚动，避免整个页面出现额外空白或被限制为小盒子 */
   overflow: auto;
   box-sizing: border-box;
@@ -416,8 +418,7 @@ onMounted(() => {
   background: #f7f8fa;
   border-radius: clamp(4px, 1vw, 8px);
   padding: clamp(16px, 3vw, 24px);
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden auto;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -454,7 +455,7 @@ onMounted(() => {
 
 .role-item:hover {
   border-color: #1e3a5f;
-  box-shadow: 0 2px 8px rgba(30, 58, 95, 0.1);
+  box-shadow: 0 2px 8px rgb(30 58 95 / 10%);
 }
 
 .role-item.active {
@@ -509,7 +510,7 @@ onMounted(() => {
 }
 
 .tree-node-content:hover {
-  background: rgba(30, 58, 95, 0.05);
+  background: rgb(30 58 95 / 5%);
 }
 
 .tree-expand-icon {
@@ -607,7 +608,7 @@ onMounted(() => {
   border-color: #1e3a5f;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .roles-layout {
     grid-template-columns: 1fr;
     gap: 16px;

@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed } from "vue"
 
 // 认证状态管理
 export interface UserInfo {
@@ -36,14 +36,16 @@ const currentUser = ref<UserInfo | null>(null)
 const tokenInfo = ref<TokenInfo | null>(null)
 
 // 存储键名（使用固定键名以确保持久化）
-const TOKEN_KEY = 'smartabp_token';
-const USER_KEY = 'smartabp_user';
-const REFRESH_TOKEN_KEY = 'smartabp_refresh_token';
+const TOKEN_KEY = "smartabp_token"
+const USER_KEY = "smartabp_user"
+const REFRESH_TOKEN_KEY = "smartabp_refresh_token"
 
 // API基础URL
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : 'https://localhost:44379')
-const CLIENT_ID = import.meta.env.VITE_CLIENT_ID || 'SmartAbp_App'
-const SCOPE = import.meta.env.VITE_SCOPE || 'SmartAbp'
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  (typeof window !== "undefined" ? window.location.origin : "https://localhost:44379")
+const CLIENT_ID = import.meta.env.VITE_CLIENT_ID || "SmartAbp_App"
+const SCOPE = import.meta.env.VITE_SCOPE || "SmartAbp"
 
 /**
  * 认证服务类
@@ -62,58 +64,61 @@ export class AuthService {
     return AuthService.instance
   }
 
-
   private refreshTimer: number | null = null
 
   /**
    * 登录
    */
-  async login(usernameOrCredentials: string | {username: string, password: string, tenantName?: string}, password?: string, tenantName?: string): Promise<boolean> {
+  async login(
+    usernameOrCredentials: string | { username: string; password: string; tenantName?: string },
+    password?: string,
+    tenantName?: string,
+  ): Promise<boolean> {
     // 支持两种调用方式
-    let username: string;
-    let pwd: string;
-    let tenant: string | undefined;
+    let username: string
+    let pwd: string
+    let tenant: string | undefined
 
     // 检查是否传入了凭据对象
-    if (typeof usernameOrCredentials === 'object') {
-      username = usernameOrCredentials.username;
-      pwd = usernameOrCredentials.password;
-      tenant = usernameOrCredentials.tenantName;
+    if (typeof usernameOrCredentials === "object") {
+      username = usernameOrCredentials.username
+      pwd = usernameOrCredentials.password
+      tenant = usernameOrCredentials.tenantName
     } else {
       // 使用传统参数方式
-      username = usernameOrCredentials;
-      pwd = password || '';
-      tenant = tenantName;
+      username = usernameOrCredentials
+      pwd = password || ""
+      tenant = tenantName
     }
     try {
       if (!username || !pwd) {
-        throw new Error('用户名或密码不能为空');
+        throw new Error("用户名或密码不能为空")
       }
-      const loginData = new URLSearchParams();
-      loginData.append('grant_type', 'password');
-      loginData.append('username', username);
-      loginData.append('password', pwd);
-      loginData.append('client_id', CLIENT_ID);
-      loginData.append('scope', SCOPE);
+      const loginData = new URLSearchParams()
+      loginData.append("grant_type", "password")
+      loginData.append("username", username)
+      loginData.append("password", pwd)
+      loginData.append("client_id", CLIENT_ID)
+      loginData.append("scope", SCOPE)
 
       // 如果提供了租户名，添加到请求头
       const headers: Record<string, string> = {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        "Content-Type": "application/x-www-form-urlencoded",
       }
 
       if (tenant) {
-        headers['__tenant'] = tenant
+        headers["__tenant"] = tenant
       }
 
       const response = await fetch(`${API_BASE_URL}/connect/token`, {
-        method: 'POST',
+        method: "POST",
         headers: headers,
-        body: loginData
+        body: loginData,
       })
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error_description || '登录失败')
+        throw new Error(errorData.error_description || "登录失败")
       }
 
       const tokenData = await response.json()
@@ -122,9 +127,9 @@ export class AuthService {
       const token: TokenInfo = {
         access_token: tokenData.access_token,
         refresh_token: tokenData.refresh_token,
-        token_type: tokenData.token_type || 'Bearer',
+        token_type: tokenData.token_type || "Bearer",
         expires_in: tokenData.expires_in,
-        expires_at: Date.now() + (tokenData.expires_in * 1000)
+        expires_at: Date.now() + tokenData.expires_in * 1000,
       }
 
       await this.setTokenInfo(token)
@@ -137,7 +142,7 @@ export class AuthService {
 
       return true
     } catch (error) {
-      console.error('登录失败:', error)
+      console.error("登录失败:", error)
       throw error
     }
   }
@@ -160,9 +165,9 @@ export class AuthService {
       currentUser.value = null
       tokenInfo.value = null
 
-      console.log('用户已登出')
+      console.log("用户已登出")
     } catch (error) {
-      console.error('登出失败:', error)
+      console.error("登出失败:", error)
     }
   }
 
@@ -173,25 +178,25 @@ export class AuthService {
     try {
       const currentToken = this.getTokenInfo()
       if (!currentToken?.refresh_token) {
-        throw new Error('没有刷新Token')
+        throw new Error("没有刷新Token")
       }
 
       const refreshData = new URLSearchParams({
-        grant_type: 'refresh_token',
+        grant_type: "refresh_token",
         refresh_token: currentToken.refresh_token,
-        client_id: CLIENT_ID
+        client_id: CLIENT_ID,
       })
 
       const response = await fetch(`${API_BASE_URL}/connect/token`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: refreshData
+        body: refreshData,
       })
 
       if (!response.ok) {
-        throw new Error('刷新Token失败')
+        throw new Error("刷新Token失败")
       }
 
       const tokenData = await response.json()
@@ -199,17 +204,17 @@ export class AuthService {
       const newToken: TokenInfo = {
         access_token: tokenData.access_token,
         refresh_token: tokenData.refresh_token || currentToken.refresh_token,
-        token_type: tokenData.token_type || 'Bearer',
+        token_type: tokenData.token_type || "Bearer",
         expires_in: tokenData.expires_in,
-        expires_at: Date.now() + (tokenData.expires_in * 1000)
+        expires_at: Date.now() + tokenData.expires_in * 1000,
       }
 
       await this.setTokenInfo(newToken)
 
-      console.log('Token刷新成功')
+      console.log("Token刷新成功")
       return true
     } catch (error) {
-      console.error('刷新Token失败:', error)
+      console.error("刷新Token失败:", error)
       await this.logout()
       return false
     }
@@ -222,17 +227,17 @@ export class AuthService {
     try {
       const token = this.getTokenInfo()
       if (!token) {
-        throw new Error('没有访问Token')
+        throw new Error("没有访问Token")
       }
 
       const response = await fetch(`${API_BASE_URL}/api/account/my-profile`, {
         headers: {
-          'Authorization': `${token.token_type} ${token.access_token}`
-        }
+          Authorization: `${token.token_type} ${token.access_token}`,
+        },
       })
 
       if (!response.ok) {
-        throw new Error('获取用户信息失败')
+        throw new Error("获取用户信息失败")
       }
 
       const userData = await response.json()
@@ -252,7 +257,7 @@ export class AuthService {
         avatar: claims.avatar,
         department: claims.department,
         position: claims.position,
-        roles: claims.role ? (Array.isArray(claims.role) ? claims.role : [claims.role]) : []
+        roles: claims.role ? (Array.isArray(claims.role) ? claims.role : [claims.role]) : [],
       }
 
       currentUser.value = user
@@ -263,7 +268,7 @@ export class AuthService {
 
       return user
     } catch (error) {
-      console.error('获取用户信息失败:', error)
+      console.error("获取用户信息失败:", error)
       return null
     }
   }
@@ -273,11 +278,11 @@ export class AuthService {
    */
   private parseTokenClaims(token: string): any {
     try {
-      const payload = token.split('.')[1]
-      const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'))
+      const payload = token.split(".")[1]
+      const decoded = atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
       return JSON.parse(decoded)
     } catch (error) {
-      console.error('解析Token失败:', error)
+      console.error("解析Token失败:", error)
       return {}
     }
   }
@@ -305,7 +310,7 @@ export class AuthService {
         tokenInfo.value = parsed
         return parsed
       } catch (error) {
-        console.error('解析存储的Token失败:', error)
+        console.error("解析存储的Token失败:", error)
         localStorage.removeItem(TOKEN_KEY)
       }
     }
@@ -324,7 +329,7 @@ export class AuthService {
 
     // 检查是否过期（提前5分钟判断为过期）
     const now = Date.now()
-    const expiresAt = token.expires_at - (5 * 60 * 1000) // 提前5分钟
+    const expiresAt = token.expires_at - 5 * 60 * 1000 // 提前5分钟
 
     return now < expiresAt
   }
@@ -341,7 +346,7 @@ export class AuthService {
     }
 
     // 计算刷新时间（过期前5分钟）
-    const refreshTime = token.expires_at - Date.now() - (5 * 60 * 1000)
+    const refreshTime = token.expires_at - Date.now() - 5 * 60 * 1000
 
     if (refreshTime > 0) {
       this.refreshTimer = window.setTimeout(async () => {
@@ -396,7 +401,7 @@ export class AuthService {
         }
       }
     } catch (error) {
-      console.error('初始化认证状态失败:', error)
+      console.error("初始化认证状态失败:", error)
       await this.logout()
     }
   }
@@ -408,7 +413,7 @@ export class AuthService {
     const token = this.getTokenInfo()
     if (token && this.isTokenValid()) {
       return {
-        'Authorization': `${token.token_type} ${token.access_token}`
+        Authorization: `${token.token_type} ${token.access_token}`,
       }
     }
     return {}
@@ -472,8 +477,6 @@ export const useAuth = () => {
     isAuthenticated: computed(() => isAuthenticated.value),
     currentUser: computed(() => currentUser.value),
     tokenInfo: computed(() => tokenInfo.value),
-    authService
+    authService,
   }
 }
-
-

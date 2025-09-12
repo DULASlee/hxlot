@@ -477,7 +477,7 @@ const resetSettings = () => {
 .toggle-btn svg {
   width: 16px;
   height: 16px;
-  fill: currentColor;
+  fill: currentcolor;
 }
 
 /* 开关样式 */
@@ -497,16 +497,13 @@ const resetSettings = () => {
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-color: var(--color-border-primary);
   transition: 0.3s;
   border-radius: 24px;
 }
 
-.slider:before {
+.slider::before {
   position: absolute;
   content: "";
   height: 18px;
@@ -522,7 +519,7 @@ input:checked + .slider {
   background-color: var(--color-primary);
 }
 
-input:checked + .slider:before {
+input:checked + .slider::before {
   transform: translateX(26px);
 }
 
@@ -567,7 +564,7 @@ input:checked + .slider:before {
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .setting-item {
     flex-direction: column;
     align-items: flex-start;

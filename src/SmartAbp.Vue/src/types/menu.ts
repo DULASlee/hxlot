@@ -7,7 +7,7 @@
 export type PermissionCode = string
 
 // 菜单项类型
-export type MenuType = 'page' | 'folder' | 'external' | 'divider'
+export type MenuType = "page" | "folder" | "external" | "divider"
 
 // 菜单项基础接口
 export interface BaseMenuItem {
@@ -31,7 +31,7 @@ export interface BaseMenuItem {
 
 // 页面菜单项
 export interface PageMenuItem extends BaseMenuItem {
-  type: 'page'
+  type: "page"
   /** 路由路径 */
   path: string
   /** Vue组件路径 (用于动态导入) */
@@ -44,7 +44,7 @@ export interface PageMenuItem extends BaseMenuItem {
 
 // 文件夹菜单项（包含子菜单）
 export interface FolderMenuItem extends BaseMenuItem {
-  type: 'folder'
+  type: "folder"
   /** 子菜单列表 */
   children: MenuItem[]
   /** 默认是否展开 */
@@ -53,16 +53,16 @@ export interface FolderMenuItem extends BaseMenuItem {
 
 // 外部链接菜单项
 export interface ExternalMenuItem extends BaseMenuItem {
-  type: 'external'
+  type: "external"
   /** 外部链接URL */
   url: string
   /** 打开方式 */
-  target?: '_blank' | '_self'
+  target?: "_blank" | "_self"
 }
 
 // 分割线菜单项
 export interface DividerMenuItem extends BaseMenuItem {
-  type: 'divider'
+  type: "divider"
 }
 
 // 联合菜单项类型

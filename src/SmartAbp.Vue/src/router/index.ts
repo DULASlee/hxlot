@@ -1,378 +1,385 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import SmartAbpLayout from '@/components/layout/SmartAbpLayout.vue'
-import LoginView from '@/views/auth/Login.vue'
-import { authService } from '@/utils/auth'
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
+import SmartAbpLayout from "@/components/layout/SmartAbpLayout.vue"
+import LoginView from "@/views/auth/Login.vue"
+import { authService } from "@/utils/auth"
 
 // 动态导入页面组件
-const DashboardView = () => import('@/views/common/DashboardView.vue')
-const UserManagement = () => import('@/views/user/UserManagement.vue')
-const UserListView = () => import('@/views/user/UserListView.vue')
-const UserRolesView = () => import('@/views/user/UserRolesView.vue')
-const LoginTest = () => import('@/views/auth/LoginTest.vue')
+const DashboardView = () => import("@/views/common/DashboardView.vue")
+const UserManagement = () => import("@/views/user/UserManagement.vue")
+const UserListView = () => import("@/views/user/UserListView.vue")
+const UserRolesView = () => import("@/views/user/UserRolesView.vue")
+const LoginTest = () => import("@/views/auth/LoginTest.vue")
 
 // 新增页面组件
-const ProfileView = () => import('@/views/common/ProfileView.vue')
-const SettingsView = () => import('@/views/common/SettingsView.vue')
-const ProjectListView = () => import('@/views/project/ProjectListView.vue')
-const ProjectAnalysisView = () => import('@/views/project/ProjectAnalysisView.vue')
-const PermissionsView = () => import('@/views/system/PermissionsView.vue')
-const UsersView = () => import('@/views/system/UsersView.vue')
+const ProfileView = () => import("@/views/common/ProfileView.vue")
+const SettingsView = () => import("@/views/common/SettingsView.vue")
+const ProjectListView = () => import("@/views/project/ProjectListView.vue")
+const ProjectAnalysisView = () => import("@/views/project/ProjectAnalysisView.vue")
+const PermissionsView = () => import("@/views/system/PermissionsView.vue")
+const UsersView = () => import("@/views/system/UsersView.vue")
 
 // 代码生成模块组件
-const LowCodeEngineView = () => import('@/views/codegen/LowCodeEngineView.vue')
-const SfcCompilerView = () => import('@/views/codegen/SfcCompilerView.vue')
-const DragDropFormView = () => import('@/views/codegen/DragDropFormView.vue')
-const PerformanceDashboard = () => import('@/views/codegen/PerformanceDashboard.vue')
-const ModuleWizardView = () => import('@/views/codegen/ModuleWizardView.vue')
+const LowCodeEngineView = () => import("@/views/codegen/LowCodeEngineView.vue")
+const SfcCompilerView = () => import("@/views/codegen/SfcCompilerView.vue")
+const DragDropFormView = () => import("@/views/codegen/DragDropFormView.vue")
+const PerformanceDashboard = () => import("@/views/codegen/PerformanceDashboard.vue")
+const ModuleWizardView = () => import("@/views/codegen/ModuleWizardView.vue")
+const VisualDesignerView = () => import("@/views/codegen/VisualDesignerView.vue")
 
 const routes: RouteRecordRaw[] = [
   // 登录页面
   {
-    path: '/login',
-    name: 'Login',
+    path: "/login",
+    name: "Login",
     component: LoginView,
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: false },
   },
   {
-    path: '/test/login',
-    name: 'LoginTest',
+    path: "/test/login",
+    name: "LoginTest",
     component: LoginTest,
-    meta: { requiresAuth: false, title: '登录功能测试' }
+    meta: { requiresAuth: false, title: "登录功能测试" },
   },
   // 根路径重定向到工作台
   {
-    path: '/',
-    redirect: '/dashboard',
-    meta: { requiresAuth: false }
+    path: "/",
+    redirect: "/dashboard",
+    meta: { requiresAuth: false },
   },
   // 工作台页面
   {
-    path: '/dashboard',
+    path: "/dashboard",
     component: SmartAbpLayout,
-    name: 'Dashboard',
+    name: "Dashboard",
     meta: {
-      title: '工作台',
-      icon: '📊',
+      title: "工作台",
+      icon: "📊",
       requiresAuth: true,
-      requiredRoles: ['user']
+      requiredRoles: ["user"],
     },
     children: [
       {
-        path: '',
+        path: "",
         component: DashboardView,
-        meta: { title: '工作台' }
-      }
-    ]
+        meta: { title: "工作台" },
+      },
+    ],
   },
   // 用户管理模块
   {
-    path: '/User',
+    path: "/User",
     component: SmartAbpLayout,
     meta: {
-      title: '用户管理',
-      icon: '👥',
+      title: "用户管理",
+      icon: "👥",
       requiresAuth: true,
-      requiredRoles: ['user']
+      requiredRoles: ["user"],
     },
     children: [
       {
-        path: '',
-        name: 'UserList',
+        path: "",
+        name: "UserList",
         component: UserListView,
-        meta: { title: '用户列表', menuKey: 'user-list' }
+        meta: { title: "用户列表", menuKey: "user-list" },
       },
       {
-        path: 'management',
-        name: 'UserManagement',
+        path: "management",
+        name: "UserManagement",
         component: UserManagement,
-        meta: { title: '用户管理', menuKey: 'user-management' }
+        meta: { title: "用户管理", menuKey: "user-management" },
       },
       {
-        path: 'roles',
-        name: 'UserRoles',
+        path: "roles",
+        name: "UserRoles",
         component: UserRolesView,
-        meta: { title: '用户角色', menuKey: 'user-roles' }
-      }
-    ]
+        meta: { title: "用户角色", menuKey: "user-roles" },
+      },
+    ],
   },
   // 项目管理模块
   {
-    path: '/Project',
+    path: "/Project",
     component: SmartAbpLayout,
     meta: {
-      title: '项目管理',
-      icon: '📁',
+      title: "项目管理",
+      icon: "📁",
       requiresAuth: true,
-      requiredRoles: ['user']
+      requiredRoles: ["user"],
     },
     children: [
       {
-        path: '',
-        name: 'ProjectList',
+        path: "",
+        name: "ProjectList",
         component: ProjectListView,
-        meta: { title: '项目列表', menuKey: 'project-list' }
+        meta: { title: "项目列表", menuKey: "project-list" },
       },
       {
-        path: 'analysis',
-        name: 'ProjectAnalysis',
+        path: "analysis",
+        name: "ProjectAnalysis",
         component: ProjectAnalysisView,
-        meta: { title: '项目分析', menuKey: 'project-analysis' }
-      }
-    ]
+        meta: { title: "项目分析", menuKey: "project-analysis" },
+      },
+    ],
   },
   // 日志管理模块
   {
-    path: '/Log',
+    path: "/Log",
     component: SmartAbpLayout,
     meta: {
-      title: '日志管理',
-      icon: '📋',
+      title: "日志管理",
+      icon: "📋",
       requiresAuth: true,
-      requiredRoles: ['user']
+      requiredRoles: ["user"],
     },
     children: [
       {
-        path: '',
-        name: 'LogList',
-        component: () => import('@/views/log/LogManagement.vue'),
-        meta: { title: '日志管理', menuKey: 'log-management' }
+        path: "",
+        name: "LogList",
+        component: () => import("@/views/log/LogManagement.vue"),
+        meta: { title: "日志管理", menuKey: "log-management" },
       },
       {
-        path: 'viewer',
-        name: 'LogViewer',
-        component: () => import('@/views/log/AdvancedLogViewer.vue'),
-        meta: { title: '日志查看器', menuKey: 'log-viewer' }
+        path: "viewer",
+        name: "LogViewer",
+        component: () => import("@/views/log/AdvancedLogViewer.vue"),
+        meta: { title: "日志查看器", menuKey: "log-viewer" },
       },
       {
-        path: 'dashboard',
-        name: 'LogDashboard',
-        component: () => import('@/views/log/LogDashboard.vue'),
-        meta: { title: '日志仪表板', menuKey: 'log-dashboard' }
-      }
-    ]
+        path: "dashboard",
+        name: "LogDashboard",
+        component: () => import("@/views/log/LogDashboard.vue"),
+        meta: { title: "日志仪表板", menuKey: "log-dashboard" },
+      },
+    ],
   },
   // 系统管理模块
   {
-    path: '/Admin',
+    path: "/Admin",
     component: SmartAbpLayout,
     meta: {
-      title: '系统管理',
-      icon: '⚙️',
+      title: "系统管理",
+      icon: "⚙️",
       requiresAuth: true,
-      requiredRoles: ['admin']
+      requiredRoles: ["admin"],
     },
     children: [
       {
-        path: '',
-        name: 'AdminDashboard',
+        path: "",
+        name: "AdminDashboard",
         component: DashboardView,
-        meta: { title: '系统概览', menuKey: 'admin-dashboard' }
+        meta: { title: "系统概览", menuKey: "admin-dashboard" },
       },
       {
-        path: 'users',
-        name: 'AdminUsers',
+        path: "users",
+        name: "AdminUsers",
         component: UsersView,
-        meta: { title: '用户管理', menuKey: 'admin-users' }
+        meta: { title: "用户管理", menuKey: "admin-users" },
       },
       {
-        path: 'roles',
-        name: 'AdminRoles',
-        component: () => import('@/views/system/RolesView.vue'),
-        meta: { title: '角色管理', menuKey: 'admin-roles' }
+        path: "roles",
+        name: "AdminRoles",
+        component: () => import("@/views/system/RolesView.vue"),
+        meta: { title: "角色管理", menuKey: "admin-roles" },
       },
       {
-        path: 'permissions',
-        name: 'AdminPermissions',
+        path: "permissions",
+        name: "AdminPermissions",
         component: PermissionsView,
-        meta: { title: '权限管理', menuKey: 'admin-permissions' }
+        meta: { title: "权限管理", menuKey: "admin-permissions" },
       },
       {
-        path: 'settings',
-        name: 'AdminSettings',
+        path: "settings",
+        name: "AdminSettings",
         component: SettingsView,
-        meta: { title: '系统设置', menuKey: 'admin-settings' }
-      }
-    ]
+        meta: { title: "系统设置", menuKey: "admin-settings" },
+      },
+    ],
   },
   // 测试页面
   {
-    path: '/Test',
+    path: "/Test",
     component: SmartAbpLayout,
     meta: {
-      title: '测试功能',
-      icon: '🧪',
+      title: "测试功能",
+      icon: "🧪",
       requiresAuth: true,
-      requiredRoles: ['user']
+      requiredRoles: ["user"],
     },
     children: [
       {
-        path: '',
-        name: 'TestView',
-        component: () => import('@/views/test/TestView.vue'),
-        meta: { title: '系统测试', menuKey: 'test-system' }
+        path: "",
+        name: "TestView",
+        component: () => import("@/views/test/TestView.vue"),
+        meta: { title: "系统测试", menuKey: "test-system" },
       },
       {
-        path: 'login',
-        name: 'LoginTestPage',
+        path: "login",
+        name: "LoginTestPage",
         component: LoginTest,
-        meta: { title: '登录测试', menuKey: 'test-login' }
+        meta: { title: "登录测试", menuKey: "test-login" },
       },
       {
-        path: 'theme',
-        name: 'ThemeDemo',
-        component: () => import('@/views/test/ThemeDemo.vue'),
-        meta: { title: '主题演示', menuKey: 'test-theme' }
+        path: "theme",
+        name: "ThemeDemo",
+        component: () => import("@/views/test/ThemeDemo.vue"),
+        meta: { title: "主题演示", menuKey: "test-theme" },
       },
       {
-        path: 'theme-debug',
-        name: 'ThemeDebug',
-        component: () => import('@/views/test/ThemeDebugView.vue'),
-        meta: { title: '主题调试', menuKey: 'test-theme-debug' }
-      }
-    ]
+        path: "theme-debug",
+        name: "ThemeDebug",
+        component: () => import("@/views/test/ThemeDebugView.vue"),
+        meta: { title: "主题调试", menuKey: "test-theme-debug" },
+      },
+    ],
   },
   // 代码生成模块
   {
-    path: '/CodeGen',
+    path: "/CodeGen",
     component: SmartAbpLayout,
     meta: {
-      title: '代码生成',
-      icon: '⚡',
+      title: "代码生成",
+      icon: "⚡",
       requiresAuth: true,
-      requiredRoles: ['user']
+      requiredRoles: ["user"],
     },
     children: [
-      {
-        path: 'wizard',
-        name: 'ModuleWizard',
+      ...(import.meta.env.DEV ? [{
+        path: "wizard",
+        name: "ModuleWizard",
         component: ModuleWizardView,
-        meta: { title: '模块生成向导', menuKey: 'module-wizard' }
-      },
+        meta: { title: "模块生成向导", menuKey: "module-wizard" },
+      }] : []),
       {
-        path: 'engine',
-        name: 'LowCodeEngine',
+        path: "engine",
+        name: "LowCodeEngine",
         component: LowCodeEngineView,
-        meta: { title: '低代码引擎控制台', menuKey: 'lowcode-engine' }
+        meta: { title: "低代码引擎控制台", menuKey: "lowcode-engine" },
       },
       {
-        path: 'sfc',
-        name: 'SfcCompiler',
+        path: "sfc",
+        name: "SfcCompiler",
         component: SfcCompilerView,
-        meta: { title: 'SFC编译器演示', menuKey: 'sfc-compiler' }
+        meta: { title: "SFC编译器演示", menuKey: "sfc-compiler" },
       },
       {
-        path: 'form',
-        name: 'DragDropForm',
+        path: "visual-designer",
+        name: "VisualDesigner",
+        component: VisualDesignerView,
+        meta: { title: "可视化设计器（P2）", menuKey: "visual-designer" },
+      },
+      {
+        path: "form",
+        name: "DragDropForm",
         component: DragDropFormView,
-        meta: { title: '拖拽表单开发器', menuKey: 'drag-drop-form' }
+        meta: { title: "拖拽表单开发器", menuKey: "drag-drop-form" },
       },
       {
-        path: 'performance',
-        name: 'PerformanceMonitor',
+        path: "performance",
+        name: "PerformanceMonitor",
         component: PerformanceDashboard,
         meta: {
-          title: '性能监控中心',
-          menuKey: 'performance-monitor',
-          requiredRoles: ['admin']
-        }
-      }
-    ]
+          title: "性能监控中心",
+          menuKey: "performance-monitor",
+          requiredRoles: ["admin"],
+        },
+      },
+    ],
   },
   // 个人中心
   {
-    path: '/profile',
+    path: "/profile",
     component: SmartAbpLayout,
-    name: 'Profile',
+    name: "Profile",
     meta: {
-      title: '个人中心',
-      icon: '👤',
+      title: "个人中心",
+      icon: "👤",
       requiresAuth: true,
-      requiredRoles: ['user']
+      requiredRoles: ["user"],
     },
     children: [
       {
-        path: '',
+        path: "",
         component: ProfileView,
-        meta: { title: '个人中心' }
-      }
-    ]
+        meta: { title: "个人中心" },
+      },
+    ],
   },
   // 帮助中心
   {
-    path: '/help',
+    path: "/help",
     component: SmartAbpLayout,
-    name: 'Help',
+    name: "Help",
     meta: {
-      title: '帮助中心',
-      icon: '❓',
+      title: "帮助中心",
+      icon: "❓",
       requiresAuth: true,
-      requiredRoles: ['user']
+      requiredRoles: ["user"],
     },
     children: [
       {
-        path: '',
-        component: () => import('@/views/common/HelpView.vue'),
-        meta: { title: '帮助中心' }
-      }
-    ]
+        path: "",
+        component: () => import("@/views/common/HelpView.vue"),
+        meta: { title: "帮助中心" },
+      },
+    ],
   },
   // 404页面 - 重定向到主框架内的404页面
   {
-    path: '/:pathMatch(.*)*',
+    path: "/:pathMatch(.*)*",
     redirect: (to) => {
       return `/dashboard/not-found${to.path}`
-    }
-  }
+    },
+  },
 ]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 })
 
 // 路由守卫 - 基础认证检查
 router.beforeEach(async (to, from, next) => {
-  console.log(`[路由守卫] 从 ${from.path} 跳转到 ${to.path}`);
+  console.log(`[路由守卫] 从 ${from.path} 跳转到 ${to.path}`)
 
   // 检查用户是否已登录
-  const isLoggedIn = authService.isTokenValid();
+  const isLoggedIn = authService.isTokenValid()
 
   // 已登录用户尝试访问登录页：重定向到工作台
-  if (to.name === 'Login' && isLoggedIn) {
-    console.log('[路由守卫] 用户已登录，重定向到工作台');
-    return next({ name: 'Dashboard' });
+  if (to.name === "Login" && isLoggedIn) {
+    console.log("[路由守卫] 用户已登录，重定向到工作台")
+    return next({ name: "Dashboard" })
   }
 
   // 需要认证但未登录：重定向到登录页
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
   if (requiresAuth && !isLoggedIn) {
-    console.log('[路由守卫] 需要认证但未登录，重定向到登录页');
+    console.log("[路由守卫] 需要认证但未登录，重定向到登录页")
     return next({
-      name: 'Login',
-      query: { redirect: to.fullPath }
-    });
+      name: "Login",
+      query: { redirect: to.fullPath },
+    })
   }
 
   // 处理根路径：根据登录状态重定向
-  if (to.path === '/') {
+  if (to.path === "/") {
     if (isLoggedIn) {
-      console.log('[路由守卫] 根路径重定向到工作台');
-      return next({ name: 'Dashboard' });
+      console.log("[路由守卫] 根路径重定向到工作台")
+      return next({ name: "Dashboard" })
     } else {
-      console.log('[路由守卫] 根路径重定向到登录页');
-      return next({ name: 'Login' });
+      console.log("[路由守卫] 根路径重定向到登录页")
+      return next({ name: "Login" })
     }
   }
 
-  console.log('[路由守卫] 允许访问');
-  next();
-});
+  console.log("[路由守卫] 允许访问")
+  next()
+})
 
 // 多标签页状态同步
-window.addEventListener('storage', (event) => {
-  if (event.key === 'token' && !event.newValue) {
-    router.push({ name: 'Login' });
+window.addEventListener("storage", (event) => {
+  if (event.key === "token" && !event.newValue) {
+    router.push({ name: "Login" })
   }
-});
+})
 
 export default router

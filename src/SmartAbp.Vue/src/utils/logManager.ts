@@ -1,5 +1,5 @@
-import { ref, computed } from 'vue'
-import { logger, LogLevel } from '@/utils/logger'
+import { ref, computed } from "vue"
+import { logger, LogLevel } from "@/utils/logger"
 
 // 性能追踪器接口
 export interface PerformanceTracker {
@@ -52,7 +52,7 @@ class LogManager {
       metadata: {},
       end: (metadata?: Record<string, any>) => {
         return this.endPerformanceTracking(tracker.id, metadata)
-      }
+      },
     }
 
     this.activeTrackers.set(tracker.id, tracker)
@@ -60,7 +60,10 @@ class LogManager {
   }
 
   // 结束性能追踪
-  endPerformanceTracking(trackingId: string, metadata?: Record<string, any>): PerformanceTracker | null {
+  endPerformanceTracking(
+    trackingId: string,
+    metadata?: Record<string, any>,
+  ): PerformanceTracker | null {
     const tracker = this.activeTrackers.get(trackingId)
     if (!tracker) {
       logger.warn(`性能追踪器未找到: ${trackingId}`)
@@ -80,12 +83,12 @@ class LogManager {
     if (tracker.duration > 1000) {
       logger.warn(`性能警告: ${tracker.name} 执行时间过长`, {
         duration: tracker.duration,
-        category: tracker.category
+        category: tracker.category,
       })
     } else {
       logger.debug(`性能追踪: ${tracker.name} 完成`, {
         duration: tracker.duration,
-        category: tracker.category
+        category: tracker.category,
       })
     }
 
@@ -95,15 +98,12 @@ class LogManager {
   // 获取性能统计
   getPerformanceStats(): PerformanceStats {
     const entries = this.performanceEntries.value
-    const avgTime = entries.length > 0
-      ? entries.reduce((sum, entry) => sum + entry.duration, 0) / entries.length
-      : 0
-    const maxTime = entries.length > 0
-      ? Math.max(...entries.map(entry => entry.duration))
-      : 0
-    const minTime = entries.length > 0
-      ? Math.min(...entries.map(entry => entry.duration))
-      : 0
+    const avgTime =
+      entries.length > 0
+        ? entries.reduce((sum, entry) => sum + entry.duration, 0) / entries.length
+        : 0
+    const maxTime = entries.length > 0 ? Math.max(...entries.map((entry) => entry.duration)) : 0
+    const minTime = entries.length > 0 ? Math.min(...entries.map((entry) => entry.duration)) : 0
 
     return {
       averageTime: avgTime,
@@ -114,7 +114,7 @@ class LogManager {
       total: entries.length,
       average: avgTime,
       min: minTime,
-      max: maxTime
+      max: maxTime,
     }
   }
 
@@ -126,28 +126,28 @@ class LogManager {
   // 获取错误统计
   getErrorStats(): ErrorStats {
     const logs = logger.getLogs()
-    const errorLogs = logs.filter(log => log.level === LogLevel.ERROR)
+    const errorLogs = logs.filter((log) => log.level === LogLevel.ERROR)
 
     const byCategory: Record<string, number> = {}
     const contexts: Record<string, number> = {}
 
-    errorLogs.forEach(log => {
-      const category = log.category || 'unknown'
+    errorLogs.forEach((log) => {
+      const category = log.category || "unknown"
       byCategory[category] = (byCategory[category] || 0) + 1
 
       // 使用category作为context
       contexts[category] = (contexts[category] || 0) + 1
     })
 
-    const recent = errorLogs.filter(log =>
-      Date.now() - log.timestamp < 24 * 60 * 60 * 1000 // 最近24小时
+    const recent = errorLogs.filter(
+      (log) => Date.now() - log.timestamp < 24 * 60 * 60 * 1000, // 最近24小时
     ).length
 
     return {
       total: errorLogs.length,
       byCategory,
       recent,
-      contexts
+      contexts,
     }
   }
 
@@ -157,13 +157,15 @@ class LogManager {
   }
 
   // 批量记录日志
-  logBatch(entries: Array<{
-    level: LogLevel
-    message: string
-    category?: string
-    data?: any
-  }>) {
-    entries.forEach(entry => {
+  logBatch(
+    entries: Array<{
+      level: LogLevel
+      message: string
+      category?: string
+      data?: any
+    }>,
+  ) {
+    entries.forEach((entry) => {
       switch (entry.level) {
         case LogLevel.DEBUG:
           logger.debug(entry.message, entry.data)
@@ -194,8 +196,8 @@ class LogManager {
       system: {
         userAgent: navigator.userAgent,
         url: window.location.href,
-        timestamp: Date.now()
-      }
+        timestamp: Date.now(),
+      },
     }
 
     return JSON.stringify(report, null, 2)
@@ -231,7 +233,7 @@ export const logManager = new LogManager()
 export function trackPerformance<T>(
   name: string,
   fn: () => T | Promise<T>,
-  category?: string
+  category?: string,
 ): T | Promise<T> {
   const tracker = logManager.startPerformanceTracking(name, category)
 
@@ -251,4 +253,3 @@ export function trackPerformance<T>(
     throw error
   }
 }
-

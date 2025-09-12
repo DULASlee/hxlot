@@ -1,0 +1,235 @@
+{
+  "testSuites": [
+    {
+      "name": "增量扩展功能测试",
+      "description": "测试AI是否能识别并执行基于现有代码的功能扩展",
+      "testCases": [
+        {
+          "id": "incremental-001",
+          "name": "基于现有服务扩展CRUD功能",
+          "userInput": "请基于现有的ProductService扩展批量删除功能",
+          "expectedTriggers": ["基于现有", "扩展"],
+          "expectedMode": "增量扩展",
+          "expectedCommands": [
+            "node tools/incremental-generation/scripts/analyze-codebase.js --target=src/SmartAbp.Application/Services/ProductService.cs",
+            "node tools/incremental-generation/analyzers/pattern-matcher.js --file=src/SmartAbp.Application/Services/ProductService.cs",
+            "node tools/incremental-generation/scripts/generate-incremental.js --strategy=service-extension --base=Product --feature=批量删除"
+          ],
+          "expectedResponseSections": [
+            "🔍 **增量分析**",
+            "📊 **增量策略**",
+            "⚙️ **代码生成**",
+            "✅ **验证结果**",
+            "📄 **生成的代码**"
+          ],
+          "qualityChecks": [
+            "兼容性检查通过",
+            "代码风格一致",
+            "测试覆盖充分",
+            "不破坏现有功能"
+          ]
+        },
+        {
+          "id": "incremental-002", 
+          "name": "扩展Vue组件功能",
+          "userInput": "基于现有的UserManagement组件增加导出Excel功能",
+          "expectedTriggers": ["基于现有", "增加功能"],
+          "expectedMode": "增量扩展",
+          "expectedCommands": [
+            "node tools/incremental-generation/scripts/analyze-codebase.js --target=src/SmartAbp.Vue/src/components/UserManagement.vue",
+            "node tools/incremental-generation/scripts/generate-incremental.js --strategy=component-extension --base=UserManagement --feature=导出Excel"
+          ],
+          "expectedResponseSections": [
+            "🔍 **增量分析**",
+            "📊 **增量策略**", 
+            "⚙️ **代码生成**",
+            "✅ **验证结果**"
+          ]
+        },
+        {
+          "id": "incremental-003",
+          "name": "扩展数据模型",
+          "userInput": "扩展User实体，添加用户偏好设置相关字段",
+          "expectedTriggers": ["扩展"],
+          "expectedMode": "增量扩展",
+          "expectedCommands": [
+            "node tools/incremental-generation/scripts/analyze-codebase.js --target=src/SmartAbp.Domain/Entities/User.cs",
+            "node tools/incremental-generation/scripts/generate-incremental.js --strategy=entity-extension --base=User --feature=用户偏好设置"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "智能重构测试",
+      "description": "测试AI是否能识别并执行代码重构任务",
+      "testCases": [
+        {
+          "id": "refactor-001",
+          "name": "重构复杂方法",
+          "userInput": "请重构OrderService中的CreateOrder方法，提高代码可读性",
+          "expectedTriggers": ["重构"],
+          "expectedMode": "智能重构",
+          "expectedCommands": [
+            "node tools/incremental-generation/analyzers/refactor-advisor.js --file=src/SmartAbp.Application/Services/OrderService.cs"
+          ],
+          "expectedResponseSections": [
+            "🔍 **代码分析**",
+            "📊 **重构建议**",
+            "⚙️ **重构实施**",
+            "✅ **兼容性检查**"
+          ],
+          "qualityChecks": [
+            "保持API兼容性",
+            "提高代码可读性",
+            "不破坏现有测试"
+          ]
+        },
+        {
+          "id": "refactor-002",
+          "name": "优化性能瓶颈",
+          "userInput": "优化ProductService的查询性能，减少数据库访问次数",
+          "expectedTriggers": ["优化"],
+          "expectedMode": "智能重构",
+          "expectedCommands": [
+            "node tools/incremental-generation/analyzers/refactor-advisor.js --file=src/SmartAbp.Application/Services/ProductService.cs"
+          ]
+        },
+        {
+          "id": "refactor-003",
+          "name": "改进代码结构",
+          "userInput": "改进UserController的代码结构，应用更好的设计模式",
+          "expectedTriggers": ["改进"],
+          "expectedMode": "智能重构"
+        }
+      ]
+    },
+    {
+      "name": "自动测试生成测试",
+      "description": "测试AI是否能自动生成高质量的单元测试",
+      "testCases": [
+        {
+          "id": "test-001",
+          "name": "生成服务测试",
+          "userInput": "为UserService生成完整的单元测试",
+          "expectedTriggers": ["生成测试"],
+          "expectedMode": "自动测试生成",
+          "expectedCommands": [
+            "node tools/incremental-generation/generators/test-generator.js --target=UserService"
+          ],
+          "expectedResponseSections": [
+            "🔍 **服务分析**",
+            "📊 **测试策略**",
+            "⚙️ **测试生成**",
+            "✅ **覆盖率验证**"
+          ],
+          "qualityChecks": [
+            "覆盖所有公共方法",
+            "包含异常处理测试",
+            "包含边界条件测试"
+          ]
+        },
+        {
+          "id": "test-002",
+          "name": "添加集成测试",
+          "userInput": "添加ProductController的集成测试",
+          "expectedTriggers": ["添加测试"],
+          "expectedMode": "自动测试生成"
+        }
+      ]
+    },
+    {
+      "name": "兼容性分析测试",
+      "description": "测试AI是否能进行兼容性分析和验证",
+      "testCases": [
+        {
+          "id": "compatibility-001",
+          "name": "API兼容性检查",
+          "userInput": "确保新增的功能不破坏现有的API接口",
+          "expectedTriggers": ["不破坏现有"],
+          "expectedMode": "兼容性分析",
+          "expectedCommands": [
+            "node tools/incremental-generation/scripts/validate-changes.js --type=compatibility"
+          ]
+        },
+        {
+          "id": "compatibility-002",
+          "name": "数据库兼容性验证",
+          "userInput": "验证数据模型变更的兼容性",
+          "expectedTriggers": ["兼容"],
+          "expectedMode": "兼容性分析"
+        }
+      ]
+    }
+  ],
+  "evaluationCriteria": {
+    "triggerRecognition": {
+      "weight": 25,
+      "description": "AI正确识别触发词的准确率",
+      "scoring": {
+        "excellent": "100%识别正确",
+        "good": "80-99%识别正确", 
+        "fair": "60-79%识别正确",
+        "poor": "<60%识别正确"
+      }
+    },
+    "commandExecution": {
+      "weight": 25,
+      "description": "AI按规定执行命令的完整性",
+      "scoring": {
+        "excellent": "所有必需命令都执行",
+        "good": "大部分命令执行正确",
+        "fair": "部分命令执行正确",
+        "poor": "很少或不执行命令"
+      }
+    },
+    "responseFormat": {
+      "weight": 20,
+      "description": "AI遵循强制响应格式的合规性",
+      "scoring": {
+        "excellent": "完全遵循格式要求",
+        "good": "基本遵循，偶有偏差",
+        "fair": "部分遵循格式",
+        "poor": "不遵循格式要求"
+      }
+    },
+    "codeQuality": {
+      "weight": 20,
+      "description": "生成代码满足质量标准的程度",
+      "scoring": {
+        "excellent": "完全满足所有质量标准",
+        "good": "满足大部分质量标准",
+        "fair": "满足基本质量标准",
+        "poor": "不满足质量标准"
+      }
+    },
+    "compatibility": {
+      "weight": 10,
+      "description": "保证兼容性不破坏现有功能",
+      "scoring": {
+        "excellent": "完全兼容，无破坏",
+        "good": "基本兼容，轻微影响",
+        "fair": "部分兼容问题",
+        "poor": "严重兼容性问题"
+      }
+    }
+  },
+  "testExecution": {
+    "manual": {
+      "description": "手动执行测试用例，观察AI响应",
+      "steps": [
+        "1. 选择测试用例",
+        "2. 输入用户请求",
+        "3. 观察AI响应",
+        "4. 检查响应格式",
+        "5. 验证命令执行",
+        "6. 评估代码质量",
+        "7. 记录测试结果"
+      ]
+    },
+    "automated": {
+      "description": "使用自动化脚本批量测试",
+      "script": "tools/ai-capability-test/run-tests.js",
+      "output": "tools/ai-capability-test/results/"
+    }
+  }
+}

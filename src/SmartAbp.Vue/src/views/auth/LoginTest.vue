@@ -528,7 +528,7 @@ onMounted(() => {
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .login-test-container {
     margin: 10px;
     padding: 10px;

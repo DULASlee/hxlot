@@ -465,7 +465,7 @@ const generateBatchLogs = () => {
   line-height: 1.6;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .log-system-demo {
     padding: 10px;
   }

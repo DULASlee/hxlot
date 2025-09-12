@@ -1,13 +1,13 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { defineStore } from "pinia"
+import { ref, computed } from "vue"
 
 // 项目模块相关类型定义
 export interface Project {
   id: string
   name: string
   description?: string
-  status: 'planning' | 'active' | 'completed' | 'cancelled'
-  priority: 'low' | 'medium' | 'high'
+  status: "planning" | "active" | "completed" | "cancelled"
+  priority: "low" | "medium" | "high"
   startDate?: string
   endDate?: string
   createdAt: string
@@ -19,7 +19,7 @@ export interface Project {
 export interface CreateProjectRequest {
   name: string
   description?: string
-  priority: 'low' | 'medium' | 'high'
+  priority: "low" | "medium" | "high"
   startDate?: string
   endDate?: string
   ownerId: string
@@ -29,13 +29,13 @@ export interface UpdateProjectRequest {
   id: string
   name?: string
   description?: string
-  status?: 'planning' | 'active' | 'completed' | 'cancelled'
-  priority?: 'low' | 'medium' | 'high'
+  status?: "planning" | "active" | "completed" | "cancelled"
+  priority?: "low" | "medium" | "high"
   startDate?: string
   endDate?: string
 }
 
-export const useProjectStore = defineStore('project', () => {
+export const useProjectStore = defineStore("project", () => {
   // 状态
   const projects = ref<Project[]>([])
   const loading = ref(false)
@@ -44,18 +44,18 @@ export const useProjectStore = defineStore('project', () => {
 
   // 计算属性
   const activeProjects = computed(() =>
-    projects.value.filter(project => project.status === 'active')
+    projects.value.filter((project) => project.status === "active"),
   )
 
   const completedProjects = computed(() =>
-    projects.value.filter(project => project.status === 'completed')
+    projects.value.filter((project) => project.status === "completed"),
   )
 
   const projectsByPriority = computed(() => {
     return {
-      high: projects.value.filter(p => p.priority === 'high'),
-      medium: projects.value.filter(p => p.priority === 'medium'),
-      low: projects.value.filter(p => p.priority === 'low')
+      high: projects.value.filter((p) => p.priority === "high"),
+      medium: projects.value.filter((p) => p.priority === "medium"),
+      low: projects.value.filter((p) => p.priority === "low"),
     }
   })
 
@@ -72,7 +72,7 @@ export const useProjectStore = defineStore('project', () => {
       // const response = await projectApi.getProjects()
       // projects.value = response.data
     } catch (err) {
-      error.value = '获取项目列表失败'
+      error.value = "获取项目列表失败"
       throw err
     } finally {
       loading.value = false
@@ -86,7 +86,7 @@ export const useProjectStore = defineStore('project', () => {
       // projects.value.push(response.data)
       // return response.data
     } catch (err) {
-      error.value = '创建项目失败'
+      error.value = "创建项目失败"
       throw err
     }
   }
@@ -101,7 +101,7 @@ export const useProjectStore = defineStore('project', () => {
       // }
       // return response.data
     } catch (err) {
-      error.value = '更新项目失败'
+      error.value = "更新项目失败"
       throw err
     }
   }
@@ -112,13 +112,13 @@ export const useProjectStore = defineStore('project', () => {
       // await projectApi.deleteProject(projectId)
       // projects.value = projects.value.filter(p => p.id !== projectId)
     } catch (err) {
-      error.value = '删除项目失败'
+      error.value = "删除项目失败"
       throw err
     }
   }
 
   const getProjectById = (projectId: string) => {
-    return projects.value.find(project => project.id === projectId)
+    return projects.value.find((project) => project.id === projectId)
   }
 
   const setCurrentProject = (project: Project | null) => {
@@ -135,14 +135,14 @@ export const useProjectStore = defineStore('project', () => {
     loading,
     error,
     currentProject,
-    
+
     // 计算属性
     activeProjects,
     completedProjects,
     projectsByPriority,
     projectCount,
     hasProjects,
-    
+
     // 方法
     fetchProjects,
     createProject,
@@ -150,6 +150,6 @@ export const useProjectStore = defineStore('project', () => {
     deleteProject,
     getProjectById,
     setCurrentProject,
-    clearError
+    clearError,
   }
 })

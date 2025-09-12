@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartAbp.EntityFrameworkCore;
+using SmartAbp.CodeGenerator;
+using SmartAbp.CodeGenerator.Hubs;
 using SmartAbp.Localization;
 using SmartAbp.MultiTenancy;
 using SmartAbp.Permissions;
@@ -60,6 +62,7 @@ namespace SmartAbp.Web;
     typeof(SmartAbpHttpApiModule),
     typeof(SmartAbpApplicationModule),
     typeof(SmartAbpEntityFrameworkCoreModule),
+    typeof(SmartAbpCodeGeneratorModule),
     typeof(AbpAutofacModule),
     typeof(AbpStudioClientAspNetCoreModule),
     typeof(AbpIdentityWebModule),
@@ -155,6 +158,7 @@ public class SmartAbpWebModule : AbpModule
         ConfigureAutoApiControllers();
         ConfigureSwaggerServices(context.Services);
         ConfigureSpaServices(context.Services);
+        ConfigureSignalR(context.Services);
 
         Configure<PermissionManagementOptions>(options =>
         {
@@ -302,6 +306,16 @@ public class SmartAbpWebModule : AbpModule
             configuration.RootPath = "wwwroot/dist";
         });
     }
+    
+    private void ConfigureSignalR(IServiceCollection services)
+    {
+        services.AddSignalR(options =>
+        {
+            options.EnableDetailedErrors = true;
+            options.KeepAliveInterval = TimeSpan.FromSeconds(30);
+            options.ClientTimeoutInterval = TimeSpan.FromMinutes(1);
+        });
+    }
 
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
@@ -357,6 +371,9 @@ public class SmartAbpWebModule : AbpModule
                 pattern: "{controller=Home}/{action=Index}/{id?}"
             );
             endpoints.MapRazorPages();
+            
+            // 2. SignalR Hubs
+            endpoints.MapHub<CodeGenerationProgressHub>("/hubs/code-generation-progress");
         });
 
         // 2. SPA 中间件捕获所有剩余请求

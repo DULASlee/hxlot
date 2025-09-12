@@ -305,7 +305,7 @@ const testApi = async () => {
   background: var(--theme-bg-sunken);
   border: 1px solid var(--theme-border-base);
   border-radius: 6px;
-  font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+  font-family: 'Fira Code', Monaco, Consolas, monospace;
   font-size: 12px;
   color: var(--theme-text-secondary);
   overflow-x: auto;
@@ -343,7 +343,7 @@ h3 {
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .auth-example {
     padding: 16px;
     margin: 0 16px;

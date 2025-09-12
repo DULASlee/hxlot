@@ -4,4 +4,4 @@
  */
 
 // 从新位置导入所有内容
-export * from './lowcode';
+export * from "./lowcode"

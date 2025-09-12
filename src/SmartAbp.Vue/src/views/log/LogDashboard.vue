@@ -703,11 +703,11 @@ onUnmounted(() => {
   background: white;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
 .header-left h2 {
-  margin: 0 0 5px 0;
+  margin: 0 0 5px;
   color: #303133;
 }
 
@@ -859,13 +859,13 @@ onUnmounted(() => {
   color: #909399;
 }
 
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
   .dashboard-content {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .log-dashboard {
     padding: 10px;
   }

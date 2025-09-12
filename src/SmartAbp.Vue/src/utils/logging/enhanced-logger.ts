@@ -3,16 +3,16 @@
  * 支持传输器架构、子日志器、完整的结构化格式
  */
 
-import { ref, computed, type Ref } from 'vue'
-import { 
-  LogTransport, 
-  LogEntry, 
-  LogLevel, 
+import { ref, computed, type Ref } from "vue"
+import {
+  LogTransport,
+  LogEntry,
+  LogLevel,
   LOG_LEVEL_NAMES,
   ConsoleTransport,
   FileTransport,
-  MemoryTransport
-} from './transports'
+  MemoryTransport,
+} from "./transports"
 
 export interface LoggerOptions {
   level?: LogLevel
@@ -51,7 +51,7 @@ export class EnhancedLogger {
   private childLoggers = new Map<string, EnhancedLogger>()
   private subscribers: Array<(logs: LogEntry[]) => void> = []
   private maxLogs = 1000
-  
+
   // 批量处理配置
   private enableBatching: boolean
   private batchSize: number
@@ -97,13 +97,13 @@ export class EnhancedLogger {
 
   error(message: string, error?: Error | string, metadata?: Record<string, any>): void {
     const enhancedMetadata = { ...metadata }
-    
+
     if (error) {
       if (error instanceof Error) {
         enhancedMetadata.error = {
           name: error.name,
           message: error.message,
-          stack: error.stack
+          stack: error.stack,
         }
       } else {
         enhancedMetadata.errorMessage = error
@@ -115,13 +115,13 @@ export class EnhancedLogger {
 
   fatal(message: string, error?: Error | string, metadata?: Record<string, any>): void {
     const enhancedMetadata = { ...metadata }
-    
+
     if (error) {
       if (error instanceof Error) {
         enhancedMetadata.error = {
           name: error.name,
           message: error.message,
-          stack: error.stack
+          stack: error.stack,
         }
       } else {
         enhancedMetadata.errorMessage = error
@@ -143,7 +143,7 @@ export class EnhancedLogger {
       timestamp: Date.now(),
       context: { ...this.context },
       metadata: metadata || {},
-      source: this.context.source || 'unknown'
+      source: this.context.source || "unknown",
     }
 
     // 添加到内存日志
@@ -164,7 +164,7 @@ export class EnhancedLogger {
 
   child(context: Record<string, any>, options?: Partial<LoggerOptions>): EnhancedLogger {
     const contextKey = JSON.stringify(context)
-    
+
     if (this.childLoggers.has(contextKey)) {
       return this.childLoggers.get(contextKey)!
     }
@@ -176,13 +176,13 @@ export class EnhancedLogger {
       transports: options?.transports ?? this.transports,
       enableBatching: options?.enableBatching ?? this.enableBatching,
       batchSize: options?.batchSize ?? this.batchSize,
-      batchTimeout: options?.batchTimeout ?? this.batchTimeout
+      batchTimeout: options?.batchTimeout ?? this.batchTimeout,
     })
 
     // 子日志器的日志也会同步到父日志器
-    childLogger.subscribe(logs => {
-      logs.forEach(entry => {
-        if (!this.logs.value.find(existing => existing.id === entry.id)) {
+    childLogger.subscribe((logs) => {
+      logs.forEach((entry) => {
+        if (!this.logs.value.find((existing) => existing.id === entry.id)) {
           this.addToLogs(entry)
           this.notifySubscribers()
         }
@@ -202,20 +202,20 @@ export class EnhancedLogger {
       context: { ...this.context, ...context },
       end: (metadata?: Record<string, any>) => {
         const duration = performance.now() - timer.startTime
-        
+
         this.debug(`Timer completed: ${name}`, {
           duration: Math.round(duration * 100) / 100,
           ...timer.context,
-          ...metadata
+          ...metadata,
         })
 
         this.activeTimers.delete(name)
         return duration
-      }
+      },
     }
 
     this.activeTimers.set(name, timer)
-    
+
     this.debug(`Timer started: ${name}`, timer.context)
     return timer
   }
@@ -223,38 +223,34 @@ export class EnhancedLogger {
   async trackAsync<T>(
     name: string,
     operation: () => Promise<T>,
-    context?: Record<string, any>
+    context?: Record<string, any>,
   ): Promise<T> {
     const timer = this.startTimer(name, context)
-    
+
     try {
       const result = await operation()
       timer.end({ success: true })
       return result
     } catch (error) {
-      timer.end({ 
+      timer.end({
         success: false,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       })
       throw error
     }
   }
 
-  trackSync<T>(
-    name: string,
-    operation: () => T,
-    context?: Record<string, any>
-  ): T {
+  trackSync<T>(name: string, operation: () => T, context?: Record<string, any>): T {
     const timer = this.startTimer(name, context)
-    
+
     try {
       const result = operation()
       timer.end({ success: true })
       return result
     } catch (error) {
-      timer.end({ 
+      timer.end({
         success: false,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       })
       throw error
     }
@@ -267,7 +263,7 @@ export class EnhancedLogger {
   }
 
   removeTransport(name: string): boolean {
-    const index = this.transports.findIndex(t => t.name === name)
+    const index = this.transports.findIndex((t) => t.name === name)
     if (index >= 0) {
       this.transports.splice(index, 1)
       return true
@@ -281,26 +277,32 @@ export class EnhancedLogger {
 
   private addDefaultTransports(): void {
     // 添加控制台传输器
-    this.transports.push(new ConsoleTransport({
-      level: LogLevel.DEBUG,
-      enableColors: true,
-      enableGrouping: true
-    }))
+    this.transports.push(
+      new ConsoleTransport({
+        level: LogLevel.DEBUG,
+        enableColors: true,
+        enableGrouping: true,
+      }),
+    )
 
     // 在生产环境添加文件传输器
-    if (process.env.NODE_ENV === 'production') {
-      this.transports.push(new FileTransport({
-        level: LogLevel.WARN,
-        filePath: 'logs/smartabp.log'
-      }))
+    if (process.env.NODE_ENV === "production") {
+      this.transports.push(
+        new FileTransport({
+          level: LogLevel.WARN,
+          filePath: "logs/smartabp.log",
+        }),
+      )
     }
 
     // 开发环境添加内存传输器用于调试
-    if (process.env.NODE_ENV === 'development') {
-      this.transports.push(new MemoryTransport({
-        level: LogLevel.DEBUG,
-        maxEntries: 500
-      }))
+    if (process.env.NODE_ENV === "development") {
+      this.transports.push(
+        new MemoryTransport({
+          level: LogLevel.DEBUG,
+          maxEntries: 500,
+        }),
+      )
     }
   }
 
@@ -329,11 +331,11 @@ export class EnhancedLogger {
       this.batchTimer = undefined
     }
 
-    batch.forEach(entry => this.writeToTransports(entry))
+    batch.forEach((entry) => this.writeToTransports(entry))
   }
 
   private async writeToTransports(entry: LogEntry): Promise<void> {
-    const promises = this.transports.map(async transport => {
+    const promises = this.transports.map(async (transport) => {
       try {
         await transport.write(entry)
       } catch (error) {
@@ -361,12 +363,12 @@ export class EnhancedLogger {
     const logs = this.logs.value
     return {
       total: logs.length,
-      debug: logs.filter(log => log.level === LogLevel.DEBUG).length,
-      info: logs.filter(log => log.level === LogLevel.INFO).length,
-      success: logs.filter(log => log.level === LogLevel.SUCCESS).length,
-      warn: logs.filter(log => log.level === LogLevel.WARN).length,
-      error: logs.filter(log => log.level === LogLevel.ERROR).length,
-      fatal: logs.filter(log => log.level === LogLevel.FATAL).length
+      debug: logs.filter((log) => log.level === LogLevel.DEBUG).length,
+      info: logs.filter((log) => log.level === LogLevel.INFO).length,
+      success: logs.filter((log) => log.level === LogLevel.SUCCESS).length,
+      warn: logs.filter((log) => log.level === LogLevel.WARN).length,
+      error: logs.filter((log) => log.level === LogLevel.ERROR).length,
+      fatal: logs.filter((log) => log.level === LogLevel.FATAL).length,
     }
   }
 
@@ -397,44 +399,46 @@ export class EnhancedLogger {
   }
 
   private notifySubscribers(): void {
-    this.subscribers.forEach(callback => {
+    this.subscribers.forEach((callback) => {
       try {
         callback(this.logs.value)
       } catch (error) {
-        console.error('Logger subscriber error:', error)
+        console.error("Logger subscriber error:", error)
       }
     })
   }
 
   // ============= 导出功能 =============
 
-  export(format: 'json' | 'csv' | 'txt' = 'json'): string {
+  export(format: "json" | "csv" | "txt" = "json"): string {
     const logs = this.logs.value
 
     switch (format) {
-      case 'json':
+      case "json":
         return JSON.stringify(logs, null, 2)
-        
-      case 'csv':
-        const headers = ['时间', '级别', '消息', '来源', '上下文', '元数据']
-        const rows = logs.map(log => [
+
+      case "csv":
+        const headers = ["时间", "级别", "消息", "来源", "上下文", "元数据"]
+        const rows = logs.map((log) => [
           new Date(log.timestamp).toLocaleString(),
           LOG_LEVEL_NAMES[log.level],
           log.message,
-          log.source || '',
+          log.source || "",
           JSON.stringify(log.context || {}),
-          JSON.stringify(log.metadata || {})
+          JSON.stringify(log.metadata || {}),
         ])
-        return [headers, ...rows].map(row => row.join(',')).join('\n')
-        
-      case 'txt':
-        return logs.map(log => {
-          const time = new Date(log.timestamp).toLocaleString()
-          const level = LOG_LEVEL_NAMES[log.level]
-          const source = log.source ? `[${log.source}]` : ''
-          return `[${time}] ${level} ${source}: ${log.message}`
-        }).join('\n')
-        
+        return [headers, ...rows].map((row) => row.join(",")).join("\n")
+
+      case "txt":
+        return logs
+          .map((log) => {
+            const time = new Date(log.timestamp).toLocaleString()
+            const level = LOG_LEVEL_NAMES[log.level]
+            const source = log.source ? `[${log.source}]` : ""
+            return `[${time}] ${level} ${source}: ${log.message}`
+          })
+          .join("\n")
+
       default:
         return JSON.stringify(logs, null, 2)
     }
@@ -446,22 +450,25 @@ export class EnhancedLogger {
       logger: {
         level: LOG_LEVEL_NAMES[this.level],
         context: this.context,
-        transports: this.transports.map(t => ({ name: t.name, level: LOG_LEVEL_NAMES[t.level] })),
+        transports: this.transports.map((t) => ({ name: t.name, level: LOG_LEVEL_NAMES[t.level] })),
         stats: this.getStats(),
         activeTimers: Array.from(this.activeTimers.keys()),
-        childLoggers: this.childLoggers.size
+        childLoggers: this.childLoggers.size,
       },
       system: {
-        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'N/A',
-        url: typeof window !== 'undefined' ? window.location.href : 'N/A',
+        userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "N/A",
+        url: typeof window !== "undefined" ? window.location.href : "N/A",
         timestamp: Date.now(),
-        memory: typeof performance !== 'undefined' && (performance as any).memory ? {
-          usedJSHeapSize: (performance as any).memory.usedJSHeapSize,
-          totalJSHeapSize: (performance as any).memory.totalJSHeapSize,
-          jsHeapSizeLimit: (performance as any).memory.jsHeapSizeLimit
-        } : null
+        memory:
+          typeof performance !== "undefined" && (performance as any).memory
+            ? {
+                usedJSHeapSize: (performance as any).memory.usedJSHeapSize,
+                totalJSHeapSize: (performance as any).memory.totalJSHeapSize,
+                jsHeapSizeLimit: (performance as any).memory.jsHeapSizeLimit,
+              }
+            : null,
       },
-      recentLogs: this.logs.value.slice(-50) // 最近50条日志
+      recentLogs: this.logs.value.slice(-50), // 最近50条日志
     }
 
     return JSON.stringify(report, null, 2)
@@ -471,29 +478,32 @@ export class EnhancedLogger {
 
   setLevel(level: LogLevel): void {
     this.level = level
-    this.info('Logger level changed', { newLevel: LOG_LEVEL_NAMES[level] })
+    this.info("Logger level changed", { newLevel: LOG_LEVEL_NAMES[level] })
   }
 
   setMaxLogs(max: number): void {
     this.maxLogs = max
     if (this.logs.value.length > max) {
       const removed = this.logs.value.splice(0, this.logs.value.length - max)
-      this.info('Log buffer trimmed', { removedCount: removed.length, newSize: this.logs.value.length })
+      this.info("Log buffer trimmed", {
+        removedCount: removed.length,
+        newSize: this.logs.value.length,
+      })
     }
   }
 
   clear(): void {
     const count = this.logs.value.length
     this.logs.value.splice(0)
-    this.info('Logs cleared', { clearedCount: count })
+    this.info("Logs cleared", { clearedCount: count })
     this.notifySubscribers()
   }
 
   async flush(): Promise<void> {
     this.flushBatch()
-    
+
     // 刷新所有传输器
-    const promises = this.transports.map(async transport => {
+    const promises = this.transports.map(async (transport) => {
       if (transport.flush) {
         try {
           await transport.flush()
@@ -507,12 +517,12 @@ export class EnhancedLogger {
   }
 
   async destroy(): Promise<void> {
-    this.info('Logger shutting down')
-    
+    this.info("Logger shutting down")
+
     await this.flush()
 
     // 销毁所有传输器
-    const promises = this.transports.map(async transport => {
+    const promises = this.transports.map(async (transport) => {
       if (transport.destroy) {
         try {
           await transport.destroy()
@@ -557,7 +567,7 @@ export function createModuleLogger(moduleName: string, options?: LoggerOptions):
     ...options,
     context: {
       module: moduleName,
-      ...options?.context
-    }
+      ...options?.context,
+    },
   })
 }

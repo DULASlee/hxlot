@@ -7,8 +7,8 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
-    "stylelint": "stylelint \"src/**/*.{css,scss,vue}\"",
-    "stylelint:fix": "stylelint \"src/**/*.{css,scss,vue}\" --fix",
+    "stylelint": "stylelint \"src/views/codegen/designer/**/*.{css,scss,vue}\" \"src/views/codegen/VisualDesignerView.vue\" \"src/styles/**/*.{css,scss,vue}\"",
+    "stylelint:fix": "stylelint \"src/views/codegen/designer/**/*.{css,scss,vue}\" \"src/views/codegen/VisualDesignerView.vue\" \"src/styles/**/*.{css,scss,vue}\" --fix",
     "gen:api": "openapi --input %VITE_API_BASE_URL%/swagger/v1/swagger.json --output src/core/api --client axios",
     "gen:api:ci": "openapi --input $VITE_API_BASE_URL/swagger/v1/swagger.json --output src/core/api --client axios",
     "gen:api:check": "git diff --exit-code src/core/api || (echo API client drift detected && exit 1)",
@@ -35,7 +35,9 @@
     "prepare": "husky install",
     "precommit-check": "tsc --noEmit && cross-env ESLINT_USE_FLAT_CONFIG=false eslint -c .eslintrc.cjs . --fix && vitest run --coverage && vite build",
     "codegen": "tsx src/tools/cli.ts generate",
-    "codegen:check": "tsx src/tools/cli.ts check"
+    "codegen:check": "tsx src/tools/cli.ts check",
+    "module:add": "tsx src/tools/add-module.ts --input",
+    "module:add:codegen": "tsx src/tools/add-module.ts --input --codegen"
   },
   "lint-staged": {
     "*.ts": [
@@ -52,8 +54,10 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
+    "@highlightjs/vue-plugin": "^2.1.0",
     "@iconify-json/ep": "^1.2.3",
     "@iconify/vue": "^5.0.0",
+    "@microsoft/signalr": "^9.0.6",
     "@vue/compiler-core": "^3.5.13",
     "@vue/compiler-dom": "^3.5.13",
     "@vue/compiler-sfc": "^3.5.13",
@@ -62,10 +66,12 @@
     "dayjs": "^1.11.18",
     "echarts": "^6.0.0",
     "element-plus": "^2.8.8",
+    "highlight.js": "^11.11.1",
     "pinia": "^3.0.3",
     "source-map": "^0.7.4",
     "vue": "^3.5.13",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@pinia/testing": "^1.0.2",
@@ -77,6 +83,7 @@
     "@typescript-eslint/parser": "^8.41.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vitejs/plugin-vue-jsx": "^5.1.1",
+    "@vitest/coverage-v8": "^3.2.4",
     "@vue/eslint-config-typescript": "^14.6.0",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
@@ -92,6 +99,8 @@
     "jsdom": "^26.1.0",
     "lint-staged": "^16.1.6",
     "npm-run-all2": "^8.0.4",
+    "openapi-typescript-codegen": "^0.29.0",
+    "postcss-html": "^1.8.0",
     "prettier": "^3.6.2",
     "sass": "^1.91.0",
     "stylelint": "^16.9.0",

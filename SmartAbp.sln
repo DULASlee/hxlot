@@ -1,4 +1,4 @@
-﻿
+﻿﻿﻿﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32611.2
@@ -22,6 +22,8 @@ EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "smartabp.vue", "src\SmartAbp.Vue\smartabp.vue.esproj", "{9379043E-BE15-F799-A06A-45BEAB39C322}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartAbp.Web", "src\SmartAbp.Web\SmartAbp.Web.csproj", "{100C3349-655C-1463-60C0-1CC4EA7D6734}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartAbp.CodeGenerator", "src\SmartAbp.CodeGenerator\SmartAbp.CodeGenerator.csproj", "{2F8B5A3C-8E4D-4F9B-A1C7-3D6E8F5C2B9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,10 @@ Global
 		{100C3349-655C-1463-60C0-1CC4EA7D6734}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{100C3349-655C-1463-60C0-1CC4EA7D6734}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{100C3349-655C-1463-60C0-1CC4EA7D6734}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F8B5A3C-8E4D-4F9B-A1C7-3D6E8F5C2B9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F8B5A3C-8E4D-4F9B-A1C7-3D6E8F5C2B9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F8B5A3C-8E4D-4F9B-A1C7-3D6E8F5C2B9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F8B5A3C-8E4D-4F9B-A1C7-3D6E8F5C2B9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +87,7 @@ Global
 		{70680696-BB1E-4383-BCB2-42C3767171FB} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{9379043E-BE15-F799-A06A-45BEAB39C322} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{100C3349-655C-1463-60C0-1CC4EA7D6734} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
+		{2F8B5A3C-8E4D-4F9B-A1C7-3D6E8F5C2B9A} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}

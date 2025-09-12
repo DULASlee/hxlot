@@ -484,7 +484,7 @@ onMounted(() => {
 }
 
 .header-card h1 {
-  margin: 0 0 10px 0;
+  margin: 0 0 10px;
   color: #409eff;
 }
 
@@ -514,7 +514,7 @@ onMounted(() => {
 }
 
 .code-container code {
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-family: Consolas, Monaco, 'Courier New', monospace;
   font-size: 14px;
   line-height: 1.5;
 }

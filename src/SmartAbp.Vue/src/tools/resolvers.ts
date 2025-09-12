@@ -1,4 +1,4 @@
-import type { Manifest } from './schema'
+import type { Manifest } from "./schema"
 
 /**
  * DependencyResolver
@@ -22,7 +22,7 @@ export class DependencyResolver {
     const visit = (name: string, stack: string[] = []) => {
       if (visited.has(name)) return
       if (visiting.has(name)) {
-        throw new Error(`Circular dependency detected: ${[...stack, name].join(' -> ')}`)
+        throw new Error(`Circular dependency detected: ${[...stack, name].join(" -> ")}`)
       }
       const manifest = this.manifests.get(name)
       if (!manifest) {
@@ -64,15 +64,19 @@ export class ConflictDetector {
         // 路由名称
         if (this.routeNames.has(route.name)) {
           const first = this.routeNames.get(route.name)!
-          throw new Error(`路由名称冲突: "${route.name}" 在模块 "${first}" 和 "${manifest.name}" 中重复`)
+          throw new Error(
+            `路由名称冲突: "${route.name}" 在模块 "${first}" 和 "${manifest.name}" 中重复`,
+          )
         }
         this.routeNames.set(route.name, manifest.name)
 
         // 路由路径（归一化处理末尾 /）
-        const normPath = route.path.replace(/\/+$/, '')
+        const normPath = route.path.replace(/\/+$/, "")
         if (this.routePaths.has(normPath)) {
           const first = this.routePaths.get(normPath)!
-          throw new Error(`路由路径冲突: "${normPath}" 在模块 "${first}" 和 "${manifest.name}" 中重复`)
+          throw new Error(
+            `路由路径冲突: "${normPath}" 在模块 "${first}" 和 "${manifest.name}" 中重复`,
+          )
         }
         this.routePaths.set(normPath, manifest.name)
       })
@@ -81,7 +85,9 @@ export class ConflictDetector {
       manifest.stores.forEach((store) => {
         if (this.storeIds.has(store.id)) {
           const first = this.storeIds.get(store.id)!
-          throw new Error(`Store id 冲突: "${store.id}" 在模块 "${first}" 和 "${manifest.name}" 中重复`)
+          throw new Error(
+            `Store id 冲突: "${store.id}" 在模块 "${first}" 和 "${manifest.name}" 中重复`,
+          )
         }
         this.storeIds.set(store.id, manifest.name)
       })
@@ -90,7 +96,9 @@ export class ConflictDetector {
       manifest.policies.forEach((policy) => {
         if (this.policies.has(policy)) {
           const first = this.policies.get(policy)!
-          throw new Error(`权限策略冲突: "${policy}" 在模块 "${first}" 和 "${manifest.name}" 中重复`)
+          throw new Error(
+            `权限策略冲突: "${policy}" 在模块 "${first}" 和 "${manifest.name}" 中重复`,
+          )
         }
         this.policies.set(policy, manifest.name)
       })

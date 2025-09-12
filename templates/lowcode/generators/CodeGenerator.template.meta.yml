@@ -1,0 +1,50 @@
+name: "低代码引擎代码生成器"
+category: "lowcode/generators"
+description: "用于创建特定类型代码生成器的标准模板"
+tags:
+  - "lowcode"
+  - "generator"
+  - "codegen"
+scenarios:
+  - "代码生成器开发"
+  - "模板引擎"
+  - "自动化代码生成"
+ai_triggers:
+  - "创建生成器"
+  - "代码生成器"
+  - "低代码生成器"
+  - "模板生成器"
+  - "自动生成代码"
+dependencies:
+  - "SmartAbp低代码内核"
+  - "模板引擎"
+permissions_required: false
+parameters:
+  - name: "GeneratorName"
+    type: "string"
+    description: "生成器名称（PascalCase）"
+    required: true
+    example: "VueComponent"
+  - name: "generatorName"
+    type: "string"
+    description: "生成器名称（camelCase）"
+    required: true
+    example: "vueComponent"
+  - name: "GeneratorDescription"
+    type: "string"
+    description: "生成器功能描述"
+    required: true
+    example: "Vue组件代码生成器"
+  - name: "TargetType"
+    type: "string"
+    description: "目标代码类型"
+    required: true
+    example: "Vue组件"
+usage_examples:
+  - "Vue组件生成器"
+  - "API服务生成器"
+  - "表单生成器"
+validation_rules:
+  - "生成器名称必须符合PascalCase命名规范"
+  - "必须实现ICodeGenerator接口"
+  - "必须包含完整的代码生成逻辑"

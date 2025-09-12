@@ -510,7 +510,7 @@ onMounted(() => {
 
 .log-entry:hover {
   border-color: var(--el-color-primary);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
 }
 
 .log-expanded {
@@ -569,9 +569,8 @@ onMounted(() => {
   border-radius: 4px;
   font-size: 12px;
   line-height: 1.4;
-  overflow-x: auto;
+  overflow: auto;
   max-height: 200px;
-  overflow-y: auto;
 }
 
 /* 日志级别样式 */
@@ -596,7 +595,7 @@ onMounted(() => {
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .log-controls {
     flex-direction: column;
     align-items: stretch;

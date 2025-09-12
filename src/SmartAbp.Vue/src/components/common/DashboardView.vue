@@ -132,13 +132,15 @@ defineProps<{
   background: white;
   border-radius: clamp(4px, 1vw, 8px);
   padding: clamp(16px, 4vw, 32px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
   width: 100%;
+
   /* 使用弹性伸缩以填充父容器剩余空间 */
   flex: 1 1 auto;
   min-height: 0;
   display: flex;
   flex-direction: column;
+
   /* 内容内部滚动，避免整个页面被限制为小盒子 */
   overflow: auto;
   box-sizing: border-box;
@@ -203,7 +205,7 @@ defineProps<{
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
 }
 
 .stat-icon {
@@ -248,7 +250,7 @@ defineProps<{
 }
 
 .info-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
 }
 
 .info-card h3 {
@@ -306,7 +308,7 @@ defineProps<{
 }
 
 /* 响应式断点 */
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
   .stats-grid {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
@@ -316,7 +318,7 @@ defineProps<{
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .stats-grid {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
@@ -338,7 +340,7 @@ defineProps<{
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .stats-grid {
     grid-template-columns: 1fr;
   }
@@ -351,7 +353,7 @@ defineProps<{
 }
 
 /* 超大屏幕优化 */
-@media (min-width: 1920px) {
+@media (width >= 1920px) {
   .stats-grid {
     grid-template-columns: repeat(4, 1fr);
   }

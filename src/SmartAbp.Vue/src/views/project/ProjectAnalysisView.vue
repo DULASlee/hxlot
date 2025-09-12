@@ -307,7 +307,7 @@ const getStatusText = (status: string) => {
   background: var(--color-bg-primary);
   border: 1px solid var(--color-border-primary);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 5%);
 }
 
 .stat-icon {
@@ -324,7 +324,7 @@ const getStatusText = (status: string) => {
 .stat-icon svg {
   width: 24px;
   height: 24px;
-  fill: currentColor;
+  fill: currentcolor;
 }
 
 .stat-content {
@@ -541,13 +541,13 @@ const getStatusText = (status: string) => {
 }
 
 /* 响应式设计 */
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .charts-section {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .stats-overview {
     grid-template-columns: 1fr;
   }

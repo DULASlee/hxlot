@@ -1,9 +1,9 @@
-import axios from 'axios'
-import { authService } from '@/utils/auth'
+import axios from "axios"
+import { authService } from "@/utils/auth"
 
 export const http = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://localhost:44379',
-  timeout: 10000
+  baseURL: import.meta.env.VITE_API_BASE_URL || "https://localhost:44379",
+  timeout: 10000,
 })
 
 http.interceptors.request.use((config) => {
@@ -16,7 +16,7 @@ http.interceptors.request.use((config) => {
 })
 
 http.interceptors.response.use(
-  res => res,
+  (res) => res,
   async (error) => {
     const original = error.config
     if (error.response?.status === 401 && !original._retry) {
@@ -32,5 +32,5 @@ http.interceptors.response.use(
       }
     }
     return Promise.reject(error)
-  }
+  },
 )

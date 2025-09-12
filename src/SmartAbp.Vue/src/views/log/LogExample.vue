@@ -298,7 +298,7 @@ const clearFilters = () => {
 }
 
 .example-section h4 {
-  margin: 0 0 12px 0;
+  margin: 0 0 12px;
   color: var(--el-text-color-primary);
   font-size: 16px;
 }
@@ -315,7 +315,7 @@ const clearFilters = () => {
   gap: 16px;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .log-example {
     padding: 10px;
   }

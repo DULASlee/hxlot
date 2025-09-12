@@ -636,7 +636,7 @@ const exportReport = () => {
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .header-content {
     flex-direction: column;
     align-items: flex-start;

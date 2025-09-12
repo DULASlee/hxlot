@@ -1,0 +1,128 @@
+{
+  "designPatterns": {
+    "frontend": {
+      "vue": {
+        "compositionAPI": {
+          "name": "Vue Composition API模式",
+          "description": "使用Composition API进行组件开发",
+          "checklist": [
+            "使用setup()函数或<script setup>语法",
+            "正确使用ref()和reactive()管理状态",
+            "使用computed()处理派生状态",
+            "使用watch()和watchEffect()监听变化",
+            "正确使用生命周期钩子",
+            "合理拆分组合式函数(composables)",
+            "正确处理组件卸载时的清理工作"
+          ],
+          "antiPatterns": [
+            "在setup外部使用响应式API",
+            "忘记在组件卸载时清理副作用",
+            "过度使用reactive导致性能问题",
+            "不合理的组合式函数拆分"
+          ]
+        },
+        "componentDesign": {
+          "name": "Vue组件设计模式",
+          "description": "Vue组件的最佳设计实践",
+          "checklist": [
+            "单一职责原则：组件只负责一个功能",
+            "Props验证：定义完整的props类型和默认值",
+            "事件命名：使用kebab-case命名自定义事件",
+            "插槽设计：合理使用具名插槽和作用域插槽",
+            "样式隔离：使用scoped CSS或CSS Modules",
+            "可访问性：添加适当的ARIA属性",
+            "国际化支持：使用i18n进行文本处理"
+          ]
+        }
+      },
+      "stateManagement": {
+        "pinia": {
+          "name": "Pinia状态管理模式",
+          "description": "使用Pinia进行状态管理的最佳实践",
+          "checklist": [
+            "Store定义：使用defineStore定义store",
+            "状态设计：合理设计state结构",
+            "Getters使用：正确使用getters处理派生状态",
+            "Actions设计：异步操作放在actions中",
+            "模块化：按功能模块拆分store",
+            "持久化：合理使用持久化插件",
+            "类型安全：使用TypeScript确保类型安全"
+          ]
+        }
+      }
+    },
+    "backend": {
+      "abp": {
+        "applicationService": {
+          "name": "ABP应用服务模式",
+          "description": "ABP框架应用服务的设计模式",
+          "checklist": [
+            "继承ApplicationService基类",
+            "实现对应的接口契约",
+            "使用AutoMapper进行对象映射",
+            "正确处理权限验证",
+            "实现完整的CRUD操作",
+            "添加适当的日志记录",
+            "处理业务异常和验证",
+            "支持分页和排序",
+            "实现软删除功能",
+            "添加审计日志"
+          ]
+        },
+        "domainService": {
+          "name": "ABP领域服务模式",
+          "description": "ABP框架领域服务的设计模式",
+          "checklist": [
+            "继承DomainService基类",
+            "实现业务逻辑封装",
+            "正确使用仓储模式",
+            "处理领域事件",
+            "实现业务规则验证",
+            "管理事务边界",
+            "处理并发控制"
+          ]
+        }
+      },
+      "repository": {
+        "name": "仓储模式",
+        "description": "数据访问层的仓储模式实现",
+        "checklist": [
+          "定义仓储接口",
+          "实现具体仓储类",
+          "支持异步操作",
+          "实现查询规约模式",
+          "支持批量操作",
+          "处理数据库异常",
+          "实现缓存策略",
+          "支持事务管理"
+        ]
+      }
+    },
+    "common": {
+      "solid": {
+        "name": "SOLID原则",
+        "description": "面向对象设计的SOLID原则",
+        "checklist": [
+          "单一职责原则(SRP)：类只有一个改变的理由",
+          "开闭原则(OCP)：对扩展开放，对修改关闭",
+          "里氏替换原则(LSP)：子类可以替换父类",
+          "接口隔离原则(ISP)：不依赖不需要的接口",
+          "依赖倒置原则(DIP)：依赖抽象而非具体实现"
+        ]
+      },
+      "errorHandling": {
+        "name": "错误处理模式",
+        "description": "统一的错误处理和异常管理",
+        "checklist": [
+          "定义统一的错误码体系",
+          "实现全局异常处理器",
+          "区分业务异常和系统异常",
+          "提供用户友好的错误信息",
+          "记录详细的错误日志",
+          "实现错误重试机制",
+          "支持错误监控和告警"
+        ]
+      }
+    }
+  }
+}

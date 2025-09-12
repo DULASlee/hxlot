@@ -1,14 +1,14 @@
-import { defineStore } from 'pinia'
-import { reactive, watch } from 'vue'
+import { defineStore } from "pinia"
+import { reactive, watch } from "vue"
 
 interface State {
   token?: string
   refreshToken?: string
 }
 
-const KEY = 'example_store'
+const KEY = "example_store"
 
-export const useExampleStore = defineStore('example', () => {
+export const useExampleStore = defineStore("example", () => {
   const state = reactive<State>({})
 
   function setToken(token?: string, refreshToken?: string) {
@@ -26,9 +26,15 @@ export const useExampleStore = defineStore('example', () => {
     if (raw) Object.assign(state, JSON.parse(raw))
   } catch {}
 
-  watch(state, () => {
-    try { localStorage.setItem(KEY, JSON.stringify(state)) } catch {}
-  }, { deep: true })
+  watch(
+    state,
+    () => {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(state))
+      } catch {}
+    },
+    { deep: true },
+  )
 
   return { state, setToken, clear }
 })

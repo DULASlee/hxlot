@@ -7,7 +7,7 @@
  * @version 1.0.0
  */
 
-import type { EventBus } from '../kernel/types'
+import type { EventBus } from "../kernel/types"
 import type {
   RemoteSpec,
   LoaderOptions,
@@ -15,13 +15,9 @@ import type {
   CacheEntry,
   IFederatedLoader,
   PerformanceMetrics,
-  SecurityValidation
-} from './types'
-import {
-  LoadingState,
-  FederationError,
-  FederationErrorType
-} from './types'
+  SecurityValidation,
+} from "./types"
+import { LoadingState, FederationError, FederationErrorType } from "./types"
 
 /**
  * 联邦插件加载器实现
@@ -34,10 +30,7 @@ export class FederatedPluginLoader implements IFederatedLoader {
   private metrics: PerformanceMetrics
   private concurrentLoads = new Set<string>()
 
-  constructor(
-    options: LoaderOptions = {},
-    eventBus?: EventBus
-  ) {
+  constructor(options: LoaderOptions = {}, eventBus?: EventBus) {
     // 设置默认选项
     this.options = {
       enableCache: options.enableCache ?? true,
@@ -45,7 +38,7 @@ export class FederatedPluginLoader implements IFederatedLoader {
       maxConcurrentLoads: options.maxConcurrentLoads ?? 5,
       enableSecurity: options.enableSecurity ?? true,
       allowedOrigins: options.allowedOrigins ?? [],
-      verbose: options.verbose ?? false
+      verbose: options.verbose ?? false,
     }
 
     this.eventBus = eventBus
@@ -60,8 +53,8 @@ export class FederatedPluginLoader implements IFederatedLoader {
       memoryUsage: 0,
       loadMethodStats: {
         esm: 0,
-        script: 0
-      }
+        script: 0,
+      },
     }
 
     // 定期清理过期缓存
@@ -77,11 +70,11 @@ export class FederatedPluginLoader implements IFederatedLoader {
 
     try {
       this.log(`开始加载远程模块: ${spec.scope}/${spec.module}`)
-      this.eventBus?.emit('load:start', {
+      this.eventBus?.emit("load:start", {
         scope: spec.scope,
         module: spec.module,
         url: spec.url,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       })
 
       // 验证并发加载限制
@@ -89,7 +82,7 @@ export class FederatedPluginLoader implements IFederatedLoader {
         throw new FederationError(
           FederationErrorType.VALIDATION_ERROR,
           `超过最大并发加载限制: ${this.options.maxConcurrentLoads}`,
-          spec
+          spec,
         )
       }
 
@@ -97,17 +90,17 @@ export class FederatedPluginLoader implements IFederatedLoader {
       if (this.options.enableCache) {
         const cached = this.checkCache<T>(cacheKey)
         if (cached) {
-          this.eventBus?.emit('cache:hit', {
+          this.eventBus?.emit("cache:hit", {
             key: cacheKey,
             size: JSON.stringify(cached.module).length,
-            timestamp: Date.now()
+            timestamp: Date.now(),
           })
           this.log(`缓存命中: ${spec.scope}/${spec.module}`)
           return cached
         }
-        this.eventBus?.emit('cache:miss', {
+        this.eventBus?.emit("cache:miss", {
           key: cacheKey,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         })
       }
 
@@ -135,28 +128,33 @@ export class FederatedPluginLoader implements IFederatedLoader {
         this.loadingPromises.delete(cacheKey)
         this.concurrentLoads.delete(cacheKey)
       }
-
     } catch (error) {
       const errorInstance = error instanceof Error ? error : new Error(String(error))
-      const federationError = error instanceof FederationError
-        ? error
-        : new FederationError(FederationErrorType.UNKNOWN_ERROR, errorInstance.message, spec, errorInstance)
+      const federationError =
+        error instanceof FederationError
+          ? error
+          : new FederationError(
+              FederationErrorType.UNKNOWN_ERROR,
+              errorInstance.message,
+              spec,
+              errorInstance,
+            )
 
       this.metrics.failedLoads++
-      this.eventBus?.emit('load:error', {
+      this.eventBus?.emit("load:error", {
         scope: spec.scope,
         module: spec.module,
         error: federationError,
         errorType: federationError.type,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       })
-      this.log(`加载失败: ${federationError.toString()}`, 'error')
+      this.log(`加载失败: ${federationError.toString()}`, "error")
 
       return {
         state: LoadingState.ERROR,
         error: federationError,
         loadTime: Date.now() - startTime,
-        fromCache: false
+        fromCache: false,
       }
     }
   }
@@ -171,17 +169,17 @@ export class FederatedPluginLoader implements IFederatedLoader {
       if (!validation.isValid) {
         throw new FederationError(
           FederationErrorType.SECURITY_ERROR,
-          `安全验证失败: ${validation.errors.join(', ')}`,
-          spec
+          `安全验证失败: ${validation.errors.join(", ")}`,
+          spec,
         )
       }
     }
 
     let lastError: Error | undefined
-    const expectedType = spec.expectedType || 'auto'
+    const expectedType = spec.expectedType || "auto"
 
     // 尝试ESM加载（优先）
-    if (expectedType === 'esm' || expectedType === 'auto') {
+    if (expectedType === "esm" || expectedType === "auto") {
       try {
         this.log(`尝试ESM加载: ${spec.scope}/${spec.module}`)
         const module = await this.loadViaESM<T>(spec)
@@ -196,29 +194,29 @@ export class FederatedPluginLoader implements IFederatedLoader {
           state: LoadingState.LOADED,
           module,
           loadTime,
-          loadMethod: 'esm',
-          fromCache: false
+          loadMethod: "esm",
+          fromCache: false,
         }
 
-        this.eventBus?.emit('load:success', {
+        this.eventBus?.emit("load:success", {
           scope: spec.scope,
           module: spec.module,
           loadTime: result.loadTime || 0,
-          loadMethod: result.loadMethod || 'esm',
+          loadMethod: result.loadMethod || "esm",
           fromCache: result.fromCache || false,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         })
         this.log(`ESM加载成功: ${spec.scope}/${spec.module} (${loadTime}ms)`)
         return result
       } catch (error) {
         const errorInstance = error instanceof Error ? error : new Error(String(error))
         lastError = errorInstance
-        this.log(`ESM加载失败: ${errorInstance.message}`, 'warn')
+        this.log(`ESM加载失败: ${errorInstance.message}`, "warn")
       }
     }
 
     // 回退到Script标签加载
-    if (expectedType === 'umd' || expectedType === 'iife' || expectedType === 'auto') {
+    if (expectedType === "umd" || expectedType === "iife" || expectedType === "auto") {
       try {
         this.log(`尝试Script标签加载: ${spec.scope}/${spec.module}`)
         const module = await this.loadViaScript<T>(spec)
@@ -233,33 +231,33 @@ export class FederatedPluginLoader implements IFederatedLoader {
           state: LoadingState.LOADED,
           module,
           loadTime,
-          loadMethod: 'script',
-          fromCache: false
+          loadMethod: "script",
+          fromCache: false,
         }
 
-        this.eventBus?.emit('load:success', {
+        this.eventBus?.emit("load:success", {
           scope: spec.scope,
           module: spec.module,
           loadTime: result.loadTime || 0,
-          loadMethod: result.loadMethod || 'script',
+          loadMethod: result.loadMethod || "script",
           fromCache: result.fromCache || false,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         })
         this.log(`Script加载成功: ${spec.scope}/${spec.module} (${loadTime}ms)`)
         return result
       } catch (error) {
         const errorInstance = error instanceof Error ? error : new Error(String(error))
         lastError = errorInstance
-        this.log(`Script加载失败: ${errorInstance.message}`, 'warn')
+        this.log(`Script加载失败: ${errorInstance.message}`, "warn")
       }
     }
 
     // 所有加载方式都失败
     throw new FederationError(
       FederationErrorType.NETWORK_ERROR,
-      `所有加载方式都失败。ESM错误: ${lastError?.message || '未尝试'}`,
+      `所有加载方式都失败。ESM错误: ${lastError?.message || "未尝试"}`,
       spec,
-      lastError
+      lastError,
     )
   }
 
@@ -272,11 +270,13 @@ export class FederatedPluginLoader implements IFederatedLoader {
     // 创建超时Promise
     const timeoutPromise = new Promise<never>((_, reject) => {
       setTimeout(() => {
-        reject(new FederationError(
-          FederationErrorType.TIMEOUT_ERROR,
-          `ESM加载超时: ${timeoutMs}ms`,
-          spec
-        ))
+        reject(
+          new FederationError(
+            FederationErrorType.TIMEOUT_ERROR,
+            `ESM加载超时: ${timeoutMs}ms`,
+            spec,
+          ),
+        )
       }, timeoutMs)
     })
 
@@ -285,7 +285,7 @@ export class FederatedPluginLoader implements IFederatedLoader {
       try {
         // 构建模块URL
         let moduleUrl: string
-        if (spec.url.startsWith('http')) {
+        if (spec.url.startsWith("http")) {
           // 绝对URL
           moduleUrl = new URL(spec.module, spec.url).href
         } else {
@@ -307,7 +307,7 @@ export class FederatedPluginLoader implements IFederatedLoader {
           FederationErrorType.PARSE_ERROR,
           `ESM解析失败: ${errorInstance.message}`,
           spec,
-          errorInstance
+          errorInstance,
         )
       }
     })()
@@ -322,20 +322,22 @@ export class FederatedPluginLoader implements IFederatedLoader {
   private async loadViaScript<T>(spec: RemoteSpec): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       const timeoutMs = spec.timeoutMs || 10000
-      const script = document.createElement('script')
+      const script = document.createElement("script")
 
       script.src = spec.url
       script.async = true
-      script.crossOrigin = 'anonymous' // 启用CORS
+      script.crossOrigin = "anonymous" // 启用CORS
 
       // 设置超时
       const timeout = setTimeout(() => {
         script.remove()
-        reject(new FederationError(
-          FederationErrorType.TIMEOUT_ERROR,
-          `Script加载超时: ${timeoutMs}ms`,
-          spec
-        ))
+        reject(
+          new FederationError(
+            FederationErrorType.TIMEOUT_ERROR,
+            `Script加载超时: ${timeoutMs}ms`,
+            spec,
+          ),
+        )
       }, timeoutMs)
 
       // 加载成功处理
@@ -351,7 +353,7 @@ export class FederatedPluginLoader implements IFederatedLoader {
 
           // 获取模块
           let module: T
-          if (typeof container.get === 'function') {
+          if (typeof container.get === "function") {
             // Module Federation 标准容器
             module = container.get(spec.module)
           } else if (container[spec.module]) {
@@ -370,12 +372,14 @@ export class FederatedPluginLoader implements IFederatedLoader {
           resolve(module)
         } catch (error) {
           const errorInstance = error instanceof Error ? error : new Error(String(error))
-          reject(new FederationError(
-            FederationErrorType.PARSE_ERROR,
-            `Script解析失败: ${errorInstance.message}`,
-            spec,
-            errorInstance
-          ))
+          reject(
+            new FederationError(
+              FederationErrorType.PARSE_ERROR,
+              `Script解析失败: ${errorInstance.message}`,
+              spec,
+              errorInstance,
+            ),
+          )
         }
       }
 
@@ -383,11 +387,13 @@ export class FederatedPluginLoader implements IFederatedLoader {
       script.onerror = () => {
         clearTimeout(timeout)
         script.remove()
-        reject(new FederationError(
-          FederationErrorType.NETWORK_ERROR,
-          `Script资源加载失败: ${spec.url}`,
-          spec
-        ))
+        reject(
+          new FederationError(
+            FederationErrorType.NETWORK_ERROR,
+            `Script资源加载失败: ${spec.url}`,
+            spec,
+          ),
+        )
       }
 
       // 添加到DOM
@@ -404,7 +410,7 @@ export class FederatedPluginLoader implements IFederatedLoader {
       await this.load(spec)
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error)
-      this.log(`预加载失败: ${errorMessage}`, 'warn')
+      this.log(`预加载失败: ${errorMessage}`, "warn")
       // 预加载失败不抛出错误
     }
   }
@@ -423,7 +429,7 @@ export class FederatedPluginLoader implements IFederatedLoader {
 
     // 清理DOM中的script标签（如果存在）
     const scripts = document.querySelectorAll(`script[src="${spec.url}"]`)
-    scripts.forEach(script => script.remove())
+    scripts.forEach((script) => script.remove())
   }
 
   /**
@@ -446,9 +452,9 @@ export class FederatedPluginLoader implements IFederatedLoader {
       this.cache.clear()
     }
 
-    this.eventBus?.emit('cache:cleanup', {
+    this.eventBus?.emit("cache:cleanup", {
       removedCount,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     })
     this.log(`缓存已清理，移除 ${removedCount} 个条目`)
 
@@ -480,8 +486,8 @@ export class FederatedPluginLoader implements IFederatedLoader {
     // 检查URL协议
     try {
       const url = new URL(spec.url)
-      if (url.protocol !== 'https:' && url.hostname !== 'localhost') {
-        errors.push('非HTTPS协议的远程URL存在安全风险')
+      if (url.protocol !== "https:" && url.hostname !== "localhost") {
+        errors.push("非HTTPS协议的远程URL存在安全风险")
         securityScore -= 30
       }
 
@@ -495,11 +501,10 @@ export class FederatedPluginLoader implements IFederatedLoader {
       }
 
       // 检查可疑路径
-      if (spec.module.includes('..') || spec.module.includes('<script>')) {
-        errors.push('模块路径包含可疑字符')
+      if (spec.module.includes("..") || spec.module.includes("<script>")) {
+        errors.push("模块路径包含可疑字符")
         securityScore -= 40
       }
-
     } catch (error) {
       errors.push(`无效的URL格式: ${spec.url}`)
       securityScore -= 60
@@ -507,7 +512,7 @@ export class FederatedPluginLoader implements IFederatedLoader {
 
     // 检查超时设置
     if (!spec.timeoutMs || spec.timeoutMs > 30000) {
-      warnings.push('建议设置适当的超时时间（小于30秒）')
+      warnings.push("建议设置适当的超时时间（小于30秒）")
       securityScore -= 5
     }
 
@@ -515,14 +520,14 @@ export class FederatedPluginLoader implements IFederatedLoader {
       isValid: errors.length === 0,
       errors,
       warnings,
-      securityScore: Math.max(0, securityScore)
+      securityScore: Math.max(0, securityScore),
     }
   }
 
   // === 私有辅助方法 ===
 
   private generateCacheKey(spec: RemoteSpec): string {
-    return `${spec.scope}/${spec.module}@${spec.version || 'latest'}`
+    return `${spec.scope}/${spec.module}@${spec.version || "latest"}`
   }
 
   private checkCache<T>(cacheKey: string): LoadResult<T> | null {
@@ -539,7 +544,7 @@ export class FederatedPluginLoader implements IFederatedLoader {
       state: LoadingState.CACHED,
       module: entry.module,
       fromCache: true,
-      loadTime: 0
+      loadTime: 0,
     }
   }
 
@@ -549,7 +554,7 @@ export class FederatedPluginLoader implements IFederatedLoader {
       module,
       timestamp: now,
       expiresAt: now + this.options.cacheExpiration,
-      spec
+      spec,
     }
 
     this.cache.set(cacheKey, entry)
@@ -558,9 +563,12 @@ export class FederatedPluginLoader implements IFederatedLoader {
 
   private startCacheCleanup(): void {
     // 每30分钟清理一次过期缓存
-    setInterval(() => {
-      this.clearCache(entry => Date.now() > entry.expiresAt)
-    }, 30 * 60 * 1000)
+    setInterval(
+      () => {
+        this.clearCache((entry) => Date.now() > entry.expiresAt)
+      },
+      30 * 60 * 1000,
+    )
   }
 
   private updateAverageLoadTime(loadTime: number): void {
@@ -578,18 +586,18 @@ export class FederatedPluginLoader implements IFederatedLoader {
     return this.cache.size * 100 * 1024
   }
 
-  private log(message: string, level: 'info' | 'warn' | 'error' = 'info'): void {
-    if (!this.options.verbose && level === 'info') return
+  private log(message: string, level: "info" | "warn" | "error" = "info"): void {
+    if (!this.options.verbose && level === "info") return
 
-    const prefix = '[FederatedLoader]'
+    const prefix = "[FederatedLoader]"
     switch (level) {
-      case 'info':
+      case "info":
         console.log(`${prefix} ${message}`)
         break
-      case 'warn':
+      case "warn":
         console.warn(`${prefix} ${message}`)
         break
-      case 'error':
+      case "error":
         console.error(`${prefix} ${message}`)
         break
     }

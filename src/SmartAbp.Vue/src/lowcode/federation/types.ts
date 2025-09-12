@@ -7,7 +7,7 @@
  * @version 1.0.0
  */
 
-import type { CodegenPlugin } from '../kernel/types'
+import type { CodegenPlugin } from "../kernel/types"
 
 /**
  * 远程模块规格定义
@@ -24,7 +24,7 @@ export interface RemoteSpec {
   /** 模块版本（用于缓存和兼容性检查） */
   version?: string
   /** 预期的模块类型 */
-  expectedType?: 'esm' | 'umd' | 'iife' | 'auto'
+  expectedType?: "esm" | "umd" | "iife" | "auto"
 }
 
 /**
@@ -49,11 +49,11 @@ export interface LoaderOptions {
  * 加载状态枚举
  */
 export enum LoadingState {
-  PENDING = 'pending',
-  LOADING = 'loading',
-  LOADED = 'loaded',
-  ERROR = 'error',
-  CACHED = 'cached'
+  PENDING = "pending",
+  LOADING = "loading",
+  LOADED = "loaded",
+  ERROR = "error",
+  CACHED = "cached",
 }
 
 /**
@@ -69,7 +69,7 @@ export interface LoadResult<T = any> {
   /** 加载耗时（毫秒） */
   loadTime?: number
   /** 加载方式 */
-  loadMethod?: 'esm' | 'script'
+  loadMethod?: "esm" | "script"
   /** 是否来自缓存 */
   fromCache?: boolean
   /** 模块元数据 */
@@ -125,17 +125,17 @@ export interface CacheEntry<T = any> {
  */
 export interface LoaderEvents {
   /** 开始加载事件 */
-  'load:start': { spec: RemoteSpec }
+  "load:start": { spec: RemoteSpec }
   /** 加载成功事件 */
-  'load:success': { spec: RemoteSpec; result: LoadResult }
+  "load:success": { spec: RemoteSpec; result: LoadResult }
   /** 加载失败事件 */
-  'load:error': { spec: RemoteSpec; error: Error }
+  "load:error": { spec: RemoteSpec; error: Error }
   /** 缓存命中事件 */
-  'cache:hit': { spec: RemoteSpec }
+  "cache:hit": { spec: RemoteSpec }
   /** 缓存失效事件 */
-  'cache:miss': { spec: RemoteSpec }
+  "cache:miss": { spec: RemoteSpec }
   /** 缓存清理事件 */
-  'cache:cleanup': { removedCount: number }
+  "cache:cleanup": { removedCount: number }
 }
 
 /**
@@ -214,13 +214,13 @@ export interface IFederatedLoader {
  * 错误类型枚举
  */
 export enum FederationErrorType {
-  NETWORK_ERROR = 'network_error',
-  TIMEOUT_ERROR = 'timeout_error',
-  PARSE_ERROR = 'parse_error',
-  SECURITY_ERROR = 'security_error',
-  VALIDATION_ERROR = 'validation_error',
-  DEPENDENCY_ERROR = 'dependency_error',
-  UNKNOWN_ERROR = 'unknown_error'
+  NETWORK_ERROR = "network_error",
+  TIMEOUT_ERROR = "timeout_error",
+  PARSE_ERROR = "parse_error",
+  SECURITY_ERROR = "security_error",
+  VALIDATION_ERROR = "validation_error",
+  DEPENDENCY_ERROR = "dependency_error",
+  UNKNOWN_ERROR = "unknown_error",
 }
 
 /**
@@ -236,10 +236,10 @@ export class FederationError extends Error {
     type: FederationErrorType,
     message: string,
     spec?: RemoteSpec,
-    originalError?: Error
+    originalError?: Error,
   ) {
     super(message)
-    this.name = 'FederationError'
+    this.name = "FederationError"
     this.type = type
     this.spec = spec
     this.originalError = originalError
@@ -247,6 +247,6 @@ export class FederationError extends Error {
   }
 
   toString(): string {
-    return `${this.name}[${this.type}]: ${this.message} ${this.spec ? `(${this.spec.scope}/${this.spec.module})` : ''}`
+    return `${this.name}[${this.type}]: ${this.message} ${this.spec ? `(${this.spec.scope}/${this.spec.module})` : ""}`
   }
 }

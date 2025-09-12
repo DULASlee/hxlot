@@ -3,8 +3,8 @@
  * @deprecated 建议使用 @/utils/logging 中的新日志系统
  */
 
-import { ref, type Ref } from 'vue'
-import { logger as enhancedLogger, LogLevel as EnhancedLogLevel } from './logging'
+import { ref, type Ref } from "vue"
+import { logger as enhancedLogger, LogLevel as EnhancedLogLevel } from "./logging"
 
 // 日志级别枚举
 export enum LogLevel {
@@ -12,25 +12,25 @@ export enum LogLevel {
   INFO = 1,
   SUCCESS = 2,
   WARN = 3,
-  ERROR = 4
+  ERROR = 4,
 }
 
 // 日志级别名称映射
 export const LOG_LEVEL_NAMES = {
-  [LogLevel.DEBUG]: 'DEBUG',
-  [LogLevel.INFO]: 'INFO',
-  [LogLevel.SUCCESS]: 'SUCCESS',
-  [LogLevel.WARN]: 'WARN',
-  [LogLevel.ERROR]: 'ERROR'
+  [LogLevel.DEBUG]: "DEBUG",
+  [LogLevel.INFO]: "INFO",
+  [LogLevel.SUCCESS]: "SUCCESS",
+  [LogLevel.WARN]: "WARN",
+  [LogLevel.ERROR]: "ERROR",
 }
 
 // 日志级别颜色映射
 export const LOG_LEVEL_COLORS = {
-  [LogLevel.DEBUG]: '#909399',
-  [LogLevel.INFO]: '#409EFF',
-  [LogLevel.SUCCESS]: '#67C23A',
-  [LogLevel.WARN]: '#E6A23C',
-  [LogLevel.ERROR]: '#F56C6C'
+  [LogLevel.DEBUG]: "#909399",
+  [LogLevel.INFO]: "#409EFF",
+  [LogLevel.SUCCESS]: "#67C23A",
+  [LogLevel.WARN]: "#E6A23C",
+  [LogLevel.ERROR]: "#F56C6C",
 }
 
 // 日志条目接口
@@ -60,7 +60,7 @@ type LogSubscriber = (logs: LogEntry[]) => void
 
 // 兼容性日志记录器类 - 包装增强日志系统
 class Logger {
-  private compatLogger = enhancedLogger.child({ source: 'legacy-logger' })
+  private compatLogger = enhancedLogger.child({ source: "legacy-logger" })
   private subscribers: LogSubscriber[] = []
 
   // 调试日志
@@ -95,11 +95,11 @@ class Logger {
 
   // 通知订阅者
   private notifySubscribers() {
-    this.subscribers.forEach(subscriber => {
+    this.subscribers.forEach((subscriber) => {
       try {
         subscriber(this.getLogs())
       } catch (error) {
-        console.error('Logger subscriber error:', error)
+        console.error("Logger subscriber error:", error)
       }
     })
   }
@@ -107,7 +107,7 @@ class Logger {
   // 获取所有日志 - 转换格式以保持兼容性
   getLogs(): LogEntry[] {
     const enhancedLogs = this.compatLogger.getLogs()
-    return enhancedLogs.map(log => ({
+    return enhancedLogs.map((log) => ({
       id: log.id,
       level: this.mapEnhancedLogLevel(log.level),
       message: log.message,
@@ -115,7 +115,7 @@ class Logger {
       category: log.context?.category || log.context?.module || log.source,
       data: log.metadata,
       source: log.source,
-      stack: log.metadata?.error?.stack
+      stack: log.metadata?.error?.stack,
     }))
   }
 
@@ -130,30 +130,35 @@ class Logger {
     const logs = this.getLogs()
     return {
       total: logs.length,
-      debug: logs.filter(log => log.level === LogLevel.DEBUG).length,
-      info: logs.filter(log => log.level === LogLevel.INFO).length,
-      success: logs.filter(log => log.level === LogLevel.SUCCESS).length,
-      warn: logs.filter(log => log.level === LogLevel.WARN).length,
-      error: logs.filter(log => log.level === LogLevel.ERROR).length
+      debug: logs.filter((log) => log.level === LogLevel.DEBUG).length,
+      info: logs.filter((log) => log.level === LogLevel.INFO).length,
+      success: logs.filter((log) => log.level === LogLevel.SUCCESS).length,
+      warn: logs.filter((log) => log.level === LogLevel.WARN).length,
+      error: logs.filter((log) => log.level === LogLevel.ERROR).length,
     }
   }
 
   // 映射增强日志级别到旧格式
   private mapEnhancedLogLevel(level: number): LogLevel {
     switch (level) {
-      case EnhancedLogLevel.DEBUG: return LogLevel.DEBUG
-      case EnhancedLogLevel.INFO: return LogLevel.INFO
-      case EnhancedLogLevel.SUCCESS: return LogLevel.SUCCESS
-      case EnhancedLogLevel.WARN: return LogLevel.WARN
+      case EnhancedLogLevel.DEBUG:
+        return LogLevel.DEBUG
+      case EnhancedLogLevel.INFO:
+        return LogLevel.INFO
+      case EnhancedLogLevel.SUCCESS:
+        return LogLevel.SUCCESS
+      case EnhancedLogLevel.WARN:
+        return LogLevel.WARN
       case EnhancedLogLevel.ERROR:
       case EnhancedLogLevel.FATAL:
         return LogLevel.ERROR
-      default: return LogLevel.INFO
+      default:
+        return LogLevel.INFO
     }
   }
 
   // 导出日志 - 委托给增强日志系统
-  export(format: 'json' | 'csv' | 'txt' = 'json'): string {
+  export(format: "json" | "csv" | "txt" = "json"): string {
     return this.compatLogger.export(format)
   }
 
@@ -228,7 +233,7 @@ export const enhanced = {
     enhancedLogger.trackSync(name, operation, context),
 
   // 导出诊断报告
-  exportDiagnostic: () => enhancedLogger.exportDiagnosticReport()
+  exportDiagnostic: () => enhancedLogger.exportDiagnosticReport(),
 }
 
 /**
@@ -247,4 +252,3 @@ export const enhanced = {
  * const userLogger = enhanced.child({ component: 'UserComponent' })
  * userLogger.info('用户操作', { userId: 123, action: 'login' })
  */
-

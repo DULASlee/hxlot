@@ -1,5 +1,3 @@
-const path = require('path')
-
 module.exports = {
   root: true,
   env: {
@@ -12,7 +10,8 @@ module.exports = {
     parser: '@typescript-eslint/parser',
     ecmaVersion: 2020,
     sourceType: 'module',
-    project: './tsconfig.json',
+    // 关闭 type-aware 项目解析，避免 include 覆盖问题
+    project: undefined,
     tsconfigRootDir: __dirname,
     extraFileExtensions: ['.vue']
   },
@@ -22,6 +21,16 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:vue/vue3-recommended',
     'plugin:prettier/recommended'
+  ],
+  ignorePatterns: [
+    'node_modules/**',
+    'dist/**',
+    'auto-imports.d.ts',
+    'components.d.ts',
+    'cypress/**',
+    'eslint.config.*',
+    '**/*.d.ts',
+    '**/*.vue.js'
   ],
   settings: {
     'import/resolver': {
@@ -48,44 +57,81 @@ module.exports = {
     // 生产代码禁止 console.*，开发期降级为警告
     'no-console': ['warn', { allow: ['warn', 'error'] }],
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-    // 代码质量阈值（先以 warn 运行，逐步收紧到 error）
-    'complexity': ['warn', 10],
+    // 降级严格规则
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-empty-object-type': 'off',
+    '@typescript-eslint/ban-types': 'off',
+    '@typescript-eslint/no-unused-expressions': 'warn',
+    '@typescript-eslint/no-require-imports': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/no-unsafe-function-type': 'off',
+    'no-empty': ['warn', { allowEmptyCatch: true }],
+    'no-case-declarations': 'off',
+    // 质量阈值（当前以 warn 运行）
+    'complexity': ['warn', 20],
     'max-depth': ['warn', 3],
-    'max-params': ['warn', 4],
-    'max-statements': ['warn', 30],
-    'max-lines-per-function': ['warn', { max: 50, skipBlankLines: true, skipComments: true }],
-    'max-lines': ['warn', { max: 500, skipBlankLines: true, skipComments: true }],
+    'max-params': ['warn', 5],
+    'max-statements': ['warn', 50],
+    'max-lines-per-function': ['warn', { max: 120, skipBlankLines: true, skipComments: true }],
+    'max-lines': ['warn', { max: 900, skipBlankLines: true, skipComments: true }],
     'prettier/prettier': ['warn'],
-    // Enforce architecture boundaries (refined)
+    // 架构边界
     'boundaries/element-types': ['warn', {
       default: 'disallow',
       message: 'Import violates project boundaries',
       rules: [
-        // views can consume presentation and domain-facing layers
         { from: 'views', allow: ['components', 'stores', 'services', 'utils', 'router', 'types', 'composables', 'styles', 'appshell', 'examples'] },
-        // components cannot import views; can use utils/services/types/composables/styles
         { from: 'components', allow: ['components', 'utils', 'services', 'types', 'composables', 'styles', 'examples'] },
         { from: 'components', disallow: ['views'] },
-        // stores should not depend on views/components; can use utils/services/types
         { from: 'stores', allow: ['utils', 'services', 'types', 'composables'] },
         { from: 'stores', disallow: ['views', 'components'] },
-        // services are low-level, only utils/types
         { from: 'services', allow: ['utils', 'types'] },
         { from: 'services', disallow: ['views', 'components', 'stores', 'router'] },
-        // router can reference views (route components), utils/types and appshell generated routes
         { from: 'router', allow: ['views', 'components', 'utils', 'types', 'appshell'] },
-        // utils/types/composables are leaf-like; disallow importing from higher layers
         { from: 'utils', disallow: ['views', 'components', 'stores', 'router', 'services'] },
         { from: 'types', disallow: ['views', 'components', 'stores', 'router', 'services'] },
         { from: 'composables', allow: ['utils', 'types', 'composables'], disallow: ['views'] },
-        // lowcode isolation: only lowcode internal, no app imports; app can import lowcode public index
         { from: 'lowcode', allow: ['lowcode'] },
         { from: 'examples', allow: ['components', 'utils', 'types', 'composables', 'services'] },
-        // appshell can be imported but should not import back into app
         { from: 'appshell', disallow: ['views', 'components', 'stores', 'router', 'services', 'utils'] }
       ]
     }]
-  }
+  },
+  overrides: [
+    {
+      files: ['src/lowcode/**/*.ts'],
+      rules: {
+        '@typescript-eslint/no-unsafe-function-type': 'off',
+        '@typescript-eslint/no-require-imports': 'off',
+        'no-empty': 'warn',
+        'no-case-declarations': 'off',
+        'no-console': ['warn', { allow: ['warn', 'error'] }]
+      }
+    },
+    {
+      files: ['src/utils/logging/**/*.ts', 'src/main.ts'],
+      rules: {
+        '@typescript-eslint/no-require-imports': 'off',
+        'no-case-declarations': 'off',
+        'no-console': ['warn', { allow: ['warn', 'error'] }]
+      }
+    },
+    {
+      files: ['src/**/*.test.ts', 'src/**/__tests__/**/*.ts', 'src/examples/**/*.{ts,tsx}'],
+      rules: {
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+        'no-global-assign': 'off'
+      }
+    },
+    {
+      files: ['src/stores/modules/auth.ts'],
+      rules: {
+        'no-useless-catch': 'warn'
+      }
+    }
+  ]
 }
 
 

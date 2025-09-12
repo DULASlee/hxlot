@@ -164,7 +164,7 @@ export default defineComponent({
   color: var(--theme-text-primary);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 5%);
   backdrop-filter: blur(8px);
   position: relative;
   overflow: hidden;
@@ -173,11 +173,8 @@ export default defineComponent({
 .theme-switcher-button::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  inset: 0;
+  background: linear-gradient(45deg, transparent 30%, rgb(255 255 255 / 10%) 50%, transparent 70%);
   transform: translateX(-100%);
   transition: transform 0.6s ease;
 }
@@ -185,7 +182,7 @@ export default defineComponent({
 .theme-switcher-button:hover {
   background: linear-gradient(135deg, var(--theme-bg-hover) 0%, var(--theme-bg-component) 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   border-color: var(--theme-brand-primary);
 }
 
@@ -195,16 +192,16 @@ export default defineComponent({
 
 .theme-switcher-button:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 }
 
 .theme-icon {
   font-size: 18px;
   background: linear-gradient(135deg, var(--theme-brand-primary), var(--theme-brand-primary-hover));
-  -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 10%));
 }
 
 .theme-name {
@@ -231,7 +228,7 @@ export default defineComponent({
   background: linear-gradient(135deg, var(--theme-bg-elevated) 0%, var(--theme-bg-component) 100%);
   border: 1px solid var(--theme-border-light, var(--theme-border-base));
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 12%), 0 2px 8px rgb(0 0 0 / 8%);
   z-index: 1000;
   overflow: hidden;
   backdrop-filter: blur(12px);
@@ -281,7 +278,7 @@ export default defineComponent({
 }
 
 .theme-dropdown-item.active {
-  background: linear-gradient(135deg, var(--theme-brand-primary-alpha, rgba(25, 118, 210, 0.1)) 0%, var(--theme-bg-accent) 100%);
+  background: linear-gradient(135deg, var(--theme-brand-primary-alpha, rgb(25 118 210 / 10%)) 0%, var(--theme-bg-accent) 100%);
   font-weight: 600;
   color: var(--theme-brand-primary);
 }
@@ -295,8 +292,8 @@ export default defineComponent({
   height: 20px;
   border-radius: 10px;
   margin-right: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+  border: 2px solid rgb(255 255 255 / 20%);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 15%), inset 0 1px 2px rgb(255 255 255 / 20%);
   position: relative;
   overflow: hidden;
 }
@@ -304,12 +301,9 @@ export default defineComponent({
 .theme-dropdown-item .theme-preview::after {
   content: '';
   position: absolute;
-  top: 2px;
-  left: 2px;
-  right: 2px;
-  bottom: 2px;
+  inset: 2px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(135deg, rgb(255 255 255 / 30%), transparent);
 }
 
 .theme-dropdown-item span {
@@ -342,9 +336,9 @@ export default defineComponent({
 /* 暗黑模式开关 */
 .dark-mode-toggle {
   justify-content: space-between;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  background: linear-gradient(135deg, rgb(255 255 255 / 10%) 0%, rgb(255 255 255 / 5%) 100%);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgb(255 255 255 / 10%);
 }
 
 .dark-mode-toggle span {
@@ -368,33 +362,30 @@ export default defineComponent({
 .toggle-slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 24px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 10%);
 }
 
-.toggle-slider:before {
+.toggle-slider::before {
   position: absolute;
   content: "";
   height: 20px;
   width: 20px;
   left: 2px;
   bottom: 2px;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  background: linear-gradient(135deg, #fff 0%, #f8fafc 100%);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 50%;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 20%), 0 1px 2px rgb(0 0 0 / 10%);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.toggle-slider:after {
+.toggle-slider::after {
   content: '☀️';
   position: absolute;
   right: 6px;
@@ -407,23 +398,23 @@ export default defineComponent({
 
 input:checked + .toggle-slider {
   background: linear-gradient(135deg, var(--theme-brand-primary) 0%, var(--theme-brand-primary-hover) 100%);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 8px rgba(var(--theme-brand-primary-rgb, 25, 118, 210), 0.3);
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 20%), 0 0 8px rgba(var(--theme-brand-primary-rgb, 25, 118, 210), 0.3);
 }
 
-input:checked + .toggle-slider:before {
+input:checked + .toggle-slider::before {
   transform: translateX(24px);
   background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 30%), 0 1px 2px rgb(0 0 0 / 20%);
 }
 
-input:checked + .toggle-slider:after {
+input:checked + .toggle-slider::after {
   content: '🌙';
   left: 6px;
   right: auto;
 }
 
 /* 响应式调整 */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .theme-name {
     display: none;
   }

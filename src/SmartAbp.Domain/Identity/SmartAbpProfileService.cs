@@ -102,21 +102,33 @@ namespace SmartAbp.Identity
             var avatarClaim = user.ExtraProperties.GetValueOrDefault("Avatar");
             if (avatarClaim != null)
             {
-                identity.AddClaim(new Claim("avatar", avatarClaim.ToString()));
+                var avatarValue = avatarClaim.ToString();
+                if (!string.IsNullOrEmpty(avatarValue))
+                {
+                    identity.AddClaim(new Claim("avatar", avatarValue));
+                }
             }
 
             // 添加部门信息（如果有扩展属性）
             var departmentClaim = user.ExtraProperties.GetValueOrDefault("Department");
             if (departmentClaim != null)
             {
-                identity.AddClaim(new Claim("department", departmentClaim.ToString()));
+                var departmentValue = departmentClaim.ToString();
+                if (!string.IsNullOrEmpty(departmentValue))
+                {
+                    identity.AddClaim(new Claim("department", departmentValue));
+                }
             }
 
             // 添加职位信息（如果有扩展属性）
             var positionClaim = user.ExtraProperties.GetValueOrDefault("Position");
             if (positionClaim != null)
             {
-                identity.AddClaim(new Claim("position", positionClaim.ToString()));
+                var positionValue = positionClaim.ToString();
+                if (!string.IsNullOrEmpty(positionValue))
+                {
+                    identity.AddClaim(new Claim("position", positionValue));
+                }
             }
 
             await Task.CompletedTask;

@@ -243,10 +243,10 @@ export default {
   top: 100%;
   right: 0;
   margin-top: 4px;
-  background: var(--card-bg, #ffffff);
+  background: var(--card-bg, #fff);
   border: 1px solid var(--border-color, #e5e7eb);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
   z-index: 1000;
   min-width: 140px;
   overflow: hidden;
@@ -275,7 +275,7 @@ export default {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgb(255 255 255 / 30%);
 }
 
 .theme-name {
