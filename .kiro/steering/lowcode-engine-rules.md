@@ -1,0 +1,495 @@
+---
+inclusion: always
+---
+
+---
+alwaysApply: true
+description: "SmartAbp低代码引擎开发强制规则"
+globs: ["**/*.ts", "**/*.vue", "**/*.js"]
+priority: 1
+---
+
+# 🚀 SmartAbp低代码引擎开发强制规则
+
+## ⚡ 低代码引擎铁律（零容错）
+
+### 1. 架构分层强制约束
+**🔴 严格遵循微内核架构分层：**
+
+```typescript
+// ✅ 强制架构层次 (基于项目实际结构)
+packages/
+├── lowcode-core/              # 🔥 微内核层 - 绝对稳定
+│   ├── src/
+│   │   ├── kernel/           # 核心引擎
+│   │   ├── types/            # 类型定义
+│   │   ├── runtime/          # 运行时环境
+│   │   └── index.ts          # 统一导出
+├── lowcode-plugins/           # 🔥 插件层 - 可扩展
+│   ├── vue3-generator/       # Vue3代码生成器
+│   ├── abp-generator/        # ABP后端生成器
+│   └── common-utils/         # 通用插件
+├── lowcode-schemas/           # 🔥 Schema层 - 严格验证
+│   ├── component.schema.json # 组件Schema
+│   ├── page.schema.json      # 页面Schema
+│   └── validation/           # 验证器
+├── lowcode-designer/          # 🔥 可视化设计器
+│   ├── src/components/       # 设计器组件
+│   ├── src/canvas/           # 画布实现
+│   └── src/panels/           # 面板组件
+└── lowcode-examples/          # 🔥 示例层 - 标准参考
+    ├── vue3-examples/        # Vue3示例
+    ├── abp-examples/         # ABP示例
+    └── tests/                # 🔥 测试层 - 100%覆盖
+
+// ❌ 严禁跨层直接调用
+// plugins/ 直接调用 schemas/ 内部实现 = 禁止
+// examples/ 直接修改 kernel/ 核心逻辑 = 禁止
+```
+
+### 2. 代码生成质量铁律
+**🔴 生成代码必须达到的标准：**
+
+```typescript
+// ✅ 强制质量检查序列
+interface CodeGenerationQuality {
+  typeCheckPass: true,           // ✅ TypeScript类型检查必须通过
+  lintErrors: 0,                 // ✅ ESLint错误必须为0
+  buildSuccess: true,            // ✅ 构建必须成功
+  runtimeStable: true,           // ✅ 运行时无错误
+  performanceTarget: {           // ✅ 性能指标
+    generationSpeed: '<156ms',   // 组件生成<156ms
+    hotReloadSpeed: '<23ms',     // 热更新<23ms
+    memoryUsage: '<200MB',       // 内存使用<200MB
+    concurrentCapacity: '>100'   // 并发处理>100组件/s
+  }
+}
+
+// ❌ 严禁生成不合规代码
+// 生成包含any类型的TypeScript = 禁止
+// 生成不符合ESLint规范的代码 = 禁止
+// 生成无法构建的代码 = 禁止
+// 生成性能不达标的代码 = 禁止
+```
+
+### 2.1. 低代码引擎BUG修复铁律
+**🚨 低代码引擎开发中修复错误的绝对禁令：**
+
+```typescript
+// ❌ 绝对禁止：删除编译器API调用来"修复"错误
+// compileTemplate({ source, filename }); // 被删除 = 禁止
+
+// ❌ 绝对禁止：使用as any绕过Vue编译器类型检查
+const compileResult = vueCompiler.compile(source) as any; // 严禁
+
+// ❌ 绝对禁止：忽略参数来规避"未使用"警告
+function compileScript(_descriptor: SFCDescriptor, options: Options) {
+  // descriptor参数被忽略 = 禁止
+}
+
+// ❌ 绝对禁止：注释掉Schema验证逻辑
+// if (!validateSchema(schema)) throw new Error(); // 严禁
+
+// ✅ 正确做法：查阅Vue编译器文档，使用正确API
+import { compileScript, compileTemplate, SFCDescriptor } from '@vue/compiler-sfc';
+
+function compileVueComponent(descriptor: SFCDescriptor, options: CompileOptions) {
+  // 正确使用descriptor中的所有必要信息
+  const script = compileScript(descriptor, {
+    id: generateId(descriptor.filename),
+    isProd: options.production,
+    ...options.scriptOptions
+  });
+  
+  const template = compileTemplate({
+    source: descriptor.template?.content || '',
+    filename: descriptor.filename,
+    id: generateId(descriptor.filename),
+    ...options.templateOptions
+  });
+  
+  return { script, template };
+}
+```
+
+## 🎯 P0阶段：前端代码生成器规范
+
+### Vue3代码生成器强制要求
+```typescript
+// ✅ 强制的Vue3生成器接口 (基于Vue 3.5.13 + TypeScript 8.41.0)
+export interface Vue3CodeGenerator {
+  // 必须实现的核心方法
+  generate(schema: Vue3Schema): Vue3GeneratedCode
+  validate(schema: Vue3Schema): ValidationResult
+  optimize(code: string): string
+  
+  // 必须支持的特性 (与项目技术栈一致)
+  supportedFeatures: {
+    compositionApi: true,        // ✅ 必须支持Composition API
+    scriptSetup: true,           // ✅ 必须支持<script setup>
+    typescript: true,            // ✅ 必须支持TypeScript 8.41.0
+    scoped: true,                // ✅ 必须支持Scoped样式
+    elementPlus: true,           // ✅ 必须集成Element Plus 2.8.8
+    pinia: true,                 // ✅ 必须支持Pinia 3.0.3状态管理
+    vueRouter: true,             // ✅ 必须支持Vue Router
+    i18n: true,                  // ✅ 必须支持国际化
+    accessibility: true,         // ✅ 必须支持无障碍
+    vueuse: true,                // ✅ 必须支持VueUse工具库
+    cssModules: true             // ✅ 必须支持CSS Modules
+  }
+  
+  // 强制性能要求 (基于项目实际标准)
+  performanceConstraints: {
+    maxGenerationTime: 156,      // 最大生成时间156ms
+    maxOutputSize: 50 * 1024,    // 最大输出50KB
+    maxComplexity: 10,           // 最大圈复杂度10
+    minTestCoverage: 80,         // 最小测试覆盖率80% (基于Vitest 2.1.8)
+    viteCompatible: true,        // ✅ 必须兼容Vite 6.0.5
+    hmrSupport: true             // ✅ 必须支持热模块替换
+  }
+  
+  // 代码风格约束 (与.prettierrc.json一致)
+  codeStyle: {
+    quotes: "double",            // ✅ 双引号
+    semicolons: false,           // ✅ 无分号
+    trailingComma: "all",        // ✅ 尾随逗号
+    printWidth: 100,             // ✅ 行宽100字符
+    tabWidth: 2,                 // ✅ 缩进2空格
+    endOfLine: "lf",             // ✅ LF换行符
+    arrowParens: "always"        // ✅ 箭头函数参数括号 (项目配置)
+  }
+}
+
+// ❌ 严禁的生成器实现
+// 生成不支持TypeScript的代码 = 禁止
+// 生成不使用设计系统变量的样式 = 禁止
+// 生成不支持国际化的组件 = 禁止
+// 生成超过性能限制的代码 = 禁止
+```
+
+### Schema设计强制规范
+```typescript
+// ✅ 严格的Schema定义标准
+interface ComponentSchema {
+  // 必需字段
+  $schema: string;               // ✅ 必须包含Schema版本
+  type: 'component' | 'page' | 'layout';
+  metadata: {
+    name: string;                // ✅ 必须有明确名称
+    version: string;             // ✅ 必须有版本号
+    description: string;         // ✅ 必须有描述
+    author: string;              // ✅ 必须有作者
+    tags: string[];              // ✅ 必须有标签
+    dependencies: string[];      // ✅ 必须声明依赖
+  };
+  
+  // 验证约束
+  validation: {
+    required: string[];          // ✅ 必需字段列表
+    additionalProperties: false; // ✅ 禁止额外属性
+    strictMode: true;            // ✅ 严格模式
+  };
+  
+  // 向后兼容性
+  compatibility: {
+    minVersion: string;          // ✅ 最小兼容版本
+    deprecated: boolean;         // ✅ 废弃状态
+    migration?: string;          // ✅ 迁移指南
+  };
+}
+
+// ❌ 严禁的Schema设计
+// 缺少必需字段的Schema = 禁止
+// 没有版本控制的Schema = 禁止
+// 不支持向后兼容的Schema = 禁止
+// 允许任意额外属性的Schema = 禁止
+```
+
+## 🏗️ P1阶段：后端代码生成器规范
+
+### ABP vNext生成器约束
+```csharp
+// ✅ 强制的后端生成器标准
+public interface IAbpCodeGenerator : ICodeGenerator
+{
+    // 必须实现的核心功能
+    Task<GeneratedCode> GenerateEntityAsync(EntitySchema schema);
+    Task<GeneratedCode> GenerateServiceAsync(ServiceSchema schema);
+    Task<GeneratedCode> GenerateControllerAsync(ControllerSchema schema);
+    Task<GeneratedCode> GenerateDtoAsync(DtoSchema schema);
+    
+    // 必须集成的ABP特性
+    AbpFeatures RequiredFeatures { get; } = new()
+    {
+        MultiTenancy = true,         // ✅ 必须支持多租户
+        Authorization = true,        // ✅ 必须支持权限
+        Auditing = true,            // ✅ 必须支持审计
+        SoftDelete = true,          // ✅ 必须支持软删除
+        Localization = true,        // ✅ 必须支持本地化
+        Caching = true,             // ✅ 必须支持缓存
+        EventBus = true,            // ✅ 必须支持事件总线
+        BackgroundJobs = true       // ✅ 必须支持后台作业
+    };
+}
+
+// ❌ 严禁的后端生成器
+// 不支持ABP多租户的生成器 = 禁止
+// 不集成权限系统的生成器 = 禁止
+// 不支持审计的生成器 = 禁止
+// 生成不符合DDD分层的代码 = 禁止
+```
+
+## 🎨 P2阶段：可视化设计器规范（细化）
+
+### 架构与数据约束（强制）
+- Schema 唯一来源：Designer 仅产出 Schema/overrides，禁止直接改写 *.generated.ts
+- 双向通道：支持从既有页面回读最小增量（Block 标记/元数据），生成前后保持一致性
+- 输出物：增量Schema + 变更回执（routes/menu/policies/files）+ snapshot 用于回滚
+- 与模板链对齐：调用既有 writers 生成 appshell 产物（router/store/lifecycle/policies/menu）
+
+### 预览与安全（强制）
+- 预览沙箱：iframe/Worker + 严格 CSP；只允许受控 postMessage 通道
+- 生产禁用动态执行（eval/new Function）；Designer 仅在开发态可启用可视化预览
+
+### 性能与协同（强制）
+- 实时预览渲染 ≤ 100ms；60fps；协同延迟 < 50ms；并发协作者 ≤ 50
+- 必须埋点：生成/预览/增量再生成（时延、错误、吞吐、内存）
+
+### 工作流（强制）
+- 生成前定制：Designer→导出增量Schema→生成→appshell注入→路由/菜单即时生效→回执
+- 生成后定制：载入路由→回读增量Schema→增量再生成→appshell更新→回执→可回滚
+- 契约与职责：P2 仅消费 Swagger/OpenAPI 契约，禁止生成后端接口；API 调用通过统一 Service/客户端封装并受漂移检测
+
+### 质量门（强制）
+- lint/type/test/build 必须绿；CI 漂移检测；Danger 校验回执必填（routes/menu/files）
+- Schema 桥接层：必须提供 DesignerOverrideSchema + SchemaReader + MergeEngine；生成的 *.vue 必须包含稳定锚点（Block 标记/数据属性）以支撑回读与合并
+
+> 参见 ADR-0015 可视化设计器架构决策。
+
+## 📱 P3阶段：跨端代码生成器规范
+
+### UniApp生成器约束
+```typescript
+// ✅ 跨端生成器强制标准
+interface UniAppGenerator {
+  // 支持的平台
+  supportedPlatforms: {
+    h5: true,                    // ✅ 必须支持H5
+    'mp-weixin': true,           // ✅ 必须支持微信小程序
+    'mp-alipay': true,           // ✅ 必须支持支付宝小程序
+    'app-plus': true,            // ✅ 必须支持App
+    'app-nvue': true             // ✅ 必须支持nvue
+  };
+  
+  // 性能优化要求
+  optimization: {
+    bundleSize: '<2MB',          // ✅ 包大小<2MB
+    startupTime: '<3s',          // ✅ 启动时间<3s
+    memoryUsage: '<100MB',       // ✅ 内存使用<100MB
+    batteryEfficiency: '>95%'    // ✅ 电池效率>95%
+  };
+  
+  // 兼容性保证
+  compatibility: {
+    minAndroidVersion: '5.0',    // ✅ 最低Android 5.0
+    minIOSVersion: '9.0',        // ✅ 最低iOS 9.0
+    minWeChatVersion: '7.0.0',   // ✅ 最低微信7.0.0
+    adaptiveLayout: true         // ✅ 自适应布局
+  };
+}
+
+// ❌ 严禁的跨端生成器
+// 不支持主流平台的生成器 = 禁止
+// 生成性能不达标的应用 = 禁止
+// 不支持自适应布局 = 禁止
+// 兼容性不满足要求 = 禁止
+```
+
+## 🛡️ 安全性强制要求
+
+### 代码生成安全约束
+```typescript
+// ✅ 强制安全检查
+interface SecurityConstraints {
+  // 输入验证和消毒
+  inputValidation: {
+    xssProtection: true,         // ✅ XSS防护
+    sqlInjectionPrevention: true,// ✅ SQL注入防护
+    codeInjectionPrevention: true,// ✅ 代码注入防护
+    pathTraversalPrevention: true,// ✅ 路径遍历防护
+    inputSanitization: true      // ✅ 输入消毒
+  };
+  
+  // 沙箱执行环境
+  sandboxExecution: {
+    isolatedContext: true,       // ✅ 隔离上下文
+    resourceLimits: true,        // ✅ 资源限制
+    timeoutProtection: true,     // ✅ 超时保护
+    memoryProtection: true       // ✅ 内存保护
+  };
+  
+  // 敏感信息保护
+  dataProtection: {
+    secretRedaction: true,       // ✅ 秘钥脱敏
+    piiProtection: true,         // ✅ 个人信息保护
+    auditLogging: true,          // ✅ 审计日志
+    accessControl: true          // ✅ 访问控制
+  };
+}
+
+// ❌ 严禁的安全漏洞
+// 直接执行用户输入的代码 = 禁止
+// 不进行输入验证和消毒 = 禁止
+// 泄露敏感配置信息 = 禁止
+// 不记录安全相关操作 = 禁止
+```
+
+## 📊 性能监控强制要求
+
+### 可观测性标准
+```typescript
+// ✅ 强制监控指标
+interface ObservabilityRequirements {
+  // 性能指标
+  performanceMetrics: {
+    generationLatency: true,     // ✅ 生成延迟
+    throughput: true,            // ✅ 吞吐量
+    errorRate: true,             // ✅ 错误率
+    resourceUtilization: true    // ✅ 资源利用率
+  };
+  
+  // 日志记录
+  logging: {
+    structuredLogs: true,        // ✅ 结构化日志
+    traceCorrelation: true,      // ✅ 链路追踪
+    errorStackTrace: true,       // ✅ 错误堆栈
+    performanceLogs: true        // ✅ 性能日志
+  };
+  
+  // 用户行为分析
+  userAnalytics: {
+    featureUsage: true,          // ✅ 功能使用统计
+    errorPatterns: true,         // ✅ 错误模式分析
+    performanceBottlenecks: true,// ✅ 性能瓶颈
+    userSatisfaction: true       // ✅ 用户满意度
+  };
+}
+
+// ❌ 严禁缺失监控
+// 没有性能监控的生成器 = 禁止
+// 不记录用户操作日志 = 禁止
+// 没有错误追踪机制 = 禁止
+// 不分析性能瓶颈 = 禁止
+```
+
+## 🧪 测试覆盖率强制要求
+
+### 全面测试标准
+```typescript
+// ✅ 强制测试覆盖率
+interface TestingRequirements {
+  // 单元测试
+  unitTests: {
+    coverageThreshold: 90,       // ✅ 覆盖率>90%
+    branchCoverage: 85,          // ✅ 分支覆盖率>85%
+    functionCoverage: 95,        // ✅ 函数覆盖率>95%
+    lineCoverage: 90             // ✅ 行覆盖率>90%
+  };
+  
+  // 集成测试
+  integrationTests: {
+    coverageThreshold: 85,       // ✅ 覆盖率>85%
+    apiEndpoints: 100,           // ✅ API端点100%覆盖
+    dataFlow: 100,               // ✅ 数据流100%覆盖
+    errorScenarios: 90           // ✅ 错误场景>90%
+  };
+  
+  // E2E测试
+  e2eTests: {
+    criticalPaths: 100,          // ✅ 关键路径100%覆盖
+    userJourneys: 95,            // ✅ 用户旅程>95%
+    crossBrowser: true,          // ✅ 跨浏览器测试
+    performanceTests: true       // ✅ 性能测试
+  };
+  
+  // 性能基准测试
+  performanceTests: {
+    loadTesting: true,           // ✅ 负载测试
+    stressTesting: true,         // ✅ 压力测试
+    spikeLoadTesting: true,      // ✅ 峰值负载测试
+    enduranceTesting: true       // ✅ 耐久性测试
+  };
+}
+
+// ❌ 严禁测试覆盖率不足
+// 单元测试覆盖率<90% = 禁止发布
+// 没有集成测试 = 禁止发布
+// 关键路径未测试 = 禁止发布
+// 没有性能基准测试 = 禁止发布
+```
+
+## 🚨 自动质量检查
+
+### 代码提交前强制检查
+```bash
+# Git pre-commit钩子自动执行
+1. Schema验证 (ajv --strict schemas/)
+2. TypeScript类型检查 (tsc --noEmit)
+3. ESLint规范检查 (eslint --fix lowcode/)
+4. 单元测试执行 (npm run test:unit)
+5. 集成测试执行 (npm run test:integration)
+6. 性能基准测试 (npm run test:performance)
+7. 安全扫描 (npm audit && npm run security:scan)
+8. 代码生成验证 (npm run lowcode:test)
+```
+
+### 质量门禁标准
+```typescript
+// 质量门禁标准 - 未达标禁止合并
+interface LowCodeQualityGates {
+  buildSuccess: true,           // ✅ 构建必须成功
+  typeCheckPass: true,          // ✅ 类型检查必须通过
+  lintErrors: 0,                // ✅ Lint错误必须为0
+  unitTestCoverage: '>90%',     // ✅ 单元测试覆盖率>90%
+  integrationTestCoverage: '>85%', // ✅ 集成测试覆盖率>85%
+  performanceTargets: {         // ✅ 性能指标达标
+    generationSpeed: '<156ms',
+    hotReload: '<23ms',
+    memoryUsage: '<200MB',
+    throughput: '>100/s'
+  },
+  securityScanPass: true,       // ✅ 安全扫描必须通过
+  schemaValidation: true,       // ✅ Schema验证必须通过
+  generatedCodeQuality: {       // ✅ 生成代码质量达标
+    typeScriptCompliant: true,
+    eslintCompliant: true,
+    buildable: true,
+    runnable: true
+  }
+}
+```
+
+## ⚠️ 违规处理机制
+
+### 自动处理流程
+1. **Schema验证失败** → 阻止代码生成，提示具体错误
+2. **生成代码质量不达标** → 自动优化，无法优化则拒绝生成
+3. **性能指标未达标** → 发出警报，标记性能债务
+4. **安全扫描不通过** → 阻止部署，强制修复安全问题
+5. **测试覆盖率不足** → 阻止合并，要求补充测试
+
+### 违规等级处理
+- **严重违规**（安全漏洞、功能异常）→ 立即阻止，回滚到安全版本
+- **重要违规**（性能不达标、测试不足）→ 允许继续但必须限期修复
+- **一般违规**（代码规范、注释缺失）→ 警告提示，建议修复
+
+---
+
+**🚀 低代码引擎是智能化开发的核心，质量标准不可妥协！**
+**🔥 严格执行这些规则，确保生成高质量、高性能、高安全性的代码！**
+- **一般违规**（代码规范、注释缺失）→ 警告提示，建议修复
+
+---
+
+**🚀 低代码引擎是智能化开发的核心，质量标准不可妥协！**
+**🔥 严格执行这些规则，确保生成高质量、高性能、高安全性的代码！**

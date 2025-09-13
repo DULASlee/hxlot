@@ -1,0 +1,160 @@
+---
+inclusion: always
+---
+
+# SmartAbp 架构规则 (Architecture Rules)
+
+## 🏛️ 企业级全栈低代码平台架构约束
+
+### 核心架构原则
+- **前后端分离**: Vue 3.5.13 SPA + ABP vNext Framework 后端
+- **微内核+插件**: 低代码引擎采用可扩展插件架构
+- **Monorepo**: 前端低代码引擎独立包管理 (基于Vite 6.0.5)
+- **企业级模式**: DDD、CQRS、微服务支持 (.NET Aspire集成)
+- **TypeScript**: 严格类型检查 (TypeScript 8.41.0)
+
+### 后端架构约束
+
+#### ABP Framework 模块依赖
+```csharp
+[DependsOn(
+    typeof(SmartAbpHttpApiModule),
+    typeof(SmartAbpApplicationModule), 
+    typeof(SmartAbpEntityFrameworkCoreModule),
+    typeof(SmartAbpCodeGeneratorModule),  // 后端低代码引擎
+    typeof(AbpAutofacModule)
+)]
+```
+
+#### 低代码引擎模块 (SmartAbp.CodeGenerator)
+- **Roslyn引擎**: 基于Microsoft Roslyn编译器API
+- **企业模式生成器**: DDD、CQRS、Aspire微服务
+- **性能优化**: 对象池、内存池、异步管道、JIT预热
+- **实时通信**: SignalR Hub推送代码生成进度
+
+#### 数据访问层
+- **统一DbContext**: SmartAbpDbContext聚合所有ABP模块
+- **仓储模式**: 泛型仓储 + 自定义仓储接口
+- **工作单元**: 分布式事务控制和自动回滚
+
+### 前端架构约束
+
+#### Monorepo包结构 (强制)
+```
+packages/
+├── @smartabp/lowcode-core          # 🔧 引擎内核包
+├── @smartabp/lowcode-designer      # 🎨 可视化设计器包
+├── @smartabp/lowcode-codegen       # 🏗️ 代码生成引擎包
+├── @smartabp/lowcode-ui-vue        # 🎭 Vue UI组件包
+├── @smartabp/lowcode-tools         # 🛠️ 开发工具包
+└── @smartabp/lowcode-api           # 🌐 API客户端包
+```
+
+#### 低代码引擎核心接口 (必须实现)
+```typescript
+interface LowCodePlugin {
+  metadata: {
+    name: string
+    version: string
+    capabilities: string[]
+    dependencies?: string[]
+  }
+  canHandle(schema: any): boolean
+  validate(schema: any): ValidationResult
+  generate(schema: any, config: any, context: any): GeneratedCode
+}
+```
+
+#### 可视化设计器组件
+- **Canvas**: 拖拽画布组件
+- **Palette**: 组件选择面板
+- **Inspector**: 属性配置面板
+- **EntityDesigner**: 后端实体类拖拽开发组件 (944行)
+
+### 安全架构约束
+
+#### 认证授权
+- **OpenIddict**: OAuth2.0/OpenID Connect服务端
+- **Claims增强**: SmartAbpProfileService注入租户/角色信息
+- **权限系统**: 基于ABP权限框架的细粒度控制
+
+#### 低代码引擎安全
+- **沙箱隔离**: 预览功能在受控沙箱中执行
+- **CSP策略**: 严格的内容安全策略防止XSS
+- **动态执行限制**: 生产环境禁用new Function/eval
+- **依赖验证**: 第三方依赖必须在插件metadata中声明
+
+### 性能架构约束
+
+#### 后端性能
+- **对象池**: ObjectPool<CSharpSyntaxRewriter>减少GC压力
+- **内存池**: ArrayPool<byte>和MemoryPool<char>优化分配
+- **异步管道**: Channel<GenerationTask>高性能任务处理
+- **JIT预热**: RuntimeHelpers.PrepareMethod预编译关键路径
+
+#### 前端性能 (基于Vite 6.0.5优化)
+- **Tree-shaking**: 支持按需引入减小bundle大小
+- **缓存策略**: 多级缓存(内存→本地存储→分布式)
+- **并发控制**: 批量生成默认并发不超过5
+- **Worker池**: 后台任务使用Web Worker处理
+- **构建优化**: Vite rollup优化 + Element Plus按需引入
+- **代码分割**: 动态导入实现路由级代码分割
+
+### 部署架构约束
+
+#### 开发环境 (基于项目实际配置)
+- **前端**: Vite 6.0.5 DevServer (5173) + Monorepo构建
+- **后端**: SmartAbp.Web (44379) + 代码生成引擎
+- **代理配置**: Vite代理API请求到后端避免CORS
+- **开发工具**: Vue DevTools 7.6.4 + TypeScript 8.41.0
+
+#### 生产环境
+- **容器化**: Docker镜像包含完整前后端代码
+- **微服务**: 支持Aspire微服务编排和K8s部署
+- **CDN**: 前端静态资源可独立部署到CDN
+- **证书**: 从openiddict.pfx加载签名/加密证书
+
+### 违规检测
+
+#### 架构违规 (自动拒绝)
+- ❌ 绕过ABP框架直接访问数据库
+- ❌ 在低代码引擎中使用动态代码执行
+- ❌ 破坏Monorepo包边界和依赖关系
+- ❌ 忽略企业架构模式(DDD/CQRS)约束
+- ❌ 不使用统一的认证授权机制
+
+#### 性能违规 (警告)
+- ⚠️ 单个插件生成时间超过5秒
+- ⚠️ 缓存命中率低于50%
+- ⚠️ 内存使用不合理或存在泄漏
+- ⚠️ 不使用对象池和内存池优化
+
+### 架构决策记录 (ADR) 强制遵循
+
+必须查阅的ADR文档:
+- `ADR-0001`: 技术栈选择决策
+- `ADR-0005`: 低代码引擎架构决策
+- `ADR-0012`: P1阶段后端代码生成引擎
+- `ADR-0015`: 可视化设计器架构决策
+- `ADR-0016`: 低代码引擎Monorepo重构
+
+### 质量门标准
+
+#### 代码质量 (基于项目实际工具链)
+- 插件代码覆盖率 ≥ 80% (Vitest覆盖率报告)
+- 生成代码必须通过ESLint + Prettier检查
+- 必须有完整的单元测试 (Vitest + @vue/test-utils)
+- TypeScript类型检查无错误 (vue-tsc)
+- 代码风格: 无分号、双引号、2空格缩进 (符合.prettierrc.json)
+
+#### 性能标准
+- 单个插件生成时间 < 5秒
+- 缓存命中率 > 50%
+- 并发处理能力 ≥ 5个任务
+- 内存使用合理，无内存泄漏
+
+#### 安全标准
+- 通过安全扫描检查
+- 无已知安全漏洞依赖
+- 输入验证覆盖率100%
+- 沙箱隔离有效性验证

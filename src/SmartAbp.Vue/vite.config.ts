@@ -2,6 +2,9 @@ import { defineConfig } from "vite"
 import vue from "@vitejs/plugin-vue"
 import vueDevtools from "vite-plugin-vue-devtools"
 import Icons from "unplugin-icons/vite"
+import AutoImport from "unplugin-auto-import/vite"
+import Components from "unplugin-vue-components/vite"
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
 import { fileURLToPath, URL } from "node:url"
 import dns from "dns"
 import moduleWizardDev from "./packages/lowcode-designer/src/dev/moduleWizardDev"
@@ -15,6 +18,14 @@ export default defineConfig({
     vue(),
     (process.env.NODE_ENV !== "production" ? moduleWizardDev() : undefined) as any,
     (process.env.NODE_ENV !== "production" ? vueDevtools() : undefined) as any,
+    AutoImport({
+      resolvers: [ElementPlusResolver()],
+      dts: true,
+    }),
+    Components({
+      resolvers: [ElementPlusResolver()],
+      dts: true,
+    }),
     Icons({
       autoInstall: true,
       compiler: "vue3",

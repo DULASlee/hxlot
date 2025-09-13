@@ -1,13 +1,18 @@
 import { promises as fs } from "fs"
 import path from "node:path"
 import type { Manifest } from "./schema"
+import { TemplateRenderer, generateTemplateParams } from "./template-renderer"
 
 /**
  * CodeWriter
  * 当前仅实现 writeRoutes —— 根据 manifests 生成 routes.generated.ts
  */
 export class CodeWriter {
-  constructor(private readonly rootDir: string) {}
+  private readonly templateRenderer: TemplateRenderer
+
+  constructor(private readonly rootDir: string) {
+    this.templateRenderer = new TemplateRenderer(rootDir)
+  }
 
   async writeRoutes(manifests: Manifest[]): Promise<void> {
     const routeLines: string[] = []
@@ -166,6 +171,118 @@ export const generatedPolicies = ${JSON.stringify(policyMap, null, 2)}
 export const generatedMenus = ${JSON.stringify(menuItems, null, 2)}
 `
     await this.writeFile("src/appshell/menu/menu.generated.ts", content)
+  }
+
+  /**
+   * 🔥 核心功能：根据模板生成Vue组件
+   * 这是修复模块向导的关键方法
+   */
+  async writeComponents(manifests: Manifest[]): Promise<void> {
+    console.log("🏗️ 开始生成Vue组件...")
+    const results: Array<{
+      component: string
+      templateUsed: string
+      success: boolean
+      error?: string
+    }> = []
+
+    for (const manifest of manifests) {
+      console.log(`📦 处理模块: ${manifest.name} (${manifest.displayName})`)
+
+      // 生成模板参数
+      const params = generateTemplateParams(manifest.name, manifest.displayName)
+
+      for (const route of manifest.routes) {
+        try {
+          console.log(`🎯 生成组件: ${route.component}`)
+
+          // 转换组件路径为文件系统路径
+          const componentPath = route.component.replace("@/", "src/")
+          const fullComponentPath = path.join(this.rootDir, componentPath)
+
+          // 使用模板渲染引擎生成组件
+          const { content, templateUsed } = await this.templateRenderer.generateComponent(
+            route.component,
+            params
+          )
+
+          // 确保目录存在
+          await fs.mkdir(path.dirname(fullComponentPath), { recursive: true })
+
+          // 写入组件文件
+          await fs.writeFile(fullComponentPath, content, "utf-8")
+
+          results.push({
+            component: route.component,
+            templateUsed,
+            success: true
+          })
+
+          console.log(`✅ 组件生成成功: ${route.component}`)
+
+        } catch (error) {
+          const errorMsg = error instanceof Error ? error.message : String(error)
+          console.error(`❌ 组件生成失败: ${route.component} - ${errorMsg}`)
+
+          results.push({
+            component: route.component,
+            templateUsed: "未知",
+            success: false,
+            error: errorMsg
+          })
+        }
+      }
+    }
+
+    // 生成报告
+    const report = this.templateRenderer.generateReport(results)
+    console.log(report)
+
+    // 写入生成报告
+    const reportPath = path.join(this.rootDir, "src/appshell/generation-report.md")
+    await fs.writeFile(reportPath, report, "utf-8")
+
+    const successful = results.filter(r => r.success).length
+    const total = results.length
+
+    if (successful === total) {
+      console.log(`🎉 所有组件生成成功！(${successful}/${total})`)
+    } else {
+      console.warn(`⚠️ 部分组件生成失败 (${successful}/${total})，请查看报告: ${reportPath}`)
+    }
+  }
+
+  /**
+   * 🎯 生成单个Store文件（扩展功能）
+   */
+  async writeStoreFiles(manifests: Manifest[]): Promise<void> {
+    console.log("🗃️ 开始生成Store文件...")
+
+    for (const manifest of manifests) {
+      for (const store of manifest.stores) {
+        try {
+          const params = generateTemplateParams(manifest.name, manifest.displayName)
+
+          // 转换Store路径
+          const storePath = store.modulePath.replace("@/", "src/") + ".ts"
+          const fullStorePath = path.join(this.rootDir, storePath)
+
+          // 使用Store模板生成
+          const { content } = await this.templateRenderer.generateComponent(
+            store.modulePath,
+            params
+          )
+
+          await fs.mkdir(path.dirname(fullStorePath), { recursive: true })
+          await fs.writeFile(fullStorePath, content, "utf-8")
+
+          console.log(`✅ Store文件生成成功: ${store.modulePath}`)
+
+        } catch (error) {
+          console.error(`❌ Store文件生成失败: ${store.modulePath} - ${error}`)
+        }
+      }
+    }
   }
 
   private async writeFile(relPath: string, content: string) {

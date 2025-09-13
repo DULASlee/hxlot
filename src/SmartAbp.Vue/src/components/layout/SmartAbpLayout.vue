@@ -210,11 +210,13 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useThemeStore } from '@/stores'
+import { useAuthStore } from '@/stores/modules/auth'
 import ThemeSwitcher from '@/components/theme/ThemeSwitcher.vue'
 import { useMenu } from '@/composables/useMenu'
 
 const router = useRouter()
 const themeStore = useThemeStore()
+const authStore = useAuthStore()
 
 // 侧边栏显示
 const sidebarCollapsed = ref(false)
@@ -278,6 +280,10 @@ const logout = () => {
 
 onMounted(() => {
   themeStore.init()
+  // 初始化认证状态
+  authStore.initialize()
+  // 同步SmartAbp认证系统状态
+  authStore.syncFromSmartAbp()
 })
 </script>
 

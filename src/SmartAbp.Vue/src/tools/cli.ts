@@ -1,11 +1,14 @@
 import { promises as fs } from "fs"
 import path from "node:path"
+import { fileURLToPath } from "node:url"
 import chalk from "chalk"
 import { ManifestSchema, type Manifest } from "./schema"
 import { DependencyResolver, ConflictDetector } from "./resolvers"
 import { CodeWriter } from "./writers"
 
 // CLI 默认根目录：smartabp.vue 项目根
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 const ROOT_DIR = path.resolve(__dirname, "../..")
 // 业务模块目录
 const MODULES_DIR = path.join(ROOT_DIR, "modules")
@@ -55,7 +58,7 @@ async function generate() {
   const detector = new ConflictDetector()
   detector.detect(sortedManifests)
 
-  // 3. 写入代码（路由/Stores/生命周期/策略）
+  // 3. 写入代码（路由/Stores/生命周期/策略/组件）
   const writer = new CodeWriter(ROOT_DIR)
   await Promise.all([
     writer.writeRoutes(sortedManifests),
@@ -63,6 +66,9 @@ async function generate() {
     writer.writeLifecycles(sortedManifests),
     writer.writePolicies(sortedManifests),
     writer.writeMenus(sortedManifests),
+    // 🔥 新增：生成实际的Vue组件文件
+    writer.writeComponents(sortedManifests),
+    writer.writeStoreFiles(sortedManifests),
   ])
 
   console.log(chalk.green(`✅ 代码生成完成，处理模块数量: ${sortedManifests.length}`))

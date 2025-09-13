@@ -1,132 +1,196 @@
-import { defineStore } from "pinia"
-import { ref, computed } from "vue"
+/*
+AI_GENERATED_COMPONENT: true
+Generated at: 2025-09-12T23:12:15.490Z
+Template parameters: {"EntityName":"User","entityName":"user","ModuleName":"User","entityDisplayName":"用户管理","kebab-case-name":"user"}
+Based on SmartAbp template library
+DO NOT EDIT MANUALLY - Regenerate using module wizard
+*/
 
-// 用户模块相关类型定义
-export interface User {
-  id: string
-  name: string
-  email: string
-  phone?: string
-  avatar?: string
-  status: "active" | "inactive" | "pending"
-  createdAt: string
-  updatedAt: string
-}
+/**
+ * AI_TEMPLATE_INFO:
+ * 模板类型: Pinia状态管理Store
+ * 适用场景: 实体数据的状态管理，包含CRUD操作
+ * 依赖项: Pinia, API服务
+ * 功能特性: 缓存策略、错误处理、加载状态管理
+ * 生成规则:
+ *   - User: 实体名称（PascalCase）
+ *   - user: 实体名称（camelCase）
+ *   - User: 模块名称
+ */
 
-export interface CreateUserRequest {
-  name: string
-  email: string
-  phone?: string
-  password: string
-}
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import type {
+  User,
+  CreateUserDto,
+  UpdateUserDto,
+  GetUserListDto,
+  PagedResultDto,
+  UserListItem,
+  UserQueryParams
+} from '@/types/user'
+import { userService } from '@/services/userService'
 
-export interface UpdateUserRequest {
-  id: string
-  name?: string
-  email?: string
-  phone?: string
-  avatar?: string
-}
+// 重新导出类型供其他模块使用
+export type { User } from '@/types/user'
+import { ElMessage } from 'element-plus'
 
-export const useUserStore = defineStore("user", () => {
-  // 状态
-  const users = ref<User[]>([])
+export const useUserStore = defineStore('user', () => {
+  // 状态定义
+  const items = ref<UserListItem[]>([])
+  const currentItem = ref<User | null>(null)
   const loading = ref(false)
-  const error = ref<string | null>(null)
-  const currentUser = ref<User | null>(null)
+  const submitting = ref(false)
+  const total = ref(0)
+
+  // 缓存相关（暂时未使用，保留供将来扩展）
+  // const cache = ref(new Map<string, { data: any; timestamp: number }>())
+  // const CACHE_TTL = 5 * 60 * 1000 // 5分钟缓存
 
   // 计算属性
-  const activeUsers = computed(() => users.value.filter((user) => user.status === "active"))
+  const isLoading = computed(() => loading.value)
+  const isSubmitting = computed(() => submitting.value)
+  const hasItems = computed(() => items.value.length > 0)
+  const enabledItems = computed(() => items.value.filter(item => item.isActive))
 
-  const userCount = computed(() => users.value.length)
-
-  const hasUsers = computed(() => users.value.length > 0)
-
-  // 方法（占位符，待实现具体业务逻辑）
-  const fetchUsers = async () => {
-    loading.value = true
-    error.value = null
+  // 获取列表数据
+  const fetchList = async (params?: GetUserListDto): Promise<PagedResultDto<UserListItem>> => {
     try {
-      // TODO: 实现获取用户列表的API调用
-      // const response = await userApi.getUsers()
-      // users.value = response.data
-    } catch (err) {
-      error.value = "获取用户列表失败"
-      throw err
+      loading.value = true
+
+      const queryParams: UserQueryParams = params ? {
+        pageIndex: Math.floor((params.skipCount || 0) / (params.maxResultCount || 20)) + 1,
+        pageSize: params.maxResultCount || 20,
+        filter: params.filter,
+        sorting: params.sorting
+      } : { pageIndex: 1, pageSize: 20 }
+      
+      const result = await userService.getList(queryParams)
+
+      // 更新状态
+      items.value = result.items
+      total.value = result.totalCount
+
+      return result
+    } catch (error) {
+      console.error('获取User列表失败:', error)
+      ElMessage.error('获取数据失败')
+      throw error
     } finally {
       loading.value = false
     }
   }
 
-  const createUser = async (_userData: CreateUserRequest) => {
+  // 创建新实体
+  const create = async (data: CreateUserDto): Promise<User> => {
     try {
-      // TODO: 实现创建用户的API调用
-      // const response = await userApi.createUser(userData)
-      // users.value.push(response.data)
-      // return response.data
-    } catch (err) {
-      error.value = "创建用户失败"
-      throw err
+      submitting.value = true
+
+      const result = await userService.create(data)
+
+      // 更新本地状态 (转换为UserListItem格式)
+      items.value.unshift(result as UserListItem)
+      total.value += 1
+
+      return result
+    } catch (error) {
+      console.error('创建User失败:', error)
+      ElMessage.error('创建失败')
+      throw error
+    } finally {
+      submitting.value = false
     }
   }
 
-  const updateUser = async (_userData: UpdateUserRequest) => {
+  // 更新实体
+  const update = async (id: string, data: UpdateUserDto): Promise<User> => {
     try {
-      // TODO: 实现更新用户的API调用
-      // const response = await userApi.updateUser(userData)
-      // const index = users.value.findIndex(u => u.id === userData.id)
-      // if (index !== -1) {
-      //   users.value[index] = response.data
-      // }
-      // return response.data
-    } catch (err) {
-      error.value = "更新用户失败"
-      throw err
+      submitting.value = true
+
+      const result = await userService.update(id, data)
+
+      // 更新本地状态 (转换为UserListItem格式)
+      const index = items.value.findIndex(item => item.id === id)
+      if (index !== -1) {
+        items.value[index] = result as UserListItem
+      }
+
+      return result
+    } catch (error) {
+      console.error('更新User失败:', error)
+      ElMessage.error('更新失败')
+      throw error
+    } finally {
+      submitting.value = false
     }
   }
 
-  const deleteUser = async (_userId: string) => {
+  // 删除实体
+  const remove = async (id: string): Promise<void> => {
     try {
-      // TODO: 实现删除用户的API调用
-      // await userApi.deleteUser(userId)
-      // users.value = users.value.filter(u => u.id !== userId)
-    } catch (err) {
-      error.value = "删除用户失败"
-      throw err
+      submitting.value = true
+
+      await userService.delete(id)
+
+      // 更新本地状态
+      const index = items.value.findIndex(item => item.id === id)
+      if (index !== -1) {
+        items.value.splice(index, 1)
+        total.value -= 1
+      }
+
+    } catch (error) {
+      console.error('删除User失败:', error)
+      ElMessage.error('删除失败')
+      throw error
+    } finally {
+      submitting.value = false
     }
   }
 
-  const getUserById = (userId: string) => {
-    return users.value.find((user) => user.id === userId)
+  // 批量删除
+  const deleteMany = async (ids: string[]): Promise<void> => {
+    try {
+      submitting.value = true
+
+      await userService.batchDelete(ids)
+
+      // 更新本地状态
+      items.value = items.value.filter(item => !ids.includes(item.id))
+      total.value -= ids.length
+
+    } catch (error) {
+      console.error('批量删除User失败:', error)
+      ElMessage.error('批量删除失败')
+      throw error
+    } finally {
+      submitting.value = false
+    }
   }
 
-  const setCurrentUser = (user: User | null) => {
-    currentUser.value = user
-  }
-
-  const clearError = () => {
-    error.value = null
-  }
-
+  // 导出方法和状态
   return {
     // 状态
-    users,
+    items,
+    currentItem,
     loading,
-    error,
-    currentUser,
+    submitting,
+    total,
 
     // 计算属性
-    activeUsers,
-    userCount,
-    hasUsers,
+    isLoading,
+    isSubmitting,
+    hasItems,
+    enabledItems,
 
     // 方法
-    fetchUsers,
-    createUser,
-    updateUser,
-    deleteUser,
-    getUserById,
-    setCurrentUser,
-    clearError,
+    fetchList,
+    create,
+    update,
+    delete: remove,
+    deleteMany
   }
 })
+
+// 类型导出
+export type UserStore = ReturnType<typeof useUserStore>

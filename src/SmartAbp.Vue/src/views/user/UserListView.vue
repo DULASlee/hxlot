@@ -1,529 +1,584 @@
+<!--
+AI_GENERATED_COMPONENT: true
+Generated at: 2025-09-12T23:12:15.489Z
+Template parameters: {"EntityName":"User","entityName":"user","ModuleName":"User","entityDisplayName":"用户管理","kebab-case-name":"user"}
+Based on SmartAbp template library
+DO NOT EDIT MANUALLY - Regenerate using module wizard
+-->
+
+<!-- 
+AI_TEMPLATE_INFO:
+模板类型: Vue CRUD管理组件
+适用场景: 标准的数据管理页面，包含列表、搜索、新增、编辑、删除功能
+依赖组件: Element Plus (el-table, el-dialog, el-form等)
+权限控制: 基于v-permission指令
+生成规则:
+  - User: 实体名称（PascalCase）
+  - user: 实体名称（camelCase）
+  - 用户管理: 实体显示名称
+  - User: 模块名称
+  - user: 短横线命名
+-->
+
 <template>
-  <div class="page-container">
+  <div class="entity-management">
+    <!-- 页面头部 -->
     <div class="page-header">
-      <h2 class="page-title">
-        用户管理
-      </h2>
+      <div class="page-title">
+        <h2>用户管理管理</h2>
+        <p class="page-description">管理系统中的用户管理信息</p>
+      </div>
       <div class="page-actions">
-        <button class="btn btn-primary">
-          新增用户
-        </button>
-        <button class="btn btn-default">
-          导出数据
-        </button>
+        <el-button
+          v-permission="'User.Create'"
+          type="primary"
+          :icon="Plus"
+          @click="handleCreate"
+        >
+          新增用户管理
+        </el-button>
       </div>
     </div>
 
-    <!-- 搜索栏 -->
-    <div class="search-bar">
-      <div class="search-item">
-        <label class="search-label">用户名:</label>
-        <input
-          v-model="searchForm.username"
-          type="text"
-          placeholder="请输入用户名"
-          class="search-input"
-        >
-      </div>
-      <div class="search-item">
-        <label class="search-label">手机号:</label>
-        <input
-          v-model="searchForm.phone"
-          type="text"
-          placeholder="请输入手机号"
-          class="search-input"
-        >
-      </div>
-      <div class="search-item">
-        <label class="search-label">状态:</label>
-        <select
-          v-model="searchForm.status"
-          class="search-select"
-        >
-          <option value="">
-            全部
-          </option>
-          <option value="active">
-            正常
-          </option>
-          <option value="disabled">
-            禁用
-          </option>
-        </select>
-      </div>
-      <button
-        class="btn btn-primary"
-        @click="handleSearch"
+    <!-- 搜索区域 -->
+    <el-card class="search-card" shadow="never">
+      <el-form
+        ref="searchFormRef"
+        :model="searchForm"
+        :inline="true"
+        class="search-form"
       >
-        查询
-      </button>
-      <button
-        class="btn btn-default"
-        @click="handleReset"
-      >
-        重置
-      </button>
-    </div>
+        <el-form-item label="名称" prop="filter">
+          <el-input
+            v-model="searchForm.filter"
+            placeholder="请输入用户管理名称"
+            clearable
+            style="width: 200px"
+            @keyup.enter="handleSearch"
+          />
+        </el-form-item>
+        
+        <el-form-item label="状态" prop="isEnabled">
+          <el-select
+            v-model="searchForm.isEnabled"
+            placeholder="请选择状态"
+            clearable
+            style="width: 120px"
+          >
+            <el-option label="启用" :value="true" />
+            <el-option label="禁用" :value="false" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" :icon="Search" @click="handleSearch">
+            搜索
+          </el-button>
+          <el-button :icon="Refresh" @click="handleReset">
+            重置
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
 
     <!-- 数据表格 -->
-    <div class="table-container">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th style="width: 50px;">
-              <input
-                v-model="selectAll"
-                type="checkbox"
-                @change="handleSelectAll"
-              >
-            </th>
-            <th>用户名</th>
-            <th>姓名</th>
-            <th>部门</th>
-            <th>角色</th>
-            <th>手机号</th>
-            <th>状态</th>
-            <th>创建时间</th>
-            <th style="width: 200px;">
-              操作
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="user in userList"
-            :key="user.id"
+    <el-card class="table-card" shadow="never">
+      <!-- 表格工具栏 -->
+      <div class="table-toolbar">
+        <div class="toolbar-left">
+          <el-button
+            v-permission="'User.Delete'"
+            type="danger"
+            :icon="Delete"
+            :disabled="!selectedRows.length"
+            @click="handleBatchDelete"
           >
-            <td>
-              <input
-                v-model="selectedUsers"
-                type="checkbox"
-                :value="user.id"
-              >
-            </td>
-            <td>{{ user.username }}</td>
-            <td>{{ user.name }}</td>
-            <td>{{ user.department }}</td>
-            <td>
-              <span
-                class="tag"
-                :class="getRoleTagClass(user.role)"
-              >{{ user.role }}</span>
-            </td>
-            <td>{{ user.phone }}</td>
-            <td>
-              <span
-                class="tag"
-                :class="getStatusTagClass(user.status)"
-              >
-                {{ user.status === 'active' ? '正常' : '禁用' }}
-              </span>
-            </td>
-            <td>{{ user.createTime }}</td>
-            <td>
-              <button
-                class="btn btn-sm btn-primary"
-                @click="handleEdit(user)"
+            批量删除 ({{ selectedRows.length }})
+          </el-button>
+        </div>
+        <div class="toolbar-right">
+          <el-tooltip content="刷新数据">
+            <el-button :icon="Refresh" circle @click="fetchData" />
+          </el-tooltip>
+        </div>
+      </div>
+
+      <!-- 数据表格 -->
+      <el-table
+        ref="tableRef"
+        v-loading="loading"
+        :data="tableData"
+        row-key="id"
+        @selection-change="handleSelectionChange"
+        @sort-change="handleSortChange"
+      >
+        <el-table-column type="selection" width="50" />
+        
+        <el-table-column
+          prop="name"
+          label="名称"
+          sortable="custom"
+          min-width="150"
+        >
+          <template #default="{ row }">
+            <div class="name-cell">
+              <span class="name-text">{{ row.name }}</span>
+              <el-tag v-if="!row.isEnabled" type="info" size="small">
+                已禁用
+              </el-tag>
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          prop="displayName"
+          label="显示名称"
+          min-width="150"
+          show-overflow-tooltip
+        />
+
+        <el-table-column
+          prop="description"
+          label="描述"
+          min-width="200"
+          show-overflow-tooltip
+        />
+
+        <el-table-column
+          prop="sort"
+          label="排序"
+          width="80"
+          sortable="custom"
+        />
+
+        <el-table-column
+          prop="creationTime"
+          label="创建时间"
+          width="160"
+          sortable="custom"
+        >
+          <template #default="{ row }">
+            {{ formatDateTime(row.creationTime) }}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="操作" width="180" fixed="right">
+          <template #default="{ row }">
+            <div class="action-buttons">
+              <el-button
+                v-permission="'User.Edit'"
+                type="primary"
+                size="small"
+                text
+                @click="handleEdit(row)"
               >
                 编辑
-              </button>
-              <button
-                class="btn btn-sm btn-danger"
-                @click="handleDelete(user)"
+              </el-button>
+              <el-button
+                v-permission="'User.Delete'"
+                type="danger"
+                size="small"
+                text
+                @click="handleDelete(row)"
               >
                 删除
-              </button>
-              <button
-                class="btn btn-sm btn-default"
-                @click="handleResetPassword(user)"
-              >
-                重置密码
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+              </el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <!-- 分页 -->
-    <div class="pagination">
-      <span class="pagination-info">共 {{ total }} 条记录</span>
-      <div class="pagination-controls">
-        <button
-          class="btn btn-sm"
-          :disabled="currentPage === 1"
-          @click="handlePageChange(currentPage - 1)"
-        >
-          上一页
-        </button>
-        <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
-        <button
-          class="btn btn-sm"
-          :disabled="currentPage === totalPages"
-          @click="handlePageChange(currentPage + 1)"
-        >
-          下一页
-        </button>
+      <!-- 分页组件 -->
+      <div class="pagination-wrapper">
+        <el-pagination
+          v-model:current-page="pagination.current"
+          v-model:page-size="pagination.pageSize"
+          :total="pagination.total"
+          :page-sizes="[10, 20, 50, 100]"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handlePageSizeChange"
+          @current-change="handleCurrentChange"
+        />
       </div>
-    </div>
+    </el-card>
+
+    <!-- 编辑对话框 -->
+    <el-dialog
+      v-model="dialogVisible"
+      :title="dialogTitle"
+      width="600px"
+      :close-on-click-modal="false"
+      @close="handleDialogClose"
+    >
+      <el-form
+        ref="formRef"
+        :model="formData"
+        :rules="formRules"
+        label-width="100px"
+        class="edit-form"
+      >
+        <el-form-item label="名称" prop="name">
+          <el-input
+            v-model="formData.name"
+            placeholder="请输入用户管理名称"
+            maxlength="50"
+            show-word-limit
+          />
+        </el-form-item>
+
+        <el-form-item label="显示名称" prop="displayName">
+          <el-input
+            v-model="formData.displayName"
+            placeholder="请输入显示名称"
+            maxlength="100"
+            show-word-limit
+          />
+        </el-form-item>
+
+        <el-form-item label="描述" prop="description">
+          <el-input
+            v-model="formData.description"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入描述信息"
+            maxlength="500"
+            show-word-limit
+          />
+        </el-form-item>
+
+        <el-form-item label="排序号" prop="sort">
+          <el-input-number
+            v-model="formData.sort"
+            :min="0"
+            :max="999999"
+            controls-position="right"
+            style="width: 150px"
+          />
+        </el-form-item>
+
+        <el-form-item label="状态" prop="isEnabled">
+          <el-switch
+            v-model="formData.isEnabled"
+            active-text="启用"
+            inactive-text="禁用"
+          />
+        </el-form-item>
+      </el-form>
+
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button
+            type="primary"
+            :loading="submitting"
+            @click="handleSubmit"
+          >
+            确定
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
+// 模板占位符说明：
+// User - 实体名称（PascalCase）
+// user - 实体名称（camelCase）
+// 用户管理 - 实体显示名称
 
-interface User {
-  id: number
-  username: string
-  name: string
-  department?: string
-  role?: string
-  phone?: string
-  status?: string
-  createTime?: string
-}
+import { ref, reactive, onMounted, computed } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { Plus, Search, Refresh, Delete } from '@element-plus/icons-vue'
 
-defineProps<{
-  userInfo: any
-}>()
+// 导入说明：以下导入需要根据实际项目结构调整
+// import { useUserStore } from '@/stores/modules/user'
+// import { formatDateTime } from '@/utils/date'
+// import type { UserDto, CreateUserDto, UpdateUserDto } from '@/types/user'
+
+// 响应式数据
+const loading = ref(false)
+const submitting = ref(false)
+const dialogVisible = ref(false)
+const selectedRows = ref<any[]>([])
+
+// 表单引用
+const searchFormRef = ref()
+const formRef = ref()
+const tableRef = ref()
 
 // 搜索表单
 const searchForm = reactive({
-  username: '',
-  phone: '',
-  status: ''
+  filter: '',
+  isEnabled: undefined as boolean | undefined
 })
 
+// 分页数据
+const pagination = reactive({
+  current: 1,
+  pageSize: 20,
+  total: 0
+})
+
+// 排序数据
+const sorting = ref('')
+
 // 表格数据
-const userList = ref<User[]>([
-  {
-    id: 1,
-    username: 'admin',
-    name: '系统管理员',
-    department: '技术部',
-    role: '超级管理员',
-    phone: '138****8888',
-    status: 'active',
-    createTime: '2024-01-01 09:00:00'
-  },
-  {
-    id: 2,
-    username: 'zhangsan',
-    name: '张三',
-    department: '工程部',
-    role: '项目经理',
-    phone: '139****9999',
-    status: 'active',
-    createTime: '2024-01-02 10:30:00'
-  },
-  {
-    id: 3,
-    username: 'lisi',
-    name: '李四',
-    department: '安全部',
-    role: '安全员',
-    phone: '137****7777',
-    status: 'disabled',
-    createTime: '2024-01-03 14:20:00'
+const tableData = ref<any[]>([])
+
+// 对话框数据
+const dialogTitle = computed(() => 
+  formData.id ? '编辑用户管理' : '新增用户管理'
+)
+
+const formData = reactive({
+  id: undefined,
+  name: '',
+  displayName: '',
+  description: '',
+  sort: 0,
+  isEnabled: true
+})
+
+// 表单验证规则
+const formRules = {
+  name: [
+    { required: true, message: '请输入用户管理名称', trigger: 'blur' },
+    { min: 2, max: 50, message: '名称长度在 2 到 50 个字符', trigger: 'blur' }
+  ]
+}
+
+// 方法实现
+const fetchData = async () => {
+  try {
+    loading.value = true
+    
+    // TODO: 调用实际的API服务
+    // const params = {
+    //   filter: searchForm.filter || undefined,
+    //   isEnabled: searchForm.isEnabled,
+    //   skipCount: (pagination.current - 1) * pagination.pageSize,
+    //   maxResultCount: pagination.pageSize,
+    //   sorting: sorting.value || undefined
+    // }
+    // const result = await userStore.fetchList(params)
+    // tableData.value = result.items
+    // pagination.total = result.totalCount
+    
+  } catch (error) {
+    ElMessage.error('获取数据失败')
+  } finally {
+    loading.value = false
   }
-])
+}
 
-// 分页
-const currentPage = ref(1)
-const pageSize = ref(10)
-const total = ref(3)
-
-const totalPages = computed(() => Math.ceil(total.value / pageSize.value))
-
-// 选择
-const selectAll = ref(false)
-const selectedUsers = ref<number[]>([])
-
-// 方法
 const handleSearch = () => {
-  console.log('搜索:', searchForm)
+  pagination.current = 1
+  fetchData()
 }
 
 const handleReset = () => {
-  Object.assign(searchForm, {
-    username: '',
-    phone: '',
-    status: ''
+  searchForm.filter = ''
+  searchForm.isEnabled = undefined
+  handleSearch()
+}
+
+const handleCreate = () => {
+  Object.assign(formData, {
+    id: undefined,
+    name: '',
+    displayName: '',
+    description: '',
+    sort: 0,
+    isEnabled: true
   })
+  dialogVisible.value = true
 }
 
-const handleSelectAll = () => {
-  if (selectAll.value) {
-    selectedUsers.value = userList.value.map(user => user.id)
+const handleEdit = (row: any) => {
+  Object.assign(formData, row)
+  dialogVisible.value = true
+}
+
+const handleDelete = async (row: any) => {
+  try {
+    await ElMessageBox.confirm(
+      `确定要删除 "${row.name}" 吗？`,
+      '确认删除',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    )
+    
+    // TODO: 调用删除API
+    // await userStore.delete(row.id)
+    
+    ElMessage.success('删除成功')
+    fetchData()
+  } catch (error) {
+    // 用户取消删除
+  }
+}
+
+const handleBatchDelete = async () => {
+  if (selectedRows.value.length === 0) return
+  
+  try {
+    await ElMessageBox.confirm(
+      `确定要删除选中的 ${selectedRows.value.length} 项吗？`,
+      '确认批量删除',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    )
+    
+    // TODO: 调用批量删除API
+    // const ids = selectedRows.value.map(row => row.id)
+    // await userStore.deleteMany(ids)
+    
+    ElMessage.success('批量删除成功')
+    fetchData()
+  } catch (error) {
+    // 用户取消删除
+  }
+}
+
+const handleSubmit = async () => {
+  try {
+    await formRef.value?.validate()
+    
+    submitting.value = true
+    
+    if (formData.id) {
+      // TODO: 更新操作
+      // await userStore.update(formData.id, formData)
+      ElMessage.success('更新成功')
+    } else {
+      // TODO: 创建操作
+      // await userStore.create(formData)
+      ElMessage.success('创建成功')
+    }
+    
+    dialogVisible.value = false
+    fetchData()
+  } catch (error) {
+    ElMessage.error('操作失败')
+  } finally {
+    submitting.value = false
+  }
+}
+
+const handleDialogClose = () => {
+  formRef.value?.resetFields()
+}
+
+const handleSelectionChange = (selection: any[]) => {
+  selectedRows.value = selection
+}
+
+const handleSortChange = ({ prop, order }: any) => {
+  if (order) {
+    sorting.value = `${prop} ${order === 'ascending' ? 'asc' : 'desc'}`
   } else {
-    selectedUsers.value = []
+    sorting.value = ''
   }
+  fetchData()
 }
 
-const handleEdit = (user: User) => {
-  alert(`编辑用户: ${user.name}`)
+const handlePageSizeChange = (size: number) => {
+  pagination.pageSize = size
+  pagination.current = 1
+  fetchData()
 }
 
-const handleDelete = (user: User) => {
-  if (confirm(`确定要删除用户 ${user.name} 吗？`)) {
-    console.log('删除用户:', user)
-  }
+const handleCurrentChange = (current: number) => {
+  pagination.current = current
+  fetchData()
 }
 
-const handleResetPassword = (user: User) => {
-  if (confirm(`确定要重置用户 ${user.name} 的密码吗？`)) {
-    console.log('重置密码:', user)
-  }
+// 工具函数占位符
+const formatDateTime = (date: string) => {
+  // TODO: 实现日期格式化
+  return date
 }
 
-const handlePageChange = (page: number) => {
-  currentPage.value = page
-}
-
-const getRoleTagClass = (role?: string): string => {
-  const roleMap: Record<string, string> = {
-    '超级管理员': 'tag-danger',
-    '项目经理': 'tag-warning',
-    '安全员': 'tag-info'
-  }
-  if (!role) return 'tag-default'
-  return roleMap[role] ?? 'tag-default'
-}
-
-const getStatusTagClass = (status?: string): string => {
-  return status === 'active' ? 'tag-success' : 'tag-danger'
-}
-
+// 生命周期
 onMounted(() => {
-  console.log('用户管理页面加载完成')
+  fetchData()
 })
 </script>
 
 <style scoped>
-.page-container {
-  background: white;
-  border-radius: 8px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
-  height: 100%;
+.entity-management {
+  padding: 20px;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f2f3f5;
+  align-items: flex-start;
+  margin-bottom: 20px;
 }
 
-.page-title {
+.page-title h2 {
+  margin: 0 0 8px 0;
   font-size: 24px;
   font-weight: 600;
-  color: #1f2329;
+  color: var(--el-text-color-primary);
+}
+
+.page-description {
   margin: 0;
+  color: var(--el-text-color-regular);
 }
 
-.page-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.search-bar {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 20px;
-  padding: 16px;
-  background: #f7f8fa;
-  border-radius: 8px;
-  flex-wrap: wrap;
-}
-
-.search-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.search-label {
-  color: #4e5969;
-  white-space: nowrap;
-  font-size: 14px;
-}
-
-.search-input, .search-select {
-  padding: 6px 12px;
-  border: 1px solid #e5e6eb;
-  border-radius: 4px;
-  font-size: 14px;
-  min-width: 120px;
-}
-
-.table-container {
-  overflow-x: auto;
+.search-card {
   margin-bottom: 20px;
 }
 
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
+.search-form {
+  margin-bottom: 0;
 }
 
-.data-table th {
-  background: #f7f8fa;
-  padding: 12px;
-  text-align: left;
-  font-weight: 600;
-  color: #1f2329;
-  border-bottom: 2px solid #e5e6eb;
-  white-space: nowrap;
+.table-card {
+  margin-bottom: 20px;
 }
 
-.data-table td {
-  padding: 12px;
-  border-bottom: 1px solid #f2f3f5;
-  color: #4e5969;
-}
-
-.data-table tr:hover {
-  background: #f7f8fa;
-}
-
-.btn {
-  padding: 8px 16px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.btn-sm {
-  padding: 4px 8px;
-  font-size: 12px;
-}
-
-.btn-primary {
-  background: #1e3a5f;
-  color: white;
-}
-
-.btn-primary:hover {
-  background: #2a4d7a;
-}
-
-.btn-danger {
-  background: #f5222d;
-  color: white;
-}
-
-.btn-danger:hover {
-  background: #ff4d4f;
-}
-
-.btn-default {
-  background: white;
-  color: #4e5969;
-  border: 1px solid #e5e6eb;
-}
-
-.btn-default:hover {
-  color: #1e3a5f;
-  border-color: #1e3a5f;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.tag {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.tag-success {
-  background: #f6ffed;
-  color: #52c41a;
-  border: 1px solid #b7eb8f;
-}
-
-.tag-warning {
-  background: #fffbe6;
-  color: #faad14;
-  border: 1px solid #ffe58f;
-}
-
-.tag-danger {
-  background: #fff1f0;
-  color: #f5222d;
-  border: 1px solid #ffccc7;
-}
-
-.tag-info {
-  background: #e6f7ff;
-  color: #1890ff;
-  border: 1px solid #91d5ff;
-}
-
-.tag-default {
-  background: #f7f8fa;
-  color: #4e5969;
-  border: 1px solid #e5e6eb;
-}
-
-.pagination {
+.table-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 16px;
-  border-top: 1px solid #f2f3f5;
+  margin-bottom: 16px;
 }
 
-.pagination-info {
-  color: #4e5969;
-  font-size: 14px;
-}
-
-.pagination-controls {
+.name-cell {
   display: flex;
   align-items: center;
+  gap: 8px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.edit-form {
+  padding: 0 20px;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
   gap: 12px;
-}
-
-.page-info {
-  color: #4e5969;
-  font-size: 14px;
-}
-
-@media (width <= 768px) {
-  .search-bar {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .search-item {
-    width: 100%;
-  }
-
-  .search-input, .search-select {
-    flex: 1;
-  }
-
-  .page-actions {
-    flex-direction: column;
-  }
-
-  .pagination {
-    flex-direction: column;
-    gap: 12px;
-  }
 }
 </style>

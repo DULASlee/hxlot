@@ -1,0 +1,15 @@
+---
+inclusion: always
+---
+
+# Project Rules (SmartAbp)
+
+- Scope: ABP vNext backend + Vue3/TS frontend + low-code engine.
+- Generated files: must live under appshell/* or *.generated.ts and include banner "// AUTO-GENERATED FILE – DO NOT EDIT." Do not hand-edit.
+- Low-code plugins: implement metadata/canHandle/validate/generate; use kernel logging/monitoring/cache; no new Function in prod (dev only in sandbox); respect timeouts and caching; keep hit-rate healthy (>50%).
+- CLI aggregation: routes.generated.ts (lazy imports, runtime guards), stores.generated.ts (factory, optional persistence), lifecycle.generated.ts (5 hooks with try-catch), policies.generated.ts (name map).
+- Backend/Frontend contract: consistent permission names, route names, policy codes; shared DTO paging/sorting; services/ as single entry for API.
+- Security: no prod dynamic exec; cross-domain/auth/tenant logic via adapters; plugin deps validated.
+- Performance/observability: timers for generation/compilation; worker pool 2–4; TTL default 1h; tag-based cache purge.
+- Coding standards: see chapter 9 in doc/项目编程规则.md (front-end TS/Vue, naming, commits, pre-submit checklist).
+- Process & gates: see Iron Laws for discovery → plan → type-check/lint/test/build → summarize.

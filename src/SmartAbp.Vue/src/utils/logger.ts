@@ -133,23 +133,18 @@ class Logger {
   log(level: unknown, message: string, data?: any) {
     switch (level) {
       case 'debug':
-      case 0:
       case LogLevel.DEBUG:
         return this.debug(message, data)
       case 'info':
-      case 1:
       case LogLevel.INFO:
         return this.info(message, data)
       case 'success':
-      case 2:
       case LogLevel.SUCCESS:
         return this.success(message, data)
       case 'warn':
-      case 3:
       case LogLevel.WARN:
         return this.warn(message, data)
       case 'error':
-      case 4:
       case LogLevel.ERROR:
         return this.error(message, data)
       default:

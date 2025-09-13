@@ -1,0 +1,72 @@
+{
+  "$schema": "https://smartabp/schema/module",
+  "name": "User",
+  "displayName": "用户管理",
+  "description": "用户管理 模块（由向导生成）",
+  "version": "1.0.0",
+  "author": "SmartAbp",
+  "abpStyle": true,
+  "order": 100,
+  "dependsOn": [],
+  "routes": [
+    {
+      "name": "UserList",
+      "path": "/User",
+      "component": "@/views/user/UserListView.vue",
+      "meta": {
+        "title": "用户管理列表",
+        "menuKey": "user-list",
+        "requiredRoles": [
+          "admin",
+          "admin666"
+        ],
+        "icon": "👥",
+        "showInMenu": true
+      }
+    },
+    {
+      "name": "UserManagement",
+      "path": "/User/management",
+      "component": "@/views/user/UserManagement.vue",
+      "meta": {
+        "title": "用户管理管理",
+        "menuKey": "user-management",
+        "requiredRoles": [
+          "admin",
+          "admin666"
+        ],
+        "icon": "👥",
+        "showInMenu": true
+      }
+    }
+  ],
+  "stores": [
+    {
+      "symbol": "useUserStore",
+      "id": "user",
+      "modulePath": "@/stores/modules/user"
+    }
+  ],
+  "policies": [
+    "User.Create",
+    "User.Read",
+    "User.Update",
+    "User.Delete"
+  ],
+  "lifecycle": {},
+  "features": {
+    "enableAuth": true,
+    "enableCache": true,
+    "enableI18n": true
+  },
+  "menuConfig": {
+    "icon": "👥",
+    "order": 100,
+    "features": [
+      "showInMenu",
+      "showIcon",
+      "enableBreadcrumb"
+    ],
+    "parentMenu": "system"
+  }
+}

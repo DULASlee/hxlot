@@ -402,6 +402,18 @@ export const useMenuStore = defineStore("menu", () => {
     { immediate: true }, // 立即执行一次
   )
 
+  // 监听用户信息变化，自动刷新菜单
+  watch(
+    () => authStore.userInfo,
+    (newUserInfo) => {
+      if (newUserInfo) {
+        console.log("👤 用户信息更新，刷新菜单:", newUserInfo)
+        setupDefaultMenuState()
+      }
+    },
+    { deep: true }
+  )
+
   // ===========================================
   // 返回公共API
   // ===========================================

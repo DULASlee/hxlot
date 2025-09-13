@@ -1,0 +1,188 @@
+---
+inclusion: always
+---
+
+# 🚨 SmartAbp项目开发铁律（Cursor强制执行）
+
+## ⚡ 开发铁律四大核心（强制执行）
+
+### 1. 代码编写前的强制准备工作
+**🔴 任何代码编写之前必须完成：**
+
+- **必须阅读项目规则**
+  - 阅读 `doc/项目开发铁律.md`
+  - 阅读 `doc/编码规范.md`
+  - 阅读 `doc/architecture/` 下的架构文档
+
+- **必须使用Serena分析现有代码**
+  ```typescript
+  // 强制使用这些工具分析现有实现
+  mcp_serena_find_symbol()        // 查找相关符号
+  mcp_serena_search_for_pattern() // 搜索类似功能
+  mcp_serena_get_symbols_overview() // 了解模块结构
+  ```
+
+- **严禁编写重复代码**
+  - 发现相似功能必须复用
+  - 新功能前必须搜索现有实现
+
+### 2. 工作计划审批制度
+**🔴 任何代码实现前必须：**
+
+- **使用sequential-thinking制定计划**
+  ```typescript
+  mcp_sequential-thinking_sequentialthinking({
+    thought: "详细分析工作步骤",
+    // ... 制定完整计划
+  })
+  ```
+
+- **等待用户审批确认**
+  - 提交完整工作计划
+  - 必须获得用户明确授权
+  - 未经授权禁止编写代码
+
+### 3. 质量保证流程
+**🔴 每次代码修改后必须验证：**
+
+```bash
+# 强制执行序列
+npm run build        # 构建验证
+npm run type-check   # 类型检查  
+npm run lint --fix   # 代码规范
+npm run dev          # 功能测试
+```
+
+**🚨 BUG修复铁律（绝对禁令）：**
+- **严禁删除代码来掩盖错误**
+- **严禁使用`as any`绕过类型检查**
+- **严禁使用`_parameter`规避未使用参数警告**
+- **严禁注释掉报错代码**
+- **必须深入理解错误根源**
+- **必须实现功能性修复方案**
+
+**错误零容忍原则：**
+- 任何构建错误必须立即修复
+- 任何类型错误必须立即修复
+- 任何lint错误必须立即修复
+
+### 4. 沟通增强机制
+**🔴 每次交互开始必须：**
+
+```typescript
+mcp_interactive-feedback-mcp_interactive_feedback({
+  project_directory: "D:\\BAOBAB\\Baobab.SmartAbp",
+  summary: "工作内容简要描述"
+})
+```
+
+## 📁 目录结构强制规范
+
+### 前端目录结构（强制遵守）
+```
+src/SmartAbp.Vue/src/
+├── views/                  # 页面视图（按模块分组）
+│   ├── user/              # 用户管理模块
+│   ├── project/           # 项目管理模块  
+│   ├── log/               # 日志管理模块
+│   ├── system/            # 系统管理模块
+│   ├── auth/              # 认证相关页面
+│   └── common/            # 通用页面
+├── components/             # 组件（按功能分组）
+│   ├── layout/            # 布局组件
+│   ├── user/              # 用户相关组件
+│   └── common/            # 通用组件
+├── stores/modules/         # 状态管理（按模块分组）
+└── styles/design-system/   # 统一设计系统
+```
+
+## 🎯 路由规范（强制）
+
+### 扁平化路由结构
+```typescript
+// 强制使用这种路由结构
+const routes = [
+  { path: '/', redirect: '/dashboard' },
+  { path: '/dashboard', component: SmartAbpLayout, name: 'Dashboard' },
+  { path: '/User', component: SmartAbpLayout, children: [...] },
+  { path: '/Project', component: SmartAbpLayout, children: [...] },
+  { path: '/Log', component: SmartAbpLayout, children: [...] },
+  { path: '/Admin', component: SmartAbpLayout, children: [...] }
+]
+```
+
+## 🎨 样式规范（强制）
+
+### 设计系统使用
+```css
+/* ✅ 强制使用：设计系统变量 */
+.component {
+  background: var(--theme-brand-primary);
+  color: var(--theme-text-inverse);
+  padding: var(--spacing-4);
+}
+
+/* ❌ 严禁使用：硬编码值 */
+.component {
+  background: #0ea5e9;  /* 禁止 */
+  color: #ffffff;       /* 禁止 */
+  padding: 16px;        /* 禁止 */
+}
+```
+
+## 🚀 低代码引擎开发流程（强制）
+
+### 低代码引擎开发四阶段铁律
+**🔴 严格按照P0-P3阶段顺序开发：**
+
+#### P0阶段：前端代码生成器开发
+```typescript
+// 🔥 强制开发序列
+1. Schema设计和验证器实现     // 第一优先级
+2. Vue3代码生成器核心开发     // 第二优先级  
+3. 插件系统架构搭建          // 第三优先级
+4. 设计系统集成和样式生成     // 第四优先级
+5. TypeScript类型生成        // 第五优先级
+6. 性能优化和测试覆盖        // 第六优先级
+
+// ❌ 严禁跳过阶段或颠倒顺序
+```
+
+#### P1阶段：后端代码生成器开发
+```csharp
+// 🔥 强制开发序列
+1. ABP vNext实体生成器        // 必须先实现
+2. 服务层代码生成器          // 依赖实体生成器
+3. 控制器API生成器           // 依赖服务层
+4. DTO映射生成器             // 依赖实体和服务
+5. 权限系统集成             // 依赖控制器
+6. 多租户支持实现            // 最后集成
+
+// ❌ 严禁不按依赖关系开发
+```
+
+#### P2阶段：可视化设计器开发
+```typescript
+// 🔥 强制开发序列（补充）
+1. 拖拽引擎 + 预览沙箱（iframe/Worker + CSP）
+2. Schema↔代码双向通道（回读增量Schema）
+3. 导出增量Schema + 调用生成链（writers）→ appshell 聚合
+4. 生成回执（routes/menu/policies/files）+ snapshot
+5. 失败回滚至上一个稳定基线
+6. 性能与协作指标采集（<100ms渲染、60fps、协作<50ms）
+
+// ❌ 严禁：直接编辑 *.generated.ts；跳过回执/回滚；无沙箱预览
+```
+
+### 可视化设计器闭环（强制）
+- 生成前可视化：Designer→Schema→生成→appshell注入→生效→回执
+- 生成后定制：加载路由→回读增量→增量生成→appshell更新→回执→可回滚
+- CI 门禁：必须存在回执清单（routes/menu/files），且漂移检测为绿
+
+> 参见 ADR-0015 可视化设计器架构决策与 `.cursor/rules/lowcode-engine-rules.mdc` P2 细化。
+
+#### P3阶段：跨端代码生成器开发
+```
+---
+
+**🔥 这些是铁律，不是建议！严格执行 = 项目成功**
