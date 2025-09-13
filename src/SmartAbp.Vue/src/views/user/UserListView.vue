@@ -39,8 +39,8 @@ const store = useUserStore()
 const items = store.items
 const loading = store.loading
 const total = store.total
-const pageIndex = store.pageIndex
-const pageSize = store.pageSize
+const pageIndex = store.pageIndex as any
+const pageSize = store.pageSize as any
 const query = reactive<Record<string, any>>({})
 
 const onSearch = () => store.fetchList({ pageIndex: pageIndex.value, pageSize: pageSize.value, query })

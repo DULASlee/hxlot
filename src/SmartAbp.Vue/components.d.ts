@@ -73,7 +73,4 @@ declare module 'vue' {
     SmartAbpLayout: typeof import('./src/components/layout/SmartAbpLayout.vue')['default']
     ThemeSwitcher: typeof import('./src/components/theme/ThemeSwitcher.vue')['default']
   }
-  export interface GlobalDirectives {
-    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
-  }
 }

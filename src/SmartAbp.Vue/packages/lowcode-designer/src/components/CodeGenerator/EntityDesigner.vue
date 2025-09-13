@@ -182,10 +182,11 @@
             </el-tab-pane>
 
             <el-tab-pane label="Relationships" name="relationships">
-               <RelationshipDesigner
-                :entities="entities"
-                :relationships="entityModel.relationships"
-                @update:relationships="entityModel.relationships = $event"
+              <RelationshipDesigner
+                v-model:modelValue="entities"
+                @create-relationship="(r) => (entityModel.relationships = [...entityModel.relationships, r as any])"
+                @update-relationship="(r) => (entityModel.relationships = entityModel.relationships.map(x => (x as any).id === (r as any).id ? (r as any) : x))"
+                @delete-relationship="(id) => (entityModel.relationships = entityModel.relationships.filter(x => (x as any).id !== id))"
               />
             </el-tab-pane>
           </el-tabs>
@@ -226,7 +227,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive, watch, nextTick, onMounted, defineEmits, Component } from 'vue'
+import { ref, reactive, watch, nextTick, defineEmits, Component } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Collection,
@@ -238,7 +239,6 @@ import {
   Plus,
   Edit,
   DocumentCopy,
-  Tools,
   Connection,
   Document,
   Promotion,
@@ -251,11 +251,7 @@ import draggable from 'vuedraggable'
 import RelationshipDesigner from './RelationshipDesigner.vue'
 import PropertyEditor from '../EntityProperty/PropertyEditor.vue'
 import EnhancedCodePreview from './EnhancedCodePreview.vue'
-import type {
-  PropertyType,
-  EntityProperty,
-  EnhancedEntityModel,
-} from '../../types/entity'
+import type { PropertyType, EntityProperty, EnhancedEntityModel } from '../../types'
 
 interface PropertyTypeDefinition {
   type: PropertyType
@@ -285,12 +281,6 @@ const entityModel = reactive<EnhancedEntityModel>({
   isSoftDelete: true,
   baseClass: 'FullAuditedAggregateRoot',
   interfaces: [],
-  displaySettings: {
-    listViewColumns: [],
-    detailViewSections: [],
-    searchableFields: [],
-    sortableFields: [],
-  },
   isAudited: true,
   indexes: [],
   constraints: [],

@@ -619,17 +619,17 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue'
+import { createComponentLogger } from '@/utils/logging'
 // 运行时内容缓存与日志改为可选注入，避免构建期硬依赖
 const globalContentCache: any = (globalThis as any).__lowcodeRuntime?.contentCache || { getStats: () => ({ totalEntries: 0, totalSizeBytes: 0, totalAccessCount: 0, averageEntrySize: 0 }) }
-const logger: any = (globalThis as any).__lowcodeRuntime?.logger || console
 // Worker池实例位于SfcCompilerEngine内部，无法直接注入，这里通过全局暴露的窗口变量进行读取
 // 在实际项目中，建议提供显式的服务暴露接口
 const workerMetrics = ref({ submitted: 0, completed: 0, failed: 0, inFlight: 0, queueMax: 0 })
 const cacheStats = ref({ totalEntries: 0, totalSizeBytes: 0, totalAccessCount: 0, averageEntrySize: 0 })
 // logger 已从统一入口导入
 
-// 组件日志器
-const componentLogger = logger.child({ component: 'PerformanceDashboard' })
+// 组件日志器（统一日志系统，避免 console 无 child 方法导致的运行时错误）
+const componentLogger = createComponentLogger('PerformanceDashboard')
 
 // 响应式状态
 const loading = ref(false)

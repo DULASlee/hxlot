@@ -23,22 +23,24 @@
     "src/**/*.vue",
     "src/**/*.tsx",
     "src/**/*.js",
-    "packages/lowcode-core/src/**/*.ts",
-    "packages/lowcode-core/src/**/*.d.ts",
-    "packages/lowcode-designer/src/**/*.ts",
-    "packages/lowcode-designer/src/**/*.d.ts",
-    "packages/lowcode-ui-vue/src/**/*.ts",
-    "packages/lowcode-ui-vue/src/**/*.d.ts"
+    "packages/**/src/**/*.ts",
+    "packages/**/src/**/*.d.ts",
+    "packages/**/src/**/*.vue"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "src/views/CodeGenerator/**",
     "src/lowcode-entry.ts",
-    "packages/lowcode-codegen/**",
-    "packages/lowcode-api/**",
-    "packages/**/src/__tests__/**",
-    "packages/**/tests/**"
+    "packages/**/__tests__/**",
+    "packages/**/tests/**",
+    "packages/lowcode-designer/src/components/UIPatterns/**",
+    "packages/lowcode-designer/src/components/ValidationRules/**",
+    "packages/lowcode-designer/src/views/designer/CollaborationPanel.vue",
+    "packages/lowcode-designer/src/views/designer/PerformanceMonitor.vue",
+    "packages/lowcode-designer/src/views/designer/VersionControlPanel.vue",
+    "packages/lowcode-designer/src/components/RelationshipDiagram/**",
+    "packages/lowcode-designer/src/components/UIGenerator/**"
   ]
 }
 
