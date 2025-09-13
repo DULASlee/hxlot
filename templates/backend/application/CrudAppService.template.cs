@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using SmartAbp.Localization;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -106,17 +107,58 @@ public class {{EntityName}}AppService : SmartAbpAppService, I{{EntityName}}AppSe
         // 验证名称唯一性
         await CheckNameAsync(input.Name);
 
-        // 创建实体
-        var entity = new {{EntityName}}(
-            GuidGenerator.Create(),
-            input.Name,
-            input.DisplayName,
-            input.Description
-        )
+        // 模板: 属性验证逻辑
+        {{#each properties}}
+        {{#if validationRules}}
+        // {{name}} 验证
+        {{#each validationRules}}
+        {{#if_eq type "required"}}
+        if ({{#if_eq ../type "string"}}string.IsNullOrWhiteSpace(input.{{../name}}){{else}}input.{{../name}} == null{{/if_eq}})
         {
-            Sort = input.Sort,
-            IsEnabled = input.IsEnabled
-        };
+            throw new UserFriendlyException(L["Validation:FieldIsRequired", L["{{../name}}"]]);
+        }
+        {{/if_eq}}
+        {{#if_eq type "maxLength"}}
+        if (input.{{../name}}?.Length > {{value}})
+        {
+            throw new UserFriendlyException(L["Validation:MaxLength", L["{{../name}}"], {{value}}]);
+        }
+        {{/if_eq}}
+        {{#if_eq type "minLength"}}
+        if (input.{{../name}}?.Length < {{value}})
+        {
+            throw new UserFriendlyException(L["Validation:MinLength", L["{{../name}}"], {{value}}]);
+        }
+        {{/if_eq}}
+        {{#if_eq type "range"}}
+        if (input.{{../name}} < {{value.min}} || input.{{../name}} > {{value.max}})
+        {
+            throw new UserFriendlyException(L["Validation:Range", L["{{../name}}"], {{value.min}}, {{value.max}}]);
+        }
+        {{/if_eq}}
+        {{#if_eq type "pattern"}}
+        if (!System.Text.RegularExpressions.Regex.IsMatch(input.{{../name}}, "{{value}}"))
+        {
+            throw new UserFriendlyException(L["Validation:InvalidFormat", L["{{../name}}"]]);
+        }
+        {{/if_eq}}
+        {{/each}}
+        {{/if}}
+        {{/each}}
+
+        var entity = ObjectMapper.Map<Create{{EntityName}}Dto, {{EntityName}}>(input);
+
+        // 创建实体
+        // var entity = new {{EntityName}}(
+        //     GuidGenerator.Create(),
+        //     input.Name,
+        //     input.DisplayName,
+        //     input.Description
+        // )
+        // {
+        //     Sort = input.Sort,
+        //     IsEnabled = input.IsEnabled
+        // };
 
         // 保存到数据库
         entity = await _{{entityName}}Repository.InsertAsync(entity, autoSave: true);
@@ -138,14 +180,57 @@ public class {{EntityName}}AppService : SmartAbpAppService, I{{EntityName}}AppSe
         var entity = await _{{entityName}}Repository.GetAsync(id);
 
         // 验证名称唯一性（排除当前实体）
-        await CheckNameAsync(input.Name, id);
+        if (entity.Name != input.Name)
+        {
+            await CheckNameAsync(input.Name, id);
+        }
 
+        // 模板: 属性验证逻辑
+        {{#each properties}}
+        {{#if validationRules}}
+        // {{name}} 验证
+        {{#each validationRules}}
+        {{#if_eq type "required"}}
+        if ({{#if_eq ../type "string"}}string.IsNullOrWhiteSpace(input.{{../name}}){{else}}input.{{../name}} == null{{/if_eq}})
+        {
+            throw new UserFriendlyException(L["Validation:FieldIsRequired", L["{{../name}}"]]);
+        }
+        {{/if_eq}}
+        {{#if_eq type "maxLength"}}
+        if (input.{{../name}}?.Length > {{value}})
+        {
+            throw new UserFriendlyException(L["Validation:MaxLength", L["{{../name}}"], {{value}}]);
+        }
+        {{/if_eq}}
+        {{#if_eq type "minLength"}}
+        if (input.{{../name}}?.Length < {{value}})
+        {
+            throw new UserFriendlyException(L["Validation:MinLength", L["{{../name}}"], {{value}}]);
+        }
+        {{/if_eq}}
+        {{#if_eq type "range"}}
+        if (input.{{../name}} < {{value.min}} || input.{{../name}} > {{value.max}})
+        {
+            throw new UserFriendlyException(L["Validation:Range", L["{{../name}}"], {{value.min}}, {{value.max}}]);
+        }
+        {{/if_eq}}
+        {{#if_eq type "pattern"}}
+        if (!System.Text.RegularExpressions.Regex.IsMatch(input.{{../name}}, "{{value}}"))
+        {
+            throw new UserFriendlyException(L["Validation:InvalidFormat", L["{{../name}}"]]);
+        }
+        {{/if_eq}}
+        {{/each}}
+        {{/if}}
+        {{/each}}
+        
         // 更新属性
-        entity.SetName(input.Name);
-        entity.SetDisplayName(input.DisplayName);
-        entity.SetDescription(input.Description);
-        entity.Sort = input.Sort;
-        entity.IsEnabled = input.IsEnabled;
+        ObjectMapper.Map(input, entity);
+        // entity.SetName(input.Name);
+        // entity.SetDisplayName(input.DisplayName);
+        // entity.SetDescription(input.Description);
+        // entity.Sort = input.Sort;
+        // entity.IsEnabled = input.IsEnabled;
 
         // 保存更改
         entity = await _{{entityName}}Repository.UpdateAsync(entity, autoSave: true);

@@ -202,7 +202,6 @@
 import { ref, computed, onMounted, onUnmounted } from "vue"
 import { useRouter } from "vue-router"
 import { useThemeStore } from "@/stores"
-import { logger } from "@/utils/logger"
 
 const router = useRouter()
 const themeStore = useThemeStore()

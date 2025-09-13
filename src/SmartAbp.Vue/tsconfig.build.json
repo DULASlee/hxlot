@@ -10,6 +10,8 @@
       "@assets/*": ["src/assets/*"],
       "@smartabp/lowcode-core": ["packages/lowcode-core/src/index.ts"],
       "@smartabp/lowcode-core/*": ["packages/lowcode-core/src/*"],
+      "@smartabp/lowcode-designer": ["packages/lowcode-designer/src/index.ts"],
+      "@smartabp/lowcode-designer/*": ["packages/lowcode-designer/src/*"],
       "@smartabp/lowcode-ui-vue": ["packages/lowcode-ui-vue/src/index.ts"],
       "@smartabp/lowcode-ui-vue/*": ["packages/lowcode-ui-vue/src/*"]
     }
@@ -23,6 +25,8 @@
     "src/**/*.js",
     "packages/lowcode-core/src/**/*.ts",
     "packages/lowcode-core/src/**/*.d.ts",
+    "packages/lowcode-designer/src/**/*.ts",
+    "packages/lowcode-designer/src/**/*.d.ts",
     "packages/lowcode-ui-vue/src/**/*.ts",
     "packages/lowcode-ui-vue/src/**/*.d.ts"
   ],
@@ -31,7 +35,6 @@
     "dist",
     "src/views/CodeGenerator/**",
     "src/lowcode-entry.ts",
-    "packages/lowcode-designer/**",
     "packages/lowcode-codegen/**",
     "packages/lowcode-api/**",
     "packages/**/src/__tests__/**",

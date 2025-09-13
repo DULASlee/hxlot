@@ -6,19 +6,12 @@
 import { ref, reactive } from 'vue'
 import { useEventListener, useThrottleFn } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
+import type { DesignerComponent } from '../types/designer'
 
 // 类型定义
 export interface Position {
   x: number
   y: number
-}
-
-export interface DesignerComponent {
-  id: string
-  type: string
-  props: Record<string, unknown>
-  position: Position
-  parentId?: string
 }
 
 export interface DragState {

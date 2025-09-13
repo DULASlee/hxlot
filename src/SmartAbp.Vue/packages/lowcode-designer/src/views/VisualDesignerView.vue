@@ -5,10 +5,10 @@
       <div class="header-left">
         <h2>企业级可视化设计器</h2>
         <div class="mode-switcher">
-          <button 
-            v-for="mode in modes" 
+          <button
+            v-for="mode in modes"
             :key="mode.value"
-            @click="setMode(mode.value)"
+            @click="setMode(mode.value as 'design' | 'preview' | 'code')"
             :class="{ active: currentMode === mode.value }"
             class="mode-btn"
           >
@@ -17,12 +17,12 @@
           </button>
         </div>
       </div>
-      
+
       <div class="header-center">
         <!-- 协作用户 -->
         <div v-if="collaborationEnabled" class="collaboration-users">
-          <div 
-            v-for="user in collaborationUsers" 
+          <div
+            v-for="user in collaborationUsers"
             :key="user.id"
             class="user-avatar"
             :style="{ backgroundColor: user.color }"
@@ -32,7 +32,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="header-right">
         <!-- 性能指标 -->
         <div class="performance-metrics">
@@ -49,7 +49,7 @@
             {{ performanceMetrics.fps }}fps
           </span>
         </div>
-        
+
         <!-- 操作按钮 -->
         <div class="action-buttons">
           <button @click="undo" :disabled="!canUndo" class="btn btn-icon" title="撤销 (Ctrl+Z)">
@@ -66,15 +66,15 @@
         </div>
       </div>
     </div>
-    
+
     <!-- 主要布局 -->
     <div class="designer-layout">
       <!-- 左侧面板 -->
       <div class="designer-sidebar left" :class="{ collapsed: leftPanelCollapsed }">
         <div class="sidebar-header">
           <div class="sidebar-tabs">
-            <button 
-              v-for="tab in leftTabs" 
+            <button
+              v-for="tab in leftTabs"
               :key="tab.key"
               @click="activeLeftTab = tab.key"
               :class="{ active: activeLeftTab === tab.key }"
@@ -88,19 +88,20 @@
             <i :class="leftPanelCollapsed ? 'icon-expand' : 'icon-collapse'"></i>
           </button>
         </div>
-        
+
         <div v-if="!leftPanelCollapsed" class="sidebar-content">
           <!-- 组件库 -->
           <div v-show="activeLeftTab === 'components'" class="tab-panel">
-            <ComponentPalette 
+            <ComponentPalette
+              v-if="designer"
               :component-library="designer.componentLibrary"
               @component-drag-start="handleComponentDragStart"
             />
           </div>
-          
+
           <!-- 图层管理 -->
           <div v-show="activeLeftTab === 'layers'" class="tab-panel">
-            <LayerManager 
+            <LayerManager
               :components="canvasComponents"
               :selected-components="selectedComponents"
               @select-component="selectComponent"
@@ -108,11 +109,11 @@
               @toggle-lock="toggleComponentLock"
             />
           </div>
-          
+
           <!-- AI助手 -->
           <div v-show="activeLeftTab === 'ai'" class="tab-panel">
-            <AIAssistantPanel 
-              v-if="aiEnabled"
+            <AIAssistantPanel
+              v-if="aiEnabled && designer"
               :ai-assistant="designer.aiAssistant"
               :design-context="designContext"
               @apply-suggestion="applySuggestion"
@@ -120,7 +121,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- 画布区域 -->
       <div class="designer-main">
         <!-- 画布工具栏 -->
@@ -138,26 +139,26 @@
                 <i class="icon-zoom-reset"></i>
               </button>
             </div>
-            
+
             <div class="view-controls">
-              <button 
-                @click="toggleGrid" 
+              <button
+                @click="toggleGrid"
                 :class="{ active: showGrid }"
                 class="btn btn-icon"
                 title="显示网格"
               >
                 <i class="icon-grid"></i>
               </button>
-              <button 
-                @click="toggleRulers" 
+              <button
+                @click="toggleRulers"
                 :class="{ active: showRulers }"
                 class="btn btn-icon"
                 title="显示标尺"
               >
                 <i class="icon-rulers"></i>
               </button>
-              <button 
-                @click="toggleMinimap" 
+              <button
+                @click="toggleMinimap"
                 :class="{ active: showMinimap }"
                 class="btn btn-icon"
                 title="显示缩略图"
@@ -166,17 +167,18 @@
               </button>
             </div>
           </div>
-          
+
           <div class="toolbar-right">
             <div class="canvas-size-info">
               {{ canvasSize.width }} × {{ canvasSize.height }}
             </div>
           </div>
         </div>
-        
+
         <!-- 画布容器 -->
         <div class="canvas-container" ref="canvasContainer">
-          <AdvancedCanvasComponent 
+          <AdvancedCanvasComponent
+            v-if="designer"
             ref="canvasRef"
             :canvas-engine="designer.canvas"
             :show-grid="showGrid"
@@ -186,24 +188,24 @@
             @component-update="handleComponentUpdate"
             @canvas-change="handleCanvasChange"
           />
-          
+
           <!-- 缩略图 -->
-          <MinimapComponent 
-            v-if="showMinimap"
+          <MinimapComponent
+            v-if="showMinimap && designer"
             :canvas-engine="designer.canvas"
-            :viewport="viewport"
+            :viewport="{ ...viewport, zoom: viewport.scale }"
             @viewport-change="handleViewportChange"
             class="minimap"
           />
         </div>
       </div>
-      
+
       <!-- 右侧面板 -->
       <div class="designer-sidebar right" :class="{ collapsed: rightPanelCollapsed }">
         <div class="sidebar-header">
           <div class="sidebar-tabs">
-            <button 
-              v-for="tab in rightTabs" 
+            <button
+              v-for="tab in rightTabs"
               :key="tab.key"
               @click="activeRightTab = tab.key"
               :class="{ active: activeRightTab === tab.key }"
@@ -217,27 +219,28 @@
             <i :class="rightPanelCollapsed ? 'icon-expand' : 'icon-collapse'"></i>
           </button>
         </div>
-        
+
         <div v-if="!rightPanelCollapsed" class="sidebar-content">
           <!-- 属性面板 -->
           <div v-show="activeRightTab === 'properties'" class="tab-panel">
-            <PropertyInspector 
+            <PropertyInspector
               :selected-components="selectedComponentsData"
               @update-component="updateComponent"
             />
           </div>
-          
+
           <!-- 样式面板 -->
           <div v-show="activeRightTab === 'styles'" class="tab-panel">
-            <StyleEditor 
+            <StyleEditor
               :selected-components="selectedComponentsData"
               @update-styles="updateComponentStyles"
             />
           </div>
-          
+
           <!-- 版本历史 -->
           <div v-show="activeRightTab === 'history'" class="tab-panel">
-            <VersionHistory 
+            <VersionHistory
+              v-if="designer"
               :version-control="designer.versionControl"
               @restore-version="restoreVersion"
             />
@@ -245,7 +248,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- 状态栏 -->
     <div class="designer-status-bar">
       <div class="status-left">
@@ -258,34 +261,34 @@
           未保存
         </span>
       </div>
-      
+
       <div class="status-right">
         <span class="status-item">
           最后保存: {{ lastSavedText }}
         </span>
       </div>
     </div>
-    
+
     <!-- 对话框和弹窗 -->
-    <ExportDialog 
-      v-if="showExportDialog"
+    <ExportDialog
+      v-if="showExportDialog && designer"
       :designer="designer"
       @close="showExportDialog = false"
       @export="handleExport"
     />
-    
-    <ImportDialog 
+
+    <ImportDialog
       v-if="showImportDialog"
       @close="showImportDialog = false"
       @import="handleImport"
     />
-    
-    <PreviewModal 
+
+    <PreviewModal
       v-if="showPreviewModal"
       :components="canvasComponents"
       @close="showPreviewModal = false"
     />
-    
+
     <!-- 保留原有功能 -->
     <el-card style="margin-top: 20px;">
       <h3>兼容性功能</h3>
@@ -425,11 +428,11 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { EnterpriseDesigner, createEnterpriseDesigner } from '../core/EnterpriseDesigner'
-import type { DesignerComponent, Position } from '../core/AdvancedCanvas'
+import type { CanvasComponent, CanvasViewport } from '../core/AdvancedCanvas'
 import type { CollaborationUser } from '../core/RealTimeCollaboration'
-import type { AISuggestion } from '../core/AIDesignAssistant'
+import type { AIDesignSuggestion } from '../core/AIDesignAssistant'
 import type { PerformanceMetrics } from '../core/PerformanceOptimizer'
 
 // 导入组件
@@ -462,7 +465,7 @@ type DesignerOverrideSchema = any
 const designer = ref<EnterpriseDesigner>()
 
 // stores 目录暂缺最小实现，此处以本地空实现代替，后续补全
-const useDesignerStore = () => ({ components: [], clear: () => {} } as any)
+const useDesignerStore = () => ({ components: ref<any[]>([]), clear: () => {} } as any)
 // UI状态
 const currentMode = ref<'design' | 'preview' | 'code'>('design')
 const leftPanelCollapsed = ref(false)
@@ -571,8 +574,8 @@ const canvasSize = computed(() => {
   return designer.value?.canvas.getCanvasSize() || { width: 1920, height: 1080 }
 })
 
-const viewport = computed(() => {
-  return designer.value?.canvas.getViewport() || { x: 0, y: 0, zoom: 1 }
+const viewport = computed<CanvasViewport>(() => {
+  return designer.value?.canvas.getViewport() || { x: 0, y: 0, scale: 1, width: 0, height: 0 }
 })
 
 const designContext = computed(() => {
@@ -585,11 +588,13 @@ const designContext = computed(() => {
 })
 
 const canUndo = computed(() => {
-  return designer.value?.versionControl.canUndo() || false
+  const state = designer.value?.versionControl.getState()
+  return state ? state.undoStack.length > 0 : false
 })
 
 const canRedo = computed(() => {
-  return designer.value?.versionControl.canRedo() || false
+  const state = designer.value?.versionControl.getState()
+  return state ? state.redoStack.length > 0 : false
 })
 
 const lastSavedText = computed(() => {
@@ -600,7 +605,7 @@ const lastSavedText = computed(() => {
   return `${Math.floor(diff / 3600000)}小时前`
 })
 
-const hasComponents = computed(() => designerStore.components.length > 0)
+const hasComponents = computed(() => designerStore.components.value.length > 0)
 
 const schemaText = computed(() => {
   return generatedCode.value?.designerSchema
@@ -639,7 +644,7 @@ const initializeDesigner = async () => {
 
     // 设置事件监听
     setupDesignerEvents()
-    
+
     statusMessage.value = '设计器初始化完成'
   } catch (error) {
     console.error('设计器初始化失败:', error)
@@ -728,17 +733,16 @@ const exportDesign = () => {
 
 // 缩放控制
 const zoomIn = () => {
-  zoomLevel.value = Math.min(zoomLevel.value * 1.2, 5)
-  designer.value?.canvas.setZoom(zoomLevel.value)
+  const newZoom = Math.min(zoomLevel.value * 1.2, 5)
+  designer.value?.canvas.setZoom(newZoom)
 }
 
 const zoomOut = () => {
-  zoomLevel.value = Math.max(zoomLevel.value / 1.2, 0.1)
-  designer.value?.canvas.setZoom(zoomLevel.value)
+  const newZoom = Math.max(zoomLevel.value / 1.2, 0.1)
+  designer.value?.canvas.setZoom(newZoom)
 }
 
 const resetZoom = () => {
-  zoomLevel.value = 1
   designer.value?.canvas.setZoom(1)
 }
 
@@ -767,11 +771,14 @@ const handleComponentSelect = (componentIds: string[]) => {
   statusMessage.value = componentIds.length > 0 ? `选中了 ${componentIds.length} 个组件` : '取消选择'
 }
 
-const handleComponentUpdate = (componentId: string, updates: Partial<DesignerComponent>) => {
-  statusMessage.value = '组件已更新'
+const handleComponentUpdate = (id: string, updates: Partial<CanvasComponent>) => {
+  designer.value?.updateComponent(id, updates)
+  statusMessage.value = `组件 ${id} 已更新`
 }
 
-const handleCanvasChange = (components: DesignerComponent[]) => {
+const handleCanvasChange = () => {
+  if (!designer.value) return
+  const components = designer.value.canvas.getComponents()
   statusMessage.value = `画布包含 ${components.length} 个组件`
 }
 
@@ -779,7 +786,7 @@ const selectComponent = (componentId: string) => {
   designer.value?.selectComponent(componentId)
 }
 
-const updateComponent = (componentId: string, updates: Partial<DesignerComponent>) => {
+const updateComponent = (componentId: string, updates: Partial<CanvasComponent>) => {
   designer.value?.updateComponent(componentId, updates)
 }
 
@@ -806,9 +813,9 @@ const toggleComponentLock = (componentId: string) => {
 }
 
 // AI助手
-const applySuggestion = async (suggestion: AISuggestion) => {
+const applySuggestion = async (suggestion: AIDesignSuggestion) => {
   try {
-    await designer.value?.aiAssistant.applySuggestion(suggestion)
+    await designer.value?.aiAssistant.applySuggestion(suggestion.id)
     statusMessage.value = '已应用AI建议'
   } catch (error) {
     ElMessage.error('应用AI建议失败')
@@ -826,12 +833,13 @@ const restoreVersion = async (snapshotId: string) => {
 }
 
 // 视口变化
-const handleViewportChange = (newViewport: any) => {
-  designer.value?.canvas.setViewport(newViewport)
+const handleViewportChange = (newViewport: { x: number; y: number; zoom: number }) => {
+  designer.value?.canvas.setViewport(newViewport.x, newViewport.y)
+  designer.value?.canvas.setZoom(newViewport.zoom)
 }
 
 // 导入导出
-const handleExport = (data: any) => {
+const handleExport = () => {
   statusMessage.value = '导出完成'
 }
 
@@ -877,7 +885,7 @@ const handleGenerateCode = async () => {
     generating.value = true
 
     // 生成代码
-    const result = exportDesignerState(designerStore.components, codegenOptions.value)
+    const result = exportDesignerState(designerStore.components.value, codegenOptions.value)
     generatedCode.value = result
 
     // 关闭配置对话框，打开预览对话框
@@ -901,7 +909,7 @@ const onExportSchema = () => {
   }
 
   try {
-    const result = exportDesignerState(designerStore.components, {
+    const result = exportDesignerState(designerStore.components.value, {
       moduleName: 'Demo',
       pageName: 'DemoPage',
       format: 'designer-schema'
@@ -1025,16 +1033,16 @@ const downloadCode = () => {
 // 生命周期
 onMounted(async () => {
   await initializeDesigner()
-  
+
   // 监听窗口大小变化
   const handleResize = () => {
     nextTick(() => {
       // 更新画布大小
     })
   }
-  
+
   window.addEventListener('resize', handleResize)
-  
+
   onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
     designer.value?.destroy()

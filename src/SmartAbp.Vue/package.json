@@ -85,6 +85,7 @@
     "cypress": "^15.1.0",
     "eslint": "^9.34.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-formatter-visualstudio": "^8.40.0",
     "eslint-plugin-boundaries": "^4.2.2",
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-vue": "^9.33.0",

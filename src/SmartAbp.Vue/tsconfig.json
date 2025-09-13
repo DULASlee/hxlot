@@ -5,7 +5,7 @@
     "module": "ESNext",
     "lib": ["ES2020", "ES2021.WeakRef", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
-    "moduleResolution": "Bundler",
+    "moduleResolution": "Node",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -49,6 +49,7 @@
     "src/**/*.vue",
     "src/**/*.tsx",
     "src/**/*.js",
+    "packages/**/*.vue",
     "packages/**/src/**/*.ts",
     "packages/**/src/**/*.d.ts"
   ],
@@ -56,8 +57,7 @@
     "node_modules",
     "dist",
     "src/views/CodeGenerator/**",
-    "packages/lowcode-core/src/__tests__/**",
-    "packages/lowcode-designer/src/**"
+    "packages/lowcode-core/src/__tests__/**"
   ],
   // 已移除对 tsconfig.node.json 的引用，由各自命令行工具按需加载配置
   "references": []

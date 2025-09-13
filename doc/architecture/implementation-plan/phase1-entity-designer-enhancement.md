@@ -6,7 +6,18 @@
 
 ## 技术架构设计
 
-### 1. 增强的实体模型定义
+### 1. 核心数据模型 (Single Source of Truth)
+
+> **[重要架构决策]**
+> 
+> 为确保整个项目的一致性和可维护性，所有与实体相关的类型定义都已统一。
+> 
+> **唯一事实来源**: `src/SmartAbp.Vue/packages/lowcode-designer/src/types/entity.ts`
+> 
+> **执行要求**: 任何与实体、属性、关系、验证规则相关的前端开发，都 **必须** 导入并使用此文件中的类型。本文档后续章节中出现的任何旧的或简化的模型定义均已 **废弃**，仅作历史参考。请以 `entity.ts` 文件中的 `EnhancedEntityModel` 接口为准。
+
+<details>
+<summary>已废弃的旧模型定义 (点击展开)</summary>
 
 ```typescript
 // src/types/enhanced-entity.ts
@@ -74,6 +85,8 @@ export interface EnhancedEntityModel extends EntityModel {
   }
 }
 ```
+
+</details>
 
 ### 2. 关系建模可视化组件
 

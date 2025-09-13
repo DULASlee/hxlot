@@ -253,6 +253,24 @@ const routes: RouteRecordRaw[] = [
         meta: { title: "低代码引擎控制台", menuKey: "lowcode-engine" },
       },
       {
+        path: "designer",
+        name: "LowCodeDesigner",
+        component: () => import("@smartabp/lowcode-designer/views/VisualDesignerView.vue"),
+        meta: {
+          title: "可视化设计",
+          icon: "el-icon-brush",
+        },
+      },
+      {
+        path: "relationship-designer-test",
+        name: "RelationshipDesignerTest",
+        component: () => import("@/views/lowcode/RelationshipDesignerTestView.vue"),
+        meta: {
+          title: "关系设计器测试",
+          icon: "el-icon-link",
+        },
+      },
+      {
         path: "sfc",
         name: "SfcCompiler",
         component: SfcCompilerView,
