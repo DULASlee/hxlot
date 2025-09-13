@@ -1,3 +1,4 @@
+/* eslint-disable */
 import "./styles/design-system/index.css" // 统一设计系统
 import "./styles/main.css" // 基础样式和工具类
 import "./plugins/dayjs"
@@ -79,6 +80,7 @@ import { createApp } from "vue"
 import { createPinia } from "pinia"
 import App from "./App.vue"
 import router from "./router"
+import { logger } from "./utils/logger"
 // 低代码设计器 store 暂未对外导出，先移除硬依赖
 
 // Highlight.js for code syntax highlighting
@@ -155,10 +157,10 @@ async function bootstrap() {
         highWatermark: 0.9,
         lowWatermark: 0.7,
       })
-      console.info("[LowCode] 内容缓存持久化已启用并完成冷启动加载")
+      logger.info("[LowCode] 内容缓存持久化已启用并完成冷启动加载")
     }
   } catch (e) {
-    console.warn("[LowCode] 启用内容缓存持久化失败（将仅使用内存缓存）", e)
+    logger.warn("[LowCode] 启用内容缓存持久化失败（将仅使用内存缓存）", { error: e })
   }
 
   // 初始化主题

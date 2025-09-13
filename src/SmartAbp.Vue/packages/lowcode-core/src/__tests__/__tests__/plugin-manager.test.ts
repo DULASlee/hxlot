@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest"
-import { PluginManager } from "../kernel/plugins"
-import { EventBus } from "../kernel/events"
-import { CacheManager } from "../kernel/cache"
-import { PerformanceMonitor } from "../kernel/monitor"
-import type { CodegenPlugin } from "../kernel/types"
-import { createLowCodeLogger } from "../adapters/logger-adapter"
+import { PluginManager } from "../../kernel/plugins"
+import { EventBus } from "../../kernel/events"
+import { CacheManager } from "../../kernel/cache"
+import { PerformanceMonitor } from "../../kernel/monitor"
+import type { CodegenPlugin } from "../../kernel/types"
+import { createLowCodeLogger } from "../../adapters/logger-adapter"
 
 function makeEnv() {
   const logger = createLowCodeLogger({ module: "pm" })

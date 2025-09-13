@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest"
 
 // 被测目标
-import { createLowCodeLogger } from "../adapters/logger-adapter"
+import { createLowCodeLogger } from "../../adapters/logger-adapter"
 
 // 保证每个用例独立
 beforeEach(() => {

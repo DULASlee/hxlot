@@ -28,10 +28,9 @@ describe('菜单系统测试', () => {
     cy.get('.admin-submenu.show').should('be.visible')
     // 主菜单应该仍然可见
     cy.get('.admin-sidebar').should('be.visible')
-    
+
     // 视觉检查：副菜单应该位于主菜单右侧不覆盖
-    cy.get('.admin-body').then($body => {
-      const bodyRect = $body[0].getBoundingClientRect()
+    cy.get('.admin-body').then(_$body => {
       cy.get('.admin-sidebar').then($sidebar => {
         const sidebarRect = $sidebar[0].getBoundingClientRect()
         cy.get('.admin-submenu.show').then($submenu => {
@@ -47,10 +46,10 @@ describe('菜单系统测试', () => {
     // 先打开副菜单
     cy.contains('系统管理').click()
     cy.get('.admin-submenu.show').should('be.visible')
-    
+
     // 点击隐藏副菜单按钮
     cy.contains('隐藏副菜单').click()
-    
+
     // 确认副菜单已隐藏
     cy.get('.admin-submenu.show').should('not.exist')
   })
@@ -58,31 +57,31 @@ describe('菜单系统测试', () => {
   it('主题切换按钮应该生效', () => {
     // 检查初始主题
     cy.get('html').should('not.have.attr', 'data-theme', 'dark')
-    
+
     // 点击主题切换按钮
     cy.get('.theme-toggle').click()
-    
+
     // 验证主题已切换到暗色
     cy.get('html').should('have.attr', 'data-theme', 'dark')
-    
+
     // 再次点击恢复亮色主题
     cy.get('.theme-toggle').click()
     cy.get('html').should('not.have.attr', 'data-theme', 'dark')
   })
-  
+
   it('折叠侧边栏按钮应该正常工作', () => {
     // 检查初始状态
     cy.get('.admin-sidebar').should('be.visible')
     cy.get('.admin-sidebar').should('not.have.class', 'collapsed')
-    
+
     // 点击折叠按钮
     cy.get('.toggle-sidebar-btn').click()
-    
+
     // 验证侧边栏已折叠
     cy.get('.admin-sidebar').should('have.class', 'collapsed')
-    
+
     // 再次点击展开
     cy.get('.toggle-sidebar-btn').click()
     cy.get('.admin-sidebar').should('not.have.class', 'collapsed')
   })
-}) 
+})

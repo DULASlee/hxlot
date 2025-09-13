@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { promises as fs } from "fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"

@@ -5,9 +5,9 @@ import path from "node:path"
  * 模板参数接口 - 强制执行命名规范
  */
 export interface TemplateParameters {
-  EntityName: string        // PascalCase: Product, User, Order
-  entityName: string        // camelCase: product, user, order
-  ModuleName: string        // 模块名: Catalog, Identity, Sales
+  EntityName: string // PascalCase: Product, User, Order
+  entityName: string // camelCase: product, user, order
+  ModuleName: string // 模块名: Catalog, Identity, Sales
   entityDisplayName: string // 显示名: 产品, 用户, 订单
   "kebab-case-name": string // 短横线: product-management
 }
@@ -40,20 +40,20 @@ export class TemplateRenderer {
    */
   async findTemplateByKeywords(keywords: string[]): Promise<string | null> {
     const keywordMap: Record<string, string> = {
-      "crud": "templates/frontend/components/CrudManagement.template.vue",
-      "management": "templates/frontend/components/CrudManagement.template.vue",
-      "list": "templates/frontend/components/CrudManagement.template.vue",
-      "store": "templates/frontend/stores/EntityStore.template.ts",
-      "pinia": "templates/frontend/stores/EntityStore.template.ts",
-      "service": "templates/backend/application/CrudAppService.template.cs",
-      "dto": "templates/backend/contracts/EntityDto.template.cs",
+      crud: "templates/frontend/components/CrudManagement.template.vue",
+      management: "templates/frontend/components/CrudManagement.template.vue",
+      list: "templates/frontend/components/CrudManagement.template.vue",
+      store: "templates/frontend/stores/EntityStore.template.ts",
+      pinia: "templates/frontend/stores/EntityStore.template.ts",
+      service: "templates/backend/application/CrudAppService.template.cs",
+      dto: "templates/backend/contracts/EntityDto.template.cs",
     }
 
     for (const keyword of keywords) {
       const templatePath = keywordMap[keyword.toLowerCase()]
       if (templatePath) {
         // 🔧 修复：使用正确的模板目录路径
-        const fullPath = path.join(this.templatesDir, templatePath.replace('templates/', ''))
+        const fullPath = path.join(this.templatesDir, templatePath.replace("templates/", ""))
         try {
           await fs.access(fullPath)
           console.log(`✅ 找到模板文件: ${fullPath}`)
@@ -155,7 +155,7 @@ DO NOT EDIT MANUALLY - Regenerate using module wizard
    */
   async generateComponent(
     componentPath: string,
-    params: TemplateParameters
+    params: TemplateParameters,
   ): Promise<{ content: string; templateUsed: string }> {
     console.log(`🔍 正在为组件生成代码: ${componentPath}`)
 
@@ -175,21 +175,23 @@ DO NOT EDIT MANUALLY - Regenerate using module wizard
 
     return {
       content,
-      templateUsed: templatePath
+      templateUsed: templatePath,
     }
   }
 
   /**
    * 📊 生成报告
    */
-  generateReport(results: Array<{
-    component: string
-    templateUsed: string
-    success: boolean
-    error?: string
-  }>): string {
-    const successful = results.filter(r => r.success).length
-    const failed = results.filter(r => !r.success).length
+  generateReport(
+    results: Array<{
+      component: string
+      templateUsed: string
+      success: boolean
+      error?: string
+    }>,
+  ): string {
+    const successful = results.filter((r) => r.success).length
+    const failed = results.filter((r) => !r.success).length
 
     let report = `
 📊 **组件生成报告**
@@ -199,7 +201,7 @@ DO NOT EDIT MANUALLY - Regenerate using module wizard
 📋 **生成详情**:
 `
 
-    results.forEach(result => {
+    results.forEach((result) => {
       const status = result.success ? "✅" : "❌"
       report += `${status} ${result.component}\n`
       report += `   模板: ${result.templateUsed}\n`
@@ -216,16 +218,22 @@ DO NOT EDIT MANUALLY - Regenerate using module wizard
 /**
  * 🎯 智能参数生成 - 从Manifest推导模板参数
  */
-export function generateTemplateParams(manifestName: string, displayName?: string): TemplateParameters {
+export function generateTemplateParams(
+  manifestName: string,
+  displayName?: string,
+): TemplateParameters {
   const EntityName = manifestName.charAt(0).toUpperCase() + manifestName.slice(1)
   const entityName = manifestName.charAt(0).toLowerCase() + manifestName.slice(1)
-  const kebabCaseName = manifestName.toLowerCase().replace(/([A-Z])/g, '-$1').replace(/^-/, '')
+  const kebabCaseName = manifestName
+    .toLowerCase()
+    .replace(/([A-Z])/g, "-$1")
+    .replace(/^-/, "")
 
   return {
     EntityName,
     entityName,
     ModuleName: EntityName,
     entityDisplayName: displayName || EntityName,
-    "kebab-case-name": kebabCaseName
+    "kebab-case-name": kebabCaseName,
   }
 }

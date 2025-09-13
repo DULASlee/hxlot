@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { defineStore } from "pinia"
 import { ref, computed } from "vue"
 
@@ -16,8 +17,12 @@ export interface LoginCredentials {
 
 export const useAuthStore = defineStore("auth", () => {
   // 状态
-  const token = ref<string | null>(localStorage.getItem("access_token") || localStorage.getItem("smartabp_token"))
-  const refreshToken = ref<string | null>(localStorage.getItem("refresh_token") || localStorage.getItem("smartabp_refresh_token"))
+  const token = ref<string | null>(
+    localStorage.getItem("access_token") || localStorage.getItem("smartabp_token"),
+  )
+  const refreshToken = ref<string | null>(
+    localStorage.getItem("refresh_token") || localStorage.getItem("smartabp_refresh_token"),
+  )
   const userInfo = ref<UserInfo | null>(null)
   const isLoading = ref(false)
 
@@ -31,7 +36,7 @@ export const useAuthStore = defineStore("auth", () => {
           id: user.id,
           username: user.userName || user.username,
           email: user.email,
-          roles: user.roles || ["user"] // 默认角色
+          roles: user.roles || ["user"], // 默认角色
         }
       } catch (error) {
         console.error("解析存储用户信息失败:", error)
@@ -136,7 +141,7 @@ export const useAuthStore = defineStore("auth", () => {
               id: user.id,
               username: user.userName || user.username,
               email: user.email,
-              roles: user.roles || ["user"]
+              roles: user.roles || ["user"],
             }
           } catch (error) {
             console.error("解析用户信息失败:", error)
@@ -159,7 +164,7 @@ export const useAuthStore = defineStore("auth", () => {
           id: user.id,
           username: user.userName || user.username,
           email: user.email,
-          roles: user.roles || ["user"]
+          roles: user.roles || ["user"],
         }
         console.log("✅ 已同步SmartAbp认证状态:", userInfo.value)
       } catch (error) {

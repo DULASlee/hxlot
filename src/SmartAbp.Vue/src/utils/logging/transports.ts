@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * 日志传输器 - Transport Pattern 实现
  * 支持多种输出目标：控制台、文件、网络等

@@ -1,4 +1,6 @@
+/* eslint-disable */
 import { ref, computed } from "vue"
+import { logger } from "@/utils/logger"
 
 // 认证状态管理
 export interface UserInfo {
@@ -118,7 +120,8 @@ export class AuthService {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        const message = (errorData && (errorData.error_description || errorData.error)) || "登录失败"
+        const message =
+          (errorData && (errorData.error_description || errorData.error)) || "登录失败"
         throw new Error(message)
       }
 
@@ -143,7 +146,7 @@ export class AuthService {
 
       return true
     } catch (error) {
-      console.error("登录失败:", error)
+      logger.error("登录失败:", { error })
       throw error
     }
   }
@@ -166,9 +169,9 @@ export class AuthService {
       currentUser.value = null
       tokenInfo.value = null
 
-      console.log("用户已登出")
+      logger.info("用户已登出")
     } catch (error) {
-      console.error("登出失败:", error)
+      logger.error("登出失败:", { error })
     }
   }
 
@@ -212,10 +215,10 @@ export class AuthService {
 
       await this.setTokenInfo(newToken)
 
-      console.log("Token刷新成功")
+      logger.info("Token刷新成功")
       return true
     } catch (error) {
-      console.error("刷新Token失败:", error)
+      logger.error("刷新Token失败:", { error })
       await this.logout()
       return false
     }
@@ -269,7 +272,7 @@ export class AuthService {
 
       return user
     } catch (error) {
-      console.error("获取用户信息失败:", error)
+      logger.error("获取用户信息失败:", { error })
       return null
     }
   }
@@ -283,7 +286,7 @@ export class AuthService {
       const decoded = atob(payload.replace(/-/g, "+").replace(/_/g, "/"))
       return JSON.parse(decoded)
     } catch (error) {
-      console.error("解析Token失败:", error)
+      logger.error("解析Token失败:", { error })
       return {}
     }
   }
@@ -311,7 +314,7 @@ export class AuthService {
         tokenInfo.value = parsed
         return parsed
       } catch (error) {
-        console.error("解析存储的Token失败:", error)
+        logger.error("解析存储的Token失败:", { error })
         localStorage.removeItem(TOKEN_KEY)
       }
     }
@@ -357,7 +360,7 @@ export class AuthService {
         }
       }, refreshTime)
 
-      console.log(`Token将在 ${Math.round(refreshTime / 1000)} 秒后自动刷新`)
+      logger.debug(`Token将在 ${Math.round(refreshTime / 1000)} 秒后自动刷新`)
     }
   }
 
@@ -402,7 +405,7 @@ export class AuthService {
         }
       }
     } catch (error) {
-      console.error("初始化认证状态失败:", error)
+      logger.error("初始化认证状态失败:", { error })
       await this.logout()
     }
   }

@@ -9,6 +9,7 @@ import { menuConfig } from "@/config/menus"
 import { MenuPermissionFilter } from "@/utils/menuFilter"
 import type { MenuItem, MenuRenderState, TabItem } from "@/types/menu"
 import { useAuthStore } from "./auth"
+import { logger } from "@/utils/logger"
 
 const menuFilter = new MenuPermissionFilter()
 
@@ -53,7 +54,7 @@ export const useMenuStore = defineStore("menu", () => {
 
   // 过滤后的菜单列表（基于用户权限）
   const filteredMenus = computed(() => {
-    console.log("🍖 计算filteredMenus:", {
+    logger.debug("🍖 计算filteredMenus:", {
       isAuthenticated: authStore.isAuthenticated,
       userInfo: authStore.userInfo,
       token: !!authStore.token,
@@ -75,11 +76,10 @@ export const useMenuStore = defineStore("menu", () => {
       filterPermissions: true,
     })
 
-    console.log(
-      "✅ 过滤后的菜单数量:",
-      filtered.length,
-      filtered.map((m: MenuItem) => m.title),
-    )
+    logger.debug("✅ 过滤后的菜单数量:", {
+      count: filtered.length,
+      titles: filtered.map((m: MenuItem) => m.title),
+    })
     return filtered
   })
 
@@ -166,7 +166,7 @@ export const useMenuStore = defineStore("menu", () => {
       }
     } catch (err) {
       error.value = err instanceof Error ? err.message : "初始化菜单失败"
-      console.error("初始化菜单失败:", err)
+      logger.error("初始化菜单失败:", err)
     } finally {
       loading.value = false
     }
@@ -183,7 +183,7 @@ export const useMenuStore = defineStore("menu", () => {
     )
     menuState.value.expandedMenuKeys = defaultExpanded
 
-    console.log("菜单初始化完成:", {
+    logger.debug("菜单初始化完成:", {
       filteredMenusCount: filteredMenus.value.length,
       expandedMenus: defaultExpanded,
       permissionSummary: permissionSummary.value,
@@ -382,7 +382,7 @@ export const useMenuStore = defineStore("menu", () => {
   watch(
     () => authStore.isAuthenticated,
     (newAuth, oldAuth) => {
-      console.log("🔄 认证状态变化:", {
+      logger.debug("🔄 认证状态变化:", {
         oldAuth,
         newAuth,
         userInfo: authStore.userInfo,
@@ -391,11 +391,11 @@ export const useMenuStore = defineStore("menu", () => {
 
       if (newAuth) {
         // 用户登录，重新初始化菜单
-        console.log("✅ 用户已认证，重新初始化菜单")
+        logger.debug("✅ 用户已认证，重新初始化菜单")
         setupDefaultMenuState()
       } else {
         // 用户登出，重置菜单状态
-        console.log("❌ 用户未认证，重置菜单状态")
+        logger.debug("❌ 用户未认证，重置菜单状态")
         resetMenuState()
       }
     },
@@ -407,11 +407,11 @@ export const useMenuStore = defineStore("menu", () => {
     () => authStore.userInfo,
     (newUserInfo) => {
       if (newUserInfo) {
-        console.log("👤 用户信息更新，刷新菜单:", newUserInfo)
+        logger.debug("👤 用户信息更新，刷新菜单:", newUserInfo)
         setupDefaultMenuState()
       }
     },
-    { deep: true }
+    { deep: true },
   )
 
   // ===========================================

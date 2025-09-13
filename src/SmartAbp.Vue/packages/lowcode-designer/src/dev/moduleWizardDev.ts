@@ -1,31 +1,31 @@
-import type { Plugin } from "vite"
-import path from "node:path"
-import { promises as fs } from "node:fs"
-import { spawn } from "node:child_process"
-import axios from "axios"
+import type { Plugin } from 'vite'
+import path from 'node:path'
+import { promises as fs } from 'node:fs'
+import { spawn } from 'node:child_process'
+import axios from 'axios'
 // 临时Schema校验占位：跳过严格校验，保持开发插件可用
 const ManifestSchema = { parse: (obj: any) => obj }
 
 function readJsonBody(req: any): Promise<any> {
   return new Promise((resolve, reject) => {
-    let data = ""
-    req.on("data", (chunk: any) => (data += chunk))
-    req.on("end", () => {
+    let data = ''
+    req.on('data', (chunk: any) => (data += chunk))
+    req.on('end', () => {
       try {
-        resolve(JSON.parse(data || "{}"))
+        resolve(JSON.parse(data || '{}'))
       } catch (e) {
         reject(e)
       }
     })
-    req.on("error", reject)
+    req.on('error', reject)
   })
 }
 
 async function runCodegen(rootDir: string) {
   await new Promise<void>((resolve, reject) => {
-    const cmd = process.platform === "win32" ? "npm.cmd" : "npm"
-    const p = spawn(cmd, ["run", "codegen"], { cwd: rootDir, stdio: "inherit" })
-    p.on("close", (code) => {
+    const cmd = process.platform === 'win32' ? 'npm.cmd' : 'npm'
+    const p = spawn(cmd, ['run', 'codegen'], { cwd: rootDir, stdio: 'inherit' })
+    p.on('close', code => {
       if (code === 0) resolve()
       else reject(new Error(`codegen 失败 (exit ${code})`))
     })
@@ -33,14 +33,14 @@ async function runCodegen(rootDir: string) {
 }
 
 function deriveFieldsFromSchema(
-  schema: any,
+  schema: any
 ): Array<{ name: string; label: string; type: string; required: boolean }> {
-  if (!schema || typeof schema !== "object") return []
+  if (!schema || typeof schema !== 'object') return []
   const requiredSet = new Set<string>(schema.required || [])
   const props = schema.properties || {}
-  return Object.keys(props).map((key) => {
+  return Object.keys(props).map(key => {
     const prop = props[key]
-    const type = (prop && (prop.type || (prop.format ? "string" : "string"))) || "string"
+    const type = (prop && (prop.type || (prop.format ? 'string' : 'string'))) || 'string'
     return { name: key, label: key, type, required: requiredSet.has(key) }
   })
 }
@@ -57,33 +57,33 @@ async function resolveEntitySchema(swagger: any, entity: string) {
 async function writeScaffold(
   rootDir: string,
   manifest: any,
-  fields: Array<{ name: string; label: string; type: string; required: boolean }>,
+  fields: Array<{ name: string; label: string; type: string; required: boolean }>
 ) {
   const moduleName: string = manifest.name
   const moduleLower = moduleName.toLowerCase()
-  const viewsDir = path.join(rootDir, "src", "views", moduleLower)
-  const storesDir = path.join(rootDir, "src", "stores", "modules")
+  const viewsDir = path.join(rootDir, 'src', 'views', moduleLower)
+  const storesDir = path.join(rootDir, 'src', 'stores', 'modules')
   await fs.mkdir(viewsDir, { recursive: true })
   await fs.mkdir(storesDir, { recursive: true })
 
   const searchInputs = fields
     .slice(0, 3)
     .map(
-      (f) =>
-        `      <el-form-item label="${f.label}"><el-input v-model="query.${f.name}" placeholder="请输入${f.label}" /></el-form-item>`,
+      f =>
+        `      <el-form-item label="${f.label}"><el-input v-model="query.${f.name}" placeholder="请输入${f.label}" /></el-form-item>`
     )
-    .join("\n")
+    .join('\n')
   const tableCols = fields
     .slice(0, 6)
-    .map((f) => `      <el-table-column prop="${f.name}" label="${f.label}" />`)
-    .join("\n")
+    .map(f => `      <el-table-column prop="${f.name}" label="${f.label}" />`)
+    .join('\n')
   const formItems = fields
     .slice(0, 6)
     .map(
-      (f) =>
-        `      <el-form-item label="${f.label}"><el-input v-model="form.${f.name}" placeholder="请输入${f.label}" /></el-form-item>`,
+      f =>
+        `      <el-form-item label="${f.label}"><el-input v-model="form.${f.name}" placeholder="请输入${f.label}" /></el-form-item>`
     )
-    .join("\n")
+    .join('\n')
 
   const listView = `<template>
   <div class="${moduleLower}-list" data-block-id="${moduleLower}-list-root">
@@ -198,46 +198,46 @@ export const use${moduleName}Store = defineStore('${moduleLower}', () => {
 })
 `
 
-  await fs.writeFile(path.join(viewsDir, `${moduleName}ListView.vue`), listView, "utf-8")
-  await fs.writeFile(path.join(viewsDir, `${moduleName}Management.vue`), managementView, "utf-8")
-  await fs.writeFile(path.join(storesDir, `${moduleLower}.ts`), storeTs, "utf-8")
+  await fs.writeFile(path.join(viewsDir, `${moduleName}ListView.vue`), listView, 'utf-8')
+  await fs.writeFile(path.join(viewsDir, `${moduleName}Management.vue`), managementView, 'utf-8')
+  await fs.writeFile(path.join(storesDir, `${moduleLower}.ts`), storeTs, 'utf-8')
 }
 
 export function moduleWizardDevPlugin(): Plugin {
   return {
-    name: "module-wizard-dev",
-    apply: "serve",
+    name: 'module-wizard-dev',
+    apply: 'serve',
     configureServer(server) {
       const rootDir = server.config.root
 
-      server.middlewares.use("/__module-wizard/openapi/fields", async (req, res) => {
-        const urlObj = new URL(req.url || "", "http://localhost")
-        const swaggerUrl = urlObj.searchParams.get("url") || ""
-        const entity = urlObj.searchParams.get("entity") || ""
+      server.middlewares.use('/__module-wizard/openapi/fields', async (req, res) => {
+        const urlObj = new URL(req.url || '', 'http://localhost')
+        const swaggerUrl = urlObj.searchParams.get('url') || ''
+        const entity = urlObj.searchParams.get('entity') || ''
         try {
           const { data } = await axios.get(swaggerUrl)
           const schema = await resolveEntitySchema(data, entity)
           const fields = deriveFieldsFromSchema(schema)
-          res.setHeader("Content-Type", "application/json")
+          res.setHeader('Content-Type', 'application/json')
           res.end(JSON.stringify({ ok: true, fields }))
         } catch (e: any) {
           res.statusCode = 500
-          res.end(JSON.stringify({ ok: false, message: e?.message || "解析失败" }))
+          res.end(JSON.stringify({ ok: false, message: e?.message || '解析失败' }))
         }
       })
 
-      server.middlewares.use("/__module-wizard/add", async (req, res) => {
-        if (req.method !== "POST") {
+      server.middlewares.use('/__module-wizard/add', async (req, res) => {
+        if (req.method !== 'POST') {
           res.statusCode = 405
-          return res.end("Method Not Allowed")
+          return res.end('Method Not Allowed')
         }
         try {
           const body = await readJsonBody(req)
           const manifest = ManifestSchema.parse(body?.manifest || body)
-          const modulesDir = path.join(rootDir, "modules", manifest.name)
+          const modulesDir = path.join(rootDir, 'modules', manifest.name)
           await fs.mkdir(modulesDir, { recursive: true })
-          const manifestPath = path.join(modulesDir, "abp.module.json")
-          await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2), "utf-8")
+          const manifestPath = path.join(modulesDir, 'abp.module.json')
+          await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2), 'utf-8')
 
           // 生成基础页面与Store占位
           const fields = Array.isArray(body?.fields) ? body.fields : []
@@ -253,21 +253,21 @@ export function moduleWizardDevPlugin(): Plugin {
             ? manifest.routes.map((r: any) => r.meta?.menuKey).filter(Boolean)
             : []
 
-          res.setHeader("Content-Type", "application/json")
+          res.setHeader('Content-Type', 'application/json')
           res.end(
             JSON.stringify({
               ok: true,
               manifest: `modules/${manifest.name}/abp.module.json`,
               routes,
-              menuKeys,
-            }),
+              menuKeys
+            })
           )
         } catch (e: any) {
           res.statusCode = 500
-          res.end(JSON.stringify({ ok: false, message: e?.message || "生成失败" }))
+          res.end(JSON.stringify({ ok: false, message: e?.message || '生成失败' }))
         }
       })
-    },
+    }
   }
 }
 

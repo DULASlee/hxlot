@@ -203,7 +203,7 @@ export const generatedMenus = ${JSON.stringify(menuItems, null, 2)}
           // 使用模板渲染引擎生成组件
           const { content, templateUsed } = await this.templateRenderer.generateComponent(
             route.component,
-            params
+            params,
           )
 
           // 确保目录存在
@@ -215,11 +215,10 @@ export const generatedMenus = ${JSON.stringify(menuItems, null, 2)}
           results.push({
             component: route.component,
             templateUsed,
-            success: true
+            success: true,
           })
 
           console.log(`✅ 组件生成成功: ${route.component}`)
-
         } catch (error) {
           const errorMsg = error instanceof Error ? error.message : String(error)
           console.error(`❌ 组件生成失败: ${route.component} - ${errorMsg}`)
@@ -228,7 +227,7 @@ export const generatedMenus = ${JSON.stringify(menuItems, null, 2)}
             component: route.component,
             templateUsed: "未知",
             success: false,
-            error: errorMsg
+            error: errorMsg,
           })
         }
       }
@@ -242,7 +241,7 @@ export const generatedMenus = ${JSON.stringify(menuItems, null, 2)}
     const reportPath = path.join(this.rootDir, "src/appshell/generation-report.md")
     await fs.writeFile(reportPath, report, "utf-8")
 
-    const successful = results.filter(r => r.success).length
+    const successful = results.filter((r) => r.success).length
     const total = results.length
 
     if (successful === total) {
@@ -270,14 +269,13 @@ export const generatedMenus = ${JSON.stringify(menuItems, null, 2)}
           // 使用Store模板生成
           const { content } = await this.templateRenderer.generateComponent(
             store.modulePath,
-            params
+            params,
           )
 
           await fs.mkdir(path.dirname(fullStorePath), { recursive: true })
           await fs.writeFile(fullStorePath, content, "utf-8")
 
           console.log(`✅ Store文件生成成功: ${store.modulePath}`)
-
         } catch (error) {
           console.error(`❌ Store文件生成失败: ${store.modulePath} - ${error}`)
         }

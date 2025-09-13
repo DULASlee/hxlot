@@ -132,19 +132,19 @@ class Logger {
   // 兼容旧API：通用log入口，非法级别忽略，不抛错
   log(level: unknown, message: string, data?: any) {
     switch (level) {
-      case 'debug':
+      case "debug":
       case LogLevel.DEBUG:
         return this.debug(message, data)
-      case 'info':
+      case "info":
       case LogLevel.INFO:
         return this.info(message, data)
-      case 'success':
+      case "success":
       case LogLevel.SUCCESS:
         return this.success(message, data)
-      case 'warn':
+      case "warn":
       case LogLevel.WARN:
         return this.warn(message, data)
-      case 'error':
+      case "error":
       case LogLevel.ERROR:
         return this.error(message, data)
       default:

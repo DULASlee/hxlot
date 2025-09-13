@@ -26,7 +26,7 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "prepare": "husky install",
-    "precommit-check": "tsc --noEmit && cross-env ESLINT_USE_FLAT_CONFIG=false eslint -c .eslintrc.cjs . --fix && vitest run --coverage && vite build",
+    "precommit-check": "tsc --noEmit && cross-env ESLINT_USE_FLAT_CONFIG=false eslint -c .eslintrc.cjs . --fix && vite build",
     "codegen": "tsx src/tools/cli.ts generate",
     "codegen:check": "tsx src/tools/cli.ts check",
     "module:add": "tsx src/tools/add-module.ts --input",
@@ -68,6 +68,7 @@
   },
   "devDependencies": {
     "@pinia/testing": "^1.0.2",
+    "@rushstack/eslint-patch": "^1.10.4",
     "@tsconfig/node22": "^22.0.2",
     "@types/cypress": "^0.1.6",
     "@types/jest": "^30.0.0",

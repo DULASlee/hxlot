@@ -18,8 +18,8 @@ DO NOT EDIT MANUALLY - Regenerate using module wizard
  *   - User: 模块名称
  */
 
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { defineStore } from "pinia"
+import { ref, computed } from "vue"
 import type {
   User,
   CreateUserDto,
@@ -27,15 +27,15 @@ import type {
   GetUserListDto,
   PagedResultDto,
   UserListItem,
-  UserQueryParams
-} from '@/types/user'
-import { userService } from '@/services/userService'
+  UserQueryParams,
+} from "@/types/user"
+import { userService } from "@/services/userService"
 
 // 重新导出类型供其他模块使用
-export type { User } from '@/types/user'
-import { ElMessage } from 'element-plus'
+export type { User } from "@/types/user"
+import { ElMessage } from "element-plus"
 
-export const useUserStore = defineStore('user', () => {
+export const useUserStore = defineStore("user", () => {
   // 状态定义
   const items = ref<UserListItem[]>([])
   const currentItem = ref<User | null>(null)
@@ -51,20 +51,22 @@ export const useUserStore = defineStore('user', () => {
   const isLoading = computed(() => loading.value)
   const isSubmitting = computed(() => submitting.value)
   const hasItems = computed(() => items.value.length > 0)
-  const enabledItems = computed(() => items.value.filter(item => item.isActive))
+  const enabledItems = computed(() => items.value.filter((item) => item.isActive))
 
   // 获取列表数据
   const fetchList = async (params?: GetUserListDto): Promise<PagedResultDto<UserListItem>> => {
     try {
       loading.value = true
 
-      const queryParams: UserQueryParams = params ? {
-        pageIndex: Math.floor((params.skipCount || 0) / (params.maxResultCount || 20)) + 1,
-        pageSize: params.maxResultCount || 20,
-        filter: params.filter,
-        sorting: params.sorting
-      } : { pageIndex: 1, pageSize: 20 }
-      
+      const queryParams: UserQueryParams = params
+        ? {
+            pageIndex: Math.floor((params.skipCount || 0) / (params.maxResultCount || 20)) + 1,
+            pageSize: params.maxResultCount || 20,
+            filter: params.filter,
+            sorting: params.sorting,
+          }
+        : { pageIndex: 1, pageSize: 20 }
+
       const result = await userService.getList(queryParams)
 
       // 更新状态
@@ -73,8 +75,8 @@ export const useUserStore = defineStore('user', () => {
 
       return result
     } catch (error) {
-      console.error('获取User列表失败:', error)
-      ElMessage.error('获取数据失败')
+      console.error("获取User列表失败:", error)
+      ElMessage.error("获取数据失败")
       throw error
     } finally {
       loading.value = false
@@ -94,8 +96,8 @@ export const useUserStore = defineStore('user', () => {
 
       return result
     } catch (error) {
-      console.error('创建User失败:', error)
-      ElMessage.error('创建失败')
+      console.error("创建User失败:", error)
+      ElMessage.error("创建失败")
       throw error
     } finally {
       submitting.value = false
@@ -110,15 +112,15 @@ export const useUserStore = defineStore('user', () => {
       const result = await userService.update(id, data)
 
       // 更新本地状态 (转换为UserListItem格式)
-      const index = items.value.findIndex(item => item.id === id)
+      const index = items.value.findIndex((item) => item.id === id)
       if (index !== -1) {
         items.value[index] = result as UserListItem
       }
 
       return result
     } catch (error) {
-      console.error('更新User失败:', error)
-      ElMessage.error('更新失败')
+      console.error("更新User失败:", error)
+      ElMessage.error("更新失败")
       throw error
     } finally {
       submitting.value = false
@@ -133,15 +135,14 @@ export const useUserStore = defineStore('user', () => {
       await userService.delete(id)
 
       // 更新本地状态
-      const index = items.value.findIndex(item => item.id === id)
+      const index = items.value.findIndex((item) => item.id === id)
       if (index !== -1) {
         items.value.splice(index, 1)
         total.value -= 1
       }
-
     } catch (error) {
-      console.error('删除User失败:', error)
-      ElMessage.error('删除失败')
+      console.error("删除User失败:", error)
+      ElMessage.error("删除失败")
       throw error
     } finally {
       submitting.value = false
@@ -156,12 +157,11 @@ export const useUserStore = defineStore('user', () => {
       await userService.batchDelete(ids)
 
       // 更新本地状态
-      items.value = items.value.filter(item => !ids.includes(item.id))
+      items.value = items.value.filter((item) => !ids.includes(item.id))
       total.value -= ids.length
-
     } catch (error) {
-      console.error('批量删除User失败:', error)
-      ElMessage.error('批量删除失败')
+      console.error("批量删除User失败:", error)
+      ElMessage.error("批量删除失败")
       throw error
     } finally {
       submitting.value = false
@@ -188,7 +188,7 @@ export const useUserStore = defineStore('user', () => {
     create,
     update,
     delete: remove,
-    deleteMany
+    deleteMany,
   }
 })
 

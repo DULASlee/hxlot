@@ -199,9 +199,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useThemeStore } from '@/stores'
+import { ref, computed, onMounted, onUnmounted } from "vue"
+import { useRouter } from "vue-router"
+import { useThemeStore } from "@/stores"
+import { logger } from "@/utils/logger"
 
 const router = useRouter()
 const themeStore = useThemeStore()
@@ -231,13 +232,13 @@ const themes = [
 
 // 计算属性
 const deviceType = computed(() => {
-  if (windowWidth.value < 768) return '移动设备'
-  if (windowWidth.value < 1024) return '平板设备'
-  return '桌面设备'
+  if (windowWidth.value < 768) return "移动设备"
+  if (windowWidth.value < 1024) return "平板设备"
+  return "桌面设备"
 })
 
 // 方法
-const addLog = (message: string, type: string = 'info') => {
+const addLog = (message: string, type: string = "info") => {
   testLogs.value.unshift({
     time: new Date().toLocaleTimeString(),
     message,
@@ -252,22 +253,22 @@ const addLog = (message: string, type: string = 'info') => {
 
 const switchTheme = (theme: string) => {
   themeStore.setTheme(theme as any)
-  addLog(`主题已切换到: ${theme}`, 'success')
+  addLog(`主题已切换到: ${theme}`, "success")
 }
 
 const toggleDark = () => {
   themeStore.toggleDarkMode()
-  addLog(`一键暗黑切换: ${themeStore.isDarkMode ? '暗黑模式' : '浅色模式'}`, 'success')
+  addLog(`一键暗黑切换: ${themeStore.isDarkMode ? "暗黑模式" : "浅色模式"}`, "success")
 }
 
 const testSidebar = () => {
   sidebarCollapsed.value = !sidebarCollapsed.value
-  addLog(`侧边栏${sidebarCollapsed.value ? '已收起' : '已展开'}`, 'info')
+  addLog(`侧边栏${sidebarCollapsed.value ? "已收起" : "已展开"}`, "info")
 }
 
 const testSubmenu = () => {
   showSubmenu.value = !showSubmenu.value
-  addLog(`副菜单${showSubmenu.value ? '已显示' : '已隐藏'}`, 'info')
+  addLog(`副菜单${showSubmenu.value ? "已显示" : "已隐藏"}`, "info")
 }
 
 const addTestTab = () => {
@@ -277,58 +278,58 @@ const addTestTab = () => {
     closable: true
   }
   tabs.value.push(testTab)
-  addLog(`添加了测试标签: ${testTab.title}`, 'info')
+  addLog(`添加了测试标签: ${testTab.title}`, "info")
 }
 
 const closeAllTabs = () => {
   const closableCount = tabs.value.filter((tab: any) => tab.closable).length
   tabs.value = tabs.value.filter((tab: any) => !tab.closable)
-  addLog(`关闭了 ${closableCount} 个标签页`, 'info')
+  addLog(`关闭了 ${closableCount} 个标签页`, "info")
 }
 
 const navigateTo = (path: string) => {
   router.push(path)
-  addLog(`导航到: ${path}`, 'info')
+  addLog(`导航到: ${path}`, "info")
 }
 
 const saveToStorage = () => {
   if (!testData.value) {
-    storageResult.value = '请输入测试数据'
-    addLog('保存失败: 数据为空', 'error')
+    storageResult.value = "请输入测试数据"
+    addLog("保存失败: 数据为空", "error")
     return
   }
 
-  localStorage.setItem('smartabp_test_data', testData.value)
-  storageResult.value = '数据已保存到本地存储'
-  addLog(`保存数据到本地存储: ${testData.value}`, 'success')
+  localStorage.setItem("smartabp_test_data", testData.value)
+  storageResult.value = "数据已保存到本地存储"
+  addLog(`保存数据到本地存储: ${testData.value}`, "success")
 }
 
 const loadFromStorage = () => {
-  const data = localStorage.getItem('smartabp_test_data')
+  const data = localStorage.getItem("smartabp_test_data")
   if (data) {
     testData.value = data
-    storageResult.value = '数据已从本地存储加载'
-    addLog(`从本地存储加载数据: ${data}`, 'success')
+    storageResult.value = "数据已从本地存储加载"
+    addLog(`从本地存储加载数据: ${data}`, "success")
   } else {
-    storageResult.value = '本地存储中没有数据'
-    addLog('本地存储中没有找到数据', 'warning')
+    storageResult.value = "本地存储中没有数据"
+    addLog("本地存储中没有找到数据", "warning")
   }
 }
 
 const clearStorage = () => {
-  localStorage.removeItem('smartabp_test_data')
-  testData.value = ''
-  storageResult.value = '本地存储数据已清除'
-  addLog('本地存储数据已清除', 'info')
+  localStorage.removeItem("smartabp_test_data")
+  testData.value = ""
+  storageResult.value = "本地存储数据已清除"
+  addLog("本地存储数据已清除", "info")
 }
 
 const testResponsive = () => {
-  addLog(`当前窗口宽度: ${windowWidth.value}px, 设备类型: ${deviceType.value}`, 'info')
+  addLog(`当前窗口宽度: ${windowWidth.value}px, 设备类型: ${deviceType.value}`, "info")
 }
 
 const clearLogs = () => {
   testLogs.value = []
-  addLog('测试日志已清除', 'info')
+  addLog("测试日志已清除", "info")
 }
 
 // 窗口大小变化监听
@@ -338,14 +339,14 @@ const handleResize = () => {
 
 // 生命周期
 onMounted(() => {
-  window.addEventListener('resize', handleResize)
-  addLog('SmartAbp 系统测试页面已加载', 'success')
-  addLog(`当前主题: ${themeStore.currentTheme}`, 'info')
-  addLog(`当前路由: ${router.currentRoute.value.path}`, 'info')
+  window.addEventListener("resize", handleResize)
+  addLog("SmartAbp 系统测试页面已加载", "success")
+  addLog(`当前主题: ${themeStore.currentTheme}`, "info")
+  addLog(`当前路由: ${router.currentRoute.value.path}`, "info")
 })
 
 onUnmounted(() => {
-  window.removeEventListener('resize', handleResize)
+  window.removeEventListener("resize", handleResize)
 })
 </script>
 

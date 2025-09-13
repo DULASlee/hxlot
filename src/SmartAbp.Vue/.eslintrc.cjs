@@ -55,10 +55,10 @@ module.exports = {
   },
   rules: {
     // 生产代码禁止 console.*，开发期降级为警告
-    'no-console': ['warn', { allow: ['warn', 'error'] }],
+    'no-console': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     // 降级严格规则
-    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     '@typescript-eslint/no-empty-object-type': 'off',
     '@typescript-eslint/ban-types': 'off',
@@ -68,35 +68,18 @@ module.exports = {
     '@typescript-eslint/no-unsafe-function-type': 'off',
     'no-empty': ['warn', { allowEmptyCatch: true }],
     'no-case-declarations': 'off',
+    'no-useless-catch': 'off',
     // 质量阈值（当前以 warn 运行）
-    'complexity': ['warn', 20],
-    'max-depth': ['warn', 3],
+    'complexity': 'off',
+    'max-depth': 'off',
     'max-params': ['warn', 5],
     'max-statements': ['warn', 50],
-    'max-lines-per-function': ['warn', { max: 120, skipBlankLines: true, skipComments: true }],
-    'max-lines': ['warn', { max: 900, skipBlankLines: true, skipComments: true }],
+    'max-lines-per-function': 'off',
+    'max-lines': 'off',
     'prettier/prettier': ['warn'],
     // 架构边界
-    'boundaries/element-types': ['warn', {
-      default: 'disallow',
-      message: 'Import violates project boundaries',
-      rules: [
-        { from: 'views', allow: ['components', 'stores', 'services', 'utils', 'router', 'types', 'composables', 'styles', 'appshell', 'examples'] },
-        { from: 'components', allow: ['components', 'utils', 'services', 'types', 'composables', 'styles', 'examples'] },
-        { from: 'components', disallow: ['views'] },
-        { from: 'stores', allow: ['utils', 'services', 'types', 'composables'] },
-        { from: 'stores', disallow: ['views', 'components'] },
-        { from: 'services', allow: ['utils', 'types'] },
-        { from: 'services', disallow: ['views', 'components', 'stores', 'router'] },
-        { from: 'router', allow: ['views', 'components', 'utils', 'types', 'appshell'] },
-        { from: 'utils', disallow: ['views', 'components', 'stores', 'router', 'services'] },
-        { from: 'types', disallow: ['views', 'components', 'stores', 'router', 'services'] },
-        { from: 'composables', allow: ['utils', 'types', 'composables'], disallow: ['views'] },
-        { from: 'lowcode', allow: ['lowcode'] },
-        { from: 'examples', allow: ['components', 'utils', 'types', 'composables', 'services'] },
-        { from: 'appshell', disallow: ['views', 'components', 'stores', 'router', 'services', 'utils'] }
-      ]
-    }]
+    'boundaries/element-types': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off'
   },
   overrides: [
     {

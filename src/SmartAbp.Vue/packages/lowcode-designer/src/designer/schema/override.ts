@@ -14,20 +14,20 @@ export interface DesignerOverrideSchema {
   }
   operations: Array<
     | {
-        type: "add"
+        type: 'add'
         targetSelector: { blockId?: string; dataNodeId?: string }
         componentType: string
         props?: Record<string, unknown>
         position?: { index?: number }
       }
     | {
-        type: "update"
+        type: 'update'
         targetSelector: { blockId?: string; dataNodeId?: string }
         propPatches?: Record<string, unknown>
         eventPatches?: Record<string, string>
       }
     | {
-        type: "remove"
+        type: 'remove'
         targetSelector: { blockId?: string; dataNodeId?: string }
       }
   >

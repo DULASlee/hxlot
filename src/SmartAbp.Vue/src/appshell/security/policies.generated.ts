@@ -5,5 +5,5 @@ export const generatedPolicies = {
   "User.Create": "User",
   "User.Read": "User",
   "User.Update": "User",
-  "User.Delete": "User"
+  "User.Delete": "User",
 }

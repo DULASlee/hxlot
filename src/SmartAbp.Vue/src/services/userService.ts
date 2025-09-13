@@ -6,24 +6,24 @@ Based on SmartAbp template library
 DO NOT EDIT MANUALLY - Regenerate using module wizard
 */
 
-import { 
-  User, 
-  CreateUserDto, 
-  UpdateUserDto, 
-  GetUserListDto, 
+import {
+  User,
+  CreateUserDto,
+  UpdateUserDto,
+  GetUserListDto,
   PagedResultDto,
   UserListItem,
   UserQueryParams,
-  UserStatistics
-} from '@/types/user'
-import { api } from '@/utils/api'
+  UserStatistics,
+} from "@/types/user"
+import { api } from "@/utils/api"
 
 /**
  * 用户服务
  * 基于ABP框架的RESTful API
  */
 class UserService {
-  private readonly baseUrl = '/api/identity/users'
+  private readonly baseUrl = "/api/identity/users"
 
   /**
    * 获取用户列表
@@ -35,8 +35,8 @@ class UserService {
         sorting: params.sorting,
         skipCount: (params.pageIndex - 1) * params.pageSize,
         maxResultCount: params.pageSize,
-        isActive: params.isActive
-      }
+        isActive: params.isActive,
+      },
     })
     return response
   }
@@ -83,8 +83,8 @@ class UserService {
    * 重置密码
    */
   async resetPassword(id: string, newPassword: string): Promise<void> {
-    await api.post(`${this.baseUrl}/${id}/reset-password`, { 
-      newPassword 
+    await api.post(`${this.baseUrl}/${id}/reset-password`, {
+      newPassword,
     })
   }
 
@@ -96,7 +96,7 @@ class UserService {
   }
 
   /**
-   * 解锁用户  
+   * 解锁用户
    */
   async unlock(id: string): Promise<void> {
     await api.post(`${this.baseUrl}/${id}/unlock`)
@@ -115,7 +115,7 @@ class UserService {
    */
   async checkUserNameAvailability(userName: string, excludeId?: string): Promise<boolean> {
     const response = await api.get(`${this.baseUrl}/check-username`, {
-      params: { userName, excludeId }
+      params: { userName, excludeId },
     })
     return response.isAvailable
   }
@@ -125,7 +125,7 @@ class UserService {
    */
   async checkEmailAvailability(email: string, excludeId?: string): Promise<boolean> {
     const response = await api.get(`${this.baseUrl}/check-email`, {
-      params: { email, excludeId }
+      params: { email, excludeId },
     })
     return response.isAvailable
   }
@@ -136,7 +136,7 @@ class UserService {
   async exportToExcel(params: GetUserListDto): Promise<Blob> {
     const response = await api.get(`${this.baseUrl}/export`, {
       params,
-      responseType: 'blob'
+      responseType: "blob",
     })
     return response
   }
@@ -146,12 +146,12 @@ class UserService {
    */
   async importFromExcel(file: File): Promise<void> {
     const formData = new FormData()
-    formData.append('file', file)
-    
+    formData.append("file", file)
+
     await api.post(`${this.baseUrl}/import`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        "Content-Type": "multipart/form-data",
+      },
     })
   }
 }

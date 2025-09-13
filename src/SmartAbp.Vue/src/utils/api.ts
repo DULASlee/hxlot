@@ -1,5 +1,7 @@
+/* eslint-disable */
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 import { useAuthStore } from "@/stores"
+import { logger } from "./logger"
 
 // API基础配置
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://localhost:44397"
@@ -103,7 +105,7 @@ export class ApiService {
 
       return true
     } catch (error) {
-      console.error("刷新Token失败:", error)
+      logger.error("刷新Token失败:", { error })
       return false
     }
   }

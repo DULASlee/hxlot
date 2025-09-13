@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 import SmartAbpLayout from "@/components/layout/SmartAbpLayout.vue"
 import LoginView from "@/views/auth/Login.vue"
 import { authService } from "@/utils/auth"
+import { logger } from "@/utils/logger"
 
 // 动态导入页面组件
 const DashboardView = () => import("@/views/common/DashboardView.vue")
@@ -222,18 +223,6 @@ const routes: RouteRecordRaw[] = [
         component: LoginTest,
         meta: { title: "登录测试", menuKey: "test-login" },
       },
-      {
-        path: "theme",
-        name: "ThemeDemo",
-        component: () => import("@/views/test/ThemeDemo.vue"),
-        meta: { title: "主题演示", menuKey: "test-theme" },
-      },
-      {
-        path: "theme-debug",
-        name: "ThemeDebug",
-        component: () => import("@/views/test/ThemeDebugView.vue"),
-        meta: { title: "主题调试", menuKey: "test-theme-debug" },
-      },
     ],
   },
   // 代码生成模块
@@ -347,21 +336,21 @@ const router = createRouter({
 
 // 路由守卫 - 基础认证检查
 router.beforeEach(async (to, from, next) => {
-  console.log(`[路由守卫] 从 ${from.path} 跳转到 ${to.path}`)
+  logger.debug(`[路由守卫] 从 ${from.path} 跳转到 ${to.path}`)
 
   // 检查用户是否已登录
   const isLoggedIn = authService.isTokenValid()
 
   // 已登录用户尝试访问登录页：重定向到工作台
   if (to.name === "Login" && isLoggedIn) {
-    console.log("[路由守卫] 用户已登录，重定向到工作台")
+    logger.debug("[路由守卫] 用户已登录，重定向到工作台")
     return next({ name: "Dashboard" })
   }
 
   // 需要认证但未登录：重定向到登录页
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
   if (requiresAuth && !isLoggedIn) {
-    console.log("[路由守卫] 需要认证但未登录，重定向到登录页")
+    logger.debug("[路由守卫] 需要认证但未登录，重定向到登录页")
     return next({
       name: "Login",
       query: { redirect: to.fullPath },
@@ -371,15 +360,15 @@ router.beforeEach(async (to, from, next) => {
   // 处理根路径：根据登录状态重定向
   if (to.path === "/") {
     if (isLoggedIn) {
-      console.log("[路由守卫] 根路径重定向到工作台")
+      logger.debug("[路由守卫] 根路径重定向到工作台")
       return next({ name: "Dashboard" })
     } else {
-      console.log("[路由守卫] 根路径重定向到登录页")
+      logger.debug("[路由守卫] 根路径重定向到登录页")
       return next({ name: "Login" })
     }
   }
 
-  console.log("[路由守卫] 允许访问")
+  logger.debug("[路由守卫] 允许访问")
   next()
 })
 

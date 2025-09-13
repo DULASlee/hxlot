@@ -166,24 +166,25 @@ class LogManager {
     }>,
   ) {
     for (const e of entries) {
+      const options = { ...(e.data || {}), category: e.category }
       switch (e.level) {
         case LogLevel.DEBUG:
-          logger.debug(e.message, { ...(e.data || {}), category: e.category })
+          logger.debug(e.message, options)
           break
         case LogLevel.INFO:
-          logger.info(e.message, { ...(e.data || {}), category: e.category })
+          logger.info(e.message, options)
           break
         case LogLevel.SUCCESS:
-          logger.success(e.message, { ...(e.data || {}), category: e.category })
+          logger.success(e.message, options)
           break
         case LogLevel.WARN:
-          logger.warn(e.message, { ...(e.data || {}), category: e.category })
+          logger.warn(e.message, options)
           break
         case LogLevel.ERROR:
-          logger.error(e.message, { ...(e.data || {}), category: e.category })
+          logger.error(e.message, options)
           break
         default:
-          logger.info(e.message, { ...(e.data || {}), category: e.category })
+          logger.info(e.message, options)
       }
     }
   }

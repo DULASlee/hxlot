@@ -6,7 +6,7 @@ Based on SmartAbp template library
 DO NOT EDIT MANUALLY - Regenerate using module wizard
 -->
 
-<!-- 
+<!--
 AI_TEMPLATE_INFO:
 模板类型: Vue CRUD管理组件
 适用场景: 标准的数据管理页面，包含列表、搜索、新增、编辑、删除功能
@@ -57,7 +57,7 @@ AI_TEMPLATE_INFO:
             @keyup.enter="handleSearch"
           />
         </el-form-item>
-        
+
         <el-form-item label="状态" prop="isEnabled">
           <el-select
             v-model="searchForm.isEnabled"
@@ -113,7 +113,7 @@ AI_TEMPLATE_INFO:
         @sort-change="handleSortChange"
       >
         <el-table-column type="selection" width="50" />
-        
+
         <el-table-column
           prop="name"
           label="名称"
@@ -287,9 +287,9 @@ AI_TEMPLATE_INFO:
 // user - 实体名称（camelCase）
 // 用户管理 - 实体显示名称
 
-import { ref, reactive, onMounted, computed } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Search, Refresh, Delete } from '@element-plus/icons-vue'
+import { ref, reactive, onMounted, computed } from "vue"
+import { ElMessage, ElMessageBox } from "element-plus"
+import { Plus, Search, Refresh, Delete } from "@element-plus/icons-vue"
 
 // 导入说明：以下导入需要根据实际项目结构调整
 // import { useUserStore } from '@/stores/modules/user'
@@ -297,19 +297,19 @@ import { Plus, Search, Refresh, Delete } from '@element-plus/icons-vue'
 // import type { UserDto, CreateUserDto, UpdateUserDto } from '@/types/user'
 
 // 响应式数据
-const loading = ref(false)
-const submitting = ref(false)
-const dialogVisible = ref(false)
+const loading = ref(false);
+const submitting = ref(false);
+const dialogVisible = ref(false);
 const selectedRows = ref<any[]>([])
 
 // 表单引用
-const searchFormRef = ref()
-const formRef = ref()
-const tableRef = ref()
+const searchFormRef = ref();
+const formRef = ref();
+const tableRef = ref();
 
 // 搜索表单
 const searchForm = reactive({
-  filter: '',
+  filter: "",
   isEnabled: undefined as boolean | undefined
 })
 
@@ -318,41 +318,41 @@ const pagination = reactive({
   current: 1,
   pageSize: 20,
   total: 0
-})
+});
 
 // 排序数据
-const sorting = ref('')
+const sorting = ref("");
 
 // 表格数据
 const tableData = ref<any[]>([])
 
 // 对话框数据
-const dialogTitle = computed(() => 
-  formData.id ? '编辑用户管理' : '新增用户管理'
+const dialogTitle = computed(() =>
+  formData.id ? "编辑用户管理" : "新增用户管理"
 )
 
 const formData = reactive({
   id: undefined,
-  name: '',
-  displayName: '',
-  description: '',
+  name: "",
+  displayName: "",
+  description: "",
   sort: 0,
   isEnabled: true
-})
+});
 
 // 表单验证规则
 const formRules = {
   name: [
-    { required: true, message: '请输入用户管理名称', trigger: 'blur' },
-    { min: 2, max: 50, message: '名称长度在 2 到 50 个字符', trigger: 'blur' }
+    { required: true, message: "请输入用户管理名称", trigger: "blur" },
+    { min: 2, max: 50, message: "名称长度在 2 到 50 个字符", trigger: "blur" }
   ]
-}
+};
 
 // 方法实现
 const fetchData = async () => {
   try {
     loading.value = true
-    
+
     // TODO: 调用实际的API服务
     // const params = {
     //   filter: searchForm.filter || undefined,
@@ -364,152 +364,152 @@ const fetchData = async () => {
     // const result = await userStore.fetchList(params)
     // tableData.value = result.items
     // pagination.total = result.totalCount
-    
+
   } catch (error) {
-    ElMessage.error('获取数据失败')
+    ElMessage.error("获取数据失败");
   } finally {
     loading.value = false
   }
-}
+};
 
 const handleSearch = () => {
   pagination.current = 1
-  fetchData()
-}
+  fetchData();
+};
 
 const handleReset = () => {
-  searchForm.filter = ''
+  searchForm.filter = "";
   searchForm.isEnabled = undefined
-  handleSearch()
-}
+  handleSearch();
+};
 
 const handleCreate = () => {
   Object.assign(formData, {
     id: undefined,
-    name: '',
-    displayName: '',
-    description: '',
+    name: "",
+    displayName: "",
+    description: "",
     sort: 0,
     isEnabled: true
   })
-  dialogVisible.value = true
-}
+  dialogVisible.value = true;
+};
 
 const handleEdit = (row: any) => {
   Object.assign(formData, row)
-  dialogVisible.value = true
-}
+  dialogVisible.value = true;
+};
 
 const handleDelete = async (row: any) => {
   try {
     await ElMessageBox.confirm(
       `确定要删除 "${row.name}" 吗？`,
-      '确认删除',
+      "确认删除",
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       }
     )
-    
+
     // TODO: 调用删除API
     // await userStore.delete(row.id)
-    
-    ElMessage.success('删除成功')
-    fetchData()
+
+    ElMessage.success("删除成功");
+    fetchData();
   } catch (error) {
     // 用户取消删除
   }
-}
+};
 
 const handleBatchDelete = async () => {
   if (selectedRows.value.length === 0) return
-  
+
   try {
     await ElMessageBox.confirm(
       `确定要删除选中的 ${selectedRows.value.length} 项吗？`,
-      '确认批量删除',
+      "确认批量删除",
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       }
     )
-    
+
     // TODO: 调用批量删除API
     // const ids = selectedRows.value.map(row => row.id)
     // await userStore.deleteMany(ids)
-    
-    ElMessage.success('批量删除成功')
-    fetchData()
+
+    ElMessage.success("批量删除成功");
+    fetchData();
   } catch (error) {
     // 用户取消删除
   }
-}
+};
 
 const handleSubmit = async () => {
   try {
     await formRef.value?.validate()
-    
+
     submitting.value = true
-    
+
     if (formData.id) {
       // TODO: 更新操作
       // await userStore.update(formData.id, formData)
-      ElMessage.success('更新成功')
+      ElMessage.success("更新成功");
     } else {
       // TODO: 创建操作
       // await userStore.create(formData)
-      ElMessage.success('创建成功')
+      ElMessage.success("创建成功");
     }
-    
+
     dialogVisible.value = false
-    fetchData()
+    fetchData();
   } catch (error) {
-    ElMessage.error('操作失败')
+    ElMessage.error("操作失败");
   } finally {
     submitting.value = false
   }
-}
+};
 
 const handleDialogClose = () => {
   formRef.value?.resetFields()
-}
+};
 
 const handleSelectionChange = (selection: any[]) => {
   selectedRows.value = selection
-}
+};
 
 const handleSortChange = ({ prop, order }: any) => {
   if (order) {
-    sorting.value = `${prop} ${order === 'ascending' ? 'asc' : 'desc'}`
+    sorting.value = `${prop} ${order === "ascending" ? "asc" : "desc"}`;
   } else {
-    sorting.value = ''
+    sorting.value = "";
   }
-  fetchData()
-}
+  fetchData();
+};
 
 const handlePageSizeChange = (size: number) => {
   pagination.pageSize = size
   pagination.current = 1
-  fetchData()
-}
+  fetchData();
+};
 
 const handleCurrentChange = (current: number) => {
   pagination.current = current
-  fetchData()
-}
+  fetchData();
+};
 
 // 工具函数占位符
 const formatDateTime = (date: string) => {
   // TODO: 实现日期格式化
   return date
-}
+};
 
 // 生命周期
 onMounted(() => {
-  fetchData()
-})
+  fetchData();
+});
 </script>
 
 <style scoped>
