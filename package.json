@@ -8,14 +8,13 @@
     "template:index": "node src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/build-template-index.cjs",
     "template:search": "node src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/template-search.cjs",
     "approve:plan": "node tools/quality-assurance/approve-plan.js",
-    "hooks:install": "node tools/quality-assurance/install-hooks.js",
     "predev": "npm run template:validate",
     "prebuild": "npm run template:validate",
     "test:coverage": "vitest run --coverage",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "prepare": "husky install",
-    "precommit-check": "npm --prefix src/SmartAbp.Vue run precommit-check",
+    
+    
     "codegen": "tsx src/tools/cli.ts generate",
     "codegen:check": "tsx src/tools/cli.ts check",
     "module:add": "tsx src/tools/add-module.ts --input",
@@ -31,7 +30,6 @@
   "devDependencies": {
     "chalk": "^4.1.2",
     "cross-env": "^7.0.3",
-    "husky": "^9.1.4",
     "semver": "^7.6.3",
     "typescript": "^5.0.0"
   },
