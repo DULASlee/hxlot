@@ -18,6 +18,8 @@ using SmartAbp.CodeGenerator.Testing;
 using SmartAbp.CodeGenerator.Services.V9;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
+using System.IO;
+using System.Text;
 
 namespace SmartAbp.CodeGenerator.Services
 {
@@ -34,19 +36,22 @@ namespace SmartAbp.CodeGenerator.Services
         private readonly CqrsPatternGenerator _cqrsGenerator;
         private readonly DomainDrivenDesignGenerator _dddGenerator;
         private readonly CodeGenerationProgressService _progressService;
+        private readonly CodeWriterService _codeWriterService;
         
         public CodeGenerationAppService(
             RoslynCodeEngine codeEngine,
             FrontendMetadataGenerator frontendMetadataGenerator,
             CqrsPatternGenerator cqrsGenerator,
             DomainDrivenDesignGenerator dddGenerator,
-            CodeGenerationProgressService progressService)
+            CodeGenerationProgressService progressService,
+            CodeWriterService codeWriterService)
         {
             _codeEngine = codeEngine;
             _frontendMetadataGenerator = frontendMetadataGenerator;
             _cqrsGenerator = cqrsGenerator;
             _dddGenerator = dddGenerator;
             _progressService = progressService;
+            _codeWriterService = codeWriterService;
         }
         
         /// <summary>
@@ -93,34 +98,121 @@ namespace SmartAbp.CodeGenerator.Services
             var generatedFiles = new List<string>();
 
             // 1. Generate all backend domain, application, efcore code...
-            // Placeholder for backend generation logic...
-            generatedFiles.Add($"{input.Name}/be/Something.cs");
-            
-            // 2. Generate frontend code
+            // This is a simplified simulation of generating one service per entity.
             foreach (var entity in input.Entities)
             {
-                // a. Generate list page meta.json
-                var listSchema = _frontendMetadataGenerator.GenerateListPageSchema(entity);
-                var listSchemaJson = JsonSerializer.Serialize(listSchema, new JsonSerializerOptions { WriteIndented = true });
-                generatedFiles.Add($"{input.Name}/fe/views/{entity.Name.ToLower()}-list.meta.json");
-                // In a real scenario, we would write listSchemaJson to the file path above.
+                var serviceName = $"{entity.Name}AppService";
+                var serviceNamespace = $"SmartAbp.{input.Name}.Services";
 
-                // b. Generate form page meta.json
-                var formSchema = _frontendMetadataGenerator.GenerateFormPageSchema(entity);
-                var formSchemaJson = JsonSerializer.Serialize(formSchema, new JsonSerializerOptions { WriteIndented = true });
-                generatedFiles.Add($"{input.Name}/fe/views/{entity.Name.ToLower()}-form.meta.json");
-                // In a real scenario, we would write formSchemaJson to the file path above.
+                // Simulate getting generated code from a real generator
+                var generatedServiceCode = $"namespace {serviceNamespace}\n{{\n    public partial class {serviceName} {{ /* Engine-generated CRUD methods */ }} \n}}";
+                
+                // Define the path where the service should be located
+                var serviceFilePath = Path.Combine(
+                    "..", // Assuming the service is in a different project root
+                    $"SmartAbp.{input.Name}.Application", 
+                    "Services", 
+                    $"{serviceName}.cs"
+                );
 
-                // c. Generate .vue skeleton file
-                generatedFiles.Add($"{input.Name}/fe/views/{entity.Name.ToLower()}.vue");
+                // Use the new CodeWriterService to apply the hybrid strategy
+                var (genFile, manualFile) = await _codeWriterService.WriteHybridCodeAsync(
+                    serviceFilePath,
+                    generatedServiceCode,
+                    serviceNamespace,
+                    serviceName
+                );
+                generatedFiles.Add(genFile);
+                generatedFiles.Add(manualFile);
             }
+            
+            // 2. Generate frontend code
+            await GenerateFrontendHybridAsync(input, generatedFiles);
             
             return new GeneratedModuleDto
             {
                 ModuleName = input.Name,
                 GeneratedFiles = generatedFiles,
-                GenerationReport = "Module generation completed successfully (simulation)."
+                GenerationReport = "Module generation completed successfully."
             };
+        }
+
+        private async Task GenerateFrontendHybridAsync(ModuleMetadataDto input, List<string> generatedFiles)
+        {
+            foreach (var entity in input.Entities)
+            {
+                var viewName = $"{entity.Name}List"; // Example for list view
+                var viewVuePath = Path.Combine("..", "SmartAbp.Vue", "src", "views", input.Name, $"{viewName}.vue");
+                
+                var viewDirectory = Path.GetDirectoryName(viewVuePath);
+                if (viewDirectory == null)
+                {
+                    throw new AbpException($"Could not determine the directory for {viewVuePath}");
+                }
+
+                var baseViewName = $"Base{viewName}";
+                var baseViewVuePath = Path.Combine(viewDirectory, "components", $"{baseViewName}.g.vue");
+
+                // a. Generate and always overwrite the base component
+                var baseViewContent = GetBaseVueComponentTemplate(baseViewName, entity);
+                Directory.CreateDirectory(Path.GetDirectoryName(baseViewVuePath)!);
+                await File.WriteAllTextAsync(baseViewVuePath, baseViewContent, Encoding.UTF8);
+                generatedFiles.Add(baseViewVuePath);
+
+                // b. Create the manual business component only if it doesn't exist
+                if (!File.Exists(viewVuePath))
+                {
+                    var viewContent = GetVueComponentTemplate(viewName, baseViewName);
+                    Directory.CreateDirectory(viewDirectory);
+                    await File.WriteAllTextAsync(viewVuePath, viewContent, Encoding.UTF8);
+                }
+                generatedFiles.Add(viewVuePath);
+            }
+        }
+
+        private string GetBaseVueComponentTemplate(string viewName, EnhancedEntityModelDto entity)
+        {
+            // In a real scenario, this would come from a .tpl file
+            return $@"<!-- This is an auto-generated file. Do not edit manually. -->
+<template>
+  <div>
+    <h1>{viewName} (Base)</h1>
+    <p>Entity: {entity.Name}</p>
+    <!-- Standard UI elements like tables and forms go here -->
+    <slot name=""custom-actions""></slot>
+  </div>
+</template>
+<script setup lang=""ts"">
+// Auto-generated logic
+</script>
+";
+        }
+
+        private string GetVueComponentTemplate(string viewName, string baseViewName)
+        {
+            return $@"<!-- This is the business component. You can safely modify this file. -->
+<template>
+  <Suspense>
+    <template #default>
+      <BaseComponent>
+        <template #custom-actions>
+          <!-- Add your custom buttons or components here -->
+          <el-button type=""primary"">Custom Action</el-button>
+        </template>
+      </BaseComponent>
+    </template>
+    <template #fallback>
+      <div>Loading...</div>
+    </template>
+  </Suspense>
+</template>
+<script setup lang=""ts"">
+import {{ defineAsyncComponent }} from 'vue';
+import {{ ElButton }} from 'element-plus';
+
+const BaseComponent = defineAsyncComponent(() => import('./components/{baseViewName}.g.vue'));
+</script>
+";
         }
         
         /// <summary>

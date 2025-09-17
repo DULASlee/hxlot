@@ -3,7 +3,9 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using SmartAbp.CodeGenerator.Domain;
 using SmartAbp.CodeGenerator.Services.V9;
+using Volo.Abp;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
 
 namespace SmartAbp.CodeGenerator.Services
@@ -19,39 +21,43 @@ namespace SmartAbp.CodeGenerator.Services
 
         public async Task<ModuleMetadataDto> GetAsync(string moduleName)
         {
-            var metadataStore = await _metadataRepository.FindAsync(x => x.ModuleName == moduleName);
+            var metadataStore = await _metadataRepository.FirstOrDefaultAsync(x => x.ModuleName == moduleName);
             if (metadataStore == null)
             {
-                return null;
+                throw new EntityNotFoundException(typeof(MetadataStore), moduleName);
             }
-
-            return JsonSerializer.Deserialize<ModuleMetadataDto>(metadataStore.MetadataJson);
+            return JsonSerializer.Deserialize<ModuleMetadataDto>(metadataStore.MetadataJson)!;
         }
 
         public async Task<ModuleMetadataDto> CreateAsync(ModuleMetadataDto input)
         {
-            var metadataJson = JsonSerializer.Serialize(input);
-            var metadataStore = new MetadataStore(
-                GuidGenerator.Create(),
-                input.Name,
-                metadataJson);
+            var existing = await _metadataRepository.FirstOrDefaultAsync(x => x.ModuleName == input.Name);
+            if (existing != null)
+            {
+                throw new UserFriendlyException($"Module with name '{input.Name}' already exists.");
+            }
 
-            await _metadataRepository.InsertAsync(metadataStore);
+            var json = JsonSerializer.Serialize(input);
+            var newMetadata = new MetadataStore(GuidGenerator.Create(), input.Name, json);
+            await _metadataRepository.InsertAsync(newMetadata);
 
-            return input;
+            return JsonSerializer.Deserialize<ModuleMetadataDto>(newMetadata.MetadataJson) 
+                   ?? throw new AbpException("Failed to deserialize metadata after creation.");
         }
 
         public async Task<ModuleMetadataDto> UpdateAsync(ModuleMetadataDto input)
         {
-            var metadataStore = await _metadataRepository.GetAsync(x => x.ModuleName == input.Name);
+            var metadataStore = await _metadataRepository.FirstOrDefaultAsync(x => x.ModuleName == input.Name);
+            if (metadataStore == null)
+            {
+                throw new EntityNotFoundException(typeof(MetadataStore), input.Name);
+            }
 
-            var metadataJson = JsonSerializer.Serialize(input);
-            metadataStore.SetMetadataJson(metadataJson);
-            metadataStore.IncrementVersion();
-
+            var json = JsonSerializer.Serialize(input);
+            metadataStore.SetMetadataJson(json);
             await _metadataRepository.UpdateAsync(metadataStore);
 
-            return input;
+            return JsonSerializer.Deserialize<ModuleMetadataDto>(metadataStore.MetadataJson)!;
         }
 
         public async Task DeleteAsync(string moduleName)

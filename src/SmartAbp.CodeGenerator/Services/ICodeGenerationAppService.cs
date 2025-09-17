@@ -87,8 +87,8 @@ namespace SmartAbp.CodeGenerator.Services.V9
 {
     public class GeneratedModuleDto
     {
-        public string ModuleName { get; set; }
+        public string ModuleName { get; set; } = default!;
         public List<string> GeneratedFiles { get; set; } = new();
-        public string GenerationReport { get; set; }
+        public string GenerationReport { get; set; } = default!;
     }
 }

@@ -5,9 +5,9 @@ namespace SmartAbp.CodeGenerator.Domain
 {
     public class MetadataStore : AggregateRoot<Guid>
     {
-        public string ModuleName { get; protected set; }
+        public string ModuleName { get; protected set; } = default!;
         
-        public string MetadataJson { get; protected set; }
+        public string MetadataJson { get; protected set; } = default!;
         
         public int Version { get; protected set; }
 

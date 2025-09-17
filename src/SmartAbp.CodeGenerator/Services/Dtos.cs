@@ -13,11 +13,11 @@ namespace SmartAbp.CodeGenerator.Services
         /// </summary>
         public class PermissionDefinitionDto
         {
-            public string Id { get; set; }
-            public string Name { get; set; } // e.g., 'SmartAbp.Construction.Project.Create'
-            public string DisplayName { get; set; }
-            public string Description { get; set; }
-            public string ParentName { get; set; }
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!; // e.g., 'SmartAbp.Construction.Project.Create'
+            public string DisplayName { get; set; } = default!;
+            public string Description { get; set; } = default!;
+            public string ParentName { get; set; } = default!;
         }
 
         /// <summary>
@@ -25,9 +25,9 @@ namespace SmartAbp.CodeGenerator.Services
         /// </summary>
         public class PermissionGroupDefinitionDto
         {
-            public string Id { get; set; }
-            public string Name { get; set; } // e.g., 'SmartAbp.Construction'
-            public string DisplayName { get; set; }
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!; // e.g., 'SmartAbp.Construction'
+            public string DisplayName { get; set; } = default!;
             public List<PermissionDefinitionDto> Permissions { get; set; } = new();
         }
 
@@ -44,12 +44,12 @@ namespace SmartAbp.CodeGenerator.Services
         /// </summary>
         public class MenuConfigDto
         {
-            public string Id { get; set; }
-            public string Title { get; set; }
-            public string Path { get; set; }
-            public string Icon { get; set; }
-            public string ComponentPath { get; set; }
-            public string RequiredPermission { get; set; }
+            public string Id { get; set; } = default!;
+            public string Title { get; set; } = default!;
+            public string Path { get; set; } = default!;
+            public string Icon { get; set; } = default!;
+            public string ComponentPath { get; set; } = default!;
+            public string RequiredPermission { get; set; } = default!;
             public List<MenuConfigDto> Children { get; set; } = new();
         }
 
@@ -59,13 +59,13 @@ namespace SmartAbp.CodeGenerator.Services
         /// </summary>
         public class ModuleMetadataDto
         {
-            public string Id { get; set; }
-            public string Name { get; set; } // e.g., 'SmartAbp.Construction'
-            public string DisplayName { get; set; }
-            public string Version { get; set; }
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!; // e.g., 'SmartAbp.Construction'
+            public string DisplayName { get; set; } = default!;
+            public string Version { get; set; } = default!;
             public List<EnhancedEntityModelDto> Entities { get; set; } = new();
             public List<MenuConfigDto> MenuConfig { get; set; } = new();
-            public PermissionConfigDto PermissionConfig { get; set; }
+            public PermissionConfigDto PermissionConfig { get; set; } = default!;
         }
 
         // --- All nested types required by ModuleMetadataDto ---
@@ -74,50 +74,50 @@ namespace SmartAbp.CodeGenerator.Services
 
         public class EnhancedEntityModelDto
         {
-            public string Id { get; set; }
-            public string Name { get; set; }
-            public string DisplayName { get; set; }
-            public string Description { get; set; }
-            public string Module { get; set; }
-            public string Namespace { get; set; }
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!;
+            public string DisplayName { get; set; } = default!;
+            public string Description { get; set; } = default!;
+            public string Module { get; set; } = default!;
+            public string Namespace { get; set; } = default!;
             public bool IsAggregateRoot { get; set; }
             public bool IsAudited { get; set; }
             public bool IsSoftDelete { get; set; }
             public bool IsMultiTenant { get; set; }
-            public string BaseClass { get; set; }
+            public string BaseClass { get; set; } = default!;
             public List<string> Interfaces { get; set; } = new();
             public List<EntityPropertyDto> Properties { get; set; } = new();
             public List<EntityRelationshipDto> Relationships { get; set; } = new();
-            public string TableName { get; set; }
-            public string Schema { get; set; }
+            public string TableName { get; set; } = default!;
+            public string Schema { get; set; } = default!;
             public List<EntityIndexDto> Indexes { get; set; } = new();
             public List<EntityConstraintDto> Constraints { get; set; } = new();
             public List<BusinessRuleDto> BusinessRules { get; set; } = new();
             public List<EntityPermissionDto> Permissions { get; set; } = new();
-            public CodeGenerationConfigDto CodeGeneration { get; set; }
-            public EntityUIConfigDto UiConfig { get; set; }
+            public CodeGenerationConfigDto CodeGeneration { get; set; } = default!;
+            public EntityUIConfigDto UiConfig { get; set; } = default!;
             public DateTime CreatedAt { get; set; }
             public DateTime UpdatedAt { get; set; }
-            public string Version { get; set; }
+            public string Version { get; set; } = default!;
             public List<string> Tags { get; set; } = new();
         }
 
         public class EntityPropertyDto
         {
-            public string Id { get; set; }
-            public string Name { get; set; }
-            public string DisplayName { get; set; }
-            public string Type { get; set; } // PropertyType enum as string
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!;
+            public string DisplayName { get; set; } = default!;
+            public string Type { get; set; } = default!; // PropertyType enum as string
             public bool IsRequired { get; set; }
             public bool IsKey { get; set; }
             public bool IsUnique { get; set; }
             public bool IsIndexed { get; set; }
-            public object DefaultValue { get; set; }
-            public string Description { get; set; }
-            public string HelpText { get; set; }
+            public object DefaultValue { get; set; } = default!;
+            public string Description { get; set; } = default!;
+            public string HelpText { get; set; } = default!;
             public int? MaxLength { get; set; }
             public int? MinLength { get; set; }
-            public string Pattern { get; set; }
+            public string Pattern { get; set; } = default!;
             public int? Precision { get; set; }
             public int? Scale { get; set; }
             public double? MinValue { get; set; }
@@ -125,11 +125,11 @@ namespace SmartAbp.CodeGenerator.Services
             public List<EnumValueDto> EnumValues { get; set; } = new();
             public List<ValidationRuleDto> ValidationRules { get; set; } = new();
             public int DisplayOrder { get; set; }
-            public string GroupName { get; set; }
+            public string GroupName { get; set; } = default!;
             public bool IsVisible { get; set; }
             public bool IsReadonly { get; set; }
-            public string ColumnName { get; set; }
-            public string ColumnType { get; set; }
+            public string ColumnName { get; set; } = default!;
+            public string ColumnType { get; set; } = default!;
             public bool IsAuditField { get; set; }
             public bool IsSoftDeleteField { get; set; }
             public bool Searchable { get; set; }
@@ -144,96 +144,96 @@ namespace SmartAbp.CodeGenerator.Services
 
         public class EntityRelationshipDto
         {
-            public string Id { get; set; }
-            public string Name { get; set; }
-            public string DisplayName { get; set; }
-            public string SourceEntityId { get; set; }
-            public string TargetEntityId { get; set; }
-            public string TargetEntity { get; set; }
-            public string Type { get; set; }
-            public string SourceProperty { get; set; }
-            public string TargetProperty { get; set; }
-            public string SourceNavigationProperty { get; set; }
-            public string TargetNavigationProperty { get; set; }
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!;
+            public string DisplayName { get; set; } = default!;
+            public string SourceEntityId { get; set; } = default!;
+            public string TargetEntityId { get; set; } = default!;
+            public string TargetEntity { get; set; } = default!;
+            public string Type { get; set; } = default!;
+            public string SourceProperty { get; set; } = default!;
+            public string TargetProperty { get; set; } = default!;
+            public string SourceNavigationProperty { get; set; } = default!;
+            public string TargetNavigationProperty { get; set; } = default!;
             public bool CascadeDelete { get; set; }
             public bool IsRequired { get; set; }
-            public string ForeignKeyProperty { get; set; }
-            public string JoinTableName { get; set; }
-            public string OnDeleteAction { get; set; }
+            public string ForeignKeyProperty { get; set; } = default!;
+            public string JoinTableName { get; set; } = default!;
+            public string OnDeleteAction { get; set; } = default!;
         }
 
         public class ValidationRuleDto
         {
-            public string Id { get; set; }
-            public string Type { get; set; }
-            public object Value { get; set; }
-            public string Message { get; set; }
-            public string Condition { get; set; }
+            public string Id { get; set; } = default!;
+            public string Type { get; set; } = default!;
+            public object Value { get; set; } = default!;
+            public string Message { get; set; } = default!;
+            public string Condition { get; set; } = default!;
         }
 
         public class EnumValueDto
         {
-            public string Id { get; set; }
-            public string Name { get; set; }
-            public object Value { get; set; }
-            public string DisplayName { get; set; }
-            public string Description { get; set; }
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!;
+            public object Value { get; set; } = default!;
+            public string DisplayName { get; set; } = default!;
+            public string Description { get; set; } = default!;
             public bool IsDefault { get; set; }
         }
 
         public class EntityIndexDto
         {
-            public string Id { get; set; }
-            public string Name { get; set; }
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!;
             public List<string> Columns { get; set; } = new();
             public bool IsUnique { get; set; }
             public bool IsClustered { get; set; }
             public List<string> IncludeColumns { get; set; } = new();
-            public string FilterCondition { get; set; }
-            public string Description { get; set; }
+            public string FilterCondition { get; set; } = default!;
+            public string Description { get; set; } = default!;
         }
 
         public class EntityConstraintDto
         {
-            public string Id { get; set; }
-            public string Name { get; set; }
-            public string Type { get; set; }
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!;
+            public string Type { get; set; } = default!;
             public List<string> Columns { get; set; } = new();
-            public string Expression { get; set; }
-            public string ReferencedTable { get; set; }
+            public string Expression { get; set; } = default!;
+            public string ReferencedTable { get; set; } = default!;
             public List<string> ReferencedColumns { get; set; } = new();
-            public string OnDelete { get; set; }
-            public string OnUpdate { get; set; }
+            public string OnDelete { get; set; } = default!;
+            public string OnUpdate { get; set; } = default!;
         }
 
         public class BusinessRuleDto
         {
-            public string Id { get; set; }
-            public string Name { get; set; }
-            public string Description { get; set; }
-            public string Type { get; set; }
-            public string Condition { get; set; }
-            public string Action { get; set; }
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!;
+            public string Description { get; set; } = default!;
+            public string Type { get; set; } = default!;
+            public string Condition { get; set; } = default!;
+            public string Action { get; set; } = default!;
             public int Priority { get; set; }
             public bool IsActive { get; set; }
-            public string ErrorMessage { get; set; }
+            public string ErrorMessage { get; set; } = default!;
         }
 
         public class EntityPermissionDto
         {
-            public string Id { get; set; }
-            public string Operation { get; set; }
+            public string Id { get; set; } = default!;
+            public string Operation { get; set; } = default!;
             public List<string> Roles { get; set; } = new();
-            public string Condition { get; set; }
+            public string Condition { get; set; } = default!;
             public List<FieldPermissionDto> FieldLevelPermissions { get; set; } = new();
         }
 
         public class FieldPermissionDto
         {
-            public string PropertyName { get; set; }
-            public string Operation { get; set; }
+            public string PropertyName { get; set; } = default!;
+            public string Operation { get; set; } = default!;
             public List<string> Roles { get; set; } = new();
-            public string Condition { get; set; }
+            public string Condition { get; set; } = default!;
         }
 
         public class CodeGenerationConfigDto
@@ -245,7 +245,7 @@ namespace SmartAbp.CodeGenerator.Services
             public bool GenerateDto { get; set; }
             public bool GenerateTests { get; set; }
             public Dictionary<string, string> CustomTemplates { get; set; } = new();
-            public CodeGenerationOptionsDto Options { get; set; }
+            public CodeGenerationOptionsDto Options { get; set; } = default!;
         }
 
         public class CodeGenerationOptionsDto
@@ -259,9 +259,9 @@ namespace SmartAbp.CodeGenerator.Services
 
         public class EntityUIConfigDto
         {
-            public ListConfigDto ListConfig { get; set; }
-            public FormConfigDto FormConfig { get; set; }
-            public DetailConfigDto DetailConfig { get; set; }
+            public ListConfigDto ListConfig { get; set; } = default!;
+            public FormConfigDto FormConfig { get; set; } = default!;
+            public DetailConfigDto DetailConfig { get; set; } = default!;
         }
 
         public class ListConfigDto
@@ -276,39 +276,39 @@ namespace SmartAbp.CodeGenerator.Services
 
         public class FormConfigDto
         {
-            public string Layout { get; set; }
+            public string Layout { get; set; } = default!;
             public int ColumnCount { get; set; }
             public List<FieldGroupDto> FieldGroups { get; set; } = new();
-            public string ValidationStrategy { get; set; }
+            public string ValidationStrategy { get; set; } = default!;
         }
 
         public class DetailConfigDto
         {
-            public string Layout { get; set; }
+            public string Layout { get; set; } = default!;
             public List<DetailSectionDto> Sections { get; set; } = new();
             public List<UIActionDto> Actions { get; set; } = new();
         }
 
         public class UIActionDto
         {
-            public string Id { get; set; }
-            public string Name { get; set; }
-            public string Type { get; set; }
-            public string Icon { get; set; }
-            public string Color { get; set; }
-            public string Size { get; set; }
-            public string Position { get; set; }
-            public string Action { get; set; }
-            public string Condition { get; set; }
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!;
+            public string Type { get; set; } = default!;
+            public string Icon { get; set; } = default!;
+            public string Color { get; set; } = default!;
+            public string Size { get; set; } = default!;
+            public string Position { get; set; } = default!;
+            public string Action { get; set; } = default!;
+            public string Condition { get; set; } = default!;
             public List<string> Permissions { get; set; } = new();
         }
 
         public class FieldGroupDto
         {
-            public string Id { get; set; }
-            public string Name { get; set; }
-            public string Title { get; set; }
-            public string Description { get; set; }
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!;
+            public string Title { get; set; } = default!;
+            public string Description { get; set; } = default!;
             public bool Collapsible { get; set; }
             public bool Collapsed { get; set; }
             public int Columns { get; set; }
@@ -317,12 +317,12 @@ namespace SmartAbp.CodeGenerator.Services
 
         public class DetailSectionDto
         {
-            public string Id { get; set; }
-            public string Title { get; set; }
-            public string Type { get; set; }
+            public string Id { get; set; } = default!;
+            public string Title { get; set; } = default!;
+            public string Type { get; set; } = default!;
             public List<string> Properties { get; set; } = new();
             public List<string> Relationships { get; set; } = new();
-            public string CustomComponent { get; set; }
+            public string CustomComponent { get; set; } = default!;
             public bool Collapsible { get; set; }
             public bool Collapsed { get; set; }
         }
@@ -334,8 +334,8 @@ namespace SmartAbp.CodeGenerator.Services
     
     public class PageSchemaDto
     {
-        public string PageType { get; set; }
-        public string Title { get; set; }
+        public string PageType { get; set; } = default!;
+        public string Title { get; set; } = default!;
     }
 
     public class ListPageSchemaDto : PageSchemaDto
@@ -350,14 +350,14 @@ namespace SmartAbp.CodeGenerator.Services
 
     public class ColumnDefinition
     {
-        public string Prop { get; set; }
-        public string Label { get; set; }
+        public string Prop { get; set; } = default!;
+        public string Label { get; set; } = default!;
     }
 
     public class FieldDefinition
     {
-        public string Name { get; set; }
-        public string Label { get; set; }
+        public string Name { get; set; } = default!;
+        public string Label { get; set; } = default!;
     }
 
     #endregion
