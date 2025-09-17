@@ -12,6 +12,8 @@
       "@smartabp/lowcode-core/*": ["packages/lowcode-core/src/*"],
       "@smartabp/lowcode-designer": ["packages/lowcode-designer/src/index.ts"],
       "@smartabp/lowcode-designer/*": ["packages/lowcode-designer/src/*"],
+      "@smartabp/lowcode-api": ["packages/lowcode-api/src/index.ts"],
+      "@smartabp/lowcode-api/*": ["packages/lowcode-api/src/*"],
       "@smartabp/lowcode-ui-vue": ["packages/lowcode-ui-vue/src/index.ts"],
       "@smartabp/lowcode-ui-vue/*": ["packages/lowcode-ui-vue/src/*"]
     }

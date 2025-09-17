@@ -14,6 +14,7 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using SmartAbp.CodeGenerator.Domain;
 
 namespace SmartAbp.EntityFrameworkCore;
 
@@ -26,6 +27,8 @@ public class SmartAbpDbContext :
     IIdentityDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
+
+    public DbSet<MetadataStore> MetadataStores { get; set; }
 
 
     #region Entities from the modules
@@ -81,11 +84,13 @@ public class SmartAbpDbContext :
         
         /* Configure your own tables/entities inside here */
 
-        //builder.Entity<YourEntity>(b =>
-        //{
-        //    b.ToTable(SmartAbpConsts.DbTablePrefix + "YourEntities", SmartAbpConsts.DbSchema);
-        //    b.ConfigureByConvention(); //auto configure for the base class props
-        //    //...
-        //});
+        builder.Entity<MetadataStore>(b =>
+        {
+            b.ToTable(SmartAbpConsts.DbTablePrefix + "MetadataStores", SmartAbpConsts.DbSchema);
+            b.ConfigureByConvention(); 
+            b.Property(x => x.ModuleName).IsRequired().HasMaxLength(256);
+            b.Property(x => x.MetadataJson).IsRequired();
+            b.HasIndex(x => x.ModuleName);
+        });
     }
 }

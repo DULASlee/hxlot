@@ -49,4 +49,50 @@ export const generatedMenus = [
       },
     ],
   },
+  {
+    key: "lowcode-engine",
+    title: "低代码引擎",
+    icon: "⚡",
+    type: "folder",
+    order: 1,
+    visible: true,
+    children: [
+      {
+        key: "module-wizard",
+        title: "模块向导",
+        icon: "✨",
+        type: "page",
+        path: "/CodeGen/module-wizard-test",
+        component: "@smartabp/lowcode-designer/views/dev/ModuleWizardTestView.vue",
+        visible: true,
+      },
+      {
+        key: "ui-customizer",
+        title: "UI定制器",
+        icon: "🎨",
+        type: "page",
+        path: "/CodeGen/ui-customizer-test",
+        component: "@smartabp/lowcode-designer/views/dev/UICustomizerTestView.vue",
+        visible: true,
+      },
+      {
+        key: "page-renderer",
+        title: "页面渲染器",
+        icon: "🖼️",
+        type: "page",
+        path: "/CodeGen/page-renderer-test",
+        component: "@smartabp/lowcode-designer/views/dev/PageRendererTestView.vue",
+        visible: true,
+      },
+      {
+        key: "relationship-designer",
+        title: "关系设计器",
+        icon: "🔗",
+        type: "page",
+        path: "/CodeGen/relationship-designer-test",
+        component: "@smartabp/lowcode-designer/views/dev/RelationshipDesignerTestView.vue",
+        visible: true,
+      }
+    ]
+  }
 ]

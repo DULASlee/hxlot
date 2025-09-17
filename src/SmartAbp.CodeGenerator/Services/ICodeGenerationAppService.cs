@@ -1,4 +1,7 @@
+using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using SmartAbp.CodeGenerator.Services.V9;
 using Volo.Abp.Application.Services;
 
 namespace SmartAbp.CodeGenerator.Services
@@ -69,8 +72,23 @@ namespace SmartAbp.CodeGenerator.Services
         Task<EnterpriseSolutionDto> GenerateEnterpriseSolutionAsync(EnterpriseSolutionDefinitionDto input);
         
         /// <summary>
+        /// Generates a module based on the provided metadata
+        /// </summary>
+        Task<GeneratedModuleDto> GenerateModuleAsync(ModuleMetadataDto input);
+        
+        /// <summary>
         /// Gets generation statistics and performance metrics
         /// </summary>
         Task<CodeGenerationStatisticsDto> GetStatisticsAsync();
+    }
+}
+
+namespace SmartAbp.CodeGenerator.Services.V9
+{
+    public class GeneratedModuleDto
+    {
+        public string ModuleName { get; set; }
+        public List<string> GeneratedFiles { get; set; } = new();
+        public string GenerationReport { get; set; }
     }
 }

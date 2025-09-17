@@ -264,10 +264,37 @@ const routes: RouteRecordRaw[] = [
       {
         path: "relationship-designer-test",
         name: "RelationshipDesignerTest",
-        component: () => import("@/views/lowcode/RelationshipDesignerTestView.vue"),
+        component: () => import("@smartabp/lowcode-designer/views/dev/RelationshipDesignerTestView.vue"),
         meta: {
           title: "关系设计器测试",
           icon: "el-icon-link",
+        },
+      },
+      {
+        path: "module-wizard-test",
+        name: "ModuleWizardTest",
+        component: () => import("@smartabp/lowcode-designer/views/dev/ModuleWizardTestView.vue"),
+        meta: {
+          title: "模块向导测试",
+          icon: "el-icon-guide",
+        },
+      },
+      {
+        path: "page-renderer-test",
+        name: "PageRendererTest",
+        component: () => import("@smartabp/lowcode-designer/views/dev/PageRendererTestView.vue"),
+        meta: {
+          title: "页面渲染器测试",
+          icon: "el-icon-picture-outline",
+        },
+      },
+      {
+        path: "ui-customizer-test",
+        name: "UICustomizerTest",
+        component: () => import("@smartabp/lowcode-designer/views/dev/UICustomizerTestView.vue"),
+        meta: {
+          title: "UI定制器测试",
+          icon: "el-icon-brush",
         },
       },
       {

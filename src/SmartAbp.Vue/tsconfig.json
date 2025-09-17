@@ -34,7 +34,8 @@
       "@smartabp/lowcode-api": ["packages/lowcode-api/src/index.ts"],
       "@smartabp/lowcode-api/*": ["packages/lowcode-api/src/*"],
       "@smartabp/lowcode-ui-vue": ["packages/lowcode-ui-vue/src/index.ts"],
-      "@smartabp/lowcode-ui-vue/*": ["packages/lowcode-ui-vue/src/*"]
+      "@smartabp/lowcode-ui-vue/*": ["packages/lowcode-ui-vue/src/*"],
+      "@smartabp/*": ["packages/*"]
     },
 
     "types": ["vite/client", "element-plus/global"],

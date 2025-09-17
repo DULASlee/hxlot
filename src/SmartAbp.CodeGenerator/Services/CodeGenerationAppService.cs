@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,8 @@ using SmartAbp.CodeGenerator.Messaging;
 using SmartAbp.CodeGenerator.Quality;
 using SmartAbp.CodeGenerator.Telemetry;
 using SmartAbp.CodeGenerator.Testing;
+using SmartAbp.CodeGenerator.Services.V9;
+using Volo.Abp;
 using Volo.Abp.Application.Services;
 
 namespace SmartAbp.CodeGenerator.Services
@@ -27,17 +30,20 @@ namespace SmartAbp.CodeGenerator.Services
     public class CodeGenerationAppService : ApplicationService, ICodeGenerationAppService
     {
         private readonly RoslynCodeEngine _codeEngine;
+        private readonly FrontendMetadataGenerator _frontendMetadataGenerator;
         private readonly CqrsPatternGenerator _cqrsGenerator;
         private readonly DomainDrivenDesignGenerator _dddGenerator;
         private readonly CodeGenerationProgressService _progressService;
         
         public CodeGenerationAppService(
             RoslynCodeEngine codeEngine,
+            FrontendMetadataGenerator frontendMetadataGenerator,
             CqrsPatternGenerator cqrsGenerator,
             DomainDrivenDesignGenerator dddGenerator,
             CodeGenerationProgressService progressService)
         {
             _codeEngine = codeEngine;
+            _frontendMetadataGenerator = frontendMetadataGenerator;
             _cqrsGenerator = cqrsGenerator;
             _dddGenerator = dddGenerator;
             _progressService = progressService;
@@ -77,6 +83,44 @@ namespace SmartAbp.CodeGenerator.Services
                 await tracker.ReportCompletion(false);
                 throw;
             }
+        }
+
+        [HttpPost("generate-module")]
+        public async Task<GeneratedModuleDto> GenerateModuleAsync(ModuleMetadataDto input)
+        {
+            Check.NotNull(input, nameof(input));
+
+            var generatedFiles = new List<string>();
+
+            // 1. Generate all backend domain, application, efcore code...
+            // Placeholder for backend generation logic...
+            generatedFiles.Add($"{input.Name}/be/Something.cs");
+            
+            // 2. Generate frontend code
+            foreach (var entity in input.Entities)
+            {
+                // a. Generate list page meta.json
+                var listSchema = _frontendMetadataGenerator.GenerateListPageSchema(entity);
+                var listSchemaJson = JsonSerializer.Serialize(listSchema, new JsonSerializerOptions { WriteIndented = true });
+                generatedFiles.Add($"{input.Name}/fe/views/{entity.Name.ToLower()}-list.meta.json");
+                // In a real scenario, we would write listSchemaJson to the file path above.
+
+                // b. Generate form page meta.json
+                var formSchema = _frontendMetadataGenerator.GenerateFormPageSchema(entity);
+                var formSchemaJson = JsonSerializer.Serialize(formSchema, new JsonSerializerOptions { WriteIndented = true });
+                generatedFiles.Add($"{input.Name}/fe/views/{entity.Name.ToLower()}-form.meta.json");
+                // In a real scenario, we would write formSchemaJson to the file path above.
+
+                // c. Generate .vue skeleton file
+                generatedFiles.Add($"{input.Name}/fe/views/{entity.Name.ToLower()}.vue");
+            }
+            
+            return new GeneratedModuleDto
+            {
+                ModuleName = input.Name,
+                GeneratedFiles = generatedFiles,
+                GenerationReport = "Module generation completed successfully (simulation)."
+            };
         }
         
         /// <summary>

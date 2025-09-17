@@ -3,6 +3,369 @@ using System.Collections.Generic;
 
 namespace SmartAbp.CodeGenerator.Services
 {
+    // =================================================================
+    // == V9 Plan - Full-Stack, Unified Metadata DTOs
+    // =================================================================
+    namespace V9
+    {
+        /// <summary>
+        /// 权限点定义
+        /// </summary>
+        public class PermissionDefinitionDto
+        {
+            public string Id { get; set; }
+            public string Name { get; set; } // e.g., 'SmartAbp.Construction.Project.Create'
+            public string DisplayName { get; set; }
+            public string Description { get; set; }
+            public string ParentName { get; set; }
+        }
+
+        /// <summary>
+        /// 权限组定义
+        /// </summary>
+        public class PermissionGroupDefinitionDto
+        {
+            public string Id { get; set; }
+            public string Name { get; set; } // e.g., 'SmartAbp.Construction'
+            public string DisplayName { get; set; }
+            public List<PermissionDefinitionDto> Permissions { get; set; } = new();
+        }
+
+        /// <summary>
+        /// 权限配置 (聚合根)
+        /// </summary>
+        public class PermissionConfigDto
+        {
+            public List<PermissionGroupDefinitionDto> Groups { get; set; } = new();
+        }
+
+        /// <summary>
+        /// 菜单项定义
+        /// </summary>
+        public class MenuConfigDto
+        {
+            public string Id { get; set; }
+            public string Title { get; set; }
+            public string Path { get; set; }
+            public string Icon { get; set; }
+            public string ComponentPath { get; set; }
+            public string RequiredPermission { get; set; }
+            public List<MenuConfigDto> Children { get; set; } = new();
+        }
+
+        /// <summary>
+        /// 全链路模块元数据 (聚合根)
+        /// 这是驱动整个低代码引擎的单一事实来源
+        /// </summary>
+        public class ModuleMetadataDto
+        {
+            public string Id { get; set; }
+            public string Name { get; set; } // e.g., 'SmartAbp.Construction'
+            public string DisplayName { get; set; }
+            public string Version { get; set; }
+            public List<EnhancedEntityModelDto> Entities { get; set; } = new();
+            public List<MenuConfigDto> MenuConfig { get; set; } = new();
+            public PermissionConfigDto PermissionConfig { get; set; }
+        }
+
+        // --- All nested types required by ModuleMetadataDto ---
+
+        #region Nested DTOs for EnhancedEntityModelDto
+
+        public class EnhancedEntityModelDto
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public string DisplayName { get; set; }
+            public string Description { get; set; }
+            public string Module { get; set; }
+            public string Namespace { get; set; }
+            public bool IsAggregateRoot { get; set; }
+            public bool IsAudited { get; set; }
+            public bool IsSoftDelete { get; set; }
+            public bool IsMultiTenant { get; set; }
+            public string BaseClass { get; set; }
+            public List<string> Interfaces { get; set; } = new();
+            public List<EntityPropertyDto> Properties { get; set; } = new();
+            public List<EntityRelationshipDto> Relationships { get; set; } = new();
+            public string TableName { get; set; }
+            public string Schema { get; set; }
+            public List<EntityIndexDto> Indexes { get; set; } = new();
+            public List<EntityConstraintDto> Constraints { get; set; } = new();
+            public List<BusinessRuleDto> BusinessRules { get; set; } = new();
+            public List<EntityPermissionDto> Permissions { get; set; } = new();
+            public CodeGenerationConfigDto CodeGeneration { get; set; }
+            public EntityUIConfigDto UiConfig { get; set; }
+            public DateTime CreatedAt { get; set; }
+            public DateTime UpdatedAt { get; set; }
+            public string Version { get; set; }
+            public List<string> Tags { get; set; } = new();
+        }
+
+        public class EntityPropertyDto
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public string DisplayName { get; set; }
+            public string Type { get; set; } // PropertyType enum as string
+            public bool IsRequired { get; set; }
+            public bool IsKey { get; set; }
+            public bool IsUnique { get; set; }
+            public bool IsIndexed { get; set; }
+            public object DefaultValue { get; set; }
+            public string Description { get; set; }
+            public string HelpText { get; set; }
+            public int? MaxLength { get; set; }
+            public int? MinLength { get; set; }
+            public string Pattern { get; set; }
+            public int? Precision { get; set; }
+            public int? Scale { get; set; }
+            public double? MinValue { get; set; }
+            public double? MaxValue { get; set; }
+            public List<EnumValueDto> EnumValues { get; set; } = new();
+            public List<ValidationRuleDto> ValidationRules { get; set; } = new();
+            public int DisplayOrder { get; set; }
+            public string GroupName { get; set; }
+            public bool IsVisible { get; set; }
+            public bool IsReadonly { get; set; }
+            public string ColumnName { get; set; }
+            public string ColumnType { get; set; }
+            public bool IsAuditField { get; set; }
+            public bool IsSoftDeleteField { get; set; }
+            public bool Searchable { get; set; }
+            public bool Disabled { get; set; }
+            public bool ListVisible { get; set; }
+            public bool DetailVisible { get; set; }
+            public bool FormVisible { get; set; }
+            public bool Sortable { get; set; }
+            public bool Filterable { get; set; }
+            public bool IsTenantField { get; set; }
+        }
+
+        public class EntityRelationshipDto
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public string DisplayName { get; set; }
+            public string SourceEntityId { get; set; }
+            public string TargetEntityId { get; set; }
+            public string TargetEntity { get; set; }
+            public string Type { get; set; }
+            public string SourceProperty { get; set; }
+            public string TargetProperty { get; set; }
+            public string SourceNavigationProperty { get; set; }
+            public string TargetNavigationProperty { get; set; }
+            public bool CascadeDelete { get; set; }
+            public bool IsRequired { get; set; }
+            public string ForeignKeyProperty { get; set; }
+            public string JoinTableName { get; set; }
+            public string OnDeleteAction { get; set; }
+        }
+
+        public class ValidationRuleDto
+        {
+            public string Id { get; set; }
+            public string Type { get; set; }
+            public object Value { get; set; }
+            public string Message { get; set; }
+            public string Condition { get; set; }
+        }
+
+        public class EnumValueDto
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public object Value { get; set; }
+            public string DisplayName { get; set; }
+            public string Description { get; set; }
+            public bool IsDefault { get; set; }
+        }
+
+        public class EntityIndexDto
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public List<string> Columns { get; set; } = new();
+            public bool IsUnique { get; set; }
+            public bool IsClustered { get; set; }
+            public List<string> IncludeColumns { get; set; } = new();
+            public string FilterCondition { get; set; }
+            public string Description { get; set; }
+        }
+
+        public class EntityConstraintDto
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public string Type { get; set; }
+            public List<string> Columns { get; set; } = new();
+            public string Expression { get; set; }
+            public string ReferencedTable { get; set; }
+            public List<string> ReferencedColumns { get; set; } = new();
+            public string OnDelete { get; set; }
+            public string OnUpdate { get; set; }
+        }
+
+        public class BusinessRuleDto
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public string Type { get; set; }
+            public string Condition { get; set; }
+            public string Action { get; set; }
+            public int Priority { get; set; }
+            public bool IsActive { get; set; }
+            public string ErrorMessage { get; set; }
+        }
+
+        public class EntityPermissionDto
+        {
+            public string Id { get; set; }
+            public string Operation { get; set; }
+            public List<string> Roles { get; set; } = new();
+            public string Condition { get; set; }
+            public List<FieldPermissionDto> FieldLevelPermissions { get; set; } = new();
+        }
+
+        public class FieldPermissionDto
+        {
+            public string PropertyName { get; set; }
+            public string Operation { get; set; }
+            public List<string> Roles { get; set; } = new();
+            public string Condition { get; set; }
+        }
+
+        public class CodeGenerationConfigDto
+        {
+            public bool GenerateEntity { get; set; }
+            public bool GenerateRepository { get; set; }
+            public bool GenerateService { get; set; }
+            public bool GenerateController { get; set; }
+            public bool GenerateDto { get; set; }
+            public bool GenerateTests { get; set; }
+            public Dictionary<string, string> CustomTemplates { get; set; } = new();
+            public CodeGenerationOptionsDto Options { get; set; }
+        }
+
+        public class CodeGenerationOptionsDto
+        {
+            public bool UseAutoMapper { get; set; }
+            public bool GenerateValidation { get; set; }
+            public bool GenerateSwaggerDoc { get; set; }
+            public bool GeneratePermissions { get; set; }
+            public bool GenerateAuditLog { get; set; }
+        }
+
+        public class EntityUIConfigDto
+        {
+            public ListConfigDto ListConfig { get; set; }
+            public FormConfigDto FormConfig { get; set; }
+            public DetailConfigDto DetailConfig { get; set; }
+        }
+
+        public class ListConfigDto
+        {
+            public int DefaultPageSize { get; set; }
+            public List<string> SortableColumns { get; set; } = new();
+            public List<string> FilterableColumns { get; set; } = new();
+            public List<string> SearchableColumns { get; set; } = new();
+            public List<string> DisplayColumns { get; set; } = new();
+            public List<UIActionDto> Actions { get; set; } = new();
+        }
+
+        public class FormConfigDto
+        {
+            public string Layout { get; set; }
+            public int ColumnCount { get; set; }
+            public List<FieldGroupDto> FieldGroups { get; set; } = new();
+            public string ValidationStrategy { get; set; }
+        }
+
+        public class DetailConfigDto
+        {
+            public string Layout { get; set; }
+            public List<DetailSectionDto> Sections { get; set; } = new();
+            public List<UIActionDto> Actions { get; set; } = new();
+        }
+
+        public class UIActionDto
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public string Type { get; set; }
+            public string Icon { get; set; }
+            public string Color { get; set; }
+            public string Size { get; set; }
+            public string Position { get; set; }
+            public string Action { get; set; }
+            public string Condition { get; set; }
+            public List<string> Permissions { get; set; } = new();
+        }
+
+        public class FieldGroupDto
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public string Title { get; set; }
+            public string Description { get; set; }
+            public bool Collapsible { get; set; }
+            public bool Collapsed { get; set; }
+            public int Columns { get; set; }
+            public List<string> Fields { get; set; } = new();
+        }
+
+        public class DetailSectionDto
+        {
+            public string Id { get; set; }
+            public string Title { get; set; }
+            public string Type { get; set; }
+            public List<string> Properties { get; set; } = new();
+            public List<string> Relationships { get; set; } = new();
+            public string CustomComponent { get; set; }
+            public bool Collapsible { get; set; }
+            public bool Collapsed { get; set; }
+        }
+
+        #endregion
+    }
+
+    #region Page Schema DTOs for Frontend Renderer
+    
+    public class PageSchemaDto
+    {
+        public string PageType { get; set; }
+        public string Title { get; set; }
+    }
+
+    public class ListPageSchemaDto : PageSchemaDto
+    {
+        public List<ColumnDefinition> Columns { get; set; } = new();
+    }
+
+    public class FormPageSchemaDto : PageSchemaDto
+    {
+        public List<FieldDefinition> Fields { get; set; } = new();
+    }
+
+    public class ColumnDefinition
+    {
+        public string Prop { get; set; }
+        public string Label { get; set; }
+    }
+
+    public class FieldDefinition
+    {
+        public string Name { get; set; }
+        public string Label { get; set; }
+    }
+
+    #endregion
+
+
+    // =================================================================
+    // == Existing DTOs (for backward compatibility)
+    // =================================================================
     // Entity Generation DTOs
     public class EntityDefinitionDto
     {
