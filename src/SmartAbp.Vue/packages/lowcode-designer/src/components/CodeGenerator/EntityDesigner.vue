@@ -227,7 +227,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, nextTick, defineEmits, Component } from 'vue'
+import { ref, reactive, watch, nextTick, defineEmits } from 'vue'
+import type { Component } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Collection,

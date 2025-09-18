@@ -306,7 +306,8 @@ export default {
         'includeMessaging',
         'includeTests',
         'includeTelemetry',
-        'includeQuality'
+        'includeQuality',
+      ],
     }
   },
 
@@ -560,7 +561,7 @@ export default {
 
       const generationType = this.activeGenerator || 'entity'
       return `Generated${generationType.charAt(0).toUpperCase() + generationType.slice(1)}.cs`
-    }
+    },
   }
 </script>
 

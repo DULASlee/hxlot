@@ -10,11 +10,10 @@
     "approve:plan": "node tools/quality-assurance/approve-plan.js",
     "predev": "npm run template:validate",
     "prebuild": "npm run template:validate",
+    "type-check": "vue-tsc --build --force",
     "test:coverage": "vitest run --coverage",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    
-    
     "codegen": "tsx src/tools/cli.ts generate",
     "codegen:check": "tsx src/tools/cli.ts check",
     "module:add": "tsx src/tools/add-module.ts --input",
@@ -31,7 +30,8 @@
     "chalk": "^4.1.2",
     "cross-env": "^7.0.3",
     "semver": "^7.6.3",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vue-tsc": "^3.0.7"
   },
   "keywords": [
     "smartabp",

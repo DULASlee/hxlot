@@ -10,167 +10,94 @@
  *   - ModuleName: 模块名称
  */
 
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import type { 
-  {{EntityName}}Dto, 
-  Create{{EntityName}}Dto, 
-  Update{{EntityName}}Dto,
-  Get{{EntityName}}ListDto,
-  PagedResultDto 
-} from '@/types/{{entityName}}'
-import { {{entityName}}Service } from '@/services/{{entityName}}Service'
-import { ElMessage } from 'element-plus'
+import { defineStore } from "pinia"
+import { ref } from "vue"
 
-export const use{{EntityName}}Store = defineStore('{{entityName}}', () => {
-  // 状态定义
-  const items = ref<{{EntityName}}Dto[]>([])
-  const currentItem = ref<{{EntityName}}Dto | null>(null)
-  const loading = ref(false)
-  const submitting = ref(false)
+// 这是一个示意性的API服务，实际生成时需要替换为真实的服务
+// import { {{EntityName}}Service } from "@/api/{{ModuleName}}/{{entityName}}"
+// import type { {{EntityName}}Dto, Create{{EntityName}}Dto, Update{{EntityName}}Dto } from "@/api/{{ModuleName}}/types"
+
+// 模拟 API 服务和类型
+const {{EntityName}}Service = {
+  getList: async (params: any) => {
+    console.log("Fetching list with params:", params)
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return {
+      items: [{ id: "1", name: `Mock {{EntityName}} 1` }, { id: "2", name: `Mock {{EntityName}} 2` }],
+      totalCount: 2,
+    }
+  },
+  create: async (data: any) => {
+    console.log("Creating {{EntityName}}:", data)
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return { id: "3", ...data }
+  },
+  update: async (id: string, data: any) => {
+    console.log(`Updating {{EntityName}} ${id}:`, data)
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return { id, ...data }
+  },
+  delete: async (id: string) => {
+    console.log(`Deleting {{EntityName}} ${id}`)
+    await new Promise(resolve => setTimeout(resolve, 500))
+  },
+}
+type {{EntityName}}Dto = { id: string; name: string; [key: string]: any }
+type Create{{EntityName}}Dto = Omit<{{EntityName}}Dto, "id">
+type Update{{EntityName}}Dto = Partial<Create{{EntityName}}Dto>
+
+
+export const use{{EntityName}}Store = defineStore("{{entityName}}", () => {
+  // State
+  const list = ref<{{EntityName}}Dto[]>([])
   const total = ref(0)
-  
-  // 缓存相关
-  const cache = ref(new Map<string, { data: any; timestamp: number }>())
-  const CACHE_TTL = 5 * 60 * 1000 // 5分钟缓存
+  const loading = ref(false)
 
-  // 计算属性
-  const isLoading = computed(() => loading.value)
-  const isSubmitting = computed(() => submitting.value)
-  const hasItems = computed(() => items.value.length > 0)
-  const enabledItems = computed(() => items.value.filter(item => item.isEnabled))
-
-  // 获取列表数据
-  const fetchList = async (params?: Get{{EntityName}}ListDto): Promise<PagedResultDto<{{EntityName}}Dto>> => {
+  // Actions
+  const fetchList = async (params: any) => {
+    loading.value = true
     try {
-      loading.value = true
-      
-      const result = await {{entityName}}Service.getList(params)
-      
-      // 更新状态
-      items.value = result.items
-      total.value = result.totalCount
-      
-      return result
+      const response = await {{EntityName}}Service.getList(params)
+      list.value = response.items
+      total.value = response.totalCount
     } catch (error) {
-      console.error('获取{{EntityName}}列表失败:', error)
-      ElMessage.error('获取数据失败')
-      throw error
+      console.error("Failed to fetch {{EntityNamePlural}} list:", error)
     } finally {
       loading.value = false
     }
   }
 
-  // 创建新实体
-  const create = async (data: Create{{EntityName}}Dto): Promise<{{EntityName}}Dto> => {
+  const createItem = async (data: Create{{EntityName}}Dto) => {
     try {
-      submitting.value = true
-      
-      const result = await {{entityName}}Service.create(data)
-      
-      // 更新本地状态
-      items.value.unshift(result)
-      total.value += 1
-      
-      return result
+      await {{EntityName}}Service.create(data)
     } catch (error) {
-      console.error('创建{{EntityName}}失败:', error)
-      ElMessage.error('创建失败')
-      throw error
-    } finally {
-      submitting.value = false
+      console.error("Failed to create {{EntityName}}:", error)
     }
   }
 
-  // 更新实体
-  const update = async (id: string, data: Update{{EntityName}}Dto): Promise<{{EntityName}}Dto> => {
+  const updateItem = async (id: string, data: Update{{EntityName}}Dto) => {
     try {
-      submitting.value = true
-      
-      const result = await {{entityName}}Service.update(id, data)
-      
-      // 更新本地状态
-      const index = items.value.findIndex(item => item.id === id)
-      if (index !== -1) {
-        items.value[index] = result
-      }
-      
-      return result
+      await {{EntityName}}Service.update(id, data)
     } catch (error) {
-      console.error('更新{{EntityName}}失败:', error)
-      ElMessage.error('更新失败')
-      throw error
-    } finally {
-      submitting.value = false
+      console.error(`Failed to update {{EntityName}} ${id}:`, error)
     }
   }
 
-  // 删除实体
-  const remove = async (id: string): Promise<void> => {
+  const deleteItem = async (id: string) => {
     try {
-      submitting.value = true
-      
-      await {{entityName}}Service.delete(id)
-      
-      // 更新本地状态
-      const index = items.value.findIndex(item => item.id === id)
-      if (index !== -1) {
-        items.value.splice(index, 1)
-        total.value -= 1
-      }
-      
+      await {{EntityName}}Service.delete(id)
     } catch (error) {
-      console.error('删除{{EntityName}}失败:', error)
-      ElMessage.error('删除失败')
-      throw error
-    } finally {
-      submitting.value = false
+      console.error(`Failed to delete {{EntityName}} ${id}:`, error)
     }
   }
 
-  // 批量删除
-  const deleteMany = async (ids: string[]): Promise<void> => {
-    try {
-      submitting.value = true
-      
-      await {{entityName}}Service.deleteMany(ids)
-      
-      // 更新本地状态
-      items.value = items.value.filter(item => !ids.includes(item.id))
-      total.value -= ids.length
-      
-    } catch (error) {
-      console.error('批量删除{{EntityName}}失败:', error)
-      ElMessage.error('批量删除失败')
-      throw error
-    } finally {
-      submitting.value = false
-    }
-  }
-
-  // 导出方法和状态
   return {
-    // 状态
-    items,
-    currentItem,
-    loading,
-    submitting,
+    list,
     total,
-    
-    // 计算属性
-    isLoading,
-    isSubmitting,
-    hasItems,
-    enabledItems,
-    
-    // 方法
+    loading,
     fetchList,
-    create,
-    update,
-    delete: remove,
-    deleteMany
+    createItem,
+    updateItem,
+    deleteItem,
   }
 })
-
-// 类型导出
-export type {{EntityName}}Store = ReturnType<typeof use{{EntityName}}Store>

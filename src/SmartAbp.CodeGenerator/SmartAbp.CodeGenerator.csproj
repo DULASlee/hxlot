@@ -15,12 +15,14 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Build" Version="17.14.8" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.14.8" />
     <!-- ABP Framework -->
-    <PackageReference Include="Volo.Abp.Core" Version="9.1.1" />
-    <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="9.1.1" />
-    <PackageReference Include="Volo.Abp.AspNetCore.SignalR" Version="9.1.1" />
-    <PackageReference Include="Volo.Abp.Authorization" Version="9.1.1" />
-    <PackageReference Include="Volo.Abp.AutoMapper" Version="9.1.1" />
+    <PackageReference Include="Volo.Abp.Core" Version="$(AbpVersion)" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="$(AbpVersion)" />
+    <PackageReference Include="Volo.Abp.AspNetCore.SignalR" Version="$(AbpVersion)" />
+    <PackageReference Include="Volo.Abp.Authorization" Version="$(AbpVersion)" />
+    <PackageReference Include="Volo.Abp.AutoMapper" Version="$(AbpVersion)" />
     
     <!-- SignalR -->
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />

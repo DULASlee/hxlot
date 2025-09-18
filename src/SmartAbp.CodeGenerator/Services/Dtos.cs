@@ -60,9 +60,15 @@ namespace SmartAbp.CodeGenerator.Services
         public class ModuleMetadataDto
         {
             public string Id { get; set; } = default!;
-            public string Name { get; set; } = default!; // e.g., 'SmartAbp.Construction'
+            public string SystemName { get; set; } = default!; // e.g., 'SmartConstruction', 'MES'
+            public string Name { get; set; } = default!; // This is now ModuleName, e.g., 'ProjectManagement', 'Device'
             public string DisplayName { get; set; } = default!;
-            public string Version { get; set; } = default!;
+            public string Description { get; set; } = default!; // 模块用途描述
+            public string Version { get; set; } = "1.0.0";
+            public string ArchitecturePattern { get; set; } = "Crud"; // "Crud", "DDD", "CQRS"
+            public DatabaseConfigDto DatabaseInfo { get; set; } = new();
+            public FeatureManagementDto FeatureManagement { get; set; } = new();
+            public List<string> Dependencies { get; set; } = new(); // List of dependent module names
             public List<EnhancedEntityModelDto> Entities { get; set; } = new();
             public List<MenuConfigDto> MenuConfig { get; set; } = new();
             public PermissionConfigDto PermissionConfig { get; set; } = default!;
@@ -71,6 +77,18 @@ namespace SmartAbp.CodeGenerator.Services
         // --- All nested types required by ModuleMetadataDto ---
 
         #region Nested DTOs for EnhancedEntityModelDto
+
+        public class DatabaseConfigDto
+        {
+            public string ConnectionStringName { get; set; } = "Default";
+            public string Schema { get; set; } = default!;
+        }
+
+        public class FeatureManagementDto
+        {
+            public bool IsEnabled { get; set; }
+            public string DefaultPolicy { get; set; } = default!;
+        }
 
         public class EnhancedEntityModelDto
         {

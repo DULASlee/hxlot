@@ -17,6 +17,13 @@ SmartAbp项目前端采用Vue 3 + TypeScript技术栈，需要建立企业级Saa
 - **HTTP客户端**: 统一使用axios封装
 
 ### 目录结构 (Feature-Sliced Design)
+
+为进一步明确低代码引擎的产出规范，特补充视图（Views）层级的强制结构：
+
+- **`src/views/{ModuleName}/{FeatureName}/`**: 每个独立的业务功能（通常对应一个主实体）应拥有自己的目录。
+  - `{ModuleName}`: 业务域，如 `Construction` (智慧工地), `Identity` (身份认证)。
+  - `{FeatureName}`: 功能特性名，通常是实体的PascalCase名称，如 `Project`, `Device`。
+
 ```
 src/SmartAbp.Vue/src/
 ├── core/                 # 核心设施层
@@ -115,3 +122,4 @@ src/SmartAbp.Vue/src/
 
 ## 更新历史
 - 2024-01-09: 初始版本，基于现有架构分析
+- 2025-09-18: 增加低代码引擎视图生成目录规范，强制采用 /views/{Module}/{Feature} 结构。

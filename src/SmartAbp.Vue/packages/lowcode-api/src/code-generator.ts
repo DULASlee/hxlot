@@ -1,4 +1,5 @@
 import { api } from "@/utils/api"
+import type { ModuleMetadata } from "@smartabp/lowcode-designer/types"
 
 /**
  * Code Generator API Service
@@ -83,6 +84,12 @@ export interface CodeGenerationStatistics {
   lastGenerationTime: string
 }
 
+export interface GeneratedModuleResult {
+  moduleName: string
+  generatedFiles: string[]
+  generationReport: string
+}
+
 /**
  * Code Generator API Client
  */
@@ -92,6 +99,13 @@ export const codeGeneratorApi = {
    */
   async getStatistics(): Promise<CodeGenerationStatistics> {
     return await api.get<CodeGenerationStatistics>("/api/code-generator/statistics")
+  },
+
+  /**
+   * [V9] Generate a full module from metadata
+   */
+  async generateModule(metadata: ModuleMetadata): Promise<GeneratedModuleResult> {
+    return await api.post<GeneratedModuleResult>("/api/code-generator/generate-module", metadata)
   },
 
   /**
