@@ -63,6 +63,7 @@ declare module 'vue' {
     ElText: typeof import('element-plus/es')['ElText']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElTree: typeof import('element-plus/es')['ElTree']
+    ElTreeSelect: typeof import('element-plus/es')['ElTreeSelect']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
@@ -77,5 +78,8 @@ declare module 'vue' {
     SmartAbp: typeof import('./src/components/common/SmartAbp.vue')['default']
     SmartAbpLayout: typeof import('./src/components/layout/SmartAbpLayout.vue')['default']
     ThemeSwitcher: typeof import('./src/components/theme/ThemeSwitcher.vue')['default']
+  }
+  export interface GlobalDirectives {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

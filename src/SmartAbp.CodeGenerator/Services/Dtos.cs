@@ -37,6 +37,14 @@ namespace SmartAbp.CodeGenerator.Services
         public class PermissionConfigDto
         {
             public List<PermissionGroupDefinitionDto> Groups { get; set; } = new();
+            public List<CustomPermissionActionDto> CustomActions { get; set; } = new();
+        }
+
+        public class CustomPermissionActionDto
+        {
+            public string EntityName { get; set; } = default!; // e.g., Project
+            public string ActionKey { get; set; } = default!;  // e.g., Approve
+            public string DisplayName { get; set; } = default!; // e.g., 审核
         }
 
         /// <summary>
@@ -68,6 +76,8 @@ namespace SmartAbp.CodeGenerator.Services
             public string ArchitecturePattern { get; set; } = "Crud"; // "Crud", "DDD", "CQRS"
             public DatabaseConfigDto DatabaseInfo { get; set; } = new();
             public FeatureManagementDto FeatureManagement { get; set; } = new();
+            public FrontendConfigDto Frontend { get; set; } = new(); // 新增前端配置
+            public bool GenerateMobilePages { get; set; } // 新增移动端开关
             public List<string> Dependencies { get; set; } = new(); // List of dependent module names
             public List<EnhancedEntityModelDto> Entities { get; set; } = new();
             public List<MenuConfigDto> MenuConfig { get; set; } = new();
@@ -82,12 +92,65 @@ namespace SmartAbp.CodeGenerator.Services
         {
             public string ConnectionStringName { get; set; } = "Default";
             public string Schema { get; set; } = default!;
+            public string Provider { get; set; } = "SqlServer"; // SqlServer | PostgreSql | MySql | Oracle
+        }
+
+        public class FrontendConfigDto // 新增DTO
+        {
+            public string ParentId { get; set; }
+            public string RoutePrefix { get; set; }
         }
 
         public class FeatureManagementDto
         {
             public bool IsEnabled { get; set; }
             public string DefaultPolicy { get; set; } = default!;
+        }
+
+        public class MenuItemDto
+        {
+            public string Id { get; set; }
+            public string Label { get; set; }
+            public List<MenuItemDto> Children { get; set; }
+        }
+
+        // ================= Database Introspection DTOs =================
+        public class DatabaseIntrospectionRequestDto
+        {
+            public string ConnectionStringName { get; set; } = default!; // e.g. "Default"
+            public string Provider { get; set; } = "SqlServer"; // SqlServer | PostgreSql | MySql | Oracle
+            public string? Schema { get; set; } // optional filter
+            public List<string>? Tables { get; set; } // optional filter
+        }
+
+        public class DatabaseSchemaDto
+        {
+            public List<TableSchemaDto> Tables { get; set; } = new();
+        }
+
+        public class TableSchemaDto
+        {
+            public string Schema { get; set; } = default!;
+            public string Name { get; set; } = default!;
+            public List<ColumnSchemaDto> Columns { get; set; } = new();
+            public List<ForeignKeySchemaDto> ForeignKeys { get; set; } = new();
+        }
+
+        public class ColumnSchemaDto
+        {
+            public string Name { get; set; } = default!;
+            public string DataType { get; set; } = default!; // provider-specific type name
+            public bool IsNullable { get; set; }
+            public int? MaxLength { get; set; }
+            public bool IsPrimaryKey { get; set; }
+        }
+
+        public class ForeignKeySchemaDto
+        {
+            public string Column { get; set; } = default!;
+            public string ReferencedSchema { get; set; } = default!;
+            public string ReferencedTable { get; set; } = default!;
+            public string ReferencedColumn { get; set; } = default!;
         }
 
         public class EnhancedEntityModelDto
@@ -178,6 +241,18 @@ namespace SmartAbp.CodeGenerator.Services
             public string ForeignKeyProperty { get; set; } = default!;
             public string JoinTableName { get; set; } = default!;
             public string OnDeleteAction { get; set; } = default!;
+            // V4.2 扩展
+            public bool IsForeignKeyRequired { get; set; } = true;
+            public RelationshipDeleteBehavior OnDeleteBehavior { get; set; } = RelationshipDeleteBehavior.Cascade;
+            public EnhancedEntityModelDto JoinEntity { get; set; } = default!;
+        }
+
+        public enum RelationshipDeleteBehavior
+        {
+            Cascade,
+            Restrict,
+            NoAction,
+            SetNull
         }
 
         public class ValidationRuleDto

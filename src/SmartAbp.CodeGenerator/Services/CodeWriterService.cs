@@ -12,6 +12,21 @@ namespace SmartAbp.CodeGenerator.Services
     public class CodeWriterService : ITransientDependency
     {
         /// <summary>
+        /// Writes content to a specified file path, creating the directory if it doesn't exist.
+        /// </summary>
+        /// <param name="filePath">The full path of the file to write.</param>
+        /// <param name="content">The content to write to the file.</param>
+        public async Task WriteFileAsync(string filePath, string content)
+        {
+            var dir = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+            await File.WriteAllTextAsync(filePath, content, Encoding.UTF8);
+        }
+
+        /// <summary>
         /// Writes generated code to a .generated.cs file and ensures a manual .cs file exists.
         /// </summary>
         /// <param name="filePath">The base path for the file, e.g., "Services/ProjectManagementService.cs"</param>

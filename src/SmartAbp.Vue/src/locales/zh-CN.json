@@ -1,0 +1,179 @@
+{
+  "wizard": {
+    "title": "模块向导",
+    "steps": ["新建", "架构", "建模", "特性", "生成"],
+    "intro": "第一步：新建模块（填写基础信息后继续）",
+    "step1": { "title": "第一步：新建模块" },
+    "step2": { "title": "第二步：架构选型" },
+    "step3": { "title": "第三步：领域建模", "alert": "请先完成实体建模，后续才能配置权限和生成代码。" },
+    "step4": { "title": "第四步：企业级特性" },
+    "step5": { "title": "第五步：预览与生成" },
+    "form": {
+      "systemName": "系统名称",
+      "systemNamePh": "如: SmartConstruction",
+      "moduleName": "模块名称 (Name)",
+      "moduleNamePh": "英文名, PascalCase, 如: ProjectManagement",
+      "displayName": "显示名称",
+      "displayNamePh": "中文名, 如: 项目管理",
+      "description": "模块描述",
+      "descriptionPh": "详细描述模块的业务用途",
+      "frontendIntegration": "前端集成",
+      "parentMenu": "父级菜单",
+      "parentMenuPh": "请选择父级菜单（可留空表示根）",
+      "archPattern": "架构模式",
+      "archPatternPh": "请选择架构模式",
+      "archOptions": {
+        "crud": "CRUD - 简单增删改查",
+        "ddd": "DDD - 领域驱动设计",
+        "cqrs": "CQRS - 命令查询职责分离"
+      }
+    },
+    "db": {
+      "section": "数据库配置",
+      "connName": "连接字符串名称",
+      "connNamePh": "选择连接字符串",
+      "schema": "数据库 Schema",
+      "schemaPh": "如: sm_project (小写+下划线)"
+    },
+    "feature": {
+      "section": "特性管理",
+      "enable": "启用特性管理",
+      "defaultPolicy": "默认授权策略",
+      "defaultPolicyPh": "如: MyModule.Default",
+      "defaultPolicyHelp": "用于统一授权校验的策略名，通常以 系统名.模块名 或 模块名.Default 命名，前后端保持一致。",
+      "version": "初始版本",
+      "dependencies": "模块依赖",
+      "dependenciesPh": "选择此模块依赖的其他模块 (暂无)"
+    },
+    "perms": {
+      "section": "权限设置（自定义操作）",
+      "hint": "先在上一步创建实体后再设置此处权限；系统会生成强类型常量与Provider。",
+      "selectEntity": "选择实体",
+      "selectAction": "选择操作",
+      "displayNamePh": "显示名称，如：审核",
+      "actionLabels": {
+        "approve": "审核",
+        "reject": "驳回",
+        "publish": "发布",
+        "assign": "分配"
+      },
+      "add": "添加",
+      "entityCol": "实体",
+      "actionCol": "操作",
+      "displayNameCol": "显示名称",
+      "previewCol": "预览",
+      "opsCol": "操作",
+      "remove": "删除"
+    },
+    "perms": {
+      "crudSection": "标准 CRUD 权限矩阵",
+      "selectAll": "全选",
+      "selectNone": "全不选",
+      "create": "创建",
+      "read": "读取",
+      "update": "更新",
+      "delete": "删除"
+    },
+    "preview": {
+      "systemName": "系统名称",
+      "moduleName": "模块名称",
+      "arch": "架构模式",
+      "entityCount": "实体数量",
+      "generateBtn": "确认并生成模块",
+      "report": "生成报告"
+    },
+    "footer": {
+      "prev": "上一步",
+      "next": "下一步",
+      "submit": "生成模块"
+    },
+    "rules": {
+      "systemNameReq": "系统名称必填",
+      "moduleNameReq": "模块名称必填",
+      "displayNameReq": "显示名称必填",
+      "mustPascal": "必须为 PascalCase",
+      "connReq": "请选择连接字符串",
+      "schemaReq": "Schema 必填",
+      "schemaPattern": "小写+下划线"
+    },
+    "msg": {
+      "generating": "🏗️ 正在生成全栈模块代码...",
+      "generated": "✅ 全栈模块 \"{name}\" 生成成功！",
+      "apiFailed": "API 请求失败: ",
+      "formInvalid": "表单校验未通过，请检查必填项",
+      "confirmGenerate": "确认生成该模块吗？",
+      "cancelled": "已取消生成"
+    }
+  },
+  "designer": {
+    "entityDesigner": "实体设计器",
+    "clear": "清空",
+    "relationships": "关系",
+    "preview": "预览",
+    "generate": "生成",
+    "entityConfig": "实体配置",
+    "entityName": "实体名称",
+    "module": "模块",
+    "baseClass": "基类",
+    "description": "描述",
+    "namespace": "命名空间",
+    "table": "表名",
+    "schema": "Schema",
+    "features": { "aggregate": "聚合根", "tenant": "多租户", "softDelete": "软删除" },
+    "propertiesTab": "属性",
+    "relationshipsTab": "关系",
+    "propertyTypes": "属性类型",
+    "untitled": "未命名实体",
+    "propsCount": "个属性",
+    "dropHint": "将属性类型拖到此处以构建实体",
+    "required": "必填",
+    "propConfig": "属性配置",
+    "codePreview": "增强代码预览",
+    "importSql": "导入SQL",
+    "importDb": "从数据库导入",
+    "entities": "实体集合",
+    "addEntity": "新增实体",
+    "removeEntity": "删除实体",
+    "confirmRemoveEntity": "确定要删除当前实体吗？",
+    "entityRemoved": "实体已删除",
+    "name": "名称",
+    "type": "类型",
+    "length": "长度",
+    "importMode": "导入模式",
+    "append": "追加",
+    "replace": "替换",
+    "sqlPlaceholder": "粘贴包含 CREATE TABLE / FOREIGN KEY 的 SQL（支持多表、外键、多对多中间表自动识别）",
+    "cancel": "取消",
+    "import": "导入",
+    "importSuccess": "成功导入 {count} 个实体",
+    "parseFailed": "SQL 解析失败，请检查语法",
+    "connectionString": "连接字符串",
+    "provider": "数据库类型",
+    "tables": "表",
+    "selectTables": "选择需要导入的表（可多选）",
+    "loadTables": "读取表",
+    "connRequired": "请选择连接字符串",
+    "tablesLoaded": "已加载 {count} 张表",
+    "loadFailed": "读取失败",
+    "loadTablesFirst": "请先读取表清单",
+    "saveDraft": "保存草稿",
+    "loadDraft": "读取草稿",
+    "draftSaved": "草稿已保存",
+    "draftLoaded": "草稿已载入",
+    "noDraft": "暂无草稿",
+    "loadFailed": "载入失败",
+    "toast": {
+      "added": "已添加属性：{name}",
+      "cleared": "已清空",
+      "needName": "请先填写实体名称",
+      "generated": "实体生成成功！",
+      "generateFailed": "生成实体失败：{msg}",
+      "propSaved": "属性保存成功"
+    },
+    "confirm": {
+      "clear": { "title": "确认清空", "message": "确定要清空设计器吗？" }
+    }
+  }
+}
+
+

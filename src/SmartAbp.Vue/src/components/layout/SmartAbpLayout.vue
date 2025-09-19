@@ -35,8 +35,14 @@
       </nav>
 
       <div class="navbar-right">
-        <!-- 集成新的主题切换器 -->
-        <ThemeSwitcher />
+        <!-- 语言切换器 -->
+        <button class="icon-btn" title="Language" @click="toggleLocale">
+          <i :class="currentLocale === 'zh-CN' ? 'fas fa-language' : 'fas fa-globe'" />
+        </button>
+        <!-- 主题切换按钮（仅图标） -->
+        <button class="icon-btn" title="Theme" @click="themeStore.toggleDarkMode()">
+          <i :class="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'" />
+        </button>
         <button
           class="icon-btn"
           title="设置"
@@ -211,11 +217,13 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useThemeStore } from '@/stores'
 import { useAuthStore } from '@/stores/modules/auth'
-import ThemeSwitcher from '@/components/theme/ThemeSwitcher.vue'
 import { useMenu } from '@/composables/useMenu'
+import { i18n, setLocale } from '@/plugins/i18n'
+import { storeToRefs } from 'pinia'
 
 const router = useRouter()
 const themeStore = useThemeStore()
+const { isDarkMode } = storeToRefs(themeStore)
 const authStore = useAuthStore()
 
 // 侧边栏显示
@@ -276,6 +284,11 @@ const logout = () => {
   localStorage.removeItem('smartabp_token')
   localStorage.removeItem('smartabp_user')
   router.push('/login')
+}
+
+const currentLocale = computed(() => i18n.global.locale.value as 'zh-CN' | 'en-US')
+const toggleLocale = () => {
+  setLocale(currentLocale.value === 'zh-CN' ? 'en-US' : 'zh-CN')
 }
 
 onMounted(() => {

@@ -39,4 +39,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Force update Roslyn packages to resolve version conflicts -->
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.14.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.14.0" />
+  </ItemGroup>
+
 </Project>

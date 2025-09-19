@@ -77,9 +77,35 @@ namespace SmartAbp.CodeGenerator.Services
         Task<GeneratedModuleDto> GenerateModuleAsync(ModuleMetadataDto input);
         
         /// <summary>
+        /// Returns available connection string names from configuration
+        /// </summary>
+        Task<System.Collections.Generic.List<string>> GetConnectionStringNamesAsync();
+        
+        /// <summary>
+        /// Returns menu tree items used by the module wizard
+        /// </summary>
+        Task<System.Collections.Generic.List<MenuItemDto>> GetMenuTreeAsync();
+
+        /// <summary>
+        /// Gets UI configuration for a specific module/entity
+        /// </summary>
+        Task<EntityUIConfigDto> GetUiConfigAsync(string moduleName, string entityName);
+
+        /// <summary>
+        /// Saves UI configuration for a specific module/entity
+        /// </summary>
+        Task SaveUiConfigAsync(string moduleName, string entityName, EntityUIConfigDto config);
+        
+        /// <summary>
         /// Gets generation statistics and performance metrics
         /// </summary>
         Task<CodeGenerationStatisticsDto> GetStatisticsAsync();
+
+        /// <summary>
+        /// Introspects a database via configured connection string and provider, returning schema tables/columns/relationships.
+        /// Supports SqlServer, PostgreSql, MySql, Oracle.
+        /// </summary>
+        Task<DatabaseSchemaDto> IntrospectDatabaseAsync(DatabaseIntrospectionRequestDto request);
     }
 }
 

@@ -114,8 +114,13 @@ export class TemplateRenderer {
 
   /**
    * ⚙️ 渲染模板 - 参数替换
+   * 根据模板文件类型选择合适的注释横幅
    */
-  renderTemplate(template: string, params: TemplateParameters): string {
+  private renderTemplateWithBanner(
+    template: string,
+    params: TemplateParameters,
+    templatePath: string,
+  ): string {
     let rendered = template
 
     // 🔥 强制参数验证
@@ -138,14 +143,19 @@ export class TemplateRenderer {
       rendered = rendered.replace(regex, value)
     })
 
-    // 添加生成标识
-    const banner = `<!--
-AI_GENERATED_COMPONENT: true
-Generated at: ${new Date().toISOString()}
-Template parameters: ${JSON.stringify(params)}
-Based on SmartAbp template library
-DO NOT EDIT MANUALLY - Regenerate using module wizard
--->\n\n`
+    // 添加生成标识（根据扩展名选择注释样式）
+    const ext = templatePath.toLowerCase().endsWith('.vue') || templatePath.toLowerCase().endsWith('.html')
+      ? 'html'
+      : 'block'
+
+    const bannerBody = `AI_GENERATED_COMPONENT: true\nGenerated at: ${new Date().toISOString()}\nTemplate parameters: ${JSON.stringify(
+      params,
+    )}\nBased on SmartAbp template library\nDO NOT EDIT MANUALLY - Regenerate using module wizard\n`
+
+    const banner =
+      ext === 'html'
+        ? `<!--\n${bannerBody}-->\n\n`
+        : `/*\n${bannerBody}*/\n\n`
 
     return banner + rendered
   }
@@ -170,8 +180,8 @@ DO NOT EDIT MANUALLY - Regenerate using module wizard
     // 2. 加载模板内容
     const template = await this.loadTemplate(templatePath)
 
-    // 3. 渲染模板
-    const content = this.renderTemplate(template, params)
+    // 3. 渲染模板（带类型感知注释横幅）
+    const content = this.renderTemplateWithBanner(template, params, templatePath)
 
     return {
       content,

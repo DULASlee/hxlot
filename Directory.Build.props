@@ -2,4 +2,54 @@
   <PropertyGroup>
     <AbpVersion>9.1.1</AbpVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- 
+      This file enforces consistent dependency versions across the entire solution.
+      It helps to prevent NuGet version conflicts like NU1608.
+    -->
+    <PackageReference Update="Microsoft.CodeAnalysis.Common" Version="4.14.0" />
+    <PackageReference Update="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
+    <PackageReference Update="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.14.0" />
+    <PackageReference Update="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.14.0" />
+    <PackageReference Update="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.14.0" />
+    <PackageReference Update="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
+
+    <!-- Centralized ABP Framework Version Management -->
+    <PackageReference Update="Volo.Abp.Core" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.AspNetCore.Mvc" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.AspNetCore.SignalR" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.Authorization" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.AutoMapper" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.Account.HttpApi" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.Account.Application.Contracts" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.FeatureManagement.Application.Contracts" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.FeatureManagement.HttpApi" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.Identity.Application.Contracts" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.Identity.HttpApi" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.PermissionManagement.Application.Contracts" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.PermissionManagement.HttpApi" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.SettingManagement.Application.Contracts" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.SettingManagement.HttpApi" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.TenantManagement.Application.Contracts" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.TenantManagement.HttpApi" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.Account.Application" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.FeatureManagement.Application" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.Identity.Application" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.PermissionManagement.Application" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.SettingManagement.Application" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.TenantManagement.Application" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.AuditLogging.Domain" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.BackgroundJobs.Domain" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.BlobStoring.Database.Domain" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.Caching" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.Emailing" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.FeatureManagement.Domain" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.Identity.Domain" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.OpenIddict.Domain" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.PermissionManagement.Domain.Identity" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.PermissionManagement.Domain.OpenIddict" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.SettingManagement.Domain" Version="$(AbpVersion)" />
+    <PackageReference Update="Volo.Abp.TenantManagement.Domain" Version="$(AbpVersion)" />
+  </ItemGroup>
 </Project>

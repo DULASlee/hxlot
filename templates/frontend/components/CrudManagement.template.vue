@@ -14,6 +14,9 @@ AI_TEMPLATE_INFO:
 
 <template>
   <div class="entity-management">
+    <!-- 若存在运行时UI配置，则优先使用元数据驱动渲染器 -->
+    <MetadataDrivenPageRenderer v-if="schema" :schema="schema" />
+    <template v-else>
     <!-- 页面头部 -->
     <div class="page-header">
       <div class="page-title">
@@ -270,6 +273,7 @@ AI_TEMPLATE_INFO:
         </div>
       </template>
     </el-dialog>
+    </template>
   </div>
 </template>
 
@@ -279,7 +283,10 @@ AI_TEMPLATE_INFO:
 // {{entityName}} - 实体名称（camelCase）
 // {{entityDisplayName}} - 实体显示名称
 
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, computed } from "vue"
+import MetadataDrivenPageRenderer from "@smartabp/lowcode-designer/runtime/MetadataDrivenPageRenderer.vue"
+import { uiConfigToPageSchema } from "@smartabp/lowcode-designer/utils/uiConfigMapper"
+import { codeGeneratorApi } from "@smartabp/lowcode-api"
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete } from '@element-plus/icons-vue'
 
@@ -293,6 +300,9 @@ const loading = ref(false)
 const submitting = ref(false)
 const dialogVisible = ref(false)
 const selectedRows = ref<any[]>([])
+
+// 元数据驱动页面 Schema（若有 UI 配置，则优先使用该渲染路径）
+const schema = ref<any | null>(null)
 
 // 表单引用
 const searchFormRef = ref()
@@ -352,6 +362,8 @@ const fetchData = async () => {
       maxResultCount: pagination.pageSize,
       sorting: sorting.value || undefined
     }
+    // 避免TS未使用变量错误
+    void params
 
     // TODO: 调用实际的API服务
     // const result = await {{entityName}}Store.fetchList(params)
@@ -430,6 +442,8 @@ const handleBatchDelete = async () => {
     )
     
     const ids = selectedRows.value.map(row => row.id)
+    // 避免TS未使用变量错误
+    void ids
     
     // TODO: 调用批量删除API
     // await {{entityName}}Store.deleteMany(ids)
@@ -501,8 +515,28 @@ const formatDateTime = (date: string) => {
 }
 
 // 生命周期
-onMounted(() => {
-  fetchData()
+onMounted(async () => {
+  try {
+    // 优先从本地 appshell/ui-config 目录加载（构建产物 / HMR 兼容）
+    const modules = import.meta.glob("@/appshell/ui-config/*.ui.json", { eager: true }) as Record<string, any>
+    const expectedKey = "/src/appshell/ui-config/{{ModuleName}}.{{EntityName}}.ui.json"
+    const mod = modules[expectedKey]
+    let cfg: any | undefined = mod?.default ?? mod
+
+    // 若本地未命中，则回退到后端接口加载（保证运行时可定制）
+    if (!cfg) {
+      cfg = await codeGeneratorApi.getUiConfig("{{ModuleName}}", "{{EntityName}}")
+    }
+
+    if (cfg) {
+      schema.value = uiConfigToPageSchema("{{EntityName}}", cfg)
+    }
+  } catch (_) {
+    // 忽略错误，走静态模板渲染
+  } finally {
+    // 无论是否存在UI配置，均进行一次数据加载（静态模板所需）
+    fetchData()
+  }
 })
 </script>
 

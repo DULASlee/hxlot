@@ -1,0 +1,15 @@
+{
+  "listConfig": {
+    "defaultPageSize": 20,
+    "displayColumns": ["name", "email", "phone", "isActive"]
+  },
+  "formConfig": {
+    "layout": "grid",
+    "columnCount": 2
+  },
+  "detailConfig": {
+    "layout": "basic"
+  }
+}
+
+

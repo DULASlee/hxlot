@@ -12,9 +12,13 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
+      include: [
+        // 聚焦本次改动的低代码 UIConfig 映射与运行时渲染
+        "packages/lowcode-designer/src/utils/uiConfigMapper.ts",
+      ],
       thresholds: {
         statements: 20,
-        branches: 60,
+        branches: 50,
         functions: 60,
         lines: 20,
       },

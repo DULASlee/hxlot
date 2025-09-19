@@ -1,0 +1,179 @@
+{
+  "wizard": {
+    "title": "Module Wizard",
+    "steps": ["New", "Architecture", "Model", "Features", "Generate"],
+    "intro": "Step 1: Create module (fill the basics then continue)",
+    "step1": { "title": "Step 1: Create Module" },
+    "step2": { "title": "Step 2: Architecture" },
+    "step3": { "title": "Step 3: Domain Modeling", "alert": "Please complete entity modeling first, then configure permissions and generate code." },
+    "step4": { "title": "Step 4: Enterprise Features" },
+    "step5": { "title": "Step 5: Preview & Generate" },
+    "form": {
+      "systemName": "System Name",
+      "systemNamePh": "e.g., SmartConstruction",
+      "moduleName": "Module Name (Name)",
+      "moduleNamePh": "English, PascalCase, e.g., ProjectManagement",
+      "displayName": "Display Name",
+      "displayNamePh": "Chinese name, e.g., 项目管理",
+      "description": "Description",
+      "descriptionPh": "Describe this module's business purpose",
+      "frontendIntegration": "Frontend Integration",
+      "parentMenu": "Parent Menu",
+      "parentMenuPh": "Select parent menu (or leave empty for root)",
+      "archPattern": "Architecture Pattern",
+      "archPatternPh": "Select an architecture pattern",
+      "archOptions": {
+        "crud": "CRUD - Simple Create/Read/Update/Delete",
+        "ddd": "DDD - Domain-Driven Design",
+        "cqrs": "CQRS - Command/Query Responsibility Segregation"
+      }
+    },
+    "db": {
+      "section": "Database Configuration",
+      "connName": "Connection String Name",
+      "connNamePh": "Select a connection string",
+      "schema": "Database Schema",
+      "schemaPh": "e.g., sm_project (lowercase + underscore)"
+    },
+    "feature": {
+      "section": "Feature Management",
+      "enable": "Enable Feature Management",
+      "defaultPolicy": "Default Authorization Policy",
+      "defaultPolicyPh": "e.g., MyModule.Default",
+      "defaultPolicyHelp": "Uniform policy name for authorization checks, usually System.Module or Module.Default; must match frontend/backend.",
+      "version": "Initial Version",
+      "dependencies": "Module Dependencies",
+      "dependenciesPh": "Select dependent modules (none yet)"
+    },
+    "perms": {
+      "section": "Permission Settings (Custom Actions)",
+      "hint": "Create entities in the previous step, then configure permissions; strong-typed constants and provider will be generated.",
+      "selectEntity": "Select Entity",
+      "selectAction": "Select Action",
+      "displayNamePh": "Display name, e.g., Approve",
+      "actionLabels": {
+        "approve": "Approve",
+        "reject": "Reject",
+        "publish": "Publish",
+        "assign": "Assign"
+      },
+      "add": "Add",
+      "entityCol": "Entity",
+      "actionCol": "Action",
+      "displayNameCol": "Display Name",
+      "previewCol": "Preview",
+      "opsCol": "Operations",
+      "remove": "Remove"
+    },
+    "perms": {
+      "crudSection": "Standard CRUD Permission Matrix",
+      "selectAll": "Select All",
+      "selectNone": "Select None",
+      "create": "Create",
+      "read": "Read",
+      "update": "Update",
+      "delete": "Delete"
+    },
+    "preview": {
+      "systemName": "System Name",
+      "moduleName": "Module Name",
+      "arch": "Architecture",
+      "entityCount": "Entity Count",
+      "generateBtn": "Confirm and Generate Module",
+      "report": "Generation Report"
+    },
+    "footer": {
+      "prev": "Previous",
+      "next": "Next",
+      "submit": "Generate Module"
+    },
+    "rules": {
+      "systemNameReq": "System name is required",
+      "moduleNameReq": "Module name is required",
+      "displayNameReq": "Display name is required",
+      "mustPascal": "Must be PascalCase",
+      "connReq": "Please select a connection string",
+      "schemaReq": "Schema is required",
+      "schemaPattern": "lowercase + underscore"
+    },
+    "msg": {
+      "generating": "🏗️ Generating full-stack module code...",
+      "generated": "✅ Module \"{name}\" generated successfully!",
+      "apiFailed": "API request failed: ",
+      "formInvalid": "Form validation failed. Please check required fields.",
+      "confirmGenerate": "Are you sure you want to generate this module?",
+      "cancelled": "Generation cancelled"
+    }
+  },
+  "designer": {
+    "entityDesigner": "Entity Designer",
+    "clear": "Clear",
+    "relationships": "Relationships",
+    "preview": "Preview",
+    "generate": "Generate",
+    "entityConfig": "Entity Configuration",
+    "entityName": "Entity Name",
+    "module": "Module",
+    "baseClass": "Base Class",
+    "description": "Description",
+    "namespace": "Namespace",
+    "table": "Table Name",
+    "schema": "Schema",
+    "features": { "aggregate": "Aggregate Root", "tenant": "Multi-Tenant", "softDelete": "Soft Delete" },
+    "propertiesTab": "Properties",
+    "relationshipsTab": "Relationships",
+    "propertyTypes": "Property Types",
+    "untitled": "Untitled Entity",
+    "propsCount": "properties",
+    "dropHint": "Drag property types here to build your entity",
+    "required": "Required",
+    "propConfig": "Property Configuration",
+    "codePreview": "Enhanced Code Preview",
+    "importSql": "Import SQL",
+    "importDb": "Import From Database",
+    "entities": "Entities",
+    "addEntity": "Add Entity",
+    "removeEntity": "Remove Entity",
+    "confirmRemoveEntity": "Are you sure you want to remove the current entity?",
+    "entityRemoved": "Entity removed",
+    "name": "Name",
+    "type": "Type",
+    "length": "Length",
+    "importMode": "Import Mode",
+    "append": "Append",
+    "replace": "Replace",
+    "sqlPlaceholder": "Paste SQL with CREATE TABLE / FOREIGN KEY (supports multi-table, FKs, and many-to-many join detection)",
+    "cancel": "Cancel",
+    "import": "Import",
+    "importSuccess": "Imported {count} entities successfully",
+    "parseFailed": "SQL parsing failed. Please check the syntax.",
+    "connectionString": "Connection String",
+    "provider": "Database Provider",
+    "tables": "Tables",
+    "selectTables": "Select tables to import (multi-select)",
+    "loadTables": "Load Tables",
+    "connRequired": "Please select a connection string",
+    "tablesLoaded": "Loaded {count} tables",
+    "loadFailed": "Load failed",
+    "loadTablesFirst": "Please load tables first",
+    "saveDraft": "Save Draft",
+    "loadDraft": "Load Draft",
+    "draftSaved": "Draft saved",
+    "draftLoaded": "Draft loaded",
+    "noDraft": "No draft found",
+    "loadFailed": "Load failed",
+    "toast": {
+      "added": "Added {name} property",
+      "cleared": "Designer cleared",
+      "needName": "Please enter entity name first",
+      "generated": "Entity generated successfully!",
+      "generateFailed": "Failed to generate entity: {msg}",
+      "propSaved": "Property saved successfully"
+    },
+    "confirm": {
+      "clear": { "title": "Confirm Clear", "message": "Are you sure you want to clear the designer?" }
+    }
+  }
+}
+
+

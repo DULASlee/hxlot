@@ -52,6 +52,8 @@ namespace SmartAbp.CodeGenerator
             
             // Application service
             services.AddScoped<CodeGenerationAppService>();
+            services.AddScoped<DefaultUIConfigGenerator>();
+            services.AddScoped<FrontendIntegrationService>();
             
             // Configure code generator options
             services.Configure<CodeGeneratorOptions>(options =>

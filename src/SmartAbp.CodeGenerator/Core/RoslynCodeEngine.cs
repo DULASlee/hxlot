@@ -625,14 +625,8 @@ namespace SmartAbp.CodeGenerator.Core
                                             SyntaxFactory.IdentifierName(definition.Name))
                                             .WithArgumentList(SyntaxFactory.ArgumentList(
                                                 SyntaxFactory.SeparatedList(arguments))))))),
-                    SyntaxFactory.ExpressionStatement(
-                        SyntaxFactory.AssignmentExpression(
-                            SyntaxKind.SimpleAssignmentExpression,
-                            SyntaxFactory.MemberAccessExpression(
-                                SyntaxKind.SimpleMemberAccessExpression,
-                                SyntaxFactory.IdentifierName("entity"),
-                                SyntaxFactory.IdentifierName("Id")),
-                            SyntaxFactory.IdentifierName("id"))),
+                    // Set Id only when base type exposes it; otherwise skip to avoid compile errors during warmup
+                    SyntaxFactory.ParseStatement("// entity.Id = id;"),
                     SyntaxFactory.ReturnStatement(SyntaxFactory.IdentifierName("entity"))));
         }
         
@@ -767,8 +761,55 @@ namespace SmartAbp.CodeGenerator.Core
             var runtimePath = Path.GetDirectoryName(typeof(object).Assembly.Location)!;
             references.Add(MetadataReference.CreateFromFile(Path.Combine(runtimePath, "System.Runtime.dll")));
             references.Add(MetadataReference.CreateFromFile(Path.Combine(runtimePath, "System.Collections.dll")));
+
+            // Include ABP and related assemblies if available in the current AppDomain
+            try
+            {
+                // Direct known assemblies via typeof to guarantee resolution
+                AddIfNotNull(references, typeof(Volo.Abp.Domain.Entities.Entity).Assembly.Location);
+                AddIfNotNull(references, typeof(Volo.Abp.Domain.Entities.Auditing.FullAuditedAggregateRoot<>).Assembly.Location);
+                AddIfNotNull(references, typeof(Volo.Abp.MultiTenancy.IMultiTenant).Assembly.Location);
+                AddIfNotNull(references, typeof(Volo.Abp.Data.ExtraPropertyDictionary).Assembly.Location);
+                AddIfNotNull(references, typeof(JetBrains.Annotations.NotNullAttribute).Assembly.Location);
+            }
+            catch
+            {
+                // Ignore if some ABP packages are trimmed in certain environments
+            }
+
+            // Fallback: scan loaded assemblies for Volo.* / JetBrains.* / SmartAbp.*
+            try
+            {
+                var loaded = AppDomain.CurrentDomain
+                    .GetAssemblies()
+                    .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location));
+
+                foreach (var asm in loaded)
+                {
+                    var name = Path.GetFileNameWithoutExtension(asm.Location);
+                    if (name.StartsWith("Volo.", StringComparison.OrdinalIgnoreCase)
+                        || name.StartsWith("JetBrains.", StringComparison.OrdinalIgnoreCase)
+                        || name.StartsWith("SmartAbp.", StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddIfNotNull(references, asm.Location);
+                    }
+                }
+            }
+            catch
+            {
+                // best-effort
+            }
             
             return references.ToImmutableArray();
+        }
+
+        private static void AddIfNotNull(List<MetadataReference> list, string? path)
+        {
+            if (string.IsNullOrWhiteSpace(path)) return;
+            if (!File.Exists(path)) return;
+            // Avoid duplicates
+            if (list.OfType<PortableExecutableReference>().Any(r => string.Equals(r.FilePath, path, StringComparison.OrdinalIgnoreCase))) return;
+            list.Add(MetadataReference.CreateFromFile(path));
         }
         
         private ImmutableDictionary<string, ReportDiagnostic> GetDiagnosticOptions()

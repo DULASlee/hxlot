@@ -407,6 +407,37 @@ serena search "#entity-designer AND #backend-entities"
 ---
 *本索引文件由SmartAbp团队维护，最后更新时间: 2025-01-12*
 
+## V4.2 代码生成引擎现状与差距（2025-09-18）
+
+### 已实现能力（后端主线）
+- `CodeGenerationAppService` 负责端到端编排：生成→集成→迁移→前端占位生成
+- 使用 `CrudArchitectureGenerator` 与 `FrontendGenerator`；通过 `CodeWriterService` 落盘
+- 统一元数据 `V9/ModuleMetadataDto` 已就绪（实体/关系/UI骨架/权限配置等）
+- 提供连接串枚举 API；菜单树 API 为临时 Mock
+
+### 关键差距（与V4.2计划对照）
+- `GenerateModuleAsync` 仍使用硬编码测试数据，未消费真实 `ModuleMetadataDto` 入参
+- `GetMenuTreeAsync` 为 Mock，需改为仓储/服务驱动的真实菜单树
+- 迁移编排仅执行 `migrations add`，尚未执行 `database update`
+- 缺少 `DefaultUIConfigGenerator`：无法基于实体与权限自动生成 UI 配置
+- 缺少 `FrontendIntegrationService`：未通过 TS AST 自动注册路由与菜单
+- `FrontendGenerator` 若干占位实现：未消费 UI 配置与模板进行生成
+
+### 关键文件（后端）
+- `src/SmartAbp.CodeGenerator/Services/CodeGenerationAppService.cs`
+- `src/SmartAbp.CodeGenerator/Services/Dtos.cs`（统一元数据 V9）
+- `src/SmartAbp.CodeGenerator/Core/Generation/Crud/*.cs`
+
+### 下一步动作（落实V4.2）
+1) `GenerateModuleAsync` 改为使用请求体 `ModuleMetadataDto`；移除测试数据
+2) 实现真实菜单 API；接入菜单仓储/服务并返回树
+3) 新增 `DefaultUIConfigGenerator`，在编排早期生成并注入 UI 配置
+4) 迁移编排补全 `dotnet ef database update`
+5) 新增 `FrontendIntegrationService`，用 TypeScript Compiler API 修改 `SmartAbp.Vue` 路由与菜单
+6) 升级 `FrontendGenerator` 以消费 UI 配置与项目模板
+
+参考：`doc/architecture/implementation-plan/代码生成引擎开发计划-V4.2-技术评审版.md`
+
 ## 📋 **文档概述**
 - **创建时间**: 2025-01-12
 - **维护者**: SmartAbp Team  

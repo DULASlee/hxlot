@@ -17,19 +17,25 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Build" Version="17.14.8" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.14.8" />
+    
+    <!-- Roslyn and Code Analysis -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.14.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all" />
+    
+    <PackageReference Include="Pluralize.NET" Version="1.0.2" />
+
     <!-- ABP Framework -->
     <PackageReference Include="Volo.Abp.Core" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.AspNetCore.SignalR" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.Authorization" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.AutoMapper" Version="$(AbpVersion)" />
+    <PackageReference Include="Volo.Abp.Autofac" Version="$(AbpVersion)" />
+    <PackageReference Include="Volo.Abp.Ddd.Application" Version="$(AbpVersion)" />
     
     <!-- SignalR -->
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
-    
-    <!-- Roslyn and Code Analysis -->
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
     
     <!-- Microsoft Extensions -->
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="9.0.0" />
@@ -46,6 +52,11 @@
     <PackageReference Include="FluentValidation" Version="11.8.1" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.1" />
+    <!-- Database providers for schema introspection -->
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
+    <PackageReference Include="Npgsql" Version="8.0.4" />
+    <PackageReference Include="MySqlConnector" Version="2.3.7" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="3.21.130" />
   </ItemGroup>
 
 </Project>

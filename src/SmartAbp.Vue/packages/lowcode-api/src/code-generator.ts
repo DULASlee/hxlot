@@ -1,5 +1,6 @@
 import { api } from "@/utils/api"
 import type { ModuleMetadata } from "@smartabp/lowcode-designer/types"
+import type { EntityUIConfig } from "./types"
 
 /**
  * Code Generator API Service
@@ -90,6 +91,45 @@ export interface GeneratedModuleResult {
   generationReport: string
 }
 
+export interface MenuItemDto {
+  id: string
+  label: string
+  children?: MenuItemDto[]
+}
+
+export interface DatabaseIntrospectionRequest {
+  connectionStringName: string
+  provider: "SqlServer" | "PostgreSql" | "MySql" | "Oracle"
+  schema?: string
+  tables?: string[]
+}
+
+export interface DatabaseSchema {
+  tables: TableSchema[]
+}
+
+export interface TableSchema {
+  schema: string
+  name: string
+  columns: ColumnSchema[]
+  foreignKeys: ForeignKeySchema[]
+}
+
+export interface ColumnSchema {
+  name: string
+  dataType: string
+  isNullable: boolean
+  maxLength?: number
+  isPrimaryKey: boolean
+}
+
+export interface ForeignKeySchema {
+  column: string
+  referencedSchema: string
+  referencedTable: string
+  referencedColumn: string
+}
+
 /**
  * Code Generator API Client
  */
@@ -106,6 +146,39 @@ export const codeGeneratorApi = {
    */
   async generateModule(metadata: ModuleMetadata): Promise<GeneratedModuleResult> {
     return await api.post<GeneratedModuleResult>("/api/code-generator/generate-module", metadata)
+  },
+
+  /**
+   * Get available connection string names
+   */
+  async getConnectionStrings(): Promise<string[]> {
+    return await api.get<string[]>("/api/code-generator/connection-strings")
+  },
+
+  /**
+   * Get menu tree for selecting parent menu
+   */
+  async getMenuTree(): Promise<MenuItemDto[]> {
+    return await api.get<MenuItemDto[]>("/api/code-generator/menus")
+  },
+
+  /** Introspect database schema */
+  async introspectDatabase(req: DatabaseIntrospectionRequest): Promise<DatabaseSchema> {
+    return await api.post<DatabaseSchema>("/api/code-generator/introspect-db", req)
+  },
+
+  /**
+   * Get UI config for a module/entity
+   */
+  async getUiConfig(moduleName: string, entityName: string): Promise<EntityUIConfig> {
+    return await api.get<EntityUIConfig>(`/api/code-generator/ui-config?module=${encodeURIComponent(moduleName)}&entity=${encodeURIComponent(entityName)}`)
+  },
+
+  /**
+   * Save UI config for a module/entity
+   */
+  async saveUiConfig(moduleName: string, entityName: string, config: EntityUIConfig): Promise<void> {
+    await api.post<void>(`/api/code-generator/ui-config?module=${encodeURIComponent(moduleName)}&entity=${encodeURIComponent(entityName)}`, config)
   },
 
   /**

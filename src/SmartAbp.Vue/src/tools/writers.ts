@@ -79,13 +79,15 @@ ${registrations.join(",\n")}
         if (pathStr) {
           const importName = `${m.name}_${hook}`
           imports.push(`import ${importName} from '${pathStr}'`)
-          calls.push(`    await ${importName}?.(ctx) // ${m.name}`)
+          calls.push(`    await ${importName}?.(_ctx) // ${m.name}`)
         }
       })
 
       // 生成每个 hook 的函数
       sections.push(
-        `// ${hook} hooks\n${imports.join("\n")}\n\nexport async function run${hook.charAt(0).toUpperCase() + hook.slice(1)}(ctx: any) {\n  try {\n${calls.join("\n")}\n  } catch (error) {\n    console.error('[Lifecycle] Error in ${hook}:', error)\n    throw error\n  }\n}`,
+        `// ${hook} hooks\n${imports.join("\n")}\n\nexport async function run${
+          hook.charAt(0).toUpperCase() + hook.slice(1)
+        }(_ctx: any) {\n  try {\n${calls.join("\n")}\n  } catch (error) {\n    console.error('[Lifecycle] Error in ${hook}:', error)\n    throw error\n  }\n}`,
       )
     })
 

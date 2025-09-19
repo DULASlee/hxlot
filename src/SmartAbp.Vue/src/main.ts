@@ -81,6 +81,7 @@ import { createPinia } from "pinia"
 import App from "./App.vue"
 import router from "./router"
 import { logger } from "./utils/logger"
+import { i18n } from "./plugins/i18n"
 // 低代码设计器 store 暂未对外导出，先移除硬依赖
 
 // Highlight.js for code syntax highlighting
@@ -142,7 +143,7 @@ if (storesFactory && typeof storesFactory === "object") {
 
 const app = createApp(App)
 
-app.use(pinia).use(router).use(hljsVuePlugin)
+app.use(pinia).use(router).use(i18n).use(hljsVuePlugin)
 
 async function bootstrap() {
   // 低代码：启用IndexedDB持久化并冷启动加载
