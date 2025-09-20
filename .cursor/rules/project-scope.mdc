@@ -1,0 +1,51 @@
+---
+description: "SmartAbp项目范围定义 - 技术栈和架构"
+globs: ["**/*"]
+alwaysApply: true
+priority: 400
+---
+
+# 📍 SmartAbp 项目范围定义
+
+## 项目范围
+- **Scope**: ABP vNext backend + Vue3/TS frontend + low-code engine
+
+## 技术栈
+- **后端**: ASP.NET Core + ABP Framework + Entity Framework Core
+- **前端**: Vue.js 3 + TypeScript + Element Plus + Pinia
+- **低代码引擎**: 自研微内核 + 插件架构
+- **构建工具**: Vite + ESLint + Prettier
+- **测试**: Vitest + Cypress
+
+## 核心架构模式
+1. **领域驱动设计 (DDD)** - 后端业务逻辑组织
+2. **微内核 + 插件架构** - 低代码引擎扩展性
+3. **增量代码生成** - 支持模块化和渐进式开发
+4. **CQRS 模式** - 命令查询职责分离
+
+## 项目结构
+```
+src/
+├── SmartAbp.Application/     # 应用服务层
+├── SmartAbp.CodeGenerator/ # 代码生成引擎
+├── SmartAbp.Domain/        # 领域层
+├── SmartAbp.HttpApi/       # API接口层
+├── SmartAbp.Web/          # Web主机层
+└── SmartAbp.Vue/          # Vue前端应用
+```
+
+## 低代码引擎包结构
+```
+packages/
+├── lowcode-core/      # 核心引擎
+├── lowcode-plugins/   # 插件系统
+├── lowcode-schemas/   # Schema定义
+├── lowcode-designer/  # 可视化设计器
+└── lowcode-examples/  # 示例代码
+```
+
+## 性能基准
+- **响应时间**: < 2秒 (简单模块)
+- **测试覆盖率**: ≥ 80%
+- **缓存命中率**: > 50%
+- **并发处理**: 最大5个并发任务

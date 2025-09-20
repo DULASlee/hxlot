@@ -1,0 +1,66 @@
+---
+description: "SmartAbp低代码引擎架构规则 - 核心约束"
+globs: ["**/*.ts", "**/*.vue", "**/*.js"]
+alwaysApply: true
+priority: 800
+---
+
+# 🚀 SmartAbp 低代码引擎架构规则
+
+## 架构分层约束
+
+### 微内核架构层次
+```
+packages/
+├── lowcode-core/          # 微内核层 - 绝对稳定
+├── lowcode-plugins/       # 插件层 - 可扩展
+├── lowcode-schemas/       # Schema层 - 严格验证
+├── lowcode-designer/      # 设计器层 - 可视化
+└── lowcode-examples/    # 示例层 - 标准参考
+```
+
+### 严禁跨层调用
+- 插件层禁止直接调用Schema层内部实现
+- 示例层禁止修改内核层核心逻辑
+- 必须通过公开API进行层间通信
+
+## 插件接口规范
+
+### 必须实现的接口
+- `metadata`: 名称、版本、描述、目标、能力、依赖
+- `canHandle(schema)`: 判定处理能力，保持幂等
+- `validate(schema)`: 返回结构化校验结果
+- `generate(schema, config, context)`: 输出GeneratedCode
+
+### 命名与性能要求
+- 插件类名以`*Plugin`结尾
+- 生成器以`-generator`结尾
+- 代码生成必须设置超时
+- 缓存命中率>50%
+- 并发度≤5
+
+## 代码生成质量标准
+
+### 强制质量检查
+- TypeScript类型检查必须通过
+- ESLint错误必须为0
+- 构建必须成功
+- 运行时无错误
+
+### 性能指标要求
+- 组件生成<156ms
+- 热更新<23ms
+- 内存使用<200MB
+- 并发处理>100组件/s
+
+## 可视化设计器规范
+
+### 功能要求
+- 支持"生成前定制"和"生成后定制"
+- Schema为唯一来源，禁止直接改写*.generated.ts
+- 预览必须沙箱化（iframe/Worker + 严格CSP）
+
+### 性能目标
+- 预览渲染≤100ms
+- 帧率60fps
+- 响应时间<2秒

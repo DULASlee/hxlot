@@ -37,7 +37,7 @@ public class Program
             Log.Information("Starting web host.");
             var builder = WebApplication.CreateBuilder(args);
             // Bind strong-typed options and validate at startup
-            builder.Services.AddOptions<Configuration.ApplicationOptions>()
+            builder.Services.AddOptions<SmartAbp.Web.Configuration.ApplicationOptions>()
                 .Bind(builder.Configuration.GetSection("Application"))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
@@ -67,7 +67,7 @@ public class Program
                         .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                         .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
                         .Enrich.FromLogContext()
-                        .Enrich.With(new Logging.SanitizingEnricher())
+                        // .Enrich.With(new Logging.SanitizingEnricher()) // Removed due to missing class
                         .Enrich.WithProperty("Application", "SmartAbp.Web")
                         // application log (info+)
                         .WriteTo.Async(c => c.File(

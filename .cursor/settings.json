@@ -1,28 +1,266 @@
 {
-  // ===== 性能与稳定性优化 =====
-  "terminal.integrated.gpuAcceleration": "off",            // 关终端 GPU 加速，减少卡顿
-  "cursor.experimental.gpuRendering": false,               // 关整体 GPU 渲染，降低显存占用
-  "terminal.maxMemory": 2048,                              // 限制终端最大内存（MB）
-  "cursor.memoryAllocation": "medium",                     // 中等内存分配，防止爆掉
-  "workbench.editor.enablePreview": false,                 // 打开文件直接固定标签，减少频繁切换卡顿
-  "editor.linkedEditing": true,                            // 启用智能联动编辑（保留智能功能）
-  "editor.suggest.snippetsPreventQuickSuggestions": false, // 保留代码提示的即时性
+  // ===== Windows 11 专项优化 - 解决PowerShell卡死问题 =====
+  "terminal.integrated.gpuAcceleration": "off",          // 强制关闭GPU加速，Win11 PowerShell兼容性问题
+  "cursor.experimental.gpuRendering": false,               // 关闭实验性GPU渲染
+  "terminal.integrated.allowChords": false,              // 禁用快捷键组合，减少PowerShell冲突
+  "terminal.integrated.allowMnemonics": false,           // 禁用助记符，避免Win11菜单冲突
+  "terminal.integrated.windowsEnableConpty": true,      // 强制使用ConPTY，提升Win11兼容性
+  "terminal.integrated.useWslProfiles": false,           // 禁用WSL配置，专注原生PowerShell
+  "terminal.integrated.enableBell": false,               // 关闭终端响铃，减少系统调用
+  "terminal.integrated.copyOnSelection": false,          // 关闭选择复制，避免PowerShell选择卡顿
+  "terminal.integrated.cursorBlinking": false,           // 关闭光标闪烁，减少渲染负担
+  "terminal.integrated.cursorStyle": "block",            // 使用块状光标，最稳定模式
+  "terminal.integrated.fontSize": 12,                    // 较小字体减少渲染压力
+  "terminal.integrated.fontFamily": "Consolas, 'Courier New', monospace", // Win11推荐等宽字体
+  "terminal.integrated.letterSpacing": 0.5,              // 字符间距优化
+  "terminal.integrated.lineHeight": 1.0,                 // 标准行高，避免渲染异常
+  "terminal.integrated.scrollback": 1000,                // 大幅减少回滚行数，降低内存占用
+  "terminal.integrated.fastScrollSensitivity": 2,          // 降低快速滚动灵敏度
+  "terminal.integrated.mouseWheelScrollSensitivity": 0.5, // 降低鼠标滚轮灵敏度
+  "terminal.integrated.smoothScrolling": false,          // 关闭平滑滚动，减少卡顿
+  "terminal.integrated.tabStopWidth": 4,                 // 标准制表符宽度
+  "terminal.integrated.wordSeparators": " ()[]{}',\"`─‘’", // 优化单词分隔符
+  "terminal.integrated.environmentChangesIndicator": "off", // 关闭环境变化指示器
+  "terminal.integrated.showExitAlert": false,            // 关闭退出警告
+  "terminal.integrated.confirmOnExit": false,            // 关闭退出确认
+  "terminal.integrated.confirmOnKill": false,            // 关闭终止确认
+  "terminal.integrated.enableFileLinks": false,          // 关闭文件链接，减少解析负担
+  "terminal.integrated.enablePersistentSessions": false, // 关闭持久会话，避免状态堆积
+  "terminal.integrated.persistentSessionReviveProcess": "never", // 永不恢复会话
+  "terminal.integrated.splitCwd": "inherit",            // 继承当前工作目录
+  "terminal.integrated.autoReplies": {},                 // 清空自动回复，避免意外交互
+  "terminal.integrated.shellIntegration.decorationIcon": "none", // 关闭shell集成装饰
+  "terminal.integrated.shellIntegration.enabled": false, // 完全关闭shell集成，最稳定
+  "terminal.integrated.shellIntegration.showWelcome": false, // 关闭欢迎信息
+  "terminal.integrated.defaultLocation": "editor",       // 在编辑器区域打开终端，更稳定
+  "terminal.integrated.tabs.location": "left",           // 标签页位置，减少UI冲突
+  "terminal.integrated.tabs.enabled": true,              // 启用标签页，便于管理
+  "terminal.integrated.tabs.hideCondition": "never",     // 始终显示标签页
 
-  // ===== 默认终端配置（Win11不卡方案） =====
-  "terminal.integrated.defaultProfile.windows": "Git Bash",
-  "terminal.integrated.profiles.windows": {"PowerShell": null},
-  "terminal.integrated.profiles": {
+  // ===== PowerShell 专项优化 =====
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "args": ["-NoLogo", "-ExecutionPolicy", "RemoteSigned"], // 简化PowerShell启动参数
+      "icon": "terminal-powershell",
+      "overrideName": true,
+      "color": "terminal.ansiBlue"
+    },
+    "Command Prompt": {
+      "path": "C:\\Windows\\System32\\cmd.exe",
+      "args": [],
+      "icon": "terminal-cmd",
+      "overrideName": true
+    },
     "Git Bash": {
-      "path": "C:\\Program Files\\Git\\bin\\bash.exe"
+      "path": "C:\\Program Files\\Git\\bin\\bash.exe",
+      "args": ["--login", "-i"],
+      "icon": "terminal-bash",
+      "overrideName": true
     }
   },
-  "terminal.integrated.confirmOnExit": false,
-  "terminal.integrated.confirmOnKill": false,
+  "terminal.integrated.defaultProfile.windows": "Command Prompt", // 默认使用CMD，最稳定
+  "terminal.integrated.automationProfile.windows": "Command Prompt", // 自动化脚本使用CMD
+
+  // ===== 系统性能优化 =====
+  "terminal.maxMemory": 1024,                            // 限制终端内存为1GB，Win11优化
+  "cursor.memoryAllocation": "low",                      // 低内存分配模式
+  "workbench.editor.enablePreview": false,               // 关闭预览模式，直接打开文件
+  "workbench.editor.limit.enabled": true,               // 启用编辑器数量限制
+  "workbench.editor.limit.value": 5,                    // 最大5个编辑器，减少内存占用
+  "workbench.editor.limit.perEditorGroup": true,
+  "workbench.startupEditor": "none",                    // 启动时不打开任何编辑器
+  "workbench.enableExperiments": false,                 // 关闭实验性功能
+  "workbench.settings.enableNaturalLanguageSearch": false, // 关闭自然语言搜索，减少CPU占用
+  "workbench.editor.closeEmptyGroups": true,            // 自动关闭空编辑器组
+  "workbench.editor.focusRecentEditorAfterClose": true, // 关闭后聚焦最近编辑器
+
+  // ===== 文件系统优化（Win11特定） =====
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/node_modules/*/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    "**/.next/**": true,
+    "**/coverage/**": true,
+    "**/.angular/**": true,
+    "**/bower_components/**": true,
+    "**/.sass-cache/**": true,
+    "**/.idea/**": true,
+    "**/.vscode/**": true,
+    "**/tmp/**": true,
+    "**/temp/**": true,
+    "**/.pytest_cache/**": true,
+    "**/__pycache__/**": true,
+    "**/.mypy_cache/**": true,
+    "**/.DS_Store/**": true,
+    "**/Thumbs.db/**": true,              // Win11缩略图缓存
+    "**/*.log/**": true,
+    "**/*.tmp/**": true
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,                 // Win11缩略图
+    "**/*.pyc": true,
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.mypy_cache": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.next": true,
+    "**/coverage": true,
+    "**/.angular": true,
+    "**/.idea": true,
+    "**/.vscode": true,
+    "**/tmp": true,
+    "**/temp": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.git": true,
+    "**/coverage": true,
+    "**/.next": true,
+    "**/.angular": true,
+    "**/bower_components": true,
+    "**/.sass-cache": true,
+    "**/.idea": true,
+    "**/.vscode": true,
+    "**/tmp": true,
+    "**/temp": true,
+    "**/*.log": true,
+    "**/*.tmp": true,
+    "**/Thumbs.db": true                    // Win11缩略图文件
+  },
+  "files.maxMemoryForLargeFilesMB": 256,  // 大文件内存限制
+  "files.watcherPollInterval": 5000,       // 文件监控轮询间隔，减少CPU占用
+  "files.hotExit": "off",                  // 关闭热退出，避免状态保存问题
+  "files.restoreUndoStack": false,         // 关闭撤销栈恢复
+  "files.saveConflictResolution": "overwriteFileContents", // 冲突解决策略
+
+  // ===== 编辑器性能优化 =====
+  "editor.largeFileOptimizations": true,               // 大文件优化
+  "editor.maxTokenizationLineLength": 200,              // 降低token化行长度限制
+  "editor.renderLineHighlight": "none",                  // 关闭行高亮，减少渲染
+  "editor.renderWhitespace": "none",                    // 关闭空白字符渲染
+  "editor.renderControlCharacters": false,                // 关闭控制字符渲染
+  "editor.wordWrap": "off",                             // 关闭自动换行，提升性能
+  "editor.rulers": [],                                   // 关闭标尺
+  "editor.minimap.enabled": false,                      // 关闭迷你地图，减少内存占用
+  "editor.smoothScrolling": false,                      // 关闭平滑滚动
+  "editor.cursorBlinking": "solid",                     // 实心光标，无闪烁
+  "editor.cursorSmoothCaretAnimation": "off",           // 关闭光标动画
+  "editor.linkedEditing": false,                        // 关闭联动编辑，减少CPU占用
+  "editor.suggest.snippetsPreventQuickSuggestions": true, // 启用snippet阻止快速建议
+  "editor.suggest.maxVisibleSuggestions": 5,            // 减少建议数量
+  "editor.hover.enabled": false,                        // 关闭悬停提示，减少干扰
+  "editor.parameterHints.enabled": false,               // 关闭参数提示
+  "editor.codeLens": false,                             // 关闭代码透镜
+  "editor.folding": false,                              // 关闭代码折叠
+  "editor.glyphMargin": false,                          // 关闭字形边距
+  "editor.hideCursorInOverviewRuler": true,             // 在概览标尺中隐藏光标
+  "editor.overviewRulerBorder": false,                  // 关闭概览标尺边框
+  "editor.scrollBeyondLastLine": false,                 // 禁止滚动到最后一行之后
+  "editor.stickyScroll.enabled": false,                 // 关闭粘性滚动
+
+  // ===== Git优化（Win11兼容） =====
+  "git.enabled": true,
+  "git.autofetch": false,                               // 关闭自动获取
+  "git.confirmSync": false,
+  "git.autorefresh": false,                             // 关闭自动刷新，减少文件系统调用
+  "git.showProgress": false,                            // 关闭Git进度显示
+  "git.countBadge": "off",                              // 关闭Git计数徽章
+  "git.ignoreWindowsGit27Warning": true,               // 忽略Win11 Git版本警告
+  "git.enableSmartCommit": false,                       // 关闭智能提交
+  "git.postCommitCommand": "none",                      // 提交后不执行任何命令
+  "git.scanLegacyWorkspaces": false,                    // 不扫描旧版工作区
+
+  // ===== 扩展优化 =====
+  "extensions.autoUpdate": false,                       // 关闭扩展自动更新
+  "extensions.autoCheckUpdates": false,
+  "extensions.closeExtensionDetailsOnViewChange": true, // 切换视图时关闭扩展详情
+  "extensions.showRecommendationsOnlyOnDemand": true,   // 按需显示推荐
+  "extensions.ignoreRecommendations": true,              // 忽略扩展推荐
+
+  // ===== 遥测和隐私（性能考虑） =====
+  "telemetry.enableTelemetry": false,                    // 关闭遥测
+  "telemetry.enableCrashReporter": false,                // 关闭崩溃报告
+  "update.mode": "none",                                 // 关闭自动更新
+  "update.enableWindowsBackgroundUpdates": false,        // 关闭Win11后台更新
+  "crash-reporter.enableCrashReporter": false,           // 关闭崩溃报告器
+  "errorTelemetry.enableErrorTelemetry": false,          // 关闭错误遥测
+
+  // ===== MCP工具配置 =====
   "mcp.trustedTools": [
-  "serena",          // ← 你实际用的工具名
-  "serena-ai",
-  "sequential-thinking",
-  "interactive-feedback-mcp"
-],
-"mcp.confirmOnRun": false
+    "serena",
+    "serena-ai", 
+    "sequential-thinking",
+    "interactive-feedback-mcp"
+  ],
+  "mcp.confirmOnRun": false,
+
+  // ===== Windows 11 系统特定优化 =====
+  "window.titleBarStyle": "native",                     // 使用原生标题栏，最稳定
+  "window.dialogStyle": "native",                       // 使用原生对话框
+  "window.nativeTabs": false,                           // 关闭原生标签页
+  "window.openFoldersInNewWindow": "off",               // 不在新窗口打开文件夹
+  "window.restoreWindows": "none",                      // 不恢复窗口状态
+  "window.zoomLevel": 0,                                // 标准缩放级别
+  "window.enableMenuBarMnemonics": false,               // 禁用菜单栏助记符
+  "security.workspace.trust.enabled": false,            // 关闭工作区信任，避免权限弹窗
+  "security.promptForLocalFileProtocolHandling": false,  // 关闭本地文件协议处理提示
+
+  // ===== 语言特定设置（性能优先） =====
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": false,                       // 关闭保存时格式化，手动控制
+    "editor.codeActionsOnSave": {},                    // 清空保存时的代码动作
+    "editor.suggest.autoImports": false,               // 关闭自动导入
+    "editor.updateImportsOnFileMove.enabled": "never",   // 文件移动时不更新导入
+    "typescript.updateImportsOnFileMove.enabled": "never",
+    "typescript.suggest.autoImports": false,
+    "typescript.preferences.includePackageJsonAutoImports": "never"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {},
+    "editor.suggest.autoImports": false
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "Vue.volar",
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {},
+    "editor.suggest.autoImports": false
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.formatOnSave": false
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.formatOnSave": false
+  },
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    },
+    "editor.formatOnSave": false
+  },
+  "[powershell]": {
+    "editor.wordWrap": "off",                           // PowerShell编辑器不自动换行
+    "editor.suggest.showSnippets": false,              // 不显示代码片段建议
+    "editor.suggest.showWords": false                  // 不显示单词建议
+  }
 }

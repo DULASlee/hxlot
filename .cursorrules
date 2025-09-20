@@ -8,7 +8,7 @@ MASTER_SECRET_TRIGGER = "专家模式"
 
 // 暗号检测逻辑 (立即生效)
 当用户输入包含"专家模式"时:
-    🔥 立即响应: "🔥 专家模式已激活！"
+    🔥 立即响应: "🔥 专家模式已激活！七重爆雷连环启动！"
     💥 EXPERT_MODE = TRUE
     🚀 QUALITY_THRESHOLD = 95  
     🛡️ COMPLETENESS_REQUIREMENT = 100%
@@ -17,45 +17,116 @@ MASTER_SECRET_TRIGGER = "专家模式"
     ⚡ ENABLE_DEEP_ANALYSIS = TRUE
     🎯 AUTO_EXECUTE_QUALITY_CHECKS = TRUE
     🏗️ PERFECT_CODE_GENERATION = TRUE
+    📋 MANDATORY_PROJECT_RULES_LOAD = TRUE
+    🔍 SERENA_PROJECT_ANALYSIS = TRUE
+    🔗 SEVEN_STAGE_ANALYSIS_CHAIN = TRUE
+```
+
+### ⚡ EXPERT MODE Response Protocol (专家模式响应协议 - 七重爆雷版)
+```markdown
+当检测到"专家模式"时，AI必须立即按此格式响应:
+
+🔥 **专家模式已激活！七重爆雷连环启动！**
+
+📋 **第一重爆雷：项目开发规范加载**
+   ✅ 已加载《项目开发规范总览》- 最新权威规范
+   ✅ 核心原则解析完成 - 极致质量律/架构先行律/独立决策律
+   ✅ 强制开发流程确认 - 代码编写前准备/工作计划审批/模板与架构决策
+   ✅ 安全架构铁律验证 - 输入验证/危险内容过滤/权限控制
+
+🔍 **第二重爆雷：Serena智能项目分析**
+   ✅ Serena项目深度分析启动
+   ✅ 现有功能实现模式识别
+   ✅ 架构约束条件提取
+   ✅ 最佳实践模式发现
+   ✅ 项目文件索引分析
+
+🚀 **第三重爆雷：增量开发分析**
+   ✅ 代码库深度分析 - tools/incremental-generation/scripts/analyze-codebase.js
+   ✅ 现有代码模式识别
+   ✅ 架构一致性验证
+   ✅ 扩展点智能识别
+   ✅ 兼容性全面评估
+
+🛡️ **第四重爆雷：质量保证检查（含TDD强制验证）**
+   ✅ 95分企业级质量标准执行
+   ✅ 零缺陷质量要求验证
+   ✅ 性能基准测试
+   ✅ 安全规范全面检查
+   ✅ TDD遵循率≥90%强制验证
+   ✅ 测试覆盖率≥80%强制检查
+   ✅ tools/quality-assurance/quality-gates.js 严格模式
+
+🏛️ **第五重爆雷：ADR架构决策咨询**
+   ✅ ADR架构决策记录查询
+   ✅ 技术选型约束确认
+   ✅ 设计模式应用验证
+   ✅ 架构原则强制遵循
+
+📚 **第六重爆雷：模板强制匹配**
+   ✅ 项目模板库100%搜索
+   ✅ 智能模板匹配算法
+   ✅ 参数自动映射验证
+   ✅ 规范一致性强制检查
+
+⚙️ **第七重爆雷：完美代码生成**
+   ✅ 基于七重深度分析的代码生成
+   ✅ 100%项目规范符合度
+   ✅ 零架构偏差保证
+   ✅ 企业级最高质量标准
+
+🏗️ **终极执行链**（含TDD强制验证）:
+[规范加载 → Serena分析 → 模式识别 → TDD验证 → 模板匹配 → 质量验证 → 架构检查 → 完美生成]
+
+💥 **专家模式承诺**（含TDD铁律）: 
+   - 零妥协的质量标准
+   - 零容忍的架构偏差  
+   - 100%规范符合度
+   - TDD遵循率≥90%强制保证
+   - 企业级完美代码输出
 ```
 
 ### 💥 Auto-Activation Protocol (暗号触发后强制执行)
 ```bash
 WHEN SECRET_TRIGGER_DETECTED:
-    # 第一重爆雷：增量开发超级模式
+    # 第一重爆雷：加载项目开发规则
+    📋 read_file "doc/项目开发规范总览.md"
+    
+    # 第二重爆雷：阅读《项目开发规范总览》
+    📚 read_file "doc/项目开发规范总览.md" --sections="核心原则,强制开发流程,架构要求"
+    
+    # 第三重爆雷：使用serena分析项目现有功能实现
+    🔍 serena_project_analysis --mode=expert --deep-dive=true
+    
+    # 第四重爆雷：增量开发超级模式
     🚀 node tools/incremental-generation/scripts/analyze-codebase.js --mode=expert --deep-analysis=true
     
-    # 第二重爆雷：质量保证最高级别
-    🛡️ node tools/quality-assurance/quality-gates.js --mode=strict --score-threshold=95 --standards=enterprise
+    # 第五重爆雷：质量保证最高级别（TDD强制验证）
+    🛡️ node tools/quality-assurance/quality-gates.js --mode=strict --score-threshold=95 --standards=enterprise --tdd-enforcement=true
     
-    # 第三重爆雷：ADR架构决策强制咨询
+    # 第六重爆雷：ADR架构决策强制咨询
     🏛️ read_file "doc/architecture/adr/README.md" + ALL_RELEVANT_ADRS
     
-    # 第四重爆雷：模板库100%强制执行
+    # 第七重爆雷：模板库100%强制执行
     📚 glob "templates/**/*.template.*" + SMART_TEMPLATE_MATCHING
 ```
 
-### ⚡ Expert Mode Response Protocol (专家模式响应协议)
-```markdown
-当检测到"专家模式"时，AI必须立即按此格式响应:
+### 🏛️ Standard ADR-Informed Response Protocol (标准ADR响应协议)
+**When ADR consultation is triggered (outside expert mode), AI MUST respond in this format:**
 
-🔥 **专家模式已激活！**
-
-💥 **超级增强启动**:
-   ✅ 增量开发分析 - 深度分析现有代码
-   ✅ 质量保证检查 - 95分标准执行  
-   ✅ ADR架构咨询 - 强制遵循架构决策
-   ✅ 模板强制执行 - 100%使用项目模板
-
-🧠 **专家级分析**: 
-   - 质量标准: 企业级 (95分+)
-   - 功能完整性: 100%零缺陷
-   - 架构符合性: 业界最佳实践
-   - 性能优化: 企业级标准
-
-🏗️ **完美代码生成**: 基于专家模式开始执行...
-
-[立即自动执行: 模板搜索 → ADR查询 → 质量检查 → 完美代码生成]
+```
+🏛️ **ADR查询**: 正在查阅相关架构决策记录...
+📋 **ADR发现**: 找到相关决策 `ADR-{number}: {title}`
+🎯 **决策要点**: 
+   - 选择方案: {decision}
+   - 主要原因: {rationale}
+   - 技术约束: {constraints}
+   - 实施指导: {implementation_guidance}
+⚙️ **应用到当前任务**: 
+   - 遵循的原则: {principles}
+   - 使用的模式: {patterns}
+   - 技术选择: {technology_choices}
+🏗️ **代码生成**: 基于ADR决策和模板生成代码
 ```
 
 ## 🎯 PROJECT OVERVIEW
@@ -178,7 +249,7 @@ interface TemplateParameters {
 - **ADR decisions are BINDING and must be followed in all code generation**
 - **When user asks "why" questions about technology choices, reference specific ADRs**
 
-### Mandatory ADR Consultation Triggers
+### Mandatory ADR Consultation Triggers（含TDD架构决策）
 **When user mentions these topics, AI MUST check corresponding ADRs:**
 
 | 用户输入关键词 | 必须查阅的ADR | ADR文件 |
@@ -194,6 +265,7 @@ interface TemplateParameters {
 | "性能优化"、"性能问题" | 性能优化 | `0009-performance-optimization.md` |
 | "设计模式"、"代码结构" | 设计模式应用 | `0010-design-patterns.md` |
 | "低代码"、"引擎架构" | 低代码引擎架构 | `0011-lowcode-engine-architecture.md` |
+| "TDD"、"测试驱动"、"测试架构" | TDD架构决策 | `0012-test-driven-development-strategy.md` |
 
 ### ADR-Informed Response Protocol (EXACT FORMAT REQUIRED)
 **When ADR consultation is triggered, AI MUST respond in this format:**
@@ -215,46 +287,53 @@ interface TemplateParameters {
 
 ## 🔄 INCREMENTAL CODE GENERATION (MANDATORY)
 
-### 增量生成触发规则
+### 增量生成触发规则（含TDD强制验证）
 当用户请求包含以下关键词时，AI必须启用增量生成模式：
 
 | 触发关键词 | 生成模式 | 必须执行的命令 |
 |---|---|---|
-| "基于现有"、"扩展"、"增加功能" | 增量扩展 | `node tools/incremental-generation/scripts/analyze-codebase.js --target={target_file}` |
-| "重构"、"优化"、"改进" | 智能重构 | `node tools/incremental-generation/analyzers/refactor-advisor.js --file={target_file}` |
-| "生成测试"、"添加测试" | 自动测试生成 | `node tools/incremental-generation/generators/test-generator.js --target={target_service}` |
-| "兼容"、"不破坏现有" | 兼容性分析 | `node tools/incremental-generation/scripts/validate-changes.js --type=compatibility` |
+| "基于现有"、"扩展"、"增加功能" | 增量扩展 | `node tools/incremental-generation/scripts/analyze-codebase.js --target={target_file} --tdd-enforcement=true` |
+| "重构"、"优化"、"改进" | 智能重构 | `node tools/incremental-generation/analyzers/refactor-advisor.js --file={target_file} --tdd-validation=true` |
+| "生成测试"、"添加测试" | 自动测试生成 | `node tools/incremental-generation/generators/test-generator.js --target={target_service} --tdd-first=true` |
+| "兼容"、"不破坏现有" | 兼容性分析 | `node tools/incremental-generation/scripts/validate-changes.js --type=compatibility --tdd-compliance=true` |
+| "TDD"、"测试驱动"、"测试先行" | TDD专项生成 | `node tools/incremental-generation/generators/tdd-generator.js --mode=strict --tdd-first=true` |
+| "新功能"、"新模块"、"新服务" | TDD优先开发 | `node tools/incremental-generation/generators/tdd-first-generator.js --mode=expert --tdd-enforcement=true` |
 
-### AI增量生成响应协议（强制格式）
+### AI增量生成响应协议（强制格式 - 含TDD验证）
 ```
 🔍 **增量分析**: 正在分析 {target_file}...
    - 现有模式: {identified_patterns}
    - 代码风格: {coding_style}  
    - 依赖关系: {dependencies}
    - 扩展点: {extension_points}
+   - TDD遵循率: {current_tdd_compliance}
 
 📊 **增量策略**: 选择策略 {selected_strategy}
    - 扩展方式: {extension_approach}
    - 兼容性级别: {compatibility_level}
    - 预期影响: {expected_impact}
    - 风险评估: {risk_assessment}
+   - TDD要求: {tdd_requirements}
 
-⚙️ **代码生成**: 基于现有代码模式生成增量代码
+⚙️ **代码生成**: 基于现有代码模式生成增量代码（TDD优先）
    - 生成文件: {generated_files}
    - 修改文件: {modified_files}  
-   - 新增测试: {new_tests}
+   - 新增测试: {new_tests} (TDD红-绿-重构循环)
    - 更新文档: {updated_docs}
+   - TDD验证: {tdd_validation_steps}
 
 ✅ **验证结果**: 
    - [x] 兼容性检查通过
    - [x] 代码风格一致
-   - [x] 测试覆盖充分
+   - [x] 测试覆盖充分 (≥80%)
+   - [x] TDD遵循率≥90%
+   - [x] 红-绿-重构循环完成
    - [x] 构建成功
    - [x] 不破坏现有功能
    - [x] 符合架构约束
 
 📄 **生成的代码**:
-[在此处输出完整的增量生成代码]
+[在此处输出完整的基于TDD的增量生成代码]
 ```
 
 ## 📋 TASK WORKFLOW (MUST FOLLOW)
@@ -263,12 +342,14 @@ interface TemplateParameters {
 - Summarize what just happened and what you will do next in 1–2 sentences.
 - Call interactive-feedback tool when starting substantial tasks or when context changes significantly.
 
-### 2) Discovery First (MANDATORY SEQUENCE)
-- **Step 1**: Read relevant docs (doc/项目编程规则.md, doc/architecture/*)
-- **Step 2**: Check Architecture Decision Records (ADRs) in doc/architecture/adr/ for relevant decisions
-- **Step 3**: Search templates/ directory for relevant patterns BEFORE any code generation
-- **Step 4**: Analyze existing code with semantic search, then grep for exact symbols
-- Prefer broad semantic search, then narrow down. Avoid guessing—find the code.
+### 🔍 Discovery First (MANDATORY SEQUENCE - 七重爆雷版)
+- **Step 1**: Load project development rules (doc/项目开发规范总览.md) - 理解最新规范（含TDD铁律）
+- **Step 2**: Serena项目分析 - 深度理解项目现有功能实现模式（含TDD实践）
+- **Step 3**: 增量分析现有代码 - tools/incremental-generation/scripts/analyze-codebase.js（TDD遵循率分析）
+- **Step 4**: 质量门控检查 - tools/quality-assurance/quality-gates.js（TDD强制验证）
+- **Step 5**: ADR决策查询 - 搜索相关架构决策（含TDD架构决策）
+- **Step 6**: 模板匹配 - 基于七重分析结果选择最佳模板（优先TDD友好模板）
+- **Step 7**: 生成符合七重爆雷标准且满足TDD要求的完美代码
 
 ### 3) Plan Before Edit
 - Use sequential thinking to sketch steps, risks, and verification points.
@@ -287,11 +368,13 @@ interface TemplateParameters {
 - Only edit what's necessary. Preserve existing indentation and formatting.
 - For new code, add imports/types/deps so it runs immediately.
 
-### 6) Quality Gates (MUST run or propose commands)
+### 6) Quality Gates (MUST run or propose commands - TDD强制执行)
 - **Type check**: `npm run type-check` (or `tsc --noEmit`)
 - **Lint**: `npm run lint --fix` (don't silence rules; fix root causes)
-- **Tests**: `npm run test:coverage` (meet 80% coverage thresholds)
+- **TDD验证**: `npm run test:coverage -- --tdd-enforcement=true` (TDD遵循率≥90%)
+- **测试覆盖率**: `npm run test:coverage` (覆盖率≥80%)
 - **Build**: `npm run build`
+- **TDD检查**: `npm run test:tdd-compliance` (新增TDD合规检查)
 - If any gate fails, fix before proceeding. On third failed attempt, ask user.
 
 ### 7) Commands & Tools
@@ -360,6 +443,7 @@ interface TemplateParameters {
 - ❌ Breaking Element Plus component integration
 - ❌ Not following ABP framework conventions
 - ❌ Bypassing quality gates (type-check, lint, test, build)
+- ❌ **跳过TDD流程 - 代码质量下降，后期调试成本激增（新增TDD铁律）**
 
 ## 🎯 SUCCESS METRICS
 
@@ -369,9 +453,10 @@ interface TemplateParameters {
 - **ADR Compliance**: 100% adherence to architectural decisions
 - **Quality Gate Pass Rate**: >90% without manual intervention
 - **Code Style Compliance**: 100% adherence to project standards
+- **TDD遵循率**: ≥90% for new features (TDD强制执行)
 - **Test Coverage**: Maintain >80% coverage for new code
 - **Build Success**: 100% successful builds after code generation
 
 ---
 
-**🎯 SUMMARY: Template library rules, ADR compliance, incremental generation, and framework-specific standards are MANDATORY and NON-NEGOTIABLE. AI must demonstrate template usage, ADR alignment, code style compliance, and quality gate validation in every code generation task. Failure to follow these rules constitutes a violation of project standards.**
+**🎯 SUMMARY: Template library rules, ADR compliance, incremental generation, TDD铁律强制执行, and framework-specific standards are MANDATORY and NON-NEGOTIABLE. AI must demonstrate template usage, ADR alignment, code style compliance, TDD遵循率≥90%, and quality gate validation in every code generation task. Failure to follow these rules constitutes a violation of project standards.**

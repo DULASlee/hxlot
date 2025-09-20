@@ -31,7 +31,10 @@
     "codegen": "tsx src/tools/cli.ts generate",
     "codegen:check": "tsx src/tools/cli.ts check",
     "module:add": "tsx src/tools/add-module.ts --input",
-    "module:add:codegen": "tsx src/tools/add-module.ts --input --codegen"
+    "module:add:codegen": "tsx src/tools/add-module.ts --input --codegen",
+    "security-check": "tsx src/tools/security-check.ts",
+    "validate-inputs": "tsx src/tools/validate-inputs.ts",
+    "dangerous-patterns": "tsx src/tools/dangerous-patterns.ts"
   },
   "lint-staged": {
     "*.ts": [

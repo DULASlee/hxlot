@@ -440,9 +440,9 @@ const fetchData = async () => {
     // tableData.value = result.items
     // pagination.total = result.totalCount
     
-  } catch (error) {
+  } catch {
     ElMessage.error('获取数据失败')
-  } finally {
+  } finally {"explanation":"修复未使用变量错误，移除catch块中的error参数，符合ESLint规范"}
     loading.value = false
   }
 }
@@ -492,7 +492,7 @@ const handleDelete = async (row: any) => {
     
     ElMessage.success('删除成功')
     fetchData()
-  } catch (error) {
+  } catch {
     // 用户取消删除
   }
 }
@@ -543,7 +543,7 @@ const handleSubmit = async () => {
     
     dialogVisible.value = false
     fetchData()
-  } catch (error) {
+  } catch {
     ElMessage.error('操作失败')
   } finally {
     submitting.value = false

@@ -1,0 +1,74 @@
+---
+description: "SmartAbp代码质量规则 - 强制检查"
+globs: ["**/*.ts", "**/*.vue", "**/*.js"]
+alwaysApply: true
+priority: 600
+---
+
+# 🛡️ SmartAbp 代码质量规则
+
+## 强制质量检查
+
+### BUG修复铁律（最高优先级）
+**绝对禁止行为：**
+- ❌ 删除报错代码来"修复"错误
+- ❌ 使用`as any`绕过类型检查
+- ❌ 使用`_`前缀规避"未使用"警告
+- ❌ 注释掉报错代码
+
+**正确做法：**
+- 深入理解错误根源
+- 查阅相关文档和API
+- 增强功能而非删减
+- 保持类型安全
+- 测试修复效果
+
+### 构建质量检查序列
+```bash
+npm run type-check   # 零类型错误 = 必须
+npm run lint         # 零lint错误 = 必须
+npm run test:coverage # ≥80%覆盖率 = 必须
+npm run build        # 零构建错误 = 必须
+```
+
+## TypeScript严格模式
+
+### 强制配置
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  }
+}
+```
+
+## 代码清洁度要求
+
+### 函数复杂度限制
+- 圈复杂度 ≤ 10
+- 单个函数不超过50行
+- 文件大小限制：Vue<300行，TS<500行
+
+### 命名清晰度要求
+```typescript
+// ✅ 推荐
+const getUserById = async (userId: string): Promise<UserInfo> => {
+  const user = await userRepository.findById(userId)
+  if (!user) {
+    throw new Error(`User with id ${userId} not found`)
+  }
+  return user
+}
+
+// ❌ 禁止
+const getData = async (id: any): Promise<any> => {
+  const result = await repo.find(id)
+  return result
+}
+```

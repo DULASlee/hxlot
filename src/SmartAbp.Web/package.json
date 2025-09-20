@@ -4,5 +4,10 @@
 	"private": true,
 	"dependencies": {
     "@abp/aspnetcore.mvc.ui.theme.leptonxlite": "~4.1.1"
+	},
+	"scripts": {
+		"security-check": "node ../SmartAbp.Vue/src/tools/security-check.js",
+		"validate-inputs": "node ../SmartAbp.Vue/src/tools/validate-inputs.js",
+		"dangerous-patterns": "node ../SmartAbp.Vue/src/tools/dangerous-patterns.js"
 	}
 }

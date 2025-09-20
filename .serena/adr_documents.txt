@@ -1,0 +1,16 @@
+./doc/architecture/adr/0001-technology-stack-selection.md
+./doc/architecture/adr/0002-frontend-architecture-decisions.md
+./doc/architecture/adr/0003-backend-architecture-decisions.md
+./doc/architecture/adr/0004-development-workflow-decisions.md
+./doc/architecture/adr/0005-lowcode-engine-architecture.md
+./doc/architecture/adr/0006-incremental-code-generation.md
+./doc/architecture/adr/0009-performance-optimization.md
+./doc/architecture/adr/0010-design-patterns.md
+./doc/architecture/adr/0011-ai-code-quality-assurance.md
+./doc/architecture/adr/0012-p1-backend-code-generation-engine.md
+./doc/architecture/adr/0013-pluggable-strategy-architecture.md
+./doc/architecture/adr/0014-enterprise-memory-monitoring.md
+./doc/architecture/adr/0015-visual-designer-architecture.md
+./doc/architecture/adr/0016-lowcode-engine-monorepo-refactoring.md
+./doc/architecture/adr/README.md
+./doc/architecture/adr/template.md

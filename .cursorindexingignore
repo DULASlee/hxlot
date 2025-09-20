@@ -1,3 +1,76 @@
 
-# Don't index SpecStory auto-save files, but allow explicit context inclusion via @ references
+# Cursor 索引忽略文件 - SmartAbp项目
+# 基于项目.gitignore和性能优化需求
+
+# 依赖和构建输出
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDE和编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志文件
+*.log
+logs/
+log/
+
+# 测试输出
+coverage/
+.nyc_output/
+test-results/
+cypress/videos/
+cypress/screenshots/
+
+# 临时文件
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# 编译输出
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# ABP框架生成文件
+*.abpmdl
+*.abpsln
+
+# 缓存目录
+.cache/
+.parcel-cache/
+
+# 环境配置
+.env.local
+.env.*.local
+
+# 大型二进制文件
+*.zip
+*.tar.gz
+*.rar
+
+# 文档构建输出
+doc/_build/
+doc/.docusaurus/
+
+# 运行时生成文件
+*.generated.ts
+*.generated.js
+
+# 性能监控日志
+performance-logs/
+profiling/
+
+# SpecStory自动保存文件
 .specstory/**
