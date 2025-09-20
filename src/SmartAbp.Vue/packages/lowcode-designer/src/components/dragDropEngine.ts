@@ -295,7 +295,10 @@ export class DragDropEngine {
       // 添加新组件
       const component: DesignerComponent = {
         id: `${dragData.componentType}-${Date.now()}`,
+        name: dragData.componentType,
         type: dragData.componentType,
+        category: 'basic',
+        version: '1.0.0',
         props: {
           ...(dragData.defaultProps || {}),
           style: {
@@ -447,7 +450,7 @@ export class DragDropEngine {
       const component = this.components.value.get(nodeId)
       if (component && isValidComponent(component)) {
         component.position = this.dragState.currentPosition
-        if (component.props.style && typeof component.props.style === 'object') {
+        if (component.props?.style && typeof component.props.style === 'object') {
           const style = component.props.style as Record<string, unknown>
           style.left = `${this.dragState.currentPosition.x}px`
           style.top = `${this.dragState.currentPosition.y}px`
@@ -494,7 +497,7 @@ export class DragDropEngine {
     const component = this.components.value.get(componentId)
     if (component && isValidComponent(component)) {
       component.position = position
-      if (component.props.style && typeof component.props.style === 'object') {
+      if (component.props?.style && typeof component.props.style === 'object') {
         const style = component.props.style as Record<string, unknown>
         style.left = `${position.x}px`
         style.top = `${position.y}px`

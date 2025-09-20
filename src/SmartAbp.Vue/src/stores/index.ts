@@ -6,7 +6,6 @@ export * from "./modules/project"
 export * from "./modules/system"
 export * from "./modules/theme"
 export * from "./modules/user"
-export { useDesignerStore } from "@smartabp/lowcode-designer"
 
 // 导出类型
 export type { UserInfo, LoginCredentials } from "./modules/auth"

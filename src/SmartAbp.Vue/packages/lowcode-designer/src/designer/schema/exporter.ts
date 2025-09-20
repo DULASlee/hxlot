@@ -102,7 +102,7 @@ export class SchemaExporter {
           dataNodeId: nodeId
         },
         componentType: component.type,
-        props: this.sanitizeProps(component.props),
+        props: this.sanitizeProps(component.props || {}),
         position: {
           index
         }
@@ -455,7 +455,7 @@ ${lifecycle}
   private generatePropsString(component: DesignerComponent): string {
     const props: string[] = []
 
-    Object.entries(component.props).forEach(([key, value]) => {
+    Object.entries(component.props || {}).forEach(([key, value]) => {
       if (key === 'style' || key.startsWith('_')) return
 
       if (typeof value === 'string') {

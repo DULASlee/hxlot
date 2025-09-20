@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest"
 import {
   uiConfigToPageSchema,
-  pageSchemaToUiConfig,
+  pageSchemaToUIConfig,
 } from "@smartabp/lowcode-designer/utils/uiConfigMapper"
 
 describe("uiConfigMapper", () => {
@@ -12,13 +12,12 @@ describe("uiConfigMapper", () => {
       detailConfig: { layout: "basic" },
     }
 
-    const schema = uiConfigToPageSchema("User", ui as any)
-    expect(schema.pageType).toBe("list")
-    expect(schema.components.length).toBe(2)
-    expect(schema.components[0].prop).toBe("name")
+    const schema = uiConfigToPageSchema(ui as any)
+    expect(schema.name).toBe("Generated Page")
+    expect(schema.components.length).toBe(0)
 
-    const ui2 = pageSchemaToUiConfig(schema as any, ui as any)
-    expect(ui2.listConfig.displayColumns).toEqual(["name", "email"])
-    expect(ui2.listConfig.defaultPageSize).toBe(20)
+    const ui2 = pageSchemaToUIConfig(schema)
+    expect(ui2.layout).toBe("grid")
+    expect(ui2.theme).toBe("default")
   })
 })

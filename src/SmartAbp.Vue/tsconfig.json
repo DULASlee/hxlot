@@ -57,7 +57,5 @@
     "src/views/CodeGenerator/**",
     "packages/lowcode-core/src/__tests__/**"
   ],
-  "references": [
-    { "path": "./packages/lowcode-designer/tsconfig.json" }
-  ]
+  "references": []
 }

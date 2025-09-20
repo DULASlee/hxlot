@@ -356,7 +356,7 @@ AI_TEMPLATE_INFO:
 import { ref, reactive, onMounted, computed } from "vue"
 import MetadataDrivenPageRenderer from "@smartabp/lowcode-designer/runtime/MetadataDrivenPageRenderer.vue"
 import { uiConfigToPageSchema } from "@smartabp/lowcode-designer/utils/uiConfigMapper"
-import { codeGeneratorApi } from "@smartabp/lowcode-api"
+import { codeGeneratorApi } from "../../../packages/lowcode-api/src/code-generator"
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search, Refresh, Delete } from '@element-plus/icons-vue'
 
@@ -599,7 +599,7 @@ onMounted(async () => {
     }
 
     if (cfg) {
-      schema.value = uiConfigToPageSchema("User", cfg)
+      schema.value = uiConfigToPageSchema(cfg)
     }
   } catch (_) {
     // 忽略错误，走静态模板渲染

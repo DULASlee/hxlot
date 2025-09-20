@@ -1,5 +1,5 @@
 import { api } from "@/utils/api"
-import type { EntityUIConfig, ModuleMetadata } from "./types"
+import type { ModuleMetadata, EntityUIConfig } from "./types"
 
 /**
  * Code Generator API Service
