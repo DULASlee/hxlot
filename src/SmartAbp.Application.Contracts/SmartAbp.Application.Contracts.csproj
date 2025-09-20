@@ -11,7 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SmartAbp.Domain.Shared\SmartAbp.Domain.Shared.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Volo.Abp.PermissionManagement.Application.Contracts" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.FeatureManagement.Application.Contracts" Version="$(AbpVersion)" />

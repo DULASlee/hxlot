@@ -4,57 +4,63 @@
       <template #header>
         <div class="preview-header">
           <div class="header-left">
-            <el-icon class="header-icon"><Document /></el-icon>
+            <el-icon class="header-icon">
+              <Document />
+            </el-icon>
             <span class="header-title">Generated Code Preview</span>
-            <el-tag v-if="language" :type="getLanguageTagType(language)" size="small">
+            <el-tag
+              v-if="language"
+              :type="getLanguageTagType(language)"
+              size="small"
+            >
               {{ language.toUpperCase() }}
             </el-tag>
           </div>
           <div class="header-actions">
             <el-tooltip content="Copy to clipboard">
               <el-button
-                @click="copyCode"
                 :icon="Copy"
                 size="small"
                 type="primary"
                 circle
                 :loading="copying"
+                @click="copyCode"
               />
             </el-tooltip>
             <el-tooltip content="Download file">
               <el-button
-                @click="downloadCode"
                 :icon="Download"
                 size="small"
                 type="success"
                 circle
+                @click="downloadCode"
               />
             </el-tooltip>
             <el-tooltip content="Format code">
               <el-button
-                @click="formatCode"
                 :icon="Magic"
                 size="small"
                 type="warning"
                 circle
                 :loading="formatting"
+                @click="formatCode"
               />
             </el-tooltip>
             <el-tooltip content="Toggle theme">
               <el-button
-                @click="toggleTheme"
                 :icon="darkTheme ? Sunny : Moon"
                 size="small"
                 type="info"
                 circle
+                @click="toggleTheme"
               />
             </el-tooltip>
             <el-tooltip content="Toggle fullscreen">
               <el-button
-                @click="toggleFullscreen"
                 :icon="isFullscreen ? Contract : Expand"
                 size="small"
                 circle
+                @click="toggleFullscreen"
               />
             </el-tooltip>
           </div>
@@ -62,7 +68,10 @@
       </template>
 
       <!-- File Tree View -->
-      <div v-if="files && Object.keys(files).length > 1" class="file-tree-container">
+      <div
+        v-if="files && Object.keys(files).length > 1"
+        class="file-tree-container"
+      >
         <div class="file-tree-header">
           <el-icon><Folder /></el-icon>
           <span>Generated Files ({{ Object.keys(files).length }})</span>
@@ -72,14 +81,18 @@
           :props="treeProps"
           node-key="path"
           :current-node-key="selectedFile"
-          @node-click="selectFile"
           :highlight-current="true"
           class="file-tree"
+          @node-click="selectFile"
         >
           <template #default="{ node, data }">
             <div class="tree-node">
-              <el-icon v-if="data.isDirectory"><Folder /></el-icon>
-              <el-icon v-else><Document /></el-icon>
+              <el-icon v-if="data.isDirectory">
+                <Folder />
+              </el-icon>
+              <el-icon v-else>
+                <Document />
+              </el-icon>
               <span class="node-label">{{ node.label }}</span>
               <span class="file-size">{{ formatFileSize(data.content?.length || 0) }}</span>
             </div>
@@ -88,7 +101,10 @@
       </div>
 
       <!-- Code Editor -->
-      <div class="code-editor-container" :class="{ 'dark-theme': darkTheme, 'fullscreen': isFullscreen }">
+      <div
+        class="code-editor-container"
+        :class="{ 'dark-theme': darkTheme, 'fullscreen': isFullscreen }"
+      >
         <div class="editor-toolbar">
           <div class="toolbar-left">
             <span class="current-file">{{ getCurrentFileName() }}</span>
@@ -110,7 +126,10 @@
           </div>
         </div>
 
-        <div class="code-content" ref="codeContainer">
+        <div
+          ref="codeContainer"
+          class="code-content"
+        >
           <highlightjs
             :code="currentCode"
             :language="language"
@@ -124,7 +143,10 @@
         </div>
 
         <!-- Code Statistics -->
-        <div v-if="showStatistics" class="code-statistics">
+        <div
+          v-if="showStatistics"
+          class="code-statistics"
+        >
           <div class="stats-grid">
             <div class="stat-item">
               <span class="stat-label">Lines:</span>

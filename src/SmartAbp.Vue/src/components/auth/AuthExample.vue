@@ -16,7 +16,7 @@
             type="text"
             required
             placeholder="请输入用户名"
-          >
+          />
         </div>
         <div class="form-group">
           <label>密码:</label>
@@ -25,7 +25,7 @@
             type="password"
             required
             placeholder="请输入密码"
-          >
+          />
         </div>
         <button
           type="submit"
@@ -70,7 +70,7 @@
             type="radio"
             value="light"
             @change="handleThemeChange"
-          >
+          />
           浅色主题
         </label>
         <label>
@@ -79,7 +79,7 @@
             type="radio"
             value="dark"
             @change="handleThemeChange"
-          >
+          />
           深色主题
         </label>
         <label>
@@ -88,7 +88,7 @@
             type="radio"
             value="auto"
             @change="handleThemeChange"
-          >
+          />
           跟随系统
         </label>
       </div>

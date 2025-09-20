@@ -148,6 +148,25 @@ export const codeGeneratorApi = {
     return await api.post<GeneratedModuleResult>("/api/code-generator/generate-module", metadata)
   },
 
+  /** Validate module metadata (server-side structural validation) */
+  async validateModule(metadata: ModuleMetadata): Promise<{
+    isValid: boolean
+    issues: Array<{ severity: string; message: string; path?: string }>
+  }> {
+    return await api.post("/api/code-generator/validate", metadata)
+  },
+
+  /** Dry-run generation: get file list and summary without writing to disk */
+  async dryRunGenerate(metadata: ModuleMetadata): Promise<{
+    success: boolean
+    moduleName: string
+    totalFiles: number
+    totalLines: number
+    files: string[]
+  }> {
+    return await api.post("/api/code-generator/dry-run", metadata)
+  },
+
   /**
    * Get available connection string names
    */
@@ -171,14 +190,23 @@ export const codeGeneratorApi = {
    * Get UI config for a module/entity
    */
   async getUiConfig(moduleName: string, entityName: string): Promise<EntityUIConfig> {
-    return await api.get<EntityUIConfig>(`/api/code-generator/ui-config?module=${encodeURIComponent(moduleName)}&entity=${encodeURIComponent(entityName)}`)
+    return await api.get<EntityUIConfig>(
+      `/api/code-generator/ui-config?module=${encodeURIComponent(moduleName)}&entity=${encodeURIComponent(entityName)}`,
+    )
   },
 
   /**
    * Save UI config for a module/entity
    */
-  async saveUiConfig(moduleName: string, entityName: string, config: EntityUIConfig): Promise<void> {
-    await api.post<void>(`/api/code-generator/ui-config?module=${encodeURIComponent(moduleName)}&entity=${encodeURIComponent(entityName)}`, config)
+  async saveUiConfig(
+    moduleName: string,
+    entityName: string,
+    config: EntityUIConfig,
+  ): Promise<void> {
+    await api.post<void>(
+      `/api/code-generator/ui-config?module=${encodeURIComponent(moduleName)}&entity=${encodeURIComponent(entityName)}`,
+      config,
+    )
   },
 
   /**

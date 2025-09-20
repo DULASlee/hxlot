@@ -23,264 +23,326 @@ AI_TEMPLATE_INFO:
 <template>
   <div class="entity-management">
     <!-- 若存在运行时UI配置，则优先使用元数据驱动渲染器 -->
-    <MetadataDrivenPageRenderer v-if="schema" :schema="schema" />
+    <MetadataDrivenPageRenderer
+      v-if="schema"
+      :schema="schema"
+    />
     <template v-else>
-    <!-- 页面头部 -->
-    <div class="page-header">
-      <div class="page-title">
-        <h2>用户管理管理</h2>
-        <p class="page-description">管理系统中的用户管理信息</p>
-      </div>
-      <div class="page-actions">
-        <el-button
-          v-permission="'User.Create'"
-          type="primary"
-          :icon="Plus"
-          @click="handleCreate"
-        >
-          新增用户管理
-        </el-button>
-      </div>
-    </div>
-
-    <!-- 搜索区域 -->
-    <el-card class="search-card" shadow="never">
-      <el-form
-        ref="searchFormRef"
-        :model="searchForm"
-        :inline="true"
-        class="search-form"
-      >
-        <el-form-item label="名称" prop="filter">
-          <el-input
-            v-model="searchForm.filter"
-            placeholder="请输入用户管理名称"
-            clearable
-            style="width: 200px"
-            @keyup.enter="handleSearch"
-          />
-        </el-form-item>
-        
-        <el-form-item label="状态" prop="isEnabled">
-          <el-select
-            v-model="searchForm.isEnabled"
-            placeholder="请选择状态"
-            clearable
-            style="width: 120px"
-          >
-            <el-option label="启用" :value="true" />
-            <el-option label="禁用" :value="false" />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item>
-          <el-button type="primary" :icon="Search" @click="handleSearch">
-            搜索
-          </el-button>
-          <el-button :icon="Refresh" @click="handleReset">
-            重置
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </el-card>
-
-    <!-- 数据表格 -->
-    <el-card class="table-card" shadow="never">
-      <!-- 表格工具栏 -->
-      <div class="table-toolbar">
-        <div class="toolbar-left">
+      <!-- 页面头部 -->
+      <div class="page-header">
+        <div class="page-title">
+          <h2>用户管理管理</h2>
+          <p class="page-description">
+            管理系统中的用户管理信息
+          </p>
+        </div>
+        <div class="page-actions">
           <el-button
-            v-permission="'User.Delete'"
-            type="danger"
-            :icon="Delete"
-            :disabled="!selectedRows.length"
-            @click="handleBatchDelete"
+            v-permission="'User.Create'"
+            type="primary"
+            :icon="Plus"
+            @click="handleCreate"
           >
-            批量删除 ({{ selectedRows.length }})
+            新增用户管理
           </el-button>
         </div>
-        <div class="toolbar-right">
-          <el-tooltip content="刷新数据">
-            <el-button :icon="Refresh" circle @click="fetchData" />
-          </el-tooltip>
-        </div>
       </div>
+
+      <!-- 搜索区域 -->
+      <el-card
+        class="search-card"
+        shadow="never"
+      >
+        <el-form
+          ref="searchFormRef"
+          :model="searchForm"
+          :inline="true"
+          class="search-form"
+        >
+          <el-form-item
+            label="名称"
+            prop="filter"
+          >
+            <el-input
+              v-model="searchForm.filter"
+              placeholder="请输入用户管理名称"
+              clearable
+              style="width: 200px"
+              @keyup.enter="handleSearch"
+            />
+          </el-form-item>
+        
+          <el-form-item
+            label="状态"
+            prop="isEnabled"
+          >
+            <el-select
+              v-model="searchForm.isEnabled"
+              placeholder="请选择状态"
+              clearable
+              style="width: 120px"
+            >
+              <el-option
+                label="启用"
+                :value="true"
+              />
+              <el-option
+                label="禁用"
+                :value="false"
+              />
+            </el-select>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button
+              type="primary"
+              :icon="Search"
+              @click="handleSearch"
+            >
+              搜索
+            </el-button>
+            <el-button
+              :icon="Refresh"
+              @click="handleReset"
+            >
+              重置
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
 
       <!-- 数据表格 -->
-      <el-table
-        ref="tableRef"
-        v-loading="loading"
-        :data="tableData"
-        row-key="id"
-        @selection-change="handleSelectionChange"
-        @sort-change="handleSortChange"
+      <el-card
+        class="table-card"
+        shadow="never"
       >
-        <el-table-column type="selection" width="50" />
-        
-        <el-table-column
-          prop="name"
-          label="名称"
-          sortable="custom"
-          min-width="150"
-        >
-          <template #default="{ row }">
-            <div class="name-cell">
-              <span class="name-text">{{ row.name }}</span>
-              <el-tag v-if="!row.isEnabled" type="info" size="small">
-                已禁用
-              </el-tag>
-            </div>
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          prop="displayName"
-          label="显示名称"
-          min-width="150"
-          show-overflow-tooltip
-        />
-
-        <el-table-column
-          prop="description"
-          label="描述"
-          min-width="200"
-          show-overflow-tooltip
-        />
-
-        <el-table-column
-          prop="sort"
-          label="排序"
-          width="80"
-          sortable="custom"
-        />
-
-        <el-table-column
-          prop="creationTime"
-          label="创建时间"
-          width="160"
-          sortable="custom"
-        >
-          <template #default="{ row }">
-            {{ formatDateTime(row.creationTime) }}
-          </template>
-        </el-table-column>
-
-        <el-table-column label="操作" width="180" fixed="right">
-          <template #default="{ row }">
-            <div class="action-buttons">
+        <!-- 表格工具栏 -->
+        <div class="table-toolbar">
+          <div class="toolbar-left">
+            <el-button
+              v-permission="'User.Delete'"
+              type="danger"
+              :icon="Delete"
+              :disabled="!selectedRows.length"
+              @click="handleBatchDelete"
+            >
+              批量删除 ({{ selectedRows.length }})
+            </el-button>
+          </div>
+          <div class="toolbar-right">
+            <el-tooltip content="刷新数据">
               <el-button
-                v-permission="'User.Edit'"
-                type="primary"
-                size="small"
-                text
-                @click="handleEdit(row)"
-              >
-                编辑
-              </el-button>
-              <el-button
-                v-permission="'User.Delete'"
-                type="danger"
-                size="small"
-                text
-                @click="handleDelete(row)"
-              >
-                删除
-              </el-button>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <!-- 分页组件 -->
-      <div class="pagination-wrapper">
-        <el-pagination
-          v-model:current-page="pagination.current"
-          v-model:page-size="pagination.pageSize"
-          :total="pagination.total"
-          :page-sizes="[10, 20, 50, 100]"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handlePageSizeChange"
-          @current-change="handleCurrentChange"
-        />
-      </div>
-    </el-card>
-
-    <!-- 编辑对话框 -->
-    <el-dialog
-      v-model="dialogVisible"
-      :title="dialogTitle"
-      width="600px"
-      :close-on-click-modal="false"
-      @close="handleDialogClose"
-    >
-      <el-form
-        ref="formRef"
-        :model="formData"
-        :rules="formRules"
-        label-width="100px"
-        class="edit-form"
-      >
-        <el-form-item label="名称" prop="name">
-          <el-input
-            v-model="formData.name"
-            placeholder="请输入用户管理名称"
-            maxlength="50"
-            show-word-limit
-          />
-        </el-form-item>
-
-        <el-form-item label="显示名称" prop="displayName">
-          <el-input
-            v-model="formData.displayName"
-            placeholder="请输入显示名称"
-            maxlength="100"
-            show-word-limit
-          />
-        </el-form-item>
-
-        <el-form-item label="描述" prop="description">
-          <el-input
-            v-model="formData.description"
-            type="textarea"
-            :rows="3"
-            placeholder="请输入描述信息"
-            maxlength="500"
-            show-word-limit
-          />
-        </el-form-item>
-
-        <el-form-item label="排序号" prop="sort">
-          <el-input-number
-            v-model="formData.sort"
-            :min="0"
-            :max="999999"
-            controls-position="right"
-            style="width: 150px"
-          />
-        </el-form-item>
-
-        <el-form-item label="状态" prop="isEnabled">
-          <el-switch
-            v-model="formData.isEnabled"
-            active-text="启用"
-            inactive-text="禁用"
-          />
-        </el-form-item>
-      </el-form>
-
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button
-            type="primary"
-            :loading="submitting"
-            @click="handleSubmit"
-          >
-            确定
-          </el-button>
+                :icon="Refresh"
+                circle
+                @click="fetchData"
+              />
+            </el-tooltip>
+          </div>
         </div>
-      </template>
-    </el-dialog>
+
+        <!-- 数据表格 -->
+        <el-table
+          ref="tableRef"
+          v-loading="loading"
+          :data="tableData"
+          row-key="id"
+          @selection-change="handleSelectionChange"
+          @sort-change="handleSortChange"
+        >
+          <el-table-column
+            type="selection"
+            width="50"
+          />
+        
+          <el-table-column
+            prop="name"
+            label="名称"
+            sortable="custom"
+            min-width="150"
+          >
+            <template #default="{ row }">
+              <div class="name-cell">
+                <span class="name-text">{{ row.name }}</span>
+                <el-tag
+                  v-if="!row.isEnabled"
+                  type="info"
+                  size="small"
+                >
+                  已禁用
+                </el-tag>
+              </div>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            prop="displayName"
+            label="显示名称"
+            min-width="150"
+            show-overflow-tooltip
+          />
+
+          <el-table-column
+            prop="description"
+            label="描述"
+            min-width="200"
+            show-overflow-tooltip
+          />
+
+          <el-table-column
+            prop="sort"
+            label="排序"
+            width="80"
+            sortable="custom"
+          />
+
+          <el-table-column
+            prop="creationTime"
+            label="创建时间"
+            width="160"
+            sortable="custom"
+          >
+            <template #default="{ row }">
+              {{ formatDateTime(row.creationTime) }}
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            label="操作"
+            width="180"
+            fixed="right"
+          >
+            <template #default="{ row }">
+              <div class="action-buttons">
+                <el-button
+                  v-permission="'User.Edit'"
+                  type="primary"
+                  size="small"
+                  text
+                  @click="handleEdit(row)"
+                >
+                  编辑
+                </el-button>
+                <el-button
+                  v-permission="'User.Delete'"
+                  type="danger"
+                  size="small"
+                  text
+                  @click="handleDelete(row)"
+                >
+                  删除
+                </el-button>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <!-- 分页组件 -->
+        <div class="pagination-wrapper">
+          <el-pagination
+            v-model:current-page="pagination.current"
+            v-model:page-size="pagination.pageSize"
+            :total="pagination.total"
+            :page-sizes="[10, 20, 50, 100]"
+            layout="total, sizes, prev, pager, next, jumper"
+            @size-change="handlePageSizeChange"
+            @current-change="handleCurrentChange"
+          />
+        </div>
+      </el-card>
+
+      <!-- 编辑对话框 -->
+      <el-dialog
+        v-model="dialogVisible"
+        :title="dialogTitle"
+        width="600px"
+        :close-on-click-modal="false"
+        @close="handleDialogClose"
+      >
+        <el-form
+          ref="formRef"
+          :model="formData"
+          :rules="formRules"
+          label-width="100px"
+          class="edit-form"
+        >
+          <el-form-item
+            label="名称"
+            prop="name"
+          >
+            <el-input
+              v-model="formData.name"
+              placeholder="请输入用户管理名称"
+              maxlength="50"
+              show-word-limit
+            />
+          </el-form-item>
+
+          <el-form-item
+            label="显示名称"
+            prop="displayName"
+          >
+            <el-input
+              v-model="formData.displayName"
+              placeholder="请输入显示名称"
+              maxlength="100"
+              show-word-limit
+            />
+          </el-form-item>
+
+          <el-form-item
+            label="描述"
+            prop="description"
+          >
+            <el-input
+              v-model="formData.description"
+              type="textarea"
+              :rows="3"
+              placeholder="请输入描述信息"
+              maxlength="500"
+              show-word-limit
+            />
+          </el-form-item>
+
+          <el-form-item
+            label="排序号"
+            prop="sort"
+          >
+            <el-input-number
+              v-model="formData.sort"
+              :min="0"
+              :max="999999"
+              controls-position="right"
+              style="width: 150px"
+            />
+          </el-form-item>
+
+          <el-form-item
+            label="状态"
+            prop="isEnabled"
+          >
+            <el-switch
+              v-model="formData.isEnabled"
+              active-text="启用"
+              inactive-text="禁用"
+            />
+          </el-form-item>
+        </el-form>
+
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="dialogVisible = false">
+              取消
+            </el-button>
+            <el-button
+              type="primary"
+              :loading="submitting"
+              @click="handleSubmit"
+            >
+              确定
+            </el-button>
+          </div>
+        </template>
+      </el-dialog>
     </template>
   </div>
 </template>

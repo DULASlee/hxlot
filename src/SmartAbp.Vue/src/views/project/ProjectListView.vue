@@ -30,7 +30,7 @@
             type="text"
             placeholder="搜索项目..."
             class="search-input"
-          >
+          />
         </div>
         <button
           class="btn-primary"
@@ -138,7 +138,7 @@
             <input
               v-model="newProject.name"
               type="text"
-            >
+            />
           </div>
           <div class="form-group">
             <label>项目描述</label>

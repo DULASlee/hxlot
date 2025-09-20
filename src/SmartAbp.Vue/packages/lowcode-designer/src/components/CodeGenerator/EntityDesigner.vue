@@ -4,35 +4,80 @@
       <template #header>
         <div class="designer-header">
           <div class="header-left">
-            <el-icon class="header-icon"><Collection /></el-icon>
+            <el-icon class="header-icon">
+              <Collection />
+            </el-icon>
             <span class="header-title">{{ t('designer.entityDesigner') }}</span>
-            <el-tag v-if="entityModel.name" type="primary" size="small">
+            <el-tag
+              v-if="entityModel.name"
+              type="primary"
+              size="small"
+            >
               {{ entityModel.name }}
             </el-tag>
           </div>
           <div class="header-actions">
-            <el-button @click="loadDraft" size="small" type="default" plain>
+            <el-button
+              size="small"
+              type="default"
+              plain
+              @click="loadDraft"
+            >
               <el-icon><DocumentCopy /></el-icon> {{ t('designer.loadDraft') }}
             </el-button>
-            <el-button @click="saveDraft" size="small" type="primary">
+            <el-button
+              size="small"
+              type="primary"
+              @click="saveDraft"
+            >
               <el-icon><Document /></el-icon> {{ t('designer.saveDraft') }}
             </el-button>
-            <el-button @click="openDbImport" size="small" type="primary" plain>
+            <el-button
+              size="small"
+              type="primary"
+              plain
+              @click="openDbImport"
+            >
               <el-icon><Connection /></el-icon> {{ t('designer.importDb') }}
             </el-button>
-            <el-button @click="openSqlImport" size="small" type="warning" plain>
+            <el-button
+              size="small"
+              type="warning"
+              plain
+              @click="openSqlImport"
+            >
               <el-icon><Document /></el-icon> {{ t('designer.importSql') }}
             </el-button>
-            <el-button @click="clearDesigner" size="small" type="danger" plain>
+            <el-button
+              size="small"
+              type="danger"
+              plain
+              @click="clearDesigner"
+            >
               <el-icon><Delete /></el-icon> {{ t('designer.clear') }}
             </el-button>
-            <el-button @click="activeTab = 'relationships'" size="small" type="success" plain>
+            <el-button
+              size="small"
+              type="success"
+              plain
+              @click="activeTab = 'relationships'"
+            >
               <el-icon><Connection /></el-icon> {{ t('designer.relationships') }}
             </el-button>
-            <el-button @click="previewCodeMethod" size="small" type="info" plain>
+            <el-button
+              size="small"
+              type="info"
+              plain
+              @click="previewCodeMethod"
+            >
               <el-icon><View /></el-icon> {{ t('designer.preview') }}
             </el-button>
-            <el-button @click="generateEntity" size="small" type="primary" :loading="isGenerating">
+            <el-button
+              size="small"
+              type="primary"
+              :loading="isGenerating"
+              @click="generateEntity"
+            >
               <el-icon><MagicStick /></el-icon> {{ t('designer.generate') }}
             </el-button>
           </div>
@@ -41,26 +86,62 @@
 
       <div class="designer-content">
         <!-- Entity switcher & actions -->
-        <div class="entity-switcher" style="margin: 8px 0 16px; display: flex; gap: 8px; align-items: center;">
+        <div
+          class="entity-switcher"
+          style="margin: 8px 0 16px; display: flex; gap: 8px; align-items: center;"
+        >
           <span style="color:#606266;">{{ t('designer.entities') }}</span>
-          <el-select v-model="currentIndex" size="small" style="width: 220px;">
-            <el-option v-for="(e, idx) in entities" :key="idx" :label="e.name || ('Entity'+(idx+1))" :value="idx" />
+          <el-select
+            v-model="currentIndex"
+            size="small"
+            style="width: 220px;"
+          >
+            <el-option
+              v-for="(e, idx) in entities"
+              :key="idx"
+              :label="e.name || ('Entity'+(idx+1))"
+              :value="idx"
+            />
           </el-select>
-          <el-button size="small" type="primary" @click="addEntity">{{ t('designer.addEntity') }}</el-button>
-          <el-button size="small" type="danger" plain @click="removeEntity" :disabled="entities.length<=1">{{ t('designer.removeEntity') }}</el-button>
+          <el-button
+            size="small"
+            type="primary"
+            @click="addEntity"
+          >
+            {{ t('designer.addEntity') }}
+          </el-button>
+          <el-button
+            size="small"
+            type="danger"
+            plain
+            :disabled="entities.length<=1"
+            @click="removeEntity"
+          >
+            {{ t('designer.removeEntity') }}
+          </el-button>
         </div>
 
         <!-- Entity Configuration Panel -->
         <div class="config-panel">
-          <el-card shadow="never" class="config-card">
+          <el-card
+            shadow="never"
+            class="config-card"
+          >
             <template #header>
               <span><el-icon><Setting /></el-icon> {{ t('designer.entityConfig') }}</span>
             </template>
 
-            <el-form :model="entityModel" label-width="120px" size="small">
+            <el-form
+              :model="entityModel"
+              label-width="120px"
+              size="small"
+            >
               <el-row :gutter="16">
                 <el-col :span="12">
-                  <el-form-item :label="t('designer.entityName')" required>
+                  <el-form-item
+                    :label="t('designer.entityName')"
+                    required
+                  >
                     <el-input
                       v-model="entityModel.name"
                       :placeholder="t('designer.entityName')"
@@ -69,7 +150,10 @@
                 </el-col>
                 <el-col :span="12">
                   <el-form-item :label="t('designer.module')">
-                    <el-input v-model="entityModel.module" :placeholder="t('designer.module')" />
+                    <el-input
+                      v-model="entityModel.module"
+                      :placeholder="t('designer.module')"
+                    />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -77,12 +161,18 @@
               <el-row :gutter="16">
                 <el-col :span="12">
                   <el-form-item :label="t('designer.baseClass')">
-                    <el-input v-model="entityModel.baseClass" :placeholder="t('designer.baseClass')" />
+                    <el-input
+                      v-model="entityModel.baseClass"
+                      :placeholder="t('designer.baseClass')"
+                    />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item :label="t('designer.description')">
-                    <el-input v-model="entityModel.description" :placeholder="t('designer.description')" />
+                    <el-input
+                      v-model="entityModel.description"
+                      :placeholder="t('designer.description')"
+                    />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -90,26 +180,41 @@
               <el-row :gutter="16">
                 <el-col :span="8">
                   <el-form-item :label="t('designer.namespace')">
-                    <el-input v-model="entityModel.namespace" :placeholder="t('designer.namespace')" />
+                    <el-input
+                      v-model="entityModel.namespace"
+                      :placeholder="t('designer.namespace')"
+                    />
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item :label="t('designer.table')">
-                    <el-input v-model="entityModel.tableName" :placeholder="t('designer.table')" />
+                    <el-input
+                      v-model="entityModel.tableName"
+                      :placeholder="t('designer.table')"
+                    />
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item :label="t('designer.schema')">
-                    <el-input v-model="entityModel.schema" :placeholder="t('designer.schema')" />
+                    <el-input
+                      v-model="entityModel.schema"
+                      :placeholder="t('designer.schema')"
+                    />
                   </el-form-item>
                 </el-col>
               </el-row>
 
               <el-form-item>
                 <el-checkbox-group v-model="entityFeatures">
-                  <el-checkbox label="isAggregateRoot">聚合根</el-checkbox>
-                  <el-checkbox label="isMultiTenant">多租户</el-checkbox>
-                  <el-checkbox label="isSoftDelete">软删除</el-checkbox>
+                  <el-checkbox label="isAggregateRoot">
+                    聚合根
+                  </el-checkbox>
+                  <el-checkbox label="isMultiTenant">
+                    多租户
+                  </el-checkbox>
+                  <el-checkbox label="isSoftDelete">
+                    软删除
+                  </el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
             </el-form>
@@ -118,8 +223,14 @@
 
         <!-- Main Designer Area -->
         <div class="designer-main">
-          <el-tabs v-model="activeTab" class="designer-tabs">
-            <el-tab-pane :label="t('designer.properties')" name="properties">
+          <el-tabs
+            v-model="activeTab"
+            class="designer-tabs"
+          >
+            <el-tab-pane
+              :label="t('designer.properties')"
+              name="properties"
+            >
               <div class="properties-workspace">
                 <!-- Property Toolbox -->
                 <div class="property-toolbox">
@@ -132,7 +243,10 @@
                       draggable="true"
                       @dragstart="onDragStart($event, propertyType)"
                     >
-                      <el-icon class="type-icon" :style="{ color: propertyType.color }">
+                      <el-icon
+                        class="type-icon"
+                        :style="{ color: propertyType.color }"
+                      >
                         <component :is="propertyType.icon" />
                       </el-icon>
                       <span class="type-name">{{ propertyType.name }}</span>
@@ -144,7 +258,10 @@
                 <div class="entity-canvas">
                   <div class="canvas-header">
                     <h4>{{ entityModel.name || t('designer.untitled') }}</h4>
-                    <el-tag v-if="entityModel.properties.length" size="small">
+                    <el-tag
+                      v-if="entityModel.properties.length"
+                      size="small"
+                    >
                       {{ entityModel.properties.length }} {{ t('designer.propsCount') }}
                     </el-tag>
                   </div>
@@ -156,8 +273,13 @@
                     @dragover.prevent="isDragOver = true"
                     @dragleave="isDragOver = false"
                   >
-                    <div v-if="entityModel.properties.length === 0" class="empty-state">
-                      <el-icon class="empty-icon"><Plus /></el-icon>
+                    <div
+                      v-if="entityModel.properties.length === 0"
+                      class="empty-state"
+                    >
+                      <el-icon class="empty-icon">
+                        <Plus />
+                      </el-icon>
                       <p>{{ t('designer.dropHint') }}</p>
                     </div>
 
@@ -165,37 +287,88 @@
                     <draggable
                       v-model="entityModel.properties"
                       group="properties"
-                      itemKey="id"
+                      item-key="id"
                       class="properties-list"
                     >
                       <template #item="{ element: property, index }">
-                        <div class="property-item" :class="{ 'selected': selectedProperty === property.id }">
-                          <div class="property-content" @click="selectProperty(property.id)">
-                            <div class="property-header" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                              <el-icon class="property-icon" :style="{ color: getPropertyTypeColor(property.type) }">
+                        <div
+                          class="property-item"
+                          :class="{ 'selected': selectedProperty === property.id }"
+                        >
+                          <div
+                            class="property-content"
+                            @click="selectProperty(property.id)"
+                          >
+                            <div
+                              class="property-header"
+                              style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;"
+                            >
+                              <el-icon
+                                class="property-icon"
+                                :style="{ color: getPropertyTypeColor(property.type) }"
+                              >
                                 <component :is="getPropertyTypeIcon(property.type)" />
                               </el-icon>
-                              <el-input v-model="property.name" size="small" style="width: 160px;" :placeholder="t('designer.name')" />
-                              <el-select v-model="property.type" size="small" style="width: 140px;" :placeholder="t('designer.type')">
-                                <el-option v-for="pt in propertyTypes" :key="pt.type" :label="pt.name" :value="pt.type" />
+                              <el-input
+                                v-model="property.name"
+                                size="small"
+                                style="width: 160px;"
+                                :placeholder="t('designer.name')"
+                              />
+                              <el-select
+                                v-model="property.type"
+                                size="small"
+                                style="width: 140px;"
+                                :placeholder="t('designer.type')"
+                              >
+                                <el-option
+                                  v-for="pt in propertyTypes"
+                                  :key="pt.type"
+                                  :label="pt.name"
+                                  :value="pt.type"
+                                />
                               </el-select>
                               <span style="color:#909399;">{{ t('designer.required') }}</span>
-                              <el-switch v-model="property.isRequired" size="small" />
+                              <el-switch
+                                v-model="property.isRequired"
+                                size="small"
+                              />
                               <template v-if="property.type==='string'">
                                 <span style="color:#909399;">{{ t('designer.length') }}</span>
-                                <el-input-number v-model="property.maxLength" :min="1" :max="4000" size="small" style="width: 140px;" />
+                                <el-input-number
+                                  v-model="property.maxLength"
+                                  :min="1"
+                                  :max="4000"
+                                  size="small"
+                                  style="width: 140px;"
+                                />
                               </template>
                             </div>
                           </div>
 
                           <div class="property-actions">
-                            <el-button @click="editProperty(property)" size="small" type="primary" text>
+                            <el-button
+                              size="small"
+                              type="primary"
+                              text
+                              @click="editProperty(property)"
+                            >
                               <el-icon><Edit /></el-icon>
                             </el-button>
-                            <el-button @click="duplicateProperty(property)" size="small" type="success" text>
+                            <el-button
+                              size="small"
+                              type="success"
+                              text
+                              @click="duplicateProperty(property)"
+                            >
                               <el-icon><DocumentCopy /></el-icon>
                             </el-button>
-                            <el-button @click="removeProperty(index)" size="small" type="danger" text>
+                            <el-button
+                              size="small"
+                              type="danger"
+                              text
+                              @click="removeProperty(index)"
+                            >
                               <el-icon><Delete /></el-icon>
                             </el-button>
                           </div>
@@ -207,9 +380,12 @@
               </div>
             </el-tab-pane>
 
-            <el-tab-pane :label="t('designer.relationships')" name="relationships">
+            <el-tab-pane
+              :label="t('designer.relationships')"
+              name="relationships"
+            >
               <RelationshipDesigner
-                v-model:modelValue="entities"
+                v-model:model-value="entities"
                 @create-relationship="(r) => (entityModel.relationships = [...entityModel.relationships, r as any])"
                 @update-relationship="(r) => (entityModel.relationships = entityModel.relationships.map(x => (x as any).id === (r as any).id ? (r as any) : x))"
                 @delete-relationship="(id) => (entityModel.relationships = entityModel.relationships.filter(x => (x as any).id !== id))"
@@ -251,54 +427,133 @@
     </el-dialog>
 
     <!-- SQL Import Dialog -->
-    <el-dialog v-model="showSqlDialog" :title="t('designer.importSql')" width="70%">
+    <el-dialog
+      v-model="showSqlDialog"
+      :title="t('designer.importSql')"
+      width="70%"
+    >
       <div style="margin-bottom:8px; display:flex; align-items:center; gap:12px;">
         <span>{{ t('designer.importMode') }}</span>
-        <el-radio-group v-model="importMode" size="small">
-          <el-radio-button label="append">{{ t('designer.append') }}</el-radio-button>
-          <el-radio-button label="replace">{{ t('designer.replace') }}</el-radio-button>
+        <el-radio-group
+          v-model="importMode"
+          size="small"
+        >
+          <el-radio-button label="append">
+            {{ t('designer.append') }}
+          </el-radio-button>
+          <el-radio-button label="replace">
+            {{ t('designer.replace') }}
+          </el-radio-button>
         </el-radio-group>
       </div>
-      <el-input v-model="sqlText" type="textarea" :rows="14" :placeholder="t('designer.sqlPlaceholder')" />
+      <el-input
+        v-model="sqlText"
+        type="textarea"
+        :rows="14"
+        :placeholder="t('designer.sqlPlaceholder')"
+      />
       <template #footer>
-        <el-button @click="showSqlDialog=false">{{ t('designer.cancel') }}</el-button>
-        <el-button type="primary" @click="doImportSql">{{ t('designer.import') }}</el-button>
+        <el-button @click="showSqlDialog=false">
+          {{ t('designer.cancel') }}
+        </el-button>
+        <el-button
+          type="primary"
+          @click="doImportSql"
+        >
+          {{ t('designer.import') }}
+        </el-button>
       </template>
     </el-dialog>
 
     <!-- DB Import Dialog -->
-    <el-dialog v-model="showDbDialog" :title="t('designer.importDb')" width="60%">
+    <el-dialog
+      v-model="showDbDialog"
+      :title="t('designer.importDb')"
+      width="60%"
+    >
       <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
         <el-form label-width="120px">
           <el-form-item :label="t('designer.connectionString')">
-            <el-select v-model="dbConnName" :placeholder="t('designer.connectionString')">
-              <el-option v-for="cs in connStrings" :key="cs" :label="cs" :value="cs" />
+            <el-select
+              v-model="dbConnName"
+              :placeholder="t('designer.connectionString')"
+            >
+              <el-option
+                v-for="cs in connStrings"
+                :key="cs"
+                :label="cs"
+                :value="cs"
+              />
             </el-select>
           </el-form-item>
           <el-form-item :label="t('designer.provider')">
-            <el-select v-model="dbProvider" :placeholder="t('designer.provider')">
-              <el-option label="SqlServer" value="SqlServer" />
-              <el-option label="PostgreSql" value="PostgreSql" />
-              <el-option label="MySql" value="MySql" />
-              <el-option label="Oracle" value="Oracle" />
+            <el-select
+              v-model="dbProvider"
+              :placeholder="t('designer.provider')"
+            >
+              <el-option
+                label="SqlServer"
+                value="SqlServer"
+              />
+              <el-option
+                label="PostgreSql"
+                value="PostgreSql"
+              />
+              <el-option
+                label="MySql"
+                value="MySql"
+              />
+              <el-option
+                label="Oracle"
+                value="Oracle"
+              />
             </el-select>
           </el-form-item>
           <el-form-item :label="t('designer.schema')">
-            <el-input v-model="dbSchema" :placeholder="t('designer.schema')" />
+            <el-input
+              v-model="dbSchema"
+              :placeholder="t('designer.schema')"
+            />
           </el-form-item>
           <el-form-item :label="t('designer.tables')">
             <div style="display:flex; gap:8px; align-items:center;">
-              <el-select v-model="selectedTables" multiple filterable :placeholder="t('designer.selectTables')" style="min-width:260px;">
-                <el-option v-for="titem in schemaTables" :key="titem" :label="titem" :value="titem" />
+              <el-select
+                v-model="selectedTables"
+                multiple
+                filterable
+                :placeholder="t('designer.selectTables')"
+                style="min-width:260px;"
+              >
+                <el-option
+                  v-for="titem in schemaTables"
+                  :key="titem"
+                  :label="titem"
+                  :value="titem"
+                />
               </el-select>
-              <el-button @click="loadTables" type="primary" plain :loading="loadingTables">{{ t('designer.loadTables') }}</el-button>
+              <el-button
+                type="primary"
+                plain
+                :loading="loadingTables"
+                @click="loadTables"
+              >
+                {{ t('designer.loadTables') }}
+              </el-button>
             </div>
           </el-form-item>
         </el-form>
       </div>
       <template #footer>
-        <el-button @click="showDbDialog=false">{{ t('designer.cancel') }}</el-button>
-        <el-button type="primary" @click="doImportDb" :disabled="!dbConnName || !dbProvider">{{ t('designer.import') }}</el-button>
+        <el-button @click="showDbDialog=false">
+          {{ t('designer.cancel') }}
+        </el-button>
+        <el-button
+          type="primary"
+          :disabled="!dbConnName || !dbProvider"
+          @click="doImportDb"
+        >
+          {{ t('designer.import') }}
+        </el-button>
       </template>
     </el-dialog>
   </div>
@@ -1024,6 +1279,10 @@ const emit = defineEmits<{
   (e: 'update:entities', value: EnhancedEntityModel[]): void
   (e: 'update:db', value: { connectionStringName?: string; provider?: string; schema?: string }): void
 }>()
+</script>
+
+<script lang="ts">
+export default {}
 </script>
 
 <style scoped>

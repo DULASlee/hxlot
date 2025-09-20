@@ -4,6 +4,8 @@
     <Version>1.0.0</Version>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
 	<AbpProjectType>app</AbpProjectType>
+    <!-- Unified ABP baseline for .NET 9 runtime -->
+    <AbpVersion>9.1.1</AbpVersion>
   </PropertyGroup>
 
   <Target Name="NoWarnOnRazorViewImportedTypeConflicts" BeforeTargets="RazorCoreCompile">

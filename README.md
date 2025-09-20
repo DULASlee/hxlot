@@ -1,4 +1,25 @@
-﻿﻿# SmartAbp - ABP vNext + Vue.js SPA 集成项目
+﻿﻿## Quality Gates
+
+Frontend (Vue/TS):
+
+```bash
+cd src/SmartAbp.Vue
+npm ci
+npm run type-check
+npm run lint
+npm run test:run
+npm run build
+```
+
+Backend (.NET):
+
+```bash
+dotnet format --verify-no-changes
+dotnet build -c Release
+```
+
+Git Hooks (Husky): ensure `.husky/pre-commit` is executable and run `npx husky install`.
+# SmartAbp - ABP vNext + Vue.js SPA 集成项目
 
 ## 📖 项目简介
 
@@ -47,6 +68,7 @@
 
 > **⚡ 所有开发人员必须首先阅读并严格遵守以下铁律**
 
+- **[项目开发规则（总纲）](doc/项目开发规则.md)** - 🔴 三条铁律总览与文档索引
 - **[项目开发铁律](doc/项目开发铁律.md)** - 🔴 强制执行的开发规范
 - **[BUG修复铁律（绝对禁令）](doc/engineering-rules.md)** - 🔴 必须执行，CI/PR 检查项
 - **[项目编程规则](doc/项目编程规则.md)** - 🔴 统一架构/规则/编码规范/质量门禁
@@ -159,7 +181,7 @@ public override void OnApplicationInitialization(ApplicationInitializationContex
     app.UseSpa(spa =>
     {
         spa.Options.SourcePath = "../SmartAbp.Vue";
-        
+
         if (env.IsDevelopment())
         {
             // 开发环境：代理到Vue开发服务器

@@ -14,6 +14,9 @@ using SmartAbp.CodeGenerator.Core.Generation.Frontend;
 using Microsoft.Extensions.Configuration;
 using Volo.Abp.Domain.Entities;
 using System.Text.Json;
+using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace SmartAbp.CodeGenerator.Services
 {
@@ -27,6 +30,7 @@ namespace SmartAbp.CodeGenerator.Services
         private readonly IConfiguration _configuration;
         private readonly DefaultUIConfigGenerator _defaultUiConfigGenerator;
         private readonly FrontendIntegrationService _frontendIntegrationService;
+        private readonly SchemaVersioningService _schemaVersioningService;
         
         public CodeGenerationAppService(
             CodeWriterService codeWriterService,
@@ -36,7 +40,8 @@ namespace SmartAbp.CodeGenerator.Services
             FrontendGenerator frontendGenerator,
             IConfiguration configuration,
             DefaultUIConfigGenerator defaultUiConfigGenerator,
-            FrontendIntegrationService frontendIntegrationService)
+            FrontendIntegrationService frontendIntegrationService,
+            SchemaVersioningService schemaVersioningService)
         {
             _codeWriterService = codeWriterService;
             _solutionIntegrationService = solutionIntegrationService;
@@ -46,6 +51,7 @@ namespace SmartAbp.CodeGenerator.Services
             _configuration = configuration;
             _defaultUiConfigGenerator = defaultUiConfigGenerator;
             _frontendIntegrationService = frontendIntegrationService;
+            _schemaVersioningService = schemaVersioningService;
         }
         
         public async Task<GeneratedModuleDto> GenerateModuleAsync(ModuleMetadataDto input)
@@ -150,6 +156,113 @@ namespace SmartAbp.CodeGenerator.Services
                 }
             };
             return Task.FromResult(menuTree);
+        }
+
+        // Unified schema entrypoint: frontend sends unified schema, backend converts to ModuleMetadataDto
+        public async Task<GeneratedModuleDto> GenerateFromUnifiedSchemaAsync(UnifiedModuleSchemaDto unified)
+        {
+            var migrated = _schemaVersioningService.MigrateToCurrent(unified);
+            var input = ConvertUnified(migrated);
+            return await GenerateModuleAsync(input);
+        }
+
+        public Task<ValidationReportDto> ValidateUnifiedAsync(UnifiedModuleSchemaDto unified)
+        {
+            var migrated = _schemaVersioningService.MigrateToCurrent(unified);
+            var input = ConvertUnified(migrated);
+            return ValidateModuleAsync(input);
+        }
+
+        public Task<GenerationDryRunResultDto> DryRunUnifiedAsync(UnifiedModuleSchemaDto unified)
+        {
+            var migrated = _schemaVersioningService.MigrateToCurrent(unified);
+            var input = ConvertUnified(migrated);
+            return DryRunGenerateAsync(input);
+        }
+
+        private ModuleMetadataDto ConvertUnified(UnifiedModuleSchemaDto unified)
+        {
+            return new ModuleMetadataDto
+            {
+                Id = unified.Id,
+                SystemName = unified.SystemName,
+                Name = unified.Name,
+                DisplayName = unified.DisplayName,
+                Description = unified.Description,
+                Version = unified.Version,
+                ArchitecturePattern = unified.ArchitecturePattern,
+                DatabaseInfo = new DatabaseConfigDto
+                {
+                    ConnectionStringName = unified.DatabaseInfo.ConnectionStringName,
+                    Provider = unified.DatabaseInfo.Provider,
+                    Schema = unified.DatabaseInfo.Schema,
+                },
+                FeatureManagement = new FeatureManagementDto { IsEnabled = unified.FeatureManagement.IsEnabled, DefaultPolicy = unified.FeatureManagement.DefaultPolicy },
+                Frontend = new FrontendConfigDto { ParentId = unified.Frontend.ParentId ?? string.Empty, RoutePrefix = unified.Frontend.RoutePrefix ?? string.Empty },
+                GenerateMobilePages = unified.GenerateMobilePages,
+                Dependencies = unified.Dependencies.ToList(),
+                Entities = unified.Entities.Select(e => new EnhancedEntityModelDto
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    DisplayName = e.DisplayName ?? e.Name,
+                    Description = e.Description,
+                    Module = e.Module,
+                    Namespace = e.Namespace,
+                    TableName = e.TableName,
+                    Schema = e.Schema,
+                    IsAggregateRoot = e.IsAggregateRoot,
+                    IsMultiTenant = e.IsMultiTenant,
+                    IsSoftDelete = e.IsSoftDelete,
+                    BaseClass = e.BaseClass,
+                    Properties = e.Properties.Select(p => new EntityPropertyDto
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        DisplayName = p.Name,
+                        Type = p.Type,
+                        IsRequired = p.IsRequired,
+                        IsKey = p.IsPrimaryKey,
+                        IsUnique = p.IsUnique,
+                        MaxLength = p.MaxLength,
+                        MinLength = p.MinLength,
+                        DefaultValue = p.DefaultValue,
+                        Description = p.Description ?? string.Empty,
+                    }).ToList(),
+                    Relationships = e.Relationships.Select(r => new EntityRelationshipDto
+                    {
+                        Id = r.Id,
+                        Name = r.Name,
+                        Type = r.Type,
+                        SourceEntityId = r.SourceEntityId,
+                        TargetEntityId = r.TargetEntityId,
+                        SourceProperty = r.SourcePropertyName ?? string.Empty,
+                        TargetProperty = r.TargetPropertyName ?? string.Empty,
+                        CascadeDelete = r.CascadeDelete,
+                        IsRequired = r.IsRequired,
+                    }).ToList(),
+                    Indexes = new List<EntityIndexDto>(),
+                    Constraints = new List<EntityConstraintDto>(),
+                    BusinessRules = new List<BusinessRuleDto>(),
+                    Permissions = new List<EntityPermissionDto>(),
+                    CodeGeneration = new CodeGenerationConfigDto { GenerateEntity = true, GenerateRepository = true, GenerateService = true, GenerateController = true, GenerateDto = true, GenerateTests = false, CustomTemplates = new Dictionary<string, string>(), Options = new CodeGenerationOptionsDto { UseAutoMapper = true, GenerateValidation = true, GenerateSwaggerDoc = true, GeneratePermissions = true, GenerateAuditLog = true } },
+                    UiConfig = new EntityUIConfigDto { ListConfig = new ListConfigDto { DefaultPageSize = 10 }, FormConfig = new FormConfigDto { Layout = "grid", ColumnCount = 2 }, DetailConfig = new DetailConfigDto { Layout = "basic" } },
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                    Version = unified.Version,
+                    Tags = new List<string>(),
+                }).ToList(),
+                PermissionConfig = new PermissionConfigDto
+                {
+                    CustomActions = unified.PermissionConfig.CustomActions
+                        .Where(a => !string.Equals(a.ActionKey, "Create", StringComparison.OrdinalIgnoreCase)
+                                 && !string.Equals(a.ActionKey, "Read", StringComparison.OrdinalIgnoreCase)
+                                 && !string.Equals(a.ActionKey, "Update", StringComparison.OrdinalIgnoreCase)
+                                 && !string.Equals(a.ActionKey, "Delete", StringComparison.OrdinalIgnoreCase))
+                        .Select(a => new CustomPermissionActionDto { EntityName = a.EntityName, ActionKey = a.ActionKey, DisplayName = a.DisplayName })
+                        .ToList(),
+                },
+            };
         }
 
         public async Task<DatabaseSchemaDto> IntrospectDatabaseAsync(DatabaseIntrospectionRequestDto request)
@@ -439,6 +552,140 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
             return schema;
         }
 
+        public Task<ValidationReportDto> ValidateModuleAsync(ModuleMetadataDto input)
+        {
+            Check.NotNull(input, nameof(input));
+            var report = new ValidationReportDto { IsValid = true };
+
+            if (string.IsNullOrWhiteSpace(input.SystemName))
+            {
+                report.IsValid = false;
+                report.Issues.Add(new ValidationIssueDto { Severity = "error", Message = "SystemName 不能为空", Path = "systemName" });
+            }
+            if (string.IsNullOrWhiteSpace(input.Name))
+            {
+                report.IsValid = false;
+                report.Issues.Add(new ValidationIssueDto { Severity = "error", Message = "Module Name 不能为空", Path = "name" });
+            }
+            if (input.Entities == null || input.Entities.Count == 0)
+            {
+                report.IsValid = false;
+                report.Issues.Add(new ValidationIssueDto { Severity = "error", Message = "必须至少定义一个实体", Path = "entities" });
+                return Task.FromResult(report);
+            }
+
+            // 基础校验：实体重名、字段必填、字段重名等
+            var entityNameSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            report.EntitiesCount = input.Entities.Count;
+            foreach (var entity in input.Entities)
+            {
+                if (string.IsNullOrWhiteSpace(entity.Name))
+                {
+                    report.IsValid = false;
+                    report.Issues.Add(new ValidationIssueDto { Severity = "error", Message = "实体名称不能为空", Path = $"entities[{input.Entities.IndexOf(entity)}].name" });
+                    continue;
+                }
+                if (!entityNameSet.Add(entity.Name))
+                {
+                    report.IsValid = false;
+                    report.Issues.Add(new ValidationIssueDto { Severity = "error", Message = $"实体名称重复: {entity.Name}", Path = $"entities[{input.Entities.IndexOf(entity)}].name" });
+                }
+
+                if (entity.Properties == null || entity.Properties.Count == 0)
+                {
+                    report.IsValid = false;
+                    report.Issues.Add(new ValidationIssueDto { Severity = "error", Message = $"实体 {entity.Name} 必须至少有一个属性", Path = $"entities[{input.Entities.IndexOf(entity)}].properties" });
+                    continue;
+                }
+
+                var propNameSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var prop in entity.Properties)
+                {
+                    if (string.IsNullOrWhiteSpace(prop.Name))
+                    {
+                        report.IsValid = false;
+                        report.Issues.Add(new ValidationIssueDto { Severity = "error", Message = $"实体 {entity.Name} 存在属性名称为空", Path = $"entities[{input.Entities.IndexOf(entity)}].properties[*].name" });
+                        continue;
+                    }
+                    if (!propNameSet.Add(prop.Name))
+                    {
+                        report.IsValid = false;
+                        report.Issues.Add(new ValidationIssueDto { Severity = "error", Message = $"实体 {entity.Name} 的属性重名: {prop.Name}", Path = $"entities[{input.Entities.IndexOf(entity)}].properties.{prop.Name}" });
+                    }
+                }
+
+                // UI 配置基本一致性校验
+                var displayCols = entity.UiConfig?.ListConfig?.DisplayColumns ?? new List<string>();
+                foreach (var col in displayCols)
+                {
+                    if (!propNameSet.Contains(col))
+                    {
+                        report.Issues.Add(new ValidationIssueDto { Severity = "warning", Message = $"列表展示列 {col} 不存在于实体 {entity.Name} 属性中", Path = $"entities[{input.Entities.IndexOf(entity)}].uiConfig.listConfig.displayColumns" });
+                    }
+                }
+            }
+
+            report.PropertiesCount = input.Entities.SelectMany(e => e.Properties ?? new List<EntityPropertyDto>()).Count();
+
+            // 权限动作校验：过滤默认 CRUD 的自定义重复
+            var dupCustom = input.PermissionConfig?.CustomActions
+                ?.Where(a => a != null)
+                ?.GroupBy(a => ($"{a.EntityName}::{a.ActionKey}"))
+                ?.Where(g => g.Count() > 1)
+                ?.ToList();
+            if (dupCustom != null && dupCustom.Count > 0)
+            {
+                report.IsValid = false;
+                foreach (var g in dupCustom)
+                {
+                    report.Issues.Add(new ValidationIssueDto { Severity = "error", Message = $"自定义权限动作重复: {g.Key.Split("::")[0]}.{g.Key.Split("::")[1]}", Path = "permissionConfig.customActions" });
+                }
+            }
+
+            return Task.FromResult(report);
+        }
+
+        public async Task<GenerationDryRunResultDto> DryRunGenerateAsync(ModuleMetadataDto input)
+        {
+            Check.NotNull(input, nameof(input));
+            var solutionRoot = FindSolutionRoot() ?? Directory.GetCurrentDirectory();
+
+            // 统一填充默认 UI 配置，保证生成器一致
+            _defaultUiConfigGenerator.ApplyDefaults(input);
+
+            Dictionary<string, string> backendFiles;
+            switch (input.ArchitecturePattern)
+            {
+                case "Crud":
+                    backendFiles = await _crudGenerator.GenerateAsync(input, solutionRoot);
+                    break;
+                default:
+                    backendFiles = new Dictionary<string, string>();
+                    break;
+            }
+
+            var frontendFiles = _frontendGenerator.Generate(input, solutionRoot);
+
+            var combined = new Dictionary<string, string>(backendFiles);
+            foreach (var kv in frontendFiles)
+            {
+                combined[kv.Key] = kv.Value;
+            }
+
+            var totalLines = combined.Sum(kv => kv.Value?.Split('\n').Length ?? 0);
+
+            return new GenerationDryRunResultDto
+            {
+                Success = true,
+                ModuleName = input.Name,
+                TotalFiles = combined.Count,
+                TotalLines = totalLines,
+                Files = combined.Keys.ToList(),
+                GenerationReport = "Dry run successful",
+                GeneratedAt = DateTime.UtcNow,
+            };
+        }
+
         private async Task GenerateBackendForModuleAsync(ModuleMetadataDto metadata, string solutionRoot, List<string> generatedFiles)
         {
             Dictionary<string, string> filesToGenerate;
@@ -456,6 +703,9 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
                     break;
             }
 
+            // Quality gates before writing any backend files
+            await RunQualityGatesAsync(filesToGenerate, "backend");
+
             foreach (var file in filesToGenerate)
             {
                 await WriteAndTrackFileAsync(file.Key, file.Value, generatedFiles);
@@ -465,6 +715,13 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
         private async Task OrchestrateDatabaseMigrationAsync(ModuleMetadataDto metadata, string solutionRoot)
         {
             _logger.LogInformation("Orchestrating database migration for module {ModuleName}...", metadata.Name);
+
+            var mode = _configuration["CodeGenerator:MigrationMode"] ?? Environment.GetEnvironmentVariable("CODEGEN_MIGRATION_MODE") ?? "Script"; // Script | Apply | None
+            if (string.Equals(mode, "None", StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogInformation("Database migration mode is 'None'; skipping migration orchestration.");
+                return;
+            }
 
             var systemName = metadata.SystemName;
             var moduleName = metadata.Name;
@@ -494,8 +751,45 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
             if (process.ExitCode == 0)
             {
                 _logger.LogInformation("Successfully created EF Core migration '{MigrationName}'. Output: {Output}", migrationName, output);
+                if (string.Equals(mode, "Script", StringComparison.OrdinalIgnoreCase))
+                {
+                    var artifactsDir = Path.Combine(solutionRoot, "artifacts", "migrations", systemName, moduleName);
+                    Directory.CreateDirectory(artifactsDir);
+                    var scriptPath = Path.Combine(artifactsDir, $"{migrationName}.sql");
 
-                // Proceed to update the database
+                    var scriptProcess = new Process
+                    {
+                        StartInfo = new ProcessStartInfo
+                        {
+                            FileName = "dotnet",
+                            Arguments = $"ef migrations script --idempotent --project \"{efProjectPath}\" --startup-project \"{startupProjectPath}\" -o \"{scriptPath}\"",
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true,
+                            UseShellExecute = false,
+                            CreateNoWindow = true,
+                            WorkingDirectory = solutionRoot,
+                        }
+                    };
+
+                    scriptProcess.Start();
+                    string scriptOut = await scriptProcess.StandardOutput.ReadToEndAsync();
+                    string scriptErr = await scriptProcess.StandardError.ReadToEndAsync();
+                    await scriptProcess.WaitForExitAsync();
+
+                    if (scriptProcess.ExitCode == 0)
+                    {
+                        _logger.LogInformation("Generated idempotent migration script at {Path}. Output: {Output}", scriptPath, scriptOut);
+                    }
+                    else
+                    {
+                        _logger.LogError("Failed to generate migration script. Error: {Error}", scriptErr);
+                    }
+
+                    // Do not apply DB updates in Script mode
+                    return;
+                }
+
+                // Apply mode: proceed to update the database
                 var updateProcess = new Process
                 {
                     StartInfo = new ProcessStartInfo
@@ -536,9 +830,105 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
         {
             _logger.LogInformation("Generating Frontend for module {ModuleName}...", metadata.Name);
             var filesToGenerate = _frontendGenerator.Generate(metadata, solutionRoot);
+
+            // Quality gates before writing any frontend files
+            await RunQualityGatesAsync(filesToGenerate, "frontend");
             foreach (var file in filesToGenerate)
             {
-                await WriteAndTrackFileAsync(file.Key, file.Value, generatedFiles);
+                // Hybrid for Vue SFC: write <name>.generated.vue; create <name>.vue if missing and re-export/compose
+                if (file.Key.EndsWith(".vue", StringComparison.OrdinalIgnoreCase))
+                {
+                    var generatedPath = Path.Combine(Path.GetDirectoryName(file.Key)!,
+                        Path.GetFileNameWithoutExtension(file.Key) + ".generated.vue");
+                    await _codeWriterService.WriteFileAsync(generatedPath, file.Value);
+                    generatedFiles.Add(generatedPath);
+
+                    var manualPath = file.Key;
+                    if (!File.Exists(manualPath))
+                    {
+                        var componentName = Path.GetFileNameWithoutExtension(file.Key);
+                        var manualSfc = @"<template>
+  <div class=""manual-wrapper"">
+    <!-- You can customize header, slots, and composition here -->
+    <component :is=""Generated"" />
+  </div>
+</template>
+
+<script setup lang=""ts"">
+import Generated from './__COMPONENT__.generated.vue'
+</script>
+
+<style scoped>
+.manual-wrapper { width: 100%; }
+</style>
+";
+                        manualSfc = manualSfc.Replace("__COMPONENT__", componentName);
+                        await _codeWriterService.WriteFileAsync(manualPath, manualSfc);
+                        generatedFiles.Add(manualPath);
+                    }
+                }
+                else
+                {
+                    await WriteAndTrackFileAsync(file.Key, file.Value, generatedFiles);
+                }
+            }
+        }
+
+        private async Task RunQualityGatesAsync(Dictionary<string, string> files, string lane)
+        {
+            // Synchronous checks; keep async signature for future IO-based analyzers
+            await Task.Yield();
+
+            var issues = new List<string>();
+
+            // 1) C# syntax diagnostics and simple banned patterns
+            foreach (var (path, content) in files)
+            {
+                var lower = path.ToLowerInvariant();
+                if (lower.EndsWith(".cs"))
+                {
+                    try
+                    {
+                        var tree = CSharpSyntaxTree.ParseText(content);
+                        var diags = tree.GetDiagnostics();
+                        foreach (var d in diags)
+                        {
+                            if (d.Severity == DiagnosticSeverity.Error)
+                            {
+                                issues.Add($"[C#] {path}: {d.Id} {d.GetMessage()}");
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        issues.Add($"[C#] {path}: parse exception {ex.Message}");
+                    }
+
+                    // crude SQL string interpolation detector
+                    if (Regex.IsMatch(content, @"\$""\s*SELECT[\n\r\s\S]*?\{.+?\}", RegexOptions.IgnoreCase))
+                    {
+                        issues.Add($"[C#] {path}: possible SQL injection via interpolated string");
+                    }
+                }
+                else if (lower.EndsWith(".ts") || lower.EndsWith(".vue"))
+                {
+                    // 2) JS/TS/Vue banned patterns
+                    if (Regex.IsMatch(content, @"\beval\s*\(", RegexOptions.IgnoreCase))
+                    {
+                        issues.Add($"[TS] {path}: usage of eval()");
+                    }
+                    if (Regex.IsMatch(content, @"\bnew\s+Function\s*\(", RegexOptions.IgnoreCase))
+                    {
+                        issues.Add($"[TS] {path}: usage of new Function()");
+                    }
+                }
+            }
+
+            if (issues.Count > 0)
+            {
+                var message = $"Quality gates failed in lane '{lane}':\n" + string.Join("\n", issues);
+                _logger.LogError(message);
+                throw new AbpException(message);
             }
         }
         
@@ -608,8 +998,29 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
         
         private async Task WriteAndTrackFileAsync(string filePath, string content, List<string> generatedFiles)
         {
-            await _codeWriterService.WriteFileAsync(filePath, content);
-            generatedFiles.Add(filePath);
+            try
+            {
+                if (filePath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) && !filePath.EndsWith(".generated.cs", StringComparison.OrdinalIgnoreCase))
+                {
+                    var ns = TryExtractNamespace(content);
+                    var cls = TryExtractPartialClassName(content);
+                    if (!string.IsNullOrWhiteSpace(ns) && !string.IsNullOrWhiteSpace(cls) && content.Contains("partial class "))
+                    {
+                        var result = await _codeWriterService.WriteHybridCodeAsync(filePath, content, ns!, cls!);
+                        generatedFiles.Add(result.generatedFilePath);
+                        if (File.Exists(result.manualFilePath)) generatedFiles.Add(result.manualFilePath);
+                        return;
+                    }
+                }
+
+                await _codeWriterService.WriteFileAsync(filePath, content);
+                generatedFiles.Add(filePath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to write file {Path}", filePath);
+                throw;
+            }
         }
 
         private string? FindSolutionRoot()
@@ -622,6 +1033,35 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
                     return currentDir.FullName;
                 }
                 currentDir = currentDir.Parent;
+            }
+            return null;
+        }
+
+        private static string? TryExtractNamespace(string content)
+        {
+            foreach (var line in content.Split('\n'))
+            {
+                var t = line.Trim();
+                if (t.StartsWith("namespace "))
+                {
+                    return t.Substring("namespace ".Length).Trim().Trim('{', ' ', '\r');
+                }
+            }
+            return null;
+        }
+
+        private static string? TryExtractPartialClassName(string content)
+        {
+            foreach (var line in content.Split('\n'))
+            {
+                var t = line.Trim();
+                var idx = t.IndexOf("partial class ", StringComparison.Ordinal);
+                if (idx >= 0)
+                {
+                    var rest = t.Substring(idx + "partial class ".Length).Trim();
+                    var name = new string(rest.TakeWhile(ch => char.IsLetterOrDigit(ch) || ch == '_').ToArray());
+                    return string.IsNullOrWhiteSpace(name) ? null : name;
+                }
             }
             return null;
         }
@@ -644,6 +1084,19 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
                     new EnhancedEntityModelDto { Name = "Team", DisplayName = "班组", Properties = new List<EntityPropertyDto> { new EntityPropertyDto { Name = "Name", Type = "string", IsRequired = true, MaxLength = 64} } }
                 }
             };
+        }
+
+        public Task<SchemaVersionManifestDto> GetSchemaVersionManifestAsync()
+        {
+            var v = new Version(_schemaVersioningService.CurrentVersion);
+            var dto = new SchemaVersionManifestDto
+            {
+                CurrentVersion = _schemaVersioningService.CurrentVersion,
+                CurrentMajor = v.Major,
+                MinSupportedMajor = v.Major,
+                MaxSupportedMajor = v.Major,
+            };
+            return Task.FromResult(dto);
         }
 
         #region Unimplemented Interface Methods

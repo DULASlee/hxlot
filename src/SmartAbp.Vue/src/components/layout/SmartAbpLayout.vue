@@ -7,7 +7,7 @@
           src="/logo.svg"
           alt="SmartAbp"
           class="logo"
-        >
+        />
         <span class="brand-name">SmartAbp</span>
       </div>
 
@@ -36,11 +36,19 @@
 
       <div class="navbar-right">
         <!-- 语言切换器 -->
-        <button class="icon-btn" title="Language" @click="toggleLocale">
+        <button
+          class="icon-btn"
+          title="Language"
+          @click="toggleLocale"
+        >
           <i :class="currentLocale === 'zh-CN' ? 'fas fa-language' : 'fas fa-globe'" />
         </button>
         <!-- 主题切换按钮（仅图标） -->
-        <button class="icon-btn" title="Theme" @click="themeStore.toggleDarkMode()">
+        <button
+          class="icon-btn"
+          title="Theme"
+          @click="themeStore.toggleDarkMode()"
+        >
           <i :class="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'" />
         </button>
         <button
@@ -58,7 +66,7 @@
             src="/logo.svg"
             alt="用户头像"
             class="user-avatar"
-          >
+          />
           <span class="username">{{ userInfo.name || '用户' }}</span>
           <i class="fas fa-chevron-down dropdown-icon" />
 

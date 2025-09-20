@@ -1,10 +1,11 @@
 /* eslint-disable */
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
+import { appConfig } from "@/config"
 import { useAuthStore } from "@/stores"
 import { logger } from "./logger"
 
-// API基础配置
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://localhost:44397"
+// API基础配置（统一从强类型配置读取）
+const API_BASE_URL = appConfig.apiBaseUrl || "https://localhost:44397"
 
 /**
  * HTTP请求工具类
@@ -37,10 +38,24 @@ export class ApiService {
         if (authHeader.Authorization) {
           config.headers.Authorization = authHeader.Authorization
         }
-
+        const startedAt = Date.now()
+        ;(config as any).metadata = { startedAt }
+        try {
+          const url = `${config.baseURL || ''}${config.url || ''}`
+          const headers = { ...config.headers }
+          if (headers && 'Authorization' in headers) headers.Authorization = '***'
+          logger.getEnhancedLogger().child({ type: 'api-request' }).info('API Request', {
+            method: config.method,
+            url,
+            headers,
+          })
+        } catch {}
         return config
       },
       (error) => {
+        try {
+          logger.getEnhancedLogger().child({ type: 'api-request-error' }).error('API Request Error', error)
+        } catch {}
         return Promise.reject(error)
       },
     )
@@ -48,6 +63,17 @@ export class ApiService {
     // 响应拦截器
     this.axiosInstance.interceptors.response.use(
       (response: AxiosResponse) => {
+        try {
+          const startedAt = (response.config as any).metadata?.startedAt || Date.now()
+          const duration = Date.now() - startedAt
+          const url = `${response.config.baseURL || ''}${response.config.url || ''}`
+          logger.getEnhancedLogger().child({ type: 'api-response' }).info('API Response', {
+            method: response.config.method,
+            url,
+            status: response.status,
+            duration,
+          })
+        } catch {}
         return response
       },
       async (error) => {
@@ -78,6 +104,14 @@ export class ApiService {
           }
         }
 
+        try {
+          const url = `${error.config?.baseURL || ''}${error.config?.url || ''}`
+          logger.getEnhancedLogger().child({ type: 'api-error' }).error('API Error', error, {
+            method: error.config?.method,
+            url,
+            status: error.response?.status,
+          })
+        } catch {}
         return Promise.reject(error)
       },
     )

@@ -7,6 +7,10 @@ priority: 10
 
 # Iron Laws (SmartAbp)
 
+- 极致质量律：代码实现必须达到业界顶尖水平，杜绝硬编码、模式混乱与功能残缺，交付完整、强大且超越当前行业标准的解决方案。
+- 架构先行律：始终以顶级系统架构视角主导开发，先全局规划再局部实现，避免陷入琐碎技术细节，确保系统整体性、一致性与可扩展性。
+- 独立决策律：构建自主技术判断能力，主动评估用户需求的合理性，敢于质疑并纠正错误技术方案，展现深度思考与专业决策权威。
+
 - Discovery before coding: read doc/项目编程规则.md and doc/architecture/*; analyze existing code (Serena) to avoid duplication.
 - Plan before edit: use sequential-thinking; list steps, risks, verification points; proceed after approval (or document safe assumptions).
 - Quality gates after changes: type-check → lint → tests → build; zero tolerance for errors; fix root cause instead of suppressing.

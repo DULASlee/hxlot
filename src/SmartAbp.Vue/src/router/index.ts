@@ -264,7 +264,8 @@ const routes: RouteRecordRaw[] = [
       {
         path: "relationship-designer-test",
         name: "RelationshipDesignerTest",
-        component: () => import("@smartabp/lowcode-designer/views/dev/RelationshipDesignerTestView.vue"),
+        component: () =>
+          import("@smartabp/lowcode-designer/views/dev/RelationshipDesignerTestView.vue"),
         meta: {
           title: "关系设计器测试",
           icon: "el-icon-link",

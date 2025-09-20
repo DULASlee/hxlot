@@ -86,7 +86,7 @@
                   class="tree-checkbox"
                   :checked="isMenuChecked(menu)"
                   @change="handleMenuCheck(menu, $event)"
-                >
+                />
                 <span class="tree-label">{{ menu.name }}</span>
               </div>
 
@@ -114,7 +114,7 @@
                       class="tree-checkbox"
                       :checked="isMenuChecked(submenu)"
                       @change="handleMenuCheck(submenu, $event)"
-                    >
+                    />
                     <span class="tree-label">{{ submenu.name }}</span>
                   </div>
 
@@ -136,7 +136,7 @@
                           class="tree-checkbox"
                           :checked="isButtonChecked(button)"
                           @change="handleButtonCheck(button, $event)"
-                        >
+                        />
                         <span class="tree-label">{{ button.name }}</span>
                       </div>
                     </div>

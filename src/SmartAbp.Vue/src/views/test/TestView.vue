@@ -140,7 +140,7 @@
                 type="text"
                 placeholder="输入测试数据"
                 class="test-input"
-              >
+              />
               <div class="storage-buttons">
                 <button @click="saveToStorage">
                   保存到本地

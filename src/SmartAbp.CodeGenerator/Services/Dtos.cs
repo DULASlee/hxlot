@@ -8,6 +8,40 @@ namespace SmartAbp.CodeGenerator.Services
     // =================================================================
     namespace V9
     {
+        public class ValidationIssueDto
+        {
+            public string Severity { get; set; } = "warning"; // "error" | "warning"
+            public string Message { get; set; } = string.Empty;
+            public string? Path { get; set; }
+        }
+
+        public class ValidationReportDto
+        {
+            public bool IsValid { get; set; }
+            public List<ValidationIssueDto> Issues { get; set; } = new();
+            public int EntitiesCount { get; set; }
+            public int PropertiesCount { get; set; }
+        }
+
+        public class GenerationDryRunResultDto
+        {
+            public bool Success { get; set; }
+            public string ModuleName { get; set; } = string.Empty;
+            public int TotalFiles { get; set; }
+            public int TotalLines { get; set; }
+            public List<string> Files { get; set; } = new();
+            public string GenerationReport { get; set; } = string.Empty;
+            public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+        }
+
+        public class SchemaVersionManifestDto
+        {
+            public string CurrentVersion { get; set; } = "1.0.0";
+            public int CurrentMajor { get; set; } = 1;
+            public int MinSupportedMajor { get; set; } = 1;
+            public int MaxSupportedMajor { get; set; } = 1;
+        }
+
         /// <summary>
         /// 权限点定义
         /// </summary>
@@ -348,6 +382,103 @@ namespace SmartAbp.CodeGenerator.Services
             public bool GenerateSwaggerDoc { get; set; }
             public bool GeneratePermissions { get; set; }
             public bool GenerateAuditLog { get; set; }
+        }
+
+        // ================= Unified Module Schema (Frontend -> Backend single source) =================
+        public class UnifiedModuleSchemaDto
+        {
+            public string Id { get; set; } = default!;
+            public string SystemName { get; set; } = default!;
+            public string Name { get; set; } = default!;
+            public string DisplayName { get; set; } = default!;
+            public string Description { get; set; } = string.Empty;
+            public string Version { get; set; } = "1.0.0";
+            public string ArchitecturePattern { get; set; } = "Crud";
+            public UnifiedDatabaseConfigDto DatabaseInfo { get; set; } = new();
+            public UnifiedFeatureManagementDto FeatureManagement { get; set; } = new();
+            public UnifiedFrontendConfigDto Frontend { get; set; } = new();
+            public bool GenerateMobilePages { get; set; }
+            public List<string> Dependencies { get; set; } = new();
+            public List<UnifiedEntitySchemaDto> Entities { get; set; } = new();
+            public UnifiedPermissionConfigDto PermissionConfig { get; set; } = new();
+        }
+
+        public class UnifiedDatabaseConfigDto
+        {
+            public string ConnectionStringName { get; set; } = "Default";
+            public string Provider { get; set; } = "SqlServer";
+            public string Schema { get; set; } = "dbo";
+        }
+
+        public class UnifiedFeatureManagementDto
+        {
+            public bool IsEnabled { get; set; }
+            public string DefaultPolicy { get; set; } = string.Empty;
+        }
+
+        public class UnifiedFrontendConfigDto
+        {
+            public string? ParentId { get; set; }
+            public string? RoutePrefix { get; set; }
+        }
+
+        public class UnifiedEntitySchemaDto
+        {
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!;
+            public string? DisplayName { get; set; }
+            public string Description { get; set; } = string.Empty;
+            public string Module { get; set; } = default!;
+            public string Namespace { get; set; } = default!;
+            public string TableName { get; set; } = default!;
+            public string Schema { get; set; } = "dbo";
+            public bool IsAggregateRoot { get; set; } = true;
+            public bool IsMultiTenant { get; set; }
+            public bool IsSoftDelete { get; set; }
+            public string BaseClass { get; set; } = "FullAuditedAggregateRoot";
+            public List<UnifiedPropertySchemaDto> Properties { get; set; } = new();
+            public List<UnifiedRelationshipSchemaDto> Relationships { get; set; } = new();
+        }
+
+        public class UnifiedPropertySchemaDto
+        {
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!;
+            public string Type { get; set; } = "string";
+            public bool IsRequired { get; set; }
+            public bool IsPrimaryKey { get; set; }
+            public bool IsUnique { get; set; }
+            public int? MaxLength { get; set; }
+            public int? MinLength { get; set; }
+            public object? DefaultValue { get; set; }
+            public string? Description { get; set; }
+        }
+
+        public class UnifiedRelationshipSchemaDto
+        {
+            public string Id { get; set; } = default!;
+            public string Name { get; set; } = default!;
+            public string Type { get; set; } = "ManyToOne";
+            public string SourceEntityId { get; set; } = default!;
+            public string TargetEntityId { get; set; } = default!;
+            public string? SourcePropertyName { get; set; }
+            public string? TargetPropertyName { get; set; }
+            public bool CascadeDelete { get; set; }
+            public bool IsRequired { get; set; }
+        }
+
+        public class UnifiedPermissionConfigDto
+        {
+            public List<UnifiedCustomPermissionActionDto> CustomActions { get; set; } = new();
+            public List<string> InheritedPermissions { get; set; } = new();
+            public Dictionary<string, string[]> RoleBasedAccess { get; set; } = new();
+        }
+
+        public class UnifiedCustomPermissionActionDto
+        {
+            public string EntityName { get; set; } = default!;
+            public string ActionKey { get; set; } = default!;
+            public string DisplayName { get; set; } = default!;
         }
 
         public class EntityUIConfigDto

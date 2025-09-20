@@ -22,6 +22,8 @@ function readJsonBody(req: any): Promise<any> {
 }
 
 async function runCodegen(rootDir: string) {
+  // 受控执行：仅当显式启用环境变量时才触发代码聚合
+  if (process.env.LOWCODE_DEV_AUTOGEN !== '1') return
   await new Promise<void>((resolve, reject) => {
     const cmd = process.platform === 'win32' ? 'npm.cmd' : 'npm'
     const p = spawn(cmd, ['run', 'codegen'], { cwd: rootDir, stdio: 'inherit' })
@@ -234,14 +236,20 @@ export function moduleWizardDevPlugin(): Plugin {
         try {
           const body = await readJsonBody(req)
           const manifest = ManifestSchema.parse(body?.manifest || body)
-          const modulesDir = path.join(rootDir, 'modules', manifest.name)
-          await fs.mkdir(modulesDir, { recursive: true })
-          const manifestPath = path.join(modulesDir, 'abp.module.json')
-          await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2), 'utf-8')
+          // 仅当显式启用写入时才落盘（避免开发态误写）
+          const enableWrite = process.env.LOWCODE_DEV_WRITE === '1'
+          if (enableWrite) {
+            const modulesDir = path.join(rootDir, 'modules', manifest.name)
+            await fs.mkdir(modulesDir, { recursive: true })
+            const manifestPath = path.join(modulesDir, 'abp.module.json')
+            await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2), 'utf-8')
+          }
 
           // 生成基础页面与Store占位
           const fields = Array.isArray(body?.fields) ? body.fields : []
-          await writeScaffold(rootDir, manifest, fields)
+          if (enableWrite) {
+            await writeScaffold(rootDir, manifest, fields)
+          }
 
           // 触发代码聚合
           await runCodegen(rootDir)

@@ -59,10 +59,29 @@ namespace SmartAbp.CodeGenerator.Core.Generation.Crud
             var appServiceClass = CreateClass(className, baseClass, new[] { SyntaxKind.PublicKeyword, SyntaxKind.PartialKeyword }, new[] { serviceInterface });
 
             // Policies
-            var readPolicy = readPolicyName ?? $"{moduleName}Permissions.{entity.Name}.Default";
-            var createPolicy = writePolicyName ?? $"{moduleName}Permissions.{entity.Name}.Create";
-            var updatePolicy = writePolicyName ?? $"{moduleName}Permissions.{entity.Name}.Update";
-            var deletePolicy = writePolicyName ?? $"{moduleName}Permissions.{entity.Name}.Delete";
+            // Prefer generated permission constants; if user passed raw string (DefaultPolicy), wrap as string literal
+            string ToAuthorizeArgument(string? policyCandidate, string fallbackExpression)
+            {
+                if (string.IsNullOrWhiteSpace(policyCandidate)) return fallbackExpression;
+                // If contains dot or unsafe chars, treat as string literal
+                var needsStringLiteral = true;
+                foreach (var ch in policyCandidate)
+                {
+                    if (!(char.IsLetterOrDigit(ch) || ch == '_' || ch == ':')) { needsStringLiteral = true; break; }
+                    needsStringLiteral = false;
+                }
+                return needsStringLiteral ? $"\"{policyCandidate}\"" : fallbackExpression;
+            }
+
+            var readPolicyExpr = $"{moduleName}Permissions.{entity.Name}.Default";
+            var createPolicyExpr = $"{moduleName}Permissions.{entity.Name}.Create";
+            var updatePolicyExpr = $"{moduleName}Permissions.{entity.Name}.Update";
+            var deletePolicyExpr = $"{moduleName}Permissions.{entity.Name}.Delete";
+
+            var readPolicy = ToAuthorizeArgument(readPolicyName, readPolicyExpr);
+            var createPolicy = ToAuthorizeArgument(writePolicyName, createPolicyExpr);
+            var updatePolicy = ToAuthorizeArgument(writePolicyName, updatePolicyExpr);
+            var deletePolicy = ToAuthorizeArgument(writePolicyName, deletePolicyExpr);
 
             appServiceClass = appServiceClass
                 .AddAttributeLists(CreateAttribute("Authorize", readPolicy));
@@ -87,7 +106,10 @@ namespace SmartAbp.CodeGenerator.Core.Generation.Crud
             var cu = CreateCompilationUnit(usings);
             cu = cu.AddMembers(ns);
 
-            return FormatCode(cu);
+            // Hybrid output: generated + manual partial
+            var code = FormatCode(cu);
+            // caller will use CodeWriterService.WriteHybridCodeAsync to persist; here返回代码文本
+            return code;
         }
 
         private string GenerateAutoMapperProfile(ModuleMetadataDto metadata)

@@ -1,5 +1,7 @@
 <template>
-  <div class="designer-canvas">Canvas Placeholder</div>
+  <div class="designer-canvas">
+    Canvas Placeholder
+  </div>
 </template>
 
 <script setup lang="ts">

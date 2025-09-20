@@ -13,7 +13,7 @@
             type="text"
             placeholder="搜索角色..."
             class="search-input"
-          >
+          />
         </div>
         <button
           class="btn-primary"
@@ -109,7 +109,7 @@
             <input
               v-model="newRole.name"
               type="text"
-            >
+            />
           </div>
           <div class="form-group">
             <label>角色描述</label>
@@ -130,7 +130,7 @@
                   v-model="newRole.permissions"
                   type="checkbox"
                   :value="permission.id"
-                >
+                />
                 <span>{{ permission.name }}</span>
               </label>
             </div>

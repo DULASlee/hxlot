@@ -31,28 +31,28 @@
             <input
               v-model="editForm.name"
               type="text"
-            >
+            />
           </div>
           <div class="form-group">
             <label>邮箱</label>
             <input
               v-model="editForm.email"
               type="email"
-            >
+            />
           </div>
           <div class="form-group">
             <label>手机号</label>
             <input
               v-model="editForm.phone"
               type="tel"
-            >
+            />
           </div>
           <div class="form-group">
             <label>部门</label>
             <input
               v-model="editForm.department"
               type="text"
-            >
+            />
           </div>
         </div>
 
@@ -123,21 +123,21 @@
             <input
               v-model="passwordForm.current"
               type="password"
-            >
+            />
           </div>
           <div class="form-group">
             <label>新密码</label>
             <input
               v-model="passwordForm.new"
               type="password"
-            >
+            />
           </div>
           <div class="form-group">
             <label>确认新密码</label>
             <input
               v-model="passwordForm.confirm"
               type="password"
-            >
+            />
           </div>
         </div>
         <div class="modal-footer">

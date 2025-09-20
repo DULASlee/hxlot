@@ -24,28 +24,28 @@
               <input
                 v-model="compilerOptions.sourceMap"
                 type="checkbox"
-              >
+              />
               <span>生成 Source Map</span>
             </label>
             <label class="option-item">
               <input
                 v-model="compilerOptions.optimizeImports"
                 type="checkbox"
-              >
+              />
               <span>优化导入</span>
             </label>
             <label class="option-item">
               <input
                 v-model="compilerOptions.hoistStatic"
                 type="checkbox"
-              >
+              />
               <span>静态提升</span>
             </label>
             <label class="option-item">
               <input
                 v-model="compilerOptions.inlineProps"
                 type="checkbox"
-              >
+              />
               <span>内联 Props</span>
             </label>
           </div>

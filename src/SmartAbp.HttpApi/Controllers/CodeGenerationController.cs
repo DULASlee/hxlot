@@ -38,6 +38,42 @@ namespace SmartAbp.Controllers
             return _service.GenerateModuleAsync(input);
         }
 
+        [HttpPost("unified/generate-module")]
+        public Task<GeneratedModuleDto> GenerateFromUnifiedSchemaAsync([FromBody] UnifiedModuleSchemaDto unified)
+        {
+            return _service.GenerateFromUnifiedSchemaAsync(unified);
+        }
+
+        [HttpPost("validate")]
+        public Task<ValidationReportDto> ValidateModuleAsync([FromBody] ModuleMetadataDto input)
+        {
+            return _service.ValidateModuleAsync(input);
+        }
+
+        [HttpPost("dry-run")]
+        public Task<GenerationDryRunResultDto> DryRunGenerateAsync([FromBody] ModuleMetadataDto input)
+        {
+            return _service.DryRunGenerateAsync(input);
+        }
+
+        [HttpPost("unified/validate")]
+        public Task<ValidationReportDto> ValidateUnifiedAsync([FromBody] UnifiedModuleSchemaDto unified)
+        {
+            return _service.ValidateUnifiedAsync(unified);
+        }
+
+        [HttpPost("unified/dry-run")]
+        public Task<GenerationDryRunResultDto> DryRunUnifiedAsync([FromBody] UnifiedModuleSchemaDto unified)
+        {
+            return _service.DryRunUnifiedAsync(unified);
+        }
+
+        [HttpGet("schema-version-manifest")]
+        public Task<SchemaVersionManifestDto> GetSchemaVersionManifestAsync()
+        {
+            return _service.GetSchemaVersionManifestAsync();
+        }
+
         [HttpPost("introspect-db")]
         public Task<DatabaseSchemaDto> IntrospectDatabaseAsync([FromBody] DatabaseIntrospectionRequestDto request)
         {

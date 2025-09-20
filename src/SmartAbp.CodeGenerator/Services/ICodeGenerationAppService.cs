@@ -75,6 +75,11 @@ namespace SmartAbp.CodeGenerator.Services
         /// Generates a module based on the provided metadata
         /// </summary>
         Task<GeneratedModuleDto> GenerateModuleAsync(ModuleMetadataDto input);
+
+        /// <summary>
+        /// Generates a module from unified frontend schema, converting to internal DTOs.
+        /// </summary>
+        Task<GeneratedModuleDto> GenerateFromUnifiedSchemaAsync(SmartAbp.CodeGenerator.Services.V9.UnifiedModuleSchemaDto unified);
         
         /// <summary>
         /// Returns available connection string names from configuration
@@ -106,6 +111,31 @@ namespace SmartAbp.CodeGenerator.Services
         /// Supports SqlServer, PostgreSql, MySql, Oracle.
         /// </summary>
         Task<DatabaseSchemaDto> IntrospectDatabaseAsync(DatabaseIntrospectionRequestDto request);
+
+        /// <summary>
+        /// Validates module metadata and returns aggregated issues for UX surfacing.
+        /// </summary>
+        Task<SmartAbp.CodeGenerator.Services.V9.ValidationReportDto> ValidateModuleAsync(ModuleMetadataDto input);
+
+        /// <summary>
+        /// Performs a dry-run generation without writing files: returns file list and summary for preview.
+        /// </summary>
+        Task<SmartAbp.CodeGenerator.Services.V9.GenerationDryRunResultDto> DryRunGenerateAsync(ModuleMetadataDto input);
+
+        /// <summary>
+        /// Validates unified schema (frontend single source) after conversion.
+        /// </summary>
+        Task<SmartAbp.CodeGenerator.Services.V9.ValidationReportDto> ValidateUnifiedAsync(SmartAbp.CodeGenerator.Services.V9.UnifiedModuleSchemaDto unified);
+
+        /// <summary>
+        /// Performs dry-run based on unified schema.
+        /// </summary>
+        Task<SmartAbp.CodeGenerator.Services.V9.GenerationDryRunResultDto> DryRunUnifiedAsync(SmartAbp.CodeGenerator.Services.V9.UnifiedModuleSchemaDto unified);
+
+        /// <summary>
+        /// Returns backend-supported schema version manifest for preflight checks.
+        /// </summary>
+        Task<SmartAbp.CodeGenerator.Services.V9.SchemaVersionManifestDto> GetSchemaVersionManifestAsync();
     }
 }
 

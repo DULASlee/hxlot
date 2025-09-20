@@ -2,6 +2,15 @@
   "singleQuote": false,
   "semi": false,
   "trailingComma": "all",
+  "printWidth": 100,
+  "arrowParens": "always",
+  "endOfLine": "lf"
+}
+
+{
+  "singleQuote": false,
+  "semi": false,
+  "trailingComma": "all",
   "arrowParens": "always",
   "endOfLine": "lf",
   "printWidth": 100

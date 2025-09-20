@@ -8,7 +8,7 @@
               src="/logo.svg"
               alt="SmartAbp Logo"
               class="logo-img"
-            >
+            />
             <h1 class="system-title">
               SmartAbp 企业管理系统
             </h1>

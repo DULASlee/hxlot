@@ -1,5 +1,7 @@
 <template>
-  <div class="designer-palette">Palette Placeholder</div>
+  <div class="designer-palette">
+    Palette Placeholder
+  </div>
 </template>
 
 <script setup lang="ts">

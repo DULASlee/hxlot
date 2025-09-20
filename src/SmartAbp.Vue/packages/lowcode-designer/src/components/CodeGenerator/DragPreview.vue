@@ -22,8 +22,13 @@
         </div>
         
         <!-- Drop zone indicator -->
-        <div v-if="showDropIndicator" class="drop-indicator">
-          <el-icon class="drop-icon"><Plus /></el-icon>
+        <div
+          v-if="showDropIndicator"
+          class="drop-indicator"
+        >
+          <el-icon class="drop-icon">
+            <Plus />
+          </el-icon>
           <span>Drop here to add</span>
         </div>
       </div>

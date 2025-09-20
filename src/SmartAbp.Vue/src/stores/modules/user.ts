@@ -29,31 +29,33 @@ import { ref } from "vue"
 const UserService = {
   getList: async (params: any) => {
     console.log("Fetching list with params:", params)
-    await new Promise(resolve => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 500))
     return {
-      items: [{ id: "1", name: `Mock User 1` }, { id: "2", name: `Mock User 2` }],
+      items: [
+        { id: "1", name: `Mock User 1` },
+        { id: "2", name: `Mock User 2` },
+      ],
       totalCount: 2,
     }
   },
   create: async (data: any) => {
     console.log("Creating User:", data)
-    await new Promise(resolve => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 500))
     return { id: "3", ...data }
   },
   update: async (id: string, data: any) => {
     console.log(`Updating User ${id}:`, data)
-    await new Promise(resolve => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 500))
     return { id, ...data }
   },
   delete: async (id: string) => {
     console.log(`Deleting User ${id}`)
-    await new Promise(resolve => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 500))
   },
 }
 type UserDto = { id: string; name: string; [key: string]: any }
 type CreateUserDto = Omit<UserDto, "id">
 type UpdateUserDto = Partial<CreateUserDto>
-
 
 export const useUserStore = defineStore("user", () => {
   // State

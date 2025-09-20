@@ -70,7 +70,7 @@
                 class="form-input"
                 placeholder="请输入租户名称（可选）"
                 :disabled="loading"
-              >
+              />
               <div class="input-icon">
                 <svg
                   width="18"
@@ -97,7 +97,7 @@
                 placeholder="请输入用户名或邮箱地址"
                 required
                 :disabled="loading"
-              >
+              />
               <div
                 v-if="usernameError"
                 class="input-error"
@@ -140,7 +140,7 @@
                 placeholder="请输入登录密码"
                 required
                 :disabled="loading"
-              >
+              />
               <div
                 v-if="passwordError"
                 class="input-error"
@@ -212,7 +212,7 @@
                 type="checkbox"
                 class="checkbox-input"
                 :disabled="loading"
-              >
+              />
               <span class="checkbox-custom" />
               <span class="checkbox-label">记住登录状态</span>
             </label>

@@ -81,13 +81,13 @@ public class SmartAbpDbContext :
         builder.ConfigureOpenIddict();
         builder.ConfigureTenantManagement();
         builder.ConfigureBlobStoring();
-        
+
         /* Configure your own tables/entities inside here */
 
         builder.Entity<MetadataStore>(b =>
         {
             b.ToTable(SmartAbpConsts.DbTablePrefix + "MetadataStores", SmartAbpConsts.DbSchema);
-            b.ConfigureByConvention(); 
+            b.ConfigureByConvention();
             b.Property(x => x.ModuleName).IsRequired().HasMaxLength(256);
             b.Property(x => x.MetadataJson).IsRequired();
             b.HasIndex(x => x.ModuleName);

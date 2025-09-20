@@ -21,7 +21,6 @@ export default [
       }
     }
   },
-  // Vue Flat 推荐规则（需展开避免嵌套数组）
   ...pluginVue.configs['flat/recommended'],
   js.configs.recommended,
   {
@@ -32,7 +31,6 @@ export default [
         parser: tsParser,
         ecmaVersion: 2020,
         sourceType: 'module',
-        // 不启用 type-aware lint，避免 tsconfig include 覆盖问题
         tsconfigRootDir: process.cwd(),
         extraFileExtensions: ['.vue']
       },
@@ -44,30 +42,40 @@ export default [
     },
     plugins: {
       vue: pluginVue,
-      '@typescript-eslint': tsPlugin
+      '@typescript-eslint': tsPlugin,
     },
     rules: {
       'no-console': 'off',
-      'no-empty': ['error', { allowEmptyCatch: true }]
+      'no-empty': ['error', { allowEmptyCatch: true }],
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', ignoreRestSiblings: true }],
+      // Typed rule disabled to avoid parserOptions.project requirement in monorepo
+      '@typescript-eslint/no-floating-promises': 'off',
+      'vue/html-self-closing': ['error', { html: { void: 'always' } }],
+      'vue/multi-word-component-names': 'off',
     }
-  },
-  // 低代码子集：暂时放宽环境与未使用规则，聚焦语法与结构问题
+  }
+  ,
   {
-    files: ['src/lowcode/**/*.{ts,tsx,vue}'],
-    rules: {
-      'no-undef': 'off',
-      'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      'no-case-declarations': 'off'
+    files: ['cypress/**/*.{cy.ts,ts}'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        cy: 'readonly',
+        describe: 'readonly',
+        it: 'readonly',
+        beforeEach: 'readonly',
+        expect: 'readonly',
+      }
     }
-  },
-  // 测试与示例覆盖：放宽部分规则
+  }
+  ,
   {
-    files: ['**/__tests__/**/*.{ts,tsx}', '**/*.test.{ts,tsx}', 'src/lowcode/examples/**/*.{ts,tsx}'],
-    rules: {
-      'no-unused-vars': 'off',
-      'no-undef': 'off'
-    }
+    // Ignore known generated/legacy artifacts
+    ignores: [
+      'src/appshell/lifecycle.generated.ts',
+      'src/components/icons/**',
+      'src/views/CodeGenerator/Dashboard.vue'
+    ]
   }
 ]
 

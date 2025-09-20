@@ -27,5 +27,3 @@ export const setLocale = (locale: "zh-CN" | "en-US") => {
 }
 
 export default i18n
-
-

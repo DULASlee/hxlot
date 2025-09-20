@@ -144,18 +144,16 @@ export class TemplateRenderer {
     })
 
     // 添加生成标识（根据扩展名选择注释样式）
-    const ext = templatePath.toLowerCase().endsWith('.vue') || templatePath.toLowerCase().endsWith('.html')
-      ? 'html'
-      : 'block'
+    const ext =
+      templatePath.toLowerCase().endsWith(".vue") || templatePath.toLowerCase().endsWith(".html")
+        ? "html"
+        : "block"
 
     const bannerBody = `AI_GENERATED_COMPONENT: true\nGenerated at: ${new Date().toISOString()}\nTemplate parameters: ${JSON.stringify(
       params,
     )}\nBased on SmartAbp template library\nDO NOT EDIT MANUALLY - Regenerate using module wizard\n`
 
-    const banner =
-      ext === 'html'
-        ? `<!--\n${bannerBody}-->\n\n`
-        : `/*\n${bannerBody}*/\n\n`
+    const banner = ext === "html" ? `<!--\n${bannerBody}-->\n\n` : `/*\n${bannerBody}*/\n\n`
 
     return banner + rendered
   }

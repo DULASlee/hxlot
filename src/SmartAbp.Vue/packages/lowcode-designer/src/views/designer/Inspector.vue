@@ -1,5 +1,7 @@
 <template>
-  <div class="designer-inspector">Inspector Placeholder</div>
+  <div class="designer-inspector">
+    Inspector Placeholder
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -13,7 +13,7 @@
             type="text"
             placeholder="搜索用户..."
             class="search-input"
-          >
+          />
         </div>
         <button
           class="btn-primary"
@@ -111,14 +111,14 @@
             <input
               v-model="newUser.name"
               type="text"
-            >
+            />
           </div>
           <div class="form-group">
             <label>邮箱</label>
             <input
               v-model="newUser.email"
               type="email"
-            >
+            />
           </div>
           <div class="form-group">
             <label>角色</label>

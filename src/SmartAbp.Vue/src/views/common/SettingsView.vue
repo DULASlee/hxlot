@@ -68,7 +68,7 @@
             v-model="systemSettings.name"
             type="text"
             class="setting-input"
-          >
+          />
         </div>
 
         <div class="setting-item">
@@ -131,7 +131,7 @@
             class="setting-input"
             min="5"
             max="1440"
-          >
+          />
         </div>
 
         <div class="setting-item">
@@ -143,7 +143,7 @@
             <input
               v-model="securitySettings.passwordComplexity"
               type="checkbox"
-            >
+            />
             <span class="slider" />
           </label>
         </div>
@@ -157,7 +157,7 @@
             <input
               v-model="securitySettings.loginLog"
               type="checkbox"
-            >
+            />
             <span class="slider" />
           </label>
         </div>
@@ -175,7 +175,7 @@
             <input
               v-model="notificationSettings.email"
               type="checkbox"
-            >
+            />
             <span class="slider" />
           </label>
         </div>
@@ -189,7 +189,7 @@
             <input
               v-model="notificationSettings.sms"
               type="checkbox"
-            >
+            />
             <span class="slider" />
           </label>
         </div>
@@ -203,7 +203,7 @@
             <input
               v-model="notificationSettings.browser"
               type="checkbox"
-            >
+            />
             <span class="slider" />
           </label>
         </div>

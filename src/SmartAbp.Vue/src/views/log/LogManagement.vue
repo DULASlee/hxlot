@@ -289,7 +289,7 @@
                 class="form-control"
                 min="1"
                 max="365"
-              >
+              />
             </div>
             <div class="form-group">
               <label>自动清理</label>
@@ -297,7 +297,7 @@
                 v-model="autoCleanup"
                 type="checkbox"
                 class="form-checkbox"
-              >
+              />
               <span class="checkbox-label">启用自动清理过期日志</span>
             </div>
             <div class="form-actions">

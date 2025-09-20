@@ -233,7 +233,7 @@
                   v-model="formConfig.name"
                   type="text"
                   class="prop-input"
-                >
+                />
               </div>
               <div class="property-item">
                 <label>表单描述</label>
@@ -250,7 +250,7 @@
                   type="text"
                   class="prop-input"
                   placeholder="120px"
-                >
+                />
               </div>
             </div>
 
@@ -279,7 +279,7 @@
                   v-model="formConfig.inline"
                   type="checkbox"
                   class="prop-checkbox"
-                >
+                />
               </div>
               <div class="property-item">
                 <label>禁用表单</label>
@@ -287,7 +287,7 @@
                   v-model="formConfig.disabled"
                   type="checkbox"
                   class="prop-checkbox"
-                >
+                />
               </div>
             </div>
           </div>
@@ -305,7 +305,7 @@
                   v-model="selectedComponent.props.name"
                   type="text"
                   class="prop-input"
-                >
+                />
               </div>
               <div class="property-item">
                 <label>字段标签</label>
@@ -313,7 +313,7 @@
                   v-model="selectedComponent.props.label"
                   type="text"
                   class="prop-input"
-                >
+                />
               </div>
               <div class="property-item">
                 <label>占位符</label>
@@ -321,7 +321,7 @@
                   v-model="selectedComponent.props.placeholder"
                   type="text"
                   class="prop-input"
-                >
+                />
               </div>
             </div>
 
@@ -333,7 +333,7 @@
                   v-model="selectedComponent.props.required"
                   type="checkbox"
                   class="prop-checkbox"
-                >
+                />
               </div>
               <div
                 v-if="selectedComponent.type === 'input'"
@@ -344,7 +344,7 @@
                   v-model.number="selectedComponent.props.minLength"
                   type="number"
                   class="prop-input"
-                >
+                />
               </div>
               <div
                 v-if="selectedComponent.type === 'input'"
@@ -355,7 +355,7 @@
                   v-model.number="selectedComponent.props.maxLength"
                   type="number"
                   class="prop-input"
-                >
+                />
               </div>
             </div>
 
@@ -375,13 +375,13 @@
                     type="text"
                     placeholder="标签"
                     class="option-input"
-                  >
+                  />
                   <input
                     v-model="option.value"
                     type="text"
                     placeholder="值"
                     class="option-input"
-                  >
+                  />
                   <button
                     class="remove-option-btn"
                     @click="removeOption(index)"
@@ -508,7 +508,7 @@
       accept=".json"
       style="display: none"
       @change="handleFileImport"
-    >
+    />
   </div>
 </template>
 
