@@ -104,7 +104,7 @@ public class SmartAbpWebModule : AbpModule
             // 添加自定义Claims处理器
             builder.AddServer(options =>
             {
-                options.AddEventHandler(SmartAbpOpenIddictClaimsHandler.Descriptor);
+                options.AddEventHandler(SmartAbp.OpenIddict.SmartAbpOpenIddictClaimsHandler.Descriptor);
             });
         });
 
