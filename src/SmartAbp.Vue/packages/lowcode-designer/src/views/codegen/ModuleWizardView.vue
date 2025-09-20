@@ -49,7 +49,7 @@
       <!-- Progress Bar -->
       <div class="progress-container">
         <el-progress
-          :percentage="wizardStateMachine.getStepProgress()"
+          :percentage="wizardStore.progressPercentage"
           :show-text="false"
           :stroke-width="6"
         />
@@ -113,7 +113,7 @@
               prop="frontend.parentId"
             >
               <el-tree-select
-                v-model="safeCurrentMetadata.frontend.parentId"
+                v-model="safeCurrentMetadata.frontend?.parentId"
                 :data="menuTree"
                 :props="{ value: 'id', label: 'label', children: 'children' }"
                 check-strictly
@@ -356,12 +356,12 @@
               style="margin-top:12px;"
             >
               <el-table-column
-                prop="entityName"
+                prop="entity"
                 :label="t('wizard.perms.entityCol')"
                 width="200"
               />
               <el-table-column
-                prop="actionKey"
+                prop="action"
                 :label="t('wizard.perms.actionCol')"
                 width="180"
               />
@@ -374,7 +374,7 @@
                 width="360"
               >
                 <template #default="scope">
-                  {{ `${safeCurrentMetadata.name}.${scope.row.entityName}.${scope.row.actionKey}` }}
+                  {{ `${safeCurrentMetadata.name}.${scope.row.entity}.${scope.row.action}` }}
                 </template>
               </el-table-column>
               <el-table-column
@@ -562,21 +562,16 @@ import { Check } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
 
 // Import our new strict typing and management systems
-import {
-  StrictModuleMetadata,
-  WizardStep,
-  ArchitecturePattern,
-  DatabaseProvider,
-  ValidatedEntityName,
-  NonEmptyString,
-  EntityId,
-  StrictPermissionAction,
-  DEFAULT_MODULE_METADATA
-} from '../../types/strict-types'
-import { WizardStateMachine, STEP_METADATA, type StepValidationResult } from '../../core/wizard-state-machine'
-import { TransactionalStateManager } from '../../core/transactional-state'
-import { ValidationCoordinator } from '../../core/validation-system'
+import { useWizardStore } from '../../stores/useWizardStore'
+import { WizardValidator } from '../../utils/validation'
+import { WizardStep } from '../../types/wizard'
+import type { ModuleMetadata, ValidationResult, CustomPermission } from '../../types/wizard'
 import { codeGeneratorApi, type MenuItemDto } from '../../api/code-generator'
+
+// Performance and responsive design imports
+import { useResponsive, useAdaptiveWizardLayout, useTouchOptimization } from '../../utils/responsive-design'
+import { usePerformanceMonitor, globalCache, requestDeduplicator } from '../../utils/performance-optimizer'
+import { useErrorRecovery, withRetry, withTransaction } from '../../utils/error-recovery'
 
 // Properly import EntityDesigner outside of reactive context
 import EntityDesigner from '../../components/CodeGenerator/EntityDesigner.vue'
@@ -598,40 +593,29 @@ const isErrorWithMessage = (error: unknown): error is { message: string } => {
 }
 
 // ============= Type-Safe Computed Properties =============
-const safeCurrentMetadata = computed(() => {
-  const state = stateManager.getCurrentState()
-  return state || {
-    id: '',
-    systemName: '',
-    name: '',
-    displayName: '',
-    description: '',
-    version: '1.0.0',
-    architecturePattern: 'Crud' as ArchitecturePattern,
-    entities: [],
-    permissionConfig: { customActions: [] },
-    featureManagement: { isEnabled: false, defaultPolicy: '' },
-    databaseInfo: { provider: 'SqlServer' as DatabaseProvider, connectionStringName: '', schema: '' },
-    frontend: { parentId: '', routePrefix: '', menuTitle: '' },
-    dependencies: [],
-    createdAt: Date.now(),
-    updatedAt: Date.now()
-  }
-})
+const safeCurrentMetadata = computed(() => wizardStore.formData)
 
 // Computed properties for table data to handle readonly arrays
-const entitiesForTable = computed(() => safeCurrentMetadata.value.entities as any[])
-const permissionsForTable = computed(() => safeCurrentMetadata.value.permissionConfig.customActions as any[])
+const entitiesForTable = computed(() => wizardStore.formData.entities as any[])
+const permissionsForTable = computed(() => wizardStore.formData.permissionConfig.customActions as any[])
 
 // ============= Core State Management =============
 const { t } = useI18n()
-const wizardStateMachine = new WizardStateMachine()
-const stateManager = new TransactionalStateManager()
-const validator = new ValidationCoordinator()
+const wizardStore = useWizardStore()
+const validator = new WizardValidator()
+
+// ============= Performance & Responsive Setup =============
+const { isMobile, isTablet, isDesktop, currentBreakpoint } = useResponsive()
+const { layoutConfig } = useAdaptiveWizardLayout()
+const { touchProps } = useTouchOptimization()
+const { metrics, startMonitoring, stopMonitoring } = usePerformanceMonitor()
+const { autoSaveManager, commandManager, recoveryState, captureError, resetError } = useErrorRecovery()
 
 // ============= Reactive State =============
-const wizardState = ref(wizardStateMachine.getState())
-// const currentValidationResult = ref<ValidationResult | null>(null)
+const wizardState = ref({
+  currentStep: wizardStore.currentStep,
+  completedSteps: wizardStore.completedSteps
+})
 const isGenerating = ref(false)
 const generationResult = ref<any>(null)
 const isPreviewLoading = ref(false)
@@ -643,23 +627,31 @@ const isLoading = ref(false)
 const hasUnsavedChanges = ref(false)
 
 // ============= Step Metadata =============
-const stepMetadata = Object.values(STEP_METADATA)
-
-// ============= Form Refs =============
-// const basicInfoFormRef = ref()
-// const entityDesignerRef = ref()
-// const featureConfigFormRef = ref()
+const stepMetadata = Object.values(wizardStore.currentStepMetadata)
 
 // ============= Computed Properties =============
-// const currentMetadata = computed(() => stateManager.getCurrentState())
-const canProceed = computed(() => wizardState.value.canProceed)
-const canGoBack = computed(() => wizardState.value.canGoBack)
-// const currentStepMetadata = computed(() => getStepMetadata(wizardState.value.currentStep))
+const canProceed = computed(() => wizardStore.canProceed)
+const canGoBack = computed(() => wizardStore.canGoBack)
+
+// Responsive computed properties
+const responsiveStepMetadata = computed(() => {
+  return stepMetadata.map(meta => ({
+    ...meta,
+    // Truncate descriptions on mobile
+    description: isMobile.value ? meta.description.substring(0, 30) + '...' : meta.description
+  }))
+})
+
+const containerClass = computed(() => [
+  'module-wizard',
+  `breakpoint-${currentBreakpoint.value}`,
+  isMobile.value ? 'mobile-layout' : 'desktop-layout',
+  isTouchDevice.value ? 'touch-device' : 'pointer-device'
+])
 
 // ============= Step Navigation Logic =============
 const canNavigateToStep = (step: WizardStep): boolean => {
-  const allowedSteps = wizardStateMachine.getAllowedTransitions()
-  return allowedSteps.includes(step) || wizardState.value.completedSteps.has(step)
+  return wizardStore.canNavigateToStep(step)
 }
 
 const navigateToStep = async (step: WizardStep): Promise<void> => {
@@ -669,8 +661,11 @@ const navigateToStep = async (step: WizardStep): Promise<void> => {
   }
 
   try {
-    await wizardStateMachine.transitionTo(step)
-    wizardState.value = wizardStateMachine.getState()
+    wizardStore.navigateToStep(step)
+    wizardState.value = {
+      currentStep: wizardStore.currentStep,
+      completedSteps: wizardStore.completedSteps
+    }
     await validateCurrentStep()
   } catch (error) {
     ElMessage.error(t('wizard.navigation.transitionFailed', { error: getErrorMessage(error) }))
@@ -679,20 +674,14 @@ const navigateToStep = async (step: WizardStep): Promise<void> => {
 // ============= Entity Management =============
 const onEntitiesUpdate = async (newEntities: any[]): Promise<void> => {
   try {
-    stateManager.beginTransaction('Update entities')
-
-    // Update entities in transactional state
-    const currentState = stateManager.getCurrentState()
-    if (currentState) {
-      stateManager.updateModuleMetadata({
+    await wizardStore.withTransaction(async () => {
+      wizardStore.updateFormData({
         entities: newEntities.map(entity => ({
           ...entity,
           updatedAt: Date.now()
         }))
       })
-    }
-
-    await stateManager.commitTransaction()
+    })
     hasUnsavedChanges.value = true
 
   } catch (error) {
@@ -702,20 +691,16 @@ const onEntitiesUpdate = async (newEntities: any[]): Promise<void> => {
 
 const onDbInfoUpdate = async (db: { connectionStringName?: string; provider?: string; schema?: string }): Promise<void> => {
   try {
-    stateManager.beginTransaction('Update database info')
-
-    const currentState = stateManager.getCurrentState()
-    if (currentState) {
-      stateManager.updateModuleMetadata({
+    await wizardStore.withTransaction(async () => {
+      const currentData = wizardStore.formData
+      wizardStore.updateFormData({
         databaseInfo: {
-          connectionStringName: db.connectionStringName || currentState.databaseInfo.connectionStringName,
-          provider: (db.provider as DatabaseProvider) || currentState.databaseInfo.provider,
-          schema: db.schema || currentState.databaseInfo.schema
+          connectionStringName: db.connectionStringName || currentData.databaseInfo.connectionStringName,
+          provider: (db.provider || currentData.databaseInfo.provider) as 'SqlServer' | 'PostgreSql' | 'MySQL' | 'SQLite',
+          schema: db.schema || currentData.databaseInfo.schema
         }
       })
-    }
-
-    await stateManager.commitTransaction()
+    })
     hasUnsavedChanges.value = true
 
   } catch (error) {
@@ -726,13 +711,13 @@ const onDbInfoUpdate = async (db: { connectionStringName?: string; provider?: st
 // ============= Validation System =============
 const validateCurrentStep = async (): Promise<boolean> => {
   try {
-    const result = await wizardStateMachine.validateCurrentStep()
+    const result = await validator.validateStep(wizardStore.currentStep, wizardStore.formData)
 
     if (!result.isValid) {
-      const errorMessages = result.errors.join(', ')
+      const errorMessages = Object.values(result.errors).flat().join(', ')
       ElMessage.error(t('wizard.validation.failed', { errors: errorMessages }))
 
-      if (result.warnings.length > 0) {
+      if (result.warnings && result.warnings.length > 0) {
         const warningMessages = result.warnings.join(', ')
         ElMessage.warning(t('wizard.validation.warnings', { warnings: warningMessages }))
       }
@@ -743,101 +728,6 @@ const validateCurrentStep = async (): Promise<boolean> => {
     ElMessage.error(t('wizard.validation.error', { error: getErrorMessage(error) }))
     return false
   }
-}
-
-// Register step validators
-const setupValidators = (): void => {
-  // Basic Info Step Validator
-  wizardStateMachine.registerValidator(WizardStep.BASIC_INFO, async (): Promise<StepValidationResult> => {
-    const currentState = stateManager.getCurrentState()
-    if (!currentState) {
-      return {
-        isValid: false,
-        errors: ['No module data available'],
-        warnings: []
-      }
-    }
-
-    // Validate basic info
-    const errors: string[] = []
-    const warnings: string[] = []
-
-    if (!currentState.systemName) {
-      errors.push('System name is required')
-    }
-
-    if (!currentState.name) {
-      errors.push('Module name is required')
-    }
-
-    if (!currentState.displayName) {
-      errors.push('Display name is required')
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-      warnings
-    }
-  })
-
-  // Entity Design Step Validator
-  wizardStateMachine.registerValidator(WizardStep.ENTITY_DESIGN, async (): Promise<StepValidationResult> => {
-    const currentState = stateManager.getCurrentState()
-    if (!currentState || currentState.entities.length === 0) {
-      return {
-        isValid: false,
-        errors: ['At least one entity is required'],
-        warnings: []
-      }
-    }
-
-    // Validate entities
-    const errors: string[] = []
-    const warnings: string[] = []
-
-    for (const entity of currentState.entities) {
-      if (!entity.name) {
-        errors.push(`Entity missing name`)
-      }
-
-      if (entity.properties.length === 0) {
-        warnings.push(`Entity '${entity.name}' has no properties`)
-      }
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-      warnings
-    }
-  })
-
-  // Feature Config Step Validator
-  wizardStateMachine.registerValidator(WizardStep.FEATURE_CONFIG, async (): Promise<StepValidationResult> => {
-    const currentState = stateManager.getCurrentState()
-    if (!currentState) {
-      return {
-        isValid: false,
-        errors: ['No module data available'],
-        warnings: []
-      }
-    }
-
-    // Validate permission configuration
-    const errors: string[] = []
-    const warnings: string[] = []
-
-    if (currentState.permissionConfig.customActions.length === 0) {
-      warnings.push('No permissions configured')
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-      warnings
-    }
-  })
 }
 
 // ============= Form Validation Rules =============
@@ -899,9 +789,6 @@ const initializeWizard = async (): Promise<void> => {
   try {
     isLoading.value = true
 
-    // Initialize wizard state machine
-    setupValidators()
-
     // Load menu tree and connection strings in parallel
     const [menus, conns] = await Promise.all([
       codeGeneratorApi.getMenuTree().catch(() => []),
@@ -911,31 +798,14 @@ const initializeWizard = async (): Promise<void> => {
     menuTree.value = menus
     connectionStrings.value = conns
 
-    // Preflight schema version
-    try {
-      const pf = await (codeGeneratorApi as any).preflightSchemaVersion(DEFAULT_MODULE_METADATA)
-      if (!pf.ok && pf.level === 'block') {
-        ElMessage.error(pf.message || 'Schema version not supported')
-        return
-      }
-      if (pf.level === 'warn' && pf.message) {
-        ElMessage.warning(pf.message)
-      }
-    } catch {}
-
-    // Initialize with default module metadata
-    const initialMetadata = {
-      id: `module-${Date.now()}` as EntityId,
-      systemName: 'MySystem',
-      name: 'MyModule',
-      displayName: 'My Module' as NonEmptyString,
-      ...DEFAULT_MODULE_METADATA
-    } as unknown as StrictModuleMetadata
-
-    stateManager.setState(initialMetadata)
+    // Reset wizard store to initial state
+    wizardStore.reset()
 
     // Set initial wizard state
-    wizardState.value = wizardStateMachine.getState()
+    wizardState.value = {
+      currentStep: wizardStore.currentStep,
+      completedSteps: wizardStore.completedSteps
+    }
 
   } catch (error) {
     ElMessage.error(t('wizard.initialization.failed', { error: getErrorMessage(error) }))
@@ -964,8 +834,8 @@ const scheduleAutoSave = (): void => {
 
 // Watch for changes and schedule auto-save
 watch(
-  () => stateManager.getCurrentState(),
-  (newState: StrictModuleMetadata | null) => {
+  () => wizardStore.formData,
+  (newState) => {
     if (newState) {
       hasUnsavedChanges.value = true
       scheduleAutoSave()
@@ -984,10 +854,34 @@ const handleBeforeUnload = (event: BeforeUnloadEvent): string | void => {
 }
 
 onMounted(async () => {
+  // Start performance monitoring
+  startMonitoring()
+  
+  // Check for recovery state
+  if (recoveryState.value) {
+    ElMessage.info(t('wizard.recovery.loaded'))
+    console.log('Recovery state:', recoveryState.value)
+  }
+
   await initializeWizard()
+
+  // Load draft if exists
+  const hasDraft = wizardStore.loadDraft()
+  if (hasDraft) {
+    ElMessage.info(t('wizard.draft.loaded'))
+  }
 
   // Add before unload listener
   window.addEventListener('beforeunload', handleBeforeUnload)
+  
+  // Add error handler
+  window.addEventListener('error', (event) => {
+    captureError(event.error)
+  })
+  
+  window.addEventListener('unhandledrejection', (event) => {
+    captureError(event.reason)
+  })
 })
 
 onUnmounted(() => {
@@ -999,11 +893,20 @@ onUnmounted(() => {
     ;(window as any).cancelIdleCallback(idleHandle)
   }
 
-  // Remove before unload listener
-  window.removeEventListener('beforeunload', handleBeforeUnload)
+  // Stop performance monitoring
+  stopMonitoring()
+  
+  // Save final state
+  autoSaveManager.saveDraft(cacheKey.value, wizardStore.formData)
+  CrashRecovery.saveRecoveryState({
+    currentStep: wizardStore.currentStep,
+    timestamp: Date.now()
+  })
 
-  // Clean up state manager listeners
-  stateManager.unsubscribe('wizard-view')
+  // Remove event listeners
+  window.removeEventListener('beforeunload', handleBeforeUnload)
+  window.removeEventListener('error', captureError)
+  window.removeEventListener('unhandledrejection', captureError)
 })
 
 // ============= Navigation Actions =============
@@ -1048,11 +951,11 @@ const previous = async (): Promise<void> => {
   }
 }
 
-// ============= Code Generation =============
+// ============= Enhanced Code Generation with Retry =============
 type UnifiedApi = {
-  validateModuleUnified: (m: StrictModuleMetadata) => Promise<{ isValid: boolean; issues: Array<{ severity: string; message: string; path?: string }> }>
-  dryRunGenerateUnified: (m: StrictModuleMetadata) => Promise<{ success: boolean; files: string[]; totalFiles: number; totalLines: number; moduleName: string }>
-  generateModuleUnified: (m: StrictModuleMetadata) => Promise<any>
+  validateModuleUnified: (m: ModuleMetadata) => Promise<{ isValid: boolean; issues: Array<{ severity: string; message: string; path?: string }> }>
+  dryRunGenerateUnified: (m: ModuleMetadata) => Promise<{ success: boolean; files: string[]; totalFiles: number; totalLines: number; moduleName: string }>
+  generateModuleUnified: (m: ModuleMetadata) => Promise<any>
 }
 
 const generate = async (): Promise<void> => {
@@ -1061,7 +964,7 @@ const generate = async (): Promise<void> => {
       generationResult.value = null
 
       // Get current state
-      const currentState = stateManager.getCurrentState()
+      const currentState = wizardStore.formData
       if (!currentState) {
         throw new Error('No module data available for generation')
       }
@@ -1095,16 +998,10 @@ const generate = async (): Promise<void> => {
 
       ElMessage.info(t('wizard.generation.starting'))
 
-      // Start generation transaction
-      stateManager.beginTransaction('Code generation')
-
       try {
         // Call the unified schema API with validated data
         const unifiedApi = codeGeneratorApi as unknown as UnifiedApi
         const result = await unifiedApi.generateModuleUnified(currentState as any)
-
-        // Commit transaction
-        await stateManager.commitTransaction()
 
         generationResult.value = result
         hasUnsavedChanges.value = false
@@ -1115,7 +1012,6 @@ const generate = async (): Promise<void> => {
         clearDraftData()
 
       } catch (apiError) {
-        await stateManager.rollbackTransaction()
         throw new Error(`Generation failed: ${getErrorMessage(apiError)}`)
       }
 
@@ -1136,7 +1032,7 @@ const runValidate = async (): Promise<void> => {
   try {
     isPreviewLoading.value = true
     validationReport.value = null
-    const currentState = stateManager.getCurrentState()
+    const currentState = wizardStore.formData
     if (!currentState) throw new Error('No module data available')
     const pf = await (codeGeneratorApi as any).preflightSchemaVersion(currentState as any)
     if (!pf.ok && pf.level === 'block') {
@@ -1164,7 +1060,7 @@ const runDryRun = async (): Promise<void> => {
   try {
     isPreviewLoading.value = true
     dryRunResult.value = null
-    const currentState = stateManager.getCurrentState()
+    const currentState = wizardStore.formData
     if (!currentState) throw new Error('No module data available')
     const pf = await (codeGeneratorApi as any).preflightSchemaVersion(currentState as any)
     if (!pf.ok && pf.level === 'block') {
@@ -1186,7 +1082,7 @@ const runDryRun = async (): Promise<void> => {
 
 // ============= Draft Management =============
 const saveDraft = async (): Promise<void> => {
-  const currentState = stateManager.getCurrentState()
+  const currentState = wizardStore.formData
   if (!currentState) {
     ElMessage.warning(t('wizard.draft.noDataToSave'))
     return
@@ -1226,16 +1122,15 @@ const actionOptions = ['Export', 'Import', 'Approve', 'Reject']
 
 const permissionPreview = computed(() => {
   if (!perm.value.entity || !perm.value.action) return ''
-  const currentState = stateManager.getCurrentState()
+  const currentState = wizardStore.formData
   if (!currentState) return ''
   return `${currentState.name}.${perm.value.entity}.${perm.value.action}`
 })
 
 const addCustomPermission = async (): Promise<void> => {
   try {
-    stateManager.beginTransaction('Add custom permission')
-
-    const currentState = stateManager.getCurrentState()
+    await wizardStore.withTransaction(async () => {
+      const currentState = wizardStore.formData
     if (!currentState) {
       throw new Error('No module state available')
     }
@@ -1252,7 +1147,7 @@ const addCustomPermission = async (): Promise<void> => {
 
     // Check for duplicates
     const existingPermission = currentState.permissionConfig.customActions.find(p =>
-      p.entityName === perm.value.entity && p.actionKey === perm.value.action
+      p.entity === perm.value.entity && p.action === perm.value.action
     )
 
     if (existingPermission) {
@@ -1260,20 +1155,19 @@ const addCustomPermission = async (): Promise<void> => {
     }
 
     // Create new permission with proper types
-    const newPermission: StrictPermissionAction = {
-      entityName: perm.value.entity as ValidatedEntityName,
-      actionKey: perm.value.action,
+    const newPermission: CustomPermission = {
+      entity: perm.value.entity,
+      action: perm.value.action,
       displayName: perm.value.displayName
     }
 
-    stateManager.updateModuleMetadata({
-      permissionConfig: {
-        ...currentState.permissionConfig,
-        customActions: [...currentState.permissionConfig.customActions, newPermission]
-      }
+      wizardStore.updateFormData({
+        permissionConfig: {
+          ...currentState.permissionConfig,
+          customActions: [...currentState.permissionConfig.customActions, newPermission]
+        }
+      })
     })
-
-    await stateManager.commitTransaction()
 
     // Clear form
     perm.value = { entity: '', action: '', displayName: '' }
@@ -1288,19 +1182,18 @@ const addCustomPermission = async (): Promise<void> => {
 
 // ============= CRUD Permission Matrix Management =============
 const hasCrud = (entityName: string, action: string): boolean => {
-  const currentState = stateManager.getCurrentState()
+  const currentState = wizardStore.formData
   if (!currentState) return false
 
   return currentState.permissionConfig.customActions.some(p =>
-    p.entityName === entityName && p.actionKey === action
+    p.entity === entityName && p.action === action
   )
 }
 
 const onToggleCrud = async (entityName: string, action: string, checked: boolean): Promise<void> => {
   try {
-    stateManager.beginTransaction(`Toggle CRUD permission: ${entityName}.${action}`)
-
-    const currentState = stateManager.getCurrentState()
+    await wizardStore.withTransaction(async () => {
+      const currentState = wizardStore.formData
     if (!currentState) {
       throw new Error('No module state available')
     }
@@ -1310,14 +1203,14 @@ const onToggleCrud = async (entityName: string, action: string, checked: boolean
     if (checked) {
       // Add permission if not exists
       const exists = newCustomActions.some(p =>
-        p.entityName === entityName && p.actionKey === action
+        p.entity === entityName && p.action === action
       )
 
       // 避免基础 CRUD 进入 customActions（后端已生成）
       if (!exists && !BASE_CRUD.includes(action)) {
-        const newPermission: StrictPermissionAction = {
-          entityName: entityName as ValidatedEntityName,
-          actionKey: action,
+        const newPermission: CustomPermission = {
+          entity: entityName,
+          action: action,
           displayName: `${action} ${entityName}`
         }
         newCustomActions.push(newPermission)
@@ -1325,18 +1218,17 @@ const onToggleCrud = async (entityName: string, action: string, checked: boolean
     } else {
       // Remove permission
       newCustomActions = newCustomActions.filter(p =>
-        !(p.entityName === entityName && p.actionKey === action)
+        !(p.entity === entityName && p.action === action)
       )
     }
 
-    stateManager.updateModuleMetadata({
-      permissionConfig: {
-        ...currentState.permissionConfig,
-        customActions: newCustomActions
-      }
+      wizardStore.updateFormData({
+        permissionConfig: {
+          ...currentState.permissionConfig,
+          customActions: newCustomActions
+        }
+      })
     })
-
-    await stateManager.commitTransaction()
     hasUnsavedChanges.value = true
 
   } catch (error) {
@@ -1346,9 +1238,8 @@ const onToggleCrud = async (entityName: string, action: string, checked: boolean
 
 const toggleAllCrud = async (checked: boolean): Promise<void> => {
   try {
-    stateManager.beginTransaction(`Toggle all CRUD permissions: ${checked}`)
-
-    const currentState = stateManager.getCurrentState()
+    await wizardStore.withTransaction(async () => {
+      const currentState = wizardStore.formData
     if (!currentState) {
       throw new Error('No module state available')
     }
@@ -1359,7 +1250,7 @@ const toggleAllCrud = async (checked: boolean): Promise<void> => {
     for (const entity of currentState.entities) {
       for (const action of crudActions) {
         const exists = newCustomActions.some(p =>
-          p.entityName === entity.name && p.actionKey === action
+          p.entity === entity.name && p.action === action
         )
 
         // 这里不向 customActions 注入基础 CRUD，保持与后端常量一致
@@ -1367,20 +1258,19 @@ const toggleAllCrud = async (checked: boolean): Promise<void> => {
           // 忽略推入，维持后端生成路径（基础 CRUD 常量由后端提供）
         } else if (!checked && exists) {
           newCustomActions = newCustomActions.filter(p =>
-            !(p.entityName === entity.name && p.actionKey === action)
+            !(p.entity === entity.name && p.action === action)
           )
         }
       }
     }
 
-    stateManager.updateModuleMetadata({
-      permissionConfig: {
-        ...currentState.permissionConfig,
-        customActions: newCustomActions
-      }
+      wizardStore.updateFormData({
+        permissionConfig: {
+          ...currentState.permissionConfig,
+          customActions: newCustomActions
+        }
+      })
     })
-
-    await stateManager.commitTransaction()
     hasUnsavedChanges.value = true
 
   } catch (error) {
@@ -1390,9 +1280,8 @@ const toggleAllCrud = async (checked: boolean): Promise<void> => {
 
 const removeCustomPermission = async (index: number): Promise<void> => {
   try {
-    stateManager.beginTransaction('Remove custom permission')
-
-    const currentState = stateManager.getCurrentState()
+    await wizardStore.withTransaction(async () => {
+      const currentState = wizardStore.formData
     if (!currentState) {
       throw new Error('No module state available')
     }
@@ -1400,18 +1289,17 @@ const removeCustomPermission = async (index: number): Promise<void> => {
     const newCustomActions = [...currentState.permissionConfig.customActions]
     const removedPermission = newCustomActions.splice(index, 1)[0]
 
-    stateManager.updateModuleMetadata({
-      permissionConfig: {
-        ...currentState.permissionConfig,
-        customActions: newCustomActions
-      }
+      wizardStore.updateFormData({
+        permissionConfig: {
+          ...currentState.permissionConfig,
+          customActions: newCustomActions
+        }
+      })
     })
-
-    await stateManager.commitTransaction()
     hasUnsavedChanges.value = true
 
     ElMessage.success(t('wizard.permissions.removed', {
-      permission: `${removedPermission.entityName}.${removedPermission.actionKey}`
+      permission: `${removedPermission.entity}.${removedPermission.action}`
     }))
 
   } catch (error) {
@@ -1423,7 +1311,7 @@ const removeCustomPermission = async (index: number): Promise<void> => {
 let crudInitialized = false
 watch(() => wizardState.value.currentStep, async (newStep: WizardStep) => {
   if (newStep === WizardStep.FEATURE_CONFIG && !crudInitialized) {
-    const currentState = stateManager.getCurrentState()
+    const currentState = wizardStore.formData
     if (currentState && currentState.permissionConfig.customActions.length === 0) {
       await toggleAllCrud(true)
     }

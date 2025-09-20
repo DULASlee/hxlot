@@ -1,6 +1,5 @@
 import { api } from "@/utils/api"
-import type { ModuleMetadata } from "@smartabp/lowcode-designer/types"
-import type { EntityUIConfig } from "./types"
+import type { EntityUIConfig, ModuleMetadata } from "./types"
 
 /**
  * Code Generator API Service
