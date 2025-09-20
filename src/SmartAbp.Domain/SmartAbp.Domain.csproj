@@ -26,6 +26,8 @@
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.OpenIddict.Domain" Version="$(AbpVersion)" />
+    <PackageReference Include="OpenIddict.Server" Version="6.0.0" />
+    <PackageReference Include="OpenIddict.Server.AspNetCore" Version="6.0.0" />
     <PackageReference Include="Volo.Abp.Identity.Domain" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.TenantManagement.Domain" Version="$(AbpVersion)" />
   </ItemGroup>

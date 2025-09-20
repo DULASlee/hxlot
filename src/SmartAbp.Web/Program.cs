@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 
@@ -35,7 +37,7 @@ public class Program
             Log.Information("Starting web host.");
             var builder = WebApplication.CreateBuilder(args);
             // Bind strong-typed options and validate at startup
-            builder.Services.AddOptions<SmartAbp.Web.Configuration.ApplicationOptions>()
+            builder.Services.AddOptions<Configuration.ApplicationOptions>()
                 .Bind(builder.Configuration.GetSection("Application"))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
@@ -65,7 +67,7 @@ public class Program
                         .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                         .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
                         .Enrich.FromLogContext()
-                        .Enrich.With(new SmartAbp.Web.Logging.SanitizingEnricher())
+                        .Enrich.With(new Logging.SanitizingEnricher())
                         .Enrich.WithProperty("Application", "SmartAbp.Web")
                         // application log (info+)
                         .WriteTo.Async(c => c.File(
@@ -108,9 +110,9 @@ public class Program
             await builder.AddApplicationAsync<SmartAbpWebModule>();
             var app = builder.Build();
             // CorrelationId + Request logging + ProblemDetails
-            app.UseMiddleware<SmartAbp.Web.Middleware.CorrelationIdMiddleware>();
+            app.UseMiddleware<Middleware.CorrelationIdMiddleware>();
             app.UseSerilogRequestLogging();
-            app.UseMiddleware<SmartAbp.Web.Middleware.ProblemDetailsExceptionHandler>();
+            app.UseMiddleware<Middleware.ProblemDetailsExceptionHandler>();
             await app.InitializeApplicationAsync();
             await app.RunAsync();
             return 0;
