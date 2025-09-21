@@ -7,12 +7,14 @@ export default defineConfig({
   plugins: [vue(), vueJsx()],
   test: {
     globals: true,
-    environment: "jsdom",
-    setupFiles: ["./src/test/setup.ts"],
+    environment: "happy-dom",
+    setupFiles: ["./tests/setup.ts"],
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
       include: [
+        // 阶段3高级UI组件库覆盖率监控
+        "packages/lowcode-designer/src/components/**",
         // TDD权限引擎覆盖率监控
         "packages/lowcode-core/src/plugins/**",
         "packages/lowcode-core/src/permissions/**",
@@ -20,10 +22,10 @@ export default defineConfig({
         "packages/lowcode-designer/src/utils/uiConfigMapper.ts",
       ],
       thresholds: {
-        statements: 80, // TDD铁律：≥80%覆盖率
-        branches: 80,
-        functions: 80,
-        lines: 80,
+        statements: 90, // 阶段3 TDD铁律：≥90%覆盖率
+        branches: 85,
+        functions: 90,
+        lines: 90,
       },
       exclude: ["node_modules/**", "dist/**", "src/test/**", "**/*.d.ts"],
     },

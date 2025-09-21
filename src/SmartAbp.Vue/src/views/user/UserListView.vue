@@ -6,7 +6,7 @@ Based on SmartAbp template library
 DO NOT EDIT MANUALLY - Regenerate using module wizard
 -->
 
-<!-- 
+<!--
 AI_TEMPLATE_INFO:
 模板类型: Vue CRUD管理组件
 适用场景: 标准的数据管理页面，包含列表、搜索、新增、编辑、删除功能
@@ -71,7 +71,7 @@ AI_TEMPLATE_INFO:
               @keyup.enter="handleSearch"
             />
           </el-form-item>
-        
+
           <el-form-item
             label="状态"
             prop="isEnabled"
@@ -153,7 +153,7 @@ AI_TEMPLATE_INFO:
             type="selection"
             width="50"
           />
-        
+
           <el-table-column
             prop="name"
             label="名称"
@@ -399,7 +399,7 @@ const sorting = ref('')
 const tableData = ref<any[]>([])
 
 // 对话框数据
-const dialogTitle = computed(() => 
+const dialogTitle = computed(() =>
   formData.id ? '编辑用户管理' : '新增用户管理'
 )
 
@@ -424,7 +424,7 @@ const formRules = {
 const fetchData = async () => {
   try {
     loading.value = true
-    
+
     const params = {
       filter: searchForm.filter || undefined,
       isEnabled: searchForm.isEnabled,
@@ -439,10 +439,11 @@ const fetchData = async () => {
     // const result = await userStore.fetchList(params)
     // tableData.value = result.items
     // pagination.total = result.totalCount
-    
+
   } catch {
     ElMessage.error('获取数据失败')
-  } finally {"explanation":"修复未使用变量错误，移除catch块中的error参数，符合ESLint规范"}
+  } finally {
+    // 修复未使用变量错误，移除catch块中的error参数，符合ESLint规范
     loading.value = false
   }
 }
@@ -486,10 +487,10 @@ const handleDelete = async (row: any) => {
         type: 'warning'
       }
     )
-    
+
     // TODO: 调用删除API
     // await userStore.delete(row.id)
-    
+
     ElMessage.success('删除成功')
     fetchData()
   } catch {
@@ -499,7 +500,7 @@ const handleDelete = async (row: any) => {
 
 const handleBatchDelete = async () => {
   if (selectedRows.value.length === 0) return
-  
+
   try {
     await ElMessageBox.confirm(
       `确定要删除选中的 ${selectedRows.value.length} 项吗？`,
@@ -510,14 +511,14 @@ const handleBatchDelete = async () => {
         type: 'warning'
       }
     )
-    
+
     const ids = selectedRows.value.map(row => row.id)
     // 避免TS未使用变量错误
     void ids
-    
+
     // TODO: 调用批量删除API
     // await userStore.deleteMany(ids)
-    
+
     ElMessage.success('批量删除成功')
     fetchData()
   } catch (error) {
@@ -528,9 +529,9 @@ const handleBatchDelete = async () => {
 const handleSubmit = async () => {
   try {
     await formRef.value?.validate()
-    
+
     submitting.value = true
-    
+
     if (formData.id) {
       // TODO: 更新操作
       // await userStore.update(formData.id, formData)
@@ -540,7 +541,7 @@ const handleSubmit = async () => {
       // await userStore.create(formData)
       ElMessage.success('创建成功')
     }
-    
+
     dialogVisible.value = false
     fetchData()
   } catch {
