@@ -404,9 +404,17 @@ namespace SmartAbp.CodeGenerator.Core
                 RuntimeHelpers.PrepareMethod(typeof(RoslynCodeEngine).GetMethod(nameof(GenerateEntityAsync))!.MethodHandle);
                 // Skip the ambiguous SyntaxFactory method
             }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogDebug(ex, "JIT warmup failed - method not found");
+            }
+            catch (NotSupportedException ex)
+            {
+                _logger.LogDebug(ex, "JIT warmup not supported on this platform");
+            }
             catch (Exception ex)
             {
-                _logger.LogDebug(ex, "JIT warmup encountered an issue, continuing anyway");
+                _logger.LogDebug(ex, "JIT warmup encountered an unexpected issue, continuing anyway");
             }
             
             _logger.LogDebug("JIT warmup completed");
@@ -432,9 +440,18 @@ namespace SmartAbp.CodeGenerator.Core
                     GC.Collect(2, GCCollectionMode.Optimized, false, true);
                 }
             }
+            catch (OutOfMemoryException ex)
+            {
+                _logger.LogCritical(ex, "Out of memory during GC monitoring - forcing emergency collection");
+                GC.Collect(2, GCCollectionMode.Aggressive, true, true);
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning(ex, "Invalid operation during GC monitoring - possible disposed objects");
+            }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Error during garbage collection monitoring");
+                _logger.LogError(ex, "Unexpected error during garbage collection monitoring");
             }
         }
         
@@ -449,9 +466,17 @@ namespace SmartAbp.CodeGenerator.Core
                 {
                     await ProcessSingleTaskAsync(task);
                 }
+                catch (OperationCanceledException ex)
+                {
+                    _logger.LogInformation(ex, "Task processing cancelled for task {TaskId}", task.Id);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    _logger.LogError(ex, "Invalid operation processing task {TaskId} - possible disposed resources", task.Id);
+                }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error processing generation task {TaskId}", task.Id);
+                    _logger.LogError(ex, "Unexpected error processing generation task {TaskId}", task.Id);
                 }
             }
         }

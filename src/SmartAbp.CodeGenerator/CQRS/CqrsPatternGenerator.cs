@@ -107,9 +107,24 @@ namespace SmartAbp.CodeGenerator.CQRS
                     GeneratedAt = DateTime.UtcNow
                 };
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, "Invalid argument provided for CQRS generation of {AggregateName}", definition.AggregateName);
+                throw;
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "Invalid operation during CQRS generation of {AggregateName}", definition.AggregateName);
+                throw;
+            }
+            catch (OutOfMemoryException ex)
+            {
+                _logger.LogCritical(ex, "Memory exhausted during CQRS generation of {AggregateName}", definition.AggregateName);
+                throw;
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to generate CQRS layer for {AggregateName}", definition.AggregateName);
+                _logger.LogError(ex, "Unexpected error generating CQRS layer for {AggregateName}", definition.AggregateName);
                 throw;
             }
         }

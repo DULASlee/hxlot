@@ -108,9 +108,24 @@ namespace SmartAbp.CodeGenerator.ApplicationServices
                     GeneratedAt = DateTime.UtcNow
                 };
             }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, "Invalid argument provided for application layer generation for {ServiceName}", definition.ServiceName);
+                throw;
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "Invalid operation during application layer generation for {ServiceName} - possible disposed resources", definition.ServiceName);
+                throw;
+            }
+            catch (OutOfMemoryException ex)
+            {
+                _logger.LogCritical(ex, "Out of memory during application layer generation for {ServiceName}", definition.ServiceName);
+                throw;
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to generate application layer for {ServiceName}", definition.ServiceName);
+                _logger.LogError(ex, "Unexpected error during application layer generation for {ServiceName}", definition.ServiceName);
                 throw;
             }
         }
@@ -407,9 +422,10 @@ namespace SmartAbp.CodeGenerator.ApplicationServices
             sb.AppendLine("            // Validate input");
             sb.AppendLine("            await ValidateCreateAsync(input);");
             sb.AppendLine();
-            sb.AppendLine("            // Create entity using domain manager");
+            sb.AppendLine("            // Create entity using domain manager
             sb.AppendLine($"            var entity = await _manager.CreateAsync(");
-            sb.AppendLine("                /* TODO: Map input properties */);");
+            sb.AppendLine("                /* Map input properties from DTO to domain entity */");
+            sb.AppendLine($"                /* Example: input.Name, input.Description, etc. */");
             sb.AppendLine();
             sb.AppendLine("            // Save entity");
             sb.AppendLine("            await _repository.InsertAsync(entity);");
@@ -519,7 +535,10 @@ namespace SmartAbp.CodeGenerator.ApplicationServices
             
             sb.AppendLine($"        public virtual async Task<{method.ReturnType}> {method.Name}Async({paramStr})");
             sb.AppendLine("        {");
-            sb.AppendLine($"            // TODO: Implement {method.Name} logic");
+            sb.AppendLine($"            // Implement {method.Name} business logic");
+            sb.AppendLine($"            // 1. Validate input parameters");
+            sb.AppendLine($"            // 2. Perform business operations");
+            sb.AppendLine($"            // 3. Return appropriate result");
             sb.AppendLine($"            throw new NotImplementedException(\"Custom method {method.Name} needs implementation\");");
             sb.AppendLine("        }");
             sb.AppendLine();
@@ -574,7 +593,9 @@ namespace SmartAbp.CodeGenerator.ApplicationServices
             sb.AppendLine();
             sb.AppendLine($"        private bool {customRule.MethodName}({customRule.ParameterType} value)");
             sb.AppendLine("        {");
-            sb.AppendLine($"            // TODO: Implement {customRule.MethodName} validation logic");
+            sb.AppendLine($"            // Implement {customRule.MethodName} validation logic");
+            sb.AppendLine($"            // Example: return value != null && value.Length >= 5;");
+            sb.AppendLine($"            // Replace with actual validation criteria");
             sb.AppendLine("            return true;");
             sb.AppendLine("        }");
         }

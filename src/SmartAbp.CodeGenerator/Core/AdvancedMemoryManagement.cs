@@ -193,9 +193,18 @@ namespace SmartAbp.CodeGenerator.Core
                     TriggerMemoryCleanup();
                 }
             }
+            catch (OutOfMemoryException ex)
+            {
+                _logger.LogCritical(ex, "Out of memory during memory pressure monitoring - forcing emergency cleanup");
+                TriggerMemoryCleanup();
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "Invalid operation during memory pressure monitoring - possible disposed objects");
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during memory pressure monitoring");
+                _logger.LogError(ex, "Unexpected error during memory pressure monitoring");
             }
         }
         
@@ -227,9 +236,17 @@ namespace SmartAbp.CodeGenerator.Core
                 {
                     disposable?.Dispose();
                 }
+                catch (ObjectDisposedException ex)
+                {
+                    _logger.LogDebug(ex, "Resource already disposed");
+                }
+                catch (InvalidOperationException ex)
+                {
+                    _logger.LogWarning(ex, "Invalid operation during resource disposal");
+                }
                 catch (Exception ex)
                 {
-                    _logger.LogWarning(ex, "Error disposing tracked resource");
+                    _logger.LogError(ex, "Unexpected error disposing tracked resource");
                 }
             }
         }
@@ -261,18 +278,36 @@ namespace SmartAbp.CodeGenerator.Core
         
         public void Dispose()
         {
-            _logger.LogInformation("Disposing AdvancedMemoryManager");
-            
-            _memoryPressureTimer?.Dispose();
-            _memoryPool?.Dispose();
-            
-            // Clear all caches
-            ClearInternalCaches();
-            
-            // Force final cleanup
-            TriggerMemoryCleanup();
-            
-            _logger.LogInformation("AdvancedMemoryManager disposed successfully");
+            try
+            {
+                _logger.LogInformation("Disposing AdvancedMemoryManager");
+                
+                // Stop monitoring first to prevent new operations during disposal
+                _memoryPressureTimer?.Dispose();
+                _memoryPressureTimer = null;
+                
+                // Clear all caches before disposing pools
+                ClearInternalCaches();
+                
+                // Dispose memory pool
+                _memoryPool?.Dispose();
+                _memoryPool = null;
+                
+                // Force final cleanup
+                TriggerMemoryCleanup();
+                
+                _logger.LogInformation("AdvancedMemoryManager disposed successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error disposing AdvancedMemoryManager");
+                // Don't rethrow in dispose - best effort cleanup
+            }
+            finally
+            {
+                // Ensure disposal is complete even if errors occur
+                _disposables?.Dispose();
+            }
         }
     }
     
