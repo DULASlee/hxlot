@@ -104,5 +104,12 @@ namespace SmartAbp.Permissions.Models
         public double P99ResponseTimeMs { get; set; }
         public long TotalRequests { get; set; }
         public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
+        
+        // 新增属性以满足构建需求
+        public double ErrorRate { get; set; }
+        public double MemoryUsageMB { get; set; }
+        public double CpuUsagePercent { get; set; }
+        public double ThroughputRPS { get; set; }
+        public double P95ResponseTimeMs { get; set; }
     }
 }

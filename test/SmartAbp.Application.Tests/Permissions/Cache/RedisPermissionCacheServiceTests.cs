@@ -118,7 +118,7 @@ namespace SmartAbp.Permissions.Cache.Tests
             // Assert
             result.ShouldBeNull(); // 应该返回null而不是抛出异常
             // 只验证日志被调用，不验证具体参数
-            _logger.ReceivedCalls().Count().ShouldBeGreaterThan(0);
+            _logger.ReceivedCalls.Count().ShouldBeGreaterThan(0);
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace SmartAbp.Permissions.Cache.Tests
             // Assert
             result.ShouldBeFalse(); // 应该返回false而不是抛出异常
             // 只验证日志被调用，不验证具体参数
-            _logger.ReceivedCalls().Count().ShouldBeGreaterThan(0);
+            _logger.ReceivedCalls.Count().ShouldBeGreaterThan(0);
         }
 
         [Theory]

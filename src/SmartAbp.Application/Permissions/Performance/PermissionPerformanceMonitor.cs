@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SmartAbp.Permissions.Documentation;
 using SmartAbp.Permissions.Models;
 
 namespace SmartAbp.Permissions.Performance
@@ -371,6 +372,47 @@ namespace SmartAbp.Permissions.Performance
             return SeverityLevel.Low;
         }
 
+        /// <summary>
+        /// 获取性能特征
+        /// </summary>
+        public async Task<PerformanceCharacteristics> GetPerformanceCharacteristicsAsync()
+        {
+            try
+            {
+                var metrics = GetCurrentMetrics();
+                var allResponseTimes = _responseTimeQueue.Select(r => r.ResponseTimeMs).ToList();
+                var p95ResponseTime = CalculateP95ResponseTime(allResponseTimes);
+                
+                // 计算吞吐量 (简化计算，假设监控窗口为1小时)
+                var throughputRPS = metrics.TotalRequests > 0 ? metrics.TotalRequests / 3600.0 : 0;
+                
+                return new PerformanceCharacteristics
+                {
+                    AverageResponseTimeMs = metrics.AverageResponseTimeMs,
+                    P95ResponseTimeMs = p95ResponseTime,
+                    P99ResponseTimeMs = metrics.P99ResponseTimeMs,
+                    ErrorRate = metrics.ErrorRate,
+                    CacheHitRate = metrics.CacheHitRate,
+                    ThroughputRPS = throughputRPS,
+                    MemoryUsageMB = 0 // 这个值需要从内存服务获取，这里设为0作为占位符
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting performance characteristics");
+                throw;
+            }
+        }
+
+        private double CalculateP95ResponseTime(List<long> responseTimes)
+        {
+            if (!responseTimes.Any()) return 0;
+
+            var sortedTimes = responseTimes.OrderBy(t => t).ToList();
+            var p95Index = (int)Math.Ceiling(sortedTimes.Count * 0.95) - 1;
+            return sortedTimes[Math.Max(0, p95Index)];
+        }
+
         #endregion
     }
 
@@ -470,6 +512,7 @@ namespace SmartAbp.Permissions.Performance
         PerformanceTrendAnalysis GetPerformanceTrend(TimeSpan timeWindow);
         List<PerformanceBottleneck> IdentifyBottlenecks();
         void ResetMetrics();
+        Task<PerformanceCharacteristics> GetPerformanceCharacteristicsAsync();
     }
 
     #endregion

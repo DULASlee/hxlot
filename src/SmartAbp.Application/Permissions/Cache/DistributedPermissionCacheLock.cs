@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
@@ -41,6 +42,11 @@ namespace SmartAbp.Permissions.Cache
         /// 是否仍然有效
         /// </summary>
         bool IsValid { get; }
+
+        /// <summary>
+        /// 是否已获取锁
+        /// </summary>
+        bool IsAcquired { get; }
 
         /// <summary>
         /// 释放锁
@@ -117,6 +123,7 @@ namespace SmartAbp.Permissions.Cache
         public string Resource { get; }
         public string LockId { get; }
         public bool IsValid => !_disposed;
+        public bool IsAcquired => !_disposed;
 
         public RedisDistributedLock(IDatabase database, string lockKey, string lockId, string resource, ILogger logger)
         {
