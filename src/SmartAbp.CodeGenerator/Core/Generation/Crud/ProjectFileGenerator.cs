@@ -10,23 +10,46 @@ namespace SmartAbp.CodeGenerator.Core.Generation.Crud
     {
         public Dictionary<string, string> Generate(ModuleMetadataDto metadata, string solutionRoot)
         {
-            var generatedFiles = new Dictionary<string, string>();
-            var systemName = metadata.SystemName;
-            var moduleName = metadata.Name;
+            try
+            {
+                var generatedFiles = new Dictionary<string, string>();
+                var systemName = metadata.SystemName;
+                var moduleName = metadata.Name;
 
-            // Define project paths
-            var domainProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.Domain");
-            var efProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.EntityFrameworkCore");
-            var contractsProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.Application.Contracts");
-            var appProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.Application");
+                // Define project paths
+                var domainProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.Domain");
+                var efProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.EntityFrameworkCore");
+                var contractsProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.Application.Contracts");
+                var appProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.Application");
 
-            // Add csproj files to the generation list
-            generatedFiles.Add(Path.Combine(domainProjectRoot, $"SmartAbp.{systemName}.{moduleName}.Domain.csproj"), GenerateDomainCsProj(systemName, moduleName));
-            generatedFiles.Add(Path.Combine(contractsProjectRoot, $"SmartAbp.{systemName}.{moduleName}.Application.Contracts.csproj"), GenerateContractsCsProj(systemName, moduleName));
-            generatedFiles.Add(Path.Combine(appProjectRoot, $"SmartAbp.{systemName}.{moduleName}.Application.csproj"), GenerateApplicationCsProj(systemName, moduleName));
-            generatedFiles.Add(Path.Combine(efProjectRoot, $"SmartAbp.{systemName}.{moduleName}.EntityFrameworkCore.csproj"), GenerateEfCoreCsProj(systemName, moduleName));
+                // Add csproj files to the generation list
+                generatedFiles.Add(Path.Combine(domainProjectRoot, $"SmartAbp.{systemName}.{moduleName}.Domain.csproj"), GenerateDomainCsProj(systemName, moduleName));
+                generatedFiles.Add(Path.Combine(contractsProjectRoot, $"SmartAbp.{systemName}.{moduleName}.Application.Contracts.csproj"), GenerateContractsCsProj(systemName, moduleName));
+                generatedFiles.Add(Path.Combine(appProjectRoot, $"SmartAbp.{systemName}.{moduleName}.Application.csproj"), GenerateApplicationCsProj(systemName, moduleName));
+                generatedFiles.Add(Path.Combine(efProjectRoot, $"SmartAbp.{systemName}.{moduleName}.EntityFrameworkCore.csproj"), GenerateEfCoreCsProj(systemName, moduleName));
 
-            return generatedFiles;
+                return generatedFiles;
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException($"Invalid argument while generating project files for module '{metadata.Name}'", ex);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                throw new DirectoryNotFoundException($"Directory not found while generating project files for module '{metadata.Name}'", ex);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new UnauthorizedAccessException($"Access denied while generating project files for module '{metadata.Name}'", ex);
+            }
+            catch (OutOfMemoryException ex)
+            {
+                throw new OutOfMemoryException($"Out of memory while generating project files for module '{metadata.Name}'", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Unexpected error while generating project files for module '{metadata.Name}'", ex);
+            }
         }
 
         private string GenerateDomainCsProj(string systemName, string moduleName)

@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Pluralize.NET;
 using SmartAbp.CodeGenerator.Services.V9;
 using Volo.Abp.DependencyInjection;
@@ -11,49 +13,98 @@ namespace SmartAbp.CodeGenerator.Core.Generation.Frontend
     public class FrontendGenerator : ITransientDependency
     {
         private readonly Pluralizer _pluralizer;
+        private readonly ILogger<FrontendGenerator> _logger;
 
-        public FrontendGenerator()
+        public FrontendGenerator(ILogger<FrontendGenerator> logger)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _pluralizer = new Pluralizer();
         }
 
         public Dictionary<string, string> Generate(ModuleMetadataDto metadata, string solutionRoot)
         {
-            var generatedFiles = new Dictionary<string, string>();
-            var vueRoot = Path.Combine(solutionRoot, "src", "SmartAbp.Vue");
-
-            // Define paths for the new module (lower-cased folder for views and stores)
-            var modulePath = Path.Combine(vueRoot, "src", "views", metadata.Name.ToLower());
-            var apiPath = Path.Combine(vueRoot, "src", "api", metadata.Name);
-            var storePath = Path.Combine(vueRoot, "src", "stores", "modules", metadata.Name.ToLower());
-
-            // Generate files for each entity
-            foreach (var entity in metadata.Entities)
+            try
             {
-                var viewsDir = modulePath;
-                var storeDir = storePath;
-                Directory.CreateDirectory(viewsDir);
-                Directory.CreateDirectory(storeDir);
+                var generatedFiles = new Dictionary<string, string>();
+                var vueRoot = Path.Combine(solutionRoot, "src", "SmartAbp.Vue");
 
-                generatedFiles.Add(
-                    Path.Combine(viewsDir, $"{entity.Name}ListView.vue"),
-                    GenerateListView(entity, metadata)
-                );
-                generatedFiles.Add(
-                    Path.Combine(viewsDir, $"{entity.Name}Management.vue"),
-                    GenerateManagementView(entity, metadata)
-                );
-                generatedFiles.Add(
-                    Path.Combine(apiPath, $"{entity.Name.ToLower()}.ts"),
-                    GenerateApiFile(entity, metadata)
-                );
-                generatedFiles.Add(
-                    Path.Combine(storeDir, $"{entity.Name.ToLower()}.ts"),
-                    GenerateStoreFile(entity, metadata)
-                );
+                // Define paths for the new module (lower-cased folder for views and stores)
+                var modulePath = Path.Combine(vueRoot, "src", "views", metadata.Name.ToLower());
+                var apiPath = Path.Combine(vueRoot, "src", "api", metadata.Name);
+                var storePath = Path.Combine(vueRoot, "src", "stores", "modules", metadata.Name.ToLower());
+
+                // Generate files for each entity
+                foreach (var entity in metadata.Entities)
+                {
+                    try
+                    {
+                        var viewsDir = modulePath;
+                        var storeDir = storePath;
+                        Directory.CreateDirectory(viewsDir);
+                        Directory.CreateDirectory(storeDir);
+
+                        generatedFiles.Add(
+                            Path.Combine(viewsDir, $"{entity.Name}ListView.vue"),
+                            GenerateListView(entity, metadata)
+                        );
+                        generatedFiles.Add(
+                            Path.Combine(viewsDir, $"{entity.Name}Management.vue"),
+                            GenerateManagementView(entity, metadata)
+                        );
+                        generatedFiles.Add(
+                            Path.Combine(apiPath, $"{entity.Name.ToLower()}.ts"),
+                            GenerateApiFile(entity, metadata)
+                        );
+                        generatedFiles.Add(
+                            Path.Combine(storeDir, $"{entity.Name.ToLower()}.ts"),
+                            GenerateStoreFile(entity, metadata)
+                        );
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        _logger.LogError(ex, "Invalid argument while generating frontend files for entity '{EntityName}' in module '{ModuleName}'", entity.Name, metadata.Name);
+                        throw;
+                    }
+                    catch (DirectoryNotFoundException ex)
+                    {
+                        _logger.LogError(ex, "Directory not found while generating frontend files for entity '{EntityName}' in module '{ModuleName}'", entity.Name, metadata.Name);
+                        throw;
+                    }
+                    catch (UnauthorizedAccessException ex)
+                    {
+                        _logger.LogError(ex, "Access denied while generating frontend files for entity '{EntityName}' in module '{ModuleName}'", entity.Name, metadata.Name);
+                        throw;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Unexpected error while generating frontend files for entity '{EntityName}' in module '{ModuleName}'", entity.Name, metadata.Name);
+                        throw;
+                    }
+                }
+
+                _logger.LogInformation("Successfully generated {FileCount} frontend files for module '{ModuleName}'", generatedFiles.Count, metadata.Name);
+                return generatedFiles;
             }
-
-            return generatedFiles;
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, "Invalid argument provided for frontend generation in module '{ModuleName}'", metadata.Name);
+                throw;
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                _logger.LogError(ex, "Directory not found while generating frontend files for module '{ModuleName}'", metadata.Name);
+                throw;
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogError(ex, "Access denied while generating frontend files for module '{ModuleName}'", metadata.Name);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while generating frontend files for module '{ModuleName}'", metadata.Name);
+                throw;
+            }
         }
 
         private string GenerateListView(EnhancedEntityModelDto entity, ModuleMetadataDto metadata)
@@ -186,24 +237,60 @@ const onCancel = () => { Object.keys(form).forEach(k => delete (form as any)[k])
 
         private string GenerateApiFile(EnhancedEntityModelDto entity, ModuleMetadataDto metadata)
         {
-            var entityName = entity.Name;
-            var entityNameCamel = ToCamelCase(entityName);
-            var moduleName = metadata.Name;
-            var entityDto = $"{entityName}Dto";
-            var createDto = $"Create{entityName}Dto";
-            var updateDto = $"Update{entityName}Dto";
-            var getListDto = $"Get{entityName}ListDto";
-            var entityPlural = _pluralizer.Pluralize(entityNameCamel);
+            try
+            {
+                var entityName = entity.Name;
+                var entityNameCamel = ToCamelCase(entityName);
+                var moduleName = metadata.Name;
+                var entityDto = $"{entityName}Dto";
+                var createDto = $"Create{entityName}Dto";
+                var updateDto = $"Update{entityName}Dto";
+                var getListDto = $"Get{entityName}ListDto";
+                var entityPlural = _pluralizer.Pluralize(entityNameCamel);
 
-            var content = $@"import {{ api }} from '@/utils/api'\n\nexport interface {entityDto} {{\n  id: string;\n  {string.Join("\n  ", entity.Properties.Select(p => $"{ToCamelCase(p.Name)}: {GetTsType(p.Type)};"))}\n}}\n\nexport interface {getListDto} {{\n  // Define query parameters here\n  keyword?: string;\n}}\n\nexport type {createDto} = Omit<{entityDto}, 'id'>;\nexport type {updateDto} = Partial<{createDto}>;\n\nconst Api = `/api/app/{entityNameCamel}`\n\nexport const get{entityPlural} = (params: {getListDto}) => api.get(Api, {{ params }})\nexport const get{entityName} = (id: string) => api.get(`${{Api}}/${{id}}`)\nexport const create{entityName} = (data: {createDto}) => api.post(Api, data)\nexport const update{entityName} = (id: string, data: {updateDto}) => api.put(`${{Api}}/${{id}}`, data)\nexport const delete{entityName} = (id: string) => api.delete(`${{Api}}/${{id}}`)\n";
-            return content;
+                var content = $@"import {{ api }} from '@/utils/api'\n\nexport interface {entityDto} {{\n  id: string;\n  {string.Join("\n  ", entity.Properties.Select(p => $"{ToCamelCase(p.Name)}: {GetTsType(p.Type)};"))}\n}}\n\nexport interface {getListDto} {{\n  // Define query parameters here\n  keyword?: string;\n}}\n\nexport type {createDto} = Omit<{entityDto}, 'id'>;\nexport type {updateDto} = Partial<{createDto}>;\n\nconst Api = `/api/app/{entityNameCamel}`\n\nexport const get{entityPlural} = (params: {getListDto}) => api.get(Api, {{ params }})\nexport const get{entityName} = (id: string) => api.get(${{Api}}/${{id}})\nexport const create{entityName} = (data: {createDto}) => api.post(Api, data)\nexport const update{entityName} = (id: string, data: {updateDto}) => api.put(${{Api}}/${{id}}, data)\nexport const delete{entityName} = (id: string) => api.delete(${{Api}}/${{id}})\n";
+                return content;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, "Invalid argument while generating API file for entity '{EntityName}' in module '{ModuleName}'", entity.Name, metadata.Name);
+                throw;
+            }
+            catch (OutOfMemoryException ex)
+            {
+                _logger.LogError(ex, "Out of memory while generating API file for entity '{EntityName}' in module '{ModuleName}'", entity.Name, metadata.Name);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while generating API file for entity '{EntityName}' in module '{ModuleName}'", entity.Name, metadata.Name);
+                throw;
+            }
         }
 
         private string GenerateStoreFile(EnhancedEntityModelDto entity, ModuleMetadataDto metadata)
         {
-            var entityLower = entity.Name.ToLower();
-            var template = $@"import {{ defineStore }} from 'pinia'\nimport {{ ref }} from 'vue'\nimport * as api from '@/api/{metadata.Name}/{entityLower}'\n\nexport const use{entity.Name}Store = defineStore('{entityLower}', () => {{\n  const items = ref<any[]>([])\n  const loading = ref(false)\n  const total = ref(0)\n  const pageIndex = ref(1)\n  const pageSize = ref(10)\n\n  async function fetchList(params?: {{ pageIndex?: number; pageSize?: number; query?: Record<string, any> }}) {{\n    loading.value = true\n    try {{\n      const pi = params?.pageIndex ?? pageIndex.value\n      const ps = params?.pageSize ?? pageSize.value\n      pageIndex.value = pi\n      pageSize.value = ps\n      const res = await api.get{_pluralizer.Pluralize(entity.Name)}({{ keyword: params?.query?.keyword }}) as any\n      items.value = (res?.items) ?? []\n      total.value = (res?.totalCount) ?? 0\n    }} finally {{\n      loading.value = false\n    }}\n  }}\n\n  async function createOrUpdate(payload: any) {{\n    if (payload?.id) return api.update{entity.Name}(payload.id, payload)\n    return api.create{entity.Name}(payload)\n  }}\n\n  async function remove(id: string | number) {{\n    return api.delete{entity.Name}(String(id))\n  }}\n\n  return {{ items, loading, total, pageIndex, pageSize, fetchList, createOrUpdate, remove }}\n}})\n";
-            return template;
+            try
+            {
+                var entityLower = entity.Name.ToLower();
+                var template = $@"import {{ defineStore }} from 'pinia'\nimport {{ ref }} from 'vue'\nimport * as api from '@/api/{metadata.Name}/{entityLower}'\n\nexport const use{entity.Name}Store = defineStore('{entityLower}', () => {{\n  const items = ref<any[]>([])\n  const loading = ref(false)\n  const total = ref(0)\n  const pageIndex = ref(1)\n  const pageSize = ref(10)\n\n  async function fetchList(params?: {{ pageIndex?: number; pageSize?: number; query?: Record<string, any> }}) {{\n    loading.value = true\n    try {{\n      const pi = params?.pageIndex ?? pageIndex.value\n      const ps = params?.pageSize ?? pageSize.value\n      pageIndex.value = pi\n      pageSize.value = ps\n      const res = await api.get{_pluralizer.Pluralize(entity.Name)}({{ keyword: params?.query?.keyword }}) as any\n      items.value = (res?.items) ?? []\n      total.value = (res?.totalCount) ?? 0\n    }} finally {{\n      loading.value = false\n    }}\n  }}\n\n  async function createOrUpdate(payload: any) {{\n    if (payload?.id) return api.update{entity.Name}(payload.id, payload)\n    return api.create{entity.Name}(payload)\n  }}\n\n  async function remove(id: string | number) {{\n    return api.delete{entity.Name}(String(id))\n  }}\n\n  return {{ items, loading, total, pageIndex, pageSize, fetchList, createOrUpdate, remove }}\n}})\n";
+                return template;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, "Invalid argument while generating store file for entity '{EntityName}' in module '{ModuleName}'", entity.Name, metadata.Name);
+                throw;
+            }
+            catch (OutOfMemoryException ex)
+            {
+                _logger.LogError(ex, "Out of memory while generating store file for entity '{EntityName}' in module '{ModuleName}'", entity.Name, metadata.Name);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while generating store file for entity '{EntityName}' in module '{ModuleName}'", entity.Name, metadata.Name);
+                throw;
+            }
         }
 
         private string ToCamelCase(string str)

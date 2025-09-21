@@ -82,9 +82,24 @@ namespace SmartAbp.CodeGenerator.Testing
                     GeneratedAt = DateTime.UtcNow
                 };
             }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "Invalid operation generating test suite for {ModuleName} - possible disposed resources", definition.ModuleName);
+                throw;
+            }
+            catch (OutOfMemoryException ex)
+            {
+                _logger.LogCritical(ex, "Memory exhausted generating test suite for {ModuleName}", definition.ModuleName);
+                throw;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, "Invalid argument provided for test suite generation for {ModuleName}", definition.ModuleName);
+                throw;
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to generate test suite for {ModuleName}", definition.ModuleName);
+                _logger.LogError(ex, "Unexpected error generating test suite for {ModuleName}", definition.ModuleName);
                 throw;
             }
         }

@@ -21,52 +21,98 @@ namespace SmartAbp.CodeGenerator.Services
 
         public async Task AddProjectToSolutionAsync(string solutionFilePath, string projectFilePath)
         {
-            _logger.LogInformation("Adding project {Project} to solution {Solution} via dotnet CLI", projectFilePath, solutionFilePath);
-            
-            var process = new Process
+            try
             {
-                StartInfo = new ProcessStartInfo
+                _logger.LogInformation("Adding project {Project} to solution {Solution} via dotnet CLI", projectFilePath, solutionFilePath);
+                
+                var process = new Process
                 {
-                    FileName = "dotnet",
-                    Arguments = $"sln \"{solutionFilePath}\" add \"{projectFilePath}\"",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "dotnet",
+                        Arguments = $"sln \"{solutionFilePath}\" add \"{projectFilePath}\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                    }
+                };
+
+                process.Start();
+                string output = await process.StandardOutput.ReadToEndAsync();
+                string error = await process.StandardError.ReadToEndAsync();
+                await process.WaitForExitAsync();
+
+                if (process.ExitCode == 0)
+                {
+                    _logger.LogInformation("Successfully added project to solution via dotnet CLI. Output: {Output}", output);
                 }
-            };
-
-            process.Start();
-            string output = await process.StandardOutput.ReadToEndAsync();
-            string error = await process.StandardError.ReadToEndAsync();
-            await process.WaitForExitAsync();
-
-            if (process.ExitCode == 0)
-            {
-                _logger.LogInformation("Successfully added project to solution via dotnet CLI. Output: {Output}", output);
+                else
+                {
+                    _logger.LogError("Failed to add project to solution via dotnet CLI. Error: {Error}", error);
+                    throw new InvalidOperationException($"Failed to add project to solution via dotnet CLI. Error: {error}");
+                }
             }
-            else
+            catch (ArgumentException ex)
             {
-                _logger.LogError("Failed to add project to solution via dotnet CLI. Error: {Error}", error);
-                // Optionally, throw an exception here
+                _logger.LogError(ex, "Invalid argument provided while adding project to solution. Solution: {Solution}, Project: {Project}", solutionFilePath, projectFilePath);
+                throw;
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "Invalid operation while adding project to solution. Solution: {Solution}, Project: {Project}", solutionFilePath, projectFilePath);
+                throw;
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogError(ex, "Access denied while adding project to solution. Solution: {Solution}, Project: {Project}", solutionFilePath, projectFilePath);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while adding project to solution. Solution: {Solution}, Project: {Project}", solutionFilePath, projectFilePath);
+                throw;
             }
         }
 
         public async Task AddProjectReferenceAsync(string targetProjectPath, string referencedProjectPath)
         {
-            _logger.LogInformation("Adding project reference from {Target} to {Reference}", targetProjectPath, referencedProjectPath);
-            var project = ProjectRootElement.Open(targetProjectPath);
-            if (project.Items.All(i => i.ItemType != "ProjectReference" || i.Include != referencedProjectPath))
+            try
             {
-                project.AddItem("ProjectReference", referencedProjectPath);
-                project.Save();
-                _logger.LogInformation("Successfully added project reference.");
+                _logger.LogInformation("Adding project reference from {Target} to {Reference}", targetProjectPath, referencedProjectPath);
+                var project = ProjectRootElement.Open(targetProjectPath);
+                if (project.Items.All(i => i.ItemType != "ProjectReference" || i.Include != referencedProjectPath))
+                {
+                    project.AddItem("ProjectReference", referencedProjectPath);
+                    project.Save();
+                    _logger.LogInformation("Successfully added project reference.");
+                }
+                else
+                {
+                    _logger.LogInformation("Project reference already exists. Skipping.");
+                }
+                await Task.CompletedTask;
             }
-            else
+            catch (ArgumentException ex)
             {
-                _logger.LogInformation("Project reference already exists. Skipping.");
+                _logger.LogError(ex, "Invalid argument provided while adding project reference. Target: {Target}, Reference: {Reference}", targetProjectPath, referencedProjectPath);
+                throw;
             }
-            await Task.CompletedTask;
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "Invalid operation while adding project reference. Target: {Target}, Reference: {Reference}", targetProjectPath, referencedProjectPath);
+                throw;
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogError(ex, "Access denied while adding project reference. Target: {Target}, Reference: {Reference}", targetProjectPath, referencedProjectPath);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while adding project reference. Target: {Target}, Reference: {Reference}", targetProjectPath, referencedProjectPath);
+                throw;
+            }
         }
     }
 }

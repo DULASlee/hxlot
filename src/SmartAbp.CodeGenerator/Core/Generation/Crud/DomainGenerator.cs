@@ -11,21 +11,43 @@ namespace SmartAbp.CodeGenerator.Core.Generation.Crud
     {
         public Dictionary<string, string> Generate(ModuleMetadataDto metadata, string solutionRoot)
         {
-            var generatedFiles = new Dictionary<string, string>();
-            var systemName = metadata.SystemName;
-            var moduleName = metadata.Name;
-            
-            var domainProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.Domain");
-
-            foreach (var entity in metadata.Entities)
+            try
             {
-                generatedFiles.Add(
-                    Path.Combine(domainProjectRoot, "Entities", $"{entity.Name}.cs"),
-                    GenerateEntity(entity, systemName, moduleName)
-                );
-            }
+                var generatedFiles = new Dictionary<string, string>();
+                var systemName = metadata.SystemName;
+                var moduleName = metadata.Name;
+                var domainProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.Domain");
 
-            return generatedFiles;
+                foreach (var entity in metadata.Entities)
+                {
+                    generatedFiles.Add(
+                        Path.Combine(domainProjectRoot, "Entities", $"{entity.Name}.cs"),
+                        GenerateEntity(entity)
+                    );
+                }
+
+                return generatedFiles;
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException($"Invalid argument while generating domain layer for module '{metadata.Name}'", ex);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                throw new DirectoryNotFoundException($"Directory not found while generating domain layer for module '{metadata.Name}'", ex);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new UnauthorizedAccessException($"Access denied while generating domain layer for module '{metadata.Name}'", ex);
+            }
+            catch (OutOfMemoryException ex)
+            {
+                throw new OutOfMemoryException($"Out of memory while generating domain layer for module '{metadata.Name}'", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Unexpected error while generating domain layer for module '{metadata.Name}'", ex);
+            }
         }
 
         private string GenerateEntity(EnhancedEntityModelDto entity, string systemName, string moduleName)

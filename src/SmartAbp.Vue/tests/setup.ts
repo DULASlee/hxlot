@@ -5,7 +5,6 @@
 
 import { config } from '@vue/test-utils'
 import { vi } from 'vitest'
-import '@testing-library/jest-dom'
 
 // 全局模拟
 Object.defineProperty(window, 'matchMedia', {
@@ -41,7 +40,7 @@ global.requestAnimationFrame = vi.fn().mockImplementation(cb => setTimeout(cb, 1
 global.cancelAnimationFrame = vi.fn().mockImplementation(id => clearTimeout(id))
 
 // 模拟 performance.memory (用于内存测试)
-if (!performance.memory) {
+if (!(performance as any).memory) {
   Object.defineProperty(performance, 'memory', {
     get: () => ({
       usedJSHeapSize: Math.floor(Math.random() * 50000000), // 50MB

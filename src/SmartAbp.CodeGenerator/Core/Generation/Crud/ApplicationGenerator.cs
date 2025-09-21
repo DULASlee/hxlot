@@ -13,30 +13,53 @@ namespace SmartAbp.CodeGenerator.Core.Generation.Crud
     {
         public Dictionary<string, string> Generate(ModuleMetadataDto metadata, string solutionRoot)
         {
-            var generatedFiles = new Dictionary<string, string>();
-            var systemName = metadata.SystemName;
-            var moduleName = metadata.Name;
-            var appProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.Application");
-
-            foreach (var entity in metadata.Entities)
+            try
             {
+                var generatedFiles = new Dictionary<string, string>();
+                var systemName = metadata.SystemName;
+                var moduleName = metadata.Name;
+                var appProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.Application");
+
+                foreach (var entity in metadata.Entities)
+                {
+                    generatedFiles.Add(
+                        Path.Combine(appProjectRoot, "Services", $"{entity.Name}AppService.cs"),
+                        GenerateAppService(entity, systemName, moduleName, metadata.FeatureManagement.DefaultPolicy)
+                    );
+                }
+
                 generatedFiles.Add(
-                    Path.Combine(appProjectRoot, "Services", $"{entity.Name}AppService.cs"),
-                    GenerateAppService(entity, systemName, moduleName, metadata.FeatureManagement.DefaultPolicy)
+                    Path.Combine(appProjectRoot, $"{moduleName}ApplicationAutoMapperProfile.cs"),
+                    GenerateAutoMapperProfile(metadata)
                 );
+
+                generatedFiles.Add(
+                    Path.Combine(appProjectRoot, $"{moduleName}ApplicationModule.cs"),
+                    GenerateApplicationModule(metadata)
+                );
+
+                return generatedFiles;
             }
-
-            generatedFiles.Add(
-                Path.Combine(appProjectRoot, $"{moduleName}ApplicationAutoMapperProfile.cs"),
-                GenerateAutoMapperProfile(metadata)
-            );
-
-            generatedFiles.Add(
-                Path.Combine(appProjectRoot, $"{moduleName}ApplicationModule.cs"),
-                GenerateApplicationModule(metadata)
-            );
-
-            return generatedFiles;
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException($"Invalid argument while generating application layer for module '{metadata.Name}'", ex);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                throw new DirectoryNotFoundException($"Directory not found while generating application layer for module '{metadata.Name}'", ex);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new UnauthorizedAccessException($"Access denied while generating application layer for module '{metadata.Name}'", ex);
+            }
+            catch (OutOfMemoryException ex)
+            {
+                throw new OutOfMemoryException($"Out of memory while generating application layer for module '{metadata.Name}'", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Unexpected error while generating application layer for module '{metadata.Name}'", ex);
+            }
         }
 
         private string GenerateAppService(EnhancedEntityModelDto entity, string systemName, string moduleName, string readPolicyName = null, string writePolicyName = null)

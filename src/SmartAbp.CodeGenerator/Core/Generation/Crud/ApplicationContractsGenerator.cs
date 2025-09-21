@@ -14,28 +14,51 @@ namespace SmartAbp.CodeGenerator.Core.Generation.Crud
     {
         public Dictionary<string, string> Generate(ModuleMetadataDto metadata, string solutionRoot)
         {
-            var generatedFiles = new Dictionary<string, string>();
-            var systemName = metadata.SystemName;
-            var moduleName = metadata.Name;
-            var contractsProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.Application.Contracts");
-
-            foreach (var entity in metadata.Entities)
+            try
             {
-                var dtosPath = Path.Combine(contractsProjectRoot, "Dtos");
-                var servicesPath = Path.Combine(contractsProjectRoot, "Services");
+                var generatedFiles = new Dictionary<string, string>();
+                var systemName = metadata.SystemName;
+                var moduleName = metadata.Name;
+                var contractsProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.Application.Contracts");
 
-                generatedFiles.Add(Path.Combine(dtosPath, $"{entity.Name}Dto.cs"), GenerateEntityDto(entity, systemName, moduleName));
-                generatedFiles.Add(Path.Combine(dtosPath, $"Create{entity.Name}Dto.cs"), GenerateCreateUpdateDto(entity, systemName, moduleName, isUpdate: false));
-                generatedFiles.Add(Path.Combine(dtosPath, $"Update{entity.Name}Dto.cs"), GenerateCreateUpdateDto(entity, systemName, moduleName, isUpdate: true));
-                generatedFiles.Add(Path.Combine(dtosPath, $"Get{entity.Name}ListDto.cs"), GenerateGetListDto(entity, systemName, moduleName));
-                generatedFiles.Add(Path.Combine(servicesPath, $"I{entity.Name}AppService.cs"), GenerateServiceInterface(entity, systemName, moduleName));
+                foreach (var entity in metadata.Entities)
+                {
+                    var dtosPath = Path.Combine(contractsProjectRoot, "Dtos");
+                    var servicesPath = Path.Combine(contractsProjectRoot, "Services");
+
+                    generatedFiles.Add(Path.Combine(dtosPath, $"{entity.Name}Dto.cs"), GenerateEntityDto(entity, systemName, moduleName));
+                    generatedFiles.Add(Path.Combine(dtosPath, $"Create{entity.Name}Dto.cs"), GenerateCreateUpdateDto(entity, systemName, moduleName, isUpdate: false));
+                    generatedFiles.Add(Path.Combine(dtosPath, $"Update{entity.Name}Dto.cs"), GenerateCreateUpdateDto(entity, systemName, moduleName, isUpdate: true));
+                    generatedFiles.Add(Path.Combine(dtosPath, $"Get{entity.Name}ListDto.cs"), GenerateGetListDto(entity, systemName, moduleName));
+                    generatedFiles.Add(Path.Combine(servicesPath, $"I{entity.Name}AppService.cs"), GenerateServiceInterface(entity, systemName, moduleName));
+                }
+
+                var permissionsPath = Path.Combine(contractsProjectRoot, "Permissions");
+                generatedFiles.Add(Path.Combine(permissionsPath, $"{moduleName}Permissions.cs"), GeneratePermissions(metadata));
+                generatedFiles.Add(Path.Combine(permissionsPath, $"{moduleName}PermissionDefinitionProvider.cs"), GeneratePermissionDefinitionProvider(metadata));
+
+                return generatedFiles;
             }
-
-            var permissionsPath = Path.Combine(contractsProjectRoot, "Permissions");
-            generatedFiles.Add(Path.Combine(permissionsPath, $"{moduleName}Permissions.cs"), GeneratePermissions(metadata));
-            generatedFiles.Add(Path.Combine(permissionsPath, $"{moduleName}PermissionDefinitionProvider.cs"), GeneratePermissionDefinitionProvider(metadata));
-
-            return generatedFiles;
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException($"Invalid argument while generating application contracts layer for module '{metadata.Name}'", ex);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                throw new DirectoryNotFoundException($"Directory not found while generating application contracts layer for module '{metadata.Name}'", ex);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new UnauthorizedAccessException($"Access denied while generating application contracts layer for module '{metadata.Name}'", ex);
+            }
+            catch (OutOfMemoryException ex)
+            {
+                throw new OutOfMemoryException($"Out of memory while generating application contracts layer for module '{metadata.Name}'", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Unexpected error while generating application contracts layer for module '{metadata.Name}'", ex);
+            }
         }
 
         private string GenerateEntityDto(EnhancedEntityModelDto entity, string systemName, string moduleName)

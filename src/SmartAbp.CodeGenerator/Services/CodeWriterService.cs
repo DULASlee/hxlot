@@ -1,6 +1,8 @@
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Volo.Abp.DependencyInjection;
 
 namespace SmartAbp.CodeGenerator.Services
@@ -11,6 +13,13 @@ namespace SmartAbp.CodeGenerator.Services
     /// </summary>
     public class CodeWriterService : ITransientDependency
     {
+        private readonly ILogger<CodeWriterService> _logger;
+
+        public CodeWriterService(ILogger<CodeWriterService> logger)
+        {
+            _logger = logger;
+        }
+
         /// <summary>
         /// Writes content to a specified file path, creating the directory if it doesn't exist.
         /// </summary>
@@ -18,12 +27,40 @@ namespace SmartAbp.CodeGenerator.Services
         /// <param name="content">The content to write to the file.</param>
         public async Task WriteFileAsync(string filePath, string content)
         {
-            var dir = Path.GetDirectoryName(filePath);
-            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+            try
             {
-                Directory.CreateDirectory(dir);
+                var dir = Path.GetDirectoryName(filePath);
+                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                await File.WriteAllTextAsync(filePath, content, Encoding.UTF8);
             }
-            await File.WriteAllTextAsync(filePath, content, Encoding.UTF8);
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, "Invalid argument provided while writing file '{FilePath}'", filePath);
+                throw;
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogError(ex, "Access denied while writing file '{FilePath}'", filePath);
+                throw;
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                _logger.LogError(ex, "Directory not found while writing file '{FilePath}'", filePath);
+                throw;
+            }
+            catch (IOException ex)
+            {
+                _logger.LogError(ex, "IO error while writing file '{FilePath}'", filePath);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while writing file '{FilePath}'", filePath);
+                throw;
+            }
         }
 
         /// <summary>
@@ -40,20 +77,48 @@ namespace SmartAbp.CodeGenerator.Services
             string manualFileNamespace,
             string className)
         {
-            var generatedFilePath = Path.ChangeExtension(filePath, ".generated.cs");
-            var manualFilePath = filePath;
-
-            // Always overwrite the generated file
-            await File.WriteAllTextAsync(generatedFilePath, generatedContent, Encoding.UTF8);
-
-            // Create the manual file only if it doesn't exist
-            if (!File.Exists(manualFilePath))
+            try
             {
-                var manualContent = GetManualFilePlaceholder(manualFileNamespace, className);
-                await File.WriteAllTextAsync(manualFilePath, manualContent, Encoding.UTF8);
-            }
+                var generatedFilePath = Path.ChangeExtension(filePath, ".generated.cs");
+                var manualFilePath = filePath;
 
-            return (generatedFilePath, manualFilePath);
+                // Always overwrite the generated file
+                await File.WriteAllTextAsync(generatedFilePath, generatedContent, Encoding.UTF8);
+
+                // Create the manual file only if it doesn't exist
+                if (!File.Exists(manualFilePath))
+                {
+                    var manualContent = GetManualFilePlaceholder(manualFileNamespace, className);
+                    await File.WriteAllTextAsync(manualFilePath, manualContent, Encoding.UTF8);
+                }
+
+                return (generatedFilePath, manualFilePath);
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, "Invalid argument provided while writing hybrid code for file '{FilePath}'", filePath);
+                throw;
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogError(ex, "Access denied while writing hybrid code for file '{FilePath}'", filePath);
+                throw;
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                _logger.LogError(ex, "Directory not found while writing hybrid code for file '{FilePath}'", filePath);
+                throw;
+            }
+            catch (IOException ex)
+            {
+                _logger.LogError(ex, "IO error while writing hybrid code for file '{FilePath}'", filePath);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while writing hybrid code for file '{FilePath}'", filePath);
+                throw;
+            }
         }
 
         private string GetManualFilePlaceholder(string ns, string className)

@@ -22,32 +22,55 @@ namespace SmartAbp.CodeGenerator.Core.Generation.Crud
 
         public Dictionary<string, string> Generate(ModuleMetadataDto metadata, string solutionRoot)
         {
-            var generatedFiles = new Dictionary<string, string>();
-            var systemName = metadata.SystemName;
-            var moduleName = metadata.Name;
-            var efProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.EntityFrameworkCore");
+            try
+            {
+                var generatedFiles = new Dictionary<string, string>();
+                var systemName = metadata.SystemName;
+                var moduleName = metadata.Name;
+                var efProjectRoot = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.EntityFrameworkCore");
 
-            generatedFiles.Add(
-                Path.Combine(efProjectRoot, $"I{moduleName}DbContext.cs"),
-                GenerateDbContextInterface(metadata)
-            );
+                generatedFiles.Add(
+                    Path.Combine(efProjectRoot, "EntityFrameworkCore", $"I{systemName}{moduleName}DbContext.cs"),
+                    GenerateDbContextInterface(metadata)
+                );
 
-            generatedFiles.Add(
-                Path.Combine(efProjectRoot, $"{moduleName}DbContext.cs"),
-                GenerateDbContext(metadata)
-            );
+                generatedFiles.Add(
+                    Path.Combine(efProjectRoot, "EntityFrameworkCore", $"{systemName}{moduleName}DbContext.cs"),
+                    GenerateDbContext(metadata)
+                );
 
-            generatedFiles.Add(
-                Path.Combine(efProjectRoot, $"{moduleName}DbContextModelCreatingExtensions.cs"),
-                GenerateModelCreatingExtensions(metadata)
-            );
+                generatedFiles.Add(
+                    Path.Combine(efProjectRoot, "EntityFrameworkCore", $"{systemName}{moduleName}DbContextModelCreatingExtensions.cs"),
+                    GenerateModelCreatingExtensions(metadata)
+                );
 
-            generatedFiles.Add(
-                Path.Combine(efProjectRoot, $"{moduleName}EntityFrameworkCoreModule.cs"),
-                GenerateEntityFrameworkCoreModule(metadata)
-            );
+                generatedFiles.Add(
+                    Path.Combine(efProjectRoot, "EntityFrameworkCore", $"{systemName}{moduleName}EntityFrameworkCoreModule.cs"),
+                    GenerateEntityFrameworkCoreModule(metadata)
+                );
 
-            return generatedFiles;
+                return generatedFiles;
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException($"Invalid argument while generating EntityFrameworkCore layer for module '{metadata.Name}'", ex);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                throw new DirectoryNotFoundException($"Directory not found while generating EntityFrameworkCore layer for module '{metadata.Name}'", ex);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                throw new UnauthorizedAccessException($"Access denied while generating EntityFrameworkCore layer for module '{metadata.Name}'", ex);
+            }
+            catch (OutOfMemoryException ex)
+            {
+                throw new OutOfMemoryException($"Out of memory while generating EntityFrameworkCore layer for module '{metadata.Name}'", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Unexpected error while generating EntityFrameworkCore layer for module '{metadata.Name}'", ex);
+            }
         }
 
         private string GenerateDbContextInterface(ModuleMetadataDto metadata)
