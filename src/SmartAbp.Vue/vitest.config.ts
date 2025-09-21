@@ -15,19 +15,23 @@ export default defineConfig({
       include: [
         // 阶段3高级UI组件库覆盖率监控
         "packages/lowcode-designer/src/components/**",
+        // TDD高级权限引擎覆盖率监控（专家模式）
+        "packages/lowcode-core/src/advanced-permissions/**",
         // TDD权限引擎覆盖率监控
         "packages/lowcode-core/src/plugins/**",
         "packages/lowcode-core/src/permissions/**",
+        // 高级UI组件库覆盖率监控
+        "packages/lowcode-designer/src/components/**",
         // 原有低代码组件覆盖率
         "packages/lowcode-designer/src/utils/uiConfigMapper.ts",
         // Zod模式验证覆盖率
         "packages/lowcode-designer/src/utils/zod-schemas.ts"
       ],
       thresholds: {
-        statements: 85, // 平衡阶段2和阶段3的要求
-        branches: 80,
-        functions: 85,
-        lines: 85,
+        statements: 95, // 🔥 专家模式TDD铁律：≥95%覆盖率
+        branches: 90,   // 🔥 专家模式分支覆盖率：≥90%
+        functions: 95,  // 🔥 专家模式函数覆盖率：≥95%
+        lines: 95,      // 🔥 专家模式行覆盖率：≥95%
       },
       exclude: ["node_modules/**", "dist/**", "src/test/**", "**/*.d.ts"],
     },
