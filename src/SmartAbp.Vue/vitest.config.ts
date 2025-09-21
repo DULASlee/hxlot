@@ -13,18 +13,21 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "json", "html"],
       include: [
-        // 聚焦本次改动的低代码 UIConfig 映射与运行时渲染
+        // TDD权限引擎覆盖率监控
+        "packages/lowcode-core/src/plugins/**",
+        "packages/lowcode-core/src/permissions/**",
+        // 原有低代码组件覆盖率
         "packages/lowcode-designer/src/utils/uiConfigMapper.ts",
       ],
       thresholds: {
-        statements: 20,
-        branches: 50,
-        functions: 60,
-        lines: 20,
+        statements: 80, // TDD铁律：≥80%覆盖率
+        branches: 80,
+        functions: 80,
+        lines: 80,
       },
       exclude: ["node_modules/**", "dist/**", "src/test/**", "**/*.d.ts"],
     },
-    include: ["src/**/*.{test,spec}.{js,ts,jsx,tsx}"],
+    include: ["src/**/*.{test,spec}.{js,ts,jsx,tsx}", "packages/**/*.{test,spec}.{js,ts,jsx,tsx}"],
     exclude: ["node_modules", "dist"],
   },
   resolve: {

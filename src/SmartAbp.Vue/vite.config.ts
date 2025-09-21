@@ -68,11 +68,21 @@ export default defineConfig({
     ],
   },
   server: {
-    host: "0.0.0.0", // 绑定所有可用地址
+    host: "localhost", // 改为localhost避免网络问题
     port: 11369,
-    strictPort: true,
+    strictPort: false, // 允许端口自动切换，避免冲突
+    open: false, // 禁用自动打开浏览器
+    cors: true,
     watch: {
-      ignored: ["**/packages/**/__tests__/**", "**/packages/**/examples/**"],
+      ignored: [
+        "**/packages/**/__tests__/**",
+        "**/packages/**/examples/**",
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/build/**",
+        "**/.git/**"
+      ],
+      usePolling: false, // 禁用轮询，减少CPU使用
     },
     headers: {
       "Cache-Control": "no-store, no-cache, must-revalidate",
@@ -84,6 +94,18 @@ export default defineConfig({
         target: "https://localhost:44379",
         changeOrigin: true,
         secure: false,
+        timeout: 10000, // 增加超时时间
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.log('proxy error', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            console.log('Sending Request to the Target:', req.method, req.url);
+          });
+          proxy.on('proxyRes', (proxyRes, req, _res) => {
+            console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
+          });
+        },
       },
     },
   },

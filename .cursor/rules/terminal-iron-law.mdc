@@ -1,0 +1,219 @@
+---
+alwaysApply: true
+---
+
+# 终端使用铁律 (Terminal Iron Law)
+
+## 🚫 绝对禁令：严禁PowerShell
+
+### 核心原则
+- **任何情况下都严禁使用PowerShell终端**
+- **PowerShell是项目开发的头号敌人**
+- **违反此铁律将导致开发环境不稳定**
+
+### 技术原因
+```
+PowerShell问题清单：
+1. 频繁卡死在分页模式 (END), (HELP)
+2. 内存占用过高 (150-300MB)
+3. 启动缓慢 (3-5秒)
+4. 与开发工具兼容性差
+5. 错误信息不清晰
+6. 调试困难
+7. 开发效率低下
+```
+
+## ✅ 强制要求：仅使用Git Bash
+
+### 唯一允许的终端
+- **主终端：Git Bash** (C:\Program Files\Git\bin\bash.exe)
+- **备用终端：CMD** (仅紧急情况)
+- **绝对禁止：任何形式的PowerShell**
+
+### Git Bash优势
+```
+性能对比：
+- 启动时间：0.5-1秒 (vs PowerShell 3-5秒)
+- 内存占用：30-50MB (vs PowerShell 150-300MB)
+- 卡死频率：从不 (vs PowerShell 经常)
+- Unix命令：完整支持
+- Git集成：原生支持
+- 稳定性：100%可靠
+```
+
+## 🛠️ 强制执行规则
+
+### 代码助手必须遵守
+```typescript
+// AI助手执行终端命令时的强制规则
+const TERMINAL_RULES = {
+  FORBIDDEN: ['powershell', 'pwsh', 'PowerShell'],
+  REQUIRED: 'git-bash',
+  FALLBACK: 'cmd',
+  ENFORCEMENT: 'STRICT'
+}
+
+// 任何终端命令都必须通过Git Bash执行
+// 如果检测到PowerShell使用，立即报错并要求切换
+```
+
+### 自动检查机制
+```bash
+#!/bin/bash
+# 终端类型检查 (每次命令执行前)
+check_terminal() {
+  if [[ "$0" == *"powershell"* ]] || [[ "$0" == *"pwsh"* ]]; then
+    echo "❌ 严重错误：检测到PowerShell使用！"
+    echo "🚫 违反项目铁律：严禁使用PowerShell"
+    echo "✅ 立即切换到Git Bash终端"
+    exit 1
+  fi
+}
+```
+
+## 📋 开发命令标准
+
+### 项目操作 (仅Git Bash)
+```bash
+# Node.js项目管理
+npm install
+npm run dev
+npm run build
+npm test
+
+# .NET项目管理
+dotnet restore
+dotnet build
+dotnet run
+dotnet test
+
+# Git版本控制
+git status
+git add .
+git commit -m "message"
+git push origin main
+
+# 文件系统操作
+ls -la          # 列出文件
+pwd             # 当前目录
+mkdir -p dir    # 创建目录
+rm -rf dir      # 删除目录
+```
+
+### 禁止的PowerShell命令
+```powershell
+# ❌ 以下命令严禁使用
+Get-ChildItem   # 使用 ls 替代
+Set-Location    # 使用 cd 替代
+New-Item        # 使用 mkdir 替代
+Remove-Item     # 使用 rm 替代
+```
+
+## 🔧 配置强制措施
+
+### Cursor IDE配置
+```json
+{
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
+  "terminal.integrated.profiles.windows": {
+    "Git Bash": {
+      "path": "C:\\Program Files\\Git\\bin\\bash.exe",
+      "args": ["--login", "-i"]
+    }
+    // PowerShell配置已完全移除
+  },
+  "powershell.powerShellDefaultVersion": "",
+  "powershell.enableProfileLoading": false
+}
+```
+
+### 项目脚本标准
+```json
+{
+  "scripts": {
+    "terminal-check": "bash -c 'echo Git Bash OK'",
+    "dev": "bash -c 'npm run serve'",
+    "build": "bash -c 'npm run build-prod'",
+    "test": "bash -c 'npm run test-coverage'"
+  }
+}
+```
+
+## ⚡ 性能保证
+
+### 终端性能基准
+```
+指标要求：
+- 启动时间：< 1秒
+- 内存占用：< 50MB
+- 命令响应：< 100ms
+- 卡死频率：0次/天
+- 错误率：< 0.1%
+```
+
+### 开发效率保证
+```
+效率指标：
+- 终端切换：0次/小时 (稳定运行)
+- 命令重试：0次 (一次成功)
+- 调试时间：最小化
+- 开发中断：0次 (无卡死)
+```
+
+## 🚨 违规处理
+
+### 检测机制
+1. **自动检测**：每次命令执行前检查终端类型
+2. **配置检查**：启动时验证Cursor终端设置
+3. **脚本验证**：package.json脚本必须使用bash
+4. **代码审查**：检查是否有PowerShell相关代码
+
+### 处理流程
+1. **立即停止**：检测到PowerShell立即中断操作
+2. **强制切换**：自动切换到Git Bash终端
+3. **配置修复**：重新应用正确的终端配置
+4. **团队通知**：记录违规并通知团队
+
+## 📚 故障排除指南
+
+### Git Bash无法启动
+```bash
+# 1. 检查Git安装
+ls "C:\Program Files\Git\bin\bash.exe"
+
+# 2. 重新安装Git (如果需要)
+# 下载：https://git-scm.com/download/win
+
+# 3. 验证PATH环境变量
+echo $PATH | grep -i git
+
+# 4. 测试基本功能
+git --version
+npm --version
+```
+
+### 紧急情况处理
+```cmd
+REM 如果Git Bash完全无法使用，临时使用CMD
+REM 但必须立即修复Git Bash问题
+
+echo "紧急使用CMD，立即修复Git Bash！"
+```
+
+---
+
+## 🎯 执行承诺
+
+**此铁律为项目开发的根本原则，任何人任何时候都必须严格遵守！**
+
+- ✅ **100%使用Git Bash**：稳定、高效、可靠
+- 🚫 **0%使用PowerShell**：不稳定、低效、问题多
+- 🛡️ **强制执行**：技术手段+人工监督双重保障
+- 📈 **持续优化**：根据使用情况不断完善规则
+
+---
+
+*制定时间：2025年9月21日*
+*执行级别：最高级别 - 强制执行*
+*适用范围：所有开发者、所有项目、所有环境*
