@@ -1,0 +1,198 @@
+name: Automated Testing System
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 2 * * *' # 每天凌晨2点运行
+
+jobs:
+  automated-testing:
+    name: 🧪 Automated Testing Suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    services:
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: 🛎️ Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: ⎔ Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
+
+    - name: 📦 Install dependencies
+      run: |
+        cd src/SmartAbp.Vue
+        npm ci --prefer-offline
+
+    - name: 🔍 Run TypeScript type checking
+      run: |
+        cd src/SmartAbp.Vue
+        npm run type-check
+
+    - name: 🧹 Run ESLint
+      run: |
+        cd src/SmartAbp.Vue
+        npm run lint
+
+    - name: 🧪 Run Unit Tests with Coverage
+      run: |
+        cd src/SmartAbp.Vue
+        npm run test:coverage
+      env:
+        NODE_ENV: test
+
+    - name: 📊 Upload coverage reports
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./src/SmartAbp.Vue/coverage/coverage-final.json
+        flags: unittests
+        name: codecov-umbrella
+
+    - name: 🌐 Run E2E Tests
+      run: |
+        cd src/SmartAbp.Vue
+        npm run cypress:run
+      env:
+        NODE_ENV: test
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+
+    - name: ⚡ Run Performance Tests
+      run: |
+        cd src/SmartAbp.Vue
+        npm run perf:analyze
+
+    - name: 🚀 Run Complete Test Automation
+      run: |
+        cd src/SmartAbp.Vue
+        node scripts/test-automation.js
+
+    - name: 📋 Upload test reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-reports
+        path: |
+          src/SmartAbp.Vue/test-reports/
+          src/SmartAbp.Vue/coverage/
+          src/SmartAbp.Vue/cypress/videos/
+          src/SmartAbp.Vue/cypress/screenshots/
+
+    - name: 📧 Send notification on failure
+      if: failure()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#ci-cd'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+    - name: 🎉 Send notification on success
+      if: success()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#ci-cd'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+  security-scan:
+    name: 🔒 Security Scanning
+    runs-on: ubuntu-latest
+    needs: automated-testing
+    if: always()
+
+    steps:
+    - name: 🛎️ Checkout code
+      uses: actions/checkout@v4
+
+    - name: ⎔ Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+
+    - name: 📦 Install dependencies
+      run: |
+        cd src/SmartAbp.Vue
+        npm ci
+
+    - name: 🔍 Run security audit
+      run: |
+        cd src/SmartAbp.Vue
+        npm audit --audit-level=moderate
+
+    - name: 🛡️ Run Snyk security scan
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --severity-threshold=high
+
+  quality-gate:
+    name: 🎯 Quality Gate
+    runs-on: ubuntu-latest
+    needs: [automated-testing, security-scan]
+    if: always()
+
+    steps:
+    - name: 📥 Download test reports
+      uses: actions/download-artifact@v4
+      with:
+        name: test-reports
+        path: ./reports
+
+    - name: 📊 Analyze test results
+      run: |
+        echo "Quality Gate Analysis:"
+        echo "====================="
+        
+        # 检查测试覆盖率是否达标
+        COVERAGE_THRESHOLD=80
+        COVERAGE=$(jq '.coverage.statements' ./reports/test-report-*.json)
+        echo "Coverage: $COVERAGE% (Threshold: ${COVERAGE_THRESHOLD}%)"
+        
+        if (( $(echo "$COVERAGE < $COVERAGE_THRESHOLD" | bc -l) )); then
+          echo "❌ Coverage below threshold"
+          exit 1
+        fi
+
+        # 检查是否有失败的测试
+        FAILED_TESTS=$(jq '.summary.failedTests' ./reports/test-report-*.json)
+        echo "Failed tests: $FAILED_TESTS"
+        
+        if [ "$FAILED_TESTS" -gt 0 ]; then
+          echo "❌ Tests failed"
+          exit 1
+        fi
+
+        echo "✅ Quality gate passed"
+        exit 0
+
+    - name: 🚨 Fail if quality gate not met
+      if: failure()
+      run: |
+        echo "Quality gate failed! Please check test results."
+        exit 1
