@@ -406,7 +406,7 @@ const matchesSearch = (log: LogEntry, query: string): boolean => {
     } else {
       return searchText.toLowerCase().includes(query.toLowerCase())
     }
-  } catch (error) {
+  } catch {
     // 正则表达式错误时回退到普通搜索
     const searchText = searchOptions.value.caseSensitive
       ? log.message
@@ -461,13 +461,14 @@ const applyQuickFilter = (filter: any) => {
       case 'warnings':
         selectedLevels.value = [LogLevel.ERROR, LogLevel.WARN]
         break
-      case 'recent':
+      case 'recent': {
         const oneHourAgo = dayjs().subtract(1, 'hour')
         timeRange.value = [
           oneHourAgo.format('YYYY-MM-DD HH:mm:ss'),
           dayjs().format('YYYY-MM-DD HH:mm:ss')
         ]
         break
+      }
       case 'performance':
         selectedCategories.value = ['performance']
         break

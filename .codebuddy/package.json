@@ -1,0 +1,50 @@
+{
+  "name": "codebuddy-smartabp-expert-rules",
+  "version": "1.0.0",
+  "description": "SmartAbp专家模式规则配置 - CodeBuddy专用版",
+  "main": "rules-loader.js",
+  "scripts": {
+    "expert:check": "node rules-loader.js",
+    "expert:analyze": "node rules-loader.js \"专家模式\"",
+    "expert:critical": "node rules-loader.js \"致命缺陷\"",
+    "setup": "npm install && echo '专家模式规则配置完成'"
+  },
+  "keywords": [
+    "codebuddy",
+    "expert-mode",
+    "smartabp",
+    "rules",
+    "ai-assistant"
+  ],
+  "author": "SmartAbp Team",
+  "license": "MIT",
+  "codebuddy": {
+    "rules": {
+      "expert-mode": {
+        "config": "./expert-mode-rules.json",
+        "loader": "./rules-loader.js",
+        "triggers": [
+          "专家模式",
+          "expert mode",
+          "详细分析",
+          "深度分析",
+          "架构设计",
+          "性能优化",
+          "安全审计"
+        ]
+      }
+    },
+    "integration": {
+      "projectRules": "../doc/项目开发规范总览.md",
+      "templateDir": "../templates",
+      "adrDir": "../doc/architecture/adr",
+      "qualityTools": "../tools/quality-assurance"
+    }
+  },
+  "dependencies": {
+    "glob": "^10.3.10"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  }
+}

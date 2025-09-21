@@ -1,0 +1,107 @@
+{
+  "$schema": "https://codebuddy.dev/schemas/expert-rules-v1.json",
+  "version": "1.0.0",
+  "name": "SmartAbp Expert Mode Rules",
+  "description": "专家模式触发规则和响应协议 - CodeBuddy专用版",
+  
+  "triggerKeywords": {
+    "expertMode": [
+      "专家模式",
+      "expert mode", 
+      "开启专家",
+      "详细分析",
+      "深度分析",
+      "专家分析",
+      "制订计划",
+      "制定方案",
+      "技术方案",
+      "架构设计",
+      "系统设计",
+      "技术架构"
+    ],
+    "criticalMode": [
+      "致命缺陷",
+      "严重问题",
+      "架构缺陷",
+      "性能瓶颈",
+      "内存泄漏",
+      "并发问题",
+      "安全漏洞",
+      "安全隐患",
+      "安全红线"
+    ]
+  },
+
+  "responseProtocols": {
+    "expertMode": {
+      "prefix": "🧠 **专家模式已激活**\n专家级别：架构师级 | 分析深度：企业级 | 质量标准：顶尖级",
+      "sections": [
+        "问题识别",
+        "根因分析", 
+        "解决方案",
+        "技术实现",
+        "性能影响",
+        "风险评估",
+        "最佳实践建议"
+      ]
+    },
+    "criticalMode": {
+      "prefix": "🔥 **专家爆雷模式 - 紧急处理**",
+      "sections": [
+        "严重级别评估",
+        "影响范围分析",
+        "紧急程度判定",
+        "立即行动清单",
+        "根本原因分析",
+        "长期解决方案",
+        "预防措施"
+      ]
+    }
+  },
+
+  "qualityStandards": {
+    "technicalDepth": "企业级",
+    "codeQuality": "生产就绪",
+    "performanceBenchmark": "真实测试数据",
+    "securityLevel": "企业安全标准"
+  },
+
+  "requiredActions": {
+    "onExpertTrigger": [
+      "loadProjectRules",
+      "serenaAnalysis",
+      "templateMatching",
+      "adrConsultation",
+      "qualityGatesCheck"
+    ],
+    "onCriticalTrigger": [
+      "immediateAlert",
+      "rootCauseAnalysis",
+      "impactAssessment",
+      "emergencyPlan",
+      "preventionStrategy"
+    ]
+  },
+
+  "templateIntegration": {
+    "mandatoryTemplateUsage": true,
+    "templateDiscoveryCommands": [
+      "glob \"templates/**/*.template.*\"",
+      "read_file \"templates/index.json\""
+    ],
+    "parameterMapping": {
+      "EntityName": "PascalCase实体名",
+      "entityName": "camelCase实体名", 
+      "ModuleName": "模块名",
+      "entityDisplayName": "中文显示名"
+    }
+  },
+
+  "complianceRequirements": {
+    "adrCompliance": true,
+    "codeStyleCompliance": true,
+    "frameworkStandards": true,
+    "securityStandards": true,
+    "performanceStandards": true
+  }
+}

@@ -298,6 +298,11 @@ import { useAuth } from '@/utils/auth'
 import { useRouter } from 'vue-router'
 import { debounce } from 'lodash-es'
 
+// 事件
+const emit = defineEmits<{
+  (event: 'login-success', data: { username: string; tenantName: string; rememberMe: boolean }): void;
+}>();
+
 // 响应式数据
 const loginForm = ref({
   tenantName: '',
@@ -474,11 +479,6 @@ const handleLogin = debounce(async (e: Event) => {
     loading.value = false;
   }
 }, DEBOUNCE_DELAY);
-
-// 事件
-const emit = defineEmits<{
-  (e: 'login-success', data: { username: string; tenantName: string; rememberMe: boolean }): void;
-}>();
 
 // 生命周期
 onMounted(() => {
