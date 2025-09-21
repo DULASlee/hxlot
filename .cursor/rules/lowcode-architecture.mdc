@@ -1,8 +1,9 @@
 ---
-description: "SmartAbp低代码引擎架构规则 - 核心约束"
-globs: ["**/*.ts", "**/*.vue", "**/*.js"]
+description: "SmartAbp低代码架构规范 - 微内核和插件系统（专家级架构指导）"
+globs: ["**/packages/**", "**/lowcode/**"]
 alwaysApply: true
 priority: 800
+expertMode: true
 ---
 
 # 🚀 SmartAbp 低代码引擎架构规则

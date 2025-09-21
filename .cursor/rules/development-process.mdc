@@ -1,8 +1,9 @@
 ---
-description: "SmartAbp开发流程规范 - 强制步骤"
-globs: ["**/*"]
+description: "SmartAbp开发流程规范 - TDD和质量保证（专家模式深度分析）"
+globs: ["**/*.ts", "**/*.vue", "**/*.cs"]
 alwaysApply: true
 priority: 900
+expertMode: true
 ---
 
 # 🔄 SmartAbp 开发流程规范

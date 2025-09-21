@@ -1,14 +1,13 @@
-﻿using SmartAbp.Localization;
-using Volo.Abp.Application.Services;
+using SmartAbp.Localization;
 
 namespace SmartAbp;
 
 /* Inherit your application services from this class.
  */
-public abstract class SmartAbpAppService : ApplicationService
+public abstract class SmartAbpAppService
 {
     protected SmartAbpAppService()
     {
-        LocalizationResource = typeof(SmartAbpResource);
+        // LocalizationResource = typeof(SmartAbpResource);
     }
 }
