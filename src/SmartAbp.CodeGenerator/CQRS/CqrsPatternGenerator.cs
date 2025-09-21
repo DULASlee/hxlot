@@ -212,7 +212,9 @@ namespace SmartAbp.CodeGenerator.CQRS
             sb.AppendLine($"        private readonly ILogger<{command.Name}Handler> _logger;");
             sb.AppendLine("        private readonly IMapper _mapper;");
             sb.AppendLine($"        private readonly IValidator<{command.Name}Command> _validator;");
-            sb.AppendLine($"        // TODO: Add domain repository and services");
+            sb.AppendLine("        // Add domain repository and services");
+            sb.AppendLine("        // Example: private readonly IRepository<{AggregateRoot}, Guid> _repository;");
+            sb.AppendLine("        // Example: private readonly IDomainService _domainService;");
             sb.AppendLine();
             
             // Constructor
@@ -247,11 +249,11 @@ namespace SmartAbp.CodeGenerator.CQRS
             // Business logic placeholder
             sb.AppendLine("            try");
             sb.AppendLine("            {");
-            sb.AppendLine("                // TODO: Implement business logic");
-            sb.AppendLine("                // 1. Load aggregate from repository");
-            sb.AppendLine("                // 2. Execute domain operation");
-            sb.AppendLine("                // 3. Save changes");
-            sb.AppendLine("                // 4. Publish domain events");
+            sb.AppendLine("                // Implement business logic");
+            sb.AppendLine("                // 1. Load aggregate from repository: var aggregate = await _repository.GetAsync(id);");
+            sb.AppendLine("                // 2. Execute domain operation: aggregate.DoSomething(command.Property);");
+            sb.AppendLine("                // 3. Save changes: await _repository.UpdateAsync(aggregate);");
+            sb.AppendLine("                // 4. Publish domain events: await _domainEventPublisher.PublishAsync(aggregate.Events);");
             sb.AppendLine();
             
             if (returnType == "Unit")
@@ -271,9 +273,27 @@ namespace SmartAbp.CodeGenerator.CQRS
             }
             
             sb.AppendLine("            }");
+            sb.AppendLine("            catch (ValidationException ex)");
+            sb.AppendLine("            {");
+            sb.AppendLine("                _logger.LogWarning(ex, \"Validation failed for {CommandName}\", ");
+            sb.AppendLine($"                    nameof({command.Name}Command));");
+            sb.AppendLine("                throw;");
+            sb.AppendLine("            }");
+            sb.AppendLine("            catch (InvalidOperationException ex)");
+            sb.AppendLine("            {");
+            sb.AppendLine("                _logger.LogError(ex, \"Invalid operation in {CommandName} - possible disposed resources\", ");
+            sb.AppendLine($"                    nameof({command.Name}Command));");
+            sb.AppendLine("                throw;");
+            sb.AppendLine("            }");
+            sb.AppendLine("            catch (OutOfMemoryException ex)");
+            sb.AppendLine("            {");
+            sb.AppendLine("                _logger.LogCritical(ex, \"Memory exhausted in {CommandName} - triggering emergency cleanup\", ");
+            sb.AppendLine($"                    nameof({command.Name}Command));");
+            sb.AppendLine("                throw;");
+            sb.AppendLine("            }");
             sb.AppendLine("            catch (Exception ex)");
             sb.AppendLine("            {");
-            sb.AppendLine("                _logger.LogError(ex, \"Error handling {CommandName}\", ");
+            sb.AppendLine("                _logger.LogError(ex, \"Unexpected error handling {CommandName}\", ");
             sb.AppendLine($"                    nameof({command.Name}Command));");
             sb.AppendLine("                throw;");
             sb.AppendLine("            }");
@@ -444,7 +464,9 @@ namespace SmartAbp.CodeGenerator.CQRS
             {
                 sb.AppendLine("        private readonly IDistributedCache _cache;");
             }
-            sb.AppendLine("        // TODO: Add repository dependencies");
+            sb.AppendLine("        // Add repository dependencies");
+            sb.AppendLine("        // Example: private readonly IRepository<{Entity}, Guid> _repository;");
+            sb.AppendLine("        // Example: private readonly IReadOnlyRepository<{Entity}, Guid> _readRepository;");
             sb.AppendLine();
             
             // Constructor
@@ -511,9 +533,21 @@ namespace SmartAbp.CodeGenerator.CQRS
             sb.AppendLine($"                    nameof({query.Name}Query));");
             sb.AppendLine("                return result;");
             sb.AppendLine("            }");
+            sb.AppendLine("            catch (InvalidOperationException ex)");
+            sb.AppendLine("            {");
+            sb.AppendLine("                _logger.LogError(ex, \"Invalid operation in {QueryName} - possible disposed resources\", ");
+            sb.AppendLine($"                    nameof({query.Name}Query));");
+            sb.AppendLine("                throw;");
+            sb.AppendLine("            }");
+            sb.AppendLine("            catch (OutOfMemoryException ex)");
+            sb.AppendLine("            {");
+            sb.AppendLine("                _logger.LogCritical(ex, \"Memory exhausted in {QueryName} - triggering emergency cleanup\", ");
+            sb.AppendLine($"                    nameof({query.Name}Query));");
+            sb.AppendLine("                throw;");
+            sb.AppendLine("            }");
             sb.AppendLine("            catch (Exception ex)");
             sb.AppendLine("            {");
-            sb.AppendLine("                _logger.LogError(ex, \"Error handling {QueryName}\", ");
+            sb.AppendLine("                _logger.LogError(ex, \"Unexpected error handling {QueryName}\", ");
             sb.AppendLine($"                    nameof({query.Name}Query));");
             sb.AppendLine("                throw;");
             sb.AppendLine("            }");
@@ -598,9 +632,17 @@ namespace SmartAbp.CodeGenerator.CQRS
             sb.AppendLine($"                    return JsonSerializer.Deserialize<{returnType}>(cached);");
             sb.AppendLine("                }");
             sb.AppendLine("            }");
+            sb.AppendLine("            catch (JsonException ex)");
+            sb.AppendLine("            {");
+            sb.AppendLine("                _logger.LogWarning(ex, \"Cache deserialization failed for key: {CacheKey}\", key);");
+            sb.AppendLine("            }");
+            sb.AppendLine("            catch (InvalidOperationException ex)");
+            sb.AppendLine("            {");
+            sb.AppendLine("                _logger.LogWarning(ex, \"Cache operation failed - cache may be disposed\");");
+            sb.AppendLine("            }");
             sb.AppendLine("            catch (Exception ex)");
             sb.AppendLine("            {");
-            sb.AppendLine("                _logger.LogWarning(ex, \"Error retrieving from cache\");");
+            sb.AppendLine("                _logger.LogWarning(ex, \"Unexpected error retrieving from cache\");");
             sb.AppendLine("            }");
             sb.AppendLine("            return default;");
             sb.AppendLine("        }");
@@ -618,9 +660,17 @@ namespace SmartAbp.CodeGenerator.CQRS
             sb.AppendLine("                var serialized = JsonSerializer.Serialize(value);");
             sb.AppendLine("                await _cache.SetStringAsync(key, serialized, options, cancellationToken);");
             sb.AppendLine("            }");
+            sb.AppendLine("            catch (JsonException ex)");
+            sb.AppendLine("            {");
+            sb.AppendLine("                _logger.LogWarning(ex, \"Cache serialization failed for key: {CacheKey}\", key);");
+            sb.AppendLine("            }");
+            sb.AppendLine("            catch (InvalidOperationException ex)");
+            sb.AppendLine("            {");
+            sb.AppendLine("                _logger.LogWarning(ex, \"Cache operation failed - cache may be disposed\");");
+            sb.AppendLine("            }");
             sb.AppendLine("            catch (Exception ex)");
             sb.AppendLine("            {");
-            sb.AppendLine("                _logger.LogWarning(ex, \"Error setting cache\");");
+            sb.AppendLine("                _logger.LogWarning(ex, \"Unexpected error setting cache\");");
             sb.AppendLine("            }");
             sb.AppendLine("        }");
         }
