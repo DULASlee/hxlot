@@ -535,11 +535,33 @@ namespace SmartAbp.CodeGenerator.ApplicationServices
             
             sb.AppendLine($"        public virtual async Task<{method.ReturnType}> {method.Name}Async({paramStr})");
             sb.AppendLine("        {");
-            sb.AppendLine($"            // Implement {method.Name} business logic");
-            sb.AppendLine($"            // 1. Validate input parameters");
-            sb.AppendLine($"            // 2. Perform business operations");
-            sb.AppendLine($"            // 3. Return appropriate result");
-            sb.AppendLine($"            throw new NotImplementedException(\"Custom method {method.Name} needs implementation\");");
+            sb.AppendLine("            try");
+            sb.AppendLine("            {");
+            sb.AppendLine($"                // Implement {method.Name} business logic");
+            sb.AppendLine($"                // 1. Validate input parameters");
+            sb.AppendLine($"                // 2. Perform business operations");
+            sb.AppendLine($"                // 3. Return appropriate result");
+            sb.AppendLine("                // Example implementation:");
+            sb.AppendLine("                // await ValidateInputAsync(input);");
+            sb.AppendLine("                // var result = await PerformBusinessOperationAsync(input);");
+            sb.AppendLine("                // return result;");
+            sb.AppendLine($"                throw new NotImplementedException(\"Custom method {method.Name} needs implementation\");");
+            sb.AppendLine("            }");
+            sb.AppendLine("            catch (UnauthorizedAccessException ex)");
+            sb.AppendLine("            {");
+            sb.AppendLine($"                // Handle authorization failures");
+            sb.AppendLine($"                throw new UnauthorizedAccessException($\"Access denied for method {method.Name}\", ex);");
+            sb.AppendLine("            }");
+            sb.AppendLine("            catch (ArgumentException ex)");
+            sb.AppendLine("            {");
+            sb.AppendLine($"                // Handle invalid arguments");
+            sb.AppendLine($"                throw new ArgumentException($\"Invalid argument in method {method.Name}\", ex);");
+            sb.AppendLine("            }");
+            sb.AppendLine("            catch (Exception ex)");
+            sb.AppendLine("            {");
+            sb.AppendLine($"                // Handle unexpected errors");
+            sb.AppendLine($"                throw new InvalidOperationException($\"Unexpected error in method {method.Name}\", ex);");
+            sb.AppendLine("            }");
             sb.AppendLine("        }");
             sb.AppendLine();
         }

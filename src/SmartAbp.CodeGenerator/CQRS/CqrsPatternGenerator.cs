@@ -511,11 +511,11 @@ namespace SmartAbp.CodeGenerator.CQRS
             // Query execution
             sb.AppendLine("            try");
             sb.AppendLine("            {");
-            sb.AppendLine("                // TODO: Implement query logic");
-            sb.AppendLine("                // 1. Build query from repository");
-            sb.AppendLine("                // 2. Apply filters and sorting");
-            sb.AppendLine("                // 3. Execute query");
-            sb.AppendLine("                // 4. Map to DTOs");
+            sb.AppendLine("                // Implement query logic");
+            sb.AppendLine("                // 1. Build query from repository: var query = await _readRepository.GetQueryableAsync();");
+            sb.AppendLine("                // 2. Apply filters and sorting: query = query.Where(x => x.Property == request.Property);");
+            sb.AppendLine("                // 3. Execute query: var entities = await AsyncExecuter.ToListAsync(query);");
+            sb.AppendLine("                // 4. Map to DTOs: return _mapper.Map<List<EntityDto>>(entities);");
             sb.AppendLine();
             
             sb.AppendLine($"                var result = default({query.ReturnType});");

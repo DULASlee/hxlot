@@ -72,9 +72,19 @@ namespace SmartAbp.CodeGenerator.Infrastructure
                     GeneratedAt = DateTime.UtcNow
                 };
             }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "Invalid operation generating infrastructure layer for {ModuleName} - possible disposed resources", definition.ModuleName);
+                throw;
+            }
+            catch (OutOfMemoryException ex)
+            {
+                _logger.LogCritical(ex, "Memory exhausted generating infrastructure layer for {ModuleName}", definition.ModuleName);
+                throw;
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to generate infrastructure layer for {ModuleName}", definition.ModuleName);
+                _logger.LogError(ex, "Unexpected error generating infrastructure layer for {ModuleName}", definition.ModuleName);
                 throw;
             }
         }
@@ -270,9 +280,26 @@ namespace SmartAbp.CodeGenerator.Infrastructure
             
             sb.AppendLine($"        public async Task<{method.ReturnType}> {method.Name}Async({paramStr})");
             sb.AppendLine("        {");
-            sb.AppendLine("            var queryable = await GetQueryableAsync();");
-            sb.AppendLine("            // TODO: Implement custom query logic");
-            sb.AppendLine($"            throw new NotImplementedException(\"Custom repository method {method.Name} needs implementation\");");
+            sb.AppendLine("            try");
+            sb.AppendLine("            {");
+            sb.AppendLine("                var queryable = await GetQueryableAsync();");
+            sb.AppendLine("                // Add custom query logic here");
+            sb.AppendLine("                // Example:");
+            sb.AppendLine("                // queryable = queryable.Where(x => x.SomeProperty == someValue);");
+            sb.AppendLine("                // var result = await queryable.ToListAsync();");
+            sb.AppendLine("                // return result;");
+            sb.AppendLine($"                throw new NotImplementedException(\"Custom repository method {method.Name} needs implementation\");");
+            sb.AppendLine("            }");
+            sb.AppendLine("            catch (InvalidOperationException ex)");
+            sb.AppendLine("            {");
+            sb.AppendLine($"                // Log warning for disposed resources");
+            sb.AppendLine($"                throw new InvalidOperationException($\"Repository operation failed - possible disposed resources in {method.Name}\", ex);");
+            sb.AppendLine("            }");
+            sb.AppendLine("            catch (Exception ex)");
+            sb.AppendLine("            {");
+            sb.AppendLine($"                // Log unexpected errors");
+            sb.AppendLine($"                throw new InvalidOperationException($\"Unexpected error in repository method {method.Name}\", ex);");
+            sb.AppendLine("            }");
             sb.AppendLine("        }");
             sb.AppendLine();
         }
