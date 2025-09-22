@@ -363,3 +363,6 @@ build.out
 log/
 tatus
 'tatus --porcelain'
+
+# Local convenience scripts
+OpenGitBashHere.cmd
