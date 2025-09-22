@@ -5,15 +5,11 @@
 
 import { ref, reactive, computed, onUnmounted, readonly } from "vue"
 import {
-  type RealTimeAlert,
   type SecurityAlert,
   type AlertNotification,
-} from "@smartabp/lowcode-designer/types/security"
-import {
   SecurityAlertType,
   AlertSeverity,
-} from "@smartabp/lowcode-designer/types/security-enums"
-import { useI18n } from "vue-i18n"
+} from "@smartabp/lowcode-designer/types/security"
 
 interface UseRealTimeAlertsOptions {
   enableWebSocket?: boolean
@@ -81,7 +77,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
       SecurityAlertType.SUSPICIOUS_ACTIVITY,
     ]
 
-    const severities: AlertSeverity[] = ["Low", "Medium", "High", "Critical"]
+    const severities: AlertSeverity[] = [AlertSeverity.LOW, AlertSeverity.MEDIUM, AlertSeverity.HIGH, AlertSeverity.CRITICAL]
     const users = ["John Doe", "Jane Smith", "Alice Johnson", "Bob Wilson", "Carol Brown"]
 
     const type = alertTypes[Math.floor(Math.random() * alertTypes.length)]
@@ -92,8 +88,9 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
       id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       type,
       severity,
+      message: getAlertDescription(type, user),
       description: getAlertDescription(type, user),
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
       userInfo: {
         displayName: user,
         email: `${user.toLowerCase().replace(" ", ".")}@company.com`,
@@ -101,8 +98,10 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
         roles: ["User"],
       },
       context: {
+        sessionId: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         ipAddress: `192.168.1.${Math.floor(Math.random() * 255)}`,
         userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        timeZone: "Asia/Shanghai",
       },
       isAcknowledged: false,
       recommendedActions: getRecommendedActions(type),
@@ -164,26 +163,34 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
   }
 
   // Alert Management Methods
-  const addAlert = (alert: Omit<SecurityAlert, "id" | "timestamp" | "isAcknowledged">): void => {
-    activeAlerts.value.unshift(alert)
+  const addAlert = (alertData: Omit<SecurityAlert, "id" | "timestamp" | "isAcknowledged">): void => {
+    const fullAlert: SecurityAlert = {
+      ...alertData,
+      id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: new Date().toISOString(),
+      isAcknowledged: false,
+    }
+
+    activeAlerts.value.unshift(fullAlert)
 
     // Create notification for high-priority alerts
-    if (alert.severity === "High" || alert.severity === "Critical") {
+    if (fullAlert.severity === "High" || fullAlert.severity === "Critical") {
       createNotification({
-        id: `notification_${alert.id}`,
-        message: `${alert.severity} security alert: ${alert.description}`,
-        type: alert.severity === "Critical" ? "error" : "warning",
-        duration: alert.severity === "Critical" ? 0 : 10000,
+        id: `notification_${fullAlert.id}`,
+        message: `${fullAlert.severity} security alert: ${alertData.message}`,
+        severity: fullAlert.severity,
+        timestamp: new Date().toISOString(),
+        isAcknowledged: false,
+        type: fullAlert.severity === "Critical" ? "error" : "warning",
+        duration: fullAlert.severity === "Critical" ? 0 : 10000,
         actions: [
           {
-            label: "Acknowledge",
-            handler: () => acknowledgeAlert(alert.id),
-            type: "primary",
+            text: "Acknowledge",
+            handler: () => acknowledgeAlert(fullAlert.id),
           },
           {
-            label: "Investigate",
-            handler: () => investigateAlert(alert.id),
-            type: "success",
+            text: "Investigate",
+            handler: () => investigateAlert(fullAlert.id),
           },
         ],
       })
@@ -205,7 +212,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
           ...activeAlerts.value[alertIndex],
           isAcknowledged: true,
           acknowledgedBy: "Current User",
-          acknowledgedAt: new Date(),
+          acknowledgedAt: new Date().toISOString(),
         }
       } else {
         // TODO: Implement actual API call

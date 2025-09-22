@@ -26,6 +26,8 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
 
   // Security Metrics
   const securityMetrics = ref<SecurityMetrics>({
+    overallScore: 95,
+    openIssues: 0,
     todayRiskEvents: 0,
     permissionChanges: 0,
     abnormalLogins: 0,
@@ -52,12 +54,14 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
     enableNotifications: true,
     theme: "light",
     layout: {
+      columns: 2,
+      showSidebar: true,
+      compactMode: false,
       showMetrics: true,
       showAlerts: true,
       showCharts: true,
       showBehaviorAnalysis: true,
       showCompliance: true,
-      columns: 2,
     },
     ...options.config,
   })
@@ -66,7 +70,7 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
   const isHealthy = computed(() => {
     if (!securityMetrics.value) return false
     const { complianceScore, todayRiskEvents } = securityMetrics.value
-    return complianceScore >= 90 && todayRiskEvents < 10
+    return (complianceScore ?? 0) >= 90 && (todayRiskEvents ?? 0) < 10
   })
 
   const totalActiveIncidents = computed(() => {
@@ -83,6 +87,8 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
 
   // Mock Data Generation (for testing and development)
   const generateMockSecurityMetrics = (): SecurityMetrics => ({
+    overallScore: Math.floor(Math.random() * 20) + 80,
+    openIssues: Math.floor(Math.random() * 10) + 1,
     todayRiskEvents: Math.floor(Math.random() * 20) + 5,
     permissionChanges: Math.floor(Math.random() * 15) + 3,
     abnormalLogins: Math.floor(Math.random() * 8) + 1,
@@ -103,6 +109,7 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
 
       data.push({
         date: date.toISOString().split("T")[0],
+        count: Math.floor(Math.random() * 50) + 100,
         permissions: Math.floor(Math.random() * 50) + 100,
         risks: Math.floor(Math.random() * 10) + 2,
         users: Math.floor(Math.random() * 20) + 50,
@@ -114,10 +121,10 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
   }
 
   const generateMockRiskDistribution = (): RiskDistributionData[] => [
-    { level: "Low", count: 150, percentage: 60, color: "#67C23A" },
-    { level: "Medium", count: 75, percentage: 30, color: "#E6A23C" },
-    { level: "High", count: 20, percentage: 8, color: "#F56C6C" },
-    { level: "Critical", count: 5, percentage: 2, color: "#909399" },
+    { risk: "Low", level: "Low", count: 150, percentage: 60, color: "#67C23A" },
+    { risk: "Medium", level: "Medium", count: 75, percentage: 30, color: "#E6A23C" },
+    { risk: "High", level: "High", count: 20, percentage: 8, color: "#F56C6C" },
+    { risk: "Critical", level: "Critical", count: 5, percentage: 2, color: "#909399" },
   ]
 
   const generateMockAbnormalBehaviors = (): AbnormalBehavior[] => [
@@ -127,7 +134,7 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
       userName: "John Doe",
       behaviorType: "UnusualHours",
       description: "Access outside business hours",
-      timestamp: new Date(Date.now() - Math.random() * 86400000),
+      timestamp: new Date(Date.now() - Math.random() * 86400000).toISOString(),
       riskLevel: "Medium",
       details: { location: "Office Network", device: "Desktop" },
       actionRequired: true,
@@ -138,7 +145,7 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
       userName: "Jane Smith",
       behaviorType: "HighFrequency",
       description: "Unusually high permission requests",
-      timestamp: new Date(Date.now() - Math.random() * 86400000),
+      timestamp: new Date(Date.now() - Math.random() * 86400000).toISOString(),
       riskLevel: "High",
       details: { requestCount: 45, normalRange: "5-10" },
       actionRequired: true,
@@ -250,6 +257,8 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
 
   const resetData = (): void => {
     securityMetrics.value = {
+      overallScore: 95,
+      openIssues: 0,
       todayRiskEvents: 0,
       permissionChanges: 0,
       abnormalLogins: 0,
