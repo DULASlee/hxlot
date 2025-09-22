@@ -204,7 +204,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Create')"
-                    @change="(v) => onToggleCrud(scope.row.name, 'Create', !!v)"
+                    @change="(v: boolean | string) => onToggleCrud(scope.row.name, 'Create', Boolean(v))"
                   />
                 </template>
               </el-table-column>
@@ -212,7 +212,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Read')"
-                    @change="(v) => onToggleCrud(scope.row.name, 'Read', !!v)"
+                    @change="(v: boolean | string) => onToggleCrud(scope.row.name, 'Read', Boolean(v))"
                   />
                 </template>
               </el-table-column>
@@ -220,7 +220,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Update')"
-                    @change="(v) => onToggleCrud(scope.row.name, 'Update', !!v)"
+                    @change="(v: boolean | string) => onToggleCrud(scope.row.name, 'Update', Boolean(v))"
                   />
                 </template>
               </el-table-column>
@@ -228,7 +228,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Delete')"
-                    @change="(v) => onToggleCrud(scope.row.name, 'Delete', !!v)"
+                    @change="(v: boolean | string) => onToggleCrud(scope.row.name, 'Delete', Boolean(v))"
                   />
                 </template>
               </el-table-column>
