@@ -1,0 +1,182 @@
+name: 低代码引擎代码质量检查
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 0 * * 1' # 每周一凌晨运行
+  workflow_dispatch: # 允许手动触发
+
+env:
+  NODE_VERSION: '18'
+  DOTNET_VERSION: '9.0'
+
+jobs:
+  code-quality-check:
+    name: 代码质量检查
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 设置Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: src/SmartAbp.Vue/package-lock.json
+
+    - name: 设置.NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: 安装依赖
+      working-directory: src/SmartAbp.Vue
+      run: |
+        npm ci
+        npm install -g eslint
+
+    - name: 构建项目
+      working-directory: src/SmartAbp.CodeGenerator
+      run: dotnet build --configuration Release
+
+    - name: 运行代码质量检查
+      working-directory: src/SmartAbp.Vue
+      run: node scripts/code-quality-engine.js
+      env:
+        CI: true
+
+    - name: 上传质量报告
+      uses: actions/upload-artifact@v4
+      with:
+        name: code-quality-report
+        path: src/SmartAbp.Vue/quality-reports/*.json
+
+    - name: 发送Slack通知
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#code-quality'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  security-scan:
+    name: 安全扫描
+    runs-on: ubuntu-latest
+    needs: code-quality-check
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+
+    - name: 设置Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: 运行安全扫描
+      working-directory: src/SmartAbp.Vue
+      run: |
+        npm audit --production
+        npx snyk test --all-projects
+
+    - name: 依赖漏洞检查
+      uses: actions/dependency-review-action@v4
+
+  performance-benchmark:
+    name: 性能基准测试
+    runs-on: ubuntu-latest
+    needs: code-quality-check
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+
+    - name: 设置Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: 运行性能测试
+      working-directory: src/SmartAbp.Vue
+      run: node scripts/performance-benchmark.js
+
+    - name: 上传性能报告
+      uses: actions/upload-artifact@v4
+      with:
+        name: performance-report
+        path: src/SmartAbp.Vue/performance-reports/*.json
+
+  quality-gate:
+    name: 质量门禁
+    runs-on: ubuntu-latest
+    needs: [code-quality-check, security-scan, performance-benchmark]
+    
+    steps:
+    - name: 下载质量报告
+      uses: actions/download-artifact@v4
+      with:
+        name: code-quality-report
+        path: quality-reports
+
+    - name: 检查质量门禁
+      run: |
+        echo "检查质量门禁标准..."
+        # 读取最新的质量报告
+        LATEST_REPORT=$(ls -t quality-reports/*.json | head -1)
+        
+        if [ -f "$LATEST_REPORT" ]; then
+          OVERALL_SCORE=$(jq -r '.overallScore' "$LATEST_REPORT")
+          COVERAGE_SCORE=$(jq -r '.metrics.testCoverage.score' "$LATEST_REPORT")
+          
+          echo "总体得分: $OVERALL_SCORE/100"
+          echo "测试覆盖率: $COVERAGE_SCORE%"
+          
+          # 质量门禁标准
+          if (( $(echo "$OVERALL_SCORE < 80" | bc -l) )); then
+            echo "❌ 质量门禁失败: 总体得分低于80分"
+            exit 1
+          fi
+          
+          if (( $(echo "$COVERAGE_SCORE < 75" | bc -l) )); then
+            echo "❌ 质量门禁失败: 测试覆盖率低于75%"
+            exit 1
+          fi
+          
+          echo "✅ 通过质量门禁检查"
+        else
+          echo "❌ 未找到质量报告"
+          exit 1
+        fi
+
+    - name: 生成质量徽章
+      uses: emibcn/badge-action@v1
+      with:
+        label: 代码质量
+        status: ${{ job.status }}
+        color: green
+        path: badges/quality.svg
+
+    - name: 上传质量徽章
+      uses: actions/upload-artifact@v4
+      with:
+        name: quality-badges
+        path: badges/
+
+# 缓存配置
+cache:
+  paths:
+    - src/SmartAbp.Vue/node_modules/
+    - src/SmartAbp.CodeGenerator/bin/
+    - src/SmartAbp.CodeGenerator/obj/
+
+# 超时设置
+timeout-minutes: 30

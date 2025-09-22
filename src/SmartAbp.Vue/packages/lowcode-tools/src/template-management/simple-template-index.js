@@ -24,9 +24,11 @@ class SimpleTemplateIndexBuilderError extends Error {
 }
 
 /**
- * Error handling utilities
+ * Error handling utilities with performance tracking
  */
 const logError = (operation, error, context = {}) => {
+  PERFORMANCE_METRICS.errorCount++
+  
   console.error(`[SimpleTemplateIndexBuilder] ${operation} failed:`, {
     error: error instanceof Error ? {
       name: error.name,
@@ -40,6 +42,14 @@ const logError = (operation, error, context = {}) => {
 
 const logWarning = (operation, message, context = {}) => {
   console.warn(`[SimpleTemplateIndexBuilder] ${operation}:`, {
+    message,
+    context,
+    timestamp: new Date().toISOString()
+  })
+}
+
+const logInfo = (operation, message, context = {}) => {
+  console.log(`[SimpleTemplateIndexBuilder] ${operation}:`, {
     message,
     context,
     timestamp: new Date().toISOString()
@@ -104,6 +114,7 @@ const validateArray = (value, fieldName) => {
  */
 const safeFileExists = (filePath, operation) => {
   try {
+    PERFORMANCE_METRICS.fileOperations.stats++
     return fs.existsSync(filePath)
   } catch (error) {
     logError(`${operation}.fileExists`, error, { filePath })
@@ -113,6 +124,7 @@ const safeFileExists = (filePath, operation) => {
 
 const safeReadFile = (filePath, encoding = 'utf8', operation) => {
   try {
+    PERFORMANCE_METRICS.fileOperations.reads++
     return fs.readFileSync(filePath, encoding)
   } catch (error) {
     if (error.code === 'ENOENT') {
@@ -136,6 +148,7 @@ const safeReadFile = (filePath, encoding = 'utf8', operation) => {
 
 const safeWriteFile = (filePath, content, encoding = 'utf8', operation) => {
   try {
+    PERFORMANCE_METRICS.fileOperations.writes++
     fs.writeFileSync(filePath, content, encoding)
     return true
   } catch (error) {
@@ -151,6 +164,7 @@ const safeWriteFile = (filePath, content, encoding = 'utf8', operation) => {
 
 const safeStat = (filePath, operation) => {
   try {
+    PERFORMANCE_METRICS.fileOperations.stats++
     return fs.statSync(filePath)
   } catch (error) {
     if (error.code === 'ENOENT') {
@@ -193,6 +207,63 @@ const safeReadDir = (dirPath, operation) => {
       { dirPath, error: error.message }
     )
   }
+}
+
+/**
+ * Cache management functions
+ */
+function getCacheKey(operation, filePath, content) {
+  try {
+    const contentHash = content ? Buffer.from(content).toString('base64').slice(0, 16) : ''
+    return `${operation}:${filePath}:${contentHash}`
+  } catch (error) {
+    logWarning('getCacheKey', 'Failed to generate cache key', { error: error.message })
+    return null
+  }
+}
+
+function getCacheEntry(key) {
+  if (!CACHE_CONFIG.enabled || !key) return null
+  
+  const entry = CACHE_CONFIG.entries.get(key)
+  if (!entry) {
+    PERFORMANCE_METRICS.cacheMisses++
+    return null
+  }
+  
+  // Check TTL
+  if (Date.now() - entry.timestamp > CACHE_CONFIG.ttl) {
+    CACHE_CONFIG.entries.delete(key)
+    PERFORMANCE_METRICS.cacheMisses++
+    return null
+  }
+  
+  PERFORMANCE_METRICS.cacheHits++
+  return entry.result
+}
+
+function setCacheEntry(key, result) {
+  if (!CACHE_CONFIG.enabled || !key) return
+  
+  // Clean up old entries if cache is full
+  if (CACHE_CONFIG.entries.size >= CACHE_CONFIG.maxSize) {
+    const oldestKey = CACHE_CONFIG.entries.keys().next().value
+    if (oldestKey) {
+      CACHE_CONFIG.entries.delete(oldestKey)
+    }
+  }
+  
+  CACHE_CONFIG.entries.set(key, {
+    result,
+    timestamp: Date.now()
+  })
+}
+
+function clearCache() {
+  CACHE_CONFIG.entries.clear()
+  PERFORMANCE_METRICS.cacheHits = 0
+  PERFORMANCE_METRICS.cacheMisses = 0
+  logInfo('clearCache', 'Cache cleared')
 }
 
 /**
@@ -263,7 +334,7 @@ function resolveTemplatesDir(startDir) {
 }
 
 /**
- * Enhanced SimpleTemplateIndexBuilder class with comprehensive error handling
+ * Enhanced SimpleTemplateIndexBuilder class with comprehensive error handling and performance optimization
  */
 class SimpleTemplateIndexBuilder {
   constructor(options = {}) {
@@ -274,6 +345,10 @@ class SimpleTemplateIndexBuilder {
         validateTemplates: options.validateTemplates !== false,
         generateStats: options.generateStats !== false,
         backupExisting: options.backupExisting !== false,
+        enablePerformanceMonitoring: options.enablePerformanceMonitoring || false,
+        enableMemoryMonitoring: options.enableMemoryMonitoring || false,
+        enableCache: options.enableCache !== false,
+        verbose: options.verbose || false,
         ...options
       }
       
@@ -288,6 +363,7 @@ class SimpleTemplateIndexBuilder {
         startTime: Date.now()
       }
       this.errors = []
+      this.memoryMonitor = this.options.enableMemoryMonitoring ? new MemoryMonitor() : null
       
       logWarning('constructor', 'SimpleTemplateIndexBuilder initialized', {
         templatesDir: this.templatesDir,
@@ -306,9 +382,11 @@ class SimpleTemplateIndexBuilder {
   }
 
   /**
-   * Enhanced build with comprehensive error handling
+   * Enhanced build with comprehensive error handling and performance monitoring
    */
   async build() {
+    const startTime = performance.now()
+    
     try {
       console.log("🔨 开始构建模板索引...\n")
       
@@ -336,6 +414,14 @@ class SimpleTemplateIndexBuilder {
       
       // Generate summary report
       this.generateSummaryReport()
+      
+      const duration = performance.now() - startTime
+      
+      // Update memory usage
+      if (this.memoryMonitor) {
+        const memoryInfo = this.memoryMonitor.update()
+        PERFORMANCE_METRICS.memoryUsage = memoryInfo.current.heapUsed
+      }
       
       console.log(`✅ 模板索引构建完成！`)
       console.log(`📁 输出文件: ${this.outputPath}`)
@@ -384,6 +470,7 @@ class SimpleTemplateIndexBuilder {
       
       const templateFiles = await this.findTemplateFiles(this.templatesDir)
       this.stats.filesScanned = templateFiles.length
+      PERFORMANCE_METRICS.totalTemplates = templateFiles.length
       
       console.log(`📋 扫描到 ${templateFiles.length} 个模板文件`)
       
@@ -465,6 +552,11 @@ class SimpleTemplateIndexBuilder {
               const stat = safeStat(fullPath, 'findTemplateFiles.scan.stat')
               
               if (stat.isDirectory()) {
+                // Skip common directories that don't contain templates
+                const skipDirs = ['node_modules', '.git', 'dist', 'build', 'coverage', '.cache']
+                if (skipDirs.includes(item)) {
+                  return
+                }
                 await scan(fullPath)
               } else if (item.includes(".template.") && !item.includes(".meta.")) {
                 files.push(fullPath)
@@ -486,6 +578,11 @@ class SimpleTemplateIndexBuilder {
       }
       
       await scan(dir)
+      
+      logInfo('findTemplateFiles', 'Template files found', {
+        count: files.length
+      })
+      
       return files
       
     } catch (error) {
@@ -501,11 +598,26 @@ class SimpleTemplateIndexBuilder {
   }
 
   /**
-   * Enhanced process template with comprehensive error handling
+   * Enhanced process template with comprehensive error handling and caching
    */
   async processTemplate(filePath) {
     try {
       validateString(filePath, 'file path')
+      
+      const startTime = performance.now()
+      
+      // Check cache
+      const cacheKey = this.options.enableCache ? getCacheKey('processTemplate', filePath, null) : null
+      const cachedResult = cacheKey ? getCacheEntry(cacheKey) : null
+      
+      if (cachedResult) {
+        const duration = performance.now() - startTime
+        logInfo('processTemplate', 'Template processed (cached)', {
+          filePath,
+          duration: `${duration.toFixed(2)}ms`
+        })
+        return cachedResult
+      }
       
       const relativePath = path.relative(this.templatesDir, filePath)
       
@@ -556,11 +668,26 @@ class SimpleTemplateIndexBuilder {
         permissions_required: aiInfo.permissions_required || false,
       }
       
-      logWarning('processTemplate', 'Template processed successfully', {
-        templateId,
+      // Cache the result
+      if (cacheKey) {
+        setCacheEntry(cacheKey, template)
+      }
+      
+      // Update average processing time
+      if (this.options.enablePerformanceMonitoring) {
+        PERFORMANCE_METRICS.avgProcessingTime = 
+          (PERFORMANCE_METRICS.avgProcessingTime * PERFORMANCE_METRICS.processedTemplates + (performance.now() - startTime)) 
+          / (PERFORMANCE_METRICS.processedTemplates + 1)
+      }
+      
+      PERFORMANCE_METRICS.processedTemplates++
+      
+      const duration = performance.now() - startTime
+      logInfo('processTemplate', 'Template processed successfully', {
         filePath,
-        category,
-        type
+        templateId: template.id,
+        name: template.name,
+        duration: `${duration.toFixed(2)}ms`
       })
       
       return template
@@ -761,10 +888,18 @@ class SimpleTemplateIndexBuilder {
     try {
       console.log("📝 开始生成索引文件...")
       
+      const startTime = performance.now()
+      
       const index = {
-        version: "1.0.0",
-        description: "SmartAbp项目代码模板库索引",
+        version: "2.0.0",
+        description: "SmartAbp项目代码模板库索引 - 增强版",
         lastUpdated: new Date().toISOString(),
+        buildInfo: {
+          timestamp: new Date().toISOString(),
+          nodeVersion: process.version,
+          platform: process.platform,
+          arch: process.arch
+        },
         templates: this.templates,
         categories: {
           backend: {
@@ -818,6 +953,7 @@ class SimpleTemplateIndexBuilder {
           total_templates: this.templates.length,
           backend_templates: this.templates.filter((t) => t.category.startsWith("backend")).length,
           frontend_templates: this.templates.filter((t) => t.category.startsWith("frontend")).length,
+          by_type: this.generateTypeStatistics(),
           processing_stats: {
             total_processed: this.stats.templatesProcessed,
             successful: this.stats.templatesSuccessful,
@@ -825,10 +961,16 @@ class SimpleTemplateIndexBuilder {
             success_rate: this.stats.templatesProcessed > 0 
               ? Math.round((this.stats.templatesSuccessful / this.stats.templatesProcessed) * 100) 
               : 0
-          }
+          },
+          build_metrics: this.options.enablePerformanceMonitoring ? {
+            processing_time: performance.now() - this.stats.startTime,
+            cache_hits: PERFORMANCE_METRICS.cacheHits,
+            cache_misses: PERFORMANCE_METRICS.cacheMisses,
+            file_operations: PERFORMANCE_METRICS.fileOperations
+          } : null
         },
         build_info: {
-          builder_version: "1.0.0",
+          builder_version: "2.0.0",
           build_time: new Date().toISOString(),
           options: this.options
         }
@@ -848,9 +990,11 @@ class SimpleTemplateIndexBuilder {
         this.options.retryDelay
       )
       
+      const duration = performance.now() - startTime
       logWarning('generateIndex', 'Index file generated successfully', {
         templatesCount: this.templates.length,
-        outputPath: this.outputPath
+        outputPath: this.outputPath,
+        duration: `${duration.toFixed(2)}ms`
       })
       
     } catch (error) {
@@ -862,6 +1006,28 @@ class SimpleTemplateIndexBuilder {
         true,
         { error: error.message }
       )
+    }
+  }
+
+  /**
+   * Generate type statistics
+   */
+  generateTypeStatistics() {
+    try {
+      const stats = {}
+      
+      this.templates.forEach(template => {
+        if (template.type) {
+          stats[template.type] = (stats[template.type] || 0) + 1
+        }
+      })
+      
+      return stats
+    } catch (error) {
+      logWarning('generateTypeStatistics', 'Failed to generate type statistics', {
+        error: error.message
+      })
+      return {}
     }
   }
 
@@ -879,6 +1045,21 @@ class SimpleTemplateIndexBuilder {
       console.log(`✅ 成功模板数: ${this.stats.templatesSuccessful}`)
       console.log(`❌ 失败模板数: ${this.stats.templatesFailed}`)
       console.log(`📈 成功率: ${this.stats.templatesProcessed > 0 ? Math.round((this.stats.templatesSuccessful / this.stats.templatesProcessed) * 100) : 0}%`)
+      
+      if (this.options.enablePerformanceMonitoring) {
+        console.log(`\n📈 性能指标:`)
+        console.log(`  平均处理时间: ${PERFORMANCE_METRICS.avgProcessingTime.toFixed(2)}ms`)
+        console.log(`  缓存命中率: ${((PERFORMANCE_METRICS.cacheHits / (PERFORMANCE_METRICS.cacheHits + PERFORMANCE_METRICS.cacheMisses)) * 100).toFixed(2)}%`)
+        console.log(`  文件操作: ${PERFORMANCE_METRICS.fileOperations.reads} 读, ${PERFORMANCE_METRICS.fileOperations.writes} 写`)
+      }
+      
+      if (this.memoryMonitor) {
+        const memoryInfo = this.memoryMonitor.update()
+        console.log(`\n💾 内存使用:`)
+        console.log(`  当前堆内存: ${(memoryInfo.current.heapUsed / 1024 / 1024).toFixed(2)} MB`)
+        console.log(`  峰值堆内存: ${(memoryInfo.peak.heapUsed / 1024 / 1024).toFixed(2)} MB`)
+        console.log(`  内存增量: ${(memoryInfo.delta.heapUsed / 1024 / 1024).toFixed(2)} MB`)
+      }
       
       if (this.errors.length > 0) {
         console.log(`\n⚠️  错误详情 (${this.errors.length} 个):`)
@@ -920,10 +1101,24 @@ class SimpleTemplateIndexBuilder {
   }
 
   /**
+   * Get performance metrics
+   */
+  getPerformanceMetrics() {
+    return { ...PERFORMANCE_METRICS }
+  }
+
+  /**
    * Get error details
    */
   getErrors() {
     return [...this.errors]
+  }
+
+  /**
+   * Clear cache
+   */
+  clearCache() {
+    clearCache()
   }
 
   /**
@@ -939,13 +1134,30 @@ class SimpleTemplateIndexBuilder {
       startTime: Date.now()
     }
     this.errors = []
+    clearCache()
+    
+    // Reset performance metrics
+    Object.keys(PERFORMANCE_METRICS).forEach(key => {
+      if (typeof PERFORMANCE_METRICS[key] === 'number') {
+        PERFORMANCE_METRICS[key] = 0
+      } else if (typeof PERFORMANCE_METRICS[key] === 'object') {
+        Object.keys(PERFORMANCE_METRICS[key]).forEach(subKey => {
+          PERFORMANCE_METRICS[key][subKey] = 0
+        })
+      }
+    })
+    
+    // Reset memory monitor
+    if (this.memoryMonitor) {
+      this.memoryMonitor.reset()
+    }
     
     logWarning('reset', 'SimpleTemplateIndexBuilder state reset')
   }
 }
 
 /**
- * Enhanced CLI execution with comprehensive error handling
+ * Enhanced CLI execution with comprehensive error handling and performance monitoring
  */
 async function main() {
   const args = process.argv.slice(2)
@@ -960,21 +1172,33 @@ async function main() {
       options.validateTemplates = true
     } else if (arg === '--no-stats') {
       options.generateStats = false
+    } else if (arg === '--performance') {
+      options.enablePerformanceMonitoring = true
+    } else if (arg === '--memory-monitoring') {
+      options.enableMemoryMonitoring = true
+    } else if (arg === '--no-cache') {
+      options.enableCache = false
+    } else if (arg === '--verbose' || arg === '-V') {
+      options.verbose = true
     } else if (arg === '--help' || arg === '-h') {
       console.log(`
-🔨 SmartAbp 简化版模板索引构建工具
+🔨 SmartAbp 简化版模板索引构建工具 - 增强版
 
 用法:
   node simple-template-index.js [选项]
 
 选项:
-  --backup, -b     备份现有索引文件
-  --validate, -v   验证模板文件
-  --no-stats       不生成统计信息
-  --help, -h       显示帮助信息
+  --backup, -b           备份现有索引文件
+  --validate, -v         验证模板文件
+  --no-stats             不生成统计信息
+  --performance          启用性能监控
+  --memory-monitoring    启用内存监控
+  --no-cache             禁用缓存
+  --verbose, -V          显示详细信息
+  --help, -h             显示帮助信息
 
 示例:
-  node simple-template-index.js --backup --validate
+  node simple-template-index.js --backup --validate --performance --memory-monitoring
       `)
       return
     }
@@ -1018,5 +1242,8 @@ if (require.main === module) {
 
 module.exports = {
   SimpleTemplateIndexBuilder,
-  SimpleTemplateIndexBuilderError
+  SimpleTemplateIndexBuilderError,
+  PERFORMANCE_METRICS,
+  CACHE_CONFIG,
+  MemoryMonitor
 }

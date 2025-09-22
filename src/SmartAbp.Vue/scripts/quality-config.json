@@ -1,0 +1,78 @@
+{
+  "qualityStandards": {
+    "overallScoreThreshold": 80,
+    "testCoverageThreshold": 75,
+    "codeStyleThreshold": 85,
+    "securityThreshold": 90,
+    "performanceThreshold": 85,
+    "maintainabilityThreshold": 80
+  },
+  "securityRules": {
+    "sqlInjectionPatterns": [
+      "\\.ExecuteSqlRaw\\(",
+      "\\.ExecuteSqlRawAsync\\(",
+      "\\.FromSql\\(",
+      "\\.FromSqlRaw\\(",
+      "string\\.Format.*SELECT",
+      "\\+.*SELECT"
+    ],
+    "hardcodedSecretsPatterns": [
+      "password.*=.*['\"].*['\"]",
+      "apiKey.*=.*['\"].*['\"]",
+      "secret.*=.*['\"].*['\"]",
+      "connectionString.*=.*['\"][^'\"]*['\"]"
+    ]
+  },
+  "performanceRules": {
+    "nPlusOnePatterns": [
+      "\\.FirstOrDefault\\(\\)\\.\\w+\\.FirstOrDefault\\(\\)",
+      "\\.Find\\(\\)\\.\\w+\\.FirstOrDefault\\(\\)",
+      "foreach.*\\.Select.*\\.FirstOrDefault\\(\\)"
+    ],
+    "memoryLeakPatterns": [
+      "event.*\\+=.*;.*没有-="
+    ]
+  },
+  "maintainabilityRules": {
+    "maxFunctionLength": 50,
+    "complexConditionPatterns": [
+      "if.*&&.*&&.*&&",
+      "if.*\\|\\|.*\\|\\|.*\\|\\|",
+      "if.*\\(.*\\(.*\\(.*\\)"
+    ]
+  },
+  "testConfig": {
+    "unitTestPattern": "**/*.test.ts",
+    "integrationTestPattern": "**/*.integration.test.ts",
+    "e2eTestPattern": "**/*.e2e.test.ts",
+    "coverageThresholds": {
+      "statements": 80,
+      "branches": 75,
+      "functions": 80,
+      "lines": 80
+    }
+  },
+  "reporting": {
+    "outputDirectory": "quality-reports",
+    "reportFormats": ["json", "html"],
+    "notifications": {
+      "slack": true,
+      "email": true,
+      "teams": false
+    }
+  },
+  "scanDirectories": [
+    "src/SmartAbp.CodeGenerator",
+    "src/SmartAbp.Application",
+    "src/SmartAbp.Application.Contracts",
+    "src/SmartAbp.Domain",
+    "src/SmartAbp.EntityFrameworkCore"
+  ],
+  "excludedPatterns": [
+    "**/bin/**",
+    "**/obj/**",
+    "**/node_modules/**",
+    "**/TestResults/**",
+    "**/coverage/**"
+  ]
+}
