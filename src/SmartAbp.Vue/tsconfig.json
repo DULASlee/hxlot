@@ -5,7 +5,7 @@
     "module": "ESNext",
     "lib": ["ES2020", "ES2021.WeakRef", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -17,27 +17,11 @@
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
     "downlevelIteration": true,
-
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@stores/*": ["src/stores/*"],
-      "@utils/*": ["src/utils/*"],
-      "@assets/*": ["src/assets/*"],
-      "@smartabp/lowcode-core": ["packages/lowcode-core/src/index.ts"],
-      "@smartabp/lowcode-core/*": ["packages/lowcode-core/src/*"],
-      "@smartabp/lowcode-designer": ["packages/lowcode-designer/src/index.ts"],
-      "@smartabp/lowcode-designer/*": ["packages/lowcode-designer/src/*"],
-      "@smartabp/lowcode-codegen": ["packages/lowcode-codegen/src/index.ts"],
-      "@smartabp/lowcode-codegen/*": ["packages/lowcode-codegen/src/*"],
-      "@smartabp/lowcode-api": ["packages/lowcode-api/src/index.ts"],
-      "@smartabp/lowcode-api/*": ["packages/lowcode-api/src/*"],
-      "@smartabp/lowcode-ui-vue": ["packages/lowcode-ui-vue/src/index.ts"],
-      "@smartabp/lowcode-ui-vue/*": ["packages/lowcode-ui-vue/src/*"],
-      "@smartabp/*": ["packages/*"]
+      "@smartabp/*": ["packages/*/src"]
     },
-
     "types": ["vite/client", "element-plus/global"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
@@ -54,8 +38,12 @@
   "exclude": [
     "node_modules",
     "dist",
-    "src/views/CodeGenerator/**",
-    "packages/lowcode-core/src/__tests__/**"
+    "**/__tests__/**"
   ],
-  "references": []
+  "references": [
+    { "path": "./packages/lowcode-api" },
+    { "path": "./packages/lowcode-core" },
+    { "path": "./packages/lowcode-designer" },
+    { "path": "./packages/lowcode-tools" }
+  ]
 }
