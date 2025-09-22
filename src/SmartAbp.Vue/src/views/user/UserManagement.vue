@@ -23,46 +23,25 @@ AI_TEMPLATE_INFO:
 <template>
   <div class="entity-management">
     <!-- 若存在运行时UI配置，则优先使用元数据驱动渲染器 -->
-    <MetadataDrivenPageRenderer
-      v-if="schema"
-      :schema="schema"
-    />
+    <MetadataDrivenPageRenderer v-if="schema" :schema="schema" />
     <template v-else>
       <!-- 页面头部 -->
       <div class="page-header">
         <div class="page-title">
           <h2>用户管理管理</h2>
-          <p class="page-description">
-            管理系统中的用户管理信息
-          </p>
+          <p class="page-description">管理系统中的用户管理信息</p>
         </div>
         <div class="page-actions">
-          <el-button
-            v-permission="'User.Create'"
-            type="primary"
-            :icon="Plus"
-            @click="handleCreate"
-          >
+          <el-button v-permission="'User.Create'" type="primary" :icon="Plus" @click="handleCreate">
             新增用户管理
           </el-button>
         </div>
       </div>
 
       <!-- 搜索区域 -->
-      <el-card
-        class="search-card"
-        shadow="never"
-      >
-        <el-form
-          ref="searchFormRef"
-          :model="searchForm"
-          :inline="true"
-          class="search-form"
-        >
-          <el-form-item
-            label="名称"
-            prop="filter"
-          >
+      <el-card class="search-card" shadow="never">
+        <el-form ref="searchFormRef" :model="searchForm" :inline="true" class="search-form">
+          <el-form-item label="名称" prop="filter">
             <el-input
               v-model="searchForm.filter"
               placeholder="请输入用户管理名称"
@@ -71,51 +50,28 @@ AI_TEMPLATE_INFO:
               @keyup.enter="handleSearch"
             />
           </el-form-item>
-        
-          <el-form-item
-            label="状态"
-            prop="isEnabled"
-          >
+
+          <el-form-item label="状态" prop="isEnabled">
             <el-select
               v-model="searchForm.isEnabled"
               placeholder="请选择状态"
               clearable
               style="width: 120px"
             >
-              <el-option
-                label="启用"
-                :value="true"
-              />
-              <el-option
-                label="禁用"
-                :value="false"
-              />
+              <el-option label="启用" :value="true" />
+              <el-option label="禁用" :value="false" />
             </el-select>
           </el-form-item>
 
           <el-form-item>
-            <el-button
-              type="primary"
-              :icon="Search"
-              @click="handleSearch"
-            >
-              搜索
-            </el-button>
-            <el-button
-              :icon="Refresh"
-              @click="handleReset"
-            >
-              重置
-            </el-button>
+            <el-button type="primary" :icon="Search" @click="handleSearch"> 搜索 </el-button>
+            <el-button :icon="Refresh" @click="handleReset"> 重置 </el-button>
           </el-form-item>
         </el-form>
       </el-card>
 
       <!-- 数据表格 -->
-      <el-card
-        class="table-card"
-        shadow="never"
-      >
+      <el-card class="table-card" shadow="never">
         <!-- 表格工具栏 -->
         <div class="table-toolbar">
           <div class="toolbar-left">
@@ -131,11 +87,7 @@ AI_TEMPLATE_INFO:
           </div>
           <div class="toolbar-right">
             <el-tooltip content="刷新数据">
-              <el-button
-                :icon="Refresh"
-                circle
-                @click="fetchData"
-              />
+              <el-button :icon="Refresh" circle @click="fetchData" />
             </el-tooltip>
           </div>
         </div>
@@ -149,27 +101,13 @@ AI_TEMPLATE_INFO:
           @selection-change="handleSelectionChange"
           @sort-change="handleSortChange"
         >
-          <el-table-column
-            type="selection"
-            width="50"
-          />
-        
-          <el-table-column
-            prop="name"
-            label="名称"
-            sortable="custom"
-            min-width="150"
-          >
+          <el-table-column type="selection" width="50" />
+
+          <el-table-column prop="name" label="名称" sortable="custom" min-width="150">
             <template #default="{ row }">
               <div class="name-cell">
                 <span class="name-text">{{ row.name }}</span>
-                <el-tag
-                  v-if="!row.isEnabled"
-                  type="info"
-                  size="small"
-                >
-                  已禁用
-                </el-tag>
+                <el-tag v-if="!row.isEnabled" type="info" size="small"> 已禁用 </el-tag>
               </div>
             </template>
           </el-table-column>
@@ -181,36 +119,17 @@ AI_TEMPLATE_INFO:
             show-overflow-tooltip
           />
 
-          <el-table-column
-            prop="description"
-            label="描述"
-            min-width="200"
-            show-overflow-tooltip
-          />
+          <el-table-column prop="description" label="描述" min-width="200" show-overflow-tooltip />
 
-          <el-table-column
-            prop="sort"
-            label="排序"
-            width="80"
-            sortable="custom"
-          />
+          <el-table-column prop="sort" label="排序" width="80" sortable="custom" />
 
-          <el-table-column
-            prop="creationTime"
-            label="创建时间"
-            width="160"
-            sortable="custom"
-          >
+          <el-table-column prop="creationTime" label="创建时间" width="160" sortable="custom">
             <template #default="{ row }">
               {{ formatDateTime(row.creationTime) }}
             </template>
           </el-table-column>
 
-          <el-table-column
-            label="操作"
-            width="180"
-            fixed="right"
-          >
+          <el-table-column label="操作" width="180" fixed="right">
             <template #default="{ row }">
               <div class="action-buttons">
                 <el-button
@@ -265,10 +184,7 @@ AI_TEMPLATE_INFO:
           label-width="100px"
           class="edit-form"
         >
-          <el-form-item
-            label="名称"
-            prop="name"
-          >
+          <el-form-item label="名称" prop="name">
             <el-input
               v-model="formData.name"
               placeholder="请输入用户管理名称"
@@ -277,10 +193,7 @@ AI_TEMPLATE_INFO:
             />
           </el-form-item>
 
-          <el-form-item
-            label="显示名称"
-            prop="displayName"
-          >
+          <el-form-item label="显示名称" prop="displayName">
             <el-input
               v-model="formData.displayName"
               placeholder="请输入显示名称"
@@ -289,10 +202,7 @@ AI_TEMPLATE_INFO:
             />
           </el-form-item>
 
-          <el-form-item
-            label="描述"
-            prop="description"
-          >
+          <el-form-item label="描述" prop="description">
             <el-input
               v-model="formData.description"
               type="textarea"
@@ -303,10 +213,7 @@ AI_TEMPLATE_INFO:
             />
           </el-form-item>
 
-          <el-form-item
-            label="排序号"
-            prop="sort"
-          >
+          <el-form-item label="排序号" prop="sort">
             <el-input-number
               v-model="formData.sort"
               :min="0"
@@ -316,30 +223,15 @@ AI_TEMPLATE_INFO:
             />
           </el-form-item>
 
-          <el-form-item
-            label="状态"
-            prop="isEnabled"
-          >
-            <el-switch
-              v-model="formData.isEnabled"
-              active-text="启用"
-              inactive-text="禁用"
-            />
+          <el-form-item label="状态" prop="isEnabled">
+            <el-switch v-model="formData.isEnabled" active-text="启用" inactive-text="禁用" />
           </el-form-item>
         </el-form>
 
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="dialogVisible = false">
-              取消
-            </el-button>
-            <el-button
-              type="primary"
-              :loading="submitting"
-              @click="handleSubmit"
-            >
-              确定
-            </el-button>
+            <el-button @click="dialogVisible = false"> 取消 </el-button>
+            <el-button type="primary" :loading="submitting" @click="handleSubmit"> 确定 </el-button>
           </div>
         </template>
       </el-dialog>
@@ -357,8 +249,8 @@ import { ref, reactive, onMounted, computed } from "vue"
 import MetadataDrivenPageRenderer from "@smartabp/lowcode-designer/runtime/MetadataDrivenPageRenderer.vue"
 import { uiConfigToPageSchema } from "@smartabp/lowcode-designer/utils/uiConfigMapper"
 import { codeGeneratorApi } from "../../../packages/lowcode-api/src/code-generator"
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Search, Refresh, Delete } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from "element-plus"
+import { Plus, Search, Refresh, Delete } from "@element-plus/icons-vue"
 
 // 导入说明：以下导入需要根据实际项目结构调整
 // import { useUserStore } from '@/stores/modules/user'
@@ -381,56 +273,54 @@ const tableRef = ref()
 
 // 搜索表单
 const searchForm = reactive({
-  filter: '',
-  isEnabled: undefined as boolean | undefined
+  filter: "",
+  isEnabled: undefined as boolean | undefined,
 })
 
 // 分页数据
 const pagination = reactive({
   current: 1,
   pageSize: 20,
-  total: 0
+  total: 0,
 })
 
 // 排序数据
-const sorting = ref('')
+const sorting = ref("")
 
 // 表格数据
 const tableData = ref<any[]>([])
 
 // 对话框数据
-const dialogTitle = computed(() => 
-  formData.id ? '编辑用户管理' : '新增用户管理'
-)
+const dialogTitle = computed(() => (formData.id ? "编辑用户管理" : "新增用户管理"))
 
 const formData = reactive({
   id: undefined,
-  name: '',
-  displayName: '',
-  description: '',
+  name: "",
+  displayName: "",
+  description: "",
   sort: 0,
-  isEnabled: true
+  isEnabled: true,
 })
 
 // 表单验证规则
 const formRules = {
   name: [
-    { required: true, message: '请输入用户管理名称', trigger: 'blur' },
-    { min: 2, max: 50, message: '名称长度在 2 到 50 个字符', trigger: 'blur' }
-  ]
+    { required: true, message: "请输入用户管理名称", trigger: "blur" },
+    { min: 2, max: 50, message: "名称长度在 2 到 50 个字符", trigger: "blur" },
+  ],
 }
 
 // 方法实现
 const fetchData = async () => {
   try {
     loading.value = true
-    
+
     const params = {
       filter: searchForm.filter || undefined,
       isEnabled: searchForm.isEnabled,
       skipCount: (pagination.current - 1) * pagination.pageSize,
       maxResultCount: pagination.pageSize,
-      sorting: sorting.value || undefined
+      sorting: sorting.value || undefined,
     }
     // 避免TS未使用变量错误
     void params
@@ -439,9 +329,8 @@ const fetchData = async () => {
     // const result = await userStore.fetchList(params)
     // tableData.value = result.items
     // pagination.total = result.totalCount
-    
   } catch (error) {
-    ElMessage.error('获取数据失败')
+    ElMessage.error("获取数据失败")
   } finally {
     loading.value = false
   }
@@ -453,7 +342,7 @@ const handleSearch = () => {
 }
 
 const handleReset = () => {
-  searchForm.filter = ''
+  searchForm.filter = ""
   searchForm.isEnabled = undefined
   handleSearch()
 }
@@ -461,11 +350,11 @@ const handleReset = () => {
 const handleCreate = () => {
   Object.assign(formData, {
     id: undefined,
-    name: '',
-    displayName: '',
-    description: '',
+    name: "",
+    displayName: "",
+    description: "",
     sort: 0,
-    isEnabled: true
+    isEnabled: true,
   })
   dialogVisible.value = true
 }
@@ -477,20 +366,16 @@ const handleEdit = (row: any) => {
 
 const handleDelete = async (row: any) => {
   try {
-    await ElMessageBox.confirm(
-      `确定要删除 "${row.name}" 吗？`,
-      '确认删除',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }
-    )
-    
+    await ElMessageBox.confirm(`确定要删除 "${row.name}" 吗？`, "确认删除", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    })
+
     // TODO: 调用删除API
     // await userStore.delete(row.id)
-    
-    ElMessage.success('删除成功')
+
+    ElMessage.success("删除成功")
     fetchData()
   } catch (error) {
     // 用户取消删除
@@ -499,26 +384,26 @@ const handleDelete = async (row: any) => {
 
 const handleBatchDelete = async () => {
   if (selectedRows.value.length === 0) return
-  
+
   try {
     await ElMessageBox.confirm(
       `确定要删除选中的 ${selectedRows.value.length} 项吗？`,
-      '确认批量删除',
+      "确认批量删除",
       {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      },
     )
-    
-    const ids = selectedRows.value.map(row => row.id)
+
+    const ids = selectedRows.value.map((row) => row.id)
     // 避免TS未使用变量错误
     void ids
-    
+
     // TODO: 调用批量删除API
     // await userStore.deleteMany(ids)
-    
-    ElMessage.success('批量删除成功')
+
+    ElMessage.success("批量删除成功")
     fetchData()
   } catch (error) {
     // 用户取消删除
@@ -528,23 +413,23 @@ const handleBatchDelete = async () => {
 const handleSubmit = async () => {
   try {
     await formRef.value?.validate()
-    
+
     submitting.value = true
-    
+
     if (formData.id) {
       // TODO: 更新操作
       // await userStore.update(formData.id, formData)
-      ElMessage.success('更新成功')
+      ElMessage.success("更新成功")
     } else {
       // TODO: 创建操作
       // await userStore.create(formData)
-      ElMessage.success('创建成功')
+      ElMessage.success("创建成功")
     }
-    
+
     dialogVisible.value = false
     fetchData()
   } catch (error) {
-    ElMessage.error('操作失败')
+    ElMessage.error("操作失败")
   } finally {
     submitting.value = false
   }
@@ -560,9 +445,9 @@ const handleSelectionChange = (selection: any[]) => {
 
 const handleSortChange = ({ prop, order }: any) => {
   if (order) {
-    sorting.value = `${prop} ${order === 'ascending' ? 'asc' : 'desc'}`
+    sorting.value = `${prop} ${order === "ascending" ? "asc" : "desc"}`
   } else {
-    sorting.value = ''
+    sorting.value = ""
   }
   fetchData()
 }
@@ -588,7 +473,10 @@ const formatDateTime = (date: string) => {
 onMounted(async () => {
   try {
     // 优先从本地 appshell/ui-config 目录加载（构建产物 / HMR 兼容）
-    const modules = import.meta.glob("@/appshell/ui-config/*.ui.json", { eager: true }) as Record<string, any>
+    const modules = import.meta.glob("@/appshell/ui-config/*.ui.json", { eager: true }) as Record<
+      string,
+      any
+    >
     const expectedKey = "/src/appshell/ui-config/User.User.ui.json"
     const mod = modules[expectedKey]
     let cfg: any | undefined = mod?.default ?? mod

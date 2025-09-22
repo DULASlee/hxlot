@@ -14,15 +14,9 @@ const yaml = require("js-yaml")
  * Custom error class for template validation errors
  */
 class TemplateValidationError extends Error {
-  constructor(
-    message,
-    code,
-    operation,
-    retryable = false,
-    details = {}
-  ) {
+  constructor(message, code, operation, retryable = false, details = {}) {
     super(message)
-    this.name = 'TemplateValidationError'
+    this.name = "TemplateValidationError"
     this.code = code
     this.operation = operation
     this.retryable = retryable
@@ -35,13 +29,16 @@ class TemplateValidationError extends Error {
  */
 const logError = (operation, error, context = {}) => {
   console.error(`[TemplateValidator] ${operation} failed:`, {
-    error: error instanceof Error ? {
-      name: error.name,
-      message: error.message,
-      stack: error.stack
-    } : error,
+    error:
+      error instanceof Error
+        ? {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          }
+        : error,
     context,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   })
 }
 
@@ -49,7 +46,7 @@ const logWarning = (operation, message, context = {}) => {
   console.warn(`[TemplateValidator] ${operation}:`, {
     message,
     context,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   })
 }
 
@@ -57,37 +54,37 @@ const logWarning = (operation, message, context = {}) => {
  * Input validation utilities
  */
 const validateString = (value, fieldName, allowEmpty = false) => {
-  if (typeof value !== 'string') {
+  if (typeof value !== "string") {
     throw new TemplateValidationError(
       `${fieldName} must be a string`,
-      'VALIDATION_ERROR',
-      'validateString',
+      "VALIDATION_ERROR",
+      "validateString",
       false,
-      { field: fieldName, value, type: typeof value }
+      { field: fieldName, value, type: typeof value },
     )
   }
-  
-  if (!allowEmpty && value.trim() === '') {
+
+  if (!allowEmpty && value.trim() === "") {
     throw new TemplateValidationError(
       `${fieldName} cannot be empty`,
-      'VALIDATION_ERROR',
-      'validateString',
+      "VALIDATION_ERROR",
+      "validateString",
       false,
-      { field: fieldName, value }
+      { field: fieldName, value },
     )
   }
-  
+
   return value
 }
 
 const validateObject = (value, fieldName) => {
-  if (typeof value !== 'object' || value === null) {
+  if (typeof value !== "object" || value === null) {
     throw new TemplateValidationError(
       `${fieldName} must be an object`,
-      'VALIDATION_ERROR',
-      'validateObject',
+      "VALIDATION_ERROR",
+      "validateObject",
       false,
-      { field: fieldName, value, type: typeof value }
+      { field: fieldName, value, type: typeof value },
     )
   }
   return value
@@ -97,10 +94,10 @@ const validateArray = (value, fieldName) => {
   if (!Array.isArray(value)) {
     throw new TemplateValidationError(
       `${fieldName} must be an array`,
-      'VALIDATION_ERROR',
-      'validateArray',
+      "VALIDATION_ERROR",
+      "validateArray",
       false,
-      { field: fieldName, value, type: typeof value }
+      { field: fieldName, value, type: typeof value },
     )
   }
   return value
@@ -118,25 +115,25 @@ const safeFileExists = (filePath, operation) => {
   }
 }
 
-const safeReadFile = (filePath, encoding = 'utf8', operation) => {
+const safeReadFile = (filePath, encoding = "utf8", operation) => {
   try {
     return fs.readFileSync(filePath, encoding)
   } catch (error) {
-    if (error.code === 'ENOENT') {
+    if (error.code === "ENOENT") {
       throw new TemplateValidationError(
         `File not found: ${filePath}`,
-        'FILE_NOT_FOUND',
+        "FILE_NOT_FOUND",
         operation,
         false,
-        { filePath }
+        { filePath },
       )
     }
     throw new TemplateValidationError(
       `Failed to read file: ${error.message}`,
-      'FILE_READ_ERROR',
+      "FILE_READ_ERROR",
       operation,
       true,
-      { filePath, error: error.message }
+      { filePath, error: error.message },
     )
   }
 }
@@ -147,10 +144,10 @@ const safeParseJSON = (content, filePath, operation) => {
   } catch (error) {
     throw new TemplateValidationError(
       `Invalid JSON in ${filePath}: ${error.message}`,
-      'JSON_PARSE_ERROR',
+      "JSON_PARSE_ERROR",
       operation,
       false,
-      { filePath, error: error.message }
+      { filePath, error: error.message },
     )
   }
 }
@@ -161,10 +158,10 @@ const safeParseYAML = (content, filePath, operation) => {
   } catch (error) {
     throw new TemplateValidationError(
       `Invalid YAML in ${filePath}: ${error.message}`,
-      'YAML_PARSE_ERROR',
+      "YAML_PARSE_ERROR",
       operation,
       false,
-      { filePath, error: error.message }
+      { filePath, error: error.message },
     )
   }
 }
@@ -183,27 +180,27 @@ const safeStat = (filePath, operation) => {
  */
 const retryOperation = async (operation, maxRetries = 3, delay = 1000) => {
   let lastError
-  
+
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await operation()
     } catch (error) {
       lastError = error
-      
+
       if (error.retryable && attempt < maxRetries) {
-        logWarning('retryOperation', `Attempt ${attempt} failed, retrying in ${delay}ms`, {
+        logWarning("retryOperation", `Attempt ${attempt} failed, retrying in ${delay}ms`, {
           error: error.message,
           attempt,
-          maxRetries
+          maxRetries,
         })
-        await new Promise(resolve => setTimeout(resolve, delay))
+        await new Promise((resolve) => setTimeout(resolve, delay))
         delay *= 2 // Exponential backoff
       } else {
         throw error
       }
     }
   }
-  
+
   throw lastError
 }
 
@@ -212,36 +209,36 @@ const retryOperation = async (operation, maxRetries = 3, delay = 1000) => {
  */
 function resolveTemplatesDir(startDir) {
   let currentDir = startDir
-  
+
   try {
     for (let i = 0; i < 10; i++) {
       const candidate = path.join(currentDir, "templates")
-      
+
       try {
-        if (safeFileExists(candidate, 'resolveTemplatesDir')) {
-          const stat = safeStat(candidate, 'resolveTemplatesDir')
+        if (safeFileExists(candidate, "resolveTemplatesDir")) {
+          const stat = safeStat(candidate, "resolveTemplatesDir")
           if (stat && stat.isDirectory()) {
-            logWarning('resolveTemplatesDir', `Found templates directory at: ${candidate}`)
+            logWarning("resolveTemplatesDir", `Found templates directory at: ${candidate}`)
             return candidate
           }
         }
       } catch (error) {
-        logWarning('resolveTemplatesDir', `Failed to check candidate directory: ${candidate}`, {
-          error: error.message
+        logWarning("resolveTemplatesDir", `Failed to check candidate directory: ${candidate}`, {
+          error: error.message,
         })
       }
-      
+
       const parent = path.dirname(currentDir)
       if (parent === currentDir) break
       currentDir = parent
     }
   } catch (error) {
-    logError('resolveTemplatesDir', error, { startDir })
+    logError("resolveTemplatesDir", error, { startDir })
   }
-  
+
   // Fallback to cwd/templates
   const fallback = path.resolve(process.cwd(), "templates")
-  logWarning('resolveTemplatesDir', `Using fallback templates directory: ${fallback}`)
+  logWarning("resolveTemplatesDir", `Using fallback templates directory: ${fallback}`)
   return fallback
 }
 
@@ -256,9 +253,9 @@ class TemplateValidator {
         retryDelay: options.retryDelay || 1000,
         strictMode: options.strictMode || false,
         skipSyntaxValidation: options.skipSyntaxValidation || false,
-        ...options
+        ...options,
       }
-      
+
       this.templatesDir = resolveTemplatesDir(__dirname)
       this.errors = []
       this.warnings = []
@@ -266,21 +263,21 @@ class TemplateValidator {
         templatesProcessed: 0,
         filesProcessed: 0,
         syntaxChecks: 0,
-        startTime: Date.now()
+        startTime: Date.now(),
       }
-      
-      logWarning('constructor', 'TemplateValidator initialized', {
+
+      logWarning("constructor", "TemplateValidator initialized", {
         templatesDir: this.templatesDir,
-        options: this.options
+        options: this.options,
       })
     } catch (error) {
-      logError('constructor', error)
+      logError("constructor", error)
       throw new TemplateValidationError(
-        'Failed to initialize TemplateValidator',
-        'INITIALIZATION_ERROR',
-        'constructor',
+        "Failed to initialize TemplateValidator",
+        "INITIALIZATION_ERROR",
+        "constructor",
         false,
-        { error: error.message }
+        { error: error.message },
       )
     }
   }
@@ -295,13 +292,13 @@ class TemplateValidator {
 
     try {
       // Validate templates directory exists
-      if (!safeFileExists(this.templatesDir, 'validateAll')) {
+      if (!safeFileExists(this.templatesDir, "validateAll")) {
         throw new TemplateValidationError(
           `Templates directory does not exist: ${this.templatesDir}`,
-          'DIRECTORY_NOT_FOUND',
-          'validateAll',
+          "DIRECTORY_NOT_FOUND",
+          "validateAll",
           false,
-          { templatesDir: this.templatesDir }
+          { templatesDir: this.templatesDir },
         )
       }
 
@@ -309,14 +306,14 @@ class TemplateValidator {
       await retryOperation(
         async () => this.validateIndex(),
         this.options.maxRetries,
-        this.options.retryDelay
+        this.options.retryDelay,
       )
 
       // Validate template files with retry
       await retryOperation(
         async () => this.validateTemplates(),
         this.options.maxRetries,
-        this.options.retryDelay
+        this.options.retryDelay,
       )
 
       // Output comprehensive results
@@ -324,13 +321,13 @@ class TemplateValidator {
 
       return this.errors.length === 0
     } catch (error) {
-      logError('validateAll', error)
+      logError("validateAll", error)
       console.error("❌ 验证过程中发生错误:", error.message)
-      
+
       if (error.details) {
         console.error("📋 错误详情:", JSON.stringify(error.details, null, 2))
       }
-      
+
       return false
     }
   }
@@ -342,23 +339,23 @@ class TemplateValidator {
     const indexPath = path.join(this.templatesDir, "index.json")
 
     try {
-      validateString(indexPath, 'indexPath')
-      
-      if (!safeFileExists(indexPath, 'validateIndex')) {
+      validateString(indexPath, "indexPath")
+
+      if (!safeFileExists(indexPath, "validateIndex")) {
         throw new TemplateValidationError(
           `Missing template index file: templates/index.json`,
-          'INDEX_FILE_NOT_FOUND',
-          'validateIndex',
+          "INDEX_FILE_NOT_FOUND",
+          "validateIndex",
           false,
-          { indexPath }
+          { indexPath },
         )
       }
 
-      const indexContent = safeReadFile(indexPath, 'utf8', 'validateIndex')
-      const indexData = safeParseJSON(indexContent, indexPath, 'validateIndex')
-      
-      validateObject(indexData, 'indexData')
-      validateArray(indexData.templates, 'indexData.templates')
+      const indexContent = safeReadFile(indexPath, "utf8", "validateIndex")
+      const indexData = safeParseJSON(indexContent, indexPath, "validateIndex")
+
+      validateObject(indexData, "indexData")
+      validateArray(indexData.templates, "indexData.templates")
 
       // Validate each template entry
       for (let i = 0; i < indexData.templates.length; i++) {
@@ -366,14 +363,13 @@ class TemplateValidator {
         try {
           await this.validateTemplateEntry(template, i)
         } catch (error) {
-          logError('validateTemplateEntry', error, { templateIndex: i, template })
+          logError("validateTemplateEntry", error, { templateIndex: i, template })
           this.errors.push(`Template entry ${i}: ${error.message}`)
         }
       }
 
       this.stats.templatesProcessed = indexData.templates.length
       console.log("✅ 索引文件验证通过")
-      
     } catch (error) {
       if (error instanceof TemplateValidationError) {
         this.errors.push(error.message)
@@ -389,36 +385,33 @@ class TemplateValidator {
    */
   async validateTemplateEntry(template, index) {
     try {
-      validateObject(template, 'template')
-      
+      validateObject(template, "template")
+
       const required = ["id", "name", "path", "category", "type"]
-      
+
       for (const field of required) {
         if (!template[field]) {
           throw new TemplateValidationError(
             `Template ${template.id || `index_${index}`} missing required field: ${field}`,
-            'MISSING_REQUIRED_FIELD',
-            'validateTemplateEntry',
+            "MISSING_REQUIRED_FIELD",
+            "validateTemplateEntry",
             false,
-            { template, missingField: field }
+            { template, missingField: field },
           )
         }
       }
 
       // Validate template file exists
       if (template.path) {
-        const templatePath = path.join(
-          this.templatesDir,
-          template.path.replace(/^templates\//, "")
-        )
-        
-        if (!safeFileExists(templatePath, 'validateTemplateEntry')) {
+        const templatePath = path.join(this.templatesDir, template.path.replace(/^templates\//, ""))
+
+        if (!safeFileExists(templatePath, "validateTemplateEntry")) {
           throw new TemplateValidationError(
             `Template file does not exist: ${template.path}`,
-            'TEMPLATE_FILE_NOT_FOUND',
-            'validateTemplateEntry',
+            "TEMPLATE_FILE_NOT_FOUND",
+            "validateTemplateEntry",
             false,
-            { templatePath, templatePath: template.path }
+            { templatePath, templatePath: template.path },
           )
         }
       }
@@ -427,32 +420,31 @@ class TemplateValidator {
       if (template.metadata) {
         const metadataPath = path.join(
           this.templatesDir,
-          template.metadata.replace(/^templates\//, "")
+          template.metadata.replace(/^templates\//, ""),
         )
-        
-        if (!safeFileExists(metadataPath, 'validateTemplateEntry')) {
+
+        if (!safeFileExists(metadataPath, "validateTemplateEntry")) {
           throw new TemplateValidationError(
             `Metadata file does not exist: ${template.metadata}`,
-            'METADATA_FILE_NOT_FOUND',
-            'validateTemplateEntry',
+            "METADATA_FILE_NOT_FOUND",
+            "validateTemplateEntry",
             false,
-            { metadataPath, metadataPath: template.metadata }
+            { metadataPath, metadataPath: template.metadata },
           )
         }
-        
+
         await this.validateMetadata(metadataPath, template.id)
       }
-      
     } catch (error) {
       if (error instanceof TemplateValidationError) {
         throw error
       } else {
         throw new TemplateValidationError(
           `Template entry validation failed: ${error.message}`,
-          'TEMPLATE_ENTRY_VALIDATION_ERROR',
-          'validateTemplateEntry',
+          "TEMPLATE_ENTRY_VALIDATION_ERROR",
+          "validateTemplateEntry",
           false,
-          { template, index, error: error.message }
+          { template, index, error: error.message },
         )
       }
     }
@@ -463,13 +455,13 @@ class TemplateValidator {
    */
   async validateMetadata(metadataPath, templateId) {
     try {
-      validateString(metadataPath, 'metadataPath')
-      validateString(templateId, 'templateId')
-      
-      const content = safeReadFile(metadataPath, 'utf8', 'validateMetadata')
-      const metadata = safeParseYAML(content, metadataPath, 'validateMetadata')
-      
-      validateObject(metadata, 'metadata')
+      validateString(metadataPath, "metadataPath")
+      validateString(templateId, "templateId")
+
+      const content = safeReadFile(metadataPath, "utf8", "validateMetadata")
+      const metadata = safeParseYAML(content, metadataPath, "validateMetadata")
+
+      validateObject(metadata, "metadata")
 
       const recommended = ["name", "category", "description", "parameters"]
 
@@ -481,33 +473,32 @@ class TemplateValidator {
 
       // Validate parameters definition
       if (metadata.parameters) {
-        validateArray(metadata.parameters, 'metadata.parameters')
-        
+        validateArray(metadata.parameters, "metadata.parameters")
+
         for (let i = 0; i < metadata.parameters.length; i++) {
           const param = metadata.parameters[i]
-          
+
           if (!param.name || !param.type) {
             throw new TemplateValidationError(
               `Template ${templateId} parameter definition incomplete at index ${i}`,
-              'INCOMPLETE_PARAMETER_DEFINITION',
-              'validateMetadata',
+              "INCOMPLETE_PARAMETER_DEFINITION",
+              "validateMetadata",
               false,
-              { templateId, parameterIndex: i, parameter: param }
+              { templateId, parameterIndex: i, parameter: param },
             )
           }
         }
       }
-      
     } catch (error) {
       if (error instanceof TemplateValidationError) {
         throw error
       } else {
         throw new TemplateValidationError(
           `Metadata validation failed for ${metadataPath}: ${error.message}`,
-          'METADATA_VALIDATION_ERROR',
-          'validateMetadata',
+          "METADATA_VALIDATION_ERROR",
+          "validateMetadata",
           false,
-          { metadataPath, templateId, error: error.message }
+          { metadataPath, templateId, error: error.message },
         )
       }
     }
@@ -519,9 +510,9 @@ class TemplateValidator {
   async validateTemplates() {
     try {
       const templateFiles = this.findTemplateFiles(this.templatesDir)
-      
+
       if (templateFiles.length === 0) {
-        logWarning('validateTemplates', 'No template files found')
+        logWarning("validateTemplates", "No template files found")
         return
       }
 
@@ -532,26 +523,25 @@ class TemplateValidator {
         try {
           await this.validateTemplateFile(filePath)
           this.stats.filesProcessed++
-          
+
           // Progress indicator
           if ((i + 1) % 10 === 0) {
             console.log(`📈 进度: ${i + 1}/${templateFiles.length}`)
           }
         } catch (error) {
-          logError('validateTemplateFile', error, { filePath, fileIndex: i })
+          logError("validateTemplateFile", error, { filePath, fileIndex: i })
           this.errors.push(`Template file ${filePath}: ${error.message}`)
         }
       }
 
       console.log(`✅ 验证了 ${this.stats.filesProcessed} 个模板文件`)
-      
     } catch (error) {
       throw new TemplateValidationError(
         `Template files validation failed: ${error.message}`,
-        'TEMPLATE_FILES_VALIDATION_ERROR',
-        'validateTemplates',
+        "TEMPLATE_FILES_VALIDATION_ERROR",
+        "validateTemplates",
         false,
-        { error: error.message }
+        { error: error.message },
       )
     }
   }
@@ -561,49 +551,48 @@ class TemplateValidator {
    */
   findTemplateFiles(dir) {
     const files = []
-    
+
     try {
-      validateString(dir, 'dir')
-      
+      validateString(dir, "dir")
+
       const scan = (currentDir) => {
         try {
           const items = fs.readdirSync(currentDir)
-          
+
           for (const item of items) {
             const fullPath = path.join(currentDir, item)
-            
+
             try {
-              const stat = safeStat(fullPath, 'findTemplateFiles')
+              const stat = safeStat(fullPath, "findTemplateFiles")
               if (!stat) continue
-              
+
               if (stat.isDirectory()) {
                 scan(fullPath)
               } else if (item.includes(".template.")) {
                 files.push(fullPath)
               }
             } catch (itemError) {
-              logWarning('findTemplateFiles', `Failed to process item: ${item}`, {
+              logWarning("findTemplateFiles", `Failed to process item: ${item}`, {
                 error: itemError.message,
-                fullPath
+                fullPath,
               })
             }
           }
         } catch (scanError) {
-          logWarning('findTemplateFiles', `Failed to scan directory: ${currentDir}`, {
-            error: scanError.message
+          logWarning("findTemplateFiles", `Failed to scan directory: ${currentDir}`, {
+            error: scanError.message,
           })
         }
       }
 
       scan(dir)
-      
     } catch (error) {
       throw new TemplateValidationError(
         `Failed to find template files: ${error.message}`,
-        'FIND_TEMPLATE_FILES_ERROR',
-        'findTemplateFiles',
+        "FIND_TEMPLATE_FILES_ERROR",
+        "findTemplateFiles",
         false,
-        { dir, error: error.message }
+        { dir, error: error.message },
       )
     }
 
@@ -615,12 +604,12 @@ class TemplateValidator {
    */
   async validateTemplateFile(filePath) {
     try {
-      validateString(filePath, 'filePath')
-      
-      const content = safeReadFile(filePath, 'utf8', 'validateTemplateFile')
+      validateString(filePath, "filePath")
+
+      const content = safeReadFile(filePath, "utf8", "validateTemplateFile")
       const relativePath = path.relative(this.templatesDir, filePath)
-      
-      validateString(relativePath, 'relativePath')
+
+      validateString(relativePath, "relativePath")
 
       // Check for AI template info
       if (!content.includes("AI_TEMPLATE_INFO")) {
@@ -637,17 +626,16 @@ class TemplateValidator {
       if (!this.options.skipSyntaxValidation) {
         await this.validateTemplateSyntax(content, filePath, relativePath)
       }
-      
     } catch (error) {
       if (error instanceof TemplateValidationError) {
         throw error
       } else {
         throw new TemplateValidationError(
           `Template file validation failed: ${error.message}`,
-          'TEMPLATE_FILE_VALIDATION_ERROR',
-          'validateTemplateFile',
+          "TEMPLATE_FILE_VALIDATION_ERROR",
+          "validateTemplateFile",
           false,
-          { filePath, error: error.message }
+          { filePath, error: error.message },
         )
       }
     }
@@ -658,10 +646,10 @@ class TemplateValidator {
    */
   async validateTemplateSyntax(content, filePath, relativePath) {
     try {
-      validateString(content, 'content')
-      validateString(filePath, 'filePath')
-      validateString(relativePath, 'relativePath')
-      
+      validateString(content, "content")
+      validateString(filePath, "filePath")
+      validateString(relativePath, "relativePath")
+
       this.stats.syntaxChecks++
 
       // Validate syntax based on file type
@@ -674,16 +662,19 @@ class TemplateValidator {
       } else if (filePath.endsWith(".js")) {
         await this.validateJavaScriptSyntax(content, relativePath)
       }
-      
     } catch (error) {
-      logError('validateTemplateSyntax', error, { filePath, relativePath })
+      logError("validateTemplateSyntax", error, { filePath, relativePath })
       if (this.options.strictMode) {
         throw error
       } else {
-        logWarning('validateTemplateSyntax', 'Syntax validation failed, continuing in non-strict mode', {
-          filePath,
-          error: error.message
-        })
+        logWarning(
+          "validateTemplateSyntax",
+          "Syntax validation failed, continuing in non-strict mode",
+          {
+            filePath,
+            error: error.message,
+          },
+        )
       }
     }
   }
@@ -693,38 +684,40 @@ class TemplateValidator {
    */
   async validateCSharpSyntax(content, filePath) {
     try {
-      validateString(content, 'content')
-      validateString(filePath, 'filePath')
-      
+      validateString(content, "content")
+      validateString(filePath, "filePath")
+
       // Basic brace matching
       const openBraces = (content.match(/\{/g) || []).length
       const closeBraces = (content.match(/\}/g) || []).length
-      
+
       if (openBraces !== closeBraces) {
         throw new TemplateValidationError(
           `C# template ${filePath} has mismatched braces: ${openBraces} open, ${closeBraces} close`,
-          'SYNTAX_ERROR',
-          'validateCSharpSyntax',
+          "SYNTAX_ERROR",
+          "validateCSharpSyntax",
           false,
-          { filePath, openBraces, closeBraces }
+          { filePath, openBraces, closeBraces },
         )
       }
 
       // Check for required using statements
-      if (content.includes("ApplicationService") && !content.includes("using Volo.Abp.Application.Services")) {
+      if (
+        content.includes("ApplicationService") &&
+        !content.includes("using Volo.Abp.Application.Services")
+      ) {
         this.warnings.push(`C# template ${filePath} may be missing required using statements`)
       }
-      
     } catch (error) {
       if (error instanceof TemplateValidationError) {
         throw error
       } else {
         throw new TemplateValidationError(
           `C# syntax validation failed for ${filePath}: ${error.message}`,
-          'CSHARP_SYNTAX_ERROR',
-          'validateCSharpSyntax',
+          "CSHARP_SYNTAX_ERROR",
+          "validateCSharpSyntax",
           false,
-          { filePath, error: error.message }
+          { filePath, error: error.message },
         )
       }
     }
@@ -735,9 +728,9 @@ class TemplateValidator {
    */
   async validateVueSyntax(content, filePath) {
     try {
-      validateString(content, 'content')
-      validateString(filePath, 'filePath')
-      
+      validateString(content, "content")
+      validateString(filePath, "filePath")
+
       // Check Vue SFC structure
       const hasTemplate = content.includes("<template>")
       const hasScript = content.includes("<script")
@@ -746,27 +739,26 @@ class TemplateValidator {
       if (!hasTemplate) {
         throw new TemplateValidationError(
           `Vue template ${filePath} missing <template> section`,
-          'SYNTAX_ERROR',
-          'validateVueSyntax',
+          "SYNTAX_ERROR",
+          "validateVueSyntax",
           false,
-          { filePath }
+          { filePath },
         )
       }
 
       if (!hasScript) {
         this.warnings.push(`Vue template ${filePath} missing <script> section`)
       }
-      
     } catch (error) {
       if (error instanceof TemplateValidationError) {
         throw error
       } else {
         throw new TemplateValidationError(
           `Vue syntax validation failed for ${filePath}: ${error.message}`,
-          'VUE_SYNTAX_ERROR',
-          'validateVueSyntax',
+          "VUE_SYNTAX_ERROR",
+          "validateVueSyntax",
           false,
-          { filePath, error: error.message }
+          { filePath, error: error.message },
         )
       }
     }
@@ -777,20 +769,20 @@ class TemplateValidator {
    */
   async validateTypeScriptSyntax(content, filePath) {
     try {
-      validateString(content, 'content')
-      validateString(filePath, 'filePath')
-      
+      validateString(content, "content")
+      validateString(filePath, "filePath")
+
       // Basic brace matching
       const openBraces = (content.match(/\{/g) || []).length
       const closeBraces = (content.match(/\}/g) || []).length
-      
+
       if (openBraces !== closeBraces) {
         throw new TemplateValidationError(
           `TypeScript template ${filePath} has mismatched braces: ${openBraces} open, ${closeBraces} close`,
-          'SYNTAX_ERROR',
-          'validateTypeScriptSyntax',
+          "SYNTAX_ERROR",
+          "validateTypeScriptSyntax",
           false,
-          { filePath, openBraces, closeBraces }
+          { filePath, openBraces, closeBraces },
         )
       }
 
@@ -798,17 +790,16 @@ class TemplateValidator {
       if (content.includes("defineStore") && !content.includes("from 'pinia'")) {
         this.warnings.push(`TypeScript template ${filePath} may be missing Pinia import`)
       }
-      
     } catch (error) {
       if (error instanceof TemplateValidationError) {
         throw error
       } else {
         throw new TemplateValidationError(
           `TypeScript syntax validation failed for ${filePath}: ${error.message}`,
-          'TYPESCRIPT_SYNTAX_ERROR',
-          'validateTypeScriptSyntax',
+          "TYPESCRIPT_SYNTAX_ERROR",
+          "validateTypeScriptSyntax",
           false,
-          { filePath, error: error.message }
+          { filePath, error: error.message },
         )
       }
     }
@@ -819,33 +810,32 @@ class TemplateValidator {
    */
   async validateJavaScriptSyntax(content, filePath) {
     try {
-      validateString(content, 'content')
-      validateString(filePath, 'filePath')
-      
+      validateString(content, "content")
+      validateString(filePath, "filePath")
+
       // Basic brace matching
       const openBraces = (content.match(/\{/g) || []).length
       const closeBraces = (content.match(/\}/g) || []).length
-      
+
       if (openBraces !== closeBraces) {
         throw new TemplateValidationError(
           `JavaScript template ${filePath} has mismatched braces: ${openBraces} open, ${closeBraces} close`,
-          'SYNTAX_ERROR',
-          'validateJavaScriptSyntax',
+          "SYNTAX_ERROR",
+          "validateJavaScriptSyntax",
           false,
-          { filePath, openBraces, closeBraces }
+          { filePath, openBraces, closeBraces },
         )
       }
-      
     } catch (error) {
       if (error instanceof TemplateValidationError) {
         throw error
       } else {
         throw new TemplateValidationError(
           `JavaScript syntax validation failed for ${filePath}: ${error.message}`,
-          'JAVASCRIPT_SYNTAX_ERROR',
-          'validateJavaScriptSyntax',
+          "JAVASCRIPT_SYNTAX_ERROR",
+          "validateJavaScriptSyntax",
           false,
-          { filePath, error: error.message }
+          { filePath, error: error.message },
         )
       }
     }
@@ -856,7 +846,7 @@ class TemplateValidator {
    */
   outputResults() {
     const duration = Date.now() - this.stats.startTime
-    
+
     console.log("\n📊 验证结果:")
     console.log(`⏱️  耗时: ${duration}ms`)
     console.log(`📁 模板目录: ${this.templatesDir}`)
@@ -890,12 +880,18 @@ class TemplateValidator {
     } else {
       console.log("❌ 模板验证失败")
     }
-    
+
     // Summary statistics
     console.log(`\n📈 统计摘要:`)
-    console.log(`   成功率: ${this.errors.length === 0 ? '100%' : Math.round((1 - this.errors.length / Math.max(this.stats.filesProcessed, 1)) * 100) + '%'}`)
-    console.log(`   错误率: ${Math.round((this.errors.length / Math.max(this.stats.filesProcessed, 1)) * 100) || 0}%`)
-    console.log(`   警告率: ${Math.round((this.warnings.length / Math.max(this.stats.filesProcessed, 1)) * 100) || 0}%`)
+    console.log(
+      `   成功率: ${this.errors.length === 0 ? "100%" : Math.round((1 - this.errors.length / Math.max(this.stats.filesProcessed, 1)) * 100) + "%"}`,
+    )
+    console.log(
+      `   错误率: ${Math.round((this.errors.length / Math.max(this.stats.filesProcessed, 1)) * 100) || 0}%`,
+    )
+    console.log(
+      `   警告率: ${Math.round((this.warnings.length / Math.max(this.stats.filesProcessed, 1)) * 100) || 0}%`,
+    )
   }
 
   /**
@@ -907,7 +903,7 @@ class TemplateValidator {
       errors: this.errors.length,
       warnings: this.warnings.length,
       success: this.errors.length === 0,
-      duration: Date.now() - this.stats.startTime
+      duration: Date.now() - this.stats.startTime,
     }
   }
 
@@ -921,7 +917,7 @@ class TemplateValidator {
       templatesProcessed: 0,
       filesProcessed: 0,
       syntaxChecks: 0,
-      startTime: Date.now()
+      startTime: Date.now(),
     }
   }
 }
@@ -932,10 +928,10 @@ class TemplateValidator {
 async function main() {
   const args = process.argv.slice(2)
   const options = {
-    strictMode: args.includes('--strict'),
-    skipSyntaxValidation: args.includes('--skip-syntax'),
-    maxRetries: parseInt(args.find(arg => arg.startsWith('--retries='))?.split('=')[1]) || 3,
-    retryDelay: parseInt(args.find(arg => arg.startsWith('--delay='))?.split('=')[1]) || 1000
+    strictMode: args.includes("--strict"),
+    skipSyntaxValidation: args.includes("--skip-syntax"),
+    maxRetries: parseInt(args.find((arg) => arg.startsWith("--retries="))?.split("=")[1]) || 3,
+    retryDelay: parseInt(args.find((arg) => arg.startsWith("--delay="))?.split("=")[1]) || 1000,
   }
 
   console.log("🔧 Template Validator")
@@ -944,7 +940,7 @@ async function main() {
   try {
     const validator = new TemplateValidator(options)
     const success = await validator.validateAll()
-    
+
     if (success) {
       console.log("\n🎉 模板验证成功完成！")
       process.exit(0)
@@ -954,18 +950,18 @@ async function main() {
     }
   } catch (error) {
     console.error("\n💥 致命错误:", error.message)
-    
+
     if (error.details) {
       console.error("📋 错误详情:", JSON.stringify(error.details, null, 2))
     }
-    
+
     process.exit(1)
   }
 }
 
 // Enhanced module execution
 if (require.main === module) {
-  main().catch(error => {
+  main().catch((error) => {
     console.error("\n💥 未处理的错误:", error)
     process.exit(1)
   })
@@ -974,5 +970,5 @@ if (require.main === module) {
 module.exports = {
   TemplateValidator,
   TemplateValidationError,
-  resolveTemplatesDir
+  resolveTemplatesDir,
 }

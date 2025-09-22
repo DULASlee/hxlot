@@ -6,8 +6,8 @@
       {
         'is-selected': isSelected,
         'is-dragging': isDragging,
-        'is-hover': isHover
-      }
+        'is-hover': isHover,
+      },
     ]"
     :data-block-id="blockId"
     :data-node-id="nodeId"
@@ -19,10 +19,7 @@
     @mouseleave="handleMouseLeave"
   >
     <!-- 组件选中边框 -->
-    <div
-      v-if="isSelected && !isPreviewMode"
-      class="selection-border"
-    >
+    <div v-if="isSelected && !isPreviewMode" class="selection-border">
       <div class="selection-handles">
         <div class="handle handle--tl" />
         <div class="handle handle--tr" />
@@ -30,13 +27,7 @@
         <div class="handle handle--br" />
       </div>
       <div class="selection-toolbar">
-        <el-button
-          size="small"
-          type="primary"
-          :icon="Edit"
-          title="编辑属性"
-          @click="handleEdit"
-        />
+        <el-button size="small" type="primary" :icon="Edit" title="编辑属性" @click="handleEdit" />
         <el-button
           size="small"
           type="danger"
@@ -59,18 +50,15 @@
     </component>
 
     <!-- 拖拽预览 -->
-    <div
-      v-if="isDragging"
-      class="drag-preview"
-    >
+    <div v-if="isDragging" class="drag-preview">
       {{ componentDisplayName }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, inject } from 'vue'
-import { Edit, Delete } from '@element-plus/icons-vue'
+import { ref, computed, inject } from "vue"
+import { Edit, Delete } from "@element-plus/icons-vue"
 // ElMessage 将在删除确认时使用
 
 // 类型定义
@@ -103,14 +91,14 @@ interface Emits {
 const props = withDefaults(defineProps<Props>(), {
   props: () => ({}),
   isPreviewMode: false,
-  componentDisplayName: ''
+  componentDisplayName: "",
 })
 
 const emit = defineEmits<Emits>()
 
 // 设计器上下文
-const designerContext = inject('designerContext', {
-  selectedId: ref<string | undefined>(undefined)
+const designerContext = inject("designerContext", {
+  selectedId: ref<string | undefined>(undefined),
 })
 
 // 响应式状态
@@ -119,36 +107,36 @@ const isHover = ref(false)
 
 // 类型安全的工具函数
 const isValidStyle = (value: unknown): value is ComponentStyle => {
-  return typeof value === 'object' && value !== null && !Array.isArray(value)
+  return typeof value === "object" && value !== null && !Array.isArray(value)
 }
 
 const isValidProps = (props: unknown): props is ComponentProps => {
-  return typeof props === 'object' && props !== null && !Array.isArray(props)
+  return typeof props === "object" && props !== null && !Array.isArray(props)
 }
 
 const getDefaultPropsForComponent = (componentType: string): ComponentProps => {
   const defaultPropsMap: Record<string, ComponentProps> = {
-    'el-button': {
-      type: 'primary',
-      size: 'default'
+    "el-button": {
+      type: "primary",
+      size: "default",
     },
-    'el-input': {
-      placeholder: '请输入内容',
-      clearable: true
+    "el-input": {
+      placeholder: "请输入内容",
+      clearable: true,
     },
-    'el-select': {
-      placeholder: '请选择',
-      clearable: true
+    "el-select": {
+      placeholder: "请选择",
+      clearable: true,
     },
-    'el-form': {
-      labelWidth: '100px',
-      labelPosition: 'right'
+    "el-form": {
+      labelWidth: "100px",
+      labelPosition: "right",
     },
-    'el-table': {
+    "el-table": {
       border: true,
       stripe: false,
-      size: 'default'
-    }
+      size: "default",
+    },
   }
 
   return defaultPropsMap[componentType] || {}
@@ -166,13 +154,13 @@ const safeProps = computed(() => {
 
   return {
     ...defaultProps,
-    ...userProps
+    ...userProps,
   }
 })
 
 const componentClass = computed(() => ({
-  'designer-component': !props.isPreviewMode,
-  'preview-component': props.isPreviewMode
+  "designer-component": !props.isPreviewMode,
+  "preview-component": props.isPreviewMode,
 }))
 
 const componentStyle = computed(() => {
@@ -181,7 +169,7 @@ const componentStyle = computed(() => {
   // 安全地处理样式属性
   if (safeProps.value.style && isValidStyle(safeProps.value.style)) {
     Object.entries(safeProps.value.style).forEach(([key, value]) => {
-      if (typeof value === 'string' || typeof value === 'number') {
+      if (typeof value === "string" || typeof value === "number") {
         style[key] = value
       }
     })
@@ -190,12 +178,12 @@ const componentStyle = computed(() => {
   // 应用宽高属性
   if (safeProps.value.width) {
     const width = safeProps.value.width
-    style.width = typeof width === 'number' ? `${width}px` : String(width)
+    style.width = typeof width === "number" ? `${width}px` : String(width)
   }
 
   if (safeProps.value.height) {
     const height = safeProps.value.height
-    style.height = typeof height === 'number' ? `${height}px` : String(height)
+    style.height = typeof height === "number" ? `${height}px` : String(height)
   }
 
   return style
@@ -209,38 +197,38 @@ const handleDragStart = (event: DragEvent) => {
 
   // 设置拖拽数据
   const dragData = {
-    type: 'move-component',
+    type: "move-component",
     nodeId: props.nodeId,
     blockId: props.blockId,
-    componentType: props.componentType
+    componentType: props.componentType,
   }
 
   if (event.dataTransfer) {
-    event.dataTransfer.setData('application/json', JSON.stringify(dragData))
-    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.setData("application/json", JSON.stringify(dragData))
+    event.dataTransfer.effectAllowed = "move"
   }
 
-  emit('dragStart', props.nodeId, event)
+  emit("dragStart", props.nodeId, event)
 }
 
 const handleDragEnd = (event: DragEvent) => {
   isDragging.value = false
-  emit('dragEnd', props.nodeId, event)
+  emit("dragEnd", props.nodeId, event)
 }
 
 const handleSelect = (event: MouseEvent) => {
   if (props.isPreviewMode) return
 
   event.stopPropagation()
-  emit('select', props.nodeId)
+  emit("select", props.nodeId)
 }
 
 const handleEdit = () => {
-  emit('edit', props.nodeId)
+  emit("edit", props.nodeId)
 }
 
 const handleDelete = () => {
-  emit('delete', props.nodeId)
+  emit("delete", props.nodeId)
 }
 
 const handleMouseEnter = () => {
@@ -255,7 +243,7 @@ const handleMouseLeave = () => {
 
 const handlePropsUpdate = (newProps: ComponentProps) => {
   if (isValidProps(newProps)) {
-    emit('propsUpdate', props.nodeId, newProps)
+    emit("propsUpdate", props.nodeId, newProps)
   }
 }
 </script>

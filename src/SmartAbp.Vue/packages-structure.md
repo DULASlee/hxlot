@@ -73,12 +73,12 @@ graph TD
     A --> C[lowcode-templates]
     A --> D[lowcode-cli]
     A --> E[lowcode-plugins]
-    
+
     B --> F[主应用]
     C --> F
     D --> F
     E --> F
-    
+
     G[用户项目] --> A
     G --> B
     G --> C
@@ -87,24 +87,29 @@ graph TD
 ## 🚀 发包策略
 
 ### 核心包 (@smartabp/lowcode-core)
+
 - 拖拽引擎
 - Schema系统
 - 代码生成器
 - 类型定义
 
 ### UI包 (@smartabp/lowcode-ui-vue)
+
 - Vue组件
 - 设计器界面
 - 组合式函数
 
 ### 模板包 (@smartabp/lowcode-templates)
+
 - 代码模板
 - 框架适配
 
 ### CLI包 (@smartabp/lowcode-cli)
+
 - 命令行工具
 - 脚手架功能
 
 ### 插件包 (@smartabp/lowcode-plugins)
+
 - 框架插件
 - 第三方集成

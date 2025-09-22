@@ -117,16 +117,16 @@ graph TD
     A[lowcode-core] --> B[lowcode-designer]
     A --> C[lowcode-codegen]
     A --> D[lowcode-ui-vue]
-    
+
     B --> E[lowcode-ui-vue]
     C --> E
-    
+
     F[lowcode-tools] --> A
     F --> B
     F --> C
-    
+
     G[lowcode-api] --> D
-    
+
     H[主应用] --> B
     H --> C
     H --> D
@@ -135,31 +135,35 @@ graph TD
 
 ## 🎯 **包功能职责**
 
-| 包名 | 主要职责 | 核心文件来源 | 发布独立性 |
-|------|----------|-------------|-----------|
-| **lowcode-core** | 引擎内核、插件系统、运行时 | `src/lowcode/` | ⭐⭐⭐ 核心包 |
-| **lowcode-designer** | 可视化设计器、实体设计器 | `src/components/designer/`, `src/views/codegen/designer/`, `src/components/CodeGenerator/` | ⭐⭐ 设计器包 |
-| **lowcode-codegen** | 代码生成、模板系统 | `src/components/designer/schemaExporter.ts`, `templates/`, `src/tools/` | ⭐⭐ 生成器包 |
-| **lowcode-ui-vue** | Vue UI组件、视图、状态管理 | `src/views/codegen/`, `src/stores/designer.ts`, `src/composables/` | ⭐ UI包 |
-| **lowcode-tools** | 开发工具、CLI、插件 | `tools/`, `src/plugins/` | ⭐ 工具包 |
-| **lowcode-api** | API客户端、类型定义 | `src/api/code-generator.ts`, `src/types/` | ⭐ API包 |
+| 包名                 | 主要职责                   | 核心文件来源                                                                               | 发布独立性    |
+| -------------------- | -------------------------- | ------------------------------------------------------------------------------------------ | ------------- |
+| **lowcode-core**     | 引擎内核、插件系统、运行时 | `src/lowcode/`                                                                             | ⭐⭐⭐ 核心包 |
+| **lowcode-designer** | 可视化设计器、实体设计器   | `src/components/designer/`, `src/views/codegen/designer/`, `src/components/CodeGenerator/` | ⭐⭐ 设计器包 |
+| **lowcode-codegen**  | 代码生成、模板系统         | `src/components/designer/schemaExporter.ts`, `templates/`, `src/tools/`                    | ⭐⭐ 生成器包 |
+| **lowcode-ui-vue**   | Vue UI组件、视图、状态管理 | `src/views/codegen/`, `src/stores/designer.ts`, `src/composables/`                         | ⭐ UI包       |
+| **lowcode-tools**    | 开发工具、CLI、插件        | `tools/`, `src/plugins/`                                                                   | ⭐ 工具包     |
+| **lowcode-api**      | API客户端、类型定义        | `src/api/code-generator.ts`, `src/types/`                                                  | ⭐ API包      |
 
 ## 🚀 **分阶段迁移计划**
 
 ### 阶段1：核心包创建
+
 - [x] 创建包目录结构
 - [ ] 迁移 `lowcode-core` (最高优先级)
 - [ ] 迁移 `lowcode-codegen` (第二优先级)
 
-### 阶段2：UI包创建  
+### 阶段2：UI包创建
+
 - [ ] 迁移 `lowcode-designer` (包含EntityDesigner)
 - [ ] 迁移 `lowcode-ui-vue`
 
 ### 阶段3：工具包创建
+
 - [ ] 迁移 `lowcode-tools`
 - [ ] 迁移 `lowcode-api`
 
 ### 阶段4：集成测试
+
 - [ ] 更新主应用导入
 - [ ] 配置构建流程
 - [ ] 端到端测试

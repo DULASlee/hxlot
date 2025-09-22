@@ -4,43 +4,43 @@
  * Custom branding and styling for Storybook interface
  */
 
-import { create } from '@storybook/theming/create'
+import { create } from "@storybook/theming/create"
 
 // Brand colors
 const brandColors = {
-  primary: '#409EFF',
-  secondary: '#67C23A', 
-  success: '#67C23A',
-  warning: '#E6A23C',
-  danger: '#F56C6C',
-  info: '#909399',
-  
+  primary: "#409EFF",
+  secondary: "#67C23A",
+  success: "#67C23A",
+  warning: "#E6A23C",
+  danger: "#F56C6C",
+  info: "#909399",
+
   // Neutral colors
-  white: '#FFFFFF',
-  black: '#000000',
+  white: "#FFFFFF",
+  black: "#000000",
   gray: {
-    50: '#FAFAFA',
-    100: '#F5F5F5',
-    200: '#EBEEF5',
-    300: '#E4E7ED',
-    400: '#DCDFE6',
-    500: '#C0C4CC',
-    600: '#909399',
-    700: '#606266',
-    800: '#303133',
-    900: '#1D1E1F'
-  }
+    50: "#FAFAFA",
+    100: "#F5F5F5",
+    200: "#EBEEF5",
+    300: "#E4E7ED",
+    400: "#DCDFE6",
+    500: "#C0C4CC",
+    600: "#909399",
+    700: "#606266",
+    800: "#303133",
+    900: "#1D1E1F",
+  },
 }
 
 // Light theme
 export const lightTheme = create({
-  base: 'light',
-  
+  base: "light",
+
   // Brand
-  brandTitle: 'Advanced UI Components',
-  brandUrl: '/',
-  brandImage: '/logo.svg',
-  brandTarget: '_self',
+  brandTitle: "Advanced UI Components",
+  brandUrl: "/",
+  brandImage: "/logo.svg",
+  brandTarget: "_self",
 
   // Colors
   colorPrimary: brandColors.primary,
@@ -74,18 +74,18 @@ export const lightTheme = create({
 
   // Typography
   fontBase: '"Helvetica Neue", Helvetica, Arial, "Microsoft YaHei", "微软雅黑", SimSun, sans-serif',
-  fontCode: 'Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace'
+  fontCode: 'Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace',
 })
 
 // Dark theme
 export const darkTheme = create({
-  base: 'dark',
-  
+  base: "dark",
+
   // Brand
-  brandTitle: 'Advanced UI Components',
-  brandUrl: '/',
-  brandImage: '/logo-dark.svg',
-  brandTarget: '_self',
+  brandTitle: "Advanced UI Components",
+  brandUrl: "/",
+  brandImage: "/logo-dark.svg",
+  brandTarget: "_self",
 
   // Colors
   colorPrimary: brandColors.primary,
@@ -119,7 +119,7 @@ export const darkTheme = create({
 
   // Typography
   fontBase: '"Helvetica Neue", Helvetica, Arial, "Microsoft YaHei", "微软雅黑", SimSun, sans-serif',
-  fontCode: 'Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace'
+  fontCode: 'Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace',
 })
 
 export default lightTheme

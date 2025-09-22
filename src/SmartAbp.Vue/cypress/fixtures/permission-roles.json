@@ -65,10 +65,7 @@
       "id": "user",
       "name": "Standard User",
       "description": "Basic user permissions",
-      "permissions": [
-        "profile.view",
-        "profile.edit"
-      ]
+      "permissions": ["profile.view", "profile.edit"]
     }
   ],
   "users": [

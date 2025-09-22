@@ -1,22 +1,16 @@
 <template>
   <div class="page-container">
     <div class="page-header">
-      <h2 class="page-title">
-        角色权限管理
-      </h2>
+      <h2 class="page-title">角色权限管理</h2>
       <div class="page-actions">
-        <button class="btn btn-primary">
-          新增角色
-        </button>
+        <button class="btn btn-primary">新增角色</button>
       </div>
     </div>
 
     <div class="roles-layout">
       <!-- 角色列表 -->
       <div class="roles-panel">
-        <h3 class="panel-title">
-          角色列表
-        </h3>
+        <h3 class="panel-title">角色列表</h3>
         <div class="roles-list">
           <div
             v-for="role in roleList"
@@ -34,18 +28,8 @@
               </div>
             </div>
             <div class="role-actions">
-              <button
-                class="btn btn-sm btn-primary"
-                @click.stop="editRole(role)"
-              >
-                编辑
-              </button>
-              <button
-                class="btn btn-sm btn-danger"
-                @click.stop="deleteRole(role)"
-              >
-                删除
-              </button>
+              <button class="btn btn-sm btn-primary" @click.stop="editRole(role)">编辑</button>
+              <button class="btn btn-sm btn-danger" @click.stop="deleteRole(role)">删除</button>
             </div>
           </div>
         </div>
@@ -55,32 +39,16 @@
       <div class="permissions-panel">
         <h3 class="panel-title">
           权限配置
-          <span
-            v-if="selectedRole"
-            class="selected-role"
-          >- {{ selectedRole.name }}</span>
+          <span v-if="selectedRole" class="selected-role">- {{ selectedRole.name }}</span>
         </h3>
 
-        <div
-          v-if="selectedRole"
-          class="permissions-content"
-        >
+        <div v-if="selectedRole" class="permissions-content">
           <!-- 权限树 -->
           <div class="permission-tree">
-            <div
-              v-for="menu in menuTree"
-              :key="menu.id"
-              class="tree-node"
-            >
+            <div v-for="menu in menuTree" :key="menu.id" class="tree-node">
               <!-- 一级菜单 -->
-              <div
-                class="tree-node-content"
-                @click="toggleNode(menu)"
-              >
-                <span
-                  class="tree-expand-icon"
-                  :class="{ expanded: menu.expanded }"
-                >▶</span>
+              <div class="tree-node-content" @click="toggleNode(menu)">
+                <span class="tree-expand-icon" :class="{ expanded: menu.expanded }">▶</span>
                 <input
                   type="checkbox"
                   class="tree-checkbox"
@@ -91,24 +59,11 @@
               </div>
 
               <!-- 二级菜单 -->
-              <div
-                v-if="menu.expanded && menu.children"
-                class="tree-children"
-              >
-                <div
-                  v-for="submenu in menu.children"
-                  :key="submenu.id"
-                  class="tree-node"
-                >
-                  <div
-                    class="tree-node-content"
-                    @click="toggleNode(submenu)"
-                  >
+              <div v-if="menu.expanded && menu.children" class="tree-children">
+                <div v-for="submenu in menu.children" :key="submenu.id" class="tree-node">
+                  <div class="tree-node-content" @click="toggleNode(submenu)">
                     <span class="tree-indent" />
-                    <span
-                      class="tree-expand-icon"
-                      :class="{ expanded: submenu.expanded }"
-                    >▶</span>
+                    <span class="tree-expand-icon" :class="{ expanded: submenu.expanded }">▶</span>
                     <input
                       type="checkbox"
                       class="tree-checkbox"
@@ -119,15 +74,8 @@
                   </div>
 
                   <!-- 按钮权限 -->
-                  <div
-                    v-if="submenu.expanded && submenu.buttons"
-                    class="tree-children"
-                  >
-                    <div
-                      v-for="button in submenu.buttons"
-                      :key="button.id"
-                      class="tree-node"
-                    >
+                  <div v-if="submenu.expanded && submenu.buttons" class="tree-children">
+                    <div v-for="button in submenu.buttons" :key="button.id" class="tree-node">
                       <div class="tree-node-content">
                         <span class="tree-indent" />
                         <span class="tree-indent" />
@@ -148,28 +96,13 @@
 
           <!-- 保存按钮 -->
           <div class="permissions-actions">
-            <button
-              class="btn btn-primary"
-              @click="savePermissions"
-            >
-              保存权限
-            </button>
-            <button
-              class="btn btn-default"
-              @click="resetPermissions"
-            >
-              重置
-            </button>
+            <button class="btn btn-primary" @click="savePermissions">保存权限</button>
+            <button class="btn btn-default" @click="resetPermissions">重置</button>
           </div>
         </div>
 
-        <div
-          v-else
-          class="empty-state"
-        >
-          <div class="empty-icon">
-            🔑
-          </div>
+        <div v-else class="empty-state">
+          <div class="empty-icon">🔑</div>
           <p>请选择一个角色来配置权限</p>
         </div>
       </div>
@@ -178,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from "vue"
 
 // Props definition (currently unused but may be needed for future enhancements)
 // const props = defineProps<{
@@ -209,76 +142,76 @@ interface MenuNode {
 const roleList = ref<Role[]>([
   {
     id: 1,
-    name: '超级管理员',
-    description: '拥有系统所有权限',
-    permissions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    name: "超级管理员",
+    description: "拥有系统所有权限",
+    permissions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   },
   {
     id: 2,
-    name: '项目经理',
-    description: '项目管理相关权限',
-    permissions: [1, 2, 3, 7, 8, 9]
+    name: "项目经理",
+    description: "项目管理相关权限",
+    permissions: [1, 2, 3, 7, 8, 9],
   },
   {
     id: 3,
-    name: '安全员',
-    description: '安全管理相关权限',
-    permissions: [1, 4, 5, 6]
-  }
+    name: "安全员",
+    description: "安全管理相关权限",
+    permissions: [1, 4, 5, 6],
+  },
 ])
 
 // 菜单权限树
 const menuTree = ref<MenuNode[]>([
   {
     id: 1,
-    name: '系统管理',
+    name: "系统管理",
     expanded: true,
     children: [
       {
         id: 2,
-        name: '用户管理',
+        name: "用户管理",
         expanded: true,
         buttons: [
-          { id: 7, name: '新增' },
-          { id: 8, name: '编辑' },
-          { id: 9, name: '删除' }
-        ]
+          { id: 7, name: "新增" },
+          { id: 8, name: "编辑" },
+          { id: 9, name: "删除" },
+        ],
       },
       {
         id: 3,
-        name: '角色管理',
+        name: "角色管理",
         expanded: false,
         buttons: [
-          { id: 10, name: '新增' },
-          { id: 11, name: '编辑' },
-          { id: 12, name: '删除' }
-        ]
-      }
-    ]
+          { id: 10, name: "新增" },
+          { id: 11, name: "编辑" },
+          { id: 12, name: "删除" },
+        ],
+      },
+    ],
   },
   {
     id: 4,
-    name: '项目管理',
+    name: "项目管理",
     expanded: false,
     children: [
       {
         id: 5,
-        name: '项目列表',
+        name: "项目列表",
         expanded: false,
-        buttons: []
-      }
-    ]
+        buttons: [],
+      },
+    ],
   },
   {
     id: 6,
-    name: '考勤管理',
+    name: "考勤管理",
     expanded: false,
-    children: []
-  }
+    children: [],
+  },
 ])
 
- // 选中的角色
- const selectedRole = ref<Role | null>(null)
+// 选中的角色
+const selectedRole = ref<Role | null>(null)
 
 // 方法
 const selectRole = (role: Role) => {
@@ -291,7 +224,7 @@ const editRole = (role: Role) => {
 
 const deleteRole = (role: Role) => {
   if (confirm(`确定要删除角色 ${role.name} 吗？`)) {
-    console.log('删除角色:', role)
+    console.log("删除角色:", role)
   }
 }
 
@@ -348,16 +281,16 @@ const handleButtonCheck = (button: ButtonItem, event: Event) => {
 const savePermissions = () => {
   if (!selectedRole.value) return
 
-  console.log('保存权限:', selectedRole.value)
-  alert('权限保存成功！')
+  console.log("保存权限:", selectedRole.value)
+  alert("权限保存成功！")
 }
 
 const resetPermissions = () => {
   if (!selectedRole.value) return
 
-  if (confirm('确定要重置权限配置吗？')) {
+  if (confirm("确定要重置权限配置吗？")) {
     // 重置逻辑
-    console.log('重置权限')
+    console.log("重置权限")
   }
 }
 
@@ -414,7 +347,8 @@ onMounted(() => {
   overflow: hidden;
 }
 
-.roles-panel, .permissions-panel {
+.roles-panel,
+.permissions-panel {
   background: #f7f8fa;
   border-radius: clamp(4px, 1vw, 8px);
   padding: clamp(16px, 3vw, 24px);

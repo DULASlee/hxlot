@@ -41,10 +41,10 @@ export class ApiService {
         const startedAt = Date.now()
         ;(config as any).metadata = { startedAt }
         try {
-          const url = `${config.baseURL || ''}${config.url || ''}`
+          const url = `${config.baseURL || ""}${config.url || ""}`
           const headers = { ...config.headers }
-          if (headers && 'Authorization' in headers) headers.Authorization = '***'
-          logger.getEnhancedLogger().child({ type: 'api-request' }).info('API Request', {
+          if (headers && "Authorization" in headers) headers.Authorization = "***"
+          logger.getEnhancedLogger().child({ type: "api-request" }).info("API Request", {
             method: config.method,
             url,
             headers,
@@ -54,7 +54,10 @@ export class ApiService {
       },
       (error) => {
         try {
-          logger.getEnhancedLogger().child({ type: 'api-request-error' }).error('API Request Error', error)
+          logger
+            .getEnhancedLogger()
+            .child({ type: "api-request-error" })
+            .error("API Request Error", error)
         } catch {}
         return Promise.reject(error)
       },
@@ -66,8 +69,8 @@ export class ApiService {
         try {
           const startedAt = (response.config as any).metadata?.startedAt || Date.now()
           const duration = Date.now() - startedAt
-          const url = `${response.config.baseURL || ''}${response.config.url || ''}`
-          logger.getEnhancedLogger().child({ type: 'api-response' }).info('API Response', {
+          const url = `${response.config.baseURL || ""}${response.config.url || ""}`
+          logger.getEnhancedLogger().child({ type: "api-response" }).info("API Response", {
             method: response.config.method,
             url,
             status: response.status,
@@ -105,8 +108,8 @@ export class ApiService {
         }
 
         try {
-          const url = `${error.config?.baseURL || ''}${error.config?.url || ''}`
-          logger.getEnhancedLogger().child({ type: 'api-error' }).error('API Error', error, {
+          const url = `${error.config?.baseURL || ""}${error.config?.url || ""}`
+          logger.getEnhancedLogger().child({ type: "api-error" }).error("API Error", error, {
             method: error.config?.method,
             url,
             status: error.response?.status,

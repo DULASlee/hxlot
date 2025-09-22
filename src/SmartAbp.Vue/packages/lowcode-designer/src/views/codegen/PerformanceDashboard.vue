@@ -9,50 +9,24 @@
         <i class="fas fa-tachometer-alt" />
         性能监控中心
       </h1>
-      <p class="page-description">
-        低代码引擎性能指标监控与分析
-      </p>
+      <p class="page-description">低代码引擎性能指标监控与分析</p>
 
       <div class="header-actions">
-        <button
-          class="refresh-btn"
-          :disabled="loading"
-          @click="refreshData"
-        >
-          <i
-            class="fas fa-sync-alt"
-            :class="{ spinning: loading }"
-          />
+        <button class="refresh-btn" :disabled="loading" @click="refreshData">
+          <i class="fas fa-sync-alt" :class="{ spinning: loading }" />
           刷新数据
         </button>
-        <button
-          class="export-btn"
-          @click="exportReport"
-        >
+        <button class="export-btn" @click="exportReport">
           <i class="fas fa-download" />
           导出报告
         </button>
         <div class="time-range-selector">
-          <select
-            v-model="timeRange"
-            class="time-select"
-            @change="onTimeRangeChange"
-          >
-            <option value="1h">
-              最近1小时
-            </option>
-            <option value="6h">
-              最近6小时
-            </option>
-            <option value="24h">
-              最近24小时
-            </option>
-            <option value="7d">
-              最近7天
-            </option>
-            <option value="30d">
-              最近30天
-            </option>
+          <select v-model="timeRange" class="time-select" @change="onTimeRangeChange">
+            <option value="1h">最近1小时</option>
+            <option value="6h">最近6小时</option>
+            <option value="24h">最近24小时</option>
+            <option value="7d">最近7天</option>
+            <option value="30d">最近30天</option>
           </select>
         </div>
       </div>
@@ -63,22 +37,12 @@
       <div class="metrics-cards">
         <div class="metric-card">
           <div class="metric-icon">
-            <i
-              class="fas fa-bolt"
-              :class="getStatusClass(metrics.averageGenerationTime, 200)"
-            />
+            <i class="fas fa-bolt" :class="getStatusClass(metrics.averageGenerationTime, 200)" />
           </div>
           <div class="metric-content">
-            <h3 class="metric-title">
-              平均生成时间
-            </h3>
-            <p class="metric-value">
-              {{ metrics.averageGenerationTime }}ms
-            </p>
-            <span
-              class="metric-trend"
-              :class="getTrendClass(metrics.generationTimeTrend)"
-            >
+            <h3 class="metric-title">平均生成时间</h3>
+            <p class="metric-value">{{ metrics.averageGenerationTime }}ms</p>
+            <span class="metric-trend" :class="getTrendClass(metrics.generationTimeTrend)">
               <i :class="getTrendIcon(metrics.generationTimeTrend)" />
               {{ Math.abs(metrics.generationTimeTrend) }}%
             </span>
@@ -87,22 +51,12 @@
 
         <div class="metric-card">
           <div class="metric-icon">
-            <i
-              class="fas fa-check-circle"
-              :class="getStatusClass(metrics.successRate, 95, true)"
-            />
+            <i class="fas fa-check-circle" :class="getStatusClass(metrics.successRate, 95, true)" />
           </div>
           <div class="metric-content">
-            <h3 class="metric-title">
-              成功率
-            </h3>
-            <p class="metric-value">
-              {{ metrics.successRate }}%
-            </p>
-            <span
-              class="metric-trend"
-              :class="getTrendClass(metrics.successRateTrend)"
-            >
+            <h3 class="metric-title">成功率</h3>
+            <p class="metric-value">{{ metrics.successRate }}%</p>
+            <span class="metric-trend" :class="getTrendClass(metrics.successRateTrend)">
               <i :class="getTrendIcon(metrics.successRateTrend)" />
               {{ Math.abs(metrics.successRateTrend) }}%
             </span>
@@ -111,22 +65,12 @@
 
         <div class="metric-card">
           <div class="metric-icon">
-            <i
-              class="fas fa-code"
-              :class="getStatusClass(metrics.throughput, 50, true)"
-            />
+            <i class="fas fa-code" :class="getStatusClass(metrics.throughput, 50, true)" />
           </div>
           <div class="metric-content">
-            <h3 class="metric-title">
-              吞吐量
-            </h3>
-            <p class="metric-value">
-              {{ metrics.throughput }}/min
-            </p>
-            <span
-              class="metric-trend"
-              :class="getTrendClass(metrics.throughputTrend)"
-            >
+            <h3 class="metric-title">吞吐量</h3>
+            <p class="metric-value">{{ metrics.throughput }}/min</p>
+            <span class="metric-trend" :class="getTrendClass(metrics.throughputTrend)">
               <i :class="getTrendIcon(metrics.throughputTrend)" />
               {{ Math.abs(metrics.throughputTrend) }}%
             </span>
@@ -135,22 +79,12 @@
 
         <div class="metric-card">
           <div class="metric-icon">
-            <i
-              class="fas fa-memory"
-              :class="getStatusClass(metrics.memoryUsage, 500)"
-            />
+            <i class="fas fa-memory" :class="getStatusClass(metrics.memoryUsage, 500)" />
           </div>
           <div class="metric-content">
-            <h3 class="metric-title">
-              内存使用
-            </h3>
-            <p class="metric-value">
-              {{ metrics.memoryUsage }}MB
-            </p>
-            <span
-              class="metric-trend"
-              :class="getTrendClass(metrics.memoryUsageTrend)"
-            >
+            <h3 class="metric-title">内存使用</h3>
+            <p class="metric-value">{{ metrics.memoryUsage }}MB</p>
+            <span class="metric-trend" :class="getTrendClass(metrics.memoryUsageTrend)">
               <i :class="getTrendIcon(metrics.memoryUsageTrend)" />
               {{ Math.abs(metrics.memoryUsageTrend) }}%
             </span>
@@ -170,17 +104,11 @@
             <div class="chart-controls">
               <div class="chart-legend">
                 <span class="legend-item">
-                  <span
-                    class="legend-color"
-                    style="background: var(--theme-brand-primary);"
-                  />
+                  <span class="legend-color" style="background: var(--theme-brand-primary)" />
                   生成时间 (ms)
                 </span>
                 <span class="legend-item">
-                  <span
-                    class="legend-color"
-                    style="background: var(--theme-success);"
-                  />
+                  <span class="legend-color" style="background: var(--theme-success)" />
                   成功率 (%)
                 </span>
               </div>
@@ -193,16 +121,12 @@
               <div class="mock-chart">
                 <!-- 模拟图表数据 -->
                 <div class="chart-bars">
-                  <div
-                    v-for="(point, index) in performanceData"
-                    :key="index"
-                    class="chart-bar"
-                  >
+                  <div v-for="(point, index) in performanceData" :key="index" class="chart-bar">
                     <div
                       class="bar-fill"
                       :style="{
                         height: `${(point.generationTime / 300) * 100}%`,
-                        background: 'var(--theme-brand-primary)'
+                        background: 'var(--theme-brand-primary)',
                       }"
                     />
                   </div>
@@ -222,11 +146,7 @@
           </div>
           <div class="chart-container">
             <div class="plugin-performance-list">
-              <div
-                v-for="plugin in pluginPerformance"
-                :key="plugin.name"
-                class="plugin-item"
-              >
+              <div v-for="plugin in pluginPerformance" :key="plugin.name" class="plugin-item">
                 <div class="plugin-info">
                   <div class="plugin-name">
                     {{ plugin.name }}
@@ -241,8 +161,8 @@
                   <div
                     class="performance-fill"
                     :style="{
-                      width: `${(plugin.averageTime / Math.max(...pluginPerformance.map(p => p.averageTime))) * 100}%`,
-                      background: getPerformanceColor(plugin.averageTime)
+                      width: `${(plugin.averageTime / Math.max(...pluginPerformance.map((p) => p.averageTime))) * 100}%`,
+                      background: getPerformanceColor(plugin.averageTime),
                     }"
                   />
                 </div>
@@ -261,52 +181,36 @@
               <i class="fas fa-industry" />
               Worker池与缓存健康度
             </h3>
-            <button
-              class="refresh-btn"
-              :disabled="loading"
-              @click="pullRuntimeHealth"
-            >
-              刷新
-            </button>
+            <button class="refresh-btn" :disabled="loading" @click="pullRuntimeHealth">刷新</button>
           </div>
           <div class="stats-content">
             <div class="health-grid">
               <div class="health-item">
-                <div class="health-label">
-                  任务提交
-                </div>
+                <div class="health-label">任务提交</div>
                 <div class="health-value">
                   {{ workerMetrics.submitted }}
                 </div>
               </div>
               <div class="health-item">
-                <div class="health-label">
-                  进行中
-                </div>
+                <div class="health-label">进行中</div>
                 <div class="health-value">
                   {{ workerMetrics.inFlight }}
                 </div>
               </div>
               <div class="health-item">
-                <div class="health-label">
-                  完成
-                </div>
+                <div class="health-label">完成</div>
                 <div class="health-value">
                   {{ workerMetrics.completed }}
                 </div>
               </div>
               <div class="health-item">
-                <div class="health-label">
-                  失败
-                </div>
+                <div class="health-label">失败</div>
                 <div class="health-value">
                   {{ workerMetrics.failed }}
                 </div>
               </div>
               <div class="health-item">
-                <div class="health-label">
-                  队列峰值
-                </div>
+                <div class="health-label">队列峰值</div>
                 <div class="health-value">
                   {{ workerMetrics.queueMax }}
                 </div>
@@ -315,33 +219,25 @@
 
             <div class="health-grid">
               <div class="health-item">
-                <div class="health-label">
-                  缓存条目
-                </div>
+                <div class="health-label">缓存条目</div>
                 <div class="health-value">
                   {{ cacheStats.totalEntries }}
                 </div>
               </div>
               <div class="health-item">
-                <div class="health-label">
-                  缓存大小
-                </div>
+                <div class="health-label">缓存大小</div>
                 <div class="health-value">
-                  {{ (cacheStats.totalSizeBytes/1024/1024).toFixed(2) }} MB
+                  {{ (cacheStats.totalSizeBytes / 1024 / 1024).toFixed(2) }} MB
                 </div>
               </div>
               <div class="health-item">
-                <div class="health-label">
-                  平均条目大小
-                </div>
+                <div class="health-label">平均条目大小</div>
                 <div class="health-value">
-                  {{ (cacheStats.averageEntrySize/1024).toFixed(2) }} KB
+                  {{ (cacheStats.averageEntrySize / 1024).toFixed(2) }} KB
                 </div>
               </div>
               <div class="health-item">
-                <div class="health-label">
-                  访问计数
-                </div>
+                <div class="health-label">访问计数</div>
                 <div class="health-value">
                   {{ cacheStats.totalAccessCount }}
                 </div>
@@ -357,33 +253,20 @@
               错误分析
             </h3>
             <div class="error-summary">
-              <span
-                class="error-count"
-                :class="{ 'has-errors': errorStats.totalErrors > 0 }"
-              >
+              <span class="error-count" :class="{ 'has-errors': errorStats.totalErrors > 0 }">
                 {{ errorStats.totalErrors }} 个错误
               </span>
             </div>
           </div>
 
           <div class="stats-content">
-            <div
-              v-if="errorStats.totalErrors === 0"
-              class="no-errors"
-            >
+            <div v-if="errorStats.totalErrors === 0" class="no-errors">
               <i class="fas fa-check-circle" />
               <p>暂无错误记录</p>
             </div>
 
-            <div
-              v-else
-              class="error-list"
-            >
-              <div
-                v-for="error in errorStats.errors"
-                :key="error.type"
-                class="error-item"
-              >
+            <div v-else class="error-list">
+              <div v-for="error in errorStats.errors" :key="error.type" class="error-item">
                 <div class="error-icon">
                   <i :class="getErrorIcon(error.type)" />
                 </div>
@@ -391,9 +274,7 @@
                   <div class="error-type">
                     {{ error.type }}
                   </div>
-                  <div class="error-count">
-                    {{ error.count }} 次
-                  </div>
+                  <div class="error-count">{{ error.count }} 次</div>
                   <div class="error-description">
                     {{ error.description }}
                   </div>
@@ -421,57 +302,45 @@
           <div class="stats-content">
             <div class="resource-metrics">
               <div class="resource-item">
-                <div class="resource-label">
-                  CPU 使用率
-                </div>
+                <div class="resource-label">CPU 使用率</div>
                 <div class="resource-bar">
                   <div
                     class="resource-fill"
                     :style="{
                       width: `${systemResources.cpuUsage}%`,
-                      background: getResourceColor(systemResources.cpuUsage)
+                      background: getResourceColor(systemResources.cpuUsage),
                     }"
                   />
                 </div>
-                <div class="resource-value">
-                  {{ systemResources.cpuUsage }}%
-                </div>
+                <div class="resource-value">{{ systemResources.cpuUsage }}%</div>
               </div>
 
               <div class="resource-item">
-                <div class="resource-label">
-                  内存使用率
-                </div>
+                <div class="resource-label">内存使用率</div>
                 <div class="resource-bar">
                   <div
                     class="resource-fill"
                     :style="{
                       width: `${systemResources.memoryUsage}%`,
-                      background: getResourceColor(systemResources.memoryUsage)
+                      background: getResourceColor(systemResources.memoryUsage),
                     }"
                   />
                 </div>
-                <div class="resource-value">
-                  {{ systemResources.memoryUsage }}%
-                </div>
+                <div class="resource-value">{{ systemResources.memoryUsage }}%</div>
               </div>
 
               <div class="resource-item">
-                <div class="resource-label">
-                  缓存命中率
-                </div>
+                <div class="resource-label">缓存命中率</div>
                 <div class="resource-bar">
                   <div
                     class="resource-fill"
                     :style="{
                       width: `${systemResources.cacheHitRate}%`,
-                      background: getResourceColor(systemResources.cacheHitRate, true)
+                      background: getResourceColor(systemResources.cacheHitRate, true),
                     }"
                   />
                 </div>
-                <div class="resource-value">
-                  {{ systemResources.cacheHitRate }}%
-                </div>
+                <div class="resource-value">{{ systemResources.cacheHitRate }}%</div>
               </div>
             </div>
           </div>
@@ -487,18 +356,12 @@
           </div>
 
           <div class="stats-content">
-            <div
-              v-if="optimizationSuggestions.length === 0"
-              class="no-suggestions"
-            >
+            <div v-if="optimizationSuggestions.length === 0" class="no-suggestions">
               <i class="fas fa-thumbs-up" />
               <p>系统运行良好，暂无优化建议</p>
             </div>
 
-            <div
-              v-else
-              class="suggestions-list"
-            >
+            <div v-else class="suggestions-list">
               <div
                 v-for="suggestion in optimizationSuggestions"
                 :key="suggestion.id"
@@ -520,17 +383,11 @@
                   </div>
                 </div>
                 <div class="suggestion-actions">
-                  <button
-                    class="apply-btn"
-                    @click="applySuggestion(suggestion.id)"
-                  >
+                  <button class="apply-btn" @click="applySuggestion(suggestion.id)">
                     <i class="fas fa-check" />
                     应用
                   </button>
-                  <button
-                    class="dismiss-btn"
-                    @click="dismissSuggestion(suggestion.id)"
-                  >
+                  <button class="dismiss-btn" @click="dismissSuggestion(suggestion.id)">
                     <i class="fas fa-times" />
                     忽略
                   </button>
@@ -550,48 +407,25 @@
               实时性能日志
             </h3>
             <div class="logs-controls">
-              <button
-                class="logs-btn"
-                @click="clearLogs"
-              >
+              <button class="logs-btn" @click="clearLogs">
                 <i class="fas fa-trash" />
                 清空
               </button>
-              <button
-                class="logs-btn"
-                :class="{ active: autoScroll }"
-                @click="toggleAutoScroll"
-              >
+              <button class="logs-btn" :class="{ active: autoScroll }" @click="toggleAutoScroll">
                 <i class="fas fa-arrow-down" />
                 自动滚动
               </button>
-              <select
-                v-model="logLevel"
-                class="log-level-select"
-              >
-                <option value="all">
-                  全部级别
-                </option>
-                <option value="error">
-                  错误
-                </option>
-                <option value="warn">
-                  警告
-                </option>
-                <option value="info">
-                  信息
-                </option>
-                <option value="debug">
-                  调试
-                </option>
+              <select v-model="logLevel" class="log-level-select">
+                <option value="all">全部级别</option>
+                <option value="error">错误</option>
+                <option value="warn">警告</option>
+                <option value="info">信息</option>
+                <option value="debug">调试</option>
               </select>
             </div>
           </div>
 
-          <div
-            ref="logsContainer"
-            class="logs-content"
-          >
+          <div ref="logsContainer" class="logs-content">
             <div
               v-for="log in filteredLogs"
               :key="log.id"
@@ -601,14 +435,8 @@
               <span class="log-time">{{ formatTime(log.timestamp) }}</span>
               <span class="log-level">{{ log.level.toUpperCase() }}</span>
               <span class="log-message">{{ log.message }}</span>
-              <span
-                v-if="log.duration"
-                class="log-duration"
-              >{{ log.duration }}ms</span>
-              <span
-                v-if="log.plugin"
-                class="log-plugin"
-              >[{{ log.plugin }}]</span>
+              <span v-if="log.duration" class="log-duration">{{ log.duration }}ms</span>
+              <span v-if="log.plugin" class="log-plugin">[{{ log.plugin }}]</span>
             </div>
           </div>
         </div>
@@ -618,24 +446,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from 'vue'
-import { createComponentLogger } from '@/utils/logging'
+import { ref, computed, onMounted, nextTick } from "vue"
+import { createComponentLogger } from "@/utils/logging"
 // 运行时内容缓存与日志改为可选注入，避免构建期硬依赖
-const globalContentCache: any = (globalThis as any).__lowcodeRuntime?.contentCache || { getStats: () => ({ totalEntries: 0, totalSizeBytes: 0, totalAccessCount: 0, averageEntrySize: 0 }) }
+const globalContentCache: any = (globalThis as any).__lowcodeRuntime?.contentCache || {
+  getStats: () => ({
+    totalEntries: 0,
+    totalSizeBytes: 0,
+    totalAccessCount: 0,
+    averageEntrySize: 0,
+  }),
+}
 // Worker池实例位于SfcCompilerEngine内部，无法直接注入，这里通过全局暴露的窗口变量进行读取
 // 在实际项目中，建议提供显式的服务暴露接口
 const workerMetrics = ref({ submitted: 0, completed: 0, failed: 0, inFlight: 0, queueMax: 0 })
-const cacheStats = ref({ totalEntries: 0, totalSizeBytes: 0, totalAccessCount: 0, averageEntrySize: 0 })
+const cacheStats = ref({
+  totalEntries: 0,
+  totalSizeBytes: 0,
+  totalAccessCount: 0,
+  averageEntrySize: 0,
+})
 // logger 已从统一入口导入
 
 // 组件日志器（统一日志系统，避免 console 无 child 方法导致的运行时错误）
-const componentLogger = createComponentLogger('PerformanceDashboard')
+const componentLogger = createComponentLogger("PerformanceDashboard")
 
 // 响应式状态
 const loading = ref(false)
-const timeRange = ref('24h')
+const timeRange = ref("24h")
 const autoScroll = ref(true)
-const logLevel = ref('all')
+const logLevel = ref("all")
 
 // 性能指标
 const metrics = ref({
@@ -646,7 +486,7 @@ const metrics = ref({
   throughput: 85,
   throughputTrend: 8.3,
   memoryUsage: 342,
-  memoryUsageTrend: -5.2
+  memoryUsageTrend: -5.2,
 })
 
 // 性能数据
@@ -657,35 +497,35 @@ const performanceData = ref([
   { timestamp: Date.now() - 1800000, generationTime: 138, successRate: 99 },
   { timestamp: Date.now() - 1200000, generationTime: 152, successRate: 97 },
   { timestamp: Date.now() - 600000, generationTime: 148, successRate: 98 },
-  { timestamp: Date.now(), generationTime: 156, successRate: 99 }
+  { timestamp: Date.now(), generationTime: 156, successRate: 99 },
 ])
 
 // 插件性能
 const pluginPerformance = ref([
   {
-    name: 'Vue3Generator',
+    name: "Vue3Generator",
     averageTime: 89,
     callCount: 1250,
-    successRate: 99.2
+    successRate: 99.2,
   },
   {
-    name: 'SfcCompiler',
+    name: "SfcCompiler",
     averageTime: 67,
     callCount: 890,
-    successRate: 98.8
+    successRate: 98.8,
   },
   {
-    name: 'SchemaValidator',
+    name: "SchemaValidator",
     averageTime: 23,
     callCount: 1450,
-    successRate: 100
+    successRate: 100,
   },
   {
-    name: 'CodeOptimizer',
+    name: "CodeOptimizer",
     averageTime: 45,
     callCount: 780,
-    successRate: 97.5
-  }
+    successRate: 97.5,
+  },
 ])
 
 // 错误统计
@@ -693,156 +533,166 @@ const errorStats = ref({
   totalErrors: 3,
   errors: [
     {
-      type: '编译错误',
+      type: "编译错误",
       count: 2,
-      description: 'TypeScript编译失败',
-      trend: -25
+      description: "TypeScript编译失败",
+      trend: -25,
     },
     {
-      type: 'Schema验证',
+      type: "Schema验证",
       count: 1,
-      description: 'Schema格式不正确',
-      trend: 0
-    }
-  ]
+      description: "Schema格式不正确",
+      trend: 0,
+    },
+  ],
 })
 
 // 系统资源
 const systemResources = ref({
   cpuUsage: 23,
   memoryUsage: 67,
-  cacheHitRate: 94
+  cacheHitRate: 94,
 })
 
 // 优化建议
 const optimizationSuggestions = ref([
   {
     id: 1,
-    title: '启用代码缓存',
-    description: '对频繁生成的组件启用缓存可以显著提升性能',
-    expectedImprovement: '减少30%生成时间',
-    priority: 'high'
+    title: "启用代码缓存",
+    description: "对频繁生成的组件启用缓存可以显著提升性能",
+    expectedImprovement: "减少30%生成时间",
+    priority: "high",
   },
   {
     id: 2,
-    title: '优化Schema验证',
-    description: '简化Schema验证规则可以减少验证时间',
-    expectedImprovement: '减少15%验证时间',
-    priority: 'medium'
-  }
+    title: "优化Schema验证",
+    description: "简化Schema验证规则可以减少验证时间",
+    expectedImprovement: "减少15%验证时间",
+    priority: "medium",
+  },
 ])
 
 // 日志数据
-const performanceLogs = ref<Array<{
-  id: string
-  level: string
-  message: string
-  timestamp: number
-  duration?: number
-  plugin?: string
-}>>([
+const performanceLogs = ref<
+  Array<{
+    id: string
+    level: string
+    message: string
+    timestamp: number
+    duration?: number
+    plugin?: string
+  }>
+>([
   {
-    id: 'log1',
-    level: 'info',
-    message: '开始生成Vue组件',
+    id: "log1",
+    level: "info",
+    message: "开始生成Vue组件",
     timestamp: Date.now() - 300000,
-    plugin: 'Vue3Generator'
+    plugin: "Vue3Generator",
   },
   {
-    id: 'log2',
-    level: 'debug',
-    message: '编译模板完成',
+    id: "log2",
+    level: "debug",
+    message: "编译模板完成",
     timestamp: Date.now() - 250000,
     duration: 45,
-    plugin: 'SfcCompiler'
+    plugin: "SfcCompiler",
   },
   {
-    id: 'log3',
-    level: 'warn',
-    message: '检测到未使用的导入',
+    id: "log3",
+    level: "warn",
+    message: "检测到未使用的导入",
     timestamp: Date.now() - 200000,
-    plugin: 'CodeOptimizer'
+    plugin: "CodeOptimizer",
   },
   {
-    id: 'log4',
-    level: 'info',
-    message: '代码生成完成',
+    id: "log4",
+    level: "info",
+    message: "代码生成完成",
     timestamp: Date.now() - 150000,
     duration: 156,
-    plugin: 'Vue3Generator'
+    plugin: "Vue3Generator",
   },
   {
-    id: 'log5',
-    level: 'error',
-    message: 'TypeScript类型检查失败',
+    id: "log5",
+    level: "error",
+    message: "TypeScript类型检查失败",
     timestamp: Date.now() - 100000,
-    plugin: 'TypeChecker'
-  }
+    plugin: "TypeChecker",
+  },
 ])
 
 const logsContainer = ref<HTMLElement>()
 
 // 计算属性
 const filteredLogs = computed(() => {
-  if (logLevel.value === 'all') {
+  if (logLevel.value === "all") {
     return performanceLogs.value
   }
-  return performanceLogs.value.filter(log => log.level === logLevel.value)
+  return performanceLogs.value.filter((log) => log.level === logLevel.value)
 })
 
 // 方法定义
 const getStatusClass = (value: number, threshold: number, higher: boolean = false) => {
   if (higher) {
-    return value >= threshold ? 'status-good' : 'status-warning'
+    return value >= threshold ? "status-good" : "status-warning"
   }
-  return value <= threshold ? 'status-good' : 'status-warning'
+  return value <= threshold ? "status-good" : "status-warning"
 }
 
 const getTrendClass = (trend: number) => {
-  if (trend > 0) return 'trend-up'
-  if (trend < 0) return 'trend-down'
-  return 'trend-neutral'
+  if (trend > 0) return "trend-up"
+  if (trend < 0) return "trend-down"
+  return "trend-neutral"
 }
 
 const getTrendIcon = (trend: number) => {
-  if (trend > 0) return 'fas fa-arrow-up'
-  if (trend < 0) return 'fas fa-arrow-down'
-  return 'fas fa-minus'
+  if (trend > 0) return "fas fa-arrow-up"
+  if (trend < 0) return "fas fa-arrow-down"
+  return "fas fa-minus"
 }
 
 const getPerformanceColor = (time: number) => {
-  if (time <= 50) return 'var(--theme-success)'
-  if (time <= 100) return 'var(--theme-warning)'
-  return 'var(--theme-error)'
+  if (time <= 50) return "var(--theme-success)"
+  if (time <= 100) return "var(--theme-warning)"
+  return "var(--theme-error)"
 }
 
 const getResourceColor = (usage: number, inverse: boolean = false) => {
   if (inverse) {
-    if (usage >= 90) return 'var(--theme-success)'
-    if (usage >= 70) return 'var(--theme-warning)'
-    return 'var(--theme-error)'
+    if (usage >= 90) return "var(--theme-success)"
+    if (usage >= 70) return "var(--theme-warning)"
+    return "var(--theme-error)"
   } else {
-    if (usage <= 50) return 'var(--theme-success)'
-    if (usage <= 80) return 'var(--theme-warning)'
-    return 'var(--theme-error)'
+    if (usage <= 50) return "var(--theme-success)"
+    if (usage <= 80) return "var(--theme-warning)"
+    return "var(--theme-error)"
   }
 }
 
 const getErrorIcon = (type: string) => {
   switch (type) {
-    case '编译错误': return 'fas fa-code'
-    case 'Schema验证': return 'fas fa-check-circle'
-    case '网络错误': return 'fas fa-wifi'
-    default: return 'fas fa-exclamation-triangle'
+    case "编译错误":
+      return "fas fa-code"
+    case "Schema验证":
+      return "fas fa-check-circle"
+    case "网络错误":
+      return "fas fa-wifi"
+    default:
+      return "fas fa-exclamation-triangle"
   }
 }
 
 const getSuggestionIcon = (priority: string) => {
   switch (priority) {
-    case 'high': return 'fas fa-exclamation-triangle'
-    case 'medium': return 'fas fa-info-circle'
-    case 'low': return 'fas fa-lightbulb'
-    default: return 'fas fa-info-circle'
+    case "high":
+      return "fas fa-exclamation-triangle"
+    case "medium":
+      return "fas fa-info-circle"
+    case "low":
+      return "fas fa-lightbulb"
+    default:
+      return "fas fa-info-circle"
   }
 }
 
@@ -855,7 +705,7 @@ const refreshData = async () => {
 
   try {
     // 模拟数据刷新
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
 
     // 更新性能指标
     metrics.value = {
@@ -866,19 +716,19 @@ const refreshData = async () => {
       throughput: 60 + Math.random() * 40,
       throughputTrend: (Math.random() - 0.5) * 20,
       memoryUsage: 300 + Math.random() * 200,
-      memoryUsageTrend: (Math.random() - 0.5) * 15
+      memoryUsageTrend: (Math.random() - 0.5) * 15,
     }
 
-    componentLogger.info('性能数据刷新完成')
+    componentLogger.info("性能数据刷新完成")
   } catch (error) {
-    componentLogger.error('刷新数据失败', error as Error)
+    componentLogger.error("刷新数据失败", error as Error)
   } finally {
     loading.value = false
   }
 }
 
 const onTimeRangeChange = () => {
-  componentLogger.info('时间范围改变', { timeRange: timeRange.value })
+  componentLogger.info("时间范围改变", { timeRange: timeRange.value })
   refreshData()
 }
 
@@ -892,12 +742,12 @@ const exportReport = () => {
       pluginPerformance: pluginPerformance.value,
       errorStats: errorStats.value,
       systemResources: systemResources.value,
-      optimizationSuggestions: optimizationSuggestions.value
+      optimizationSuggestions: optimizationSuggestions.value,
     }
 
-    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' })
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" })
     const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
+    const a = document.createElement("a")
     a.href = url
     a.download = `performance-report-${Date.now()}.json`
     document.body.appendChild(a)
@@ -905,44 +755,50 @@ const exportReport = () => {
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
 
-    componentLogger.info('性能报告导出成功')
+    componentLogger.info("性能报告导出成功")
   } catch (error) {
-    componentLogger.error('导出报告失败', error as Error)
+    componentLogger.error("导出报告失败", error as Error)
   }
 }
 
 const applySuggestion = (id: number) => {
-  const suggestionIndex = optimizationSuggestions.value.findIndex(s => s.id === id)
+  const suggestionIndex = optimizationSuggestions.value.findIndex((s) => s.id === id)
   if (suggestionIndex > -1) {
     optimizationSuggestions.value.splice(suggestionIndex, 1)
-    componentLogger.info('应用优化建议', { suggestionId: id })
+    componentLogger.info("应用优化建议", { suggestionId: id })
   }
 }
 
 const dismissSuggestion = (id: number) => {
-  const suggestionIndex = optimizationSuggestions.value.findIndex(s => s.id === id)
+  const suggestionIndex = optimizationSuggestions.value.findIndex((s) => s.id === id)
   if (suggestionIndex > -1) {
     optimizationSuggestions.value.splice(suggestionIndex, 1)
-    componentLogger.info('忽略优化建议', { suggestionId: id })
+    componentLogger.info("忽略优化建议", { suggestionId: id })
   }
 }
 
 const clearLogs = () => {
   performanceLogs.value = []
-  componentLogger.info('清空性能日志')
+  componentLogger.info("清空性能日志")
 }
 
 const toggleAutoScroll = () => {
   autoScroll.value = !autoScroll.value
-  componentLogger.info(`自动滚动${autoScroll.value ? '启用' : '禁用'}`)
+  componentLogger.info(`自动滚动${autoScroll.value ? "启用" : "禁用"}`)
 }
 
 const pullRuntimeHealth = () => {
   try {
     const anyWin = globalThis as any
-    if (anyWin.__sfcWorkerPool && typeof anyWin.__sfcWorkerPool.getMetrics === 'function') {
+    if (anyWin.__sfcWorkerPool && typeof anyWin.__sfcWorkerPool.getMetrics === "function") {
       const m = anyWin.__sfcWorkerPool.getMetrics()
-      workerMetrics.value = { submitted: m.submitted, completed: m.completed, failed: m.failed, inFlight: m.inFlight, queueMax: m.queueMax }
+      workerMetrics.value = {
+        submitted: m.submitted,
+        completed: m.completed,
+        failed: m.failed,
+        inFlight: m.inFlight,
+        queueMax: m.queueMax,
+      }
     }
   } catch {}
   try {
@@ -953,15 +809,9 @@ const pullRuntimeHealth = () => {
 
 // 模拟实时日志
 const generateRealtimeLog = () => {
-  const levels = ['debug', 'info', 'warn', 'error']
-  const messages = [
-    '开始代码生成',
-    '编译模板',
-    '优化代码',
-    '类型检查',
-    '生成完成'
-  ]
-  const plugins = ['Vue3Generator', 'SfcCompiler', 'CodeOptimizer', 'TypeChecker']
+  const levels = ["debug", "info", "warn", "error"]
+  const messages = ["开始代码生成", "编译模板", "优化代码", "类型检查", "生成完成"]
+  const plugins = ["Vue3Generator", "SfcCompiler", "CodeOptimizer", "TypeChecker"]
 
   const log = {
     id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -969,7 +819,7 @@ const generateRealtimeLog = () => {
     message: messages[Math.floor(Math.random() * messages.length)],
     timestamp: Date.now(),
     duration: Math.random() > 0.5 ? Math.floor(Math.random() * 200) : undefined,
-    plugin: plugins[Math.floor(Math.random() * plugins.length)]
+    plugin: plugins[Math.floor(Math.random() * plugins.length)],
   }
 
   performanceLogs.value.push(log)
@@ -991,7 +841,7 @@ const generateRealtimeLog = () => {
 
 // 生命周期
 onMounted(() => {
-  componentLogger.info('性能监控中心加载完成')
+  componentLogger.info("性能监控中心加载完成")
 
   // 确保所有函数被正确引用（避免TypeScript未使用警告）
   void getErrorIcon // 显式引用函数
@@ -1009,9 +859,9 @@ onMounted(() => {
   setInterval(pullRuntimeHealth, 3000)
   // 订阅元数据处理事件
   try {
-    addEventListener('lowcode:metadata:processed', (e: any) => {
-      const k = '__meta_durations__'
-      const win = (globalThis as any)
+    addEventListener("lowcode:metadata:processed", (e: any) => {
+      const k = "__meta_durations__"
+      const win = globalThis as any
       if (!win[k]) win[k] = [] as number[]
       const arr: number[] = win[k]
       arr.push(e.detail?.duration || 0)
@@ -1060,7 +910,8 @@ onMounted(() => {
   gap: var(--spacing-3);
 }
 
-.refresh-btn, .export-btn {
+.refresh-btn,
+.export-btn {
   padding: var(--spacing-3) var(--spacing-4);
   border: 1px solid var(--theme-border-base);
   border-radius: var(--radius-md);
@@ -1074,7 +925,8 @@ onMounted(() => {
   transition: all 0.2s ease;
 }
 
-.refresh-btn:hover, .export-btn:hover {
+.refresh-btn:hover,
+.export-btn:hover {
   background: var(--theme-bg-hover);
 }
 
@@ -1088,8 +940,12 @@ onMounted(() => {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .time-select {
@@ -1389,25 +1245,29 @@ onMounted(() => {
   font-weight: var(--font-weight-semibold);
 }
 
-.no-errors, .no-suggestions {
+.no-errors,
+.no-suggestions {
   text-align: center;
   padding: var(--spacing-8);
   color: var(--theme-text-secondary);
 }
 
-.no-errors i, .no-suggestions i {
+.no-errors i,
+.no-suggestions i {
   font-size: var(--font-size-2xl);
   color: var(--theme-success);
   margin-bottom: var(--spacing-3);
   display: block;
 }
 
-.error-list, .suggestions-list {
+.error-list,
+.suggestions-list {
   display: grid;
   gap: var(--spacing-3);
 }
 
-.error-item, .suggestion-item {
+.error-item,
+.suggestion-item {
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
@@ -1416,29 +1276,34 @@ onMounted(() => {
   border-radius: var(--radius-md);
 }
 
-.error-icon, .suggestion-icon {
+.error-icon,
+.suggestion-icon {
   font-size: var(--font-size-lg);
   width: 40px;
   text-align: center;
 }
 
-.error-details, .suggestion-content {
+.error-details,
+.suggestion-content {
   flex: 1;
 }
 
-.error-type, .suggestion-title {
+.error-type,
+.suggestion-title {
   font-weight: var(--font-weight-semibold);
   color: var(--theme-text-primary);
   margin-bottom: var(--spacing-1);
 }
 
-.error-count, .suggestion-description {
+.error-count,
+.suggestion-description {
   font-size: var(--font-size-sm);
   color: var(--theme-text-secondary);
   margin-bottom: var(--spacing-1);
 }
 
-.error-description, .suggestion-impact {
+.error-description,
+.suggestion-impact {
   font-size: var(--font-size-xs);
   color: var(--theme-text-tertiary);
 }
@@ -1460,7 +1325,8 @@ onMounted(() => {
   gap: var(--spacing-2);
 }
 
-.apply-btn, .dismiss-btn {
+.apply-btn,
+.dismiss-btn {
   padding: var(--spacing-2) var(--spacing-3);
   border: none;
   border-radius: var(--radius-sm);

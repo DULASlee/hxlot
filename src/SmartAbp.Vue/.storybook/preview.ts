@@ -4,36 +4,36 @@
  * Global decorators, parameters, and component setup
  */
 
-import type { Preview } from '@storybook/vue3'
-import { setup } from '@storybook/vue3'
-import { app } from '@storybook/vue3'
+import type { Preview } from "@storybook/vue3"
+import { setup } from "@storybook/vue3"
+import { app } from "@storybook/vue3"
 
 // Element Plus setup
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import 'element-plus/theme-chalk/dark/css-vars.css'
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import ElementPlus from "element-plus"
+import "element-plus/dist/index.css"
+import "element-plus/theme-chalk/dark/css-vars.css"
+import * as ElementPlusIconsVue from "@element-plus/icons-vue"
 
 // Vue ecosystem
-import { createPinia } from 'pinia'
+import { createPinia } from "pinia"
 
 // Custom styles
-import '../src/styles/main.scss'
-import '../src/styles/storybook.scss'
+import "../src/styles/main.scss"
+import "../src/styles/storybook.scss"
 
 // Setup Vue application
 setup((app) => {
   // Install Element Plus
   app.use(ElementPlus)
-  
+
   // Register Element Plus icons
   for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
   }
-  
+
   // Install Pinia for state management
   app.use(createPinia())
-  
+
   // Global properties for Storybook
   app.config.globalProperties.$STORYBOOK = true
 })
@@ -50,14 +50,14 @@ const withElementPlus = (story: any) => ({
   `,
   data() {
     return {
-      locale: null // Will use default locale
+      locale: null, // Will use default locale
     }
-  }
+  },
 })
 
 const withTheme = (story: any, context: any) => {
-  const theme = context.globals.theme || 'light'
-  
+  const theme = context.globals.theme || "light"
+
   return {
     components: { story },
     template: `
@@ -68,27 +68,27 @@ const withTheme = (story: any, context: any) => {
     computed: {
       themeClass() {
         return {
-          'theme-light': theme === 'light',
-          'theme-dark': theme === 'dark',
-          'theme-auto': theme === 'auto'
+          "theme-light": theme === "light",
+          "theme-dark": theme === "dark",
+          "theme-auto": theme === "auto",
         }
-      }
+      },
     },
     mounted() {
       // Apply theme to document
-      document.documentElement.setAttribute('data-theme', theme)
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark')
+      document.documentElement.setAttribute("data-theme", theme)
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark")
       } else {
-        document.documentElement.classList.remove('dark')
+        document.documentElement.classList.remove("dark")
       }
-    }
+    },
   }
 }
 
 const withResponsiveViewport = (story: any, context: any) => {
-  const viewport = context.globals.viewport || 'desktop'
-  
+  const viewport = context.globals.viewport || "desktop"
+
   return {
     components: { story },
     template: `
@@ -99,8 +99,8 @@ const withResponsiveViewport = (story: any, context: any) => {
     computed: {
       viewportClass() {
         return `viewport-${viewport}`
-      }
-    }
+      },
+    },
   }
 }
 
@@ -121,7 +121,7 @@ const withPerformanceMonitoring = (story: any) => {
         showPerformanceInfo: false,
         renderTime: 0,
         memoryUsage: 0,
-        startTime: 0
+        startTime: 0,
       }
     },
     created() {
@@ -129,10 +129,10 @@ const withPerformanceMonitoring = (story: any) => {
     },
     mounted() {
       this.renderTime = Math.round(performance.now() - this.startTime)
-      this.memoryUsage = performance.memory 
-        ? Math.round(performance.memory.usedJSHeapSize / 1024 / 1024 * 100) / 100
+      this.memoryUsage = performance.memory
+        ? Math.round((performance.memory.usedJSHeapSize / 1024 / 1024) * 100) / 100
         : 0
-      
+
       // Show performance info for 3 seconds
       this.showPerformanceInfo = true
       setTimeout(() => {
@@ -141,134 +141,129 @@ const withPerformanceMonitoring = (story: any) => {
     },
     methods: {
       onMounted() {
-        console.log('Component mounted in Storybook')
-      }
-    }
+        console.log("Component mounted in Storybook")
+      },
+    },
   }
 }
 
 // Main preview configuration
 const preview: Preview = {
   // Global decorators
-  decorators: [
-    withElementPlus,
-    withTheme,
-    withResponsiveViewport,
-    withPerformanceMonitoring
-  ],
+  decorators: [withElementPlus, withTheme, withResponsiveViewport, withPerformanceMonitoring],
 
   // Global parameters
   parameters: {
     // Actions configuration
-    actions: { 
-      argTypesRegex: '^on[A-Z].*',
-      handles: ['mouseover', 'click', 'change', 'input']
+    actions: {
+      argTypesRegex: "^on[A-Z].*",
+      handles: ["mouseover", "click", "change", "input"],
     },
-    
+
     // Controls configuration
     controls: {
       matchers: {
         color: /(background|color)$/i,
-        date: /Date$/
+        date: /Date$/,
       },
       expanded: true,
-      sort: 'requiredFirst'
+      sort: "requiredFirst",
     },
-    
+
     // Documentation configuration
     docs: {
       extractComponentDescription: (component: any, { notes }: any) => {
         if (notes) {
-          return typeof notes === 'string' ? notes : notes.markdown || notes.text
+          return typeof notes === "string" ? notes : notes.markdown || notes.text
         }
         return null
       },
       source: {
-        language: 'html',
-        format: 'dedent'
-      }
+        language: "html",
+        format: "dedent",
+      },
     },
 
     // Viewport configuration
     viewport: {
       viewports: {
         mobile: {
-          name: 'Mobile',
+          name: "Mobile",
           styles: {
-            width: '375px',
-            height: '667px'
-          }
+            width: "375px",
+            height: "667px",
+          },
         },
         tablet: {
-          name: 'Tablet',
+          name: "Tablet",
           styles: {
-            width: '768px',
-            height: '1024px'
-          }
+            width: "768px",
+            height: "1024px",
+          },
         },
         desktop: {
-          name: 'Desktop',
+          name: "Desktop",
           styles: {
-            width: '1200px',
-            height: '800px'
-          }
+            width: "1200px",
+            height: "800px",
+          },
         },
         large: {
-          name: 'Large Desktop',
+          name: "Large Desktop",
           styles: {
-            width: '1440px',
-            height: '900px'
-          }
-        }
+            width: "1440px",
+            height: "900px",
+          },
+        },
       },
-      defaultViewport: 'desktop'
+      defaultViewport: "desktop",
     },
 
     // Background configuration
     backgrounds: {
-      default: 'light',
+      default: "light",
       values: [
         {
-          name: 'light',
-          value: '#ffffff'
+          name: "light",
+          value: "#ffffff",
         },
         {
-          name: 'dark',
-          value: '#1e1e1e'
+          name: "dark",
+          value: "#1e1e1e",
         },
         {
-          name: 'gray',
-          value: '#f5f5f5'
-        }
-      ]
+          name: "gray",
+          value: "#f5f5f5",
+        },
+      ],
     },
 
     // Layout configuration
-    layout: 'padded',
+    layout: "padded",
 
     // Options configuration
     options: {
       storySort: {
-        method: 'alphabetical',
+        method: "alphabetical",
         order: [
-          'Introduction',
-          'Design System',
-          ['Colors', 'Typography', 'Spacing', 'Icons'],
-          'Components',
+          "Introduction",
+          "Design System",
+          ["Colors", "Typography", "Spacing", "Icons"],
+          "Components",
           [
-            'Basic',
-            ['AdvancedTable', 'AdvancedForm'],
-            'Data',
-            ['AdvancedChart', 'AdvancedTree', 'AdvancedUpload'],
-            'Layout',
-            ['AdvancedLayout', 'AdvancedNavigation', 'AdvancedPanel']
+            "Basic",
+            ["AdvancedTable", "AdvancedForm"],
+            "Data",
+            ["AdvancedChart", "AdvancedTree", "AdvancedUpload"],
+            "Layout",
+            ["AdvancedLayout", "AdvancedNavigation", "AdvancedPanel"],
           ],
-          'Examples',
-          'Testing'
+          "Examples",
+          "Testing",
         ],
-        includeName: true
-      }
-    }
+        includeName: true,
+      },
+    },
   },
 
   // Global args
@@ -280,71 +275,71 @@ const preview: Preview = {
   argTypes: {
     // Common prop types
     size: {
-      control: { type: 'select' },
-      options: ['small', 'default', 'large']
+      control: { type: "select" },
+      options: ["small", "default", "large"],
     },
     type: {
-      control: { type: 'select' },
-      options: ['primary', 'success', 'warning', 'danger', 'info', 'text']
+      control: { type: "select" },
+      options: ["primary", "success", "warning", "danger", "info", "text"],
     },
     disabled: {
-      control: { type: 'boolean' }
+      control: { type: "boolean" },
     },
     loading: {
-      control: { type: 'boolean' }
-    }
+      control: { type: "boolean" },
+    },
   },
 
   // Global types
   globals: {
     theme: {
-      description: 'Global theme for components',
-      defaultValue: 'light',
+      description: "Global theme for components",
+      defaultValue: "light",
       toolbar: {
-        title: 'Theme',
-        icon: 'paintbrush',
+        title: "Theme",
+        icon: "paintbrush",
         items: [
-          { value: 'light', icon: 'sun', title: 'Light theme' },
-          { value: 'dark', icon: 'moon', title: 'Dark theme' },
-          { value: 'auto', icon: 'circle', title: 'Auto theme' }
+          { value: "light", icon: "sun", title: "Light theme" },
+          { value: "dark", icon: "moon", title: "Dark theme" },
+          { value: "auto", icon: "circle", title: "Auto theme" },
         ],
-        dynamicTitle: true
-      }
+        dynamicTitle: true,
+      },
     },
     locale: {
-      description: 'Internationalization locale',
-      defaultValue: 'zh-CN',
+      description: "Internationalization locale",
+      defaultValue: "zh-CN",
       toolbar: {
-        title: 'Locale',
-        icon: 'globe',
+        title: "Locale",
+        icon: "globe",
         items: [
-          { value: 'zh-CN', title: '中文' },
-          { value: 'en-US', title: 'English' },
-          { value: 'ja-JP', title: '日本語' }
+          { value: "zh-CN", title: "中文" },
+          { value: "en-US", title: "English" },
+          { value: "ja-JP", title: "日本語" },
         ],
-        dynamicTitle: true
-      }
+        dynamicTitle: true,
+      },
     },
     performanceMode: {
-      description: 'Show performance monitoring',
+      description: "Show performance monitoring",
       defaultValue: false,
       toolbar: {
-        title: 'Performance',
-        icon: 'timer',
+        title: "Performance",
+        icon: "timer",
         items: [
-          { value: false, title: 'Off' },
-          { value: true, title: 'On' }
-        ]
-      }
-    }
+          { value: false, title: "Off" },
+          { value: true, title: "On" },
+        ],
+      },
+    },
   },
 
   // Initialize function
   initialGlobals: {
-    theme: 'light',
-    locale: 'zh-CN',
-    performanceMode: false
-  }
+    theme: "light",
+    locale: "zh-CN",
+    performanceMode: false,
+  },
 }
 
 export default preview

@@ -5,6 +5,7 @@
 在现有的 package.json 中添加以下内容：
 
 ### 新增脚本
+
 ```json
 {
   "scripts": {
@@ -17,6 +18,7 @@
 ```
 
 ### 新增依赖（可选，用于高级功能）
+
 ```json
 {
   "dependencies": {
@@ -33,6 +35,7 @@
 ## 🔧 TypeScript 配置
 
 创建 `tsconfig.lowcode.json`：
+
 ```json
 {
   "extends": "./tsconfig.json",
@@ -42,25 +45,21 @@
     "declaration": true,
     "declarationMap": true
   },
-  "include": [
-    "src/lowcode/**/*"
-  ],
-  "exclude": [
-    "src/lowcode/**/*.test.ts",
-    "src/lowcode/examples/**/*"
-  ]
+  "include": ["src/lowcode/**/*"],
+  "exclude": ["src/lowcode/**/*.test.ts", "src/lowcode/examples/**/*"]
 }
 ```
 
 ## 🚀 集成到现有 Vue 项目
 
 ### 1. 在 main.ts 中初始化（可选）
+
 ```typescript
 // src/SmartAbp.Vue/src/main.ts
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-import { createPinia } from 'pinia'
+import { createApp } from "vue"
+import App from "./App.vue"
+import router from "./router"
+import { createPinia } from "pinia"
 
 // 引入低代码引擎（仅在需要时）
 // import { LowCodeKernel } from './lowcode'
@@ -72,10 +71,11 @@ app.use(router)
 // 全局注册低代码引擎（可选）
 // app.provide('lowcodeKernel', new LowCodeKernel())
 
-app.mount('#app')
+app.mount("#app")
 ```
 
 ### 2. 在组件中使用
+
 ```vue
 <!-- src/SmartAbp.Vue/src/views/lowcode/CodeGenerator.vue -->
 <template>
@@ -89,58 +89,59 @@ app.mount('#app')
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { LowCodeKernel } from '@/lowcode'
-import { Vue3Plugin } from '@/lowcode/plugins/vue3'
+import { ref } from "vue"
+import { LowCodeKernel } from "@/lowcode"
+import { Vue3Plugin } from "@/lowcode/plugins/vue3"
 
-const generatedCode = ref('')
+const generatedCode = ref("")
 
 const generateCode = async () => {
   const kernel = new LowCodeKernel()
   await kernel.initialize()
   await kernel.registerPlugin(new Vue3Plugin())
-  
+
   const result = await kernel.generate({
-    id: 'sample-component',
-    version: '1.0.0',
-    type: 'component',
-    metadata: { name: 'SampleComponent' },
+    id: "sample-component",
+    version: "1.0.0",
+    type: "component",
+    metadata: { name: "SampleComponent" },
     template: {
-      type: 'template',
+      type: "template",
       content: {
-        tag: 'div',
-        props: { class: 'sample' },
-        children: ['Hello from LowCode!']
-      }
-    }
+        tag: "div",
+        props: { class: "sample" },
+        children: ["Hello from LowCode!"],
+      },
+    },
   })
-  
+
   if (result.success) {
-    generatedCode.value = result.result?.code || ''
+    generatedCode.value = result.result?.code || ""
   }
 }
 </script>
 ```
 
 ### 3. 路由配置
+
 ```typescript
 // src/SmartAbp.Vue/src/router/index.ts
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router"
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     // 现有路由...
     {
-      path: '/lowcode',
-      name: 'LowCode',
-      component: () => import('@/views/lowcode/CodeGenerator.vue'),
+      path: "/lowcode",
+      name: "LowCode",
+      component: () => import("@/views/lowcode/CodeGenerator.vue"),
       meta: {
-        title: '低代码生成器',
-        requiresAuth: true
-      }
-    }
-  ]
+        title: "低代码生成器",
+        requiresAuth: true,
+      },
+    },
+  ],
 })
 
 export default router
@@ -149,57 +150,60 @@ export default router
 ## 🔨 Vite 配置更新
 
 在 `vite.config.ts` 中添加路径别名：
+
 ```typescript
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { resolve } from 'path'
+import { defineConfig } from "vite"
+import vue from "@vitejs/plugin-vue"
+import { resolve } from "path"
 
 export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
-      '@lowcode': resolve(__dirname, 'src/lowcode')
-    }
-  }
+      "@": resolve(__dirname, "src"),
+      "@lowcode": resolve(__dirname, "src/lowcode"),
+    },
+  },
 })
 ```
 
 ## 📝 导入路径示例
 
 在项目中使用时的导入路径：
+
 ```typescript
 // 导入核心内核
-import { LowCodeKernel } from '@/lowcode'
-import { LowCodeKernel } from '@/lowcode/kernel'
+import { LowCodeKernel } from "@/lowcode"
+import { LowCodeKernel } from "@/lowcode/kernel"
 
 // 导入插件
-import { Vue3Plugin } from '@/lowcode/plugins/vue3'
+import { Vue3Plugin } from "@/lowcode/plugins/vue3"
 
 // 导入类型
-import type { Schema, GeneratedCode } from '@/lowcode/kernel/types'
+import type { Schema, GeneratedCode } from "@/lowcode/kernel/types"
 ```
 
 ## 🧪 测试集成
 
 创建测试文件验证集成：
+
 ```typescript
 // src/SmartAbp.Vue/src/lowcode/examples/integration-test.ts
-import { LowCodeKernel } from '../kernel'
-import { Vue3Plugin } from '../plugins/vue3'
+import { LowCodeKernel } from "../kernel"
+import { Vue3Plugin } from "../plugins/vue3"
 
 export async function testIntegration() {
-  console.log('🚀 开始集成测试...')
-  
+  console.log("🚀 开始集成测试...")
+
   const kernel = new LowCodeKernel()
   await kernel.initialize()
   await kernel.registerPlugin(new Vue3Plugin())
-  
+
   const health = kernel.getHealthInfo()
-  console.log('内核健康状态：', health)
-  
-  console.log('✅ 集成测试完成！')
-  
+  console.log("内核健康状态：", health)
+
+  console.log("✅ 集成测试完成！")
+
   await kernel.shutdown()
 }
 

@@ -3,15 +3,15 @@
  * Stage 5.3 TDD Implementation - Vue 3 Composition API
  */
 
-import { ref, reactive, computed, readonly } from 'vue'
-import type { 
-  SecurityMetrics, 
-  PermissionTrendData, 
+import { ref, reactive, computed, readonly } from "vue"
+import type {
+  SecurityMetrics,
+  PermissionTrendData,
   RiskDistributionData,
   AbnormalBehavior,
   ComplianceIssue,
-  DashboardConfig 
-} from '../packages/lowcode-designer/src/types/security'
+  DashboardConfig,
+} from "../packages/lowcode-designer/src/types/security"
 
 interface UseSecurityDashboardOptions {
   config?: Partial<DashboardConfig>
@@ -33,7 +33,7 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
     riskEventsTrend: 0,
     permissionChangesTrend: 0,
     abnormalLoginsTrend: 0,
-    complianceScoreTrend: 0
+    complianceScoreTrend: 0,
   })
 
   // Chart Data
@@ -50,16 +50,16 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
     autoRefresh: true,
     enableRealTimeAlerts: true,
     enableNotifications: true,
-    theme: 'light',
+    theme: "light",
     layout: {
       showMetrics: true,
       showAlerts: true,
       showCharts: true,
       showBehaviorAnalysis: true,
       showCompliance: true,
-      columns: 2
+      columns: 2,
     },
-    ...options.config
+    ...options.config,
   })
 
   // Computed Properties
@@ -70,8 +70,10 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
   })
 
   const totalActiveIncidents = computed(() => {
-    return abnormalBehaviors.value.length + 
-           complianceData.value.filter(issue => issue.status === 'Open').length
+    return (
+      abnormalBehaviors.value.length +
+      complianceData.value.filter((issue) => issue.status === "Open").length
+    )
   })
 
   // Mock Data Generation (for testing and development)
@@ -83,89 +85,86 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
     riskEventsTrend: Math.floor(Math.random() * 20) - 10,
     permissionChangesTrend: Math.floor(Math.random() * 10) - 5,
     abnormalLoginsTrend: Math.floor(Math.random() * 6) - 3,
-    complianceScoreTrend: Math.floor(Math.random() * 10) - 5
+    complianceScoreTrend: Math.floor(Math.random() * 10) - 5,
   })
 
   const generateMockTrendData = (): PermissionTrendData[] => {
     const data: PermissionTrendData[] = []
     const today = new Date()
-    
+
     for (let i = 6; i >= 0; i--) {
       const date = new Date(today)
       date.setDate(date.getDate() - i)
-      
+
       data.push({
-        date: date.toISOString().split('T')[0],
+        date: date.toISOString().split("T")[0],
         permissions: Math.floor(Math.random() * 50) + 100,
         risks: Math.floor(Math.random() * 10) + 2,
         users: Math.floor(Math.random() * 20) + 50,
-        failed: Math.floor(Math.random() * 5) + 1
+        failed: Math.floor(Math.random() * 5) + 1,
       })
     }
-    
+
     return data
   }
 
   const generateMockRiskDistribution = (): RiskDistributionData[] => [
-    { level: 'Low', count: 150, percentage: 60, color: '#67C23A' },
-    { level: 'Medium', count: 75, percentage: 30, color: '#E6A23C' },
-    { level: 'High', count: 20, percentage: 8, color: '#F56C6C' },
-    { level: 'Critical', count: 5, percentage: 2, color: '#909399' }
+    { level: "Low", count: 150, percentage: 60, color: "#67C23A" },
+    { level: "Medium", count: 75, percentage: 30, color: "#E6A23C" },
+    { level: "High", count: 20, percentage: 8, color: "#F56C6C" },
+    { level: "Critical", count: 5, percentage: 2, color: "#909399" },
   ]
 
   const generateMockAbnormalBehaviors = (): AbnormalBehavior[] => [
     {
-      id: '1',
-      userId: 'user1',
-      userName: 'John Doe',
-      behaviorType: 'UnusualHours',
-      description: 'Access outside business hours',
+      id: "1",
+      userId: "user1",
+      userName: "John Doe",
+      behaviorType: "UnusualHours",
+      description: "Access outside business hours",
       timestamp: new Date(Date.now() - Math.random() * 86400000),
-      riskLevel: 'Medium',
-      details: { location: 'Office Network', device: 'Desktop' },
-      actionRequired: true
+      riskLevel: "Medium",
+      details: { location: "Office Network", device: "Desktop" },
+      actionRequired: true,
     },
     {
-      id: '2',
-      userId: 'user2',
-      userName: 'Jane Smith',
-      behaviorType: 'HighFrequency',
-      description: 'Unusually high permission requests',
+      id: "2",
+      userId: "user2",
+      userName: "Jane Smith",
+      behaviorType: "HighFrequency",
+      description: "Unusually high permission requests",
       timestamp: new Date(Date.now() - Math.random() * 86400000),
-      riskLevel: 'High',
-      details: { requestCount: 45, normalRange: '5-10' },
-      actionRequired: true
-    }
+      riskLevel: "High",
+      details: { requestCount: 45, normalRange: "5-10" },
+      actionRequired: true,
+    },
   ]
 
   const generateMockComplianceData = (): ComplianceIssue[] => [
     {
-      id: '1',
-      type: 'DataRetention',
-      severity: 'High',
-      description: 'Data retention policy violation detected',
+      id: "1",
+      type: "DataRetention",
+      severity: "High",
+      description: "Data retention policy violation detected",
       affectedUsers: 25,
       detectedAt: new Date(Date.now() - Math.random() * 86400000),
-      status: 'Open',
+      status: "Open",
       recommendations: [
-        'Review data retention policies',
-        'Update user access permissions',
-        'Schedule compliance audit'
-      ]
+        "Review data retention policies",
+        "Update user access permissions",
+        "Schedule compliance audit",
+      ],
     },
     {
-      id: '2',
-      type: 'AccessControl',
-      severity: 'Medium',
-      description: 'Excessive administrative permissions',
+      id: "2",
+      type: "AccessControl",
+      severity: "Medium",
+      description: "Excessive administrative permissions",
       affectedUsers: 8,
       detectedAt: new Date(Date.now() - Math.random() * 86400000),
-      status: 'InProgress',
-      recommendations: [
-        'Review admin role assignments',
-        'Implement principle of least privilege'
-      ]
-    }
+      status: "InProgress",
+      recommendations: ["Review admin role assignments", "Implement principle of least privilege"],
+    },
   ]
 
   // API Methods
@@ -176,8 +175,8 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
     try {
       if (options.enableMocking !== false) {
         // Use mock data for testing/development
-        await new Promise(resolve => setTimeout(resolve, 500)) // Simulate API delay
-        
+        await new Promise((resolve) => setTimeout(resolve, 500)) // Simulate API delay
+
         securityMetrics.value = generateMockSecurityMetrics()
         permissionTrendData.value = generateMockTrendData()
         riskDistributionData.value = generateMockRiskDistribution()
@@ -192,14 +191,14 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
         //   securityApi.getAbnormalBehaviors(),
         //   securityApi.getComplianceIssues()
         // ])
-        
-        throw new Error('Production API not yet implemented')
+
+        throw new Error("Production API not yet implemented")
       }
 
       lastUpdated.value = new Date()
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to load dashboard data'
-      console.error('Dashboard data loading error:', err)
+      error.value = err instanceof Error ? err.message : "Failed to load dashboard data"
+      console.error("Dashboard data loading error:", err)
     } finally {
       loading.value = false
     }
@@ -210,31 +209,31 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
     await loadDashboardData()
   }
 
-  const exportData = async (format: 'pdf' | 'excel' | 'csv'): Promise<void> => {
+  const exportData = async (format: "pdf" | "excel" | "csv"): Promise<void> => {
     try {
       loading.value = true
-      
+
       // TODO: Implement actual export functionality
-      await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate export delay
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate export delay
+
       console.log(`Exporting dashboard data as ${format}`)
-      
+
       // Mock successful export
       if (options.enableMocking !== false) {
         // Simulate file download
-        const blob = new Blob(['Mock dashboard data'], { type: 'text/plain' })
+        const blob = new Blob(["Mock dashboard data"], { type: "text/plain" })
         const url = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
+        const link = document.createElement("a")
         link.href = url
-        link.download = `security-dashboard-${new Date().toISOString().split('T')[0]}.${format}`
+        link.download = `security-dashboard-${new Date().toISOString().split("T")[0]}.${format}`
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
         window.URL.revokeObjectURL(url)
       }
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Export failed'
-      console.error('Export error:', err)
+      error.value = err instanceof Error ? err.message : "Export failed"
+      console.error("Export error:", err)
     } finally {
       loading.value = false
     }
@@ -253,7 +252,7 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
       riskEventsTrend: 0,
       permissionChangesTrend: 0,
       abnormalLoginsTrend: 0,
-      complianceScoreTrend: 0
+      complianceScoreTrend: 0,
     }
     permissionTrendData.value = []
     riskDistributionData.value = []
@@ -268,27 +267,27 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
     loading: readonly(loading),
     error: readonly(error),
     lastUpdated: readonly(lastUpdated),
-    
+
     // Data
     securityMetrics: readonly(securityMetrics),
     permissionTrendData: readonly(permissionTrendData),
     riskDistributionData: readonly(riskDistributionData),
     abnormalBehaviors: readonly(abnormalBehaviors),
     complianceData: readonly(complianceData),
-    
+
     // Configuration
     config: readonly(config),
-    
+
     // Computed
     isHealthy,
     totalActiveIncidents,
-    
+
     // Methods
     loadDashboardData,
     refreshMetrics,
     exportData,
     updateConfig,
-    resetData
+    resetData,
   }
 }
 

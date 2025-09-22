@@ -1,71 +1,43 @@
 <template>
   <div class="page-container">
     <div class="page-header">
-      <h2 class="page-title">
-        工作台
-      </h2>
+      <h2 class="page-title">工作台</h2>
       <div class="page-actions">
-        <button class="btn btn-primary">
-          刷新数据
-        </button>
+        <button class="btn btn-primary">刷新数据</button>
       </div>
     </div>
 
     <!-- 统计卡片 -->
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-icon">
-          👥
-        </div>
+        <div class="stat-icon">👥</div>
         <div class="stat-content">
-          <div class="stat-value">
-            1,234
-          </div>
-          <div class="stat-label">
-            在线用户
-          </div>
+          <div class="stat-value">1,234</div>
+          <div class="stat-label">在线用户</div>
         </div>
       </div>
 
       <div class="stat-card">
-        <div class="stat-icon">
-          🏗️
-        </div>
+        <div class="stat-icon">🏗️</div>
         <div class="stat-content">
-          <div class="stat-value">
-            56
-          </div>
-          <div class="stat-label">
-            活跃项目
-          </div>
+          <div class="stat-value">56</div>
+          <div class="stat-label">活跃项目</div>
         </div>
       </div>
 
       <div class="stat-card">
-        <div class="stat-icon">
-          ⚠️
-        </div>
+        <div class="stat-icon">⚠️</div>
         <div class="stat-content">
-          <div class="stat-value">
-            12
-          </div>
-          <div class="stat-label">
-            待处理告警
-          </div>
+          <div class="stat-value">12</div>
+          <div class="stat-label">待处理告警</div>
         </div>
       </div>
 
       <div class="stat-card">
-        <div class="stat-icon">
-          📊
-        </div>
+        <div class="stat-icon">📊</div>
         <div class="stat-content">
-          <div class="stat-value">
-            98.5%
-          </div>
-          <div class="stat-label">
-            系统可用性
-          </div>
+          <div class="stat-value">98.5%</div>
+          <div class="stat-label">系统可用性</div>
         </div>
       </div>
     </div>
@@ -77,15 +49,15 @@
         <div class="user-details">
           <div class="detail-item">
             <span class="label">用户名:</span>
-            <span class="value">{{ userInfo?.userName || 'N/A' }}</span>
+            <span class="value">{{ userInfo?.userName || "N/A" }}</span>
           </div>
           <div class="detail-item">
             <span class="label">邮箱:</span>
-            <span class="value">{{ userInfo?.email || 'N/A' }}</span>
+            <span class="value">{{ userInfo?.email || "N/A" }}</span>
           </div>
           <div class="detail-item">
             <span class="label">角色:</span>
-            <span class="value">{{ userInfo?.role || 'N/A' }}</span>
+            <span class="value">{{ userInfo?.role || "N/A" }}</span>
           </div>
           <div class="detail-item">
             <span class="label">登录时间:</span>
@@ -97,21 +69,11 @@
       <div class="info-card">
         <h3>系统功能</h3>
         <div class="feature-list">
-          <div class="feature-item">
-            ✅ JWT Token认证
-          </div>
-          <div class="feature-item">
-            ✅ 多租户支持
-          </div>
-          <div class="feature-item">
-            ✅ 企业级UI框架
-          </div>
-          <div class="feature-item">
-            ✅ 响应式布局
-          </div>
-          <div class="feature-item">
-            ✅ 权限管理
-          </div>
+          <div class="feature-item">✅ JWT Token认证</div>
+          <div class="feature-item">✅ 多租户支持</div>
+          <div class="feature-item">✅ 企业级UI框架</div>
+          <div class="feature-item">✅ 响应式布局</div>
+          <div class="feature-item">✅ 权限管理</div>
         </div>
       </div>
     </div>
@@ -119,8 +81,6 @@
 </template>
 
 <script setup lang="ts">
-
-
 defineProps<{
   userInfo: any
 }>()
@@ -199,7 +159,9 @@ defineProps<{
   display: flex;
   align-items: center;
   gap: clamp(12px, 3vw, 20px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   min-height: clamp(80px, 12vh, 120px);
 }
 

@@ -7,17 +7,11 @@
           <p>欢迎使用 SmartAbp 企业管理系统</p>
         </div>
         <div class="header-actions">
-          <button
-            class="header-btn"
-            @click="refreshDashboard"
-          >
+          <button class="header-btn" @click="refreshDashboard">
             <i class="fas fa-sync-alt" />
             <span>刷新数据</span>
           </button>
-          <button
-            class="header-btn"
-            @click="exportReport"
-          >
+          <button class="header-btn" @click="exportReport">
             <i class="fas fa-download" />
             <span>导出报告</span>
           </button>
@@ -33,12 +27,8 @@
             <i class="fas fa-users" />
           </div>
           <div class="stat-content">
-            <div class="stat-number">
-              1,234
-            </div>
-            <div class="stat-label">
-              用户总数
-            </div>
+            <div class="stat-number">1,234</div>
+            <div class="stat-label">用户总数</div>
             <div class="stat-trend">
               <i class="fas fa-arrow-up trend-up" />
               <span>+12% 本月</span>
@@ -51,12 +41,8 @@
             <i class="fas fa-project-diagram" />
           </div>
           <div class="stat-content">
-            <div class="stat-number">
-              56
-            </div>
-            <div class="stat-label">
-              项目数量
-            </div>
+            <div class="stat-number">56</div>
+            <div class="stat-label">项目数量</div>
             <div class="stat-trend">
               <i class="fas fa-arrow-up trend-up" />
               <span>+3 本周</span>
@@ -69,12 +55,8 @@
             <i class="fas fa-chart-line" />
           </div>
           <div class="stat-content">
-            <div class="stat-number">
-              89%
-            </div>
-            <div class="stat-label">
-              系统健康度
-            </div>
+            <div class="stat-number">89%</div>
+            <div class="stat-label">系统健康度</div>
             <div class="stat-trend">
               <i class="fas fa-arrow-down trend-down" />
               <span>-2% 今日</span>
@@ -87,12 +69,8 @@
             <i class="fas fa-file-alt" />
           </div>
           <div class="stat-content">
-            <div class="stat-number">
-              2,456
-            </div>
-            <div class="stat-label">
-              今日日志
-            </div>
+            <div class="stat-number">2,456</div>
+            <div class="stat-label">今日日志</div>
             <div class="stat-trend">
               <i class="fas fa-arrow-up trend-up" />
               <span>+156 今日</span>
@@ -105,10 +83,7 @@
       <div class="quick-actions">
         <h2><i class="fas fa-bolt" />快速操作</h2>
         <div class="action-grid">
-          <button
-            class="action-btn"
-            @click="$router.push('/Admin/users')"
-          >
+          <button class="action-btn" @click="$router.push('/Admin/users')">
             <i class="fas fa-users" />
             <div class="action-content">
               <span class="action-title">用户管理</span>
@@ -116,10 +91,7 @@
             </div>
           </button>
 
-          <button
-            class="action-btn"
-            @click="$router.push('/Project')"
-          >
+          <button class="action-btn" @click="$router.push('/Project')">
             <i class="fas fa-project-diagram" />
             <div class="action-content">
               <span class="action-title">项目管理</span>
@@ -127,10 +99,7 @@
             </div>
           </button>
 
-          <button
-            class="action-btn"
-            @click="$router.push('/Log')"
-          >
+          <button class="action-btn" @click="$router.push('/Log')">
             <i class="fas fa-file-alt" />
             <div class="action-content">
               <span class="action-title">系统日志</span>
@@ -138,10 +107,7 @@
             </div>
           </button>
 
-          <button
-            class="action-btn"
-            @click="testTheme"
-          >
+          <button class="action-btn" @click="testTheme">
             <i class="fas fa-palette" />
             <div class="action-content">
               <span class="action-title">主题测试</span>
@@ -149,10 +115,7 @@
             </div>
           </button>
 
-          <button
-            class="action-btn"
-            @click="$router.push('/Admin/settings')"
-          >
+          <button class="action-btn" @click="$router.push('/Admin/settings')">
             <i class="fas fa-cog" />
             <div class="action-content">
               <span class="action-title">系统设置</span>
@@ -160,10 +123,7 @@
             </div>
           </button>
 
-          <button
-            class="action-btn"
-            @click="$router.push('/Admin/permissions')"
-          >
+          <button class="action-btn" @click="$router.push('/Admin/permissions')">
             <i class="fas fa-shield-alt" />
             <div class="action-content">
               <span class="action-title">权限管理</span>
@@ -224,29 +184,29 @@
 </template>
 
 <script setup lang="ts">
-import { useThemeStore } from '@/stores'
+import { useThemeStore } from "@/stores"
 
 const themeStore = useThemeStore()
 
 const testTheme = () => {
-  console.log('当前主题:', themeStore.currentTheme)
-  console.log('是否暗黑模式:', themeStore.isDarkMode)
-  console.log('主题类名:', themeStore.currentTheme)
+  console.log("当前主题:", themeStore.currentTheme)
+  console.log("是否暗黑模式:", themeStore.isDarkMode)
+  console.log("主题类名:", themeStore.currentTheme)
 
   // 测试主题切换
   themeStore.toggleDarkMode()
 }
 
 const refreshDashboard = () => {
-  console.log('刷新仪表板数据...')
+  console.log("刷新仪表板数据...")
   // 这里可以添加实际的数据刷新逻辑
-  alert('仪表板数据已刷新！')
+  alert("仪表板数据已刷新！")
 }
 
 const exportReport = () => {
-  console.log('导出报告...')
+  console.log("导出报告...")
   // 这里可以添加实际的报告导出逻辑
-  alert('报告导出功能开发中...')
+  alert("报告导出功能开发中...")
 }
 </script>
 
@@ -356,7 +316,7 @@ const exportReport = () => {
 }
 
 .stat-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -366,10 +326,18 @@ const exportReport = () => {
   transition: all 0.3s ease;
 }
 
-.stat-card.users::before { background: var(--theme-brand-primary); }
-.stat-card.projects::before { background: var(--theme-success); }
-.stat-card.health::before { background: var(--theme-warning); }
-.stat-card.logs::before { background: var(--theme-info); }
+.stat-card.users::before {
+  background: var(--theme-brand-primary);
+}
+.stat-card.projects::before {
+  background: var(--theme-success);
+}
+.stat-card.health::before {
+  background: var(--theme-warning);
+}
+.stat-card.logs::before {
+  background: var(--theme-info);
+}
 
 .stat-icon {
   width: 56px;

@@ -3,14 +3,14 @@
  * Stage 5.3 TDD Implementation - Vue 3 Composition API
  */
 
-import { ref, reactive, computed, onUnmounted, readonly } from 'vue'
-import type { 
-  SecurityAlert, 
+import { ref, reactive, computed, onUnmounted, readonly } from "vue"
+import type {
+  SecurityAlert,
   AlertFilter,
   AlertNotification,
   SecurityAlertType,
-  AlertSeverity 
-} from '../packages/lowcode-designer/src/types/security'
+  AlertSeverity,
+} from "../packages/lowcode-designer/src/types/security"
 
 interface UseRealTimeAlertsOptions {
   enableWebSocket?: boolean
@@ -32,7 +32,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
     enableWebSocket = true,
     reconnectAttempts = 5,
     reconnectDelay = 3000,
-    enableMocking = true
+    enableMocking = true,
   } = options
 
   // State
@@ -43,7 +43,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
     connecting: false,
     lastConnected: null,
     reconnectAttempts: 0,
-    error: null
+    error: null,
   })
 
   // WebSocket connection
@@ -52,34 +52,34 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
   let mockAlertTimer: NodeJS.Timeout | null = null
 
   // Computed Properties
-  const unreadCount = computed(() => 
-    activeAlerts.value.filter(alert => !alert.isAcknowledged).length
+  const unreadCount = computed(
+    () => activeAlerts.value.filter((alert) => !alert.isAcknowledged).length,
   )
 
   const criticalAlerts = computed(() =>
-    activeAlerts.value.filter(alert => alert.severity === 'Critical')
+    activeAlerts.value.filter((alert) => alert.severity === "Critical"),
   )
 
   const highPriorityAlerts = computed(() =>
-    activeAlerts.value.filter(alert => 
-      alert.severity === 'High' || alert.severity === 'Critical'
-    )
+    activeAlerts.value.filter(
+      (alert) => alert.severity === "High" || alert.severity === "Critical",
+    ),
   )
 
   // Mock Data Generation
   const generateMockAlert = (): SecurityAlert => {
     const alertTypes: SecurityAlertType[] = [
-      'HighRiskPermissionAccess',
-      'UnusualLocationAccess', 
-      'OffHoursAccess',
-      'PermissionEscalation',
-      'MultipleFailedAttempts',
-      'SensitiveDataAccess',
-      'SuspiciousActivity'
+      "HighRiskPermissionAccess",
+      "UnusualLocationAccess",
+      "OffHoursAccess",
+      "PermissionEscalation",
+      "MultipleFailedAttempts",
+      "SensitiveDataAccess",
+      "SuspiciousActivity",
     ]
 
-    const severities: AlertSeverity[] = ['Low', 'Medium', 'High', 'Critical']
-    const users = ['John Doe', 'Jane Smith', 'Alice Johnson', 'Bob Wilson', 'Carol Brown']
+    const severities: AlertSeverity[] = ["Low", "Medium", "High", "Critical"]
+    const users = ["John Doe", "Jane Smith", "Alice Johnson", "Bob Wilson", "Carol Brown"]
 
     const type = alertTypes[Math.floor(Math.random() * alertTypes.length)]
     const severity = severities[Math.floor(Math.random() * severities.length)]
@@ -93,16 +93,16 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
       timestamp: new Date(),
       userInfo: {
         displayName: user,
-        email: `${user.toLowerCase().replace(' ', '.')}@company.com`,
-        department: 'Engineering',
-        roles: ['User']
+        email: `${user.toLowerCase().replace(" ", ".")}@company.com`,
+        department: "Engineering",
+        roles: ["User"],
       },
       context: {
         ipAddress: `192.168.1.${Math.floor(Math.random() * 255)}`,
-        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
       },
       isAcknowledged: false,
-      recommendedActions: getRecommendedActions(type)
+      recommendedActions: getRecommendedActions(type),
     }
   }
 
@@ -114,7 +114,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
       PermissionEscalation: `Permission escalation attempt by ${user}`,
       MultipleFailedAttempts: `Multiple failed login attempts by ${user}`,
       SensitiveDataAccess: `Sensitive data access by ${user}`,
-      SuspiciousActivity: `Suspicious activity detected for ${user}`
+      SuspiciousActivity: `Suspicious activity detected for ${user}`,
     }
     return descriptions[type]
   }
@@ -122,103 +122,103 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
   const getRecommendedActions = (type: SecurityAlertType): string[] => {
     const actions: Record<SecurityAlertType, string[]> = {
       HighRiskPermissionAccess: [
-        'Review user permissions',
-        'Verify business justification',
-        'Monitor subsequent activities'
+        "Review user permissions",
+        "Verify business justification",
+        "Monitor subsequent activities",
       ],
       UnusualLocationAccess: [
-        'Verify user location',
-        'Check VPN usage',
-        'Consider additional authentication'
+        "Verify user location",
+        "Check VPN usage",
+        "Consider additional authentication",
       ],
       OffHoursAccess: [
-        'Confirm legitimate business need',
-        'Review access logs',
-        'Update access policies if needed'
+        "Confirm legitimate business need",
+        "Review access logs",
+        "Update access policies if needed",
       ],
       PermissionEscalation: [
-        'Immediately review permissions',
-        'Lock account if suspicious',
-        'Investigate privilege changes'
+        "Immediately review permissions",
+        "Lock account if suspicious",
+        "Investigate privilege changes",
       ],
       MultipleFailedAttempts: [
-        'Check for brute force attacks',
-        'Consider account lockout',
-        'Review authentication logs'
+        "Check for brute force attacks",
+        "Consider account lockout",
+        "Review authentication logs",
       ],
       SensitiveDataAccess: [
-        'Audit data access patterns',
-        'Verify data usage justification',
-        'Monitor data export activities'
+        "Audit data access patterns",
+        "Verify data usage justification",
+        "Monitor data export activities",
       ],
       SuspiciousActivity: [
-        'Investigate activity patterns',
-        'Review user behavior baseline',
-        'Consider temporary restrictions'
-      ]
+        "Investigate activity patterns",
+        "Review user behavior baseline",
+        "Consider temporary restrictions",
+      ],
     }
-    return actions[type] || ['Review and investigate']
+    return actions[type] || ["Review and investigate"]
   }
 
   // Alert Management Methods
   const addAlert = (alert: SecurityAlert): void => {
     activeAlerts.value.unshift(alert)
-    
+
     // Create notification for high-priority alerts
-    if (alert.severity === 'High' || alert.severity === 'Critical') {
+    if (alert.severity === "High" || alert.severity === "Critical") {
       createNotification({
         id: `notification_${alert.id}`,
         message: `${alert.severity} security alert: ${alert.description}`,
-        type: alert.severity === 'Critical' ? 'error' : 'warning',
-        duration: alert.severity === 'Critical' ? 0 : 10000,
+        type: alert.severity === "Critical" ? "error" : "warning",
+        duration: alert.severity === "Critical" ? 0 : 10000,
         actions: [
           {
-            label: 'Acknowledge',
+            label: "Acknowledge",
             handler: () => acknowledgeAlert(alert.id),
-            type: 'primary'
+            type: "primary",
           },
           {
-            label: 'Investigate',
+            label: "Investigate",
             handler: () => investigateAlert(alert.id),
-            type: 'success'
-          }
-        ]
+            type: "success",
+          },
+        ],
       })
     }
   }
 
   const acknowledgeAlert = async (alertId: string): Promise<void> => {
     try {
-      const alertIndex = activeAlerts.value.findIndex(alert => alert.id === alertId)
+      const alertIndex = activeAlerts.value.findIndex((alert) => alert.id === alertId)
       if (alertIndex === -1) {
-        throw new Error('Alert not found')
+        throw new Error("Alert not found")
       }
 
       if (enableMocking) {
         // Mock API call
-        await new Promise(resolve => setTimeout(resolve, 300))
-        
+        await new Promise((resolve) => setTimeout(resolve, 300))
+
         activeAlerts.value[alertIndex] = {
           ...activeAlerts.value[alertIndex],
           isAcknowledged: true,
-          acknowledgedBy: 'Current User',
-          acknowledgedAt: new Date()
+          acknowledgedBy: "Current User",
+          acknowledgedAt: new Date(),
         }
       } else {
         // TODO: Implement actual API call
         // await alertsApi.acknowledgeAlert(alertId)
-        throw new Error('Production API not yet implemented')
+        throw new Error("Production API not yet implemented")
       }
 
       // Remove related notification
       const notificationIndex = notifications.value.findIndex(
-        notification => notification.id === `notification_${alertId}`
+        (notification) => notification.id === `notification_${alertId}`,
       )
       if (notificationIndex !== -1) {
         notifications.value.splice(notificationIndex, 1)
       }
     } catch (error) {
-      console.error('Failed to acknowledge alert:', error)
+      console.error("Failed to acknowledge alert:", error)
       throw error
     }
   }
@@ -227,22 +227,22 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
     try {
       if (enableMocking) {
         // Mock investigation start
-        await new Promise(resolve => setTimeout(resolve, 200))
+        await new Promise((resolve) => setTimeout(resolve, 200))
         console.log(`Starting investigation for alert: ${alertId}`)
       } else {
         // TODO: Implement actual API call
         // await alertsApi.startInvestigation(alertId)
-        throw new Error('Production API not yet implemented')
+        throw new Error("Production API not yet implemented")
       }
     } catch (error) {
-      console.error('Failed to start investigation:', error)
+      console.error("Failed to start investigation:", error)
       throw error
     }
   }
 
   const createNotification = (notification: AlertNotification): void => {
     notifications.value.push(notification)
-    
+
     // Auto-remove notification after duration
     if (notification.duration && notification.duration > 0) {
       setTimeout(() => {
@@ -252,7 +252,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
   }
 
   const removeNotification = (notificationId: string): void => {
-    const index = notifications.value.findIndex(n => n.id === notificationId)
+    const index = notifications.value.findIndex((n) => n.id === notificationId)
     if (index !== -1) {
       notifications.value.splice(index, 1)
     }
@@ -278,7 +278,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
     try {
       // TODO: Replace with actual WebSocket endpoint
-      const wsUrl = 'ws://localhost:44300/hubs/security-alerts'
+      const wsUrl = "ws://localhost:44300/hubs/security-alerts"
       websocket = new WebSocket(wsUrl)
 
       websocket.onopen = () => {
@@ -287,39 +287,39 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
         connectionStatus.lastConnected = new Date()
         connectionStatus.reconnectAttempts = 0
         connectionStatus.error = null
-        console.log('Security alerts WebSocket connected')
+        console.log("Security alerts WebSocket connected")
       }
 
       websocket.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data)
-          if (data.type === 'security_alert') {
+          if (data.type === "security_alert") {
             addAlert(data.alert)
           }
         } catch (error) {
-          console.error('Failed to parse WebSocket message:', error)
+          console.error("Failed to parse WebSocket message:", error)
         }
       }
 
       websocket.onclose = () => {
         connectionStatus.connected = false
         connectionStatus.connecting = false
-        
+
         if (connectionStatus.reconnectAttempts < reconnectAttempts) {
           scheduleReconnect()
         }
       }
 
       websocket.onerror = (error) => {
-        connectionStatus.error = 'WebSocket connection failed'
+        connectionStatus.error = "WebSocket connection failed"
         connectionStatus.connecting = false
-        console.error('WebSocket error:', error)
+        console.error("WebSocket error:", error)
       }
     } catch (error) {
       connectionStatus.connecting = false
-      connectionStatus.error = 'Failed to create WebSocket connection'
-      console.error('WebSocket creation error:', error)
-      
+      connectionStatus.error = "Failed to create WebSocket connection"
+      console.error("WebSocket creation error:", error)
+
       // Fallback to mock data in development
       if (enableMocking) {
         startMockAlertGeneration()
@@ -334,24 +334,24 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
       websocket.close()
       websocket = null
     }
-    
+
     if (mockAlertTimer) {
       clearInterval(mockAlertTimer)
       mockAlertTimer = null
     }
-    
+
     if (reconnectTimer) {
       clearTimeout(reconnectTimer)
       reconnectTimer = null
     }
-    
+
     connectionStatus.connected = false
     connectionStatus.connecting = false
   }
 
   const scheduleReconnect = (): void => {
     connectionStatus.reconnectAttempts++
-    
+
     reconnectTimer = setTimeout(() => {
       console.log(`Reconnecting to security alerts (attempt ${connectionStatus.reconnectAttempts})`)
       connectAlertStream()
@@ -360,17 +360,18 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
   const startMockAlertGeneration = (): void => {
     if (mockAlertTimer) return
-    
+
     // Generate initial mock alerts
     const initialAlerts = Array.from({ length: 3 }, () => generateMockAlert())
     activeAlerts.value = initialAlerts
-    
+
     // Generate new alerts periodically
     mockAlertTimer = setInterval(() => {
-      if (Math.random() < 0.3) { // 30% chance of new alert
+      if (Math.random() < 0.3) {
+        // 30% chance of new alert
         const newAlert = generateMockAlert()
         addAlert(newAlert)
-        
+
         // Limit total alerts to prevent memory issues
         if (activeAlerts.value.length > 50) {
           activeAlerts.value = activeAlerts.value.slice(0, 30)
@@ -381,33 +382,33 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
   // Filter and Search
   const filterAlerts = (filter: AlertFilter): SecurityAlert[] => {
-    return activeAlerts.value.filter(alert => {
+    return activeAlerts.value.filter((alert) => {
       if (filter.severity && !filter.severity.includes(alert.severity)) {
         return false
       }
-      
+
       if (filter.type && !filter.type.includes(alert.type)) {
         return false
       }
-      
+
       if (filter.acknowledged !== undefined && alert.isAcknowledged !== filter.acknowledged) {
         return false
       }
-      
+
       if (filter.userId && alert.userInfo?.displayName !== filter.userId) {
         return false
       }
-      
+
       if (filter.dateRange) {
         const alertTime = new Date(alert.timestamp).getTime()
         const startTime = filter.dateRange.startDate.getTime()
         const endTime = filter.dateRange.endDate.getTime()
-        
+
         if (alertTime < startTime || alertTime > endTime) {
           return false
         }
       }
-      
+
       return true
     })
   }
@@ -422,12 +423,12 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
     activeAlerts: readonly(activeAlerts),
     notifications: readonly(notifications),
     connectionStatus: readonly(connectionStatus),
-    
+
     // Computed
     unreadCount,
     criticalAlerts,
     highPriorityAlerts,
-    
+
     // Methods
     connectAlertStream,
     disconnectAlertStream,
@@ -436,7 +437,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
     addAlert,
     createNotification,
     removeNotification,
-    filterAlerts
+    filterAlerts,
   }
 }
 

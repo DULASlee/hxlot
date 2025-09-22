@@ -1,9 +1,6 @@
 <template>
   <div class="login-test-container">
-    <el-card
-      class="login-card"
-      shadow="hover"
-    >
+    <el-card class="login-card" shadow="hover">
       <template #header>
         <div class="card-header">
           <h2>SmartAbp 登录功能测试</h2>
@@ -14,21 +11,12 @@
       </template>
 
       <!-- API 连接测试 -->
-      <el-divider content-position="left">
-        API 连接测试
-      </el-divider>
+      <el-divider content-position="left"> API 连接测试 </el-divider>
       <div class="test-section">
-        <el-button
-          :loading="testing.api"
-          type="primary"
-          @click="testApiConnection"
-        >
+        <el-button :loading="testing.api" type="primary" @click="testApiConnection">
           🔗 测试 API 连接
         </el-button>
-        <div
-          v-if="apiTestResult"
-          class="test-result"
-        >
+        <div v-if="apiTestResult" class="test-result">
           <el-alert
             :title="apiTestResult.success ? 'API 连接成功' : 'API 连接失败'"
             :type="apiTestResult.success ? 'success' : 'error'"
@@ -39,9 +27,7 @@
       </div>
 
       <!-- 用户登录测试 -->
-      <el-divider content-position="left">
-        用户登录测试
-      </el-divider>
+      <el-divider content-position="left"> 用户登录测试 </el-divider>
       <div class="login-section">
         <el-form
           ref="loginFormRef"
@@ -50,21 +36,11 @@
           label-width="80px"
           @submit.prevent="handleLogin"
         >
-          <el-form-item
-            label="用户名"
-            prop="username"
-          >
-            <el-input
-              v-model="loginForm.username"
-              placeholder="请输入用户名"
-              clearable
-            />
+          <el-form-item label="用户名" prop="username">
+            <el-input v-model="loginForm.username" placeholder="请输入用户名" clearable />
           </el-form-item>
 
-          <el-form-item
-            label="密码"
-            prop="password"
-          >
+          <el-form-item label="密码" prop="password">
             <el-input
               v-model="loginForm.password"
               type="password"
@@ -81,65 +57,43 @@
               style="width: 100%"
               @click="handleLogin"
             >
-              👤 {{ authStore.isLoading ? '登录中...' : '登录测试' }}
+              👤 {{ authStore.isLoading ? "登录中..." : "登录测试" }}
             </el-button>
           </el-form-item>
         </el-form>
 
         <!-- 快速测试按钮 -->
         <div class="quick-test-buttons">
-          <el-button
-            size="small"
-            @click="fillTestData('admin')"
-          >
-            填入管理员测试数据
-          </el-button>
-          <el-button
-            size="small"
-            @click="fillTestData('user')"
-          >
-            填入普通用户测试数据
-          </el-button>
-          <el-button
-            size="small"
-            type="warning"
-            @click="fillTestData('invalid')"
-          >
+          <el-button size="small" @click="fillTestData('admin')"> 填入管理员测试数据 </el-button>
+          <el-button size="small" @click="fillTestData('user')"> 填入普通用户测试数据 </el-button>
+          <el-button size="small" type="warning" @click="fillTestData('invalid')">
             填入无效测试数据
           </el-button>
         </div>
       </div>
 
       <!-- 认证状态显示 -->
-      <el-divider content-position="left">
-        认证状态
-      </el-divider>
+      <el-divider content-position="left"> 认证状态 </el-divider>
       <div class="auth-status">
-        <el-descriptions
-          :column="2"
-          border
-        >
+        <el-descriptions :column="2" border>
           <el-descriptions-item label="认证状态">
             <el-tag :type="authStore.isAuthenticated ? 'success' : 'danger'">
-              {{ authStore.isAuthenticated ? '已认证' : '未认证' }}
+              {{ authStore.isAuthenticated ? "已认证" : "未认证" }}
             </el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="Token">
-            <el-text
-              class="token-display"
-              truncated
-            >
-              {{ authStore.token || '无' }}
+            <el-text class="token-display" truncated>
+              {{ authStore.token || "无" }}
             </el-text>
           </el-descriptions-item>
           <el-descriptions-item label="用户ID">
-            {{ authStore.userInfo?.id || '无' }}
+            {{ authStore.userInfo?.id || "无" }}
           </el-descriptions-item>
           <el-descriptions-item label="用户名">
-            {{ authStore.userInfo?.username || '无' }}
+            {{ authStore.userInfo?.username || "无" }}
           </el-descriptions-item>
           <el-descriptions-item label="邮箱">
-            {{ authStore.userInfo?.email || '无' }}
+            {{ authStore.userInfo?.email || "无" }}
           </el-descriptions-item>
           <el-descriptions-item label="角色">
             <el-tag
@@ -154,38 +108,18 @@
           </el-descriptions-item>
         </el-descriptions>
 
-        <div
-          v-if="authStore.isAuthenticated"
-          class="auth-actions"
-        >
-          <el-button
-            :loading="testing.userInfo"
-            type="info"
-            @click="testUserInfo"
-          >
+        <div v-if="authStore.isAuthenticated" class="auth-actions">
+          <el-button :loading="testing.userInfo" type="info" @click="testUserInfo">
             🔄 刷新用户信息
           </el-button>
-          <el-button
-            type="danger"
-            @click="handleLogout"
-          >
-            🚪 登出测试
-          </el-button>
+          <el-button type="danger" @click="handleLogout"> 🚪 登出测试 </el-button>
         </div>
       </div>
 
       <!-- 测试日志 -->
-      <el-divider content-position="left">
-        测试日志
-      </el-divider>
+      <el-divider content-position="left"> 测试日志 </el-divider>
       <div class="test-logs">
-        <el-button
-          size="small"
-          type="warning"
-          @click="clearLogs"
-        >
-          🗑️ 清空日志
-        </el-button>
+        <el-button size="small" type="warning" @click="clearLogs"> 🗑️ 清空日志 </el-button>
         <div class="logs-container">
           <div
             v-for="(log, index) in testLogs"
@@ -195,12 +129,7 @@
             <span class="log-time">{{ log.time }}</span>
             <span class="log-message">{{ log.message }}</span>
           </div>
-          <div
-            v-if="testLogs.length === 0"
-            class="no-logs"
-          >
-            暂无测试日志
-          </div>
+          <div v-if="testLogs.length === 0" class="no-logs">暂无测试日志</div>
         </div>
       </div>
     </el-card>
@@ -208,14 +137,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
-import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
-import { useAuthStore } from '@/stores'
-import { authService } from '@/utils/auth'
-import { api } from '@/utils/api'
-import dayjs from 'dayjs'
-
-
+import { ref, reactive, computed, onMounted } from "vue"
+import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus"
+import { useAuthStore } from "@/stores"
+import { authService } from "@/utils/auth"
+import { api } from "@/utils/api"
+import dayjs from "dayjs"
 
 // 使用 stores
 const authStore = useAuthStore()
@@ -225,26 +152,26 @@ const loginFormRef = ref<FormInstance>()
 
 // 登录表单数据
 const loginForm = reactive({
-  username: '',
-  password: ''
+  username: "",
+  password: "",
 })
 
 // 表单验证规则
 const loginRules: FormRules = {
   username: [
-    { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 2, max: 50, message: '用户名长度在 2 到 50 个字符', trigger: 'blur' }
+    { required: true, message: "请输入用户名", trigger: "blur" },
+    { min: 2, max: 50, message: "用户名长度在 2 到 50 个字符", trigger: "blur" },
   ],
   password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, max: 100, message: '密码长度在 6 到 100 个字符', trigger: 'blur' }
-  ]
+    { required: true, message: "请输入密码", trigger: "blur" },
+    { min: 6, max: 100, message: "密码长度在 6 到 100 个字符", trigger: "blur" },
+  ],
 }
 
 // 测试状态
 const testing = reactive({
   api: false,
-  userInfo: false
+  userInfo: false,
 })
 
 // API 测试结果
@@ -256,26 +183,28 @@ const apiTestResult = ref<{
 // 连接状态
 const connectionStatus = computed(() => {
   if (apiTestResult.value === null) {
-    return { type: 'info', text: '未测试' }
+    return { type: "info", text: "未测试" }
   }
   return apiTestResult.value.success
-    ? { type: 'success', text: '连接正常' }
-    : { type: 'danger', text: '连接异常' }
+    ? { type: "success", text: "连接正常" }
+    : { type: "danger", text: "连接异常" }
 })
 
 // 测试日志
-const testLogs = ref<Array<{
-  time: string
-  type: 'info' | 'success' | 'warning' | 'error'
-  message: string
-}>>([])
+const testLogs = ref<
+  Array<{
+    time: string
+    type: "info" | "success" | "warning" | "error"
+    message: string
+  }>
+>([])
 
 // 添加日志
-const addLog = (type: 'info' | 'success' | 'warning' | 'error', message: string) => {
+const addLog = (type: "info" | "success" | "warning" | "error", message: string) => {
   testLogs.value.unshift({
-    time: dayjs().format('HH:mm:ss'),
+    time: dayjs().format("HH:mm:ss"),
     type,
-    message
+    message,
   })
   // 限制日志数量
   if (testLogs.value.length > 50) {
@@ -286,48 +215,51 @@ const addLog = (type: 'info' | 'success' | 'warning' | 'error', message: string)
 // 清空日志
 const clearLogs = () => {
   testLogs.value = []
-  addLog('info', '日志已清空')
+  addLog("info", "日志已清空")
 }
 
 // 测试 API 连接
 const testApiConnection = async () => {
   testing.api = true
-  addLog('info', '开始测试 API 连接...')
+  addLog("info", "开始测试 API 连接...")
 
   try {
     // API健康检查
-    await api.get('/health-status')
+    await api.get("/health-status")
     apiTestResult.value = {
       success: true,
-      message: `连接成功！响应时间: ${Date.now() % 1000}ms`
+      message: `连接成功！响应时间: ${Date.now() % 1000}ms`,
     }
-    addLog('success', 'API 连接测试成功')
-    ElMessage.success('API 连接正常')
+    addLog("success", "API 连接测试成功")
+    ElMessage.success("API 连接正常")
   } catch (error: any) {
     apiTestResult.value = {
       success: false,
-      message: `连接失败: ${error.message || '未知错误'}`
+      message: `连接失败: ${error.message || "未知错误"}`,
     }
-    addLog('error', `API 连接失败: ${error.message}`)
-    ElMessage.error('API 连接失败')
+    addLog("error", `API 连接失败: ${error.message}`)
+    ElMessage.error("API 连接失败")
   } finally {
     testing.api = false
   }
 }
 
 // 填充测试数据
-const fillTestData = (type: 'admin' | 'user' | 'invalid') => {
+const fillTestData = (type: "admin" | "user" | "invalid") => {
   const testData = {
-    admin: { username: 'admin', password: '1q2w3E*' },
-    user: { username: 'testuser', password: 'Test123!' },
-    invalid: { username: 'invalid', password: 'wrongpass' }
+    admin: { username: "admin", password: "1q2w3E*" },
+    user: { username: "testuser", password: "Test123!" },
+    invalid: { username: "invalid", password: "wrongpass" },
   }
 
   const data = testData[type]
   loginForm.username = data.username
   loginForm.password = data.password
 
-  addLog('info', `已填入${type === 'admin' ? '管理员' : type === 'user' ? '普通用户' : '无效'}测试数据`)
+  addLog(
+    "info",
+    `已填入${type === "admin" ? "管理员" : type === "user" ? "普通用户" : "无效"}测试数据`,
+  )
 }
 
 // 处理登录
@@ -338,23 +270,23 @@ const handleLogin = async () => {
     const valid = await loginFormRef.value.validate()
     if (!valid) return
 
-    addLog('info', `开始登录测试，用户名: ${loginForm.username}`)
+    addLog("info", `开始登录测试，用户名: ${loginForm.username}`)
 
     const success = await authService.login({
       username: loginForm.username,
-      password: loginForm.password
+      password: loginForm.password,
     })
 
     if (success) {
-      addLog('success', '登录成功！')
-      ElMessage.success('登录成功！')
+      addLog("success", "登录成功！")
+      ElMessage.success("登录成功！")
 
       // 自动获取用户信息
       await testUserInfo()
     }
   } catch (error: any) {
-    const errorMsg = error.message || '登录失败'
-    addLog('error', `登录失败: ${errorMsg}`)
+    const errorMsg = error.message || "登录失败"
+    addLog("error", `登录失败: ${errorMsg}`)
     ElMessage.error(errorMsg)
   }
 }
@@ -362,20 +294,20 @@ const handleLogin = async () => {
 // 测试获取用户信息
 const testUserInfo = async () => {
   testing.userInfo = true
-  addLog('info', '开始获取用户信息...')
+  addLog("info", "开始获取用户信息...")
 
   try {
     const userInfo = await authService.fetchUserInfo()
     if (userInfo) {
-      addLog('success', `用户信息获取成功: ${userInfo.userName}`)
-      ElMessage.success('用户信息获取成功')
+      addLog("success", `用户信息获取成功: ${userInfo.userName}`)
+      ElMessage.success("用户信息获取成功")
     } else {
-      addLog('warning', '用户信息获取失败')
-      ElMessage.warning('用户信息获取失败')
+      addLog("warning", "用户信息获取失败")
+      ElMessage.warning("用户信息获取失败")
     }
   } catch (error: any) {
-    addLog('error', `用户信息获取失败: ${error.message}`)
-    ElMessage.error('用户信息获取失败')
+    addLog("error", `用户信息获取失败: ${error.message}`)
+    ElMessage.error("用户信息获取失败")
   } finally {
     testing.userInfo = false
   }
@@ -384,27 +316,27 @@ const testUserInfo = async () => {
 // 处理登出
 const handleLogout = async () => {
   try {
-    await ElMessageBox.confirm('确定要登出吗？', '确认登出', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
+    await ElMessageBox.confirm("确定要登出吗？", "确认登出", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
     })
 
-    addLog('info', '开始登出测试...')
+    addLog("info", "开始登出测试...")
     await authService.logout()
-    addLog('success', '登出成功！')
-    ElMessage.success('登出成功！')
+    addLog("success", "登出成功！")
+    ElMessage.success("登出成功！")
   } catch (error: any) {
-    if (error !== 'cancel') {
-      addLog('error', `登出失败: ${error.message}`)
-      ElMessage.error('登出失败')
+    if (error !== "cancel") {
+      addLog("error", `登出失败: ${error.message}`)
+      ElMessage.error("登出失败")
     }
   }
 }
 
 // 组件挂载时自动测试 API 连接
 onMounted(() => {
-  addLog('info', 'SmartAbp 登录功能测试页面已加载')
+  addLog("info", "SmartAbp 登录功能测试页面已加载")
   testApiConnection()
 })
 </script>

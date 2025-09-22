@@ -3,8 +3,8 @@
  * 提供安全扫描、性能分析、代码验证等功能
  */
 
-const fs = require('fs')
-const path = require('path')
+const fs = require("fs")
+const path = require("path")
 
 class CodeQualityHelpers {
   /**
@@ -12,8 +12,8 @@ class CodeQualityHelpers {
    */
   scanForSecurityIssues() {
     const issues = []
-    const codeDir = path.join(process.cwd(), 'src', 'SmartAbp.CodeGenerator')
-    
+    const codeDir = path.join(process.cwd(), "src", "SmartAbp.CodeGenerator")
+
     // 检查SQL注入风险
     const sqlPatterns = [
       /\.ExecuteSqlRaw\(/,
@@ -21,18 +21,18 @@ class CodeQualityHelpers {
       /\.FromSql\(/,
       /\.FromSqlRaw\(/,
       /string\.Format.*SELECT/,
-      /\+.*SELECT/
+      /\+.*SELECT/,
     ]
-    
+
     this.scanDirectory(codeDir, /\.cs$/, (content, filePath) => {
-      sqlPatterns.forEach(pattern => {
+      sqlPatterns.forEach((pattern) => {
         if (pattern.test(content)) {
           issues.push({
-            type: 'SECURITY',
-            severity: 'HIGH',
-            message: '潜在的SQL注入风险',
+            type: "SECURITY",
+            severity: "HIGH",
+            message: "潜在的SQL注入风险",
             file: filePath,
-            pattern: pattern.toString()
+            pattern: pattern.toString(),
           })
         }
       })
@@ -43,18 +43,18 @@ class CodeQualityHelpers {
       /password.*=.*['"].*['"]/i,
       /apiKey.*=.*['"].*['"]/i,
       /secret.*=.*['"].*['"]/i,
-      /connectionString.*=.*['"][^'"]*['"]/i
+      /connectionString.*=.*['"][^'"]*['"]/i,
     ]
-    
+
     this.scanDirectory(codeDir, /\.cs$/, (content, filePath) => {
-      secretPatterns.forEach(pattern => {
+      secretPatterns.forEach((pattern) => {
         if (pattern.test(content)) {
           issues.push({
-            type: 'SECURITY',
-            severity: 'MEDIUM',
-            message: '硬编码的敏感信息',
+            type: "SECURITY",
+            severity: "MEDIUM",
+            message: "硬编码的敏感信息",
             file: filePath,
-            pattern: pattern.toString()
+            pattern: pattern.toString(),
           })
         }
       })
@@ -68,43 +68,41 @@ class CodeQualityHelpers {
    */
   scanForPerformanceIssues() {
     const issues = []
-    const codeDir = path.join(process.cwd(), 'src', 'SmartAbp.CodeGenerator')
-    
+    const codeDir = path.join(process.cwd(), "src", "SmartAbp.CodeGenerator")
+
     // 检查N+1查询模式
     const nPlusOnePatterns = [
       /\.FirstOrDefault\(\)\.\w+\.FirstOrDefault\(\)/,
       /\.Find\(\)\.\w+\.FirstOrDefault\(\)/,
-      /foreach.*\.Select.*\.FirstOrDefault\(\)/
+      /foreach.*\.Select.*\.FirstOrDefault\(\)/,
     ]
-    
+
     this.scanDirectory(codeDir, /\.cs$/, (content, filePath) => {
-      nPlusOnePatterns.forEach(pattern => {
+      nPlusOnePatterns.forEach((pattern) => {
         if (pattern.test(content)) {
           issues.push({
-            type: 'PERFORMANCE',
-            severity: 'MEDIUM',
-            message: '潜在的N+1查询问题',
+            type: "PERFORMANCE",
+            severity: "MEDIUM",
+            message: "潜在的N+1查询问题",
             file: filePath,
-            pattern: pattern.toString()
+            pattern: pattern.toString(),
           })
         }
       })
     })
 
     // 检查内存泄漏模式
-    const memoryLeakPatterns = [
-      /event.*\+=[^;]*;.*没有-=/
-    ]
-    
+    const memoryLeakPatterns = [/event.*\+=[^;]*;.*没有-=/]
+
     this.scanDirectory(codeDir, /\.cs$/, (content, filePath) => {
-      memoryLeakPatterns.forEach(pattern => {
+      memoryLeakPatterns.forEach((pattern) => {
         if (pattern.test(content)) {
           issues.push({
-            type: 'PERFORMANCE',
-            severity: 'HIGH',
-            message: '潜在的内存泄漏问题',
+            type: "PERFORMANCE",
+            severity: "HIGH",
+            message: "潜在的内存泄漏问题",
             file: filePath,
-            pattern: pattern.toString()
+            pattern: pattern.toString(),
           })
         }
       })
@@ -118,14 +116,14 @@ class CodeQualityHelpers {
    */
   scanForMaintainabilityIssues() {
     const issues = []
-    const codeDir = path.join(process.cwd(), 'src', 'SmartAbp.CodeGenerator')
-    
+    const codeDir = path.join(process.cwd(), "src", "SmartAbp.CodeGenerator")
+
     // 检查过长的函数
     this.scanDirectory(codeDir, /\.cs$/, (content, filePath) => {
-      const lines = content.split('\n')
+      const lines = content.split("\n")
       let inFunction = false
       let functionStart = 0
-      let functionName = ''
+      let functionName = ""
 
       lines.forEach((line, index) => {
         if (line.match(/^\s*(public|private|protected)\s+.*\(.*\)\s*{/)) {
@@ -134,15 +132,15 @@ class CodeQualityHelpers {
           functionName = line.trim()
         }
 
-        if (inFunction && line.includes('}')) {
+        if (inFunction && line.includes("}")) {
           const functionLength = index - functionStart
           if (functionLength > 50) {
             issues.push({
-              type: 'MAINTAINABILITY',
-              severity: 'MEDIUM',
+              type: "MAINTAINABILITY",
+              severity: "MEDIUM",
               message: `函数过长: ${functionName} (${functionLength}行)`,
               file: filePath,
-              line: functionStart + 1
+              line: functionStart + 1,
             })
           }
           inFunction = false
@@ -154,18 +152,18 @@ class CodeQualityHelpers {
     const complexConditionPatterns = [
       /if.*&&.*&&.*&&/,
       /if.*\|\|.*\|\|.*\|\|/,
-      /if.*\(.*\(.*\(.*\)/
+      /if.*\(.*\(.*\(.*\)/,
     ]
-    
+
     this.scanDirectory(codeDir, /\.cs$/, (content, filePath) => {
-      complexConditionPatterns.forEach(pattern => {
+      complexConditionPatterns.forEach((pattern) => {
         if (pattern.test(content)) {
           issues.push({
-            type: 'MAINTAINABILITY',
-            severity: 'LOW',
-            message: '复杂的条件判断',
+            type: "MAINTAINABILITY",
+            severity: "LOW",
+            message: "复杂的条件判断",
             file: filePath,
-            pattern: pattern.toString()
+            pattern: pattern.toString(),
           })
         }
       })
@@ -179,24 +177,27 @@ class CodeQualityHelpers {
    */
   calculateLintScore(lintResults) {
     if (!lintResults || lintResults.length === 0) return 100
-    
-    const totalIssues = lintResults.reduce((sum, file) => sum + file.errorCount + file.warningCount, 0)
+
+    const totalIssues = lintResults.reduce(
+      (sum, file) => sum + file.errorCount + file.warningCount,
+      0,
+    )
     const maxScore = 100
     const penaltyPerIssue = 2
-    
-    return Math.max(0, maxScore - (totalIssues * penaltyPerIssue))
+
+    return Math.max(0, maxScore - totalIssues * penaltyPerIssue)
   }
 
   /**
    * 解析覆盖率结果
    */
   parseCoverage(coverageOutput) {
-    const lines = coverageOutput.split('\n')
+    const lines = coverageOutput.split("\n")
     let statements = 0
     let belowThreshold = false
 
     for (const line of lines) {
-      if (line.includes('Statements') && line.includes('%')) {
+      if (line.includes("Statements") && line.includes("%")) {
         const match = line.match(/(\d+(\.\d+)?)%/)
         if (match) {
           statements = parseFloat(match[1])
@@ -213,19 +214,19 @@ class CodeQualityHelpers {
    */
   findGeneratedFiles() {
     const generatedDirs = [
-      'src/SmartAbp.Application',
-      'src/SmartAbp.Application.Contracts', 
-      'src/SmartAbp.Domain',
-      'src/SmartAbp.EntityFrameworkCore'
+      "src/SmartAbp.Application",
+      "src/SmartAbp.Application.Contracts",
+      "src/SmartAbp.Domain",
+      "src/SmartAbp.EntityFrameworkCore",
     ]
-    
+
     const generatedFiles = []
-    
-    generatedDirs.forEach(dir => {
+
+    generatedDirs.forEach((dir) => {
       if (fs.existsSync(dir)) {
         this.scanDirectory(dir, /\.cs$/, (content, filePath) => {
           // 检查是否包含生成代码的标记
-          if (content.includes('// Auto-generated') || content.includes('GeneratedCode')) {
+          if (content.includes("// Auto-generated") || content.includes("GeneratedCode")) {
             generatedFiles.push(filePath)
           }
         })
@@ -245,10 +246,10 @@ class CodeQualityHelpers {
       /console\.log\(/,
       /Debug\.WriteLine\(/,
       /throw new Exception\(/,
-      /catch\s*\(\s*Exception\s*\)/
+      /catch\s*\(\s*Exception\s*\)/,
     ]
 
-    return qualityPatterns.some(pattern => pattern.test(content))
+    return qualityPatterns.some((pattern) => pattern.test(content))
   }
 
   /**
@@ -260,10 +261,10 @@ class CodeQualityHelpers {
       /using\s+System/,
       /namespace\s+\w+/,
       /class\s+\w+/,
-      /public\s+(class|interface|enum)/
+      /public\s+(class|interface|enum)/,
     ]
 
-    return requiredPatterns.every(pattern => pattern.test(content))
+    return requiredPatterns.every((pattern) => pattern.test(content))
   }
 
   /**
@@ -273,15 +274,15 @@ class CodeQualityHelpers {
     if (!fs.existsSync(dir)) return
 
     const items = fs.readdirSync(dir)
-    
-    items.forEach(item => {
+
+    items.forEach((item) => {
       const fullPath = path.join(dir, item)
       const stat = fs.statSync(fullPath)
-      
+
       if (stat.isDirectory()) {
         this.scanDirectory(fullPath, filePattern, callback)
       } else if (filePattern.test(item)) {
-        const content = fs.readFileSync(fullPath, 'utf8')
+        const content = fs.readFileSync(fullPath, "utf8")
         callback(content, fullPath)
       }
     })
@@ -292,9 +293,12 @@ class CodeQualityHelpers {
    */
   generateQualityReport(metrics, stats) {
     const overallScore = Math.round(
-      (metrics.codeStyle.score + metrics.security.score + 
-       metrics.performance.score + metrics.maintainability.score + 
-       metrics.testCoverage.score) / 5
+      (metrics.codeStyle.score +
+        metrics.security.score +
+        metrics.performance.score +
+        metrics.maintainability.score +
+        metrics.testCoverage.score) /
+        5,
     )
 
     return {
@@ -302,8 +306,8 @@ class CodeQualityHelpers {
       overallScore,
       metrics,
       generatedCode: stats,
-      status: overallScore >= 80 ? 'PASSED' : 'FAILED',
-      recommendations: this.generateRecommendations(metrics)
+      status: overallScore >= 80 ? "PASSED" : "FAILED",
+      recommendations: this.generateRecommendations(metrics),
     }
   }
 
@@ -314,23 +318,23 @@ class CodeQualityHelpers {
     const recommendations = []
 
     if (metrics.codeStyle.score < 90) {
-      recommendations.push('运行 ESLint 自动修复代码风格问题')
+      recommendations.push("运行 ESLint 自动修复代码风格问题")
     }
 
     if (metrics.security.score < 100) {
-      recommendations.push('修复发现的安全漏洞，避免硬编码敏感信息')
+      recommendations.push("修复发现的安全漏洞，避免硬编码敏感信息")
     }
 
     if (metrics.performance.score < 95) {
-      recommendations.push('优化性能敏感代码，避免N+1查询')
+      recommendations.push("优化性能敏感代码，避免N+1查询")
     }
 
     if (metrics.maintainability.score < 90) {
-      recommendations.push('重构复杂函数，提高代码可读性')
+      recommendations.push("重构复杂函数，提高代码可读性")
     }
 
     if (metrics.testCoverage.score < 80) {
-      recommendations.push('增加单元测试覆盖率，目标达到80%以上')
+      recommendations.push("增加单元测试覆盖率，目标达到80%以上")
     }
 
     return recommendations
@@ -339,15 +343,15 @@ class CodeQualityHelpers {
   /**
    * 保存报告到文件
    */
-  saveReport(report, filename = 'code-quality-report.json') {
-    const reportDir = path.join(process.cwd(), 'quality-reports')
+  saveReport(report, filename = "code-quality-report.json") {
+    const reportDir = path.join(process.cwd(), "quality-reports")
     if (!fs.existsSync(reportDir)) {
       fs.mkdirSync(reportDir, { recursive: true })
     }
 
     const reportFile = path.join(reportDir, filename)
     fs.writeFileSync(reportFile, JSON.stringify(report, null, 2))
-    
+
     return reportFile
   }
 }

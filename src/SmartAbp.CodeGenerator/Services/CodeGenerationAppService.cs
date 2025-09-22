@@ -338,8 +338,14 @@ WHERE tc.TABLE_SCHEMA=@s AND tc.TABLE_NAME=@t AND tc.CONSTRAINT_TYPE='PRIMARY KE
                                 pkCmd.Parameters.Add(new Microsoft.Data.SqlClient.SqlParameter("@t", name));
                                 using var r = await pkCmd.ExecuteReaderAsync();
                                 var pkCols = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                                while (await r.ReadAsync()) pkCols.Add(r.GetString(0));
-                                foreach (var c in table.Columns) c.IsPrimaryKey = pkCols.Contains(c.Name);
+                                while (await r.ReadAsync())
+                            {
+                                pkCols.Add(r.GetString(0));
+                            }
+                                foreach (var c in table.Columns)
+                            {
+                                c.IsPrimaryKey = pkCols.Contains(c.Name);
+                            }
                             }
 
                             // FKs
@@ -391,7 +397,10 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
                     {
                         if (!string.IsNullOrWhiteSpace(request.Schema)) cmd.Parameters.AddWithValue("@s", request.Schema);
                         await using var reader = await cmd.ExecuteReaderAsync();
-                        while (await reader.ReadAsync()) tableList.Add((reader.GetString(0), reader.GetString(1)));
+                        while (await reader.ReadAsync())
+                        {
+                            tableList.Add((reader.GetString(0), reader.GetString(1)));
+                        }
                     }
                     foreach (var (sch, name) in tableList)
                     {
@@ -939,7 +948,7 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
                 }
                 else
                 {
-                    _logger.LogError("Failed to create EF Core migration '{MigrationName}'. Error: {Error}", migrationName, error);
+                    this._logger.LogError("Failed to create EF Core migration '{MigrationName}'. Error: {Error}", migrationName, error);
                     throw new AbpException($"Failed to create EF Core migration for module '{metadata.Name}'. Error: {error}");
                 }
             }

@@ -3,85 +3,37 @@
     <!-- 顶部导航栏 -->
     <header class="top-navbar">
       <div class="navbar-left">
-        <img
-          src="/logo.svg"
-          alt="SmartAbp"
-          class="logo"
-        />
+        <img src="/logo.svg" alt="SmartAbp" class="logo" />
         <span class="brand-name">SmartAbp</span>
       </div>
 
       <nav class="navbar-center">
-        <a
-          href="#"
-          class="nav-link"
-          @click="navigateToExternal('智慧工地')"
-        >智慧工地</a>
-        <a
-          href="#"
-          class="nav-link"
-          @click="navigateToExternal('MES')"
-        >MES</a>
-        <a
-          href="#"
-          class="nav-link"
-          @click="navigateToExternal('系统配置')"
-        >系统配置</a>
-        <a
-          href="#"
-          class="nav-link"
-          @click="navigateToExternal('APP')"
-        >APP</a>
+        <a href="#" class="nav-link" @click="navigateToExternal('智慧工地')">智慧工地</a>
+        <a href="#" class="nav-link" @click="navigateToExternal('MES')">MES</a>
+        <a href="#" class="nav-link" @click="navigateToExternal('系统配置')">系统配置</a>
+        <a href="#" class="nav-link" @click="navigateToExternal('APP')">APP</a>
       </nav>
 
       <div class="navbar-right">
         <!-- 语言切换器 -->
-        <button
-          class="icon-btn"
-          title="Language"
-          @click="toggleLocale"
-        >
+        <button class="icon-btn" title="Language" @click="toggleLocale">
           <i :class="currentLocale === 'zh-CN' ? 'fas fa-language' : 'fas fa-globe'" />
         </button>
         <!-- 主题切换按钮（仅图标） -->
-        <button
-          class="icon-btn"
-          title="Theme"
-          @click="themeStore.toggleDarkMode()"
-        >
+        <button class="icon-btn" title="Theme" @click="themeStore.toggleDarkMode()">
           <i :class="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'" />
         </button>
-        <button
-          class="icon-btn"
-          title="设置"
-          @click="openSettings"
-        >
+        <button class="icon-btn" title="设置" @click="openSettings">
           <i class="fas fa-cog" />
         </button>
-        <div
-          class="user-menu"
-          @click="toggleUserDropdown"
-        >
-          <img
-            src="/logo.svg"
-            alt="用户头像"
-            class="user-avatar"
-          />
-          <span class="username">{{ userInfo.name || '用户' }}</span>
+        <div class="user-menu" @click="toggleUserDropdown">
+          <img src="/logo.svg" alt="用户头像" class="user-avatar" />
+          <span class="username">{{ userInfo.name || "用户" }}</span>
           <i class="fas fa-chevron-down dropdown-icon" />
 
-          <div
-            v-if="showUserDropdown"
-            class="user-dropdown"
-          >
-            <a
-              href="#"
-              @click="goToProfile"
-            >个人信息</a>
-            <a
-              href="#"
-              @click="logout"
-            >退出登录</a>
+          <div v-if="showUserDropdown" class="user-dropdown">
+            <a href="#" @click="goToProfile">个人信息</a>
+            <a href="#" @click="logout">退出登录</a>
           </div>
         </div>
       </div>
@@ -90,39 +42,32 @@
     <!-- 主内容区域 -->
     <div class="main-container">
       <!-- 侧边栏 -->
-      <aside
-        class="sidebar"
-        :class="{ collapsed: sidebarCollapsed }"
-      >
+      <aside class="sidebar" :class="{ collapsed: sidebarCollapsed }">
         <div class="sidebar-header">
-          <button
-            class="collapse-btn"
-            @click="toggleSidebar"
-          >
+          <button class="collapse-btn" @click="toggleSidebar">
             <i :class="sidebarCollapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left'" />
           </button>
         </div>
 
         <nav class="sidebar-nav">
-          <div
-            v-for="item in filteredMenus"
-            :key="item.key"
-            class="nav-item"
-          >
+          <div v-for="item in filteredMenus" :key="item.key" class="nav-item">
             <div
               class="nav-link"
-              :class="{ active: menuState.activeMenuKey === item.key, 'has-children': item.type === 'folder' && item.children }"
-              @click="handleMenuClick(item)
-              "
+              :class="{
+                active: menuState.activeMenuKey === item.key,
+                'has-children': item.type === 'folder' && item.children,
+              }"
+              @click="handleMenuClick(item)"
             >
               <i :class="item.icon" />
-              <span
-                v-if="!sidebarCollapsed"
-                class="nav-text"
-              >{{ item.title }}</span>
+              <span v-if="!sidebarCollapsed" class="nav-text">{{ item.title }}</span>
               <i
                 v-if="item.type === 'folder' && item.children && !sidebarCollapsed"
-                :class="['fas fa-chevron-down', 'expand-icon', { expanded: expandedMenus.includes(item.key) }]"
+                :class="[
+                  'fas fa-chevron-down',
+                  'expand-icon',
+                  { expanded: expandedMenus.includes(item.key) },
+                ]"
               />
             </div>
 
@@ -148,17 +93,10 @@
       </aside>
 
       <!-- 副菜单 -->
-      <aside
-        v-if="!sidebarCollapsed"
-        class="submenu-panel"
-        :class="{ show: shouldShowSubmenu }"
-      >
+      <aside v-if="!sidebarCollapsed" class="submenu-panel" :class="{ show: shouldShowSubmenu }">
         <div class="submenu-header">
           <h3>{{ submenuTitle }}</h3>
-          <button
-            class="close-submenu"
-            @click="closeSubmenu"
-          >
+          <button class="close-submenu" @click="closeSubmenu">
             <i class="fas fa-times" />
           </button>
         </div>
@@ -179,10 +117,7 @@
       <!-- 内容区域 -->
       <main class="content-area">
         <!-- 标签页导航 -->
-        <div
-          v-if="openTabs.length > 0"
-          class="tab-navigation"
-        >
+        <div v-if="openTabs.length > 0" class="tab-navigation">
           <div class="tabs-container">
             <div
               v-for="tab in openTabs"
@@ -212,22 +147,18 @@
     </div>
 
     <!-- 遮罩层 -->
-    <div
-      v-if="showUserDropdown"
-      class="overlay"
-      @click="closeAllDropdowns"
-    />
+    <div v-if="showUserDropdown" class="overlay" @click="closeAllDropdowns" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useThemeStore } from '@/stores'
-import { useAuthStore } from '@/stores/modules/auth'
-import { useMenu } from '@/composables/useMenu'
-import { i18n, setLocale } from '@/plugins/i18n'
-import { storeToRefs } from 'pinia'
+import { ref, computed, onMounted } from "vue"
+import { useRouter } from "vue-router"
+import { useThemeStore } from "@/stores"
+import { useAuthStore } from "@/stores/modules/auth"
+import { useMenu } from "@/composables/useMenu"
+import { i18n, setLocale } from "@/plugins/i18n"
+import { storeToRefs } from "pinia"
 
 const router = useRouter()
 const themeStore = useThemeStore()
@@ -249,7 +180,7 @@ const {
   handleSubMenuClick,
   closeSubmenu,
   switchTab,
-  closeTab
+  closeTab,
 } = useMenu()
 
 const expandedMenus = computed(() => menuState.value.expandedMenuKeys)
@@ -258,8 +189,8 @@ const activeTab = computed(() => menuState.value.activeTab)
 
 // 用户信息
 const userInfo = ref({
-  name: '管理员',
-  email: 'admin@smartabp.com'
+  name: "管理员",
+  email: "admin@smartabp.com",
 })
 
 // 方法
@@ -280,23 +211,23 @@ const navigateToExternal = (name: string) => {
 }
 
 const openSettings = () => {
-  router.push('/Admin/settings')
+  router.push("/Admin/settings")
 }
 
 const goToProfile = () => {
-  router.push('/profile')
+  router.push("/profile")
   showUserDropdown.value = false
 }
 
 const logout = () => {
-  localStorage.removeItem('smartabp_token')
-  localStorage.removeItem('smartabp_user')
-  router.push('/login')
+  localStorage.removeItem("smartabp_token")
+  localStorage.removeItem("smartabp_user")
+  router.push("/login")
 }
 
-const currentLocale = computed(() => i18n.global.locale.value as 'zh-CN' | 'en-US')
+const currentLocale = computed(() => i18n.global.locale.value as "zh-CN" | "en-US")
 const toggleLocale = () => {
-  setLocale(currentLocale.value === 'zh-CN' ? 'en-US' : 'zh-CN')
+  setLocale(currentLocale.value === "zh-CN" ? "en-US" : "zh-CN")
 }
 
 onMounted(() => {
@@ -317,7 +248,8 @@ onMounted(() => {
   background-color: var(--theme-bg-body);
   color: var(--theme-text-primary);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 /* 顶部导航栏 */
@@ -646,7 +578,7 @@ onMounted(() => {
 }
 
 .sidebar-nav .nav-link.active::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 50%;
@@ -730,7 +662,7 @@ onMounted(() => {
 }
 
 .sub-nav-link.active::before {
-  content: '';
+  content: "";
   position: absolute;
   left: -24px;
   top: 50%;
@@ -806,7 +738,7 @@ onMounted(() => {
 }
 
 .tab-item.active::before {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -976,7 +908,7 @@ onMounted(() => {
 }
 
 .submenu-header::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 20px;
@@ -1045,7 +977,7 @@ onMounted(() => {
 }
 
 .submenu-item.active::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 50%;

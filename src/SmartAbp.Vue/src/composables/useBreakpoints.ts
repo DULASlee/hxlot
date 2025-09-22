@@ -3,7 +3,7 @@
  * Stage 5.3 TDD Implementation - Vue 3 Composition API
  */
 
-import { ref, computed, onMounted, onUnmounted, readonly } from 'vue'
+import { ref, computed, onMounted, onUnmounted, readonly } from "vue"
 
 interface BreakpointConfig {
   xs: number
@@ -26,7 +26,7 @@ export function useBreakpoints(options: UseBreakpointsOptions = {}) {
     md: 768,
     lg: 992,
     xl: 1200,
-    xxl: 1600
+    xxl: 1600,
   }
 
   const config = { ...defaultConfig, ...options.config }
@@ -50,13 +50,13 @@ export function useBreakpoints(options: UseBreakpointsOptions = {}) {
 
   // Current breakpoint name
   const breakpoint = computed(() => {
-    if (isXs.value) return 'xs'
-    if (isSm.value) return 'sm'
-    if (isMd.value) return 'md'
-    if (isLg.value) return 'lg'
-    if (isXl.value) return 'xl'
-    if (isXxl.value) return 'xxl'
-    return 'unknown'
+    if (isXs.value) return "xs"
+    if (isSm.value) return "sm"
+    if (isMd.value) return "md"
+    if (isLg.value) return "lg"
+    if (isXl.value) return "xl"
+    if (isXxl.value) return "xxl"
+    return "unknown"
   })
 
   // Breakpoint utilities
@@ -69,14 +69,12 @@ export function useBreakpoints(options: UseBreakpointsOptions = {}) {
   }
 
   const isBetween = (min: keyof BreakpointConfig, max: keyof BreakpointConfig) => {
-    return computed(() => 
-      windowWidth.value >= config[min] && windowWidth.value < config[max]
-    )
+    return computed(() => windowWidth.value >= config[min] && windowWidth.value < config[max])
   }
 
   // Update dimensions
   const updateDimensions = () => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       windowWidth.value = window.innerWidth
       windowHeight.value = window.innerHeight
     }
@@ -89,15 +87,15 @@ export function useBreakpoints(options: UseBreakpointsOptions = {}) {
 
   // Lifecycle
   onMounted(() => {
-    if (!options.enableSSR && typeof window !== 'undefined') {
+    if (!options.enableSSR && typeof window !== "undefined") {
       updateDimensions()
-      window.addEventListener('resize', handleResize, { passive: true })
+      window.addEventListener("resize", handleResize, { passive: true })
     }
   })
 
   onUnmounted(() => {
-    if (typeof window !== 'undefined') {
-      window.removeEventListener('resize', handleResize)
+    if (typeof window !== "undefined") {
+      window.removeEventListener("resize", handleResize)
     }
   })
 
@@ -105,7 +103,7 @@ export function useBreakpoints(options: UseBreakpointsOptions = {}) {
     // State
     windowWidth: readonly(windowWidth),
     windowHeight: readonly(windowHeight),
-    
+
     // Breakpoint checks
     isXs,
     isSm,
@@ -113,22 +111,22 @@ export function useBreakpoints(options: UseBreakpointsOptions = {}) {
     isLg,
     isXl,
     isXxl,
-    
+
     // Convenient aliases
     isMobile,
     isTablet,
     isDesktop,
-    
+
     // Current breakpoint
     breakpoint,
-    
+
     // Utilities
     isAbove,
     isBelow,
     isBetween,
-    
+
     // Config
-    config: readonly(config)
+    config: readonly(config),
   }
 }
 

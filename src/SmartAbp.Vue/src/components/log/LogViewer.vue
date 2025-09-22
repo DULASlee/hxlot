@@ -51,119 +51,62 @@
 
       <div class="log-actions">
         <!-- 日志统计 -->
-        <el-popover
-          placement="bottom"
-          width="300"
-          trigger="hover"
-        >
+        <el-popover placement="bottom" width="300" trigger="hover">
           <template #reference>
-            <el-button
-              size="small"
-              type="info"
-              plain
-            >
+            <el-button size="small" type="info" plain>
               <IconEpDataAnalysis />
               统计 ({{ stats.total }})
             </el-button>
           </template>
           <div class="log-stats">
             <div class="stat-item">
-              <el-tag
-                type="success"
-                size="small"
-              >
-                成功: {{ stats.success }}
-              </el-tag>
+              <el-tag type="success" size="small"> 成功: {{ stats.success }} </el-tag>
             </div>
             <div class="stat-item">
-              <el-tag
-                type="info"
-                size="small"
-              >
-                信息: {{ stats.info }}
-              </el-tag>
+              <el-tag type="info" size="small"> 信息: {{ stats.info }} </el-tag>
             </div>
             <div class="stat-item">
-              <el-tag
-                type="warning"
-                size="small"
-              >
-                警告: {{ stats.warn }}
-              </el-tag>
+              <el-tag type="warning" size="small"> 警告: {{ stats.warn }} </el-tag>
             </div>
             <div class="stat-item">
-              <el-tag
-                type="danger"
-                size="small"
-              >
-                错误: {{ stats.error }}
-              </el-tag>
+              <el-tag type="danger" size="small"> 错误: {{ stats.error }} </el-tag>
             </div>
             <div class="stat-item">
-              <el-tag size="small">
-                调试: {{ stats.debug }}
-              </el-tag>
+              <el-tag size="small"> 调试: {{ stats.debug }} </el-tag>
             </div>
           </div>
         </el-popover>
 
         <!-- 导出按钮 -->
         <el-dropdown @command="handleExport">
-          <el-button
-            size="small"
-            type="primary"
-            plain
-          >
+          <el-button size="small" type="primary" plain>
             <IconEpDownload />
             导出
             <IconEpArrowDown />
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="json">
-                JSON 格式
-              </el-dropdown-item>
-              <el-dropdown-item command="csv">
-                CSV 格式
-              </el-dropdown-item>
-              <el-dropdown-item command="txt">
-                文本格式
-              </el-dropdown-item>
+              <el-dropdown-item command="json"> JSON 格式 </el-dropdown-item>
+              <el-dropdown-item command="csv"> CSV 格式 </el-dropdown-item>
+              <el-dropdown-item command="txt"> 文本格式 </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
 
         <!-- 清空日志 -->
-        <el-button
-          size="small"
-          type="danger"
-          plain
-          @click="handleClear"
-        >
+        <el-button size="small" type="danger" plain @click="handleClear">
           <IconEpDelete />
           清空
         </el-button>
 
         <!-- 自动滚动开关 -->
-        <el-switch
-          v-model="autoScroll"
-          size="small"
-          active-text="自动滚动"
-          inactive-text=""
-        />
+        <el-switch v-model="autoScroll" size="small" active-text="自动滚动" inactive-text="" />
       </div>
     </div>
 
     <!-- 日志列表 -->
-    <div
-      ref="logContainer"
-      class="log-container"
-      :style="{ height: containerHeight }"
-    >
-      <div
-        v-if="filteredLogs.length === 0"
-        class="empty-logs"
-      >
+    <div ref="logContainer" class="log-container" :style="{ height: containerHeight }">
+      <div v-if="filteredLogs.length === 0" class="empty-logs">
         <el-empty description="暂无日志数据" />
       </div>
 
@@ -177,11 +120,7 @@
         <!-- 日志头部 -->
         <div class="log-header">
           <div class="log-meta">
-            <el-tag
-              :type="getLevelTagType(log.level)"
-              size="small"
-              class="log-level-tag"
-            >
+            <el-tag :type="getLevelTagType(log.level)" size="small" class="log-level-tag">
               {{ LOG_LEVEL_NAMES[log.level] }}
             </el-tag>
 
@@ -189,42 +128,22 @@
               {{ formatTime(new Date(log.timestamp)) }}
             </span>
 
-            <el-tag
-              v-if="log.category"
-              size="small"
-              class="log-category"
-              plain
-            >
+            <el-tag v-if="log.category" size="small" class="log-category" plain>
               {{ log.category }}
             </el-tag>
 
-            <el-tag
-              v-if="log.source"
-              size="small"
-              class="log-source"
-              type="info"
-              plain
-            >
+            <el-tag v-if="log.source" size="small" class="log-source" type="info" plain>
               {{ log.source }}
             </el-tag>
           </div>
 
           <div class="log-actions-mini">
-            <el-button
-              v-if="log.data"
-              size="small"
-              text
-              @click.stop="toggleLogExpansion(log.id)"
-            >
+            <el-button v-if="log.data" size="small" text @click.stop="toggleLogExpansion(log.id)">
               <IconEpArrowDown v-if="!expandedLogs.has(log.id)" />
               <IconEpArrowUp v-else />
             </el-button>
 
-            <el-button
-              size="small"
-              text
-              @click.stop="copyLog(log)"
-            >
+            <el-button size="small" text @click.stop="copyLog(log)">
               <IconEpCopyDocument />
             </el-button>
           </div>
@@ -236,13 +155,8 @@
         </div>
 
         <!-- 展开的数据 -->
-        <div
-          v-if="expandedLogs.has(log.id) && log.data"
-          class="log-data"
-        >
-          <el-divider content-position="left">
-            详细数据
-          </el-divider>
+        <div v-if="expandedLogs.has(log.id) && log.data" class="log-data">
+          <el-divider content-position="left"> 详细数据 </el-divider>
           <pre class="log-data-content">{{ formatLogData(log.data) }}</pre>
         </div>
       </div>
@@ -251,10 +165,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, nextTick } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import dayjs from 'dayjs'
-import { logger, LogLevel, LOG_LEVEL_NAMES, type LogEntry } from '@/utils/logger'
+import { ref, computed, watch, onMounted, nextTick } from "vue"
+import { ElMessage, ElMessageBox } from "element-plus"
+import dayjs from "dayjs"
+import { logger, LogLevel, LOG_LEVEL_NAMES, type LogEntry } from "@/utils/logger"
 
 // Props
 interface Props {
@@ -266,18 +180,18 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  height: '400px',
+  height: "400px",
   maxEntries: 1000,
   showControls: true,
   autoScroll: true,
-  categories: () => []
+  categories: () => [],
 })
 
 // 响应式数据
 const logs = logger.getLogsRef()
 const selectedLevel = ref<number | null>(null)
-const selectedCategory = ref<string>('')
-const searchQuery = ref('')
+const selectedCategory = ref<string>("")
+const searchQuery = ref("")
 const autoScroll = ref(props.autoScroll)
 const expandedLogs = ref(new Set<string>())
 const logContainer = ref<HTMLElement>()
@@ -290,21 +204,22 @@ const filteredLogs = computed(() => {
 
   // 级别过滤
   if (selectedLevel.value !== null) {
-    result = result.filter(log => log.level === selectedLevel.value)
+    result = result.filter((log) => log.level === selectedLevel.value)
   }
 
   // 分类过滤
   if (selectedCategory.value) {
-    result = result.filter(log => log.category === selectedCategory.value)
+    result = result.filter((log) => log.category === selectedCategory.value)
   }
 
   // 搜索过滤
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
-    result = result.filter(log =>
-      log.message.toLowerCase().includes(query) ||
-      log.category?.toLowerCase().includes(query) ||
-      log.source?.toLowerCase().includes(query)
+    result = result.filter(
+      (log) =>
+        log.message.toLowerCase().includes(query) ||
+        log.category?.toLowerCase().includes(query) ||
+        log.source?.toLowerCase().includes(query),
     )
   }
 
@@ -318,7 +233,7 @@ const categories = computed(() => {
   }
 
   const categorySet = new Set<string>()
-  logs.value.forEach(log => {
+  logs.value.forEach((log) => {
     if (log.category) {
       categorySet.add(log.category)
     }
@@ -330,11 +245,11 @@ const stats = computed(() => logger.getStats())
 
 // 方法
 const formatTime = (timestamp: Date) => {
-  return dayjs(timestamp).format('HH:mm:ss.SSS')
+  return dayjs(timestamp).format("HH:mm:ss.SSS")
 }
 
 const formatLogData = (data: any) => {
-  if (typeof data === 'string') {
+  if (typeof data === "string") {
     return data
   }
   return JSON.stringify(data, null, 2)
@@ -342,12 +257,18 @@ const formatLogData = (data: any) => {
 
 const getLevelTagType = (level: LogLevel) => {
   switch (level) {
-    case LogLevel.SUCCESS: return 'success'
-    case LogLevel.INFO: return 'info'
-    case LogLevel.WARN: return 'warning'
-    case LogLevel.ERROR: return 'danger'
-    case LogLevel.DEBUG: return undefined
-    default: return undefined
+    case LogLevel.SUCCESS:
+      return "success"
+    case LogLevel.INFO:
+      return "info"
+    case LogLevel.WARN:
+      return "warning"
+    case LogLevel.ERROR:
+      return "danger"
+    case LogLevel.DEBUG:
+      return undefined
+    default:
+      return undefined
   }
 }
 
@@ -361,48 +282,44 @@ const toggleLogExpansion = (logId: string) => {
 
 const copyLog = async (log: LogEntry) => {
   try {
-    const text = `[${formatTime(new Date(log.timestamp))}] [${LOG_LEVEL_NAMES[log.level]}] ${log.category ? `[${log.category}] ` : ''}${log.message}`
+    const text = `[${formatTime(new Date(log.timestamp))}] [${LOG_LEVEL_NAMES[log.level]}] ${log.category ? `[${log.category}] ` : ""}${log.message}`
     await navigator.clipboard.writeText(text)
-    ElMessage.success('日志已复制到剪贴板')
+    ElMessage.success("日志已复制到剪贴板")
   } catch (error) {
-    ElMessage.error('复制失败')
+    ElMessage.error("复制失败")
   }
 }
 
 const handleExport = (format: string) => {
   try {
-    const content = logger.export(format as 'json' | 'csv' | 'txt')
+    const content = logger.export(format as "json" | "csv" | "txt")
     const blob = new Blob([content], {
-      type: format === 'json' ? 'application/json' : 'text/plain'
+      type: format === "json" ? "application/json" : "text/plain",
     })
     const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
+    const a = document.createElement("a")
     a.href = url
-    a.download = `logs_${dayjs().format('YYYY-MM-DD_HH-mm-ss')}.${format}`
+    a.download = `logs_${dayjs().format("YYYY-MM-DD_HH-mm-ss")}.${format}`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
-    ElMessage.success('日志导出成功')
+    ElMessage.success("日志导出成功")
   } catch (error) {
-    ElMessage.error('导出失败')
+    ElMessage.error("导出失败")
   }
 }
 
 const handleClear = async () => {
   try {
-    await ElMessageBox.confirm(
-      '确定要清空所有日志吗？此操作不可恢复。',
-      '确认清空',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }
-    )
+    await ElMessageBox.confirm("确定要清空所有日志吗？此操作不可恢复。", "确认清空", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    })
     logger.clear()
     expandedLogs.value.clear()
-    ElMessage.success('日志已清空')
+    ElMessage.success("日志已清空")
   } catch {
     // 用户取消
   }
@@ -421,7 +338,7 @@ watch(
   () => logs.value.length,
   () => {
     scrollToBottom()
-  }
+  },
 )
 
 // 监听自动滚动设置变化
@@ -536,7 +453,7 @@ onMounted(() => {
 }
 
 .log-time {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 12px;
   color: var(--el-text-color-secondary);
 }
@@ -579,19 +496,19 @@ onMounted(() => {
 }
 
 .log-level-1 {
-  border-left: 4px solid #409EFF;
+  border-left: 4px solid #409eff;
 }
 
 .log-level-2 {
-  border-left: 4px solid #E6A23C;
+  border-left: 4px solid #e6a23c;
 }
 
 .log-level-3 {
-  border-left: 4px solid #F56C6C;
+  border-left: 4px solid #f56c6c;
 }
 
 .log-level-4 {
-  border-left: 4px solid #67C23A;
+  border-left: 4px solid #67c23a;
 }
 
 /* 响应式设计 */

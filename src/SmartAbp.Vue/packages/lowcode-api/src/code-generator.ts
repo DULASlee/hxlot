@@ -137,20 +137,20 @@ class CodeGeneratorError extends Error {
     message: string,
     public code: string,
     public details?: any,
-    public retryable = false
+    public retryable = false,
   ) {
     super(message)
-    this.name = 'CodeGeneratorError'
+    this.name = "CodeGeneratorError"
   }
 }
 
 const validateRequired = (value: any, fieldName: string): void => {
-  if (value === null || value === undefined || value === '') {
+  if (value === null || value === undefined || value === "") {
     throw new CodeGeneratorError(
       `${fieldName} is required`,
-      'VALIDATION_ERROR',
+      "VALIDATION_ERROR",
       { field: fieldName },
-      false
+      false,
     )
   }
 }
@@ -159,41 +159,44 @@ const validateArray = (value: any[], fieldName: string): void => {
   if (!Array.isArray(value)) {
     throw new CodeGeneratorError(
       `${fieldName} must be an array`,
-      'VALIDATION_ERROR',
+      "VALIDATION_ERROR",
       { field: fieldName, type: typeof value },
-      false
+      false,
     )
   }
 }
 
 const validateString = (value: any, fieldName: string): void => {
-  if (typeof value !== 'string') {
+  if (typeof value !== "string") {
     throw new CodeGeneratorError(
       `${fieldName} must be a string`,
-      'VALIDATION_ERROR',
+      "VALIDATION_ERROR",
       { field: fieldName, type: typeof value },
-      false
+      false,
     )
   }
 }
 
 const logError = (operation: string, error: any, context?: any): void => {
   console.error(`[CodeGeneratorAPI] ${operation} failed:`, {
-    error: error instanceof Error ? {
-      name: error.name,
-      message: error.message,
-      stack: error.stack
-    } : error,
+    error:
+      error instanceof Error
+        ? {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          }
+        : error,
     context,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   })
 }
 
 const showErrorMessage = (message: string, details?: string): void => {
   ElMessage.error({
-    message: `${message}${details ? `: ${details}` : ''}`,
+    message: `${message}${details ? `: ${details}` : ""}`,
     duration: 5000,
-    showClose: true
+    showClose: true,
   })
 }
 
@@ -201,27 +204,27 @@ const retryWithBackoff = async <T>(
   operation: () => Promise<T>,
   operationName: string,
   maxRetries = 3,
-  baseDelay = 1000
+  baseDelay = 1000,
 ): Promise<T> => {
   let lastError: any
-  
+
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       return await operation()
     } catch (error) {
       lastError = error
       logError(operationName, error, { attempt: attempt + 1, maxRetries })
-      
+
       if (attempt === maxRetries) {
         break
       }
-      
+
       // Exponential backoff with jitter
       const delay = baseDelay * Math.pow(2, attempt) + Math.random() * 1000
-      await new Promise(resolve => setTimeout(resolve, delay))
+      await new Promise((resolve) => setTimeout(resolve, delay))
     }
   }
-  
+
   throw lastError
 }
 
@@ -236,13 +239,13 @@ export const codeGeneratorApi = {
     try {
       return await retryWithBackoff(
         () => api.get<CodeGenerationStatistics>("/api/code-generator/statistics"),
-        'getStatistics'
+        "getStatistics",
       )
     } catch (error) {
-      const errorMessage = 'Failed to retrieve generation statistics'
-      logError('getStatistics', error)
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'API_ERROR', error, true)
+      const errorMessage = "Failed to retrieve generation statistics"
+      logError("getStatistics", error)
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "API_ERROR", error, true)
     }
   },
 
@@ -252,12 +255,12 @@ export const codeGeneratorApi = {
   async generateModule(metadata: ModuleMetadata): Promise<GeneratedModuleResult> {
     try {
       // Input validation
-      validateRequired(metadata, 'Module metadata')
-      validateRequired(metadata.moduleName, 'Module name')
-      validateString(metadata.moduleName, 'Module name')
-      
+      validateRequired(metadata, "Module metadata")
+      validateRequired(metadata.moduleName, "Module name")
+      validateString(metadata.moduleName, "Module name")
+
       if (metadata.entities) {
-        validateArray(metadata.entities, 'Entities')
+        validateArray(metadata.entities, "Entities")
         metadata.entities.forEach((entity, index) => {
           validateRequired(entity.name, `Entity[${index}].name`)
           validateString(entity.name, `Entity[${index}].name`)
@@ -266,24 +269,21 @@ export const codeGeneratorApi = {
 
       return await retryWithBackoff(
         () => api.post<GeneratedModuleResult>("/api/code-generator/generate-module", metadata),
-        'generateModule'
+        "generateModule",
       )
     } catch (error) {
-      const errorMessage = 'Failed to generate module'
-      logError('generateModule', error, { moduleName: metadata?.moduleName })
-      
-      if (error instanceof CodeGeneratorError && error.code === 'VALIDATION_ERROR') {
-        showErrorMessage('Module validation failed', error.message)
+      const errorMessage = "Failed to generate module"
+      logError("generateModule", error, { moduleName: metadata?.moduleName })
+
+      if (error instanceof CodeGeneratorError && error.code === "VALIDATION_ERROR") {
+        showErrorMessage("Module validation failed", error.message)
       } else {
-        showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
+        showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
       }
-      
-      throw error instanceof CodeGeneratorError ? error : new CodeGeneratorError(
-        errorMessage,
-        'GENERATION_ERROR',
-        error,
-        true
-      )
+
+      throw error instanceof CodeGeneratorError
+        ? error
+        : new CodeGeneratorError(errorMessage, "GENERATION_ERROR", error, true)
     }
   },
 
@@ -294,19 +294,19 @@ export const codeGeneratorApi = {
   }> {
     try {
       // Input validation
-      validateRequired(metadata, 'Module metadata')
-      validateRequired(metadata.moduleName, 'Module name')
-      validateString(metadata.moduleName, 'Module name')
+      validateRequired(metadata, "Module metadata")
+      validateRequired(metadata.moduleName, "Module name")
+      validateString(metadata.moduleName, "Module name")
 
       return await retryWithBackoff(
         () => api.post("/api/code-generator/validate", metadata),
-        'validateModule'
+        "validateModule",
       )
     } catch (error) {
-      const errorMessage = 'Failed to validate module metadata'
-      logError('validateModule', error, { moduleName: metadata?.moduleName })
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'VALIDATION_ERROR', error, true)
+      const errorMessage = "Failed to validate module metadata"
+      logError("validateModule", error, { moduleName: metadata?.moduleName })
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "VALIDATION_ERROR", error, true)
     }
   },
 
@@ -320,19 +320,19 @@ export const codeGeneratorApi = {
   }> {
     try {
       // Input validation
-      validateRequired(metadata, 'Module metadata')
-      validateRequired(metadata.moduleName, 'Module name')
-      validateString(metadata.moduleName, 'Module name')
+      validateRequired(metadata, "Module metadata")
+      validateRequired(metadata.moduleName, "Module name")
+      validateString(metadata.moduleName, "Module name")
 
       return await retryWithBackoff(
         () => api.post("/api/code-generator/dry-run", metadata),
-        'dryRunGenerate'
+        "dryRunGenerate",
       )
     } catch (error) {
-      const errorMessage = 'Failed to perform dry run generation'
-      logError('dryRunGenerate', error, { moduleName: metadata?.moduleName })
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'DRY_RUN_ERROR', error, true)
+      const errorMessage = "Failed to perform dry run generation"
+      logError("dryRunGenerate", error, { moduleName: metadata?.moduleName })
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "DRY_RUN_ERROR", error, true)
     }
   },
 
@@ -343,13 +343,13 @@ export const codeGeneratorApi = {
     try {
       return await retryWithBackoff(
         () => api.get<string[]>("/api/code-generator/connection-strings"),
-        'getConnectionStrings'
+        "getConnectionStrings",
       )
     } catch (error) {
-      const errorMessage = 'Failed to retrieve connection strings'
-      logError('getConnectionStrings', error)
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'API_ERROR', error, true)
+      const errorMessage = "Failed to retrieve connection strings"
+      logError("getConnectionStrings", error)
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "API_ERROR", error, true)
     }
   },
 
@@ -360,13 +360,13 @@ export const codeGeneratorApi = {
     try {
       return await retryWithBackoff(
         () => api.get<MenuItemDto[]>("/api/code-generator/menus"),
-        'getMenuTree'
+        "getMenuTree",
       )
     } catch (error) {
-      const errorMessage = 'Failed to retrieve menu tree'
-      logError('getMenuTree', error)
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'API_ERROR', error, true)
+      const errorMessage = "Failed to retrieve menu tree"
+      logError("getMenuTree", error)
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "API_ERROR", error, true)
     }
   },
 
@@ -374,44 +374,41 @@ export const codeGeneratorApi = {
   async introspectDatabase(req: DatabaseIntrospectionRequest): Promise<DatabaseSchema> {
     try {
       // Input validation
-      validateRequired(req, 'Database introspection request')
-      validateRequired(req.connectionStringName, 'Connection string name')
-      validateString(req.connectionStringName, 'Connection string name')
-      validateRequired(req.provider, 'Database provider')
-      
+      validateRequired(req, "Database introspection request")
+      validateRequired(req.connectionStringName, "Connection string name")
+      validateString(req.connectionStringName, "Connection string name")
+      validateRequired(req.provider, "Database provider")
+
       const validProviders = ["SqlServer", "PostgreSql", "MySql", "Oracle"]
       if (!validProviders.includes(req.provider)) {
         throw new CodeGeneratorError(
-          `Invalid database provider: ${req.provider}. Valid providers: ${validProviders.join(', ')}`,
-          'VALIDATION_ERROR',
+          `Invalid database provider: ${req.provider}. Valid providers: ${validProviders.join(", ")}`,
+          "VALIDATION_ERROR",
           { provider: req.provider, validProviders },
-          false
+          false,
         )
       }
 
       return await retryWithBackoff(
         () => api.post<DatabaseSchema>("/api/code-generator/introspect-db", req),
-        'introspectDatabase'
+        "introspectDatabase",
       )
     } catch (error) {
-      const errorMessage = 'Failed to introspect database'
-      logError('introspectDatabase', error, { 
+      const errorMessage = "Failed to introspect database"
+      logError("introspectDatabase", error, {
         connectionStringName: req?.connectionStringName,
-        provider: req?.provider 
+        provider: req?.provider,
       })
-      
-      if (error instanceof CodeGeneratorError && error.code === 'VALIDATION_ERROR') {
-        showErrorMessage('Database configuration validation failed', error.message)
+
+      if (error instanceof CodeGeneratorError && error.code === "VALIDATION_ERROR") {
+        showErrorMessage("Database configuration validation failed", error.message)
       } else {
-        showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
+        showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
       }
-      
-      throw error instanceof CodeGeneratorError ? error : new CodeGeneratorError(
-        errorMessage,
-        'DATABASE_ERROR',
-        error,
-        true
-      )
+
+      throw error instanceof CodeGeneratorError
+        ? error
+        : new CodeGeneratorError(errorMessage, "DATABASE_ERROR", error, true)
     }
   },
 
@@ -421,22 +418,23 @@ export const codeGeneratorApi = {
   async getUiConfig(moduleName: string, entityName: string): Promise<EntityUIConfig> {
     try {
       // Input validation
-      validateRequired(moduleName, 'Module name')
-      validateString(moduleName, 'Module name')
-      validateRequired(entityName, 'Entity name')
-      validateString(entityName, 'Entity name')
+      validateRequired(moduleName, "Module name")
+      validateString(moduleName, "Module name")
+      validateRequired(entityName, "Entity name")
+      validateString(entityName, "Entity name")
 
       return await retryWithBackoff(
-        () => api.get<EntityUIConfig>(
-          `/api/code-generator/ui-config?module=${encodeURIComponent(moduleName)}&entity=${encodeURIComponent(entityName)}`
-        ),
-        'getUiConfig'
+        () =>
+          api.get<EntityUIConfig>(
+            `/api/code-generator/ui-config?module=${encodeURIComponent(moduleName)}&entity=${encodeURIComponent(entityName)}`,
+          ),
+        "getUiConfig",
       )
     } catch (error) {
-      const errorMessage = 'Failed to retrieve UI configuration'
-      logError('getUiConfig', error, { moduleName, entityName })
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'API_ERROR', error, true)
+      const errorMessage = "Failed to retrieve UI configuration"
+      logError("getUiConfig", error, { moduleName, entityName })
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "API_ERROR", error, true)
     }
   },
 
@@ -450,24 +448,25 @@ export const codeGeneratorApi = {
   ): Promise<void> {
     try {
       // Input validation
-      validateRequired(moduleName, 'Module name')
-      validateString(moduleName, 'Module name')
-      validateRequired(entityName, 'Entity name')
-      validateString(entityName, 'Entity name')
-      validateRequired(config, 'UI configuration')
+      validateRequired(moduleName, "Module name")
+      validateString(moduleName, "Module name")
+      validateRequired(entityName, "Entity name")
+      validateString(entityName, "Entity name")
+      validateRequired(config, "UI configuration")
 
       await retryWithBackoff(
-        () => api.post<void>(
-          `/api/code-generator/ui-config?module=${encodeURIComponent(moduleName)}&entity=${encodeURIComponent(entityName)}`,
-          config
-        ),
-        'saveUiConfig'
+        () =>
+          api.post<void>(
+            `/api/code-generator/ui-config?module=${encodeURIComponent(moduleName)}&entity=${encodeURIComponent(entityName)}`,
+            config,
+          ),
+        "saveUiConfig",
       )
     } catch (error) {
-      const errorMessage = 'Failed to save UI configuration'
-      logError('saveUiConfig', error, { moduleName, entityName })
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'API_ERROR', error, true)
+      const errorMessage = "Failed to save UI configuration"
+      logError("saveUiConfig", error, { moduleName, entityName })
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "API_ERROR", error, true)
     }
   },
 
@@ -477,37 +476,34 @@ export const codeGeneratorApi = {
   async generateEntity(definition: EntityDefinition): Promise<GeneratedCodeResult> {
     try {
       // Input validation
-      validateRequired(definition, 'Entity definition')
-      validateRequired(definition.name, 'Entity name')
-      validateString(definition.name, 'Entity name')
-      validateRequired(definition.module, 'Module name')
-      validateString(definition.module, 'Module name')
-      validateRequired(definition.properties, 'Entity properties')
-      validateArray(definition.properties, 'Entity properties')
+      validateRequired(definition, "Entity definition")
+      validateRequired(definition.name, "Entity name")
+      validateString(definition.name, "Entity name")
+      validateRequired(definition.module, "Module name")
+      validateString(definition.module, "Module name")
+      validateRequired(definition.properties, "Entity properties")
+      validateArray(definition.properties, "Entity properties")
 
       return await retryWithBackoff(
         () => api.post<GeneratedCodeResult>("/api/code-generator/generate-entity", definition),
-        'generateEntity'
+        "generateEntity",
       )
     } catch (error) {
-      const errorMessage = 'Failed to generate entity'
-      logError('generateEntity', error, { 
+      const errorMessage = "Failed to generate entity"
+      logError("generateEntity", error, {
         entityName: definition?.name,
-        moduleName: definition?.module 
+        moduleName: definition?.module,
       })
-      
-      if (error instanceof CodeGeneratorError && error.code === 'VALIDATION_ERROR') {
-        showErrorMessage('Entity validation failed', error.message)
+
+      if (error instanceof CodeGeneratorError && error.code === "VALIDATION_ERROR") {
+        showErrorMessage("Entity validation failed", error.message)
       } else {
-        showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
+        showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
       }
-      
-      throw error instanceof CodeGeneratorError ? error : new CodeGeneratorError(
-        errorMessage,
-        'GENERATION_ERROR',
-        error,
-        true
-      )
+
+      throw error instanceof CodeGeneratorError
+        ? error
+        : new CodeGeneratorError(errorMessage, "GENERATION_ERROR", error, true)
     }
   },
 
@@ -517,17 +513,17 @@ export const codeGeneratorApi = {
   async generateDdd(definition: any): Promise<any> {
     try {
       // Input validation
-      validateRequired(definition, 'DDD definition')
+      validateRequired(definition, "DDD definition")
 
       return await retryWithBackoff(
         () => api.post("/api/code-generator/generate-ddd", definition),
-        'generateDdd'
+        "generateDdd",
       )
     } catch (error) {
-      const errorMessage = 'Failed to generate DDD domain layer'
-      logError('generateDdd', error)
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'GENERATION_ERROR', error, true)
+      const errorMessage = "Failed to generate DDD domain layer"
+      logError("generateDdd", error)
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "GENERATION_ERROR", error, true)
     }
   },
 
@@ -537,17 +533,17 @@ export const codeGeneratorApi = {
   async generateCqrs(definition: any): Promise<any> {
     try {
       // Input validation
-      validateRequired(definition, 'CQRS definition')
+      validateRequired(definition, "CQRS definition")
 
       return await retryWithBackoff(
         () => api.post("/api/code-generator/generate-cqrs", definition),
-        'generateCqrs'
+        "generateCqrs",
       )
     } catch (error) {
-      const errorMessage = 'Failed to generate CQRS pattern'
-      logError('generateCqrs', error)
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'GENERATION_ERROR', error, true)
+      const errorMessage = "Failed to generate CQRS pattern"
+      logError("generateCqrs", error)
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "GENERATION_ERROR", error, true)
     }
   },
 
@@ -557,17 +553,17 @@ export const codeGeneratorApi = {
   async generateApplicationServices(definition: any): Promise<any> {
     try {
       // Input validation
-      validateRequired(definition, 'Application services definition')
+      validateRequired(definition, "Application services definition")
 
       return await retryWithBackoff(
         () => api.post("/api/code-generator/generate-application-services", definition),
-        'generateApplicationServices'
+        "generateApplicationServices",
       )
     } catch (error) {
-      const errorMessage = 'Failed to generate application services'
-      logError('generateApplicationServices', error)
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'GENERATION_ERROR', error, true)
+      const errorMessage = "Failed to generate application services"
+      logError("generateApplicationServices", error)
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "GENERATION_ERROR", error, true)
     }
   },
 
@@ -577,17 +573,17 @@ export const codeGeneratorApi = {
   async generateInfrastructure(definition: any): Promise<any> {
     try {
       // Input validation
-      validateRequired(definition, 'Infrastructure definition')
+      validateRequired(definition, "Infrastructure definition")
 
       return await retryWithBackoff(
         () => api.post("/api/code-generator/generate-infrastructure", definition),
-        'generateInfrastructure'
+        "generateInfrastructure",
       )
     } catch (error) {
-      const errorMessage = 'Failed to generate infrastructure layer'
-      logError('generateInfrastructure', error)
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'GENERATION_ERROR', error, true)
+      const errorMessage = "Failed to generate infrastructure layer"
+      logError("generateInfrastructure", error)
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "GENERATION_ERROR", error, true)
     }
   },
 
@@ -597,17 +593,17 @@ export const codeGeneratorApi = {
   async generateAspire(definition: any): Promise<any> {
     try {
       // Input validation
-      validateRequired(definition, 'Aspire definition')
+      validateRequired(definition, "Aspire definition")
 
       return await retryWithBackoff(
         () => api.post("/api/code-generator/generate-aspire", definition),
-        'generateAspire'
+        "generateAspire",
       )
     } catch (error) {
-      const errorMessage = 'Failed to generate Aspire solution'
-      logError('generateAspire', error)
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'GENERATION_ERROR', error, true)
+      const errorMessage = "Failed to generate Aspire solution"
+      logError("generateAspire", error)
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "GENERATION_ERROR", error, true)
     }
   },
 
@@ -617,17 +613,17 @@ export const codeGeneratorApi = {
   async generateCaching(definition: any): Promise<any> {
     try {
       // Input validation
-      validateRequired(definition, 'Caching definition')
+      validateRequired(definition, "Caching definition")
 
       return await retryWithBackoff(
         () => api.post("/api/code-generator/generate-caching", definition),
-        'generateCaching'
+        "generateCaching",
       )
     } catch (error) {
-      const errorMessage = 'Failed to generate caching solution'
-      logError('generateCaching', error)
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'GENERATION_ERROR', error, true)
+      const errorMessage = "Failed to generate caching solution"
+      logError("generateCaching", error)
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "GENERATION_ERROR", error, true)
     }
   },
 
@@ -637,17 +633,17 @@ export const codeGeneratorApi = {
   async generateMessaging(definition: any): Promise<any> {
     try {
       // Input validation
-      validateRequired(definition, 'Messaging definition')
+      validateRequired(definition, "Messaging definition")
 
       return await retryWithBackoff(
         () => api.post("/api/code-generator/generate-messaging", definition),
-        'generateMessaging'
+        "generateMessaging",
       )
     } catch (error) {
-      const errorMessage = 'Failed to generate messaging solution'
-      logError('generateMessaging', error)
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'GENERATION_ERROR', error, true)
+      const errorMessage = "Failed to generate messaging solution"
+      logError("generateMessaging", error)
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "GENERATION_ERROR", error, true)
     }
   },
 
@@ -657,17 +653,17 @@ export const codeGeneratorApi = {
   async generateTests(definition: any): Promise<any> {
     try {
       // Input validation
-      validateRequired(definition, 'Test definition')
+      validateRequired(definition, "Test definition")
 
       return await retryWithBackoff(
         () => api.post("/api/code-generator/generate-tests", definition),
-        'generateTests'
+        "generateTests",
       )
     } catch (error) {
-      const errorMessage = 'Failed to generate test suite'
-      logError('generateTests', error)
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'GENERATION_ERROR', error, true)
+      const errorMessage = "Failed to generate test suite"
+      logError("generateTests", error)
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "GENERATION_ERROR", error, true)
     }
   },
 
@@ -677,17 +673,17 @@ export const codeGeneratorApi = {
   async generateTelemetry(definition: any): Promise<any> {
     try {
       // Input validation
-      validateRequired(definition, 'Telemetry definition')
+      validateRequired(definition, "Telemetry definition")
 
       return await retryWithBackoff(
         () => api.post("/api/code-generator/generate-telemetry", definition),
-        'generateTelemetry'
+        "generateTelemetry",
       )
     } catch (error) {
-      const errorMessage = 'Failed to generate telemetry solution'
-      logError('generateTelemetry', error)
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'GENERATION_ERROR', error, true)
+      const errorMessage = "Failed to generate telemetry solution"
+      logError("generateTelemetry", error)
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "GENERATION_ERROR", error, true)
     }
   },
 
@@ -697,17 +693,17 @@ export const codeGeneratorApi = {
   async generateQuality(definition: any): Promise<any> {
     try {
       // Input validation
-      validateRequired(definition, 'Quality definition')
+      validateRequired(definition, "Quality definition")
 
       return await retryWithBackoff(
         () => api.post("/api/code-generator/generate-quality", definition),
-        'generateQuality'
+        "generateQuality",
       )
     } catch (error) {
-      const errorMessage = 'Failed to generate quality solution'
-      logError('generateQuality', error)
-      showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
-      throw new CodeGeneratorError(errorMessage, 'GENERATION_ERROR', error, true)
+      const errorMessage = "Failed to generate quality solution"
+      logError("generateQuality", error)
+      showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
+      throw new CodeGeneratorError(errorMessage, "GENERATION_ERROR", error, true)
     }
   },
 
@@ -719,43 +715,41 @@ export const codeGeneratorApi = {
   ): Promise<EnterpriseSolutionResult> {
     try {
       // Input validation
-      validateRequired(definition, 'Enterprise solution request')
-      validateRequired(definition.solutionName, 'Solution name')
-      validateString(definition.solutionName, 'Solution name')
+      validateRequired(definition, "Enterprise solution request")
+      validateRequired(definition.solutionName, "Solution name")
+      validateString(definition.solutionName, "Solution name")
 
       // Validate solution name format
       if (!/^[a-zA-Z][a-zA-Z0-9]*$/.test(definition.solutionName)) {
         throw new CodeGeneratorError(
-          'Solution name must start with a letter and contain only letters and numbers',
-          'VALIDATION_ERROR',
+          "Solution name must start with a letter and contain only letters and numbers",
+          "VALIDATION_ERROR",
           { solutionName: definition.solutionName },
-          false
+          false,
         )
       }
 
       return await retryWithBackoff(
-        () => api.post<EnterpriseSolutionResult>(
-          "/api/code-generator/generate-enterprise-solution",
-          definition
-        ),
-        'generateEnterpriseSolution'
+        () =>
+          api.post<EnterpriseSolutionResult>(
+            "/api/code-generator/generate-enterprise-solution",
+            definition,
+          ),
+        "generateEnterpriseSolution",
       )
     } catch (error) {
-      const errorMessage = 'Failed to generate enterprise solution'
-      logError('generateEnterpriseSolution', error, { solutionName: definition?.solutionName })
-      
-      if (error instanceof CodeGeneratorError && error.code === 'VALIDATION_ERROR') {
-        showErrorMessage('Solution validation failed', error.message)
+      const errorMessage = "Failed to generate enterprise solution"
+      logError("generateEnterpriseSolution", error, { solutionName: definition?.solutionName })
+
+      if (error instanceof CodeGeneratorError && error.code === "VALIDATION_ERROR") {
+        showErrorMessage("Solution validation failed", error.message)
       } else {
-        showErrorMessage(errorMessage, error instanceof Error ? error.message : 'Unknown error')
+        showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
       }
-      
-      throw error instanceof CodeGeneratorError ? error : new CodeGeneratorError(
-        errorMessage,
-        'GENERATION_ERROR',
-        error,
-        true
-      )
+
+      throw error instanceof CodeGeneratorError
+        ? error
+        : new CodeGeneratorError(errorMessage, "GENERATION_ERROR", error, true)
     }
   },
 }

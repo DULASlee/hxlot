@@ -1,36 +1,24 @@
 <template>
   <div class="not-found-view">
     <div class="not-found-content">
-      <div class="error-code">
-        404
-      </div>
+      <div class="error-code">404</div>
       <h1>页面未找到</h1>
       <p>抱歉，您访问的页面不存在或已被移除。</p>
       <div class="actions">
-        <button
-          class="btn-primary"
-          @click="goHome"
-        >
-          返回首页
-        </button>
-        <button
-          class="btn-secondary"
-          @click="goBack"
-        >
-          返回上页
-        </button>
+        <button class="btn-primary" @click="goHome">返回首页</button>
+        <button class="btn-secondary" @click="goBack">返回上页</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router"
 
 const router = useRouter()
 
 const goHome = () => {
-  router.push('/dashboard')
+  router.push("/dashboard")
 }
 
 const goBack = () => {

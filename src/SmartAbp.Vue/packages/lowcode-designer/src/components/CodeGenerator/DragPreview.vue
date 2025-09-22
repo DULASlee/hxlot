@@ -20,12 +20,9 @@
             <span class="preview-subtitle">{{ subtitle }}</span>
           </div>
         </div>
-        
+
         <!-- Drop zone indicator -->
-        <div
-          v-if="showDropIndicator"
-          class="drop-indicator"
-        >
+        <div v-if="showDropIndicator" class="drop-indicator">
           <el-icon class="drop-icon">
             <Plus />
           </el-icon>
@@ -46,20 +43,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
-import { Plus } from '@element-plus/icons-vue'
+import { ref, computed, watch, onMounted, onUnmounted } from "vue"
+import { Plus } from "@element-plus/icons-vue"
 
 interface DragPreviewProps {
   isDragging?: boolean
   dragItem?: any
   dragPosition?: { x: number; y: number }
   targetZone?: string
-  previewType?: 'property' | 'component' | 'file' | 'default'
+  previewType?: "property" | "component" | "file" | "default"
 }
 
 const props = withDefaults(defineProps<DragPreviewProps>(), {
   isDragging: false,
-  previewType: 'default'
+  previewType: "default",
 })
 
 interface DropZone {
@@ -76,74 +73,74 @@ const mousePosition = ref({ x: 0, y: 0 })
 
 // Computed properties
 const dragState = computed(() => {
-  if (!props.isDragging) return 'idle'
-  if (props.targetZone) return 'over-target'
-  return 'dragging'
+  if (!props.isDragging) return "idle"
+  if (props.targetZone) return "over-target"
+  return "dragging"
 })
 
 const previewStyle = computed(() => ({
   left: `${mousePosition.value.x + 15}px`,
   top: `${mousePosition.value.y - 10}px`,
-  opacity: props.isDragging ? '0.9' : '0',
-  transform: props.isDragging ? 'scale(1)' : 'scale(0.8)',
-  pointerEvents: 'none' as const
+  opacity: props.isDragging ? "0.9" : "0",
+  transform: props.isDragging ? "scale(1)" : "scale(0.8)",
+  pointerEvents: "none" as const,
 }))
 
 const icon = computed(() => {
-  if (!props.dragItem) return 'Document'
-  
+  if (!props.dragItem) return "Document"
+
   switch (props.previewType) {
-    case 'property':
+    case "property":
       return getPropertyIcon(props.dragItem.type)
-    case 'component':
-      return 'Component'
-    case 'file':
-      return 'Document'
+    case "component":
+      return "Component"
+    case "file":
+      return "Document"
     default:
-      return 'Box'
+      return "Box"
   }
 })
 
 const iconColor = computed(() => {
   switch (props.previewType) {
-    case 'property':
+    case "property":
       return getPropertyColor(props.dragItem?.type)
-    case 'component':
-      return '#67C23A'
-    case 'file':
-      return '#E6A23C'
+    case "component":
+      return "#67C23A"
+    case "file":
+      return "#E6A23C"
     default:
-      return '#409EFF'
+      return "#409EFF"
   }
 })
 
 const title = computed(() => {
-  if (!props.dragItem) return 'Dragging Item'
-  
+  if (!props.dragItem) return "Dragging Item"
+
   switch (props.previewType) {
-    case 'property':
-      return props.dragItem.name || 'Property'
-    case 'component':
-      return props.dragItem.name || 'Component'
-    case 'file':
-      return props.dragItem.fileName || 'File'
+    case "property":
+      return props.dragItem.name || "Property"
+    case "component":
+      return props.dragItem.name || "Component"
+    case "file":
+      return props.dragItem.fileName || "File"
     default:
-      return props.dragItem.name || 'Item'
+      return props.dragItem.name || "Item"
   }
 })
 
 const subtitle = computed(() => {
-  if (!props.dragItem) return ''
-  
+  if (!props.dragItem) return ""
+
   switch (props.previewType) {
-    case 'property':
-      return props.dragItem.type || 'Unknown Type'
-    case 'component':
-      return 'UI Component'
-    case 'file':
-      return 'Code File'
+    case "property":
+      return props.dragItem.type || "Unknown Type"
+    case "component":
+      return "UI Component"
+    case "file":
+      return "Code File"
     default:
-      return 'Drag Item'
+      return "Drag Item"
   }
 })
 
@@ -155,103 +152,106 @@ const showDropIndicator = computed(() => {
 const updateMousePosition = (event: MouseEvent) => {
   mousePosition.value = {
     x: event.clientX,
-    y: event.clientY
+    y: event.clientY,
   }
 }
 
 const getPropertyIcon = (type: string): string => {
   const iconMap: Record<string, string> = {
-    'string': 'Document',
-    'int': 'Promotion',
-    'decimal': 'Money',
-    'bool': 'Switch',
-    'DateTime': 'Calendar',
-    'Guid': 'Key'
+    string: "Document",
+    int: "Promotion",
+    decimal: "Money",
+    bool: "Switch",
+    DateTime: "Calendar",
+    Guid: "Key",
   }
-  return iconMap[type] || 'Document'
+  return iconMap[type] || "Document"
 }
 
 const getPropertyColor = (type: string): string => {
   const colorMap: Record<string, string> = {
-    'string': '#409EFF',
-    'int': '#67C23A',
-    'decimal': '#E6A23C',
-    'bool': '#F56C6C',
-    'DateTime': '#909399',
-    'Guid': '#722ED1'
+    string: "#409EFF",
+    int: "#67C23A",
+    decimal: "#E6A23C",
+    bool: "#F56C6C",
+    DateTime: "#909399",
+    Guid: "#722ED1",
   }
-  return colorMap[type] || '#409EFF'
+  return colorMap[type] || "#409EFF"
 }
 
 const updateDropZones = () => {
   // Find all drop zones in the document
-  const dropZoneElements = document.querySelectorAll('[data-drop-zone]')
+  const dropZoneElements = document.querySelectorAll("[data-drop-zone]")
   const zones: DropZone[] = []
-  
+
   dropZoneElements.forEach((element) => {
     const rect = element.getBoundingClientRect()
-    const zoneId = element.getAttribute('data-drop-zone')
-    const canAccept = element.hasAttribute('data-can-accept')
-    const isActive = element.classList.contains('drag-over')
-    
+    const zoneId = element.getAttribute("data-drop-zone")
+    const canAccept = element.hasAttribute("data-can-accept")
+    const isActive = element.classList.contains("drag-over")
+
     if (zoneId) {
       zones.push({
         id: zoneId,
         bounds: rect,
         isActive,
-        canAccept
+        canAccept,
       })
     }
   })
-  
+
   activeDropZones.value = zones
 }
 
 const getDropZoneClass = (zone: DropZone): string => {
-  const classes = ['drop-zone-overlay']
-  
-  if (zone.isActive) classes.push('active')
-  if (zone.canAccept) classes.push('can-accept')
-  else classes.push('cannot-accept')
-  
-  return classes.join(' ')
+  const classes = ["drop-zone-overlay"]
+
+  if (zone.isActive) classes.push("active")
+  if (zone.canAccept) classes.push("can-accept")
+  else classes.push("cannot-accept")
+
+  return classes.join(" ")
 }
 
 const getDropZoneStyle = (zone: DropZone) => ({
   left: `${zone.bounds.left}px`,
   top: `${zone.bounds.top}px`,
   width: `${zone.bounds.width}px`,
-  height: `${zone.bounds.height}px`
+  height: `${zone.bounds.height}px`,
 })
 
 // Event listeners
 onMounted(() => {
-  document.addEventListener('mousemove', updateMousePosition)
-  
+  document.addEventListener("mousemove", updateMousePosition)
+
   // Update drop zones periodically during drag
   const interval = setInterval(() => {
     if (props.isDragging) {
       updateDropZones()
     }
   }, 100)
-  
+
   onUnmounted(() => {
     clearInterval(interval)
   })
 })
 
 onUnmounted(() => {
-  document.removeEventListener('mousemove', updateMousePosition)
+  document.removeEventListener("mousemove", updateMousePosition)
 })
 
 // Watch for drag state changes
-watch(() => props.isDragging, (isDragging) => {
-  if (isDragging) {
-    updateDropZones()
-  } else {
-    activeDropZones.value = []
-  }
-})
+watch(
+  () => props.isDragging,
+  (isDragging) => {
+    if (isDragging) {
+      updateDropZones()
+    } else {
+      activeDropZones.value = []
+    }
+  },
+)
 </script>
 
 <style scoped>

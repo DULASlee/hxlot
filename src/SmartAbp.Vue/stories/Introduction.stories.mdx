@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/addon-docs'
+import { Meta } from "@storybook/addon-docs"
 
 <Meta title="Introduction/Welcome" />
 
@@ -12,6 +12,7 @@ import { Meta } from '@storybook/addon-docs'
 
     Advanced UI Component Library 是基于 Vue 3 + TypeScript + Element Plus 构建的企业级组件库，
     专为复杂业务场景设计，提供高性能、易用性、可访问性的组件解决方案。
+
   </div>
 
   <div className="sb-section">
@@ -27,7 +28,7 @@ import { Meta } from '@storybook/addon-docs'
           <li>实时图表和数据可视化</li>
         </ul>
       </div>
-      
+
       <div className="component-preview preview-compact">
         <h4>⚡ 高性能优化</h4>
         <ul>
@@ -37,7 +38,7 @@ import { Meta } from '@storybook/addon-docs'
           <li>渲染性能监控</li>
         </ul>
       </div>
-      
+
       <div className="component-preview preview-compact">
         <h4>🎨 设计系统</h4>
         <ul>
@@ -48,6 +49,7 @@ import { Meta } from '@storybook/addon-docs'
         </ul>
       </div>
     </div>
+
   </div>
 
   <div className="sb-section">
@@ -71,7 +73,7 @@ import { Meta } from '@storybook/addon-docs'
           </div>
         </div>
       </div>
-      
+
       <div className="component-preview">
         <h4>数据录入组件</h4>
         <div className="design-tokens">
@@ -85,7 +87,7 @@ import { Meta } from '@storybook/addon-docs'
           </div>
         </div>
       </div>
-      
+
       <div className="component-preview">
         <h4>布局导航组件</h4>
         <div className="design-tokens">
@@ -104,6 +106,7 @@ import { Meta } from '@storybook/addon-docs'
         </div>
       </div>
     </div>
+
   </div>
 
   <div className="sb-section">
@@ -111,15 +114,15 @@ import { Meta } from '@storybook/addon-docs'
 
     <div className="code-block">
       <pre>
-{`
-核心框架：Vue 3.5+ | TypeScript 5.8+
+
+{`核心框架：Vue 3.5+ | TypeScript 5.8+
 UI 基础：Element Plus 2.8+
 构建工具：Vite 7.0+ | Webpack 5
 测试框架：Vitest 3.2+ | Cypress 15.1+
-开发工具：Storybook 8.0+ | ESLint 9.34+
-`}
-      </pre>
-    </div>
+开发工具：Storybook 8.0+ | ESLint 9.34+`}
+</pre>
+</div>
+
   </div>
 
   <div className="sb-section">
@@ -129,23 +132,29 @@ UI 基础：Element Plus 2.8+
 
     <div className="code-block">
       <pre>
+
 {`
+
 # 使用 npm
+
 npm install @smartabp/advanced-ui-components
 
 # 使用 yarn
+
 yarn add @smartabp/advanced-ui-components
 
 # 使用 pnpm
+
 pnpm add @smartabp/advanced-ui-components
 `}
-      </pre>
-    </div>
+</pre>
+</div>
 
     #### 2. 全局引入
 
     <div className="code-block">
       <pre>
+
 {`
 // main.ts
 import { createApp } from 'vue'
@@ -159,13 +168,14 @@ app.use(ElementPlus)
 app.use(AdvancedUI)
 app.mount('#app')
 `}
-      </pre>
-    </div>
+</pre>
+</div>
 
     #### 3. 按需引入
 
     <div className="code-block">
       <pre>
+
 {`
 // 组件中使用
 import { AdvancedTable, AdvancedForm } from '@smartabp/advanced-ui-components'
@@ -184,7 +194,9 @@ export default {
 
     <div className="code-block">
       <pre>
+
 {`
+
 <template>
   <advanced-table
     :data="tableData"
@@ -206,9 +218,11 @@ const columns = [
   { key: 'email', label: '邮箱', width: 200 }
 ]
 </script>
+
 `}
-      </pre>
-    </div>
+</pre>
+</div>
+
   </div>
 
   <div className="sb-section">
@@ -219,22 +233,23 @@ const columns = [
         <h4>一致性</h4>
         <p>统一的视觉风格、交互方式和代码规范，确保用户体验的连贯性。</p>
       </div>
-      
+
       <div className="component-preview preview-compact">
         <h4>效率</h4>
         <p>减少开发者的工作量，提供开箱即用的解决方案和完善的文档。</p>
       </div>
-      
+
       <div className="component-preview preview-compact">
         <h4>可控</h4>
         <p>提供丰富的配置选项和扩展能力，满足不同业务场景需求。</p>
       </div>
-      
+
       <div className="component-preview preview-compact">
         <h4>包容</h4>
         <p>支持无障碍访问，确保所有用户都能正常使用我们的组件。</p>
       </div>
     </div>
+
   </div>
 
   <div className="sb-section">
@@ -242,7 +257,7 @@ const columns = [
 
     <div className="component-preview">
       <h4>组件库性能基准</h4>
-      
+
       | 指标 | 目标值 | 当前值 | 状态 |
       |------|--------|--------|------|
       | 包体积 | < 500KB | 425KB | <span className="a11y-indicator a11y-pass">优秀</span> |
@@ -251,6 +266,7 @@ const columns = [
       | 虚拟滚动 | 10K+ 条目 | 50K 条目 | <span className="a11y-indicator a11y-pass">优秀</span> |
       | 响应时间 | < 16ms | 12ms | <span className="a11y-indicator a11y-pass">优秀</span> |
     </div>
+
   </div>
 
   <div className="sb-section">
@@ -263,14 +279,14 @@ const columns = [
           92% 覆盖率
         </div>
       </div>
-      
+
       <div className="component-preview preview-compact">
         <h4>集成测试</h4>
         <div className="token-preview" style={{ background: 'linear-gradient(90deg, #409eff 88%, #e4e7ed 12%)' }}>
           88% 覆盖率
         </div>
       </div>
-      
+
       <div className="component-preview preview-compact">
         <h4>E2E 测试</h4>
         <div className="token-preview" style={{ background: 'linear-gradient(90deg, #e6a23c 85%, #e4e7ed 15%)' }}>
@@ -278,6 +294,7 @@ const columns = [
         </div>
       </div>
     </div>
+
   </div>
 
   <div className="sb-section">
@@ -285,7 +302,7 @@ const columns = [
 
     <div className="component-preview">
       <h4>现代浏览器支持</h4>
-      
+
       | 浏览器 | 版本支持 | 状态 | 备注 |
       |--------|----------|------|------|
       | Chrome | 90+ | <span className="a11y-indicator a11y-pass">支持</span> | 推荐使用 |
@@ -294,6 +311,7 @@ const columns = [
       | Edge | 90+ | <span className="a11y-indicator a11y-pass">支持</span> | 完全兼容 |
       | IE | 11 | <span className="a11y-indicator a11y-fail">不支持</span> | 已停止支持 |
     </div>
+
   </div>
 
   <div className="sb-section">
@@ -309,7 +327,7 @@ const columns = [
           <li><a href="?path=/docs/design-system-icons--docs">Icons - 图标库</a></li>
         </ul>
       </div>
-      
+
       <div className="component-preview">
         <h4>🧩 组件文档</h4>
         <ul>
@@ -320,6 +338,7 @@ const columns = [
         </ul>
       </div>
     </div>
+
   </div>
 
   <div className="sb-section">
@@ -331,27 +350,34 @@ const columns = [
         我们欢迎社区的贡献！无论是 Bug 报告、功能建议、文档完善还是代码贡献，
         都能帮助我们把组件库做得更好。
       </p>
-      
+
       <div className="code-block">
         <pre>
+
 {`
+
 # 1. Fork 项目
+
 git clone https://github.com/smartabp/advanced-ui-components.git
 
 # 2. 创建功能分支
+
 git checkout -b feature/new-component
 
 # 3. 提交更改
+
 git commit -m "feat: add new awesome component"
 
 # 4. 推送分支
+
 git push origin feature/new-component
 
 # 5. 创建 Pull Request
+
 `}
-        </pre>
-      </div>
-      
+</pre>
+</div>
+
       <p>
         在提交 PR 之前，请确保：
       </p>
@@ -362,6 +388,7 @@ git push origin feature/new-component
         <li>✅ 更新相关的类型定义</li>
       </ul>
     </div>
+
   </div>
 
   <div className="sb-section">
@@ -375,7 +402,7 @@ git push origin feature/new-component
           提交 Issue
         </a>
       </div>
-      
+
       <div className="component-preview preview-compact">
         <h4>💬 讨论交流</h4>
         <p>加入我们的社区讨论！</p>
@@ -383,7 +410,7 @@ git push origin feature/new-component
           参与讨论
         </a>
       </div>
-      
+
       <div className="component-preview preview-compact">
         <h4>📧 邮件联系</h4>
         <p>商务合作或技术咨询</p>
@@ -392,6 +419,7 @@ git push origin feature/new-component
         </a>
       </div>
     </div>
+
   </div>
 
   <div className="sb-section">
@@ -403,6 +431,7 @@ git push origin feature/new-component
         详细信息请查看 <a href="https://github.com/smartabp/advanced-ui-components/blob/main/LICENSE" target="_blank">LICENSE</a> 文件。
       </p>
     </div>
+
   </div>
 
 </div>

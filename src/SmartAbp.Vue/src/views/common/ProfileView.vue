@@ -9,17 +9,15 @@
       <div class="profile-card">
         <div class="profile-avatar">
           <div class="avatar-circle">
-            <span>{{ userInfo.name?.charAt(0) || 'U' }}</span>
+            <span>{{ userInfo.name?.charAt(0) || "U" }}</span>
           </div>
-          <button class="change-avatar-btn">
-            更换头像
-          </button>
+          <button class="change-avatar-btn">更换头像</button>
         </div>
 
         <div class="profile-info">
-          <h2>{{ userInfo.name || '用户' }}</h2>
-          <p>{{ userInfo.email || 'user@example.com' }}</p>
-          <span class="role-badge">{{ userInfo.role || '普通用户' }}</span>
+          <h2>{{ userInfo.name || "用户" }}</h2>
+          <p>{{ userInfo.email || "user@example.com" }}</p>
+          <span class="role-badge">{{ userInfo.role || "普通用户" }}</span>
         </div>
       </div>
 
@@ -28,47 +26,25 @@
         <div class="form-grid">
           <div class="form-group">
             <label>用户名</label>
-            <input
-              v-model="editForm.name"
-              type="text"
-            />
+            <input v-model="editForm.name" type="text" />
           </div>
           <div class="form-group">
             <label>邮箱</label>
-            <input
-              v-model="editForm.email"
-              type="email"
-            />
+            <input v-model="editForm.email" type="email" />
           </div>
           <div class="form-group">
             <label>手机号</label>
-            <input
-              v-model="editForm.phone"
-              type="tel"
-            />
+            <input v-model="editForm.phone" type="tel" />
           </div>
           <div class="form-group">
             <label>部门</label>
-            <input
-              v-model="editForm.department"
-              type="text"
-            />
+            <input v-model="editForm.department" type="text" />
           </div>
         </div>
 
         <div class="form-actions">
-          <button
-            class="btn-primary"
-            @click="saveProfile"
-          >
-            保存更改
-          </button>
-          <button
-            class="btn-secondary"
-            @click="resetForm"
-          >
-            重置
-          </button>
+          <button class="btn-primary" @click="saveProfile">保存更改</button>
+          <button class="btn-secondary" @click="resetForm">重置</button>
         </div>
       </div>
 
@@ -80,12 +56,7 @@
               <h4>修改密码</h4>
               <p>定期更换密码以保护账户安全</p>
             </div>
-            <button
-              class="btn-outline"
-              @click="showChangePassword = true"
-            >
-              修改密码
-            </button>
+            <button class="btn-outline" @click="showChangePassword = true">修改密码</button>
           </div>
 
           <div class="security-item">
@@ -93,66 +64,36 @@
               <h4>两步验证</h4>
               <p>启用两步验证增强账户安全性</p>
             </div>
-            <button class="btn-outline">
-              启用
-            </button>
+            <button class="btn-outline">启用</button>
           </div>
         </div>
       </div>
     </div>
 
     <!-- 修改密码模态框 -->
-    <div
-      v-if="showChangePassword"
-      class="modal-overlay"
-      @click="showChangePassword = false"
-    >
-      <div
-        class="modal"
-        @click.stop
-      >
+    <div v-if="showChangePassword" class="modal-overlay" @click="showChangePassword = false">
+      <div class="modal" @click.stop>
         <div class="modal-header">
           <h3>修改密码</h3>
-          <button @click="showChangePassword = false">
-            ×
-          </button>
+          <button @click="showChangePassword = false">×</button>
         </div>
         <div class="modal-body">
           <div class="form-group">
             <label>当前密码</label>
-            <input
-              v-model="passwordForm.current"
-              type="password"
-            />
+            <input v-model="passwordForm.current" type="password" />
           </div>
           <div class="form-group">
             <label>新密码</label>
-            <input
-              v-model="passwordForm.new"
-              type="password"
-            />
+            <input v-model="passwordForm.new" type="password" />
           </div>
           <div class="form-group">
             <label>确认新密码</label>
-            <input
-              v-model="passwordForm.confirm"
-              type="password"
-            />
+            <input v-model="passwordForm.confirm" type="password" />
           </div>
         </div>
         <div class="modal-footer">
-          <button
-            class="btn-secondary"
-            @click="showChangePassword = false"
-          >
-            取消
-          </button>
-          <button
-            class="btn-primary"
-            @click="changePassword"
-          >
-            确定
-          </button>
+          <button class="btn-secondary" @click="showChangePassword = false">取消</button>
+          <button class="btn-primary" @click="changePassword">确定</button>
         </div>
       </div>
     </div>
@@ -160,36 +101,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from "vue"
 
 const showChangePassword = ref(false)
 
 const userInfo = ref({
-  name: '管理员',
-  email: 'admin@smartabp.com',
-  phone: '138****8888',
-  department: '技术部',
-  role: '系统管理员'
+  name: "管理员",
+  email: "admin@smartabp.com",
+  phone: "138****8888",
+  department: "技术部",
+  role: "系统管理员",
 })
 
 const editForm = ref({
-  name: '',
-  email: '',
-  phone: '',
-  department: ''
+  name: "",
+  email: "",
+  phone: "",
+  department: "",
 })
 
 const passwordForm = ref({
-  current: '',
-  new: '',
-  confirm: ''
+  current: "",
+  new: "",
+  confirm: "",
 })
 
 const saveProfile = () => {
   // 保存用户信息
   userInfo.value = { ...userInfo.value, ...editForm.value }
-  console.log('保存用户信息:', userInfo.value)
-  alert('个人信息已保存')
+  console.log("保存用户信息:", userInfo.value)
+  alert("个人信息已保存")
 }
 
 const resetForm = () => {
@@ -197,20 +138,20 @@ const resetForm = () => {
     name: userInfo.value.name,
     email: userInfo.value.email,
     phone: userInfo.value.phone,
-    department: userInfo.value.department
+    department: userInfo.value.department,
   }
 }
 
 const changePassword = () => {
   if (passwordForm.value.new !== passwordForm.value.confirm) {
-    alert('新密码和确认密码不匹配')
+    alert("新密码和确认密码不匹配")
     return
   }
 
-  console.log('修改密码')
+  console.log("修改密码")
   showChangePassword.value = false
-  passwordForm.value = { current: '', new: '', confirm: '' }
-  alert('密码修改成功')
+  passwordForm.value = { current: "", new: "", confirm: "" }
+  alert("密码修改成功")
 }
 
 onMounted(() => {

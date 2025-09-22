@@ -3,10 +3,10 @@
  * Advanced UI Component Library - Phase 3 Week 4
  */
 
-import { beforeEach, afterEach, expect } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
-import { nextTick } from 'vue'
-import { performanceThresholds } from './performance.config'
+import { beforeEach, afterEach, expect } from "vitest"
+import { mount, VueWrapper } from "@vue/test-utils"
+import { nextTick } from "vue"
+import { performanceThresholds } from "./performance.config"
 
 // Global performance monitoring setup
 let performanceObserver: PerformanceObserver | null = null
@@ -25,21 +25,21 @@ beforeEach(() => {
   if (performance.clearMeasures) performance.clearMeasures()
 
   // Setup performance observer
-  if (typeof PerformanceObserver !== 'undefined') {
+  if (typeof PerformanceObserver !== "undefined") {
     performanceObserver = new PerformanceObserver((list) => {
       const entries = list.getEntries()
-      entries.forEach(entry => {
-        if (entry.entryType === 'measure' && entry.name.startsWith('test-')) {
+      entries.forEach((entry) => {
+        if (entry.entryType === "measure" && entry.name.startsWith("test-")) {
           console.log(`Performance: ${entry.name} took ${entry.duration.toFixed(2)}ms`)
         }
       })
     })
-    performanceObserver.observe({ entryTypes: ['measure'] })
+    performanceObserver.observe({ entryTypes: ["measure"] })
   }
 
   // Mark test start
   if (performance.mark) {
-    performance.mark('test-start')
+    performance.mark("test-start")
   }
 })
 
@@ -53,45 +53,44 @@ afterEach(() => {
 
   // Mark test end and measure
   if (performance.mark && performance.measure) {
-    performance.mark('test-end')
-    performance.measure('test-duration', 'test-start', 'test-end')
+    performance.mark("test-end")
+    performance.measure("test-duration", "test-start", "test-end")
   }
 })
 
 // Performance testing utilities
 export class PerformanceTestUtils {
-  
   /**
    * Measure component render time
    */
   static async measureRenderTime(
-    component: any, 
-    props: any = {}, 
-    options: any = {}
+    component: any,
+    props: any = {},
+    options: any = {},
   ): Promise<{ duration: number; wrapper: VueWrapper<any> }> {
     const startTime = performance.now()
-    
+
     if (performance.mark) {
-      performance.mark('render-start')
+      performance.mark("render-start")
     }
-    
+
     const wrapper = mount(component, {
       props,
-      ...options
+      ...options,
     })
-    
+
     // Wait for Vue to complete rendering
     await nextTick()
     await wrapper.vm.$nextTick()
-    
+
     if (performance.mark) {
-      performance.mark('render-end')
-      performance.measure('render-duration', 'render-start', 'render-end')
+      performance.mark("render-end")
+      performance.measure("render-duration", "render-start", "render-end")
     }
-    
+
     const endTime = performance.now()
     const duration = endTime - startTime
-    
+
     return { duration, wrapper }
   }
 
@@ -101,8 +100,13 @@ export class PerformanceTestUtils {
   static async measureMountUnmountTime(
     component: any,
     props: any = {},
-    iterations: number = 10
-  ): Promise<{ mountTime: number; unmountTime: number; avgMountTime: number; avgUnmountTime: number }> {
+    iterations: number = 10,
+  ): Promise<{
+    mountTime: number
+    unmountTime: number
+    avgMountTime: number
+    avgUnmountTime: number
+  }> {
     const mountTimes: number[] = []
     const unmountTimes: number[] = []
 
@@ -125,7 +129,7 @@ export class PerformanceTestUtils {
       mountTime: Math.max(...mountTimes),
       unmountTime: Math.max(...unmountTimes),
       avgMountTime: mountTimes.reduce((sum, time) => sum + time, 0) / mountTimes.length,
-      avgUnmountTime: unmountTimes.reduce((sum, time) => sum + time, 0) / unmountTimes.length
+      avgUnmountTime: unmountTimes.reduce((sum, time) => sum + time, 0) / unmountTimes.length,
     }
   }
 
@@ -135,7 +139,7 @@ export class PerformanceTestUtils {
   static async measureMemoryUsage(
     component: any,
     props: any = {},
-    iterations: number = 5
+    iterations: number = 5,
   ): Promise<{ baseline: number; peak: number; final: number; leaked: number }> {
     if (!performance.memory) {
       return { baseline: 0, peak: 0, final: 0, leaked: 0 }
@@ -150,24 +154,24 @@ export class PerformanceTestUtils {
       const wrapper = mount(component, { props })
       await nextTick()
       wrappers.push(wrapper)
-      
+
       const current = performance.memory.usedJSHeapSize
       if (current > peak) peak = current
     }
 
     // Force garbage collection if available
     if ((global as any).gc) {
-      (global as any).gc()
+      ;(global as any).gc()
     }
 
     // Unmount all instances
-    wrappers.forEach(wrapper => wrapper.unmount())
-    
+    wrappers.forEach((wrapper) => wrapper.unmount())
+
     // Wait for cleanup
-    await new Promise(resolve => setTimeout(resolve, 100))
-    
+    await new Promise((resolve) => setTimeout(resolve, 100))
+
     if ((global as any).gc) {
-      (global as any).gc()
+      ;(global as any).gc()
     }
 
     const final = performance.memory.usedJSHeapSize
@@ -182,7 +186,7 @@ export class PerformanceTestUtils {
   static async benchmarkWithDataset(
     component: any,
     generateData: (size: number) => any,
-    sizes: number[] = [100, 500, 1000, 5000]
+    sizes: number[] = [100, 500, 1000, 5000],
   ): Promise<Array<{ size: number; renderTime: number; memoryUsage: number }>> {
     const results = []
 
@@ -190,11 +194,11 @@ export class PerformanceTestUtils {
       const data = generateData(size)
       const { duration } = await this.measureRenderTime(component, { data })
       const { peak, baseline } = await this.measureMemoryUsage(component, { data })
-      
+
       results.push({
         size,
         renderTime: duration,
-        memoryUsage: peak - baseline
+        memoryUsage: peak - baseline,
       })
     }
 
@@ -207,7 +211,7 @@ export class PerformanceTestUtils {
   static async stressTest(
     component: any,
     operations: Array<() => Promise<void>>,
-    iterations: number = 100
+    iterations: number = 100,
   ): Promise<{ avgOperationTime: number; maxOperationTime: number; errors: number }> {
     const wrapper = mount(component)
     await nextTick()
@@ -224,7 +228,7 @@ export class PerformanceTestUtils {
           operationTimes.push(end - start)
         } catch (error) {
           errors++
-          console.warn('Stress test operation failed:', error)
+          console.warn("Stress test operation failed:", error)
         }
       }
     }
@@ -234,7 +238,7 @@ export class PerformanceTestUtils {
     return {
       avgOperationTime: operationTimes.reduce((sum, time) => sum + time, 0) / operationTimes.length,
       maxOperationTime: Math.max(...operationTimes),
-      errors
+      errors,
     }
   }
 
@@ -243,12 +247,12 @@ export class PerformanceTestUtils {
    */
   static validatePerformance(
     results: { renderTime?: number; memoryUsage?: number; bundleSize?: number },
-    componentType: 'simple' | 'complex' | 'large' = 'simple'
+    componentType: "simple" | "complex" | "large" = "simple",
   ) {
     if (results.renderTime !== undefined) {
       expect(
         results.renderTime,
-        `Component render time ${results.renderTime.toFixed(2)}ms exceeds threshold ${performanceThresholds.render[componentType]}ms`
+        `Component render time ${results.renderTime.toFixed(2)}ms exceeds threshold ${performanceThresholds.render[componentType]}ms`,
       ).toBeLessThan(performanceThresholds.render[componentType])
     }
 
@@ -256,7 +260,7 @@ export class PerformanceTestUtils {
       const memoryThreshold = performanceThresholds.memory.component * 1024 * 1024 // Convert MB to bytes
       expect(
         results.memoryUsage,
-        `Component memory usage ${(results.memoryUsage / 1024 / 1024).toFixed(2)}MB exceeds threshold ${performanceThresholds.memory.component}MB`
+        `Component memory usage ${(results.memoryUsage / 1024 / 1024).toFixed(2)}MB exceeds threshold ${performanceThresholds.memory.component}MB`,
       ).toBeLessThan(memoryThreshold)
     }
 
@@ -264,7 +268,7 @@ export class PerformanceTestUtils {
       const bundleThreshold = performanceThresholds.bundle.component * 1024 // Convert KB to bytes
       expect(
         results.bundleSize,
-        `Component bundle size ${(results.bundleSize / 1024).toFixed(2)}KB exceeds threshold ${performanceThresholds.bundle.component}KB`
+        `Component bundle size ${(results.bundleSize / 1024).toFixed(2)}KB exceeds threshold ${performanceThresholds.bundle.component}KB`,
       ).toBeLessThan(bundleThreshold)
     }
   }
@@ -276,28 +280,28 @@ export class PerformanceTestUtils {
     component: any,
     props: any = {},
     duration: number = 5000, // 5 seconds
-    sampleInterval: number = 100 // 100ms
+    sampleInterval: number = 100, // 100ms
   ): Promise<Array<{ timestamp: number; memory: number; renderTime: number }>> {
     const profile: Array<{ timestamp: number; memory: number; renderTime: number }> = []
     const startTime = Date.now()
-    
+
     const wrapper = mount(component, { props })
     await nextTick()
 
     const interval = setInterval(async () => {
       const timestamp = Date.now() - startTime
-      
+
       // Measure current memory
       const memory = performance.memory ? performance.memory.usedJSHeapSize : 0
-      
+
       // Measure render time by triggering re-render
       const renderStart = performance.now()
       wrapper.vm.$forceUpdate()
       await nextTick()
       const renderTime = performance.now() - renderStart
-      
+
       profile.push({ timestamp, memory, renderTime })
-      
+
       if (timestamp >= duration) {
         clearInterval(interval)
       }
@@ -318,9 +322,9 @@ export const performanceMatchers = {
   toRenderFasterThan: (received: number, expected: number) => {
     const pass = received < expected
     return {
-      message: () => 
-        `expected component to render ${pass ? 'slower' : 'faster'} than ${expected}ms, but took ${received.toFixed(2)}ms`,
-      pass
+      message: () =>
+        `expected component to render ${pass ? "slower" : "faster"} than ${expected}ms, but took ${received.toFixed(2)}ms`,
+      pass,
     }
   },
 
@@ -330,22 +334,22 @@ export const performanceMatchers = {
     const expectedMB = expected / 1024 / 1024
     return {
       message: () =>
-        `expected component to use ${pass ? 'more' : 'less'} memory than ${expectedMB.toFixed(2)}MB, but used ${receivedMB.toFixed(2)}MB`,
-      pass
+        `expected component to use ${pass ? "more" : "less"} memory than ${expectedMB.toFixed(2)}MB, but used ${receivedMB.toFixed(2)}MB`,
+      pass,
     }
   },
 
   toHaveGoodPerformance: (
     received: { renderTime: number; memoryUsage: number },
-    componentType: 'simple' | 'complex' | 'large' = 'simple'
+    componentType: "simple" | "complex" | "large" = "simple",
   ) => {
     const renderThreshold = performanceThresholds.render[componentType]
     const memoryThreshold = performanceThresholds.memory.component * 1024 * 1024
-    
+
     const renderPass = received.renderTime < renderThreshold
     const memoryPass = received.memoryUsage < memoryThreshold
     const pass = renderPass && memoryPass
-    
+
     return {
       message: () => {
         const issues = []
@@ -353,13 +357,15 @@ export const performanceMatchers = {
           issues.push(`render time ${received.renderTime.toFixed(2)}ms > ${renderThreshold}ms`)
         }
         if (!memoryPass) {
-          issues.push(`memory usage ${(received.memoryUsage / 1024 / 1024).toFixed(2)}MB > ${performanceThresholds.memory.component}MB`)
+          issues.push(
+            `memory usage ${(received.memoryUsage / 1024 / 1024).toFixed(2)}MB > ${performanceThresholds.memory.component}MB`,
+          )
         }
-        return `expected component to have good performance, but: ${issues.join(', ')}`
+        return `expected component to have good performance, but: ${issues.join(", ")}`
       },
-      pass
+      pass,
     }
-  }
+  },
 }
 
 // Extend expect with custom matchers
@@ -370,72 +376,88 @@ export const ComponentBenchmarks = {
   // Table component benchmarks
   table: {
     smallDataset: () => Array.from({ length: 100 }, (_, i) => ({ id: i, name: `Item ${i}` })),
-    mediumDataset: () => Array.from({ length: 1000 }, (_, i) => ({ id: i, name: `Item ${i}`, value: Math.random() })),
-    largeDataset: () => Array.from({ length: 10000 }, (_, i) => ({ 
-      id: i, 
-      name: `Item ${i}`, 
-      value: Math.random(),
-      category: `Category ${i % 10}`,
-      description: `Description for item ${i}`.repeat(3)
-    }))
+    mediumDataset: () =>
+      Array.from({ length: 1000 }, (_, i) => ({ id: i, name: `Item ${i}`, value: Math.random() })),
+    largeDataset: () =>
+      Array.from({ length: 10000 }, (_, i) => ({
+        id: i,
+        name: `Item ${i}`,
+        value: Math.random(),
+        category: `Category ${i % 10}`,
+        description: `Description for item ${i}`.repeat(3),
+      })),
   },
 
   // Form component benchmarks
   form: {
-    simpleForm: () => ({ fields: Array.from({ length: 5 }, (_, i) => ({ name: `field${i}`, type: 'input' })) }),
-    complexForm: () => ({ fields: Array.from({ length: 20 }, (_, i) => ({ 
-      name: `field${i}`, 
-      type: ['input', 'select', 'textarea', 'checkbox'][i % 4],
-      validators: [{ type: 'required' }]
-    })) }),
-    dynamicForm: () => ({ fields: Array.from({ length: 50 }, (_, i) => ({
-      name: `field${i}`,
-      type: 'input',
-      condition: i % 2 === 0 ? { field: 'toggle', value: true } : undefined
-    })) })
+    simpleForm: () => ({
+      fields: Array.from({ length: 5 }, (_, i) => ({ name: `field${i}`, type: "input" })),
+    }),
+    complexForm: () => ({
+      fields: Array.from({ length: 20 }, (_, i) => ({
+        name: `field${i}`,
+        type: ["input", "select", "textarea", "checkbox"][i % 4],
+        validators: [{ type: "required" }],
+      })),
+    }),
+    dynamicForm: () => ({
+      fields: Array.from({ length: 50 }, (_, i) => ({
+        name: `field${i}`,
+        type: "input",
+        condition: i % 2 === 0 ? { field: "toggle", value: true } : undefined,
+      })),
+    }),
   },
 
   // Tree component benchmarks
   tree: {
-    flatTree: (size: number) => Array.from({ length: size }, (_, i) => ({ id: i, label: `Node ${i}` })),
+    flatTree: (size: number) =>
+      Array.from({ length: size }, (_, i) => ({ id: i, label: `Node ${i}` })),
     deepTree: (depth: number, childrenPerNode: number = 3) => {
       const createNode = (level: number, index: number): any => ({
         id: `${level}-${index}`,
         label: `Node ${level}-${index}`,
-        children: level < depth ? Array.from({ length: childrenPerNode }, (_, i) => createNode(level + 1, i)) : undefined
+        children:
+          level < depth
+            ? Array.from({ length: childrenPerNode }, (_, i) => createNode(level + 1, i))
+            : undefined,
       })
       return [createNode(0, 0)]
-    }
-  }
+    },
+  },
 }
 
 // Performance test data generators
 export const TestDataGenerators = {
-  generateUsers: (count: number) => Array.from({ length: count }, (_, i) => ({
-    id: i,
-    name: `User ${i}`,
-    email: `user${i}@example.com`,
-    age: 20 + (i % 50),
-    department: ['Engineering', 'Sales', 'Marketing'][i % 3],
-    salary: 50000 + (i * 1000)
-  })),
+  generateUsers: (count: number) =>
+    Array.from({ length: count }, (_, i) => ({
+      id: i,
+      name: `User ${i}`,
+      email: `user${i}@example.com`,
+      age: 20 + (i % 50),
+      department: ["Engineering", "Sales", "Marketing"][i % 3],
+      salary: 50000 + i * 1000,
+    })),
 
-  generateProducts: (count: number) => Array.from({ length: count }, (_, i) => ({
-    id: i,
-    name: `Product ${i}`,
-    price: (Math.random() * 1000).toFixed(2),
-    category: ['Electronics', 'Clothing', 'Books', 'Home'][i % 4],
-    inStock: i % 5 !== 0,
-    description: `Description for product ${i}. `.repeat(10)
-  })),
+  generateProducts: (count: number) =>
+    Array.from({ length: count }, (_, i) => ({
+      id: i,
+      name: `Product ${i}`,
+      price: (Math.random() * 1000).toFixed(2),
+      category: ["Electronics", "Clothing", "Books", "Home"][i % 4],
+      inStock: i % 5 !== 0,
+      description: `Description for product ${i}. `.repeat(10),
+    })),
 
   generateChartData: (points: number) => ({
     labels: Array.from({ length: points }, (_, i) => `Point ${i}`),
-    datasets: [{
-      label: 'Performance Data',
-      data: Array.from({ length: points }, () => Math.random() * 100)
-    }]
-  })
+    datasets: [
+      {
+        label: "Performance Data",
+        data: Array.from({ length: points }, () => Math.random() * 100),
+      },
+    ],
+  }),
 }
 
 export default PerformanceTestUtils

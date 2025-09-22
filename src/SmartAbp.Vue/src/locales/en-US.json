@@ -5,7 +5,10 @@
     "intro": "Step 1: Create module (fill the basics then continue)",
     "step1": { "title": "Step 1: Create Module" },
     "step2": { "title": "Step 2: Architecture" },
-    "step3": { "title": "Step 3: Domain Modeling", "alert": "Please complete entity modeling first, then configure permissions and generate code." },
+    "step3": {
+      "title": "Step 3: Domain Modeling",
+      "alert": "Please complete entity modeling first, then configure permissions and generate code."
+    },
     "step4": { "title": "Step 4: Enterprise Features" },
     "step5": { "title": "Step 5: Preview & Generate" },
     "form": {
@@ -119,7 +122,11 @@
     "namespace": "Namespace",
     "table": "Table Name",
     "schema": "Schema",
-    "features": { "aggregate": "Aggregate Root", "tenant": "Multi-Tenant", "softDelete": "Soft Delete" },
+    "features": {
+      "aggregate": "Aggregate Root",
+      "tenant": "Multi-Tenant",
+      "softDelete": "Soft Delete"
+    },
     "propertiesTab": "Properties",
     "relationshipsTab": "Relationships",
     "propertyTypes": "Property Types",
@@ -171,9 +178,10 @@
       "propSaved": "Property saved successfully"
     },
     "confirm": {
-      "clear": { "title": "Confirm Clear", "message": "Are you sure you want to clear the designer?" }
+      "clear": {
+        "title": "Confirm Clear",
+        "message": "Are you sure you want to clear the designer?"
+      }
     }
   }
 }
-
-

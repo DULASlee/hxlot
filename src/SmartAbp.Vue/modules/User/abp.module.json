@@ -16,10 +16,7 @@
       "meta": {
         "title": "用户管理列表",
         "menuKey": "user-list",
-        "requiredRoles": [
-          "admin",
-          "admin666"
-        ],
+        "requiredRoles": ["admin", "admin666"],
         "icon": "👥",
         "showInMenu": true
       }
@@ -31,10 +28,7 @@
       "meta": {
         "title": "用户管理管理",
         "menuKey": "user-management",
-        "requiredRoles": [
-          "admin",
-          "admin666"
-        ],
+        "requiredRoles": ["admin", "admin666"],
         "icon": "👥",
         "showInMenu": true
       }
@@ -47,12 +41,7 @@
       "modulePath": "@/stores/modules/user"
     }
   ],
-  "policies": [
-    "User.Create",
-    "User.Read",
-    "User.Update",
-    "User.Delete"
-  ],
+  "policies": ["User.Create", "User.Read", "User.Update", "User.Delete"],
   "lifecycle": {},
   "features": {
     "enableAuth": true,
@@ -62,11 +51,7 @@
   "menuConfig": {
     "icon": "👥",
     "order": 100,
-    "features": [
-      "showInMenu",
-      "showIcon",
-      "enableBreadcrumb"
-    ],
+    "features": ["showInMenu", "showIcon", "enableBreadcrumb"],
     "parentMenu": "system"
   }
 }

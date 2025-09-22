@@ -4,41 +4,41 @@
  * Component lazy loading, dynamic imports, and runtime performance optimizations
  */
 
-import { defineAsyncComponent, Component } from 'vue'
+import { defineAsyncComponent, Component } from "vue"
 
 // Performance monitoring configuration
 export const performanceConfig = {
   // Core Web Vitals thresholds
   vitals: {
     LCP: 2.5, // Largest Contentful Paint (seconds)
-    FID: 100, // First Input Delay (milliseconds) 
+    FID: 100, // First Input Delay (milliseconds)
     CLS: 0.1, // Cumulative Layout Shift
     FCP: 1.5, // First Contentful Paint (seconds)
-    TTFB: 800 // Time to First Byte (milliseconds)
+    TTFB: 800, // Time to First Byte (milliseconds)
   },
 
   // Component loading strategies
   loading: {
-    strategy: 'progressive', // 'eager' | 'lazy' | 'progressive'
-    chunkSize: 'medium', // 'small' | 'medium' | 'large'
+    strategy: "progressive", // 'eager' | 'lazy' | 'progressive'
+    chunkSize: "medium", // 'small' | 'medium' | 'large'
     prefetchRoutes: true,
-    preloadCritical: true
+    preloadCritical: true,
   },
 
   // Bundle splitting configuration
   bundles: {
     maxChunkSize: 500000, // 500KB
-    minChunkSize: 20000,  // 20KB
-    vendors: ['vue', 'element-plus', 'echarts'],
-    commons: ['utils', 'constants', 'helpers']
+    minChunkSize: 20000, // 20KB
+    vendors: ["vue", "element-plus", "echarts"],
+    commons: ["utils", "constants", "helpers"],
   },
 
   // Caching strategies
   cache: {
-    assets: 'immutable',
-    api: 'stale-while-revalidate',
-    components: 'cache-first'
-  }
+    assets: "immutable",
+    api: "stale-while-revalidate",
+    components: "cache-first",
+  },
 }
 
 // Advanced component loader with performance monitoring
@@ -57,7 +57,7 @@ export class AdvancedComponentLoader {
       delay?: number
       timeout?: number
       retries?: number
-    } = {}
+    } = {},
   ) {
     return defineAsyncComponent({
       loader: () => this.loadComponentWithMetrics(componentName, importFunction),
@@ -74,13 +74,13 @@ export class AdvancedComponentLoader {
           console.error(`Failed to load component: ${componentName}`, error)
           fail()
         }
-      }
+      },
     })
   }
 
   private async loadComponentWithMetrics(
     componentName: string,
-    importFunction: () => Promise<any>
+    importFunction: () => Promise<any>,
   ): Promise<Component> {
     // Check cache first
     if (this.loadedComponents.has(componentName)) {
@@ -101,26 +101,28 @@ export class AdvancedComponentLoader {
         // End performance measurement
         const endTime = performance.now()
         const loadTime = endTime - startTime
-        
+
         performance.mark(`component-load-end-${componentName}`)
         performance.measure(
           `component-load-${componentName}`,
           `component-load-start-${componentName}`,
-          `component-load-end-${componentName}`
+          `component-load-end-${componentName}`,
         )
 
         // Store metrics
         this.performanceMetrics.set(componentName, loadTime)
-        
+
         // Log performance if slow
         if (loadTime > 1000) {
-          console.warn(`Slow component load detected: ${componentName} took ${loadTime.toFixed(2)}ms`)
+          console.warn(
+            `Slow component load detected: ${componentName} took ${loadTime.toFixed(2)}ms`,
+          )
         }
 
         const component = module.default || module
         this.loadedComponents.set(componentName, component)
         this.loadingComponents.delete(componentName)
-        
+
         return component
       })
       .catch((error) => {
@@ -166,7 +168,7 @@ export class AdvancedComponentLoader {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
         }
-      `
+      `,
     }
   }
 
@@ -183,7 +185,7 @@ export class AdvancedComponentLoader {
           <button class="retry-button" @click="$emit('retry')">重试</button>
         </div>
       `,
-      emits: ['retry'],
+      emits: ["retry"],
       style: `
         .component-error {
           display: flex;
@@ -226,7 +228,7 @@ export class AdvancedComponentLoader {
         .retry-button:hover {
           background-color: #66b3ff;
         }
-      `
+      `,
     }
   }
 
@@ -250,70 +252,75 @@ export const componentLoader = new AdvancedComponentLoader()
 export const AdvancedComponents = {
   // Core components - preload critical
   AdvancedTable: componentLoader.createLazyComponent(
-    'AdvancedTable',
-    () => import('@/packages/lowcode-designer/src/components/AdvancedTable/AdvancedTable.vue'),
-    { delay: 0 } // Immediate for critical component
+    "AdvancedTable",
+    () => import("@/packages/lowcode-designer/src/components/AdvancedTable/AdvancedTable.vue"),
+    { delay: 0 }, // Immediate for critical component
   ),
 
   AdvancedForm: componentLoader.createLazyComponent(
-    'AdvancedForm', 
-    () => import('@/packages/lowcode-designer/src/components/AdvancedForm/AdvancedForm.vue'),
-    { delay: 0 }
+    "AdvancedForm",
+    () => import("@/packages/lowcode-designer/src/components/AdvancedForm/AdvancedForm.vue"),
+    { delay: 0 },
   ),
 
   // Visualization components - lazy load
   AdvancedChart: componentLoader.createLazyComponent(
-    'AdvancedChart',
-    () => import('@/packages/lowcode-designer/src/components/AdvancedChart/AdvancedChart.vue'),
-    { delay: 100 }
+    "AdvancedChart",
+    () => import("@/packages/lowcode-designer/src/components/AdvancedChart/AdvancedChart.vue"),
+    { delay: 100 },
   ),
 
   // Layout components - progressive load
   AdvancedLayout: componentLoader.createLazyComponent(
-    'AdvancedLayout',
-    () => import('@/packages/lowcode-designer/src/components/AdvancedLayout/AdvancedLayout.vue'),
-    { delay: 200 }
+    "AdvancedLayout",
+    () => import("@/packages/lowcode-designer/src/components/AdvancedLayout/AdvancedLayout.vue"),
+    { delay: 200 },
   ),
 
   AdvancedNavigation: componentLoader.createLazyComponent(
-    'AdvancedNavigation',
-    () => import('@/packages/lowcode-designer/src/components/AdvancedNavigation/AdvancedNavigation.vue'),
-    { delay: 200 }
+    "AdvancedNavigation",
+    () =>
+      import(
+        "@/packages/lowcode-designer/src/components/AdvancedNavigation/AdvancedNavigation.vue"
+      ),
+    { delay: 200 },
   ),
 
   AdvancedPanel: componentLoader.createLazyComponent(
-    'AdvancedPanel',
-    () => import('@/packages/lowcode-designer/src/components/AdvancedPanel/AdvancedPanel.vue'),
-    { delay: 200 }
+    "AdvancedPanel",
+    () => import("@/packages/lowcode-designer/src/components/AdvancedPanel/AdvancedPanel.vue"),
+    { delay: 200 },
   ),
 
   // Heavy components - lazy load with longer delay
   AdvancedTree: componentLoader.createLazyComponent(
-    'AdvancedTree',
-    () => import('@/packages/lowcode-designer/src/components/AdvancedTree/AdvancedTree.vue'),
-    { delay: 300, timeout: 15000 }
+    "AdvancedTree",
+    () => import("@/packages/lowcode-designer/src/components/AdvancedTree/AdvancedTree.vue"),
+    { delay: 300, timeout: 15000 },
   ),
 
   AdvancedUpload: componentLoader.createLazyComponent(
-    'AdvancedUpload',
-    () => import('@/packages/lowcode-designer/src/components/AdvancedUpload/AdvancedUpload.vue'),
-    { delay: 300, timeout: 15000 }
-  )
+    "AdvancedUpload",
+    () => import("@/packages/lowcode-designer/src/components/AdvancedUpload/AdvancedUpload.vue"),
+    { delay: 300, timeout: 15000 },
+  ),
 }
 
 // Performance monitoring utilities
 export const PerformanceMonitor = {
   // Initialize Core Web Vitals monitoring
   initVitals() {
-    if (typeof window !== 'undefined' && 'performance' in window) {
+    if (typeof window !== "undefined" && "performance" in window) {
       // Import web-vitals dynamically
-      import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-        getCLS(this.onVitalMetric.bind(this))
-        getFID(this.onVitalMetric.bind(this))
-        getFCP(this.onVitalMetric.bind(this))
-        getLCP(this.onVitalMetric.bind(this))
-        getTTFB(this.onVitalMetric.bind(this))
-      }).catch(console.error)
+      import("web-vitals" as any)
+        .then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+          getCLS(this.onVitalMetric.bind(this))
+          getFID(this.onVitalMetric.bind(this))
+          getFCP(this.onVitalMetric.bind(this))
+          getLCP(this.onVitalMetric.bind(this))
+          getTTFB(this.onVitalMetric.bind(this))
+        })
+        .catch(console.error)
     }
   },
 
@@ -321,19 +328,19 @@ export const PerformanceMonitor = {
   onVitalMetric(metric: any) {
     const threshold = performanceConfig.vitals[metric.name as keyof typeof performanceConfig.vitals]
     const isGood = metric.value <= threshold
-    
+
     console.log(
-      `%c${metric.name}: ${metric.value.toFixed(2)}${metric.name === 'CLS' ? '' : 'ms'} ${isGood ? '✅' : '❌'}`,
-      `color: ${isGood ? 'green' : 'red'}; font-weight: bold;`
+      `%c${metric.name}: ${metric.value.toFixed(2)}${metric.name === "CLS" ? "" : "ms"} ${isGood ? "✅" : "❌"}`,
+      `color: ${isGood ? "green" : "red"}; font-weight: bold;`,
     )
 
     // Send to analytics if available
-    if (window.gtag) {
-      window.gtag('event', metric.name, {
-        event_category: 'Web Vitals',
+    if ((window as any).gtag) {
+      (window as any).gtag("event", metric.name, {
+        event_category: "Web Vitals",
         value: Math.round(metric.value),
         custom_parameter_1: metric.id,
-        non_interaction: true
+        non_interaction: true,
       })
     }
   },
@@ -342,21 +349,22 @@ export const PerformanceMonitor = {
   measureComponentRender(componentName: string, renderFn: () => void) {
     const startTime = performance.now()
     performance.mark(`render-start-${componentName}`)
-    
+
     renderFn()
-    
+
     requestAnimationFrame(() => {
       const endTime = performance.now()
       const renderTime = endTime - startTime
-      
+
       performance.mark(`render-end-${componentName}`)
       performance.measure(
         `render-${componentName}`,
         `render-start-${componentName}`,
-        `render-end-${componentName}`
+        `render-end-${componentName}`,
       )
 
-      if (renderTime > 16) { // More than one frame
+      if (renderTime > 16) {
+        // More than one frame
         console.warn(`Slow render detected: ${componentName} took ${renderTime.toFixed(2)}ms`)
       }
     })
@@ -364,43 +372,42 @@ export const PerformanceMonitor = {
 
   // Get all performance entries
   getPerformanceEntries() {
-    if (typeof window === 'undefined' || !window.performance) {
+    if (typeof window === "undefined" || !window.performance) {
       return {}
     }
 
-    const entries = performance.getEntriesByType('measure')
-    const componentEntries = entries.filter(entry => 
-      entry.name.startsWith('component-load-') || entry.name.startsWith('render-')
+    const entries = performance.getEntriesByType("measure")
+    const componentEntries = entries.filter(
+      (entry) => entry.name.startsWith("component-load-") || entry.name.startsWith("render-"),
     )
 
-    return componentEntries.reduce((acc, entry) => {
-      acc[entry.name] = entry.duration
-      return acc
-    }, {} as Record<string, number>)
+    return componentEntries.reduce(
+      (acc, entry) => {
+        acc[entry.name] = entry.duration
+        return acc
+      },
+      {} as Record<string, number>,
+    )
   },
 
   // Clear performance entries
   clearEntries() {
-    if (typeof window !== 'undefined' && window.performance) {
+    if (typeof window !== "undefined" && window.performance) {
       performance.clearMeasures()
       performance.clearMarks()
     }
-  }
+  },
 }
 
 // Resource optimization utilities
 export const ResourceOptimizer = {
   // Preload critical resources
   preloadCriticalResources() {
-    const criticalResources = [
-      '/fonts/element-icons.woff2',
-      '/css/element-plus.css',
-      '/js/vue.js'
-    ]
+    const criticalResources = ["/fonts/element-icons.woff2", "/css/element-plus.css", "/js/vue.js"]
 
-    criticalResources.forEach(resource => {
-      const link = document.createElement('link')
-      link.rel = 'preload'
+    criticalResources.forEach((resource) => {
+      const link = document.createElement("link")
+      link.rel = "preload"
       link.href = resource
       link.as = this.getResourceType(resource)
       document.head.appendChild(link)
@@ -410,15 +417,15 @@ export const ResourceOptimizer = {
   // Prefetch non-critical resources
   prefetchResources() {
     const prefetchResources = [
-      () => import('@/packages/lowcode-designer/src/components/AdvancedChart/AdvancedChart.vue'),
-      () => import('@/packages/lowcode-designer/src/components/AdvancedTree/AdvancedTree.vue'),
-      () => import('@/packages/lowcode-designer/src/components/AdvancedUpload/AdvancedUpload.vue')
+      () => import("@/packages/lowcode-designer/src/components/AdvancedChart/AdvancedChart.vue"),
+      () => import("@/packages/lowcode-designer/src/components/AdvancedTree/AdvancedTree.vue"),
+      () => import("@/packages/lowcode-designer/src/components/AdvancedUpload/AdvancedUpload.vue"),
     ]
 
     // Prefetch when browser is idle
-    if ('requestIdleCallback' in window) {
+    if ("requestIdleCallback" in window) {
       window.requestIdleCallback(() => {
-        prefetchResources.forEach(importFn => {
+        prefetchResources.forEach((importFn) => {
           importFn().catch(() => {}) // Silent fail for prefetch
         })
       })
@@ -426,64 +433,65 @@ export const ResourceOptimizer = {
   },
 
   getResourceType(url: string): string {
-    const extension = url.split('.').pop()?.toLowerCase()
+    const extension = url.split(".").pop()?.toLowerCase()
     switch (extension) {
-      case 'woff':
-      case 'woff2':
-      case 'ttf':
-        return 'font'
-      case 'css':
-        return 'style'
-      case 'js':
-        return 'script'
-      case 'jpg':
-      case 'jpeg':
-      case 'png':
-      case 'webp':
-        return 'image'
+      case "woff":
+      case "woff2":
+      case "ttf":
+        return "font"
+      case "css":
+        return "style"
+      case "js":
+        return "script"
+      case "jpg":
+      case "jpeg":
+      case "png":
+      case "webp":
+        return "image"
       default:
-        return 'fetch'
+        return "fetch"
     }
-  }
+  },
 }
 
 // Bundle optimization utilities
 export const BundleOptimizer = {
   // Analyze bundle composition
   analyzeBundles() {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Bundle analysis available in production build only')
+    if (process.env.NODE_ENV === "development") {
+      console.log("Bundle analysis available in production build only")
       return
     }
 
     // This would be populated by webpack-bundle-analyzer
-    const bundleInfo = window.__WEBPACK_BUNDLE_INFO__ || {}
+    const bundleInfo = (window as any).__WEBPACK_BUNDLE_INFO__ || {}
     console.table(bundleInfo)
   },
 
   // Check for duplicate dependencies
   checkDuplicates() {
-    if (typeof window === 'undefined') return
+    if (typeof window === "undefined") return
 
-    const modules = window.__webpack_require__?.cache || {}
+    const modules = (window as any).__webpack_require__?.cache || {}
     const moduleNames = Object.keys(modules)
     const duplicates = new Map<string, string[]>()
 
-    moduleNames.forEach(name => {
-      const baseName = name.replace(/\?.*$/, '').replace(/\/index\.(js|ts|vue)$/, '')
+    moduleNames.forEach((name) => {
+      const baseName = name.replace(/\?.*$/, "").replace(/\/index\.(js|ts|vue)$/, "")
       if (!duplicates.has(baseName)) {
         duplicates.set(baseName, [])
       }
       duplicates.get(baseName)!.push(name)
     })
 
-    const actualDuplicates = Array.from(duplicates.entries())
-      .filter(([_, instances]) => instances.length > 1)
+    const actualDuplicates = Array.from(duplicates.entries()).filter(
+      ([_, instances]) => instances.length > 1,
+    )
 
     if (actualDuplicates.length > 0) {
-      console.warn('Duplicate modules detected:', actualDuplicates)
+      console.warn("Duplicate modules detected:", actualDuplicates)
     }
-  }
+  },
 }
 
 // Export performance configuration as default
@@ -494,5 +502,5 @@ export default {
   AdvancedComponents,
   PerformanceMonitor,
   ResourceOptimizer,
-  BundleOptimizer
+  BundleOptimizer,
 }

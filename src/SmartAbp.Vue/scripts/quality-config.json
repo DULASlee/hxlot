@@ -29,9 +29,7 @@
       "\\.Find\\(\\)\\.\\w+\\.FirstOrDefault\\(\\)",
       "foreach.*\\.Select.*\\.FirstOrDefault\\(\\)"
     ],
-    "memoryLeakPatterns": [
-      "event.*\\+=.*;.*没有-="
-    ]
+    "memoryLeakPatterns": ["event.*\\+=.*;.*没有-="]
   },
   "maintainabilityRules": {
     "maxFunctionLength": 50,

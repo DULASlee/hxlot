@@ -3,61 +3,33 @@
     <h2>认证状态示例</h2>
 
     <!-- 未登录状态 -->
-    <div
-      v-if="!authStore.isAuthenticated"
-      class="login-section"
-    >
+    <div v-if="!authStore.isAuthenticated" class="login-section">
       <h3>用户登录</h3>
       <form @submit.prevent="handleLogin">
         <div class="form-group">
           <label>用户名:</label>
-          <input
-            v-model="loginForm.username"
-            type="text"
-            required
-            placeholder="请输入用户名"
-          />
+          <input v-model="loginForm.username" type="text" required placeholder="请输入用户名" />
         </div>
         <div class="form-group">
           <label>密码:</label>
-          <input
-            v-model="loginForm.password"
-            type="password"
-            required
-            placeholder="请输入密码"
-          />
+          <input v-model="loginForm.password" type="password" required placeholder="请输入密码" />
         </div>
-        <button
-          type="submit"
-          :disabled="authStore.isLoading"
-          class="login-btn"
-        >
-          {{ authStore.isLoading ? '登录中...' : '登录' }}
+        <button type="submit" :disabled="authStore.isLoading" class="login-btn">
+          {{ authStore.isLoading ? "登录中..." : "登录" }}
         </button>
       </form>
     </div>
 
     <!-- 已登录状态 -->
-    <div
-      v-else
-      class="user-section"
-    >
+    <div v-else class="user-section">
       <h3>用户信息</h3>
-      <div
-        v-if="authStore.userInfo"
-        class="user-info"
-      >
+      <div v-if="authStore.userInfo" class="user-info">
         <p><strong>用户ID:</strong> {{ authStore.userInfo.id }}</p>
         <p><strong>用户名:</strong> {{ authStore.userInfo.username }}</p>
         <p><strong>邮箱:</strong> {{ authStore.userInfo.email }}</p>
-        <p><strong>角色:</strong> {{ authStore.userInfo.roles.join(', ') }}</p>
+        <p><strong>角色:</strong> {{ authStore.userInfo.roles.join(", ") }}</p>
       </div>
-      <button
-        class="logout-btn"
-        @click="handleLogout"
-      >
-        登出
-      </button>
+      <button class="logout-btn" @click="handleLogout">登出</button>
     </div>
 
     <!-- 主题切换 -->
@@ -98,16 +70,10 @@
     <!-- API测试 -->
     <div class="api-section">
       <h3>API测试</h3>
-      <button
-        :disabled="isTestingApi"
-        @click="testApi"
-      >
-        {{ isTestingApi ? '测试中...' : '测试API连接' }}
+      <button :disabled="isTestingApi" @click="testApi">
+        {{ isTestingApi ? "测试中..." : "测试API连接" }}
       </button>
-      <div
-        v-if="apiResult"
-        class="api-result"
-      >
+      <div v-if="apiResult" class="api-result">
         <pre>{{ apiResult }}</pre>
       </div>
     </div>
@@ -115,10 +81,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAuthStore, useThemeStore } from '@/stores'
-import { authService } from '@/utils/auth'
-import { api } from '@/utils/api'
+import { ref } from "vue"
+import { useAuthStore, useThemeStore } from "@/stores"
+import { authService } from "@/utils/auth"
+import { api } from "@/utils/api"
 
 // 使用stores
 const authStore = useAuthStore()
@@ -126,23 +92,23 @@ const themeStore = useThemeStore()
 
 // 登录表单
 const loginForm = ref({
-  username: '',
-  password: ''
+  username: "",
+  password: "",
 })
 
 // API测试状态
 const isTestingApi = ref(false)
-const apiResult = ref('')
+const apiResult = ref("")
 
 // 处理登录
 const handleLogin = async () => {
   try {
     await authService.login(loginForm.value)
     // 登录成功后清空表单
-    loginForm.value = { username: '', password: '' }
+    loginForm.value = { username: "", password: "" }
   } catch (error) {
-    console.error('登录失败:', error)
-    alert('登录失败，请检查用户名和密码')
+    console.error("登录失败:", error)
+    alert("登录失败，请检查用户名和密码")
   }
 }
 
@@ -151,7 +117,7 @@ const handleLogout = async () => {
   try {
     await authService.logout()
   } catch (error) {
-    console.error('登出失败:', error)
+    console.error("登出失败:", error)
   }
 }
 
@@ -164,7 +130,7 @@ const handleThemeChange = () => {
 const testApi = async () => {
   isTestingApi.value = true
   try {
-    const result = await api.get('/health-status')
+    const result = await api.get("/health-status")
     apiResult.value = JSON.stringify(result, null, 2)
   } catch (error) {
     apiResult.value = `API测试失败: ${error}`
@@ -305,7 +271,7 @@ const testApi = async () => {
   background: var(--theme-bg-sunken);
   border: 1px solid var(--theme-border-base);
   border-radius: 6px;
-  font-family: 'Fira Code', Monaco, Consolas, monospace;
+  font-family: "Fira Code", Monaco, Consolas, monospace;
   font-size: 12px;
   color: var(--theme-text-secondary);
   overflow-x: auto;

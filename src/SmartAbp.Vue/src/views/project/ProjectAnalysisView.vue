@@ -11,16 +11,16 @@
         <div class="stat-card">
           <div class="stat-icon">
             <svg viewBox="0 0 24 24">
-              <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z" />
+              <path
+                d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"
+              />
             </svg>
           </div>
           <div class="stat-content">
             <div class="stat-number">
               {{ totalProjects }}
             </div>
-            <div class="stat-label">
-              总项目数
-            </div>
+            <div class="stat-label">总项目数</div>
           </div>
         </div>
 
@@ -34,41 +34,39 @@
             <div class="stat-number">
               {{ completedProjects }}
             </div>
-            <div class="stat-label">
-              已完成
-            </div>
+            <div class="stat-label">已完成</div>
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-icon">
             <svg viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              />
             </svg>
           </div>
           <div class="stat-content">
             <div class="stat-number">
               {{ activeProjects }}
             </div>
-            <div class="stat-label">
-              进行中
-            </div>
+            <div class="stat-label">进行中</div>
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-icon">
             <svg viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
+              />
             </svg>
           </div>
           <div class="stat-content">
             <div class="stat-number">
               {{ pausedProjects }}
             </div>
-            <div class="stat-label">
-              已暂停
-            </div>
+            <div class="stat-label">已暂停</div>
           </div>
         </div>
       </div>
@@ -101,23 +99,14 @@
           <h3>项目进度趋势</h3>
           <div class="chart-container">
             <div class="progress-chart">
-              <div
-                v-for="month in progressData"
-                :key="month.name"
-                class="progress-bar-item"
-              >
+              <div v-for="month in progressData" :key="month.name" class="progress-bar-item">
                 <div class="month-label">
                   {{ month.name }}
                 </div>
                 <div class="progress-bar">
-                  <div
-                    class="progress-fill"
-                    :style="{ width: month.progress + '%' }"
-                  />
+                  <div class="progress-fill" :style="{ width: month.progress + '%' }" />
                 </div>
-                <div class="progress-value">
-                  {{ month.progress }}%
-                </div>
+                <div class="progress-value">{{ month.progress }}%</div>
               </div>
             </div>
           </div>
@@ -140,10 +129,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="project in projectDetails"
-                :key="project.id"
-              >
+              <tr v-for="project in projectDetails" :key="project.id">
                 <td>
                   <div class="project-name">
                     <strong>{{ project.name }}</strong>
@@ -151,20 +137,14 @@
                   </div>
                 </td>
                 <td>
-                  <span
-                    class="status-badge"
-                    :class="project.status"
-                  >
+                  <span class="status-badge" :class="project.status">
                     {{ getStatusText(project.status) }}
                   </span>
                 </td>
                 <td>
                   <div class="progress-cell">
                     <div class="progress-bar small">
-                      <div
-                        class="progress-fill"
-                        :style="{ width: project.progress + '%' }"
-                      />
+                      <div class="progress-fill" :style="{ width: project.progress + '%' }" />
                     </div>
                     <span>{{ project.progress }}%</span>
                   </div>
@@ -182,7 +162,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed } from "vue"
 
 interface Project {
   id: number
@@ -198,66 +178,72 @@ interface Project {
 const projectDetails = ref<Project[]>([
   {
     id: 1,
-    name: 'SmartAbp 核心开发',
-    description: '开发框架核心功能',
-    status: 'active',
+    name: "SmartAbp 核心开发",
+    description: "开发框架核心功能",
+    status: "active",
     progress: 75,
     members: 5,
-    startDate: '2024-01-15',
-    endDate: '2024-06-30'
+    startDate: "2024-01-15",
+    endDate: "2024-06-30",
   },
   {
     id: 2,
-    name: '前端界面优化',
-    description: '优化用户界面设计',
-    status: 'active',
+    name: "前端界面优化",
+    description: "优化用户界面设计",
+    status: "active",
     progress: 60,
     members: 3,
-    startDate: '2024-02-01',
-    endDate: '2024-05-15'
+    startDate: "2024-02-01",
+    endDate: "2024-05-15",
   },
   {
     id: 3,
-    name: '数据库迁移',
-    description: '数据库架构升级',
-    status: 'completed',
+    name: "数据库迁移",
+    description: "数据库架构升级",
+    status: "completed",
     progress: 100,
     members: 2,
-    startDate: '2024-01-01',
-    endDate: '2024-03-31'
+    startDate: "2024-01-01",
+    endDate: "2024-03-31",
   },
   {
     id: 4,
-    name: 'API 文档编写',
-    description: '编写完整的API文档',
-    status: 'paused',
+    name: "API 文档编写",
+    description: "编写完整的API文档",
+    status: "paused",
     progress: 30,
     members: 1,
-    startDate: '2024-02-10',
-    endDate: '2024-04-30'
-  }
+    startDate: "2024-02-10",
+    endDate: "2024-04-30",
+  },
 ])
 
 const progressData = ref([
-  { name: '1月', progress: 20 },
-  { name: '2月', progress: 35 },
-  { name: '3月', progress: 50 },
-  { name: '4月', progress: 65 },
-  { name: '5月', progress: 75 },
-  { name: '6月', progress: 85 }
+  { name: "1月", progress: 20 },
+  { name: "2月", progress: 35 },
+  { name: "3月", progress: 50 },
+  { name: "4月", progress: 65 },
+  { name: "5月", progress: 75 },
+  { name: "6月", progress: 85 },
 ])
 
 // 计算统计数据
 const totalProjects = computed(() => projectDetails.value.length)
-const activeProjects = computed(() => projectDetails.value.filter(p => p.status === 'active').length)
-const completedProjects = computed(() => projectDetails.value.filter(p => p.status === 'completed').length)
-const pausedProjects = computed(() => projectDetails.value.filter(p => p.status === 'paused').length)
+const activeProjects = computed(
+  () => projectDetails.value.filter((p) => p.status === "active").length,
+)
+const completedProjects = computed(
+  () => projectDetails.value.filter((p) => p.status === "completed").length,
+)
+const pausedProjects = computed(
+  () => projectDetails.value.filter((p) => p.status === "paused").length,
+)
 
 const getStatusText = (status: string) => {
   const statusMap: Record<string, string> = {
-    active: '进行中',
-    completed: '已完成',
-    paused: '已暂停'
+    active: "进行中",
+    completed: "已完成",
+    paused: "已暂停",
   }
   return statusMap[status] || status
 }

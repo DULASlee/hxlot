@@ -9,9 +9,7 @@
         <i class="fas fa-cogs" />
         低代码引擎控制台
       </h1>
-      <p class="page-description">
-        SmartAbp 低代码引擎管理和监控中心
-      </p>
+      <p class="page-description">SmartAbp 低代码引擎管理和监控中心</p>
     </div>
 
     <div class="engine-dashboard">
@@ -19,15 +17,12 @@
       <div class="status-cards">
         <div class="status-card">
           <div class="card-icon">
-            <i
-              class="fas fa-heartbeat"
-              :class="{ 'active': engineStatus.healthy }"
-            />
+            <i class="fas fa-heartbeat" :class="{ active: engineStatus.healthy }" />
           </div>
           <div class="card-content">
             <h3>引擎状态</h3>
             <p :class="engineStatus.healthy ? 'status-healthy' : 'status-error'">
-              {{ engineStatus.healthy ? '运行正常' : '异常' }}
+              {{ engineStatus.healthy ? "运行正常" : "异常" }}
             </p>
           </div>
         </div>
@@ -50,9 +45,7 @@
           </div>
           <div class="card-content">
             <h3>生成性能</h3>
-            <p class="metric-value">
-              {{ engineStatus.avgGenerationTime }}ms
-            </p>
+            <p class="metric-value">{{ engineStatus.avgGenerationTime }}ms</p>
           </div>
         </div>
 
@@ -62,46 +55,28 @@
           </div>
           <div class="card-content">
             <h3>成功率</h3>
-            <p class="metric-value">
-              {{ engineStatus.successRate }}%
-            </p>
+            <p class="metric-value">{{ engineStatus.successRate }}%</p>
           </div>
         </div>
       </div>
 
       <!-- 快速操作区域 -->
       <div class="quick-actions">
-        <h2 class="section-title">
-          快速操作
-        </h2>
+        <h2 class="section-title">快速操作</h2>
         <div class="action-buttons">
-          <button
-            class="action-btn primary"
-            :disabled="loading"
-            @click="initializeEngine"
-          >
+          <button class="action-btn primary" :disabled="loading" @click="initializeEngine">
             <i class="fas fa-play" />
             初始化引擎
           </button>
-          <button
-            class="action-btn secondary"
-            :disabled="loading"
-            @click="runExample"
-          >
+          <button class="action-btn secondary" :disabled="loading" @click="runExample">
             <i class="fas fa-rocket" />
             运行示例
           </button>
-          <button
-            class="action-btn secondary"
-            @click="showPerformanceTest"
-          >
+          <button class="action-btn secondary" @click="showPerformanceTest">
             <i class="fas fa-stopwatch" />
             性能测试
           </button>
-          <button
-            class="action-btn secondary"
-            @click="exportDiagnostic"
-          >
+          <button class="action-btn secondary" @click="exportDiagnostic">
             <i class="fas fa-download" />
             导出诊断
           </button>
@@ -111,44 +86,24 @@
       <!-- 实时日志区域 -->
       <div class="log-section">
         <div class="section-header">
-          <h2 class="section-title">
-            实时日志
-          </h2>
+          <h2 class="section-title">实时日志</h2>
           <div class="log-controls">
-            <button
-              class="control-btn"
-              @click="clearLogs"
-            >
+            <button class="control-btn" @click="clearLogs">
               <i class="fas fa-trash" />
               清空
             </button>
-            <button
-              class="control-btn"
-              :class="{ active: autoScroll }"
-              @click="toggleAutoScroll"
-            >
+            <button class="control-btn" :class="{ active: autoScroll }" @click="toggleAutoScroll">
               <i class="fas fa-arrow-down" />
               自动滚动
             </button>
           </div>
         </div>
-        <div
-          ref="logViewer"
-          class="log-viewer"
-        >
-          <div
-            v-for="log in logs"
-            :key="log.id"
-            class="log-entry"
-            :class="`log-${log.level}`"
-          >
+        <div ref="logViewer" class="log-viewer">
+          <div v-for="log in logs" :key="log.id" class="log-entry" :class="`log-${log.level}`">
             <span class="log-time">{{ formatTime(log.timestamp) }}</span>
             <span class="log-level">{{ log.level.toUpperCase() }}</span>
             <span class="log-message">{{ log.message }}</span>
-            <span
-              v-if="log.metadata"
-              class="log-metadata"
-            >
+            <span v-if="log.metadata" class="log-metadata">
               {{ JSON.stringify(log.metadata, null, 2) }}
             </span>
           </div>
@@ -157,9 +112,7 @@
 
       <!-- 代码生成演示区域 -->
       <div class="generation-demo">
-        <h2 class="section-title">
-          代码生成演示
-        </h2>
+        <h2 class="section-title">代码生成演示</h2>
         <div class="demo-controls">
           <div class="schema-input">
             <label for="schema-editor">输入Schema:</label>
@@ -172,54 +125,26 @@
             />
           </div>
           <div class="generation-controls">
-            <button
-              class="generate-btn"
-              :disabled="loading"
-              @click="generateCode"
-            >
+            <button class="generate-btn" :disabled="loading" @click="generateCode">
               <i class="fas fa-code" />
               生成代码
             </button>
-            <select
-              v-model="selectedPlugin"
-              class="plugin-selector"
-            >
-              <option value="vue3">
-                Vue3 生成器
-              </option>
-              <option
-                value="react"
-                disabled
-              >
-                React 生成器 (待开发)
-              </option>
-              <option
-                value="angular"
-                disabled
-              >
-                Angular 生成器 (待开发)
-              </option>
+            <select v-model="selectedPlugin" class="plugin-selector">
+              <option value="vue3">Vue3 生成器</option>
+              <option value="react" disabled>React 生成器 (待开发)</option>
+              <option value="angular" disabled>Angular 生成器 (待开发)</option>
             </select>
           </div>
         </div>
-        <div
-          v-if="generatedCode"
-          class="generated-output"
-        >
+        <div v-if="generatedCode" class="generated-output">
           <h3>生成结果:</h3>
           <pre class="code-output"><code>{{ generatedCode }}</code></pre>
           <div class="output-actions">
-            <button
-              class="copy-btn"
-              @click="copyCode"
-            >
+            <button class="copy-btn" @click="copyCode">
               <i class="fas fa-copy" />
               复制代码
             </button>
-            <button
-              class="download-btn"
-              @click="downloadCode"
-            >
+            <button class="download-btn" @click="downloadCode">
               <i class="fas fa-download" />
               下载文件
             </button>
@@ -231,14 +156,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, computed } from 'vue'
-import { logger } from '../../../../../src/utils/logging'
+import { ref, onMounted, nextTick, computed } from "vue"
+import { logger } from "../../../../../src/utils/logging"
 // 注释掉缺失的模块导入
 // import { LowCodeKernel } from '../../../../lowcode-core/src'
 // import { Vue3Plugin } from '../../../../lowcode-codegen/src'
 
 // 组件日志器
-const componentLogger = logger.child({ component: 'LowCodeEngineView' })
+const componentLogger = logger.child({ component: "LowCodeEngineView" })
 
 // 响应式状态
 const loading = ref(false)
@@ -251,7 +176,7 @@ const engineStatus = ref({
   healthy: false,
   pluginsCount: 0,
   avgGenerationTime: 0,
-  successRate: 0
+  successRate: 0,
 })
 
 // 日志系统
@@ -287,15 +212,15 @@ const demoSchema = ref(`{
   "emits": ["click"]
 }`)
 
-const selectedPlugin = ref('vue3')
-const generatedCode = ref('')
+const selectedPlugin = ref("vue3")
+const generatedCode = ref("")
 
 // 计算属性
 const formattedStatus = computed(() => {
   return {
     ...engineStatus.value,
-    statusText: engineStatus.value.healthy ? '运行正常' : '异常',
-    statusClass: engineStatus.value.healthy ? 'status-healthy' : 'status-error'
+    statusText: engineStatus.value.healthy ? "运行正常" : "异常",
+    statusClass: engineStatus.value.healthy ? "status-healthy" : "status-error",
   }
 })
 
@@ -312,7 +237,7 @@ const addLog = (level: string, message: string, metadata?: any) => {
     level,
     message,
     timestamp: Date.now(),
-    metadata
+    metadata,
   }
 
   logs.value.push(log)
@@ -338,26 +263,25 @@ const formatTime = (timestamp: number) => {
 
 const initializeEngine = async () => {
   loading.value = true
-  addLog('info', '正在初始化低代码引擎...', { action: 'init' })
+  addLog("info", "正在初始化低代码引擎...", { action: "init" })
 
   try {
     // 注释掉使用缺失模块的代码
-    addLog('info', '内核创建完成')
-    addLog('success', '内核初始化完成')
-    addLog('success', 'Vue3插件注册成功')
+    addLog("info", "内核创建完成")
+    addLog("success", "内核初始化完成")
+    addLog("success", "Vue3插件注册成功")
 
     engineInstance.value = { isHealthy: () => true }
 
     // 更新状态
     updateEngineStatus()
 
-    addLog('success', '低代码引擎初始化完成！')
-    componentLogger.info('低代码引擎初始化成功')
-
+    addLog("success", "低代码引擎初始化完成！")
+    componentLogger.info("低代码引擎初始化成功")
   } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : '未知错误'
-    addLog('error', `引擎初始化失败: ${errorMsg}`, { error })
-    componentLogger.error('低代码引擎初始化失败', error as Error)
+    const errorMsg = error instanceof Error ? error.message : "未知错误"
+    addLog("error", `引擎初始化失败: ${errorMsg}`, { error })
+    componentLogger.error("低代码引擎初始化失败", error as Error)
   } finally {
     loading.value = false
   }
@@ -369,7 +293,7 @@ const updateEngineStatus = () => {
       healthy: false,
       pluginsCount: 0,
       avgGenerationTime: 0,
-      successRate: 0
+      successRate: 0,
     }
     return
   }
@@ -379,29 +303,28 @@ const updateEngineStatus = () => {
     healthy,
     pluginsCount: 1, // 目前只有Vue3插件
     avgGenerationTime: 120, // 模拟数据
-    successRate: healthy ? 98.5 : 0
+    successRate: healthy ? 98.5 : 0,
   }
 }
 
 const runExample = async () => {
   if (!engineInstance.value) {
-    addLog('error', '请先初始化引擎')
+    addLog("error", "请先初始化引擎")
     return
   }
 
   loading.value = true
-  addLog('info', '运行代码生成示例...', { action: 'example' })
+  addLog("info", "运行代码生成示例...", { action: "example" })
 
   try {
     const schema = JSON.parse(demoSchema.value)
     const result = await engineInstance.value.generate(schema)
 
-    generatedCode.value = result.result?.toString() || '生成失败'
-    addLog('success', '示例运行成功', { resultLength: generatedCode.value.length })
-
+    generatedCode.value = result.result?.toString() || "生成失败"
+    addLog("success", "示例运行成功", { resultLength: generatedCode.value.length })
   } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : '未知错误'
-    addLog('error', `示例运行失败: ${errorMsg}`, { error })
+    const errorMsg = error instanceof Error ? error.message : "未知错误"
+    addLog("error", `示例运行失败: ${errorMsg}`, { error })
   } finally {
     loading.value = false
   }
@@ -409,7 +332,7 @@ const runExample = async () => {
 
 const generateCode = async () => {
   if (!engineInstance.value) {
-    addLog('error', '请先初始化引擎')
+    addLog("error", "请先初始化引擎")
     return
   }
 
@@ -418,27 +341,26 @@ const generateCode = async () => {
 
   try {
     const schema = JSON.parse(demoSchema.value)
-    addLog('info', '开始生成代码...', { plugin: selectedPlugin.value })
+    addLog("info", "开始生成代码...", { plugin: selectedPlugin.value })
 
     const result = await engineInstance.value.generate(schema)
     const duration = Date.now() - startTime
 
-    generatedCode.value = result.result?.toString() || '生成失败'
-    addLog('success', `代码生成完成 (${duration}ms)`, {
+    generatedCode.value = result.result?.toString() || "生成失败"
+    addLog("success", `代码生成完成 (${duration}ms)`, {
       duration,
-      codeLength: generatedCode.value.length
+      codeLength: generatedCode.value.length,
     })
-
   } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : '生成失败'
-    addLog('error', `代码生成失败: ${errorMsg}`, { error })
+    const errorMsg = error instanceof Error ? error.message : "生成失败"
+    addLog("error", `代码生成失败: ${errorMsg}`, { error })
   } finally {
     loading.value = false
   }
 }
 
 const showPerformanceTest = () => {
-  addLog('info', '性能测试功能开发中...', { feature: 'performance' })
+  addLog("info", "性能测试功能开发中...", { feature: "performance" })
 }
 
 const exportDiagnostic = () => {
@@ -449,13 +371,13 @@ const exportDiagnostic = () => {
       logs: logs.value.slice(-20), // 最近20条日志
       systemInfo: {
         userAgent: navigator.userAgent,
-        url: window.location.href
-      }
+        url: window.location.href,
+      },
     }
 
-    const blob = new Blob([JSON.stringify(diagnostic, null, 2)], { type: 'application/json' })
+    const blob = new Blob([JSON.stringify(diagnostic, null, 2)], { type: "application/json" })
     const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
+    const a = document.createElement("a")
     a.href = url
     a.download = `lowcode-diagnostic-${Date.now()}.json`
     document.body.appendChild(a)
@@ -463,53 +385,53 @@ const exportDiagnostic = () => {
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
 
-    addLog('success', '诊断报告导出成功')
+    addLog("success", "诊断报告导出成功")
   } catch (error) {
-    addLog('error', '诊断报告导出失败', { error })
+    addLog("error", "诊断报告导出失败", { error })
   }
 }
 
 const copyCode = async () => {
   try {
     await navigator.clipboard.writeText(generatedCode.value)
-    addLog('success', '代码已复制到剪贴板')
+    addLog("success", "代码已复制到剪贴板")
   } catch (error) {
-    addLog('error', '复制失败', { error })
+    addLog("error", "复制失败", { error })
   }
 }
 
 const downloadCode = () => {
   try {
-    const blob = new Blob([generatedCode.value], { type: 'text/plain' })
+    const blob = new Blob([generatedCode.value], { type: "text/plain" })
     const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
+    const a = document.createElement("a")
     a.href = url
-    a.download = 'generated-component.vue'
+    a.download = "generated-component.vue"
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
 
-    addLog('success', '代码文件下载完成')
+    addLog("success", "代码文件下载完成")
   } catch (error) {
-    addLog('error', '下载失败', { error })
+    addLog("error", "下载失败", { error })
   }
 }
 
 const clearLogs = () => {
   logs.value = []
-  addLog('info', '日志已清空')
+  addLog("info", "日志已清空")
 }
 
 const toggleAutoScroll = () => {
   autoScroll.value = !autoScroll.value
-  addLog('info', `自动滚动已${autoScroll.value ? '启用' : '禁用'}`)
+  addLog("info", `自动滚动已${autoScroll.value ? "启用" : "禁用"}`)
 }
 
 // 生命周期
 onMounted(() => {
-  componentLogger.info('低代码引擎控制台加载完成')
-  addLog('info', '欢迎使用SmartAbp低代码引擎控制台', { version: '1.0.0' })
+  componentLogger.info("低代码引擎控制台加载完成")
+  addLog("info", "欢迎使用SmartAbp低代码引擎控制台", { version: "1.0.0" })
 
   // 确保所有计算属性被正确引用
   void getEngineStatusDisplay // 显式引用函数避免未使用警告
@@ -583,9 +505,15 @@ onMounted(() => {
 }
 
 @keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .card-content h3 {
@@ -860,7 +788,8 @@ onMounted(() => {
   gap: var(--spacing-2);
 }
 
-.copy-btn, .download-btn {
+.copy-btn,
+.download-btn {
   padding: var(--spacing-2) var(--spacing-3);
   background: var(--theme-bg-base);
   border: 1px solid var(--theme-border-base);
@@ -873,7 +802,8 @@ onMounted(() => {
   color: var(--theme-text-primary);
 }
 
-.copy-btn:hover, .download-btn:hover {
+.copy-btn:hover,
+.download-btn:hover {
   background: var(--theme-bg-hover);
 }
 

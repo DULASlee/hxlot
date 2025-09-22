@@ -29,26 +29,27 @@ namespace SmartAbp.CodeGenerator.Core
             _projectFileGenerator = projectFileGenerator;
         }
 
-        public Task<Dictionary<string, string>> GenerateAsync(ModuleMetadataDto metadata, string solutionRoot)
+        public async Task<Dictionary<string, string>> GenerateAsync(ModuleMetadataDto metadata, string solutionRoot)
         {
             var generatedFiles = new Dictionary<string, string>();
 
-            _domainGenerator.Generate(metadata, solutionRoot)
-                .ToList().ForEach(x => generatedFiles.Add(x.Key, x.Value));
-            
-            _efCoreGenerator.Generate(metadata, solutionRoot)
-                .ToList().ForEach(x => generatedFiles.Add(x.Key, x.Value));
+            // 使用更高效的方式合并字典，避免多次ToList和ForEach
+            await AddGeneratedFilesAsync(_domainGenerator.Generate(metadata, solutionRoot), generatedFiles);
+            await AddGeneratedFilesAsync(_efCoreGenerator.Generate(metadata, solutionRoot), generatedFiles);
+            await AddGeneratedFilesAsync(_applicationContractsGenerator.Generate(metadata, solutionRoot), generatedFiles);
+            await AddGeneratedFilesAsync(_applicationGenerator.Generate(metadata, solutionRoot), generatedFiles);
+            await AddGeneratedFilesAsync(_projectFileGenerator.Generate(metadata, solutionRoot), generatedFiles);
 
-            _applicationContractsGenerator.Generate(metadata, solutionRoot)
-                .ToList().ForEach(x => generatedFiles.Add(x.Key, x.Value));
+            return generatedFiles;
+        }
 
-            _applicationGenerator.Generate(metadata, solutionRoot)
-                .ToList().ForEach(x => generatedFiles.Add(x.Key, x.Value));
-
-            _projectFileGenerator.Generate(metadata, solutionRoot)
-                .ToList().ForEach(x => generatedFiles.Add(x.Key, x.Value));
-
-            return Task.FromResult(generatedFiles);
+        private async Task AddGeneratedFilesAsync(Task<Dictionary<string, string>> generationTask, Dictionary<string, string> targetDictionary)
+        {
+            var files = await generationTask.ConfigureAwait(false);
+            foreach (var file in files)
+            {
+                targetDictionary[file.Key] = file.Value;
+            }
         }
     }
 }

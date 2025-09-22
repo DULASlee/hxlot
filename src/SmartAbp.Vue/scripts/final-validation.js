@@ -5,10 +5,10 @@
  * Quality Gates, Security Scan, Production Deployment Preparation
  */
 
-const fs = require('fs')
-const path = require('path')
-const { execSync } = require('child_process')
-const chalk = require('chalk')
+const fs = require("fs")
+const path = require("path")
+const { execSync } = require("child_process")
+const chalk = require("chalk")
 
 class FinalValidationSuite {
   constructor() {
@@ -17,38 +17,38 @@ class FinalValidationSuite {
       qualityGates: {},
       securityScan: {},
       deploymentPrep: {},
-      overall: { passed: false, score: 0 }
+      overall: { passed: false, score: 0 },
     }
   }
 
   async runFullValidation() {
-    console.log(chalk.blue.bold('\n🚀 Starting Final Validation Suite...\n'))
+    console.log(chalk.blue.bold("\n🚀 Starting Final Validation Suite...\n"))
 
     try {
       const startTime = Date.now()
 
       // Step 1: Quality Gates
-      console.log(chalk.yellow('📊 Step 1: Quality Gates Validation'))
+      console.log(chalk.yellow("📊 Step 1: Quality Gates Validation"))
       await this.runQualityGates()
 
       // Step 2: Security Scan
-      console.log(chalk.yellow('🔒 Step 2: Security Scan'))
+      console.log(chalk.yellow("🔒 Step 2: Security Scan"))
       await this.runSecurityScan()
 
       // Step 3: Performance Validation
-      console.log(chalk.yellow('⚡ Step 3: Performance Validation'))
+      console.log(chalk.yellow("⚡ Step 3: Performance Validation"))
       await this.runPerformanceValidation()
 
       // Step 4: Accessibility Audit
-      console.log(chalk.yellow('♿ Step 4: Accessibility Audit'))
+      console.log(chalk.yellow("♿ Step 4: Accessibility Audit"))
       await this.runAccessibilityAudit()
 
       // Step 5: Cross-browser Testing
-      console.log(chalk.yellow('🌐 Step 5: Cross-browser Testing'))
+      console.log(chalk.yellow("🌐 Step 5: Cross-browser Testing"))
       await this.runCrossBrowserTesting()
 
       // Step 6: Deployment Preparation
-      console.log(chalk.yellow('📦 Step 6: Deployment Preparation'))
+      console.log(chalk.yellow("📦 Step 6: Deployment Preparation"))
       await this.runDeploymentPreparation()
 
       // Calculate overall results
@@ -62,77 +62,77 @@ class FinalValidationSuite {
 
       // Exit with appropriate code
       process.exit(this.validationResults.overall.passed ? 0 : 1)
-
     } catch (error) {
-      console.error(chalk.red.bold('\n❌ Final Validation Failed:'), error.message)
+      console.error(chalk.red.bold("\n❌ Final Validation Failed:"), error.message)
       process.exit(1)
     }
   }
 
   async runQualityGates() {
     const gates = {
-      typeCheck: { threshold: 100, description: 'TypeScript 类型检查' },
-      linting: { threshold: 100, description: 'ESLint 代码规范' },
-      unitTests: { threshold: 90, description: '单元测试覆盖率' },
-      e2eTests: { threshold: 80, description: 'E2E 测试覆盖率' },
-      buildSuccess: { threshold: 100, description: '构建成功率' }
+      typeCheck: { threshold: 100, description: "TypeScript 类型检查" },
+      linting: { threshold: 100, description: "ESLint 代码规范" },
+      unitTests: { threshold: 90, description: "单元测试覆盖率" },
+      e2eTests: { threshold: 80, description: "E2E 测试覆盖率" },
+      buildSuccess: { threshold: 100, description: "构建成功率" },
     }
 
     for (const [gate, config] of Object.entries(gates)) {
       console.log(`  • ${config.description}...`)
-      
+
       try {
         let score = 0
-        
+
         switch (gate) {
-          case 'typeCheck':
-            execSync('npm run type-check', { stdio: 'pipe' })
+          case "typeCheck":
+            execSync("npm run type-check", { stdio: "pipe" })
             score = 100
             break
-            
-          case 'linting':
-            const lintResult = execSync('npm run lint', { encoding: 'utf8' })
-            score = lintResult.includes('error') ? 0 : 100
+
+          case "linting":
+            const lintResult = execSync("npm run lint", { encoding: "utf8" })
+            score = lintResult.includes("error") ? 0 : 100
             break
-            
-          case 'unitTests':
-            const testResult = execSync('npm run test:coverage', { encoding: 'utf8' })
+
+          case "unitTests":
+            const testResult = execSync("npm run test:coverage", { encoding: "utf8" })
             const coverageMatch = testResult.match(/All files\s+\|\s+([\d.]+)/)
             score = coverageMatch ? parseFloat(coverageMatch[1]) : 0
             break
-            
-          case 'e2eTests':
+
+          case "e2eTests":
             try {
-              execSync('npm run cypress:run', { stdio: 'pipe' })
+              execSync("npm run cypress:run", { stdio: "pipe" })
               score = 85 // Assume good E2E coverage
             } catch {
               score = 0
             }
             break
-            
-          case 'buildSuccess':
-            execSync('npm run build', { stdio: 'pipe' })
+
+          case "buildSuccess":
+            execSync("npm run build", { stdio: "pipe" })
             score = 100
             break
         }
-        
+
         const passed = score >= config.threshold
         this.validationResults.qualityGates[gate] = {
           score,
           threshold: config.threshold,
           passed,
-          description: config.description
+          description: config.description,
         }
-        
-        console.log(`    ${passed ? '✅' : '❌'} ${config.description}: ${score}/${config.threshold}`)
-        
+
+        console.log(
+          `    ${passed ? "✅" : "❌"} ${config.description}: ${score}/${config.threshold}`,
+        )
       } catch (error) {
         this.validationResults.qualityGates[gate] = {
           score: 0,
           threshold: config.threshold,
           passed: false,
           description: config.description,
-          error: error.message
+          error: error.message,
         }
         console.log(`    ❌ ${config.description}: 失败`)
       }
@@ -141,58 +141,57 @@ class FinalValidationSuite {
 
   async runSecurityScan() {
     const securityChecks = {
-      vulnerabilities: { description: 'NPM 漏洞扫描' },
-      sensitiveData: { description: '敏感数据检测' },
-      dependencies: { description: '依赖安全检查' },
-      codeAnalysis: { description: '代码安全分析' }
+      vulnerabilities: { description: "NPM 漏洞扫描" },
+      sensitiveData: { description: "敏感数据检测" },
+      dependencies: { description: "依赖安全检查" },
+      codeAnalysis: { description: "代码安全分析" },
     }
 
     for (const [check, config] of Object.entries(securityChecks)) {
       console.log(`  • ${config.description}...`)
-      
+
       try {
         let result = { passed: false, issues: [] }
-        
+
         switch (check) {
-          case 'vulnerabilities':
-            const auditResult = execSync('npm audit --audit-level high', { 
-              encoding: 'utf8',
-              stdio: 'pipe' 
+          case "vulnerabilities":
+            const auditResult = execSync("npm audit --audit-level high", {
+              encoding: "utf8",
+              stdio: "pipe",
             })
-            result.passed = !auditResult.includes('high')
+            result.passed = !auditResult.includes("high")
             if (!result.passed) {
-              result.issues = ['发现高危漏洞，请运行 npm audit fix']
+              result.issues = ["发现高危漏洞，请运行 npm audit fix"]
             }
             break
-            
-          case 'sensitiveData':
+
+          case "sensitiveData":
             result = this.scanSensitiveData()
             break
-            
-          case 'dependencies':
+
+          case "dependencies":
             result = this.checkDependencySecurity()
             break
-            
-          case 'codeAnalysis':
+
+          case "codeAnalysis":
             result = await this.runCodeSecurityAnalysis()
             break
         }
-        
+
         this.validationResults.securityScan[check] = {
           ...result,
-          description: config.description
+          description: config.description,
         }
-        
-        console.log(`    ${result.passed ? '✅' : '❌'} ${config.description}`)
+
+        console.log(`    ${result.passed ? "✅" : "❌"} ${config.description}`)
         if (result.issues.length > 0) {
-          result.issues.forEach(issue => console.log(`      - ${issue}`))
+          result.issues.forEach((issue) => console.log(`      - ${issue}`))
         }
-        
       } catch (error) {
         this.validationResults.securityScan[check] = {
           passed: false,
           issues: [error.message],
-          description: config.description
+          description: config.description,
         }
         console.log(`    ❌ ${config.description}: 检查失败`)
       }
@@ -200,88 +199,85 @@ class FinalValidationSuite {
   }
 
   async runPerformanceValidation() {
-    console.log('  • 运行性能分析...')
-    
+    console.log("  • 运行性能分析...")
+
     try {
       // Run performance analysis
-      const performanceScript = path.join(__dirname, 'performance-analysis.js')
-      const perfResult = execSync(`node ${performanceScript} full`, { 
-        encoding: 'utf8',
-        stdio: 'pipe' 
+      const performanceScript = path.join(__dirname, "performance-analysis.js")
+      const perfResult = execSync(`node ${performanceScript} full`, {
+        encoding: "utf8",
+        stdio: "pipe",
       })
-      
+
       const bundleSizeCheck = this.checkBundleSize()
       const loadTimeCheck = this.checkLoadTime()
-      
+
       this.validationResults.performance = {
         bundleSize: bundleSizeCheck,
         loadTime: loadTimeCheck,
-        passed: bundleSizeCheck.passed && loadTimeCheck.passed
+        passed: bundleSizeCheck.passed && loadTimeCheck.passed,
       }
-      
-      console.log(`    ${this.validationResults.performance.passed ? '✅' : '❌'} 性能验证`)
-      
+
+      console.log(`    ${this.validationResults.performance.passed ? "✅" : "❌"} 性能验证`)
     } catch (error) {
       this.validationResults.performance = {
         passed: false,
-        error: error.message
+        error: error.message,
       }
       console.log(`    ❌ 性能验证: 失败`)
     }
   }
 
   async runAccessibilityAudit() {
-    console.log('  • 无障碍访问审计...')
-    
+    console.log("  • 无障碍访问审计...")
+
     try {
       // Start development server
-      const serverProcess = execSync('npm run serve &', { stdio: 'pipe' })
-      await new Promise(resolve => setTimeout(resolve, 5000))
-      
+      const serverProcess = execSync("npm run serve &", { stdio: "pipe" })
+      await new Promise((resolve) => setTimeout(resolve, 5000))
+
       // Run axe accessibility tests
       const axeResult = await this.runAxeAudit()
-      
+
       // Kill server
-      execSync('pkill -f "serve"', { stdio: 'pipe' })
-      
+      execSync('pkill -f "serve"', { stdio: "pipe" })
+
       this.validationResults.accessibility = axeResult
-      console.log(`    ${axeResult.passed ? '✅' : '❌'} 无障碍访问审计`)
-      
+      console.log(`    ${axeResult.passed ? "✅" : "❌"} 无障碍访问审计`)
     } catch (error) {
       this.validationResults.accessibility = {
         passed: false,
-        error: error.message
+        error: error.message,
       }
       console.log(`    ❌ 无障碍访问审计: 失败`)
     }
   }
 
   async runCrossBrowserTesting() {
-    console.log('  • 跨浏览器兼容性测试...')
-    
+    console.log("  • 跨浏览器兼容性测试...")
+
     try {
       // Mock cross-browser testing results
       // In real implementation, this would run tests across different browsers
       const browserResults = {
-        chrome: { passed: true, version: '120+' },
-        firefox: { passed: true, version: '119+' },
-        safari: { passed: true, version: '16+' },
-        edge: { passed: true, version: '120+' }
+        chrome: { passed: true, version: "120+" },
+        firefox: { passed: true, version: "119+" },
+        safari: { passed: true, version: "16+" },
+        edge: { passed: true, version: "120+" },
       }
-      
-      const allPassed = Object.values(browserResults).every(result => result.passed)
-      
+
+      const allPassed = Object.values(browserResults).every((result) => result.passed)
+
       this.validationResults.crossBrowser = {
         results: browserResults,
-        passed: allPassed
+        passed: allPassed,
       }
-      
-      console.log(`    ${allPassed ? '✅' : '❌'} 跨浏览器兼容性测试`)
-      
+
+      console.log(`    ${allPassed ? "✅" : "❌"} 跨浏览器兼容性测试`)
     } catch (error) {
       this.validationResults.crossBrowser = {
         passed: false,
-        error: error.message
+        error: error.message,
       }
       console.log(`    ❌ 跨浏览器兼容性测试: 失败`)
     }
@@ -289,53 +285,52 @@ class FinalValidationSuite {
 
   async runDeploymentPreparation() {
     const deploymentChecks = {
-      buildOptimization: { description: '构建优化检查' },
-      assetOptimization: { description: '资源优化检查' },
-      configValidation: { description: '配置文件验证' },
-      documentationComplete: { description: '文档完整性检查' },
-      versionTagging: { description: '版本标记检查' }
+      buildOptimization: { description: "构建优化检查" },
+      assetOptimization: { description: "资源优化检查" },
+      configValidation: { description: "配置文件验证" },
+      documentationComplete: { description: "文档完整性检查" },
+      versionTagging: { description: "版本标记检查" },
     }
 
     for (const [check, config] of Object.entries(deploymentChecks)) {
       console.log(`  • ${config.description}...`)
-      
+
       try {
         let result = { passed: false }
-        
+
         switch (check) {
-          case 'buildOptimization':
+          case "buildOptimization":
             result = this.checkBuildOptimization()
             break
-            
-          case 'assetOptimization':
+
+          case "assetOptimization":
             result = this.checkAssetOptimization()
             break
-            
-          case 'configValidation':
+
+          case "configValidation":
             result = this.validateConfigurations()
             break
-            
-          case 'documentationComplete':
+
+          case "documentationComplete":
             result = this.checkDocumentationCompleteness()
             break
-            
-          case 'versionTagging':
+
+          case "versionTagging":
             result = this.checkVersionTagging()
             break
         }
-        
+
         this.validationResults.deploymentPrep[check] = {
           ...result,
-          description: config.description
+          description: config.description,
         }
-        
-        console.log(`    ${result.passed ? '✅' : '❌'} ${config.description}`)
-        
+
+        console.log(`    ${result.passed ? "✅" : "❌"} ${config.description}`)
       } catch (error) {
         this.validationResults.deploymentPrep[check] = {
           passed: false,
           error: error.message,
-          description: config.description
+          description: config.description,
         }
         console.log(`    ❌ ${config.description}: 失败`)
       }
@@ -344,49 +339,43 @@ class FinalValidationSuite {
 
   // Helper methods for specific checks
   scanSensitiveData() {
-    const sensitivePatterns = [
-      /api[_-]?key/i,
-      /secret/i,
-      /password/i,
-      /token/i,
-      /auth[_-]?key/i
-    ]
-    
+    const sensitivePatterns = [/api[_-]?key/i, /secret/i, /password/i, /token/i, /auth[_-]?key/i]
+
     const issues = []
     const filesToCheck = this.getSourceFiles()
-    
-    filesToCheck.forEach(file => {
-      const content = fs.readFileSync(file, 'utf8')
-      sensitivePatterns.forEach(pattern => {
-        if (pattern.test(content) && !content.includes('// @allow-sensitive')) {
+
+    filesToCheck.forEach((file) => {
+      const content = fs.readFileSync(file, "utf8")
+      sensitivePatterns.forEach((pattern) => {
+        if (pattern.test(content) && !content.includes("// @allow-sensitive")) {
           issues.push(`可能的敏感数据泄露: ${file}`)
         }
       })
     })
-    
+
     return {
       passed: issues.length === 0,
-      issues
+      issues,
     }
   }
 
   checkDependencySecurity() {
-    const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'))
+    const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"))
     const issues = []
-    
+
     // Check for known vulnerable packages
-    const vulnerablePackages = ['lodash@4.17.20', 'axios@0.19.0']
-    
+    const vulnerablePackages = ["lodash@4.17.20", "axios@0.19.0"]
+
     for (const [pkg, version] of Object.entries(packageJson.dependencies || {})) {
       const pkgStr = `${pkg}@${version}`
-      if (vulnerablePackages.some(vuln => pkgStr.includes(vuln))) {
+      if (vulnerablePackages.some((vuln) => pkgStr.includes(vuln))) {
         issues.push(`发现已知漏洞包: ${pkgStr}`)
       }
     }
-    
+
     return {
       passed: issues.length === 0,
-      issues
+      issues,
     }
   }
 
@@ -395,16 +384,16 @@ class FinalValidationSuite {
     // In real implementation, this would run tools like SonarQube, CodeQL, etc.
     return {
       passed: true,
-      issues: []
+      issues: [],
     }
   }
 
   checkBundleSize() {
-    const distPath = path.join(this.projectRoot, 'dist')
+    const distPath = path.join(this.projectRoot, "dist")
     if (!fs.existsSync(distPath)) {
-      return { passed: false, reason: '构建文件不存在' }
+      return { passed: false, reason: "构建文件不存在" }
     }
-    
+
     let totalSize = 0
     const calculateSize = (dir) => {
       const files = fs.readdirSync(dir)
@@ -418,16 +407,17 @@ class FinalValidationSuite {
         }
       }
     }
-    
+
     calculateSize(distPath)
     const sizeInMB = totalSize / 1024 / 1024
     const threshold = 5 // 5MB threshold
-    
+
     return {
       passed: sizeInMB <= threshold,
       size: sizeInMB,
       threshold,
-      reason: sizeInMB > threshold ? `包大小 ${sizeInMB.toFixed(2)}MB 超过阈值 ${threshold}MB` : null
+      reason:
+        sizeInMB > threshold ? `包大小 ${sizeInMB.toFixed(2)}MB 超过阈值 ${threshold}MB` : null,
     }
   }
 
@@ -436,7 +426,7 @@ class FinalValidationSuite {
     return {
       passed: true,
       loadTime: 1.2,
-      threshold: 3.0
+      threshold: 3.0,
     }
   }
 
@@ -445,80 +435,75 @@ class FinalValidationSuite {
     return {
       passed: true,
       violations: 0,
-      issues: []
+      issues: [],
     }
   }
 
   checkBuildOptimization() {
-    const buildConfigExists = fs.existsSync('webpack.performance.config.js')
-    const viteConfigExists = fs.existsSync('vite.config.ts')
-    
+    const buildConfigExists = fs.existsSync("webpack.performance.config.js")
+    const viteConfigExists = fs.existsSync("vite.config.ts")
+
     return {
       passed: buildConfigExists || viteConfigExists,
       details: {
         webpackConfig: buildConfigExists,
-        viteConfig: viteConfigExists
-      }
+        viteConfig: viteConfigExists,
+      },
     }
   }
 
   checkAssetOptimization() {
-    const distPath = path.join(this.projectRoot, 'dist')
+    const distPath = path.join(this.projectRoot, "dist")
     if (!fs.existsSync(distPath)) {
-      return { passed: false, reason: '构建目录不存在' }
+      return { passed: false, reason: "构建目录不存在" }
     }
-    
-    const hasGzippedAssets = fs.readdirSync(distPath)
-      .some(file => file.endsWith('.gz'))
-    
+
+    const hasGzippedAssets = fs.readdirSync(distPath).some((file) => file.endsWith(".gz"))
+
     return {
       passed: hasGzippedAssets,
-      reason: !hasGzippedAssets ? '缺少Gzip压缩资源' : null
+      reason: !hasGzippedAssets ? "缺少Gzip压缩资源" : null,
     }
   }
 
   validateConfigurations() {
     const requiredConfigs = [
-      'package.json',
-      'tsconfig.json',
-      'vite.config.ts',
-      '.storybook/main.ts'
+      "package.json",
+      "tsconfig.json",
+      "vite.config.ts",
+      ".storybook/main.ts",
     ]
-    
-    const missingConfigs = requiredConfigs.filter(config => 
-      !fs.existsSync(path.join(this.projectRoot, config))
+
+    const missingConfigs = requiredConfigs.filter(
+      (config) => !fs.existsSync(path.join(this.projectRoot, config)),
     )
-    
+
     return {
       passed: missingConfigs.length === 0,
-      missingConfigs
+      missingConfigs,
     }
   }
 
   checkDocumentationCompleteness() {
-    const requiredDocs = [
-      'README.md',
-      'CHANGELOG.md',
-      'stories/Introduction.stories.mdx'
-    ]
-    
-    const missingDocs = requiredDocs.filter(doc => 
-      !fs.existsSync(path.join(this.projectRoot, doc))
+    const requiredDocs = ["README.md", "CHANGELOG.md", "stories/Introduction.stories.mdx"]
+
+    const missingDocs = requiredDocs.filter(
+      (doc) => !fs.existsSync(path.join(this.projectRoot, doc)),
     )
-    
+
     return {
       passed: missingDocs.length === 0,
-      missingDocs
+      missingDocs,
     }
   }
 
   checkVersionTagging() {
-    const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'))
+    const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"))
     const hasVersion = !!packageJson.version
-    
+
     return {
       passed: hasVersion,
-      version: packageJson.version
+      version: packageJson.version,
     }
   }
 
@@ -529,61 +514,71 @@ class FinalValidationSuite {
       for (const file of files) {
         const filePath = path.join(dir, file)
         const stats = fs.statSync(filePath)
-        if (stats.isDirectory() && !file.startsWith('.') && file !== 'node_modules') {
+        if (stats.isDirectory() && !file.startsWith(".") && file !== "node_modules") {
           scanDir(filePath)
-        } else if (file.endsWith('.ts') || file.endsWith('.vue') || file.endsWith('.js')) {
+        } else if (file.endsWith(".ts") || file.endsWith(".vue") || file.endsWith(".js")) {
           sourceFiles.push(filePath)
         }
       }
     }
-    
-    scanDir(path.join(this.projectRoot, 'src'))
+
+    scanDir(path.join(this.projectRoot, "src"))
     return sourceFiles
   }
 
   calculateOverallResults() {
     const allResults = {
       ...this.validationResults.qualityGates,
-      ...Object.fromEntries(Object.entries(this.validationResults.securityScan).map(([k, v]) => [k, { passed: v.passed }])),
-      ...Object.fromEntries(Object.entries(this.validationResults.deploymentPrep).map(([k, v]) => [k, { passed: v.passed }])),
+      ...Object.fromEntries(
+        Object.entries(this.validationResults.securityScan).map(([k, v]) => [
+          k,
+          { passed: v.passed },
+        ]),
+      ),
+      ...Object.fromEntries(
+        Object.entries(this.validationResults.deploymentPrep).map(([k, v]) => [
+          k,
+          { passed: v.passed },
+        ]),
+      ),
       performance: this.validationResults.performance,
       accessibility: this.validationResults.accessibility,
-      crossBrowser: this.validationResults.crossBrowser
+      crossBrowser: this.validationResults.crossBrowser,
     }
-    
+
     const totalChecks = Object.keys(allResults).length
-    const passedChecks = Object.values(allResults).filter(result => result.passed).length
+    const passedChecks = Object.values(allResults).filter((result) => result.passed).length
     const score = Math.round((passedChecks / totalChecks) * 100)
-    
+
     this.validationResults.overall = {
       passed: score >= 90, // 90% threshold for passing
       score,
       totalChecks,
-      passedChecks
+      passedChecks,
     }
   }
 
   async generateValidationReport() {
     const report = {
       timestamp: new Date().toISOString(),
-      version: JSON.parse(fs.readFileSync('package.json', 'utf8')).version,
+      version: JSON.parse(fs.readFileSync("package.json", "utf8")).version,
       results: this.validationResults,
       summary: {
         overallScore: this.validationResults.overall.score,
         passed: this.validationResults.overall.passed,
-        recommendations: this.generateRecommendations()
-      }
+        recommendations: this.generateRecommendations(),
+      },
     }
-    
+
     // Save JSON report
-    const reportPath = path.join(this.projectRoot, 'validation-report.json')
+    const reportPath = path.join(this.projectRoot, "validation-report.json")
     fs.writeFileSync(reportPath, JSON.stringify(report, null, 2))
-    
+
     // Generate HTML report
     const htmlReport = this.generateHTMLReport(report)
-    const htmlPath = path.join(this.projectRoot, 'validation-report.html')
+    const htmlPath = path.join(this.projectRoot, "validation-report.html")
     fs.writeFileSync(htmlPath, htmlReport)
-    
+
     console.log(chalk.cyan(`\n📊 验证报告已生成:`))
     console.log(`  JSON: ${reportPath}`)
     console.log(`  HTML: ${htmlPath}`)
@@ -591,57 +586,57 @@ class FinalValidationSuite {
 
   generateRecommendations() {
     const recommendations = []
-    
+
     // Quality Gates recommendations
     Object.entries(this.validationResults.qualityGates).forEach(([gate, result]) => {
       if (!result.passed) {
         recommendations.push({
-          type: 'Quality',
-          priority: 'High',
+          type: "Quality",
+          priority: "High",
           issue: `${result.description} 未通过`,
           recommendation: this.getQualityGateRecommendation(gate),
-          impact: 'Critical'
+          impact: "Critical",
         })
       }
     })
-    
+
     // Security recommendations
     Object.entries(this.validationResults.securityScan).forEach(([check, result]) => {
       if (!result.passed) {
         recommendations.push({
-          type: 'Security',
-          priority: 'High',
+          type: "Security",
+          priority: "High",
           issue: `${result.description} 发现问题`,
-          recommendation: result.issues.join(', '),
-          impact: 'High'
+          recommendation: result.issues.join(", "),
+          impact: "High",
         })
       }
     })
-    
+
     // Performance recommendations
     if (this.validationResults.performance && !this.validationResults.performance.passed) {
       recommendations.push({
-        type: 'Performance',
-        priority: 'Medium',
-        issue: '性能指标未达标',
-        recommendation: '优化代码分割、压缩资源、使用CDN',
-        impact: 'Medium'
+        type: "Performance",
+        priority: "Medium",
+        issue: "性能指标未达标",
+        recommendation: "优化代码分割、压缩资源、使用CDN",
+        impact: "Medium",
       })
     }
-    
+
     return recommendations
   }
 
   getQualityGateRecommendation(gate) {
     const recommendations = {
-      typeCheck: '修复TypeScript类型错误',
-      linting: '修复ESLint规范问题',
-      unitTests: '增加单元测试覆盖率',
-      e2eTests: '增加端到端测试用例',
-      buildSuccess: '修复构建错误'
+      typeCheck: "修复TypeScript类型错误",
+      linting: "修复ESLint规范问题",
+      unitTests: "增加单元测试覆盖率",
+      e2eTests: "增加端到端测试用例",
+      buildSuccess: "修复构建错误",
     }
-    
-    return recommendations[gate] || '请查看详细错误信息'
+
+    return recommendations[gate] || "请查看详细错误信息"
   }
 
   generateHTMLReport(report) {
@@ -679,7 +674,7 @@ class FinalValidationSuite {
         <h1>🚀 Advanced UI Components - 最终验证报告</h1>
         
         <div class="summary">
-            <div class="metric-card ${report.results.overall.passed ? 'passed' : 'failed'}">
+            <div class="metric-card ${report.results.overall.passed ? "passed" : "failed"}">
                 <div class="metric-value">${report.results.overall.score}/100</div>
                 <div class="metric-label">总体评分</div>
             </div>
@@ -696,32 +691,44 @@ class FinalValidationSuite {
         <div class="section">
             <h3>📊 质量门禁检查</h3>
             <div class="test-grid">
-                ${Object.entries(report.results.qualityGates).map(([key, result]) => `
-                    <div class="test-item ${result.passed ? 'test-passed' : 'test-failed'}">
+                ${Object.entries(report.results.qualityGates)
+                  .map(
+                    ([key, result]) => `
+                    <div class="test-item ${result.passed ? "test-passed" : "test-failed"}">
                         <strong>${result.description}</strong><br>
                         <span>评分: ${result.score}/${result.threshold}</span><br>
-                        <span>状态: ${result.passed ? '✅ 通过' : '❌ 失败'}</span>
+                        <span>状态: ${result.passed ? "✅ 通过" : "❌ 失败"}</span>
                     </div>
-                `).join('')}
+                `,
+                  )
+                  .join("")}
             </div>
         </div>
         
-        ${report.summary.recommendations.length > 0 ? `
+        ${
+          report.summary.recommendations.length > 0
+            ? `
         <div class="section">
             <h3>🔍 改进建议</h3>
-            ${report.summary.recommendations.map(rec => `
+            ${report.summary.recommendations
+              .map(
+                (rec) => `
                 <div class="recommendation ${rec.priority.toLowerCase()}-priority">
                     <strong>[${rec.priority}] ${rec.type}</strong><br>
                     <strong>问题:</strong> ${rec.issue}<br>
                     <strong>建议:</strong> ${rec.recommendation}<br>
                     <strong>影响:</strong> ${rec.impact}
                 </div>
-            `).join('')}
+            `,
+              )
+              .join("")}
         </div>
-        ` : ''}
+        `
+            : ""
+        }
         
         <div class="timestamp">
-            报告生成时间: ${new Date(report.timestamp).toLocaleString('zh-CN')}
+            报告生成时间: ${new Date(report.timestamp).toLocaleString("zh-CN")}
         </div>
     </div>
 </body>
@@ -730,29 +737,29 @@ class FinalValidationSuite {
   }
 
   displayFinalResults(duration) {
-    console.log(chalk.blue.bold('\n🏁 最终验证结果'))
-    console.log(chalk.gray('─'.repeat(50)))
-    
+    console.log(chalk.blue.bold("\n🏁 最终验证结果"))
+    console.log(chalk.gray("─".repeat(50)))
+
     const { overall } = this.validationResults
-    const color = overall.passed ? 'green' : 'red'
-    const status = overall.passed ? '通过' : '失败'
-    
-    console.log(`总体评分: ${chalk[color](overall.score + '/100')}`)
+    const color = overall.passed ? "green" : "red"
+    const status = overall.passed ? "通过" : "失败"
+
+    console.log(`总体评分: ${chalk[color](overall.score + "/100")}`)
     console.log(`验证状态: ${chalk[color](status)}`)
     console.log(`通过检查: ${overall.passedChecks}/${overall.totalChecks}`)
     console.log(`执行时间: ${this.formatDuration(duration)}`)
-    
+
     if (overall.passed) {
-      console.log(chalk.green.bold('\n🎉 恭喜！项目已通过所有验证检查，可以进行生产部署！'))
+      console.log(chalk.green.bold("\n🎉 恭喜！项目已通过所有验证检查，可以进行生产部署！"))
     } else {
-      console.log(chalk.red.bold('\n⚠️  项目未通过验证，请查看报告并修复问题后重新验证。'))
+      console.log(chalk.red.bold("\n⚠️  项目未通过验证，请查看报告并修复问题后重新验证。"))
     }
   }
 
   formatDuration(ms) {
     const seconds = Math.floor(ms / 1000)
     const minutes = Math.floor(seconds / 60)
-    
+
     if (minutes > 0) {
       return `${minutes}分${seconds % 60}秒`
     }

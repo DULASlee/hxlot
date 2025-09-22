@@ -27,14 +27,8 @@
 
     <!-- 高级搜索面板 -->
     <el-collapse-transition>
-      <div
-        v-show="showAdvanced"
-        class="advanced-search"
-      >
-        <el-card
-          shadow="never"
-          class="search-panel"
-        >
+      <div v-show="showAdvanced" class="advanced-search">
+        <el-card shadow="never" class="search-panel">
           <div class="search-options">
             <!-- 时间范围 -->
             <div class="option-group">
@@ -54,10 +48,7 @@
             <!-- 日志级别 -->
             <div class="option-group">
               <label class="option-label">日志级别</label>
-              <el-checkbox-group
-                v-model="selectedLevels"
-                @change="handleLevelChange"
-              >
+              <el-checkbox-group v-model="selectedLevels" @change="handleLevelChange">
                 <el-checkbox
                   v-for="level in logLevels"
                   :key="level.value"
@@ -113,22 +104,13 @@
             <div class="option-group">
               <label class="option-label">搜索选项</label>
               <div class="search-options-checkboxes">
-                <el-checkbox
-                  v-model="searchOptions.caseSensitive"
-                  @change="handleSearch"
-                >
+                <el-checkbox v-model="searchOptions.caseSensitive" @change="handleSearch">
                   区分大小写
                 </el-checkbox>
-                <el-checkbox
-                  v-model="searchOptions.useRegex"
-                  @change="handleSearch"
-                >
+                <el-checkbox v-model="searchOptions.useRegex" @change="handleSearch">
                   正则表达式
                 </el-checkbox>
-                <el-checkbox
-                  v-model="searchOptions.searchInData"
-                  @change="handleSearch"
-                >
+                <el-checkbox v-model="searchOptions.searchInData" @change="handleSearch">
                   搜索数据字段
                 </el-checkbox>
               </div>
@@ -136,15 +118,8 @@
 
             <!-- 操作按钮 -->
             <div class="option-group">
-              <el-button @click="clearAllFilters">
-                清空所有过滤器
-              </el-button>
-              <el-button
-                type="primary"
-                @click="saveCurrentFilter"
-              >
-                保存当前过滤器
-              </el-button>
+              <el-button @click="clearAllFilters"> 清空所有过滤器 </el-button>
+              <el-button type="primary" @click="saveCurrentFilter"> 保存当前过滤器 </el-button>
             </div>
           </div>
         </el-card>
@@ -167,10 +142,7 @@
 
     <!-- 搜索结果统计 -->
     <div class="search-stats">
-      <el-text
-        size="small"
-        type="info"
-      >
+      <el-text size="small" type="info">
         找到 {{ filteredCount }} 条记录
         <span v-if="searchQuery">，关键词: "{{ searchQuery }}"</span>
       </el-text>
@@ -186,62 +158,38 @@
     </div>
 
     <!-- 保存的过滤器 -->
-    <el-drawer
-      v-model="showSavedFilters"
-      title="保存的过滤器"
-      direction="rtl"
-      size="400px"
-    >
+    <el-drawer v-model="showSavedFilters" title="保存的过滤器" direction="rtl" size="400px">
       <div class="saved-filters">
-        <div
-          v-for="(filter, index) in savedFilters"
-          :key="index"
-          class="saved-filter-item"
-        >
+        <div v-for="(filter, index) in savedFilters" :key="index" class="saved-filter-item">
           <div class="filter-info">
             <h4>{{ filter.name }}</h4>
             <p class="filter-description">
               {{ filter.description }}
             </p>
-            <el-text
-              size="small"
-              type="info"
-            >
-              保存时间: {{ dayjs(filter.createdAt).format('YYYY-MM-DD HH:mm') }}
+            <el-text size="small" type="info">
+              保存时间: {{ dayjs(filter.createdAt).format("YYYY-MM-DD HH:mm") }}
             </el-text>
           </div>
           <div class="filter-actions">
-            <el-button
-              size="small"
-              @click="applySavedFilter(filter)"
-            >
-              应用
-            </el-button>
-            <el-button
-              size="small"
-              type="danger"
-              @click="deleteSavedFilter(index)"
-            >
+            <el-button size="small" @click="applySavedFilter(filter)"> 应用 </el-button>
+            <el-button size="small" type="danger" @click="deleteSavedFilter(index)">
               删除
             </el-button>
           </div>
         </div>
-        <el-empty
-          v-if="savedFilters.length === 0"
-          description="暂无保存的过滤器"
-        />
+        <el-empty v-if="savedFilters.length === 0" description="暂无保存的过滤器" />
       </div>
     </el-drawer>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search } from '@element-plus/icons-vue'
-import { logger, LogLevel, type LogEntry } from '@/utils/logger'
-import { logExporter, ExportFormat } from '@/utils/logExporter'
-import dayjs from 'dayjs'
+import { ref, computed, watch, onMounted } from "vue"
+import { ElMessage, ElMessageBox } from "element-plus"
+import { Search } from "@element-plus/icons-vue"
+import { logger, LogLevel, type LogEntry } from "@/utils/logger"
+import { logExporter, ExportFormat } from "@/utils/logExporter"
+import dayjs from "dayjs"
 
 // Props
 interface Props {
@@ -257,7 +205,7 @@ const emit = defineEmits<{
 }>()
 
 // 响应式数据
-const searchQuery = ref('')
+const searchQuery = ref("")
 const showAdvanced = ref(false)
 const timeRange = ref<[string, string] | null>(null)
 const selectedLevels = ref<LogLevel[]>([
@@ -265,34 +213,34 @@ const selectedLevels = ref<LogLevel[]>([
   LogLevel.INFO,
   LogLevel.SUCCESS,
   LogLevel.WARN,
-  LogLevel.ERROR
+  LogLevel.ERROR,
 ])
 const selectedCategories = ref<string[]>([])
 const selectedSources = ref<string[]>([])
 const searchOptions = ref({
   caseSensitive: false,
   useRegex: false,
-  searchInData: false
+  searchInData: false,
 })
 const showSavedFilters = ref(false)
 const savedFilters = ref<SavedFilter[]>([])
 
 // 日志级别配置
 const logLevels = [
-  { value: LogLevel.DEBUG, label: '调试', color: '#909399' },
-  { value: LogLevel.INFO, label: '信息', color: '#409EFF' },
-  { value: LogLevel.SUCCESS, label: '成功', color: '#67C23A' },
-  { value: LogLevel.WARN, label: '警告', color: '#E6A23C' },
-  { value: LogLevel.ERROR, label: '错误', color: '#F56C6C' }
+  { value: LogLevel.DEBUG, label: "调试", color: "#909399" },
+  { value: LogLevel.INFO, label: "信息", color: "#409EFF" },
+  { value: LogLevel.SUCCESS, label: "成功", color: "#67C23A" },
+  { value: LogLevel.WARN, label: "警告", color: "#E6A23C" },
+  { value: LogLevel.ERROR, label: "错误", color: "#F56C6C" },
 ]
 
 // 快速过滤器
 const quickFilters = ref([
-  { name: 'errors', label: '仅错误', active: false },
-  { name: 'warnings', label: '错误和警告', active: false },
-  { name: 'recent', label: '最近1小时', active: false },
-  { name: 'performance', label: '性能相关', active: false },
-  { name: 'auth', label: '认证相关', active: false }
+  { name: "errors", label: "仅错误", active: false },
+  { name: "warnings", label: "错误和警告", active: false },
+  { name: "recent", label: "最近1小时", active: false },
+  { name: "performance", label: "性能相关", active: false },
+  { name: "auth", label: "认证相关", active: false },
 ])
 
 // 保存的过滤器接口
@@ -315,7 +263,7 @@ interface SavedFilter {
 // 计算属性
 const availableCategories = computed(() => {
   const categories = new Set<string>()
-  props.logs.forEach(log => {
+  props.logs.forEach((log) => {
     if (log.category) {
       categories.add(log.category)
     }
@@ -325,7 +273,7 @@ const availableCategories = computed(() => {
 
 const availableSources = computed(() => {
   const sources = new Set<string>()
-  props.logs.forEach(log => {
+  props.logs.forEach((log) => {
     if (log.source) {
       sources.add(log.source)
     }
@@ -341,31 +289,29 @@ const filteredLogs = computed(() => {
     const [start, end] = timeRange.value
     const startTime = new Date(start)
     const endTime = new Date(end)
-    filtered = filtered.filter(log =>
-      new Date(log.timestamp) >= startTime && new Date(log.timestamp) <= endTime
+    filtered = filtered.filter(
+      (log) => new Date(log.timestamp) >= startTime && new Date(log.timestamp) <= endTime,
     )
   }
 
   // 级别过滤
-  filtered = filtered.filter(log => selectedLevels.value.includes(log.level))
+  filtered = filtered.filter((log) => selectedLevels.value.includes(log.level))
 
   // 分类过滤
   if (selectedCategories.value.length > 0) {
-    filtered = filtered.filter(log =>
-      log.category && selectedCategories.value.includes(log.category)
+    filtered = filtered.filter(
+      (log) => log.category && selectedCategories.value.includes(log.category),
     )
   }
 
   // 来源过滤
   if (selectedSources.value.length > 0) {
-    filtered = filtered.filter(log =>
-      log.source && selectedSources.value.includes(log.source)
-    )
+    filtered = filtered.filter((log) => log.source && selectedSources.value.includes(log.source))
   }
 
   // 文本搜索
   if (searchQuery.value.trim()) {
-    filtered = filtered.filter(log => matchesSearch(log, searchQuery.value.trim()))
+    filtered = filtered.filter((log) => matchesSearch(log, searchQuery.value.trim()))
   }
 
   return filtered
@@ -390,12 +336,12 @@ const matchesSearch = (log: LogEntry, query: string): boolean => {
 
     // 是否搜索数据字段
     if (searchOptions.value.searchInData && log.data) {
-      searchText += ' ' + JSON.stringify(log.data)
+      searchText += " " + JSON.stringify(log.data)
     }
 
     // 是否使用正则表达式
     if (searchOptions.value.useRegex) {
-      const flags = searchOptions.value.caseSensitive ? 'g' : 'gi'
+      const flags = searchOptions.value.caseSensitive ? "g" : "gi"
       const regex = new RegExp(query, flags)
       return regex.test(searchText)
     }
@@ -408,22 +354,18 @@ const matchesSearch = (log: LogEntry, query: string): boolean => {
     }
   } catch {
     // 正则表达式错误时回退到普通搜索
-    const searchText = searchOptions.value.caseSensitive
-      ? log.message
-      : log.message.toLowerCase()
-    const searchQuery = searchOptions.value.caseSensitive
-      ? query
-      : query.toLowerCase()
+    const searchText = searchOptions.value.caseSensitive ? log.message : log.message.toLowerCase()
+    const searchQuery = searchOptions.value.caseSensitive ? query : query.toLowerCase()
     return searchText.includes(searchQuery)
   }
 }
 
 const handleSearch = () => {
-  emit('searchChanged', searchQuery.value)
+  emit("searchChanged", searchQuery.value)
 }
 
 const handleClear = () => {
-  searchQuery.value = ''
+  searchQuery.value = ""
   handleSearch()
 }
 
@@ -449,31 +391,31 @@ const handleSourceChange = () => {
 
 const applyQuickFilter = (filter: any) => {
   // 重置其他快速过滤器
-  quickFilters.value.forEach(f => {
+  quickFilters.value.forEach((f) => {
     f.active = f.name === filter.name ? !f.active : false
   })
 
   if (filter.active) {
     switch (filter.name) {
-      case 'errors':
+      case "errors":
         selectedLevels.value = [LogLevel.ERROR]
         break
-      case 'warnings':
+      case "warnings":
         selectedLevels.value = [LogLevel.ERROR, LogLevel.WARN]
         break
-      case 'recent': {
-        const oneHourAgo = dayjs().subtract(1, 'hour')
+      case "recent": {
+        const oneHourAgo = dayjs().subtract(1, "hour")
         timeRange.value = [
-          oneHourAgo.format('YYYY-MM-DD HH:mm:ss'),
-          dayjs().format('YYYY-MM-DD HH:mm:ss')
+          oneHourAgo.format("YYYY-MM-DD HH:mm:ss"),
+          dayjs().format("YYYY-MM-DD HH:mm:ss"),
         ]
         break
       }
-      case 'performance':
-        selectedCategories.value = ['performance']
+      case "performance":
+        selectedCategories.value = ["performance"]
         break
-      case 'auth':
-        selectedCategories.value = ['auth', 'authentication', 'login']
+      case "auth":
+        selectedCategories.value = ["auth", "authentication", "login"]
         break
     }
   } else {
@@ -482,57 +424,61 @@ const applyQuickFilter = (filter: any) => {
 }
 
 const clearAllFilters = () => {
-  searchQuery.value = ''
+  searchQuery.value = ""
   timeRange.value = null
   selectedLevels.value = [
     LogLevel.DEBUG,
     LogLevel.INFO,
     LogLevel.SUCCESS,
     LogLevel.WARN,
-    LogLevel.ERROR
+    LogLevel.ERROR,
   ]
   selectedCategories.value = []
   selectedSources.value = []
   searchOptions.value = {
     caseSensitive: false,
     useRegex: false,
-    searchInData: false
+    searchInData: false,
   }
-  quickFilters.value.forEach(f => {
+  quickFilters.value.forEach((f) => {
     f.active = false
   })
 }
 
 const saveCurrentFilter = async () => {
   try {
-    const { value: name } = await ElMessageBox.prompt('请输入过滤器名称', '保存过滤器', {
-      confirmButtonText: '保存',
-      cancelButtonText: '取消',
+    const { value: name } = await ElMessageBox.prompt("请输入过滤器名称", "保存过滤器", {
+      confirmButtonText: "保存",
+      cancelButtonText: "取消",
       inputPattern: /\S+/,
-      inputErrorMessage: '过滤器名称不能为空'
+      inputErrorMessage: "过滤器名称不能为空",
     })
 
-    const { value: description } = await ElMessageBox.prompt('请输入过滤器描述（可选）', '保存过滤器', {
-      confirmButtonText: '保存',
-      cancelButtonText: '取消',
-      inputType: 'textarea'
-    })
+    const { value: description } = await ElMessageBox.prompt(
+      "请输入过滤器描述（可选）",
+      "保存过滤器",
+      {
+        confirmButtonText: "保存",
+        cancelButtonText: "取消",
+        inputType: "textarea",
+      },
+    )
 
     const filter: SavedFilter = {
       name,
-      description: description || '',
+      description: description || "",
       createdAt: new Date(),
       searchQuery: searchQuery.value,
       timeRange: timeRange.value,
       selectedLevels: [...selectedLevels.value],
       selectedCategories: [...selectedCategories.value],
       selectedSources: [...selectedSources.value],
-      searchOptions: { ...searchOptions.value }
+      searchOptions: { ...searchOptions.value },
     }
 
     savedFilters.value.push(filter)
     saveSavedFilters()
-    ElMessage.success('过滤器保存成功')
+    ElMessage.success("过滤器保存成功")
   } catch {
     // 用户取消
   }
@@ -551,15 +497,15 @@ const applySavedFilter = (filter: SavedFilter) => {
 
 const deleteSavedFilter = async (index: number) => {
   try {
-    await ElMessageBox.confirm('确定要删除这个过滤器吗？', '确认删除', {
-      confirmButtonText: '删除',
-      cancelButtonText: '取消',
-      type: 'warning'
+    await ElMessageBox.confirm("确定要删除这个过滤器吗？", "确认删除", {
+      confirmButtonText: "删除",
+      cancelButtonText: "取消",
+      type: "warning",
     })
 
     savedFilters.value.splice(index, 1)
     saveSavedFilters()
-    ElMessage.success('过滤器删除成功')
+    ElMessage.success("过滤器删除成功")
   } catch {
     // 用户取消
   }
@@ -570,7 +516,7 @@ const exportFilteredLogs = () => {
     format: ExportFormat.HTML,
     includeAnalysis: true,
     includePerformance: false,
-    includeErrors: false
+    includeErrors: false,
   }
 
   // 创建临时的过滤后的日志数据
@@ -579,8 +525,8 @@ const exportFilteredLogs = () => {
   logger.getLogs = () => tempLogs
 
   try {
-    logExporter.downloadLogs(config, `filtered_logs_${dayjs().format('YYYY-MM-DD_HH-mm-ss')}.html`)
-    ElMessage.success('筛选结果导出成功')
+    logExporter.downloadLogs(config, `filtered_logs_${dayjs().format("YYYY-MM-DD_HH-mm-ss")}.html`)
+    ElMessage.success("筛选结果导出成功")
   } finally {
     // 恢复原始方法
     logger.getLogs = originalGetLogs
@@ -589,31 +535,35 @@ const exportFilteredLogs = () => {
 
 const loadSavedFilters = () => {
   try {
-    const saved = localStorage.getItem('log-search-filters')
+    const saved = localStorage.getItem("log-search-filters")
     if (saved) {
       const parsed = JSON.parse(saved)
       savedFilters.value = parsed.map((f: any) => ({
         ...f,
-        createdAt: new Date(f.createdAt)
+        createdAt: new Date(f.createdAt),
       }))
     }
   } catch (error) {
-    console.warn('加载保存的过滤器失败:', error)
+    console.warn("加载保存的过滤器失败:", error)
   }
 }
 
 const saveSavedFilters = () => {
   try {
-    localStorage.setItem('log-search-filters', JSON.stringify(savedFilters.value))
+    localStorage.setItem("log-search-filters", JSON.stringify(savedFilters.value))
   } catch (error) {
-    console.warn('保存过滤器失败:', error)
+    console.warn("保存过滤器失败:", error)
   }
 }
 
 // 监听过滤结果变化
-watch(filteredLogs, (newLogs) => {
-  emit('filtered', newLogs)
-}, { immediate: true })
+watch(
+  filteredLogs,
+  (newLogs) => {
+    emit("filtered", newLogs)
+  },
+  { immediate: true },
+)
 
 // 组件挂载时加载保存的过滤器
 onMounted(() => {

@@ -1,4 +1,3 @@
- 
 import { ref, computed, watch } from "vue"
 
 export const THEMES = {

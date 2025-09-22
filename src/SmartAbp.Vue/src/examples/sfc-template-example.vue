@@ -1,22 +1,19 @@
 <template>
   <section class="example-card">
     <h2>{{ title }}</h2>
-    <button
-      class="btn"
-      @click="inc"
-    >
-      Clicked {{ count }} times
-    </button>
+    <button class="btn" @click="inc">Clicked {{ count }} times</button>
     <slot />
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue"
 
-const title = 'SFC Template Example'
+const title = "SFC Template Example"
 const count = ref(0)
-const inc = () => { count.value++ }
+const inc = () => {
+  count.value++
+}
 </script>
 
 <style scoped>

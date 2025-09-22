@@ -48,7 +48,9 @@
   background-clip: padding-box;
   border: 1px solid var(--theme-input-border);
   border-radius: var(--radius-md);
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 .form-control:focus {
@@ -232,15 +234,51 @@
   width: auto;
 }
 
-.form-col-1 { flex: 0 0 8.333333%; max-width: 8.333333%; }
-.form-col-2 { flex: 0 0 16.666667%; max-width: 16.666667%; }
-.form-col-3 { flex: 0 0 25%; max-width: 25%; }
-.form-col-4 { flex: 0 0 33.333333%; max-width: 33.333333%; }
-.form-col-5 { flex: 0 0 41.666667%; max-width: 41.666667%; }
-.form-col-6 { flex: 0 0 50%; max-width: 50%; }
-.form-col-7 { flex: 0 0 58.333333%; max-width: 58.333333%; }
-.form-col-8 { flex: 0 0 66.666667%; max-width: 66.666667%; }
-.form-col-9 { flex: 0 0 75%; max-width: 75%; }
-.form-col-10 { flex: 0 0 83.333333%; max-width: 83.333333%; }
-.form-col-11 { flex: 0 0 91.666667%; max-width: 91.666667%; }
-.form-col-12 { flex: 0 0 100%; max-width: 100%; }
+.form-col-1 {
+  flex: 0 0 8.333333%;
+  max-width: 8.333333%;
+}
+.form-col-2 {
+  flex: 0 0 16.666667%;
+  max-width: 16.666667%;
+}
+.form-col-3 {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+.form-col-4 {
+  flex: 0 0 33.333333%;
+  max-width: 33.333333%;
+}
+.form-col-5 {
+  flex: 0 0 41.666667%;
+  max-width: 41.666667%;
+}
+.form-col-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+.form-col-7 {
+  flex: 0 0 58.333333%;
+  max-width: 58.333333%;
+}
+.form-col-8 {
+  flex: 0 0 66.666667%;
+  max-width: 66.666667%;
+}
+.form-col-9 {
+  flex: 0 0 75%;
+  max-width: 75%;
+}
+.form-col-10 {
+  flex: 0 0 83.333333%;
+  max-width: 83.333333%;
+}
+.form-col-11 {
+  flex: 0 0 91.666667%;
+  max-width: 91.666667%;
+}
+.form-col-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}

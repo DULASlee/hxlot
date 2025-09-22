@@ -25,17 +25,21 @@ export default defineConfig({
         // 原有低代码组件覆盖率
         "packages/lowcode-designer/src/utils/uiConfigMapper.ts",
         // Zod模式验证覆盖率
-        "packages/lowcode-designer/src/utils/zod-schemas.ts"
+        "packages/lowcode-designer/src/utils/zod-schemas.ts",
       ],
       thresholds: {
         statements: 95, // 🔥 专家模式TDD铁律：≥95%覆盖率
-        branches: 90,   // 🔥 专家模式分支覆盖率：≥90%
-        functions: 95,  // 🔥 专家模式函数覆盖率：≥95%
-        lines: 95,      // 🔥 专家模式行覆盖率：≥95%
+        branches: 90, // 🔥 专家模式分支覆盖率：≥90%
+        functions: 95, // 🔥 专家模式函数覆盖率：≥95%
+        lines: 95, // 🔥 专家模式行覆盖率：≥95%
       },
       exclude: ["node_modules/**", "dist/**", "src/test/**", "**/*.d.ts"],
     },
-    include: ["src/**/*.{test,spec}.{js,ts,jsx,tsx}", "packages/**/*.{test,spec}.{js,ts,jsx,tsx}", "tests/**/*.{test,spec}.{js,ts,jsx,tsx}"],
+    include: [
+      "src/**/*.{test,spec}.{js,ts,jsx,tsx}",
+      "packages/**/*.{test,spec}.{js,ts,jsx,tsx}",
+      "tests/**/*.{test,spec}.{js,ts,jsx,tsx}",
+    ],
     exclude: ["node_modules", "dist"],
   },
   resolve: {

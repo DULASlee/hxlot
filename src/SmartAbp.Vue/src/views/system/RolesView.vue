@@ -8,17 +8,9 @@
     <div class="page-content">
       <div class="toolbar">
         <div class="search-box">
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="搜索角色..."
-            class="search-input"
-          />
+          <input v-model="searchQuery" type="text" placeholder="搜索角色..." class="search-input" />
         </div>
-        <button
-          class="btn-primary"
-          @click="showAddRole = true"
-        >
+        <button class="btn-primary" @click="showAddRole = true">
           <svg viewBox="0 0 24 24">
             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
           </svg>
@@ -39,10 +31,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="role in filteredRoles"
-              :key="role.id"
-            >
+            <tr v-for="role in filteredRoles" :key="role.id">
               <td>
                 <div class="role-info">
                   <div class="role-icon">
@@ -61,24 +50,9 @@
               <td>{{ role.createdAt }}</td>
               <td>
                 <div class="actions">
-                  <button
-                    class="btn-sm"
-                    @click="editRole(role)"
-                  >
-                    编辑
-                  </button>
-                  <button
-                    class="btn-sm"
-                    @click="viewPermissions(role)"
-                  >
-                    权限
-                  </button>
-                  <button
-                    class="btn-sm danger"
-                    @click="deleteRole(role)"
-                  >
-                    删除
-                  </button>
+                  <button class="btn-sm" @click="editRole(role)">编辑</button>
+                  <button class="btn-sm" @click="viewPermissions(role)">权限</button>
+                  <button class="btn-sm danger" @click="deleteRole(role)">删除</button>
                 </div>
               </td>
             </tr>
@@ -88,35 +62,20 @@
     </div>
 
     <!-- 添加角色模态框 -->
-    <div
-      v-if="showAddRole"
-      class="modal-overlay"
-      @click="showAddRole = false"
-    >
-      <div
-        class="modal"
-        @click.stop
-      >
+    <div v-if="showAddRole" class="modal-overlay" @click="showAddRole = false">
+      <div class="modal" @click.stop>
         <div class="modal-header">
           <h3>添加角色</h3>
-          <button @click="showAddRole = false">
-            ×
-          </button>
+          <button @click="showAddRole = false">×</button>
         </div>
         <div class="modal-body">
           <div class="form-group">
             <label>角色名称</label>
-            <input
-              v-model="newRole.name"
-              type="text"
-            />
+            <input v-model="newRole.name" type="text" />
           </div>
           <div class="form-group">
             <label>角色描述</label>
-            <textarea
-              v-model="newRole.description"
-              rows="3"
-            />
+            <textarea v-model="newRole.description" rows="3" />
           </div>
           <div class="form-group">
             <label>权限分配</label>
@@ -126,48 +85,25 @@
                 :key="permission.id"
                 class="permission-item"
               >
-                <input
-                  v-model="newRole.permissions"
-                  type="checkbox"
-                  :value="permission.id"
-                />
+                <input v-model="newRole.permissions" type="checkbox" :value="permission.id" />
                 <span>{{ permission.name }}</span>
               </label>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button
-            class="btn-secondary"
-            @click="showAddRole = false"
-          >
-            取消
-          </button>
-          <button
-            class="btn-primary"
-            @click="addRole"
-          >
-            确定
-          </button>
+          <button class="btn-secondary" @click="showAddRole = false">取消</button>
+          <button class="btn-primary" @click="addRole">确定</button>
         </div>
       </div>
     </div>
 
     <!-- 权限详情模态框 -->
-    <div
-      v-if="showPermissions"
-      class="modal-overlay"
-      @click="showPermissions = false"
-    >
-      <div
-        class="modal"
-        @click.stop
-      >
+    <div v-if="showPermissions" class="modal-overlay" @click="showPermissions = false">
+      <div class="modal" @click.stop>
         <div class="modal-header">
           <h3>{{ selectedRole?.name }} - 权限详情</h3>
-          <button @click="showPermissions = false">
-            ×
-          </button>
+          <button @click="showPermissions = false">×</button>
         </div>
         <div class="modal-body">
           <div class="permissions-list">
@@ -181,12 +117,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button
-            class="btn-primary"
-            @click="showPermissions = false"
-          >
-            关闭
-          </button>
+          <button class="btn-primary" @click="showPermissions = false">关闭</button>
         </div>
       </div>
     </div>
@@ -194,7 +125,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed } from "vue"
 
 interface Permission {
   id: string
@@ -210,71 +141,78 @@ interface Role {
   createdAt: string
 }
 
-const searchQuery = ref('')
+const searchQuery = ref("")
 const showAddRole = ref(false)
 const showPermissions = ref(false)
 const selectedRole = ref<Role | null>(null)
 
 const newRole = ref({
-  name: '',
-  description: '',
-  permissions: [] as string[]
+  name: "",
+  description: "",
+  permissions: [] as string[],
 })
 
 const availablePermissions = ref<Permission[]>([
-  { id: 'user.read', name: '查看用户' },
-  { id: 'user.create', name: '创建用户' },
-  { id: 'user.update', name: '编辑用户' },
-  { id: 'user.delete', name: '删除用户' },
-  { id: 'role.read', name: '查看角色' },
-  { id: 'role.create', name: '创建角色' },
-  { id: 'role.update', name: '编辑角色' },
-  { id: 'role.delete', name: '删除角色' },
-  { id: 'project.read', name: '查看项目' },
-  { id: 'project.create', name: '创建项目' },
-  { id: 'project.update', name: '编辑项目' },
-  { id: 'project.delete', name: '删除项目' },
-  { id: 'system.config', name: '系统配置' },
-  { id: 'system.logs', name: '系统日志' }
+  { id: "user.read", name: "查看用户" },
+  { id: "user.create", name: "创建用户" },
+  { id: "user.update", name: "编辑用户" },
+  { id: "user.delete", name: "删除用户" },
+  { id: "role.read", name: "查看角色" },
+  { id: "role.create", name: "创建角色" },
+  { id: "role.update", name: "编辑角色" },
+  { id: "role.delete", name: "删除角色" },
+  { id: "project.read", name: "查看项目" },
+  { id: "project.create", name: "创建项目" },
+  { id: "project.update", name: "编辑项目" },
+  { id: "project.delete", name: "删除项目" },
+  { id: "system.config", name: "系统配置" },
+  { id: "system.logs", name: "系统日志" },
 ])
 
 const roles = ref<Role[]>([
   {
     id: 1,
-    name: '超级管理员',
-    description: '拥有系统所有权限的管理员角色',
+    name: "超级管理员",
+    description: "拥有系统所有权限的管理员角色",
     userCount: 2,
-    permissions: availablePermissions.value.map(p => p.id),
-    createdAt: '2024-01-01'
+    permissions: availablePermissions.value.map((p) => p.id),
+    createdAt: "2024-01-01",
   },
   {
     id: 2,
-    name: '项目管理员',
-    description: '负责项目管理的角色',
+    name: "项目管理员",
+    description: "负责项目管理的角色",
     userCount: 5,
-    permissions: ['project.read', 'project.create', 'project.update', 'project.delete', 'user.read'],
-    createdAt: '2024-01-15'
+    permissions: [
+      "project.read",
+      "project.create",
+      "project.update",
+      "project.delete",
+      "user.read",
+    ],
+    createdAt: "2024-01-15",
   },
   {
     id: 3,
-    name: '普通用户',
-    description: '系统普通用户角色',
+    name: "普通用户",
+    description: "系统普通用户角色",
     userCount: 20,
-    permissions: ['user.read', 'project.read'],
-    createdAt: '2024-02-01'
-  }
+    permissions: ["user.read", "project.read"],
+    createdAt: "2024-02-01",
+  },
 ])
 
 const filteredRoles = computed(() => {
   if (!searchQuery.value) return roles.value
-  return roles.value.filter(role =>
-    role.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    role.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+  return roles.value.filter(
+    (role) =>
+      role.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      role.description.toLowerCase().includes(searchQuery.value.toLowerCase()),
   )
 })
 
 const getPermissionName = (permissionId: string) => {
-  const permission = availablePermissions.value.find(p => p.id === permissionId)
+  const permission = availablePermissions.value.find((p) => p.id === permissionId)
   return permission ? permission.name : permissionId
 }
 
@@ -285,15 +223,15 @@ const addRole = () => {
     description: newRole.value.description,
     userCount: 0,
     permissions: [...newRole.value.permissions],
-    createdAt: new Date().toISOString().split('T')[0]
+    createdAt: new Date().toISOString().split("T")[0],
   }
   roles.value.push(role)
   showAddRole.value = false
-  newRole.value = { name: '', description: '', permissions: [] }
+  newRole.value = { name: "", description: "", permissions: [] }
 }
 
 const editRole = (role: Role) => {
-  console.log('编辑角色:', role)
+  console.log("编辑角色:", role)
 }
 
 const viewPermissions = (role: Role) => {
@@ -303,7 +241,7 @@ const viewPermissions = (role: Role) => {
 
 const deleteRole = (role: Role) => {
   if (confirm(`确定要删除角色 ${role.name} 吗？`)) {
-    const index = roles.value.findIndex(r => r.id === role.id)
+    const index = roles.value.findIndex((r) => r.id === role.id)
     if (index > -1) {
       roles.value.splice(index, 1)
     }
@@ -395,7 +333,8 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 12px 20px;
   text-align: left;
   border-bottom: 1px solid var(--color-border-primary);
@@ -429,7 +368,8 @@ td {
   font-weight: 500;
 }
 
-.user-count, .permission-count {
+.user-count,
+.permission-count {
   padding: 4px 8px;
   background: var(--color-bg-secondary);
   border-radius: 4px;
@@ -622,7 +562,8 @@ td {
     font-size: 14px;
   }
 
-  th, td {
+  th,
+  td {
     padding: 8px 12px;
   }
 

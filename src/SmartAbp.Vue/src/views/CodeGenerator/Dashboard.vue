@@ -14,7 +14,9 @@
         <div class="header-content">
           <div class="title-section">
             <h1 class="gradient-text">🚀 SmartAbp Enterprise Code Generator</h1>
-            <p class="subtitle">Generate world-class enterprise applications with cutting-edge patterns</p>
+            <p class="subtitle">
+              Generate world-class enterprise applications with cutting-edge patterns
+            </p>
           </div>
           <div class="status-indicator">
             <el-badge :value="statistics?.totalGenerations || 0" class="status-badge">
@@ -37,7 +39,9 @@
           />
           <div class="progress-info">
             <span>{{ activeGenerationSessions[0]?.currentStep }}</span>
-            <span class="progress-time">{{ formatProgressTime(activeGenerationSessions[0]?.elapsedTime?.totalMilliseconds || 0) }}</span>
+            <span class="progress-time">{{
+              formatProgressTime(activeGenerationSessions[0]?.elapsedTime?.totalMilliseconds || 0)
+            }}</span>
           </div>
         </div>
       </el-header>
@@ -49,12 +53,20 @@
             <el-card class="progress-card">
               <div slot="header">
                 <i class="el-icon-loading"></i> Active Generations
-                <el-tag :type="isConnectedToProgress ? 'success' : 'danger'" size="mini" style="margin-left: 10px;">
-                  {{ isConnectedToProgress ? 'Connected' : 'Disconnected' }}
+                <el-tag
+                  :type="isConnectedToProgress ? 'success' : 'danger'"
+                  size="mini"
+                  style="margin-left: 10px"
+                >
+                  {{ isConnectedToProgress ? "Connected" : "Disconnected" }}
                 </el-tag>
               </div>
 
-              <div v-for="session in activeGenerationSessions" :key="session.sessionId" class="progress-session">
+              <div
+                v-for="session in activeGenerationSessions"
+                :key="session.sessionId"
+                class="progress-session"
+              >
                 <div class="session-header">
                   <h4>{{ session.generationType }} Generation</h4>
                   <el-tag :type="session.status === 'Error' ? 'danger' : 'primary'" size="small">
@@ -64,7 +76,13 @@
 
                 <el-progress
                   :percentage="session.progressPercentage"
-                  :status="session.status === 'Error' ? 'exception' : (session.progressPercentage === 100 ? 'success' : 'active')"
+                  :status="
+                    session.status === 'Error'
+                      ? 'exception'
+                      : session.progressPercentage === 100
+                        ? 'success'
+                        : 'active'
+                  "
                   :stroke-width="8"
                   striped
                   striped-flow
@@ -72,8 +90,15 @@
 
                 <div class="session-details">
                   <p><strong>Step:</strong> {{ session.currentStep }}</p>
-                  <p><strong>Files:</strong> {{ session.filesGenerated }}/{{ session.totalFiles || '?' }}</p>
-                  <p><strong>Time:</strong> {{ formatProgressTime(session.elapsedTime?.totalMilliseconds || 0) }}</p>
+                  <p>
+                    <strong>Files:</strong> {{ session.filesGenerated }}/{{
+                      session.totalFiles || "?"
+                    }}
+                  </p>
+                  <p>
+                    <strong>Time:</strong>
+                    {{ formatProgressTime(session.elapsedTime?.totalMilliseconds || 0) }}
+                  </p>
                   <p v-if="session.message"><strong>Status:</strong> {{ session.message }}</p>
                   <p v-if="session.errorMessage" class="error-message">
                     <strong>Error:</strong> {{ session.errorMessage }}
@@ -85,9 +110,7 @@
           <!-- Statistics Card -->
           <el-col :span="24" :md="8">
             <el-card class="stats-card">
-              <div slot="header">
-                <i class="el-icon-data-line"></i> Generation Statistics
-              </div>
+              <div slot="header"><i class="el-icon-data-line"></i> Generation Statistics</div>
               <div v-if="statistics">
                 <div class="stat-item">
                   <span class="label">Total Generations:</span>
@@ -110,7 +133,12 @@
                   <span class="value">{{ formatBytes(statistics.memoryUsage) }}</span>
                 </div>
               </div>
-              <el-button @click="loadStatistics" type="primary" size="small" style="margin-top: 10px;">
+              <el-button
+                @click="loadStatistics"
+                type="primary"
+                size="small"
+                style="margin-top: 10px"
+              >
                 <i class="el-icon-refresh"></i> Refresh
               </el-button>
             </el-card>
@@ -119,16 +147,15 @@
           <!-- Quick Actions -->
           <el-col :span="24" :md="16">
             <el-card class="actions-card">
-              <div slot="header">
-                <i class="el-icon-magic-stick"></i> Quick Actions
-              </div>
+              <div slot="header"><i class="el-icon-magic-stick"></i> Quick Actions</div>
               <el-row :gutter="16">
                 <el-col :span="12" :md="8" v-for="generator in generators" :key="generator.type">
                   <el-button
                     @click="openGenerator(generator.type)"
                     :type="generator.color"
                     class="generator-button"
-                    :loading="isGenerating === generator.type">
+                    :loading="isGenerating === generator.type"
+                  >
                     <i :class="generator.icon"></i>
                     {{ generator.name }}
                   </el-button>
@@ -139,7 +166,7 @@
         </el-row>
 
         <!-- Generator Forms -->
-        <el-row :gutter="20" style="margin-top: 20px;">
+        <el-row :gutter="20" style="margin-top: 20px">
           <el-col :span="24">
             <el-card v-if="activeGenerator">
               <div slot="header">
@@ -158,14 +185,19 @@
               <div v-if="activeGenerator === 'enterprise'">
                 <el-form :model="enterpriseForm" label-width="200px">
                   <el-form-item label="Solution Name">
-                    <el-input v-model="enterpriseForm.solutionName" placeholder="e.g., ECommerceSolution"></el-input>
+                    <el-input
+                      v-model="enterpriseForm.solutionName"
+                      placeholder="e.g., ECommerceSolution"
+                    ></el-input>
                   </el-form-item>
 
                   <el-form-item label="Components to Generate">
                     <el-checkbox-group v-model="enterpriseComponents">
                       <el-checkbox label="includeDdd">Domain-Driven Design (DDD)</el-checkbox>
                       <el-checkbox label="includeCqrs">CQRS with MediatR</el-checkbox>
-                      <el-checkbox label="includeApplicationServices">Application Services</el-checkbox>
+                      <el-checkbox label="includeApplicationServices"
+                        >Application Services</el-checkbox
+                      >
                       <el-checkbox label="includeInfrastructure">Infrastructure Layer</el-checkbox>
                       <el-checkbox label="includeAspire">Aspire Microservices</el-checkbox>
                       <el-checkbox label="includeCaching">Distributed Caching</el-checkbox>
@@ -177,7 +209,11 @@
                   </el-form-item>
 
                   <el-form-item>
-                    <el-button @click="generateEnterpriseSolution" type="primary" :loading="isGenerating === 'enterprise'">
+                    <el-button
+                      @click="generateEnterpriseSolution"
+                      type="primary"
+                      :loading="isGenerating === 'enterprise'"
+                    >
                       <i class="el-icon-magic-stick"></i> Generate Enterprise Solution
                     </el-button>
                   </el-form-item>
@@ -188,20 +224,28 @@
         </el-row>
 
         <!-- Generation Results with Code Preview -->
-        <el-row v-if="generationResult" style="margin-top: 20px;">
+        <el-row v-if="generationResult" style="margin-top: 20px">
           <el-col :span="24">
             <el-card>
               <div slot="header">
                 <i class="el-icon-document"></i> Generation Result
-                <el-tag :type="generationResult.success ? 'success' : 'danger'" style="margin-left: 10px;">
-                  {{ generationResult.success ? 'Success' : 'Failed' }}
+                <el-tag
+                  :type="generationResult.success ? 'success' : 'danger'"
+                  style="margin-left: 10px"
+                >
+                  {{ generationResult.success ? "Success" : "Failed" }}
                 </el-tag>
               </div>
 
               <div v-if="generationResult.success">
                 <div class="result-summary">
-                  <p><strong>Generated at:</strong> {{ formatDate(generationResult.generatedAt) }}</p>
-                  <p><strong>Generation time:</strong> {{ formatTimeSpan(generationResult.generationTime) }}</p>
+                  <p>
+                    <strong>Generated at:</strong> {{ formatDate(generationResult.generatedAt) }}
+                  </p>
+                  <p>
+                    <strong>Generation time:</strong>
+                    {{ formatTimeSpan(generationResult.generationTime) }}
+                  </p>
                   <p><strong>Files generated:</strong> {{ generationResult.fileCount }}</p>
                   <p><strong>Lines of code:</strong> {{ generationResult.linesOfCode }}</p>
                 </div>
@@ -218,7 +262,7 @@
                   />
                 </div>
 
-                <el-button @click="downloadResult" type="success" style="margin-top: 10px;">
+                <el-button @click="downloadResult" type="success" style="margin-top: 10px">
                   <i class="el-icon-download"></i> Download Generated Code
                 </el-button>
               </div>
@@ -228,7 +272,8 @@
                   :title="generationResult.error"
                   type="error"
                   :description="generationResult.details"
-                  show-icon>
+                  show-icon
+                >
                 </el-alert>
               </div>
             </el-card>
@@ -594,7 +639,8 @@ export default {
   font-size: 1.2rem;
 }
 
-.stats-card, .actions-card {
+.stats-card,
+.actions-card {
   margin-bottom: 20px;
   box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
 }

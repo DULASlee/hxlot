@@ -7,22 +7,14 @@
           <span class="title-icon">📋</span>
           日志管理
         </h1>
-        <p class="page-description">
-          系统日志的统一管理、查看、分析和导出平台
-        </p>
+        <p class="page-description">系统日志的统一管理、查看、分析和导出平台</p>
       </div>
       <div class="header-actions">
-        <button
-          class="btn btn-primary"
-          @click="refreshLogs"
-        >
+        <button class="btn btn-primary" @click="refreshLogs">
           <span class="btn-icon">🔄</span>
           刷新日志
         </button>
-        <button
-          class="btn btn-secondary"
-          @click="exportLogs"
-        >
+        <button class="btn btn-secondary" @click="exportLogs">
           <span class="btn-icon">📤</span>
           导出日志
         </button>
@@ -32,13 +24,8 @@
     <!-- 功能导航卡片 -->
     <div class="feature-cards">
       <div class="card-grid">
-        <div
-          class="feature-card"
-          @click="navigateTo('/Log/dashboard')"
-        >
-          <div class="card-icon">
-            📊
-          </div>
+        <div class="feature-card" @click="navigateTo('/Log/dashboard')">
+          <div class="card-icon">📊</div>
           <div class="card-content">
             <h3>日志仪表板</h3>
             <p>实时监控系统日志状态和统计信息</p>
@@ -53,18 +40,11 @@
               </span>
             </div>
           </div>
-          <div class="card-arrow">
-            →
-          </div>
+          <div class="card-arrow">→</div>
         </div>
 
-        <div
-          class="feature-card"
-          @click="navigateTo('/Log/viewer')"
-        >
-          <div class="card-icon">
-            👁️
-          </div>
+        <div class="feature-card" @click="navigateTo('/Log/viewer')">
+          <div class="card-icon">👁️</div>
           <div class="card-content">
             <h3>日志查看器</h3>
             <p>高级日志搜索、过滤和详细查看</p>
@@ -79,18 +59,11 @@
               </span>
             </div>
           </div>
-          <div class="card-arrow">
-            →
-          </div>
+          <div class="card-arrow">→</div>
         </div>
 
-        <div
-          class="feature-card"
-          @click="showAnalytics = true"
-        >
-          <div class="card-icon">
-            📈
-          </div>
+        <div class="feature-card" @click="showAnalytics = true">
+          <div class="card-icon">📈</div>
           <div class="card-content">
             <h3>性能分析</h3>
             <p>系统性能指标和趋势分析</p>
@@ -105,18 +78,11 @@
               </span>
             </div>
           </div>
-          <div class="card-arrow">
-            →
-          </div>
+          <div class="card-arrow">→</div>
         </div>
 
-        <div
-          class="feature-card"
-          @click="showSettings = true"
-        >
-          <div class="card-icon">
-            ⚙️
-          </div>
+        <div class="feature-card" @click="showSettings = true">
+          <div class="card-icon">⚙️</div>
           <div class="card-content">
             <h3>日志配置</h3>
             <p>日志级别、存储和清理策略配置</p>
@@ -131,9 +97,7 @@
               </span>
             </div>
           </div>
-          <div class="card-arrow">
-            →
-          </div>
+          <div class="card-arrow">→</div>
         </div>
       </div>
     </div>
@@ -141,70 +105,41 @@
     <!-- 快速概览 -->
     <div class="quick-overview">
       <div class="overview-section">
-        <h2 class="section-title">
-          实时日志流
-        </h2>
+        <h2 class="section-title">实时日志流</h2>
         <div class="log-stream">
-          <LogViewer
-            :max-height="300"
-            :show-controls="false"
-          />
+          <LogViewer :max-height="300" :show-controls="false" />
         </div>
       </div>
 
       <div class="overview-section">
-        <h2 class="section-title">
-          系统状态
-        </h2>
+        <h2 class="section-title">系统状态</h2>
         <div class="system-status">
           <div class="status-grid">
             <div class="status-item">
-              <div class="status-icon healthy">
-                ✅
-              </div>
+              <div class="status-icon healthy">✅</div>
               <div class="status-info">
-                <div class="status-label">
-                  系统状态
-                </div>
-                <div class="status-value">
-                  正常运行
-                </div>
+                <div class="status-label">系统状态</div>
+                <div class="status-value">正常运行</div>
               </div>
             </div>
             <div class="status-item">
-              <div class="status-icon warning">
-                ⚠️
-              </div>
+              <div class="status-icon warning">⚠️</div>
               <div class="status-info">
-                <div class="status-label">
-                  内存使用
-                </div>
-                <div class="status-value">
-                  {{ memoryUsage }}%
-                </div>
+                <div class="status-label">内存使用</div>
+                <div class="status-value">{{ memoryUsage }}%</div>
               </div>
             </div>
             <div class="status-item">
-              <div class="status-icon info">
-                ℹ️
-              </div>
+              <div class="status-icon info">ℹ️</div>
               <div class="status-info">
-                <div class="status-label">
-                  磁盘空间
-                </div>
-                <div class="status-value">
-                  {{ diskUsage }}%
-                </div>
+                <div class="status-label">磁盘空间</div>
+                <div class="status-value">{{ diskUsage }}%</div>
               </div>
             </div>
             <div class="status-item">
-              <div class="status-icon success">
-                🚀
-              </div>
+              <div class="status-icon success">🚀</div>
               <div class="status-info">
-                <div class="status-label">
-                  运行时间
-                </div>
+                <div class="status-label">运行时间</div>
                 <div class="status-value">
                   {{ uptime }}
                 </div>
@@ -216,23 +151,11 @@
     </div>
 
     <!-- 性能分析弹窗 -->
-    <div
-      v-if="showAnalytics"
-      class="modal-overlay"
-      @click="showAnalytics = false"
-    >
-      <div
-        class="modal-content"
-        @click.stop
-      >
+    <div v-if="showAnalytics" class="modal-overlay" @click="showAnalytics = false">
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>性能分析</h3>
-          <button
-            class="close-btn"
-            @click="showAnalytics = false"
-          >
-            ×
-          </button>
+          <button class="close-btn" @click="showAnalytics = false">×</button>
         </div>
         <div class="modal-body">
           <LogDashboard />
@@ -241,78 +164,35 @@
     </div>
 
     <!-- 设置弹窗 -->
-    <div
-      v-if="showSettings"
-      class="modal-overlay"
-      @click="showSettings = false"
-    >
-      <div
-        class="modal-content"
-        @click.stop
-      >
+    <div v-if="showSettings" class="modal-overlay" @click="showSettings = false">
+      <div class="modal-content" @click.stop>
         <div class="modal-header">
           <h3>日志配置</h3>
-          <button
-            class="close-btn"
-            @click="showSettings = false"
-          >
-            ×
-          </button>
+          <button class="close-btn" @click="showSettings = false">×</button>
         </div>
         <div class="modal-body">
           <div class="settings-form">
             <div class="form-group">
               <label>日志级别</label>
-              <select
-                v-model="logLevel"
-                class="form-control"
-              >
-                <option value="debug">
-                  Debug
-                </option>
-                <option value="info">
-                  Info
-                </option>
-                <option value="warn">
-                  Warning
-                </option>
-                <option value="error">
-                  Error
-                </option>
+              <select v-model="logLevel" class="form-control">
+                <option value="debug">Debug</option>
+                <option value="info">Info</option>
+                <option value="warn">Warning</option>
+                <option value="error">Error</option>
               </select>
             </div>
             <div class="form-group">
               <label>保留天数</label>
-              <input
-                v-model="retentionDays"
-                type="number"
-                class="form-control"
-                min="1"
-                max="365"
-              />
+              <input v-model="retentionDays" type="number" class="form-control" min="1" max="365" />
             </div>
             <div class="form-group">
               <label>自动清理</label>
-              <input
-                v-model="autoCleanup"
-                type="checkbox"
-                class="form-checkbox"
-              />
+              <input v-model="autoCleanup" type="checkbox" class="form-checkbox" />
               <span class="checkbox-label">启用自动清理过期日志</span>
             </div>
             <div class="form-actions">
-              <button
-                class="btn btn-primary"
-                @click="saveSettings"
-              >
-                保存设置
-              </button>
-              <button
-                class="btn btn-secondary"
-                @click="showSettings = false"
-              >
-                取消
-              </button>
+              <button class="btn btn-primary" @click="saveSettings">保存设置</button>
+              <button class="btn btn-secondary" @click="showSettings = false">取消</button>
             </div>
           </div>
         </div>
@@ -322,18 +202,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { logger } from '@/utils/logger'
-import LogViewer from './LogViewer.vue'
-import LogDashboard from '@/views/log/LogDashboard.vue'
+import { ref, onMounted } from "vue"
+import { useRouter } from "vue-router"
+import { logger } from "@/utils/logger"
+import LogViewer from "./LogViewer.vue"
+import LogDashboard from "@/views/log/LogDashboard.vue"
 
 const router = useRouter()
 
 // 响应式数据
 const showAnalytics = ref(false)
 const showSettings = ref(false)
-const logLevel = ref('info')
+const logLevel = ref("info")
 const retentionDays = ref(30)
 const autoCleanup = ref(true)
 
@@ -344,10 +224,10 @@ const totalLogsCount = ref(0)
 const onlineUsersCount = ref(0)
 const avgResponseTime = ref(0)
 const successRate = ref(0)
-const storageSize = ref('0MB')
+const storageSize = ref("0MB")
 const memoryUsage = ref(0)
 const diskUsage = ref(0)
-const uptime = ref('0天')
+const uptime = ref("0天")
 
 // 导航方法
 const navigateTo = (path: string) => {
@@ -356,34 +236,34 @@ const navigateTo = (path: string) => {
 
 // 刷新日志
 const refreshLogs = () => {
-  logger.info('用户刷新日志数据', {
-    component: 'LogManagement',
-    action: 'refresh_logs',
-    timestamp: new Date().toISOString()
+  logger.info("用户刷新日志数据", {
+    component: "LogManagement",
+    action: "refresh_logs",
+    timestamp: new Date().toISOString(),
   })
   loadStatistics()
 }
 
 // 导出日志
 const exportLogs = () => {
-  logger.info('用户导出日志数据', {
-    component: 'LogManagement',
-    action: 'export_logs',
-    timestamp: new Date().toISOString()
+  logger.info("用户导出日志数据", {
+    component: "LogManagement",
+    action: "export_logs",
+    timestamp: new Date().toISOString(),
   })
   // 这里可以调用日志导出功能
 }
 
 // 保存设置
 const saveSettings = () => {
-  logger.info('用户保存日志配置', {
-    component: 'LogManagement',
-    action: 'save_settings',
+  logger.info("用户保存日志配置", {
+    component: "LogManagement",
+    action: "save_settings",
     settings: {
       logLevel: logLevel.value,
       retentionDays: retentionDays.value,
-      autoCleanup: autoCleanup.value
-    }
+      autoCleanup: autoCleanup.value,
+    },
   })
   showSettings.value = false
 }
@@ -408,10 +288,10 @@ const loadStatistics = () => {
 
 // 组件挂载时加载数据
 onMounted(() => {
-  logger.info('日志管理页面加载', {
-    component: 'LogManagement',
-    action: 'page_load',
-    timestamp: new Date().toISOString()
+  logger.info("日志管理页面加载", {
+    component: "LogManagement",
+    action: "page_load",
+    timestamp: new Date().toISOString(),
   })
   loadStatistics()
 })

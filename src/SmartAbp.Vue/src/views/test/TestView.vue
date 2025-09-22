@@ -14,7 +14,7 @@
             <h3>当前主题状态</h3>
             <div class="status-info">
               <p><strong>当前主题:</strong> {{ themeStore.currentTheme }}</p>
-              <p><strong>是否暗黑:</strong> {{ themeStore.isDarkMode ? '是' : '否' }}</p>
+              <p><strong>是否暗黑:</strong> {{ themeStore.isDarkMode ? "是" : "否" }}</p>
               <p><strong>主题类名:</strong> {{ themeStore.currentTheme }}</p>
             </div>
           </div>
@@ -31,11 +31,8 @@
                 {{ theme.label }}
               </button>
             </div>
-            <button
-              class="dark-toggle-btn"
-              @click="toggleDark"
-            >
-              {{ themeStore.isDarkMode ? '切换到浅色' : '切换到深色' }}
+            <button class="dark-toggle-btn" @click="toggleDark">
+              {{ themeStore.isDarkMode ? "切换到浅色" : "切换到深色" }}
             </button>
           </div>
         </div>
@@ -48,17 +45,13 @@
           <div class="test-card">
             <h3>侧边栏状态</h3>
             <div class="status-info">
-              <p><strong>侧边栏:</strong> {{ sidebarCollapsed ? '已收起' : '已展开' }}</p>
-              <p><strong>副菜单:</strong> {{ showSubmenu ? '显示' : '隐藏' }}</p>
+              <p><strong>侧边栏:</strong> {{ sidebarCollapsed ? "已收起" : "已展开" }}</p>
+              <p><strong>副菜单:</strong> {{ showSubmenu ? "显示" : "隐藏" }}</p>
               <p><strong>当前菜单:</strong> {{ activeMenu }}</p>
             </div>
             <div class="layout-buttons">
-              <button @click="testSidebar">
-                切换侧边栏
-              </button>
-              <button @click="testSubmenu">
-                切换副菜单
-              </button>
+              <button @click="testSidebar">切换侧边栏</button>
+              <button @click="testSubmenu">切换副菜单</button>
             </div>
           </div>
 
@@ -69,12 +62,8 @@
               <p><strong>标签数量:</strong> {{ tabs.length }}</p>
             </div>
             <div class="tab-buttons">
-              <button @click="addTestTab">
-                添加测试标签
-              </button>
-              <button @click="closeAllTabs">
-                关闭所有标签
-              </button>
+              <button @click="addTestTab">添加测试标签</button>
+              <button @click="closeAllTabs">关闭所有标签</button>
             </div>
           </div>
         </div>
@@ -87,42 +76,26 @@
           <div class="test-card">
             <h3>系统管理页面</h3>
             <div class="nav-buttons">
-              <button @click="navigateTo('/Admin/users')">
-                用户管理
-              </button>
-              <button @click="navigateTo('/Admin/roles')">
-                角色管理
-              </button>
-              <button @click="navigateTo('/Admin/permissions')">
-                权限管理
-              </button>
+              <button @click="navigateTo('/Admin/users')">用户管理</button>
+              <button @click="navigateTo('/Admin/roles')">角色管理</button>
+              <button @click="navigateTo('/Admin/permissions')">权限管理</button>
             </div>
           </div>
 
           <div class="test-card">
             <h3>项目管理页面</h3>
             <div class="nav-buttons">
-              <button @click="navigateTo('/Project')">
-                项目列表
-              </button>
-              <button @click="navigateTo('/Project/analysis')">
-                项目分析
-              </button>
+              <button @click="navigateTo('/Project')">项目列表</button>
+              <button @click="navigateTo('/Project/analysis')">项目分析</button>
             </div>
           </div>
 
           <div class="test-card">
             <h3>其他页面</h3>
             <div class="nav-buttons">
-              <button @click="navigateTo('/profile')">
-                个人中心
-              </button>
-              <button @click="navigateTo('/Admin/settings')">
-                系统设置
-              </button>
-              <button @click="navigateTo('/dashboard')">
-                返回工作台
-              </button>
+              <button @click="navigateTo('/profile')">个人中心</button>
+              <button @click="navigateTo('/Admin/settings')">系统设置</button>
+              <button @click="navigateTo('/dashboard')">返回工作台</button>
             </div>
           </div>
         </div>
@@ -135,27 +108,13 @@
           <div class="test-card">
             <h3>本地存储测试</h3>
             <div class="storage-test">
-              <input
-                v-model="testData"
-                type="text"
-                placeholder="输入测试数据"
-                class="test-input"
-              />
+              <input v-model="testData" type="text" placeholder="输入测试数据" class="test-input" />
               <div class="storage-buttons">
-                <button @click="saveToStorage">
-                  保存到本地
-                </button>
-                <button @click="loadFromStorage">
-                  从本地加载
-                </button>
-                <button @click="clearStorage">
-                  清除数据
-                </button>
+                <button @click="saveToStorage">保存到本地</button>
+                <button @click="loadFromStorage">从本地加载</button>
+                <button @click="clearStorage">清除数据</button>
               </div>
-              <p
-                v-if="storageResult"
-                class="storage-result"
-              >
+              <p v-if="storageResult" class="storage-result">
                 {{ storageResult }}
               </p>
             </div>
@@ -166,9 +125,7 @@
             <div class="responsive-test">
               <p><strong>窗口宽度:</strong> {{ windowWidth }}px</p>
               <p><strong>设备类型:</strong> {{ deviceType }}</p>
-              <button @click="testResponsive">
-                测试响应式
-              </button>
+              <button @click="testResponsive">测试响应式</button>
             </div>
           </div>
         </div>
@@ -178,21 +135,12 @@
       <div class="test-section">
         <h2>测试日志</h2>
         <div class="test-logs">
-          <div
-            v-for="(log, index) in testLogs"
-            :key="index"
-            :class="['log-item', log.type]"
-          >
+          <div v-for="(log, index) in testLogs" :key="index" :class="['log-item', log.type]">
             <span class="log-time">{{ log.time }}</span>
             <span class="log-message">{{ log.message }}</span>
           </div>
         </div>
-        <button
-          class="clear-logs-btn"
-          @click="clearLogs"
-        >
-          清除日志
-        </button>
+        <button class="clear-logs-btn" @click="clearLogs">清除日志</button>
       </div>
     </div>
   </div>
@@ -207,26 +155,24 @@ const router = useRouter()
 const themeStore = useThemeStore()
 
 // 测试数据
-const testData = ref('')
-const storageResult = ref('')
+const testData = ref("")
+const storageResult = ref("")
 const windowWidth = ref(window.innerWidth)
-const testLogs = ref<Array<{ time: string, message: string, type: string }>>([])
+const testLogs = ref<Array<{ time: string; message: string; type: string }>>([])
 
 // 模拟布局状态（实际应该从父组件获取）
 const sidebarCollapsed = ref(false)
 const showSubmenu = ref(false)
-const activeMenu = ref('dashboard')
-const activeTab = ref('/dashboard')
-const tabs = ref([
-  { title: '工作台', path: '/dashboard', closable: false }
-])
+const activeMenu = ref("dashboard")
+const activeTab = ref("/dashboard")
+const tabs = ref([{ title: "工作台", path: "/dashboard", closable: false }])
 
 // 主题配置 - 使用统一的主题系统
 const themes = [
-  { label: '科技蓝', value: 'tech-blue' },
-  { label: '深绿色', value: 'deep-green' },
-  { label: '淡紫色', value: 'light-purple' },
-  { label: '暗黑模式', value: 'dark' }
+  { label: "科技蓝", value: "tech-blue" },
+  { label: "深绿色", value: "deep-green" },
+  { label: "淡紫色", value: "light-purple" },
+  { label: "暗黑模式", value: "dark" },
 ]
 
 // 计算属性
@@ -241,7 +187,7 @@ const addLog = (message: string, type: string = "info") => {
   testLogs.value.unshift({
     time: new Date().toLocaleTimeString(),
     message,
-    type
+    type,
   })
 
   // 限制日志数量
@@ -274,7 +220,7 @@ const addTestTab = () => {
   const testTab = {
     title: `测试标签 ${tabs.value.length}`,
     path: `/test/${Date.now()}`,
-    closable: true
+    closable: true,
   }
   tabs.value.push(testTab)
   addLog(`添加了测试标签: ${testTab.title}`, "info")

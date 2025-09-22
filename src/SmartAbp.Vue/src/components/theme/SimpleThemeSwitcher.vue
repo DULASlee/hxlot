@@ -1,21 +1,12 @@
 <template>
   <div class="theme-switcher">
-    <button
-      class="theme-button"
-      @click="toggleDropdown"
-    >
+    <button class="theme-button" @click="toggleDropdown">
       <span class="theme-icon">🎨</span>
       <span class="theme-text">主题</span>
-      <span
-        class="dropdown-arrow"
-        :class="{ open: showDropdown }"
-      >▼</span>
+      <span class="dropdown-arrow" :class="{ open: showDropdown }">▼</span>
     </button>
 
-    <div
-      v-if="showDropdown"
-      class="theme-dropdown"
-    >
+    <div v-if="showDropdown" class="theme-dropdown">
       <div
         v-for="theme in themes"
         :key="theme.key"
@@ -23,26 +14,20 @@
         :class="{ active: currentTheme === theme.key }"
         @click="selectTheme(theme.key)"
       >
-        <span
-          class="theme-color"
-          :style="{ backgroundColor: theme.color }"
-        />
+        <span class="theme-color" :style="{ backgroundColor: theme.color }" />
         <span class="theme-name">{{ theme.name }}</span>
-        <span
-          v-if="currentTheme === theme.key"
-          class="check-mark"
-        >✓</span>
+        <span v-if="currentTheme === theme.key" class="check-mark">✓</span>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-type ThemeKey = 'classic' | 'tech' | 'elegant' | 'dark'
+type ThemeKey = "classic" | "tech" | "elegant" | "dark"
 type ThemeVars = Record<string, string>
 
 function isThemeKey(value: string | null): value is ThemeKey {
-  return value === 'classic' || value === 'tech' || value === 'elegant' || value === 'dark'
+  return value === "classic" || value === "tech" || value === "elegant" || value === "dark"
 }
 export default {
   name: "SimpleThemeSwitcher",
@@ -61,7 +46,7 @@ export default {
   mounted() {
     // 从localStorage加载保存的主题
     const savedTheme = localStorage.getItem("selectedTheme")
-    const themeToApply: ThemeKey = isThemeKey(savedTheme) ? savedTheme : 'classic'
+    const themeToApply: ThemeKey = isThemeKey(savedTheme) ? savedTheme : "classic"
     this.currentTheme = themeToApply
     this.applyTheme(themeToApply)
 

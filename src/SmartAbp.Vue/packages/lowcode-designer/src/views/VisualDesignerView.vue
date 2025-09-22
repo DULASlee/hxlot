@@ -20,10 +20,7 @@
 
       <div class="header-center">
         <!-- 协作用户 -->
-        <div
-          v-if="collaborationEnabled"
-          class="collaboration-users"
-        >
+        <div v-if="collaborationEnabled" class="collaboration-users">
           <div
             v-for="user in collaborationUsers"
             :key="user.id"
@@ -55,42 +52,17 @@
 
         <!-- 操作按钮 -->
         <div class="action-buttons">
-          <button
-            :disabled="!canUndo"
-            class="btn btn-icon"
-            title="撤销 (Ctrl+Z)"
-            @click="undo"
-          >
+          <button :disabled="!canUndo" class="btn btn-icon" title="撤销 (Ctrl+Z)" @click="undo">
             <i class="icon-undo" />
           </button>
-          <button
-            :disabled="!canRedo"
-            class="btn btn-icon"
-            title="重做 (Ctrl+Y)"
-            @click="redo"
-          >
+          <button :disabled="!canRedo" class="btn btn-icon" title="重做 (Ctrl+Y)" @click="redo">
             <i class="icon-redo" />
           </button>
-          <button
-            :disabled="!isDirty"
-            class="btn btn-icon"
-            title="保存 (Ctrl+S)"
-            @click="save"
-          >
+          <button :disabled="!isDirty" class="btn btn-icon" title="保存 (Ctrl+S)" @click="save">
             <i class="icon-save" />
           </button>
-          <button
-            class="btn btn-primary"
-            @click="preview"
-          >
-            预览
-          </button>
-          <button
-            class="btn btn-secondary"
-            @click="exportDesign"
-          >
-            导出
-          </button>
+          <button class="btn btn-primary" @click="preview">预览</button>
+          <button class="btn btn-secondary" @click="exportDesign">导出</button>
         </div>
       </div>
     </div>
@@ -98,10 +70,7 @@
     <!-- 主要布局 -->
     <div class="designer-layout">
       <!-- 左侧面板 -->
-      <div
-        class="designer-sidebar left"
-        :class="{ collapsed: leftPanelCollapsed }"
-      >
+      <div class="designer-sidebar left" :class="{ collapsed: leftPanelCollapsed }">
         <div class="sidebar-header">
           <div class="sidebar-tabs">
             <button
@@ -115,23 +84,14 @@
               <span v-if="!leftPanelCollapsed">{{ tab.label }}</span>
             </button>
           </div>
-          <button
-            class="collapse-btn"
-            @click="leftPanelCollapsed = !leftPanelCollapsed"
-          >
+          <button class="collapse-btn" @click="leftPanelCollapsed = !leftPanelCollapsed">
             <i :class="leftPanelCollapsed ? 'icon-expand' : 'icon-collapse'" />
           </button>
         </div>
 
-        <div
-          v-if="!leftPanelCollapsed"
-          class="sidebar-content"
-        >
+        <div v-if="!leftPanelCollapsed" class="sidebar-content">
           <!-- 组件库 -->
-          <div
-            v-show="activeLeftTab === 'components'"
-            class="tab-panel"
-          >
+          <div v-show="activeLeftTab === 'components'" class="tab-panel">
             <ComponentPalette
               v-if="designer"
               :component-library="{}"
@@ -140,10 +100,7 @@
           </div>
 
           <!-- 图层管理 -->
-          <div
-            v-show="activeLeftTab === 'layers'"
-            class="tab-panel"
-          >
+          <div v-show="activeLeftTab === 'layers'" class="tab-panel">
             <LayerManager
               :components="canvasComponents"
               :selected-components="selectedComponents"
@@ -154,10 +111,7 @@
           </div>
 
           <!-- AI助手 -->
-          <div
-            v-show="activeLeftTab === 'ai'"
-            class="tab-panel"
-          >
+          <div v-show="activeLeftTab === 'ai'" class="tab-panel">
             <AIAssistantPanel
               v-if="aiEnabled && designer"
               :ai-assistant="{}"
@@ -174,23 +128,14 @@
         <div class="canvas-toolbar">
           <div class="toolbar-left">
             <div class="zoom-controls">
-              <button
-                class="btn btn-icon"
-                @click="zoomOut"
-              >
+              <button class="btn btn-icon" @click="zoomOut">
                 <i class="icon-zoom-out" />
               </button>
               <span class="zoom-level">{{ Math.round(zoomLevel * 100) }}%</span>
-              <button
-                class="btn btn-icon"
-                @click="zoomIn"
-              >
+              <button class="btn btn-icon" @click="zoomIn">
                 <i class="icon-zoom-in" />
               </button>
-              <button
-                class="btn btn-icon"
-                @click="resetZoom"
-              >
+              <button class="btn btn-icon" @click="resetZoom">
                 <i class="icon-zoom-reset" />
               </button>
             </div>
@@ -224,17 +169,12 @@
           </div>
 
           <div class="toolbar-right">
-            <div class="canvas-size-info">
-              {{ canvasSize.width }} × {{ canvasSize.height }}
-            </div>
+            <div class="canvas-size-info">{{ canvasSize.width }} × {{ canvasSize.height }}</div>
           </div>
         </div>
 
         <!-- 画布容器 -->
-        <div
-          ref="canvasContainer"
-          class="canvas-container"
-        >
+        <div ref="canvasContainer" class="canvas-container">
           <AdvancedCanvasComponent
             v-if="designer"
             ref="canvasRef"
@@ -259,10 +199,7 @@
       </div>
 
       <!-- 右侧面板 -->
-      <div
-        class="designer-sidebar right"
-        :class="{ collapsed: rightPanelCollapsed }"
-      >
+      <div class="designer-sidebar right" :class="{ collapsed: rightPanelCollapsed }">
         <div class="sidebar-header">
           <div class="sidebar-tabs">
             <button
@@ -276,23 +213,14 @@
               <span v-if="!rightPanelCollapsed">{{ tab.label }}</span>
             </button>
           </div>
-          <button
-            class="collapse-btn"
-            @click="rightPanelCollapsed = !rightPanelCollapsed"
-          >
+          <button class="collapse-btn" @click="rightPanelCollapsed = !rightPanelCollapsed">
             <i :class="rightPanelCollapsed ? 'icon-expand' : 'icon-collapse'" />
           </button>
         </div>
 
-        <div
-          v-if="!rightPanelCollapsed"
-          class="sidebar-content"
-        >
+        <div v-if="!rightPanelCollapsed" class="sidebar-content">
           <!-- 属性面板 -->
-          <div
-            v-show="activeRightTab === 'properties'"
-            class="tab-panel"
-          >
+          <div v-show="activeRightTab === 'properties'" class="tab-panel">
             <PropertyInspector
               :selected-components="selectedComponentsData"
               @update-component="updateComponent"
@@ -300,10 +228,7 @@
           </div>
 
           <!-- 样式面板 -->
-          <div
-            v-show="activeRightTab === 'styles'"
-            class="tab-panel"
-          >
+          <div v-show="activeRightTab === 'styles'" class="tab-panel">
             <StyleEditor
               :selected-components="selectedComponentsData"
               @update-styles="updateComponentStyles"
@@ -311,10 +236,7 @@
           </div>
 
           <!-- 版本历史 -->
-          <div
-            v-show="activeRightTab === 'history'"
-            class="tab-panel"
-          >
+          <div v-show="activeRightTab === 'history'" class="tab-panel">
             <VersionHistory
               v-if="designer"
               :version-control="{}"
@@ -332,19 +254,14 @@
           <i class="icon-info" />
           {{ statusMessage }}
         </span>
-        <span
-          v-if="isDirty"
-          class="status-item dirty"
-        >
+        <span v-if="isDirty" class="status-item dirty">
           <i class="icon-dot" />
           未保存
         </span>
       </div>
 
       <div class="status-right">
-        <span class="status-item">
-          最后保存: {{ lastSavedText }}
-        </span>
+        <span class="status-item"> 最后保存: {{ lastSavedText }} </span>
       </div>
     </div>
 
@@ -369,107 +286,54 @@
     />
 
     <!-- 保留原有功能 -->
-    <el-card style="margin-top: 20px;">
+    <el-card style="margin-top: 20px">
       <h3>兼容性功能</h3>
       <div class="actions">
-        <el-button
-          type="primary"
-          :disabled="!hasComponents"
-          @click="onPreview"
-        >
+        <el-button type="primary" :disabled="!hasComponents" @click="onPreview">
           <el-icon><View /></el-icon>
           预览页面
         </el-button>
-        <el-button
-          :disabled="!hasComponents"
-          :loading="generating"
-          @click="onGenerateCode"
-        >
+        <el-button :disabled="!hasComponents" :loading="generating" @click="onGenerateCode">
           <el-icon><Document /></el-icon>
           生成代码
         </el-button>
-        <el-button
-          :disabled="!hasComponents"
-          @click="onExportSchema"
-        >
+        <el-button :disabled="!hasComponents" @click="onExportSchema">
           <el-icon><Download /></el-icon>
           导出Schema
         </el-button>
-        <el-button
-          :disabled="!hasComponents"
-          type="danger"
-          @click="onClearAll"
-        >
+        <el-button :disabled="!hasComponents" type="danger" @click="onClearAll">
           <el-icon><Delete /></el-icon>
           清空画布
         </el-button>
       </div>
 
       <!-- 代码生成配置对话框 -->
-      <el-dialog
-        v-model="showCodeDialog"
-        title="代码生成配置"
-        width="600px"
-      >
-        <el-form
-          :model="codegenOptions"
-          label-width="100px"
-        >
-          <el-form-item
-            label="模块名称"
-            required
-          >
-            <el-input
-              v-model="codegenOptions.moduleName"
-              placeholder="例如：UserManagement"
-            />
+      <el-dialog v-model="showCodeDialog" title="代码生成配置" width="600px">
+        <el-form :model="codegenOptions" label-width="100px">
+          <el-form-item label="模块名称" required>
+            <el-input v-model="codegenOptions.moduleName" placeholder="例如：UserManagement" />
           </el-form-item>
-          <el-form-item
-            label="页面名称"
-            required
-          >
-            <el-input
-              v-model="codegenOptions.pageName"
-              placeholder="例如：UserList"
-            />
+          <el-form-item label="页面名称" required>
+            <el-input v-model="codegenOptions.pageName" placeholder="例如：UserList" />
           </el-form-item>
           <el-form-item label="作者">
-            <el-input
-              v-model="codegenOptions.author"
-              placeholder="可选"
-            />
+            <el-input v-model="codegenOptions.author" placeholder="可选" />
           </el-form-item>
           <el-form-item label="生成格式">
             <el-radio-group v-model="codegenOptions.format">
-              <el-radio value="vue-sfc">
-                Vue SFC
-              </el-radio>
-              <el-radio value="designer-schema">
-                Designer Schema
-              </el-radio>
-              <el-radio value="both">
-                两者都要
-              </el-radio>
+              <el-radio value="vue-sfc"> Vue SFC </el-radio>
+              <el-radio value="designer-schema"> Designer Schema </el-radio>
+              <el-radio value="both"> 两者都要 </el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item>
-            <el-checkbox v-model="codegenOptions.includeEvents">
-              包含事件绑定
-            </el-checkbox>
-            <el-checkbox v-model="codegenOptions.includeValidation">
-              包含校验规则
-            </el-checkbox>
+            <el-checkbox v-model="codegenOptions.includeEvents"> 包含事件绑定 </el-checkbox>
+            <el-checkbox v-model="codegenOptions.includeValidation"> 包含校验规则 </el-checkbox>
           </el-form-item>
         </el-form>
         <template #footer>
-          <el-button @click="showCodeDialog = false">
-            取消
-          </el-button>
-          <el-button
-            type="primary"
-            :loading="generating"
-            @click="handleGenerateCode"
-          >
+          <el-button @click="showCodeDialog = false"> 取消 </el-button>
+          <el-button type="primary" :loading="generating" @click="handleGenerateCode">
             生成代码
           </el-button>
         </template>
@@ -486,25 +350,15 @@
           <div class="dialog-header">
             <span>生成的代码</span>
             <div class="header-actions">
-              <el-button
-                text
-                @click="previewFullscreen = !previewFullscreen"
-              >
+              <el-button text @click="previewFullscreen = !previewFullscreen">
                 <el-icon><FullScreen v-if="!previewFullscreen" /><Aim v-else /></el-icon>
               </el-button>
             </div>
           </div>
         </template>
 
-        <el-tabs
-          v-model="activeTab"
-          type="border-card"
-        >
-          <el-tab-pane
-            v-if="generatedCode?.vueSFC"
-            label="Vue模板"
-            name="template"
-          >
+        <el-tabs v-model="activeTab" type="border-card">
+          <el-tab-pane v-if="generatedCode?.vueSFC" label="Vue模板" name="template">
             <el-input
               v-model="generatedCode.vueSFC.template"
               type="textarea"
@@ -513,11 +367,7 @@
               class="code-textarea"
             />
           </el-tab-pane>
-          <el-tab-pane
-            v-if="generatedCode?.vueSFC"
-            label="脚本代码"
-            name="script"
-          >
+          <el-tab-pane v-if="generatedCode?.vueSFC" label="脚本代码" name="script">
             <el-input
               v-model="generatedCode.vueSFC.script"
               type="textarea"
@@ -526,11 +376,7 @@
               class="code-textarea"
             />
           </el-tab-pane>
-          <el-tab-pane
-            v-if="generatedCode?.vueSFC"
-            label="样式代码"
-            name="style"
-          >
+          <el-tab-pane v-if="generatedCode?.vueSFC" label="样式代码" name="style">
             <el-input
               v-model="generatedCode.vueSFC.style"
               type="textarea"
@@ -539,11 +385,7 @@
               class="code-textarea"
             />
           </el-tab-pane>
-          <el-tab-pane
-            v-if="generatedCode?.designerSchema"
-            label="Designer Schema"
-            name="schema"
-          >
+          <el-tab-pane v-if="generatedCode?.designerSchema" label="Designer Schema" name="schema">
             <el-input
               v-model="schemaText"
               type="textarea"
@@ -552,10 +394,7 @@
               class="code-textarea"
             />
           </el-tab-pane>
-          <el-tab-pane
-            label="路由配置"
-            name="routes"
-          >
+          <el-tab-pane label="路由配置" name="routes">
             <el-input
               v-model="routesText"
               type="textarea"
@@ -567,20 +406,12 @@
         </el-tabs>
 
         <template #footer>
-          <el-button @click="showPreviewDialog = false">
-            关闭
-          </el-button>
-          <el-button
-            type="primary"
-            @click="copyToClipboard"
-          >
+          <el-button @click="showPreviewDialog = false"> 关闭 </el-button>
+          <el-button type="primary" @click="copyToClipboard">
             <el-icon><CopyDocument /></el-icon>
             复制当前代码
           </el-button>
-          <el-button
-            type="success"
-            @click="downloadCode"
-          >
+          <el-button type="success" @click="downloadCode">
             <el-icon><Download /></el-icon>
             下载文件
           </el-button>
@@ -595,17 +426,15 @@
         placeholder="粘贴包含data-block-id/data-node-id的SFC模板"
       />
       <div class="actions">
-        <el-button @click="onReadSFC">
-          回读Selectors
-        </el-button>
+        <el-button @click="onReadSFC"> 回读Selectors </el-button>
       </div>
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue"
+import { ElMessage } from "element-plus"
 // 注释掉缺失的模块导入
 // import { EnterpriseDesigner, createEnterpriseDesigner } from '../core/EnterpriseDesigner'
 // import type { CanvasComponent, CanvasViewport } from '../core/AdvancedCanvas'
@@ -618,17 +447,17 @@ interface EnterpriseDesigner {
   // 核心方法
   initialize?(): Promise<void>
   destroy?(): void
-  
+
   // 事件系统
   on?(event: string, callback: Function): void
   off?(event: string, callback: Function): void
   emit?(event: string, data: any): void
-  
+
   // 状态管理
   getState?(): any
   setState?(state: any): void
   getDesignContext?(): any
-  
+
   // 画布操作
   canvas?: {
     getComponents?(): any[]
@@ -639,24 +468,24 @@ interface EnterpriseDesigner {
     setViewport?(x: number, y: number): void
     getComponent?(id: string): any
   }
-  
+
   // 版本控制
   versionControl?: {
     getState?(): any
     restoreSnapshot?(id: string): Promise<void>
   }
-  
+
   // AI助手
   aiAssistant?: {
     applySuggestion?(id: string): Promise<void>
   }
-  
+
   // 组件操作
   selectComponent?(id: string): void
   updateComponent?(id: string, updates: any): void
-  
+
   // 其他方法
-  setMode?(mode: 'design' | 'preview' | 'code'): void
+  setMode?(mode: "design" | "preview" | "code"): void
   undo?(): void
   redo?(): void
   save?(): Promise<void>
@@ -692,17 +521,17 @@ interface PerformanceMetrics {
 }
 
 // 导入组件
-import ComponentPalette from './designer/ComponentPalette.vue'
-import LayerManager from './designer/LayerManager.vue'
-import AIAssistantPanel from './designer/AIAssistantPanel.vue'
-import PropertyInspector from './designer/PropertyInspector.vue'
-import StyleEditor from './designer/StyleEditor.vue'
-import VersionHistory from './designer/VersionHistory.vue'
-import AdvancedCanvasComponent from './designer/AdvancedCanvasComponent.vue'
-import MinimapComponent from './designer/MinimapComponent.vue'
-import ExportDialog from './designer/ExportDialog.vue'
-import ImportDialog from './designer/ImportDialog.vue'
-import PreviewModal from './designer/PreviewModal.vue'
+import ComponentPalette from "./designer/ComponentPalette.vue"
+import LayerManager from "./designer/LayerManager.vue"
+import AIAssistantPanel from "./designer/AIAssistantPanel.vue"
+import PropertyInspector from "./designer/PropertyInspector.vue"
+import StyleEditor from "./designer/StyleEditor.vue"
+import VersionHistory from "./designer/VersionHistory.vue"
+import AdvancedCanvasComponent from "./designer/AdvancedCanvasComponent.vue"
+import MinimapComponent from "./designer/MinimapComponent.vue"
+import ExportDialog from "./designer/ExportDialog.vue"
+import ImportDialog from "./designer/ImportDialog.vue"
+import PreviewModal from "./designer/PreviewModal.vue"
 
 // 保留原有功能的导入
 import {
@@ -712,22 +541,26 @@ import {
   Delete,
   FullScreen,
   Aim,
-  CopyDocument
-} from '@element-plus/icons-vue'
-import { exportDesignerState, type ExportOptions, type CodeGenerationResult } from '../designer/schema/exporter'
+  CopyDocument,
+} from "@element-plus/icons-vue"
+import {
+  exportDesignerState,
+  type ExportOptions,
+  type CodeGenerationResult,
+} from "../designer/schema/exporter"
 type DesignerOverrideSchema = any
 
 // 企业级设计器实例
 const designer = ref<EnterpriseDesigner>()
 
 // stores 目录暂缺最小实现，此处以本地空实现代替，后续补全
-const useDesignerStore = () => ({ components: ref<any[]>([]), clear: () => {} } as any)
+const useDesignerStore = () => ({ components: ref<any[]>([]), clear: () => {} }) as any
 // UI状态
-const currentMode = ref<'design' | 'preview' | 'code'>('design')
+const currentMode = ref<"design" | "preview" | "code">("design")
 const leftPanelCollapsed = ref(false)
 const rightPanelCollapsed = ref(false)
-const activeLeftTab = ref('components')
-const activeRightTab = ref('properties')
+const activeLeftTab = ref("components")
+const activeRightTab = ref("properties")
 
 // 视图控制
 const showGrid = ref(true)
@@ -753,11 +586,11 @@ const performanceMetrics = ref<PerformanceMetrics>({
   memoryUsage: 0,
   componentCount: 0,
   fps: 60,
-  lastUpdateTime: 0
+  lastUpdateTime: 0,
 })
 
 // 状态信息
-const statusMessage = ref('就绪')
+const statusMessage = ref("就绪")
 const isDirty = ref(false)
 const lastSaved = ref(0)
 
@@ -766,21 +599,21 @@ const canvasContainer = ref<HTMLElement>()
 const canvasRef = ref()
 
 // 响应式数据（保留原有功能）
-const sfcText = ref('')
+const sfcText = ref("")
 const generating = ref(false)
 const showCodeDialog = ref(false)
 const showPreviewDialog = ref(false)
 const previewFullscreen = ref(false)
-const activeTab = ref('template')
+const activeTab = ref("template")
 
 // 代码生成配置
 const codegenOptions = ref<ExportOptions>({
-  moduleName: 'UserManagement',
-  pageName: 'UserList',
-  author: '',
-  format: 'vue-sfc',
+  moduleName: "UserManagement",
+  pageName: "UserList",
+  author: "",
+  format: "vue-sfc",
   includeEvents: true,
-  includeValidation: true
+  includeValidation: true,
 })
 
 // 生成的代码
@@ -791,27 +624,29 @@ const designerStore = useDesignerStore()
 
 // 模式配置
 const modes = [
-  { value: 'design', label: '设计', icon: 'icon-design' },
-  { value: 'preview', label: '预览', icon: 'icon-preview' },
-  { value: 'code', label: '代码', icon: 'icon-code' }
+  { value: "design", label: "设计", icon: "icon-design" },
+  { value: "preview", label: "预览", icon: "icon-preview" },
+  { value: "code", label: "代码", icon: "icon-code" },
 ]
 
 // 左侧标签页
 const leftTabs = [
-  { key: 'components', label: '组件', icon: 'icon-components' },
-  { key: 'layers', label: '图层', icon: 'icon-layers' },
-  { key: 'ai', label: 'AI助手', icon: 'icon-ai' }
+  { key: "components", label: "组件", icon: "icon-components" },
+  { key: "layers", label: "图层", icon: "icon-layers" },
+  { key: "ai", label: "AI助手", icon: "icon-ai" },
 ]
 
 // 右侧标签页
 const rightTabs = [
-  { key: 'properties', label: '属性', icon: 'icon-properties' },
-  { key: 'styles', label: '样式', icon: 'icon-styles' },
-  { key: 'history', label: '历史', icon: 'icon-history' }
+  { key: "properties", label: "属性", icon: "icon-properties" },
+  { key: "styles", label: "样式", icon: "icon-styles" },
+  { key: "history", label: "历史", icon: "icon-history" },
 ]
 
 // Schema处理器（保留原有功能）
-const reader = { readFromVueSFC: (_c: string, _o: any) => ({ selectors: {}, operations: [] }) } as any
+const reader = {
+  readFromVueSFC: (_c: string, _o: any) => ({ selectors: {}, operations: [] }),
+} as any
 
 // 计算属性
 const canvasComponents = computed(() => {
@@ -839,7 +674,7 @@ const designContext = computed(() => {
     components: [],
     selectedComponents: [],
     canvasSize: { width: 1920, height: 1080 },
-    viewport: { x: 0, y: 0, zoom: 1 }
+    viewport: { x: 0, y: 0, zoom: 1 },
   }
 })
 
@@ -848,9 +683,9 @@ const canUndo = computed(() => false)
 const canRedo = computed(() => false)
 
 const lastSavedText = computed(() => {
-  if (lastSaved.value === 0) return '从未保存'
+  if (lastSaved.value === 0) return "从未保存"
   const diff = Date.now() - lastSaved.value
-  if (diff < 60000) return '刚刚'
+  if (diff < 60000) return "刚刚"
   if (diff < 3600000) return `${Math.floor(diff / 60000)}分钟前`
   return `${Math.floor(diff / 3600000)}小时前`
 })
@@ -860,43 +695,45 @@ const hasComponents = computed(() => designerStore.components.value.length > 0)
 const schemaText = computed(() => {
   return generatedCode.value?.designerSchema
     ? JSON.stringify(generatedCode.value.designerSchema, null, 2)
-    : ''
+    : ""
 })
 
 const routesText = computed(() => {
   return generatedCode.value?.routes
-    ? JSON.stringify({
-        routes: generatedCode.value.routes,
-        menuItems: generatedCode.value.menuItems
-      }, null, 2)
-    : ''
+    ? JSON.stringify(
+        {
+          routes: generatedCode.value.routes,
+          menuItems: generatedCode.value.menuItems,
+        },
+        null,
+        2,
+      )
+    : ""
 })
 
 // 企业级设计器方法实现 - 简化版本
 const initializeDesigner = async () => {
   try {
     designer.value = createEnterpriseDesigner({})
-    
+
     // 模拟初始化成功
-    await new Promise(resolve => setTimeout(resolve, 100))
-    
-    statusMessage.value = '设计器初始化完成（演示模式）'
-    ElMessage.success('设计器初始化完成')
+    await new Promise((resolve) => setTimeout(resolve, 100))
+
+    statusMessage.value = "设计器初始化完成（演示模式）"
+    ElMessage.success("设计器初始化完成")
   } catch (error) {
-    console.error('设计器初始化失败:', error)
-    ElMessage.error('设计器初始化失败')
+    console.error("设计器初始化失败:", error)
+    ElMessage.error("设计器初始化失败")
   }
 }
 
-
-
 // 模式切换
-const setMode = (mode: 'design' | 'preview' | 'code') => {
+const setMode = (mode: "design" | "preview" | "code") => {
   currentMode.value = mode
   if (designer.value?.setMode) {
     designer.value.setMode(mode)
   }
-  statusMessage.value = `切换到${mode === 'design' ? '设计' : mode === 'preview' ? '预览' : '代码'}模式`
+  statusMessage.value = `切换到${mode === "design" ? "设计" : mode === "preview" ? "预览" : "代码"}模式`
 }
 
 // 操作方法
@@ -904,14 +741,14 @@ const undo = () => {
   if (designer.value?.undo) {
     designer.value.undo()
   }
-  statusMessage.value = '撤销操作'
+  statusMessage.value = "撤销操作"
 }
 
 const redo = () => {
   if (designer.value?.redo) {
     designer.value.redo()
   }
-  statusMessage.value = '重做操作'
+  statusMessage.value = "重做操作"
 }
 
 const save = async () => {
@@ -919,16 +756,16 @@ const save = async () => {
     if (designer.value?.save) {
       await designer.value.save()
     }
-    ElMessage.success('保存成功')
-    statusMessage.value = '保存成功'
+    ElMessage.success("保存成功")
+    statusMessage.value = "保存成功"
   } catch (error) {
-    ElMessage.error('保存失败')
+    ElMessage.error("保存失败")
   }
 }
 
 const preview = () => {
   if (canvasComponents.value.length === 0) {
-    ElMessage.warning('画布为空，无法预览')
+    ElMessage.warning("画布为空，无法预览")
     return
   }
   showPreviewModal.value = true
@@ -936,7 +773,7 @@ const preview = () => {
 
 const exportDesign = () => {
   if (canvasComponents.value.length === 0) {
-    ElMessage.warning('画布为空，无法导出')
+    ElMessage.warning("画布为空，无法导出")
     return
   }
   showExportDialog.value = true
@@ -966,17 +803,17 @@ const resetZoom = () => {
 // 视图控制
 const toggleGrid = () => {
   showGrid.value = !showGrid.value
-  statusMessage.value = `网格${showGrid.value ? '已显示' : '已隐藏'}`
+  statusMessage.value = `网格${showGrid.value ? "已显示" : "已隐藏"}`
 }
 
 const toggleRulers = () => {
   showRulers.value = !showRulers.value
-  statusMessage.value = `标尺${showRulers.value ? '已显示' : '已隐藏'}`
+  statusMessage.value = `标尺${showRulers.value ? "已显示" : "已隐藏"}`
 }
 
 const toggleMinimap = () => {
   showMinimap.value = !showMinimap.value
-  statusMessage.value = `缩略图${showMinimap.value ? '已显示' : '已隐藏'}`
+  statusMessage.value = `缩略图${showMinimap.value ? "已显示" : "已隐藏"}`
 }
 
 // 组件操作
@@ -985,7 +822,8 @@ const handleComponentDragStart = (component: any) => {
 }
 
 const handleComponentSelect = (componentIds: string[]) => {
-  statusMessage.value = componentIds.length > 0 ? `选中了 ${componentIds.length} 个组件` : '取消选择'
+  statusMessage.value =
+    componentIds.length > 0 ? `选中了 ${componentIds.length} 个组件` : "取消选择"
 }
 
 const handleComponentUpdate = (id: string, updates: Partial<CanvasComponent>) => {
@@ -1024,7 +862,10 @@ const toggleComponentVisibility = (componentId: string) => {
   const component = designer.value.canvas.getComponent(componentId)
   if (component) {
     designer.value.updateComponent(componentId, {
-      style: { ...component.style, display: component.style?.display === 'none' ? 'block' : 'none' }
+      style: {
+        ...component.style,
+        display: component.style?.display === "none" ? "block" : "none",
+      },
     })
   }
 }
@@ -1034,7 +875,7 @@ const toggleComponentLock = (componentId: string) => {
   const component = designer.value.canvas.getComponent(componentId)
   if (component) {
     designer.value.updateComponent(componentId, {
-      locked: !component.locked
+      locked: !component.locked,
     })
   }
 }
@@ -1045,9 +886,9 @@ const applySuggestion = async (suggestion: AIDesignSuggestion) => {
     if (designer.value?.aiAssistant?.applySuggestion) {
       await designer.value.aiAssistant.applySuggestion(suggestion.id)
     }
-    statusMessage.value = '已应用AI建议'
+    statusMessage.value = "已应用AI建议"
   } catch (error) {
-    ElMessage.error('应用AI建议失败')
+    ElMessage.error("应用AI建议失败")
   }
 }
 
@@ -1057,9 +898,9 @@ const restoreVersion = async (snapshotId: string) => {
     if (designer.value?.versionControl?.restoreSnapshot) {
       await designer.value.versionControl.restoreSnapshot(snapshotId)
     }
-    statusMessage.value = '版本已恢复'
+    statusMessage.value = "版本已恢复"
   } catch (error) {
-    ElMessage.error('版本恢复失败')
+    ElMessage.error("版本恢复失败")
   }
 }
 
@@ -1075,48 +916,48 @@ const handleViewportChange = (newViewport: { x: number; y: number; zoom: number 
 
 // 导入导出
 const handleExport = () => {
-  statusMessage.value = '导出完成'
+  statusMessage.value = "导出完成"
 }
 
 const handleImport = (data: any) => {
   try {
     if (designer.value?.importFromJSON) {
       designer.value.importFromJSON(data)
-      statusMessage.value = '导入完成'
+      statusMessage.value = "导入完成"
     } else {
-      ElMessage.warning('导入功能暂不可用')
+      ElMessage.warning("导入功能暂不可用")
     }
   } catch (error) {
-    ElMessage.error('导入失败')
+    ElMessage.error("导入失败")
   }
 }
 
 // 保留原有功能的方法实现
 const onPreview = () => {
   if (!hasComponents.value) {
-    ElMessage.warning('请先添加一些组件到画布')
+    ElMessage.warning("请先添加一些组件到画布")
     return
   }
 
   // TODO: 实现预览功能
-  ElMessage.info('预览功能开发中...')
+  ElMessage.info("预览功能开发中...")
 }
 
 const onGenerateCode = () => {
   if (!hasComponents.value) {
-    ElMessage.warning('请先添加一些组件到画布')
+    ElMessage.warning("请先添加一些组件到画布")
     return
   }
 
   // 重置配置为合理的默认值
-  codegenOptions.value.moduleName = 'UserManagement'
-  codegenOptions.value.pageName = 'UserList'
+  codegenOptions.value.moduleName = "UserManagement"
+  codegenOptions.value.pageName = "UserList"
   showCodeDialog.value = true
 }
 
 const handleGenerateCode = async () => {
   if (!codegenOptions.value.moduleName || !codegenOptions.value.pageName) {
-    ElMessage.error('请填写模块名称和页面名称')
+    ElMessage.error("请填写模块名称和页面名称")
     return
   }
 
@@ -1130,12 +971,12 @@ const handleGenerateCode = async () => {
     // 关闭配置对话框，打开预览对话框
     showCodeDialog.value = false
     showPreviewDialog.value = true
-    activeTab.value = 'template'
+    activeTab.value = "template"
 
-    ElMessage.success('代码生成成功！')
+    ElMessage.success("代码生成成功！")
   } catch (error) {
-    console.error('代码生成失败:', error)
-    ElMessage.error('代码生成失败，请检查组件配置')
+    console.error("代码生成失败:", error)
+    ElMessage.error("代码生成失败，请检查组件配置")
   } finally {
     generating.value = false
   }
@@ -1143,31 +984,31 @@ const handleGenerateCode = async () => {
 
 const onExportSchema = () => {
   if (!hasComponents.value) {
-    ElMessage.warning('请先添加一些组件到画布')
+    ElMessage.warning("请先添加一些组件到画布")
     return
   }
 
   try {
     const result = exportDesignerState(designerStore.components.value, {
-      moduleName: 'Demo',
-      pageName: 'DemoPage',
-      format: 'designer-schema'
+      moduleName: "Demo",
+      pageName: "DemoPage",
+      format: "designer-schema",
     } as ExportOptions)
     const schema = result.designerSchema || {
       metadata: {
-        schemaVersion: '0.1.0',
-        moduleName: 'Demo',
-        pageName: 'DemoPage',
-        timestamp: new Date().toISOString()
+        schemaVersion: "0.1.0",
+        moduleName: "Demo",
+        pageName: "DemoPage",
+        timestamp: new Date().toISOString(),
       },
       selectors: {},
-      operations: []
+      operations: [],
     }
 
     // 下载Schema文件
-    const blob = new Blob([JSON.stringify(schema, null, 2)], { type: 'application/json' })
+    const blob = new Blob([JSON.stringify(schema, null, 2)], { type: "application/json" })
     const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
+    const a = document.createElement("a")
     a.href = url
     a.download = `designer-schema-${Date.now()}.json`
     document.body.appendChild(a)
@@ -1175,45 +1016,45 @@ const onExportSchema = () => {
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
 
-    ElMessage.success('Schema已导出下载')
+    ElMessage.success("Schema已导出下载")
   } catch (error) {
-    console.error('导出失败:', error)
-    ElMessage.error('导出失败')
+    console.error("导出失败:", error)
+    ElMessage.error("导出失败")
   }
 }
 
 const onClearAll = () => {
   designerStore.clear()
   generatedCode.value = null
-  ElMessage.success('画布已清空')
+  ElMessage.success("画布已清空")
 }
 
 const copyToClipboard = async () => {
   try {
-    let content = ''
+    let content = ""
 
     switch (activeTab.value) {
-      case 'template':
-        content = generatedCode.value?.vueSFC?.template || ''
+      case "template":
+        content = generatedCode.value?.vueSFC?.template || ""
         break
-      case 'script':
-        content = generatedCode.value?.vueSFC?.script || ''
+      case "script":
+        content = generatedCode.value?.vueSFC?.script || ""
         break
-      case 'style':
-        content = generatedCode.value?.vueSFC?.style || ''
+      case "style":
+        content = generatedCode.value?.vueSFC?.style || ""
         break
-      case 'schema':
+      case "schema":
         content = schemaText.value
         break
-      case 'routes':
+      case "routes":
         content = routesText.value
         break
     }
 
     await navigator.clipboard.writeText(content)
-    ElMessage.success('代码已复制到剪贴板')
+    ElMessage.success("代码已复制到剪贴板")
   } catch (error) {
-    ElMessage.error('复制失败')
+    ElMessage.error("复制失败")
   }
 }
 
@@ -1221,41 +1062,41 @@ const downloadCode = () => {
   if (!generatedCode.value) return
 
   try {
-    let filename = ''
-    let content = ''
-    let mimeType = 'text/plain'
+    let filename = ""
+    let content = ""
+    let mimeType = "text/plain"
 
     switch (activeTab.value) {
-      case 'template':
+      case "template":
         filename = `${codegenOptions.value.pageName}.vue`
-        content = `${generatedCode.value.vueSFC?.template || ''}\n\n${generatedCode.value.vueSFC?.script || ''}\n\n${generatedCode.value.vueSFC?.style || ''}`
-        mimeType = 'text/plain'
+        content = `${generatedCode.value.vueSFC?.template || ""}\n\n${generatedCode.value.vueSFC?.script || ""}\n\n${generatedCode.value.vueSFC?.style || ""}`
+        mimeType = "text/plain"
         break
-      case 'script':
+      case "script":
         filename = `${codegenOptions.value.pageName}.js`
-        content = generatedCode.value.vueSFC?.script || ''
-        mimeType = 'text/javascript'
+        content = generatedCode.value.vueSFC?.script || ""
+        mimeType = "text/javascript"
         break
-      case 'style':
+      case "style":
         filename = `${codegenOptions.value.pageName}.css`
-        content = generatedCode.value.vueSFC?.style || ''
-        mimeType = 'text/css'
+        content = generatedCode.value.vueSFC?.style || ""
+        mimeType = "text/css"
         break
-      case 'schema':
+      case "schema":
         filename = `${codegenOptions.value.pageName}-schema.json`
         content = schemaText.value
-        mimeType = 'application/json'
+        mimeType = "application/json"
         break
-      case 'routes':
+      case "routes":
         filename = `${codegenOptions.value.pageName}-routes.json`
         content = routesText.value
-        mimeType = 'application/json'
+        mimeType = "application/json"
         break
     }
 
     const blob = new Blob([content], { type: mimeType })
     const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
+    const a = document.createElement("a")
     a.href = url
     a.download = filename
     document.body.appendChild(a)
@@ -1265,7 +1106,7 @@ const downloadCode = () => {
 
     ElMessage.success(`文件 ${filename} 已下载`)
   } catch (error) {
-    ElMessage.error('下载失败')
+    ElMessage.error("下载失败")
   }
 }
 
@@ -1280,10 +1121,10 @@ onMounted(async () => {
     })
   }
 
-  window.addEventListener('resize', handleResize)
+  window.addEventListener("resize", handleResize)
 
   onUnmounted(() => {
-    window.removeEventListener('resize', handleResize)
+    window.removeEventListener("resize", handleResize)
     if (designer.value?.destroy) {
       designer.value.destroy()
     }
@@ -1300,13 +1141,15 @@ watch(zoomLevel, (newZoom: number) => {
 // Schema处理（保留原有功能）
 const readFromSFC = (content: string): DesignerOverrideSchema => {
   return reader.readFromVueSFC(content, {
-    moduleName: 'Demo',
-    pageName: 'DemoPage'
+    moduleName: "Demo",
+    pageName: "DemoPage",
   })
 }
 
 const onReadSFC = () => {
-  const schema = readFromSFC(sfcText.value || '<template><div data-block-id="demo-root"/></template>')
+  const schema = readFromSFC(
+    sfcText.value || '<template><div data-block-id="demo-root"/></template>',
+  )
   const blocks = Object.keys(schema.selectors.byBlockId || {})
   const nodes = Object.keys(schema.selectors.byDataNodeId || {})
   ElMessage.success(`回读成功：blocks=${blocks.length}, nodes=${nodes.length}`)
@@ -1345,7 +1188,7 @@ const onReadSFC = () => {
 }
 
 .code-textarea {
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   font-size: 0.875rem;
   line-height: 1.4;
 }

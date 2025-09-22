@@ -8,11 +8,7 @@
               <Document />
             </el-icon>
             <span class="header-title">Generated Code Preview</span>
-            <el-tag
-              v-if="language"
-              :type="getLanguageTagType(language)"
-              size="small"
-            >
+            <el-tag v-if="language" :type="getLanguageTagType(language)" size="small">
               {{ language.toUpperCase() }}
             </el-tag>
           </div>
@@ -68,10 +64,7 @@
       </template>
 
       <!-- File Tree View -->
-      <div
-        v-if="files && Object.keys(files).length > 1"
-        class="file-tree-container"
-      >
+      <div v-if="files && Object.keys(files).length > 1" class="file-tree-container">
         <div class="file-tree-header">
           <el-icon><Folder /></el-icon>
           <span>Generated Files ({{ Object.keys(files).length }})</span>
@@ -103,7 +96,7 @@
       <!-- Code Editor -->
       <div
         class="code-editor-container"
-        :class="{ 'dark-theme': darkTheme, 'fullscreen': isFullscreen }"
+        :class="{ 'dark-theme': darkTheme, fullscreen: isFullscreen }"
       >
         <div class="editor-toolbar">
           <div class="toolbar-left">
@@ -113,23 +106,12 @@
             <span class="char-count">{{ charCount }} chars</span>
           </div>
           <div class="toolbar-right">
-            <el-switch
-              v-model="showLineNumbers"
-              active-text="Line Numbers"
-              size="small"
-            />
-            <el-switch
-              v-model="wordWrap"
-              active-text="Word Wrap"
-              size="small"
-            />
+            <el-switch v-model="showLineNumbers" active-text="Line Numbers" size="small" />
+            <el-switch v-model="wordWrap" active-text="Word Wrap" size="small" />
           </div>
         </div>
 
-        <div
-          ref="codeContainer"
-          class="code-content"
-        >
+        <div ref="codeContainer" class="code-content">
           <highlightjs
             :code="currentCode"
             :language="language"
@@ -137,16 +119,13 @@
             class="code-highlight"
             :class="{
               'show-line-numbers': showLineNumbers,
-              'word-wrap': wordWrap
+              'word-wrap': wordWrap,
             }"
           />
         </div>
 
         <!-- Code Statistics -->
-        <div
-          v-if="showStatistics"
-          class="code-statistics"
-        >
+        <div v-if="showStatistics" class="code-statistics">
           <div class="stats-grid">
             <div class="stat-item">
               <span class="stat-label">Lines:</span>
@@ -162,7 +141,7 @@
             </div>
             <div class="stat-item">
               <span class="stat-label">Language:</span>
-              <span class="stat-value">{{ language || 'Auto-detect' }}</span>
+              <span class="stat-value">{{ language || "Auto-detect" }}</span>
             </div>
           </div>
         </div>
@@ -172,8 +151,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ref, computed, watch, nextTick } from "vue"
+import { ElMessage } from "element-plus"
 import {
   Document,
   CopyDocument as Copy,
@@ -183,8 +162,8 @@ import {
   Moon,
   FullScreen as Expand,
   Aim as Contract,
-  Folder
-} from '@element-plus/icons-vue'
+  Folder,
+} from "@element-plus/icons-vue"
 
 // Add default export for compatibility
 // export default {
@@ -200,11 +179,11 @@ interface CodePreviewProps {
 }
 
 const props = withDefaults(defineProps<CodePreviewProps>(), {
-  code: '',
+  code: "",
   files: () => ({}),
-  language: 'csharp',
-  fileName: 'Generated.cs',
-  showStatistics: true
+  language: "csharp",
+  fileName: "Generated.cs",
+  showStatistics: true,
 })
 
 // Reactive state
@@ -214,25 +193,25 @@ const darkTheme = ref(false)
 const isFullscreen = ref(false)
 const showLineNumbers = ref(true)
 const wordWrap = ref(false)
-const selectedFile = ref('')
+const selectedFile = ref("")
 const codeContainer = ref<HTMLElement>()
 
 // File tree configuration
 const treeProps = {
-  children: 'children',
-  label: 'name'
+  children: "children",
+  label: "name",
 }
 
 // Computed properties
 const currentCode = computed(() => {
   if (props.files && Object.keys(props.files).length > 0) {
-    return props.files[selectedFile.value] || Object.values(props.files)[0] || ''
+    return props.files[selectedFile.value] || Object.values(props.files)[0] || ""
   }
-  return props.code || ''
+  return props.code || ""
 })
 
 const lineCount = computed(() => {
-  return currentCode.value.split('\n').length
+  return currentCode.value.split("\n").length
 })
 
 const charCount = computed(() => {
@@ -245,12 +224,12 @@ const fileTreeData = computed(() => {
   const tree: any[] = []
 
   Object.entries(props.files).forEach(([path, content]) => {
-    const parts = path.split('/')
+    const parts = path.split("/")
     let currentLevel = tree
-    let currentPath = ''
+    let currentPath = ""
 
     parts.forEach((part, index) => {
-      currentPath += (index > 0 ? '/' : '') + part
+      currentPath += (index > 0 ? "/" : "") + part
 
       if (index === parts.length - 1) {
         // It's a file
@@ -258,17 +237,17 @@ const fileTreeData = computed(() => {
           name: part,
           path: currentPath,
           content,
-          isDirectory: false
+          isDirectory: false,
         })
       } else {
         // It's a directory
-        let existing = currentLevel.find(item => item.name === part && item.isDirectory)
+        let existing = currentLevel.find((item) => item.name === part && item.isDirectory)
         if (!existing) {
           existing = {
             name: part,
             path: currentPath,
             children: [],
-            isDirectory: true
+            isDirectory: true,
           }
           currentLevel.push(existing)
         }
@@ -281,27 +260,31 @@ const fileTreeData = computed(() => {
 })
 
 // Initialize selected file
-watch(() => props.files, (newFiles) => {
-  if (newFiles && Object.keys(newFiles).length > 0 && !selectedFile.value) {
-    selectedFile.value = Object.keys(newFiles)[0]
-  }
-}, { immediate: true })
+watch(
+  () => props.files,
+  (newFiles) => {
+    if (newFiles && Object.keys(newFiles).length > 0 && !selectedFile.value) {
+      selectedFile.value = Object.keys(newFiles)[0]
+    }
+  },
+  { immediate: true },
+)
 
 // Methods
 const copyCode = async () => {
   copying.value = true
   try {
     await navigator.clipboard.writeText(currentCode.value)
-    ElMessage.success('Code copied to clipboard!')
+    ElMessage.success("Code copied to clipboard!")
   } catch (error) {
     // Fallback for older browsers
-    const textArea = document.createElement('textarea')
+    const textArea = document.createElement("textarea")
     textArea.value = currentCode.value
     document.body.appendChild(textArea)
     textArea.select()
-    document.execCommand('copy')
+    document.execCommand("copy")
     document.body.removeChild(textArea)
-    ElMessage.success('Code copied to clipboard!')
+    ElMessage.success("Code copied to clipboard!")
   } finally {
     copying.value = false
   }
@@ -309,10 +292,10 @@ const copyCode = async () => {
 
 const downloadCode = () => {
   const fileName = getCurrentFileName()
-  const blob = new Blob([currentCode.value], { type: 'text/plain' })
+  const blob = new Blob([currentCode.value], { type: "text/plain" })
   const url = URL.createObjectURL(blob)
 
-  const link = document.createElement('a')
+  const link = document.createElement("a")
   link.href = url
   link.download = fileName
   link.click()
@@ -326,8 +309,8 @@ const formatCode = async () => {
   try {
     // Simple formatting for demonstration
     // In a real implementation, you might use Prettier or similar
-    await new Promise(resolve => setTimeout(resolve, 500))
-    ElMessage.success('Code formatted successfully!')
+    await new Promise((resolve) => setTimeout(resolve, 500))
+    ElMessage.success("Code formatted successfully!")
   } finally {
     formatting.value = false
   }
@@ -342,9 +325,9 @@ const toggleFullscreen = async () => {
   await nextTick()
 
   if (isFullscreen.value) {
-    document.body.style.overflow = 'hidden'
+    document.body.style.overflow = "hidden"
   } else {
-    document.body.style.overflow = ''
+    document.body.style.overflow = ""
   }
 }
 
@@ -356,37 +339,39 @@ const selectFile = (data: any) => {
 
 const getCurrentFileName = (): string => {
   if (selectedFile.value) {
-    return selectedFile.value.split('/').pop() || 'Generated.cs'
+    return selectedFile.value.split("/").pop() || "Generated.cs"
   }
-  return props.fileName || 'Generated.cs'
+  return props.fileName || "Generated.cs"
 }
 
-const getLanguageTagType = (lang: string): 'primary' | 'success' | 'warning' | 'info' | 'danger' => {
-  const langTypes: Record<string, 'primary' | 'success' | 'warning' | 'info' | 'danger'> = {
-    csharp: 'primary',
-    typescript: 'success',
-    javascript: 'warning',
-    vue: 'success',
-    json: 'info',
-    xml: 'danger',
-    sql: 'primary'
+const getLanguageTagType = (
+  lang: string,
+): "primary" | "success" | "warning" | "info" | "danger" => {
+  const langTypes: Record<string, "primary" | "success" | "warning" | "info" | "danger"> = {
+    csharp: "primary",
+    typescript: "success",
+    javascript: "warning",
+    vue: "success",
+    json: "info",
+    xml: "danger",
+    sql: "primary",
   }
-  return langTypes[lang.toLowerCase()] || 'info'
+  return langTypes[lang.toLowerCase()] || "info"
 }
 
 const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 B'
+  if (bytes === 0) return "0 B"
   const k = 1024
-  const sizes = ['B', 'KB', 'MB', 'GB']
+  const sizes = ["B", "KB", "MB", "GB"]
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`
 }
 
 // Cleanup on unmount
-import { onUnmounted } from 'vue'
+import { onUnmounted } from "vue"
 onUnmounted(() => {
   if (isFullscreen.value) {
-    document.body.style.overflow = ''
+    document.body.style.overflow = ""
   }
 })
 </script>
@@ -516,7 +501,8 @@ onUnmounted(() => {
   color: #409eff;
 }
 
-.line-count, .char-count {
+.line-count,
+.char-count {
   color: #909399;
   font-size: 12px;
 }
@@ -534,7 +520,7 @@ onUnmounted(() => {
 .code-highlight {
   padding: 16px;
   margin: 0;
-  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
   font-size: 14px;
   line-height: 1.6;
   white-space: pre;

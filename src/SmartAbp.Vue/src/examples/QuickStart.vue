@@ -5,42 +5,17 @@
     <div class="demo-section">
       <h3>基础日志记录</h3>
       <div class="button-group">
-        <button
-          class="btn-info"
-          @click="logInfo"
-        >
-          信息日志
-        </button>
-        <button
-          class="btn-warning"
-          @click="logWarning"
-        >
-          警告日志
-        </button>
-        <button
-          class="btn-error"
-          @click="logError"
-        >
-          错误日志
-        </button>
+        <button class="btn-info" @click="logInfo">信息日志</button>
+        <button class="btn-warning" @click="logWarning">警告日志</button>
+        <button class="btn-error" @click="logError">错误日志</button>
       </div>
     </div>
 
     <div class="demo-section">
       <h3>性能追踪</h3>
       <div class="button-group">
-        <button
-          class="btn-primary"
-          @click="trackPerformance"
-        >
-          开始性能测试
-        </button>
-        <button
-          class="btn-secondary"
-          @click="simulateApiCall"
-        >
-          模拟API调用
-        </button>
+        <button class="btn-primary" @click="trackPerformance">开始性能测试</button>
+        <button class="btn-secondary" @click="simulateApiCall">模拟API调用</button>
       </div>
     </div>
 
@@ -52,86 +27,89 @@
 </template>
 
 <script setup lang="ts">
-import { logger } from '@/utils/logger'
-import { logManager } from '@/utils/logManager'
-import LogViewer from '@/views/log/LogViewer.vue'
+import { logger } from "@/utils/logger"
+import { logManager } from "@/utils/logManager"
+import LogViewer from "@/views/log/LogViewer.vue"
 
 // 基础日志记录示例
 const logInfo = () => {
-  logger.info('用户操作：点击了信息按钮', {
-    component: 'QuickStart',
-    action: 'click_info_button',
+  logger.info("用户操作：点击了信息按钮", {
+    component: "QuickStart",
+    action: "click_info_button",
     timestamp: new Date().toISOString(),
-    userId: 'demo-user-123'
+    userId: "demo-user-123",
   })
 }
 
 const logWarning = () => {
-  logger.warn('系统警告：检测到潜在问题', {
-    component: 'QuickStart',
-    issue: '内存使用率较高',
-    threshold: '85%',
-    current: '92%'
+  logger.warn("系统警告：检测到潜在问题", {
+    component: "QuickStart",
+    issue: "内存使用率较高",
+    threshold: "85%",
+    current: "92%",
   })
 }
 
 const logError = () => {
-  logger.error('系统错误：操作失败', {
-    component: 'QuickStart',
-    error: '网络连接超时',
-    code: 'NETWORK_TIMEOUT',
-    details: '请求超过30秒未响应'
+  logger.error("系统错误：操作失败", {
+    component: "QuickStart",
+    error: "网络连接超时",
+    code: "NETWORK_TIMEOUT",
+    details: "请求超过30秒未响应",
   })
 }
 
 // 性能追踪示例
 const trackPerformance = async () => {
-  const tracker = logManager.startPerformanceTracking('user-interaction')
+  const tracker = logManager.startPerformanceTracking("user-interaction")
 
   // 模拟一些处理时间
-  await new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 500))
+  await new Promise((resolve) => setTimeout(resolve, Math.random() * 2000 + 500))
 
   tracker.end({
-    operation: '用户交互处理',
+    operation: "用户交互处理",
     success: true,
-    itemsProcessed: Math.floor(Math.random() * 100) + 1
+    itemsProcessed: Math.floor(Math.random() * 100) + 1,
   })
 }
 
 const simulateApiCall = async () => {
-  const tracker = logManager.startPerformanceTracking('api-request')
+  const tracker = logManager.startPerformanceTracking("api-request")
 
   try {
     // 模拟API调用
     await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        Math.random() > 0.2 ? resolve('success') : reject(new Error('API错误'))
-      }, Math.random() * 3000 + 1000)
+      setTimeout(
+        () => {
+          Math.random() > 0.2 ? resolve("success") : reject(new Error("API错误"))
+        },
+        Math.random() * 3000 + 1000,
+      )
     })
 
     tracker.end({
-      endpoint: '/api/users',
-      method: 'GET',
+      endpoint: "/api/users",
+      method: "GET",
       status: 200,
-      dataSize: '2.5KB'
+      dataSize: "2.5KB",
     })
 
-    logger.info('API调用成功', {
-      endpoint: '/api/users',
-      responseTime: tracker.duration + 'ms'
+    logger.info("API调用成功", {
+      endpoint: "/api/users",
+      responseTime: tracker.duration + "ms",
     })
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorMessage = error instanceof Error ? error.message : "Unknown error"
     tracker.end({
-      endpoint: '/api/users',
-      method: 'GET',
+      endpoint: "/api/users",
+      method: "GET",
       status: 500,
-      error: errorMessage
+      error: errorMessage,
     })
 
-    logger.error('API调用失败', {
-      endpoint: '/api/users',
-      error: errorMessage
+    logger.error("API调用失败", {
+      endpoint: "/api/users",
+      error: errorMessage,
     })
   }
 }

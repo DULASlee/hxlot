@@ -6,58 +6,30 @@
     </div>
 
     <!-- 操作演示区域 -->
-    <el-card
-      class="demo-section"
-      shadow="never"
-    >
+    <el-card class="demo-section" shadow="never">
       <template #header>
         <h3>日志记录演示</h3>
       </template>
 
       <div class="demo-actions">
         <el-button-group>
-          <el-button @click="generateInfoLog">
-            生成信息日志
-          </el-button>
-          <el-button
-            type="success"
-            @click="generateSuccessLog"
-          >
-            生成成功日志
-          </el-button>
-          <el-button
-            type="warning"
-            @click="generateWarningLog"
-          >
-            生成警告日志
-          </el-button>
-          <el-button
-            type="danger"
-            @click="generateErrorLog"
-          >
-            生成错误日志
-          </el-button>
+          <el-button @click="generateInfoLog"> 生成信息日志 </el-button>
+          <el-button type="success" @click="generateSuccessLog"> 生成成功日志 </el-button>
+          <el-button type="warning" @click="generateWarningLog"> 生成警告日志 </el-button>
+          <el-button type="danger" @click="generateErrorLog"> 生成错误日志 </el-button>
         </el-button-group>
 
         <el-divider direction="vertical" />
 
         <el-button-group>
-          <el-button @click="simulateApiCall">
-            模拟 API 调用
-          </el-button>
-          <el-button @click="simulatePerformanceTest">
-            性能测试
-          </el-button>
-          <el-button @click="simulateErrorScenario">
-            错误场景
-          </el-button>
+          <el-button @click="simulateApiCall"> 模拟 API 调用 </el-button>
+          <el-button @click="simulatePerformanceTest"> 性能测试 </el-button>
+          <el-button @click="simulateErrorScenario"> 错误场景 </el-button>
         </el-button-group>
 
         <el-divider direction="vertical" />
 
-        <el-button @click="generateBatchLogs">
-          批量生成日志
-        </el-button>
+        <el-button @click="generateBatchLogs"> 批量生成日志 </el-button>
       </div>
     </el-card>
 
@@ -65,19 +37,13 @@
     <LogDashboard />
 
     <!-- 使用说明 -->
-    <el-card
-      class="demo-section"
-      shadow="never"
-    >
+    <el-card class="demo-section" shadow="never">
       <template #header>
         <h3>使用说明</h3>
       </template>
 
       <el-collapse>
-        <el-collapse-item
-          title="基本日志记录"
-          name="basic"
-        >
+        <el-collapse-item title="基本日志记录" name="basic">
           <div class="usage-content">
             <h4>在组件中使用日志记录：</h4>
             <pre><code>import { logger } from '@/utils/logger'
@@ -91,10 +57,7 @@ logger.debug('调试信息', 'debug', debugData)</code></pre>
           </div>
         </el-collapse-item>
 
-        <el-collapse-item
-          title="性能跟踪"
-          name="performance"
-        >
+        <el-collapse-item title="性能跟踪" name="performance">
           <div class="usage-content">
             <h4>使用性能跟踪功能：</h4>
             <pre><code>import { logManager, trackPerformance } from '@/utils/logManager'
@@ -112,10 +75,7 @@ const trackedApiCall = trackPerformance(apiCall, 'API调用', 'network')</code><
           </div>
         </el-collapse-item>
 
-        <el-collapse-item
-          title="日志分析"
-          name="analysis"
-        >
+        <el-collapse-item title="日志分析" name="analysis">
           <div class="usage-content">
             <h4>使用日志分析功能：</h4>
             <pre><code>import { logAnalyzer, analyzeCurrentLogs } from '@/utils/logAnalyzer'
@@ -134,10 +94,7 @@ logAnalyzer.setConfig({
           </div>
         </el-collapse-item>
 
-        <el-collapse-item
-          title="日志导出"
-          name="export"
-        >
+        <el-collapse-item title="日志导出" name="export">
           <div class="usage-content">
             <h4>导出日志数据：</h4>
             <pre><code>import { logExporter, ExportFormat } from '@/utils/logExporter'
@@ -158,10 +115,7 @@ const jsonData = logExporter.exportLogs({
           </div>
         </el-collapse-item>
 
-        <el-collapse-item
-          title="组件集成"
-          name="components"
-        >
+        <el-collapse-item title="组件集成" name="components">
           <div class="usage-content">
             <h4>在 Vue 组件中集成日志系统：</h4>
             <pre><code>&lt;template&gt;
@@ -196,21 +150,13 @@ const handleFiltered = (filteredLogs) => {
     </el-card>
 
     <!-- 最佳实践 -->
-    <el-card
-      class="demo-section"
-      shadow="never"
-    >
+    <el-card class="demo-section" shadow="never">
       <template #header>
         <h3>最佳实践建议</h3>
       </template>
 
       <div class="best-practices">
-        <el-alert
-          title="日志级别使用建议"
-          type="info"
-          :closable="false"
-          show-icon
-        >
+        <el-alert title="日志级别使用建议" type="info" :closable="false" show-icon>
           <ul>
             <li><strong>DEBUG</strong>: 详细的调试信息，仅在开发环境使用</li>
             <li><strong>INFO</strong>: 一般信息，记录正常的业务流程</li>
@@ -225,7 +171,7 @@ const handleFiltered = (filteredLogs) => {
           type="warning"
           :closable="false"
           show-icon
-          style="margin-top: 15px;"
+          style="margin-top: 15px"
         >
           <ul>
             <li>对关键业务流程进行性能跟踪</li>
@@ -240,7 +186,7 @@ const handleFiltered = (filteredLogs) => {
           type="success"
           :closable="false"
           show-icon
-          style="margin-top: 15px;"
+          style="margin-top: 15px"
         >
           <ul>
             <li>定期清理旧日志，避免内存占用过多</li>
@@ -255,71 +201,70 @@ const handleFiltered = (filteredLogs) => {
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from 'element-plus'
-import { logger } from '@/utils/logger'
-import { logManager } from '@/utils/logManager'
-import LogDashboard from '@/views/log/LogDashboard.vue'
+import { ElMessage } from "element-plus"
+import { logger } from "@/utils/logger"
+import { logManager } from "@/utils/logManager"
+import LogDashboard from "@/views/log/LogDashboard.vue"
 
 // 生成不同类型的日志
 const generateInfoLog = () => {
-  logger.info('这是一条信息日志', {
+  logger.info("这是一条信息日志", {
     timestamp: new Date(),
-    user: 'demo-user',
-    action: 'generate-info-log',
-    category: 'demo'
+    user: "demo-user",
+    action: "generate-info-log",
+    category: "demo",
   })
-  ElMessage.info('已生成信息日志')
+  ElMessage.info("已生成信息日志")
 }
 
 const generateSuccessLog = () => {
-  logger.success('操作执行成功！', {
-    operation: 'demo-success',
+  logger.success("操作执行成功！", {
+    operation: "demo-success",
     duration: Math.random() * 1000,
-    category: 'demo'
+    category: "demo",
   })
-  ElMessage.success('已生成成功日志')
+  ElMessage.success("已生成成功日志")
 }
 
 const generateWarningLog = () => {
-  logger.warn('检测到潜在问题', {
-    issue: 'demo-warning',
-    severity: 'medium',
-    suggestion: '建议检查相关配置',
-    category: 'demo'
+  logger.warn("检测到潜在问题", {
+    issue: "demo-warning",
+    severity: "medium",
+    suggestion: "建议检查相关配置",
+    category: "demo",
   })
-  ElMessage.warning('已生成警告日志')
+  ElMessage.warning("已生成警告日志")
 }
 
 const generateErrorLog = () => {
-  const error = new Error('这是一个演示错误')
-  logger.error('发生了一个错误', { error, category: 'demo' })
-  ElMessage.error('已生成错误日志')
+  const error = new Error("这是一个演示错误")
+  logger.error("发生了一个错误", { error, category: "demo" })
+  ElMessage.error("已生成错误日志")
 }
 
 // 模拟 API 调用
 const simulateApiCall = async () => {
-  const trackingId = logManager.startPerformanceTracking('模拟API调用', 'api')
+  const trackingId = logManager.startPerformanceTracking("模拟API调用", "api")
 
   try {
-    logger.info('开始API调用', { endpoint: '/api/demo', category: 'api' })
+    logger.info("开始API调用", { endpoint: "/api/demo", category: "api" })
 
     // 模拟网络延迟
-    await new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 500))
+    await new Promise((resolve) => setTimeout(resolve, Math.random() * 2000 + 500))
 
     if (Math.random() > 0.8) {
-      throw new Error('API调用失败')
+      throw new Error("API调用失败")
     }
 
-    logger.success('API调用成功', {
+    logger.success("API调用成功", {
       status: 200,
-      data: { result: 'success' },
-      category: 'api'
+      data: { result: "success" },
+      category: "api",
     })
-    ElMessage.success('API调用模拟完成')
-
+    ElMessage.success("API调用模拟完成")
   } catch (error) {
-    logger.error('API调用失败', { error, category: 'api' })
-    ElMessage.error('API调用失败')
+    logger.error("API调用失败", { error, category: "api" })
+    ElMessage.error("API调用失败")
   } finally {
     logManager.endPerformanceTracking(trackingId.id)
   }
@@ -328,13 +273,13 @@ const simulateApiCall = async () => {
 // 性能测试
 const simulatePerformanceTest = () => {
   const operations = [
-    { name: '数据库查询', category: 'database', duration: Math.random() * 1500 + 200 },
-    { name: '文件处理', category: 'file', duration: Math.random() * 3000 + 500 },
-    { name: '图片压缩', category: 'image', duration: Math.random() * 2000 + 800 },
-    { name: '数据计算', category: 'compute', duration: Math.random() * 1000 + 100 }
+    { name: "数据库查询", category: "database", duration: Math.random() * 1500 + 200 },
+    { name: "文件处理", category: "file", duration: Math.random() * 3000 + 500 },
+    { name: "图片压缩", category: "image", duration: Math.random() * 2000 + 800 },
+    { name: "数据计算", category: "compute", duration: Math.random() * 1000 + 100 },
   ]
 
-  operations.forEach(op => {
+  operations.forEach((op) => {
     const trackingId = logManager.startPerformanceTracking(op.name, op.category)
 
     setTimeout(() => {
@@ -344,36 +289,36 @@ const simulatePerformanceTest = () => {
         logger.warn(`${op.name}执行时间较长`, {
           duration: op.duration,
           threshold: 1500,
-          category: 'performance'
+          category: "performance",
         })
       } else {
         logger.info(`${op.name}执行完成`, {
           duration: op.duration,
-          category: 'performance'
+          category: "performance",
         })
       }
     }, op.duration)
   })
 
-  ElMessage.info('性能测试已开始，请查看日志')
+  ElMessage.info("性能测试已开始，请查看日志")
 }
 
 // 错误场景模拟
 const simulateErrorScenario = () => {
   const scenarios = [
-    { type: '网络错误', error: new Error('网络连接超时') },
-    { type: '权限错误', error: new Error('用户权限不足') },
-    { type: '数据错误', error: new Error('数据格式不正确') },
-    { type: '系统错误', error: new Error('系统内部错误') }
+    { type: "网络错误", error: new Error("网络连接超时") },
+    { type: "权限错误", error: new Error("用户权限不足") },
+    { type: "数据错误", error: new Error("数据格式不正确") },
+    { type: "系统错误", error: new Error("系统内部错误") },
   ]
 
   scenarios.forEach((scenario, index) => {
     setTimeout(() => {
-      logger.error(`${scenario.type}发生`, { error: scenario.error, category: 'error-simulation' })
+      logger.error(`${scenario.type}发生`, { error: scenario.error, category: "error-simulation" })
     }, index * 500)
   })
 
-  ElMessage.warning('错误场景模拟已开始')
+  ElMessage.warning("错误场景模拟已开始")
 }
 
 // 批量生成日志
@@ -381,8 +326,8 @@ const generateBatchLogs = () => {
   const logEntries = []
 
   for (let i = 0; i < 20; i++) {
-    const levels = ['info', 'success', 'warn', 'error']
-    const categories = ['user', 'system', 'api', 'database', 'ui']
+    const levels = ["info", "success", "warn", "error"]
+    const categories = ["user", "system", "api", "database", "ui"]
     const level = levels[Math.floor(Math.random() * levels.length)]
     const category = categories[Math.floor(Math.random() * categories.length)]
 
@@ -391,7 +336,7 @@ const generateBatchLogs = () => {
       message: `批量日志 ${i + 1}: ${category} 操作`,
       category,
       data: { batchId: Date.now(), index: i },
-      source: 'batch-generator'
+      source: "batch-generator",
     })
   }
 

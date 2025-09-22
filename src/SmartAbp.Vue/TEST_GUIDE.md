@@ -68,22 +68,26 @@ npm run cypress:run
 ### 登录测试页面功能
 
 #### 1. API 连接测试
+
 - **功能**: 测试与后端 API 的连接状态
 - **测试端点**: `/health-status`
 - **预期结果**: 显示连接成功或失败状态
 
 #### 2. 用户登录测试
+
 - **测试数据**:
   - 管理员: `admin` / `1q2w3E*`
   - 普通用户: `testuser` / `Test123!`
   - 无效用户: `invalid` / `wrongpass`
 
 #### 3. 认证状态显示
+
 - Token 状态
 - 用户信息 (ID, 用户名, 邮箱, 角色)
 - 认证状态 (已认证/未认证)
 
 #### 4. 测试日志
+
 - 实时显示测试操作日志
 - 按时间倒序排列
 - 支持清空日志功能
@@ -91,6 +95,7 @@ npm run cypress:run
 ### 单元测试覆盖范围
 
 #### 认证状态管理 (`auth.test.ts`)
+
 ```typescript
 ✅ 初始状态验证
 ✅ Token 设置和获取
@@ -101,6 +106,7 @@ npm run cypress:run
 ```
 
 #### 登录组件测试 (`LoginTest.test.ts`)
+
 ```typescript
 ✅ 组件渲染测试
 ✅ 表单数据填充
@@ -113,21 +119,25 @@ npm run cypress:run
 ### E2E 测试场景
 
 #### 基础功能测试
+
 - 页面加载和渲染
 - 表单填充和验证
 - 按钮交互和状态
 
 #### 登录流程测试
+
 - 成功登录流程
 - 失败登录处理
 - 表单验证错误
 
 #### 网络和性能测试
+
 - 网络错误处理
 - 慢速网络适应
 - 响应式设计验证
 
 #### 可访问性测试
+
 - 键盘导航支持
 - Enter 键表单提交
 - 焦点管理
@@ -136,11 +146,11 @@ npm run cypress:run
 
 ### 预设测试账户
 
-| 类型 | 用户名 | 密码 | 用途 |
-|------|--------|------|------|
-| 管理员 | `admin` | `1q2w3E*` | 测试管理员权限登录 |
-| 普通用户 | `testuser` | `Test123!` | 测试普通用户登录 |
-| 无效用户 | `invalid` | `wrongpass` | 测试登录失败处理 |
+| 类型     | 用户名     | 密码        | 用途               |
+| -------- | ---------- | ----------- | ------------------ |
+| 管理员   | `admin`    | `1q2w3E*`   | 测试管理员权限登录 |
+| 普通用户 | `testuser` | `Test123!`  | 测试普通用户登录   |
+| 无效用户 | `invalid`  | `wrongpass` | 测试登录失败处理   |
 
 ### API 端点配置
 
@@ -153,6 +163,7 @@ npm run cypress:run
 ## 🔧 测试配置
 
 ### Vitest 配置 (`vitest.config.ts`)
+
 ```typescript
 - 测试环境: jsdom
 - 全局变量: 启用
@@ -161,6 +172,7 @@ npm run cypress:run
 ```
 
 ### Cypress 配置 (`cypress.config.ts`)
+
 ```typescript
 - 基础 URL: http://localhost:11369
 - 视口大小: 1280x720
@@ -169,6 +181,7 @@ npm run cypress:run
 ```
 
 ### 测试环境设置 (`src/test/setup.ts`)
+
 ```typescript
 - Pinia 状态管理初始化
 - localStorage 模拟
@@ -181,9 +194,11 @@ npm run cypress:run
 ### 运行测试并查看结果
 
 1. **单元测试报告**:
+
    ```bash
    npm run test:coverage
    ```
+
    - 生成覆盖率报告
    - 显示测试通过率
    - 标识未覆盖的代码
@@ -192,6 +207,7 @@ npm run cypress:run
    ```bash
    npm run cypress:run
    ```
+
    - 生成测试视频
    - 截图记录
    - 测试执行时间统计
@@ -205,29 +221,37 @@ npm run cypress:run
 ## 🐛 常见问题排查
 
 ### 1. API 连接失败
+
 **问题**: 测试页面显示 "API 连接失败"
 **解决方案**:
+
 - 检查后端服务是否启动
 - 验证 `VITE_API_BASE_URL` 环境变量
 - 检查网络连接和防火墙设置
 
 ### 2. 登录测试失败
+
 **问题**: 使用测试账户登录失败
 **解决方案**:
+
 - 确认后端数据库中存在测试用户
 - 检查密码是否正确
 - 验证认证服务配置
 
 ### 3. 单元测试失败
+
 **问题**: `npm run test` 执行失败
 **解决方案**:
+
 - 检查依赖是否完整安装
 - 验证测试环境配置
 - 查看具体错误信息
 
 ### 4. E2E 测试失败
+
 **问题**: Cypress 测试无法运行
 **解决方案**:
+
 - 确保开发服务器正在运行
 - 检查端口 11369 是否可访问
 - 验证 Cypress 配置
@@ -246,7 +270,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: "20"
       - run: npm ci
       - run: npm run test:run
       - run: npm run build
@@ -258,12 +282,13 @@ jobs:
 ### 添加新的测试用例
 
 1. **单元测试**:
+
    ```typescript
    // src/stores/__tests__/新功能.test.ts
-   import { describe, it, expect } from 'vitest'
-   
-   describe('新功能测试', () => {
-     it('应该正确处理新功能', () => {
+   import { describe, it, expect } from "vitest"
+
+   describe("新功能测试", () => {
+     it("应该正确处理新功能", () => {
        // 测试代码
      })
    })
@@ -272,9 +297,9 @@ jobs:
 2. **E2E 测试**:
    ```typescript
    // cypress/e2e/新功能.cy.ts
-   describe('新功能 E2E 测试', () => {
-     it('应该完成新功能流程', () => {
-       cy.visit('/new-feature')
+   describe("新功能 E2E 测试", () => {
+     it("应该完成新功能流程", () => {
+       cy.visit("/new-feature")
        // 测试步骤
      })
    })

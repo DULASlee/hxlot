@@ -9,9 +9,7 @@
         <i class="fas fa-mouse-pointer" />
         拖拽表单开发器
       </h1>
-      <p class="page-description">
-        可视化表单设计器，支持拖拽组件、实时预览和代码生成
-      </p>
+      <p class="page-description">可视化表单设计器，支持拖拽组件、实时预览和代码生成</p>
     </div>
 
     <div class="form-designer">
@@ -23,18 +21,10 @@
             组件库
           </h2>
           <div class="panel-actions">
-            <button
-              class="action-btn"
-              title="折叠所有"
-              @click="collapseAllGroups"
-            >
+            <button class="action-btn" title="折叠所有" @click="collapseAllGroups">
               <i class="fas fa-compress" />
             </button>
-            <button
-              class="action-btn"
-              title="展开所有"
-              @click="expandAllGroups"
-            >
+            <button class="action-btn" title="展开所有" @click="expandAllGroups">
               <i class="fas fa-expand" />
             </button>
           </div>
@@ -47,14 +37,8 @@
             class="component-group"
             :class="{ collapsed: group.collapsed }"
           >
-            <div
-              class="group-header"
-              @click="toggleGroup(group.key)"
-            >
-              <i
-                class="group-icon"
-                :class="group.icon"
-              />
+            <div class="group-header" @click="toggleGroup(group.key)">
+              <i class="group-icon" :class="group.icon" />
               <span class="group-title">{{ group.title }}</span>
               <i class="toggle-icon fas fa-chevron-down" />
             </div>
@@ -90,53 +74,33 @@
           </h2>
           <div class="canvas-actions">
             <div class="zoom-controls">
-              <button
-                class="zoom-btn"
-                :disabled="zoom <= 0.5"
-                @click="zoomOut"
-              >
+              <button class="zoom-btn" :disabled="zoom <= 0.5" @click="zoomOut">
                 <i class="fas fa-search-minus" />
               </button>
               <span class="zoom-display">{{ Math.round(zoom * 100) }}%</span>
-              <button
-                class="zoom-btn"
-                :disabled="zoom >= 2"
-                @click="zoomIn"
-              >
+              <button class="zoom-btn" :disabled="zoom >= 2" @click="zoomIn">
                 <i class="fas fa-search-plus" />
               </button>
             </div>
-            <button
-              class="action-btn"
-              @click="resetZoom"
-            >
+            <button class="action-btn" @click="resetZoom">
               <i class="fas fa-expand-arrows-alt" />
               重置
             </button>
-            <button
-              class="action-btn danger"
-              @click="clearCanvas"
-            >
+            <button class="action-btn danger" @click="clearCanvas">
               <i class="fas fa-trash" />
               清空
             </button>
           </div>
         </div>
 
-        <div
-          class="canvas-container"
-          :style="{ transform: `scale(${zoom})` }"
-        >
+        <div class="canvas-container" :style="{ transform: `scale(${zoom})` }">
           <div
             class="form-canvas"
             @dragover.prevent="onCanvasDragOver"
             @drop="onCanvasDrop"
             @click="clearSelection"
           >
-            <div
-              v-if="formComponents.length === 0"
-              class="canvas-placeholder"
-            >
+            <div v-if="formComponents.length === 0" class="canvas-placeholder">
               <i class="fas fa-hand-point-up" />
               <p>从左侧拖拽组件到这里开始设计表单</p>
             </div>
@@ -147,17 +111,14 @@
               class="form-component"
               :class="{
                 selected: selectedComponentId === component.id,
-                hover: hoverComponentId === component.id
+                hover: hoverComponentId === component.id,
               }"
               @click.stop="selectComponent(component.id)"
               @mouseenter="hoverComponentId = component.id"
               @mouseleave="hoverComponentId = null"
             >
               <!-- 组件操作按钮 -->
-              <div
-                v-if="selectedComponentId === component.id"
-                class="component-actions"
-              >
+              <div v-if="selectedComponentId === component.id" class="component-actions">
                 <button
                   class="move-btn"
                   :disabled="index === 0"
@@ -172,16 +133,10 @@
                 >
                   <i class="fas fa-arrow-down" />
                 </button>
-                <button
-                  class="duplicate-btn"
-                  @click.stop="duplicateComponent(index)"
-                >
+                <button class="duplicate-btn" @click.stop="duplicateComponent(index)">
                   <i class="fas fa-copy" />
                 </button>
-                <button
-                  class="remove-btn"
-                  @click.stop="removeComponent(index)"
-                >
+                <button class="remove-btn" @click.stop="removeComponent(index)">
                   <i class="fas fa-times" />
                 </button>
               </div>
@@ -203,17 +158,10 @@
         <div class="panel-header">
           <h2 class="panel-title">
             <i class="fas fa-cog" />
-            {{ selectedComponent ? '组件属性' : '表单属性' }}
+            {{ selectedComponent ? "组件属性" : "表单属性" }}
           </h2>
-          <div
-            v-if="selectedComponent"
-            class="panel-actions"
-          >
-            <button
-              class="action-btn"
-              title="重置属性"
-              @click="resetComponentProps"
-            >
+          <div v-if="selectedComponent" class="panel-actions">
+            <button class="action-btn" title="重置属性" @click="resetComponentProps">
               <i class="fas fa-undo" />
             </button>
           </div>
@@ -221,27 +169,16 @@
 
         <div class="property-content">
           <!-- 表单整体属性 -->
-          <div
-            v-if="!selectedComponent"
-            class="form-properties"
-          >
+          <div v-if="!selectedComponent" class="form-properties">
             <div class="property-group">
               <h3>基础设置</h3>
               <div class="property-item">
                 <label>表单名称</label>
-                <input
-                  v-model="formConfig.name"
-                  type="text"
-                  class="prop-input"
-                />
+                <input v-model="formConfig.name" type="text" class="prop-input" />
               </div>
               <div class="property-item">
                 <label>表单描述</label>
-                <textarea
-                  v-model="formConfig.description"
-                  class="prop-textarea"
-                  rows="3"
-                />
+                <textarea v-model="formConfig.description" class="prop-textarea" rows="3" />
               </div>
               <div class="property-item">
                 <label>标签宽度</label>
@@ -258,62 +195,34 @@
               <h3>布局设置</h3>
               <div class="property-item">
                 <label>表单大小</label>
-                <select
-                  v-model="formConfig.size"
-                  class="prop-select"
-                >
-                  <option value="large">
-                    大
-                  </option>
-                  <option value="default">
-                    默认
-                  </option>
-                  <option value="small">
-                    小
-                  </option>
+                <select v-model="formConfig.size" class="prop-select">
+                  <option value="large">大</option>
+                  <option value="default">默认</option>
+                  <option value="small">小</option>
                 </select>
               </div>
               <div class="property-item">
                 <label>内联表单</label>
-                <input
-                  v-model="formConfig.inline"
-                  type="checkbox"
-                  class="prop-checkbox"
-                />
+                <input v-model="formConfig.inline" type="checkbox" class="prop-checkbox" />
               </div>
               <div class="property-item">
                 <label>禁用表单</label>
-                <input
-                  v-model="formConfig.disabled"
-                  type="checkbox"
-                  class="prop-checkbox"
-                />
+                <input v-model="formConfig.disabled" type="checkbox" class="prop-checkbox" />
               </div>
             </div>
           </div>
 
           <!-- 组件属性 -->
-          <div
-            v-else
-            class="component-properties"
-          >
+          <div v-else class="component-properties">
             <div class="property-group">
               <h3>基础属性</h3>
               <div class="property-item">
                 <label>字段名称</label>
-                <input
-                  v-model="selectedComponent.props.name"
-                  type="text"
-                  class="prop-input"
-                />
+                <input v-model="selectedComponent.props.name" type="text" class="prop-input" />
               </div>
               <div class="property-item">
                 <label>字段标签</label>
-                <input
-                  v-model="selectedComponent.props.label"
-                  type="text"
-                  class="prop-input"
-                />
+                <input v-model="selectedComponent.props.label" type="text" class="prop-input" />
               </div>
               <div class="property-item">
                 <label>占位符</label>
@@ -335,10 +244,7 @@
                   class="prop-checkbox"
                 />
               </div>
-              <div
-                v-if="selectedComponent.type === 'input'"
-                class="property-item"
-              >
+              <div v-if="selectedComponent.type === 'input'" class="property-item">
                 <label>最小长度</label>
                 <input
                   v-model.number="selectedComponent.props.minLength"
@@ -346,10 +252,7 @@
                   class="prop-input"
                 />
               </div>
-              <div
-                v-if="selectedComponent.type === 'input'"
-                class="property-item"
-              >
+              <div v-if="selectedComponent.type === 'input'" class="property-item">
                 <label>最大长度</label>
                 <input
                   v-model.number="selectedComponent.props.maxLength"
@@ -359,10 +262,7 @@
               </div>
             </div>
 
-            <div
-              v-if="selectedComponent.type === 'select'"
-              class="property-group"
-            >
+            <div v-if="selectedComponent.type === 'select'" class="property-group">
               <h3>选项设置</h3>
               <div class="options-editor">
                 <div
@@ -376,23 +276,12 @@
                     placeholder="标签"
                     class="option-input"
                   />
-                  <input
-                    v-model="option.value"
-                    type="text"
-                    placeholder="值"
-                    class="option-input"
-                  />
-                  <button
-                    class="remove-option-btn"
-                    @click="removeOption(index)"
-                  >
+                  <input v-model="option.value" type="text" placeholder="值" class="option-input" />
+                  <button class="remove-option-btn" @click="removeOption(index)">
                     <i class="fas fa-times" />
                   </button>
                 </div>
-                <button
-                  class="add-option-btn"
-                  @click="addOption"
-                >
+                <button class="add-option-btn" @click="addOption">
                   <i class="fas fa-plus" />
                   添加选项
                 </button>
@@ -406,41 +295,26 @@
     <!-- 底部操作栏 -->
     <div class="bottom-toolbar">
       <div class="toolbar-left">
-        <button
-          class="toolbar-btn primary"
-          @click="showPreview = true"
-        >
+        <button class="toolbar-btn primary" @click="showPreview = true">
           <i class="fas fa-eye" />
           预览表单
         </button>
-        <button
-          class="toolbar-btn secondary"
-          @click="generateCode"
-        >
+        <button class="toolbar-btn secondary" @click="generateCode">
           <i class="fas fa-code" />
           生成代码
         </button>
-        <button
-          class="toolbar-btn secondary"
-          @click="exportForm"
-        >
+        <button class="toolbar-btn secondary" @click="exportForm">
           <i class="fas fa-download" />
           导出配置
         </button>
       </div>
 
       <div class="toolbar-right">
-        <button
-          class="toolbar-btn secondary"
-          @click="importForm"
-        >
+        <button class="toolbar-btn secondary" @click="importForm">
           <i class="fas fa-upload" />
           导入配置
         </button>
-        <button
-          class="toolbar-btn success"
-          @click="saveForm"
-        >
+        <button class="toolbar-btn success" @click="saveForm">
           <i class="fas fa-save" />
           保存表单
         </button>
@@ -448,30 +322,17 @@
     </div>
 
     <!-- 预览模态框 -->
-    <div
-      v-if="showPreview"
-      class="preview-modal"
-      @click="showPreview = false"
-    >
-      <div
-        class="preview-content"
-        @click.stop
-      >
+    <div v-if="showPreview" class="preview-modal" @click="showPreview = false">
+      <div class="preview-content" @click.stop>
         <div class="preview-header">
           <h3>表单预览</h3>
-          <button
-            class="close-btn"
-            @click="showPreview = false"
-          >
+          <button class="close-btn" @click="showPreview = false">
             <i class="fas fa-times" />
           </button>
         </div>
 
         <div class="preview-form">
-          <form
-            class="generated-form"
-            @submit.prevent="handlePreviewSubmit"
-          >
+          <form class="generated-form" @submit.prevent="handlePreviewSubmit">
             <component
               :is="getComponentRenderer(component.type)"
               v-for="component in formComponents"
@@ -482,19 +343,8 @@
             />
 
             <div class="form-actions">
-              <button
-                type="submit"
-                class="submit-btn"
-              >
-                提交
-              </button>
-              <button
-                type="reset"
-                class="reset-btn"
-                @click="resetForm"
-              >
-                重置
-              </button>
+              <button type="submit" class="submit-btn">提交</button>
+              <button type="reset" class="reset-btn" @click="resetForm">重置</button>
             </div>
           </form>
         </div>
@@ -513,136 +363,189 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { logger } from '@/utils/logging'
-import { useFullscreen } from '@/composables/useFullscreen'
+import { ref, computed, onMounted } from "vue"
+import { logger } from "@/utils/logging"
+import { useFullscreen } from "@/composables/useFullscreen"
 
 // 组件日志器
-const componentLogger = logger.child({ component: 'DragDropFormView' })
+const componentLogger = logger.child({ component: "DragDropFormView" })
 
 // 全屏功能
 const fullscreenApi = useFullscreen()
 const formDesignerRef = ref<HTMLElement>()
-onMounted(() => { if (formDesignerRef.value) fullscreenApi.setFullscreenElement(formDesignerRef.value); void fullscreenApi.isFullscreen.value })
+onMounted(() => {
+  if (formDesignerRef.value) fullscreenApi.setFullscreenElement(formDesignerRef.value)
+  void fullscreenApi.isFullscreen.value
+})
 
 // 组件库定义 - 扩展更多控件
 const componentGroups = ref([
   {
-    key: 'basic',
-    title: '基础组件',
-    icon: 'fas fa-cube',
+    key: "basic",
+    title: "基础组件",
+    icon: "fas fa-cube",
     collapsed: false,
     components: [
-      { type: 'input', name: '文本输入', description: '单行文本输入框', icon: 'fas fa-edit' },
-      { type: 'textarea', name: '文本域', description: '多行文本输入框', icon: 'fas fa-align-left' },
-      { type: 'number', name: '数字输入', description: '数字输入框', icon: 'fas fa-calculator' },
-      { type: 'password', name: '密码输入', description: '密码输入框', icon: 'fas fa-lock' },
-      { type: 'email', name: '邮箱输入', description: '邮箱输入框', icon: 'fas fa-envelope' },
-      { type: 'url', name: 'URL输入', description: 'URL输入框', icon: 'fas fa-link' },
-      { type: 'phone', name: '电话输入', description: '电话号码输入框', icon: 'fas fa-phone' },
-      { type: 'password', name: '密码输入', description: '密码输入框', icon: 'fas fa-lock' },
-      { type: 'email', name: '邮箱输入', description: '邮箱输入框', icon: 'fas fa-envelope' },
-      { type: 'url', name: 'URL输入', description: 'URL输入框', icon: 'fas fa-link' },
-      { type: 'phone', name: '电话输入', description: '电话号码输入框', icon: 'fas fa-phone' },
-      { type: 'select', name: '选择器', description: '下拉选择框', icon: 'fas fa-caret-down' },
-      { type: 'radio', name: '单选框', description: '单选按钮组', icon: 'fas fa-dot-circle' },
-      { type: 'checkbox', name: '复选框', description: '复选框组', icon: 'fas fa-check-square' }
-    ]
+      { type: "input", name: "文本输入", description: "单行文本输入框", icon: "fas fa-edit" },
+      {
+        type: "textarea",
+        name: "文本域",
+        description: "多行文本输入框",
+        icon: "fas fa-align-left",
+      },
+      { type: "number", name: "数字输入", description: "数字输入框", icon: "fas fa-calculator" },
+      { type: "password", name: "密码输入", description: "密码输入框", icon: "fas fa-lock" },
+      { type: "email", name: "邮箱输入", description: "邮箱输入框", icon: "fas fa-envelope" },
+      { type: "url", name: "URL输入", description: "URL输入框", icon: "fas fa-link" },
+      { type: "phone", name: "电话输入", description: "电话号码输入框", icon: "fas fa-phone" },
+      { type: "password", name: "密码输入", description: "密码输入框", icon: "fas fa-lock" },
+      { type: "email", name: "邮箱输入", description: "邮箱输入框", icon: "fas fa-envelope" },
+      { type: "url", name: "URL输入", description: "URL输入框", icon: "fas fa-link" },
+      { type: "phone", name: "电话输入", description: "电话号码输入框", icon: "fas fa-phone" },
+      { type: "select", name: "选择器", description: "下拉选择框", icon: "fas fa-caret-down" },
+      { type: "radio", name: "单选框", description: "单选按钮组", icon: "fas fa-dot-circle" },
+      { type: "checkbox", name: "复选框", description: "复选框组", icon: "fas fa-check-square" },
+    ],
   },
   {
-    key: 'advanced',
-    title: '高级组件',
-    icon: 'fas fa-star',
+    key: "advanced",
+    title: "高级组件",
+    icon: "fas fa-star",
     collapsed: false,
     components: [
-      { type: 'date', name: '日期选择', description: '日期选择器', icon: 'fas fa-calendar' },
-      { type: 'datetime', name: '日期时间', description: '日期时间选择器', icon: 'fas fa-calendar-alt' },
-      { type: 'daterange', name: '日期范围', description: '日期范围选择器', icon: 'fas fa-calendar-week' },
-      { type: 'image-upload', name: '图片上传', description: '图片上传组件', icon: 'fas fa-image' },
-      { type: 'slider', name: '滑块', description: '数值滑块', icon: 'fas fa-sliders-h' },
-      { type: 'color', name: '颜色选择', description: '颜色选择器', icon: 'fas fa-palette' },
-      { type: 'cascader', name: '级联选择', description: '级联选择器', icon: 'fas fa-sitemap' },
-      { type: 'time', name: '时间选择', description: '时间选择器', icon: 'fas fa-clock' },
-      { type: 'upload', name: '文件上传', description: '文件上传组件', icon: 'fas fa-cloud-upload-alt' }
-    ]
+      { type: "date", name: "日期选择", description: "日期选择器", icon: "fas fa-calendar" },
+      {
+        type: "datetime",
+        name: "日期时间",
+        description: "日期时间选择器",
+        icon: "fas fa-calendar-alt",
+      },
+      {
+        type: "daterange",
+        name: "日期范围",
+        description: "日期范围选择器",
+        icon: "fas fa-calendar-week",
+      },
+      { type: "image-upload", name: "图片上传", description: "图片上传组件", icon: "fas fa-image" },
+      { type: "slider", name: "滑块", description: "数值滑块", icon: "fas fa-sliders-h" },
+      { type: "color", name: "颜色选择", description: "颜色选择器", icon: "fas fa-palette" },
+      { type: "cascader", name: "级联选择", description: "级联选择器", icon: "fas fa-sitemap" },
+      { type: "time", name: "时间选择", description: "时间选择器", icon: "fas fa-clock" },
+      {
+        type: "upload",
+        name: "文件上传",
+        description: "文件上传组件",
+        icon: "fas fa-cloud-upload-alt",
+      },
+    ],
   },
   {
-    key: 'layout',
-    title: '布局组件',
-    icon: 'fas fa-th-large',
+    key: "layout",
+    title: "布局组件",
+    icon: "fas fa-th-large",
     collapsed: false,
     components: [
-      { type: 'divider', name: '分割线', description: '内容分割线', icon: 'fas fa-minus' },
-      { type: 'card', name: '卡片容器', description: '卡片布局容器', icon: 'fas fa-square' },
-      { type: 'tabs', name: '标签页', description: '标签页容器', icon: 'fas fa-folder' },
-      { type: 'collapse', name: '折叠面板', description: '可折叠内容面板', icon: 'fas fa-compress-alt' },
-      { type: 'grid', name: '栅格布局', description: '响应式栅格布局', icon: 'fas fa-th' },
-      { type: 'table', name: '数据表格', description: '数据展示表格', icon: 'fas fa-table' }
-    ]
+      { type: "divider", name: "分割线", description: "内容分割线", icon: "fas fa-minus" },
+      { type: "card", name: "卡片容器", description: "卡片布局容器", icon: "fas fa-square" },
+      { type: "tabs", name: "标签页", description: "标签页容器", icon: "fas fa-folder" },
+      {
+        type: "collapse",
+        name: "折叠面板",
+        description: "可折叠内容面板",
+        icon: "fas fa-compress-alt",
+      },
+      { type: "grid", name: "栅格布局", description: "响应式栅格布局", icon: "fas fa-th" },
+      { type: "table", name: "数据表格", description: "数据展示表格", icon: "fas fa-table" },
+    ],
   },
   {
-    key: 'business',
-    title: '业务组件',
-    icon: 'fas fa-briefcase',
+    key: "business",
+    title: "业务组件",
+    icon: "fas fa-briefcase",
     collapsed: false,
     components: [
-      { type: 'user-select', name: '用户选择', description: '用户选择器', icon: 'fas fa-users' },
-      { type: 'dept-select', name: '部门选择', description: '部门选择器', icon: 'fas fa-building' },
-      { type: 'role-select', name: '角色选择', description: '角色选择器', icon: 'fas fa-user-tag' },
-      { type: 'dict-select', name: '字典选择', description: '数据字典选择器', icon: 'fas fa-book' },
-      { type: 'region-select', name: '地区选择', description: '地区选择器', icon: 'fas fa-map-marker-alt' },
-      { type: 'rich-text', name: '富文本编辑', description: '富文本编辑器', icon: 'fas fa-edit' },
-      { type: 'code-editor', name: '代码编辑', description: '代码编辑器', icon: 'fas fa-code' },
-      { type: 'time', name: '时间选择', description: '时间选择器', icon: 'fas fa-clock' },
-      { type: 'daterange', name: '日期范围', description: '日期范围选择器', icon: 'fas fa-calendar-week' },
-      { type: 'upload', name: '文件上传', description: '文件上传组件', icon: 'fas fa-cloud-upload-alt' },
-      { type: 'image-upload', name: '图片上传', description: '图片上传组件', icon: 'fas fa-image' },
-      { type: 'switch', name: '开关', description: '开关切换', icon: 'fas fa-toggle-on' },
-      { type: 'rate', name: '评分', description: '评分组件', icon: 'fas fa-star' },
-      { type: 'slider', name: '滑块', description: '数值滑块', icon: 'fas fa-sliders-h' },
-      { type: 'color', name: '颜色选择', description: '颜色选择器', icon: 'fas fa-palette' },
-      { type: 'cascader', name: '级联选择', description: '级联选择器', icon: 'fas fa-sitemap' }
-    ]
+      { type: "user-select", name: "用户选择", description: "用户选择器", icon: "fas fa-users" },
+      { type: "dept-select", name: "部门选择", description: "部门选择器", icon: "fas fa-building" },
+      { type: "role-select", name: "角色选择", description: "角色选择器", icon: "fas fa-user-tag" },
+      { type: "dict-select", name: "字典选择", description: "数据字典选择器", icon: "fas fa-book" },
+      {
+        type: "region-select",
+        name: "地区选择",
+        description: "地区选择器",
+        icon: "fas fa-map-marker-alt",
+      },
+      { type: "rich-text", name: "富文本编辑", description: "富文本编辑器", icon: "fas fa-edit" },
+      { type: "code-editor", name: "代码编辑", description: "代码编辑器", icon: "fas fa-code" },
+      { type: "time", name: "时间选择", description: "时间选择器", icon: "fas fa-clock" },
+      {
+        type: "daterange",
+        name: "日期范围",
+        description: "日期范围选择器",
+        icon: "fas fa-calendar-week",
+      },
+      {
+        type: "upload",
+        name: "文件上传",
+        description: "文件上传组件",
+        icon: "fas fa-cloud-upload-alt",
+      },
+      { type: "image-upload", name: "图片上传", description: "图片上传组件", icon: "fas fa-image" },
+      { type: "switch", name: "开关", description: "开关切换", icon: "fas fa-toggle-on" },
+      { type: "rate", name: "评分", description: "评分组件", icon: "fas fa-star" },
+      { type: "slider", name: "滑块", description: "数值滑块", icon: "fas fa-sliders-h" },
+      { type: "color", name: "颜色选择", description: "颜色选择器", icon: "fas fa-palette" },
+      { type: "cascader", name: "级联选择", description: "级联选择器", icon: "fas fa-sitemap" },
+    ],
   },
   {
-    key: 'layout',
-    title: '布局组件',
-    icon: 'fas fa-th-large',
+    key: "layout",
+    title: "布局组件",
+    icon: "fas fa-th-large",
     collapsed: false,
     components: [
-      { type: 'divider', name: '分割线', description: '内容分割线', icon: 'fas fa-minus' },
-      { type: 'card', name: '卡片容器', description: '卡片布局容器', icon: 'fas fa-square' },
-      { type: 'tabs', name: '标签页', description: '标签页容器', icon: 'fas fa-folder' },
-      { type: 'collapse', name: '折叠面板', description: '可折叠内容面板', icon: 'fas fa-compress-alt' },
-      { type: 'grid', name: '栅格布局', description: '响应式栅格布局', icon: 'fas fa-th' },
-      { type: 'table', name: '数据表格', description: '数据展示表格', icon: 'fas fa-table' }
-    ]
+      { type: "divider", name: "分割线", description: "内容分割线", icon: "fas fa-minus" },
+      { type: "card", name: "卡片容器", description: "卡片布局容器", icon: "fas fa-square" },
+      { type: "tabs", name: "标签页", description: "标签页容器", icon: "fas fa-folder" },
+      {
+        type: "collapse",
+        name: "折叠面板",
+        description: "可折叠内容面板",
+        icon: "fas fa-compress-alt",
+      },
+      { type: "grid", name: "栅格布局", description: "响应式栅格布局", icon: "fas fa-th" },
+      { type: "table", name: "数据表格", description: "数据展示表格", icon: "fas fa-table" },
+    ],
   },
   {
-    key: 'business',
-    title: '业务组件',
-    icon: 'fas fa-briefcase',
+    key: "business",
+    title: "业务组件",
+    icon: "fas fa-briefcase",
     collapsed: false,
     components: [
-      { type: 'user-select', name: '用户选择', description: '用户选择器', icon: 'fas fa-users' },
-      { type: 'dept-select', name: '部门选择', description: '部门选择器', icon: 'fas fa-building' },
-      { type: 'role-select', name: '角色选择', description: '角色选择器', icon: 'fas fa-user-tag' },
-      { type: 'dict-select', name: '字典选择', description: '数据字典选择器', icon: 'fas fa-book' },
-      { type: 'region-select', name: '地区选择', description: '地区选择器', icon: 'fas fa-map-marker-alt' },
-      { type: 'rich-text', name: '富文本编辑', description: '富文本编辑器', icon: 'fas fa-edit' },
-      { type: 'code-editor', name: '代码编辑', description: '代码编辑器', icon: 'fas fa-code' }
-    ]
-  }
+      { type: "user-select", name: "用户选择", description: "用户选择器", icon: "fas fa-users" },
+      { type: "dept-select", name: "部门选择", description: "部门选择器", icon: "fas fa-building" },
+      { type: "role-select", name: "角色选择", description: "角色选择器", icon: "fas fa-user-tag" },
+      { type: "dict-select", name: "字典选择", description: "数据字典选择器", icon: "fas fa-book" },
+      {
+        type: "region-select",
+        name: "地区选择",
+        description: "地区选择器",
+        icon: "fas fa-map-marker-alt",
+      },
+      { type: "rich-text", name: "富文本编辑", description: "富文本编辑器", icon: "fas fa-edit" },
+      { type: "code-editor", name: "代码编辑", description: "代码编辑器", icon: "fas fa-code" },
+    ],
+  },
 ])
 
 // 表单状态
 const formConfig = ref({
-  name: '未命名表单',
-  description: '',
-  labelWidth: '120px',
-  size: 'default',
+  name: "未命名表单",
+  description: "",
+  labelWidth: "120px",
+  size: "default",
   inline: false,
-  disabled: false
+  disabled: false,
 })
 
 const formComponents = ref<any[]>([])
@@ -657,7 +560,7 @@ const showPreview = ref(false)
 
 // 计算属性
 const selectedComponent = computed(() => {
-  return formComponents.value.find(c => c.id === selectedComponentId.value)
+  return formComponents.value.find((c) => c.id === selectedComponentId.value)
 })
 
 // 文件输入引用
@@ -665,20 +568,20 @@ const fileInput = ref<HTMLInputElement>()
 
 // 方法定义
 const toggleGroup = (groupKey: string) => {
-  const group = componentGroups.value.find(g => g.key === groupKey)
+  const group = componentGroups.value.find((g) => g.key === groupKey)
   if (group) {
     group.collapsed = !group.collapsed
   }
 }
 
 const collapseAllGroups = () => {
-  componentGroups.value.forEach(group => {
+  componentGroups.value.forEach((group) => {
     group.collapsed = true
   })
 }
 
 const expandAllGroups = () => {
-  componentGroups.value.forEach(group => {
+  componentGroups.value.forEach((group) => {
     group.collapsed = false
   })
 }
@@ -686,9 +589,9 @@ const expandAllGroups = () => {
 const onComponentDragStart = (event: DragEvent, component: any) => {
   draggedComponent.value = component
   if (event.dataTransfer) {
-    event.dataTransfer.effectAllowed = 'copy'
+    event.dataTransfer.effectAllowed = "copy"
   }
-  componentLogger.info('开始拖拽组件', { type: component.type })
+  componentLogger.info("开始拖拽组件", { type: component.type })
 }
 
 const onComponentDragEnd = () => {
@@ -699,7 +602,7 @@ const onCanvasDragOver = (event: DragEvent) => {
   if (draggedComponent.value) {
     event.preventDefault()
     if (event.dataTransfer) {
-      event.dataTransfer.dropEffect = 'copy'
+      event.dataTransfer.dropEffect = "copy"
     }
   }
 }
@@ -714,10 +617,10 @@ const onCanvasDrop = (event: DragEvent) => {
     // 初始化表单数据
     formData.value[newComponent.id] = getDefaultValue(newComponent.type)
 
-    componentLogger.info('添加表单组件', {
+    componentLogger.info("添加表单组件", {
       type: newComponent.type,
       id: newComponent.id,
-      totalComponents: formComponents.value.length
+      totalComponents: formComponents.value.length,
     })
 
     draggedComponent.value = null
@@ -734,36 +637,36 @@ const createFormComponent = (componentDef: any) => {
     props: {
       ...defaultProps,
       name: id,
-      label: componentDef.name
-    }
+      label: componentDef.name,
+    },
   }
 }
 
 const getDefaultProps = (type: string) => {
   const baseProps = {
-    name: '',
-    label: '',
-    placeholder: '',
-    required: false
+    name: "",
+    label: "",
+    placeholder: "",
+    required: false,
   }
 
   switch (type) {
-    case 'input':
+    case "input":
       return { ...baseProps, minLength: 0, maxLength: 100 }
-    case 'textarea':
+    case "textarea":
       return { ...baseProps, rows: 3 }
-    case 'number':
+    case "number":
       return { ...baseProps, min: 0, max: 100, step: 1 }
-    case 'select':
-      return { ...baseProps, options: [{ label: '选项1', value: 'option1' }], multiple: false }
-    case 'radio':
-    case 'checkbox':
-      return { ...baseProps, options: [{ label: '选项1', value: 'option1' }] }
-    case 'switch':
-      return { ...baseProps, checkedText: '是', uncheckedText: '否' }
-    case 'rate':
+    case "select":
+      return { ...baseProps, options: [{ label: "选项1", value: "option1" }], multiple: false }
+    case "radio":
+    case "checkbox":
+      return { ...baseProps, options: [{ label: "选项1", value: "option1" }] }
+    case "switch":
+      return { ...baseProps, checkedText: "是", uncheckedText: "否" }
+    case "rate":
       return { ...baseProps, max: 5, allowHalf: false }
-    case 'slider':
+    case "slider":
       return { ...baseProps, min: 0, max: 100, step: 1 }
     default:
       return baseProps
@@ -772,17 +675,17 @@ const getDefaultProps = (type: string) => {
 
 const getDefaultValue = (type: string) => {
   switch (type) {
-    case 'checkbox':
+    case "checkbox":
       return []
-    case 'switch':
+    case "switch":
       return false
-    case 'rate':
+    case "rate":
       return 0
-    case 'number':
-    case 'slider':
+    case "number":
+    case "slider":
       return 0
     default:
-      return ''
+      return ""
   }
 }
 
@@ -792,17 +695,17 @@ const getComponentRenderer = (type: string) => {
 
   // 根据组件类型返回不同的渲染器
   switch (type) {
-    case 'input':
-    case 'textarea':
-    case 'number':
-      return 'input'
-    case 'select':
-      return 'select'
-    case 'checkbox':
-    case 'radio':
-      return 'label'
+    case "input":
+    case "textarea":
+    case "number":
+      return "input"
+    case "select":
+      return "select"
+    case "checkbox":
+    case "radio":
+      return "label"
     default:
-      return 'div'
+      return "div"
   }
 }
 
@@ -816,7 +719,7 @@ const updateComponentValue = (componentId: string, value: any) => {
 
 const selectComponent = (componentId: string) => {
   selectedComponentId.value = componentId
-  componentLogger.info('选择组件', { componentId })
+  componentLogger.info("选择组件", { componentId })
 }
 
 const clearSelection = () => {
@@ -842,13 +745,13 @@ const duplicateComponent = (index: number) => {
   const duplicate = {
     ...original,
     id: `field_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-    props: { ...original.props, name: `${original.props.name}_copy` }
+    props: { ...original.props, name: `${original.props.name}_copy` },
   }
 
   formComponents.value.splice(index + 1, 0, duplicate)
   formData.value[duplicate.id] = getDefaultValue(duplicate.type)
 
-  componentLogger.info('复制组件', { originalId: original.id, duplicateId: duplicate.id })
+  componentLogger.info("复制组件", { originalId: original.id, duplicateId: duplicate.id })
 }
 
 const removeComponent = (index: number) => {
@@ -860,13 +763,13 @@ const removeComponent = (index: number) => {
     selectedComponentId.value = null
   }
 
-  componentLogger.info('删除组件', { componentId: component.id })
+  componentLogger.info("删除组件", { componentId: component.id })
 }
 
 const resetComponentProps = () => {
   if (selectedComponent.value) {
     selectedComponent.value.props = getDefaultProps(selectedComponent.value.type)
-    componentLogger.info('重置组件属性', { componentId: selectedComponent.value.id })
+    componentLogger.info("重置组件属性", { componentId: selectedComponent.value.id })
   }
 }
 
@@ -874,7 +777,7 @@ const addOption = () => {
   if (selectedComponent.value && selectedComponent.value.props.options) {
     selectedComponent.value.props.options.push({
       label: `选项${selectedComponent.value.props.options.length + 1}`,
-      value: `option${selectedComponent.value.props.options.length + 1}`
+      value: `option${selectedComponent.value.props.options.length + 1}`,
     })
   }
 }
@@ -899,43 +802,43 @@ const resetZoom = () => {
 }
 
 const clearCanvas = () => {
-  if (confirm('确定要清空画布吗？此操作不可恢复。')) {
+  if (confirm("确定要清空画布吗？此操作不可恢复。")) {
     formComponents.value = []
     formData.value = {}
     selectedComponentId.value = null
-    componentLogger.info('清空画布')
+    componentLogger.info("清空画布")
   }
 }
 
 // 表单操作
 const handlePreviewSubmit = () => {
-  console.log('表单提交:', formData.value)
-  componentLogger.info('预览表单提交', { formData: formData.value })
+  console.log("表单提交:", formData.value)
+  componentLogger.info("预览表单提交", { formData: formData.value })
 }
 
 const resetForm = () => {
-  Object.keys(formData.value).forEach(key => {
-    const component = formComponents.value.find(c => c.id === key)
+  Object.keys(formData.value).forEach((key) => {
+    const component = formComponents.value.find((c) => c.id === key)
     if (component) {
       formData.value[key] = getDefaultValue(component.type)
     }
   })
-  componentLogger.info('重置表单数据')
+  componentLogger.info("重置表单数据")
 }
 
 const generateCode = () => {
   const formSchema = {
     config: formConfig.value,
     components: formComponents.value,
-    data: formData.value
+    data: formData.value,
   }
 
   // 这里应该调用低代码引擎生成Vue组件代码
-  console.log('生成代码:', formSchema)
-  componentLogger.info('生成表单代码', { componentCount: formComponents.value.length })
+  console.log("生成代码:", formSchema)
+  componentLogger.info("生成表单代码", { componentCount: formComponents.value.length })
 
   // 模拟代码生成结果
-  alert('代码生成功能开发中...')
+  alert("代码生成功能开发中...")
 }
 
 const exportForm = () => {
@@ -943,23 +846,23 @@ const exportForm = () => {
     const formSchema = {
       config: formConfig.value,
       components: formComponents.value,
-      version: '1.0.0',
-      timestamp: new Date().toISOString()
+      version: "1.0.0",
+      timestamp: new Date().toISOString(),
     }
 
-    const blob = new Blob([JSON.stringify(formSchema, null, 2)], { type: 'application/json' })
+    const blob = new Blob([JSON.stringify(formSchema, null, 2)], { type: "application/json" })
     const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
+    const a = document.createElement("a")
     a.href = url
-    a.download = `${formConfig.value.name.replace(/\s+/g, '_')}_form_schema.json`
+    a.download = `${formConfig.value.name.replace(/\s+/g, "_")}_form_schema.json`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
 
-    componentLogger.info('导出表单配置', { componentCount: formComponents.value.length })
+    componentLogger.info("导出表单配置", { componentCount: formComponents.value.length })
   } catch (error) {
-    componentLogger.error('导出表单配置失败', error as Error)
+    componentLogger.error("导出表单配置失败", error as Error)
   }
 }
 
@@ -984,39 +887,39 @@ const handleFileImport = (event: Event) => {
 
           // 重新初始化表单数据
           formData.value = {}
-          formComponents.value.forEach(component => {
+          formComponents.value.forEach((component) => {
             formData.value[component.id] = getDefaultValue(component.type)
           })
 
           selectedComponentId.value = null
-          componentLogger.info('导入表单配置成功', { componentCount: formComponents.value.length })
+          componentLogger.info("导入表单配置成功", { componentCount: formComponents.value.length })
         } else {
-          throw new Error('无效的表单配置文件')
+          throw new Error("无效的表单配置文件")
         }
       } catch (error) {
-        componentLogger.error('导入表单配置失败', error as Error)
-        alert('导入失败：文件格式不正确')
+        componentLogger.error("导入表单配置失败", error as Error)
+        alert("导入失败：文件格式不正确")
       }
     }
     reader.readAsText(file)
   }
 
   // 清空文件选择
-  target.value = ''
+  target.value = ""
 }
 
 const saveForm = () => {
   // 这里应该调用API保存表单配置
-  componentLogger.info('保存表单', {
+  componentLogger.info("保存表单", {
     name: formConfig.value.name,
-    componentCount: formComponents.value.length
+    componentCount: formComponents.value.length,
   })
-  alert('保存功能开发中...')
+  alert("保存功能开发中...")
 }
 
 // 生命周期
 onMounted(() => {
-  componentLogger.info('拖拽表单开发器加载完成')
+  componentLogger.info("拖拽表单开发器加载完成")
 })
 </script>
 
@@ -1355,7 +1258,9 @@ onMounted(() => {
   z-index: 10;
 }
 
-.move-btn, .duplicate-btn, .remove-btn {
+.move-btn,
+.duplicate-btn,
+.remove-btn {
   width: 24px;
   height: 24px;
   padding: 0;
@@ -1433,7 +1338,9 @@ onMounted(() => {
   margin-bottom: var(--spacing-1);
 }
 
-.prop-input, .prop-textarea, .prop-select {
+.prop-input,
+.prop-textarea,
+.prop-select {
   width: 100%;
   padding: var(--spacing-2);
   border: 1px solid var(--theme-border-base);
@@ -1508,7 +1415,8 @@ onMounted(() => {
   border-top: 1px solid var(--theme-border-base);
 }
 
-.toolbar-left, .toolbar-right {
+.toolbar-left,
+.toolbar-right {
   display: flex;
   gap: var(--spacing-3);
 }
@@ -1627,7 +1535,8 @@ onMounted(() => {
   border-top: 1px solid var(--theme-border-base);
 }
 
-.submit-btn, .reset-btn {
+.submit-btn,
+.reset-btn {
   padding: var(--spacing-3) var(--spacing-6);
   border: none;
   border-radius: var(--radius-md);
@@ -1658,7 +1567,8 @@ onMounted(() => {
     grid-template-rows: auto auto 1fr;
   }
 
-  .component-panel, .property-panel {
+  .component-panel,
+  .property-panel {
     max-height: 300px;
   }
 }
@@ -1669,7 +1579,8 @@ onMounted(() => {
     gap: var(--spacing-3);
   }
 
-  .toolbar-left, .toolbar-right {
+  .toolbar-left,
+  .toolbar-right {
     width: 100%;
     justify-content: center;
   }

@@ -4,21 +4,13 @@
     <div class="dashboard-header">
       <div class="header-left">
         <h2>日志仪表板</h2>
-        <el-text
-          type="info"
-          size="small"
-        >
-          实时监控系统日志和性能指标
-        </el-text>
+        <el-text type="info" size="small"> 实时监控系统日志和性能指标 </el-text>
       </div>
       <div class="header-right">
         <el-button-group>
-          <el-button
-            :type="autoRefresh ? 'primary' : 'default'"
-            @click="toggleAutoRefresh"
-          >
+          <el-button :type="autoRefresh ? 'primary' : 'default'" @click="toggleAutoRefresh">
             <el-icon><Timer /></el-icon>
-            {{ autoRefresh ? '停止自动刷新' : '开启自动刷新' }}
+            {{ autoRefresh ? "停止自动刷新" : "开启自动刷新" }}
           </el-button>
           <el-button @click="refreshData">
             <el-icon><Refresh /></el-icon>
@@ -34,10 +26,7 @@
 
     <!-- 统计卡片 -->
     <div class="stats-cards">
-      <el-card
-        class="stat-card"
-        shadow="hover"
-      >
+      <el-card class="stat-card" shadow="hover">
         <div class="stat-content">
           <div class="stat-icon error">
             <el-icon><Warning /></el-icon>
@@ -46,24 +35,16 @@
             <div class="stat-value">
               {{ stats.errorCount }}
             </div>
-            <div class="stat-label">
-              错误
-            </div>
+            <div class="stat-label">错误</div>
           </div>
         </div>
-        <div
-          class="stat-trend"
-          :class="{ increase: stats.errorTrend > 0 }"
-        >
+        <div class="stat-trend" :class="{ increase: stats.errorTrend > 0 }">
           <el-icon><TrendCharts /></el-icon>
-          {{ stats.errorTrend > 0 ? '+' : '' }}{{ stats.errorTrend }}%
+          {{ stats.errorTrend > 0 ? "+" : "" }}{{ stats.errorTrend }}%
         </div>
       </el-card>
 
-      <el-card
-        class="stat-card"
-        shadow="hover"
-      >
+      <el-card class="stat-card" shadow="hover">
         <div class="stat-content">
           <div class="stat-icon warning">
             <el-icon><WarningFilled /></el-icon>
@@ -72,69 +53,44 @@
             <div class="stat-value">
               {{ stats.warningCount }}
             </div>
-            <div class="stat-label">
-              警告
-            </div>
+            <div class="stat-label">警告</div>
           </div>
         </div>
-        <div
-          class="stat-trend"
-          :class="{ increase: stats.warningTrend > 0 }"
-        >
+        <div class="stat-trend" :class="{ increase: stats.warningTrend > 0 }">
           <el-icon><TrendCharts /></el-icon>
-          {{ stats.warningTrend > 0 ? '+' : '' }}{{ stats.warningTrend }}%
+          {{ stats.warningTrend > 0 ? "+" : "" }}{{ stats.warningTrend }}%
         </div>
       </el-card>
 
-      <el-card
-        class="stat-card"
-        shadow="hover"
-      >
+      <el-card class="stat-card" shadow="hover">
         <div class="stat-content">
           <div class="stat-icon performance">
             <el-icon><Odometer /></el-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">
-              {{ stats.avgResponseTime }}ms
-            </div>
-            <div class="stat-label">
-              平均响应时间
-            </div>
+            <div class="stat-value">{{ stats.avgResponseTime }}ms</div>
+            <div class="stat-label">平均响应时间</div>
           </div>
         </div>
-        <div
-          class="stat-trend"
-          :class="{ increase: stats.performanceTrend > 0 }"
-        >
+        <div class="stat-trend" :class="{ increase: stats.performanceTrend > 0 }">
           <el-icon><TrendCharts /></el-icon>
-          {{ stats.performanceTrend > 0 ? '+' : '' }}{{ stats.performanceTrend }}%
+          {{ stats.performanceTrend > 0 ? "+" : "" }}{{ stats.performanceTrend }}%
         </div>
       </el-card>
 
-      <el-card
-        class="stat-card"
-        shadow="hover"
-      >
+      <el-card class="stat-card" shadow="hover">
         <div class="stat-content">
           <div class="stat-icon health">
             <el-icon><CircleCheck /></el-icon>
           </div>
           <div class="stat-info">
-            <div class="stat-value">
-              {{ stats.healthScore }}/100
-            </div>
-            <div class="stat-label">
-              健康评分
-            </div>
+            <div class="stat-value">{{ stats.healthScore }}/100</div>
+            <div class="stat-label">健康评分</div>
           </div>
         </div>
-        <div
-          class="stat-trend"
-          :class="{ increase: stats.healthTrend > 0 }"
-        >
+        <div class="stat-trend" :class="{ increase: stats.healthTrend > 0 }">
           <el-icon><TrendCharts /></el-icon>
-          {{ stats.healthTrend > 0 ? '+' : '' }}{{ stats.healthTrend }}%
+          {{ stats.healthTrend > 0 ? "+" : "" }}{{ stats.healthTrend }}%
         </div>
       </el-card>
     </div>
@@ -144,51 +100,26 @@
       <!-- 左侧面板 -->
       <div class="left-panel">
         <!-- 日志级别分布图表 -->
-        <el-card
-          class="chart-card"
-          shadow="never"
-        >
+        <el-card class="chart-card" shadow="never">
           <template #header>
             <div class="card-header">
               <span>日志级别分布</span>
-              <el-select
-                v-model="chartTimeRange"
-                size="small"
-                @change="updateCharts"
-              >
-                <el-option
-                  label="最近1小时"
-                  value="1h"
-                />
-                <el-option
-                  label="最近24小时"
-                  value="24h"
-                />
-                <el-option
-                  label="最近7天"
-                  value="7d"
-                />
+              <el-select v-model="chartTimeRange" size="small" @change="updateCharts">
+                <el-option label="最近1小时" value="1h" />
+                <el-option label="最近24小时" value="24h" />
+                <el-option label="最近7天" value="7d" />
               </el-select>
             </div>
           </template>
-          <div
-            ref="levelChartRef"
-            class="chart-container"
-          />
+          <div ref="levelChartRef" class="chart-container" />
         </el-card>
 
         <!-- 时间趋势图表 -->
-        <el-card
-          class="chart-card"
-          shadow="never"
-        >
+        <el-card class="chart-card" shadow="never">
           <template #header>
             <span>日志时间趋势</span>
           </template>
-          <div
-            ref="trendChartRef"
-            class="chart-container"
-          />
+          <div ref="trendChartRef" class="chart-container" />
         </el-card>
       </div>
 
@@ -202,10 +133,7 @@
         />
 
         <!-- 日志查看器 -->
-        <el-card
-          class="log-viewer-card"
-          shadow="never"
-        >
+        <el-card class="log-viewer-card" shadow="never">
           <template #header>
             <div class="card-header">
               <span>日志记录 ({{ filteredLogs.length }})</span>
@@ -226,10 +154,7 @@
                     列表
                   </el-button>
                 </el-button-group>
-                <el-button
-                  size="small"
-                  @click="clearAllLogs"
-                >
+                <el-button size="small" @click="clearAllLogs">
                   <el-icon><Delete /></el-icon>
                   清空
                 </el-button>
@@ -247,10 +172,7 @@
         </el-card>
 
         <!-- 热点问题 -->
-        <el-card
-          class="hotspots-card"
-          shadow="never"
-        >
+        <el-card class="hotspots-card" shadow="never">
           <template #header>
             <span>热点问题</span>
           </template>
@@ -265,65 +187,35 @@
                 <div class="hotspot-message">
                   {{ hotspot.message }}
                 </div>
-                <div class="hotspot-count">
-                  出现 {{ hotspot.count }} 次
-                </div>
+                <div class="hotspot-count">出现 {{ hotspot.count }} 次</div>
               </div>
-              <el-tag
-                :type="hotspot.type === 'error' ? 'danger' : 'warning'"
-                size="small"
-              >
-                {{ hotspot.type === 'error' ? '错误' : '警告' }}
+              <el-tag :type="hotspot.type === 'error' ? 'danger' : 'warning'" size="small">
+                {{ hotspot.type === "error" ? "错误" : "警告" }}
               </el-tag>
             </div>
-            <el-empty
-              v-if="hotspots.length === 0"
-              description="暂无热点问题"
-            />
+            <el-empty v-if="hotspots.length === 0" description="暂无热点问题" />
           </div>
         </el-card>
       </div>
     </div>
 
     <!-- 导出对话框 -->
-    <el-dialog
-      v-model="showExportDialog"
-      title="导出日志"
-      width="600px"
-      @close="resetExportForm"
-    >
-      <el-form
-        :model="exportForm"
-        label-width="120px"
-      >
+    <el-dialog v-model="showExportDialog" title="导出日志" width="600px" @close="resetExportForm">
+      <el-form :model="exportForm" label-width="120px">
         <el-form-item label="导出格式">
           <el-radio-group v-model="exportForm.format">
-            <el-radio :label="ExportFormat.JSON">
-              JSON
-            </el-radio>
-            <el-radio :label="ExportFormat.CSV">
-              CSV
-            </el-radio>
-            <el-radio :label="ExportFormat.HTML">
-              HTML
-            </el-radio>
-            <el-radio :label="ExportFormat.TXT">
-              TXT
-            </el-radio>
+            <el-radio :label="ExportFormat.JSON"> JSON </el-radio>
+            <el-radio :label="ExportFormat.CSV"> CSV </el-radio>
+            <el-radio :label="ExportFormat.HTML"> HTML </el-radio>
+            <el-radio :label="ExportFormat.TXT"> TXT </el-radio>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item label="包含内容">
           <el-checkbox-group v-model="exportForm.includes">
-            <el-checkbox label="analysis">
-              分析报告
-            </el-checkbox>
-            <el-checkbox label="performance">
-              性能数据
-            </el-checkbox>
-            <el-checkbox label="errors">
-              错误报告
-            </el-checkbox>
+            <el-checkbox label="analysis"> 分析报告 </el-checkbox>
+            <el-checkbox label="performance"> 性能数据 </el-checkbox>
+            <el-checkbox label="errors"> 错误报告 </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
 
@@ -350,23 +242,16 @@
       </el-form>
 
       <template #footer>
-        <el-button @click="showExportDialog = false">
-          取消
-        </el-button>
-        <el-button
-          type="primary"
-          @click="handleExport"
-        >
-          导出
-        </el-button>
+        <el-button @click="showExportDialog = false"> 取消 </el-button>
+        <el-button type="primary" @click="handleExport"> 导出 </el-button>
       </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ref, computed, onMounted, onUnmounted, nextTick } from "vue"
+import { ElMessage, ElMessageBox } from "element-plus"
 import {
   Timer,
   Refresh,
@@ -378,22 +263,22 @@ import {
   TrendCharts,
   Grid,
   List,
-  Delete
-} from '@element-plus/icons-vue'
-import * as echarts from 'echarts'
-import { logger, LogLevel, type LogEntry } from '@/utils/logger'
-import { logAnalyzer, analyzeCurrentLogs } from '@/utils/logAnalyzer'
-import { logExporter, ExportFormat, type ExportConfig } from '@/utils/logExporter'
-import { logManager } from '@/utils/logManager'
-import LogSearchFilter from './LogSearchFilter.vue'
-import LogViewer from '@/components/log/LogViewer.vue'
-import dayjs from 'dayjs'
+  Delete,
+} from "@element-plus/icons-vue"
+import * as echarts from "echarts"
+import { logger, LogLevel, type LogEntry } from "@/utils/logger"
+import { logAnalyzer, analyzeCurrentLogs } from "@/utils/logAnalyzer"
+import { logExporter, ExportFormat, type ExportConfig } from "@/utils/logExporter"
+import { logManager } from "@/utils/logManager"
+import LogSearchFilter from "./LogSearchFilter.vue"
+import LogViewer from "@/components/log/LogViewer.vue"
+import dayjs from "dayjs"
 
 // 响应式数据
 const autoRefresh = ref(false)
 const refreshInterval = ref<number | null>(null)
-const chartTimeRange = ref('24h')
-const viewMode = ref<'table' | 'list'>('table')
+const chartTimeRange = ref("24h")
+const viewMode = ref<"table" | "list">("table")
 const showExportDialog = ref(false)
 const allLogs = ref<LogEntry[]>([])
 const filteredLogs = ref<LogEntry[]>([])
@@ -407,9 +292,9 @@ let trendChart: echarts.ECharts | null = null
 // 导出表单
 const exportForm = ref({
   format: ExportFormat.HTML,
-  includes: ['analysis'],
+  includes: ["analysis"],
   timeRange: null as [string, string] | null,
-  maxEntries: 1000
+  maxEntries: 1000,
 })
 
 // 统计数据
@@ -421,7 +306,7 @@ const stats = ref({
   errorTrend: 0,
   warningTrend: 0,
   performanceTrend: 0,
-  healthTrend: 0
+  healthTrend: 0,
 })
 
 // 计算属性
@@ -449,7 +334,7 @@ const updateStats = () => {
     errorTrend: Math.floor(Math.random() * 20 - 10), // 模拟趋势数据
     warningTrend: Math.floor(Math.random() * 20 - 10),
     performanceTrend: Math.floor(Math.random() * 20 - 10),
-    healthTrend: Math.floor(Math.random() * 10 - 5)
+    healthTrend: Math.floor(Math.random() * 10 - 5),
   }
 }
 
@@ -468,58 +353,58 @@ const updateLevelChart = () => {
 
   const analysis = analyzeCurrentLogs()
   const levelData = [
-    { name: '调试', value: analysis.summary.levelDistribution[LogLevel.DEBUG], color: '#909399' },
-    { name: '信息', value: analysis.summary.levelDistribution[LogLevel.INFO], color: '#409EFF' },
-    { name: '成功', value: analysis.summary.levelDistribution[LogLevel.SUCCESS], color: '#67C23A' },
-    { name: '警告', value: analysis.summary.levelDistribution[LogLevel.WARN], color: '#E6A23C' },
-    { name: '错误', value: analysis.summary.levelDistribution[LogLevel.ERROR], color: '#F56C6C' }
-  ].filter(item => item.value > 0)
+    { name: "调试", value: analysis.summary.levelDistribution[LogLevel.DEBUG], color: "#909399" },
+    { name: "信息", value: analysis.summary.levelDistribution[LogLevel.INFO], color: "#409EFF" },
+    { name: "成功", value: analysis.summary.levelDistribution[LogLevel.SUCCESS], color: "#67C23A" },
+    { name: "警告", value: analysis.summary.levelDistribution[LogLevel.WARN], color: "#E6A23C" },
+    { name: "错误", value: analysis.summary.levelDistribution[LogLevel.ERROR], color: "#F56C6C" },
+  ].filter((item) => item.value > 0)
 
   const option = {
     tooltip: {
-      trigger: 'item',
-      formatter: '{a} <br/>{b}: {c} ({d}%)'
+      trigger: "item",
+      formatter: "{a} <br/>{b}: {c} ({d}%)",
     },
     legend: {
-      orient: 'vertical',
-      left: 'left',
+      orient: "vertical",
+      left: "left",
       textStyle: {
-        fontSize: 12
-      }
+        fontSize: 12,
+      },
     },
     series: [
       {
-        name: '日志级别',
-        type: 'pie',
-        radius: ['40%', '70%'],
-        center: ['60%', '50%'],
+        name: "日志级别",
+        type: "pie",
+        radius: ["40%", "70%"],
+        center: ["60%", "50%"],
         avoidLabelOverlap: false,
         itemStyle: {
           borderRadius: 10,
-          borderColor: '#fff',
-          borderWidth: 2
+          borderColor: "#fff",
+          borderWidth: 2,
         },
         label: {
           show: false,
-          position: 'center'
+          position: "center",
         },
         emphasis: {
           label: {
             show: true,
-            fontSize: '18',
-            fontWeight: 'bold'
-          }
+            fontSize: "18",
+            fontWeight: "bold",
+          },
         },
         labelLine: {
-          show: false
+          show: false,
         },
-        data: levelData.map(item => ({
+        data: levelData.map((item) => ({
           name: item.name,
           value: item.value,
-          itemStyle: { color: item.color }
-        }))
-      }
-    ]
+          itemStyle: { color: item.color },
+        })),
+      },
+    ],
   }
 
   levelChart.setOption(option)
@@ -535,54 +420,54 @@ const updateTrendChart = () => {
   const analysis = analyzeCurrentLogs()
   const trendData = analysis.trends.errorTrends.slice(-24) // 最近24小时
 
-  const times = trendData.map(item => dayjs(item.time).format('HH:mm'))
-  const values = trendData.map(item => item.count)
+  const times = trendData.map((item) => dayjs(item.time).format("HH:mm"))
+  const values = trendData.map((item) => item.count)
 
   const option = {
     tooltip: {
-      trigger: 'axis',
+      trigger: "axis",
       axisPointer: {
-        type: 'cross'
-      }
+        type: "cross",
+      },
     },
     grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      containLabel: true,
     },
     xAxis: {
-      type: 'category',
+      type: "category",
       boundaryGap: false,
       data: times,
       axisLabel: {
-        fontSize: 10
-      }
+        fontSize: 10,
+      },
     },
     yAxis: {
-      type: 'value',
+      type: "value",
       axisLabel: {
-        fontSize: 10
-      }
+        fontSize: 10,
+      },
     },
     series: [
       {
-        name: '错误数量',
-        type: 'line',
-        stack: 'Total',
+        name: "错误数量",
+        type: "line",
+        stack: "Total",
         smooth: true,
         lineStyle: {
-          width: 2
+          width: 2,
         },
         areaStyle: {
-          opacity: 0.3
+          opacity: 0.3,
         },
         itemStyle: {
-          color: '#F56C6C'
+          color: "#F56C6C",
         },
-        data: values
-      }
-    ]
+        data: values,
+      },
+    ],
   }
 
   trendChart.setOption(option)
@@ -595,19 +480,19 @@ const toggleAutoRefresh = () => {
     refreshInterval.value = window.setInterval(() => {
       loadData()
     }, 30000) // 30秒刷新一次
-    ElMessage.success('已开启自动刷新')
+    ElMessage.success("已开启自动刷新")
   } else {
     if (refreshInterval.value) {
       clearInterval(refreshInterval.value)
       refreshInterval.value = null
     }
-    ElMessage.info('已停止自动刷新')
+    ElMessage.info("已停止自动刷新")
   }
 }
 
 const refreshData = () => {
   loadData()
-  ElMessage.success('数据已刷新')
+  ElMessage.success("数据已刷新")
 }
 
 const handleLogsFiltered = (logs: LogEntry[]) => {
@@ -620,16 +505,16 @@ const handleSearchChanged = () => {
 
 const clearAllLogs = async () => {
   try {
-    await ElMessageBox.confirm('确定要清空所有日志吗？此操作不可恢复。', '确认清空', {
-      confirmButtonText: '清空',
-      cancelButtonText: '取消',
-      type: 'warning'
+    await ElMessageBox.confirm("确定要清空所有日志吗？此操作不可恢复。", "确认清空", {
+      confirmButtonText: "清空",
+      cancelButtonText: "取消",
+      type: "warning",
     })
 
     logger.clear()
     logManager.cleanup()
     loadData()
-    ElMessage.success('日志已清空')
+    ElMessage.success("日志已清空")
   } catch {
     // 用户取消
   }
@@ -638,27 +523,29 @@ const clearAllLogs = async () => {
 const handleExport = () => {
   const config: ExportConfig = {
     format: exportForm.value.format,
-    includeAnalysis: exportForm.value.includes.includes('analysis'),
-    includePerformance: exportForm.value.includes.includes('performance'),
-    includeErrors: exportForm.value.includes.includes('errors'),
-    timeRange: exportForm.value.timeRange ? {
-      start: new Date(exportForm.value.timeRange[0]),
-      end: new Date(exportForm.value.timeRange[1])
-    } : undefined,
-    maxEntries: exportForm.value.maxEntries
+    includeAnalysis: exportForm.value.includes.includes("analysis"),
+    includePerformance: exportForm.value.includes.includes("performance"),
+    includeErrors: exportForm.value.includes.includes("errors"),
+    timeRange: exportForm.value.timeRange
+      ? {
+          start: new Date(exportForm.value.timeRange[0]),
+          end: new Date(exportForm.value.timeRange[1]),
+        }
+      : undefined,
+    maxEntries: exportForm.value.maxEntries,
   }
 
   logExporter.downloadLogs(config)
   showExportDialog.value = false
-  ElMessage.success('导出成功')
+  ElMessage.success("导出成功")
 }
 
 const resetExportForm = () => {
   exportForm.value = {
     format: ExportFormat.HTML,
-    includes: ['analysis'],
+    includes: ["analysis"],
     timeRange: null,
-    maxEntries: 1000
+    maxEntries: 1000,
   }
 }
 
@@ -667,7 +554,7 @@ onMounted(() => {
   loadData()
 
   // 监听窗口大小变化
-  window.addEventListener('resize', () => {
+  window.addEventListener("resize", () => {
     levelChart?.resize()
     trendChart?.resize()
   })
@@ -681,7 +568,7 @@ onUnmounted(() => {
   levelChart?.dispose()
   trendChart?.dispose()
 
-  window.removeEventListener('resize', () => {
+  window.removeEventListener("resize", () => {
     levelChart?.resize()
     trendChart?.resize()
   })

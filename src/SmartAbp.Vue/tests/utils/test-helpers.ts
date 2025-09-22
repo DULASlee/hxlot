@@ -3,20 +3,20 @@
  * 提供统一的测试工具函数和配置
  */
 
-import { mount, VueWrapper } from '@vue/test-utils'
-import { createPinia } from 'pinia'
-import { createRouter, createWebHistory } from 'vue-router'
-import ElementPlus from 'element-plus'
-import { Component } from 'vue'
+import { mount, VueWrapper } from "@vue/test-utils"
+import { createPinia } from "pinia"
+import { createRouter, createWebHistory } from "vue-router"
+import ElementPlus from "element-plus"
+import { Component } from "vue"
 
 // 创建测试用的路由实例
 const createTestRouter = () => {
   return createRouter({
     history: createWebHistory(),
     routes: [
-      { path: '/', component: { template: '<div>Home</div>' } },
-      { path: '/test', component: { template: '<div>Test</div>' } }
-    ]
+      { path: "/", component: { template: "<div>Home</div>" } },
+      { path: "/test", component: { template: "<div>Test</div>" } },
+    ],
   })
 }
 
@@ -34,7 +34,7 @@ const createTestPinia = () => {
 export const createTestWrapper = (
   component: Component,
   props: Record<string, any> = {},
-  options: Record<string, any> = {}
+  options: Record<string, any> = {},
 ): VueWrapper<any> => {
   const router = createTestRouter()
   const pinia = createTestPinia()
@@ -44,16 +44,16 @@ export const createTestWrapper = (
     global: {
       plugins: [ElementPlus, router, pinia],
       stubs: {
-        'router-link': true,
-        'router-view': true,
-        ...options.stubs
+        "router-link": true,
+        "router-view": true,
+        ...options.stubs,
       },
       mocks: {
         $t: (key: string) => key, // 模拟国际化
-        ...options.mocks
-      }
+        ...options.mocks,
+      },
     },
-    ...options
+    ...options,
   })
 }
 
@@ -62,10 +62,7 @@ export const createTestWrapper = (
  * @param count 数据数量
  * @param generator 数据生成器函数
  */
-export const generateMockData = <T>(
-  count: number,
-  generator: (index: number) => T
-): T[] => {
+export const generateMockData = <T>(count: number, generator: (index: number) => T): T[] => {
   return Array.from({ length: count }, (_, index) => generator(index))
 }
 
@@ -79,38 +76,41 @@ export const mockUserGenerator = (index: number) => ({
   age: 20 + (index % 50),
   isEnabled: index % 2 === 0,
   creationTime: new Date(2024, 0, 1 + index).toISOString(),
-  sort: index
+  sort: index,
 })
 
 /**
  * 模拟表格列配置
  */
 export const mockTableColumns = [
-  { key: 'name', title: '姓名', width: 120, sortable: true },
-  { key: 'email', title: '邮箱', width: 200 },
-  { key: 'age', title: '年龄', width: 80, sortable: true },
-  { key: 'isEnabled', title: '状态', width: 100 },
-  { key: 'creationTime', title: '创建时间', width: 160, sortable: true }
+  { key: "name", title: "姓名", width: 120, sortable: true },
+  { key: "email", title: "邮箱", width: 200 },
+  { key: "age", title: "年龄", width: 80, sortable: true },
+  { key: "isEnabled", title: "状态", width: 100 },
+  { key: "creationTime", title: "创建时间", width: 160, sortable: true },
 ]
 
 /**
  * 模拟图表数据生成器
  */
 export const mockChartDataGenerator = {
-  line: (count: number = 10) => generateMockData(count, (i) => ({
-    x: i,
-    y: Math.floor(Math.random() * 100)
-  })),
+  line: (count: number = 10) =>
+    generateMockData(count, (i) => ({
+      x: i,
+      y: Math.floor(Math.random() * 100),
+    })),
 
-  bar: (count: number = 5) => generateMockData(count, (i) => ({
-    name: `Category ${i}`,
-    value: Math.floor(Math.random() * 100)
-  })),
+  bar: (count: number = 5) =>
+    generateMockData(count, (i) => ({
+      name: `Category ${i}`,
+      value: Math.floor(Math.random() * 100),
+    })),
 
-  pie: (count: number = 4) => generateMockData(count, (i) => ({
-    name: `Segment ${i}`,
-    value: Math.floor(Math.random() * 100)
-  }))
+  pie: (count: number = 4) =>
+    generateMockData(count, (i) => ({
+      name: `Segment ${i}`,
+      value: Math.floor(Math.random() * 100),
+    })),
 }
 
 /**
@@ -124,14 +124,14 @@ export const waitForUpdate = async (wrapper: VueWrapper<any>) => {
  * 模拟异步操作
  */
 export const mockAsyncOperation = (delay: number = 100) => {
-  return new Promise(resolve => setTimeout(resolve, delay))
+  return new Promise((resolve) => setTimeout(resolve, delay))
 }
 
 /**
  * 创建模拟的API响应
  */
 export const createMockApiResponse = <T>(data: T, delay: number = 100) => {
-  return new Promise<T>(resolve => {
+  return new Promise<T>((resolve) => {
     setTimeout(() => resolve(data), delay)
   })
 }
@@ -143,7 +143,7 @@ export const triggerEvent = async (
   wrapper: VueWrapper<any>,
   selector: string,
   event: string,
-  payload?: any
+  payload?: any,
 ) => {
   const element = wrapper.find(selector)
   if (!element.exists()) {
@@ -167,7 +167,7 @@ export const isElementVisible = (wrapper: VueWrapper<any>, selector: string): bo
  */
 export const getElementText = (wrapper: VueWrapper<any>, selector: string): string => {
   const element = wrapper.find(selector)
-  return element.exists() ? element.text() : ''
+  return element.exists() ? element.text() : ""
 }
 
 /**
@@ -176,18 +176,18 @@ export const getElementText = (wrapper: VueWrapper<any>, selector: string): stri
 export const mockDragAndDrop = async (
   wrapper: VueWrapper<any>,
   sourceSelector: string,
-  targetSelector: string
+  targetSelector: string,
 ) => {
   const source = wrapper.find(sourceSelector)
   const target = wrapper.find(targetSelector)
 
   if (!source.exists() || !target.exists()) {
-    throw new Error('Source or target element not found for drag and drop')
+    throw new Error("Source or target element not found for drag and drop")
   }
 
-  await source.trigger('dragstart')
-  await target.trigger('dragover')
-  await target.trigger('drop')
+  await source.trigger("dragstart")
+  await target.trigger("dragover")
+  await target.trigger("drop")
   await waitForUpdate(wrapper)
 }
 
@@ -210,7 +210,7 @@ export const measureMemoryUsage = () => {
     return {
       used: memory.usedJSHeapSize,
       total: memory.totalJSHeapSize,
-      limit: memory.jsHeapSizeLimit
+      limit: memory.jsHeapSizeLimit,
     }
   }
   return null

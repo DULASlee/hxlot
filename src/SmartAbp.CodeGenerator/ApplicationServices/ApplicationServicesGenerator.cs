@@ -31,6 +31,8 @@ namespace SmartAbp.CodeGenerator.ApplicationServices
         /// </summary>
         public async Task<GeneratedApplicationLayer> GenerateApplicationLayerAsync(ApplicationServiceDefinition definition)
         {
+            ArgumentNullException.ThrowIfNull(definition, nameof(definition));
+            
             _logger.LogInformation("Generating application layer for {ServiceName}", definition.ServiceName);
             
             var files = new Dictionary<string, string>();
@@ -38,61 +40,61 @@ namespace SmartAbp.CodeGenerator.ApplicationServices
             try
             {
                 // 1. Generate Application Service Interface
-                var interfaceCode = await GenerateServiceInterfaceAsync(definition);
+                var interfaceCode = await GenerateServiceInterfaceAsync(definition).ConfigureAwait(false);
                 files[$"Services/I{definition.ServiceName}AppService.cs"] = interfaceCode;
                 
                 // 2. Generate Application Service Implementation
-                var implementationCode = await GenerateServiceImplementationAsync(definition);
+                var implementationCode = await GenerateServiceImplementationAsync(definition).ConfigureAwait(false);
                 files[$"Services/{definition.ServiceName}AppService.cs"] = implementationCode;
                 
                 // 3. Generate DTOs with validation
                 foreach (var dto in definition.DTOs ?? Enumerable.Empty<ApplicationDtoDefinition>())
                 {
-                    var dtoCode = await GenerateDtoWithValidationAsync(dto, definition.Namespace);
+                    var dtoCode = await GenerateDtoWithValidationAsync(dto, definition.Namespace).ConfigureAwait(false);
                     files[$"DTOs/{dto.Name}.cs"] = dtoCode;
                 }
                 
                 // 4. Generate Input/Output DTOs
                 foreach (var inputDto in definition.InputDTOs ?? Enumerable.Empty<ApplicationDtoDefinition>())
                 {
-                    var inputCode = await GenerateInputDtoAsync(inputDto, definition.Namespace);
+                    var inputCode = await GenerateInputDtoAsync(inputDto, definition.Namespace).ConfigureAwait(false);
                     files[$"DTOs/Input/{inputDto.Name}.cs"] = inputCode;
                 }
                 
                 foreach (var outputDto in definition.OutputDTOs ?? Enumerable.Empty<ApplicationDtoDefinition>())
                 {
-                    var outputCode = await GenerateOutputDtoAsync(outputDto, definition.Namespace);
+                    var outputCode = await GenerateOutputDtoAsync(outputDto, definition.Namespace).ConfigureAwait(false);
                     files[$"DTOs/Output/{outputDto.Name}.cs"] = outputCode;
                 }
                 
                 // 5. Generate AutoMapper Profile
-                var mapperCode = await GenerateAutoMapperProfileAsync(definition);
+                var mapperCode = await GenerateAutoMapperProfileAsync(definition).ConfigureAwait(false);
                 files[$"Mappings/{definition.ServiceName}AutoMapperProfile.cs"] = mapperCode;
                 
                 // 6. Generate Validators
                 foreach (var validator in definition.Validators ?? Enumerable.Empty<ValidatorDefinition>())
                 {
-                    var validatorCode = await GenerateFluentValidatorAsync(validator, definition.Namespace);
+                    var validatorCode = await GenerateFluentValidatorAsync(validator, definition.Namespace).ConfigureAwait(false);
                     files[$"Validators/{validator.Name}.cs"] = validatorCode;
                 }
                 
                 // 7. Generate Authorization Handlers
                 foreach (var authHandler in definition.AuthorizationHandlers ?? Enumerable.Empty<AuthorizationHandlerDefinition>())
                 {
-                    var authCode = await GenerateAuthorizationHandlerAsync(authHandler, definition.Namespace);
+                    var authCode = await GenerateAuthorizationHandlerAsync(authHandler, definition.Namespace).ConfigureAwait(false);
                     files[$"Authorization/{authHandler.Name}.cs"] = authCode;
                 }
                 
                 // 8. Generate Application Module
-                var moduleCode = await GenerateApplicationModuleAsync(definition);
+                var moduleCode = await GenerateApplicationModuleAsync(definition).ConfigureAwait(false);
                 files[$"{definition.ServiceName}ApplicationModule.cs"] = moduleCode;
                 
                 // 9. Generate Application Constants
-                var constantsCode = await GenerateApplicationConstantsAsync(definition);
+                var constantsCode = await GenerateApplicationConstantsAsync(definition).ConfigureAwait(false);
                 files[$"Constants/{definition.ServiceName}ApplicationConstants.cs"] = constantsCode;
                 
                 // 10. Generate Extension Methods
-                var extensionsCode = await GenerateExtensionMethodsAsync(definition);
+                var extensionsCode = await GenerateExtensionMethodsAsync(definition).ConfigureAwait(false);
                 files[$"Extensions/{definition.ServiceName}ApplicationExtensions.cs"] = extensionsCode;
                 
                 _logger.LogInformation("Successfully generated {FileCount} application service files for {ServiceName}", 
@@ -422,7 +424,7 @@ namespace SmartAbp.CodeGenerator.ApplicationServices
             sb.AppendLine("            // Validate input");
             sb.AppendLine("            await ValidateCreateAsync(input);");
             sb.AppendLine();
-            sb.AppendLine("            // Create entity using domain manager
+            sb.AppendLine("        // Create entity using domain manager");
             sb.AppendLine($"            var entity = await _manager.CreateAsync(");
             sb.AppendLine("                /* Map input properties from DTO to domain entity */");
             sb.AppendLine($"                /* Example: input.Name, input.Description, etc. */");

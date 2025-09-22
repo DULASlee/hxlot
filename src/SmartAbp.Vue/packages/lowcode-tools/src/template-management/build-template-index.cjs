@@ -5,58 +5,57 @@
  * 自动扫描templates目录，生成index.json文件
  */
 
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs")
+const path = require("path")
+const yaml = require("js-yaml")
 
 // Resolve the repository-level templates directory by walking up from current file
 function resolveTemplatesDir(startDir) {
-  let currentDir = startDir;
+  let currentDir = startDir
   for (let i = 0; i < 10; i++) {
-    const candidate = path.join(currentDir, 'templates');
+    const candidate = path.join(currentDir, "templates")
     try {
       if (fs.existsSync(candidate) && fs.statSync(candidate).isDirectory()) {
-        return candidate;
+        return candidate
       }
     } catch (e) {
       // ignore and continue walking up
     }
-    const parent = path.dirname(currentDir);
-    if (parent === currentDir) break;
-    currentDir = parent;
+    const parent = path.dirname(currentDir)
+    if (parent === currentDir) break
+    currentDir = parent
   }
   // Fallback to cwd/templates
-  return path.resolve(process.cwd(), 'templates');
+  return path.resolve(process.cwd(), "templates")
 }
 
 class TemplateIndexBuilder {
   constructor() {
-    this.templatesDir = resolveTemplatesDir(__dirname);
-    this.outputPath = path.join(this.templatesDir, 'index.json');
-    this.templates = [];
-    this.categories = {};
+    this.templatesDir = resolveTemplatesDir(__dirname)
+    this.outputPath = path.join(this.templatesDir, "index.json")
+    this.templates = []
+    this.categories = {}
   }
 
   /**
    * 构建索引
    */
   async build() {
-    console.log('🔨 开始构建模板索引...\n');
+    console.log("🔨 开始构建模板索引...\n")
 
     try {
       // 扫描模板文件
-      await this.scanTemplates();
+      await this.scanTemplates()
 
       // 生成索引文件
-      await this.generateIndex();
+      await this.generateIndex()
 
-      console.log(`✅ 模板索引构建完成！`);
-      console.log(`📁 输出文件: ${this.outputPath}`);
-      console.log(`📊 共发现 ${this.templates.length} 个模板`);
-
+      console.log(`✅ 模板索引构建完成！`)
+      console.log(`📁 输出文件: ${this.outputPath}`)
+      console.log(`📊 共发现 ${this.templates.length} 个模板`)
     } catch (error) {
-      console.error('❌ 构建索引时发生错误:', error.message);
-      process.exit(1);
+      console.error("❌ 构建索引时发生错误:", error.message)
+      process.exit(1)
     }
   }
 
@@ -64,83 +63,85 @@ class TemplateIndexBuilder {
    * 扫描模板文件
    */
   async scanTemplates() {
-    const templateFiles = this.findTemplateFiles(this.templatesDir);
+    const templateFiles = this.findTemplateFiles(this.templatesDir)
 
     for (const filePath of templateFiles) {
       try {
-        const template = await this.processTemplate(filePath);
+        const template = await this.processTemplate(filePath)
         if (template) {
-          this.templates.push(template);
+          this.templates.push(template)
         }
       } catch (error) {
-        console.warn(`⚠️  处理模板文件失败: ${filePath} - ${error.message}`);
+        console.warn(`⚠️  处理模板文件失败: ${filePath} - ${error.message}`)
       }
     }
 
-    console.log(`📋 扫描到 ${templateFiles.length} 个模板文件`);
+    console.log(`📋 扫描到 ${templateFiles.length} 个模板文件`)
   }
 
   /**
    * 查找所有模板文件
    */
   findTemplateFiles(dir) {
-    const files = [];
+    const files = []
 
     const scan = (currentDir) => {
-      const items = fs.readdirSync(currentDir);
+      const items = fs.readdirSync(currentDir)
 
       for (const item of items) {
-        const fullPath = path.join(currentDir, item);
-        const stat = fs.statSync(fullPath);
+        const fullPath = path.join(currentDir, item)
+        const stat = fs.statSync(fullPath)
 
         if (stat.isDirectory()) {
-          scan(fullPath);
-        } else if (item.includes('.template.') && !item.includes('.meta.')) {
-          files.push(fullPath);
+          scan(fullPath)
+        } else if (item.includes(".template.") && !item.includes(".meta.")) {
+          files.push(fullPath)
         }
       }
-    };
+    }
 
-    scan(dir);
-    return files;
+    scan(dir)
+    return files
   }
 
   /**
    * 处理单个模板文件
    */
   async processTemplate(filePath) {
-    const relativePath = path.relative(this.templatesDir, filePath);
-    const metadataPath = this.getMetadataPath(filePath);
+    const relativePath = path.relative(this.templatesDir, filePath)
+    const metadataPath = this.getMetadataPath(filePath)
 
     // 读取模板内容
-    const content = fs.readFileSync(filePath, 'utf8');
+    const content = fs.readFileSync(filePath, "utf8")
 
     // 提取AI模板信息
-    const aiInfo = this.extractAITemplateInfo(content);
+    const aiInfo = this.extractAITemplateInfo(content)
 
     // 读取元数据
-    let metadata = {};
+    let metadata = {}
     if (fs.existsSync(metadataPath)) {
       try {
-        const metadataContent = fs.readFileSync(metadataPath, 'utf8');
-        metadata = yaml.load(metadataContent) || {};
+        const metadataContent = fs.readFileSync(metadataPath, "utf8")
+        metadata = yaml.load(metadataContent) || {}
       } catch (error) {
-        console.warn(`⚠️  读取元数据失败: ${metadataPath}`);
+        console.warn(`⚠️  读取元数据失败: ${metadataPath}`)
       }
     }
 
     // 生成模板ID
-    const templateId = this.generateTemplateId(relativePath);
+    const templateId = this.generateTemplateId(relativePath)
 
     // 解析分类
-    const category = this.parseCategory(relativePath);
+    const category = this.parseCategory(relativePath)
 
     // 构建模板对象
     const template = {
       id: templateId,
       name: metadata.name || aiInfo.name || path.basename(filePath, path.extname(filePath)),
-      path: `templates/${relativePath.replace(/\\/g, '/')}`,
-      metadata: fs.existsSync(metadataPath) ? `templates/${path.relative(this.templatesDir, metadataPath).replace(/\\/g, '/')}` : null,
+      path: `templates/${relativePath.replace(/\\/g, "/")}`,
+      metadata: fs.existsSync(metadataPath)
+        ? `templates/${path.relative(this.templatesDir, metadataPath).replace(/\\/g, "/")}`
+        : null,
       category: category,
       type: this.extractType(relativePath),
       tags: metadata.tags || aiInfo.tags || [],
@@ -148,64 +149,67 @@ class TemplateIndexBuilder {
       ai_triggers: metadata.ai_triggers || aiInfo.ai_triggers || [],
       dependencies: metadata.dependencies || aiInfo.dependencies || [],
       permissions_required: metadata.permissions_required || aiInfo.permissions_required || false,
-      parameters: metadata.parameters || aiInfo.parameters || []
-    };
+      parameters: metadata.parameters || aiInfo.parameters || [],
+    }
 
     // 更新分类信息
-    this.updateCategories(category, metadata.description || aiInfo.description);
+    this.updateCategories(category, metadata.description || aiInfo.description)
 
-    return template;
+    return template
   }
 
   /**
    * 获取元数据文件路径
    */
   getMetadataPath(templatePath) {
-    const dir = path.dirname(templatePath);
-    const basename = path.basename(templatePath);
-    const nameWithoutExt = basename.replace(/\.template\.[^.]+$/, '');
-    return path.join(dir, `${nameWithoutExt}.template.meta.yml`);
+    const dir = path.dirname(templatePath)
+    const basename = path.basename(templatePath)
+    const nameWithoutExt = basename.replace(/\.template\.[^.]+$/, "")
+    return path.join(dir, `${nameWithoutExt}.template.meta.yml`)
   }
 
   /**
    * 提取AI模板信息
    */
   extractAITemplateInfo(content) {
-    const info = {};
+    const info = {}
 
     // 提取AI_TEMPLATE_INFO注释块
-    const aiInfoMatch = content.match(/AI_TEMPLATE_INFO[:\s]*\n([\s\S]*?)(?=\*\/|-->|###)/);
+    const aiInfoMatch = content.match(/AI_TEMPLATE_INFO[:\s]*\n([\s\S]*?)(?=\*\/|-->|###)/)
     if (aiInfoMatch) {
-      const infoText = aiInfoMatch[1];
+      const infoText = aiInfoMatch[1]
 
       // 解析各种信息
-      info.name = this.extractInfoField(infoText, '模板类型');
-      info.description = this.extractInfoField(infoText, '适用场景');
-      info.dependencies = this.extractInfoArray(infoText, '依赖项');
-      info.tags = this.extractInfoArray(infoText, '标签');
-      info.permissions_required = infoText.includes('权限') || infoText.includes('permission');
+      info.name = this.extractInfoField(infoText, "模板类型")
+      info.description = this.extractInfoField(infoText, "适用场景")
+      info.dependencies = this.extractInfoArray(infoText, "依赖项")
+      info.tags = this.extractInfoArray(infoText, "标签")
+      info.permissions_required = infoText.includes("权限") || infoText.includes("permission")
     }
 
-    return info;
+    return info
   }
 
   /**
    * 提取信息字段
    */
   extractInfoField(text, fieldName) {
-    const regex = new RegExp(`${fieldName}[：:][\\s]*([^\\n]+)`, 'i');
-    const match = text.match(regex);
-    return match ? match[1].trim() : null;
+    const regex = new RegExp(`${fieldName}[：:][\\s]*([^\\n]+)`, "i")
+    const match = text.match(regex)
+    return match ? match[1].trim() : null
   }
 
   /**
    * 提取信息数组
    */
   extractInfoArray(text, fieldName) {
-    const field = this.extractInfoField(text, fieldName);
-    if (!field) return [];
+    const field = this.extractInfoField(text, fieldName)
+    if (!field) return []
 
-    return field.split(/[ ,，、]/).map(item => item.trim()).filter(item => item);
+    return field
+      .split(/[ ,，、]/)
+      .map((item) => item.trim())
+      .filter((item) => item)
   }
 
   /**
@@ -213,55 +217,55 @@ class TemplateIndexBuilder {
    */
   generateTemplateId(relativePath) {
     return relativePath
-      .replace(/\\/g, '-')
-      .replace(/\//g, '-')
-      .replace(/\.template\.[^.]+$/, '')
-      .toLowerCase();
+      .replace(/\\/g, "-")
+      .replace(/\//g, "-")
+      .replace(/\.template\.[^.]+$/, "")
+      .toLowerCase()
   }
 
   /**
    * 解析分类
    */
   parseCategory(relativePath) {
-    const parts = relativePath.split(/[\/\\]/);
+    const parts = relativePath.split(/[\/\\]/)
     if (parts.length >= 2) {
-      return `${parts[0]}/${parts[1]}`;
+      return `${parts[0]}/${parts[1]}`
     }
-    return parts[0] || 'general';
+    return parts[0] || "general"
   }
 
   /**
    * 提取类型
    */
   extractType(relativePath) {
-    const filename = path.basename(relativePath);
+    const filename = path.basename(relativePath)
 
-    if (filename.includes('Service')) return 'service';
-    if (filename.includes('Component') || filename.includes('Management')) return 'component';
-    if (filename.includes('Store')) return 'store';
-    if (filename.includes('Dto')) return 'dto';
-    if (filename.includes('Interface')) return 'interface';
+    if (filename.includes("Service")) return "service"
+    if (filename.includes("Component") || filename.includes("Management")) return "component"
+    if (filename.includes("Store")) return "store"
+    if (filename.includes("Dto")) return "dto"
+    if (filename.includes("Interface")) return "interface"
 
-    const ext = path.extname(filename);
-    if (ext === '.vue') return 'component';
-    if (ext === '.ts') return 'typescript';
-    if (ext === '.cs') return 'csharp';
+    const ext = path.extname(filename)
+    if (ext === ".vue") return "component"
+    if (ext === ".ts") return "typescript"
+    if (ext === ".cs") return "csharp"
 
-    return 'unknown';
+    return "unknown"
   }
 
   /**
    * 更新分类信息
    */
   updateCategories(category, description) {
-    const [main, sub] = category.split('/');
+    const [main, sub] = category.split("/")
 
     if (!this.categories[main]) {
-      this.categories[main] = {};
+      this.categories[main] = {}
     }
 
     if (sub && !this.categories[main][sub]) {
-      this.categories[main][sub] = description || sub;
+      this.categories[main][sub] = description || sub
     }
   }
 
@@ -280,13 +284,13 @@ class TemplateIndexBuilder {
       statistics: {
         total_templates: this.templates.length,
         categories_count: Object.keys(this.categories).length,
-        backend_templates: this.templates.filter(t => t.category.startsWith('backend')).length,
-        frontend_templates: this.templates.filter(t => t.category.startsWith('frontend')).length
-      }
-    };
+        backend_templates: this.templates.filter((t) => t.category.startsWith("backend")).length,
+        frontend_templates: this.templates.filter((t) => t.category.startsWith("frontend")).length,
+      },
+    }
 
     // 写入文件
-    fs.writeFileSync(this.outputPath, JSON.stringify(index, null, 2), 'utf8');
+    fs.writeFileSync(this.outputPath, JSON.stringify(index, null, 2), "utf8")
   }
 
   /**
@@ -300,8 +304,8 @@ class TemplateIndexBuilder {
       dto_objects: "templates/**/contracts/*dto*.template.cs",
       vue_components: "templates/frontend/components/*.template.vue",
       abp_services: "templates/backend/application/*.template.cs",
-      interfaces: "templates/backend/contracts/*Interface*.template.cs"
-    };
+      interfaces: "templates/backend/contracts/*Interface*.template.cs",
+    }
   }
 
   /**
@@ -315,31 +319,29 @@ class TemplateIndexBuilder {
         createDto: "Create{EntityName}Dto",
         updateDto: "Update{EntityName}Dto",
         interface: "I{EntityName}AppService",
-        getListDto: "Get{EntityName}ListDto"
+        getListDto: "Get{EntityName}ListDto",
       },
       frontend: {
         component: "{EntityName}Management.vue",
         store: "use{EntityName}Store",
         service: "{entityName}Service",
-        types: "{entityName}.ts"
+        types: "{entityName}.ts",
       },
       permissions: {
         group: "{ModuleName}",
-        actions: ["Default", "Create", "Edit", "Delete"]
-      }
-    };
+        actions: ["Default", "Create", "Edit", "Delete"],
+      },
+    }
   }
 }
 
 // 运行构建
 if (require.main === module) {
-  const builder = new TemplateIndexBuilder();
-  builder.build().catch(error => {
-    console.error('构建失败:', error);
-    process.exit(1);
-  });
+  const builder = new TemplateIndexBuilder()
+  builder.build().catch((error) => {
+    console.error("构建失败:", error)
+    process.exit(1)
+  })
 }
 
-module.exports = TemplateIndexBuilder;
-
-
+module.exports = TemplateIndexBuilder
