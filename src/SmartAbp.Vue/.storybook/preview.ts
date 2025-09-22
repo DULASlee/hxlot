@@ -4,9 +4,9 @@
  * Global decorators, parameters, and component setup
  */
 
-import type { Preview } from "@storybook/vue3"
-import { setup } from "@storybook/vue3"
-import { app } from "@storybook/vue3"
+import type { Preview } from "@storybook/vue3-vite"
+import { setup } from "@storybook/vue3-vite"
+import { app } from "@storybook/vue3-vite"
 
 // Element Plus setup
 import ElementPlus from "element-plus"
@@ -290,8 +290,8 @@ const preview: Preview = {
     },
   },
 
-  // Global types
-  globals: {
+  // Initialize function
+  initialGlobals: {
     theme: {
       description: "Global theme for components",
       defaultValue: "light",
@@ -332,14 +332,7 @@ const preview: Preview = {
         ],
       },
     },
-  },
-
-  // Initialize function
-  initialGlobals: {
-    theme: "light",
-    locale: "zh-CN",
-    performanceMode: false,
-  },
+  }
 }
 
 export default preview

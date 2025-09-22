@@ -4,7 +4,7 @@
  * Custom branding and styling for Storybook interface
  */
 
-import { create } from "@storybook/theming/create"
+import { create } from "storybook/theming/create"
 
 // Brand colors
 const brandColors = {

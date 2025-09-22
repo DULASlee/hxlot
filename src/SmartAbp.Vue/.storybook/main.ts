@@ -1,3 +1,5 @@
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
 /**
  * Storybook Main Configuration
  * Advanced UI Component Library - Phase 3 Week 4
@@ -6,6 +8,8 @@
 
 import type { StorybookConfig } from "@storybook/vue3-vite"
 import { mergeConfig } from "vite"
+
+const require = createRequire(import.meta.url);
 
 const config: StorybookConfig = {
   // Story file patterns
@@ -18,27 +22,17 @@ const config: StorybookConfig = {
 
   // Storybook addons
   addons: [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
-    "@storybook/addon-controls",
-    "@storybook/addon-actions",
-    "@storybook/addon-viewport",
-    "@storybook/addon-backgrounds",
-    "@storybook/addon-toolbars",
-    "@storybook/addon-measure",
-    "@storybook/addon-outline",
-    "@storybook/addon-docs",
-    "@storybook/addon-storysource",
-    "@storybook/addon-a11y", // Accessibility testing
-    "@storybook/addon-design-tokens",
-    "@chromatic-com/storybook", // Visual testing
-    "storybook-addon-vue-mdx",
-    "storybook-addon-pseudo-states",
+    getAbsolutePath("@storybook/addon-links"),
+    getAbsolutePath("@storybook/addon-docs"),
+    getAbsolutePath("@storybook/addon-a11y"),
+    getAbsolutePath("@storybook/addon-design-tokens"),
+    getAbsolutePath("@chromatic-com/storybook"),
+    getAbsolutePath("storybook-addon-vue-mdx"),
+    getAbsolutePath("storybook-addon-pseudo-states")
   ],
 
   framework: {
-    name: "@storybook/vue3-vite",
+    name: getAbsolutePath("@storybook/vue3-vite"),
     options: {
       docgen: "vue-component-meta", // Enhanced prop extraction
     },
@@ -56,8 +50,7 @@ const config: StorybookConfig = {
 
   // Documentation configuration
   docs: {
-    autodocs: "tag",
-    defaultName: "Documentation",
+    defaultName: "Documentation"
   },
 
   // Vite configuration customization
@@ -96,8 +89,8 @@ const config: StorybookConfig = {
       optimizeDeps: {
         include: [
           "@storybook/addon-essentials",
-          "@storybook/addon-actions",
-          "@storybook/addon-controls",
+          "storybook/actions",
+          "storybook/internal/controls",
           "element-plus",
           "echarts",
         ],
@@ -144,3 +137,7 @@ const config: StorybookConfig = {
 }
 
 export default config
+
+function getAbsolutePath(value: string): any {
+  return dirname(require.resolve(join(value, "package.json")));
+}
