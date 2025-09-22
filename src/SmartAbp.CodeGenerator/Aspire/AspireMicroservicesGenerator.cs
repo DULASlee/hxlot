@@ -404,7 +404,7 @@ namespace SmartAbp.CodeGenerator.Aspire
         private async Task<string> GenerateAspireHostProjectFileAsync(AspireSolutionDefinition definition) => 
             await Task.FromResult($@"<Project Sdk=""Aspire.Hosting.AppHost"">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>{Guid.NewGuid()}</UserSecretsId>
@@ -426,7 +426,7 @@ namespace SmartAbp.CodeGenerator.Aspire
         private async Task<string> GenerateServiceDefaultsProjectFileAsync() => 
             await Task.FromResult(@"<Project Sdk=""Microsoft.NET.Sdk"">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
