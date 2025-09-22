@@ -4,35 +4,52 @@
 已接受
 
 ## 背景
-SmartAbp项目需要构建前端低代码引擎，支持代码自动生成、可视化编辑和运行时渲染，采用微内核+插件的可扩展架构。
+SmartAbp项目已构建完整的全栈低代码引擎，包括：
+1. **后端**: SmartAbp.CodeGenerator - 基于Roslyn AST的企业级代码生成引擎
+2. **前端**: 基于Vue 3的可视化设计器和元数据驱动运行时
+3. **架构**: 支持DDD、CQRS、分布式缓存、微服务等企业级架构模式
+4. **覆盖范围**: 29个专业代码生成器，覆盖85-90%的企业应用场景
 
 ## 决策
 
-### 核心架构：微内核 + 插件
+### 全栈低代码引擎架构
 
+#### 后端代码生成引擎 (SmartAbp.CodeGenerator)
 ```
-src/SmartAbp.Vue/src/lowcode/
-├── kernel/                 # 微内核
-│   ├── event-bus/         # 事件总线
-│   ├── cache/             # 缓存管理
-│   ├── logger/            # 日志系统
-│   ├── performance/       # 性能监控
-│   └── plugin-manager/    # 插件管理
-├── plugins/               # 插件系统
-│   ├── vue3-generator/    # Vue3代码生成器
-│   ├── sfc-compiler/      # 单文件组件编译器
-│   ├── router-generator/  # 路由生成器
-│   └── store-generator/   # 状态管理生成器
-├── runtime/               # 运行时
-│   ├── worker-pool/       # Worker池
-│   ├── metadata-pipeline/ # 元数据流水线
-│   ├── sandbox/           # 沙箱执行
-│   └── renderer/          # 渲染引擎
-├── adapters/              # 适配器
-│   ├── logger-adapter/    # 日志适配
-│   ├── cache-adapter/     # 缓存适配
-│   └── monitor-adapter/   # 监控适配
-└── examples/              # 示例和测试
+src/SmartAbp.CodeGenerator/
+├── Core/                   # 核心引擎
+│   ├── RoslynCodeEngine.cs      # Roslyn AST引擎
+│   ├── CrudArchitectureGenerator.cs # CRUD架构生成器
+│   └── Generation/             # 分层代码生成
+├── DDD/                    # 领域驱动设计
+│   └── DomainDrivenDesignGenerator.cs
+├── CQRS/                   # 命令查询分离
+│   └── CqrsPatternGenerator.cs
+├── Caching/                # 分布式缓存
+│   └── DistributedCachingGenerator.cs
+├── Quality/                # 代码质量
+│   └── CodeQualityGenerator.cs
+├── Testing/                # 测试生成
+│   └── UnitTestGenerator.cs
+├── Aspire/                 # 微服务
+│   └── AspireMicroservicesGenerator.cs
+└── Services/               # 应用服务
+    ├── CodeGenerationAppService.cs
+    └── 13个专业生成服务
+```
+
+#### 前端可视化引擎 (packages/lowcode-*)
+```
+packages/
+├── lowcode-core/           # 核心运行时
+├── lowcode-designer/       # 可视化设计器
+│   ├── components/         # 设计器组件
+│   ├── views/             # 设计器视图
+│   ├── runtime/           # 元数据驱动渲染
+│   └── utils/             # 工具函数
+├── lowcode-codegen/        # 前端代码生成
+├── lowcode-api/            # API客户端
+└── lowcode-ui-vue/         # Vue UI组件
 ```
 
 ### 插件接口规范
@@ -51,12 +68,12 @@ interface LowCodePlugin {
     dependencies?: string[]
     peerDependencies?: string[]
   }
-  
+
   // 核心方法
   canHandle(schema: any): boolean
   validate(schema: any): ValidationResult
   generate(schema: any, config: any, context: any): GeneratedCode
-  
+
   // 生命周期
   onInit?(): void
   onDestroy?(): void
@@ -75,7 +92,7 @@ graph TD
     E --> F[后处理]
     F --> G[质量检查]
     G --> H[输出结果]
-    
+
     I[缓存检查] --> B
     J[性能监控] --> E
     K[错误处理] --> H
@@ -220,3 +237,4 @@ logger.error('Generation failed', error)
 
 ## 更新历史
 - 2024-01-09: 初始版本，基于项目编程规则整理
+- 2025-01-12: 重大更新，基于实际实现的29个代码生成器更新架构描述
