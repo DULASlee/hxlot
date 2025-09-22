@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Timers;
+using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -117,8 +117,8 @@ namespace SmartAbp.Permissions.Monitoring
         private readonly IOptions<EnterpriseMonitoringOptions> _options;
         private readonly List<MetricData> _metrics;
         private readonly List<AlertData> _alerts;
-        private readonly Timer? _metricsTimer;
-        private readonly Timer? _healthTimer;
+        private readonly System.Threading.Timer? _metricsTimer;
+        private readonly System.Threading.Timer? _healthTimer;
         private bool _isMonitoring;
         // 移除 PerformanceCounter 依赖，使用替代方案
         private readonly object _cpuLock = new object();
@@ -143,13 +143,13 @@ namespace SmartAbp.Permissions.Monitoring
 
             if (_options.Value.EnablePerformanceMonitoring)
             {
-                _metricsTimer = new Timer(async _ => await CollectMetricsAsync(),
+                _metricsTimer = new System.Threading.Timer(OnMetricsTimer,
                     null, TimeSpan.Zero, TimeSpan.FromSeconds(_options.Value.MetricsCollectionIntervalSeconds));
             }
 
             if (_options.Value.EnableHealthMonitoring)
             {
-                _healthTimer = new Timer(async _ => await PerformHealthChecksAsync(),
+                _healthTimer = new System.Threading.Timer(OnHealthTimer,
                     null, TimeSpan.Zero, TimeSpan.FromSeconds(_options.Value.HealthCheckIntervalSeconds));
             }
         }
@@ -611,11 +611,42 @@ namespace SmartAbp.Permissions.Monitoring
             }
         }
 
+        private void OnMetricsTimer(object? state)
+        {
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await CollectMetricsAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error in metrics timer callback");
+                }
+            });
+        }
+
+        private void OnHealthTimer(object? state)
+        {
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await PerformHealthChecksAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error in health timer callback");
+                }
+            });
+        }
+
         public void Dispose()
         {
             _metricsTimer?.Dispose();
             _healthTimer?.Dispose();
-            _cpuCounter?.Dispose();
+            // TODO: _cpuCounter 字段不存在，已注释
+            // _cpuCounter?.Dispose();
             _currentProcess?.Dispose();
         }
     }

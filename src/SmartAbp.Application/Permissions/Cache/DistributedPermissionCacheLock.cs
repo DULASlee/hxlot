@@ -149,7 +149,9 @@ namespace SmartAbp.Permissions.Cache
                         return 0
                     end";
 
-                var result = await _database.ScriptEvaluateAsync(script, new[] { _lockKey }, new[] { LockId });
+                var result = await _database.ScriptEvaluateAsync(script, 
+                    new StackExchange.Redis.RedisKey[] { _lockKey }, 
+                    new StackExchange.Redis.RedisValue[] { LockId });
                 var released = (long)result == 1;
 
                 if (released)

@@ -32,6 +32,9 @@ namespace SmartAbp.Application.Permissions.Auditing.Models
         public string CorrelationId { get; set; }
         public string TenantId { get; set; }
         public int RiskScore { get; set; }
+        
+        // Approval Information for SOX Compliance
+        public ApprovalInfo? ApprovalInfo { get; set; }
     }
 
     public class UserInfo

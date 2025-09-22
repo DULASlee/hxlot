@@ -179,7 +179,7 @@ namespace SmartAbp.Application.Permissions.Auditing.Services
                                 GreaterThanOrEqualTo = startDate,
                                 LessThanOrEqualTo = endDate
                             }
-                        }.Concat(userId.HasValue ? new[]
+                        }.Concat(userId.HasValue ? new QueryContainer[]
                         {
                             new TermQuery
                             {

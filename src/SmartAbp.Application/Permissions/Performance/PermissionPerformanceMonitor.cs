@@ -394,7 +394,7 @@ namespace SmartAbp.Permissions.Performance
                     ErrorRate = metrics.ErrorRate,
                     CacheHitRate = metrics.CacheHitRate,
                     ThroughputRPS = throughputRPS,
-                    MemoryUsageMB = 0 // 这个值需要从内存服务获取，这里设为0作为占位符
+                    // MemoryUsageMB = 0 // 这个字段不存在于PerformanceCharacteristics类中
                 };
             }
             catch (Exception ex)

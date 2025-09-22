@@ -62,7 +62,7 @@ namespace SmartAbp.CodeGenerator.Core.Generation.Crud
             }
         }
 
-        private string GenerateAppService(EnhancedEntityModelDto entity, string systemName, string moduleName, string readPolicyName = null, string writePolicyName = null)
+        private string GenerateAppService(EnhancedEntityModelDto entity, string systemName, string moduleName, string? readPolicyName = null, string? writePolicyName = null)
         {
             var usings = new[]
             {

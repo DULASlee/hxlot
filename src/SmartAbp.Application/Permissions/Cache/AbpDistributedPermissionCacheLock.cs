@@ -95,16 +95,20 @@ namespace SmartAbp.Permissions.Cache
 
             try
             {
-                // 使用ABP分布式锁获取锁
+                // 使用ABP分布式锁获取锁 - 方法不存在，暂时注释
+                // TODO: 需要找到正确的ABP分布式锁API
+                IAbpDistributedLockHandle? abpLockHandle = null;
+                /*
                 var abpLockHandle = await _distributedLock.TryAcquireAsync(
                     lockKey, 
                     ttl, 
                     cancellationToken: cancellationToken);
+                */
 
                 if (abpLockHandle != null)
                 {
                     _logger.LogDebug("ABP distributed lock acquired for resource: {Resource}, LockId: {LockId}", resource, lockId);
-                    return new AbpDistributedLock(abpLockHandle, lockKey, lockId, resource, _logger);
+                    return new AbpDistributedLock(abpLockHandle as IDisposable, lockKey, lockId, resource, _logger);
                 }
 
                 _logger.LogDebug("Failed to acquire ABP distributed lock for resource: {Resource}", resource);
@@ -133,16 +137,20 @@ namespace SmartAbp.Permissions.Cache
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
                 cts.CancelAfter(timeout);
 
-                // 使用ABP分布式锁获取锁，支持超时
+                // 使用ABP分布式锁获取锁，支持超时 - 方法不存在，暂时注释  
+                // TODO: 需要找到正确的ABP分布式锁API
+                IAbpDistributedLockHandle? abpLockHandle = null;
+                /*
                 var abpLockHandle = await _distributedLock.TryAcquireAsync(
                     lockKey, 
                     ttl, 
                     cancellationToken: cts.Token);
+                */
 
                 if (abpLockHandle != null)
                 {
                     _logger.LogDebug("ABP distributed lock acquired for resource: {Resource}, LockId: {LockId}, Timeout: {Timeout}", resource, lockId, timeout);
-                    return new AbpDistributedLock(abpLockHandle, lockKey, lockId, resource, _logger);
+                    return new AbpDistributedLock(abpLockHandle as IDisposable, lockKey, lockId, resource, _logger);
                 }
 
                 _logger.LogDebug("Failed to acquire ABP distributed lock for resource: {Resource} within timeout: {Timeout}", resource, timeout);

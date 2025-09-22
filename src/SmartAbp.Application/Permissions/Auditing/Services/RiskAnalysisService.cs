@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SmartAbp.Application.Permissions.Auditing.Models;
@@ -151,7 +152,10 @@ namespace SmartAbp.Application.Permissions.Auditing.Services
                 {
                     // Initialize known locations from recent history
                     knownLocations = await BuildUserLocationHistory(userId);
-                    await _locationCache.SetAsync(cacheKey, knownLocations, TimeSpan.FromHours(24));
+                    await _locationCache.SetAsync(cacheKey, knownLocations, new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24)
+                    });
                 }
 
                 // Check if current IP is in known locations
@@ -198,7 +202,10 @@ namespace SmartAbp.Application.Permissions.Auditing.Services
                     accessPattern.LastAccess = DateTime.UtcNow;
                 }
 
-                await _accessPatternCache.SetAsync(cacheKey, accessPattern, TimeSpan.FromMinutes(30));
+                await _accessPatternCache.SetAsync(cacheKey, accessPattern, new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30)
+                });
 
                 // Check if access frequency exceeds threshold
                 var timeWindow = TimeSpan.FromMinutes(30);

@@ -175,7 +175,7 @@ namespace SmartAbp.CodeGenerator.Core.Generation.Crud
             }
             
             var ns = CreateNamespace($"SmartAbp.{systemName}.{moduleName}.Permissions").AddMembers(permissionsClass);
-            var cu = CreateCompilationUnit(null).AddMembers(ns);
+            var cu = CreateCompilationUnit().AddMembers(ns);
             return FormatCode(cu);
         }
 

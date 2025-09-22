@@ -22,7 +22,7 @@ namespace SmartAbp.CodeGenerator.Core.Generation.Crud
                 {
                     generatedFiles.Add(
                         Path.Combine(domainProjectRoot, "Entities", $"{entity.Name}.cs"),
-                        GenerateEntity(entity)
+                        GenerateEntity(entity, metadata.SystemName, metadata.Name)
                     );
                 }
 

@@ -29,18 +29,26 @@ namespace SmartAbp.CodeGenerator.Core
             _projectFileGenerator = projectFileGenerator;
         }
 
-        public async Task<Dictionary<string, string>> GenerateAsync(ModuleMetadataDto metadata, string solutionRoot)
+        public Task<Dictionary<string, string>> GenerateAsync(ModuleMetadataDto metadata, string solutionRoot)
         {
             var generatedFiles = new Dictionary<string, string>();
 
             // 使用更高效的方式合并字典，避免多次ToList和ForEach
-            await AddGeneratedFilesAsync(_domainGenerator.Generate(metadata, solutionRoot), generatedFiles);
-            await AddGeneratedFilesAsync(_efCoreGenerator.Generate(metadata, solutionRoot), generatedFiles);
-            await AddGeneratedFilesAsync(_applicationContractsGenerator.Generate(metadata, solutionRoot), generatedFiles);
-            await AddGeneratedFilesAsync(_applicationGenerator.Generate(metadata, solutionRoot), generatedFiles);
-            await AddGeneratedFilesAsync(_projectFileGenerator.Generate(metadata, solutionRoot), generatedFiles);
+            AddGeneratedFiles(_domainGenerator.Generate(metadata, solutionRoot), generatedFiles);
+            AddGeneratedFiles(_efCoreGenerator.Generate(metadata, solutionRoot), generatedFiles);
+            AddGeneratedFiles(_applicationContractsGenerator.Generate(metadata, solutionRoot), generatedFiles);
+            AddGeneratedFiles(_applicationGenerator.Generate(metadata, solutionRoot), generatedFiles);
+            AddGeneratedFiles(_projectFileGenerator.Generate(metadata, solutionRoot), generatedFiles);
 
-            return generatedFiles;
+            return Task.FromResult(generatedFiles);
+        }
+
+        private void AddGeneratedFiles(Dictionary<string, string> sourceFiles, Dictionary<string, string> targetDictionary)
+        {
+            foreach (var file in sourceFiles)
+            {
+                targetDictionary[file.Key] = file.Value;
+            }
         }
 
         private async Task AddGeneratedFilesAsync(Task<Dictionary<string, string>> generationTask, Dictionary<string, string> targetDictionary)
