@@ -356,3 +356,10 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+
+# Build & Tooling Output
+build.out
+*.tsbuildinfo
+log/
+tatus
+'tatus --porcelain'
