@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
+using SmartAbp;
 
 namespace SmartAbp.Web;
 
@@ -107,7 +108,7 @@ public class Program
                         .WriteTo.Async(c => c.Console())
                         .WriteTo.Async(c => c.AbpStudio(services));
                 });
-            await builder.AddApplicationAsync<SmartAbpWebModule>();
+            await builder.AddApplicationAsync<SmartAbpHttpApiModule>();
             var app = builder.Build();
             // CorrelationId + Request logging + ProblemDetails
             app.UseMiddleware<Middleware.CorrelationIdMiddleware>();
