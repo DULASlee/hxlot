@@ -333,7 +333,7 @@
             </el-button>
             <el-button type="primary" :loading="isGenerating" @click="generate">
               🚀 {{ t("wizard.preview.generateBtn") }}
-            </el-button>
+          </el-button>
           </div>
 
           <div v-if="validationReport" style="margin-top: 16px">
@@ -574,7 +574,7 @@ const onDbInfoUpdate = async (db: {
     await wizardStore.withTransaction(async () => {
       const currentData = wizardStore.formData
       wizardStore.updateFormData({
-        databaseInfo: {
+  databaseInfo: {
           connectionStringName:
             db.connectionStringName || currentData.databaseInfo.connectionStringName,
           provider: (db.provider || currentData.databaseInfo.provider) as
@@ -857,7 +857,7 @@ const previous = async (): Promise<void> => {
 const generate = async (): Promise<void> => {
   try {
     isGenerating.value = true
-    generationResult.value = null
+  generationResult.value = null
 
     // Get current state
     const currentState = wizardStore.formData
@@ -1088,7 +1088,7 @@ const onToggleCrud = async (
           }
           newCustomActions.push(newPermission)
         }
-      } else {
+    } else {
         // Remove permission
         newCustomActions = newCustomActions.filter(
           (p: CustomPermission) => !(p.entity === entityName && p.action === action),
