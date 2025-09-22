@@ -131,8 +131,8 @@ namespace SmartAbp.CodeGenerator.Services
 
         public class FrontendConfigDto // 新增DTO
         {
-            public string ParentId { get; set; }
-            public string RoutePrefix { get; set; }
+            public string ParentId { get; set; } = default!;
+            public string RoutePrefix { get; set; } = default!;
         }
 
         public class FeatureManagementDto
@@ -143,9 +143,9 @@ namespace SmartAbp.CodeGenerator.Services
 
         public class MenuItemDto
         {
-            public string Id { get; set; }
-            public string Label { get; set; }
-            public List<MenuItemDto> Children { get; set; }
+            public string Id { get; set; } = default!;
+            public string Label { get; set; } = default!;
+            public List<MenuItemDto> Children { get; set; } = new List<MenuItemDto>();
         }
 
         // ================= Database Introspection DTOs =================

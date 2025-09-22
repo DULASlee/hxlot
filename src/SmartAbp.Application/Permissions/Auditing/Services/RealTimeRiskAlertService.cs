@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SmartAbp.Application.Permissions.Auditing.Models;
@@ -213,7 +214,10 @@ namespace SmartAbp.Application.Permissions.Auditing.Services
                     alert.AcknowledgedBy = acknowledgedBy;
                     alert.AcknowledgedAt = DateTime.UtcNow;
 
-                    await _alertCache.SetAsync(cacheKey, alert, TimeSpan.FromDays(7));
+                    await _alertCache.SetAsync(cacheKey, alert, new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7)
+                    });
 
                     _logger.LogInformation("Security alert {AlertId} acknowledged by {User}", 
                         alertId, acknowledgedBy);
@@ -322,13 +326,19 @@ namespace SmartAbp.Application.Permissions.Auditing.Services
         private async Task StoreAlertAsync(SecurityAlert alert)
         {
             var cacheKey = $"security_alert:{alert.Id}";
-            await _alertCache.SetAsync(cacheKey, alert, TimeSpan.FromDays(7));
+            await _alertCache.SetAsync(cacheKey, alert, new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7)
+            });
         }
 
         private async Task UpdateAlertAsync(SecurityAlert alert)
         {
             var cacheKey = $"security_alert:{alert.Id}";
-            await _alertCache.SetAsync(cacheKey, alert, TimeSpan.FromDays(7));
+            await _alertCache.SetAsync(cacheKey, alert, new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7)
+            });
         }
 
         private string FormatAlertEmailContent(SecurityAlert alert)
@@ -385,7 +395,7 @@ Contact the security team immediately for escalation procedures.
             return new
             {
                 type = "message",
-                attachments = new[]
+                attachments = new object[]
                 {
                     new
                     {
@@ -394,7 +404,7 @@ Contact the security team immediately for escalation procedures.
                         {
                             type = "AdaptiveCard",
                             version = "1.2",
-                            body = new[]
+                            body = new object[]
                             {
                                 new
                                 {

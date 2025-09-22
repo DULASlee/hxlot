@@ -660,7 +660,7 @@ namespace SmartAbp.Permissions.Health
                 _logger.LogError(ex, "Error getting health check statistics");
                 return new HealthCheckStatistics
                 {
-                    StatisticsTimeRange = range ?? TimeSpan.FromDays(7),
+                    StatisticsTimeRange = timeRange ?? TimeSpan.FromDays(7),
                     HealthRate = 0
                 };
             }

@@ -678,7 +678,8 @@ namespace SmartAbp.Permissions.Documentation
                     ImplementedInterfaces = serviceType.GetInterfaces().Select(i => i.Name).ToList(),
                     Dependencies = GetServiceDependencies(serviceType),
                     ConfigurationOptions = GetConfigurationOptions(serviceType),
-                    Performance = await GetPerformanceCharacteristicsAsync(),
+                    // TODO: GetPerformanceCharacteristicsAsync 方法不存在
+                    // Performance = await GetPerformanceCharacteristicsAsync(),
                     UsageExamples = GetUsageExamples(serviceType)
                 };
                 

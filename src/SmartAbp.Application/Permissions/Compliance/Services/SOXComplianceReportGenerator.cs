@@ -53,7 +53,7 @@ namespace SmartAbp.Application.Permissions.Compliance.Services
                 // Generate comprehensive SOX report
                 var report = new SOXComplianceReport
                 {
-                    ReportPeriod = new DateRange(startDate, endDate),
+                    ReportPeriod = new SmartAbp.Application.Permissions.Compliance.Models.DateRange(startDate, endDate),
                     TenantId = tenantId,
                     GeneratedAt = DateTime.UtcNow,
 
@@ -168,9 +168,10 @@ namespace SmartAbp.Application.Permissions.Compliance.Services
                         DataType = group.Key,
                         AccessCount = group.Count(),
                         UniqueUsers = group.Select(log => log.UserId).Distinct().ToList(),
-                        PeakAccessTime = group.GroupBy(log => log.Timestamp.Hour)
-                                            .OrderByDescending(hourGroup => hourGroup.Count())
-                                            .First().Key.ToString() + ":00",
+                        PeakAccessTime = new DateTime(group.First().Timestamp.Year, group.First().Timestamp.Month, group.First().Timestamp.Day, 
+                                                     group.GroupBy(log => log.Timestamp.Hour)
+                                                         .OrderByDescending(hourGroup => hourGroup.Count())
+                                                         .First().Key, 0, 0),
                         IsUnusualPattern = IsUnusualAccessPattern(group),
                         PatternDescription = GeneratePatternDescription(group)
                     })

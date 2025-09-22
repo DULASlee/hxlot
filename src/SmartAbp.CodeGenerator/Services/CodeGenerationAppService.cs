@@ -226,7 +226,7 @@ namespace SmartAbp.CodeGenerator.Services
                         IsUnique = p.IsUnique,
                         MaxLength = p.MaxLength,
                         MinLength = p.MinLength,
-                        DefaultValue = p.DefaultValue,
+                        DefaultValue = p.DefaultValue ?? string.Empty,
                         Description = p.Description ?? string.Empty,
                     }).ToList(),
                     Relationships = e.Relationships.Select(r => new EntityRelationshipDto

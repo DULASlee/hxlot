@@ -575,13 +575,11 @@ namespace SmartAbp.Permissions.BackgroundServices
         {
             try
             {
-                var gcResult = await memoryService.ForceGarbageCollectionAsync();
+                await memoryService.ForceGarbageCollectionAsync();
                 
                 if (_options.DetailedLogging)
                 {
-                    _logger.LogInformation("Garbage collection completed: Gen0={Gen0Collections}, Gen1={Gen1Collections}, Gen2={Gen2Collections}, Memory={MemoryBeforeGC}->{MemoryAfterGC}MB",
-                        gcResult.Gen0Collections, gcResult.Gen1Collections, gcResult.Gen2Collections, 
-                        gcResult.MemoryBeforeGC, gcResult.MemoryAfterGC);
+                    _logger.LogInformation("Garbage collection completed successfully");
                 }
             }
             catch (Exception ex)

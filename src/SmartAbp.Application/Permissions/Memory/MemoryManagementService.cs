@@ -152,6 +152,21 @@ namespace SmartAbp.Permissions.Memory
         public double MemoryUsagePercentage { get; set; }
 
         /// <summary>
+        /// 已使用内存（MB）
+        /// </summary>
+        public long UsedMemoryMB { get; set; }
+
+        /// <summary>
+        /// 可用内存（MB）
+        /// </summary>
+        public long AvailableMemoryMB { get; set; }
+
+        /// <summary>
+        /// 总内存（MB）
+        /// </summary>
+        public long TotalMemoryMB { get; set; }
+
+        /// <summary>
         /// 内存状态
         /// </summary>
         public MemoryStatus Status { get; set; }

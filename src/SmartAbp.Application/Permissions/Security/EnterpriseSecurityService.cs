@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -497,19 +499,20 @@ namespace SmartAbp.Permissions.Security
                 }
 
                 // 处理特定类型的事件
+                var stats = GetStatistics();
                 switch (securityEvent.EventType)
                 {
                     case SecurityEventType.RateLimitTriggered:
-                        Interlocked.Increment(ref GetStatistics().RateLimitTriggers);
+                        stats.RateLimitTriggers++;
                         break;
                     case SecurityEventType.AccountLocked:
-                        Interlocked.Increment(ref GetStatistics().AccountLockouts);
+                        stats.AccountLockouts++;
                         break;
                     case SecurityEventType.PermissionValidationFailed:
-                        Interlocked.Increment(ref GetStatistics().PermissionValidationFailures);
+                        stats.PermissionValidationFailures++;
                         break;
                     case SecurityEventType.LoginFailed:
-                        Interlocked.Increment(ref GetStatistics().FailedLoginAttempts);
+                        stats.FailedLoginAttempts++;
                         break;
                 }
             }

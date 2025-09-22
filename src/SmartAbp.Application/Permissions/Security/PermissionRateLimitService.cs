@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SmartAbp.Permissions.Models;
+using PermissionRateLimitOptions = SmartAbp.Permissions.Models.PermissionRateLimitOptions;
 
 namespace SmartAbp.Permissions.Security
 {

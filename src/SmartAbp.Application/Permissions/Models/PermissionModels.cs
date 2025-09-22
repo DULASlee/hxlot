@@ -112,4 +112,5 @@ namespace SmartAbp.Permissions.Models
         public double ThroughputRPS { get; set; }
         public double P95ResponseTimeMs { get; set; }
     }
+
 }

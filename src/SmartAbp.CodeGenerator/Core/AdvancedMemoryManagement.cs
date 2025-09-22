@@ -284,14 +284,11 @@ namespace SmartAbp.CodeGenerator.Core
                 
                 // Stop monitoring first to prevent new operations during disposal
                 _memoryPressureTimer?.Dispose();
-                _memoryPressureTimer = null;
                 
                 // Clear all caches before disposing pools
                 ClearInternalCaches();
                 
-                // Dispose memory pool
-                _memoryPool?.Dispose();
-                _memoryPool = null;
+                // Memory pool is shared, don't dispose it
                 
                 // Force final cleanup
                 TriggerMemoryCleanup();
@@ -306,7 +303,20 @@ namespace SmartAbp.CodeGenerator.Core
             finally
             {
                 // Ensure disposal is complete even if errors occur
-                _disposables?.Dispose();
+                if (_disposables != null)
+                {
+                    while (_disposables.TryTake(out var disposable))
+                    {
+                        try
+                        {
+                            disposable?.Dispose();
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "Error disposing object in disposables bag");
+                        }
+                    }
+                }
             }
         }
     }
