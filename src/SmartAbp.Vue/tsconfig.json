@@ -9,7 +9,6 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "jsx": "preserve",
     "strict": true,
     "noUnusedLocals": true,
@@ -20,7 +19,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@smartabp/*": ["packages/*/src"]
+      "@smartabp/*": ["packages/*"]
     },
     "types": ["vite/client", "element-plus/global"],
     "esModuleInterop": true,
@@ -45,5 +44,9 @@
     { "path": "./packages/lowcode-core" },
     { "path": "./packages/lowcode-designer" },
     { "path": "./packages/lowcode-tools" }
-  ]
+  ],
+  // Adding a comment to force a refresh of the TS server and path mappings
+  "vueCompilerOptions": {
+    "target": 2.7
+  }
 }

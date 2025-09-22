@@ -3,7 +3,7 @@
  * 支持DesignerOverrideSchema格式和Vue SFC生成
  */
 
-import type { DesignerComponent } from "../../types/designer"
+import type { DesignerComponent } from "@smartabp/lowcode-designer/types/designer"
 // 临时占位：最小化 DesignerOverrideSchema 定义，避免断链
 export interface DesignerOverrideSchema {
   metadata: {
@@ -334,7 +334,7 @@ ${lifecycle}
       if (component.type.startsWith("el-")) {
         const componentName = component.type
           .split("-")
-          .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+          .map((part: any) => part.charAt(0).toUpperCase() + part.slice(1))
           .join("")
         elementComponents.add(componentName)
       }

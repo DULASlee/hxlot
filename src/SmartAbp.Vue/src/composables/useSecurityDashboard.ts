@@ -4,14 +4,14 @@
  */
 
 import { ref, reactive, computed, readonly } from "vue"
-import type {
+import {
   SecurityMetrics,
   PermissionTrendData,
   RiskDistributionData,
   AbnormalBehavior,
   ComplianceIssue,
   DashboardConfig,
-} from "../packages/lowcode-designer/src/types/security"
+} from "@smartabp/lowcode-designer/types/security"
 
 interface UseSecurityDashboardOptions {
   config?: Partial<DashboardConfig>
@@ -72,9 +72,14 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
   const totalActiveIncidents = computed(() => {
     return (
       abnormalBehaviors.value.length +
-      complianceData.value.filter((issue) => issue.status === "Open").length
+      complianceData.value.filter((issue: ComplianceIssue) => issue.status === "Open").length
     )
   })
+
+  const openIssuesCount = computed(
+    () =>
+      complianceData.value.filter((issue: ComplianceIssue) => issue.status === "Open").length,
+  )
 
   // Mock Data Generation (for testing and development)
   const generateMockSecurityMetrics = (): SecurityMetrics => ({
@@ -281,6 +286,7 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
     // Computed
     isHealthy,
     totalActiveIncidents,
+    openIssuesCount,
 
     // Methods
     loadDashboardData,

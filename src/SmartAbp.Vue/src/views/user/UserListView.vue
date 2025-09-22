@@ -248,14 +248,15 @@ AI_TEMPLATE_INFO:
 import { ref, reactive, onMounted, computed } from "vue"
 import MetadataDrivenPageRenderer from "@smartabp/lowcode-designer/runtime/MetadataDrivenPageRenderer.vue"
 import { uiConfigToPageSchema } from "@smartabp/lowcode-designer/utils/uiConfigMapper"
-import { codeGeneratorApi } from "../../../packages/lowcode-api/src/types"
+import { codeGeneratorApi } from "@smartabp/lowcode-api"
+import type { ElForm, ElTable } from "element-plus"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { Plus, Search, Refresh, Delete } from "@element-plus/icons-vue"
 
 // 导入说明：以下导入需要根据实际项目结构调整
 // import { useUserStore } from '@/stores/modules/user'
 // import { formatDateTime } from '@/utils/date'
-// import type { UserDto, CreateUserDto, UpdateUserDto } from '@/types/user'
+import type { EntityDefinition } from "@smartabp/lowcode-api/types"
 
 // 响应式数据
 const loading = ref(false)
@@ -293,7 +294,14 @@ const tableData = ref<any[]>([])
 // 对话框数据
 const dialogTitle = computed(() => (formData.id ? "编辑用户管理" : "新增用户管理"))
 
-const formData = reactive({
+const formData = reactive<{
+  id: string | undefined;
+  name: string;
+  displayName: string;
+  description: string;
+  sort: number;
+  isEnabled: boolean;
+}>({
   id: undefined,
   name: "",
   displayName: "",
@@ -360,12 +368,12 @@ const handleCreate = () => {
   dialogVisible.value = true
 }
 
-const handleEdit = (row: any) => {
+const handleEdit = (row: EntityDefinition) => {
   Object.assign(formData, row)
   dialogVisible.value = true
 }
 
-const handleDelete = async (row: any) => {
+const handleDelete = async (row: EntityDefinition) => {
   try {
     await ElMessageBox.confirm(`确定要删除 "${row.name}" 吗？`, "确认删除", {
       confirmButtonText: "确定",

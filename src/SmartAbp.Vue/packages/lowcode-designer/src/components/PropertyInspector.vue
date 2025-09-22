@@ -241,7 +241,7 @@
 import { ref, reactive, computed, watch } from "vue"
 import { ElMessage } from "element-plus"
 import { Plus, Delete, Refresh, Box } from "@element-plus/icons-vue"
-import type { DesignerComponent } from "../types/designer"
+import type { DesignerComponent } from "@smartabp/lowcode-designer/types/designer"
 
 // 类型定义
 interface PropertyConfig {

@@ -4,13 +4,12 @@
  */
 
 import { ref, reactive, computed, onUnmounted, readonly } from "vue"
-import type {
+import {
   SecurityAlert,
-  AlertFilter,
   AlertNotification,
   SecurityAlertType,
   AlertSeverity,
-} from "../packages/lowcode-designer/src/types/security"
+} from "@smartabp/lowcode-designer/types/security"
 
 interface UseRealTimeAlertsOptions {
   enableWebSocket?: boolean
@@ -53,29 +52,29 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
   // Computed Properties
   const unreadCount = computed(
-    () => activeAlerts.value.filter((alert) => !alert.isAcknowledged).length,
+    () => activeAlerts.value.filter((alert: SecurityAlert) => !alert.isAcknowledged).length,
   )
 
   const criticalAlerts = computed(() =>
-    activeAlerts.value.filter((alert) => alert.severity === "Critical"),
+    activeAlerts.value.filter((alert: SecurityAlert) => alert.severity === "Critical"),
   )
 
   const highPriorityAlerts = computed(() =>
     activeAlerts.value.filter(
-      (alert) => alert.severity === "High" || alert.severity === "Critical",
+      (alert: SecurityAlert) => alert.severity === "High" || alert.severity === "Critical",
     ),
   )
 
   // Mock Data Generation
   const generateMockAlert = (): SecurityAlert => {
     const alertTypes: SecurityAlertType[] = [
-      "HighRiskPermissionAccess",
-      "UnusualLocationAccess",
-      "OffHoursAccess",
-      "PermissionEscalation",
-      "MultipleFailedAttempts",
-      "SensitiveDataAccess",
-      "SuspiciousActivity",
+      SecurityAlertType.VULNERABILITY,
+      SecurityAlertType.LOGIN_ATTEMPT,
+      SecurityAlertType.OFF_HOURS_ACCESS,
+      SecurityAlertType.PERMISSION_ESCALATION,
+      SecurityAlertType.MULTIPLE_FAILED_ATTEMPTS,
+      SecurityAlertType.SENSITIVE_DATA_ACCESS,
+      SecurityAlertType.SUSPICIOUS_ACTIVITY,
     ]
 
     const severities: AlertSeverity[] = ["Low", "Medium", "High", "Critical"]
@@ -108,50 +107,50 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
   const getAlertDescription = (type: SecurityAlertType, user: string): string => {
     const descriptions: Record<SecurityAlertType, string> = {
-      HighRiskPermissionAccess: `High-risk permission access by ${user}`,
-      UnusualLocationAccess: `Unusual location access detected for ${user}`,
-      OffHoursAccess: `Off-hours system access by ${user}`,
-      PermissionEscalation: `Permission escalation attempt by ${user}`,
-      MultipleFailedAttempts: `Multiple failed login attempts by ${user}`,
-      SensitiveDataAccess: `Sensitive data access by ${user}`,
-      SuspiciousActivity: `Suspicious activity detected for ${user}`,
+      [SecurityAlertType.VULNERABILITY]: `High-risk permission access by ${user}`,
+      [SecurityAlertType.LOGIN_ATTEMPT]: `Unusual location access detected for ${user}`,
+      [SecurityAlertType.OFF_HOURS_ACCESS]: `Off-hours system access by ${user}`,
+      [SecurityAlertType.PERMISSION_ESCALATION]: `Permission escalation attempt by ${user}`,
+      [SecurityAlertType.MULTIPLE_FAILED_ATTEMPTS]: `Multiple failed login attempts by ${user}`,
+      [SecurityAlertType.SENSITIVE_DATA_ACCESS]: `Sensitive data access by ${user}`,
+      [SecurityAlertType.SUSPICIOUS_ACTIVITY]: `Suspicious activity detected for ${user}`,
     }
     return descriptions[type]
   }
 
   const getRecommendedActions = (type: SecurityAlertType): string[] => {
     const actions: Record<SecurityAlertType, string[]> = {
-      HighRiskPermissionAccess: [
+      [SecurityAlertType.VULNERABILITY]: [
         "Review user permissions",
         "Verify business justification",
         "Monitor subsequent activities",
       ],
-      UnusualLocationAccess: [
+      [SecurityAlertType.LOGIN_ATTEMPT]: [
         "Verify user location",
         "Check VPN usage",
         "Consider additional authentication",
       ],
-      OffHoursAccess: [
+      [SecurityAlertType.OFF_HOURS_ACCESS]: [
         "Confirm legitimate business need",
         "Review access logs",
         "Update access policies if needed",
       ],
-      PermissionEscalation: [
+      [SecurityAlertType.PERMISSION_ESCALATION]: [
         "Immediately review permissions",
         "Lock account if suspicious",
         "Investigate privilege changes",
       ],
-      MultipleFailedAttempts: [
+      [SecurityAlertType.MULTIPLE_FAILED_ATTEMPTS]: [
         "Check for brute force attacks",
         "Consider account lockout",
         "Review authentication logs",
       ],
-      SensitiveDataAccess: [
+      [SecurityAlertType.SENSITIVE_DATA_ACCESS]: [
         "Audit data access patterns",
         "Verify data usage justification",
         "Monitor data export activities",
       ],
-      SuspiciousActivity: [
+      [SecurityAlertType.SUSPICIOUS_ACTIVITY]: [
         "Investigate activity patterns",
         "Review user behavior baseline",
         "Consider temporary restrictions",
@@ -161,7 +160,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
   }
 
   // Alert Management Methods
-  const addAlert = (alert: SecurityAlert): void => {
+  const addAlert = (alert: Omit<SecurityAlert, "id" | "timestamp" | "isAcknowledged">): void => {
     activeAlerts.value.unshift(alert)
 
     // Create notification for high-priority alerts
@@ -189,7 +188,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
   const acknowledgeAlert = async (alertId: string): Promise<void> => {
     try {
-      const alertIndex = activeAlerts.value.findIndex((alert) => alert.id === alertId)
+      const alertIndex = activeAlerts.value.findIndex((alert: SecurityAlert) => alert.id === alertId)
       if (alertIndex === -1) {
         throw new Error("Alert not found")
       }
@@ -212,7 +211,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
       // Remove related notification
       const notificationIndex = notifications.value.findIndex(
-        (notification) => notification.id === `notification_${alertId}`,
+        (notification: AlertNotification) => notification.id === `notification_${alertId}`,
       )
       if (notificationIndex !== -1) {
         notifications.value.splice(notificationIndex, 1)
@@ -252,9 +251,14 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
   }
 
   const removeNotification = (notificationId: string): void => {
-    const index = notifications.value.findIndex((n) => n.id === notificationId)
-    if (index !== -1) {
-      notifications.value.splice(index, 1)
+    try {
+      const index = notifications.value.findIndex((n: AlertNotification) => n.id === notificationId)
+      if (index !== -1) {
+        notifications.value.splice(index, 1)
+      }
+    } catch (error) {
+      console.error("Failed to remove notification:", error)
+      throw error
     }
   }
 
@@ -381,35 +385,14 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
   }
 
   // Filter and Search
-  const filterAlerts = (filter: AlertFilter): SecurityAlert[] => {
-    return activeAlerts.value.filter((alert) => {
-      if (filter.severity && !filter.severity.includes(alert.severity)) {
-        return false
-      }
-
-      if (filter.type && !filter.type.includes(alert.type)) {
-        return false
-      }
-
-      if (filter.acknowledged !== undefined && alert.isAcknowledged !== filter.acknowledged) {
-        return false
-      }
-
-      if (filter.userId && alert.userInfo?.displayName !== filter.userId) {
-        return false
-      }
-
-      if (filter.dateRange) {
-        const alertTime = new Date(alert.timestamp).getTime()
-        const startTime = filter.dateRange.startDate.getTime()
-        const endTime = filter.dateRange.endDate.getTime()
-
-        if (alertTime < startTime || alertTime > endTime) {
-          return false
-        }
-      }
-
-      return true
+  const filterAlerts = (
+    severities: SecurityAlert["severity"][] = [],
+    acknowledged?: boolean,
+  ): SecurityAlert[] => {
+    return activeAlerts.value.filter((alert: SecurityAlert) => {
+      const severityMatch = severities.length === 0 || severities.includes(alert.severity)
+      const acknowledgedMatch = acknowledged === undefined || alert.isAcknowledged === acknowledged
+      return severityMatch && acknowledgedMatch
     })
   }
 

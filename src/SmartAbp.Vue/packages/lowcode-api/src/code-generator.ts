@@ -1,7 +1,6 @@
 import { api } from "@/utils/api"
 import { ElMessage } from "element-plus"
-import { useI18n } from "vue-i18n"
-import type { ModuleMetadata, EntityUIConfig } from "./types"
+import type { ModuleMetadata, EntityUIConfig, EntityDefinition } from "./types"
 
 /**
  * Code Generator API Service
@@ -9,25 +8,7 @@ import type { ModuleMetadata, EntityUIConfig } from "./types"
  */
 
 // Type definitions for API requests and responses
-export interface EntityDefinition {
-  name: string
-  module: string
-  aggregate: string
-  description: string
-  isAggregateRoot: boolean
-  isMultiTenant: boolean
-  isSoftDelete: boolean
-  hasExtraProperties: boolean
-  properties: PropertyDefinition[]
-}
-
-export interface PropertyDefinition {
-  name: string
-  type: string
-  isRequired: boolean
-  maxLength?: number
-  description: string
-}
+// EntityDefinition and PropertyDefinition moved to types.ts
 
 export interface GeneratedCodeResult {
   code: string
@@ -256,12 +237,12 @@ export const codeGeneratorApi = {
     try {
       // Input validation
       validateRequired(metadata, "Module metadata")
-      validateRequired(metadata.moduleName, "Module name")
-      validateString(metadata.moduleName, "Module name")
+      validateRequired(metadata.name, "Module name")
+      validateString(metadata.name, "Module name")
 
       if (metadata.entities) {
         validateArray(metadata.entities, "Entities")
-        metadata.entities.forEach((entity, index) => {
+        metadata.entities.forEach((entity: EntityDefinition, index: number) => {
           validateRequired(entity.name, `Entity[${index}].name`)
           validateString(entity.name, `Entity[${index}].name`)
         })
@@ -273,7 +254,7 @@ export const codeGeneratorApi = {
       )
     } catch (error) {
       const errorMessage = "Failed to generate module"
-      logError("generateModule", error, { moduleName: metadata?.moduleName })
+      logError("generateModule", error, { moduleName: metadata?.name })
 
       if (error instanceof CodeGeneratorError && error.code === "VALIDATION_ERROR") {
         showErrorMessage("Module validation failed", error.message)
@@ -295,8 +276,8 @@ export const codeGeneratorApi = {
     try {
       // Input validation
       validateRequired(metadata, "Module metadata")
-      validateRequired(metadata.moduleName, "Module name")
-      validateString(metadata.moduleName, "Module name")
+      validateRequired(metadata.name, "Module name")
+      validateString(metadata.name, "Module name")
 
       return await retryWithBackoff(
         () => api.post("/api/code-generator/validate", metadata),
@@ -304,7 +285,7 @@ export const codeGeneratorApi = {
       )
     } catch (error) {
       const errorMessage = "Failed to validate module metadata"
-      logError("validateModule", error, { moduleName: metadata?.moduleName })
+      logError("validateModule", error, { moduleName: metadata?.name })
       showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
       throw new CodeGeneratorError(errorMessage, "VALIDATION_ERROR", error, true)
     }
@@ -321,8 +302,8 @@ export const codeGeneratorApi = {
     try {
       // Input validation
       validateRequired(metadata, "Module metadata")
-      validateRequired(metadata.moduleName, "Module name")
-      validateString(metadata.moduleName, "Module name")
+      validateRequired(metadata.name, "Module name")
+      validateString(metadata.name, "Module name")
 
       return await retryWithBackoff(
         () => api.post("/api/code-generator/dry-run", metadata),
@@ -330,7 +311,7 @@ export const codeGeneratorApi = {
       )
     } catch (error) {
       const errorMessage = "Failed to perform dry run generation"
-      logError("dryRunGenerate", error, { moduleName: metadata?.moduleName })
+      logError("dryRunGenerate", error, { moduleName: metadata?.name })
       showErrorMessage(errorMessage, error instanceof Error ? error.message : "Unknown error")
       throw new CodeGeneratorError(errorMessage, "DRY_RUN_ERROR", error, true)
     }

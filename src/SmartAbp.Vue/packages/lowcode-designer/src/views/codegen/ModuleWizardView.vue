@@ -24,7 +24,7 @@
             >
               <Check />
             </el-icon>
-            <span v-else class="step-number">{{ index + 1 }}</span>
+            <span v-else class="step-number">{{ Number(index) + 1 }}</span>
           </div>
           <div class="step-content">
             <div class="step-title">
@@ -204,7 +204,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Create')"
-                    @change="(v) => onToggleCrud(scope.row.name, 'Create', !!v)"
+                    @change="(v: boolean) => onToggleCrud(scope.row.name, 'Create', v)"
                   />
                 </template>
               </el-table-column>
@@ -212,7 +212,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Read')"
-                    @change="(v) => onToggleCrud(scope.row.name, 'Read', !!v)"
+                    @change="(v: boolean) => onToggleCrud(scope.row.name, 'Read', v)"
                   />
                 </template>
               </el-table-column>
@@ -220,7 +220,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Update')"
-                    @change="(v) => onToggleCrud(scope.row.name, 'Update', !!v)"
+                    @change="(v: boolean) => onToggleCrud(scope.row.name, 'Update', v)"
                   />
                 </template>
               </el-table-column>
@@ -228,7 +228,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Delete')"
-                    @change="(v) => onToggleCrud(scope.row.name, 'Delete', !!v)"
+                    @change="(v: boolean) => onToggleCrud(scope.row.name, 'Delete', v)"
                   />
                 </template>
               </el-table-column>
@@ -447,19 +447,19 @@ import { Check } from "@element-plus/icons-vue"
 import { useI18n } from "vue-i18n"
 
 // Import our new strict typing and management systems
-import { useWizardStore } from "../../stores/useWizardStore"
-import { WizardValidator } from "../../utils/validation"
-import { WizardStep } from "../../types/wizard"
-import type { ModuleMetadata, CustomPermission } from "../../types/wizard"
-// API import removed - file not found
+import { useWizardStore } from "@smartabp/lowcode-designer/stores/useWizardStore"
+import { WizardValidator } from "@smartabp/lowcode-designer/utils/validation"
+import { WizardStep } from "@smartabp/lowcode-designer/types/wizard"
+import type { ModuleMetadata, CustomPermission, EntityDefinition } from "@smartabp/lowcode-api/types"
+import { codeGeneratorApi } from "@smartabp/lowcode-api"
 
 // Performance and responsive design imports
-import { useResponsive } from "../../utils/responsive-design"
-import { usePerformanceMonitor } from "../../utils/performance-optimizer"
-import { useErrorRecovery, CrashRecovery } from "../../utils/error-recovery"
+import { useResponsive } from "@smartabp/lowcode-designer/utils/responsive-design"
+import { usePerformanceMonitor } from "@smartabp/lowcode-designer/utils/performance-optimizer"
+import { useErrorRecovery, CrashRecovery } from "@smartabp/lowcode-designer/utils/error-recovery"
 
 // Properly import EntityDesigner outside of reactive context
-import EntityDesigner from "../../components/CodeGenerator/EntityDesigner.vue"
+import EntityDesigner from "@smartabp/lowcode-designer/components/CodeGenerator/EntityDesigner.vue"
 
 // ============= Error Handling Utilities =============
 const getErrorMessage = (error: unknown): string => {
@@ -480,9 +480,9 @@ const isErrorWithMessage = (error: unknown): error is { message: string } => {
 const safeCurrentMetadata = computed(() => wizardStore.formData)
 
 // Computed properties for table data to handle readonly arrays
-const entitiesForTable = computed(() => wizardStore.formData.entities as any[])
+const entitiesForTable = computed(() => wizardStore.formData.entities as EntityDefinition[])
 const permissionsForTable = computed(
-  () => wizardStore.formData.permissionConfig.customActions as any[],
+  () => wizardStore.formData.permissionConfig.customActions as CustomPermission[],
 )
 
 // Remove unused computed properties
@@ -520,7 +520,8 @@ const hasUnsavedChanges = ref(false)
 const cacheKey = ref(`module-wizard-${Date.now()}`)
 
 // ============= Step Metadata =============
-const stepMetadata = Object.values(wizardStore.currentStepMetadata)
+const stepMetadata: { [key: string]: { step: WizardStep; title: string; description: string; estimatedTime: string } } =
+  wizardStore.currentStepMetadata
 
 // ============= Computed Properties =============
 const canProceed = computed(() => wizardStore.canProceed)
@@ -551,7 +552,7 @@ const navigateToStep = async (step: WizardStep): Promise<void> => {
   }
 }
 // ============= Entity Management =============
-const onEntitiesUpdate = async (newEntities: any[]): Promise<void> => {
+const onEntitiesUpdate = async (newEntities: EntityDefinition[]): Promise<void> => {
   try {
     await wizardStore.withTransaction(async () => {
       wizardStore.updateFormData({
@@ -682,9 +683,12 @@ const initializeWizard = async (): Promise<void> => {
     isLoading.value = true
 
     // Load menu tree and connection strings in parallel
-    // API calls disabled - codeGeneratorApi not found
-    menuTree.value = []
-    connectionStrings.value = []
+    const [menus, conns] = await Promise.all([
+      codeGeneratorApi.getMenuTree(),
+      codeGeneratorApi.getConnectionStrings(),
+    ])
+    menuTree.value = menus
+    connectionStrings.value = conns
 
     // Reset wizard store to initial state
     wizardStore.reset()
@@ -890,12 +894,8 @@ const generate = async (): Promise<void> => {
     ElMessage.info(t("wizard.generation.starting"))
 
     try {
-      // API call disabled - codeGeneratorApi not found
-      const result = {
-        moduleName: currentState.name,
-        generationReport: "Code generation completed (API disabled)",
-        generatedFiles: ["API not available - generation simulated"],
-      }
+      // API call re-enabled
+      const result = await codeGeneratorApi.generateModule(currentState)
 
       generationResult.value = result
       hasUnsavedChanges.value = false
@@ -926,14 +926,7 @@ const runValidate = async (): Promise<void> => {
     validationReport.value = null
     const currentState = wizardStore.formData
     if (!currentState) throw new Error("No module data available")
-    // API call disabled - codeGeneratorApi not found
-    const pf = { ok: true, level: "info" as const, message: "Preflight check simulated" }
-    if (!pf.ok) {
-      throw new Error(pf.message || "Schema version not supported")
-    }
-    console.log(pf.message || "Preflight info")
-    // API call disabled - codeGeneratorApi not found
-    const result = { isValid: true, issues: [] }
+    const result = await codeGeneratorApi.validateModule(currentState)
     validationReport.value = result
     if (!result.isValid) {
       ElMessage.error(t("wizard.preview.validationHasErrors"))
@@ -953,20 +946,7 @@ const runDryRun = async (): Promise<void> => {
     dryRunResult.value = null
     const currentState = wizardStore.formData
     if (!currentState) throw new Error("No module data available")
-    // API call disabled - codeGeneratorApi not found
-    const pf = { ok: true, level: "info" as const, message: "Preflight check simulated" }
-    if (!pf.ok) {
-      throw new Error(pf.message || "Schema version not supported")
-    }
-    console.log(pf.message || "Preflight info")
-    // API call disabled - codeGeneratorApi not found
-    const result = {
-      success: true,
-      files: [],
-      totalFiles: 0,
-      totalLines: 0,
-      moduleName: currentState.name,
-    }
+    const result = await codeGeneratorApi.dryRunGenerate(currentState)
     dryRunResult.value = result
     ElMessage.success(t("wizard.preview.dryRunOk"))
   } catch (err) {
@@ -1042,7 +1022,7 @@ const addCustomPermission = async (): Promise<void> => {
 
       // Check for duplicates
       const existingPermission = currentState.permissionConfig.customActions.find(
-        (p) => p.entity === perm.value.entity && p.action === perm.value.action,
+        (p: CustomPermission) => p.entity === perm.value.entity && p.action === perm.value.action,
       )
 
       if (existingPermission) {
@@ -1080,7 +1060,7 @@ const hasCrud = (entityName: string, action: string): boolean => {
   if (!currentState) return false
 
   return currentState.permissionConfig.customActions.some(
-    (p) => p.entity === entityName && p.action === action,
+    (p: CustomPermission) => p.entity === entityName && p.action === action,
   )
 }
 
@@ -1100,7 +1080,7 @@ const onToggleCrud = async (
 
       if (checked) {
         // Add permission if not exists
-        const exists = newCustomActions.some((p) => p.entity === entityName && p.action === action)
+        const exists = newCustomActions.some((p: CustomPermission) => p.entity === entityName && p.action === action)
 
         // 避免基础 CRUD 进入 customActions（后端已生成）
         if (!exists && !BASE_CRUD.includes(action)) {
@@ -1114,7 +1094,7 @@ const onToggleCrud = async (
       } else {
         // Remove permission
         newCustomActions = newCustomActions.filter(
-          (p) => !(p.entity === entityName && p.action === action),
+          (p: CustomPermission) => !(p.entity === entityName && p.action === action),
         )
       }
 
@@ -1145,7 +1125,7 @@ const toggleAllCrud = async (checked: boolean): Promise<void> => {
       for (const entity of currentState.entities) {
         for (const action of crudActions) {
           const exists = newCustomActions.some(
-            (p) => p.entity === entity.name && p.action === action,
+            (p: CustomPermission) => p.entity === entity.name && p.action === action,
           )
 
           // 这里不向 customActions 注入基础 CRUD，保持与后端常量一致
@@ -1153,7 +1133,7 @@ const toggleAllCrud = async (checked: boolean): Promise<void> => {
             // 忽略推入，维持后端生成路径（基础 CRUD 常量由后端提供）
           } else if (!checked && exists) {
             newCustomActions = newCustomActions.filter(
-              (p) => !(p.entity === entity.name && p.action === action),
+              (p: CustomPermission) => !(p.entity === entity.name && p.action === action),
             )
           }
         }

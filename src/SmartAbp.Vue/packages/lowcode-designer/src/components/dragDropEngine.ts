@@ -6,7 +6,7 @@
 import { ref, reactive } from "vue"
 import { useEventListener, useThrottleFn } from "@vueuse/core"
 import { ElMessage } from "element-plus"
-import type { DesignerComponent } from "../types/designer"
+import type { DesignerComponent } from "@smartabp/lowcode-designer/types/designer"
 
 // 类型定义
 export interface Position {
@@ -297,8 +297,6 @@ export class DragDropEngine {
         id: `${dragData.componentType}-${Date.now()}`,
         name: dragData.componentType,
         type: dragData.componentType,
-        category: "basic",
-        version: "1.0.0",
         props: {
           ...(dragData.defaultProps || {}),
           style: {

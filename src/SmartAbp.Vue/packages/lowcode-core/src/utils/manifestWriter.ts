@@ -4,19 +4,28 @@
  */
 
 import { ElMessage } from "element-plus"
-import {
-  LowCodeKernel,
-  Plugin,
-  Vue3Plugin,
-} from "../types"
+import type {
+  ModuleMetadata,
+  EntityDefinition,
+  PropertyDefinition,
+} from "@smartabp/lowcode-api/types"
+
+/**
+ * 本地类型定义
+ */
+interface MenuConfiguration {
+  id: string
+  name: string
+  icon: string
+  path: string
+  sort: number
+  children?: MenuConfiguration[]
+}
 
 /**
  * 清单文件写入器
  */
 export class SmartAbpManifestWriter {
-  private moduleMetadata: any | null = null
-  private outputPath: string = ""
-
   constructor() {
     console.log("📋 SmartAbpManifestWriter initialized")
   }
@@ -48,9 +57,6 @@ export class SmartAbpManifestWriter {
           `Invalid module name: ${metadata.name}. Module name must start with a letter and contain only letters and numbers`,
         )
       }
-
-      this.moduleMetadata = metadata
-      this.outputPath = basePath
 
       const files: { path: string; content: string }[] = []
 
@@ -207,7 +213,7 @@ export class SmartAbpManifestWriter {
   /**
    * 生成列表视图配置
    */
-  private generateListView(metadata: any): any {
+  private generateListView(metadata: ModuleMetadata): any {
     try {
       // 验证参数
       if (!metadata) {
@@ -266,7 +272,7 @@ export class SmartAbpManifestWriter {
   /**
    * 生成管理视图配置
    */
-  private generateManagementView(metadata: any): any {
+  private generateManagementView(metadata: ModuleMetadata): any {
     try {
       // 验证参数
       if (!metadata) {
@@ -326,7 +332,7 @@ export class SmartAbpManifestWriter {
   /**
    * 生成状态管理配置
    */
-  private generateStore(metadata: any): any {
+  private generateStore(metadata: ModuleMetadata): any {
     try {
       // 验证参数
       if (!metadata) {
@@ -432,7 +438,7 @@ export class SmartAbpManifestWriter {
   /**
    * 生成路由配置
    */
-  private generateRouteConfig(metadata: any): any {
+  private generateRouteConfig(metadata: ModuleMetadata): any {
     try {
       // 验证参数
       if (!metadata) {
@@ -504,7 +510,7 @@ export class SmartAbpManifestWriter {
   /**
    * 生成菜单配置
    */
-  private generateMenuConfig(metadata: any): any {
+  private generateMenuConfig(metadata: ModuleMetadata): any {
     try {
       // 验证参数
       if (!metadata) {
@@ -643,9 +649,9 @@ export class SmartAbpManifestWriter {
       }
 
       const filters = entity.properties
-        .filter((prop) => prop.filterable !== false)
+        .filter((prop: PropertyDefinition) => prop.filterable !== false)
         .slice(0, 4) // 最多4个过滤器
-        .map((prop) => ({
+        .map((prop: PropertyDefinition) => ({
           field: prop.name,
           label: prop.displayName || prop.name,
           type: this.getFilterType(prop.type),

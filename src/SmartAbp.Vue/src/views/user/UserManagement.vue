@@ -248,7 +248,8 @@ AI_TEMPLATE_INFO:
 import { ref, reactive, onMounted, computed } from "vue"
 import MetadataDrivenPageRenderer from "@smartabp/lowcode-designer/runtime/MetadataDrivenPageRenderer.vue"
 import { uiConfigToPageSchema } from "@smartabp/lowcode-designer/utils/uiConfigMapper"
-import { codeGeneratorApi } from "../../../packages/lowcode-api/src/code-generator"
+import { codeGeneratorApi } from "@smartabp/lowcode-api"
+import type { ElForm, ElTable } from "element-plus"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { Plus, Search, Refresh, Delete } from "@element-plus/icons-vue"
 
