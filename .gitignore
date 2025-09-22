@@ -366,3 +366,7 @@ tatus
 
 # Local convenience scripts
 OpenGitBashHere.cmd
+
+# Generated artifacts and reports
+/artifacts/
+.env.quality

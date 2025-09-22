@@ -78,7 +78,8 @@ install_dependencies() {
     fi
     
     # 安装全局工具
-    npm install -g eslint
+    # npm install -g eslint --registry=https://registry.npmmirror.com
+    log_warning "全局安装eslint已移除，请确保其已作为项目的devDependency安装。"
     
     cd ../..
     log_success "依赖安装完成"
@@ -109,10 +110,10 @@ setup_quality_system() {
     log_info "配置质量保障系统..."
     
     # 创建报告目录
-    mkdir -p quality-reports security-reports performance-reports
+    mkdir -p artifacts/quality-reports artifacts/security-reports artifacts/performance-reports
     
     # 复制配置文件
-    cp src/SmartAbp.Vue/scripts/quality-config.json ./
+    cp config/quality-config.json ./
     
     # 设置执行权限
     chmod +x src/SmartAbp.Vue/scripts/*.js
@@ -179,7 +180,7 @@ EMAIL_NOTIFICATIONS=true
 
 # 扫描配置
 SCAN_DIRECTORIES=src/SmartAbp.CodeGenerator,src/SmartAbp.Application
-EXCLUDE_PATTERNS=**/bin/**,**/obj/**,**/node_modules/**
+EXCLUDE_PATTERNS=**/bin/**,**/obj/**,**/node_modules/**,**/artifacts/**
 
 # 性能配置
 PERFORMANCE_RESPONSE_TIME_THRESHOLD=100
@@ -209,12 +210,12 @@ show_deployment_summary() {
     echo "   npm run quality:full    # 完整质量检查"
     echo ""
     echo "📋 下一步:"
-    echo "   1. 查看质量报告: quality-reports/"
+    echo "   1. 查看质量报告: artifacts/"
     echo "   2. 配置通知渠道: 编辑.env.quality"
     echo "   3. 自定义质量规则: 编辑quality-config.json"
     echo "   4. 集成到CI/CD: 查看.github/workflows/"
     echo ""
-    echo "💡 提示: 系统已自动运行初始质量检查，请查看生成的报告"
+    echo "💡 提示: 系统已自动运行初始质量检查，请查看生成的报告(artifacts/)"
     echo ""
 }
 
