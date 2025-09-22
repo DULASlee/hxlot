@@ -17,12 +17,12 @@ const ProjectAnalysisView = () => import("@/views/project/ProjectAnalysisView.vu
 const PermissionsView = () => import("@/views/system/PermissionsView.vue");
 const UsersView = () => import("@/views/system/UsersView.vue");
 // 代码生成模块组件
-const LowCodeEngineView = () => import("@smartabp/lowcode-designer/views/codegen/LowCodeEngineView.vue");
-const SfcCompilerView = () => import("@smartabp/lowcode-designer/views/codegen/SfcCompilerView.vue");
-const DragDropFormView = () => import("@smartabp/lowcode-designer/views/codegen/DragDropFormView.vue");
-const PerformanceDashboard = () => import("@smartabp/lowcode-designer/views/codegen/PerformanceDashboard.vue");
-const ModuleWizardView = () => import("@smartabp/lowcode-designer/views/codegen/ModuleWizardView.vue");
-const VisualDesignerView = () => import("@smartabp/lowcode-designer/views/VisualDesignerView.vue");
+const LowCodeEngineView = () => import("../../packages/lowcode-designer/src/views/codegen/LowCodeEngineView.vue");
+const SfcCompilerView = () => import("../../packages/lowcode-designer/src/views/codegen/SfcCompilerView.vue");
+const DragDropFormView = () => import("../../packages/lowcode-designer/src/views/codegen/DragDropFormView.vue");
+const PerformanceDashboard = () => import("../../packages/lowcode-designer/src/views/codegen/PerformanceDashboard.vue");
+const ModuleWizardView = () => import("../../packages/lowcode-designer/src/views/codegen/ModuleWizardView.vue");
+const VisualDesignerView = () => import("../../packages/lowcode-designer/src/views/VisualDesignerView.vue");
 const routes = [
     // 登录页面
     {
@@ -247,7 +247,7 @@ const routes = [
             {
                 path: "designer",
                 name: "LowCodeDesigner",
-                component: () => import("@smartabp/lowcode-designer/views/VisualDesignerView.vue"),
+                component: () => import("@smartabp/lowcode-designer/src/views/VisualDesignerView.vue"),
                 meta: {
                     title: "可视化设计",
                     icon: "el-icon-brush",

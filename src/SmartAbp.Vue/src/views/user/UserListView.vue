@@ -246,7 +246,7 @@ AI_TEMPLATE_INFO:
 // 用户管理 - 实体显示名称
 
 import { ref, reactive, onMounted, computed } from "vue"
-import MetadataDrivenPageRenderer from "@smartabp/lowcode-designer/runtime/MetadataDrivenPageRenderer.vue"
+import MetadataDrivenPageRenderer from "../../../packages/lowcode-designer/src/runtime/MetadataDrivenPageRenderer.vue"
 // import { uiConfigToPageSchema } from "../../../packages/lowcode-designer/src/utils/uiConfigMapper"
 // Temporary mock to avoid type errors
 const uiConfigToPageSchema = (config: any) => config

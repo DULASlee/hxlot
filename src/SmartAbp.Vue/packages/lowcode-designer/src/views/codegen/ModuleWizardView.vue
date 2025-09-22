@@ -447,19 +447,16 @@ import { Check } from "@element-plus/icons-vue"
 import { useI18n } from "vue-i18n"
 
 // Import our new strict typing and management systems
-import { useWizardStore } from "@smartabp/lowcode-designer/stores/useWizardStore"
-import { WizardValidator } from "@smartabp/lowcode-designer/utils/validation"
+import { useWizardStore, WizardValidator } from "@smartabp/lowcode-designer"
 import { WizardStep } from "@smartabp/lowcode-designer/types/wizard"
 import type { ModuleMetadata, CustomPermission, EntityDefinition } from "@smartabp/lowcode-api/types"
 import { codeGeneratorApi } from "@smartabp/lowcode-api"
 
 // Performance and responsive design imports
-import { useResponsive } from "@smartabp/lowcode-designer/utils/responsive-design"
-import { usePerformanceMonitor } from "@smartabp/lowcode-designer/utils/performance-optimizer"
-import { useErrorRecovery, CrashRecovery } from "@smartabp/lowcode-designer/utils/error-recovery"
+import { useResponsive, usePerformanceMonitor, useErrorRecovery, CrashRecovery } from "@smartabp/lowcode-designer"
 
 // Properly import EntityDesigner outside of reactive context
-import EntityDesigner from "@smartabp/lowcode-designer/components/CodeGenerator/EntityDesigner.vue"
+import { EntityDesigner } from "@smartabp/lowcode-designer"
 
 // ============= Error Handling Utilities =============
 const getErrorMessage = (error: unknown): string => {

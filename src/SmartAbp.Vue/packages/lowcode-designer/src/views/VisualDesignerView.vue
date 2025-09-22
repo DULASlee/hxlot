@@ -521,7 +521,7 @@ interface PerformanceMetrics {
 }
 
 // 导入组件
-import ComponentPalette from "./designer/ComponentPalette.vue"
+import ComponentPalette from "./designer/Palette.vue"
 import LayerManager from "./designer/LayerManager.vue"
 import AIAssistantPanel from "./designer/AIAssistantPanel.vue"
 import PropertyInspector from "./designer/PropertyInspector.vue"

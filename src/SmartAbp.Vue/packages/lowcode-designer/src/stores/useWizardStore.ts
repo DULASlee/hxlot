@@ -8,7 +8,7 @@ import { ref, computed } from "vue"
 import { WizardStep } from "../types/wizard"
 import type { StepMetadata, ModuleMetadata } from "../types/wizard"
 import { useDebouncedWatch, ApiCache, RequestDeduplicator } from "../utils/performance-optimizer"
-import { AutoSaveManager } from "../utils/error-recovery"
+import { useErrorRecovery } from "../utils/error-recovery"
 import { ElMessage } from "element-plus"
 
 // 创建全局实例
@@ -36,7 +36,7 @@ export const useWizardStore = defineStore("wizard", () => {
   const isLoading = ref(false)
 
   // Performance optimizations
-  const autoSaveManager = new AutoSaveManager()
+  const { autoSaveManager } = useErrorRecovery()
   const cacheKey = computed(() => `wizard:${formData.value.systemName}:${formData.value.name}`)
 
   // Getters
