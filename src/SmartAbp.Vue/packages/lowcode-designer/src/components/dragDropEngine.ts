@@ -297,6 +297,8 @@ export class DragDropEngine {
         id: `${dragData.componentType}-${Date.now()}`,
         name: dragData.componentType,
         type: dragData.componentType,
+        category: "basic",
+        version: "1.0.0",
         props: {
           ...(dragData.defaultProps || {}),
           style: {
