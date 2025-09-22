@@ -1,0 +1,137 @@
+# Prometheus Configuration for SmartAbp Performance Monitoring
+# Stage 6.2 Performance Monitoring & Analytics
+
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds
+  evaluation_interval: 15s # Evaluate rules every 15 seconds
+  external_labels:
+    monitor: 'smartabp-performance-monitor'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'
+rule_files:
+  - "alert_rules.yml"
+  - "performance_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # SmartAbp Application Metrics
+  - job_name: 'smartabp-app'
+    static_configs:
+      - targets: ['host.docker.internal:5001'] # SmartAbp application
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+
+  # SmartAbp API Health Check
+  - job_name: 'smartabp-health'
+    static_configs:
+      - targets: ['host.docker.internal:5001']
+    metrics_path: '/health'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # Node Exporter for system metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 15s
+
+  # cAdvisor for container metrics
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 15s
+
+  # K6 Performance Test Results (when available)
+  - job_name: 'k6-metrics'
+    static_configs:
+      - targets: ['host.docker.internal:6565'] # K6 metrics server
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    scrape_timeout: 3s
+
+  # Custom SmartAbp Security Metrics
+  - job_name: 'smartabp-security'
+    static_configs:
+      - targets: ['host.docker.internal:5001']
+    metrics_path: '/api/metrics/security'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    basic_auth:
+      username: 'admin'
+      password: 'admin123'
+
+  # SmartAbp Database Metrics (if available)
+  - job_name: 'smartabp-database'
+    static_configs:
+      - targets: ['host.docker.internal:1433'] # SQL Server
+    scrape_interval: 60s
+    scrape_timeout: 30s
+
+  # Redis Metrics (if using Redis for caching)
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['host.docker.internal:6379']
+    scrape_interval: 30s
+
+  # Elasticsearch Metrics (for audit logs)
+  - job_name: 'elasticsearch'
+    static_configs:
+      - targets: ['host.docker.internal:9200']
+    metrics_path: '/_prometheus/metrics'
+    scrape_interval: 30s
+
+  # Blackbox exporter for endpoint monitoring
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [http_2xx] # Look for a HTTP 200 response
+    static_configs:
+      - targets:
+        - https://localhost:5001/api/health # SmartAbp health endpoint
+        - https://localhost:5001/api/auth/health # Authentication health
+        - https://localhost:5001/api/security/health # Security service health
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115 # Blackbox exporter service
+
+  # Custom performance test endpoints
+  - job_name: 'performance-endpoints'
+    static_configs:
+      - targets: ['host.docker.internal:5001']
+    metrics_path: '/api/metrics/performance'
+    scrape_interval: 10s
+    params:
+      format: ['prometheus']
+    basic_auth:
+      username: 'admin'
+      password: 'admin123'
+
+# Remote write configuration for long-term storage
+remote_write:
+  - url: "http://influxdb:8086/api/v1/prom/write?db=performance"
+    write_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'smartabp_.*'
+        target_label: __name__
+        replacement: '${1}'
+
+# Remote read configuration
+remote_read:
+  - url: "http://influxdb:8086/api/v1/prom/read?db=performance"

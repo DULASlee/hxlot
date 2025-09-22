@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartAbp Performance Monitoring Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f1419;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header .subtitle {
+            opacity: 0.8;
+            margin-top: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .status-bar {
+            background-color: #1f2937;
+            padding: 0.75rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #374151;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-healthy { background-color: #10b981; }
+        .status-warning { background-color: #f59e0b; }
+        .status-critical { background-color: #ef4444; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .main-content {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .metric-card {
+            background-color: #1f2937;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #374151;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        .metric-card h3 {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-change {
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .change-positive { color: #10b981; }
+        .change-negative { color: #ef4444; }
+        .change-neutral { color: #6b7280; }
+
+        .chart-container {
+            grid-column: span 3;
+            background-color: #1f2937;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #374151;
+            margin-top: 1rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .time-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .time-selector button {
+            background-color: #374151;
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background-color 0.2s;
+        }
+
+        .time-selector button:hover,
+        .time-selector button.active {
+            background-color: #3b82f6;
+        }
+
+        .alerts-panel {
+            grid-column: span 3;
+            background-color: #1f2937;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #374151;
+            margin-top: 1rem;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            border-left: 4px solid;
+        }
+
+        .alert-critical {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-left-color: #ef4444;
+        }
+
+        .alert-warning {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-left-color: #f59e0b;
+        }
+
+        .alert-info {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-left-color: #3b82f6;
+        }
+
+        .alert-icon {
+            font-size: 1.25rem;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-description {
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+
+        .alert-time {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .controls-panel {
+            grid-column: span 3;
+            background-color: #1f2937;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #374151;
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .control-button {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .control-button:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .control-button.danger {
+            background-color: #ef4444;
+        }
+
+        .control-button.danger:hover {
+            background-color: #dc2626;
+        }
+
+        .performance-grid {
+            grid-column: span 3;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .performance-chart {
+            background-color: #1f2937;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #374151;
+        }
+
+        .refresh-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #3b82f6;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .chart-container,
+            .alerts-panel,
+            .controls-panel,
+            .performance-grid {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .chart-container,
+            .alerts-panel,
+            .controls-panel,
+            .performance-grid {
+                grid-column: span 1;
+            }
+            
+            .performance-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>
+            📊 SmartAbp Performance Monitoring Dashboard
+            <span class="refresh-indicator" id="refreshIndicator" style="display: none;"></span>
+        </h1>
+        <div class="subtitle">Real-time performance monitoring and analytics for enterprise security system</div>
+    </div>
+
+    <div class="status-bar">
+        <div class="status-indicator">
+            <div class="status-dot status-healthy" id="systemStatus"></div>
+            <span id="systemStatusText">System Healthy</span>
+        </div>
+        <div>
+            <span>Last Updated: <span id="lastUpdated">--:--:--</span></span>
+        </div>
+        <div>
+            <span>Uptime: <span id="systemUptime">0d 0h 0m</span></span>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Performance Metrics -->
+        <div class="metric-card">
+            <h3>Response Time</h3>
+            <div class="metric-value" id="responseTime">--ms</div>
+            <div class="metric-change change-neutral" id="responseTimeChange">
+                <span>--</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <h3>Requests/Second</h3>
+            <div class="metric-value" id="requestsPerSecond">--</div>
+            <div class="metric-change change-neutral" id="requestsPerSecondChange">
+                <span>--</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <h3>Error Rate</h3>
+            <div class="metric-value" id="errorRate">--%</div>
+            <div class="metric-change change-neutral" id="errorRateChange">
+                <span>--</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <h3>Active Users</h3>
+            <div class="metric-value" id="activeUsers">--</div>
+            <div class="metric-change change-neutral" id="activeUsersChange">
+                <span>--</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <h3>CPU Usage</h3>
+            <div class="metric-value" id="cpuUsage">--%</div>
+            <div class="metric-change change-neutral" id="cpuUsageChange">
+                <span>--</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <h3>Memory Usage</h3>
+            <div class="metric-value" id="memoryUsage">--%</div>
+            <div class="metric-change change-neutral" id="memoryUsageChange">
+                <span>--</span>
+            </div>
+        </div>
+
+        <!-- Response Time Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3 class="chart-title">Response Time Trends</h3>
+                <div class="time-selector">
+                    <button class="active" data-range="1h">1H</button>
+                    <button data-range="6h">6H</button>
+                    <button data-range="24h">24H</button>
+                    <button data-range="7d">7D</button>
+                </div>
+            </div>
+            <canvas id="responseTimeChart" width="400" height="200"></canvas>
+        </div>
+
+        <!-- Performance Charts Grid -->
+        <div class="performance-grid">
+            <div class="performance-chart">
+                <h3 class="chart-title">Throughput</h3>
+                <canvas id="throughputChart" width="400" height="200"></canvas>
+            </div>
+            <div class="performance-chart">
+                <h3 class="chart-title">Error Distribution</h3>
+                <canvas id="errorChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Alerts Panel -->
+        <div class="alerts-panel">
+            <h3 class="chart-title">Performance Alerts</h3>
+            <div id="alertsList">
+                <!-- Alerts will be dynamically populated -->
+            </div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <button class="control-button" onclick="startPerformanceTest()">
+                🚀 Start Load Test
+            </button>
+            <button class="control-button" onclick="startSecurityTest()">
+                🛡️ Start Security Test
+            </button>
+            <button class="control-button" onclick="exportReport()">
+                📊 Export Report
+            </button>
+            <button class="control-button danger" onclick="stopAllTests()">
+                ⏹️ Stop All Tests
+            </button>
+            <button class="control-button" onclick="refreshData()">
+                🔄 Refresh Data
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let responseTimeChart, throughputChart, errorChart;
+        let performanceData = {
+            responseTime: [],
+            throughput: [],
+            errors: [],
+            timestamps: []
+        };
+        let currentTimeRange = '1h';
+        let isAutoRefresh = true;
+        let refreshInterval;
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            startAutoRefresh();
+            loadInitialData();
+            setupTimeRangeSelectors();
+        });
+
+        // Initialize Chart.js charts
+        function initializeCharts() {
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#ffffff'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#9ca3af' },
+                        grid: { color: '#374151' }
+                    },
+                    y: {
+                        ticks: { color: '#9ca3af' },
+                        grid: { color: '#374151' }
+                    }
+                }
+            };
+
+            // Response Time Chart
+            const responseTimeCtx = document.getElementById('responseTimeChart').getContext('2d');
+            responseTimeChart = new Chart(responseTimeCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Response Time (ms)',
+                        data: [],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: commonOptions
+            });
+
+            // Throughput Chart
+            const throughputCtx = document.getElementById('throughputChart').getContext('2d');
+            throughputChart = new Chart(throughputCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Requests/sec',
+                        data: [],
+                        backgroundColor: '#10b981',
+                        borderColor: '#059669',
+                        borderWidth: 1
+                    }]
+                },
+                options: commonOptions
+            });
+
+            // Error Chart
+            const errorCtx = document.getElementById('errorChart').getContext('2d');
+            errorChart = new Chart(errorCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Success', 'Client Errors', 'Server Errors'],
+                    datasets: [{
+                        data: [95, 3, 2],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#ffffff'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Setup time range selectors
+        function setupTimeRangeSelectors() {
+            document.querySelectorAll('.time-selector button').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelector('.time-selector button.active').classList.remove('active');
+                    this.classList.add('active');
+                    currentTimeRange = this.dataset.range;
+                    loadPerformanceData(currentTimeRange);
+                });
+            });
+        }
+
+        // Load initial data
+        function loadInitialData() {
+            loadPerformanceData(currentTimeRange);
+            loadAlerts();
+            updateSystemStatus();
+        }
+
+        // Simulate loading performance data
+        function loadPerformanceData(timeRange) {
+            showRefreshIndicator();
+            
+            // Simulate API call with setTimeout
+            setTimeout(() => {
+                const dataPoints = getDataPointsForRange(timeRange);
+                const now = Date.now();
+                
+                // Generate mock data
+                performanceData.timestamps = [];
+                performanceData.responseTime = [];
+                performanceData.throughput = [];
+                
+                for (let i = dataPoints - 1; i >= 0; i--) {
+                    const time = now - (i * getIntervalForRange(timeRange));
+                    performanceData.timestamps.push(new Date(time));
+                    performanceData.responseTime.push(Math.random() * 1000 + 200);
+                    performanceData.throughput.push(Math.random() * 100 + 50);
+                }
+                
+                updateCharts();
+                updateMetrics();
+                hideRefreshIndicator();
+            }, 1000);
+        }
+
+        // Get number of data points for time range
+        function getDataPointsForRange(range) {
+            switch(range) {
+                case '1h': return 60;
+                case '6h': return 72;
+                case '24h': return 96;
+                case '7d': return 168;
+                default: return 60;
+            }
+        }
+
+        // Get interval in milliseconds for time range
+        function getIntervalForRange(range) {
+            switch(range) {
+                case '1h': return 60000; // 1 minute
+                case '6h': return 300000; // 5 minutes
+                case '24h': return 900000; // 15 minutes
+                case '7d': return 3600000; // 1 hour
+                default: return 60000;
+            }
+        }
+
+        // Update charts with new data
+        function updateCharts() {
+            const labels = performanceData.timestamps.map(t => 
+                currentTimeRange === '7d' ? 
+                t.toLocaleDateString() : 
+                t.toLocaleTimeString()
+            );
+
+            // Update response time chart
+            responseTimeChart.data.labels = labels;
+            responseTimeChart.data.datasets[0].data = performanceData.responseTime;
+            responseTimeChart.update('none');
+
+            // Update throughput chart
+            throughputChart.data.labels = labels.slice(-10); // Show last 10 points
+            throughputChart.data.datasets[0].data = performanceData.throughput.slice(-10);
+            throughputChart.update('none');
+        }
+
+        // Update metric cards
+        function updateMetrics() {
+            const latestResponseTime = performanceData.responseTime[performanceData.responseTime.length - 1];
+            const latestThroughput = performanceData.throughput[performanceData.throughput.length - 1];
+            
+            document.getElementById('responseTime').textContent = Math.round(latestResponseTime) + 'ms';
+            document.getElementById('requestsPerSecond').textContent = Math.round(latestThroughput);
+            document.getElementById('errorRate').textContent = (Math.random() * 5).toFixed(2) + '%';
+            document.getElementById('activeUsers').textContent = Math.round(Math.random() * 500 + 100);
+            document.getElementById('cpuUsage').textContent = Math.round(Math.random() * 80 + 20) + '%';
+            document.getElementById('memoryUsage').textContent = Math.round(Math.random() * 70 + 30) + '%';
+            
+            // Update change indicators
+            updateChangeIndicators();
+            
+            // Update last updated time
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+        }
+
+        // Update change indicators
+        function updateChangeIndicators() {
+            const changes = [
+                { id: 'responseTimeChange', value: (Math.random() - 0.5) * 100 },
+                { id: 'requestsPerSecondChange', value: (Math.random() - 0.5) * 50 },
+                { id: 'errorRateChange', value: (Math.random() - 0.5) * 2 },
+                { id: 'activeUsersChange', value: (Math.random() - 0.5) * 100 },
+                { id: 'cpuUsageChange', value: (Math.random() - 0.5) * 20 },
+                { id: 'memoryUsageChange', value: (Math.random() - 0.5) * 15 }
+            ];
+
+            changes.forEach(change => {
+                const element = document.getElementById(change.id);
+                const isPositive = change.value > 0;
+                const isNegative = change.value < 0;
+                
+                element.className = `metric-change ${isPositive ? 'change-positive' : isNegative ? 'change-negative' : 'change-neutral'}`;
+                element.innerHTML = `<span>${isPositive ? '↗' : isNegative ? '↘' : '→'} ${Math.abs(change.value).toFixed(1)}${change.id.includes('Rate') || change.id.includes('Usage') ? '%' : ''}</span>`;
+            });
+        }
+
+        // Load and display alerts
+        function loadAlerts() {
+            const mockAlerts = [
+                {
+                    type: 'warning',
+                    title: 'High Response Time',
+                    description: 'Average response time exceeded 1000ms threshold',
+                    time: '2 minutes ago'
+                },
+                {
+                    type: 'info',
+                    title: 'Security Test Completed',
+                    description: 'OWASP Top 10 vulnerability scan finished successfully',
+                    time: '15 minutes ago'
+                },
+                {
+                    type: 'critical',
+                    title: 'High CPU Usage',
+                    description: 'CPU usage reached 95% on production server',
+                    time: '1 hour ago'
+                }
+            ];
+
+            const alertsContainer = document.getElementById('alertsList');
+            alertsContainer.innerHTML = mockAlerts.map(alert => `
+                <div class="alert-item alert-${alert.type}">
+                    <div class="alert-icon">
+                        ${alert.type === 'critical' ? '🚨' : alert.type === 'warning' ? '⚠️' : 'ℹ️'}
+                    </div>
+                    <div class="alert-content">
+                        <div class="alert-title">${alert.title}</div>
+                        <div class="alert-description">${alert.description}</div>
+                    </div>
+                    <div class="alert-time">${alert.time}</div>
+                </div>
+            `).join('');
+        }
+
+        // Update system status
+        function updateSystemStatus() {
+            const statusDot = document.getElementById('systemStatus');
+            const statusText = document.getElementById('systemStatusText');
+            const uptime = document.getElementById('systemUptime');
+            
+            // Simulate system status
+            const statuses = ['healthy', 'warning', 'critical'];
+            const statusTexts = ['System Healthy', 'Performance Degraded', 'System Critical'];
+            const currentStatus = 0; // Assume healthy for demo
+            
+            statusDot.className = `status-dot status-${statuses[currentStatus]}`;
+            statusText.textContent = statusTexts[currentStatus];
+            
+            // Update uptime
+            const uptimeHours = Math.floor(Math.random() * 240);
+            const days = Math.floor(uptimeHours / 24);
+            const hours = uptimeHours % 24;
+            const minutes = Math.floor(Math.random() * 60);
+            uptime.textContent = `${days}d ${hours}h ${minutes}m`;
+        }
+
+        // Auto refresh functionality
+        function startAutoRefresh() {
+            refreshInterval = setInterval(() => {
+                if (isAutoRefresh) {
+                    loadPerformanceData(currentTimeRange);
+                    loadAlerts();
+                    updateSystemStatus();
+                }
+            }, 30000); // Refresh every 30 seconds
+        }
+
+        // Control functions
+        function startPerformanceTest() {
+            alert('Starting K6 performance test... This would trigger npm run test:performance');
+            console.log('Would execute: npm run test:performance');
+        }
+
+        function startSecurityTest() {
+            alert('Starting security test suite... This would trigger npm run test:security:all');
+            console.log('Would execute: npm run test:security:all');
+        }
+
+        function exportReport() {
+            alert('Exporting performance report... This would generate a comprehensive report');
+            console.log('Would execute: npm run report:security');
+        }
+
+        function stopAllTests() {
+            alert('Stopping all running tests...');
+            console.log('Would stop all K6 processes');
+        }
+
+        function refreshData() {
+            loadPerformanceData(currentTimeRange);
+            loadAlerts();
+            updateSystemStatus();
+        }
+
+        // Utility functions
+        function showRefreshIndicator() {
+            document.getElementById('refreshIndicator').style.display = 'inline-block';
+        }
+
+        function hideRefreshIndicator() {
+            document.getElementById('refreshIndicator').style.display = 'none';
+        }
+
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', function() {
+            isAutoRefresh = !document.hidden;
+        });
+    </script>
+</body>
+</html>

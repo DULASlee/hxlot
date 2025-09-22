@@ -1,0 +1,73 @@
+[
+  {
+    "id": "compliance-001",
+    "type": "DataRetention",
+    "severity": "High",
+    "description": "Data retention policy violation: Customer data older than 7 years found",
+    "affectedUsers": 25,
+    "detectedAt": "2024-01-15T09:00:00Z",
+    "status": "Open",
+    "recommendations": [
+      "Review data retention policies",
+      "Archive or delete outdated customer records",
+      "Update data lifecycle management procedures"
+    ]
+  },
+  {
+    "id": "compliance-002",
+    "type": "AccessControl",
+    "severity": "Medium",
+    "description": "Excessive administrative permissions detected for non-admin users",
+    "affectedUsers": 8,
+    "detectedAt": "2024-01-15T08:30:00Z",
+    "status": "InProgress",
+    "recommendations": [
+      "Review admin role assignments",
+      "Implement principle of least privilege",
+      "Conduct quarterly access reviews"
+    ]
+  },
+  {
+    "id": "compliance-003",
+    "type": "AuditLogging",
+    "severity": "Critical",
+    "description": "Audit logging gaps detected in financial transaction processing",
+    "affectedUsers": 150,
+    "detectedAt": "2024-01-15T08:00:00Z",
+    "status": "Open",
+    "recommendations": [
+      "Enable comprehensive audit logging",
+      "Review audit log retention settings",
+      "Implement real-time audit monitoring"
+    ]
+  },
+  {
+    "id": "compliance-004",
+    "type": "Encryption",
+    "severity": "High",
+    "description": "Unencrypted sensitive data transmission detected",
+    "affectedUsers": 45,
+    "detectedAt": "2024-01-15T07:45:00Z",
+    "status": "Resolved",
+    "resolvedAt": "2024-01-15T09:30:00Z",
+    "recommendations": [
+      "Enforce TLS encryption for all data transmission",
+      "Update application configuration",
+      "Conduct security assessment"
+    ]
+  },
+  {
+    "id": "compliance-005",
+    "type": "PolicyViolation",
+    "severity": "Medium",
+    "description": "Password policy violations: Weak passwords detected",
+    "affectedUsers": 32,
+    "detectedAt": "2024-01-15T07:00:00Z",
+    "status": "InProgress",
+    "recommendations": [
+      "Enforce stronger password requirements",
+      "Implement password complexity validation",
+      "Schedule user security training"
+    ]
+  }
+]

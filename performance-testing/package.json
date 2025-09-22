@@ -1,0 +1,80 @@
+{
+  "name": "@smartabp/performance-testing",
+  "version": "1.0.0",
+  "description": "K6 Performance Testing Framework for SmartAbp Security System",
+  "main": "index.js",
+  "scripts": {
+    "test:performance": "k6 run tests/load/dashboard-load.js",
+    "test:stress": "k6 run tests/stress/security-stress.js",
+    "test:spike": "k6 run tests/spike/permission-spike.js",
+    "test:volume": "k6 run tests/volume/high-volume.js",
+    "test:endurance": "k6 run tests/endurance/long-duration.js",
+    "test:security": "k6 run tests/security/vulnerability-scan.js",
+    "test:security:stress": "k6 run tests/security/security-stress.js",
+    "test:security:vulnerability": "k6 run tests/security/vulnerability-scan.js",
+    "test:security:pentest": "k6 run tests/security/penetration-test.js",
+    "test:security:owasp": "k6 run --env K6_VULNERABILITY_TYPE=mixed tests/security/vulnerability-scan.js",
+    "test:security:auth": "k6 run --env K6_PENTEST_TYPE=authentication tests/security/penetration-test.js",
+    "test:security:injection": "k6 run --env K6_TEST_TYPE=sql_injection tests/security/security-stress.js",
+    "test:security:all": "bash scripts/run-security-tests.sh",
+    "test:security:windows": "scripts\\run-security-tests.bat",
+    "test:all": "npm run test:performance && npm run test:stress && npm run test:spike",
+    "test:comprehensive": "npm run test:all && npm run test:security:all",
+    "benchmark": "k6 run tests/benchmark/baseline.js",
+    "monitor": "k6 run --out influxdb=http://localhost:8086/k6 tests/monitor/real-time.js",
+    "report": "node scripts/generate-report.js",
+    "report:security": "bash scripts/run-security-tests.sh"
+  },
+  "devDependencies": {
+    "@types/k6": "^0.48.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "k6",
+    "performance",
+    "load-testing",
+    "security",
+    "smartabp"
+  ],
+  "author": "SmartAbp Team",
+  "license": "MIT",
+  "k6": {
+    "thresholds": {
+      "http_req_duration": ["p(95)<2000"],
+      "http_req_failed": ["rate<0.05"],
+      "http_reqs": ["rate>100"]
+    },
+    "scenarios": {
+      "load": {
+        "executor": "ramping-vus",
+        "startVUs": 1,
+        "stages": [
+          { "duration": "2m", "target": 10 },
+          { "duration": "5m", "target": 50 },
+          { "duration": "2m", "target": 0 }
+        ]
+      },
+      "stress": {
+        "executor": "ramping-vus",
+        "startVUs": 1,
+        "stages": [
+          { "duration": "2m", "target": 50 },
+          { "duration": "5m", "target": 100 },
+          { "duration": "10m", "target": 200 },
+          { "duration": "2m", "target": 0 }
+        ]
+      },
+      "spike": {
+        "executor": "ramping-vus",
+        "startVUs": 1,
+        "stages": [
+          { "duration": "1m", "target": 10 },
+          { "duration": "30s", "target": 100 },
+          { "duration": "1m", "target": 10 },
+          { "duration": "30s", "target": 200 },
+          { "duration": "1m", "target": 0 }
+        ]
+      }
+    }
+  }
+}

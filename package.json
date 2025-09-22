@@ -1,42 +1,46 @@
 {
-  "name": "smartabp-lowcode-quality",
+  "name": "smartabp-template-library",
   "version": "1.0.0",
-  "description": "SmartAbp低代码引擎质量保障系统",
+  "description": "SmartAbp项目代码模板库",
   "scripts": {
-    "quality:check": "node src/SmartAbp.Vue/scripts/code-quality-engine.js",
-    "quality:security": "node src/SmartAbp.Vue/scripts/security-scanner.js",
-    "quality:performance": "node src/SmartAbp.Vue/scripts/performance-analyzer.js",
-    "quality:full": "npm run quality:check && npm run quality:security && npm run quality:performance",
-    "test:run": "vitest run",
+    "expert:preflight": "node tools/quality-assurance/preflight-enforcer.js",
+    "template:validate": "node src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/template-validator.cjs",
+    "template:index": "node src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/build-template-index.cjs",
+    "template:search": "node src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/template-search.cjs",
+    "approve:plan": "node tools/quality-assurance/approve-plan.js",
+    "predev": "npm run template:validate",
+    "prebuild": "npm run template:validate",
+    "type-check": "vue-tsc --build --force",
     "test:coverage": "vitest run --coverage",
-    "test:ui": "vitest --ui",
-    "perf:analyze": "node src/SmartAbp.Vue/scripts/performance-benchmark.js",
-    "lint": "eslint src/SmartAbp.CodeGenerator --ext .cs,.ts,.js",
-    "lint:fix": "eslint src/SmartAbp.CodeGenerator --ext .cs,.ts,.js --fix",
-    "security:scan": "npm audit --production",
-    "security:snyk": "npx snyk test --all-projects",
-    "build": "dotnet build src/SmartAbp.CodeGenerator/SmartAbp.CodeGenerator.csproj --configuration Release",
-    "clean": "dotnet clean && rm -rf quality-reports security-reports performance-reports"
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "codegen": "tsx src/tools/cli.ts generate",
+    "codegen:check": "tsx src/tools/cli.ts check",
+    "module:add": "tsx src/tools/add-module.ts --input",
+    "module:add:codegen": "tsx src/tools/add-module.ts --input --codegen",
+    "expert:auto": "node tools/quality-assurance/expert-auto.js",
+    "expert:finalize": "node tools/quality-assurance/expert-finalize.js",
+    "expert:verify": "npm run lint && npm run type-check && npm run test:coverage && npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.6.0",
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
-    "eslint": "^8.0.0",
-    "vitest": "^1.0.0",
-    "@vitest/coverage-istanbul": "^1.0.0",
-    "chalk": "^4.1.0",
-    "snyk": "^1.0.0"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
+    "chalk": "^4.1.2",
+    "cross-env": "^7.0.3",
+    "semver": "^7.6.3",
+    "typescript": "^5.0.0",
+    "vue-tsc": "^3.0.7"
   },
   "keywords": [
-    "lowcode",
-    "quality",
-    "security",
-    "performance",
-    "testing",
-    "automation"
+    "smartabp",
+    "template",
+    "code-generation",
+    "abp-framework",
+    "vue3",
+    "typescript"
   ],
-  "author": "SmartAbp Quality Team",
+  "author": "SmartAbp Team",
   "license": "MIT"
 }

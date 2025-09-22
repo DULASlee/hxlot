@@ -1,0 +1,197 @@
+# AlertManager Configuration for SmartAbp Performance Monitoring
+# Stage 6.2 Performance Monitoring & Analytics
+
+global:
+  smtp_smarthost: 'localhost:587'
+  smtp_from: 'alerts@smartabp.com'
+  smtp_auth_username: 'alerts@smartabp.com'
+  smtp_auth_password: 'your-smtp-password'
+
+# Route configuration
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'web.hook'
+  routes:
+  # Critical alerts - immediate notification
+  - match:
+      severity: critical
+    receiver: 'critical-alerts'
+    group_wait: 0s
+    repeat_interval: 5m
+    
+  # Security alerts - high priority
+  - match_re:
+      alertname: ^(SecurityBreach|UnauthorizedAccess|HighRiskActivity).*
+    receiver: 'security-team'
+    group_wait: 5s
+    repeat_interval: 15m
+    
+  # Performance alerts
+  - match_re:
+      alertname: ^(HighResponseTime|HighErrorRate|ResourceExhaustion).*
+    receiver: 'performance-team'
+    group_wait: 30s
+    repeat_interval: 30m
+    
+  # Infrastructure alerts
+  - match:
+      team: infrastructure
+    receiver: 'infrastructure-team'
+    repeat_interval: 1h
+
+# Inhibit rules
+inhibit_rules:
+  # Inhibit any alert that has 'critical' severity if there's an alert
+  # with 'down' severity for the same service
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'cluster', 'service']
+
+# Receiver definitions
+receivers:
+- name: 'web.hook'
+  webhook_configs:
+  - url: 'http://host.docker.internal:5001/api/alerts/webhook'
+    send_resolved: true
+    http_config:
+      basic_auth:
+        username: 'admin'
+        password: 'admin123'
+
+- name: 'critical-alerts'
+  email_configs:
+  - to: 'admin@smartabp.com,devops@smartabp.com'
+    subject: '🚨 CRITICAL ALERT: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+    body: |
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Instance: {{ .Labels.instance }}
+      Time: {{ .StartsAt }}
+      
+      {{ if .GeneratorURL }}View in Prometheus: {{ .GeneratorURL }}{{ end }}
+      {{ end }}
+    headers:
+      Priority: 'urgent'
+  
+  slack_configs:
+  - api_url: 'YOUR_SLACK_WEBHOOK_URL'
+    channel: '#critical-alerts'
+    color: 'danger'
+    title: '🚨 Critical Alert - SmartAbp Performance'
+    text: |
+      {{ range .Alerts }}
+      *Alert:* {{ .Annotations.summary }}
+      *Description:* {{ .Annotations.description }}
+      *Severity:* {{ .Labels.severity }}
+      *Instance:* {{ .Labels.instance }}
+      {{ end }}
+    send_resolved: true
+
+- name: 'security-team'
+  email_configs:
+  - to: 'security@smartabp.com,admin@smartabp.com'
+    subject: '🛡️ SECURITY ALERT: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+    body: |
+      SECURITY INCIDENT DETECTED
+      
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Source: {{ .Labels.instance }}
+      Attack Type: {{ .Labels.attack_type }}
+      Time: {{ .StartsAt }}
+      
+      Immediate Action Required:
+      1. Verify the alert in the Security Dashboard
+      2. Check audit logs for related activities
+      3. Implement containment measures if confirmed
+      4. Document the incident
+      
+      {{ if .GeneratorURL }}View Details: {{ .GeneratorURL }}{{ end }}
+      {{ end }}
+    headers:
+      Priority: 'urgent'
+      X-Security-Alert: 'true'
+
+  webhook_configs:
+  - url: 'http://host.docker.internal:5001/api/security/alerts/webhook'
+    send_resolved: true
+    http_config:
+      basic_auth:
+        username: 'admin'
+        password: 'admin123'
+
+- name: 'performance-team'
+  email_configs:
+  - to: 'performance@smartabp.com,devops@smartabp.com'
+    subject: '📊 PERFORMANCE ALERT: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+    body: |
+      PERFORMANCE ISSUE DETECTED
+      
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Service: {{ .Labels.service }}
+      Instance: {{ .Labels.instance }}
+      Time: {{ .StartsAt }}
+      
+      Performance Metrics:
+      - Response Time: {{ .Labels.response_time }}ms
+      - Error Rate: {{ .Labels.error_rate }}%
+      - Throughput: {{ .Labels.throughput }} req/s
+      
+      Recommended Actions:
+      1. Check system resources (CPU, Memory, Disk)
+      2. Review recent deployments
+      3. Analyze performance dashboard
+      4. Scale resources if necessary
+      
+      {{ if .GeneratorURL }}View Metrics: {{ .GeneratorURL }}{{ end }}
+      {{ end }}
+
+- name: 'infrastructure-team'
+  email_configs:
+  - to: 'infrastructure@smartabp.com,devops@smartabp.com'
+    subject: '🏗️ INFRASTRUCTURE ALERT: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+    body: |
+      INFRASTRUCTURE ISSUE DETECTED
+      
+      {{ range .Alerts }}
+      Alert: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      Severity: {{ .Labels.severity }}
+      Node: {{ .Labels.instance }}
+      Time: {{ .StartsAt }}
+      
+      System Information:
+      - CPU Usage: {{ .Labels.cpu_usage }}%
+      - Memory Usage: {{ .Labels.memory_usage }}%
+      - Disk Usage: {{ .Labels.disk_usage }}%
+      - Load Average: {{ .Labels.load_average }}
+      
+      {{ if .GeneratorURL }}View System Metrics: {{ .GeneratorURL }}{{ end }}
+      {{ end }}
+
+  pagerduty_configs:
+  - routing_key: 'YOUR_PAGERDUTY_INTEGRATION_KEY'
+    description: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+    severity: '{{ .GroupLabels.severity }}'
+    details:
+      alert_count: '{{ len .Alerts }}'
+      firing_alerts: |
+        {{ range .Alerts }}
+        - {{ .Annotations.summary }}
+        {{ end }}
+
+# Templates for custom messages
+templates:
+- '/etc/alertmanager/templates/*.tmpl'

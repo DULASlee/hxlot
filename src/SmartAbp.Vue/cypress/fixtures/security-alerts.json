@@ -1,0 +1,62 @@
+[
+  {
+    "id": "alert-001",
+    "type": "HighRiskPermissionAccess",
+    "severity": "High",
+    "description": "High-risk permission access detected for sensitive customer data",
+    "timestamp": "2024-01-15T10:25:00Z",
+    "userInfo": {
+      "displayName": "John Doe",
+      "userId": "user-123",
+      "department": "IT"
+    },
+    "isAcknowledged": false,
+    "location": "Office Network",
+    "riskScore": 85
+  },
+  {
+    "id": "alert-002",
+    "type": "UnusualLocationAccess",
+    "severity": "Critical",
+    "description": "Access from unusual geographic location detected",
+    "timestamp": "2024-01-15T10:20:00Z",
+    "userInfo": {
+      "displayName": "Jane Smith",
+      "userId": "user-456",
+      "department": "Finance"
+    },
+    "isAcknowledged": false,
+    "location": "Unknown Location",
+    "riskScore": 95
+  },
+  {
+    "id": "alert-003",
+    "type": "PermissionEscalation",
+    "severity": "Medium",
+    "description": "User attempted to escalate permissions beyond assigned role",
+    "timestamp": "2024-01-15T10:15:00Z",
+    "userInfo": {
+      "displayName": "Bob Wilson",
+      "userId": "user-789",
+      "department": "HR"
+    },
+    "isAcknowledged": true,
+    "location": "Office Network",
+    "riskScore": 70
+  },
+  {
+    "id": "alert-004",
+    "type": "SuspiciousActivity",
+    "severity": "Low",
+    "description": "Multiple failed login attempts detected",
+    "timestamp": "2024-01-15T10:10:00Z",
+    "userInfo": {
+      "displayName": "Alice Johnson",
+      "userId": "user-101",
+      "department": "Marketing"
+    },
+    "isAcknowledged": false,
+    "location": "Remote VPN",
+    "riskScore": 45
+  }
+]

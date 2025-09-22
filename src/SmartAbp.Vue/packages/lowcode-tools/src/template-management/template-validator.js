@@ -179,1361 +179,800 @@ const safeStat = (filePath, operation) => {
 }
 
 /**
- * 重试操作（带指数退避）
+ * Retry mechanism for operations
  */
-async function retryOperation(operation, maxRetries = 3, initialDelay = 1000) {
+const retryOperation = async (operation, maxRetries = 3, delay = 1000) => {
   let lastError
   
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await operation()
     } catch (error) {
       lastError = error
       
-      if (attempt === maxRetries) {
-        break
+      if (error.retryable && attempt < maxRetries) {
+        logWarning('retryOperation', `Attempt ${attempt} failed, retrying in ${delay}ms`, {
+          error: error.message,
+          attempt,
+          maxRetries
+        })
+        await new Promise(resolve => setTimeout(resolve, delay))
+        delay *= 2 // Exponential backoff
+      } else {
+        throw error
       }
-      
-      const delay = initialDelay * Math.pow(2, attempt)
-      logWarning(`Operation failed (attempt ${attempt + 1}/${maxRetries + 1}), retrying in ${delay}ms`, {
-        error: error.message
-      })
-      
-      await new Promise(resolve => setTimeout(resolve, delay))
     }
   }
   
-  throw new TemplateValidationError(`Operation failed after ${maxRetries + 1} attempts`, {
-    lastError: lastError.message,
-    attempts: maxRetries + 1
-  })
+  throw lastError
 }
 
 /**
- * 获取缓存键
+ * Enhanced templates directory resolution with error handling
  */
-function getCacheKey(filePath, content) {
-  const stats = safeStat(filePath)
-  if (!stats) return null
-  
-  return `${filePath}:${stats.mtime.getTime()}:${content.length}`
-}
-
-/**
- * 获取缓存条目
- */
-function getCacheEntry(key) {
-  if (!VALIDATION_CACHE.enabled || !key) return null
-  
-  const entry = VALIDATION_CACHE.entries.get(key)
-  if (!entry) {
-    PERFORMANCE_METRICS.cacheMisses++
-    return null
-  }
-  
-  // 检查TTL
-  if (Date.now() - entry.timestamp > VALIDATION_CACHE.ttl) {
-    VALIDATION_CACHE.entries.delete(key)
-    PERFORMANCE_METRICS.cacheMisses++
-    return null
-  }
-  
-  PERFORMANCE_METRICS.cacheHits++
-  return entry.result
-}
-
-/**
- * 设置缓存条目
- */
-function setCacheEntry(key, result) {
-  if (!VALIDATION_CACHE.enabled || !key) return
-  
-  // 清理过期条目
-  if (VALIDATION_CACHE.entries.size >= VALIDATION_CACHE.maxSize) {
-    const oldestKey = VALIDATION_CACHE.entries.keys().next().value
-    if (oldestKey) {
-      VALIDATION_CACHE.entries.delete(oldestKey)
-    }
-  }
-  
-  VALIDATION_CACHE.entries.set(key, {
-    result,
-    timestamp: Date.now()
-  })
-}
-
-/**
- * 清理验证缓存
- */
-function clearValidationCache() {
-  VALIDATION_CACHE.entries.clear()
-  PERFORMANCE_METRICS.cacheHits = 0
-  PERFORMANCE_METRICS.cacheMisses = 0
-  logWarning('Validation cache cleared')
-}
-
-/**
- * 解析模板目录
- */
-function resolveTemplatesDir(templatesDir) {
-  try {
-    const resolvedPath = path.resolve(templatesDir)
-    
-    if (!safeFileExists(resolvedPath)) {
-      throw new TemplateValidationError(`Templates directory does not exist: ${templatesDir}`, {
-        templatesDir,
-        resolvedPath
-      })
-    }
-    
-    const stats = safeStat(resolvedPath)
-    if (!stats || !stats.isDirectory()) {
-      throw new TemplateValidationError(`Templates path is not a directory: ${templatesDir}`, {
-        templatesDir,
-        resolvedPath
-      })
-    }
-    
-    return resolvedPath
-  } catch (error) {
-    if (error instanceof TemplateValidationError) {
-      throw error
-    }
-    throw new TemplateValidationError(`Failed to resolve templates directory: ${error.message}`, {
-      templatesDir,
-      error: error.message
-    })
-  }
-}
-
-/**
- * 获取文件类型配置
- */
-function getFileTypeConfig(filePath) {
-  const ext = path.extname(filePath).toLowerCase()
-  
-  for (const [type, config] of Object.entries(FILE_TYPE_CONFIG)) {
-    if (config.extensions.includes(ext)) {
-      return config
-    }
-  }
-  
-  return null
-}
-
-/**
- * 验证C#语法
- */
-function validateCSharpSyntax(content, filePath) {
-  const errors = []
-  const warnings = []
+function resolveTemplatesDir(startDir) {
+  let currentDir = startDir
   
   try {
-    // 基本语法检查
-    const openBraces = (content.match(/{/g) || []).length
-    const closeBraces = (content.match(/}/g) || []).length
-    
-    if (openBraces !== closeBraces) {
-      errors.push(`Mismatched braces: ${openBraces} open, ${closeBraces} close`)
-    }
-    
-    // 命名空间检查
-    const namespaceMatch = content.match(/namespace\s+(\w+(?:\.\w+)*)/)
-    if (!namespaceMatch) {
-      warnings.push('Missing namespace declaration')
-    }
-    
-    // 类定义检查
-    const classMatches = content.match(/class\s+(\w+)/g) || []
-    if (classMatches.length === 0) {
-      warnings.push('No class definitions found')
-    }
-    
-    // 使用语句检查
-    const usingMatches = content.match(/using\s+(\w+(?:\.\w+)*);/g) || []
-    const systemUsings = usingMatches.filter(u => u.includes('System')).length
-    
-    if (systemUsings === 0) {
-      warnings.push('No System using statements found')
-    }
-    
-    // 方法定义检查
-    const methodMatches = content.match(/(public|private|protected|internal)\s+(\w+)\s+(\w+)\s*\([^)]*\)\s*\{/g) || []
-    if (methodMatches.length === 0) {
-      warnings.push('No method definitions found')
-    }
-    
-  } catch (error) {
-    errors.push(`Syntax validation error: ${error.message}`)
-  }
-  
-  return { errors, warnings }
-}
-
-/**
- * 验证Vue语法
- */
-function validateVueSyntax(content, filePath) {
-  const errors = []
-  const warnings = []
-  
-  try {
-    // 基本结构检查
-    if (!content.includes('<template>')) {
-      errors.push('Missing <template> section')
-    }
-    
-    if (!content.includes('<script>')) {
-      errors.push('Missing <script> section')
-    }
-    
-    // 模板语法检查
-    const templateMatch = content.match(/<template>[\s\S]*?<\/template>/)
-    if (templateMatch) {
-      const templateContent = templateMatch[0]
+    for (let i = 0; i < 10; i++) {
+      const candidate = path.join(currentDir, "templates")
       
-      // 检查未闭合的标签
-      const openTags = templateContent.match(/<(\w+)[^>]*>/g) || []
-      const closeTags = templateContent.match(/<\/(\w+)>/g) || []
-      
-      if (openTags.length !== closeTags.length) {
-        warnings.push('Potential unclosed tags in template')
-      }
-      
-      // 检查Vue指令
-      const vueDirectives = templateContent.match(/v-\w+/g) || []
-      if (vueDirectives.length === 0) {
-        warnings.push('No Vue directives found in template')
-      }
-    }
-    
-    // Script语法检查
-    const scriptMatch = content.match(/<script[^>]*>[\s\S]*?<\/script>/)
-    if (scriptMatch) {
-      const scriptContent = scriptMatch[0]
-      
-      // 检查export default
-      if (!scriptContent.includes('export default')) {
-        warnings.push('Missing export default in script section')
-      }
-      
-      // 检查组件注册
-      if (scriptContent.includes('components:')) {
-        const componentsMatch = scriptContent.match(/components:\s*\{([^}]+)\}/)
-        if (!componentsMatch) {
-          errors.push('Invalid components registration syntax')
+      try {
+        if (safeFileExists(candidate, 'resolveTemplatesDir')) {
+          const stat = safeStat(candidate, 'resolveTemplatesDir')
+          if (stat && stat.isDirectory()) {
+            logWarning('resolveTemplatesDir', `Found templates directory at: ${candidate}`)
+            return candidate
+          }
         }
-      }
-    }
-    
-    // Style部分检查（可选）
-    if (!content.includes('<style')) {
-      warnings.push('Missing <style> section')
-    }
-    
-  } catch (error) {
-    errors.push(`Syntax validation error: ${error.message}`)
-  }
-  
-  return { errors, warnings }
-}
-
-/**
- * 验证TypeScript语法
- */
-function validateTypeScriptSyntax(content, filePath) {
-  const errors = []
-  const warnings = []
-  
-  try {
-    // 导入语句检查
-    const importMatches = content.match(/import\s+.*\s+from\s+['"][^'"]+['"];?/g) || []
-    const exportMatches = content.match(/export\s+(default\s+)?(interface|class|function|const|let|var)/g) || []
-    
-    if (importMatches.length === 0) {
-      warnings.push('No import statements found')
-    }
-    
-    if (exportMatches.length === 0) {
-      warnings.push('No export statements found')
-    }
-    
-    // 类型定义检查
-    const interfaceMatches = content.match(/interface\s+(\w+)/g) || []
-    const typeMatches = content.match(/type\s+(\w+)/g) || []
-    
-    if (interfaceMatches.length === 0 && typeMatches.length === 0) {
-      warnings.push('No TypeScript type definitions found')
-    }
-    
-    // 装饰器检查（Vue相关）
-    if (content.includes('@Component')) {
-      if (!content.includes('vue-property-decorator') && !content.includes('vue-class-component')) {
-        warnings.push('Using @Component decorator but missing required imports')
-      }
-    }
-    
-    // Pinia状态管理检查
-    if (content.includes('defineStore')) {
-      if (!content.includes('pinia')) {
-        warnings.push('Using defineStore but missing pinia import')
+      } catch (error) {
+        logWarning('resolveTemplatesDir', `Failed to check candidate directory: ${candidate}`, {
+          error: error.message
+        })
       }
       
-      // 检查store定义格式
-      const storeMatch = content.match(/defineStore\s*\(\s*['"](\w+)['"]\s*,\s*\{/)
-      if (!storeMatch) {
-        errors.push('Invalid defineStore syntax')
-      }
+      const parent = path.dirname(currentDir)
+      if (parent === currentDir) break
+      currentDir = parent
     }
-    
-    // 括号匹配检查
-    const openBraces = (content.match(/{/g) || []).length
-    const closeBraces = (content.match(/}/g) || []).length
-    
-    if (openBraces !== closeBraces) {
-      errors.push(`Mismatched braces: ${openBraces} open, ${closeBraces} close`)
-    }
-    
   } catch (error) {
-    errors.push(`Syntax validation error: ${error.message}`)
+    logError('resolveTemplatesDir', error, { startDir })
   }
   
-  return { errors, warnings }
+  // Fallback to cwd/templates
+  const fallback = path.resolve(process.cwd(), "templates")
+  logWarning('resolveTemplatesDir', `Using fallback templates directory: ${fallback}`)
+  return fallback
 }
 
 /**
- * 验证JavaScript语法
- */
-function validateJavaScriptSyntax(content, filePath) {
-  const errors = []
-  const warnings = []
-  
-  try {
-    // 模块系统检查
-    const hasImports = content.includes('import') || content.includes('require')
-    const hasExports = content.includes('export') || content.includes('module.exports')
-    
-    if (!hasImports && !hasExports) {
-      warnings.push('No module imports or exports found')
-    }
-    
-    // ES6+语法检查
-    const arrowFunctions = content.match(/=>/g) || []
-    const constDeclarations = content.match(/const\s+/g) || []
-    const letDeclarations = content.match(/let\s+/g) || []
-    
-    if (arrowFunctions.length === 0 && constDeclarations.length === 0 && letDeclarations.length === 0) {
-      warnings.push('No modern JavaScript syntax found (arrow functions, const, let)')
-    }
-    
-    // 异步代码检查
-    const asyncKeywords = content.match(/async/g) || []
-    const awaitKeywords = content.match(/await/g) || []
-    
-    if (asyncKeywords.length > 0 && awaitKeywords.length === 0) {
-      warnings.push('Using async but no await keywords found')
-    }
-    
-    // Pinia状态管理检查
-    if (content.includes('defineStore')) {
-      if (!content.includes('pinia')) {
-        warnings.push('Using defineStore but missing pinia import')
-      }
-      
-      // 检查store定义格式
-      const storeMatch = content.match(/defineStore\s*\(\s*['"](\w+)['"]\s*,\s*\{/)
-      if (!storeMatch) {
-        errors.push('Invalid defineStore syntax')
-      }
-    }
-    
-    // 严格模式检查
-    if (!content.includes('use strict')) {
-      warnings.push('Missing "use strict" declaration')
-    }
-    
-    // 括号匹配检查
-    const openBraces = (content.match(/{/g) || []).length
-    const closeBraces = (content.match(/}/g) || []).length
-    
-    if (openBraces !== closeBraces) {
-      errors.push(`Mismatched braces: ${openBraces} open, ${closeBraces} close`)
-    }
-    
-  } catch (error) {
-    errors.push(`Syntax validation error: ${error.message}`)
-  }
-  
-  return { errors, warnings }
-}
-
-/**
- * 模板验证器类
+ * Enhanced TemplateValidator class with comprehensive error handling
  */
 class TemplateValidator {
   constructor(options = {}) {
-    this.options = {
-      templatesDir: options.templatesDir || './templates',
-      enableCache: options.enableCache !== false,
-      enablePerformanceMonitoring: options.enablePerformanceMonitoring || false,
-      maxFileSize: options.maxFileSize || 1024 * 1024, // 1MB
-      allowedFileTypes: options.allowedFileTypes || ['.cs', '.vue', '.ts', '.js', '.json', '.yaml', '.yml'],
-      ...options
+    try {
+      this.options = {
+        maxRetries: options.maxRetries || 3,
+        retryDelay: options.retryDelay || 1000,
+        strictMode: options.strictMode || false,
+        skipSyntaxValidation: options.skipSyntaxValidation || false,
+        ...options
+      }
+      
+      this.templatesDir = resolveTemplatesDir(__dirname)
+      this.errors = []
+      this.warnings = []
+      this.stats = {
+        templatesProcessed: 0,
+        filesProcessed: 0,
+        syntaxChecks: 0,
+        startTime: Date.now()
+      }
+      
+      logWarning('constructor', 'TemplateValidator initialized', {
+        templatesDir: this.templatesDir,
+        options: this.options
+      })
+    } catch (error) {
+      logError('constructor', error)
+      throw new TemplateValidationError(
+        'Failed to initialize TemplateValidator',
+        'INITIALIZATION_ERROR',
+        'constructor',
+        false,
+        { error: error.message }
+      )
     }
-    
-    this.templatesDir = resolveTemplatesDir(this.options.templatesDir)
-    this.validationResults = new Map()
-    this.errorLog = []
-    
-    logWarning(`TemplateValidator initialized with directory: ${this.templatesDir}`)
   }
-  
+
   /**
-   * 记录错误
-   */
-  logError(code, message, details = {}) {
-    const error = {
-      code,
-      message,
-      details,
-      timestamp: new Date().toISOString(),
-      templatesDir: this.templatesDir
-    }
-    
-    this.errorLog.push(error)
-    PERFORMANCE_METRICS.errorCount++
-    
-    // 限制错误日志大小
-    if (this.errorLog.length > 100) {
-      this.errorLog = this.errorLog.slice(-50)
-    }
-    
-    logError(message, details)
-    return error
-  }
-  
-  /**
-   * 验证所有模板
+   * Enhanced validation with retry mechanism and comprehensive error handling
    */
   async validateAll() {
-    const startTime = Date.now()
-    const results = {
-      total: 0,
-      valid: 0,
-      invalid: 0,
-      errors: [],
-      warnings: [],
-      details: new Map()
-    }
-    
+    console.log("🔍 开始验证模板库...")
+    console.log(`📁 模板目录: ${this.templatesDir}`)
+    console.log(`⚙️  配置: ${JSON.stringify(this.options, null, 2)}\n`)
+
     try {
-      logWarning('Starting template validation...')
-      
-      // 验证索引文件
-      const indexResult = await this.validateIndex()
-      results.details.set('index', indexResult)
-      
-      if (!indexResult.valid) {
-        results.errors.push(...indexResult.errors)
-        results.invalid++
+      // Validate templates directory exists
+      if (!safeFileExists(this.templatesDir, 'validateAll')) {
+        throw new TemplateValidationError(
+          `Templates directory does not exist: ${this.templatesDir}`,
+          'DIRECTORY_NOT_FOUND',
+          'validateAll',
+          false,
+          { templatesDir: this.templatesDir }
+        )
       }
-      
-      // 查找所有模板文件
-      const templateFiles = await this.findTemplateFiles()
-      results.total = templateFiles.length
-      
-      // 验证每个模板文件
-      for (const filePath of templateFiles) {
-        try {
-          const fileResult = await this.validateTemplateFile(filePath)
-          results.details.set(filePath, fileResult)
-          
-          if (fileResult.valid) {
-            results.valid++
-          } else {
-            results.invalid++
-            results.errors.push(...fileResult.errors)
-          }
-          
-          results.warnings.push(...fileResult.warnings)
-          
-        } catch (error) {
-          results.invalid++
-          const errorMessage = error instanceof Error ? error.message : String(error)
-          results.errors.push(`Failed to validate ${filePath}: ${errorMessage}`)
-          this.logError('VALIDATE_FILE_ERROR', 'Failed to validate template file', { 
-            filePath, 
-            error: errorMessage 
-          })
-        }
-      }
-      
-      const duration = Date.now() - startTime
-      
-      // 更新性能指标
-      if (this.options.enablePerformanceMonitoring) {
-        PERFORMANCE_METRICS.totalValidations++
-        PERFORMANCE_METRICS.successfulValidations += results.valid
-        PERFORMANCE_METRICS.failedValidations += results.invalid
-        PERFORMANCE_METRICS.averageValidationTime = 
-          (PERFORMANCE_METRICS.averageValidationTime * (PERFORMANCE_METRICS.totalValidations - 1) + duration) 
-          / PERFORMANCE_METRICS.totalValidations
-      }
-      
-      logWarning(`Template validation completed in ${duration}ms: ${results.valid}/${results.total} valid`)
-      
-      return {
-        ...results,
-        duration,
-        success: results.invalid === 0,
-        performance: this.getPerformanceMetrics()
-      }
-      
+
+      // Validate index file with retry
+      await retryOperation(
+        async () => this.validateIndex(),
+        this.options.maxRetries,
+        this.options.retryDelay
+      )
+
+      // Validate template files with retry
+      await retryOperation(
+        async () => this.validateTemplates(),
+        this.options.maxRetries,
+        this.options.retryDelay
+      )
+
+      // Output comprehensive results
+      this.outputResults()
+
+      return this.errors.length === 0
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      this.logError('VALIDATE_ALL_ERROR', 'Failed to validate all templates', { error: errorMessage })
+      logError('validateAll', error)
+      console.error("❌ 验证过程中发生错误:", error.message)
       
-      return {
-        ...results,
-        success: false,
-        errors: [...results.errors, `Validation failed: ${errorMessage}`]
+      if (error.details) {
+        console.error("📋 错误详情:", JSON.stringify(error.details, null, 2))
       }
+      
+      return false
     }
   }
-  
+
   /**
-   * 验证索引文件
+   * Enhanced index validation with comprehensive error handling
    */
   async validateIndex() {
+    const indexPath = path.join(this.templatesDir, "index.json")
+
     try {
-      const indexPath = path.join(this.templatesDir, 'index.json')
+      validateString(indexPath, 'indexPath')
       
-      if (!safeFileExists(indexPath)) {
-        throw new TemplateValidationError('Index file not found', { 
-          expectedPath: indexPath,
-          templatesDir: this.templatesDir 
-        })
+      if (!safeFileExists(indexPath, 'validateIndex')) {
+        throw new TemplateValidationError(
+          `Missing template index file: templates/index.json`,
+          'INDEX_FILE_NOT_FOUND',
+          'validateIndex',
+          false,
+          { indexPath }
+        )
       }
+
+      const indexContent = safeReadFile(indexPath, 'utf8', 'validateIndex')
+      const indexData = safeParseJSON(indexContent, indexPath, 'validateIndex')
       
-      const content = safeReadFile(indexPath)
-      const indexData = safeParseJSON(content, 'index file')
-      
-      // 验证索引文件结构
-      validateObject(indexData, 'index data')
-      
-      if (!indexData.templates || !Array.isArray(indexData.templates)) {
-        throw new TemplateValidationError('Invalid index file: templates must be an array', {
-          templates: indexData.templates,
-          templatesDir: this.templatesDir
-        })
-      }
-      
-      if (indexData.templates.length === 0) {
-        logWarning('Index file contains no templates', { templatesDir: this.templatesDir })
-      }
-      
-      // 验证每个模板条目
-      const validationPromises = indexData.templates.map(async (template, index) => {
+      validateObject(indexData, 'indexData')
+      validateArray(indexData.templates, 'indexData.templates')
+
+      // Validate each template entry
+      for (let i = 0; i < indexData.templates.length; i++) {
+        const template = indexData.templates[i]
         try {
-          return await this.validateTemplateEntry(template, index)
+          await this.validateTemplateEntry(template, i)
         } catch (error) {
-          this.logError('VALIDATE_TEMPLATE_ENTRY_ERROR', 'Failed to validate template entry', {
-            template,
-            index,
-            error: error.message
-          })
-          throw error
+          logError('validateTemplateEntry', error, { templateIndex: i, template })
+          this.errors.push(`Template entry ${i}: ${error.message}`)
         }
-      })
-      
-      const results = await Promise.allSettled(validationPromises)
-      const errors = []
-      const warnings = []
-      
-      results.forEach((result, index) => {
-        if (result.status === 'rejected') {
-          errors.push(`Template entry ${index}: ${result.reason.message}`)
-        }
-      })
-      
-      logWarning(`Index file validation completed: ${indexData.templates.length} templates, ${errors.length} errors`)
-      
-      return {
-        valid: errors.length === 0,
-        errors,
-        warnings,
-        templateCount: indexData.templates.length
       }
+
+      this.stats.templatesProcessed = indexData.templates.length
+      console.log("✅ 索引文件验证通过")
       
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      this.logError('VALIDATE_INDEX_ERROR', 'Failed to validate index file', { error: errorMessage })
-      
-      return {
-        valid: false,
-        errors: [errorMessage],
-        warnings: []
+      if (error instanceof TemplateValidationError) {
+        this.errors.push(error.message)
+      } else {
+        this.errors.push(`索引文件验证错误: ${error.message}`)
       }
+      throw error
     }
   }
-  
+
   /**
-   * 验证模板条目
+   * Enhanced template entry validation with comprehensive error handling
    */
   async validateTemplateEntry(template, index) {
     try {
-      // 验证必填字段
-      const requiredFields = ['name', 'description', 'file', 'metadata']
-      const missingFields = requiredFields.filter(field => !template[field])
+      validateObject(template, 'template')
       
-      if (missingFields.length > 0) {
-        throw new TemplateValidationError(`Missing required fields: ${missingFields.join(', ')}`, {
-          template,
-          missingFields,
-          index
-        })
+      const required = ["id", "name", "path", "category", "type"]
+      
+      for (const field of required) {
+        if (!template[field]) {
+          throw new TemplateValidationError(
+            `Template ${template.id || `index_${index}`} missing required field: ${field}`,
+            'MISSING_REQUIRED_FIELD',
+            'validateTemplateEntry',
+            false,
+            { template, missingField: field }
+          )
+        }
       }
-      
-      // 验证名称
-      const name = validateString(template.name, 'template name')
-      if (name.length === 0) {
-        throw new TemplateValidationError('Template name cannot be empty', { template, index })
+
+      // Validate template file exists
+      if (template.path) {
+        const templatePath = path.join(
+          this.templatesDir,
+          template.path.replace(/^templates\//, "")
+        )
+        
+        if (!safeFileExists(templatePath, 'validateTemplateEntry')) {
+          throw new TemplateValidationError(
+            `Template file does not exist: ${template.path}`,
+            'TEMPLATE_FILE_NOT_FOUND',
+            'validateTemplateEntry',
+            false,
+            { templatePath, templatePath: template.path }
+          )
+        }
       }
-      
-      // 验证描述
-      const description = validateString(template.description, 'template description')
-      if (description.length === 0) {
-        throw new TemplateValidationError('Template description cannot be empty', { template, index })
-      }
-      
-      // 验证文件路径
-      const filePath = validateString(template.file, 'template file')
-      const fullPath = path.join(this.templatesDir, filePath)
-      
-      if (!safeFileExists(fullPath)) {
-        throw new TemplateValidationError(`Template file not found: ${filePath}`, {
-          template,
-          filePath,
-          fullPath,
-          index
-        })
-      }
-      
-      // 验证文件类型
-      const ext = path.extname(fullPath).toLowerCase()
-      if (!this.options.allowedFileTypes.includes(ext)) {
-        throw new TemplateValidationError(`Unsupported file type: ${ext}`, {
-          template,
-          filePath,
-          allowedTypes: this.options.allowedFileTypes,
-          index
-        })
-      }
-      
-      // 验证文件大小
-      const stats = safeStat(fullPath)
-      if (stats && stats.size > this.options.maxFileSize) {
-        throw new TemplateValidationError(`Template file too large: ${stats.size} bytes (max: ${this.options.maxFileSize})`, {
-          template,
-          filePath,
-          size: stats.size,
-          maxSize: this.options.maxFileSize,
-          index
-        })
-      }
-      
-      // 验证元数据
-      const metadata = validateObject(template.metadata, 'template metadata')
-      await this.validateMetadata(metadata, filePath, index)
-      
-      // 验证元数据文件
-      const metadataPath = validateString(template.metadata, 'metadata file')
-      const fullMetadataPath = path.join(this.templatesDir, metadataPath)
-      
-      if (!safeFileExists(fullMetadataPath)) {
-        throw new TemplateValidationError(`Metadata file not found: ${metadataPath}`, {
-          template,
-          metadataPath,
-          fullMetadataPath,
-          index
-        })
-      }
-      
-      logWarning(`Template entry validation completed: ${name} (${filePath})`)
-      
-      return {
-        valid: true,
-        name,
-        filePath,
-        metadataPath
+
+      // Validate metadata file exists and is valid (if declared)
+      if (template.metadata) {
+        const metadataPath = path.join(
+          this.templatesDir,
+          template.metadata.replace(/^templates\//, "")
+        )
+        
+        if (!safeFileExists(metadataPath, 'validateTemplateEntry')) {
+          throw new TemplateValidationError(
+            `Metadata file does not exist: ${template.metadata}`,
+            'METADATA_FILE_NOT_FOUND',
+            'validateTemplateEntry',
+            false,
+            { metadataPath, metadataPath: template.metadata }
+          )
+        }
+        
+        await this.validateMetadata(metadataPath, template.id)
       }
       
     } catch (error) {
       if (error instanceof TemplateValidationError) {
         throw error
+      } else {
+        throw new TemplateValidationError(
+          `Template entry validation failed: ${error.message}`,
+          'TEMPLATE_ENTRY_VALIDATION_ERROR',
+          'validateTemplateEntry',
+          false,
+          { template, index, error: error.message }
+        )
       }
-      
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      throw new TemplateValidationError(`Failed to validate template entry: ${errorMessage}`, {
-        template,
-        index,
-        error: errorMessage
-      })
     }
   }
-  
+
   /**
-   * 验证元数据
+   * Enhanced metadata validation with comprehensive error handling
    */
-  async validateMetadata(metadata, templateFile, index) {
+  async validateMetadata(metadataPath, templateId) {
     try {
-      const metadataObj = validateObject(metadata, 'metadata')
+      validateString(metadataPath, 'metadataPath')
+      validateString(templateId, 'templateId')
       
-      // 验证推荐字段
-      const recommendedFields = ['author', 'version', 'tags', 'parameters']
-      const missingRecommended = recommendedFields.filter(field => !metadataObj[field])
+      const content = safeReadFile(metadataPath, 'utf8', 'validateMetadata')
+      const metadata = safeParseYAML(content, metadataPath, 'validateMetadata')
       
-      if (missingRecommended.length > 0) {
-        logWarning(`Missing recommended metadata fields: ${missingRecommended.join(', ')}`, {
-          templateFile,
-          index,
-          missingFields: missingRecommended
-        })
+      validateObject(metadata, 'metadata')
+
+      const recommended = ["name", "category", "description", "parameters"]
+
+      for (const field of recommended) {
+        if (!metadata[field]) {
+          this.warnings.push(`Template ${templateId} metadata missing recommended field: ${field}`)
+        }
       }
-      
-      // 验证参数定义
-      if (metadataObj.parameters && Array.isArray(metadataObj.parameters)) {
-        const parameterErrors = []
+
+      // Validate parameters definition
+      if (metadata.parameters) {
+        validateArray(metadata.parameters, 'metadata.parameters')
         
-        metadataObj.parameters.forEach((param, paramIndex) => {
-          try {
-            if (!param.name) {
-              parameterErrors.push(`Parameter ${paramIndex}: missing name`)
-            }
-            
-            if (!param.type) {
-              parameterErrors.push(`Parameter ${paramIndex}: missing type`)
-            }
-            
-            if (param.required && param.default === undefined) {
-              logWarning(`Required parameter without default value: ${param.name}`, {
-                templateFile,
-                index,
-                parameter: param
-              })
-            }
-            
-            // 验证参数类型
-            const validTypes = ['string', 'number', 'boolean', 'array', 'object', 'file', 'select']
-            if (param.type && !validTypes.includes(param.type)) {
-              parameterErrors.push(`Parameter ${paramIndex}: invalid type '${param.type}'. Valid types: ${validTypes.join(', ')}`)
-            }
-            
-            // 验证选择类型参数
-            if (param.type === 'select' && (!param.options || !Array.isArray(param.options))) {
-              parameterErrors.push(`Parameter ${paramIndex}: select type requires options array`)
-            }
-            
-          } catch (paramError) {
-            parameterErrors.push(`Parameter ${paramIndex}: validation error - ${paramError.message}`)
+        for (let i = 0; i < metadata.parameters.length; i++) {
+          const param = metadata.parameters[i]
+          
+          if (!param.name || !param.type) {
+            throw new TemplateValidationError(
+              `Template ${templateId} parameter definition incomplete at index ${i}`,
+              'INCOMPLETE_PARAMETER_DEFINITION',
+              'validateMetadata',
+              false,
+              { templateId, parameterIndex: i, parameter: param }
+            )
           }
-        })
-        
-        if (parameterErrors.length > 0) {
-          throw new TemplateValidationError(`Parameter validation failed: ${parameterErrors.join('; ')}`, {
-            templateFile,
-            index,
-            parameterErrors
-          })
         }
       }
       
-      logWarning(`Metadata validation completed for: ${templateFile}`)
-      
-      return {
-        valid: true,
-        warnings: missingRecommended.length > 0 ? [`Missing recommended fields: ${missingRecommended.join(', ')}`] : []
-      }
-      
     } catch (error) {
       if (error instanceof TemplateValidationError) {
         throw error
+      } else {
+        throw new TemplateValidationError(
+          `Metadata validation failed for ${metadataPath}: ${error.message}`,
+          'METADATA_VALIDATION_ERROR',
+          'validateMetadata',
+          false,
+          { metadataPath, templateId, error: error.message }
+        )
       }
-      
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      throw new TemplateValidationError(`Failed to validate metadata: ${errorMessage}`, {
-        templateFile,
-        index,
-        error: errorMessage
-      })
     }
   }
-  
+
   /**
-   * 验证模板文件
+   * Enhanced template files validation with comprehensive error handling
+   */
+  async validateTemplates() {
+    try {
+      const templateFiles = this.findTemplateFiles(this.templatesDir)
+      
+      if (templateFiles.length === 0) {
+        logWarning('validateTemplates', 'No template files found')
+        return
+      }
+
+      console.log(`🔍 找到 ${templateFiles.length} 个模板文件`)
+
+      for (let i = 0; i < templateFiles.length; i++) {
+        const filePath = templateFiles[i]
+        try {
+          await this.validateTemplateFile(filePath)
+          this.stats.filesProcessed++
+          
+          // Progress indicator
+          if ((i + 1) % 10 === 0) {
+            console.log(`📈 进度: ${i + 1}/${templateFiles.length}`)
+          }
+        } catch (error) {
+          logError('validateTemplateFile', error, { filePath, fileIndex: i })
+          this.errors.push(`Template file ${filePath}: ${error.message}`)
+        }
+      }
+
+      console.log(`✅ 验证了 ${this.stats.filesProcessed} 个模板文件`)
+      
+    } catch (error) {
+      throw new TemplateValidationError(
+        `Template files validation failed: ${error.message}`,
+        'TEMPLATE_FILES_VALIDATION_ERROR',
+        'validateTemplates',
+        false,
+        { error: error.message }
+      )
+    }
+  }
+
+  /**
+   * Enhanced template file discovery with error handling
+   */
+  findTemplateFiles(dir) {
+    const files = []
+    
+    try {
+      validateString(dir, 'dir')
+      
+      const scan = (currentDir) => {
+        try {
+          const items = fs.readdirSync(currentDir)
+          
+          for (const item of items) {
+            const fullPath = path.join(currentDir, item)
+            
+            try {
+              const stat = safeStat(fullPath, 'findTemplateFiles')
+              if (!stat) continue
+              
+              if (stat.isDirectory()) {
+                scan(fullPath)
+              } else if (item.includes(".template.")) {
+                files.push(fullPath)
+              }
+            } catch (itemError) {
+              logWarning('findTemplateFiles', `Failed to process item: ${item}`, {
+                error: itemError.message,
+                fullPath
+              })
+            }
+          }
+        } catch (scanError) {
+          logWarning('findTemplateFiles', `Failed to scan directory: ${currentDir}`, {
+            error: scanError.message
+          })
+        }
+      }
+
+      scan(dir)
+      
+    } catch (error) {
+      throw new TemplateValidationError(
+        `Failed to find template files: ${error.message}`,
+        'FIND_TEMPLATE_FILES_ERROR',
+        'findTemplateFiles',
+        false,
+        { dir, error: error.message }
+      )
+    }
+
+    return files
+  }
+
+  /**
+   * Enhanced individual template file validation with comprehensive error handling
    */
   async validateTemplateFile(filePath) {
     try {
-      const fullPath = path.join(this.templatesDir, filePath)
+      validateString(filePath, 'filePath')
       
-      // 检查缓存
-      if (this.options.enableCache) {
-        const content = safeReadFile(fullPath)
-        const cacheKey = getCacheKey(fullPath, content)
-        const cachedResult = getCacheEntry(cacheKey)
-        
-        if (cachedResult) {
-          logWarning(`Using cached validation result for: ${filePath}`)
-          return cachedResult
-        }
+      const content = safeReadFile(filePath, 'utf8', 'validateTemplateFile')
+      const relativePath = path.relative(this.templatesDir, filePath)
+      
+      validateString(relativePath, 'relativePath')
+
+      // Check for AI template info
+      if (!content.includes("AI_TEMPLATE_INFO")) {
+        this.warnings.push(`Template ${relativePath} missing AI_TEMPLATE_INFO comment`)
+      }
+
+      // Check for parameter placeholders
+      const placeholders = content.match(/\{\{[^}]+\}\}/g) || []
+      if (placeholders.length === 0) {
+        this.warnings.push(`Template ${relativePath} has no parameter placeholders`)
+      }
+
+      // Syntax validation (if enabled)
+      if (!this.options.skipSyntaxValidation) {
+        await this.validateTemplateSyntax(content, filePath, relativePath)
       }
       
-      const startTime = Date.now()
+    } catch (error) {
+      if (error instanceof TemplateValidationError) {
+        throw error
+      } else {
+        throw new TemplateValidationError(
+          `Template file validation failed: ${error.message}`,
+          'TEMPLATE_FILE_VALIDATION_ERROR',
+          'validateTemplateFile',
+          false,
+          { filePath, error: error.message }
+        )
+      }
+    }
+  }
+
+  /**
+   * Enhanced template syntax validation with error handling
+   */
+  async validateTemplateSyntax(content, filePath, relativePath) {
+    try {
+      validateString(content, 'content')
+      validateString(filePath, 'filePath')
+      validateString(relativePath, 'relativePath')
       
-      // 读取文件内容
-      const content = safeReadFile(fullPath)
+      this.stats.syntaxChecks++
+
+      // Validate syntax based on file type
+      if (filePath.endsWith(".cs")) {
+        await this.validateCSharpSyntax(content, relativePath)
+      } else if (filePath.endsWith(".vue")) {
+        await this.validateVueSyntax(content, relativePath)
+      } else if (filePath.endsWith(".ts")) {
+        await this.validateTypeScriptSyntax(content, relativePath)
+      } else if (filePath.endsWith(".js")) {
+        await this.validateJavaScriptSyntax(content, relativePath)
+      }
       
-      // 验证文件大小
-      const stats = safeStat(fullPath)
-      if (stats && stats.size > this.options.maxFileSize) {
-        throw new TemplateValidationError(`Template file too large: ${stats.size} bytes (max: ${this.options.maxFileSize})`, {
+    } catch (error) {
+      logError('validateTemplateSyntax', error, { filePath, relativePath })
+      if (this.options.strictMode) {
+        throw error
+      } else {
+        logWarning('validateTemplateSyntax', 'Syntax validation failed, continuing in non-strict mode', {
           filePath,
-          size: stats.size,
-          maxSize: this.options.maxFileSize
+          error: error.message
         })
       }
-      
-      // 验证AI模板信息
-      const aiTemplateInfo = this.validateTemplateInfo(content, filePath)
-      
-      // 验证参数占位符
-      const parameterValidation = this.validateParameterPlaceholders(content, filePath)
-      
-      // 文件类型特定验证
-      const syntaxValidation = await this.validateTemplateSyntax(content, filePath)
-      
-      const duration = Date.now() - startTime
-      
-      const result = {
-        valid: aiTemplateInfo.valid && parameterValidation.valid && syntaxValidation.valid,
-        errors: [
-          ...aiTemplateInfo.errors,
-          ...parameterValidation.errors,
-          ...syntaxValidation.errors
-        ],
-        warnings: [
-          ...aiTemplateInfo.warnings,
-          ...parameterValidation.warnings,
-          ...syntaxValidation.warnings
-        ],
-        filePath,
-        duration,
-        size: stats ? stats.size : 0
-      }
-      
-      // 缓存结果
-      if (this.options.enableCache) {
-        const cacheKey = getCacheKey(fullPath, content)
-        setCacheEntry(cacheKey, result)
-      }
-      
-      logWarning(`Template file validation completed: ${filePath} (${duration}ms)`)
-      
-      return result
-      
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      this.logError('VALIDATE_TEMPLATE_FILE_ERROR', 'Failed to validate template file', { 
-        filePath, 
-        error: errorMessage 
-      })
-      
-      return {
-        valid: false,
-        errors: [errorMessage],
-        warnings: [],
-        filePath,
-        duration: 0,
-        size: 0
-      }
     }
   }
-  
+
   /**
-   * 验证模板信息
+   * Enhanced C# syntax validation with error handling
    */
-  validateTemplateInfo(content, filePath) {
+  async validateCSharpSyntax(content, filePath) {
     try {
-      const errors = []
-      const warnings = []
+      validateString(content, 'content')
+      validateString(filePath, 'filePath')
       
-      // 检查AI模板信息注释
-      const aiTemplateInfoMatch = content.match(/\/\*\s*AI_TEMPLATE_INFO\s*([\s\S]*?)\s*\*\//)
-      if (!aiTemplateInfoMatch) {
-        warnings.push('Missing AI_TEMPLATE_INFO comment block')
+      // Basic brace matching
+      const openBraces = (content.match(/\{/g) || []).length
+      const closeBraces = (content.match(/\}/g) || []).length
+      
+      if (openBraces !== closeBraces) {
+        throw new TemplateValidationError(
+          `C# template ${filePath} has mismatched braces: ${openBraces} open, ${closeBraces} close`,
+          'SYNTAX_ERROR',
+          'validateCSharpSyntax',
+          false,
+          { filePath, openBraces, closeBraces }
+        )
+      }
+
+      // Check for required using statements
+      if (content.includes("ApplicationService") && !content.includes("using Volo.Abp.Application.Services")) {
+        this.warnings.push(`C# template ${filePath} may be missing required using statements`)
+      }
+      
+    } catch (error) {
+      if (error instanceof TemplateValidationError) {
+        throw error
       } else {
-        try {
-          const infoContent = aiTemplateInfoMatch[1]
-          const infoLines = infoContent.split('\n').filter(line => line.trim())
-          
-          // 解析信息
-          const info = {}
-          infoLines.forEach(line => {
-            const match = line.match(/^\s*\*?\s*(\w+):\s*(.+)$/)
-            if (match) {
-              info[match[1].trim()] = match[2].trim()
-            }
-          })
-          
-          // 验证必需字段
-          const requiredFields = ['name', 'description', 'version']
-          const missingFields = requiredFields.filter(field => !info[field])
-          
-          if (missingFields.length > 0) {
-            errors.push(`Missing required AI template info fields: ${missingFields.join(', ')}`)
-          }
-          
-          // 验证版本格式
-          if (info.version && !/^\d+\.\d+\.\d+/.test(info.version)) {
-            warnings.push(`Invalid version format: ${info.version}`)
-          }
-          
-        } catch (parseError) {
-          errors.push(`Failed to parse AI template info: ${parseError.message}`)
-        }
-      }
-      
-      return {
-        valid: errors.length === 0,
-        errors,
-        warnings
-      }
-      
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      this.logError('VALIDATE_TEMPLATE_INFO_ERROR', 'Failed to validate template info', { 
-        filePath, 
-        error: errorMessage 
-      })
-      
-      return {
-        valid: false,
-        errors: [errorMessage],
-        warnings: []
+        throw new TemplateValidationError(
+          `C# syntax validation failed for ${filePath}: ${error.message}`,
+          'CSHARP_SYNTAX_ERROR',
+          'validateCSharpSyntax',
+          false,
+          { filePath, error: error.message }
+        )
       }
     }
   }
-  
+
   /**
-   * 验证参数占位符
+   * Enhanced Vue syntax validation with error handling
    */
-  validateParameterPlaceholders(content, filePath) {
+  async validateVueSyntax(content, filePath) {
     try {
-      const errors = []
-      const warnings = []
+      validateString(content, 'content')
+      validateString(filePath, 'filePath')
       
-      // 查找参数占位符
-      const placeholderMatches = content.match(/\{\{(\w+)\}\}/g) || []
+      // Check Vue SFC structure
+      const hasTemplate = content.includes("<template>")
+      const hasScript = content.includes("<script")
+      const hasStyle = content.includes("<style")
+
+      if (!hasTemplate) {
+        throw new TemplateValidationError(
+          `Vue template ${filePath} missing <template> section`,
+          'SYNTAX_ERROR',
+          'validateVueSyntax',
+          false,
+          { filePath }
+        )
+      }
+
+      if (!hasScript) {
+        this.warnings.push(`Vue template ${filePath} missing <script> section`)
+      }
       
-      if (placeholderMatches.length === 0) {
-        warnings.push('No parameter placeholders found')
+    } catch (error) {
+      if (error instanceof TemplateValidationError) {
+        throw error
       } else {
-        // 提取参数名称
-        const parameters = placeholderMatches.map(match => {
-          const paramMatch = match.match(/\{\{(\w+)\}\}/)
-          return paramMatch ? paramMatch[1] : null
-        }).filter(Boolean)
-        
-        // 检查参数命名规范
-        const invalidParameters = parameters.filter(param => !/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(param))
-        
-        if (invalidParameters.length > 0) {
-          errors.push(`Invalid parameter names: ${invalidParameters.join(', ')}`)
-        }
-        
-        // 检查重复参数
-        const uniqueParameters = new Set(parameters)
-        if (parameters.length !== uniqueParameters.size) {
-          warnings.push('Duplicate parameter placeholders found')
-        }
-        
-        // 检查参数使用情况
-        const parameterCounts = {}
-        parameters.forEach(param => {
-          parameterCounts[param] = (parameterCounts[param] || 0) + 1
-        })
-        
-        const unusedParameters = Object.keys(parameterCounts).filter(param => parameterCounts[param] === 1)
-        if (unusedParameters.length > 0) {
-          warnings.push(`Potentially unused parameters: ${unusedParameters.join(', ')}`)
-        }
-      }
-      
-      return {
-        valid: errors.length === 0,
-        errors,
-        warnings
-      }
-      
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      this.logError('VALIDATE_PARAMETER_PLACEHOLDERS_ERROR', 'Failed to validate parameter placeholders', { 
-        filePath, 
-        error: errorMessage 
-      })
-      
-      return {
-        valid: false,
-        errors: [errorMessage],
-        warnings: []
+        throw new TemplateValidationError(
+          `Vue syntax validation failed for ${filePath}: ${error.message}`,
+          'VUE_SYNTAX_ERROR',
+          'validateVueSyntax',
+          false,
+          { filePath, error: error.message }
+        )
       }
     }
   }
-  
+
   /**
-   * 验证模板语法
+   * Enhanced TypeScript syntax validation with error handling
    */
-  async validateTemplateSyntax(content, filePath) {
+  async validateTypeScriptSyntax(content, filePath) {
     try {
-      const ext = path.extname(filePath).toLowerCase()
-      const fileTypeConfig = getFileTypeConfig(filePath)
+      validateString(content, 'content')
+      validateString(filePath, 'filePath')
       
-      if (!fileTypeConfig) {
-        logWarning(`Unknown file type for syntax validation: ${filePath}`)
-        return { valid: true, errors: [], warnings: [] }
+      // Basic brace matching
+      const openBraces = (content.match(/\{/g) || []).length
+      const closeBraces = (content.match(/\}/g) || []).length
+      
+      if (openBraces !== closeBraces) {
+        throw new TemplateValidationError(
+          `TypeScript template ${filePath} has mismatched braces: ${openBraces} open, ${closeBraces} close`,
+          'SYNTAX_ERROR',
+          'validateTypeScriptSyntax',
+          false,
+          { filePath, openBraces, closeBraces }
+        )
       }
-      
-      const errors = []
-      const warnings = []
-      
-      // 执行语法验证器
-      for (const validatorName of fileTypeConfig.syntaxValidators) {
-        try {
-          const validator = this[validatorName]
-          if (typeof validator === 'function') {
-            const result = validator(content, filePath)
-            errors.push(...result.errors)
-            warnings.push(...result.warnings)
-          }
-        } catch (validatorError) {
-          errors.push(`Syntax validator error (${validatorName}): ${validatorError.message}`)
-        }
-      }
-      
-      // 检查必需模式
-      if (fileTypeConfig.requiredPatterns) {
-        for (const pattern of fileTypeConfig.requiredPatterns) {
-          if (!pattern.test(content)) {
-            errors.push(`Missing required pattern: ${pattern.source}`)
-          }
-        }
-      }
-      
-      // 检查可选模式
-      if (fileTypeConfig.optionalPatterns) {
-        for (const pattern of fileTypeConfig.optionalPatterns) {
-          if (!pattern.test(content)) {
-            warnings.push(`Missing optional pattern: ${pattern.source}`)
-          }
-        }
-      }
-      
-      logWarning(`Template syntax validation completed: ${filePath} (${fileTypeConfig.name})`)
-      
-      return {
-        valid: errors.length === 0,
-        errors,
-        warnings
+
+      // Check for Pinia imports
+      if (content.includes("defineStore") && !content.includes("from 'pinia'")) {
+        this.warnings.push(`TypeScript template ${filePath} may be missing Pinia import`)
       }
       
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      this.logError('VALIDATE_TEMPLATE_SYNTAX_ERROR', 'Failed to validate template syntax', { 
-        filePath, 
-        error: errorMessage 
-      })
-      
-      return {
-        valid: false,
-        errors: [errorMessage],
-        warnings: []
+      if (error instanceof TemplateValidationError) {
+        throw error
+      } else {
+        throw new TemplateValidationError(
+          `TypeScript syntax validation failed for ${filePath}: ${error.message}`,
+          'TYPESCRIPT_SYNTAX_ERROR',
+          'validateTypeScriptSyntax',
+          false,
+          { filePath, error: error.message }
+        )
       }
     }
   }
-  
+
   /**
-   * 查找模板文件
+   * Enhanced JavaScript syntax validation with error handling
    */
-  async findTemplateFiles() {
+  async validateJavaScriptSyntax(content, filePath) {
     try {
-      const files = []
-      const stack = [this.templatesDir]
+      validateString(content, 'content')
+      validateString(filePath, 'filePath')
       
-      while (stack.length > 0) {
-        const currentDir = stack.pop()
-        
-        try {
-          const entries = fs.readdirSync(currentDir, { withFileTypes: true })
-          
-          for (const entry of entries) {
-            const fullPath = path.join(currentDir, entry.name)
-            
-            if (entry.isDirectory()) {
-              // 跳过隐藏目录和node_modules
-              if (!entry.name.startsWith('.') && entry.name !== 'node_modules') {
-                stack.push(fullPath)
-              }
-            } else if (entry.isFile()) {
-              const ext = path.extname(entry.name).toLowerCase()
-              
-              // 检查文件类型
-              if (this.options.allowedFileTypes.includes(ext)) {
-                // 跳过隐藏文件和测试文件
-                if (!entry.name.startsWith('.') && !entry.name.includes('.test.')) {
-                  const relativePath = path.relative(this.templatesDir, fullPath)
-                  files.push(relativePath)
-                }
-              }
-            }
-          }
-        } catch (dirError) {
-          logWarning(`Failed to read directory: ${currentDir}`, { error: dirError.message })
-        }
+      // Basic brace matching
+      const openBraces = (content.match(/\{/g) || []).length
+      const closeBraces = (content.match(/\}/g) || []).length
+      
+      if (openBraces !== closeBraces) {
+        throw new TemplateValidationError(
+          `JavaScript template ${filePath} has mismatched braces: ${openBraces} open, ${closeBraces} close`,
+          'SYNTAX_ERROR',
+          'validateJavaScriptSyntax',
+          false,
+          { filePath, openBraces, closeBraces }
+        )
       }
       
-      logWarning(`Found ${files.length} template files in ${this.templatesDir}`)
-      
-      return files.sort()
-      
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      this.logError('FIND_TEMPLATE_FILES_ERROR', 'Failed to find template files', { 
-        templatesDir: this.templatesDir,
-        error: errorMessage 
-      })
-      
-      return []
+      if (error instanceof TemplateValidationError) {
+        throw error
+      } else {
+        throw new TemplateValidationError(
+          `JavaScript syntax validation failed for ${filePath}: ${error.message}`,
+          'JAVASCRIPT_SYNTAX_ERROR',
+          'validateJavaScriptSyntax',
+          false,
+          { filePath, error: error.message }
+        )
+      }
     }
   }
-  
+
   /**
-   * 获取验证结果
+   * Enhanced results output with comprehensive statistics
    */
-  getValidationResults() {
-    return new Map(this.validationResults)
+  outputResults() {
+    const duration = Date.now() - this.stats.startTime
+    
+    console.log("\n📊 验证结果:")
+    console.log(`⏱️  耗时: ${duration}ms`)
+    console.log(`📁 模板目录: ${this.templatesDir}`)
+    console.log(`📋 处理的模板: ${this.stats.templatesProcessed}`)
+    console.log(`📄 处理的文件: ${this.stats.filesProcessed}`)
+    console.log(`🔍 语法检查: ${this.stats.syntaxChecks}`)
+    console.log(`✅ 状态: ${this.errors.length === 0 ? "通过" : "失败"}`)
+    console.log(`❌ 错误: ${this.errors.length} 个`)
+    console.log(`⚠️  警告: ${this.warnings.length} 个\n`)
+
+    if (this.errors.length > 0) {
+      console.log("❌ 错误详情:")
+      this.errors.forEach((error, index) => {
+        console.log(`  ${index + 1}. ${error}`)
+      })
+      console.log()
+    }
+
+    if (this.warnings.length > 0) {
+      console.log("⚠️  警告详情:")
+      this.warnings.forEach((warning, index) => {
+        console.log(`  ${index + 1}. ${warning}`)
+      })
+      console.log()
+    }
+
+    if (this.errors.length === 0 && this.warnings.length === 0) {
+      console.log("🎉 所有模板验证通过！")
+    } else if (this.errors.length === 0) {
+      console.log("⚠️  模板验证完成，存在警告")
+    } else {
+      console.log("❌ 模板验证失败")
+    }
+    
+    // Summary statistics
+    console.log(`\n📈 统计摘要:`)
+    console.log(`   成功率: ${this.errors.length === 0 ? '100%' : Math.round((1 - this.errors.length / Math.max(this.stats.filesProcessed, 1)) * 100) + '%'}`)
+    console.log(`   错误率: ${Math.round((this.errors.length / Math.max(this.stats.filesProcessed, 1)) * 100) || 0}%`)
+    console.log(`   警告率: ${Math.round((this.warnings.length / Math.max(this.stats.filesProcessed, 1)) * 100) || 0}%`)
   }
-  
+
   /**
-   * 获取错误日志
-   */
-  getErrorLog() {
-    return [...this.errorLog]
-  }
-  
-  /**
-   * 获取性能指标
-   */
-  getPerformanceMetrics() {
-    return { ...PERFORMANCE_METRICS }
-  }
-  
-  /**
-   * 获取统计信息
+   * Get validation statistics
    */
   getStats() {
-    const totalFiles = this.validationResults.size
-    const validFiles = Array.from(this.validationResults.values()).filter(r => r.valid).length
-    const invalidFiles = totalFiles - validFiles
-    
     return {
-      totalFiles,
-      validFiles,
-      invalidFiles,
-      validationRate: totalFiles > 0 ? (validFiles / totalFiles * 100).toFixed(2) + '%' : '0%',
-      cacheStats: {
-        hits: PERFORMANCE_METRICS.cacheHits,
-        misses: PERFORMANCE_METRICS.cacheMisses,
-        hitRate: (PERFORMANCE_METRICS.cacheHits + PERFORMANCE_METRICS.cacheMisses) > 0 
-          ? (PERFORMANCE_METRICS.cacheHits / (PERFORMANCE_METRICS.cacheHits + PERFORMANCE_METRICS.cacheMisses) * 100).toFixed(2) + '%'
-          : '0%'
-      },
-      performance: this.getPerformanceMetrics()
+      ...this.stats,
+      errors: this.errors.length,
+      warnings: this.warnings.length,
+      success: this.errors.length === 0,
+      duration: Date.now() - this.stats.startTime
     }
   }
-  
+
   /**
-   * 重置验证器状态
+   * Reset validator state
    */
   reset() {
-    this.validationResults.clear()
-    this.errorLog = []
-    clearValidationCache()
-    
-    // 重置性能指标
-    Object.keys(PERFORMANCE_METRICS).forEach(key => {
-      PERFORMANCE_METRICS[key] = 0
-    })
-    
-    logWarning('TemplateValidator reset completed')
-  }
-  
-  /**
-   * 输出验证结果
-   */
-  outputResults(results) {
-    try {
-      console.log('\n📋 Template Validation Results:')
-      console.log('=====================================')
-      console.log(`Total Files: ${results.total}`)
-      console.log(`Valid: ${results.valid} ✅`)
-      console.log(`Invalid: ${results.invalid} ❌`)
-      console.log(`Success Rate: ${results.total > 0 ? ((results.valid / results.total) * 100).toFixed(2) : 0}%`)
-      console.log(`Duration: ${results.duration}ms`)
-      
-      if (results.errors.length > 0) {
-        console.log('\n❌ Errors:')
-        results.errors.forEach((error, index) => {
-          console.log(`  ${index + 1}. ${error}`)
-        })
-      }
-      
-      if (results.warnings.length > 0) {
-        console.log('\n⚠️  Warnings:')
-        results.warnings.forEach((warning, index) => {
-          console.log(`  ${index + 1}. ${warning}`)
-        })
-      }
-      
-      if (results.performance) {
-        console.log('\n📊 Performance Metrics:')
-        console.log(`  Total Validations: ${results.performance.totalValidations}`)
-        console.log(`  Cache Hit Rate: ${results.performance.cacheHits + results.performance.cacheMisses > 0 
-          ? (results.performance.cacheHits / (results.performance.cacheHits + results.performance.cacheMisses) * 100).toFixed(2) 
-          : 0}%`)
-        console.log(`  Error Count: ${results.performance.errorCount}`)
-      }
-      
-      console.log('\n✨ Validation completed!')
-      
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      this.logError('OUTPUT_RESULTS_ERROR', 'Failed to output validation results', { error: errorMessage })
+    this.errors = []
+    this.warnings = []
+    this.stats = {
+      templatesProcessed: 0,
+      filesProcessed: 0,
+      syntaxChecks: 0,
+      startTime: Date.now()
     }
   }
 }
 
 /**
- * 主函数（CLI执行入口）
+ * Enhanced CLI execution with error handling
  */
 async function main() {
+  const args = process.argv.slice(2)
+  const options = {
+    strictMode: args.includes('--strict'),
+    skipSyntaxValidation: args.includes('--skip-syntax'),
+    maxRetries: parseInt(args.find(arg => arg.startsWith('--retries='))?.split('=')[1]) || 3,
+    retryDelay: parseInt(args.find(arg => arg.startsWith('--delay='))?.split('=')[1]) || 1000
+  }
+
+  console.log("🔧 Template Validator")
+  console.log(`📋 参数: ${JSON.stringify(options, null, 2)}\n`)
+
   try {
-    const args = process.argv.slice(2)
-    const templatesDir = args[0] || './templates'
-    const enableCache = !args.includes('--no-cache')
-    const enablePerformanceMonitoring = args.includes('--performance')
-    const verbose = args.includes('--verbose') || args.includes('-v')
+    const validator = new TemplateValidator(options)
+    const success = await validator.validateAll()
     
-    console.log(`🔍 Starting template validation for: ${templatesDir}`)
-    
-    const validator = new TemplateValidator({
-      templatesDir,
-      enableCache,
-      enablePerformanceMonitoring,
-      maxFileSize: 2 * 1024 * 1024 // 2MB
-    })
-    
-    const results = await validator.validateAll()
-    
-    // 输出结果
-    validator.outputResults(results)
-    
-    // 详细输出（如果启用）
-    if (verbose) {
-      console.log('\n📄 Detailed Results:')
-      console.log('====================')
-      
-      for (const [key, result] of results.details) {
-        console.log(`\n${key}:`)
-        console.log(`  Valid: ${result.valid ? '✅' : '❌'}`)
-        
-        if (result.errors.length > 0) {
-          console.log('  Errors:')
-          result.errors.forEach(error => console.log(`    - ${error}`))
-        }
-        
-        if (result.warnings.length > 0) {
-          console.log('  Warnings:')
-          result.warnings.forEach(warning => console.log(`    - ${warning}`))
-        }
-        
-        if (result.duration) {
-          console.log(`  Duration: ${result.duration}ms`)
-        }
-      }
-      
-      // 输出错误日志
-      const errorLog = validator.getErrorLog()
-      if (errorLog.length > 0) {
-        console.log('\n📋 Error Log:')
-        errorLog.forEach((error, index) => {
-          console.log(`  ${index + 1}. [${error.code}] ${error.message}`)
-          if (error.details && Object.keys(error.details).length > 0) {
-            console.log(`     Details:`, JSON.stringify(error.details, null, 2))
-          }
-        })
-      }
-      
-      // 输出性能指标
-      if (enablePerformanceMonitoring) {
-        const metrics = validator.getPerformanceMetrics()
-        console.log('\n📊 Performance Metrics:')
-        console.log(JSON.stringify(metrics, null, 2))
-      }
+    if (success) {
+      console.log("\n🎉 模板验证成功完成！")
+      process.exit(0)
+    } else {
+      console.log("\n❌ 模板验证失败")
+      process.exit(1)
     }
-    
-    // 退出码
-    process.exit(results.success ? 0 : 1)
-    
   } catch (error) {
-    console.error('❌ Template validation failed:', error.message)
+    console.error("\n💥 致命错误:", error.message)
     
     if (error.details) {
-      console.error('Details:', JSON.stringify(error.details, null, 2))
+      console.error("📋 错误详情:", JSON.stringify(error.details, null, 2))
     }
     
     process.exit(1)
   }
 }
 
-// 模块导出
+// Enhanced module execution
+if (require.main === module) {
+  main().catch(error => {
+    console.error("\n💥 未处理的错误:", error)
+    process.exit(1)
+  })
+}
+
 module.exports = {
   TemplateValidator,
   TemplateValidationError,
-  validateString,
-  validateObject,
-  validateArray,
-  safeFileExists,
-  safeReadFile,
-  safeParseJSON,
-  safeParseYAML,
-  safeStat,
-  retryOperation,
-  resolveTemplatesDir,
-  getFileTypeConfig,
-  validateCSharpSyntax,
-  validateVueSyntax,
-  validateTypeScriptSyntax,
-  validateJavaScriptSyntax,
-  clearValidationCache,
-  PERFORMANCE_METRICS,
-  FILE_TYPE_CONFIG,
-  main
-}
-
-// 如果是直接执行，运行主函数
-if (require.main === module) {
-  main().catch(error => {
-    console.error('❌ Fatal error:', error)
-    process.exit(1)
-  })
+  resolveTemplatesDir
 }

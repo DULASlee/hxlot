@@ -1,0 +1,131 @@
+[
+  {
+    "id": "audit-001",
+    "timestamp": "2024-01-15T10:30:00Z",
+    "userId": "user-admin",
+    "userName": "System Administrator",
+    "action": "SECURITY_ALERT_ACKNOWLEDGED",
+    "resourceType": "SecurityAlert",
+    "resourceId": "alert-001",
+    "details": {
+      "alertType": "HighRiskPermissionAccess",
+      "severity": "High",
+      "previousStatus": "Open",
+      "newStatus": "Acknowledged"
+    },
+    "ipAddress": "192.168.1.100",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "sessionId": "session-123",
+    "riskLevel": "Low"
+  },
+  {
+    "id": "audit-002",
+    "timestamp": "2024-01-15T10:25:00Z",
+    "userId": "user-compliance",
+    "userName": "Compliance Officer",
+    "action": "COMPLIANCE_ISSUE_RESOLVED",
+    "resourceType": "ComplianceIssue",
+    "resourceId": "compliance-001",
+    "details": {
+      "issueType": "DataRetention",
+      "severity": "High",
+      "previousStatus": "Open",
+      "newStatus": "Resolved",
+      "resolutionNotes": "Data retention policy updated and old records archived"
+    },
+    "ipAddress": "192.168.1.105",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "sessionId": "session-456",
+    "riskLevel": "Low"
+  },
+  {
+    "id": "audit-003",
+    "timestamp": "2024-01-15T10:20:00Z",
+    "userId": "user-analyst",
+    "userName": "Security Analyst",
+    "action": "BEHAVIOR_INVESTIGATION_STARTED",
+    "resourceType": "AbnormalBehavior",
+    "resourceId": "behavior-001",
+    "details": {
+      "behaviorType": "UnusualHours",
+      "targetUserId": "user-123",
+      "investigationReason": "Access pattern analysis required"
+    },
+    "ipAddress": "192.168.1.102",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+    "sessionId": "session-789",
+    "riskLevel": "Medium"
+  },
+  {
+    "id": "audit-004",
+    "timestamp": "2024-01-15T10:15:00Z",
+    "userId": "user-viewer",
+    "userName": "Security Viewer",
+    "action": "DASHBOARD_ACCESSED",
+    "resourceType": "SecurityDashboard",
+    "resourceId": "dashboard",
+    "details": {
+      "accessType": "View",
+      "dashboardSection": "SecurityMetrics"
+    },
+    "ipAddress": "192.168.1.103",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "sessionId": "session-101",
+    "riskLevel": "Low"
+  },
+  {
+    "id": "audit-005",
+    "timestamp": "2024-01-15T10:10:00Z",
+    "userId": "user-admin",
+    "userName": "System Administrator",
+    "action": "DATA_EXPORTED",
+    "resourceType": "SecurityDashboard",
+    "resourceId": "dashboard",
+    "details": {
+      "exportFormat": "PDF",
+      "dataTypes": ["SecurityMetrics", "ComplianceData", "Alerts"],
+      "recordCount": 150
+    },
+    "ipAddress": "192.168.1.100",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "sessionId": "session-123",
+    "riskLevel": "Medium"
+  },
+  {
+    "id": "audit-006",
+    "timestamp": "2024-01-15T10:05:00Z",
+    "userId": "user-standard",
+    "userName": "Standard User",
+    "action": "UNAUTHORIZED_ACCESS_ATTEMPT",
+    "resourceType": "SecurityDashboard",
+    "resourceId": "dashboard",
+    "details": {
+      "attemptedAction": "View",
+      "deniedReason": "Insufficient permissions",
+      "requiredPermission": "security.dashboard.view"
+    },
+    "ipAddress": "192.168.1.110",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "sessionId": "session-999",
+    "riskLevel": "High"
+  },
+  {
+    "id": "audit-007",
+    "timestamp": "2024-01-15T10:00:00Z",
+    "userId": "user-analyst",
+    "userName": "Security Analyst",
+    "action": "ALERT_INVESTIGATION_COMPLETED",
+    "resourceType": "SecurityAlert",
+    "resourceId": "alert-002",
+    "details": {
+      "alertType": "UnusualLocationAccess",
+      "investigationResult": "False positive - User was traveling for business",
+      "investigationDuration": "25 minutes",
+      "evidenceCollected": ["Login logs", "Travel approval", "VPN logs"]
+    },
+    "ipAddress": "192.168.1.102",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
+    "sessionId": "session-789",
+    "riskLevel": "Low"
+  }
+]

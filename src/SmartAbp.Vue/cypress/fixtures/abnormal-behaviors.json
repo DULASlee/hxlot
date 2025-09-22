@@ -1,0 +1,77 @@
+[
+  {
+    "id": "behavior-001",
+    "userId": "user-123",
+    "userName": "John Doe",
+    "behaviorType": "UnusualHours",
+    "description": "Access outside normal business hours (2:30 AM)",
+    "timestamp": "2024-01-15T02:30:00Z",
+    "riskLevel": "Medium",
+    "details": {
+      "location": "Office Network",
+      "device": "Desktop Workstation",
+      "accessedResources": ["Customer Database", "Financial Reports"]
+    },
+    "actionRequired": true
+  },
+  {
+    "id": "behavior-002",
+    "userId": "user-456",
+    "userName": "Jane Smith",
+    "behaviorType": "HighFrequency",
+    "description": "Unusually high number of permission requests (45 in 1 hour)",
+    "timestamp": "2024-01-15T10:00:00Z",
+    "riskLevel": "High",
+    "details": {
+      "requestCount": 45,
+      "normalRange": "5-10 per hour",
+      "requestedPermissions": ["Admin Panel", "User Management", "System Settings"]
+    },
+    "actionRequired": true
+  },
+  {
+    "id": "behavior-003",
+    "userId": "user-789",
+    "userName": "Bob Wilson",
+    "behaviorType": "UnusualLocation",
+    "description": "Access from geographic location outside normal pattern",
+    "timestamp": "2024-01-15T09:45:00Z",
+    "riskLevel": "High",
+    "details": {
+      "location": "Unknown City, Foreign Country",
+      "previousLocations": ["New York, USA", "San Francisco, USA"],
+      "ipAddress": "203.45.67.89"
+    },
+    "actionRequired": true
+  },
+  {
+    "id": "behavior-004",
+    "userId": "user-101",
+    "userName": "Alice Johnson",
+    "behaviorType": "PermissionScanning",
+    "description": "Systematic scanning of various system permissions",
+    "timestamp": "2024-01-15T09:30:00Z",
+    "riskLevel": "Medium",
+    "details": {
+      "scannedPermissions": 28,
+      "timeFrame": "15 minutes",
+      "pattern": "Sequential access to admin functions"
+    },
+    "actionRequired": false
+  },
+  {
+    "id": "behavior-005",
+    "userId": "user-202",
+    "userName": "Charlie Brown",
+    "behaviorType": "DataExfiltration",
+    "description": "Large volume data download outside normal pattern",
+    "timestamp": "2024-01-15T09:15:00Z",
+    "riskLevel": "Critical",
+    "details": {
+      "dataVolume": "2.5 GB",
+      "normalVolume": "< 100 MB",
+      "dataTypes": ["Customer Records", "Financial Data", "Employee Information"]
+    },
+    "actionRequired": true
+  }
+]

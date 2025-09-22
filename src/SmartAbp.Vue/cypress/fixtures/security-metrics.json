@@ -1,0 +1,11 @@
+{
+  "todayRiskEvents": 12,
+  "permissionChanges": 8,
+  "abnormalLogins": 3,
+  "complianceScore": 94,
+  "riskEventsTrend": 5,
+  "permissionChangesTrend": -2,
+  "abnormalLoginsTrend": 1,
+  "complianceScoreTrend": 3,
+  "lastUpdated": "2024-01-15T10:30:00Z"
+}

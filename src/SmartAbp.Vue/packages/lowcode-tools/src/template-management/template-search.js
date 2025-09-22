@@ -496,21 +496,6 @@ class TemplateSearcher {
 
       validateString(trigger, 'trigger')
       
-      // Check cache
-      const cacheKey = this.options.enableCache ? getCacheKey('trigger', trigger, {}) : null
-      const cachedResult = cacheKey ? getCacheEntry(cacheKey) : null
-      
-      if (cachedResult) {
-        const duration = performance.now() - startTime
-        logInfo('searchByTrigger', 'Trigger search completed (cached)', {
-          trigger,
-          resultsCount: cachedResult.length,
-          searchTime: `${duration.toFixed(2)}ms`,
-          cached: true
-        })
-        return cachedResult
-      }
-      
       const triggerLower = this.options.caseSensitive ? trigger : trigger.toLowerCase()
       
       const results = this.index.templates
@@ -549,40 +534,19 @@ class TemplateSearcher {
           }
         })
       
-      // Cache the result
-      if (cacheKey) {
-        setCacheEntry(cacheKey, results)
-      }
-      
       // Update statistics
-      const searchTime = performance.now() - startTime
+      const searchTime = Date.now() - startTime
       this.updateStats(results.length, searchTime)
       
-      // Update performance metrics
-      if (this.options.enablePerformanceMonitoring) {
-        PERFORMANCE_METRICS.totalSearches++
-        PERFORMANCE_METRICS.successfulSearches++
-        PERFORMANCE_METRICS.searchTypes.trigger++
-        PERFORMANCE_METRICS.avgSearchTime = 
-          (PERFORMANCE_METRICS.avgSearchTime * (PERFORMANCE_METRICS.totalSearches - 1) + searchTime) 
-          / PERFORMANCE_METRICS.totalSearches
-      }
-      
-      logInfo('searchByTrigger', 'Trigger search completed', {
+      logWarning('searchByTrigger', 'Trigger search completed', {
         trigger,
         resultsCount: results.length,
-        searchTime: `${searchTime.toFixed(2)}ms`,
-        cached: false
+        searchTime: `${searchTime}ms`
       })
       
       return results
       
     } catch (error) {
-      if (this.options.enablePerformanceMonitoring) {
-        PERFORMANCE_METRICS.totalSearches++
-        PERFORMANCE_METRICS.failedSearches++
-      }
-      
       logError('searchByTrigger', error, { trigger })
       if (error instanceof TemplateSearchError) {
         throw error
@@ -599,7 +563,7 @@ class TemplateSearcher {
   }
 
   /**
-   * Enhanced match score calculation with error handling and performance optimization
+   * Enhanced match score calculation with error handling
    */
   calculateMatchScore(template, trigger) {
     try {
@@ -657,11 +621,11 @@ class TemplateSearcher {
   }
 
   /**
-   * Enhanced recommendations with comprehensive error handling and performance monitoring
+   * Enhanced recommendations with comprehensive error handling
    */
   getRecommendations(context = {}) {
     try {
-      const startTime = performance.now()
+      const startTime = Date.now()
       
       if (!this.index) {
         throw new TemplateSearchError(
@@ -674,26 +638,12 @@ class TemplateSearcher {
 
       validateObject(context, 'context')
       
-      // Check cache
-      const cacheKey = this.options.enableCache ? getCacheKey('recommendations', JSON.stringify(context), {}) : null
-      const cachedResult = cacheKey ? getCacheEntry(cacheKey) : null
-      
-      if (cachedResult) {
-        const duration = performance.now() - startTime
-        logInfo('getRecommendations', 'Recommendations generated (cached)', {
-          context,
-          resultsCount: cachedResult.length,
-          searchTime: `${duration.toFixed(2)}ms`,
-          cached: true
-        })
-        return cachedResult
-      }
-      
+      const { entityType, operation, framework } = context
       let candidates = [...this.index.templates]
 
       // Filter by context with error handling
-      if (context.entityType) {
-        validateString(context.entityType, 'entityType')
+      if (entityType) {
+        validateString(entityType, 'entityType')
         candidates = candidates.filter((t) => {
           try {
             validateObject(t, 'template')
@@ -702,7 +652,7 @@ class TemplateSearcher {
               t.scenarios.some((s) => {
                 validateString(s, 'scenario')
                 const scenarioText = this.options.caseSensitive ? s : s.toLowerCase()
-                const entityTypeText = this.options.caseSensitive ? context.entityType : context.entityType.toLowerCase()
+                const entityTypeText = this.options.caseSensitive ? entityType : entityType.toLowerCase()
                 return scenarioText.includes(entityTypeText)
               })
             
@@ -710,7 +660,7 @@ class TemplateSearcher {
               t.ai_triggers.some((trigger) => {
                 validateString(trigger, 'AI trigger')
                 const triggerText = this.options.caseSensitive ? trigger : trigger.toLowerCase()
-                const entityTypeText = this.options.caseSensitive ? context.entityType : context.entityType.toLowerCase()
+                const entityTypeText = this.options.caseSensitive ? entityType : entityType.toLowerCase()
                 return triggerText.includes(entityTypeText)
               })
             
@@ -725,8 +675,8 @@ class TemplateSearcher {
         })
       }
 
-      if (context.operation) {
-        validateString(context.operation, 'operation')
+      if (operation) {
+        validateString(operation, 'operation')
         candidates = candidates.filter((t) => {
           try {
             validateObject(t, 'template')
@@ -735,7 +685,7 @@ class TemplateSearcher {
               t.ai_triggers.some((trigger) => {
                 validateString(trigger, 'AI trigger')
                 const triggerText = this.options.caseSensitive ? trigger : trigger.toLowerCase()
-                const operationText = this.options.caseSensitive ? context.operation : context.operation.toLowerCase()
+                const operationText = this.options.caseSensitive ? operation : operation.toLowerCase()
                 return triggerText.includes(operationText)
               })
             
@@ -743,7 +693,7 @@ class TemplateSearcher {
               t.tags.some((tag) => {
                 validateString(tag, 'tag')
                 const tagText = this.options.caseSensitive ? tag : tag.toLowerCase()
-                const operationText = this.options.caseSensitive ? context.operation : context.operation.toLowerCase()
+                const operationText = this.options.caseSensitive ? operation : operation.toLowerCase()
                 return tagText.includes(operationText)
               })
             
@@ -758,8 +708,8 @@ class TemplateSearcher {
         })
       }
 
-      if (context.framework) {
-        validateString(context.framework, 'framework')
+      if (framework) {
+        validateString(framework, 'framework')
         candidates = candidates.filter((t) => {
           try {
             validateObject(t, 'template')
@@ -768,13 +718,13 @@ class TemplateSearcher {
               t.dependencies.some((dep) => {
                 validateString(dep, 'dependency')
                 const depText = this.options.caseSensitive ? dep : dep.toLowerCase()
-                const frameworkText = this.options.caseSensitive ? context.framework : context.framework.toLowerCase()
+                const frameworkText = this.options.caseSensitive ? framework : framework.toLowerCase()
                 return depText.includes(frameworkText)
               })
             
             const hasCategory = t.category && 
               (this.options.caseSensitive ? t.category : t.category.toLowerCase()).includes(
-                this.options.caseSensitive ? context.framework : context.framework.toLowerCase()
+                this.options.caseSensitive ? framework : framework.toLowerCase()
               )
             
             return hasDependency || hasCategory
@@ -806,40 +756,19 @@ class TemplateSearcher {
         })
         .slice(0, 5)
       
-      // Cache the result
-      if (cacheKey) {
-        setCacheEntry(cacheKey, sortedCandidates)
-      }
-      
       // Update statistics
-      const searchTime = performance.now() - startTime
+      const searchTime = Date.now() - startTime
       this.updateStats(sortedCandidates.length, searchTime)
       
-      // Update performance metrics
-      if (this.options.enablePerformanceMonitoring) {
-        PERFORMANCE_METRICS.totalSearches++
-        PERFORMANCE_METRICS.successfulSearches++
-        PERFORMANCE_METRICS.searchTypes.recommendation++
-        PERFORMANCE_METRICS.avgSearchTime = 
-          (PERFORMANCE_METRICS.avgSearchTime * (PERFORMANCE_METRICS.totalSearches - 1) + searchTime) 
-          / PERFORMANCE_METRICS.totalSearches
-      }
-      
-      logInfo('getRecommendations', 'Recommendations generated', {
+      logWarning('getRecommendations', 'Recommendations generated', {
         context,
         resultsCount: sortedCandidates.length,
-        searchTime: `${searchTime.toFixed(2)}ms`,
-        cached: false
+        searchTime: `${searchTime}ms`
       })
       
       return sortedCandidates
       
     } catch (error) {
-      if (this.options.enablePerformanceMonitoring) {
-        PERFORMANCE_METRICS.totalSearches++
-        PERFORMANCE_METRICS.failedSearches++
-      }
-      
       logError('getRecommendations', error, { context })
       if (error instanceof TemplateSearchError) {
         throw error
@@ -856,12 +785,10 @@ class TemplateSearcher {
   }
 
   /**
-   * Enhanced template details display with error handling and performance monitoring
+   * Enhanced template details display with error handling
    */
   showTemplate(templateId) {
     try {
-      const startTime = performance.now()
-      
       if (!this.index) {
         throw new TemplateSearchError(
           'Template index not initialized',
@@ -934,13 +861,7 @@ class TemplateSearcher {
       }
       
       // Update statistics
-      const duration = performance.now() - startTime
       this.stats.searchesPerformed++
-      
-      logInfo('showTemplate', 'Template details displayed', {
-        templateId,
-        duration: `${duration.toFixed(2)}ms`
-      })
       
     } catch (error) {
       logError('showTemplate', error, { templateId })
@@ -959,12 +880,10 @@ class TemplateSearcher {
   }
 
   /**
-   * Enhanced categories listing with error handling and performance monitoring
+   * Enhanced categories listing with error handling
    */
   listCategories() {
     try {
-      const startTime = performance.now()
-      
       if (!this.index) {
         throw new TemplateSearchError(
           'Template index not initialized',
@@ -1025,11 +944,6 @@ class TemplateSearcher {
         }
       })
       
-      const duration = performance.now() - startTime
-      logInfo('listCategories', 'Categories listed', {
-        duration: `${duration.toFixed(2)}ms`
-      })
-      
     } catch (error) {
       logError('listCategories', error)
       if (error instanceof TemplateSearchError) {
@@ -1047,7 +961,7 @@ class TemplateSearcher {
   }
 
   /**
-   * Enhanced statistics display with comprehensive error handling and performance metrics
+   * Enhanced statistics display with error handling
    */
   showStats() {
     try {
@@ -1062,8 +976,7 @@ class TemplateSearcher {
 
       const stats = this.index.statistics || {}
       const runtimeStats = this.getStats()
-      const memoryInfo = this.memoryMonitor ? this.memoryMonitor.update() : null
-      
+
       console.log("\n📊 模板库统计:")
       console.log(`📋 总模板数: ${stats.total_templates || 0}`)
       console.log(`📂 分类数: ${stats.categories_count || 0}`)
@@ -1076,25 +989,6 @@ class TemplateSearcher {
       console.log(`📊 平均结果数: ${runtimeStats.avgResultsCount}`)
       console.log(`⏱️  平均搜索时间: ${runtimeStats.avgSearchTime}ms`)
       console.log(`📋 搜索历史记录: ${this.searchHistory.length} 条`)
-      
-      if (this.options.enablePerformanceMonitoring) {
-        console.log(`\n📈 性能指标:`)
-        console.log(`  总搜索: ${PERFORMANCE_METRICS.totalSearches}`)
-        console.log(`  成功搜索: ${PERFORMANCE_METRICS.successfulSearches}`)
-        console.log(`  失败搜索: ${PERFORMANCE_METRICS.failedSearches}`)
-        console.log(`  文本搜索: ${PERFORMANCE_METRICS.searchTypes.text}`)
-        console.log(`  触发词搜索: ${PERFORMANCE_METRICS.searchTypes.trigger}`)
-        console.log(`  推荐搜索: ${PERFORMANCE_METRICS.searchTypes.recommendation}`)
-        console.log(`  缓存命中率: ${((PERFORMANCE_METRICS.cacheHits / (PERFORMANCE_METRICS.cacheHits + PERFORMANCE_METRICS.cacheMisses)) * 100).toFixed(2)}%`)
-        console.log(`  错误计数: ${PERFORMANCE_METRICS.errorCount}`)
-      }
-      
-      if (memoryInfo) {
-        console.log(`\n💾 内存使用:`)
-        console.log(`  当前堆内存: ${(memoryInfo.current.heapUsed / 1024 / 1024).toFixed(2)} MB`)
-        console.log(`  峰值堆内存: ${(memoryInfo.peak.heapUsed / 1024 / 1024).toFixed(2)} MB`)
-        console.log(`  内存增量: ${(memoryInfo.delta.heapUsed / 1024 / 1024).toFixed(2)} MB`)
-      }
       
     } catch (error) {
       logError('showStats', error)
@@ -1113,7 +1007,7 @@ class TemplateSearcher {
   }
 
   /**
-   * Update search statistics with enhanced error handling
+   * Update search statistics
    */
   updateStats(resultsCount, searchTime) {
     try {
@@ -1132,7 +1026,7 @@ class TemplateSearcher {
   }
 
   /**
-   * Record search history with enhanced error handling
+   * Record search history
    */
   recordSearch(query, options, resultsCount, searchTime) {
     try {
@@ -1184,75 +1078,12 @@ class TemplateSearcher {
    */
   clearSearchHistory() {
     this.searchHistory = []
-    logInfo('clearSearchHistory', 'Search history cleared')
-  }
-
-  /**
-   * Get performance metrics
-   */
-  getPerformanceMetrics() {
-    return { ...PERFORMANCE_METRICS }
-  }
-
-  /**
-   * Clear cache
-   */
-  clearCache() {
-    clearCache()
-  }
-
-  /**
-   * Reset all statistics and metrics
-   */
-  reset() {
-    this.searchHistory = []
-    clearCache()
-    
-    // Reset performance metrics
-    Object.keys(PERFORMANCE_METRICS).forEach(key => {
-      if (typeof PERFORMANCE_METRICS[key] === 'number') {
-        PERFORMANCE_METRICS[key] = 0
-      } else if (typeof PERFORMANCE_METRICS[key] === 'object') {
-        Object.keys(PERFORMANCE_METRICS[key]).forEach(subKey => {
-          PERFORMANCE_METRICS[key][subKey] = 0
-        })
-      }
-    })
-    
-    // Reset memory monitor
-    if (this.memoryMonitor) {
-      this.memoryMonitor.reset()
-    }
-    
-    // Reset stats
-    this.stats = {
-      searchesPerformed: 0,
-      resultsReturned: 0,
-      avgSearchTime: 0,
-      startTime: Date.now()
-    }
-    
-    logInfo('reset', 'TemplateSearcher reset completed')
-  }
-
-  /**
-   * Get error log
-   */
-  getErrorLog() {
-    return [...this.errorLog]
-  }
-
-  /**
-   * Clear error log
-   */
-  clearErrorLog() {
-    this.errorLog = []
-    logInfo('clearErrorLog', 'Error log cleared')
+    logWarning('clearSearchHistory', 'Search history cleared')
   }
 }
 
 /**
- * Enhanced CLI execution with comprehensive error handling and performance monitoring
+ * Enhanced CLI execution with comprehensive error handling
  */
 async function main() {
   const args = process.argv.slice(2)
@@ -1269,43 +1100,23 @@ async function main() {
   npm run template:search categories        # 列出所有分类
   npm run template:search stats            # 显示统计信息
   npm run template:search recommend [类型] [操作] [框架] # 获取推荐
-  npm run template:search clear-cache      # 清除缓存
-  npm run template:search reset            # 重置统计和缓存
-
-选项:
-  --performance          # 启用性能监控
-  --memory-monitoring    # 启用内存监控
-  --no-cache            # 禁用缓存
-  --verbose, -v         # 详细输出
 
 示例:
   npm run template:search search crud
   npm run template:search trigger "管理页面"
   npm run template:search show backend-application-crudappservice-template
-  npm run template:search recommend 用户 CRUD vue --performance
+  npm run template:search recommend 用户 CRUD vue
     `)
     return
   }
 
   try {
-    // Parse options
-    const options = {
-      enablePerformanceMonitoring: args.includes('--performance'),
-      enableMemoryMonitoring: args.includes('--memory-monitoring'),
-      enableCache: !args.includes('--no-cache'),
-      verbose: args.includes('--verbose') || args.includes('-v')
-    }
-    
-    // Remove option arguments
-    const cleanArgs = args.filter(arg => !arg.startsWith('--'))
-    const cleanCommand = cleanArgs[0]
-    
-    const searcher = new TemplateSearcher(options)
+    const searcher = new TemplateSearcher()
     await searcher.init()
 
-    switch (cleanCommand) {
+    switch (command) {
       case "search":
-        const query = cleanArgs[1]
+        const query = args[1]
         const searchResults = searcher.search(query)
 
         console.log(`\n🔍 搜索结果 (${searchResults.length} 个):`)
@@ -1326,7 +1137,7 @@ async function main() {
         break
 
       case "trigger":
-        const trigger = cleanArgs[1]
+        const trigger = args[1]
         if (!trigger) {
           throw new TemplateSearchError(
             'Please provide a trigger word',
@@ -1355,7 +1166,7 @@ async function main() {
         break
 
       case "show":
-        const templateId = cleanArgs[1]
+        const templateId = args[1]
         if (!templateId) {
           throw new TemplateSearchError(
             'Please provide a template ID',
@@ -1377,9 +1188,9 @@ async function main() {
 
       case "recommend":
         const context = {
-          entityType: cleanArgs[1],
-          operation: cleanArgs[2],
-          framework: cleanArgs[3],
+          entityType: args[1],
+          operation: args[2],
+          framework: args[3],
         }
 
         const recommendations = searcher.getRecommendations(context)
@@ -1400,35 +1211,19 @@ async function main() {
         })
         break
 
-      case "clear-cache":
-        searcher.clearCache()
-        console.log("✅ 缓存已清除")
-        break
-
-      case "reset":
-        searcher.reset()
-        console.log("✅ 统计和缓存已重置")
-        break
-
       default:
         throw new TemplateSearchError(
-          `Unknown command: ${cleanCommand}`,
+          `Unknown command: ${command}`,
           'UNKNOWN_COMMAND',
           'main',
           false,
-          { command: cleanCommand }
+          { command }
         )
     }
 
     // Show search statistics
     const stats = searcher.getStats()
     console.log(`\n📊 搜索统计 - 总搜索次数: ${stats.searchesPerformed}, 平均搜索时间: ${stats.avgSearchTime}ms`)
-    
-    // Show performance metrics if enabled
-    if (options.enablePerformanceMonitoring) {
-      const metrics = searcher.getPerformanceMetrics()
-      console.log(`📈 性能指标 - 缓存命中率: ${((metrics.cacheHits / (metrics.cacheHits + metrics.cacheMisses)) * 100).toFixed(2)}%`)
-    }
     
   } catch (error) {
     if (error instanceof TemplateSearchError) {
@@ -1444,16 +1239,6 @@ async function main() {
   }
 }
 
-// Module exports
-module.exports = {
-  TemplateSearcher,
-  TemplateSearchError,
-  PERFORMANCE_METRICS,
-  CACHE_CONFIG,
-  MemoryMonitor
-}
-
-// Execute main function if run directly
 if (require.main === module) {
   main().catch((error) => {
     console.error("\n💥 未处理的错误:", error)
@@ -1462,4 +1247,9 @@ if (require.main === module) {
     }
     process.exit(1)
   })
+}
+
+module.exports = {
+  TemplateSearcher,
+  TemplateSearchError
 }

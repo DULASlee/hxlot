@@ -35,7 +35,7 @@ export default defineConfig({
       },
       exclude: ["node_modules/**", "dist/**", "src/test/**", "**/*.d.ts"],
     },
-    include: ["src/**/*.{test,spec}.{js,ts,jsx,tsx}", "packages/**/*.{test,spec}.{js,ts,jsx,tsx}"],
+    include: ["src/**/*.{test,spec}.{js,ts,jsx,tsx}", "packages/**/*.{test,spec}.{js,ts,jsx,tsx}", "tests/**/*.{test,spec}.{js,ts,jsx,tsx}"],
     exclude: ["node_modules", "dist"],
   },
   resolve: {

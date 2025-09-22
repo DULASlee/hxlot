@@ -1,0 +1,121 @@
+{
+  "roles": [
+    {
+      "id": "admin",
+      "name": "Administrator",
+      "description": "Full system access with all permissions",
+      "permissions": [
+        "security.dashboard.view",
+        "security.dashboard.export",
+        "security.alerts.view",
+        "security.alerts.acknowledge",
+        "security.alerts.investigate",
+        "security.compliance.view",
+        "security.compliance.resolve",
+        "security.behaviors.view",
+        "security.behaviors.investigate",
+        "users.view",
+        "users.edit",
+        "users.delete",
+        "roles.manage",
+        "audit.view",
+        "system.settings"
+      ]
+    },
+    {
+      "id": "security_analyst",
+      "name": "Security Analyst",
+      "description": "Security monitoring and analysis permissions",
+      "permissions": [
+        "security.dashboard.view",
+        "security.dashboard.export",
+        "security.alerts.view",
+        "security.alerts.acknowledge",
+        "security.alerts.investigate",
+        "security.compliance.view",
+        "security.behaviors.view",
+        "security.behaviors.investigate",
+        "audit.view"
+      ]
+    },
+    {
+      "id": "compliance_officer",
+      "name": "Compliance Officer",
+      "description": "Compliance monitoring and resolution permissions",
+      "permissions": [
+        "security.dashboard.view",
+        "security.compliance.view",
+        "security.compliance.resolve",
+        "audit.view",
+        "reports.compliance.generate"
+      ]
+    },
+    {
+      "id": "viewer",
+      "name": "Security Viewer",
+      "description": "Read-only access to security information",
+      "permissions": [
+        "security.dashboard.view",
+        "security.alerts.view",
+        "security.compliance.view",
+        "security.behaviors.view"
+      ]
+    },
+    {
+      "id": "user",
+      "name": "Standard User",
+      "description": "Basic user permissions",
+      "permissions": [
+        "profile.view",
+        "profile.edit"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": "user-admin",
+      "username": "admin",
+      "displayName": "System Administrator",
+      "email": "admin@smartabp.com",
+      "roles": ["admin"],
+      "isActive": true,
+      "lastLogin": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": "user-analyst",
+      "username": "analyst",
+      "displayName": "Security Analyst",
+      "email": "analyst@smartabp.com",
+      "roles": ["security_analyst"],
+      "isActive": true,
+      "lastLogin": "2024-01-15T09:30:00Z"
+    },
+    {
+      "id": "user-compliance",
+      "username": "compliance",
+      "displayName": "Compliance Officer",
+      "email": "compliance@smartabp.com",
+      "roles": ["compliance_officer"],
+      "isActive": true,
+      "lastLogin": "2024-01-15T09:15:00Z"
+    },
+    {
+      "id": "user-viewer",
+      "username": "viewer",
+      "displayName": "Security Viewer",
+      "email": "viewer@smartabp.com",
+      "roles": ["viewer"],
+      "isActive": true,
+      "lastLogin": "2024-01-15T09:00:00Z"
+    },
+    {
+      "id": "user-standard",
+      "username": "standard",
+      "displayName": "Standard User",
+      "email": "user@smartabp.com",
+      "roles": ["user"],
+      "isActive": true,
+      "lastLogin": "2024-01-15T08:45:00Z"
+    }
+  ]
+}

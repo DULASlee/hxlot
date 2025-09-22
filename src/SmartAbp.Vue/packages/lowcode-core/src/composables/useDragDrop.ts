@@ -1,4 +1,4 @@
-import { ref, reactive, computed, onUnmounted, nextTick } from 'vue'
+import { ref, reactive, computed, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus'
 
 export interface DragData {
@@ -65,50 +65,9 @@ export interface DragState {
 }
 
 /**
- * 错误信息接口
- */
-interface DragDropError {
-  code: string
-  message: string
-  details?: any
-  timestamp: number
-}
-
-/**
- * 配置选项接口
- */
-interface DragDropConfig {
-  enableDebounce?: boolean
-  debounceDelay?: number
-  enableMemoryProtection?: boolean
-  maxRetries?: number
-  enablePerformanceMonitoring?: boolean
-}
-
-/**
- * 性能监控数据
- */
-interface PerformanceMetrics {
-  dragOperations: number
-  dropOperations: number
-  validationFailures: number
-  averageDragDuration: number
-  lastOperationTime: number
-}
-
-/**
  * 拖拽功能组合式函数
  */
-export function useDragDrop(config: DragDropConfig = {}) {
-  // 配置选项
-  const options = {
-    enableDebounce: config.enableDebounce ?? true,
-    debounceDelay: config.debounceDelay ?? 16, // ~60fps
-    enableMemoryProtection: config.enableMemoryProtection ?? true,
-    maxRetries: config.maxRetries ?? 3,
-    enablePerformanceMonitoring: config.enablePerformanceMonitoring ?? false
-  }
-
+export function useDragDrop() {
   // 拖拽状态
   const dragState = reactive<DragState>({
     isDragging: false,
@@ -124,22 +83,6 @@ export function useDragDrop(config: DragDropConfig = {}) {
   
   // 放置区域映射表
   const dropZones = ref<Map<string, DropZoneConfig>>(new Map())
-  
-  // 错误日志
-  const errorLog = ref<DragDropError[]>([])
-  
-  // 性能监控
-  const performanceMetrics = reactive<PerformanceMetrics>({
-    dragOperations: 0,
-    dropOperations: 0,
-    validationFailures: 0,
-    averageDragDuration: 0,
-    lastOperationTime: 0
-  })
-  
-  // 防抖定时器
-  let debounceTimer: number | null = null
-  let dragStartTime: number = 0
   
   // 是否正在拖拽
   const isDragging = computed(() => dragState.isDragging)
@@ -164,64 +107,7 @@ export function useDragDrop(config: DragDropConfig = {}) {
       opacity: 0.8,
     }
   })
-
-  /**
-   * 记录错误信息
-   */
-  const logError = (code: string, message: string, details?: any): void => {
-    const error: DragDropError = {
-      code,
-      message,
-      details,
-      timestamp: Date.now()
-    }
-    
-    errorLog.value.push(error)
-    
-    // 限制错误日志数量，防止内存泄漏
-    if (options.enableMemoryProtection && errorLog.value.length > 100) {
-      errorLog.value = errorLog.value.slice(-50)
-    }
-    
-    console.error(`[useDragDrop] ${code}: ${message}`, details)
-  }
-
-  /**
-   * 防抖函数
-   */
-  const debounce = <T extends (...args: any[]) => any>(func: T, delay: number): T => {
-    return ((...args: Parameters<T>) => {
-      if (debounceTimer) {
-        clearTimeout(debounceTimer)
-      }
-      
-      debounceTimer = window.setTimeout(() => {
-        func(...args)
-      }, delay)
-    }) as T
-  }
-
-  /**
-   * 验证拖拽数据
-   */
-  const validateDragData = (data: DragData): void => {
-    if (!data || typeof data !== 'object') {
-      throw new Error('Drag data must be a valid object')
-    }
-
-    if (!data.type?.trim()) {
-      throw new Error('Drag data type is required')
-    }
-
-    if (!data.id?.trim()) {
-      throw new Error('Drag data ID is required')
-    }
-
-    if (!data.name?.trim()) {
-      throw new Error('Drag data name is required')
-    }
-  }
-
+  
   /**
    * 开始拖拽
    */
@@ -232,12 +118,20 @@ export function useDragDrop(config: DragDropConfig = {}) {
         throw new Error('Drag event is required')
       }
 
-      validateDragData(data)
+      if (!data || typeof data !== 'object') {
+        throw new Error('Drag data must be a valid object')
+      }
 
-      // 性能监控
-      if (options.enablePerformanceMonitoring) {
-        dragStartTime = Date.now()
-        performanceMetrics.dragOperations++
+      if (!data.type?.trim()) {
+        throw new Error('Drag data type is required')
+      }
+
+      if (!data.id?.trim()) {
+        throw new Error('Drag data ID is required')
+      }
+
+      if (!data.name?.trim()) {
+        throw new Error('Drag data name is required')
       }
 
       // 设置拖拽数据
@@ -285,8 +179,9 @@ export function useDragDrop(config: DragDropConfig = {}) {
         duration: 2000,
       })
     } catch (error) {
+      console.error(`[startDrag] 开始拖拽失败:`, error)
+      
       const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('START_DRAG_ERROR', 'Failed to start drag', { error: errorMessage, data })
       
       ElMessage.error({
         message: `Failed to start drag: ${errorMessage}`,
@@ -310,15 +205,6 @@ export function useDragDrop(config: DragDropConfig = {}) {
         return
       }
       
-      // 性能监控
-      if (options.enablePerformanceMonitoring && dragStartTime > 0) {
-        const duration = Date.now() - dragStartTime
-        performanceMetrics.lastOperationTime = duration
-        performanceMetrics.averageDragDuration = 
-          (performanceMetrics.averageDragDuration * (performanceMetrics.dragOperations - 1) + duration) 
-          / performanceMetrics.dragOperations
-      }
-      
       console.log(`🖱️ Ended dragging: ${dragState.dragData?.name}`)
       
       // 移除全局事件监听器
@@ -334,8 +220,9 @@ export function useDragDrop(config: DragDropConfig = {}) {
         duration: 2000,
       })
     } catch (error) {
+      console.error(`[endDrag] 结束拖拽失败:`, error)
+      
       const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('END_DRAG_ERROR', 'Failed to end drag', { error: errorMessage })
       
       ElMessage.error({
         message: `Failed to end drag: ${errorMessage}`,
@@ -344,20 +231,15 @@ export function useDragDrop(config: DragDropConfig = {}) {
 
       // 确保清理拖拽状态
       cleanupDragState()
+
+      // 不抛出错误，避免影响主流程
     }
   }
-
-  /**
-   * 防抖处理拖拽悬停
-   */
-  const debouncedDragOver = options.enableDebounce 
-    ? debounce(handleDragOver, options.debounceDelay)
-    : handleDragOver
   
   /**
    * 处理拖拽悬停
    */
-  function handleDragOver(event: DragEvent): void {
+  const handleDragOver = (event: DragEvent): void => {
     try {
       if (!dragState.isDragging || !dragState.dragData) {
         return
@@ -379,10 +261,7 @@ export function useDragDrop(config: DragDropConfig = {}) {
           try {
             dragState.currentDropZone.onLeave(dragState.dragData, dragState.currentDropZone)
           } catch (callbackError) {
-            logError('ON_LEAVE_CALLBACK_ERROR', 'onLeave callback failed', { 
-              error: callbackError instanceof Error ? callbackError.message : String(callbackError),
-              zone: dragState.currentDropZone.id 
-            })
+            console.error(`[handleDragOver] 调用onLeave回调失败:`, callbackError)
           }
         }
         
@@ -391,10 +270,7 @@ export function useDragDrop(config: DragDropConfig = {}) {
           try {
             dropZone.onEnter(dragState.dragData, dropZone)
           } catch (callbackError) {
-            logError('ON_ENTER_CALLBACK_ERROR', 'onEnter callback failed', { 
-              error: callbackError instanceof Error ? callbackError.message : String(callbackError),
-              zone: dropZone.id 
-            })
+            console.error(`[handleDragOver] 调用onEnter回调失败:`, callbackError)
           }
         }
         
@@ -410,13 +286,16 @@ export function useDragDrop(config: DragDropConfig = {}) {
         }
       }
     } catch (error) {
+      console.error(`[handleDragOver] 处理拖拽悬停失败:`, error)
+      
       const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('DRAG_OVER_ERROR', 'Failed to handle drag over', { error: errorMessage })
       
       ElMessage.error({
         message: `Failed to handle drag over: ${errorMessage}`,
         duration: 3000,
       })
+
+      // 不抛出错误，避免影响拖拽流程
     }
   }
   
@@ -431,11 +310,6 @@ export function useDragDrop(config: DragDropConfig = {}) {
       
       // 阻止默认行为
       event.preventDefault()
-      
-      // 性能监控
-      if (options.enablePerformanceMonitoring) {
-        performanceMetrics.dropOperations++
-      }
       
       // 查找放置区域
       const dropZone = findDropZoneAtPosition(event.clientX, event.clientY)
@@ -454,12 +328,9 @@ export function useDragDrop(config: DragDropConfig = {}) {
               duration: 3000,
             })
           } catch (dropError) {
+            console.error(`[handleDrop] 放置操作失败:`, dropError)
+            
             const errorMessage = dropError instanceof Error ? dropError.message : String(dropError)
-            logError('DROP_OPERATION_ERROR', 'Drop operation failed', { 
-              error: errorMessage,
-              data: dragState.dragData.name,
-              zone: dropZone.name 
-            })
             
             ElMessage.error({
               message: `Drop operation failed: ${errorMessage}`,
@@ -467,10 +338,7 @@ export function useDragDrop(config: DragDropConfig = {}) {
             })
           }
         } else {
-          logError('INVALID_DROP_ERROR', 'Invalid drop attempt', { 
-            data: dragState.dragData.name,
-            zone: dropZone.name 
-          })
+          console.warn(`🚫 Invalid drop: ${dragState.dragData.name} into ${dropZone.name}`)
           
           ElMessage.warning({
             message: `Cannot drop ${dragState.dragData.name} here`,
@@ -482,8 +350,9 @@ export function useDragDrop(config: DragDropConfig = {}) {
       // 结束拖拽
       endDrag(event)
     } catch (error) {
+      console.error(`[handleDrop] 处理放置失败:`, error)
+      
       const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('HANDLE_DROP_ERROR', 'Failed to handle drop', { error: errorMessage })
       
       ElMessage.error({
         message: `Failed to handle drop: ${errorMessage}`,
@@ -492,6 +361,8 @@ export function useDragDrop(config: DragDropConfig = {}) {
 
       // 确保结束拖拽
       endDrag(event)
+
+      // 不抛出错误，避免影响主流程
     }
   }
   
@@ -500,56 +371,58 @@ export function useDragDrop(config: DragDropConfig = {}) {
    */
   const registerDropZone = (config: DropZoneConfig): void => {
     try {
-      // 参数验证
-      if (!config) {
-        throw new Error('Drop zone config is required')
+      // 验证参数
+      if (!config || typeof config !== 'object') {
+        throw new Error('Drop zone config must be a valid object')
       }
-      
+
       if (!config.id?.trim()) {
         throw new Error('Drop zone ID is required')
       }
-      
+
       if (!config.name?.trim()) {
         throw new Error('Drop zone name is required')
       }
-      
+
       if (!config.element) {
         throw new Error('Drop zone element is required')
       }
-      
-      if (!Array.isArray(config.acceptedTypes) || config.acceptedTypes.length === 0) {
-        throw new Error('Accepted types must be a non-empty array')
+
+      if (!Array.isArray(config.acceptedTypes)) {
+        throw new Error('Accepted types must be an array')
       }
-      
+
+      if (config.acceptedTypes.length === 0) {
+        throw new Error('Accepted types array cannot be empty')
+      }
+
       // 验证元素是否有效
       if (!document.body.contains(config.element)) {
         throw new Error('Drop zone element must be attached to DOM')
       }
-      
-      // 检查ID是否已存在
-      if (dropZones.value.has(config.id)) {
-        throw new Error(`Drop zone with ID '${config.id}' already exists`)
-      }
-      
+
       // 注册放置区域
       dropZones.value.set(config.id, config)
       
-      console.log(`📋 Registered drop zone: ${config.name} (${config.id})`)
+      // 添加放置区域事件监听器
+      config.element.addEventListener('dragover', handleDragOver)
+      config.element.addEventListener('drop', handleDrop)
+      config.element.addEventListener('dragleave', handleDragLeave)
+      
+      console.log(`📍 Registered drop zone: ${config.name} (${config.id})`)
       
       ElMessage.success({
-        message: `Registered drop zone: ${config.name}`,
+        message: `Drop zone registered: ${config.name}`,
         duration: 2000,
       })
     } catch (error) {
+      console.error(`[registerDropZone] 注册放置区域失败:`, error)
+      
       const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('REGISTER_DROP_ZONE_ERROR', 'Failed to register drop zone', { 
-        error: errorMessage,
-        config 
-      })
       
       ElMessage.error({
         message: `Failed to register drop zone: ${errorMessage}`,
-        duration: 3000,
+        duration: 4000,
       })
 
       // 抛出转换后的错误，让调用方处理
@@ -560,52 +433,49 @@ export function useDragDrop(config: DragDropConfig = {}) {
   /**
    * 注销放置区域
    */
-  const unregisterDropZone = (id: string): void => {
+  const unregisterDropZone = (zoneId: string): void => {
     try {
-      // 参数验证
-      if (!id?.trim()) {
+      // 验证参数
+      if (!zoneId?.trim()) {
         throw new Error('Drop zone ID is required')
       }
-      
-      // 检查是否存在
-      const config = dropZones.value.get(id)
+
+      const config = dropZones.value.get(zoneId)
       if (!config) {
-        throw new Error(`Drop zone with ID '${id}' not found`)
+        console.warn(`Drop zone not found: ${zoneId}`)
+        return
       }
       
-      // 从映射表中移除
-      dropZones.value.delete(id)
+      // 移除事件监听器
+      config.element.removeEventListener('dragover', handleDragOver)
+      config.element.removeEventListener('drop', handleDrop)
+      config.element.removeEventListener('dragleave', handleDragLeave)
       
-      // 如果当前拖拽悬停在这个区域，清空当前区域
-      if (dragState.currentDropZone?.id === id) {
+      // 从映射表中删除
+      dropZones.value.delete(zoneId)
+      
+      // 如果当前悬停在这个放置区域，清除它
+      if (dragState.currentDropZone?.id === zoneId) {
         dragState.currentDropZone = null
       }
       
-      // 更新有效放置区域列表
-      if (dragState.dragData) {
-        updateValidDropZones(dragState.dragData)
-      }
-      
-      console.log(`📋 Unregistered drop zone: ${config.name} (${id})`)
+      console.log(`🗑️ Unregistered drop zone: ${config.name} (${zoneId})`)
       
       ElMessage.info({
-        message: `Unregistered drop zone: ${config.name}`,
+        message: `Drop zone unregistered: ${config.name}`,
         duration: 2000,
       })
     } catch (error) {
+      console.error(`[unregisterDropZone] 注销放置区域失败:`, error)
+      
       const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('UNREGISTER_DROP_ZONE_ERROR', 'Failed to unregister drop zone', { 
-        error: errorMessage,
-        id 
-      })
       
       ElMessage.error({
         message: `Failed to unregister drop zone: ${errorMessage}`,
         duration: 3000,
       })
 
-      // 抛出转换后的错误，让调用方处理
-      throw new Error(`Failed to unregister drop zone: ${errorMessage}`)
+      // 不抛出错误，避免影响主流程
     }
   }
   
@@ -614,14 +484,15 @@ export function useDragDrop(config: DragDropConfig = {}) {
    */
   const createDragPreview = (data: DragData): void => {
     try {
-      // 参数验证
-      if (!data) {
-        throw new Error('Drag data is required')
+      // 验证参数
+      if (!data || typeof data !== 'object') {
+        throw new Error('Drag data must be a valid object')
       }
-      
+
       // 清理之前的预览
       if (dragState.dragPreview) {
-        cleanupDragPreview()
+        document.body.removeChild(dragState.dragPreview)
+        dragState.dragPreview = null
       }
       
       // 创建预览元素
@@ -629,165 +500,136 @@ export function useDragDrop(config: DragDropConfig = {}) {
       preview.className = 'drag-preview'
       preview.style.cssText = `
         position: fixed;
-        pointer-events: none;
-        z-index: 9999;
+        top: -1000px;
+        left: -1000px;
         background: #409EFF;
         color: white;
         padding: 8px 12px;
         border-radius: 4px;
         font-size: 14px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        border: 1px solid #3a8ee6;
-        white-space: nowrap;
-        max-width: 200px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        pointer-events: none;
+        z-index: 9999;
       `
       
       // 设置预览内容
-      const icon = data.icon ? `<i class="${data.icon}" style="margin-right: 4px;"></i>` : ''
-      const description = data.description ? `<div style="font-size: 12px; opacity: 0.8; margin-top: 2px;">${data.description}</div>` : ''
+      const icon = data.icon ? `<i class="${data.icon}"></i> ` : ''
+      const description = data.description ? `<br><small>${data.description}</small>` : ''
+      preview.innerHTML = `${icon}<strong>${data.name}</strong>${description}`
       
-      preview.innerHTML = `
-        ${icon}
-        <span>${data.name}</span>
-        ${description}
-      `
-      
-      // 添加到文档
+      // 添加到DOM
       document.body.appendChild(preview)
-      
-      // 更新拖拽状态
       dragState.dragPreview = preview
       
       console.log(`🎨 Created drag preview for: ${data.name}`)
     } catch (error) {
+      console.error(`[createDragPreview] 创建拖拽预览失败:`, error)
+      
       const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('CREATE_DRAG_PREVIEW_ERROR', 'Failed to create drag preview', { 
-        error: errorMessage,
-        data 
+      
+      ElMessage.error({
+        message: `Failed to create drag preview: ${errorMessage}`,
+        duration: 3000,
       })
-      
-      // 不显示错误消息，避免影响拖拽体验
-      console.warn(`Failed to create drag preview: ${errorMessage}`)
-    }
-  }
-  
-  /**
-   * 清理拖拽预览
-   */
-  const cleanupDragPreview = (): void => {
-    try {
-      if (dragState.dragPreview && document.body.contains(dragState.dragPreview)) {
-        document.body.removeChild(dragState.dragPreview)
-        console.log('🎨 Cleaned up drag preview')
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('CLEANUP_DRAG_PREVIEW_ERROR', 'Failed to cleanup drag preview', { error: errorMessage })
-      
-      // 静默处理，不影响主流程
-    } finally {
-      dragState.dragPreview = null
+
+      // 不抛出错误，避免影响拖拽流程
     }
   }
   
   /**
    * 验证放置
    */
-  const validateDrop = (data: DragData, dropZone: DropZoneConfig): boolean => {
+  const validateDrop = (data: DragData, zone: DropZoneConfig): boolean => {
     try {
-      // 参数验证
-      if (!data) {
-        logError('VALIDATION_ERROR', 'Drag data is required for validation')
+      // 验证参数
+      if (!data || typeof data !== 'object') {
+        console.warn('Invalid drag data for validation')
         return false
       }
-      
-      if (!dropZone) {
-        logError('VALIDATION_ERROR', 'Drop zone is required for validation')
+
+      if (!zone || typeof zone !== 'object') {
+        console.warn('Invalid drop zone for validation')
         return false
       }
-      
+
       // 检查类型是否匹配
-      if (!dropZone.acceptedTypes.includes(data.type)) {
-        logError('TYPE_MISMATCH_ERROR', 'Drag data type not accepted by drop zone', {
-          dataType: data.type,
-          acceptedTypes: dropZone.acceptedTypes
-        })
+      if (!zone.acceptedTypes.includes(data.type)) {
+        console.warn(`Type mismatch: ${data.type} not in ${zone.acceptedTypes.join(', ')}`)
         return false
       }
       
       // 检查数量限制
-      if (dropZone.maxItems !== undefined && dropZone.maxItems > 0) {
-        // 这里需要业务逻辑来统计当前放置区域中的项目数量
-        // 暂时假设业务逻辑会处理这个验证
-        console.log(`📊 Validating max items limit: ${dropZone.maxItems}`)
+      if (zone.maxItems !== undefined && zone.maxItems > 0) {
+        // 这里需要具体的实现来计算当前放置的项目数量
+        console.log(`Checking max items limit: ${zone.maxItems}`)
       }
       
       return true
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('VALIDATE_DROP_ERROR', 'Failed to validate drop', { 
-        error: errorMessage,
-        data: data?.name,
-        zone: dropZone?.name 
-      })
+      console.error(`[validateDrop] 验证放置失败:`, error)
       
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      
+      ElMessage.error({
+        message: `Failed to validate drop: ${errorMessage}`,
+        duration: 3000,
+      })
+
+      // 回退到false，拒绝放置
       return false
     }
   }
   
   /**
-   * 获取所有放置区域
+   * 获取放置区域
    */
   const getDropZones = (): DropZoneConfig[] => {
     try {
       return Array.from(dropZones.value.values())
     } catch (error) {
+      console.error(`[getDropZones] 获取放置区域失败:`, error)
+      
       const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('GET_DROP_ZONES_ERROR', 'Failed to get drop zones', { error: errorMessage })
+      
+      ElMessage.error({
+        message: `Failed to get drop zones: ${errorMessage}`,
+        duration: 3000,
+      })
+
+      // 回退到空数组
       return []
     }
   }
   
   /**
-   * 查找指定位置的放置区域
+   * 查找位置处的放置区域
    */
   const findDropZoneAtPosition = (x: number, y: number): DropZoneConfig | null => {
     try {
-      // 参数验证
+      // 验证参数
       if (typeof x !== 'number' || typeof y !== 'number') {
-        throw new Error('Coordinates must be numbers')
+        console.warn('Invalid coordinates for drop zone detection')
+        return null
       }
-      
-      if (x < 0 || y < 0) {
-        throw new Error('Coordinates must be non-negative')
-      }
-      
-      // 获取所有放置区域
-      const zones = getDropZones()
-      
-      // 查找包含指定位置的放置区域
-      for (const zone of zones) {
-        if (!zone.element || !document.body.contains(zone.element)) {
-          continue
-        }
-        
+
+      for (const zone of dropZones.value.values()) {
         const rect = zone.element.getBoundingClientRect()
         if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
           return zone
         }
       }
-      
       return null
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('FIND_DROP_ZONE_ERROR', 'Failed to find drop zone at position', { 
-        error: errorMessage,
-        x,
-        y 
-      })
+      console.error(`[findDropZoneAtPosition] 查找放置区域失败:`, error)
       
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      
+      ElMessage.error({
+        message: `Failed to find drop zone at position: ${errorMessage}`,
+        duration: 3000,
+      })
+
+      // 回退到null
       return null
     }
   }
@@ -797,26 +639,36 @@ export function useDragDrop(config: DragDropConfig = {}) {
    */
   const updateValidDropZones = (data: DragData): void => {
     try {
-      // 参数验证
-      if (!data) {
-        throw new Error('Drag data is required')
+      // 验证参数
+      if (!data || typeof data !== 'object') {
+        throw new Error('Drag data must be a valid object')
       }
-      
-      // 获取所有放置区域
-      const zones = getDropZones()
-      
-      // 过滤有效的放置区域
-      dragState.validDropZones = zones.filter(zone => validateDrop(data, zone))
-      
-      console.log(`📊 Updated valid drop zones: ${dragState.validDropZones.length}/${zones.length}`)
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('UPDATE_VALID_ZONES_ERROR', 'Failed to update valid drop zones', { 
-        error: errorMessage,
-        data: data?.name 
+
+      if (!data.type?.trim()) {
+        throw new Error('Drag data type is required')
+      }
+
+      dragState.validDropZones = Array.from(dropZones.value.values()).filter(zone => {
+        try {
+          return validateDrop(data, zone)
+        } catch (validationError) {
+          console.error(`[updateValidDropZones] 验证放置区域失败:`, validationError)
+          return false
+        }
       })
       
-      // 清空有效放置区域列表
+      console.log(`🎯 Found ${dragState.validDropZones.length} valid drop zones for type: ${data.type}`)
+    } catch (error) {
+      console.error(`[updateValidDropZones] 更新有效放置区域失败:`, error)
+      
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      
+      ElMessage.error({
+        message: `Failed to update valid drop zones: ${errorMessage}`,
+        duration: 3000,
+      })
+
+      // 回退到空数组
       dragState.validDropZones = []
     }
   }
@@ -824,41 +676,33 @@ export function useDragDrop(config: DragDropConfig = {}) {
   /**
    * 更新放置区域位置
    */
-  const updateDropZonePosition = (id: string, element: HTMLElement): void => {
+  const updateDropZonePosition = (zoneId: string): void => {
     try {
-      // 参数验证
-      if (!id?.trim()) {
+      // 验证参数
+      if (!zoneId?.trim()) {
         throw new Error('Drop zone ID is required')
       }
-      
-      if (!element) {
-        throw new Error('Element is required')
-      }
-      
-      // 查找放置区域
-      const zone = dropZones.value.get(id)
+
+      const zone = dropZones.value.get(zoneId)
       if (!zone) {
-        throw new Error(`Drop zone with ID '${id}' not found`)
+        console.warn(`Drop zone not found: ${zoneId}`)
+        return
       }
       
-      // 更新元素
-      zone.element = element
-      
-      console.log(`📋 Updated drop zone position: ${zone.name} (${id})`)
+      // 更新位置信息（主要用于调试和日志）
+      const rect = zone.element.getBoundingClientRect()
+      console.log(`📍 Updated position for drop zone ${zone.name}: (${rect.left}, ${rect.top}) - (${rect.right}, ${rect.bottom})`)
     } catch (error) {
+      console.error(`[updateDropZonePosition] 更新放置区域位置失败:`, error)
+      
       const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('UPDATE_ZONE_POSITION_ERROR', 'Failed to update drop zone position', { 
-        error: errorMessage,
-        id 
-      })
       
       ElMessage.error({
         message: `Failed to update drop zone position: ${errorMessage}`,
         duration: 3000,
       })
 
-      // 抛出转换后的错误，让调用方处理
-      throw new Error(`Failed to update drop zone position: ${errorMessage}`)
+      // 不抛出错误，避免影响主流程
     }
   }
   
@@ -871,29 +715,33 @@ export function useDragDrop(config: DragDropConfig = {}) {
         return
       }
       
-      // 检查是否离开了所有放置区域
+      // 检查是否真的离开了放置区域
       const dropZone = findDropZoneAtPosition(event.clientX, event.clientY)
-      
       if (!dropZone && dragState.currentDropZone) {
-        // 离开当前放置区域
-        if (dragState.currentDropZone.onLeave) {
+        // 离开放置区域
+        if (dragState.currentDropZone.onLeave && dragState.dragData) {
           try {
-            dragState.currentDropZone.onLeave(dragState.dragData!, dragState.currentDropZone)
+            dragState.currentDropZone.onLeave(dragState.dragData, dragState.currentDropZone)
           } catch (callbackError) {
-            logError('ON_LEAVE_CALLBACK_ERROR', 'onLeave callback failed', { 
-              error: callbackError instanceof Error ? callbackError.message : String(callbackError),
-              zone: dragState.currentDropZone.id 
-            })
+            console.error(`[handleDragLeave] 调用onLeave回调失败:`, callbackError)
           }
         }
         
         dragState.currentDropZone = null
+        
+        console.log(`🚪 Left drop zone`)
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('DRAG_LEAVE_ERROR', 'Failed to handle drag leave', { error: errorMessage })
+      console.error(`[handleDragLeave] 处理拖拽离开失败:`, error)
       
-      // 静默处理，不影响拖拽体验
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      
+      ElMessage.error({
+        message: `Failed to handle drag leave: ${errorMessage}`,
+        duration: 3000,
+      })
+
+      // 不抛出错误，避免影响拖拽流程
     }
   }
   
@@ -902,46 +750,39 @@ export function useDragDrop(config: DragDropConfig = {}) {
    */
   const cleanupDragState = (): void => {
     try {
-      // 清理拖拽预览
-      cleanupDragPreview()
-      
-      // 重置拖拽状态
       dragState.isDragging = false
       dragState.dragData = null
       dragState.dragElement = null
-      dragState.startPosition = { x: 0, y: 0 }
-      dragState.currentPosition = { x: 0, y: 0 }
-      dragState.offset = { x: 0, y: 0 }
-      dragState.validDropZones = []
       dragState.currentDropZone = null
+      dragState.validDropZones = []
       
-      // 清理防抖定时器
-      if (debounceTimer) {
-        clearTimeout(debounceTimer)
-        debounceTimer = null
+      // 清理拖拽预览
+      if (dragState.dragPreview) {
+        document.body.removeChild(dragState.dragPreview)
+        dragState.dragPreview = null
       }
       
-      console.log('🧹 Cleaned up drag state')
+      console.log(`🧹 Cleaned up drag state`)
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('CLEANUP_DRAG_STATE_ERROR', 'Failed to cleanup drag state', { error: errorMessage })
+      console.error(`[cleanupDragState] 清理拖拽状态失败:`, error)
       
-      // 静默处理，确保状态清理
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      
+      ElMessage.error({
+        message: `Failed to cleanup drag state: ${errorMessage}`,
+        duration: 3000,
+      })
+
+      // 强制重置状态
+      dragState.isDragging = false
+      dragState.dragData = null
+      dragState.dragElement = null
+      dragState.currentDropZone = null
+      dragState.validDropZones = []
+      dragState.dragPreview = null
+
+      // 不抛出错误，避免影响清理流程
     }
-  }
-  
-  /**
-   * 获取错误日志
-   */
-  const getErrorLog = (): DragDropError[] => {
-    return [...errorLog.value]
-  }
-  
-  /**
-   * 获取性能指标
-   */
-  const getPerformanceMetrics = (): PerformanceMetrics => {
-    return { ...performanceMetrics }
   }
   
   /**
@@ -949,77 +790,86 @@ export function useDragDrop(config: DragDropConfig = {}) {
    */
   const cleanup = (): void => {
     try {
-      console.log('🧹 Cleaning up drag drop resources...')
+      console.log(`🧹 Cleaning up useDragDrop`)
       
       // 结束当前拖拽
       if (dragState.isDragging) {
         endDrag()
       }
       
-      // 清理所有放置区域
-      dropZones.value.clear()
-      
-      // 清理错误日志
-      errorLog.value = []
-      
-      // 重置性能指标
-      Object.assign(performanceMetrics, {
-        dragOperations: 0,
-        dropOperations: 0,
-        validationFailures: 0,
-        averageDragDuration: 0,
-        lastOperationTime: 0
-      })
-      
-      // 清理防抖定时器
-      if (debounceTimer) {
-        clearTimeout(debounceTimer)
-        debounceTimer = null
+      // 注销所有放置区域
+      const zoneIds = Array.from(dropZones.value.keys())
+      for (const zoneId of zoneIds) {
+        unregisterDropZone(zoneId)
       }
       
-      console.log('✅ Drag drop resources cleaned up')
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      logError('CLEANUP_ERROR', 'Failed to cleanup resources', { error: errorMessage })
+      // 清理拖拽状态
+      cleanupDragState()
       
-      // 静默处理，确保资源清理
+      ElMessage.info({
+        message: 'Drag and drop system cleaned up',
+        duration: 2000,
+      })
+    } catch (error) {
+      console.error(`[cleanup] 清理资源失败:`, error)
+      
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      
+      ElMessage.error({
+        message: `Failed to cleanup drag and drop system: ${errorMessage}`,
+        duration: 3000,
+      })
+
+      // 强制清理
+      dragState.isDragging = false
+      dragState.dragData = null
+      dragState.dragElement = null
+      dragState.currentDropZone = null
+      dragState.validDropZones = []
+      dragState.dragPreview = null
+      dropZones.value.clear()
+
+      // 不抛出错误，避免影响清理流程
     }
   }
   
-  // 组件卸载时清理资源
+  /**
+   * 组件卸载时清理资源
+   */
   onUnmounted(() => {
-    cleanup()
+    try {
+      cleanup()
+    } catch (error) {
+      console.error(`[onUnmounted] 清理资源失败:`, error)
+      
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      
+      ElMessage.error({
+        message: `Failed to cleanup resources: ${errorMessage}`,
+        duration: 3000,
+      })
+
+      // 不抛出错误，避免影响卸载流程
+    }
   })
   
-  // 返回公开的方法和状态
   return {
     // 状态
-    dragState: readonly(dragState),
+    dragState,
     isDragging,
     currentDragData,
     currentDropZone,
     dragPreviewStyle,
+    dropZones,
     
     // 方法
     startDrag,
     endDrag,
     registerDropZone,
     unregisterDropZone,
-    updateDropZonePosition,
-    handleDragLeave,
     validateDrop,
     getDropZones,
-    findDropZoneAtPosition,
-    updateValidDropZones,
-    cleanupDragState,
+    updateDropZonePosition,
     cleanup,
-    
-    // 调试和监控
-    getErrorLog,
-    getPerformanceMetrics,
-    
-    // 事件处理（防抖版本）
-    handleDragOver: debouncedDragOver,
-    handleDrop,
   }
 }
