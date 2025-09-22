@@ -44,9 +44,5 @@
     { "path": "./packages/lowcode-core" },
     { "path": "./packages/lowcode-designer" },
     { "path": "./packages/lowcode-tools" }
-  ],
-  // Adding a comment to force a refresh of the TS server and path mappings
-  "vueCompilerOptions": {
-    "target": 2.7
-  }
+  ]
 }
