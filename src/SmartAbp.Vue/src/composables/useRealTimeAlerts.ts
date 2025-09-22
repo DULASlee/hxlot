@@ -5,11 +5,15 @@
 
 import { ref, reactive, computed, onUnmounted, readonly } from "vue"
 import {
-  SecurityAlert,
-  AlertNotification,
+  type RealTimeAlert,
+  type SecurityAlert,
+  type AlertNotification,
+} from "@smartabp/lowcode-designer/types/security"
+import {
   SecurityAlertType,
   AlertSeverity,
-} from "@smartabp/lowcode-designer/types/security"
+} from "@smartabp/lowcode-designer/types/security-enums"
+import { useI18n } from "vue-i18n"
 
 interface UseRealTimeAlertsOptions {
   enableWebSocket?: boolean

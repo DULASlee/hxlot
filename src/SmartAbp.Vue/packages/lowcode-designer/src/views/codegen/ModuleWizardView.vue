@@ -204,7 +204,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Create')"
-                    @change="(v: boolean) => onToggleCrud(scope.row.name, 'Create', v)"
+                    @change="(v) => onToggleCrud(scope.row.name, 'Create', !!v)"
                   />
                 </template>
               </el-table-column>
@@ -212,7 +212,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Read')"
-                    @change="(v: boolean) => onToggleCrud(scope.row.name, 'Read', v)"
+                    @change="(v) => onToggleCrud(scope.row.name, 'Read', !!v)"
                   />
                 </template>
               </el-table-column>
@@ -220,7 +220,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Update')"
-                    @change="(v: boolean) => onToggleCrud(scope.row.name, 'Update', v)"
+                    @change="(v) => onToggleCrud(scope.row.name, 'Update', !!v)"
                   />
                 </template>
               </el-table-column>
@@ -228,7 +228,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Delete')"
-                    @change="(v: boolean) => onToggleCrud(scope.row.name, 'Delete', v)"
+                    @change="(v) => onToggleCrud(scope.row.name, 'Delete', !!v)"
                   />
                 </template>
               </el-table-column>
@@ -878,7 +878,7 @@ const generate = async (): Promise<void> => {
     }
 
     // Final validation - use validateStep for complete validation
-    const validationResult = WizardValidator.validateStep("preview", currentState)
+    const validationResult = WizardValidator.validateStep(WizardStep.PREVIEW, currentState)
     if (!validationResult.isValid) {
       const errors = Object.values(validationResult.errors).flat().join(", ")
       throw new Error(`Validation failed: ${errors}`)

@@ -5,12 +5,12 @@
 
 import { ref, reactive, computed, readonly } from "vue"
 import {
-  SecurityMetrics,
-  PermissionTrendData,
-  RiskDistributionData,
-  AbnormalBehavior,
-  ComplianceIssue,
-  DashboardConfig,
+  type SecurityMetrics,
+  type PermissionTrendData,
+  type RiskDistributionData,
+  type AbnormalBehavior,
+  type ComplianceIssue,
+  type DashboardConfig,
 } from "@smartabp/lowcode-designer/types/security"
 
 interface UseSecurityDashboardOptions {
