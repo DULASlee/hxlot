@@ -765,6 +765,645 @@
           "example": "EnhancedThemeEditor.test"
         }
       ]
+    },
+    {
+      "id": "business-workflow-approval",
+      "name": "企业级审批工作流",
+      "path": "templates/business-workflow/ApprovalWorkflow.template.vue",
+      "metadata": "templates/business-workflow/ApprovalWorkflow.template.meta.yml",
+      "category": "business-workflow/approval",
+      "type": "component",
+      "tags": [
+        "workflow",
+        "approval",
+        "business-process",
+        "multi-level-approval",
+        "enterprise"
+      ],
+      "scenarios": [
+        "请假审批流程",
+        "费用报销审批",
+        "采购申请审批",
+        "合同审批流程",
+        "人事变动审批"
+      ],
+      "ai_triggers": [
+        "审批工作流",
+        "多级审批",
+        "业务流程",
+        "工作流引擎",
+        "审批流程",
+        "企业审批"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "工作流引擎API"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "WorkflowName",
+          "type": "string",
+          "description": "工作流名称",
+          "required": true,
+          "example": "费用报销审批"
+        },
+        {
+          "name": "workflowId",
+          "type": "string",
+          "description": "工作流ID",
+          "required": true,
+          "example": "expense-approval"
+        },
+        {
+          "name": "BusinessType",
+          "type": "string",
+          "description": "业务类型",
+          "required": true,
+          "example": "ExpenseReimbursement"
+        }
+      ]
+    },
+    {
+      "id": "reporting-data-analysis",
+      "name": "数据分析报表",
+      "path": "templates/reporting/DataAnalysisReport.template.vue",
+      "metadata": "templates/reporting/DataAnalysisReport.template.meta.yml",
+      "category": "reporting/analysis",
+      "type": "component",
+      "tags": [
+        "reporting",
+        "data-analysis",
+        "charts",
+        "export",
+        "real-time"
+      ],
+      "scenarios": [
+        "销售数据分析",
+        "用户行为分析",
+        "财务报表分析",
+        "运营数据报告",
+        "市场分析报告"
+      ],
+      "ai_triggers": [
+        "数据报表",
+        "数据分析",
+        "图表展示",
+        "报表导出",
+        "实时报表",
+        "可视化分析"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "ECharts",
+        "报表API"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "ReportName",
+          "type": "string",
+          "description": "报表名称",
+          "required": true,
+          "example": "销售数据分析报表"
+        },
+        {
+          "name": "MainChartTitle",
+          "type": "string",
+          "description": "主图表标题",
+          "required": false,
+          "example": "销售收入"
+        },
+        {
+          "name": "DistributionTitle",
+          "type": "string",
+          "description": "分布图标题",
+          "required": false,
+          "example": "区域销售"
+        },
+        {
+          "name": "ComparisonTitle",
+          "type": "string",
+          "description": "对比图标题",
+          "required": false,
+          "example": "同期对比"
+        }
+      ]
+    },
+    {
+      "id": "dashboard-executive",
+      "name": "企业级高管仪表盘",
+      "path": "templates/dashboard/ExecutiveDashboard.template.vue",
+      "metadata": "templates/dashboard/ExecutiveDashboard.template.meta.yml",
+      "category": "dashboard/executive",
+      "type": "component",
+      "tags": [
+        "dashboard",
+        "executive",
+        "kpi",
+        "real-time",
+        "decision-support"
+      ],
+      "scenarios": [
+        "CEO决策仪表盘",
+        "CFO财务仪表盘",
+        "COO运营仪表盘",
+        "销售总监仪表盘",
+        "企业综合仪表盘"
+      ],
+      "ai_triggers": [
+        "高管仪表盘",
+        "CEO仪表盘",
+        "决策支持",
+        "KPI仪表盘",
+        "实时监控",
+        "企业仪表盘"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "ECharts",
+        "实时数据API"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "DashboardName",
+          "type": "string",
+          "description": "仪表盘名称",
+          "required": true,
+          "example": "CEO决策仪表盘"
+        }
+      ]
+    },
+    {
+      "id": "communication-notification-center",
+      "name": "企业级通知中心",
+      "path": "templates/communication/NotificationCenter.template.vue",
+      "metadata": "templates/communication/NotificationCenter.template.meta.yml",
+      "category": "communication/notification",
+      "type": "component",
+      "tags": [
+        "notification",
+        "communication",
+        "multi-channel",
+        "batch-send",
+        "template-management"
+      ],
+      "scenarios": [
+        "系统消息通知",
+        "营销消息推送",
+        "紧急事件通知",
+        "定时消息发送",
+        "多渠道消息管理"
+      ],
+      "ai_triggers": [
+        "通知中心",
+        "消息推送",
+        "通知管理",
+        "批量发送",
+        "消息模板",
+        "多渠道通知"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "通知API",
+        "消息队列"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "NotificationName",
+          "type": "string",
+          "description": "通知中心名称",
+          "required": true,
+          "example": "企业通知中心"
+        }
+      ]
+    },
+    {
+      "id": "system-monitor",
+      "name": "系统监控面板",
+      "path": "templates/system/SystemMonitor.template.vue",
+      "metadata": "templates/system/SystemMonitor.template.meta.yml",
+      "category": "system/monitoring",
+      "type": "component",
+      "tags": [
+        "system",
+        "monitor",
+        "performance",
+        "alerts",
+        "real-time",
+        "enterprise"
+      ],
+      "scenarios": [
+        "系统性能监控",
+        "服务状态监控",
+        "告警管理",
+        "运维监控面板",
+        "实时指标监控"
+      ],
+      "ai_triggers": [
+        "系统监控",
+        "性能监控",
+        "服务监控",
+        "告警管理",
+        "运维面板",
+        "实时监控"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "ECharts",
+        "监控API"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "SystemMonitorName",
+          "type": "string",
+          "description": "系统监控面板名称",
+          "required": true,
+          "example": "企业系统监控"
+        }
+      ]
+    },
+    {
+      "id": "config-manager",
+      "name": "配置管理系统",
+      "path": "templates/config/ConfigManager.template.vue",
+      "metadata": "templates/config/ConfigManager.template.meta.yml",
+      "category": "config/management",
+      "type": "component",
+      "tags": [
+        "config",
+        "management",
+        "distributed",
+        "version-control",
+        "environment",
+        "enterprise"
+      ],
+      "scenarios": [
+        "分布式配置管理",
+        "环境配置管理",
+        "配置版本控制",
+        "配置中心",
+        "系统参数管理"
+      ],
+      "ai_triggers": [
+        "配置管理",
+        "配置中心",
+        "参数管理",
+        "环境配置",
+        "分布式配置",
+        "配置版本"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "Pinia",
+        "配置API"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "ConfigManagerName",
+          "type": "string",
+          "description": "配置管理系统名称",
+          "required": true,
+          "example": "企业配置中心"
+        }
+      ]
+    },
+    {
+      "id": "project-manager",
+      "name": "项目管理系统",
+      "path": "templates/project/ProjectManager.template.vue",
+      "metadata": "templates/project/ProjectManager.template.meta.yml",
+      "category": "project/management",
+      "type": "component",
+      "tags": [
+        "project",
+        "management",
+        "gantt",
+        "tasks",
+        "resource-allocation",
+        "enterprise"
+      ],
+      "scenarios": [
+        "企业项目管理",
+        "甘特图项目规划",
+        "任务管理",
+        "资源分配管理",
+        "项目进度跟踪"
+      ],
+      "ai_triggers": [
+        "项目管理",
+        "甘特图",
+        "任务管理",
+        "资源管理",
+        "项目进度",
+        "项目规划"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "Gantt.js",
+        "项目API"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "ProjectManagerName",
+          "type": "string",
+          "description": "项目管理系统名称",
+          "required": true,
+          "example": "企业项目管理平台"
+        }
+      ]
+    },
+    {
+      "id": "document-manager",
+      "name": "文档管理系统",
+      "path": "templates/document/DocumentManager.template.vue",
+      "metadata": "templates/document/DocumentManager.template.meta.yml",
+      "category": "document/management",
+      "type": "component",
+      "tags": [
+        "document",
+        "management",
+        "version-control",
+        "collaboration",
+        "permissions",
+        "enterprise"
+      ],
+      "scenarios": [
+        "企业文档管理",
+        "文档版本控制",
+        "协作文档编辑",
+        "知识库管理",
+        "文档权限管理"
+      ],
+      "ai_triggers": [
+        "文档管理",
+        "文件管理",
+        "版本控制",
+        "文档协作",
+        "知识库",
+        "文档权限"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "文档API",
+        "文件上传"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "DocumentManagerName",
+          "type": "string",
+          "description": "文档管理系统名称",
+          "required": true,
+          "example": "企业知识库"
+        }
+      ]
+    },
+    {
+      "id": "data-processing-import-export",
+      "name": "数据导入导出管理",
+      "path": "templates/data-processing/DataImportExport.template.vue",
+      "metadata": "templates/data-processing/DataImportExport.template.meta.yml",
+      "category": "data-processing/import-export",
+      "type": "component",
+      "tags": [
+        "data-processing",
+        "import",
+        "export",
+        "batch-processing",
+        "validation",
+        "enterprise"
+      ],
+      "scenarios": [
+        "批量数据导入",
+        "数据导出管理",
+        "Excel数据处理",
+        "数据验证清洗",
+        "文件格式转换"
+      ],
+      "ai_triggers": [
+        "数据导入",
+        "数据导出",
+        "批量处理",
+        "Excel导入",
+        "数据清洗",
+        "文件转换"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "数据处理API",
+        "文件处理"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "DataImportExportName",
+          "type": "string",
+          "description": "数据导入导出功能名称",
+          "required": true,
+          "example": "用户数据导入导出"
+        }
+      ]
+    },
+    {
+      "id": "api-connector",
+      "name": "API连接器管理",
+      "path": "templates/integration/ApiConnector.template.vue",
+      "metadata": "templates/integration/ApiConnector.template.meta.yml",
+      "category": "integration/api",
+      "type": "component",
+      "tags": [
+        "integration",
+        "api",
+        "connector",
+        "third-party",
+        "data-sync",
+        "enterprise"
+      ],
+      "scenarios": [
+        "第三方API集成",
+        "数据同步管理",
+        "接口对接管理",
+        "外部服务集成",
+        "API连接监控"
+      ],
+      "ai_triggers": [
+        "API连接",
+        "第三方集成",
+        "接口对接",
+        "数据同步",
+        "外部服务",
+        "API管理"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "集成API",
+        "HTTP客户端"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "ApiConnectorName",
+          "type": "string",
+          "description": "API连接器名称",
+          "required": true,
+          "example": "微信API连接器"
+        }
+      ]
+    },
+    {
+      "id": "role-permission-manager",
+      "name": "角色权限管理器",
+      "path": "templates/security/RolePermissionManager.template.vue",
+      "metadata": "templates/security/RolePermissionManager.template.meta.yml",
+      "category": "security/permission",
+      "type": "component",
+      "tags": [
+        "security",
+        "permission",
+        "role",
+        "access-control",
+        "enterprise-security",
+        "rbac"
+      ],
+      "scenarios": [
+        "企业权限管理",
+        "角色权限分配",
+        "用户访问控制",
+        "权限审计管理",
+        "安全策略管理"
+      ],
+      "ai_triggers": [
+        "权限管理",
+        "角色管理",
+        "访问控制",
+        "用户权限",
+        "安全管理",
+        "权限分配"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "权限API",
+        "安全框架"
+      ],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "RolePermissionManagerName",
+          "type": "string",
+          "description": "角色权限管理器名称",
+          "required": true,
+          "example": "企业权限管理中心"
+        }
+      ]
+    },
+    {
+      "id": "data-table-ui",
+      "name": "通用数据表格",
+      "path": "templates/ui-components/DataTable.template.vue",
+      "metadata": "templates/ui-components/DataTable.template.meta.yml",
+      "category": "ui-components/table",
+      "type": "component",
+      "tags": [
+        "ui-component",
+        "table",
+        "data-display",
+        "pagination",
+        "sorting",
+        "filtering"
+      ],
+      "scenarios": [
+        "数据列表展示",
+        "表格数据管理",
+        "分页表格",
+        "排序过滤表格",
+        "通用数据展示"
+      ],
+      "ai_triggers": [
+        "数据表格",
+        "列表展示",
+        "表格组件",
+        "数据列表",
+        "分页表格",
+        "排序表格"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "数据API"
+      ],
+      "permissions_required": false,
+      "parameters": [
+        {
+          "name": "DataTableName",
+          "type": "string",
+          "description": "数据表格组件名称",
+          "required": true,
+          "example": "用户列表表格"
+        }
+      ]
+    },
+    {
+      "id": "advanced-form",
+      "name": "高级表单组件",
+      "path": "templates/forms/AdvancedForm.template.vue",
+      "metadata": "templates/forms/AdvancedForm.template.meta.yml",
+      "category": "forms/advanced",
+      "type": "component",
+      "tags": [
+        "form",
+        "advanced",
+        "validation",
+        "dynamic-fields",
+        "complex-form",
+        "enterprise"
+      ],
+      "scenarios": [
+        "复杂表单设计",
+        "动态表单生成",
+        "高级表单验证",
+        "多步骤表单",
+        "企业级表单"
+      ],
+      "ai_triggers": [
+        "高级表单",
+        "复杂表单",
+        "动态表单",
+        "表单验证",
+        "多步表单",
+        "企业表单"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "表单验证库"
+      ],
+      "permissions_required": false,
+      "parameters": [
+        {
+          "name": "AdvancedFormName",
+          "type": "string",
+          "description": "高级表单组件名称",
+          "required": true,
+          "example": "用户信息表单"
+        }
+      ]
     }
   ],
   "categories": {
@@ -792,6 +1431,45 @@
     },
     "testing": {
       "tdd": "TDD测试驱动开发模板，支持Vue组件和业务逻辑的单元测试"
+    },
+    "business-workflow": {
+      "approval": "企业级多级审批工作流模板，支持复杂业务流程管理和条件分支"
+    },
+    "reporting": {
+      "analysis": "数据分析报表模板，支持多维度分析、实时刷新和多格式导出"
+    },
+    "dashboard": {
+      "executive": "高管决策支持仪表盘模板，支持KPI监控、实时数据和业务健康度分析"
+    },
+    "communication": {
+      "notification": "企业级通知中心模板，支持多渠道消息推送、模板管理和批量发送"
+    },
+    "system": {
+      "monitoring": "企业级系统监控模板，支持实时性能监控、告警管理、服务状态监控"
+    },
+    "config": {
+      "management": "分布式配置管理模板，支持环境配置、版本控制、参数管理"
+    },
+    "project": {
+      "management": "项目管理系统模板，支持甘特图、任务管理、资源分配、进度跟踪"
+    },
+    "document": {
+      "management": "文档管理系统模板，支持版本控制、协作编辑、权限管理、知识库"
+    },
+    "data-processing": {
+      "import-export": "数据导入导出模板，支持批量处理、数据验证、格式转换"
+    },
+    "integration": {
+      "api": "API集成连接器模板，支持第三方服务集成、数据同步、接口对接"
+    },
+    "security": {
+      "permission": "权限安全管理模板，支持角色管理、访问控制、权限审计、RBAC"
+    },
+    "ui-components": {
+      "table": "通用UI组件模板，支持数据展示、分页、排序、过滤功能"
+    },
+    "forms": {
+      "advanced": "高级表单组件模板，支持复杂验证、动态字段、多步骤表单"
     }
   },
   "ai_search_patterns": {
@@ -809,7 +1487,33 @@
     "workflow_engine": "templates/**/*workflow*.template.*",
     "lowcode_studio": "templates/**/*studio*.template.*",
     "tdd_tests": "templates/testing/**/*.template.ts",
-    "tdd_verified": "templates/**/*tdd-verified*.template.*"
+    "tdd_verified": "templates/**/*tdd-verified*.template.*",
+    "business_workflow": "templates/business-workflow/**/*.template.vue",
+    "approval_workflow": "templates/**/*approval*.template.*",
+    "reporting_analysis": "templates/reporting/**/*.template.vue",
+    "data_reports": "templates/**/*report*.template.*",
+    "executive_dashboard": "templates/dashboard/**/*.template.vue",
+    "kpi_dashboard": "templates/**/*dashboard*.template.*",
+    "notification_system": "templates/communication/**/*.template.vue",
+    "message_center": "templates/**/*notification*.template.*",
+    "system_monitoring": "templates/system/**/*.template.vue",
+    "performance_monitor": "templates/**/*monitor*.template.*",
+    "config_management": "templates/config/**/*.template.vue",
+    "parameter_config": "templates/**/*config*.template.*",
+    "project_management": "templates/project/**/*.template.vue",
+    "gantt_project": "templates/**/*project*.template.*",
+    "document_management": "templates/document/**/*.template.vue",
+    "knowledge_base": "templates/**/*document*.template.*",
+    "data_import_export": "templates/data-processing/**/*.template.vue",
+    "batch_processing": "templates/**/*import*export*.template.*",
+    "api_integration": "templates/integration/**/*.template.vue",
+    "third_party_connector": "templates/**/*api*connector*.template.*",
+    "security_permission": "templates/security/**/*.template.vue",
+    "role_management": "templates/**/*permission*.template.*",
+    "ui_components": "templates/ui-components/**/*.template.vue",
+    "data_table": "templates/**/*table*.template.*",
+    "advanced_forms": "templates/forms/**/*.template.vue",
+    "complex_form": "templates/**/*form*.template.*"
   },
   "naming_conventions": {
     "backend": {
@@ -837,15 +1541,29 @@
     }
   },
   "statistics": {
-    "total_templates": 17,
-    "categories_count": 6,
+    "total_templates": 30,
+    "categories_count": 15,
     "backend_templates": 6,
     "frontend_templates": 2,
     "lowcode_templates": 3,
     "enhanced_components": 3,
     "enhanced_stores": 2,
     "testing_templates": 1,
+    "business_workflow_templates": 1,
+    "reporting_templates": 1,
+    "dashboard_templates": 1,
+    "communication_templates": 1,
+    "system_templates": 1,
+    "config_templates": 1,
+    "project_templates": 1,
+    "document_templates": 1,
+    "data_processing_templates": 1,
+    "integration_templates": 1,
+    "security_templates": 1,
+    "ui_component_templates": 1,
+    "form_templates": 1,
     "tdd_verified_templates": 6,
-    "test_coverage": "48/48 tests passed"
+    "test_coverage": "48/48 tests passed",
+    "enterprise_ready_templates": 30
   }
 }
