@@ -108,7 +108,7 @@ public class Program
                         .WriteTo.Async(c => c.Console())
                         .WriteTo.Async(c => c.AbpStudio(services));
                 });
-            await builder.AddApplicationAsync<SmartAbpHttpApiModule>();
+            await builder.AddApplicationAsync<SmartAbpHttpApiHostModule>();
             var app = builder.Build();
             // CorrelationId + Request logging + ProblemDetails
             app.UseMiddleware<Middleware.CorrelationIdMiddleware>();

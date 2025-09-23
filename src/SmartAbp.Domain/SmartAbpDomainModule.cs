@@ -1,3 +1,5 @@
+using System;
+using OpenIddict;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SmartAbp.Localization;
@@ -37,6 +39,47 @@ namespace SmartAbp;
     )]
 public class SmartAbpDomainModule : AbpModule
 {
+    public override void PreConfigureServices(ServiceConfigurationContext context)
+    {
+        // Enable OpenIddict server endpoints and flows for development
+        PreConfigure<OpenIddictBuilder>(builder =>
+        {
+            builder.AddServer(options =>
+            {
+                options
+                    .SetAuthorizationEndpointUris("/connect/authorize")
+                    .SetTokenEndpointUris("/connect/token")
+                    .SetUserinfoEndpointUris("/connect/userinfo")
+                    .SetIntrospectionEndpointUris("/connect/introspect")
+                    .SetRevocationEndpointUris("/connect/revocation");
+
+                options
+                    .AllowPasswordFlow()
+                    .AllowRefreshTokenFlow()
+                    .AllowClientCredentialsFlow();
+
+                options.AcceptAnonymousClients();
+
+                options
+                    .AddDevelopmentEncryptionCertificate()
+                    .AddDevelopmentSigningCertificate();
+
+                options.UseAspNetCore()
+                    .EnableAuthorizationEndpointPassthrough()
+                    .EnableTokenEndpointPassthrough()
+                    .EnableUserinfoEndpointPassthrough()
+                    .EnableStatusCodePagesIntegration();
+            });
+
+            builder.AddValidation(options =>
+            {
+                options.UseLocalServer();
+                options.UseAspNetCore();
+            });
+        });
+
+    }
+
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         Configure<AbpMultiTenancyOptions>(options =>
@@ -65,7 +108,7 @@ public class SmartAbpDomainModule : AbpModule
             options.Languages.Add(new LanguageInfo("es", "es", "Español"));
             options.Languages.Add(new LanguageInfo("sv", "sv", "Svenska"));
         });
-        
+
 
 #if DEBUG
         context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
