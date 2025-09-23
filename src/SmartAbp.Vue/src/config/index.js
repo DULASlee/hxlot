@@ -6,5 +6,5 @@ function normalizeUrl(url) {
 }
 const env = import.meta?.env || {};
 export const appConfig = {
-    apiBaseUrl: normalizeUrl(env.VITE_API_BASE_URL || globalThis.__API_BASE_URL__),
+    apiBaseUrl: normalizeUrl(env.VITE_API_BASE_URL || globalThis.__API_BASE_URL__ || "https://localhost:44379"),
 };

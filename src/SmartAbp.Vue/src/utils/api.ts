@@ -5,7 +5,7 @@ import { useAuthStore } from "@/stores"
 import { logger } from "./logger"
 
 // API基础配置（统一从强类型配置读取）
-const API_BASE_URL = appConfig.apiBaseUrl || "https://localhost:44397"
+const API_BASE_URL = appConfig.apiBaseUrl || "https://localhost:44379"
 
 /**
  * HTTP请求工具类

@@ -68,7 +68,7 @@ export default defineConfig({
     ],
   },
   server: {
-    host: "localhost", // 改为localhost避免网络问题
+    host: "0.0.0.0", // 绑定所有网络接口，确保IPv4可访问
     port: 11369,
     strictPort: false, // 允许端口自动切换，避免冲突
     open: false, // 禁用自动打开浏览器

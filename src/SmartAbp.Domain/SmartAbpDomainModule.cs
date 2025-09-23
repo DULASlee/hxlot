@@ -49,7 +49,6 @@ public class SmartAbpDomainModule : AbpModule
                 options
                     .SetAuthorizationEndpointUris("/connect/authorize")
                     .SetTokenEndpointUris("/connect/token")
-                    .SetUserinfoEndpointUris("/connect/userinfo")
                     .SetIntrospectionEndpointUris("/connect/introspect")
                     .SetRevocationEndpointUris("/connect/revocation");
 
@@ -67,14 +66,7 @@ public class SmartAbpDomainModule : AbpModule
                 options.UseAspNetCore()
                     .EnableAuthorizationEndpointPassthrough()
                     .EnableTokenEndpointPassthrough()
-                    .EnableUserinfoEndpointPassthrough()
                     .EnableStatusCodePagesIntegration();
-            });
-
-            builder.AddValidation(options =>
-            {
-                options.UseLocalServer();
-                options.UseAspNetCore();
             });
         });
 
