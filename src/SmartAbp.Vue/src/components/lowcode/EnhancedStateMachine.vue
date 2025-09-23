@@ -26,14 +26,14 @@
         </div>
       </div>
       <div class="workflow-actions">
-        <el-button
-          size="small"
+        <el-button 
+          size="small" 
           @click="showMetadataDialog = true"
         >
           编辑信息
         </el-button>
-        <el-button
-          size="small"
+        <el-button 
+          size="small" 
           type="primary"
           data-testid="generate-code-btn"
           @click="generateCode"
@@ -88,14 +88,14 @@
             </el-button-group>
           </div>
         </div>
-
+        
         <div
           class="state-machine-canvas"
           data-testid="state-machine-canvas"
         >
           <!-- 状态节点 -->
-          <div
-            v-for="state in store.states"
+          <div 
+            v-for="state in store.states" 
             :key="state.id"
             class="state-node"
             :class="`state-${state.type}`"
@@ -111,17 +111,17 @@
             <div class="state-type">
               {{ getStateTypeLabel(state.type) }}
             </div>
-            <el-button
-              size="small"
-              type="danger"
-              circle
+            <el-button 
+              size="small" 
+              type="danger" 
+              circle 
               class="delete-btn"
               @click.stop="removeState(state.id)"
             >
               <el-icon><close /></el-icon>
             </el-button>
           </div>
-
+          
           <!-- 转换线条 -->
           <svg
             class="transitions-overlay"
@@ -131,7 +131,7 @@
               <marker
                 id="arrowhead"
                 markerWidth="10"
-                markerHeight="7"
+                markerHeight="7" 
                 refX="9"
                 refY="3.5"
                 orient="auto"
@@ -142,7 +142,7 @@
                 />
               </marker>
             </defs>
-            <line
+            <line 
               v-for="transition in store.transitions"
               :key="transition.id"
               :x1="getStatePosition(transition.source).x + 50"
@@ -177,7 +177,7 @@
                 <h5>状态类型</h5>
               </div>
               <div class="state-types">
-                <div
+                <div 
                   v-for="type in ['start', 'intermediate', 'end']"
                   :key="type"
                   class="state-type-item"
@@ -188,10 +188,10 @@
                   <span>{{ getStateTypeLabel(type) }}</span>
                 </div>
               </div>
-
+              
               <div class="states-list">
                 <h5>当前状态</h5>
-                <div
+                <div 
                   v-for="state in store.states"
                   :key="state.id"
                   class="state-list-item"
@@ -200,9 +200,9 @@
                 >
                   <div :class="`state-indicator state-${state.type}`" />
                   <span class="state-name">{{ state.label }}</span>
-                  <el-button
-                    size="small"
-                    type="text"
+                  <el-button 
+                    size="small" 
+                    type="text" 
                     @click.stop="removeState(state.id)"
                   >
                     <el-icon><delete /></el-icon>
@@ -223,8 +223,8 @@
             >
               <div class="panel-header">
                 <h5>状态转换</h5>
-                <el-button
-                  size="small"
+                <el-button 
+                  size="small" 
                   type="primary"
                   :disabled="store.states.length < 2"
                   @click="showTransitionDialog = true"
@@ -232,9 +232,9 @@
                   添加转换
                 </el-button>
               </div>
-
+              
               <div class="transitions-list">
-                <div
+                <div 
                   v-for="transition in store.transitions"
                   :key="transition.id"
                   class="transition-item"
@@ -256,9 +256,9 @@
                   >
                     动作: {{ transition.action }}
                   </div>
-                  <el-button
-                    size="small"
-                    type="text"
+                  <el-button 
+                    size="small" 
+                    type="text" 
                     @click.stop="removeTransition(transition.id)"
                   >
                     <el-icon><delete /></el-icon>
@@ -279,8 +279,8 @@
             >
               <div class="panel-header">
                 <h5>业务规则</h5>
-                <el-button
-                  size="small"
+                <el-button 
+                  size="small" 
                   type="primary"
                   data-testid="add-rule-btn"
                   @click="showRuleDialog = true"
@@ -288,9 +288,9 @@
                   添加规则
                 </el-button>
               </div>
-
+              
               <div class="rules-list">
-                <div
+                <div 
                   v-for="rule in store.businessRules"
                   :key="rule.id"
                   class="rule-item"
@@ -320,14 +320,14 @@
                     </div>
                   </div>
                   <div class="rule-actions">
-                    <el-switch
-                      v-model="rule.enabled"
+                    <el-switch 
+                      v-model="rule.enabled" 
                       size="small"
                       @change="toggleRule(rule.id)"
                     />
-                    <el-button
-                      size="small"
-                      type="text"
+                    <el-button 
+                      size="small" 
+                      type="text" 
                       @click="removeRule(rule.id)"
                     >
                       <el-icon><delete /></el-icon>
@@ -350,21 +350,21 @@
               <div class="panel-header">
                 <h5>代码预览</h5>
                 <el-button-group>
-                  <el-button
+                  <el-button 
                     size="small"
                     :type="codeType === 'frontend' ? 'primary' : ''"
                     @click="codeType = 'frontend'"
                   >
                     前端
                   </el-button>
-                  <el-button
+                  <el-button 
                     size="small"
                     :type="codeType === 'backend' ? 'primary' : ''"
                     @click="codeType = 'backend'"
                   >
                     后端
                   </el-button>
-                  <el-button
+                  <el-button 
                     size="small"
                     :type="codeType === 'policies' ? 'primary' : ''"
                     @click="codeType = 'policies'"
@@ -373,7 +373,7 @@
                   </el-button>
                 </el-button-group>
               </div>
-
+              
               <div class="code-content">
                 <pre><code>{{ generatedCode }}</code></pre>
               </div>
@@ -455,7 +455,7 @@
             v-model="transitionForm.source"
             placeholder="选择源状态"
           >
-            <el-option
+            <el-option 
               v-for="state in sourceStates"
               :key="state.id"
               :label="state.label"
@@ -468,7 +468,7 @@
             v-model="transitionForm.target"
             placeholder="选择目标状态"
           >
-            <el-option
+            <el-option 
               v-for="state in targetStates"
               :key="state.id"
               :label="state.label"
@@ -477,14 +477,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="转换条件">
-          <el-input
-            v-model="transitionForm.condition"
+          <el-input 
+            v-model="transitionForm.condition" 
             placeholder="例如: user.role === 'admin'"
           />
         </el-form-item>
         <el-form-item label="执行动作">
-          <el-input
-            v-model="transitionForm.action"
+          <el-input 
+            v-model="transitionForm.action" 
             placeholder="例如: sendNotification('approved')"
           />
         </el-form-item>
@@ -638,11 +638,11 @@ const canvasStyle = computed(() => ({
   pointerEvents: "none" as const
 }))
 
-const sourceStates = computed(() =>
+const sourceStates = computed(() => 
   store.states.filter(s => s.type !== "end")
 )
 
-const targetStates = computed(() =>
+const targetStates = computed(() => 
   store.states.filter(s => s.type !== "start")
 )
 
@@ -676,7 +676,7 @@ const getStateTypeLabel = (type: string): string => {
 const getRuleTypeLabel = (type: string): string => {
   const labels = {
     "field-linkage": "字段联动",
-    "permission-constraint": "权限约束",
+    "permission-constraint": "权限约束", 
     "async-validation": "异步验证",
     "custom": "自定义"
   }
@@ -687,7 +687,7 @@ const getRuleTypeColor = (type: string): "primary" | "success" | "warning" | "in
   const colors: Record<string, "primary" | "success" | "warning" | "info" | "danger"> = {
     "field-linkage": "primary",
     "permission-constraint": "warning",
-    "async-validation": "info",
+    "async-validation": "info", 
     "custom": "success"
   }
   return colors[type as keyof typeof colors]
@@ -709,13 +709,13 @@ const addNewState = (type: "start" | "intermediate" | "end") => {
     ElMessage.warning("只能有一个开始状态")
     return
   }
-
+  
   const stateId = `${type}_${Date.now()}`
   const position = {
     x: store.states.length * 150 + 50,
     y: 100
   }
-
+  
   try {
     store.addState({
       id: stateId,
@@ -723,7 +723,7 @@ const addNewState = (type: "start" | "intermediate" | "end") => {
       label: `${getStateTypeLabel(type)}${store.states.length + 1}`,
       position
     })
-
+    
     selectedState.value = stateId
     ElMessage.success(`添加${getStateTypeLabel(type)}状态成功`)
   } catch (error) {
@@ -767,7 +767,7 @@ const saveTransition = () => {
     ElMessage.error("请选择源状态和目标状态")
     return
   }
-
+  
   try {
     store.addTransition({
       id: `${transitionForm.value.source}_${transitionForm.value.target}_${Date.now()}`,
@@ -776,7 +776,7 @@ const saveTransition = () => {
       condition: transitionForm.value.condition,
       action: transitionForm.value.action
     })
-
+    
     showTransitionDialog.value = false
     transitionForm.value = { source: "", target: "", condition: "", action: "" }
     ElMessage.success("添加转换成功")
@@ -791,7 +791,7 @@ const saveRule = () => {
     ElMessage.error("请填写必要的规则信息")
     return
   }
-
+  
   try {
     store.addBusinessRule({
       id: ruleForm.value.id,
@@ -801,7 +801,7 @@ const saveRule = () => {
       action: ruleForm.value.action,
       priority: ruleForm.value.priority
     })
-
+    
     showRuleDialog.value = false
     ruleForm.value = {
       id: "",
@@ -840,11 +840,11 @@ const generateCode = () => {
     ElMessage.error("状态机验证失败，请修复错误后重试")
     return
   }
-
+  
   const codePackage = store.generateCompleteCodePackage()
   logger.info("代码生成完成", codePackage.metadata)
   ElMessage.success("代码生成成功")
-
+  
   // 切换到代码预览标签
   activeTab.value = "code"
 }
@@ -868,7 +868,7 @@ const saveAsTemplate = async () => {
       "保存为模板",
       { inputValue: store.workflowMetadata.name + "模板" }
     )
-
+    
     if (templateName) {
       store.addWorkflowTemplate({
         id: `template_${Date.now()}`,
@@ -877,7 +877,7 @@ const saveAsTemplate = async () => {
         states: store.states.map(s => s.id),
         rules: store.businessRules.map(r => r.id)
       })
-
+      
       ElMessage.success("保存模板成功")
     }
   } catch {
@@ -891,14 +891,14 @@ const loadTemplate = async () => {
     ElMessage.info("暂无可用模板")
     return
   }
-
+  
   // 这里应该显示模板选择对话框
   ElMessage.info("模板加载功能开发中")
 }
 
 // 初始化
 watch(() => store.workflowMetadata, (metadata) => {
-  metadataForm.value = {
+  metadataForm.value = { 
     name: metadata.name || "",
     description: metadata.description || "",
     entity: metadata.entity || ""
@@ -979,7 +979,7 @@ onMounted(() => {
   flex: 1;
   position: relative;
   overflow: hidden;
-  background:
+  background: 
     radial-gradient(circle, var(--el-border-color-light) 1px, transparent 1px);
   background-size: 20px 20px;
 }

@@ -191,7 +191,7 @@
                 <el-menu-item index="3">
                   系统设置
                 </el-menu-item>
-                <el-submenu index="4">
+                <el-sub-menu index="4">
                   <template #title>
                     更多功能
                   </template>
@@ -201,7 +201,7 @@
                   <el-menu-item index="4-2">
                     角色管理
                   </el-menu-item>
-                </el-submenu>
+                </el-sub-menu>
               </el-menu>
             </div>
 

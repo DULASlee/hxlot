@@ -30,6 +30,7 @@
       "@assets/*": ["src/SmartAbp.Vue/src/assets/*"],
       "@smartabp/lowcode-api": ["src/SmartAbp.Vue/packages/lowcode-api/src/index.ts"],
       "@smartabp/lowcode-api/*": ["src/SmartAbp.Vue/packages/lowcode-api/src/*"],
+      "@smartabp/lowcode-api/types": ["src/SmartAbp.Vue/packages/lowcode-api/types.ts"],
       "@smartabp/lowcode-core": ["src/SmartAbp.Vue/packages/lowcode-core/src/index.ts"],
       "@smartabp/lowcode-core/*": ["src/SmartAbp.Vue/packages/lowcode-core/src/*"],
       "@smartabp/lowcode-designer": ["src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts"],
