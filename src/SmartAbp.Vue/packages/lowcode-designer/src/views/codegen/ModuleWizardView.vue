@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { ElMessage, ElForm, ElFormItem, ElInput, ElButton } from "element-plus"
-import EntityDesigner from "@smartabp/lowcode-designer/components/CodeGenerator/EntityDesigner.vue"
+import EntityDesigner from "../../components/CodeGenerator/EntityDesigner.vue"
 import { codeGeneratorApi } from "@smartabp/lowcode-api"
 import { getErrorMessage } from "@/utils/error-handling"
 import type {
