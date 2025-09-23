@@ -103,7 +103,7 @@ get_folder_size() {
         echo "0"
         return
     fi
-    
+
     if command -v du >/dev/null 2>&1; then
         # 使用du命令，转换为MB
         local size_kb=$(du -sk "$path" 2>/dev/null | cut -f1)
@@ -118,31 +118,31 @@ remove_safely_with_backup() {
     local path="$1"
     local description="$2"
     local backup_first="${3:-false}"
-    
+
     if [ ! -e "$path" ]; then
         log_warning "路径不存在，跳过: $path"
         return
     fi
-    
+
     local size_mb=$(get_folder_size "$path")
-    
+
     if [ "$DRY_RUN" = true ]; then
         log_progress "[DRY RUN] 将清理 $description : $path ($size_mb MB)"
         return
     fi
-    
+
     # 备份重要配置
     if [ "$backup_first" = true ] && [ "$BACKUP" = true ] && [ "$(echo "$size_mb > 0" | bc)" -eq 1 ]; then
         local backup_name=$(basename "$path")
         local backup_target="$BACKUP_PATH/${backup_name}-$(date +%Y%m%d-%H%M%S)"
-        
+
         if cp -r "$path" "$backup_target" 2>/dev/null; then
             log_success "已备份 $description 到: $backup_target"
         else
             log_error "备份失败: $path"
         fi
     fi
-    
+
     # 执行清理
     if rm -rf "$path" 2>/dev/null; then
         log_success "✅ 已清理 $description : $size_mb MB"
@@ -158,20 +158,20 @@ clear_old_files() {
     local path="$1"
     local days_to_keep="$2"
     local description="$3"
-    
+
     if [ ! -d "$path" ]; then
         return
     fi
-    
+
     if [ "$DRY_RUN" = true ]; then
         local old_files_count=$(find "$path" -type f -mtime +$days_to_keep 2>/dev/null | wc -l)
         log_progress "[DRY RUN] 将清理 $description 中 $days_to_keep 天前的文件: $old_files_count 个"
         return
     fi
-    
+
     local files_removed=0
     local total_size=0
-    
+
     # 查找并删除旧文件
     while IFS= read -r -d '' file; do
         if [ -f "$file" ]; then
@@ -180,7 +180,7 @@ clear_old_files() {
             rm -f "$file" 2>/dev/null && files_removed=$((files_removed + 1))
         fi
     done < <(find "$path" -type f -mtime +$days_to_keep -print0 2>/dev/null)
-    
+
     if [ $files_removed -gt 0 ]; then
         local size_mb=$(echo "scale=2; $total_size / 1024 / 1024" | bc)
         log_success "✅ 已清理 $description 旧文件: $files_removed 个文件, $size_mb MB"
@@ -203,7 +203,7 @@ detect_os() {
 get_cursor_paths() {
     local os=$(detect_os)
     local home_dir="$HOME"
-    
+
     case $os in
         "macos")
             echo "config:$home_dir/Library/Application Support/Cursor"
@@ -231,14 +231,14 @@ start_cursor_cleanup() {
     log_info "清理模式: $([ "$DEEP_CLEAN" = true ] && echo '深度清理' || echo '标准清理')"
     log_info "执行模式: $([ "$DRY_RUN" = true ] && echo '预演模式' || echo '实际清理')"
     log_info ""
-    
+
     # 创建备份目录
     if [ "$BACKUP" = true ] && [ "$DRY_RUN" = false ]; then
         BACKUP_PATH="/tmp/CursorBackup-$(date +%Y%m%d-%H%M%S)"
         mkdir -p "$BACKUP_PATH"
         log_info "备份目录: $BACKUP_PATH"
     fi
-    
+
     # 检测Cursor进程
     if pgrep -f "cursor" >/dev/null 2>&1; then
         log_warning "⚠️  检测到Cursor进程正在运行"
@@ -253,13 +253,13 @@ start_cursor_cleanup() {
             fi
         fi
     fi
-    
+
     # 获取Cursor路径
     local cursor_paths=($(get_cursor_paths))
     local config_path=""
     local cache_path=""
     local logs_path=""
-    
+
     for path_info in "${cursor_paths[@]}"; do
         case $path_info in
             config:*)
@@ -273,44 +273,44 @@ start_cursor_cleanup() {
                 ;;
         esac
     done
-    
+
     # 定义清理项目
     log_progress "🧹 开始清理Cursor IDE文件..."
-    
+
     # 标准清理项目
     if [ -n "$cache_path" ]; then
         remove_safely_with_backup "$cache_path/GPUCache" "GPU缓存" false
         remove_safely_with_backup "$cache_path/ShaderCache" "着色器缓存" false
         remove_safely_with_backup "$cache_path/CachedData" "Web缓存数据" false
     fi
-    
+
     if [ -n "$config_path" ]; then
         remove_safely_with_backup "$config_path/CachedExtensions" "扩展缓存" false
         remove_safely_with_backup "$config_path/CachedExtensionVSIXs" "扩展安装包缓存" false
         remove_safely_with_backup "$config_path/logs" "应用日志" false
     fi
-    
+
     # 清理工作区存储（备份）
     if [ -n "$config_path" ]; then
         remove_safely_with_backup "$config_path/User/workspaceStorage" "工作区存储" true
     fi
-    
+
     # 深度清理项目
     if [ "$DEEP_CLEAN" = true ]; then
         log_progress "🔍 深度清理模式：清理更多缓存文件..."
-        
+
         if [ -n "$config_path" ]; then
             remove_safely_with_backup "$config_path/Crashpad" "崩溃转储文件" false
             remove_safely_with_backup "$config_path/User/tmp" "临时文件" false
         fi
-        
+
         # 清理Node.js缓存
         local node_cache_paths=(
             "$HOME/.npm"
             "$HOME/.node-gyp"
             "$HOME/.cache/npm"
         )
-        
+
         for path in "${node_cache_paths[@]}"; do
             if [ -d "$path" ]; then
                 local size=$(get_folder_size "$path")
@@ -320,13 +320,13 @@ start_cursor_cleanup() {
             fi
         done
     fi
-    
+
     # 清理旧日志文件
     log_progress "📋 清理旧日志文件..."
     if [ -n "$logs_path" ]; then
         clear_old_files "$logs_path" "$KEEP_DAYS" "Cursor日志"
     fi
-    
+
     # 清理系统临时文件中的Cursor相关文件
     log_progress "🗑️  清理系统临时文件中的Cursor数据..."
     find /tmp -name "*cursor*" -type f -mtime +1 2>/dev/null | while read -r file; do
@@ -345,10 +345,10 @@ show_performance_recommendations() {
     log_info "5. 关闭不必要的文件和标签页"
     log_info "6. 使用.gitignore排除大型node_modules目录"
     log_info ""
-    
+
     # 系统资源检查
     log_progress "💻 系统资源状态:"
-    
+
     # 磁盘空间检查
     df -h | grep -E '^/dev/' | while read -r filesystem size used avail use_percent mount; do
         case $use_percent in
@@ -363,7 +363,7 @@ show_performance_recommendations() {
                 ;;
         esac
     done
-    
+
     # 内存检查
     if command -v free >/dev/null 2>&1; then
         local mem_info=$(free -h | grep '^Mem:')
@@ -380,7 +380,7 @@ restart_cursor() {
     if [ "$RESTART_CURSOR" = true ] && [ "$DRY_RUN" = false ]; then
         log_progress "🔄 重启Cursor IDE..."
         sleep 2
-        
+
         # 查找Cursor可执行文件
         local cursor_paths=(
             "/Applications/Cursor.app/Contents/MacOS/Cursor"  # macOS
@@ -388,7 +388,7 @@ restart_cursor() {
             "/opt/cursor/cursor"                               # Linux alternative
             "$HOME/.local/bin/cursor"                          # User installation
         )
-        
+
         local cursor_exe=""
         for path in "${cursor_paths[@]}"; do
             if [ -x "$path" ]; then
@@ -396,7 +396,7 @@ restart_cursor() {
                 break
             fi
         done
-        
+
         if [ -n "$cursor_exe" ]; then
             nohup "$cursor_exe" "$(pwd)" > /dev/null 2>&1 &
             log_success "✅ Cursor IDE 已重启"
@@ -413,9 +413,9 @@ main() {
         log_error "需要安装 bc 工具进行数学计算"
         exit 1
     fi
-    
+
     start_cursor_cleanup
-    
+
     log_info ""
     log_success "========================================"
     log_success "          🎉 清理完成!"
@@ -423,19 +423,19 @@ main() {
     log_info "📊 清理统计:"
     log_success "   💾 释放磁盘空间: $TOTAL_CLEANED MB"
     log_success "   📁 处理项目数: $FILES_PROCESSED 个"
-    
+
     if [ -n "$BACKUP_PATH" ] && [ -d "$BACKUP_PATH" ]; then
         local backup_size=$(get_folder_size "$BACKUP_PATH")
         log_info "   💼 备份大小: $backup_size MB"
         log_info "   📂 备份位置: $BACKUP_PATH"
     fi
-    
+
     log_info "   ⏰ 完成时间: $(date)"
     log_info ""
-    
+
     show_performance_recommendations
     restart_cursor
-    
+
     log_success "✅ Cursor IDE 性能优化完成!"
 }
 
