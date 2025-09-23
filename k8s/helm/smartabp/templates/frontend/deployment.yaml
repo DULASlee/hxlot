@@ -1,0 +1,112 @@
+{{- if .Values.frontend.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "smartabp.fullname" . }}-frontend
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "smartabp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
+spec:
+  {{- if not .Values.frontend.autoscaling.enabled }}
+  replicas: {{ .Values.frontend.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "smartabp.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: frontend
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/frontend/configmap.yaml") . | sha256sum }}
+        {{- with .Values.frontend.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "smartabp.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: frontend
+        version: {{ .Values.frontend.image.tag | quote }}
+    spec:
+      {{- with .Values.frontend.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "smartabp.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.frontend.podSecurityContext | nindent 8 }}
+      containers:
+        - name: frontend
+          securityContext:
+            {{- toYaml .Values.frontend.securityContext | nindent 12 }}
+          image: "{{ .Values.frontend.image.registry }}/{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.frontend.service.targetPort }}
+              protocol: TCP
+          env:
+            - name: NODE_ENV
+              value: {{ .Values.frontend.env.NODE_ENV | quote }}
+            - name: VITE_API_BASE_URL
+              value: {{ .Values.frontend.env.VITE_API_BASE_URL | quote }}
+            - name: VITE_BUILD_TARGET
+              value: {{ .Values.frontend.env.VITE_BUILD_TARGET | quote }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          {{- if .Values.frontend.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.frontend.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.frontend.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.frontend.readinessProbe | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.frontend.resources | nindent 12 }}
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+            - name: var-cache-nginx
+              mountPath: /var/cache/nginx
+            - name: var-run
+              mountPath: /var/run
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: {{ include "smartabp.fullname" . }}-frontend-config
+        - name: tmp
+          emptyDir: {}
+        - name: var-cache-nginx
+          emptyDir: {}
+        - name: var-run
+          emptyDir: {}
+      {{- with .Values.frontend.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.frontend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.frontend.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      # Pod disruption budget for high availability
+      {{- if gt (int .Values.frontend.replicaCount) 1 }}
+      terminationGracePeriodSeconds: 30
+      {{- end }}
+{{- end }}

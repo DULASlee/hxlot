@@ -1,0 +1,80 @@
+{{- if and .Values.frontend.enabled .Values.frontend.ingress.enabled }}
+{{- $fullName := include "smartabp.fullname" . }}
+{{- $svcPort := .Values.frontend.service.port }}
+{{- if and .Values.frontend.ingress.className (not (hasKey .Values.frontend.ingress.annotations "kubernetes.io/ingress.class")) }}
+  {{- $_ := set .Values.frontend.ingress.annotations "kubernetes.io/ingress.class" .Values.frontend.ingress.className}}
+{{- end }}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion }}
+apiVersion: networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion }}
+apiVersion: networking.k8s.io/v1beta1
+{{- else }}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-frontend
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "smartabp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
+  {{- with .Values.frontend.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+    # Performance optimizations
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "8k"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "8"
+    nginx.ingress.kubernetes.io/client-body-buffer-size: "1m"
+    # Compression
+    nginx.ingress.kubernetes.io/enable-brotli: "true"
+    nginx.ingress.kubernetes.io/brotli-level: "6"
+    nginx.ingress.kubernetes.io/brotli-types: "text/xml image/svg+xml application/x-font-ttf image/vnd.microsoft.icon application/x-font-opentype application/json font/eot application/vnd.ms-fontobject application/javascript font/otf application/xml application/xhtml+xml text/javascript application/x-javascript text/plain application/x-font-truetype application/xml+rss image/x-icon font/opentype text/css image/x-win-bitmap"
+    # Security headers
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      add_header X-Content-Type-Options nosniff always;
+      add_header X-Frame-Options SAMEORIGIN always;
+      add_header X-XSS-Protection "1; mode=block" always;
+      add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+      add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' {{ .Values.backend.env.ASPNETCORE_URLS }};" always;
+    # Rate limiting
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+  {{- end }}
+spec:
+  {{- if and (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) .Values.frontend.ingress.className }}
+  ingressClassName: {{ .Values.frontend.ingress.className }}
+  {{- end }}
+  {{- if .Values.frontend.ingress.tls }}
+  tls:
+    {{- range .Values.frontend.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.frontend.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-frontend
+                port:
+                  number: {{ $svcPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-frontend
+              servicePort: {{ $svcPort }}
+              {{- end }}
+          {{- end }}
+    {{- end }}
+{{- end }}

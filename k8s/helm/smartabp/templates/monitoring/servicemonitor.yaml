@@ -1,0 +1,65 @@
+{{- if and .Values.monitoring.enabled .Values.monitoring.prometheus.enabled .Values.monitoring.prometheus.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "smartabp.fullname" . }}-backend
+  namespace: {{ .Values.monitoring.prometheus.serviceMonitor.namespace | default .Release.Namespace }}
+  labels:
+    {{- include "smartabp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+    {{- with .Values.monitoring.prometheus.serviceMonitor.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "smartabp.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: backend
+  endpoints:
+    - port: metrics
+      path: {{ .Values.monitoring.prometheus.serviceMonitor.path }}
+      interval: {{ .Values.monitoring.prometheus.serviceMonitor.interval }}
+      scrapeTimeout: {{ .Values.monitoring.prometheus.serviceMonitor.scrapeTimeout | default "10s" }}
+      honorLabels: true
+      {{- if .Values.monitoring.prometheus.serviceMonitor.metricRelabelings }}
+      metricRelabelings:
+        {{- toYaml .Values.monitoring.prometheus.serviceMonitor.metricRelabelings | nindent 8 }}
+      {{- end }}
+      {{- if .Values.monitoring.prometheus.serviceMonitor.relabelings }}
+      relabelings:
+        {{- toYaml .Values.monitoring.prometheus.serviceMonitor.relabelings | nindent 8 }}
+      {{- end }}
+---
+{{- if .Values.frontend.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "smartabp.fullname" . }}-frontend
+  namespace: {{ .Values.monitoring.prometheus.serviceMonitor.namespace | default .Release.Namespace }}
+  labels:
+    {{- include "smartabp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
+    {{- with .Values.monitoring.prometheus.serviceMonitor.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "smartabp.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: frontend
+  endpoints:
+    - port: http
+      path: /nginx_status
+      interval: {{ .Values.monitoring.prometheus.serviceMonitor.interval }}
+      scrapeTimeout: {{ .Values.monitoring.prometheus.serviceMonitor.scrapeTimeout | default "10s" }}
+      honorLabels: true
+      {{- if .Values.monitoring.prometheus.serviceMonitor.metricRelabelings }}
+      metricRelabelings:
+        {{- toYaml .Values.monitoring.prometheus.serviceMonitor.metricRelabelings | nindent 8 }}
+      {{- end }}
+      {{- if .Values.monitoring.prometheus.serviceMonitor.relabelings }}
+      relabelings:
+        {{- toYaml .Values.monitoring.prometheus.serviceMonitor.relabelings | nindent 8 }}
+      {{- end }}
+{{- end }}
+{{- end }}

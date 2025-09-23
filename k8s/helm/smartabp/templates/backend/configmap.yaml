@@ -1,0 +1,172 @@
+{{- if .Values.backend.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "smartabp.fullname" . }}-backend-config
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "smartabp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+data:
+  # Application configuration
+  App__SelfUrl: "https://{{ (index .Values.backend.ingress.hosts 0).host }}"
+  App__ClientUrl: "https://{{ (index .Values.frontend.ingress.hosts 0).host }}"
+  App__RedirectAllowedUrls: "https://{{ (index .Values.frontend.ingress.hosts 0).host }}"
+  App__CorsOrigins: {{ .Values.backend.env.App__CorsOrigins | quote }}
+  
+  # Logging configuration
+  Serilog__MinimumLevel__Default: {{ .Values.logging.level | default "Information" | quote }}
+  Serilog__MinimumLevel__Override__Microsoft: "Warning"
+  Serilog__MinimumLevel__Override__System: "Warning"
+  Serilog__MinimumLevel__Override__Microsoft.EntityFrameworkCore: "Warning"
+  
+  # Feature flags
+  Features__LowCodeEngine: "true"
+  Features__CodeGeneration: "true"
+  Features__VisualDesigner: "true"
+  Features__TemplateManagement: "true"
+  
+  # Performance settings
+  ConnectionStrings__RedisConnectionString: "{{ include "smartabp.redis.connectionString" . }}"
+  Redis__Configuration__AbsoluteExpirationRelativeToNow: "3600"
+  Redis__Configuration__SlidingExpiration: "1800"
+  
+  # Monitoring and observability
+  OpenTelemetry__ServiceName: "smartabp-backend"
+  OpenTelemetry__ServiceVersion: {{ .Values.backend.image.tag | default .Chart.AppVersion | quote }}
+  OpenTelemetry__Enabled: {{ .Values.monitoring.enabled | quote }}
+  
+  {{- if .Values.monitoring.prometheus.enabled }}
+  Prometheus__Enabled: "true"
+  Prometheus__Port: "9090"
+  Prometheus__Path: "/metrics"
+  {{- end }}
+  
+  # Security settings
+  Authentication__JwtBearer__Authority: "https://{{ (index .Values.backend.ingress.hosts 0).host }}"
+  Authentication__JwtBearer__Audience: "SmartAbp"
+  Authentication__JwtBearer__RequireHttpsMetadata: "true"
+  
+  # Background jobs
+  BackgroundJobs__IsJobExecutionEnabled: "true"
+  BackgroundJobs__CleanupInterval: "60000"
+  
+  # File storage
+  FileManagement__DefaultContainer: "default"
+  FileManagement__MaxFileSize: "104857600"  # 100MB
+  FileManagement__AllowedExtensions: ".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "smartabp.fullname" . }}-backend-appsettings
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "smartabp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+data:
+  appsettings.Production.json: |
+    {
+      "App": {
+        "SelfUrl": "https://{{ (index .Values.backend.ingress.hosts 0).host }}",
+        "ClientUrl": "https://{{ (index .Values.frontend.ingress.hosts 0).host }}",
+        "CorsOrigins": "{{ .Values.backend.env.App__CorsOrigins }}",
+        "RedirectAllowedUrls": "https://{{ (index .Values.frontend.ingress.hosts 0).host }}"
+      },
+      "ConnectionStrings": {
+        "Default": "{{ include "smartabp.postgresql.connectionString" . }}",
+        "Redis": "{{ include "smartabp.redis.connectionString" . }}"
+      },
+      "Redis": {
+        "IsEnabled": true,
+        "Configuration": {
+          "AbsoluteExpirationRelativeToNow": "01:00:00",
+          "SlidingExpiration": "00:30:00"
+        }
+      },
+      "Serilog": {
+        "MinimumLevel": {
+          "Default": "{{ .Values.logging.level | default "Information" }}",
+          "Override": {
+            "Microsoft": "Warning",
+            "Microsoft.EntityFrameworkCore": "Warning",
+            "System": "Warning"
+          }
+        },
+        "WriteTo": [
+          {
+            "Name": "Console",
+            "Args": {
+              "outputTemplate": "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}"
+            }
+          }
+          {{- if .Values.logging.aggregation.enabled }},
+          {
+            "Name": "Elasticsearch",
+            "Args": {
+              "nodeUris": "{{ .Values.logging.aggregation.endpoint }}",
+              "indexFormat": "smartabp-logs-{0:yyyy.MM.dd}",
+              "autoRegisterTemplate": true,
+              "autoRegisterTemplateVersion": "ESv7",
+              "typeName": "_doc",
+              "batchAction": "IndexMany",
+              "period": "00:00:05",
+              "inlineFields": true,
+              "restrictedToMinimumLevel": "Information"
+            }
+          }
+          {{- end }}
+        ]
+      },
+      "AuthServer": {
+        "Authority": "https://{{ (index .Values.backend.ingress.hosts 0).host }}",
+        "RequireHttpsMetadata": true,
+        "SwaggerClientId": "SmartAbp_Swagger",
+        "SwaggerClientSecret": "1q2w3e*"
+      },
+      "StringEncryption": {
+        "DefaultPassPhrase": "SmartAbp2024DefaultPassPhrase"
+      },
+      "Features": {
+        "LowCodeEngine": true,
+        "CodeGeneration": true,
+        "VisualDesigner": true,
+        "TemplateManagement": true
+      },
+      "BackgroundJobs": {
+        "IsJobExecutionEnabled": true,
+        "CleanupInterval": 60000
+      },
+      "FileManagement": {
+        "DefaultContainer": "default",
+        "MaxFileSize": 104857600,
+        "AllowedExtensions": [".jpg", ".jpeg", ".png", ".gif", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".txt", ".zip", ".rar"]
+      },
+      {{- if .Values.monitoring.enabled }}
+      "OpenTelemetry": {
+        "ServiceName": "smartabp-backend",
+        "ServiceVersion": "{{ .Values.backend.image.tag | default .Chart.AppVersion }}",
+        "Enabled": true,
+        "Jaeger": {
+          "Endpoint": "http://jaeger-collector:14268/api/traces"
+        }
+      },
+      {{- end }}
+      "HealthChecks-UI": {
+        "HealthChecks": [
+          {
+            "Name": "SmartAbp Backend",
+            "Uri": "/health"
+          },
+          {
+            "Name": "Database",
+            "Uri": "/health/db"
+          },
+          {
+            "Name": "Redis",
+            "Uri": "/health/redis"
+          }
+        ]
+      }
+    }
+{{- end }}

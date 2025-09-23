@@ -1,0 +1,214 @@
+{{- if .Values.security.networkPolicies.enabled }}
+apiVersion: {{ include "smartabp.networkPolicy.apiVersion" . }}
+kind: NetworkPolicy
+metadata:
+  name: {{ include "smartabp.fullname" . }}-frontend
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "smartabp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: frontend
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "smartabp.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: frontend
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow incoming traffic from ingress controller
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+        - namespaceSelector:
+            matchLabels:
+              name: istio-system
+      ports:
+        - protocol: TCP
+          port: {{ .Values.frontend.service.targetPort }}
+    # Allow incoming traffic from monitoring
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9090
+  egress:
+    # Allow DNS resolution
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Allow outbound to backend API
+    - to:
+        - podSelector:
+            matchLabels:
+              {{- include "smartabp.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: backend
+      ports:
+        - protocol: TCP
+          port: {{ .Values.backend.service.port }}
+    # Allow outbound HTTPS for CDN/external resources
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+---
+apiVersion: {{ include "smartabp.networkPolicy.apiVersion" . }}
+kind: NetworkPolicy
+metadata:
+  name: {{ include "smartabp.fullname" . }}-backend
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "smartabp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "smartabp.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: backend
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow incoming traffic from frontend
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "smartabp.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: frontend
+      ports:
+        - protocol: TCP
+          port: {{ .Values.backend.service.targetPort }}
+    # Allow incoming traffic from ingress controller
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+        - namespaceSelector:
+            matchLabels:
+              name: istio-system
+      ports:
+        - protocol: TCP
+          port: {{ .Values.backend.service.targetPort }}
+    # Allow incoming traffic from monitoring
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9090
+  egress:
+    # Allow DNS resolution
+    - to: []
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Allow outbound to PostgreSQL
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: postgresql
+      ports:
+        - protocol: TCP
+          port: {{ include "smartabp.postgresql.port" . }}
+    # Allow outbound to Redis
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: redis
+      ports:
+        - protocol: TCP
+          port: {{ include "smartabp.redis.port" . }}
+    # Allow outbound HTTPS for external API calls
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+    # Allow outbound SMTP for email notifications
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 587
+        - protocol: TCP
+          port: 465
+        - protocol: TCP
+          port: 25
+---
+{{- if .Values.postgresql.enabled }}
+apiVersion: {{ include "smartabp.networkPolicy.apiVersion" . }}
+kind: NetworkPolicy
+metadata:
+  name: {{ include "smartabp.fullname" . }}-postgresql
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "smartabp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgresql
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: postgresql
+  policyTypes:
+    - Ingress
+  ingress:
+    # Only allow backend to connect to PostgreSQL
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "smartabp.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: backend
+      ports:
+        - protocol: TCP
+          port: {{ include "smartabp.postgresql.port" . }}
+    # Allow monitoring
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: {{ include "smartabp.postgresql.port" . }}
+{{- end }}
+---
+{{- if .Values.redis.enabled }}
+apiVersion: {{ include "smartabp.networkPolicy.apiVersion" . }}
+kind: NetworkPolicy
+metadata:
+  name: {{ include "smartabp.fullname" . }}-redis
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "smartabp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: redis
+  policyTypes:
+    - Ingress
+  ingress:
+    # Only allow backend to connect to Redis
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "smartabp.selectorLabels" . | nindent 14 }}
+              app.kubernetes.io/component: backend
+      ports:
+        - protocol: TCP
+          port: {{ include "smartabp.redis.port" . }}
+    # Allow monitoring
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: {{ include "smartabp.redis.port" . }}
+{{- end }}
+{{- end }}

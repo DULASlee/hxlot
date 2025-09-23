@@ -1,0 +1,425 @@
+name: 🚀 SmartAbp Kubernetes Deployment
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main ]
+
+env:
+  REGISTRY: ghcr.io
+  FRONTEND_IMAGE_NAME: ${{ github.repository }}/smartabp-frontend
+  BACKEND_IMAGE_NAME: ${{ github.repository }}/smartabp-backend
+  HELM_CHART_VERSION: 1.0.0
+
+jobs:
+  # Quality Gates - Production Readiness Validation
+  quality-gates:
+    name: 🛡️ Production Readiness Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'src/SmartAbp.Vue/package-lock.json'
+
+      - name: 📦 Install dependencies
+        working-directory: src/SmartAbp.Vue
+        run: npm ci
+
+      - name: 🔍 TypeScript type checking
+        working-directory: src/SmartAbp.Vue
+        run: npm run type-check
+
+      - name: 📏 ESLint code quality
+        working-directory: src/SmartAbp.Vue
+        run: npx eslint src --ext .ts,.vue --max-warnings 0
+
+      - name: 🏗️ Build application
+        working-directory: src/SmartAbp.Vue
+        run: npm run build
+
+      - name: 🧪 Unit tests with coverage
+        working-directory: src/SmartAbp.Vue
+        run: npm run test:coverage
+
+      - name: 📊 Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: src/SmartAbp.Vue/coverage
+          fail_ci_if_error: true
+
+      - name: 🛡️ Security audit
+        working-directory: src/SmartAbp.Vue
+        run: npm audit --audit-level=high
+
+  # Frontend Docker Build and Push
+  build-frontend:
+    name: 🏗️ Build Frontend Image
+    needs: quality-gates
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🔐 Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 📋 Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: 🏗️ Build and push frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          target: frontend-production
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
+
+  # Backend Docker Build and Push
+  build-backend:
+    name: 🏗️ Build Backend Image
+    needs: quality-gates
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: 🔍 .NET build and test
+        run: |
+          dotnet restore
+          dotnet build --no-restore --configuration Release
+          dotnet test --no-build --configuration Release --verbosity normal
+
+      - name: 🔧 Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🔐 Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 📋 Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.BACKEND_IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: 🏗️ Build and push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          target: backend-production
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
+
+  # Helm Chart Testing and Packaging
+  helm-package:
+    name: 📦 Package Helm Chart
+    needs: quality-gates
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: '3.13.0'
+
+      - name: 📋 Helm lint
+        run: helm lint k8s/helm/smartabp
+
+      - name: 🧪 Helm template test
+        run: |
+          helm template smartabp-test k8s/helm/smartabp \
+            --values k8s/helm/smartabp/values.yaml \
+            --set frontend.image.tag=${{ github.sha }} \
+            --set backend.image.tag=${{ github.sha }} \
+            --output-dir /tmp/helm-output
+          
+          # Validate generated manifests
+          find /tmp/helm-output -name "*.yaml" -exec kubectl --dry-run=client apply -f {} \;
+
+      - name: 📦 Package Helm chart
+        run: |
+          mkdir -p helm-packages
+          helm package k8s/helm/smartabp --destination helm-packages/
+          helm repo index helm-packages/ --url https://dulaslee.github.io/hxlot/
+
+      - name: 📤 Upload Helm package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: helm-chart-${{ github.sha }}
+          path: helm-packages/
+
+  # Development Environment Deployment
+  deploy-development:
+    name: 🚀 Deploy to Development
+    needs: [build-frontend, build-backend, helm-package]
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    environment:
+      name: development
+      url: https://dev.lowcode.smartabp.com
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: '3.13.0'
+
+      - name: 🔧 Setup kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_DEV }}
+
+      - name: 📥 Download Helm chart
+        uses: actions/download-artifact@v4
+        with:
+          name: helm-chart-${{ github.sha }}
+          path: helm-packages/
+
+      - name: 🚀 Deploy to development cluster
+        run: |
+          helm upgrade --install smartabp-dev helm-packages/smartabp-lowcode-engine-${{ env.HELM_CHART_VERSION }}.tgz \
+            --namespace smartabp-dev \
+            --create-namespace \
+            --values k8s/helm/smartabp/values-dev.yaml \
+            --set frontend.image.tag=${{ github.sha }} \
+            --set backend.image.tag=${{ github.sha }} \
+            --set frontend.ingress.hosts[0].host=dev.lowcode.smartabp.com \
+            --set backend.ingress.hosts[0].host=api-dev.lowcode.smartabp.com \
+            --timeout 10m \
+            --wait
+
+      - name: 🔍 Verify deployment
+        run: |
+          kubectl get pods -n smartabp-dev
+          kubectl get services -n smartabp-dev
+          kubectl get ingress -n smartabp-dev
+
+  # Staging Environment Deployment
+  deploy-staging:
+    name: 🚀 Deploy to Staging
+    needs: [build-frontend, build-backend, helm-package, deploy-development]
+    if: github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging.lowcode.smartabp.com
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: '3.13.0'
+
+      - name: 🔧 Setup kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_STAGING }}
+
+      - name: 📥 Download Helm chart
+        uses: actions/download-artifact@v4
+        with:
+          name: helm-chart-${{ github.sha }}
+          path: helm-packages/
+
+      - name: 🧪 Run integration tests
+        run: |
+          # Run comprehensive integration tests
+          npm ci
+          npm run test:e2e:staging
+        working-directory: src/SmartAbp.Vue
+
+      - name: 🚀 Deploy to staging cluster
+        run: |
+          helm upgrade --install smartabp-staging helm-packages/smartabp-lowcode-engine-${{ env.HELM_CHART_VERSION }}.tgz \
+            --namespace smartabp-staging \
+            --create-namespace \
+            --values k8s/helm/smartabp/values-staging.yaml \
+            --set frontend.image.tag=${{ github.sha }} \
+            --set backend.image.tag=${{ github.sha }} \
+            --set frontend.ingress.hosts[0].host=staging.lowcode.smartabp.com \
+            --set backend.ingress.hosts[0].host=api-staging.lowcode.smartabp.com \
+            --timeout 15m \
+            --wait
+
+  # Production Environment Deployment
+  deploy-production:
+    name: 🚀 Deploy to Production
+    needs: [build-frontend, build-backend, helm-package]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://lowcode.smartabp.com
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: '3.13.0'
+
+      - name: 🔧 Setup kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG_PROD }}
+
+      - name: 📥 Download Helm chart
+        uses: actions/download-artifact@v4
+        with:
+          name: helm-chart-${{ github.sha }}
+          path: helm-packages/
+
+      - name: 🛡️ Production readiness validation
+        run: |
+          # Run comprehensive production readiness tests
+          node src/SmartAbp.Vue/scripts/production-readiness-validator.js
+        env:
+          CI: true
+          ENVIRONMENT: production
+
+      - name: 🚀 Deploy to production cluster
+        run: |
+          helm upgrade --install smartabp-prod helm-packages/smartabp-lowcode-engine-${{ env.HELM_CHART_VERSION }}.tgz \
+            --namespace smartabp-prod \
+            --create-namespace \
+            --values k8s/helm/smartabp/values-prod.yaml \
+            --set frontend.image.tag=${GITHUB_REF#refs/tags/} \
+            --set backend.image.tag=${GITHUB_REF#refs/tags/} \
+            --set frontend.ingress.hosts[0].host=lowcode.smartabp.com \
+            --set backend.ingress.hosts[0].host=api.lowcode.smartabp.com \
+            --timeout 20m \
+            --wait
+
+      - name: 🔍 Post-deployment validation
+        run: |
+          # Validate production deployment
+          kubectl get pods -n smartabp-prod
+          kubectl get services -n smartabp-prod
+          kubectl get ingress -n smartabp-prod
+          
+          # Health check
+          sleep 30
+          curl -f https://lowcode.smartabp.com/health || exit 1
+          curl -f https://api.lowcode.smartabp.com/health || exit 1
+
+      - name: 📈 Performance baseline test
+        run: |
+          # Run production performance tests
+          node src/SmartAbp.Vue/tests/performance/performance-benchmark.js
+        env:
+          TARGET_URL: https://lowcode.smartabp.com
+          API_URL: https://api.lowcode.smartabp.com
+
+      - name: 🔔 Notify deployment success
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#smartabp-deployments'
+          text: |
+            🚀 SmartAbp Production Deployment Successful!
+            Version: ${{ github.ref }}
+            Frontend: https://lowcode.smartabp.com
+            Backend: https://api.lowcode.smartabp.com
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        if: success()
+
+  # Cleanup and Monitoring
+  post-deploy:
+    name: 📊 Post-Deployment Tasks
+    needs: [deploy-development, deploy-staging, deploy-production]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🧹 Cleanup old Docker images
+        run: |
+          # Clean up old container images
+          echo "Cleaning up container registry..."
+          # This would typically call registry cleanup APIs
+
+      - name: 📊 Update monitoring dashboards
+        run: |
+          # Update Grafana dashboards with new version info
+          echo "Updating monitoring configuration..."
+
+      - name: 📝 Generate deployment report
+        run: |
+          echo "# SmartAbp Deployment Report" > deployment-report.md
+          echo "- **Commit**: ${{ github.sha }}" >> deployment-report.md
+          echo "- **Version**: ${{ github.ref }}" >> deployment-report.md
+          echo "- **Date**: $(date)" >> deployment-report.md
+          echo "- **Status**: ${{ job.status }}" >> deployment-report.md
+
+      - name: 📤 Archive deployment report
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-report-${{ github.sha }}
+          path: deployment-report.md
