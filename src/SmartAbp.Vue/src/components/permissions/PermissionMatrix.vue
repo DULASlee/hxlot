@@ -4,7 +4,10 @@
     <div class="matrix-header">
       <div class="header-left">
         <h3>权限矩阵管理</h3>
-        <el-tag type="info" size="small">
+        <el-tag
+          type="info"
+          size="small"
+        >
           基于OptimizedPermissionInheritanceEngine
         </el-tag>
       </div>
@@ -19,8 +22,16 @@
           @input="handleSearch"
         />
 
-        <el-select v-model="selectedModule" placeholder="选择模块" clearable @change="handleModuleChange">
-          <el-option label="全部模块" value="" />
+        <el-select
+          v-model="selectedModule"
+          placeholder="选择模块"
+          clearable
+          @change="handleModuleChange"
+        >
+          <el-option
+            label="全部模块"
+            value=""
+          />
           <el-option
             v-for="module in availableModules"
             :key="module"
@@ -29,7 +40,10 @@
           />
         </el-select>
 
-        <el-button type="primary" @click="showBulkOperationDialog = true">
+        <el-button
+          type="primary"
+          @click="showBulkOperationDialog = true"
+        >
           批量操作
         </el-button>
 
@@ -61,7 +75,10 @@
     </el-alert>
 
     <!-- 权限矩阵表格 -->
-    <div class="matrix-container" v-loading="loading">
+    <div
+      v-loading="loading"
+      class="matrix-container"
+    >
       <el-table
         ref="matrixTableRef"
         :data="filteredMatrixData"
@@ -72,20 +89,37 @@
         @cell-click="handleCellClick"
       >
         <!-- 选择列 -->
-        <el-table-column type="selection" width="50" fixed="left" />
+        <el-table-column
+          type="selection"
+          width="50"
+          fixed="left"
+        />
 
         <!-- 权限名称列 -->
-        <el-table-column prop="permissionName" label="权限名称" width="200" fixed="left">
+        <el-table-column
+          prop="permissionName"
+          label="权限名称"
+          width="200"
+          fixed="left"
+        >
           <template #default="{ row }">
             <div class="permission-info">
-              <div class="permission-name">{{ row.permissionName }}</div>
-              <div class="permission-module">{{ row.module }}</div>
+              <div class="permission-name">
+                {{ row.permissionName }}
+              </div>
+              <div class="permission-module">
+                {{ row.module }}
+              </div>
             </div>
           </template>
         </el-table-column>
 
         <!-- 权限描述列 -->
-        <el-table-column prop="description" label="描述" width="150" />
+        <el-table-column
+          prop="description"
+          label="描述"
+          width="150"
+        />
 
         <!-- 动态角色权限列 -->
         <el-table-column
@@ -97,8 +131,12 @@
         >
           <template #header>
             <div class="role-header">
-              <div class="role-name">{{ role.name }}</div>
-              <div class="role-users">{{ role.userCount }}用户</div>
+              <div class="role-name">
+                {{ role.name }}
+              </div>
+              <div class="role-users">
+                {{ role.userCount }}用户
+              </div>
             </div>
           </template>
 
@@ -133,10 +171,25 @@
         </el-table-column>
 
         <!-- 操作列 -->
-        <el-table-column label="操作" width="120" fixed="right">
+        <el-table-column
+          label="操作"
+          width="120"
+          fixed="right"
+        >
           <template #default="{ row }">
-            <el-button size="small" @click="editPermission(row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="viewAuditLog(row)">日志</el-button>
+            <el-button
+              size="small"
+              @click="editPermission(row)"
+            >
+              编辑
+            </el-button>
+            <el-button
+              size="small"
+              type="danger"
+              @click="viewAuditLog(row)"
+            >
+              日志
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -149,9 +202,9 @@
       :total="totalCount"
       :page-sizes="[20, 50, 100, 200]"
       layout="total, sizes, prev, pager, next, jumper"
+      style="margin-top: 16px; justify-content: center"
       @size-change="handlePageSizeChange"
       @current-change="handleCurrentPageChange"
-      style="margin-top: 16px; justify-content: center"
     />
 
     <!-- 批量操作对话框 -->
@@ -162,12 +215,21 @@
       :destroy-on-close="true"
     >
       <div class="bulk-operation-content">
-        <el-form :model="bulkOperationForm" label-width="100px">
+        <el-form
+          :model="bulkOperationForm"
+          label-width="100px"
+        >
           <el-form-item label="操作类型">
             <el-radio-group v-model="bulkOperationForm.operationType">
-              <el-radio value="grant">批量授权</el-radio>
-              <el-radio value="revoke">批量撤销</el-radio>
-              <el-radio value="copy">复制权限</el-radio>
+              <el-radio value="grant">
+                批量授权
+              </el-radio>
+              <el-radio value="revoke">
+                批量撤销
+              </el-radio>
+              <el-radio value="copy">
+                复制权限
+              </el-radio>
             </el-radio-group>
           </el-form-item>
 
@@ -187,7 +249,10 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item v-if="bulkOperationForm.operationType === 'copy'" label="源角色">
+          <el-form-item
+            v-if="bulkOperationForm.operationType === 'copy'"
+            label="源角色"
+          >
             <el-select
               v-model="bulkOperationForm.sourceRole"
               placeholder="选择源角色"
@@ -204,9 +269,15 @@
 
           <el-form-item label="权限范围">
             <el-checkbox-group v-model="bulkOperationForm.permissionScopes">
-              <el-checkbox value="selected">仅选中的权限</el-checkbox>
-              <el-checkbox value="module">整个模块</el-checkbox>
-              <el-checkbox value="all">全部权限</el-checkbox>
+              <el-checkbox value="selected">
+                仅选中的权限
+              </el-checkbox>
+              <el-checkbox value="module">
+                整个模块
+              </el-checkbox>
+              <el-checkbox value="all">
+                全部权限
+              </el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </el-form>
@@ -215,16 +286,28 @@
           <h4>操作预览</h4>
           <div class="preview-stats">
             <el-tag>将影响 {{ bulkOperationPreview.affectedRoles }} 个角色</el-tag>
-            <el-tag type="warning">涉及 {{ bulkOperationPreview.affectedPermissions }} 个权限</el-tag>
-            <el-tag type="info">预计影响 {{ bulkOperationPreview.affectedUsers }} 个用户</el-tag>
+            <el-tag type="warning">
+              涉及 {{ bulkOperationPreview.affectedPermissions }} 个权限
+            </el-tag>
+            <el-tag type="info">
+              预计影响 {{ bulkOperationPreview.affectedUsers }} 个用户
+            </el-tag>
           </div>
         </div>
       </div>
 
       <template #footer>
-        <el-button @click="showBulkOperationDialog = false">取消</el-button>
-        <el-button @click="previewBulkOperation">预览</el-button>
-        <el-button type="primary" :loading="executingBulkOperation" @click="executeBulkOperation">
+        <el-button @click="showBulkOperationDialog = false">
+          取消
+        </el-button>
+        <el-button @click="previewBulkOperation">
+          预览
+        </el-button>
+        <el-button
+          type="primary"
+          :loading="executingBulkOperation"
+          @click="executeBulkOperation"
+        >
           执行操作
         </el-button>
       </template>
@@ -236,15 +319,24 @@
       :title="`权限详情: ${selectedPermissionDetail?.permissionName}`"
       width="800px"
     >
-      <div v-if="selectedPermissionDetail" class="permission-detail">
-        <el-descriptions :column="2" border>
+      <div
+        v-if="selectedPermissionDetail"
+        class="permission-detail"
+      >
+        <el-descriptions
+          :column="2"
+          border
+        >
           <el-descriptions-item label="权限名称">
             {{ selectedPermissionDetail.permissionName }}
           </el-descriptions-item>
           <el-descriptions-item label="所属模块">
             {{ selectedPermissionDetail.module }}
           </el-descriptions-item>
-          <el-descriptions-item label="权限描述" :span="2">
+          <el-descriptions-item
+            label="权限描述"
+            :span="2"
+          >
             {{ selectedPermissionDetail.description }}
           </el-descriptions-item>
         </el-descriptions>
@@ -257,11 +349,14 @@
             node-key="id"
             :expand-on-click-node="false"
           >
-            <template #default="{ node: _node, data }">
+            <template #default="{ data }">
               <div class="inheritance-node">
                 <i :class="data.icon" />
                 <span>{{ data.name }}</span>
-                <el-tag :type="data.status === 'granted' ? 'success' : 'danger'" size="small">
+                <el-tag
+                  :type="data.status === 'granted' ? 'success' : 'danger'"
+                  size="small"
+                >
                   {{ data.status === 'granted' ? '已授权' : '已拒绝' }}
                 </el-tag>
               </div>
@@ -274,7 +369,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { ElMessage, ElMessageBox, type ElTable } from 'element-plus'
 import { Search as SearchIcon } from '@element-plus/icons-vue'
 
@@ -366,10 +461,14 @@ const filteredMatrixData = computed(() => {
     result = result.filter(item => item.module === selectedModule.value)
   }
 
-  // 分页
+  // 分页 - 通过watch监听变化，避免计算属性副作用
   const start = (currentPage.value - 1) * pageSize.value
   const end = start + pageSize.value
-  totalCount.value = result.length
+  
+  // 避免在computed中修改响应式数据
+  nextTick(() => {
+    totalCount.value = result.length
+  })
 
   return result.slice(start, end)
 })
@@ -586,7 +685,7 @@ const executeBulkOperation = async () => {
     // 刷新数据
     await loadPermissionMatrix()
 
-  } catch (error) {
+  } catch {
     ElMessage.error('批量操作执行失败')
   } finally {
     executingBulkOperation.value = false
@@ -641,7 +740,7 @@ const loadPermissionMatrix = async () => {
     matrixData.value = mockData
     availableRoles.value = mockRoles
 
-  } catch (error) {
+  } catch {
     ElMessage.error('加载权限矩阵失败')
   } finally {
     loading.value = false

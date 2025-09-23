@@ -265,7 +265,12 @@ const otherCategoryGroups = computed(() => {
     if (!groups[category]) {
       groups[category] = []
     }
-    groups[category].push(template)
+    groups[category].push({
+      id: template.id,
+      name: template.name,
+      description: template.description || '',
+      category: template.category || 'general'
+    })
   })
 
   return Object.keys(groups).map(category => ({
@@ -275,7 +280,7 @@ const otherCategoryGroups = computed(() => {
 })
 
 // 方法
-const selectTemplate = (template: Template) => {
+const selectTemplate = (template: any) => {
   emit("select", template)
 }
 

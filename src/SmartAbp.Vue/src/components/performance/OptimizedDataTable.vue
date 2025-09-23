@@ -5,7 +5,10 @@ SmartAbp Enterprise Optimized Data Table Component
 <template>
   <div class="optimized-data-table">
     <!-- 性能监控面板 -->
-    <div v-if="showPerformancePanel" class="performance-panel">
+    <div
+      v-if="showPerformancePanel"
+      class="performance-panel"
+    >
       <div class="performance-metrics">
         <div class="metric">
           <span class="label">渲染时间:</span>
@@ -25,9 +28,25 @@ SmartAbp Enterprise Optimized Data Table Component
         </div>
       </div>
       <div class="performance-actions">
-        <el-button size="small" @click="triggerGC">垃圾回收</el-button>
-        <el-button size="small" @click="clearCache">清理缓存</el-button>
-        <el-button size="small" type="warning" @click="exportPerformanceData">导出性能数据</el-button>
+        <el-button
+          size="small"
+          @click="triggerGC"
+        >
+          垃圾回收
+        </el-button>
+        <el-button
+          size="small"
+          @click="clearCache"
+        >
+          清理缓存
+        </el-button>
+        <el-button
+          size="small"
+          type="warning"
+          @click="exportPerformanceData"
+        >
+          导出性能数据
+        </el-button>
       </div>
     </div>
 
@@ -50,10 +69,22 @@ SmartAbp Enterprise Optimized Data Table Component
           style="width: 120px; margin-left: 10px"
           @change="handlePageSizeChange"
         >
-          <el-option label="50" :value="50" />
-          <el-option label="100" :value="100" />
-          <el-option label="200" :value="200" />
-          <el-option label="500" :value="500" />
+          <el-option
+            label="50"
+            :value="50"
+          />
+          <el-option
+            label="100"
+            :value="100"
+          />
+          <el-option
+            label="200"
+            :value="200"
+          />
+          <el-option
+            label="500"
+            :value="500"
+          />
         </el-select>
       </div>
       <div class="toolbar-right">
@@ -62,7 +93,10 @@ SmartAbp Enterprise Optimized Data Table Component
           active-text="性能面板"
           style="margin-right: 10px"
         />
-        <el-button type="primary" @click="refreshData">
+        <el-button
+          type="primary"
+          @click="refreshData"
+        >
           <el-icon><Refresh /></el-icon>
           刷新数据
         </el-button>
@@ -79,7 +113,7 @@ SmartAbp Enterprise Optimized Data Table Component
       <div :style="{ height: `${totalHeight}px`, position: 'relative' }">
         <!-- 可见行渲染 -->
         <div
-          v-for="(item, _index) in visibleItems"
+          v-for="item in visibleItems"
           :key="item._virtualIndex"
           class="virtual-row"
           :style="{
@@ -89,7 +123,10 @@ SmartAbp Enterprise Optimized Data Table Component
             height: `${itemHeight}px`
           }"
         >
-          <div class="table-row" :class="{ 'row-even': item._virtualIndex % 2 === 0 }">
+          <div
+            class="table-row"
+            :class="{ 'row-even': item._virtualIndex % 2 === 0 }"
+          >
             <!-- 序号列 -->
             <div class="table-cell index-cell">
               {{ item._virtualIndex + 1 }}
@@ -126,10 +163,20 @@ SmartAbp Enterprise Optimized Data Table Component
             </div>
 
             <!-- 操作列 -->
-            <div v-if="showActions" class="table-cell actions-cell">
+            <div
+              v-if="showActions"
+              class="table-cell actions-cell"
+            >
               <el-button-group size="small">
-                <el-button @click="handleEdit(item)">编辑</el-button>
-                <el-button type="danger" @click="handleDelete(item)">删除</el-button>
+                <el-button @click="handleEdit(item)">
+                  编辑
+                </el-button>
+                <el-button
+                  type="danger"
+                  @click="handleDelete(item)"
+                >
+                  删除
+                </el-button>
               </el-button-group>
             </div>
           </div>
@@ -138,17 +185,32 @@ SmartAbp Enterprise Optimized Data Table Component
     </div>
 
     <!-- 加载状态 -->
-    <div v-if="loading" class="loading-overlay">
+    <div
+      v-if="loading"
+      class="loading-overlay"
+    >
       <el-loading text="加载中..." />
     </div>
 
     <!-- 无限滚动加载更多 -->
-    <div v-if="enableInfiniteScroll" ref="infiniteScrollTarget" class="infinite-scroll-trigger">
-      <div v-if="infiniteLoading" class="loading-more">
-        <el-icon class="is-loading"><Loading /></el-icon>
+    <div
+      v-if="enableInfiniteScroll"
+      ref="infiniteScrollTarget"
+      class="infinite-scroll-trigger"
+    >
+      <div
+        v-if="infiniteLoading"
+        class="loading-more"
+      >
+        <el-icon class="is-loading">
+          <Loading />
+        </el-icon>
         <span>加载更多...</span>
       </div>
-      <div v-else-if="infiniteFinished" class="no-more-data">
+      <div
+        v-else-if="infiniteFinished"
+        class="no-more-data"
+      >
         没有更多数据了
       </div>
     </div>

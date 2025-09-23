@@ -24,24 +24,50 @@ SmartAbp Enterprise Lazy Loading Image Component
     />
     
     <!-- 加载状态 -->
-    <div v-if="isLoading && showLoadingIndicator" class="loading-indicator">
-      <div class="loading-spinner"></div>
-      <span v-if="loadingText" class="loading-text">{{ loadingText }}</span>
+    <div
+      v-if="isLoading && showLoadingIndicator"
+      class="loading-indicator"
+    >
+      <div class="loading-spinner" />
+      <span
+        v-if="loadingText"
+        class="loading-text"
+      >{{ loadingText }}</span>
     </div>
     
     <!-- 错误状态 -->
-    <div v-if="hasError && showErrorIndicator" class="error-indicator">
-      <div class="error-icon">❌</div>
-      <span v-if="errorText" class="error-text">{{ errorText }}</span>
-      <button v-if="allowRetry" class="retry-button" @click="retry">
+    <div
+      v-if="hasError && showErrorIndicator"
+      class="error-indicator"
+    >
+      <div class="error-icon">
+        ❌
+      </div>
+      <span
+        v-if="errorText"
+        class="error-text"
+      >{{ errorText }}</span>
+      <button
+        v-if="allowRetry"
+        class="retry-button"
+        @click="retry"
+      >
         重试
       </button>
     </div>
     
     <!-- 占位内容 -->
-    <div v-if="!hasLoaded && !isLoading && !hasError && showPlaceholder" class="placeholder">
-      <div class="placeholder-icon">🖼️</div>
-      <span v-if="placeholderText" class="placeholder-text">{{ placeholderText }}</span>
+    <div
+      v-if="!hasLoaded && !isLoading && !hasError && showPlaceholder"
+      class="placeholder"
+    >
+      <div class="placeholder-icon">
+        🖼️
+      </div>
+      <span
+        v-if="placeholderText"
+        class="placeholder-text"
+      >{{ placeholderText }}</span>
     </div>
   </div>
 </template>
