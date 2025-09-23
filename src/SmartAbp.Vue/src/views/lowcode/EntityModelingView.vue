@@ -71,8 +71,12 @@
               <div class="entity-info">
                 <i :class="getEntityIcon(entity.category)" />
                 <div class="entity-details">
-                  <div class="entity-name">{{ entity.name }}</div>
-                  <div class="entity-table">{{ entity.tableName }}</div>
+                  <div class="entity-name">
+                    {{ entity.name }}
+                  </div>
+                  <div class="entity-table">
+                    {{ entity.tableName }}
+                  </div>
                 </div>
               </div>
               <div class="entity-status">
@@ -99,8 +103,8 @@
             :key="preset.id"
             size="small"
             :disabled="isEntityExists(preset.tableName)"
-            @click="addPresetEntity(preset)"
             style="margin: 2px; width: calc(50% - 4px);"
+            @click="addPresetEntity(preset)"
           >
             {{ preset.name }}
           </el-button>
@@ -132,7 +136,10 @@
             </el-button>
           </el-button-group>
           
-          <div class="toolbar-info" v-if="selectedEntity">
+          <div
+            v-if="selectedEntity"
+            class="toolbar-info"
+          >
             <span>当前实体: {{ selectedEntity.name }}</span>
             <el-divider direction="vertical" />
             <span>表名: {{ selectedEntity.tableName }}</span>
@@ -140,7 +147,10 @@
         </div>
 
         <!-- 字段设计面板 -->
-        <div v-if="designMode === 'fields' && selectedEntity" class="fields-designer">
+        <div
+          v-if="designMode === 'fields' && selectedEntity"
+          class="fields-designer"
+        >
           <div class="fields-header">
             <h3>字段配置</h3>
             <el-button 
@@ -153,8 +163,15 @@
             </el-button>
           </div>
           
-          <el-table :data="selectedEntity.fields" style="width: 100%">
-            <el-table-column prop="name" label="字段名" width="150">
+          <el-table
+            :data="selectedEntity.fields"
+            style="width: 100%"
+          >
+            <el-table-column
+              prop="name"
+              label="字段名"
+              width="150"
+            >
               <template #default="scope">
                 <el-input 
                   v-model="scope.row.name" 
@@ -163,14 +180,28 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column prop="displayName" label="显示名" width="120">
+            <el-table-column
+              prop="displayName"
+              label="显示名"
+              width="120"
+            >
               <template #default="scope">
-                <el-input v-model="scope.row.displayName" size="small" />
+                <el-input
+                  v-model="scope.row.displayName"
+                  size="small"
+                />
               </template>
             </el-table-column>
-            <el-table-column prop="type" label="数据类型" width="120">
+            <el-table-column
+              prop="type"
+              label="数据类型"
+              width="120"
+            >
               <template #default="scope">
-                <el-select v-model="scope.row.type" size="small">
+                <el-select
+                  v-model="scope.row.type"
+                  size="small"
+                >
                   <el-option 
                     v-for="type in fieldTypes"
                     :key="type.value"
@@ -180,23 +211,35 @@
                 </el-select>
               </template>
             </el-table-column>
-            <el-table-column prop="length" label="长度" width="80">
+            <el-table-column
+              prop="length"
+              label="长度"
+              width="80"
+            >
               <template #default="scope">
                 <el-input-number 
+                  v-if="needsLength(scope.row.type)" 
                   v-model="scope.row.length" 
                   size="small" 
-                  :min="1" 
+                  :min="1"
                   :max="5000"
-                  v-if="needsLength(scope.row.type)"
                 />
               </template>
             </el-table-column>
-            <el-table-column prop="isRequired" label="必填" width="80">
+            <el-table-column
+              prop="isRequired"
+              label="必填"
+              width="80"
+            >
               <template #default="scope">
                 <el-checkbox v-model="scope.row.isRequired" />
               </template>
             </el-table-column>
-            <el-table-column prop="isPrimaryKey" label="主键" width="80">
+            <el-table-column
+              prop="isPrimaryKey"
+              label="主键"
+              width="80"
+            >
               <template #default="scope">
                 <el-checkbox 
                   v-model="scope.row.isPrimaryKey"
@@ -204,12 +247,22 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column prop="defaultValue" label="默认值" width="120">
+            <el-table-column
+              prop="defaultValue"
+              label="默认值"
+              width="120"
+            >
               <template #default="scope">
-                <el-input v-model="scope.row.defaultValue" size="small" />
+                <el-input
+                  v-model="scope.row.defaultValue"
+                  size="small"
+                />
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="120">
+            <el-table-column
+              label="操作"
+              width="120"
+            >
               <template #default="scope">
                 <el-button 
                   type="primary" 
@@ -229,7 +282,10 @@
         </div>
 
         <!-- 关系设计面板 -->
-        <div v-if="designMode === 'relations'" class="relations-designer">
+        <div
+          v-if="designMode === 'relations'"
+          class="relations-designer"
+        >
           <div class="relations-header">
             <h3>实体关系设计</h3>
             <el-button 
@@ -243,10 +299,16 @@
           </div>
           
           <!-- 关系图表区域 -->
-          <div class="relations-canvas" ref="relationsCanvas">
+          <div
+            ref="relationsCanvas"
+            class="relations-canvas"
+          >
             <!-- 这里将来可以集成可视化关系图组件 -->
             <div class="relations-placeholder">
-              <i class="el-icon-share" style="font-size: 48px; color: #ddd;" />
+              <i
+                class="el-icon-share"
+                style="font-size: 48px; color: #ddd;"
+              />
               <p>实体关系图</p>
               <p>支持拖拽连线设计实体间关系</p>
             </div>
@@ -255,12 +317,30 @@
           <!-- 关系列表 -->
           <div class="relations-list">
             <h4>已配置关系</h4>
-            <el-table :data="relations" style="width: 100%">
-              <el-table-column prop="fromEntity" label="源实体" />
-              <el-table-column prop="toEntity" label="目标实体" />
-              <el-table-column prop="type" label="关系类型" />
-              <el-table-column prop="foreignKey" label="外键字段" />
-              <el-table-column label="操作" width="120">
+            <el-table
+              :data="relations"
+              style="width: 100%"
+            >
+              <el-table-column
+                prop="fromEntity"
+                label="源实体"
+              />
+              <el-table-column
+                prop="toEntity"
+                label="目标实体"
+              />
+              <el-table-column
+                prop="type"
+                label="关系类型"
+              />
+              <el-table-column
+                prop="foreignKey"
+                label="外键字段"
+              />
+              <el-table-column
+                label="操作"
+                width="120"
+              >
                 <template #default="scope">
                   <el-button 
                     type="primary" 
@@ -281,7 +361,10 @@
         </div>
 
         <!-- 验证规则面板 -->
-        <div v-if="designMode === 'validation' && selectedEntity" class="validation-designer">
+        <div
+          v-if="designMode === 'validation' && selectedEntity"
+          class="validation-designer"
+        >
           <div class="validation-header">
             <h3>验证规则配置</h3>
             <el-button 
@@ -294,10 +377,20 @@
             </el-button>
           </div>
           
-          <el-table :data="selectedEntity.validationRules" style="width: 100%">
-            <el-table-column prop="fieldName" label="字段" width="150">
+          <el-table
+            :data="selectedEntity.validationRules"
+            style="width: 100%"
+          >
+            <el-table-column
+              prop="fieldName"
+              label="字段"
+              width="150"
+            >
               <template #default="scope">
-                <el-select v-model="scope.row.fieldName" size="small">
+                <el-select
+                  v-model="scope.row.fieldName"
+                  size="small"
+                >
                   <el-option 
                     v-for="field in selectedEntity.fields"
                     :key="field.name"
@@ -307,28 +400,66 @@
                 </el-select>
               </template>
             </el-table-column>
-            <el-table-column prop="ruleType" label="规则类型" width="150">
+            <el-table-column
+              prop="ruleType"
+              label="规则类型"
+              width="150"
+            >
               <template #default="scope">
-                <el-select v-model="scope.row.ruleType" size="small">
-                  <el-option label="长度限制" value="length" />
-                  <el-option label="数值范围" value="range" />
-                  <el-option label="正则表达式" value="regex" />
-                  <el-option label="唯一性检查" value="unique" />
-                  <el-option label="自定义函数" value="custom" />
+                <el-select
+                  v-model="scope.row.ruleType"
+                  size="small"
+                >
+                  <el-option
+                    label="长度限制"
+                    value="length"
+                  />
+                  <el-option
+                    label="数值范围"
+                    value="range"
+                  />
+                  <el-option
+                    label="正则表达式"
+                    value="regex"
+                  />
+                  <el-option
+                    label="唯一性检查"
+                    value="unique"
+                  />
+                  <el-option
+                    label="自定义函数"
+                    value="custom"
+                  />
                 </el-select>
               </template>
             </el-table-column>
-            <el-table-column prop="ruleValue" label="规则值" width="200">
+            <el-table-column
+              prop="ruleValue"
+              label="规则值"
+              width="200"
+            >
               <template #default="scope">
-                <el-input v-model="scope.row.ruleValue" size="small" />
+                <el-input
+                  v-model="scope.row.ruleValue"
+                  size="small"
+                />
               </template>
             </el-table-column>
-            <el-table-column prop="errorMessage" label="错误信息">
+            <el-table-column
+              prop="errorMessage"
+              label="错误信息"
+            >
               <template #default="scope">
-                <el-input v-model="scope.row.errorMessage" size="small" />
+                <el-input
+                  v-model="scope.row.errorMessage"
+                  size="small"
+                />
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="80">
+            <el-table-column
+              label="操作"
+              width="80"
+            >
               <template #default="scope">
                 <el-button 
                   type="danger" 
@@ -343,12 +474,18 @@
       </div>
 
       <!-- 右侧属性面板 -->
-      <div class="properties-panel" v-if="selectedEntity">
+      <div
+        v-if="selectedEntity"
+        class="properties-panel"
+      >
         <div class="panel-header">
           <h3>实体属性</h3>
         </div>
         
-        <el-form :model="selectedEntity" label-width="80px">
+        <el-form
+          :model="selectedEntity"
+          label-width="80px"
+        >
           <el-form-item label="实体名">
             <el-input v-model="selectedEntity.name" />
           </el-form-item>
@@ -367,10 +504,22 @@
           </el-form-item>
           <el-form-item label="分类">
             <el-select v-model="selectedEntity.category">
-              <el-option label="核心实体" value="core" />
-              <el-option label="关联实体" value="relation" />
-              <el-option label="配置实体" value="config" />
-              <el-option label="日志实体" value="log" />
+              <el-option
+                label="核心实体"
+                value="core"
+              />
+              <el-option
+                label="关联实体"
+                value="relation"
+              />
+              <el-option
+                label="配置实体"
+                value="config"
+              />
+              <el-option
+                label="日志实体"
+                value="log"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="启用软删除">
@@ -388,13 +537,22 @@
         <div class="generation-preview">
           <h4>代码预览</h4>
           <el-tabs v-model="previewTab">
-            <el-tab-pane label="实体类" name="entity">
+            <el-tab-pane
+              label="实体类"
+              name="entity"
+            >
               <pre class="code-preview">{{ generateEntityPreview() }}</pre>
             </el-tab-pane>
-            <el-tab-pane label="DTO" name="dto">
+            <el-tab-pane
+              label="DTO"
+              name="dto"
+            >
               <pre class="code-preview">{{ generateDtoPreview() }}</pre>
             </el-tab-pane>
-            <el-tab-pane label="SQL" name="sql">
+            <el-tab-pane
+              label="SQL"
+              name="sql"
+            >
               <pre class="code-preview">{{ generateSqlPreview() }}</pre>
             </el-tab-pane>
           </el-tabs>
@@ -408,15 +566,24 @@
       title="添加新实体" 
       width="500px"
     >
-      <el-form :model="newEntityForm" label-width="80px">
-        <el-form-item label="实体名" required>
+      <el-form
+        :model="newEntityForm"
+        label-width="80px"
+      >
+        <el-form-item
+          label="实体名"
+          required
+        >
           <el-input 
             v-model="newEntityForm.name" 
             placeholder="例如: User"
             @input="autoFillTableName"
           />
         </el-form-item>
-        <el-form-item label="表名" required>
+        <el-form-item
+          label="表名"
+          required
+        >
           <el-input 
             v-model="newEntityForm.tableName" 
             placeholder="例如: AbpUsers"
@@ -437,8 +604,15 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="showAddEntityDialog = false">取消</el-button>
-        <el-button type="primary" @click="createEntity">确定</el-button>
+        <el-button @click="showAddEntityDialog = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="createEntity"
+        >
+          确定
+        </el-button>
       </template>
     </el-dialog>
 
@@ -448,9 +622,18 @@
       title="添加实体关系" 
       width="600px"
     >
-      <el-form :model="newRelationForm" label-width="100px">
-        <el-form-item label="源实体" required>
-          <el-select v-model="newRelationForm.fromEntity" placeholder="选择源实体">
+      <el-form
+        :model="newRelationForm"
+        label-width="100px"
+      >
+        <el-form-item
+          label="源实体"
+          required
+        >
+          <el-select
+            v-model="newRelationForm.fromEntity"
+            placeholder="选择源实体"
+          >
             <el-option 
               v-for="entity in entities"
               :key="entity.id"
@@ -459,8 +642,14 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="目标实体" required>
-          <el-select v-model="newRelationForm.toEntity" placeholder="选择目标实体">
+        <el-form-item
+          label="目标实体"
+          required
+        >
+          <el-select
+            v-model="newRelationForm.toEntity"
+            placeholder="选择目标实体"
+          >
             <el-option 
               v-for="entity in entities"
               :key="entity.id"
@@ -469,14 +658,32 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="关系类型" required>
-          <el-select v-model="newRelationForm.type" placeholder="选择关系类型">
-            <el-option label="一对一 (1:1)" value="one-to-one" />
-            <el-option label="一对多 (1:N)" value="one-to-many" />
-            <el-option label="多对多 (M:N)" value="many-to-many" />
+        <el-form-item
+          label="关系类型"
+          required
+        >
+          <el-select
+            v-model="newRelationForm.type"
+            placeholder="选择关系类型"
+          >
+            <el-option
+              label="一对一 (1:1)"
+              value="one-to-one"
+            />
+            <el-option
+              label="一对多 (1:N)"
+              value="one-to-many"
+            />
+            <el-option
+              label="多对多 (M:N)"
+              value="many-to-many"
+            />
           </el-select>
         </el-form-item>
-        <el-form-item label="外键字段" required>
+        <el-form-item
+          label="外键字段"
+          required
+        >
           <el-input 
             v-model="newRelationForm.foreignKey" 
             placeholder="例如: UserId"
@@ -490,8 +697,15 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="showAddRelationDialog = false">取消</el-button>
-        <el-button type="primary" @click="createRelation">确定</el-button>
+        <el-button @click="showAddRelationDialog = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="createRelation"
+        >
+          确定
+        </el-button>
       </template>
     </el-dialog>
 
@@ -504,29 +718,51 @@
     >
       <div class="schema-preview">
         <el-tabs v-model="schemaPreviewTab">
-          <el-tab-pane label="ER图" name="diagram">
+          <el-tab-pane
+            label="ER图"
+            name="diagram"
+          >
             <div class="er-diagram">
               <!-- 这里可以集成ER图组件 -->
               <p>实体关系图将在这里显示</p>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="DDL语句" name="ddl">
+          <el-tab-pane
+            label="DDL语句"
+            name="ddl"
+          >
             <pre class="ddl-preview">{{ generateDDL() }}</pre>
           </el-tab-pane>
-          <el-tab-pane label="实体统计" name="stats">
+          <el-tab-pane
+            label="实体统计"
+            name="stats"
+          >
             <div class="schema-stats">
               <el-row :gutter="20">
                 <el-col :span="6">
-                  <el-statistic title="实体数量" :value="entities.length" />
+                  <el-statistic
+                    title="实体数量"
+                    :value="entities.length"
+                  />
                 </el-col>
                 <el-col :span="6">
-                  <el-statistic title="字段总数" :value="totalFields" />
+                  <el-statistic
+                    title="字段总数"
+                    :value="totalFields"
+                  />
                 </el-col>
                 <el-col :span="6">
-                  <el-statistic title="关系数量" :value="relations.length" />
+                  <el-statistic
+                    title="关系数量"
+                    :value="relations.length"
+                  />
                 </el-col>
                 <el-col :span="6">
-                  <el-statistic title="完成度" :value="progressPercentage" suffix="%" />
+                  <el-statistic
+                    title="完成度"
+                    :value="progressPercentage"
+                    suffix="%"
+                  />
                 </el-col>
               </el-row>
             </div>

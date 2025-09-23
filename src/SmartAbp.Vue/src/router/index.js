@@ -24,7 +24,7 @@ const PerformanceDashboard = () => import("@smartabp/lowcode-designer/views/code
 const VisualDesignerView = () => import("@smartabp/lowcode-designer/views/VisualDesignerView.vue");
 const LowCodeStudioView = () => import("@/views/lowcode/LowCodeStudioView.vue");
 const DesignView = () => import("@/views/lowcode/DesignView.vue");
-const ModuleWizardView = () => import("@smartabp/lowcode-designer/views/dev/ModuleWizardTestView.vue");
+// const ModuleWizardView = () => import("@smartabp/lowcode-designer/views/dev/ModuleWizardTestView.vue"); // 文件已删除
 const routes = [
     // 登录页面
     {

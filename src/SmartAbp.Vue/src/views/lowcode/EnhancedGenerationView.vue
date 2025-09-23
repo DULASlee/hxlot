@@ -47,9 +47,15 @@
     <div class="generation-body">
       <!-- 左侧配置面板 -->
       <div class="config-panel">
-        <el-tabs v-model="activeConfigTab" type="card">
+        <el-tabs
+          v-model="activeConfigTab"
+          type="card"
+        >
           <!-- 实体选择 -->
-          <el-tab-pane label="实体选择" name="entities">
+          <el-tab-pane
+            label="实体选择"
+            name="entities"
+          >
             <div class="entity-selection">
               <div class="selection-header">
                 <el-checkbox 
@@ -59,22 +65,33 @@
                 >
                   全选实体 ({{ selectedEntities.length }}/{{ availableEntities.length }})
                 </el-checkbox>
-                <el-button size="small" @click="refreshEntities">
+                <el-button
+                  size="small"
+                  @click="refreshEntities"
+                >
                   <i class="el-icon-refresh" /> 刷新
                 </el-button>
               </div>
               
               <div class="entity-list">
-                <el-checkbox-group v-model="selectedEntities" @change="updateGeneration">
+                <el-checkbox-group
+                  v-model="selectedEntities"
+                  @change="updateGeneration"
+                >
                   <div 
                     v-for="entity in availableEntities" 
                     :key="entity.id"
                     class="entity-item"
                   >
-                    <el-checkbox :label="entity.id" class="entity-checkbox">
+                    <el-checkbox
+                      :label="entity.id"
+                      class="entity-checkbox"
+                    >
                       <div class="entity-content">
                         <div class="entity-info">
-                          <div class="entity-name">{{ entity.name }}</div>
+                          <div class="entity-name">
+                            {{ entity.name }}
+                          </div>
                           <div class="entity-details">
                             <span>表: {{ entity.tableName }}</span>
                             <span>字段: {{ entity.fields.length }}</span>
@@ -95,38 +112,83 @@
           </el-tab-pane>
 
           <!-- 代码配置 -->
-          <el-tab-pane label="代码配置" name="config">
+          <el-tab-pane
+            label="代码配置"
+            name="config"
+          >
             <div class="code-config">
-              <el-form :model="codeConfig" label-width="120px">
+              <el-form
+                :model="codeConfig"
+                label-width="120px"
+              >
                 <el-form-item label="项目名称">
-                  <el-input v-model="codeConfig.projectName" placeholder="SmartAbp.PermissionSystem" />
+                  <el-input
+                    v-model="codeConfig.projectName"
+                    placeholder="SmartAbp.PermissionSystem"
+                  />
                 </el-form-item>
                 <el-form-item label="命名空间">
-                  <el-input v-model="codeConfig.namespace" placeholder="SmartAbp.PermissionSystem" />
+                  <el-input
+                    v-model="codeConfig.namespace"
+                    placeholder="SmartAbp.PermissionSystem"
+                  />
                 </el-form-item>
                 <el-form-item label="数据库类型">
                   <el-select v-model="codeConfig.databaseType">
-                    <el-option label="SQL Server" value="SqlServer" />
-                    <el-option label="MySQL" value="MySQL" />
-                    <el-option label="PostgreSQL" value="PostgreSQL" />
-                    <el-option label="Oracle" value="Oracle" />
+                    <el-option
+                      label="SQL Server"
+                      value="SqlServer"
+                    />
+                    <el-option
+                      label="MySQL"
+                      value="MySQL"
+                    />
+                    <el-option
+                      label="PostgreSQL"
+                      value="PostgreSQL"
+                    />
+                    <el-option
+                      label="Oracle"
+                      value="Oracle"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="前端框架">
                   <el-select v-model="codeConfig.frontendFramework">
-                    <el-option label="Vue 3 + TypeScript" value="Vue3TS" />
-                    <el-option label="React + TypeScript" value="ReactTS" />
-                    <el-option label="Angular" value="Angular" />
+                    <el-option
+                      label="Vue 3 + TypeScript"
+                      value="Vue3TS"
+                    />
+                    <el-option
+                      label="React + TypeScript"
+                      value="ReactTS"
+                    />
+                    <el-option
+                      label="Angular"
+                      value="Angular"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="启用功能">
                   <el-checkbox-group v-model="codeConfig.features">
-                    <el-checkbox label="audit">审计日志</el-checkbox>
-                    <el-checkbox label="cache">分布式缓存</el-checkbox>
-                    <el-checkbox label="permission">权限控制</el-checkbox>
-                    <el-checkbox label="validation">数据验证</el-checkbox>
-                    <el-checkbox label="localization">多语言</el-checkbox>
-                    <el-checkbox label="testing">单元测试</el-checkbox>
+                    <el-checkbox label="audit">
+                      审计日志
+                    </el-checkbox>
+                    <el-checkbox label="cache">
+                      分布式缓存
+                    </el-checkbox>
+                    <el-checkbox label="permission">
+                      权限控制
+                    </el-checkbox>
+                    <el-checkbox label="validation">
+                      数据验证
+                    </el-checkbox>
+                    <el-checkbox label="localization">
+                      多语言
+                    </el-checkbox>
+                    <el-checkbox label="testing">
+                      单元测试
+                    </el-checkbox>
                   </el-checkbox-group>
                 </el-form-item>
               </el-form>
@@ -158,10 +220,18 @@
         </div>
 
         <!-- 文件树预览 -->
-        <div v-if="previewMode === 'tree'" class="file-tree-preview">
+        <div
+          v-if="previewMode === 'tree'"
+          class="file-tree-preview"
+        >
           <div class="tree-header">
             <span>预计生成文件结构</span>
-            <el-tag type="info" size="small">{{ estimatedFiles }} 个文件</el-tag>
+            <el-tag
+              type="info"
+              size="small"
+            >
+              {{ estimatedFiles }} 个文件
+            </el-tag>
           </div>
           <el-tree
             :data="fileTreeData"
@@ -175,16 +245,25 @@
               <div class="tree-node">
                 <i :class="getFileIcon(data.type)" />
                 <span class="node-label">{{ data.name }}</span>
-                <span v-if="data.size" class="file-size">{{ data.size }}</span>
+                <span
+                  v-if="data.size"
+                  class="file-size"
+                >{{ data.size }}</span>
               </div>
             </template>
           </el-tree>
         </div>
 
         <!-- 代码预览 -->
-        <div v-if="previewMode === 'code'" class="code-preview">
+        <div
+          v-if="previewMode === 'code'"
+          class="code-preview"
+        >
           <div class="preview-tabs">
-            <el-tabs v-model="activePreviewFile" type="card">
+            <el-tabs
+              v-model="activePreviewFile"
+              type="card"
+            >
               <el-tab-pane 
                 v-for="file in previewFiles" 
                 :key="file.id"
@@ -195,15 +274,24 @@
                   <div class="code-header">
                     <div class="file-info">
                       <span class="file-path">{{ file.path }}</span>
-                      <el-tag :type="getFileTypeTag(file.type)" size="small">
+                      <el-tag
+                        :type="getFileTypeTag(file.type)"
+                        size="small"
+                      >
                         {{ file.type }}
                       </el-tag>
                     </div>
                     <div class="code-actions">
-                      <el-button size="small" @click="copyCode(file.content)">
+                      <el-button
+                        size="small"
+                        @click="copyCode(file.content)"
+                      >
                         <i class="el-icon-document-copy" /> 复制
                       </el-button>
-                      <el-button size="small" @click="downloadFile(file)">
+                      <el-button
+                        size="small"
+                        @click="downloadFile(file)"
+                      >
                         <i class="el-icon-download" /> 下载
                       </el-button>
                     </div>
@@ -218,7 +306,10 @@
         </div>
 
         <!-- 生成进度 -->
-        <div v-if="generating" class="generation-progress">
+        <div
+          v-if="generating"
+          class="generation-progress"
+        >
           <div class="progress-header">
             <h4>代码生成进度</h4>
             <el-tag :type="generationStatus === 'success' ? 'success' : 'info'">
@@ -241,7 +332,10 @@
         </div>
 
         <!-- 生成结果 -->
-        <div v-if="generationResult" class="generation-result">
+        <div
+          v-if="generationResult"
+          class="generation-result"
+        >
           <div class="result-header">
             <h4>生成结果</h4>
             <el-tag :type="generationResult.success ? 'success' : 'danger'">
@@ -251,21 +345,38 @@
           <div class="result-summary">
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-statistic title="生成文件" :value="generationResult.fileCount" />
+                <el-statistic
+                  title="生成文件"
+                  :value="generationResult.fileCount"
+                />
               </el-col>
               <el-col :span="6">
-                <el-statistic title="代码行数" :value="generationResult.lineCount" />
+                <el-statistic
+                  title="代码行数"
+                  :value="generationResult.lineCount"
+                />
               </el-col>
               <el-col :span="6">
-                <el-statistic title="耗时" :value="generationResult.duration" suffix="秒" />
+                <el-statistic
+                  title="耗时"
+                  :value="generationResult.duration"
+                  suffix="秒"
+                />
               </el-col>
               <el-col :span="6">
-                <el-statistic title="文件大小" :value="generationResult.totalSize" suffix="KB" />
+                <el-statistic
+                  title="文件大小"
+                  :value="generationResult.totalSize"
+                  suffix="KB"
+                />
               </el-col>
             </el-row>
           </div>
           <div class="result-actions">
-            <el-button type="primary" @click="downloadGeneratedCode">
+            <el-button
+              type="primary"
+              @click="downloadGeneratedCode"
+            >
               <i class="el-icon-download" /> 下载生成的代码
             </el-button>
             <el-button @click="openOutputDirectory">
