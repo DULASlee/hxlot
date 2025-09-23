@@ -302,7 +302,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Run Git Sync
         run: |
           chmod +x scripts/git-safe-sync.sh
@@ -390,6 +390,6 @@ scripts\git-safe-sync.bat --help
 
 ---
 
-**📝 文档版本**: v1.0  
-**🗓️ 最后更新**: 2024-12-23  
+**📝 文档版本**: v1.0
+**🗓️ 最后更新**: 2024-12-23
 **👥 维护团队**: SmartAbp开发团队
