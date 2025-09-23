@@ -43,7 +43,7 @@
           </span>
         </div>
 
-        <!-- 操作按钮 -->
+        <!-- 🚀 增强操作按钮 - 基于现有架构增量开发 -->
         <div class="action-buttons">
           <button :disabled="!canUndo" class="btn btn-icon" title="撤销 (Ctrl+Z)" @click="undo">
             <i class="icon-undo" />
@@ -54,6 +54,31 @@
           <button :disabled="!isDirty" class="btn btn-icon" title="保存 (Ctrl+S)" @click="save">
             <i class="icon-save" />
           </button>
+          
+          <!-- 🎯 网格对齐工具 -->
+          <div class="btn-group">
+            <button 
+              :class="{ active: dragState.snapToGrid }" 
+              class="btn btn-icon" 
+              title="网格对齐" 
+              @click="toggleSnapToGrid"
+            >
+              <i class="icon-grid" />
+            </button>
+            <select 
+              v-model="dragState.gridSize" 
+              class="grid-size-selector" 
+              title="网格大小"
+              @change="setGridSize(dragState.gridSize)"
+            >
+              <option :value="5">5px</option>
+              <option :value="10">10px</option>
+              <option :value="20">20px</option>
+              <option :value="25">25px</option>
+              <option :value="50">50px</option>
+            </select>
+          </div>
+          
           <button class="btn btn-primary" @click="preview">预览</button>
           <button class="btn btn-secondary" @click="exportDesign">导出</button>
         </div>
@@ -802,9 +827,128 @@ const toggleMinimap = () => {
   statusMessage.value = `缩略图${showMinimap.value ? "已显示" : "已隐藏"}`
 }
 
-// 组件操作
-const handleComponentDragStart = (component: any) => {
-  statusMessage.value = `开始拖拽 ${component.name}`
+// 🚀 增强组件拖拽操作 - 基于现有架构增量开发
+const dragState = ref<{
+  isDragging: boolean
+  dragComponent: any
+  startPosition: { x: number; y: number }
+  gridSize: number
+  snapToGrid: boolean
+  multiSelect: boolean
+  selectedComponents: string[]
+}>({
+  isDragging: false,
+  dragComponent: null,
+  startPosition: { x: 0, y: 0 },
+  gridSize: 20,
+  snapToGrid: true,
+  multiSelect: false,
+  selectedComponents: []
+})
+
+const handleComponentDragStart = (component: any, event?: DragEvent) => {
+  dragState.value.isDragging = true
+  dragState.value.dragComponent = component
+  
+  if (event) {
+    dragState.value.startPosition = {
+      x: event.clientX,
+      y: event.clientY
+    }
+  }
+  
+  statusMessage.value = `开始拖拽 ${component.name || component.type}`
+  
+  // 🎯 网格对齐提示
+  if (dragState.value.snapToGrid) {
+    statusMessage.value += ` (网格对齐: ${dragState.value.gridSize}px)`
+  }
+}
+
+// 🎯 网格对齐功能
+const snapToGrid = (position: { x: number; y: number }) => {
+  if (!dragState.value.snapToGrid) return position
+  
+  const { gridSize } = dragState.value
+  return {
+    x: Math.round(position.x / gridSize) * gridSize,
+    y: Math.round(position.y / gridSize) * gridSize
+  }
+}
+
+// 🎯 拖拽约束检查
+const checkDragConstraints = (component: any, position: { x: number; y: number }) => {
+  const constraints = {
+    minX: 0,
+    minY: 0,
+    maxX: canvasSize.value.width - (component.width || 100),
+    maxY: canvasSize.value.height - (component.height || 100)
+  }
+  
+  return {
+    x: Math.max(constraints.minX, Math.min(constraints.maxX, position.x)),
+    y: Math.max(constraints.minY, Math.min(constraints.maxY, position.y))
+  }
+}
+
+// 🎯 多选拖拽支持
+const handleMultiSelectDrag = (componentIds: string[], deltaX: number, deltaY: number) => {
+  componentIds.forEach(id => {
+    if (designer.value?.canvas?.getComponent && designer.value?.updateComponent) {
+      const component = designer.value.canvas.getComponent(id)
+      if (component) {
+        const newPosition = snapToGrid({
+          x: component.x + deltaX,
+          y: component.y + deltaY
+        })
+        
+        const constrainedPosition = checkDragConstraints(component, newPosition)
+        
+        designer.value.updateComponent(id, {
+          x: constrainedPosition.x,
+          y: constrainedPosition.y
+        })
+      }
+    }
+  })
+  
+  statusMessage.value = `批量移动了 ${componentIds.length} 个组件`
+}
+
+// 🎯 拖拽结束处理
+const handleComponentDragEnd = (component: any, finalPosition?: { x: number; y: number }) => {
+  dragState.value.isDragging = false
+  
+  if (finalPosition && designer.value?.updateComponent) {
+    const snappedPosition = snapToGrid(finalPosition)
+    const constrainedPosition = checkDragConstraints(component, snappedPosition)
+    
+    designer.value.updateComponent(component.id, constrainedPosition)
+    
+    statusMessage.value = `组件 ${component.name || component.type} 已移动到 (${constrainedPosition.x}, ${constrainedPosition.y})`
+  }
+  
+  dragState.value.dragComponent = null
+}
+
+// 🎯 暴露拖拽处理函数供画布组件使用
+const exposeDragHandlers = () => ({
+  handleMultiSelectDrag,
+  handleComponentDragEnd,
+  snapToGrid,
+  checkDragConstraints
+})
+
+// 🎯 切换网格对齐
+const toggleSnapToGrid = () => {
+  dragState.value.snapToGrid = !dragState.value.snapToGrid
+  statusMessage.value = `网格对齐已${dragState.value.snapToGrid ? '启用' : '禁用'}`
+}
+
+// 🎯 设置网格大小
+const setGridSize = (size: number) => {
+  dragState.value.gridSize = Math.max(5, Math.min(50, size))
+  statusMessage.value = `网格大小设置为 ${dragState.value.gridSize}px`
 }
 
 const handleComponentSelect = (componentIds: string[]) => {
@@ -1198,5 +1342,59 @@ const onReadSFC = () => {
   color: var(--el-text-color-secondary, #909399);
   font-weight: 500;
   opacity: 0.8;
+}
+
+/* 🎯 增强拖拽工具样式 */
+.btn-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 8px;
+  padding: 4px 8px;
+  background: var(--el-fill-color-light, #f5f7fa);
+  border-radius: 4px;
+}
+
+.btn.active {
+  background: var(--el-color-primary, #409eff);
+  color: white;
+}
+
+.grid-size-selector {
+  padding: 4px 8px;
+  border: 1px solid var(--el-border-color, #dcdfe6);
+  border-radius: 4px;
+  font-size: 12px;
+  background: white;
+  cursor: pointer;
+}
+
+.grid-size-selector:focus {
+  outline: none;
+  border-color: var(--el-color-primary, #409eff);
+}
+
+/* 🎯 拖拽状态指示器 */
+.drag-indicator {
+  position: absolute;
+  pointer-events: none;
+  border: 2px dashed var(--el-color-primary, #409eff);
+  background: rgba(64, 158, 255, 0.1);
+  z-index: 1000;
+}
+
+.drag-grid {
+  background-image: 
+    linear-gradient(to right, rgba(64, 158, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(64, 158, 255, 0.1) 1px, transparent 1px);
+}
+
+/* 🎯 多选框架样式 */
+.multi-select-frame {
+  position: absolute;
+  border: 2px solid var(--el-color-primary, #409eff);
+  background: rgba(64, 158, 255, 0.1);
+  pointer-events: none;
+  z-index: 999;
 }
 </style>
