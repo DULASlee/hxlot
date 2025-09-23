@@ -180,8 +180,8 @@ export class EnhancedLogger {
     })
 
     // 子日志器的日志也会同步到父日志器
-    childLogger.subscribe((logs) => {
-      logs.forEach((entry) => {
+    childLogger.subscribe((_logs: LogEntry[]) => {
+      _logs.forEach((entry: LogEntry) => {
         if (!this.logs.value.find((existing) => existing.id === entry.id)) {
           this.addToLogs(entry)
           this.notifySubscribers()
@@ -200,13 +200,13 @@ export class EnhancedLogger {
       name,
       startTime: performance.now(),
       context: { ...this.context, ...context },
-      end: (metadata?: Record<string, any>) => {
+      end: (_metadata?: Record<string, any>) => {
         const duration = performance.now() - timer.startTime
 
         this.debug(`Timer completed: ${name}`, {
           duration: Math.round(duration * 100) / 100,
           ...timer.context,
-          ...metadata,
+          ..._metadata,
         })
 
         this.activeTimers.delete(name)

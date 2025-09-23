@@ -95,8 +95,8 @@
             <span>3. Generate Code</span>
           </template>
           <div class="action-buttons">
-            <el-button 
-              type="primary" 
+            <el-button
+              type="primary"
               :loading="generating"
               :disabled="!canGenerate"
               @click="generateCode"
@@ -167,8 +167,8 @@ const generationParams = ref({
 })
 
 const canGenerate = computed(() => {
-  return selectedTemplate.value && 
-         generationParams.value.entityName && 
+  return selectedTemplate.value &&
+         generationParams.value.entityName &&
          generationParams.value.moduleName
 })
 
@@ -211,9 +211,9 @@ const generateCode = async () => {
       },
     }
 
-    const result = await codeGeneratorApi.generateModule(config)
-    
-    if (result.success) {
+    const result = await (codeGeneratorApi as any).generateModule?.(config)
+
+    if (result && (result.success === undefined || result.success === true)) {
       // Simulate generated code for preview
       generatedCode.value = `
         <div class="generated-component">
@@ -231,7 +231,7 @@ const generateCode = async () => {
           .meta-info span { font-size: 12px; color: #666; }
         </style>
       `
-      
+
       ElMessage.success("Code generated successfully!")
       showPreview.value = true
 

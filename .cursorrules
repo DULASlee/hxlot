@@ -299,12 +299,12 @@ async function executeThunderbolt8() {
 ```
 🏛️ **ADR查询**: 正在查阅相关架构决策记录...
 📋 **ADR发现**: 找到相关决策 `ADR-{number}: {title}`
-🎯 **决策要点**:
+🎯 **决策要点**: 
    - 选择方案: {decision}
    - 主要原因: {rationale}
    - 技术约束: {constraints}
    - 实施指导: {implementation_guidance}
-⚙️ **应用到当前任务**:
+⚙️ **应用到当前任务**: 
    - 遵循的原则: {principles}
    - 使用的模式: {patterns}
    - 技术选择: {technology_choices}
@@ -405,13 +405,13 @@ read_file "templates/index.json"
 ```
 🔍 **模板搜索**: 正在查找 {需求类型} 相关模板...
 📋 **模板发现**: 找到模板 `{template_path}`
-⚙️ **参数映射**:
+⚙️ **参数映射**: 
    - EntityName: {实体名称PascalCase}
    - entityName: {实体名称camelCase}
    - ModuleName: {模块名称}
    - entityDisplayName: {中文显示名称}
 🏗️ **代码生成**: 基于模板 `{template_id}` 生成代码
-✅ **合规检查**:
+✅ **合规检查**: 
    - [x] 使用了项目模板
    - [x] 符合ABP框架规范
    - [x] 遵循项目命名约定

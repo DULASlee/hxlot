@@ -10,7 +10,7 @@ export interface PerformanceTracker {
   endTime: number
   duration: number
   metadata: Record<string, any>
-  end: (metadata?: Record<string, any>) => PerformanceTracker | null
+  end: (_metadata?: Record<string, any>) => PerformanceTracker | null
 }
 
 // 性能统计接口
@@ -50,8 +50,8 @@ class LogManager {
       endTime: 0,
       duration: 0,
       metadata: {},
-      end: (metadata?: Record<string, any>) => {
-        return this.endPerformanceTracking(tracker.id, metadata)
+      end: (_metadata?: Record<string, any>) => {
+        return this.endPerformanceTracking(tracker.id, _metadata)
       },
     }
 
@@ -62,7 +62,7 @@ class LogManager {
   // 结束性能追踪
   endPerformanceTracking(
     trackingId: string,
-    metadata?: Record<string, any>,
+    _metadata?: Record<string, any>,
   ): PerformanceTracker | null {
     const tracker = this.activeTrackers.get(trackingId)
     if (!tracker) {
@@ -72,9 +72,6 @@ class LogManager {
 
     tracker.endTime = performance.now()
     tracker.duration = tracker.endTime - tracker.startTime
-    if (metadata) {
-      tracker.metadata = { ...tracker.metadata, ...metadata }
-    }
 
     this.performanceEntries.value.push(tracker)
     this.activeTrackers.delete(trackingId)

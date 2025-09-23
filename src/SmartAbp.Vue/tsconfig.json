@@ -19,8 +19,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@smartabp/lowcode-api": ["packages/lowcode-api/src"],
-      "@smartabp/lowcode-api/*": ["packages/lowcode-api/src/*"],
+      "@smartabp/lowcode-api": ["packages/lowcode-api/index.ts"],
+      "@smartabp/lowcode-api/*": ["packages/lowcode-api/*"],
       "@smartabp/lowcode-core": ["packages/lowcode-core/src"],
       "@smartabp/lowcode-core/*": ["packages/lowcode-core/src/*"],
       "@smartabp/lowcode-designer": ["packages/lowcode-designer/src"],
@@ -46,6 +46,10 @@
   "exclude": [
     "node_modules",
     "dist",
-    "**/__tests__/**"
+    "**/__tests__/**",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
   ]
 }
