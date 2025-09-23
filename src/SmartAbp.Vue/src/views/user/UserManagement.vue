@@ -439,7 +439,7 @@ const fetchData = async () => {
     await store.fetchList(params)
     tableData.value = store.list
     pagination.total = store.total
-  } catch (error) {
+  } catch {
     ElMessage.error("获取数据失败")
   } finally {
     loading.value = false
@@ -487,7 +487,7 @@ const handleDelete = async (row: any) => {
 
     ElMessage.success("删除成功")
     fetchData()
-  } catch (error) {
+  } catch {
     // 用户取消删除
   }
 }
@@ -516,7 +516,7 @@ const handleBatchDelete = async () => {
 
     ElMessage.success("批量删除成功")
     fetchData()
-  } catch (error) {
+  } catch {
     // 用户取消删除
   }
 }
@@ -540,7 +540,7 @@ const handleSubmit = async () => {
 
     dialogVisible.value = false
     fetchData()
-  } catch (error) {
+  } catch {
     ElMessage.error("操作失败")
   } finally {
     submitting.value = false
@@ -601,7 +601,7 @@ onMounted(async () => {
     if (cfg) {
       schema.value = uiConfigToPageSchema(cfg)
     }
-  } catch (_) {
+  } catch {
     // 忽略错误，走静态模板渲染
   } finally {
     // 无论是否存在UI配置，均进行一次数据加载（静态模板所需）

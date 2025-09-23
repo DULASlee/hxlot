@@ -434,7 +434,7 @@ const exportData = async () => {
     URL.revokeObjectURL(url)
 
     ElMessage.success("数据导出成功")
-  } catch (error) {
+  } catch {
     ElMessage.error("导出失败")
   }
 }
@@ -455,7 +455,7 @@ const exportDiagnostic = async () => {
     URL.revokeObjectURL(url)
 
     ElMessage.success("诊断报告导出成功")
-  } catch (error) {
+  } catch {
     ElMessage.error("导出失败")
   }
 }

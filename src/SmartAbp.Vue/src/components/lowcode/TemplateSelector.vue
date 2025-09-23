@@ -40,7 +40,7 @@ import { ElCard } from "element-plus"
 import type { Template } from "@smartabp/lowcode-api/types"
 
 const emit = defineEmits<{
-  (e: "select", template: Template): void
+  select: [template: Template]
 }>()
 
 const store = useTemplatesStore()

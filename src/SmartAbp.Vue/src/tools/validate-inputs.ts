@@ -177,7 +177,7 @@ class InputValidator {
         if (match[1]) {
           try {
             SystemNameSchema.parse(match[1])
-          } catch (error) {
+          } catch {
             this.issues.push({
               file: filePath,
               line: lineNumber,
@@ -205,7 +205,7 @@ class InputValidator {
         if (match[1] && !match[1].startsWith("/") && match[1].length > 1) {
           try {
             RouteNameSchema.parse(match[1])
-          } catch (error) {
+          } catch {
             this.issues.push({
               file: filePath,
               line: lineNumber,
@@ -236,7 +236,7 @@ class InputValidator {
         if (match[1]) {
           try {
             PermissionSchema.parse(match[1])
-          } catch (error) {
+          } catch {
             this.issues.push({
               file: filePath,
               line: lineNumber,

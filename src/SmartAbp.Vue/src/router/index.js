@@ -17,11 +17,14 @@ const ProjectAnalysisView = () => import("@/views/project/ProjectAnalysisView.vu
 const PermissionsView = () => import("@/views/system/PermissionsView.vue");
 const UsersView = () => import("@/views/system/UsersView.vue");
 // 代码生成模块组件
-const LowCodeEngineView = () => import("../../packages/lowcode-designer/src/views/codegen/LowCodeEngineView.vue");
-const SfcCompilerView = () => import("../../packages/lowcode-designer/src/views/codegen/SfcCompilerView.vue");
-const DragDropFormView = () => import("../../packages/lowcode-designer/src/views/codegen/DragDropFormView.vue");
-const PerformanceDashboard = () => import("../../packages/lowcode-designer/src/views/codegen/PerformanceDashboard.vue");
-const VisualDesignerView = () => import("../../packages/lowcode-designer/src/views/VisualDesignerView.vue");
+const LowCodeEngineView = () => import("@smartabp/lowcode-designer/views/codegen/LowCodeEngineView.vue");
+const SfcCompilerView = () => import("@smartabp/lowcode-designer/views/codegen/SfcCompilerView.vue");
+const DragDropFormView = () => import("@smartabp/lowcode-designer/views/codegen/DragDropFormView.vue");
+const PerformanceDashboard = () => import("@smartabp/lowcode-designer/views/codegen/PerformanceDashboard.vue");
+const VisualDesignerView = () => import("@smartabp/lowcode-designer/views/VisualDesignerView.vue");
+const LowCodeStudioView = () => import("@/views/lowcode/LowCodeStudioView.vue");
+const DesignView = () => import("@/views/lowcode/DesignView.vue");
+const ModuleWizardView = () => import("@smartabp/lowcode-designer/views/dev/ModuleWizardTestView.vue");
 const routes = [
     // 登录页面
     {
@@ -246,7 +249,7 @@ const routes = [
             {
                 path: "designer",
                 name: "LowCodeDesigner",
-                component: () => import("@smartabp/lowcode-designer/src/views/VisualDesignerView.vue"),
+                component: () => import("@smartabp/lowcode-designer/views/VisualDesignerView.vue"),
                 meta: {
                     title: "可视化设计",
                     icon: "el-icon-brush",
@@ -363,6 +366,49 @@ const routes = [
         redirect: (to) => {
             return `/dashboard/not-found${to.path}`;
         },
+    },
+    // LowCode Studio 企业级工作台
+    {
+        path: "/studio",
+        component: LowCodeStudioView,
+        meta: {
+            title: "LowCode Studio",
+            icon: "🎨",
+            requiresAuth: true,
+            requiredRoles: ["user"],
+        },
+        children: [
+            {
+                path: "",
+                name: "StudioModeling",
+                component: () => import("@/views/lowcode/QuickStart.vue"),
+                meta: { title: "数据建模", menuKey: "studio-modeling" },
+            },
+            {
+                path: "design",
+                name: "StudioDesign",
+                component: DesignView,
+                meta: { title: "页面设计", menuKey: "studio-design" },
+            },
+            {
+                path: "generation",
+                name: "StudioGeneration",
+                component: () => import("@/views/lowcode/GenerationView.vue"),
+                meta: { title: "代码生成", menuKey: "studio-generation" },
+            },
+            {
+                path: "workflows",
+                name: "StudioWorkflows",
+                component: () => import("@/views/lowcode/WorkflowsView.vue"),
+                meta: { title: "工作流", menuKey: "studio-workflows" },
+            },
+            {
+                path: "theme",
+                name: "StudioTheme",
+                component: () => import("@/views/lowcode/QuickStart.vue"),
+                meta: { title: "主题定制", menuKey: "studio-theme" },
+            },
+        ],
     },
 ];
 const router = createRouter({

@@ -258,7 +258,7 @@ const copyCode = async () => {
   try {
     await navigator.clipboard.writeText(generatedCode.value)
     ElMessage.success("Code copied to clipboard!")
-  } catch (_error) {
+  } catch {
     ElMessage.error("Failed to copy code")
   }
 }

@@ -455,7 +455,7 @@ const copyCode = async () => {
   try {
     await navigator.clipboard.writeText(generatedCode.value)
     ElMessage.success("代码已复制到剪贴板")
-  } catch (error) {
+  } catch {
     ElMessage.error("复制失败")
   }
 }

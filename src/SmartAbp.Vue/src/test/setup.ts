@@ -49,23 +49,23 @@ Object.defineProperty(window, "matchMedia", {
 
 // 模拟 localStorage
 const localStorageMock = {
-  getItem: vi.fn((_key: string) => null),
+  getItem: vi.fn(() => null),
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),
   length: 0,
-  key: vi.fn((_index: number) => null),
+  key: vi.fn(() => null),
 }
 vi.stubGlobal("localStorage", localStorageMock)
 
 // 模拟 sessionStorage
 const sessionStorageMock = {
-  getItem: vi.fn((_key: string) => null),
+  getItem: vi.fn(() => null),
   setItem: vi.fn(),
   removeItem: vi.fn(),
   clear: vi.fn(),
   length: 0,
-  key: vi.fn((_index: number) => null),
+  key: vi.fn(() => null),
 }
 vi.stubGlobal("sessionStorage", sessionStorageMock)
 

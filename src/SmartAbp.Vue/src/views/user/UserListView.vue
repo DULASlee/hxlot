@@ -524,7 +524,7 @@ const handleBatchDelete = async () => {
 
     ElMessage.success("批量删除成功")
     fetchData()
-  } catch (error) {
+  } catch {
     // 用户取消删除
   }
 }
@@ -608,7 +608,7 @@ onMounted(async () => {
     if (cfg) {
       schema.value = uiConfigToPageSchema(cfg)
     }
-  } catch (_) {
+  } catch {
     // 忽略错误，走静态模板渲染
   } finally {
     // 无论是否存在UI配置，均进行一次数据加载（静态模板所需）

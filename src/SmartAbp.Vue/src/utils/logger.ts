@@ -7,6 +7,7 @@ import { ref, type Ref } from "vue"
 import { logger as enhancedLogger, LogLevel as EnhancedLogLevel } from "./logging"
 
 // 日志级别枚举
+ 
 export enum LogLevel {
   DEBUG = 0,
   INFO = 1,
@@ -56,7 +57,7 @@ export interface LogStats {
 }
 
 // 日志订阅者类型
-type LogSubscriber = (logs: LogEntry[]) => void
+type LogSubscriber = (_logs: LogEntry[]) => void
 
 // 兼容性日志记录器类 - 包装增强日志系统
 class Logger {

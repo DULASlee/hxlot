@@ -371,7 +371,7 @@ const copyLog = async (log: LogEntry) => {
     const text = `[${formatTime(new Date(log.timestamp))}] [${LOG_LEVEL_NAMES[log.level]}] ${log.category ? `[${log.category}] ` : ""}${log.message}`
     await navigator.clipboard.writeText(text)
     ElMessage.success("日志已复制到剪贴板")
-  } catch (error) {
+  } catch {
     ElMessage.error("复制失败")
   }
 }
@@ -391,7 +391,7 @@ const handleExport = (format: string) => {
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
     ElMessage.success("日志导出成功")
-  } catch (error) {
+  } catch {
     ElMessage.error("导出失败")
   }
 }

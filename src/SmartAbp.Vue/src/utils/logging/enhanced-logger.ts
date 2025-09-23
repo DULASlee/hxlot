@@ -37,7 +37,7 @@ export interface PerformanceTimer {
   name: string
   startTime: number
   context?: Record<string, any>
-  end(metadata?: Record<string, any>): number
+  end(_metadata?: Record<string, any>): number
 }
 
 /**
@@ -49,7 +49,7 @@ export class EnhancedLogger {
   private transports: LogTransport[] = []
   private logs: Ref<LogEntry[]> = ref([])
   private childLoggers = new Map<string, EnhancedLogger>()
-  private subscribers: Array<(logs: LogEntry[]) => void> = []
+  private subscribers: Array<(_logs: LogEntry[]) => void> = []
   private maxLogs = 1000
 
   // 批量处理配置
@@ -388,7 +388,7 @@ export class EnhancedLogger {
 
   // ============= 订阅机制 =============
 
-  subscribe(callback: (logs: LogEntry[]) => void): () => void {
+  subscribe(callback: (_logs: LogEntry[]) => void): () => void {
     this.subscribers.push(callback)
     return () => {
       const index = this.subscribers.indexOf(callback)
@@ -417,7 +417,7 @@ export class EnhancedLogger {
       case "json":
         return JSON.stringify(logs, null, 2)
 
-      case "csv":
+      case "csv": {
         const headers = ["时间", "级别", "消息", "来源", "上下文", "元数据"]
         const rows = logs.map((log) => [
           new Date(log.timestamp).toLocaleString(),
@@ -428,6 +428,7 @@ export class EnhancedLogger {
           JSON.stringify(log.metadata || {}),
         ])
         return [headers, ...rows].map((row) => row.join(",")).join("\n")
+      }
 
       case "txt":
         return logs

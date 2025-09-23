@@ -64,8 +64,8 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
   // WebSocket connection
   let websocket: WebSocket | null = null
-  let reconnectTimer: NodeJS.Timeout | null = null
-  let mockAlertTimer: NodeJS.Timeout | null = null
+  let reconnectTimer: ReturnType<typeof setTimeout> | null = null
+  let mockAlertTimer: ReturnType<typeof setTimeout> | null = null
 
   // Computed Properties
   const unreadCount = computed(

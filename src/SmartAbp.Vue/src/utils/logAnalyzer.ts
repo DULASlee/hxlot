@@ -41,6 +41,7 @@ export interface LogAnalysisResult {
 }
 
 // 时间范围枚举
+ 
 export enum TimeRange {
   LAST_HOUR = "last_hour",
   LAST_DAY = "last_day",
@@ -48,6 +49,7 @@ export enum TimeRange {
   LAST_MONTH = "last_month",
   CUSTOM = "custom",
 }
+ 
 
 // 分析配置
 export interface AnalysisConfig {

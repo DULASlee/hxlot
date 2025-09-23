@@ -485,7 +485,7 @@ export const BundleOptimizer = {
     })
 
     const actualDuplicates = Array.from(duplicates.entries()).filter(
-      ([_, instances]) => instances.length > 1,
+      ([, instances]) => instances.length > 1,
     )
 
     if (actualDuplicates.length > 0) {

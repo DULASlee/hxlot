@@ -302,10 +302,7 @@ import { debounce } from "lodash-es"
 
 // 事件
 const emit = defineEmits<{
-  (
-    event: "login-success",
-    data: { username: string; tenantName: string; rememberMe: boolean },
-  ): void
+  "login-success": [data: { username: string; tenantName: string; rememberMe: boolean }]
 }>()
 
 // 响应式数据
