@@ -341,9 +341,21 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
-        name: "LowCodeStudio",
+        name: "LowCodeStudioHome",
         component: () => import("@/views/lowcode/LowCodeStudioView.vue"),
-        meta: { title: "LowCode Studio", menuKey: "lowcode-studio" },
+        meta: { title: "低代码工作室", menuKey: "lowcode-studio-home" },
+      },
+      {
+        path: "workflows",
+        name: "LowCodeWorkflows",
+        component: () => import("@/views/lowcode/WorkflowsView.vue"),
+        meta: { title: "工作流", menuKey: "lowcode-workflows" },
+      },
+      {
+        path: "generation",
+        name: "LowCodeGeneration",
+        component: () => import("@/views/lowcode/GenerationView.vue"),
+        meta: { title: "代码生成", menuKey: "lowcode-generation" },
       },
     ],
   },

@@ -22,7 +22,7 @@ type SecurityAlertType =
   message: string
   severity: AlertSeverity
     timestamp: number
-  isAcknowledged: boolean
+  acknowledged: boolean
   type: "error" | "warning" | "info"
   duration?: number
   actions?: Array<{ text: string; handler: () => void }>
@@ -84,7 +84,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
   // Mock Data Generation
   const generateMockAlert = (): SecurityAlert => {
-  const alertTypes: SecurityAlertType[] = [
+    const alertTypes: SecurityAlertType[] = [
       "VULNERABILITY",
       "LOGIN_ATTEMPT",
       "OFF_HOURS_ACCESS",
@@ -101,27 +101,25 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
     const severity = severities[Math.floor(Math.random() * severities.length)]
     const user = users[Math.floor(Math.random() * users.length)]
 
+    const notificationType: "error" | "warning" | "info" =
+      severity === "critical"
+        ? "error"
+        : severity === "high"
+        ? "warning"
+        : "info"
+
     return {
       id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      type,
-      severity,
+      title: getAlertDescription(type, user),
       message: getAlertDescription(type, user),
-      description: getAlertDescription(type, user),
+      type: notificationType,
+      severity,
       timestamp: Date.now(),
-      userInfo: {
-        displayName: user,
-        email: `${user.toLowerCase().replace(" ", ".")}@company.com`,
-        department: "Engineering",
-        roles: ["User"],
-      },
-      context: {
-        sessionId: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        ipAddress: `192.168.1.${Math.floor(Math.random() * 255)}`,
-        userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        timeZone: "Asia/Shanghai",
-      },
       acknowledged: false,
-      recommendedActions: getRecommendedActions(type),
+      source: "MockProvider",
+      metadata: {
+        user,
+      },
     }
   }
 
@@ -136,47 +134,6 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
       SUSPICIOUS_ACTIVITY: `Suspicious activity detected for ${user}`,
     }
     return descriptions[type]
-  }
-
-  const getRecommendedActions = (type: SecurityAlertType): string[] => {
-    const actions: Record<SecurityAlertType, string[]> = {
-      VULNERABILITY: [
-        "Review user permissions",
-        "Verify business justification",
-        "Monitor subsequent activities",
-      ],
-      LOGIN_ATTEMPT: [
-        "Verify user location",
-        "Check VPN usage",
-        "Consider additional authentication",
-      ],
-      OFF_HOURS_ACCESS: [
-        "Confirm legitimate business need",
-        "Review access logs",
-        "Update access policies if needed",
-      ],
-      PERMISSION_ESCALATION: [
-        "Immediately review permissions",
-        "Lock account if suspicious",
-        "Investigate privilege changes",
-      ],
-      MULTIPLE_FAILED_ATTEMPTS: [
-        "Check for brute force attacks",
-        "Consider account lockout",
-        "Review authentication logs",
-      ],
-      SENSITIVE_DATA_ACCESS: [
-        "Audit data access patterns",
-        "Verify data usage justification",
-        "Monitor data export activities",
-      ],
-      SUSPICIOUS_ACTIVITY: [
-        "Investigate activity patterns",
-        "Review user behavior baseline",
-        "Consider temporary restrictions",
-      ],
-    }
-    return actions[type] || ["Review and investigate"]
   }
 
   // Alert Management Methods
@@ -197,7 +154,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
         message: `${fullAlert.severity} security alert: ${alertData.message}`,
         severity: fullAlert.severity,
         timestamp: Date.now(),
-      isAcknowledged: false,
+        acknowledged: false,
         type: fullAlert.severity === "critical" ? "error" : "warning",
         duration: fullAlert.severity === "critical" ? 0 : 10000,
         actions: [
@@ -228,6 +185,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
         activeAlerts.value[alertIndex] = {
           ...activeAlerts.value[alertIndex],
           acknowledged: true,
+          acknowledgedBy: "Current User",
         }
       } else {
         // TODO: Implement actual API call
