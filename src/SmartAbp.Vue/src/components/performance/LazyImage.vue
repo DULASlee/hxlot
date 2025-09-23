@@ -119,7 +119,7 @@ const lazyImageOptions = computed<LazyImageOptions>(() => ({
 const {
   target,
   currentSrc,
-  isVisible,
+  // isVisible, // 暂时注释未使用变量
   isLoading,
   hasError,
   hasLoaded,

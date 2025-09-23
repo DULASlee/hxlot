@@ -1,5 +1,5 @@
 // SmartAbp Enterprise Memory Optimization & Cache Management
-import { ref, onBeforeUnmount, watch, type Ref } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
 
 /**
  * 内存监控Hook
@@ -118,8 +118,10 @@ export class LRUCache<K, V> {
       if (this.cache.size >= this.capacity) {
         // 移除最久未使用的项
         const oldestKey = this.accessOrder.values().next().value
-        this.accessOrder.delete(oldestKey)
-        this.cache.delete(oldestKey)
+        if (oldestKey !== undefined) {
+          this.accessOrder.delete(oldestKey)
+          this.cache.delete(oldestKey)
+        }
       }
       
       this.cache.set(key, value)
@@ -197,8 +199,8 @@ export function useCache<T>(
     capacity = 100,
     ttl = 60 * 60 * 1000, // 1小时
     persistent = false,
-    serialize = JSON.stringify,
-    deserialize = JSON.parse
+    // serialize = JSON.stringify, // 暂时注释未使用变量
+    // deserialize = JSON.parse // 暂时注释未使用变量
   } = options
 
   const cache = new LRUCache<string, CacheItem<T>>(capacity)

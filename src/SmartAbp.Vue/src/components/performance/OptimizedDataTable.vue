@@ -79,7 +79,7 @@ SmartAbp Enterprise Optimized Data Table Component
       <div :style="{ height: `${totalHeight}px`, position: 'relative' }">
         <!-- 可见行渲染 -->
         <div
-          v-for="(item, index) in visibleItems"
+          v-for="(item, _index) in visibleItems"
           :key="item._virtualIndex"
           class="virtual-row"
           :style="{
@@ -241,7 +241,7 @@ const {
   totalHeight,
   startIndex,
   endIndex,
-  scrollToIndex,
+  // scrollToIndex, // 暂时注释未使用变量
   updateData
 } = useVirtualScroll(tableData, virtualScrollOptions)
 
@@ -250,7 +250,7 @@ const infiniteScrollTarget = ref<HTMLElement | null>(null)
 const {
   isLoading: infiniteLoading,
   isFinished: infiniteFinished,
-  load: loadMoreData
+  // load: loadMoreData // 暂时注释未使用变量
 } = useInfiniteScroll(async () => {
   if (props.loadMore) {
     const result = await props.loadMore()

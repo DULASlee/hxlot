@@ -142,8 +142,8 @@ import { ElButton, ElCard, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElTa
 import TemplateSelector from "@/components/lowcode/TemplateSelector.vue"
 import SandboxPreview from "@/components/lowcode/SandboxPreview.vue"
 import { useWorkspaceStore } from "@/stores/lowcode/workspace"
-import { codeGeneratorApi } from "../../../packages/lowcode-api/src/index"
-// import { codeGeneratorApi } from "../../../packages/lowcode-api/src/index"
+import { codeGeneratorApi } from "../../../packages/lowcode-api/index"
+// import { codeGeneratorApi } from "../../../packages/lowcode-api/index"
 // import type { Template } from "@smartabp/lowcode-api/types"
 
 interface Template {

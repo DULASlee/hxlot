@@ -999,6 +999,11 @@ const exposeDragHandlers = () => ({
   checkDragConstraints
 })
 
+// 暴露给模板使用
+defineExpose({
+  dragHandlers: exposeDragHandlers()
+})
+
 // 🎯 切换网格对齐
 const toggleSnapToGrid = () => {
   dragState.value.snapToGrid = !dragState.value.snapToGrid

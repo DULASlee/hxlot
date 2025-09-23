@@ -257,7 +257,7 @@
             node-key="id"
             :expand-on-click-node="false"
           >
-            <template #default="{ node, data }">
+            <template #default="{ node: _node, data }">
               <div class="inheritance-node">
                 <i :class="data.icon" />
                 <span>{{ data.name }}</span>
@@ -274,7 +274,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox, type ElTable } from 'element-plus'
 import { Search as SearchIcon } from '@element-plus/icons-vue'
 
@@ -648,7 +648,7 @@ const loadPermissionMatrix = async () => {
   }
 }
 
-const updateRolePermission = async (roleId: string, permissionName: string, granted: boolean) => {
+const updateRolePermission = async (_roleId: string, _permissionName: string, _granted: boolean) => {
   // 模拟API调用
   return new Promise(resolve => {
     setTimeout(() => {
@@ -657,7 +657,7 @@ const updateRolePermission = async (roleId: string, permissionName: string, gran
   })
 }
 
-const performBulkPermissionOperation = async (operation: BulkOperationForm) => {
+const performBulkPermissionOperation = async (_operation: BulkOperationForm) => {
   // 模拟批量操作API调用
   return new Promise(resolve => {
     setTimeout(() => {
@@ -666,7 +666,7 @@ const performBulkPermissionOperation = async (operation: BulkOperationForm) => {
   })
 }
 
-const loadPermissionInheritanceTree = (permissionName: string) => {
+const loadPermissionInheritanceTree = (_permissionName: string) => {
   // 模拟权限继承树数据
   permissionInheritanceTree.value = [
     {
