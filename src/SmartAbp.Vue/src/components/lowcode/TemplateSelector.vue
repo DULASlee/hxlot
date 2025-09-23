@@ -37,7 +37,12 @@
 import { onMounted } from "vue"
 import { useTemplatesStore } from "@/stores/lowcode/templates"
 import { ElCard } from "element-plus"
-import type { Template } from "@smartabp/lowcode-api/types"
+// import type { Template } from "@smartabp/lowcode-api/types"
+interface Template {
+  id: string
+  name: string
+  description: string
+}
 
 const emit = defineEmits<{
   select: [template: Template]

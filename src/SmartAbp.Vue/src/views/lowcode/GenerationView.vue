@@ -142,8 +142,14 @@ import { ElButton, ElCard, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElTa
 import TemplateSelector from "@/components/lowcode/TemplateSelector.vue"
 import SandboxPreview from "@/components/lowcode/SandboxPreview.vue"
 import { useWorkspaceStore } from "@/stores/lowcode/workspace"
-import { codeGeneratorApi } from "@smartabp/lowcode-api"
-import type { Template } from "@smartabp/lowcode-api/types"
+// import { codeGeneratorApi } from "@smartabp/lowcode-api"
+// import type { Template } from "@smartabp/lowcode-api/types"
+
+interface Template {
+  id: string
+  name: string
+  description: string
+}
 
 const workspaceStore = useWorkspaceStore()
 const selectedTemplate = ref<Template | null>(null)
@@ -316,6 +322,12 @@ const copyCode = async () => {
   display: flex;
   gap: 12px;
 }
+
+.project-info {
+  display: flex;
+  gap: 8px;
+}
+</style>
 
 .project-info {
   display: flex;
