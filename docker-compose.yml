@@ -1,0 +1,175 @@
+# SmartAbp Enterprise LowCode Engine - Production Docker Compose
+version: '3.8'
+
+services:
+  # SmartAbp Web 应用
+  smartabp-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smartabp-lowcode-engine
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__Default=Server=sqlserver;Database=SmartAbpDb;User Id=sa;Password=MyComplexPassword123!;TrustServerCertificate=true
+      - ConnectionStrings__Redis=redis:6379
+      - ElasticSearch__Url=http://elasticsearch:9200
+    depends_on:
+      - sqlserver
+      - redis
+      - elasticsearch
+    networks:
+      - smartabp-network
+    volumes:
+      - smartabp-logs:/app/logs
+      - smartabp-uploads:/app/uploads
+
+  # SQL Server 数据库
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: smartabp-sqlserver
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=MyComplexPassword123!
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      - smartabp-network
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: smartabp-redis
+    restart: unless-stopped
+    command: redis-server --requirepass MyRedisPassword123!
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - smartabp-network
+
+  # Elasticsearch 搜索引擎
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+    container_name: smartabp-elasticsearch
+    restart: unless-stopped
+    environment:
+      - node.name=smartabp-es01
+      - cluster.name=smartabp-cluster
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - smartabp-network
+
+  # Kibana 可视化 (可选)
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.8.0
+    container_name: smartabp-kibana
+    restart: unless-stopped
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - smartabp-network
+
+  # Nginx 反向代理
+  nginx:
+    image: nginx:alpine
+    container_name: smartabp-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/ssl:/etc/nginx/ssl:ro
+      - smartabp-logs:/var/log/nginx
+    depends_on:
+      - smartabp-web
+    networks:
+      - smartabp-network
+
+  # Prometheus 监控
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: smartabp-prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./scripts/performance-testing/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - smartabp-network
+
+  # Grafana 仪表板
+  grafana:
+    image: grafana/grafana:latest
+    container_name: smartabp-grafana
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./scripts/performance-testing/monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+    depends_on:
+      - prometheus
+    networks:
+      - smartabp-network
+
+# 网络配置
+networks:
+  smartabp-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# 数据卷配置
+volumes:
+  sqlserver-data:
+    driver: local
+  redis-data:
+    driver: local
+  elasticsearch-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+  smartabp-logs:
+    driver: local
+  smartabp-uploads:
+    driver: local
