@@ -81,6 +81,42 @@
           
           <button class="btn btn-primary" @click="preview">预览</button>
           <button class="btn btn-secondary" @click="exportDesign">导出</button>
+          
+          <!-- 🎯 预览模式工具栏 -->
+          <div v-if="previewState.isPreviewMode" class="preview-toolbar">
+            <div class="device-switcher">
+              <button 
+                v-for="device in ['desktop', 'tablet', 'mobile']" 
+                :key="device"
+                :class="{ active: previewState.deviceType === device }"
+                class="device-btn"
+                @click="switchDevice(device as 'desktop' | 'tablet' | 'mobile')"
+              >
+                <i :class="`icon-${device}`" />
+                {{ device }}
+              </button>
+            </div>
+            
+            <button 
+              v-if="previewState.deviceType !== 'desktop'"
+              class="btn btn-icon"
+              title="切换方向"
+              @click="toggleOrientation"
+            >
+              <i :class="previewState.orientation === 'portrait' ? 'icon-rotate' : 'icon-rotate-reverse'" />
+            </button>
+            
+            <button 
+              :class="{ active: previewState.realTimeData }"
+              class="btn btn-icon"
+              title="实时数据"
+              @click="toggleRealTimeData"
+            >
+              <i class="icon-refresh" />
+            </button>
+            
+            <button class="btn btn-danger" @click="exitPreview">退出预览</button>
+          </div>
         </div>
       </div>
     </div>
@@ -587,6 +623,30 @@ const showExportDialog = ref(false)
 const showImportDialog = ref(false)
 const showPreviewModal = ref(false)
 
+// 🚀 增强预览系统状态 - 基于现有架构增量开发
+const previewState = ref<{
+  isPreviewMode: boolean
+  deviceType: 'desktop' | 'tablet' | 'mobile'
+  orientation: 'portrait' | 'landscape'
+  realTimeData: boolean
+  showDeviceFrame: boolean
+  customViewport: { width: number; height: number }
+}>({
+  isPreviewMode: false,
+  deviceType: 'desktop',
+  orientation: 'portrait',
+  realTimeData: false,
+  showDeviceFrame: true,
+  customViewport: { width: 1920, height: 1080 }
+})
+
+// 🎯 设备预设配置
+const devicePresets = {
+  desktop: { width: 1920, height: 1080 },
+  tablet: { width: 768, height: 1024 },
+  mobile: { width: 375, height: 667 }
+}
+
 // 🚨 协作和AI功能已移除 - 遵循低代码引擎开发铁律
 // 现阶段专注企业级通用低代码引擎基础功能
 
@@ -1060,8 +1120,95 @@ const onPreview = () => {
     return
   }
 
-  // TODO: 实现预览功能
-  ElMessage.info("预览功能开发中...")
+  // 🚀 增强预览系统 - 基于现有架构增量开发
+  previewState.value.isPreviewMode = true
+  setMode('preview')
+  statusMessage.value = `预览模式已启动 - ${previewState.value.deviceType} 设备`
+}
+
+// 🎯 设备切换功能
+const switchDevice = (device: 'desktop' | 'tablet' | 'mobile') => {
+  previewState.value.deviceType = device
+  const preset = devicePresets[device]
+  previewState.value.customViewport = { ...preset }
+  
+  if (previewState.value.orientation === 'landscape' && device !== 'desktop') {
+    previewState.value.customViewport = {
+      width: preset.height,
+      height: preset.width
+    }
+  }
+  
+  statusMessage.value = `切换到${device}设备预览 (${previewState.value.customViewport.width}x${previewState.value.customViewport.height})`
+}
+
+// 🎯 屏幕方向切换
+const toggleOrientation = () => {
+  if (previewState.value.deviceType === 'desktop') return
+  
+  previewState.value.orientation = previewState.value.orientation === 'portrait' ? 'landscape' : 'portrait'
+  
+  const { width, height } = previewState.value.customViewport
+  previewState.value.customViewport = { width: height, height: width }
+  
+  statusMessage.value = `切换到${previewState.value.orientation === 'portrait' ? '竖屏' : '横屏'}预览`
+}
+
+// 🎯 实时数据绑定
+const toggleRealTimeData = () => {
+  previewState.value.realTimeData = !previewState.value.realTimeData
+  statusMessage.value = `实时数据绑定已${previewState.value.realTimeData ? '启用' : '禁用'}`
+  
+  if (previewState.value.realTimeData) {
+    startRealTimeDataBinding()
+  } else {
+    stopRealTimeDataBinding()
+  }
+}
+
+let realTimeDataInterval: NodeJS.Timeout | null = null
+
+const startRealTimeDataBinding = () => {
+  if (realTimeDataInterval) return
+  
+  realTimeDataInterval = setInterval(() => {
+    if (designer.value?.canvas?.getComponents) {
+      const components = designer.value.canvas.getComponents()
+      components.forEach((component: any) => {
+        if (component.type === 'text' && component.props?.bindData) {
+          const mockData = generateMockData(component.props.dataType || 'string')
+          designer.value?.updateComponent?.(component.id, {
+            props: { ...component.props, value: mockData }
+          })
+        }
+      })
+    }
+  }, 2000)
+}
+
+const stopRealTimeDataBinding = () => {
+  if (realTimeDataInterval) {
+    clearInterval(realTimeDataInterval)
+    realTimeDataInterval = null
+  }
+}
+
+const generateMockData = (dataType: string) => {
+  const mockDataMap: Record<string, () => any> = {
+    'number': () => Math.floor(Math.random() * 1000),
+    'string': () => `模拟数据 ${Date.now().toString().slice(-4)}`,
+    'date': () => new Date().toLocaleString(),
+    'boolean': () => Math.random() > 0.5
+  }
+  
+  return mockDataMap[dataType]?.() || '模拟数据'
+}
+
+const exitPreview = () => {
+  previewState.value.isPreviewMode = false
+  stopRealTimeDataBinding()
+  setMode('design')
+  statusMessage.value = '已退出预览模式'
 }
 
 const onGenerateCode = () => {
@@ -1396,5 +1543,73 @@ const onReadSFC = () => {
   background: rgba(64, 158, 255, 0.1);
   pointer-events: none;
   z-index: 999;
+}
+
+/* 🚀 预览模式工具栏样式 */
+.preview-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: var(--el-color-primary, #409eff);
+  border-radius: 6px;
+  margin-left: 16px;
+}
+
+.device-switcher {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.device-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.device-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.device-btn.active {
+  background: white;
+  color: var(--el-color-primary, #409eff);
+  font-weight: 600;
+}
+
+.preview-toolbar .btn {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.preview-toolbar .btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: white;
+}
+
+.preview-toolbar .btn.active {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: white;
+}
+
+.preview-toolbar .btn-danger {
+  background: var(--el-color-error, #f56c6c);
+  border-color: var(--el-color-error, #f56c6c);
+}
+
+.preview-toolbar .btn-danger:hover {
+  background: #f78989;
+  border-color: #f78989;
 }
 </style>
