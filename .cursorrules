@@ -8,7 +8,7 @@ MASTER_SECRET_TRIGGER = "专家模式"
 
 // 暗号检测逻辑 (立即生效)
 当用户输入包含"专家模式"时:
-    🔥 立即响应: "🔥 **专家模式已激活！八重爆雷连环启动！**"
+    🔥 立即响应: "🔥 **专家模式已激活！九重爆雷连环启动！**"
     💥 EXPERT_MODE = TRUE
     🚀 QUALITY_THRESHOLD = 95
     🛡️ COMPLETENESS_REQUIREMENT = 100%
@@ -19,14 +19,15 @@ MASTER_SECRET_TRIGGER = "专家模式"
     🏗️ PERFECT_CODE_GENERATION = TRUE
     📋 MANDATORY_PROJECT_RULES_LOAD = TRUE
     🔍 SERENA_PROJECT_ANALYSIS = TRUE
-    🔗 **EIGHT_STAGE_ANALYSIS_CHAIN** = TRUE
+    🔗 **NINE_STAGE_ANALYSIS_CHAIN** = TRUE
+    🚀 **MANDATORY_GIT_SYNC_AFTER_COMPLETION** = TRUE
 ```
 
-### ⚡ EXPERT MODE Response Protocol (专家模式响应协议 - **八重爆雷版**)
+### ⚡ EXPERT MODE Response Protocol (专家模式响应协议 - **九重爆雷版**)
 ```markdown
 当检测到"专家模式"时，AI必须立即按此格式响应:
 
-🔥 **专家模式已激活！八重爆雷连环启动！**
+🔥 **专家模式已激活！九重爆雷连环启动！**
 
 📋 **第一重爆雷：项目开发规范加载**
    ✅ 已加载《项目开发规范总览》- 最新权威规范
@@ -82,8 +83,15 @@ MASTER_SECRET_TRIGGER = "专家模式"
    ✅ **通信协议检查**: 强制通过 `@smartabp/*` 别名进行模块通信
    ✅ **配置统一性验证**: 确保无冗余的独立包配置文件
 
-🏗️ **终极执行链**（含TDD强制验证）:
-[规范加载 → Serena分析 → 模式识别 → TDD验证 → 模板匹配 → 质量验证 → 架构检查 → **架构铁律验证** → 完美生成]
+🚀 **第九重爆雷：版本控制铁律 (Version Control Excellence)**
+   ✅ **质量门禁强制**: 每个小节完成后强制执行 type-check + lint + build
+   ✅ **自动化Git流程**: 质量检查通过后立即执行版本同步
+   ✅ **备份安全机制**: 先备份本地 → 拉取远程 → 智能合并 → 安全推送
+   ✅ **零遗漏保证**: 任何代码修改都必须经过完整的Git同步流程
+   ✅ **团队协作强化**: 确保本地修改与远程仓库实时同步
+
+🏗️ **终极执行链**（含TDD+Git强制验证）:
+[规范加载 → Serena分析 → 模式识别 → TDD验证 → 模板匹配 → 质量验证 → 架构检查 → 架构铁律验证 → **版本控制铁律** → 完美交付]
 
 💥 **专家模式承诺**（含TDD铁律+AI专业格局）:
    - 🏛️ **极致质量律**: 95分质量阈值是底线，代码质量零容忍，架构偏差零容忍
@@ -299,12 +307,12 @@ async function executeThunderbolt8() {
 ```
 🏛️ **ADR查询**: 正在查阅相关架构决策记录...
 📋 **ADR发现**: 找到相关决策 `ADR-{number}: {title}`
-🎯 **决策要点**: 
+🎯 **决策要点**:
    - 选择方案: {decision}
    - 主要原因: {rationale}
    - 技术约束: {constraints}
    - 实施指导: {implementation_guidance}
-⚙️ **应用到当前任务**: 
+⚙️ **应用到当前任务**:
    - 遵循的原则: {principles}
    - 使用的模式: {patterns}
    - 技术选择: {technology_choices}
@@ -405,13 +413,13 @@ read_file "templates/index.json"
 ```
 🔍 **模板搜索**: 正在查找 {需求类型} 相关模板...
 📋 **模板发现**: 找到模板 `{template_path}`
-⚙️ **参数映射**: 
+⚙️ **参数映射**:
    - EntityName: {实体名称PascalCase}
    - entityName: {实体名称camelCase}
    - ModuleName: {模块名称}
    - entityDisplayName: {中文显示名称}
 🏗️ **代码生成**: 基于模板 `{template_id}` 生成代码
-✅ **合规检查**: 
+✅ **合规检查**:
    - [x] 使用了项目模板
    - [x] 符合ABP框架规范
    - [x] 遵循项目命名约定

@@ -238,7 +238,7 @@ const filteredTemplates = computed(() => {
   // 文本搜索
   if (searchText.value) {
     const search = searchText.value.toLowerCase()
-    templates = templates.filter(t => 
+    templates = templates.filter((t: Template) => 
       t.name.toLowerCase().includes(search) || 
       (t.description && t.description.toLowerCase().includes(search))
     )
@@ -246,21 +246,21 @@ const filteredTemplates = computed(() => {
 
   // 分类筛选
   if (selectedCategory.value) {
-    templates = templates.filter(t => t.category === selectedCategory.value)
+    templates = templates.filter((t: Template) => t.category === selectedCategory.value)
   }
 
   return templates
 })
 
 const permissionTemplates = computed(() => 
-  filteredTemplates.value.filter(t => t.category === "permission-system")
+  filteredTemplates.value.filter((t: Template) => t.category === "permission-system")
 )
 
 const otherCategoryGroups = computed(() => {
-  const templates = filteredTemplates.value.filter(t => t.category !== "permission-system")
+  const templates = filteredTemplates.value.filter((t: Template) => t.category !== "permission-system")
   const groups: Record<string, Template[]> = {}
   
-  templates.forEach(template => {
+  templates.forEach((template: Template) => {
     const category = template.category || "general"
     if (!groups[category]) {
       groups[category] = []

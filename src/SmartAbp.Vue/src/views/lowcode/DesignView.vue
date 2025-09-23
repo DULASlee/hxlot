@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 <template>
   <div class="page-design-view">
     <!-- 页面设计器头部 -->

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { defineStore } from "pinia"
 import { ref } from "vue"
 import { logger } from "@/utils/logger"
@@ -75,12 +76,12 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
   // 代码生成主方法
   const generateCode = async (
     config: CodeGenerationConfig,
-    onProgress?: (progress: GenerationProgress) => void
+    onProgress?: (_progress: GenerationProgress) => void
   ): Promise<GenerationResult> => {
     try {
       isGenerating.value = true
       error.value = null
-      
+
       const startTime = Date.now()
       logger.info("开始代码生成", config)
 
@@ -88,12 +89,12 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
       const totalTasks = calculateTotalTasks(config)
       let completedTasks = 0
 
-      const updateProgress = (task: string) => {
+      const updateProgress = (_task: string) => {
         completedTasks++
         const percentage = Math.round((completedTasks / totalTasks) * 100)
         const progress: GenerationProgress = {
           percentage,
-          currentTask: task,
+          currentTask: _task,
           completedTasks,
           totalTasks
         }
@@ -149,16 +150,16 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
         generationHistory.value = generationHistory.value.slice(0, 10)
       }
 
-      logger.info("代码生成完成", { 
+      logger.info("代码生成完成", {
         fileCount: result.fileCount,
-        duration: result.duration 
+        duration: result.duration
       })
 
       return result
-    } catch (err) {
-      const error = err as Error
+    } catch (_err) {
+      const error = _err as Error
       logger.error("代码生成失败", { error: error.message })
-      
+
       const result: GenerationResult = {
         success: false,
         fileCount: 0,
@@ -169,7 +170,7 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
         warnings: [],
         files: []
       }
-      
+
       return result
     } finally {
       isGenerating.value = false
@@ -185,7 +186,7 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
     // 后端任务
     tasks += config.templates.backend.length * entityCount
 
-    // 前端任务  
+    // 前端任务
     tasks += config.templates.frontend.length * entityCount
 
     // 数据库任务
@@ -197,7 +198,7 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
   // 生成后端代码
   const generateBackendCode = async (
     config: CodeGenerationConfig,
-    onProgress: (task: string) => void
+    onProgress: (_task: string) => void
   ) => {
     const files = []
 
@@ -207,12 +208,12 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
 
       for (const templateId of config.templates.backend) {
         onProgress(`生成${entity.name}的${templateId}`)
-        
+
         const file = await generateBackendFile(entity, templateId, config)
         if (file) {
           files.push(file)
         }
-        
+
         // 模拟生成延迟
         await new Promise(resolve => setTimeout(resolve, 200))
       }
@@ -224,7 +225,7 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
   // 生成前端代码
   const generateFrontendCode = async (
     config: CodeGenerationConfig,
-    onProgress: (task: string) => void
+    onProgress: (_task: string) => void
   ) => {
     const files = []
 
@@ -234,12 +235,12 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
 
       for (const templateId of config.templates.frontend) {
         onProgress(`生成${entity.name}的${templateId}`)
-        
+
         const file = await generateFrontendFile(entity, templateId, config)
         if (file) {
           files.push(file)
         }
-        
+
         // 模拟生成延迟
         await new Promise(resolve => setTimeout(resolve, 200))
       }
@@ -251,18 +252,18 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
   // 生成数据库代码
   const generateDatabaseCode = async (
     config: CodeGenerationConfig,
-    onProgress: (task: string) => void
+    onProgress: (_task: string) => void
   ) => {
     const files = []
 
     for (const templateId of config.templates.database) {
       onProgress(`生成${templateId}`)
-      
+
       const file = await generateDatabaseFile(templateId, config)
       if (file) {
         files.push(file)
       }
-      
+
       // 模拟生成延迟
       await new Promise(resolve => setTimeout(resolve, 200))
     }
@@ -315,7 +316,7 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
         type: "csharp",
         size
       }
-    } catch (err) {
+    } catch (_err) {
       logger.error(`生成后端文件失败: ${templateId}`, { entity: entity.name })
       return null
     }
@@ -371,7 +372,7 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
         type: config.config.frontendFramework === "Vue3TS" ? "vue" : "typescript",
         size
       }
-    } catch (err) {
+    } catch (_err) {
       logger.error(`生成前端文件失败: ${templateId}`, { entity: entity.name })
       return null
     }
@@ -410,7 +411,7 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
         type: "csharp",
         size
       }
-    } catch (err) {
+    } catch (_err) {
       logger.error(`生成数据库文件失败: ${templateId}`)
       return null
     }
@@ -419,9 +420,9 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
   // 代码模板生成函数
   const generateEntityClass = (entity: any, config: CodeGenerationConfig): string => {
     const fields = entity.fields.map((field: any) => {
-      const type = field.type === "Guid" ? "Guid" : 
-                   field.type === "bool" ? "bool" : 
-                   field.type === "DateTime" ? "DateTime" : 
+      const type = field.type === "Guid" ? "Guid" :
+                   field.type === "bool" ? "bool" :
+                   field.type === "DateTime" ? "DateTime" :
                    field.type === "int" ? "int" : "string"
       const nullable = !field.isRequired && type !== "Guid" ? "?" : ""
       return `        public ${type}${nullable} ${field.name} { get; set; }`
@@ -435,11 +436,11 @@ namespace ${config.config.namespace}.${entity.name}s
     public class ${entity.name} : FullAuditedAggregateRoot<Guid>
     {
 ${fields}
-        
+
         protected ${entity.name}()
         {
         }
-        
+
         public ${entity.name}(Guid id) : base(id)
         {
         }
@@ -449,9 +450,9 @@ ${fields}
 
   const generateDtoClass = (entity: any, config: CodeGenerationConfig): string => {
     const fields = entity.fields.map((field: any) => {
-      const type = field.type === "Guid" ? "Guid" : 
-                   field.type === "bool" ? "bool" : 
-                   field.type === "DateTime" ? "DateTime" : 
+      const type = field.type === "Guid" ? "Guid" :
+                   field.type === "bool" ? "bool" :
+                   field.type === "DateTime" ? "DateTime" :
                    field.type === "int" ? "int" : "string"
       const nullable = !field.isRequired && type !== "Guid" ? "?" : ""
       return `        public ${type}${nullable} ${field.name} { get; set; }`
@@ -551,7 +552,7 @@ namespace ${config.config.namespace}.${entity.name}s
     <div class="page-header">
       <h1>${entity.displayName || entity.name}管理</h1>
     </div>
-    
+
     <el-card>
       <div class="search-toolbar">
         <el-form :model="searchForm" inline>
@@ -564,7 +565,7 @@ ${searchFields.map((field: any) => `          <el-form-item label="${field.displ
           </el-form-item>
         </el-form>
       </div>
-      
+
       <div class="action-toolbar">
         <el-button type="primary" @click="handleCreate">
           <i class="el-icon-plus" /> 新增
@@ -573,7 +574,7 @@ ${searchFields.map((field: any) => `          <el-form-item label="${field.displ
           <i class="el-icon-download" /> 导出
         </el-button>
       </div>
-      
+
       <el-table :data="tableData" :loading="loading">
 ${tableColumns.map((field: any) => `        <el-table-column prop="${field.name.toLowerCase()}" label="${field.displayName || field.name}" />`).join('\n')}
         <el-table-column label="操作" width="200">
@@ -584,7 +585,7 @@ ${tableColumns.map((field: any) => `        <el-table-column prop="${field.name.
           </template>
         </el-table-column>
       </el-table>
-      
+
       <el-pagination
         v-model:current-page="pagination.page"
         v-model:page-size="pagination.size"
@@ -714,7 +715,7 @@ onMounted(() => {
     <div class="page-header">
       <h1>{{ isEdit ? '编辑' : '新增' }}${entity.displayName || entity.name}</h1>
     </div>
-    
+
     <el-card>
       <el-form :model="form" :rules="rules" ref="formRef" label-width="120px">
 ${formFields.map((field: any) => {
@@ -722,7 +723,7 @@ ${formFields.map((field: any) => {
                    field.type === "bool" ? "switch" :
                    field.type === "int" || field.type === "long" || field.type === "decimal" ? "input-number" :
                    "input"
-  
+
   if (inputType === "date-picker") {
     return `        <el-form-item label="${field.displayName || field.name}" prop="${field.name.toLowerCase()}">
           <el-date-picker v-model="form.${field.name.toLowerCase()}" type="datetime" placeholder="选择${field.displayName || field.name}" />
@@ -742,7 +743,7 @@ ${formFields.map((field: any) => {
   }
 }).join('\n')}
       </el-form>
-      
+
       <div class="form-actions">
         <el-button type="primary" @click="handleSave" :loading="saving">保存</el-button>
         <el-button @click="handleCancel">取消</el-button>
@@ -776,7 +777,7 @@ ${formFields.map((field: any) => {
 })
 
 const rules = ref({
-${formFields.filter((f: any) => f.isRequired).map((field: any) => 
+${formFields.filter((f: any) => f.isRequired).map((field: any) =>
 `  ${field.name.toLowerCase()}: [{ required: true, message: "请输入${field.displayName || field.name}", trigger: "blur" }]`
 ).join(',\n')}
 })
@@ -847,16 +848,16 @@ onMounted(() => {
     <div class="page-header">
       <h1>${entity.displayName || entity.name}详情</h1>
     </div>
-    
+
     <el-card>
       <el-descriptions title="基本信息" :column="2" border>
-${fields.map((field: any) => 
+${fields.map((field: any) =>
 `        <el-descriptions-item label="${field.displayName || field.name}">
           {{ data.${field.name.toLowerCase()} }}
         </el-descriptions-item>`
 ).join('\n')}
       </el-descriptions>
-      
+
       <div class="detail-actions">
         <el-button type="primary" @click="handleEdit">编辑</el-button>
         <el-button @click="handleBack">返回</el-button>
@@ -976,9 +977,9 @@ export const use${entity.name}Store = defineStore("${entity.name.toLowerCase()}"
       const result = await ${entity.name.toLowerCase()}Api.getList(params)
       items.value = result.items
       return result
-    } catch (err) {
-      error.value = (err as Error).message
-      throw err
+    } catch (_err) {
+      error.value = (_err as Error).message
+      throw _err
     } finally {
       isLoading.value = false
     }
@@ -989,9 +990,9 @@ export const use${entity.name}Store = defineStore("${entity.name.toLowerCase()}"
     error.value = null
     try {
       return await ${entity.name.toLowerCase()}Api.get(id)
-    } catch (err) {
-      error.value = (err as Error).message
-      throw err
+    } catch (_err) {
+      error.value = (_err as Error).message
+      throw _err
     } finally {
       isLoading.value = false
     }
@@ -1004,9 +1005,9 @@ export const use${entity.name}Store = defineStore("${entity.name.toLowerCase()}"
       const result = await ${entity.name.toLowerCase()}Api.create(data)
       items.value.unshift(result)
       return result
-    } catch (err) {
-      error.value = (err as Error).message
-      throw err
+    } catch (_err) {
+      error.value = (_err as Error).message
+      throw _err
     } finally {
       isLoading.value = false
     }
@@ -1022,9 +1023,9 @@ export const use${entity.name}Store = defineStore("${entity.name.toLowerCase()}"
         items.value[index] = result
       }
       return result
-    } catch (err) {
-      error.value = (err as Error).message
-      throw err
+    } catch (_err) {
+      error.value = (_err as Error).message
+      throw _err
     } finally {
       isLoading.value = false
     }
@@ -1039,9 +1040,9 @@ export const use${entity.name}Store = defineStore("${entity.name.toLowerCase()}"
       if (index !== -1) {
         items.value.splice(index, 1)
       }
-    } catch (err) {
-      error.value = (err as Error).message
-      throw err
+    } catch (_err) {
+      error.value = (_err as Error).message
+      throw _err
     } finally {
       isLoading.value = false
     }
@@ -1128,7 +1129,7 @@ namespace ${config.config.namespace}.DbMigrator
   const getStatistics = () => {
     const totalGenerated = generationHistory.value.reduce((sum, result) => sum + result.fileCount, 0)
     const totalLines = generationHistory.value.reduce((sum, result) => sum + result.lineCount, 0)
-    const averageDuration = generationHistory.value.length > 0 
+    const averageDuration = generationHistory.value.length > 0
       ? generationHistory.value.reduce((sum, result) => sum + result.duration, 0) / generationHistory.value.length
       : 0
 
@@ -1137,7 +1138,7 @@ namespace ${config.config.namespace}.DbMigrator
       totalFiles: totalGenerated,
       totalLines,
       averageDuration: Math.round(averageDuration * 100) / 100,
-      successRate: generationHistory.value.length > 0 
+      successRate: generationHistory.value.length > 0
         ? Math.round((generationHistory.value.filter(r => r.success).length / generationHistory.value.length) * 100)
         : 0
     }
