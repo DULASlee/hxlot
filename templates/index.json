@@ -1538,11 +1538,74 @@
         "Edit",
         "Delete"
       ]
+    },
+    {
+      "id": "domain-permission-user-management",
+      "name": "企业后台权限管理 - 用户管理",
+      "path": "templates/domain-specific/permission-management/UserManagement.template.vue",
+      "category": "domain-specific",
+      "type": "page",
+      "tags": ["permission", "user", "management", "enterprise", "vue"],
+      "scenarios": ["企业后台管理系统", "权限管理系统", "用户管理模块"],
+      "ai_triggers": ["用户管理", "权限管理", "企业后台", "用户权限"],
+      "dependencies": ["Vue3", "ElementPlus", "usePermission", "userService"],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "EntityName",
+          "type": "string", 
+          "description": "实体名称，如：User",
+          "required": true,
+          "example": "User"
+        }
+      ]
+    },
+    {
+      "id": "domain-construction-project-management",
+      "name": "智慧工地 - 项目管理",
+      "path": "templates/domain-specific/smart-construction/ProjectManagement.template.vue",
+      "category": "domain-specific",
+      "type": "page",
+      "tags": ["construction", "project", "management", "iot", "vue"],
+      "scenarios": ["智慧工地管理", "工程项目管理", "建筑施工管理"],
+      "ai_triggers": ["工地管理", "项目管理", "施工管理", "智慧工地"],
+      "dependencies": ["Vue3", "ElementPlus", "usePermission", "projectService"],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "EntityName",
+          "type": "string",
+          "description": "实体名称，如：Project",
+          "required": true,
+          "example": "Project"
+        }
+      ]
+    },
+    {
+      "id": "domain-mes-production-order",
+      "name": "MES制造执行 - 生产订单管理", 
+      "path": "templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+      "category": "domain-specific",
+      "type": "page",
+      "tags": ["mes", "production", "manufacturing", "order", "vue"],
+      "scenarios": ["MES制造执行系统", "生产订单管理", "制造管理系统"],
+      "ai_triggers": ["生产订单", "制造执行", "MES系统", "生产管理"],
+      "dependencies": ["Vue3", "ElementPlus", "usePermission", "productionOrderService"],
+      "permissions_required": true,
+      "parameters": [
+        {
+          "name": "EntityName",
+          "type": "string",
+          "description": "实体名称，如：ProductionOrder",
+          "required": true,
+          "example": "ProductionOrder"
+        }
+      ]
     }
   },
   "statistics": {
-    "total_templates": 30,
-    "categories_count": 15,
+    "total_templates": 33,
+    "categories_count": 16,
     "backend_templates": 6,
     "frontend_templates": 2,
     "lowcode_templates": 3,
@@ -1562,8 +1625,12 @@
     "security_templates": 1,
     "ui_component_templates": 1,
     "form_templates": 1,
+    "domain_specific_templates": 3,
+    "permission_management_templates": 1,
+    "smart_construction_templates": 1,
+    "mes_system_templates": 1,
     "tdd_verified_templates": 6,
     "test_coverage": "48/48 tests passed",
-    "enterprise_ready_templates": 30
+    "enterprise_ready_templates": 33
   }
 }

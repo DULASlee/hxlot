@@ -47,6 +47,13 @@
           </el-button-group>
           <el-button-group class="ml-2">
             <el-button
+              type="success"
+              :icon="'el-icon-magic-stick'"
+              @click="showProjectWizard = true"
+            >
+              智能项目向导
+            </el-button>
+            <el-button
               type="primary"
               :icon="'el-icon-view'"
               @click="preview"
@@ -54,7 +61,7 @@
               预览
             </el-button>
             <el-button
-              type="success"
+              type="info"
               :icon="'el-icon-download'"
               @click="generate"
             >
@@ -65,6 +72,35 @@
       </div>
       <div class="header-right">
         <div class="status-indicators">
+          <!-- 智能工作流进度 -->
+          <div class="workflow-progress">
+            <el-tooltip content="点击查看智能工作流指导" placement="bottom">
+              <div class="progress-indicator" @click="showWorkflowGuide">
+                <el-progress
+                  type="circle"
+                  :percentage="totalWorkflowProgress"
+                  :width="32"
+                  :stroke-width="3"
+                  :show-text="false"
+                  :color="totalWorkflowProgress >= 100 ? '#67c23a' : '#409eff'"
+                />
+                <span class="progress-text">{{ totalWorkflowProgress }}%</span>
+              </div>
+            </el-tooltip>
+          </div>
+          
+          <!-- 智能建议提示 -->
+          <el-tooltip
+            v-if="nextStepSuggestion"
+            :content="nextStepSuggestion"
+            placement="bottom"
+          >
+            <i 
+              class="el-icon-info suggestion-icon"
+              @click="showWorkflowGuide"
+            />
+          </el-tooltip>
+          
           <el-badge
             :value="issueCount"
             :hidden="issueCount === 0"
@@ -286,6 +322,12 @@
               >
                 <SandboxPreview :code="previewCode" />
               </el-tab-pane>
+              <el-tab-pane
+                label="质量"
+                name="quality"
+              >
+                <IntelligentQualityAssurance />
+              </el-tab-pane>
             </el-tabs>
           </div>
         </div>
@@ -397,20 +439,42 @@
         </div>
       </div>
     </footer>
+
+    <!-- 智能项目向导 -->
+    <ProjectWizard
+      v-model="showProjectWizard"
+      @generation-complete="handleProjectGenerated"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue"
 import { useRoute } from "vue-router"
+import { ElMessage } from "element-plus"
 import ThemeEditor from "@/components/lowcode/ThemeEditor.vue"
 import SandboxPreview from "@/components/lowcode/SandboxPreview.vue"
+import ProjectWizard from "@/components/lowcode/ProjectWizard.vue"
+import IntelligentQualityAssurance from "@/components/lowcode/IntelligentQualityAssurance.vue"
+import { useSmartWorkflow } from "@/composables/useSmartWorkflow"
 
 // 响应式数据
 const route = useRoute()
 const navigationCollapsed = ref(false)
 const sidebarCollapsed = ref(false)
 const footerCollapsed = ref(false)
+const showProjectWizard = ref(false)
+
+// 智能工作流
+const {
+  workflowState,
+  currentStep: workflowCurrentStep,
+  totalWorkflowProgress,
+  nextStepSuggestion,
+  setCurrentStep: setWorkflowStep,
+  showWorkflowGuide,
+  initializeWorkflow
+} = useSmartWorkflow()
 
 // 工作空间管理
 const workspaces = ref([
@@ -586,10 +650,28 @@ const addLog = (level: string, message: string) => {
   })
 }
 
+const handleProjectGenerated = (result: any) => {
+  addLog("success", `项目生成完成: ${result.config.projectName}`)
+  addLog("info", `已生成 ${result.template.entities.length} 个实体`)
+  addLog("info", `预计生成 ${result.template.estimatedFiles} 个代码文件`)
+  
+  // 自动切换到数据建模步骤查看结果
+  setCurrentStep('modeling')
+  
+  ElMessage.success({
+    message: '🎉 企业级项目生成完成！请查看数据建模结果',
+    duration: 5000,
+    showClose: true
+  })
+}
+
 // 生命周期
 onMounted(() => {
   addLog("info", "LowCode Studio 企业级工作台已启动")
   addLog("info", `当前工作空间：${currentWorkspace.value.name}`)
+  
+  // 初始化智能工作流
+  initializeWorkflow()
   
   // 根据路由设置当前步骤
   if (route.path.includes("generation")) {
@@ -690,6 +772,39 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+/* 智能工作流样式 */
+.workflow-progress {
+  position: relative;
+  cursor: pointer;
+}
+
+.progress-indicator {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-text {
+  position: absolute;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--el-text-color-primary);
+  pointer-events: none;
+}
+
+.suggestion-icon {
+  color: var(--el-color-primary);
+  cursor: pointer;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
 }
 
 .status-badge {
