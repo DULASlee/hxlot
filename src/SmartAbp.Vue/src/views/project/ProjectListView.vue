@@ -8,15 +8,34 @@
     <div class="page-content">
       <div class="toolbar">
         <div class="filters">
-          <select v-model="statusFilter" class="filter-select">
-            <option value="">所有状态</option>
-            <option value="active">进行中</option>
-            <option value="completed">已完成</option>
-            <option value="paused">已暂停</option>
+          <select
+            v-model="statusFilter"
+            class="filter-select"
+          >
+            <option value="">
+              所有状态
+            </option>
+            <option value="active">
+              进行中
+            </option>
+            <option value="completed">
+              已完成
+            </option>
+            <option value="paused">
+              已暂停
+            </option>
           </select>
-          <input v-model="searchQuery" type="text" placeholder="搜索项目..." class="search-input" />
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="搜索项目..."
+            class="search-input"
+          />
         </div>
-        <button class="btn-primary" @click="showAddProject = true">
+        <button
+          class="btn-primary"
+          @click="showAddProject = true"
+        >
           <svg viewBox="0 0 24 24">
             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
           </svg>
@@ -33,7 +52,10 @@
         >
           <div class="project-header">
             <h3>{{ project.name }}</h3>
-            <span class="status-badge" :class="project.status">
+            <span
+              class="status-badge"
+              :class="project.status"
+            >
               {{ getStatusText(project.status) }}
             </span>
           </div>
@@ -63,22 +85,33 @@
 
           <div class="project-progress">
             <div class="progress-bar">
-              <div class="progress-fill" :style="{ width: project.progress + '%' }" />
+              <div
+                class="progress-fill"
+                :style="{ width: project.progress + '%' }"
+              />
             </div>
             <span class="progress-text">{{ project.progress }}%</span>
           </div>
 
           <div class="project-footer">
-            <div class="project-date">创建于 {{ project.createdAt }}</div>
+            <div class="project-date">
+              创建于 {{ project.createdAt }}
+            </div>
             <div class="project-actions">
-              <button class="action-btn" @click.stop="editProject(project)">
+              <button
+                class="action-btn"
+                @click.stop="editProject(project)"
+              >
                 <svg viewBox="0 0 24 24">
                   <path
                     d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
                   />
                 </svg>
               </button>
-              <button class="action-btn danger" @click.stop="deleteProject(project)">
+              <button
+                class="action-btn danger"
+                @click.stop="deleteProject(project)"
+              >
                 <svg viewBox="0 0 24 24">
                   <path
                     d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
@@ -92,33 +125,64 @@
     </div>
 
     <!-- 新建项目模态框 -->
-    <div v-if="showAddProject" class="modal-overlay" @click="showAddProject = false">
-      <div class="modal" @click.stop>
+    <div
+      v-if="showAddProject"
+      class="modal-overlay"
+      @click="showAddProject = false"
+    >
+      <div
+        class="modal"
+        @click.stop
+      >
         <div class="modal-header">
           <h3>新建项目</h3>
-          <button @click="showAddProject = false">×</button>
+          <button @click="showAddProject = false">
+            ×
+          </button>
         </div>
         <div class="modal-body">
           <div class="form-group">
             <label>项目名称</label>
-            <input v-model="newProject.name" type="text" />
+            <input
+              v-model="newProject.name"
+              type="text"
+            />
           </div>
           <div class="form-group">
             <label>项目描述</label>
-            <textarea v-model="newProject.description" rows="3" />
+            <textarea
+              v-model="newProject.description"
+              rows="3"
+            />
           </div>
           <div class="form-group">
             <label>项目状态</label>
             <select v-model="newProject.status">
-              <option value="active">进行中</option>
-              <option value="paused">已暂停</option>
-              <option value="completed">已完成</option>
+              <option value="active">
+                进行中
+              </option>
+              <option value="paused">
+                已暂停
+              </option>
+              <option value="completed">
+                已完成
+              </option>
             </select>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn-secondary" @click="showAddProject = false">取消</button>
-          <button class="btn-primary" @click="addProject">创建</button>
+          <button
+            class="btn-secondary"
+            @click="showAddProject = false"
+          >
+            取消
+          </button>
+          <button
+            class="btn-primary"
+            @click="addProject"
+          >
+            创建
+          </button>
         </div>
       </div>
     </div>

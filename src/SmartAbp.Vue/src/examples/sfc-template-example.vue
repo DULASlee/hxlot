@@ -1,7 +1,12 @@
 <template>
   <section class="example-card">
     <h2>{{ title }}</h2>
-    <button class="btn" @click="inc">Clicked {{ count }} times</button>
+    <button
+      class="btn"
+      @click="inc"
+    >
+      Clicked {{ count }} times
+    </button>
     <slot />
   </section>
 </template>

@@ -1,10 +1,18 @@
 <template>
   <div class="template-selector">
-    <div v-if="store.isLoading">Loading templates...</div>
-    <div v-if="store.error" class="error">
+    <div v-if="store.isLoading">
+      Loading templates...
+    </div>
+    <div
+      v-if="store.error"
+      class="error"
+    >
       Failed to load templates: {{ store.error.message }}
     </div>
-    <div v-if="!store.isLoading && !store.error" class="template-list">
+    <div
+      v-if="!store.isLoading && !store.error"
+      class="template-list"
+    >
       <el-card
         v-for="template in store.templates"
         :key="template.id"
@@ -17,7 +25,9 @@
             <span>{{ template.name }}</span>
           </div>
         </template>
-        <p>{{ template.description }}</p>
+        <p v-if="template.description">
+          {{ template.description }}
+        </p>
       </el-card>
     </div>
   </div>
@@ -27,10 +37,10 @@
 import { onMounted } from "vue"
 import { useTemplatesStore } from "@/stores/lowcode/templates"
 import { ElCard } from "element-plus"
-import type { TemplateDefinition } from "@smartabp/lowcode-api/types"
+import type { Template } from "@smartabp/lowcode-api/types"
 
 const emit = defineEmits<{
-  (e: "select", template: TemplateDefinition): void
+  (e: "select", template: Template): void
 }>()
 
 const store = useTemplatesStore()
@@ -41,7 +51,7 @@ onMounted(() => {
   }
 })
 
-const selectTemplate = (template: TemplateDefinition) => {
+const selectTemplate = (template: Template) => {
   emit("select", template)
 }
 </script>

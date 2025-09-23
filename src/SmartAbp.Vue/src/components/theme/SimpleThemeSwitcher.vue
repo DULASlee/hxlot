@@ -1,12 +1,21 @@
 <template>
   <div class="theme-switcher">
-    <button class="theme-button" @click="toggleDropdown">
+    <button
+      class="theme-button"
+      @click="toggleDropdown"
+    >
       <span class="theme-icon">🎨</span>
       <span class="theme-text">主题</span>
-      <span class="dropdown-arrow" :class="{ open: showDropdown }">▼</span>
+      <span
+        class="dropdown-arrow"
+        :class="{ open: showDropdown }"
+      >▼</span>
     </button>
 
-    <div v-if="showDropdown" class="theme-dropdown">
+    <div
+      v-if="showDropdown"
+      class="theme-dropdown"
+    >
       <div
         v-for="theme in themes"
         :key="theme.key"
@@ -14,9 +23,15 @@
         :class="{ active: currentTheme === theme.key }"
         @click="selectTheme(theme.key)"
       >
-        <span class="theme-color" :style="{ backgroundColor: theme.color }" />
+        <span
+          class="theme-color"
+          :style="{ backgroundColor: theme.color }"
+        />
         <span class="theme-name">{{ theme.name }}</span>
-        <span v-if="currentTheme === theme.key" class="check-mark">✓</span>
+        <span
+          v-if="currentTheme === theme.key"
+          class="check-mark"
+        >✓</span>
       </div>
     </div>
   </div>

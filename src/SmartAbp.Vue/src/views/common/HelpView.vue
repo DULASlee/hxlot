@@ -108,7 +108,10 @@
       <div class="help-documentation">
         <h2>详细文档</h2>
 
-        <div id="getting-started" class="doc-section">
+        <div
+          id="getting-started"
+          class="doc-section"
+        >
           <h3>新手指南</h3>
           <p>欢迎使用SmartAbp管理系统！本指南将帮助您快速上手。</p>
           <ol>
@@ -119,7 +122,10 @@
           </ol>
         </div>
 
-        <div id="theme" class="doc-section">
+        <div
+          id="theme"
+          class="doc-section"
+        >
           <h3>主题切换</h3>
           <p>系统支持多种主题模式：</p>
           <ul>
@@ -133,7 +139,10 @@
           <p>点击右上角的主题切换按钮即可快速切换主题。</p>
         </div>
 
-        <div id="user-management" class="doc-section">
+        <div
+          id="user-management"
+          class="doc-section"
+        >
           <h3>用户管理</h3>
           <p>用户管理模块包含以下功能：</p>
           <ul>

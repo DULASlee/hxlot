@@ -23,25 +23,46 @@ AI_TEMPLATE_INFO:
 <template>
   <div class="entity-management">
     <!-- 若存在运行时UI配置，则优先使用元数据驱动渲染器 -->
-    <MetadataDrivenPageRenderer v-if="schema" :schema="schema" />
+    <MetadataDrivenPageRenderer
+      v-if="schema"
+      :schema="schema"
+    />
     <template v-else>
       <!-- 页面头部 -->
       <div class="page-header">
         <div class="page-title">
           <h2>用户管理管理</h2>
-          <p class="page-description">管理系统中的用户管理信息</p>
+          <p class="page-description">
+            管理系统中的用户管理信息
+          </p>
         </div>
         <div class="page-actions">
-          <el-button v-permission="'User.Create'" type="primary" :icon="Plus" @click="handleCreate">
+          <el-button
+            v-permission="'User.Create'"
+            type="primary"
+            :icon="Plus"
+            @click="handleCreate"
+          >
             新增用户管理
           </el-button>
         </div>
       </div>
 
       <!-- 搜索区域 -->
-      <el-card class="search-card" shadow="never">
-        <el-form ref="searchFormRef" :model="searchForm" :inline="true" class="search-form">
-          <el-form-item label="名称" prop="filter">
+      <el-card
+        class="search-card"
+        shadow="never"
+      >
+        <el-form
+          ref="searchFormRef"
+          :model="searchForm"
+          :inline="true"
+          class="search-form"
+        >
+          <el-form-item
+            label="名称"
+            prop="filter"
+          >
             <el-input
               v-model="searchForm.filter"
               placeholder="请输入用户管理名称"
@@ -51,27 +72,50 @@ AI_TEMPLATE_INFO:
             />
           </el-form-item>
 
-          <el-form-item label="状态" prop="isEnabled">
+          <el-form-item
+            label="状态"
+            prop="isEnabled"
+          >
             <el-select
               v-model="searchForm.isEnabled"
               placeholder="请选择状态"
               clearable
               style="width: 120px"
             >
-              <el-option label="启用" :value="true" />
-              <el-option label="禁用" :value="false" />
+              <el-option
+                label="启用"
+                :value="true"
+              />
+              <el-option
+                label="禁用"
+                :value="false"
+              />
             </el-select>
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" :icon="Search" @click="handleSearch"> 搜索 </el-button>
-            <el-button :icon="Refresh" @click="handleReset"> 重置 </el-button>
+            <el-button
+              type="primary"
+              :icon="Search"
+              @click="handleSearch"
+            >
+              搜索
+            </el-button>
+            <el-button
+              :icon="Refresh"
+              @click="handleReset"
+            >
+              重置
+            </el-button>
           </el-form-item>
         </el-form>
       </el-card>
 
       <!-- 数据表格 -->
-      <el-card class="table-card" shadow="never">
+      <el-card
+        class="table-card"
+        shadow="never"
+      >
         <!-- 表格工具栏 -->
         <div class="table-toolbar">
           <div class="toolbar-left">
@@ -87,7 +131,11 @@ AI_TEMPLATE_INFO:
           </div>
           <div class="toolbar-right">
             <el-tooltip content="刷新数据">
-              <el-button :icon="Refresh" circle @click="fetchData" />
+              <el-button
+                :icon="Refresh"
+                circle
+                @click="fetchData"
+              />
             </el-tooltip>
           </div>
         </div>
@@ -101,13 +149,27 @@ AI_TEMPLATE_INFO:
           @selection-change="handleSelectionChange"
           @sort-change="handleSortChange"
         >
-          <el-table-column type="selection" width="50" />
+          <el-table-column
+            type="selection"
+            width="50"
+          />
 
-          <el-table-column prop="name" label="名称" sortable="custom" min-width="150">
+          <el-table-column
+            prop="name"
+            label="名称"
+            sortable="custom"
+            min-width="150"
+          >
             <template #default="{ row }">
               <div class="name-cell">
                 <span class="name-text">{{ row.name }}</span>
-                <el-tag v-if="!row.isEnabled" type="info" size="small"> 已禁用 </el-tag>
+                <el-tag
+                  v-if="!row.isEnabled"
+                  type="info"
+                  size="small"
+                >
+                  已禁用
+                </el-tag>
               </div>
             </template>
           </el-table-column>
@@ -119,17 +181,36 @@ AI_TEMPLATE_INFO:
             show-overflow-tooltip
           />
 
-          <el-table-column prop="description" label="描述" min-width="200" show-overflow-tooltip />
+          <el-table-column
+            prop="description"
+            label="描述"
+            min-width="200"
+            show-overflow-tooltip
+          />
 
-          <el-table-column prop="sort" label="排序" width="80" sortable="custom" />
+          <el-table-column
+            prop="sort"
+            label="排序"
+            width="80"
+            sortable="custom"
+          />
 
-          <el-table-column prop="creationTime" label="创建时间" width="160" sortable="custom">
+          <el-table-column
+            prop="creationTime"
+            label="创建时间"
+            width="160"
+            sortable="custom"
+          >
             <template #default="{ row }">
               {{ formatDateTime(row.creationTime) }}
             </template>
           </el-table-column>
 
-          <el-table-column label="操作" width="180" fixed="right">
+          <el-table-column
+            label="操作"
+            width="180"
+            fixed="right"
+          >
             <template #default="{ row }">
               <div class="action-buttons">
                 <el-button
@@ -184,7 +265,10 @@ AI_TEMPLATE_INFO:
           label-width="100px"
           class="edit-form"
         >
-          <el-form-item label="名称" prop="name">
+          <el-form-item
+            label="名称"
+            prop="name"
+          >
             <el-input
               v-model="formData.name"
               placeholder="请输入用户管理名称"
@@ -193,7 +277,10 @@ AI_TEMPLATE_INFO:
             />
           </el-form-item>
 
-          <el-form-item label="显示名称" prop="displayName">
+          <el-form-item
+            label="显示名称"
+            prop="displayName"
+          >
             <el-input
               v-model="formData.displayName"
               placeholder="请输入显示名称"
@@ -202,7 +289,10 @@ AI_TEMPLATE_INFO:
             />
           </el-form-item>
 
-          <el-form-item label="描述" prop="description">
+          <el-form-item
+            label="描述"
+            prop="description"
+          >
             <el-input
               v-model="formData.description"
               type="textarea"
@@ -213,7 +303,10 @@ AI_TEMPLATE_INFO:
             />
           </el-form-item>
 
-          <el-form-item label="排序号" prop="sort">
+          <el-form-item
+            label="排序号"
+            prop="sort"
+          >
             <el-input-number
               v-model="formData.sort"
               :min="0"
@@ -223,15 +316,30 @@ AI_TEMPLATE_INFO:
             />
           </el-form-item>
 
-          <el-form-item label="状态" prop="isEnabled">
-            <el-switch v-model="formData.isEnabled" active-text="启用" inactive-text="禁用" />
+          <el-form-item
+            label="状态"
+            prop="isEnabled"
+          >
+            <el-switch
+              v-model="formData.isEnabled"
+              active-text="启用"
+              inactive-text="禁用"
+            />
           </el-form-item>
         </el-form>
 
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="dialogVisible = false"> 取消 </el-button>
-            <el-button type="primary" :loading="submitting" @click="handleSubmit"> 确定 </el-button>
+            <el-button @click="dialogVisible = false">
+              取消
+            </el-button>
+            <el-button
+              type="primary"
+              :loading="submitting"
+              @click="handleSubmit"
+            >
+              确定
+            </el-button>
           </div>
         </template>
       </el-dialog>
@@ -251,14 +359,14 @@ import MetadataDrivenPageRenderer from "../../../packages/lowcode-designer/src/r
 // Temporary mock to avoid type errors
 const uiConfigToPageSchema = (config: any) => config
 import { codeGeneratorApi } from "@smartabp/lowcode-api"
-import type { ElForm, ElTable } from "element-plus"
+import type { ElTable, FormInstance } from "element-plus"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { Plus, Search, Refresh, Delete } from "@element-plus/icons-vue"
 
 // 导入说明：以下导入需要根据实际项目结构调整
-// import { useUserStore } from '@/stores/modules/user'
-// import { formatDateTime } from '@/utils/date'
-// import type { UserDto, CreateUserDto, UpdateUserDto } from '@/types/user'
+import { useUserStore } from "@/stores/modules/user"
+// import { formatDateTime } from "@/utils/date"
+// import type { UserDto, CreateUserDto, UpdateUserDto } from "@/types/user"
 
 // 响应式数据
 const loading = ref(false)
@@ -271,7 +379,7 @@ const schema = ref<any | null>(null)
 
 // 表单引用
 const searchFormRef = ref()
-const formRef = ref()
+const formRef = ref<FormInstance | null>(null)
 const tableRef = ref()
 
 // 搜索表单
@@ -325,13 +433,12 @@ const fetchData = async () => {
       maxResultCount: pagination.pageSize,
       sorting: sorting.value || undefined,
     }
-    // 避免TS未使用变量错误
     void params
 
-    // TODO: 调用实际的API服务
-    // const result = await userStore.fetchList(params)
-    // tableData.value = result.items
-    // pagination.total = result.totalCount
+    const store = useUserStore()
+    await store.fetchList(params)
+    tableData.value = store.list
+    pagination.total = store.total
   } catch (error) {
     ElMessage.error("获取数据失败")
   } finally {
@@ -375,8 +482,8 @@ const handleDelete = async (row: any) => {
       type: "warning",
     })
 
-    // TODO: 调用删除API
-    // await userStore.delete(row.id)
+    const store = useUserStore()
+    await store.deleteItem(row.id)
 
     ElMessage.success("删除成功")
     fetchData()
@@ -400,11 +507,12 @@ const handleBatchDelete = async () => {
     )
 
     const ids = selectedRows.value.map((row) => row.id)
-    // 避免TS未使用变量错误
     void ids
 
-    // TODO: 调用批量删除API
-    // await userStore.deleteMany(ids)
+    const store = useUserStore()
+    for (const id of ids) {
+      await store.deleteItem(id)
+    }
 
     ElMessage.success("批量删除成功")
     fetchData()
@@ -415,17 +523,18 @@ const handleBatchDelete = async () => {
 
 const handleSubmit = async () => {
   try {
-    await formRef.value?.validate()
+    if (formRef.value && typeof formRef.value.validate === "function") {
+      await formRef.value.validate()
+    }
 
     submitting.value = true
 
+    const store = useUserStore()
     if (formData.id) {
-      // TODO: 更新操作
-      // await userStore.update(formData.id, formData)
+      await store.updateItem(formData.id, formData)
       ElMessage.success("更新成功")
     } else {
-      // TODO: 创建操作
-      // await userStore.create(formData)
+      await store.createItem(formData)
       ElMessage.success("创建成功")
     }
 

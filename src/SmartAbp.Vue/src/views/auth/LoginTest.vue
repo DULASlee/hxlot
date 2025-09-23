@@ -1,6 +1,9 @@
 <template>
   <div class="login-test-container">
-    <el-card class="login-card" shadow="hover">
+    <el-card
+      class="login-card"
+      shadow="hover"
+    >
       <template #header>
         <div class="card-header">
           <h2>SmartAbp 登录功能测试</h2>
@@ -11,12 +14,21 @@
       </template>
 
       <!-- API 连接测试 -->
-      <el-divider content-position="left"> API 连接测试 </el-divider>
+      <el-divider content-position="left">
+        API 连接测试
+      </el-divider>
       <div class="test-section">
-        <el-button :loading="testing.api" type="primary" @click="testApiConnection">
+        <el-button
+          :loading="testing.api"
+          type="primary"
+          @click="testApiConnection"
+        >
           🔗 测试 API 连接
         </el-button>
-        <div v-if="apiTestResult" class="test-result">
+        <div
+          v-if="apiTestResult"
+          class="test-result"
+        >
           <el-alert
             :title="apiTestResult.success ? 'API 连接成功' : 'API 连接失败'"
             :type="apiTestResult.success ? 'success' : 'error'"
@@ -27,7 +39,9 @@
       </div>
 
       <!-- 用户登录测试 -->
-      <el-divider content-position="left"> 用户登录测试 </el-divider>
+      <el-divider content-position="left">
+        用户登录测试
+      </el-divider>
       <div class="login-section">
         <el-form
           ref="loginFormRef"
@@ -36,11 +50,21 @@
           label-width="80px"
           @submit.prevent="handleLogin"
         >
-          <el-form-item label="用户名" prop="username">
-            <el-input v-model="loginForm.username" placeholder="请输入用户名" clearable />
+          <el-form-item
+            label="用户名"
+            prop="username"
+          >
+            <el-input
+              v-model="loginForm.username"
+              placeholder="请输入用户名"
+              clearable
+            />
           </el-form-item>
 
-          <el-form-item label="密码" prop="password">
+          <el-form-item
+            label="密码"
+            prop="password"
+          >
             <el-input
               v-model="loginForm.password"
               type="password"
@@ -64,25 +88,47 @@
 
         <!-- 快速测试按钮 -->
         <div class="quick-test-buttons">
-          <el-button size="small" @click="fillTestData('admin')"> 填入管理员测试数据 </el-button>
-          <el-button size="small" @click="fillTestData('user')"> 填入普通用户测试数据 </el-button>
-          <el-button size="small" type="warning" @click="fillTestData('invalid')">
+          <el-button
+            size="small"
+            @click="fillTestData('admin')"
+          >
+            填入管理员测试数据
+          </el-button>
+          <el-button
+            size="small"
+            @click="fillTestData('user')"
+          >
+            填入普通用户测试数据
+          </el-button>
+          <el-button
+            size="small"
+            type="warning"
+            @click="fillTestData('invalid')"
+          >
             填入无效测试数据
           </el-button>
         </div>
       </div>
 
       <!-- 认证状态显示 -->
-      <el-divider content-position="left"> 认证状态 </el-divider>
+      <el-divider content-position="left">
+        认证状态
+      </el-divider>
       <div class="auth-status">
-        <el-descriptions :column="2" border>
+        <el-descriptions
+          :column="2"
+          border
+        >
           <el-descriptions-item label="认证状态">
             <el-tag :type="authStore.isAuthenticated ? 'success' : 'danger'">
               {{ authStore.isAuthenticated ? "已认证" : "未认证" }}
             </el-tag>
           </el-descriptions-item>
           <el-descriptions-item label="Token">
-            <el-text class="token-display" truncated>
+            <el-text
+              class="token-display"
+              truncated
+            >
               {{ authStore.token || "无" }}
             </el-text>
           </el-descriptions-item>
@@ -108,18 +154,38 @@
           </el-descriptions-item>
         </el-descriptions>
 
-        <div v-if="authStore.isAuthenticated" class="auth-actions">
-          <el-button :loading="testing.userInfo" type="info" @click="testUserInfo">
+        <div
+          v-if="authStore.isAuthenticated"
+          class="auth-actions"
+        >
+          <el-button
+            :loading="testing.userInfo"
+            type="info"
+            @click="testUserInfo"
+          >
             🔄 刷新用户信息
           </el-button>
-          <el-button type="danger" @click="handleLogout"> 🚪 登出测试 </el-button>
+          <el-button
+            type="danger"
+            @click="handleLogout"
+          >
+            🚪 登出测试
+          </el-button>
         </div>
       </div>
 
       <!-- 测试日志 -->
-      <el-divider content-position="left"> 测试日志 </el-divider>
+      <el-divider content-position="left">
+        测试日志
+      </el-divider>
       <div class="test-logs">
-        <el-button size="small" type="warning" @click="clearLogs"> 🗑️ 清空日志 </el-button>
+        <el-button
+          size="small"
+          type="warning"
+          @click="clearLogs"
+        >
+          🗑️ 清空日志
+        </el-button>
         <div class="logs-container">
           <div
             v-for="(log, index) in testLogs"
@@ -129,7 +195,12 @@
             <span class="log-time">{{ log.time }}</span>
             <span class="log-message">{{ log.message }}</span>
           </div>
-          <div v-if="testLogs.length === 0" class="no-logs">暂无测试日志</div>
+          <div
+            v-if="testLogs.length === 0"
+            class="no-logs"
+          >
+            暂无测试日志
+          </div>
         </div>
       </div>
     </el-card>

@@ -1,19 +1,39 @@
 <template>
   <div class="theme-switcher">
     <!-- 主题切换下拉菜单 -->
-    <div v-click-outside="closeDropdown" class="theme-switcher-dropdown">
-      <button class="theme-switcher-button" title="切换主题" @click="toggleDropdown">
-        <i :class="currentThemeIcon" class="theme-icon" />
+    <div
+      v-click-outside="closeDropdown"
+      class="theme-switcher-dropdown"
+    >
+      <button
+        class="theme-switcher-button"
+        title="切换主题"
+        @click="toggleDropdown"
+      >
+        <i
+          :class="currentThemeIcon"
+          class="theme-icon"
+        />
         <span class="theme-name">{{ currentThemeName }}</span>
-        <i class="fas fa-chevron-down dropdown-arrow" :class="{ 'rotate-180': isDropdownOpen }" />
+        <i
+          class="fas fa-chevron-down dropdown-arrow"
+          :class="{ 'rotate-180': isDropdownOpen }"
+        />
       </button>
 
-      <div v-if="isDropdownOpen" class="theme-dropdown-menu">
+      <div
+        v-if="isDropdownOpen"
+        class="theme-dropdown-menu"
+      >
         <!-- 一键暗黑模式切换 -->
         <div class="theme-dropdown-item dark-mode-toggle">
           <span>暗黑模式</span>
           <label class="toggle-switch">
-            <input type="checkbox" :checked="isDarkMode" @change="toggleDarkMode" />
+            <input
+              type="checkbox"
+              :checked="isDarkMode"
+              @change="toggleDarkMode"
+            />
             <span class="toggle-slider" />
           </label>
         </div>
@@ -28,9 +48,15 @@
           :class="{ active: currentTheme === theme.value }"
           @click="setTheme(theme.value)"
         >
-          <div class="theme-preview" :style="{ backgroundColor: theme.color }" />
+          <div
+            class="theme-preview"
+            :style="{ backgroundColor: theme.color }"
+          />
           <span>{{ theme.name }}</span>
-          <i v-if="currentTheme === theme.value" class="fas fa-check" />
+          <i
+            v-if="currentTheme === theme.value"
+            class="fas fa-check"
+          />
         </div>
       </div>
     </div>
