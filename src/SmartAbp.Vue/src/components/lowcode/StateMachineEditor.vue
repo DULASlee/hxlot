@@ -32,8 +32,8 @@ import type { StateNode } from "@/stores/lowcode/statemachine"
 // Import Vue Flow CSS
 import "@vue-flow/core/dist/style.css"
 import "@vue-flow/core/dist/theme-default.css"
-// import "@vue-flow/background/dist/style.css" // 暂时注释掉，可能包未正确安装
 import "@vue-flow/controls/dist/style.css"
+// Note: @vue-flow/background CSS handled via component import
 
 const store = useStateMachineStore()
 const { addNodes: addFlowNodes } = useVueFlow()
