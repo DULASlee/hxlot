@@ -1,4 +1,4 @@
-import { ref, watch, watchEffect, nextTick, onUnmounted } from "vue"
+import { ref, watch, nextTick, onUnmounted, computed } from "vue"
 import type { Ref } from "vue"
 import { ElMessage } from "element-plus"
 
@@ -101,17 +101,7 @@ const safeRequestAnimationFrame = (callback: FrameRequestCallback): number => {
   }
 }
 
-const safeCancelAnimationFrame = (id: number): void => {
-  try {
-    if (typeof id === "number") {
-      cancelAnimationFrame(id)
-    } else {
-      clearTimeout(id)
-    }
-  } catch (error) {
-    logPerformanceError("cancelAnimationFrame", error)
-  }
-}
+// removed unused safeCancelAnimationFrame to satisfy noUnusedLocals
 
 // Memory Monitor with error handling
 export class MemoryMonitor {
@@ -309,7 +299,7 @@ export function useDebouncedWatch<T>(
     validateFunction(callback, "callback")
 
     let timeoutId: number | null = null
-    let lastValue: T | undefined = undefined
+    // let lastValue: T | undefined = undefined
 
     const debouncedCallback = (newValue: T, oldValue: T | undefined) => {
       try {
@@ -320,7 +310,7 @@ export function useDebouncedWatch<T>(
         timeoutId = window.setTimeout(() => {
           try {
             callback(newValue, oldValue)
-            lastValue = newValue
+            // lastValue = newValue
             timeoutId = null
           } catch (error) {
             logPerformanceError("debouncedCallback", error)
@@ -971,9 +961,7 @@ export function usePerformanceMonitor(
     // Cleanup on unmount
     onUnmounted(() => {
       stopMonitoring()
-      if (memoryMonitor) {
-        memoryMonitor.destroy?.()
-      }
+    // MemoryMonitor has explicit stopMonitoring; destroy not required
     })
 
     return {

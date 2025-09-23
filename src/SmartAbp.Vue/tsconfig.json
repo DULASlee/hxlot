@@ -19,7 +19,16 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@smartabp/*": ["packages/*"]
+      "@smartabp/lowcode-api": ["packages/lowcode-api/src"],
+      "@smartabp/lowcode-api/*": ["packages/lowcode-api/src/*"],
+      "@smartabp/lowcode-core": ["packages/lowcode-core/src"],
+      "@smartabp/lowcode-core/*": ["packages/lowcode-core/src/*"],
+      "@smartabp/lowcode-designer": ["packages/lowcode-designer/src"],
+      "@smartabp/lowcode-designer/*": ["packages/lowcode-designer/src/*"],
+      "@smartabp/lowcode-codegen": ["packages/lowcode-codegen/src"],
+      "@smartabp/lowcode-codegen/*": ["packages/lowcode-codegen/src/*"],
+      "@smartabp/lowcode-tools": ["packages/lowcode-tools/src"],
+      "@smartabp/lowcode-tools/*": ["packages/lowcode-tools/src/*"]
     },
     "types": ["vite/client", "element-plus/global"],
     "esModuleInterop": true,
@@ -38,11 +47,5 @@
     "node_modules",
     "dist",
     "**/__tests__/**"
-  ],
-  "references": [
-    { "path": "./packages/lowcode-api" },
-    { "path": "./packages/lowcode-core" },
-    { "path": "./packages/lowcode-designer" },
-    { "path": "./packages/lowcode-tools" }
   ]
 }

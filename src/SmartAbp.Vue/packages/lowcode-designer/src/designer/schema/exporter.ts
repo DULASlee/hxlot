@@ -3,7 +3,7 @@
  * 支持DesignerOverrideSchema格式和Vue SFC生成
  */
 
-import type { DesignerComponent } from "@smartabp/lowcode-designer/types/designer"
+import type { DesignerComponent } from "../../types/designer"
 // 临时占位：最小化 DesignerOverrideSchema 定义，避免断链
 export interface DesignerOverrideSchema {
   metadata: {

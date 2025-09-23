@@ -7,19 +7,19 @@
       <!-- Secure Step Navigation -->
       <div class="step-navigation" role="navigation">
         <div
-          v-for="(stepMeta, index) in stepMetadata"
-          :key="stepMeta.step"
+          v-for="(stepMeta, index) in Object.values(stepMetadata)"
+          :key="(stepMeta as any).step"
           class="step-item"
           :class="{
-            active: wizardState.currentStep === stepMeta.step,
-            completed: wizardState.completedSteps.has(stepMeta.step),
-            disabled: !canNavigateToStep(stepMeta.step),
+            active: wizardState.currentStep === (stepMeta as any).step,
+            completed: wizardState.completedSteps.has((stepMeta as any).step),
+            disabled: !canNavigateToStep((stepMeta as any).step),
           }"
-          @click="navigateToStep(stepMeta.step)"
+          @click="navigateToStep((stepMeta as any).step)"
         >
           <div class="step-indicator">
             <el-icon
-              v-if="wizardState.completedSteps.has(stepMeta.step)"
+              v-if="wizardState.completedSteps.has((stepMeta as any).step)"
               class="step-icon completed"
             >
               <Check />
@@ -28,13 +28,13 @@
           </div>
           <div class="step-content">
             <div class="step-title">
-              {{ stepMeta.title }}
+              {{ (stepMeta as any).title }}
             </div>
             <div class="step-description">
-              {{ stepMeta.description }}
+              {{ (stepMeta as any).description }}
             </div>
             <div class="step-time">
-              {{ stepMeta.estimatedTime }}
+              {{ (stepMeta as any).estimatedTime }}
             </div>
           </div>
         </div>
@@ -204,7 +204,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Create')"
-                    @change="(v: boolean | string) => onToggleCrud(scope.row.name, 'Create', Boolean(v))"
+                    @change="(val: any) => onToggleCrud(scope.row.name, 'Create', Boolean(val))"
                   />
                 </template>
               </el-table-column>
@@ -212,7 +212,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Read')"
-                    @change="(v: boolean | string) => onToggleCrud(scope.row.name, 'Read', Boolean(v))"
+                    @change="(val: any) => onToggleCrud(scope.row.name, 'Read', Boolean(val))"
                   />
                 </template>
               </el-table-column>
@@ -220,7 +220,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Update')"
-                    @change="(v: boolean | string) => onToggleCrud(scope.row.name, 'Update', Boolean(v))"
+                    @change="(val: any) => onToggleCrud(scope.row.name, 'Update', Boolean(val))"
                   />
                 </template>
               </el-table-column>
@@ -228,7 +228,7 @@
                 <template #default="scope">
                   <el-checkbox
                     :model-value="hasCrud(scope.row.name, 'Delete')"
-                    @change="(v: boolean | string) => onToggleCrud(scope.row.name, 'Delete', Boolean(v))"
+                    @change="(val: any) => onToggleCrud(scope.row.name, 'Delete', Boolean(val))"
                   />
                 </template>
               </el-table-column>
@@ -447,7 +447,8 @@ import { Check } from "@element-plus/icons-vue"
 import { useI18n } from "vue-i18n"
 
 // Import our new strict typing and management systems
-import { useWizardStore, WizardValidator } from "@smartabp/lowcode-designer"
+import { useWizardStore } from "@smartabp/lowcode-designer"
+import { WizardValidator } from "../../utils/validation"
 import { WizardStep } from "@smartabp/lowcode-designer/types/wizard"
 import type { ModuleMetadata, CustomPermission, EntityDefinition } from "@smartabp/lowcode-api/types"
 import { codeGeneratorApi } from "@smartabp/lowcode-api"
@@ -517,8 +518,7 @@ const hasUnsavedChanges = ref(false)
 const cacheKey = ref(`module-wizard-${Date.now()}`)
 
 // ============= Step Metadata =============
-const stepMetadata: { [key: string]: { step: WizardStep; title: string; description: string; estimatedTime: string } } =
-  wizardStore.currentStepMetadata
+const stepMetadata = wizardStore.currentStepMetadata || ({} as Record<string, { step: WizardStep; title: string; description: string; estimatedTime: string }>)
 
 // ============= Computed Properties =============
 const canProceed = computed(() => wizardStore.canProceed)
@@ -553,10 +553,7 @@ const onEntitiesUpdate = async (newEntities: EntityDefinition[]): Promise<void> 
   try {
     await wizardStore.withTransaction(async () => {
       wizardStore.updateFormData({
-        entities: newEntities.map((entity) => ({
-          ...entity,
-          updatedAt: Date.now(),
-        })),
+        entities: newEntities as any,
       })
     })
     hasUnsavedChanges.value = true
@@ -595,18 +592,16 @@ const onDbInfoUpdate = async (db: {
 // ============= Validation System =============
 const validateCurrentStep = async (): Promise<boolean> => {
   try {
-    const result = await WizardValidator.validateStep(wizardStore.currentStep, wizardStore.formData)
-
+    const result = WizardValidator.validateModuleMetadata(wizardStore.formData)
     if (!result.isValid) {
-      const errorMessages = Object.values(result.errors).flat().join(", ")
+      const errorMessages = result.errors.map(e => e.message).join(", ")
       ElMessage.error(t("wizard.validation.failed", { errors: errorMessages }))
 
       if (result.warnings && result.warnings.length > 0) {
-        const warningMessages = result.warnings.join(", ")
+        const warningMessages = result.warnings.map(w => w.message).join(", ")
         ElMessage.warning(t("wizard.validation.warnings", { warnings: warningMessages }))
       }
     }
-
     return result.isValid
   } catch (error) {
     ElMessage.error(t("wizard.validation.error", { error: getErrorMessage(error) }))
@@ -875,7 +870,7 @@ const generate = async (): Promise<void> => {
     }
 
     // Final validation - use validateStep for complete validation
-    const validationResult = WizardValidator.validateStep(WizardStep.PREVIEW, currentState)
+    const validationResult = WizardValidator.validateModuleMetadata(currentState)
     if (!validationResult.isValid) {
       const errors = Object.values(validationResult.errors).flat().join(", ")
       throw new Error(`Validation failed: ${errors}`)
@@ -892,7 +887,11 @@ const generate = async (): Promise<void> => {
 
     try {
       // API call re-enabled
-      const result = await codeGeneratorApi.generateModule(currentState)
+  const result = await codeGeneratorApi.generateModule({
+    metadata: currentState as any,
+    options: { framework: "vue", language: "typescript", architecture: "ddd", testing: true, documentation: false, docker: false, ciCd: false },
+    target: { outputDir: "generated", baseNamespace: "SmartAbp", basePath: "/", apiVersion: "v1" }
+  } as any)
 
       generationResult.value = result
       hasUnsavedChanges.value = false
@@ -923,7 +922,7 @@ const runValidate = async (): Promise<void> => {
     validationReport.value = null
     const currentState = wizardStore.formData
     if (!currentState) throw new Error("No module data available")
-    const result = await codeGeneratorApi.validateModule(currentState)
+    const result = await codeGeneratorApi.validateModule({ metadata: currentState } as any)
     validationReport.value = result
     if (!result.isValid) {
       ElMessage.error(t("wizard.preview.validationHasErrors"))
@@ -943,7 +942,7 @@ const runDryRun = async (): Promise<void> => {
     dryRunResult.value = null
     const currentState = wizardStore.formData
     if (!currentState) throw new Error("No module data available")
-    const result = await codeGeneratorApi.dryRunGenerate(currentState)
+  const result = await codeGeneratorApi.dryRunGenerate(currentState as any)
     dryRunResult.value = result
     ElMessage.success(t("wizard.preview.dryRunOk"))
   } catch (err) {

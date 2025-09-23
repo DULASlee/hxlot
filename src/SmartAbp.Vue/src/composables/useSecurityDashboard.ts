@@ -4,14 +4,79 @@
  */
 
 import { ref, reactive, computed, readonly } from "vue"
-import {
-  type SecurityMetrics,
-  type PermissionTrendData,
-  type RiskDistributionData,
-  type AbnormalBehavior,
-  type ComplianceIssue,
-  type DashboardConfig,
-} from "@smartabp/lowcode-designer/types/security"
+// Narrow local dashboard types aligned with available designer security types
+type RiskLevel = "Low" | "Medium" | "High" | "Critical"
+
+interface SecurityMetrics {
+  overallScore: number
+  openIssues: number
+  todayRiskEvents: number
+  permissionChanges: number
+  abnormalLogins: number
+  complianceScore: number
+  riskEventsTrend: number
+  permissionChangesTrend: number
+  abnormalLoginsTrend: number
+  complianceScoreTrend: number
+}
+
+interface PermissionTrendData {
+  date: string
+  count: number
+  permissions: number
+  risks: number
+  users: number
+  failed: number
+}
+
+interface RiskDistributionData {
+  risk: RiskLevel
+  level: RiskLevel
+  count: number
+  percentage: number
+  color: string
+}
+
+interface AbnormalBehavior {
+  id: string
+  userId: string
+  userName: string
+  behaviorType: string
+  description: string
+  timestamp: string
+  riskLevel: RiskLevel
+  details?: Record<string, any>
+  actionRequired?: boolean
+}
+
+interface ComplianceIssue {
+  id: string
+  type: string
+  severity: RiskLevel
+  description: string
+  affectedUsers: number
+  detectedAt: Date
+  status: "Open" | "InProgress" | "Resolved"
+  recommendations: string[]
+}
+
+interface DashboardConfig {
+  refreshInterval: number
+  autoRefresh: boolean
+  enableRealTimeAlerts: boolean
+  enableNotifications: boolean
+  theme: "light" | "dark"
+  layout: {
+    columns: number
+    showSidebar: boolean
+    compactMode: boolean
+    showMetrics: boolean
+    showAlerts: boolean
+    showCharts: boolean
+    showBehaviorAnalysis: boolean
+    showCompliance: boolean
+  }
+}
 
 interface UseSecurityDashboardOptions {
   config?: Partial<DashboardConfig>

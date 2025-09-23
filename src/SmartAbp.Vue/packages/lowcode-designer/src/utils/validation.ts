@@ -3,7 +3,7 @@
  */
 
 import { z } from "zod"
-import type { ModuleMetadata, EntityDefinition, EntityProperty, WizardStep } from "../types/wizard"
+import type { ModuleMetadata, EntityDefinition, EntityProperty } from "../types/wizard"
 import { ElMessage } from "element-plus"
 
 /**
@@ -95,7 +95,7 @@ const EntityDefinitionSchema = z.object({
 /**
  * Module metadata validation schema
  */
-const ModuleMetadataSchema = z.object({
+export const ModuleMetadataSchema = z.object({
   name: z.string().min(1, "Module name is required"),
   displayName: z.string().optional(),
   description: z.string().optional(),
@@ -189,7 +189,7 @@ const WizardStepSchema = z.object({
   validation: z
     .object({
       requiredFields: z.array(z.string()).optional(),
-      customValidator: z.function().optional(),
+      customValidator: z.any().optional(),
     })
     .optional(),
   ui: z
@@ -278,10 +278,10 @@ export class WizardValidator {
         }
       } else {
         // 转换Zod错误为ValidationError格式
-        const errors: ValidationError[] = result.error.issues.map((err) => ({
-          field: err.path.join("."),
-          message: err.message,
-          code: err.code,
+    const errors: ValidationError[] = result.error.issues.map((err: any) => ({
+          field: Array.isArray(err.path) ? err.path.join(".") : String(err.path ?? ""),
+          message: String(err.message ?? "Validation error"),
+          code: String((err.code ?? "ZOD_ERROR") as string),
           severity: "error" as const,
         }))
 
@@ -585,14 +585,14 @@ export class WizardValidator {
   /**
    * Create validator function
    */
-  static createValidator<T>(schema: z.ZodSchema<T>): (value: any) => ValidationResult {
+  static createValidator<T>(schema: z.ZodSchema<T>): (value: unknown) => ValidationResult {
     try {
       // 验证参数
       if (!schema) {
         throw new Error("Schema is required")
       }
 
-      return (value: any): ValidationResult => {
+      return (value: unknown): ValidationResult => {
         try {
           const result = schema.safeParse(value)
 

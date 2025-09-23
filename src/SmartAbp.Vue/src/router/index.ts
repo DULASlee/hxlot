@@ -328,6 +328,25 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  // LowCode Studio 一体化工作台
+  {
+    path: "/studio",
+    component: SmartAbpLayout,
+    meta: {
+      title: "LowCode Studio",
+      icon: "🧩",
+      requiresAuth: true,
+      requiredRoles: ["user"],
+    },
+    children: [
+      {
+        path: "",
+        name: "LowCodeStudio",
+        component: () => import("@/views/lowcode/LowCodeStudioView.vue"),
+        meta: { title: "LowCode Studio", menuKey: "lowcode-studio" },
+      },
+    ],
+  },
   // 个人中心
   {
     path: "/profile",

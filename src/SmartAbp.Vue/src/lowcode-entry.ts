@@ -5,4 +5,3 @@
 
 export * from "@smartabp/lowcode-core"
 export * from "@smartabp/lowcode-codegen"
-export * from "@smartabp/lowcode-ui-vue"

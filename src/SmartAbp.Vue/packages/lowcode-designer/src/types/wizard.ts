@@ -23,11 +23,13 @@ export interface EntityDefinition {
   tableName?: string
   schema?: string
   namespace?: string
+  primaryKeys?: string[]
+  foreignKeys?: Array<{ property: string; entity: string; propertyName: string }>
 }
 
 export interface EntityProperty {
   name: string
-  type: PropertyType
+  type: PropertyType | string
   displayName?: string
   description?: string
   required?: boolean
@@ -36,6 +38,8 @@ export interface EntityProperty {
   defaultValue?: any
   isPrimaryKey?: boolean
   isForeignKey?: boolean
+  isNavigationProperty?: boolean
+  foreignEntity?: string
 }
 
 export interface EntityRelationship {

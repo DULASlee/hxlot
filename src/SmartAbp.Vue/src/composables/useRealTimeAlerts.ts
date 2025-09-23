@@ -4,12 +4,29 @@
  */
 
 import { ref, reactive, computed, onUnmounted, readonly } from "vue"
-import {
-  type SecurityAlert,
-  type AlertNotification,
-  SecurityAlertType,
-  AlertSeverity,
-} from "@smartabp/lowcode-designer/types/security"
+import type { SecurityAlert } from "@smartabp/lowcode-designer/types/security"
+
+// Narrow local types aligned with available SecurityAlert shape
+type AlertSeverity = "low" | "medium" | "high" | "critical"
+type SecurityAlertType =
+  | "VULNERABILITY"
+  | "LOGIN_ATTEMPT"
+  | "OFF_HOURS_ACCESS"
+  | "PERMISSION_ESCALATION"
+  | "MULTIPLE_FAILED_ATTEMPTS"
+  | "SENSITIVE_DATA_ACCESS"
+  | "SUSPICIOUS_ACTIVITY"
+
+  interface AlertNotification {
+  id: string
+  message: string
+  severity: AlertSeverity
+    timestamp: number
+  isAcknowledged: boolean
+  type: "error" | "warning" | "info"
+  duration?: number
+  actions?: Array<{ text: string; handler: () => void }>
+}
 
 interface UseRealTimeAlertsOptions {
   enableWebSocket?: boolean
@@ -52,32 +69,32 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
   // Computed Properties
   const unreadCount = computed(
-    () => activeAlerts.value.filter((alert: SecurityAlert) => !alert.isAcknowledged).length,
+    () => activeAlerts.value.filter((alert: SecurityAlert) => !(alert as any).acknowledged).length,
   )
 
   const criticalAlerts = computed(() =>
-    activeAlerts.value.filter((alert: SecurityAlert) => alert.severity === "Critical"),
+    activeAlerts.value.filter((alert: SecurityAlert) => alert.severity === "critical"),
   )
 
   const highPriorityAlerts = computed(() =>
     activeAlerts.value.filter(
-      (alert: SecurityAlert) => alert.severity === "High" || alert.severity === "Critical",
+      (alert: SecurityAlert) => alert.severity === "high" || alert.severity === "critical",
     ),
   )
 
   // Mock Data Generation
   const generateMockAlert = (): SecurityAlert => {
-    const alertTypes: SecurityAlertType[] = [
-      SecurityAlertType.VULNERABILITY,
-      SecurityAlertType.LOGIN_ATTEMPT,
-      SecurityAlertType.OFF_HOURS_ACCESS,
-      SecurityAlertType.PERMISSION_ESCALATION,
-      SecurityAlertType.MULTIPLE_FAILED_ATTEMPTS,
-      SecurityAlertType.SENSITIVE_DATA_ACCESS,
-      SecurityAlertType.SUSPICIOUS_ACTIVITY,
+  const alertTypes: SecurityAlertType[] = [
+      "VULNERABILITY",
+      "LOGIN_ATTEMPT",
+      "OFF_HOURS_ACCESS",
+      "PERMISSION_ESCALATION",
+      "MULTIPLE_FAILED_ATTEMPTS",
+      "SENSITIVE_DATA_ACCESS",
+      "SUSPICIOUS_ACTIVITY",
     ]
 
-    const severities: AlertSeverity[] = [AlertSeverity.LOW, AlertSeverity.MEDIUM, AlertSeverity.HIGH, AlertSeverity.CRITICAL]
+    const severities: AlertSeverity[] = ["low", "medium", "high", "critical"]
     const users = ["John Doe", "Jane Smith", "Alice Johnson", "Bob Wilson", "Carol Brown"]
 
     const type = alertTypes[Math.floor(Math.random() * alertTypes.length)]
@@ -90,7 +107,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
       severity,
       message: getAlertDescription(type, user),
       description: getAlertDescription(type, user),
-      timestamp: new Date().toISOString(),
+      timestamp: Date.now(),
       userInfo: {
         displayName: user,
         email: `${user.toLowerCase().replace(" ", ".")}@company.com`,
@@ -103,57 +120,57 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
         userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
         timeZone: "Asia/Shanghai",
       },
-      isAcknowledged: false,
+      acknowledged: false,
       recommendedActions: getRecommendedActions(type),
     }
   }
 
   const getAlertDescription = (type: SecurityAlertType, user: string): string => {
     const descriptions: Record<SecurityAlertType, string> = {
-      [SecurityAlertType.VULNERABILITY]: `High-risk permission access by ${user}`,
-      [SecurityAlertType.LOGIN_ATTEMPT]: `Unusual location access detected for ${user}`,
-      [SecurityAlertType.OFF_HOURS_ACCESS]: `Off-hours system access by ${user}`,
-      [SecurityAlertType.PERMISSION_ESCALATION]: `Permission escalation attempt by ${user}`,
-      [SecurityAlertType.MULTIPLE_FAILED_ATTEMPTS]: `Multiple failed login attempts by ${user}`,
-      [SecurityAlertType.SENSITIVE_DATA_ACCESS]: `Sensitive data access by ${user}`,
-      [SecurityAlertType.SUSPICIOUS_ACTIVITY]: `Suspicious activity detected for ${user}`,
+      VULNERABILITY: `High-risk permission access by ${user}`,
+      LOGIN_ATTEMPT: `Unusual location access detected for ${user}`,
+      OFF_HOURS_ACCESS: `Off-hours system access by ${user}`,
+      PERMISSION_ESCALATION: `Permission escalation attempt by ${user}`,
+      MULTIPLE_FAILED_ATTEMPTS: `Multiple failed login attempts by ${user}`,
+      SENSITIVE_DATA_ACCESS: `Sensitive data access by ${user}`,
+      SUSPICIOUS_ACTIVITY: `Suspicious activity detected for ${user}`,
     }
     return descriptions[type]
   }
 
   const getRecommendedActions = (type: SecurityAlertType): string[] => {
     const actions: Record<SecurityAlertType, string[]> = {
-      [SecurityAlertType.VULNERABILITY]: [
+      VULNERABILITY: [
         "Review user permissions",
         "Verify business justification",
         "Monitor subsequent activities",
       ],
-      [SecurityAlertType.LOGIN_ATTEMPT]: [
+      LOGIN_ATTEMPT: [
         "Verify user location",
         "Check VPN usage",
         "Consider additional authentication",
       ],
-      [SecurityAlertType.OFF_HOURS_ACCESS]: [
+      OFF_HOURS_ACCESS: [
         "Confirm legitimate business need",
         "Review access logs",
         "Update access policies if needed",
       ],
-      [SecurityAlertType.PERMISSION_ESCALATION]: [
+      PERMISSION_ESCALATION: [
         "Immediately review permissions",
         "Lock account if suspicious",
         "Investigate privilege changes",
       ],
-      [SecurityAlertType.MULTIPLE_FAILED_ATTEMPTS]: [
+      MULTIPLE_FAILED_ATTEMPTS: [
         "Check for brute force attacks",
         "Consider account lockout",
         "Review authentication logs",
       ],
-      [SecurityAlertType.SENSITIVE_DATA_ACCESS]: [
+      SENSITIVE_DATA_ACCESS: [
         "Audit data access patterns",
         "Verify data usage justification",
         "Monitor data export activities",
       ],
-      [SecurityAlertType.SUSPICIOUS_ACTIVITY]: [
+      SUSPICIOUS_ACTIVITY: [
         "Investigate activity patterns",
         "Review user behavior baseline",
         "Consider temporary restrictions",
@@ -163,26 +180,26 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
   }
 
   // Alert Management Methods
-  const addAlert = (alertData: Omit<SecurityAlert, "id" | "timestamp" | "isAcknowledged">): void => {
+  const addAlert = (alertData: Omit<SecurityAlert, "id" | "timestamp" | "acknowledged">): void => {
     const fullAlert: SecurityAlert = {
       ...alertData,
       id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      timestamp: new Date().toISOString(),
-      isAcknowledged: false,
+      timestamp: Date.now(),
+      acknowledged: false,
     }
 
     activeAlerts.value.unshift(fullAlert)
 
     // Create notification for high-priority alerts
-    if (fullAlert.severity === "High" || fullAlert.severity === "Critical") {
+    if (fullAlert.severity === "high" || fullAlert.severity === "critical") {
       createNotification({
         id: `notification_${fullAlert.id}`,
         message: `${fullAlert.severity} security alert: ${alertData.message}`,
         severity: fullAlert.severity,
-        timestamp: new Date().toISOString(),
-        isAcknowledged: false,
-        type: fullAlert.severity === "Critical" ? "error" : "warning",
-        duration: fullAlert.severity === "Critical" ? 0 : 10000,
+        timestamp: Date.now(),
+      isAcknowledged: false,
+        type: fullAlert.severity === "critical" ? "error" : "warning",
+        duration: fullAlert.severity === "critical" ? 0 : 10000,
         actions: [
           {
             text: "Acknowledge",
@@ -254,7 +271,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
     notifications.value.push(notification)
 
     // Auto-remove notification after duration
-    if (notification.duration && notification.duration > 0) {
+    if (typeof notification.duration === "number" && notification.duration > 0) {
       setTimeout(() => {
         removeNotification(notification.id)
       }, notification.duration)

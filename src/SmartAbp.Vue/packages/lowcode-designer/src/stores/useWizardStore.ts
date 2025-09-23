@@ -458,13 +458,7 @@ export const useWizardStore = defineStore("wizard", () => {
 
       isLoading.value = true
 
-      if (cacheable) {
-        const cacheResult = globalCache.get<T>(cacheKey.value)
-        if (cacheResult) {
-          isLoading.value = false
-          return cacheResult
-        }
-      }
+      // 移除同步 get 调用，统一走去重执行
 
       try {
         const result = await requestDeduplicator.deduplicate(`transaction:${Date.now()}`, operation, {})
