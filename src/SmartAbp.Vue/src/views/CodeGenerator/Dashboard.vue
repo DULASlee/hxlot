@@ -288,7 +288,7 @@
 // @ts-nocheck // Legacy view pending refactor to Composition API; excluded from P0/P2 quality path
 import { codeGeneratorApi } from '@smartabp/lowcode-api'
 import CodePreview from '@smartabp/lowcode-designer/components/CodeGenerator/CodePreview.vue'
-import EntityDesigner from '@smartabp/lowcode-designer/components/CodeGenerator/EntityDesigner.vue'
+import EntityDesigner from '@/packages/lowcode-designer/src/components/CodeGenerator/EntityDesigner.vue'
 
 export default {
   name: 'CodeGeneratorDashboard',
