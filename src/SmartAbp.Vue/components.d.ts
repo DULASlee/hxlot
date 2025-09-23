@@ -79,6 +79,7 @@ declare module 'vue' {
     LogViewer: typeof import('./src/components/log/LogViewer.vue')['default']
     OneClickSolution: typeof import('./src/components/lowcode/OneClickSolution.vue')['default']
     OptimizedDataTable: typeof import('./src/components/performance/OptimizedDataTable.vue')['default']
+    PermissionMatrix: typeof import('./src/components/permissions/PermissionMatrix.vue')['default']
     PlaceholderView: typeof import('./src/components/PlaceholderView.vue')['default']
     ProjectWizard: typeof import('./src/components/lowcode/ProjectWizard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
