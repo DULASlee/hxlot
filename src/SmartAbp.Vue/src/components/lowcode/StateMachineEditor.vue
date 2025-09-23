@@ -1,12 +1,21 @@
 <template>
   <div class="state-machine-editor">
-    <VueFlow :nodes="nodes" :edges="edges" fit-view-on-init>
+    <VueFlow
+      :nodes="nodes"
+      :edges="edges"
+      fit-view-on-init
+    >
       <Background />
       <Controls />
     </VueFlow>
     <div class="controls">
-      <el-input v-model="newNodeLabel" placeholder="New state label" />
-      <el-button @click="addNode">Add State</el-button>
+      <el-input
+        v-model="newNodeLabel"
+        placeholder="New state label"
+      />
+      <el-button @click="addNode">
+        Add State
+      </el-button>
     </div>
   </div>
 </template>

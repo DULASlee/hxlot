@@ -3,9 +3,15 @@
     <h1>低代码工作室</h1>
     <div class="main-content">
       <div class="navigation-panel">
-        <router-link to="/studio">项目概览</router-link>
-        <router-link to="/studio/workflows">工作流</router-link>
-        <router-link to="/studio/generation">代码生成</router-link>
+        <router-link to="/studio">
+          项目概览
+        </router-link>
+        <router-link to="/studio/workflows">
+          工作流
+        </router-link>
+        <router-link to="/studio/generation">
+          代码生成
+        </router-link>
       </div>
       <div class="editor-panel">
         <router-view />

@@ -2,6 +2,14 @@ import { defineStore } from "pinia"
 import { ref } from "vue"
 import { ElMessage } from "element-plus"
 
+export interface LowCodePage {
+  id: string
+  name: string
+  template: string
+  code: string
+  createdAt: number
+}
+
 export interface LowCodeProject {
   id: string
   name: string
@@ -9,7 +17,7 @@ export interface LowCodeProject {
   createdAt: number
   updatedAt: number
   entities: any[] // Placeholder for entity definitions
-  pages: any[] // Placeholder for page definitions
+  pages: LowCodePage[] // Generated pages
   workflows: any[] // Placeholder for workflow definitions
 }
 

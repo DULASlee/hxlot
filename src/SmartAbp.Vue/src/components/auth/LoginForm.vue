@@ -13,24 +13,53 @@
         <!-- 企业Logo和标题 -->
         <div class="login-header">
           <div class="company-logo">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-              <rect width="48" height="48" rx="8" fill="#1e3a5f" />
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+            >
+              <rect
+                width="48"
+                height="48"
+                rx="8"
+                fill="#1e3a5f"
+              />
               <path
                 d="M12 24L18 18L24 24L30 18L36 24"
                 stroke="white"
                 stroke-width="2.5"
                 stroke-linecap="round"
               />
-              <circle cx="24" cy="32" r="3" fill="white" />
-              <rect x="20" y="12" width="8" height="4" fill="white" opacity="0.8" />
+              <circle
+                cx="24"
+                cy="32"
+                r="3"
+                fill="white"
+              />
+              <rect
+                x="20"
+                y="12"
+                width="8"
+                height="4"
+                fill="white"
+                opacity="0.8"
+              />
             </svg>
           </div>
-          <h1 class="system-title">SmartAbp 企业管理系统</h1>
-          <p class="system-subtitle">Enterprise Management Platform</p>
+          <h1 class="system-title">
+            SmartAbp 企业管理系统
+          </h1>
+          <p class="system-subtitle">
+            Enterprise Management Platform
+          </p>
         </div>
 
         <!-- 登录表单 -->
-        <form class="login-form" @submit.prevent="handleLogin">
+        <form
+          class="login-form"
+          @submit.prevent="handleLogin"
+        >
           <!-- 租户输入 -->
           <div class="form-group">
             <label class="form-label">租户名称</label>
@@ -43,7 +72,12 @@
                 :disabled="loading"
               />
               <div class="input-icon">
-                <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
+                <svg
+                  width="18"
+                  height="18"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
@@ -64,8 +98,16 @@
                 required
                 :disabled="loading"
               />
-              <div v-if="usernameError" class="input-error">
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+              <div
+                v-if="usernameError"
+                class="input-error"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path
                     fill-rule="evenodd"
                     d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
@@ -74,7 +116,12 @@
                 <span>{{ usernameError }}</span>
               </div>
               <div class="input-icon">
-                <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
+                <svg
+                  width="18"
+                  height="18"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
                 </svg>
               </div>
@@ -94,8 +141,16 @@
                 required
                 :disabled="loading"
               />
-              <div v-if="passwordError" class="input-error">
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+              <div
+                v-if="passwordError"
+                class="input-error"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path
                     fill-rule="evenodd"
                     d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
@@ -104,8 +159,14 @@
                 <span>{{ passwordError }}</span>
               </div>
               <!-- 密码强度指示器 -->
-              <div v-if="loginForm.password && !passwordError" class="password-strength">
-                <div class="password-strength-bar" :class="'strength-' + passwordStrength" />
+              <div
+                v-if="loginForm.password && !passwordError"
+                class="password-strength"
+              >
+                <div
+                  class="password-strength-bar"
+                  :class="'strength-' + passwordStrength"
+                />
               </div>
               <button
                 type="button"
@@ -126,7 +187,13 @@
                     d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
                   />
                 </svg>
-                <svg v-else width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
+                <svg
+                  v-else
+                  width="18"
+                  height="18"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path
                     fill-rule="evenodd"
                     d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z"
@@ -151,12 +218,23 @@
               <span class="checkbox-custom" />
               <span class="checkbox-label">记住登录状态</span>
             </label>
-            <a href="#" class="forgot-link">忘记密码？</a>
+            <a
+              href="#"
+              class="forgot-link"
+            >忘记密码？</a>
           </div>
 
           <!-- 错误提示 -->
-          <div v-if="errorMessage" class="error-alert">
-            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+          <div
+            v-if="errorMessage"
+            class="error-alert"
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
               <path
                 fill-rule="evenodd"
                 d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
@@ -166,9 +244,22 @@
           </div>
 
           <!-- 登录按钮 -->
-          <button type="submit" class="login-submit-btn" :disabled="loading || !isFormValid">
-            <span v-if="loading" class="loading-spinner" />
-            <svg v-else width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+          <button
+            type="submit"
+            class="login-submit-btn"
+            :disabled="loading || !isFormValid"
+          >
+            <span
+              v-if="loading"
+              class="loading-spinner"
+            />
+            <svg
+              v-else
+              width="20"
+              height="20"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
               <path
                 fill-rule="evenodd"
                 d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z"
@@ -181,7 +272,12 @@
         <!-- 底部信息 -->
         <div class="login-footer">
           <div class="security-info">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+            <svg
+              width="16"
+              height="16"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
               <path
                 fill-rule="evenodd"
                 d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
@@ -189,7 +285,9 @@
             </svg>
             <span>企业级安全认证</span>
           </div>
-          <div class="copyright">© 2024 SmartAbp 企业管理系统 | 企业版</div>
+          <div class="copyright">
+            © 2024 SmartAbp 企业管理系统 | 企业版
+          </div>
         </div>
       </div>
     </div>

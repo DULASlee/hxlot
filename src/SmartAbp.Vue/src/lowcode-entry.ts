@@ -1,7 +1,8 @@
 /**
- * 低代码引擎主入口文件（兼容层）
- * 统一代理到 packages 下的正式包导出
+ * This file is intended to be a central export point for low-code packages.
+ * However, due to complexities in the build process and type resolution,
+ * it is currently empty to prevent duplicate export errors.
+ *
+ * Components should import directly from the specific packages they need, for example:
+ * import { something } from "@smartabp/lowcode-core"
  */
-
-export * from "@smartabp/lowcode-core"
-export * from "@smartabp/lowcode-codegen/types"

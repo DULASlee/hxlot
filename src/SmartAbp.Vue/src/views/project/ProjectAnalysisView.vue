@@ -20,7 +20,9 @@
             <div class="stat-number">
               {{ totalProjects }}
             </div>
-            <div class="stat-label">总项目数</div>
+            <div class="stat-label">
+              总项目数
+            </div>
           </div>
         </div>
 
@@ -34,7 +36,9 @@
             <div class="stat-number">
               {{ completedProjects }}
             </div>
-            <div class="stat-label">已完成</div>
+            <div class="stat-label">
+              已完成
+            </div>
           </div>
         </div>
 
@@ -50,7 +54,9 @@
             <div class="stat-number">
               {{ activeProjects }}
             </div>
-            <div class="stat-label">进行中</div>
+            <div class="stat-label">
+              进行中
+            </div>
           </div>
         </div>
 
@@ -66,7 +72,9 @@
             <div class="stat-number">
               {{ pausedProjects }}
             </div>
-            <div class="stat-label">已暂停</div>
+            <div class="stat-label">
+              已暂停
+            </div>
           </div>
         </div>
       </div>
@@ -99,14 +107,23 @@
           <h3>项目进度趋势</h3>
           <div class="chart-container">
             <div class="progress-chart">
-              <div v-for="month in progressData" :key="month.name" class="progress-bar-item">
+              <div
+                v-for="month in progressData"
+                :key="month.name"
+                class="progress-bar-item"
+              >
                 <div class="month-label">
                   {{ month.name }}
                 </div>
                 <div class="progress-bar">
-                  <div class="progress-fill" :style="{ width: month.progress + '%' }" />
+                  <div
+                    class="progress-fill"
+                    :style="{ width: month.progress + '%' }"
+                  />
                 </div>
-                <div class="progress-value">{{ month.progress }}%</div>
+                <div class="progress-value">
+                  {{ month.progress }}%
+                </div>
               </div>
             </div>
           </div>
@@ -129,7 +146,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="project in projectDetails" :key="project.id">
+              <tr
+                v-for="project in projectDetails"
+                :key="project.id"
+              >
                 <td>
                   <div class="project-name">
                     <strong>{{ project.name }}</strong>
@@ -137,14 +157,20 @@
                   </div>
                 </td>
                 <td>
-                  <span class="status-badge" :class="project.status">
+                  <span
+                    class="status-badge"
+                    :class="project.status"
+                  >
                     {{ getStatusText(project.status) }}
                   </span>
                 </td>
                 <td>
                   <div class="progress-cell">
                     <div class="progress-bar small">
-                      <div class="progress-fill" :style="{ width: project.progress + '%' }" />
+                      <div
+                        class="progress-fill"
+                        :style="{ width: project.progress + '%' }"
+                      />
                     </div>
                     <span>{{ project.progress }}%</span>
                   </div>

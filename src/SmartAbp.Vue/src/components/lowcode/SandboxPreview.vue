@@ -6,8 +6,7 @@
       sandbox="allow-scripts"
       csp="script-src 'self'"
       @load="onIframeLoad"
-    >
-    </iframe>
+    />
   </div>
 </template>
 
