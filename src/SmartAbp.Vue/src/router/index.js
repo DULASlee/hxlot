@@ -21,7 +21,6 @@ const LowCodeEngineView = () => import("../../packages/lowcode-designer/src/view
 const SfcCompilerView = () => import("../../packages/lowcode-designer/src/views/codegen/SfcCompilerView.vue");
 const DragDropFormView = () => import("../../packages/lowcode-designer/src/views/codegen/DragDropFormView.vue");
 const PerformanceDashboard = () => import("../../packages/lowcode-designer/src/views/codegen/PerformanceDashboard.vue");
-const ModuleWizardView = () => import("../../packages/lowcode-designer/src/views/codegen/ModuleWizardView.vue");
 const VisualDesignerView = () => import("../../packages/lowcode-designer/src/views/VisualDesignerView.vue");
 const routes = [
     // 登录页面
@@ -233,7 +232,7 @@ const routes = [
                     {
                         path: "wizard",
                         name: "ModuleWizard",
-                        component: ModuleWizardView,
+                        component: LowCodeEngineView,
                         meta: { title: "模块生成向导", menuKey: "module-wizard" },
                     },
                 ]
