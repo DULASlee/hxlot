@@ -19,17 +19,10 @@
       </div>
 
       <div class="header-center">
-        <!-- 协作用户 -->
-        <div v-if="collaborationEnabled" class="collaboration-users">
-          <div
-            v-for="user in collaborationUsers"
-            :key="user.id"
-            class="user-avatar"
-            :style="{ backgroundColor: user.color }"
-            :title="user.name"
-          >
-            {{ user.name.charAt(0).toUpperCase() }}
-          </div>
+        <!-- 企业级低代码引擎 - 专注基础功能 -->
+        <div class="engine-info">
+          <span class="engine-title">SmartAbp LowCode Engine</span>
+          <span class="engine-version">v1.0 - Enterprise Edition</span>
         </div>
       </div>
 
@@ -110,15 +103,8 @@
             />
           </div>
 
-          <!-- AI助手 -->
-          <div v-show="activeLeftTab === 'ai'" class="tab-panel">
-            <AIAssistantPanel
-              v-if="aiEnabled && designer"
-              :ai-assistant="{}"
-              :design-context="designContext"
-              @apply-suggestion="applySuggestion"
-            />
-          </div>
+          <!-- 🚨 AI助手功能已移除 - 遵循低代码引擎开发铁律 -->
+          <!-- 现阶段专注基础功能：代码生成、可视化设计、元数据驱动 -->
         </div>
       </div>
 
@@ -438,6 +424,7 @@ import { ElMessage } from "element-plus"
 // 注释掉缺失的模块导入
 // import { EnterpriseDesigner, createEnterpriseDesigner } from '../core/EnterpriseDesigner'
 // import type { CanvasComponent, CanvasViewport } from '../core/AdvancedCanvas'
+// 🚨 协作和AI相关类型导入已移除 - 遵循低代码引擎开发铁律
 // import type { CollaborationUser } from '../core/RealTimeCollaboration'
 // import type { AIDesignSuggestion } from '../core/AIDesignAssistant'
 // import type { PerformanceMetrics } from '../core/PerformanceOptimizer'
@@ -475,10 +462,10 @@ interface EnterpriseDesigner {
     restoreSnapshot?(id: string): Promise<void>
   }
 
-  // AI助手
-  aiAssistant?: {
-    applySuggestion?(id: string): Promise<void>
-  }
+  // 🚨 AI助手接口已移除 - 遵循低代码引擎开发铁律
+  // aiAssistant?: {
+  //   applySuggestion?(id: string): Promise<void>
+  // }
 
   // 组件操作
   selectComponent?(id: string): void
@@ -502,15 +489,16 @@ interface CanvasComponent {
 
 // 移除未使用的接口定义
 
-interface CollaborationUser {
-  id: string
-  name: string
-  color: string
-}
+// 🚨 协作和AI相关接口已移除 - 遵循低代码引擎开发铁律
+// interface CollaborationUser {
+//   id: string
+//   name: string
+//   color: string
+// }
 
-interface AIDesignSuggestion {
-  id: string
-}
+// interface AIDesignSuggestion {
+//   id: string
+// }
 
 interface PerformanceMetrics {
   renderTime: number
@@ -523,7 +511,8 @@ interface PerformanceMetrics {
 // 导入组件
 import ComponentPalette from "./designer/Palette.vue"
 import LayerManager from "./designer/LayerManager.vue"
-import AIAssistantPanel from "./designer/AIAssistantPanel.vue"
+// 🚨 AI助手组件导入已移除 - 遵循低代码引擎开发铁律
+// import AIAssistantPanel from "./designer/AIAssistantPanel.vue"
 import PropertyInspector from "./designer/PropertyInspector.vue"
 import StyleEditor from "./designer/StyleEditor.vue"
 import VersionHistory from "./designer/VersionHistory.vue"
@@ -573,12 +562,8 @@ const showExportDialog = ref(false)
 const showImportDialog = ref(false)
 const showPreviewModal = ref(false)
 
-// 协作状态
-const collaborationEnabled = ref(false)
-const collaborationUsers = ref<CollaborationUser[]>([])
-
-// AI状态
-const aiEnabled = ref(false)
+// 🚨 协作和AI功能已移除 - 遵循低代码引擎开发铁律
+// 现阶段专注企业级通用低代码引擎基础功能
 
 // 性能指标
 const performanceMetrics = ref<PerformanceMetrics>({
@@ -633,7 +618,7 @@ const modes = [
 const leftTabs = [
   { key: "components", label: "组件", icon: "icon-components" },
   { key: "layers", label: "图层", icon: "icon-layers" },
-  { key: "ai", label: "AI助手", icon: "icon-ai" },
+  // 🚨 AI助手标签已移除 - 遵循低代码引擎开发铁律
 ]
 
 // 右侧标签页
@@ -669,14 +654,15 @@ const viewport = computed(() => {
   return { x: 0, y: 0, scale: 1, width: 0, height: 0 }
 })
 
-const designContext = computed(() => {
-  return {
-    components: [],
-    selectedComponents: [],
-    canvasSize: { width: 1920, height: 1080 },
-    viewport: { x: 0, y: 0, zoom: 1 },
-  }
-})
+// 🚨 设计上下文已简化 - 遵循低代码引擎开发铁律
+// const designContext = computed(() => {
+//   return {
+//     components: [],
+//     selectedComponents: [],
+//     canvasSize: { width: 1920, height: 1080 },
+//     viewport: { x: 0, y: 0, zoom: 1 },
+//   }
+// })
 
 const canUndo = computed(() => false)
 
@@ -880,17 +866,8 @@ const toggleComponentLock = (componentId: string) => {
   }
 }
 
-// AI助手
-const applySuggestion = async (suggestion: AIDesignSuggestion) => {
-  try {
-    if (designer.value?.aiAssistant?.applySuggestion) {
-      await designer.value.aiAssistant.applySuggestion(suggestion.id)
-    }
-    statusMessage.value = "已应用AI建议"
-  } catch (error) {
-    ElMessage.error("应用AI建议失败")
-  }
-}
+// 🚨 AI助手功能已移除 - 遵循低代码引擎开发铁律
+// 现阶段严禁AI智能辅助功能，专注基础功能完善
 
 // 版本控制
 const restoreVersion = async (snapshotId: string) => {
@@ -1197,5 +1174,29 @@ const onReadSFC = () => {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
+}
+
+/* 🚀 企业级引擎标识样式 - 专注基础功能 */
+.engine-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 8px 16px;
+}
+
+.engine-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--el-color-primary, #409eff);
+  margin-bottom: 2px;
+  letter-spacing: 0.5px;
+}
+
+.engine-version {
+  font-size: 12px;
+  color: var(--el-text-color-secondary, #909399);
+  font-weight: 500;
+  opacity: 0.8;
 }
 </style>
