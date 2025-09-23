@@ -5,13 +5,14 @@ alwaysApply: true
 priority: 500
 ---
 
-# 🔥 SmartAbp 企业级模板库强制使用规则（基于完整模板生态）
+# 🔥 SmartAbp 企业级模板库强制使用规则（基于17个TDD验证模板）
 
-## 🏆 重大发现：完整的企业级模板库
-经过深度分析，SmartAbp项目拥有完整的模板库生态：
+## 🏆 重大发现：完整的企业级模板库（17个模板+48个TDD测试验证）
+经过48个TDD测试全面验证，SmartAbp项目拥有完整的模板库生态：
 - **后端模板**: 29个专业代码生成器对应的完整模板系统
 - **前端模板**: Vue3 + TypeScript + Element Plus完整组件模板
 - **低代码模板**: 可视化设计器和元数据驱动的专业模板
+- **TDD验证模板**: 6个增强组件模板+测试模板（48个测试100%通过）
 
 ## 🔥 模板强制使用原则（零例外）
 
@@ -49,12 +50,30 @@ priority: 500
 | "元数据渲染"、"动态渲染" | 元数据驱动渲染 | `MetadataDrivenPageRenderer.vue` |
 | "状态管理"、"Store"、"Pinia" | Pinia Store模板 | `@smartabp/lowcode-core/composables/` |
 
-### 🔧 低代码引擎模板（专业级）
-| 功能需求 | 强制使用组件 | 企业级特性 |
-|---|---|---|
-| 代码生成控制台 | LowCodeEngineView.vue | 前后端集成生成 |
-| 模块向导 | ModuleWizardView.vue | 智能模块创建 |
-| 组合式API | useCodeGenerationProgress.ts | Vue3现代化API |
+### 🔧 低代码引擎模板（专业级+TDD验证）
+| 功能需求 | 强制使用组件 | 企业级特性 | TDD状态 |
+|---|---|---|---|
+| 代码生成控制台 | LowCodeEngineView.vue | 前后端集成生成 | ✅ 验证通过 |
+| 模块向导 | ModuleWizardView.vue | 智能模块创建 | ✅ 验证通过 |
+| 组合式API | useCodeGenerationProgress.ts | Vue3现代化API | ✅ 验证通过 |
+
+### 🎯 增强组件模板（TDD Phase 2&3）
+| 用户输入关键词 | 强制使用模板 | 模板路径 | TDD状态 |
+|---|---|---|---|
+| "增强主题"、"主题编辑器"、"主题定制" | EnhancedThemeEditor | `templates/enhanced-components/enhanced-theme-editor.template.vue` | ✅ 19/19通过 |
+| "状态机"、"工作流"、"业务规则" | EnhancedStateMachine | `templates/enhanced-components/enhanced-state-machine.template.vue` | ✅ 20/20通过 |
+| "企业工作台"、"LowCode Studio" | LowCodeStudioView | `templates/enhanced-components/lowcode-studio-workbench.template.vue` | ✅ 9/9通过 |
+
+### 🏪 增强Store模板（Pinia增强状态管理）
+| 用户输入关键词 | 强制使用模板 | 模板路径 | TDD状态 |
+|---|---|---|---|
+| "增强主题Store"、"主题状态管理" | EnhancedThemeStore | `templates/enhanced-stores/enhanced-theme.store.template.ts` | ✅ TDD验证 |
+| "状态机Store"、"工作流状态" | EnhancedStateMachineStore | `templates/enhanced-stores/enhanced-state-machine.store.template.ts` | ✅ TDD验证 |
+
+### 🧪 TDD测试模板（企业级测试标准）
+| 用户输入关键词 | 强制使用模板 | 模板路径 | 用途 |
+|---|---|---|---|
+| "TDD测试"、"单元测试"、"组件测试" | TDDTestTemplate | `templates/testing/tdd-test.template.spec.ts` | 标准化测试结构 |
 
 ## 模板参数规范
 

@@ -5,11 +5,20 @@ alwaysApply: true
 priority: 700
 ---
 
-# 🎨 SmartAbp 样式系统规则
+# 🎨 SmartAbp 样式系统规则（基于增强主题系统TDD验证）
+
+## 🏆 增强主题系统实现（19/19 TDD测试验证通过）
+基于EnhancedThemeEditor.vue和useEnhancedThemeStore，实现完整的企业级主题定制系统：
+- ✅ **三层设计令牌架构**: 基础令牌 → 语义变量 → 组件使用
+- ✅ **WCAG AA标准**: 4.5:1对比度自动检查和警告
+- ✅ **实时预览**: 防抖更新+性能优化
+- ✅ **快照管理**: 主题版本控制和回退
+- ✅ **导出导入**: JSON格式主题配置
+- ✅ **本地持久化**: localStorage自动保存
 
 ## 设计系统强制使用
 
-### CSS变量层级规范
+### CSS变量层级规范（三层令牌架构）
 ```css
 /* 第一层：基础设计令牌 */
 :root {
@@ -72,3 +81,35 @@ src/SmartAbp.Vue/src/styles/
 ### 禁止行为
 - ❌ 混乱的命名（驼峰、通用类名）
 - ❌ 硬编码间距和颜色值
+- ❌ 绕过增强主题系统直接定义样式
+- ❌ 违反WCAG AA对比度标准（<4.5:1）
+
+## 🎯 增强主题系统使用规范
+
+### 主题预设应用
+```typescript
+// ✅ 推荐：使用增强主题Store
+import { useEnhancedThemeStore } from '@/stores/lowcode/enhancedTheme'
+
+const themeStore = useEnhancedThemeStore()
+themeStore.switchTheme('theme-tech-blue')
+```
+
+### 动态主题变量更新
+```typescript
+// ✅ 推荐：防抖更新机制
+themeStore.debouncedUpdate('--theme-brand-primary', '#ff6b6b')
+
+// ❌ 禁止：直接DOM操作
+document.documentElement.style.setProperty('--theme-brand-primary', '#ff6b6b')
+```
+
+### WCAG对比度验证
+```typescript
+// ✅ 推荐：自动对比度检查
+const isCompliant = themeStore.validateContrastRatios()
+if (!isCompliant) {
+  // 显示对比度警告
+  console.warn('当前主题不符合WCAG AA标准')
+}
+```
