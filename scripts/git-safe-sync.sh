@@ -142,8 +142,10 @@ if [ -n "$(git status --porcelain)" ]; then
 
     if [ "$SHOULD_COMMIT" = true ]; then
         log_info "正在自动提交本地更改..."
-        git add .
-        git commit -m "自动提交: $(date) - Git安全同步前的本地更改"
+        if [ "$DRY_RUN" = false ]; then
+            git add .
+            git commit -m "自动提交: $(date) - Git安全同步前的本地更改"
+        fi
         log_success "本地更改已自动提交"
     else
         log_warning "本地有未提交更改，请先手动处理"
