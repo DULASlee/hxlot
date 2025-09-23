@@ -4,6 +4,43 @@
 
 set -e  # 遇到错误立即退出
 
+# 参数处理
+AUTO_COMMIT=false
+NON_INTERACTIVE=false
+DRY_RUN=false
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --auto-commit|-a)
+            AUTO_COMMIT=true
+            shift
+            ;;
+        --non-interactive|-n)
+            NON_INTERACTIVE=true
+            AUTO_COMMIT=true  # 非交互模式自动启用自动提交
+            shift
+            ;;
+        --dry-run|-d)
+            DRY_RUN=true
+            shift
+            ;;
+        --help|-h)
+            echo "用法: $0 [选项]"
+            echo "选项:"
+            echo "  -a, --auto-commit     自动提交本地更改"
+            echo "  -n, --non-interactive 非交互模式(自动处理所有确认)"
+            echo "  -d, --dry-run         预演模式(不执行实际操作)"
+            echo "  -h, --help            显示此帮助信息"
+            exit 0
+            ;;
+        *)
+            echo "未知参数: $1"
+            echo "使用 $0 --help 查看帮助"
+            exit 1
+            ;;
+    esac
+done
+
 # 颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -58,6 +95,7 @@ echo "========================================"
 echo
 echo "功能: 备份 → 拉取 → 合并 → 推送"
 echo "时间: $(date)"
+echo "模式: $(if [ "$NON_INTERACTIVE" = true ]; then echo "非交互模式"; elif [ "$DRY_RUN" = true ]; then echo "预演模式"; else echo "交互模式"; fi)"
 echo
 
 # 切换到项目根目录
@@ -93,9 +131,16 @@ if [ -n "$(git status --porcelain)" ]; then
     git status --porcelain | while read line; do
         echo "     发现未提交的更改: $line"
     done
-    
-    read -p "是否自动提交本地更改? (y/N): " AUTO_COMMIT
-    if [ "$AUTO_COMMIT" = "y" ] || [ "$AUTO_COMMIT" = "Y" ]; then
+
+    if [ "$NON_INTERACTIVE" = true ]; then
+        log_info "非交互模式：自动提交本地更改..."
+        SHOULD_COMMIT=true
+    else
+        read -p "是否自动提交本地更改? (y/N): " USER_INPUT
+        SHOULD_COMMIT=$([ "$USER_INPUT" = "y" ] || [ "$USER_INPUT" = "Y" ])
+    fi
+
+    if [ "$SHOULD_COMMIT" = true ]; then
         log_info "正在自动提交本地更改..."
         git add .
         git commit -m "自动提交: $(date) - Git安全同步前的本地更改"
@@ -130,11 +175,15 @@ echo "$CURRENT_BRANCH" > "${BACKUP_PATH}_branch.txt"
 echo "$CURRENT_HEAD" > "${BACKUP_PATH}_head.txt"
 
 # 创建备份标签
-if git tag "$BACKUP_TAG" HEAD; then
-    log_success "本地备份已创建: $BACKUP_TAG"
-    log_info "📁 备份位置: $BACKUP_PATH"
+if [ "$DRY_RUN" = true ]; then
+    log_info "[DRY RUN] 将创建备份标签: $BACKUP_TAG"
 else
-    log_warning "备份标签创建失败，但继续执行..."
+    if git tag "$BACKUP_TAG" HEAD; then
+        log_success "本地备份已创建: $BACKUP_TAG"
+        log_info "📁 备份位置: $BACKUP_PATH"
+    else
+        log_warning "备份标签创建失败，但继续执行..."
+    fi
 fi
 echo
 
@@ -142,7 +191,9 @@ echo
 log_step "4/6" "拉取远程仓库更新..."
 
 log_info "正在获取远程更新信息..."
-git fetch origin
+if [ "$DRY_RUN" = false ]; then
+    git fetch origin
+fi
 
 # 检查是否有远程更新
 REMOTE_COMMITS=$(git rev-list HEAD..origin/$CURRENT_BRANCH --count)
@@ -153,7 +204,7 @@ if [ "$REMOTE_COMMITS" = "0" ]; then
 else
     log_info "📥 发现 $REMOTE_COMMITS 个远程提交需要合并"
     HAS_REMOTE_UPDATES=1
-    
+
     echo "     远程更新概要:"
     git log --oneline HEAD..origin/$CURRENT_BRANCH --max-count=5 | sed 's/^/       /'
 fi
@@ -163,8 +214,11 @@ echo
 if [ "$HAS_REMOTE_UPDATES" = "1" ]; then
     log_step "5/6" "合并远程更新到本地..."
     log_info "使用策略: merge (保留完整历史)"
-    
-    if git merge origin/$CURRENT_BRANCH --no-edit; then
+
+    if [ "$DRY_RUN" = true ]; then
+        log_info "[DRY RUN] 将合并远程更新"
+        log_success "[DRY RUN] 模拟合并成功 ✅"
+    elif git merge origin/$CURRENT_BRANCH --no-edit; then
         log_success "远程更新合并成功 ✅"
     else
         log_error "合并失败! 可能存在冲突"
@@ -197,8 +251,11 @@ if [ "$LOCAL_COMMITS" = "0" ]; then
     log_info "📊 本地与远程已同步"
 else
     log_info "📤 推送 $LOCAL_COMMITS 个本地提交到远程仓库..."
-    
-    if git push origin $CURRENT_BRANCH; then
+
+    if [ "$DRY_RUN" = true ]; then
+        log_info "[DRY RUN] 将推送 $LOCAL_COMMITS 个本地提交"
+        log_success "[DRY RUN] 模拟推送成功 ✅"
+    elif git push origin $CURRENT_BRANCH; then
         log_success "推送成功 ✅"
     else
         log_error "推送失败!"

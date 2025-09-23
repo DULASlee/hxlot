@@ -3,12 +3,54 @@ setlocal enabledelayedexpansion
 title SmartAbp Git Safe Sync - 企业级版本管理工具
 color 0F
 
+REM --- 参数处理 ---
+set "AUTO_COMMIT=0"
+set "NON_INTERACTIVE=0"
+set "DRY_RUN=0"
+
+:parse_args
+if "%~1"=="" goto :args_done
+if /i "%~1"=="-a" set "AUTO_COMMIT=1"
+if /i "%~1"=="--auto-commit" set "AUTO_COMMIT=1"
+if /i "%~1"=="-n" (
+    set "NON_INTERACTIVE=1"
+    set "AUTO_COMMIT=1"
+)
+if /i "%~1"=="--non-interactive" (
+    set "NON_INTERACTIVE=1"
+    set "AUTO_COMMIT=1"
+)
+if /i "%~1"=="-d" set "DRY_RUN=1"
+if /i "%~1"=="--dry-run" set "DRY_RUN=1"
+if /i "%~1"=="-h" goto :show_help
+if /i "%~1"=="--help" goto :show_help
+shift
+goto :parse_args
+
+:show_help
+echo 用法: %~nx0 [选项]
+echo 选项:
+echo   -a, --auto-commit     自动提交本地更改
+echo   -n, --non-interactive 非交互模式(自动处理所有确认)
+echo   -d, --dry-run         预演模式(不执行实际操作)
+echo   -h, --help            显示此帮助信息
+goto :eof
+
+:args_done
+
 echo ========================================
 echo    SmartAbp 企业级Git安全同步工具
 echo ========================================
 echo.
 echo 功能: 备份 → 拉取 → 合并 → 推送
 echo 时间: %date% %time%
+if "%NON_INTERACTIVE%"=="1" (
+    echo 模式: 非交互模式
+) else if "%DRY_RUN%"=="1" (
+    echo 模式: 预演模式
+) else (
+    echo 模式: 交互模式
+)
 echo.
 
 REM --- 确保在项目根目录运行 ---
@@ -47,8 +89,18 @@ for /f "tokens=*" %%a in ('git status --porcelain') do (
 
 if defined HAS_CHANGES (
     echo      ⚠️  检测到本地未提交的更改
-    set /p "AUTO_COMMIT=是否自动提交本地更改? (y/N): "
-    if /i "!AUTO_COMMIT!"=="y" (
+    if "%NON_INTERACTIVE%"=="1" (
+        echo      非交互模式：自动提交本地更改...
+        set "SHOULD_COMMIT=1"
+    ) else (
+        set /p "USER_INPUT=是否自动提交本地更改? (y/N): "
+        if /i "!USER_INPUT!"=="y" (
+            set "SHOULD_COMMIT=1"
+        ) else (
+            set "SHOULD_COMMIT=0"
+        )
+    )
+    if "!SHOULD_COMMIT!"=="1" (
         echo      正在自动提交本地更改...
         git add .
         git commit -m "自动提交: %date% %time% - Git安全同步前的本地更改"
