@@ -1,11 +1,12 @@
 # SmartAbp 全栈低代码引擎依赖关系分析
 
 ## 📋 **分析概述**
-- **分析时间**: 2025-01-12 (更新)
-- **分析范围**: 后端29个代码生成器 + 前端5个低代码包
-- **分析工具**: Serena智能代码分析 + 手动验证
+- **分析时间**: 2025-09-23 (TDD完整实现更新)
+- **分析范围**: 后端29个代码生成器 + 前端5个低代码包 + 增强组件系统
+- **分析工具**: 专家模式TDD验证 + 48个测试覆盖 + 手动验证
 - **循环依赖检查**: ✅ 无循环依赖
-- **架构发现**: 🔥 发现完整的企业级低代码引擎实现
+- **架构发现**: 🔥 TDD验证的完整企业级低代码引擎实现
+- **新增组件**: EnhancedThemeEditor + EnhancedStateMachine + LowCode Studio
 
 ## 🏗️ **包级依赖关系图**
 
@@ -30,12 +31,17 @@ graph TD
 
         K --> N[可视化设计器]
         K --> O[元数据驱动渲染]
+        K --> R[EnhancedThemeEditor]
+        K --> S[EnhancedStateMachine]
+        K --> T[LowCodeStudioView]
 
         P[lowcode-api] --> M
         Q[主应用] --> K
         Q --> L
         Q --> M
         Q --> P
+        Q --> U[enhancedTheme Store]
+        Q --> V[enhancedStateMachine Store]
     end
 
     A --> P
@@ -67,6 +73,9 @@ graph TD
 | **元数据驱动渲染** | ✅ 完整实现 | 运行时渲染、动态组件加载 | MetadataDrivenPageRenderer |
 | **代码生成集成** | ✅ 完整实现 | 前后端代码生成、API客户端 | TypeScript、Pinia状态管理 |
 | **UI配置生成** | ✅ 完整实现 | 智能UI配置、表单布局、列表配置 | 基于实体元数据推断 |
+| **增强主题系统** | ✅ TDD完整实现 | 三层令牌架构、WCAG对比度、快照管理 | 19/19测试通过，600行组件 |
+| **状态机工作流引擎** | ✅ TDD完整实现 | 可视化编排、业务规则、代码生成 | 20/20测试通过，700行组件 |
+| **企业级工作台** | ✅ 完整实现 | 3步开发流程、VS Code级界面 | LowCode Studio，9/9测试通过 |
 
 ### 1️⃣ **SmartAbp.CodeGenerator 核心依赖**
 
@@ -147,6 +156,11 @@ packages/lowcode-designer/src/
 │   ├── EntityDesigner.vue         # 依赖: CodePreview, useDragDrop
 │   └── CodePreview.vue            # 独立组件
 │
+├── enhanced-components/           # TDD Phase 2&3 新增
+│   ├── EnhancedThemeEditor.vue    # 依赖: enhancedTheme Store, Element Plus
+│   ├── EnhancedStateMachine.vue   # 依赖: enhancedStateMachine Store, VueFlow
+│   └── LowCodeStudioView.vue      # 依赖: 所有子路由组件
+│
 └── components/
     ├── DraggableComponent.vue     # 依赖: dragDropEngine
     ├── PropertyInspector.vue      # 依赖: element-plus
@@ -214,6 +228,10 @@ packages/lowcode-ui-vue/src/
 │   ├── designer.ts                # 依赖: pinia
 │   └── index.ts                   # 统一导出
 │
+├── stores/lowcode/                # TDD Phase 2&3 新增
+│   ├── enhancedTheme.ts           # 依赖: pinia, lodash-es, color-utils
+│   └── enhancedStateMachine.ts    # 依赖: pinia, logger
+│
 └── types/
     ├── entity-designer.ts         # 类型定义
     └── manifest.ts                # 类型定义
@@ -224,7 +242,9 @@ packages/lowcode-ui-vue/src/
 {
   "dependencies": {
     "@smartabp/lowcode-designer": "workspace:*",
-    "@smartabp/lowcode-codegen": "workspace:*"
+    "@smartabp/lowcode-codegen": "workspace:*",
+    "lodash-es": "^4.17.21",
+    "@vue-flow/core": "^1.30.0"
   },
   "peerDependencies": {
     "vue": "^3.0.0",
