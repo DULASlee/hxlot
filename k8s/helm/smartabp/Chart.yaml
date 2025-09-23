@@ -1,0 +1,47 @@
+apiVersion: v2
+name: smartabp-lowcode-engine
+description: SmartAbp Enterprise LowCode Engine - Kubernetes Helm Chart
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+keywords:
+  - lowcode
+  - enterprise
+  - smartabp
+  - vue3
+  - typescript
+  - abp
+
+home: https://github.com/DULASlee/hxlot
+sources:
+  - https://github.com/DULASlee/hxlot
+
+maintainers:
+  - name: SmartAbp Team
+    email: smartabp@example.com
+
+annotations:
+  category: Development
+  licenses: MIT
+  images: |
+    - name: smartabp-frontend
+      image: smartabp/lowcode-frontend:1.0.0
+    - name: smartabp-backend
+      image: smartabp/lowcode-backend:1.0.0
+    - name: postgresql
+      image: postgres:15
+    - name: redis
+      image: redis:7-alpine
+    - name: nginx
+      image: nginx:1.25-alpine
+
+dependencies:
+  - name: postgresql
+    version: "12.x.x"
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  - name: redis
+    version: "17.x.x"
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled

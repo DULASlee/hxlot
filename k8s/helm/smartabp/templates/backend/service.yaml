@@ -1,0 +1,49 @@
+{{- if .Values.backend.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "smartabp.fullname" . }}-backend
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "smartabp.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+  {{- with .Values.backend.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.backend.service.type }}
+  {{- if and (eq .Values.backend.service.type "LoadBalancer") .Values.backend.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.backend.service.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.backend.service.type "LoadBalancer") .Values.backend.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- range .Values.backend.service.loadBalancerSourceRanges }}
+    - {{ . }}
+    {{- end }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.backend.service.port }}
+      targetPort: {{ .Values.backend.service.targetPort }}
+      protocol: TCP
+      name: http
+      {{- if and (or (eq .Values.backend.service.type "NodePort") (eq .Values.backend.service.type "LoadBalancer")) .Values.backend.service.nodePort }}
+      nodePort: {{ .Values.backend.service.nodePort }}
+      {{- end }}
+    - port: 9090
+      targetPort: 9090
+      protocol: TCP
+      name: metrics
+  selector:
+    {{- include "smartabp.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+  {{- if eq .Values.backend.service.type "ClusterIP" }}
+  clusterIP: {{ .Values.backend.service.clusterIP | default "None" }}
+  {{- end }}
+  sessionAffinity: {{ .Values.backend.service.sessionAffinity | default "ClientIP" }}
+  {{- if eq .Values.backend.service.sessionAffinity "ClientIP" }}
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800  # 3 hours for backend session stickiness
+  {{- end }}
+{{- end }}

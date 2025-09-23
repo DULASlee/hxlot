@@ -1,0 +1,472 @@
+# SmartAbp LowCode Engine - Kubernetes Deployment Configuration
+# Enterprise-grade configuration for production deployment
+
+# Global settings
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: ""
+
+# SmartAbp Frontend (Vue3 + TypeScript)
+frontend:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: smartabp/lowcode-frontend
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+
+  replicaCount: 3
+
+  # Pod resource configuration
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+
+  # Horizontal Pod Autoscaler
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+
+  # Node selection
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  # Pod security context
+  podSecurityContext:
+    fsGroup: 1001
+
+  # Container security context  
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: false
+    allowPrivilegeEscalation: false
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 5173
+    annotations: {}
+
+  # Ingress configuration
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    hosts:
+      - host: lowcode.smartabp.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: smartabp-lowcode-tls
+        hosts:
+          - lowcode.smartabp.com
+
+  # Environment variables
+  env:
+    NODE_ENV: "production"
+    VITE_API_BASE_URL: "https://api.lowcode.smartabp.com"
+    VITE_BUILD_TARGET: "production"
+
+  # Liveness and readiness probes
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 5173
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: 5173
+    initialDelaySeconds: 15
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+# SmartAbp Backend (ABP vNext + .NET)
+backend:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: smartabp/lowcode-backend
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+
+  replicaCount: 2
+
+  # Pod resource configuration
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+
+  # Horizontal Pod Autoscaler
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 8
+    targetCPUUtilizationPercentage: 75
+    targetMemoryUtilizationPercentage: 85
+
+  # Node selection
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  # Pod security context
+  podSecurityContext:
+    fsGroup: 1001
+
+  # Container security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: false
+    allowPrivilegeEscalation: false
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8080
+    annotations: {}
+
+  # Ingress configuration
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    hosts:
+      - host: api.lowcode.smartabp.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: smartabp-api-tls
+        hosts:
+          - api.lowcode.smartabp.com
+
+  # Environment variables
+  env:
+    ASPNETCORE_ENVIRONMENT: "Production"
+    ASPNETCORE_URLS: "http://+:8080"
+    ConnectionStrings__Default: "Server=smartabp-postgresql;Port=5432;Database=SmartAbpLowCode;User Id=smartabp;Password=SmartAbp2024!"
+    ConnectionStrings__Redis: "smartabp-redis:6379"
+    App__CorsOrigins: "https://lowcode.smartabp.com"
+
+  # Liveness and readiness probes
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8080
+    initialDelaySeconds: 60
+    periodSeconds: 15
+    timeoutSeconds: 10
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /health/ready
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+# PostgreSQL Database Configuration
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: "PostgresAdmin2024!"
+    username: "smartabp"
+    password: "SmartAbp2024!"
+    database: "SmartAbpLowCode"
+  
+  architecture: standalone
+  
+  primary:
+    persistence:
+      enabled: true
+      size: 20Gi
+      storageClass: ""
+    
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+      requests:
+        cpu: 500m
+        memory: 1Gi
+
+    # PostgreSQL configuration
+    configuration: |
+      max_connections = 200
+      shared_buffers = 512MB
+      effective_cache_size = 1GB
+      work_mem = 4MB
+      maintenance_work_mem = 64MB
+      checkpoint_completion_target = 0.9
+      wal_buffers = 16MB
+      default_statistics_target = 100
+
+  # Backup configuration
+  backup:
+    enabled: true
+    schedule: "0 2 * * *"  # Daily at 2 AM
+    retention: "7d"
+
+# Redis Cache Configuration
+redis:
+  enabled: true
+  architecture: standalone
+  
+  auth:
+    enabled: false
+  
+  master:
+    persistence:
+      enabled: true
+      size: 8Gi
+      storageClass: ""
+    
+    resources:
+      limits:
+        cpu: 500m
+        memory: 1Gi
+      requests:
+        cpu: 250m
+        memory: 512Mi
+
+    # Redis configuration
+    configuration: |
+      maxmemory 768mb
+      maxmemory-policy allkeys-lru
+      timeout 0
+      tcp-keepalive 60
+      save 900 1
+      save 300 10
+      save 60 10000
+
+# Nginx Load Balancer
+nginx:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: nginx
+    tag: "1.25-alpine"
+    pullPolicy: IfNotPresent
+
+  replicaCount: 2
+
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  service:
+    type: LoadBalancer
+    port: 80
+    targetPort: 80
+
+  # Nginx configuration
+  config: |
+    upstream frontend {
+        server smartabp-frontend:80;
+    }
+    
+    upstream backend {
+        server smartabp-backend:80;
+    }
+    
+    server {
+        listen 80;
+        server_name _;
+        
+        # Frontend routes
+        location / {
+            proxy_pass http://frontend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        # API routes
+        location /api/ {
+            proxy_pass http://backend;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            
+            # File upload size limit
+            client_max_body_size 100M;
+        }
+        
+        # Health check
+        location /nginx-health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
+        }
+    }
+
+# Monitoring and Observability
+monitoring:
+  enabled: true
+  
+  # Prometheus monitoring
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      namespace: monitoring
+      interval: 30s
+      path: /metrics
+  
+  # Grafana dashboards
+  grafana:
+    enabled: true
+    dashboards:
+      enabled: true
+      
+  # Application performance monitoring
+  apm:
+    enabled: false
+    provider: ""  # elastic, newrelic, datadog
+
+# Logging configuration
+logging:
+  enabled: true
+  
+  # Log level
+  level: "Information"
+  
+  # Structured logging
+  structured: true
+  
+  # Log aggregation
+  aggregation:
+    enabled: true
+    endpoint: ""  # elasticsearch, fluentd
+    
+# Security configurations
+security:
+  # Pod Security Standards
+  podSecurityStandards:
+    enforce: "restricted"
+    audit: "restricted"
+    warn: "restricted"
+  
+  # Network policies
+  networkPolicies:
+    enabled: true
+    
+  # RBAC
+  rbac:
+    create: true
+    
+  # Service accounts
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+
+# Backup and disaster recovery
+backup:
+  enabled: true
+  
+  # Database backup
+  database:
+    enabled: true
+    schedule: "0 2 * * *"  # Daily at 2 AM
+    retention: "30d"
+    storage:
+      type: "s3"  # s3, gcs, azure
+      bucket: "smartabp-backups"
+  
+  # Application backup
+  application:
+    enabled: true
+    schedule: "0 3 * * 0"  # Weekly on Sunday at 3 AM
+    retention: "4w"
+
+# Development and testing
+development:
+  enabled: false
+  
+  # Debug mode
+  debug:
+    enabled: false
+    
+  # Test database
+  testDatabase:
+    enabled: false
+
+# Performance tuning
+performance:
+  # JVM tuning for backend (if using Java components)
+  jvm:
+    heapSize: "1G"
+    gcAlgorithm: "G1GC"
+    
+  # Node.js tuning for frontend
+  nodejs:
+    maxOldSpaceSize: "512"
+    maxSemiSpaceSize: "128"
+
+# Notifications and alerting
+alerting:
+  enabled: true
+  
+  # Slack notifications
+  slack:
+    enabled: false
+    webhook: ""
+    channel: "#smartabp-alerts"
+  
+  # Email notifications
+  email:
+    enabled: false
+    smtp:
+      server: ""
+      port: 587
+      username: ""
+      password: ""
