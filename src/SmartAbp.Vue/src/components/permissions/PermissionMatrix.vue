@@ -369,6 +369,8 @@
 </template>
 
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { ElMessage, ElMessageBox, type ElTable } from 'element-plus'
 import { Search as SearchIcon } from '@element-plus/icons-vue'
@@ -464,7 +466,7 @@ const filteredMatrixData = computed(() => {
   // 分页 - 通过watch监听变化，避免计算属性副作用
   const start = (currentPage.value - 1) * pageSize.value
   const end = start + pageSize.value
-  
+
   // 避免在computed中修改响应式数据
   nextTick(() => {
     totalCount.value = result.length

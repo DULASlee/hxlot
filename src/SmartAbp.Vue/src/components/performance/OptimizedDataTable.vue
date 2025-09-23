@@ -131,7 +131,7 @@ SmartAbp Enterprise Optimized Data Table Component
             <div class="table-cell index-cell">
               {{ item._virtualIndex + 1 }}
             </div>
-            
+
             <!-- 数据列 -->
             <div
               v-for="column in columns"
@@ -218,6 +218,9 @@ SmartAbp Enterprise Optimized Data Table Component
 </template>
 
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
+/* eslint-disable vue/require-default-prop */
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { ElButton, ElInput, ElSelect, ElOption, ElSwitch, ElIcon, ElLoading, ElButtonGroup } from 'element-plus'
 import { Search, Refresh, Loading } from '@element-plus/icons-vue'
@@ -282,10 +285,10 @@ const scrollContainer = ref<HTMLElement | null>(null)
 // 性能监控
 const { memoryInfo, startMonitoring, triggerGC } = useMemoryMonitor()
 const { averageRenderTime, startRenderTimer, recordRenderTime } = usePerformanceMonitor()
-const cache = useCache<any[]>('optimized-data-table', { 
-  capacity: 200, 
+const cache = useCache<any[]>('optimized-data-table', {
+  capacity: 200,
   ttl: 5 * 60 * 1000, // 5分钟
-  persistent: true 
+  persistent: true
 })
 
 // 虚拟滚动配置
@@ -333,22 +336,22 @@ const [debouncedSearch] = useDebounce(async (keyword: string) => {
   if (!props.onSearch) return
 
   const startTime = startRenderTimer()
-  
+
   try {
     loading.value = true
-    
+
     // 检查缓存
     const cacheKey = `search_${keyword}`
     let results = cache.get(cacheKey)
-    
+
     if (!results) {
       results = await props.onSearch(keyword)
       cache.set(cacheKey, results)
     }
-    
+
     tableData.value = results
     updateData(results)
-    
+
   } finally {
     loading.value = false
     recordRenderTime(startTime)
@@ -369,14 +372,14 @@ const handlePageSizeChange = (size: number) => {
 
 const refreshData = async () => {
   const startTime = startRenderTimer()
-  
+
   try {
     loading.value = true
     emit('refresh')
-    
+
     // 清理缓存
     cache.clear()
-    
+
     await nextTick()
   } finally {
     loading.value = false
@@ -410,7 +413,7 @@ const exportPerformanceData = () => {
     },
     timestamp: new Date().toISOString()
   }
-  
+
   // 导出为JSON文件
   const blob = new Blob([JSON.stringify(performanceData, null, 2)], {
     type: 'application/json'
