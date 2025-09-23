@@ -60,7 +60,7 @@
               <el-color-picker
                 v-model="primaryColor"
                 data-testid="primary-color-picker"
-                @change="onColorChange('--theme-brand-primary', $event)"
+                @change="onColorChange('--theme-brand-primary', $event || '')"
               />
             </div>
             <div class="color-item">
@@ -68,7 +68,7 @@
               <el-color-picker
                 v-model="successColor"
                 data-testid="success-color-picker"
-                @change="onColorChange('--theme-brand-success', $event)"
+                @change="onColorChange('--theme-brand-success', $event || '')"
               />
             </div>
             <div class="color-item">
@@ -76,7 +76,7 @@
               <el-color-picker
                 v-model="warningColor"
                 data-testid="warning-color-picker"
-                @change="onColorChange('--theme-brand-warning', $event)"
+                @change="onColorChange('--theme-brand-warning', $event || '')"
               />
             </div>
             <div class="color-item">
@@ -84,7 +84,7 @@
               <el-color-picker
                 v-model="dangerColor"
                 data-testid="danger-color-picker"
-                @change="onColorChange('--theme-brand-danger', $event)"
+                @change="onColorChange('--theme-brand-danger', $event || '')"
               />
             </div>
           </div>
@@ -113,7 +113,7 @@
                 :min="0"
                 :max="64"
                 :step="4"
-                @change="onSpacingChange(level, $event)"
+                @change="onSpacingChange(level, Array.isArray($event) ? $event[0] : $event)"
               />
               <span class="value-display">{{ getSpacingDisplay(level) }}</span>
             </div>
@@ -139,7 +139,7 @@
                 :min="12"
                 :max="20"
                 :step="1"
-                @change="onFontSizeChange($event)"
+                @change="onFontSizeChange(Array.isArray($event) ? $event[0] : $event)"
               />
               <span class="value-display">{{ baseFontSize }}px</span>
             </div>
@@ -199,7 +199,7 @@
                 :min="0"
                 :max="20"
                 :step="1"
-                @change="onRadiusChange(level, $event)"
+                @change="onRadiusChange(level, Array.isArray($event) ? $event[0] : $event)"
               />
               <span class="value-display">{{ getRadiusDisplay(level) }}</span>
             </div>
@@ -238,7 +238,7 @@
                     :model-value="getShadowOpacity(level)"
                     :min="0"
                     :max="100"
-                    @change="onShadowOpacityChange(level, $event)"
+                    @change="onShadowOpacityChange(level, Array.isArray($event) ? $event[0] : $event)"
                   />
                 </div>
               </div>

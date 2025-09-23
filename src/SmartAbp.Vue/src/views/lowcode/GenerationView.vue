@@ -18,7 +18,7 @@
           <template #header>
             <span>1. Select Template</span>
           </template>
-          <TemplateSelector @select="onTemplateSelect" />
+          <TemplateSelector @select="(template: any) => onTemplateSelect(template)" />
         </el-card>
 
         <el-card
@@ -143,6 +143,7 @@ import TemplateSelector from "@/components/lowcode/TemplateSelector.vue"
 import SandboxPreview from "@/components/lowcode/SandboxPreview.vue"
 import { useWorkspaceStore } from "@/stores/lowcode/workspace"
 import { codeGeneratorApi } from "@smartabp/lowcode-api"
+// import { codeGeneratorApi } from "@smartabp/lowcode-api"
 // import type { Template } from "@smartabp/lowcode-api/types"
 
 interface Template {

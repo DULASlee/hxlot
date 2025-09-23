@@ -272,8 +272,8 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
 
           logger.info(`Imported theme configuration: ${Object.keys(config.variables).length} variables`)
           resolve(true)
-        } catch (error: unknown) {
-          logger.error("Failed to parse theme configuration:", error as Error | string | undefined)
+        } catch (error) {
+          logger.error("Failed to parse theme configuration:", error as Error)
           resolve(false)
         }
       }
@@ -333,7 +333,34 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
   watch([currentTheme, themeVariables], () => {
     saveThemeToStorage()
   }, { deep: true })
-
+  
+  // 重置为默认主题
+  const resetToDefault = () => {
+    themeVariables.value = {
+      "--theme-brand-primary": "#409eff",
+      "--theme-brand-success": "#67c23a",
+      "--theme-brand-warning": "#e6a23c",
+      "--theme-brand-danger": "#f56c6c"
+    }
+    applyTheme()
+    logger.info("Theme reset to default")
+  }
+  
+  // 从本地存储加载主题
+  const loadFromLocalStorage = () => {
+    try {
+      const stored = localStorage.getItem("enhanced-theme-variables")
+      if (stored) {
+        const parsed = JSON.parse(stored)
+        themeVariables.value = { ...themeVariables.value, ...parsed }
+        applyTheme()
+        logger.info("Theme loaded from local storage")
+      }
+    } catch (error) {
+      logger.error("Failed to load theme from local storage:", error as Error)
+    }
+  }
+  
   // 初始化
   initializeTheme()
 
@@ -367,6 +394,8 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
 
     // 工具方法
     initializeTheme,
-    saveThemeToStorage
+    saveThemeToStorage,
+    resetToDefault,
+    loadFromLocalStorage
   }
 })

@@ -1,0 +1,1294 @@
+<template>
+  <div class="entity-modeling-view">
+    <!-- 建模器头部 -->
+    <div class="modeling-header">
+      <div class="header-left">
+        <h2>
+          <i class="el-icon-data-analysis" />
+          数据建模 - 权限管理系统
+        </h2>
+        <div class="progress-info">
+          <span>实体设计进度: {{ completedEntities }}/{{ totalEntities }}</span>
+          <el-progress 
+            :percentage="progressPercentage" 
+            :stroke-width="6" 
+            status="success"
+          />
+        </div>
+      </div>
+      <div class="header-actions">
+        <el-button-group>
+          <el-button 
+            type="primary" 
+            :icon="isAutoLayout ? 'el-icon-magic-stick' : 'el-icon-rank'"
+            @click="toggleAutoLayout"
+          >
+            {{ isAutoLayout ? '手动布局' : '自动布局' }}
+          </el-button>
+          <el-button 
+            type="success" 
+            icon="el-icon-view" 
+            @click="previewSchema"
+          >
+            预览架构
+          </el-button>
+          <el-button 
+            type="warning" 
+            icon="el-icon-download" 
+            @click="exportSchema"
+          >
+            导出设计
+          </el-button>
+        </el-button-group>
+      </div>
+    </div>
+
+    <!-- 主体建模区域 -->
+    <div class="modeling-body">
+      <!-- 左侧实体列表 -->
+      <div class="entities-panel">
+        <div class="panel-header">
+          <h3>实体列表</h3>
+          <el-button 
+            type="primary" 
+            size="small" 
+            icon="el-icon-plus"
+            @click="showAddEntityDialog = true"
+          >
+            添加实体
+          </el-button>
+        </div>
+        
+        <div class="entities-list">
+          <div 
+            v-for="entity in entities" 
+            :key="entity.id"
+            class="entity-card"
+            :class="{ active: selectedEntityId === entity.id, completed: entity.isCompleted }"
+            @click="selectEntity(entity.id)"
+          >
+            <div class="entity-header">
+              <div class="entity-info">
+                <i :class="getEntityIcon(entity.category)" />
+                <div class="entity-details">
+                  <div class="entity-name">{{ entity.name }}</div>
+                  <div class="entity-table">{{ entity.tableName }}</div>
+                </div>
+              </div>
+              <div class="entity-status">
+                <el-tag 
+                  :type="entity.isCompleted ? 'success' : 'warning'" 
+                  size="small"
+                >
+                  {{ entity.isCompleted ? '已完成' : '待完善' }}
+                </el-tag>
+              </div>
+            </div>
+            <div class="entity-stats">
+              <span>字段: {{ entity.fields.length }}</span>
+              <span>关系: {{ getEntityRelationCount(entity.id) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 预设实体快速添加 -->
+        <div class="preset-entities">
+          <h4>权限管理预设实体</h4>
+          <el-button 
+            v-for="preset in presetEntities"
+            :key="preset.id"
+            size="small"
+            :disabled="isEntityExists(preset.tableName)"
+            @click="addPresetEntity(preset)"
+            style="margin: 2px; width: calc(50% - 4px);"
+          >
+            {{ preset.name }}
+          </el-button>
+        </div>
+      </div>
+
+      <!-- 中央设计区域 -->
+      <div class="design-area">
+        <!-- 工具栏 -->
+        <div class="design-toolbar">
+          <el-button-group size="small">
+            <el-button 
+              :type="designMode === 'fields' ? 'primary' : 'default'"
+              @click="designMode = 'fields'"
+            >
+              字段设计
+            </el-button>
+            <el-button 
+              :type="designMode === 'relations' ? 'primary' : 'default'"
+              @click="designMode = 'relations'"
+            >
+              关系设计
+            </el-button>
+            <el-button 
+              :type="designMode === 'validation' ? 'primary' : 'default'"
+              @click="designMode = 'validation'"
+            >
+              验证规则
+            </el-button>
+          </el-button-group>
+          
+          <div class="toolbar-info" v-if="selectedEntity">
+            <span>当前实体: {{ selectedEntity.name }}</span>
+            <el-divider direction="vertical" />
+            <span>表名: {{ selectedEntity.tableName }}</span>
+          </div>
+        </div>
+
+        <!-- 字段设计面板 -->
+        <div v-if="designMode === 'fields' && selectedEntity" class="fields-designer">
+          <div class="fields-header">
+            <h3>字段配置</h3>
+            <el-button 
+              type="primary" 
+              size="small" 
+              icon="el-icon-plus"
+              @click="addField"
+            >
+              添加字段
+            </el-button>
+          </div>
+          
+          <el-table :data="selectedEntity.fields" style="width: 100%">
+            <el-table-column prop="name" label="字段名" width="150">
+              <template #default="scope">
+                <el-input 
+                  v-model="scope.row.name" 
+                  size="small"
+                  @change="validateField(scope.row)"
+                />
+              </template>
+            </el-table-column>
+            <el-table-column prop="displayName" label="显示名" width="120">
+              <template #default="scope">
+                <el-input v-model="scope.row.displayName" size="small" />
+              </template>
+            </el-table-column>
+            <el-table-column prop="type" label="数据类型" width="120">
+              <template #default="scope">
+                <el-select v-model="scope.row.type" size="small">
+                  <el-option 
+                    v-for="type in fieldTypes"
+                    :key="type.value"
+                    :label="type.label"
+                    :value="type.value"
+                  />
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column prop="length" label="长度" width="80">
+              <template #default="scope">
+                <el-input-number 
+                  v-model="scope.row.length" 
+                  size="small" 
+                  :min="1" 
+                  :max="5000"
+                  v-if="needsLength(scope.row.type)"
+                />
+              </template>
+            </el-table-column>
+            <el-table-column prop="isRequired" label="必填" width="80">
+              <template #default="scope">
+                <el-checkbox v-model="scope.row.isRequired" />
+              </template>
+            </el-table-column>
+            <el-table-column prop="isPrimaryKey" label="主键" width="80">
+              <template #default="scope">
+                <el-checkbox 
+                  v-model="scope.row.isPrimaryKey"
+                  @change="handlePrimaryKeyChange(scope.row)"
+                />
+              </template>
+            </el-table-column>
+            <el-table-column prop="defaultValue" label="默认值" width="120">
+              <template #default="scope">
+                <el-input v-model="scope.row.defaultValue" size="small" />
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="120">
+              <template #default="scope">
+                <el-button 
+                  type="primary" 
+                  size="small" 
+                  icon="el-icon-edit"
+                  @click="editFieldValidation(scope.row)"
+                />
+                <el-button 
+                  type="danger" 
+                  size="small" 
+                  icon="el-icon-delete"
+                  @click="removeField(scope.$index)"
+                />
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+
+        <!-- 关系设计面板 -->
+        <div v-if="designMode === 'relations'" class="relations-designer">
+          <div class="relations-header">
+            <h3>实体关系设计</h3>
+            <el-button 
+              type="primary" 
+              size="small" 
+              icon="el-icon-connection"
+              @click="showAddRelationDialog = true"
+            >
+              添加关系
+            </el-button>
+          </div>
+          
+          <!-- 关系图表区域 -->
+          <div class="relations-canvas" ref="relationsCanvas">
+            <!-- 这里将来可以集成可视化关系图组件 -->
+            <div class="relations-placeholder">
+              <i class="el-icon-share" style="font-size: 48px; color: #ddd;" />
+              <p>实体关系图</p>
+              <p>支持拖拽连线设计实体间关系</p>
+            </div>
+          </div>
+
+          <!-- 关系列表 -->
+          <div class="relations-list">
+            <h4>已配置关系</h4>
+            <el-table :data="relations" style="width: 100%">
+              <el-table-column prop="fromEntity" label="源实体" />
+              <el-table-column prop="toEntity" label="目标实体" />
+              <el-table-column prop="type" label="关系类型" />
+              <el-table-column prop="foreignKey" label="外键字段" />
+              <el-table-column label="操作" width="120">
+                <template #default="scope">
+                  <el-button 
+                    type="primary" 
+                    size="small" 
+                    icon="el-icon-edit"
+                    @click="editRelation(scope.row)"
+                  />
+                  <el-button 
+                    type="danger" 
+                    size="small" 
+                    icon="el-icon-delete"
+                    @click="removeRelation(scope.$index)"
+                  />
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
+
+        <!-- 验证规则面板 -->
+        <div v-if="designMode === 'validation' && selectedEntity" class="validation-designer">
+          <div class="validation-header">
+            <h3>验证规则配置</h3>
+            <el-button 
+              type="primary" 
+              size="small" 
+              icon="el-icon-circle-check"
+              @click="addValidationRule"
+            >
+              添加规则
+            </el-button>
+          </div>
+          
+          <el-table :data="selectedEntity.validationRules" style="width: 100%">
+            <el-table-column prop="fieldName" label="字段" width="150">
+              <template #default="scope">
+                <el-select v-model="scope.row.fieldName" size="small">
+                  <el-option 
+                    v-for="field in selectedEntity.fields"
+                    :key="field.name"
+                    :label="field.displayName || field.name"
+                    :value="field.name"
+                  />
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column prop="ruleType" label="规则类型" width="150">
+              <template #default="scope">
+                <el-select v-model="scope.row.ruleType" size="small">
+                  <el-option label="长度限制" value="length" />
+                  <el-option label="数值范围" value="range" />
+                  <el-option label="正则表达式" value="regex" />
+                  <el-option label="唯一性检查" value="unique" />
+                  <el-option label="自定义函数" value="custom" />
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column prop="ruleValue" label="规则值" width="200">
+              <template #default="scope">
+                <el-input v-model="scope.row.ruleValue" size="small" />
+              </template>
+            </el-table-column>
+            <el-table-column prop="errorMessage" label="错误信息">
+              <template #default="scope">
+                <el-input v-model="scope.row.errorMessage" size="small" />
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="80">
+              <template #default="scope">
+                <el-button 
+                  type="danger" 
+                  size="small" 
+                  icon="el-icon-delete"
+                  @click="removeValidationRule(scope.$index)"
+                />
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </div>
+
+      <!-- 右侧属性面板 -->
+      <div class="properties-panel" v-if="selectedEntity">
+        <div class="panel-header">
+          <h3>实体属性</h3>
+        </div>
+        
+        <el-form :model="selectedEntity" label-width="80px">
+          <el-form-item label="实体名">
+            <el-input v-model="selectedEntity.name" />
+          </el-form-item>
+          <el-form-item label="表名">
+            <el-input v-model="selectedEntity.tableName" />
+          </el-form-item>
+          <el-form-item label="显示名">
+            <el-input v-model="selectedEntity.displayName" />
+          </el-form-item>
+          <el-form-item label="描述">
+            <el-input 
+              v-model="selectedEntity.description" 
+              type="textarea" 
+              :rows="3"
+            />
+          </el-form-item>
+          <el-form-item label="分类">
+            <el-select v-model="selectedEntity.category">
+              <el-option label="核心实体" value="core" />
+              <el-option label="关联实体" value="relation" />
+              <el-option label="配置实体" value="config" />
+              <el-option label="日志实体" value="log" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="启用软删除">
+            <el-checkbox v-model="selectedEntity.enableSoftDelete" />
+          </el-form-item>
+          <el-form-item label="启用审计">
+            <el-checkbox v-model="selectedEntity.enableAudit" />
+          </el-form-item>
+          <el-form-item label="启用多租户">
+            <el-checkbox v-model="selectedEntity.enableMultiTenant" />
+          </el-form-item>
+        </el-form>
+
+        <!-- 生成预览 -->
+        <div class="generation-preview">
+          <h4>代码预览</h4>
+          <el-tabs v-model="previewTab">
+            <el-tab-pane label="实体类" name="entity">
+              <pre class="code-preview">{{ generateEntityPreview() }}</pre>
+            </el-tab-pane>
+            <el-tab-pane label="DTO" name="dto">
+              <pre class="code-preview">{{ generateDtoPreview() }}</pre>
+            </el-tab-pane>
+            <el-tab-pane label="SQL" name="sql">
+              <pre class="code-preview">{{ generateSqlPreview() }}</pre>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+      </div>
+    </div>
+
+    <!-- 添加实体对话框 -->
+    <el-dialog 
+      v-model="showAddEntityDialog" 
+      title="添加新实体" 
+      width="500px"
+    >
+      <el-form :model="newEntityForm" label-width="80px">
+        <el-form-item label="实体名" required>
+          <el-input 
+            v-model="newEntityForm.name" 
+            placeholder="例如: User"
+            @input="autoFillTableName"
+          />
+        </el-form-item>
+        <el-form-item label="表名" required>
+          <el-input 
+            v-model="newEntityForm.tableName" 
+            placeholder="例如: AbpUsers"
+          />
+        </el-form-item>
+        <el-form-item label="显示名">
+          <el-input 
+            v-model="newEntityForm.displayName" 
+            placeholder="例如: 用户"
+          />
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input 
+            v-model="newEntityForm.description" 
+            type="textarea" 
+            placeholder="实体功能描述"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="showAddEntityDialog = false">取消</el-button>
+        <el-button type="primary" @click="createEntity">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 添加关系对话框 -->
+    <el-dialog 
+      v-model="showAddRelationDialog" 
+      title="添加实体关系" 
+      width="600px"
+    >
+      <el-form :model="newRelationForm" label-width="100px">
+        <el-form-item label="源实体" required>
+          <el-select v-model="newRelationForm.fromEntity" placeholder="选择源实体">
+            <el-option 
+              v-for="entity in entities"
+              :key="entity.id"
+              :label="entity.name"
+              :value="entity.name"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="目标实体" required>
+          <el-select v-model="newRelationForm.toEntity" placeholder="选择目标实体">
+            <el-option 
+              v-for="entity in entities"
+              :key="entity.id"
+              :label="entity.name"
+              :value="entity.name"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="关系类型" required>
+          <el-select v-model="newRelationForm.type" placeholder="选择关系类型">
+            <el-option label="一对一 (1:1)" value="one-to-one" />
+            <el-option label="一对多 (1:N)" value="one-to-many" />
+            <el-option label="多对多 (M:N)" value="many-to-many" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="外键字段" required>
+          <el-input 
+            v-model="newRelationForm.foreignKey" 
+            placeholder="例如: UserId"
+          />
+        </el-form-item>
+        <el-form-item label="导航属性">
+          <el-input 
+            v-model="newRelationForm.navigationProperty" 
+            placeholder="例如: User"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="showAddRelationDialog = false">取消</el-button>
+        <el-button type="primary" @click="createRelation">确定</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 架构预览对话框 -->
+    <el-dialog 
+      v-model="showSchemaPreview" 
+      title="数据库架构预览" 
+      width="80%"
+      top="5vh"
+    >
+      <div class="schema-preview">
+        <el-tabs v-model="schemaPreviewTab">
+          <el-tab-pane label="ER图" name="diagram">
+            <div class="er-diagram">
+              <!-- 这里可以集成ER图组件 -->
+              <p>实体关系图将在这里显示</p>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="DDL语句" name="ddl">
+            <pre class="ddl-preview">{{ generateDDL() }}</pre>
+          </el-tab-pane>
+          <el-tab-pane label="实体统计" name="stats">
+            <div class="schema-stats">
+              <el-row :gutter="20">
+                <el-col :span="6">
+                  <el-statistic title="实体数量" :value="entities.length" />
+                </el-col>
+                <el-col :span="6">
+                  <el-statistic title="字段总数" :value="totalFields" />
+                </el-col>
+                <el-col :span="6">
+                  <el-statistic title="关系数量" :value="relations.length" />
+                </el-col>
+                <el-col :span="6">
+                  <el-statistic title="完成度" :value="progressPercentage" suffix="%" />
+                </el-col>
+              </el-row>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue"
+import { ElMessage, ElMessageBox } from "element-plus"
+import { useEntityModelingStore } from "@/stores/lowcode/entityModeling"
+
+// Store
+const store = useEntityModelingStore()
+
+// 响应式数据
+const selectedEntityId = ref<string>("")
+const designMode = ref<"fields" | "relations" | "validation">("fields")
+const isAutoLayout = ref(true)
+const showAddEntityDialog = ref(false)
+const showAddRelationDialog = ref(false)
+const showSchemaPreview = ref(false)
+const previewTab = ref("entity")
+const schemaPreviewTab = ref("diagram")
+
+// 表单数据
+const newEntityForm = ref({
+  name: "",
+  tableName: "",
+  displayName: "",
+  description: ""
+})
+
+const newRelationForm = ref({
+  fromEntity: "",
+  toEntity: "",
+  type: "",
+  foreignKey: "",
+  navigationProperty: ""
+})
+
+// 字段类型定义
+const fieldTypes = [
+  { label: "字符串 (string)", value: "string" },
+  { label: "整数 (int)", value: "int" },
+  { label: "长整数 (long)", value: "long" },
+  { label: "布尔值 (bool)", value: "bool" },
+  { label: "日期时间 (DateTime)", value: "DateTime" },
+  { label: "小数 (decimal)", value: "decimal" },
+  { label: "GUID", value: "Guid" },
+  { label: "枚举 (enum)", value: "enum" },
+  { label: "JSON", value: "json" }
+]
+
+// 权限管理预设实体
+const presetEntities = [
+  {
+    id: "organization-unit",
+    name: "组织架构",
+    tableName: "AbpOrganizationUnits",
+    displayName: "组织架构",
+    description: "企业组织架构管理，支持公司-部门-岗位三级结构",
+    category: "core"
+  },
+  {
+    id: "user",
+    name: "User",
+    tableName: "AbpUsers",
+    displayName: "用户",
+    description: "系统用户基本信息管理",
+    category: "core"
+  },
+  {
+    id: "role",
+    name: "Role",
+    tableName: "AbpRoles",
+    displayName: "角色",
+    description: "系统角色定义和管理",
+    category: "core"
+  },
+  {
+    id: "permission",
+    name: "Permission",
+    tableName: "AbpPermissions",
+    displayName: "权限",
+    description: "系统权限定义和管理",
+    category: "core"
+  },
+  {
+    id: "role-permission",
+    name: "RolePermission",
+    tableName: "AbpRolePermissions",
+    displayName: "角色权限",
+    description: "角色与权限的关联关系",
+    category: "relation"
+  },
+  {
+    id: "menu",
+    name: "Menu",
+    tableName: "AbpMenus",
+    displayName: "菜单",
+    description: "系统菜单和界面权限管理",
+    category: "config"
+  }
+]
+
+// 计算属性
+const entities = computed(() => store.entities)
+const relations = computed(() => store.relations)
+const selectedEntity = computed(() => 
+  entities.value.find(e => e.id === selectedEntityId.value)
+)
+const completedEntities = computed(() => 
+  entities.value.filter(e => e.isCompleted).length
+)
+const totalEntities = computed(() => entities.value.length)
+const progressPercentage = computed(() => 
+  totalEntities.value === 0 ? 0 : Math.round((completedEntities.value / totalEntities.value) * 100)
+)
+const totalFields = computed(() => 
+  entities.value.reduce((sum, entity) => sum + entity.fields.length, 0)
+)
+
+// 方法
+const selectEntity = (entityId: string) => {
+  selectedEntityId.value = entityId
+}
+
+const getEntityIcon = (category: string) => {
+  const icons: Record<string, string> = {
+    core: "el-icon-coin",
+    relation: "el-icon-connection",
+    config: "el-icon-setting",
+    log: "el-icon-document"
+  }
+  return icons[category] || "el-icon-coin"
+}
+
+const getEntityRelationCount = (entityId: string) => {
+  const entity = entities.value.find(e => e.id === entityId)
+  if (!entity) return 0
+  return relations.value.filter(r => 
+    r.fromEntity === entity.name || r.toEntity === entity.name
+  ).length
+}
+
+const isEntityExists = (tableName: string) => {
+  return entities.value.some(e => e.tableName === tableName)
+}
+
+const addPresetEntity = (preset: any) => {
+  store.addEntity({
+    ...preset,
+    fields: getDefaultFieldsForEntity(preset.id),
+    validationRules: [],
+    enableSoftDelete: true,
+    enableAudit: true,
+    enableMultiTenant: true,
+    isCompleted: false
+  })
+  ElMessage.success(`已添加预设实体：${preset.displayName}`)
+}
+
+const getDefaultFieldsForEntity = (entityType: string) => {
+  const baseFields = [
+    { name: "Id", displayName: "主键", type: "Guid", isPrimaryKey: true, isRequired: true }
+  ]
+
+  const entityFields: Record<string, any[]> = {
+    "organization-unit": [
+      { name: "Code", displayName: "组织代码", type: "string", length: 50, isRequired: true },
+      { name: "Name", displayName: "组织名称", type: "string", length: 100, isRequired: true },
+      { name: "DisplayName", displayName: "显示名称", type: "string", length: 100 },
+      { name: "ParentId", displayName: "父级ID", type: "Guid" },
+      { name: "Level", displayName: "层级", type: "int", isRequired: true },
+      { name: "Sort", displayName: "排序", type: "int" }
+    ],
+    "user": [
+      { name: "UserName", displayName: "用户名", type: "string", length: 50, isRequired: true },
+      { name: "Email", displayName: "邮箱", type: "string", length: 100, isRequired: true },
+      { name: "Name", displayName: "姓名", type: "string", length: 50 },
+      { name: "Surname", displayName: "姓氏", type: "string", length: 50 },
+      { name: "PhoneNumber", displayName: "手机号", type: "string", length: 20 },
+      { name: "IsActive", displayName: "是否激活", type: "bool", defaultValue: "true" }
+    ],
+    "role": [
+      { name: "Name", displayName: "角色名", type: "string", length: 50, isRequired: true },
+      { name: "DisplayName", displayName: "显示名", type: "string", length: 100 },
+      { name: "Description", displayName: "描述", type: "string", length: 500 },
+      { name: "IsDefault", displayName: "默认角色", type: "bool", defaultValue: "false" },
+      { name: "IsStatic", displayName: "系统角色", type: "bool", defaultValue: "false" }
+    ],
+    "permission": [
+      { name: "Name", displayName: "权限名", type: "string", length: 100, isRequired: true },
+      { name: "DisplayName", displayName: "显示名", type: "string", length: 100 },
+      { name: "Description", displayName: "描述", type: "string", length: 500 },
+      { name: "ParentName", displayName: "父权限", type: "string", length: 100 },
+      { name: "IsEnabled", displayName: "是否启用", type: "bool", defaultValue: "true" }
+    ],
+    "role-permission": [
+      { name: "RoleId", displayName: "角色ID", type: "Guid", isRequired: true },
+      { name: "PermissionName", displayName: "权限名", type: "string", length: 100, isRequired: true }
+    ],
+    "menu": [
+      { name: "Name", displayName: "菜单名", type: "string", length: 50, isRequired: true },
+      { name: "DisplayName", displayName: "显示名", type: "string", length: 100 },
+      { name: "Url", displayName: "链接", type: "string", length: 200 },
+      { name: "Icon", displayName: "图标", type: "string", length: 50 },
+      { name: "ParentId", displayName: "父菜单ID", type: "Guid" },
+      { name: "Sort", displayName: "排序", type: "int" },
+      { name: "Permission", displayName: "所需权限", type: "string", length: 100 }
+    ]
+  }
+
+  return [...baseFields, ...(entityFields[entityType] || [])]
+}
+
+const autoFillTableName = () => {
+  if (newEntityForm.value.name && !newEntityForm.value.tableName) {
+    newEntityForm.value.tableName = `Abp${newEntityForm.value.name}s`
+  }
+}
+
+const createEntity = () => {
+  if (!newEntityForm.value.name || !newEntityForm.value.tableName) {
+    ElMessage.error("请填写必填字段")
+    return
+  }
+
+  if (isEntityExists(newEntityForm.value.tableName)) {
+    ElMessage.error("表名已存在")
+    return
+  }
+
+  store.addEntity({
+    ...newEntityForm.value,
+    id: `entity-${Date.now()}`,
+    category: "core",
+    fields: [
+      { name: "Id", displayName: "主键", type: "Guid", isPrimaryKey: true, isRequired: true }
+    ],
+    validationRules: [],
+    enableSoftDelete: false,
+    enableAudit: false,
+    enableMultiTenant: false,
+    isCompleted: false
+  })
+
+  // 重置表单
+  newEntityForm.value = {
+    name: "",
+    tableName: "",
+    displayName: "",
+    description: ""
+  }
+  showAddEntityDialog.value = false
+  ElMessage.success("实体创建成功")
+}
+
+const addField = () => {
+  if (!selectedEntity.value) return
+  
+  store.addField(selectedEntity.value.id, {
+    name: "NewField",
+    displayName: "新字段",
+    type: "string",
+    length: 50,
+    isRequired: false,
+    isPrimaryKey: false,
+    defaultValue: ""
+  })
+}
+
+const removeField = (index: number) => {
+  if (!selectedEntity.value) return
+  store.removeField(selectedEntity.value.id, index)
+}
+
+const needsLength = (type: string) => {
+  return ["string", "decimal"].includes(type)
+}
+
+const handlePrimaryKeyChange = (field: any) => {
+  if (field.isPrimaryKey && selectedEntity.value) {
+    // 确保只有一个主键
+    selectedEntity.value.fields.forEach(f => {
+      if (f !== field) f.isPrimaryKey = false
+    })
+  }
+}
+
+const validateField = (field: any) => {
+  // 字段验证逻辑
+  if (!field.name) {
+    ElMessage.warning("字段名不能为空")
+  }
+}
+
+const editFieldValidation = (field: any) => {
+  // 打开字段验证编辑器
+  console.log("编辑字段验证规则:", field)
+}
+
+const addValidationRule = () => {
+  if (!selectedEntity.value) return
+  
+  store.addValidationRule(selectedEntity.value.id, {
+    fieldName: "",
+    ruleType: "length",
+    ruleValue: "",
+    errorMessage: ""
+  })
+}
+
+const removeValidationRule = (index: number) => {
+  if (!selectedEntity.value) return
+  store.removeValidationRule(selectedEntity.value.id, index)
+}
+
+const createRelation = () => {
+  if (!newRelationForm.value.fromEntity || !newRelationForm.value.toEntity || !newRelationForm.value.type) {
+    ElMessage.error("请填写必填字段")
+    return
+  }
+
+  store.addRelation({
+    id: `relation-${Date.now()}`,
+    fromEntity: newRelationForm.value.fromEntity,
+    toEntity: newRelationForm.value.toEntity,
+    type: newRelationForm.value.type as "one-to-one" | "one-to-many" | "many-to-many",
+    foreignKey: newRelationForm.value.foreignKey,
+    navigationProperty: newRelationForm.value.navigationProperty
+  })
+
+  // 重置表单
+  newRelationForm.value = {
+    fromEntity: "",
+    toEntity: "",
+    type: "",
+    foreignKey: "",
+    navigationProperty: ""
+  }
+  showAddRelationDialog.value = false
+  ElMessage.success("关系创建成功")
+}
+
+const editRelation = (relation: any) => {
+  console.log("编辑关系:", relation)
+}
+
+const removeRelation = (index: number) => {
+  store.removeRelation(index)
+}
+
+const toggleAutoLayout = () => {
+  isAutoLayout.value = !isAutoLayout.value
+  ElMessage.info(`已切换到${isAutoLayout.value ? '自动' : '手动'}布局模式`)
+}
+
+const previewSchema = () => {
+  showSchemaPreview.value = true
+}
+
+const exportSchema = () => {
+  const schema = {
+    entities: entities.value,
+    relations: relations.value,
+    metadata: {
+      createdAt: new Date().toISOString(),
+      version: "1.0.0"
+    }
+  }
+  
+  const blob = new Blob([JSON.stringify(schema, null, 2)], { type: "application/json" })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement("a")
+  link.href = url
+  link.download = "entity-schema.json"
+  link.click()
+  URL.revokeObjectURL(url)
+  
+  ElMessage.success("架构导出成功")
+}
+
+const generateEntityPreview = () => {
+  if (!selectedEntity.value) return ""
+  
+  const entity = selectedEntity.value
+  const fields = entity.fields.map(f => 
+    `    public ${f.type}${f.isRequired ? '' : '?'} ${f.name} { get; set; }`
+  ).join('\n')
+  
+  return `public class ${entity.name} : Entity<Guid>
+{
+${fields}
+}`
+}
+
+const generateDtoPreview = () => {
+  if (!selectedEntity.value) return ""
+  
+  const entity = selectedEntity.value
+  const fields = entity.fields.map(f => 
+    `    public ${f.type}${f.isRequired ? '' : '?'} ${f.name} { get; set; }`
+  ).join('\n')
+  
+  return `public class ${entity.name}Dto
+{
+${fields}
+}`
+}
+
+const generateSqlPreview = () => {
+  if (!selectedEntity.value) return ""
+  
+  const entity = selectedEntity.value
+  const columns = entity.fields.map(f => {
+    let type = getSqlType(f.type, f.length)
+    let constraints = f.isRequired ? 'NOT NULL' : 'NULL'
+    if (f.isPrimaryKey) constraints += ' PRIMARY KEY'
+    return `    ${f.name} ${type} ${constraints}`
+  }).join(',\n')
+  
+  return `CREATE TABLE ${entity.tableName} (
+${columns}
+);`
+}
+
+const getSqlType = (type: string, length?: number) => {
+  const typeMap: Record<string, string> = {
+    string: length ? `NVARCHAR(${length})` : 'NVARCHAR(MAX)',
+    int: 'INT',
+    long: 'BIGINT',
+    bool: 'BIT',
+    DateTime: 'DATETIME2',
+    decimal: 'DECIMAL(18,2)',
+    Guid: 'UNIQUEIDENTIFIER',
+    enum: 'INT',
+    json: 'NVARCHAR(MAX)'
+  }
+  return typeMap[type] || 'NVARCHAR(MAX)'
+}
+
+const generateDDL = () => {
+  return entities.value.map(entity => {
+    const columns = entity.fields.map(f => {
+      let type = getSqlType(f.type, f.length)
+      let constraints = f.isRequired ? 'NOT NULL' : 'NULL'
+      if (f.isPrimaryKey) constraints += ' PRIMARY KEY'
+      return `    ${f.name} ${type} ${constraints}`
+    }).join(',\n')
+    
+    return `CREATE TABLE ${entity.tableName} (
+${columns}
+);`
+  }).join('\n\n')
+}
+
+// 初始化
+onMounted(() => {
+  // 初始化预设实体（如果为空）
+  if (entities.value.length === 0) {
+    ElMessageBox.confirm(
+      '检测到您还没有创建任何实体，是否要加载权限管理系统的预设实体？',
+      '快速开始',
+      {
+        confirmButtonText: '加载预设',
+        cancelButtonText: '手动创建',
+        type: 'info'
+      }
+    ).then(() => {
+      presetEntities.forEach(preset => addPresetEntity(preset))
+      if (entities.value.length > 0) {
+        selectedEntityId.value = entities.value[0].id
+      }
+    }).catch(() => {
+      // 用户选择手动创建
+    })
+  } else if (entities.value.length > 0) {
+    selectedEntityId.value = entities.value[0].id
+  }
+})
+</script>
+
+<style scoped>
+.entity-modeling-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+}
+
+.modeling-header {
+  background: white;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e8e8e8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left h2 {
+  margin: 0 0 8px 0;
+  color: #303133;
+  font-size: 20px;
+}
+
+.progress-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #606266;
+}
+
+.progress-info .el-progress {
+  width: 200px;
+}
+
+.modeling-body {
+  flex: 1;
+  display: flex;
+  gap: 1px;
+  min-height: 0;
+}
+
+.entities-panel {
+  width: 300px;
+  background: white;
+  border-right: 1px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  padding: 16px;
+  border-bottom: 1px solid #e8e8e8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #303133;
+}
+
+.entities-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.entity-card {
+  background: #f8f9fa;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.entity-card:hover {
+  background: #e6f7ff;
+  border-color: #40a9ff;
+}
+
+.entity-card.active {
+  background: #e6f7ff;
+  border-color: #1890ff;
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
+}
+
+.entity-card.completed {
+  border-color: #52c41a;
+}
+
+.entity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.entity-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.entity-info i {
+  font-size: 16px;
+  color: #1890ff;
+}
+
+.entity-name {
+  font-weight: 500;
+  color: #303133;
+}
+
+.entity-table {
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.entity-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #666;
+}
+
+.preset-entities {
+  padding: 16px;
+  border-top: 1px solid #e8e8e8;
+}
+
+.preset-entities h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #606266;
+}
+
+.design-area {
+  flex: 1;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.design-toolbar {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e8e8e8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toolbar-info {
+  font-size: 14px;
+  color: #606266;
+}
+
+.fields-designer,
+.relations-designer,
+.validation-designer {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.fields-header,
+.relations-header,
+.validation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.fields-header h3,
+.relations-header h3,
+.validation-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #303133;
+}
+
+.relations-canvas {
+  height: 300px;
+  border: 2px dashed #d9d9d9;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  color: #8c8c8c;
+}
+
+.relations-placeholder p {
+  margin: 8px 0;
+}
+
+.relations-list h4 {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: #606266;
+}
+
+.properties-panel {
+  width: 350px;
+  background: white;
+  border-left: 1px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.properties-panel .panel-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.properties-panel .el-form {
+  padding: 24px;
+}
+
+.generation-preview {
+  padding: 0 24px 24px;
+}
+
+.generation-preview h4 {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: #606266;
+}
+
+.code-preview {
+  background: #f8f9fa;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  padding: 12px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #303133;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.schema-preview .er-diagram {
+  height: 400px;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8c8c8c;
+}
+
+.ddl-preview {
+  background: #f8f9fa;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  padding: 16px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #303133;
+  max-height: 500px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+.schema-stats {
+  padding: 24px;
+}
+</style>
