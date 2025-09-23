@@ -55,27 +55,55 @@
       </div>
 
       <!-- 右侧预览面板 -->
-      <div v-if="showPreview" class="theme-preview-panel">
+      <div
+        v-if="showPreview"
+        class="theme-preview-panel"
+      >
         <div class="preview-header">
           <h3>实时预览</h3>
-          <el-select v-model="previewMode" size="small">
-            <el-option label="组件预览" value="components" />
-            <el-option label="页面预览" value="pages" />
-            <el-option label="完整应用" value="full" />
+          <el-select
+            v-model="previewMode"
+            size="small"
+          >
+            <el-option
+              label="组件预览"
+              value="components"
+            />
+            <el-option
+              label="页面预览"
+              value="pages"
+            />
+            <el-option
+              label="完整应用"
+              value="full"
+            />
           </el-select>
         </div>
         
         <div class="preview-content">
           <!-- 组件预览模式 -->
-          <div v-if="previewMode === 'components'" class="components-preview">
+          <div
+            v-if="previewMode === 'components'"
+            class="components-preview"
+          >
             <div class="preview-section">
               <h4>按钮组件</h4>
               <div class="button-group">
-                <el-button type="primary">主要按钮</el-button>
-                <el-button type="success">成功按钮</el-button>
-                <el-button type="warning">警告按钮</el-button>
-                <el-button type="danger">危险按钮</el-button>
-                <el-button type="info">信息按钮</el-button>
+                <el-button type="primary">
+                  主要按钮
+                </el-button>
+                <el-button type="success">
+                  成功按钮
+                </el-button>
+                <el-button type="warning">
+                  警告按钮
+                </el-button>
+                <el-button type="danger">
+                  危险按钮
+                </el-button>
+                <el-button type="info">
+                  信息按钮
+                </el-button>
               </div>
             </div>
 
@@ -83,12 +111,24 @@
               <h4>表单组件</h4>
               <el-form label-width="80px">
                 <el-form-item label="输入框">
-                  <el-input v-model="previewData.input" placeholder="请输入内容" />
+                  <el-input
+                    v-model="previewData.input"
+                    placeholder="请输入内容"
+                  />
                 </el-form-item>
                 <el-form-item label="选择器">
-                  <el-select v-model="previewData.select" placeholder="请选择">
-                    <el-option label="选项1" value="1" />
-                    <el-option label="选项2" value="2" />
+                  <el-select
+                    v-model="previewData.select"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      label="选项1"
+                      value="1"
+                    />
+                    <el-option
+                      label="选项2"
+                      value="2"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="开关">
@@ -99,9 +139,18 @@
 
             <div class="preview-section">
               <h4>数据展示</h4>
-              <el-table :data="previewData.tableData" style="width: 100%">
-                <el-table-column prop="name" label="名称" />
-                <el-table-column prop="status" label="状态">
+              <el-table
+                :data="previewData.tableData"
+                style="width: 100%"
+              >
+                <el-table-column
+                  prop="name"
+                  label="名称"
+                />
+                <el-table-column
+                  prop="status"
+                  label="状态"
+                >
                   <template #default="scope">
                     <el-tag :type="scope.row.status === '正常' ? 'success' : 'warning'">
                       {{ scope.row.status }}
@@ -110,8 +159,18 @@
                 </el-table-column>
                 <el-table-column label="操作">
                   <template #default>
-                    <el-button size="small" type="primary">编辑</el-button>
-                    <el-button size="small" type="danger">删除</el-button>
+                    <el-button
+                      size="small"
+                      type="primary"
+                    >
+                      编辑
+                    </el-button>
+                    <el-button
+                      size="small"
+                      type="danger"
+                    >
+                      删除
+                    </el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -119,14 +178,29 @@
 
             <div class="preview-section">
               <h4>导航组件</h4>
-              <el-menu mode="horizontal" :default-active="'1'">
-                <el-menu-item index="1">工作台</el-menu-item>
-                <el-menu-item index="2">用户管理</el-menu-item>
-                <el-menu-item index="3">系统设置</el-menu-item>
+              <el-menu
+                mode="horizontal"
+                :default-active="'1'"
+              >
+                <el-menu-item index="1">
+                  工作台
+                </el-menu-item>
+                <el-menu-item index="2">
+                  用户管理
+                </el-menu-item>
+                <el-menu-item index="3">
+                  系统设置
+                </el-menu-item>
                 <el-submenu index="4">
-                  <template #title>更多功能</template>
-                  <el-menu-item index="4-1">权限管理</el-menu-item>
-                  <el-menu-item index="4-2">角色管理</el-menu-item>
+                  <template #title>
+                    更多功能
+                  </template>
+                  <el-menu-item index="4-1">
+                    权限管理
+                  </el-menu-item>
+                  <el-menu-item index="4-2">
+                    角色管理
+                  </el-menu-item>
                 </el-submenu>
               </el-menu>
             </div>
@@ -134,18 +208,43 @@
             <div class="preview-section">
               <h4>反馈组件</h4>
               <div class="feedback-group">
-                <el-alert title="成功提示" type="success" show-icon />
-                <el-alert title="信息提示" type="info" show-icon />
-                <el-alert title="警告提示" type="warning" show-icon />
-                <el-alert title="错误提示" type="error" show-icon />
+                <el-alert
+                  title="成功提示"
+                  type="success"
+                  show-icon
+                />
+                <el-alert
+                  title="信息提示"
+                  type="info"
+                  show-icon
+                />
+                <el-alert
+                  title="警告提示"
+                  type="warning"
+                  show-icon
+                />
+                <el-alert
+                  title="错误提示"
+                  type="error"
+                  show-icon
+                />
               </div>
             </div>
           </div>
 
           <!-- 页面预览模式 -->
-          <div v-if="previewMode === 'pages'" class="pages-preview">
-            <el-tabs v-model="previewPageTab" type="card">
-              <el-tab-pane label="登录页面" name="login">
+          <div
+            v-if="previewMode === 'pages'"
+            class="pages-preview"
+          >
+            <el-tabs
+              v-model="previewPageTab"
+              type="card"
+            >
+              <el-tab-pane
+                label="登录页面"
+                name="login"
+              >
                 <div class="page-preview">
                   <div class="login-preview">
                     <el-card style="width: 400px; margin: 20px auto;">
@@ -156,61 +255,109 @@
                       </template>
                       <el-form label-width="0">
                         <el-form-item>
-                          <el-input placeholder="用户名" prefix-icon="el-icon-user" />
+                          <el-input
+                            placeholder="用户名"
+                            prefix-icon="el-icon-user"
+                          />
                         </el-form-item>
                         <el-form-item>
-                          <el-input placeholder="密码" type="password" prefix-icon="el-icon-lock" />
+                          <el-input
+                            placeholder="密码"
+                            type="password"
+                            prefix-icon="el-icon-lock"
+                          />
                         </el-form-item>
                         <el-form-item>
-                          <el-button type="primary" style="width: 100%;">登录</el-button>
+                          <el-button
+                            type="primary"
+                            style="width: 100%;"
+                          >
+                            登录
+                          </el-button>
                         </el-form-item>
                       </el-form>
                     </el-card>
                   </div>
                 </div>
               </el-tab-pane>
-              <el-tab-pane label="工作台" name="dashboard">
+              <el-tab-pane
+                label="工作台"
+                name="dashboard"
+              >
                 <div class="page-preview">
                   <div class="dashboard-preview">
                     <el-row :gutter="20">
                       <el-col :span="6">
                         <el-card>
-                          <el-statistic title="用户总数" :value="1234" />
+                          <el-statistic
+                            title="用户总数"
+                            :value="1234"
+                          />
                         </el-card>
                       </el-col>
                       <el-col :span="6">
                         <el-card>
-                          <el-statistic title="在线用户" :value="89" />
+                          <el-statistic
+                            title="在线用户"
+                            :value="89"
+                          />
                         </el-card>
                       </el-col>
                       <el-col :span="6">
                         <el-card>
-                          <el-statistic title="系统访问" :value="5678" />
+                          <el-statistic
+                            title="系统访问"
+                            :value="5678"
+                          />
                         </el-card>
                       </el-col>
                       <el-col :span="6">
                         <el-card>
-                          <el-statistic title="数据总量" :value="9876" suffix="条" />
+                          <el-statistic
+                            title="数据总量"
+                            :value="9876"
+                            suffix="条"
+                          />
                         </el-card>
                       </el-col>
                     </el-row>
                   </div>
                 </div>
               </el-tab-pane>
-              <el-tab-pane label="数据表格" name="table">
+              <el-tab-pane
+                label="数据表格"
+                name="table"
+              >
                 <div class="page-preview">
                   <el-card>
                     <template #header>
                       <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span>用户管理</span>
-                        <el-button type="primary" size="small">添加用户</el-button>
+                        <el-button
+                          type="primary"
+                          size="small"
+                        >
+                          添加用户
+                        </el-button>
                       </div>
                     </template>
                     <el-table :data="previewData.tableData">
-                      <el-table-column prop="name" label="用户名" />
-                      <el-table-column prop="email" label="邮箱" />
-                      <el-table-column prop="role" label="角色" />
-                      <el-table-column prop="status" label="状态">
+                      <el-table-column
+                        prop="name"
+                        label="用户名"
+                      />
+                      <el-table-column
+                        prop="email"
+                        label="邮箱"
+                      />
+                      <el-table-column
+                        prop="role"
+                        label="角色"
+                      />
+                      <el-table-column
+                        prop="status"
+                        label="状态"
+                      >
                         <template #default="scope">
                           <el-tag :type="scope.row.status === '正常' ? 'success' : 'warning'">
                             {{ scope.row.status }}
@@ -225,11 +372,14 @@
           </div>
 
           <!-- 完整应用预览模式 -->
-          <div v-if="previewMode === 'full'" class="full-preview">
+          <div
+            v-if="previewMode === 'full'"
+            class="full-preview"
+          >
             <iframe 
               :src="fullPreviewUrl" 
               style="width: 100%; height: 600px; border: 1px solid #ddd; border-radius: 4px;"
-            ></iframe>
+            />
           </div>
         </div>
       </div>
@@ -248,7 +398,10 @@
           :before-upload="handleImportTheme"
           :show-file-list="false"
         >
-          <i class="el-icon-upload" style="font-size: 67px; color: #C0C4CC;"></i>
+          <i
+            class="el-icon-upload"
+            style="font-size: 67px; color: #C0C4CC;"
+          />
           <div style="color: #606266;">
             将主题配置文件拖到此处，或<em>点击上传</em>
           </div>
@@ -267,7 +420,9 @@
         />
       </div>
       <template #footer>
-        <el-button @click="showImportDialog = false">取消</el-button>
+        <el-button @click="showImportDialog = false">
+          取消
+        </el-button>
         <el-button 
           type="primary" 
           :disabled="!importThemeText"

@@ -329,9 +329,3 @@ const copyCode = async () => {
   gap: 8px;
 }
 </style>
-
-.project-info {
-  display: flex;
-  gap: 8px;
-}
-</style>

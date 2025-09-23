@@ -4,11 +4,25 @@
     <div class="workflow-header">
       <div class="workflow-info">
         <h3>{{ store.workflowMetadata.name }}</h3>
-        <p class="workflow-description">{{ store.workflowMetadata.description }}</p>
+        <p class="workflow-description">
+          {{ store.workflowMetadata.description }}
+        </p>
         <div class="workflow-stats">
-          <el-tag size="small">{{ store.stateCount.total }} 状态</el-tag>
-          <el-tag size="small" type="success">{{ store.transitionCount }} 转换</el-tag>
-          <el-tag size="small" type="warning">{{ store.ruleCount }} 规则</el-tag>
+          <el-tag size="small">
+            {{ store.stateCount.total }} 状态
+          </el-tag>
+          <el-tag
+            size="small"
+            type="success"
+          >
+            {{ store.transitionCount }} 转换
+          </el-tag>
+          <el-tag
+            size="small"
+            type="warning"
+          >
+            {{ store.ruleCount }} 规则
+          </el-tag>
         </div>
       </div>
       <div class="workflow-actions">
@@ -32,8 +46,12 @@
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="save">保存为模板</el-dropdown-item>
-              <el-dropdown-item command="load">加载模板</el-dropdown-item>
+              <el-dropdown-item command="save">
+                保存为模板
+              </el-dropdown-item>
+              <el-dropdown-item command="load">
+                加载模板
+              </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -48,20 +66,33 @@
           <h4>状态机设计器</h4>
           <div class="canvas-tools">
             <el-button-group>
-              <el-button size="small" @click="addNewState('start')" :disabled="store.startStates.length > 0">
+              <el-button
+                size="small"
+                :disabled="store.startStates.length > 0"
+                @click="addNewState('start')"
+              >
                 <el-icon><plus /></el-icon> 开始状态
               </el-button>
-              <el-button size="small" @click="addNewState('intermediate')">
+              <el-button
+                size="small"
+                @click="addNewState('intermediate')"
+              >
                 <el-icon><plus /></el-icon> 中间状态
               </el-button>
-              <el-button size="small" @click="addNewState('end')">
+              <el-button
+                size="small"
+                @click="addNewState('end')"
+              >
                 <el-icon><plus /></el-icon> 结束状态
               </el-button>
             </el-button-group>
           </div>
         </div>
         
-        <div class="state-machine-canvas" data-testid="state-machine-canvas">
+        <div
+          class="state-machine-canvas"
+          data-testid="state-machine-canvas"
+        >
           <!-- 状态节点 -->
           <div 
             v-for="state in store.states" 
@@ -74,8 +105,12 @@
             }"
             @click="selectState(state.id)"
           >
-            <div class="state-label">{{ state.label }}</div>
-            <div class="state-type">{{ getStateTypeLabel(state.type) }}</div>
+            <div class="state-label">
+              {{ state.label }}
+            </div>
+            <div class="state-type">
+              {{ getStateTypeLabel(state.type) }}
+            </div>
             <el-button 
               size="small" 
               type="danger" 
@@ -88,11 +123,23 @@
           </div>
           
           <!-- 转换线条 -->
-          <svg class="transitions-overlay" :style="canvasStyle">
+          <svg
+            class="transitions-overlay"
+            :style="canvasStyle"
+          >
             <defs>
-              <marker id="arrowhead" markerWidth="10" markerHeight="7" 
-                      refX="9" refY="3.5" orient="auto">
-                <polygon points="0 0, 10 3.5, 0 7" fill="#409EFF" />
+              <marker
+                id="arrowhead"
+                markerWidth="10"
+                markerHeight="7" 
+                refX="9"
+                refY="3.5"
+                orient="auto"
+              >
+                <polygon
+                  points="0 0, 10 3.5, 0 7"
+                  fill="#409EFF"
+                />
               </marker>
             </defs>
             <line 
@@ -113,22 +160,31 @@
 
       <!-- 侧边栏 -->
       <div class="sidebar">
-        <el-tabs v-model="activeTab" class="sidebar-tabs">
+        <el-tabs
+          v-model="activeTab"
+          class="sidebar-tabs"
+        >
           <!-- 状态面板 -->
-          <el-tab-pane label="状态" name="states">
-            <div class="state-palette" data-testid="state-palette">
+          <el-tab-pane
+            label="状态"
+            name="states"
+          >
+            <div
+              class="state-palette"
+              data-testid="state-palette"
+            >
               <div class="palette-header">
                 <h5>状态类型</h5>
               </div>
               <div class="state-types">
                 <div 
-                  class="state-type-item"
-                  :class="{ disabled: type === 'start' && store.startStates.length > 0 }"
                   v-for="type in ['start', 'intermediate', 'end']"
                   :key="type"
+                  class="state-type-item"
+                  :class="{ disabled: type === 'start' && store.startStates.length > 0 }"
                   @click="addNewState(type as 'start' | 'intermediate' | 'end')"
                 >
-                  <div :class="`state-icon state-${type}`"></div>
+                  <div :class="`state-icon state-${type}`" />
                   <span>{{ getStateTypeLabel(type) }}</span>
                 </div>
               </div>
@@ -142,7 +198,7 @@
                   :class="{ selected: selectedState === state.id }"
                   @click="selectState(state.id)"
                 >
-                  <div :class="`state-indicator state-${state.type}`"></div>
+                  <div :class="`state-indicator state-${state.type}`" />
                   <span class="state-name">{{ state.label }}</span>
                   <el-button 
                     size="small" 
@@ -157,15 +213,21 @@
           </el-tab-pane>
 
           <!-- 转换面板 -->
-          <el-tab-pane label="转换" name="transitions">
-            <div class="transition-panel" data-testid="transition-panel">
+          <el-tab-pane
+            label="转换"
+            name="transitions"
+          >
+            <div
+              class="transition-panel"
+              data-testid="transition-panel"
+            >
               <div class="panel-header">
                 <h5>状态转换</h5>
                 <el-button 
                   size="small" 
                   type="primary"
-                  @click="showTransitionDialog = true"
                   :disabled="store.states.length < 2"
+                  @click="showTransitionDialog = true"
                 >
                   添加转换
                 </el-button>
@@ -182,10 +244,16 @@
                   <div class="transition-path">
                     {{ getStateName(transition.source) }} → {{ getStateName(transition.target) }}
                   </div>
-                  <div class="transition-condition" v-if="transition.condition">
+                  <div
+                    v-if="transition.condition"
+                    class="transition-condition"
+                  >
                     条件: {{ transition.condition }}
                   </div>
-                  <div class="transition-action" v-if="transition.action">
+                  <div
+                    v-if="transition.action"
+                    class="transition-action"
+                  >
                     动作: {{ transition.action }}
                   </div>
                   <el-button 
@@ -201,8 +269,14 @@
           </el-tab-pane>
 
           <!-- 业务规则面板 -->
-          <el-tab-pane label="规则" name="rules">
-            <div class="business-rules-panel" data-testid="business-rules-panel">
+          <el-tab-pane
+            label="规则"
+            name="rules"
+          >
+            <div
+              class="business-rules-panel"
+              data-testid="business-rules-panel"
+            >
               <div class="panel-header">
                 <h5>业务规则</h5>
                 <el-button 
@@ -224,16 +298,26 @@
                 >
                   <div class="rule-header">
                     <span class="rule-name">{{ rule.id }}</span>
-                    <el-tag size="small" :type="getRuleTypeColor(rule.type)">
+                    <el-tag
+                      size="small"
+                      :type="getRuleTypeColor(rule.type)"
+                    >
                       {{ getRuleTypeLabel(rule.type) }}
                     </el-tag>
                   </div>
                   <div class="rule-details">
-                    <div class="rule-trigger">触发: {{ rule.trigger }}</div>
-                    <div class="rule-condition" v-if="rule.condition">
+                    <div class="rule-trigger">
+                      触发: {{ rule.trigger }}
+                    </div>
+                    <div
+                      v-if="rule.condition"
+                      class="rule-condition"
+                    >
                       条件: {{ rule.condition }}
                     </div>
-                    <div class="rule-action">动作: {{ rule.action }}</div>
+                    <div class="rule-action">
+                      动作: {{ rule.action }}
+                    </div>
                   </div>
                   <div class="rule-actions">
                     <el-switch 
@@ -255,8 +339,14 @@
           </el-tab-pane>
 
           <!-- 代码预览面板 -->
-          <el-tab-pane label="代码" name="code">
-            <div class="code-preview-panel" data-testid="code-preview-panel">
+          <el-tab-pane
+            label="代码"
+            name="code"
+          >
+            <div
+              class="code-preview-panel"
+              data-testid="code-preview-panel"
+            >
               <div class="panel-header">
                 <h5>代码预览</h5>
                 <el-button-group>
@@ -294,42 +384,77 @@
     </div>
 
     <!-- 验证警告 -->
-    <div v-if="validationResult && !validationResult.isValid" class="validation-warnings" data-testid="validation-warnings">
+    <div
+      v-if="validationResult && !validationResult.isValid"
+      class="validation-warnings"
+      data-testid="validation-warnings"
+    >
       <el-alert
         title="状态机验证警告"
         type="warning"
         :closable="false"
       >
-        <div v-for="error in validationResult.errors" :key="error" class="error-item">
+        <div
+          v-for="error in validationResult.errors"
+          :key="error"
+          class="error-item"
+        >
           {{ error }}
         </div>
       </el-alert>
     </div>
 
     <!-- 元数据编辑对话框 -->
-    <el-dialog v-model="showMetadataDialog" title="编辑工作流信息" width="500px">
-      <el-form :model="metadataForm" label-width="80px">
+    <el-dialog
+      v-model="showMetadataDialog"
+      title="编辑工作流信息"
+      width="500px"
+    >
+      <el-form
+        :model="metadataForm"
+        label-width="80px"
+      >
         <el-form-item label="名称">
           <el-input v-model="metadataForm.name" />
         </el-form-item>
         <el-form-item label="描述">
-          <el-input v-model="metadataForm.description" type="textarea" />
+          <el-input
+            v-model="metadataForm.description"
+            type="textarea"
+          />
         </el-form-item>
         <el-form-item label="实体">
           <el-input v-model="metadataForm.entity" />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="showMetadataDialog = false">取消</el-button>
-        <el-button type="primary" @click="saveMetadata">保存</el-button>
+        <el-button @click="showMetadataDialog = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="saveMetadata"
+        >
+          保存
+        </el-button>
       </template>
     </el-dialog>
 
     <!-- 转换编辑对话框 -->
-    <el-dialog v-model="showTransitionDialog" title="添加状态转换" width="600px">
-      <el-form :model="transitionForm" label-width="80px">
+    <el-dialog
+      v-model="showTransitionDialog"
+      title="添加状态转换"
+      width="600px"
+    >
+      <el-form
+        :model="transitionForm"
+        label-width="80px"
+      >
         <el-form-item label="源状态">
-          <el-select v-model="transitionForm.source" placeholder="选择源状态">
+          <el-select
+            v-model="transitionForm.source"
+            placeholder="选择源状态"
+          >
             <el-option 
               v-for="state in sourceStates"
               :key="state.id"
@@ -339,7 +464,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="目标状态">
-          <el-select v-model="transitionForm.target" placeholder="选择目标状态">
+          <el-select
+            v-model="transitionForm.target"
+            placeholder="选择目标状态"
+          >
             <el-option 
               v-for="state in targetStates"
               :key="state.id"
@@ -362,41 +490,93 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="showTransitionDialog = false">取消</el-button>
-        <el-button type="primary" @click="saveTransition">保存</el-button>
+        <el-button @click="showTransitionDialog = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="saveTransition"
+        >
+          保存
+        </el-button>
       </template>
     </el-dialog>
 
     <!-- 业务规则编辑对话框 -->
-    <el-dialog v-model="showRuleDialog" title="添加业务规则" width="600px">
-      <el-form :model="ruleForm" label-width="80px">
+    <el-dialog
+      v-model="showRuleDialog"
+      title="添加业务规则"
+      width="600px"
+    >
+      <el-form
+        :model="ruleForm"
+        label-width="80px"
+      >
         <el-form-item label="规则类型">
-          <el-select v-model="ruleForm.type" data-testid="rule-type-selector">
-            <el-option label="字段联动" value="field-linkage" />
-            <el-option label="权限约束" value="permission-constraint" />
-            <el-option label="异步验证" value="async-validation" />
-            <el-option label="自定义" value="custom" />
+          <el-select
+            v-model="ruleForm.type"
+            data-testid="rule-type-selector"
+          >
+            <el-option
+              label="字段联动"
+              value="field-linkage"
+            />
+            <el-option
+              label="权限约束"
+              value="permission-constraint"
+            />
+            <el-option
+              label="异步验证"
+              value="async-validation"
+            />
+            <el-option
+              label="自定义"
+              value="custom"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="规则ID">
-          <el-input v-model="ruleForm.id" placeholder="规则唯一标识" />
+          <el-input
+            v-model="ruleForm.id"
+            placeholder="规则唯一标识"
+          />
         </el-form-item>
         <el-form-item label="触发条件">
-          <el-input v-model="ruleForm.trigger" placeholder="触发字段或事件" />
+          <el-input
+            v-model="ruleForm.trigger"
+            placeholder="触发字段或事件"
+          />
         </el-form-item>
         <el-form-item label="执行条件">
-          <el-input v-model="ruleForm.condition" placeholder="例如: value > 100" />
+          <el-input
+            v-model="ruleForm.condition"
+            placeholder="例如: value > 100"
+          />
         </el-form-item>
         <el-form-item label="执行动作">
-          <el-input v-model="ruleForm.action" placeholder="例如: setField('discount', 10)" />
+          <el-input
+            v-model="ruleForm.action"
+            placeholder="例如: setField('discount', 10)"
+          />
         </el-form-item>
         <el-form-item label="优先级">
-          <el-input-number v-model="ruleForm.priority" :min="0" :max="100" />
+          <el-input-number
+            v-model="ruleForm.priority"
+            :min="0"
+            :max="100"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="showRuleDialog = false">取消</el-button>
-        <el-button type="primary" @click="saveRule">保存</el-button>
+        <el-button @click="showRuleDialog = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="saveRule"
+        >
+          保存
+        </el-button>
       </template>
     </el-dialog>
   </div>

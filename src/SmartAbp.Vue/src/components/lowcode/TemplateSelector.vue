@@ -18,7 +18,10 @@
           size="small"
           style="width: 150px; margin-left: 12px;"
         >
-          <el-option label="全部分类" value="" />
+          <el-option
+            label="全部分类"
+            value=""
+          />
           <el-option
             v-for="category in categories"
             :key="category.value"
@@ -30,27 +33,52 @@
     </div>
 
     <!-- 加载状态 -->
-    <div v-if="store.isLoading" class="loading-state">
-      <el-skeleton :rows="3" animated />
+    <div
+      v-if="store.isLoading"
+      class="loading-state"
+    >
+      <el-skeleton
+        :rows="3"
+        animated
+      />
     </div>
 
     <!-- 错误状态 -->
-    <div v-if="store.error" class="error-state">
+    <div
+      v-if="store.error"
+      class="error-state"
+    >
       <el-empty description="加载模板失败">
-        <el-button type="primary" @click="store.fetchTemplates()">重试</el-button>
+        <el-button
+          type="primary"
+          @click="store.fetchTemplates()"
+        >
+          重试
+        </el-button>
       </el-empty>
     </div>
 
     <!-- 模板列表 -->
-    <div v-if="!store.isLoading && !store.error" class="templates-content">
+    <div
+      v-if="!store.isLoading && !store.error"
+      class="templates-content"
+    >
       <!-- 权限管理模板（特别展示） -->
-      <div v-if="permissionTemplates.length > 0" class="template-category">
+      <div
+        v-if="permissionTemplates.length > 0"
+        class="template-category"
+      >
         <div class="category-header">
           <h3>
             <i class="el-icon-lock" />
             权限管理系统模板
           </h3>
-          <el-tag type="success" size="small">推荐</el-tag>
+          <el-tag
+            type="success"
+            size="small"
+          >
+            推荐
+          </el-tag>
         </div>
         <div class="template-grid">
           <el-card
@@ -66,12 +94,22 @@
                   <i class="el-icon-shield" />
                   {{ template.name }}
                 </div>
-                <el-tag type="primary" size="small">企业级</el-tag>
+                <el-tag
+                  type="primary"
+                  size="small"
+                >
+                  企业级
+                </el-tag>
               </div>
             </template>
             <div class="template-content">
-              <p class="template-description">{{ template.description }}</p>
-              <div v-if="template.features" class="template-features">
+              <p class="template-description">
+                {{ template.description }}
+              </p>
+              <div
+                v-if="template.features"
+                class="template-features"
+              >
                 <el-tag
                   v-for="feature in template.features"
                   :key="feature"
@@ -123,8 +161,13 @@
               </div>
             </template>
             <div class="template-content">
-              <p class="template-description">{{ template.description }}</p>
-              <div v-if="template.features" class="template-features">
+              <p class="template-description">
+                {{ template.description }}
+              </p>
+              <div
+                v-if="template.features"
+                class="template-features"
+              >
                 <el-tag
                   v-for="feature in template.features"
                   :key="feature"
@@ -141,9 +184,17 @@
       </div>
 
       <!-- 空状态 -->
-      <div v-if="filteredTemplates.length === 0" class="empty-state">
+      <div
+        v-if="filteredTemplates.length === 0"
+        class="empty-state"
+      >
         <el-empty description="没有找到匹配的模板">
-          <el-button type="primary" @click="clearFilters">清除筛选条件</el-button>
+          <el-button
+            type="primary"
+            @click="clearFilters"
+          >
+            清除筛选条件
+          </el-button>
         </el-empty>
       </div>
     </div>
