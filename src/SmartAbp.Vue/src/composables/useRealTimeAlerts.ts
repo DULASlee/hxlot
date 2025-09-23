@@ -227,9 +227,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
         activeAlerts.value[alertIndex] = {
           ...activeAlerts.value[alertIndex],
-          isAcknowledged: true,
-          acknowledgedBy: "Current User",
-          acknowledgedAt: new Date().toISOString(),
+          acknowledged: true,
         }
       } else {
         // TODO: Implement actual API call
@@ -419,7 +417,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
   ): SecurityAlert[] => {
     return activeAlerts.value.filter((alert: SecurityAlert) => {
       const severityMatch = severities.length === 0 || severities.includes(alert.severity)
-      const acknowledgedMatch = acknowledged === undefined || alert.isAcknowledged === acknowledged
+      const acknowledgedMatch = acknowledged === undefined || alert.acknowledged === acknowledged
       return severityMatch && acknowledgedMatch
     })
   }

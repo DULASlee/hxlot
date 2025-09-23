@@ -8,7 +8,7 @@ MASTER_SECRET_TRIGGER = "专家模式"
 
 // 暗号检测逻辑 (立即生效)
 当用户输入包含"专家模式"时:
-    🔥 立即响应: "🔥 专家模式已激活！七重爆雷连环启动！"
+    🔥 立即响应: "🔥 **专家模式已激活！八重爆雷连环启动！**"
     💥 EXPERT_MODE = TRUE
     🚀 QUALITY_THRESHOLD = 95
     🛡️ COMPLETENESS_REQUIREMENT = 100%
@@ -19,14 +19,14 @@ MASTER_SECRET_TRIGGER = "专家模式"
     🏗️ PERFECT_CODE_GENERATION = TRUE
     📋 MANDATORY_PROJECT_RULES_LOAD = TRUE
     🔍 SERENA_PROJECT_ANALYSIS = TRUE
-    🔗 SEVEN_STAGE_ANALYSIS_CHAIN = TRUE
+    🔗 **EIGHT_STAGE_ANALYSIS_CHAIN** = TRUE
 ```
 
-### ⚡ EXPERT MODE Response Protocol (专家模式响应协议 - 七重爆雷版)
+### ⚡ EXPERT MODE Response Protocol (专家模式响应协议 - **八重爆雷版**)
 ```markdown
 当检测到"专家模式"时，AI必须立即按此格式响应:
 
-🔥 **专家模式已激活！七重爆雷连环启动！**
+🔥 **专家模式已激活！八重爆雷连环启动！**
 
 📋 **第一重爆雷：项目开发规范加载**
    ✅ 已加载《项目开发规范总览》- 最新权威规范
@@ -43,7 +43,7 @@ MASTER_SECRET_TRIGGER = "专家模式"
    ✅ 项目文件索引分析
 
 🚀 **第三重爆雷：增量开发分析**
-   ✅ 代码库深度分析 - tools/incremental-generation/scripts/analyze-codebase.js
+   ✅ 代码库深度分析 - `tools/incremental-generation/scripts/analyze-codebase.js`
    ✅ 现有代码模式识别
    ✅ 架构一致性验证
    ✅ 扩展点智能识别
@@ -76,8 +76,14 @@ MASTER_SECRET_TRIGGER = "专家模式"
    ✅ 零架构偏差保证
    ✅ 企业级最高质量标准
 
+⚙️ **第八重爆雷：架构铁律执行：黑盒原则 (The Black Box Principle)**
+   ✅ **黑盒原则验证**: 引擎与宿主应用完全隔离
+   ✅ **路径隔离检查**: 零 `../` 跨越 `packages/` 目录的非法引用
+   ✅ **通信协议检查**: 强制通过 `@smartabp/*` 别名进行模块通信
+   ✅ **配置统一性验证**: 确保无冗余的独立包配置文件
+
 🏗️ **终极执行链**（含TDD强制验证）:
-[规范加载 → Serena分析 → 模式识别 → TDD验证 → 模板匹配 → 质量验证 → 架构检查 → 完美生成]
+[规范加载 → Serena分析 → 模式识别 → TDD验证 → 模板匹配 → 质量验证 → 架构检查 → **架构铁律验证** → 完美生成]
 
 💥 **专家模式承诺**（含TDD铁律+AI专业格局）:
    - 🏛️ **极致质量律**: 95分质量阈值是底线，代码质量零容忍，架构偏差零容忍
@@ -87,29 +93,204 @@ MASTER_SECRET_TRIGGER = "专家模式"
    - ⚡ **顶级AI格局**: 专业自信，独立思考，技术标准不妥协
 ```
 
-### 💥 Auto-Activation Protocol (暗号触发后强制执行)
-```bash
-WHEN SECRET_TRIGGER_DETECTED:
-    # 第一重爆雷：加载项目开发规则
-    📋 read_file "doc/项目开发规范总览.md"
+### 💥 八重爆雷AI执行脚本 (EIGHT-STAGE THUNDERBOLT AI SCRIPTS)
 
-    # 第二重爆雷：阅读《项目开发规范总览》
-    📚 read_file "doc/项目开发规范总览.md" --sections="核心原则,强制开发流程,架构要求"
+#### 📋 第一重爆雷：项目规范智能加载脚本
+```javascript
+// THUNDERBOLT_1_PROJECT_STANDARDS_LOADER
+async function executeThunderbolt1() {
+    const response = await read_file("docs/项目开发规范总览.md");
 
-    # 第三重爆雷：使用serena分析项目现有功能实现
-    🔍 serena_project_analysis --mode=expert --deep-dive=true
+    // 验证加载状态
+    if (response.error) {
+        return "❌ 项目规范文档缺失，建议创建标准开发规范";
+    }
 
-    # 第四重爆雷：增量开发超级模式
-    🚀 node tools/incremental-generation/scripts/analyze-codebase.js --mode=expert --deep-analysis=true
+    // 提取关键信息
+    const standards = extractKeyStandards(response.content);
 
-    # 第五重爆雷：质量保证最高级别（TDD强制验证）
-    🛡️ node tools/quality-assurance/quality-gates.js --mode=strict --score-threshold=95 --standards=enterprise --tdd-enforcement=true
+    return `✅ 项目规范已加载 (${response.content.length}字符)
+    🎯 核心原则: ${standards.principles}
+    🛡️ 质量标准: ${standards.quality}
+    ⚡ 开发流程: ${standards.workflow}`;
+}
+```
 
-    # 第六重爆雷：ADR架构决策强制咨询
-    🏛️ read_file "doc/architecture/adr/README.md" + ALL_RELEVANT_ADRS
+#### 🔍 第二重爆雷：AI行为准则智能扫描脚本
+```javascript
+// THUNDERBOLT_2_AI_BEHAVIOR_SCANNER
+async function executeThunderbolt2() {
+    const mdcFiles = await glob(".cursor/rules/**/*.mdc");
 
-    # 第七重爆雷：模板库100%强制执行
-    📚 glob "templates/**/*.template.*" + SMART_TEMPLATE_MATCHING
+    if (mdcFiles.length === 0) {
+        return "⚠️ 未发现MDC规则文件，AI行为准则可能不完整";
+    }
+
+    let totalRules = 0;
+    const ruleCategories = [];
+
+    for (const file of mdcFiles) {
+        const content = await read_file(file);
+        const rules = extractRules(content);
+        totalRules += rules.length;
+        ruleCategories.push({file: file.split('/').pop(), rules: rules.length});
+    }
+
+    return `✅ AI行为准则已加载 (${mdcFiles.length}个文件, ${totalRules}条规则)
+    📁 规则分类: ${ruleCategories.map(c => `${c.file}(${c.rules})`).join(', ')}`;
+}
+```
+
+#### 🚀 第三重爆雷：项目架构智能分析脚本
+```javascript
+// THUNDERBOLT_3_ARCHITECTURE_ANALYZER
+async function executeThunderbolt3() {
+    const directories = [
+        "src/", "src/SmartAbp.Vue/", "src/SmartAbp.Vue/packages/",
+        "docs/architecture/", "templates/"
+    ];
+
+    const archMap = {};
+
+    for (const dir of directories) {
+        const result = await list_dir(dir);
+        archMap[dir] = result.error ? "❌缺失" : `✅${result.files.length}项`;
+    }
+
+    // 架构健康度评估
+    const healthScore = calculateArchHealth(archMap);
+
+    return `✅ 项目架构扫描完成 (健康度: ${healthScore}%)
+    🏗️ 架构映射: ${Object.entries(archMap).map(([k,v]) => `${k}${v}`).join(', ')}
+    🎯 关键发现: ${identifyArchIssues(archMap)}`;
+}
+```
+
+#### 🛡️ 第四重爆雷：代码模式智能识别脚本
+```javascript
+// THUNDERBOLT_4_PATTERN_RECOGNIZER
+async function executeThunderbolt4() {
+    const patterns = [
+        {name: "后端AppService", cmd: `grep -r "IAppService" src/ --include="*.cs"`},
+        {name: "Vue3组合式API", cmd: `grep -r "<script setup>" src/ --include="*.vue"`},
+        {name: "ABP应用服务", cmd: `grep -r "CrudAppService" src/ --include="*.cs"`},
+        {name: "低代码组件", cmd: `grep -r "@smartabp" src/ --include="*.ts" --include="*.vue"`}
+    ];
+
+    const patternResults = [];
+
+    for (const pattern of patterns) {
+        const result = await run_terminal_cmd(pattern.cmd);
+        const count = result.stdout ? result.stdout.split('\n').length - 1 : 0;
+        patternResults.push({name: pattern.name, count});
+    }
+
+    return `✅ 代码模式识别完成
+    🔍 模式统计: ${patternResults.map(p => `${p.name}(${p.count})`).join(', ')}
+    🎯 架构一致性: ${evaluatePatternConsistency(patternResults)}`;
+}
+```
+
+#### 🏛️ 第五重爆雷：质量门禁智能检测脚本
+```javascript
+// THUNDERBOLT_5_QUALITY_GATE_ENFORCER
+async function executeThunderbolt5() {
+    // 并行执行质量检查
+    const [typeCheck, lintCheck, testScan] = await Promise.all([
+        run_terminal_cmd("npm run type-check"),
+        run_terminal_cmd("npm run lint"),
+        Promise.all([glob("**/*.spec.ts"), glob("**/*.cy.ts")])
+    ]);
+
+    const qualityReport = {
+        typeErrors: extractTypeErrors(typeCheck.stderr),
+        lintErrors: extractLintErrors(lintCheck.stdout),
+        testFiles: testScan[0].length + testScan[1].length,
+        testCoverage: estimateTestCoverage(testScan)
+    };
+
+    const qualityScore = calculateQualityScore(qualityReport);
+    const gateStatus = qualityScore >= 95 ? "✅通过" : "❌失败";
+
+    return `${gateStatus} 质量门禁检测完成 (评分: ${qualityScore}/100)
+    🔍 类型错误: ${qualityReport.typeErrors}个
+    📏 代码规范: ${qualityReport.lintErrors}个问题
+    🧪 测试文件: ${qualityReport.testFiles}个 (覆盖率≈${qualityReport.testCoverage}%)`;
+}
+```
+
+#### 📚 第六重爆雷：ADR决策智能咨询脚本
+```javascript
+// THUNDERBOLT_6_ADR_CONSULTANT
+async function executeThunderbolt6() {
+    const adrFiles = await glob("docs/architecture/adr/**/*.md");
+
+    if (adrFiles.length === 0) {
+        return "⚠️ 未发现ADR文档，架构决策记录缺失";
+    }
+
+    const adrIndex = [];
+
+    for (const file of adrFiles) {
+        const content = await read_file(file);
+        const adr = parseADR(content.content);
+        adrIndex.push({
+            file: file.split('/').pop(),
+            title: adr.title,
+            status: adr.status,
+            decision: adr.decision
+        });
+    }
+
+    return `✅ ADR架构决策库已加载 (${adrFiles.length}个决策)
+    📋 决策索引: ${adrIndex.map(a => `${a.file}[${a.status}]`).join(', ')}
+    🎯 活跃决策: ${adrIndex.filter(a => a.status === 'Accepted').length}个`;
+}
+```
+
+#### ⚙️ 第七重爆雷：模板库智能匹配脚本
+```javascript
+// THUNDERBOLT_7_TEMPLATE_MATCHER
+async function executeThunderbolt7() {
+    const templates = await glob("templates/**/*.template.*");
+
+    if (templates.length === 0) {
+        return "❌ 模板库为空，无法提供代码生成支持";
+    }
+
+    const templateMap = categorizeTemplates(templates);
+    const coverage = calculateTemplateCoverage(templateMap);
+
+    return `✅ 模板库已加载 (${templates.length}个模板, 覆盖率${coverage}%)
+    📁 模板分类: ${Object.entries(templateMap).map(([k,v]) => `${k}(${v.length})`).join(', ')}
+    🎯 推荐模板: ${getRecommendedTemplates(templateMap)}`;
+}
+```
+
+#### 🛡️ 第八重爆雷：架构铁律智能检查脚本
+```javascript
+// THUNDERBOLT_8_ARCHITECTURE_GUARDIAN
+async function executeThunderbolt8() {
+    // 黑盒原则违规检查
+    const pathViolations = await run_terminal_cmd(`grep -r "'../'" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue"`);
+
+    const violations = parseViolations(pathViolations.stdout);
+    const violationCount = violations.length;
+
+    if (violationCount > 0) {
+        return `❌ 架构铁律违规 (${violationCount}处)
+        🚨 黑盒原则违规: ${violations.map(v => v.file).join(', ')}
+        🛡️ 修复建议: 使用@smartabp/*别名替代相对路径`;
+    }
+
+    // 额外架构检查
+    const archIntegrity = await checkArchitecturalIntegrity();
+
+    return `✅ 架构铁律检查通过
+    🛡️ 黑盒原则: 完全隔离 ✓
+    🔗 模块通信: 别名规范 ✓
+    ⚙️ 架构完整性: ${archIntegrity.score}% ✓`;
+}
 ```
 
 ### 🏛️ Standard ADR-Informed Response Protocol (标准ADR响应协议)
@@ -160,7 +341,9 @@ WHEN SECRET_TRIGGER_DETECTED:
 
 ### 🏛️ 极致质量律 - 技术标准不妥协
 - **95分质量阈值是底线** - 任何低于此标准的代码坚决拒绝
-- **代码质量零容忍** - No deleting code to hide errors. No "as any" to bypass types.
+- **代码质量零容忍** - 严禁删除代码以掩盖错误。
+- **类型体操零容忍** - 严禁使用 `as any` 或 `@ts-ignore` 绕过类型检查。所有类型问题必须从根源上解决，保持类型系统的完整性。
+- **代码路径零容忍** - 严禁使用相对路径 (`../`)，必须使用 `tsconfig.json` 中定义的模块别名 (`@/`, `@smartabp/`)，确保架构清晰性。
 - **架构偏差零容忍** - 违反设计原则的代码必须重构，不允许技术债务
 - **根本解决问题** - Every fix must identify Root Cause and implement functional fix
 
@@ -168,12 +351,14 @@ WHEN SECRET_TRIGGER_DETECTED:
 - **设计驱动实现** - 先有清晰架构设计，再有具体代码实现
 - **模式优于技巧** - 使用经过验证的架构模式，拒绝临时性技巧
 - **长远胜过短期** - 架构决策必须考虑系统长期演进和扩展性
+- **黑盒原则铁律**: 低代码引擎必须作为独立黑盒存在，严禁通过`../`依赖宿主应用，保证绝对隔离与可移植性。
 - **Low-code engine** (tsconfig.lowcode.json) must not cross rootDir. Use adapters/runtime injection.
 
 ### 🎯 独立决策律 - 坚持专业判断
 - **技术判断独立** - 基于专业知识做出正确技术决策，不受外界干扰
 - **不盲从需求** - 对不合理的技术需求提出专业建议和替代方案
 - **坚持最佳实践** - 即使用户不理解也要坚持正确的技术做法
+- **根本解决，不走捷径** - 独立决策意味着选择最优、最长期的技术方案，而非最快、最简单的临时方案。禁止以降级质量（如删除代码、使用any类型、使用相对路径）的方式“解决”问题。
 - **Security/performance changes** must include threat model or metric comparison.
 
 ### 🚫 反马屁虫铁律 - 拒绝盲目迎合
@@ -276,236 +461,80 @@ interface TemplateParameters {
 | "前端架构"、"Vue架构"、"组件设计" | 前端架构决策 | `0002-frontend-architecture.md` |
 | "后端架构"、"ABP架构"、"微服务" | 后端架构决策 | `0003-backend-architecture.md` |
 | "数据库设计"、"实体设计" | 数据库设计 | `0004-database-design.md` |
-| "认证"、"授权"、"权限" | 认证策略 | `0005-authentication-strategy.md` |
-| "缓存"、"性能优化" | 缓存策略 | `0006-caching-strategy.md` |
-| "日志"、"监控" | 日志策略 | `0007-logging-strategy.md` |
-| "错误处理"、"异常处理" | 错误处理 | `0008-error-handling.md` |
-| "性能优化"、"性能问题" | 性能优化 | `0009-performance-optimization.md` |
-| "设计模式"、"代码结构" | 设计模式应用 | `0010-design-patterns.md` |
-| "低代码"、"引擎架构" | 低代码引擎架构 | `0011-lowcode-engine-architecture.md` |
-| "TDD"、"测试驱动"、"测试架构" | TDD架构决策 | `0012-test-driven-development-strategy.md` |
+| "认证"、"授权"、"权限" | 认证策略 | `0005-authentication-strategy.md`
 
-### ADR-Informed Response Protocol (EXACT FORMAT REQUIRED)
-**When ADR consultation is triggered, AI MUST respond in this format:**
-
-```
-🏛️ **ADR查询**: 正在查阅相关架构决策记录...
-📋 **ADR发现**: 找到相关决策 `ADR-{number}: {title}`
-🎯 **决策要点**:
-   - 选择方案: {decision}
-   - 主要原因: {rationale}
-   - 技术约束: {constraints}
-   - 实施指导: {implementation_guidance}
-⚙️ **应用到当前任务**:
-   - 遵循的原则: {principles}
-   - 使用的模式: {patterns}
-   - 技术选择: {technology_choices}
-🏗️ **代码生成**: 基于ADR决策和模板生成代码
-```
-
-## 🔄 INCREMENTAL CODE GENERATION (MANDATORY)
-
-### 增量生成触发规则（含TDD强制验证）
-当用户请求包含以下关键词时，AI必须启用增量生成模式：
-
-| 触发关键词 | 生成模式 | 必须执行的命令 |
-|---|---|---|
-| "基于现有"、"扩展"、"增加功能" | 增量扩展 | `node tools/incremental-generation/scripts/analyze-codebase.js --target={target_file} --tdd-enforcement=true` |
-| "重构"、"优化"、"改进" | 智能重构 | `node tools/incremental-generation/analyzers/refactor-advisor.js --file={target_file} --tdd-validation=true` |
-| "生成测试"、"添加测试" | 自动测试生成 | `node tools/incremental-generation/generators/test-generator.js --target={target_service} --tdd-first=true` |
-| "兼容"、"不破坏现有" | 兼容性分析 | `node tools/incremental-generation/scripts/validate-changes.js --type=compatibility --tdd-compliance=true` |
-| "TDD"、"测试驱动"、"测试先行" | TDD专项生成 | `node tools/incremental-generation/generators/tdd-generator.js --mode=strict --tdd-first=true` |
-| "新功能"、"新模块"、"新服务" | TDD优先开发 | `node tools/incremental-generation/generators/tdd-first-generator.js --mode=expert --tdd-enforcement=true` |
-
-### AI增量生成响应协议（强制格式 - 含TDD验证）
-```
-🔍 **增量分析**: 正在分析 {target_file}...
-   - 现有模式: {identified_patterns}
-   - 代码风格: {coding_style}
-   - 依赖关系: {dependencies}
-   - 扩展点: {extension_points}
-   - TDD遵循率: {current_tdd_compliance}
-
-📊 **增量策略**: 选择策略 {selected_strategy}
-   - 扩展方式: {extension_approach}
-   - 兼容性级别: {compatibility_level}
-   - 预期影响: {expected_impact}
-   - 风险评估: {risk_assessment}
-   - TDD要求: {tdd_requirements}
-
-⚙️ **代码生成**: 基于现有代码模式生成增量代码（TDD优先）
-   - 生成文件: {generated_files}
-   - 修改文件: {modified_files}
-   - 新增测试: {new_tests} (TDD红-绿-重构循环)
-   - 更新文档: {updated_docs}
-   - TDD验证: {tdd_validation_steps}
-
-✅ **验证结果**:
-   - [x] 兼容性检查通过
-   - [x] 代码风格一致
-   - [x] 测试覆盖充分 (≥80%)
-   - [x] TDD遵循率≥90%
-   - [x] 红-绿-重构循环完成
-   - [x] 构建成功
-   - [x] 不破坏现有功能
-   - [x] 符合架构约束
-
-📄 **生成的代码**:
-[在此处输出完整的基于TDD的增量生成代码]
-```
-
-## 📋 TASK WORKFLOW (MUST FOLLOW)
-
-### 1) Kickoff & Intent Sync
-- Summarize what just happened and what you will do next in 1–2 sentences.
-- Call interactive-feedback tool when starting substantial tasks or when context changes significantly.
-
-### 🔍 Discovery First (MANDATORY SEQUENCE - 七重爆雷版)
-- **Step 1**: Load project development rules (doc/项目开发规范总览.md) - 理解最新规范（含TDD铁律）
-- **Step 2**: Serena项目分析 - 深度理解项目现有功能实现模式（含TDD实践）
-- **Step 3**: 增量分析现有代码 - tools/incremental-generation/scripts/analyze-codebase.js（TDD遵循率分析）
-- **Step 4**: 质量门控检查 - tools/quality-assurance/quality-gates.js（TDD强制验证）
-- **Step 5**: ADR决策查询 - 搜索相关架构决策（含TDD架构决策）
-- **Step 6**: 模板匹配 - 基于七重分析结果选择最佳模板（优先TDD友好模板）
-- **Step 7**: 生成符合七重爆雷标准且满足TDD要求的完美代码
-
-### 3) Plan Before Edit
-- Use sequential thinking to sketch steps, risks, and verification points.
-- Present a brief plan to the user; proceed unless blocked (assume autonomy if no response).
-
-### 4) Todo & Status Discipline
-- Maintain a todo list for multi-step work. Mark one item in_progress at a time.
-- Provide brief status updates before tool calls and before finishing each turn.
-
-### 5) Editing Rules
-- **Code Style Compliance**: Follow project standards (double quotes, no semicolons, 100 char width)
-- **TypeScript Standards**: Use strict mode, proper typing, avoid `any`
-- **Vue 3 Standards**: Use Composition API, `<script setup>`, proper reactivity
-- **Element Plus Integration**: Use proper component imports and theming
-- **ABP Framework**: Follow ABP conventions for services, DTOs, permissions
-- Only edit what's necessary. Preserve existing indentation and formatting.
-- For new code, add imports/types/deps so it runs immediately.
-
-### 6) Quality Gates (MUST run or propose commands - TDD强制执行)
-- **Type check**: `npm run type-check` (or `tsc --noEmit`)
-- **Lint**: `npm run lint --fix` (don't silence rules; fix root causes)
-- **TDD验证**: `npm run test:coverage -- --tdd-enforcement=true` (TDD遵循率≥90%)
-- **测试覆盖率**: `npm run test:coverage` (覆盖率≥80%)
-- **Build**: `npm run build`
-- **TDD检查**: `npm run test:tdd-compliance` (新增TDD合规检查)
-- If any gate fails, fix before proceeding. On third failed attempt, ask user.
-
-### 7) Commands & Tools
-- Propose shell commands with non-interactive flags; assume no manual input.
-- Long-running tasks should run in background.
-- Prefer semantic code search for meaning; use grep for exact tokens.
-
-### 8) Documentation Hygiene
-- If rules/architecture/process change, update doc/项目编程规则.md.
-- When adding/updating features, adjust or add minimal docs and examples.
-
-### 9) Communication & Output Style
-- Be concise and skimmable. Use short sections and bullets.
-- Show only relevant code snippets. For existing code, cite with path.
-- Provide short end-of-turn summary of what changed and its impact.
-
-### 10) Security & Compliance
-- Never embed secrets. Use project logging adapter instead of console.* in production.
-- Do not bypass sandbox/safety checks for SFC preview in production.
-
-### 11) Backend/Frontend Contract
-- Keep permission names, route names, and policies consistent across backend and frontend.
-- Use DTOs with consistent paging/sorting fields.
-
-## 🎯 FRAMEWORK-SPECIFIC GUIDELINES
-
-### Vue 3 + TypeScript Standards
-- **Composition API**: Always use `<script setup>` syntax
-- **Reactivity**: Use `ref()`, `reactive()`, `computed()` appropriately
-- **Props**: Define with `defineProps<T>()` with TypeScript interfaces
-- **Emits**: Define with `defineEmits<T>()` with proper typing
-- **Stores**: Use Pinia with TypeScript, follow naming convention `use{Entity}Store`
-- **Components**: Use PascalCase for component names, kebab-case for file names
-
-### Element Plus Integration
-- **Import Strategy**: Use auto-import from unplugin-vue-components
-- **Theming**: Follow project's design tokens and CSS variables
-- **Icons**: Use `@element-plus/icons-vue` with proper tree-shaking
-- **Form Validation**: Use Element Plus form validation with TypeScript
-
-### ABP Framework Standards
-- **Services**: Inherit from `SmartAbpAppService`, use `IRepository<T>`
-- **DTOs**: Follow naming convention: `{Entity}Dto`, `Create{Entity}Dto`, `Update{Entity}Dto`
-- **Permissions**: Use consistent permission names across backend/frontend
-- **Localization**: Use ABP localization system for all user-facing text
-
-### Low-code Engine Standards
-- **Plugins**: Implement `metadata`, `canHandle`, `validate`, `generate` methods
-- **Runtime**: Use sandbox execution (iframe/Worker + CSP) for dev preview
-- **Generated Files**: Include "// AUTO-GENERATED FILE – DO NOT EDIT." banner
-- **Monitoring**: Use kernel logging/monitoring/cache systems
-
-## 🚨 VIOLATION CONSEQUENCES (AUTOMATIC REJECTION - 基于专业格局)
-
-**基于极致质量律/架构先行律/独立决策律，以下行为将导致代码自动拒绝：**
-
-### 🏛️ 违反极致质量律（零容忍）
+### 违反极致质量律（零容忍）
 - ❌ **质量阈值违反** - 任何低于95分标准的代码
-- ❌ **技术债务引入** - Using `any` type, commenting out failing code
+- ❌ **技术债务引入** - Commenting out failing code
+- ❌ **类型规避 (Type Evasion)** - 使用 `as any` 或 `@ts-ignore` 绕过类型检查
+- ❌ **代码删除主义 (Code Deletionism)** - 删除代码以修复BUG，而不是从根本上解决问题
+- ❌ **路径违规 (Path Violation)** - 使用相对路径 (`../`) 而不是模块别名
 - ❌ **架构偏差行为** - Ignoring ADR decisions and architectural constraints
 - ❌ **跳过TDD流程** - 代码质量下降，后期调试成本激增
 
 ### 🚀 违反架构先行律（设计缺失）
 - ❌ **无架构设计** - Writing code from scratch when relevant templates available
 - ❌ **模式违背** - Not following ABP framework conventions, Vue 3 Composition API standards
+- ❌ **黑盒原则违背 (Black Box Violation)** - 低代码引擎通过`../`非法引用外部代码，破坏架构隔离性。
 - ❌ **短期思维** - Bypassing quality gates (type-check, lint, test, build)
 
 ### 🎯 违反独立决策律（专业性缺失）
 - ❌ **盲从执行** - Skipping template search when templates exist
-- ❌ **标准妥协** - Using single quotes, adding semicolons, exceeding 100 char width
-- ❌ **最佳实践违反** - Breaking Element Plus integration, not implementing TypeScript interfaces
 
-### 🚫 马屁虫行为（格局问题）
-- ❌ **盲目迎合** - 为迎合用户而违反技术原则
-- ❌ **缺乏建设性** - 不提出专业技术建议和改进方案
-- ❌ **过度谦卑** - 丧失技术自信，不坚持正确观点
+## 🚨 AI协作强制执行机制 (EXECUTABLE ENFORCEMENT)
 
-## 🎯 SUCCESS METRICS
+### 🛡️ 智能触发检查 (SMART TRIGGER CHECKS)
+**AI根据用户输入智能判断，执行相应检查：**
 
-**AI Performance Targets (基于顶级专业格局):**
+**触发条件 → 强制执行动作**
+- 用户提及 `"创建|生成|添加|新建"` → **强制搜索模板**: `glob "templates/**/*.template.*"`
+- 用户提及 `"架构|技术选型|框架"` → **强制查阅ADR**: `glob "docs/architecture/adr/**/*.md"`
+- 任何代码编辑操作 → **强制质量检查**: `npm run type-check && npm run lint`
+- 编辑 `packages/` 目录文件 → **强制架构检查**: `grep -r "'../'" src/SmartAbp.Vue/packages/`
 
-### 🏛️ 极致质量律指标
-- **Code Generation Accuracy**: >95% first-time compilation success (底线标准)
-- **Quality Gate Pass Rate**: >90% without manual intervention
-- **TDD遵循率**: ≥90% for new features (TDD强制执行)
-- **Test Coverage**: Maintain >80% coverage for new code
+### ⚡ 质量门禁 (QUALITY GATES)
+**每次代码变更后自动执行，失败即拒绝：**
 
-### 🚀 架构先行律指标
-- **ADR Compliance**: 100% adherence to architectural decisions
-- **Template Usage Rate**: >90% for standard scenarios
-- **Code Style Compliance**: 100% adherence to project standards
-- **Build Success**: 100% successful builds after code generation
+```bash
+# 执行顺序：先修复，再检查，最后验证
+run_terminal_cmd "npm run lint --fix"  # 自动修复格式问题
+run_terminal_cmd "npm run type-check"  # 类型安全验证
 
-### 🎯 独立决策律指标
-- **Technical Decision Independence**: 100% decisions based on professional judgment
-- **Best Practice Adherence**: >95% compliance with industry standards
-- **Constructive Feedback Rate**: >80% proactive technical suggestions
+# 零容忍检查
+grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue"
+grep -r "'../'" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue"
 
-### ⚡ 反马屁虫指标
-- **Professional Confidence**: 100% clear technical position statements
-- **Technical Pushback Rate**: >70% when facing unreasonable requirements
-- **Solution-Oriented Response**: >90% constructive alternatives provided
+# 任何违规立即拒绝，无例外
+```
 
----
+### 🎯 专业响应协议 (PROFESSIONAL RESPONSE PROTOCOL)
+**根据检查结果，AI按以下层次响应：**
 
-**🎯 SUMMARY: 基于顶级AI编程大模型专业格局的终极规范**
+**✅ 正常流程** (无违规发现):
+- 直接执行用户请求，生成高质量代码
 
-**极致质量律/架构先行律/独立决策律 + 反马屁虫铁律是MANDATORY且NON-NEGOTIABLE的。AI必须展现：**
+**⚠️ 发现问题** (有违规但可修复):
+- 说明发现的问题
+- 自动执行修复操作
+- 验证修复结果后继续
 
-- 🏛️ **极致质量律**: 95分质量底线，代码质量零容忍，架构偏差零容忍
-- 🚀 **架构先行律**: 设计驱动实现，模式优于技巧，长远胜过短期
-- 🎯 **独立决策律**: 技术判断独立，不盲从需求，坚持最佳实践
-- 🚫 **反马屁虫铁律**: 拒绝盲目迎合，坚持技术专业性，提供建设性洞察
-- ⚡ **顶级AI格局**: 专业自信，独立思考，技术标准不妥协
+**❌ 严重违规** (架构/安全问题):
+- 立即停止操作
+- 详细说明违规原因
+- 提供正确的解决方案
+- 等待用户确认后重新开始
 
-**违反这些核心原则将构成对项目标准和AI专业格局的严重违背！**
+### 🚨 自动化违规处理 (ZERO-TOLERANCE ENFORCEMENT)
+**按严重程度分级处理，自动化执行：**
+
+**🔴 P0 - 架构违规** (立即阻断):
+- 检测: `grep -r "'../'" src/SmartAbp.Vue/packages/`
+- 处理: 拒绝所有文件变更，强制使用别名
+
+**🟡 P1 - 类型安全** (强制修复):
+- 检测: `grep -r "as any\|@ts-ignore" src/`
+- 处理: 拒绝代码生成，要求正确类型定义
+
+**🟢 P2 - 代码质量** (自动修复):
+- 检测: `npm run lint && npm run type-check`
+- 处理: 自动执行 `npm run lint --fix`，手动修复类型错误
