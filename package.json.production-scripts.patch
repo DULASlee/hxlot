@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "prod:validate": "node src/SmartAbp.Vue/scripts/production-readiness-validator.js",
+    "prod:e2e": "cd src/SmartAbp.Vue && npx cypress run --spec 'tests/e2e/lowcode-studio-e2e.cy.ts'",
+    "prod:performance": "node src/SmartAbp.Vue/tests/performance/performance-benchmark.js",
+    "prod:security": "node src/SmartAbp.Vue/tests/security/security-audit.js",
+    "prod:report": "open docs/production-readiness-report.html",
+    "quality:check": "npm run type-check && npm run lint && npm run test:coverage && npm run build"
+  }
+}
