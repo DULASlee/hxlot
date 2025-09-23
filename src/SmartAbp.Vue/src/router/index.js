@@ -381,7 +381,7 @@ const routes = [
             {
                 path: "",
                 name: "StudioModeling",
-                component: () => import("@/views/lowcode/QuickStart.vue"),
+                component: () => import("@/views/lowcode/EntityModelingView.vue"),
                 meta: { title: "数据建模", menuKey: "studio-modeling" },
             },
             {
@@ -393,7 +393,7 @@ const routes = [
             {
                 path: "generation",
                 name: "StudioGeneration",
-                component: () => import("@/views/lowcode/GenerationView.vue"),
+                component: () => import("@/views/lowcode/EnhancedGenerationView.vue"),
                 meta: { title: "代码生成", menuKey: "studio-generation" },
             },
             {
@@ -405,7 +405,7 @@ const routes = [
             {
                 path: "theme",
                 name: "StudioTheme",
-                component: () => import("@/views/lowcode/QuickStart.vue"),
+                component: () => import("@/views/lowcode/ThemeCustomizationView.vue"),
                 meta: { title: "主题定制", menuKey: "studio-theme" },
             },
         ],

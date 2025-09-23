@@ -3,7 +3,7 @@ import { ref, computed, watch } from "vue"
 import { logger } from "@/utils/logging"
 
 // WCAG对比度计算工具
-function calculateContrastRatio(color1: string, color2: string): number {
+function calculateContrastRatio(_color1: string, _color2: string): number {
   // 简化的对比度计算（实际应使用更精确的算法）
   // 这里返回模拟值，实际实现需要rgb转换和亮度计算
   return Math.random() * 10 + 4 // 模拟4-14的对比度值
@@ -93,7 +93,7 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
   })
   
   const contrastWarnings = computed(() => {
-    const warnings = []
+    const warnings: Array<{ key: string; ratio: number; required: number }> = []
     Object.entries(contrastRatios.value).forEach(([key, ratio]) => {
       if (!isWCAGCompliant(ratio)) {
         warnings.push({ key, ratio, required: 4.5 })
@@ -273,7 +273,7 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
           logger.info(`Imported theme configuration: ${Object.keys(config.variables).length} variables`)
           resolve(true)
         } catch (error) {
-          logger.error("Failed to parse theme configuration:", error)
+          logger.error("Failed to parse theme configuration:", error as Error)
           resolve(false)
         }
       }
@@ -334,6 +334,33 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
     saveThemeToStorage()
   }, { deep: true })
   
+  // 重置为默认主题
+  const resetToDefault = () => {
+    themeVariables.value = {
+      "--theme-brand-primary": "#409eff",
+      "--theme-brand-success": "#67c23a",
+      "--theme-brand-warning": "#e6a23c",
+      "--theme-brand-danger": "#f56c6c"
+    }
+    applyTheme()
+    logger.info("Theme reset to default")
+  }
+  
+  // 从本地存储加载主题
+  const loadFromLocalStorage = () => {
+    try {
+      const stored = localStorage.getItem("enhanced-theme-variables")
+      if (stored) {
+        const parsed = JSON.parse(stored)
+        themeVariables.value = { ...themeVariables.value, ...parsed }
+        applyTheme()
+        logger.info("Theme loaded from local storage")
+      }
+    } catch (error) {
+      logger.error("Failed to load theme from local storage:", error as Error)
+    }
+  }
+  
   // 初始化
   initializeTheme()
   
@@ -367,6 +394,8 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
     
     // 工具方法
     initializeTheme,
-    saveThemeToStorage
+    saveThemeToStorage,
+    resetToDefault,
+    loadFromLocalStorage
   }
 })

@@ -503,14 +503,14 @@ const getRuleTypeLabel = (type: string): string => {
   return labels[type as keyof typeof labels] || type
 }
 
-const getRuleTypeColor = (type: string): "primary" | "success" | "warning" | "info" | "danger" | "" => {
+const getRuleTypeColor = (type: string): "primary" | "success" | "warning" | "info" | "danger" | undefined => {
   const colors: Record<string, "primary" | "success" | "warning" | "info" | "danger"> = {
     "field-linkage": "primary",
     "permission-constraint": "warning",
     "async-validation": "info", 
     "custom": "success"
   }
-  return colors[type as keyof typeof colors] || ""
+  return colors[type as keyof typeof colors]
 }
 
 const getStateName = (stateId: string): string => {
