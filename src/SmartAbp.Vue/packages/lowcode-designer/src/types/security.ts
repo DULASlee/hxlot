@@ -28,10 +28,12 @@ export interface SecurityAlert {
   id: string
   title: string
   message: string
-  type: "warning" | "error" | "info"
+  description?: string
+  type: "error" | "warning" | "info"
   severity: "low" | "medium" | "high" | "critical"
   timestamp: number
   acknowledged: boolean
+  acknowledgedBy?: string
   source: string
   metadata?: Record<string, any>
 }
