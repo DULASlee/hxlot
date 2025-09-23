@@ -23,7 +23,11 @@ export default defineConfig({
       dts: true,
     }),
     Components({
-      resolvers: [ElementPlusResolver()],
+      resolvers: [
+        ElementPlusResolver({
+          importStyle: false,
+        })
+      ],
       dts: true,
     }),
     Icons({

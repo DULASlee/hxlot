@@ -358,7 +358,7 @@ import MetadataDrivenPageRenderer from "../../../packages/lowcode-designer/src/r
 // import { uiConfigToPageSchema } from "../../../packages/lowcode-designer/src/utils/uiConfigMapper"
 // Temporary mock to avoid type errors
 const uiConfigToPageSchema = (config: any) => config
-import { codeGeneratorApi } from "@smartabp/lowcode-api"
+import { codeGeneratorApi } from "../../../packages/lowcode-api/src/index"
 import type { ElForm, ElTable } from "element-plus"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { Plus, Search, Refresh, Delete } from "@element-plus/icons-vue"
