@@ -104,8 +104,10 @@ try {
             Write-Host "     发现未提交的更改: $change"
         }
 
-        $shouldCommit = $AutoCommit
-        if (-not $AutoCommit) {
+        if ($AutoCommit) {
+            Write-ColorLog "自动提交模式：自动提交本地更改..." "Info"
+            $shouldCommit = $true
+        } else {
             $response = Read-Host "是否自动提交本地更改? (y/N)"
             $shouldCommit = ($response -eq "y" -or $response -eq "Y")
         }
