@@ -1,7 +1,6 @@
 import { defineStore } from "pinia"
 import { ref } from "vue"
-// import { codeGeneratorApi } from "@smartabp/lowcode-api"
-// import type { Template } from "@smartabp/lowcode-api/types"
+import { codeGeneratorApi } from "@smartabp/lowcode-api"
 
 interface Template {
   id: string
@@ -19,9 +18,7 @@ export const useTemplatesStore = defineStore("templates", () => {
     isLoading.value = true
     error.value = null
     try {
-      if (codeGeneratorApi.getTemplates) {
-        templates.value = await codeGeneratorApi.getTemplates()
-      }
+      templates.value = await (codeGeneratorApi as any).getTemplates?.() ?? []
     } catch (e: any) {
       error.value = e
     } finally {

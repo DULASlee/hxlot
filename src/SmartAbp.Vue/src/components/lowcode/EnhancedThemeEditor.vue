@@ -5,7 +5,10 @@
       <template #header>
         <span>主题预设</span>
       </template>
-      <div class="theme-presets" data-testid="theme-preset-selector">
+      <div
+        class="theme-presets"
+        data-testid="theme-preset-selector"
+      >
         <div
           v-for="(name, themeId) in themeStore.themePresets"
           :key="themeId"
@@ -15,10 +18,22 @@
           @click="themeStore.switchTheme(themeId)"
         >
           <div class="theme-preview">
-            <div class="preview-color primary" :style="getThemePreviewStyle(themeId, 'primary')" />
-            <div class="preview-color success" :style="getThemePreviewStyle(themeId, 'success')" />
-            <div class="preview-color warning" :style="getThemePreviewStyle(themeId, 'warning')" />
-            <div class="preview-color danger" :style="getThemePreviewStyle(themeId, 'danger')" />
+            <div
+              class="preview-color primary"
+              :style="getThemePreviewStyle(themeId, 'primary')"
+            />
+            <div
+              class="preview-color success"
+              :style="getThemePreviewStyle(themeId, 'success')"
+            />
+            <div
+              class="preview-color warning"
+              :style="getThemePreviewStyle(themeId, 'warning')"
+            />
+            <div
+              class="preview-color danger"
+              :style="getThemePreviewStyle(themeId, 'danger')"
+            />
           </div>
           <span class="theme-name">{{ name }}</span>
         </div>
@@ -26,10 +41,19 @@
     </el-card>
 
     <!-- 主题编辑标签页 -->
-    <el-tabs v-model="activeTab" class="theme-editor-tabs">
+    <el-tabs
+      v-model="activeTab"
+      class="theme-editor-tabs"
+    >
       <!-- 颜色调整 -->
-      <el-tab-pane label="颜色" name="colors">
-        <div class="adjustment-section" data-testid="color-section">
+      <el-tab-pane
+        label="颜色"
+        name="colors"
+      >
+        <div
+          class="adjustment-section"
+          data-testid="color-section"
+        >
           <div class="color-row">
             <div class="color-item">
               <label>主色</label>
@@ -68,8 +92,14 @@
       </el-tab-pane>
 
       <!-- 间距调整 -->
-      <el-tab-pane label="间距" name="spacing">
-        <div class="adjustment-section" data-testid="spacing-section">
+      <el-tab-pane
+        label="间距"
+        name="spacing"
+      >
+        <div
+          class="adjustment-section"
+          data-testid="spacing-section"
+        >
           <div class="spacing-grid">
             <div
               v-for="level in 8"
@@ -92,8 +122,14 @@
       </el-tab-pane>
 
       <!-- 字体调整 -->
-      <el-tab-pane label="字体" name="typography">
-        <div class="adjustment-section" data-testid="typography-section">
+      <el-tab-pane
+        label="字体"
+        name="typography"
+      >
+        <div
+          class="adjustment-section"
+          data-testid="typography-section"
+        >
           <div class="typography-controls">
             <div class="typography-item">
               <label>基础字号</label>
@@ -107,7 +143,7 @@
               />
               <span class="value-display">{{ baseFontSize }}px</span>
             </div>
-            
+
             <div class="typography-item">
               <label>字重</label>
               <el-select
@@ -115,11 +151,26 @@
                 data-testid="font-weight-selector"
                 @change="onFontWeightChange($event)"
               >
-                <el-option label="细体 (300)" value="300" />
-                <el-option label="正常 (400)" value="400" />
-                <el-option label="中等 (500)" value="500" />
-                <el-option label="粗体 (600)" value="600" />
-                <el-option label="极粗 (700)" value="700" />
+                <el-option
+                  label="细体 (300)"
+                  value="300"
+                />
+                <el-option
+                  label="正常 (400)"
+                  value="400"
+                />
+                <el-option
+                  label="中等 (500)"
+                  value="500"
+                />
+                <el-option
+                  label="粗体 (600)"
+                  value="600"
+                />
+                <el-option
+                  label="极粗 (700)"
+                  value="700"
+                />
               </el-select>
             </div>
           </div>
@@ -127,11 +178,17 @@
       </el-tab-pane>
 
       <!-- 圆角调整 -->
-      <el-tab-pane label="圆角" name="radius">
-        <div class="adjustment-section" data-testid="radius-section">
+      <el-tab-pane
+        label="圆角"
+        name="radius"
+      >
+        <div
+          class="adjustment-section"
+          data-testid="radius-section"
+        >
           <div class="radius-grid">
             <div
-              v-for="(level, index) in ['sm', 'base', 'lg', 'xl']"
+              v-for="level in ['sm', 'base', 'lg', 'xl']"
               :key="level"
               class="radius-item"
             >
@@ -151,8 +208,14 @@
       </el-tab-pane>
 
       <!-- 阴影调整 -->
-      <el-tab-pane label="阴影" name="shadows">
-        <div class="adjustment-section" data-testid="shadow-section">
+      <el-tab-pane
+        label="阴影"
+        name="shadows"
+      >
+        <div
+          class="adjustment-section"
+          data-testid="shadow-section"
+        >
           <div class="shadow-grid">
             <div
               v-for="level in ['sm', 'md', 'lg', 'xl']"
@@ -160,8 +223,14 @@
               class="shadow-item"
             >
               <label>阴影-{{ level.toUpperCase() }}</label>
-              <div class="shadow-control" :data-testid="`shadow-control-${level}`">
-                <div class="shadow-preview" :style="getShadowPreviewStyle(level)">
+              <div
+                class="shadow-control"
+                :data-testid="`shadow-control-${level}`"
+              >
+                <div
+                  class="shadow-preview"
+                  :style="getShadowPreviewStyle(level)"
+                >
                   预览
                 </div>
                 <div class="shadow-inputs">
@@ -179,8 +248,14 @@
       </el-tab-pane>
 
       <!-- 对比度检查 -->
-      <el-tab-pane label="对比度" name="contrast">
-        <div class="adjustment-section" data-testid="contrast-section">
+      <el-tab-pane
+        label="对比度"
+        name="contrast"
+      >
+        <div
+          class="adjustment-section"
+          data-testid="contrast-section"
+        >
           <div class="contrast-checks">
             <div
               v-for="(ratio, key) in themeStore.contrastRatios"
@@ -188,8 +263,13 @@
               class="contrast-item"
               :data-testid="`${key}-contrast`"
             >
-              <div class="contrast-label">{{ getContrastLabel(key) }}</div>
-              <div class="contrast-value" :class="getContrastClass(ratio)">
+              <div class="contrast-label">
+                {{ getContrastLabel(key) }}
+              </div>
+              <div
+                class="contrast-value"
+                :class="getContrastClass(ratio)"
+              >
                 {{ ratio.toFixed(2) }}:1
               </div>
               <div class="contrast-status">
@@ -197,16 +277,23 @@
               </div>
             </div>
           </div>
-          
+
           <!-- 对比度警告 -->
-          <div v-if="themeStore.contrastWarnings.length > 0" class="contrast-warnings" data-testid="contrast-warning">
+          <div
+            v-if="themeStore.contrastWarnings.length > 0"
+            class="contrast-warnings"
+            data-testid="contrast-warning"
+          >
             <el-alert
               title="对比度警告"
               type="warning"
               :closable="false"
             >
-              <div v-for="warning in themeStore.contrastWarnings" :key="warning.key">
-                {{ getContrastLabel(warning.key) }}对比度不足：{{ warning.ratio.toFixed(2) }}:1 
+              <div
+                v-for="warning in themeStore.contrastWarnings"
+                :key="warning.key"
+              >
+                {{ getContrastLabel(warning.key) }}对比度不足：{{ warning.ratio.toFixed(2) }}:1
                 (需要 ≥{{ warning.required }}:1)
               </div>
             </el-alert>
@@ -216,18 +303,38 @@
     </el-tabs>
 
     <!-- 实时预览面板 -->
-    <el-card class="preview-panel" data-testid="theme-preview-panel">
+    <el-card
+      class="preview-panel"
+      data-testid="theme-preview-panel"
+    >
       <template #header>
         <span>实时预览</span>
       </template>
       <div class="preview-content">
-        <el-button type="primary" data-testid="preview-button">主要按钮</el-button>
-        <el-button type="success">成功按钮</el-button>
-        <el-button type="warning">警告按钮</el-button>
-        <el-button type="danger">危险按钮</el-button>
-        
-        <el-card class="preview-card" data-testid="preview-card" style="margin-top: 16px;">
-          <p data-testid="preview-text">这是预览文本，展示当前主题效果。</p>
+        <el-button
+          type="primary"
+          data-testid="preview-button"
+        >
+          主要按钮
+        </el-button>
+        <el-button type="success">
+          成功按钮
+        </el-button>
+        <el-button type="warning">
+          警告按钮
+        </el-button>
+        <el-button type="danger">
+          危险按钮
+        </el-button>
+
+        <el-card
+          class="preview-card"
+          data-testid="preview-card"
+          style="margin-top: 16px;"
+        >
+          <p data-testid="preview-text">
+            这是预览文本，展示当前主题效果。
+          </p>
           <p>间距、圆角、阴影都会实时更新。</p>
         </el-card>
       </div>
@@ -238,8 +345,8 @@
       <template #header>
         <div class="snapshot-header">
           <span>主题快照</span>
-          <el-button 
-            type="primary" 
+          <el-button
+            type="primary"
             size="small"
             data-testid="create-snapshot-btn"
             @click="createSnapshot"
@@ -248,7 +355,10 @@
           </el-button>
         </div>
       </template>
-      <div class="snapshots-list" data-testid="snapshot-list">
+      <div
+        class="snapshots-list"
+        data-testid="snapshot-list"
+      >
         <div
           v-for="snapshot in themeStore.snapshots"
           :key="snapshot.id"
@@ -256,9 +366,15 @@
           :data-testid="`snapshot-item-${snapshot.id}`"
         >
           <div class="snapshot-info">
-            <div class="snapshot-name">{{ snapshot.name }}</div>
-            <div class="snapshot-time">{{ formatTime(snapshot.timestamp) }}</div>
-            <div class="snapshot-desc">{{ snapshot.description }}</div>
+            <div class="snapshot-name">
+              {{ snapshot.name }}
+            </div>
+            <div class="snapshot-time">
+              {{ formatTime(snapshot.timestamp) }}
+            </div>
+            <div class="snapshot-desc">
+              {{ snapshot.description }}
+            </div>
           </div>
           <div class="snapshot-actions">
             <el-button
@@ -278,8 +394,11 @@
             </el-button>
           </div>
         </div>
-        
-        <div v-if="themeStore.snapshots.length === 0" class="empty-snapshots">
+
+        <div
+          v-if="themeStore.snapshots.length === 0"
+          class="empty-snapshots"
+        >
           暂无快照，点击"创建快照"保存当前主题
         </div>
       </div>
@@ -291,13 +410,13 @@
         <span>导出导入</span>
       </template>
       <div class="export-import-actions">
-        <el-button 
+        <el-button
           data-testid="export-theme-btn"
           @click="exportTheme"
         >
           导出主题
         </el-button>
-        <el-button 
+        <el-button
           data-testid="import-theme-btn"
           @click="triggerImport"
         >
@@ -309,7 +428,7 @@
           accept=".json"
           style="display: none;"
           @change="importTheme"
-        >
+        />
       </div>
     </el-card>
   </div>
@@ -334,7 +453,7 @@ const primaryColor = computed({
 })
 
 const successColor = computed({
-  get: () => themeStore.themeVariables["--theme-brand-success"], 
+  get: () => themeStore.themeVariables["--theme-brand-success"],
   set: (value) => themeStore.debouncedUpdate("--theme-brand-success", value)
 })
 
@@ -361,21 +480,22 @@ const fontWeight = computed(() => {
 // === 事件处理 ===
 
 // 颜色变化处理
-const onColorChange = (variable: string, color: string) => {
+const onColorChange = (variable: string, color: string | null) => {
   if (color) {
     themeStore.debouncedUpdate(variable, color)
     logger.debug(`Color changed: ${variable} = ${color}`)
   }
 }
 
-// 间距变化处理  
-const onSpacingChange = (level: number, value: number) => {
+// 间距变化处理
+const onSpacingChange = (level: number, value: number | number[]) => {
+  if (Array.isArray(value)) value = value[0] ?? 0
   const remValue = `${value / 16}rem`
   themeStore.debouncedUpdate(`--spacing-${level}`, remValue)
 }
 
 const getSpacingValue = (level: number): number => {
-  const remValue = themeStore.themeVariables[`--spacing-${level}`] 
+  const remValue = themeStore.themeVariables[`--spacing-${level}`]
   return parseFloat(remValue.replace('rem', '')) * 16
 }
 
@@ -384,17 +504,20 @@ const getSpacingDisplay = (level: number): string => {
 }
 
 // 字体变化处理
-const onFontSizeChange = (size: number) => {
+const onFontSizeChange = (size: number | number[]) => {
+  if (Array.isArray(size)) size = size[0] ?? 16
   const remValue = `${size / 16}rem`
   themeStore.debouncedUpdate("--font-size-base", remValue)
 }
 
-const onFontWeightChange = (weight: string) => {
+const onFontWeightChange = (weight: string | number) => {
+  weight = String(weight)
   themeStore.debouncedUpdate("--font-weight-normal", weight)
 }
 
 // 圆角变化处理
-const onRadiusChange = (level: string, value: number) => {
+const onRadiusChange = (level: string, value: number | number[]) => {
+  if (Array.isArray(value)) value = value[0] ?? 0
   const remValue = `${value / 16}rem`
   themeStore.debouncedUpdate(`--radius-${level}`, remValue)
 }
@@ -409,17 +532,18 @@ const getRadiusDisplay = (level: string): string => {
 }
 
 // 阴影处理
-const onShadowOpacityChange = (level: string, opacity: number) => {
+const onShadowOpacityChange = (level: string, opacity: number | number[]) => {
+  if (Array.isArray(opacity)) opacity = opacity[0] ?? 10
   // 这里简化处理，实际需要解析和修改阴影字符串中的透明度
   const shadowVar = `--shadow-${level}`
   const currentShadow = themeStore.themeVariables[shadowVar]
-  
+
   // 简单的透明度替换（实际应该用正则表达式）
   const newShadow = currentShadow.replace(
-    /rgba\(0, 0, 0, [\d.]+\)/g, 
+    /rgba\(0, 0, 0, [\d.]+\)/g,
     `rgba(0, 0, 0, ${opacity / 100})`
   )
-  
+
   themeStore.debouncedUpdate(shadowVar, newShadow)
 }
 
@@ -440,14 +564,14 @@ const getThemePreviewStyle = (themeId: string, colorType: string) => {
   const colorMap: Record<string, Record<string, string>> = {
     'theme-tech-blue': {
       primary: '#0ea5e9',
-      success: '#10b981', 
+      success: '#10b981',
       warning: '#f59e0b',
       danger: '#ef4444'
     },
     'theme-deep-green': {
       primary: '#059669',
       success: '#10b981',
-      warning: '#f59e0b', 
+      warning: '#f59e0b',
       danger: '#ef4444'
     },
     'theme-light-purple': {
@@ -463,7 +587,7 @@ const getThemePreviewStyle = (themeId: string, colorType: string) => {
       danger: '#f87171'
     }
   }
-  
+
   return {
     backgroundColor: colorMap[themeId]?.[colorType] || '#ccc'
   }
@@ -473,7 +597,7 @@ const getThemePreviewStyle = (themeId: string, colorType: string) => {
 const getContrastLabel = (key: string): string => {
   const labels: Record<string, string> = {
     'primary-bg': '主色/背景',
-    'text-bg': '文本/背景', 
+    'text-bg': '文本/背景',
     'success-bg': '成功色/背景',
     'warning-bg': '警告色/背景',
     'danger-bg': '危险色/背景'
@@ -496,7 +620,7 @@ const createSnapshot = async () => {
       confirmButtonText: '创建',
       cancelButtonText: '取消',
     })
-    
+
     if (name) {
       themeStore.createSnapshot(name)
       ElMessage.success('快照创建成功')
@@ -522,12 +646,12 @@ const deleteSnapshot = async (snapshotId: string) => {
       confirmButtonText: '删除',
       cancelButtonText: '取消'
     })
-    
+
     const success = themeStore.deleteSnapshot(snapshotId)
     if (success) {
       ElMessage.success('快照删除成功')
     } else {
-      ElMessage.error('快照删除失败') 
+      ElMessage.error('快照删除失败')
     }
   } catch {
     // 用户取消
@@ -547,7 +671,7 @@ const triggerImport = () => {
 const importTheme = async (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (!file) return
-  
+
   try {
     const success = await themeStore.importTheme(file)
     if (success) {
@@ -558,7 +682,7 @@ const importTheme = async (event: Event) => {
   } catch {
     ElMessage.error('主题导入出错')
   }
-  
+
   // 清空input
   if (fileInput.value) {
     fileInput.value.value = ''

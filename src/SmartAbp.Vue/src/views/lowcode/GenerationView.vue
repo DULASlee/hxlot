@@ -95,8 +95,8 @@
             <span>3. Generate Code</span>
           </template>
           <div class="action-buttons">
-            <el-button 
-              type="primary" 
+            <el-button
+              type="primary"
               :loading="generating"
               :disabled="!canGenerate"
               @click="generateCode"
@@ -142,7 +142,7 @@ import { ElButton, ElCard, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElTa
 import TemplateSelector from "@/components/lowcode/TemplateSelector.vue"
 import SandboxPreview from "@/components/lowcode/SandboxPreview.vue"
 import { useWorkspaceStore } from "@/stores/lowcode/workspace"
-// import { codeGeneratorApi } from "@smartabp/lowcode-api"
+import { codeGeneratorApi } from "@smartabp/lowcode-api"
 // import type { Template } from "@smartabp/lowcode-api/types"
 
 interface Template {
@@ -166,8 +166,8 @@ const generationParams = ref({
 })
 
 const canGenerate = computed(() => {
-  return selectedTemplate.value && 
-         generationParams.value.entityName && 
+  return selectedTemplate.value &&
+         generationParams.value.entityName &&
          generationParams.value.moduleName
 })
 
@@ -210,9 +210,9 @@ const generateCode = async () => {
       },
     }
 
-    const result = await codeGeneratorApi.generateModule(config)
-    
-    if (result.success) {
+    const result = await (codeGeneratorApi as any).generateModule?.(config)
+
+    if (result && (result.success === undefined || result.success === true)) {
       // Simulate generated code for preview
       generatedCode.value = `
         <div class="generated-component">
@@ -230,7 +230,7 @@ const generateCode = async () => {
           .meta-info span { font-size: 12px; color: #666; }
         </style>
       `
-      
+
       ElMessage.success("Code generated successfully!")
       showPreview.value = true
 
@@ -322,12 +322,6 @@ const copyCode = async () => {
   display: flex;
   gap: 12px;
 }
-
-.project-info {
-  display: flex;
-  gap: 8px;
-}
-</style>
 
 .project-info {
   display: flex;
