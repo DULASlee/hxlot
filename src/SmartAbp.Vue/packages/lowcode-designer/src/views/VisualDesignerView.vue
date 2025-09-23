@@ -54,20 +54,20 @@
           <button :disabled="!isDirty" class="btn btn-icon" title="保存 (Ctrl+S)" @click="save">
             <i class="icon-save" />
           </button>
-          
+
           <!-- 🎯 网格对齐工具 -->
           <div class="btn-group">
-            <button 
-              :class="{ active: dragState.snapToGrid }" 
-              class="btn btn-icon" 
-              title="网格对齐" 
+            <button
+              :class="{ active: dragState.snapToGrid }"
+              class="btn btn-icon"
+              title="网格对齐"
               @click="toggleSnapToGrid"
             >
               <i class="icon-grid" />
             </button>
-            <select 
-              v-model="dragState.gridSize" 
-              class="grid-size-selector" 
+            <select
+              v-model="dragState.gridSize"
+              class="grid-size-selector"
               title="网格大小"
               @change="setGridSize(dragState.gridSize)"
             >
@@ -78,15 +78,15 @@
               <option :value="50">50px</option>
             </select>
           </div>
-          
+
           <button class="btn btn-primary" @click="preview">预览</button>
           <button class="btn btn-secondary" @click="exportDesign">导出</button>
-          
+
           <!-- 🎯 预览模式工具栏 -->
           <div v-if="previewState.isPreviewMode" class="preview-toolbar">
             <div class="device-switcher">
-              <button 
-                v-for="device in ['desktop', 'tablet', 'mobile']" 
+              <button
+                v-for="device in ['desktop', 'tablet', 'mobile']"
                 :key="device"
                 :class="{ active: previewState.deviceType === device }"
                 class="device-btn"
@@ -96,8 +96,8 @@
                 {{ device }}
               </button>
             </div>
-            
-            <button 
+
+            <button
               v-if="previewState.deviceType !== 'desktop'"
               class="btn btn-icon"
               title="切换方向"
@@ -105,8 +105,8 @@
             >
               <i :class="previewState.orientation === 'portrait' ? 'icon-rotate' : 'icon-rotate-reverse'" />
             </button>
-            
-            <button 
+
+            <button
               :class="{ active: previewState.realTimeData }"
               class="btn btn-icon"
               title="实时数据"
@@ -114,7 +114,7 @@
             >
               <i class="icon-refresh" />
             </button>
-            
+
             <button class="btn btn-danger" @click="exitPreview">退出预览</button>
           </div>
         </div>
@@ -909,16 +909,16 @@ const dragState = ref<{
 const handleComponentDragStart = (component: any, event?: DragEvent) => {
   dragState.value.isDragging = true
   dragState.value.dragComponent = component
-  
+
   if (event) {
     dragState.value.startPosition = {
       x: event.clientX,
       y: event.clientY
     }
   }
-  
+
   statusMessage.value = `开始拖拽 ${component.name || component.type}`
-  
+
   // 🎯 网格对齐提示
   if (dragState.value.snapToGrid) {
     statusMessage.value += ` (网格对齐: ${dragState.value.gridSize}px)`
@@ -928,7 +928,7 @@ const handleComponentDragStart = (component: any, event?: DragEvent) => {
 // 🎯 网格对齐功能
 const snapToGrid = (position: { x: number; y: number }) => {
   if (!dragState.value.snapToGrid) return position
-  
+
   const { gridSize } = dragState.value
   return {
     x: Math.round(position.x / gridSize) * gridSize,
@@ -944,7 +944,7 @@ const checkDragConstraints = (component: any, position: { x: number; y: number }
     maxX: canvasSize.value.width - (component.width || 100),
     maxY: canvasSize.value.height - (component.height || 100)
   }
-  
+
   return {
     x: Math.max(constraints.minX, Math.min(constraints.maxX, position.x)),
     y: Math.max(constraints.minY, Math.min(constraints.maxY, position.y))
@@ -961,9 +961,9 @@ const handleMultiSelectDrag = (componentIds: string[], deltaX: number, deltaY: n
           x: component.x + deltaX,
           y: component.y + deltaY
         })
-        
+
         const constrainedPosition = checkDragConstraints(component, newPosition)
-        
+
         designer.value.updateComponent(id, {
           x: constrainedPosition.x,
           y: constrainedPosition.y
@@ -971,23 +971,23 @@ const handleMultiSelectDrag = (componentIds: string[], deltaX: number, deltaY: n
       }
     }
   })
-  
+
   statusMessage.value = `批量移动了 ${componentIds.length} 个组件`
 }
 
 // 🎯 拖拽结束处理
 const handleComponentDragEnd = (component: any, finalPosition?: { x: number; y: number }) => {
   dragState.value.isDragging = false
-  
+
   if (finalPosition && designer.value?.updateComponent) {
     const snappedPosition = snapToGrid(finalPosition)
     const constrainedPosition = checkDragConstraints(component, snappedPosition)
-    
+
     designer.value.updateComponent(component.id, constrainedPosition)
-    
+
     statusMessage.value = `组件 ${component.name || component.type} 已移动到 (${constrainedPosition.x}, ${constrainedPosition.y})`
   }
-  
+
   dragState.value.dragComponent = null
 }
 
@@ -1131,26 +1131,26 @@ const switchDevice = (device: 'desktop' | 'tablet' | 'mobile') => {
   previewState.value.deviceType = device
   const preset = devicePresets[device]
   previewState.value.customViewport = { ...preset }
-  
+
   if (previewState.value.orientation === 'landscape' && device !== 'desktop') {
     previewState.value.customViewport = {
       width: preset.height,
       height: preset.width
     }
   }
-  
+
   statusMessage.value = `切换到${device}设备预览 (${previewState.value.customViewport.width}x${previewState.value.customViewport.height})`
 }
 
 // 🎯 屏幕方向切换
 const toggleOrientation = () => {
   if (previewState.value.deviceType === 'desktop') return
-  
+
   previewState.value.orientation = previewState.value.orientation === 'portrait' ? 'landscape' : 'portrait'
-  
+
   const { width, height } = previewState.value.customViewport
   previewState.value.customViewport = { width: height, height: width }
-  
+
   statusMessage.value = `切换到${previewState.value.orientation === 'portrait' ? '竖屏' : '横屏'}预览`
 }
 
@@ -1158,7 +1158,7 @@ const toggleOrientation = () => {
 const toggleRealTimeData = () => {
   previewState.value.realTimeData = !previewState.value.realTimeData
   statusMessage.value = `实时数据绑定已${previewState.value.realTimeData ? '启用' : '禁用'}`
-  
+
   if (previewState.value.realTimeData) {
     startRealTimeDataBinding()
   } else {
@@ -1170,7 +1170,7 @@ let realTimeDataInterval: NodeJS.Timeout | null = null
 
 const startRealTimeDataBinding = () => {
   if (realTimeDataInterval) return
-  
+
   realTimeDataInterval = setInterval(() => {
     if (designer.value?.canvas?.getComponents) {
       const components = designer.value.canvas.getComponents()
@@ -1200,7 +1200,7 @@ const generateMockData = (dataType: string) => {
     'date': () => new Date().toLocaleString(),
     'boolean': () => Math.random() > 0.5
   }
-  
+
   return mockDataMap[dataType]?.() || '模拟数据'
 }
 
@@ -1531,7 +1531,7 @@ const onReadSFC = () => {
 }
 
 .drag-grid {
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(64, 158, 255, 0.1) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(64, 158, 255, 0.1) 1px, transparent 1px);
 }

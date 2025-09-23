@@ -342,6 +342,26 @@ const routes: RouteRecordRaw[] = [
         name: "LowCodeStudioHome",
         component: () => import("@/views/lowcode/LowCodeStudioView.vue"),
         meta: { title: "低代码工作室", menuKey: "lowcode-studio-home" },
+        children: [
+          {
+            path: "",
+            name: "DataModeling",
+            component: () => import("@/views/lowcode/EntityModelingView.vue"),
+            meta: { title: "数据建模", menuKey: "studio-modeling" },
+          },
+          {
+            path: "design",
+            name: "PageDesign",
+            component: () => import("@/views/lowcode/VisualDesignerView.vue"),
+            meta: { title: "页面设计", menuKey: "studio-design" },
+          },
+          {
+            path: "generation",
+            name: "CodeGeneration",
+            component: () => import("@/views/lowcode/GenerationView.vue"),
+            meta: { title: "代码生成", menuKey: "studio-generation" },
+          },
+        ],
       },
       {
         path: "workflows",

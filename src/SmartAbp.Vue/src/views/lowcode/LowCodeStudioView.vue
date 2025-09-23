@@ -522,19 +522,83 @@ const preview = () => {
   </div>`
 }
 
-const generate = () => {
+const generate = async () => {
   buildStatus.value = "生成中..."
   addLog("info", "开始生成代码...")
-  
-  // 模拟异步生成过程
-  setTimeout(() => {
+
+  try {
+    // 🚀 连接真实的后端代码生成引擎
+    const generateRequest = {
+      moduleName: currentWorkspace.value.name,
+      entities: [
+        {
+          name: "User",
+          properties: [
+            { name: "Name", type: "string", required: true },
+            { name: "Email", type: "string", required: true },
+            { name: "IsActive", type: "bool", required: false }
+          ]
+        }
+      ],
+      generateBackend: true,
+      generateFrontend: true,
+      generateTests: true
+    }
+
+    addLog("info", "正在调用后端代码生成服务...")
+
+    // 调用真实的CodeGenerationAppService
+    const response = await fetch('/api/code-generation/generate-module', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access_token') || ''}`
+      },
+      body: JSON.stringify(generateRequest)
+    })
+
+    if (!response.ok) {
+      throw new Error(`生成失败: ${response.status} ${response.statusText}`)
+    }
+
+    const result = await response.json()
+
     buildStatus.value = "生成完成"
     outputContent.value += "\n\n=== 代码生成完成 ===\n"
-    outputContent.value += "生成文件: UserManagement.vue\n"
-    outputContent.value += "生成文件: UserService.ts\n"
-    outputContent.value += "生成文件: UserDto.ts\n"
-    addLog("success", "代码生成完成！")
-  }, 2000)
+    outputContent.value += `模块名称: ${result.moduleName}\n`
+    outputContent.value += `生成文件数: ${result.generatedFiles?.length || 0}\n`
+
+    if (result.generatedFiles && result.generatedFiles.length > 0) {
+      outputContent.value += "\n生成的文件:\n"
+      result.generatedFiles.forEach((file: string) => {
+        outputContent.value += `- ${file}\n`
+      })
+    }
+
+    if (result.generationReport) {
+      outputContent.value += "\n生成报告:\n"
+      outputContent.value += result.generationReport
+    }
+
+    addLog("success", `代码生成完成！生成了 ${result.generatedFiles?.length || 0} 个文件`)
+
+  } catch (error: any) {
+    buildStatus.value = "生成失败"
+    const errorMessage = error.message || "未知错误"
+    outputContent.value += `\n\n=== 代码生成失败 ===\n`
+    outputContent.value += `错误: ${errorMessage}\n`
+    addLog("error", `代码生成失败: ${errorMessage}`)
+
+    // 添加问题到问题面板
+    issues.value.push({
+      id: Date.now(),
+      type: "error",
+      message: `代码生成失败: ${errorMessage}`,
+      file: "CodeGeneration",
+      line: 1
+    })
+    issueCount.value = issues.value.length
+  }
 }
 
 const togglePreview = () => {
@@ -590,7 +654,7 @@ const addLog = (level: string, message: string) => {
 onMounted(() => {
   addLog("info", "LowCode Studio 企业级工作台已启动")
   addLog("info", `当前工作空间：${currentWorkspace.value.name}`)
-  
+
   // 根据路由设置当前步骤
   if (route.path.includes("generation")) {
     setCurrentStep("generate")
@@ -1042,7 +1106,7 @@ onMounted(() => {
   .studio-navigation {
     width: 240px;
   }
-  
+
   .studio-sidebar {
     width: 280px;
   }
@@ -1053,7 +1117,7 @@ onMounted(() => {
     width: 0;
     border: none;
   }
-  
+
   .studio-sidebar.collapsed {
     width: 0;
     border: none;
