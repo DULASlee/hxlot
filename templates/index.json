@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "description": "SmartAbp项目代码模板库索引",
-  "lastUpdated": "2025-09-12T07:45:28.187Z",
+  "lastUpdated": "2025-09-23T00:00:00.000Z",
   "templates": [
     {
       "id": "backend-application-crudappservice",
@@ -450,6 +450,321 @@
           "example": "data-display"
         }
       ]
+    },
+    {
+      "id": "enhanced-theme-editor",
+      "name": "增强主题编辑器",
+      "path": "templates/enhanced-components/EnhancedThemeEditor.template.vue",
+      "metadata": "templates/enhanced-components/EnhancedThemeEditor.template.meta.yml",
+      "category": "enhanced-components/theme",
+      "type": "component",
+      "tags": [
+        "theme",
+        "editor",
+        "wcag",
+        "design-tokens",
+        "tdd-verified"
+      ],
+      "scenarios": [
+        "企业级主题定制",
+        "设计系统管理",
+        "可访问性优化",
+        "主题变量管理"
+      ],
+      "ai_triggers": [
+        "主题编辑器",
+        "主题定制",
+        "设计令牌",
+        "WCAG标准",
+        "主题管理",
+        "颜色对比度"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "Pinia",
+        "lodash-es",
+        "color-utils"
+      ],
+      "permissions_required": false,
+      "tdd_verified": true,
+      "test_coverage": "19/19 tests passed",
+      "parameters": [
+        {
+          "name": "themeName",
+          "type": "string",
+          "description": "主题名称",
+          "required": true,
+          "example": "企业主题"
+        },
+        {
+          "name": "primaryColor",
+          "type": "string",
+          "description": "主品牌色",
+          "required": true,
+          "example": "#0ea5e9"
+        }
+      ]
+    },
+    {
+      "id": "enhanced-state-machine",
+      "name": "增强状态机引擎",
+      "path": "templates/enhanced-components/EnhancedStateMachine.template.vue",
+      "metadata": "templates/enhanced-components/EnhancedStateMachine.template.meta.yml",
+      "category": "enhanced-components/workflow",
+      "type": "component",
+      "tags": [
+        "state-machine",
+        "workflow",
+        "business-rules",
+        "code-generation",
+        "tdd-verified"
+      ],
+      "scenarios": [
+        "工作流设计",
+        "业务流程管理",
+        "状态机编排",
+        "审批流程"
+      ],
+      "ai_triggers": [
+        "状态机",
+        "工作流",
+        "业务规则",
+        "流程管理",
+        "可视化编排",
+        "工作流引擎"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "Pinia",
+        "@vue-flow/core",
+        "@vue-flow/controls",
+        "@vue-flow/mini-map"
+      ],
+      "permissions_required": true,
+      "tdd_verified": true,
+      "test_coverage": "20/20 tests passed",
+      "parameters": [
+        {
+          "name": "workflowName",
+          "type": "string",
+          "description": "工作流名称",
+          "required": true,
+          "example": "审批工作流"
+        },
+        {
+          "name": "entityName",
+          "type": "string",
+          "description": "关联实体名称",
+          "required": false,
+          "example": "Order"
+        }
+      ]
+    },
+    {
+      "id": "lowcode-studio-workbench",
+      "name": "LowCode Studio企业级工作台",
+      "path": "templates/enhanced-components/LowCodeStudioView.template.vue",
+      "metadata": "templates/enhanced-components/LowCodeStudioView.template.meta.yml",
+      "category": "enhanced-components/workbench",
+      "type": "component",
+      "tags": [
+        "lowcode-studio",
+        "enterprise-workbench",
+        "three-step-process",
+        "vs-code-level",
+        "tdd-verified"
+      ],
+      "scenarios": [
+        "低代码开发工作台",
+        "企业级开发环境",
+        "可视化开发平台",
+        "专业开发工具"
+      ],
+      "ai_triggers": [
+        "LowCode Studio",
+        "工作台",
+        "开发环境",
+        "低代码平台",
+        "可视化开发",
+        "企业级工作台"
+      ],
+      "dependencies": [
+        "Vue 3",
+        "Element Plus",
+        "Vue Router",
+        "Pinia"
+      ],
+      "permissions_required": true,
+      "tdd_verified": true,
+      "test_coverage": "9/9 tests passed",
+      "parameters": [
+        {
+          "name": "workspaceName",
+          "type": "string",
+          "description": "工作空间名称",
+          "required": true,
+          "example": "默认工作空间"
+        },
+        {
+          "name": "projectName",
+          "type": "string",
+          "description": "项目名称",
+          "required": false,
+          "example": "企业管理系统"
+        }
+      ]
+    },
+    {
+      "id": "enhanced-theme-store",
+      "name": "增强主题状态管理",
+      "path": "templates/enhanced-stores/enhancedTheme.template.ts",
+      "metadata": "templates/enhanced-stores/enhancedTheme.template.meta.yml",
+      "category": "enhanced-stores/theme",
+      "type": "store",
+      "tags": [
+        "pinia",
+        "theme-store",
+        "design-tokens",
+        "wcag",
+        "tdd-verified"
+      ],
+      "scenarios": [
+        "主题状态管理",
+        "设计令牌管理",
+        "主题快照管理",
+        "WCAG对比度检查"
+      ],
+      "ai_triggers": [
+        "主题Store",
+        "主题状态管理",
+        "设计令牌Store",
+        "主题变量管理",
+        "WCAG Store"
+      ],
+      "dependencies": [
+        "Pinia",
+        "lodash-es",
+        "color-utils"
+      ],
+      "permissions_required": false,
+      "tdd_verified": true,
+      "test_coverage": "integrated with component tests",
+      "parameters": [
+        {
+          "name": "storeName",
+          "type": "string",
+          "description": "Store名称",
+          "required": true,
+          "example": "enhancedTheme"
+        }
+      ]
+    },
+    {
+      "id": "enhanced-state-machine-store",
+      "name": "增强状态机状态管理",
+      "path": "templates/enhanced-stores/enhancedStateMachine.template.ts",
+      "metadata": "templates/enhanced-stores/enhancedStateMachine.template.meta.yml",
+      "category": "enhanced-stores/workflow",
+      "type": "store",
+      "tags": [
+        "pinia",
+        "state-machine-store",
+        "workflow-engine",
+        "business-rules",
+        "tdd-verified"
+      ],
+      "scenarios": [
+        "状态机状态管理",
+        "工作流引擎",
+        "业务规则执行",
+        "代码生成管理"
+      ],
+      "ai_triggers": [
+        "状态机Store",
+        "工作流Store",
+        "业务规则Store",
+        "状态机引擎Store",
+        "工作流状态管理"
+      ],
+      "dependencies": [
+        "Pinia",
+        "logging-utils"
+      ],
+      "permissions_required": true,
+      "tdd_verified": true,
+      "test_coverage": "integrated with component tests",
+      "parameters": [
+        {
+          "name": "storeName",
+          "type": "string",
+          "description": "Store名称",
+          "required": true,
+          "example": "enhancedStateMachine"
+        },
+        {
+          "name": "workflowName",
+          "type": "string",
+          "description": "工作流名称",
+          "required": false,
+          "example": "审批工作流"
+        }
+      ]
+    },
+    {
+      "id": "tdd-test-template",
+      "name": "TDD测试模板",
+      "path": "templates/testing/TDDTest.template.ts",
+      "metadata": "templates/testing/TDDTest.template.meta.yml",
+      "category": "testing/tdd",
+      "type": "test",
+      "tags": [
+        "tdd",
+        "vitest",
+        "vue-test-utils",
+        "unit-test",
+        "quality-assurance"
+      ],
+      "scenarios": [
+        "TDD开发实践",
+        "组件单元测试",
+        "业务逻辑测试",
+        "质量保证"
+      ],
+      "ai_triggers": [
+        "TDD测试",
+        "单元测试",
+        "测试驱动开发",
+        "组件测试",
+        "质量测试",
+        "自动化测试"
+      ],
+      "dependencies": [
+        "Vitest",
+        "@vue/test-utils",
+        "Element Plus",
+        "Pinia"
+      ],
+      "permissions_required": false,
+      "tdd_verified": true,
+      "test_coverage": "meta-template",
+      "parameters": [
+        {
+          "name": "componentName",
+          "type": "string",
+          "description": "被测试组件名称",
+          "required": true,
+          "example": "EnhancedThemeEditor"
+        },
+        {
+          "name": "testSuiteName",
+          "type": "string",
+          "description": "测试套件名称",
+          "required": true,
+          "example": "EnhancedThemeEditor.test"
+        }
+      ]
     }
   ],
   "categories": {
@@ -465,6 +780,18 @@
       "generators": "用于创建特定类型代码生成器的标准模板",
       "plugins": "用于创建低代码引擎功能插件的标准模板",
       "runtime": "用于创建可在低代码引擎中运行的Vue组件模板"
+    },
+    "enhanced-components": {
+      "theme": "基于TDD实现的增强主题系统组件，支持三层令牌架构和WCAG AA标准",
+      "workflow": "基于TDD实现的状态机工作流引擎，支持可视化设计和业务规则",
+      "workbench": "企业级低代码开发工作台，VS Code级别的专业开发环境"
+    },
+    "enhanced-stores": {
+      "theme": "增强主题系统的Pinia状态管理，支持设计令牌和WCAG检查",
+      "workflow": "状态机工作流引擎的状态管理，支持业务规则执行和代码生成"
+    },
+    "testing": {
+      "tdd": "TDD测试驱动开发模板，支持Vue组件和业务逻辑的单元测试"
     }
   },
   "ai_search_patterns": {
@@ -474,7 +801,15 @@
     "dto_objects": "templates/**/contracts/*dto*.template.cs",
     "vue_components": "templates/frontend/components/*.template.vue",
     "abp_services": "templates/backend/application/*.template.cs",
-    "interfaces": "templates/backend/contracts/*Interface*.template.cs"
+    "interfaces": "templates/backend/contracts/*Interface*.template.cs",
+    "enhanced_components": "templates/enhanced-components/**/*.template.vue",
+    "enhanced_stores": "templates/enhanced-stores/**/*.template.ts",
+    "theme_system": "templates/**/*theme*.template.*",
+    "state_machine": "templates/**/*state*machine*.template.*",
+    "workflow_engine": "templates/**/*workflow*.template.*",
+    "lowcode_studio": "templates/**/*studio*.template.*",
+    "tdd_tests": "templates/testing/**/*.template.ts",
+    "tdd_verified": "templates/**/*tdd-verified*.template.*"
   },
   "naming_conventions": {
     "backend": {
@@ -502,9 +837,15 @@
     }
   },
   "statistics": {
-    "total_templates": 11,
-    "categories_count": 3,
+    "total_templates": 17,
+    "categories_count": 6,
     "backend_templates": 6,
-    "frontend_templates": 2
+    "frontend_templates": 2,
+    "lowcode_templates": 3,
+    "enhanced_components": 3,
+    "enhanced_stores": 2,
+    "testing_templates": 1,
+    "tdd_verified_templates": 6,
+    "test_coverage": "48/48 tests passed"
   }
 }

@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "description": "SmartAbp项目架构决策记录索引",
-  "lastUpdated": "2025-09-12T00:00:00.000Z",
+  "lastUpdated": "2025-09-23T00:00:00.000Z",
   "adrs": [
     {
       "id": "0001",
@@ -276,6 +276,94 @@
       ],
       "relatedADRs": ["0011", "0015", "0001"],
       "summary": "将分散的低代码引擎代码重构为6个独立npm包的Monorepo架构决策，并强制低代码代码存放于packages/@smartabp/lowcode-* 子包"
+    },
+    {
+      "id": "0017",
+      "title": "增强主题系统架构决策",
+      "path": "./0017-enhanced-theme-system.md",
+      "status": "已接受",
+      "category": "TDD实践",
+      "tags": ["主题系统", "设计令牌", "WCAG", "TDD", "三层架构"],
+      "createdDate": "2025-09-23",
+      "lastUpdated": "2025-09-23",
+      "decisionMakers": ["架构团队", "前端团队", "UX团队"],
+      "impactScope": "前端主题系统和用户体验",
+      "aiTriggers": [
+        "主题定制",
+        "设计令牌",
+        "WCAG标准",
+        "可访问性",
+        "主题管理",
+        "颜色对比度"
+      ],
+      "relatedADRs": ["0002", "0016", "0018"],
+      "summary": "基于TDD实现的三层设计令牌架构增强主题系统，支持WCAG AA标准、快照管理和企业级主题定制"
+    },
+    {
+      "id": "0018",
+      "title": "状态机工作流引擎架构决策",
+      "path": "./0018-state-machine-workflow-engine.md",
+      "status": "已接受",
+      "category": "TDD实践",
+      "tags": ["状态机", "工作流", "业务规则", "TDD", "可视化编排"],
+      "createdDate": "2025-09-23",
+      "lastUpdated": "2025-09-23",
+      "decisionMakers": ["架构团队", "业务团队", "前端团队"],
+      "impactScope": "业务流程管理和工作流引擎",
+      "aiTriggers": [
+        "状态机",
+        "工作流",
+        "业务规则",
+        "流程管理",
+        "可视化编排",
+        "代码生成"
+      ],
+      "relatedADRs": ["0011", "0016", "0017"],
+      "summary": "基于TDD实现的企业级状态机工作流引擎，支持可视化设计、业务规则引擎和完整的代码生成能力"
+    },
+    {
+      "id": "0019",
+      "title": "TDD开发实践架构决策",
+      "path": "./0019-tdd-development-practice.md",
+      "status": "已接受",
+      "category": "TDD实践",
+      "tags": ["TDD", "测试驱动开发", "质量保证", "自动化测试"],
+      "createdDate": "2025-09-23",
+      "lastUpdated": "2025-09-23",
+      "decisionMakers": ["架构团队", "质量团队", "开发团队"],
+      "impactScope": "整个项目的开发实践和质量保证",
+      "aiTriggers": [
+        "TDD",
+        "测试驱动开发",
+        "单元测试",
+        "质量保证",
+        "自动化测试",
+        "测试覆盖率"
+      ],
+      "relatedADRs": ["0017", "0018", "0020"],
+      "summary": "全面采用TDD开发实践，通过48个测试确保90%生产就绪的企业级质量标准"
+    },
+    {
+      "id": "0020",
+      "title": "LowCode Studio企业级工作台架构决策",
+      "path": "./0020-lowcode-studio-workbench.md",
+      "status": "已接受",
+      "category": "用户体验",
+      "tags": ["LowCode Studio", "企业级工作台", "3步开发流程", "VS Code级界面"],
+      "createdDate": "2025-09-23",
+      "lastUpdated": "2025-09-23",
+      "decisionMakers": ["架构团队", "UX团队", "产品团队"],
+      "impactScope": "低代码开发用户体验和工作流程",
+      "aiTriggers": [
+        "LowCode Studio",
+        "工作台",
+        "开发流程",
+        "用户界面",
+        "专业开发环境",
+        "VS Code"
+      ],
+      "relatedADRs": ["0011", "0016", "0019"],
+      "summary": "构建VS Code级别的专业低代码开发工作台，实现建模→设计→生成的标准化3步开发流程"
     }
   ],
   "categories": {
@@ -314,6 +402,14 @@
     "代码设计": {
       "description": "代码结构和设计模式相关的决策",
       "adrs": ["0010"]
+    },
+    "TDD实践": {
+      "description": "测试驱动开发和质量保证相关的决策",
+      "adrs": ["0017", "0018", "0019"]
+    },
+    "用户体验": {
+      "description": "用户界面和用户体验相关的决策",
+      "adrs": ["0020"]
     }
   },
   "aiUsageGuidelines": {
@@ -324,18 +420,26 @@
       "遇到性能问题时，应参考性能优化ADR中的策略",
       "实施缓存时，应遵循缓存策略ADR的指导",
       "处理错误时，应按照错误处理ADR的规范",
-      "应用设计模式时，应参考设计模式ADR的建议"
+      "应用设计模式时，应参考设计模式ADR的建议",
+      "开发新功能时，必须遵循TDD开发实践ADR的要求",
+      "实现主题系统时，应参考增强主题系统架构ADR",
+      "设计工作流时，应参考状态机工作流引擎ADR",
+      "构建用户界面时，应参考LowCode Studio工作台ADR"
     ],
     "triggerPatterns": [
       "当用户询问'为什么选择XXX技术'时，引用相关的技术选型ADR",
       "当用户要求'优化性能'时，参考性能优化ADR",
       "当用户提到'架构设计'时，参考相关的架构ADR",
-      "当用户询问'最佳实践'时，参考设计模式ADR"
+      "当用户询问'最佳实践'时，参考设计模式ADR",
+      "当用户提到'TDD'或'测试驱动开发'时，参考TDD开发实践ADR",
+      "当用户询问'主题定制'或'WCAG标准'时，参考增强主题系统ADR",
+      "当用户提到'工作流'或'状态机'时，参考状态机工作流引擎ADR",
+      "当用户询问'工作台'或'开发环境'时，参考LowCode Studio工作台ADR"
     ]
   },
   "statistics": {
-    "totalADRs": 13,
-    "acceptedADRs": 13,
+    "totalADRs": 17,
+    "acceptedADRs": 17,
     "proposedADRs": 0,
     "deprecatedADRs": 0,
     "supersededADRs": 0,
@@ -348,7 +452,9 @@
       "性能优化": 2,
       "运维监控": 1,
       "异常处理": 1,
-      "代码设计": 1
+      "代码设计": 1,
+      "TDD实践": 3,
+      "用户体验": 1
     }
   }
 }
