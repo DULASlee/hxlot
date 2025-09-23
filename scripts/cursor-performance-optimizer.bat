@@ -115,7 +115,7 @@ if "%DEEP_CLEAN%"=="1" (
     echo 🔍 深度清理模式：清理更多缓存文件...
     call :cleanup_folder "%LOCALAPPDATA_CURSOR%\Crashpad\reports" "崩溃转储文件" "0"
     call :cleanup_folder "%LOCALAPPDATA_CURSOR%\User\tmp" "临时文件" "0"
-    
+
     REM 清理Node.js缓存
     call :cleanup_folder "%APPDATA%\npm-cache" "NPM缓存" "0"
     call :cleanup_folder "%LOCALAPPDATA%\npm-cache" "本地NPM缓存" "0"
@@ -194,7 +194,7 @@ if "%NEED_BACKUP%"=="1" if "%BACKUP%"=="1" if %FOLDER_SIZE% gtr 0 (
         set "BACKUP_NAME=%~n1%~x1"
         set "BACKUP_TARGET=%BACKUP_PATH%\!BACKUP_NAME!-%date:~0,4%%date:~5,2%%date:~8,2%-%time:~0,2%%time:~3,2%%time:~6,2%"
         set "BACKUP_TARGET=!BACKUP_TARGET: =0!"
-        
+
         xcopy "%FOLDER_PATH%" "!BACKUP_TARGET!" /E /I /H /Y >nul 2>&1
         if !errorlevel! equ 0 (
             echo ✅ 已备份 %DESCRIPTION% 到: !BACKUP_TARGET!
@@ -269,7 +269,7 @@ for /f "tokens=1,2,3,4" %%a in ('wmic logicaldisk get size^,freespace^,caption^,
         set /a "FREE_GB=%%b/1024/1024/1024"
         set /a "TOTAL_GB=%%c/1024/1024/1024"
         set /a "FREE_PERCENT=%%b*100/%%c"
-        
+
         if !FREE_PERCENT! lss 10 (
             echo [错误] 磁盘 %%a 可用空间不足: !FREE_GB! GB / !TOTAL_GB! GB ^(!FREE_PERCENT!%%^)
         ) else if !FREE_PERCENT! lss 20 (
@@ -291,10 +291,10 @@ goto :eof
 if "%RESTART_CURSOR%"=="1" if "%DRY_RUN%"=="0" (
     echo 🔄 重启Cursor IDE...
     timeout /t 2 /nobreak >nul
-    
+
     REM 查找Cursor安装路径
     set "CURSOR_EXE="
-    
+
     if exist "%LOCALAPPDATA%\Programs\cursor\Cursor.exe" (
         set "CURSOR_EXE=%LOCALAPPDATA%\Programs\cursor\Cursor.exe"
     ) else if exist "%ProgramFiles%\Cursor\Cursor.exe" (
@@ -302,7 +302,7 @@ if "%RESTART_CURSOR%"=="1" if "%DRY_RUN%"=="0" (
     ) else if exist "%ProgramFiles(x86)%\Cursor\Cursor.exe" (
         set "CURSOR_EXE=%ProgramFiles(x86)%\Cursor\Cursor.exe"
     )
-    
+
     if defined CURSOR_EXE (
         start "" "!CURSOR_EXE!" "%CD%"
         echo ✅ Cursor IDE 已重启

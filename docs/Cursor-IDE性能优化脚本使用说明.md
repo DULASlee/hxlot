@@ -421,7 +421,7 @@ scripts\cursor-performance-optimizer.bat --help
 
 ---
 
-**📝 文档版本**: v1.0  
-**🗓️ 最后更新**: 2024-12-23  
-**👥 维护团队**: SmartAbp首席架构师团队  
+**📝 文档版本**: v1.0
+**🗓️ 最后更新**: 2024-12-23
+**👥 维护团队**: SmartAbp首席架构师团队
 **🎯 适用环境**: Windows 10+, macOS 10.15+, Ubuntu 18.04+
