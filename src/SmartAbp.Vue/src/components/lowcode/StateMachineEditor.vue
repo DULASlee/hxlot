@@ -23,8 +23,8 @@
 <script setup lang="ts">
 import { ref, computed } from "vue"
 import { VueFlow, useVueFlow } from "@vue-flow/core"
-import { Background } from "@vue-flow/background"
-import { Controls } from "@vue-flow/controls"
+// import { Background } from "@vue-flow/background"
+// import { Controls } from "@vue-flow/controls"
 import { ElButton, ElInput } from "element-plus"
 import { useStateMachineStore } from "@/stores/lowcode/statemachine"
 import type { StateNode } from "@/stores/lowcode/statemachine"

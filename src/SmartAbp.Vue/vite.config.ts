@@ -47,7 +47,7 @@ export default defineConfig({
         new URL("./packages/lowcode-codegen/src", import.meta.url),
       ),
       "@smartabp/lowcode-api": fileURLToPath(
-        new URL("./packages/lowcode-api/src", import.meta.url),
+        new URL("./packages/lowcode-api", import.meta.url),
       ),
       "@smartabp/lowcode-ui-vue": fileURLToPath(
         new URL("./packages/lowcode-ui-vue/src", import.meta.url),

@@ -1,7 +1,14 @@
 import { defineStore } from "pinia"
 import { ref } from "vue"
-import { codeGeneratorApi } from "@smartabp/lowcode-api"
-import type { Template } from "@smartabp/lowcode-api/types"
+// import { codeGeneratorApi } from "@smartabp/lowcode-api"
+// import type { Template } from "@smartabp/lowcode-api/types"
+
+interface Template {
+  id: string
+  name: string
+  description: string
+  category: string
+}
 
 export const useTemplatesStore = defineStore("templates", () => {
   const templates = ref<Template[]>([])
