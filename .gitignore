@@ -370,3 +370,4 @@ OpenGitBashHere.cmd
 # Generated artifacts and reports
 /artifacts/
 .env.quality
+src/SmartAbp.Application.backup.*/

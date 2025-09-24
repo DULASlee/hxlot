@@ -21,6 +21,7 @@ using SmartAbp.EntityFrameworkCore;
 namespace SmartAbp.Web;
 
 [DependsOn(
+    typeof(SmartAbpApplicationModule),
     typeof(SmartAbpHttpApiModule),
     typeof(SmartAbpEntityFrameworkCoreModule),
     typeof(AbpAutofacModule),
