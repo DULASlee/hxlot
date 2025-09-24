@@ -5,14 +5,14 @@ alwaysApply: true
 priority: 600
 ---
 
-# 🔥 SmartAbp 企业级代码质量规则（90%生产就绪标准+48个TDD测试验证）
+# 🔥 SmartAbp 企业级代码质量规则
 
-## 🏆 重大发现：企业级质量保证体系（基于48个TDD测试全面验证）
-基于29个专业代码生成器的质量标准，SmartAbp已达到企业级质量保证：
+## 🏆 企业级质量保证体系
+基于专业代码生成器的质量标准，SmartAbp已达到企业级质量保证：
 - **CodeQualityGenerator.cs**: Roslyn静态分析、代码度量、质量门控
-- **UnitTestGenerator.cs**: 自动测试生成、TDD支持、90%+覆盖率
+- **UnitTestGenerator.cs**: 自动测试生成、TDD支持、高覆盖率
 - **质量门控系统**: 95分企业级质量标准执行
-- **TDD验证完成**: 48个测试100%通过（Phase 2&3&工作台全覆盖）
+- **TDD验证**: 完整测试覆盖（增强组件+工作台全通过）
 
 ## 🔥 企业级强制质量检查（零容忍）
 
@@ -30,26 +30,19 @@ priority: 600
 - 保持类型安全
 - 测试修复效果
 
-### 🛡️ 企业级构建质量检查序列（48个TDD测试验证通过）
+### 🛡️ 企业级构建质量检查序列
 ```bash
-# 基于CodeQualityGenerator.cs的企业级质量标准 + 48个TDD测试验证
-npm run type-check      # 零类型错误 = 必须 (TypeScript 5.8严格模式) ✅
-npm run lint            # 零lint错误 = 必须 (ESLint 9.34.0) ✅  
-npm run test:coverage   # ≥80%覆盖率 = 必须 (Vitest 3.2.4) ✅
-npm run test:tdd-compliance # ≥90%TDD遵循率 = 必须 (48/48测试通过) ✅
-npm run build           # 零构建错误 = 必须 (Vite 7.0.6) ✅
-npm run quality-gates   # 95分质量标准 = 必须 (企业级门控) ✅
+# 前端质量检查（基于企业级质量标准）
+npm run type-check      # 零类型错误 = 必须
+npm run lint            # 零lint错误 = 必须
+npm run test:coverage   # ≥80%覆盖率 = 必须
+npm run build           # 零构建错误 = 必须
+npm run quality-gates   # 95分质量标准 = 必须
 
-# TDD Phase 2&3 验证通过状态
-# ✅ Phase 2: 19/19 增强主题系统测试通过
-# ✅ Phase 3: 20/20 增强状态机引擎测试通过  
-# ✅ 工作台: 9/9 LowCode Studio测试通过
-# 🏆 总计: 48/48 TDD测试100%通过，90%生产就绪
-
-# 后端质量检查（基于29个生成器标准）
+# 后端质量检查（基于代码生成器标准）
 dotnet test --coverage  # ≥80%测试覆盖率
 dotnet build --no-restore # 零编译错误
-roslyn-analyzer        # 静态代码分析 (CodeQualityGenerator)
+roslyn-analyzer        # 静态代码分析
 ```
 
 ## TypeScript严格模式
