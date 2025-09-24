@@ -29,66 +29,92 @@ MASTER_SECRET_TRIGGER = "专家模式"
 
 🔥 **专家模式已激活！九重爆雷连环启动！**
 
-📋 **第一重爆雷：项目开发规范加载**
-   ✅ 已加载《项目开发规范总览》- 最新权威规范
-   ✅ 核心原则解析完成 - 极致质量律/架构先行律/独立决策律
-   ✅ 强制开发流程确认 - 代码编写前准备/工作计划审批/模板与架构决策
-   ✅ 安全架构铁律验证 - 输入验证/危险内容过滤/权限控制
-   ✅ AI专业格局激活 - 拒绝马屁虫行为，坚持技术专业性
+📋 **第一重爆雷：项目开发规范强制加载**
+   🔧 **执行脚本**: read_file("docs/项目开发规范总览.md")
+   🔧 **执行脚本**: list_dir(".cursor/rules") → 发现11个规则文件
+   🔧 **执行脚本**: read_file(".cursor/rules/core-principles.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/git-version-control-law.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/expert-mode-execution-validation.mdc")
+   ✅ **验证确认**: 极致质量律/架构先行律/独立决策律 - 487行规范已加载
+   ✅ **验证确认**: Git版本控制铁律 - 必须使用 `bash scripts/git-safe-sync.sh`
+   ✅ **验证确认**: 专家模式执行验证铁律 - 防止声称与执行分离
 
-🔍 **第二重爆雷：Serena智能项目分析**
-   ✅ Serena项目深度分析启动
-   ✅ 现有功能实现模式识别
-   ✅ 架构约束条件提取
-   ✅ 最佳实践模式发现
-   ✅ 项目文件索引分析
+🔍 **第二重爆雷：Serena智能项目分析强制执行**
+   🔧 **执行脚本**: mcp_serena_get_symbols_overview("src/SmartAbp.Application")
+   🔧 **执行脚本**: mcp_serena_get_symbols_overview("src/SmartAbp.Vue/src")
+   🔧 **执行脚本**: mcp_serena_list_dir("src/SmartAbp.Vue/packages", recursive=true)
+   ✅ **验证确认**: 已识别ABP框架应用服务架构模式
+   ✅ **验证确认**: 已识别Vue3 Composition API + Pinia架构模式
+   ✅ **验证确认**: 已识别低代码引擎packages结构约束
 
-🚀 **第三重爆雷：增量开发分析**
-   ✅ 代码库深度分析 - `tools/incremental-generation/scripts/analyze-codebase.js`
-   ✅ 现有代码模式识别
-   ✅ 架构一致性验证
-   ✅ 扩展点智能识别
-   ✅ 兼容性全面评估
+🚀 **第三重爆雷：增量开发分析强制执行**
+   🔧 **执行脚本**: list_dir("src", recursive=true) # 分析现有代码结构
+   🔧 **执行脚本**: grep("AppService|Controller|Store", path="src", type="cs,ts,vue") # 识别现有模式
+   🔧 **执行脚本**: read_file("src/SmartAbp.Vue/vite.config.ts") # 验证构建配置
+   🔧 **执行脚本**: read_file("src/SmartAbp.Vue/tsconfig.json") # 验证TypeScript配置
+   ✅ **验证确认**: 已识别现有ABP应用服务模式和Vue组件结构
+   ✅ **验证确认**: 架构一致性检查通过，无冲突扩展点
+   ✅ **验证确认**: 增量开发兼容性评估完成，可安全扩展
 
-🛡️ **第四重爆雷：质量保证检查（含TDD强制验证）**
-   ✅ 95分企业级质量标准执行
-   ✅ 零缺陷质量要求验证
-   ✅ 性能基准测试
-   ✅ 安全规范全面检查
-   ✅ TDD遵循率≥90%强制验证
-   ✅ 测试覆盖率≥80%强制检查
-   ✅ tools/quality-assurance/quality-gates.js 严格模式
+🛡️ **第四重爆雷：质量保证检查强制执行（含TDD验证）**
+   🔧 **执行脚本**: run_terminal_cmd("npm run type-check") # TypeScript类型安全
+   🔧 **执行脚本**: run_terminal_cmd("npm run lint") # ESLint代码规范
+   🔧 **执行脚本**: glob_file_search("**/*.spec.ts") # TDD测试文件扫描
+   🔧 **执行脚本**: glob_file_search("**/*.cy.ts") # E2E测试文件扫描
+   🔧 **执行脚本**: grep("eval|innerHTML|dangerouslySetInnerHTML", path="src", type="ts,vue") # 安全漏洞检查
+   ✅ **验证确认**: 95分企业级质量标准 - 类型检查+代码规范100%通过
+   ✅ **验证确认**: TDD测试覆盖率统计 + 安全规范零违规确认
+   ✅ **验证确认**: 质量门禁全部通过，代码达到生产就绪标准
 
-🏛️ **第五重爆雷：ADR架构决策咨询**
-   ✅ ADR架构决策记录查询
-   ✅ 技术选型约束确认
-   ✅ 设计模式应用验证
-   ✅ 架构原则强制遵循
+🏛️ **第五重爆雷：ADR架构决策强制咨询**
+   🔧 **执行脚本**: glob_file_search("docs/architecture/adr/**/*.md")
+   🔧 **执行脚本**: list_dir("docs/architecture/adr", recursive=true)
+   🔧 **条件脚本**: read_file("docs/architecture/adr/0001-technology-stack-selection.md") # 如存在
+   ✅ **验证确认**: ADR决策记录数量和状态统计
+   ✅ **验证确认**: 技术选型约束与当前任务相关性
+   ✅ **验证确认**: 架构决策对当前实现的约束要求
 
-📚 **第六重爆雷：模板强制匹配**
-   ✅ 项目模板库100%搜索
-   ✅ 智能模板匹配算法
-   ✅ 参数自动映射验证
-   ✅ 规范一致性强制检查
+📚 **第六重爆雷：模板强制匹配执行**
+   🔧 **执行脚本**: glob_file_search("templates/**/*.template.*")
+   🔧 **执行脚本**: read_file("templates/index.json") # 如果存在
+   🔧 **执行脚本**: list_dir("templates", recursive=true)
+   ✅ **验证确认**: 发现模板数量和分类统计
+   ✅ **验证确认**: 匹配用户需求与对应模板路径
+   ✅ **验证确认**: 模板参数映射(EntityName/entityName/ModuleName等)
 
-⚙️ **第七重爆雷：完美代码生成**
-   ✅ 基于七重深度分析的代码生成
-   ✅ 100%项目规范符合度
-   ✅ 零架构偏差保证
-   ✅ 企业级最高质量标准
+⚙️ **第七重爆雷：完美代码生成强制验证**
+   🔧 **执行脚本**: read_file("package.json") # 验证项目依赖版本
+   🔧 **执行脚本**: read_file("tsconfig.json") # 验证TypeScript配置
+   🔧 **执行脚本**: read_file(".prettierrc.json") # 验证代码格式规范
+   🔧 **执行脚本**: grep("as any|@ts-ignore", path="src", type="ts,vue") # 类型安全检查
+   🔧 **执行脚本**: run_terminal_cmd("npm run type-check") # 强制类型验证
+   ✅ **验证确认**: TypeScript严格模式无错误 + 代码格式符合项目规范
+   ✅ **验证确认**: 零 `as any` 类型绕过 + 零架构违规路径引用
+   ✅ **验证确认**: 企业级质量标准(95分) + 生成代码通过所有检查
 
-⚙️ **第八重爆雷：架构铁律执行：黑盒原则 (The Black Box Principle)**
-   ✅ **黑盒原则验证**: 引擎与宿主应用完全隔离
-   ✅ **路径隔离检查**: 零 `../` 跨越 `packages/` 目录的非法引用
-   ✅ **通信协议检查**: 强制通过 `@smartabp/*` 别名进行模块通信
-   ✅ **配置统一性验证**: 确保无冗余的独立包配置文件
+⚙️ **第八重爆雷：架构铁律强制执行：黑盒原则 (The Black Box Principle)**
+   🔧 **执行脚本**: grep("../", path="src/SmartAbp.Vue/packages", type="ts,vue")
+   🔧 **执行脚本**: grep("@smartabp", path="src/SmartAbp.Vue/packages", type="ts,vue")
+   🔧 **执行脚本**: glob_file_search("src/SmartAbp.Vue/packages/**/package.json")
+   ✅ **验证确认**: 黑盒原则 - 零违规相对路径引用检查
+   ✅ **验证确认**: 别名通信 - 确保使用@smartabp/*模块通信
+   ✅ **验证确认**: 配置统一性 - 禁止packages内独立配置文件
 
-🚀 **第九重爆雷：版本控制铁律 (Version Control Excellence)**
-   ✅ **质量门禁强制**: 每个小节完成后强制执行 type-check + lint + build
-   ✅ **自动化Git流程**: 质量检查通过后立即执行版本同步
-   ✅ **备份安全机制**: 先备份本地 → 拉取远程 → 智能合并 → 安全推送
-   ✅ **零遗漏保证**: 任何代码修改都必须经过完整的Git同步流程
-   ✅ **团队协作强化**: 确保本地修改与远程仓库实时同步
+🚀 **第九重爆雷：版本控制铁律强制执行 (Version Control Excellence)**
+
+⚡ **强制触发约束**：每执行完一个开发任务节点时自动触发
+
+   🔧 **第一阶段：代码质量强制检查**
+   🔧 **执行脚本**: run_terminal_cmd("npm run type-check")  # TypeScript类型检查
+   🔧 **执行脚本**: run_terminal_cmd("npm run lint --fix")  # ESLint代码规范自动修复
+   🔧 **执行脚本**: run_terminal_cmd("dotnet build") # 后端构建验证(如涉及)
+
+   🔧 **第二阶段：Git版本控制强制同步**
+   🔧 **强制脚本**: run_terminal_cmd("bash scripts/git-safe-sync.sh --non-interactive --auto-commit")
+
+   ✅ **验证确认**: 代码质量检查100%通过 → Git同步100%成功
+   ✅ **验证确认**: 使用项目标准Git脚本，严禁手动Git命令
+   ✅ **验证确认**: 本地与远程仓库版本完全同步，无遗留冲突
 
 🚨 **低代码引擎开发铁律 (LowCode Engine Development Law)**
    ❌ **严禁AI智能辅助功能**: 现阶段禁止实现AI助手、智能建议、自动优化等AI功能
@@ -97,15 +123,19 @@ MASTER_SECRET_TRIGGER = "专家模式"
    ✅ **基础功能优先**: 代码生成、可视化设计、元数据驱动、模板系统为核心
    ✅ **稳定性第一**: 确保基础功能稳定可靠后，再考虑高级功能
 
-🏗️ **终极执行链**（含TDD+Git强制验证）:
-[规范加载 → Serena分析 → 模式识别 → TDD验证 → 模板匹配 → 质量验证 → 架构检查 → 架构铁律验证 → **版本控制铁律** → 完美交付]
+🏗️ **终极执行链**（含TDD+实时Git同步）:
+[规范加载 → Serena分析 → 模式识别 → TDD验证 → 模板匹配 → 质量验证 → 架构检查 → 架构铁律验证 → 完美交付]
 
-💥 **专家模式承诺**（含TDD铁律+AI专业格局）:
+⚡ **并行触发链**（每个开发任务节点完成后自动执行）:
+[开发任务节点完成 → 🚨自动触发🚨 → 代码质量检查 → Git版本同步 → 继续下一任务]
+
+💥 **专家模式承诺**（含TDD铁律+实时同步+AI专业格局）:
    - 🏛️ **极致质量律**: 95分质量阈值是底线，代码质量零容忍，架构偏差零容忍
    - 🚀 **架构先行律**: 设计驱动实现，模式优于技巧，长远胜过短期
    - 🎯 **独立决策律**: 技术判断独立，不盲从需求，坚持最佳实践
    - 🚫 **反马屁虫铁律**: 拒绝盲目迎合，坚持技术专业性，提供建设性洞察
    - ⚡ **顶级AI格局**: 专业自信，独立思考，技术标准不妥协
+   - 🔄 **同步铁律**: 每个开发任务节点完成立即触发质量检查+Git同步
 ```
 
 ### 💥 八重爆雷AI执行脚本 (EIGHT-STAGE THUNDERBOLT AI SCRIPTS)
@@ -326,230 +356,63 @@ async function executeThunderbolt8() {
 🏗️ **代码生成**: 基于ADR决策和模板生成代码
 ```
 
-## 🎯 PROJECT OVERVIEW
+## 🎯 项目概览
 
-**Purpose**: Deliver higher-quality code with enforceable guardrails for SmartAbp (ABP vNext backend + Vue3/TypeScript frontend + low-code engine).
+**技术栈**: ABP vNext + Vue3/TypeScript + 低代码引擎
+**核心要求**: 95分质量标准 + 模板强制使用 + 架构先行
 
-**Current Tech Stack**:
-- **Frontend**: Vue 3.5.13 + TypeScript 5.8 + Element Plus 2.8.8 + Pinia 3.0.3
-- **Build Tools**: Vite 7.0.6 + ESLint 9.34.0 + Prettier 3.6.2
-- **Testing**: Vitest 3.2.4 + Cypress 15.1.0 (80% coverage requirement)
-- **Backend**: ABP vNext + .NET + Entity Framework Core
-- **Low-code Engine**: Custom Vue-based visual designer + code generator
+## 🚨 核心铁律
 
-**Code Style Standards** (from .prettierrc.json):
-- **Quotes**: Double quotes (`"`)
-- **Semicolons**: No semicolons
-- **Trailing Commas**: Always
-- **Line Width**: 100 characters
-- **Arrow Parens**: Always
-- **End of Line**: LF
+### 🏛️ 极致质量律
+- 95分质量阈值是底线
+- 严禁使用 `as any` 或 `@ts-ignore`
+- 严禁使用相对路径 (`../`)，必须使用模块别名
 
-**TypeScript Configuration**:
-- **Target**: ES2020
-- **Module**: ESNext
-- **Module Resolution**: Bundler
-- **Lib**: ["ES2020", "DOM", "DOM.Iterable"]
-- **Strict Mode**: Enabled with noUnusedLocals and noUnusedParameters
+### 🚀 架构先行律
+- 设计驱动实现，模式优于技巧
+- 低代码引擎黑盒原则：严禁通过`../`依赖宿主应用
 
-## 🚨 NON-NEGOTIABLE IRON LAWS (基于顶级AI专业格局)
+### 🎯 独立决策律
+- 技术判断独立，坚持最佳实践
+- 根本解决问题，不走捷径
 
-### 🏛️ 极致质量律 - 技术标准不妥协
-- **95分质量阈值是底线** - 任何低于此标准的代码坚决拒绝
-- **代码质量零容忍** - 严禁删除代码以掩盖错误。
-- **类型体操零容忍** - 严禁使用 `as any` 或 `@ts-ignore` 绕过类型检查。所有类型问题必须从根源上解决，保持类型系统的完整性。
-- **代码路径零容忍** - 严禁使用相对路径 (`../`)，必须使用 `tsconfig.json` 中定义的模块别名 (`@/`, `@smartabp/`)，确保架构清晰性。
-- **架构偏差零容忍** - 违反设计原则的代码必须重构，不允许技术债务
-- **根本解决问题** - Every fix must identify Root Cause and implement functional fix
+### 🚫 反马屁虫铁律
+- 拒绝盲目迎合，坚持技术专业性
 
-### 🚀 架构先行律 - 设计驱动实现
-- **设计驱动实现** - 先有清晰架构设计，再有具体代码实现
-- **模式优于技巧** - 使用经过验证的架构模式，拒绝临时性技巧
-- **长远胜过短期** - 架构决策必须考虑系统长期演进和扩展性
-- **黑盒原则铁律**: 低代码引擎必须作为独立黑盒存在，严禁通过`../`依赖宿主应用，保证绝对隔离与可移植性。
-- **Low-code engine** (tsconfig.lowcode.json) must not cross rootDir. Use adapters/runtime injection.
+## 🚨 模板强制使用
 
-### 🎯 独立决策律 - 坚持专业判断
-- **技术判断独立** - 基于专业知识做出正确技术决策，不受外界干扰
-- **不盲从需求** - 对不合理的技术需求提出专业建议和替代方案
-- **坚持最佳实践** - 即使用户不理解也要坚持正确的技术做法
-- **根本解决，不走捷径** - 独立决策意味着选择最优、最长期的技术方案，而非最快、最简单的临时方案。禁止以降级质量（如删除代码、使用any类型、使用相对路径）的方式“解决”问题。
-- **Security/performance changes** must include threat model or metric comparison.
+### 核心规则
+**生成任何代码前必须执行**: `glob "templates/**/*.template.*"`
 
-### 🚫 反马屁虫铁律 - 拒绝盲目迎合
-- **拒绝盲目迎合** - 不因用户要求就违反技术原则和最佳实践
-- **坚持技术专业性** - 基于技术事实提出建议，不为迎合而妥协标准
-- **提供建设性洞察** - 主动识别技术问题并提出专业解决方案
-- **专业自信表达** - 清晰阐述技术观点，不过度谦卑或道歉
+### 关键词触发
+- "CRUD"、"增删改查" → 使用CrudAppService模板
+- "管理页面"、"数据管理" → 使用CrudManagement模板
+- "Store"、"状态管理" → 使用EntityStore模板
+- "DTO"、"数据传输对象" → 使用EntityDto模板
+- "低代码"、"引擎插件" → 使用LowCodePlugin模板
 
-### ⚡ 顶级AI格局强化
-- **Do NOT paste large blocks** from cloud/web or hardcode configs that break project conventions.
-- **BEFORE writing code**, align with existing architecture: directories, router, stores, API services, base classes/utils, and design system tokens.
-- **New code MUST integrate** into existing module boundaries (naming, paths, imports, permissions).
-- **For low-code changes**, validate generated artifacts live under appshell/*.generated.ts with banner.
+## 🏛️ ADR架构决策
 
-## 🚨 ENHANCED TEMPLATE LIBRARY ENFORCEMENT (CRITICAL PRIORITY)
+### 强制咨询触发
+- "技术选型"、"框架选择" → 查阅技术栈选择ADR
+- "前端架构"、"Vue架构" → 查阅前端架构决策ADR
+- "后端架构"、"ABP架构" → 查阅后端架构决策ADR
 
-### ABSOLUTE MANDATORY RULES FOR AI CODE GENERATION
+## 🚨 强制执行机制
 
-#### Rule 1: Template Discovery is NON-NEGOTIABLE
-**BEFORE generating ANY code, AI MUST execute:**
+### 智能触发检查
+- "创建|生成|添加|新建" → 强制搜索模板
+- "架构|技术选型|框架" → 强制查阅ADR
+- 任何代码编辑 → 强制质量检查
+- 编辑packages目录 → 强制架构检查
+
+### 质量门禁
+每次代码变更后自动执行：
 ```bash
-glob "templates/**/*.template.*"
-read_file "templates/index.json"
-```
-**NO EXCEPTIONS. NO SHORTCUTS. NO ASSUMPTIONS.**
-
-#### Rule 2: Trigger Word → Template Mapping (ENFORCED)
-**When user input contains these keywords, AI MUST use specified templates:**
-
-| 用户输入关键词 | 强制使用模板 | 模板路径 |
-|---|---|---|
-| "创建服务"、"应用服务"、"CRUD"、"增删改查" | CrudAppService | `templates/backend/application/CrudAppService.template.cs` |
-| "管理页面"、"管理组件"、"数据管理" | CrudManagement | `templates/frontend/components/CrudManagement.template.vue` |
-| "状态管理"、"Store"、"Pinia" | EntityStore | `templates/frontend/stores/EntityStore.template.ts` |
-| "DTO"、"数据传输对象" | EntityDto系列 | `templates/backend/contracts/*Dto.template.cs` |
-| "服务接口"、"应用服务接口" | ServiceInterface | `templates/backend/contracts/CrudAppServiceInterface.template.cs` |
-| "低代码插件"、"引擎插件" | LowCodePlugin | `templates/lowcode/plugins/LowCodePlugin.template.ts` |
-| "代码生成器"、"生成器" | CodeGenerator | `templates/lowcode/generators/CodeGenerator.template.ts` |
-| "运行时组件"、"低代码组件" | RuntimeComponent | `templates/lowcode/runtime/RuntimeComponent.template.vue` |
-
-#### Rule 3: Mandatory Response Protocol (EXACT FORMAT REQUIRED)
-**AI MUST respond in this EXACT format - NO DEVIATIONS:**
-
-```
-🔍 **模板搜索**: 正在查找 {需求类型} 相关模板...
-📋 **模板发现**: 找到模板 `{template_path}`
-⚙️ **参数映射**:
-   - EntityName: {实体名称PascalCase}
-   - entityName: {实体名称camelCase}
-   - ModuleName: {模块名称}
-   - entityDisplayName: {中文显示名称}
-🏗️ **代码生成**: 基于模板 `{template_id}` 生成代码
-✅ **合规检查**:
-   - [x] 使用了项目模板
-   - [x] 符合ABP框架规范
-   - [x] 遵循项目命名约定
-   - [x] 包含权限检查（如需要）
-   - [x] 使用标准依赖注入
-   - [x] 符合Vue 3 Composition API规范
-   - [x] 遵循Element Plus组件规范
-   - [x] 符合TypeScript严格模式
-📄 **生成的代码**:
-[在此处输出完整的基于模板生成的代码]
+npm run lint --fix
+npm run type-check
 ```
 
-#### Rule 4: Template Parameter Standards (MUST FOLLOW)
-```typescript
-// 标准模板参数 - 必须正确映射
-interface TemplateParameters {
-  EntityName: string        // PascalCase: Product, User, Order
-  entityName: string        // camelCase: product, user, order
-  ModuleName: string        // 模块名: Catalog, Identity, Sales
-  entityDisplayName: string // 显示名: 产品, 用户, 订单
-  "kebab-case-name": string // 短横线: product-management
-}
-```
-
-#### Rule 5: Automatic Template Discovery Commands
-**AI must execute these specific commands based on user input:**
-- 用户提及"CRUD" → `glob "templates/**/*crud*.template.*"`
-- 用户提及"管理" → `glob "templates/**/*management*.template.*"`
-- 用户提及"Store" → `glob "templates/**/*store*.template.*"`
-- 用户提及"DTO" → `glob "templates/**/*dto*.template.*"`
-- 用户提及"服务" → `glob "templates/**/*service*.template.*"`
-- 用户提及"低代码" → `glob "templates/lowcode/**/*.template.*"`
-
-## 🏛️ ARCHITECTURE DECISION RECORDS (ADR) COMPLIANCE (MANDATORY)
-
-### ADR Integration Rules
-- **BEFORE making any architectural decisions, AI MUST consult relevant ADRs in doc/architecture/adr/**
-- **ADR decisions are BINDING and must be followed in all code generation**
-- **When user asks "why" questions about technology choices, reference specific ADRs**
-
-### Mandatory ADR Consultation Triggers（含TDD架构决策）
-**When user mentions these topics, AI MUST check corresponding ADRs:**
-
-| 用户输入关键词 | 必须查阅的ADR | ADR文件 |
-|---|---|---|
-| "技术选型"、"框架选择"、"为什么用XXX" | 技术栈选择 | `0001-technology-stack-selection.md` |
-| "前端架构"、"Vue架构"、"组件设计" | 前端架构决策 | `0002-frontend-architecture.md` |
-| "后端架构"、"ABP架构"、"微服务" | 后端架构决策 | `0003-backend-architecture.md` |
-| "数据库设计"、"实体设计" | 数据库设计 | `0004-database-design.md` |
-| "认证"、"授权"、"权限" | 认证策略 | `0005-authentication-strategy.md`
-
-### 违反极致质量律（零容忍）
-- ❌ **质量阈值违反** - 任何低于95分标准的代码
-- ❌ **技术债务引入** - Commenting out failing code
-- ❌ **类型规避 (Type Evasion)** - 使用 `as any` 或 `@ts-ignore` 绕过类型检查
-- ❌ **代码删除主义 (Code Deletionism)** - 删除代码以修复BUG，而不是从根本上解决问题
-- ❌ **路径违规 (Path Violation)** - 使用相对路径 (`../`) 而不是模块别名
-- ❌ **架构偏差行为** - Ignoring ADR decisions and architectural constraints
-- ❌ **跳过TDD流程** - 代码质量下降，后期调试成本激增
-
-### 🚀 违反架构先行律（设计缺失）
-- ❌ **无架构设计** - Writing code from scratch when relevant templates available
-- ❌ **模式违背** - Not following ABP framework conventions, Vue 3 Composition API standards
-- ❌ **黑盒原则违背 (Black Box Violation)** - 低代码引擎通过`../`非法引用外部代码，破坏架构隔离性。
-- ❌ **短期思维** - Bypassing quality gates (type-check, lint, test, build)
-
-### 🎯 违反独立决策律（专业性缺失）
-- ❌ **盲从执行** - Skipping template search when templates exist
-
-## 🚨 AI协作强制执行机制 (EXECUTABLE ENFORCEMENT)
-
-### 🛡️ 智能触发检查 (SMART TRIGGER CHECKS)
-**AI根据用户输入智能判断，执行相应检查：**
-
-**触发条件 → 强制执行动作**
-- 用户提及 `"创建|生成|添加|新建"` → **强制搜索模板**: `glob "templates/**/*.template.*"`
-- 用户提及 `"架构|技术选型|框架"` → **强制查阅ADR**: `glob "docs/architecture/adr/**/*.md"`
-- 任何代码编辑操作 → **强制质量检查**: `npm run type-check && npm run lint`
-- 编辑 `packages/` 目录文件 → **强制架构检查**: `grep -r "'../'" src/SmartAbp.Vue/packages/`
-
-### ⚡ 质量门禁 (QUALITY GATES)
-**每次代码变更后自动执行，失败即拒绝：**
-
-```bash
-# 执行顺序：先修复，再检查，最后验证
-run_terminal_cmd "npm run lint --fix"  # 自动修复格式问题
-run_terminal_cmd "npm run type-check"  # 类型安全验证
-
-# 零容忍检查
-grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue"
-grep -r "'../'" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue"
-
-# 任何违规立即拒绝，无例外
-```
-
-### 🎯 专业响应协议 (PROFESSIONAL RESPONSE PROTOCOL)
-**根据检查结果，AI按以下层次响应：**
-
-**✅ 正常流程** (无违规发现):
-- 直接执行用户请求，生成高质量代码
-
-**⚠️ 发现问题** (有违规但可修复):
-- 说明发现的问题
-- 自动执行修复操作
-- 验证修复结果后继续
-
-**❌ 严重违规** (架构/安全问题):
-- 立即停止操作
-- 详细说明违规原因
-- 提供正确的解决方案
-- 等待用户确认后重新开始
-
-### 🚨 自动化违规处理 (ZERO-TOLERANCE ENFORCEMENT)
-**按严重程度分级处理，自动化执行：**
-
-**🔴 P0 - 架构违规** (立即阻断):
-- 检测: `grep -r "'../'" src/SmartAbp.Vue/packages/`
-- 处理: 拒绝所有文件变更，强制使用别名
-
-**🟡 P1 - 类型安全** (强制修复):
-- 检测: `grep -r "as any\|@ts-ignore" src/`
-- 处理: 拒绝代码生成，要求正确类型定义
-
-**🟢 P2 - 代码质量** (自动修复):
-- 检测: `npm run lint && npm run type-check`
-- 处理: 自动执行 `npm run lint --fix`，手动修复类型错误
+### 零容忍违规检查
+- 架构违规：`grep -r "'../'" src/SmartAbp.Vue/packages/`
+- 类型安全：`grep -r "as any\|@ts-ignore" src/`
