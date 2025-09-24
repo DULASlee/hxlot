@@ -3,10 +3,10 @@ SmartAbp Enterprise Lazy Loading Image Component
 企业级懒加载图片组件 - 支持占位图、错误处理、响应式图片等特性
 -->
 <template>
-  <div 
+  <div
     ref="target"
     class="lazy-image-container"
-    :class="{ 
+    :class="{
       'is-loading': isLoading,
       'has-error': hasError,
       'is-loaded': hasLoaded && !hasError
@@ -22,7 +22,7 @@ SmartAbp Enterprise Lazy Loading Image Component
       @load="handleLoad"
       @error="handleError"
     />
-    
+
     <!-- 加载状态 -->
     <div
       v-if="isLoading && showLoadingIndicator"
@@ -34,7 +34,7 @@ SmartAbp Enterprise Lazy Loading Image Component
         class="loading-text"
       >{{ loadingText }}</span>
     </div>
-    
+
     <!-- 错误状态 -->
     <div
       v-if="hasError && showErrorIndicator"
@@ -55,7 +55,7 @@ SmartAbp Enterprise Lazy Loading Image Component
         重试
       </button>
     </div>
-    
+
     <!-- 占位内容 -->
     <div
       v-if="!hasLoaded && !isLoading && !hasError && showPlaceholder"
@@ -177,7 +177,7 @@ onMounted(() => {
       rect.bottom <= window.innerHeight &&
       rect.right <= window.innerWidth
     )
-    
+
     if (isInViewport) {
       reload()
     }
@@ -282,13 +282,13 @@ onMounted(() => {
   .placeholder {
     padding: 8px;
   }
-  
+
   .loading-text,
   .error-text,
   .placeholder-text {
     font-size: 11px;
   }
-  
+
   .error-icon,
   .placeholder-icon {
     font-size: 20px;
@@ -300,13 +300,13 @@ onMounted(() => {
   .lazy-image-container {
     border: 1px solid #000;
   }
-  
+
   .loading-text,
   .error-text,
   .placeholder-text {
     color: #000;
   }
-  
+
   .retry-button {
     border-color: #000;
     color: #000;
@@ -320,7 +320,7 @@ onMounted(() => {
   .retry-button {
     transition: none;
   }
-  
+
   .loading-spinner {
     animation: none;
     border-top-color: #409eff;
@@ -332,19 +332,19 @@ onMounted(() => {
   .lazy-image-container {
     background-color: #2d2d2d;
   }
-  
+
   .loading-text,
   .error-text,
   .placeholder-text {
     color: #a8a8a8;
   }
-  
+
   .retry-button {
     background: #2d2d2d;
     border-color: #4a4a4a;
     color: #a8a8a8;
   }
-  
+
   .retry-button:hover {
     border-color: #409eff;
     color: #409eff;

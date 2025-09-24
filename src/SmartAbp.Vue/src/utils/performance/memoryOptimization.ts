@@ -24,7 +24,7 @@ export function useMemoryMonitor() {
     totalMemory: 0,
     memoryUsage: 0
   })
-  
+
   const isSupported = ref(false)
   const updateInterval = ref<number | null>(null)
 
@@ -33,7 +33,7 @@ export function useMemoryMonitor() {
       const memory = (performance as any).memory
       const used = Math.round(memory.usedJSHeapSize / 1024 / 1024)
       const total = Math.round(memory.totalJSHeapSize / 1024 / 1024)
-      
+
       memoryInfo.value = {
         usedMemory: used,
         totalMemory: total,
@@ -123,7 +123,7 @@ export class LRUCache<K, V> {
           this.cache.delete(oldestKey)
         }
       }
-      
+
       this.cache.set(key, value)
       this.accessOrder.add(key)
     }
@@ -245,7 +245,7 @@ export function useCache<T>(
 
   const get = (cacheKey: string): T | null => {
     totalRequests.value++
-    
+
     const item = cache.get(cacheKey)
     if (item) {
       // 检查是否过期
@@ -259,7 +259,7 @@ export function useCache<T>(
         cache.delete(cacheKey)
       }
     }
-    
+
     hitRate.value = Math.round((cacheHits.value / totalRequests.value) * 100)
     return null
   }
@@ -270,7 +270,7 @@ export function useCache<T>(
       timestamp: Date.now(),
       accessCount: 1
     }
-    
+
     cache.set(cacheKey, item)
     saveToStorage()
   }
@@ -288,7 +288,7 @@ export function useCache<T>(
     cacheHits.value = 0
     totalRequests.value = 0
     hitRate.value = 0
-    
+
     if (persistent && typeof localStorage !== 'undefined') {
       localStorage.removeItem(`cache_${key}`)
     }
@@ -306,16 +306,16 @@ export function useCache<T>(
   const cleanup = (): void => {
     const now = Date.now()
     const keysToDelete: string[] = []
-    
+
     for (const cacheKey of cache.keys()) {
       const item = cache.get(cacheKey)
       if (item && now - item.timestamp >= ttl) {
         keysToDelete.push(cacheKey)
       }
     }
-    
+
     keysToDelete.forEach(cacheKey => cache.delete(cacheKey))
-    
+
     if (keysToDelete.length > 0) {
       saveToStorage()
       console.log(`[Cache] Cleaned up ${keysToDelete.length} expired items`)
@@ -359,7 +359,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
     if (timer) {
       clearTimeout(timer)
     }
-    
+
     timer = window.setTimeout(() => {
       fn.apply(null, args)
       timer = null
@@ -392,7 +392,7 @@ export function useThrottle<T extends (...args: any[]) => any>(
 
   const throttledFn = ((...args: Parameters<T>) => {
     lastArgs = args
-    
+
     if (timer) return
 
     timer = window.setTimeout(() => {
