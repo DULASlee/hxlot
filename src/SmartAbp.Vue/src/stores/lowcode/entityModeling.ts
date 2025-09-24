@@ -30,6 +30,7 @@ export interface EntityDefinition {
   displayName: string
   description: string
   category: "core" | "relation" | "config" | "log"
+  module?: string // 可选的模块名称，用于代码生成
   fields: EntityField[]
   validationRules: ValidationRule[]
   enableSoftDelete: boolean
@@ -121,7 +122,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
   const error = ref<string | null>(null)
 
   // 实体操作
-  const addEntity = (entity: Omit<EntityDefinition, "id"> & { id?: string }) => {
+  const addEntity = (entity: Omit<EntityDefinition, "id"> & { id?: string }): EntityDefinition => {
     try {
       const newEntity: EntityDefinition = {
         ...entity,
@@ -133,6 +134,8 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
       
       // 检查实体完成状态
       checkEntityCompletion(newEntity.id)
+      
+      return newEntity
     } catch (err) {
       const error = err as Error
       logger.error("添加实体失败", { error: error.message })
@@ -312,7 +315,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
   }
 
   // 关系操作
-  const addRelation = (relation: EntityRelation) => {
+  const addRelation = (relation: Omit<EntityRelation, "id"> & { id?: string }): EntityRelation => {
     try {
       // 检查关系是否已存在
       const exists = relations.value.some(r => 
@@ -325,7 +328,12 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         throw new Error(`关系已存在: ${relation.fromEntity} -> ${relation.toEntity}`)
       }
 
-      relations.value.push(relation)
+      const newRelation: EntityRelation = {
+        ...relation,
+        id: relation.id || `relation-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      }
+      relations.value.push(newRelation)
+      return newRelation
       logger.info(`关系已添加: ${relation.fromEntity} -> ${relation.toEntity}`, { 
         relationId: relation.id,
         type: relation.type 

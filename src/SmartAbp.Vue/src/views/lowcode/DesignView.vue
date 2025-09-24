@@ -55,7 +55,7 @@
         <div class="layout-mode-selector">
           <el-radio-group
             v-model="layoutMode"
-            @change="onLayoutModeChange"
+            @change="(val: any) => onLayoutModeChange(val)"
           >
             <el-radio-button value="single">
               单页面
@@ -870,7 +870,7 @@
 import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { logger } from "@/utils/logger"
-import { useEntityModelingStore, type EntityDefinition, type EntityField, type MDIWindowConfig, type TabConfig, type UIComponentMetadata } from "@/stores/lowcode/entityModeling"
+import { useEntityModelingStore, type EntityDefinition, type MDIWindowConfig, type TabConfig } from "@/stores/lowcode/entityModeling"
 import { usePageDesignStore } from "@/stores/lowcode/pageDesign"
 import VisualComponentPalette from "@/components/lowcode/VisualComponentPalette.vue"
 import VisualDesignCanvas from "@/components/lowcode/VisualDesignCanvas.vue"
@@ -913,7 +913,7 @@ const previewDevice = ref("desktop")
 const componentSearchFilter = ref("")
 const selectedEntity = ref<EntityDefinition | null>(null)
 const draggedComponent = ref<any>(null)
-const designerMode = ref("visual") // visual | legacy
+// const designerMode = ref("visual") // visual | legacy - 暂时注释
 
 // 界面模式相关
 const layoutMode = ref("single") // single | tabs | mdi | split
@@ -1231,12 +1231,12 @@ const getPreviewUrl = () => {
 }
 
 // 可视化设计器事件处理方法
-const handleComponentDragStart = (dragData) => {
+const handleComponentDragStart = (dragData: any) => {
   draggedComponent.value = dragData.component
   console.log('Component drag started:', dragData)
 }
 
-const handleComponentDragEnd = (dragData) => {
+const handleComponentDragEnd = (dragData: any) => {
   draggedComponent.value = null
   console.log('Component drag ended:', dragData)
 }
@@ -1274,9 +1274,9 @@ const handleComponentUpdated = (component: any) => {
     
     // 同步到页面存储
     if (currentPage.value) {
-      pageStore.updatePage(currentPage.value.id, { 
+      pageStore.updatePage((currentPage.value as any).id, { 
         components: canvasComponents.value,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date()
       })
     }
   }
@@ -1293,9 +1293,9 @@ const handleComponentDeleted = (component: any) => {
     
     // 同步到页面存储
     if (currentPage.value) {
-      pageStore.updatePage(currentPage.value.id, { 
+      pageStore.updatePage((currentPage.value as any).id, { 
         components: canvasComponents.value,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date()
       })
     }
     
@@ -1388,14 +1388,15 @@ const getEntityIcon = (category: string) => {
 // 移除未使用的设计器切换方法
 
 // 界面模式切换
-const onLayoutModeChange = (mode: string) => {
-  layoutMode.value = mode
-  console.log("界面模式切换:", mode)
+const onLayoutModeChange = (mode: any) => {
+  const modeStr = String(mode)
+  layoutMode.value = modeStr
+  logger?.info("界面模式切换:", { mode: modeStr })
   
   // 根据模式初始化相应数据
-  if (mode === "mdi" && mdiWindows.value.length === 0) {
+  if (modeStr === "mdi" && mdiWindows.value.length === 0) {
     initializeMDIWindows()
-  } else if (mode === "tabs" && tabPages.value.length === 0) {
+  } else if (modeStr === "tabs" && tabPages.value.length === 0) {
     initializeTabPages()
   }
 }

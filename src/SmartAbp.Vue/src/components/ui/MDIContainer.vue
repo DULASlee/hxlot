@@ -149,18 +149,18 @@
       />
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="restoreWindow(contextWindow?.id)">
+          <el-dropdown-item @click="restoreWindow(contextWindow?.id || '')">
             <i class="el-icon-refresh-left" /> 还原
           </el-dropdown-item>
-          <el-dropdown-item @click="minimizeWindow(contextWindow?.id)">
+          <el-dropdown-item @click="minimizeWindow(contextWindow?.id || '')">
             <i class="el-icon-minus" /> 最小化
           </el-dropdown-item>
-          <el-dropdown-item @click="maximizeWindow(contextWindow?.id)">
+          <el-dropdown-item @click="maximizeWindow(contextWindow?.id || '')">
             <i class="el-icon-full-screen" /> 最大化
           </el-dropdown-item>
           <el-dropdown-item
             divided
-            @click="closeWindow(contextWindow?.id)"
+            @click="closeWindow(contextWindow?.id || '')"
           >
             <i class="el-icon-close" /> 关闭
           </el-dropdown-item>
@@ -302,7 +302,7 @@ const toggleWindowMaximize = (windowId: string) => {
 
 const closeAllWindows = () => {
   activeWindows.value.forEach(window => {
-    closeWindow(window.id)
+    closeWindow(window.id || '')
   })
 }
 

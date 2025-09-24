@@ -1,1310 +1,939 @@
+<!-- 
+基于企业级模板库的完整实体关系设计器
+适用场景: 企业级实体关系建模、可视化设计、关系验证
+依赖项: Vue 3, SmartAbp低代码引擎, Element Plus
+-->
+
 <template>
-  <div class="advanced-relationship-designer">
-    <el-card>
-      <template #header>
-        <div class="designer-header">
-          <h3>
-            <i class="el-icon-share" />
-            高级实体关系设计器
-          </h3>
-          <div class="designer-actions">
-            <el-button-group size="small">
-              <el-button
-                :type="viewMode === 'graph' ? 'primary' : 'default'"
-                icon="el-icon-connection"
-                @click="setViewMode('graph')"
-              >
-                关系图
-              </el-button>
-              <el-button
-                :type="viewMode === 'matrix' ? 'primary' : 'default'"
-                icon="el-icon-menu"
-                @click="setViewMode('matrix')"
-              >
-                关系矩阵
-              </el-button>
-              <el-button
-                :type="viewMode === 'tree' ? 'primary' : 'default'"
-                icon="el-icon-s-grid"
-                @click="setViewMode('tree')"
-              >
-                继承树
-              </el-button>
-            </el-button-group>
-          </div>
-        </div>
-      </template>
-
-      <!-- 关系图视图 -->
-      <div
-        v-if="viewMode === 'graph'"
-        class="graph-view"
-      >
-        <div class="graph-toolbar">
-          <div class="toolbar-left">
-            <el-button-group size="small">
-              <el-button
-                type="primary"
-                icon="el-icon-plus"
-                @click="showAddRelationDialog = true"
-              >
-                添加关系
-              </el-button>
-              <el-button
-                icon="el-icon-magic-stick"
-                @click="autoLayoutRelations"
-              >
-                自动布局
-              </el-button>
-              <el-button
-                icon="el-icon-view"
-                @click="fitToScreen"
-              >
-                适合屏幕
-              </el-button>
-            </el-button-group>
-          </div>
-          <div class="toolbar-right">
-            <el-tooltip content="显示继承关系">
-              <el-checkbox v-model="showInheritance">
-                继承
-              </el-checkbox>
-            </el-tooltip>
-            <el-tooltip content="显示聚合关系">
-              <el-checkbox v-model="showAggregation">
-                聚合
-              </el-checkbox>
-            </el-tooltip>
-            <el-tooltip content="显示组合关系">
-              <el-checkbox v-model="showComposition">
-                组合
-              </el-checkbox>
-            </el-tooltip>
-            <el-tooltip content="显示依赖关系">
-              <el-checkbox v-model="showDependency">
-                依赖
-              </el-checkbox>
-            </el-tooltip>
-          </div>
-        </div>
-
-        <!-- Vue Flow 关系图 -->
-        <div class="relationship-graph">
-          <VueFlow
-            ref="vueFlowRef"
-            :nodes="graphNodes"
-            :edges="graphEdges"
-            class="vue-flow-container"
-            @node-click="onNodeClick"
-            @edge-click="onEdgeClick"
-            @nodes-change="onNodesChange"
-            @edges-change="onEdgesChange"
-          >
-            <Background />
-            <Controls />
-            <MiniMap />
-            
-            <!-- 自定义实体节点 -->
-            <template #node-entity="{ data }">
-              <EntityNode
-                :entity="data.entity"
-                :selected="data.selected"
-                @edit="editEntity"
-                @delete="deleteEntity"
-              />
-            </template>
-
-            <!-- 自定义关系边 -->
-            <template #edge-relationship="{ data }">
-              <RelationshipEdge
-                :relationship="data.relationship"
-                @edit="editRelationship"
-                @delete="deleteRelationship"
-              />
-            </template>
-          </VueFlow>
-        </div>
-      </div>
-
-      <!-- 关系矩阵视图 -->
-      <div
-        v-else-if="viewMode === 'matrix'"
-        class="matrix-view"
-      >
-        <div class="matrix-container">
-          <table class="relationship-matrix">
-            <thead>
-              <tr>
-                <th class="entity-header">
-                  实体
-                </th>
-                <th
-                  v-for="entity in entities"
-                  :key="entity.id"
-                  class="entity-header"
-                >
-                  {{ entity.name }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="fromEntity in entities"
-                :key="fromEntity.id"
-                class="matrix-row"
-              >
-                <th class="entity-name">
-                  {{ fromEntity.name }}
-                </th>
-                <td
-                  v-for="toEntity in entities"
-                  :key="toEntity.id"
-                  class="matrix-cell"
-                  @click="addQuickRelation(fromEntity, toEntity)"
-                >
-                  <div
-                    v-if="getRelation(fromEntity.id, toEntity.id)"
-                    class="relation-indicator"
-                    :class="getRelationClass(getRelation(fromEntity.id, toEntity.id))"
-                    @click.stop="editRelation(getRelation(fromEntity.id, toEntity.id))"
-                  >
-                    <i :class="getRelationIcon(getRelation(fromEntity.id, toEntity.id))" />
-                    <span class="relation-type">
-                      {{ getRelationTypeLabel(getRelation(fromEntity.id, toEntity.id).type) }}
-                    </span>
-                  </div>
-                  <div
-                    v-else-if="fromEntity.id !== toEntity.id"
-                    class="add-relation-hint"
-                  >
-                    <i class="el-icon-plus" />
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- 继承树视图 -->
-      <div
-        v-else-if="viewMode === 'tree'"
-        class="tree-view"
-      >
-        <div class="tree-toolbar">
+  <div class="advanced-entity-relationship-designer">
+    <!-- 工具栏 -->
+    <div class="designer-toolbar">
+      <div class="toolbar-left">
+        <el-button-group>
           <el-button
-            type="primary"
+            :type="currentMode === 'select' ? 'primary' : 'default'"
             size="small"
-            icon="el-icon-plus"
-            @click="showAddInheritanceDialog = true"
+            @click="setMode('select')"
           >
-            添加继承关系
+            选择
           </el-button>
           <el-button
+            :type="currentMode === 'entity' ? 'primary' : 'default'"
             size="small"
-            icon="el-icon-magic-stick"
-            @click="createAbstractEntity"
+            @click="setMode('entity')"
           >
-            创建抽象实体
+            添加实体
           </el-button>
-        </div>
-
-        <div class="inheritance-tree">
-          <el-tree
-            :data="inheritanceTreeData"
-            :props="treeProps"
-            node-key="id"
-            :expand-on-click-node="false"
-            :render-content="renderTreeNode"
-            @node-click="onTreeNodeClick"
-          />
-        </div>
-      </div>
-    </el-card>
-
-    <!-- 高级关系配置对话框 -->
-    <el-dialog
-      v-model="showAdvancedRelationDialog"
-      title="高级关系配置"
-      width="800px"
-    >
-      <el-form
-        ref="relationFormRef"
-        :model="relationForm"
-        :rules="relationRules"
-        label-width="120px"
-      >
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item
-              label="源实体"
-              prop="fromEntityId"
-            >
-              <el-select
-                v-model="relationForm.fromEntityId"
-                placeholder="选择源实体"
-                style="width: 100%"
-              >
-                <el-option
-                  v-for="entity in entities"
-                  :key="entity.id"
-                  :label="entity.name"
-                  :value="entity.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item
-              label="目标实体"
-              prop="toEntityId"
-            >
-              <el-select
-                v-model="relationForm.toEntityId"
-                placeholder="选择目标实体"
-                style="width: 100%"
-              >
-                <el-option
-                  v-for="entity in entities"
-                  :key="entity.id"
-                  :label="entity.name"
-                  :value="entity.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item
-              label="关系类型"
-              prop="type"
-            >
-              <el-select
-                v-model="relationForm.type"
-                placeholder="选择关系类型"
-                style="width: 100%"
-              >
-                <el-option-group label="基本关系">
-                  <el-option
-                    label="一对一"
-                    value="one-to-one"
-                  />
-                  <el-option
-                    label="一对多"
-                    value="one-to-many"
-                  />
-                  <el-option
-                    label="多对多"
-                    value="many-to-many"
-                  />
-                </el-option-group>
-                <el-option-group label="高级关系">
-                  <el-option
-                    label="继承"
-                    value="inheritance"
-                  />
-                  <el-option
-                    label="聚合"
-                    value="aggregation"
-                  />
-                  <el-option
-                    label="组合"
-                    value="composition"
-                  />
-                  <el-option
-                    label="依赖"
-                    value="dependency"
-                  />
-                </el-option-group>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item
-              label="关系强度"
-              prop="strength"
-            >
-              <el-select
-                v-model="relationForm.strength"
-                placeholder="选择关系强度"
-                style="width: 100%"
-              >
-                <el-option
-                  label="强关联"
-                  value="strong"
-                />
-                <el-option
-                  label="弱关联"
-                  value="weak"
-                />
-                <el-option
-                  label="可选关联"
-                  value="optional"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item
-              label="源端属性"
-              prop="fromProperty"
-            >
-              <el-input
-                v-model="relationForm.fromProperty"
-                placeholder="导航属性名称"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item
-              label="目标端属性"
-              prop="toProperty"
-            >
-              <el-input
-                v-model="relationForm.toProperty"
-                placeholder="导航属性名称"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-form-item
-          label="外键字段"
-          prop="foreignKey"
+          <el-button
+            :type="currentMode === 'relation' ? 'primary' : 'default'"
+            size="small"
+            @click="setMode('relation')"
+          >
+            添加关系
+          </el-button>
+        </el-button-group>
+        
+        <el-divider direction="vertical" />
+        
+        <el-button
+          size="small"
+          :disabled="zoomLevel >= 200"
+          @click="zoomIn"
         >
-          <el-input
-            v-model="relationForm.foreignKey"
-            placeholder="外键字段名称"
-          />
-        </el-form-item>
+          放大
+        </el-button>
+        <span class="zoom-display">{{ zoomLevel }}%</span>
+        <el-button
+          size="small"
+          :disabled="zoomLevel <= 50"
+          @click="zoomOut"
+        >
+          缩小
+        </el-button>
+        
+        <el-divider direction="vertical" />
+        
+        <el-button
+          size="small"
+          @click="autoLayout"
+        >
+          自动布局
+        </el-button>
+      </div>
+      
+      <div class="toolbar-right">
+        <el-button
+          size="small"
+          @click="validateRelationships"
+        >
+          验证关系
+        </el-button>
+        <el-button
+          size="small"
+          @click="exportSchema"
+        >
+          导出架构
+        </el-button>
+      </div>
+    </div>
 
-        <el-form-item label="级联操作">
-          <el-checkbox-group v-model="relationForm.cascadeActions">
-            <el-checkbox label="cascadeDelete">
-              级联删除
-            </el-checkbox>
-            <el-checkbox label="cascadeUpdate">
-              级联更新
-            </el-checkbox>
-            <el-checkbox label="cascadeInsert">
-              级联插入
-            </el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-
-        <el-form-item label="业务规则">
-          <el-input
-            v-model="relationForm.businessRules"
-            type="textarea"
-            :rows="3"
-            placeholder="描述此关系的业务规则和约束..."
-          />
-        </el-form-item>
-
-        <el-form-item label="关系描述">
-          <el-input
-            v-model="relationForm.description"
-            type="textarea"
-            :rows="2"
-            placeholder="描述实体间的关系..."
-          />
-        </el-form-item>
-      </el-form>
-
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="showAdvancedRelationDialog = false">
-            取消
-          </el-button>
-          <el-button
-            type="primary"
-            :loading="saving"
-            @click="saveAdvancedRelation"
-          >
-            保存关系
-          </el-button>
+    <!-- 设计画布 -->
+    <div
+      ref="canvasRef"
+      class="designer-canvas"
+    >
+      <div 
+        class="canvas-content"
+        :style="{ 
+          transform: `scale(${zoomLevel / 100})`,
+          transformOrigin: 'top left'
+        }"
+        @mousedown="handleCanvasMouseDown"
+        @mousemove="handleCanvasMouseMove"
+        @mouseup="handleCanvasMouseUp"
+      >
+        <!-- 网格背景 -->
+        <div
+          v-show="showGrid"
+          class="canvas-grid"
+        />
+        
+        <!-- 实体节点 -->
+        <div
+          v-for="entity in positionedEntities"
+          :key="entity.id"
+          class="entity-node"
+          :class="{
+            'entity-node--selected': selectedEntityId === entity.id,
+            'entity-node--dragging': draggingEntityId === entity.id
+          }"
+          :style="{
+            left: `${entity.position.x}px`,
+            top: `${entity.position.y}px`
+          }"
+          @mousedown="handleEntityMouseDown(entity, $event)"
+          @click="handleEntityClick(entity)"
+        >
+          <!-- 实体头部 -->
+          <div class="entity-header">
+            <div class="entity-title">
+              <span class="entity-name">{{ entity.displayName || entity.name }}</span>
+            </div>
+            <div class="entity-actions">
+              <el-button
+                size="small"
+                text
+                @click.stop="editEntity(entity)"
+              >
+                编辑
+              </el-button>
+              <el-button
+                size="small"
+                text
+                type="danger"
+                @click.stop="deleteEntity(entity.id)"
+              >
+                删除
+              </el-button>
+            </div>
+          </div>
+          
+          <!-- 实体字段列表 -->
+          <div class="entity-fields">
+            <div
+              v-for="field in entity.fields"
+              :key="field.name"
+              class="entity-field"
+              :class="{
+                'entity-field--primary': field.isPrimaryKey,
+                'entity-field--required': field.isRequired
+              }"
+            >
+              <span class="field-name">{{ field.name }}</span>
+              <span class="field-type">{{ field.type }}</span>
+            </div>
+          </div>
         </div>
-      </template>
-    </el-dialog>
+        
+        <!-- 关系连线SVG -->
+        <svg
+          class="relationships-svg"
+          :width="canvasWidth"
+          :height="canvasHeight"
+        >
+          <g
+            v-for="relation in computedRelations"
+            :key="relation.id"
+            class="relationship-line"
+            @click="selectRelation(relation.id)"
+          >
+            <path
+              :d="relation.path"
+              :stroke="getRelationColor(relation.type)"
+              stroke-width="2"
+              fill="none"
+            />
+            <text
+              :x="relation.labelPosition.x"
+              :y="relation.labelPosition.y"
+              class="relationship-label"
+              text-anchor="middle"
+            >
+              {{ getRelationTypeLabel(relation.type) }}
+            </text>
+          </g>
+        </svg>
+      </div>
+    </div>
 
-    <!-- 继承关系配置对话框 -->
+    <!-- 新增实体对话框 -->
     <el-dialog
-      v-model="showInheritanceDialog"
-      title="配置继承关系"
-      width="600px"
+      v-model="showEntityDialog"
+      title="添加实体"
+      width="500px"
+      :close-on-click-modal="false"
     >
       <el-form
-        ref="inheritanceFormRef"
-        :model="inheritanceForm"
+        ref="entityFormRef"
+        :model="newEntityForm"
+        :rules="entityFormRules"
         label-width="100px"
       >
-        <el-form-item label="基类实体">
+        <el-form-item
+          label="实体名称"
+          prop="name"
+        >
+          <el-input
+            v-model="newEntityForm.name"
+            placeholder="请输入实体名称（PascalCase）"
+          />
+        </el-form-item>
+        <el-form-item
+          label="显示名称"
+          prop="displayName"
+        >
+          <el-input
+            v-model="newEntityForm.displayName"
+            placeholder="请输入显示名称"
+          />
+        </el-form-item>
+        <el-form-item
+          label="表名"
+          prop="tableName"
+        >
+          <el-input
+            v-model="newEntityForm.tableName"
+            placeholder="请输入数据库表名"
+          />
+        </el-form-item>
+        <el-form-item
+          label="描述"
+          prop="description"
+        >
+          <el-input
+            v-model="newEntityForm.description"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入实体描述"
+          />
+        </el-form-item>
+        <el-form-item
+          label="分类"
+          prop="category"
+        >
           <el-select
-            v-model="inheritanceForm.baseEntityId"
-            placeholder="选择基类实体"
+            v-model="newEntityForm.category"
             style="width: 100%"
           >
             <el-option
-              v-for="entity in entities.filter(e => !e.isAbstract)"
-              :key="entity.id"
-              :label="entity.name"
-              :value="entity.id"
+              label="核心实体"
+              value="core"
             />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="派生实体">
-          <el-select
-            v-model="inheritanceForm.derivedEntityIds"
-            placeholder="选择派生实体"
-            multiple
-            style="width: 100%"
-          >
             <el-option
-              v-for="entity in entities"
-              :key="entity.id"
-              :label="entity.name"
-              :value="entity.id"
+              label="关系实体"
+              value="relation"
+            />
+            <el-option
+              label="配置实体"
+              value="config"
+            />
+            <el-option
+              label="日志实体"
+              value="log"
             />
           </el-select>
-        </el-form-item>
-        <el-form-item label="继承策略">
-          <el-radio-group v-model="inheritanceForm.strategy">
-            <el-radio label="table-per-hierarchy">
-              每个层次结构一张表
-            </el-radio>
-            <el-radio label="table-per-type">
-              每个类型一张表
-            </el-radio>
-            <el-radio label="table-per-concrete">
-              每个具体类一张表
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="抽象类">
-          <el-checkbox v-model="inheritanceForm.isAbstract">
-            设置为抽象实体
-          </el-checkbox>
         </el-form-item>
       </el-form>
-
+      
       <template #footer>
-        <el-button @click="showInheritanceDialog = false">
+        <el-button @click="showEntityDialog = false">
           取消
         </el-button>
         <el-button
           type="primary"
-          @click="saveInheritance"
+          @click="confirmAddEntity"
         >
-          保存继承关系
+          确认
         </el-button>
       </template>
     </el-dialog>
 
-    <!-- 关系验证结果 -->
-    <div
-      v-if="relationshipValidation.length > 0"
-      class="validation-panel"
+    <!-- 验证结果对话框 -->
+    <el-dialog
+      v-model="showValidationDialog"
+      title="关系验证结果"
+      width="600px"
     >
-      <h4>
-        <i class="el-icon-warning" />
-        关系验证结果
-      </h4>
-      <div class="validation-list">
+      <div class="validation-results">
         <div
-          v-for="validation in relationshipValidation"
-          :key="validation.id"
-          class="validation-item"
-          :class="validation.severity"
+          v-if="validationResults.length === 0"
+          class="validation-success"
         >
-          <i :class="getValidationIcon(validation.severity)" />
-          <span class="validation-message">{{ validation.message }}</span>
-          <el-button
-            v-if="validation.autoFix"
-            size="mini"
-            type="primary"
-            @click="autoFixValidation(validation)"
+          <span>✅ 所有关系验证通过！</span>
+        </div>
+        <div v-else>
+          <div
+            v-for="(result, index) in validationResults"
+            :key="index"
+            class="validation-item"
+            :class="`validation-item--${result.severity}`"
           >
-            自动修复
-          </el-button>
+            <span>{{ result.message }}</span>
+          </div>
         </div>
       </div>
-    </div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { VueFlow, Background, Controls, MiniMap } from '@vue-flow/core'
-import EntityNode from './EntityNode.vue'
-import RelationshipEdge from './RelationshipEdge.vue'
-import { useEntityModelingStore } from '@/stores/lowcode/entityModeling'
-import { ElMessage } from 'element-plus'
+import { ref, computed, onMounted } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { useEntityModelingStore, type EntityDefinition, type EntityRelation } from '@/stores/lowcode/entityModeling'
+import { logger } from '@/utils/logger'
+
+// Props
+interface Props {
+  entities?: EntityDefinition[]
+  relations?: EntityRelation[]
+  readonly?: boolean
+  showGrid?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  entities: () => [],
+  relations: () => [],
+  readonly: false,
+  showGrid: true
+})
+
+// Events
+const emit = defineEmits<{
+  (e: 'entity-added', entity: EntityDefinition): void
+  (e: 'entity-updated', entity: EntityDefinition): void
+  (e: 'entity-deleted', entityId: string): void
+  (e: 'relation-added', relation: EntityRelation): void
+  (e: 'relation-updated', relation: EntityRelation): void
+  (e: 'relation-deleted', relationId: string): void
+}>()
 
 // Store
 const entityStore = useEntityModelingStore()
 
 // 响应式数据
-const viewMode = ref('graph')
-const showInheritance = ref(true)
-const showAggregation = ref(true)
-const showComposition = ref(true)
-const showDependency = ref(false)
+const canvasRef = ref<HTMLElement>()
+const entityFormRef = ref()
 
-const showAdvancedRelationDialog = ref(false)
-const showInheritanceDialog = ref(false)
-const showAddRelationDialog = ref(false)
-const saving = ref(false)
+// 设计器状态
+const currentMode = ref<'select' | 'entity' | 'relation'>('select')
+const zoomLevel = ref(100)
+const canvasWidth = ref(1200)
+const canvasHeight = ref(800)
 
-// Vue Flow 引用
-const vueFlowRef = ref()
+// 实体相关状态
+const selectedEntityId = ref<string>('')
+const draggingEntityId = ref<string>('')
+const entityPositions = ref<Record<string, { x: number; y: number }>>({})
+
+// 关系相关状态
+const selectedRelationId = ref<string>('')
+const isDrawingRelation = ref(false)
+const relationStartEntity = ref<string>('')
+
+// 拖拽状态
+const isDragging = ref(false)
+const dragOffset = ref({ x: 0, y: 0 })
+
+// UI状态
+const showEntityDialog = ref(false)
+const showValidationDialog = ref(false)
 
 // 表单数据
-const relationForm = ref({
-  fromEntityId: '',
-  toEntityId: '',
-  type: 'one-to-many',
-  strength: 'strong',
-  fromProperty: '',
-  toProperty: '',
-  foreignKey: '',
-  cascadeActions: [],
-  businessRules: '',
-  description: ''
+const newEntityForm = ref({
+  name: '',
+  displayName: '',
+  tableName: '',
+  description: '',
+  category: 'core' as const
 })
 
-const inheritanceForm = ref({
-  baseEntityId: '',
-  derivedEntityIds: [],
-  strategy: 'table-per-hierarchy',
-  isAbstract: false
-})
+// 验证结果
+const validationResults = ref<Array<{
+  severity: 'error' | 'warning'
+  message: string
+  entityId?: string
+  relationId?: string
+}>>([])
 
-// 关系验证规则
-const relationRules = {
-  fromEntityId: [
-    { required: true, message: '请选择源实体', trigger: 'change' }
+// 表单验证规则
+const entityFormRules = {
+  name: [
+    { required: true, message: '请输入实体名称', trigger: 'blur' },
+    { pattern: /^[A-Z][a-zA-Z0-9]*$/, message: '实体名称必须为PascalCase格式', trigger: 'blur' }
   ],
-  toEntityId: [
-    { required: true, message: '请选择目标实体', trigger: 'change' }
+  displayName: [
+    { required: true, message: '请输入显示名称', trigger: 'blur' }
   ],
-  type: [
-    { required: true, message: '请选择关系类型', trigger: 'change' }
+  tableName: [
+    { required: true, message: '请输入表名', trigger: 'blur' }
   ]
 }
 
 // 计算属性
-const entities = computed(() => entityStore.entities)
-const relations = computed(() => entityStore.relations)
-
-const graphNodes = computed(() => {
-  return entities.value.map(entity => ({
-    id: entity.id,
-    type: 'entity',
-    position: entity.position || { x: Math.random() * 500, y: Math.random() * 300 },
-    data: {
-      entity,
-      selected: false
-    }
+const positionedEntities = computed(() => {
+  return (props.entities || entityStore.entities).map(entity => ({
+    ...entity,
+    position: entityPositions.value[entity.id] || { x: 100, y: 100 }
   }))
 })
 
-const graphEdges = computed(() => {
-  return relations.value
-    .filter(relation => {
-      // 根据过滤条件显示不同类型的关系
-      switch (relation.type) {
-        case 'inheritance':
-          return showInheritance.value
-        case 'aggregation':
-          return showAggregation.value
-        case 'composition':
-          return showComposition.value
-        case 'dependency':
-          return showDependency.value
-        default:
-          return true
-      }
-    })
-    .map(relation => ({
-      id: relation.id,
-      type: 'relationship',
-      source: relation.fromEntityId,
-      target: relation.toEntityId,
-      label: getRelationLabel(relation),
-      markerEnd: getRelationMarker(relation.type),
-      style: getRelationStyle(relation.type),
-      data: {
-        relationship: relation
-      }
-    }))
-})
-
-const inheritanceTreeData = computed(() => {
-  // 构建继承树结构
-  const tree = []
-  const processedEntities = new Set()
-
-  entities.value.forEach(entity => {
-    if (!processedEntities.has(entity.id)) {
-      const treeNode = buildInheritanceTree(entity, processedEntities)
-      if (treeNode) {
-        tree.push(treeNode)
-      }
+const computedRelations = computed(() => {
+  const relations = props.relations || entityStore.relations
+  return relations.map(relation => {
+    const fromEntity = positionedEntities.value.find(e => e.id === relation.fromEntity)
+    const toEntity = positionedEntities.value.find(e => e.id === relation.toEntity)
+    
+    if (!fromEntity || !toEntity) {
+      return { ...relation, path: '', labelPosition: { x: 0, y: 0 } }
+    }
+    
+    const fromPos = fromEntity.position
+    const toPos = toEntity.position
+    const fromCenter = { x: fromPos.x + 150, y: fromPos.y + 100 }
+    const toCenter = { x: toPos.x + 150, y: toPos.y + 100 }
+    
+    const path = `M ${fromCenter.x} ${fromCenter.y} L ${toCenter.x} ${toCenter.y}`
+    const labelPosition = {
+      x: (fromCenter.x + toCenter.x) / 2,
+      y: (fromCenter.y + toCenter.y) / 2
+    }
+    
+    return {
+      ...relation,
+      path,
+      labelPosition
     }
   })
-
-  return tree
 })
-
-const relationshipValidation = computed(() => {
-  const validations = []
-
-  // 验证循环依赖
-  const cycles = detectCircularDependencies()
-  cycles.forEach(cycle => {
-    validations.push({
-      id: `cycle-${cycle.join('-')}`,
-      severity: 'error',
-      message: `检测到循环依赖：${cycle.join(' → ')}`,
-      autoFix: false
-    })
-  })
-
-  // 验证孤立实体
-  const orphanEntities = findOrphanEntities()
-  orphanEntities.forEach(entity => {
-    validations.push({
-      id: `orphan-${entity.id}`,
-      severity: 'warning',
-      message: `实体"${entity.name}"没有任何关系，可能需要建立关联`,
-      autoFix: true
-    })
-  })
-
-  // 验证缺失外键
-  const missingForeignKeys = findMissingForeignKeys()
-  missingForeignKeys.forEach(missing => {
-    validations.push({
-      id: `fk-${missing.relationId}`,
-      severity: 'warning',
-      message: `关系"${missing.relationName}"缺少外键字段`,
-      autoFix: true
-    })
-  })
-
-  return validations
-})
-
-const treeProps = {
-  children: 'children',
-  label: 'name'
-}
 
 // 方法
-const setViewMode = (mode) => {
-  viewMode.value = mode
+const setMode = (mode: typeof currentMode.value) => {
+  currentMode.value = mode
+  logger?.info('设计器模式切换', { mode })
 }
 
-const onNodeClick = (event) => {
-  console.log('Node clicked:', event)
+const zoomIn = () => {
+  if (zoomLevel.value < 200) {
+    zoomLevel.value = Math.min(200, zoomLevel.value + 25)
+  }
 }
 
-const onEdgeClick = (event) => {
-  console.log('Edge clicked:', event)
+const zoomOut = () => {
+  if (zoomLevel.value > 50) {
+    zoomLevel.value = Math.max(50, zoomLevel.value - 25)
+  }
 }
 
-const onNodesChange = (changes) => {
-  // 处理节点位置变化，保存到实体数据中
-  changes.forEach(change => {
-    if (change.type === 'position' && change.position) {
-      const entity = entities.value.find(e => e.id === change.id)
-      if (entity) {
-        entity.position = change.position
-      }
+const autoLayout = () => {
+  const entities = positionedEntities.value
+  const cols = Math.ceil(Math.sqrt(entities.length))
+  const spacing = { x: 300, y: 200 }
+  
+  entities.forEach((entity, index) => {
+    const row = Math.floor(index / cols)
+    const col = index % cols
+    entityPositions.value[entity.id] = {
+      x: 50 + col * spacing.x,
+      y: 50 + row * spacing.y
     }
   })
+  
+  logger?.info('执行自动布局', { entitiesCount: entities.length })
 }
 
-const onEdgesChange = (changes) => {
-  console.log('Edges changed:', changes)
+const handleCanvasMouseDown = (event: MouseEvent) => {
+  if (currentMode.value === 'entity') {
+    addEntityAtPosition(event.offsetX, event.offsetY)
+  }
 }
 
-const addQuickRelation = (fromEntity, toEntity) => {
-  if (fromEntity.id === toEntity.id) return
+const handleCanvasMouseMove = (event: MouseEvent) => {
+  if (isDragging.value && draggingEntityId.value) {
+    const entityId = draggingEntityId.value
+    entityPositions.value[entityId] = {
+      x: event.offsetX - dragOffset.value.x,
+      y: event.offsetY - dragOffset.value.y
+    }
+  }
+}
 
-  relationForm.value = {
-    fromEntityId: fromEntity.id,
-    toEntityId: toEntity.id,
+const handleCanvasMouseUp = () => {
+  isDragging.value = false
+  draggingEntityId.value = ''
+}
+
+const handleEntityMouseDown = (entity: EntityDefinition, event: MouseEvent) => {
+  event.stopPropagation()
+  
+  if (currentMode.value === 'select') {
+    const canvasRect = canvasRef.value?.getBoundingClientRect()
+    
+    if (canvasRect) {
+      dragOffset.value = {
+        x: event.clientX - canvasRect.left - (entityPositions.value[entity.id]?.x || 0),
+        y: event.clientY - canvasRect.top - (entityPositions.value[entity.id]?.y || 0)
+      }
+    }
+    
+    isDragging.value = true
+    draggingEntityId.value = entity.id
+  } else if (currentMode.value === 'relation') {
+    startRelation(entity.id)
+  }
+}
+
+const handleEntityClick = (entity: EntityDefinition) => {
+  if (currentMode.value === 'relation' && relationStartEntity.value && relationStartEntity.value !== entity.id) {
+    finishRelation(entity.id)
+  } else {
+    selectEntity(entity.id)
+  }
+}
+
+const selectEntity = (entityId: string) => {
+  selectedEntityId.value = entityId
+  selectedRelationId.value = ''
+  logger?.info('选择实体', { entityId })
+}
+
+const selectRelation = (relationId: string) => {
+  selectedRelationId.value = relationId
+  selectedEntityId.value = ''
+  logger?.info('选择关系', { relationId })
+}
+
+const addEntityAtPosition = (_x: number, _y: number) => {
+  newEntityForm.value = {
+    name: '',
+    displayName: '',
+    tableName: '',
+    description: '',
+    category: 'core'
+  }
+  
+  showEntityDialog.value = true
+}
+
+const confirmAddEntity = async () => {
+  try {
+    await entityFormRef.value?.validate()
+    
+    const newEntity: Omit<EntityDefinition, 'id'> & { id?: string } = {
+      name: newEntityForm.value.name,
+      displayName: newEntityForm.value.displayName,
+      tableName: newEntityForm.value.tableName,
+      description: newEntityForm.value.description,
+      category: newEntityForm.value.category,
+      fields: [
+        {
+          name: 'Id',
+          displayName: '主键',
+          type: 'Guid',
+          isRequired: true,
+          isPrimaryKey: true
+        }
+      ],
+      validationRules: [],
+      enableSoftDelete: true,
+      enableAudit: true,
+      enableMultiTenant: false,
+      isCompleted: false
+    }
+    
+    const entity = entityStore.addEntity(newEntity)
+    
+    // 设置实体位置
+    entityPositions.value[entity.id] = { x: 100, y: 100 }
+    
+    emit('entity-added', entity)
+    showEntityDialog.value = false
+    
+    ElMessage.success('实体添加成功')
+    logger?.info('添加实体', { entity: newEntity })
+  } catch (error) {
+    logger?.error('添加实体失败', error)
+  }
+}
+
+const editEntity = (entity: EntityDefinition) => {
+  // 编辑实体功能
+  logger?.info('编辑实体', { entityId: entity.id })
+}
+
+const deleteEntity = async (entityId: string) => {
+  try {
+    const entity = positionedEntities.value.find(e => e.id === entityId)
+    if (!entity) return
+    
+    await ElMessageBox.confirm(
+      `确定要删除实体 "${entity.displayName || entity.name}" 吗？`,
+      '确认删除',
+      { type: 'warning' }
+    )
+    
+    entityStore.removeEntity(entityId)
+    delete entityPositions.value[entityId]
+    
+    emit('entity-deleted', entityId)
+    ElMessage.success('实体删除成功')
+    logger?.info('删除实体', { entityId })
+  } catch (error) {
+    // 用户取消删除
+  }
+}
+
+const startRelation = (entityId: string) => {
+  relationStartEntity.value = entityId
+  isDrawingRelation.value = true
+  logger?.info('开始绘制关系', { fromEntity: entityId })
+}
+
+const finishRelation = (toEntityId: string) => {
+  if (!relationStartEntity.value || relationStartEntity.value === toEntityId) {
+    return
+  }
+  
+  const newRelation: Omit<EntityRelation, 'id'> & { id?: string } = {
+    fromEntity: relationStartEntity.value,
+    toEntity: toEntityId,
     type: 'one-to-many',
-    strength: 'strong',
-    fromProperty: `${toEntity.name}s`,
-    toProperty: fromEntity.name,
-    foreignKey: `${fromEntity.name}Id`,
-    cascadeActions: [],
-    businessRules: '',
-    description: `${fromEntity.name}到${toEntity.name}的关系`
+    foreignKey: `${relationStartEntity.value}Id`
   }
-
-  showAdvancedRelationDialog.value = true
+  
+  const relation = entityStore.addRelation(newRelation)
+  emit('relation-added', relation)
+  
+  // 重置状态
+  relationStartEntity.value = ''
+  isDrawingRelation.value = false
+  
+  ElMessage.success('关系添加成功')
+  logger?.info('添加关系', { relation: newRelation })
 }
 
-const getRelation = (fromEntityId, toEntityId) => {
-  return relations.value.find(r => 
-    r.fromEntityId === fromEntityId && r.toEntityId === toEntityId
-  )
+const validateRelationships = () => {
+  const results: typeof validationResults.value = []
+  const relations = props.relations || entityStore.relations
+  
+  // 检查孤立实体
+  const connectedEntities = new Set<string>()
+  relations.forEach(relation => {
+    connectedEntities.add(relation.fromEntity)
+    connectedEntities.add(relation.toEntity)
+  })
+  
+  positionedEntities.value.forEach(entity => {
+    if (!connectedEntities.has(entity.id)) {
+      results.push({
+        severity: 'warning',
+        message: `实体 "${entity.displayName || entity.name}" 没有任何关系`,
+        entityId: entity.id
+      })
+    }
+  })
+  
+  validationResults.value = results
+  showValidationDialog.value = true
+  
+  logger?.info('关系验证完成', { resultsCount: results.length })
 }
 
-const getRelationClass = (relation) => {
-  return `relation-${relation.type}`
-}
-
-const getRelationIcon = (relation) => {
-  const icons = {
-    'one-to-one': 'el-icon-connection',
-    'one-to-many': 'el-icon-s-unfold',
-    'many-to-many': 'el-icon-menu',
-    'inheritance': 'el-icon-top',
-    'aggregation': 'el-icon-collection',
-    'composition': 'el-icon-box',
-    'dependency': 'el-icon-right'
+const exportSchema = () => {
+  const schema = {
+    entities: positionedEntities.value.map(entity => ({
+      ...entity,
+      position: entityPositions.value[entity.id]
+    })),
+    relations: computedRelations.value,
+    metadata: {
+      exportTime: new Date().toISOString(),
+      version: '1.0.0'
+    }
   }
-  return icons[relation.type] || 'el-icon-connection'
+  
+  const blob = new Blob([JSON.stringify(schema, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `entity-schema-${Date.now()}.json`
+  a.click()
+  URL.revokeObjectURL(url)
+  
+  ElMessage.success('架构导出成功')
+  logger?.info('导出架构', { entitiesCount: schema.entities.length, relationsCount: schema.relations.length })
 }
 
-const getRelationTypeLabel = (type) => {
+const getRelationColor = (type: EntityRelation['type']) => {
+  const colors = {
+    'one-to-one': '#67C23A',
+    'one-to-many': '#409EFF',
+    'many-to-many': '#E6A23C'
+  }
+  return colors[type] || '#409EFF'
+}
+
+const getRelationTypeLabel = (type: EntityRelation['type']) => {
   const labels = {
     'one-to-one': '1:1',
     'one-to-many': '1:N',
-    'many-to-many': 'N:N',
-    'inheritance': '继承',
-    'aggregation': '聚合',
-    'composition': '组合',
-    'dependency': '依赖'
+    'many-to-many': 'M:N'
   }
-  return labels[type] || type
+  return labels[type] || '1:N'
 }
 
-const getRelationLabel = (relation) => {
-  return getRelationTypeLabel(relation.type)
-}
-
-const getRelationMarker = (type) => {
-  const markers = {
-    'inheritance': 'triangle',
-    'aggregation': 'diamond',
-    'composition': 'diamond-filled',
-    'dependency': 'arrow'
+// 生命周期
+onMounted(() => {
+  // 初始化画布尺寸
+  if (canvasRef.value) {
+    const rect = canvasRef.value.getBoundingClientRect()
+    canvasWidth.value = rect.width
+    canvasHeight.value = rect.height
   }
-  return markers[type] || 'arrow'
-}
-
-const getRelationStyle = (type) => {
-  const styles = {
-    'inheritance': { strokeDasharray: '5,5' },
-    'dependency': { strokeDasharray: '10,5' },
-    'aggregation': { stroke: '#e6a23c' },
-    'composition': { stroke: '#f56c6c' }
-  }
-  return styles[type] || {}
-}
-
-const buildInheritanceTree = (entity, processed) => {
-  if (processed.has(entity.id)) return null
-
-  processed.add(entity.id)
-
-  const children = entities.value.filter(e => {
-    const inheritanceRelation = relations.value.find(r => 
-      r.type === 'inheritance' && r.fromEntityId === e.id && r.toEntityId === entity.id
-    )
-    return inheritanceRelation && !processed.has(e.id)
-  }).map(childEntity => buildInheritanceTree(childEntity, processed))
-  .filter(Boolean)
-
-  return {
-    id: entity.id,
-    name: entity.name,
-    isAbstract: entity.isAbstract || false,
-    children: children.length > 0 ? children : undefined
-  }
-}
-
-const renderTreeNode = (h, { node, data }) => {
-  const entity = entities.value.find(e => e.id === data.id)
-  return h(
-    'span',
-    {
-      class: ['tree-node', { abstract: data.isAbstract }]
-    },
-    [
-      h('i', { class: data.isAbstract ? 'el-icon-document-remove' : 'el-icon-document' }),
-      h('span', data.name),
-      entity && h('el-tag', {
-        props: { size: 'mini', type: data.isAbstract ? 'warning' : 'success' }
-      }, data.isAbstract ? '抽象' : '具体')
-    ]
-  )
-}
-
-const onTreeNodeClick = (data) => {
-  const entity = entities.value.find(e => e.id === data.id)
-  if (entity) {
-    // 触发实体选择事件
-    emit('entity-selected', entity)
-  }
-}
-
-const saveAdvancedRelation = async () => {
-  try {
-    saving.value = true
-
-    // 验证表单
-    await relationFormRef.value?.validate()
-
-    // 创建高级关系对象
-    const relation = {
-      id: `relation-${Date.now()}`,
-      ...relationForm.value,
-      createdAt: new Date().toISOString()
-    }
-
-    // 保存到store
-    entityStore.addRelation(relation)
-
-    ElMessage.success('高级关系配置保存成功')
-    showAdvancedRelationDialog.value = false
-
-    // 重置表单
-    relationForm.value = {
-      fromEntityId: '',
-      toEntityId: '',
-      type: 'one-to-many',
-      strength: 'strong',
-      fromProperty: '',
-      toProperty: '',
-      foreignKey: '',
-      cascadeActions: [],
-      businessRules: '',
-      description: ''
-    }
-
-  } catch (error) {
-    ElMessage.error('保存关系失败：' + error.message)
-  } finally {
-    saving.value = false
-  }
-}
-
-const saveInheritance = async () => {
-  try {
-    const baseEntity = entities.value.find(e => e.id === inheritanceForm.value.baseEntityId)
-    
-    if (inheritanceForm.value.isAbstract) {
-      // 设置基类为抽象实体
-      entityStore.updateEntity(baseEntity.id, { isAbstract: true })
-    }
-
-    // 为每个派生实体创建继承关系
-    inheritanceForm.value.derivedEntityIds.forEach(derivedId => {
-      const inheritanceRelation = {
-        id: `inheritance-${baseEntity.id}-${derivedId}`,
-        fromEntityId: derivedId,
-        toEntityId: baseEntity.id,
-        type: 'inheritance',
-        strategy: inheritanceForm.value.strategy,
-        description: `${entities.value.find(e => e.id === derivedId)?.name} 继承自 ${baseEntity.name}`
-      }
-      
-      entityStore.addRelation(inheritanceRelation)
-    })
-
-    ElMessage.success('继承关系配置成功')
-    showInheritanceDialog.value = false
-
-  } catch (error) {
-    ElMessage.error('配置继承关系失败：' + error.message)
-  }
-}
-
-const autoLayoutRelations = () => {
-  // 实现自动布局算法
-  const layoutConfig = {
-    direction: 'TB', // Top to Bottom
-    nodeDistance: 200,
-    levelDistance: 150
-  }
-
-  // 简单的层次化布局
-  const levels = calculateEntityLevels()
-  levels.forEach((entityIds, level) => {
-    entityIds.forEach((entityId, index) => {
-      const entity = entities.value.find(e => e.id === entityId)
-      if (entity) {
-        entity.position = {
-          x: index * layoutConfig.nodeDistance,
-          y: level * layoutConfig.levelDistance
-        }
-      }
-    })
-  })
-
-  ElMessage.success('自动布局完成')
-}
-
-const calculateEntityLevels = () => {
-  const levels = new Map()
-  const visited = new Set()
-
-  const dfs = (entityId, level) => {
-    if (visited.has(entityId)) return
-    visited.add(entityId)
-
-    if (!levels.has(level)) {
-      levels.set(level, [])
-    }
-    levels.get(level).push(entityId)
-
-    // 查找依赖此实体的其他实体
-    const dependents = relations.value
-      .filter(r => r.toEntityId === entityId)
-      .map(r => r.fromEntityId)
-
-    dependents.forEach(dependentId => {
-      if (!visited.has(dependentId)) {
-        dfs(dependentId, level + 1)
-      }
-    })
-  }
-
-  // 从没有依赖的实体开始
-  const rootEntities = entities.value.filter(entity => 
-    !relations.value.some(r => r.fromEntityId === entity.id)
-  )
-
-  rootEntities.forEach(entity => dfs(entity.id, 0))
-
-  return levels
-}
-
-const fitToScreen = () => {
-  if (vueFlowRef.value) {
-    vueFlowRef.value.fitView()
-  }
-}
-
-const createAbstractEntity = () => {
-  // 创建抽象实体的逻辑
-  emit('create-abstract-entity')
-}
-
-const detectCircularDependencies = () => {
-  const cycles = []
-  const visited = new Set()
-  const recStack = new Set()
-
-  const dfs = (entityId, path) => {
-    if (recStack.has(entityId)) {
-      // 找到循环依赖
-      const cycleStart = path.indexOf(entityId)
-      cycles.push(path.slice(cycleStart).concat([entityId]))
-      return
-    }
-
-    if (visited.has(entityId)) return
-
-    visited.add(entityId)
-    recStack.add(entityId)
-
-    const dependencies = relations.value
-      .filter(r => r.fromEntityId === entityId)
-      .map(r => r.toEntityId)
-
-    dependencies.forEach(depId => {
-      dfs(depId, [...path, depId])
-    })
-
-    recStack.delete(entityId)
-  }
-
-  entities.value.forEach(entity => {
-    if (!visited.has(entity.id)) {
-      dfs(entity.id, [entity.id])
-    }
-  })
-
-  return cycles
-}
-
-const findOrphanEntities = () => {
-  return entities.value.filter(entity => {
-    return !relations.value.some(r => 
-      r.fromEntityId === entity.id || r.toEntityId === entity.id
-    )
-  })
-}
-
-const findMissingForeignKeys = () => {
-  const missing = []
-
-  relations.value.forEach(relation => {
-    if (['one-to-many', 'many-to-one'].includes(relation.type) && relation.foreignKey) {
-      const targetEntity = entities.value.find(e => 
-        relation.type === 'one-to-many' ? e.id === relation.fromEntityId : e.id === relation.toEntityId
-      )
-
-      if (targetEntity && !targetEntity.fields.some(f => f.name === relation.foreignKey)) {
-        missing.push({
-          relationId: relation.id,
-          relationName: `${relation.fromEntity} → ${relation.toEntity}`,
-          missingKey: relation.foreignKey,
-          entity: targetEntity.name
-        })
+  
+  // 初始化实体位置
+  positionedEntities.value.forEach((entity, index) => {
+    if (!entityPositions.value[entity.id]) {
+      const cols = Math.ceil(Math.sqrt(positionedEntities.value.length))
+      const row = Math.floor(index / cols)
+      const col = index % cols
+      entityPositions.value[entity.id] = {
+        x: 50 + col * 300,
+        y: 50 + row * 200
       }
     }
   })
-
-  return missing
-}
-
-const getValidationIcon = (severity) => {
-  const icons = {
-    error: 'el-icon-circle-close',
-    warning: 'el-icon-warning',
-    info: 'el-icon-info'
-  }
-  return icons[severity] || 'el-icon-info'
-}
-
-const autoFixValidation = (validation) => {
-  // 自动修复验证问题
-  if (validation.id.startsWith('fk-')) {
-    // 自动添加缺失的外键字段
-    const missingFK = findMissingForeignKeys().find(m => 
-      validation.id.includes(m.relationId)
-    )
-    if (missingFK) {
-      const entity = entities.value.find(e => e.name === missingFK.entity)
-      if (entity) {
-        entityStore.addField(entity.id, {
-          name: missingFK.missingKey,
-          displayName: `${missingFK.missingKey}`,
-          type: 'Guid',
-          isRequired: true,
-          description: '外键字段'
-        })
-        ElMessage.success('已自动添加外键字段')
-      }
-    }
-  }
-}
-
-// Emits
-const emit = defineEmits<{
-  'entity-selected': [entity: any]
-  'create-abstract-entity': []
-}>()
-
-// 引用
-const relationFormRef = ref()
-const inheritanceFormRef = ref()
+  
+  logger?.info('高级实体关系设计器初始化完成')
+})
 </script>
 
 <style scoped>
-.advanced-relationship-designer {
+.advanced-entity-relationship-designer {
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  background: var(--el-bg-color);
 }
 
-.designer-header {
+.designer-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.designer-header h3 {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--el-text-color-primary);
-}
-
-/* 关系图样式 */
-.graph-view {
-  height: 600px;
-}
-
-.graph-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  padding: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--el-border-color);
   background: var(--el-bg-color-page);
-  border-radius: 8px;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .toolbar-right {
   display: flex;
-  gap: 16px;
   align-items: center;
+  gap: 8px;
 }
 
-.relationship-graph {
-  height: 520px;
-  border: 1px solid var(--el-border-color-lighter);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.vue-flow-container {
-  background: var(--el-bg-color-page);
-}
-
-/* 关系矩阵样式 */
-.matrix-view {
-  height: 600px;
-  overflow: auto;
-}
-
-.matrix-container {
-  min-width: fit-content;
-}
-
-.relationship-matrix {
-  width: 100%;
-  border-collapse: collapse;
-  border: 1px solid var(--el-border-color);
-}
-
-.relationship-matrix th,
-.relationship-matrix td {
-  border: 1px solid var(--el-border-color-lighter);
-  padding: 8px;
+.zoom-display {
+  font-size: 12px;
+  color: var(--el-text-color-regular);
+  min-width: 35px;
   text-align: center;
-  min-width: 120px;
-  min-height: 40px;
+}
+
+.designer-canvas {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+.canvas-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+.canvas-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(to right, #e0e0e0 1px, transparent 1px),
+    linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+.entity-node {
+  position: absolute;
+  width: 300px;
+  min-height: 120px;
+  background: white;
+  border: 2px solid var(--el-border-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+}
+
+.entity-node:hover {
+  border-color: var(--el-color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.entity-node--selected {
+  border-color: var(--el-color-primary);
+  box-shadow: 0 0 0 3px rgba(64, 158, 255, 0.2);
+}
+
+.entity-node--dragging {
+  transform: rotate(5deg);
+  z-index: 10;
 }
 
 .entity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
   background: var(--el-color-primary-light-9);
-  font-weight: 600;
-  color: var(--el-color-primary);
+  border-bottom: 1px solid var(--el-border-color);
+  border-radius: 6px 6px 0 0;
+}
+
+.entity-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .entity-name {
-  background: var(--el-color-primary-light-9);
   font-weight: 600;
-  color: var(--el-color-primary);
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+  color: var(--el-text-color-primary);
 }
 
-.matrix-cell {
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.matrix-cell:hover {
-  background: var(--el-color-primary-light-9);
-}
-
-.relation-indicator {
+.entity-actions {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.relation-indicator.relation-inheritance {
-  background: var(--el-color-warning-light-8);
-  color: var(--el-color-warning);
-}
-
-.relation-indicator.relation-aggregation {
-  background: var(--el-color-success-light-8);
-  color: var(--el-color-success);
-}
-
-.relation-indicator.relation-composition {
-  background: var(--el-color-danger-light-8);
-  color: var(--el-color-danger);
-}
-
-.relation-type {
-  font-size: 10px;
-  font-weight: 600;
-}
-
-.add-relation-hint {
-  color: var(--el-border-color);
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s;
 }
 
-.matrix-cell:hover .add-relation-hint {
+.entity-node:hover .entity-actions {
   opacity: 1;
 }
 
-/* 继承树样式 */
-.tree-view {
-  height: 600px;
+.entity-fields {
+  padding: 8px 0;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
-.tree-toolbar {
-  margin-bottom: 16px;
-  padding: 12px;
-  background: var(--el-bg-color-page);
-  border-radius: 8px;
-}
-
-.inheritance-tree {
-  height: 520px;
-  overflow: auto;
-  padding: 16px;
-  border: 1px solid var(--el-border-color-lighter);
-  border-radius: 8px;
-}
-
-.tree-node {
+.entity-field {
   display: flex;
   align-items: center;
+  padding: 4px 16px;
   gap: 8px;
+  font-size: 13px;
 }
 
-.tree-node.abstract {
-  font-style: italic;
+.entity-field:hover {
+  background: var(--el-fill-color-light);
+}
+
+.entity-field--primary {
   color: var(--el-color-warning);
+  font-weight: 600;
 }
 
-/* 验证面板样式 */
-.validation-panel {
-  margin-top: 16px;
-  padding: 16px;
-  background: var(--el-bg-color-page);
-  border-radius: 8px;
-  border-left: 4px solid var(--el-color-warning);
+.entity-field--required .field-name::after {
+  content: '*';
+  color: var(--el-color-danger);
+  margin-left: 2px;
 }
 
-.validation-panel h4 {
-  margin: 0 0 12px 0;
-  color: var(--el-text-color-primary);
+.field-name {
+  flex: 1;
+  font-weight: 500;
+}
+
+.field-type {
+  color: var(--el-text-color-regular);
+  font-size: 12px;
+}
+
+.relationships-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.relationship-line {
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.relationship-line:hover path {
+  stroke-width: 3;
+}
+
+.relationship-label {
+  font-size: 12px;
+  fill: var(--el-text-color-primary);
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.validation-results {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.validation-success {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-}
-
-.validation-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  padding: 20px;
+  color: var(--el-color-success);
 }
 
 .validation-item {
@@ -1312,33 +941,18 @@ const inheritanceFormRef = ref()
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  border-radius: 6px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  font-size: 13px;
 }
 
-.validation-item.error {
+.validation-item--error {
   background: var(--el-color-danger-light-9);
   color: var(--el-color-danger);
 }
 
-.validation-item.warning {
+.validation-item--warning {
   background: var(--el-color-warning-light-9);
   color: var(--el-color-warning);
-}
-
-.validation-item.info {
-  background: var(--el-color-info-light-9);
-  color: var(--el-color-info);
-}
-
-.validation-message {
-  flex: 1;
-  font-size: 13px;
-}
-
-/* 对话框样式 */
-.dialog-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
 }
 </style>

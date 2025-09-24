@@ -209,28 +209,31 @@
       />
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="closeTab(contextTab?.id)">
+          <el-dropdown-item @click="closeTab(contextTab?.id || '')">
             <el-icon><Close /></el-icon> 关闭标签
           </el-dropdown-item>
           <el-dropdown-item 
             :disabled="tabs.length <= 1"
-            @click="closeOtherTabs(contextTab?.id)"
+            @click="closeOtherTabs(contextTab?.id || '')"
           >
             <el-icon><Remove /></el-icon> 关闭其他标签
           </el-dropdown-item>
           <el-dropdown-item 
-            @click="closeTabsToRight(contextTab?.id)"
+            @click="closeTabsToRight(contextTab?.id || '')"
           >
             <el-icon><Right /></el-icon> 关闭右侧标签
           </el-dropdown-item>
           <el-dropdown-item
             divided
-            @click="pinTab(contextTab?.id)"
+            @click="pinTab(contextTab?.id || '')"
           >
             <i class="el-icon-thumb-tack" /> {{ contextTab?.pinned ? '取消固定' : '固定标签' }}
           </el-dropdown-item>
-          <el-dropdown-item @click="duplicateTab(contextTab?.id)">
-            <el-icon><CopyDocument /></el-icon> 复制标签
+          <el-dropdown-item
+            <el-icon
+            @click="duplicateTab(contextTab?.id || '')"
+          >
+            <CopyDocument /></el-icon> 复制标签
           </el-dropdown-item>
         </el-dropdown-menu>
       </template>
@@ -393,7 +396,7 @@ const dragIndicatorStyle = computed(() => {
 })
 
 // 方法
-const getTabStyle = (tab: TabConfig, index: number) => {
+const getTabStyle = (tab: TabConfig, _index: number) => {
   const baseStyle: any = {}
   
   if (props.tabWidth === 'fixed') {
@@ -576,8 +579,9 @@ const updateSizes = () => {
   const tabElements = tabsNavRef.value.querySelectorAll('.tab-item, .tab-add-button')
   let totalWidth = 0
   
-  tabElements.forEach(element => {
-    totalWidth += (element as HTMLElement).offsetWidth
+  tabElements.forEach((element) => {
+    const htmlElement = element as HTMLElement
+    totalWidth += htmlElement.offsetWidth
   })
   
   tabsWidth.value = totalWidth

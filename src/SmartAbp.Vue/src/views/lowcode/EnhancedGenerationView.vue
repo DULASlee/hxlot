@@ -902,7 +902,7 @@ const generateRoutesCode = async (config: any) => {
   return {
     files: [{
       name: 'routes.ts',
-      path: `src/router/${config.entities[0]?.module || 'generated'}.routes.ts`,
+      path: `src/router/generated.routes.ts`,
       content: routesContent,
       type: 'typescript',
       size: 2.1,
@@ -919,7 +919,7 @@ const generateStoreCode = async (config: any) => {
   for (const entity of config.entities) {
     files.push({
       name: `${entity.name.toLowerCase()}.store.ts`,
-      path: `src/stores/${entity.module}/${entity.name.toLowerCase()}.store.ts`,
+      path: `src/stores/generated/${entity.name.toLowerCase()}.store.ts`,
       content: generateEntityStore(entity),
       type: 'typescript',
       size: 2.8,
@@ -1375,28 +1375,9 @@ console.log('${entity.displayName}表单组件')
 </${'script'}>`
 }
 
-const getInputType = (fieldType: string) => {
-  const typeMap: Record<string, string> = {
-    'string': 'input',
-    'int': 'input-number',
-    'decimal': 'input-number', 
-    'bool': 'switch',
-    'DateTime': 'date-picker',
-    'enum': 'select'
-  }
-  return typeMap[fieldType] || 'input'
-}
-
-const getDefaultValue = (fieldType: string) => {
-  const defaultMap: Record<string, string> = {
-    'string': "''",
-    'int': '0',
-    'decimal': '0',
-    'bool': 'false',
-    'DateTime': 'null'
-  }
-  return defaultMap[fieldType] || "null"
-}
+// 代码生成辅助方法 - 暂时注释未使用
+// const getInputType = (fieldType: string) => { ... }
+// const getDefaultValue = (fieldType: string) => { ... }
 
 // 🔥 补充的代码生成方法
 const generateController = (entity: EntityDefinition) => {
@@ -1484,7 +1465,7 @@ export interface ${entity.name}QueryParams {
 
 const generateEntityStore = (entity: EntityDefinition) => {
   return `import { defineStore } from 'pinia'
-import type { ${entity.name}, ${entity.name}CreateInput, ${entity.name}UpdateInput, ${entity.name}QueryParams } from '@/types/${entity.module}/${entity.name}.types'
+import type { ${entity.name}, ${entity.name}CreateInput, ${entity.name}UpdateInput, ${entity.name}QueryParams } from '@/types/generated/${entity.name}.types'
 
 export const use${entity.name}Store = defineStore('${entity.name.toLowerCase()}', {
   state: () => ({
@@ -1589,7 +1570,7 @@ const generateModuleRoutes = (entities: EntityDefinition[], layoutType: string) 
       return `  {
     path: '/${entity.name.toLowerCase()}-mdi',
     name: '${entity.name}MDI',
-    component: () => import('@/views/${entity.module}/${entity.name}Management.vue'),
+    component: () => import('@/views/generated/${entity.name}Management.vue'),
     meta: {
       title: '${entity.displayName}管理 (MDI)',
       icon: 'el-icon-monitor',
@@ -1600,7 +1581,7 @@ const generateModuleRoutes = (entities: EntityDefinition[], layoutType: string) 
       return `  {
     path: '/${entity.name.toLowerCase()}-tabs',
     name: '${entity.name}Tabs',
-    component: () => import('@/views/${entity.module}/${entity.name}TabsView.vue'),
+    component: () => import('@/views/generated/${entity.name}TabsView.vue'),
     meta: {
       title: '${entity.displayName}管理 (标签页)',
       icon: 'el-icon-files',
@@ -1611,7 +1592,7 @@ const generateModuleRoutes = (entities: EntityDefinition[], layoutType: string) 
       return `  {
     path: '/${entity.name.toLowerCase()}',
     name: '${entity.name}Management',
-    component: () => import('@/views/${entity.module}/${entity.name}List.vue'),
+    component: () => import('@/views/generated/${entity.name}List.vue'),
     meta: {
       title: '${entity.displayName}管理',
       icon: 'el-icon-menu',
@@ -1624,14 +1605,14 @@ const generateModuleRoutes = (entities: EntityDefinition[], layoutType: string) 
   return `import type { RouteRecordRaw } from 'vue-router'
 
 // ${layoutType.toUpperCase()}布局的${entities.map(e => e.displayName).join('、')}模块路由
-export const ${entities[0]?.module || 'generated'}Routes: RouteRecordRaw[] = [
+export const generatedRoutes: RouteRecordRaw[] = [
 ${routes}
 ]`
 }
 
 const generateUnitTests = (entity: EntityDefinition) => {
   return `import { describe, it, expect, beforeEach } from 'vitest'
-import { use${entity.name}Store } from '@/stores/${entity.module}/${entity.name.toLowerCase()}.store'
+import { use${entity.name}Store } from '@/stores/generated/${entity.name.toLowerCase()}.store'
 import { createPinia, setActivePinia } from 'pinia'
 
 describe('${entity.name}Store', () => {
@@ -1773,7 +1754,7 @@ onMounted(() => {
 })
 
 // 智能代码生成引擎事件处理方法
-const handleGenerationCompleted = (result) => {
+const handleGenerationCompleted = (result: any) => {
   ElMessage.success('🎉 智能代码生成完成！')
   
   // 更新生成结果到现有状态
@@ -1787,12 +1768,12 @@ const handleGenerationCompleted = (result) => {
   console.log('Intelligent generation completed:', result)
 }
 
-const handleTemplateSelected = (template) => {
+const handleTemplateSelected = (template: any) => {
   ElMessage.info(`已选择模板: ${template.name}`)
   console.log('Template selected:', template)
 }
 
-const handlePreviewUpdated = (preview) => {
+const handlePreviewUpdated = (preview: any) => {
   // 将智能生成的预览集成到现有预览系统
   if (preview && preview.files) {
     preview.files.forEach(file => {

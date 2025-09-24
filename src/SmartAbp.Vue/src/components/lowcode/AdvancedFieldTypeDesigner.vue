@@ -1,1250 +1,704 @@
+<!-- 
+基于企业级模板库的高级字段类型设计器
+适用场景: 企业级字段类型定义、验证规则、UI控件配置
+依赖项: Vue 3, SmartAbp低代码引擎, Element Plus
+-->
+
 <template>
-  <div class="advanced-field-designer">
-    <el-card>
-      <template #header>
-        <div class="designer-header">
-          <h3>
-            <i class="el-icon-edit" />
-            高级字段类型设计器
-          </h3>
+  <div class="advanced-field-type-designer">
+    <!-- 工具栏 -->
+    <div class="designer-toolbar">
+      <div class="toolbar-left">
+        <el-button-group>
           <el-button
-            type="primary"
+            :type="activeTab === 'basic' ? 'primary' : 'default'"
             size="small"
-            icon="el-icon-plus"
-            @click="showAddFieldTypeDialog = true"
+            @click="activeTab = 'basic'"
           >
-            自定义字段类型
+            基础类型
+          </el-button>
+          <el-button
+            :type="activeTab === 'custom' ? 'primary' : 'default'"
+            size="small"
+            @click="activeTab = 'custom'"
+          >
+            自定义类型
+          </el-button>
+          <el-button
+            :type="activeTab === 'validation' ? 'primary' : 'default'"
+            size="small"
+            @click="activeTab = 'validation'"
+          >
+            验证规则
+          </el-button>
+        </el-button-group>
+      </div>
+      
+      <div class="toolbar-right">
+        <el-button
+          size="small"
+          :disabled="!selectedField"
+          @click="previewField"
+        >
+          预览字段
+        </el-button>
+        <el-button
+          size="small"
+          type="primary"
+          :disabled="!isFieldTypeValid"
+          @click="saveFieldType"
+        >
+          保存类型
+        </el-button>
+      </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="designer-content">
+      <!-- 左侧：字段类型列表 -->
+      <div class="field-types-panel">
+        <div class="panel-header">
+          <h4>字段类型库</h4>
+          <el-button
+            size="small"
+            @click="showAddTypeDialog = true"
+          >
+            新增类型
           </el-button>
         </div>
-      </template>
-
-      <!-- 字段类型分类 -->
-      <div class="field-types-catalog">
-        <el-tabs
-          v-model="activeTypeCategory"
-          type="border-card"
-        >
-          <el-tab-pane
-            label="基础类型"
-            name="basic"
+        
+        <div class="search-section">
+          <el-input
+            v-model="searchKeyword"
+            placeholder="搜索字段类型..."
+            size="small"
+            clearable
+          />
+        </div>
+        
+        <div class="types-list">
+          <div
+            v-for="fieldType in filteredFieldTypes"
+            :key="fieldType.name"
+            class="type-item"
+            :class="{ 'type-item--selected': selectedFieldType?.name === fieldType.name }"
+            @click="selectFieldType(fieldType)"
           >
-            <div class="type-grid">
-              <div
-                v-for="type in basicFieldTypes"
-                :key="type.name"
-                class="field-type-card"
-                :class="{ selected: selectedFieldType?.name === type.name }"
-                @click="selectFieldType(type)"
-              >
-                <div class="type-icon">
-                  <i :class="type.icon" />
-                </div>
-                <div class="type-info">
-                  <div class="type-name">
-                    {{ type.displayName }}
-                  </div>
-                  <div class="type-description">
-                    {{ type.description }}
-                  </div>
-                  <div class="type-example">
-                    {{ type.example }}
-                  </div>
-                </div>
-              </div>
+            <div class="type-header">
+              <span class="type-icon">{{ fieldType.icon }}</span>
+              <span class="type-name">{{ fieldType.displayName }}</span>
             </div>
-          </el-tab-pane>
-
-          <el-tab-pane
-            label="业务类型"
-            name="business"
-          >
-            <div class="type-grid">
-              <div
-                v-for="type in businessFieldTypes"
-                :key="type.name"
-                class="field-type-card"
-                :class="{ selected: selectedFieldType?.name === type.name }"
-                @click="selectFieldType(type)"
-              >
-                <div class="type-icon">
-                  <i :class="type.icon" />
-                </div>
-                <div class="type-info">
-                  <div class="type-name">
-                    {{ type.displayName }}
-                  </div>
-                  <div class="type-description">
-                    {{ type.description }}
-                  </div>
-                  <div class="type-features">
-                    <el-tag
-                      v-for="feature in type.features"
-                      :key="feature"
-                      size="mini"
-                      type="success"
-                    >
-                      {{ feature }}
-                    </el-tag>
-                  </div>
-                </div>
-              </div>
+            <div class="type-description">
+              {{ fieldType.description }}
             </div>
-          </el-tab-pane>
-
-          <el-tab-pane
-            label="枚举字典"
-            name="enum"
-          >
-            <div class="enum-manager">
-              <div class="enum-toolbar">
-                <el-button
-                  type="primary"
-                  size="small"
-                  icon="el-icon-plus"
-                  @click="showAddEnumDialog = true"
-                >
-                  新建枚举
-                </el-button>
-                <el-button
-                  size="small"
-                  icon="el-icon-document-copy"
-                  @click="importEnumsFromDict"
-                >
-                  从字典导入
-                </el-button>
-              </div>
-
-              <div class="enum-list">
-                <div
-                  v-for="enumType in customEnums"
-                  :key="enumType.id"
-                  class="enum-card"
-                >
-                  <div class="enum-header">
-                    <div class="enum-info">
-                      <h4>{{ enumType.name }}</h4>
-                      <p>{{ enumType.description }}</p>
-                    </div>
-                    <div class="enum-actions">
-                      <el-button
-                        size="mini"
-                        icon="el-icon-edit"
-                        @click="editEnum(enumType)"
-                      />
-                      <el-button
-                        size="mini"
-                        type="danger"
-                        icon="el-icon-delete"
-                        @click="deleteEnum(enumType)"
-                      />
-                    </div>
-                  </div>
-                  <div class="enum-values">
-                    <el-tag
-                      v-for="value in enumType.values"
-                      :key="value.key"
-                      size="small"
-                      class="enum-value-tag"
-                    >
-                      {{ value.label }} ({{ value.key }})
-                    </el-tag>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </el-tab-pane>
-
-          <el-tab-pane
-            label="复杂类型"
-            name="complex"
-          >
-            <div class="complex-types">
-              <div class="complex-type-builder">
-                <h4>复杂类型构建器</h4>
-                <p>创建包含多个属性的复杂值对象类型</p>
-                
-                <el-button
-                  type="primary"
-                  icon="el-icon-plus"
-                  @click="showComplexTypeDialog = true"
-                >
-                  创建复杂类型
-                </el-button>
-              </div>
-
-              <div class="complex-types-list">
-                <div
-                  v-for="complexType in complexTypes"
-                  :key="complexType.id"
-                  class="complex-type-card"
-                >
-                  <div class="complex-type-header">
-                    <h4>{{ complexType.name }}</h4>
-                    <div class="complex-type-actions">
-                      <el-button
-                        size="mini"
-                        icon="el-icon-edit"
-                        @click="editComplexType(complexType)"
-                      />
-                      <el-button
-                        size="mini"
-                        type="danger"
-                        icon="el-icon-delete"
-                        @click="deleteComplexType(complexType)"
-                      />
-                    </div>
-                  </div>
-                  <div class="complex-type-properties">
-                    <div
-                      v-for="prop in complexType.properties"
-                      :key="prop.name"
-                      class="property-item"
-                    >
-                      <span class="property-name">{{ prop.name }}</span>
-                      <span class="property-type">{{ prop.type }}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </el-tab-pane>
-        </el-tabs>
+          </div>
+        </div>
       </div>
 
-      <!-- 字段类型详细配置 -->
-      <div
-        v-if="selectedFieldType"
-        class="field-type-config"
-      >
-        <el-card>
-          <template #header>
-            <h4>
-              <i :class="selectedFieldType.icon" />
-              {{ selectedFieldType.displayName }} - 详细配置
-            </h4>
-          </template>
-
+      <!-- 中间：配置面板 -->
+      <div class="configuration-panel">
+        <!-- 基础类型配置 -->
+        <div
+          v-if="activeTab === 'basic' && selectedFieldType"
+          class="basic-config"
+        >
+          <h4>基础配置</h4>
+          
           <el-form
-            ref="fieldConfigFormRef"
             :model="fieldConfig"
-            label-width="120px"
+            label-width="100px"
+            size="small"
           >
-            <el-row :gutter="20">
-              <el-col :span="12">
-                <el-form-item label="字段名称">
-                  <el-input
-                    v-model="fieldConfig.name"
-                    placeholder="字段名称 (PascalCase)"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="显示名称">
-                  <el-input
-                    v-model="fieldConfig.displayName"
-                    placeholder="用户界面显示的名称"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-
-            <!-- 动态配置项 -->
-            <div v-if="selectedFieldType.configOptions">
-              <div
-                v-for="option in selectedFieldType.configOptions"
-                :key="option.name"
-              >
-                <el-form-item :label="option.label">
-                  <!-- 字符串配置 -->
-                  <el-input
-                    v-if="option.type === 'string'"
-                    v-model="fieldConfig[option.name]"
-                    :placeholder="option.placeholder"
-                  />
-                  
-                  <!-- 数字配置 -->
-                  <el-input-number
-                    v-else-if="option.type === 'number'"
-                    v-model="fieldConfig[option.name]"
-                    :min="option.min"
-                    :max="option.max"
-                    :step="option.step"
-                  />
-                  
-                  <!-- 布尔配置 -->
-                  <el-checkbox
-                    v-else-if="option.type === 'boolean'"
-                    v-model="fieldConfig[option.name]"
-                  >
-                    {{ option.description }}
-                  </el-checkbox>
-                  
-                  <!-- 选择配置 -->
-                  <el-select
-                    v-else-if="option.type === 'select'"
-                    v-model="fieldConfig[option.name]"
-                    style="width: 100%"
-                  >
-                    <el-option
-                      v-for="choice in option.choices"
-                      :key="choice.value"
-                      :label="choice.label"
-                      :value="choice.value"
-                    />
-                  </el-select>
-                </el-form-item>
-              </div>
-            </div>
-
-            <!-- 验证规则配置 -->
-            <el-form-item label="验证规则">
-              <div class="validation-rules">
-                <div
-                  v-for="(rule, index) in fieldConfig.validationRules"
-                  :key="index"
-                  class="rule-item"
-                >
-                  <el-select
-                    v-model="rule.type"
-                    placeholder="规则类型"
-                    style="width: 120px"
-                  >
-                    <el-option
-                      label="必填"
-                      value="required"
-                    />
-                    <el-option
-                      label="长度"
-                      value="length"
-                    />
-                    <el-option
-                      label="范围"
-                      value="range"
-                    />
-                    <el-option
-                      label="正则"
-                      value="regex"
-                    />
-                    <el-option
-                      label="唯一"
-                      value="unique"
-                    />
-                    <el-option
-                      label="自定义"
-                      value="custom"
-                    />
-                  </el-select>
-                  <el-input
-                    v-model="rule.value"
-                    placeholder="规则值"
-                    style="width: 150px"
-                  />
-                  <el-input
-                    v-model="rule.message"
-                    placeholder="错误消息"
-                    style="width: 200px"
-                  />
-                  <el-button
-                    size="mini"
-                    type="danger"
-                    icon="el-icon-delete"
-                    @click="removeValidationRule(index)"
-                  />
-                </div>
-                <el-button
-                  size="small"
-                  type="dashed"
-                  icon="el-icon-plus"
-                  @click="addValidationRule"
-                >
-                  添加验证规则
-                </el-button>
-              </div>
-            </el-form-item>
-
-            <!-- 默认值配置 -->
-            <el-form-item label="默认值">
-              <div class="default-value-config">
-                <el-radio-group v-model="fieldConfig.defaultValueType">
-                  <el-radio label="none">
-                    无默认值
-                  </el-radio>
-                  <el-radio label="static">
-                    静态值
-                  </el-radio>
-                  <el-radio label="function">
-                    函数生成
-                  </el-radio>
-                  <el-radio label="expression">
-                    表达式
-                  </el-radio>
-                </el-radio-group>
-                
-                <div
-                  v-if="fieldConfig.defaultValueType !== 'none'"
-                  class="default-value-input"
-                >
-                  <el-input
-                    v-if="fieldConfig.defaultValueType === 'static'"
-                    v-model="fieldConfig.defaultValue"
-                    placeholder="输入默认值"
-                  />
-                  <el-select
-                    v-else-if="fieldConfig.defaultValueType === 'function'"
-                    v-model="fieldConfig.defaultValue"
-                    placeholder="选择默认值函数"
-                  >
-                    <el-option
-                      label="当前时间"
-                      value="DateTime.Now"
-                    />
-                    <el-option
-                      label="GUID"
-                      value="Guid.NewGuid()"
-                    />
-                    <el-option
-                      label="当前用户ID"
-                      value="CurrentUser.Id"
-                    />
-                    <el-option
-                      label="随机数"
-                      value="Random.Next()"
-                    />
-                  </el-select>
-                  <el-input
-                    v-else-if="fieldConfig.defaultValueType === 'expression'"
-                    v-model="fieldConfig.defaultValue"
-                    placeholder="输入表达式 (如: entity.CreationTime + TimeSpan.FromDays(30))"
-                  />
-                </div>
-              </div>
-            </el-form-item>
-
-            <!-- 业务属性 -->
-            <el-form-item label="业务属性">
-              <el-checkbox-group v-model="fieldConfig.businessAttributes">
-                <el-row>
-                  <el-col :span="8">
-                    <el-checkbox label="isAuditField">
-                      审计字段
-                    </el-checkbox>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-checkbox label="isVersionField">
-                      版本字段
-                    </el-checkbox>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-checkbox label="isSensitive">
-                      敏感信息
-                    </el-checkbox>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="8">
-                    <el-checkbox label="isSearchable">
-                      可搜索
-                    </el-checkbox>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-checkbox label="isFilterable">
-                      可筛选
-                    </el-checkbox>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-checkbox label="isSortable">
-                      可排序
-                    </el-checkbox>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="8">
-                    <el-checkbox label="isExportable">
-                      可导出
-                    </el-checkbox>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-checkbox label="isImportable">
-                      可导入
-                    </el-checkbox>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-checkbox label="isReadOnly">
-                      只读
-                    </el-checkbox>
-                  </el-col>
-                </el-row>
-              </el-checkbox-group>
-            </el-form-item>
-
-            <!-- UI展示配置 -->
-            <el-form-item label="UI展示">
-              <el-row :gutter="20">
-                <el-col :span="8">
-                  <el-form-item label="控件类型">
-                    <el-select
-                      v-model="fieldConfig.uiControl"
-                      placeholder="选择UI控件"
-                    >
-                      <el-option
-                        label="文本框"
-                        value="input"
-                      />
-                      <el-option
-                        label="文本域"
-                        value="textarea"
-                      />
-                      <el-option
-                        label="数字输入"
-                        value="number"
-                      />
-                      <el-option
-                        label="下拉选择"
-                        value="select"
-                      />
-                      <el-option
-                        label="单选按钮"
-                        value="radio"
-                      />
-                      <el-option
-                        label="复选框"
-                        value="checkbox"
-                      />
-                      <el-option
-                        label="日期选择"
-                        value="date"
-                      />
-                      <el-option
-                        label="时间选择"
-                        value="time"
-                      />
-                      <el-option
-                        label="文件上传"
-                        value="upload"
-                      />
-                      <el-option
-                        label="富文本"
-                        value="editor"
-                      />
-                      <el-option
-                        label="代码编辑器"
-                        value="code"
-                      />
-                      <el-option
-                        label="颜色选择器"
-                        value="color"
-                      />
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="显示宽度">
-                    <el-select v-model="fieldConfig.displayWidth">
-                      <el-option
-                        label="自适应"
-                        value="auto"
-                      />
-                      <el-option
-                        label="窄 (25%)"
-                        value="narrow"
-                      />
-                      <el-option
-                        label="中等 (50%)"
-                        value="medium"
-                      />
-                      <el-option
-                        label="宽 (75%)"
-                        value="wide"
-                      />
-                      <el-option
-                        label="全宽 (100%)"
-                        value="full"
-                      />
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="列表显示">
-                    <el-checkbox v-model="fieldConfig.showInList">
-                      在列表中显示
-                    </el-checkbox>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </el-form-item>
-
-            <el-form-item label="字段描述">
+            <el-form-item label="字段名称">
               <el-input
-                v-model="fieldConfig.description"
-                type="textarea"
-                :rows="2"
-                placeholder="详细描述此字段的用途和业务含义"
+                v-model="fieldConfig.name"
+                placeholder="请输入字段名称"
               />
             </el-form-item>
-
-            <el-form-item>
-              <el-button
-                type="primary"
-                :loading="applying"
-                @click="applyFieldConfig"
+            
+            <el-form-item label="显示名称">
+              <el-input
+                v-model="fieldConfig.displayName"
+                placeholder="请输入显示名称"
+              />
+            </el-form-item>
+            
+            <el-form-item label="数据类型">
+              <el-select
+                v-model="fieldConfig.dataType"
+                style="width: 100%"
               >
-                应用配置
-              </el-button>
-              <el-button @click="resetFieldConfig">
-                重置
-              </el-button>
+                <el-option
+                  v-for="option in selectedFieldType.dataTypeOptions"
+                  :key="option.value"
+                  :label="option.label"
+                  :value="option.value"
+                />
+              </el-select>
+            </el-form-item>
+            
+            <el-form-item
+              v-if="fieldConfig.dataType === 'string'"
+              label="长度限制"
+            >
+              <el-input-number
+                v-model="fieldConfig.length"
+                :min="0"
+                :max="4000"
+                style="width: 100%"
+              />
+            </el-form-item>
+            
+            <el-form-item
+              v-if="fieldConfig.dataType === 'decimal'"
+              label="精度"
+            >
+              <el-input-number
+                v-model="fieldConfig.precision"
+                :min="1"
+                :max="38"
+                style="width: 48%"
+              />
+              <span style="margin: 0 2%">.</span>
+              <el-input-number
+                v-model="fieldConfig.scale"
+                :min="0"
+                :max="fieldConfig.precision || 18"
+                style="width: 48%"
+              />
+            </el-form-item>
+            
+            <el-form-item label="默认值">
+              <el-input
+                v-model="fieldConfig.defaultValue"
+                placeholder="请输入默认值"
+              />
+            </el-form-item>
+            
+            <el-form-item label="是否必填">
+              <el-switch v-model="fieldConfig.isRequired" />
+            </el-form-item>
+            
+            <el-form-item label="是否主键">
+              <el-switch v-model="fieldConfig.isPrimaryKey" />
             </el-form-item>
           </el-form>
-        </el-card>
-      </div>
-    </el-card>
-  </div>
-  </el-card>
-
-  <!-- 自定义字段类型对话框 -->
-  <el-dialog
-    v-model="showAddFieldTypeDialog"
-    title="创建自定义字段类型"
-    width="600px"
-  >
-    <el-form
-      ref="customTypeFormRef"
-      :model="customTypeForm"
-      label-width="120px"
-    >
-      <el-form-item
-        label="类型名称"
-        required
-      >
-        <el-input
-          v-model="customTypeForm.name"
-          placeholder="例如：PhoneNumber"
-        />
-      </el-form-item>
-      <el-form-item
-        label="显示名称"
-        required
-      >
-        <el-input
-          v-model="customTypeForm.displayName"
-          placeholder="例如：手机号码"
-        />
-      </el-form-item>
-      <el-form-item label="基础类型">
-        <el-select v-model="customTypeForm.baseType">
-          <el-option
-            label="字符串"
-            value="string"
-          />
-          <el-option
-            label="数字"
-            value="number"
-          />
-          <el-option
-            label="日期时间"
-            value="datetime"
-          />
-          <el-option
-            label="布尔值"
-            value="boolean"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="验证模式">
-        <el-input
-          v-model="customTypeForm.validationPattern"
-          placeholder="正则表达式验证模式"
-        />
-      </el-form-item>
-      <el-form-item label="格式化函数">
-        <el-input
-          v-model="customTypeForm.formatFunction"
-          placeholder="JavaScript格式化函数"
-        />
-      </el-form-item>
-      <el-form-item label="类型描述">
-        <el-input
-          v-model="customTypeForm.description"
-          type="textarea"
-          :rows="2"
-        />
-      </el-form-item>
-    </el-form>
-
-    <template #footer>
-      <el-button @click="showAddFieldTypeDialog = false">
-        取消
-      </el-button>
-      <el-button
-        type="primary"
-        @click="saveCustomFieldType"
-      >
-        保存类型
-      </el-button>
-    </template>
-  </el-dialog>
-
-  <!-- 枚举类型对话框 -->
-  <el-dialog
-    v-model="showAddEnumDialog"
-    title="创建枚举类型"
-    width="700px"
-  >
-    <el-form
-      ref="enumFormRef"
-      :model="enumForm"
-      label-width="100px"
-    >
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item
-            label="枚举名称"
-            required
-          >
-            <el-input
-              v-model="enumForm.name"
-              placeholder="例如：UserStatus"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item
-            label="显示名称"
-            required
-          >
-            <el-input
-              v-model="enumForm.displayName"
-              placeholder="例如：用户状态"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <el-form-item label="枚举描述">
-        <el-input
-          v-model="enumForm.description"
-          placeholder="描述此枚举的用途"
-        />
-      </el-form-item>
-
-      <el-form-item label="枚举值">
-        <div class="enum-values-editor">
-          <div
-            v-for="(value, index) in enumForm.values"
-            :key="index"
-            class="enum-value-row"
-          >
-            <el-input
-              v-model="value.key"
-              placeholder="键值 (如: Active)"
-              style="width: 150px"
-            />
-            <el-input
-              v-model="value.label"
-              placeholder="显示标签 (如: 启用)"
-              style="width: 150px"
-            />
-            <el-input-number
-              v-model="value.sort"
-              placeholder="排序"
-              :min="0"
-              style="width: 100px"
-            />
-            <el-input
-              v-model="value.description"
-              placeholder="描述"
-              style="width: 200px"
-            />
-            <el-button
-              size="mini"
-              type="danger"
-              icon="el-icon-delete"
-              @click="removeEnumValue(index)"
-            />
-          </div>
-          <el-button
-            size="small"
-            type="dashed"
-            icon="el-icon-plus"
-            @click="addEnumValue"
-          >
-            添加枚举值
-          </el-button>
         </div>
-      </el-form-item>
-    </el-form>
 
-    <template #footer>
-      <el-button @click="showAddEnumDialog = false">
-        取消
-      </el-button>
-      <el-button
-        type="primary"
-        @click="saveEnum"
-      >
-        保存枚举
-      </el-button>
-    </template>
-  </el-dialog>
-
-  <!-- 复杂类型对话框 -->
-  <el-dialog
-    v-model="showComplexTypeDialog"
-    title="创建复杂类型 (值对象)"
-    width="800px"
-  >
-    <el-form
-      ref="complexTypeFormRef"
-      :model="complexTypeForm"
-      label-width="100px"
-    >
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item
-            label="类型名称"
-            required
+        <!-- 自定义类型配置 -->
+        <div
+          v-else-if="activeTab === 'custom'"
+          class="custom-config"
+        >
+          <h4>自定义类型配置</h4>
+          
+          <el-form
+            :model="customTypeConfig"
+            label-width="100px"
+            size="small"
           >
-            <el-input
-              v-model="complexTypeForm.name"
-              placeholder="例如：Address"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item
-            label="显示名称"
-            required
-          >
-            <el-input
-              v-model="complexTypeForm.displayName"
-              placeholder="例如：地址信息"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <el-form-item label="类型描述">
-        <el-input
-          v-model="complexTypeForm.description"
-          placeholder="描述此复杂类型的用途"
-        />
-      </el-form-item>
-
-      <el-form-item label="属性定义">
-        <div class="complex-properties-editor">
-          <div
-            v-for="(prop, index) in complexTypeForm.properties"
-            :key="index"
-            class="property-row"
-          >
-            <el-input
-              v-model="prop.name"
-              placeholder="属性名"
-              style="width: 120px"
-            />
-            <el-input
-              v-model="prop.displayName"
-              placeholder="显示名"
-              style="width: 120px"
-            />
-            <el-select
-              v-model="prop.type"
-              placeholder="类型"
-              style="width: 100px"
+            <el-form-item label="类型名称">
+              <el-input
+                v-model="customTypeConfig.typeName"
+                placeholder="请输入类型名称"
+              />
+            </el-form-item>
+            
+            <el-form-item label="基础类型">
+              <el-select
+                v-model="customTypeConfig.baseType"
+                style="width: 100%"
+              >
+                <el-option
+                  label="字符串"
+                  value="string"
+                />
+                <el-option
+                  label="数字"
+                  value="number"
+                />
+                <el-option
+                  label="日期"
+                  value="date"
+                />
+                <el-option
+                  label="布尔"
+                  value="boolean"
+                />
+                <el-option
+                  label="枚举"
+                  value="enum"
+                />
+              </el-select>
+            </el-form-item>
+            
+            <el-form-item label="验证模式">
+              <el-input
+                v-model="customTypeConfig.validationPattern"
+                placeholder="请输入正则表达式"
+                type="textarea"
+                :rows="3"
+              />
+            </el-form-item>
+            
+            <el-form-item label="格式化函数">
+              <el-input
+                v-model="customTypeConfig.formatFunction"
+                placeholder="请输入格式化JavaScript代码"
+                type="textarea"
+                :rows="4"
+              />
+            </el-form-item>
+            
+            <el-form-item
+              v-if="customTypeConfig.baseType === 'enum'"
+              label="枚举选项"
             >
-              <el-option
-                label="string"
-                value="string"
-              />
-              <el-option
-                label="int"
-                value="int"
-              />
-              <el-option
-                label="decimal"
-                value="decimal"
-              />
-              <el-option
-                label="bool"
-                value="bool"
-              />
-              <el-option
-                label="DateTime"
-                value="DateTime"
-              />
-            </el-select>
-            <el-checkbox v-model="prop.isRequired">
-              必填
-            </el-checkbox>
-            <el-input
-              v-model="prop.description"
-              placeholder="描述"
-              style="width: 150px"
-            />
-            <el-button
-              size="mini"
-              type="danger"
-              icon="el-icon-delete"
-              @click="removeComplexProperty(index)"
-            />
-          </div>
-          <el-button
-            size="small"
-            type="dashed"
-            icon="el-icon-plus"
-            @click="addComplexProperty"
-          >
-            添加属性
-          </el-button>
+              <div class="enum-options">
+                <div
+                  v-for="(option, index) in customTypeConfig.enumOptions"
+                  :key="index"
+                  class="enum-option"
+                >
+                  <el-input
+                    v-model="option.label"
+                    placeholder="显示文本"
+                    size="small"
+                    style="width: 45%"
+                  />
+                  <el-input
+                    v-model="option.value"
+                    placeholder="值"
+                    size="small"
+                    style="width: 45%"
+                  />
+                  <el-button
+                    size="small"
+                    type="danger"
+                    text
+                    @click="removeEnumOption(index)"
+                  >
+                    删除
+                  </el-button>
+                </div>
+                <el-button
+                  size="small"
+                  type="primary"
+                  text
+                  @click="addEnumOption"
+                >
+                  添加选项
+                </el-button>
+              </div>
+            </el-form-item>
+          </el-form>
         </div>
-      </el-form-item>
-    </el-form>
 
-    <template #footer>
-      <el-button @click="showComplexTypeDialog = false">
-        取消
-      </el-button>
-      <el-button
-        type="primary"
-        @click="saveComplexType"
+        <!-- 验证规则配置 -->
+        <div
+          v-else-if="activeTab === 'validation'"
+          class="validation-config"
+        >
+          <h4>验证规则</h4>
+          
+          <div class="validation-rules">
+            <div
+              v-for="(rule, index) in fieldConfig.validationRules"
+              :key="index"
+              class="validation-rule"
+            >
+              <el-select
+                v-model="rule.type"
+                style="width: 30%"
+                size="small"
+              >
+                <el-option
+                  label="必填"
+                  value="required"
+                />
+                <el-option
+                  label="长度"
+                  value="length"
+                />
+                <el-option
+                  label="范围"
+                  value="range"
+                />
+                <el-option
+                  label="正则"
+                  value="regex"
+                />
+                <el-option
+                  label="唯一"
+                  value="unique"
+                />
+                <el-option
+                  label="自定义"
+                  value="custom"
+                />
+              </el-select>
+              
+              <el-input
+                v-model="rule.value"
+                placeholder="规则值"
+                style="width: 35%"
+                size="small"
+              />
+              
+              <el-input
+                v-model="rule.message"
+                placeholder="错误信息"
+                style="width: 30%"
+                size="small"
+              />
+              
+              <el-button
+                size="small"
+                type="danger"
+                text
+                @click="removeValidationRule(index)"
+              >
+                删除
+              </el-button>
+            </div>
+            
+            <el-button
+              size="small"
+              type="primary"
+              text
+              @click="addValidationRule"
+            >
+              添加规则
+            </el-button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧：预览面板 -->
+      <div class="preview-panel">
+        <div class="panel-header">
+          <h4>字段预览</h4>
+        </div>
+        
+        <div class="preview-content">
+          <div
+            v-if="!selectedField"
+            class="no-selection"
+          >
+            请选择或配置一个字段类型
+          </div>
+          
+          <div
+            v-else
+            class="field-preview"
+          >
+            <!-- 表单控件预览 -->
+            <div class="control-preview">
+              <el-form-item :label="fieldConfig.displayName || fieldConfig.name">
+                <component
+                  :is="getPreviewComponent(fieldConfig.dataType)"
+                  v-model="previewValue"
+                  v-bind="getPreviewProps()"
+                  :placeholder="`请输入${fieldConfig.displayName || fieldConfig.name}`"
+                />
+              </el-form-item>
+            </div>
+            
+            <!-- 字段信息 -->
+            <div class="field-info">
+              <h5>字段信息</h5>
+              <div class="info-item">
+                <span class="label">数据类型:</span>
+                <span class="value">{{ fieldConfig.dataType }}</span>
+              </div>
+              <div
+                v-if="fieldConfig.length"
+                class="info-item"
+              >
+                <span class="label">长度:</span>
+                <span class="value">{{ fieldConfig.length }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">必填:</span>
+                <span class="value">{{ fieldConfig.isRequired ? '是' : '否' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">主键:</span>
+                <span class="value">{{ fieldConfig.isPrimaryKey ? '是' : '否' }}</span>
+              </div>
+            </div>
+            
+            <!-- 验证规则信息 -->
+            <div
+              v-if="fieldConfig.validationRules.length > 0"
+              class="validation-info"
+            >
+              <h5>验证规则</h5>
+              <div
+                v-for="rule in fieldConfig.validationRules"
+                :key="rule.type"
+                class="validation-rule-info"
+              >
+                <span class="rule-type">{{ getValidationRuleLabel(rule.type) }}</span>
+                <span class="rule-value">{{ rule.value }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 新增字段类型对话框 -->
+    <el-dialog
+      v-model="showAddTypeDialog"
+      title="新增字段类型"
+      width="500px"
+      :close-on-click-modal="false"
+    >
+      <el-form
+        ref="addTypeFormRef"
+        :model="newTypeForm"
+        :rules="newTypeFormRules"
+        label-width="100px"
       >
-        保存复杂类型
-      </el-button>
-    </template>
-  </el-dialog>
+        <el-form-item
+          label="类型名称"
+          prop="name"
+        >
+          <el-input
+            v-model="newTypeForm.name"
+            placeholder="请输入类型名称"
+          />
+        </el-form-item>
+        
+        <el-form-item
+          label="显示名称"
+          prop="displayName"
+        >
+          <el-input
+            v-model="newTypeForm.displayName"
+            placeholder="请输入显示名称"
+          />
+        </el-form-item>
+        
+        <el-form-item
+          label="图标"
+          prop="icon"
+        >
+          <el-input
+            v-model="newTypeForm.icon"
+            placeholder="请输入图标"
+          />
+        </el-form-item>
+        
+        <el-form-item
+          label="描述"
+          prop="description"
+        >
+          <el-input
+            v-model="newTypeForm.description"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入类型描述"
+          />
+        </el-form-item>
+      </el-form>
+      
+      <template #footer>
+        <el-button @click="showAddTypeDialog = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="confirmAddType"
+        >
+          确认
+        </el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { VueFlow, Background, Controls, MiniMap } from '@vue-flow/core'
-import EntityNode from './EntityNode.vue'
-import RelationshipEdge from './RelationshipEdge.vue'
-import { useEntityModelingStore } from '@/stores/lowcode/entityModeling'
+import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
+import { type EntityField } from '@/stores/lowcode/entityModeling'
+import { logger } from '@/utils/logger'
 
-// Store
-const entityStore = useEntityModelingStore()
+// Props
+interface Props {
+  selectedField?: EntityField
+  entityFields?: EntityField[]
+}
+
+const props = defineProps<Props>()
+
+// Events
+const emit = defineEmits<{
+  'field-updated': [field: EntityField]
+  'field-validated': [field: EntityField, isValid: boolean]
+  'field-type-created': [fieldType: any]
+}>()
+
+// Store - 暂时注释未使用
+// const entityStore = useEntityModelingStore()
 
 // 响应式数据
-const activeTypeCategory = ref('basic')
-const selectedFieldType = ref(null)
-const applying = ref(false)
+const addTypeFormRef = ref()
+const activeTab = ref<'basic' | 'custom' | 'validation'>('basic')
+const searchKeyword = ref('')
+const selectedFieldType = ref<any>(null)
+const previewValue = ref<any>('')
 
-// 对话框状态
-const showAddFieldTypeDialog = ref(false)
-const showAddEnumDialog = ref(false)
-const showComplexTypeDialog = ref(false)
+// UI状态
+const showAddTypeDialog = ref(false)
 
 // 字段配置
 const fieldConfig = ref({
   name: '',
   displayName: '',
-  validationRules: [],
-  defaultValueType: 'none',
+  dataType: 'string',
+  length: 255,
+  precision: 18,
+  scale: 2,
   defaultValue: '',
-  businessAttributes: [],
-  uiControl: 'input',
-  displayWidth: 'medium',
-  showInList: true,
-  description: ''
+  isRequired: false,
+  isPrimaryKey: false,
+  validationRules: [] as Array<{
+    type: string
+    value: string
+    message: string
+  }>
 })
 
-// 自定义类型表单
-const customTypeForm = ref({
-  name: '',
-  displayName: '',
+// 自定义类型配置
+const customTypeConfig = ref({
+  typeName: '',
   baseType: 'string',
   validationPattern: '',
   formatFunction: '',
+  enumOptions: [] as Array<{ label: string; value: string }>
+})
+
+// 新增类型表单
+const newTypeForm = ref({
+  name: '',
+  displayName: '',
+  icon: '🔤',
   description: ''
 })
 
-// 枚举表单
-const enumForm = ref({
-  name: '',
-  displayName: '',
-  description: '',
-  values: [
-    { key: '', label: '', sort: 0, description: '' }
-  ]
-})
-
-// 复杂类型表单
-const complexTypeForm = ref({
-  name: '',
-  displayName: '',
-  description: '',
-  properties: [
-    { name: '', displayName: '', type: 'string', isRequired: false, description: '' }
-  ]
-})
-
-// 自定义枚举
-const customEnums = ref([
-  {
-    id: 'user-status',
-    name: 'UserStatus',
-    displayName: '用户状态',
-    description: '用户账户状态枚举',
-    values: [
-      { key: 'Active', label: '启用', sort: 1, description: '用户账户正常使用' },
-      { key: 'Inactive', label: '禁用', sort: 2, description: '用户账户被禁用' },
-      { key: 'Locked', label: '锁定', sort: 3, description: '用户账户被锁定' },
-      { key: 'Pending', label: '待激活', sort: 4, description: '等待用户激活' }
-    ]
-  },
-  {
-    id: 'project-status',
-    name: 'ProjectStatus',
-    displayName: '项目状态',
-    description: '工程项目状态枚举',
-    values: [
-      { key: 'Planning', label: '筹备中', sort: 1, description: '项目筹备阶段' },
-      { key: 'Construction', label: '施工中', sort: 2, description: '正在施工' },
-      { key: 'Suspended', label: '暂停', sort: 3, description: '项目暂停' },
-      { key: 'Completed', label: '完工', sort: 4, description: '项目完工' },
-      { key: 'Acceptance', label: '验收', sort: 5, description: '项目验收' }
-    ]
-  }
-])
-
-// 复杂类型
-const complexTypes = ref([
-  {
-    id: 'address',
-    name: 'Address',
-    displayName: '地址信息',
-    description: '完整的地址信息值对象',
-    properties: [
-      { name: 'Street', displayName: '街道地址', type: 'string', isRequired: true, description: '详细街道地址' },
-      { name: 'City', displayName: '城市', type: 'string', isRequired: true, description: '所在城市' },
-      { name: 'Province', displayName: '省份', type: 'string', isRequired: true, description: '所在省份' },
-      { name: 'PostalCode', displayName: '邮政编码', type: 'string', isRequired: false, description: '邮政编码' },
-      { name: 'Country', displayName: '国家', type: 'string', isRequired: true, description: '所在国家' }
-    ]
-  },
-  {
-    id: 'contact-info',
-    name: 'ContactInfo',
-    displayName: '联系信息',
-    description: '完整的联系信息值对象',
-    properties: [
-      { name: 'Phone', displayName: '电话', type: 'string', isRequired: false, description: '固定电话' },
-      { name: 'Mobile', displayName: '手机', type: 'string', isRequired: true, description: '手机号码' },
-      { name: 'Email', displayName: '邮箱', type: 'string', isRequired: false, description: '电子邮箱' },
-      { name: 'QQ', displayName: 'QQ号', type: 'string', isRequired: false, description: 'QQ号码' },
-      { name: 'WeChat', displayName: '微信号', type: 'string', isRequired: false, description: '微信号码' }
-    ]
-  }
-])
-
-// 基础字段类型
-const basicFieldTypes = ref([
+// 内置字段类型
+const builtInFieldTypes = ref([
   {
     name: 'string',
     displayName: '字符串',
-    icon: 'el-icon-document',
+    icon: '🔤',
     description: '文本字符串类型',
-    example: '例如：用户名、产品名称',
-    configOptions: [
-      { name: 'maxLength', label: '最大长度', type: 'number', min: 1, max: 5000, placeholder: '最大字符数' },
-      { name: 'minLength', label: '最小长度', type: 'number', min: 0, max: 1000, placeholder: '最小字符数' }
+    dataTypeOptions: [
+      { label: 'string', value: 'string' },
+      { label: 'text', value: 'text' }
     ]
   },
   {
     name: 'int',
     displayName: '整数',
-    icon: 'el-icon-rank',
+    icon: '🔢',
     description: '32位整数类型',
-    example: '例如：数量、年龄、排序',
-    configOptions: [
-      { name: 'minValue', label: '最小值', type: 'number', placeholder: '最小值' },
-      { name: 'maxValue', label: '最大值', type: 'number', placeholder: '最大值' }
+    dataTypeOptions: [
+      { label: 'int', value: 'int' },
+      { label: 'long', value: 'long' }
     ]
   },
   {
     name: 'decimal',
     displayName: '小数',
-    icon: 'el-icon-money',
+    icon: '💰',
     description: '高精度小数类型',
-    example: '例如：价格、金额、重量',
-    configOptions: [
-      { name: 'precision', label: '总位数', type: 'number', min: 1, max: 38, placeholder: '总精度位数' },
-      { name: 'scale', label: '小数位数', type: 'number', min: 0, max: 38, placeholder: '小数位数' }
+    dataTypeOptions: [
+      { label: 'decimal', value: 'decimal' },
+      { label: 'double', value: 'double' }
     ]
   },
   {
-    name: 'DateTime',
+    name: 'datetime',
     displayName: '日期时间',
-    icon: 'el-icon-time',
-    description: '日期和时间类型',
-    example: '例如：创建时间、生日',
-    configOptions: [
-      { 
-        name: 'dateFormat', 
-        label: '日期格式', 
-        type: 'select',
-        choices: [
-          { label: 'yyyy-MM-dd', value: 'yyyy-MM-dd' },
-          { label: 'yyyy-MM-dd HH:mm:ss', value: 'yyyy-MM-dd HH:mm:ss' },
-          { label: 'yyyy/MM/dd', value: 'yyyy/MM/dd' }
-        ]
-      }
+    icon: '📅',
+    description: '日期时间类型',
+    dataTypeOptions: [
+      { label: 'DateTime', value: 'DateTime' },
+      { label: 'DateOnly', value: 'DateOnly' },
+      { label: 'TimeOnly', value: 'TimeOnly' }
     ]
   },
   {
     name: 'bool',
-    displayName: '布尔值',
-    icon: 'el-icon-switch-button',
-    description: '真/假布尔类型',
-    example: '例如：是否启用、是否可见',
-    configOptions: [
-      { name: 'trueLabel', label: '真值标签', type: 'string', placeholder: '例如：是、启用' },
-      { name: 'falseLabel', label: '假值标签', type: 'string', placeholder: '例如：否、禁用' }
+    displayName: '布尔',
+    icon: '✅',
+    description: '布尔值类型',
+    dataTypeOptions: [
+      { label: 'bool', value: 'bool' }
     ]
   },
   {
-    name: 'Guid',
-    displayName: '全局唯一标识符',
-    icon: 'el-icon-key',
-    description: 'GUID主键类型',
-    example: '例如：实体ID、关联ID',
-    configOptions: []
+    name: 'guid',
+    displayName: 'GUID',
+    icon: '🔑',
+    description: '全局唯一标识符',
+    dataTypeOptions: [
+      { label: 'Guid', value: 'Guid' }
+    ]
   }
 ])
 
-// 业务字段类型
-const businessFieldTypes = ref([
-  {
-    name: 'PhoneNumber',
-    displayName: '手机号码',
-    icon: 'el-icon-phone',
-    description: '中国手机号码类型',
-    example: '13800138000',
-    features: ['格式验证', '自动格式化'],
-    configOptions: [
-      { 
-        name: 'region', 
-        label: '地区', 
-        type: 'select',
-        choices: [
-          { label: '中国大陆', value: 'CN' },
-          { label: '香港', value: 'HK' },
-          { label: '台湾', value: 'TW' }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'Email',
-    displayName: '电子邮箱',
-    icon: 'el-icon-message',
-    description: '邮箱地址类型',
-    example: 'user@example.com',
-    features: ['格式验证', '域名验证'],
-    configOptions: [
-      { name: 'allowedDomains', label: '允许的域名', type: 'string', placeholder: '例如：@company.com,@example.com' }
-    ]
-  },
-  {
-    name: 'IdCard',
-    displayName: '身份证号',
-    icon: 'el-icon-postcard',
-    description: '中国身份证号码',
-    example: '110101199001011234',
-    features: ['格式验证', '校验位验证', '年龄计算'],
-    configOptions: []
-  },
-  {
-    name: 'Money',
-    displayName: '货币金额',
-    icon: 'el-icon-coin',
-    description: '货币金额类型',
-    example: '￥1,234.56',
-    features: ['精度控制', '格式化显示', '货币符号'],
-    configOptions: [
-      { 
-        name: 'currency', 
-        label: '货币类型', 
-        type: 'select',
-        choices: [
-          { label: '人民币 (CNY)', value: 'CNY' },
-          { label: '美元 (USD)', value: 'USD' },
-          { label: '欧元 (EUR)', value: 'EUR' }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'Percentage',
-    displayName: '百分比',
-    icon: 'el-icon-pie-chart',
-    description: '百分比数值类型',
-    example: '85.5%',
-    features: ['范围验证', '百分比显示'],
-    configOptions: [
-      { name: 'minValue', label: '最小值', type: 'number', min: 0, max: 100 },
-      { name: 'maxValue', label: '最大值', type: 'number', min: 0, max: 100 }
-    ]
-  },
-  {
-    name: 'Color',
-    displayName: '颜色值',
-    icon: 'el-icon-brush',
-    description: '颜色代码类型',
-    example: '#FF5733',
-    features: ['颜色选择器', '格式验证'],
-    configOptions: [
-      { 
-        name: 'format', 
-        label: '颜色格式', 
-        type: 'select',
-        choices: [
-          { label: 'HEX (#FFFFFF)', value: 'hex' },
-          { label: 'RGB (255,255,255)', value: 'rgb' },
-          { label: 'HSL (360,100%,100%)', value: 'hsl' }
-        ]
-      }
-    ]
-  }
-])
+// 表单验证规则
+const newTypeFormRules = {
+  name: [
+    { required: true, message: '请输入类型名称', trigger: 'blur' }
+  ],
+  displayName: [
+    { required: true, message: '请输入显示名称', trigger: 'blur' }
+  ]
+}
 
 // 计算属性
-const entities = computed(() => entityStore.entities)
+const filteredFieldTypes = computed(() => {
+  if (!searchKeyword.value) {
+    return builtInFieldTypes.value
+  }
+  return builtInFieldTypes.value.filter(type =>
+    type.displayName.includes(searchKeyword.value) ||
+    type.description.includes(searchKeyword.value)
+  )
+})
+
+const selectedField = computed(() => {
+  return props.selectedField || null
+})
+
+const isFieldTypeValid = computed(() => {
+  return fieldConfig.value.name && fieldConfig.value.dataType
+})
 
 // 方法
-const selectFieldType = (type) => {
-  selectedFieldType.value = type
+const selectFieldType = (fieldType: any) => {
+  selectedFieldType.value = fieldType
   
   // 重置字段配置
   fieldConfig.value = {
     name: '',
     displayName: '',
-    validationRules: [],
-    defaultValueType: 'none',
+    dataType: fieldType.dataTypeOptions[0]?.value || 'string',
+    length: fieldType.name === 'string' ? 255 : 0,
+    precision: fieldType.name === 'decimal' ? 18 : 0,
+    scale: fieldType.name === 'decimal' ? 2 : 0,
     defaultValue: '',
-    businessAttributes: [],
-    uiControl: getDefaultUIControl(type.name),
-    displayWidth: 'medium',
-    showInList: true,
-    description: ''
+    isRequired: false,
+    isPrimaryKey: false,
+    validationRules: []
   }
-}
-
-const getDefaultUIControl = (typeName) => {
-  const controlMap = {
-    'string': 'input',
-    'int': 'number',
-    'decimal': 'number',
-    'DateTime': 'date',
-    'bool': 'checkbox',
-    'PhoneNumber': 'input',
-    'Email': 'input',
-    'Money': 'number',
-    'Color': 'color'
-  }
-  return controlMap[typeName] || 'input'
+  
+  logger?.info('选择字段类型', { fieldType: fieldType.name })
 }
 
 const addValidationRule = () => {
@@ -1255,387 +709,302 @@ const addValidationRule = () => {
   })
 }
 
-const removeValidationRule = (index) => {
+const removeValidationRule = (index: number) => {
   fieldConfig.value.validationRules.splice(index, 1)
 }
 
-const applyFieldConfig = () => {
-  if (!selectedFieldType.value || !fieldConfig.value.name) {
-    ElMessage.warning('请选择字段类型并填写字段名称')
+const addEnumOption = () => {
+  customTypeConfig.value.enumOptions.push({
+    label: '',
+    value: ''
+  })
+}
+
+const removeEnumOption = (index: number) => {
+  customTypeConfig.value.enumOptions.splice(index, 1)
+}
+
+const getPreviewComponent = (dataType: string) => {
+  const componentMap: Record<string, string> = {
+    'string': 'el-input',
+    'text': 'el-input',
+    'int': 'el-input-number',
+    'long': 'el-input-number',
+    'decimal': 'el-input-number',
+    'double': 'el-input-number',
+    'DateTime': 'el-date-picker',
+    'DateOnly': 'el-date-picker',
+    'TimeOnly': 'el-time-picker',
+    'bool': 'el-switch',
+    'Guid': 'el-input'
+  }
+  return componentMap[dataType] || 'el-input'
+}
+
+const getPreviewProps = () => {
+  const dataType = fieldConfig.value.dataType
+  const props: Record<string, any> = {}
+  
+  if (dataType === 'text') {
+    props.type = 'textarea'
+    props.rows = 3
+  } else if (dataType === 'DateTime') {
+    props.type = 'datetime'
+  } else if (dataType === 'DateOnly') {
+    props.type = 'date'
+  } else if (['int', 'long', 'decimal', 'double'].includes(dataType)) {
+    if (fieldConfig.value.precision) {
+      props.precision = fieldConfig.value.scale || 0
+    }
+  }
+  
+  return props
+}
+
+const getValidationRuleLabel = (type: string) => {
+  const labels: Record<string, string> = {
+    'required': '必填',
+    'length': '长度',
+    'range': '范围',
+    'regex': '正则',
+    'unique': '唯一',
+    'custom': '自定义'
+  }
+  return labels[type] || type
+}
+
+const previewField = () => {
+  if (!selectedField.value) return
+  
+  // 更新预览值
+  previewValue.value = fieldConfig.value.defaultValue || ''
+  
+  ElMessage.success('字段预览已更新')
+  logger?.info('预览字段', { field: fieldConfig.value })
+}
+
+const saveFieldType = () => {
+  if (!isFieldTypeValid.value) {
+    ElMessage.warning('请完善字段类型配置')
     return
   }
+  
+  // 构建符合EntityField接口的字段对象
+  const newField: EntityField = {
+    name: fieldConfig.value.name,
+    displayName: fieldConfig.value.displayName,
+    type: fieldConfig.value.dataType,
+    isRequired: fieldConfig.value.isRequired,
+    isPrimaryKey: fieldConfig.value.isPrimaryKey,
+    defaultValue: fieldConfig.value.defaultValue,
+    description: `${selectedFieldType.value?.displayName || ''}类型字段`
+  }
+  
+  // 只有当length有有效值时才添加该属性
+  if (fieldConfig.value.length && fieldConfig.value.length > 0) {
+    newField.length = fieldConfig.value.length
+  }
+  
+  emit('field-updated', newField)
+  
+  ElMessage.success('字段类型保存成功')
+  logger?.info('保存字段类型', { field: newField })
+}
 
-  applying.value = true
-
+const confirmAddType = async () => {
   try {
-    // 构建完整的字段定义
-    const fieldDefinition = {
-      name: fieldConfig.value.name,
-      displayName: fieldConfig.value.displayName,
-      type: selectedFieldType.value.name,
-      isRequired: fieldConfig.value.validationRules.some(rule => rule.type === 'required'),
-      isPrimaryKey: false,
-      defaultValue: fieldConfig.value.defaultValueType === 'none' ? '' : fieldConfig.value.defaultValue,
-      description: fieldConfig.value.description,
-      // 扩展属性
-      businessAttributes: fieldConfig.value.businessAttributes,
-      uiControl: fieldConfig.value.uiControl,
-      displayWidth: fieldConfig.value.displayWidth,
-      showInList: fieldConfig.value.showInList,
-      validationRules: fieldConfig.value.validationRules,
-      // 字段类型特定配置
-      ...fieldConfig.value
+    await addTypeFormRef.value?.validate()
+    
+    const newType = {
+      id: `custom_${Date.now()}`,
+      ...newTypeForm.value,
+      category: 'custom',
+      dataTypeOptions: [
+        { label: newTypeForm.value.name, value: newTypeForm.value.name }
+      ]
     }
-
-    // 发送字段应用事件
-    emit('field-configured', fieldDefinition)
-
-    ElMessage.success('字段配置已应用')
-
+    
+    builtInFieldTypes.value.push(newType)
+    emit('field-type-created', newType)
+    
+    showAddTypeDialog.value = false
+    
+    // 重置表单
+    newTypeForm.value = {
+      name: '',
+      displayName: '',
+      icon: '🔤',
+      description: ''
+    }
+    
+    ElMessage.success('字段类型创建成功')
+    logger?.info('创建自定义字段类型', { type: newType })
   } catch (error) {
-    ElMessage.error('应用字段配置失败：' + error.message)
-  } finally {
-    applying.value = false
+    logger?.error('创建字段类型失败', error)
   }
 }
 
-const resetFieldConfig = () => {
-  fieldConfig.value = {
-    name: '',
-    displayName: '',
-    validationRules: [],
-    defaultValueType: 'none',
-    defaultValue: '',
-    businessAttributes: [],
-    uiControl: 'input',
-    displayWidth: 'medium',
-    showInList: true,
-    description: ''
+// 生命周期
+onMounted(() => {
+  // 如果有选中的字段，初始化配置
+  if (selectedField.value) {
+    const matchingType = builtInFieldTypes.value.find(type => 
+      type.dataTypeOptions.some(option => option.value === selectedField.value?.type)
+    )
+    
+    if (matchingType) {
+      selectFieldType(matchingType)
+      
+      fieldConfig.value = {
+        name: selectedField.value.name,
+        displayName: selectedField.value.displayName,
+        dataType: selectedField.value.type,
+        length: selectedField.value.length ?? 255, // 使用空值合并提供默认值
+        precision: 18,
+        scale: 2,
+        defaultValue: selectedField.value.defaultValue || '',
+        isRequired: selectedField.value.isRequired,
+        isPrimaryKey: selectedField.value.isPrimaryKey,
+        validationRules: []
+      }
+    }
   }
-}
-
-const saveCustomFieldType = () => {
-  // 保存自定义字段类型
-  const newType = {
-    ...customTypeForm.value,
-    id: `custom-${Date.now()}`,
-    icon: 'el-icon-document',
-    category: 'custom'
-  }
-
-  businessFieldTypes.value.push(newType)
-  showAddFieldTypeDialog.value = false
-
-  ElMessage.success('自定义字段类型创建成功')
-}
-
-const addEnumValue = () => {
-  enumForm.value.values.push({
-    key: '',
-    label: '',
-    sort: enumForm.value.values.length + 1,
-    description: ''
-  })
-}
-
-const removeEnumValue = (index) => {
-  enumForm.value.values.splice(index, 1)
-}
-
-const saveEnum = () => {
-  const newEnum = {
-    ...enumForm.value,
-    id: `enum-${Date.now()}`
-  }
-
-  customEnums.value.push(newEnum)
-  showAddEnumDialog.value = false
-
-  ElMessage.success('枚举类型创建成功')
-}
-
-const editEnum = (enumType) => {
-  enumForm.value = { ...enumType }
-  showAddEnumDialog.value = true
-}
-
-const deleteEnum = (enumType) => {
-  const index = customEnums.value.findIndex(e => e.id === enumType.id)
-  if (index > -1) {
-    customEnums.value.splice(index, 1)
-    ElMessage.success('枚举类型删除成功')
-  }
-}
-
-const addComplexProperty = () => {
-  complexTypeForm.value.properties.push({
-    name: '',
-    displayName: '',
-    type: 'string',
-    isRequired: false,
-    description: ''
-  })
-}
-
-const removeComplexProperty = (index) => {
-  complexTypeForm.value.properties.splice(index, 1)
-}
-
-const saveComplexType = () => {
-  const newComplexType = {
-    ...complexTypeForm.value,
-    id: `complex-${Date.now()}`
-  }
-
-  complexTypes.value.push(newComplexType)
-  showComplexTypeDialog.value = false
-
-  ElMessage.success('复杂类型创建成功')
-}
-
-const editComplexType = (complexType) => {
-  complexTypeForm.value = { ...complexType }
-  showComplexTypeDialog.value = true
-}
-
-const deleteComplexType = (complexType) => {
-  const index = complexTypes.value.findIndex(t => t.id === complexType.id)
-  if (index > -1) {
-    complexTypes.value.splice(index, 1)
-    ElMessage.success('复杂类型删除成功')
-  }
-}
-
-const importEnumsFromDict = () => {
-  ElMessage.info('从数据字典导入功能开发中...')
-}
-
-// Emits
-const emit = defineEmits<{
-  'field-configured': [field: any]
-}>()
+  
+  logger?.info('高级字段类型设计器初始化完成')
+})
 </script>
 
 <style scoped>
-.advanced-field-designer {
+.advanced-field-type-designer {
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  background: var(--el-bg-color);
 }
 
-.designer-header {
+.designer-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--el-border-color);
+  background: var(--el-bg-color-page);
 }
 
-.designer-header h3 {
-  margin: 0;
+.toolbar-left {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--el-text-color-primary);
-}
-
-/* 字段类型分类样式 */
-.field-types-catalog {
-  margin-bottom: 20px;
-}
-
-.type-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  padding: 16px 0;
-}
-
-.field-type-card {
-  border: 1px solid var(--el-border-color-lighter);
-  border-radius: 8px;
-  padding: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
   gap: 12px;
 }
 
-.field-type-card:hover {
-  border-color: var(--el-color-primary-light-5);
-  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.1);
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.field-type-card.selected {
+.designer-content {
+  display: flex;
+  flex: 1;
+  height: 0;
+}
+
+.field-types-panel {
+  width: 300px;
+  border-right: 1px solid var(--el-border-color);
+  background: var(--el-bg-color-page);
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid var(--el-border-color);
+}
+
+.panel-header h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.search-section {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--el-border-color);
+}
+
+.types-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.type-item {
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 1px solid var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.type-item:hover {
   border-color: var(--el-color-primary);
   background: var(--el-color-primary-light-9);
 }
 
-.type-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background: var(--el-color-primary-light-8);
+.type-item--selected {
+  border-color: var(--el-color-primary);
+  background: var(--el-color-primary-light-9);
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+}
+
+.type-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
-.type-icon i {
-  font-size: 18px;
-  color: var(--el-color-primary);
-}
-
-.type-info {
-  flex: 1;
+.type-icon {
+  font-size: 16px;
 }
 
 .type-name {
-  font-size: 14px;
   font-weight: 600;
   color: var(--el-text-color-primary);
-  margin-bottom: 4px;
 }
 
 .type-description {
   font-size: 12px;
-  color: var(--el-text-color-secondary);
-  margin-bottom: 4px;
+  color: var(--el-text-color-regular);
 }
 
-.type-example {
-  font-size: 11px;
-  color: var(--el-color-primary);
-  font-style: italic;
-}
-
-.type-features {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 8px;
-}
-
-/* 枚举管理样式 */
-.enum-manager {
-  padding: 16px 0;
-}
-
-.enum-toolbar {
-  margin-bottom: 16px;
-}
-
-.enum-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.enum-card {
-  border: 1px solid var(--el-border-color-lighter);
-  border-radius: 8px;
+.configuration-panel {
+  flex: 1;
   padding: 16px;
+  overflow-y: auto;
 }
 
-.enum-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 12px;
-}
-
-.enum-info h4 {
-  margin: 0 0 4px 0;
-  color: var(--el-text-color-primary);
-}
-
-.enum-info p {
-  margin: 0;
-  font-size: 13px;
-  color: var(--el-text-color-secondary);
-}
-
-.enum-values {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.enum-value-tag {
-  margin: 0;
-}
-
-/* 复杂类型样式 */
-.complex-types {
-  padding: 16px 0;
-}
-
-.complex-type-builder {
-  text-align: center;
-  padding: 20px;
-  background: var(--el-bg-color-page);
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.complex-type-builder h4 {
-  margin: 0 0 8px 0;
-  color: var(--el-text-color-primary);
-}
-
-.complex-type-builder p {
+.configuration-panel h4 {
   margin: 0 0 16px 0;
-  color: var(--el-text-color-secondary);
+  font-size: 16px;
+  font-weight: 600;
 }
 
-.complex-types-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-.complex-type-card {
-  border: 1px solid var(--el-border-color-lighter);
-  border-radius: 8px;
-  padding: 16px;
-}
-
-.complex-type-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.complex-type-header h4 {
-  margin: 0;
-  color: var(--el-text-color-primary);
-}
-
-.complex-type-properties {
+.enum-options {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 
-.property-item {
+.enum-option {
   display: flex;
-  justify-content: space-between;
-  padding: 4px 8px;
-  background: var(--el-bg-color-page);
-  border-radius: 4px;
-  font-size: 13px;
-}
-
-.property-name {
-  font-weight: 500;
-  color: var(--el-text-color-primary);
-}
-
-.property-type {
-  color: var(--el-color-primary);
-}
-
-/* 字段配置样式 */
-.field-type-config {
-  margin-top: 20px;
+  align-items: center;
+  gap: 8px;
 }
 
 .validation-rules {
@@ -1644,34 +1013,106 @@ const emit = defineEmits<{
   gap: 8px;
 }
 
-.rule-item {
+.validation-rule {
   display: flex;
-  gap: 8px;
   align-items: center;
+  gap: 8px;
 }
 
-.default-value-config {
+.preview-panel {
+  width: 350px;
+  border-left: 1px solid var(--el-border-color);
+  background: var(--el-bg-color-page);
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
-.default-value-input {
-  margin-top: 8px;
+.preview-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
 }
 
-/* 表单编辑器样式 */
-.enum-values-editor,
-.complex-properties-editor {
+.no-selection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--el-text-color-placeholder);
+  font-size: 14px;
+}
+
+.field-preview {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
 }
 
-.enum-value-row,
-.property-row {
+.control-preview {
+  padding: 16px;
+  border: 1px solid var(--el-border-color);
+  border-radius: 6px;
+  background: white;
+}
+
+.field-info,
+.validation-info {
+  padding: 16px;
+  border: 1px solid var(--el-border-color);
+  border-radius: 6px;
+  background: white;
+}
+
+.field-info h5,
+.validation-info h5 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--el-text-color-primary);
+}
+
+.info-item {
   display: flex;
-  gap: 8px;
+  justify-content: space-between;
   align-items: center;
+  padding: 4px 0;
+  font-size: 13px;
+}
+
+.info-item .label {
+  color: var(--el-text-color-regular);
+}
+
+.info-item .value {
+  font-weight: 500;
+  color: var(--el-text-color-primary);
+}
+
+.validation-rule-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 13px;
+}
+
+.rule-type {
+  color: var(--el-color-primary);
+  font-weight: 500;
+}
+
+.rule-value {
+  color: var(--el-text-color-regular);
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .field-types-panel {
+    width: 250px;
+  }
+  
+  .preview-panel {
+    width: 300px;
+  }
 }
 </style>
