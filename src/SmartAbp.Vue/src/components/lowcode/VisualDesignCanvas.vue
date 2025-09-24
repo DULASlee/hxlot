@@ -469,7 +469,6 @@ const emit = defineEmits<{
   'component-updated': [component: any]
   'component-deleted': [component: any]
   'preview-generated': [data: any]
->>>>>>> origin/main
 }>()
 
 defineEmits<{

@@ -594,6 +594,7 @@ namespace SmartAbp.CodeGenerator.Services
     public class EntityDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
+        public string? DisplayName { get; set; }
         public string Module { get; set; } = string.Empty;
         public string Aggregate { get; set; } = string.Empty;
         public string KeyType { get; set; } = "Guid";
@@ -665,6 +666,20 @@ namespace SmartAbp.CodeGenerator.Services
         public CodeMetadataDto Metadata { get; set; } = new();
         public TimeSpan GenerationTime { get; set; }
         public string? SessionId { get; set; }
+        
+        // Additional properties used by CodeGenerationAppService
+        public bool Success { get; set; } = true;
+        public string EntityName { get; set; } = string.Empty;
+        public List<GeneratedFileDto> GeneratedFiles { get; set; } = new();
+        public string GenerationReport { get; set; } = string.Empty;
+    }
+    
+    public class GeneratedFileDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Path { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty; // e.g., "Entity", "AppService", "Dto", etc.
     }
     
     public class CodeMetadataDto
@@ -1096,5 +1111,24 @@ namespace SmartAbp.CodeGenerator.Services
         public long MemoryUsage { get; set; }
         public double CacheHitRatio { get; set; }
         public DateTime? LastGenerationTime { get; set; }
+        
+        // Additional properties used by CodeGenerationAppService
+        public int TotalModulesGenerated { get; set; }
+        public int TotalEntitiesGenerated { get; set; }
+        public int TotalFilesGenerated { get; set; }
+        public int TotalLinesOfCodeGenerated { get; set; }
+        public DateTime? LastGenerationDate { get; set; }
+        public string GenerationEngineVersion { get; set; } = "1.0.0";
+        public int QualityScore { get; set; } = 95;
+        public CodeGenerationPerformanceDto Performance { get; set; } = new();
+    }
+    
+    public class CodeGenerationPerformanceDto
+    {
+        public double AverageGenerationTimeMs { get; set; }
+        public double AverageFilesPerSecond { get; set; }
+        public double AverageLinesPerSecond { get; set; }
+        public long PeakMemoryUsageMB { get; set; }
+        public long MemoryUsageMB { get; set; }
     }
 }

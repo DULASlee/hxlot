@@ -17,9 +17,6 @@ using Volo.Abp.Account.Web;
 using Volo.Abp.Identity.Web;
 using Volo.Abp.TenantManagement.Web;
 using SmartAbp.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Volo.Abp.AspNetCore.Authentication.JwtBearer;
-using Volo.Abp.AspNetCore.Mvc;
 
 namespace SmartAbp.Web;
 

@@ -1391,7 +1391,13 @@ import Generated from './__COMPONENT__.generated.vue'
                 {
                     Success = true,
                     EntityName = input.Name,
-                    GeneratedFiles = result.GeneratedFiles,
+                    GeneratedFiles = result.GeneratedFiles?.Select(f => new GeneratedFileDto 
+                    { 
+                        Name = Path.GetFileName(f), 
+                        Path = f, 
+                        Content = string.Empty, 
+                        Type = "Generated" 
+                    }).ToList() ?? new List<GeneratedFileDto>(),
                     GenerationReport = $"Entity '{input.Name}' generated successfully as part of module generation."
                 };
             }
@@ -1402,7 +1408,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 {
                     Success = false,
                     EntityName = input.Name,
-                    GeneratedFiles = new List<string>(),
+                    GeneratedFiles = new List<GeneratedFileDto>(),
                     GenerationReport = $"Failed to generate entity '{input.Name}': {ex.Message}"
                 };
             }
@@ -1479,7 +1485,7 @@ import Generated from './__COMPONENT__.generated.vue'
                     TotalModulesGenerated = await CountGeneratedModulesAsync(solutionRoot),
                     TotalEntitiesGenerated = await CountGeneratedEntitiesAsync(solutionRoot),
                     TotalFilesGenerated = await CountGeneratedFilesAsync(solutionRoot),
-                    TotalLinesOfCodeGenerated = await CountGeneratedLinesAsync(solutionRoot),
+                    TotalLinesOfCodeGenerated = (int)await CountGeneratedLinesAsync(solutionRoot),
                     LastGenerationDate = await GetLastGenerationDateAsync(solutionRoot),
                     GenerationEngineVersion = "1.0.0",
                     QualityScore = 95, // 企业级质量标准
