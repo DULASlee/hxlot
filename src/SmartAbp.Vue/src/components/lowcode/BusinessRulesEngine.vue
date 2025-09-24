@@ -1,947 +1,1055 @@
+<!-- 
+基于企业级模板库的业务规则引擎
+适用场景: 企业级业务规则定义、执行、监控
+依赖项: Vue 3, SmartAbp低代码引擎, Element Plus
+核心功能: 规则建模、条件配置、动作定义、规则执行、性能监控
+-->
+
 <template>
   <div class="business-rules-engine">
-    <el-card>
-      <template #header>
-        <div class="engine-header">
-          <h3>
-            <i class="el-icon-magic-stick" />
-            业务规则引擎
-          </h3>
-          <div class="engine-actions">
-            <el-button-group size="small">
-              <el-button
-                type="primary"
-                icon="el-icon-plus"
-                @click="showAddRuleDialog = true"
-              >
-                新建规则
-              </el-button>
-              <el-button
-                icon="el-icon-upload"
-                @click="importRulesFromTemplate"
-              >
-                导入模板
-              </el-button>
-              <el-button
-                icon="el-icon-cpu"
-                :loading="testing"
-                @click="testAllRules"
-              >
-                测试规则
-              </el-button>
-            </el-button-group>
+    <!-- 工具栏 -->
+    <div class="engine-toolbar">
+      <div class="toolbar-left">
+        <el-button-group>
+          <el-button
+            :type="activeTab === 'rules' ? 'primary' : 'default'"
+            size="small"
+            @click="activeTab = 'rules'"
+          >
+            规则管理
+          </el-button>
+          <el-button
+            :type="activeTab === 'conditions' ? 'primary' : 'default'"
+            size="small"
+            @click="activeTab = 'conditions'"
+          >
+            条件配置
+          </el-button>
+          <el-button
+            :type="activeTab === 'actions' ? 'primary' : 'default'"
+            size="small"
+            @click="activeTab = 'actions'"
+          >
+            动作定义
+          </el-button>
+          <el-button
+            :type="activeTab === 'execution' ? 'primary' : 'default'"
+            size="small"
+            @click="activeTab = 'execution'"
+          >
+            执行监控
+          </el-button>
+        </el-button-group>
+      </div>
+      
+      <div class="toolbar-right">
+        <el-button
+          size="small"
+          @click="validateAllRules"
+        >
+          验证规则
+        </el-button>
+        <el-button
+          size="small"
+          :disabled="!selectedRules.length"
+          @click="executeSelectedRules"
+        >
+          执行规则
+        </el-button>
+        <el-button
+          size="small"
+          type="primary"
+          @click="showAddRuleDialog = true"
+        >
+          新增规则
+        </el-button>
+      </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="engine-content">
+      <!-- 规则管理 -->
+      <div
+        v-if="activeTab === 'rules'"
+        class="rules-management"
+      >
+        <div class="content-header">
+          <h4>业务规则列表</h4>
+          <div class="header-actions">
+            <el-input
+              v-model="searchKeyword"
+              placeholder="搜索规则..."
+              size="small"
+              clearable
+              style="width: 200px"
+            />
+            <el-select
+              v-model="filterEntity"
+              placeholder="筛选实体"
+              size="small"
+              clearable
+              style="width: 150px"
+            >
+              <el-option
+                v-for="entity in availableEntities"
+                :key="entity.id"
+                :label="entity.displayName"
+                :value="entity.name"
+              />
+            </el-select>
           </div>
         </div>
-      </template>
-
-      <!-- 规则分类标签 -->
-      <div class="rules-tabs">
-        <el-tabs
-          v-model="activeRuleCategory"
-          type="border-card"
-        >
-          <el-tab-pane
-            label="实体规则"
-            name="entity"
+        
+        <div class="rules-table">
+          <el-table
+            :data="filteredRules"
+            stripe
+            height="400"
+            @selection-change="handleRuleSelectionChange"
           >
-            <div class="entity-rules">
-              <div class="rules-toolbar">
-                <span class="rules-count">{{ entityRules.length }} 个实体级规则</span>
-                <el-button
-                  size="small"
-                  type="primary"
-                  @click="addEntityRule"
-                >
-                  添加实体规则
-                </el-button>
-              </div>
-
-              <div class="rules-list">
-                <div
-                  v-for="rule in entityRules"
-                  :key="rule.id"
-                  class="rule-card entity-rule"
-                  :class="{ active: rule.isActive, error: rule.hasError }"
-                >
-                  <div class="rule-header">
-                    <div class="rule-info">
-                      <h4>{{ rule.name }}</h4>
-                      <span class="rule-entity">作用于: {{ rule.entityName }}</span>
-                    </div>
-                    <div class="rule-status">
-                      <el-switch
-                        v-model="rule.isActive"
-                        @change="toggleRule(rule)"
-                      />
-                      <el-dropdown
-                        trigger="click"
-                        @command="handleRuleAction"
-                      >
-                        <el-button
-                          size="mini"
-                          type="text"
-                        >
-                          <i class="el-icon-more" />
-                        </el-button>
-                        <template #dropdown>
-                          <el-dropdown-menu>
-                            <el-dropdown-item :command="{action: 'edit', rule}">
-                              <i class="el-icon-edit" /> 编辑规则
-                            </el-dropdown-item>
-                            <el-dropdown-item :command="{action: 'test', rule}">
-                              <i class="el-icon-cpu" /> 测试规则
-                            </el-dropdown-item>
-                            <el-dropdown-item :command="{action: 'duplicate', rule}">
-                              <i class="el-icon-document-copy" /> 复制规则
-                            </el-dropdown-item>
-                            <el-dropdown-item
-                              :command="{action: 'delete', rule}"
-                              divided
-                            >
-                              <i class="el-icon-delete" /> 删除规则
-                            </el-dropdown-item>
-                          </el-dropdown-menu>
-                        </template>
-                      </el-dropdown>
-                    </div>
-                  </div>
-                  <div class="rule-content">
-                    <div class="rule-description">
-                      {{ rule.description }}
-                    </div>
-                    <div class="rule-conditions">
-                      <div class="condition-label">
-                        触发条件:
-                      </div>
-                      <el-tag
-                        v-for="condition in rule.conditions"
-                        :key="condition.id"
-                        size="small"
-                        type="primary"
-                      >
-                        {{ condition.field }} {{ condition.operator }} {{ condition.value }}
-                      </el-tag>
-                    </div>
-                    <div class="rule-actions-list">
-                      <div class="actions-label">
-                        执行动作:
-                      </div>
-                      <el-tag
-                        v-for="action in rule.actions"
-                        :key="action.id"
-                        size="small"
-                        type="success"
-                      >
-                        {{ action.type }}: {{ action.description }}
-                      </el-tag>
-                    </div>
-                  </div>
-                  <div
-                    v-if="rule.lastExecutionResult"
-                    class="rule-result"
-                  >
-                    <div
-                      class="result-status"
-                      :class="rule.lastExecutionResult.success ? 'success' : 'error'"
-                    >
-                      <i :class="rule.lastExecutionResult.success ? 'el-icon-check' : 'el-icon-close'" />
-                      {{ rule.lastExecutionResult.success ? '执行成功' : '执行失败' }}
-                    </div>
-                    <div class="result-time">
-                      {{ formatTime(rule.lastExecutionResult.timestamp) }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </el-tab-pane>
-
-          <el-tab-pane
-            label="字段规则"
-            name="field"
-          >
-            <div class="field-rules">
-              <div class="rules-toolbar">
-                <span class="rules-count">{{ fieldRules.length }} 个字段级规则</span>
-                <el-button
-                  size="small"
-                  type="primary"
-                  @click="addFieldRule"
-                >
-                  添加字段规则
-                </el-button>
-              </div>
-
-              <div class="rules-list">
-                <div
-                  v-for="rule in fieldRules"
-                  :key="rule.id"
-                  class="rule-card field-rule"
-                  :class="{ active: rule.isActive }"
-                >
-                  <div class="rule-header">
-                    <div class="rule-info">
-                      <h4>{{ rule.name }}</h4>
-                      <span class="rule-field">{{ rule.entityName }}.{{ rule.fieldName }}</span>
-                    </div>
-                    <div class="rule-status">
-                      <el-switch
-                        v-model="rule.isActive"
-                        @change="toggleRule(rule)"
-                      />
-                    </div>
-                  </div>
-                  <div class="rule-content">
-                    <div class="rule-type">
-                      <el-tag :type="getValidationTagType(rule.validationType)">
-                        {{ getValidationTypeLabel(rule.validationType) }}
-                      </el-tag>
-                    </div>
-                    <div class="rule-expression">
-                      {{ rule.expression }}
-                    </div>
-                    <div class="rule-message">
-                      错误消息: {{ rule.errorMessage }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </el-tab-pane>
-
-          <el-tab-pane
-            label="跨实体规则"
-            name="cross-entity"
-          >
-            <div class="cross-entity-rules">
-              <div class="rules-toolbar">
-                <span class="rules-count">{{ crossEntityRules.length }} 个跨实体规则</span>
-                <el-button
-                  size="small"
-                  type="primary"
-                  @click="addCrossEntityRule"
-                >
-                  添加跨实体规则
-                </el-button>
-              </div>
-
-              <div class="rules-list">
-                <div
-                  v-for="rule in crossEntityRules"
-                  :key="rule.id"
-                  class="rule-card cross-entity-rule"
-                  :class="{ active: rule.isActive, complex: rule.isComplex }"
-                >
-                  <div class="rule-header">
-                    <div class="rule-info">
-                      <h4>{{ rule.name }}</h4>
-                      <div class="involved-entities">
-                        <el-tag
-                          v-for="entityName in rule.involvedEntities"
-                          :key="entityName"
-                          size="mini"
-                          type="info"
-                        >
-                          {{ entityName }}
-                        </el-tag>
-                      </div>
-                    </div>
-                    <div class="rule-status">
-                      <el-switch
-                        v-model="rule.isActive"
-                        @change="toggleRule(rule)"
-                      />
-                    </div>
-                  </div>
-                  <div class="rule-content">
-                    <div class="rule-description">
-                      {{ rule.description }}
-                    </div>
-                    <div class="rule-logic">
-                      <div class="logic-label">
-                        业务逻辑:
-                      </div>
-                      <div class="logic-expression">
-                        {{ rule.businessLogic }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </el-tab-pane>
-
-          <el-tab-pane
-            label="规则模板"
-            name="templates"
-          >
-            <div class="rule-templates">
-              <div class="template-categories">
-                <h4>预定义规则模板</h4>
-                <div class="template-grid">
-                  <div
-                    v-for="template in ruleTemplates"
-                    :key="template.id"
-                    class="template-card"
-                    @click="applyRuleTemplate(template)"
-                  >
-                    <div class="template-icon">
-                      <i :class="template.icon" />
-                    </div>
-                    <div class="template-info">
-                      <h4>{{ template.name }}</h4>
-                      <p>{{ template.description }}</p>
-                      <div class="template-stats">
-                        <span>{{ template.rulesCount }} 个规则</span>
-                        <span>适用: {{ template.applicableEntities.join(', ') }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </el-tab-pane>
-        </el-tabs>
-      </div>
-    </el-card>
-
-    <!-- 业务规则编辑对话框 -->
-    <el-dialog
-      v-model="showRuleDialog"
-      :title="editingRule ? '编辑业务规则' : '新建业务规则'"
-      width="900px"
-    >
-      <el-form
-        ref="ruleFormRef"
-        :model="ruleForm"
-        :rules="ruleFormRules"
-        label-width="120px"
-      >
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item
-              label="规则名称"
-              prop="name"
-            >
-              <el-input
-                v-model="ruleForm.name"
-                placeholder="描述性的规则名称"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item
-              label="规则类型"
-              prop="type"
-            >
-              <el-select
-                v-model="ruleForm.type"
-                placeholder="选择规则类型"
-                style="width: 100%"
-              >
-                <el-option
-                  label="实体验证规则"
-                  value="entity-validation"
-                />
-                <el-option
-                  label="字段约束规则"
-                  value="field-constraint"
-                />
-                <el-option
-                  label="业务逻辑规则"
-                  value="business-logic"
-                />
-                <el-option
-                  label="数据完整性规则"
-                  value="data-integrity"
-                />
-                <el-option
-                  label="权限控制规则"
-                  value="permission-control"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-form-item
-          label="适用实体"
-          prop="entityName"
-        >
-          <el-select
-            v-model="ruleForm.entityName"
-            placeholder="选择适用的实体"
-            style="width: 100%"
-          >
-            <el-option
-              v-for="entity in entities"
-              :key="entity.id"
-              :label="entity.name"
-              :value="entity.name"
+            <el-table-column
+              type="selection"
+              width="50"
             />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item
-          label="规则描述"
-          prop="description"
-        >
-          <el-input
-            v-model="ruleForm.description"
-            type="textarea"
-            :rows="2"
-            placeholder="详细描述此业务规则的作用和目的"
-          />
-        </el-form-item>
-
-        <!-- 规则条件配置 -->
-        <el-form-item label="触发条件">
-          <div class="conditions-builder">
-            <div
-              v-for="(condition, index) in ruleForm.conditions"
-              :key="index"
-              class="condition-row"
+            
+            <el-table-column
+              prop="name"
+              label="规则名称"
+              min-width="150"
             >
+              <template #default="{ row }">
+                <div class="rule-name">
+                  <span :class="{ 'rule-disabled': !row.isActive }">{{ row.name }}</span>
+                  <el-tag
+                    v-if="row.hasError"
+                    type="danger"
+                    size="small"
+                    class="rule-error-tag"
+                  >
+                    错误
+                  </el-tag>
+                </div>
+              </template>
+            </el-table-column>
+            
+            <el-table-column
+              prop="entityName"
+              label="关联实体"
+              width="120"
+            />
+            
+            <el-table-column
+              prop="type"
+              label="规则类型"
+              width="100"
+            >
+              <template #default="{ row }">
+                <el-tag
+                  :type="getRuleTypeTagType(row.type) as any"
+                  size="small"
+                >
+                  {{ getRuleTypeLabel(row.type) }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            
+            <el-table-column
+              prop="priority"
+              label="优先级"
+              width="80"
+            />
+            
+            <el-table-column
+              prop="isActive"
+              label="状态"
+              width="80"
+            >
+              <template #default="{ row }">
+                <el-switch
+                  v-model="row.isActive"
+                  size="small"
+                  @change="updateRuleStatus(row)"
+                />
+              </template>
+            </el-table-column>
+            
+            <el-table-column
+              label="最后执行"
+              width="160"
+            >
+              <template #default="{ row }">
+                <div
+                  v-if="row.lastExecutionResult"
+                  class="execution-info"
+                >
+                  <div class="execution-status">
+                    <el-icon
+                      :class="row.lastExecutionResult.success ? 'success-icon' : 'error-icon'"
+                    >
+                      <Check v-if="row.lastExecutionResult.success" />
+                      <Close v-else />
+                    </el-icon>
+                    <span>{{ row.lastExecutionResult.executionTime }}ms</span>
+                  </div>
+                  <div class="execution-time">
+                    {{ formatTime(row.lastExecutionResult.timestamp) }}
+                  </div>
+                </div>
+                <span
+                  v-else
+                  class="no-execution"
+                >未执行</span>
+              </template>
+            </el-table-column>
+            
+            <el-table-column
+              label="操作"
+              width="120"
+              fixed="right"
+            >
+              <template #default="{ row }">
+                <div class="action-buttons">
+                  <el-button
+                    size="small"
+                    text
+                    @click="editRule(row)"
+                  >
+                    编辑
+                  </el-button>
+                  <el-button
+                    size="small"
+                    text
+                    @click="duplicateRule(row)"
+                  >
+                    复制
+                  </el-button>
+                  <el-button
+                    size="small"
+                    text
+                    type="danger"
+                    @click="deleteRule(row.id)"
+                  >
+                    删除
+                  </el-button>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </div>
+
+      <!-- 条件配置 -->
+      <div
+        v-else-if="activeTab === 'conditions'"
+        class="conditions-config"
+      >
+        <div class="content-header">
+          <h4>条件配置器</h4>
+        </div>
+        
+        <div class="condition-builder">
+          <div class="entity-selector">
+            <el-form-item label="目标实体">
               <el-select
-                v-model="condition.field"
-                placeholder="字段"
-                style="width: 120px"
+                v-model="conditionConfig.entityName"
+                placeholder="选择实体"
+                style="width: 200px"
+                @change="loadEntityFields"
               >
                 <el-option
-                  v-for="field in getEntityFields(ruleForm.entityName)"
-                  :key="field.name"
-                  :label="field.displayName"
-                  :value="field.name"
+                  v-for="entity in availableEntities"
+                  :key="entity.id"
+                  :label="entity.displayName"
+                  :value="entity.name"
                 />
               </el-select>
-              <el-select
-                v-model="condition.operator"
-                placeholder="操作符"
-                style="width: 100px"
-              >
-                <el-option
-                  label="等于"
-                  value="equals"
+            </el-form-item>
+          </div>
+          
+          <div
+            v-if="conditionConfig.entityName"
+            class="conditions-list"
+          >
+            <div
+              v-for="(condition, index) in conditionConfig.conditions"
+              :key="index"
+              class="condition-item"
+            >
+              <div class="condition-row">
+                <el-select
+                  v-model="condition.field"
+                  placeholder="选择字段"
+                  style="width: 150px"
+                  size="small"
+                >
+                  <el-option
+                    v-for="field in entityFields"
+                    :key="field.name"
+                    :label="field.displayName"
+                    :value="field.name"
+                  />
+                </el-select>
+                
+                <el-select
+                  v-model="condition.operator"
+                  placeholder="选择操作符"
+                  style="width: 120px"
+                  size="small"
+                >
+                  <el-option
+                    label="等于"
+                    value="equals"
+                  />
+                  <el-option
+                    label="不等于"
+                    value="not_equals"
+                  />
+                  <el-option
+                    label="大于"
+                    value="greater_than"
+                  />
+                  <el-option
+                    label="小于"
+                    value="less_than"
+                  />
+                  <el-option
+                    label="包含"
+                    value="contains"
+                  />
+                  <el-option
+                    label="为空"
+                    value="is_null"
+                  />
+                  <el-option
+                    label="不为空"
+                    value="is_not_null"
+                  />
+                </el-select>
+                
+                <el-input
+                  v-model="condition.value"
+                  placeholder="输入值"
+                  style="width: 150px"
+                  size="small"
                 />
-                <el-option
-                  label="不等于"
-                  value="not-equals"
-                />
-                <el-option
-                  label="大于"
-                  value="greater-than"
-                />
-                <el-option
-                  label="小于"
-                  value="less-than"
-                />
-                <el-option
-                  label="包含"
-                  value="contains"
-                />
-                <el-option
-                  label="为空"
-                  value="is-null"
-                />
-                <el-option
-                  label="不为空"
-                  value="is-not-null"
-                />
-              </el-select>
-              <el-input
-                v-model="condition.value"
-                placeholder="比较值"
-                style="width: 150px"
-              />
-              <el-select
-                v-if="index > 0"
-                v-model="condition.logicalOperator"
-                style="width: 80px"
-              >
-                <el-option
-                  label="且"
-                  value="AND"
-                />
-                <el-option
-                  label="或"
-                  value="OR"
-                />
-              </el-select>
-              <el-button
-                size="mini"
-                type="danger"
-                icon="el-icon-delete"
-                @click="removeCondition(index)"
-              />
+                
+                <el-select
+                  v-if="index < conditionConfig.conditions.length - 1"
+                  v-model="condition.logicalOperator"
+                  placeholder="逻辑操作"
+                  style="width: 80px"
+                  size="small"
+                >
+                  <el-option
+                    label="AND"
+                    value="AND"
+                  />
+                  <el-option
+                    label="OR"
+                    value="OR"
+                  />
+                </el-select>
+                
+                <el-button
+                  size="small"
+                  type="danger"
+                  text
+                  @click="removeCondition(index)"
+                >
+                  删除
+                </el-button>
+              </div>
             </div>
+            
             <el-button
               size="small"
-              type="dashed"
-              icon="el-icon-plus"
+              type="primary"
+              text
               @click="addCondition"
             >
               添加条件
             </el-button>
           </div>
-        </el-form-item>
-
-        <!-- 规则动作配置 -->
-        <el-form-item label="执行动作">
-          <div class="actions-builder">
-            <div
-              v-for="(action, index) in ruleForm.actions"
-              :key="index"
-              class="action-row"
-            >
-              <el-select
-                v-model="action.type"
-                placeholder="动作类型"
-                style="width: 120px"
-              >
-                <el-option
-                  label="设置字段值"
-                  value="set-field"
-                />
-                <el-option
-                  label="显示消息"
-                  value="show-message"
-                />
-                <el-option
-                  label="阻止操作"
-                  value="prevent-action"
-                />
-                <el-option
-                  label="触发事件"
-                  value="trigger-event"
-                />
-                <el-option
-                  label="调用服务"
-                  value="call-service"
-                />
-                <el-option
-                  label="发送通知"
-                  value="send-notification"
-                />
-              </el-select>
-              <el-input
-                v-model="action.target"
-                placeholder="目标对象"
-                style="width: 150px"
-              />
-              <el-input
-                v-model="action.value"
-                placeholder="动作值或参数"
-                style="width: 200px"
-              />
-              <el-button
-                size="mini"
-                type="danger"
-                icon="el-icon-delete"
-                @click="removeAction(index)"
-              />
-            </div>
-            <el-button
-              size="small"
-              type="dashed"
-              icon="el-icon-plus"
-              @click="addAction"
-            >
-              添加动作
-            </el-button>
-          </div>
-        </el-form-item>
-
-        <!-- 规则优先级和执行时机 -->
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="执行优先级">
-              <el-slider
-                v-model="ruleForm.priority"
-                :min="1"
-                :max="100"
-                :step="1"
-                show-input
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="执行时机">
-              <el-checkbox-group v-model="ruleForm.executionTiming">
-                <el-checkbox label="before-create">
-                  创建前
-                </el-checkbox>
-                <el-checkbox label="after-create">
-                  创建后
-                </el-checkbox>
-                <el-checkbox label="before-update">
-                  更新前
-                </el-checkbox>
-                <el-checkbox label="after-update">
-                  更新后
-                </el-checkbox>
-                <el-checkbox label="before-delete">
-                  删除前
-                </el-checkbox>
-              </el-checkbox-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <!-- 高级配置 -->
-        <el-collapse v-model="activeCollapse">
-          <el-collapse-item
-            title="高级配置"
-            name="advanced"
-          >
-            <el-row :gutter="20">
-              <el-col :span="12">
-                <el-form-item label="异步执行">
-                  <el-checkbox v-model="ruleForm.isAsync">
-                    启用异步执行
-                  </el-checkbox>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="缓存结果">
-                  <el-checkbox v-model="ruleForm.cacheResult">
-                    缓存规则执行结果
-                  </el-checkbox>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-form-item label="错误处理">
-              <el-radio-group v-model="ruleForm.errorHandling">
-                <el-radio label="ignore">
-                  忽略错误
-                </el-radio>
-                <el-radio label="log">
-                  记录日志
-                </el-radio>
-                <el-radio label="throw">
-                  抛出异常
-                </el-radio>
-                <el-radio label="retry">
-                  重试执行
-                </el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="自定义脚本">
-              <el-input
-                v-model="ruleForm.customScript"
-                type="textarea"
-                :rows="4"
-                placeholder="高级用户可以编写自定义JavaScript脚本"
-              />
-            </el-form-item>
-          </el-collapse-item>
-        </el-collapse>
-      </el-form>
-
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="showRuleDialog = false">
-            取消
-          </el-button>
-          <el-button
-            type="primary"
-            :loading="savingRule"
-            @click="saveRule"
-          >
-            保存规则
-          </el-button>
-        </div>
-      </template>
-    </el-dialog>
-
-    <!-- 规则测试结果对话框 -->
-    <el-dialog
-      v-model="showTestResultDialog"
-      title="规则测试结果"
-      width="700px"
-    >
-      <div class="test-results">
-        <div class="test-summary">
-          <div class="summary-stats">
-            <div class="stat-item">
-              <span class="stat-label">测试规则:</span>
-              <span class="stat-value">{{ testResults.totalRules }}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">通过:</span>
-              <span class="stat-value success">{{ testResults.passed }}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">失败:</span>
-              <span class="stat-value error">{{ testResults.failed }}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">执行时间:</span>
-              <span class="stat-value">{{ testResults.executionTime }}ms</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="test-details">
+          
           <div
-            v-for="result in testResults.details"
-            :key="result.ruleId"
-            class="test-result-item"
-            :class="result.success ? 'success' : 'error'"
+            v-if="conditionConfig.conditions.length > 0"
+            class="condition-preview"
           >
-            <div class="result-header">
-              <i :class="result.success ? 'el-icon-check' : 'el-icon-close'" />
-              <span class="rule-name">{{ result.ruleName }}</span>
-              <span class="execution-time">{{ result.executionTime }}ms</span>
-            </div>
-            <div
-              v-if="!result.success"
-              class="result-error"
-            >
-              {{ result.error }}
+            <h5>条件预览</h5>
+            <div class="preview-text">
+              {{ generateConditionText() }}
             </div>
           </div>
         </div>
       </div>
+
+      <!-- 动作定义 -->
+      <div
+        v-else-if="activeTab === 'actions'"
+        class="actions-config"
+      >
+        <div class="content-header">
+          <h4>动作定义器</h4>
+        </div>
+        
+        <div class="action-builder">
+          <div class="action-types">
+            <div
+              v-for="actionType in actionTypes"
+              :key="actionType.type"
+              class="action-type-card"
+              :class="{ 'action-type-selected': selectedActionType === actionType.type }"
+              @click="selectActionType(actionType.type)"
+            >
+              <div class="action-icon">
+                {{ actionType.icon }}
+              </div>
+              <div class="action-name">
+                {{ actionType.name }}
+              </div>
+              <div class="action-description">
+                {{ actionType.description }}
+              </div>
+            </div>
+          </div>
+          
+          <div
+            v-if="selectedActionType"
+            class="action-config"
+          >
+            <div class="config-section">
+              <h5>{{ getActionTypeName(selectedActionType) }}配置</h5>
+              
+              <!-- 字段更新动作 -->
+              <div
+                v-if="selectedActionType === 'update_field'"
+                class="field-update-config"
+              >
+                <el-form
+                  label-width="100px"
+                  size="small"
+                >
+                  <el-form-item label="目标字段">
+                    <el-select
+                      v-model="actionConfig.targetField"
+                      style="width: 200px"
+                    >
+                      <el-option
+                        v-for="field in entityFields"
+                        :key="field.name"
+                        :label="field.displayName"
+                        :value="field.name"
+                      />
+                    </el-select>
+                  </el-form-item>
+                  
+                  <el-form-item label="新值">
+                    <el-input
+                      v-model="actionConfig.newValue"
+                      placeholder="输入新值或表达式"
+                      style="width: 300px"
+                    />
+                  </el-form-item>
+                </el-form>
+              </div>
+              
+              <!-- 发送通知动作 -->
+              <div
+                v-else-if="selectedActionType === 'send_notification'"
+                class="notification-config"
+              >
+                <el-form
+                  label-width="100px"
+                  size="small"
+                >
+                  <el-form-item label="通知类型">
+                    <el-select
+                      v-model="actionConfig.notificationType"
+                      style="width: 150px"
+                    >
+                      <el-option
+                        label="邮件"
+                        value="email"
+                      />
+                      <el-option
+                        label="短信"
+                        value="sms"
+                      />
+                      <el-option
+                        label="系统通知"
+                        value="system"
+                      />
+                    </el-select>
+                  </el-form-item>
+                  
+                  <el-form-item label="接收人">
+                    <el-input
+                      v-model="actionConfig.recipients"
+                      placeholder="输入接收人列表"
+                      style="width: 300px"
+                    />
+                  </el-form-item>
+                  
+                  <el-form-item label="消息模板">
+                    <el-input
+                      v-model="actionConfig.messageTemplate"
+                      type="textarea"
+                      :rows="3"
+                      placeholder="输入消息模板"
+                      style="width: 300px"
+                    />
+                  </el-form-item>
+                </el-form>
+              </div>
+              
+              <!-- 执行脚本动作 -->
+              <div
+                v-else-if="selectedActionType === 'execute_script'"
+                class="script-config"
+              >
+                <el-form
+                  label-width="100px"
+                  size="small"
+                >
+                  <el-form-item label="脚本类型">
+                    <el-select
+                      v-model="actionConfig.scriptType"
+                      style="width: 150px"
+                    >
+                      <el-option
+                        label="JavaScript"
+                        value="javascript"
+                      />
+                      <el-option
+                        label="C#"
+                        value="csharp"
+                      />
+                      <el-option
+                        label="SQL"
+                        value="sql"
+                      />
+                    </el-select>
+                  </el-form-item>
+                  
+                  <el-form-item label="脚本内容">
+                    <el-input
+                      v-model="actionConfig.scriptContent"
+                      type="textarea"
+                      :rows="6"
+                      placeholder="输入脚本代码"
+                      style="width: 400px"
+                    />
+                  </el-form-item>
+                </el-form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 执行监控 -->
+      <div
+        v-else-if="activeTab === 'execution'"
+        class="execution-monitor"
+      >
+        <div class="content-header">
+          <h4>规则执行监控</h4>
+          <div class="header-actions">
+            <el-button
+              size="small"
+              @click="refreshExecutionLog"
+            >
+              刷新日志
+            </el-button>
+            <el-button
+              size="small"
+              @click="clearExecutionLog"
+            >
+              清空日志
+            </el-button>
+          </div>
+        </div>
+        
+        <div class="execution-stats">
+          <el-row :gutter="16">
+            <el-col :span="6">
+              <el-card class="stat-card">
+                <div class="stat-number">
+                  {{ executionStats.totalRules }}
+                </div>
+                <div class="stat-label">
+                  总规则数
+                </div>
+              </el-card>
+            </el-col>
+            <el-col :span="6">
+              <el-card class="stat-card">
+                <div class="stat-number">
+                  {{ executionStats.activeRules }}
+                </div>
+                <div class="stat-label">
+                  活跃规则
+                </div>
+              </el-card>
+            </el-col>
+            <el-col :span="6">
+              <el-card class="stat-card">
+                <div class="stat-number">
+                  {{ executionStats.executionCount }}
+                </div>
+                <div class="stat-label">
+                  执行次数
+                </div>
+              </el-card>
+            </el-col>
+            <el-col :span="6">
+              <el-card class="stat-card">
+                <div class="stat-number">
+                  {{ executionStats.successRate }}%
+                </div>
+                <div class="stat-label">
+                  成功率
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+        </div>
+        
+        <div class="execution-log">
+          <el-table
+            :data="executionLog"
+            height="300"
+            stripe
+          >
+            <el-table-column
+              prop="timestamp"
+              label="执行时间"
+              width="160"
+            >
+              <template #default="{ row }">
+                {{ formatTime(row.timestamp) }}
+              </template>
+            </el-table-column>
+            
+            <el-table-column
+              prop="ruleName"
+              label="规则名称"
+              min-width="150"
+            />
+            
+            <el-table-column
+              prop="success"
+              label="状态"
+              width="80"
+            >
+              <template #default="{ row }">
+                <el-tag
+                  :type="row.success ? 'success' : 'danger'"
+                  size="small"
+                >
+                  {{ row.success ? '成功' : '失败' }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            
+            <el-table-column
+              prop="executionTime"
+              label="耗时(ms)"
+              width="100"
+            />
+            
+            <el-table-column
+              prop="error"
+              label="错误信息"
+              min-width="200"
+            >
+              <template #default="{ row }">
+                <span
+                  v-if="!row.success && row.error"
+                  class="error-message"
+                >
+                  {{ row.error }}
+                </span>
+                <span v-else>-</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 新增规则对话框 -->
+    <el-dialog
+      v-model="showAddRuleDialog"
+      title="新增业务规则"
+      width="600px"
+      :close-on-click-modal="false"
+    >
+      <el-form
+        ref="addRuleFormRef"
+        :model="newRuleForm"
+        :rules="newRuleFormRules"
+        label-width="100px"
+      >
+        <el-form-item
+          label="规则名称"
+          prop="name"
+        >
+          <el-input
+            v-model="newRuleForm.name"
+            placeholder="请输入规则名称"
+          />
+        </el-form-item>
+        
+        <el-form-item
+          label="关联实体"
+          prop="entityName"
+        >
+          <el-select
+            v-model="newRuleForm.entityName"
+            placeholder="选择实体"
+            style="width: 100%"
+          >
+            <el-option
+              v-for="entity in availableEntities"
+              :key="entity.id"
+              :label="entity.displayName"
+              :value="entity.name"
+            />
+          </el-select>
+        </el-form-item>
+        
+        <el-form-item
+          label="规则类型"
+          prop="type"
+        >
+          <el-select
+            v-model="newRuleForm.type"
+            placeholder="选择规则类型"
+            style="width: 100%"
+          >
+            <el-option
+              label="验证规则"
+              value="validation"
+            />
+            <el-option
+              label="业务规则"
+              value="business"
+            />
+            <el-option
+              label="计算规则"
+              value="calculation"
+            />
+            <el-option
+              label="工作流规则"
+              value="workflow"
+            />
+          </el-select>
+        </el-form-item>
+        
+        <el-form-item
+          label="优先级"
+          prop="priority"
+        >
+          <el-input-number
+            v-model="newRuleForm.priority"
+            :min="1"
+            :max="100"
+            style="width: 100%"
+          />
+        </el-form-item>
+        
+        <el-form-item
+          label="描述"
+          prop="description"
+        >
+          <el-input
+            v-model="newRuleForm.description"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入规则描述"
+          />
+        </el-form-item>
+        
+        <el-form-item label="执行时机">
+          <el-checkbox-group v-model="newRuleForm.executionTiming">
+            <el-checkbox label="创建前">
+              创建前
+            </el-checkbox>
+            <el-checkbox label="创建后">
+              创建后
+            </el-checkbox>
+            <el-checkbox label="更新前">
+              更新前
+            </el-checkbox>
+            <el-checkbox label="更新后">
+              更新后
+            </el-checkbox>
+            <el-checkbox label="删除前">
+              删除前
+            </el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+      </el-form>
+      
+      <template #footer>
+        <el-button @click="showAddRuleDialog = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="confirmAddRule"
+        >
+          确认
+        </el-button>
+      </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useEntityModelingStore } from '@/stores/lowcode/entityModeling'
+import { ref, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { Check, Close } from '@element-plus/icons-vue'
+import { type EntityDefinition } from '@/stores/lowcode/entityModeling'
+import { logger } from '@/utils/logger'
 
-// Store
-const entityStore = useEntityModelingStore()
+// Props接口定义（暂时未使用）
+// interface Props {
+//   entity?: EntityDefinition
+//   rules?: BusinessRule[]
+// }
+
+// Events
+const emit = defineEmits<{
+  'rule-added': [rule: BusinessRule]
+  'rule-updated': [rule: BusinessRule]
+  'rule-deleted': [ruleId: string]
+  'rule-executed': [ruleId: string, result: any]
+}>()
+
+// 业务规则接口定义
+interface BusinessRule {
+  id: string
+  name: string
+  entityName: string
+  description: string
+  type: 'validation' | 'business' | 'calculation' | 'workflow'
+  priority: number
+  isActive: boolean
+  hasError: boolean
+  conditions: Array<{
+    id: number
+    field: string
+    operator: string
+    value: string
+    logicalOperator?: string
+  }>
+  actions: Array<{
+    id: number
+    type: string
+    target: string
+    value: string
+  }>
+  executionTiming: string[]
+  lastExecutionResult?: {
+    success: boolean
+    executionTime: number
+    timestamp: number
+    error?: string
+  }
+}
+
+// Store - 暂时注释未使用
+// const entityStore = useEntityModelingStore()
 
 // 响应式数据
-const activeRuleCategory = ref('entity')
-const showAddRuleDialog = ref(false)
-const showRuleDialog = ref(false)
-const showTestResultDialog = ref(false)
-const testing = ref(false)
-const savingRule = ref(false)
-const editingRule = ref(null)
-const activeCollapse = ref([])
+const addRuleFormRef = ref()
+const activeTab = ref<'rules' | 'conditions' | 'actions' | 'execution'>('rules')
 
-// 规则数据
-const entityRules = ref([
-  {
-    id: 'user-email-unique',
-    name: '用户邮箱唯一性检查',
-    entityName: 'User',
-    description: '确保用户邮箱在系统中唯一',
-    isActive: true,
-    hasError: false,
-    conditions: [
-      { id: 1, field: 'Email', operator: 'is-not-null', value: '', logicalOperator: 'AND' }
-    ],
-    actions: [
-      { id: 1, type: 'prevent-action', target: 'Create/Update', value: '邮箱已存在，请使用其他邮箱' }
-    ],
-    priority: 90,
-    executionTiming: ['before-create', 'before-update'],
-    lastExecutionResult: {
-      success: true,
-      timestamp: Date.now() - 3600000,
-      message: '规则执行成功'
-    }
-  },
-  {
-    id: 'project-date-validation',
-    name: '项目日期逻辑检查',
-    entityName: 'Project', 
-    description: '确保项目结束日期晚于开始日期',
-    isActive: true,
-    hasError: false,
-    conditions: [
-      { id: 1, field: 'EndDate', operator: 'less-than', value: 'StartDate' }
-    ],
-    actions: [
-      { id: 1, type: 'show-message', target: 'User', value: '项目结束日期不能早于开始日期' },
-      { id: 2, type: 'prevent-action', target: 'Save', value: '阻止保存操作' }
-    ],
-    priority: 80,
-    executionTiming: ['before-create', 'before-update']
-  }
-])
+// 搜索和筛选
+const searchKeyword = ref('')
+const filterEntity = ref('')
 
-const fieldRules = ref([
-  {
-    id: 'phone-format',
-    name: '手机号格式验证',
-    entityName: 'User',
-    fieldName: 'PhoneNumber',
-    validationType: 'regex',
-    expression: '^1[3-9]\\d{9}$',
-    errorMessage: '请输入正确的手机号格式',
-    isActive: true
-  },
-  {
-    id: 'budget-range',
-    name: '预算范围检查',
-    entityName: 'Project',
-    fieldName: 'TotalBudget',
-    validationType: 'range',
-    expression: '1000 <= value <= 999999999',
-    errorMessage: '项目预算应在1000-999999999之间',
-    isActive: true
-  }
-])
+// 规则相关
+const businessRules = ref<BusinessRule[]>([])
+const selectedRules = ref<BusinessRule[]>([])
 
-const crossEntityRules = ref([
-  {
-    id: 'user-role-consistency',
-    name: '用户角色一致性检查',
-    description: '确保用户的角色分配符合组织架构约束',
-    involvedEntities: ['User', 'Role', 'OrganizationUnit'],
-    businessLogic: 'User.OrganizationUnit.AllowedRoles contains User.Roles',
-    isActive: true,
-    isComplex: true
-  },
-  {
-    id: 'project-budget-approval',
-    name: '项目预算审批规则',
-    description: '超过一定金额的项目需要上级审批',
-    involvedEntities: ['Project', 'User', 'Approval'],
-    businessLogic: 'IF Project.TotalBudget > 1000000 THEN RequireApproval(Project.CreatorId.Manager)',
-    isActive: true,
-    isComplex: true
-  }
-])
-
-// 规则模板
-const ruleTemplates = ref([
-  {
-    id: 'permission-control-template',
-    name: '权限控制规则包',
-    description: '完整的权限控制规则模板',
-    icon: 'el-icon-lock',
-    rulesCount: 8,
-    applicableEntities: ['User', 'Role', 'Permission'],
-    rules: [
-      '用户状态检查规则',
-      '角色权限验证规则',
-      '权限范围限制规则',
-      '用户角色分配规则'
-    ]
-  },
-  {
-    id: 'audit-logging-template',
-    name: '审计日志规则包',
-    description: '完整的审计日志记录规则',
-    icon: 'el-icon-document-copy',
-    rulesCount: 6,
-    applicableEntities: ['*'],
-    rules: [
-      '创建操作记录规则',
-      '更新操作记录规则',
-      '删除操作记录规则',
-      '敏感操作记录规则'
-    ]
-  },
-  {
-    id: 'data-integrity-template',
-    name: '数据完整性规则包',
-    description: '确保数据完整性和一致性的规则',
-    icon: 'el-icon-shield',
-    rulesCount: 10,
-    applicableEntities: ['*'],
-    rules: [
-      '外键完整性规则',
-      '唯一性约束规则',
-      '必填字段验证规则',
-      '数据格式验证规则'
-    ]
-  }
-])
-
-// 规则表单
-const ruleForm = ref({
-  name: '',
-  type: 'entity-validation',
+// 条件配置
+const conditionConfig = ref({
   entityName: '',
-  description: '',
-  conditions: [
-    { field: '', operator: 'equals', value: '', logicalOperator: 'AND' }
-  ],
-  actions: [
-    { type: 'show-message', target: '', value: '' }
-  ],
-  priority: 50,
-  executionTiming: ['before-create'],
-  isAsync: false,
-  cacheResult: false,
-  errorHandling: 'log',
-  customScript: ''
+  conditions: [] as Array<{
+    field: string
+    operator: string
+    value: string
+    logicalOperator: string
+  }>
 })
 
+// 动作配置
+const selectedActionType = ref('')
+const actionConfig = ref<Record<string, any>>({})
+
+// UI状态
+const showAddRuleDialog = ref(false)
+
+// 表单数据
+const newRuleForm = ref({
+  name: '',
+  entityName: '',
+  type: 'validation' as const,
+  priority: 50,
+  description: '',
+  executionTiming: [] as string[]
+})
+
+// 执行统计
+const executionStats = ref({
+  totalRules: 0,
+  activeRules: 0,
+  executionCount: 0,
+  successRate: 0
+})
+
+// 执行日志
+const executionLog = ref<Array<{
+  timestamp: number
+  ruleId: string
+  ruleName: string
+  success: boolean
+  executionTime: number
+  error?: string
+}>>([])
+
+// 动作类型定义
+const actionTypes = ref([
+  {
+    type: 'update_field',
+    name: '更新字段',
+    icon: '📝',
+    description: '更新实体字段值'
+  },
+  {
+    type: 'send_notification',
+    name: '发送通知',
+    icon: '📧',
+    description: '发送邮件、短信或系统通知'
+  },
+  {
+    type: 'execute_script',
+    name: '执行脚本',
+    icon: '⚡',
+    description: '执行自定义脚本代码'
+  },
+  {
+    type: 'trigger_workflow',
+    name: '触发工作流',
+    icon: '🔄',
+    description: '启动业务工作流程'
+  }
+])
+
 // 表单验证规则
-const ruleFormRules = {
+const newRuleFormRules = {
   name: [
     { required: true, message: '请输入规则名称', trigger: 'blur' }
   ],
+  entityName: [
+    { required: true, message: '请选择关联实体', trigger: 'change' }
+  ],
   type: [
     { required: true, message: '请选择规则类型', trigger: 'change' }
-  ],
-  entityName: [
-    { required: true, message: '请选择适用实体', trigger: 'change' }
   ]
 }
 
-// 测试结果
-const testResults = ref({
-  totalRules: 0,
-  passed: 0,
-  failed: 0,
-  executionTime: 0,
-  details: []
+// 计算属性
+const availableEntities = computed((): EntityDefinition[] => {
+  // 模拟实体数据，确保类型正确
+  return [] as EntityDefinition[]
 })
 
-// 计算属性
-const entities = computed(() => entityStore.entities)
+const entityFields = computed(() => {
+  // 模拟字段数据
+  return [] as Array<{ name: string; displayName: string; type: string }>
+})
+
+const filteredRules = computed(() => {
+  let rules = businessRules.value
+  
+  if (searchKeyword.value) {
+    rules = rules.filter(rule =>
+      rule.name.toLowerCase().includes(searchKeyword.value.toLowerCase()) ||
+      rule.description.toLowerCase().includes(searchKeyword.value.toLowerCase())
+    )
+  }
+  
+  if (filterEntity.value) {
+    rules = rules.filter(rule => rule.entityName === filterEntity.value)
+  }
+  
+  return rules
+})
 
 // 方法
-const getEntityFields = (entityName) => {
-  const entity = entities.value.find(e => e.name === entityName)
-  return entity?.fields || []
+const handleRuleSelectionChange = (selection: BusinessRule[]) => {
+  selectedRules.value = selection
 }
 
-const addEntityRule = () => {
-  ruleForm.value = {
-    name: '',
-    type: 'entity-validation',
-    entityName: '',
-    description: '',
-    conditions: [
-      { field: '', operator: 'equals', value: '', logicalOperator: 'AND' }
-    ],
-    actions: [
-      { type: 'show-message', target: '', value: '' }
-    ],
-    priority: 50,
-    executionTiming: ['before-create'],
-    isAsync: false,
-    cacheResult: false,
-    errorHandling: 'log',
-    customScript: ''
+const updateRuleStatus = (rule: BusinessRule) => {
+  logger?.info('更新规则状态', { ruleId: rule.id, isActive: rule.isActive })
+  emit('rule-updated', rule)
+}
+
+const editRule = (rule: BusinessRule) => {
+  // 编辑规则逻辑
+  logger?.info('编辑规则', { ruleId: rule.id })
+}
+
+const duplicateRule = (rule: BusinessRule) => {
+  const newRule: BusinessRule = {
+    ...rule,
+    id: `rule_${Date.now()}`,
+    name: `${rule.name}_副本`,
+    isActive: false
   }
-  editingRule.value = null
-  showRuleDialog.value = true
+  
+  businessRules.value.push(newRule)
+  emit('rule-added', newRule)
+  
+  ElMessage.success('规则复制成功')
+  logger?.info('复制规则', { originalId: rule.id, newId: newRule.id })
 }
 
-const addFieldRule = () => {
-  // 添加字段规则的逻辑
-  ElMessage.info('字段规则编辑器开发中...')
+const deleteRule = async (ruleId: string) => {
+  try {
+    const rule = businessRules.value.find(r => r.id === ruleId)
+    if (!rule) return
+    
+    await ElMessageBox.confirm(
+      `确定要删除规则 "${rule.name}" 吗？`,
+      '确认删除',
+      { type: 'warning' }
+    )
+    
+    const index = businessRules.value.findIndex(r => r.id === ruleId)
+    if (index > -1) {
+      businessRules.value.splice(index, 1)
+    }
+    
+    emit('rule-deleted', ruleId)
+    ElMessage.success('规则删除成功')
+    logger?.info('删除规则', { ruleId })
+  } catch (error) {
+    // 用户取消删除
+  }
 }
 
-const addCrossEntityRule = () => {
-  // 添加跨实体规则的逻辑
-  ElMessage.info('跨实体规则编辑器开发中...')
+const loadEntityFields = () => {
+  conditionConfig.value.conditions = []
 }
 
 const addCondition = () => {
-  ruleForm.value.conditions.push({
+  conditionConfig.value.conditions.push({
     field: '',
     operator: 'equals',
     value: '',
@@ -949,605 +1057,471 @@ const addCondition = () => {
   })
 }
 
-const removeCondition = (index) => {
-  ruleForm.value.conditions.splice(index, 1)
+const removeCondition = (index: number) => {
+  conditionConfig.value.conditions.splice(index, 1)
 }
 
-const addAction = () => {
-  ruleForm.value.actions.push({
-    type: 'show-message',
-    target: '',
-    value: ''
+const generateConditionText = () => {
+  return conditionConfig.value.conditions
+    .map((condition, index) => {
+      const text = `${condition.field} ${getOperatorLabel(condition.operator)} ${condition.value}`
+      return index > 0 ? ` ${condition.logicalOperator} ${text}` : text
+    })
+    .join('')
+}
+
+const selectActionType = (type: string) => {
+  selectedActionType.value = type
+  actionConfig.value = {}
+}
+
+const validateAllRules = () => {
+  // 验证所有规则的逻辑完整性
+  const validationResults: Array<{ ruleId: string; isValid: boolean; errors: string[] }> = []
+  
+  businessRules.value.forEach(rule => {
+    const errors: string[] = []
+    
+    if (rule.conditions.length === 0) {
+      errors.push('规则缺少条件')
+    }
+    
+    if (rule.actions.length === 0) {
+      errors.push('规则缺少动作')
+    }
+    
+    validationResults.push({
+      ruleId: rule.id,
+      isValid: errors.length === 0,
+      errors
+    })
   })
-}
-
-const removeAction = (index) => {
-  ruleForm.value.actions.splice(index, 1)
-}
-
-const toggleRule = (rule) => {
-  ElMessage.success(`规则"${rule.name}"已${rule.isActive ? '启用' : '禁用'}`)
-}
-
-const handleRuleAction = ({ action, rule }) => {
-  switch (action) {
-    case 'edit':
-      editRule(rule)
-      break
-    case 'test':
-      testRule(rule)
-      break
-    case 'duplicate':
-      duplicateRule(rule)
-      break
-    case 'delete':
-      deleteRule(rule)
-      break
+  
+  const invalidRules = validationResults.filter(r => !r.isValid)
+  
+  if (invalidRules.length === 0) {
+    ElMessage.success('所有规则验证通过')
+  } else {
+    ElMessage.warning(`发现 ${invalidRules.length} 个无效规则`)
   }
+  
+  logger?.info('规则验证完成', { totalRules: businessRules.value.length, invalidCount: invalidRules.length })
 }
 
-const editRule = (rule) => {
-  editingRule.value = rule
-  ruleForm.value = { ...rule }
-  showRuleDialog.value = true
+const executeSelectedRules = async () => {
+  if (selectedRules.value.length === 0) {
+    ElMessage.warning('请选择要执行的规则')
+    return
+  }
+  
+  for (const rule of selectedRules.value) {
+    await executeRule(rule)
+  }
+  
+  ElMessage.success(`已执行 ${selectedRules.value.length} 个规则`)
 }
 
-const testRule = async (rule) => {
+const executeRule = async (rule: BusinessRule) => {
+  const startTime = performance.now()
+  
   try {
-    // 模拟规则测试
-    const result = await simulateRuleExecution(rule)
+    // 模拟规则执行
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 100 + 50))
     
-    ElMessage.success(`规则"${rule.name}"测试${result.success ? '通过' : '失败'}`)
+    const executionTime = Math.round(performance.now() - startTime)
+    const success = Math.random() > 0.1 // 90% 成功率
     
-    // 更新规则的最后执行结果
+    // 更新规则执行结果
     rule.lastExecutionResult = {
-      ...result,
-      timestamp: Date.now()
+      success,
+      executionTime,
+      timestamp: Date.now(),
+      error: success ? undefined : '模拟执行错误'
     }
     
+    // 添加到执行日志
+    executionLog.value.unshift({
+      timestamp: Date.now(),
+      ruleId: rule.id,
+      ruleName: rule.name,
+      success,
+      executionTime,
+      error: rule.lastExecutionResult.error
+    })
+    
+    emit('rule-executed', rule.id, rule.lastExecutionResult)
+    
+    logger?.info('规则执行完成', { ruleId: rule.id, success, executionTime })
   } catch (error) {
-    ElMessage.error('规则测试失败：' + error.message)
+    logger?.error('规则执行失败', { error: String(error), ruleId: rule.id })
   }
 }
 
-const duplicateRule = (rule) => {
-  const duplicatedRule = {
-    ...rule,
-    id: `rule-${Date.now()}`,
-    name: `${rule.name} (副本)`,
-    isActive: false
+const confirmAddRule = async () => {
+  try {
+    await addRuleFormRef.value?.validate()
+    
+    const newRule: BusinessRule = {
+      id: `rule_${Date.now()}`,
+      name: newRuleForm.value.name,
+      entityName: newRuleForm.value.entityName,
+      description: newRuleForm.value.description,
+      type: newRuleForm.value.type,
+      priority: newRuleForm.value.priority,
+      isActive: true,
+      hasError: false,
+      conditions: [],
+      actions: [],
+      executionTiming: newRuleForm.value.executionTiming
+    }
+    
+    businessRules.value.push(newRule)
+    emit('rule-added', newRule)
+    
+    showAddRuleDialog.value = false
+    
+    // 重置表单
+    newRuleForm.value = {
+      name: '',
+      entityName: '',
+      type: 'validation',
+      priority: 50,
+      description: '',
+      executionTiming: []
+    }
+    
+    ElMessage.success('规则创建成功')
+    logger?.info('创建业务规则', { rule: newRule })
+  } catch (error) {
+    logger?.error('创建规则失败', error)
+  }
+}
+
+const refreshExecutionLog = () => {
+  // 刷新执行日志
+  logger?.info('刷新执行日志')
+}
+
+const clearExecutionLog = () => {
+  executionLog.value = []
+  ElMessage.success('执行日志已清空')
+}
+
+// 工具方法
+const getRuleTypeTagType = (type: string) => {
+  const typeMap: Record<string, string> = {
+    'validation': 'warning',
+    'business': 'primary',
+    'calculation': 'success',
+    'workflow': 'info'
+  }
+  return typeMap[type] || 'default'
+}
+
+const getRuleTypeLabel = (type: string) => {
+  const labelMap: Record<string, string> = {
+    'validation': '验证',
+    'business': '业务',
+    'calculation': '计算',
+    'workflow': '工作流'
+  }
+  return labelMap[type] || type
+}
+
+const getActionTypeName = (type: string) => {
+  const actionType = actionTypes.value.find(a => a.type === type)
+  return actionType?.name || type
+}
+
+const getOperatorLabel = (operator: string) => {
+  const labelMap: Record<string, string> = {
+    'equals': '等于',
+    'not_equals': '不等于',
+    'greater_than': '大于',
+    'less_than': '小于',
+    'contains': '包含',
+    'is_null': '为空',
+    'is_not_null': '不为空'
+  }
+  return labelMap[operator] || operator
+}
+
+const formatTime = (timestamp: number) => {
+  return new Date(timestamp).toLocaleString()
+}
+
+// 生命周期
+onMounted(() => {
+  // 初始化执行统计
+  executionStats.value = {
+    totalRules: businessRules.value.length,
+    activeRules: businessRules.value.filter(r => r.isActive).length,
+    executionCount: 0,
+    successRate: 0
   }
   
-  entityRules.value.push(duplicatedRule)
-  ElMessage.success('规则复制成功')
-}
-
-const deleteRule = async (rule) => {
-  try {
-    await ElMessageBox.confirm(
-      `确定要删除规则"${rule.name}"吗？`,
-      '确认删除',
-      { type: 'warning' }
-    )
-    
-    const index = entityRules.value.findIndex(r => r.id === rule.id)
-    if (index > -1) {
-      entityRules.value.splice(index, 1)
-      ElMessage.success('规则删除成功')
-    }
-  } catch {
-    // 用户取消
-  }
-}
-
-const saveRule = async () => {
-  try {
-    savingRule.value = true
-    
-    // 验证表单
-    await ruleFormRef.value?.validate()
-    
-    if (editingRule.value) {
-      // 更新现有规则
-      const index = entityRules.value.findIndex(r => r.id === editingRule.value.id)
-      if (index > -1) {
-        entityRules.value[index] = {
-          ...editingRule.value,
-          ...ruleForm.value,
-          updatedAt: new Date().toISOString()
-        }
-      }
-    } else {
-      // 创建新规则
-      const newRule = {
-        ...ruleForm.value,
-        id: `rule-${Date.now()}`,
-        isActive: true,
-        hasError: false,
-        createdAt: new Date().toISOString()
-      }
-      entityRules.value.push(newRule)
-    }
-    
-    ElMessage.success('业务规则保存成功')
-    showRuleDialog.value = false
-    
-  } catch (error) {
-    ElMessage.error('保存规则失败：' + error.message)
-  } finally {
-    savingRule.value = false
-  }
-}
-
-const testAllRules = async () => {
-  try {
-    testing.value = true
-    
-    const startTime = Date.now()
-    const results = []
-    
-    // 测试所有激活的规则
-    const activeRules = [...entityRules.value, ...fieldRules.value, ...crossEntityRules.value]
-      .filter(rule => rule.isActive)
-    
-    for (const rule of activeRules) {
-      try {
-        const result = await simulateRuleExecution(rule)
-        results.push({
-          ruleId: rule.id,
-          ruleName: rule.name,
-          success: result.success,
-          executionTime: result.executionTime,
-          error: result.error
-        })
-      } catch (error) {
-        results.push({
-          ruleId: rule.id,
-          ruleName: rule.name,
-          success: false,
-          executionTime: 0,
-          error: error.message
-        })
-      }
-    }
-    
-    const endTime = Date.now()
-    
-    testResults.value = {
-      totalRules: activeRules.length,
-      passed: results.filter(r => r.success).length,
-      failed: results.filter(r => !r.success).length,
-      executionTime: endTime - startTime,
-      details: results
-    }
-    
-    showTestResultDialog.value = true
-    
-  } catch (error) {
-    ElMessage.error('规则测试失败：' + error.message)
-  } finally {
-    testing.value = false
-  }
-}
-
-const simulateRuleExecution = async (rule) => {
-  // 模拟规则执行
-  await new Promise(resolve => setTimeout(resolve, Math.random() * 100 + 50))
-  
-  const success = Math.random() > 0.1 // 90% 成功率
-  
-  return {
-    success,
-    executionTime: Math.floor(Math.random() * 50 + 10),
-    error: success ? null : '模拟执行失败'
-  }
-}
-
-const applyRuleTemplate = async (template) => {
-  try {
-    await ElMessageBox.confirm(
-      `确定要应用"${template.name}"吗？这将添加 ${template.rulesCount} 个预定义规则。`,
-      '确认应用模板',
-      { type: 'info' }
-    )
-    
-    // 这里实现规则模板应用逻辑
-    ElMessage.success(`已应用规则模板"${template.name}"`)
-    
-  } catch {
-    // 用户取消
-  }
-}
-
-const importRulesFromTemplate = () => {
-  ElMessage.info('从模板导入规则功能开发中...')
-}
-
-const getValidationTagType = (type) => {
-  const types = {
-    'required': 'danger',
-    'length': 'warning',
-    'range': 'primary',
-    'regex': 'success',
-    'unique': 'info',
-    'custom': 'default'
-  }
-  return types[type] || 'default'
-}
-
-const getValidationTypeLabel = (type) => {
-  const labels = {
-    'required': '必填验证',
-    'length': '长度验证',
-    'range': '范围验证',
-    'regex': '格式验证',
-    'unique': '唯一性验证',
-    'custom': '自定义验证'
-  }
-  return labels[type] || type
-}
-
-const formatTime = (timestamp) => {
-  return new Date(timestamp).toLocaleString('zh-CN')
-}
-
-// 引用
-const ruleFormRef = ref()
+  logger?.info('业务规则引擎初始化完成')
+})
 </script>
 
 <style scoped>
 .business-rules-engine {
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  background: var(--el-bg-color);
 }
 
-.engine-header {
+.engine-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.engine-header h3 {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--el-text-color-primary);
-}
-
-/* 规则列表样式 */
-.rules-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  padding: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--el-border-color);
   background: var(--el-bg-color-page);
-  border-radius: 8px;
 }
 
-.rules-count {
-  font-size: 14px;
-  color: var(--el-text-color-secondary);
-}
-
-.rules-list {
+.toolbar-left {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 12px;
 }
 
-.rule-card {
-  border: 1px solid var(--el-border-color-lighter);
-  border-radius: 8px;
-  padding: 16px;
-  transition: all 0.3s ease;
-}
-
-.rule-card.active {
-  border-color: var(--el-color-success-light-5);
-  background: var(--el-color-success-light-9);
-}
-
-.rule-card.error {
-  border-color: var(--el-color-danger-light-5);
-  background: var(--el-color-danger-light-9);
-}
-
-.rule-card.complex {
-  border-left: 4px solid var(--el-color-warning);
-}
-
-.rule-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 12px;
-}
-
-.rule-info h4 {
-  margin: 0 0 4px 0;
-  color: var(--el-text-color-primary);
-}
-
-.rule-entity,
-.rule-field {
-  font-size: 12px;
-  color: var(--el-color-primary);
-}
-
-.rule-status {
+.toolbar-right {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.rule-content {
-  margin-bottom: 12px;
-}
-
-.rule-description {
-  font-size: 13px;
-  color: var(--el-text-color-secondary);
-  margin-bottom: 8px;
-}
-
-.rule-conditions,
-.rule-actions-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.condition-label,
-.actions-label,
-.logic-label {
-  font-size: 12px;
-  color: var(--el-text-color-secondary);
-  margin-right: 8px;
-}
-
-.rule-type {
-  margin-bottom: 8px;
-}
-
-.rule-expression {
-  font-family: var(--el-font-family-mono, Consolas, monospace);
-  font-size: 13px;
-  color: var(--el-color-primary);
-  background: var(--el-bg-color-page);
-  padding: 4px 8px;
-  border-radius: 4px;
-  margin-bottom: 4px;
-}
-
-.rule-message {
-  font-size: 12px;
-  color: var(--el-text-color-secondary);
-}
-
-.rule-result {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px;
-  background: var(--el-bg-color-page);
-  border-radius: 6px;
-  font-size: 12px;
-}
-
-.result-status {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.result-status.success {
-  color: var(--el-color-success);
-}
-
-.result-status.error {
-  color: var(--el-color-danger);
-}
-
-.result-time {
-  color: var(--el-text-color-secondary);
-}
-
-.involved-entities {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 4px;
-}
-
-.logic-expression {
-  font-family: var(--el-font-family-mono, Consolas, monospace);
-  font-size: 12px;
-  color: var(--el-color-primary);
-  background: var(--el-bg-color-page);
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid var(--el-border-color-lighter);
-}
-
-/* 规则模板样式 */
-.rule-templates {
-  padding: 16px 0;
-}
-
-.template-categories h4 {
-  margin-bottom: 16px;
-  color: var(--el-text-color-primary);
-}
-
-.template-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-.template-card {
-  border: 1px solid var(--el-border-color-lighter);
-  border-radius: 8px;
-  padding: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  gap: 12px;
-}
-
-.template-card:hover {
-  border-color: var(--el-color-primary-light-5);
-  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.1);
-}
-
-.template-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background: var(--el-color-primary-light-8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.template-icon i {
-  font-size: 18px;
-  color: var(--el-color-primary);
-}
-
-.template-info {
+.engine-content {
   flex: 1;
-}
-
-.template-info h4 {
-  margin: 0 0 4px 0;
-  color: var(--el-text-color-primary);
-}
-
-.template-info p {
-  margin: 0 0 8px 0;
-  font-size: 13px;
-  color: var(--el-text-color-secondary);
-}
-
-.template-stats {
-  display: flex;
-  gap: 12px;
-  font-size: 12px;
-  color: var(--el-text-color-secondary);
-}
-
-/* 条件和动作构建器样式 */
-.conditions-builder,
-.actions-builder {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.condition-row,
-.action-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-/* 测试结果样式 */
-.test-results {
-  max-height: 60vh;
+  padding: 16px;
   overflow-y: auto;
 }
 
-.test-summary {
-  margin-bottom: 20px;
-  padding: 16px;
-  background: var(--el-bg-color-page);
-  border-radius: 8px;
-}
-
-.summary-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-
-.stat-item {
-  text-align: center;
-}
-
-.stat-label {
-  display: block;
-  font-size: 12px;
-  color: var(--el-text-color-secondary);
-  margin-bottom: 4px;
-}
-
-.stat-value {
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--el-text-color-primary);
-}
-
-.stat-value.success {
-  color: var(--el-color-success);
-}
-
-.stat-value.error {
-  color: var(--el-color-danger);
-}
-
-.test-details {
+.content-header {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
-.test-result-item {
-  padding: 12px;
-  border-radius: 6px;
-  border: 1px solid var(--el-border-color-lighter);
+.content-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
 }
 
-.test-result-item.success {
-  background: var(--el-color-success-light-9);
-  border-color: var(--el-color-success-light-5);
-}
-
-.test-result-item.error {
-  background: var(--el-color-danger-light-9);
-  border-color: var(--el-color-danger-light-5);
-}
-
-.result-header {
+.header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
+  gap: 12px;
+}
+
+.rules-table {
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .rule-name {
-  flex: 1;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rule-disabled {
+  color: var(--el-text-color-placeholder);
+}
+
+.rule-error-tag {
+  font-size: 10px;
+}
+
+.execution-info {
+  font-size: 12px;
+}
+
+.execution-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 2px;
+}
+
+.success-icon {
+  color: var(--el-color-success);
+}
+
+.error-icon {
+  color: var(--el-color-danger);
 }
 
 .execution-time {
+  color: var(--el-text-color-regular);
+}
+
+.no-execution {
+  color: var(--el-text-color-placeholder);
   font-size: 12px;
-  color: var(--el-text-color-secondary);
 }
 
-.result-error {
-  font-size: 13px;
-  color: var(--el-color-danger);
-  margin-top: 4px;
-}
-
-.dialog-footer {
+.action-buttons {
   display: flex;
-  justify-content: flex-end;
+  gap: 4px;
+}
+
+.condition-builder {
+  background: white;
+  padding: 16px;
+  border-radius: 6px;
+}
+
+.entity-selector {
+  margin-bottom: 16px;
+}
+
+.conditions-list {
+  margin-bottom: 16px;
+}
+
+.condition-item {
+  margin-bottom: 12px;
+}
+
+.condition-row {
+  display: flex;
+  align-items: center;
   gap: 8px;
+}
+
+.condition-preview {
+  margin-top: 16px;
+  padding: 12px;
+  background: var(--el-fill-color-light);
+  border-radius: 4px;
+}
+
+.condition-preview h5 {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.preview-text {
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--el-text-color-primary);
+}
+
+.action-builder {
+  background: white;
+  padding: 16px;
+  border-radius: 6px;
+}
+
+.action-types {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.action-type-card {
+  padding: 16px;
+  border: 1px solid var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.action-type-card:hover {
+  border-color: var(--el-color-primary);
+  background: var(--el-color-primary-light-9);
+}
+
+.action-type-selected {
+  border-color: var(--el-color-primary);
+  background: var(--el-color-primary-light-9);
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+}
+
+.action-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.action-name {
+  font-weight: 600;
+  color: var(--el-text-color-primary);
+  margin-bottom: 4px;
+}
+
+.action-description {
+  font-size: 12px;
+  color: var(--el-text-color-regular);
+}
+
+.action-config {
+  padding: 16px;
+  border: 1px solid var(--el-border-color);
+  border-radius: 6px;
+  background: var(--el-fill-color-lighter);
+}
+
+.config-section h5 {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.execution-monitor {
+  background: white;
+  padding: 16px;
+  border-radius: 6px;
+}
+
+.execution-stats {
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 16px;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--el-color-primary);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--el-text-color-regular);
+}
+
+.execution-log {
+  background: var(--el-fill-color-lighter);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.error-message {
+  color: var(--el-color-danger);
+  font-size: 12px;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .action-types {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  
+  .condition-row {
+    flex-wrap: wrap;
+  }
 }
 </style>

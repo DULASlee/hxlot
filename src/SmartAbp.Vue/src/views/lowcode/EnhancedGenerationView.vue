@@ -17,24 +17,24 @@
       </div>
       <div class="header-actions">
         <el-button-group>
-          <el-button
-            type="primary"
+          <el-button 
+            type="primary" 
             icon="el-icon-magic-stick"
             :loading="generating"
             @click="generateAllCode"
           >
             一键生成全部代码
           </el-button>
-          <el-button
-            type="success"
-            icon="el-icon-view"
+          <el-button 
+            type="success" 
+            icon="el-icon-view" 
             @click="previewCode"
           >
             预览代码
           </el-button>
-          <el-button
-            type="warning"
-            icon="el-icon-download"
+          <el-button 
+            type="warning" 
+            icon="el-icon-download" 
             @click="downloadCode"
           >
             下载代码包
@@ -68,8 +68,8 @@
           >
             <div class="entity-selection">
               <div class="selection-header">
-                <el-checkbox
-                  v-model="selectAllEntities"
+                <el-checkbox 
+                  v-model="selectAllEntities" 
                   :indeterminate="isIndeterminate"
                   @change="handleSelectAll"
                 >
@@ -82,14 +82,14 @@
                   <i class="el-icon-refresh" /> 刷新
                 </el-button>
               </div>
-
+              
               <div class="entity-list">
                 <el-checkbox-group
                   v-model="selectedEntities"
                   @change="updateGeneration"
                 >
-                  <div
-                    v-for="entity in availableEntities"
+                  <div 
+                    v-for="entity in availableEntities" 
                     :key="entity.id"
                     class="entity-item"
                   >
@@ -107,8 +107,8 @@
                             <span>字段: {{ entity.fields.length }}</span>
                           </div>
                         </div>
-                        <el-tag
-                          :type="entity.category === 'core' ? 'primary' : 'info'"
+                        <el-tag 
+                          :type="entity.category === 'core' ? 'primary' : 'info'" 
                           size="small"
                         >
                           {{ getCategoryLabel(entity.category) }}
@@ -213,13 +213,13 @@
           <h3>代码预览和生成</h3>
           <div class="header-actions">
             <el-button-group size="small">
-              <el-button
+              <el-button 
                 :type="previewMode === 'tree' ? 'primary' : ''"
                 @click="previewMode = 'tree'"
               >
                 <i class="el-icon-menu" /> 文件树
               </el-button>
-              <el-button
+              <el-button 
                 :type="previewMode === 'code' ? 'primary' : ''"
                 @click="previewMode = 'code'"
               >
@@ -274,10 +274,10 @@
               v-model="activePreviewFile"
               type="card"
             >
-              <el-tab-pane
-                v-for="file in previewFiles"
+              <el-tab-pane 
+                v-for="file in previewFiles" 
                 :key="file.id"
-                :label="file.name"
+                :label="file.name" 
                 :name="file.id"
               >
                 <div class="code-content">
@@ -326,8 +326,8 @@
               {{ getStatusText() }}
             </el-tag>
           </div>
-          <el-progress
-            :percentage="generationPercentage"
+          <el-progress 
+            :percentage="generationPercentage" 
             :status="generationStatus"
             :stroke-width="8"
           />
@@ -481,11 +481,11 @@ namespace SmartAbp.PermissionSystem.Users
         public string Surname { get; set; }
         public string PhoneNumber { get; set; }
         public bool IsActive { get; set; }
-
+        
         protected User()
         {
         }
-
+        
         public User(Guid id, string userName, string email) : base(id)
         {
             UserName = userName;
@@ -520,11 +520,11 @@ namespace SmartAbp.PermissionSystem.Users
 const availableEntities = computed(() => entityStore.entities)
 const availablePages = computed(() => pageStore.pages)
 
-const isIndeterminate = computed(() =>
+const isIndeterminate = computed(() => 
   selectedEntities.value.length > 0 && selectedEntities.value.length < availableEntities.value.length
 )
 
-const selectedEntityObjects = computed(() =>
+const selectedEntityObjects = computed(() => 
   availableEntities.value.filter(e => selectedEntities.value.includes(e.id))
 )
 
@@ -571,7 +571,7 @@ const fileTreeData = computed(() => {
 const getCategoryLabel = (category: string) => {
   const labels: Record<string, string> = {
     core: "核心",
-    relation: "关联",
+    relation: "关联", 
     config: "配置",
     log: "日志"
   }
@@ -663,39 +663,39 @@ const generateAllCode = async () => {
     currentGenerationTask.value = "生成后端实体和服务..."
     generationPercentage.value = 10
     const backendCode = await generateBackendCode(generationConfig)
-
+    
     // 步骤2: 生成前端组件
     currentGenerationTask.value = "生成前端页面组件..."
     generationPercentage.value = 30
     const frontendCode = await generateFrontendCode(generationConfig)
-
+    
     // 步骤3: 生成路由配置
     currentGenerationTask.value = "生成路由和导航..."
     generationPercentage.value = 50
     const routesCode = await generateRoutesCode(generationConfig)
-
+    
     // 步骤4: 生成状态管理
     currentGenerationTask.value = "生成状态管理代码..."
     generationPercentage.value = 70
     const storeCode = await generateStoreCode(generationConfig)
-
+    
     // 步骤5: 生成测试代码
     if (generateTests.value) {
       currentGenerationTask.value = "生成测试代码..."
       generationPercentage.value = 85
       await generateTestCode(generationConfig)
     }
-
+    
     // 步骤6: 生成文档
     if (generateDocs.value) {
       currentGenerationTask.value = "生成API文档..."
       generationPercentage.value = 95
       await generateDocsCode(generationConfig)
     }
-
+    
     generationPercentage.value = 100
     generationStatus.value = "success"
-
+    
     // 构建生成结果
     const allGeneratedFiles = [
       ...backendCode.files,
@@ -703,7 +703,7 @@ const generateAllCode = async () => {
       ...routesCode.files,
       ...storeCode.files
     ]
-
+    
     generationResult.value = {
       success: true,
       fileCount: allGeneratedFiles.length,
@@ -712,7 +712,7 @@ const generateAllCode = async () => {
       totalSize: allGeneratedFiles.reduce((sum, file) => sum + file.size, 0),
       files: allGeneratedFiles
     }
-
+    
     // 更新预览文件
     previewFiles.value = allGeneratedFiles.map(file => ({
       id: file.path,
@@ -723,7 +723,7 @@ const generateAllCode = async () => {
       size: file.size,
       lineCount: file.lineCount
     }))
-
+    
     generating.value = false
     ElMessage.success(`🎉 代码生成完成！共生成 ${allGeneratedFiles.length} 个文件`)
 
@@ -777,9 +777,9 @@ const generateBackendCode = async (config: {
   generateDocs: boolean;
 }) => {
   await new Promise(resolve => setTimeout(resolve, 1000)) // 模拟网络请求
-
+  
   const files: any[] = []
-
+  
   for (const entity of config.entities) {
     // 生成实体类
     files.push({
@@ -790,7 +790,7 @@ const generateBackendCode = async (config: {
       size: 2.5,
       lineCount: 50
     })
-
+    
     // 生成DTO类
     files.push({
       name: `${entity.name}Dto.cs`,
@@ -800,7 +800,7 @@ const generateBackendCode = async (config: {
       size: 1.8,
       lineCount: 35
     })
-
+    
     // 生成应用服务
     files.push({
       name: `${entity.name}AppService.cs`,
@@ -810,7 +810,7 @@ const generateBackendCode = async (config: {
       size: 4.2,
       lineCount: 120
     })
-
+    
     // 生成控制器
     files.push({
       name: `${entity.name}Controller.cs`,
@@ -821,7 +821,7 @@ const generateBackendCode = async (config: {
       lineCount: 60
     })
   }
-
+  
   return { files }
 }
 
@@ -836,9 +836,9 @@ const generateFrontendCode = async (config: {
   generateDocs: boolean;
 }) => {
   await new Promise(resolve => setTimeout(resolve, 1200))
-
+  
   const files: any[] = []
-
+  
   for (const entity of config.entities) {
     // 根据布局类型生成不同的组件
     if (config.layoutType === 'mdi') {
@@ -869,7 +869,7 @@ const generateFrontendCode = async (config: {
         size: 3.8,
         lineCount: 140
       })
-
+      
       files.push({
         name: `${entity.name}Form.vue`,
         path: `src/views/${entity.module}/${entity.name}Form.vue`,
@@ -879,7 +879,7 @@ const generateFrontendCode = async (config: {
         lineCount: 120
       })
     }
-
+    
     // 生成TypeScript类型定义
     files.push({
       name: `${entity.name}.types.ts`,
@@ -890,19 +890,19 @@ const generateFrontendCode = async (config: {
       lineCount: 45
     })
   }
-
+  
   return { files }
 }
 
 const generateRoutesCode = async (config: any) => {
   await new Promise(resolve => setTimeout(resolve, 600))
-
+  
   const routesContent = generateModuleRoutes(config.entities, config.layoutType)
-
+  
   return {
     files: [{
       name: 'routes.ts',
-      path: `src/router/${config.entities[0]?.module || 'generated'}.routes.ts`,
+      path: `src/router/generated.routes.ts`,
       content: routesContent,
       type: 'typescript',
       size: 2.1,
@@ -913,28 +913,28 @@ const generateRoutesCode = async (config: any) => {
 
 const generateStoreCode = async (config: any) => {
   await new Promise(resolve => setTimeout(resolve, 800))
-
+  
   const files: any[] = []
-
+  
   for (const entity of config.entities) {
     files.push({
       name: `${entity.name.toLowerCase()}.store.ts`,
-      path: `src/stores/${entity.module}/${entity.name.toLowerCase()}.store.ts`,
+      path: `src/stores/generated/${entity.name.toLowerCase()}.store.ts`,
       content: generateEntityStore(entity),
       type: 'typescript',
       size: 2.8,
       lineCount: 95
     })
   }
-
+  
   return { files }
 }
 
 const generateTestCode = async (config: any) => {
   await new Promise(resolve => setTimeout(resolve, 400))
-
+  
   const files: any[] = []
-
+  
   for (const entity of config.entities) {
     files.push({
       name: `${entity.name}.spec.ts`,
@@ -945,13 +945,13 @@ const generateTestCode = async (config: any) => {
       lineCount: 40
     })
   }
-
+  
   return { files }
 }
 
 const generateDocsCode = async (config: any) => {
   await new Promise(resolve => setTimeout(resolve, 300))
-
+  
   return {
     files: [{
       name: 'api.md',
@@ -970,9 +970,9 @@ const generateEntityClass = (entity: EntityDefinition) => {
     const attrs: string[] = []
     if (field.isRequired) attrs.push('[Required]')
     if (field.length) attrs.push(`[StringLength(${field.length})]`)
-
+    
     const attrString = attrs.length > 0 ? `    ${attrs.join('\n    ')}\n` : ''
-
+    
     return `${attrString}    public ${field.type} ${field.name} { get; set; }`
   }).join('\n\n')
 
@@ -1033,28 +1033,28 @@ namespace SmartAbp.Application.Services
             : base(repository)
         {
         }
-
+        
         public override async Task<${entity.name}Dto> CreateAsync(${entity.name}Dto input)
         {
             // 🔥 真实的创建逻辑
             var entity = new ${entity.name}();
             ObjectMapper.Map(input, entity);
-
+            
             await Repository.InsertAsync(entity);
             await CurrentUnitOfWork.SaveChangesAsync();
-
+            
             return ObjectMapper.Map<${entity.name}Dto>(entity);
         }
-
+        
         public override async Task<${entity.name}Dto> UpdateAsync(Guid id, ${entity.name}Dto input)
         {
             // 🔥 真实的更新逻辑
             var entity = await Repository.GetAsync(id);
             ObjectMapper.Map(input, entity);
-
+            
             await Repository.UpdateAsync(entity);
             await CurrentUnitOfWork.SaveChangesAsync();
-
+            
             return ObjectMapper.Map<${entity.name}Dto>(entity);
         }
     }
@@ -1071,7 +1071,7 @@ const generateMDIManagementComponent = (entity: EntityDefinition) => {
       <el-button icon="el-icon-refresh" @click="refresh">刷新</el-button>
       <el-button icon="el-icon-download" @click="exportData">导出</el-button>
     </div>
-
+    
     <div class="mdi-content">
       <el-table
         :data="tableData"
@@ -1093,7 +1093,7 @@ ${entity.fields.map((field: EntityField) => `        <el-table-column
           </template>
         </el-table-column>
       </el-table>
-
+      
       <el-pagination
         v-model:current-page="pagination.current"
         v-model:page-size="pagination.pageSize"
@@ -1192,20 +1192,20 @@ const generateTabsViewComponent = (entity: EntityDefinition) => {
     >
       <!-- ${entity.displayName}列表标签 -->
       <template v-if="activeTab === 'list'">
-        <${entity.name}List
+        <${entity.name}List 
           @item-selected="handleItemSelected"
           @item-created="handleItemCreated"
         />
       </template>
-
+      
       <!-- ${entity.displayName}详情标签 -->
       <template v-if="activeTab === 'detail'">
-        <${entity.name}Detail
+        <${entity.name}Detail 
           :item-id="selectedItemId"
           @item-updated="handleItemUpdated"
         />
       </template>
-
+      
       <!-- 动态标签页 -->
       <template v-for="tab in dynamicTabs" :key="tab.id">
         <component
@@ -1305,7 +1305,7 @@ const generateListComponent = (entity: EntityDefinition) => {
         新增
       </el-button>
     </div>
-
+    
     <!-- 数据表格 -->
     <el-table
       :data="tableData"
@@ -1375,39 +1375,9 @@ console.log('${entity.displayName}表单组件')
 </${'script'}>`
 }
 
-const getInputType = (fieldType: string): string => {
-  const typeMap: Record<string, string> = {
-    'string': 'input',
-    'int': 'input-number',
-    'decimal': 'input-number',
-    'bool': 'switch',
-    'DateTime': 'date-picker',
-    'date': 'date-picker',
-    'enum': 'select',
-    'text': 'textarea',
-    'email': 'input',
-    'url': 'input',
-    'phone': 'input'
-  }
-  return typeMap[fieldType] || 'input'
-}
-
-const getDefaultValue = (fieldType: string): string => {
-  const defaultMap: Record<string, string> = {
-    'string': "''",
-    'int': '0',
-    'decimal': '0.0',
-    'bool': 'false',
-    'DateTime': 'new Date()',
-    'date': 'new Date()',
-    'enum': 'undefined',
-    'text': "''",
-    'email': "''",
-    'url': "''",
-    'phone': "''"
-  }
-  return defaultMap[fieldType] || "''"
-}
+// 代码生成辅助方法 - 暂时注释未使用
+// const getInputType = (fieldType: string) => { ... }
+// const getDefaultValue = (fieldType: string) => { ... }
 
 // 🔥 补充的代码生成方法
 const generateController = (entity: EntityDefinition) => {
@@ -1475,7 +1445,7 @@ ${interfaceFields}
 }
 
 export interface ${entity.name}CreateInput {
-${entity.fields.filter((f: EntityField) => f.name !== 'Id').map((field: EntityField) =>
+${entity.fields.filter((f: EntityField) => f.name !== 'Id').map((field: EntityField) => 
   `  ${field.name.toLowerCase()}: ${getTypeScriptType(field.type)}${field.isRequired ? '' : ' | null'}`
 ).join('\n')}
 }
@@ -1495,7 +1465,7 @@ export interface ${entity.name}QueryParams {
 
 const generateEntityStore = (entity: EntityDefinition) => {
   return `import { defineStore } from 'pinia'
-import type { ${entity.name}, ${entity.name}CreateInput, ${entity.name}UpdateInput, ${entity.name}QueryParams } from '@/types/${entity.module}/${entity.name}.types'
+import type { ${entity.name}, ${entity.name}CreateInput, ${entity.name}UpdateInput, ${entity.name}QueryParams } from '@/types/generated/${entity.name}.types'
 
 export const use${entity.name}Store = defineStore('${entity.name.toLowerCase()}', {
   state: () => ({
@@ -1525,7 +1495,7 @@ export const use${entity.name}Store = defineStore('${entity.name.toLowerCase()}'
           headers: { 'Content-Type': 'application/json' }
         })
         const data = await response.json()
-
+        
         this.items = data.items || []
         this.pagination.total = data.totalCount || 0
       } catch (error) {
@@ -1543,7 +1513,7 @@ export const use${entity.name}Store = defineStore('${entity.name.toLowerCase()}'
           body: JSON.stringify(input)
         })
         const item = await response.json()
-
+        
         this.items.unshift(item)
         return item
       } catch (error) {
@@ -1560,12 +1530,12 @@ export const use${entity.name}Store = defineStore('${entity.name.toLowerCase()}'
           body: JSON.stringify(input)
         })
         const item = await response.json()
-
+        
         const index = this.items.findIndex(i => i.id === id)
         if (index >= 0) {
           this.items[index] = item
         }
-
+        
         return item
       } catch (error) {
         console.error('更新${entity.displayName}失败:', error)
@@ -1578,12 +1548,12 @@ export const use${entity.name}Store = defineStore('${entity.name.toLowerCase()}'
         await fetch(\`/api/${entity.name.toLowerCase()}/\${id}\`, {
           method: 'DELETE'
         })
-
+        
         const index = this.items.findIndex(i => i.id === id)
         if (index >= 0) {
           this.items.splice(index, 1)
         }
-
+        
         return true
       } catch (error) {
         console.error('删除${entity.displayName}失败:', error)
@@ -1600,7 +1570,7 @@ const generateModuleRoutes = (entities: EntityDefinition[], layoutType: string) 
       return `  {
     path: '/${entity.name.toLowerCase()}-mdi',
     name: '${entity.name}MDI',
-    component: () => import('@/views/${entity.module}/${entity.name}Management.vue'),
+    component: () => import('@/views/generated/${entity.name}Management.vue'),
     meta: {
       title: '${entity.displayName}管理 (MDI)',
       icon: 'el-icon-monitor',
@@ -1611,7 +1581,7 @@ const generateModuleRoutes = (entities: EntityDefinition[], layoutType: string) 
       return `  {
     path: '/${entity.name.toLowerCase()}-tabs',
     name: '${entity.name}Tabs',
-    component: () => import('@/views/${entity.module}/${entity.name}TabsView.vue'),
+    component: () => import('@/views/generated/${entity.name}TabsView.vue'),
     meta: {
       title: '${entity.displayName}管理 (标签页)',
       icon: 'el-icon-files',
@@ -1622,7 +1592,7 @@ const generateModuleRoutes = (entities: EntityDefinition[], layoutType: string) 
       return `  {
     path: '/${entity.name.toLowerCase()}',
     name: '${entity.name}Management',
-    component: () => import('@/views/${entity.module}/${entity.name}List.vue'),
+    component: () => import('@/views/generated/${entity.name}List.vue'),
     meta: {
       title: '${entity.displayName}管理',
       icon: 'el-icon-menu',
@@ -1635,14 +1605,14 @@ const generateModuleRoutes = (entities: EntityDefinition[], layoutType: string) 
   return `import type { RouteRecordRaw } from 'vue-router'
 
 // ${layoutType.toUpperCase()}布局的${entities.map(e => e.displayName).join('、')}模块路由
-export const ${entities[0]?.module || 'generated'}Routes: RouteRecordRaw[] = [
+export const generatedRoutes: RouteRecordRaw[] = [
 ${routes}
 ]`
 }
 
 const generateUnitTests = (entity: EntityDefinition) => {
   return `import { describe, it, expect, beforeEach } from 'vitest'
-import { use${entity.name}Store } from '@/stores/${entity.module}/${entity.name.toLowerCase()}.store'
+import { use${entity.name}Store } from '@/stores/generated/${entity.name.toLowerCase()}.store'
 import { createPinia, setActivePinia } from 'pinia'
 
 describe('${entity.name}Store', () => {
@@ -1658,7 +1628,7 @@ describe('${entity.name}Store', () => {
 
   it('should fetch ${entity.displayName} list', async () => {
     const store = use${entity.name}Store()
-
+    
     // Mock fetch response
     global.fetch = vi.fn().mockResolvedValue({
       json: () => Promise.resolve({
@@ -1668,7 +1638,7 @@ describe('${entity.name}Store', () => {
     })
 
     await store.fetchList()
-
+    
     expect(store.items).toHaveLength(1)
     expect(store.pagination.total).toBe(1)
   })
@@ -1676,13 +1646,13 @@ describe('${entity.name}Store', () => {
   it('should create ${entity.displayName}', async () => {
     const store = use${entity.name}Store()
     const input = { ${entity.fields.filter((f: any) => f.isRequired && f.name !== 'Id').map((f: any) => `${f.name.toLowerCase()}: 'test'`).join(', ')} }
-
+    
     global.fetch = vi.fn().mockResolvedValue({
       json: () => Promise.resolve({ id: '1', ...input })
     })
 
     const result = await store.create(input)
-
+    
     expect(result).toBeDefined()
     expect(store.items).toContain(result)
   })
@@ -1696,7 +1666,7 @@ const generateApiDocumentation = (entities: EntityDefinition[]) => {
 ### 获取${entity.displayName}列表
 - **URL**: \`GET /api/${entity.name.toLowerCase()}\`
 - **描述**: 获取${entity.displayName}的分页列表
-- **参数**:
+- **参数**: 
   - \`page\`: 页码
   - \`pageSize\`: 页面大小
   - \`search\`: 搜索关键词
@@ -1708,7 +1678,7 @@ const generateApiDocumentation = (entities: EntityDefinition[]) => {
 ### 创建${entity.displayName}
 - **URL**: \`POST /api/${entity.name.toLowerCase()}\`
 - **描述**: 创建新的${entity.displayName}
-- **请求体**:
+- **请求体**: 
 \`\`\`json
 {
 ${entity.fields.filter((f: any) => f.name !== 'Id').map((field: any) => `  "${field.name.toLowerCase()}": "${getExampleValue(field.type)}"`).join(',\n')}
@@ -1773,11 +1743,11 @@ const getExampleValue = (fieldType: string) => {
 onMounted(() => {
   entityStore.loadFromLocalStorage()
   pageStore.loadFromLocalStorage()
-
+  
   if (availableEntities.value.length > 0) {
     selectedEntities.value = [availableEntities.value[0].id]
   }
-
+  
   if (previewFiles.value.length > 0) {
     activePreviewFile.value = previewFiles.value[0].id
   }
@@ -1786,7 +1756,7 @@ onMounted(() => {
 // 智能代码生成引擎事件处理方法
 const handleGenerationCompleted = (result: any) => {
   ElMessage.success('🎉 智能代码生成完成！')
-
+  
   // 更新生成结果到现有状态
   generationResult.value = {
     ...generationResult.value,
@@ -1794,7 +1764,7 @@ const handleGenerationCompleted = (result: any) => {
     generatedAt: new Date().toISOString(),
     intelligence: true
   }
-
+  
   console.log('Intelligent generation completed:', result)
 }
 
@@ -1806,7 +1776,7 @@ const handleTemplateSelected = (template: any) => {
 const handlePreviewUpdated = (preview: any) => {
   // 将智能生成的预览集成到现有预览系统
   if (preview && preview.files) {
-    preview.files.forEach((file: any) => {
+    preview.files.forEach(file => {
       const existingIndex = previewFiles.value.findIndex(f => f.path === file.path)
       if (existingIndex > -1) {
         // 更新现有文件
@@ -1825,7 +1795,7 @@ const handlePreviewUpdated = (preview: any) => {
       }
     })
   }
-
+  
   console.log('Preview updated:', preview)
 }
 </script>
