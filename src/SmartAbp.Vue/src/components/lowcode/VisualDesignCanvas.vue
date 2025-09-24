@@ -129,11 +129,7 @@
             :style="getComponentStyle(component)"
             @click="selectComponent(component)"
             @mouseenter="() => { hoverComponent = component }"
-<<<<<<< HEAD
-            @mouseleave="hoverComponent = null"
-=======
             @mouseleave="() => { hoverComponent = null }"
->>>>>>> origin/main
           >
             <!-- 组件内容 -->
             <component

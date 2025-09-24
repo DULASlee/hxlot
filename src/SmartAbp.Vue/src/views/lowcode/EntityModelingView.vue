@@ -569,7 +569,7 @@
           v-if="designMode === 'assistant'"
           class="intelligent-assistant"
         >
-          <IntelligentModelingAssistant />
+          <EnterpriseModelingAssistant />
         </div>
       </div>
 
@@ -1141,7 +1141,7 @@ import AdvancedEntityRelationshipDesigner from "@/components/lowcode/AdvancedEnt
 import AdvancedFieldTypeDesigner from "@/components/lowcode/AdvancedFieldTypeDesigner.vue"
 import BusinessRulesEngine from "@/components/lowcode/BusinessRulesEngine.vue"
 import DataDictionaryManager from "@/components/lowcode/DataDictionaryManager.vue"
-import IntelligentModelingAssistant from "@/components/lowcode/IntelligentModelingAssistant.vue"
+import EnterpriseModelingAssistant from "@/components/lowcode/EnterpriseModelingAssistant.vue"
 
 // Store
 const store = useEntityModelingStore()

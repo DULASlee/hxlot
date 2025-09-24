@@ -332,7 +332,7 @@
                 label="质量"
                 name="quality"
               >
-                <IntelligentQualityAssurance />
+                <EnterpriseQualityAssurance />
               </el-tab-pane>
             </el-tabs>
           </div>
@@ -461,7 +461,7 @@ import { ElMessage } from "element-plus"
 import ThemeEditor from "@/components/lowcode/ThemeEditor.vue"
 import SandboxPreview from "@/components/lowcode/SandboxPreview.vue"
 import ProjectWizard from "@/components/lowcode/ProjectWizard.vue"
-import IntelligentQualityAssurance from "@/components/lowcode/IntelligentQualityAssurance.vue"
+import EnterpriseQualityAssurance from "@/components/lowcode/EnterpriseQualityAssurance.vue"
 import { useSmartWorkflow } from "@/composables/useSmartWorkflow"
 
 // 响应式数据
