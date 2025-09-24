@@ -45,7 +45,7 @@ const handleDrop = (event) => {
 
   try {
     const dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
-    
+
     if (dragData.sourceType === 'palette') {
       // 从组件面板拖拽的组件
       addComponentToCanvas(dragData.component, {
@@ -94,12 +94,12 @@ const addComponentToCanvas = (componentTemplate, position) => {
 
   components.value.push(newComponent)
   selectedComponent.value = newComponent
-  
+
   // 保存到历史记录
   saveToHistory()
-  
+
   ElMessage.success(`组件"${componentTemplate.name}"添加成功`)
-  
+
   // 触发组件添加事件
   emit('component-added', newComponent)
 }
@@ -139,7 +139,7 @@ const moveComponent = (index, direction) => {
     const temp = components.value[index]
     components.value[index] = components.value[newIndex]
     components.value[newIndex] = temp
-    
+
     saveToHistory()
   }
 }
@@ -154,11 +154,11 @@ const duplicateComponent = (component) => {
       top: `${parseInt(component.style.top) + 20}px`
     }
   }
-  
+
   components.value.push(duplicated)
   selectedComponent.value = duplicated
   saveToHistory()
-  
+
   ElMessage.success('组件复制成功')
 }
 
@@ -166,11 +166,11 @@ const deleteComponent = (component) => {
   const index = components.value.findIndex(c => c.id === component.id)
   if (index > -1) {
     components.value.splice(index, 1)
-    
+
     if (selectedComponent.value?.id === component.id) {
       selectedComponent.value = null
     }
-    
+
     saveToHistory()
     ElMessage.success('组件删除成功')
   }
@@ -188,7 +188,7 @@ const getComponentRenderer = (component) => {
   // 根据组件类型返回对应的渲染器
   const rendererMap = {
     'el-button': 'button',
-    'el-input': 'input', 
+    'el-input': 'input',
     'el-select': 'select',
     'el-table': 'table',
     'el-card': 'card',
@@ -196,13 +196,13 @@ const getComponentRenderer = (component) => {
     'el-text': 'span',
     'el-divider': 'hr'
   }
-  
+
   return rendererMap[component.type] || 'div'
 }
 
 const startResize = (component, direction, event) => {
   event.stopPropagation()
-  
+
   const startX = event.clientX
   const startY = event.clientY
   const startWidth = parseInt(component.style.width)
@@ -236,7 +236,7 @@ const startResize = (component, direction, event) => {
         component.style.top = Math.min(startTop + deltaY, startTop + startHeight - 30) + 'px'
         break
     }
-    
+
     // 显示对齐辅助线
     showAlignmentGuides(component)
   }
@@ -244,10 +244,10 @@ const startResize = (component, direction, event) => {
   const handleMouseUp = () => {
     document.removeEventListener('mousemove', handleMouseMove)
     document.removeEventListener('mouseup', handleMouseUp)
-    
+
     // 隐藏辅助线
     guideLines.value = []
-    
+
     // 保存到历史记录
     saveToHistory()
   }
@@ -258,7 +258,7 @@ const startResize = (component, direction, event) => {
 
 const showAlignmentGuides = (movingComponent) => {
   guideLines.value = []
-  
+
   const movingRect = {
     left: parseInt(movingComponent.style.left),
     top: parseInt(movingComponent.style.top),
@@ -311,11 +311,11 @@ const addGuideLine = (type, position) => {
   const guideLine = {
     id: `guide-${type}-${position}`,
     type,
-    style: type === 'vertical' 
+    style: type === 'vertical'
       ? { left: `${position}px`, top: '0', height: '100%' }
       : { top: `${position}px`, left: '0', width: '100%' }
   }
-  
+
   if (!guideLines.value.some(g => g.id === guideLine.id)) {
     guideLines.value.push(guideLine)
   }
@@ -440,20 +440,20 @@ const generateVueTemplate = () => {
   }
 
   let template = '<template>\n  <div class="page-container">\n'
-  
+
   components.value.forEach(component => {
     template += `    <${component.type}`
-    
+
     // 添加属性
     Object.entries(component.props).forEach(([key, value]) => {
       if (value !== null && value !== undefined && value !== '') {
         template += ` ${key}="${value}"`
       }
     })
-    
+
     template += `>\n      ${component.name}\n    </${component.type}>\n`
   })
-  
+
   template += '  </div>\n</template>'
   return template
 }

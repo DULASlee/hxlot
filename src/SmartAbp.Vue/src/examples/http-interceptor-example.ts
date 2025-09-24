@@ -1,6 +1,31 @@
 import axios from "axios"
-// authService removed; example no longer valid
-export {}
+// HTTP Interceptor Example - Updated to use Pinia Auth Store
+import { useAuthStore } from "@/stores"
+
+export function setupHttpInterceptors() {
+  const authStore = useAuthStore()
+
+  const getAuthHeader = () => {
+    return authStore.token ? `Bearer ${authStore.token}` : ""
+  }
+
+  // Example response interceptor for auth errors
+  const handleAuthError = async (error: any) => {
+    if (error.response?.status === 401) {
+      const ok = await authStore.refreshToken()
+      if (ok) {
+        const header = getAuthHeader()
+        return header
+      } else {
+        authStore.logout()
+        return null
+      }
+    }
+    throw error
+  }
+
+  return { getAuthHeader, handleAuthError }
+}
 
 export const http = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "https://localhost:44379",

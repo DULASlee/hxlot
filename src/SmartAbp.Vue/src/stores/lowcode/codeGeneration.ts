@@ -72,6 +72,8 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
   const templates = ref<CodeTemplate[]>([])
   const currentProgress = ref<GenerationProgress | null>(null)
   const error = ref<string | null>(null)
+  const generatedFiles = ref<Array<{ path: string; content: string; type: string; size: number }>>([])
+  const lastGenerationStatus = ref<'pending' | 'success' | 'error'>('pending')
 
   // 代码生成主方法
   const generateCode = async (
@@ -150,6 +152,10 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
         generationHistory.value = generationHistory.value.slice(0, 10)
       }
 
+      // 更新状态
+      generatedFiles.value = [...result.files]
+      lastGenerationStatus.value = 'success'
+
       logger.info("代码生成完成", {
         fileCount: result.fileCount,
         duration: result.duration
@@ -159,6 +165,10 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
     } catch (_err) {
       const error = _err as Error
       logger.error("代码生成失败", { error: error.message })
+
+      // 更新错误状态
+      generatedFiles.value = []
+      lastGenerationStatus.value = 'error'
 
       const result: GenerationResult = {
         success: false,
@@ -1151,6 +1161,8 @@ namespace ${config.config.namespace}.DbMigrator
     templates,
     currentProgress,
     error,
+    generatedFiles,
+    lastGenerationStatus,
 
     // 方法
     generateCode,

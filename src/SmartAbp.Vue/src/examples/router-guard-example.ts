@@ -1,5 +1,21 @@
 import router from "@/router"
-export {}
+// Router Guard Example - Updated to use Pinia Auth Store
+import { useAuthStore } from "@/stores"
+
+export async function authGuard(requiredRoles: string[] = []) {
+  const authStore = useAuthStore()
+
+  const valid = authStore.isAuthenticated
+  if (!valid) {
+    return false
+  }
+
+  if (requiredRoles.length > 0 && !requiredRoles.some((_r) => authStore.isAuthenticated)) {
+    return false
+  }
+
+  return true
+}
 
 // Minimal guard example for reference
 router.beforeEach(async (to, _from, next) => {

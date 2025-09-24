@@ -29,6 +29,7 @@ export interface EntityDefinition {
   tableName: string
   displayName: string
   description: string
+  module: string
   category: "core" | "relation" | "config" | "log"
   fields: EntityField[]
   validationRules: ValidationRule[]
@@ -127,10 +128,10 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         ...entity,
         id: entity.id || `entity-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       }
-      
+
       entities.value.push(newEntity)
       logger.info(`实体已添加: ${newEntity.name}`, { entityId: newEntity.id })
-      
+
       // 检查实体完成状态
       checkEntityCompletion(newEntity.id)
     } catch (err) {
@@ -149,7 +150,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
 
       entities.value[index] = { ...entities.value[index], ...updates }
       logger.info(`实体已更新: ${entityId}`, { updates })
-      
+
       // 重新检查完成状态
       checkEntityCompletion(entityId)
     } catch (err) {
@@ -168,12 +169,12 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
 
       const entity = entities.value[index]
       entities.value.splice(index, 1)
-      
+
       // 移除相关关系
-      relations.value = relations.value.filter(r => 
+      relations.value = relations.value.filter(r =>
         r.fromEntity !== entity.name && r.toEntity !== entity.name
       )
-      
+
       logger.info(`实体已删除: ${entity.name}`, { entityId })
     } catch (err) {
       const error = err as Error
@@ -197,7 +198,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
 
       entity.fields.push(field)
       logger.info(`字段已添加: ${field.name}`, { entityId, fieldName: field.name })
-      
+
       // 重新检查完成状态
       checkEntityCompletion(entityId)
     } catch (err) {
@@ -220,7 +221,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
 
       entity.fields[fieldIndex] = { ...entity.fields[fieldIndex], ...updates }
       logger.info(`字段已更新: ${entity.fields[fieldIndex].name}`, { entityId, fieldIndex })
-      
+
       // 重新检查完成状态
       checkEntityCompletion(entityId)
     } catch (err) {
@@ -244,7 +245,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
       const fieldName = entity.fields[fieldIndex].name
       entity.fields.splice(fieldIndex, 1)
       logger.info(`字段已删除: ${fieldName}`, { entityId, fieldIndex })
-      
+
       // 重新检查完成状态
       checkEntityCompletion(entityId)
     } catch (err) {
@@ -315,9 +316,9 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
   const addRelation = (relation: EntityRelation) => {
     try {
       // 检查关系是否已存在
-      const exists = relations.value.some(r => 
-        r.fromEntity === relation.fromEntity && 
-        r.toEntity === relation.toEntity && 
+      const exists = relations.value.some(r =>
+        r.fromEntity === relation.fromEntity &&
+        r.toEntity === relation.toEntity &&
         r.type === relation.type
       )
 
@@ -326,9 +327,9 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
       }
 
       relations.value.push(relation)
-      logger.info(`关系已添加: ${relation.fromEntity} -> ${relation.toEntity}`, { 
+      logger.info(`关系已添加: ${relation.fromEntity} -> ${relation.toEntity}`, {
         relationId: relation.id,
-        type: relation.type 
+        type: relation.type
       })
     } catch (err) {
       const error = err as Error
@@ -361,8 +362,8 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
 
       const relation = relations.value[relationIndex]
       relations.value.splice(relationIndex, 1)
-      logger.info(`关系已删除: ${relation.fromEntity} -> ${relation.toEntity}`, { 
-        relationId: relation.id 
+      logger.info(`关系已删除: ${relation.fromEntity} -> ${relation.toEntity}`, {
+        relationId: relation.id
       })
     } catch (err) {
       const error = err as Error
@@ -386,7 +387,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         const hasBasicInfo = Boolean(entity.name && entity.tableName)
 
         const isCompleted = hasPrimaryKey && hasMinFields && hasBasicInfo
-      
+
       if (entity.isCompleted !== isCompleted) {
         entity.isCompleted = isCompleted
         logger.info(`实体完成状态更新: ${entity.name} = ${isCompleted}`, { entityId })
@@ -420,9 +421,9 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         const parsed = JSON.parse(data)
         entities.value = parsed.entities || []
         relations.value = parsed.relations || []
-        logger.info("实体建模数据已从本地存储加载", { 
+        logger.info("实体建模数据已从本地存储加载", {
           entitiesCount: entities.value.length,
-          relationsCount: relations.value.length 
+          relationsCount: relations.value.length
         })
       }
     } catch (err) {
@@ -443,6 +444,16 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
     } catch (err) {
       const error = err as Error
       logger.error("清除数据失败", { error: error.message })
+    }
+  }
+
+  const clearAllEntities = () => {
+    try {
+      entities.value.splice(0, entities.value.length)
+      logger.info("所有实体已清除")
+    } catch (err) {
+      const error = err as Error
+      logger.error("清除实体失败", { error: error.message })
     }
   }
 
@@ -482,13 +493,13 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
 
       entities.value = schema.entities
       relations.value = schema.relations || []
-      
+
       // 重新检查所有实体的完成状态
       entities.value.forEach(entity => checkEntityCompletion(entity.id))
-      
-      logger.info("架构导入成功", { 
+
+      logger.info("架构导入成功", {
         entitiesCount: entities.value.length,
-        relationsCount: relations.value.length 
+        relationsCount: relations.value.length
       })
     } catch (err) {
       const error = err as Error
@@ -507,7 +518,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         // 检查基本信息
         if (!entity.name) errors.push(`实体缺少名称: ${entity.id}`)
         if (!entity.tableName) errors.push(`实体缺少表名: ${entity.name}`)
-        
+
         // 检查主键
         const primaryKeys = entity.fields.filter(f => f.isPrimaryKey)
         if (primaryKeys.length === 0) {
@@ -515,7 +526,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         } else if (primaryKeys.length > 1) {
           errors.push(`实体有多个主键: ${entity.name}`)
         }
-        
+
         // 检查字段名重复
         const fieldNames = entity.fields.map(f => f.name)
         const duplicates = fieldNames.filter((name, index) => fieldNames.indexOf(name) !== index)
@@ -528,7 +539,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
       relations.value.forEach(relation => {
         const fromExists = entities.value.some(e => e.name === relation.fromEntity)
         const toExists = entities.value.some(e => e.name === relation.toEntity)
-        
+
         if (!fromExists) errors.push(`关系引用不存在的源实体: ${relation.fromEntity}`)
         if (!toExists) errors.push(`关系引用不存在的目标实体: ${relation.toEntity}`)
       })
@@ -584,32 +595,33 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
     relations,
     isLoading,
     error,
-    
+
     // 实体操作
     addEntity,
     updateEntity,
     removeEntity,
-    
+
     // 字段操作
     addField,
     updateField,
     removeField,
-    
+
     // 验证规则操作
     addValidationRule,
     updateValidationRule,
     removeValidationRule,
-    
+
     // 关系操作
     addRelation,
     updateRelation,
     removeRelation,
-    
+
     // 工具方法
     checkEntityCompletion,
     saveToLocalStorage,
     loadFromLocalStorage,
     clearAllData,
+    clearAllEntities,
     exportSchema,
     importSchema,
     validateSchema,

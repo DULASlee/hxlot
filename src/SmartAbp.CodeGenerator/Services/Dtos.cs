@@ -555,7 +555,7 @@ namespace SmartAbp.CodeGenerator.Services
     }
 
     #region Page Schema DTOs for Frontend Renderer
-    
+
     public class PageSchemaDto
     {
         public string PageType { get; set; } = default!;
@@ -608,7 +608,7 @@ namespace SmartAbp.CodeGenerator.Services
         public List<CollectionDefinitionDto> Collections { get; set; } = new();
         public List<DomainMethodDefinitionDto> DomainMethods { get; set; } = new();
     }
-    
+
     public class PropertyDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -621,7 +621,7 @@ namespace SmartAbp.CodeGenerator.Services
         public string? DefaultValue { get; set; }
         public string? Description { get; set; }
     }
-    
+
     public class NavigationPropertyDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -631,7 +631,7 @@ namespace SmartAbp.CodeGenerator.Services
         public string? ForeignKey { get; set; }
         public string? InverseProperty { get; set; }
     }
-    
+
     public class CollectionDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -639,7 +639,7 @@ namespace SmartAbp.CodeGenerator.Services
         public bool IsReadOnly { get; set; } = true;
         public string? Description { get; set; }
     }
-    
+
     public class DomainMethodDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -649,7 +649,7 @@ namespace SmartAbp.CodeGenerator.Services
         public List<ParameterDefinitionDto> Parameters { get; set; } = new();
         public string? MethodBody { get; set; }
     }
-    
+
     public class ParameterDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -657,7 +657,7 @@ namespace SmartAbp.CodeGenerator.Services
         public bool IsOptional { get; set; }
         public string? DefaultValue { get; set; }
     }
-    
+
     public class GeneratedCodeDto
     {
         public string Name { get; set; } = string.Empty;
@@ -666,14 +666,14 @@ namespace SmartAbp.CodeGenerator.Services
         public CodeMetadataDto Metadata { get; set; } = new();
         public TimeSpan GenerationTime { get; set; }
         public string? SessionId { get; set; }
-        
+
         // Additional properties used by CodeGenerationAppService
         public bool Success { get; set; } = true;
         public string EntityName { get; set; } = string.Empty;
         public List<GeneratedFileDto> GeneratedFiles { get; set; } = new();
         public string GenerationReport { get; set; } = string.Empty;
     }
-    
+
     public class GeneratedFileDto
     {
         public string Name { get; set; } = string.Empty;
@@ -681,7 +681,7 @@ namespace SmartAbp.CodeGenerator.Services
         public string Content { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty; // e.g., "Entity", "AppService", "Dto", etc.
     }
-    
+
     public class CodeMetadataDto
     {
         public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
@@ -689,7 +689,7 @@ namespace SmartAbp.CodeGenerator.Services
         public int LinesOfCode { get; set; }
         public Dictionary<string, object> AdditionalProperties { get; set; } = new();
     }
-    
+
     // DDD Generation DTOs
     public class DddDefinitionDto
     {
@@ -702,7 +702,7 @@ namespace SmartAbp.CodeGenerator.Services
         public List<SpecificationDefinitionDto> Specifications { get; set; } = new();
         public List<DomainServiceDefinitionDto> DomainServices { get; set; } = new();
     }
-    
+
     public class AggregateDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -711,21 +711,21 @@ namespace SmartAbp.CodeGenerator.Services
         public List<BusinessRuleDefinitionDto> BusinessRules { get; set; } = new();
         public List<DomainEventDefinitionDto> Events { get; set; } = new();
     }
-    
+
     public class ValueObjectDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public List<PropertyDefinitionDto> Properties { get; set; } = new();
     }
-    
+
     public class DomainEventDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public List<PropertyDefinitionDto> Properties { get; set; } = new();
     }
-    
+
     public class SpecificationDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -733,14 +733,14 @@ namespace SmartAbp.CodeGenerator.Services
         public string TargetEntity { get; set; } = string.Empty;
         public string Condition { get; set; } = string.Empty;
     }
-    
+
     public class DomainServiceDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public List<DomainMethodDefinitionDto> Methods { get; set; } = new();
     }
-    
+
     public class BusinessRuleDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -749,7 +749,7 @@ namespace SmartAbp.CodeGenerator.Services
         public string ErrorMessage { get; set; } = string.Empty;
         public List<string> Parameters { get; set; } = new();
     }
-    
+
     public class GeneratedDddSolutionDto
     {
         public string ModuleName { get; set; } = string.Empty;
@@ -760,7 +760,7 @@ namespace SmartAbp.CodeGenerator.Services
         public DateTime GeneratedAt { get; set; }
         public string SessionId { get; set; } = string.Empty;
     }
-    
+
     // CQRS Generation DTOs
     public class CqrsDefinitionDto
     {
@@ -770,7 +770,7 @@ namespace SmartAbp.CodeGenerator.Services
         public List<QueryDefinitionDto> Queries { get; set; } = new();
         public List<EventDefinitionDto> Events { get; set; } = new();
     }
-    
+
     public class CommandDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -780,7 +780,7 @@ namespace SmartAbp.CodeGenerator.Services
         public bool RequiresTransaction { get; set; } = true;
         public bool RequiresAuthorization { get; set; } = true;
     }
-    
+
     public class QueryDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -790,7 +790,7 @@ namespace SmartAbp.CodeGenerator.Services
         public bool IsPaged { get; set; } = false;
         public bool IsCacheable { get; set; } = true;
     }
-    
+
     public class EventDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -798,7 +798,7 @@ namespace SmartAbp.CodeGenerator.Services
         public List<PropertyDefinitionDto> Properties { get; set; } = new();
         public bool IsIntegrationEvent { get; set; } = false;
     }
-    
+
     public class GeneratedCqrsSolutionDto
     {
         public string ModuleName { get; set; } = string.Empty;
@@ -809,7 +809,7 @@ namespace SmartAbp.CodeGenerator.Services
         public DateTime GeneratedAt { get; set; }
         public string SessionId { get; set; } = string.Empty;
     }
-    
+
     // Application Services DTOs
     public class ApplicationServiceDefinitionDto
     {
@@ -825,7 +825,7 @@ namespace SmartAbp.CodeGenerator.Services
         public bool UseCaching { get; set; } = true;
         public bool UseAuditLogging { get; set; } = true;
     }
-    
+
     public class GeneratedApplicationLayerDto
     {
         public string ServiceName { get; set; } = string.Empty;
@@ -835,7 +835,7 @@ namespace SmartAbp.CodeGenerator.Services
         public int AuthHandlerCount { get; set; }
         public DateTime GeneratedAt { get; set; }
     }
-    
+
     // Infrastructure DTOs
     public class InfrastructureDefinitionDto
     {
@@ -844,21 +844,21 @@ namespace SmartAbp.CodeGenerator.Services
         public List<EntityDefinitionDto> Entities { get; set; } = new();
         public List<RepositoryDefinitionDto> Repositories { get; set; } = new();
     }
-    
+
     public class RepositoryDefinitionDto
     {
         public string EntityName { get; set; } = string.Empty;
         public string DbContextName { get; set; } = string.Empty;
         public List<RepositoryMethodDefinitionDto> CustomMethods { get; set; } = new();
     }
-    
+
     public class RepositoryMethodDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string ReturnType { get; set; } = string.Empty;
         public List<ParameterDefinitionDto> Parameters { get; set; } = new();
     }
-    
+
     public class GeneratedInfrastructureLayerDto
     {
         public string ModuleName { get; set; } = string.Empty;
@@ -867,7 +867,7 @@ namespace SmartAbp.CodeGenerator.Services
         public int RepositoryCount { get; set; }
         public DateTime GeneratedAt { get; set; }
     }
-    
+
     // Aspire DTOs
     public class AspireSolutionDefinitionDto
     {
@@ -883,7 +883,7 @@ namespace SmartAbp.CodeGenerator.Services
         public bool UseElasticsearch { get; set; } = true;
         public bool UseSeq { get; set; } = true;
     }
-    
+
     public class MicroserviceDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -896,7 +896,7 @@ namespace SmartAbp.CodeGenerator.Services
         public bool UseHealthChecks { get; set; } = true;
         public bool UseOpenTelemetry { get; set; } = true;
     }
-    
+
     public class GeneratedAspireSolutionDto
     {
         public string SolutionName { get; set; } = string.Empty;
@@ -904,7 +904,7 @@ namespace SmartAbp.CodeGenerator.Services
         public int MicroserviceCount { get; set; }
         public DateTime GeneratedAt { get; set; }
     }
-    
+
     // Caching DTOs
     public class CachingDefinitionDto
     {
@@ -912,14 +912,14 @@ namespace SmartAbp.CodeGenerator.Services
         public string Namespace { get; set; } = string.Empty;
         public List<CacheStrategyDefinitionDto> CacheStrategies { get; set; } = new();
     }
-    
+
     public class CacheStrategyDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string Type { get; set; } = "Redis";
         public TimeSpan DefaultExpiry { get; set; } = TimeSpan.FromMinutes(30);
     }
-    
+
     public class GeneratedCachingSolutionDto
     {
         public string ModuleName { get; set; } = string.Empty;
@@ -927,7 +927,7 @@ namespace SmartAbp.CodeGenerator.Services
         public int CacheStrategyCount { get; set; }
         public DateTime GeneratedAt { get; set; }
     }
-    
+
     // Messaging DTOs
     public class MessagingDefinitionDto
     {
@@ -936,7 +936,7 @@ namespace SmartAbp.CodeGenerator.Services
         public List<MessageDefinitionDto> Messages { get; set; } = new();
         public List<EventDefinitionDto> IntegrationEvents { get; set; } = new();
     }
-    
+
     public class MessageDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -944,7 +944,7 @@ namespace SmartAbp.CodeGenerator.Services
         public string Type { get; set; } = "Command";
         public List<PropertyDefinitionDto> Properties { get; set; } = new();
     }
-    
+
     public class GeneratedMessagingSolutionDto
     {
         public string ModuleName { get; set; } = string.Empty;
@@ -953,7 +953,7 @@ namespace SmartAbp.CodeGenerator.Services
         public int EventCount { get; set; }
         public DateTime GeneratedAt { get; set; }
     }
-    
+
     // Testing DTOs
     public class TestSuiteDefinitionDto
     {
@@ -962,7 +962,7 @@ namespace SmartAbp.CodeGenerator.Services
         public List<EntityTestDefinitionDto> Entities { get; set; } = new();
         public List<ServiceTestDefinitionDto> ApplicationServices { get; set; } = new();
     }
-    
+
     public class EntityTestDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -970,7 +970,7 @@ namespace SmartAbp.CodeGenerator.Services
         public List<PropertyDefinitionDto> Properties { get; set; } = new();
         public List<BusinessMethodDefinitionDto> BusinessMethods { get; set; } = new();
     }
-    
+
     public class ServiceTestDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -978,14 +978,14 @@ namespace SmartAbp.CodeGenerator.Services
         public bool HasCrud { get; set; } = true;
         public bool HasAuthorization { get; set; } = true;
     }
-    
+
     public class BusinessMethodDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string ReturnType { get; set; } = "void";
         public List<ParameterDefinitionDto> Parameters { get; set; } = new();
     }
-    
+
     public class GeneratedTestSuiteDto
     {
         public string ModuleName { get; set; } = string.Empty;
@@ -993,7 +993,7 @@ namespace SmartAbp.CodeGenerator.Services
         public int TestClassCount { get; set; }
         public DateTime GeneratedAt { get; set; }
     }
-    
+
     // Telemetry DTOs
     public class TelemetryDefinitionDto
     {
@@ -1002,7 +1002,7 @@ namespace SmartAbp.CodeGenerator.Services
         public List<MetricDefinitionDto> Metrics { get; set; } = new();
         public List<TracingPointDefinitionDto> TracingPoints { get; set; } = new();
     }
-    
+
     public class MetricDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
@@ -1010,14 +1010,14 @@ namespace SmartAbp.CodeGenerator.Services
         public string Type { get; set; } = "Counter";
         public string Unit { get; set; } = string.Empty;
     }
-    
+
     public class TracingPointDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string Level { get; set; } = "Information";
     }
-    
+
     public class GeneratedTelemetrySolutionDto
     {
         public string ModuleName { get; set; } = string.Empty;
@@ -1026,7 +1026,7 @@ namespace SmartAbp.CodeGenerator.Services
         public int TracingCount { get; set; }
         public DateTime GeneratedAt { get; set; }
     }
-    
+
     // Quality DTOs
     public class QualityDefinitionDto
     {
@@ -1035,7 +1035,7 @@ namespace SmartAbp.CodeGenerator.Services
         public List<QualityRuleDto> Rules { get; set; } = new();
         public List<QualityMetricDto> Metrics { get; set; } = new();
     }
-    
+
     public class QualityRuleDto
     {
         public string Name { get; set; } = string.Empty;
@@ -1044,7 +1044,7 @@ namespace SmartAbp.CodeGenerator.Services
         public string Severity { get; set; } = "Warning";
         public bool IsEnabled { get; set; } = true;
     }
-    
+
     public class QualityMetricDto
     {
         public string Name { get; set; } = string.Empty;
@@ -1054,7 +1054,7 @@ namespace SmartAbp.CodeGenerator.Services
         public double? MaxValue { get; set; }
         public double? TargetValue { get; set; }
     }
-    
+
     public class GeneratedQualitySolutionDto
     {
         public string ModuleName { get; set; } = string.Empty;
@@ -1063,7 +1063,7 @@ namespace SmartAbp.CodeGenerator.Services
         public int MetricCount { get; set; }
         public DateTime GeneratedAt { get; set; }
     }
-    
+
     // Enterprise Solution DTOs
     public class EnterpriseSolutionDefinitionDto
     {
@@ -1078,7 +1078,7 @@ namespace SmartAbp.CodeGenerator.Services
         public bool IncludeTests { get; set; } = true;
         public bool IncludeTelemetry { get; set; } = true;
         public bool IncludeQuality { get; set; } = true;
-        
+
         public DddDefinitionDto DddDefinition { get; set; } = new();
         public CqrsDefinitionDto CqrsDefinition { get; set; } = new();
         public ApplicationServiceDefinitionDto ApplicationServiceDefinition { get; set; } = new();
@@ -1090,7 +1090,7 @@ namespace SmartAbp.CodeGenerator.Services
         public TelemetryDefinitionDto TelemetryDefinition { get; set; } = new();
         public QualityDefinitionDto QualityDefinition { get; set; } = new();
     }
-    
+
     public class EnterpriseSolutionDto
     {
         public string SolutionName { get; set; } = string.Empty;
@@ -1099,7 +1099,7 @@ namespace SmartAbp.CodeGenerator.Services
         public bool IsSuccess { get; set; }
         public DateTime GeneratedAt { get; set; }
     }
-    
+
     // Statistics DTO
     public class CodeGenerationStatisticsDto
     {
@@ -1111,7 +1111,7 @@ namespace SmartAbp.CodeGenerator.Services
         public long MemoryUsage { get; set; }
         public double CacheHitRatio { get; set; }
         public DateTime? LastGenerationTime { get; set; }
-        
+
         // Additional properties used by CodeGenerationAppService
         public int TotalModulesGenerated { get; set; }
         public int TotalEntitiesGenerated { get; set; }
@@ -1122,7 +1122,7 @@ namespace SmartAbp.CodeGenerator.Services
         public int QualityScore { get; set; } = 95;
         public CodeGenerationPerformanceDto Performance { get; set; } = new();
     }
-    
+
     public class CodeGenerationPerformanceDto
     {
         public double AverageGenerationTimeMs { get; set; }
