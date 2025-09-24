@@ -1,6 +1,39 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 <template>
   <div class="page-design-view">
+    <!-- 企业级可视化页面设计器 -->
+    <div class="visual-page-designer">
+      <!-- 左侧组件面板 -->
+      <VisualComponentPalette
+        :search-filter="componentSearchFilter"
+        @drag-start="handleComponentDragStart"
+        @drag-end="handleComponentDragEnd"
+        @component-selected="handleComponentSelected"
+      />
+
+      <!-- 中央设计画布 -->
+      <VisualDesignCanvas
+        :page-data="currentPage"
+        :entity-data="selectedEntity"
+        @component-added="handleComponentAdded"
+        @component-selected="handleComponentSelected"
+        @component-updated="handleComponentUpdated"
+        @component-deleted="handleComponentDeleted"
+        @preview-generated="handlePreviewGenerated"
+      />
+
+      <!-- 右侧属性面板 -->
+      <ComponentPropertyPanel
+        :selected-component="selectedComponent"
+        :available-entities="availableEntities"
+        @property-changed="handlePropertyChanged"
+        @layout-changed="handleLayoutChanged"
+        @style-changed="handleStyleChanged"
+        @data-binding-changed="handleDataBindingChanged"
+      />
+    </div>
+
+    <!-- 原有的批量生成功能保留 -->
     <!-- 页面设计器头部 -->
     <div class="design-header">
       <div class="header-left">
@@ -677,6 +710,9 @@ import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useEntityModelingStore } from "@/stores/lowcode/entityModeling"
 import { usePageDesignStore } from "@/stores/lowcode/pageDesign"
+import VisualComponentPalette from "@/components/lowcode/VisualComponentPalette.vue"
+import VisualDesignCanvas from "@/components/lowcode/VisualDesignCanvas.vue"
+import ComponentPropertyPanel from "@/components/lowcode/ComponentPropertyPanel.vue"
 
 // Stores
 const entityStore = useEntityModelingStore()
@@ -707,6 +743,12 @@ const selectedComponent = ref<any>(null)
 const currentPage = ref({ name: "新页面" })
 const showPreview = ref(false)
 const previewDevice = ref("desktop")
+
+// 可视化设计器状态
+const componentSearchFilter = ref("")
+const selectedEntity = ref(null)
+const draggedComponent = ref(null)
+const designerMode = ref("visual") // visual | legacy
 
 // 组件库定义
 const layoutComponents = [
@@ -970,12 +1012,136 @@ const getPreviewUrl = () => {
   return "/preview"
 }
 
+// 可视化设计器事件处理方法
+const handleComponentDragStart = (dragData) => {
+  draggedComponent.value = dragData.component
+  console.log('Component drag started:', dragData)
+}
+
+const handleComponentDragEnd = (dragData) => {
+  draggedComponent.value = null
+  console.log('Component drag ended:', dragData)
+}
+
+const handleComponentAdded = (component) => {
+  canvasComponents.value.push(component)
+  selectedComponent.value = component
+  
+  // 更新页面数据
+  if (currentPage.value) {
+    currentPage.value.components = [...canvasComponents.value]
+    pageStore.updatePage(currentPage.value.id, { components: canvasComponents.value })
+  }
+  
+  ElMessage.success(`组件"${component.name}"添加成功`)
+}
+
+const handleComponentSelected = (component) => {
+  selectedComponent.value = component
+  console.log('Component selected:', component)
+}
+
+const handleComponentUpdated = (component) => {
+  const index = canvasComponents.value.findIndex(c => c.id === component.id)
+  if (index > -1) {
+    canvasComponents.value[index] = component
+    
+    // 同步到页面存储
+    if (currentPage.value) {
+      pageStore.updatePage(currentPage.value.id, { components: canvasComponents.value })
+    }
+  }
+}
+
+const handleComponentDeleted = (component) => {
+  const index = canvasComponents.value.findIndex(c => c.id === component.id)
+  if (index > -1) {
+    canvasComponents.value.splice(index, 1)
+    
+    if (selectedComponent.value?.id === component.id) {
+      selectedComponent.value = null
+    }
+    
+    // 同步到页面存储
+    if (currentPage.value) {
+      pageStore.updatePage(currentPage.value.id, { components: canvasComponents.value })
+    }
+  }
+}
+
+const handlePreviewGenerated = (previewData) => {
+  console.log('Preview generated:', previewData)
+  showPreview.value = true
+}
+
+const handlePropertyChanged = (data) => {
+  const { componentId, property, value } = data
+  const component = canvasComponents.value.find(c => c.id === componentId)
+  
+  if (component) {
+    component.props[property] = value
+    handleComponentUpdated(component)
+  }
+}
+
+const handleLayoutChanged = (data) => {
+  const { componentId, layout } = data
+  const component = canvasComponents.value.find(c => c.id === componentId)
+  
+  if (component) {
+    component.style = {
+      ...component.style,
+      left: `${layout.x}px`,
+      top: `${layout.y}px`,
+      width: layout.width,
+      height: layout.height,
+      position: layout.position,
+      zIndex: layout.zIndex
+    }
+    handleComponentUpdated(component)
+  }
+}
+
+const handleStyleChanged = (data) => {
+  const { componentId, property, value } = data
+  const component = canvasComponents.value.find(c => c.id === componentId)
+  
+  if (component) {
+    if (!component.computedStyle) {
+      component.computedStyle = {}
+    }
+    component.computedStyle[property] = value
+    handleComponentUpdated(component)
+  }
+}
+
+const handleDataBindingChanged = (data) => {
+  const { componentId, dataBinding } = data
+  const component = canvasComponents.value.find(c => c.id === componentId)
+  
+  if (component) {
+    component.dataBinding = dataBinding
+    handleComponentUpdated(component)
+  }
+}
+
+const switchToVisualDesigner = () => {
+  designerMode.value = "visual"
+  ElMessage.success('已切换到可视化设计器')
+}
+
+const switchToLegacyDesigner = () => {
+  designerMode.value = "legacy"
+  ElMessage.success('已切换到传统设计器')
+}
+
 // 初始化
 onMounted(() => {
   entityStore.loadFromLocalStorage()
   if (availableEntities.value.length > 0) {
     selectedEntities.value = [availableEntities.value[0].id]
     previewTab.value = availableEntities.value[0].id
+    selectedEntity.value = availableEntities.value[0]
   }
 })
 </script>
@@ -986,6 +1152,22 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   background: #f5f5f5;
+}
+
+/* 企业级可视化页面设计器样式 */
+.visual-page-designer {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background: var(--el-bg-color-page);
+}
+
+.visual-page-designer > * {
+  flex-shrink: 0;
+}
+
+.visual-page-designer .visual-design-canvas {
+  flex: 1;
 }
 
 .design-header {

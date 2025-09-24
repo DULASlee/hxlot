@@ -134,6 +134,37 @@
             >
               验证规则
             </el-button>
+            <el-button 
+              :type="designMode === 'advanced-relations' ? 'primary' : 'default'"
+              @click="designMode = 'advanced-relations'"
+            >
+              高级关系
+            </el-button>
+            <el-button 
+              :type="designMode === 'field-types' ? 'primary' : 'default'"
+              @click="designMode = 'field-types'"
+            >
+              字段类型
+            </el-button>
+            <el-button 
+              :type="designMode === 'business-rules' ? 'primary' : 'default'"
+              @click="designMode = 'business-rules'"
+            >
+              业务规则
+            </el-button>
+            <el-button 
+              :type="designMode === 'data-dict' ? 'primary' : 'default'"
+              @click="designMode = 'data-dict'"
+            >
+              数据字典
+            </el-button>
+            <el-button 
+              :type="designMode === 'assistant' ? 'primary' : 'default'"
+              @click="designMode = 'assistant'"
+            >
+              <i class="el-icon-magic-stick" />
+              智能助手
+            </el-button>
           </el-button-group>
           
           <div
@@ -471,6 +502,54 @@
             </el-table-column>
           </el-table>
         </div>
+
+        <!-- 高级关系设计面板 -->
+        <div
+          v-if="designMode === 'advanced-relations'"
+          class="advanced-relations-designer"
+        >
+          <AdvancedEntityRelationshipDesigner
+            @entity-selected="selectEntity"
+            @create-abstract-entity="createAbstractEntity"
+          />
+        </div>
+
+        <!-- 高级字段类型面板 -->
+        <div
+          v-if="designMode === 'field-types'"
+          class="field-types-designer"
+        >
+          <AdvancedFieldTypeDesigner
+            @field-configured="handleFieldConfigured"
+          />
+        </div>
+
+        <!-- 业务规则引擎面板 -->
+        <div
+          v-if="designMode === 'business-rules'"
+          class="business-rules-designer"
+        >
+          <BusinessRulesEngine />
+        </div>
+
+        <!-- 数据字典管理面板 -->
+        <div
+          v-if="designMode === 'data-dict'"
+          class="data-dictionary-designer"
+        >
+          <DataDictionaryManager
+            @dictionary-selected="handleDictionarySelected"
+            @dictionary-updated="handleDictionaryUpdated"
+          />
+        </div>
+
+        <!-- 智能建模助手面板 -->
+        <div
+          v-if="designMode === 'assistant'"
+          class="intelligent-assistant"
+        >
+          <IntelligentModelingAssistant />
+        </div>
       </div>
 
       <!-- 右侧属性面板 -->
@@ -777,6 +856,11 @@
 import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useEntityModelingStore } from "@/stores/lowcode/entityModeling"
+import AdvancedEntityRelationshipDesigner from "@/components/lowcode/AdvancedEntityRelationshipDesigner.vue"
+import AdvancedFieldTypeDesigner from "@/components/lowcode/AdvancedFieldTypeDesigner.vue"
+import BusinessRulesEngine from "@/components/lowcode/BusinessRulesEngine.vue"
+import DataDictionaryManager from "@/components/lowcode/DataDictionaryManager.vue"
+import IntelligentModelingAssistant from "@/components/lowcode/IntelligentModelingAssistant.vue"
 
 // Store
 const store = useEntityModelingStore()
@@ -1224,6 +1308,67 @@ ${columns}
   }).join('\n\n')
 }
 
+// 高级功能事件处理方法
+const handleFieldConfigured = (fieldDefinition) => {
+  if (selectedEntity.value) {
+    try {
+      // 检查字段是否已存在
+      const existingField = selectedEntity.value.fields.find(f => f.name === fieldDefinition.name)
+      if (existingField) {
+        ElMessage.warning(`字段"${fieldDefinition.name}"已存在`)
+        return
+      }
+
+      // 添加配置好的字段到当前实体
+      store.addField(selectedEntity.value.id, fieldDefinition)
+      ElMessage.success(`高级字段"${fieldDefinition.name}"添加成功`)
+    } catch (error) {
+      ElMessage.error('添加高级字段失败：' + error.message)
+    }
+  } else {
+    ElMessage.warning('请先选择一个实体')
+  }
+}
+
+const createAbstractEntity = () => {
+  try {
+    const abstractEntity = {
+      name: 'BaseEntity',
+      tableName: '',
+      displayName: '抽象基类',
+      description: '实体基类，包含公共字段',
+      category: 'core',
+      fields: [
+        { name: 'Id', displayName: 'ID', type: 'Guid', isRequired: true, isPrimaryKey: true },
+        { name: 'CreationTime', displayName: '创建时间', type: 'DateTime', isRequired: true },
+        { name: 'CreatorId', displayName: '创建人ID', type: 'Guid?', isRequired: false }
+      ],
+      validationRules: [],
+      enableSoftDelete: false,
+      enableAudit: true,
+      enableMultiTenant: false,
+      isCompleted: true,
+      isAbstract: true
+    }
+
+    store.addEntity(abstractEntity)
+    ElMessage.success('抽象实体创建成功')
+  } catch (error) {
+    ElMessage.error('创建抽象实体失败：' + error.message)
+  }
+}
+
+const handleDictionarySelected = (dictionary) => {
+  // 处理数据字典选择事件，可以将字典应用为字段的枚举类型
+  console.log('Dictionary selected:', dictionary)
+  ElMessage.info(`已选择数据字典"${dictionary.name}"`)
+}
+
+const handleDictionaryUpdated = (dictionary) => {
+  // 处理数据字典更新事件
+  ElMessage.success(`数据字典"${dictionary.name}"更新成功`)
+}
+
 // 初始化
 onMounted(() => {
   // 初始化预设实体（如果为空）
@@ -1414,7 +1559,12 @@ onMounted(() => {
 
 .fields-designer,
 .relations-designer,
-.validation-designer {
+.validation-designer,
+.advanced-relations-designer,
+.field-types-designer,
+.business-rules-designer,
+.data-dictionary-designer,
+.intelligent-assistant {
   flex: 1;
   padding: 24px;
   overflow-y: auto;

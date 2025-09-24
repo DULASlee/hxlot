@@ -45,6 +45,16 @@
 
     <!-- 主体生成区域 -->
     <div class="generation-body">
+      <!-- 智能代码生成引擎 -->
+      <div class="intelligent-engine-panel">
+        <IntelligentCodeGenerationEngine
+          @generation-completed="handleGenerationCompleted"
+          @template-selected="handleTemplateSelected"
+          @preview-updated="handlePreviewUpdated"
+        />
+      </div>
+
+      <!-- 原有的生成功能保留 -->
       <!-- 左侧配置面板 -->
       <div class="config-panel">
         <el-tabs
@@ -397,6 +407,7 @@ import { ref, computed, onMounted } from "vue"
 import { ElMessage } from "element-plus"
 import { useEntityModelingStore } from "@/stores/lowcode/entityModeling"
 import { usePageDesignStore } from "@/stores/lowcode/pageDesign"
+import IntelligentCodeGenerationEngine from "@/components/lowcode/IntelligentCodeGenerationEngine.vue"
 
 // Stores
 const entityStore = useEntityModelingStore()
@@ -675,6 +686,52 @@ onMounted(() => {
     activePreviewFile.value = previewFiles.value[0].id
   }
 })
+
+// 智能代码生成引擎事件处理方法
+const handleGenerationCompleted = (result) => {
+  ElMessage.success('🎉 智能代码生成完成！')
+  
+  // 更新生成结果到现有状态
+  generationResult.value = {
+    ...generationResult.value,
+    ...result,
+    generatedAt: new Date().toISOString(),
+    intelligence: true
+  }
+  
+  console.log('Intelligent generation completed:', result)
+}
+
+const handleTemplateSelected = (template) => {
+  ElMessage.info(`已选择模板: ${template.name}`)
+  console.log('Template selected:', template)
+}
+
+const handlePreviewUpdated = (preview) => {
+  // 将智能生成的预览集成到现有预览系统
+  if (preview && preview.files) {
+    preview.files.forEach(file => {
+      const existingIndex = previewFiles.value.findIndex(f => f.path === file.path)
+      if (existingIndex > -1) {
+        // 更新现有文件
+        previewFiles.value[existingIndex] = {
+          ...previewFiles.value[existingIndex],
+          ...file,
+          isIntelligentGenerated: true
+        }
+      } else {
+        // 添加新文件
+        previewFiles.value.push({
+          ...file,
+          id: `file-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+          isIntelligentGenerated: true
+        })
+      }
+    })
+  }
+  
+  console.log('Preview updated:', preview)
+}
 </script>
 
 <style scoped>
