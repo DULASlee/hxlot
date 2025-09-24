@@ -163,7 +163,7 @@
                 :class="{ active: currentStep === 'modeling' }"
               >
                 <router-link
-                  to="/studio"
+                  to="/lowcode/entity-modeling"
                   class="nav-link"
                   @click="setCurrentStep('modeling')"
                 >
@@ -182,7 +182,7 @@
                 :class="{ active: currentStep === 'design' }"
               >
                 <router-link
-                  to="/studio/design"
+                  to="/lowcode/design"
                   class="nav-link"
                   @click="setCurrentStep('design')"
                 >
@@ -201,7 +201,7 @@
                 :class="{ active: currentStep === 'generate' }"
               >
                 <router-link
-                  to="/studio/generation"
+                  to="/lowcode/generation"
                   class="nav-link"
                   @click="setCurrentStep('generate')"
                 >
@@ -473,11 +473,8 @@ const showProjectWizard = ref(false)
 
 // 智能工作流
 const {
-  workflowState,
-  currentStep: workflowCurrentStep,
   totalWorkflowProgress,
   nextStepSuggestion,
-  setCurrentStep: setWorkflowStep,
   showWorkflowGuide,
   initializeWorkflow
 } = useSmartWorkflow()
@@ -748,6 +745,8 @@ onMounted(() => {
     setCurrentStep("generate")
   } else if (route.path.includes("design")) {
     setCurrentStep("design")
+  } else if (route.path.includes("entity-modeling")) {
+    setCurrentStep("modeling")
   } else {
     setCurrentStep("modeling")
   }

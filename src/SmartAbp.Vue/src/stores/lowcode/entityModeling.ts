@@ -48,6 +48,70 @@ export interface EntityRelation {
   navigationProperty?: string
 }
 
+// MDI窗口配置
+export interface MDIWindowConfig {
+  id: string
+  title: string
+  icon?: string
+  bounds: { x: number; y: number; width: number; height: number }
+  maximized: boolean
+  minimized: boolean
+  resizable: boolean
+  draggable: boolean
+  modal: boolean
+  state: "normal" | "maximized" | "minimized" | "closed"
+  component: string
+  props: Record<string, any>
+  permissions: any[]
+  createdAt: string
+}
+
+// 标签页配置
+export interface TabConfig {
+  id: string
+  title: string
+  icon?: string
+  closable: boolean
+  active: boolean
+  component: string
+  props: Record<string, any>
+  permissions: any[]
+  pinned?: boolean
+  loading?: boolean
+  hasChanges?: boolean
+  path?: string
+}
+
+// UI组件元数据
+export interface UIComponentMetadata {
+  id: string
+  type: string
+  name: string
+  displayName: string
+  description: string
+  parentId?: string
+  children: string[]
+  props: Record<string, any>
+  style: Record<string, any>
+  layout: {
+    x: number
+    y: number
+    width: number
+    height: number
+    resizable: boolean
+    draggable: boolean
+  }
+  dataBinding?: any
+  events: any[]
+  permissions: any[]
+  visible: boolean
+  disabled: boolean
+  readonly: boolean
+  required: boolean
+  createdAt: string
+  updatedAt: string
+}
+
 // 建模器状态管理
 export const useEntityModelingStore = defineStore("entityModeling", () => {
   // 状态数据
