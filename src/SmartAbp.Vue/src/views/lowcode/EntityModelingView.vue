@@ -1300,27 +1300,7 @@ const editingEntity = ref<any>(null)
 const entityEditFormRef = ref()
 const entityFeatures = ref<string[]>([])
 
-// 实体编辑表单规则
-const entityEditRules = {
-  name: [
-    { required: true, message: '请输入实体名称', trigger: 'blur' },
-    { pattern: /^[A-Z][a-zA-Z0-9]*$/, message: '实体名称必须符合PascalCase命名规范', trigger: 'blur' }
-  ],
-  tableName: [
-    { required: true, message: '请输入表名', trigger: 'blur' },
-    { pattern: /^[A-Za-z][a-zA-Z0-9_]*$/, message: '表名必须符合数据库命名规范', trigger: 'blur' }
-  ],
-  displayName: [
-    { required: true, message: '请输入显示名称', trigger: 'blur' }
-  ]
-}
-
-// 自动生成表名
-const autoGenerateTableName = () => {
-  if (editingEntity.value && editingEntity.value.name && !editingEntity.value.tableName) {
-    editingEntity.value.tableName = `Abp${editingEntity.value.name}s`
-  }
-}
+// 移除未使用的表单规则和方法
 
 const editEntity = (entity: any) => {
   editingEntity.value = { ...entity } // 深拷贝避免直接修改

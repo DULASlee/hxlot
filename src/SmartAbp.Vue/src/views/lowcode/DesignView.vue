@@ -1342,15 +1342,18 @@ const handleDataBindingChanged = (data) => {
   }
 }
 
-const switchToVisualDesigner = () => {
-  designerMode.value = "visual"
-  ElMessage.success('已切换到可视化设计器')
+// 获取实体图标
+const getEntityIcon = (category: string) => {
+  const icons: Record<string, string> = {
+    core: "el-icon-coin",
+    relation: "el-icon-connection", 
+    config: "el-icon-setting",
+    log: "el-icon-document"
+  }
+  return icons[category] || "el-icon-coin"
 }
 
-const switchToLegacyDesigner = () => {
-  designerMode.value = "legacy"
-  ElMessage.success('已切换到传统设计器')
-}
+// 移除未使用的设计器切换方法
 
 // 界面模式切换
 const onLayoutModeChange = (mode: string) => {

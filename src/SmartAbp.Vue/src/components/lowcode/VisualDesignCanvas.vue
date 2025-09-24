@@ -783,25 +783,7 @@ const generateVueTemplate = () => {
 }
 
 const generateVueScript = () => {
-  return `<script setup lang="ts">
-import { ref, reactive } from 'vue'
-
-// 响应式数据
-const formData = reactive({
-  // 表单数据
-})
-
-const loading = ref(false)
-
-// 方法
-const handleSubmit = () => {
-  console.log('表单提交:', formData)
-}
-
-const handleReset = () => {
-  Object.keys(formData).forEach(key => {
-    formData[key] = ''
-  })
+  return 'Vue组件代码生成功能开发中...'
 }
 
 // Emits

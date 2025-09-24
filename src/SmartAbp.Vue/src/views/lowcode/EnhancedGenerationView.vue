@@ -510,6 +510,10 @@ const isIndeterminate = computed(() =>
   selectedEntities.value.length > 0 && selectedEntities.value.length < availableEntities.value.length
 )
 
+const selectedEntityObjects = computed(() => 
+  availableEntities.value.filter(e => selectedEntities.value.includes(e.id))
+)
+
 const estimatedFiles = computed(() => {
   return selectedEntities.value.length * 10 // 简化估算：每个实体10个文件
 })
@@ -665,14 +669,14 @@ const generateAllCode = async () => {
     if (generateTests.value) {
       currentGenerationTask.value = "生成测试代码..."
       generationPercentage.value = 85
-      const testCode = await generateTestCode(generationConfig)
+      await generateTestCode(generationConfig)
     }
     
     // 步骤6: 生成文档
     if (generateDocs.value) {
       currentGenerationTask.value = "生成API文档..."
       generationPercentage.value = 95
-      const docsCode = await generateDocsCode(generationConfig)
+      await generateDocsCode(generationConfig)
     }
     
     generationPercentage.value = 100

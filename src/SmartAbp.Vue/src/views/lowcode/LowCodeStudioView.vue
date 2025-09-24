@@ -473,11 +473,8 @@ const showProjectWizard = ref(false)
 
 // 智能工作流
 const {
-  workflowState,
-  currentStep: workflowCurrentStep,
   totalWorkflowProgress,
   nextStepSuggestion,
-  setCurrentStep: setWorkflowStep,
   showWorkflowGuide,
   initializeWorkflow
 } = useSmartWorkflow()
