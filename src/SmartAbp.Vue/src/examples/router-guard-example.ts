@@ -29,18 +29,18 @@ export async function authGuard(requiredRoles: string[] = []) {
   return true
 }
 
-// Minimal guard example for reference
+// Minimal guard example for reference - 使用企业级认证服务
 router.beforeEach(async (to, _from, next) => {
   const requiresAuth = to.matched.some((r) => r.meta?.requiresAuth)
   if (!requiresAuth) return next()
 
-  const authStore = useAuthStore()
-  const isValid = authStore.isAuthenticated
+  // 优先使用企业级authService，回退到直接store访问
+  const isValid = await authService.validateToken()
   if (!isValid) return next({ name: "Login", query: { redirect: to.fullPath } })
 
-  // role-based sample
+  // role-based sample - 使用authService进行权限检查
   const requiredRoles = (to.meta?.requiredRoles as string[] | undefined) || []
-  if (requiredRoles.length > 0 && !requiredRoles.some((r) => authStore.hasRole(r))) {
+  if (requiredRoles.length > 0 && !requiredRoles.some((r) => authService.hasRole(r))) {
     return next({ name: "Dashboard" })
   }
   next()

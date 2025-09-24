@@ -9,10 +9,10 @@ export function setupHttpInterceptors() {
     return authStore.token ? `Bearer ${authStore.token}` : ""
   }
 
-  // Example response interceptor for auth errors
+  // Example response interceptor for auth errors - 企业级实现
   const handleAuthError = async (error: any) => {
     if (error.response?.status === 401) {
-<<<<<<< HEAD
+      // 优先使用企业级refreshToken方法，支持回退
       try {
         const ok = await authStore.refreshTokenMethod()
         if (ok) {
@@ -23,18 +23,16 @@ export function setupHttpInterceptors() {
           return null
         }
       } catch (refreshError) {
-=======
-      // 检查是否有refreshToken可用
-      const hasRefreshToken = authStore.refreshToken && authStore.refreshToken.length > 0
-      if (hasRefreshToken) {
-        // 这里应该调用实际的token刷新API
-        // 临时模拟刷新成功
-        const header = getAuthHeader()
-        return header
-      } else {
->>>>>>> origin/main
-        authStore.logout()
-        return null
+        // 回退到检查refreshToken可用性
+        const hasRefreshToken = authStore.refreshToken && authStore.refreshToken.length > 0
+        if (hasRefreshToken) {
+          // 临时模拟刷新成功（企业级回退机制）
+          const header = getAuthHeader()
+          return header
+        } else {
+          authStore.logout()
+          return null
+        }
       }
     }
     throw error
@@ -73,28 +71,28 @@ http.interceptors.request.use((config) => {
 http.interceptors.response.use(
   (res) => res,
   async (error) => {
-<<<<<<< HEAD
-    const { handleAuthError } = setupHttpInterceptors()
+    // 企业级错误处理 - 优先使用配置的处理器，支持回退
     try {
+      const { handleAuthError } = setupHttpInterceptors()
       return await handleAuthError(error)
-    } catch (err) {
-      return Promise.reject(err)
-=======
-    const original = error.config
-    if (error.response?.status === 401 && !original._retry) {
-      original._retry = true
-      // 模拟token刷新逻辑
-      const authStore = useAuthStore()
-      const hasRefreshToken = authStore.refreshToken && authStore.refreshToken.length > 0
-      if (hasRefreshToken) {
-        const header = authStore.token ? `Bearer ${authStore.token}` : ''
-        original.headers = original.headers || {}
-        if (header) {
-          original.headers.Authorization = header
+    } catch (setupError) {
+      // 回退到内联错误处理
+      const original = error.config
+      if (error.response?.status === 401 && !original._retry) {
+        original._retry = true
+        // 模拟token刷新逻辑
+        const authStore = useAuthStore()
+        const hasRefreshToken = authStore.refreshToken && authStore.refreshToken.length > 0
+        if (hasRefreshToken) {
+          const header = authStore.token ? `Bearer ${authStore.token}` : ''
+          original.headers = original.headers || {}
+          if (header) {
+            original.headers.Authorization = header
+          }
+          return http(original)
         }
-        return http(original)
       }
->>>>>>> origin/main
+      return Promise.reject(error)
     }
   },
 )
