@@ -1,4 +1,4 @@
-import { authService } from "@/utils/auth";
+export {}
 export const permissionDirective = {
     mounted(el, binding) {
         const need = Array.isArray(binding.value) ? binding.value : [binding.value];

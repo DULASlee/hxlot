@@ -75,5 +75,5 @@ export const getLogStats = () => {
 }
 
 // 导出认证相关
-export { authService } from "./auth"
+// authService 已移除，统一使用 Pinia 的 useAuthStore
 export { useAuth } from "./useAuth"

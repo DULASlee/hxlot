@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import SmartAbpLayout from "@/components/layout/SmartAbpLayout.vue";
 import LoginView from "@/views/auth/Login.vue";
-import { authService } from "@/utils/auth";
+export {}
 import { logger } from "@/utils/logger";
 // 动态导入页面组件
 const DashboardView = () => import("@/views/common/DashboardView.vue");

@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 import SmartAbpLayout from "@/components/layout/SmartAbpLayout.vue"
 import LoginView from "@/views/auth/Login.vue"
-import { authService } from "@/utils/auth"
+import { useAuthStore } from "@/stores"
 import { logger } from "@/utils/logger"
 
 // 动态导入页面组件
@@ -350,7 +350,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "design",
-        name: "PageDesign", 
+        name: "PageDesign",
         component: () => import("@/views/lowcode/DesignView.vue"),
         meta: { title: "页面设计", menuKey: "page-design" },
       },
@@ -431,7 +431,8 @@ router.beforeEach(async (to, from, next) => {
   logger.debug(`[路由守卫] 从 ${from.path} 跳转到 ${to.path}`)
 
   // 检查用户是否已登录
-  const isLoggedIn = authService.isTokenValid()
+  const authStore = useAuthStore()
+  const isLoggedIn = authStore.isAuthenticated
 
   // 已登录用户尝试访问登录页：重定向到工作台
   if (to.name === "Login" && isLoggedIn) {

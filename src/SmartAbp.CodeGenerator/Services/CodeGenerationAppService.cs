@@ -31,7 +31,7 @@ namespace SmartAbp.CodeGenerator.Services
         private readonly DefaultUIConfigGenerator _defaultUiConfigGenerator;
         private readonly FrontendIntegrationService _frontendIntegrationService;
         private readonly SchemaVersioningService _schemaVersioningService;
-        
+
         public CodeGenerationAppService(
             CodeWriterService codeWriterService,
             SolutionIntegrationService solutionIntegrationService,
@@ -53,7 +53,7 @@ namespace SmartAbp.CodeGenerator.Services
             _frontendIntegrationService = frontendIntegrationService;
             _schemaVersioningService = schemaVersioningService;
         }
-        
+
         public async Task<GeneratedModuleDto> GenerateModuleAsync(ModuleMetadataDto input)
         {
             Check.NotNull(input, nameof(input));
@@ -351,7 +351,7 @@ WHERE tc.TABLE_SCHEMA=@s AND tc.TABLE_NAME=@t AND tc.CONSTRAINT_TYPE='PRIMARY KE
                             // FKs
                             using (var fkCmd = conn.CreateCommand())
                             {
-                                fkCmd.CommandText = @"SELECT 
+                                fkCmd.CommandText = @"SELECT
     fk_tab.TABLE_SCHEMA AS FK_SCHEMA, fk_tab.TABLE_NAME AS FK_TABLE, fk_col.COLUMN_NAME AS FK_COLUMN,
     pk_tab.TABLE_SCHEMA AS PK_SCHEMA, pk_tab.TABLE_NAME AS PK_TABLE, pk_col.COLUMN_NAME AS PK_COLUMN
 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS rc
@@ -592,7 +592,7 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
                 throw new AbpException($"Provider '{provider}' not supported");
             }
 
-            _logger.LogInformation("Database introspection completed successfully for connection string '{ConnectionStringName}' with provider '{Provider}'. Found {TableCount} tables.", 
+            _logger.LogInformation("Database introspection completed successfully for connection string '{ConnectionStringName}' with provider '{Provider}'. Found {TableCount} tables.",
                 request.ConnectionStringName, provider, schema.Tables.Count);
             return schema;
         }
@@ -973,7 +973,7 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
                 throw new AbpException($"Unexpected error during database migration orchestration for module '{metadata.Name}': {ex.Message}");
             }
         }
-        
+
         private async Task GenerateFrontendAsync(ModuleMetadataDto metadata, string solutionRoot, List<string> generatedFiles)
         {
             _logger.LogInformation("Generating Frontend for module {ModuleName}...", metadata.Name);
@@ -1128,7 +1128,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 throw new AbpException(message);
             }
         }
-        
+
         private async Task GenerateTestProjectsAsync(ModuleMetadataDto metadata, string solutionRoot)
         {
             try
@@ -1136,14 +1136,14 @@ import Generated from './__COMPONENT__.generated.vue'
                 var systemName = metadata.SystemName;
                 var moduleName = metadata.Name;
                 var solutionFile = Path.Combine(solutionRoot, "SmartAbp.sln");
-                
+
                 var appTestsProjectDir = Path.Combine(solutionRoot, $"tests/SmartAbp.{systemName}.{moduleName}.Application.Tests");
                 Directory.CreateDirectory(appTestsProjectDir);
-                
+
                 var appTestsProjectPath = Path.Combine(appTestsProjectDir, $"SmartAbp.{systemName}.{moduleName}.Application.Tests.csproj");
-                
+
                 // TODO: Re-implement test project generation using Roslyn/templates
-                var appTestsProjectContent = ""; 
+                var appTestsProjectContent = "";
                 await WriteAndTrackFileAsync(appTestsProjectPath, appTestsProjectContent, new List<string>());
 
                 await _solutionIntegrationService.AddProjectToSolutionAsync(solutionFile, appTestsProjectPath);
@@ -1200,7 +1200,7 @@ import Generated from './__COMPONENT__.generated.vue'
                         await _solutionIntegrationService.AddProjectToSolutionAsync(solutionFile, projectPath);
                     }
                 }
-                
+
                 var webProjectPath = Path.Combine(solutionRoot, "src/SmartAbp.Web/SmartAbp.Web.csproj");
                 var appProjectPath = Path.Combine(solutionRoot, $"src/SmartAbp.{systemName}.{moduleName}.Application/SmartAbp.{systemName}.{moduleName}.Application.csproj");
 
@@ -1230,7 +1230,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 throw new AbpException($"Unexpected error during module integration for module '{metadata.Name}': {ex.Message}");
             }
         }
-        
+
         private string Pluralize(string word) => new Pluralizer().Pluralize(word);
 
         private async Task GenerateFrontendHybridAsync(ModuleMetadataDto metadata, string solutionRoot, List<string> generatedFiles)
@@ -1238,7 +1238,7 @@ import Generated from './__COMPONENT__.generated.vue'
             // TODO: Re-implement frontend generation
             await Task.CompletedTask;
         }
-        
+
         private async Task WriteAndTrackFileAsync(string filePath, string content, List<string> generatedFiles)
         {
             try
@@ -1308,7 +1308,7 @@ import Generated from './__COMPONENT__.generated.vue'
             }
             return null;
         }
-        
+
         private ModuleMetadataDto CreateProjectManagementTestData()
         {
             return new ModuleMetadataDto
@@ -1343,13 +1343,13 @@ import Generated from './__COMPONENT__.generated.vue'
         }
 
         #region Unimplemented Interface Methods
-        
+
         public async Task<GeneratedCodeDto> GenerateEntityAsync(EntityDefinitionDto input)
         {
             // 🔥 实现实体生成功能 - 企业级标准
             Check.NotNull(input, nameof(input));
             Check.NotNullOrWhiteSpace(input.Name, nameof(input.Name));
-            
+
             try
             {
                 var solutionRoot = FindSolutionRoot();
@@ -1357,7 +1357,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 {
                     throw new AbpException("Could not find the solution root directory.");
                 }
-                
+
                 // 创建简化的模块元数据用于实体生成
                 var moduleMetadata = new ModuleMetadataDto
                 {
@@ -1384,14 +1384,20 @@ import Generated from './__COMPONENT__.generated.vue'
                         }
                     }
                 };
-                
+
                 var result = await GenerateModuleAsync(moduleMetadata);
-                
+
                 return new GeneratedCodeDto
                 {
                     Success = true,
                     EntityName = input.Name,
-                    GeneratedFiles = result.GeneratedFiles,
+                    GeneratedFiles = result.GeneratedFiles?.Select(f => new GeneratedFileDto
+                    {
+                        Name = Path.GetFileName(f),
+                        Path = f,
+                        Content = string.Empty,
+                        Type = "Generated"
+                    }).ToList() ?? new List<GeneratedFileDto>(),
                     GenerationReport = $"Entity '{input.Name}' generated successfully as part of module generation."
                 };
             }
@@ -1402,7 +1408,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 {
                     Success = false,
                     EntityName = input.Name,
-                    GeneratedFiles = new List<string>(),
+                    GeneratedFiles = new List<GeneratedFileDto>(),
                     GenerationReport = $"Failed to generate entity '{input.Name}': {ex.Message}"
                 };
             }
@@ -1473,13 +1479,13 @@ import Generated from './__COMPONENT__.generated.vue'
                 {
                     throw new AbpException("Could not find the solution root directory.");
                 }
-                
+
                 var stats = new CodeGenerationStatisticsDto
                 {
                     TotalModulesGenerated = await CountGeneratedModulesAsync(solutionRoot),
                     TotalEntitiesGenerated = await CountGeneratedEntitiesAsync(solutionRoot),
                     TotalFilesGenerated = await CountGeneratedFilesAsync(solutionRoot),
-                    TotalLinesOfCodeGenerated = await CountGeneratedLinesAsync(solutionRoot),
+                    TotalLinesOfCodeGenerated = (int)await CountGeneratedLinesAsync(solutionRoot),
                     LastGenerationDate = await GetLastGenerationDateAsync(solutionRoot),
                     GenerationEngineVersion = "1.0.0",
                     QualityScore = 95, // 企业级质量标准
@@ -1490,7 +1496,7 @@ import Generated from './__COMPONENT__.generated.vue'
                         MemoryUsageMB = 256
                     }
                 };
-                
+
                 return stats;
             }
             catch (Exception ex)
@@ -1499,57 +1505,57 @@ import Generated from './__COMPONENT__.generated.vue'
                 throw new AbpException($"Failed to get code generation statistics: {ex.Message}");
             }
         }
-        
+
         private async Task<int> CountGeneratedModulesAsync(string solutionRoot)
         {
             await Task.Yield();
             // 统计已生成的模块数量
             var srcDir = Path.Combine(solutionRoot, "src");
             if (!Directory.Exists(srcDir)) return 0;
-            
+
             return Directory.GetDirectories(srcDir)
-                .Count(d => Path.GetFileName(d).Contains("SmartAbp.") && 
+                .Count(d => Path.GetFileName(d).Contains("SmartAbp.") &&
                            Path.GetFileName(d).Contains(".Application"));
         }
-        
+
         private async Task<int> CountGeneratedEntitiesAsync(string solutionRoot)
         {
             await Task.Yield();
             // 统计已生成的实体数量
             var srcDir = Path.Combine(solutionRoot, "src");
             if (!Directory.Exists(srcDir)) return 0;
-            
+
             var entityFiles = Directory.GetFiles(srcDir, "*.cs", SearchOption.AllDirectories)
-                .Where(f => Path.GetFileName(f).EndsWith(".cs") && 
+                .Where(f => Path.GetFileName(f).EndsWith(".cs") &&
                            !Path.GetFileName(f).Contains("Dto") &&
                            !Path.GetFileName(f).Contains("AppService"));
-                           
+
             return entityFiles.Count();
         }
-        
+
         private async Task<int> CountGeneratedFilesAsync(string solutionRoot)
         {
             await Task.Yield();
             // 统计所有生成的文件
             var srcDir = Path.Combine(solutionRoot, "src");
             if (!Directory.Exists(srcDir)) return 0;
-            
+
             return Directory.GetFiles(srcDir, "*.*", SearchOption.AllDirectories)
                 .Where(f => f.EndsWith(".cs") || f.EndsWith(".vue") || f.EndsWith(".ts"))
                 .Count();
         }
-        
+
         private async Task<long> CountGeneratedLinesAsync(string solutionRoot)
         {
             await Task.Yield();
             // 统计代码行数
             var srcDir = Path.Combine(solutionRoot, "src");
             if (!Directory.Exists(srcDir)) return 0;
-            
+
             long totalLines = 0;
             var codeFiles = Directory.GetFiles(srcDir, "*.*", SearchOption.AllDirectories)
                 .Where(f => f.EndsWith(".cs") || f.EndsWith(".vue") || f.EndsWith(".ts"));
-                
+
             foreach (var file in codeFiles)
             {
                 try
@@ -1562,20 +1568,20 @@ import Generated from './__COMPONENT__.generated.vue'
                     _logger.LogWarning(ex, "Failed to count lines in file {FilePath}", file);
                 }
             }
-            
+
             return totalLines;
         }
-        
+
         private async Task<DateTime?> GetLastGenerationDateAsync(string solutionRoot)
         {
             await Task.Yield();
             // 获取最后生成时间
             var srcDir = Path.Combine(solutionRoot, "src");
             if (!Directory.Exists(srcDir)) return null;
-            
+
             var files = Directory.GetFiles(srcDir, "*.cs", SearchOption.AllDirectories);
             if (files.Length == 0) return null;
-            
+
             return files.Select(f => new FileInfo(f).LastWriteTime).Max();
         }
 

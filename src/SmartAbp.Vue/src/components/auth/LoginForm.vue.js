@@ -1,6 +1,5 @@
 /// <reference types="D:/BAOBAB/Baobab.SmartAbp/src/SmartAbp.Vue/node_modules/.vue-global-types/vue_3.5_0.d.ts" />
 import { ref, computed, onMounted, watchEffect } from "vue";
-import { useAuth } from "@/utils/auth";
 import { useRouter } from "vue-router";
 import { debounce } from "lodash-es";
 const emit = defineEmits();
@@ -203,8 +202,8 @@ let __VLS_directives;
 /** @type {__VLS_StyleScopedClasses['form-options']} */ ;
 /** @type {__VLS_StyleScopedClasses['login-card']} */ ;
 /** @type {__VLS_StyleScopedClasses['system-title']} */ ;
-// CSS variable injection 
-// CSS variable injection end 
+// CSS variable injection
+// CSS variable injection end
 __VLS_asFunctionalElement(__VLS_elements.div, __VLS_elements.div)({
     ...{ class: "enterprise-login-container" },
 });

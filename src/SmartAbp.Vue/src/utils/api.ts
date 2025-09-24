@@ -132,9 +132,12 @@ export class ApiService {
         return false
       }
 
-      const response = await axios.post(`${API_BASE_URL}/connect/token`, {
-        grant_type: "refresh_token",
-        refresh_token: refreshToken,
+      const form = new URLSearchParams()
+      form.append("grant_type", "refresh_token")
+      form.append("refresh_token", refreshToken)
+
+      const response = await axios.post(`${API_BASE_URL}/connect/token`, form, {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
       })
 
       const { access_token, refresh_token: newRefreshToken } = response.data

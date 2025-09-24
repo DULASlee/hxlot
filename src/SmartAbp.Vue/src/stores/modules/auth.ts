@@ -1,10 +1,12 @@
-/* eslint-disable */
+
 import { defineStore } from "pinia"
 import { ref, computed } from "vue"
+import { apiService } from "@/utils/api" // 引入apiService
+import { logger } from "@/utils/logger" // 引入logger
 
 export interface UserInfo {
   id: string
-  username: string
+  userName: string
   email: string
   roles: string[]
 }
@@ -15,181 +17,149 @@ export interface LoginCredentials {
   tenantName?: string
 }
 
-export const useAuthStore = defineStore("auth", () => {
-  // 状态
-  const token = ref<string | null>(
-    localStorage.getItem("access_token") || localStorage.getItem("smartabp_token"),
-  )
-  const refreshToken = ref<string | null>(
-    localStorage.getItem("refresh_token") || localStorage.getItem("smartabp_refresh_token"),
-  )
-  const userInfo = ref<UserInfo | null>(null)
-  const isLoading = ref(false)
-
-  // 初始化时尝试从本地存储恢复用户信息
-  const initializeFromStorage = () => {
-    const storedUser = localStorage.getItem("smartabp_user")
-    if (storedUser) {
-      try {
-        const user = JSON.parse(storedUser)
-        userInfo.value = {
-          id: user.id,
-          username: user.userName || user.username,
-          email: user.email,
-          roles: user.roles || ["user"], // 默认角色
-        }
-      } catch (error) {
-        console.error("解析存储用户信息失败:", error)
-      }
-    }
-  }
-
-  // 计算属性
-  const isAuthenticated = computed(() => {
-    // 检查token或从smartabp认证系统获取状态
-    const hasToken = !!token.value
-    const hasStoredToken = !!localStorage.getItem("smartabp_token")
-    const hasUserInfo = !!userInfo.value
-    return hasToken || (hasStoredToken && hasUserInfo)
-  })
-  const hasRole = computed(() => (role: string) => {
-    return userInfo.value?.roles?.includes(role) ?? false
-  })
-
-  // 方法
-  const setToken = (accessToken: string, refreshTokenValue?: string) => {
-    token.value = accessToken
-    localStorage.setItem("access_token", accessToken)
-
-    if (refreshTokenValue) {
-      refreshToken.value = refreshTokenValue
-      localStorage.setItem("refresh_token", refreshTokenValue)
-    }
-  }
-
-  const setUserInfo = (user: UserInfo) => {
-    userInfo.value = user
-  }
-
-  const clearAuth = () => {
-    token.value = null
-    refreshToken.value = null
-    userInfo.value = null
-    localStorage.removeItem("access_token")
-    localStorage.removeItem("refresh_token")
-  }
-
-  const getAuthHeader = () => {
-    return token.value ? { Authorization: `Bearer ${token.value}` } : {}
-  }
-
-  const login = async (credentials: LoginCredentials) => {
-    try {
-      isLoading.value = true
-
-      // 模拟API调用
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      if (credentials.username === "admin" && credentials.password === "1q2w3E*") {
-        const mockToken = "mock-jwt-token-" + Date.now()
-        const mockUser: UserInfo = {
-          id: "1",
-          username: credentials.username,
-          email: "admin@example.com",
-          roles: ["admin"],
-        }
-
-        setToken(mockToken)
-        setUserInfo(mockUser)
-
-        return { success: true, user: mockUser, token: mockToken }
-      } else {
-        throw new Error("用户名或密码错误")
-      }
-    } catch (err) {
-      throw err
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  const logout = () => {
-    clearAuth()
-    // 同时清理smartabp认证系统的存储
-    localStorage.removeItem("smartabp_token")
-    localStorage.removeItem("smartabp_user")
-    localStorage.removeItem("smartabp_refresh_token")
-  }
-
-  // 初始化认证状态
-  const initialize = () => {
-    initializeFromStorage()
-
-    // 监听localStorage变化，实现多标签页同步
-    window.addEventListener("storage", (event) => {
-      if (event.key === "smartabp_token" || event.key === "access_token") {
-        if (event.newValue) {
-          token.value = event.newValue
-        } else {
-          logout()
-        }
-      } else if (event.key === "smartabp_user") {
-        if (event.newValue) {
-          try {
-            const user = JSON.parse(event.newValue)
-            userInfo.value = {
-              id: user.id,
-              username: user.userName || user.username,
-              email: user.email,
-              roles: user.roles || ["user"],
-            }
-          } catch (error) {
-            console.error("解析用户信息失败:", error)
-          }
-        }
-      }
-    })
-  }
-
-  // 兼容smartabp认证系统的登录方法
-  const syncFromSmartAbp = () => {
-    const smartabpToken = localStorage.getItem("smartabp_token")
-    const smartabpUser = localStorage.getItem("smartabp_user")
-
-    if (smartabpToken && smartabpUser) {
-      token.value = smartabpToken
-      try {
-        const user = JSON.parse(smartabpUser)
-        userInfo.value = {
-          id: user.id,
-          username: user.userName || user.username,
-          email: user.email,
-          roles: user.roles || ["user"],
-        }
-        console.log("✅ 已同步SmartAbp认证状态:", userInfo.value)
-      } catch (error) {
-        console.error("同步用户信息失败:", error)
-      }
-    }
-  }
-
-  return {
+export const useAuthStore = defineStore(
+  "auth",
+  () => {
     // 状态
-    token,
-    refreshToken,
-    userInfo,
-    isLoading,
+    const token = ref<string | null>(null)
+    const refreshToken = ref<string | null>(null)
+    const userInfo = ref<UserInfo | null>(null)
+    const isLoading = ref(false)
+
     // 计算属性
-    isAuthenticated,
-    hasRole,
+    const isAuthenticated = computed(() => !!token.value && !!userInfo.value)
+    const hasRole = computed(() => (role: string) => {
+      return userInfo.value?.roles?.includes(role) ?? false
+    })
+
     // 方法
-    setToken,
-    setUserInfo,
-    clearAuth,
-    getAuthHeader,
-    login,
-    logout,
-    initialize,
-    syncFromSmartAbp,
-  }
-})
+    const setToken = (accessToken: string, refreshTokenValue?: string) => {
+      token.value = accessToken
+      localStorage.setItem("smartabp_token", accessToken)
+
+      if (refreshTokenValue) {
+        refreshToken.value = refreshTokenValue
+        localStorage.setItem("smartabp_refresh_token", refreshTokenValue)
+      }
+    }
+
+    const setUserInfo = (user: UserInfo) => {
+      userInfo.value = user
+      localStorage.setItem("smartabp_user", JSON.stringify(user))
+    }
+
+    const clearAuth = () => {
+      token.value = null
+      refreshToken.value = null
+      userInfo.value = null
+      localStorage.removeItem("smartabp_token")
+      localStorage.removeItem("smartabp_refresh_token")
+      localStorage.removeItem("smartabp_user")
+    }
+
+    const getAuthHeader = () => {
+      return token.value ? { Authorization: `Bearer ${token.value}` } : {}
+    }
+
+    const fetchUserInfo = async (): Promise<UserInfo | null> => {
+      if (!token.value) return null
+      try {
+        const user = await apiService.get<UserInfo>("/api/account/my-profile")
+        setUserInfo(user)
+        return user
+      } catch (error) {
+        logger.error("获取用户信息失败:", { error })
+        clearAuth()
+        return null
+      }
+    }
+
+    const login = async (credentials: LoginCredentials) => {
+      isLoading.value = true
+      try {
+        const loginData = new URLSearchParams()
+        loginData.append("grant_type", "password")
+        loginData.append("username", credentials.username)
+        loginData.append("password", credentials.password)
+        loginData.append("client_id", "SmartAbp_App")
+        loginData.append("scope", "SmartAbp")
+
+        const headers: Record<string, string> = {
+          "Content-Type": "application/x-www-form-urlencoded",
+        }
+        if (credentials.tenantName) {
+          headers["__tenant"] = credentials.tenantName
+        }
+
+        const response = await apiService.getInstance().post("/connect/token", loginData, {
+          headers,
+        })
+
+        if (response.status === 200) {
+          const tokenData = response.data
+          setToken(tokenData.access_token, tokenData.refresh_token)
+          await fetchUserInfo()
+          return true
+        } else {
+          const errorData = response.data || {}
+          const message =
+            (errorData && (errorData.error_description || errorData.error)) || "登录失败"
+          throw new Error(message)
+        }
+      } catch (err: any) {
+        clearAuth()
+        logger.error("登录失败:", { error: err })
+        throw err
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    const logout = () => {
+      clearAuth()
+      // 可选：通知后端吊销token
+    }
+
+    const initialize = () => {
+      const storedToken = localStorage.getItem("smartabp_token")
+      const storedRefreshToken = localStorage.getItem("smartabp_refresh_token")
+      const storedUser = localStorage.getItem("smartabp_user")
+
+      if (storedToken && storedUser) {
+        token.value = storedToken
+        refreshToken.value = storedRefreshToken
+        try {
+          userInfo.value = JSON.parse(storedUser)
+        } catch (e) {
+          logger.error("解析存储的用户信息失败", e)
+          clearAuth()
+        }
+      }
+    }
+
+    initialize() // 初始化状态
+
+    return {
+      // 状态
+      token,
+      refreshToken,
+      userInfo,
+      isLoading,
+      // 计算属性
+      isAuthenticated,
+      hasRole,
+      // 方法
+      setToken,
+      setUserInfo,
+      clearAuth,
+      getAuthHeader,
+      login,
+      logout,
+      fetchUserInfo,
+      initialize,
+    }
+  },
+  {
+    // Pinia 纯组合式不支持 persist 选项；保持手动持久化
+  },
+)

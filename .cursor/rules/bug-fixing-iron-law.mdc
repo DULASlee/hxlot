@@ -1,0 +1,171 @@
+# 🔥 第十重爆雷专家模式：BUG修复铁律 (The Ultimate Bug-Fixing Iron Law)
+
+## 🚨 核心铁律：永远禁止删除功能代码
+
+### ❌ **严禁行为 (ABSOLUTELY FORBIDDEN)**
+
+1. **删除核心功能代码**
+   - ❌ 禁止删除任何业务逻辑函数
+   - ❌ 禁止注释掉核心功能方法
+   - ❌ 禁止简单删除导致编译错误的代码
+   - ❌ 禁止使用 `as any` 绕过类型检查
+
+2. **简单粗暴的修复方式**
+   - ❌ 禁止 `// TODO: 实现此功能` 的空函数
+   - ❌ 禁止 `export {}` 清空文件内容
+   - ❌ 禁止删除未使用变量而不分析其用途
+   - ❌ 禁止删除看似无用的接口定义
+
+### ✅ **正确修复方式 (CORRECT APPROACH)**
+
+1. **类型错误修复**
+   ```typescript
+   // ❌ 错误做法
+   // const getInputType = (fieldType: string) => { // 删除
+
+   // ✅ 正确做法
+   const getInputType = (fieldType: string): string => {
+     const typeMap: Record<string, string> = {
+       'string': 'input',
+       'int': 'input-number',
+       'bool': 'switch'
+     }
+     return typeMap[fieldType] || 'input'
+   }
+   ```
+
+2. **未使用变量处理**
+   ```typescript
+   // ❌ 错误做法：直接删除
+   // const designerMode = ref("visual")
+
+   // ✅ 正确做法：分析用途并正确实现
+   const designerMode = ref<"visual" | "legacy">("visual")
+   // 在模板中正确使用或导出给其他组件使用
+   ```
+
+3. **接口属性缺失**
+   ```typescript
+   // ❌ 错误做法：使用 as any
+   pageStore.updatePage((currentPage.value as any).id, {
+
+   // ✅ 正确做法：完善接口定义
+   interface PageData {
+     id: string
+     name: string
+     // ... 其他必要属性
+   }
+   ```
+
+## 🏗️ **低代码引擎开发铁律**
+
+### 🎯 **核心原则**
+1. **功能完整性第一**: 每个函数都有其设计目的，删除可能破坏整体架构
+2. **类型安全优先**: 通过完善类型定义解决编译错误，不使用any绕过
+3. **渐进式修复**: 逐步完善功能实现，不一次性删除大段代码
+4. **业务逻辑保护**: 保护所有业务逻辑代码，即使暂时未使用
+
+### 🔧 **修复策略**
+1. **分析根因**: 理解错误产生的真正原因
+2. **完善定义**: 补充缺失的类型、接口、属性定义
+3. **渐进实现**: 先提供基础实现，后续迭代完善
+4. **保持架构**: 维护代码的整体架构完整性
+
+## 🚀 **第十重爆雷触发机制**
+
+### 📋 **自动检测条件**
+```javascript
+// 当检测到以下模式时自动触发第十重爆雷
+const FORBIDDEN_PATTERNS = [
+  /\/\/ TODO: 实现|\/\/ 删除|\/\/ 注释/g,
+  /export \{\}/g,
+  /as any/g,
+  /\/\* eslint-disable/g
+]
+
+// 强制执行检查
+function validateBugFix(code) {
+  FORBIDDEN_PATTERNS.forEach(pattern => {
+    if (pattern.test(code)) {
+      throw new Error("🚨 违反第十重爆雷铁律：禁止删除功能代码！")
+    }
+  })
+}
+```
+
+### ⚡ **强制执行流程**
+1. **检测阶段**: 扫描所有修改的代码文件
+2. **验证阶段**: 确保没有功能代码被删除
+3. **修复阶段**: 强制使用正确的修复方式
+4. **质量阶段**: 验证修复后的代码质量
+
+## 🛡️ **企业级质量标准**
+
+### 📊 **修复质量评估**
+- **功能完整性**: 100% (不允许删除任何功能)
+- **类型安全性**: 95%+ (严格类型检查)
+- **架构一致性**: 100% (维护整体架构)
+- **业务逻辑性**: 100% (保护所有业务代码)
+
+### 🏆 **最佳实践示例**
+```typescript
+// 🌟 企业级BUG修复示例
+// 问题：函数未使用
+// ❌ 错误修复：删除函数
+// ✅ 正确修复：分析用途并完善实现
+
+const exportEntitySchema = async (): Promise<void> => {
+  try {
+    const store = useEntityModelingStore()
+    const entities = store.entities
+    const relations = store.relations
+
+    const schema = {
+      entities: entities.value,
+      relations: relations.value,
+      metadata: {
+        version: '1.0.0',
+        exportedAt: new Date().toISOString(),
+        generator: 'SmartAbp LowCode Engine'
+      }
+    }
+
+    const blob = new Blob([JSON.stringify(schema, null, 2)], {
+      type: 'application/json'
+    })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `entity-schema-${Date.now()}.json`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+
+    ElMessage.success('实体架构导出成功')
+  } catch (error) {
+    ElMessage.error(`导出失败: ${(error as Error).message}`)
+    throw error
+  }
+}
+```
+
+## 🔥 **AI编程大模型强制遵循声明**
+
+**所有AI编程助手（包括但不限于Claude、GPT、Cursor AI等）在处理SmartAbp低代码引擎项目时，必须严格遵循本铁律。违反者将导致项目开发失败，低代码引擎永远无法完成。**
+
+### 📜 **AI行为约束**
+1. **检测到编译错误时**: 必须分析根因，完善类型定义，不能删除代码
+2. **遇到未使用变量时**: 必须分析设计意图，正确实现功能，不能简单删除
+3. **面对复杂类型错误时**: 必须通过接口完善解决，不能使用any绕过
+4. **修复业务逻辑BUG时**: 必须保持功能完整性，渐进式修复
+
+### ⚡ **强制执行机制**
+- 每次代码修复前必须通过第十重爆雷检查
+- 任何删除功能代码的操作都将被自动阻止
+- 所有修复必须通过企业级质量门禁验证
+- 违反铁律的修复将被强制回滚并重新修复
+
+---
+
+**🔥 第十重爆雷宣言**: 代码是企业的核心资产，每一行业务逻辑都是宝贵的智慧结晶，绝不允许因为简单的编译错误而被随意删除！
