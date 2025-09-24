@@ -407,6 +407,7 @@ import { ref, computed, onMounted } from "vue"
 import { ElMessage } from "element-plus"
 import { useEntityModelingStore, type EntityDefinition, type EntityField } from "@/stores/lowcode/entityModeling"
 import { usePageDesignStore } from "@/stores/lowcode/pageDesign"
+import { logger } from "@/utils/logger"
 import EnterpriseCodeGenerationEngine from "@/components/lowcode/EnterpriseCodeGenerationEngine.vue"
 
 // Stores
@@ -587,7 +588,7 @@ const handleSelectAll = (checked: string | number | boolean) => {
 }
 
 const updateGeneration = () => {
-  console.log("更新生成配置", selectedEntities.value)
+  logger?.info("更新生成配置", { selectedEntities: selectedEntities.value.length })
 }
 
 const refreshEntities = () => {
@@ -731,7 +732,7 @@ const generateAllCode = async () => {
     generationStatus.value = "exception"
     generating.value = false
     ElMessage.error(`代码生成失败: ${error.message}`)
-    console.error('代码生成错误:', error)
+    logger?.error('代码生成错误', { error: String(error) })
   }
 }
 
@@ -1132,7 +1133,7 @@ const handleDelete = async (row: any) => {
   try {
     await ElMessageBox.confirm('确定删除此${entity.displayName}吗？', '确认删除')
     // 🔥 真实的删除逻辑
-    console.log('删除${entity.displayName}:', row)
+    logger?.info('删除实体操作', { entityDisplayName: '${entity.displayName}', row })
     ElMessage.success('删除成功')
   } catch {
     // 用户取消
@@ -1349,12 +1350,12 @@ const handleDelete = (row: any) => {
 }
 
 const handleSearch = () => {
-  console.log('搜索:', searchText.value)
+  logger?.info('执行搜索操作', { searchText: searchText.value })
 }
 
 onMounted(() => {
   // 🔥 加载数据
-  console.log('\${entity.displayName}列表初始化')
+  logger?.info('实体列表初始化', { entityDisplayName: '${entity.displayName}' })
 })
 </${'script'}>\``
 }
@@ -1371,7 +1372,8 @@ const generateFormComponent = (entity: any) => {
 
 <${'script'} setup lang="ts">
 // ${entity.displayName}表单逻辑
-console.log('${entity.displayName}表单组件')
+// ${entity.displayName}表单组件初始化
+logger?.info('表单组件初始化', { entityDisplayName: '${entity.displayName}' })
 </${'script'}>`
 }
 

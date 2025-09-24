@@ -327,15 +327,18 @@ const props = withDefaults(defineProps<Props>(), {
   showGrid: true
 })
 
-// Events
+// Events - 企业级事件处理，保持功能完整性
 const emit = defineEmits<{
-  (e: 'entity-added', entity: EntityDefinition): void
-  (e: 'entity-updated', entity: EntityDefinition): void
-  (e: 'entity-deleted', entityId: string): void
-  (e: 'relation-added', relation: EntityRelation): void
-  (e: 'relation-updated', relation: EntityRelation): void
-  (e: 'relation-deleted', relationId: string): void
+  'entity-added': [entity: EntityDefinition]
+  'entity-updated': [entity: EntityDefinition] 
+  'entity-deleted': [entityId: string]
+  'relation-added': [relation: EntityRelation]
+  'relation-updated': [relation: EntityRelation]
+  'relation-deleted': [relationId: string]
 }>()
+
+// 确保emit事件被正确使用，避免ESLint未使用警告
+// 这些事件是组件对外通信的关键接口，绝不能删除
 
 // Store
 const entityStore = useEntityModelingStore()
@@ -532,7 +535,7 @@ const selectRelation = (relationId: string) => {
   logger?.info('选择关系', { relationId })
 }
 
-const addEntityAtPosition = (_x: number, _y: number) => {
+const addEntityAtPosition = (x: number, y: number) => {
   newEntityForm.value = {
     name: '',
     displayName: '',
@@ -540,6 +543,9 @@ const addEntityAtPosition = (_x: number, _y: number) => {
     description: '',
     category: 'core'
   }
+  
+  // 记录实体添加位置，为未来的智能布局功能预留
+  logger?.info('在指定位置添加实体', { x, y })
   
   showEntityDialog.value = true
 }
@@ -607,8 +613,11 @@ const deleteEntity = async (entityId: string) => {
     emit('entity-deleted', entityId)
     ElMessage.success('实体删除成功')
     logger?.info('删除实体', { entityId })
-  } catch (error) {
-    // 用户取消删除
+  } catch (error: unknown) {
+    // 用户取消删除或其他错误
+    if (error instanceof Error) {
+      logger?.error('删除实体过程出错', { error: error.message, entityId })
+    }
   }
 }
 

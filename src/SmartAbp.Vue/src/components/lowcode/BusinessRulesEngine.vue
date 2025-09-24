@@ -1039,8 +1039,11 @@ const deleteRule = async (ruleId: string) => {
     emit('rule-deleted', ruleId)
     ElMessage.success('规则删除成功')
     logger?.info('删除规则', { ruleId })
-  } catch (error) {
-    // 用户取消删除
+  } catch (error: unknown) {
+    // 用户取消删除或其他错误
+    if (error instanceof Error) {
+      logger?.error('删除规则过程出错', { error: error.message, ruleId })
+    }
   }
 }
 

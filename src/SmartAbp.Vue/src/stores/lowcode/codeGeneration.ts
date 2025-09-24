@@ -78,7 +78,7 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
   // 代码生成主方法
   const generateCode = async (
     config: CodeGenerationConfig,
-    onProgress?: (_progress: GenerationProgress) => void
+    onProgress?: (progress: GenerationProgress) => void
   ): Promise<GenerationResult> => {
     try {
       isGenerating.value = true
@@ -209,7 +209,7 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
   // 生成后端代码
   const generateBackendCode = async (
     config: CodeGenerationConfig,
-    onProgress: (_task: string) => void
+    onProgress: (task: string) => void
   ) => {
     const files = []
 
@@ -236,7 +236,7 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
   // 生成前端代码
   const generateFrontendCode = async (
     config: CodeGenerationConfig,
-    onProgress: (_task: string) => void
+    onProgress: (task: string) => void
   ) => {
     const files = []
 
@@ -263,7 +263,7 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
   // 生成数据库代码
   const generateDatabaseCode = async (
     config: CodeGenerationConfig,
-    onProgress: (_task: string) => void
+    onProgress: (task: string) => void
   ) => {
     const files = []
 

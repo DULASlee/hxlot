@@ -22,7 +22,7 @@ export async function authGuard(requiredRoles: string[] = []) {
     return false
   }
 
-  if (requiredRoles.length > 0 && !requiredRoles.some((_r) => authStore.isAuthenticated)) {
+  if (requiredRoles.length > 0 && !requiredRoles.some((role) => authStore.userInfo?.roles?.includes(role))) {
     return false
   }
 

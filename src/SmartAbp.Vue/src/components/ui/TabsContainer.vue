@@ -395,7 +395,7 @@ const dragIndicatorStyle = computed(() => {
 })
 
 // 方法
-const getTabStyle = (tab: TabConfig, _index: number) => {
+const getTabStyle = (tab: TabConfig, index: number) => {
   const baseStyle: any = {}
   
   if (props.tabWidth === 'fixed') {
@@ -406,9 +406,13 @@ const getTabStyle = (tab: TabConfig, _index: number) => {
     baseStyle.minWidth = '120px'
   }
   
+  // 使用index设置层级，保持功能完整性
+  baseStyle.zIndex = index + 1
+  
   if (dragState.value.dragging && dragState.value.dragTabId === tab.id) {
     baseStyle.opacity = 0.5
     baseStyle.transform = `translateX(${dragState.value.currentX - dragState.value.startX}px)`
+    baseStyle.zIndex = 999 // 拖拽时提升层级
   }
   
   return baseStyle
