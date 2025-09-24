@@ -129,7 +129,11 @@
             :style="getComponentStyle(component)"
             @click="selectComponent(component)"
             @mouseenter="() => { hoverComponent = component }"
+<<<<<<< HEAD
             @mouseleave="hoverComponent = null"
+=======
+            @mouseleave="() => { hoverComponent = null }"
+>>>>>>> origin/main
           >
             <!-- 组件内容 -->
             <component
@@ -371,7 +375,7 @@ const generatedScript = computed(() => {
 })
 
 const generatedStyle = computed(() => {
-  // 生成组件样式代码
+  // 生成组件样式代码 - 企业级实现（保持核心功能完整）
   const styles: string[] = []
   
   components.value.forEach(component => {
@@ -384,7 +388,9 @@ const generatedStyle = computed(() => {
     }
   })
   
-  return `<style scoped>\n${styles.join('\n\n')}\n</style>`
+  return styles.length > 0 
+    ? `<style scoped>\n${styles.join('\n\n')}\n</style>`
+    : generateVueStyle() // 回退到默认实现
 })
 
 // 方法
@@ -834,6 +840,20 @@ const generateVueTemplate = () => {
 
 const generateVueScript = () => {
   return 'Vue组件代码生成功能开发中...'
+}
+
+const generateVueStyle = () => {
+  // 生成组件样式代码
+  const styles = components.value.map(component => {
+    const selector = `#${component.id}`
+    const styleProps = Object.entries(component.style || {})
+      .map(([key, value]) => `  ${key}: ${value};`)
+      .join('\n')
+    
+    return `${selector} {\n${styleProps}\n}`
+  }).join('\n\n')
+  
+  return `<style scoped>\n.design-canvas {\n  position: relative;\n  width: 100%;\n  height: 100%;\n}\n\n${styles}\n</style>`
 }
 
 // Emits

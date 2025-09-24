@@ -47,7 +47,7 @@
     <div class="generation-body">
       <!-- 智能代码生成引擎 -->
       <div class="intelligent-engine-panel">
-        <IntelligentCodeGenerationEngine
+        <EnterpriseCodeGenerationEngine
           @generation-completed="handleGenerationCompleted"
           @template-selected="handleTemplateSelected"
           @preview-updated="handlePreviewUpdated"
@@ -407,7 +407,7 @@ import { ref, computed, onMounted } from "vue"
 import { ElMessage } from "element-plus"
 import { useEntityModelingStore, type EntityDefinition, type EntityField } from "@/stores/lowcode/entityModeling"
 import { usePageDesignStore } from "@/stores/lowcode/pageDesign"
-import IntelligentCodeGenerationEngine from "@/components/lowcode/IntelligentCodeGenerationEngine.vue"
+import EnterpriseCodeGenerationEngine from "@/components/lowcode/EnterpriseCodeGenerationEngine.vue"
 
 // Stores
 const entityStore = useEntityModelingStore()
