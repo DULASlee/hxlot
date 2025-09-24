@@ -1136,7 +1136,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
-import { useEntityModelingStore } from "@/stores/lowcode/entityModeling"
+import { useEntityModelingStore, type EntityDefinition, type EntityField } from "@/stores/lowcode/entityModeling"
 import AdvancedEntityRelationshipDesigner from "@/components/lowcode/AdvancedEntityRelationshipDesigner.vue"
 import AdvancedFieldTypeDesigner from "@/components/lowcode/AdvancedFieldTypeDesigner.vue"
 import BusinessRulesEngine from "@/components/lowcode/BusinessRulesEngine.vue"
@@ -1296,13 +1296,13 @@ const addPresetEntity = (preset: any) => {
 
 // 🔥 实体编辑功能 - 真实可用的编辑界面
 const showEntityEditDialog = ref(false)
-const editingEntity = ref<any>(null)
+const editingEntity = ref<EntityDefinition | null>(null)
 const entityEditFormRef = ref()
 const entityFeatures = ref<string[]>([])
 
 // 移除未使用的表单规则和方法
 
-const editEntity = (entity: any) => {
+const editEntity = (entity: EntityDefinition) => {
   editingEntity.value = { ...entity } // 深拷贝避免直接修改
   showEntityEditDialog.value = true
 }
@@ -1331,7 +1331,7 @@ const handleEntityEditCancel = () => {
 }
 
 // 🔥 核心CRUD功能实现 - 确保真实可用
-const saveEntity = async (entity: any) => {
+const saveEntity = async (entity: EntityDefinition) => {
   try {
     // 验证实体数据
     if (!entity.name || !entity.tableName) {
@@ -1352,7 +1352,7 @@ const saveEntity = async (entity: any) => {
   }
 }
 
-const updateEntityField = (entityId: string, fieldIndex: number, field: any) => {
+const updateEntityField = (entityId: string, fieldIndex: number, field: EntityField) => {
   const entity = entities.value.find(e => e.id === entityId)
   if (entity && entity.fields[fieldIndex]) {
     entity.fields[fieldIndex] = { ...entity.fields[fieldIndex], ...field }
@@ -1364,15 +1364,14 @@ const updateEntityField = (entityId: string, fieldIndex: number, field: any) => 
 const addEntityField = (entityId: string) => {
   const entity = entities.value.find(e => e.id === entityId)
   if (entity) {
-    const newField = {
-      id: `field-${Date.now()}`,
+    const newField: EntityField = {
       name: "NewField",
       displayName: "新字段",
       type: "string",
       isRequired: false,
-      maxLength: 100,
+      length: 100,
       description: "",
-      validationRules: []
+      isPrimaryKey: false
     }
     entity.fields.push(newField)
     store.updateEntity(entityId, entity)
@@ -1439,7 +1438,7 @@ const deleteEntity = async (entityId: string) => {
   }
 }
 
-const validateEntity = (entity: any) => {
+const validateEntity = (entity: EntityDefinition) => {
   const errors: string[] = []
   
   // 基础验证

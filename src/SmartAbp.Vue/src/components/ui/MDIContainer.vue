@@ -175,7 +175,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import type { MDIWindowConfig } from '@/types/unified-metadata'
+import type { MDIWindowConfig } from '@/stores/lowcode/entityModeling'
 
 // Props
 interface Props {

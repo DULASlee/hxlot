@@ -405,7 +405,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue"
 import { ElMessage } from "element-plus"
-import { useEntityModelingStore } from "@/stores/lowcode/entityModeling"
+import { useEntityModelingStore, type EntityDefinition, type EntityField } from "@/stores/lowcode/entityModeling"
 import { usePageDesignStore } from "@/stores/lowcode/pageDesign"
 import IntelligentCodeGenerationEngine from "@/components/lowcode/IntelligentCodeGenerationEngine.vue"
 
@@ -445,7 +445,21 @@ const outputDirectory = ref("./generated")
 const selectedFeatures = ref(["crud", "validation", "permission", "audit"])
 
 // 生成结果
-const generationResult = ref<any>(null)
+const generationResult = ref<{
+  success: boolean;
+  fileCount: number;
+  lineCount: number;
+  duration: number;
+  totalSize: number;
+  files: Array<{
+    name: string;
+    path: string;
+    content: string;
+    type: string;
+    size: number;
+    lineCount: number;
+  }>;
+} | null>(null)
 
 // 预览文件数据
 const previewFiles = ref([
@@ -752,7 +766,16 @@ const getStatusText = () => {
 }
 
 // 🔥 真实的代码生成实现
-const generateBackendCode = async (config: any) => {
+const generateBackendCode = async (config: {
+  entities: EntityDefinition[];
+  outputDirectory: string;
+  features: string[];
+  layoutType: string;
+  generateBackend: boolean;
+  generateFrontend: boolean;
+  generateTests: boolean;
+  generateDocs: boolean;
+}) => {
   await new Promise(resolve => setTimeout(resolve, 1000)) // 模拟网络请求
   
   const files: any[] = []
@@ -802,7 +825,16 @@ const generateBackendCode = async (config: any) => {
   return { files }
 }
 
-const generateFrontendCode = async (config: any) => {
+const generateFrontendCode = async (config: {
+  entities: EntityDefinition[];
+  outputDirectory: string;
+  features: string[];
+  layoutType: string;
+  generateBackend: boolean;
+  generateFrontend: boolean;
+  generateTests: boolean;
+  generateDocs: boolean;
+}) => {
   await new Promise(resolve => setTimeout(resolve, 1200))
   
   const files: any[] = []
@@ -812,7 +844,7 @@ const generateFrontendCode = async (config: any) => {
     if (config.layoutType === 'mdi') {
       files.push({
         name: `${entity.name}Management.vue`,
-        path: `src/views/${entity.module}/${entity.name}Management.vue`,
+        path: `src/views/generated/${entity.name}Management.vue`,
         content: generateMDIManagementComponent(entity),
         type: 'vue',
         size: 5.2,
@@ -821,7 +853,7 @@ const generateFrontendCode = async (config: any) => {
     } else if (config.layoutType === 'tabs') {
       files.push({
         name: `${entity.name}TabsView.vue`,
-        path: `src/views/${entity.module}/${entity.name}TabsView.vue`,
+        path: `src/views/generated/${entity.name}TabsView.vue`,
         content: generateTabsViewComponent(entity),
         type: 'vue',
         size: 4.8,
@@ -933,11 +965,11 @@ const generateDocsCode = async (config: any) => {
 }
 
 // 🔥 具体的代码生成器实现
-const generateEntityClass = (entity: any) => {
-  const fields = entity.fields.map((field: any) => {
-    const attrs = []
+const generateEntityClass = (entity: EntityDefinition) => {
+  const fields = entity.fields.map((field: EntityField) => {
+    const attrs: string[] = []
     if (field.isRequired) attrs.push('[Required]')
-    if (field.maxLength) attrs.push(`[StringLength(${field.maxLength})]`)
+    if (field.length) attrs.push(`[StringLength(${field.length})]`)
     
     const attrString = attrs.length > 0 ? `    ${attrs.join('\n    ')}\n` : ''
     
@@ -960,8 +992,8 @@ ${fields}
 }`
 }
 
-const generateDtoClass = (entity: any) => {
-  const fields = entity.fields.filter((f: any) => f.name !== 'Id').map((field: any) => {
+const generateDtoClass = (entity: EntityDefinition) => {
+  const fields = entity.fields.filter((f: EntityField) => f.name !== 'Id').map((field: EntityField) => {
     return `    /// <summary>
     /// ${field.displayName || field.description || field.name}
     /// </summary>
@@ -984,7 +1016,7 @@ ${fields}
 }`
 }
 
-const generateAppService = (entity: any) => {
+const generateAppService = (entity: EntityDefinition) => {
   return `using System;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
@@ -1029,7 +1061,7 @@ namespace SmartAbp.Application.Services
 }`
 }
 
-const generateMDIManagementComponent = (entity: any) => {
+const generateMDIManagementComponent = (entity: EntityDefinition) => {
   return `<template>
   <div class="mdi-${entity.name.toLowerCase()}-management">
     <div class="mdi-toolbar">
@@ -1049,10 +1081,10 @@ const generateMDIManagementComponent = (entity: any) => {
         border
       >
         <el-table-column type="selection" width="55" />
-${entity.fields.filter((f: any) => f.showInList !== false).map((field: any) => `        <el-table-column
+${entity.fields.map((field: EntityField) => `        <el-table-column
           prop="${field.name.toLowerCase()}"
           label="${field.displayName}"
-          ${field.type === 'string' && field.maxLength > 100 ? 'show-overflow-tooltip' : ''}
+          ${field.type === 'string' && (field.length || 0) > 100 ? 'show-overflow-tooltip' : ''}
         />`).join('\n')}
         <el-table-column label="操作" width="200">
           <template #default="{ row }">
@@ -1148,7 +1180,7 @@ onMounted(() => {
 </style>\``
 }
 
-const generateTabsViewComponent = (entity: any) => {
+const generateTabsViewComponent = (entity: EntityDefinition) => {
   return `<template>
   <div class="tabs-${entity.name.toLowerCase()}-view">
     <TabsContainer
@@ -1257,7 +1289,7 @@ const handleItemUpdated = (item: any) => {
 </style>\``
 }
 
-const generateListComponent = (entity: any) => {
+const generateListComponent = (entity: EntityDefinition) => {
   return `<template>
   <div class="${entity.name.toLowerCase()}-list">
     <!-- 搜索栏 -->
@@ -1282,10 +1314,10 @@ const generateListComponent = (entity: any) => {
       stripe
     >
       <el-table-column type="selection" width="55" />
-${entity.fields.filter((f: any) => f.showInList !== false).map((field: any) => `      <el-table-column
+${entity.fields.map((field: EntityField) => `      <el-table-column
         prop="${field.name.toLowerCase()}"
         label="${field.displayName}"
-        ${field.type === 'string' && field.maxLength > 50 ? 'show-overflow-tooltip' : ''}
+        ${field.type === 'string' && (field.length || 0) > 50 ? 'show-overflow-tooltip' : ''}
       />`).join('\n')}
       <el-table-column label="操作" width="150">
         <template #default="{ row }">
@@ -1367,7 +1399,7 @@ const getDefaultValue = (fieldType: string) => {
 }
 
 // 🔥 补充的代码生成方法
-const generateController = (entity: any) => {
+const generateController = (entity: EntityDefinition) => {
   return `using Microsoft.AspNetCore.Mvc;
 using SmartAbp.Application.Contracts.Dtos;
 using SmartAbp.Application.Services;
@@ -1417,8 +1449,8 @@ namespace SmartAbp.HttpApi.Controllers
 }`
 }
 
-const generateTypeDefinitions = (entity: any) => {
-  const interfaceFields = entity.fields.map((field: any) => {
+const generateTypeDefinitions = (entity: EntityDefinition) => {
+  const interfaceFields = entity.fields.map((field: EntityField) => {
     return `  /** ${field.displayName || field.description || field.name} */
   ${field.name.toLowerCase()}: ${getTypeScriptType(field.type)}${field.isRequired ? '' : ' | null'}`
   }).join('\n')
@@ -1432,7 +1464,7 @@ ${interfaceFields}
 }
 
 export interface ${entity.name}CreateInput {
-${entity.fields.filter((f: any) => f.name !== 'Id').map((field: any) => 
+${entity.fields.filter((f: EntityField) => f.name !== 'Id').map((field: EntityField) => 
   `  ${field.name.toLowerCase()}: ${getTypeScriptType(field.type)}${field.isRequired ? '' : ' | null'}`
 ).join('\n')}
 }
@@ -1450,7 +1482,7 @@ export interface ${entity.name}QueryParams {
 }`
 }
 
-const generateEntityStore = (entity: any) => {
+const generateEntityStore = (entity: EntityDefinition) => {
   return `import { defineStore } from 'pinia'
 import type { ${entity.name}, ${entity.name}CreateInput, ${entity.name}UpdateInput, ${entity.name}QueryParams } from '@/types/${entity.module}/${entity.name}.types'
 
@@ -1551,7 +1583,7 @@ export const use${entity.name}Store = defineStore('${entity.name.toLowerCase()}'
 })`
 }
 
-const generateModuleRoutes = (entities: any[], layoutType: string) => {
+const generateModuleRoutes = (entities: EntityDefinition[], layoutType: string) => {
   const routes = entities.map(entity => {
     if (layoutType === 'mdi') {
       return `  {
@@ -1597,7 +1629,7 @@ ${routes}
 ]`
 }
 
-const generateUnitTests = (entity: any) => {
+const generateUnitTests = (entity: EntityDefinition) => {
   return `import { describe, it, expect, beforeEach } from 'vitest'
 import { use${entity.name}Store } from '@/stores/${entity.module}/${entity.name.toLowerCase()}.store'
 import { createPinia, setActivePinia } from 'pinia'
@@ -1646,7 +1678,7 @@ describe('${entity.name}Store', () => {
 })`
 }
 
-const generateApiDocumentation = (entities: any[]) => {
+const generateApiDocumentation = (entities: EntityDefinition[]) => {
   const apiDocs = entities.map(entity => `
 ## ${entity.displayName} API
 

@@ -869,14 +869,15 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
-import { useEntityModelingStore } from "@/stores/lowcode/entityModeling"
+import { logger } from "@/utils/logger"
+import { useEntityModelingStore, type EntityDefinition, type EntityField, type MDIWindowConfig, type TabConfig, type UIComponentMetadata } from "@/stores/lowcode/entityModeling"
 import { usePageDesignStore } from "@/stores/lowcode/pageDesign"
 import VisualComponentPalette from "@/components/lowcode/VisualComponentPalette.vue"
 import VisualDesignCanvas from "@/components/lowcode/VisualDesignCanvas.vue"
 import ComponentPropertyPanel from "@/components/lowcode/ComponentPropertyPanel.vue"
 import MDIContainer from "@/components/ui/MDIContainer.vue"
 import TabsContainer from "@/components/ui/TabsContainer.vue"
-import type { MDIWindowConfig, TabConfig } from '@/types/unified-metadata'
+// 使用简化的类型定义
 
 // Stores
 const entityStore = useEntityModelingStore()
@@ -910,15 +911,15 @@ const previewDevice = ref("desktop")
 
 // 可视化设计器状态
 const componentSearchFilter = ref("")
-const selectedEntity = ref(null)
-const draggedComponent = ref(null)
+const selectedEntity = ref<EntityDefinition | null>(null)
+const draggedComponent = ref<any>(null)
 const designerMode = ref("visual") // visual | legacy
 
 // 界面模式相关
 const layoutMode = ref("single") // single | tabs | mdi | split
 
 // MDI相关数据
-const mdiWindows = ref<MDIWindowConfig[]>([
+const mdiWindows = ref<any[]>([
   {
     id: "window-1",
     title: "用户管理",
@@ -937,10 +938,10 @@ const mdiWindows = ref<MDIWindowConfig[]>([
   }
 ])
 const activeMDIWindow = ref("window-1")
-const selectedMDIWindow = ref<MDIWindowConfig | null>(null)
+const selectedMDIWindow = ref<any>(null)
 
 // Tabs相关数据  
-const tabPages = ref<TabConfig[]>([
+const tabPages = ref<any[]>([
   {
     id: "tab-1",
     title: "用户列表",
@@ -965,7 +966,7 @@ const tabPages = ref<TabConfig[]>([
   }
 ])
 const activeTab = ref("tab-1")
-const selectedTab = ref<TabConfig | null>(null)
+const selectedTab = ref<any>(null)
 
 // 组件库定义
 const layoutComponents = [
@@ -1240,37 +1241,48 @@ const handleComponentDragEnd = (dragData) => {
   console.log('Component drag ended:', dragData)
 }
 
-const handleComponentAdded = (component) => {
-  canvasComponents.value.push(component)
-  selectedComponent.value = component
-  
-  // 更新页面数据
-  if (currentPage.value) {
-    currentPage.value.components = [...canvasComponents.value]
-    pageStore.updatePage(currentPage.value.id, { components: canvasComponents.value })
+const handleComponentAdded = (component: any) => {
+  // 简化组件添加逻辑
+  const newComponent = {
+    ...component,
+    id: component.id || `component-${Date.now()}`,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   }
   
-  ElMessage.success(`组件"${component.name}"添加成功`)
+  canvasComponents.value.push(newComponent)
+  selectedComponent.value = newComponent
+  
+  ElMessage.success(`组件"${component.displayName || component.name}"添加成功`)
 }
 
-const handleComponentSelected = (component) => {
+const handleComponentSelected = (component: any) => {
   selectedComponent.value = component
-  console.log('Component selected:', component)
+  // 使用结构化日志替代console.log
+  logger?.info('Component selected', { componentId: component.id, componentType: component.type })
 }
 
-const handleComponentUpdated = (component) => {
+const handleComponentUpdated = (component: any) => {
   const index = canvasComponents.value.findIndex(c => c.id === component.id)
   if (index > -1) {
-    canvasComponents.value[index] = component
+    // 更新时间戳
+    const updatedComponent = {
+      ...component,
+      updatedAt: new Date().toISOString()
+    }
+    canvasComponents.value[index] = updatedComponent
     
     // 同步到页面存储
     if (currentPage.value) {
-      pageStore.updatePage(currentPage.value.id, { components: canvasComponents.value })
+      pageStore.updatePage(currentPage.value.id, { 
+        components: canvasComponents.value,
+        updatedAt: new Date().toISOString()
+      })
     }
   }
 }
 
-const handleComponentDeleted = (component) => {
+const handleComponentDeleted = (component: any) => {
   const index = canvasComponents.value.findIndex(c => c.id === component.id)
   if (index > -1) {
     canvasComponents.value.splice(index, 1)
@@ -1281,17 +1293,22 @@ const handleComponentDeleted = (component) => {
     
     // 同步到页面存储
     if (currentPage.value) {
-      pageStore.updatePage(currentPage.value.id, { components: canvasComponents.value })
+      pageStore.updatePage(currentPage.value.id, { 
+        components: canvasComponents.value,
+        updatedAt: new Date().toISOString()
+      })
     }
+    
+    ElMessage.success(`组件"${component.displayName || component.name}"删除成功`)
   }
 }
 
-const handlePreviewGenerated = (previewData) => {
-  console.log('Preview generated:', previewData)
+const handlePreviewGenerated = (previewData: any) => {
+  logger?.info('Preview generated', { dataSize: JSON.stringify(previewData).length })
   showPreview.value = true
 }
 
-const handlePropertyChanged = (data) => {
+const handlePropertyChanged = (data: { componentId: string; property: string; value: any }) => {
   const { componentId, property, value } = data
   const component = canvasComponents.value.find(c => c.id === componentId)
   
@@ -1301,38 +1318,53 @@ const handlePropertyChanged = (data) => {
   }
 }
 
-const handleLayoutChanged = (data) => {
+const handleLayoutChanged = (data: { componentId: string; layout: any }) => {
   const { componentId, layout } = data
   const component = canvasComponents.value.find(c => c.id === componentId)
   
   if (component) {
+    // 类型安全的布局更新
+    component.layout = {
+      ...component.layout,
+      x: layout.x || 0,
+      y: layout.y || 0,
+      width: layout.width || 200,
+      height: layout.height || 100,
+      resizable: layout.resizable ?? true,
+      draggable: layout.draggable ?? true
+    }
+    
+    // 同步样式属性
     component.style = {
       ...component.style,
-      left: `${layout.x}px`,
-      top: `${layout.y}px`,
-      width: layout.width,
-      height: layout.height,
-      position: layout.position,
-      zIndex: layout.zIndex
+      left: `${layout.x || 0}px`,
+      top: `${layout.y || 0}px`,
+      width: typeof layout.width === 'number' ? `${layout.width}px` : layout.width || '200px',
+      height: typeof layout.height === 'number' ? `${layout.height}px` : layout.height || '100px',
+      position: layout.position || 'absolute',
+      zIndex: layout.zIndex || 1
     }
+    
     handleComponentUpdated(component)
   }
 }
 
-const handleStyleChanged = (data) => {
+const handleStyleChanged = (data: { componentId: string; property: string; value: any }) => {
   const { componentId, property, value } = data
   const component = canvasComponents.value.find(c => c.id === componentId)
   
   if (component) {
-    if (!component.computedStyle) {
-      component.computedStyle = {}
+    // 确保style对象存在
+    if (!component.style) {
+      component.style = {}
     }
-    component.computedStyle[property] = value
+    
+    component.style[property] = value
     handleComponentUpdated(component)
   }
 }
 
-const handleDataBindingChanged = (data) => {
+const handleDataBindingChanged = (data: { componentId: string; dataBinding: any }) => {
   const { componentId, dataBinding } = data
   const component = canvasComponents.value.find(c => c.id === componentId)
   
