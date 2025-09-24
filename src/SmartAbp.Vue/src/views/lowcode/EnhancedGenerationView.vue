@@ -1746,8 +1746,76 @@ onMounted(() => {
   entityStore.loadFromLocalStorage()
   pageStore.loadFromLocalStorage()
   
-  if (availableEntities.value.length > 0) {
-    selectedEntities.value = [availableEntities.value[0].id]
+  // 如果没有实体，创建示例实体供用户立即测试代码生成功能
+  if (availableEntities.value.length === 0) {
+    ElMessage.info({
+      message: '🚀 正在创建示例实体，便于您立即测试企业级代码生成功能！',
+      duration: 3000
+    })
+    
+    // 创建示例权限管理系统实体
+    const sampleEntities = [
+      {
+        name: 'User',
+        tableName: 'Users',
+        displayName: '用户',
+        description: '系统用户实体 - 权限管理核心',
+        category: 'core' as const,
+        module: 'Identity',
+        fields: [
+          { name: 'Id', displayName: '主键', type: 'Guid', isRequired: true, isPrimaryKey: true },
+          { name: 'UserName', displayName: '用户名', type: 'string', length: 50, isRequired: true, isPrimaryKey: false },
+          { name: 'Email', displayName: '邮箱', type: 'string', length: 100, isRequired: true, isPrimaryKey: false },
+          { name: 'PhoneNumber', displayName: '手机号', type: 'string', length: 20, isRequired: false, isPrimaryKey: false },
+          { name: 'IsActive', displayName: '是否启用', type: 'bool', isRequired: true, isPrimaryKey: false }
+        ],
+        validationRules: [],
+        enableSoftDelete: true,
+        enableAudit: true,
+        enableMultiTenant: false,
+        isCompleted: true
+      },
+      {
+        name: 'Role',
+        tableName: 'Roles',
+        displayName: '角色',
+        description: '系统角色实体 - 权限管理核心',
+        category: 'core' as const,
+        module: 'Identity',
+        fields: [
+          { name: 'Id', displayName: '主键', type: 'Guid', isRequired: true, isPrimaryKey: true },
+          { name: 'Name', displayName: '角色名称', type: 'string', length: 50, isRequired: true, isPrimaryKey: false },
+          { name: 'DisplayName', displayName: '显示名称', type: 'string', length: 100, isRequired: true, isPrimaryKey: false },
+          { name: 'Description', displayName: '描述', type: 'string', length: 500, isRequired: false, isPrimaryKey: false }
+        ],
+        validationRules: [],
+        enableSoftDelete: false,
+        enableAudit: true,
+        enableMultiTenant: false,
+        isCompleted: true
+      }
+    ]
+    
+    sampleEntities.forEach(entityData => {
+      entityStore.addEntity(entityData)
+    })
+    entityStore.saveToLocalStorage()
+    
+    // 延迟显示成功消息，确保用户能看到
+    setTimeout(() => {
+      ElMessage.success({
+        message: '✅ 示例权限管理系统实体创建完成！现在可以点击"一键生成全部代码"测试功能',
+        duration: 5000
+      })
+      
+      // 自动选择创建的实体
+      selectedEntities.value = sampleEntities.map(e => entityStore.entities.find(entity => entity.name === e.name)?.id).filter(Boolean) as string[]
+    }, 1000)
+  } else {
+    // 如果有实体，默认选择第一个
+    if (availableEntities.value.length > 0) {
+      selectedEntities.value = [availableEntities.value[0].id]
+    }
   }
   
   if (previewFiles.value.length > 0) {

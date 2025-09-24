@@ -340,7 +340,9 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
-        redirect: "/lowcode/entity-modeling"
+        name: "LowCodeStudioWelcome",
+        component: () => import("@/views/lowcode/LowCodeStudioWelcome.vue"),
+        meta: { title: "LowCode Studio", menuKey: "welcome" }
       },
       {
         path: "entity-modeling",

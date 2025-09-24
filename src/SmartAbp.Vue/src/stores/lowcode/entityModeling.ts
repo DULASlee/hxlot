@@ -621,6 +621,39 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
     exportSchema,
     importSchema,
     validateSchema,
-    getStatistics
+    getStatistics,
+    
+    // 初始化方法 - 确保用户能立即使用
+    initialize: () => {
+      loadFromLocalStorage()
+      
+      // 如果没有实体，创建示例实体供用户立即测试代码生成
+      if (entities.value.length === 0) {
+        logger.info('创建示例实体，便于用户测试代码生成功能')
+        
+        const userEntity = {
+          name: 'User',
+          tableName: 'Users',
+          displayName: '用户',
+          description: '系统用户实体 - 用于测试代码生成',
+          category: 'core' as const,
+          module: 'Identity',
+          fields: [
+            { name: 'Id', displayName: '主键', type: 'Guid', isRequired: true, isPrimaryKey: true },
+            { name: 'UserName', displayName: '用户名', type: 'string', length: 50, isRequired: true, isPrimaryKey: false },
+            { name: 'Email', displayName: '邮箱', type: 'string', length: 100, isRequired: true, isPrimaryKey: false },
+            { name: 'IsActive', displayName: '是否启用', type: 'bool', isRequired: true, isPrimaryKey: false }
+          ],
+          validationRules: [],
+          enableSoftDelete: true,
+          enableAudit: true,
+          enableMultiTenant: false,
+          isCompleted: true
+        }
+        
+        addEntity(userEntity)
+        saveToLocalStorage()
+      }
+    }
   }
 })
