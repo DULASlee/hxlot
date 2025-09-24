@@ -230,10 +230,9 @@
             <i class="el-icon-thumb-tack" /> {{ contextTab?.pinned ? '取消固定' : '固定标签' }}
           </el-dropdown-item>
           <el-dropdown-item
-            <el-icon
             @click="duplicateTab(contextTab?.id || '')"
           >
-            <CopyDocument /></el-icon> 复制标签
+            <el-icon><CopyDocument /></el-icon> 复制标签
           </el-dropdown-item>
         </el-dropdown-menu>
       </template>

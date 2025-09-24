@@ -120,6 +120,18 @@ export const useAuthStore = defineStore(
       // 可选：通知后端吊销token
     }
 
+    // SmartAbp同步方法，保持向后兼容
+    const syncFromSmartAbp = async () => {
+      try {
+        // 从SmartAbp系统同步用户信息
+        await fetchUserInfo()
+        return true
+      } catch (error) {
+        console.error('SmartAbp同步失败:', error)
+        return false
+      }
+    }
+
     const initialize = () => {
       const storedToken = localStorage.getItem("smartabp_token")
       const storedRefreshToken = localStorage.getItem("smartabp_refresh_token")
@@ -157,6 +169,7 @@ export const useAuthStore = defineStore(
       logout,
       fetchUserInfo,
       initialize,
+      syncFromSmartAbp,
     }
   },
   {

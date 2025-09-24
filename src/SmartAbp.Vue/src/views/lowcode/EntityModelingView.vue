@@ -569,7 +569,7 @@
           v-if="designMode === 'assistant'"
           class="intelligent-assistant"
         >
-          <IntelligentModelingAssistant />
+          <EnterpriseModelingAssistant />
         </div>
       </div>
 
@@ -1141,7 +1141,7 @@ import AdvancedEntityRelationshipDesigner from "@/components/lowcode/AdvancedEnt
 import AdvancedFieldTypeDesigner from "@/components/lowcode/AdvancedFieldTypeDesigner.vue"
 import BusinessRulesEngine from "@/components/lowcode/BusinessRulesEngine.vue"
 import DataDictionaryManager from "@/components/lowcode/DataDictionaryManager.vue"
-import IntelligentModelingAssistant from "@/components/lowcode/IntelligentModelingAssistant.vue"
+import EnterpriseModelingAssistant from "@/components/lowcode/EnterpriseModelingAssistant.vue"
 
 // Store
 const store = useEntityModelingStore()
@@ -1841,7 +1841,7 @@ ${columns}
 }
 
 // 高级功能事件处理方法
-const handleFieldConfigured = (fieldDefinition) => {
+const handleFieldConfigured = (fieldDefinition: any) => {
   if (selectedEntity.value) {
     try {
       // 检查字段是否已存在
@@ -1854,8 +1854,9 @@ const handleFieldConfigured = (fieldDefinition) => {
       // 添加配置好的字段到当前实体
       store.addField(selectedEntity.value.id, fieldDefinition)
       ElMessage.success(`高级字段"${fieldDefinition.name}"添加成功`)
-    } catch (error) {
-      ElMessage.error('添加高级字段失败：' + error.message)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : '未知错误'
+      ElMessage.error('添加高级字段失败：' + errorMessage)
     }
   } else {
     ElMessage.warning('请先选择一个实体')
@@ -1869,12 +1870,12 @@ const createAbstractEntity = () => {
       tableName: '',
       displayName: '抽象基类',
       description: '实体基类，包含公共字段',
-      category: 'core',
+      category: 'core' as const,
       fields: [
         { name: 'Id', displayName: 'ID', type: 'Guid', isRequired: true, isPrimaryKey: true },
-        { name: 'CreationTime', displayName: '创建时间', type: 'DateTime', isRequired: true },
-        { name: 'CreatorId', displayName: '创建人ID', type: 'Guid?', isRequired: false }
-      ],
+        { name: 'CreationTime', displayName: '创建时间', type: 'DateTime', isRequired: true, isPrimaryKey: false },
+        { name: 'CreatorId', displayName: '创建人ID', type: 'Guid?', isRequired: false, isPrimaryKey: false }
+      ] as EntityField[],
       validationRules: [],
       enableSoftDelete: false,
       enableAudit: true,
@@ -1885,18 +1886,19 @@ const createAbstractEntity = () => {
 
     store.addEntity(abstractEntity)
     ElMessage.success('抽象实体创建成功')
-  } catch (error) {
-    ElMessage.error('创建抽象实体失败：' + error.message)
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : '未知错误'
+    ElMessage.error('创建抽象实体失败：' + errorMessage)
   }
 }
 
-const handleDictionarySelected = (dictionary) => {
+const handleDictionarySelected = (dictionary: any) => {
   // 处理数据字典选择事件，可以将字典应用为字段的枚举类型
   console.log('Dictionary selected:', dictionary)
   ElMessage.info(`已选择数据字典"${dictionary.name}"`)
 }
 
-const handleDictionaryUpdated = (dictionary) => {
+const handleDictionaryUpdated = (dictionary: any) => {
   // 处理数据字典更新事件
   ElMessage.success(`数据字典"${dictionary.name}"更新成功`)
 }

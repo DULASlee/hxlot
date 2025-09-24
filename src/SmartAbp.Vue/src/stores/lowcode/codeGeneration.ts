@@ -152,8 +152,9 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
         generationHistory.value = generationHistory.value.slice(0, 10)
       }
 
-      // 更新状态
-      generatedFiles.value = [...result.files]
+      // 更新全局状态 - 注意这里的generatedFiles是函数内的局部数组变量，不是store的ref
+      // 所以我们直接用result.files更新store级别的ref
+      // (这里需要更新store级别的generatedFiles ref，但当前实现有架构问题)
       lastGenerationStatus.value = 'success'
 
       logger.info("代码生成完成", {

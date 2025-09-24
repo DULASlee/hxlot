@@ -2,6 +2,18 @@ import router from "@/router"
 // Router Guard Example - Updated to use Pinia Auth Store
 import { useAuthStore } from "@/stores"
 
+// 临时AuthService模拟，保持示例功能完整
+const authService = {
+  validateToken: async () => {
+    const authStore = useAuthStore()
+    return authStore.isAuthenticated
+  },
+  hasRole: (role: string) => {
+    const authStore = useAuthStore()
+    return authStore.userInfo?.roles?.includes(role) || false
+  }
+}
+
 export async function authGuard(requiredRoles: string[] = []) {
   const authStore = useAuthStore()
 
