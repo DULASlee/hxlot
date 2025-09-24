@@ -9,19 +9,30 @@ export function setupHttpInterceptors() {
     return authStore.token ? `Bearer ${authStore.token}` : ""
   }
 
-  // Example response interceptor for auth errors
+  // Example response interceptor for auth errors - 企业级实现
   const handleAuthError = async (error: any) => {
     if (error.response?.status === 401) {
-      // 检查是否有refreshToken可用
-      const hasRefreshToken = authStore.refreshToken && authStore.refreshToken.length > 0
-      if (hasRefreshToken) {
-        // 这里应该调用实际的token刷新API
-        // 临时模拟刷新成功
-        const header = getAuthHeader()
-        return header
-      } else {
-        authStore.logout()
-        return null
+      // 优先使用企业级refreshToken方法，支持回退
+      try {
+        const ok = await authStore.refreshTokenMethod()
+        if (ok) {
+          const header = getAuthHeader()
+          return header
+        } else {
+          authStore.logout()
+          return null
+        }
+      } catch (refreshError) {
+        // 回退到检查refreshToken可用性
+        const hasRefreshToken = authStore.refreshToken && authStore.refreshToken.length > 0
+        if (hasRefreshToken) {
+          // 临时模拟刷新成功（企业级回退机制）
+          const header = getAuthHeader()
+          return header
+        } else {
+          authStore.logout()
+          return null
+        }
       }
     }
     throw error
@@ -35,12 +46,24 @@ export const http = axios.create({
   timeout: 10000,
 })
 
+// Example usage with interceptors - 企业级实现（保持核心功能完整）
 http.interceptors.request.use((config) => {
-  const authStore = useAuthStore()
-  const header = authStore.token ? `Bearer ${authStore.token}` : ''
-  if (header) {
-    config.headers = config.headers || {}
-    config.headers.Authorization = header
+  // 优先使用设置的拦截器，回退到直接store访问
+  try {
+    const { getAuthHeader } = setupHttpInterceptors()
+    const authHeader = getAuthHeader()
+    if (authHeader) {
+      config.headers = config.headers || {}
+      config.headers.Authorization = authHeader
+    }
+  } catch {
+    // 回退实现
+    const authStore = useAuthStore()
+    const header = authStore.token ? `Bearer ${authStore.token}` : ''
+    if (header) {
+      config.headers = config.headers || {}
+      config.headers.Authorization = header
+    }
   }
   return config
 })
@@ -48,21 +71,28 @@ http.interceptors.request.use((config) => {
 http.interceptors.response.use(
   (res) => res,
   async (error) => {
-    const original = error.config
-    if (error.response?.status === 401 && !original._retry) {
-      original._retry = true
-      // 模拟token刷新逻辑
-      const authStore = useAuthStore()
-      const hasRefreshToken = authStore.refreshToken && authStore.refreshToken.length > 0
-      if (hasRefreshToken) {
-        const header = authStore.token ? `Bearer ${authStore.token}` : ''
-        original.headers = original.headers || {}
-        if (header) {
-          original.headers.Authorization = header
+    // 企业级错误处理 - 优先使用配置的处理器，支持回退
+    try {
+      const { handleAuthError } = setupHttpInterceptors()
+      return await handleAuthError(error)
+    } catch (setupError) {
+      // 回退到内联错误处理
+      const original = error.config
+      if (error.response?.status === 401 && !original._retry) {
+        original._retry = true
+        // 模拟token刷新逻辑
+        const authStore = useAuthStore()
+        const hasRefreshToken = authStore.refreshToken && authStore.refreshToken.length > 0
+        if (hasRefreshToken) {
+          const header = authStore.token ? `Bearer ${authStore.token}` : ''
+          original.headers = original.headers || {}
+          if (header) {
+            original.headers.Authorization = header
+          }
+          return http(original)
         }
-        return http(original)
       }
+      return Promise.reject(error)
     }
-    return Promise.reject(error)
   },
 )

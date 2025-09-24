@@ -30,7 +30,7 @@ export interface EntityDefinition {
   displayName: string
   description: string
   category: "core" | "relation" | "config" | "log"
-  module?: string // 可选的模块名称，用于代码生成
+  module: string // 模块名称，用于代码生成
   fields: EntityField[]
   validationRules: ValidationRule[]
   enableSoftDelete: boolean

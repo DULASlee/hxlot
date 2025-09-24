@@ -80,7 +80,7 @@
             >
               <div
                 class="progress-indicator"
-                @click="() => { initializeWorkflow() }"
+                @click="() => showWorkflowGuide = !showWorkflowGuide"
               >
                 <el-progress
                   type="circle"
@@ -103,7 +103,7 @@
           >
             <i 
               class="el-icon-info suggestion-icon"
-              @click="() => { initializeWorkflow() }"
+              @click="() => showWorkflowGuide = !showWorkflowGuide"
             />
           </el-tooltip>
           
@@ -475,7 +475,7 @@ const showProjectWizard = ref(false)
 const {
   totalWorkflowProgress,
   nextStepSuggestion,
-  // showWorkflowGuide, // 暂时注释未使用
+  showWorkflowGuide,
   initializeWorkflow
 } = useSmartWorkflow()
 

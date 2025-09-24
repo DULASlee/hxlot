@@ -120,18 +120,6 @@ export const useAuthStore = defineStore(
       // 可选：通知后端吊销token
     }
 
-    // SmartAbp同步方法，保持向后兼容
-    const syncFromSmartAbp = async () => {
-      try {
-        // 从SmartAbp系统同步用户信息
-        await fetchUserInfo()
-        return true
-      } catch (error) {
-        console.error('SmartAbp同步失败:', error)
-        return false
-      }
-    }
-
     const initialize = () => {
       const storedToken = localStorage.getItem("smartabp_token")
       const storedRefreshToken = localStorage.getItem("smartabp_refresh_token")
@@ -146,6 +134,73 @@ export const useAuthStore = defineStore(
           logger.error("解析存储的用户信息失败", e)
           clearAuth()
         }
+      }
+    }
+
+    // SmartAbp系统同步方法 - 企业级认证状态同步
+    const syncFromSmartAbp = async () => {
+      try {
+        // 检查是否存在有效的认证状态
+        if (!token.value) {
+          logger.debug("无有效token，跳过SmartAbp同步")
+          return
+        }
+
+        // 验证当前token是否仍然有效
+        try {
+          await fetchUserInfo()
+          logger.debug("SmartAbp认证状态同步成功")
+        } catch (error) {
+          // Token可能已过期，尝试刷新
+          if (refreshToken.value) {
+            try {
+              await refreshTokenMethod()
+              logger.info("SmartAbp认证状态已通过refresh token恢复")
+            } catch (refreshError) {
+              logger.warn("SmartAbp认证状态同步失败，清除过期认证", refreshError)
+              clearAuth()
+            }
+          } else {
+            logger.warn("SmartAbp认证状态同步失败，无refresh token可用", error)
+            clearAuth()
+          }
+        }
+      } catch (error) {
+        logger.error("SmartAbp认证状态同步异常", error)
+      }
+    }
+
+    // Refresh Token方法 - 企业级令牌刷新
+    const refreshTokenMethod = async () => {
+      if (!refreshToken.value) {
+        throw new Error("No refresh token available")
+      }
+
+      try {
+        isLoading.value = true
+        const response = await apiService.getInstance().post("/connect/token", {
+          grant_type: "refresh_token",
+          refresh_token: refreshToken.value,
+          client_id: "SmartAbp_App",
+        }, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          }
+        })
+
+        if (response.status === 200) {
+          const tokenData = response.data
+          setToken(tokenData.access_token, tokenData.refresh_token)
+          await fetchUserInfo()
+          return true
+        } else {
+          throw new Error("Refresh token failed")
+        }
+      } catch (error) {
+        clearAuth()
+        throw error
+      } finally {
+        isLoading.value = false
       }
     }
 
@@ -170,6 +225,7 @@ export const useAuthStore = defineStore(
       fetchUserInfo,
       initialize,
       syncFromSmartAbp,
+      refreshTokenMethod,
     }
   },
   {

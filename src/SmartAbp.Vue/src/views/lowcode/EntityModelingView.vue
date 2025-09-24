@@ -1621,6 +1621,7 @@ const createEntity = () => {
     ...newEntityForm.value,
     id: `entity-${Date.now()}`,
     category: "core",
+    module: 'Manual', // 添加模块属性
     fields: [
       { name: "Id", displayName: "主键", type: "Guid", isPrimaryKey: true, isRequired: true }
     ],
@@ -1855,9 +1856,8 @@ const handleFieldConfigured = (fieldDefinition: any) => {
       // 添加配置好的字段到当前实体
       store.addField(selectedEntity.value.id, fieldDefinition)
       ElMessage.success(`高级字段"${fieldDefinition.name}"添加成功`)
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : '未知错误'
-      ElMessage.error('添加高级字段失败：' + errorMessage)
+    } catch (error) {
+      ElMessage.error('添加高级字段失败：' + (error as Error).message)
     }
   } else {
     ElMessage.warning('请先选择一个实体')
@@ -1866,30 +1866,31 @@ const handleFieldConfigured = (fieldDefinition: any) => {
 
 const createAbstractEntity = () => {
   try {
-    const abstractEntity = {
+    const abstractEntity: Omit<EntityDefinition, "id"> & { id?: string } = {
+      id: `entity_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       name: 'BaseEntity',
       tableName: '',
       displayName: '抽象基类',
       description: '实体基类，包含公共字段',
-      category: 'core' as const,
+      category: 'core',
+      module: 'Generated',
       fields: [
         { name: 'Id', displayName: 'ID', type: 'Guid', isRequired: true, isPrimaryKey: true },
         { name: 'CreationTime', displayName: '创建时间', type: 'DateTime', isRequired: true, isPrimaryKey: false },
         { name: 'CreatorId', displayName: '创建人ID', type: 'Guid?', isRequired: false, isPrimaryKey: false }
-      ] as EntityField[],
+      ],
       validationRules: [],
       enableSoftDelete: false,
       enableAudit: true,
       enableMultiTenant: false,
       isCompleted: true,
-      isAbstract: true
+      // isAbstract: true  // 移除不存在的属性
     }
 
     store.addEntity(abstractEntity)
     ElMessage.success('抽象实体创建成功')
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : '未知错误'
-    ElMessage.error('创建抽象实体失败：' + errorMessage)
+  } catch (error) {
+    ElMessage.error('创建抽象实体失败：' + (error as Error).message)
   }
 }
 

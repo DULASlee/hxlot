@@ -371,7 +371,22 @@ const generatedScript = computed(() => {
 })
 
 const generatedStyle = computed(() => {
-  return generateVueStyle()
+  // 生成组件样式代码 - 企业级实现（保持核心功能完整）
+  const styles: string[] = []
+  
+  components.value.forEach(component => {
+    if (component.style && Object.keys(component.style).length > 0) {
+      const selector = `.canvas-component[data-id="${component.id}"]`
+      const cssRules = Object.entries(component.style)
+        .map(([key, value]) => `  ${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value};`)
+        .join('\n')
+      styles.push(`${selector} {\n${cssRules}\n}`)
+    }
+  })
+  
+  return styles.length > 0 
+    ? `<style scoped>\n${styles.join('\n\n')}\n</style>`
+    : generateVueStyle() // 回退到默认实现
 })
 
 // 方法
