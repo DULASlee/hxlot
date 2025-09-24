@@ -50,8 +50,12 @@
               <i class="el-icon-data-analysis" />
             </div>
             <div class="metric-content">
-              <div class="metric-title">数据模型质量</div>
-              <div class="metric-score">{{ dataModelScore }}/100</div>
+              <div class="metric-title">
+                数据模型质量
+              </div>
+              <div class="metric-score">
+                {{ dataModelScore }}/100
+              </div>
             </div>
           </div>
           <div class="metric-item">
@@ -59,8 +63,12 @@
               <i class="el-icon-brush" />
             </div>
             <div class="metric-content">
-              <div class="metric-title">页面设计质量</div>
-              <div class="metric-score">{{ pageDesignScore }}/100</div>
+              <div class="metric-title">
+                页面设计质量
+              </div>
+              <div class="metric-score">
+                {{ pageDesignScore }}/100
+              </div>
             </div>
           </div>
           <div class="metric-item">
@@ -68,8 +76,12 @@
               <i class="el-icon-cpu" />
             </div>
             <div class="metric-content">
-              <div class="metric-title">代码生成质量</div>
-              <div class="metric-score">{{ codeGenerationScore }}/100</div>
+              <div class="metric-title">
+                代码生成质量
+              </div>
+              <div class="metric-score">
+                {{ codeGenerationScore }}/100
+              </div>
             </div>
           </div>
         </div>
@@ -89,9 +101,16 @@
               <i :class="getCheckIcon(check.status)" />
             </div>
             <div class="check-content">
-              <div class="check-title">{{ check.title }}</div>
-              <div class="check-description">{{ check.description }}</div>
-              <div v-if="check.issues.length > 0" class="check-issues">
+              <div class="check-title">
+                {{ check.title }}
+              </div>
+              <div class="check-description">
+                {{ check.description }}
+              </div>
+              <div
+                v-if="check.issues.length > 0"
+                class="check-issues"
+              >
                 <el-tag
                   v-for="issue in check.issues.slice(0, 3)"
                   :key="issue.id"
@@ -100,7 +119,10 @@
                 >
                   {{ issue.message }}
                 </el-tag>
-                <span v-if="check.issues.length > 3" class="more-issues">
+                <span
+                  v-if="check.issues.length > 3"
+                  class="more-issues"
+                >
                   +{{ check.issues.length - 3 }}个问题
                 </span>
               </div>
@@ -139,8 +161,12 @@
               <i :class="suggestion.icon" />
             </div>
             <div class="suggestion-content">
-              <div class="suggestion-title">{{ suggestion.title }}</div>
-              <div class="suggestion-description">{{ suggestion.description }}</div>
+              <div class="suggestion-title">
+                {{ suggestion.title }}
+              </div>
+              <div class="suggestion-description">
+                {{ suggestion.description }}
+              </div>
             </div>
             <div class="suggestion-actions">
               <el-button
@@ -159,7 +185,11 @@
       <div class="enterprise-features">
         <h4>企业级特性检查</h4>
         <el-row :gutter="16">
-          <el-col :span="8" v-for="feature in enterpriseFeatures" :key="feature.id">
+          <el-col
+            v-for="feature in enterpriseFeatures"
+            :key="feature.id"
+            :span="8"
+          >
             <div 
               class="feature-card"
               :class="{ enabled: feature.enabled, critical: feature.critical }"
@@ -174,8 +204,13 @@
                   {{ feature.enabled ? '已启用' : (feature.critical ? '必需' : '可选') }}
                 </el-tag>
               </div>
-              <div class="feature-description">{{ feature.description }}</div>
-              <div v-if="!feature.enabled && feature.critical" class="feature-warning">
+              <div class="feature-description">
+                {{ feature.description }}
+              </div>
+              <div
+                v-if="!feature.enabled && feature.critical"
+                class="feature-warning"
+              >
                 <i class="el-icon-warning" />
                 <span>企业级应用必需特性</span>
               </div>

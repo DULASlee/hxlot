@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 /* eslint-disable no-unused-vars */
 import { logger, LogLevel, type LogEntry } from "@/utils/logger"
 import { logManager } from "@/utils/logManager"

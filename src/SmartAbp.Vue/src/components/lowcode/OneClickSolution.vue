@@ -1,6 +1,9 @@
 <template>
   <div class="one-click-solution">
-    <el-card class="solution-card" shadow="hover">
+    <el-card
+      class="solution-card"
+      shadow="hover"
+    >
       <template #header>
         <div class="card-header">
           <h2>
@@ -49,7 +52,10 @@
       </div>
 
       <!-- 快速配置 -->
-      <div v-if="selectedSolution" class="quick-config">
+      <div
+        v-if="selectedSolution"
+        class="quick-config"
+      >
         <h3>快速配置</h3>
         <el-row :gutter="20">
           <el-col :span="8">
@@ -80,28 +86,55 @@
 
         <!-- 高级选项 -->
         <el-collapse v-model="activeCollapse">
-          <el-collapse-item title="高级配置选项" name="advanced">
+          <el-collapse-item
+            title="高级配置选项"
+            name="advanced"
+          >
             <el-row :gutter="20">
               <el-col :span="12">
                 <h4>企业级特性</h4>
                 <el-checkbox-group v-model="config.enterpriseFeatures">
-                  <el-checkbox label="multiTenant">多租户支持</el-checkbox>
-                  <el-checkbox label="auditLogging">审计日志</el-checkbox>
-                  <el-checkbox label="permissionControl">权限控制</el-checkbox>
-                  <el-checkbox label="dataValidation">数据验证</el-checkbox>
-                  <el-checkbox label="caching">分布式缓存</el-checkbox>
-                  <el-checkbox label="monitoring">监控指标</el-checkbox>
+                  <el-checkbox label="multiTenant">
+                    多租户支持
+                  </el-checkbox>
+                  <el-checkbox label="auditLogging">
+                    审计日志
+                  </el-checkbox>
+                  <el-checkbox label="permissionControl">
+                    权限控制
+                  </el-checkbox>
+                  <el-checkbox label="dataValidation">
+                    数据验证
+                  </el-checkbox>
+                  <el-checkbox label="caching">
+                    分布式缓存
+                  </el-checkbox>
+                  <el-checkbox label="monitoring">
+                    监控指标
+                  </el-checkbox>
                 </el-checkbox-group>
               </el-col>
               <el-col :span="12">
                 <h4>部署选项</h4>
                 <el-checkbox-group v-model="config.deploymentOptions">
-                  <el-checkbox label="docker">Docker容器化</el-checkbox>
-                  <el-checkbox label="kubernetes">Kubernetes编排</el-checkbox>
-                  <el-checkbox label="cicd">CI/CD流水线</el-checkbox>
-                  <el-checkbox label="monitoring">监控配置</el-checkbox>
-                  <el-checkbox label="backup">备份策略</el-checkbox>
-                  <el-checkbox label="ssl">SSL证书</el-checkbox>
+                  <el-checkbox label="docker">
+                    Docker容器化
+                  </el-checkbox>
+                  <el-checkbox label="kubernetes">
+                    Kubernetes编排
+                  </el-checkbox>
+                  <el-checkbox label="cicd">
+                    CI/CD流水线
+                  </el-checkbox>
+                  <el-checkbox label="monitoring">
+                    监控配置
+                  </el-checkbox>
+                  <el-checkbox label="backup">
+                    备份策略
+                  </el-checkbox>
+                  <el-checkbox label="ssl">
+                    SSL证书
+                  </el-checkbox>
                 </el-checkbox-group>
               </el-col>
             </el-row>
@@ -110,7 +143,10 @@
       </div>
 
       <!-- 生成预览 -->
-      <div v-if="selectedSolution" class="generation-preview">
+      <div
+        v-if="selectedSolution"
+        class="generation-preview"
+      >
         <h3>将要生成的内容</h3>
         <div class="preview-sections">
           <div class="preview-section">
@@ -232,14 +268,24 @@
               <i :class="getStageIcon(stage.status)" />
             </div>
             <div class="stage-content">
-              <div class="stage-title">{{ stage.title }}</div>
-              <div class="stage-description">{{ stage.description }}</div>
-              <div v-if="stage.files" class="stage-files">
+              <div class="stage-title">
+                {{ stage.title }}
+              </div>
+              <div class="stage-description">
+                {{ stage.description }}
+              </div>
+              <div
+                v-if="stage.files"
+                class="stage-files"
+              >
                 生成文件：{{ stage.files.length }}个
               </div>
             </div>
             <div class="stage-status">
-              <span v-if="stage.duration" class="duration">
+              <span
+                v-if="stage.duration"
+                class="duration"
+              >
                 {{ stage.duration }}ms
               </span>
               <el-tag

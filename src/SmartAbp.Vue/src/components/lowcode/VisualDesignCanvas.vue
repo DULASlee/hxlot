@@ -803,31 +803,6 @@ const handleReset = () => {
     formData[key] = ''
   })
 }
-</script>`
-}
-
-const generateVueStyle = () => {
-  return `<style scoped>
-.page-container {
-  padding: 20px;
-  background: var(--el-bg-color-page);
-  min-height: 100vh;
-}
-
-/* 组件样式 */
-${components.value.map(component => `
-.${component.type} {
-  /* ${component.name} 样式 */
-}`).join('\n')}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .page-container {
-    padding: 12px;
-  }
-}
-</style>`
-}
 
 // Emits
 const emit = defineEmits<{

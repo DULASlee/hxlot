@@ -20,9 +20,16 @@
       </template>
 
       <!-- 组件分类标签 -->
-      <el-tabs v-model="activeCategory" type="border-card" size="small">
+      <el-tabs
+        v-model="activeCategory"
+        type="border-card"
+        size="small"
+      >
         <!-- 基础组件 -->
-        <el-tab-pane label="基础组件" name="basic">
+        <el-tab-pane
+          label="基础组件"
+          name="basic"
+        >
           <div class="component-grid">
             <div
               v-for="component in filteredBasicComponents"
@@ -35,15 +42,22 @@
                 <i :class="component.icon" />
               </div>
               <div class="component-info">
-                <div class="component-name">{{ component.name }}</div>
-                <div class="component-tag">{{ component.tag }}</div>
+                <div class="component-name">
+                  {{ component.name }}
+                </div>
+                <div class="component-tag">
+                  {{ component.tag }}
+                </div>
               </div>
             </div>
           </div>
         </el-tab-pane>
 
         <!-- 表单组件 -->
-        <el-tab-pane label="表单组件" name="form">
+        <el-tab-pane
+          label="表单组件"
+          name="form"
+        >
           <div class="component-grid">
             <div
               v-for="component in filteredFormComponents"
@@ -56,18 +70,33 @@
                 <i :class="component.icon" />
               </div>
               <div class="component-info">
-                <div class="component-name">{{ component.name }}</div>
-                <div class="component-tag">{{ component.tag }}</div>
+                <div class="component-name">
+                  {{ component.name }}
+                </div>
+                <div class="component-tag">
+                  {{ component.tag }}
+                </div>
               </div>
-              <div v-if="component.isAdvanced" class="advanced-badge">
-                <el-tag size="mini" type="warning">高级</el-tag>
+              <div
+                v-if="component.isAdvanced"
+                class="advanced-badge"
+              >
+                <el-tag
+                  size="mini"
+                  type="warning"
+                >
+                  高级
+                </el-tag>
               </div>
             </div>
           </div>
         </el-tab-pane>
 
         <!-- 数据展示 -->
-        <el-tab-pane label="数据展示" name="data">
+        <el-tab-pane
+          label="数据展示"
+          name="data"
+        >
           <div class="component-grid">
             <div
               v-for="component in filteredDataComponents"
@@ -80,18 +109,33 @@
                 <i :class="component.icon" />
               </div>
               <div class="component-info">
-                <div class="component-name">{{ component.name }}</div>
-                <div class="component-tag">{{ component.tag }}</div>
+                <div class="component-name">
+                  {{ component.name }}
+                </div>
+                <div class="component-tag">
+                  {{ component.tag }}
+                </div>
               </div>
-              <div v-if="component.isProfessional" class="professional-badge">
-                <el-tag size="mini" type="success">专业</el-tag>
+              <div
+                v-if="component.isProfessional"
+                class="professional-badge"
+              >
+                <el-tag
+                  size="mini"
+                  type="success"
+                >
+                  专业
+                </el-tag>
               </div>
             </div>
           </div>
         </el-tab-pane>
 
         <!-- 布局组件 -->
-        <el-tab-pane label="布局组件" name="layout">
+        <el-tab-pane
+          label="布局组件"
+          name="layout"
+        >
           <div class="component-grid">
             <div
               v-for="component in filteredLayoutComponents"
@@ -104,15 +148,22 @@
                 <i :class="component.icon" />
               </div>
               <div class="component-info">
-                <div class="component-name">{{ component.name }}</div>
-                <div class="component-tag">{{ component.tag }}</div>
+                <div class="component-name">
+                  {{ component.name }}
+                </div>
+                <div class="component-tag">
+                  {{ component.tag }}
+                </div>
               </div>
             </div>
           </div>
         </el-tab-pane>
 
         <!-- 企业组件 -->
-        <el-tab-pane label="企业组件" name="enterprise">
+        <el-tab-pane
+          label="企业组件"
+          name="enterprise"
+        >
           <div class="component-grid">
             <div
               v-for="component in filteredEnterpriseComponents"
@@ -125,18 +176,30 @@
                 <i :class="component.icon" />
               </div>
               <div class="component-info">
-                <div class="component-name">{{ component.name }}</div>
-                <div class="component-tag">{{ component.tag }}</div>
+                <div class="component-name">
+                  {{ component.name }}
+                </div>
+                <div class="component-tag">
+                  {{ component.tag }}
+                </div>
               </div>
               <div class="enterprise-badge">
-                <el-tag size="mini" type="danger">企业级</el-tag>
+                <el-tag
+                  size="mini"
+                  type="danger"
+                >
+                  企业级
+                </el-tag>
               </div>
             </div>
           </div>
         </el-tab-pane>
 
         <!-- 自定义组件 -->
-        <el-tab-pane label="自定义" name="custom">
+        <el-tab-pane
+          label="自定义"
+          name="custom"
+        >
           <div class="custom-components">
             <div class="custom-header">
               <el-button
@@ -161,8 +224,12 @@
                   <i :class="component.icon" />
                 </div>
                 <div class="component-info">
-                  <div class="component-name">{{ component.name }}</div>
-                  <div class="component-tag">{{ component.tag }}</div>
+                  <div class="component-name">
+                    {{ component.name }}
+                  </div>
+                  <div class="component-tag">
+                    {{ component.tag }}
+                  </div>
                 </div>
                 <div class="custom-actions">
                   <el-button
@@ -207,13 +274,19 @@
         :model="customComponentForm"
         label-width="100px"
       >
-        <el-form-item label="组件名称" required>
+        <el-form-item
+          label="组件名称"
+          required
+        >
           <el-input
             v-model="customComponentForm.name"
             placeholder="例如：客户信息卡片"
           />
         </el-form-item>
-        <el-form-item label="组件标签" required>
+        <el-form-item
+          label="组件标签"
+          required
+        >
           <el-input
             v-model="customComponentForm.tag"
             placeholder="例如：customer-info-card"
@@ -252,7 +325,9 @@
       </el-form>
 
       <template #footer>
-        <el-button @click="showCreateCustomComponent = false">取消</el-button>
+        <el-button @click="showCreateCustomComponent = false">
+          取消
+        </el-button>
         <el-button
           type="primary"
           @click="saveCustomComponent"

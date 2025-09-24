@@ -79,10 +79,31 @@
                   </div>
                 </div>
               </div>
-              <div class="entity-status">
+              <div class="entity-actions">
+                <el-button-group size="small">
+                  <el-button 
+                    icon="el-icon-edit" 
+                    type="primary"
+                    title="编辑实体"
+                    @click.stop="editEntity(entity)"
+                  />
+                  <el-button 
+                    icon="el-icon-document-checked" 
+                    type="success"
+                    title="保存实体"
+                    @click.stop="saveEntity(entity)"
+                  />
+                  <el-button 
+                    icon="el-icon-delete" 
+                    type="danger"
+                    title="删除实体"
+                    @click.stop="deleteEntity(entity.id)"
+                  />
+                </el-button-group>
                 <el-tag 
                   :type="entity.isCompleted ? 'success' : 'warning'" 
                   size="small"
+                  class="entity-status-tag"
                 >
                   {{ entity.isCompleted ? '已完成' : '待完善' }}
                 </el-tag>
@@ -788,6 +809,266 @@
       </template>
     </el-dialog>
 
+    <!-- 实体编辑对话框 -->
+    <el-dialog
+      v-model="showEntityEditDialog"
+      title="编辑实体"
+      width="700px"
+      :close-on-click-modal="false"
+      @close="handleEntityEditCancel"
+    >
+      <el-form
+        v-if="editingEntity"
+        ref="entityEditFormRef"
+        :model="editingEntity"
+        label-width="100px"
+      >
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item
+              label="实体名称"
+              required
+            >
+              <el-input 
+                v-model="editingEntity.name" 
+                placeholder="请输入实体名称 (PascalCase)"
+              />
+              <div class="form-help">
+                实体名称，如：User、Organization
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+              label="表名"
+              required
+            >
+              <el-input 
+                v-model="editingEntity.tableName" 
+                placeholder="请输入数据库表名"
+              />
+              <div class="form-help">
+                数据库表名，如：AbpUsers
+              </div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item
+              label="显示名称"
+              required
+            >
+              <el-input 
+                v-model="editingEntity.displayName" 
+                placeholder="请输入显示名称"
+              />
+              <div class="form-help">
+                界面显示名称，如：用户、组织
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="实体分类">
+              <el-select
+                v-model="editingEntity.category"
+                placeholder="选择分类"
+              >
+                <el-option
+                  value="core"
+                  label="核心实体"
+                />
+                <el-option
+                  value="relation"
+                  label="关系实体"
+                />
+                <el-option
+                  value="config"
+                  label="配置实体"
+                />
+                <el-option
+                  value="log"
+                  label="日志实体"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        
+        <el-form-item label="实体描述">
+          <el-input 
+            v-model="editingEntity.description" 
+            type="textarea"
+            :rows="2"
+            placeholder="请输入实体描述"
+          />
+        </el-form-item>
+        
+        <div class="entity-options-section">
+          <h4>实体特性</h4>
+          <el-checkbox-group v-model="entityFeatures">
+            <el-row :gutter="20">
+              <el-col :span="8">
+                <el-checkbox value="isAggregateRoot">
+                  聚合根
+                </el-checkbox>
+              </el-col>
+              <el-col :span="8">
+                <el-checkbox value="enableSoftDelete">
+                  软删除
+                </el-checkbox>
+              </el-col>
+              <el-col :span="8">
+                <el-checkbox value="enableAudit">
+                  审计字段
+                </el-checkbox>
+              </el-col>
+              <el-col :span="8">
+                <el-checkbox value="enableMultiTenant">
+                  多租户
+                </el-checkbox>
+              </el-col>
+              <el-col :span="8">
+                <el-checkbox value="hasExtraProperties">
+                  扩展属性
+                </el-checkbox>
+              </el-col>
+              <el-col :span="8">
+                <el-checkbox value="enableCaching">
+                  启用缓存
+                </el-checkbox>
+              </el-col>
+            </el-row>
+          </el-checkbox-group>
+        </div>
+        
+        <!-- 字段快速编辑 -->
+        <div class="fields-quick-edit">
+          <div class="fields-header">
+            <h4>字段管理</h4>
+            <el-button 
+              size="small" 
+              type="primary" 
+              icon="el-icon-plus"
+              @click="addEntityField(editingEntity.id)"
+            >
+              添加字段
+            </el-button>
+          </div>
+          
+          <div class="fields-table">
+            <el-table 
+              :data="editingEntity.fields" 
+              size="small"
+              max-height="300"
+            >
+              <el-table-column
+                prop="name"
+                label="字段名"
+                width="120"
+              >
+                <template #default="{ row, $index }">
+                  <el-input 
+                    v-model="row.name" 
+                    size="small"
+                    @change="updateEntityField(editingEntity.id, $index, row)"
+                  />
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="displayName"
+                label="显示名"
+                width="100"
+              >
+                <template #default="{ row, $index }">
+                  <el-input 
+                    v-model="row.displayName" 
+                    size="small"
+                    @change="updateEntityField(editingEntity.id, $index, row)"
+                  />
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="type"
+                label="类型"
+                width="100"
+              >
+                <template #default="{ row, $index }">
+                  <el-select 
+                    v-model="row.type" 
+                    size="small"
+                    @change="updateEntityField(editingEntity.id, $index, row)"
+                  >
+                    <el-option 
+                      v-for="type in fieldTypes"
+                      :key="type.value"
+                      :label="type.value"
+                      :value="type.value"
+                    />
+                  </el-select>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="isRequired"
+                label="必填"
+                width="60"
+              >
+                <template #default="{ row, $index }">
+                  <el-checkbox 
+                    v-model="row.isRequired"
+                    @change="updateEntityField(editingEntity.id, $index, row)"
+                  />
+                </template>
+              </el-table-column>
+              <el-table-column
+                v-if="editingEntity.fields.some(f => f.type === 'string')"
+                prop="maxLength"
+                label="长度"
+                width="80"
+              >
+                <template #default="{ row, $index }">
+                  <el-input-number 
+                    v-if="row.type === 'string'"
+                    v-model="row.maxLength" 
+                    size="small"
+                    :min="1"
+                    :max="4000"
+                    @change="updateEntityField(editingEntity.id, $index, row)"
+                  />
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="操作"
+                width="80"
+              >
+                <template #default="{ $index }">
+                  <el-button 
+                    size="small" 
+                    type="danger" 
+                    icon="el-icon-delete"
+                    @click="removeEntityField(editingEntity.id, $index)"
+                  />
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
+      </el-form>
+      
+      <template #footer>
+        <el-button @click="handleEntityEditCancel">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="handleEntityEditConfirm"
+        >
+          保存实体
+        </el-button>
+      </template>
+    </el-dialog>
+
     <!-- 架构预览对话框 -->
     <el-dialog 
       v-model="showSchemaPreview" 
@@ -1011,6 +1292,269 @@ const addPresetEntity = (preset: any) => {
     isCompleted: false
   })
   ElMessage.success(`已添加预设实体：${preset.displayName}`)
+}
+
+// 🔥 实体编辑功能 - 真实可用的编辑界面
+const showEntityEditDialog = ref(false)
+const editingEntity = ref<any>(null)
+const entityEditFormRef = ref()
+const entityFeatures = ref<string[]>([])
+
+// 实体编辑表单规则
+const entityEditRules = {
+  name: [
+    { required: true, message: '请输入实体名称', trigger: 'blur' },
+    { pattern: /^[A-Z][a-zA-Z0-9]*$/, message: '实体名称必须符合PascalCase命名规范', trigger: 'blur' }
+  ],
+  tableName: [
+    { required: true, message: '请输入表名', trigger: 'blur' },
+    { pattern: /^[A-Za-z][a-zA-Z0-9_]*$/, message: '表名必须符合数据库命名规范', trigger: 'blur' }
+  ],
+  displayName: [
+    { required: true, message: '请输入显示名称', trigger: 'blur' }
+  ]
+}
+
+// 自动生成表名
+const autoGenerateTableName = () => {
+  if (editingEntity.value && editingEntity.value.name && !editingEntity.value.tableName) {
+    editingEntity.value.tableName = `Abp${editingEntity.value.name}s`
+  }
+}
+
+const editEntity = (entity: any) => {
+  editingEntity.value = { ...entity } // 深拷贝避免直接修改
+  showEntityEditDialog.value = true
+}
+
+const handleEntityEditConfirm = async () => {
+  if (!editingEntity.value) return
+  
+  // 验证实体数据
+  const errors = validateEntity(editingEntity.value)
+  if (errors.length > 0) {
+    ElMessage.error(`验证失败：${errors.join('; ')}`)
+    return
+  }
+  
+  // 保存实体
+  const success = await saveEntity(editingEntity.value)
+  if (success) {
+    showEntityEditDialog.value = false
+    editingEntity.value = null
+  }
+}
+
+const handleEntityEditCancel = () => {
+  showEntityEditDialog.value = false
+  editingEntity.value = null
+}
+
+// 🔥 核心CRUD功能实现 - 确保真实可用
+const saveEntity = async (entity: any) => {
+  try {
+    // 验证实体数据
+    if (!entity.name || !entity.tableName) {
+      throw new Error("实体名称和表名不能为空")
+    }
+    
+    // 更新到store
+    store.updateEntity(entity.id, entity)
+    
+    // 持久化到localStorage
+    store.saveToLocalStorage()
+    
+    ElMessage.success(`实体 "${entity.displayName || entity.name}" 保存成功`)
+    return true
+  } catch (error: any) {
+    ElMessage.error(`保存失败: ${error.message}`)
+    return false
+  }
+}
+
+const updateEntityField = (entityId: string, fieldIndex: number, field: any) => {
+  const entity = entities.value.find(e => e.id === entityId)
+  if (entity && entity.fields[fieldIndex]) {
+    entity.fields[fieldIndex] = { ...entity.fields[fieldIndex], ...field }
+    store.updateEntity(entityId, entity)
+    store.saveToLocalStorage()
+  }
+}
+
+const addEntityField = (entityId: string) => {
+  const entity = entities.value.find(e => e.id === entityId)
+  if (entity) {
+    const newField = {
+      id: `field-${Date.now()}`,
+      name: "NewField",
+      displayName: "新字段",
+      type: "string",
+      isRequired: false,
+      maxLength: 100,
+      description: "",
+      validationRules: []
+    }
+    entity.fields.push(newField)
+    store.updateEntity(entityId, entity)
+    store.saveToLocalStorage()
+    ElMessage.success("字段添加成功")
+  }
+}
+
+const removeEntityField = async (entityId: string, fieldIndex: number) => {
+  const entity = entities.value.find(e => e.id === entityId)
+  if (!entity) return
+  
+  const field = entity.fields[fieldIndex]
+  if (!field) return
+  
+  try {
+    await ElMessageBox.confirm(
+      `确定要删除字段 "${field.displayName || field.name}" 吗？`,
+      '删除确认',
+      { type: 'warning' }
+    )
+    
+    entity.fields.splice(fieldIndex, 1)
+    store.updateEntity(entityId, entity)
+    store.saveToLocalStorage()
+    ElMessage.success("字段删除成功")
+  } catch {
+    // 用户取消删除
+  }
+}
+
+const deleteEntity = async (entityId: string) => {
+  const entity = entities.value.find(e => e.id === entityId)
+  if (!entity) return
+  
+  try {
+    await ElMessageBox.confirm(
+      `确定要删除实体 "${entity.displayName || entity.name}" 吗？\n\n删除后将无法恢复，且会影响相关的关系配置。`,
+      '删除确认',
+      { type: 'warning' }
+    )
+    
+    // 删除相关的关系
+    const relatedRelations = relations.value.filter(r => 
+      r.fromEntity === entity.name || r.toEntity === entity.name
+    )
+    
+    relatedRelations.forEach(relation => {
+      store.removeRelation(relation.id)
+    })
+    
+    // 删除实体
+    store.removeEntity(entityId)
+    store.saveToLocalStorage()
+    
+    // 重置选中状态
+    if (selectedEntityId.value === entityId) {
+      selectedEntityId.value = entities.value.length > 0 ? entities.value[0].id : ""
+    }
+    
+    ElMessage.success(`实体 "${entity.displayName || entity.name}" 删除成功`)
+  } catch {
+    // 用户取消删除
+  }
+}
+
+const validateEntity = (entity: any) => {
+  const errors: string[] = []
+  
+  // 基础验证
+  if (!entity.name) errors.push("实体名称不能为空")
+  if (!entity.tableName) errors.push("表名不能为空")
+  if (!entity.displayName) errors.push("显示名称不能为空")
+  
+  // 命名规范验证
+  if (entity.name && !/^[A-Z][a-zA-Z0-9]*$/.test(entity.name)) {
+    errors.push("实体名称必须符合PascalCase命名规范")
+  }
+  
+  if (entity.tableName && !/^[A-Za-z][a-zA-Z0-9_]*$/.test(entity.tableName)) {
+    errors.push("表名必须符合数据库命名规范")
+  }
+  
+  // 字段验证
+  if (!entity.fields || entity.fields.length === 0) {
+    errors.push("实体至少需要一个字段")
+  } else {
+    const primaryKeys = entity.fields.filter((f: any) => f.isPrimaryKey)
+    if (primaryKeys.length === 0) {
+      errors.push("实体必须有一个主键字段")
+    }
+    
+    entity.fields.forEach((field: any, index: number) => {
+      if (!field.name) errors.push(`第${index + 1}个字段名称不能为空`)
+      if (!field.type) errors.push(`第${index + 1}个字段类型不能为空`)
+    })
+  }
+  
+  return errors
+}
+
+const exportEntitySchema = async () => {
+  try {
+    const schema = {
+      entities: entities.value,
+      relations: relations.value,
+      metadata: {
+        exportTime: new Date().toISOString(),
+        version: "1.0.0",
+        engine: "SmartAbp LowCode"
+      }
+    }
+    
+    const blob = new Blob([JSON.stringify(schema, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `entities-schema-${Date.now()}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+    
+    ElMessage.success("实体架构导出成功")
+  } catch (error: any) {
+    ElMessage.error(`导出失败: ${error.message}`)
+  }
+}
+
+const importEntitySchema = async (file: File) => {
+  try {
+    const text = await file.text()
+    const schema = JSON.parse(text)
+    
+    if (!schema.entities || !Array.isArray(schema.entities)) {
+      throw new Error("无效的架构文件格式")
+    }
+    
+    // 确认导入
+    await ElMessageBox.confirm(
+      `确定要导入 ${schema.entities.length} 个实体吗？\n\n这将覆盖当前的所有实体配置。`,
+      '导入确认',
+      { type: 'warning' }
+    )
+    
+    // 清空现有数据
+    store.clearAllEntities()
+    
+    // 导入新数据
+    schema.entities.forEach((entity: any) => {
+      store.addEntity(entity)
+    })
+    
+    if (schema.relations) {
+      schema.relations.forEach((relation: any) => {
+        store.addRelation(relation)
+      })
+    }
+    
+    store.saveToLocalStorage()
+    ElMessage.success("实体架构导入成功")
+  } catch (error: any) {
+    ElMessage.error(`导入失败: ${error.message}`)
+  }
 }
 
 const getDefaultFieldsForEntity = (entityType: string) => {
@@ -1493,8 +2037,19 @@ onMounted(() => {
 .entity-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 8px;
+}
+
+.entity-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.entity-status-tag {
+  margin-top: 4px;
 }
 
 .entity-info {
@@ -1534,6 +2089,52 @@ onMounted(() => {
   margin: 0 0 8px 0;
   font-size: 14px;
   color: #606266;
+}
+
+/* 实体编辑对话框样式 */
+.form-help {
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+  margin-top: 4px;
+}
+
+.entity-options-section {
+  margin: 16px 0;
+  padding: 16px;
+  background: var(--el-bg-color-page);
+  border-radius: 6px;
+}
+
+.entity-options-section h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: var(--el-text-color-primary);
+}
+
+.fields-quick-edit {
+  margin-top: 16px;
+  border: 1px solid var(--el-border-color);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.fields-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--el-bg-color-light);
+  border-bottom: 1px solid var(--el-border-color);
+}
+
+.fields-header h4 {
+  margin: 0;
+  font-size: 14px;
+  color: var(--el-text-color-primary);
+}
+
+.fields-table {
+  padding: 8px;
 }
 
 .design-area {

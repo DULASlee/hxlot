@@ -67,8 +67,14 @@
               clearable
               @change="filterDictionaries"
             >
-              <el-option label="启用" :value="true" />
-              <el-option label="禁用" :value="false" />
+              <el-option
+                label="启用"
+                :value="true"
+              />
+              <el-option
+                label="禁用"
+                :value="false"
+              />
             </el-select>
           </el-col>
         </el-row>
@@ -97,8 +103,12 @@
                   {{ dict.isEnabled ? '启用' : '禁用' }}
                 </el-tag>
               </div>
-              <div class="dict-code">代码: {{ dict.code }}</div>
-              <div class="dict-description">{{ dict.description }}</div>
+              <div class="dict-code">
+                代码: {{ dict.code }}
+              </div>
+              <div class="dict-description">
+                {{ dict.description }}
+              </div>
             </div>
             <div class="dict-stats">
               <div class="stat-item">
@@ -164,7 +174,10 @@
       </div>
 
       <!-- 字典详情编辑面板 -->
-      <div v-if="selectedDictionary" class="dictionary-details">
+      <div
+        v-if="selectedDictionary"
+        class="dictionary-details"
+      >
         <el-card>
           <template #header>
             <div class="details-header">
@@ -275,13 +288,13 @@
                 <el-button-group size="mini">
                   <el-button
                     icon="el-icon-top"
-                    @click="moveDictItem($index, 'up')"
                     :disabled="$index === 0"
+                    @click="moveDictItem($index, 'up')"
                   />
                   <el-button
                     icon="el-icon-bottom"
-                    @click="moveDictItem($index, 'down')"
                     :disabled="$index === selectedDictionary.items.length - 1"
+                    @click="moveDictItem($index, 'down')"
                   />
                   <el-button
                     icon="el-icon-delete"
@@ -310,7 +323,10 @@
       >
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="字典名称" prop="name">
+            <el-form-item
+              label="字典名称"
+              prop="name"
+            >
               <el-input
                 v-model="dictForm.name"
                 placeholder="例如：用户状态"
@@ -318,7 +334,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="字典代码" prop="code">
+            <el-form-item
+              label="字典代码"
+              prop="code"
+            >
               <el-input
                 v-model="dictForm.code"
                 placeholder="例如：USER_STATUS"
@@ -327,7 +346,10 @@
           </el-col>
         </el-row>
 
-        <el-form-item label="字典分类" prop="category">
+        <el-form-item
+          label="字典分类"
+          prop="category"
+        >
           <el-select
             v-model="dictForm.category"
             placeholder="选择分类"
@@ -367,11 +389,13 @@
       </el-form>
 
       <template #footer>
-        <el-button @click="showAddDictDialog = false">取消</el-button>
+        <el-button @click="showAddDictDialog = false">
+          取消
+        </el-button>
         <el-button
           type="primary"
-          @click="saveDictionary"
           :loading="savingDict"
+          @click="saveDictionary"
         >
           创建字典
         </el-button>
@@ -386,12 +410,21 @@
     >
       <div class="import-options">
         <el-radio-group v-model="importType">
-          <el-radio label="excel">从Excel文件导入</el-radio>
-          <el-radio label="json">从JSON文件导入</el-radio>
-          <el-radio label="database">从数据库导入</el-radio>
+          <el-radio label="excel">
+            从Excel文件导入
+          </el-radio>
+          <el-radio label="json">
+            从JSON文件导入
+          </el-radio>
+          <el-radio label="database">
+            从数据库导入
+          </el-radio>
         </el-radio-group>
 
-        <div v-if="importType === 'excel'" class="excel-import">
+        <div
+          v-if="importType === 'excel'"
+          class="excel-import"
+        >
           <el-upload
             ref="uploadRef"
             :auto-upload="false"
@@ -399,7 +432,10 @@
             accept=".xlsx,.xls"
             @change="handleFileChange"
           >
-            <el-button type="primary" icon="el-icon-upload">
+            <el-button
+              type="primary"
+              icon="el-icon-upload"
+            >
               选择Excel文件
             </el-button>
           </el-upload>
@@ -413,14 +449,29 @@
           </div>
         </div>
 
-        <div v-if="importType === 'database'" class="database-import">
+        <div
+          v-if="importType === 'database'"
+          class="database-import"
+        >
           <el-form label-width="100px">
             <el-form-item label="数据库类型">
               <el-select v-model="dbConfig.type">
-                <el-option label="MySQL" value="mysql" />
-                <el-option label="SQL Server" value="sqlserver" />
-                <el-option label="PostgreSQL" value="postgresql" />
-                <el-option label="Oracle" value="oracle" />
+                <el-option
+                  label="MySQL"
+                  value="mysql"
+                />
+                <el-option
+                  label="SQL Server"
+                  value="sqlserver"
+                />
+                <el-option
+                  label="PostgreSQL"
+                  value="postgresql"
+                />
+                <el-option
+                  label="Oracle"
+                  value="oracle"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="连接字符串">
@@ -444,11 +495,13 @@
       </div>
 
       <template #footer>
-        <el-button @click="showImportDialog = false">取消</el-button>
+        <el-button @click="showImportDialog = false">
+          取消
+        </el-button>
         <el-button
           type="primary"
-          @click="executeImport"
           :loading="importing"
+          @click="executeImport"
         >
           开始导入
         </el-button>

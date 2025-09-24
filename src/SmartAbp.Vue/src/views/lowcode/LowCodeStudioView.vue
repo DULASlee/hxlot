@@ -74,8 +74,14 @@
         <div class="status-indicators">
           <!-- 智能工作流进度 -->
           <div class="workflow-progress">
-            <el-tooltip content="点击查看智能工作流指导" placement="bottom">
-              <div class="progress-indicator" @click="showWorkflowGuide">
+            <el-tooltip
+              content="点击查看智能工作流指导"
+              placement="bottom"
+            >
+              <div
+                class="progress-indicator"
+                @click="showWorkflowGuide"
+              >
                 <el-progress
                   type="circle"
                   :percentage="totalWorkflowProgress"
@@ -157,7 +163,7 @@
                 :class="{ active: currentStep === 'modeling' }"
               >
                 <router-link
-                  to="/studio"
+                  to="/lowcode/entity-modeling"
                   class="nav-link"
                   @click="setCurrentStep('modeling')"
                 >
@@ -176,7 +182,7 @@
                 :class="{ active: currentStep === 'design' }"
               >
                 <router-link
-                  to="/studio/design"
+                  to="/lowcode/design"
                   class="nav-link"
                   @click="setCurrentStep('design')"
                 >
@@ -195,7 +201,7 @@
                 :class="{ active: currentStep === 'generate' }"
               >
                 <router-link
-                  to="/studio/generation"
+                  to="/lowcode/generation"
                   class="nav-link"
                   @click="setCurrentStep('generate')"
                 >
@@ -742,6 +748,8 @@ onMounted(() => {
     setCurrentStep("generate")
   } else if (route.path.includes("design")) {
     setCurrentStep("design")
+  } else if (route.path.includes("entity-modeling")) {
+    setCurrentStep("modeling")
   } else {
     setCurrentStep("modeling")
   }

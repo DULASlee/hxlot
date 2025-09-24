@@ -328,8 +328,9 @@ const routes: RouteRecordRaw[] = [
   },
   // LowCode Studio 一体化工作台
   {
-    path: "/studio",
-    component: SmartAbpLayout,
+    path: "/lowcode",
+    component: () => import("@/views/lowcode/LowCodeStudioView.vue"),
+    name: "LowCodeStudio",
     meta: {
       title: "LowCode Studio",
       icon: "🧩",
@@ -339,41 +340,37 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
-        name: "LowCodeStudioHome",
-        component: () => import("@/views/lowcode/LowCodeStudioView.vue"),
-        meta: { title: "低代码工作室", menuKey: "lowcode-studio-home" },
-        children: [
-          {
-            path: "",
-            name: "DataModeling",
-            component: () => import("@/views/lowcode/EntityModelingView.vue"),
-            meta: { title: "数据建模", menuKey: "studio-modeling" },
-          },
-          {
-            path: "design",
-            name: "PageDesign",
-            component: () => import("@/views/lowcode/VisualDesignerView.vue"),
-            meta: { title: "页面设计", menuKey: "studio-design" },
-          },
-          {
-            path: "generation",
-            name: "CodeGeneration",
-            component: () => import("@/views/lowcode/GenerationView.vue"),
-            meta: { title: "代码生成", menuKey: "studio-generation" },
-          },
-        ],
+        redirect: "/lowcode/entity-modeling"
       },
       {
-        path: "workflows",
-        name: "LowCodeWorkflows",
-        component: () => import("@/views/lowcode/WorkflowsView.vue"),
-        meta: { title: "工作流", menuKey: "lowcode-workflows" },
+        path: "entity-modeling",
+        name: "EntityModeling",
+        component: () => import("@/views/lowcode/EntityModelingView.vue"),
+        meta: { title: "数据建模", menuKey: "entity-modeling" },
+      },
+      {
+        path: "design",
+        name: "PageDesign", 
+        component: () => import("@/views/lowcode/DesignView.vue"),
+        meta: { title: "页面设计", menuKey: "page-design" },
       },
       {
         path: "generation",
-        name: "LowCodeGeneration",
-        component: () => import("@/views/lowcode/GenerationView.vue"),
-        meta: { title: "代码生成", menuKey: "lowcode-generation" },
+        name: "CodeGeneration",
+        component: () => import("@/views/lowcode/EnhancedGenerationView.vue"),
+        meta: { title: "代码生成", menuKey: "code-generation" },
+      },
+      {
+        path: "workflows",
+        name: "WorkflowsManagement",
+        component: () => import("@/views/lowcode/WorkflowsView.vue"),
+        meta: { title: "工作流", menuKey: "workflows" },
+      },
+      {
+        path: "theme",
+        name: "ThemeCustomization",
+        component: () => import("@/views/lowcode/ThemeCustomizationView.vue"),
+        meta: { title: "主题定制", menuKey: "theme-customization" },
       },
     ],
   },

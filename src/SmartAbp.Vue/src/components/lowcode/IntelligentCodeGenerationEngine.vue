@@ -12,8 +12,8 @@
               <el-button
                 type="primary"
                 icon="el-icon-magic-stick"
-                @click="analyzeAndGenerate"
                 :loading="analyzing"
+                @click="analyzeAndGenerate"
               >
                 智能分析生成
               </el-button>
@@ -25,8 +25,8 @@
               </el-button>
               <el-button
                 icon="el-icon-download"
-                @click="downloadGeneratedCode"
                 :disabled="!hasGeneratedCode"
+                @click="downloadGeneratedCode"
               >
                 下载代码包
               </el-button>
@@ -36,7 +36,10 @@
       </template>
 
       <!-- 智能分析结果 -->
-      <div v-if="analysisResult" class="analysis-result">
+      <div
+        v-if="analysisResult"
+        class="analysis-result"
+      >
         <el-alert
           :title="`智能分析完成 - 推荐生成方案`"
           type="success"
@@ -88,8 +91,12 @@
           >
             <div class="match-header">
               <div class="match-info">
-                <div class="template-name">{{ match.template.name }}</div>
-                <div class="template-category">{{ match.template.category }}</div>
+                <div class="template-name">
+                  {{ match.template.name }}
+                </div>
+                <div class="template-category">
+                  {{ match.template.category }}
+                </div>
               </div>
               <div class="match-score">
                 <el-progress
@@ -152,8 +159,8 @@
           <el-button
             size="small"
             type="primary"
-            @click="autoFillParameters"
             :loading="autoFilling"
+            @click="autoFillParameters"
           >
             自动填充参数
           </el-button>
@@ -168,8 +175,12 @@
           >
             <div class="param-header">
               <div class="param-info">
-                <div class="param-name">{{ param.displayName }}</div>
-                <div class="param-description">{{ param.description }}</div>
+                <div class="param-name">
+                  {{ param.displayName }}
+                </div>
+                <div class="param-description">
+                  {{ param.description }}
+                </div>
               </div>
               <div class="param-status">
                 <el-tag
@@ -215,7 +226,10 @@
               </el-checkbox>
               
               <!-- 数组参数 -->
-              <div v-else-if="param.type === 'array'" class="array-param">
+              <div
+                v-else-if="param.type === 'array'"
+                class="array-param"
+              >
                 <el-tag
                   v-for="(item, index) in param.value"
                   :key="index"
@@ -228,13 +242,16 @@
                   v-model="newArrayItem"
                   size="mini"
                   placeholder="添加项目"
-                  @keyup.enter="addArrayItem(param)"
                   style="width: 100px"
+                  @keyup.enter="addArrayItem(param)"
                 />
               </div>
             </div>
 
-            <div v-if="param.autoFilled" class="auto-fill-info">
+            <div
+              v-if="param.autoFilled"
+              class="auto-fill-info"
+            >
               <i class="el-icon-magic-stick" />
               <span>基于{{ param.autoFillSource }}自动填充</span>
             </div>
@@ -251,7 +268,10 @@
           </h4>
         </div>
 
-        <el-form label-width="120px" size="small">
+        <el-form
+          label-width="120px"
+          size="small"
+        >
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="项目命名空间">
@@ -275,24 +295,36 @@
             <el-checkbox-group v-model="generationConfig.options">
               <el-row>
                 <el-col :span="8">
-                  <el-checkbox label="backend">后端代码</el-checkbox>
+                  <el-checkbox label="backend">
+                    后端代码
+                  </el-checkbox>
                 </el-col>
                 <el-col :span="8">
-                  <el-checkbox label="frontend">前端代码</el-checkbox>
+                  <el-checkbox label="frontend">
+                    前端代码
+                  </el-checkbox>
                 </el-col>
                 <el-col :span="8">
-                  <el-checkbox label="database">数据库脚本</el-checkbox>
+                  <el-checkbox label="database">
+                    数据库脚本
+                  </el-checkbox>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="8">
-                  <el-checkbox label="tests">单元测试</el-checkbox>
+                  <el-checkbox label="tests">
+                    单元测试
+                  </el-checkbox>
                 </el-col>
                 <el-col :span="8">
-                  <el-checkbox label="docs">API文档</el-checkbox>
+                  <el-checkbox label="docs">
+                    API文档
+                  </el-checkbox>
                 </el-col>
                 <el-col :span="8">
-                  <el-checkbox label="deployment">部署配置</el-checkbox>
+                  <el-checkbox label="deployment">
+                    部署配置
+                  </el-checkbox>
                 </el-col>
               </el-row>
             </el-checkbox-group>
@@ -311,17 +343,32 @@
 
           <el-form-item label="代码风格">
             <el-select v-model="generationConfig.codeStyle">
-              <el-option label="企业标准" value="enterprise" />
-              <el-option label="简洁风格" value="minimal" />
-              <el-option label="详细注释" value="verbose" />
-              <el-option label="高性能" value="performance" />
+              <el-option
+                label="企业标准"
+                value="enterprise"
+              />
+              <el-option
+                label="简洁风格"
+                value="minimal"
+              />
+              <el-option
+                label="详细注释"
+                value="verbose"
+              />
+              <el-option
+                label="高性能"
+                value="performance"
+              />
             </el-select>
           </el-form-item>
         </el-form>
       </div>
 
       <!-- 生成预览 -->
-      <div v-if="generationPreview" class="generation-preview">
+      <div
+        v-if="generationPreview"
+        class="generation-preview"
+      >
         <div class="preview-header">
           <h4>
             <i class="el-icon-view" />
@@ -329,15 +376,21 @@
           </h4>
           <el-button
             size="small"
-            @click="refreshPreview"
             :loading="previewing"
+            @click="refreshPreview"
           >
             刷新预览
           </el-button>
         </div>
 
-        <el-tabs v-model="activePreviewTab" type="border-card">
-          <el-tab-pane label="文件树" name="files">
+        <el-tabs
+          v-model="activePreviewTab"
+          type="border-card"
+        >
+          <el-tab-pane
+            label="文件树"
+            name="files"
+          >
             <div class="file-tree">
               <el-tree
                 :data="generationPreview.fileTree"
@@ -363,11 +416,20 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane label="代码预览" name="code">
+          <el-tab-pane
+            label="代码预览"
+            name="code"
+          >
             <div class="code-preview">
               <div class="code-tabs">
-                <el-tabs v-model="selectedFileType" type="card">
-                  <el-tab-pane label="后端代码" name="backend">
+                <el-tabs
+                  v-model="selectedFileType"
+                  type="card"
+                >
+                  <el-tab-pane
+                    label="后端代码"
+                    name="backend"
+                  >
                     <div class="code-files">
                       <div
                         v-for="file in backendFiles"
@@ -379,7 +441,10 @@
                         <div class="file-header">
                           <i :class="getFileIcon(file)" />
                           <span class="file-name">{{ file.name }}</span>
-                          <el-tag size="mini" :type="getFileTypeTag(file.type)">
+                          <el-tag
+                            size="mini"
+                            :type="getFileTypeTag(file.type)"
+                          >
                             {{ file.type }}
                           </el-tag>
                         </div>
@@ -390,7 +455,10 @@
                     </div>
                   </el-tab-pane>
 
-                  <el-tab-pane label="前端代码" name="frontend">
+                  <el-tab-pane
+                    label="前端代码"
+                    name="frontend"
+                  >
                     <div class="code-files">
                       <div
                         v-for="file in frontendFiles"
@@ -402,7 +470,10 @@
                         <div class="file-header">
                           <i :class="getFileIcon(file)" />
                           <span class="file-name">{{ file.name }}</span>
-                          <el-tag size="mini" :type="getFileTypeTag(file.type)">
+                          <el-tag
+                            size="mini"
+                            :type="getFileTypeTag(file.type)"
+                          >
                             {{ file.type }}
                           </el-tag>
                         </div>
@@ -413,7 +484,10 @@
                     </div>
                   </el-tab-pane>
 
-                  <el-tab-pane label="测试代码" name="tests">
+                  <el-tab-pane
+                    label="测试代码"
+                    name="tests"
+                  >
                     <div class="code-files">
                       <div
                         v-for="file in testFiles"
@@ -425,7 +499,10 @@
                         <div class="file-header">
                           <i :class="getFileIcon(file)" />
                           <span class="file-name">{{ file.name }}</span>
-                          <el-tag size="mini" type="warning">
+                          <el-tag
+                            size="mini"
+                            type="warning"
+                          >
                             {{ file.type }}
                           </el-tag>
                         </div>
@@ -440,7 +517,10 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane label="质量报告" name="quality">
+          <el-tab-pane
+            label="质量报告"
+            name="quality"
+          >
             <div class="quality-report">
               <div class="quality-overview">
                 <div class="quality-score">
@@ -491,9 +571,15 @@
                   >
                     <i :class="getIssueIcon(issue.severity)" />
                     <div class="issue-content">
-                      <div class="issue-title">{{ issue.title }}</div>
-                      <div class="issue-description">{{ issue.description }}</div>
-                      <div class="issue-location">{{ issue.file }}:{{ issue.line }}</div>
+                      <div class="issue-title">
+                        {{ issue.title }}
+                      </div>
+                      <div class="issue-description">
+                        {{ issue.description }}
+                      </div>
+                      <div class="issue-location">
+                        {{ issue.file }}:{{ issue.line }}
+                      </div>
                     </div>
                     <div class="issue-actions">
                       <el-button
@@ -525,20 +611,36 @@
         <div class="generation-summary">
           <div class="summary-stats">
             <div class="stat-card">
-              <div class="stat-value">{{ selectedTemplateCount }}</div>
-              <div class="stat-label">选中模板</div>
+              <div class="stat-value">
+                {{ selectedTemplateCount }}
+              </div>
+              <div class="stat-label">
+                选中模板
+              </div>
             </div>
             <div class="stat-card">
-              <div class="stat-value">{{ targetEntityCount }}</div>
-              <div class="stat-label">目标实体</div>
+              <div class="stat-value">
+                {{ targetEntityCount }}
+              </div>
+              <div class="stat-label">
+                目标实体
+              </div>
             </div>
             <div class="stat-card">
-              <div class="stat-value">{{ estimatedFileCount }}</div>
-              <div class="stat-label">预计文件</div>
+              <div class="stat-value">
+                {{ estimatedFileCount }}
+              </div>
+              <div class="stat-label">
+                预计文件
+              </div>
             </div>
             <div class="stat-card">
-              <div class="stat-value">{{ estimatedTime }}</div>
-              <div class="stat-label">预计时间(分钟)</div>
+              <div class="stat-value">
+                {{ estimatedTime }}
+              </div>
+              <div class="stat-label">
+                预计时间(分钟)
+              </div>
             </div>
           </div>
         </div>
@@ -548,9 +650,9 @@
             type="success"
             size="large"
             icon="el-icon-cpu"
-            @click="startIntelligentGeneration"
             :loading="generating"
             :disabled="!canGenerate"
+            @click="startIntelligentGeneration"
           >
             开始智能生成 ({{ estimatedTime }}分钟)
           </el-button>
@@ -596,9 +698,16 @@
               <i :class="getStageIcon(stage.status)" />
             </div>
             <div class="stage-content">
-              <div class="stage-title">{{ stage.title }}</div>
-              <div class="stage-description">{{ stage.description }}</div>
-              <div v-if="stage.currentFile" class="current-file">
+              <div class="stage-title">
+                {{ stage.title }}
+              </div>
+              <div class="stage-description">
+                {{ stage.description }}
+              </div>
+              <div
+                v-if="stage.currentFile"
+                class="current-file"
+              >
                 正在生成: {{ stage.currentFile }}
               </div>
             </div>

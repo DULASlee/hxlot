@@ -50,6 +50,28 @@
           />
         </div>
       </div>
+      <div class="header-center">
+        <!-- 界面模式选择器 -->
+        <div class="layout-mode-selector">
+          <el-radio-group
+            v-model="layoutMode"
+            @change="onLayoutModeChange"
+          >
+            <el-radio-button value="single">
+              单页面
+            </el-radio-button>
+            <el-radio-button value="tabs">
+              标签页
+            </el-radio-button>
+            <el-radio-button value="mdi">
+              MDI窗口
+            </el-radio-button>
+            <el-radio-button value="split">
+              分割布局
+            </el-radio-button>
+          </el-radio-group>
+        </div>
+      </div>
       <div class="header-actions">
         <el-button-group>
           <el-button 
@@ -79,9 +101,148 @@
 
     <!-- 主体设计区域 -->
     <div class="design-body">
+      <!-- MDI窗口设计模式 -->
+      <div
+        v-if="layoutMode === 'mdi'"
+        class="mdi-design-mode"
+      >
+        <div class="mdi-designer-toolbar">
+          <el-button-group>
+            <el-button
+              icon="el-icon-plus"
+              @click="addMDIWindow"
+            >
+              添加窗口
+            </el-button>
+            <el-button
+              icon="el-icon-setting"
+              @click="configureMDI"
+            >
+              MDI配置
+            </el-button>
+            <el-button
+              icon="el-icon-view"
+              @click="previewMDI"
+            >
+              预览MDI
+            </el-button>
+          </el-button-group>
+        </div>
+        
+        <div class="mdi-design-container">
+          <!-- MDI窗口设计器 -->
+          <MDIContainer
+            :windows="mdiWindows"
+            :active-window-id="activeMDIWindow"
+            @window-activated="handleMDIWindowActivated"
+            @window-closed="handleMDIWindowClosed"
+            @window-moved="handleMDIWindowMoved"
+            @window-resized="handleMDIWindowResized"
+          />
+          
+          <!-- MDI窗口配置面板 -->
+          <div class="mdi-config-panel">
+            <h4>窗口配置</h4>
+            <div
+              v-if="selectedMDIWindow"
+              class="window-config"
+            >
+              <el-form
+                :model="selectedMDIWindow"
+                label-width="80px"
+              >
+                <el-form-item label="窗口标题">
+                  <el-input v-model="selectedMDIWindow.title" />
+                </el-form-item>
+                <el-form-item label="窗口图标">
+                  <el-input v-model="selectedMDIWindow.icon" />
+                </el-form-item>
+                <el-form-item label="是否模态">
+                  <el-switch v-model="selectedMDIWindow.modal" />
+                </el-form-item>
+                <el-form-item label="可调整大小">
+                  <el-switch v-model="selectedMDIWindow.resizable" />
+                </el-form-item>
+                <el-form-item label="可拖拽">
+                  <el-switch v-model="selectedMDIWindow.draggable" />
+                </el-form-item>
+              </el-form>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tabs标签页设计模式 -->
+      <div
+        v-else-if="layoutMode === 'tabs'"
+        class="tabs-design-mode"
+      >
+        <div class="tabs-designer-toolbar">
+          <el-button-group>
+            <el-button
+              icon="el-icon-plus"
+              @click="addTabPage"
+            >
+              添加标签页
+            </el-button>
+            <el-button
+              icon="el-icon-setting"
+              @click="configureTabs"
+            >
+              标签配置
+            </el-button>
+            <el-button
+              icon="el-icon-view"
+              @click="previewTabs"
+            >
+              预览标签页
+            </el-button>
+          </el-button-group>
+        </div>
+        
+        <div class="tabs-design-container">
+          <!-- 标签页设计器 -->
+          <TabsContainer
+            :tabs="tabPages"
+            :active-tab-id="activeTab"
+            @tab-activated="handleTabActivated"
+            @tab-closed="handleTabClosed"
+            @tab-moved="handleTabMoved"
+            @add-tab="addTabPage"
+          />
+          
+          <!-- 标签页配置面板 -->
+          <div class="tabs-config-panel">
+            <h4>标签配置</h4>
+            <div
+              v-if="selectedTab"
+              class="tab-config"
+            >
+              <el-form
+                :model="selectedTab"
+                label-width="80px"
+              >
+                <el-form-item label="标签标题">
+                  <el-input v-model="selectedTab.title" />
+                </el-form-item>
+                <el-form-item label="标签图标">
+                  <el-input v-model="selectedTab.icon" />
+                </el-form-item>
+                <el-form-item label="可关闭">
+                  <el-switch v-model="selectedTab.closable" />
+                </el-form-item>
+                <el-form-item label="固定标签">
+                  <el-switch v-model="selectedTab.pinned" />
+                </el-form-item>
+              </el-form>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- 智能批量生成模式 -->
       <div
-        v-if="designMode === 'batch'"
+        v-else-if="designMode === 'batch'"
         class="batch-design-mode"
       >
         <div class="batch-sidebar">
@@ -713,6 +874,9 @@ import { usePageDesignStore } from "@/stores/lowcode/pageDesign"
 import VisualComponentPalette from "@/components/lowcode/VisualComponentPalette.vue"
 import VisualDesignCanvas from "@/components/lowcode/VisualDesignCanvas.vue"
 import ComponentPropertyPanel from "@/components/lowcode/ComponentPropertyPanel.vue"
+import MDIContainer from "@/components/ui/MDIContainer.vue"
+import TabsContainer from "@/components/ui/TabsContainer.vue"
+import type { MDIWindowConfig, TabConfig } from '@/types/unified-metadata'
 
 // Stores
 const entityStore = useEntityModelingStore()
@@ -749,6 +913,59 @@ const componentSearchFilter = ref("")
 const selectedEntity = ref(null)
 const draggedComponent = ref(null)
 const designerMode = ref("visual") // visual | legacy
+
+// 界面模式相关
+const layoutMode = ref("single") // single | tabs | mdi | split
+
+// MDI相关数据
+const mdiWindows = ref<MDIWindowConfig[]>([
+  {
+    id: "window-1",
+    title: "用户管理",
+    icon: "el-icon-user",
+    bounds: { x: 50, y: 50, width: 800, height: 600 },
+    maximized: false,
+    minimized: false,
+    resizable: true,
+    draggable: true,
+    modal: false,
+    state: "normal",
+    component: "UserManagement",
+    props: {},
+    permissions: [],
+    createdAt: new Date().toISOString()
+  }
+])
+const activeMDIWindow = ref("window-1")
+const selectedMDIWindow = ref<MDIWindowConfig | null>(null)
+
+// Tabs相关数据  
+const tabPages = ref<TabConfig[]>([
+  {
+    id: "tab-1",
+    title: "用户列表",
+    icon: "el-icon-user",
+    closable: true,
+    active: true,
+    component: "UserList",
+    props: {},
+    permissions: [],
+    pinned: false
+  },
+  {
+    id: "tab-2", 
+    title: "角色管理",
+    icon: "el-icon-user-solid",
+    closable: true,
+    active: false,
+    component: "RoleManagement", 
+    props: {},
+    permissions: [],
+    pinned: false
+  }
+])
+const activeTab = ref("tab-1")
+const selectedTab = ref<TabConfig | null>(null)
 
 // 组件库定义
 const layoutComponents = [
@@ -1135,6 +1352,285 @@ const switchToLegacyDesigner = () => {
   ElMessage.success('已切换到传统设计器')
 }
 
+// 界面模式切换
+const onLayoutModeChange = (mode: string) => {
+  layoutMode.value = mode
+  console.log("界面模式切换:", mode)
+  
+  // 根据模式初始化相应数据
+  if (mode === "mdi" && mdiWindows.value.length === 0) {
+    initializeMDIWindows()
+  } else if (mode === "tabs" && tabPages.value.length === 0) {
+    initializeTabPages()
+  }
+}
+
+// MDI相关方法
+const initializeMDIWindows = () => {
+  const entities = availableEntities.value.slice(0, 3) // 取前3个实体作为示例
+  
+  mdiWindows.value = entities.map((entity, index) => ({
+    id: `window-${entity.id}`,
+    title: `${entity.displayName || entity.name}管理`,
+    icon: getEntityIcon(entity.category),
+    bounds: {
+      x: 50 + index * 30,
+      y: 50 + index * 30,
+      width: 800,
+      height: 600
+    },
+    maximized: false,
+    minimized: false,
+    resizable: true,
+    draggable: true,
+    modal: false,
+    state: "normal",
+    component: `${entity.name}Management`,
+    props: { entityId: entity.id },
+    permissions: [],
+    createdAt: new Date().toISOString()
+  }))
+  
+  if (mdiWindows.value.length > 0) {
+    activeMDIWindow.value = mdiWindows.value[0].id
+    selectedMDIWindow.value = mdiWindows.value[0]
+  }
+}
+
+const addMDIWindow = () => {
+  const newId = `window-${Date.now()}`
+  const newWindow: MDIWindowConfig = {
+    id: newId,
+    title: "新窗口",
+    icon: "el-icon-document",
+    bounds: { x: 100, y: 100, width: 600, height: 400 },
+    maximized: false,
+    minimized: false,
+    resizable: true,
+    draggable: true,
+    modal: false,
+    state: "normal",
+    component: "EmptyPage",
+    props: {},
+    permissions: [],
+    createdAt: new Date().toISOString()
+  }
+  
+  mdiWindows.value.push(newWindow)
+  activeMDIWindow.value = newId
+  selectedMDIWindow.value = newWindow
+}
+
+const handleMDIWindowActivated = (windowId: string) => {
+  activeMDIWindow.value = windowId
+  selectedMDIWindow.value = mdiWindows.value.find(w => w.id === windowId) || null
+}
+
+const handleMDIWindowClosed = (windowId: string) => {
+  const index = mdiWindows.value.findIndex(w => w.id === windowId)
+  if (index >= 0) {
+    mdiWindows.value.splice(index, 1)
+  }
+  
+  if (activeMDIWindow.value === windowId) {
+    activeMDIWindow.value = mdiWindows.value.length > 0 ? mdiWindows.value[0].id : ""
+    selectedMDIWindow.value = mdiWindows.value.length > 0 ? mdiWindows.value[0] : null
+  }
+}
+
+const handleMDIWindowMoved = (windowId: string, x: number, y: number) => {
+  const window = mdiWindows.value.find(w => w.id === windowId)
+  if (window) {
+    window.bounds.x = x
+    window.bounds.y = y
+  }
+}
+
+const handleMDIWindowResized = (windowId: string, width: number, height: number) => {
+  const window = mdiWindows.value.find(w => w.id === windowId)
+  if (window) {
+    window.bounds.width = width
+    window.bounds.height = height
+  }
+}
+
+const configureMDI = () => {
+  ElMessage.info("MDI配置功能开发中...")
+}
+
+const previewMDI = () => {
+  // 生成MDI预览代码
+  const mdiCode = generateMDICode()
+  console.log("MDI预览代码:", mdiCode)
+  ElMessage.success("MDI界面预览已生成")
+}
+
+// Tabs相关方法
+const initializeTabPages = () => {
+  const entities = availableEntities.value.slice(0, 4) // 取前4个实体作为示例
+  
+  tabPages.value = entities.map((entity, index) => ({
+    id: `tab-${entity.id}`,
+    title: `${entity.displayName || entity.name}`,
+    icon: getEntityIcon(entity.category),
+    closable: true,
+    active: index === 0,
+    component: `${entity.name}List`,
+    props: { entityId: entity.id },
+    permissions: [],
+    pinned: false
+  }))
+  
+  if (tabPages.value.length > 0) {
+    activeTab.value = tabPages.value[0].id
+    selectedTab.value = tabPages.value[0]
+  }
+}
+
+const addTabPage = () => {
+  const newId = `tab-${Date.now()}`
+  const newTab: TabConfig = {
+    id: newId,
+    title: "新标签页",
+    icon: "el-icon-document",
+    closable: true,
+    active: false,
+    component: "EmptyPage",
+    props: {},
+    permissions: [],
+    pinned: false
+  }
+  
+  tabPages.value.push(newTab)
+  activeTab.value = newId
+  selectedTab.value = newTab
+}
+
+const handleTabActivated = (tabId: string) => {
+  // 更新所有标签的激活状态
+  tabPages.value.forEach(tab => {
+    tab.active = tab.id === tabId
+  })
+  
+  activeTab.value = tabId
+  selectedTab.value = tabPages.value.find(t => t.id === tabId) || null
+}
+
+const handleTabClosed = (tabId: string) => {
+  const index = tabPages.value.findIndex(t => t.id === tabId)
+  if (index >= 0) {
+    tabPages.value.splice(index, 1)
+  }
+  
+  if (activeTab.value === tabId) {
+    if (tabPages.value.length > 0) {
+      const newActiveTab = tabPages.value[Math.max(0, index - 1)]
+      activeTab.value = newActiveTab.id
+      selectedTab.value = newActiveTab
+      newActiveTab.active = true
+    } else {
+      activeTab.value = ""
+      selectedTab.value = null
+    }
+  }
+}
+
+const handleTabMoved = (fromIndex: number, toIndex: number) => {
+  const tab = tabPages.value.splice(fromIndex, 1)[0]
+  tabPages.value.splice(toIndex, 0, tab)
+}
+
+const configureTabs = () => {
+  ElMessage.info("标签页配置功能开发中...")
+}
+
+const previewTabs = () => {
+  // 生成Tabs预览代码
+  const tabsCode = generateTabsCode()
+  console.log("Tabs预览代码:", tabsCode)
+  ElMessage.success("标签页界面预览已生成")
+}
+
+// 代码生成方法
+const generateMDICode = () => {
+  const windowsJson = JSON.stringify(mdiWindows.value, null, 2)
+  const activeWindowRef = activeMDIWindow.value
+  
+  return `<template>
+  <div class="mdi-application">
+    <MDIContainer
+      :windows="windows"
+      :active-window-id="activeWindow"
+      @window-activated="handleWindowActivated"
+      @window-closed="handleWindowClosed"
+    />
+  </div>
+</template>
+
+<${'script'} setup lang="ts">
+import { ref } from 'vue'
+import MDIContainer from '@/components/ui/MDIContainer.vue'
+
+const windows = ref(${windowsJson})
+const activeWindow = ref("${activeWindowRef}")
+
+const handleWindowActivated = (windowId: string) => {
+  activeWindow.value = windowId
+}
+
+const handleWindowClosed = (windowId: string) => {
+  const index = windows.value.findIndex(w => w.id === windowId)
+  if (index >= 0) {
+    windows.value.splice(index, 1)
+  }
+}
+</${'script'}>`.trim()
+}
+
+const generateTabsCode = () => {
+  const tabsJson = JSON.stringify(tabPages.value, null, 2)
+  const activeTabRef = activeTab.value
+  
+  return `<template>
+  <div class="tabs-application">
+    <TabsContainer
+      :tabs="tabs"
+      :active-tab-id="activeTab"
+      @tab-activated="handleTabActivated"
+      @tab-closed="handleTabClosed"
+      @tab-moved="handleTabMoved"
+    />
+  </div>
+</template>
+
+<${'script'} setup lang="ts">
+import { ref } from 'vue'
+import TabsContainer from '@/components/ui/TabsContainer.vue'
+
+const tabs = ref(${tabsJson})
+const activeTab = ref("${activeTabRef}")
+
+const handleTabActivated = (tabId: string) => {
+  tabs.value.forEach(tab => {
+    tab.active = tab.id === tabId
+  })
+  activeTab.value = tabId
+}
+
+const handleTabClosed = (tabId: string) => {
+  const index = tabs.value.findIndex(t => t.id === tabId)
+  if (index >= 0) {
+    tabs.value.splice(index, 1)
+  }
+}
+
+const handleTabMoved = (fromIndex: number, toIndex: number) => {
+  const tab = tabs.value.splice(fromIndex, 1)[0]
+  tabs.value.splice(toIndex, 0, tab)
+}
+</${'script'}>`.trim()
+}
+
 // 初始化
 onMounted(() => {
   entityStore.loadFromLocalStorage()
@@ -1197,9 +1693,96 @@ onMounted(() => {
   width: 200px;
 }
 
+.header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.layout-mode-selector {
+  padding: 0 20px;
+}
+
 .design-body {
   flex: 1;
   min-height: 0;
+}
+
+/* MDI设计模式样式 */
+.mdi-design-mode {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mdi-designer-toolbar {
+  padding: 12px 16px;
+  background: var(--el-bg-color-light);
+  border-bottom: 1px solid var(--el-border-color);
+}
+
+.mdi-design-container {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.mdi-config-panel {
+  width: 300px;
+  background: var(--el-bg-color);
+  border-left: 1px solid var(--el-border-color);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.mdi-config-panel h4 {
+  margin: 0 0 16px 0;
+  color: var(--el-text-color-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.window-config {
+  margin-top: 16px;
+}
+
+/* Tabs设计模式样式 */
+.tabs-design-mode {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs-designer-toolbar {
+  padding: 12px 16px;
+  background: var(--el-bg-color-light);
+  border-bottom: 1px solid var(--el-border-color);
+}
+
+.tabs-design-container {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.tabs-config-panel {
+  width: 300px;
+  background: var(--el-bg-color);
+  border-left: 1px solid var(--el-border-color);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.tabs-config-panel h4 {
+  margin: 0 0 16px 0;
+  color: var(--el-text-color-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tab-config {
+  margin-top: 16px;
 }
 
 /* 批量设计模式 */
