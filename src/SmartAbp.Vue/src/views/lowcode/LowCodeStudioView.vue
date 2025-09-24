@@ -622,13 +622,18 @@ const generate = async () => {
         'Authorization': `Bearer ${localStorage.getItem('access_token') || ''}`
       },
       body: JSON.stringify(generateRequest)
+    }).catch((fetchError) => {
+      // 捕获网络错误
+      throw new Error(`网络请求失败: ${fetchError.message}`)
     })
 
     if (!response.ok) {
       throw new Error(`生成失败: ${response.status} ${response.statusText}`)
     }
 
-    const result = await response.json()
+    const result = await response.json().catch((jsonError) => {
+      throw new Error(`响应解析失败: ${jsonError.message}`)
+    })
 
     buildStatus.value = "生成完成"
     outputContent.value += "\n\n=== 代码生成完成 ===\n"
@@ -655,6 +660,8 @@ const generate = async () => {
     outputContent.value += `\n\n=== 代码生成失败 ===\n`
     outputContent.value += `错误: ${errorMessage}\n`
     addLog("error", `代码生成失败: ${errorMessage}`)
+    // 确保错误被正确记录，避免未处理的Promise rejection
+    console.error("Code generation error:", error)
 
     // 添加问题到问题面板
     issues.value.push({
