@@ -5,7 +5,10 @@ SmartAbp Enterprise Optimized Data Table Component
 <template>
   <div class="optimized-data-table">
     <!-- 性能监控面板 -->
-    <div v-if="showPerformancePanel" class="performance-panel">
+    <div
+      v-if="showPerformancePanel"
+      class="performance-panel"
+    >
       <div class="performance-metrics">
         <div class="metric">
           <span class="label">渲染时间:</span>
@@ -25,9 +28,25 @@ SmartAbp Enterprise Optimized Data Table Component
         </div>
       </div>
       <div class="performance-actions">
-        <el-button size="small" @click="triggerGC">垃圾回收</el-button>
-        <el-button size="small" @click="clearCache">清理缓存</el-button>
-        <el-button size="small" type="warning" @click="exportPerformanceData">导出性能数据</el-button>
+        <el-button
+          size="small"
+          @click="triggerGC"
+        >
+          垃圾回收
+        </el-button>
+        <el-button
+          size="small"
+          @click="clearCache"
+        >
+          清理缓存
+        </el-button>
+        <el-button
+          size="small"
+          type="warning"
+          @click="exportPerformanceData"
+        >
+          导出性能数据
+        </el-button>
       </div>
     </div>
 
@@ -50,10 +69,22 @@ SmartAbp Enterprise Optimized Data Table Component
           style="width: 120px; margin-left: 10px"
           @change="handlePageSizeChange"
         >
-          <el-option label="50" :value="50" />
-          <el-option label="100" :value="100" />
-          <el-option label="200" :value="200" />
-          <el-option label="500" :value="500" />
+          <el-option
+            label="50"
+            :value="50"
+          />
+          <el-option
+            label="100"
+            :value="100"
+          />
+          <el-option
+            label="200"
+            :value="200"
+          />
+          <el-option
+            label="500"
+            :value="500"
+          />
         </el-select>
       </div>
       <div class="toolbar-right">
@@ -62,7 +93,10 @@ SmartAbp Enterprise Optimized Data Table Component
           active-text="性能面板"
           style="margin-right: 10px"
         />
-        <el-button type="primary" @click="refreshData">
+        <el-button
+          type="primary"
+          @click="refreshData"
+        >
           <el-icon><Refresh /></el-icon>
           刷新数据
         </el-button>
@@ -79,7 +113,7 @@ SmartAbp Enterprise Optimized Data Table Component
       <div :style="{ height: `${totalHeight}px`, position: 'relative' }">
         <!-- 可见行渲染 -->
         <div
-          v-for="(item, index) in visibleItems"
+          v-for="item in visibleItems"
           :key="item._virtualIndex"
           class="virtual-row"
           :style="{
@@ -89,12 +123,15 @@ SmartAbp Enterprise Optimized Data Table Component
             height: `${itemHeight}px`
           }"
         >
-          <div class="table-row" :class="{ 'row-even': item._virtualIndex % 2 === 0 }">
+          <div
+            class="table-row"
+            :class="{ 'row-even': item._virtualIndex % 2 === 0 }"
+          >
             <!-- 序号列 -->
             <div class="table-cell index-cell">
               {{ item._virtualIndex + 1 }}
             </div>
-            
+
             <!-- 数据列 -->
             <div
               v-for="column in columns"
@@ -126,10 +163,20 @@ SmartAbp Enterprise Optimized Data Table Component
             </div>
 
             <!-- 操作列 -->
-            <div v-if="showActions" class="table-cell actions-cell">
+            <div
+              v-if="showActions"
+              class="table-cell actions-cell"
+            >
               <el-button-group size="small">
-                <el-button @click="handleEdit(item)">编辑</el-button>
-                <el-button type="danger" @click="handleDelete(item)">删除</el-button>
+                <el-button @click="handleEdit(item)">
+                  编辑
+                </el-button>
+                <el-button
+                  type="danger"
+                  @click="handleDelete(item)"
+                >
+                  删除
+                </el-button>
               </el-button-group>
             </div>
           </div>
@@ -138,17 +185,32 @@ SmartAbp Enterprise Optimized Data Table Component
     </div>
 
     <!-- 加载状态 -->
-    <div v-if="loading" class="loading-overlay">
+    <div
+      v-if="loading"
+      class="loading-overlay"
+    >
       <el-loading text="加载中..." />
     </div>
 
     <!-- 无限滚动加载更多 -->
-    <div v-if="enableInfiniteScroll" ref="infiniteScrollTarget" class="infinite-scroll-trigger">
-      <div v-if="infiniteLoading" class="loading-more">
-        <el-icon class="is-loading"><Loading /></el-icon>
+    <div
+      v-if="enableInfiniteScroll"
+      ref="infiniteScrollTarget"
+      class="infinite-scroll-trigger"
+    >
+      <div
+        v-if="infiniteLoading"
+        class="loading-more"
+      >
+        <el-icon class="is-loading">
+          <Loading />
+        </el-icon>
         <span>加载更多...</span>
       </div>
-      <div v-else-if="infiniteFinished" class="no-more-data">
+      <div
+        v-else-if="infiniteFinished"
+        class="no-more-data"
+      >
         没有更多数据了
       </div>
     </div>
@@ -156,6 +218,9 @@ SmartAbp Enterprise Optimized Data Table Component
 </template>
 
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
+/* eslint-disable vue/require-default-prop */
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { ElButton, ElInput, ElSelect, ElOption, ElSwitch, ElIcon, ElLoading, ElButtonGroup } from 'element-plus'
 import { Search, Refresh, Loading } from '@element-plus/icons-vue'
@@ -220,10 +285,10 @@ const scrollContainer = ref<HTMLElement | null>(null)
 // 性能监控
 const { memoryInfo, startMonitoring, triggerGC } = useMemoryMonitor()
 const { averageRenderTime, startRenderTimer, recordRenderTime } = usePerformanceMonitor()
-const cache = useCache<any[]>('optimized-data-table', { 
-  capacity: 200, 
+const cache = useCache<any[]>('optimized-data-table', {
+  capacity: 200,
   ttl: 5 * 60 * 1000, // 5分钟
-  persistent: true 
+  persistent: true
 })
 
 // 虚拟滚动配置
@@ -241,7 +306,7 @@ const {
   totalHeight,
   startIndex,
   endIndex,
-  scrollToIndex,
+  // scrollToIndex, // 暂时注释未使用变量
   updateData
 } = useVirtualScroll(tableData, virtualScrollOptions)
 
@@ -250,7 +315,7 @@ const infiniteScrollTarget = ref<HTMLElement | null>(null)
 const {
   isLoading: infiniteLoading,
   isFinished: infiniteFinished,
-  load: loadMoreData
+  // load: loadMoreData // 暂时注释未使用变量
 } = useInfiniteScroll(async () => {
   if (props.loadMore) {
     const result = await props.loadMore()
@@ -271,22 +336,22 @@ const [debouncedSearch] = useDebounce(async (keyword: string) => {
   if (!props.onSearch) return
 
   const startTime = startRenderTimer()
-  
+
   try {
     loading.value = true
-    
+
     // 检查缓存
     const cacheKey = `search_${keyword}`
     let results = cache.get(cacheKey)
-    
+
     if (!results) {
       results = await props.onSearch(keyword)
       cache.set(cacheKey, results)
     }
-    
+
     tableData.value = results
     updateData(results)
-    
+
   } finally {
     loading.value = false
     recordRenderTime(startTime)
@@ -307,14 +372,14 @@ const handlePageSizeChange = (size: number) => {
 
 const refreshData = async () => {
   const startTime = startRenderTimer()
-  
+
   try {
     loading.value = true
     emit('refresh')
-    
+
     // 清理缓存
     cache.clear()
-    
+
     await nextTick()
   } finally {
     loading.value = false
@@ -348,7 +413,7 @@ const exportPerformanceData = () => {
     },
     timestamp: new Date().toISOString()
   }
-  
+
   // 导出为JSON文件
   const blob = new Blob([JSON.stringify(performanceData, null, 2)], {
     type: 'application/json'

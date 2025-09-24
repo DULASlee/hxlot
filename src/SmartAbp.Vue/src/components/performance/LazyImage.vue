@@ -3,10 +3,10 @@ SmartAbp Enterprise Lazy Loading Image Component
 企业级懒加载图片组件 - 支持占位图、错误处理、响应式图片等特性
 -->
 <template>
-  <div 
+  <div
     ref="target"
     class="lazy-image-container"
-    :class="{ 
+    :class="{
       'is-loading': isLoading,
       'has-error': hasError,
       'is-loaded': hasLoaded && !hasError
@@ -22,26 +22,52 @@ SmartAbp Enterprise Lazy Loading Image Component
       @load="handleLoad"
       @error="handleError"
     />
-    
+
     <!-- 加载状态 -->
-    <div v-if="isLoading && showLoadingIndicator" class="loading-indicator">
-      <div class="loading-spinner"></div>
-      <span v-if="loadingText" class="loading-text">{{ loadingText }}</span>
+    <div
+      v-if="isLoading && showLoadingIndicator"
+      class="loading-indicator"
+    >
+      <div class="loading-spinner" />
+      <span
+        v-if="loadingText"
+        class="loading-text"
+      >{{ loadingText }}</span>
     </div>
-    
+
     <!-- 错误状态 -->
-    <div v-if="hasError && showErrorIndicator" class="error-indicator">
-      <div class="error-icon">❌</div>
-      <span v-if="errorText" class="error-text">{{ errorText }}</span>
-      <button v-if="allowRetry" class="retry-button" @click="retry">
+    <div
+      v-if="hasError && showErrorIndicator"
+      class="error-indicator"
+    >
+      <div class="error-icon">
+        ❌
+      </div>
+      <span
+        v-if="errorText"
+        class="error-text"
+      >{{ errorText }}</span>
+      <button
+        v-if="allowRetry"
+        class="retry-button"
+        @click="retry"
+      >
         重试
       </button>
     </div>
-    
+
     <!-- 占位内容 -->
-    <div v-if="!hasLoaded && !isLoading && !hasError && showPlaceholder" class="placeholder">
-      <div class="placeholder-icon">🖼️</div>
-      <span v-if="placeholderText" class="placeholder-text">{{ placeholderText }}</span>
+    <div
+      v-if="!hasLoaded && !isLoading && !hasError && showPlaceholder"
+      class="placeholder"
+    >
+      <div class="placeholder-icon">
+        🖼️
+      </div>
+      <span
+        v-if="placeholderText"
+        class="placeholder-text"
+      >{{ placeholderText }}</span>
     </div>
   </div>
 </template>
@@ -119,7 +145,7 @@ const lazyImageOptions = computed<LazyImageOptions>(() => ({
 const {
   target,
   currentSrc,
-  isVisible,
+  // isVisible, // 暂时注释未使用变量
   isLoading,
   hasError,
   hasLoaded,
@@ -151,7 +177,7 @@ onMounted(() => {
       rect.bottom <= window.innerHeight &&
       rect.right <= window.innerWidth
     )
-    
+
     if (isInViewport) {
       reload()
     }
@@ -256,13 +282,13 @@ onMounted(() => {
   .placeholder {
     padding: 8px;
   }
-  
+
   .loading-text,
   .error-text,
   .placeholder-text {
     font-size: 11px;
   }
-  
+
   .error-icon,
   .placeholder-icon {
     font-size: 20px;
@@ -274,13 +300,13 @@ onMounted(() => {
   .lazy-image-container {
     border: 1px solid #000;
   }
-  
+
   .loading-text,
   .error-text,
   .placeholder-text {
     color: #000;
   }
-  
+
   .retry-button {
     border-color: #000;
     color: #000;
@@ -294,7 +320,7 @@ onMounted(() => {
   .retry-button {
     transition: none;
   }
-  
+
   .loading-spinner {
     animation: none;
     border-top-color: #409eff;
@@ -306,19 +332,19 @@ onMounted(() => {
   .lazy-image-container {
     background-color: #2d2d2d;
   }
-  
+
   .loading-text,
   .error-text,
   .placeholder-text {
     color: #a8a8a8;
   }
-  
+
   .retry-button {
     background: #2d2d2d;
     border-color: #4a4a4a;
     color: #a8a8a8;
   }
-  
+
   .retry-button:hover {
     border-color: #409eff;
     color: #409eff;
