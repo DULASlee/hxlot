@@ -36,7 +36,10 @@
       </template>
 
       <!-- 关系图视图 -->
-      <div v-if="viewMode === 'graph'" class="graph-view">
+      <div
+        v-if="viewMode === 'graph'"
+        class="graph-view"
+      >
         <div class="graph-toolbar">
           <div class="toolbar-left">
             <el-button-group size="small">
@@ -63,16 +66,24 @@
           </div>
           <div class="toolbar-right">
             <el-tooltip content="显示继承关系">
-              <el-checkbox v-model="showInheritance">继承</el-checkbox>
+              <el-checkbox v-model="showInheritance">
+                继承
+              </el-checkbox>
             </el-tooltip>
             <el-tooltip content="显示聚合关系">
-              <el-checkbox v-model="showAggregation">聚合</el-checkbox>
+              <el-checkbox v-model="showAggregation">
+                聚合
+              </el-checkbox>
             </el-tooltip>
             <el-tooltip content="显示组合关系">
-              <el-checkbox v-model="showComposition">组合</el-checkbox>
+              <el-checkbox v-model="showComposition">
+                组合
+              </el-checkbox>
             </el-tooltip>
             <el-tooltip content="显示依赖关系">
-              <el-checkbox v-model="showDependency">依赖</el-checkbox>
+              <el-checkbox v-model="showDependency">
+                依赖
+              </el-checkbox>
             </el-tooltip>
           </div>
         </div>
@@ -83,11 +94,11 @@
             ref="vueFlowRef"
             :nodes="graphNodes"
             :edges="graphEdges"
+            class="vue-flow-container"
             @node-click="onNodeClick"
             @edge-click="onEdgeClick"
             @nodes-change="onNodesChange"
             @edges-change="onEdgesChange"
-            class="vue-flow-container"
           >
             <Background />
             <Controls />
@@ -116,12 +127,17 @@
       </div>
 
       <!-- 关系矩阵视图 -->
-      <div v-else-if="viewMode === 'matrix'" class="matrix-view">
+      <div
+        v-else-if="viewMode === 'matrix'"
+        class="matrix-view"
+      >
         <div class="matrix-container">
           <table class="relationship-matrix">
             <thead>
               <tr>
-                <th class="entity-header">实体</th>
+                <th class="entity-header">
+                  实体
+                </th>
                 <th
                   v-for="entity in entities"
                   :key="entity.id"
@@ -137,7 +153,9 @@
                 :key="fromEntity.id"
                 class="matrix-row"
               >
-                <th class="entity-name">{{ fromEntity.name }}</th>
+                <th class="entity-name">
+                  {{ fromEntity.name }}
+                </th>
                 <td
                   v-for="toEntity in entities"
                   :key="toEntity.id"
@@ -169,7 +187,10 @@
       </div>
 
       <!-- 继承树视图 -->
-      <div v-else-if="viewMode === 'tree'" class="tree-view">
+      <div
+        v-else-if="viewMode === 'tree'"
+        class="tree-view"
+      >
         <div class="tree-toolbar">
           <el-button
             type="primary"
@@ -215,7 +236,10 @@
       >
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="源实体" prop="fromEntityId">
+            <el-form-item
+              label="源实体"
+              prop="fromEntityId"
+            >
               <el-select
                 v-model="relationForm.fromEntityId"
                 placeholder="选择源实体"
@@ -231,7 +255,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="目标实体" prop="toEntityId">
+            <el-form-item
+              label="目标实体"
+              prop="toEntityId"
+            >
               <el-select
                 v-model="relationForm.toEntityId"
                 placeholder="选择目标实体"
@@ -250,36 +277,72 @@
 
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="关系类型" prop="type">
+            <el-form-item
+              label="关系类型"
+              prop="type"
+            >
               <el-select
                 v-model="relationForm.type"
                 placeholder="选择关系类型"
                 style="width: 100%"
               >
                 <el-option-group label="基本关系">
-                  <el-option label="一对一" value="one-to-one" />
-                  <el-option label="一对多" value="one-to-many" />
-                  <el-option label="多对多" value="many-to-many" />
+                  <el-option
+                    label="一对一"
+                    value="one-to-one"
+                  />
+                  <el-option
+                    label="一对多"
+                    value="one-to-many"
+                  />
+                  <el-option
+                    label="多对多"
+                    value="many-to-many"
+                  />
                 </el-option-group>
                 <el-option-group label="高级关系">
-                  <el-option label="继承" value="inheritance" />
-                  <el-option label="聚合" value="aggregation" />
-                  <el-option label="组合" value="composition" />
-                  <el-option label="依赖" value="dependency" />
+                  <el-option
+                    label="继承"
+                    value="inheritance"
+                  />
+                  <el-option
+                    label="聚合"
+                    value="aggregation"
+                  />
+                  <el-option
+                    label="组合"
+                    value="composition"
+                  />
+                  <el-option
+                    label="依赖"
+                    value="dependency"
+                  />
                 </el-option-group>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="关系强度" prop="strength">
+            <el-form-item
+              label="关系强度"
+              prop="strength"
+            >
               <el-select
                 v-model="relationForm.strength"
                 placeholder="选择关系强度"
                 style="width: 100%"
               >
-                <el-option label="强关联" value="strong" />
-                <el-option label="弱关联" value="weak" />
-                <el-option label="可选关联" value="optional" />
+                <el-option
+                  label="强关联"
+                  value="strong"
+                />
+                <el-option
+                  label="弱关联"
+                  value="weak"
+                />
+                <el-option
+                  label="可选关联"
+                  value="optional"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -287,7 +350,10 @@
 
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="源端属性" prop="fromProperty">
+            <el-form-item
+              label="源端属性"
+              prop="fromProperty"
+            >
               <el-input
                 v-model="relationForm.fromProperty"
                 placeholder="导航属性名称"
@@ -295,7 +361,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="目标端属性" prop="toProperty">
+            <el-form-item
+              label="目标端属性"
+              prop="toProperty"
+            >
               <el-input
                 v-model="relationForm.toProperty"
                 placeholder="导航属性名称"
@@ -304,7 +373,10 @@
           </el-col>
         </el-row>
 
-        <el-form-item label="外键字段" prop="foreignKey">
+        <el-form-item
+          label="外键字段"
+          prop="foreignKey"
+        >
           <el-input
             v-model="relationForm.foreignKey"
             placeholder="外键字段名称"
@@ -313,9 +385,15 @@
 
         <el-form-item label="级联操作">
           <el-checkbox-group v-model="relationForm.cascadeActions">
-            <el-checkbox label="cascadeDelete">级联删除</el-checkbox>
-            <el-checkbox label="cascadeUpdate">级联更新</el-checkbox>
-            <el-checkbox label="cascadeInsert">级联插入</el-checkbox>
+            <el-checkbox label="cascadeDelete">
+              级联删除
+            </el-checkbox>
+            <el-checkbox label="cascadeUpdate">
+              级联更新
+            </el-checkbox>
+            <el-checkbox label="cascadeInsert">
+              级联插入
+            </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
 
@@ -340,11 +418,13 @@
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="showAdvancedRelationDialog = false">取消</el-button>
+          <el-button @click="showAdvancedRelationDialog = false">
+            取消
+          </el-button>
           <el-button
             type="primary"
-            @click="saveAdvancedRelation"
             :loading="saving"
+            @click="saveAdvancedRelation"
           >
             保存关系
           </el-button>
@@ -394,9 +474,15 @@
         </el-form-item>
         <el-form-item label="继承策略">
           <el-radio-group v-model="inheritanceForm.strategy">
-            <el-radio label="table-per-hierarchy">每个层次结构一张表</el-radio>
-            <el-radio label="table-per-type">每个类型一张表</el-radio>
-            <el-radio label="table-per-concrete">每个具体类一张表</el-radio>
+            <el-radio label="table-per-hierarchy">
+              每个层次结构一张表
+            </el-radio>
+            <el-radio label="table-per-type">
+              每个类型一张表
+            </el-radio>
+            <el-radio label="table-per-concrete">
+              每个具体类一张表
+            </el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="抽象类">
@@ -407,7 +493,9 @@
       </el-form>
 
       <template #footer>
-        <el-button @click="showInheritanceDialog = false">取消</el-button>
+        <el-button @click="showInheritanceDialog = false">
+          取消
+        </el-button>
         <el-button
           type="primary"
           @click="saveInheritance"
@@ -418,7 +506,10 @@
     </el-dialog>
 
     <!-- 关系验证结果 -->
-    <div v-if="relationshipValidation.length > 0" class="validation-panel">
+    <div
+      v-if="relationshipValidation.length > 0"
+      class="validation-panel"
+    >
       <h4>
         <i class="el-icon-warning" />
         关系验证结果

@@ -24,8 +24,8 @@
               </el-button>
               <el-button
                 icon="el-icon-cpu"
-                @click="testAllRules"
                 :loading="testing"
+                @click="testAllRules"
               >
                 测试规则
               </el-button>
@@ -36,8 +36,14 @@
 
       <!-- 规则分类标签 -->
       <div class="rules-tabs">
-        <el-tabs v-model="activeRuleCategory" type="border-card">
-          <el-tab-pane label="实体规则" name="entity">
+        <el-tabs
+          v-model="activeRuleCategory"
+          type="border-card"
+        >
+          <el-tab-pane
+            label="实体规则"
+            name="entity"
+          >
             <div class="entity-rules">
               <div class="rules-toolbar">
                 <span class="rules-count">{{ entityRules.length }} 个实体级规则</span>
@@ -67,8 +73,14 @@
                         v-model="rule.isActive"
                         @change="toggleRule(rule)"
                       />
-                      <el-dropdown @command="handleRuleAction" trigger="click">
-                        <el-button size="mini" type="text">
+                      <el-dropdown
+                        trigger="click"
+                        @command="handleRuleAction"
+                      >
+                        <el-button
+                          size="mini"
+                          type="text"
+                        >
                           <i class="el-icon-more" />
                         </el-button>
                         <template #dropdown>
@@ -82,7 +94,10 @@
                             <el-dropdown-item :command="{action: 'duplicate', rule}">
                               <i class="el-icon-document-copy" /> 复制规则
                             </el-dropdown-item>
-                            <el-dropdown-item :command="{action: 'delete', rule}" divided>
+                            <el-dropdown-item
+                              :command="{action: 'delete', rule}"
+                              divided
+                            >
                               <i class="el-icon-delete" /> 删除规则
                             </el-dropdown-item>
                           </el-dropdown-menu>
@@ -91,9 +106,13 @@
                     </div>
                   </div>
                   <div class="rule-content">
-                    <div class="rule-description">{{ rule.description }}</div>
+                    <div class="rule-description">
+                      {{ rule.description }}
+                    </div>
                     <div class="rule-conditions">
-                      <div class="condition-label">触发条件:</div>
+                      <div class="condition-label">
+                        触发条件:
+                      </div>
                       <el-tag
                         v-for="condition in rule.conditions"
                         :key="condition.id"
@@ -104,7 +123,9 @@
                       </el-tag>
                     </div>
                     <div class="rule-actions-list">
-                      <div class="actions-label">执行动作:</div>
+                      <div class="actions-label">
+                        执行动作:
+                      </div>
                       <el-tag
                         v-for="action in rule.actions"
                         :key="action.id"
@@ -115,8 +136,14 @@
                       </el-tag>
                     </div>
                   </div>
-                  <div v-if="rule.lastExecutionResult" class="rule-result">
-                    <div class="result-status" :class="rule.lastExecutionResult.success ? 'success' : 'error'">
+                  <div
+                    v-if="rule.lastExecutionResult"
+                    class="rule-result"
+                  >
+                    <div
+                      class="result-status"
+                      :class="rule.lastExecutionResult.success ? 'success' : 'error'"
+                    >
                       <i :class="rule.lastExecutionResult.success ? 'el-icon-check' : 'el-icon-close'" />
                       {{ rule.lastExecutionResult.success ? '执行成功' : '执行失败' }}
                     </div>
@@ -129,7 +156,10 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane label="字段规则" name="field">
+          <el-tab-pane
+            label="字段规则"
+            name="field"
+          >
             <div class="field-rules">
               <div class="rules-toolbar">
                 <span class="rules-count">{{ fieldRules.length }} 个字段级规则</span>
@@ -155,7 +185,10 @@
                       <span class="rule-field">{{ rule.entityName }}.{{ rule.fieldName }}</span>
                     </div>
                     <div class="rule-status">
-                      <el-switch v-model="rule.isActive" @change="toggleRule(rule)" />
+                      <el-switch
+                        v-model="rule.isActive"
+                        @change="toggleRule(rule)"
+                      />
                     </div>
                   </div>
                   <div class="rule-content">
@@ -164,15 +197,22 @@
                         {{ getValidationTypeLabel(rule.validationType) }}
                       </el-tag>
                     </div>
-                    <div class="rule-expression">{{ rule.expression }}</div>
-                    <div class="rule-message">错误消息: {{ rule.errorMessage }}</div>
+                    <div class="rule-expression">
+                      {{ rule.expression }}
+                    </div>
+                    <div class="rule-message">
+                      错误消息: {{ rule.errorMessage }}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </el-tab-pane>
 
-          <el-tab-pane label="跨实体规则" name="cross-entity">
+          <el-tab-pane
+            label="跨实体规则"
+            name="cross-entity"
+          >
             <div class="cross-entity-rules">
               <div class="rules-toolbar">
                 <span class="rules-count">{{ crossEntityRules.length }} 个跨实体规则</span>
@@ -207,14 +247,23 @@
                       </div>
                     </div>
                     <div class="rule-status">
-                      <el-switch v-model="rule.isActive" @change="toggleRule(rule)" />
+                      <el-switch
+                        v-model="rule.isActive"
+                        @change="toggleRule(rule)"
+                      />
                     </div>
                   </div>
                   <div class="rule-content">
-                    <div class="rule-description">{{ rule.description }}</div>
+                    <div class="rule-description">
+                      {{ rule.description }}
+                    </div>
                     <div class="rule-logic">
-                      <div class="logic-label">业务逻辑:</div>
-                      <div class="logic-expression">{{ rule.businessLogic }}</div>
+                      <div class="logic-label">
+                        业务逻辑:
+                      </div>
+                      <div class="logic-expression">
+                        {{ rule.businessLogic }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -222,7 +271,10 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane label="规则模板" name="templates">
+          <el-tab-pane
+            label="规则模板"
+            name="templates"
+          >
             <div class="rule-templates">
               <div class="template-categories">
                 <h4>预定义规则模板</h4>
@@ -267,7 +319,10 @@
       >
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="规则名称" prop="name">
+            <el-form-item
+              label="规则名称"
+              prop="name"
+            >
               <el-input
                 v-model="ruleForm.name"
                 placeholder="描述性的规则名称"
@@ -275,23 +330,44 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="规则类型" prop="type">
+            <el-form-item
+              label="规则类型"
+              prop="type"
+            >
               <el-select
                 v-model="ruleForm.type"
                 placeholder="选择规则类型"
                 style="width: 100%"
               >
-                <el-option label="实体验证规则" value="entity-validation" />
-                <el-option label="字段约束规则" value="field-constraint" />
-                <el-option label="业务逻辑规则" value="business-logic" />
-                <el-option label="数据完整性规则" value="data-integrity" />
-                <el-option label="权限控制规则" value="permission-control" />
+                <el-option
+                  label="实体验证规则"
+                  value="entity-validation"
+                />
+                <el-option
+                  label="字段约束规则"
+                  value="field-constraint"
+                />
+                <el-option
+                  label="业务逻辑规则"
+                  value="business-logic"
+                />
+                <el-option
+                  label="数据完整性规则"
+                  value="data-integrity"
+                />
+                <el-option
+                  label="权限控制规则"
+                  value="permission-control"
+                />
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
-        <el-form-item label="适用实体" prop="entityName">
+        <el-form-item
+          label="适用实体"
+          prop="entityName"
+        >
           <el-select
             v-model="ruleForm.entityName"
             placeholder="选择适用的实体"
@@ -306,7 +382,10 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="规则描述" prop="description">
+        <el-form-item
+          label="规则描述"
+          prop="description"
+        >
           <el-input
             v-model="ruleForm.description"
             type="textarea"
@@ -340,13 +419,34 @@
                 placeholder="操作符"
                 style="width: 100px"
               >
-                <el-option label="等于" value="equals" />
-                <el-option label="不等于" value="not-equals" />
-                <el-option label="大于" value="greater-than" />
-                <el-option label="小于" value="less-than" />
-                <el-option label="包含" value="contains" />
-                <el-option label="为空" value="is-null" />
-                <el-option label="不为空" value="is-not-null" />
+                <el-option
+                  label="等于"
+                  value="equals"
+                />
+                <el-option
+                  label="不等于"
+                  value="not-equals"
+                />
+                <el-option
+                  label="大于"
+                  value="greater-than"
+                />
+                <el-option
+                  label="小于"
+                  value="less-than"
+                />
+                <el-option
+                  label="包含"
+                  value="contains"
+                />
+                <el-option
+                  label="为空"
+                  value="is-null"
+                />
+                <el-option
+                  label="不为空"
+                  value="is-not-null"
+                />
               </el-select>
               <el-input
                 v-model="condition.value"
@@ -358,8 +458,14 @@
                 v-model="condition.logicalOperator"
                 style="width: 80px"
               >
-                <el-option label="且" value="AND" />
-                <el-option label="或" value="OR" />
+                <el-option
+                  label="且"
+                  value="AND"
+                />
+                <el-option
+                  label="或"
+                  value="OR"
+                />
               </el-select>
               <el-button
                 size="mini"
@@ -392,12 +498,30 @@
                 placeholder="动作类型"
                 style="width: 120px"
               >
-                <el-option label="设置字段值" value="set-field" />
-                <el-option label="显示消息" value="show-message" />
-                <el-option label="阻止操作" value="prevent-action" />
-                <el-option label="触发事件" value="trigger-event" />
-                <el-option label="调用服务" value="call-service" />
-                <el-option label="发送通知" value="send-notification" />
+                <el-option
+                  label="设置字段值"
+                  value="set-field"
+                />
+                <el-option
+                  label="显示消息"
+                  value="show-message"
+                />
+                <el-option
+                  label="阻止操作"
+                  value="prevent-action"
+                />
+                <el-option
+                  label="触发事件"
+                  value="trigger-event"
+                />
+                <el-option
+                  label="调用服务"
+                  value="call-service"
+                />
+                <el-option
+                  label="发送通知"
+                  value="send-notification"
+                />
               </el-select>
               <el-input
                 v-model="action.target"
@@ -443,11 +567,21 @@
           <el-col :span="12">
             <el-form-item label="执行时机">
               <el-checkbox-group v-model="ruleForm.executionTiming">
-                <el-checkbox label="before-create">创建前</el-checkbox>
-                <el-checkbox label="after-create">创建后</el-checkbox>
-                <el-checkbox label="before-update">更新前</el-checkbox>
-                <el-checkbox label="after-update">更新后</el-checkbox>
-                <el-checkbox label="before-delete">删除前</el-checkbox>
+                <el-checkbox label="before-create">
+                  创建前
+                </el-checkbox>
+                <el-checkbox label="after-create">
+                  创建后
+                </el-checkbox>
+                <el-checkbox label="before-update">
+                  更新前
+                </el-checkbox>
+                <el-checkbox label="after-update">
+                  更新后
+                </el-checkbox>
+                <el-checkbox label="before-delete">
+                  删除前
+                </el-checkbox>
               </el-checkbox-group>
             </el-form-item>
           </el-col>
@@ -455,7 +589,10 @@
 
         <!-- 高级配置 -->
         <el-collapse v-model="activeCollapse">
-          <el-collapse-item title="高级配置" name="advanced">
+          <el-collapse-item
+            title="高级配置"
+            name="advanced"
+          >
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="异步执行">
@@ -474,10 +611,18 @@
             </el-row>
             <el-form-item label="错误处理">
               <el-radio-group v-model="ruleForm.errorHandling">
-                <el-radio label="ignore">忽略错误</el-radio>
-                <el-radio label="log">记录日志</el-radio>
-                <el-radio label="throw">抛出异常</el-radio>
-                <el-radio label="retry">重试执行</el-radio>
+                <el-radio label="ignore">
+                  忽略错误
+                </el-radio>
+                <el-radio label="log">
+                  记录日志
+                </el-radio>
+                <el-radio label="throw">
+                  抛出异常
+                </el-radio>
+                <el-radio label="retry">
+                  重试执行
+                </el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="自定义脚本">
@@ -494,11 +639,13 @@
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="showRuleDialog = false">取消</el-button>
+          <el-button @click="showRuleDialog = false">
+            取消
+          </el-button>
           <el-button
             type="primary"
-            @click="saveRule"
             :loading="savingRule"
+            @click="saveRule"
           >
             保存规则
           </el-button>
@@ -546,7 +693,10 @@
               <span class="rule-name">{{ result.ruleName }}</span>
               <span class="execution-time">{{ result.executionTime }}ms</span>
             </div>
-            <div v-if="!result.success" class="result-error">
+            <div
+              v-if="!result.success"
+              class="result-error"
+            >
               {{ result.error }}
             </div>
           </div>

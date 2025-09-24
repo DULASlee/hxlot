@@ -296,7 +296,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watchEffect } from "vue"
-import { useAuth } from "@/utils/auth"
+import { useAuthStore } from "@/stores" // 从 Pinia Store 导入
 import { useRouter } from "vue-router"
 import { debounce } from "lodash-es"
 
@@ -314,12 +314,13 @@ const loginForm = ref({
 })
 
 const showPassword = ref(false)
-const loading = ref(false)
 const errorMessage = ref("")
 const router = useRouter()
 
-// 使用认证服务的isAuthenticated状态
-const { isAuthenticated, authService } = useAuth()
+// 使用 Pinia 认证 Store
+const authStore = useAuthStore()
+const loading = computed(() => authStore.isLoading)
+const isAuthenticated = computed(() => authStore.isAuthenticated)
 
 // 输入验证
 const usernameError = ref("")
@@ -419,20 +420,17 @@ const handleLogin = debounce(async (e: Event) => {
     return
   }
 
-  loading.value = true
-
   try {
-    // 创建登录参数
-    const username = loginForm.value.username.trim()
-    const password = loginForm.value.password
-    const tenantName = loginForm.value.tenantName.trim() || undefined
-
-    const success = await authService.login(username, password, tenantName)
+    const success = await authStore.login({
+      username: loginForm.value.username.trim(),
+      password: loginForm.value.password,
+      tenantName: loginForm.value.tenantName.trim() || undefined,
+    })
 
     if (success) {
       // 如果选择了记住我，保存用户名
       if (loginForm.value.rememberMe) {
-        localStorage.setItem("remembered_username", username)
+        localStorage.setItem("remembered_username", loginForm.value.username)
       } else {
         localStorage.removeItem("remembered_username")
       }
@@ -478,7 +476,7 @@ const handleLogin = debounce(async (e: Event) => {
       }, 500)
     }
   } finally {
-    loading.value = false
+    // loading.value = false // 由 Pinia 管理
   }
 }, DEBOUNCE_DELAY)
 

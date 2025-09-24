@@ -17,6 +17,9 @@ using Volo.Abp.Account.Web;
 using Volo.Abp.Identity.Web;
 using Volo.Abp.TenantManagement.Web;
 using SmartAbp.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Volo.Abp.AspNetCore.Authentication.JwtBearer;
+using Volo.Abp.AspNetCore.Mvc;
 
 namespace SmartAbp.Web;
 
@@ -68,6 +71,13 @@ public class SmartAbpHttpApiHostModule : AbpModule
             options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "SmartAbp API", Version = "v1" });
             options.DocInclusionPredicate((docName, description) => true);
             options.CustomSchemaIds(type => type.FullName);
+        });
+
+        // Configure JWT Bearer authentication
+        context.Services.Configure<Microsoft.AspNetCore.Authentication.AuthenticationOptions>(authOptions =>
+        {
+            authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         });
     }
 

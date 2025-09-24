@@ -218,7 +218,7 @@ SmartAbp Enterprise Optimized Data Table Component
 </template>
 
 <script setup lang="ts">
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 /* eslint-disable no-unused-vars */
 /* eslint-disable vue/require-default-prop */
 import { ref, computed, onMounted, watch, nextTick } from 'vue'

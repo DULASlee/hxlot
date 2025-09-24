@@ -48,7 +48,7 @@
         class="user-info"
       >
         <p><strong>用户ID:</strong> {{ authStore.userInfo.id }}</p>
-        <p><strong>用户名:</strong> {{ authStore.userInfo.username }}</p>
+        <p><strong>用户名:</strong> {{ authStore.userInfo.userName }}</p>
         <p><strong>邮箱:</strong> {{ authStore.userInfo.email }}</p>
         <p><strong>角色:</strong> {{ authStore.userInfo.roles.join(", ") }}</p>
       </div>
@@ -117,7 +117,6 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { useAuthStore, useThemeStore } from "@/stores"
-import { authService } from "@/utils/auth"
 import { api } from "@/utils/api"
 
 // 使用stores
@@ -137,7 +136,7 @@ const apiResult = ref("")
 // 处理登录
 const handleLogin = async () => {
   try {
-    await authService.login(loginForm.value)
+    await authStore.login(loginForm.value)
     // 登录成功后清空表单
     loginForm.value = { username: "", password: "" }
   } catch (error) {
@@ -149,7 +148,7 @@ const handleLogin = async () => {
 // 处理登出
 const handleLogout = async () => {
   try {
-    await authService.logout()
+    await authStore.logout()
   } catch (error) {
     console.error("登出失败:", error)
   }

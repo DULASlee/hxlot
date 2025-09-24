@@ -136,7 +136,7 @@
             {{ authStore.userInfo?.id || "无" }}
           </el-descriptions-item>
           <el-descriptions-item label="用户名">
-            {{ authStore.userInfo?.username || "无" }}
+            {{ authStore.userInfo?.userName || "无" }}
           </el-descriptions-item>
           <el-descriptions-item label="邮箱">
             {{ authStore.userInfo?.email || "无" }}
@@ -211,7 +211,6 @@
 import { ref, reactive, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus"
 import { useAuthStore } from "@/stores"
-import { authService } from "@/utils/auth"
 import { api } from "@/utils/api"
 import dayjs from "dayjs"
 
@@ -343,7 +342,7 @@ const handleLogin = async () => {
 
     addLog("info", `开始登录测试，用户名: ${loginForm.username}`)
 
-    const success = await authService.login({
+    const success = await authStore.login({
       username: loginForm.username,
       password: loginForm.password,
     })
@@ -368,7 +367,7 @@ const testUserInfo = async () => {
   addLog("info", "开始获取用户信息...")
 
   try {
-    const userInfo = await authService.fetchUserInfo()
+    const userInfo = await authStore.fetchUserInfo()
     if (userInfo) {
       addLog("success", `用户信息获取成功: ${userInfo.userName}`)
       ElMessage.success("用户信息获取成功")
@@ -394,7 +393,7 @@ const handleLogout = async () => {
     })
 
     addLog("info", "开始登出测试...")
-    await authService.logout()
+    await authStore.logout()
     addLog("success", "登出成功！")
     ElMessage.success("登出成功！")
   } catch (error: any) {

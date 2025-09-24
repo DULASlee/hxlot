@@ -10,15 +10,30 @@
     >
       <!-- 向导步骤指示器 -->
       <div class="wizard-steps">
-        <el-steps :active="currentStep" align-center>
-          <el-step title="选择项目类型" icon="el-icon-folder-opened" />
-          <el-step title="项目配置" icon="el-icon-setting" />
-          <el-step title="生成确认" icon="el-icon-check" />
+        <el-steps
+          :active="currentStep"
+          align-center
+        >
+          <el-step
+            title="选择项目类型"
+            icon="el-icon-folder-opened"
+          />
+          <el-step
+            title="项目配置"
+            icon="el-icon-setting"
+          />
+          <el-step
+            title="生成确认"
+            icon="el-icon-check"
+          />
         </el-steps>
       </div>
 
       <!-- 步骤1: 项目类型选择 -->
-      <div v-if="currentStep === 0" class="step-content">
+      <div
+        v-if="currentStep === 0"
+        class="step-content"
+      >
         <div class="step-header">
           <h3>选择您要生成的项目类型</h3>
           <p>基于企业级模板，一键生成完整的数据模型、页面设计和代码</p>
@@ -41,7 +56,9 @@
                 <p>{{ template.description }}</p>
               </div>
               <div class="template-badge">
-                <el-tag type="success">{{ template.entities.length }}个实体</el-tag>
+                <el-tag type="success">
+                  {{ template.entities.length }}个实体
+                </el-tag>
               </div>
             </div>
             
@@ -77,7 +94,10 @@
       </div>
 
       <!-- 步骤2: 项目配置 -->
-      <div v-if="currentStep === 1" class="step-content">
+      <div
+        v-if="currentStep === 1"
+        class="step-content"
+      >
         <div class="step-header">
           <h3>配置项目信息</h3>
           <p>自定义项目名称、命名空间和功能特性</p>
@@ -91,7 +111,10 @@
         >
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="项目名称" prop="projectName">
+              <el-form-item
+                label="项目名称"
+                prop="projectName"
+              >
                 <el-input
                   v-model="projectConfig.projectName"
                   placeholder="例如：智慧工地管理系统"
@@ -99,7 +122,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="项目代码" prop="projectCode">
+              <el-form-item
+                label="项目代码"
+                prop="projectCode"
+              >
                 <el-input
                   v-model="projectConfig.projectCode"
                   placeholder="例如：SmartConstruction"
@@ -110,7 +136,10 @@
           
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="命名空间" prop="namespace">
+              <el-form-item
+                label="命名空间"
+                prop="namespace"
+              >
                 <el-input
                   v-model="projectConfig.namespace"
                   placeholder="例如：SmartAbp.SmartConstruction"
@@ -118,7 +147,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="数据库名" prop="databaseName">
+              <el-form-item
+                label="数据库名"
+                prop="databaseName"
+              >
                 <el-input
                   v-model="projectConfig.databaseName"
                   placeholder="例如：SmartConstructionDb"
@@ -127,7 +159,10 @@
             </el-col>
           </el-row>
 
-          <el-form-item label="项目描述" prop="description">
+          <el-form-item
+            label="项目描述"
+            prop="description"
+          >
             <el-input
               v-model="projectConfig.description"
               type="textarea"
@@ -140,45 +175,72 @@
             <el-checkbox-group v-model="projectConfig.features">
               <el-row :gutter="20">
                 <el-col :span="8">
-                  <el-checkbox label="multiTenant">多租户支持</el-checkbox>
+                  <el-checkbox label="multiTenant">
+                    多租户支持
+                  </el-checkbox>
                 </el-col>
                 <el-col :span="8">
-                  <el-checkbox label="auditLogging">审计日志</el-checkbox>
+                  <el-checkbox label="auditLogging">
+                    审计日志
+                  </el-checkbox>
                 </el-col>
                 <el-col :span="8">
-                  <el-checkbox label="permissionControl">权限控制</el-checkbox>
-                </el-col>
-              </el-row>
-              <el-row :gutter="20">
-                <el-col :span="8">
-                  <el-checkbox label="dataValidation">数据验证</el-checkbox>
-                </el-col>
-                <el-col :span="8">
-                  <el-checkbox label="caching">缓存支持</el-checkbox>
-                </el-col>
-                <el-col :span="8">
-                  <el-checkbox label="apiDocumentation">API文档</el-checkbox>
+                  <el-checkbox label="permissionControl">
+                    权限控制
+                  </el-checkbox>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="8">
-                  <el-checkbox label="unitTests">单元测试</el-checkbox>
+                  <el-checkbox label="dataValidation">
+                    数据验证
+                  </el-checkbox>
                 </el-col>
                 <el-col :span="8">
-                  <el-checkbox label="localization">国际化</el-checkbox>
+                  <el-checkbox label="caching">
+                    缓存支持
+                  </el-checkbox>
                 </el-col>
                 <el-col :span="8">
-                  <el-checkbox label="monitoring">监控指标</el-checkbox>
+                  <el-checkbox label="apiDocumentation">
+                    API文档
+                  </el-checkbox>
+                </el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="8">
+                  <el-checkbox label="unitTests">
+                    单元测试
+                  </el-checkbox>
+                </el-col>
+                <el-col :span="8">
+                  <el-checkbox label="localization">
+                    国际化
+                  </el-checkbox>
+                </el-col>
+                <el-col :span="8">
+                  <el-checkbox label="monitoring">
+                    监控指标
+                  </el-checkbox>
                 </el-col>
               </el-row>
             </el-checkbox-group>
           </el-form-item>
 
-          <el-form-item label="UI风格" prop="uiStyle">
+          <el-form-item
+            label="UI风格"
+            prop="uiStyle"
+          >
             <el-radio-group v-model="projectConfig.uiStyle">
-              <el-radio label="modern">现代简约</el-radio>
-              <el-radio label="enterprise">企业经典</el-radio>
-              <el-radio label="dashboard">仪表盘风格</el-radio>
+              <el-radio label="modern">
+                现代简约
+              </el-radio>
+              <el-radio label="enterprise">
+                企业经典
+              </el-radio>
+              <el-radio label="dashboard">
+                仪表盘风格
+              </el-radio>
             </el-radio-group>
           </el-form-item>
         </el-form>
@@ -208,7 +270,10 @@
       </div>
 
       <!-- 步骤3: 生成确认 -->
-      <div v-if="currentStep === 2" class="step-content">
+      <div
+        v-if="currentStep === 2"
+        class="step-content"
+      >
         <div class="step-header">
           <h3>确认生成配置</h3>
           <p>即将生成完整的企业级应用，请确认配置信息</p>
@@ -226,7 +291,10 @@
                 <div class="detail-section">
                   <h4>📊 数据建模</h4>
                   <ul>
-                    <li v-for="entity in selectedTemplate?.entities" :key="entity.name">
+                    <li
+                      v-for="entity in selectedTemplate?.entities"
+                      :key="entity.name"
+                    >
                       <strong>{{ entity.displayName }}</strong> ({{ entity.name }})
                       - {{ entity.fields?.length || 0 }}个字段
                     </li>
@@ -278,24 +346,36 @@
           <el-checkbox-group v-model="generationOptions">
             <el-row :gutter="20">
               <el-col :span="8">
-                <el-checkbox label="generateEntities">生成实体模型</el-checkbox>
+                <el-checkbox label="generateEntities">
+                  生成实体模型
+                </el-checkbox>
               </el-col>
               <el-col :span="8">
-                <el-checkbox label="generatePages">生成页面设计</el-checkbox>
+                <el-checkbox label="generatePages">
+                  生成页面设计
+                </el-checkbox>
               </el-col>
               <el-col :span="8">
-                <el-checkbox label="generateCode">生成完整代码</el-checkbox>
+                <el-checkbox label="generateCode">
+                  生成完整代码
+                </el-checkbox>
               </el-col>
             </el-row>
             <el-row :gutter="20">
               <el-col :span="8">
-                <el-checkbox label="runQualityCheck">自动质量检查</el-checkbox>
+                <el-checkbox label="runQualityCheck">
+                  自动质量检查
+                </el-checkbox>
               </el-col>
               <el-col :span="8">
-                <el-checkbox label="generateTests">生成测试代码</el-checkbox>
+                <el-checkbox label="generateTests">
+                  生成测试代码
+                </el-checkbox>
               </el-col>
               <el-col :span="8">
-                <el-checkbox label="setupDeployment">配置部署文件</el-checkbox>
+                <el-checkbox label="setupDeployment">
+                  配置部署文件
+                </el-checkbox>
               </el-col>
             </el-row>
           </el-checkbox-group>
@@ -319,7 +399,9 @@
       <!-- 对话框底部操作 -->
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="handleClose">取消</el-button>
+          <el-button @click="handleClose">
+            取消
+          </el-button>
           <el-button
             v-if="currentStep > 0"
             @click="prevStep"
@@ -370,13 +452,20 @@
         />
         
         <div class="progress-details">
-          <div class="detail-item" v-for="step in generationSteps" :key="step.id">
+          <div
+            v-for="step in generationSteps"
+            :key="step.id"
+            class="detail-item"
+          >
             <i 
               :class="getStepIcon(step.status)"
               :style="{ color: getStepColor(step.status) }"
             />
             <span>{{ step.name }}</span>
-            <span v-if="step.status === 'completed'" class="step-time">
+            <span
+              v-if="step.status === 'completed'"
+              class="step-time"
+            >
               ({{ step.duration }}ms)
             </span>
           </div>

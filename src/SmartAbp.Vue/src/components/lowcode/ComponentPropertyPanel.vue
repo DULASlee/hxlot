@@ -7,8 +7,14 @@
             <i class="el-icon-setting" />
             属性配置
           </h3>
-          <div v-if="selectedComponent" class="component-info">
-            <el-tag size="small" type="primary">
+          <div
+            v-if="selectedComponent"
+            class="component-info"
+          >
+            <el-tag
+              size="small"
+              type="primary"
+            >
               {{ selectedComponent.name }}
             </el-tag>
           </div>
@@ -16,7 +22,10 @@
       </template>
 
       <!-- 未选中组件时的提示 -->
-      <div v-if="!selectedComponent" class="no-selection">
+      <div
+        v-if="!selectedComponent"
+        class="no-selection"
+      >
         <div class="no-selection-content">
           <i class="el-icon-info" />
           <h4>未选中组件</h4>
@@ -25,7 +34,10 @@
       </div>
 
       <!-- 组件属性配置 -->
-      <div v-else class="property-configuration">
+      <div
+        v-else
+        class="property-configuration"
+      >
         <!-- 基础属性 -->
         <div class="property-section">
           <div class="section-header">
@@ -75,7 +87,10 @@
             </h4>
           </div>
           
-          <el-form label-width="60px" size="small">
+          <el-form
+            label-width="60px"
+            size="small"
+          >
             <el-row :gutter="12">
               <el-col :span="12">
                 <el-form-item label="X坐标">
@@ -130,10 +145,22 @@
                 size="small"
                 @change="updateLayout"
               >
-                <el-option label="静态" value="static" />
-                <el-option label="相对" value="relative" />
-                <el-option label="绝对" value="absolute" />
-                <el-option label="固定" value="fixed" />
+                <el-option
+                  label="静态"
+                  value="static"
+                />
+                <el-option
+                  label="相对"
+                  value="relative"
+                />
+                <el-option
+                  label="绝对"
+                  value="absolute"
+                />
+                <el-option
+                  label="固定"
+                  value="fixed"
+                />
               </el-select>
             </el-form-item>
 
@@ -158,7 +185,10 @@
             </h4>
           </div>
           
-          <el-form label-width="80px" size="small">
+          <el-form
+            label-width="80px"
+            size="small"
+          >
             <div
               v-for="(propConfig, propKey) in componentPropConfigs"
               :key="propKey"
@@ -231,7 +261,10 @@
                 </el-select>
                 
                 <!-- 数组属性 -->
-                <div v-else-if="propConfig.type === 'array'" class="array-editor">
+                <div
+                  v-else-if="propConfig.type === 'array'"
+                  class="array-editor"
+                >
                   <div
                     v-for="(item, index) in componentProps[propKey]"
                     :key="index"
@@ -265,7 +298,10 @@
                 </div>
                 
                 <!-- 对象属性 -->
-                <div v-else-if="propConfig.type === 'object'" class="object-editor">
+                <div
+                  v-else-if="propConfig.type === 'object'"
+                  class="object-editor"
+                >
                   <el-input
                     v-model="componentProps[propKey]"
                     type="textarea"
@@ -288,10 +324,16 @@
             </h4>
           </div>
           
-          <el-form label-width="80px" size="small">
+          <el-form
+            label-width="80px"
+            size="small"
+          >
             <!-- 字体样式 -->
             <el-collapse v-model="activeStyleSections">
-              <el-collapse-item title="字体样式" name="font">
+              <el-collapse-item
+                title="字体样式"
+                name="font"
+              >
                 <el-row :gutter="12">
                   <el-col :span="12">
                     <el-form-item label="字体大小">
@@ -299,12 +341,30 @@
                         v-model="styleProps.fontSize"
                         @change="updateStyleProperty('fontSize', styleProps.fontSize)"
                       >
-                        <el-option label="12px" value="12px" />
-                        <el-option label="14px" value="14px" />
-                        <el-option label="16px" value="16px" />
-                        <el-option label="18px" value="18px" />
-                        <el-option label="20px" value="20px" />
-                        <el-option label="24px" value="24px" />
+                        <el-option
+                          label="12px"
+                          value="12px"
+                        />
+                        <el-option
+                          label="14px"
+                          value="14px"
+                        />
+                        <el-option
+                          label="16px"
+                          value="16px"
+                        />
+                        <el-option
+                          label="18px"
+                          value="18px"
+                        />
+                        <el-option
+                          label="20px"
+                          value="20px"
+                        />
+                        <el-option
+                          label="24px"
+                          value="24px"
+                        />
                       </el-select>
                     </el-form-item>
                   </el-col>
@@ -314,9 +374,18 @@
                         v-model="styleProps.fontWeight"
                         @change="updateStyleProperty('fontWeight', styleProps.fontWeight)"
                       >
-                        <el-option label="正常" value="normal" />
-                        <el-option label="粗体" value="bold" />
-                        <el-option label="细体" value="lighter" />
+                        <el-option
+                          label="正常"
+                          value="normal"
+                        />
+                        <el-option
+                          label="粗体"
+                          value="bold"
+                        />
+                        <el-option
+                          label="细体"
+                          value="lighter"
+                        />
                       </el-select>
                     </el-form-item>
                   </el-col>
@@ -334,14 +403,23 @@
                     v-model="styleProps.textAlign"
                     @change="updateStyleProperty('textAlign', styleProps.textAlign)"
                   >
-                    <el-radio-button label="left">左对齐</el-radio-button>
-                    <el-radio-button label="center">居中</el-radio-button>
-                    <el-radio-button label="right">右对齐</el-radio-button>
+                    <el-radio-button label="left">
+                      左对齐
+                    </el-radio-button>
+                    <el-radio-button label="center">
+                      居中
+                    </el-radio-button>
+                    <el-radio-button label="right">
+                      右对齐
+                    </el-radio-button>
                   </el-radio-group>
                 </el-form-item>
               </el-collapse-item>
 
-              <el-collapse-item title="背景样式" name="background">
+              <el-collapse-item
+                title="背景样式"
+                name="background"
+              >
                 <el-form-item label="背景颜色">
                   <el-color-picker
                     v-model="styleProps.backgroundColor"
@@ -358,7 +436,10 @@
                 </el-form-item>
               </el-collapse-item>
 
-              <el-collapse-item title="边框样式" name="border">
+              <el-collapse-item
+                title="边框样式"
+                name="border"
+              >
                 <el-row :gutter="12">
                   <el-col :span="12">
                     <el-form-item label="边框宽度">
@@ -376,10 +457,22 @@
                         v-model="styleProps.borderStyle"
                         @change="updateBorderStyle"
                       >
-                        <el-option label="实线" value="solid" />
-                        <el-option label="虚线" value="dashed" />
-                        <el-option label="点线" value="dotted" />
-                        <el-option label="双线" value="double" />
+                        <el-option
+                          label="实线"
+                          value="solid"
+                        />
+                        <el-option
+                          label="虚线"
+                          value="dashed"
+                        />
+                        <el-option
+                          label="点线"
+                          value="dotted"
+                        />
+                        <el-option
+                          label="双线"
+                          value="double"
+                        />
                       </el-select>
                     </el-form-item>
                   </el-col>
@@ -402,11 +495,16 @@
                 </el-form-item>
               </el-collapse-item>
 
-              <el-collapse-item title="间距样式" name="spacing">
+              <el-collapse-item
+                title="间距样式"
+                name="spacing"
+              >
                 <div class="spacing-editor">
                   <div class="spacing-visual">
                     <div class="margin-area">
-                      <div class="margin-label">margin</div>
+                      <div class="margin-label">
+                        margin
+                      </div>
                       <div class="margin-inputs">
                         <el-input-number
                           v-model="spacingProps.marginTop"
@@ -422,7 +520,9 @@
                             @change="updateSpacing"
                           />
                           <div class="padding-area">
-                            <div class="padding-label">padding</div>
+                            <div class="padding-label">
+                              padding
+                            </div>
                             <div class="padding-inputs">
                               <el-input-number
                                 v-model="spacingProps.paddingTop"
@@ -474,21 +574,42 @@
                 </div>
               </el-collapse-item>
 
-              <el-collapse-item title="阴影效果" name="shadow">
+              <el-collapse-item
+                title="阴影效果"
+                name="shadow"
+              >
                 <el-form-item label="阴影类型">
                   <el-select
                     v-model="styleProps.shadowType"
                     @change="updateShadowStyle"
                   >
-                    <el-option label="无阴影" value="none" />
-                    <el-option label="轻微阴影" value="light" />
-                    <el-option label="中等阴影" value="medium" />
-                    <el-option label="深度阴影" value="heavy" />
-                    <el-option label="自定义" value="custom" />
+                    <el-option
+                      label="无阴影"
+                      value="none"
+                    />
+                    <el-option
+                      label="轻微阴影"
+                      value="light"
+                    />
+                    <el-option
+                      label="中等阴影"
+                      value="medium"
+                    />
+                    <el-option
+                      label="深度阴影"
+                      value="heavy"
+                    />
+                    <el-option
+                      label="自定义"
+                      value="custom"
+                    />
                   </el-select>
                 </el-form-item>
                 
-                <div v-if="styleProps.shadowType === 'custom'" class="custom-shadow">
+                <div
+                  v-if="styleProps.shadowType === 'custom'"
+                  class="custom-shadow"
+                >
                   <el-row :gutter="8">
                     <el-col :span="6">
                       <el-form-item label="X偏移">
@@ -561,14 +682,38 @@
                 size="small"
                 style="width: 100px"
               >
-                <el-option label="点击" value="click" />
-                <el-option label="双击" value="dblclick" />
-                <el-option label="鼠标进入" value="mouseenter" />
-                <el-option label="鼠标离开" value="mouseleave" />
-                <el-option label="焦点获得" value="focus" />
-                <el-option label="焦点失去" value="blur" />
-                <el-option label="值改变" value="change" />
-                <el-option label="输入" value="input" />
+                <el-option
+                  label="点击"
+                  value="click"
+                />
+                <el-option
+                  label="双击"
+                  value="dblclick"
+                />
+                <el-option
+                  label="鼠标进入"
+                  value="mouseenter"
+                />
+                <el-option
+                  label="鼠标离开"
+                  value="mouseleave"
+                />
+                <el-option
+                  label="焦点获得"
+                  value="focus"
+                />
+                <el-option
+                  label="焦点失去"
+                  value="blur"
+                />
+                <el-option
+                  label="值改变"
+                  value="change"
+                />
+                <el-option
+                  label="输入"
+                  value="input"
+                />
               </el-select>
               
               <el-select
@@ -577,11 +722,26 @@
                 size="small"
                 style="width: 120px"
               >
-                <el-option label="显示消息" value="showMessage" />
-                <el-option label="跳转页面" value="navigateTo" />
-                <el-option label="调用API" value="callAPI" />
-                <el-option label="更新数据" value="updateData" />
-                <el-option label="自定义函数" value="customFunction" />
+                <el-option
+                  label="显示消息"
+                  value="showMessage"
+                />
+                <el-option
+                  label="跳转页面"
+                  value="navigateTo"
+                />
+                <el-option
+                  label="调用API"
+                  value="callAPI"
+                />
+                <el-option
+                  label="更新数据"
+                  value="updateData"
+                />
+                <el-option
+                  label="自定义函数"
+                  value="customFunction"
+                />
               </el-select>
               
               <el-input
@@ -619,7 +779,10 @@
             </h4>
           </div>
           
-          <el-form label-width="80px" size="small">
+          <el-form
+            label-width="80px"
+            size="small"
+          >
             <el-form-item label="数据源">
               <el-select
                 v-model="dataBinding.source"
@@ -635,7 +798,10 @@
               </el-select>
             </el-form-item>
             
-            <el-form-item v-if="dataBinding.source" label="绑定字段">
+            <el-form-item
+              v-if="dataBinding.source"
+              label="绑定字段"
+            >
               <el-select
                 v-model="dataBinding.field"
                 placeholder="选择字段"
@@ -655,9 +821,15 @@
                 v-model="dataBinding.type"
                 @change="updateDataBinding"
               >
-                <el-radio label="display">显示</el-radio>
-                <el-radio label="edit">编辑</el-radio>
-                <el-radio label="filter">筛选</el-radio>
+                <el-radio label="display">
+                  显示
+                </el-radio>
+                <el-radio label="edit">
+                  编辑
+                </el-radio>
+                <el-radio label="filter">
+                  筛选
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-form>
@@ -672,28 +844,49 @@
             </h4>
           </div>
           
-          <el-form label-width="80px" size="small">
+          <el-form
+            label-width="80px"
+            size="small"
+          >
             <el-form-item label="桌面端">
               <el-checkbox-group v-model="responsiveProps.desktop">
-                <el-checkbox label="visible">显示</el-checkbox>
-                <el-checkbox label="fullWidth">全宽</el-checkbox>
+                <el-checkbox label="visible">
+                  显示
+                </el-checkbox>
+                <el-checkbox label="fullWidth">
+                  全宽
+                </el-checkbox>
               </el-checkbox-group>
             </el-form-item>
             
             <el-form-item label="平板端">
               <el-checkbox-group v-model="responsiveProps.tablet">
-                <el-checkbox label="visible">显示</el-checkbox>
-                <el-checkbox label="fullWidth">全宽</el-checkbox>
-                <el-checkbox label="stackVertical">垂直堆叠</el-checkbox>
+                <el-checkbox label="visible">
+                  显示
+                </el-checkbox>
+                <el-checkbox label="fullWidth">
+                  全宽
+                </el-checkbox>
+                <el-checkbox label="stackVertical">
+                  垂直堆叠
+                </el-checkbox>
               </el-checkbox-group>
             </el-form-item>
             
             <el-form-item label="手机端">
               <el-checkbox-group v-model="responsiveProps.mobile">
-                <el-checkbox label="visible">显示</el-checkbox>
-                <el-checkbox label="fullWidth">全宽</el-checkbox>
-                <el-checkbox label="stackVertical">垂直堆叠</el-checkbox>
-                <el-checkbox label="hiddenOnMobile">移动端隐藏</el-checkbox>
+                <el-checkbox label="visible">
+                  显示
+                </el-checkbox>
+                <el-checkbox label="fullWidth">
+                  全宽
+                </el-checkbox>
+                <el-checkbox label="stackVertical">
+                  垂直堆叠
+                </el-checkbox>
+                <el-checkbox label="hiddenOnMobile">
+                  移动端隐藏
+                </el-checkbox>
               </el-checkbox-group>
             </el-form-item>
           </el-form>

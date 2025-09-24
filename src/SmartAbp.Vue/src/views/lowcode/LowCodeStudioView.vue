@@ -74,8 +74,14 @@
         <div class="status-indicators">
           <!-- 智能工作流进度 -->
           <div class="workflow-progress">
-            <el-tooltip content="点击查看智能工作流指导" placement="bottom">
-              <div class="progress-indicator" @click="showWorkflowGuide">
+            <el-tooltip
+              content="点击查看智能工作流指导"
+              placement="bottom"
+            >
+              <div
+                class="progress-indicator"
+                @click="showWorkflowGuide"
+              >
                 <el-progress
                   type="circle"
                   :percentage="totalWorkflowProgress"

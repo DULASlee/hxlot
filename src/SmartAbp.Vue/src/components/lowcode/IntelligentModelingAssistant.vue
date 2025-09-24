@@ -11,8 +11,8 @@
             type="primary"
             size="small"
             icon="el-icon-refresh"
-            @click="analyzeModel"
             :loading="analyzing"
+            @click="analyzeModel"
           >
             重新分析
           </el-button>
@@ -33,7 +33,9 @@
         
         <div class="quality-metrics">
           <div class="metric-item">
-            <div class="metric-name">实体完整性</div>
+            <div class="metric-name">
+              实体完整性
+            </div>
             <el-progress
               :percentage="modelQuality.entityCompleteness"
               :stroke-width="6"
@@ -43,7 +45,9 @@
             <span class="metric-value">{{ modelQuality.entityCompleteness }}%</span>
           </div>
           <div class="metric-item">
-            <div class="metric-name">关系合理性</div>
+            <div class="metric-name">
+              关系合理性
+            </div>
             <el-progress
               :percentage="modelQuality.relationshipQuality"
               :stroke-width="6"
@@ -53,7 +57,9 @@
             <span class="metric-value">{{ modelQuality.relationshipQuality }}%</span>
           </div>
           <div class="metric-item">
-            <div class="metric-name">命名规范性</div>
+            <div class="metric-name">
+              命名规范性
+            </div>
             <el-progress
               :percentage="modelQuality.namingConvention"
               :stroke-width="6"
@@ -63,7 +69,9 @@
             <span class="metric-value">{{ modelQuality.namingConvention }}%</span>
           </div>
           <div class="metric-item">
-            <div class="metric-name">业务合规性</div>
+            <div class="metric-name">
+              业务合规性
+            </div>
             <el-progress
               :percentage="modelQuality.businessCompliance"
               :stroke-width="6"
@@ -113,8 +121,12 @@
                 <i :class="suggestion.icon" />
               </div>
               <div class="suggestion-info">
-                <div class="suggestion-title">{{ suggestion.title }}</div>
-                <div class="suggestion-description">{{ suggestion.description }}</div>
+                <div class="suggestion-title">
+                  {{ suggestion.title }}
+                </div>
+                <div class="suggestion-description">
+                  {{ suggestion.description }}
+                </div>
               </div>
               <div class="suggestion-priority">
                 <el-tag
@@ -130,10 +142,16 @@
               <div class="suggestion-reason">
                 <strong>建议原因:</strong> {{ suggestion.reason }}
               </div>
-              <div v-if="suggestion.benefits" class="suggestion-benefits">
+              <div
+                v-if="suggestion.benefits"
+                class="suggestion-benefits"
+              >
                 <strong>预期收益:</strong>
                 <ul>
-                  <li v-for="benefit in suggestion.benefits" :key="benefit">
+                  <li
+                    v-for="benefit in suggestion.benefits"
+                    :key="benefit"
+                  >
                     {{ benefit }}
                   </li>
                 </ul>
@@ -184,8 +202,12 @@
             :class="pattern.confidence >= 0.8 ? 'high-confidence' : 'medium-confidence'"
           >
             <div class="pattern-info">
-              <div class="pattern-name">{{ pattern.name }}</div>
-              <div class="pattern-description">{{ pattern.description }}</div>
+              <div class="pattern-name">
+                {{ pattern.name }}
+              </div>
+              <div class="pattern-description">
+                {{ pattern.description }}
+              </div>
               <div class="pattern-confidence">
                 置信度: {{ Math.round(pattern.confidence * 100) }}%
               </div>
@@ -202,9 +224,14 @@
               </el-tag>
             </div>
             <div class="pattern-recommendations">
-              <div class="recommendations-label">建议:</div>
+              <div class="recommendations-label">
+                建议:
+              </div>
               <ul class="recommendations-list">
-                <li v-for="rec in pattern.recommendations" :key="rec">
+                <li
+                  v-for="rec in pattern.recommendations"
+                  :key="rec"
+                >
                   {{ rec }}
                 </li>
               </ul>
@@ -236,9 +263,16 @@
               <i :class="practice.passed ? 'el-icon-check' : 'el-icon-close'" />
             </div>
             <div class="practice-content">
-              <div class="practice-name">{{ practice.name }}</div>
-              <div class="practice-description">{{ practice.description }}</div>
-              <div v-if="!practice.passed && practice.suggestion" class="practice-suggestion">
+              <div class="practice-name">
+                {{ practice.name }}
+              </div>
+              <div class="practice-description">
+                {{ practice.description }}
+              </div>
+              <div
+                v-if="!practice.passed && practice.suggestion"
+                class="practice-suggestion"
+              >
                 💡 建议: {{ practice.suggestion }}
               </div>
             </div>
@@ -263,7 +297,10 @@
       :title="selectedSuggestion?.title"
       width="700px"
     >
-      <div v-if="selectedSuggestion" class="suggestion-details-content">
+      <div
+        v-if="selectedSuggestion"
+        class="suggestion-details-content"
+      >
         <div class="detail-section">
           <h4>建议描述</h4>
           <p>{{ selectedSuggestion.description }}</p>
@@ -274,16 +311,25 @@
           <p>{{ selectedSuggestion.reason }}</p>
         </div>
 
-        <div v-if="selectedSuggestion.steps" class="detail-section">
+        <div
+          v-if="selectedSuggestion.steps"
+          class="detail-section"
+        >
           <h4>实施步骤</h4>
           <ol>
-            <li v-for="step in selectedSuggestion.steps" :key="step">
+            <li
+              v-for="step in selectedSuggestion.steps"
+              :key="step"
+            >
               {{ step }}
             </li>
           </ol>
         </div>
 
-        <div v-if="selectedSuggestion.impact" class="detail-section">
+        <div
+          v-if="selectedSuggestion.impact"
+          class="detail-section"
+        >
           <h4>影响评估</h4>
           <div class="impact-grid">
             <div class="impact-item">
@@ -304,7 +350,9 @@
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="showSuggestionDetails = false">关闭</el-button>
+          <el-button @click="showSuggestionDetails = false">
+            关闭
+          </el-button>
           <el-button
             v-if="selectedSuggestion?.autoApplicable"
             type="primary"

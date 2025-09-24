@@ -1,5 +1,6 @@
 import axios from "axios"
-import { authService } from "@/utils/auth"
+// authService removed; example no longer valid
+export {}
 
 export const http = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "https://localhost:44379",

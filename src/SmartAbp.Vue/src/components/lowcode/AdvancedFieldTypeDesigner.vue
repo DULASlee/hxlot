@@ -20,8 +20,14 @@
 
       <!-- 字段类型分类 -->
       <div class="field-types-catalog">
-        <el-tabs v-model="activeTypeCategory" type="border-card">
-          <el-tab-pane label="基础类型" name="basic">
+        <el-tabs
+          v-model="activeTypeCategory"
+          type="border-card"
+        >
+          <el-tab-pane
+            label="基础类型"
+            name="basic"
+          >
             <div class="type-grid">
               <div
                 v-for="type in basicFieldTypes"
@@ -34,15 +40,24 @@
                   <i :class="type.icon" />
                 </div>
                 <div class="type-info">
-                  <div class="type-name">{{ type.displayName }}</div>
-                  <div class="type-description">{{ type.description }}</div>
-                  <div class="type-example">{{ type.example }}</div>
+                  <div class="type-name">
+                    {{ type.displayName }}
+                  </div>
+                  <div class="type-description">
+                    {{ type.description }}
+                  </div>
+                  <div class="type-example">
+                    {{ type.example }}
+                  </div>
                 </div>
               </div>
             </div>
           </el-tab-pane>
 
-          <el-tab-pane label="业务类型" name="business">
+          <el-tab-pane
+            label="业务类型"
+            name="business"
+          >
             <div class="type-grid">
               <div
                 v-for="type in businessFieldTypes"
@@ -55,8 +70,12 @@
                   <i :class="type.icon" />
                 </div>
                 <div class="type-info">
-                  <div class="type-name">{{ type.displayName }}</div>
-                  <div class="type-description">{{ type.description }}</div>
+                  <div class="type-name">
+                    {{ type.displayName }}
+                  </div>
+                  <div class="type-description">
+                    {{ type.description }}
+                  </div>
                   <div class="type-features">
                     <el-tag
                       v-for="feature in type.features"
@@ -72,7 +91,10 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane label="枚举字典" name="enum">
+          <el-tab-pane
+            label="枚举字典"
+            name="enum"
+          >
             <div class="enum-manager">
               <div class="enum-toolbar">
                 <el-button
@@ -132,7 +154,10 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane label="复杂类型" name="complex">
+          <el-tab-pane
+            label="复杂类型"
+            name="complex"
+          >
             <div class="complex-types">
               <div class="complex-type-builder">
                 <h4>复杂类型构建器</h4>
@@ -187,7 +212,10 @@
       </div>
 
       <!-- 字段类型详细配置 -->
-      <div v-if="selectedFieldType" class="field-type-config">
+      <div
+        v-if="selectedFieldType"
+        class="field-type-config"
+      >
         <el-card>
           <template #header>
             <h4>
@@ -281,12 +309,30 @@
                     placeholder="规则类型"
                     style="width: 120px"
                   >
-                    <el-option label="必填" value="required" />
-                    <el-option label="长度" value="length" />
-                    <el-option label="范围" value="range" />
-                    <el-option label="正则" value="regex" />
-                    <el-option label="唯一" value="unique" />
-                    <el-option label="自定义" value="custom" />
+                    <el-option
+                      label="必填"
+                      value="required"
+                    />
+                    <el-option
+                      label="长度"
+                      value="length"
+                    />
+                    <el-option
+                      label="范围"
+                      value="range"
+                    />
+                    <el-option
+                      label="正则"
+                      value="regex"
+                    />
+                    <el-option
+                      label="唯一"
+                      value="unique"
+                    />
+                    <el-option
+                      label="自定义"
+                      value="custom"
+                    />
                   </el-select>
                   <el-input
                     v-model="rule.value"
@@ -320,13 +366,24 @@
             <el-form-item label="默认值">
               <div class="default-value-config">
                 <el-radio-group v-model="fieldConfig.defaultValueType">
-                  <el-radio label="none">无默认值</el-radio>
-                  <el-radio label="static">静态值</el-radio>
-                  <el-radio label="function">函数生成</el-radio>
-                  <el-radio label="expression">表达式</el-radio>
+                  <el-radio label="none">
+                    无默认值
+                  </el-radio>
+                  <el-radio label="static">
+                    静态值
+                  </el-radio>
+                  <el-radio label="function">
+                    函数生成
+                  </el-radio>
+                  <el-radio label="expression">
+                    表达式
+                  </el-radio>
                 </el-radio-group>
                 
-                <div v-if="fieldConfig.defaultValueType !== 'none'" class="default-value-input">
+                <div
+                  v-if="fieldConfig.defaultValueType !== 'none'"
+                  class="default-value-input"
+                >
                   <el-input
                     v-if="fieldConfig.defaultValueType === 'static'"
                     v-model="fieldConfig.defaultValue"
@@ -337,10 +394,22 @@
                     v-model="fieldConfig.defaultValue"
                     placeholder="选择默认值函数"
                   >
-                    <el-option label="当前时间" value="DateTime.Now" />
-                    <el-option label="GUID" value="Guid.NewGuid()" />
-                    <el-option label="当前用户ID" value="CurrentUser.Id" />
-                    <el-option label="随机数" value="Random.Next()" />
+                    <el-option
+                      label="当前时间"
+                      value="DateTime.Now"
+                    />
+                    <el-option
+                      label="GUID"
+                      value="Guid.NewGuid()"
+                    />
+                    <el-option
+                      label="当前用户ID"
+                      value="CurrentUser.Id"
+                    />
+                    <el-option
+                      label="随机数"
+                      value="Random.Next()"
+                    />
                   </el-select>
                   <el-input
                     v-else-if="fieldConfig.defaultValueType === 'expression'"
@@ -356,35 +425,53 @@
               <el-checkbox-group v-model="fieldConfig.businessAttributes">
                 <el-row>
                   <el-col :span="8">
-                    <el-checkbox label="isAuditField">审计字段</el-checkbox>
+                    <el-checkbox label="isAuditField">
+                      审计字段
+                    </el-checkbox>
                   </el-col>
                   <el-col :span="8">
-                    <el-checkbox label="isVersionField">版本字段</el-checkbox>
+                    <el-checkbox label="isVersionField">
+                      版本字段
+                    </el-checkbox>
                   </el-col>
                   <el-col :span="8">
-                    <el-checkbox label="isSensitive">敏感信息</el-checkbox>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="8">
-                    <el-checkbox label="isSearchable">可搜索</el-checkbox>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-checkbox label="isFilterable">可筛选</el-checkbox>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-checkbox label="isSortable">可排序</el-checkbox>
+                    <el-checkbox label="isSensitive">
+                      敏感信息
+                    </el-checkbox>
                   </el-col>
                 </el-row>
                 <el-row>
                   <el-col :span="8">
-                    <el-checkbox label="isExportable">可导出</el-checkbox>
+                    <el-checkbox label="isSearchable">
+                      可搜索
+                    </el-checkbox>
                   </el-col>
                   <el-col :span="8">
-                    <el-checkbox label="isImportable">可导入</el-checkbox>
+                    <el-checkbox label="isFilterable">
+                      可筛选
+                    </el-checkbox>
                   </el-col>
                   <el-col :span="8">
-                    <el-checkbox label="isReadOnly">只读</el-checkbox>
+                    <el-checkbox label="isSortable">
+                      可排序
+                    </el-checkbox>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="8">
+                    <el-checkbox label="isExportable">
+                      可导出
+                    </el-checkbox>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-checkbox label="isImportable">
+                      可导入
+                    </el-checkbox>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-checkbox label="isReadOnly">
+                      只读
+                    </el-checkbox>
                   </el-col>
                 </el-row>
               </el-checkbox-group>
@@ -399,29 +486,80 @@
                       v-model="fieldConfig.uiControl"
                       placeholder="选择UI控件"
                     >
-                      <el-option label="文本框" value="input" />
-                      <el-option label="文本域" value="textarea" />
-                      <el-option label="数字输入" value="number" />
-                      <el-option label="下拉选择" value="select" />
-                      <el-option label="单选按钮" value="radio" />
-                      <el-option label="复选框" value="checkbox" />
-                      <el-option label="日期选择" value="date" />
-                      <el-option label="时间选择" value="time" />
-                      <el-option label="文件上传" value="upload" />
-                      <el-option label="富文本" value="editor" />
-                      <el-option label="代码编辑器" value="code" />
-                      <el-option label="颜色选择器" value="color" />
+                      <el-option
+                        label="文本框"
+                        value="input"
+                      />
+                      <el-option
+                        label="文本域"
+                        value="textarea"
+                      />
+                      <el-option
+                        label="数字输入"
+                        value="number"
+                      />
+                      <el-option
+                        label="下拉选择"
+                        value="select"
+                      />
+                      <el-option
+                        label="单选按钮"
+                        value="radio"
+                      />
+                      <el-option
+                        label="复选框"
+                        value="checkbox"
+                      />
+                      <el-option
+                        label="日期选择"
+                        value="date"
+                      />
+                      <el-option
+                        label="时间选择"
+                        value="time"
+                      />
+                      <el-option
+                        label="文件上传"
+                        value="upload"
+                      />
+                      <el-option
+                        label="富文本"
+                        value="editor"
+                      />
+                      <el-option
+                        label="代码编辑器"
+                        value="code"
+                      />
+                      <el-option
+                        label="颜色选择器"
+                        value="color"
+                      />
                     </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="显示宽度">
                     <el-select v-model="fieldConfig.displayWidth">
-                      <el-option label="自适应" value="auto" />
-                      <el-option label="窄 (25%)" value="narrow" />
-                      <el-option label="中等 (50%)" value="medium" />
-                      <el-option label="宽 (75%)" value="wide" />
-                      <el-option label="全宽 (100%)" value="full" />
+                      <el-option
+                        label="自适应"
+                        value="auto"
+                      />
+                      <el-option
+                        label="窄 (25%)"
+                        value="narrow"
+                      />
+                      <el-option
+                        label="中等 (50%)"
+                        value="medium"
+                      />
+                      <el-option
+                        label="宽 (75%)"
+                        value="wide"
+                      />
+                      <el-option
+                        label="全宽 (100%)"
+                        value="full"
+                      />
                     </el-select>
                   </el-form-item>
                 </el-col>
@@ -447,8 +585,8 @@
             <el-form-item>
               <el-button
                 type="primary"
-                @click="applyFieldConfig"
                 :loading="applying"
+                @click="applyFieldConfig"
               >
                 应用配置
               </el-button>
@@ -457,268 +595,323 @@
               </el-button>
             </el-form-item>
           </el-form>
-        </div>
+        </el-card>
       </div>
     </el-card>
+  </div>
+  </el-card>
 
-    <!-- 自定义字段类型对话框 -->
-    <el-dialog
-      v-model="showAddFieldTypeDialog"
-      title="创建自定义字段类型"
-      width="600px"
+  <!-- 自定义字段类型对话框 -->
+  <el-dialog
+    v-model="showAddFieldTypeDialog"
+    title="创建自定义字段类型"
+    width="600px"
+  >
+    <el-form
+      ref="customTypeFormRef"
+      :model="customTypeForm"
+      label-width="120px"
     >
-      <el-form
-        ref="customTypeFormRef"
-        :model="customTypeForm"
-        label-width="120px"
+      <el-form-item
+        label="类型名称"
+        required
       >
-        <el-form-item label="类型名称" required>
-          <el-input
-            v-model="customTypeForm.name"
-            placeholder="例如：PhoneNumber"
+        <el-input
+          v-model="customTypeForm.name"
+          placeholder="例如：PhoneNumber"
+        />
+      </el-form-item>
+      <el-form-item
+        label="显示名称"
+        required
+      >
+        <el-input
+          v-model="customTypeForm.displayName"
+          placeholder="例如：手机号码"
+        />
+      </el-form-item>
+      <el-form-item label="基础类型">
+        <el-select v-model="customTypeForm.baseType">
+          <el-option
+            label="字符串"
+            value="string"
           />
-        </el-form-item>
-        <el-form-item label="显示名称" required>
-          <el-input
-            v-model="customTypeForm.displayName"
-            placeholder="例如：手机号码"
+          <el-option
+            label="数字"
+            value="number"
           />
-        </el-form-item>
-        <el-form-item label="基础类型">
-          <el-select v-model="customTypeForm.baseType">
-            <el-option label="字符串" value="string" />
-            <el-option label="数字" value="number" />
-            <el-option label="日期时间" value="datetime" />
-            <el-option label="布尔值" value="boolean" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="验证模式">
-          <el-input
-            v-model="customTypeForm.validationPattern"
-            placeholder="正则表达式验证模式"
+          <el-option
+            label="日期时间"
+            value="datetime"
           />
-        </el-form-item>
-        <el-form-item label="格式化函数">
-          <el-input
-            v-model="customTypeForm.formatFunction"
-            placeholder="JavaScript格式化函数"
+          <el-option
+            label="布尔值"
+            value="boolean"
           />
-        </el-form-item>
-        <el-form-item label="类型描述">
-          <el-input
-            v-model="customTypeForm.description"
-            type="textarea"
-            :rows="2"
-          />
-        </el-form-item>
-      </el-form>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="验证模式">
+        <el-input
+          v-model="customTypeForm.validationPattern"
+          placeholder="正则表达式验证模式"
+        />
+      </el-form-item>
+      <el-form-item label="格式化函数">
+        <el-input
+          v-model="customTypeForm.formatFunction"
+          placeholder="JavaScript格式化函数"
+        />
+      </el-form-item>
+      <el-form-item label="类型描述">
+        <el-input
+          v-model="customTypeForm.description"
+          type="textarea"
+          :rows="2"
+        />
+      </el-form-item>
+    </el-form>
 
-      <template #footer>
-        <el-button @click="showAddFieldTypeDialog = false">取消</el-button>
-        <el-button
-          type="primary"
-          @click="saveCustomFieldType"
-        >
-          保存类型
-        </el-button>
-      </template>
-    </el-dialog>
+    <template #footer>
+      <el-button @click="showAddFieldTypeDialog = false">
+        取消
+      </el-button>
+      <el-button
+        type="primary"
+        @click="saveCustomFieldType"
+      >
+        保存类型
+      </el-button>
+    </template>
+  </el-dialog>
 
-    <!-- 枚举类型对话框 -->
-    <el-dialog
-      v-model="showAddEnumDialog"
-      title="创建枚举类型"
-      width="700px"
+  <!-- 枚举类型对话框 -->
+  <el-dialog
+    v-model="showAddEnumDialog"
+    title="创建枚举类型"
+    width="700px"
+  >
+    <el-form
+      ref="enumFormRef"
+      :model="enumForm"
+      label-width="100px"
     >
-      <el-form
-        ref="enumFormRef"
-        :model="enumForm"
-        label-width="100px"
-      >
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="枚举名称" required>
-              <el-input
-                v-model="enumForm.name"
-                placeholder="例如：UserStatus"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="显示名称" required>
-              <el-input
-                v-model="enumForm.displayName"
-                placeholder="例如：用户状态"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item
+            label="枚举名称"
+            required
+          >
+            <el-input
+              v-model="enumForm.name"
+              placeholder="例如：UserStatus"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            label="显示名称"
+            required
+          >
+            <el-input
+              v-model="enumForm.displayName"
+              placeholder="例如：用户状态"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
 
-        <el-form-item label="枚举描述">
-          <el-input
-            v-model="enumForm.description"
-            placeholder="描述此枚举的用途"
-          />
-        </el-form-item>
+      <el-form-item label="枚举描述">
+        <el-input
+          v-model="enumForm.description"
+          placeholder="描述此枚举的用途"
+        />
+      </el-form-item>
 
-        <el-form-item label="枚举值">
-          <div class="enum-values-editor">
-            <div
-              v-for="(value, index) in enumForm.values"
-              :key="index"
-              class="enum-value-row"
-            >
-              <el-input
-                v-model="value.key"
-                placeholder="键值 (如: Active)"
-                style="width: 150px"
-              />
-              <el-input
-                v-model="value.label"
-                placeholder="显示标签 (如: 启用)"
-                style="width: 150px"
-              />
-              <el-input-number
-                v-model="value.sort"
-                placeholder="排序"
-                :min="0"
-                style="width: 100px"
-              />
-              <el-input
-                v-model="value.description"
-                placeholder="描述"
-                style="width: 200px"
-              />
-              <el-button
-                size="mini"
-                type="danger"
-                icon="el-icon-delete"
-                @click="removeEnumValue(index)"
-              />
-            </div>
+      <el-form-item label="枚举值">
+        <div class="enum-values-editor">
+          <div
+            v-for="(value, index) in enumForm.values"
+            :key="index"
+            class="enum-value-row"
+          >
+            <el-input
+              v-model="value.key"
+              placeholder="键值 (如: Active)"
+              style="width: 150px"
+            />
+            <el-input
+              v-model="value.label"
+              placeholder="显示标签 (如: 启用)"
+              style="width: 150px"
+            />
+            <el-input-number
+              v-model="value.sort"
+              placeholder="排序"
+              :min="0"
+              style="width: 100px"
+            />
+            <el-input
+              v-model="value.description"
+              placeholder="描述"
+              style="width: 200px"
+            />
             <el-button
-              size="small"
-              type="dashed"
-              icon="el-icon-plus"
-              @click="addEnumValue"
-            >
-              添加枚举值
-            </el-button>
+              size="mini"
+              type="danger"
+              icon="el-icon-delete"
+              @click="removeEnumValue(index)"
+            />
           </div>
-        </el-form-item>
-      </el-form>
+          <el-button
+            size="small"
+            type="dashed"
+            icon="el-icon-plus"
+            @click="addEnumValue"
+          >
+            添加枚举值
+          </el-button>
+        </div>
+      </el-form-item>
+    </el-form>
 
-      <template #footer>
-        <el-button @click="showAddEnumDialog = false">取消</el-button>
-        <el-button
-          type="primary"
-          @click="saveEnum"
-        >
-          保存枚举
-        </el-button>
-      </template>
-    </el-dialog>
-
-    <!-- 复杂类型对话框 -->
-    <el-dialog
-      v-model="showComplexTypeDialog"
-      title="创建复杂类型 (值对象)"
-      width="800px"
-    >
-      <el-form
-        ref="complexTypeFormRef"
-        :model="complexTypeForm"
-        label-width="100px"
+    <template #footer>
+      <el-button @click="showAddEnumDialog = false">
+        取消
+      </el-button>
+      <el-button
+        type="primary"
+        @click="saveEnum"
       >
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="类型名称" required>
-              <el-input
-                v-model="complexTypeForm.name"
-                placeholder="例如：Address"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="显示名称" required>
-              <el-input
-                v-model="complexTypeForm.displayName"
-                placeholder="例如：地址信息"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
+        保存枚举
+      </el-button>
+    </template>
+  </el-dialog>
 
-        <el-form-item label="类型描述">
-          <el-input
-            v-model="complexTypeForm.description"
-            placeholder="描述此复杂类型的用途"
-          />
-        </el-form-item>
+  <!-- 复杂类型对话框 -->
+  <el-dialog
+    v-model="showComplexTypeDialog"
+    title="创建复杂类型 (值对象)"
+    width="800px"
+  >
+    <el-form
+      ref="complexTypeFormRef"
+      :model="complexTypeForm"
+      label-width="100px"
+    >
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item
+            label="类型名称"
+            required
+          >
+            <el-input
+              v-model="complexTypeForm.name"
+              placeholder="例如：Address"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item
+            label="显示名称"
+            required
+          >
+            <el-input
+              v-model="complexTypeForm.displayName"
+              placeholder="例如：地址信息"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
 
-        <el-form-item label="属性定义">
-          <div class="complex-properties-editor">
-            <div
-              v-for="(prop, index) in complexTypeForm.properties"
-              :key="index"
-              class="property-row"
+      <el-form-item label="类型描述">
+        <el-input
+          v-model="complexTypeForm.description"
+          placeholder="描述此复杂类型的用途"
+        />
+      </el-form-item>
+
+      <el-form-item label="属性定义">
+        <div class="complex-properties-editor">
+          <div
+            v-for="(prop, index) in complexTypeForm.properties"
+            :key="index"
+            class="property-row"
+          >
+            <el-input
+              v-model="prop.name"
+              placeholder="属性名"
+              style="width: 120px"
+            />
+            <el-input
+              v-model="prop.displayName"
+              placeholder="显示名"
+              style="width: 120px"
+            />
+            <el-select
+              v-model="prop.type"
+              placeholder="类型"
+              style="width: 100px"
             >
-              <el-input
-                v-model="prop.name"
-                placeholder="属性名"
-                style="width: 120px"
+              <el-option
+                label="string"
+                value="string"
               />
-              <el-input
-                v-model="prop.displayName"
-                placeholder="显示名"
-                style="width: 120px"
+              <el-option
+                label="int"
+                value="int"
               />
-              <el-select
-                v-model="prop.type"
-                placeholder="类型"
-                style="width: 100px"
-              >
-                <el-option label="string" value="string" />
-                <el-option label="int" value="int" />
-                <el-option label="decimal" value="decimal" />
-                <el-option label="bool" value="bool" />
-                <el-option label="DateTime" value="DateTime" />
-              </el-select>
-              <el-checkbox v-model="prop.isRequired">必填</el-checkbox>
-              <el-input
-                v-model="prop.description"
-                placeholder="描述"
-                style="width: 150px"
+              <el-option
+                label="decimal"
+                value="decimal"
               />
-              <el-button
-                size="mini"
-                type="danger"
-                icon="el-icon-delete"
-                @click="removeComplexProperty(index)"
+              <el-option
+                label="bool"
+                value="bool"
               />
-            </div>
+              <el-option
+                label="DateTime"
+                value="DateTime"
+              />
+            </el-select>
+            <el-checkbox v-model="prop.isRequired">
+              必填
+            </el-checkbox>
+            <el-input
+              v-model="prop.description"
+              placeholder="描述"
+              style="width: 150px"
+            />
             <el-button
-              size="small"
-              type="dashed"
-              icon="el-icon-plus"
-              @click="addComplexProperty"
-            >
-              添加属性
-            </el-button>
+              size="mini"
+              type="danger"
+              icon="el-icon-delete"
+              @click="removeComplexProperty(index)"
+            />
           </div>
-        </el-form-item>
-      </el-form>
+          <el-button
+            size="small"
+            type="dashed"
+            icon="el-icon-plus"
+            @click="addComplexProperty"
+          >
+            添加属性
+          </el-button>
+        </div>
+      </el-form-item>
+    </el-form>
 
-      <template #footer>
-        <el-button @click="showComplexTypeDialog = false">取消</el-button>
-        <el-button
-          type="primary"
-          @click="saveComplexType"
-        >
-          保存复杂类型
-        </el-button>
-      </template>
-    </el-dialog>
+    <template #footer>
+      <el-button @click="showComplexTypeDialog = false">
+        取消
+      </el-button>
+      <el-button
+        type="primary"
+        @click="saveComplexType"
+      >
+        保存复杂类型
+      </el-button>
+    </template>
+  </el-dialog>
   </div>
 </template>
 

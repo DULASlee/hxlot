@@ -4,7 +4,7 @@ import { defineConfig } from "cypress"
 
 export default defineConfig({
   e2e: {
-    baseUrl: "http://localhost:11369",
+    baseUrl: process.env.CYPRESS_BASE_URL || "http://localhost:11369",
     specPattern: "cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
     supportFile: "cypress/support/e2e.ts",
     videosFolder: "cypress/videos",
@@ -22,6 +22,7 @@ export default defineConfig({
       COMPONENT_TEST_MODE: true,
       PERFORMANCE_THRESHOLD_MS: 1000,
       ACCESSIBILITY_ENABLED: true,
+      API_BASE_URL: process.env.CYPRESS_API_BASE_URL || "https://localhost:44379",
     },
     setupNodeEvents(on, config) {
       // Advanced UI Component testing node events

@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 import SmartAbpLayout from "@/components/layout/SmartAbpLayout.vue"
 import LoginView from "@/views/auth/Login.vue"
-import { authService } from "@/utils/auth"
+// authService removed; guards should use useAuthStore if needed
 import { logger } from "@/utils/logger"
 
 // 动态导入页面组件
