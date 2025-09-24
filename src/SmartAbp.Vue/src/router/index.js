@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import SmartAbpLayout from "@/components/layout/SmartAbpLayout.vue";
 import LoginView from "@/views/auth/Login.vue";
-export {}
+import { useAuthStore } from "@/stores"; // 添加认证store导入
 import { logger } from "@/utils/logger";
 // 动态导入页面组件
 const DashboardView = () => import("@/views/common/DashboardView.vue");
@@ -418,8 +418,9 @@ const router = createRouter({
 // 路由守卫 - 基础认证检查
 router.beforeEach(async (to, from, next) => {
     logger.debug(`[路由守卫] 从 ${from.path} 跳转到 ${to.path}`);
-    // 检查用户是否已登录
-    const isLoggedIn = authService.isTokenValid();
+    // 检查用户是否已登录 - 使用企业级认证store
+    const authStore = useAuthStore();
+    const isLoggedIn = authStore.isAuthenticated;
     // 已登录用户尝试访问登录页：重定向到工作台
     if (to.name === "Login" && isLoggedIn) {
         logger.debug("[路由守卫] 用户已登录，重定向到工作台");

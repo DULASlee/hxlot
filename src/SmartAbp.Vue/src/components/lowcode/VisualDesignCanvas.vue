@@ -31,10 +31,7 @@
         
         <div class="toolbar-center">
           <div class="device-selector">
-            <el-radio-group
-              v-model="previewDevice"
-              size="small"
-            >
+            <el-radio-group v-model="previewDevice" size="small">
               <el-radio-button label="desktop">
                 <i class="el-icon-monitor" /> 桌面
               </el-radio-button>
@@ -52,15 +49,15 @@
           <el-button-group size="small">
             <el-button
               icon="el-icon-refresh-left"
-              :disabled="!canUndo"
               @click="undo"
+              :disabled="!canUndo"
             >
               撤销
             </el-button>
             <el-button
               icon="el-icon-refresh-right"
-              :disabled="!canRedo"
               @click="redo"
+              :disabled="!canRedo"
             >
               重做
             </el-button>
@@ -75,26 +72,20 @@
       </div>
 
       <!-- 设计画布 -->
-      <div
-        class="canvas-workspace"
-        :class="getCanvasClass()"
-      >
+      <div class="canvas-workspace" :class="getCanvasClass()">
         <!-- 设计模式画布 -->
         <div
           v-if="canvasMode === 'design'"
-          ref="designCanvasRef"
           class="design-canvas"
           :class="getDeviceClass()"
           @drop="handleDrop"
           @dragover="handleDragOver"
           @dragenter="handleDragEnter"
           @dragleave="handleDragLeave"
+          ref="designCanvasRef"
         >
           <!-- 拖拽提示 -->
-          <div
-            v-if="components.length === 0"
-            class="drop-hint"
-          >
+          <div v-if="components.length === 0" class="drop-hint">
             <div class="hint-content">
               <i class="el-icon-upload" />
               <h3>拖拽组件到此处开始设计</h3>
@@ -126,10 +117,10 @@
               selected: selectedComponent?.id === component.id,
               hover: hoverComponent?.id === component.id
             }"
-            :style="getComponentStyle(component)"
             @click="selectComponent(component)"
-            @mouseenter="() => { hoverComponent = component }"
-            @mouseleave="() => { hoverComponent = null }"
+            @mouseenter="hoverComponent = component"
+            @mouseleave="hoverComponent = null"
+            :style="getComponentStyle(component)"
           >
             <!-- 组件内容 -->
             <component
@@ -145,29 +136,29 @@
               class="component-tools"
             >
               <div class="tools-bar">
-                <el-button-group size="small">
+                <el-button-group size="mini">
                   <el-button
                     icon="el-icon-rank"
+                    @click="moveComponent(index, 'up')"
                     :disabled="index === 0"
                     title="上移"
-                    @click="moveComponent(index, 'up')"
                   />
                   <el-button
                     icon="el-icon-sort"
+                    @click="moveComponent(index, 'down')"
                     :disabled="index === components.length - 1"
                     title="下移"
-                    @click="moveComponent(index, 'down')"
                   />
                   <el-button
                     icon="el-icon-document-copy"
-                    title="复制"
                     @click="duplicateComponent(component)"
+                    title="复制"
                   />
                   <el-button
                     icon="el-icon-delete"
                     type="danger"
-                    title="删除"
                     @click="deleteComponent(component)"
+                    title="删除"
                   />
                 </el-button-group>
               </div>
@@ -230,30 +221,18 @@
         >
           <div class="code-editor">
             <div class="code-tabs">
-              <el-tabs
-                v-model="activeCodeTab"
-                type="card"
-              >
-                <el-tab-pane
-                  label="Vue模板"
-                  name="template"
-                >
+              <el-tabs v-model="activeCodeTab" type="card">
+                <el-tab-pane label="Vue模板" name="template">
                   <div class="code-content">
                     <pre class="code-block">{{ generatedTemplate }}</pre>
                   </div>
                 </el-tab-pane>
-                <el-tab-pane
-                  label="JavaScript"
-                  name="script"
-                >
+                <el-tab-pane label="JavaScript" name="script">
                   <div class="code-content">
                     <pre class="code-block">{{ generatedScript }}</pre>
                   </div>
                 </el-tab-pane>
-                <el-tab-pane
-                  label="CSS样式"
-                  name="style"
-                >
+                <el-tab-pane label="CSS样式" name="style">
                   <div class="code-content">
                     <pre class="code-block">{{ generatedStyle }}</pre>
                   </div>
@@ -283,7 +262,7 @@
             :show-tooltip="false"
             style="width: 100px; margin: 0 8px"
           />
-          <el-button-group size="small">
+          <el-button-group size="mini">
             <el-button
               icon="el-icon-zoom-out"
               @click="zoomOut"
@@ -305,47 +284,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 
-// Props - 企业级类型定义（暂时注释以避免未使用警告）
-// interface Props {
-//   pageData?: any
-//   entityData?: any
-// }
-
-// 组件数据类型定义
-interface CanvasComponent {
-  id: string
-  type: string
-  name: string
-  props: Record<string, any>
-  style: Record<string, any>
-  events?: Record<string, any>
-  children?: CanvasComponent[]
+// Props
+interface Props {
+  pageData?: any
+  entityData?: any
 }
 
-// const props = withDefaults(defineProps<Props>(), {
-//   pageData: null,
-//   entityData: null
-// })
+const props = withDefaults(defineProps<Props>(), {
+  pageData: null,
+  entityData: null
+})
 
 // 响应式数据
 const canvasMode = ref('design')
 const previewDevice = ref('desktop')
-const selectedComponent = ref<CanvasComponent | null>(null)
-const hoverComponent = ref<CanvasComponent | null>(null)
+const selectedComponent = ref(null)
+const hoverComponent = ref(null)
 const zoomLevel = ref(1)
 const activeCodeTab = ref('template')
 
 // 画布状态
-const components = ref<CanvasComponent[]>([])
+const components = ref([])
 const canvasSize = ref({ width: 1200, height: 800 })
 const isDraggingOver = ref(false)
-const guideLines = ref<any[]>([])
+const guideLines = ref([])
 
 // 历史记录
-const history = ref<{ timestamp: number; components: CanvasComponent[] }[]>([])
+const history = ref([])
 const historyIndex = ref(-1)
 const maxHistorySize = 50
 
@@ -371,26 +339,11 @@ const generatedScript = computed(() => {
 })
 
 const generatedStyle = computed(() => {
-  // 生成组件样式代码 - 企业级实现（保持核心功能完整）
-  const styles: string[] = []
-  
-  components.value.forEach(component => {
-    if (component.style && Object.keys(component.style).length > 0) {
-      const selector = `.canvas-component[data-id="${component.id}"]`
-      const cssRules = Object.entries(component.style)
-        .map(([key, value]) => `  ${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value};`)
-        .join('\n')
-      styles.push(`${selector} {\n${cssRules}\n}`)
-    }
-  })
-  
-  return styles.length > 0 
-    ? `<style scoped>\n${styles.join('\n\n')}\n</style>`
-    : generateVueStyle() // 回退到默认实现
+  return generateVueStyle()
 })
 
 // 方法
-const setCanvasMode = (mode: string) => {
+const setCanvasMode = (mode) => {
   canvasMode.value = mode
   
   if (mode === 'preview') {
@@ -410,12 +363,11 @@ const getDeviceClass = () => {
   return `device-${previewDevice.value}`
 }
 
-const handleDrop = (event: DragEvent) => {
+const handleDrop = (event) => {
   event.preventDefault()
   isDraggingOver.value = false
 
   try {
-    if (!event.dataTransfer) return
     const dragData = JSON.parse(event.dataTransfer.getData('text/plain'))
     
     if (dragData.sourceType === 'palette') {
@@ -430,29 +382,25 @@ const handleDrop = (event: DragEvent) => {
   }
 }
 
-const handleDragOver = (event: DragEvent) => {
+const handleDragOver = (event) => {
   event.preventDefault()
-  if (event.dataTransfer) {
-    event.dataTransfer.dropEffect = 'copy'
-  }
+  event.dataTransfer.dropEffect = 'copy'
 }
 
-const handleDragEnter = (event: DragEvent) => {
+const handleDragEnter = (event) => {
   event.preventDefault()
   isDraggingOver.value = true
 }
 
-const handleDragLeave = (event: DragEvent) => {
+const handleDragLeave = (event) => {
   event.preventDefault()
   // 只有当离开整个画布区域时才取消拖拽状态
-  const currentTarget = event.currentTarget as HTMLElement
-  const relatedTarget = event.relatedTarget as Node
-  if (currentTarget && relatedTarget && !currentTarget.contains(relatedTarget)) {
+  if (!event.currentTarget.contains(event.relatedTarget)) {
     isDraggingOver.value = false
   }
 }
 
-const addComponentToCanvas = (componentTemplate: any, position: { x: number; y: number }) => {
+const addComponentToCanvas = (componentTemplate, position) => {
   const newComponent = {
     id: `component-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
     type: componentTemplate.tag,
@@ -480,8 +428,8 @@ const addComponentToCanvas = (componentTemplate: any, position: { x: number; y: 
   emit('component-added', newComponent)
 }
 
-const getDefaultWidth = (componentType: string) => {
-  const widthMap: Record<string, string> = {
+const getDefaultWidth = (componentType) => {
+  const widthMap = {
     'el-button': '80px',
     'el-input': '200px',
     'el-select': '200px',
@@ -492,8 +440,8 @@ const getDefaultWidth = (componentType: string) => {
   return widthMap[componentType] || '200px'
 }
 
-const getDefaultHeight = (componentType: string) => {
-  const heightMap: Record<string, string> = {
+const getDefaultHeight = (componentType) => {
+  const heightMap = {
     'el-button': '32px',
     'el-input': '32px',
     'el-select': '32px',
@@ -504,12 +452,12 @@ const getDefaultHeight = (componentType: string) => {
   return heightMap[componentType] || 'auto'
 }
 
-const selectComponent = (component: CanvasComponent) => {
+const selectComponent = (component) => {
   selectedComponent.value = component
   emit('component-selected', component)
 }
 
-const moveComponent = (index: number, direction: 'up' | 'down') => {
+const moveComponent = (index, direction) => {
   const newIndex = direction === 'up' ? index - 1 : index + 1
   if (newIndex >= 0 && newIndex < components.value.length) {
     const temp = components.value[index]
@@ -520,7 +468,7 @@ const moveComponent = (index: number, direction: 'up' | 'down') => {
   }
 }
 
-const duplicateComponent = (component: CanvasComponent) => {
+const duplicateComponent = (component) => {
   const duplicated = {
     ...component,
     id: `component-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
@@ -538,7 +486,7 @@ const duplicateComponent = (component: CanvasComponent) => {
   ElMessage.success('组件复制成功')
 }
 
-const deleteComponent = (component: CanvasComponent) => {
+const deleteComponent = (component) => {
   const index = components.value.findIndex(c => c.id === component.id)
   if (index > -1) {
     components.value.splice(index, 1)
@@ -552,7 +500,7 @@ const deleteComponent = (component: CanvasComponent) => {
   }
 }
 
-const getComponentStyle = (component: CanvasComponent) => {
+const getComponentStyle = (component) => {
   return {
     ...component.style,
     transform: `scale(${zoomLevel.value})`,
@@ -560,9 +508,9 @@ const getComponentStyle = (component: CanvasComponent) => {
   }
 }
 
-const getComponentRenderer = (component: CanvasComponent) => {
+const getComponentRenderer = (component) => {
   // 根据组件类型返回对应的渲染器
-  const rendererMap: Record<string, string> = {
+  const rendererMap = {
     'el-button': 'button',
     'el-input': 'input', 
     'el-select': 'select',
@@ -576,7 +524,7 @@ const getComponentRenderer = (component: CanvasComponent) => {
   return rendererMap[component.type] || 'div'
 }
 
-const startResize = (component: CanvasComponent, direction: string, event: MouseEvent) => {
+const startResize = (component, direction, event) => {
   event.stopPropagation()
   
   const startX = event.clientX
@@ -586,7 +534,7 @@ const startResize = (component: CanvasComponent, direction: string, event: Mouse
   const startLeft = parseInt(component.style.left)
   const startTop = parseInt(component.style.top)
 
-  const handleMouseMove = (moveEvent: MouseEvent) => {
+  const handleMouseMove = (moveEvent) => {
     const deltaX = moveEvent.clientX - startX
     const deltaY = moveEvent.clientY - startY
 
@@ -632,7 +580,7 @@ const startResize = (component: CanvasComponent, direction: string, event: Mouse
   document.addEventListener('mouseup', handleMouseUp)
 }
 
-const showAlignmentGuides = (movingComponent: CanvasComponent) => {
+const showAlignmentGuides = (movingComponent) => {
   guideLines.value = []
   
   const movingRect = {
@@ -683,7 +631,7 @@ const showAlignmentGuides = (movingComponent: CanvasComponent) => {
   })
 }
 
-const addGuideLine = (type: string, position: number) => {
+const addGuideLine = (type, position) => {
   const guideLine = {
     id: `guide-${type}-${position}`,
     type,
@@ -835,21 +783,50 @@ const generateVueTemplate = () => {
 }
 
 const generateVueScript = () => {
-  return 'Vue组件代码生成功能开发中...'
+  return `<script setup lang="ts">
+import { ref, reactive } from 'vue'
+
+// 响应式数据
+const formData = reactive({
+  // 表单数据
+})
+
+const loading = ref(false)
+
+// 方法
+const handleSubmit = () => {
+  console.log('表单提交:', formData)
+}
+
+const handleReset = () => {
+  Object.keys(formData).forEach(key => {
+    formData[key] = ''
+  })
+}
+</script>`
 }
 
 const generateVueStyle = () => {
-  // 生成组件样式代码
-  const styles = components.value.map(component => {
-    const selector = `#${component.id}`
-    const styleProps = Object.entries(component.style || {})
-      .map(([key, value]) => `  ${key}: ${value};`)
-      .join('\n')
-    
-    return `${selector} {\n${styleProps}\n}`
-  }).join('\n\n')
-  
-  return `<style scoped>\n.design-canvas {\n  position: relative;\n  width: 100%;\n  height: 100%;\n}\n\n${styles}\n</style>`
+  return `<style scoped>
+.page-container {
+  padding: 20px;
+  background: var(--el-bg-color-page);
+  min-height: 100vh;
+}
+
+/* 组件样式 */
+${components.value.map(component => `
+.${component.type} {
+  /* ${component.name} 样式 */
+}`).join('\n')}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 12px;
+  }
+}
+</style>`
 }
 
 // Emits

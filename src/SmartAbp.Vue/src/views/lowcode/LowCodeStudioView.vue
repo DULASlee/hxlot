@@ -94,19 +94,19 @@
               </div>
             </el-tooltip>
           </div>
-          
+
           <!-- 智能建议提示 -->
           <el-tooltip
             v-if="nextStepSuggestion"
             :content="nextStepSuggestion"
             placement="bottom"
           >
-            <i 
+            <i
               class="el-icon-info suggestion-icon"
               @click="() => showWorkflowGuide = !showWorkflowGuide"
             />
           </el-tooltip>
-          
+
           <el-badge
             :value="issueCount"
             :hidden="issueCount === 0"
@@ -721,10 +721,10 @@ const handleProjectGenerated = (result: any) => {
   addLog("success", `项目生成完成: ${result.config.projectName}`)
   addLog("info", `已生成 ${result.template.entities.length} 个实体`)
   addLog("info", `预计生成 ${result.template.estimatedFiles} 个代码文件`)
-  
+
   // 自动切换到数据建模步骤查看结果
   setCurrentStep('modeling')
-  
+
   ElMessage.success({
     message: '🎉 企业级项目生成完成！请查看数据建模结果',
     duration: 5000,
@@ -736,10 +736,10 @@ const handleProjectGenerated = (result: any) => {
 onMounted(() => {
   addLog("info", "LowCode Studio 企业级工作台已启动")
   addLog("info", `当前工作空间：${currentWorkspace.value.name}`)
-  
+
   // 初始化智能工作流
   initializeWorkflow()
-  
+
   // 根据路由设置当前步骤
   if (route.path.includes("generation")) {
     setCurrentStep("generate")

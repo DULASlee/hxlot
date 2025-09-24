@@ -23,43 +23,48 @@ export const useAuthStore = defineStore(
     // 状态
     const token = ref<string | null>(null)
     const refreshToken = ref<string | null>(null)
-    const userInfo = ref<UserInfo | null>(null)
-    const isLoading = ref(false)
+  const userInfo = ref<UserInfo | null>(null)
+  const isLoading = ref(false)
 
-    // 计算属性
+  // 计算属性
     const isAuthenticated = computed(() => !!token.value && !!userInfo.value)
-    const hasRole = computed(() => (role: string) => {
-      return userInfo.value?.roles?.includes(role) ?? false
-    })
+  const hasRole = computed(() => (role: string) => {
+    return userInfo.value?.roles?.includes(role) ?? false
+  })
 
-    // 方法
-    const setToken = (accessToken: string, refreshTokenValue?: string) => {
-      token.value = accessToken
+  // 方法
+  const setToken = (accessToken: string, refreshTokenValue?: string) => {
+    token.value = accessToken
       localStorage.setItem("smartabp_token", accessToken)
 
-      if (refreshTokenValue) {
-        refreshToken.value = refreshTokenValue
+    if (refreshTokenValue) {
+      refreshToken.value = refreshTokenValue
         localStorage.setItem("smartabp_refresh_token", refreshTokenValue)
+    }
+  }
+
+  const setUserInfo = (user: UserInfo) => {
+      // 确保用户有基本角色
+      if (!user.roles || user.roles.length === 0) {
+        user.roles = user.userName === "admin" ? ["admin", "user"] : ["user"]
       }
-    }
 
-    const setUserInfo = (user: UserInfo) => {
-      userInfo.value = user
+    userInfo.value = user
       localStorage.setItem("smartabp_user", JSON.stringify(user))
-    }
+  }
 
-    const clearAuth = () => {
-      token.value = null
-      refreshToken.value = null
-      userInfo.value = null
+  const clearAuth = () => {
+    token.value = null
+    refreshToken.value = null
+    userInfo.value = null
       localStorage.removeItem("smartabp_token")
       localStorage.removeItem("smartabp_refresh_token")
       localStorage.removeItem("smartabp_user")
-    }
+  }
 
-    const getAuthHeader = () => {
-      return token.value ? { Authorization: `Bearer ${token.value}` } : {}
-    }
+  const getAuthHeader = () => {
+    return token.value ? { Authorization: `Bearer ${token.value}` } : {}
+  }
 
     const fetchUserInfo = async (): Promise<UserInfo | null> => {
       if (!token.value) return null
@@ -74,7 +79,7 @@ export const useAuthStore = defineStore(
       }
     }
 
-    const login = async (credentials: LoginCredentials) => {
+  const login = async (credentials: LoginCredentials) => {
       isLoading.value = true
       try {
         const loginData = new URLSearchParams()
@@ -100,27 +105,27 @@ export const useAuthStore = defineStore(
           setToken(tokenData.access_token, tokenData.refresh_token)
           await fetchUserInfo()
           return true
-        } else {
+      } else {
           const errorData = response.data || {}
           const message =
             (errorData && (errorData.error_description || errorData.error)) || "登录失败"
           throw new Error(message)
-        }
+      }
       } catch (err: any) {
         clearAuth()
         logger.error("登录失败:", { error: err })
-        throw err
-      } finally {
-        isLoading.value = false
-      }
+      throw err
+    } finally {
+      isLoading.value = false
     }
+  }
 
-    const logout = () => {
-      clearAuth()
+  const logout = () => {
+    clearAuth()
       // 可选：通知后端吊销token
-    }
+  }
 
-    const initialize = () => {
+  const initialize = () => {
       const storedToken = localStorage.getItem("smartabp_token")
       const storedRefreshToken = localStorage.getItem("smartabp_refresh_token")
       const storedUser = localStorage.getItem("smartabp_user")
@@ -129,7 +134,12 @@ export const useAuthStore = defineStore(
         token.value = storedToken
         refreshToken.value = storedRefreshToken
         try {
-          userInfo.value = JSON.parse(storedUser)
+          const user = JSON.parse(storedUser)
+          // 确保恢复的用户有基本角色
+          if (!user.roles || user.roles.length === 0) {
+            user.roles = user.userName === "admin" ? ["admin", "user"] : ["user"]
+          }
+          userInfo.value = user
         } catch (e) {
           logger.error("解析存储的用户信息失败", e)
           clearAuth()
@@ -206,25 +216,25 @@ export const useAuthStore = defineStore(
 
     initialize() // 初始化状态
 
-    return {
-      // 状态
-      token,
-      refreshToken,
-      userInfo,
-      isLoading,
-      // 计算属性
-      isAuthenticated,
-      hasRole,
-      // 方法
-      setToken,
-      setUserInfo,
-      clearAuth,
-      getAuthHeader,
-      login,
-      logout,
+  return {
+    // 状态
+    token,
+    refreshToken,
+    userInfo,
+    isLoading,
+    // 计算属性
+    isAuthenticated,
+    hasRole,
+    // 方法
+    setToken,
+    setUserInfo,
+    clearAuth,
+    getAuthHeader,
+    login,
+    logout,
       fetchUserInfo,
-      initialize,
-      syncFromSmartAbp,
+    initialize,
+    syncFromSmartAbp,
       refreshTokenMethod,
     }
   },
