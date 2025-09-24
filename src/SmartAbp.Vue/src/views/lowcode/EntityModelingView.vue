@@ -1487,7 +1487,7 @@ const exportEntitySchema = async (): Promise<void> => {
         relationCount: store.relations.length
       }
     }
-    
+
     const dataStr = JSON.stringify(schema, null, 2)
     const blob = new Blob([dataStr], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
@@ -1498,7 +1498,7 @@ const exportEntitySchema = async (): Promise<void> => {
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
-    
+
     ElMessage.success('实体架构导出成功')
   } catch (error) {
     ElMessage.error(`导出失败: ${(error as Error).message}`)
