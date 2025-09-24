@@ -440,6 +440,7 @@ import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import EnhancedThemeEditor from "@/components/lowcode/EnhancedThemeEditor.vue"
 import { useEnhancedThemeStore } from "@/stores/lowcode/enhancedTheme"
+import { logger } from "@/utils/logger"
 
 // Store
 const themeStore = useEnhancedThemeStore()
@@ -477,7 +478,7 @@ const fullPreviewUrl = computed(() => {
 // 方法
 const handleThemeChange = (themeData: any) => {
   // 主题变更时的处理逻辑
-  console.log("主题已变更:", themeData)
+  logger?.info("主题变更", { themeName: themeData.name })
 }
 
 const togglePreview = () => {
@@ -500,7 +501,7 @@ const exportTheme = () => {
     ElMessage.success("主题配置已导出")
   } catch (error) {
     ElMessage.error("导出主题配置失败")
-    console.error("Export theme error:", error)
+    logger?.error("主题导出错误", { error: String(error) })
   }
 }
 
@@ -532,7 +533,7 @@ const handleImportTheme = (file: File) => {
       showImportDialog.value = false
     } catch (error) {
       ElMessage.error("主题文件格式错误")
-      console.error("Import theme error:", error)
+      logger?.error("主题导入错误", { error: String(error) })
     }
   }
   reader.readAsText(file)
@@ -548,7 +549,7 @@ const importThemeFromText = () => {
     importThemeText.value = ""
   } catch (error) {
     ElMessage.error("主题配置格式错误")
-    console.error("Import theme from text error:", error)
+    logger?.error("主题文本导入错误", { error: String(error) })
   }
 }
 

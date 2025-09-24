@@ -1137,6 +1137,7 @@
 import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useEntityModelingStore, type EntityDefinition, type EntityField } from "@/stores/lowcode/entityModeling"
+import { logger } from "@/utils/logger"
 import AdvancedEntityRelationshipDesigner from "@/components/lowcode/AdvancedEntityRelationshipDesigner.vue"
 import AdvancedFieldTypeDesigner from "@/components/lowcode/AdvancedFieldTypeDesigner.vue"
 import BusinessRulesEngine from "@/components/lowcode/BusinessRulesEngine.vue"
@@ -1683,7 +1684,7 @@ const validateField = (field: any) => {
 
 const editFieldValidation = (field: any) => {
   // 打开字段验证编辑器
-  console.log("编辑字段验证规则:", field)
+  logger?.info("编辑字段验证规则", { field: field.name })
 }
 
 const addValidationRule = () => {
@@ -1730,7 +1731,7 @@ const createRelation = () => {
 }
 
 const editRelation = (relation: any) => {
-  console.log("编辑关系:", relation)
+  logger?.info("编辑关系", { relationId: relation.id, type: relation.type })
 }
 
 const removeRelation = (index: number) => {
@@ -1895,7 +1896,7 @@ const createAbstractEntity = () => {
 
 const handleDictionarySelected = (dictionary: any) => {
   // 处理数据字典选择事件，可以将字典应用为字段的枚举类型
-  console.log('Dictionary selected:', dictionary)
+  logger?.info('数据字典选择', { dictionaryName: dictionary.name })
   ElMessage.info(`已选择数据字典"${dictionary.name}"`)
 }
 

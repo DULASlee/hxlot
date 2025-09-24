@@ -1046,7 +1046,7 @@ const updateBatchGeneration = () => {
 
 const updatePreview = () => {
   // 更新UI风格预览
-  console.log("更新UI风格预览:", uiStyle.value)
+  logger?.info("更新UI风格预览", { uiStyle: uiStyle.value })
 }
 
 const generateBatchPages = async () => {
@@ -1065,7 +1065,7 @@ const generateBatchPages = async () => {
     ElMessage.success(`成功生成 ${estimatedPageCount.value} 个页面`)
   } catch (error) {
     ElMessage.error("批量生成失败")
-    console.error("Batch generation error:", error)
+    logger?.error("批量生成错误", { error: String(error) })
   } finally {
     generating.value = false
   }
@@ -1083,7 +1083,7 @@ const exportPages = () => {
 // 拖拽处理
 const handleDragStart = (component: any) => {
   // 设置拖拽数据
-  console.log("开始拖拽组件:", component)
+  logger?.info("开始拖拽组件", { component: component.name })
 }
 
 const handleDragOver = (event: DragEvent) => {
@@ -1158,12 +1158,12 @@ const clearCanvas = () => {
 
 const undoCanvas = () => {
   // 撤销操作
-  console.log("撤销操作")
+  logger?.info("执行撤销操作")
 }
 
 const redoCanvas = () => {
   // 重做操作
-  console.log("重做操作")
+  logger?.info("执行重做操作")
 }
 
 const previewPage = () => {
@@ -1172,7 +1172,7 @@ const previewPage = () => {
 
 const applyTemplate = (templateType: string) => {
   // 应用快速模板
-  console.log("应用模板:", templateType)
+  logger?.info("应用模板", { templateType })
 }
 
 const getComponentRenderer = (_type: string) => {
@@ -1233,12 +1233,12 @@ const getPreviewUrl = () => {
 // 可视化设计器事件处理方法
 const handleComponentDragStart = (dragData: any) => {
   draggedComponent.value = dragData.component
-  console.log('Component drag started:', dragData)
+  logger?.info('组件拖拽开始', { dragData })
 }
 
 const handleComponentDragEnd = (dragData: any) => {
   draggedComponent.value = null
-  console.log('Component drag ended:', dragData)
+  logger?.info('组件拖拽结束', { dragData })
 }
 
 const handleComponentAdded = (component: any) => {
@@ -1497,7 +1497,7 @@ const configureMDI = () => {
 const previewMDI = () => {
   // 生成MDI预览代码
   const mdiCode = generateMDICode()
-  console.log("MDI预览代码:", mdiCode)
+  logger?.info("生成MDI预览代码", { codeLength: mdiCode.length })
   ElMessage.success("MDI界面预览已生成")
 }
 
@@ -1583,7 +1583,7 @@ const configureTabs = () => {
 const previewTabs = () => {
   // 生成Tabs预览代码
   const tabsCode = generateTabsCode()
-  console.log("Tabs预览代码:", tabsCode)
+  logger?.info("生成Tabs预览代码", { codeLength: tabsCode.length })
   ElMessage.success("标签页界面预览已生成")
 }
 

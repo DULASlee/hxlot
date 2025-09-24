@@ -139,6 +139,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue"
 import { ElButton, ElCard, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElTag, ElMessage } from "element-plus"
+import { logger } from "@/utils/logger"
 import TemplateSelector from "@/components/lowcode/TemplateSelector.vue"
 import SandboxPreview from "@/components/lowcode/SandboxPreview.vue"
 import { useWorkspaceStore } from "@/stores/lowcode/workspace"
@@ -255,7 +256,7 @@ const generateCode = async () => {
       ElMessage.error("Code generation failed")
     }
   } catch (error) {
-    console.error("Generation error:", error)
+    logger?.error("代码生成错误", { error: String(error) })
     ElMessage.error("Code generation failed: " + (error instanceof Error ? error.message : "Unknown error"))
   } finally {
     generating.value = false
