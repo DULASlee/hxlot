@@ -80,7 +80,7 @@
             >
               <div
                 class="progress-indicator"
-                @click="showWorkflowGuide"
+                @click="() => showWorkflowGuide = !showWorkflowGuide"
               >
                 <el-progress
                   type="circle"
@@ -103,7 +103,7 @@
           >
             <i 
               class="el-icon-info suggestion-icon"
-              @click="showWorkflowGuide"
+              @click="() => showWorkflowGuide = !showWorkflowGuide"
             />
           </el-tooltip>
           

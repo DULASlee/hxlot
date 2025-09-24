@@ -12,11 +12,16 @@ export function setupHttpInterceptors() {
   // Example response interceptor for auth errors
   const handleAuthError = async (error: any) => {
     if (error.response?.status === 401) {
-      const ok = await authStore.refreshToken()
-      if (ok) {
-        const header = getAuthHeader()
-        return header
-      } else {
+      try {
+        const ok = await authStore.refreshTokenMethod()
+        if (ok) {
+          const header = getAuthHeader()
+          return header
+        } else {
+          authStore.logout()
+          return null
+        }
+      } catch (refreshError) {
         authStore.logout()
         return null
       }
@@ -32,11 +37,13 @@ export const http = axios.create({
   timeout: 10000,
 })
 
+// Example usage with interceptors
 http.interceptors.request.use((config) => {
-  const header = authService.getAuthHeader()
-  if (header.Authorization) {
+  const { getAuthHeader } = setupHttpInterceptors()
+  const authHeader = getAuthHeader()
+  if (authHeader) {
     config.headers = config.headers || {}
-    config.headers.Authorization = header.Authorization
+    config.headers.Authorization = authHeader
   }
   return config
 })
@@ -44,19 +51,11 @@ http.interceptors.request.use((config) => {
 http.interceptors.response.use(
   (res) => res,
   async (error) => {
-    const original = error.config
-    if (error.response?.status === 401 && !original._retry) {
-      original._retry = true
-      const ok = await authService.refreshToken()
-      if (ok) {
-        const header = authService.getAuthHeader()
-        original.headers = original.headers || {}
-        if (header.Authorization) {
-          original.headers.Authorization = header.Authorization
-        }
-        return http(original)
-      }
+    const { handleAuthError } = setupHttpInterceptors()
+    try {
+      return await handleAuthError(error)
+    } catch (err) {
+      return Promise.reject(err)
     }
-    return Promise.reject(error)
   },
 )

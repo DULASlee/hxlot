@@ -104,7 +104,7 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
         onProgress?.(progress)
       }
 
-      const generatedFiles: Array<{
+      const localGeneratedFiles: Array<{
         path: string
         content: string
         type: string
@@ -115,21 +115,21 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
       if (config.templates.backend.length > 0) {
         logger.info("开始生成后端代码")
         const backendFiles = await generateBackendCode(config, updateProgress)
-        generatedFiles.push(...backendFiles)
+        localGeneratedFiles.push(...backendFiles)
       }
 
       // 生成前端代码
       if (config.templates.frontend.length > 0) {
         logger.info("开始生成前端代码")
         const frontendFiles = await generateFrontendCode(config, updateProgress)
-        generatedFiles.push(...frontendFiles)
+        localGeneratedFiles.push(...frontendFiles)
       }
 
       // 生成数据库代码
       if (config.templates.database.length > 0) {
         logger.info("开始生成数据库代码")
         const databaseFiles = await generateDatabaseCode(config, updateProgress)
-        generatedFiles.push(...databaseFiles)
+        localGeneratedFiles.push(...databaseFiles)
       }
 
       const endTime = Date.now()
@@ -137,13 +137,13 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
 
       const result: GenerationResult = {
         success: true,
-        fileCount: generatedFiles.length,
-        lineCount: generatedFiles.reduce((sum, file) => sum + file.content.split('\n').length, 0),
+        fileCount: localGeneratedFiles.length,
+        lineCount: localGeneratedFiles.reduce((sum, file) => sum + file.content.split('\n').length, 0),
         duration,
-        totalSize: generatedFiles.reduce((sum, file) => sum + file.size, 0),
+        totalSize: localGeneratedFiles.reduce((sum, file) => sum + file.size, 0),
         errors: [],
         warnings: [],
-        files: generatedFiles
+        files: localGeneratedFiles
       }
 
       // 保存到历史记录

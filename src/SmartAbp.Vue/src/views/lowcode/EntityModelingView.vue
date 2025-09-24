@@ -1620,6 +1620,7 @@ const createEntity = () => {
     ...newEntityForm.value,
     id: `entity-${Date.now()}`,
     category: "core",
+    module: 'Manual', // 添加模块属性
     fields: [
       { name: "Id", displayName: "主键", type: "Guid", isPrimaryKey: true, isRequired: true }
     ],
@@ -1841,7 +1842,7 @@ ${columns}
 }
 
 // 高级功能事件处理方法
-const handleFieldConfigured = (fieldDefinition) => {
+const handleFieldConfigured = (fieldDefinition: any) => {
   if (selectedEntity.value) {
     try {
       // 检查字段是否已存在
@@ -1855,7 +1856,7 @@ const handleFieldConfigured = (fieldDefinition) => {
       store.addField(selectedEntity.value.id, fieldDefinition)
       ElMessage.success(`高级字段"${fieldDefinition.name}"添加成功`)
     } catch (error) {
-      ElMessage.error('添加高级字段失败：' + error.message)
+      ElMessage.error('添加高级字段失败：' + (error as Error).message)
     }
   } else {
     ElMessage.warning('请先选择一个实体')
@@ -1864,39 +1865,41 @@ const handleFieldConfigured = (fieldDefinition) => {
 
 const createAbstractEntity = () => {
   try {
-    const abstractEntity = {
+    const abstractEntity: Omit<EntityDefinition, "id"> & { id?: string } = {
+      id: `entity_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       name: 'BaseEntity',
       tableName: '',
       displayName: '抽象基类',
       description: '实体基类，包含公共字段',
       category: 'core',
+      module: 'Generated',
       fields: [
         { name: 'Id', displayName: 'ID', type: 'Guid', isRequired: true, isPrimaryKey: true },
-        { name: 'CreationTime', displayName: '创建时间', type: 'DateTime', isRequired: true },
-        { name: 'CreatorId', displayName: '创建人ID', type: 'Guid?', isRequired: false }
+        { name: 'CreationTime', displayName: '创建时间', type: 'DateTime', isRequired: true, isPrimaryKey: false },
+        { name: 'CreatorId', displayName: '创建人ID', type: 'Guid?', isRequired: false, isPrimaryKey: false }
       ],
       validationRules: [],
       enableSoftDelete: false,
       enableAudit: true,
       enableMultiTenant: false,
       isCompleted: true,
-      isAbstract: true
+      // isAbstract: true  // 移除不存在的属性
     }
 
     store.addEntity(abstractEntity)
     ElMessage.success('抽象实体创建成功')
   } catch (error) {
-    ElMessage.error('创建抽象实体失败：' + error.message)
+    ElMessage.error('创建抽象实体失败：' + (error as Error).message)
   }
 }
 
-const handleDictionarySelected = (dictionary) => {
+const handleDictionarySelected = (dictionary: any) => {
   // 处理数据字典选择事件，可以将字典应用为字段的枚举类型
   console.log('Dictionary selected:', dictionary)
   ElMessage.info(`已选择数据字典"${dictionary.name}"`)
 }
 
-const handleDictionaryUpdated = (dictionary) => {
+const handleDictionaryUpdated = (dictionary: any) => {
   // 处理数据字典更新事件
   ElMessage.success(`数据字典"${dictionary.name}"更新成功`)
 }

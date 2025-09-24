@@ -554,6 +554,7 @@ const confirmAddEntity = async () => {
       tableName: newEntityForm.value.tableName,
       description: newEntityForm.value.description,
       category: newEntityForm.value.category,
+      module: 'Generated', // 添加模块属性
       fields: [
         {
           name: 'Id',

@@ -1776,7 +1776,7 @@ const handleTemplateSelected = (template: any) => {
 const handlePreviewUpdated = (preview: any) => {
   // 将智能生成的预览集成到现有预览系统
   if (preview && preview.files) {
-    preview.files.forEach(file => {
+    preview.files.forEach((file: any) => {
       const existingIndex = previewFiles.value.findIndex(f => f.path === file.path)
       if (existingIndex > -1) {
         // 更新现有文件

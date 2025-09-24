@@ -128,7 +128,7 @@
             }"
             :style="getComponentStyle(component)"
             @click="selectComponent(component)"
-              @mouseenter="() => { hoverComponent = component }"
+            @mouseenter="() => { hoverComponent = component }"
             @mouseleave="hoverComponent = null"
           >
             <!-- 组件内容 -->
@@ -334,7 +334,7 @@ interface CanvasComponent {
 const canvasMode = ref('design')
 const previewDevice = ref('desktop')
 const selectedComponent = ref<CanvasComponent | null>(null)
-const hoverComponent = ref(null)
+const hoverComponent = ref<CanvasComponent | null>(null)
 const zoomLevel = ref(1)
 const activeCodeTab = ref('template')
 
@@ -370,9 +370,22 @@ const generatedScript = computed(() => {
   return generateVueScript()
 })
 
-// const generatedStyle = computed(() => {
-//   return generateVueStyle()
-// })
+const generatedStyle = computed(() => {
+  // 生成组件样式代码
+  const styles: string[] = []
+  
+  components.value.forEach(component => {
+    if (component.style && Object.keys(component.style).length > 0) {
+      const selector = `.canvas-component[data-id="${component.id}"]`
+      const cssRules = Object.entries(component.style)
+        .map(([key, value]) => `  ${key.replace(/([A-Z])/g, '-$1').toLowerCase()}: ${value};`)
+        .join('\n')
+      styles.push(`${selector} {\n${cssRules}\n}`)
+    }
+  })
+  
+  return `<style scoped>\n${styles.join('\n\n')}\n</style>`
+})
 
 // 方法
 const setCanvasMode = (mode: string) => {

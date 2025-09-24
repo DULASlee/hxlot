@@ -22,12 +22,13 @@ router.beforeEach(async (to, _from, next) => {
   const requiresAuth = to.matched.some((r) => r.meta?.requiresAuth)
   if (!requiresAuth) return next()
 
-  const valid = await authService.validateToken()
-  if (!valid) return next({ name: "Login", query: { redirect: to.fullPath } })
+  const authStore = useAuthStore()
+  const isValid = authStore.isAuthenticated
+  if (!isValid) return next({ name: "Login", query: { redirect: to.fullPath } })
 
   // role-based sample
   const requiredRoles = (to.meta?.requiredRoles as string[] | undefined) || []
-  if (requiredRoles.length > 0 && !requiredRoles.some((r) => authService.hasRole(r))) {
+  if (requiredRoles.length > 0 && !requiredRoles.some((r) => authStore.hasRole(r))) {
     return next({ name: "Dashboard" })
   }
   next()
