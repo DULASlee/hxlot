@@ -369,7 +369,7 @@ const routes = [
     // LowCode Studio 低代码工作室完整路由定义
     {
         path: "/lowcode",
-        component: SmartAbpLayout,
+        component: () => import("@/views/lowcode/LowCodeStudioView.enhanced.vue"),
         name: "LowCodeStudio",
         meta: {
             title: "低代码工作室",
@@ -380,9 +380,7 @@ const routes = [
         children: [
             {
                 path: "",
-                name: "LowCodeStudioHome",
-                component: LowCodeStudioView,
-                meta: { title: "低代码工作室", menuKey: "lowcode-studio-home" },
+                redirect: "/lowcode/entity-modeling"
             },
             {
                 path: "design",
