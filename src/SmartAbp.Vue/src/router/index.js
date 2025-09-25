@@ -386,7 +386,7 @@ const routes = [
             },
             {
                 path: "design",
-                name: "LowCodeDesign", 
+                name: "LowCodeDesign",
                 component: () => import("@/views/lowcode/DesignView.vue"),
                 meta: { title: "可视化设计", menuKey: "lowcode-design" },
             },

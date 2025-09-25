@@ -14,7 +14,7 @@
 </head>
 <body>
   <h1>🚀 SmartAbp 低代码引擎 - 最小可运行版本测试</h1>
-  
+
   <div class="test-section success">
     <h2>✅ 基础Vue3渲染测试</h2>
     <div id="vue-basic-test">
@@ -42,50 +42,50 @@
 
   <script type="module">
     import { createApp, ref } from '/node_modules/vue/dist/vue.esm-browser.js'
-    
+
     // 基础Vue3测试
     const basicApp = createApp({
       setup() {
         const message = ref('Vue3基础渲染正常! ✅')
         const count = ref(0)
-        
+
         const increment = () => {
           count.value++
         }
-        
+
         return { message, count, increment }
       }
     })
-    
+
     basicApp.mount('#vue-basic-test')
-    
+
     // 记录测试结果
     console.log('🧪 最小可运行版本测试启动')
     console.log('✅ Vue3基础功能: 正常')
-    
+
     // 尝试加载低代码核心模块（如果可用）
     try {
       // 这里将测试我们的@smartabp别名是否工作
       console.log('🔍 尝试加载低代码核心模块...')
-      
+
       // 模拟Store状态检查
       const testLowcodeStores = () => {
         const entityStoreStatus = '✅ 可用'
-        const pageStoreStatus = '✅ 可用' 
+        const pageStoreStatus = '✅ 可用'
         const codegenStoreStatus = '✅ 可用'
-        
+
         return { entityStoreStatus, pageStoreStatus, codegenStoreStatus }
       }
-      
+
       const lowcodeApp = createApp({
         setup() {
           return testLowcodeStores()
         }
       })
-      
+
       lowcodeApp.mount('#lowcode-test')
       console.log('✅ 低代码核心模块: 基础功能正常')
-      
+
     } catch (error) {
       console.error('❌ 低代码模块加载失败:', error)
       document.getElementById('lowcode-test').innerHTML = '<p style="color: red;">❌ 模块加载失败: ' + error.message + '</p>'

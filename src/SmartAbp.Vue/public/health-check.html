@@ -16,13 +16,13 @@
 <body>
     <div class="container">
         <h1>🚀 SmartAbp 系统健康检查</h1>
-        
+
         <div class="status success">
             <h3>✅ 前端开发服务器运行正常</h3>
             <p>端口: 11369</p>
             <p>状态: 在线</p>
         </div>
-        
+
         <div class="status info">
             <h3>🔍 路由系统测试</h3>
             <p>根路径: <a href="/">/ (应重定向到 /dashboard)</a></p>
@@ -30,7 +30,7 @@
             <p>低代码工作室: <a href="/lowcode">/lowcode</a></p>
             <p>Studio重定向: <a href="/studio">/studio (应重定向到 /lowcode)</a></p>
         </div>
-        
+
         <div class="status info">
             <h3>🧩 低代码引擎子路由</h3>
             <p>设计视图: <a href="/lowcode/design">/lowcode/design</a></p>
@@ -39,18 +39,18 @@
             <p>主题定制: <a href="/lowcode/theme">/lowcode/theme</a></p>
             <p>工作流: <a href="/lowcode/workflows">/lowcode/workflows</a></p>
         </div>
-        
+
         <div class="timestamp">
             生成时间: <span id="timestamp"></span>
         </div>
     </div>
-    
+
     <script>
         document.getElementById('timestamp').textContent = new Date().toLocaleString('zh-CN');
-        
+
         // 自动测试路由可达性
         console.log('🔍 开始路由可达性测试...');
-        
+
         async function testRoute(path) {
             try {
                 const response = await fetch(path, { method: 'HEAD' });
@@ -61,7 +61,7 @@
                 return -1;
             }
         }
-        
+
         // 测试核心路由
         Promise.all([
             testRoute('/'),
