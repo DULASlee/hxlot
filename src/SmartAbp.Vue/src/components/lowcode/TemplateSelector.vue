@@ -15,19 +15,32 @@
             @input="handleSearch"
           >
             <template #prefix>
-              <i class="el-icon-search"></i>
+              <i class="el-icon-search" />
             </template>
           </el-input>
         </div>
 
         <!-- 分类筛选 -->
         <div class="template-categories">
-          <el-radio-group v-model="selectedCategory" @change="handleCategoryChange">
-            <el-radio-button label="all">全部</el-radio-button>
-            <el-radio-button label="admin">管理后台</el-radio-button>
-            <el-radio-button label="business">业务应用</el-radio-button>
-            <el-radio-button label="mobile">移动端</el-radio-button>
-            <el-radio-button label="component">组件</el-radio-button>
+          <el-radio-group
+            v-model="selectedCategory"
+            @change="handleCategoryChange"
+          >
+            <el-radio-button label="all">
+              全部
+            </el-radio-button>
+            <el-radio-button label="admin">
+              管理后台
+            </el-radio-button>
+            <el-radio-button label="business">
+              业务应用
+            </el-radio-button>
+            <el-radio-button label="mobile">
+              移动端
+            </el-radio-button>
+            <el-radio-button label="component">
+              组件
+            </el-radio-button>
           </el-radio-group>
         </div>
 
@@ -41,7 +54,10 @@
             @click="selectTemplate(template)"
           >
             <div class="template-preview">
-              <img :src="template.preview" :alt="template.name" />
+              <img
+                :src="template.preview"
+                :alt="template.name"
+              />
               <div class="template-overlay">
                 <el-button
                   type="primary"
@@ -53,14 +69,21 @@
               </div>
             </div>
             <div class="template-info">
-              <h4 class="template-title">{{ template.name }}</h4>
-              <p class="template-description">{{ template.description }}</p>
+              <h4 class="template-title">
+                {{ template.name }}
+              </h4>
+              <p class="template-description">
+                {{ template.description }}
+              </p>
               <div class="template-meta">
-                <el-tag :type="getCategoryType(template.category)" size="mini">
+                <el-tag
+                  :type="getCategoryType(template.category)"
+                  size="mini"
+                >
                   {{ getCategoryName(template.category) }}
                 </el-tag>
                 <span class="template-downloads">
-                  <i class="el-icon-download"></i>
+                  <i class="el-icon-download" />
                   {{ template.downloads }}
                 </span>
               </div>
@@ -69,9 +92,17 @@
         </div>
 
         <!-- 空状态 -->
-        <div v-if="filteredTemplates.length === 0" class="empty-state">
+        <div
+          v-if="filteredTemplates.length === 0"
+          class="empty-state"
+        >
           <el-empty description="没有找到匹配的模板">
-            <el-button type="primary" @click="resetSearch">清空搜索</el-button>
+            <el-button
+              type="primary"
+              @click="resetSearch"
+            >
+              清空搜索
+            </el-button>
           </el-empty>
         </div>
       </div>

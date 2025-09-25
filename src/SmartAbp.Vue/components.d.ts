@@ -16,8 +16,6 @@ declare module 'vue' {
     DashboardView: typeof import('./src/components/common/DashboardView.vue')['default']
     DataDictionaryManager: typeof import('./src/components/lowcode/DataDictionaryManager.vue')['default']
     ElBadge: typeof import('element-plus/es')['ElBadge']
-    ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
-    ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElButtonGroup: typeof import('element-plus/es')['ElButtonGroup']
     ElCard: typeof import('element-plus/es')['ElCard']

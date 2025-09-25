@@ -1,30 +1,59 @@
 <template>
   <div class="enterprise-project-wizard">
-    <el-card shadow="never" class="wizard-card">
+    <el-card
+      shadow="never"
+      class="wizard-card"
+    >
       <template #header>
         <div class="wizard-header">
           <div class="header-left">
-            <i class="el-icon-magic-stick wizard-icon"></i>
+            <i class="el-icon-magic-stick wizard-icon" />
             <span class="wizard-title">智能项目向导</span>
           </div>
           <div class="header-right">
-            <el-tag type="success" size="small">企业级</el-tag>
+            <el-tag
+              type="success"
+              size="small"
+            >
+              企业级
+            </el-tag>
           </div>
         </div>
       </template>
 
       <div class="wizard-content">
-        <el-steps :active="currentStep" align-center class="wizard-steps">
-          <el-step title="项目类型" description="选择项目模板"></el-step>
-          <el-step title="基础配置" description="配置项目信息"></el-step>
-          <el-step title="功能模块" description="选择功能模块"></el-step>
-          <el-step title="完成创建" description="生成项目结构"></el-step>
+        <el-steps
+          :active="currentStep"
+          align-center
+          class="wizard-steps"
+        >
+          <el-step
+            title="项目类型"
+            description="选择项目模板"
+          />
+          <el-step
+            title="基础配置"
+            description="配置项目信息"
+          />
+          <el-step
+            title="功能模块"
+            description="选择功能模块"
+          />
+          <el-step
+            title="完成创建"
+            description="生成项目结构"
+          />
         </el-steps>
 
         <div class="step-content">
           <!-- 步骤1：项目类型选择 -->
-          <div v-if="currentStep === 0" class="step-panel">
-            <h3 class="step-title">选择项目类型</h3>
+          <div
+            v-if="currentStep === 0"
+            class="step-panel"
+          >
+            <h3 class="step-title">
+              选择项目类型
+            </h3>
             <div class="project-templates">
               <div
                 v-for="template in projectTemplates"
@@ -34,7 +63,7 @@
                 @click="selectTemplate(template)"
               >
                 <div class="template-icon">
-                  <i :class="template.icon"></i>
+                  <i :class="template.icon" />
                 </div>
                 <div class="template-info">
                   <h4>{{ template.name }}</h4>
@@ -55,30 +84,57 @@
           </div>
 
           <!-- 步骤2：基础配置 -->
-          <div v-if="currentStep === 1" class="step-panel">
-            <h3 class="step-title">项目基础配置</h3>
-            <el-form :model="projectConfig" label-width="120px" class="config-form">
+          <div
+            v-if="currentStep === 1"
+            class="step-panel"
+          >
+            <h3 class="step-title">
+              项目基础配置
+            </h3>
+            <el-form
+              :model="projectConfig"
+              label-width="120px"
+              class="config-form"
+            >
               <el-row :gutter="20">
                 <el-col :span="12">
-                  <el-form-item label="项目名称" required>
-                    <el-input v-model="projectConfig.name" placeholder="输入项目名称" />
+                  <el-form-item
+                    label="项目名称"
+                    required
+                  >
+                    <el-input
+                      v-model="projectConfig.name"
+                      placeholder="输入项目名称"
+                    />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="项目标识" required>
-                    <el-input v-model="projectConfig.key" placeholder="project-key" />
+                  <el-form-item
+                    label="项目标识"
+                    required
+                  >
+                    <el-input
+                      v-model="projectConfig.key"
+                      placeholder="project-key"
+                    />
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item label="命名空间">
-                    <el-input v-model="projectConfig.namespace" placeholder="YourCompany.ProjectName" />
+                    <el-input
+                      v-model="projectConfig.namespace"
+                      placeholder="YourCompany.ProjectName"
+                    />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="版本号">
-                    <el-input v-model="projectConfig.version" placeholder="1.0.0" />
+                    <el-input
+                      v-model="projectConfig.version"
+                      placeholder="1.0.0"
+                    />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -94,8 +150,13 @@
           </div>
 
           <!-- 步骤3：功能模块 -->
-          <div v-if="currentStep === 2" class="step-panel">
-            <h3 class="step-title">选择功能模块</h3>
+          <div
+            v-if="currentStep === 2"
+            class="step-panel"
+          >
+            <h3 class="step-title">
+              选择功能模块
+            </h3>
             <div class="modules-grid">
               <div
                 v-for="module in availableModules"
@@ -105,7 +166,10 @@
                 @click="toggleModule(module.id)"
               >
                 <div class="module-header">
-                  <i :class="module.icon" class="module-icon"></i>
+                  <i
+                    :class="module.icon"
+                    class="module-icon"
+                  />
                   <el-checkbox
                     :model-value="selectedModules.includes(module.id)"
                     @change="toggleModule(module.id)"
@@ -114,7 +178,10 @@
                 <h4>{{ module.name }}</h4>
                 <p>{{ module.description }}</p>
                 <div class="module-complexity">
-                  <el-tag :type="getComplexityType(module.complexity)" size="mini">
+                  <el-tag
+                    :type="getComplexityType(module.complexity)"
+                    size="mini"
+                  >
                     {{ module.complexity }}
                   </el-tag>
                 </div>
@@ -123,11 +190,16 @@
           </div>
 
           <!-- 步骤4：完成创建 -->
-          <div v-if="currentStep === 3" class="step-panel">
-            <h3 class="step-title">项目创建完成</h3>
+          <div
+            v-if="currentStep === 3"
+            class="step-panel"
+          >
+            <h3 class="step-title">
+              项目创建完成
+            </h3>
             <div class="completion-panel">
               <div class="success-icon">
-                <i class="el-icon-success"></i>
+                <i class="el-icon-success" />
               </div>
               <h2>恭喜！项目创建成功</h2>
               <div class="project-summary">
@@ -155,12 +227,17 @@
         </div>
 
         <div class="wizard-actions">
-          <el-button v-if="currentStep > 0" @click="prevStep">上一步</el-button>
+          <el-button
+            v-if="currentStep > 0"
+            @click="prevStep"
+          >
+            上一步
+          </el-button>
           <el-button
             v-if="currentStep < 3"
             type="primary"
-            @click="nextStep"
             :disabled="!canProceed"
+            @click="nextStep"
           >
             下一步
           </el-button>

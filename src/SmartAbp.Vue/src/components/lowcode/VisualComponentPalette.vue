@@ -9,7 +9,7 @@
         <!-- 基础组件 -->
         <div class="component-category">
           <h4 class="category-title">
-            <i class="el-icon-collection"></i>
+            <i class="el-icon-collection" />
             基础组件
           </h4>
           <div class="components-grid">
@@ -21,7 +21,7 @@
               @dragstart="handleDragStart($event, component)"
             >
               <div class="component-icon">
-                <i :class="component.icon"></i>
+                <i :class="component.icon" />
               </div>
               <span class="component-name">{{ component.name }}</span>
             </div>
@@ -31,7 +31,7 @@
         <!-- 表单组件 -->
         <div class="component-category">
           <h4 class="category-title">
-            <i class="el-icon-edit-outline"></i>
+            <i class="el-icon-edit-outline" />
             表单组件
           </h4>
           <div class="components-grid">
@@ -43,7 +43,7 @@
               @dragstart="handleDragStart($event, component)"
             >
               <div class="component-icon">
-                <i :class="component.icon"></i>
+                <i :class="component.icon" />
               </div>
               <span class="component-name">{{ component.name }}</span>
             </div>
@@ -53,7 +53,7 @@
         <!-- 数据展示 -->
         <div class="component-category">
           <h4 class="category-title">
-            <i class="el-icon-data-analysis"></i>
+            <i class="el-icon-data-analysis" />
             数据展示
           </h4>
           <div class="components-grid">
@@ -65,7 +65,7 @@
               @dragstart="handleDragStart($event, component)"
             >
               <div class="component-icon">
-                <i :class="component.icon"></i>
+                <i :class="component.icon" />
               </div>
               <span class="component-name">{{ component.name }}</span>
             </div>
