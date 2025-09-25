@@ -159,8 +159,6 @@
 import { ref, onMounted, nextTick, computed } from "vue"
 import { logger } from "../../../../../src/utils/logging"
 // 注释掉缺失的模块导入
-// import { LowCodeKernel } from '../../../../lowcode-core/src'
-// import { Vue3Plugin } from '../../../../lowcode-codegen/src'
 
 // 组件日志器
 const componentLogger = logger.child({ component: "LowCodeEngineView" })

@@ -4,7 +4,6 @@
 
 import { ref, computed, onUnmounted } from "vue"
 import { ElMessage } from "element-plus"
-// import type { ModuleMetadata } from "../types/wizard" // Removed unused import
 
 /**
  * Conflict resolution strategies

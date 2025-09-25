@@ -483,12 +483,7 @@
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue"
 import { ElMessage } from "element-plus"
 // 注释掉缺失的模块导入
-// import { EnterpriseDesigner, createEnterpriseDesigner } from '../core/EnterpriseDesigner'
-// import type { CanvasComponent, CanvasViewport } from '../core/AdvancedCanvas'
 // 🚨 协作和AI相关类型导入已移除 - 遵循低代码引擎开发铁律
-// import type { CollaborationUser } from '../core/RealTimeCollaboration'
-// import type { AIDesignSuggestion } from '../core/AIDesignAssistant'
-// import type { PerformanceMetrics } from '../core/PerformanceOptimizer'
 
 // 企业级设计器接口定义
 interface EnterpriseDesigner {

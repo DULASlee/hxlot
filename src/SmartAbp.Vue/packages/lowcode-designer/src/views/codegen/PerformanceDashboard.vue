@@ -447,7 +447,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from "vue"
-import { createComponentLogger } from "@/utils/logging"
+import logging from '@smartabp/lowcode-tools'
 // 运行时内容缓存与日志改为可选注入，避免构建期硬依赖
 const globalContentCache: any = (globalThis as any).__lowcodeRuntime?.contentCache || {
   getStats: () => ({

@@ -364,7 +364,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue"
-import { logger } from "@/utils/logging"
+import logging from '@smartabp/lowcode-tools'
 import { useFullscreen } from "@/composables/useFullscreen"
 
 // 组件日志器

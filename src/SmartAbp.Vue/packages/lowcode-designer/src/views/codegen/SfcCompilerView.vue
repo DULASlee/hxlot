@@ -276,7 +276,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
-import { logger } from "@/utils/logging"
+import logging from '@smartabp/lowcode-tools'
 
 // 组件日志器
 const componentLogger = logger.child({ component: "SfcCompilerView" })
