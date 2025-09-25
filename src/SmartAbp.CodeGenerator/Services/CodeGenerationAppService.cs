@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SmartAbp.CodeGenerator.Core;
+using SmartAbp.CodeGenerator.Core.Validation;
 using SmartAbp.CodeGenerator.Events;
 using SmartAbp.CodeGenerator.Services.V9;
 using Volo.Abp;
@@ -42,6 +43,7 @@ namespace SmartAbp.CodeGenerator.Services
         private readonly FrontendIntegrationService _frontendIntegrationService;
         private readonly SchemaVersioningService _schemaVersioningService;
         private readonly ILocalEventBus _eventBus; // 🔥 ABP事件总线 - 实现解耦架构
+        private readonly EnhancedModelProcessor _enhancedModelProcessor; // 🔥 增强模型处理器 - 集成类型映射和循环引用检测
 
         public CodeGenerationAppService(
             CodeWriterService codeWriterService,
@@ -53,7 +55,8 @@ namespace SmartAbp.CodeGenerator.Services
             DefaultUIConfigGenerator defaultUiConfigGenerator,
             FrontendIntegrationService frontendIntegrationService,
             SchemaVersioningService schemaVersioningService,
-            ILocalEventBus eventBus) // 🔥 注入ABP事件总线
+            ILocalEventBus eventBus, // 🔥 注入ABP事件总线
+            EnhancedModelProcessor enhancedModelProcessor) // 🔥 注入增强模型处理器
         {
             _codeWriterService = codeWriterService;
             _solutionIntegrationService = solutionIntegrationService;
@@ -65,6 +68,7 @@ namespace SmartAbp.CodeGenerator.Services
             _frontendIntegrationService = frontendIntegrationService;
             _schemaVersioningService = schemaVersioningService;
             _eventBus = eventBus; // 🔥 ABP事件总线设置
+            _enhancedModelProcessor = enhancedModelProcessor; // 🔥 增强模型处理器设置
         }
 
         /// <summary>
@@ -115,6 +119,29 @@ namespace SmartAbp.CodeGenerator.Services
             Check.NotNull(input, nameof(input));
             Check.NotNull(input.Entities, nameof(input.Entities));
 
+            _logger.LogInformation("🔍 开始增强模型处理 - 类型映射和循环引用检测");
+
+            // 🔥 增强模型处理：集成类型映射和循环引用检测
+            var modelProcessingResult = await _enhancedModelProcessor.ProcessModuleMetadataAsync(input);
+            
+            if (!modelProcessingResult.IsSuccess)
+            {
+                var errorDetails = modelProcessingResult.GetMessagesForLevel(MessageLevel.Error);
+                _logger.LogError("❌ 模型处理失败:\n{ErrorDetails}", errorDetails);
+                throw new AbpException($"模块元数据处理失败:\n{errorDetails}");
+            }
+
+            if (modelProcessingResult.WarningCount > 0)
+            {
+                var warningDetails = modelProcessingResult.GetMessagesForLevel(MessageLevel.Warning);
+                _logger.LogWarning("⚠️ 模型处理警告:\n{WarningDetails}", warningDetails);
+            }
+
+            _logger.LogInformation("✅ 增强模型处理完成: {Summary}", modelProcessingResult.ProcessingSummary);
+
+            // 使用处理后的元数据进行代码生成
+            var processedInput = modelProcessingResult.ProcessedMetadata;
+
             var generatedFiles = new List<string>();
             var solutionRoot = FindSolutionRoot();
             if (solutionRoot == null)
@@ -123,32 +150,35 @@ namespace SmartAbp.CodeGenerator.Services
             }
 
             // Generate default UI configuration based on metadata before any codegen
-            _defaultUiConfigGenerator.ApplyDefaults(input);
+            _defaultUiConfigGenerator.ApplyDefaults(processedInput);
 
-            await GenerateBackendForModuleAsync(input, solutionRoot, generatedFiles);
+            await GenerateBackendForModuleAsync(processedInput, solutionRoot, generatedFiles);
 
             // Wait for all files to be written before proceeding
             await Task.Delay(500); // A small delay to ensure file system is updated
 
-            await IntegrateModuleIntoSolutionAsync(input, solutionRoot);
+            await IntegrateModuleIntoSolutionAsync(processedInput, solutionRoot);
 
             // Wait for solution/project files to be updated
             await Task.Delay(500);
 
-            await OrchestrateDatabaseMigrationAsync(input, solutionRoot);
+            await OrchestrateDatabaseMigrationAsync(processedInput, solutionRoot);
 
-            await GenerateFrontendAsync(input, solutionRoot, generatedFiles);
+            await GenerateFrontendAsync(processedInput, solutionRoot, generatedFiles);
 
             // Integrate routes/menus into frontend project
-            await _frontendIntegrationService.IntegrateAsync(input, solutionRoot);
+            await _frontendIntegrationService.IntegrateAsync(processedInput, solutionRoot);
 
             // await GenerateTestProjectsAsync(testInput, solutionRoot);
 
             return new GeneratedModuleDto
             {
-                ModuleName = input.Name,
+                ModuleName = processedInput.Name,
                 GeneratedFiles = generatedFiles,
-                GenerationReport = "Module generation completed successfully."
+                GenerationReport = $"✅ Module {processedInput.Name} generated successfully with enhanced processing.\n" +
+                                   $"📊 Processing results: {modelProcessingResult.ErrorCount} errors, {modelProcessingResult.WarningCount} warnings.\n" +
+                                   $"📁 Total files generated: {generatedFiles.Count}\n" +
+                                   $"🔍 Enhanced features: Complete type mapping + Circular reference detection"
             };
         }
 

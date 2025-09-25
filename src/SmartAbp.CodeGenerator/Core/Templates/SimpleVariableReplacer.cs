@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using SmartAbp.CodeGenerator.Dto;
+using SmartAbp.CodeGenerator.Core.Types;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -13,10 +14,14 @@ namespace SmartAbp.CodeGenerator.Core.Templates;
 public class SimpleVariableReplacer
 {
     private readonly ILogger<SimpleVariableReplacer> _logger;
+    private readonly CompleteTypeMapper _typeMapper;
 
-    public SimpleVariableReplacer(ILogger<SimpleVariableReplacer> logger)
+    public SimpleVariableReplacer(
+        ILogger<SimpleVariableReplacer> logger,
+        CompleteTypeMapper typeMapper)
     {
         _logger = logger;
+        _typeMapper = typeMapper;
     }
 
     /// <summary>
@@ -377,44 +382,48 @@ public class SimpleVariableReplacer
     }
 
     /// <summary>
-    /// 获取 C# 类型
+    /// 获取 C# 类型 - 使用完整的类型映射器
     /// </summary>
     private string GetCSharpType(string? inputType)
     {
-        if (string.IsNullOrEmpty(inputType))
-            return "string";
-
-        // 使用之前实现的类型映射逻辑（将在下一步实现完整的类型映射）
-        return inputType.ToLowerInvariant() switch
+        try
         {
-            "string" => "string",
-            "int" => "int",
-            "long" => "long",
-            "decimal" => "decimal",
-            "double" => "double", 
-            "float" => "float",
-            "bool" => "bool",
-            "datetime" => "DateTime",
-            "guid" => "Guid",
-            "string?" => "string?",
-            "int?" => "int?",
-            "bool?" => "bool?",
-            "datetime?" => "DateTime?",
-            "guid?" => "Guid?",
-            _ => inputType // 返回原始值，在类型映射器中会进一步处理
-        };
+            var mappingResult = _typeMapper.GetCSharpTypeMapping(inputType);
+            
+            if (mappingResult.HasWarning)
+            {
+                _logger.LogWarning("类型映射警告: {Warning}", mappingResult.WarningMessage);
+            }
+            
+            if (!mappingResult.IsSuccess)
+            {
+                _logger.LogError("类型映射失败: {Error}", mappingResult.ErrorMessage);
+            }
+            
+            return mappingResult.TypeInfo.CSharpType;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "获取C#类型映射时发生异常: {InputType}", inputType);
+            return "string"; // 兜底返回string类型
+        }
     }
 
     /// <summary>
-    /// 判断是否为值类型
+    /// 判断是否为值类型 - 使用完整的类型映射器
     /// </summary>
     private bool IsValueType(string? type)
     {
-        if (string.IsNullOrEmpty(type))
+        try
+        {
+            var mappingResult = _typeMapper.GetCSharpTypeMapping(type);
+            return mappingResult.IsSuccess && mappingResult.TypeInfo.IsValueType;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "判断值类型时发生异常: {Type}", type);
             return false;
-
-        var valueTypes = new[] { "int", "long", "decimal", "double", "float", "bool", "datetime", "guid", "byte", "short" };
-        return valueTypes.Contains(type.ToLowerInvariant());
+        }
     }
 
     /// <summary>

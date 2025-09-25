@@ -7,6 +7,8 @@ using SmartAbp.CodeGenerator.Aspire;
 using SmartAbp.CodeGenerator.Caching;
 using SmartAbp.CodeGenerator.Core;
 using SmartAbp.CodeGenerator.Core.Templates;
+using SmartAbp.CodeGenerator.Core.Types;
+using SmartAbp.CodeGenerator.Core.Validation;
 using SmartAbp.CodeGenerator.CQRS;
 using SmartAbp.CodeGenerator.DDD;
 using SmartAbp.CodeGenerator.Hubs;
@@ -55,6 +57,15 @@ namespace SmartAbp.CodeGenerator
             services.AddScoped<ReliableTemplatePathResolver>();
             services.AddScoped<SimpleVariableReplacer>();
             services.AddScoped<PragmaticTemplateService>();
+            
+            // 🔥 完整类型映射系统 - 支持现代C#所有类型
+            services.AddScoped<CompleteTypeMapper>();
+            
+            // 🔥 循环引用检测系统 - 防止复杂模型生成器崩溃
+            services.AddScoped<SimpleCircularReferenceDetector>();
+            
+            // 🔥 增强模型处理器 - 集成类型映射和循环引用检测
+            services.AddScoped<EnhancedModelProcessor>();
             
             // Application service
             services.AddScoped<CodeGenerationAppService>();
