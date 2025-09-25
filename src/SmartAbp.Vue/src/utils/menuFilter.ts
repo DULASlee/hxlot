@@ -1,4 +1,4 @@
- 
+
 /**
  * 菜单权限过滤工具
  * 基于现有 AuthService 实现菜单权限检查和过滤
@@ -53,7 +53,18 @@ export class MenuPermissionFilter {
     }
 
     // 检查用户是否拥有所需角色中的任意一个
-    const userRoles = currentUser?.roles || []
+    let userRoles = currentUser?.roles || []
+
+    // 如果用户未认证，给予guest角色
+    if (!currentUser || (!currentUser.userName && userRoles.length === 0)) {
+      userRoles = ["guest"]
+    }
+
+    // 如果用户已认证但没有明确角色，给予user角色
+    if (currentUser?.userName && userRoles.length === 0) {
+      userRoles = ["user"]
+    }
+
     return menuItem.requiredRoles.some((role) => userRoles.includes(role))
   }
 

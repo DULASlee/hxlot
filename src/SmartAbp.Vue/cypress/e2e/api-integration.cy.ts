@@ -1,93 +1,239 @@
-/// <reference types="cypress" />
+          expect(response.status).to.eq(200)
+          expect(response.body.alerts.length).to.be.lessThan(101)
+          
+          // Response should be optimized for large datasets
+          expect(response.headers['content-encoding']).to.include('gzip')
+        })
+      })
+    })
+  })
 
-describe('SmartAbp API Integration Tests', () => {
-  const API_BASE_URL = Cypress.config('baseUrl') || 'https://localhost:44379';
-  let authToken: string | null = null;
+  describe('Security and Authentication', () => {
+    
+    describe('JWT Token Validation', () => {
+      it('should validate JWT token expiration', () => {
+        // Use expired token
+        const expiredToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.expired.token'
+        
+        cy.request({
+          method: 'GET',
+          url: `${API_BASE}/security/dashboard/metrics`,
+          headers: {
+            'Authorization': `Bearer ${expiredToken}`
+          },
+          failOnStatusCode: false
+        }).then((response) => {
+          expect(response.status).to.eq(401)
+          expect(response.body.error).to.eq('Token Expired')
+        })
+      })
 
-  beforeEach(() => {
-    // Enterprise login to get the token before each test
-    cy.request({
-      method: 'POST',
-      url: `${API_BASE_URL}/connect/token`,
-      form: true,
-      body: {
-        grant_type: 'password',
-        username: 'admin', // Standard test user
-        password: '1q2w3E*', // Standard test password
-        client_id: 'SmartAbp_App',
-        scope: 'SmartAbp',
-      },
-    }).then((response) => {
-      expect(response.status).to.eq(200);
-      expect(response.body).to.have.property('access_token');
-      authToken = response.body.access_token;
-    });
-  });
+      it('should validate token refresh mechanism', () => {
+        // Test token refresh
+        cy.request({
+          method: 'POST',
+          url: `${API_BASE}/auth/refresh-token`,
+          headers: {
+            'Authorization': 'Bearer ' + window.localStorage.getItem('access_token'),
+            'Refresh-Token': window.localStorage.getItem('refresh_token')
+          }
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(response.body).to.have.property('accessToken')
+          expect(response.body).to.have.property('refreshToken')
+          expect(response.body).to.have.property('expiresIn')
+        })
+      })
+    })
 
-  context('User Profile and Authentication API', () => {
-    it('should successfully fetch user profile with a valid token', () => {
-      expect(authToken).to.not.be.null;
+    describe('Rate Limiting', () => {
+      it('should enforce API rate limits', () => {
+        const requests = []
+        
+        // Make many requests rapidly
+        for (let i = 0; i < 100; i++) {
+          requests.push(
+            cy.request({
+              method: 'GET',
+              url: `${API_BASE}/security/dashboard/metrics`,
+              headers: {
+                'Authorization': 'Bearer ' + window.localStorage.getItem('access_token')
+              },
+              failOnStatusCode: false
+            })
+          )
+        }
+        
+        Cypress.Promise.all(requests).then((responses) => {
+          // Some requests should be rate limited
+          const rateLimitedResponses = responses.filter(r => r.status === 429)
+          expect(rateLimitedResponses.length).to.be.greaterThan(0)
+          
+          // Rate limited responses should have proper headers
+          rateLimitedResponses.forEach(response => {
+            expect(response.headers).to.have.property('x-ratelimit-limit')
+            expect(response.headers).to.have.property('x-ratelimit-remaining')
+            expect(response.headers).to.have.property('retry-after')
+          })
+        })
+      })
+    })
+  })
 
-      cy.request({
-        method: 'GET',
-        url: `${API_BASE_URL}/api/account/my-profile`,
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      }).then((response) => {
-        expect(response.status).to.eq(200);
-        expect(response.body).to.have.property('id');
-        expect(response.body).to.have.property('userName', 'admin');
-        expect(response.body).to.have.property('email');
-      });
-    });
+  describe('Cross-Service Integration', () => {
+    
+    describe('Elasticsearch Integration', () => {
+      it('should query audit logs from Elasticsearch', () => {
+        cy.request({
+          method: 'POST',
+          url: `${API_BASE}/audit/search`,
+          headers: {
+            'Authorization': 'Bearer ' + window.localStorage.getItem('access_token')
+          },
+          body: {
+            query: {
+              match: {
+                action: 'SECURITY_ALERT_ACKNOWLEDGED'
+              }
+            },
+            from: 0,
+            size: 10,
+            sort: [{ timestamp: { order: 'desc' } }]
+          }
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(response.body).to.have.property('hits')
+          expect(response.body.hits).to.have.property('total')
+          expect(response.body.hits).to.have.property('hits')
+          expect(response.body.hits.hits).to.be.an('array')
+        })
+      })
+    })
 
-    it('should fail to fetch user profile without a token', () => {
-      cy.request({
-        method: 'GET',
-        url: `${API_BASE_URL}/api/account/my-profile`,
-        failOnStatusCode: false, // Prevent Cypress from failing the test on 4xx/5xx
-      }).then((response) => {
-        // Expect a redirect to the login page for unauthorized access
-        expect(response.status).to.eq(302);
-      });
-    });
+    describe('External Service Integration', () => {
+      it('should integrate with external notification service', () => {
+        cy.request({
+          method: 'POST',
+          url: `${API_BASE}/notifications/send`,
+          headers: {
+            'Authorization': 'Bearer ' + window.localStorage.getItem('access_token')
+          },
+          body: {
+            type: 'security-alert',
+            recipients: ['admin@smartabp.com'],
+            priority: 'High',
+            data: {
+              alertId: 'alert-001',
+              alertType: 'HighRiskPermissionAccess'
+            }
+          }
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(response.body).to.have.property('notificationId')
+          expect(response.body).to.have.property('status', 'sent')
+          expect(response.body).to.have.property('deliveryTime')
+        })
+      })
+    })
+  })
 
-    it('should fail to fetch user profile with an invalid token', () => {
-      const invalidToken = 'this-is-an-invalid-token';
-      cy.request({
-        method: 'GET',
-        url: `${API_BASE_URL}/api/account/my-profile`,
-        headers: {
-          Authorization: `Bearer ${invalidToken}`,
-        },
-        failOnStatusCode: false,
-      }).then((response) => {
-        // ABP returns 302 for invalid tokens in this setup
-        expect(response.status).to.eq(302);
-      });
-    });
-  });
+  describe('Data Export and Reporting', () => {
+    
+    describe('Export API Functionality', () => {
+      it('should export dashboard data in multiple formats', () => {
+        const formats = ['pdf', 'excel', 'csv']
+        
+        formats.forEach(format => {
+          cy.request({
+            method: 'POST',
+            url: `${API_BASE}/security/dashboard/export`,
+            headers: {
+              'Authorization': 'Bearer ' + window.localStorage.getItem('access_token')
+            },
+            body: {
+              format: format,
+              dateRange: '7d',
+              sections: ['metrics', 'alerts', 'compliance', 'behaviors']
+            }
+          }).then((response) => {
+            expect(response.status).to.eq(200)
+            expect(response.body).to.have.property('exportId')
+            expect(response.body).to.have.property('downloadUrl')
+            expect(response.body).to.have.property('expiresAt')
+            expect(response.body).to.have.property('fileSize')
+          })
+        })
+      })
 
-  context('Application Configuration API', () => {
-    it('should fetch application configuration successfully', () => {
-      expect(authToken).to.not.be.null;
+      it('should generate compliance reports with proper validation', () => {
+        cy.request({
+          method: 'POST',
+          url: `${API_BASE}/reports/compliance/generate`,
+          headers: {
+            'Authorization': 'Bearer ' + window.localStorage.getItem('access_token')
+          },
+          body: {
+            reportType: 'GDPR_Compliance',
+            period: {
+              from: '2024-01-01',
+              to: '2024-01-31'
+            },
+            includeRecommendations: true,
+            format: 'pdf'
+          }
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(response.body).to.have.property('reportId')
+          expect(response.body).to.have.property('status', 'processing')
+          expect(response.body).to.have.property('estimatedCompletion')
+        })
+      })
+    })
+  })
 
-      cy.request({
-        method: 'GET',
-        url: `${API_BASE_URL}/api/abp/application-configuration`,
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      }).then((response) => {
-        expect(response.status).to.eq(200);
-        expect(response.body).to.have.property('auth');
-        expect(response.body).to.have.property('currentUser');
-        expect(response.body.currentUser).to.have.property('isAuthenticated', true);
-        expect(response.body.currentUser).to.have.property('userName', 'admin');
-      });
-    });
-  });
+  describe('Health Check and Monitoring', () => {
+    
+    describe('API Health Endpoints', () => {
+      it('should provide comprehensive health check', () => {
+        cy.request({
+          method: 'GET',
+          url: `${API_BASE}/health`,
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(response.body).to.have.property('status', 'healthy')
+          expect(response.body).to.have.property('timestamp')
+          expect(response.body).to.have.property('services')
+          
+          // Validate service health
+          const services = response.body.services
+          expect(services).to.have.property('database')
+          expect(services).to.have.property('elasticsearch')
+          expect(services).to.have.property('redis')
+          expect(services).to.have.property('notifications')
+          
+          Object.values(services).forEach(service => {
+            expect(service).to.have.property('status')
+            expect(service).to.have.property('responseTime')
+          })
+        })
+      })
 
-  // Add more tests for other critical APIs as needed
-});
+      it('should provide detailed readiness check', () => {
+        cy.request({
+          method: 'GET',
+          url: `${API_BASE}/health/ready`,
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(response.body).to.have.property('ready', true)
+          expect(response.body).to.have.property('checks')
+          
+          response.body.checks.forEach(check => {
+            expect(check).to.have.property('name')
+            expect(check).to.have.property('status', 'pass')
+            expect(check).to.have.property('time')
+          })
+        })
+      })
+    })
+  })
+})

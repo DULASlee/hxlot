@@ -18,7 +18,10 @@ import { useThemeStore } from "@/stores/lowcode/theme"
 
 const themeStore = useThemeStore()
 
-const primaryColor = computed(() => themeStore.themeVariables["--el-color-primary"])
+const primaryColor = computed(() => {
+  // 安全访问，防止 themeVariables 未初始化
+  return themeStore.themeVariables?.["--el-color-primary"] || "#409EFF"
+})
 
 const onColorChange = (event: Event) => {
   const target = event.target as HTMLInputElement

@@ -4,6 +4,20 @@ import "./styles/main.css" // 基础样式和工具类
 import "./plugins/dayjs"
 
 /**
+ * 全局Promise rejection处理器
+ * 防止未处理的Promise rejection导致控制台错误
+ */
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('Unhandled promise rejection:', event.reason)
+  // 记录错误但不阻止默认行为
+  if (typeof event.reason?.message === 'string') {
+    console.warn('Promise rejection details:', event.reason.message)
+  }
+  // 可以选择preventDefault()来阻止默认的错误报告
+  // event.preventDefault()
+})
+
+/**
  * 低代码运行时能力注入：
  * - getEnhancedLoggerFactory：提供结构化日志创建工厂
  * - logManager：提供性能跟踪 start/end

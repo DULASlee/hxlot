@@ -3,7 +3,10 @@
     <!-- 顶部工具栏：保持完整功能 -->
     <header class="studio-header">
       <div class="header-left">
-        <router-link to="/lowcode" class="studio-logo">
+        <router-link
+          to="/lowcode"
+          class="studio-logo"
+        >
           <el-icon><Platform /></el-icon>
           <span class="logo-text">LowCode Studio</span>
         </router-link>
@@ -30,24 +33,50 @@
       
       <div class="header-center">
         <nav class="main-nav">
-          <router-link to="/lowcode/entity-modeling" class="nav-item" :class="{ active: currentStep === 'modeling' }">
+          <router-link
+            to="/lowcode/entity-modeling"
+            class="nav-item"
+            :class="{ active: currentStep === 'modeling' }"
+          >
             <el-icon><DataBoard /></el-icon>
             <span>实体建模</span>
-            <el-badge :value="entityCount" :hidden="entityCount === 0" />
+            <el-badge
+              :value="entityCount"
+              :hidden="entityCount === 0"
+            />
           </router-link>
-          <router-link to="/lowcode/design" class="nav-item" :class="{ active: currentStep === 'design' }">
+          <router-link
+            to="/lowcode/design"
+            class="nav-item"
+            :class="{ active: currentStep === 'design' }"
+          >
             <el-icon><Brush /></el-icon>
             <span>页面设计</span>
-            <el-badge :value="pageCount" :hidden="pageCount === 0" />
+            <el-badge
+              :value="pageCount"
+              :hidden="pageCount === 0"
+            />
           </router-link>
-          <router-link to="/lowcode/theme" class="nav-item" :class="{ active: currentStep === 'theme' }">
+          <router-link
+            to="/lowcode/theme"
+            class="nav-item"
+            :class="{ active: currentStep === 'theme' }"
+          >
             <el-icon><PictureRounded /></el-icon>
             <span>主题定制</span>
           </router-link>
-          <router-link to="/lowcode/generation" class="nav-item" :class="{ active: currentStep === 'generate' }">
+          <router-link
+            to="/lowcode/generation"
+            class="nav-item"
+            :class="{ active: currentStep === 'generate' }"
+          >
             <el-icon><Cpu /></el-icon>
             <span>代码生成</span>
-            <el-badge :value="generatedFileCount" :hidden="generatedFileCount === 0" type="success" />
+            <el-badge
+              :value="generatedFileCount"
+              :hidden="generatedFileCount === 0"
+              type="success"
+            />
           </router-link>
         </nav>
       </div>
@@ -55,15 +84,21 @@
       <div class="header-right">
         <!-- 智能工作流进度 -->
         <div class="workflow-progress">
-          <el-tooltip content="开发进度" placement="bottom">
-            <div class="progress-indicator" @click="() => { initializeWorkflow() }">
+          <el-tooltip
+            content="开发进度"
+            placement="bottom"
+          >
+            <div
+              class="progress-indicator"
+              @click="() => { initializeWorkflow() }"
+            >
               <el-progress
                 type="circle"
                 :percentage="totalWorkflowProgress"
                 :width="32"
                 :stroke-width="3"
                 :show-text="false"
-                status="success"
+                :color="totalWorkflowProgress >= 100 ? '#67c23a' : '#409eff'"
               />
             </div>
           </el-tooltip>
@@ -75,16 +110,25 @@
           :content="nextStepSuggestion"
           placement="bottom"
         >
-          <el-button text @click="() => { initializeWorkflow() }">
+          <el-button
+            text
+            @click="() => { initializeWorkflow() }"
+          >
             <el-icon><InfoFilled /></el-icon>
           </el-button>
         </el-tooltip>
         
-        <el-button text @click="showHelp">
+        <el-button
+          text
+          @click="showHelp"
+        >
           <el-icon><QuestionFilled /></el-icon>
           帮助
         </el-button>
-        <el-button text @click="showSettings">
+        <el-button
+          text
+          @click="showSettings"
+        >
           <el-icon><Setting /></el-icon>
           设置
         </el-button>
@@ -116,19 +160,28 @@
       </div>
       
       <div class="footer-right">
-        <el-tooltip content="实体数量" placement="top">
+        <el-tooltip
+          content="实体数量"
+          placement="top"
+        >
           <span class="stat-item">
             <el-icon><DataBoard /></el-icon>
             {{ entityCount }}
           </span>
         </el-tooltip>
-        <el-tooltip content="页面数量" placement="top">
+        <el-tooltip
+          content="页面数量"
+          placement="top"
+        >
           <span class="stat-item">
             <el-icon><Document /></el-icon>
             {{ pageCount }}
           </span>
         </el-tooltip>
-        <el-tooltip content="生成文件数" placement="top">
+        <el-tooltip
+          content="生成文件数"
+          placement="top"
+        >
           <span class="stat-item">
             <el-icon><Files /></el-icon>
             {{ generatedFileCount }}
