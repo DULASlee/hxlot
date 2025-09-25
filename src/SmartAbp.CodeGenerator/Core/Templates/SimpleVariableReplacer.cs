@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using SmartAbp.CodeGenerator.Dto;
+using SmartAbp.CodeGenerator.Services.V9;
 using SmartAbp.CodeGenerator.Core.Types;
 using System.Reflection;
 using System.Text;
@@ -31,7 +31,7 @@ public class SimpleVariableReplacer
     /// <param name="metadata">模块元数据</param>
     /// <param name="entity">实体数据（可选）</param>
     /// <returns>替换后的内容</returns>
-    public string ReplaceVariables(string template, ModuleMetadataDto metadata, EntityModelDto? entity = null)
+    public string ReplaceVariables(string template, ModuleMetadataDto metadata, EnhancedEntityModelDto? entity = null)
     {
         if (string.IsNullOrEmpty(template))
         {
@@ -99,7 +99,7 @@ public class SimpleVariableReplacer
     /// <summary>
     /// 替换实体级变量
     /// </summary>
-    private string ReplaceEntityVariables(string template, EntityModelDto entity)
+    private string ReplaceEntityVariables(string template, EnhancedEntityModelDto entity)
     {
         var replacements = new Dictionary<string, string>
         {
@@ -122,7 +122,7 @@ public class SimpleVariableReplacer
     /// <summary>
     /// 替换属性相关变量
     /// </summary>
-    private string ReplacePropertyVariables(string template, List<PropertyModelDto> properties)
+    private string ReplacePropertyVariables(string template, List<EntityPropertyDto> properties)
     {
         var sb = new StringBuilder();
 
@@ -156,7 +156,7 @@ public class SimpleVariableReplacer
     /// <summary>
     /// 生成属性声明
     /// </summary>
-    private string GeneratePropertyDeclarations(List<PropertyModelDto> properties)
+    private string GeneratePropertyDeclarations(List<EntityPropertyDto> properties)
     {
         var declarations = properties.Select(p => 
         {
@@ -172,7 +172,7 @@ public class SimpleVariableReplacer
     /// <summary>
     /// 生成数据注解
     /// </summary>
-    private string GenerateDataAnnotations(PropertyModelDto property)
+    private string GenerateDataAnnotations(EntityPropertyDto property)
     {
         var annotations = new List<string>();
 
@@ -181,9 +181,10 @@ public class SimpleVariableReplacer
             annotations.Add("    [Required]");
         }
 
-        if (!string.IsNullOrEmpty(property.MaxLength) && int.TryParse(property.MaxLength, out var maxLength))
+        // 🔥 类型安全修复：正确处理int?类型（遵循BUG修复铁律）
+        if (property.MaxLength.HasValue && property.MaxLength.Value > 0)
         {
-            annotations.Add($"    [MaxLength({maxLength})]");
+            annotations.Add($"    [MaxLength({property.MaxLength.Value})]");
         }
 
         if (!string.IsNullOrEmpty(property.DisplayName))
@@ -204,7 +205,7 @@ public class SimpleVariableReplacer
     /// <summary>
     /// 生成构造函数参数
     /// </summary>
-    private string GenerateConstructorParameters(List<PropertyModelDto> properties)
+    private string GenerateConstructorParameters(List<EntityPropertyDto> properties)
     {
         var requiredProps = properties.Where(p => p.IsRequired && !IsKeyProperty(p)).ToList();
         
@@ -222,7 +223,7 @@ public class SimpleVariableReplacer
     /// <summary>
     /// 生成构造函数赋值
     /// </summary>
-    private string GenerateConstructorAssignments(List<PropertyModelDto> properties)
+    private string GenerateConstructorAssignments(List<EntityPropertyDto> properties)
     {
         var requiredProps = properties.Where(p => p.IsRequired && !IsKeyProperty(p)).ToList();
         
@@ -240,7 +241,7 @@ public class SimpleVariableReplacer
     /// <summary>
     /// 生成 DTO 属性
     /// </summary>
-    private string GenerateDtoProperties(List<PropertyModelDto> properties)
+    private string GenerateDtoProperties(List<EntityPropertyDto> properties)
     {
         var dtoProps = properties.Select(p => 
             $"    public {GetCSharpType(p.Type)} {p.Name} {{ get; set; }}");
@@ -251,7 +252,7 @@ public class SimpleVariableReplacer
     /// <summary>
     /// 生成创建 DTO 属性（排除 Id 和自动属性）
     /// </summary>
-    private string GenerateCreateDtoProperties(List<PropertyModelDto> properties)
+    private string GenerateCreateDtoProperties(List<EntityPropertyDto> properties)
     {
         var createProps = properties
             .Where(p => !IsKeyProperty(p) && !IsAuditProperty(p.Name))
@@ -267,7 +268,7 @@ public class SimpleVariableReplacer
     /// <summary>
     /// 生成更新 DTO 属性（排除 Id 和创建时间）
     /// </summary>
-    private string GenerateUpdateDtoProperties(List<PropertyModelDto> properties)
+    private string GenerateUpdateDtoProperties(List<EntityPropertyDto> properties)
     {
         var updateProps = properties
             .Where(p => !IsKeyProperty(p) && !IsCreationAuditProperty(p.Name))
@@ -375,7 +376,7 @@ public class SimpleVariableReplacer
     /// <summary>
     /// 获取主键属性
     /// </summary>
-    private PropertyModelDto? GetPrimaryKeyProperty(List<PropertyModelDto> properties)
+    private EntityPropertyDto? GetPrimaryKeyProperty(List<EntityPropertyDto> properties)
     {
         return properties?.FirstOrDefault(p => p.IsKey) ?? 
                properties?.FirstOrDefault(p => p.Name.Equals("Id", StringComparison.OrdinalIgnoreCase));
@@ -429,7 +430,7 @@ public class SimpleVariableReplacer
     /// <summary>
     /// 判断是否为主键属性
     /// </summary>
-    private bool IsKeyProperty(PropertyModelDto property)
+    private bool IsKeyProperty(EntityPropertyDto property)
     {
         return property.IsKey || property.Name.Equals("Id", StringComparison.OrdinalIgnoreCase);
     }

@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using SmartAbp.CodeGenerator.Dto;
+using SmartAbp.CodeGenerator.Services.V9;
 
 namespace SmartAbp.CodeGenerator.Core.Validation;
 
@@ -22,7 +22,7 @@ public class SimpleCircularReferenceDetector
     /// </summary>
     /// <param name="entities">实体列表</param>
     /// <returns>检测结果</returns>
-    public CircularReferenceDetectionResult DetectCircularReferences(List<EntityModelDto> entities)
+    public CircularReferenceDetectionResult DetectCircularReferences(List<EnhancedEntityModelDto> entities)
     {
         var result = new CircularReferenceDetectionResult();
 
@@ -94,7 +94,7 @@ public class SimpleCircularReferenceDetector
     /// <param name="entityName">实体名称</param>
     /// <param name="entities">所有实体</param>
     /// <returns>是否存在循环引用</returns>
-    public bool HasCircularReferenceForEntity(string entityName, List<EntityModelDto> entities)
+    public bool HasCircularReferenceForEntity(string entityName, List<EnhancedEntityModelDto> entities)
     {
         try
         {
@@ -117,7 +117,7 @@ public class SimpleCircularReferenceDetector
     /// </summary>
     /// <param name="entities">实体列表</param>
     /// <returns>依赖图：键为实体名，值为该实体依赖的其他实体列表</returns>
-    private Dictionary<string, List<string>> BuildEntityDependencyGraph(List<EntityModelDto> entities)
+    private Dictionary<string, List<string>> BuildEntityDependencyGraph(List<EnhancedEntityModelDto> entities)
     {
         var graph = new Dictionary<string, List<string>>();
         var entityNames = entities.Select(e => e.Name).ToHashSet();
@@ -323,7 +323,7 @@ public class SimpleCircularReferenceDetector
     /// </summary>
     /// <param name="entities">实体列表</param>
     /// <returns>依赖复杂度分析结果</returns>
-    public DependencyComplexityAnalysis AnalyzeDependencyComplexity(List<EntityModelDto> entities)
+    public DependencyComplexityAnalysis AnalyzeDependencyComplexity(List<EnhancedEntityModelDto> entities)
     {
         var analysis = new DependencyComplexityAnalysis();
 

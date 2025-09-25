@@ -108,6 +108,11 @@ namespace SmartAbp.CodeGenerator.Services
             public string Description { get; set; } = default!; // 模块用途描述
             public string Version { get; set; } = "1.0.0";
             public string ArchitecturePattern { get; set; } = "Crud"; // "Crud", "DDD", "CQRS"
+            
+            // 🔥 企业级扩展：添加模板系统所需属性（遵循BUG修复铁律 - 完善类型定义）
+            public string Namespace { get; set; } = default!; // 命名空间，如 "SmartAbp.ProjectManagement"
+            public string Author { get; set; } = "SmartAbp Generator"; // 代码生成作者信息
+            
             public DatabaseConfigDto DatabaseInfo { get; set; } = new();
             public FeatureManagementDto FeatureManagement { get; set; } = new();
             public FrontendConfigDto Frontend { get; set; } = new(); // 新增前端配置
@@ -117,6 +122,10 @@ namespace SmartAbp.CodeGenerator.Services
             public List<MenuConfigDto> MenuConfig { get; set; } = new();
             public PermissionConfigDto PermissionConfig { get; set; } = default!;
         }
+
+        // 🔥 重复代码检查修复：ConflictResolutionStrategy已在FileOperations命名空间中定义
+        // 遵循第十三重爆雷规则 - 严禁重复定义同名枚举
+        // 请使用: SmartAbp.CodeGenerator.Core.FileOperations.ConflictResolutionStrategy
 
         // --- All nested types required by ModuleMetadataDto ---
 

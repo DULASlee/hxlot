@@ -395,7 +395,8 @@ public class AtomicFileWriter
         var backupFileName = $"{fileName}.backup.{timestamp}{extension}";
         var backupPath = Path.Combine(directory, backupFileName);
 
-        await File.CopyAsync(filePath, backupPath);
+        // 🔥 API兼容性修复：使用File.Copy代替File.CopyAsync（遵循BUG修复铁律）
+        await Task.Run(() => File.Copy(filePath, backupPath, overwrite: true));
         
         _logger.LogDebug("创建文件备份: {OriginalPath} -> {BackupPath}", filePath, backupPath);
         

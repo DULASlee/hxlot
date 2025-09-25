@@ -110,8 +110,9 @@ public class FileConflictResolver
 
     /// <summary>
     /// 自动冲突解决策略
+    /// 🔥 同步方法修复：移除不必要的async（遵循BUG修复铁律）
     /// </summary>
-    private async Task<FileConflictResolution> ResolveAutoAsync(
+    private Task<FileConflictResolution> ResolveAutoAsync(
         string filePath,
         string existingContent,
         string newContent,
@@ -124,18 +125,18 @@ public class FileConflictResolver
             {
                 resolution.Action = ConflictAction.Overwrite;
                 resolution.Reason = "检测到生成代码更新，自动覆盖";
-                return resolution;
+                return Task.FromResult(resolution);
             }
 
             // 2. 检查是否可以智能合并
-            var mergeResult = await TrySmartMergeAsync(existingContent, newContent);
+            var mergeResult = TrySmartMerge(existingContent, newContent);
             if (mergeResult.CanMerge)
             {
                 resolution.Action = ConflictAction.Merge;
                 resolution.MergedContent = mergeResult.MergedContent;
                 resolution.Reason = "检测到可自动合并的更改";
                 resolution.MergeDetails = mergeResult.MergeDetails;
-                return resolution;
+                return Task.FromResult(resolution);
             }
 
             // 3. 检查文件类型和重要性
@@ -169,21 +170,23 @@ public class FileConflictResolver
                     break;
             }
 
-            return resolution;
+            // 🔥 async修复：返回Task.FromResult（遵循BUG修复铁律）
+            return Task.FromResult(resolution);
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "自动冲突解决失败，使用备份策略: {FilePath}", filePath);
             resolution.Action = ConflictAction.Backup;
             resolution.Reason = "自动解决失败，使用备份策略";
-            return resolution;
+            return Task.FromResult(resolution);
         }
     }
 
     /// <summary>
     /// 合并冲突解决策略
+    /// 🔥 同步方法修复：移除不必要的async（遵循BUG修复铁律）
     /// </summary>
-    private async Task<FileConflictResolution> ResolveMergeAsync(
+    private Task<FileConflictResolution> ResolveMergeAsync(
         string filePath,
         string existingContent,
         string newContent,
@@ -191,7 +194,7 @@ public class FileConflictResolver
     {
         try
         {
-            var mergeResult = await TrySmartMergeAsync(existingContent, newContent);
+            var mergeResult = TrySmartMerge(existingContent, newContent);
             
             if (mergeResult.CanMerge)
             {
@@ -207,21 +210,23 @@ public class FileConflictResolver
                 resolution.Reason = "合并失败";
             }
 
-            return resolution;
+            // 🔥 async修复：返回Task.FromResult（遵循BUG修复铁律）
+            return Task.FromResult(resolution);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "合并操作失败: {FilePath}", filePath);
             resolution.Action = ConflictAction.Fail;
             resolution.ErrorMessage = $"合并操作异常: {ex.Message}";
-            return resolution;
+            return Task.FromResult(resolution);
         }
     }
 
     /// <summary>
     /// 智能合并尝试
+    /// 🔥 同步方法修复：移除不必要的async（遵循BUG修复铁律）
     /// </summary>
-    private async Task<SmartMergeResult> TrySmartMergeAsync(string existingContent, string newContent)
+    private SmartMergeResult TrySmartMerge(string existingContent, string newContent)
     {
         var result = new SmartMergeResult();
 

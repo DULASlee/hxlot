@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using SmartAbp.CodeGenerator.Dto;
+using SmartAbp.CodeGenerator.Services.V9;
 using SmartAbp.CodeGenerator.Core.Types;
 
 namespace SmartAbp.CodeGenerator.Core.Validation;
@@ -168,7 +168,8 @@ public class EnhancedModelProcessor
 
         if (metadata.Entities == null)
         {
-            metadata.Entities = new List<EntityModelDto>();
+            // 🔥 类型修复：使用正确的EnhancedEntityModelDto类型（遵循BUG修复铁律）
+            metadata.Entities = new List<EnhancedEntityModelDto>();
             result.AddWarning("模块实体列表为null，已初始化为空列表");
         }
 
@@ -210,7 +211,8 @@ public class EnhancedModelProcessor
             // 验证属性
             if (entity.Properties == null)
             {
-                entity.Properties = new List<PropertyModelDto>();
+                // 🔥 类型修复：使用正确的EntityPropertyDto类型（遵循BUG修复铁律）
+                entity.Properties = new List<EntityPropertyDto>();
                 result.AddWarning($"实体 '{entity.Name}' 的属性列表为null，已初始化为空列表");
             }
 
@@ -223,8 +225,9 @@ public class EnhancedModelProcessor
 
     /// <summary>
     /// 处理类型映射
+    /// 🔥 同步方法修复：移除不必要的async（遵循BUG修复铁律）
     /// </summary>
-    private async Task ProcessTypeMapping(ModelProcessingResult result)
+    private Task ProcessTypeMapping(ModelProcessingResult result)
     {
         _logger.LogDebug("开始处理类型映射验证");
 
@@ -255,12 +258,14 @@ public class EnhancedModelProcessor
         }
 
         _logger.LogDebug("类型映射处理完成");
+        return Task.CompletedTask; // 🔥 async修复：返回完成的任务
     }
 
     /// <summary>
     /// 处理循环引用检测
+    /// 🔥 同步方法修复：移除不必要的async（遵循BUG修复铁律）
     /// </summary>
-    private async Task ProcessCircularReferenceDetection(ModelProcessingResult result)
+    private Task ProcessCircularReferenceDetection(ModelProcessingResult result)
     {
         _logger.LogDebug("开始循环引用检测");
 
@@ -292,12 +297,14 @@ public class EnhancedModelProcessor
         }
 
         _logger.LogDebug("循环引用检测完成");
+        return Task.CompletedTask; // 🔥 async修复：返回完成的任务
     }
 
     /// <summary>
     /// 处理业务规则验证
+    /// 🔥 同步方法修复：移除不必要的async（遵循BUG修复铁律）
     /// </summary>
-    private async Task ProcessBusinessRuleValidation(ModelProcessingResult result)
+    private Task ProcessBusinessRuleValidation(ModelProcessingResult result)
     {
         _logger.LogDebug("开始业务规则验证");
 
@@ -339,12 +346,14 @@ public class EnhancedModelProcessor
         }
 
         _logger.LogDebug("业务规则验证完成");
+        return Task.CompletedTask; // 🔥 async修复：返回完成的任务
     }
 
     /// <summary>
     /// 处理数据完整性验证
+    /// 🔥 同步方法修复：移除不必要的async（遵循BUG修复铁律）
     /// </summary>
-    private async Task ProcessDataIntegrityValidation(ModelProcessingResult result)
+    private Task ProcessDataIntegrityValidation(ModelProcessingResult result)
     {
         _logger.LogDebug("开始数据完整性验证");
 
@@ -355,22 +364,23 @@ public class EnhancedModelProcessor
             foreach (var property in entity.Properties)
             {
                 // 验证字符串长度设置
+                // 🔥 类型安全修复：正确处理int?类型的MaxLength（遵循BUG修复铁律）
                 if (property.Type == "string" && property.IsRequired)
                 {
-                    if (string.IsNullOrEmpty(property.MaxLength))
+                    if (!property.MaxLength.HasValue || property.MaxLength.Value <= 0)
                     {
                         result.AddWarning($"实体 '{entity.Name}' 必填字符串属性 '{property.Name}' 未设置最大长度");
                     }
-                    else if (int.TryParse(property.MaxLength, out var maxLen) && maxLen > 4000)
+                    else if (property.MaxLength.Value > 4000)
                     {
-                        result.AddWarning($"实体 '{entity.Name}' 属性 '{property.Name}' 最大长度过大({maxLen})，可能影响数据库性能");
+                        result.AddWarning($"实体 '{entity.Name}' 属性 '{property.Name}' 最大长度过大({property.MaxLength.Value})，可能影响数据库性能");
                     }
                 }
 
-                // 验证数值范围设置
+                // 🔥 类型安全修复：正确处理double?类型的MinValue和MaxValue（遵循BUG修复铁律）
                 if (property.Type?.Contains("decimal") == true || property.Type?.Contains("double") == true)
                 {
-                    if (string.IsNullOrEmpty(property.MinValue) && string.IsNullOrEmpty(property.MaxValue))
+                    if (!property.MinValue.HasValue && !property.MaxValue.HasValue)
                     {
                         result.AddInfo($"实体 '{entity.Name}' 数值属性 '{property.Name}' 未设置取值范围");
                     }
@@ -379,6 +389,7 @@ public class EnhancedModelProcessor
         }
 
         _logger.LogDebug("数据完整性验证完成");
+        return Task.CompletedTask; // 🔥 async修复：返回完成的任务
     }
 
     /// <summary>
@@ -418,13 +429,15 @@ public class EnhancedModelProcessor
             Description = original.Description,
             DisplayName = original.DisplayName,
             Author = original.Author,
-            Entities = original.Entities?.Select(e => new EntityModelDto
+            // 🔥 类型修复+Null安全：使用正确类型并确保非null结果（遵循BUG修复铁律）
+            Entities = original.Entities?.Select(e => new EnhancedEntityModelDto
             {
                 Name = e.Name,
                 Description = e.Description,
                 DisplayName = e.DisplayName,
                 TableName = e.TableName,
-                Properties = e.Properties?.Select(p => new PropertyModelDto
+                // 🔥 Null安全修复：确保Properties永远不为null（遵循BUG修复铁律）
+                Properties = e.Properties?.Select(p => new EntityPropertyDto
                 {
                     Name = p.Name,
                     Type = p.Type,
@@ -436,8 +449,8 @@ public class EnhancedModelProcessor
                     MinValue = p.MinValue,
                     MaxValue = p.MaxValue,
                     DefaultValue = p.DefaultValue
-                }).ToList()
-            }).ToList()
+                }).ToList() ?? new List<EntityPropertyDto>()
+            }).ToList() ?? new List<EnhancedEntityModelDto>() // 🔥 Null安全：确保Entities不为null
         };
     }
 

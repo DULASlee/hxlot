@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using SmartAbp.CodeGenerator.Dto;
+using SmartAbp.CodeGenerator.Services.V9;
 
 namespace SmartAbp.CodeGenerator.Core.Types;
 
@@ -223,7 +223,7 @@ public class CompleteTypeMapper
     /// </summary>
     /// <param name="properties">属性列表</param>
     /// <returns>批量映射结果</returns>
-    public BatchTypeMappingResult GetBatchTypeMapping(List<PropertyModelDto> properties)
+    public BatchTypeMappingResult GetBatchTypeMapping(List<EntityPropertyDto> properties)
     {
         var result = new BatchTypeMappingResult();
 

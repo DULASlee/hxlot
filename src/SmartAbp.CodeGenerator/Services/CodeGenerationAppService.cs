@@ -142,7 +142,8 @@ namespace SmartAbp.CodeGenerator.Services
                     GenerateFrontend = true,
                     GenerateConfiguration = true,
                     EnableCompilationCheck = false, // 可以通过配置启用
-                    ConflictStrategy = ConflictResolutionStrategy.Auto
+                    // 🔥 命名空间修复：使用完全限定名解决枚举引用（遵循BUG修复铁律）
+                    ConflictStrategy = SmartAbp.CodeGenerator.Core.FileOperations.ConflictResolutionStrategy.Auto
                 };
 
                 // 执行稳定生成流水线

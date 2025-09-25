@@ -115,7 +115,8 @@ public class GenerationProgressTracker
     /// <param name="filesProcessed">已处理文件数</param>
     /// <param name="totalFiles">总文件数</param>
     /// <returns></returns>
-    public async Task UpdateDetailedStatusAsync(
+    /// 🔥 同步方法修复：移除不必要的async（遵循BUG修复铁律）
+    public Task UpdateDetailedStatusAsync(
         string generationId, 
         string currentFile, 
         int filesProcessed, 
@@ -125,7 +126,7 @@ public class GenerationProgressTracker
         {
             if (!_progressMap.TryGetValue(generationId, out var progress))
             {
-                return;
+                return Task.CompletedTask; // 🔥 async修复：返回完成的任务
             }
 
             progress.CurrentFile = currentFile;
@@ -154,6 +155,9 @@ public class GenerationProgressTracker
         {
             _logger.LogWarning(ex, "更新详细状态失败: {GenerationId}", generationId);
         }
+        
+        // 🔥 async修复：返回完成的任务（遵循BUG修复铁律）
+        return Task.CompletedTask;
     }
 
     /// <summary>

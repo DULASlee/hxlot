@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using SmartAbp.CodeGenerator.Dto;
+using SmartAbp.CodeGenerator.Services.V9;
 using System.Text;
 
 namespace SmartAbp.CodeGenerator.Core.Templates;
@@ -34,7 +34,7 @@ public class PragmaticTemplateService
     public async Task<TemplateRenderResult> RenderTemplateAsync(
         string templateName, 
         ModuleMetadataDto metadata, 
-        EntityModelDto? entity = null)
+        EnhancedEntityModelDto? entity = null)
     {
         try
         {
@@ -320,7 +320,7 @@ public class TemplateRenderRequest
 {
     public string TemplateName { get; set; } = string.Empty;
     public ModuleMetadataDto Metadata { get; set; } = new();
-    public EntityModelDto? Entity { get; set; }
+    public EnhancedEntityModelDto? Entity { get; set; }
 }
 
 /// <summary>

@@ -9,7 +9,7 @@ using Volo.Abp.DependencyInjection;
 using System.Reflection;
 using System.Linq;
 using SmartAbp.CodeGenerator.Core.Templates;
-using SmartAbp.CodeGenerator.Dto;
+using SmartAbp.CodeGenerator.Services.V9;
 
 namespace SmartAbp.CodeGenerator.Services
 {
@@ -23,10 +23,6 @@ namespace SmartAbp.CodeGenerator.Services
         private readonly ILogger<TemplateService> _logger;
         private readonly PragmaticTemplateService _pragmaticTemplateService;
         
-        // 保持向后兼容的旧属性（已废弃）
-        [Obsolete("请使用新的模板服务，此属性将在下个版本移除")]
-        private readonly string _templateRoot;
-
         public TemplateService(
             ILogger<TemplateService> logger,
             PragmaticTemplateService pragmaticTemplateService)
@@ -34,8 +30,8 @@ namespace SmartAbp.CodeGenerator.Services
             _logger = logger;
             _pragmaticTemplateService = pragmaticTemplateService;
             
-            // 为了向后兼容保留，但不再使用
-            _templateRoot = ""; 
+            // 🔥 清理过时属性：移除_templateRoot字段使用（遵循BUG修复铁律）
+            // 新版本完全依赖PragmaticTemplateService进行模板处理
         }
 
         /// <summary>
@@ -52,7 +48,7 @@ namespace SmartAbp.CodeGenerator.Services
 
                 // 将参数对象转换为元数据格式
                 var metadata = ConvertParametersToMetadata(parameters);
-                EntityModelDto? entity = null;
+                EnhancedEntityModelDto? entity = null;
 
                 // 如果参数包含实体信息，提取实体数据
                 if (HasEntityData(parameters))
@@ -77,9 +73,9 @@ namespace SmartAbp.CodeGenerator.Services
             {
                 _logger.LogError(ex, "模板处理失败: {TemplatePath}", templateRelativePath);
                 
-                // 对于向后兼容，如果新版本失败，尝试旧版本处理（临时）
-                _logger.LogWarning("尝试使用旧版本模板处理方式...");
-                return await ReadAndProcessTemplateLegacyAsync(templateRelativePath, parameters);
+                // 🔥 错误处理改进：不再依赖过时方法，直接抛出异常（遵循BUG修复铁律）
+                _logger.LogError("模板处理完全失败，无法找到替代方案: {TemplatePath}", templateRelativePath);
+                throw new InvalidOperationException($"模板处理失败，无法处理模板: {templateRelativePath}. 错误: {ex.Message}");
             }
         }
 
@@ -141,7 +137,8 @@ namespace SmartAbp.CodeGenerator.Services
                                          paramType.GetProperty("ModuleDescription");
                 if (descriptionProperty != null)
                 {
-                    metadata.Description = descriptionProperty.GetValue(parameters)?.ToString();
+                    // 🔥 Null安全修复：使用null-coalescing operator（遵循BUG修复铁律）
+                    metadata.Description = descriptionProperty.GetValue(parameters)?.ToString() ?? string.Empty;
                 }
 
                 // 如果没有找到任何属性，使用默认值
@@ -181,11 +178,11 @@ namespace SmartAbp.CodeGenerator.Services
         /// <summary>
         /// 从参数中提取实体数据
         /// </summary>
-        private EntityModelDto? ExtractEntityFromParameters(object parameters)
+        private EnhancedEntityModelDto? ExtractEntityFromParameters(object parameters)
         {
             try
             {
-                var entity = new EntityModelDto();
+                var entity = new EnhancedEntityModelDto();
                 var paramType = parameters.GetType();
 
                 var entityNameProperty = paramType.GetProperty("EntityName") ?? paramType.GetProperty("Name");
