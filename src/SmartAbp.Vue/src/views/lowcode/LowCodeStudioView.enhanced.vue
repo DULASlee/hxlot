@@ -154,7 +154,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 
 // 组件导入
 import WorkspaceContainer from '@/components/layout/WorkspaceContainer.vue'
@@ -203,8 +203,6 @@ const { subscribe, cleanup: cleanupEvents } = useEventSubscription('LowCodeStudi
 
 // 智能工作流
 const {
-  totalWorkflowProgress,
-  nextStepSuggestion,
   initializeWorkflow
 } = useSmartWorkflow()
 

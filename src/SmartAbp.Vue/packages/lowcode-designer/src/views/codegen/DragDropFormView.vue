@@ -364,11 +364,12 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue"
-import logging from '@smartabp/lowcode-tools'
+import { logger } from '@smartabp/lowcode-tools'
 import { useFullscreen } from "@/composables/useFullscreen"
 
 // 组件日志器
-const componentLogger = logger.child({ component: "DragDropFormView" })
+// 使用logger进行日志记录
+// const componentLogger = logger.child({ component: "DragDropFormView" })
 
 // 全屏功能
 const fullscreenApi = useFullscreen()

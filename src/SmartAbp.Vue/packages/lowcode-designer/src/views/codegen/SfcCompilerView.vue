@@ -276,10 +276,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
-import logging from '@smartabp/lowcode-tools'
+import { logger } from '@smartabp/lowcode-tools'
 
 // 组件日志器
-const componentLogger = logger.child({ component: "SfcCompilerView" })
+// 使用logger进行日志记录
+// const componentLogger = logger.child({ component: "SfcCompilerView" })
 
 // 编译器状态
 const compiling = ref(false)

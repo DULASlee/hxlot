@@ -173,7 +173,7 @@ const emit = defineEmits<{
 
 // Store
 const workspaceStore = useWorkspaceStore()
-const { isGlobalLoading } = storeToRefs(workspaceStore)
+// const { isGlobalLoading } = storeToRefs(workspaceStore)
 
 // 本地状态
 const asideCollapsed = ref(false)

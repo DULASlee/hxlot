@@ -180,7 +180,7 @@
                 <div class="module-complexity">
                   <el-tag
                     :type="getComplexityType(module.complexity)"
-                    size="mini"
+                    size="small"
                   >
                     {{ module.complexity }}
                   </el-tag>

@@ -9,32 +9,32 @@
         </h2>
         <div class="progress-info">
           <span>实体设计进度: {{ completedEntities }}/{{ totalEntities }}</span>
-          <el-progress 
-            :percentage="progressPercentage" 
-            :stroke-width="6" 
+          <el-progress
+            :percentage="progressPercentage"
+            :stroke-width="6"
             status="success"
           />
         </div>
       </div>
       <div class="header-actions">
         <el-button-group>
-          <el-button 
-            type="primary" 
+          <el-button
+            type="primary"
             :icon="isAutoLayout ? 'el-icon-magic-stick' : 'el-icon-rank'"
             @click="toggleAutoLayout"
           >
             {{ isAutoLayout ? '手动布局' : '自动布局' }}
           </el-button>
-          <el-button 
-            type="success" 
-            icon="el-icon-view" 
+          <el-button
+            type="success"
+            icon="el-icon-view"
             @click="previewSchema"
           >
             预览架构
           </el-button>
-          <el-button 
-            type="warning" 
-            icon="el-icon-download" 
+          <el-button
+            type="warning"
+            icon="el-icon-download"
             @click="exportSchema"
           >
             导出设计
@@ -49,19 +49,19 @@
       <div class="entities-panel">
         <div class="panel-header">
           <h3>实体列表</h3>
-          <el-button 
-            type="primary" 
-            size="small" 
+          <el-button
+            type="primary"
+            size="small"
             icon="el-icon-plus"
             @click="showAddEntityDialog = true"
           >
             添加实体
           </el-button>
         </div>
-        
+
         <div class="entities-list">
-          <div 
-            v-for="entity in entities" 
+          <div
+            v-for="entity in entities"
             :key="entity.id"
             class="entity-card"
             :class="{ active: selectedEntityId === entity.id, completed: entity.isCompleted }"
@@ -81,27 +81,27 @@
               </div>
               <div class="entity-actions">
                 <el-button-group size="small">
-                  <el-button 
-                    icon="el-icon-edit" 
+                  <el-button
+                    icon="el-icon-edit"
                     type="primary"
                     title="编辑实体"
                     @click.stop="editEntity(entity)"
                   />
-                  <el-button 
-                    icon="el-icon-document-checked" 
+                  <el-button
+                    icon="el-icon-document-checked"
                     type="success"
                     title="保存实体"
                     @click.stop="saveEntity(entity)"
                   />
-                  <el-button 
-                    icon="el-icon-delete" 
+                  <el-button
+                    icon="el-icon-delete"
                     type="danger"
                     title="删除实体"
                     @click.stop="deleteEntity(entity.id)"
                   />
                 </el-button-group>
-                <el-tag 
-                  :type="entity.isCompleted ? 'success' : 'warning'" 
+                <el-tag
+                  :type="entity.isCompleted ? 'success' : 'warning'"
                   size="small"
                   class="entity-status-tag"
                 >
@@ -119,7 +119,7 @@
         <!-- 预设实体快速添加 -->
         <div class="preset-entities">
           <h4>权限管理预设实体</h4>
-          <el-button 
+          <el-button
             v-for="preset in presetEntities"
             :key="preset.id"
             size="small"
@@ -137,49 +137,49 @@
         <!-- 工具栏 -->
         <div class="design-toolbar">
           <el-button-group size="small">
-            <el-button 
+            <el-button
               :type="designMode === 'fields' ? 'primary' : 'default'"
               @click="designMode = 'fields'"
             >
               字段设计
             </el-button>
-            <el-button 
+            <el-button
               :type="designMode === 'relations' ? 'primary' : 'default'"
               @click="designMode = 'relations'"
             >
               关系设计
             </el-button>
-            <el-button 
+            <el-button
               :type="designMode === 'validation' ? 'primary' : 'default'"
               @click="designMode = 'validation'"
             >
               验证规则
             </el-button>
-            <el-button 
+            <el-button
               :type="designMode === 'advanced-relations' ? 'primary' : 'default'"
               @click="designMode = 'advanced-relations'"
             >
               高级关系
             </el-button>
-            <el-button 
+            <el-button
               :type="designMode === 'field-types' ? 'primary' : 'default'"
               @click="designMode = 'field-types'"
             >
               字段类型
             </el-button>
-            <el-button 
+            <el-button
               :type="designMode === 'business-rules' ? 'primary' : 'default'"
               @click="designMode = 'business-rules'"
             >
               业务规则
             </el-button>
-            <el-button 
+            <el-button
               :type="designMode === 'data-dict' ? 'primary' : 'default'"
               @click="designMode = 'data-dict'"
             >
               数据字典
             </el-button>
-            <el-button 
+            <el-button
               :type="designMode === 'assistant' ? 'primary' : 'default'"
               @click="designMode = 'assistant'"
             >
@@ -187,7 +187,7 @@
               智能助手
             </el-button>
           </el-button-group>
-          
+
           <div
             v-if="selectedEntity"
             class="toolbar-info"
@@ -205,16 +205,16 @@
         >
           <div class="fields-header">
             <h3>字段配置</h3>
-            <el-button 
-              type="primary" 
-              size="small" 
+            <el-button
+              type="primary"
+              size="small"
               icon="el-icon-plus"
               @click="addField"
             >
               添加字段
             </el-button>
           </div>
-          
+
           <el-table
             :data="selectedEntity.fields"
             style="width: 100%"
@@ -225,8 +225,8 @@
               width="150"
             >
               <template #default="scope">
-                <el-input 
-                  v-model="scope.row.name" 
+                <el-input
+                  v-model="scope.row.name"
                   size="small"
                   @change="validateField(scope.row)"
                 />
@@ -254,7 +254,7 @@
                   v-model="scope.row.type"
                   size="small"
                 >
-                  <el-option 
+                  <el-option
                     v-for="type in fieldTypes"
                     :key="type.value"
                     :label="type.label"
@@ -269,10 +269,10 @@
               width="80"
             >
               <template #default="scope">
-                <el-input-number 
-                  v-if="needsLength(scope.row.type)" 
-                  v-model="scope.row.length" 
-                  size="small" 
+                <el-input-number
+                  v-if="needsLength(scope.row.type)"
+                  v-model="scope.row.length"
+                  size="small"
                   :min="1"
                   :max="5000"
                 />
@@ -293,7 +293,7 @@
               width="80"
             >
               <template #default="scope">
-                <el-checkbox 
+                <el-checkbox
                   v-model="scope.row.isPrimaryKey"
                   @change="handlePrimaryKeyChange(scope.row)"
                 />
@@ -316,15 +316,15 @@
               width="120"
             >
               <template #default="scope">
-                <el-button 
-                  type="primary" 
-                  size="small" 
+                <el-button
+                  type="primary"
+                  size="small"
                   icon="el-icon-edit"
                   @click="editFieldValidation(scope.row)"
                 />
-                <el-button 
-                  type="danger" 
-                  size="small" 
+                <el-button
+                  type="danger"
+                  size="small"
                   icon="el-icon-delete"
                   @click="removeField(scope.$index)"
                 />
@@ -340,16 +340,16 @@
         >
           <div class="relations-header">
             <h3>实体关系设计</h3>
-            <el-button 
-              type="primary" 
-              size="small" 
+            <el-button
+              type="primary"
+              size="small"
               icon="el-icon-connection"
               @click="showAddRelationDialog = true"
             >
               添加关系
             </el-button>
           </div>
-          
+
           <!-- 关系图表区域 -->
           <div
             ref="relationsCanvas"
@@ -394,15 +394,15 @@
                 width="120"
               >
                 <template #default="scope">
-                  <el-button 
-                    type="primary" 
-                    size="small" 
+                  <el-button
+                    type="primary"
+                    size="small"
                     icon="el-icon-edit"
                     @click="editRelation(scope.row)"
                   />
-                  <el-button 
-                    type="danger" 
-                    size="small" 
+                  <el-button
+                    type="danger"
+                    size="small"
                     icon="el-icon-delete"
                     @click="removeRelation(scope.$index)"
                   />
@@ -419,16 +419,16 @@
         >
           <div class="validation-header">
             <h3>验证规则配置</h3>
-            <el-button 
-              type="primary" 
-              size="small" 
+            <el-button
+              type="primary"
+              size="small"
               icon="el-icon-circle-check"
               @click="addValidationRule"
             >
               添加规则
             </el-button>
           </div>
-          
+
           <el-table
             :data="selectedEntity.validationRules"
             style="width: 100%"
@@ -443,7 +443,7 @@
                   v-model="scope.row.fieldName"
                   size="small"
                 >
-                  <el-option 
+                  <el-option
                     v-for="field in selectedEntity.fields"
                     :key="field.name"
                     :label="field.displayName || field.name"
@@ -513,9 +513,9 @@
               width="80"
             >
               <template #default="scope">
-                <el-button 
-                  type="danger" 
-                  size="small" 
+                <el-button
+                  type="danger"
+                  size="small"
                   icon="el-icon-delete"
                   @click="removeValidationRule(scope.$index)"
                 />
@@ -581,7 +581,7 @@
         <div class="panel-header">
           <h3>实体属性</h3>
         </div>
-        
+
         <el-form
           :model="selectedEntity"
           label-width="80px"
@@ -596,9 +596,9 @@
             <el-input v-model="selectedEntity.displayName" />
           </el-form-item>
           <el-form-item label="描述">
-            <el-input 
-              v-model="selectedEntity.description" 
-              type="textarea" 
+            <el-input
+              v-model="selectedEntity.description"
+              type="textarea"
               :rows="3"
             />
           </el-form-item>
@@ -661,9 +661,9 @@
     </div>
 
     <!-- 添加实体对话框 -->
-    <el-dialog 
-      v-model="showAddEntityDialog" 
-      title="添加新实体" 
+    <el-dialog
+      v-model="showAddEntityDialog"
+      title="添加新实体"
       width="500px"
     >
       <el-form
@@ -674,8 +674,8 @@
           label="实体名"
           required
         >
-          <el-input 
-            v-model="newEntityForm.name" 
+          <el-input
+            v-model="newEntityForm.name"
             placeholder="例如: User"
             @input="autoFillTableName"
           />
@@ -684,21 +684,21 @@
           label="表名"
           required
         >
-          <el-input 
-            v-model="newEntityForm.tableName" 
+          <el-input
+            v-model="newEntityForm.tableName"
             placeholder="例如: AbpUsers"
           />
         </el-form-item>
         <el-form-item label="显示名">
-          <el-input 
-            v-model="newEntityForm.displayName" 
+          <el-input
+            v-model="newEntityForm.displayName"
             placeholder="例如: 用户"
           />
         </el-form-item>
         <el-form-item label="描述">
-          <el-input 
-            v-model="newEntityForm.description" 
-            type="textarea" 
+          <el-input
+            v-model="newEntityForm.description"
+            type="textarea"
             placeholder="实体功能描述"
           />
         </el-form-item>
@@ -717,9 +717,9 @@
     </el-dialog>
 
     <!-- 添加关系对话框 -->
-    <el-dialog 
-      v-model="showAddRelationDialog" 
-      title="添加实体关系" 
+    <el-dialog
+      v-model="showAddRelationDialog"
+      title="添加实体关系"
       width="600px"
     >
       <el-form
@@ -734,7 +734,7 @@
             v-model="newRelationForm.fromEntity"
             placeholder="选择源实体"
           >
-            <el-option 
+            <el-option
               v-for="entity in entities"
               :key="entity.id"
               :label="entity.name"
@@ -750,7 +750,7 @@
             v-model="newRelationForm.toEntity"
             placeholder="选择目标实体"
           >
-            <el-option 
+            <el-option
               v-for="entity in entities"
               :key="entity.id"
               :label="entity.name"
@@ -784,14 +784,14 @@
           label="外键字段"
           required
         >
-          <el-input 
-            v-model="newRelationForm.foreignKey" 
+          <el-input
+            v-model="newRelationForm.foreignKey"
             placeholder="例如: UserId"
           />
         </el-form-item>
         <el-form-item label="导航属性">
-          <el-input 
-            v-model="newRelationForm.navigationProperty" 
+          <el-input
+            v-model="newRelationForm.navigationProperty"
             placeholder="例如: User"
           />
         </el-form-item>
@@ -829,8 +829,8 @@
               label="实体名称"
               required
             >
-              <el-input 
-                v-model="editingEntity.name" 
+              <el-input
+                v-model="editingEntity.name"
                 placeholder="请输入实体名称 (PascalCase)"
               />
               <div class="form-help">
@@ -843,8 +843,8 @@
               label="表名"
               required
             >
-              <el-input 
-                v-model="editingEntity.tableName" 
+              <el-input
+                v-model="editingEntity.tableName"
                 placeholder="请输入数据库表名"
               />
               <div class="form-help">
@@ -853,15 +853,15 @@
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
               label="显示名称"
               required
             >
-              <el-input 
-                v-model="editingEntity.displayName" 
+              <el-input
+                v-model="editingEntity.displayName"
                 placeholder="请输入显示名称"
               />
               <div class="form-help">
@@ -895,16 +895,16 @@
             </el-form-item>
           </el-col>
         </el-row>
-        
+
         <el-form-item label="实体描述">
-          <el-input 
-            v-model="editingEntity.description" 
+          <el-input
+            v-model="editingEntity.description"
             type="textarea"
             :rows="2"
             placeholder="请输入实体描述"
           />
         </el-form-item>
-        
+
         <div class="entity-options-section">
           <h4>实体特性</h4>
           <el-checkbox-group v-model="entityFeatures">
@@ -942,24 +942,24 @@
             </el-row>
           </el-checkbox-group>
         </div>
-        
+
         <!-- 字段快速编辑 -->
         <div class="fields-quick-edit">
           <div class="fields-header">
             <h4>字段管理</h4>
-            <el-button 
-              size="small" 
-              type="primary" 
+            <el-button
+              size="small"
+              type="primary"
               icon="el-icon-plus"
               @click="addEntityField(editingEntity.id)"
             >
               添加字段
             </el-button>
           </div>
-          
+
           <div class="fields-table">
-            <el-table 
-              :data="editingEntity.fields" 
+            <el-table
+              :data="editingEntity.fields"
               size="small"
               max-height="300"
             >
@@ -969,8 +969,8 @@
                 width="120"
               >
                 <template #default="{ row, $index }">
-                  <el-input 
-                    v-model="row.name" 
+                  <el-input
+                    v-model="row.name"
                     size="small"
                     @change="updateEntityField(editingEntity.id, $index, row)"
                   />
@@ -982,8 +982,8 @@
                 width="100"
               >
                 <template #default="{ row, $index }">
-                  <el-input 
-                    v-model="row.displayName" 
+                  <el-input
+                    v-model="row.displayName"
                     size="small"
                     @change="updateEntityField(editingEntity.id, $index, row)"
                   />
@@ -995,12 +995,12 @@
                 width="100"
               >
                 <template #default="{ row, $index }">
-                  <el-select 
-                    v-model="row.type" 
+                  <el-select
+                    v-model="row.type"
                     size="small"
                     @change="updateEntityField(editingEntity.id, $index, row)"
                   >
-                    <el-option 
+                    <el-option
                       v-for="type in fieldTypes"
                       :key="type.value"
                       :label="type.value"
@@ -1015,7 +1015,7 @@
                 width="60"
               >
                 <template #default="{ row, $index }">
-                  <el-checkbox 
+                  <el-checkbox
                     v-model="row.isRequired"
                     @change="updateEntityField(editingEntity.id, $index, row)"
                   />
@@ -1028,9 +1028,9 @@
                 width="80"
               >
                 <template #default="{ row, $index }">
-                  <el-input-number 
+                  <el-input-number
                     v-if="row.type === 'string'"
-                    v-model="row.maxLength" 
+                    v-model="row.maxLength"
                     size="small"
                     :min="1"
                     :max="4000"
@@ -1043,9 +1043,9 @@
                 width="80"
               >
                 <template #default="{ $index }">
-                  <el-button 
-                    size="small" 
-                    type="danger" 
+                  <el-button
+                    size="small"
+                    type="danger"
                     icon="el-icon-delete"
                     @click="removeEntityField(editingEntity.id, $index)"
                   />
@@ -1055,7 +1055,7 @@
           </div>
         </div>
       </el-form>
-      
+
       <template #footer>
         <el-button @click="handleEntityEditCancel">
           取消
@@ -1070,9 +1070,9 @@
     </el-dialog>
 
     <!-- 架构预览对话框 -->
-    <el-dialog 
-      v-model="showSchemaPreview" 
-      title="数据库架构预览" 
+    <el-dialog
+      v-model="showSchemaPreview"
+      title="数据库架构预览"
       width="80%"
       top="5vh"
     >
@@ -1241,17 +1241,17 @@ const presetEntities = [
 // 计算属性
 const entities = computed(() => store.entities)
 const relations = computed(() => store.relations)
-const selectedEntity = computed(() => 
+const selectedEntity = computed(() =>
   entities.value.find(e => e.id === selectedEntityId.value)
 )
-const completedEntities = computed(() => 
+const completedEntities = computed(() =>
   entities.value.filter(e => e.isCompleted).length
 )
 const totalEntities = computed(() => entities.value.length)
-const progressPercentage = computed(() => 
+const progressPercentage = computed(() =>
   totalEntities.value === 0 ? 0 : Math.round((completedEntities.value / totalEntities.value) * 100)
 )
-const totalFields = computed(() => 
+const totalFields = computed(() =>
   entities.value.reduce((sum, entity) => sum + entity.fields.length, 0)
 )
 
@@ -1273,7 +1273,7 @@ const getEntityIcon = (category: string) => {
 const getEntityRelationCount = (entityId: string) => {
   const entity = entities.value.find(e => e.id === entityId)
   if (!entity) return 0
-  return relations.value.filter(r => 
+  return relations.value.filter(r =>
     r.fromEntity === entity.name || r.toEntity === entity.name
   ).length
 }
@@ -1310,14 +1310,14 @@ const editEntity = (entity: EntityDefinition) => {
 
 const handleEntityEditConfirm = async () => {
   if (!editingEntity.value) return
-  
+
   // 验证实体数据
   const errors = validateEntity(editingEntity.value)
   if (errors.length > 0) {
     ElMessage.error(`验证失败：${errors.join('; ')}`)
     return
   }
-  
+
   // 保存实体
   const success = await saveEntity(editingEntity.value)
   if (success) {
@@ -1338,13 +1338,13 @@ const saveEntity = async (entity: EntityDefinition) => {
     if (!entity.name || !entity.tableName) {
       throw new Error("实体名称和表名不能为空")
     }
-    
+
     // 更新到store
     store.updateEntity(entity.id, entity)
-    
+
     // 持久化到localStorage
     store.saveToLocalStorage()
-    
+
     ElMessage.success(`实体 "${entity.displayName || entity.name}" 保存成功`)
     return true
   } catch (error: any) {
@@ -1384,17 +1384,17 @@ const addEntityField = (entityId: string) => {
 const removeEntityField = async (entityId: string, fieldIndex: number) => {
   const entity = entities.value.find(e => e.id === entityId)
   if (!entity) return
-  
+
   const field = entity.fields[fieldIndex]
   if (!field) return
-  
+
   try {
     await ElMessageBox.confirm(
       `确定要删除字段 "${field.displayName || field.name}" 吗？`,
       '删除确认',
       { type: 'warning' }
     )
-    
+
     entity.fields.splice(fieldIndex, 1)
     store.updateEntity(entityId, entity)
     store.saveToLocalStorage()
@@ -1407,35 +1407,35 @@ const removeEntityField = async (entityId: string, fieldIndex: number) => {
 const deleteEntity = async (entityId: string) => {
   const entity = entities.value.find(e => e.id === entityId)
   if (!entity) return
-  
+
   try {
     await ElMessageBox.confirm(
       `确定要删除实体 "${entity.displayName || entity.name}" 吗？\n\n删除后将无法恢复，且会影响相关的关系配置。`,
       '删除确认',
       { type: 'warning' }
     )
-    
+
     // 删除相关的关系
-    const relatedRelations = relations.value.filter(r => 
+    const relatedRelations = relations.value.filter(r =>
       r.fromEntity === entity.name || r.toEntity === entity.name
     )
-    
+
     relatedRelations.forEach(relation => {
       const relationIndex = store.relations.findIndex(r => r.id === relation.id)
       if (relationIndex >= 0) {
         store.removeRelation(relationIndex)
       }
     })
-    
+
     // 删除实体
     store.removeEntity(entityId)
     store.saveToLocalStorage()
-    
+
     // 重置选中状态
     if (selectedEntityId.value === entityId) {
       selectedEntityId.value = entities.value.length > 0 ? entities.value[0].id : ""
     }
-    
+
     ElMessage.success(`实体 "${entity.displayName || entity.name}" 删除成功`)
   } catch {
     // 用户取消删除
@@ -1444,21 +1444,21 @@ const deleteEntity = async (entityId: string) => {
 
 const validateEntity = (entity: EntityDefinition) => {
   const errors: string[] = []
-  
+
   // 基础验证
   if (!entity.name) errors.push("实体名称不能为空")
   if (!entity.tableName) errors.push("表名不能为空")
   if (!entity.displayName) errors.push("显示名称不能为空")
-  
+
   // 命名规范验证
   if (entity.name && !/^[A-Z][a-zA-Z0-9]*$/.test(entity.name)) {
     errors.push("实体名称必须符合PascalCase命名规范")
   }
-  
+
   if (entity.tableName && !/^[A-Za-z][a-zA-Z0-9_]*$/.test(entity.tableName)) {
     errors.push("表名必须符合数据库命名规范")
   }
-  
+
   // 字段验证
   if (!entity.fields || entity.fields.length === 0) {
     errors.push("实体至少需要一个字段")
@@ -1467,17 +1467,17 @@ const validateEntity = (entity: EntityDefinition) => {
     if (primaryKeys.length === 0) {
       errors.push("实体必须有一个主键字段")
     }
-    
+
     entity.fields.forEach((field: any, index: number) => {
       if (!field.name) errors.push(`第${index + 1}个字段名称不能为空`)
       if (!field.type) errors.push(`第${index + 1}个字段类型不能为空`)
     })
   }
-  
+
   return errors
 }
 
-// 导出功能暂时注释避免编译错误  
+// 导出功能暂时注释避免编译错误
 /*
 const exportEntitySchema = async () => {
   try {
@@ -1490,7 +1490,7 @@ const exportEntitySchema = async () => {
         engine: "SmartAbp LowCode"
       }
     }
-    
+
     const blob = new Blob([JSON.stringify(schema, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -1498,7 +1498,7 @@ const exportEntitySchema = async () => {
     a.download = `entities-schema-${Date.now()}.json`
     a.click()
     URL.revokeObjectURL(url)
-    
+
     ElMessage.success("实体架构导出成功")
   } catch (error: any) {
     ElMessage.error(`导出失败: ${error.message}`)
@@ -1512,32 +1512,32 @@ const importEntitySchema = async (file: File) => {
   try {
     const text = await file.text()
     const schema = JSON.parse(text)
-    
+
     if (!schema.entities || !Array.isArray(schema.entities)) {
       throw new Error("无效的架构文件格式")
     }
-    
+
     // 确认导入
     await ElMessageBox.confirm(
       `确定要导入 ${schema.entities.length} 个实体吗？\n\n这将覆盖当前的所有实体配置。`,
       '导入确认',
       { type: 'warning' }
     )
-    
+
     // 清空现有数据
     store.clearAllEntities()
-    
+
     // 导入新数据
     schema.entities.forEach((entity: any) => {
       store.addEntity(entity)
     })
-    
+
     if (schema.relations) {
       schema.relations.forEach((relation: any) => {
         store.addRelation(relation)
       })
     }
-    
+
     store.saveToLocalStorage()
     ElMessage.success("实体架构导入成功")
   } catch (error: any) {
@@ -1645,7 +1645,7 @@ const createEntity = () => {
 
 const addField = () => {
   if (!selectedEntity.value) return
-  
+
   store.addField(selectedEntity.value.id, {
     name: "NewField",
     displayName: "新字段",
@@ -1689,7 +1689,7 @@ const editFieldValidation = (field: any) => {
 
 const addValidationRule = () => {
   if (!selectedEntity.value) return
-  
+
   store.addValidationRule(selectedEntity.value.id, {
     fieldName: "",
     ruleType: "length",
@@ -1756,7 +1756,7 @@ const exportSchema = () => {
       version: "1.0.0"
     }
   }
-  
+
   const blob = new Blob([JSON.stringify(schema, null, 2)], { type: "application/json" })
   const url = URL.createObjectURL(blob)
   const link = document.createElement("a")
@@ -1764,18 +1764,18 @@ const exportSchema = () => {
   link.download = "entity-schema.json"
   link.click()
   URL.revokeObjectURL(url)
-  
+
   ElMessage.success("架构导出成功")
 }
 
 const generateEntityPreview = () => {
   if (!selectedEntity.value) return ""
-  
+
   const entity = selectedEntity.value
-  const fields = entity.fields.map(f => 
+  const fields = entity.fields.map(f =>
     `    public ${f.type}${f.isRequired ? '' : '?'} ${f.name} { get; set; }`
   ).join('\n')
-  
+
   return `public class ${entity.name} : Entity<Guid>
 {
 ${fields}
@@ -1784,12 +1784,12 @@ ${fields}
 
 const generateDtoPreview = () => {
   if (!selectedEntity.value) return ""
-  
+
   const entity = selectedEntity.value
-  const fields = entity.fields.map(f => 
+  const fields = entity.fields.map(f =>
     `    public ${f.type}${f.isRequired ? '' : '?'} ${f.name} { get; set; }`
   ).join('\n')
-  
+
   return `public class ${entity.name}Dto
 {
 ${fields}
@@ -1798,7 +1798,7 @@ ${fields}
 
 const generateSqlPreview = () => {
   if (!selectedEntity.value) return ""
-  
+
   const entity = selectedEntity.value
   const columns = entity.fields.map(f => {
     let type = getSqlType(f.type, f.length)
@@ -1806,7 +1806,7 @@ const generateSqlPreview = () => {
     if (f.isPrimaryKey) constraints += ' PRIMARY KEY'
     return `    ${f.name} ${type} ${constraints}`
   }).join(',\n')
-  
+
   return `CREATE TABLE ${entity.tableName} (
 ${columns}
 );`
@@ -1835,7 +1835,7 @@ const generateDDL = () => {
       if (f.isPrimaryKey) constraints += ' PRIMARY KEY'
       return `    ${f.name} ${type} ${constraints}`
     }).join(',\n')
-    
+
     return `CREATE TABLE ${entity.tableName} (
 ${columns}
 );`

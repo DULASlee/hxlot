@@ -78,7 +78,7 @@
               <div class="template-meta">
                 <el-tag
                   :type="getCategoryType(template.category)"
-                  size="mini"
+                  size="small"
                 >
                   {{ getCategoryName(template.category) }}
                 </el-tag>

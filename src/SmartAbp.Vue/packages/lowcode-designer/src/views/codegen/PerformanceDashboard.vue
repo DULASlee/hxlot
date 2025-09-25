@@ -447,7 +447,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from "vue"
-import logging from '@smartabp/lowcode-tools'
+import { logger } from '@smartabp/lowcode-tools'
 // 运行时内容缓存与日志改为可选注入，避免构建期硬依赖
 const globalContentCache: any = (globalThis as any).__lowcodeRuntime?.contentCache || {
   getStats: () => ({
@@ -469,7 +469,8 @@ const cacheStats = ref({
 // logger 已从统一入口导入
 
 // 组件日志器（统一日志系统，避免 console 无 child 方法导致的运行时错误）
-const componentLogger = createComponentLogger("PerformanceDashboard")
+// 使用logger进行日志记录
+// const componentLogger = createComponentLogger("PerformanceDashboard")
 
 // 响应式状态
 const loading = ref(false)

@@ -22,6 +22,9 @@ export interface MDIWindowConfig {
   closable?: boolean
   modal?: boolean
   zIndex?: number
+  icon?: string
+  state?: WindowState
+  draggable?: boolean
 }
 
 /**
@@ -37,6 +40,9 @@ export interface TabConfig {
   disabled?: boolean
   cached?: boolean
   meta?: Record<string, any>
+  active?: boolean
+  pinned?: boolean
+  state?: TabState
 }
 
 /**
