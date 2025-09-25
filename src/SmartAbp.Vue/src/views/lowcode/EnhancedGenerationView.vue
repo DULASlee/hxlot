@@ -406,7 +406,7 @@
 import { ref, computed, onMounted } from "vue"
 import { ElMessage } from "element-plus"
 import { useEntityModelingStore, type EntityDefinition, type EntityField } from '@smartabp/lowcode-core'
-import { usePageDesignStore } from "@/stores/lowcode/pageDesign"
+import { usePageDesignStore } from '@smartabp/lowcode-core'
 import { logger } from "@/utils/logger"
 import EnterpriseCodeGenerationEngine from "@/components/lowcode/EnterpriseCodeGenerationEngine.vue"
 

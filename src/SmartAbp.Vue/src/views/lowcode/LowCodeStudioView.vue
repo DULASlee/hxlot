@@ -221,8 +221,7 @@ import {
 } from '@element-plus/icons-vue'
 import ProjectWizard from "@/components/lowcode/ProjectWizard.vue"
 import { useEntityModelingStore } from '@smartabp/lowcode-core'
-import { usePageDesignStore } from '@/stores/lowcode/pageDesign'
-import { useCodeGenerationStore } from '@/stores/lowcode/codeGeneration'
+import { usePageDesignStore, useCodeGenerationStore } from '@smartabp/lowcode-core'
 import { useSmartWorkflow } from "@/composables/useSmartWorkflow"
 import { logger } from '@/utils/logger'
 

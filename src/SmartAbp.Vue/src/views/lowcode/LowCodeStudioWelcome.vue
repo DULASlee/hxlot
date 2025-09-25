@@ -192,7 +192,7 @@ import {
   Upload
 } from '@element-plus/icons-vue'
 import { useEntityModelingStore } from '@smartabp/lowcode-core'
-import { usePageDesignStore } from '@/stores/lowcode/pageDesign'
+import { usePageDesignStore } from '@smartabp/lowcode-core'
 import { logger } from '@/utils/logger'
 
 // 路由

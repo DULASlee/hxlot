@@ -1140,7 +1140,7 @@ import { useEntityModelingStore, type EntityDefinition, type EntityField } from 
 import { logger } from "@/utils/logger"
 import { AdvancedEntityRelationshipDesigner } from '@smartabp/lowcode-designer'
 import { AdvancedFieldTypeDesigner } from '@smartabp/lowcode-designer'
-import BusinessRulesEngine from '@smartabp/lowcode-designer'
+import { BusinessRulesEngine } from '@smartabp/lowcode-designer'
 import DataDictionaryManager from "@/components/lowcode/DataDictionaryManager.vue"
 import EnterpriseModelingAssistant from "@/components/lowcode/EnterpriseModelingAssistant.vue"
 
