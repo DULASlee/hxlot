@@ -16,12 +16,18 @@
       >
         <el-sub-menu
           v-if="item.children && item.children.length > 0"
-          :index="item.path"
+          :index="item.path + '_submenu'"
         >
           <template #title>
             <el-icon><component :is="item.icon" /></el-icon>
             <span>{{ item.title }}</span>
           </template>
+          <el-menu-item
+            :index="item.path"
+          >
+            <el-icon><component :is="item.icon" /></el-icon>
+            🏠 {{ item.title }} 首页
+          </el-menu-item>
           <el-menu-item
             v-for="child in item.children"
             :key="child.path"
