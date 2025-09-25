@@ -6,6 +6,7 @@ using SmartAbp.CodeGenerator.ApplicationServices;
 using SmartAbp.CodeGenerator.Aspire;
 using SmartAbp.CodeGenerator.Caching;
 using SmartAbp.CodeGenerator.Core;
+using SmartAbp.CodeGenerator.Core.Templates;
 using SmartAbp.CodeGenerator.CQRS;
 using SmartAbp.CodeGenerator.DDD;
 using SmartAbp.CodeGenerator.Hubs;
@@ -50,6 +51,11 @@ namespace SmartAbp.CodeGenerator
             // SignalR Hub
             services.AddSignalR();
             
+            // 🔥 务实模板系统 - 修复自检发现的致命缺陷
+            services.AddScoped<ReliableTemplatePathResolver>();
+            services.AddScoped<SimpleVariableReplacer>();
+            services.AddScoped<PragmaticTemplateService>();
+            
             // Application service
             services.AddScoped<CodeGenerationAppService>();
             services.AddScoped<DefaultUIConfigGenerator>();
@@ -63,6 +69,15 @@ namespace SmartAbp.CodeGenerator
                 options.EnableOptimizations = configuration.GetValue<bool>("CodeGenerator:EnableOptimizations", true);
                 options.EnableTelemetry = configuration.GetValue<bool>("CodeGenerator:EnableTelemetry", true);
                 options.EnableQualityGates = configuration.GetValue<bool>("CodeGenerator:EnableQualityGates", true);
+            });
+            
+            // 🔥 务实模板系统配置 - 支持多环境模板路径
+            services.Configure<TemplateConfiguration>(options =>
+            {
+                options.TemplateRootPath = configuration["CodeGeneration:TemplateRootPath"];
+                options.FallbackTemplatePath = configuration["CodeGeneration:FallbackTemplatePath"] ?? "./embedded-templates";
+                options.EnableEmbeddedTemplates = configuration.GetValue<bool>("CodeGeneration:EnableEmbeddedTemplates", true);
+                options.EnableTemplateValidation = configuration.GetValue<bool>("CodeGeneration:EnableTemplateValidation", true);
             });
             
             // Configure AutoMapper
