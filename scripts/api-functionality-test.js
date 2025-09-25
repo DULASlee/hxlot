@@ -12,10 +12,13 @@ console.log('📡 开始API功能真实性检查...\n');
 
 // API端点列表
 const apiEndpoints = [
-  { name: '前端开发服务器', url: 'http://localhost:11369/', method: 'GET' },
-  { name: '后端API健康检查', url: 'https://localhost:44321/health', method: 'GET' },
-  { name: '后端API Swagger', url: 'https://localhost:44321/swagger', method: 'GET' },
-  { name: 'ABP应用配置', url: 'https://localhost:44321/api/abp/application-configuration', method: 'GET' }
+  { name: '前端开发服务器(主)', url: 'http://localhost:11369/', method: 'GET' },
+  { name: '前端开发服务器(备用1)', url: 'http://localhost:11370/', method: 'GET' },
+  { name: '前端开发服务器(备用2)', url: 'http://localhost:11371/', method: 'GET' },
+  { name: '后端API根路径', url: 'https://localhost:44379/', method: 'GET' },
+  { name: '后端API Swagger', url: 'https://localhost:44379/swagger', method: 'GET' },
+  { name: 'ABP应用配置', url: 'https://localhost:44379/api/abp/application-configuration', method: 'GET' },
+  { name: 'ABP应用信息', url: 'https://localhost:44379/api/abp/application-info', method: 'GET' }
 ];
 
 // HTTP请求工具函数
@@ -124,5 +127,8 @@ async function main() {
     process.exit(1);
   }
 }
+
+main();
+
 
 main();

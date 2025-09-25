@@ -20,94 +20,83 @@ DO NOT EDIT MANUALLY - Regenerate using module wizard
 
 import { defineStore } from "pinia"
 import { ref } from "vue"
+import { userService } from "@/services/userService"
+import type { CreateUserDto, UpdateUserDto, UserQueryParams, UserListItem } from "@/types/user"
 
-// 这是一个示意性的API服务，实际生成时需要替换为真实的服务
-// import { UserService } from "@/api/User/user"
-// import type { UserDto, CreateUserDto, UpdateUserDto } from "@/api/User/types"
-
-// 模拟 API 服务和类型
-const UserService = {
-  getList: async (params: any) => {
-    console.log("Fetching list with params:", params)
-    await new Promise((resolve) => setTimeout(resolve, 500))
-    return {
-      items: [
-        { id: "1", name: `Mock User 1` },
-        { id: "2", name: `Mock User 2` },
-      ],
-      totalCount: 2,
-    }
-  },
-  create: async (data: any) => {
-    console.log("Creating User:", data)
-    await new Promise((resolve) => setTimeout(resolve, 500))
-    return { id: "3", ...data }
-  },
-  update: async (id: string, data: any) => {
-    console.log(`Updating User ${id}:`, data)
-    await new Promise((resolve) => setTimeout(resolve, 500))
-    return { id, ...data }
-  },
-  delete: async (id: string) => {
-    console.log(`Deleting User ${id}`)
-    await new Promise((resolve) => setTimeout(resolve, 500))
-  },
-}
-type UserDto = { id: string; name: string; [key: string]: any }
-type CreateUserDto = Omit<UserDto, "id">
-type UpdateUserDto = Partial<CreateUserDto>
 
 export const useUserStore = defineStore("user", () => {
   // State
-  const list = ref<UserDto[]>([])
+  const list = ref<UserListItem[]>([])
   const total = ref(0)
   const loading = ref(false)
 
   // Actions
-  const fetchList = async (params: any) => {
+  const fetchList = async (params: UserQueryParams) => {
     loading.value = true
     try {
-      const response = await UserService.getList(params)
+      const response = await userService.getList(params)
       list.value = response.items
       total.value = response.totalCount
+      return response
     } catch (error) {
-      console.error("Failed to fetch {{UserPlural}} list:", error)
+      console.error("Failed to fetch user list:", error)
+      throw error
     } finally {
       loading.value = false
     }
   }
 
-  const createItem = async (data: CreateUserDto) => {
+  const create = async (data: CreateUserDto) => {
     try {
-      await UserService.create(data)
+      const response = await userService.create(data)
+      await fetchList({ pageIndex: 1, pageSize: 10 }) // Refresh list
+      return response
     } catch (error) {
       console.error("Failed to create User:", error)
+      throw error
     }
   }
 
-  const updateItem = async (id: string, data: UpdateUserDto) => {
+  const update = async (id: string, data: UpdateUserDto) => {
     try {
-      await UserService.update(id, data)
+      const response = await userService.update(id, data)
+      await fetchList({ pageIndex: 1, pageSize: 10 }) // Refresh list
+      return response
     } catch (error) {
       console.error(`Failed to update User ${id}:`, error)
+      throw error
     }
   }
 
   const deleteItem = async (id: string) => {
     try {
-      await UserService.delete(id)
+      await userService.delete(id)
+      await fetchList({ pageIndex: 1, pageSize: 10 }) // Refresh list
     } catch (error) {
       console.error(`Failed to delete User ${id}:`, error)
+      throw error
     }
   }
+
+  const deleteMany = async (ids: string[]) => {
+    try {
+      await userService.batchDelete(ids)
+      await fetchList({ pageIndex: 1, pageSize: 10 }) // Refresh list
+    } catch (error) {
+      console.error(`Failed to delete multiple users:`, error)
+      throw error
+    }
+  }
+
 
   return {
     list,
     total,
     loading,
     fetchList,
-    createItem,
-    updateItem,
-    deleteItem,
+    create,
+    update,
+    delete: deleteItem,
+    deleteMany,
   }
 })

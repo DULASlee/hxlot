@@ -371,9 +371,9 @@ import { ElMessage, ElMessageBox } from "element-plus"
 import { Plus, Search, Refresh, Delete } from "@element-plus/icons-vue"
 
 // 导入说明：以下导入需要根据实际项目结构调整
-// import { useUserStore } from '@/stores/modules/user'
-// import { formatDateTime } from '@/utils/date'
-// import type { EntityDefinition } from "@smartabp/lowcode-api/types" // This type is no longer available
+import { useUserStore } from "@/stores/modules/user"
+import dayjs from 'dayjs'
+import type { CreateUserDto, UpdateUserDto } from "@/types/user"
 
 // 响应式数据
 const loading = ref(false)
@@ -412,12 +412,21 @@ const tableData = ref<any[]>([])
 const dialogTitle = computed(() => (formData.id ? "编辑用户管理" : "新增用户管理"))
 
 const formData = reactive<{
-  id: string | undefined;
+  id?: string;
   name: string;
   displayName: string;
   description: string;
   sort: number;
   isEnabled: boolean;
+  // Add missing properties to satisfy DTOs
+  userName: string;
+  surname: string;
+  email: string;
+  isActive: boolean;
+  lockoutEnabled: boolean;
+  roleNames: string[];
+  password?: string;
+  concurrencyStamp?: string; // Add concurrencyStamp
 }>({
   id: undefined,
   name: "",
@@ -425,6 +434,15 @@ const formData = reactive<{
   description: "",
   sort: 0,
   isEnabled: true,
+  // Initialize missing properties
+  userName: "",
+  surname: "",
+  email: "",
+  isActive: true,
+  lockoutEnabled: true,
+  roleNames: [],
+  password: "",
+  concurrencyStamp: "", // Initialize concurrencyStamp
 })
 
 // 表单验证规则
@@ -436,6 +454,8 @@ const formRules = {
 }
 
 // 方法实现
+const userStore = useUserStore()
+
 const fetchData = async () => {
   try {
     loading.value = true
@@ -443,17 +463,14 @@ const fetchData = async () => {
     const params = {
       filter: searchForm.filter || undefined,
       isEnabled: searchForm.isEnabled,
-      skipCount: (pagination.current - 1) * pagination.pageSize,
-      maxResultCount: pagination.pageSize,
+      pageIndex: pagination.current,
+      pageSize: pagination.pageSize,
       sorting: sorting.value || undefined,
     }
-    // 避免TS未使用变量错误
-    void params
 
-    // TODO: 调用实际的API服务
-    // const result = await userStore.fetchList(params)
-    // tableData.value = result.items
-    // pagination.total = result.totalCount
+    const result = await userStore.fetchList(params)
+    tableData.value = result.items
+    pagination.total = result.totalCount
   } catch {
     ElMessage.error("获取数据失败")
   } finally {
@@ -481,6 +498,15 @@ const handleCreate = () => {
     description: "",
     sort: 0,
     isEnabled: true,
+    // Initialize missing properties for create
+    userName: "",
+    surname: "",
+    email: "",
+    isActive: true,
+    lockoutEnabled: true,
+    roleNames: [],
+    password: "",
+    concurrencyStamp: "", // Initialize concurrencyStamp
   })
   dialogVisible.value = true
 }
@@ -498,8 +524,7 @@ const handleDelete = async (row: any) => {
       type: "warning",
     })
 
-    // TODO: 调用删除API
-    // await userStore.delete(row.id)
+    await userStore.delete(row.id)
 
     ElMessage.success("删除成功")
     fetchData()
@@ -523,11 +548,7 @@ const handleBatchDelete = async () => {
     )
 
     const ids = selectedRows.value.map((row) => row.id)
-    // 避免TS未使用变量错误
-    void ids
-
-    // TODO: 调用批量删除API
-    // await userStore.deleteMany(ids)
+    await userStore.deleteMany(ids)
 
     ElMessage.success("批量删除成功")
     fetchData()
@@ -544,11 +565,11 @@ const handleSubmit = async () => {
 
     if (formData.id) {
       // TODO: 更新操作
-      // await userStore.update(formData.id, formData)
+      await userStore.update(formData.id, formData as UpdateUserDto)
       ElMessage.success("更新成功")
     } else {
       // TODO: 创建操作
-      // await userStore.create(formData)
+      await userStore.create(formData as CreateUserDto)
       ElMessage.success("创建成功")
     }
 
@@ -591,8 +612,8 @@ const handleCurrentChange = (current: number) => {
 
 // 工具函数占位符
 const formatDateTime = (date: string) => {
-  // TODO: 实现日期格式化
-  return date
+  if (!date) return ''
+  return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
 }
 
 // 生命周期
