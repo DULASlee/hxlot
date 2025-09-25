@@ -32,6 +32,8 @@ export interface MDIWindowConfig {
   state?: WindowState
   draggable?: boolean
   maximized?: boolean
+  minimized?: boolean
+  permissions?: string[]
 }
 
 /**

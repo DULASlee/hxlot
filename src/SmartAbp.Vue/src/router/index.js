@@ -17,11 +17,11 @@ const ProjectAnalysisView = () => import("@/views/project/ProjectAnalysisView.vu
 const PermissionsView = () => import("@/views/system/PermissionsView.vue");
 const UsersView = () => import("@/views/system/UsersView.vue");
 // 代码生成模块组件
-const LowCodeEngineView = () => import("@smartabp/lowcode-designer/views/codegen/LowCodeEngineView.vue");
-const SfcCompilerView = () => import("@smartabp/lowcode-designer/views/codegen/SfcCompilerView.vue");
-const DragDropFormView = () => import("@smartabp/lowcode-designer/views/codegen/DragDropFormView.vue");
-const PerformanceDashboard = () => import("@smartabp/lowcode-designer/views/codegen/PerformanceDashboard.vue");
-const VisualDesignerView = () => import("@smartabp/lowcode-designer/views/VisualDesignerView.vue");
+const LowCodeEngineView = () => import("@smartabp/lowcode-designer/src/views/codegen/LowCodeEngineView.vue");
+const SfcCompilerView = () => import("@smartabp/lowcode-designer/src/views/codegen/SfcCompilerView.vue");
+const DragDropFormView = () => import("@smartabp/lowcode-designer/src/views/codegen/DragDropFormView.vue");
+const PerformanceDashboard = () => import("@smartabp/lowcode-designer/src/views/codegen/PerformanceDashboard.vue");
+const VisualDesignerView = () => import("@smartabp/lowcode-designer/src/views/VisualDesignerView.vue");
 const LowCodeStudioView = () => import("@/views/lowcode/LowCodeStudioView.vue");
 // const ModuleWizardView = () => import("@smartabp/lowcode-designer/views/dev/ModuleWizardTestView.vue"); // 文件已删除
 const routes = [
@@ -248,7 +248,7 @@ const routes = [
             {
                 path: "designer",
                 name: "LowCodeDesigner",
-                component: () => import("@smartabp/lowcode-designer/views/VisualDesignerView.vue"),
+                component: () => import("@smartabp/lowcode-designer/src/views/VisualDesignerView.vue"),
                 meta: {
                     title: "可视化设计",
                     icon: "el-icon-brush",

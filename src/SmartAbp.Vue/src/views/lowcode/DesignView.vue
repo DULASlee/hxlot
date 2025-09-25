@@ -14,7 +14,7 @@
       <!-- 中央设计画布 -->
       <VisualDesignCanvas
         :page-data="currentPage"
-        :entity-data="selectedEntity"
+        :entity-data="selectedEntity || {}"
         @component-added="handleComponentAdded"
         @component-selected="handleComponentSelected"
         @component-updated="handleComponentUpdated"
