@@ -380,7 +380,9 @@ const routes = [
         children: [
             {
                 path: "",
-                redirect: "/lowcode/entity-modeling"
+                name: "LowCodeHome",
+                component: () => import("@/views/lowcode/LowCodeStudioHome.vue"),
+                meta: { title: "低代码工作台", menuKey: "lowcode-home" }
             },
             {
                 path: "design",

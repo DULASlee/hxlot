@@ -393,6 +393,26 @@ export const menuConfig: MenuConfig = {
       ],
     },
 
+    // LowCode Studio - 顶级菜单入口
+    {
+      key: "studio",
+      title: "Studio",
+      icon: "🧩",
+      type: "page",
+      path: "/lowcode",
+      component: "@/views/lowcode/LowCodeStudioView.enhanced.vue",
+      order: 8,
+      visible: true,
+      requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
+      closable: true,
+      description: "企业级低代码开发工作台",
+      meta: {
+        title: "LowCode Studio",
+        menuKey: "studio-home",
+        keepAlive: true,
+      },
+    },
+
     // 代码生成模块
     {
       key: "codegen",
@@ -438,7 +458,7 @@ export const menuConfig: MenuConfig = {
               path: "/lowcode",
               icon: "🧩",
               type: "page",
-              component: "@/views/lowcode/LowCodeStudioView.vue",
+              component: "@/views/lowcode/LowCodeStudioView.enhanced.vue",
               order: 0,
               visible: true,
               requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
