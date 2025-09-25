@@ -3,7 +3,10 @@
     <slot v-if="!hasError" />
 
     <!-- 错误回退UI -->
-    <div v-else class="error-fallback">
+    <div
+      v-else
+      class="error-fallback"
+    >
       <el-result
         :icon="errorIcon"
         :title="errorTitle"
@@ -12,15 +15,25 @@
       >
         <template #extra>
           <div class="error-actions">
-            <el-button @click="retry" :loading="retrying">
+            <el-button
+              :loading="retrying"
+              @click="retry"
+            >
               <el-icon><RefreshRight /></el-icon>
               重试
             </el-button>
-            <el-button type="primary" @click="reportError">
+            <el-button
+              type="primary"
+              @click="reportError"
+            >
               <el-icon><Warning /></el-icon>
               报告问题
             </el-button>
-            <el-button v-if="showReload" type="danger" @click="reloadPage">
+            <el-button
+              v-if="showReload"
+              type="danger"
+              @click="reloadPage"
+            >
               <el-icon><Refresh /></el-icon>
               重新加载
             </el-button>
@@ -29,16 +42,26 @@
       </el-result>
 
       <!-- 错误详情（开发模式） -->
-      <el-collapse v-if="isDev && errorInfo" class="error-details">
-        <el-collapse-item title="错误详情" name="details">
+      <el-collapse
+        v-if="isDev && errorInfo"
+        class="error-details"
+      >
+        <el-collapse-item
+          title="错误详情"
+          name="details"
+        >
           <div class="error-stack">
             <h4>错误信息</h4>
             <pre>{{ errorInfo.message }}</pre>
 
-            <h4 v-if="errorInfo.stack">调用栈</h4>
+            <h4 v-if="errorInfo.stack">
+              调用栈
+            </h4>
             <pre v-if="errorInfo.stack">{{ errorInfo.stack }}</pre>
 
-            <h4 v-if="componentInfo">组件信息</h4>
+            <h4 v-if="componentInfo">
+              组件信息
+            </h4>
             <pre v-if="componentInfo">{{ componentInfo }}</pre>
           </div>
         </el-collapse-item>

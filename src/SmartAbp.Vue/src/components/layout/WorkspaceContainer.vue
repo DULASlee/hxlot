@@ -1,10 +1,16 @@
 <template>
-  <div class="workspace-container" :class="containerClasses">
+  <div
+    class="workspace-container"
+    :class="containerClasses"
+  >
     <!-- 全局加载遮罩 -->
     <GlobalLoadingOverlay v-if="showGlobalLoading" />
 
     <!-- 工具栏区域 -->
-    <header v-if="$slots.toolbar" class="workspace-toolbar">
+    <header
+      v-if="$slots.toolbar"
+      class="workspace-toolbar"
+    >
       <slot name="toolbar" />
     </header>
 
@@ -17,13 +23,18 @@
         :style="asideStyle"
         :class="{ 'collapsed': asideCollapsed }"
       >
-        <div class="aside-header" v-if="asideTitle">
-          <h3 class="aside-title">{{ asideTitle }}</h3>
+        <div
+          v-if="asideTitle"
+          class="aside-header"
+        >
+          <h3 class="aside-title">
+            {{ asideTitle }}
+          </h3>
           <el-button
             v-if="asideCollapsible"
             text
-            @click="toggleAside"
             class="aside-toggle"
+            @click="toggleAside"
           >
             <el-icon>
               <ArrowLeft v-if="!asideCollapsed" />
@@ -38,8 +49,14 @@
       </aside>
 
       <!-- 中央内容区 -->
-      <main class="workspace-content" :style="contentStyle">
-        <div class="content-header" v-if="$slots.header">
+      <main
+        class="workspace-content"
+        :style="contentStyle"
+      >
+        <div
+          v-if="$slots.header"
+          class="content-header"
+        >
           <slot name="header" />
         </div>
 
@@ -47,7 +64,10 @@
           <slot />
         </div>
 
-        <div class="content-footer" v-if="$slots.footer">
+        <div
+          v-if="$slots.footer"
+          class="content-footer"
+        >
           <slot name="footer" />
         </div>
       </main>
@@ -59,13 +79,18 @@
         :style="propertiesStyle"
         :class="{ 'collapsed': propertiesCollapsed }"
       >
-        <div class="properties-header" v-if="propertiesTitle">
-          <h3 class="properties-title">{{ propertiesTitle }}</h3>
+        <div
+          v-if="propertiesTitle"
+          class="properties-header"
+        >
+          <h3 class="properties-title">
+            {{ propertiesTitle }}
+          </h3>
           <el-button
             v-if="propertiesCollapsible"
             text
-            @click="toggleProperties"
             class="properties-toggle"
+            @click="toggleProperties"
           >
             <el-icon>
               <ArrowRight v-if="!propertiesCollapsed" />
@@ -81,7 +106,10 @@
     </div>
 
     <!-- 底部状态栏 -->
-    <footer v-if="$slots.statusbar" class="workspace-statusbar">
+    <footer
+      v-if="$slots.statusbar"
+      class="workspace-statusbar"
+    >
       <slot name="statusbar" />
     </footer>
   </div>

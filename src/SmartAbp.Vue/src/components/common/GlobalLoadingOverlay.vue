@@ -1,47 +1,79 @@
 <template>
   <Teleport to="body">
-    <div v-if="visible" class="global-loading-overlay" :class="overlayClasses">
+    <div
+      v-if="visible"
+      class="global-loading-overlay"
+      :class="overlayClasses"
+    >
       <div class="loading-container">
         <!-- 加载图标 -->
         <div class="loading-icon">
-          <el-icon v-if="iconType === 'spinner'" class="rotating">
+          <el-icon
+            v-if="iconType === 'spinner'"
+            class="rotating"
+          >
             <Loading />
           </el-icon>
-          <el-icon v-else-if="iconType === 'gear'" class="rotating">
+          <el-icon
+            v-else-if="iconType === 'gear'"
+            class="rotating"
+          >
             <Setting />
           </el-icon>
-          <div v-else-if="iconType === 'dots'" class="dots-loader">
-            <span></span>
-            <span></span>
-            <span></span>
+          <div
+            v-else-if="iconType === 'dots'"
+            class="dots-loader"
+          >
+            <span />
+            <span />
+            <span />
           </div>
-          <div v-else-if="iconType === 'pulse'" class="pulse-loader"></div>
+          <div
+            v-else-if="iconType === 'pulse'"
+            class="pulse-loader"
+          />
         </div>
 
         <!-- 加载文本 -->
         <div class="loading-text">
-          <h3 class="loading-title">{{ title }}</h3>
-          <p v-if="message" class="loading-message">{{ message }}</p>
+          <h3 class="loading-title">
+            {{ title }}
+          </h3>
+          <p
+            v-if="message"
+            class="loading-message"
+          >
+            {{ message }}
+          </p>
         </div>
 
         <!-- 进度条 -->
-        <div v-if="showProgress" class="loading-progress">
+        <div
+          v-if="showProgress"
+          class="loading-progress"
+        >
           <el-progress
             :percentage="progress"
             :status="progressStatus"
             :stroke-width="4"
             :show-text="showProgressText"
           />
-          <span v-if="progressText" class="progress-text">{{ progressText }}</span>
+          <span
+            v-if="progressText"
+            class="progress-text"
+          >{{ progressText }}</span>
         </div>
 
         <!-- 操作按钮 -->
-        <div v-if="showActions" class="loading-actions">
+        <div
+          v-if="showActions"
+          class="loading-actions"
+        >
           <el-button
             v-if="cancellable"
             size="small"
-            @click="handleCancel"
             :loading="cancelling"
+            @click="handleCancel"
           >
             取消
           </el-button>
@@ -57,7 +89,11 @@
       </div>
 
       <!-- 背景点击遮罩 -->
-      <div v-if="closeOnClickOutside" class="overlay-mask" @click="handleMaskClick"></div>
+      <div
+        v-if="closeOnClickOutside"
+        class="overlay-mask"
+        @click="handleMaskClick"
+      />
     </div>
   </Teleport>
 </template>

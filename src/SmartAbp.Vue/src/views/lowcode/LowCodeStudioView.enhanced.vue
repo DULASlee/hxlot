@@ -55,7 +55,10 @@
             >
               <!-- 路由组件缓存 -->
               <KeepAlive :include="cachedViews">
-                <Suspense @resolve="onModuleLoaded" @fallback="onModuleLoading">
+                <Suspense
+                  @resolve="onModuleLoaded"
+                  @fallback="onModuleLoading"
+                >
                   <template #default>
                     <component
                       :is="Component"
