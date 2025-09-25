@@ -305,37 +305,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
+import type { 
+  CanvasComponent, 
+  GuideLine, 
+  CanvasHistory, 
+  ComponentTemplate, 
+  Position,
+  DeviceType,
+  CanvasMode,
+  Size,
+  ComponentType,
+  ResizeDirection,
+  MoveDirection
+} from '@/types/canvas'
 
-// Props
+// Props - 企业级类型定义
 interface Props {
-  pageData?: any
-  entityData?: any
+  pageData?: Record<string, any>
+  entityData?: Record<string, any>
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  pageData: null,
-  entityData: null
+  pageData: () => ({}),
+  entityData: () => ({})
 })
 
-// 响应式数据
-const canvasMode = ref('design')
-const previewDevice = ref('desktop')
-const selectedComponent = ref(null)
-const hoverComponent = ref(null)
+// 响应式数据 - 完整类型安全
+const canvasMode = ref<CanvasMode>('design')
+const previewDevice = ref<DeviceType>('desktop')
+const selectedComponent = ref<CanvasComponent | null>(null)
+const hoverComponent = ref<CanvasComponent | null>(null)
 const zoomLevel = ref(1)
 const activeCodeTab = ref('template')
+const components = ref<CanvasComponent[]>([])
+const guideLines = ref<GuideLine[]>([])
+const history = ref<CanvasHistory[]>([])
+const historyIndex = ref(0)
 
-// 画布状态
-const components = ref([])
-const canvasSize = ref({ width: 1200, height: 800 })
+// 画布状态 - 去除重复定义，使用上方的类型安全定义
+const canvasSize = ref<Size>({ width: 1200, height: 800 })
 const isDraggingOver = ref(false)
-const guideLines = ref([])
-
-// 历史记录
-const history = ref([])
-const historyIndex = ref(-1)
+const showGrid = ref(true)
+const gridSize = ref(20)
 const maxHistorySize = 50
 
 // 计算属性
@@ -364,7 +377,7 @@ const generatedStyle = computed(() => {
 })
 
 // 方法
-const setCanvasMode = (mode) => {
+const setCanvasMode = (mode: CanvasMode) => {
   canvasMode.value = mode
   
   if (mode === 'preview') {
@@ -384,7 +397,7 @@ const getDeviceClass = () => {
   return `device-${previewDevice.value}`
 }
 
-const handleDrop = (event) => {
+const handleDrop = (event: DragEvent) => {
   event.preventDefault()
   isDraggingOver.value = false
 
@@ -403,17 +416,17 @@ const handleDrop = (event) => {
   }
 }
 
-const handleDragOver = (event) => {
+const handleDragOver = (event: DragEvent) => {
   event.preventDefault()
   event.dataTransfer.dropEffect = 'copy'
 }
 
-const handleDragEnter = (event) => {
+const handleDragEnter = (event: DragEvent) => {
   event.preventDefault()
   isDraggingOver.value = true
 }
 
-const handleDragLeave = (event) => {
+const handleDragLeave = (event: DragEvent) => {
   event.preventDefault()
   // 只有当离开整个画布区域时才取消拖拽状态
   if (!event.currentTarget.contains(event.relatedTarget)) {
@@ -421,7 +434,7 @@ const handleDragLeave = (event) => {
   }
 }
 
-const addComponentToCanvas = (componentTemplate, position) => {
+const addComponentToCanvas = (componentTemplate: ComponentTemplate, position: Position) => {
   const newComponent = {
     id: `component-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
     type: componentTemplate.tag,
@@ -449,7 +462,7 @@ const addComponentToCanvas = (componentTemplate, position) => {
   emit('component-added', newComponent)
 }
 
-const getDefaultWidth = (componentType) => {
+const getDefaultWidth = (componentType: ComponentType) => {
   const widthMap = {
     'el-button': '80px',
     'el-input': '200px',
