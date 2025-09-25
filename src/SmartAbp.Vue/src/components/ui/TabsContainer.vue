@@ -304,6 +304,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  activeTabId: '',
   theme: 'light',
   keepAlive: false,
   showAddButton: true,

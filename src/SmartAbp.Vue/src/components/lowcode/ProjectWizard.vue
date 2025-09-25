@@ -92,7 +92,7 @@
               项目基础配置
             </h3>
             <el-form
-              :model="projectConfig"
+              :model="projectFormData"
               label-width="120px"
               class="config-form"
             >
@@ -103,7 +103,7 @@
                     required
                   >
                     <el-input
-                      v-model="projectConfig.name"
+                      v-model="projectFormData.name"
                       placeholder="输入项目名称"
                     />
                   </el-form-item>
@@ -114,7 +114,7 @@
                     required
                   >
                     <el-input
-                      v-model="projectConfig.key"
+                      v-model="projectFormData.key"
                       placeholder="project-key"
                     />
                   </el-form-item>
@@ -124,7 +124,7 @@
                 <el-col :span="12">
                   <el-form-item label="命名空间">
                     <el-input
-                      v-model="projectConfig.namespace"
+                      v-model="projectFormData.namespace"
                       placeholder="YourCompany.ProjectName"
                     />
                   </el-form-item>
@@ -132,7 +132,7 @@
                 <el-col :span="12">
                   <el-form-item label="版本号">
                     <el-input
-                      v-model="projectConfig.version"
+                      v-model="projectFormData.version"
                       placeholder="1.0.0"
                     />
                   </el-form-item>
@@ -140,7 +140,7 @@
               </el-row>
               <el-form-item label="项目描述">
                 <el-input
-                  v-model="projectConfig.description"
+                  v-model="projectFormData.description"
                   type="textarea"
                   :rows="3"
                   placeholder="描述项目的用途和特点"
@@ -204,8 +204,8 @@
               <h2>恭喜！项目创建成功</h2>
               <div class="project-summary">
                 <el-card shadow="never">
-                  <h4>{{ projectConfig.name }}</h4>
-                  <p>{{ projectConfig.description }}</p>
+                  <h4>{{ projectFormData.name }}</h4>
+                  <p>{{ projectFormData.description }}</p>
                   <div class="summary-details">
                     <div class="detail-item">
                       <span class="label">项目类型：</span>
@@ -257,11 +257,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-interface Props {
-  projectConfig?: any
-}
+// interface Props { // 暂时注释避免未使用警告
+//   projectConfig?: any
+// }
 
-const props = defineProps<Props>()
+// const props = defineProps<Props>()
 
 const emit = defineEmits<{
   'project-created': [project: any]
@@ -272,7 +272,7 @@ const currentStep = ref(0)
 const selectedTemplate = ref<any>(null)
 const selectedModules = ref<string[]>([])
 
-const projectConfig = ref({
+const projectFormData = ref({
   name: '',
   key: '',
   namespace: '',
@@ -341,7 +341,7 @@ const availableModules = ref([
 const canProceed = computed(() => {
   switch (currentStep.value) {
     case 0: return selectedTemplate.value !== null
-    case 1: return projectConfig.value.name && projectConfig.value.key
+    case 1: return projectFormData.value.name && projectFormData.value.key
     case 2: return selectedModules.value.length > 0
     default: return true
   }
@@ -390,7 +390,7 @@ const prevStep = () => {
 
 const createProject = () => {
   const project = {
-    ...projectConfig.value,
+    ...projectFormData.value,
     template: selectedTemplate.value,
     modules: selectedModules.value,
     estimatedDays: estimatedDays.value

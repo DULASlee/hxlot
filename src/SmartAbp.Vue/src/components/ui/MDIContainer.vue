@@ -185,7 +185,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  theme: 'light'
+  theme: 'light',
+  activeWindowId: ''
 })
 
 // Emits

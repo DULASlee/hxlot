@@ -348,7 +348,7 @@ ${validation.failures.map(f => `- ${f}`).join('\n')}
 ` : '## ✅ 所有性能指标均符合企业级标准！'}
 
 ## 📋 建议
-${this.generateRecommendations(metrics, validation)}
+${this.generateRecommendations(metrics)}
 `
   }
 
@@ -591,7 +591,7 @@ ${this.generateRecommendations(metrics, validation)}
     return performance.now() - start
   }
 
-  private generateRecommendations(metrics: PerformanceMetrics, _validation: any): string {
+  private generateRecommendations(metrics: PerformanceMetrics): string {
     const recommendations = []
 
     if (metrics.componentRenderTime > 50) {

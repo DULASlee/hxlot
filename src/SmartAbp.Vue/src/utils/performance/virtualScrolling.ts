@@ -30,9 +30,11 @@ export interface VirtualScrollReturn<T> {
   /** 可见区域结束索引 */
   endIndex: Ref<number>
   /** 滚动到指定索引 */
-  scrollToIndex: (index: number) => void
+  // eslint-disable-next-line no-unused-vars
+  scrollToIndex: (_index: number) => void
   /** 更新数据源 */
-  updateData: (newData: T[]) => void
+  // eslint-disable-next-line no-unused-vars
+  updateData: (_newData: T[]) => void
 }
 
 /**
@@ -58,7 +60,7 @@ export function useVirtualScroll<T>(
   // 计算属性
   const totalHeight = computed(() => data.value.length * itemHeight)
   const visibleItemCount = computed(() => Math.ceil(containerHeight / itemHeight))
-  
+
   const visibleItems = computed(() => {
     const start = Math.max(0, startIndex.value - bufferSize)
     const end = Math.min(data.value.length, endIndex.value + bufferSize)
@@ -72,10 +74,10 @@ export function useVirtualScroll<T>(
   // 节流函数
   let throttleTimer: number | null = null
   const throttle = (fn: Function, delay: number) => {
-    return (...args: any[]) => {
+    return (..._args: any[]) => {
       if (throttleTimer) return
       throttleTimer = window.setTimeout(() => {
-        fn.apply(null, args)
+        fn.apply(null, _args)
         throttleTimer = null
       }, delay)
     }
@@ -89,39 +91,39 @@ export function useVirtualScroll<T>(
       data.value.length,
       start + visibleItemCount.value
     )
-    
+
     startIndex.value = start
     endIndex.value = end
   }
 
   // 节流的滚动处理
-  const handleScroll = throttle((e: Event) => {
-    const target = e.target as HTMLElement
-    scrollTop.value = target.scrollTop
+  const handleScroll = throttle(() => {
+    if (!scrollContainer.value) return
+    scrollTop.value = scrollContainer.value.scrollTop
     updateVisibleRange()
   }, throttleDelay)
 
   // 滚动到指定索引
-  const scrollToIndex = (index: number) => {
+  const scrollToIndex = (_index: number) => {
     if (!scrollContainer.value) return
-    
-    const targetScrollTop = index * itemHeight
+
+    const targetScrollTop = _index * itemHeight
     scrollContainer.value.scrollTop = targetScrollTop
     scrollTop.value = targetScrollTop
     updateVisibleRange()
   }
 
   // 更新数据源
-  const updateData = (newData: T[]) => {
-    data.value = newData
+  const updateData = (_newData: T[]) => {
+    data.value = _newData
     updateVisibleRange()
   }
 
   // 生命周期
   onMounted(() => {
     if (scrollContainer.value) {
-      scrollContainer.value.addEventListener('scroll', handleScroll, { 
-        passive: true 
+      scrollContainer.value.addEventListener('scroll', handleScroll, {
+        passive: true
       })
     }
     updateVisibleRange()
@@ -151,19 +153,18 @@ export function useVirtualScroll<T>(
 /**
  * 企业级表格虚拟滚动组件
  */
-export interface VirtualTableOptions extends VirtualScrollOptions {
-  /** 表格列配置 */
+export interface VirtualTableOptions<T> {
+  data: T[]
+  itemHeight: number
+  containerHeight: number
   columns: Array<{
     key: string
     title: string
     width?: number
-    align?: 'left' | 'center' | 'right'
-    render?: (value: any, record: any, index: number) => any
+
+    // eslint-disable-next-line no-unused-vars
+    render?: (_value: any, _record: T, _index: number) => any
   }>
-  /** 是否显示序号列 */
-  showIndex?: boolean
-  /** 序号列标题 */
-  indexTitle?: string
 }
 
 /**
@@ -171,12 +172,12 @@ export interface VirtualTableOptions extends VirtualScrollOptions {
  */
 export function useVirtualTable<T extends Record<string, any>>(
   data: Ref<T[]>,
-  options: VirtualTableOptions
+  options: VirtualTableOptions<T>
 ) {
   const virtualScroll = useVirtualScroll(data, options)
-  
+
   const { columns, showIndex = false, indexTitle = '#' } = options
-  
+
   // 扩展列配置
   const enhancedColumns = computed(() => {
     const cols = [...columns]
@@ -212,7 +213,7 @@ export function usePerformanceMonitor() {
   const recordRenderTime = (startTime: number) => {
     const endTime = performance.now()
     const renderTime = endTime - startTime
-    
+
     renderTimes.value.push(renderTime)
     // 只保留最近100次记录
     if (renderTimes.value.length > 100) {

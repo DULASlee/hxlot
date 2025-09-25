@@ -363,7 +363,8 @@ const uiConfigToPageSchema = (config: any) => config
 
 // 临时API模拟，保持功能完整性
 const codeGeneratorApi = {
-  getUiConfig: (_module: string, _entity: string) => Promise.resolve(null),
+  // eslint-disable-next-line no-unused-vars
+       getUiConfig: (_module: string, _entity: string) => Promise.resolve(null),
   generateCode: () => Promise.resolve({ success: true, files: [] })
 }
 import type { ElTable, FormInstance } from "element-plus"

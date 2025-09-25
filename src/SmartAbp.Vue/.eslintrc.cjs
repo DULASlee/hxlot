@@ -59,6 +59,10 @@ module.exports = {
     "@typescript-eslint/explicit-module-boundary-types": "off",
     // 降级严格规则
     "@typescript-eslint/no-explicit-any": "off",
+    "no-unused-vars": [
+      "warn",
+      { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+    ],
     "@typescript-eslint/no-unused-vars": [
       "warn",
       { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },

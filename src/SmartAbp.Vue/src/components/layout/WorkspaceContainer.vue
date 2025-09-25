@@ -200,7 +200,7 @@ const emit = defineEmits<{
 }>()
 
 // Store
-const workspaceStore = useWorkspaceStore()
+// const workspaceStore = useWorkspaceStore() // 暂时注释
 // const { isGlobalLoading } = storeToRefs(workspaceStore)
 
 // 本地状态

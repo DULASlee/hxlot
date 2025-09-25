@@ -23,7 +23,8 @@ export function useAuth() {
     store.logout()
   }
 
-  const hasPermission = (_permission: string) => {
+  // eslint-disable-next-line no-unused-vars
+  const hasPermission = (_permission: string): boolean => {
     // Placeholder: integrate when permission store is available
     return true
   }
