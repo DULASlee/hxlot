@@ -62,15 +62,18 @@ const collapsed = computed({
 
 const activeMenuKey = computed(() => router.currentRoute.value.path)
 
-// Functional menu items with correct structure
+// Complete menu structure matching the routes
 const menuItems = ref([
   {
     path: '/lowcode',
     title: 'LowCode Studio',
     icon: MagicStick,
     children: [
-      { path: '/lowcode/entity-modeling', title: 'Entity Modeling', icon: DataBoard, children: [] },
-      { path: '/lowcode/design', title: 'Design', icon: Brush, children: [] },
+      { path: '/lowcode/entity-modeling', title: '实体建模', icon: DataBoard, children: [] },
+      { path: '/lowcode/design', title: '可视化设计', icon: Brush, children: [] },
+      { path: '/lowcode/generation', title: '代码生成', icon: MagicStick, children: [] },
+      { path: '/lowcode/theme', title: '主题定制', icon: Brush, children: [] },
+      { path: '/lowcode/workflows', title: '工作流', icon: DataBoard, children: [] },
     ]
   }
 ])
