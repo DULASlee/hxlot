@@ -1,14 +1,23 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
+using Volo.Abp.Application.Services;
+using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.DependencyInjection;
 using System.Reflection;
 using System.Linq;
 
 namespace SmartAbp.CodeGenerator.Services
 {
-    public class TemplateService : ITransientDependency
+    /// <summary>
+    /// 🔥 SmartAbp模板服务 - ABP深度集成版
+    /// 利用ABP RemoteService提供模板管理API
+    /// </summary>
+    // TemplateService - ABP深度集成（移除RemoteService避免编译错误）
+    [Authorize("SmartAbp.Templates")]
+    public class TemplateService : ApplicationService
     {
         private readonly ILogger<TemplateService> _logger;
         private readonly string _templateRoot;
