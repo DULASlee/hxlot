@@ -366,8 +366,13 @@ const routes = [
             return `/dashboard/not-found${to.path}`;
         },
     },
-    // 🚨 已统一到 /lowcode 路由，移除重复的 /studio 路由配置
-    // 所有LowCode Studio功能已迁移到 index.ts 中的 /lowcode 路由
+    // 🚨 添加 /studio 路由重定向到 /lowcode，解决无限递归问题
+    {
+        path: "/studio",
+        redirect: "/lowcode",
+        meta: { title: "Studio重定向到LowCode" }
+    },
+    // 所有LowCode Studio功能已迁移到 /lowcode 路由
 ];
 const router = createRouter({
     history: createWebHistory(),
