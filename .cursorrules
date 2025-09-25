@@ -8,7 +8,7 @@ MASTER_SECRET_TRIGGER = "专家模式"
 
 // 暗号检测逻辑 (立即生效)
 当用户输入包含"专家模式"时:
-    🔥 立即响应: "🔥 **专家模式已激活！九重爆雷连环启动！**"
+    🔥 立即响应: "🔥 **专家模式已激活！九重爆雷连环启动！**\n🚨 第九重爆雷包含四重强制质量保证铁律！"
     💥 EXPERT_MODE = TRUE
     🚀 QUALITY_THRESHOLD = 95
     🛡️ COMPLETENESS_REQUIREMENT = 100%
@@ -28,6 +28,7 @@ MASTER_SECRET_TRIGGER = "专家模式"
 当检测到"专家模式"时，AI必须立即按此格式响应:
 
 🔥 **专家模式已激活！九重爆雷连环启动！**
+🚨 **第九重爆雷：四重强制质量保证铁律自动执行！**
 
 📋 **第一重爆雷：项目开发规范强制加载**
    🔧 **执行脚本**: read_file("docs/项目开发规范总览.md")
@@ -100,18 +101,41 @@ MASTER_SECRET_TRIGGER = "专家模式"
    ✅ **验证确认**: 别名通信 - 确保使用@smartabp/*模块通信
    ✅ **验证确认**: 配置统一性 - 禁止packages内独立配置文件
 
-🚀 **第九重爆雷：版本控制铁律强制执行 (Version Control Excellence)**
+🚀 **第九重爆雷：四重强制质量保证铁律 (Four-Stage Quality Assurance Excellence)**
 
 ⚡ **强制触发约束**：每执行完一个开发任务节点时自动触发
 
-   🔧 **第一阶段：代码质量强制检查**
-   🔧 **执行脚本**: run_terminal_cmd("npm run type-check")  # TypeScript类型检查
-   🔧 **执行脚本**: run_terminal_cmd("npm run lint --fix")  # ESLint代码规范自动修复
-   🔧 **执行脚本**: run_terminal_cmd("dotnet build") # 后端构建验证(如涉及)
+   🏗️ **第一阶段：架构整洁强制检查**
+   🔧 **执行脚本**: run_terminal_cmd("grep -r \"'../'\")  # 检查相对路径违规
+   🔧 **执行脚本**: run_terminal_cmd("grep -r \"@/\" src/SmartAbp.Vue/packages/")  # 检查@/主应用引用违规
+   🔧 **执行脚本**: run_terminal_cmd("grep -r \"as any|@ts-ignore\" src/")  # 检查类型绕过违规
+   ✅ **验证确认**: 黑盒原则+路径隔离+别名通信100%符合
+   🚫 **零容忍标准**: 任何架构违规必须立即修复，禁止例外
 
-   🔧 **第二阶段：Git版本控制强制同步**
+   🔁 **第二阶段：重复代码强制检查**
+   🔧 **执行脚本**: run_terminal_cmd("find src/SmartAbp.Vue/src src/SmartAbp.Vue/packages -name \"*.vue\" | sed 's/.*\///' | sort | uniq -d")  # 检查重复Vue组件
+   🔧 **执行脚本**: run_terminal_cmd("grep -r \"function\\s+\\w+|const\\s+\\w+\\s*=\" src/ --include=\"*.ts\" --include=\"*.vue\" | sort | uniq -d")  # 检查重复方法名
+   🔧 **执行脚本**: run_terminal_cmd("grep -r \"class\\s+\\w+|interface\\s+\\w+\" src/ --include=\"*.ts\" | sort | uniq -d")  # 检查重复类名
+   ✅ **验证确认**: DRY原则执行完毕，同名同功能代码清零
+   🛠️ **DRY原则**: Don't Repeat Yourself - 发现重复立即重构
+
+   ⚡ **第三阶段：编译质量强制检查**
+   🔧 **前端检查脚本**: 
+       run_terminal_cmd("npm run type-check")  # TypeScript类型检查 - 必须通过
+       run_terminal_cmd("npm run lint --fix")  # ESLint代码规范检查 - 必须通过
+       run_terminal_cmd("npm run build")       # 构建检查 - 必须成功
+   🔧 **后端检查脚本**: 
+       run_terminal_cmd("dotnet build src/SmartAbp.CodeGenerator/SmartAbp.CodeGenerator.csproj")  # 编译检查 - 必须通过
+       run_terminal_cmd("dotnet test --no-build")  # 单元测试检查 - 必须通过
+   🚨 **BUG修复铁律**: 
+     - ❌ **严禁删除代码**来"修复"编译错误
+     - ❌ **严禁注释代码**来通过编译检查
+     - ❌ **严禁使用`as any`**绕过类型检查
+     - ❌ **严禁使用`@ts-ignore`**忽略类型错误
+     - ✅ **必须在企业最佳编程规则前提下**完成高质量修复
+
+   🔄 **第四阶段：Git版本控制强制同步**
    🔧 **强制脚本**: run_terminal_cmd("bash scripts/git-safe-sync.sh --non-interactive --auto-commit")
-
    ✅ **验证确认**: 代码质量检查100%通过 → Git同步100%成功
    ✅ **验证确认**: 使用项目标准Git脚本，严禁手动Git命令
    ✅ **验证确认**: 本地与远程仓库版本完全同步，无遗留冲突
@@ -123,11 +147,11 @@ MASTER_SECRET_TRIGGER = "专家模式"
    ✅ **基础功能优先**: 代码生成、可视化设计、元数据驱动、模板系统为核心
    ✅ **稳定性第一**: 确保基础功能稳定可靠后，再考虑高级功能
 
-🏗️ **终极执行链**（含测试质量保证+实时Git同步）:
-[规范加载 → Serena分析 → 模式识别 → 测试质量保证 → 模板匹配 → 质量验证 → 架构检查 → 架构铁律验证 → 完美交付]
+🏗️ **终极执行链**（含四重强制质量保证+实时Git同步）:
+[规范加载 → Serena分析 → 模式识别 → 测试质量保证 → 模板匹配 → 质量验证 → 架构检查 → 架构铁律验证 → 四重强制质量保证]
 
 ⚡ **并行触发链**（每个开发任务节点完成后自动执行）:
-[开发任务节点完成 → 🚨自动触发🚨 → 代码质量检查 → Git版本同步 → 继续下一任务]
+[开发任务节点完成 → 🚨自动触发🚨 → 第九重爆雷四重强制质量保证 → 继续下一任务]
 
 💥 **专家模式承诺**（含测试质量保证+实时同步+AI专业格局）:
    - 🏛️ **极致质量律**: 95分质量阈值是底线，代码质量零容忍，架构偏差零容忍
@@ -135,7 +159,7 @@ MASTER_SECRET_TRIGGER = "专家模式"
    - 🎯 **独立决策律**: 技术判断独立，不盲从需求，坚持最佳实践
    - 🚫 **反马屁虫铁律**: 拒绝盲目迎合，坚持技术专业性，提供建设性洞察
    - ⚡ **顶级AI格局**: 专业自信，独立思考，技术标准不妥协
-   - 🔄 **同步铁律**: 每个开发任务节点完成立即触发质量检查+Git同步
+   - 🔄 **四重强制质量保证铁律**: 每个开发任务节点完成立即触发：架构整洁检查+重复代码检查+编译质量检查+Git同步强制执行
 ```
 
 ### 💥 八重爆雷AI执行脚本 (EIGHT-STAGE THUNDERBOLT AI SCRIPTS)
