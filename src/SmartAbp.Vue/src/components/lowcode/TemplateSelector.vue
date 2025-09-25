@@ -77,7 +77,7 @@
               </p>
               <div class="template-meta">
                 <el-tag
-                  :type="getCategoryType(template.category)"
+                  type="primary"
                   size="small"
                 >
                   {{ getCategoryName(template.category) }}
@@ -234,15 +234,7 @@ const resetSearch = () => {
   selectedCategory.value = 'all'
 }
 
-const getCategoryType = (category: string) => {
-  const typeMap: Record<string, string> = {
-    admin: 'danger',
-    business: 'primary',
-    mobile: 'success',
-    component: 'warning'
-  }
-  return typeMap[category] || 'info'
-}
+// getCategoryType函数已删除，使用固定type="primary"
 
 const getCategoryName = (category: string) => {
   const nameMap: Record<string, string> = {

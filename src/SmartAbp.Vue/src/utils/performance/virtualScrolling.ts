@@ -157,10 +157,13 @@ export interface VirtualTableOptions<T> {
   data: T[]
   itemHeight: number
   containerHeight: number
+  showIndex?: boolean
+  indexTitle?: string
   columns: Array<{
     key: string
     title: string
     width?: number
+    align?: 'left' | 'center' | 'right'
 
     // eslint-disable-next-line no-unused-vars
     render?: (_value: any, _record: T, _index: number) => any
