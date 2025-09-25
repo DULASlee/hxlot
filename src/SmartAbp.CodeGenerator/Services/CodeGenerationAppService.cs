@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SmartAbp.CodeGenerator.Core;
+using SmartAbp.CodeGenerator.Core.Pipeline;
 using SmartAbp.CodeGenerator.Core.Validation;
 using SmartAbp.CodeGenerator.Events;
 using SmartAbp.CodeGenerator.Services.V9;
@@ -44,6 +45,7 @@ namespace SmartAbp.CodeGenerator.Services
         private readonly SchemaVersioningService _schemaVersioningService;
         private readonly ILocalEventBus _eventBus; // 🔥 ABP事件总线 - 实现解耦架构
         private readonly EnhancedModelProcessor _enhancedModelProcessor; // 🔥 增强模型处理器 - 集成类型映射和循环引用检测
+        private readonly StableGenerationPipeline _stableGenerationPipeline; // 🔥 稳定生成流水线 - 异常恢复和进度监控
 
         public CodeGenerationAppService(
             CodeWriterService codeWriterService,
@@ -56,7 +58,8 @@ namespace SmartAbp.CodeGenerator.Services
             FrontendIntegrationService frontendIntegrationService,
             SchemaVersioningService schemaVersioningService,
             ILocalEventBus eventBus, // 🔥 注入ABP事件总线
-            EnhancedModelProcessor enhancedModelProcessor) // 🔥 注入增强模型处理器
+            EnhancedModelProcessor enhancedModelProcessor, // 🔥 注入增强模型处理器
+            StableGenerationPipeline stableGenerationPipeline) // 🔥 注入稳定生成流水线
         {
             _codeWriterService = codeWriterService;
             _solutionIntegrationService = solutionIntegrationService;
@@ -69,6 +72,7 @@ namespace SmartAbp.CodeGenerator.Services
             _schemaVersioningService = schemaVersioningService;
             _eventBus = eventBus; // 🔥 ABP事件总线设置
             _enhancedModelProcessor = enhancedModelProcessor; // 🔥 增强模型处理器设置
+            _stableGenerationPipeline = stableGenerationPipeline; // 🔥 稳定生成流水线设置
         }
 
         /// <summary>
@@ -111,9 +115,58 @@ namespace SmartAbp.CodeGenerator.Services
         }
 
         /// <summary>
+        /// 🔥 稳定生成流水线版本 - 企业级安全可靠的代码生成
+        /// 集成异常恢复、进度监控、质量检查的完整流水线
+        /// </summary>
+        public async Task<GeneratedModuleDto> GenerateModuleStableAsync(ModuleMetadataDto input)
+        {
+            Check.NotNull(input, nameof(input));
+            Check.NotNull(input.Entities, nameof(input.Entities));
+
+            _logger.LogInformation("🚀 启动稳定生成流水线: {ModuleName}", input.Name);
+
+            try
+            {
+                // 准备稳定生成请求
+                var solutionRoot = FindSolutionRoot();
+                if (solutionRoot == null)
+                {
+                    throw new AbpException("Could not find the solution root directory.");
+                }
+
+                var request = new StableGenerationRequest
+                {
+                    ModuleMetadata = input,
+                    OutputPath = solutionRoot,
+                    GenerateBackend = true,
+                    GenerateFrontend = true,
+                    GenerateConfiguration = true,
+                    EnableCompilationCheck = false, // 可以通过配置启用
+                    ConflictStrategy = ConflictResolutionStrategy.Auto
+                };
+
+                // 执行稳定生成流水线
+                var result = await _stableGenerationPipeline.ExecuteAsync(request);
+
+                // 转换为标准返回格式
+                return new GeneratedModuleDto
+                {
+                    ModuleName = input.Name,
+                    GeneratedFiles = result.GeneratedFiles.Keys.ToList(),
+                    GenerationReport = result.GenerationSummary
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "稳定生成流水线执行失败: {ModuleName}", input.Name);
+                throw new AbpException($"稳定生成流水线执行失败: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
         /// 🔥 保留原有的直接生成方法作为回退选项
         /// </summary>
-        [Obsolete("This method is deprecated. Use event-driven GenerateModuleAsync instead.")]
+        [Obsolete("This method is deprecated. Use GenerateModuleStableAsync for enhanced reliability.")]
         public async Task<GeneratedModuleDto> GenerateModuleDirectAsync(ModuleMetadataDto input)
         {
             Check.NotNull(input, nameof(input));

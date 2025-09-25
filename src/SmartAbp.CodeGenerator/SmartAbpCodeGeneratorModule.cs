@@ -6,6 +6,8 @@ using SmartAbp.CodeGenerator.ApplicationServices;
 using SmartAbp.CodeGenerator.Aspire;
 using SmartAbp.CodeGenerator.Caching;
 using SmartAbp.CodeGenerator.Core;
+using SmartAbp.CodeGenerator.Core.FileOperations;
+using SmartAbp.CodeGenerator.Core.Pipeline;
 using SmartAbp.CodeGenerator.Core.Templates;
 using SmartAbp.CodeGenerator.Core.Types;
 using SmartAbp.CodeGenerator.Core.Validation;
@@ -66,6 +68,15 @@ namespace SmartAbp.CodeGenerator
             
             // 🔥 增强模型处理器 - 集成类型映射和循环引用检测
             services.AddScoped<EnhancedModelProcessor>();
+            
+            // 🔥 安全文件操作系统 - 原子性写入和冲突解决
+            services.AddScoped<FileConflictResolver>();
+            services.AddScoped<AtomicFileWriter>();
+            
+            // 🔥 稳定生成流水线系统 - 异常恢复和进度监控
+            services.AddScoped<GenerationProgressTracker>();
+            services.AddScoped<GenerationQualityChecker>();
+            services.AddScoped<StableGenerationPipeline>();
             
             // Application service
             services.AddScoped<CodeGenerationAppService>();
