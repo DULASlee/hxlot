@@ -366,13 +366,62 @@ const routes = [
             return `/dashboard/not-found${to.path}`;
         },
     },
+    // LowCode Studio 低代码工作室完整路由定义
+    {
+        path: "/lowcode",
+        component: SmartAbpLayout,
+        name: "LowCodeStudio",
+        meta: {
+            title: "低代码工作室",
+            icon: "🧩",
+            requiresAuth: true,
+            requiredRoles: ["user"],
+        },
+        children: [
+            {
+                path: "",
+                name: "LowCodeStudioHome",
+                component: LowCodeStudioView,
+                meta: { title: "低代码工作室", menuKey: "lowcode-studio-home" },
+            },
+            {
+                path: "design",
+                name: "LowCodeDesign", 
+                component: () => import("@/views/lowcode/DesignView.vue"),
+                meta: { title: "可视化设计", menuKey: "lowcode-design" },
+            },
+            {
+                path: "entity-modeling",
+                name: "LowCodeEntityModeling",
+                component: () => import("@/views/lowcode/EntityModelingView.vue"),
+                meta: { title: "实体建模", menuKey: "lowcode-entity-modeling" },
+            },
+            {
+                path: "generation",
+                name: "LowCodeGeneration",
+                component: () => import("@/views/lowcode/EnhancedGenerationView.vue"),
+                meta: { title: "代码生成", menuKey: "lowcode-generation" },
+            },
+            {
+                path: "theme",
+                name: "LowCodeTheme",
+                component: () => import("@/views/lowcode/ThemeCustomizationView.vue"),
+                meta: { title: "主题定制", menuKey: "lowcode-theme" },
+            },
+            {
+                path: "workflows",
+                name: "LowCodeWorkflows",
+                component: () => import("@/views/lowcode/WorkflowsView.vue"),
+                meta: { title: "工作流管理", menuKey: "lowcode-workflows" },
+            },
+        ],
+    },
     // 🚨 添加 /studio 路由重定向到 /lowcode，解决无限递归问题
     {
         path: "/studio",
         redirect: "/lowcode",
         meta: { title: "Studio重定向到LowCode" }
     },
-    // 所有LowCode Studio功能已迁移到 /lowcode 路由
 ];
 const router = createRouter({
     history: createWebHistory(),

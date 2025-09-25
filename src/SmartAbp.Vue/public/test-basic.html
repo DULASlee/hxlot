@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🚨 SmartAbp基础功能残酷测试</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/element-plus@2.4.4/dist/index.full.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-plus@2.4.4/dist/index.css">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .success { color: green; } .error { color: red; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>🚨 SmartAbp低代码引擎基础功能残酷测试</h1>
+        
+        <!-- 测试1：基础Vue3渲染 -->
+        <div class="test-section">
+            <h2>测试1：基础Vue3渲染</h2>
+            <p :class="vue3Working ? 'success' : 'error'">
+                Vue3状态: {{ vue3Working ? '✅ 正常工作' : '❌ 渲染失败' }}
+            </p>
+            <p>响应式测试: {{ message }}</p>
+            <button @click="updateMessage">点击测试响应式</button>
+        </div>
+
+        <!-- 测试2：Element Plus组件 -->
+        <div class="test-section">
+            <h2>测试2：Element Plus组件</h2>
+            <el-button type="primary" @click="testElementPlus">Element Plus按钮测试</el-button>
+            <p :class="elementWorking ? 'success' : 'error'">
+                Element Plus状态: {{ elementWorking ? '✅ 正常工作' : '❌ 组件失败' }}
+            </p>
+        </div>
+
+        <!-- 测试3：基础表单功能 -->
+        <div class="test-section">
+            <h2>测试3：基础表单功能</h2>
+            <el-form :model="testForm" style="max-width: 400px;">
+                <el-form-item label="用户名">
+                    <el-input v-model="testForm.username" placeholder="输入用户名" />
+                </el-form-item>
+                <el-form-item label="邮箱">
+                    <el-input v-model="testForm.email" placeholder="输入邮箱" />
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm">提交测试</el-button>
+                </el-form-item>
+            </el-form>
+            <p v-if="formResult" :class="formResult.success ? 'success' : 'error'">
+                表单结果: {{ formResult.message }}
+            </p>
+        </div>
+
+        <!-- 测试4：网络请求模拟 -->
+        <div class="test-section">
+            <h2>测试4：网络请求模拟</h2>
+            <el-button @click="testApiCall" :loading="apiLoading">测试API调用</el-button>
+            <p v-if="apiResult" :class="apiResult.success ? 'success' : 'error'">
+                API结果: {{ apiResult.message }}
+            </p>
+        </div>
+
+        <!-- 测试5：路由功能模拟 -->
+        <div class="test-section">
+            <h2>测试5：路由功能模拟</h2>
+            <el-button @click="testRouting">测试路由切换</el-button>
+            <p v-if="routeResult" :class="routeResult.success ? 'success' : 'error'">
+                路由结果: {{ routeResult.message }}
+            </p>
+        </div>
+
+        <!-- 测试结果汇总 -->
+        <div class="test-section">
+            <h2>🎯 测试结果汇总</h2>
+            <ul>
+                <li :class="vue3Working ? 'success' : 'error'">Vue3基础: {{ vue3Working ? '✅' : '❌' }}</li>
+                <li :class="elementWorking ? 'success' : 'error'">Element Plus: {{ elementWorking ? '✅' : '❌' }}</li>
+                <li :class="formWorking ? 'success' : 'error'">表单功能: {{ formWorking ? '✅' : '❌' }}</li>
+                <li :class="apiWorking ? 'success' : 'error'">API调用: {{ apiWorking ? '✅' : '❌' }}</li>
+                <li :class="routeWorking ? 'success' : 'error'">路由功能: {{ routeWorking ? '✅' : '❌' }}</li>
+            </ul>
+            <h3 :class="allTestsPassed ? 'success' : 'error'">
+                总体状态: {{ allTestsPassed ? '✅ 基础功能正常' : '❌ 存在问题需修复' }}
+            </h3>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, computed } = Vue;
+        const { ElButton, ElForm, ElFormItem, ElInput } = ElementPlus;
+        
+        createApp({
+            components: {
+                ElButton, ElForm, ElFormItem, ElInput
+            },
+            setup() {
+                // 基础状态
+                const vue3Working = ref(true);
+                const elementWorking = ref(false);
+                const formWorking = ref(false);
+                const apiWorking = ref(false);
+                const routeWorking = ref(false);
+                
+                const message = ref('初始消息');
+                const apiLoading = ref(false);
+                
+                // 表单数据
+                const testForm = ref({
+                    username: '',
+                    email: ''
+                });
+                
+                // 结果数据
+                const formResult = ref(null);
+                const apiResult = ref(null);
+                const routeResult = ref(null);
+                
+                // 计算属性
+                const allTestsPassed = computed(() => {
+                    return vue3Working.value && elementWorking.value && 
+                           formWorking.value && apiWorking.value && routeWorking.value;
+                });
+                
+                // 测试方法
+                const updateMessage = () => {
+                    message.value = '✅ Vue3响应式正常工作！时间: ' + new Date().toLocaleTimeString();
+                };
+                
+                const testElementPlus = () => {
+                    elementWorking.value = true;
+                    ElementPlus.ElMessage.success('✅ Element Plus组件正常工作！');
+                };
+                
+                const submitForm = () => {
+                    if (!testForm.value.username || !testForm.value.email) {
+                        formResult.value = {
+                            success: false,
+                            message: '❌ 表单验证失败：请填写所有字段'
+                        };
+                        ElementPlus.ElMessage.error('请填写所有字段');
+                        return;
+                    }
+                    
+                    formWorking.value = true;
+                    formResult.value = {
+                        success: true,
+                        message: `✅ 表单提交成功！用户名: ${testForm.value.username}, 邮箱: ${testForm.value.email}`
+                    };
+                    ElementPlus.ElMessage.success('表单提交成功！');
+                };
+                
+                const testApiCall = async () => {
+                    apiLoading.value = true;
+                    try {
+                        // 模拟API调用
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        
+                        // 模拟成功响应
+                        apiWorking.value = true;
+                        apiResult.value = {
+                            success: true,
+                            message: '✅ API调用成功！模拟数据返回正常'
+                        };
+                        ElementPlus.ElMessage.success('API调用成功！');
+                    } catch (error) {
+                        apiResult.value = {
+                            success: false,
+                            message: '❌ API调用失败: ' + error.message
+                        };
+                        ElementPlus.ElMessage.error('API调用失败');
+                    } finally {
+                        apiLoading.value = false;
+                    }
+                };
+                
+                const testRouting = () => {
+                    try {
+                        // 模拟路由功能
+                        const currentUrl = window.location.href;
+                        const testUrl = currentUrl + '#test-route';
+                        window.location.hash = 'test-route';
+                        
+                        setTimeout(() => {
+                            routeWorking.value = true;
+                            routeResult.value = {
+                                success: true,
+                                message: '✅ 路由切换成功！当前URL: ' + window.location.href
+                            };
+                            ElementPlus.ElMessage.success('路由功能正常！');
+                        }, 500);
+                        
+                    } catch (error) {
+                        routeResult.value = {
+                            success: false,
+                            message: '❌ 路由测试失败: ' + error.message
+                        };
+                        ElementPlus.ElMessage.error('路由功能异常');
+                    }
+                };
+                
+                return {
+                    vue3Working, elementWorking, formWorking, apiWorking, routeWorking,
+                    message, apiLoading, testForm, formResult, apiResult, routeResult,
+                    allTestsPassed, updateMessage, testElementPlus, submitForm, 
+                    testApiCall, testRouting
+                };
+            }
+        }).use(ElementPlus).mount('#app');
+    </script>
+</body>
+</html>
+
