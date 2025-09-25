@@ -175,7 +175,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import type { MDIWindowConfig } from '@/stores/lowcode/entityModeling'
+import type { MDIWindowConfig } from '@smartabp/lowcode-core'
 
 // Props
 interface Props {

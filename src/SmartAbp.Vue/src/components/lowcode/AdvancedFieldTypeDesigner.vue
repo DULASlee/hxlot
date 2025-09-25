@@ -522,7 +522,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { type EntityField } from '@/stores/lowcode/entityModeling'
+import { type EntityField } from '@smartabp/lowcode-core'
 import { logger } from '@/utils/logger'
 
 // Props

@@ -347,13 +347,13 @@ const routes: RouteRecordRaw[] = [
       {
         path: "entity-modeling",
         name: "EntityModeling",
-        component: () => import("@/views/lowcode/EntityModelingView.vue"),
+        component: () => import('@smartabp/lowcode-designer'),
         meta: { title: "数据建模", menuKey: "entity-modeling" },
       },
       {
         path: "design",
         name: "PageDesign",
-        component: () => import("@/views/lowcode/DesignView.vue"),
+        component: () => import('@smartabp/lowcode-designer'),
         meta: { title: "页面设计", menuKey: "page-design" },
       },
       {
@@ -371,7 +371,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "theme",
         name: "ThemeCustomization",
-        component: () => import("@/views/lowcode/ThemeCustomizationView.vue"),
+        component: () => import('@smartabp/lowcode-designer'),
         meta: { title: "主题定制", menuKey: "theme-customization" },
       },
     ],

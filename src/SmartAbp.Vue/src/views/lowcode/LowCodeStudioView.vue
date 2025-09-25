@@ -220,7 +220,7 @@ import {
   Files
 } from '@element-plus/icons-vue'
 import ProjectWizard from "@/components/lowcode/ProjectWizard.vue"
-import { useEntityModelingStore } from '@/stores/lowcode/entityModeling'
+import { useEntityModelingStore } from '@smartabp/lowcode-core'
 import { usePageDesignStore } from '@/stores/lowcode/pageDesign'
 import { useCodeGenerationStore } from '@/stores/lowcode/codeGeneration'
 import { useSmartWorkflow } from "@/composables/useSmartWorkflow"

@@ -171,7 +171,7 @@ import HelpCenter from '@/components/lowcode/HelpCenter.vue'
 
 // Stores 和 Composables
 import { useWorkspaceStore } from '@/stores/modules/workspace'
-import { useEntityModelingStore } from '@/stores/lowcode/entityModeling'
+import { useEntityModelingStore } from '@smartabp/lowcode-core'
 import { usePageDesignStore } from '@/stores/lowcode/pageDesign'
 import { useCodeGenerationStore } from '@/stores/lowcode/codeGeneration'
 import { useEventBus, useEventSubscription } from '@/utils/eventBus'

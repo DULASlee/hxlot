@@ -288,7 +288,7 @@ import {
   Close, Plus, ArrowLeft, ArrowRight, More, Remove, Right, 
   List, CopyDocument, Loading 
 } from '@element-plus/icons-vue'
-import type { TabConfig } from '@/stores/lowcode/entityModeling'
+import type { TabConfig } from '@smartabp/lowcode-core'
 
 // Props
 interface Props {

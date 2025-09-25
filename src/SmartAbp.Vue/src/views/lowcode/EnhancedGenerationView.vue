@@ -405,7 +405,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue"
 import { ElMessage } from "element-plus"
-import { useEntityModelingStore, type EntityDefinition, type EntityField } from "@/stores/lowcode/entityModeling"
+import { useEntityModelingStore, type EntityDefinition, type EntityField } from '@smartabp/lowcode-core'
 import { usePageDesignStore } from "@/stores/lowcode/pageDesign"
 import { logger } from "@/utils/logger"
 import EnterpriseCodeGenerationEngine from "@/components/lowcode/EnterpriseCodeGenerationEngine.vue"

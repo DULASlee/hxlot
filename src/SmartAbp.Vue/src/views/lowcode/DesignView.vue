@@ -870,10 +870,10 @@
 import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { logger } from "@/utils/logger"
-import { useEntityModelingStore, type EntityDefinition, type MDIWindowConfig, type TabConfig } from "@/stores/lowcode/entityModeling"
+import { useEntityModelingStore, type EntityDefinition, type MDIWindowConfig, type TabConfig } from '@smartabp/lowcode-core'
 import { usePageDesignStore } from "@/stores/lowcode/pageDesign"
 import VisualComponentPalette from "@/components/lowcode/VisualComponentPalette.vue"
-import VisualDesignCanvas from "@/components/lowcode/VisualDesignCanvas.vue"
+import VisualDesignCanvas from '@smartabp/lowcode-designer'
 import ComponentPropertyPanel from "@/components/lowcode/ComponentPropertyPanel.vue"
 import MDIContainer from "@/components/ui/MDIContainer.vue"
 import TabsContainer from "@/components/ui/TabsContainer.vue"
