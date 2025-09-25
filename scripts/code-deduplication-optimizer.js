@@ -20,7 +20,7 @@ class CodeDeduplicationOptimizer {
    */
   analyzeComponentDuplication() {
     console.log('🔍 分析组件重复模式...');
-    
+
     const componentPairs = [
       {
         original: 'src/components/lowcode/BusinessRulesEngine.vue',
@@ -30,14 +30,14 @@ class CodeDeduplicationOptimizer {
       },
       {
         original: 'src/components/lowcode/EnhancedThemeEditor.vue',
-        duplicate: 'packages/lowcode-designer/src/components/EnhancedThemeEditor.vue', 
+        duplicate: 'packages/lowcode-designer/src/components/EnhancedThemeEditor.vue',
         action: 'KEEP_PACKAGES_VERSION',
         reason: '保留packages版本，删除src版本'
       },
       {
         original: 'src/components/lowcode/EnhancedStateMachine.vue',
         duplicate: 'packages/lowcode-designer/src/components/EnhancedStateMachine.vue',
-        action: 'KEEP_PACKAGES_VERSION', 
+        action: 'KEEP_PACKAGES_VERSION',
         reason: '保留packages版本，删除src版本'
       },
       {
@@ -49,7 +49,7 @@ class CodeDeduplicationOptimizer {
     ];
 
     componentPairs.forEach(pair => {
-      if (fs.existsSync(path.join(this.projectRoot, pair.original)) && 
+      if (fs.existsSync(path.join(this.projectRoot, pair.original)) &&
           fs.existsSync(path.join(this.projectRoot, pair.duplicate))) {
         this.consolidationPlan.push(pair);
       }
@@ -64,7 +64,7 @@ class CodeDeduplicationOptimizer {
    */
   analyzeStoreDuplication() {
     console.log('🔍 分析Store重复模式...');
-    
+
     const storePairs = [
       {
         original: 'src/stores/lowcode/entityModeling.ts',
@@ -93,7 +93,7 @@ class CodeDeduplicationOptimizer {
     ];
 
     const validStorePairs = storePairs.filter(pair =>
-      fs.existsSync(path.join(this.projectRoot, pair.original)) && 
+      fs.existsSync(path.join(this.projectRoot, pair.original)) &&
       fs.existsSync(path.join(this.projectRoot, pair.duplicate))
     );
 
@@ -106,9 +106,9 @@ class CodeDeduplicationOptimizer {
    */
   async optimizeComponentDuplication() {
     console.log('🧩 执行组件合并优化...');
-    
+
     const componentPlan = this.analyzeComponentDuplication();
-    
+
     for (const pair of componentPlan) {
       try {
         if (pair.action === 'KEEP_PACKAGES_VERSION') {
@@ -118,10 +118,10 @@ class CodeDeduplicationOptimizer {
             // 先备份
             const backupPath = originalPath + '.backup';
             fs.copyFileSync(originalPath, backupPath);
-            
+
             // 删除原文件
             fs.unlinkSync(originalPath);
-            
+
             console.log(`   ✅ 删除重复组件: ${pair.original}`);
             console.log(`   📦 保留packages版本: ${pair.duplicate}`);
             this.optimizedCount++;
@@ -138,9 +138,9 @@ class CodeDeduplicationOptimizer {
    */
   async optimizeStoreDuplication() {
     console.log('🏗️ 执行Store统一优化...');
-    
+
     const storePlan = this.analyzeStoreDuplication();
-    
+
     for (const pair of storePlan) {
       try {
         if (pair.action === 'KEEP_PACKAGES_VERSION') {
@@ -150,7 +150,7 @@ class CodeDeduplicationOptimizer {
             const backupPath = originalPath + '.backup';
             fs.copyFileSync(originalPath, backupPath);
             fs.unlinkSync(originalPath);
-            
+
             console.log(`   ✅ 删除重复Store: ${pair.original}`);
             console.log(`   📦 保留packages版本: ${pair.duplicate}`);
             this.optimizedCount++;
@@ -170,9 +170,9 @@ class CodeDeduplicationOptimizer {
    */
   async updateReferencePaths() {
     console.log('🔧 更新组件引用路径...');
-    
+
     const allFiles = this.findAllCodeFiles();
-    
+
     const pathUpdates = [
       {
         from: '@/components/lowcode/BusinessRulesEngine.vue',
@@ -200,23 +200,23 @@ class CodeDeduplicationOptimizer {
       try {
         let content = fs.readFileSync(file, 'utf8');
         let fileChanged = false;
-        
+
         pathUpdates.forEach(update => {
           const pattern = new RegExp(`['"]${update.from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}['"]`, 'g');
           const newContent = content.replace(pattern, `'${update.to}'`);
-          
+
           if (newContent !== content) {
             content = newContent;
             fileChanged = true;
             console.log(`   ✅ ${update.description}: ${path.relative(this.projectRoot, file)}`);
           }
         });
-        
+
         if (fileChanged) {
           fs.writeFileSync(file, content, 'utf8');
           this.optimizedCount++;
         }
-        
+
       } catch (error) {
         // 忽略读取错误
       }
@@ -228,30 +228,30 @@ class CodeDeduplicationOptimizer {
    */
   async runFullOptimization() {
     console.log('🚀 开始代码重复优化...\n');
-    
+
     const startTime = Date.now();
-    
+
     try {
       // 执行优化步骤
       await this.optimizeComponentDuplication();  // 组件去重
       await this.optimizeStoreDuplication();      // Store去重
       await this.updateReferencePaths();          // 更新引用
-      
+
       const duration = Date.now() - startTime;
-      
+
       console.log('\n🎯 === 代码去重优化完成 ===');
       console.log(`✅ 优化成功: ${this.optimizedCount}处`);
       console.log(`⏰ 总耗时: ${duration}ms`);
-      
+
       // 生成优化报告
       this.generateOptimizationReport();
-      
+
       return {
         success: true,
         optimizedCount: this.optimizedCount,
         duration
       };
-      
+
     } catch (error) {
       console.error('🚨 优化过程中发生错误:', error);
       throw error;
@@ -273,7 +273,7 @@ class CodeDeduplicationOptimizer {
 
     const reportPath = path.join(this.projectRoot, 'reports/code-optimization-report.json');
     fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
-    
+
     console.log(`\n📄 优化报告已保存: ${reportPath}`);
   }
 
@@ -285,15 +285,15 @@ class CodeDeduplicationOptimizer {
 
   findFilesInDirRecursive(dir, extensions) {
     const files = [];
-    
+
     const search = (currentDir) => {
       try {
         const items = fs.readdirSync(currentDir);
-        
+
         items.forEach(item => {
           const fullPath = path.join(currentDir, item);
           const stat = fs.statSync(fullPath);
-          
+
           if (stat.isDirectory() && !item.includes('node_modules') && !item.includes('.git')) {
             search(fullPath);
           } else if (extensions.some(ext => item.endsWith(ext))) {
@@ -304,7 +304,7 @@ class CodeDeduplicationOptimizer {
         // 忽略权限错误
       }
     };
-    
+
     search(dir);
     return files;
   }
@@ -318,7 +318,7 @@ class CodeDeduplicationOptimizer {
 // 执行优化
 if (require.main === module) {
   const optimizer = new CodeDeduplicationOptimizer();
-  
+
   optimizer.runFullOptimization().then(result => {
     console.log('\n✅ 代码去重优化完成!');
   }).catch(error => {

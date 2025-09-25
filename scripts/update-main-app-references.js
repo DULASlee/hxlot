@@ -19,7 +19,7 @@ class MainAppReferenceUpdater {
    */
   updateLowCodeComponentReferences() {
     console.log('🔄 更新主应用低代码组件引用...');
-    
+
     const referenceUpdates = [
       // 组件引用更新
       {
@@ -28,13 +28,13 @@ class MainAppReferenceUpdater {
         importName: 'BusinessRulesEngine'
       },
       {
-        from: '@/components/lowcode/EnhancedThemeEditor.vue', 
+        from: '@/components/lowcode/EnhancedThemeEditor.vue',
         to: '@smartabp/lowcode-designer',
         importName: 'EnhancedThemeEditor'
       },
       {
         from: '@/components/lowcode/EnhancedStateMachine.vue',
-        to: '@smartabp/lowcode-designer', 
+        to: '@smartabp/lowcode-designer',
         importName: 'EnhancedStateMachine'
       },
       {
@@ -52,7 +52,7 @@ class MainAppReferenceUpdater {
         to: '@smartabp/lowcode-designer',
         importName: 'AdvancedFieldTypeDesigner'
       },
-      
+
       // Store引用更新
       {
         from: '@/stores/lowcode/entityModeling',
@@ -77,29 +77,29 @@ class MainAppReferenceUpdater {
     ];
 
     const mainAppFiles = this.findMainAppFiles();
-    
+
     for (const file of mainAppFiles) {
       try {
         let content = fs.readFileSync(file, 'utf8');
         let fileChanged = false;
-        
+
         referenceUpdates.forEach(update => {
           const oldPattern = new RegExp(`import\\s+([^}]+)\\s+from\\s+['"]${update.from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}['"]`, 'g');
-          
+
           if (oldPattern.test(content)) {
             // 更新为新的导入方式
             content = content.replace(oldPattern, `import { ${update.importName} } from '${update.to}'`);
             fileChanged = true;
-            
+
             console.log(`   ✅ ${update.description}: ${path.relative(this.projectRoot, file)}`);
             this.updatedCount++;
           }
         });
-        
+
         if (fileChanged) {
           fs.writeFileSync(file, content, 'utf8');
         }
-        
+
       } catch (error) {
         console.error(`   ❌ 更新失败: ${path.relative(this.projectRoot, file)} - ${error.message}`);
       }
@@ -111,7 +111,7 @@ class MainAppReferenceUpdater {
    */
   updateRouterReferences() {
     console.log('📋 更新路由配置引用...');
-    
+
     const routerFiles = [
       'src/router/index.ts',
       'src/router/index.js'
@@ -123,7 +123,7 @@ class MainAppReferenceUpdater {
         try {
           let content = fs.readFileSync(filePath, 'utf8');
           let fileChanged = false;
-          
+
           // 更新路由组件引用
           const routerUpdates = [
             {
@@ -142,23 +142,23 @@ class MainAppReferenceUpdater {
               description: '更新ThemeCustomizationView路由引用'
             }
           ];
-          
+
           routerUpdates.forEach(update => {
             const pattern = new RegExp(`['"]${update.from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}['"]`, 'g');
             const newContent = content.replace(pattern, `'${update.to}'`);
-            
+
             if (newContent !== content) {
               content = newContent;
               fileChanged = true;
               console.log(`   ✅ ${update.description}: ${routerFile}`);
             }
           });
-          
+
           if (fileChanged) {
             fs.writeFileSync(filePath, content, 'utf8');
             this.updatedCount++;
           }
-          
+
         } catch (error) {
           console.error(`   ❌ 路由更新失败: ${routerFile} - ${error.message}`);
         }
@@ -171,9 +171,9 @@ class MainAppReferenceUpdater {
    */
   cleanupBackupFiles() {
     console.log('🧹 清理临时备份文件...');
-    
+
     const backupFiles = this.findFilesInDirRecursive(this.projectRoot, ['.backup']);
-    
+
     backupFiles.forEach(file => {
       try {
         fs.unlinkSync(file);
@@ -193,15 +193,15 @@ class MainAppReferenceUpdater {
 
   findFilesInDirRecursive(dir, extensions) {
     const files = [];
-    
+
     const search = (currentDir) => {
       try {
         const items = fs.readdirSync(currentDir);
-        
+
         items.forEach(item => {
           const fullPath = path.join(currentDir, item);
           const stat = fs.statSync(fullPath);
-          
+
           if (stat.isDirectory() && !item.includes('node_modules') && !item.includes('.git')) {
             search(fullPath);
           } else if (extensions.some(ext => item.endsWith(ext))) {
@@ -212,7 +212,7 @@ class MainAppReferenceUpdater {
         // 忽略权限错误
       }
     };
-    
+
     search(dir);
     return files;
   }
@@ -222,26 +222,26 @@ class MainAppReferenceUpdater {
    */
   async runFullUpdate() {
     console.log('🚀 开始主应用引用路径更新...\n');
-    
+
     const startTime = Date.now();
-    
+
     try {
       await this.updateLowCodeComponentReferences();
       await this.updateRouterReferences();
       await this.cleanupBackupFiles();
-      
+
       const duration = Date.now() - startTime;
-      
+
       console.log('\n🎯 === 引用路径更新完成 ===');
       console.log(`✅ 更新成功: ${this.updatedCount}处`);
       console.log(`⏰ 总耗时: ${duration}ms`);
-      
+
       return {
         success: true,
         updatedCount: this.updatedCount,
         duration
       };
-      
+
     } catch (error) {
       console.error('🚨 更新过程中发生错误:', error);
       throw error;
@@ -252,7 +252,7 @@ class MainAppReferenceUpdater {
 // 执行更新
 if (require.main === module) {
   const updater = new MainAppReferenceUpdater();
-  
+
   updater.runFullUpdate().then(result => {
     console.log('\n✅ 主应用引用更新完成!');
   }).catch(error => {

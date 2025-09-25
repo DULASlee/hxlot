@@ -34,6 +34,7 @@ export interface MDIWindowConfig {
   maximized?: boolean
   minimized?: boolean
   permissions?: string[]
+  createdAt?: string
 }
 
 /**
