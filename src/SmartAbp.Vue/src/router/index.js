@@ -367,49 +367,8 @@ const routes = [
             return `/dashboard/not-found${to.path}`;
         },
     },
-    // LowCode Studio 企业级工作台
-    {
-        path: "/studio",
-        component: LowCodeStudioView,
-        meta: {
-            title: "LowCode Studio",
-            icon: "🎨",
-            requiresAuth: true,
-            requiredRoles: ["user"],
-        },
-        children: [
-            {
-                path: "",
-                name: "StudioModeling",
-                component: () => import("@/views/lowcode/EntityModelingView.vue"),
-                meta: { title: "数据建模", menuKey: "studio-modeling" },
-            },
-            {
-                path: "design",
-                name: "StudioDesign",
-                component: DesignView,
-                meta: { title: "页面设计", menuKey: "studio-design" },
-            },
-            {
-                path: "generation",
-                name: "StudioGeneration",
-                component: () => import("@/views/lowcode/EnhancedGenerationView.vue"),
-                meta: { title: "代码生成", menuKey: "studio-generation" },
-            },
-            {
-                path: "workflows",
-                name: "StudioWorkflows",
-                component: () => import("@/views/lowcode/WorkflowsView.vue"),
-                meta: { title: "工作流", menuKey: "studio-workflows" },
-            },
-            {
-                path: "theme",
-                name: "StudioTheme",
-                component: () => import("@/views/lowcode/ThemeCustomizationView.vue"),
-                meta: { title: "主题定制", menuKey: "studio-theme" },
-            },
-        ],
-    },
+    // 🚨 已统一到 /lowcode 路由，移除重复的 /studio 路由配置
+    // 所有LowCode Studio功能已迁移到 index.ts 中的 /lowcode 路由
 ];
 const router = createRouter({
     history: createWebHistory(),

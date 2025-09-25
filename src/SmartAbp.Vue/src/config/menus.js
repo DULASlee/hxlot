@@ -380,13 +380,13 @@ export const menuConfig = {
                 },
             ],
         },
-        // LowCode Studio 企业级工作台
+        // LowCode Studio 企业级工作台 (统一路径)
         {
             key: "lowcode-studio",
             title: "LowCode Studio",
             icon: "fas fa-magic",
             type: "page",
-            path: "/studio",
+            path: "/lowcode",
             component: "@/views/lowcode/LowCodeStudioView.vue",
             order: 9,
             visible: true,
@@ -394,7 +394,7 @@ export const menuConfig = {
             closable: true,
             defaultExpanded: false,
             description: "企业级低代码开发工作台 - 3步完成（建模→设计→生成）",
-            badge: "NEW",
+            badge: "HOT",
             meta: {
                 title: "LowCode Studio",
                 menuKey: "lowcode-studio",
@@ -443,7 +443,7 @@ export const menuConfig = {
             {
               key: "lowcode-studio",
               title: "LowCode Studio",
-              path: "/studio",
+              path: "/lowcode",
               icon: "🧩",
               type: "page",
               component: "@/views/lowcode/LowCodeStudioView.vue",

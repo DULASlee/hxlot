@@ -52,6 +52,8 @@ declare module 'vue' {
     EnterpriseCodeGenerationEngine: typeof import('./src/components/lowcode/EnterpriseCodeGenerationEngine.vue')['default']
     EnterpriseModelingAssistant: typeof import('./src/components/lowcode/EnterpriseModelingAssistant.vue')['default']
     EnterpriseQualityAssurance: typeof import('./src/components/lowcode/EnterpriseQualityAssurance.vue')['default']
+    ErrorBoundary: typeof import('./src/components/common/ErrorBoundary.vue')['default']
+    GlobalLoadingOverlay: typeof import('./src/components/common/GlobalLoadingOverlay.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
@@ -80,5 +82,6 @@ declare module 'vue' {
     ThemeSwitcher: typeof import('./src/components/theme/ThemeSwitcher.vue')['default']
     VisualComponentPalette: typeof import('./src/components/lowcode/VisualComponentPalette.vue')['default']
     VisualDesignCanvas: typeof import('./src/components/lowcode/VisualDesignCanvas.vue')['default']
+    WorkspaceContainer: typeof import('./src/components/layout/WorkspaceContainer.vue')['default']
   }
 }
