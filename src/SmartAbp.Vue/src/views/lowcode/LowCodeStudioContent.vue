@@ -1,5 +1,5 @@
 <template>
-  <div class="lowcode-studio-home">
+  <div class="lowcode-studio-content">
     <!-- 欢迎区域 -->
     <div class="welcome-section">
       <div class="welcome-header">
@@ -126,10 +126,10 @@ const navigateTo = (path: string) => {
 </script>
 
 <style scoped>
-.lowcode-studio-home {
+.lowcode-studio-content {
   padding: 24px;
   background: var(--el-bg-color-page);
-  min-height: 100%;
+  min-height: calc(100vh - 120px);
 }
 
 .welcome-section {
