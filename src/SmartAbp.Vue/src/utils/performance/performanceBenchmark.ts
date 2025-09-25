@@ -75,7 +75,6 @@ export const PERFORMANCE_BENCHMARKS = {
  */
 export class PerformanceBenchmarkSuite {
   private metrics: Partial<PerformanceMetrics> = {}
-  private startTime: number = 0
   private observer?: PerformanceObserver
 
   constructor() {
@@ -592,7 +591,7 @@ ${this.generateRecommendations(metrics, validation)}
     return performance.now() - start
   }
 
-  private generateRecommendations(metrics: PerformanceMetrics, validation: any): string {
+  private generateRecommendations(metrics: PerformanceMetrics, _validation: any): string {
     const recommendations = []
 
     if (metrics.componentRenderTime > 50) {

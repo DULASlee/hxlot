@@ -470,7 +470,7 @@ const cacheStats = ref({
 
 // 组件日志器（统一日志系统，避免 console 无 child 方法导致的运行时错误）
 // 使用logger进行日志记录
-// const componentLogger = createComponentLogger("PerformanceDashboard")
+// const logger = createComponentLogger("PerformanceDashboard")
 
 // 响应式状态
 const loading = ref(false)
@@ -720,16 +720,16 @@ const refreshData = async () => {
       memoryUsageTrend: (Math.random() - 0.5) * 15,
     }
 
-    componentLogger.info("性能数据刷新完成")
+    logger.info("性能数据刷新完成")
   } catch (error) {
-    componentLogger.error("刷新数据失败", error as Error)
+    logger.error("刷新数据失败", error as Error)
   } finally {
     loading.value = false
   }
 }
 
 const onTimeRangeChange = () => {
-  componentLogger.info("时间范围改变", { timeRange: timeRange.value })
+  logger.info("时间范围改变", { timeRange: timeRange.value })
   refreshData()
 }
 
@@ -756,9 +756,9 @@ const exportReport = () => {
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
 
-    componentLogger.info("性能报告导出成功")
+    logger.info("性能报告导出成功")
   } catch (error) {
-    componentLogger.error("导出报告失败", error as Error)
+    logger.error("导出报告失败", error as Error)
   }
 }
 
@@ -766,7 +766,7 @@ const applySuggestion = (id: number) => {
   const suggestionIndex = optimizationSuggestions.value.findIndex((s) => s.id === id)
   if (suggestionIndex > -1) {
     optimizationSuggestions.value.splice(suggestionIndex, 1)
-    componentLogger.info("应用优化建议", { suggestionId: id })
+    logger.info("应用优化建议", { suggestionId: id })
   }
 }
 
@@ -774,18 +774,18 @@ const dismissSuggestion = (id: number) => {
   const suggestionIndex = optimizationSuggestions.value.findIndex((s) => s.id === id)
   if (suggestionIndex > -1) {
     optimizationSuggestions.value.splice(suggestionIndex, 1)
-    componentLogger.info("忽略优化建议", { suggestionId: id })
+    logger.info("忽略优化建议", { suggestionId: id })
   }
 }
 
 const clearLogs = () => {
   performanceLogs.value = []
-  componentLogger.info("清空性能日志")
+  logger.info("清空性能日志")
 }
 
 const toggleAutoScroll = () => {
   autoScroll.value = !autoScroll.value
-  componentLogger.info(`自动滚动${autoScroll.value ? "启用" : "禁用"}`)
+  logger.info(`自动滚动${autoScroll.value ? "启用" : "禁用"}`)
 }
 
 const pullRuntimeHealth = () => {
@@ -842,7 +842,7 @@ const generateRealtimeLog = () => {
 
 // 生命周期
 onMounted(() => {
-  componentLogger.info("性能监控中心加载完成")
+  logger.info("性能监控中心加载完成")
 
   // 确保所有函数被正确引用（避免TypeScript未使用警告）
   void getErrorIcon // 显式引用函数

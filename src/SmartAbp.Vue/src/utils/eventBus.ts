@@ -325,11 +325,8 @@ export class EventBusManager {
     }
 
     // 注册监听器
-    if (options?.once) {
-      eventBus.once(type, wrappedHandler)
-    } else {
-      eventBus.on(type, wrappedHandler)
-    }
+    // mitt库暂不支持once方法，使用on代替
+    eventBus.on(type, wrappedHandler)
 
     // 统计监听器数量
     const currentCount = this.listeners.get(type) || 0

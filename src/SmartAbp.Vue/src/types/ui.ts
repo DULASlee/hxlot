@@ -16,6 +16,12 @@ export interface MDIWindowConfig {
     x: number
     y: number
   }
+  bounds?: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
   resizable?: boolean
   minimizable?: boolean
   maximizable?: boolean
@@ -25,6 +31,7 @@ export interface MDIWindowConfig {
   icon?: string
   state?: WindowState
   draggable?: boolean
+  maximized?: boolean
 }
 
 /**
@@ -43,6 +50,10 @@ export interface TabConfig {
   active?: boolean
   pinned?: boolean
   state?: TabState
+  loading?: boolean
+  hasChanges?: boolean
+  path?: string
+  permissions?: string[]
 }
 
 /**

@@ -263,10 +263,10 @@ const getWindowStyle = (window: MDIWindowConfig) => {
   }
 
   return {
-    left: `${window.bounds.x}px`,
-    top: `${window.bounds.y}px`,
-    width: `${window.bounds.width}px`,
-    height: `${window.bounds.height}px`,
+    left: `${window.bounds?.x || window.position?.x || 0}px`,
+    top: `${window.bounds?.y || window.position?.y || 0}px`,
+    width: `${window.bounds?.width || window.size?.width || 400}px`,
+    height: `${window.bounds?.height || window.size?.height || 300}px`,
     zIndex: props.activeWindowId === window.id ? 1000 : 100
   }
 }
@@ -316,8 +316,8 @@ const startWindowDrag = (event: MouseEvent, window: MDIWindowConfig) => {
     windowId: window.id,
     startX: event.clientX,
     startY: event.clientY,
-    startWindowX: window.bounds.x,
-    startWindowY: window.bounds.y
+    startWindowX: window.bounds?.x || window.position?.x || 0,
+    startWindowY: window.bounds?.y || window.position?.y || 0
   }
   
   document.addEventListener('mousemove', handleWindowDrag)
@@ -355,10 +355,10 @@ const startWindowResize = (event: MouseEvent, window: MDIWindowConfig, direction
     direction,
     startX: event.clientX,
     startY: event.clientY,
-    startWidth: window.bounds.width,
-    startHeight: window.bounds.height,
-    startWindowX: window.bounds.x,
-    startWindowY: window.bounds.y
+    startWidth: window.bounds?.width || window.size?.width || 400,
+    startHeight: window.bounds?.height || window.size?.height || 300,
+    startWindowX: window.bounds?.x || window.position?.x || 0,
+    startWindowY: window.bounds?.y || window.position?.y || 0
   }
   
   document.addEventListener('mousemove', handleWindowResize)

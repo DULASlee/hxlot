@@ -369,7 +369,7 @@ import { useFullscreen } from "@/composables/useFullscreen"
 
 // 组件日志器
 // 使用logger进行日志记录
-// const componentLogger = logger.child({ component: "DragDropFormView" })
+// const logger = logger.child({ component: "DragDropFormView" })
 
 // 全屏功能
 const fullscreenApi = useFullscreen()
@@ -592,7 +592,7 @@ const onComponentDragStart = (event: DragEvent, component: any) => {
   if (event.dataTransfer) {
     event.dataTransfer.effectAllowed = "copy"
   }
-  componentLogger.info("开始拖拽组件", { type: component.type })
+  logger?.info("开始拖拽组件", { type: component.type })
 }
 
 const onComponentDragEnd = () => {
@@ -618,7 +618,7 @@ const onCanvasDrop = (event: DragEvent) => {
     // 初始化表单数据
     formData.value[newComponent.id] = getDefaultValue(newComponent.type)
 
-    componentLogger.info("添加表单组件", {
+    logger.info("添加表单组件", {
       type: newComponent.type,
       id: newComponent.id,
       totalComponents: formComponents.value.length,
@@ -720,7 +720,7 @@ const updateComponentValue = (componentId: string, value: any) => {
 
 const selectComponent = (componentId: string) => {
   selectedComponentId.value = componentId
-  componentLogger.info("选择组件", { componentId })
+  logger.info("选择组件", { componentId })
 }
 
 const clearSelection = () => {
@@ -752,7 +752,7 @@ const duplicateComponent = (index: number) => {
   formComponents.value.splice(index + 1, 0, duplicate)
   formData.value[duplicate.id] = getDefaultValue(duplicate.type)
 
-  componentLogger.info("复制组件", { originalId: original.id, duplicateId: duplicate.id })
+  logger.info("复制组件", { originalId: original.id, duplicateId: duplicate.id })
 }
 
 const removeComponent = (index: number) => {
@@ -764,13 +764,13 @@ const removeComponent = (index: number) => {
     selectedComponentId.value = null
   }
 
-  componentLogger.info("删除组件", { componentId: component.id })
+  logger.info("删除组件", { componentId: component.id })
 }
 
 const resetComponentProps = () => {
   if (selectedComponent.value) {
     selectedComponent.value.props = getDefaultProps(selectedComponent.value.type)
-    componentLogger.info("重置组件属性", { componentId: selectedComponent.value.id })
+    logger.info("重置组件属性", { componentId: selectedComponent.value.id })
   }
 }
 
@@ -807,14 +807,14 @@ const clearCanvas = () => {
     formComponents.value = []
     formData.value = {}
     selectedComponentId.value = null
-    componentLogger.info("清空画布")
+    logger.info("清空画布")
   }
 }
 
 // 表单操作
 const handlePreviewSubmit = () => {
   console.log("表单提交:", formData.value)
-  componentLogger.info("预览表单提交", { formData: formData.value })
+  logger.info("预览表单提交", { formData: formData.value })
 }
 
 const resetForm = () => {
@@ -824,7 +824,7 @@ const resetForm = () => {
       formData.value[key] = getDefaultValue(component.type)
     }
   })
-  componentLogger.info("重置表单数据")
+  logger.info("重置表单数据")
 }
 
 const generateCode = () => {
@@ -836,7 +836,7 @@ const generateCode = () => {
 
   // 这里应该调用低代码引擎生成Vue组件代码
   console.log("生成代码:", formSchema)
-  componentLogger.info("生成表单代码", { componentCount: formComponents.value.length })
+  logger.info("生成表单代码", { componentCount: formComponents.value.length })
 
   // 模拟代码生成结果
   alert("代码生成功能开发中...")
@@ -861,9 +861,9 @@ const exportForm = () => {
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
 
-    componentLogger.info("导出表单配置", { componentCount: formComponents.value.length })
+    logger.info("导出表单配置", { componentCount: formComponents.value.length })
   } catch (error) {
-    componentLogger.error("导出表单配置失败", error as Error)
+    logger.error("导出表单配置失败", error as Error)
   }
 }
 
@@ -893,12 +893,12 @@ const handleFileImport = (event: Event) => {
           })
 
           selectedComponentId.value = null
-          componentLogger.info("导入表单配置成功", { componentCount: formComponents.value.length })
+          logger.info("导入表单配置成功", { componentCount: formComponents.value.length })
         } else {
           throw new Error("无效的表单配置文件")
         }
       } catch (error) {
-        componentLogger.error("导入表单配置失败", error as Error)
+        logger.error("导入表单配置失败", error as Error)
         alert("导入失败：文件格式不正确")
       }
     }
@@ -911,7 +911,7 @@ const handleFileImport = (event: Event) => {
 
 const saveForm = () => {
   // 这里应该调用API保存表单配置
-  componentLogger.info("保存表单", {
+  logger.info("保存表单", {
     name: formConfig.value.name,
     componentCount: formComponents.value.length,
   })
@@ -920,7 +920,7 @@ const saveForm = () => {
 
 // 生命周期
 onMounted(() => {
-  componentLogger.info("拖拽表单开发器加载完成")
+  logger.info("拖拽表单开发器加载完成")
 })
 </script>
 
