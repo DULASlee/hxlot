@@ -208,17 +208,17 @@
                   <p>{{ projectFormData.description }}</p>
                   <div class="summary-details">
                     <div class="detail-item">
-                      <span class="label">项目类型：</span>
-                      <span class="value">{{ selectedTemplate?.name }}</span>
-                    </div>
-                    <div class="detail-item">
-                      <span class="label">功能模块：</span>
-                      <span class="value">{{ selectedModules.length }} 个模块</span>
-                    </div>
-                    <div class="detail-item">
-                      <span class="label">预计开发周期：</span>
-                      <span class="value">{{ estimatedDays }} 工作日</span>
-                    </div>
+                    <span class="label">项目类型：</span>
+                    <span class="value">{{ selectedTemplate?.name }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="label">功能模块：</span>
+                    <span class="value">{{ selectedModules.length }} 个模块</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="label">预计开发周期：</span>
+                    <span class="value">{{ estimatedDays }} 工作日</span>
+                  </div>
                   </div>
                 </el-card>
               </div>
@@ -257,9 +257,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-// interface Props { // 暂时注释避免未使用警告
-//   projectConfig?: any
-// }
+interface Props {
+  projectConfig?: any
+}
 
 // const props = defineProps<Props>()
 

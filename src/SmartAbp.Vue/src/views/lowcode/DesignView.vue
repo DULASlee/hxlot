@@ -1175,7 +1175,7 @@ const applyTemplate = (templateType: string) => {
   logger?.info("应用模板", { templateType })
 }
 
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
     const getComponentRenderer = (_type: string) => {
   // 返回组件渲染器
   return "div"

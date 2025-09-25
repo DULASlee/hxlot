@@ -1,5 +1,5 @@
 // SmartAbp Enterprise Virtual Scrolling Performance Optimization
-import { ref, computed, onMounted, onBeforeUnmount, type Ref } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 
 /**
  * 企业级虚拟滚动Hook
@@ -30,10 +30,10 @@ export interface VirtualScrollReturn<T> {
   /** 可见区域结束索引 */
   endIndex: Ref<number>
   /** 滚动到指定索引 */
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   scrollToIndex: (_index: number) => void
   /** 更新数据源 */
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   updateData: (_newData: T[]) => void
 }
 
@@ -60,7 +60,7 @@ export function useVirtualScroll<T>(
   // 计算属性
   const totalHeight = computed(() => data.value.length * itemHeight)
   const visibleItemCount = computed(() => Math.ceil(containerHeight / itemHeight))
-
+  
   const visibleItems = computed(() => {
     const start = Math.max(0, startIndex.value - bufferSize)
     const end = Math.min(data.value.length, endIndex.value + bufferSize)
@@ -91,7 +91,7 @@ export function useVirtualScroll<T>(
       data.value.length,
       start + visibleItemCount.value
     )
-
+    
     startIndex.value = start
     endIndex.value = end
   }
@@ -106,7 +106,7 @@ export function useVirtualScroll<T>(
   // 滚动到指定索引
   const scrollToIndex = (_index: number) => {
     if (!scrollContainer.value) return
-
+    
     const targetScrollTop = _index * itemHeight
     scrollContainer.value.scrollTop = targetScrollTop
     scrollTop.value = targetScrollTop
@@ -122,8 +122,8 @@ export function useVirtualScroll<T>(
   // 生命周期
   onMounted(() => {
     if (scrollContainer.value) {
-      scrollContainer.value.addEventListener('scroll', handleScroll, {
-        passive: true
+      scrollContainer.value.addEventListener('scroll', handleScroll, { 
+        passive: true 
       })
     }
     updateVisibleRange()
@@ -157,15 +157,12 @@ export interface VirtualTableOptions<T> {
   data: T[]
   itemHeight: number
   containerHeight: number
-  showIndex?: boolean
-  indexTitle?: string
   columns: Array<{
     key: string
     title: string
     width?: number
-    align?: 'left' | 'center' | 'right'
-
-    // eslint-disable-next-line no-unused-vars
+     
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
     render?: (_value: any, _record: T, _index: number) => any
   }>
 }
@@ -178,9 +175,9 @@ export function useVirtualTable<T extends Record<string, any>>(
   options: VirtualTableOptions<T>
 ) {
   const virtualScroll = useVirtualScroll(data, options)
-
+  
   const { columns, showIndex = false, indexTitle = '#' } = options
-
+  
   // 扩展列配置
   const enhancedColumns = computed(() => {
     const cols = [...columns]
@@ -216,7 +213,7 @@ export function usePerformanceMonitor() {
   const recordRenderTime = (startTime: number) => {
     const endTime = performance.now()
     const renderTime = endTime - startTime
-
+    
     renderTimes.value.push(renderTime)
     // 只保留最近100次记录
     if (renderTimes.value.length > 100) {
