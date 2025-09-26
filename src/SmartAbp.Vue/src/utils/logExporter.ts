@@ -8,11 +8,11 @@ import dayjs from "dayjs"
 
 
 export enum ExportFormat {
-  JSON = "json",
-  CSV = "csv",
-  HTML = "html",
-  TXT = "txt",
-  XML = "xml",
+  JSON = "json",  
+  CSV = "csv",  
+  HTML = "html",  
+  TXT = "txt",  
+  XML = "xml",  
 }
 
 // 导出配置

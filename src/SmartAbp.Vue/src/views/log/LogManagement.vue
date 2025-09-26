@@ -325,7 +325,7 @@
 import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 import { logger } from "@/utils/logger"
-import LogViewer from "./LogViewer.vue"
+import LogViewer from "./AdvancedLogViewer.vue"
 import LogDashboard from "@/views/log/LogDashboard.vue"
 
 const router = useRouter()

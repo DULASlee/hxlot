@@ -70,9 +70,9 @@ interface Props {
 }
 
 interface Emits {
-  (e: 'confirm'): void
-  (e: 'cancel'): void
-  (e: 'update:visible', value: boolean): void
+  (_e: 'confirm'): void
+  (_e: 'cancel'): void
+  (_e: 'update:visible', _value: boolean): void
 }
 
 const props = withDefaults(defineProps<Props>(), {
