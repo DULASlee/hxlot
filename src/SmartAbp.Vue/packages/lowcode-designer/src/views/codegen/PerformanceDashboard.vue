@@ -445,9 +445,26 @@
   </div>
 </template>
 
+import { ref, computed, onMounted, nextTick } from "vue"
+// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+import { createComponentLogger } from "@smartabp/lowcode-tools"
+=======
+// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+import { createComponentLogger } from "@smartabp/lowcode-tools"
+>>>>>>> feature/architecture-rebirth
+=======
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from "vue"
-import { logger } from '@smartabp/lowcode-tools'
+// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+import { createComponentLogger } from "@smartabp/lowcode-tools"
+=======
+import { ref, computed, onMounted, nextTick } from "vue"
+// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+import { createComponentLogger } from "@smartabp/lowcode-tools"
+=======
+// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+import { createComponentLogger } from "@smartabp/lowcode-tools"
+>>>>>>> feature/architecture-rebirth
 // 运行时内容缓存与日志改为可选注入，避免构建期硬依赖
 const globalContentCache: any = (globalThis as any).__lowcodeRuntime?.contentCache || {
   getStats: () => ({
