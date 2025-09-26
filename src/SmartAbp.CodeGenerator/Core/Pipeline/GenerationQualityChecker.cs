@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
+using SmartAbp.CodeGenerator.Core.Validation; // 🔥 增强语法验证器
 
 namespace SmartAbp.CodeGenerator.Core.Pipeline;
 
@@ -12,9 +13,14 @@ public class GenerationQualityChecker
 {
     private readonly ILogger<GenerationQualityChecker> _logger;
 
-    public GenerationQualityChecker(ILogger<GenerationQualityChecker> logger)
+    private readonly EnhancedCSharpSyntaxValidator _enhancedSyntaxValidator; // 🔥 增强语法验证器
+
+    public GenerationQualityChecker(
+        ILogger<GenerationQualityChecker> logger,
+        EnhancedCSharpSyntaxValidator enhancedSyntaxValidator) // 🔥 注入增强语法验证器
     {
         _logger = logger;
+        _enhancedSyntaxValidator = enhancedSyntaxValidator;
     }
 
     /// <summary>
@@ -260,78 +266,30 @@ public class GenerationQualityChecker
     }
 
     /// <summary>
-    /// C# 基础语法检查
+    /// C# 基础语法检查 - 🔥 增强版实现（协助请求2）
     /// </summary>
     private List<string> CheckBasicCSharpSyntax(string content, string filePath)
     {
-        var issues = new List<string>();
-
         try
         {
-            var lines = content.Split('\n');
-
-            for (int i = 0; i < lines.Length; i++)
-            {
-                var line = lines[i].Trim();
-                var lineNumber = i + 1;
-
-                // 检查大括号匹配
-                var openBraces = line.Count(c => c == '{');
-                var closeBraces = line.Count(c => c == '}');
-                
-                // 检查分号缺失（简单检查）
-                if (line.EndsWith(")") && !line.Contains("if") && !line.Contains("for") && 
-                    !line.Contains("while") && !line.Contains("switch") && !line.Contains("catch") &&
-                    !line.Contains("=>") && !line.Contains("//"))
-                {
-                    issues.Add($"第{lineNumber}行可能缺少分号");
-                }
-
-                // 检查基础语法错误
-                if (line.Contains(";;"))
-                {
-                    issues.Add($"第{lineNumber}行有重复分号");
-                }
-
-                if (Regex.IsMatch(line, @"\s+\)\s*\{") && !line.Contains("//"))
-                {
-                    // 检查方法定义格式
-                }
-
-                // 检查using语句位置
-                if (line.StartsWith("using ") && i > 0 && 
-                    lines.Take(i).Any(l => !l.Trim().StartsWith("using ") && !string.IsNullOrWhiteSpace(l.Trim()) && !l.Trim().StartsWith("//")))
-                {
-                    issues.Add($"第{lineNumber}行using语句应该在文件顶部");
-                }
-            }
-
-            // 检查整体结构
-            var totalOpenBraces = content.Count(c => c == '{');
-            var totalCloseBraces = content.Count(c => c == '}');
+            // 🔥 协助请求2：使用增强C#语法验证器替代简单实现
+            var validationResult = _enhancedSyntaxValidator.ValidateSyntax(content, filePath);
             
-            if (totalOpenBraces != totalCloseBraces)
-            {
-                issues.Add($"大括号不匹配: 开括号{totalOpenBraces}个, 闭括号{totalCloseBraces}个");
-            }
+            var allIssues = new List<string>();
+            allIssues.AddRange(validationResult.Errors);
+            allIssues.AddRange(validationResult.Warnings);
+            allIssues.AddRange(validationResult.Infos);
 
-            // 检查基本关键字拼写
-            var keywords = new[] { "public", "private", "protected", "internal", "static", "virtual", "override", "abstract" };
-            foreach (var keyword in keywords)
-            {
-                // 检查常见拼写错误（这里简化处理）
-                if (content.Contains($"{keyword} ") || content.Contains($" {keyword}"))
-                {
-                    // 关键字存在，检查是否有拼写错误
-                }
-            }
+            _logger.LogDebug("🔍 增强C#语法检查完成: {FilePath}, 发现 {IssueCount} 个问题", 
+                filePath, allIssues.Count);
+
+            return allIssues;
         }
         catch (Exception ex)
         {
-            issues.Add($"语法检查异常: {ex.Message}");
+            _logger.LogError(ex, "❌ 增强C#语法检查失败: {FilePath}", filePath);
+            return new List<string> { $"语法检查异常: {ex.Message}" };
         }
-
-        return issues;
     }
 
     /// <summary>

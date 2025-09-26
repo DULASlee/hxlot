@@ -21,12 +21,16 @@ public class EnhancedFrontendGenerator : ITransientDependency
     private readonly ILogger<EnhancedFrontendGenerator> _logger;
     private readonly PragmaticTemplateService _templateService;
 
+    private readonly Vue3ComponentCustomizer _componentCustomizer; // 🎨 Vue3组件订制器
+
     public EnhancedFrontendGenerator(
         ILogger<EnhancedFrontendGenerator> logger,
-        PragmaticTemplateService templateService)
+        PragmaticTemplateService templateService,
+        Vue3ComponentCustomizer componentCustomizer) // 🔥 注入Vue3组件订制器
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _templateService = templateService ?? throw new ArgumentNullException(nameof(templateService));
+        _componentCustomizer = componentCustomizer ?? throw new ArgumentNullException(nameof(componentCustomizer));
     }
 
     /// <summary>
@@ -110,20 +114,45 @@ public class EnhancedFrontendGenerator : ITransientDependency
     }
 
     /// <summary>
-    /// 🎨 生成Vue管理组件（基于CrudManagement模板）
+    /// 🎨 生成Vue管理组件（增强版 - 协助请求3实现）
     /// </summary>
     private async Task<TemplateRenderResult> GenerateManagementComponentAsync(
         EnhancedEntityModelDto entity, 
         ModuleMetadataDto metadata)
     {
-        _logger.LogDebug("生成管理组件: {EntityName}", entity.Name);
+        _logger.LogDebug("🎨 生成增强Vue管理组件: {EntityName}", entity.Name);
 
-        // 🔥 模板强制匹配：使用标准CrudManagement模板
-        return await _templateService.RenderTemplateAsync(
-            "frontend/components/CrudManagement.template.vue",
-            metadata,
-            entity
-        );
+        try
+        {
+            // 🔥 协助请求3：使用Vue3组件订制器生成带扩展点的组件
+            var customizationOptions = new ComponentCustomizationOptions
+            {
+                EnableThemeCustomization = true,
+                EnableResponsiveLayout = true,
+                EnableAdvancedSearch = true,
+                EnableBatchOperations = true,
+                EnableImportExport = true
+            };
+
+            var customizedContent = _componentCustomizer.GenerateCustomizableManagementComponent(
+                entity, metadata, customizationOptions);
+
+            _logger.LogDebug("✅ 增强Vue组件生成成功: {EntityName}, 包含15个扩展点", entity.Name);
+            
+            return TemplateRenderResult.Success(customizedContent, "vue3-component-customizer");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "❌ 增强Vue组件生成失败: {EntityName}", entity.Name);
+            
+            // 🔄 兜底策略：使用原有模板
+            _logger.LogInformation("🔄 使用标准模板作为兜底方案: {EntityName}", entity.Name);
+            return await _templateService.RenderTemplateAsync(
+                "frontend/components/CrudManagement.template.vue",
+                metadata,
+                entity
+            );
+        }
     }
 
     /// <summary>

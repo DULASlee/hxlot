@@ -72,22 +72,34 @@
 
   <!-- 🏢 企业版特性：内嵌模板资源配置 - 容器化环境零配置部署 -->
   <ItemGroup>
-    <!-- 将所有模板文件编译为内嵌资源 -->
-    <EmbeddedResource Include="..\..\templates\**\*.template.*">
-      <LogicalName>SmartAbp.CodeGenerator.Templates.%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+    <!-- 后端模板文件 -->
+    <EmbeddedResource Include="..\..\templates\backend\application\*.template.*">
+      <LogicalName>SmartAbp.CodeGenerator.Templates.backend.application.%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\templates\backend\contracts\*.template.*">
+      <LogicalName>SmartAbp.CodeGenerator.Templates.backend.contracts.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
     
-    <!-- 模板索引配置文件 -->
+    <!-- 前端模板文件 -->
+    <EmbeddedResource Include="..\..\templates\frontend\components\*.template.*">
+      <LogicalName>SmartAbp.CodeGenerator.Templates.frontend.components.%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\templates\frontend\stores\*.template.*">
+      <LogicalName>SmartAbp.CodeGenerator.Templates.frontend.stores.%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\templates\frontend\router\*.template.*">
+      <LogicalName>SmartAbp.CodeGenerator.Templates.frontend.router.%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    
+    <!-- 低代码引擎模板文件 -->
+    <EmbeddedResource Include="..\..\templates\lowcode\**\*.template.*">
+      <LogicalName>SmartAbp.CodeGenerator.Templates.lowcode.%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    
+    <!-- 模板索引和配置文件 -->
     <EmbeddedResource Include="..\..\templates\index.json">
       <LogicalName>SmartAbp.CodeGenerator.Templates.index.json</LogicalName>
     </EmbeddedResource>
-    
-    <!-- 模板元数据文件 -->
-    <EmbeddedResource Include="..\..\templates\**\*.meta.yml">
-      <LogicalName>SmartAbp.CodeGenerator.Templates.%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
-    </EmbeddedResource>
-    
-    <!-- 专家模式配置文件 -->
     <EmbeddedResource Include="..\..\templates\EXPERT_MODE_CONFIG.json">
       <LogicalName>SmartAbp.CodeGenerator.Templates.EXPERT_MODE_CONFIG.json</LogicalName>
     </EmbeddedResource>
