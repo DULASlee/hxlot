@@ -627,7 +627,61 @@ namespace SmartAbp.CodeGenerator.ApplicationServices
         // Additional method stubs for remaining generators
         private async Task<string> GenerateInputDtoAsync(ApplicationDtoDefinition dto, string rootNamespace) => await Task.FromResult("// Input DTO implementation");
         private async Task<string> GenerateOutputDtoAsync(ApplicationDtoDefinition dto, string rootNamespace) => await Task.FromResult("// Output DTO implementation");
-        private async Task<string> GenerateAutoMapperProfileAsync(ApplicationServiceDefinition definition) => await Task.FromResult("// AutoMapper profile implementation");
+        /// <summary>
+        /// 🔥 ABP集成修复：生成真实的AutoMapper配置（替代占位实现）
+        /// </summary>
+        private async Task<string> GenerateAutoMapperProfileAsync(ApplicationServiceDefinition definition)
+        {
+            var sb = new StringBuilder();
+            
+            sb.AppendLine("using AutoMapper;");
+            // 🔥 属性名修复：使用正确的Namespace属性（遵循BUG修复铁律）
+            sb.AppendLine($"using {definition.Namespace}.Domain.Entities;");
+            sb.AppendLine($"using {definition.Namespace}.Application.Contracts.{definition.ServiceName};");
+            sb.AppendLine();
+            sb.AppendLine($"namespace {definition.Namespace}.Application.{definition.ServiceName};");
+            sb.AppendLine();
+            sb.AppendLine($"/// <summary>");
+            sb.AppendLine($"/// 🔧 {definition.ServiceName} AutoMapper配置");
+            sb.AppendLine($"/// 自动生成的DTO映射配置，支持完整的CRUD操作");
+            sb.AppendLine($"/// </summary>");
+            sb.AppendLine($"public class {definition.ServiceName}AutoMapperProfile : Profile");
+            sb.AppendLine("{");
+            sb.AppendLine($"    public {definition.ServiceName}AutoMapperProfile()");
+            sb.AppendLine("    {");
+            
+            // 生成基础实体映射
+            sb.AppendLine($"        // 🔧 {definition.ServiceName}实体基础映射");
+            sb.AppendLine($"        CreateMap<{definition.ServiceName}, {definition.ServiceName}Dto>();");
+            sb.AppendLine($"        CreateMap<Create{definition.ServiceName}Dto, {definition.ServiceName}>();");
+            // 🔥 语法修复：完整的单行链式调用（遵循BUG修复铁律）
+            sb.AppendLine($"        CreateMap<Update{definition.ServiceName}Dto, {definition.ServiceName}>().ForMember(dest => dest.Id, opt => opt.Ignore()); // 防止ID覆盖");
+            sb.AppendLine();
+            
+            // 生成列表映射
+            sb.AppendLine($"        // 📋 列表查询映射");
+            sb.AppendLine($"        CreateMap<{definition.ServiceName}, Get{definition.ServiceName}ListDto>();");
+            sb.AppendLine();
+            
+            // 生成自定义映射（如果有的话）
+            if (definition.CustomMethods.Any())
+            {
+                sb.AppendLine($"        // 🎯 自定义方法映射");
+                foreach (var method in definition.CustomMethods)
+                {
+                    if (!string.IsNullOrEmpty(method.ReturnType) && method.ReturnType != "void")
+                    {
+                        sb.AppendLine($"        // CreateMap<{definition.ServiceName}, {method.ReturnType}>();");
+                    }
+                }
+                sb.AppendLine();
+            }
+            
+            sb.AppendLine("    }");
+            sb.AppendLine("}");
+            
+            return await Task.FromResult(sb.ToString());
+        }
         private async Task<string> GenerateAuthorizationHandlerAsync(AuthorizationHandlerDefinition handler, string rootNamespace) => await Task.FromResult("// Authorization handler implementation");
         private async Task<string> GenerateApplicationModuleAsync(ApplicationServiceDefinition definition) => await Task.FromResult("// Application module implementation");
         private async Task<string> GenerateApplicationConstantsAsync(ApplicationServiceDefinition definition) => await Task.FromResult("// Application constants implementation");

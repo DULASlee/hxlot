@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Linq;
 using SmartAbp.CodeGenerator.Core.Templates;
 using SmartAbp.CodeGenerator.Services.V9;
+using SmartAbp.Permissions; // 🔥 权限集成：引用权限常量定义
 
 namespace SmartAbp.CodeGenerator.Services
 {
@@ -17,7 +18,8 @@ namespace SmartAbp.CodeGenerator.Services
     /// 🔥 SmartAbp模板服务 - 基于务实模板系统的企业级实现
     /// 修复了自检发现的致命缺陷：硬编码路径、简陋变量替换、null值处理
     /// </summary>
-    [Authorize("SmartAbp.Templates")]
+    // 🔥 权限集成修复：使用标准权限常量（遵循ABP最佳实践）
+    [Authorize(SmartAbpPermissions.Templates.Default)]
     public class TemplateService : ApplicationService
     {
         private readonly ILogger<TemplateService> _logger;

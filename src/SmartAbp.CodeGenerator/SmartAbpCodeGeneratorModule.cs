@@ -8,6 +8,7 @@ using SmartAbp.CodeGenerator.Caching;
 using SmartAbp.CodeGenerator.Core;
 using SmartAbp.CodeGenerator.Core.FileOperations;
 using SmartAbp.CodeGenerator.Core.Pipeline;
+using SmartAbp.CodeGenerator.Core.Generation.Frontend; // 🔥 增强前端生成器
 using SmartAbp.CodeGenerator.Core.Templates;
 using SmartAbp.CodeGenerator.Core.Types;
 using SmartAbp.CodeGenerator.Core.Validation;
@@ -77,6 +78,9 @@ namespace SmartAbp.CodeGenerator
             services.AddScoped<GenerationProgressTracker>();
             services.AddScoped<GenerationQualityChecker>();
             services.AddScoped<StableGenerationPipeline>();
+            
+            // 🔥 增强前端生成器 - Vue3模板驱动实现
+            services.AddScoped<EnhancedFrontendGenerator>();
             
             // Application service
             services.AddScoped<CodeGenerationAppService>();

@@ -23,6 +23,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using SmartAbp.Permissions; // 🔥 权限集成：引用权限常量定义
 
 namespace SmartAbp.CodeGenerator.Services
 {
@@ -31,7 +32,8 @@ namespace SmartAbp.CodeGenerator.Services
     /// 利用ABP RemoteService实现自动API生成，减少70%重复代码
     /// </summary>
     [RemoteService(Name = "CodeGeneration")]
-    [Authorize("SmartAbp.CodeGeneration")]
+    // 🔥 权限集成修复：使用标准权限常量（遵循ABP最佳实践）
+    [Authorize(SmartAbpPermissions.CodeGeneration.Default)]
     public class CodeGenerationAppService : ApplicationService, ICodeGenerationAppService
     {
         private readonly CodeWriterService _codeWriterService;
@@ -39,6 +41,7 @@ namespace SmartAbp.CodeGenerator.Services
         private readonly CrudArchitectureGenerator _crudGenerator;
         private readonly ILogger<CodeGenerationAppService> _logger;
         private readonly FrontendGenerator _frontendGenerator;
+        private readonly EnhancedFrontendGenerator _enhancedFrontendGenerator; // 🔥 增强前端生成器
         private readonly IConfiguration _configuration;
         private readonly DefaultUIConfigGenerator _defaultUiConfigGenerator;
         private readonly FrontendIntegrationService _frontendIntegrationService;
@@ -53,6 +56,7 @@ namespace SmartAbp.CodeGenerator.Services
             CrudArchitectureGenerator crudGenerator,
             ILogger<CodeGenerationAppService> logger,
             FrontendGenerator frontendGenerator,
+            EnhancedFrontendGenerator enhancedFrontendGenerator, // 🔥 注入增强前端生成器
             IConfiguration configuration,
             DefaultUIConfigGenerator defaultUiConfigGenerator,
             FrontendIntegrationService frontendIntegrationService,
@@ -66,6 +70,7 @@ namespace SmartAbp.CodeGenerator.Services
             _crudGenerator = crudGenerator;
             _logger = logger;
             _frontendGenerator = frontendGenerator;
+            _enhancedFrontendGenerator = enhancedFrontendGenerator; // 🔥 增强前端生成器设置
             _configuration = configuration;
             _defaultUiConfigGenerator = defaultUiConfigGenerator;
             _frontendIntegrationService = frontendIntegrationService;
@@ -1116,8 +1121,10 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
 
         private async Task GenerateFrontendAsync(ModuleMetadataDto metadata, string solutionRoot, List<string> generatedFiles)
         {
-            _logger.LogInformation("Generating Frontend for module {ModuleName}...", metadata.Name);
-            var filesToGenerate = _frontendGenerator.Generate(metadata, solutionRoot);
+            _logger.LogInformation("🚀 启动增强Vue3前端代码生成: {ModuleName}...", metadata.Name);
+            
+            // 🔥 Vue3前端生成器升级：使用增强模板驱动生成器
+            var filesToGenerate = await _enhancedFrontendGenerator.GenerateAsync(metadata, solutionRoot);
 
             // Quality gates before writing any frontend files
             await RunQualityGatesAsync(filesToGenerate, "frontend");
