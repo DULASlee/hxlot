@@ -1138,9 +1138,7 @@ import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useEntityModelingStore, type EntityDefinition, type EntityField } from '@smartabp/lowcode-core'
 import { logger } from "@/utils/logger"
-import { AdvancedEntityRelationshipDesigner } from '@smartabp/lowcode-designer'
-import { AdvancedFieldTypeDesigner } from '@smartabp/lowcode-designer'
-import { BusinessRulesEngine } from '@smartabp/lowcode-designer'
+import { AdvancedEntityRelationshipDesigner, AdvancedFieldTypeDesigner, BusinessRulesEngine } from '@smartabp/lowcode-designer'
 import DataDictionaryManager from "@/components/lowcode/DataDictionaryManager.vue"
 import EnterpriseModelingAssistant from "@/components/lowcode/EnterpriseModelingAssistant.vue"
 

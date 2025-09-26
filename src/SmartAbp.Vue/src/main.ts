@@ -92,6 +92,8 @@ window.addEventListener('unhandledrejection', (event) => {
 
 import { createApp } from "vue"
 import { createPinia } from "pinia"
+import ElementPlus from "element-plus"
+import "element-plus/dist/index.css"
 import App from "./App.vue"
 import router from "./router"
 import { logger } from "./utils/logger"
@@ -157,7 +159,7 @@ if (storesFactory && typeof storesFactory === "object") {
 
 const app = createApp(App)
 
-app.use(pinia).use(router).use(i18n).use(hljsVuePlugin)
+app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin)
 
 async function bootstrap() {
   // 低代码：启用IndexedDB持久化并冷启动加载
