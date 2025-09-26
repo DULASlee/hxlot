@@ -872,9 +872,9 @@ import { ElMessage, ElMessageBox } from "element-plus"
 import { logger } from "@/utils/logger"
 import { useEntityModelingStore, type EntityDefinition, type MDIWindowConfig, type TabConfig } from '@smartabp/lowcode-core'
 import { usePageDesignStore } from '@smartabp/lowcode-core'
-import VisualComponentPalette from "@/components/lowcode/VisualComponentPalette.vue"
+import { VisualComponentPalette } from "@smartabp/lowcode-designer"
 import { VisualDesignCanvas } from '@smartabp/lowcode-designer'
-import ComponentPropertyPanel from "@/components/lowcode/ComponentPropertyPanel.vue"
+import { ComponentPropertyPanel } from "@smartabp/lowcode-designer"
 import MDIContainer from "@/components/ui/MDIContainer.vue"
 import TabsContainer from "@/components/ui/TabsContainer.vue"
 // 使用简化的类型定义

@@ -408,7 +408,7 @@ import { ElMessage } from "element-plus"
 import { useEntityModelingStore, type EntityDefinition, type EntityField } from '@smartabp/lowcode-core'
 import { usePageDesignStore } from '@smartabp/lowcode-core'
 import { logger } from "@/utils/logger"
-import EnterpriseCodeGenerationEngine from "@/components/lowcode/EnterpriseCodeGenerationEngine.vue"
+import { EnterpriseCodeGenerationEngine } from "@smartabp/lowcode-designer"
 
 // Stores
 const entityStore = useEntityModelingStore()

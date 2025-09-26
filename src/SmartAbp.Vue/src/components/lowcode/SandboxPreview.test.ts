@@ -3,13 +3,13 @@
  */
 import { describe, it, expect } from "vitest"
 import { mount } from "@vue/test-utils"
-import SandboxPreview from "@/components/lowcode/SandboxPreview.vue"
+import { SandboxPreview } from "@smartabp/lowcode-designer"
 
 describe("SandboxPreview.vue", () => {
   it("should render an iframe with the correct sandbox attributes", () => {
     const wrapper = mount(SandboxPreview, { props: { code: "<p>test</p>" } })
     const iframe = wrapper.find("iframe")
-    
+
     expect(iframe.exists()).toBe(true)
     expect(iframe.attributes("sandbox")).toContain("allow-scripts")
   })

@@ -1,12 +1,12 @@
 <template>
-  <div class="data-dictionary-manager">
+  <div class="component-property-panel">
     <el-card>
       <template #header>
-        <span>数据字典管理</span>
+        <span>组件属性面板</span>
       </template>
       
       <div class="content">
-        <el-empty description="数据字典管理功能开发中" />
+        <el-empty description="组件属性面板功能开发中" />
       </div>
     </el-card>
   </div>
@@ -15,18 +15,18 @@
 <script setup lang="ts">
 // 临时简化组件
 interface Props {
-  dictionaries?: any[]
+  selectedComponent?: any
 }
 
 defineProps<Props>()
 
 // const emit = defineEmits<{
-//   'dictionary-added': [dictionary: any]
+//   'property-change': [property: string, value: any]
 // }>() // 暂时注释未使用
 </script>
 
 <style scoped>
-.data-dictionary-manager {
+.component-property-panel {
   height: 100%;
 }
 .content {
