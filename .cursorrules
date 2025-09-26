@@ -97,40 +97,28 @@ MASTER_SECRET_TRIGGER = "专家模式"
 📚 **第六重爆雷：GIT版本管理和质量检查强制执行**
 ⚡ **触发机制**: 编程30分钟后或每完成一个开发任务节点自动触发
 
-   🏗️ **第一阶段：架构整洁强制检查**
-   🔧 **执行脚本**: run_terminal_cmd("grep -r \"'../\'\" src/SmartAbp.Vue/packages/")  # 检查相对路径违规
-   🔧 **执行脚本**: run_terminal_cmd("grep -r \"@/\" src/SmartAbp.Vue/packages/")  # 检查@/主应用引用违规
-   🔧 **执行脚本**: run_terminal_cmd("grep -r \"as any|@ts-ignore\" src/")  # 检查类型绕过违规
-   ✅ **验证确认**: 黑盒原则+路径隔离+别名通信100%符合
-   🚫 **零容忍标准**: 任何架构违规必须立即修复，禁止例外
+🚨 **Git提交前四重强制检查门禁（零容忍）**
 
-   🔁 **第二阶段：重复代码强制检查**
-   🔧 **执行脚本**: run_terminal_cmd("find src/SmartAbp.Vue/src src/SmartAbp.Vue/packages -name \"*.vue\" | sed 's/.*\///' | sort | uniq -d")  # 检查重复Vue组件
-   🔧 **执行脚本**: run_terminal_cmd("grep -r \"function\\s+\\w+|const\\s+\\w+\\s*=\" src/ --include=\"*.ts\" --include=\"*.vue\" | sort | uniq -d")  # 检查重复方法名
-   🔧 **执行脚本**: run_terminal_cmd("grep -r \"class\\s+\\w+|interface\\s+\\w+\" src/ --include=\"*.ts\" | sort | uniq -d")  # 检查重复类名
-   ✅ **验证确认**: DRY原则执行完毕，同名同功能代码清零
-   🛠️ **DRY原则**: Don't Repeat Yourself - 发现重复立即重构
+   🏗️ **第一关：架构整洁检查（0违规）**
+   🔧 相对路径违规检查: grep -r "'../'" src/SmartAbp.Vue/packages/
+   🔧 主应用引用违规检查: grep -r "@/" src/SmartAbp.Vue/packages/  
+   🔧 类型绕过违规检查: grep -r "as any\|@ts-ignore" src/
+   ❌ **有任何违规严禁提交！必须修复！**
 
-   ⚡ **第三阶段：编译质量强制检查**
-   🔧 **前端检查脚本**:
-       run_terminal_cmd("npm run type-check")  # TypeScript类型检查 - 必须通过
-       run_terminal_cmd("npm run lint --fix")  # ESLint代码规范检查 - 必须通过
-       run_terminal_cmd("npm run build")       # 构建检查 - 必须成功
-   🔧 **后端检查脚本**:
-       run_terminal_cmd("dotnet build src/SmartAbp.CodeGenerator/SmartAbp.CodeGenerator.csproj")  # 编译检查 - 必须通过
-       run_terminal_cmd("dotnet test --no-build")  # 单元测试检查 - 必须通过
-   🚨 **BUG修复铁律**:
-     - ❌ **严禁删除代码**来"修复"编译错误
-     - ❌ **严禁注释代码**来通过编译检查
-     - ❌ **严禁使用`as any`**绕过类型检查
-     - ❌ **严禁使用`@ts-ignore`**忽略类型错误
-     - ✅ **必须在企业最佳编程规则前提下**完成高质量修复
+   🔄 **第二关：代码去重检查（0重复）**
+   🔧 重复组件检查: find src/ -name "*.vue" | sort | uniq -d
+   🔧 重复方法检查: grep -r "function\|const.*=" src/ | sort | uniq -d
+   🔧 重复类检查: grep -r "class\|interface" src/ | sort | uniq -d
+   ❌ **有任何重复严禁提交！必须重构！**
 
-   🔄 **第四阶段：Git版本控制强制同步**
-   🔧 **强制脚本**: run_terminal_cmd("bash scripts/git-safe-sync.sh --non-interactive --auto-commit")
-   ✅ **验证确认**: 代码质量检查100%通过 → Git同步100%成功
-   ✅ **验证确认**: 使用项目标准Git脚本，严禁手动Git命令
-   ✅ **验证确认**: 本地与远程仓库版本完全同步，无遗留冲突
+   ⚡ **第三关：类型和编译检查（0错误）**
+   🔧 前端检查: npm run type-check && npm run lint && npm run build
+   🔧 后端检查: dotnet build && dotnet test --no-build
+   ❌ **有任何错误严禁提交！必须修复！**
+
+   🚀 **第四关：Git提交执行（质量门禁全部通过后）**
+   🔧 强制脚本: bash scripts/git-safe-sync.sh --non-interactive --auto-commit
+   ✅ 验证: 使用项目标准Git脚本，本地与远程完全同步
 
 ⚙️ **第七重爆雷：全栈代码生成器专注核心功能**
    ❌ **严禁AI智能辅助功能**: 现阶段禁止实现AI助手、智能建议、自动优化等AI功能
