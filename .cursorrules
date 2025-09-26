@@ -112,14 +112,14 @@ MASTER_SECRET_TRIGGER = "专家模式"
    🛠️ **DRY原则**: Don't Repeat Yourself - 发现重复立即重构
 
    ⚡ **第三阶段：编译质量强制检查**
-   🔧 **前端检查脚本**: 
+   🔧 **前端检查脚本**:
        run_terminal_cmd("npm run type-check")  # TypeScript类型检查 - 必须通过
        run_terminal_cmd("npm run lint --fix")  # ESLint代码规范检查 - 必须通过
        run_terminal_cmd("npm run build")       # 构建检查 - 必须成功
-   🔧 **后端检查脚本**: 
+   🔧 **后端检查脚本**:
        run_terminal_cmd("dotnet build src/SmartAbp.CodeGenerator/SmartAbp.CodeGenerator.csproj")  # 编译检查 - 必须通过
        run_terminal_cmd("dotnet test --no-build")  # 单元测试检查 - 必须通过
-   🚨 **BUG修复铁律**: 
+   🚨 **BUG修复铁律**:
      - ❌ **严禁删除代码**来"修复"编译错误
      - ❌ **严禁注释代码**来通过编译检查
      - ❌ **严禁使用`as any`**绕过类型检查
@@ -145,31 +145,7 @@ MASTER_SECRET_TRIGGER = "专家模式"
    ✅ **验证确认**: 技术选型约束与当前任务相关性
    ✅ **验证确认**: 架构决策对当前实现的约束要求
 
-📚 **第六重爆雷：模板强制匹配执行**
-   🔧 **执行脚本**: glob_file_search("templates/**/*.template.*")
-   🔧 **执行脚本**: read_file("templates/index.json") # 如果存在
-   🔧 **执行脚本**: list_dir("templates", recursive=true)
-   ✅ **验证确认**: 发现模板数量和分类统计
-   ✅ **验证确认**: 匹配用户需求与对应模板路径
-   ✅ **验证确认**: 模板参数映射(EntityName/entityName/ModuleName等)
 
-⚙️ **第七重爆雷：完美代码生成强制验证**
-   🔧 **执行脚本**: read_file("package.json") # 验证项目依赖版本
-   🔧 **执行脚本**: read_file("tsconfig.json") # 验证TypeScript配置
-   🔧 **执行脚本**: read_file(".prettierrc.json") # 验证代码格式规范
-   🔧 **执行脚本**: grep("as any|@ts-ignore", path="src", type="ts,vue") # 类型安全检查
-   🔧 **执行脚本**: run_terminal_cmd("npm run type-check") # 强制类型验证
-   ✅ **验证确认**: TypeScript严格模式无错误 + 代码格式符合项目规范
-   ✅ **验证确认**: 零 `as any` 类型绕过 + 零架构违规路径引用
-   ✅ **验证确认**: 企业级质量标准(95分) + 生成代码通过所有检查
-
-⚙️ **第八重爆雷：架构铁律强制执行：黑盒原则 (The Black Box Principle)**
-   🔧 **执行脚本**: grep("../", path="src/SmartAbp.Vue/packages", type="ts,vue")
-   🔧 **执行脚本**: grep("@smartabp", path="src/SmartAbp.Vue/packages", type="ts,vue")
-   🔧 **执行脚本**: glob_file_search("src/SmartAbp.Vue/packages/**/package.json")
-   ✅ **验证确认**: 黑盒原则 - 零违规相对路径引用检查
-   ✅ **验证确认**: 别名通信 - 确保使用@smartabp/*模块通信
-   ✅ **验证确认**: 配置统一性 - 禁止packages内独立配置文件
 
 ## 💥 专家模式承诺 (基于新版七重爆雷)
 
@@ -261,25 +237,6 @@ const TASK_COMPLETION_TRIGGERS = [
 **技术栈**: ABP vNext + Vue3/TypeScript + 低代码引擎
 **核心要求**: 95分质量标准 + 模板强制使用 + 架构先行
 
-## 🚨 核心铁律
-
-### 🏛️ 极致质量律
-- 95分质量阈值是底线
-- 严禁使用 `as any` 或 `@ts-ignore`
-- 严禁使用相对路径 (`../`)，必须使用模块别名
-
-### 🚀 架构先行律
-- 设计驱动实现，模式优于技巧
-- 低代码引擎黑盒原则：严禁通过`../`依赖宿主应用
-
-### 🎯 独立决策律
-- 技术判断独立，坚持最佳实践
-- 根本解决问题，不走捷径
-
-### 🚫 反马屁虫铁律
-- 拒绝盲目迎合，坚持技术专业性
-
-## 🚨 模板强制使用
 
 ### 核心规则
 **生成任何代码前必须执行**: `glob "templates/**/*.template.*"`
@@ -305,13 +262,6 @@ const TASK_COMPLETION_TRIGGERS = [
 - "架构|技术选型|框架" → 强制查阅ADR
 - 任何代码编辑 → 强制质量检查
 - 编辑packages目录 → 强制架构检查
-
-### 质量门禁
-每次代码变更后自动执行：
-```bash
-npm run lint --fix
-npm run type-check
-```
 
 ### 零容忍违规检查
 - 架构违规：`grep -r "'../'" src/SmartAbp.Vue/packages/`

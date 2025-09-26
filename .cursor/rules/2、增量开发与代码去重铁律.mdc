@@ -1,0 +1,136 @@
+---
+description: "增量开发与代码去重铁律 - AI编程大模型严禁重复编码"
+globs: ["**/*.ts", "**/*.vue", "**/*.cs"]
+alwaysApply: true
+priority: 1200
+expertMode: true
+---
+
+# 🚨 增量开发与代码去重铁律
+
+## 🔥 核心原则：严禁重复编码
+
+**AI编程大模型在任何情况下都严禁编写同样名字或同样功能的组件、类、方法、API、路由、状态、类型！**
+
+## 🛡️ 强制去重检查范围
+
+### 前端去重检查
+```bash
+# Vue组件重名检查
+find src/SmartAbp.Vue/src src/SmartAbp.Vue/packages -name "*.vue" | sed 's/.*\///' | sort | uniq -d
+
+# TypeScript方法重名检查
+grep -r "function\s+\w+|const\s+\w+\s*=" src/ --include="*.ts" --include="*.vue" | sort | uniq -d
+
+# 接口和类型重名检查
+grep -r "class\s+\w+|interface\s+\w+" src/ --include="*.ts" | sort | uniq -d
+
+# 路由重复检查
+grep -r "path:|name:" src/SmartAbp.Vue/src/router/ --include="*.ts" --include="*.js" | sort | uniq -d
+
+# Store状态重复检查
+grep -r "defineStore\|useStore" src/ --include="*.ts" | sort | uniq -d
+```
+
+### 后端去重检查
+```bash
+# C#类重名检查
+grep -r "class\s+\w+|interface\s+\w+" src/ --include="*.cs" | sort | uniq -d
+
+# 应用服务重名检查
+grep -r "class.*AppService|interface.*IAppService" src/ --include="*.cs" | sort | uniq -d
+
+# Controller重复检查
+grep -r "class.*Controller" src/ --include="*.cs" | sort | uniq -d
+```
+
+## 🚨 严禁重复的代码类型
+
+### 组件层面
+- ❌ 同名Vue组件（如多个UserManagement.vue）
+- ❌ 同功能组件（如多个用户列表组件）
+- ❌ 同样的页面路由配置
+- ❌ 重复的组件状态管理
+
+### 服务层面
+- ❌ 同名应用服务（如多个UserAppService）
+- ❌ 同功能API接口
+- ❌ 重复的业务逻辑实现
+- ❌ 相同的数据传输对象（DTO）
+
+### 工具层面
+- ❌ 同名工具函数
+- ❌ 重复的类型定义
+- ❌ 相同的常量定义
+- ❌ 重复的配置文件
+
+## ✅ 正确的增量开发方式
+
+### 扩展现有功能
+```typescript
+// ✅ 正确：扩展现有组件
+export interface UserManagementProps extends BaseManagementProps {
+  additionalFeatures?: string[]
+}
+
+// ❌ 错误：创建新的重复组件
+// export interface UserListProps { ... }
+```
+
+### 继承和组合
+```typescript
+// ✅ 正确：继承现有服务
+export class EnhancedUserAppService extends UserAppService {
+  // 新增功能
+}
+
+// ❌ 错误：重新实现用户服务
+// export class NewUserAppService { ... }
+```
+
+### 配置化差异
+```typescript
+// ✅ 正确：配置化处理差异
+const tableConfig = {
+  user: { columns: ['name', 'email'], actions: ['edit', 'delete'] },
+  product: { columns: ['name', 'price'], actions: ['edit'] }
+}
+
+// ❌ 错误：为每个实体创建独立组件
+```
+
+## 🔍 增量开发检查清单
+
+### 编码前检查
+- [ ] 搜索是否存在同名组件/类/方法
+- [ ] 分析现有功能是否可扩展
+- [ ] 确认新功能的独特性和必要性
+- [ ] 评估代码复用的可能性
+
+### 编码中检查
+- [ ] 命名唯一性验证
+- [ ] 功能边界清晰定义
+- [ ] 避免重复实现逻辑
+- [ ] 保持架构一致性
+
+### 编码后检查
+- [ ] 执行自动去重检查脚本
+- [ ] 验证DRY原则遵循
+- [ ] 确认代码库整洁度
+- [ ] 检查重构优化机会
+
+## 💥 违规后果
+
+### AI行为监督
+发现重复代码时：
+1. **立即停止编码**
+2. **分析重复原因**
+3. **重构或删除重复代码**
+4. **优化现有实现**
+
+### 质量保证
+- **代码Review必须**: 重点检查重复性
+- **自动化检测**: CI/CD集成去重检查
+- **团队培训**: 强化DRY原则教育
+
+**DRY原则是代码质量的基石！严禁任何形式的重复编码！**

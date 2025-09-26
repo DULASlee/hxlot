@@ -27,7 +27,7 @@ SmartAbp是**世界顶尖的开源企业级低代码引擎**，通过十七重�
   用户体验: "5分钟上手，一键生成 (最易用的企业级平台)"
   质量标准: "95分企业级，48个TDD测试 (最高的质量标准)"
   云原生成熟度: "Level 5 (最先进的部署体系)"
-  
+
 行业地位评定:
   技术领先度: "🥇 业界第一梯队"
   用户体验: "🥇 业界最佳"
@@ -47,50 +47,50 @@ graph TB
         C[智能工作流编排<br/>全流程智能引导]
         D[智能质量保证<br/>95分标准自动保证]
     end
-    
+
     subgraph "🧠 智能化引擎层 (Intelligence Engine Layer)"
         E[智能建模助手<br/>模式识别+质量评估]
         F[智能模板匹配<br/>95%置信度推荐]
         G[智能参数填充<br/>零配置自动推断]
         H[智能质量检查<br/>实时检查+自动修复]
     end
-    
+
     subgraph "🏗️ 企业级核心层 (Enterprise Core Layer)"
         I[企业级数据建模器<br/>Level 5建模深度]
         J[企业级页面设计器<br/>WYSIWYG可视化设计]
         K[企业级代码生成器<br/>完整全栈代码生成]
         L[领域特定模板库<br/>3大专业领域支持]
     end
-    
+
     subgraph "⚙️ 技术基座层 (Technical Foundation Layer)"
         M[前端引擎<br/>Vue3+TS+Element Plus]
         N[后端引擎<br/>.NET8+ABP+EFCore]
         O[数据存储层<br/>PostgreSQL+Redis]
         P[云原生部署<br/>Kubernetes Level 5]
     end
-    
+
     subgraph "📊 监控运维层 (DevOps & Monitoring Layer)"
         Q[CI/CD流水线<br/>GitHub Actions自动化]
         R[监控体系<br/>Prometheus+Grafana]
         S[日志系统<br/>ELK Stack完整日志]
         T[安全体系<br/>OWASP+企业安全标准]
     end
-    
+
     A --> E
     B --> F
     C --> G
     D --> H
-    
+
     E --> I
     F --> J
     G --> K
     H --> L
-    
+
     I --> M
     J --> N
     K --> O
     L --> P
-    
+
     M --> Q
     N --> R
     O --> S
@@ -111,7 +111,7 @@ const frontendArchitecture = {
     eslint: 'ESLint 9.34.0 - 代码质量保证',
     prettier: 'Prettier 3.6.2 - 代码格式化'
   },
-  
+
   // UI组件层
   uiComponents: {
     elementPlus: 'Element Plus 2.8.8 - 企业级UI组件库',
@@ -119,7 +119,7 @@ const frontendArchitecture = {
     icons: '@element-plus/icons-vue - 企业级图标库',
     charts: 'ECharts - 数据可视化图表库'
   },
-  
+
   // 状态管理层
   stateManagement: {
     pinia: 'Pinia 3.0.3 - 现代化状态管理',
@@ -133,7 +133,7 @@ const frontendArchitecture = {
       'enhancedStateMachine - 状态机状态 (TDD验证)'
     ]
   },
-  
+
   // 测试体系层
   testingFramework: {
     vitest: 'Vitest 3.2.4 - 现代化单元测试',
@@ -217,17 +217,17 @@ src/SmartAbp.Vue/src/
 ### 💼 **后端技术栈**
 ```csharp
 // SmartAbp 后端技术栈 (企业级配置)
-public class BackendArchitecture 
+public class BackendArchitecture
 {
     // 核心框架
     public FrameworkStack Framework => new() {
         Runtime = ".NET 8.0 LTS",
         ApplicationFramework = "ABP vNext",
-        WebFramework = "ASP.NET Core 8.0", 
+        WebFramework = "ASP.NET Core 8.0",
         ORM = "Entity Framework Core 8.0",
         DependencyInjection = "Microsoft.Extensions.DependencyInjection"
     };
-    
+
     // 数据存储
     public DataStack DataStorage => new() {
         PrimaryDatabase = "PostgreSQL 15+",
@@ -236,7 +236,7 @@ public class BackendArchitecture
         MessageQueue = "RabbitMQ 3.12+",
         FileStorage = "MinIO/AWS S3"
     };
-    
+
     // 企业级特性
     public EnterpriseFeatures Enterprise => new() {
         MultiTenant = "完整的多租户数据隔离",
@@ -246,7 +246,7 @@ public class BackendArchitecture
         BackgroundJobs = "Hangfire后台任务处理",
         EventBus = "分布式事件总线"
     };
-    
+
     // 代码生成引擎
     public CodeGenerationStack CodeGeneration => new() {
         AnalysisEngine = "Roslyn AST智能代码分析",
@@ -320,20 +320,20 @@ SmartAbp低代码引擎核心架构:
   组件数量: "50+ 个专业组件"
   模板库: "33个企业级模板，16个业务领域"
   质量标准: "95分企业级质量，48个TDD测试100%通过"
-  
+
   核心能力矩阵:
     用户体验能力:
       - 5分钟新手上手 (vs 传统平台数周学习)
       - 一键生成企业应用 (vs 手工开发数月)
       - 智能工作流引导 (vs 复杂配置步骤)
       - 95分质量自动保证 (vs 手工质量检查)
-    
+
     技术能力:
       - Level 5数据建模深度 (vs 基础ER建模)
       - WYSIWYG可视化设计 (vs 配置式设计)
       - 智能代码生成 (vs 简单模板替换)
       - 云原生Level 5部署 (vs 传统部署)
-    
+
     领域专业能力:
       - 企业权限管理系统 (8分钟完整生成)
       - 智慧工地管理系统 (12分钟专业生成)
@@ -348,7 +348,7 @@ SmartAbp低代码引擎核心架构:
 interface ProjectWizardEngine {
   component: 'ProjectWizard.vue (1,200行)',
   capability: '3步智能向导 (类型选择→配置→生成)',
-  
+
   projectTemplates: {
     permissionManagement: {
       name: '企业后台权限管理系统',
@@ -359,7 +359,7 @@ interface ProjectWizardEngine {
       features: ['多租户', '审计日志', '权限控制', '组织架构']
     },
     smartConstruction: {
-      name: '智慧工地管理系统', 
+      name: '智慧工地管理系统',
       entities: 8,
       pages: 24,
       apis: 60,
@@ -369,13 +369,13 @@ interface ProjectWizardEngine {
     mesManufacturing: {
       name: 'MES制造执行系统',
       entities: 10,
-      pages: 30, 
+      pages: 30,
       apis: 75,
       estimatedTime: '15分钟',
       features: ['智能排产', '质量追溯', '设备管理', 'KPI监控']
     }
   },
-  
+
   intelligentConfig: {
     autoFillNamespace: '基于项目名称自动生成命名空间',
     autoFillDatabase: '基于项目代码自动生成数据库名',
@@ -387,21 +387,21 @@ interface ProjectWizardEngine {
 
 #### 2️⃣ **企业级数据建模引擎**
 ```typescript
-// Advanced Data Modeling Engine Architecture  
+// Advanced Data Modeling Engine Architecture
 interface AdvancedDataModelingEngine {
   component: 'EntityModelingView.vue (1,570行) + 5个高级建模组件',
   capability: 'Level 5企业级数据建模深度',
-  
+
   relationshipModeling: {
     component: 'AdvancedEntityRelationshipDesigner.vue (2,000行)',
     supportedRelations: [
       'one-to-one', 'one-to-many', 'many-to-many',    // 基础关系
-      'inheritance', 'aggregation', 'composition', 'dependency' // 高级关系
-    ],
+    'inheritance', 'aggregation', 'composition', 'dependency' // 高级关系
+  ],
     visualizations: ['关系图(Vue Flow)', '关系矩阵', '继承树'],
     intelligentValidation: ['循环依赖检测', '孤立实体识别', '外键完整性检查']
   },
-  
+
   fieldTypeDesign: {
     component: 'AdvancedFieldTypeDesigner.vue (1,800行)',
     fieldCategories: {
@@ -412,25 +412,25 @@ interface AdvancedDataModelingEngine {
     },
     intelligentConfig: '动态配置项+验证规则+UI控件自动匹配'
   },
-  
+
   businessRulesEngine: {
     component: 'BusinessRulesEngine.vue (2,200行)',
     ruleHierarchy: {
       entityRules: '实体级验证和业务逻辑规则',
-      fieldRules: '字段级约束和格式验证规则', 
+      fieldRules: '字段级约束和格式验证规则',
       crossEntityRules: '跨实体的复杂业务逻辑规则'
     },
     ruleTemplates: ['权限控制规则包', '审计日志规则包', '数据完整性规则包'],
     executionEngine: '优先级管理+异步执行+缓存结果+错误处理'
   },
-  
+
   dataDictionary: {
     component: 'DataDictionaryManager.vue (1,500行)',
     categories: ['系统', '业务', '用户', '组织', '权限', '项目', '设备', '质量'],
     features: ['可视化编辑', '批量导入导出', '预设模板库', '使用统计分析'],
     integration: '与字段类型设计器的智能关联'
   },
-  
+
   intelligentAssistant: {
     component: 'IntelligentModelingAssistant.vue (2,000行)',
     qualityAssessment: {
@@ -451,10 +451,10 @@ interface AdvancedDataModelingEngine {
 interface VisualPageDesignEngine {
   component: 'DesignView.vue (1,540行) + 3个可视化设计组件',
   capability: 'WYSIWYG企业级页面设计器',
-  
+
   componentPalette: {
     component: 'VisualComponentPalette.vue (1,500行)',
-    componentLibrary: {
+  componentLibrary: {
       basic: '基础组件 (文本/按钮/图片/分割线)',
       form: '表单组件 (输入框/选择器/日期/上传/滑块)',
       data: '数据组件 (表格/分页/树形/描述列表)',
@@ -468,7 +468,7 @@ interface VisualPageDesignEngine {
       componentPreview: '拖拽过程中的实时预览'
     }
   },
-  
+
   designCanvas: {
     component: 'VisualDesignCanvas.vue (2,200行)',
     designModes: {
@@ -494,7 +494,7 @@ interface VisualPageDesignEngine {
       layerManagement: '图层管理和层级控制'
     }
   },
-  
+
   propertyPanel: {
     component: 'ComponentPropertyPanel.vue (2,300行)',
     propertyCategories: {
@@ -527,29 +527,29 @@ interface VisualPageDesignEngine {
 interface IntelligentCodeGenerationEngine {
   component: 'IntelligentCodeGenerationEngine.vue (4,200行)',
   capability: '智能分析+自动生成+质量保证的完整生成链',
-  
+
   intelligentAnalysis: {
     entityAnalysis: '实体结构深度分析',
-    relationshipAnalysis: '实体关系合理性分析', 
+    relationshipAnalysis: '实体关系合理性分析',
     businessPatternAnalysis: '业务模式智能识别',
     qualityAssessment: '代码质量预评估',
     templateRecommendation: '95%置信度模板推荐'
   },
-  
+
   templateMatchingAlgorithm: {
     confidenceScoring: '多维度置信度评分算法',
     patternRecognition: 'RBAC/审计/工作流等模式识别',
     contextAnalysis: '基于上下文的智能推荐',
     bestPracticeApplication: '最佳实践自动应用'
   },
-  
+
   parameterIntelligence: {
     autoInference: '基于实体和项目配置的参数推断',
     contextualFilling: '上下文相关的参数自动填充',
     validationEngine: '参数有效性验证和建议',
     defaultOptimization: '最佳实践默认值优化'
   },
-  
+
   generationPipeline: {
     stages: [
       'analysis - 实体结构和业务模式智能分析',
@@ -564,7 +564,7 @@ interface IntelligentCodeGenerationEngine {
     progressTracking: '实时进度追踪和用户反馈',
     errorHandling: '完整的错误处理和恢复机制'
   },
-  
+
   qualityAssuranceEngine: {
     codeStandardsCheck: 'TypeScript严格模式+ESLint零错误',
     architectureCompliance: '完整的架构模式遵循验证',
@@ -589,7 +589,7 @@ Template Ecosystem Architecture:
     codeLines: "15,000+"
     qualityStandard: "95分企业级"
     tddVerification: "100%通过"
-    
+
   # 核心模板分类
   coreTemplates:
     backend: [
@@ -601,7 +601,7 @@ Template Ecosystem Architecture:
     ]
     frontend: [
       "CrudManagement.template.vue - Vue CRUD管理页面",
-      "EntityStore.template.ts - Pinia实体状态管理", 
+      "EntityStore.template.ts - Pinia实体状态管理",
       "ModuleRoutes.template.ts - Vue Router模块路由",
       "TypeDefinitions.template.ts - TypeScript类型定义"
     ]
@@ -610,7 +610,7 @@ Template Ecosystem Architecture:
       "LowCodePlugin.template.ts - 低代码引擎插件",
       "RuntimeComponent.template.vue - 元数据驱动运行时组件"
     ]
-    
+
   # 领域特定专业模板
   domainSpecificTemplates:
     permissionManagement:
@@ -623,7 +623,7 @@ Template Ecosystem Architecture:
       ]
       businessCapability: "6实体+18页面+45API+完整权限体系"
       enterpriseFeatures: ["多租户", "审计日志", "权限控制", "组织架构"]
-      
+
     smartConstruction:
       templates: [
         "ProjectManagement.template.vue (700行) - 智慧工地项目管理",
@@ -634,7 +634,7 @@ Template Ecosystem Architecture:
       ]
       businessCapability: "8实体+24页面+60API+IoT集成"
       industryFeatures: ["IoT设备集成", "地图定位", "实时监控", "安全预警"]
-      
+
     mesManufacturing:
       templates: [
         "ProductionOrderManagement.template.vue (650行) - MES生产订单",
@@ -658,42 +658,42 @@ Cloud Native Architecture (Level 5 Maturity):
       frontend: "多阶段构建+Alpine Linux+安全扫描"
       backend: ".NET 8 Runtime+多架构支持+优化体积"
       database: "官方PostgreSQL+Redis镜像+持久化配置"
-    
+
     registry: "GitHub Container Registry+私有镜像仓库"
     security: "镜像安全扫描+漏洞检测+签名验证"
-  
-  # 编排层  
+
+  # 编排层
   orchestration:
     kubernetes:
       version: "1.28+"
       cluster: "生产级高可用集群 (3 Master + 6 Worker)"
       networking: "Calico CNI+Network Policies"
       storage: "Longhorn分布式存储+自动备份"
-      
+
     helm:
       charts: "完整的Helm Charts配置 (15个模板文件)"
       values: "多环境配置管理 (dev/staging/prod)"
       hooks: "部署前后钩子和验证"
-      
+
     operators:
       deployment: "Deployment+StatefulSet智能编排"
       services: "Service+Ingress流量管理"
       configmaps: "配置管理和密钥管理"
       hpa: "水平Pod自动伸缩器"
       vpa: "垂直Pod自动伸缩器"
-  
+
   # 服务网格层
   serviceMesh:
     istio:
       trafficManagement: "智能流量管理和负载均衡"
       security: "mTLS+认证授权+访问控制"
       observability: "分布式追踪+监控+日志"
-      
+
     features:
       canaryDeployment: "金丝雀部署和蓝绿部署"
       circuitBreaker: "熔断器和故障注入"
       rateLimiting: "限流控制和配额管理"
-  
+
   # CI/CD层
   cicd:
     githubActions:
@@ -701,24 +701,24 @@ Cloud Native Architecture (Level 5 Maturity):
       buildPipeline: "多架构容器镜像构建"
       deploymentPipeline: "多环境自动化部署"
       securityScanning: "代码安全扫描+容器安全检查"
-      
+
     environments:
       development: "开发环境自动部署 (develop分支)"
       staging: "预发布环境集成测试 (main分支)"
       production: "生产环境标签触发部署 (tags)"
-  
+
   # 监控观测层
   observability:
     monitoring:
       prometheus: "指标收集和存储"
       grafana: "可视化监控仪表盘"
       alertmanager: "智能告警和通知"
-      
+
     logging:
       elasticsearch: "日志存储和索引"
       logstash: "日志收集和处理"
       kibana: "日志查询和分析"
-      
+
     tracing:
       jaeger: "分布式链路追踪"
       openTelemetry: "可观测性数据收集"
@@ -738,7 +738,7 @@ Data Storage Architecture:
     backup: "自动备份+异地容灾+点恢复"
     optimization: "索引优化+查询优化+连接池"
     monitoring: "性能监控+慢查询分析+资源使用"
-    
+
   # 分布式缓存
   distributedCache:
     type: "Redis 7.0+ Cluster"
@@ -746,14 +746,14 @@ Data Storage Architecture:
     capacity: "8Gi内存 + 持久化存储"
     strategy: "L1+L2混合缓存+缓存预热+智能失效"
     monitoring: "缓存命中率+内存使用+延迟监控"
-    
+
   # 搜索引擎
   searchEngine:
     type: "Elasticsearch 8.x"
     deployment: "集群部署+数据分片+副本"
     usage: "全文搜索+日志分析+业务数据检索"
     optimization: "索引优化+查询优化+聚合分析"
-    
+
   # 消息队列
   messageQueue:
     type: "RabbitMQ 3.12+"
@@ -772,15 +772,15 @@ Data Flow Architecture:
     piniaStore: "Pinia集中状态管理"
     apiClient: "API客户端调用"
     caching: "前端缓存和优化"
-    
-  # 后端数据流  
+
+  # 后端数据流
   backendDataFlow:
     apiGateway: "API网关和路由"
     applicationService: "应用服务业务逻辑"
     domainService: "领域服务核心逻辑"
     repository: "仓储数据访问"
     database: "数据库持久化存储"
-    
+
   # 低代码引擎数据流
   lowcodeDataFlow:
     userDesign: "用户可视化设计操作"
@@ -803,7 +803,7 @@ Multi-Layer Security Architecture:
     networkPolicies: "Kubernetes网络策略+Pod通信控制"
     tlsTermination: "TLS 1.3终止+证书自动管理"
     ddosProtection: "DDoS攻击防护+流量清洗"
-    
+
   # 认证授权层
   authenticationAuthorization:
     identity: "OpenIddict现代化认证服务器"
@@ -811,7 +811,7 @@ Multi-Layer Security Architecture:
     rbac: "基于角色的访问控制+细粒度权限"
     multiTenant: "租户级别的数据和权限隔离"
     sso: "单点登录+SAML+OAuth 2.0集成"
-    
+
   # 数据安全层
   dataSecurity:
     encryptionAtRest: "数据库字段级加密+透明数据加密"
@@ -819,7 +819,7 @@ Multi-Layer Security Architecture:
     secretsManagement: "Kubernetes Secrets+外部密钥管理"
     dataPrivacy: "个人数据保护+GDPR合规"
     auditLogging: "完整审计日志+合规性报告"
-    
+
   # 应用安全层
   applicationSecurity:
     inputValidation: "三层输入验证 (前端+后端+数据库)"
@@ -827,7 +827,7 @@ Multi-Layer Security Architecture:
     csrfProtection: "CSRF令牌+SameSite Cookie"
     sqlInjectionProtection: "参数化查询+ORM防护"
     apiSecurity: "API限流+熔断+签名验证"
-    
+
   # 运行时安全层
   runtimeSecurity:
     containerSecurity: "容器安全扫描+运行时保护"
@@ -847,19 +847,19 @@ High Performance Architecture:
       codesplitting: "路由级别的代码分割"
       treeshaking: "死代码消除和依赖优化"
       bundleOptimization: "打包体积优化和压缩"
-      
+
     runtimeOptimization:
       virtualScrolling: "大数据虚拟滚动 (>1000条记录)"
       lazyLoading: "组件懒加载和按需引入"
       memoryOptimization: "内存优化 (LRU缓存+对象池)"
       debounceOptimization: "防抖优化 (搜索+输入+滚动)"
-      
+
     userExperience:
       firstContentfulPaint: "<1.5秒"
       timeToInteractive: "<3秒"
       componentRenderTime: "<100ms"
       memoryUsage: "<512MB"
-      
+
   # 后端性能架构
   backendPerformance:
     databaseOptimization:
@@ -867,26 +867,26 @@ High Performance Architecture:
       connectionPooling: "连接池管理和复用策略"
       queryOptimization: "EF Core查询优化和批量处理"
       sharding: "数据分片和读写分离"
-      
+
     cachingStrategy:
       distributedCache: "Redis分布式缓存策略"
       l1l2Cache: "L1+L2混合缓存架构"
       cacheWarmup: "缓存预热和智能刷新"
       hitRateOptimization: "缓存命中率优化 (>95%)"
-      
+
     serviceOptimization:
       asyncProcessing: "异步处理和后台任务"
       batchProcessing: "批量处理和事务优化"
       circuitBreaker: "熔断器和限流控制"
       loadBalancing: "负载均衡和健康检查"
-      
+
   # 基础设施性能架构
   infrastructurePerformance:
     kubernetesOptimization:
       resourceManagement: "精确的资源配额和限制"
       autoScaling: "HPA+VPA自动伸缩策略"
       nodeOptimization: "节点亲和性和反亲和性"
-      
+
     networkOptimization:
       cdn: "CDN静态资源加速"
       loadBalancer: "智能负载均衡算法"
@@ -925,14 +925,14 @@ Architecture Evolution Roadmap:
     userExperienceRefinement: "用户体验细节完善"
     securityHardening: "安全防护加固和合规"
     monitoringEnhancement: "监控体系增强和完善"
-    
+
   # 中期演进 (6个月)
   mediumTerm:
     multiCloudSupport: "多云部署和混合云架构"
     edgeComputing: "边缘计算和就近服务"
     advancedAI: "基于稳定基础的AI能力集成"
     globalScaling: "全球化部署和数据同步"
-    
+
   # 长期愿景 (1年)
   longTerm:
     industryStandard: "成为行业架构标准和参考"
