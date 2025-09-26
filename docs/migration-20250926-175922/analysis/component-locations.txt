@@ -1,0 +1,100 @@
+=== AdvancedEntityRelationshipDesigner.vue ===
+src/SmartAbp.Vue/src/components/lowcode/AdvancedEntityRelationshipDesigner.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/AdvancedEntityRelationshipDesigner.vue
+
+=== AdvancedFieldTypeDesigner.vue ===
+src/SmartAbp.Vue/src/components/lowcode/AdvancedFieldTypeDesigner.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/AdvancedFieldTypeDesigner.vue
+
+=== ComponentPropertyPanel.vue ===
+src/SmartAbp.Vue/src/components/lowcode/ComponentPropertyPanel.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/ComponentPropertyPanel.vue
+
+=== Dashboard.vue ===
+src/SmartAbp.Vue/src/views/CodeGenerator/Dashboard.vue
+src/SmartAbp.Vue/src/views/common/Dashboard.vue
+
+=== DashboardView.vue ===
+src/SmartAbp.Vue/src/components/common/DashboardView.vue
+src/SmartAbp.Vue/src/views/common/DashboardView.vue
+
+=== DataDictionaryManager.vue ===
+src/SmartAbp.Vue/src/components/lowcode/DataDictionaryManager.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/DataDictionaryManager.vue
+
+=== DesignView.vue ===
+src/SmartAbp.Vue/src/views/lowcode/DesignView.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/views/DesignView.vue
+
+=== EnhancedGenerationView.vue ===
+src/SmartAbp.Vue/src/views/lowcode/EnhancedGenerationView.vue
+src/SmartAbp.Vue/packages/lowcode-codegen/EnhancedGenerationView.vue
+
+=== EnterpriseCodeGenerationEngine.vue ===
+src/SmartAbp.Vue/src/components/lowcode/EnterpriseCodeGenerationEngine.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/EnterpriseCodeGenerationEngine.vue
+
+=== EnterpriseModelingAssistant.vue ===
+src/SmartAbp.Vue/src/components/lowcode/EnterpriseModelingAssistant.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/EnterpriseModelingAssistant.vue
+
+=== EnterpriseQualityAssurance.vue ===
+src/SmartAbp.Vue/src/components/lowcode/EnterpriseQualityAssurance.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/EnterpriseQualityAssurance.vue
+
+=== EntityModelingView.vue ===
+src/SmartAbp.Vue/src/views/lowcode/EntityModelingView.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/views/EntityModelingView.vue
+
+=== ErrorBoundary.vue ===
+src/SmartAbp.Vue/src/components/common/ErrorBoundary.vue
+src/SmartAbp.Vue/packages/lowcode-core/src/components/ErrorBoundary.vue
+
+=== GlobalLoadingOverlay.vue ===
+src/SmartAbp.Vue/src/components/common/GlobalLoadingOverlay.vue
+src/SmartAbp.Vue/packages/lowcode-core/src/components/GlobalLoadingOverlay.vue
+
+=== OneClickSolution.vue ===
+src/SmartAbp.Vue/src/components/lowcode/OneClickSolution.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/OneClickSolution.vue
+
+=== ProjectWizard.vue ===
+src/SmartAbp.Vue/src/components/lowcode/ProjectWizard.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/ProjectWizard.vue
+
+=== PropertyInspector.vue ===
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/PropertyInspector.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/views/designer/PropertyInspector.vue
+
+=== QuickStart.vue ===
+src/SmartAbp.Vue/src/examples/QuickStart.vue
+src/SmartAbp.Vue/src/views/lowcode/QuickStart.vue
+
+=== SandboxPreview.vue ===
+src/SmartAbp.Vue/src/components/lowcode/SandboxPreview.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/SandboxPreview.vue
+
+=== StateMachineEditor.vue ===
+src/SmartAbp.Vue/src/components/lowcode/StateMachineEditor.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/StateMachineEditor.vue
+
+=== TemplateSelector.vue ===
+src/SmartAbp.Vue/src/components/lowcode/TemplateSelector.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/TemplateSelector.vue
+
+=== ThemeCustomizationView.vue ===
+src/SmartAbp.Vue/src/views/lowcode/ThemeCustomizationView.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/views/ThemeCustomizationView.vue
+
+=== ThemeEditor.vue ===
+src/SmartAbp.Vue/src/components/lowcode/ThemeEditor.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/ThemeEditor.vue
+
+=== VisualComponentPalette.vue ===
+src/SmartAbp.Vue/src/components/lowcode/VisualComponentPalette.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/VisualComponentPalette.vue
+
+=== WorkspaceContainer.vue ===
+src/SmartAbp.Vue/src/components/layout/WorkspaceContainer.vue
+src/SmartAbp.Vue/packages/lowcode-core/src/components/WorkspaceContainer.vue
+

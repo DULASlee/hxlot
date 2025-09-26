@@ -1,0 +1,101 @@
+📈 对比组件代码量...
+=== AdvancedEntityRelationshipDesigner.vue 代码量对比 ===
+968 src/SmartAbp.Vue/src/components/lowcode/AdvancedEntityRelationshipDesigner.vue
+968 src/SmartAbp.Vue/packages/lowcode-designer/src/components/AdvancedEntityRelationshipDesigner.vue
+
+=== AdvancedFieldTypeDesigner.vue 代码量对比 ===
+1118 src/SmartAbp.Vue/src/components/lowcode/AdvancedFieldTypeDesigner.vue
+1118 src/SmartAbp.Vue/packages/lowcode-designer/src/components/AdvancedFieldTypeDesigner.vue
+
+=== ComponentPropertyPanel.vue 代码量对比 ===
+38 src/SmartAbp.Vue/src/components/lowcode/ComponentPropertyPanel.vue
+38 src/SmartAbp.Vue/packages/lowcode-designer/src/components/ComponentPropertyPanel.vue
+
+=== Dashboard.vue 代码量对比 ===
+780 src/SmartAbp.Vue/src/views/CodeGenerator/Dashboard.vue
+31 src/SmartAbp.Vue/src/views/common/Dashboard.vue
+
+=== DashboardView.vue 代码量对比 ===
+365 src/SmartAbp.Vue/src/components/common/DashboardView.vue
+682 src/SmartAbp.Vue/src/views/common/DashboardView.vue
+
+=== DataDictionaryManager.vue 代码量对比 ===
+38 src/SmartAbp.Vue/src/components/lowcode/DataDictionaryManager.vue
+333 src/SmartAbp.Vue/packages/lowcode-designer/src/components/DataDictionaryManager.vue
+
+=== DesignView.vue 代码量对比 ===
+2305 src/SmartAbp.Vue/src/views/lowcode/DesignView.vue
+2301 src/SmartAbp.Vue/packages/lowcode-designer/src/views/DesignView.vue
+
+=== EnhancedGenerationView.vue 代码量对比 ===
+2154 src/SmartAbp.Vue/src/views/lowcode/EnhancedGenerationView.vue
+2154 src/SmartAbp.Vue/packages/lowcode-codegen/EnhancedGenerationView.vue
+
+=== EnterpriseCodeGenerationEngine.vue 代码量对比 ===
+777 src/SmartAbp.Vue/src/components/lowcode/EnterpriseCodeGenerationEngine.vue
+777 src/SmartAbp.Vue/packages/lowcode-designer/src/components/EnterpriseCodeGenerationEngine.vue
+
+=== EnterpriseModelingAssistant.vue 代码量对比 ===
+202 src/SmartAbp.Vue/src/components/lowcode/EnterpriseModelingAssistant.vue
+202 src/SmartAbp.Vue/packages/lowcode-designer/src/components/EnterpriseModelingAssistant.vue
+
+=== EnterpriseQualityAssurance.vue 代码量对比 ===
+290 src/SmartAbp.Vue/src/components/lowcode/EnterpriseQualityAssurance.vue
+290 src/SmartAbp.Vue/packages/lowcode-designer/src/components/EnterpriseQualityAssurance.vue
+
+=== EntityModelingView.vue 代码量对比 ===
+2271 src/SmartAbp.Vue/src/views/lowcode/EntityModelingView.vue
+2273 src/SmartAbp.Vue/packages/lowcode-designer/src/views/EntityModelingView.vue
+
+=== ErrorBoundary.vue 代码量对比 ===
+66 src/SmartAbp.Vue/src/components/common/ErrorBoundary.vue
+283 src/SmartAbp.Vue/packages/lowcode-core/src/components/ErrorBoundary.vue
+
+=== GlobalLoadingOverlay.vue 代码量对比 ===
+25 src/SmartAbp.Vue/src/components/common/GlobalLoadingOverlay.vue
+425 src/SmartAbp.Vue/packages/lowcode-core/src/components/GlobalLoadingOverlay.vue
+
+=== OneClickSolution.vue 代码量对比 ===
+66 src/SmartAbp.Vue/src/components/lowcode/OneClickSolution.vue
+66 src/SmartAbp.Vue/packages/lowcode-designer/src/components/OneClickSolution.vue
+
+=== ProjectWizard.vue 代码量对比 ===
+624 src/SmartAbp.Vue/src/components/lowcode/ProjectWizard.vue
+624 src/SmartAbp.Vue/packages/lowcode-designer/src/components/ProjectWizard.vue
+
+=== PropertyInspector.vue 代码量对比 ===
+790 src/SmartAbp.Vue/packages/lowcode-designer/src/components/PropertyInspector.vue
+67 src/SmartAbp.Vue/packages/lowcode-designer/src/views/designer/PropertyInspector.vue
+
+=== QuickStart.vue 代码量对比 ===
+222 src/SmartAbp.Vue/src/examples/QuickStart.vue
+548 src/SmartAbp.Vue/src/views/lowcode/QuickStart.vue
+
+=== SandboxPreview.vue 代码量对比 ===
+54 src/SmartAbp.Vue/src/components/lowcode/SandboxPreview.vue
+54 src/SmartAbp.Vue/packages/lowcode-designer/src/components/SandboxPreview.vue
+
+=== StateMachineEditor.vue 代码量对比 ===
+74 src/SmartAbp.Vue/src/components/lowcode/StateMachineEditor.vue
+73 src/SmartAbp.Vue/packages/lowcode-designer/src/components/StateMachineEditor.vue
+
+=== TemplateSelector.vue 代码量对比 ===
+407 src/SmartAbp.Vue/src/components/lowcode/TemplateSelector.vue
+407 src/SmartAbp.Vue/packages/lowcode-designer/src/components/TemplateSelector.vue
+
+=== ThemeCustomizationView.vue 代码量对比 ===
+684 src/SmartAbp.Vue/src/views/lowcode/ThemeCustomizationView.vue
+684 src/SmartAbp.Vue/packages/lowcode-designer/src/views/ThemeCustomizationView.vue
+
+=== ThemeEditor.vue 代码量对比 ===
+43 src/SmartAbp.Vue/src/components/lowcode/ThemeEditor.vue
+43 src/SmartAbp.Vue/packages/lowcode-designer/src/components/ThemeEditor.vue
+
+=== VisualComponentPalette.vue 代码量对比 ===
+206 src/SmartAbp.Vue/src/components/lowcode/VisualComponentPalette.vue
+206 src/SmartAbp.Vue/packages/lowcode-designer/src/components/VisualComponentPalette.vue
+
+=== WorkspaceContainer.vue 代码量对比 ===
+127 src/SmartAbp.Vue/src/components/layout/WorkspaceContainer.vue
+503 src/SmartAbp.Vue/packages/lowcode-core/src/components/WorkspaceContainer.vue
+

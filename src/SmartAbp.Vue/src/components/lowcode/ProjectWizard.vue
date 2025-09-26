@@ -257,9 +257,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-interface Props {
-  projectConfig?: any
-}
+// interface Props {
+//   projectConfig?: any
+// }
 
 // const props = defineProps<Props>()
 

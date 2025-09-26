@@ -1,0 +1,220 @@
+🔍 分析组件引用关系...
+=== AdvancedEntityRelationshipDesigner 引用关系 ===
+src/SmartAbp.Vue/src/views/lowcode/EntityModelingView.vue:          <AdvancedEntityRelationshipDesigner
+src/SmartAbp.Vue/src/views/lowcode/EntityModelingView.vue:import { AdvancedEntityRelationshipDesigner, AdvancedFieldTypeDesigner, BusinessRulesEngine } from '@smartabp/lowcode-designer'
+
+=== AdvancedFieldTypeDesigner 引用关系 ===
+src/SmartAbp.Vue/src/views/lowcode/EntityModelingView.vue:          <AdvancedFieldTypeDesigner
+src/SmartAbp.Vue/src/views/lowcode/EntityModelingView.vue:import { AdvancedEntityRelationshipDesigner, AdvancedFieldTypeDesigner, BusinessRulesEngine } from '@smartabp/lowcode-designer'
+
+=== ComponentPropertyPanel 引用关系 ===
+src/SmartAbp.Vue/src/views/lowcode/DesignView.vue:      <ComponentPropertyPanel
+src/SmartAbp.Vue/src/views/lowcode/DesignView.vue:import ComponentPropertyPanel from "@/components/lowcode/ComponentPropertyPanel.vue"
+
+=== Dashboard 引用关系 ===
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.js: * Security Dashboard Composable
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.js:export function useSecurityDashboard(options = {}) {
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.js:    const loadDashboardData = async () => {
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.js:            console.error("Dashboard data loading error:", err);
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.js:        await loadDashboardData();
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.js:        loadDashboardData,
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.ts: * Security Dashboard Composable
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.ts:interface DashboardConfig {
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.ts:interface UseSecurityDashboardOptions {
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.ts:  config?: Partial<DashboardConfig>
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.ts:export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) {
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.ts:  const config = reactive<DashboardConfig>({
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.ts:  const loadDashboardData = async (): Promise<void> => {
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.ts:      console.error("Dashboard data loading error:", err)
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.ts:    await loadDashboardData()
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.ts:  const updateConfig = (newConfig: Partial<DashboardConfig>): void => {
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.ts:    loadDashboardData,
+src/SmartAbp.Vue/src/composables/useSecurityDashboard.ts:export type UseSecurityDashboard = ReturnType<typeof useSecurityDashboard>
+src/SmartAbp.Vue/src/config/menus.js:            component: "@/views/common/DashboardView.vue",
+src/SmartAbp.Vue/src/config/menus.js:                    component: "@/views/log/LogDashboard.vue",
+src/SmartAbp.Vue/src/config/menus.js:                    component: "@/views/codegen/PerformanceDashboard.vue",
+src/SmartAbp.Vue/src/config/menus.ts:      component: "@/views/common/DashboardView.vue",
+src/SmartAbp.Vue/src/config/menus.ts:          component: "@/views/log/LogDashboard.vue",
+src/SmartAbp.Vue/src/config/menus.ts:          component: "@/views/codegen/PerformanceDashboard.vue",
+src/SmartAbp.Vue/src/examples/router-guard-example.js:        return next({ name: "Dashboard" });
+src/SmartAbp.Vue/src/examples/router-guard-example.ts:    return next({ name: "Dashboard" })
+src/SmartAbp.Vue/src/router/index.js:const DashboardView = () => import("@/views/common/DashboardView.vue");
+src/SmartAbp.Vue/src/router/index.js:const PerformanceDashboard = () => import("@smartabp/lowcode-designer/src/views/codegen/PerformanceDashboard.vue");
+src/SmartAbp.Vue/src/router/index.js:        name: "Dashboard",
+src/SmartAbp.Vue/src/router/index.js:                component: DashboardView,
+src/SmartAbp.Vue/src/router/index.js:                name: "LogDashboard",
+src/SmartAbp.Vue/src/router/index.js:                component: () => import("@/views/log/LogDashboard.vue"),
+src/SmartAbp.Vue/src/router/index.js:                name: "AdminDashboard",
+src/SmartAbp.Vue/src/router/index.js:                component: DashboardView,
+src/SmartAbp.Vue/src/router/index.js:                component: PerformanceDashboard,
+src/SmartAbp.Vue/src/router/index.js:        return next({ name: "Dashboard" });
+src/SmartAbp.Vue/src/router/index.js:            return next({ name: "Dashboard" });
+src/SmartAbp.Vue/src/router/index.ts:const DashboardView = () => import("@/views/common/DashboardView.vue")
+src/SmartAbp.Vue/src/router/index.ts:const PerformanceDashboard = () =>
+src/SmartAbp.Vue/src/router/index.ts:  import("../../packages/lowcode-designer/src/views/codegen/PerformanceDashboard.vue")
+src/SmartAbp.Vue/src/router/index.ts:    name: "Dashboard",
+src/SmartAbp.Vue/src/router/index.ts:        component: DashboardView,
+src/SmartAbp.Vue/src/router/index.ts:        name: "LogDashboard",
+src/SmartAbp.Vue/src/router/index.ts:        component: () => import("@/views/log/LogDashboard.vue"),
+src/SmartAbp.Vue/src/router/index.ts:        name: "AdminDashboard",
+src/SmartAbp.Vue/src/router/index.ts:        component: DashboardView,
+src/SmartAbp.Vue/src/router/index.ts:        component: PerformanceDashboard,
+src/SmartAbp.Vue/src/router/index.ts:    return next({ name: "Dashboard" })
+src/SmartAbp.Vue/src/router/index.ts:      return next({ name: "Dashboard" })
+src/SmartAbp.Vue/src/views/CodeGenerator/Dashboard.vue:  name: 'CodeGeneratorDashboard',
+src/SmartAbp.Vue/src/views/common/Dashboard.vue:    <DashboardView :user-info="userInfo" />
+src/SmartAbp.Vue/src/views/common/Dashboard.vue:import DashboardView from "@/components/common/DashboardView.vue"
+src/SmartAbp.Vue/src/views/common/Dashboard.vue.js:import DashboardView from "@/components/common/DashboardView.vue";
+src/SmartAbp.Vue/src/views/common/Dashboard.vue.js:/** @type {[typeof DashboardView, ]} */ ;
+src/SmartAbp.Vue/src/views/common/Dashboard.vue.js:const __VLS_0 = __VLS_asFunctionalComponent(DashboardView, new DashboardView({
+src/SmartAbp.Vue/src/views/common/Dashboard.vue.js:        DashboardView: DashboardView,
+src/SmartAbp.Vue/src/views/common/DashboardView.vue:            @click="refreshDashboard"
+src/SmartAbp.Vue/src/views/common/DashboardView.vue:const refreshDashboard = () => {
+src/SmartAbp.Vue/src/views/common/DashboardView.vue.js:const refreshDashboard = () => {
+src/SmartAbp.Vue/src/views/common/DashboardView.vue.js:    ...{ onClick: (__VLS_ctx.refreshDashboard) },
+src/SmartAbp.Vue/src/views/common/DashboardView.vue.js:[refreshDashboard,];
+src/SmartAbp.Vue/src/views/common/DashboardView.vue.js:        refreshDashboard: refreshDashboard,
+src/SmartAbp.Vue/src/views/log/LogManagement.vue:          <LogDashboard />
+src/SmartAbp.Vue/src/views/log/LogManagement.vue:import LogDashboard from "@/views/log/LogDashboard.vue"
+src/SmartAbp.Vue/src/views/log/LogManagement.vue.js:import LogDashboard from "@/views/log/LogDashboard.vue";
+src/SmartAbp.Vue/src/views/log/LogManagement.vue.js:    /** @type {[typeof LogDashboard, ]} */ ;
+src/SmartAbp.Vue/src/views/log/LogManagement.vue.js:    const __VLS_4 = __VLS_asFunctionalComponent(LogDashboard, new LogDashboard({}));
+src/SmartAbp.Vue/src/views/log/LogManagement.vue.js:        LogDashboard: LogDashboard,
+src/SmartAbp.Vue/src/views/log/LogSystemDemo.vue:    <LogDashboard />
+src/SmartAbp.Vue/src/views/log/LogSystemDemo.vue:    &lt;LogDashboard /&gt;
+src/SmartAbp.Vue/src/views/log/LogSystemDemo.vue:import LogDashboard from '@/views/log/LogDashboard.vue'
+src/SmartAbp.Vue/src/views/log/LogSystemDemo.vue:import LogDashboard from "@/views/log/LogDashboard.vue"
+src/SmartAbp.Vue/src/views/log/LogSystemDemo.vue.js:import LogDashboard from "@/views/log/LogDashboard.vue";
+src/SmartAbp.Vue/src/views/log/LogSystemDemo.vue.js:/** @type {[typeof LogDashboard, ]} */ ;
+src/SmartAbp.Vue/src/views/log/LogSystemDemo.vue.js:const __VLS_90 = __VLS_asFunctionalComponent(LogDashboard, new LogDashboard({}));
+src/SmartAbp.Vue/src/views/log/LogSystemDemo.vue.js:        LogDashboard: LogDashboard,
+
+=== DashboardView 引用关系 ===
+src/SmartAbp.Vue/src/config/menus.js:            component: "@/views/common/DashboardView.vue",
+src/SmartAbp.Vue/src/config/menus.ts:      component: "@/views/common/DashboardView.vue",
+src/SmartAbp.Vue/src/router/index.js:const DashboardView = () => import("@/views/common/DashboardView.vue");
+src/SmartAbp.Vue/src/router/index.js:                component: DashboardView,
+src/SmartAbp.Vue/src/router/index.js:                component: DashboardView,
+src/SmartAbp.Vue/src/router/index.ts:const DashboardView = () => import("@/views/common/DashboardView.vue")
+src/SmartAbp.Vue/src/router/index.ts:        component: DashboardView,
+src/SmartAbp.Vue/src/router/index.ts:        component: DashboardView,
+src/SmartAbp.Vue/src/views/common/Dashboard.vue:    <DashboardView :user-info="userInfo" />
+src/SmartAbp.Vue/src/views/common/Dashboard.vue:import DashboardView from "@/components/common/DashboardView.vue"
+src/SmartAbp.Vue/src/views/common/Dashboard.vue.js:import DashboardView from "@/components/common/DashboardView.vue";
+src/SmartAbp.Vue/src/views/common/Dashboard.vue.js:/** @type {[typeof DashboardView, ]} */ ;
+src/SmartAbp.Vue/src/views/common/Dashboard.vue.js:const __VLS_0 = __VLS_asFunctionalComponent(DashboardView, new DashboardView({
+src/SmartAbp.Vue/src/views/common/Dashboard.vue.js:        DashboardView: DashboardView,
+
+=== DataDictionaryManager 引用关系 ===
+src/SmartAbp.Vue/src/views/lowcode/EntityModelingView.vue:          <DataDictionaryManager
+src/SmartAbp.Vue/src/views/lowcode/EntityModelingView.vue:import DataDictionaryManager from "@/components/lowcode/DataDictionaryManager.vue"
+
+=== DesignView 引用关系 ===
+src/SmartAbp.Vue/src/config/menus.ts:          component: "@/views/lowcode/DesignView.vue",
+src/SmartAbp.Vue/src/router/index.js:                component: () => import(/* webpackChunkName: "lowcode-design" */ "@/views/lowcode/DesignView.vue"),
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.enhanced.vue:  return ['EntityModelingView', 'DesignView', 'ThemeCustomizationView']
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.vue:  return ['EntityModelingView', 'DesignView', 'ThemeCustomizationView']
+
+=== EnhancedGenerationView 引用关系 ===
+src/SmartAbp.Vue/src/config/menus.ts:          component: "@/views/lowcode/EnhancedGenerationView.vue",
+src/SmartAbp.Vue/src/router/index.js:                component: () => import(/* webpackChunkName: "lowcode-generation" */ "@/views/lowcode/EnhancedGenerationView.vue"),
+src/SmartAbp.Vue/src/router/index.ts:        component: () => import("@/views/lowcode/EnhancedGenerationView.vue"),
+
+=== EnterpriseCodeGenerationEngine 引用关系 ===
+src/SmartAbp.Vue/src/views/lowcode/EnhancedGenerationView.vue:        <EnterpriseCodeGenerationEngine
+src/SmartAbp.Vue/src/views/lowcode/EnhancedGenerationView.vue:import EnterpriseCodeGenerationEngine from "@/components/lowcode/EnterpriseCodeGenerationEngine.vue"
+
+=== EnterpriseModelingAssistant 引用关系 ===
+src/SmartAbp.Vue/src/views/lowcode/EntityModelingView.vue:          <EnterpriseModelingAssistant />
+src/SmartAbp.Vue/src/views/lowcode/EntityModelingView.vue:import EnterpriseModelingAssistant from "@/components/lowcode/EnterpriseModelingAssistant.vue"
+
+=== EnterpriseQualityAssurance 引用关系 ===
+无引用
+
+=== EntityModelingView 引用关系 ===
+src/SmartAbp.Vue/src/config/menus.ts:          component: "@/views/lowcode/EntityModelingView.vue",
+src/SmartAbp.Vue/src/router/index.js:                component: () => import(/* webpackChunkName: "lowcode-entity-modeling" */ "@/views/lowcode/EntityModelingView.vue"),
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.enhanced.vue:  return ['EntityModelingView', 'DesignView', 'ThemeCustomizationView']
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.vue:  return ['EntityModelingView', 'DesignView', 'ThemeCustomizationView']
+
+=== ErrorBoundary 引用关系 ===
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.enhanced.vue:    <ErrorBoundary @error="handleGlobalError">
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.enhanced.vue:              <ErrorBoundary
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.enhanced.vue:              </ErrorBoundary>
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.enhanced.vue:    </ErrorBoundary>
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.enhanced.vue:import ErrorBoundary from '@/components/common/ErrorBoundary.vue'
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.vue:    <ErrorBoundary @error="handleGlobalError">
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.vue:              <ErrorBoundary
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.vue:              </ErrorBoundary>
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.vue:    </ErrorBoundary>
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.vue:import ErrorBoundary from '@/components/common/ErrorBoundary.vue'
+
+=== GlobalLoadingOverlay 引用关系 ===
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.enhanced.vue:    <GlobalLoadingOverlay v-if="loadingStates.global" />
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.enhanced.vue:import GlobalLoadingOverlay from '@/components/common/GlobalLoadingOverlay.vue'
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.vue:    <GlobalLoadingOverlay v-if="loadingStates.global" />
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.vue:import GlobalLoadingOverlay from '@/components/common/GlobalLoadingOverlay.vue'
+
+=== OneClickSolution 引用关系 ===
+无引用
+
+=== ProjectWizard 引用关系 ===
+无引用
+
+=== PropertyInspector 引用关系 ===
+无引用
+
+=== QuickStart 引用关系 ===
+src/SmartAbp.Vue/src/examples/QuickStart.vue:    component: "QuickStart",
+src/SmartAbp.Vue/src/examples/QuickStart.vue:    component: "QuickStart",
+src/SmartAbp.Vue/src/examples/QuickStart.vue:    component: "QuickStart",
+src/SmartAbp.Vue/src/examples/QuickStart.vue.js:        component: "QuickStart",
+src/SmartAbp.Vue/src/examples/QuickStart.vue.js:        component: "QuickStart",
+src/SmartAbp.Vue/src/examples/QuickStart.vue.js:        component: "QuickStart",
+
+=== SandboxPreview 引用关系 ===
+src/SmartAbp.Vue/src/components/lowcode/SandboxPreview.test.ts:import SandboxPreview from "@/components/lowcode/SandboxPreview.vue"
+src/SmartAbp.Vue/src/components/lowcode/SandboxPreview.test.ts:describe("SandboxPreview.vue", () => {
+src/SmartAbp.Vue/src/components/lowcode/SandboxPreview.test.ts:    const wrapper = mount(SandboxPreview, { props: { code: "<p>test</p>" } })
+src/SmartAbp.Vue/src/components/lowcode/SandboxPreview.test.ts:    const wrapper = mount(SandboxPreview, { props: { code: "<p>test</p>" } })
+src/SmartAbp.Vue/src/components/lowcode/SandboxPreview.test.ts:    const wrapper = mount(SandboxPreview, { props: { code } })
+src/SmartAbp.Vue/src/views/lowcode/GenerationView.test.ts:          "SandboxPreview": {
+src/SmartAbp.Vue/src/views/lowcode/GenerationView.vue:          <SandboxPreview :code="generatedCode" />
+src/SmartAbp.Vue/src/views/lowcode/GenerationView.vue:import SandboxPreview from "@/components/lowcode/SandboxPreview.vue"
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.test.ts:          SandboxPreview: { template: '<div class="sandbox-preview">Sandbox Preview</div>' },
+
+=== StateMachineEditor 引用关系 ===
+src/SmartAbp.Vue/src/views/lowcode/WorkflowsView.vue:    <StateMachineEditor />
+src/SmartAbp.Vue/src/views/lowcode/WorkflowsView.vue:import StateMachineEditor from "@/components/lowcode/StateMachineEditor.vue"
+
+=== TemplateSelector 引用关系 ===
+src/SmartAbp.Vue/src/views/lowcode/GenerationView.test.ts:          "TemplateSelector": {
+src/SmartAbp.Vue/src/views/lowcode/GenerationView.vue:          <TemplateSelector @select="(template: any) => onTemplateSelect(template)" />
+src/SmartAbp.Vue/src/views/lowcode/GenerationView.vue:import TemplateSelector from "@/components/lowcode/TemplateSelector.vue"
+
+=== ThemeCustomizationView 引用关系 ===
+src/SmartAbp.Vue/src/config/menus.ts:          component: "@/views/lowcode/ThemeCustomizationView.vue",
+src/SmartAbp.Vue/src/router/index.js:                component: () => import(/* webpackChunkName: "lowcode-theme" */ "@/views/lowcode/ThemeCustomizationView.vue"),
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.enhanced.vue:  return ['EntityModelingView', 'DesignView', 'ThemeCustomizationView']
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.vue:  return ['EntityModelingView', 'DesignView', 'ThemeCustomizationView']
+
+=== ThemeEditor 引用关系 ===
+src/SmartAbp.Vue/src/components/lowcode/EnhancedThemeEditor.test.ts:import EnhancedThemeEditor from "./EnhancedThemeEditor.vue"
+src/SmartAbp.Vue/src/components/lowcode/EnhancedThemeEditor.test.ts:describe("EnhancedThemeEditor.vue - Phase 2 TDD Tests", () => {
+src/SmartAbp.Vue/src/components/lowcode/EnhancedThemeEditor.test.ts:    return mount(EnhancedThemeEditor, {
+src/SmartAbp.Vue/src/components/lowcode/ThemeEditor.test.ts:import ThemeEditor from "@/components/lowcode/ThemeEditor.vue"
+src/SmartAbp.Vue/src/components/lowcode/ThemeEditor.test.ts:describe("ThemeEditor.vue", () => {
+src/SmartAbp.Vue/src/components/lowcode/ThemeEditor.test.ts:    const wrapper = mount(ThemeEditor)
+src/SmartAbp.Vue/src/components/lowcode/ThemeEditor.test.ts:    const wrapper = mount(ThemeEditor)
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.test.ts:          ThemeEditor: { template: '<div class="theme-editor">Theme Editor</div>' },
+src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.test.ts:    expect(wrapper.findComponent({ name: "ThemeEditor" }).exists() || wrapper.find(".theme-editor").exists()).toBe(true)
+src/SmartAbp.Vue/src/views/lowcode/ThemeCustomizationView.vue:        <EnhancedThemeEditor @theme-changed="handleThemeChange" />
+src/SmartAbp.Vue/src/views/lowcode/ThemeCustomizationView.vue:import { EnhancedThemeEditor } from '@smartabp/lowcode-designer'
+
+=== VisualComponentPalette 引用关系 ===
+src/SmartAbp.Vue/src/views/lowcode/DesignView.vue:      <VisualComponentPalette
+src/SmartAbp.Vue/src/views/lowcode/DesignView.vue:import VisualComponentPalette from "@/components/lowcode/VisualComponentPalette.vue"
+
+=== WorkspaceContainer 引用关系 ===
+无引用
+
