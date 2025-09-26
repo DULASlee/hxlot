@@ -25,7 +25,7 @@ if [ $RELATIVE_PATH_VIOLATIONS -gt 0 ]; then
     exit 1
 fi
 
-# 检查@/主应用引用违规  
+# 检查@/主应用引用违规
 APP_REF_VIOLATIONS=$(grep -r "@/" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue" | wc -l)
 if [ $APP_REF_VIOLATIONS -gt 0 ]; then
     echo "❌ 发现 $APP_REF_VIOLATIONS 处@/主应用引用违规，严禁提交！"

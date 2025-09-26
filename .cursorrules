@@ -101,7 +101,7 @@ MASTER_SECRET_TRIGGER = "专家模式"
 
    🏗️ **第一关：架构整洁检查（0违规）**
    🔧 相对路径违规检查: grep -r "'../'" src/SmartAbp.Vue/packages/
-   🔧 主应用引用违规检查: grep -r "@/" src/SmartAbp.Vue/packages/  
+   🔧 主应用引用违规检查: grep -r "@/" src/SmartAbp.Vue/packages/
    🔧 类型绕过违规检查: grep -r "as any\|@ts-ignore" src/
    ❌ **有任何违规严禁提交！必须修复！**
 

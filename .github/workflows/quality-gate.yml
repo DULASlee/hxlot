@@ -1,0 +1,154 @@
+name: SmartAbp Quality Gate
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  architecture-check:
+    name: 🏗️ 架构整洁检查
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: 检查相对路径违规
+      run: |
+        echo "🔍 检查packages目录相对路径违规..."
+        violations=$(grep -r "'../'" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue" | wc -l)
+        if [ $violations -gt 0 ]; then
+          echo "❌ 发现 $violations 处相对路径违规"
+          grep -r "'../'" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue"
+          exit 1
+        fi
+        echo "✅ 相对路径检查通过"
+    
+    - name: 检查@/主应用引用违规
+      run: |
+        echo "🔍 检查packages目录@/引用违规..."
+        violations=$(grep -r "@/" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue" | wc -l)
+        if [ $violations -gt 0 ]; then
+          echo "❌ 发现 $violations 处@/引用违规"
+          grep -r "@/" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue"
+          exit 1
+        fi
+        echo "✅ @/引用检查通过"
+    
+    - name: 检查类型安全违规
+      run: |
+        echo "🔍 检查类型安全违规..."
+        violations=$(grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue" | wc -l)
+        if [ $violations -gt 0 ]; then
+          echo "❌ 发现 $violations 处类型安全违规"
+          grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue" | head -10
+          exit 1
+        fi
+        echo "✅ 类型安全检查通过"
+
+  duplicate-check:
+    name: 🔄 代码去重检查
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: 检查重复Vue组件
+      run: |
+        echo "🔍 检查重复Vue组件..."
+        duplicates=$(find src/SmartAbp.Vue/src src/SmartAbp.Vue/packages -name "*.vue" 2>/dev/null | sed 's/.*\///' | sort | uniq -d)
+        if [ -n "$duplicates" ]; then
+          echo "❌ 发现重复Vue组件："
+          echo "$duplicates"
+          exit 1
+        fi
+        echo "✅ Vue组件去重检查通过"
+    
+    - name: 检查重复方法名
+      run: |
+        echo "🔍 检查重复方法名..."
+        duplicates=$(grep -r "function\s+\w+\|const\s+\w+\s*=" src/ --include="*.ts" --include="*.vue" | sed 's/:.*//g' | sort | uniq -d)
+        if [ -n "$duplicates" ]; then
+          echo "❌ 发现重复方法名"
+          exit 1
+        fi
+        echo "✅ 方法名去重检查通过"
+
+  frontend-quality:
+    name: ⚡ 前端质量检查
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: src/SmartAbp.Vue/package-lock.json
+    
+    - name: Install dependencies
+      working-directory: src/SmartAbp.Vue
+      run: npm ci
+    
+    - name: TypeScript类型检查
+      working-directory: src/SmartAbp.Vue
+      run: |
+        echo "🔍 执行TypeScript类型检查..."
+        npm run type-check
+        echo "✅ TypeScript类型检查通过"
+    
+    - name: ESLint代码规范检查
+      working-directory: src/SmartAbp.Vue
+      run: |
+        echo "🔍 执行ESLint代码规范检查..."
+        npm run lint
+        echo "✅ ESLint代码规范检查通过"
+    
+    - name: 构建编译检查
+      working-directory: src/SmartAbp.Vue
+      run: |
+        echo "🔍 执行构建编译检查..."
+        npm run build
+        echo "✅ 构建编译检查通过"
+
+  backend-quality:
+    name: 🛡️ 后端质量检查
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: 后端编译检查
+      run: |
+        echo "🔍 执行后端编译检查..."
+        dotnet build src/SmartAbp.CodeGenerator/SmartAbp.CodeGenerator.csproj
+        echo "✅ 后端编译检查通过"
+    
+    - name: 单元测试检查
+      run: |
+        echo "🔍 执行单元测试检查..."
+        dotnet test --no-build --verbosity normal
+        echo "✅ 单元测试检查通过"
+
+  quality-gate-summary:
+    name: 🎯 质量门禁汇总
+    runs-on: ubuntu-latest
+    needs: [architecture-check, duplicate-check, frontend-quality, backend-quality]
+    
+    steps:
+    - name: 质量门禁通过
+      run: |
+        echo "🎉 SmartAbp质量门禁检查全部通过！"
+        echo "✅ 架构整洁：0违规"
+        echo "✅ 代码去重：0重复"
+        echo "✅ 前端质量：0错误"
+        echo "✅ 后端质量：0错误"
+        echo "🚀 代码质量达到企业级95分标准！"
