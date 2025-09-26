@@ -39,7 +39,7 @@ export interface VueSFCTemplate {
 export interface CodeGenerationResult {
   vueSFC?: VueSFCTemplate
   designerSchema?: DesignerOverrideSchema
-  routes?: Array<{ path: string; name: string; component: string }>
+  routes?: Array<{ path: string; name: string; component: string | (() => Promise<any>) }>
   menuItems?: Array<{ key: string; title: string; path: string }>
 }
 

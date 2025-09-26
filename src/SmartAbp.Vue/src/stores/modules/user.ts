@@ -98,5 +98,8 @@ export const useUserStore = defineStore("user", () => {
     update,
     delete: deleteItem,
     deleteMany,
+    createItem: create,  // 别名支持
+    updateItem: update,  // 别名支持
+    deleteItem,          // 别名支持
   }
 })

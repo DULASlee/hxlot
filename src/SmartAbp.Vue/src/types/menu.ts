@@ -1,4 +1,4 @@
- 
+
 /**
  * 动态菜单系统类型定义
  * 基于现有架构扩展，与 AuthService 和 UserInfo 完全兼容
@@ -46,6 +46,8 @@ export interface PageMenuItem extends BaseMenuItem {
 // 文件夹菜单项（包含子菜单）
 export interface FolderMenuItem extends BaseMenuItem {
   type: "folder"
+  /** 路由路径（可选，用于文件夹级别路由） */
+  path?: string
   /** 子菜单列表 */
   children: MenuItem[]
   /** 默认是否展开 */

@@ -387,25 +387,25 @@ const routes = [
             {
                 path: "design",
                 name: "LowCodeDesign",
-                component: () => import(/* webpackChunkName: "lowcode-design" */ "@/views/lowcode/DesignView.vue"),
+                component: () => import(/* webpackChunkName: "lowcode-design" */ "@smartabp/lowcode-designer/src/views/DesignView.vue"),
                 meta: { title: "可视化设计", menuKey: "lowcode-design", keepAlive: true, transition: 'slide-left' },
             },
             {
                 path: "entity-modeling",
                 name: "LowCodeEntityModeling",
-                component: () => import(/* webpackChunkName: "lowcode-entity-modeling" */ "@/views/lowcode/EntityModelingView.vue"),
+                component: () => import(/* webpackChunkName: "lowcode-entity-modeling" */ "@smartabp/lowcode-designer/src/views/EntityModelingView.vue"),
                 meta: { title: "实体建模", menuKey: "lowcode-entity-modeling", keepAlive: true, transition: 'slide-right' },
             },
             {
                 path: "generation",
                 name: "LowCodeGeneration",
-                component: () => import(/* webpackChunkName: "lowcode-generation" */ "@/views/lowcode/EnhancedGenerationView.vue"),
+                component: () => import(/* webpackChunkName: "lowcode-generation" */ "@smartabp/lowcode-designer/src/views/EnhancedGenerationView.vue"),
                 meta: { title: "代码生成", menuKey: "lowcode-generation" },
             },
             {
                 path: "theme",
                 name: "LowCodeTheme",
-                component: () => import(/* webpackChunkName: "lowcode-theme" */ "@/views/lowcode/ThemeCustomizationView.vue"),
+                component: () => import(/* webpackChunkName: "lowcode-theme" */ "@smartabp/lowcode-designer/src/views/ThemeCustomizationView.vue"),
                 meta: { title: "主题定制", menuKey: "lowcode-theme", keepAlive: true },
             },
             {

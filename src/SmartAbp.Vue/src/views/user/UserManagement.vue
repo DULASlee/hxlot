@@ -437,6 +437,8 @@ const fetchData = async () => {
     const params = {
       filter: searchForm.filter || undefined,
       isEnabled: searchForm.isEnabled,
+      pageIndex: pagination.current,
+      pageSize: pagination.pageSize,
       skipCount: (pagination.current - 1) * pagination.pageSize,
       maxResultCount: pagination.pageSize,
       sorting: sorting.value || undefined,
@@ -539,10 +541,10 @@ const handleSubmit = async () => {
 
     const store = useUserStore()
     if (formData.id) {
-      await store.updateItem(formData.id, formData)
+      await store.updateItem(formData.id, formData as any) // 临时类型兼容
       ElMessage.success("更新成功")
     } else {
-      await store.createItem(formData)
+      await store.createItem(formData as any) // 临时类型兼容
       ElMessage.success("创建成功")
     }
 

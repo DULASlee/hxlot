@@ -373,11 +373,12 @@ import { logger } from "@smartabp/lowcode-tools"
 // const logger = logger.child({ component: "DragDropFormView" })
 
 // 全屏功能
-const fullscreenApi = useFullscreen()
-const formDesignerRef = ref<HTMLElement>()
+// const fullscreenApi = useFullscreen() // 暂时注释，待useFullscreen组合式函数实现
+// const formDesignerRef = ref<HTMLElement>() // 暂时注释，待useFullscreen实现
 onMounted(() => {
-  if (formDesignerRef.value) fullscreenApi.setFullscreenElement(formDesignerRef.value)
-  void fullscreenApi.isFullscreen.value
+  // 暂时注释全屏功能，待useFullscreen组合式函数实现
+  // if (formDesignerRef.value) fullscreenApi.setFullscreenElement(formDesignerRef.value)
+  // void fullscreenApi.isFullscreen.value
 })
 
 // 组件库定义 - 扩展更多控件
