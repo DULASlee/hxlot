@@ -454,6 +454,9 @@ import { createComponentLogger } from "@smartabp/lowcode-tools"
 const logger = createComponentLogger('PerformanceDashboard')
 
 // 运行时内容缓存与日志改为可选注入，避免构建期硬依赖
+// 创建组件日志器
+const logger = createComponentLogger("PerformanceDashboard")
+
 const globalContentCache: any = (globalThis as any).__lowcodeRuntime?.contentCache || {
   getStats: () => ({
     totalEntries: 0,
