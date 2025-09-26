@@ -1,0 +1,181 @@
+---
+description: "Git提交强制质量检查铁律 - 0类型错误+0编译错误+0架构违规+0代码重复"
+globs: ["**/*"]
+alwaysApply: true
+priority: 1050
+---
+
+# 🚨 Git提交强制质量检查铁律
+
+## 🔥 核心原则：四重检查门禁，全部通过才能提交
+
+**任何Git提交前必须按顺序执行以下4个强制检查，有任何失败都严禁提交！**
+
+## 🏗️ 第一关：架构整洁检查脚本（零容忍）
+
+### 强制执行脚本
+```bash
+echo "🔍 第一关：架构整洁检查..."
+
+# 检查相对路径违规
+RELATIVE_PATH_VIOLATIONS=$(grep -r "'../'" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue" | wc -l)
+if [ $RELATIVE_PATH_VIOLATIONS -gt 0 ]; then
+    echo "❌ 发现 $RELATIVE_PATH_VIOLATIONS 处相对路径违规，严禁提交！"
+    grep -r "'../'" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue"
+    exit 1
+fi
+
+# 检查@/主应用引用违规
+APP_REF_VIOLATIONS=$(grep -r "@/" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue" | wc -l)
+if [ $APP_REF_VIOLATIONS -gt 0 ]; then
+    echo "❌ 发现 $APP_REF_VIOLATIONS 处@/主应用引用违规，严禁提交！"
+    grep -r "@/" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue"
+    exit 1
+fi
+
+# 检查类型绕过违规
+TYPE_BYPASS_VIOLATIONS=$(grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue" | wc -l)
+if [ $TYPE_BYPASS_VIOLATIONS -gt 0 ]; then
+    echo "❌ 发现 $TYPE_BYPASS_VIOLATIONS 处类型绕过违规，严禁提交！"
+    grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue"
+    exit 1
+fi
+
+echo "✅ 第一关：架构整洁检查通过"
+```
+
+## 🔄 第二关：代码去重检查脚本（零容忍）
+
+### 强制执行脚本
+```bash
+echo "🔍 第二关：代码去重检查..."
+
+# 检查重复Vue组件
+DUPLICATE_COMPONENTS=$(find src/SmartAbp.Vue/src src/SmartAbp.Vue/packages -name "*.vue" | sed 's/.*\///' | sort | uniq -d | wc -l)
+if [ $DUPLICATE_COMPONENTS -gt 0 ]; then
+    echo "❌ 发现 $DUPLICATE_COMPONENTS 个重复Vue组件，严禁提交！"
+    find src/SmartAbp.Vue/src src/SmartAbp.Vue/packages -name "*.vue" | sed 's/.*\///' | sort | uniq -d
+    exit 1
+fi
+
+# 检查重复方法名
+DUPLICATE_METHODS=$(grep -r "function\s+\w+\|const\s+\w+\s*=" src/ --include="*.ts" --include="*.vue" | sort | uniq -d | wc -l)
+if [ $DUPLICATE_METHODS -gt 0 ]; then
+    echo "❌ 发现 $DUPLICATE_METHODS 个重复方法名，严禁提交！"
+    grep -r "function\s+\w+\|const\s+\w+\s*=" src/ --include="*.ts" --include="*.vue" | sort | uniq -d
+    exit 1
+fi
+
+# 检查重复类名/接口名
+DUPLICATE_CLASSES=$(grep -r "class\s+\w+\|interface\s+\w+" src/ --include="*.ts" | sort | uniq -d | wc -l)
+if [ $DUPLICATE_CLASSES -gt 0 ]; then
+    echo "❌ 发现 $DUPLICATE_CLASSES 个重复类名/接口名，严禁提交！"
+    grep -r "class\s+\w+\|interface\s+\w+" src/ --include="*.ts" | sort | uniq -d
+    exit 1
+fi
+
+echo "✅ 第二关：代码去重检查通过"
+```
+
+## ⚡ 第三关：类型检查和编译检查（零容忍）
+
+### 前端强制检查脚本
+```bash
+echo "🔍 第三关：前端类型检查和编译检查..."
+
+# TypeScript类型检查
+echo "执行TypeScript类型检查..."
+npm run type-check
+if [ $? -ne 0 ]; then
+    echo "❌ TypeScript类型检查失败，严禁提交！"
+    exit 1
+fi
+
+# ESLint代码规范检查
+echo "执行ESLint代码规范检查..."
+npm run lint --fix
+if [ $? -ne 0 ]; then
+    echo "❌ ESLint代码规范检查失败，严禁提交！"
+    exit 1
+fi
+
+# 构建编译检查
+echo "执行构建编译检查..."
+npm run build
+if [ $? -ne 0 ]; then
+    echo "❌ 构建编译检查失败，严禁提交！"
+    exit 1
+fi
+
+echo "✅ 第三关：前端检查通过"
+```
+
+### 后端强制检查脚本（如涉及后端更改）
+```bash
+echo "🔍 第三关：后端编译检查..."
+
+# C#编译检查
+echo "执行C#编译检查..."
+dotnet build src/SmartAbp.CodeGenerator/SmartAbp.CodeGenerator.csproj
+if [ $? -ne 0 ]; then
+    echo "❌ C#编译检查失败，严禁提交！"
+    exit 1
+fi
+
+# 单元测试检查
+echo "执行单元测试检查..."
+dotnet test --no-build
+if [ $? -ne 0 ]; then
+    echo "❌ 单元测试检查失败，严禁提交！"
+    exit 1
+fi
+
+echo "✅ 第三关：后端检查通过"
+```
+
+## 🚀 第四关：Git提交执行（质量检查全部通过后）
+
+### 强制使用项目标准Git脚本
+```bash
+echo "🚀 第四关：执行Git提交..."
+echo "✅ 所有质量检查通过，开始Git同步..."
+
+# 优先使用项目标准Git脚本
+bash scripts/git-safe-sync.sh --non-interactive --auto-commit
+
+if [ $? -eq 0 ]; then
+    echo "✅ Git同步成功完成！"
+else
+    echo "❌ Git同步失败，请检查网络和权限"
+    exit 1
+fi
+```
+
+## 💥 AI行为强制要求
+
+### 执行顺序（严格按序）
+1. **必须先执行架构整洁检查** - 通过后才能进入下一关
+2. **必须执行代码去重检查** - 通过后才能进入下一关
+3. **必须执行类型和编译检查** - 通过后才能进入下一关
+4. **最后执行Git提交** - 仅在前3关全部通过后执行
+
+### 违规处理
+- ❌ **严禁跳过任何检查关卡**
+- ❌ **严禁降低检查标准**
+- ❌ **严禁手动Git命令绕过脚本**
+- ✅ **必须修复所有问题后重新执行检查**
+
+### 成功标准
+- 🏗️ **架构整洁**: 0个相对路径违规，0个@/引用违规，0个类型绕过
+- 🔄 **代码去重**: 0个重复组件，0个重复方法，0个重复类
+- ⚡ **质量检查**: 0个类型错误，0个lint错误，0个编译错误
+- 🚀 **Git同步**: 使用标准脚本，本地与远程完全同步
+
+## 🛡️ 质量保证承诺
+
+- **零错误容忍**: 任何类型错误、编译错误、架构违规都严禁提交
+- **零重复容忍**: 任何同名、同功能的重复代码都严禁提交
+- **企业级标准**: 95分质量标准是Git提交的最低门槛
+- **标准化流程**: 必须使用项目标准Git脚本，严禁手动操作
+
+**这是不可妥协的Git提交质量铁律！任何AI编程模型都必须严格遵守！**
