@@ -118,7 +118,7 @@ ${tableCols}
 
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue'
-// 🔥 架构整洁修复：移除@/主应用引用，使用相对路径（遵循黑盒原则）
+// 🔥 架构整洁修复：移除主应用引用，使用相对路径（遵循黑盒原则）
 import { use${moduleName}Store } from '../../../stores/modules/${moduleLower}'
 const store = use${moduleName}Store()
 const items = store.items
@@ -152,7 +152,7 @@ ${formItems}
 
 <script setup lang="ts">
 import { reactive } from 'vue'
-// 🔥 架构整洁修复：移除@/主应用引用，使用相对路径（遵循黑盒原则）
+// 🔥 架构整洁修复：移除主应用引用，使用相对路径（遵循黑盒原则）
 import { use${moduleName}Store } from '../../../stores/modules/${moduleLower}'
 const store = use${moduleName}Store()
 const form = reactive<Record<string, any>>({})

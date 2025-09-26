@@ -447,7 +447,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from "vue"
-// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+// 🔥 架构整洁修复：移除主应用引用，使用lowcode工具包（遵循黑盒原则）
 import { createComponentLogger } from "@smartabp/lowcode-tools"
 
 // 创建组件日志器
