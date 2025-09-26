@@ -213,7 +213,7 @@ export class EnterpriseMenuManager {
       icon: this.getIconByCategory(config.parentCategory),
       type: "page",
       path: config.routePrefix,
-      component: () => import(`@/views${config.routePrefix}/Index.vue`),
+      component: `@/views${config.routePrefix}/Index.vue`,
       order: this.getNextOrder(config.parentCategory),
       visible: true,
       requiredRoles: ["admin", "user"],
