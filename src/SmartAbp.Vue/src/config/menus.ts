@@ -435,7 +435,7 @@ export const menuConfig: MenuConfig = {
             {
               key: "lowcode-studio",
               title: "LowCode Studio",
-              path: "/studio",
+              path: "/lowcode",
               icon: "🧩",
               type: "page",
               component: "@/views/lowcode/LowCodeStudioView.vue",

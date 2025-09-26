@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartAbp 健康检查</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; background: #f5f5f5; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .status { padding: 20px; margin: 20px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .timestamp { color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 SmartAbp 系统健康检查</h1>
+
+        <div class="status success">
+            <h3>✅ 前端开发服务器运行正常</h3>
+            <p>端口: 11369</p>
+            <p>状态: 在线</p>
+        </div>
+
+        <div class="status info">
+            <h3>🔍 路由系统测试</h3>
+            <p>根路径: <a href="/">/ (应重定向到 /dashboard)</a></p>
+            <p>工作台: <a href="/dashboard">/dashboard</a></p>
+            <p>低代码工作室: <a href="/lowcode">/lowcode</a></p>
+            <p>Studio重定向: <a href="/studio">/studio (应重定向到 /lowcode)</a></p>
+        </div>
+
+        <div class="status info">
+            <h3>🧩 低代码引擎子路由</h3>
+            <p>设计视图: <a href="/lowcode/design">/lowcode/design</a></p>
+            <p>实体建模: <a href="/lowcode/entity-modeling">/lowcode/entity-modeling</a></p>
+            <p>代码生成: <a href="/lowcode/generation">/lowcode/generation</a></p>
+            <p>主题定制: <a href="/lowcode/theme">/lowcode/theme</a></p>
+            <p>工作流: <a href="/lowcode/workflows">/lowcode/workflows</a></p>
+        </div>
+
+        <div class="timestamp">
+            生成时间: <span id="timestamp"></span>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('timestamp').textContent = new Date().toLocaleString('zh-CN');
+
+        // 自动测试路由可达性
+        console.log('🔍 开始路由可达性测试...');
+
+        async function testRoute(path) {
+            try {
+                const response = await fetch(path, { method: 'HEAD' });
+                console.log(`✅ ${path}: ${response.status}`);
+                return response.status;
+            } catch (error) {
+                console.error(`❌ ${path}: ${error.message}`);
+                return -1;
+            }
+        }
+
+        // 测试核心路由
+        Promise.all([
+            testRoute('/'),
+            testRoute('/dashboard'),
+            testRoute('/lowcode'),
+            testRoute('/studio'),
+        ]).then(results => {
+            console.log('路由测试完成:', results);
+        });
+    </script>
+</body>
+</html>

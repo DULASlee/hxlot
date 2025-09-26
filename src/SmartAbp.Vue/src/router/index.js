@@ -17,13 +17,12 @@ const ProjectAnalysisView = () => import("@/views/project/ProjectAnalysisView.vu
 const PermissionsView = () => import("@/views/system/PermissionsView.vue");
 const UsersView = () => import("@/views/system/UsersView.vue");
 // 代码生成模块组件
-const LowCodeEngineView = () => import("@smartabp/lowcode-designer/views/codegen/LowCodeEngineView.vue");
-const SfcCompilerView = () => import("@smartabp/lowcode-designer/views/codegen/SfcCompilerView.vue");
-const DragDropFormView = () => import("@smartabp/lowcode-designer/views/codegen/DragDropFormView.vue");
-const PerformanceDashboard = () => import("@smartabp/lowcode-designer/views/codegen/PerformanceDashboard.vue");
-const VisualDesignerView = () => import("@smartabp/lowcode-designer/views/VisualDesignerView.vue");
+const LowCodeEngineView = () => import("@smartabp/lowcode-designer/src/views/codegen/LowCodeEngineView.vue");
+const SfcCompilerView = () => import("@smartabp/lowcode-designer/src/views/codegen/SfcCompilerView.vue");
+const DragDropFormView = () => import("@smartabp/lowcode-designer/src/views/codegen/DragDropFormView.vue");
+const PerformanceDashboard = () => import("@smartabp/lowcode-designer/src/views/codegen/PerformanceDashboard.vue");
+const VisualDesignerView = () => import("@smartabp/lowcode-designer/src/views/VisualDesignerView.vue");
 const LowCodeStudioView = () => import("@/views/lowcode/LowCodeStudioView.vue");
-const DesignView = () => import("@/views/lowcode/DesignView.vue");
 // const ModuleWizardView = () => import("@smartabp/lowcode-designer/views/dev/ModuleWizardTestView.vue"); // 文件已删除
 const routes = [
     // 登录页面
@@ -249,7 +248,7 @@ const routes = [
             {
                 path: "designer",
                 name: "LowCodeDesigner",
-                component: () => import("@smartabp/lowcode-designer/views/VisualDesignerView.vue"),
+                component: () => import("@smartabp/lowcode-designer/src/views/VisualDesignerView.vue"),
                 meta: {
                     title: "可视化设计",
                     icon: "el-icon-brush",
@@ -367,8 +366,62 @@ const routes = [
             return `/dashboard/not-found${to.path}`;
         },
     },
-    // 🚨 已统一到 /lowcode 路由，移除重复的 /studio 路由配置
-    // 所有LowCode Studio功能已迁移到 index.ts 中的 /lowcode 路由
+    // LowCode Studio 低代码工作室完整路由定义
+    {
+        path: "/lowcode",
+        component: SmartAbpLayout,
+        name: "LowCodeStudio",
+        meta: {
+            title: "低代码工作室",
+            icon: "🧩",
+            requiresAuth: true,
+            requiredRoles: ["user"],
+        },
+        children: [
+            {
+                path: "",
+                name: "LowCodeStudioHome",
+                component: LowCodeStudioView,
+                meta: { title: "低代码工作室", menuKey: "lowcode-studio-home" },
+            },
+            {
+                path: "design",
+                name: "LowCodeDesign",
+                component: () => import("@/views/lowcode/DesignView.vue"),
+                meta: { title: "可视化设计", menuKey: "lowcode-design" },
+            },
+            {
+                path: "entity-modeling",
+                name: "LowCodeEntityModeling",
+                component: () => import("@/views/lowcode/EntityModelingView.vue"),
+                meta: { title: "实体建模", menuKey: "lowcode-entity-modeling" },
+            },
+            {
+                path: "generation",
+                name: "LowCodeGeneration",
+                component: () => import("@/views/lowcode/EnhancedGenerationView.vue"),
+                meta: { title: "代码生成", menuKey: "lowcode-generation" },
+            },
+            {
+                path: "theme",
+                name: "LowCodeTheme",
+                component: () => import("@/views/lowcode/ThemeCustomizationView.vue"),
+                meta: { title: "主题定制", menuKey: "lowcode-theme" },
+            },
+            {
+                path: "workflows",
+                name: "LowCodeWorkflows",
+                component: () => import("@/views/lowcode/WorkflowsView.vue"),
+                meta: { title: "工作流管理", menuKey: "lowcode-workflows" },
+            },
+        ],
+    },
+    // 🚨 添加 /studio 路由重定向到 /lowcode，解决无限递归问题
+    {
+        path: "/studio",
+        redirect: "/lowcode",
+        meta: { title: "Studio重定向到LowCode" }
+    },
 ];
 const router = createRouter({
     history: createWebHistory(),

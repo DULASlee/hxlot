@@ -14,7 +14,7 @@
       <!-- 中央设计画布 -->
       <VisualDesignCanvas
         :page-data="currentPage"
-        :entity-data="selectedEntity"
+        :entity-data="selectedEntity || {}"
         @component-added="handleComponentAdded"
         @component-selected="handleComponentSelected"
         @component-updated="handleComponentUpdated"
@@ -43,9 +43,9 @@
         </h2>
         <div class="design-progress">
           <span>设计进度: {{ completedPages }}/{{ totalPages }}</span>
-          <el-progress 
-            :percentage="designProgressPercentage" 
-            :stroke-width="6" 
+          <el-progress
+            :percentage="designProgressPercentage"
+            :stroke-width="6"
             status="success"
           />
         </div>
@@ -74,23 +74,23 @@
       </div>
       <div class="header-actions">
         <el-button-group>
-          <el-button 
-            type="primary" 
+          <el-button
+            type="primary"
             :icon="designMode === 'batch' ? 'el-icon-magic-stick' : 'el-icon-rank'"
             @click="toggleDesignMode"
           >
             {{ designMode === 'batch' ? '切换单页设计' : '智能批量生成' }}
           </el-button>
-          <el-button 
-            type="success" 
-            icon="el-icon-view" 
+          <el-button
+            type="success"
+            icon="el-icon-view"
             @click="previewPages"
           >
             预览页面
           </el-button>
-          <el-button 
-            type="warning" 
-            icon="el-icon-download" 
+          <el-button
+            type="warning"
+            icon="el-icon-download"
             @click="exportPages"
           >
             导出设计
@@ -128,7 +128,7 @@
             </el-button>
           </el-button-group>
         </div>
-        
+
         <div class="mdi-design-container">
           <!-- MDI窗口设计器 -->
           <MDIContainer
@@ -139,7 +139,7 @@
             @window-moved="handleMDIWindowMoved"
             @window-resized="handleMDIWindowResized"
           />
-          
+
           <!-- MDI窗口配置面板 -->
           <div class="mdi-config-panel">
             <h4>窗口配置</h4>
@@ -171,7 +171,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Tabs标签页设计模式 -->
       <div
         v-else-if="layoutMode === 'tabs'"
@@ -199,7 +199,7 @@
             </el-button>
           </el-button-group>
         </div>
-        
+
         <div class="tabs-design-container">
           <!-- 标签页设计器 -->
           <TabsContainer
@@ -210,7 +210,7 @@
             @tab-moved="handleTabMoved"
             @add-tab="addTabPage"
           />
-          
+
           <!-- 标签页配置面板 -->
           <div class="tabs-config-panel">
             <h4>标签配置</h4>
@@ -253,8 +253,8 @@
                 v-model="selectedEntities"
                 @change="updateBatchGeneration"
               >
-                <div 
-                  v-for="entity in availableEntities" 
+                <div
+                  v-for="entity in availableEntities"
                   :key="entity.id"
                   class="entity-option"
                 >
@@ -271,8 +271,8 @@
                       </div>
                     </div>
                   </el-checkbox>
-                  <el-tag 
-                    :type="entity.category === 'core' ? 'primary' : 'info'" 
+                  <el-tag
+                    :type="entity.category === 'core' ? 'primary' : 'info'"
                     size="small"
                   >
                     {{ getCategoryLabel(entity.category) }}
@@ -334,9 +334,9 @@
           </div>
 
           <div class="batch-actions">
-            <el-button 
-              type="primary" 
-              size="large" 
+            <el-button
+              type="primary"
+              size="large"
               :loading="generating"
               style="width: 100%;"
               @click="generateBatchPages"
@@ -351,23 +351,23 @@
           <div class="preview-header">
             <h3>生成预览</h3>
             <div class="preview-stats">
-              <el-statistic 
-                title="将生成页面数" 
-                :value="estimatedPageCount" 
+              <el-statistic
+                title="将生成页面数"
+                :value="estimatedPageCount"
                 suffix="个"
               />
             </div>
           </div>
-          
+
           <div class="preview-content">
             <el-tabs
               v-model="previewTab"
               type="card"
             >
-              <el-tab-pane 
-                v-for="entity in selectedEntityObjects" 
+              <el-tab-pane
+                v-for="entity in selectedEntityObjects"
                 :key="entity.id"
-                :label="entity.name" 
+                :label="entity.name"
                 :name="entity.id"
               >
                 <div class="entity-page-preview">
@@ -407,8 +407,8 @@
                       <div class="preview-mockup form-mockup">
                         <div class="form-header" />
                         <div class="form-fields">
-                          <div 
-                            v-for="field in entity.fields.slice(0, 6)" 
+                          <div
+                            v-for="field in entity.fields.slice(0, 6)"
                             :key="field.name"
                             class="form-field"
                           >
@@ -438,8 +438,8 @@
                               基本信息
                             </div>
                             <div class="detail-fields">
-                              <div 
-                                v-for="field in entity.fields.slice(0, 4)" 
+                              <div
+                                v-for="field in entity.fields.slice(0, 4)"
                                 :key="field.name"
                                 class="detail-field"
                               />
@@ -465,14 +465,14 @@
         <div class="components-panel">
           <div class="panel-header">
             <h3>组件库</h3>
-            <el-input 
-              v-model="componentSearch" 
-              size="small" 
+            <el-input
+              v-model="componentSearch"
+              size="small"
               placeholder="搜索组件..."
               prefix-icon="el-icon-search"
             />
           </div>
-          
+
           <div class="component-categories">
             <el-collapse v-model="activeCategories">
               <el-collapse-item
@@ -480,7 +480,7 @@
                 name="layout"
               >
                 <div class="component-list">
-                  <div 
+                  <div
                     v-for="component in layoutComponents"
                     :key="component.type"
                     class="component-item"
@@ -492,13 +492,13 @@
                   </div>
                 </div>
               </el-collapse-item>
-              
+
               <el-collapse-item
                 title="表单组件"
                 name="form"
               >
                 <div class="component-list">
-                  <div 
+                  <div
                     v-for="component in formComponents"
                     :key="component.type"
                     class="component-item"
@@ -510,13 +510,13 @@
                   </div>
                 </div>
               </el-collapse-item>
-              
+
               <el-collapse-item
                 title="数据展示"
                 name="display"
               >
                 <div class="component-list">
-                  <div 
+                  <div
                     v-for="component in displayComponents"
                     :key="component.type"
                     class="component-item"
@@ -534,7 +534,7 @@
                 name="business"
               >
                 <div class="component-list">
-                  <div 
+                  <div
                     v-for="component in businessComponents"
                     :key="component.type"
                     class="component-item"
@@ -580,7 +580,7 @@
             </div>
           </div>
 
-          <div 
+          <div
             class="canvas-workspace"
             @drop="handleDrop"
             @dragover="handleDragOver"
@@ -618,7 +618,7 @@
             </div>
 
             <!-- 渲染画布组件 -->
-            <div 
+            <div
               v-for="(component, index) in canvasComponents"
               :key="component.id"
               class="canvas-component"
@@ -627,12 +627,12 @@
             >
               <div class="component-wrapper">
                 <!-- 组件渲染区域 -->
-                <component 
+                <component
                   :is="getComponentRenderer(component.type)"
                   v-bind="component.props"
                   :component-data="component"
                 />
-                
+
                 <!-- 组件操作栏 -->
                 <div
                   v-if="selectedComponent?.id === component.id"
@@ -666,7 +666,7 @@
           <div class="panel-header">
             <h3>属性配置</h3>
           </div>
-          
+
           <div
             v-if="selectedComponent"
             class="property-editor"
@@ -692,14 +692,14 @@
                         size="small"
                       />
                     </el-form-item>
-                    
+
                     <!-- 动态属性渲染 -->
                     <template
                       v-for="(propDef, propKey) in getComponentPropDefs(selectedComponent.type)"
                       :key="propKey"
                     >
                       <el-form-item :label="propDef.label">
-                        <component 
+                        <component
                           :is="getPropertyEditor(propDef.type)"
                           v-model="selectedComponent.props[propKey]"
                           v-bind="propDef.attrs"
@@ -710,7 +710,7 @@
                   </el-form>
                 </div>
               </el-tab-pane>
-              
+
               <el-tab-pane
                 label="样式"
                 name="style"
@@ -761,7 +761,7 @@
                   </el-form>
                 </div>
               </el-tab-pane>
-              
+
               <el-tab-pane
                 label="事件"
                 name="events"
@@ -810,7 +810,7 @@
               </el-tab-pane>
             </el-tabs>
           </div>
-          
+
           <div
             v-else
             class="no-selection"
@@ -822,28 +822,28 @@
     </div>
 
     <!-- 页面预览对话框 -->
-    <el-dialog 
-      v-model="showPreview" 
-      title="页面预览" 
+    <el-dialog
+      v-model="showPreview"
+      title="页面预览"
       width="90%"
       top="5vh"
     >
       <div class="page-preview">
         <div class="preview-toolbar">
           <el-button-group size="small">
-            <el-button 
+            <el-button
               :type="previewDevice === 'desktop' ? 'primary' : ''"
               @click="previewDevice = 'desktop'"
             >
               <i class="el-icon-monitor" /> 桌面
             </el-button>
-            <el-button 
+            <el-button
               :type="previewDevice === 'tablet' ? 'primary' : ''"
               @click="previewDevice = 'tablet'"
             >
               <i class="el-icon-mobile" /> 平板
             </el-button>
-            <el-button 
+            <el-button
               :type="previewDevice === 'mobile' ? 'primary' : ''"
               @click="previewDevice = 'mobile'"
             >
@@ -851,13 +851,13 @@
             </el-button>
           </el-button-group>
         </div>
-        
+
         <div
           class="preview-container"
           :class="`device-${previewDevice}`"
         >
-          <iframe 
-            :src="getPreviewUrl()" 
+          <iframe
+            :src="getPreviewUrl()"
             class="preview-frame"
           />
         </div>
@@ -870,10 +870,10 @@
 import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { logger } from "@/utils/logger"
-import { useEntityModelingStore, type EntityDefinition, type MDIWindowConfig, type TabConfig } from "@/stores/lowcode/entityModeling"
-import { usePageDesignStore } from "@/stores/lowcode/pageDesign"
+import { useEntityModelingStore, type EntityDefinition, type MDIWindowConfig, type TabConfig } from '@smartabp/lowcode-core'
+import { usePageDesignStore } from '@smartabp/lowcode-core'
 import VisualComponentPalette from "@/components/lowcode/VisualComponentPalette.vue"
-import VisualDesignCanvas from "@/components/lowcode/VisualDesignCanvas.vue"
+import { VisualDesignCanvas } from '@smartabp/lowcode-designer'
 import ComponentPropertyPanel from "@/components/lowcode/ComponentPropertyPanel.vue"
 import MDIContainer from "@/components/ui/MDIContainer.vue"
 import TabsContainer from "@/components/ui/TabsContainer.vue"
@@ -940,7 +940,7 @@ const mdiWindows = ref<any[]>([
 const activeMDIWindow = ref("window-1")
 const selectedMDIWindow = ref<any>(null)
 
-// Tabs相关数据  
+// Tabs相关数据
 const tabPages = ref<any[]>([
   {
     id: "tab-1",
@@ -954,12 +954,12 @@ const tabPages = ref<any[]>([
     pinned: false
   },
   {
-    id: "tab-2", 
+    id: "tab-2",
     title: "角色管理",
     icon: "el-icon-user-solid",
     closable: true,
     active: false,
-    component: "RoleManagement", 
+    component: "RoleManagement",
     props: {},
     permissions: [],
     pinned: false
@@ -1004,12 +1004,12 @@ const businessComponents = [
 
 // 计算属性
 const availableEntities = computed(() => entityStore.entities)
-const selectedEntityObjects = computed(() => 
+const selectedEntityObjects = computed(() =>
   availableEntities.value.filter(e => selectedEntities.value.includes(e.id))
 )
 const completedPages = computed(() => pageStore.completedPages)
 const totalPages = computed(() => pageStore.totalPages)
-const designProgressPercentage = computed(() => 
+const designProgressPercentage = computed(() =>
   totalPages.value === 0 ? 0 : Math.round((completedPages.value / totalPages.value) * 100)
 )
 const estimatedPageCount = computed(() => {
@@ -1175,7 +1175,8 @@ const applyTemplate = (templateType: string) => {
   logger?.info("应用模板", { templateType })
 }
 
-const getComponentRenderer = (_type: string) => {
+// eslint-disable-next-line no-unused-vars
+    const getComponentRenderer = (_type: string) => {
   // 返回组件渲染器
   return "div"
 }
@@ -1249,10 +1250,10 @@ const handleComponentAdded = (component: any) => {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   }
-  
+
   canvasComponents.value.push(newComponent)
   selectedComponent.value = newComponent
-  
+
   ElMessage.success(`组件"${component.displayName || component.name}"添加成功`)
 }
 
@@ -1271,10 +1272,10 @@ const handleComponentUpdated = (component: any) => {
       updatedAt: new Date().toISOString()
     }
     canvasComponents.value[index] = updatedComponent
-    
+
     // 同步到页面存储
     if (currentPage.value) {
-      pageStore.updatePage((currentPage.value as any).id, { 
+      pageStore.updatePage((currentPage.value as any).id, {
         components: canvasComponents.value,
         updatedAt: new Date()
       })
@@ -1286,19 +1287,19 @@ const handleComponentDeleted = (component: any) => {
   const index = canvasComponents.value.findIndex(c => c.id === component.id)
   if (index > -1) {
     canvasComponents.value.splice(index, 1)
-    
+
     if (selectedComponent.value?.id === component.id) {
       selectedComponent.value = null
     }
-    
+
     // 同步到页面存储
     if (currentPage.value) {
-      pageStore.updatePage((currentPage.value as any).id, { 
+      pageStore.updatePage((currentPage.value as any).id, {
         components: canvasComponents.value,
         updatedAt: new Date()
       })
     }
-    
+
     ElMessage.success(`组件"${component.displayName || component.name}"删除成功`)
   }
 }
@@ -1311,7 +1312,7 @@ const handlePreviewGenerated = (previewData: any) => {
 const handlePropertyChanged = (data: { componentId: string; property: string; value: any }) => {
   const { componentId, property, value } = data
   const component = canvasComponents.value.find(c => c.id === componentId)
-  
+
   if (component) {
     component.props[property] = value
     handleComponentUpdated(component)
@@ -1321,7 +1322,7 @@ const handlePropertyChanged = (data: { componentId: string; property: string; va
 const handleLayoutChanged = (data: { componentId: string; layout: any }) => {
   const { componentId, layout } = data
   const component = canvasComponents.value.find(c => c.id === componentId)
-  
+
   if (component) {
     // 类型安全的布局更新
     component.layout = {
@@ -1333,7 +1334,7 @@ const handleLayoutChanged = (data: { componentId: string; layout: any }) => {
       resizable: layout.resizable ?? true,
       draggable: layout.draggable ?? true
     }
-    
+
     // 同步样式属性
     component.style = {
       ...component.style,
@@ -1344,7 +1345,7 @@ const handleLayoutChanged = (data: { componentId: string; layout: any }) => {
       position: layout.position || 'absolute',
       zIndex: layout.zIndex || 1
     }
-    
+
     handleComponentUpdated(component)
   }
 }
@@ -1352,13 +1353,13 @@ const handleLayoutChanged = (data: { componentId: string; layout: any }) => {
 const handleStyleChanged = (data: { componentId: string; property: string; value: any }) => {
   const { componentId, property, value } = data
   const component = canvasComponents.value.find(c => c.id === componentId)
-  
+
   if (component) {
     // 确保style对象存在
     if (!component.style) {
       component.style = {}
     }
-    
+
     component.style[property] = value
     handleComponentUpdated(component)
   }
@@ -1367,7 +1368,7 @@ const handleStyleChanged = (data: { componentId: string; property: string; value
 const handleDataBindingChanged = (data: { componentId: string; dataBinding: any }) => {
   const { componentId, dataBinding } = data
   const component = canvasComponents.value.find(c => c.id === componentId)
-  
+
   if (component) {
     component.dataBinding = dataBinding
     handleComponentUpdated(component)
@@ -1378,7 +1379,7 @@ const handleDataBindingChanged = (data: { componentId: string; dataBinding: any 
 const getEntityIcon = (category: string) => {
   const icons: Record<string, string> = {
     core: "el-icon-coin",
-    relation: "el-icon-connection", 
+    relation: "el-icon-connection",
     config: "el-icon-setting",
     log: "el-icon-document"
   }
@@ -1392,7 +1393,7 @@ const onLayoutModeChange = (mode: any) => {
   const modeStr = String(mode)
   layoutMode.value = modeStr
   logger?.info("界面模式切换:", { mode: modeStr })
-  
+
   // 根据模式初始化相应数据
   if (modeStr === "mdi" && mdiWindows.value.length === 0) {
     initializeMDIWindows()
@@ -1404,7 +1405,7 @@ const onLayoutModeChange = (mode: any) => {
 // MDI相关方法
 const initializeMDIWindows = () => {
   const entities = availableEntities.value.slice(0, 3) // 取前3个实体作为示例
-  
+
   mdiWindows.value = entities.map((entity, index) => ({
     id: `window-${entity.id}`,
     title: `${entity.displayName || entity.name}管理`,
@@ -1426,7 +1427,7 @@ const initializeMDIWindows = () => {
     permissions: [],
     createdAt: new Date().toISOString()
   }))
-  
+
   if (mdiWindows.value.length > 0) {
     activeMDIWindow.value = mdiWindows.value[0].id
     selectedMDIWindow.value = mdiWindows.value[0]
@@ -1451,7 +1452,7 @@ const addMDIWindow = () => {
     permissions: [],
     createdAt: new Date().toISOString()
   }
-  
+
   mdiWindows.value.push(newWindow)
   activeMDIWindow.value = newId
   selectedMDIWindow.value = newWindow
@@ -1467,7 +1468,7 @@ const handleMDIWindowClosed = (windowId: string) => {
   if (index >= 0) {
     mdiWindows.value.splice(index, 1)
   }
-  
+
   if (activeMDIWindow.value === windowId) {
     activeMDIWindow.value = mdiWindows.value.length > 0 ? mdiWindows.value[0].id : ""
     selectedMDIWindow.value = mdiWindows.value.length > 0 ? mdiWindows.value[0] : null
@@ -1504,7 +1505,7 @@ const previewMDI = () => {
 // Tabs相关方法
 const initializeTabPages = () => {
   const entities = availableEntities.value.slice(0, 4) // 取前4个实体作为示例
-  
+
   tabPages.value = entities.map((entity, index) => ({
     id: `tab-${entity.id}`,
     title: `${entity.displayName || entity.name}`,
@@ -1516,7 +1517,7 @@ const initializeTabPages = () => {
     permissions: [],
     pinned: false
   }))
-  
+
   if (tabPages.value.length > 0) {
     activeTab.value = tabPages.value[0].id
     selectedTab.value = tabPages.value[0]
@@ -1536,7 +1537,7 @@ const addTabPage = () => {
     permissions: [],
     pinned: false
   }
-  
+
   tabPages.value.push(newTab)
   activeTab.value = newId
   selectedTab.value = newTab
@@ -1547,7 +1548,7 @@ const handleTabActivated = (tabId: string) => {
   tabPages.value.forEach(tab => {
     tab.active = tab.id === tabId
   })
-  
+
   activeTab.value = tabId
   selectedTab.value = tabPages.value.find(t => t.id === tabId) || null
 }
@@ -1557,7 +1558,7 @@ const handleTabClosed = (tabId: string) => {
   if (index >= 0) {
     tabPages.value.splice(index, 1)
   }
-  
+
   if (activeTab.value === tabId) {
     if (tabPages.value.length > 0) {
       const newActiveTab = tabPages.value[Math.max(0, index - 1)]
@@ -1591,7 +1592,7 @@ const previewTabs = () => {
 const generateMDICode = () => {
   const windowsJson = JSON.stringify(mdiWindows.value, null, 2)
   const activeWindowRef = activeMDIWindow.value
-  
+
   return `<template>
   <div class="mdi-application">
     <MDIContainer
@@ -1626,7 +1627,7 @@ const handleWindowClosed = (windowId: string) => {
 const generateTabsCode = () => {
   const tabsJson = JSON.stringify(tabPages.value, null, 2)
   const activeTabRef = activeTab.value
-  
+
   return `<template>
   <div class="tabs-application">
     <TabsContainer

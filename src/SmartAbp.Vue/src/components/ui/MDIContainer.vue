@@ -27,7 +27,7 @@
         @contextmenu="showWindowContextMenu($event, window)"
       >
         <!-- 窗口标题栏 -->
-        <div 
+        <div
           class="window-titlebar"
           @mousedown="startWindowDrag($event, window)"
           @dblclick="toggleWindowMaximize(window.id)"
@@ -41,22 +41,22 @@
             </div>
           </div>
           <div class="titlebar-actions">
-            <el-button 
-              text 
+            <el-button
+              text
               size="small"
               @click="minimizeWindow(window.id)"
             >
               <i class="el-icon-minus" />
             </el-button>
-            <el-button 
-              text 
+            <el-button
+              text
               size="small"
               @click="toggleWindowMaximize(window.id)"
             >
               <i :class="window.state === 'maximized' ? 'el-icon-copy-document' : 'el-icon-full-screen'" />
             </el-button>
-            <el-button 
-              text 
+            <el-button
+              text
               size="small"
               @click="closeWindow(window.id)"
             >
@@ -70,7 +70,7 @@
           v-show="window.state !== 'minimized'"
           class="window-content"
         >
-          <component 
+          <component
             :is="window.component"
             v-bind="window.props"
             @window-title-change="updateWindowTitle(window.id, $event)"
@@ -124,7 +124,7 @@
       v-if="minimizedWindows.length > 0"
       class="mdi-taskbar"
     >
-      <div 
+      <div
         v-for="window in minimizedWindows"
         :key="window.id"
         class="taskbar-item"
@@ -175,7 +175,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import type { MDIWindowConfig } from '@/stores/lowcode/entityModeling'
+import type { MDIWindowConfig } from '@smartabp/lowcode-core'
 
 // Props
 interface Props {
@@ -185,7 +185,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  theme: 'light'
+  theme: 'light',
+  activeWindowId: ''
 })
 
 // Emits
@@ -255,7 +256,7 @@ const getWindowStyle = (window: MDIWindowConfig) => {
       zIndex: props.activeWindowId === window.id ? 1000 : 100
     }
   }
-  
+
   if (window.state === 'minimized') {
     return {
       display: 'none'
@@ -263,10 +264,10 @@ const getWindowStyle = (window: MDIWindowConfig) => {
   }
 
   return {
-    left: `${window.bounds.x}px`,
-    top: `${window.bounds.y}px`,
-    width: `${window.bounds.width}px`,
-    height: `${window.bounds.height}px`,
+    left: `${window.bounds?.x || window.position?.x || 0}px`,
+    top: `${window.bounds?.y || window.position?.y || 0}px`,
+    width: `${window.bounds?.width || window.size?.width || 400}px`,
+    height: `${window.bounds?.height || window.size?.height || 300}px`,
     zIndex: props.activeWindowId === window.id ? 1000 : 100
   }
 }
@@ -309,30 +310,30 @@ const closeAllWindows = () => {
 // 窗口拖拽
 const startWindowDrag = (event: MouseEvent, window: MDIWindowConfig) => {
   if (window.state === 'maximized' || !window.draggable) return
-  
+
   event.preventDefault()
   dragState.value = {
     dragging: true,
     windowId: window.id,
     startX: event.clientX,
     startY: event.clientY,
-    startWindowX: window.bounds.x,
-    startWindowY: window.bounds.y
+    startWindowX: window.bounds?.x || window.position?.x || 0,
+    startWindowY: window.bounds?.y || window.position?.y || 0
   }
-  
+
   document.addEventListener('mousemove', handleWindowDrag)
   document.addEventListener('mouseup', stopWindowDrag)
 }
 
 const handleWindowDrag = (event: MouseEvent) => {
   if (!dragState.value.dragging) return
-  
+
   const deltaX = event.clientX - dragState.value.startX
   const deltaY = event.clientY - dragState.value.startY
-  
+
   const newX = dragState.value.startWindowX + deltaX
   const newY = dragState.value.startWindowY + deltaY
-  
+
   emit('window-moved', dragState.value.windowId, newX, newY)
 }
 
@@ -345,38 +346,38 @@ const stopWindowDrag = () => {
 // 窗口调整大小
 const startWindowResize = (event: MouseEvent, window: MDIWindowConfig, direction: string) => {
   if (!window.resizable) return
-  
+
   event.preventDefault()
   event.stopPropagation()
-  
+
   resizeState.value = {
     resizing: true,
     windowId: window.id,
     direction,
     startX: event.clientX,
     startY: event.clientY,
-    startWidth: window.bounds.width,
-    startHeight: window.bounds.height,
-    startWindowX: window.bounds.x,
-    startWindowY: window.bounds.y
+    startWidth: window.bounds?.width || window.size?.width || 400,
+    startHeight: window.bounds?.height || window.size?.height || 300,
+    startWindowX: window.bounds?.x || window.position?.x || 0,
+    startWindowY: window.bounds?.y || window.position?.y || 0
   }
-  
+
   document.addEventListener('mousemove', handleWindowResize)
   document.addEventListener('mouseup', stopWindowResize)
 }
 
 const handleWindowResize = (event: MouseEvent) => {
   if (!resizeState.value.resizing) return
-  
+
   const deltaX = event.clientX - resizeState.value.startX
   const deltaY = event.clientY - resizeState.value.startY
   const direction = resizeState.value.direction
-  
+
   let newWidth = resizeState.value.startWidth
   let newHeight = resizeState.value.startHeight
   let newX = resizeState.value.startWindowX
   let newY = resizeState.value.startWindowY
-  
+
   // 根据调整方向计算新的尺寸和位置
   if (direction.includes('e')) {
     newWidth = Math.max(200, resizeState.value.startWidth + deltaX)
@@ -392,7 +393,7 @@ const handleWindowResize = (event: MouseEvent) => {
     newHeight = Math.max(150, resizeState.value.startHeight - deltaY)
     newY = resizeState.value.startWindowY + deltaY
   }
-  
+
   emit('window-moved', resizeState.value.windowId, newX, newY)
   emit('window-resized', resizeState.value.windowId, newWidth, newHeight)
 }

@@ -120,9 +120,27 @@ export const useAuthStore = defineStore(
     }
   }
 
-  const logout = () => {
-    clearAuth()
-      // 可选：通知后端吊销token
+  const logout = async () => {
+    try {
+      // 如果有token，尝试通知后端吊销token
+      if (token.value) {
+        try {
+          await apiService.post("/api/account/logout", {}, {
+            headers: getAuthHeader()
+          })
+          logger.info("已通知后端退出登录")
+        } catch (error) {
+          // 即使后端调用失败，也要继续清除本地状态
+          logger.warn("通知后端退出登录失败，但继续清除本地状态", error)
+        }
+      }
+    } catch (error) {
+      logger.error("退出登录过程中发生错误", error)
+    } finally {
+      // 无论如何都要清除本地认证状态
+      clearAuth()
+      logger.info("用户已退出登录，本地认证状态已清除")
+    }
   }
 
   const initialize = () => {

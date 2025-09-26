@@ -110,7 +110,7 @@
           <el-icon><VideoPlay /></el-icon>
           观看演示
         </el-button>
-        
+
         <el-button
           type="success"
           size="large"
@@ -119,7 +119,7 @@
           <el-icon><Plus /></el-icon>
           创建第一个实体
         </el-button>
-        
+
         <el-button
           size="large"
           @click="importTemplate"
@@ -136,8 +136,8 @@
       >
         <h3>最近项目</h3>
         <div class="project-cards">
-          <div 
-            v-for="project in recentProjects" 
+          <div
+            v-for="project in recentProjects"
             :key="project.id"
             class="project-card"
             @click="openProject(project)"
@@ -182,17 +182,17 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { 
-  Platform, 
-  Folder, 
-  Brush, 
+import {
+  Platform,
+  Folder,
+  Brush,
   Cpu,
   VideoPlay,
   Plus,
   Upload
 } from '@element-plus/icons-vue'
-import { useEntityModelingStore } from '@/stores/lowcode/entityModeling'
-import { usePageDesignStore } from '@/stores/lowcode/pageDesign'
+import { useEntityModelingStore } from '@smartabp/lowcode-core'
+import { usePageDesignStore } from '@smartabp/lowcode-core'
 import { logger } from '@/utils/logger'
 
 // 路由
@@ -259,10 +259,10 @@ const createFirstEntity = () => {
     enableMultiTenant: false,
     isCompleted: true
   }
-  
+
   entityStore.addEntity(sampleEntity)
   ElMessage.success('示例用户实体已创建！')
-  
+
   // 导航到实体建模页面
   setTimeout(() => {
     goToModeling()
@@ -500,24 +500,24 @@ onMounted(() => {
   .welcome-container {
     padding: 20px 16px;
   }
-  
+
   .welcome-header h1 {
     font-size: 28px;
   }
-  
+
   .welcome-subtitle {
     font-size: 16px;
   }
-  
+
   .step-cards {
     grid-template-columns: 1fr;
   }
-  
+
   .quick-actions {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .help-links {
     flex-direction: column;
     gap: 16px;

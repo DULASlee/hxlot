@@ -175,17 +175,20 @@ export class LRUCache<K, V> {
 export interface CacheOptions<T> {
   /** 缓存容量 */
   capacity?: number
-  /** 缓存过期时间（毫秒） */
+  /** 过期时间（毫秒） */
   ttl?: number
   /** 存储到localStorage */
   persistent?: boolean
   /** 序列化函数 */
+  // eslint-disable-next-line no-unused-vars
   serialize?: (value: T) => string
   /** 反序列化函数 */
+  // eslint-disable-next-line no-unused-vars
   deserialize?: (value: string) => T
 }
 
 interface CacheItem<T> {
+   
   value: T
   timestamp: number
   accessCount: number
@@ -349,19 +352,20 @@ export function useCache<T>(
 /**
  * 防抖Hook
  */
-export function useDebounce<T extends (...args: any[]) => any>(
+export function useDebounce<T extends (..._args: any[]) => any>(
   fn: T,
   delay: number = 300
 ): [T, () => void] {
   let timer: number | null = null
 
-  const debouncedFn = ((...args: Parameters<T>) => {
+   
+  const debouncedFn = ((..._args: Parameters<T>) => {
     if (timer) {
       clearTimeout(timer)
     }
 
     timer = window.setTimeout(() => {
-      fn.apply(null, args)
+      fn.apply(null, _args)
       timer = null
     }, delay)
   }) as T
@@ -383,25 +387,27 @@ export function useDebounce<T extends (...args: any[]) => any>(
 /**
  * 节流Hook
  */
-export function useThrottle<T extends (...args: any[]) => any>(
+export function useThrottle<T extends (..._args: any[]) => any>(
   fn: T,
   delay: number = 300
 ): [T, () => void] {
   let timer: number | null = null
-  let lastArgs: Parameters<T> | null = null
+  let lastExecTime = 0
 
-  const throttledFn = ((...args: Parameters<T>) => {
-    lastArgs = args
+   
+  const throttledFn = ((..._args: Parameters<T>) => {
+    const now = Date.now()
 
-    if (timer) return
-
-    timer = window.setTimeout(() => {
-      if (lastArgs) {
-        fn.apply(null, lastArgs)
-        lastArgs = null
-      }
-      timer = null
-    }, delay)
+    if (now - lastExecTime >= delay) {
+      fn.apply(null, _args)
+      lastExecTime = now
+    } else if (!timer) {
+      timer = window.setTimeout(() => {
+        fn.apply(null, _args)
+        lastExecTime = Date.now()
+        timer = null
+      }, delay - (now - lastExecTime))
+    }
   }) as T
 
   const cancel = () => {
@@ -409,7 +415,6 @@ export function useThrottle<T extends (...args: any[]) => any>(
       clearTimeout(timer)
       timer = null
     }
-    lastArgs = null
   }
 
   onBeforeUnmount(() => {
@@ -425,12 +430,15 @@ export function useThrottle<T extends (...args: any[]) => any>(
 export class ObjectPool<T> {
   private pool: T[] = []
   private createFn: () => T
-  private resetFn?: (obj: T) => void
+   
+  // eslint-disable-next-line no-unused-vars
+  private resetFn?: (_obj: T) => void
   private maxSize: number
 
   constructor(
     createFn: () => T,
-    resetFn?: (obj: T) => void,
+    // eslint-disable-next-line no-unused-vars
+    resetFn?: (_obj: T) => void,
     maxSize: number = 50
   ) {
     this.createFn = createFn
@@ -439,10 +447,8 @@ export class ObjectPool<T> {
   }
 
   get(): T {
-    if (this.pool.length > 0) {
-      return this.pool.pop()!
-    }
-    return this.createFn()
+    const item = this.pool.pop()
+    return item || this.createFn()
   }
 
   release(obj: T): void {

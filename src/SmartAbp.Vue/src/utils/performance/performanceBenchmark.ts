@@ -75,7 +75,6 @@ export const PERFORMANCE_BENCHMARKS = {
  */
 export class PerformanceBenchmarkSuite {
   private metrics: Partial<PerformanceMetrics> = {}
-  private startTime: number = 0
   private observer?: PerformanceObserver
 
   constructor() {
@@ -349,7 +348,7 @@ ${validation.failures.map(f => `- ${f}`).join('\n')}
 ` : '## ✅ 所有性能指标均符合企业级标准！'}
 
 ## 📋 建议
-${this.generateRecommendations(metrics, validation)}
+${this.generateRecommendations(metrics)}
 `
   }
 
@@ -592,7 +591,7 @@ ${this.generateRecommendations(metrics, validation)}
     return performance.now() - start
   }
 
-  private generateRecommendations(metrics: PerformanceMetrics, validation: any): string {
+  private generateRecommendations(metrics: PerformanceMetrics): string {
     const recommendations = []
 
     if (metrics.componentRenderTime > 50) {

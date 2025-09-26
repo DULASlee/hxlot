@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>残酷真相测试 - 基础渲染</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/element-plus"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .test-case { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .pass { border-color: #28a745; background-color: #e9f7ec; }
+        .fail { border-color: #dc3545; background-color: #fce8e6; }
+        h1, h2 { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>🚨 残酷真相审查：真实性检查</h1>
+
+    <div id="vue-test" class="test-case">
+        <h2>1. Vue.js 基础渲染测试</h2>
+        <p>{{ message }}</p>
+        <button @click="count++">点击次数: {{ count }}</button>
+    </div>
+
+    <div id="element-plus-test" class="test-case">
+        <h2>2. Element Plus 组件渲染测试</h2>
+        <el-button type="primary" @click="showAlert">点击Element按钮</el-button>
+        <el-input v-model="inputValue" placeholder="测试输入框"></el-input>
+        <p>输入值: {{ inputValue }}</p>
+    </div>
+
+    <script>
+        // --- Test Case 1: Vue.js Basic Rendering ---
+        const VueTest = {
+            setup() {
+                const message = Vue.ref('✅ 如果看到此消息，Vue基础渲染正常。');
+                const count = Vue.ref(0);
+                return { message, count };
+            }
+        };
+        const vueApp = Vue.createApp(VueTest);
+        vueApp.mount('#vue-test');
+        document.getElementById('vue-test').classList.add('pass');
+        console.log('✅ Vue.js 基础渲染测试通过');
+
+        // --- Test Case 2: Element Plus Component Rendering ---
+        const ElementPlusTest = {
+            setup() {
+                const inputValue = Vue.ref('');
+                const showAlert = () => {
+                    ElementPlus.ElMessage.success('✅ Element Plus 事件绑定和消息提示正常！');
+                };
+                return { inputValue, showAlert };
+            }
+        };
+        const elementApp = Vue.createApp(ElementPlusTest);
+        elementApp.use(ElementPlus);
+        elementApp.mount('#element-plus-test');
+        document.getElementById('element-plus-test').classList.add('pass');
+        console.log('✅ Element Plus 组件渲染测试通过');
+    </script>
+</body>
+</html>

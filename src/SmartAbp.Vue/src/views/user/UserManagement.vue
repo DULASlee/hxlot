@@ -266,63 +266,48 @@ AI_TEMPLATE_INFO:
           class="edit-form"
         >
           <el-form-item
-            label="名称"
-            prop="name"
+            label="用户名"
+            prop="userName"
           >
             <el-input
-              v-model="formData.name"
-              placeholder="请输入用户管理名称"
+              v-model="formData.userName"
+              placeholder="请输入用户名"
               maxlength="50"
               show-word-limit
             />
           </el-form-item>
 
           <el-form-item
-            label="显示名称"
-            prop="displayName"
+            label="姓名"
+            prop="name"
           >
             <el-input
-              v-model="formData.displayName"
-              placeholder="请输入显示名称"
+              v-model="formData.name"
+              placeholder="请输入姓名"
+              maxlength="50"
+              show-word-limit
+            />
+          </el-form-item>
+
+          <el-form-item
+            label="邮箱"
+            prop="email"
+          >
+            <el-input
+              v-model="formData.email"
+              placeholder="请输入邮箱"
               maxlength="100"
               show-word-limit
             />
           </el-form-item>
 
           <el-form-item
-            label="描述"
-            prop="description"
-          >
-            <el-input
-              v-model="formData.description"
-              type="textarea"
-              :rows="3"
-              placeholder="请输入描述信息"
-              maxlength="500"
-              show-word-limit
-            />
-          </el-form-item>
-
-          <el-form-item
-            label="排序号"
-            prop="sort"
-          >
-            <el-input-number
-              v-model="formData.sort"
-              :min="0"
-              :max="999999"
-              controls-position="right"
-              style="width: 150px"
-            />
-          </el-form-item>
-
-          <el-form-item
-            label="状态"
-            prop="isEnabled"
+            label="激活状态"
+            prop="isActive"
           >
             <el-switch
-              v-model="formData.isEnabled"
-              active-text="启用"
+              v-model="formData.isActive"
+              active-text="激活"
               inactive-text="禁用"
             />
           </el-form-item>
@@ -363,7 +348,8 @@ const uiConfigToPageSchema = (config: any) => config
 
 // 临时API模拟，保持功能完整性
 const codeGeneratorApi = {
-  getUiConfig: (_module: string, _entity: string) => Promise.resolve(null),
+  // eslint-disable-next-line no-unused-vars
+       getUiConfig: (_module: string, _entity: string) => Promise.resolve(null),
   generateCode: () => Promise.resolve({ success: true, files: [] })
 }
 import type { ElTable, FormInstance } from "element-plus"
@@ -372,11 +358,11 @@ import { Plus, Search, Refresh, Delete } from "@element-plus/icons-vue"
 
 // 导入说明：以下导入需要根据实际项目结构调整
 import { useUserStore } from "@/stores/modules/user"
-// import { formatDateTime } from "@/utils/date"
-// import type { UserDto, CreateUserDto, UpdateUserDto } from "@/types/user"
+import { storeToRefs } from "pinia"
+import dayjs from 'dayjs'
+import type { CreateUserDto, UpdateUserDto } from "@/types/user"
 
 // 响应式数据
-const loading = ref(false)
 const submitting = ref(false)
 const dialogVisible = ref(false)
 const selectedRows = ref<any[]>([])
@@ -406,51 +392,46 @@ const pagination = reactive({
 const sorting = ref("")
 
 // 表格数据
-const tableData = ref<any[]>([])
+const store = useUserStore()
+const { list: tableData, loading } = storeToRefs(store)
 
 // 对话框数据
-const dialogTitle = computed(() => (formData.id ? "编辑用户管理" : "新增用户管理"))
+const dialogTitle = computed(() => ((formData.value as any).id ? "编辑用户" : "新增用户"))
 
-const formData = reactive({
+const formData = ref<Partial<CreateUserDto & UpdateUserDto & { id: string }>>({
   id: undefined,
+  userName: "",
   name: "",
-  displayName: "",
-  description: "",
-  sort: 0,
-  isEnabled: true,
+  surname: "",
+  email: "",
+  phoneNumber: "",
+  isActive: true,
+  lockoutEnabled: true,
+  roleNames: [],
+  password: "",
+  concurrencyStamp: "",
 })
 
 // 表单验证规则
-const formRules = {
-  name: [
-    { required: true, message: "请输入用户管理名称", trigger: "blur" },
-    { min: 2, max: 50, message: "名称长度在 2 到 50 个字符", trigger: "blur" },
+const formRules: Partial<Record<keyof CreateUserDto, any[]>> = {
+  userName: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+  email: [
+    { required: true, message: "请输入邮箱地址", trigger: "blur" },
+    { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
   ],
+  password: [{ required: true, message: "请输入密码", trigger: "blur" }],
 }
 
 // 方法实现
 const fetchData = async () => {
-  try {
-    loading.value = true
-
-    const params = {
-      filter: searchForm.filter || undefined,
-      isEnabled: searchForm.isEnabled,
-      skipCount: (pagination.current - 1) * pagination.pageSize,
-      maxResultCount: pagination.pageSize,
-      sorting: sorting.value || undefined,
-    }
-    void params
-
-    const store = useUserStore()
-    await store.fetchList(params)
-    tableData.value = store.list
-    pagination.total = store.total
-  } catch {
-    ElMessage.error("获取数据失败")
-  } finally {
-    loading.value = false
+  const params = {
+    filter: searchForm.filter || undefined,
+    isEnabled: searchForm.isEnabled,
+    pageIndex: pagination.current,
+    pageSize: pagination.pageSize,
+    sorting: sorting.value || undefined,
   }
+  await store.fetchList(params)
 }
 
 const handleSearch = () => {
@@ -459,41 +440,42 @@ const handleSearch = () => {
 }
 
 const handleReset = () => {
-  searchForm.filter = ""
-  searchForm.isEnabled = undefined
+  if (searchFormRef.value) {
+    searchFormRef.value.resetFields()
+  }
   handleSearch()
 }
 
 const handleCreate = () => {
-  Object.assign(formData, {
+  formData.value = {
     id: undefined,
+    userName: "",
     name: "",
-    displayName: "",
-    description: "",
-    sort: 0,
-    isEnabled: true,
-  })
+    surname: "",
+    email: "",
+    phoneNumber: "",
+    isActive: true,
+    lockoutEnabled: true,
+    roleNames: [],
+    password: "",
+    concurrencyStamp: "",
+  }
   dialogVisible.value = true
 }
 
 const handleEdit = (row: any) => {
-  Object.assign(formData, row)
+  formData.value = { ...row }
   dialogVisible.value = true
 }
 
 const handleDelete = async (row: any) => {
   try {
     await ElMessageBox.confirm(`确定要删除 "${row.name}" 吗？`, "确认删除", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
       type: "warning",
     })
 
-    const store = useUserStore()
-    await store.deleteItem(row.id)
-
+    await store.delete(row.id)
     ElMessage.success("删除成功")
-    fetchData()
   } catch {
     // 用户取消删除
   }
@@ -506,23 +488,12 @@ const handleBatchDelete = async () => {
     await ElMessageBox.confirm(
       `确定要删除选中的 ${selectedRows.value.length} 项吗？`,
       "确认批量删除",
-      {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      },
+      { type: "warning" },
     )
 
     const ids = selectedRows.value.map((row) => row.id)
-    void ids
-
-    const store = useUserStore()
-    for (const id of ids) {
-      await store.deleteItem(id)
-    }
-
+    await store.deleteMany(ids)
     ElMessage.success("批量删除成功")
-    fetchData()
   } catch {
     // 用户取消删除
   }
@@ -530,25 +501,21 @@ const handleBatchDelete = async () => {
 
 const handleSubmit = async () => {
   try {
-    if (formRef.value && typeof formRef.value.validate === "function") {
-      await formRef.value.validate()
-    }
+    await formRef.value?.validate()
 
     submitting.value = true
 
-    const store = useUserStore()
-    if (formData.id) {
-      await store.updateItem(formData.id, formData)
+    if (formData.value.id) {
+      await store.update(formData.value.id, formData.value as UpdateUserDto)
       ElMessage.success("更新成功")
     } else {
-      await store.createItem(formData)
+      await store.create(formData.value as CreateUserDto)
       ElMessage.success("创建成功")
     }
 
     dialogVisible.value = false
-    fetchData()
-  } catch {
-    ElMessage.error("操作失败")
+  } catch (err) {
+    console.error("Form submission error:", err)
   } finally {
     submitting.value = false
   }
@@ -584,8 +551,8 @@ const handleCurrentChange = (current: number) => {
 
 // 工具函数占位符
 const formatDateTime = (date: string) => {
-  // TODO: 实现日期格式化
-  return date
+  if (!date) return ''
+  return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
 }
 
 // 生命周期

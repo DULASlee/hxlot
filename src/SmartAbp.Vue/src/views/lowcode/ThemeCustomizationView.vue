@@ -15,29 +15,29 @@
       </div>
       <div class="header-actions">
         <el-button-group>
-          <el-button 
-            type="primary" 
+          <el-button
+            type="primary"
             icon="el-icon-view"
             @click="togglePreview"
           >
             {{ showPreview ? '隐藏预览' : '显示预览' }}
           </el-button>
-          <el-button 
-            type="success" 
+          <el-button
+            type="success"
             icon="el-icon-download"
             @click="exportTheme"
           >
             导出主题
           </el-button>
-          <el-button 
-            type="warning" 
+          <el-button
+            type="warning"
             icon="el-icon-upload"
             @click="showImportDialog = true"
           >
             导入主题
           </el-button>
-          <el-button 
-            type="info" 
+          <el-button
+            type="info"
             icon="el-icon-refresh"
             @click="resetTheme"
           >
@@ -79,7 +79,7 @@
             />
           </el-select>
         </div>
-        
+
         <div class="preview-content">
           <!-- 组件预览模式 -->
           <div
@@ -376,8 +376,8 @@
             v-if="previewMode === 'full'"
             class="full-preview"
           >
-            <iframe 
-              :src="fullPreviewUrl" 
+            <iframe
+              :src="fullPreviewUrl"
               style="width: 100%; height: 600px; border: 1px solid #ddd; border-radius: 4px;"
             />
           </div>
@@ -386,9 +386,9 @@
     </div>
 
     <!-- 导入主题对话框 -->
-    <el-dialog 
-      v-model="showImportDialog" 
-      title="导入主题配置" 
+    <el-dialog
+      v-model="showImportDialog"
+      title="导入主题配置"
       width="500px"
     >
       <div class="import-content">
@@ -409,9 +409,9 @@
             支持.json格式的主题配置文件
           </div>
         </el-upload>
-        
+
         <el-divider>或者</el-divider>
-        
+
         <el-input
           v-model="importThemeText"
           type="textarea"
@@ -423,8 +423,8 @@
         <el-button @click="showImportDialog = false">
           取消
         </el-button>
-        <el-button 
-          type="primary" 
+        <el-button
+          type="primary"
           :disabled="!importThemeText"
           @click="importThemeFromText"
         >
@@ -438,7 +438,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
-import EnhancedThemeEditor from "@/components/lowcode/EnhancedThemeEditor.vue"
+import { EnhancedThemeEditor } from '@smartabp/lowcode-designer'
 import { useEnhancedThemeStore } from "@/stores/lowcode/enhancedTheme"
 import { logger } from "@/utils/logger"
 
@@ -488,8 +488,8 @@ const togglePreview = () => {
 const exportTheme = () => {
   try {
     const themeConfig = themeStore.exportTheme()
-    const blob = new Blob([JSON.stringify(themeConfig, null, 2)], { 
-      type: "application/json" 
+    const blob = new Blob([JSON.stringify(themeConfig, null, 2)], {
+      type: "application/json"
     })
     const url = URL.createObjectURL(blob)
     const link = document.createElement("a")
@@ -497,7 +497,7 @@ const exportTheme = () => {
     link.download = `theme-${currentThemeName.value}-${Date.now()}.json`
     link.click()
     URL.revokeObjectURL(url)
-    
+
     ElMessage.success("主题配置已导出")
   } catch (error) {
     ElMessage.error("导出主题配置失败")

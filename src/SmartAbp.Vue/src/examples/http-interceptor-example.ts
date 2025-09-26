@@ -22,7 +22,7 @@ export function setupHttpInterceptors() {
           authStore.logout()
           return null
         }
-      } catch (refreshError) {
+      } catch {
         // 回退到检查refreshToken可用性
         const hasRefreshToken = authStore.refreshToken && authStore.refreshToken.length > 0
         if (hasRefreshToken) {
@@ -75,7 +75,7 @@ http.interceptors.response.use(
     try {
       const { handleAuthError } = setupHttpInterceptors()
       return await handleAuthError(error)
-    } catch (setupError) {
+    } catch {
       // 回退到内联错误处理
       const original = error.config
       if (error.response?.status === 401 && !original._retry) {

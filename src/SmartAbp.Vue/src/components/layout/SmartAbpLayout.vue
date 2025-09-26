@@ -223,6 +223,14 @@
       class="overlay"
       @click="closeAllDropdowns"
     />
+
+    <!-- 退出登录确认对话框 -->
+    <LogoutConfirmDialog
+      v-model:visible="showLogoutDialog"
+      :is-loading="isLoggingOut"
+      @confirm="handleLogoutConfirm"
+      @cancel="handleLogoutCancel"
+    />
   </div>
 </template>
 
@@ -234,6 +242,7 @@ import { useAuthStore } from "@/stores/modules/auth"
 import { useMenu } from "@/composables/useMenu"
 import { i18n, setLocale } from "@/plugins/i18n"
 import { storeToRefs } from "pinia"
+import LogoutConfirmDialog from "@/components/common/LogoutConfirmDialog.vue"
 
 const router = useRouter()
 const themeStore = useThemeStore()
@@ -243,6 +252,10 @@ const authStore = useAuthStore()
 // 侧边栏显示
 const sidebarCollapsed = ref(false)
 const showUserDropdown = ref(false)
+
+// 退出登录对话框状态
+const showLogoutDialog = ref(false)
+const isLoggingOut = ref(false)
 
 // 动态菜单系统
 const {
@@ -295,9 +308,37 @@ const goToProfile = () => {
 }
 
 const logout = () => {
-  localStorage.removeItem("smartabp_token")
-  localStorage.removeItem("smartabp_user")
-  router.push("/login")
+  // 关闭用户下拉菜单
+  showUserDropdown.value = false
+  // 显示退出登录确认对话框
+  showLogoutDialog.value = true
+}
+
+const handleLogoutConfirm = async () => {
+  try {
+    isLoggingOut.value = true
+    
+    // 调用认证存储的退出方法
+    await authStore.logout()
+    
+    // 关闭对话框
+    showLogoutDialog.value = false
+    
+    // 跳转到登录页
+    await router.push("/login")
+  } catch (error) {
+    console.error("退出登录时发生错误:", error)
+    // 即使出错也要清除本地状态并跳转
+    authStore.logout()
+    await router.push("/login")
+  } finally {
+    isLoggingOut.value = false
+    showLogoutDialog.value = false
+  }
+}
+
+const handleLogoutCancel = () => {
+  showLogoutDialog.value = false
 }
 
 const currentLocale = computed(() => i18n.global.locale.value as "zh-CN" | "en-US")

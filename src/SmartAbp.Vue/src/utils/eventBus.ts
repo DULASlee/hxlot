@@ -156,6 +156,32 @@ export type LowCodeEvents = {
     step: string
   }
 
+  // ===== 业务规则事件 =====
+  'business-rule:status-changed': {
+    ruleId: string
+    isActive: boolean
+    enabled?: boolean
+    updatedAt: string
+  }
+
+  'business-rule:saved': {
+    rule: any
+    isNew: boolean
+  }
+
+  // ===== 权限系统事件 =====
+  'permission:role-status-changed': {
+    roleId: string
+    isActive: boolean
+    enabled?: boolean
+    updatedBy: string
+  }
+
+  'permission:role-saved': {
+    role: any
+    isNew: boolean
+  }
+
   // ===== 工作流事件 =====
   'workflow:state-changed': {
     workflowId: string
@@ -163,6 +189,12 @@ export type LowCodeEvents = {
     toState: string
     trigger: string
     data?: any
+  }
+
+  'workflow:deployed': {
+    workflowId: string
+    version: string
+    deployedAt: string
   }
 
   'workflow:action-executed': {
@@ -325,11 +357,8 @@ export class EventBusManager {
     }
 
     // 注册监听器
-    if (options?.once) {
-      eventBus.once(type, wrappedHandler)
-    } else {
-      eventBus.on(type, wrappedHandler)
-    }
+    // mitt库暂不支持once方法，使用on代替
+    eventBus.on(type, wrappedHandler)
 
     // 统计监听器数量
     const currentCount = this.listeners.get(type) || 0

@@ -42,19 +42,22 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
       "@smartabp/lowcode-core": fileURLToPath(
-        new URL("./packages/lowcode-core/src", import.meta.url),
+        new URL("./packages/lowcode-core/index.ts", import.meta.url),
       ),
       "@smartabp/lowcode-designer": fileURLToPath(
-        new URL("./packages/lowcode-designer/src", import.meta.url),
+        new URL("./packages/lowcode-designer", import.meta.url),
       ),
       "@smartabp/lowcode-codegen": fileURLToPath(
-        new URL("./packages/lowcode-codegen/src", import.meta.url),
+        new URL("./packages/lowcode-codegen/index.ts", import.meta.url),
       ),
       "@smartabp/lowcode-api": fileURLToPath(
-        new URL("./packages/lowcode-api", import.meta.url),
+        new URL("./packages/lowcode-api/index.ts", import.meta.url),
+      ),
+      "@smartabp/lowcode-tools": fileURLToPath(
+        new URL("./packages/lowcode-tools/index.ts", import.meta.url),
       ),
       "@smartabp/lowcode-ui-vue": fileURLToPath(
-        new URL("./packages/lowcode-ui-vue/src", import.meta.url),
+        new URL("./packages/lowcode-ui-vue/index.ts", import.meta.url),
       ),
     },
   },

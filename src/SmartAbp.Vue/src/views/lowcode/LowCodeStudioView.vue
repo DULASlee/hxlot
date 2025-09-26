@@ -10,7 +10,7 @@
           <el-icon><Platform /></el-icon>
           <span class="logo-text">LowCode Studio</span>
         </router-link>
-        
+
         <div class="workspace-selector">
           <el-dropdown @command="switchWorkspace">
             <span class="workspace-name">
@@ -30,7 +30,7 @@
           </el-dropdown>
         </div>
       </div>
-      
+
       <div class="header-center">
         <nav class="main-nav">
           <router-link
@@ -80,7 +80,7 @@
           </router-link>
         </nav>
       </div>
-      
+
       <div class="header-right">
         <!-- 智能工作流进度 -->
         <div class="workflow-progress">
@@ -103,7 +103,7 @@
             </div>
           </el-tooltip>
         </div>
-        
+
         <!-- 下一步建议 -->
         <el-tooltip
           v-if="nextStepSuggestion"
@@ -117,7 +117,7 @@
             <el-icon><InfoFilled /></el-icon>
           </el-button>
         </el-tooltip>
-        
+
         <el-button
           text
           @click="showHelp"
@@ -148,17 +148,17 @@
         <span class="separator">|</span>
         <span class="project-info">{{ workspaceInfo.description }}</span>
       </div>
-      
+
       <div class="footer-center">
-        <el-progress 
-          :percentage="overallProgress" 
+        <el-progress
+          :percentage="overallProgress"
           :width="100"
           :status="overallProgress === 100 ? 'success' : undefined"
           :show-text="false"
         />
         <span class="progress-text">开发进度 {{ overallProgress }}%</span>
       </div>
-      
+
       <div class="footer-right">
         <el-tooltip
           content="实体数量"
@@ -206,12 +206,12 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { 
-  Platform, 
+import {
+  Platform,
   DataBoard,
-  Brush, 
-  PictureRounded, 
-  Cpu, 
+  Brush,
+  PictureRounded,
+  Cpu,
   ArrowDown,
   InfoFilled,
   QuestionFilled,
@@ -220,9 +220,8 @@ import {
   Files
 } from '@element-plus/icons-vue'
 import ProjectWizard from "@/components/lowcode/ProjectWizard.vue"
-import { useEntityModelingStore } from '@/stores/lowcode/entityModeling'
-import { usePageDesignStore } from '@/stores/lowcode/pageDesign'
-import { useCodeGenerationStore } from '@/stores/lowcode/codeGeneration'
+import { useEntityModelingStore } from '@smartabp/lowcode-core'
+import { usePageDesignStore, useCodeGenerationStore } from '@smartabp/lowcode-core'
 import { useSmartWorkflow } from "@/composables/useSmartWorkflow"
 import { logger } from '@/utils/logger'
 
@@ -255,7 +254,7 @@ const workspaceInfo = computed(() => ({
 
 const entityCount = computed(() => entityStore.entities.length)
 const pageCount = computed(() => pageStore.pages.length)
-const generatedFileCount = computed(() => codeGenStore.generationHistory.length > 0 ? 
+const generatedFileCount = computed(() => codeGenStore.generationHistory.length > 0 ?
   codeGenStore.generationHistory[0].fileCount : 0)
 
 const overallProgress = computed(() => {
@@ -294,7 +293,7 @@ const handleProjectCreated = (project: any) => {
 // 生命周期
 onMounted(() => {
   logger?.info('LowCode Studio 启动', { route: route.path })
-  
+
   // 根据当前路由设置步骤
   if (route.path.includes('entity-modeling')) {
     setCurrentStep('modeling')
@@ -305,7 +304,7 @@ onMounted(() => {
   } else if (route.path.includes('generation')) {
     setCurrentStep('generate')
   }
-  
+
   // 初始化工作流
   initializeWorkflow()
 })
@@ -494,15 +493,15 @@ onMounted(() => {
   .studio-header {
     padding: 0 16px;
   }
-  
+
   .header-left {
     gap: 12px;
   }
-  
+
   .workspace-selector {
     display: none;
   }
-  
+
   .footer-center {
     display: none;
   }

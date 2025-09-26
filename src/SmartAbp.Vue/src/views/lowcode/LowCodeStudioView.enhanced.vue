@@ -55,7 +55,10 @@
             >
               <!-- 路由组件缓存 -->
               <KeepAlive :include="cachedViews">
-                <Suspense @resolve="onModuleLoaded" @fallback="onModuleLoading">
+                <Suspense
+                  @resolve="onModuleLoaded"
+                  @fallback="onModuleLoading"
+                >
                   <template #default>
                     <component
                       :is="Component"
@@ -154,7 +157,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 
 // 组件导入
 import WorkspaceContainer from '@/components/layout/WorkspaceContainer.vue'
@@ -171,9 +174,8 @@ import HelpCenter from '@/components/lowcode/HelpCenter.vue'
 
 // Stores 和 Composables
 import { useWorkspaceStore } from '@/stores/modules/workspace'
-import { useEntityModelingStore } from '@/stores/lowcode/entityModeling'
-import { usePageDesignStore } from '@/stores/lowcode/pageDesign'
-import { useCodeGenerationStore } from '@/stores/lowcode/codeGeneration'
+import { useEntityModelingStore } from '@smartabp/lowcode-core'
+import { usePageDesignStore, useCodeGenerationStore } from '@smartabp/lowcode-core'
 import { useEventBus, useEventSubscription } from '@/utils/eventBus'
 import { useSmartWorkflow } from '@/composables/useSmartWorkflow'
 import { logger } from '@/utils/logger'
@@ -204,8 +206,6 @@ const { subscribe, cleanup: cleanupEvents } = useEventSubscription('LowCodeStudi
 
 // 智能工作流
 const {
-  totalWorkflowProgress,
-  nextStepSuggestion,
   initializeWorkflow
 } = useSmartWorkflow()
 

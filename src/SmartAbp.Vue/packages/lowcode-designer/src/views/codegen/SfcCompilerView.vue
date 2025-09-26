@@ -276,10 +276,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
-import { logger } from "@/utils/logging"
+import { logger } from '@smartabp/lowcode-tools'
 
 // 组件日志器
-const componentLogger = logger.child({ component: "SfcCompilerView" })
+// 使用logger进行日志记录
+// const logger = logger.child({ component: "SfcCompilerView" })
 
 // 编译器状态
 const compiling = ref(false)
@@ -399,7 +400,7 @@ const compileCode = async () => {
   const startTime = Date.now()
 
   try {
-    componentLogger.info("开始编译SFC组件", {
+    logger.info("开始编译SFC组件", {
       codeLength: sourceCode.value.length,
       options: compilerOptions.value,
     })
@@ -452,13 +453,13 @@ const compileCode = async () => {
       })
     }
 
-    componentLogger.info("SFC编译完成", {
+    logger.info("SFC编译完成", {
       duration,
       outputSize: totalOutput,
       warnings: compilationStats.value.warnings,
     })
   } catch (error) {
-    componentLogger.error("SFC编译失败", error as Error)
+    logger.error("SFC编译失败", error as Error)
 
     compilationStats.value.errors = 1
     compilationMessages.value.push({
@@ -492,7 +493,7 @@ const clearResults = () => {
   compilationMessages.value = []
   previewError.value = ""
 
-  componentLogger.info("编译结果已清空")
+  logger.info("编译结果已清空")
 }
 
 const loadExample = () => {
@@ -604,7 +605,7 @@ const loadExample = () => {
     "</style>",
   ].join("\n")
 
-  componentLogger.info("已加载示例代码")
+  logger.info("已加载示例代码")
 }
 
 const exportResults = () => {
@@ -628,38 +629,38 @@ const exportResults = () => {
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
 
-    componentLogger.info("编译结果导出成功")
+    logger.info("编译结果导出成功")
   } catch (error) {
-    componentLogger.error("导出失败", error as Error)
+    logger.error("导出失败", error as Error)
   }
 }
 
 const formatCode = () => {
   // 简单的代码格式化 (实际项目中应该使用 prettier 等工具)
-  componentLogger.info("代码格式化功能开发中")
+  logger.info("代码格式化功能开发中")
 }
 
 const toggleFullscreen = () => {
-  componentLogger.info("全屏编辑功能开发中")
+  logger.info("全屏编辑功能开发中")
 }
 
 const copyToClipboard = async (text: string) => {
   try {
     await navigator.clipboard.writeText(text)
-    componentLogger.info("代码已复制到剪贴板")
+    logger.info("代码已复制到剪贴板")
   } catch (error) {
-    componentLogger.error("复制失败", error as Error)
+    logger.error("复制失败", error as Error)
   }
 }
 
 const refreshPreview = () => {
   previewError.value = ""
-  componentLogger.info("预览已刷新")
+  logger.info("预览已刷新")
 }
 
 const togglePreviewMode = () => {
   previewMode.value = previewMode.value === "desktop" ? "mobile" : "desktop"
-  componentLogger.info(`预览模式切换为${previewMode.value}`)
+  logger.info(`预览模式切换为${previewMode.value}`)
 }
 
 const getMessageIcon = (type: string) => {
@@ -677,7 +678,7 @@ const getMessageIcon = (type: string) => {
 
 // 生命周期
 onMounted(() => {
-  componentLogger.info("SFC编译器演示页面加载完成")
+  logger.info("SFC编译器演示页面加载完成")
 })
 </script>
 
