@@ -30,83 +30,75 @@ MASTER_SECRET_TRIGGER = "专家模式"
 🔥 **专家模式已激活！九重爆雷连环启动！**
 🚨 **第九重爆雷：四重强制质量保证铁律自动执行！**
 
-📋 **第一重爆雷：项目开发规范强制加载**
+📋 **第一重爆雷：项目开发规范强制加载学习**
    🔧 **执行脚本**: read_file("docs/项目开发规范总览.md")
-   🔧 **执行脚本**: list_dir(".cursor/rules") → 发现11个规则文件
-   🔧 **执行脚本**: read_file(".cursor/rules/core-principles.mdc")
-   🔧 **执行脚本**: read_file(".cursor/rules/git-version-control-law.mdc")
-   🔧 **执行脚本**: read_file(".cursor/rules/expert-mode-execution-validation.mdc")
-   ✅ **验证确认**: 极致质量律/架构先行律/独立决策律 - 487行规范已加载
+   🔧 **执行脚本**: list_dir(".cursor/rules") → 发现所有规则文件
+   🔧 **执行脚本**: read_file(".cursor/rules/0、专家模式执行铁律.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/1、项目开发规则铁律.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/2、增量开发与代码去重铁律.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/3、架构整洁铁律.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/4、代码修复核心功能保护铁律.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/5、git推送与代码质量铁律.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/样式规范铁律.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/模版使用铁律.mdc")
+   ✅ **验证确认**: 极致质量律/架构先行律/独立决策律 - 完整规范体系已加载
    ✅ **验证确认**: Git版本控制铁律 - 必须使用 `bash scripts/git-safe-sync.sh`
-   ✅ **验证确认**: 专家模式执行验证铁律 - 防止声称与执行分离
+   ✅ **验证确认**: 所有铁律规则已加载，防止违规执行
 
-🔍 **第二重爆雷：Serena智能项目分析强制执行**
-   🔧 **执行脚本**: mcp_serena_get_symbols_overview("src/SmartAbp.Application")
-   🔧 **执行脚本**: mcp_serena_get_symbols_overview("src/SmartAbp.Vue/src")
-   🔧 **执行脚本**: mcp_serena_list_dir("src/SmartAbp.Vue/packages", recursive=true)
-   ✅ **验证确认**: 已识别ABP框架应用服务架构模式
-   ✅ **验证确认**: 已识别Vue3 Composition API + Pinia架构模式
-   ✅ **验证确认**: 已识别低代码引擎packages结构约束
+🔍 **第二重爆雷：项目智能分析强制执行**
+   🔧 **Serena代码库分析**: mcp_serena_get_symbols_overview("src/SmartAbp.Application")
+   🔧 **Serena代码库分析**: mcp_serena_get_symbols_overview("src/SmartAbp.Vue/src")
+   🔧 **Serena代码库分析**: mcp_serena_list_dir("src/SmartAbp.Vue/packages", recursive=true)
+   🔧 **ADR知识库学习**: read_file("docs/architecture/adr/0001-technology-stack-selection.md")
+   🔧 **ADR知识库学习**: read_file("docs/architecture/adr/0005-lowcode-engine-architecture.md")
+   🔧 **代码模版库学习**: glob_file_search("templates/**/*.template.*")
+   🔧 **架构文档学习**: read_file("docs/architecture/dependency-analysis.md")
+   🔧 **架构文档学习**: read_file("docs/architecture/SmartAbp企业级低代码引擎系统架构说明书.md")
+   🔧 **架构文档学习**: read_file("docs/architecture/SmartAbp企业级低代码引擎技术规格说明书v17.md")
+   🔧 **架构文档学习**: read_file("docs/architecture/SmartAbp企业级低代码引擎依赖分析报告v17.md")
+   ✅ **验证确认**: ABP框架+Vue3架构+低代码引擎完整技术栈识别
+   ✅ **验证确认**: ADR架构决策约束+模板库规范+依赖关系理解完成
+   ✅ **验证确认**: 确保编写符合项目现有技术栈和功能需求的高质量代码
 
-🚀 **第三重爆雷：增量开发分析强制执行**
-   🔧 **执行脚本**: list_dir("src", recursive=true) # 分析现有代码结构
-   🔧 **执行脚本**: grep("AppService|Controller|Store", path="src", type="cs,ts,vue") # 识别现有模式
-   🔧 **执行脚本**: read_file("src/SmartAbp.Vue/vite.config.ts") # 验证构建配置
-   🔧 **执行脚本**: read_file("src/SmartAbp.Vue/tsconfig.json") # 验证TypeScript配置
-   ✅ **验证确认**: 已识别现有ABP应用服务模式和Vue组件结构
-   ✅ **验证确认**: 架构一致性检查通过，无冲突扩展点
-   ✅ **验证确认**: 增量开发兼容性评估完成，可安全扩展
+🚀 **第三重爆雷：增量开发代码去重强制执行**
+   🔧 **现有代码扫描**: list_dir("src", recursive=true) # 分析现有代码结构
+   🔧 **现有模式识别**: grep("AppService|Controller|Store", path="src", type="cs,ts,vue") # 识别现有模式
+   🔧 **组件去重检查**: find src/SmartAbp.Vue/src src/SmartAbp.Vue/packages -name "*.vue" | sed 's/.*\/\///' | sort | uniq -d
+   🔧 **方法去重检查**: grep -r "function\s+\w+|const\s+\w+\s*=" src/ --include="*.ts" --include="*.vue" | sort | uniq -d
+   🔧 **类型去重检查**: grep -r "class\s+\w+|interface\s+\w+" src/ --include="*.ts" | sort | uniq -d
+   🔧 **路由去重检查**: grep -r "path:|name:" src/SmartAbp.Vue/src/router/ --include="*.ts" --include="*.js" | sort | uniq -d
+   🚨 **编码铁律**: AI编程大模型严禁编写同样名字或同样功能的组件、类、方法、API、路由、状态、类型
+   ✅ **验证确认**: 现有代码库完整分析，严格避免重复开发
+   ✅ **验证确认**: DRY原则强制执行，增量开发代码去重完成
+   ✅ **验证确认**: 确保所有新代码都是独特且必要的功能扩展
 
-🛡️ **第四重爆雷：质量保证检查强制执行**
-   🔧 **执行脚本**: run_terminal_cmd("npm run type-check") # TypeScript类型安全
-   🔧 **执行脚本**: run_terminal_cmd("npm run lint") # ESLint代码规范
-   🔧 **执行脚本**: glob_file_search("**/*.spec.ts") # 测试文件扫描
-   🔧 **执行脚本**: glob_file_search("**/*.cy.ts") # E2E测试文件扫描
-   🔧 **执行脚本**: grep("eval|innerHTML|dangerouslySetInnerHTML", path="src", type="ts,vue") # 安全漏洞检查
-   ✅ **验证确认**: 95分企业级质量标准 - 类型检查+代码规范100%通过
-   ✅ **验证确认**: 测试覆盖率统计 + 安全规范零违规确认
-   ✅ **验证确认**: 质量门禁全部通过，代码达到生产就绪标准
+🛡️ **第四重爆雷：架构整洁强制执行**
+   🔧 **packages架构检查**: grep -r "'../'" src/SmartAbp.Vue/packages/ # 检查相对路径违规
+   🔧 **packages架构检查**: grep -r "@/" src/SmartAbp.Vue/packages/ # 检查主应用引用违规
+   🔧 **packages架构检查**: glob_file_search("src/SmartAbp.Vue/packages/**/package.json") # 检查独立配置
+   🔧 **黑盒原则验证**: grep -r "@smartabp" src/SmartAbp.Vue/packages/ # 验证别名通信
+   🚨 **架构铁律**: 所有AI编程大模型必须遵循架构整洁铁律
+   🚨 **packages规范**: 低代码生成器实现代码必须保存在SmartAbp.Vue/packages文件夹下
+   ✅ **验证确认**: 黑盒原则完全隔离，packages现代架构最佳实践
+   ✅ **验证确认**: 路径隔离+别名通信+配置统一性100%符合
+   ✅ **验证确认**: 现代前后端项目架构规范严格执行
 
-🏛️ **第五重爆雷：ADR架构决策强制咨询**
-   🔧 **执行脚本**: glob_file_search("docs/architecture/adr/**/*.md")
-   🔧 **执行脚本**: list_dir("docs/architecture/adr", recursive=true)
-   🔧 **条件脚本**: read_file("docs/architecture/adr/0001-technology-stack-selection.md") # 如存在
-   ✅ **验证确认**: ADR决策记录数量和状态统计
-   ✅ **验证确认**: 技术选型约束与当前任务相关性
-   ✅ **验证确认**: 架构决策对当前实现的约束要求
+🏛️ **第五重爆雷：BUG修复最佳实践强制执行**
+   🔧 **BUG修复检查**: grep -r "as any|@ts-ignore" src/ # 检查类型绕过违规
+   🔧 **代码删除检查**: 验证是否有删除业务逻辑代码的修复行为
+   🔧 **注释检查**: 验证是否有注释掉核心功能来通过编译检查
+   🚨 **修复铁律**: 严禁删除代码、注释代码来通过编译检查
+   🚨 **类型铁律**: 严禁使用as any通过代码检查
+   🚨 **企业实践**: 必须在企业最佳编程实践前提下修复代码BUG
+   ✅ **验证确认**: BUG修复方式符合企业级最佳实践
+   ✅ **验证确认**: 类型安全检查100%通过，无绕过行为
+   ✅ **验证确认**: 核心功能完整保护，无删除降级行为
 
-📚 **第六重爆雷：模板强制匹配执行**
-   🔧 **执行脚本**: glob_file_search("templates/**/*.template.*")
-   🔧 **执行脚本**: read_file("templates/index.json") # 如果存在
-   🔧 **执行脚本**: list_dir("templates", recursive=true)
-   ✅ **验证确认**: 发现模板数量和分类统计
-   ✅ **验证确认**: 匹配用户需求与对应模板路径
-   ✅ **验证确认**: 模板参数映射(EntityName/entityName/ModuleName等)
-
-⚙️ **第七重爆雷：完美代码生成强制验证**
-   🔧 **执行脚本**: read_file("package.json") # 验证项目依赖版本
-   🔧 **执行脚本**: read_file("tsconfig.json") # 验证TypeScript配置
-   🔧 **执行脚本**: read_file(".prettierrc.json") # 验证代码格式规范
-   🔧 **执行脚本**: grep("as any|@ts-ignore", path="src", type="ts,vue") # 类型安全检查
-   🔧 **执行脚本**: run_terminal_cmd("npm run type-check") # 强制类型验证
-   ✅ **验证确认**: TypeScript严格模式无错误 + 代码格式符合项目规范
-   ✅ **验证确认**: 零 `as any` 类型绕过 + 零架构违规路径引用
-   ✅ **验证确认**: 企业级质量标准(95分) + 生成代码通过所有检查
-
-⚙️ **第八重爆雷：架构铁律强制执行：黑盒原则 (The Black Box Principle)**
-   🔧 **执行脚本**: grep("../", path="src/SmartAbp.Vue/packages", type="ts,vue")
-   🔧 **执行脚本**: grep("@smartabp", path="src/SmartAbp.Vue/packages", type="ts,vue")
-   🔧 **执行脚本**: glob_file_search("src/SmartAbp.Vue/packages/**/package.json")
-   ✅ **验证确认**: 黑盒原则 - 零违规相对路径引用检查
-   ✅ **验证确认**: 别名通信 - 确保使用@smartabp/*模块通信
-   ✅ **验证确认**: 配置统一性 - 禁止packages内独立配置文件
-
-🚀 **第九重爆雷：四重强制质量保证铁律 (Four-Stage Quality Assurance Excellence)**
-
-⚡ **强制触发约束**：每执行完一个开发任务节点时自动触发
+📚 **第六重爆雷：GIT版本管理和质量检查强制执行**
+⚡ **触发机制**: 编程30分钟后或每完成一个开发任务节点自动触发
 
    🏗️ **第一阶段：架构整洁强制检查**
-   🔧 **执行脚本**: run_terminal_cmd("grep -r \"'../'\")  # 检查相对路径违规
+   🔧 **执行脚本**: run_terminal_cmd("grep -r \"'../\'\" src/SmartAbp.Vue/packages/")  # 检查相对路径违规
    🔧 **执行脚本**: run_terminal_cmd("grep -r \"@/\" src/SmartAbp.Vue/packages/")  # 检查@/主应用引用违规
    🔧 **执行脚本**: run_terminal_cmd("grep -r \"as any|@ts-ignore\" src/")  # 检查类型绕过违规
    ✅ **验证确认**: 黑盒原则+路径隔离+别名通信100%符合
@@ -140,12 +132,66 @@ MASTER_SECRET_TRIGGER = "专家模式"
    ✅ **验证确认**: 使用项目标准Git脚本，严禁手动Git命令
    ✅ **验证确认**: 本地与远程仓库版本完全同步，无遗留冲突
 
-🚨 **低代码引擎开发铁律 (LowCode Engine Development Law)**
+⚙️ **第七重爆雷：全栈代码生成器专注核心功能**
    ❌ **严禁AI智能辅助功能**: 现阶段禁止实现AI助手、智能建议、自动优化等AI功能
-   ❌ **严禁多人协作功能**: 现阶段禁止实现实时协作、多用户编辑、协作同步等功能
-   ✅ **专注核心功能**: 优先实现功能完善、好用的企业级通用低代码引擎
-   ✅ **基础功能优先**: 代码生成、可视化设计、元数据驱动、模板系统为核心
-   ✅ **稳定性第一**: 确保基础功能稳定可靠后，再考虑高级功能
+   ❌ **严禁多人在线功能**: 现阶段禁止实现实时协作、多用户编辑、在线协作等功能
+   ✅ **专注核心**: 企业级稳定可靠的全栈代码自动生成
+   ✅ **基础优先**: 代码生成、可视化设计、元数据驱动、模板系统为核心
+   ✅ **质量第一**: 确保基础功能稳定可靠后，再考虑高级功能
+   🔧 **执行脚本**: glob_file_search("docs/architecture/adr/**/*.md")
+   🔧 **执行脚本**: list_dir("docs/architecture/adr", recursive=true)
+   🔧 **条件脚本**: read_file("docs/architecture/adr/0001-technology-stack-selection.md") # 如存在
+   ✅ **验证确认**: ADR决策记录数量和状态统计
+   ✅ **验证确认**: 技术选型约束与当前任务相关性
+   ✅ **验证确认**: 架构决策对当前实现的约束要求
+
+📚 **第六重爆雷：模板强制匹配执行**
+   🔧 **执行脚本**: glob_file_search("templates/**/*.template.*")
+   🔧 **执行脚本**: read_file("templates/index.json") # 如果存在
+   🔧 **执行脚本**: list_dir("templates", recursive=true)
+   ✅ **验证确认**: 发现模板数量和分类统计
+   ✅ **验证确认**: 匹配用户需求与对应模板路径
+   ✅ **验证确认**: 模板参数映射(EntityName/entityName/ModuleName等)
+
+⚙️ **第七重爆雷：完美代码生成强制验证**
+   🔧 **执行脚本**: read_file("package.json") # 验证项目依赖版本
+   🔧 **执行脚本**: read_file("tsconfig.json") # 验证TypeScript配置
+   🔧 **执行脚本**: read_file(".prettierrc.json") # 验证代码格式规范
+   🔧 **执行脚本**: grep("as any|@ts-ignore", path="src", type="ts,vue") # 类型安全检查
+   🔧 **执行脚本**: run_terminal_cmd("npm run type-check") # 强制类型验证
+   ✅ **验证确认**: TypeScript严格模式无错误 + 代码格式符合项目规范
+   ✅ **验证确认**: 零 `as any` 类型绕过 + 零架构违规路径引用
+   ✅ **验证确认**: 企业级质量标准(95分) + 生成代码通过所有检查
+
+⚙️ **第八重爆雷：架构铁律强制执行：黑盒原则 (The Black Box Principle)**
+   🔧 **执行脚本**: grep("../", path="src/SmartAbp.Vue/packages", type="ts,vue")
+   🔧 **执行脚本**: grep("@smartabp", path="src/SmartAbp.Vue/packages", type="ts,vue")
+   🔧 **执行脚本**: glob_file_search("src/SmartAbp.Vue/packages/**/package.json")
+   ✅ **验证确认**: 黑盒原则 - 零违规相对路径引用检查
+   ✅ **验证确认**: 别名通信 - 确保使用@smartabp/*模块通信
+   ✅ **验证确认**: 配置统一性 - 禁止packages内独立配置文件
+
+## 💥 专家模式承诺 (基于新版七重爆雷)
+
+- 🏛️ **极致质量律**: 95分质量阈值是底线，代码质量零容忍，架构偏差零容忍
+- 🚀 **架构先行律**: 设计驱动实现，模式优于技巧，长远胜过短期
+- 🎯 **独立决策律**: 技术判断独立，不盲从需求，坚持最佳实践
+- 🚫 **反马屁虫铁律**: 拒绝盲目迎合，坚持技术专业性，提供建设性洞察
+- ⚡ **顶级AI格局**: 专业自信，独立思考，技术标准不妥协
+- 🔄 **智能同步铁律**: 第六重爆雷智能触发，30分钟或任务节点完成时自动执行质量检查+Git同步
+
+## 🎯 专家模式新版七重爆雷执行机制
+
+### ⚡ 第六重爆雷触发机制 (智能时间触发)
+**触发条件**: 编程30分钟后 OR 每完成一个开发任务节点时自动触发
+**执行内容**: Git版本管理和质量检查强制执行 (整合原第九重爆雷)
+
+### 🏗️ 第七重爆雷：全栈代码生成器开发约束
+**核心原则**: 现阶段专注企业级稳定可靠的全栈代码自动生成
+   ❌ **严禁AI智能辅助代码生成**: 禁止实现AI助手、智能建议、自动优化等AI功能
+   ❌ **严禁多人在线系统功能**: 禁止实现实时协作、多用户编辑、在线协作等功能
+   ✅ **专注企业级核心**: 代码生成、可视化设计、元数据驱动、模板系统
+   ✅ **稳定性优先**: 确保基础功能稳定可靠，质量达到95分企业级标准
 
 🏗️ **终极执行链**（含四重强制质量保证+实时Git同步）:
 [规范加载 → Serena分析 → 模式识别 → 测试质量保证 → 模板匹配 → 质量验证 → 架构检查 → 架构铁律验证 → 四重强制质量保证]
@@ -162,205 +208,35 @@ MASTER_SECRET_TRIGGER = "专家模式"
    - 🔄 **四重强制质量保证铁律**: 每个开发任务节点完成立即触发：架构整洁检查+重复代码检查+编译质量检查+Git同步强制执行
 ```
 
-### 💥 八重爆雷AI执行脚本 (EIGHT-STAGE THUNDERBOLT AI SCRIPTS)
+### 💥 新版七重爆雷完整执行链
 
-#### 📋 第一重爆雷：项目规范智能加载脚本
-```javascript
-// THUNDERBOLT_1_PROJECT_STANDARDS_LOADER
-async function executeThunderbolt1() {
-    const response = await read_file("docs/项目开发规范总览.md");
+[第一重：规范学习] → [第二重：智能分析] → [第三重：代码去重] → [第四重：架构整洁] → [第五重：BUG修复] → [第六重：质量+Git同步] → [第七重：代码生成器约束]
 
-    // 验证加载状态
-    if (response.error) {
-        return "❌ 项目规范文档缺失，建议创建标准开发规范";
-    }
+## 🏗️ 智能时间触发机制
 
-    // 提取关键信息
-    const standards = extractKeyStandards(response.content);
-
-    return `✅ 项目规范已加载 (${response.content.length}字符)
-    🎯 核心原则: ${standards.principles}
-    🛡️ 质量标准: ${standards.quality}
-    ⚡ 开发流程: ${standards.workflow}`;
-}
+### ⚡ 第六重爆雷智能触发器
+```typescript
+// 30分钟定时触发 OR 开发任务完成触发
+const GIT_SYNC_INTERVAL = 30 * 60 * 1000; // 30分钟
+const TASK_COMPLETION_TRIGGERS = [
+  '完成Vue组件编写', '完成C#服务编写', '修复重要BUG',
+  '完成架构重构', '完成测试编写', '完成文档更新'
+];
 ```
 
-#### 🔍 第二重爆雷：AI行为准则智能扫描脚本
-```javascript
-// THUNDERBOLT_2_AI_BEHAVIOR_SCANNER
-async function executeThunderbolt2() {
-    const mdcFiles = await glob(".cursor/rules/**/*.mdc");
+🏗️ **终极执行链**（含四重强制质量保证+实时Git同步）:
+[规范加载 → Serena分析 → 模式识别 → 测试质量保证 → 模板匹配 → 质量验证 → 架构检查 → 架构铁律验证 → 四重强制质量保证]
 
-    if (mdcFiles.length === 0) {
-        return "⚠️ 未发现MDC规则文件，AI行为准则可能不完整";
-    }
+⚡ **并行触发链**（每个开发任务节点完成后自动执行）:
+[开发任务节点完成 → 🚨自动触发🚨 → 第六重爆雷四重强制质量保证 → 继续下一任务]
 
-    let totalRules = 0;
-    const ruleCategories = [];
-
-    for (const file of mdcFiles) {
-        const content = await read_file(file);
-        const rules = extractRules(content);
-        totalRules += rules.length;
-        ruleCategories.push({file: file.split('/').pop(), rules: rules.length});
-    }
-
-    return `✅ AI行为准则已加载 (${mdcFiles.length}个文件, ${totalRules}条规则)
-    📁 规则分类: ${ruleCategories.map(c => `${c.file}(${c.rules})`).join(', ')}`;
-}
-```
-
-#### 🚀 第三重爆雷：项目架构智能分析脚本
-```javascript
-// THUNDERBOLT_3_ARCHITECTURE_ANALYZER
-async function executeThunderbolt3() {
-    const directories = [
-        "src/", "src/SmartAbp.Vue/", "src/SmartAbp.Vue/packages/",
-        "docs/architecture/", "templates/"
-    ];
-
-    const archMap = {};
-
-    for (const dir of directories) {
-        const result = await list_dir(dir);
-        archMap[dir] = result.error ? "❌缺失" : `✅${result.files.length}项`;
-    }
-
-    // 架构健康度评估
-    const healthScore = calculateArchHealth(archMap);
-
-    return `✅ 项目架构扫描完成 (健康度: ${healthScore}%)
-    🏗️ 架构映射: ${Object.entries(archMap).map(([k,v]) => `${k}${v}`).join(', ')}
-    🎯 关键发现: ${identifyArchIssues(archMap)}`;
-}
-```
-
-#### 🛡️ 第四重爆雷：代码模式智能识别脚本
-```javascript
-// THUNDERBOLT_4_PATTERN_RECOGNIZER
-async function executeThunderbolt4() {
-    const patterns = [
-        {name: "后端AppService", cmd: `grep -r "IAppService" src/ --include="*.cs"`},
-        {name: "Vue3组合式API", cmd: `grep -r "<script setup>" src/ --include="*.vue"`},
-        {name: "ABP应用服务", cmd: `grep -r "CrudAppService" src/ --include="*.cs"`},
-        {name: "低代码组件", cmd: `grep -r "@smartabp" src/ --include="*.ts" --include="*.vue"`}
-    ];
-
-    const patternResults = [];
-
-    for (const pattern of patterns) {
-        const result = await run_terminal_cmd(pattern.cmd);
-        const count = result.stdout ? result.stdout.split('\n').length - 1 : 0;
-        patternResults.push({name: pattern.name, count});
-    }
-
-    return `✅ 代码模式识别完成
-    🔍 模式统计: ${patternResults.map(p => `${p.name}(${p.count})`).join(', ')}
-    🎯 架构一致性: ${evaluatePatternConsistency(patternResults)}`;
-}
-```
-
-#### 🏛️ 第五重爆雷：质量门禁智能检测脚本
-```javascript
-// THUNDERBOLT_5_QUALITY_GATE_ENFORCER
-async function executeThunderbolt5() {
-    // 并行执行质量检查
-    const [typeCheck, lintCheck, testScan] = await Promise.all([
-        run_terminal_cmd("npm run type-check"),
-        run_terminal_cmd("npm run lint"),
-        Promise.all([glob("**/*.spec.ts"), glob("**/*.cy.ts")])
-    ]);
-
-    const qualityReport = {
-        typeErrors: extractTypeErrors(typeCheck.stderr),
-        lintErrors: extractLintErrors(lintCheck.stdout),
-        testFiles: testScan[0].length + testScan[1].length,
-        testCoverage: estimateTestCoverage(testScan)
-    };
-
-    const qualityScore = calculateQualityScore(qualityReport);
-    const gateStatus = qualityScore >= 95 ? "✅通过" : "❌失败";
-
-    return `${gateStatus} 质量门禁检测完成 (评分: ${qualityScore}/100)
-    🔍 类型错误: ${qualityReport.typeErrors}个
-    📏 代码规范: ${qualityReport.lintErrors}个问题
-    🧪 测试文件: ${qualityReport.testFiles}个 (覆盖率≈${qualityReport.testCoverage}%)`;
-}
-```
-
-#### 📚 第六重爆雷：ADR决策智能咨询脚本
-```javascript
-// THUNDERBOLT_6_ADR_CONSULTANT
-async function executeThunderbolt6() {
-    const adrFiles = await glob("docs/architecture/adr/**/*.md");
-
-    if (adrFiles.length === 0) {
-        return "⚠️ 未发现ADR文档，架构决策记录缺失";
-    }
-
-    const adrIndex = [];
-
-    for (const file of adrFiles) {
-        const content = await read_file(file);
-        const adr = parseADR(content.content);
-        adrIndex.push({
-            file: file.split('/').pop(),
-            title: adr.title,
-            status: adr.status,
-            decision: adr.decision
-        });
-    }
-
-    return `✅ ADR架构决策库已加载 (${adrFiles.length}个决策)
-    📋 决策索引: ${adrIndex.map(a => `${a.file}[${a.status}]`).join(', ')}
-    🎯 活跃决策: ${adrIndex.filter(a => a.status === 'Accepted').length}个`;
-}
-```
-
-#### ⚙️ 第七重爆雷：模板库智能匹配脚本
-```javascript
-// THUNDERBOLT_7_TEMPLATE_MATCHER
-async function executeThunderbolt7() {
-    const templates = await glob("templates/**/*.template.*");
-
-    if (templates.length === 0) {
-        return "❌ 模板库为空，无法提供代码生成支持";
-    }
-
-    const templateMap = categorizeTemplates(templates);
-    const coverage = calculateTemplateCoverage(templateMap);
-
-    return `✅ 模板库已加载 (${templates.length}个模板, 覆盖率${coverage}%)
-    📁 模板分类: ${Object.entries(templateMap).map(([k,v]) => `${k}(${v.length})`).join(', ')}
-    🎯 推荐模板: ${getRecommendedTemplates(templateMap)}`;
-}
-```
-
-#### 🛡️ 第八重爆雷：架构铁律智能检查脚本
-```javascript
-// THUNDERBOLT_8_ARCHITECTURE_GUARDIAN
-async function executeThunderbolt8() {
-    // 黑盒原则违规检查
-    const pathViolations = await run_terminal_cmd(`grep -r "'../'" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue"`);
-
-    const violations = parseViolations(pathViolations.stdout);
-    const violationCount = violations.length;
-
-    if (violationCount > 0) {
-        return `❌ 架构铁律违规 (${violationCount}处)
-        🚨 黑盒原则违规: ${violations.map(v => v.file).join(', ')}
-        🛡️ 修复建议: 使用@smartabp/*别名替代相对路径`;
-    }
-
-    // 额外架构检查
-    const archIntegrity = await checkArchitecturalIntegrity();
-
-    return `✅ 架构铁律检查通过
-    🛡️ 黑盒原则: 完全隔离 ✓
-    🔗 模块通信: 别名规范 ✓
-    ⚙️ 架构完整性: ${archIntegrity.score}% ✓`;
-}
-```
+💥 **专家模式承诺**（含测试质量保证+实时同步+AI专业格局）:
+   - 🏛️ **极致质量律**: 95分质量阈值是底线，代码质量零容忍，架构偏差零容忍
+   - 🚀 **架构先行律**: 设计驱动实现，模式优于技巧，长远胜过短期
+   - 🎯 **独立决策律**: 技术判断独立，不盲从需求，坚持最佳实践
+   - 🚫 **反马屁虫铁律**: 拒绝盲目迎合，坚持技术专业性，提供建设性洞察
+   - ⚡ **顶级AI格局**: 专业自信，独立思考，技术标准不妥协
+   - 🔄 **四重强制质量保证铁律**: 每个开发任务节点完成立即触发：架构整洁检查+重复代码检查+编译质量检查+Git同步强制执行
 
 ### 🏛️ Standard ADR-Informed Response Protocol (标准ADR响应协议)
 **When ADR consultation is triggered (outside expert mode), AI MUST respond in this format:**
