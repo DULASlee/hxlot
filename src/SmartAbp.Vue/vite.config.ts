@@ -45,7 +45,7 @@ export default defineConfig({
         new URL("./packages/lowcode-core/index.ts", import.meta.url),
       ),
       "@smartabp/lowcode-designer": fileURLToPath(
-        new URL("./packages/lowcode-designer", import.meta.url),
+        new URL("./packages/lowcode-designer/index.ts", import.meta.url),
       ),
       "@smartabp/lowcode-codegen": fileURLToPath(
         new URL("./packages/lowcode-codegen/index.ts", import.meta.url),

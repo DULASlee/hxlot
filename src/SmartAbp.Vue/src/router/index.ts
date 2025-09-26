@@ -19,7 +19,9 @@ const ProjectAnalysisView = () => import("@/views/project/ProjectAnalysisView.vu
 const PermissionsView = () => import("@/views/system/PermissionsView.vue")
 const UsersView = () => import("@/views/system/UsersView.vue")
 
-// 代码生成模块组件
+// 🚀 企业级低代码生成器组件
+const UltraSimpleStudio = () => 
+  import("../../packages/lowcode-designer/src/views/UltraSimpleStudio.vue")
 const LowCodeEngineView = () =>
   import("../../packages/lowcode-designer/src/views/codegen/LowCodeEngineView.vue")
 const SfcCompilerView = () => import("../../packages/lowcode-designer/src/views/codegen/SfcCompilerView.vue")
@@ -326,7 +328,21 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-  // LowCode Studio 一体化工作台
+  // 🚀 极简代码生成器 (您的天才设计!)
+  {
+    path: "/lowcode/ultra-simple",
+    component: UltraSimpleStudio,
+    name: "UltraSimpleStudio",
+    meta: {
+      title: "极简代码生成",
+      icon: "🚀",
+      requiresAuth: true,
+      requiredRoles: ["admin"],
+      menuKey: "ultra-simple-studio"
+    }
+  },
+
+  // LowCode Studio 专家模式
   {
     path: "/lowcode",
     component: () => import("@/views/lowcode/LowCodeStudioView.vue"),
@@ -335,7 +351,7 @@ const routes: RouteRecordRaw[] = [
       title: "LowCode Studio",
       icon: "🧩",
       requiresAuth: true,
-      requiredRoles: ["user"],
+      requiredRoles: ["admin"],
     },
     children: [
       {
