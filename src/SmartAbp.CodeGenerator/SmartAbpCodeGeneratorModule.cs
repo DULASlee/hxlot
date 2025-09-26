@@ -73,6 +73,9 @@ namespace SmartAbp.CodeGenerator
             // 🔥 增强模型处理器 - 集成类型映射和循环引用检测
             services.AddScoped<EnhancedModelProcessor>();
             
+            // 🔥 增强C#语法验证器 - 协助请求2：基础语法错误检测
+            services.AddScoped<EnhancedCSharpSyntaxValidator>();
+            
             // 🔥 安全文件操作系统 - 原子性写入和冲突解决
             services.AddScoped<FileConflictResolver>();
             services.AddScoped<AtomicFileWriter>();
@@ -84,6 +87,9 @@ namespace SmartAbp.CodeGenerator
             
             // 🔥 增强前端生成器 - Vue3模板驱动实现
             services.AddScoped<EnhancedFrontendGenerator>();
+            
+            // 🎨 Vue3组件订制优化器 - 协助请求3：业务逻辑扩展点
+            services.AddScoped<Vue3ComponentCustomizer>();
             
             // Application service
             services.AddScoped<CodeGenerationAppService>();
