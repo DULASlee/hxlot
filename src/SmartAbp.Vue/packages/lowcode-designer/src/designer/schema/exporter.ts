@@ -194,7 +194,8 @@ export class SchemaExporter {
       {
         path: `/${this.options.moduleName.toLowerCase()}/${this.options.pageName.toLowerCase()}`,
         name: `${this.options.moduleName}${this.options.pageName}`,
-        component: `@/views/${this.options.moduleName.toLowerCase()}/${this.options.pageName}.vue`,
+        // 🔥 架构整洁修复：移除@/主应用引用，使用动态组件引用（遵循黑盒原则）
+        component: () => import(`../../../views/${this.options.moduleName.toLowerCase()}/${this.options.pageName}.vue`),
       },
     ]
 

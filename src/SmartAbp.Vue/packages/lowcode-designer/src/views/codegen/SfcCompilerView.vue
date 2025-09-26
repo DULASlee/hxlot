@@ -270,13 +270,61 @@
           </div>
         </div>
       </div>
-    </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from "vue"
+// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+import { logger } from "@smartabp/lowcode-tools"
+=======
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
-import { logger } from '@smartabp/lowcode-tools'
+=======
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from "vue"
+// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+import { logger } from "@smartabp/lowcode-tools"
+=======
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from "vue"
+// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+import { logger } from "@smartabp/lowcode-tools"
+=======
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from "vue"
+// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+import { logger } from "@smartabp/lowcode-tools"
+=======
+// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+import { logger } from "@smartabp/lowcode-tools"
+>>>>>>> feature/architecture-rebirth
+=======
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from "vue"
+// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+import { logger } from "@smartabp/lowcode-tools"
+=======
+<script setup lang="ts">
+import { ref, onMounted } from "vue"
+// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+import { logger } from "@smartabp/lowcode-tools"
+=======
+// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+import { logger } from "@smartabp/lowcode-tools"
+>>>>>>> feature/architecture-rebirth
 
 // 组件日志器
 // 使用logger进行日志记录

@@ -5,11 +5,21 @@ using SmartAbp.CodeGenerator.Domain;
 using SmartAbp.CodeGenerator.Services.V9;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
+using Volo.Abp.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Repositories;
+using SmartAbp.Permissions; // 🔥 权限集成：引用权限常量定义
 
 namespace SmartAbp.CodeGenerator.Services
 {
+    /// <summary>
+    /// 🔥 SmartAbp元数据管理应用服务 - ABP深度集成版
+    /// 已正确使用Repository模式，现添加RemoteService自动API支持
+    /// </summary>
+    [RemoteService(Name = "Metadata")]
+    // 🔥 权限集成修复：使用标准权限常量（遵循ABP最佳实践）
+    [Authorize(SmartAbpPermissions.Metadata.Default)]
     public class MetadataAppService : ApplicationService, IMetadataAppService
     {
         private readonly IRepository<MetadataStore, Guid> _metadataRepository;

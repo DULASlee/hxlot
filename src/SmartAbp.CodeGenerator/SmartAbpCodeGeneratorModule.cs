@@ -6,6 +6,12 @@ using SmartAbp.CodeGenerator.ApplicationServices;
 using SmartAbp.CodeGenerator.Aspire;
 using SmartAbp.CodeGenerator.Caching;
 using SmartAbp.CodeGenerator.Core;
+using SmartAbp.CodeGenerator.Core.FileOperations;
+using SmartAbp.CodeGenerator.Core.Pipeline;
+using SmartAbp.CodeGenerator.Core.Generation.Frontend; // 🔥 增强前端生成器
+using SmartAbp.CodeGenerator.Core.Templates;
+using SmartAbp.CodeGenerator.Core.Types;
+using SmartAbp.CodeGenerator.Core.Validation;
 using SmartAbp.CodeGenerator.CQRS;
 using SmartAbp.CodeGenerator.DDD;
 using SmartAbp.CodeGenerator.Hubs;
@@ -50,6 +56,35 @@ namespace SmartAbp.CodeGenerator
             // SignalR Hub
             services.AddSignalR();
             
+                // 🔥 务实模板系统 - 修复自检发现的致命缺陷
+                services.AddScoped<ReliableTemplatePathResolver>();
+                services.AddScoped<SimpleVariableReplacer>();
+                services.AddScoped<PragmaticTemplateService>();
+                
+                // 🏢 企业版特性：内嵌模板资源提取器
+                services.AddScoped<IEmbeddedTemplateExtractor, EmbeddedTemplateExtractor>();
+            
+            // 🔥 完整类型映射系统 - 支持现代C#所有类型
+            services.AddScoped<CompleteTypeMapper>();
+            
+            // 🔥 循环引用检测系统 - 防止复杂模型生成器崩溃
+            services.AddScoped<SimpleCircularReferenceDetector>();
+            
+            // 🔥 增强模型处理器 - 集成类型映射和循环引用检测
+            services.AddScoped<EnhancedModelProcessor>();
+            
+            // 🔥 安全文件操作系统 - 原子性写入和冲突解决
+            services.AddScoped<FileConflictResolver>();
+            services.AddScoped<AtomicFileWriter>();
+            
+            // 🔥 稳定生成流水线系统 - 异常恢复和进度监控
+            services.AddScoped<GenerationProgressTracker>();
+            services.AddScoped<GenerationQualityChecker>();
+            services.AddScoped<StableGenerationPipeline>();
+            
+            // 🔥 增强前端生成器 - Vue3模板驱动实现
+            services.AddScoped<EnhancedFrontendGenerator>();
+            
             // Application service
             services.AddScoped<CodeGenerationAppService>();
             services.AddScoped<DefaultUIConfigGenerator>();
@@ -63,6 +98,15 @@ namespace SmartAbp.CodeGenerator
                 options.EnableOptimizations = configuration.GetValue<bool>("CodeGenerator:EnableOptimizations", true);
                 options.EnableTelemetry = configuration.GetValue<bool>("CodeGenerator:EnableTelemetry", true);
                 options.EnableQualityGates = configuration.GetValue<bool>("CodeGenerator:EnableQualityGates", true);
+            });
+            
+            // 🔥 务实模板系统配置 - 支持多环境模板路径
+            services.Configure<TemplateConfiguration>(options =>
+            {
+                options.TemplateRootPath = configuration["CodeGeneration:TemplateRootPath"];
+                options.FallbackTemplatePath = configuration["CodeGeneration:FallbackTemplatePath"] ?? "./embedded-templates";
+                options.EnableEmbeddedTemplates = configuration.GetValue<bool>("CodeGeneration:EnableEmbeddedTemplates", true);
+                options.EnableTemplateValidation = configuration.GetValue<bool>("CodeGeneration:EnableTemplateValidation", true);
             });
             
             // Configure AutoMapper
