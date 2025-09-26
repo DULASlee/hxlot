@@ -41,13 +41,14 @@ public class EmbeddedTemplateExtractor : IEmbeddedTemplateExtractor, ITransientD
 
     /// <summary>
     /// 提取指定的内嵌模板资源到临时目录
+    /// 🔥 同步方法修复：移除不必要的async（遵循BUG修复铁律）
     /// </summary>
-    public async Task<string?> ExtractTemplateAsync(string templateRelativePath)
+    public Task<string?> ExtractTemplateAsync(string templateRelativePath)
     {
         if (string.IsNullOrWhiteSpace(templateRelativePath))
         {
             _logger.LogWarning("模板相对路径为空，跳过提取");
-            return null;
+            return Task.FromResult<string?>(null);
         }
 
         try
@@ -58,7 +59,7 @@ public class EmbeddedTemplateExtractor : IEmbeddedTemplateExtractor, ITransientD
                 if (File.Exists(existingPath))
                 {
                     _logger.LogDebug("📋 使用已提取的模板: {TemplatePath}", templateRelativePath);
-                    return existingPath;
+                    return Task.FromResult<string?>(existingPath);
                 }
                 // 如果文件不存在，从缓存中移除
                 _extractedTemplates.TryRemove(templateRelativePath, out _);
@@ -71,26 +72,29 @@ public class EmbeddedTemplateExtractor : IEmbeddedTemplateExtractor, ITransientD
             if (!IsResourceAvailable(resourceName))
             {
                 _logger.LogDebug("❌ 内嵌资源不存在: {ResourceName}", resourceName);
-                return null;
+                return Task.FromResult<string?>(null);
             }
 
-            // 🚀 提取资源到临时文件
+            // 🚀 提取资源到临时文件（修复lock+await冲突）
+            string? extractedPath;
             lock (_extractionLock)
             {
-                var extractedPath = await ExtractResourceToFileAsync(resourceName, templateRelativePath);
-                if (extractedPath != null)
-                {
-                    _extractedTemplates.TryAdd(templateRelativePath, extractedPath);
-                    _logger.LogInformation("✅ 内嵌模板提取成功: {TemplatePath} → {ExtractedPath}", 
-                        templateRelativePath, extractedPath);
-                }
-                return extractedPath;
+                // 🔥 同步提取：避免lock语句中的await（遵循BUG修复铁律）
+                extractedPath = ExtractResourceToFileAsync(resourceName, templateRelativePath).GetAwaiter().GetResult();
             }
+            
+            if (extractedPath != null)
+            {
+                _extractedTemplates.TryAdd(templateRelativePath, extractedPath);
+                _logger.LogInformation("✅ 内嵌模板提取成功: {TemplatePath} → {ExtractedPath}", 
+                    templateRelativePath, extractedPath);
+            }
+            return Task.FromResult(extractedPath);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "❌ 内嵌模板提取失败: {TemplatePath}", templateRelativePath);
-            return null;
+            return Task.FromResult<string?>(null);
         }
     }
 
