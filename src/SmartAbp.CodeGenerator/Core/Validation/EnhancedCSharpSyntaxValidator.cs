@@ -554,3 +554,5 @@ public class CSharpSyntaxValidationResult
         return $"{status} - 错误: {Errors.Count}, 警告: {Warnings.Count}, 建议: {Infos.Count}";
     }
 }
+
+
