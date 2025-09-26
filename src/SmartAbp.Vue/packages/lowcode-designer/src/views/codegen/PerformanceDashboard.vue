@@ -449,9 +449,6 @@
 import { ref, computed, onMounted, nextTick } from "vue"
 // 🔥 架构整洁修复：移除主应用引用，使用lowcode工具包（遵循黑盒原则）
 import { createComponentLogger } from "@smartabp/lowcode-tools"
-
-// 创建组件日志器
-const logger = createComponentLogger("PerformanceDashboard")
 // 运行时内容缓存与日志改为可选注入，避免构建期硬依赖
 const globalContentCache: any = (globalThis as any).__lowcodeRuntime?.contentCache || {
   getStats: () => ({
