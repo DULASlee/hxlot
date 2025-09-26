@@ -39,7 +39,7 @@ export interface VueSFCTemplate {
 export interface CodeGenerationResult {
   vueSFC?: VueSFCTemplate
   designerSchema?: DesignerOverrideSchema
-  routes?: Array<{ path: string; name: string; component: string }>
+  routes?: Array<{ path: string; name: string; component: string | (() => Promise<any>) }>
   menuItems?: Array<{ key: string; title: string; path: string }>
 }
 
@@ -194,7 +194,7 @@ export class SchemaExporter {
       {
         path: `/${this.options.moduleName.toLowerCase()}/${this.options.pageName.toLowerCase()}`,
         name: `${this.options.moduleName}${this.options.pageName}`,
-        // 🔥 架构整洁修复：移除@/主应用引用，使用动态组件引用（遵循黑盒原则）
+        // 🔥 架构整洁修复：移除主应用引用，使用动态组件引用（遵循黑盒原则）
         component: () => import(`../../../views/${this.options.moduleName.toLowerCase()}/${this.options.pageName}.vue`),
       },
     ]

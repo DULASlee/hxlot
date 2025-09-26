@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import { mount } from "@vue/test-utils"
 import { createPinia, setActivePinia } from "pinia"
-import ThemeEditor from "@/components/lowcode/ThemeEditor.vue"
+import { ThemeEditor } from "@smartabp/lowcode-designer"
 import { useThemeStore } from "@/stores/lowcode/theme"
 
 describe("ThemeEditor.vue", () => {

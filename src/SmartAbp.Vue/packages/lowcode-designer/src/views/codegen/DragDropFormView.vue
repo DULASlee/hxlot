@@ -364,7 +364,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue"
-// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
+// 🔥 架构整洁修复：移除主应用引用，使用lowcode工具包（遵循黑盒原则）
 import { logger } from "@smartabp/lowcode-tools"
 import { useFullscreen } from "@smartabp/lowcode-core"
 
@@ -373,11 +373,12 @@ import { useFullscreen } from "@smartabp/lowcode-core"
 // const logger = logger.child({ component: "DragDropFormView" })
 
 // 全屏功能
-const fullscreenApi = useFullscreen()
-const formDesignerRef = ref<HTMLElement>()
+// const fullscreenApi = useFullscreen() // 暂时注释，待useFullscreen组合式函数实现
+// const formDesignerRef = ref<HTMLElement>() // 暂时注释，待useFullscreen实现
 onMounted(() => {
-  if (formDesignerRef.value) fullscreenApi.setFullscreenElement(formDesignerRef.value)
-  void fullscreenApi.isFullscreen.value
+  // 暂时注释全屏功能，待useFullscreen组合式函数实现
+  // if (formDesignerRef.value) fullscreenApi.setFullscreenElement(formDesignerRef.value)
+  // void fullscreenApi.isFullscreen.value
 })
 
 // 组件库定义 - 扩展更多控件

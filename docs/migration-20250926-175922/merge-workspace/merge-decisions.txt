@@ -1,0 +1,7 @@
+AdvancedEntityRelationshipDesigner.vue: NEED_ANALYSIS
+AdvancedFieldTypeDesigner.vue: NEED_ANALYSIS
+ComponentPropertyPanel.vue: SAFE_TO_DELETE_SRC
+DesignView.vue: HAS_DIFFERENCES
+AdvancedEntityRelationshipDesigner.vue: NEED_ANALYSIS
+AdvancedFieldTypeDesigner.vue: NEED_ANALYSIS
+DesignView.vue: HAS_DIFFERENCES

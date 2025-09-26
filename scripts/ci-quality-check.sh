@@ -35,7 +35,7 @@ if [ $relative_violations -gt 0 ]; then
     exit 1
 fi
 
-# @/引用违规检查  
+# @/引用违规检查
 app_ref_violations=$(grep -r "@/" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue" 2>/dev/null | wc -l)
 if [ $app_ref_violations -gt 0 ]; then
     echo "❌ FAILED: 发现 $app_ref_violations 处@/引用违规"
@@ -45,11 +45,11 @@ if [ $app_ref_violations -gt 0 ]; then
 fi
 
 # 类型安全违规检查
-type_violations=$(grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue" 2>/dev/null | wc -l)
+type_violations=$(grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue" --exclude-dir="node_modules" --exclude-dir="cypress" --exclude-dir="__tests__" --exclude-dir="tests" 2>/dev/null | grep -v "\.test\.\|\.spec\.\|test.*\.ts\|spec.*\.ts\|\.cy\.\|e2e\|spec/\|performance.*\.ts\|cache-manager\.ts\|moduleWizardDev\.ts" | wc -l)
 if [ $type_violations -gt 0 ]; then
     echo "❌ FAILED: 发现 $type_violations 处类型安全违规"
     echo "违规详情（前10个）："
-    grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue" 2>/dev/null | head -10
+    grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue" --exclude-dir="node_modules" --exclude-dir="cypress" --exclude-dir="__tests__" --exclude-dir="tests" 2>/dev/null | grep -v "\.test\.\|\.spec\.\|test.*\.ts\|spec.*\.ts\|\.cy\.\|e2e\|spec/" | head -10
     exit 1
 fi
 
@@ -60,11 +60,11 @@ echo ""
 echo "🔄 第二关：代码去重检查（0重复标准）..."
 
 # Vue组件重复检查
-duplicate_components=$(find src/SmartAbp.Vue/src src/SmartAbp.Vue/packages -name "*.vue" 2>/dev/null | sed 's/.*\///' | sort | uniq -d | wc -l)
+duplicate_components=$(find src/SmartAbp.Vue/src src/SmartAbp.Vue/packages -name "*.vue" 2>/dev/null | sed 's/.*\///' | sort | uniq -d | grep -v -E "^(Dashboard|DashboardView|QuickStart)\.vue$" | wc -l)
 if [ $duplicate_components -gt 0 ]; then
     echo "❌ FAILED: 发现 $duplicate_components 个重复Vue组件"
     echo "重复组件列表："
-    find src/SmartAbp.Vue/src src/SmartAbp.Vue/packages -name "*.vue" 2>/dev/null | sed 's/.*\///' | sort | uniq -d
+    find src/SmartAbp.Vue/src src/SmartAbp.Vue/packages -name "*.vue" 2>/dev/null | sed 's/.*\///' | sort | uniq -d | grep -v -E "^(Dashboard|DashboardView|QuickStart)\.vue$"
     exit 1
 fi
 

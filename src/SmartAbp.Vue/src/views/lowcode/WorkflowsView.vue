@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import StateMachineEditor from "@/components/lowcode/StateMachineEditor.vue"
+import { StateMachineEditor } from "@smartabp/lowcode-designer"
 </script>
 
 <style scoped>

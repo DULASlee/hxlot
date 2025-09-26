@@ -375,7 +375,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "generation",
         name: "CodeGeneration",
-        component: () => import("@/views/lowcode/EnhancedGenerationView.vue"),
+        component: () => import("@/views/lowcode/GenerationView.vue"),
         meta: { title: "代码生成", menuKey: "code-generation" },
       },
       {

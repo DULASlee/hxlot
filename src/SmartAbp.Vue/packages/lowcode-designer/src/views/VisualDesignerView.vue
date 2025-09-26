@@ -569,7 +569,7 @@ import ComponentPalette from "./designer/Palette.vue"
 import LayerManager from "./designer/LayerManager.vue"
 // 🚨 AI助手组件导入已移除 - 遵循低代码引擎开发铁律
 // import AIAssistantPanel from "./designer/AIAssistantPanel.vue"
-import PropertyInspector from "./designer/PropertyInspector.vue"
+import PropertyInspector from "../components/PropertyInspector.vue"
 import StyleEditor from "./designer/StyleEditor.vue"
 import VersionHistory from "./designer/VersionHistory.vue"
 import AdvancedCanvasComponent from "./designer/AdvancedCanvasComponent.vue"
