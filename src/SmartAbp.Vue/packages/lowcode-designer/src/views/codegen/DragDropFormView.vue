@@ -363,20 +363,10 @@
 </template>
 
 <script setup lang="ts">
-// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
-import { logger } from "@smartabp/lowcode-tools"
-import { useFullscreen } from "@smartabp/lowcode-core"
->>>>>>> feature/architecture-rebirth
-=======
 import { ref, computed, onMounted } from "vue"
 // 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
 import { logger } from "@smartabp/lowcode-tools"
 import { useFullscreen } from "@smartabp/lowcode-core"
-=======
-// 🔥 架构整洁修复：移除@/主应用引用，使用lowcode工具包（遵循黑盒原则）
-import { logger } from "@smartabp/lowcode-tools"
-import { useFullscreen } from "@smartabp/lowcode-core"
->>>>>>> feature/architecture-rebirth
 
 // 组件日志器
 // 使用logger进行日志记录
