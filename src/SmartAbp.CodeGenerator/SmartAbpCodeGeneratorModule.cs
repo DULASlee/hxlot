@@ -56,10 +56,13 @@ namespace SmartAbp.CodeGenerator
             // SignalR Hub
             services.AddSignalR();
             
-            // 🔥 务实模板系统 - 修复自检发现的致命缺陷
-            services.AddScoped<ReliableTemplatePathResolver>();
-            services.AddScoped<SimpleVariableReplacer>();
-            services.AddScoped<PragmaticTemplateService>();
+                // 🔥 务实模板系统 - 修复自检发现的致命缺陷
+                services.AddScoped<ReliableTemplatePathResolver>();
+                services.AddScoped<SimpleVariableReplacer>();
+                services.AddScoped<PragmaticTemplateService>();
+                
+                // 🏢 企业版特性：内嵌模板资源提取器
+                services.AddScoped<IEmbeddedTemplateExtractor, EmbeddedTemplateExtractor>();
             
             // 🔥 完整类型映射系统 - 支持现代C#所有类型
             services.AddScoped<CompleteTypeMapper>();

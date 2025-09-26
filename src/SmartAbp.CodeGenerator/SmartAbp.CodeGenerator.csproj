@@ -13,6 +13,9 @@
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     <ImplicitUsings>enable</ImplicitUsings>
     <NoWarn>$(NoWarn);1591</NoWarn>
+    
+    <!-- 🏢 企业版特性：禁用默认嵌入资源，手动控制模板嵌入 -->
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
   </PropertyGroup>
 
   <ItemGroup>
@@ -65,6 +68,29 @@
   <ItemGroup>
     <ProjectReference Include="..\SmartAbp.Application.Contracts\SmartAbp.Application.Contracts.csproj" />
     <ProjectReference Include="..\SmartAbp.Domain.Shared\SmartAbp.Domain.Shared.csproj" />
+  </ItemGroup>
+
+  <!-- 🏢 企业版特性：内嵌模板资源配置 - 容器化环境零配置部署 -->
+  <ItemGroup>
+    <!-- 将所有模板文件编译为内嵌资源 -->
+    <EmbeddedResource Include="..\..\templates\**\*.template.*">
+      <LogicalName>SmartAbp.CodeGenerator.Templates.%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    
+    <!-- 模板索引配置文件 -->
+    <EmbeddedResource Include="..\..\templates\index.json">
+      <LogicalName>SmartAbp.CodeGenerator.Templates.index.json</LogicalName>
+    </EmbeddedResource>
+    
+    <!-- 模板元数据文件 -->
+    <EmbeddedResource Include="..\..\templates\**\*.meta.yml">
+      <LogicalName>SmartAbp.CodeGenerator.Templates.%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    
+    <!-- 专家模式配置文件 -->
+    <EmbeddedResource Include="..\..\templates\EXPERT_MODE_CONFIG.json">
+      <LogicalName>SmartAbp.CodeGenerator.Templates.EXPERT_MODE_CONFIG.json</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

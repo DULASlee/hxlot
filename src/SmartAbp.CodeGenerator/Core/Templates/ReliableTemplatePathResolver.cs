@@ -12,13 +12,16 @@ public class ReliableTemplatePathResolver
 {
     private readonly IConfiguration _configuration;
     private readonly ILogger<ReliableTemplatePathResolver> _logger;
+    private readonly IEmbeddedTemplateExtractor _embeddedTemplateExtractor; // 🏢 企业版：内嵌模板提取器
     
     public ReliableTemplatePathResolver(
         IConfiguration configuration,
-        ILogger<ReliableTemplatePathResolver> logger)
+        ILogger<ReliableTemplatePathResolver> logger,
+        IEmbeddedTemplateExtractor embeddedTemplateExtractor) // 🔥 注入内嵌模板提取器
     {
         _configuration = configuration;
         _logger = logger;
+        _embeddedTemplateExtractor = embeddedTemplateExtractor;
     }
 
     /// <summary>
@@ -148,36 +151,42 @@ public class ReliableTemplatePathResolver
     }
 
     /// <summary>
-    /// 策略4: 从内嵌资源获取模板（需要首席架构师协助实现）
+    /// 策略4: 从内嵌资源获取模板（🏢 企业版特性实现）
     /// </summary>
     private string? TryGetEmbeddedTemplate(string templateName)
     {
-        // TODO: 需要首席架构师协助实现内嵌资源模板提取逻辑
-        // 这是容器化环境的兜底方案，当所有文件路径都找不到时使用
-
+        // 🏢 企业版特性：内嵌模板资源提取 - 容器化环境零配置部署
+        
         try
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = $"SmartAbp.CodeGenerator.Templates.{templateName}";
-
-            using var stream = assembly.GetManifestResourceStream(resourceName);
-            if (stream != null)
+            _logger.LogDebug("🔍 尝试从内嵌资源获取模板: {TemplateName}", templateName);
+            
+            // 🔧 检查模板是否内嵌
+            if (!_embeddedTemplateExtractor.IsTemplateEmbedded(templateName))
             {
-                // 将内嵌资源写入临时文件
-                var tempFile = Path.Combine(Path.GetTempPath(), $"template_{Guid.NewGuid():N}_{templateName}");
-                using var fileStream = File.Create(tempFile);
-                stream.CopyTo(fileStream);
+                _logger.LogDebug("❌ 模板未内嵌到程序集中: {TemplateName}", templateName);
+                return null;
+            }
 
-                _logger.LogInformation("从内嵌资源提取模板到临时文件: {TempFile}", tempFile);
-                return tempFile;
+            // 🚀 异步提取模板到临时目录
+            var extractedPath = _embeddedTemplateExtractor.ExtractTemplateAsync(templateName).GetAwaiter().GetResult();
+            
+            if (extractedPath != null && File.Exists(extractedPath))
+            {
+                _logger.LogInformation("✅ 内嵌模板提取成功: {TemplateName} → {ExtractedPath}", templateName, extractedPath);
+                return extractedPath;
+            }
+            else
+            {
+                _logger.LogWarning("❌ 内嵌模板提取失败或文件不存在: {TemplateName}", templateName);
+                return null;
             }
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "从内嵌资源获取模板失败: {TemplateName}", templateName);
+            _logger.LogError(ex, "❌ 内嵌模板提取过程发生异常: {TemplateName}", templateName);
+            return null;
         }
-
-        return null;
     }
 
     /// <summary>
@@ -197,7 +206,20 @@ public class ReliableTemplatePathResolver
             CollectTemplatesFromPath(Path.Combine(solutionRoot, "templates"), templates);
         }
 
-        // TODO: 添加内嵌资源模板列表
+        // 🏢 企业版特性：添加内嵌资源模板列表
+        try
+        {
+            var embeddedTemplates = _embeddedTemplateExtractor.GetAvailableTemplatesAsync().GetAwaiter().GetResult();
+            foreach (var template in embeddedTemplates)
+            {
+                templates.Add(template);
+            }
+            _logger.LogDebug("📋 发现内嵌模板: {EmbeddedCount} 个", embeddedTemplates.Count);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "⚠️ 获取内嵌模板列表失败，跳过内嵌资源");
+        }
 
         return templates.OrderBy(t => t).ToList();
     }
