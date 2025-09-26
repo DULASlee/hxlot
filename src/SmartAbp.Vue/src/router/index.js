@@ -399,7 +399,7 @@ const routes = [
             {
                 path: "generation",
                 name: "LowCodeGeneration",
-                component: () => import(/* webpackChunkName: "lowcode-generation" */ "@smartabp/lowcode-designer/src/views/EnhancedGenerationView.vue"),
+                component: () => import(/* webpackChunkName: "lowcode-generation" */ "../views/lowcode/GenerationView.vue"),
                 meta: { title: "代码生成", menuKey: "lowcode-generation" },
             },
             {

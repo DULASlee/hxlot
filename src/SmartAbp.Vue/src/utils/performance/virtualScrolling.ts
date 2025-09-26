@@ -30,10 +30,10 @@ export interface VirtualScrollReturn<T> {
   /** 可见区域结束索引 */
   endIndex: Ref<number>
   /** 滚动到指定索引 */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line no-unused-vars
   scrollToIndex: (_index: number) => void
   /** 更新数据源 */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line no-unused-vars
   updateData: (_newData: T[]) => void
 }
 
@@ -164,7 +164,7 @@ export interface VirtualTableOptions<T> {
     title: string
     width?: number
     align?: 'left' | 'center' | 'right'
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+    // eslint-disable-next-line no-unused-vars
     render?: (_value: any, _record: T, _index: number) => any
   }>
 }

@@ -463,7 +463,7 @@ export const menuConfig: MenuConfig = {
           icon: "fas fa-code",
           type: "page",
           path: "/lowcode/generation",
-          component: "@/views/lowcode/EnhancedGenerationView.vue",
+          component: "@/views/lowcode/GenerationView.vue",
           order: 3,
           visible: true,
           requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],

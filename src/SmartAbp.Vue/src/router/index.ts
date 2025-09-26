@@ -359,7 +359,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "generation",
         name: "CodeGeneration",
-        component: () => import("@smartabp/lowcode-designer/src/views/EnhancedGenerationView.vue"),
+        component: () => import("@/views/lowcode/GenerationView.vue"),
         meta: { title: "代码生成", menuKey: "code-generation" },
       },
       {
