@@ -1,9 +1,28 @@
-          expect(response.status).to.eq(200)
-          expect(response.body.alerts.length).to.be.lessThan(101)
-          
-          // Response should be optimized for large datasets
-          expect(response.headers['content-encoding']).to.include('gzip')
-        })
+const API_BASE = Cypress.env('API_BASE') || 'http://localhost:3000/api'
+
+describe('API Integration Tests', () => {
+  beforeEach(() => {
+    // Setup API authentication
+    cy.window().then((win) => {
+      win.localStorage.setItem('access_token', 'test-token-123')
+      win.localStorage.setItem('refresh_token', 'refresh-token-456')
+    })
+  })
+
+  describe('Performance and Load Testing', () => {
+    it('should handle large dataset requests efficiently', () => {
+      cy.request({
+        method: 'GET',
+        url: `${API_BASE}/security/dashboard/alerts`,
+        headers: {
+          'Authorization': 'Bearer ' + window.localStorage.getItem('access_token')
+        }
+      }).then((response) => {
+        expect(response.status).to.eq(200)
+        expect(response.body.alerts.length).to.be.lessThan(101)
+        
+        // Response should be optimized for large datasets
+        expect(response.headers['content-encoding']).to.include('gzip')
       })
     })
   })

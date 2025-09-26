@@ -180,15 +180,15 @@ export interface CacheOptions<T> {
   /** 存储到localStorage */
   persistent?: boolean
   /** 序列化函数 */
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   serialize?: (value: T) => string
   /** 反序列化函数 */
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   deserialize?: (value: string) => T
 }
 
 interface CacheItem<T> {
-   
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   value: T
   timestamp: number
   accessCount: number
@@ -358,7 +358,7 @@ export function useDebounce<T extends (..._args: any[]) => any>(
 ): [T, () => void] {
   let timer: number | null = null
 
-   
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const debouncedFn = ((..._args: Parameters<T>) => {
     if (timer) {
       clearTimeout(timer)
@@ -394,7 +394,7 @@ export function useThrottle<T extends (..._args: any[]) => any>(
   let timer: number | null = null
   let lastExecTime = 0
 
-   
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const throttledFn = ((..._args: Parameters<T>) => {
     const now = Date.now()
 
@@ -431,13 +431,13 @@ export class ObjectPool<T> {
   private pool: T[] = []
   private createFn: () => T
    
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   private resetFn?: (_obj: T) => void
   private maxSize: number
 
   constructor(
     createFn: () => T,
-    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
     resetFn?: (_obj: T) => void,
     maxSize: number = 50
   ) {

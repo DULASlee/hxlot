@@ -10,7 +10,9 @@
     >
       <div class="dialog-header">
         <i class="fas fa-sign-out-alt dialog-icon" />
-        <h3 class="dialog-title">确认退出</h3>
+        <h3 class="dialog-title">
+          确认退出
+        </h3>
       </div>
       
       <div class="dialog-content">
@@ -25,8 +27,12 @@
             class="user-avatar"
           />
           <div class="user-details">
-            <div class="username">{{ userName }}</div>
-            <div class="user-email">{{ userEmail }}</div>
+            <div class="username">
+              {{ userName }}
+            </div>
+            <div class="user-email">
+              {{ userEmail }}
+            </div>
           </div>
         </div>
       </div>

@@ -72,7 +72,15 @@ export default defineConfig({
       "highlight.js",
       "@highlightjs/vue-plugin",
       "dayjs",
+      "mitt",
+      "lodash-es",
+      "axios"
     ],
+    force: false, // 不强制重新构建依赖
+  },
+  esbuild: {
+    target: 'es2020', // 优化编译目标
+    logOverride: { 'this-is-undefined-in-esm': 'silent' }
   },
   server: {
     host: "0.0.0.0", // 绑定所有网络接口，确保IPv4可访问
@@ -80,14 +88,22 @@ export default defineConfig({
     strictPort: false, // 允许端口自动切换，避免冲突
     open: false, // 禁用自动打开浏览器
     cors: true,
+    hmr: {
+      overlay: false // 减少HMR开销
+    },
     watch: {
       ignored: [
         "**/packages/**/__tests__/**",
         "**/packages/**/examples/**",
+        "**/packages/**/*.test.ts",
+        "**/packages/**/*.spec.ts",
         "**/node_modules/**",
         "**/dist/**",
         "**/build/**",
         "**/.git/**",
+        "**/.vscode/**",
+        "**/coverage/**",
+        "**/storybook-static/**"
       ],
       usePolling: false, // 禁用轮询，减少CPU使用
     },
