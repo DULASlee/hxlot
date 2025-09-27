@@ -441,9 +441,7 @@ const fetchData = async () => {
       pageSize: pagination.pageSize,
       skipCount: (pagination.current - 1) * pagination.pageSize,
       maxResultCount: pagination.pageSize,
-      sorting: sorting.value || undefined,
-      pageIndex: pagination.current,
-      pageSize: pagination.pageSize
+      sorting: sorting.value || undefined
     }
     void params
 
@@ -556,10 +554,10 @@ const handleSubmit = async () => {
     }
 
     if (formData.id) {
-      await store.updateItem(formData.id, formData as any) // 临时类型兼容
+      await store.updateItem(formData.id, entity as any) // 使用构造的entity对象
       ElMessage.success("更新成功")
     } else {
-      await store.createItem(formData as any) // 临时类型兼容
+      await store.createItem(entity as any) // 使用构造的entity对象
       ElMessage.success("创建成功")
     }
 
