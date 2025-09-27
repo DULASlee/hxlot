@@ -354,8 +354,8 @@ AI_TEMPLATE_INFO:
 // 用户管理 - 实体显示名称
 
 import { ref, reactive, onMounted, computed } from "vue"
-import MetadataDrivenPageRenderer from "../../../packages/lowcode-designer/src/runtime/MetadataDrivenPageRenderer.vue"
-// import { uiConfigToPageSchema } from "../../../packages/lowcode-designer/src/utils/uiConfigMapper"
+import { MetadataDrivenPageRenderer } from "@smartabp/lowcode-designer"
+// import { uiConfigToPageSchema } from "@smartabp/lowcode-designer/utils/uiConfigMapper"
 // Temporary mock to avoid type errors
 const uiConfigToPageSchema = (config: any) => config
 // 暂时注释避免编译错误
@@ -609,7 +609,7 @@ onMounted(async () => {
 
     // 若本地未命中，则回退到后端接口加载（保证运行时可定制）
     if (!cfg) {
-      cfg = await (codeGeneratorApi as any).getUiConfig("User", "User")
+      cfg = await codeGeneratorApi.getUiConfig("User", "User")
     }
 
     if (cfg) {

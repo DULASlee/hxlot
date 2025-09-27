@@ -354,8 +354,8 @@ AI_TEMPLATE_INFO:
 // 用户管理 - 实体显示名称
 
 import { ref, reactive, onMounted, computed } from "vue"
-import MetadataDrivenPageRenderer from "../../../packages/lowcode-designer/src/runtime/MetadataDrivenPageRenderer.vue"
-// import { uiConfigToPageSchema } from "../../../packages/lowcode-designer/src/utils/uiConfigMapper"
+import { MetadataDrivenPageRenderer } from "@smartabp/lowcode-designer"
+// import { uiConfigToPageSchema } from "@smartabp/lowcode-designer/utils/uiConfigMapper"
 // Temporary mock to avoid type errors
 const uiConfigToPageSchema = (config: any) => config
 // 暂时注释避免编译错误
@@ -444,7 +444,7 @@ const fetchData = async () => {
     void params
 
     const store = useUserStore()
-    await store.fetchList(params)
+    await store.fetchList(params as any) // 临时类型兼容
     tableData.value = store.list
     pagination.total = store.total
   } catch {
@@ -552,10 +552,10 @@ const handleSubmit = async () => {
     }
 
     if (formData.id) {
-      await store.updateItem(formData.id, entity as any) // 使用构造的entity对象
+      await store.updateItem(formData.id, userData) // 使用构造的userData对象
       ElMessage.success("更新成功")
     } else {
-      await store.createItem(entity as any) // 使用构造的entity对象
+      await store.createItem(userData) // 使用构造的userData对象
       ElMessage.success("创建成功")
     }
 
