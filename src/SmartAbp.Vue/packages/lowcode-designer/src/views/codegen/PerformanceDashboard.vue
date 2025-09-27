@@ -448,8 +448,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from "vue"
 // 🔥 架构整洁修复：移除主应用引用，使用lowcode工具包（遵循黑盒原则）
-// 创建组件专用logger
-const logger = console
+import { createComponentLogger } from "@smartabp/lowcode-tools"
+
+// 创建logger实例
+const logger = createComponentLogger('PerformanceDashboard')
 // 运行时内容缓存与日志改为可选注入，避免构建期硬依赖
 
 // 定义全局低代码运行时类型
