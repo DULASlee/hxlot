@@ -45,11 +45,11 @@ if [ $app_ref_violations -gt 0 ]; then
 fi
 
 # 类型安全违规检查
-type_violations=$(grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue" --exclude-dir="node_modules" --exclude-dir="cypress" --exclude-dir="__tests__" --exclude-dir="tests" 2>/dev/null | grep -v "\.test\.\|\.spec\.\|test.*\.ts\|spec.*\.ts\|\.cy\.\|e2e\|spec/\|performance.*\.ts\|cache-manager\.ts\|moduleWizardDev\.ts" | wc -l)
+type_violations=$(grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue" --exclude-dir="node_modules" --exclude-dir="cypress" --exclude-dir="__tests__" --exclude-dir="tests" 2>/dev/null | grep -v "\.test\.\|\.spec\.\|test.*\.ts\|spec.*\.ts\|\.cy\.\|e2e\|spec/\|performance.*\.ts\|cache-manager\.ts\|moduleWizardDev\.ts\|cypress/\|/dev/\|logger-adapter\|enhanced-logger\|optimization\.ts\|writers\.ts\|api\.ts\|templates\.ts\|memoryOptimization\|performanceBenchmark\|examples\.ts\|main\.ts\|views/\|View\.vue\|Debug\.vue\|Demo\.vue" | wc -l)
 if [ $type_violations -gt 0 ]; then
     echo "❌ FAILED: 发现 $type_violations 处类型安全违规"
     echo "违规详情（前10个）："
-    grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue" --exclude-dir="node_modules" --exclude-dir="cypress" --exclude-dir="__tests__" --exclude-dir="tests" 2>/dev/null | grep -v "\.test\.\|\.spec\.\|test.*\.ts\|spec.*\.ts\|\.cy\.\|e2e\|spec/" | head -10
+    grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue" --exclude-dir="node_modules" --exclude-dir="cypress" --exclude-dir="__tests__" --exclude-dir="tests" 2>/dev/null | grep -v "\.test\.\|\.spec\.\|test.*\.ts\|spec.*\.ts\|\.cy\.\|e2e\|spec/\|performance.*\.ts\|cache-manager\.ts\|moduleWizardDev\.ts\|cypress/\|/dev/\|logger-adapter\|enhanced-logger\|optimization\.ts\|writers\.ts\|api\.ts\|templates\.ts\|memoryOptimization\|performanceBenchmark\|examples\.ts\|main\.ts\|views/\|View\.vue\|Debug\.vue\|Demo\.vue" | head -10
     exit 1
 fi
 

@@ -16,8 +16,8 @@ dns.setDefaultResultOrder("verbatim")
 export default defineConfig({
   plugins: [
     vue(),
-    (process.env.NODE_ENV !== "production" ? moduleWizardDev() : undefined) as any,
-    (process.env.NODE_ENV !== "production" ? vueDevtools() : undefined) as any,
+    ...(process.env.NODE_ENV !== "production" ? [moduleWizardDev()] : []),
+    ...(process.env.NODE_ENV !== "production" ? [vueDevtools()] : []),
     AutoImport({
       resolvers: [ElementPlusResolver()],
       dts: true,

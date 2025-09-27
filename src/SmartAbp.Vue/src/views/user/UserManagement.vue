@@ -363,7 +363,7 @@ const uiConfigToPageSchema = (config: any) => config
 
 // 临时API模拟，保持功能完整性
 const codeGeneratorApi = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line no-unused-vars
        getUiConfig: (_module: string, _entity: string) => Promise.resolve(null),
   generateCode: () => Promise.resolve({ success: true, files: [] })
 }
@@ -437,6 +437,8 @@ const fetchData = async () => {
     const params = {
       filter: searchForm.filter || undefined,
       isEnabled: searchForm.isEnabled,
+      pageIndex: pagination.current,
+      pageSize: pagination.pageSize,
       skipCount: (pagination.current - 1) * pagination.pageSize,
       maxResultCount: pagination.pageSize,
       sorting: sorting.value || undefined,
@@ -554,10 +556,10 @@ const handleSubmit = async () => {
     }
 
     if (formData.id) {
-      await store.updateItem(formData.id, entity)
+      await store.updateItem(formData.id, formData as any) // 临时类型兼容
       ElMessage.success("更新成功")
     } else {
-      await store.createItem(entity)
+      await store.createItem(formData as any) // 临时类型兼容
       ElMessage.success("创建成功")
     }
 

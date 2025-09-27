@@ -365,9 +365,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue"
 // 🔥 架构整洁修复：移除主应用引用，使用lowcode工具包（遵循黑盒原则）
-// TODO: 实现logger
-const logger = console
-// import { useFullscreen } from "@smartabp/lowcode-core" // 暂时注释，待useFullscreen实现
+import { logger } from "@smartabp/lowcode-tools"
+// import { useFullscreen } from "@smartabp/lowcode-core" // 待useFullscreen实现
 
 // 组件日志器
 // 使用logger进行日志记录

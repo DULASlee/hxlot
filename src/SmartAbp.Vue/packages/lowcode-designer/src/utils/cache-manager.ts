@@ -29,7 +29,7 @@ interface CacheOptions {
   maxSize?: number
   defaultTTL?: number // in milliseconds
   version?: string
-  storage?: Storage
+  storage?: Storage | Map<string, any>
 }
 
 // Error handling utilities
@@ -200,7 +200,7 @@ export class CacheManager {
         maxSize: 50,
         defaultTTL: 10 * 60 * 1000,
         version: "1.0.0",
-        storage: new Map() as any,
+        storage: new Map() as Map<string, any>,
       }
       this.storage = this.options.storage
     }
@@ -552,7 +552,7 @@ export class CacheManager {
       const retrieved = this.get(testKey)
       this.delete(testKey)
 
-      return (retrieved as any)?.test === true
+      return (retrieved as { test: boolean; timestamp: number } | null)?.test === true
     } catch (error) {
       logCacheError("healthCheck", error)
       return false
@@ -634,7 +634,7 @@ export const globalCache = new CacheManager({
         return sessionStorage
       } catch (sessionError) {
         console.warn("[CacheManager] sessionStorage not available, using memory-only cache")
-        return new Map() as any
+        return new Map() as Map<string, any>
       }
     }
   })(),
