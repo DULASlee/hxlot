@@ -448,14 +448,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from "vue"
 // 🔥 架构整洁修复：移除主应用引用，使用lowcode工具包（遵循黑盒原则）
-import { createComponentLogger } from "@smartabp/lowcode-tools"
+// TODO: 实现createComponentLogger
+const createComponentLogger = () => console
 
 // 创建组件专用logger
-const logger = createComponentLogger('PerformanceDashboard')
+const logger = createComponentLogger()
 
 // 运行时内容缓存与日志改为可选注入，避免构建期硬依赖
-// 创建组件日志器
-const logger = createComponentLogger("PerformanceDashboard")
 
 const globalContentCache: any = (globalThis as any).__lowcodeRuntime?.contentCache || {
   getStats: () => ({

@@ -6,8 +6,8 @@
 import { ElMessage } from "element-plus"
 import type {
   ModuleMetadata,
-  EntityDefinition,
-  PropertyDefinition,
+  EntityMetadata as EntityDefinition,
+  EntityProperty as PropertyDefinition,
 } from "@smartabp/lowcode-api/types"
 
 /**

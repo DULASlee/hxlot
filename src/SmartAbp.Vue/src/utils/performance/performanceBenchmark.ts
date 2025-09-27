@@ -1,6 +1,7 @@
 // 🚀 SmartAbp 低代码引擎性能基准测试 - 2025企业级标准
 
-import { logger } from '@smartabp/lowcode-tools'
+// TODO: 实现logger
+const logger = console
 
 /**
  * 🎯 性能指标接口

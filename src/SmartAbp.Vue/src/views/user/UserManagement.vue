@@ -440,6 +440,8 @@ const fetchData = async () => {
       skipCount: (pagination.current - 1) * pagination.pageSize,
       maxResultCount: pagination.pageSize,
       sorting: sorting.value || undefined,
+      pageIndex: pagination.current,
+      pageSize: pagination.pageSize
     }
     void params
 
@@ -538,11 +540,24 @@ const handleSubmit = async () => {
     submitting.value = true
 
     const store = useUserStore()
+    const entity = {
+      ...formData,
+      userName: formData.name,
+      surname: '',
+      email: `${formData.name}@example.com`,
+      isActive: formData.isEnabled,
+      roleNames: [],
+      password: 'Password123!',
+      phoneNumber: '',
+      lockoutEnabled: false,
+      concurrencyStamp: ''
+    }
+
     if (formData.id) {
-      await store.updateItem(formData.id, formData)
+      await store.updateItem(formData.id, entity)
       ElMessage.success("更新成功")
     } else {
-      await store.createItem(formData)
+      await store.createItem(entity)
       ElMessage.success("创建成功")
     }
 

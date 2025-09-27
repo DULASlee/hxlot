@@ -225,7 +225,14 @@ export interface CodeGeneratorApi {
 
 export const codeGeneratorApi: CodeGeneratorApi = {
   async generateModule(_config) {
-    return { success: true }
+    return {
+      success: true,
+      generatedFiles: [],
+      statistics: { filesGenerated: 0, linesOfCode: 0, duration: 0 },
+      errors: [],
+      report: '',
+      generatedAt: new Date().toISOString()
+    }
   },
   async getTemplates() {
     return [

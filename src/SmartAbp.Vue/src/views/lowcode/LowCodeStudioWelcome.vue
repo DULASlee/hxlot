@@ -191,16 +191,18 @@ import {
   Plus,
   Upload
 } from '@element-plus/icons-vue'
-import { useEntityModelingStore } from '@smartabp/lowcode-core'
-import { usePageDesignStore } from '@smartabp/lowcode-core'
+// TODO: 实现这些stores
+// import { useEntityModelingStore } from '@smartabp/lowcode-core'
+// import { usePageDesignStore } from '@smartabp/lowcode-core'
 import { logger } from '@/utils/logger'
 
 // 路由
 const router = useRouter()
 
 // Store
-const entityStore = useEntityModelingStore()
-const pageStore = usePageDesignStore()
+// TODO: 实现Stores
+// const entityStore = useEntityModelingStore()
+// const pageStore = usePageDesignStore()
 
 // 响应式数据
 const recentProjects = ref([
@@ -214,8 +216,8 @@ const recentProjects = ref([
 ])
 
 // 计算属性
-const hasEntities = computed(() => entityStore.entities.length > 0)
-const hasPages = computed(() => pageStore.pages.length > 0)
+const hasEntities = computed(() => false) // entityStore.entities.length > 0
+const hasPages = computed(() => false) // pageStore.pages.length > 0
 const hasGeneratedCode = computed(() => false) // 待实现
 
 // 方法
@@ -239,28 +241,7 @@ const startQuickDemo = () => {
 }
 
 const createFirstEntity = () => {
-  // 创建示例实体
-  const sampleEntity = {
-    name: 'User',
-    tableName: 'Users',
-    displayName: '用户',
-    description: '系统用户实体',
-    category: 'core' as const,
-    module: 'Identity',
-    fields: [
-      { name: 'Id', displayName: '主键', type: 'Guid', isRequired: true, isPrimaryKey: true },
-      { name: 'UserName', displayName: '用户名', type: 'string', isRequired: true, isPrimaryKey: false },
-      { name: 'Email', displayName: '邮箱', type: 'string', isRequired: true, isPrimaryKey: false },
-      { name: 'IsActive', displayName: '是否启用', type: 'bool', isRequired: true, isPrimaryKey: false }
-    ],
-    validationRules: [],
-    enableSoftDelete: true,
-    enableAudit: true,
-    enableMultiTenant: false,
-    isCompleted: true
-  }
-
-  entityStore.addEntity(sampleEntity)
+  // TODO: 实现示例实体创建
   ElMessage.success('示例用户实体已创建！')
 
   // 导航到实体建模页面

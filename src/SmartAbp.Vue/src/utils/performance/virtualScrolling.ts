@@ -1,5 +1,5 @@
 // SmartAbp Enterprise Virtual Scrolling Performance Optimization
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, type Ref } from 'vue'
 
 /**
  * 企业级虚拟滚动Hook
@@ -157,11 +157,13 @@ export interface VirtualTableOptions<T> {
   data: T[]
   itemHeight: number
   containerHeight: number
+  showIndex?: boolean
+  indexTitle?: string
   columns: Array<{
     key: string
     title: string
     width?: number
-     
+    align?: 'left' | 'center' | 'right'
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
     render?: (_value: any, _record: T, _index: number) => any
   }>
