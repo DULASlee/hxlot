@@ -4,6 +4,23 @@
  */
 import { ref, onMounted, onUnmounted } from "vue"
 
+// 扩展HTMLElement类型以支持不同浏览器的全屏API
+interface ExtendedHTMLElement extends HTMLElement {
+  webkitRequestFullscreen?: () => Promise<void>
+  msRequestFullscreen?: () => Promise<void>
+  mozRequestFullScreen?: () => Promise<void>
+}
+
+// 扩展Document类型以支持不同浏览器的退出全屏API
+interface ExtendedDocument extends Document {
+  webkitExitFullscreen?: () => Promise<void>
+  msExitFullscreen?: () => Promise<void>
+  mozCancelFullScreen?: () => Promise<void>
+  webkitFullscreenElement?: Element | null
+  msFullscreenElement?: Element | null
+  mozFullScreenElement?: Element | null
+}
+
 export function useFullscreen() {
   const isFullscreen = ref(false)
   const fullscreenElement = ref<HTMLElement | null>(null)
@@ -13,16 +30,16 @@ export function useFullscreen() {
    */
   const enterFullscreen = async (element?: HTMLElement) => {
     try {
-      const targetElement = element || fullscreenElement.value || document.documentElement
+      const targetElement = (element || fullscreenElement.value || document.documentElement) as ExtendedHTMLElement
 
       if (targetElement.requestFullscreen) {
         await targetElement.requestFullscreen()
-      } else if ((targetElement as any).webkitRequestFullscreen) {
-        await (targetElement as any).webkitRequestFullscreen()
-      } else if ((targetElement as any).msRequestFullscreen) {
-        await (targetElement as any).msRequestFullscreen()
-      } else if ((targetElement as any).mozRequestFullScreen) {
-        await (targetElement as any).mozRequestFullScreen()
+      } else if (targetElement.webkitRequestFullscreen) {
+        await targetElement.webkitRequestFullscreen()
+      } else if (targetElement.msRequestFullscreen) {
+        await targetElement.msRequestFullscreen()
+      } else if (targetElement.mozRequestFullScreen) {
+        await targetElement.mozRequestFullScreen()
       }
 
       isFullscreen.value = true
@@ -36,14 +53,16 @@ export function useFullscreen() {
    */
   const exitFullscreen = async () => {
     try {
-      if (document.exitFullscreen) {
-        await document.exitFullscreen()
-      } else if ((document as any).webkitExitFullscreen) {
-        await (document as any).webkitExitFullscreen()
-      } else if ((document as any).msExitFullscreen) {
-        await (document as any).msExitFullscreen()
-      } else if ((document as any).mozCancelFullScreen) {
-        await (document as any).mozCancelFullScreen()
+      const extendedDocument = document as ExtendedDocument
+
+      if (extendedDocument.exitFullscreen) {
+        await extendedDocument.exitFullscreen()
+      } else if (extendedDocument.webkitExitFullscreen) {
+        await extendedDocument.webkitExitFullscreen()
+      } else if (extendedDocument.msExitFullscreen) {
+        await extendedDocument.msExitFullscreen()
+      } else if (extendedDocument.mozCancelFullScreen) {
+        await extendedDocument.mozCancelFullScreen()
       }
 
       isFullscreen.value = false
@@ -67,11 +86,12 @@ export function useFullscreen() {
    * 监听全屏状态变化
    */
   const handleFullscreenChange = () => {
+    const extendedDoc = document as ExtendedDocument
     const fullscreenEl =
-      document.fullscreenElement ||
-      (document as any).webkitFullscreenElement ||
-      (document as any).msFullscreenElement ||
-      (document as any).mozFullScreenElement
+      extendedDoc.fullscreenElement ||
+      extendedDoc.webkitFullscreenElement ||
+      extendedDoc.msFullscreenElement ||
+      extendedDoc.mozFullScreenElement
 
     isFullscreen.value = !!fullscreenEl
   }

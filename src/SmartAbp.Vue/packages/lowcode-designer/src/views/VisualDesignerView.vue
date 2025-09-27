@@ -480,7 +480,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue"
+import { ref, computed, onMounted, onUnmounted, watch, nextTick, type Ref } from "vue"
 import { ElMessage } from "element-plus"
 // 注释掉缺失的模块导入
 // 🚨 协作和AI相关类型导入已移除 - 遵循低代码引擎开发铁律
@@ -599,7 +599,10 @@ type DesignerOverrideSchema = any
 const designer = ref<EnterpriseDesigner>()
 
 // stores 目录暂缺最小实现，此处以本地空实现代替，后续补全
-const useDesignerStore = () => ({ components: ref<any[]>([]), clear: () => {} }) as any
+const useDesignerStore = (): { components: Ref<any[]>; clear: () => void } => ({
+  components: ref<any[]>([]),
+  clear: () => {}
+})
 // UI状态
 const currentMode = ref<"design" | "preview" | "code">("design")
 const leftPanelCollapsed = ref(false)
@@ -709,9 +712,11 @@ const rightTabs = [
 ]
 
 // Schema处理器（保留原有功能）
-const reader = {
+const reader: {
+  readFromVueSFC: (c: string, o: any) => { selectors: Record<string, unknown>; operations: any[] }
+} = {
   readFromVueSFC: (_c: string, _o: any) => ({ selectors: {}, operations: [] }),
-} as any
+}
 
 // 计算属性
 const canvasComponents = computed(() => {

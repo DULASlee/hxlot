@@ -61,8 +61,8 @@ const isValidPosition = (position: unknown): position is { x: number; y: number 
     position !== null &&
     "x" in position &&
     "y" in position &&
-    typeof (position as any).x === "number" &&
-    typeof (position as any).y === "number"
+    typeof (position as Record<string, unknown>).x === "number" &&
+    typeof (position as Record<string, unknown>).y === "number"
   )
 }
 

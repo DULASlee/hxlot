@@ -25,12 +25,12 @@ window.addEventListener('unhandledrejection', (event) => {
  * 说明：仅注入接口，不在此处引入低代码源或打破编译边界
  */
 ;(function injectLowcodeRuntime() {
-  const rt = (globalThis as any).__lowcodeRuntime || ((globalThis as any).__lowcodeRuntime = {})
+  const rt = (globalThis as unknown as { __lowcodeRuntime?: any }).__lowcodeRuntime || ((globalThis as unknown as { __lowcodeRuntime: any }).__lowcodeRuntime = {})
   // 引用宿主现有日志系统与性能系统
   try {
     // 延迟读取，保持与项目路径解耦
-    const { createLogger } = require("./utils/logging/enhanced-logger") as any
-    const logMgrMod = require("./utils/logManager") as any
+    const { createLogger } = require("./utils/logging/enhanced-logger") as { createLogger: any }
+    const logMgrMod = require("./utils/logManager") as { default: any }
 
     rt.getEnhancedLoggerFactory = (opts: {
       level?: number
@@ -47,13 +47,13 @@ window.addEventListener('unhandledrejection', (event) => {
     }
 
     rt.logManager = {
-      startPerformanceTracking: logMgrMod?.logManager?.startPerformanceTracking,
-      endPerformanceTracking: logMgrMod?.logManager?.endPerformanceTracking,
+      startPerformanceTracking: logMgrMod?.default?.logManager?.startPerformanceTracking,
+      endPerformanceTracking: logMgrMod?.default?.logManager?.endPerformanceTracking,
     }
 
     rt.trackPerformance = async <T>(name: string, fn: () => Promise<T> | T): Promise<T> => {
-      if (typeof logMgrMod?.trackPerformance === "function") {
-        return await logMgrMod.trackPerformance(name, fn)
+      if (typeof logMgrMod?.default?.trackPerformance === "function") {
+        return await logMgrMod.default.trackPerformance(name, fn)
       }
       // 回退：直接执行
       return await Promise.resolve().then(fn)
@@ -131,13 +131,13 @@ import { menuConfig } from "@/config/menus"
 
 // 动态注册路由
 if (Array.isArray(generatedRoutes) && generatedRoutes.length > 0) {
-  generatedRoutes.forEach((r) => router.addRoute(r as any))
+  generatedRoutes.forEach((r) => router.addRoute(r as import('vue-router').RouteRecordRaw))
 }
 
 // 合并菜单（运行时注入）
 if (Array.isArray(generatedMenus) && generatedMenus.length > 0) {
   try {
-    ;(menuConfig.menus as any).push(...generatedMenus)
+    ;(menuConfig.menus as unknown as any[]).push(...generatedMenus)
   } catch (_) {}
 }
 
@@ -164,7 +164,7 @@ app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin)
 async function bootstrap() {
   // 低代码：启用IndexedDB持久化并冷启动加载
   try {
-    const anyRt: any = (globalThis as any).__lowcodeRuntime
+    const anyRt: any = (globalThis as unknown as { __lowcodeRuntime?: any }).__lowcodeRuntime
     const cache = anyRt?.contentCache
     if (cache?.enablePersistence) {
       await cache.enablePersistence("smartabp-content-cache", "entries")

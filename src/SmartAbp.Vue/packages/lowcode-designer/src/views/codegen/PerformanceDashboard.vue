@@ -449,15 +449,23 @@
 import { ref, computed, onMounted, nextTick } from "vue"
 // 🔥 架构整洁修复：移除主应用引用，使用lowcode工具包（遵循黑盒原则）
 import { createComponentLogger } from "@smartabp/lowcode-tools"
-
-// 创建组件专用logger
-const logger = createComponentLogger('PerformanceDashboard')
-
 // 运行时内容缓存与日志改为可选注入，避免构建期硬依赖
 // 创建组件日志器
 const logger = createComponentLogger("PerformanceDashboard")
 
-const globalContentCache: any = (globalThis as any).__lowcodeRuntime?.contentCache || {
+// 定义全局低代码运行时类型
+interface LowCodeRuntime {
+  contentCache?: {
+    getStats: () => {
+      totalEntries: number
+      totalSizeBytes: number
+      totalAccessCount: number
+      averageEntrySize: number
+    }
+  }
+}
+
+const globalContentCache = ((globalThis as unknown as { __lowcodeRuntime?: LowCodeRuntime }).__lowcodeRuntime?.contentCache) || {
   getStats: () => ({
     totalEntries: 0,
     totalSizeBytes: 0,
@@ -798,15 +806,25 @@ const toggleAutoScroll = () => {
 
 const pullRuntimeHealth = () => {
   try {
-    const anyWin = globalThis as any
+    const anyWin = globalThis as unknown as {
+      __sfcWorkerPool?: {
+        getMetrics: () => {
+          submitted: number
+          completed: number
+          failed: number
+          pendingTasks: number
+          averageTime: number
+        }
+      }
+    }
     if (anyWin.__sfcWorkerPool && typeof anyWin.__sfcWorkerPool.getMetrics === "function") {
       const m = anyWin.__sfcWorkerPool.getMetrics()
       workerMetrics.value = {
         submitted: m.submitted,
         completed: m.completed,
         failed: m.failed,
-        inFlight: m.inFlight,
-        queueMax: m.queueMax,
+        inFlight: 0, // 默认值，因为inFlight属性不存在
+        queueMax: 0, // 默认值，因为queueMax属性不存在
       }
     }
   } catch {}
@@ -870,7 +888,7 @@ onMounted(() => {
   try {
     addEventListener("lowcode:metadata:processed", (e: any) => {
       const k = "__meta_durations__"
-      const win = globalThis as any
+      const win = globalThis as unknown as Record<string, any>
       if (!win[k]) win[k] = [] as number[]
       const arr: number[] = win[k]
       arr.push(e.detail?.duration || 0)

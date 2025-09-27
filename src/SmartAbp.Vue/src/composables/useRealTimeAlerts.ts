@@ -69,7 +69,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
   // Computed Properties
   const unreadCount = computed(
-    () => activeAlerts.value.filter((alert: SecurityAlert) => !(alert as any).acknowledged).length,
+    () => activeAlerts.value.filter((alert: SecurityAlert) => !alert.acknowledged).length,
   )
 
   const criticalAlerts = computed(() =>

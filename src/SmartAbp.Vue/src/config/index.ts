@@ -8,8 +8,8 @@ function normalizeUrl(url: unknown): string {
   return value
 }
 
-const env = (import.meta as any)?.env || {}
+const env = (import.meta as unknown as { env?: Record<string, any> })?.env || {}
 
 export const appConfig: AppConfig = {
-  apiBaseUrl: normalizeUrl(env.VITE_API_BASE_URL || (globalThis as any).__API_BASE_URL__ || "https://localhost:44379"),
+  apiBaseUrl: normalizeUrl(env.VITE_API_BASE_URL || (globalThis as unknown as { __API_BASE_URL__?: string }).__API_BASE_URL__ || "https://localhost:44379"),
 }

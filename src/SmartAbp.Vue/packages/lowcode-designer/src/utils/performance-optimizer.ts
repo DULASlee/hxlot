@@ -97,7 +97,7 @@ const safeRequestAnimationFrame = (callback: FrameRequestCallback): number => {
   } catch (error) {
     logPerformanceError("requestAnimationFrame", error)
     // Fallback to setTimeout
-    return window.setTimeout(() => callback(performance.now()), 16) as any
+    return window.setTimeout(() => callback(performance.now()), 16) as unknown as number
   }
 }
 
@@ -113,7 +113,7 @@ export class MemoryMonitor {
 
   constructor() {
     try {
-      this.isSupported = !!(performance as any).memory
+      this.isSupported = !!((performance as unknown as { memory?: unknown }).memory)
       if (!this.isSupported) {
         console.warn("[MemoryMonitor] Memory API not supported in this browser")
       }
@@ -134,7 +134,7 @@ export class MemoryMonitor {
         }
       }
 
-      const memory = (performance as any).memory
+      const memory = (performance as unknown as { memory: { usedJSHeapSize: number; totalJSHeapSize: number; jsHeapSizeLimit: number } }).memory
       const info = {
         usedJSHeapSize: memory.usedJSHeapSize,
         totalJSHeapSize: memory.totalJSHeapSize,
@@ -243,13 +243,14 @@ export function AutoCleanup<T extends { new (...args: any[]): {} }>(constructor:
 
       try {
         // Store original unmount if it exists
-        if (typeof (this as any).$options?.beforeUnmount === "function") {
-          this.originalUnmount = (this as any).$options.beforeUnmount
+        const componentInstance = this as unknown as { $options?: { beforeUnmount?: () => void } }
+        if (typeof componentInstance.$options?.beforeUnmount === "function") {
+          this.originalUnmount = componentInstance.$options.beforeUnmount
         }
 
         // Override unmount to run cleanup
-        ;(this as any).$options = {
-          ...(this as any).$options,
+        componentInstance.$options = {
+          ...componentInstance.$options,
           beforeUnmount: () => {
             this.runCleanup()
             if (this.originalUnmount) {

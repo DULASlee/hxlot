@@ -90,13 +90,13 @@ export function useDesignSystem() {
   }
 
   // 优化的主题设置函数
-  const setTheme = (newTheme: ThemeType) => {
+  const setTheme: ((newTheme: ThemeType) => void) & { debounceTimer?: number | null } = ((newTheme: ThemeType) => {
     // 防抖处理，避免快速切换时的性能问题
-    if ((setTheme as any).debounceTimer) {
-      clearTimeout((setTheme as any).debounceTimer)
+    if (setTheme.debounceTimer) {
+      clearTimeout(setTheme.debounceTimer)
     }
 
-    ;(setTheme as any).debounceTimer = setTimeout(() => {
+    setTheme.debounceTimer = (setTimeout(() => {
       if (theme.value !== newTheme) {
         // 开始性能监控
         const themeConfig = THEMES.find((t) => t.value === newTheme)
@@ -117,9 +117,9 @@ export function useDesignSystem() {
           }, 200) // 等待过渡动画完成
         })
       }
-      ;(setTheme as any).debounceTimer = null
-    }, 16) // 约1帧的延迟，平滑切换
-  }
+      setTheme.debounceTimer = null
+    }, 16) as unknown as number) // 约1帧的延迟，平滑切换
+  }) as ((newTheme: ThemeType) => void) & { debounceTimer?: number | null }
 
   // 切换暗黑模式
   const toggleDarkMode = () => {
@@ -233,7 +233,7 @@ export function useDesignSystem() {
   // 预加载所有主题（在空闲时间执行）
   const preloadAllThemes = () => {
     if ("requestIdleCallback" in window) {
-      ;(window as any).requestIdleCallback(() => {
+      ;(window as Window & { requestIdleCallback?: (callback: () => void) => void }).requestIdleCallback!(() => {
         THEMES.forEach((themeConfig) => {
           if (themeConfig.value !== theme.value) {
             preloadTheme(themeConfig.value)

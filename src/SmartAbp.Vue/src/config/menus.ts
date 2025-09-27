@@ -1,13 +1,7 @@
 import type { MenuConfig, MenuItem, PageMenuItem } from "@/types/menu"
-import { enterpriseMenuConfig, EnterpriseMenuManager } from "./enterpriseMenus"
 
 /**
- * 🏢 SmartAbp 企业级菜单配置
- * 🎯 低代码引擎核心功能 - 专注基础实现  
- * ❌ 严禁添加AI智能辅助功能
- * ❌ 严禁添加多人协作功能
- * 📦 遵循企业级菜单架构标准
- * 
+ * SmartAbp 完整菜单配置
  * 基于现有路由系统和权限模型
  * 与现有 AuthService 和路由配置完全兼容
  */
@@ -19,26 +13,10 @@ export const ROLES = {
   GUEST: "guest",
 } as const
 
-// 🏢 企业级菜单配置 (替换原有混乱的菜单)
-export const menuConfig: MenuConfig = enterpriseMenuConfig
-
-// 🔗 菜单管理器实例 (用于动态添加生成的菜单)
-export const menuManager = EnterpriseMenuManager.getInstance()
-
-// 🚀 注册极简代码生成器到工具箱 (您的天才设计!)
-menuManager.registerBusinessModule({
-  systemName: 'LowCode',
-  moduleName: 'UltraSimple', 
-  displayName: '极简代码生成',
-  routePrefix: '/lowcode/ultra-simple',
-  parentCategory: 'business',
-  permissions: ['admin']
-})
-
-// 📋 原有菜单配置 (保留兼容性)
-export const legacyMenuConfig: MenuConfig = {
+// 完整菜单配置
+export const menuConfig: MenuConfig = {
   defaultPath: "/dashboard",
-  loginPath: "/login", 
+  loginPath: "/login",
   forbiddenPath: "/403",
 
   menus: [
@@ -467,7 +445,7 @@ export const legacyMenuConfig: MenuConfig = {
           title: "可视化设计",
           icon: "fas fa-paint-brush",
           type: "page",
-          path: "/lowcode/design", 
+          path: "/lowcode/design",
           component: "@/views/lowcode/DesignView.vue",
           order: 2,
           visible: true,
