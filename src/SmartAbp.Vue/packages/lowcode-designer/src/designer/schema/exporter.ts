@@ -195,7 +195,7 @@ export class SchemaExporter {
         path: `/${this.options.moduleName.toLowerCase()}/${this.options.pageName.toLowerCase()}`,
         name: `${this.options.moduleName}${this.options.pageName}`,
         // 🔥 架构整洁修复：使用安全的组件引用
-        component: () => import('@/views/common/PlaceholderView.vue'),
+        component: () => import('../../../src/views/common/PlaceholderView.vue'),
       },
     ]
 
