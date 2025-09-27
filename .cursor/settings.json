@@ -1,7 +1,7 @@
 {
   // ===== SmartAbp Cursor IDE 优化配置 - 解决终端卡死问题 =====
 
-  // ===== 终端配置优化 =====
+  // ===== 终端配置优化 - 解决卡死和编码问题 =====
   "terminal.integrated.gpuAcceleration": "off",
   "terminal.integrated.allowChords": false,
   "terminal.integrated.allowMnemonics": false,
@@ -25,31 +25,39 @@
   "terminal.integrated.confirmOnExit": false,
   "terminal.integrated.confirmOnKill": false,
   "terminal.integrated.showExitAlert": false,
+  
+  // 默认使用PowerShell（避免Git Bash的字符编码问题）
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  
+  // 环境变量优化 - 解决字符编码问题
+  "terminal.integrated.env.windows": {
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "MSYS_NO_PATHCONV": "1",
+    "MSYS2_ARG_CONV_EXCL": "*",
+    "LESSCHARSET": "utf-8"
+  },
 
-  // ===== 终端配置文件 - 支持PowerShell和Git Bash =====
+  // ===== 终端配置文件 - 优化PowerShell，避免Git Bash问题 =====
   "terminal.integrated.profiles.windows": {
     "PowerShell": {
       "source": "PowerShell",
-      "args": ["-NoLogo", "-ExecutionPolicy", "Bypass"],
+      "args": ["-NoLogo", "-ExecutionPolicy", "Bypass", "-NoProfile"],
       "icon": "terminal-powershell",
-      "overrideName": true
-    },
-    "Git Bash": {
-      "path": "C:\\Program Files\\Git\\bin\\bash.exe",
-      "args": ["--login"],
-      "icon": "terminal-bash",
-      "overrideName": true
+      "overrideName": true,
+      "env": {
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8"
+      }
     },
     "Command Prompt": {
       "path": "C:\\Windows\\System32\\cmd.exe",
-      "args": [],
+      "args": ["/K", "chcp 65001"],
       "icon": "terminal-cmd",
       "overrideName": true
     }
   },
 
-  // PowerShell 为默认终端（SmartAbp项目需要PowerShell脚本）
-  "terminal.integrated.defaultProfile.windows": "PowerShell",
 
   // PowerShell 配置优化
   "powershell.enableProfileLoading": true,
@@ -58,7 +66,15 @@
   "powershell.integratedConsole.suppressStartupBanner": true,
 
   "terminal.integrated.cwd": "${workspaceFolder}",
-  "terminal.integrated.inheritEnv": true,
+  "terminal.integrated.inheritEnv": false,
+  
+  // 终端性能和稳定性优化
+  "terminal.integrated.localEchoEnabled": "off",
+  "terminal.integrated.localEchoLatencyThreshold": 30,
+  "terminal.integrated.localEchoExcludePrograms": ["vim", "vi", "nano"],
+  "terminal.integrated.autoReplies": {
+    "Terminate batch job (Y/N)?": "Y"
+  },
 
   // ===== 系统性能优化 =====
   "workbench.editor.enablePreview": false,
@@ -159,7 +175,7 @@
   "editor.scrollBeyondLastLine": false,
   "editor.stickyScroll.enabled": false,
 
-  // ===== Git优化 =====
+  // ===== Git优化 - 解决网络和编码问题 =====
   "git.enabled": true,
   "git.autofetch": false,
   "git.confirmSync": false,
@@ -168,6 +184,14 @@
   "git.countBadge": "tracked",
   "git.enableSmartCommit": true,
   "git.postCommitCommand": "none",
+  "git.path": "C:\\Program Files\\Git\\bin\\git.exe",
+  "git.terminalAuthentication": false,
+  "git.useIntegratedAskpass": false,
+  
+  // Git配置优化 - 解决网络和编码问题
+  "git.ignoreLegacyWarning": true,
+  "git.decorations.enabled": true,
+  "git.timeline.enabled": false,
 
   // ===== 扩展优化 =====
   "extensions.autoUpdate": false,
