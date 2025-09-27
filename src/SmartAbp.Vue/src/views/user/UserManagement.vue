@@ -374,7 +374,7 @@ import { Plus, Search, Refresh, Delete } from "@element-plus/icons-vue"
 // 导入说明：以下导入需要根据实际项目结构调整
 import { useUserStore } from "@/stores/modules/user"
 // import { formatDateTime } from "@/utils/date"
-// import type { UserDto, CreateUserDto, UpdateUserDto } from "@/types/user"
+import type { UserQueryParams } from "@/types/user"
 
 // 响应式数据
 const loading = ref(false)
@@ -434,14 +434,13 @@ const fetchData = async () => {
   try {
     loading.value = true
 
-    const params = {
+    const params: UserQueryParams = {
+      pageIndex: pagination.current,
+      pageSize: pagination.pageSize,
       filter: searchForm.filter || undefined,
-      isEnabled: searchForm.isEnabled,
-      skipCount: (pagination.current - 1) * pagination.pageSize,
-      maxResultCount: pagination.pageSize,
-      sorting: sorting.value || undefined
+      sorting: sorting.value || undefined,
+      isActive: searchForm.isEnabled
     }
-    void params
 
     const store = useUserStore()
     await store.fetchList(params)
@@ -538,7 +537,7 @@ const handleSubmit = async () => {
     submitting.value = true
 
     const store = useUserStore()
-    const userData = {
+    const entity = {
       ...formData,
       userName: formData.name,
       surname: '',

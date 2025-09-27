@@ -1,0 +1,263 @@
+# ========================================
+# SmartAbp 推荐的全局 Git 配置
+# ========================================
+#
+# 使用方法:
+# 1. 复制此文件内容到 ~/.gitconfig
+# 2. 或者使用 git config --global 命令逐项配置
+# 3. 将 YOUR_NAME 和 YOUR_EMAIL 替换为实际信息
+#
+
+[user]
+    name = YOUR_NAME
+    email = YOUR_EMAIL
+    # 签名提交 (推荐)
+    signingkey = YOUR_GPG_KEY_ID
+
+[core]
+    # 使用 LF 换行符 (跨平台兼容)
+    autocrlf = input
+    # 文件权限检查
+    filemode = false
+    # 大小写敏感
+    ignorecase = false
+    # 默认编辑器
+    editor = code --wait
+    # 分页器配置
+    pager = less -FMRiX
+    # 长路径支持 (Windows)
+    longpaths = true
+    # 提交模板
+    template = ~/.gitmessage
+
+[commit]
+    # 使用 GPG 签名 (推荐)
+    gpgsign = true
+    # 详细提交信息
+    verbose = true
+
+[push]
+    # 推送策略
+    default = simple
+    # 自动设置上游分支
+    autoSetupRemote = true
+    # 推送时检查钩子
+    recurseSubmodules = check
+
+[pull]
+    # 拉取时变基而不是合并
+    rebase = true
+    # 自动清理远程分支
+    prune = true
+
+[fetch]
+    # 自动清理
+    prune = true
+    # 并行获取
+    parallel = 4
+
+[merge]
+    # 合并工具
+    tool = vscode
+    # 冲突标记风格
+    conflictstyle = diff3
+    # 自动合并标记
+    autoStash = true
+
+[mergetool "vscode"]
+    cmd = code --wait $MERGED
+
+[diff]
+    # 差异工具
+    tool = vscode
+    # 算法优化
+    algorithm = patience
+    # 颜色移动检测
+    colorMoved = default
+
+[difftool "vscode"]
+    cmd = code --wait --diff $LOCAL $REMOTE
+
+[rebase]
+    # 变基时自动储藏
+    autoStash = true
+    # 变基时自动压缩
+    autoSquash = true
+
+[status]
+    # 显示未跟踪文件夹内容
+    showUntrackedFiles = all
+    # 分支状态
+    branch = true
+    # 短格式
+    short = true
+
+[log]
+    # 日期格式
+    date = relative
+    # 图形显示
+    graph = true
+
+[color]
+    # 全局颜色
+    ui = auto
+    # 分支颜色
+    branch = auto
+    # 差异颜色
+    diff = auto
+    # 状态颜色
+    status = auto
+
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red
+    new = green
+
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
+
+# ========================================
+# SmartAbp 专用别名
+# ========================================
+
+[alias]
+    # 🚀 常用操作
+    st = status
+    ci = commit
+    co = checkout
+    br = branch
+
+    # 📊 日志查看
+    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    lga = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
+
+    # 🔍 查找和搜索
+    find = !git ls-files | grep -i
+    grep = grep -Ii
+
+    # 🔄 同步操作
+    sync = !bash scripts/git-safe-sync.sh
+    safe-sync = !bash scripts/git-safe-sync.sh --non-interactive
+
+    # 🧹 清理操作
+    cleanup = !git branch --merged | grep -v '\\*\\|master\\|main\\|develop' | xargs -n 1 git branch -d
+    prune-all = !git remote prune origin && git gc --prune=now
+
+    # 📝 提交操作
+    amend = commit --amend --no-edit
+    fixup = commit --fixup
+    uncommit = reset --soft HEAD~1
+
+    # 🎯 SmartAbp 专用
+    quality-check = !bash scripts/local-quality-check.sh
+    expert-mode = !bash scripts/ai-expert-mode-validator.js
+
+    # 🔧 开发辅助
+    unstage = reset HEAD --
+    discard = checkout --
+    graph = log --graph --abbrev-commit --decorate --all
+
+    # 📈 统计信息
+    contributors = shortlog --summary --numbered --email
+    stats = diff --stat
+
+    # 🏷️ 标签操作
+    tag-latest = describe --tags --abbrev=0
+    tags = tag -l --sort=-version:refname
+
+# ========================================
+# 文件和路径配置
+# ========================================
+
+[include]
+    # 包含本地配置
+    path = ~/.gitconfig.local
+
+[includeIf "gitdir:~/work/smartabp/"]
+    # SmartAbp 项目特定配置
+    path = ~/.gitconfig.smartabp
+
+# ========================================
+# 安全和性能
+# ========================================
+
+[transfer]
+    # 传输时检查
+    fsckobjects = true
+
+[receive]
+    # 接收时检查
+    fsckObjects = true
+
+[gc]
+    # 垃圾回收配置
+    auto = 256
+    autopacklimit = 4
+
+[pack]
+    # 打包配置
+    threads = 4
+
+# ========================================
+# 子模块配置
+# ========================================
+
+[submodule]
+    # 递归更新
+    recurse = true
+
+# ========================================
+# URL 重写 (加速访问)
+# ========================================
+
+[url "https://github.com/"]
+    insteadOf = gh:
+
+[url "https://gitee.com/"]
+    insteadOf = gt:
+
+# ========================================
+# Windows 特定配置
+# ========================================
+
+[core]
+    # Windows 符号链接支持
+    symlinks = true
+    # 预编写缓冲区
+    precomposeunicode = true
+
+# ========================================
+# 性能优化
+# ========================================
+
+[feature]
+    # 启用实验性功能
+    manyFiles = true
+
+[index]
+    # 索引版本
+    version = 4
+
+[protocol]
+    # 协议版本
+    version = 2
+
+# ========================================
+# 钩子配置
+# ========================================
+
+[init]
+    # 默认分支名
+    defaultBranch = main
+    # 模板目录
+    templateDir = ~/.git-templates
+
+# 注意: 请根据实际情况调整配置项

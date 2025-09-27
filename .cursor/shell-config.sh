@@ -1,24 +1,31 @@
 #!/bin/bash
-# Cursor IDE Shell Configuration
-# 防止分页器卡死的配置
+# SmartAbp 统一Shell配置 (Bash fallback)
+# 现在统一使用 .cursor/unified-terminal.sh，此文件保留兼容性
 
-# 设置分页器
-export PAGER=cat
-export MANPAGER=cat
-export LESS=""
+echo "⚠️ 此配置文件已废弃，请使用: source .cursor/unified-terminal.sh"
+echo "🔄 自动加载统一配置..."
 
-# Git 特定配置
-export GIT_PAGER=cat
+# 自动加载统一配置
+if [ -f ".cursor/unified-terminal.sh" ]; then
+    source .cursor/unified-terminal.sh
+else
+    echo "❌ 统一配置文件不存在，使用备用配置"
 
-# 防止 less 分页器启动
-export SYSTEMD_PAGER=""
-
-# 优化终端显示
-export TERM=xterm-256color
-
-# 设置历史记录
-export HISTSIZE=10000
-export HISTFILESIZE=20000
+    # 备用配置（与统一配置保持一致）
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+    export LESSCHARSET=utf-8
+    export PAGER=cat
+    export MANPAGER=cat
+    export LESS=""
+    export GIT_PAGER=cat
+    export SYSTEMD_PAGER=""
+    export TERM=xterm-256color
+    export HISTSIZE=10000
+    export HISTFILESIZE=20000
+    export MSYS_NO_PATHCONV=1
+    export MSYS2_ARG_CONV_EXCL='*'
+fi
 
 # 避免分页的常用命令别名
 alias ll='ls -la'

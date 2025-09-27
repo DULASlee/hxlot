@@ -1,0 +1,26 @@
+{
+  "description": "SmartAbp 统一环境变量配置 - 所有终端和脚本的核心配置源",
+  "encoding": {
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "LESSCHARSET": "utf-8",
+    "TERM": "xterm-256color"
+  },
+  "pagers": {
+    "PAGER": "cat",
+    "GIT_PAGER": "cat",
+    "MANPAGER": "cat",
+    "LESS": "",
+    "SYSTEMD_PAGER": ""
+  },
+  "msys": {
+    "MSYS_NO_PATHCONV": "1",
+    "MSYS2_ARG_CONV_EXCL": "*"
+  },
+  "terminal": {
+    "scrollback": 500,
+    "fastScrollSensitivity": 1,
+    "mouseWheelScrollSensitivity": 1,
+    "maxHistoryCount": 10000
+  }
+}

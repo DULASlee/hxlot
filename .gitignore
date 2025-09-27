@@ -371,3 +371,123 @@ OpenGitBashHere.cmd
 /artifacts/
 .env.quality
 src/SmartAbp.Application.backup.*/
+
+# ========================================
+# SmartAbp 项目特定忽略规则
+# ========================================
+
+# 🏗️ 代码生成器输出
+/generated/
+**/Generated/
+**/*.generated.*
+**/*.g.cs
+**/*.g.ts
+
+# 🎯 低代码引擎相关
+/lowcode-output/
+/visual-designer-cache/
+/metadata-cache/
+*.lowcode.cache
+*.designer.cache
+
+# 📊 性能分析和监控
+/performance-reports/
+/lighthouse-reports/
+/bundle-analysis/
+*.performance.json
+*.lighthouse.json
+
+# 🔧 质量检查报告
+/quality-reports/
+/coverage-reports/
+/lint-reports/
+*.quality.json
+*.coverage.json
+
+# 🚀 Cursor IDE 优化缓存
+.cursor-cache/
+.cursor-tmp/
+*.cursor.cache
+
+# 🐳 Docker 相关
+.docker-cache/
+docker-compose.override.yml
+.dockerignore.local
+
+# 🔒 安全文件
+*.key
+*.pem
+*.p12
+*.pfx
+appsettings.secrets.json
+secrets.json
+
+# 📋 模板编译缓存
+/template-cache/
+*.template.cache
+*.template.compiled
+
+# 🧪 测试相关
+/test-results/
+/TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# 📈 Storybook 构建产物
+storybook-static/
+chromatic-output/
+
+# 🎨 设计资源
+/design-assets/
+*.sketch
+*.fig
+*.xd
+
+# 🔄 Git 备份
+.git-backups/
+
+# 📦 ABP 框架特定
+**/bin/Debug/
+**/bin/Release/
+**/obj/Debug/
+**/obj/Release/
+**/.abp/
+abp.resourcemapping.json
+
+# 🚦 CI/CD 临时文件
+.github-cache/
+.azure-cache/
+.deployment-cache/
+
+# 🧰 开发工具临时文件
+.vscode-server/
+.cursor-server/
+.idea-server/
+
+# 📱 移动开发
+*.ipa
+*.apk
+*.aab
+platforms/
+plugins/
+
+# 🔍 代码分析工具
+.sonarqube/
+.scannerwork/
+*.sarif
+
+# 💾 数据库相关
+*.db
+*.sqlite
+*.sqlite3
+LocalDB/
+App_Data/
+
+# 🌐 本地化文件缓存
+*.resx.cache
+*.resources.cache
+
+# 🎯 智能感知缓存
+**/.vs/
+**/intellisense.cache
