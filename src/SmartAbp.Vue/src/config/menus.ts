@@ -507,6 +507,22 @@ export const menuConfig: MenuConfig = {
       description: "低代码引擎和代码生成工具",
       children: [
         {
+          key: "ultra-simple-studio",
+          title: "极简代码生成",
+          icon: "fas fa-magic",
+          type: "page",
+          path: "/CodeGen/ultra-simple",
+          component: "../../packages/lowcode-designer/src/views/UltraSimpleStudio.vue",
+          order: 0,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
+          closable: true,
+          meta: {
+            title: "极简代码生成",
+            menuKey: "ultra-simple-studio",
+          },
+        },
+        {
           key: "module-wizard",
           title: "模块向导",
           icon: "fas fa-magic",

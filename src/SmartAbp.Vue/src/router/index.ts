@@ -234,6 +234,12 @@ const routes: RouteRecordRaw[] = [
       requiredRoles: ["user"],
     },
     children: [
+      {
+        path: "ultra-simple",
+        name: "UltraSimpleStudio",
+        component: () => import("../../packages/lowcode-designer/src/views/UltraSimpleStudio.vue"),
+        meta: { title: "极简代码生成", menuKey: "ultra-simple-studio" },
+      },
       ...(import.meta.env.DEV
         ? [
             {
@@ -253,7 +259,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "designer",
         name: "LowCodeDesigner",
-        component: () => import("@smartabp/lowcode-designer/src/views/VisualDesignerView.vue"),
+        component: VisualDesignerView,
         meta: {
           title: "可视化设计",
           icon: "el-icon-brush",
@@ -347,13 +353,13 @@ const routes: RouteRecordRaw[] = [
       {
         path: "entity-modeling",
         name: "EntityModeling",
-        component: () => import('@smartabp/lowcode-designer'),
+        component: () => import("../../packages/lowcode-designer/src/views/EntityModelingView.vue"),
         meta: { title: "数据建模", menuKey: "entity-modeling" },
       },
       {
         path: "design",
         name: "PageDesign",
-        component: () => import('@smartabp/lowcode-designer'),
+        component: () => import("../../packages/lowcode-designer/src/views/DesignView.vue"),
         meta: { title: "页面设计", menuKey: "page-design" },
       },
       {
@@ -371,7 +377,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "theme",
         name: "ThemeCustomization",
-        component: () => import('@smartabp/lowcode-designer'),
+        component: () => import("../../packages/lowcode-designer/src/views/ThemeCustomizationView.vue"),
         meta: { title: "主题定制", menuKey: "theme-customization" },
       },
     ],
