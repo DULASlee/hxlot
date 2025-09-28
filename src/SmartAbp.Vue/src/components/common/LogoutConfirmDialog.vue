@@ -14,12 +14,12 @@
           确认退出
         </h3>
       </div>
-      
+
       <div class="dialog-content">
         <p class="dialog-message">
           您确定要退出登录吗？退出后需要重新登录才能访问系统。
         </p>
-        
+
         <div class="user-info">
           <img
             :src="userAvatar"
@@ -36,7 +36,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="dialog-actions">
         <button
           class="btn btn-cancel"
@@ -70,9 +70,9 @@ interface Props {
 }
 
 interface Emits {
-  (_e: 'confirm'): void
-  (_e: 'cancel'): void
-  (_e: 'update:visible', _value: boolean): void
+  confirm: []
+  cancel: []
+  'update:visible': [value: boolean]
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -275,11 +275,11 @@ const handleOverlayClick = () => {
     width: 95%;
     margin: 20px;
   }
-  
+
   .dialog-actions {
     flex-direction: column;
   }
-  
+
   .btn {
     width: 100%;
   }

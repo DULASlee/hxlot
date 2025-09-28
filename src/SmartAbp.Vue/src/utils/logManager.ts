@@ -1,4 +1,4 @@
- 
+
 import { ref, computed } from "vue"
 import { logger, LogLevel } from "@/utils/logger"
 
@@ -11,7 +11,7 @@ export interface PerformanceTracker {
   endTime: number
   duration: number
   metadata: Record<string, any>
-  end: (_metadata?: Record<string, any>) => PerformanceTracker | null
+  end: (metadata?: Record<string, any>) => PerformanceTracker | null
 }
 
 // 性能统计接口
@@ -63,7 +63,6 @@ class LogManager {
   // 结束性能追踪
   endPerformanceTracking(
     trackingId: string,
-    _metadata?: Record<string, any>,
   ): PerformanceTracker | null {
     const tracker = this.activeTrackers.get(trackingId)
     if (!tracker) {

@@ -1,4 +1,4 @@
- 
+
 /**
  * 增强的结构化日志器
  * 支持传输器架构、子日志器、完整的结构化格式
@@ -38,7 +38,7 @@ export interface PerformanceTimer {
   name: string
   startTime: number
   context?: Record<string, any>
-  end(_metadata?: Record<string, any>): number
+  end(metadata?: Record<string, any>): number
 }
 
 /**
@@ -50,7 +50,7 @@ export class EnhancedLogger {
   private transports: LogTransport[] = []
   private logs: Ref<LogEntry[]> = ref([])
   private childLoggers = new Map<string, EnhancedLogger>()
-  private subscribers: Array<(_logs: LogEntry[]) => void> = []
+  private subscribers: Array<(logs: LogEntry[]) => void> = []
   private maxLogs = 1000
 
   // 批量处理配置
@@ -389,7 +389,7 @@ export class EnhancedLogger {
 
   // ============= 订阅机制 =============
 
-  subscribe(callback: (_logs: LogEntry[]) => void): () => void {
+  subscribe(callback: (logs: LogEntry[]) => void): () => void {
     this.subscribers.push(callback)
     return () => {
       const index = this.subscribers.indexOf(callback)

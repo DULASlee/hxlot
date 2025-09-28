@@ -1,6 +1,6 @@
- 
+
 import { defineStore } from "pinia"
-import { ref, computed } from "vue" 
+import { ref, computed } from "vue"
 import { logger } from "@/utils/logger"
 
 // 系统模块相关类型定义
@@ -88,10 +88,10 @@ export const useSystemStore = defineStore("system", () => {
         defaultLanguage: 'zh-CN',
         timezone: 'Asia/Shanghai'
       }
-      
+
       await new Promise(resolve => setTimeout(resolve, 300))
       settings.value = mockSettings
-      
+
       logger.info('系统设置获取成功')
     } catch (err) {
       error.value = "获取系统设置失败"
@@ -109,10 +109,10 @@ export const useSystemStore = defineStore("system", () => {
         ...settings.value!,
         ...newSettings
       }
-      
+
       await new Promise(resolve => setTimeout(resolve, 300))
       settings.value = updatedSettings
-      
+
       logger.info('系统设置更新成功', { updatedFields: Object.keys(newSettings) })
       return updatedSettings
     } catch (err) {
@@ -163,7 +163,7 @@ export const useSystemStore = defineStore("system", () => {
     }
   }
 
-  const toggleMaintenanceMode = async (_enabled: boolean) => {
+  const toggleMaintenanceMode = async () => {
     try {
       // TODO: 实现切换维护模式的API调用
       // await systemApi.setMaintenanceMode(enabled)

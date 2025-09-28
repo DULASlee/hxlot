@@ -74,13 +74,12 @@ export class MenuPermissionFilter {
    */
   filterMenus(menus: MenuItem[], currentUser: any, options: MenuFilterOptions = {}): MenuItem[] {
     const { filterHidden = true, filterPermissions = true, customFilter } = options
-    const customFilterFn = customFilter as ((menu: MenuItem) => boolean) | undefined
 
     return (
       menus
         .filter((menu) => {
           // 应用自定义过滤器
-          if (customFilterFn && !customFilterFn(menu)) {
+          if (customFilter && !customFilter(menu)) {
             return false
           }
 
