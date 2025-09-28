@@ -50,7 +50,7 @@ export class EnhancedLogger {
   private transports: LogTransport[] = []
   private logs: Ref<LogEntry[]> = ref([])
   private childLoggers = new Map<string, EnhancedLogger>()
-  private subscribers: Array<(entries: LogEntry[]) => void> = []
+  private subscribers: Array<(logs: LogEntry[]) => void> = []
   private maxLogs = 1000
 
   // 批量处理配置
@@ -181,8 +181,8 @@ export class EnhancedLogger {
     })
 
     // 子日志器的日志也会同步到父日志器
-    childLogger.subscribe((_logs: LogEntry[]) => {
-      _logs.forEach((entry: LogEntry) => {
+    childLogger.subscribe((logs: LogEntry[]) => {
+      logs.forEach((entry: LogEntry) => {
         if (!this.logs.value.find((existing) => existing.id === entry.id)) {
           this.addToLogs(entry)
           this.notifySubscribers()
@@ -383,7 +383,7 @@ export class EnhancedLogger {
 
   // ============= 订阅机制 =============
 
-  subscribe(callback: (entries: LogEntry[]) => void): () => void {
+  subscribe(callback: (logs: LogEntry[]) => void): () => void {
     this.subscribers.push(callback)
     return () => {
       const index = this.subscribers.indexOf(callback)

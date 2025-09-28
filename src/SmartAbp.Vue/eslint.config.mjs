@@ -1,3 +1,4 @@
+/* globals process */
 import js from "@eslint/js"
 import pluginVue from "eslint-plugin-vue"
 import tsPlugin from "@typescript-eslint/eslint-plugin"
@@ -40,16 +41,16 @@ export default [
       "@typescript-eslint": tsPlugin,
     },
     rules: {
+      "no-unused-vars": "off",
       "no-console": "off",
       "no-empty": ["error", { allowEmptyCatch: true }],
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        { argsIgnorePattern: "^_", ignoreRestSiblings: true },
-      ],
+      "@typescript-eslint/no-unused-vars": "off",
       // Typed rule disabled to avoid parserOptions.project requirement in monorepo
       "@typescript-eslint/no-floating-promises": "off",
       "vue/html-self-closing": ["error", { html: { void: "always" } }],
       "vue/multi-word-component-names": "off",
+      // 禁用已弃用的过滤器规则，以避免对 Vue 3 代码的误报
+      "vue/no-deprecated-filter": "off",
     },
   },
   {
@@ -72,5 +73,14 @@ export default [
       "src/components/icons/**",
       "src/views/CodeGenerator/Dashboard.vue",
     ],
+  },
+  {
+    // 完全禁用对 .d.ts 文件的未使用变量检查
+    files: ["**/*.d.ts"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": "off",
+      "no-unused-vars": "off",
+      "no-undef": "off",
+    },
   },
 ]

@@ -352,7 +352,7 @@ export function useCache<T>(
 /**
  * 防抖Hook
  */
-export function useDebounce<T extends (...args: any[]) => any>(
+export function useDebounce<T extends (..._args: any[]) => any>(
   fn: T,
   delay: number = 300
 ): [T, () => void] {
@@ -387,7 +387,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
 /**
  * 节流Hook
  */
-export function useThrottle<T extends (...args: any[]) => any>(
+export function useThrottle<T extends (..._args: any[]) => any>(
   fn: T,
   delay: number = 300
 ): [T, () => void] {

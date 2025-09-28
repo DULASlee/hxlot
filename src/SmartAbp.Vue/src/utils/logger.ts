@@ -17,14 +17,7 @@ export enum LogLevel {
   ERROR = 4,
 }
 
-// 使用枚举值避免 ESLint 警告
-export const LOG_LEVELS = {
-  DEBUG: LogLevel.DEBUG,
-  INFO: LogLevel.INFO,
-  SUCCESS: LogLevel.SUCCESS,
-  WARN: LogLevel.WARN,
-  ERROR: LogLevel.ERROR,
-}
+
 
 // 日志级别名称映射
 export const LOG_LEVEL_NAMES = {
@@ -67,7 +60,7 @@ export interface LogStats {
 }
 
 // 日志订阅者类型
-type LogSubscriber = (entries: LogEntry[]) => void
+type LogSubscriber = (logs: LogEntry[]) => void
 
 // 兼容性日志记录器类 - 包装增强日志系统
 class Logger {
