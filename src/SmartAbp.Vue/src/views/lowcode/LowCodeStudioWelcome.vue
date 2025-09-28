@@ -263,8 +263,8 @@ const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString()
 }
 
-const getProjectStatusType = (status: string) => {
-  const typeMap: Record<string, string> = {
+const getProjectStatusType = (status: string): 'success' | 'info' | 'warning' | 'primary' | 'danger' => {
+  const typeMap: Record<string, 'success' | 'info' | 'warning' | 'primary' | 'danger'> = {
     'active': 'success',
     'planning': 'warning',
     'completed': 'info',

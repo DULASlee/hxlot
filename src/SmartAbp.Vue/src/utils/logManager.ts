@@ -52,7 +52,7 @@ class LogManager {
       duration: 0,
       metadata: {},
       end: (_metadata?: Record<string, any>) => {
-        return this.endPerformanceTracking(tracker.id, _metadata)
+        return this.endPerformanceTracking(tracker.id)
       },
     }
 
