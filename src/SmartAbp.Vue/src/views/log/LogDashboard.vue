@@ -382,7 +382,7 @@ import {
 } from "@element-plus/icons-vue"
 import * as echarts from "echarts"
 import { logger, LogLevel, type LogEntry } from "@/utils/logger"
-import { logAnalyzer, analyzeCurrentLogs } from "@/utils/logAnalyzer"
+import { logAnalyzer } from "@/utils/logAnalyzer"
 import { logExporter, ExportFormat, type ExportConfig } from "@/utils/logExporter"
 import { logManager } from "@/utils/logManager"
 import LogSearchFilter from "./LogSearchFilter.vue"
@@ -399,8 +399,8 @@ const allLogs = ref<LogEntry[]>([])
 const filteredLogs = ref<LogEntry[]>([])
 
 // 图表引用
-const levelChartRef = ref<HTMLElement>()
-const trendChartRef = ref<HTMLElement>()
+const levelChartRef = ref<HTMLDivElement>()
+const trendChartRef = ref<HTMLDivElement>()
 let levelChart: echarts.ECharts | null = null
 let trendChart: echarts.ECharts | null = null
 
@@ -426,7 +426,6 @@ const stats = ref({
 
 // 计算属性
 const hotspots = computed(() => {
-  analyzeCurrentLogs()
   return logAnalyzer.getHotspots(filteredLogs.value).slice(0, 5)
 })
 
@@ -438,14 +437,14 @@ const loadData = () => {
 }
 
 const updateStats = () => {
-  const analysis = analyzeCurrentLogs()
+  const analysis = logAnalyzer.analyze()
   const performanceStats = logManager.getPerformanceStats()
 
   stats.value = {
-    errorCount: analysis.summary.levelDistribution[LogLevel.ERROR],
-    warningCount: analysis.summary.levelDistribution[LogLevel.WARN],
+    errorCount: analysis.summary.levelDistribution[LogLevel.ERROR] || 0,
+    warningCount: analysis.summary.levelDistribution[LogLevel.WARN] || 0,
     avgResponseTime: Math.round(performanceStats.average || 0),
-    healthScore: analysis.insights.healthScore,
+    healthScore: analysis.insights.healthScore || 100,
     errorTrend: Math.floor(Math.random() * 20 - 10), // 模拟趋势数据
     warningTrend: Math.floor(Math.random() * 20 - 10),
     performanceTrend: Math.floor(Math.random() * 20 - 10),
@@ -466,22 +465,22 @@ const updateLevelChart = () => {
     levelChart = echarts.init(levelChartRef.value)
   }
 
-  const analysis = analyzeCurrentLogs()
+  const analysis = logAnalyzer.analyze()
   const levelData = [
-    { name: "调试", value: analysis.summary.levelDistribution[LogLevel.DEBUG], color: "#909399" },
-    { name: "信息", value: analysis.summary.levelDistribution[LogLevel.INFO], color: "#409EFF" },
-    { name: "成功", value: analysis.summary.levelDistribution[LogLevel.SUCCESS], color: "#67C23A" },
-    { name: "警告", value: analysis.summary.levelDistribution[LogLevel.WARN], color: "#E6A23C" },
-    { name: "错误", value: analysis.summary.levelDistribution[LogLevel.ERROR], color: "#F56C6C" },
+    { name: "调试", value: analysis.summary.levelDistribution[LogLevel.DEBUG] || 0, color: "#909399" },
+    { name: "信息", value: analysis.summary.levelDistribution[LogLevel.INFO] || 0, color: "#409EFF" },
+    { name: "成功", value: analysis.summary.levelDistribution[LogLevel.SUCCESS] || 0, color: "#67C23A" },
+    { name: "警告", value: analysis.summary.levelDistribution[LogLevel.WARN] || 0, color: "#E6A23C" },
+    { name: "错误", value: analysis.summary.levelDistribution[LogLevel.ERROR] || 0, color: "#F56C6C" },
   ].filter((item) => item.value > 0)
 
   const option = {
     tooltip: {
-      trigger: "item",
+      trigger: "item" as const,
       formatter: "{a} <br/>{b}: {c} ({d}%)",
     },
     legend: {
-      orient: "vertical",
+      orient: "vertical" as const,
       left: "left",
       textStyle: {
         fontSize: 12,
@@ -490,7 +489,7 @@ const updateLevelChart = () => {
     series: [
       {
         name: "日志级别",
-        type: "pie",
+        type: "pie" as const,
         radius: ["40%", "70%"],
         center: ["60%", "50%"],
         avoidLabelOverlap: false,
@@ -506,7 +505,7 @@ const updateLevelChart = () => {
         emphasis: {
           label: {
             show: true,
-            fontSize: "18",
+            fontSize: 18,
             fontWeight: "bold",
           },
         },
@@ -532,17 +531,17 @@ const updateTrendChart = () => {
     trendChart = echarts.init(trendChartRef.value)
   }
 
-  const analysis = analyzeCurrentLogs()
-  const trendData = analysis.trends.errorTrends.slice(-24) // 最近24小时
+  const analysis = logAnalyzer.analyze()
+  const trendData = analysis.trends.errorTrends?.slice(-24) || [] // 最近24小时
 
   const times = trendData.map((item) => dayjs(item.time).format("HH:mm"))
   const values = trendData.map((item) => item.count)
 
   const option = {
     tooltip: {
-      trigger: "axis",
+      trigger: "axis" as const,
       axisPointer: {
-        type: "cross",
+        type: "cross" as const,
       },
     },
     grid: {
@@ -552,7 +551,7 @@ const updateTrendChart = () => {
       containLabel: true,
     },
     xAxis: {
-      type: "category",
+      type: "category" as const,
       boundaryGap: false,
       data: times,
       axisLabel: {
@@ -560,7 +559,7 @@ const updateTrendChart = () => {
       },
     },
     yAxis: {
-      type: "value",
+      type: "value" as const,
       axisLabel: {
         fontSize: 10,
       },
@@ -568,7 +567,7 @@ const updateTrendChart = () => {
     series: [
       {
         name: "错误数量",
-        type: "line",
+        type: "line" as const,
         stack: "Total",
         smooth: true,
         lineStyle: {

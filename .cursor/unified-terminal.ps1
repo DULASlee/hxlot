@@ -56,9 +56,40 @@ function global:dnr { dotnet run }
 function global:dnb { dotnet build }
 function global:dnt { dotnet test }
 
-# SmartAbp 专用函数
-function global:smartabp-sync { bash scripts/git-safe-sync.sh --non-interactive --auto-commit }
-function global:smartabp-check { bash scripts/ci-quality-check.sh }
+# SmartAbp 专用函数（智能跨平台，保持完整功能）
+function global:smartabp-sync {
+  # 智能选择最佳执行方式，保持脚本完整功能
+  if (Test-Path "scripts/git-safe-sync.ps1") {
+    Write-Host "🚀 使用PowerShell版本同步..." -ForegroundColor Green
+    & "scripts/git-safe-sync.ps1" --non-interactive --auto-commit
+  } elseif (Test-Path "scripts/git-safe-sync.bat") {
+    Write-Host "🚀 使用批处理版本同步..." -ForegroundColor Green
+    & "scripts/git-safe-sync.bat"
+  } elseif (Test-Path "scripts/git-safe-sync.sh") {
+    Write-Host "🚀 使用Bash版本同步（可能启动WSL）..." -ForegroundColor Yellow
+    # 延迟执行bash，避免IDE启动时触发
+    Start-Process powershell -ArgumentList "-NoProfile", "-Command", "bash scripts/git-safe-sync.sh --non-interactive --auto-commit; Read-Host '按Enter继续...'"
+  } else {
+    Write-Host "❌ 未找到Git同步脚本" -ForegroundColor Red
+  }
+}
+
+function global:smartabp-check {
+  # 智能选择最佳执行方式，保持脚本完整功能
+  if (Test-Path "scripts/local-quality-check.ps1") {
+    Write-Host "🔍 使用PowerShell版本质量检查..." -ForegroundColor Green
+    & "scripts/local-quality-check.ps1"
+  } elseif (Test-Path "scripts/ci-quality-check.sh") {
+    Write-Host "🔍 使用Bash版本质量检查（可能启动WSL）..." -ForegroundColor Yellow
+    # 延迟执行bash，避免IDE启动时触发
+    Start-Process powershell -ArgumentList "-NoProfile", "-Command", "bash scripts/ci-quality-check.sh; Read-Host '按Enter继续...'"
+  } else {
+    Write-Host "📋 手动质量检查选项：" -ForegroundColor Cyan
+    Write-Host "1. cd src/SmartAbp.Vue && npm run type-check" -ForegroundColor White
+    Write-Host "2. dotnet build" -ForegroundColor White
+    Write-Host "3. cd src/SmartAbp.Vue && npm run lint" -ForegroundColor White
+  }
+}
 function global:smartabp-dev {
   Write-Host "🚀 启动SmartAbp开发环境..." -ForegroundColor Green
   & "scripts/start-dev.ps1"

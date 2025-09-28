@@ -7,6 +7,7 @@
   "terminal.integrated.allowMnemonics": false,
   "terminal.integrated.windowsEnableConpty": false,
   "terminal.integrated.useWslProfiles": false,
+  "terminal.integrated.automationProfile.windows": null,
   "terminal.integrated.enableBell": false,
   "terminal.integrated.copyOnSelection": false,
   "terminal.integrated.cursorBlinking": false,
@@ -127,6 +128,25 @@
   "workbench.enableExperiments": false,
   "workbench.settings.enableNaturalLanguageSearch": false,
   "workbench.editor.closeEmptyGroups": true,
+
+
+  // ===== TypeScript 语言服务优化 - 解决内存不足问题 =====
+  "typescript.preferences.maxFileSize": 20971520,
+  "typescript.disableAutomaticTypeAcquisition": false,
+  "typescript.tsserver.maxTsServerMemory": 8192,
+  "typescript.tsserver.watchOptions": {
+    "watchFile": "priorityPollingInterval",
+    "watchDirectory": "dynamicPriorityPolling",
+    "fallbackPolling": "dynamicPriority",
+    "synchronousWatchDirectory": true,
+    "excludeDirectories": ["**/node_modules", "**/dist", "**/coverage", "**/reports"]
+  },
+  "typescript.tsserver.enableTracing": false,
+  "typescript.tsserver.log": "off",
+  "typescript.preferences.disableSuggestions": false,
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.includePackageJsonAutoImports": "on",
   "workbench.editor.focusRecentEditorAfterClose": true,
 
   // ===== 文件系统优化 =====

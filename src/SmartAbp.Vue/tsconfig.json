@@ -5,6 +5,8 @@
     "module": "ESNext",
     "lib": ["ES2020", "ES2021.WeakRef", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -49,6 +51,18 @@
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/*.spec.ts",
-    "**/*.spec.tsx"
+    "**/*.spec.tsx",
+    "build",
+    "coverage",
+    "cypress",
+    "reports",
+    "stories",
+    "**/*.stories.ts",
+    "**/*.stories.js",
+    "**/*.stories.vue",
+    "public",
+    "scripts",
+    "*.config.ts",
+    "*.config.js"
   ]
 }
