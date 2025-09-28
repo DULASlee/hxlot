@@ -97,26 +97,9 @@ export function useDesignSystem() {
     }
 
     setTheme.debounceTimer = (setTimeout(() => {
-      if (theme.value !== newTheme) {
-        // 开始性能监控
-        const themeConfig = THEMES.find((t) => t.value === newTheme)
-        const themeName = themeConfig?.name || newTheme
-        performanceMonitor.measureThemeSwitch(themeName)
-
-        // 预加载新主题
-        preloadTheme(newTheme)
-
-        theme.value = newTheme
-        localStorage.setItem(THEME_STORAGE_KEY, newTheme)
-        applyTheme()
-
-        // 在下一帧结束性能监控
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            performanceMonitor.endMeasurement(themeName)
-          }, 200) // 等待过渡动画完成
-        })
-      }
+      theme.value = newTheme
+      localStorage.setItem(THEME_STORAGE_KEY, newTheme)
+      applyTheme()
       setTheme.debounceTimer = null
     }, 16) as unknown as number) // 约1帧的延迟，平滑切换
   }) as ((newTheme: ThemeType) => void) & { debounceTimer?: number | null }
@@ -233,13 +216,12 @@ export function useDesignSystem() {
   // 预加载所有主题（在空闲时间执行）
   const preloadAllThemes = () => {
     if ("requestIdleCallback" in window) {
-      ;(window as Window & { requestIdleCallback?: (callback: () => void) => void }).requestIdleCallback!(() => {
+      ;(window as any).requestIdleCallback(() => {
         THEMES.forEach((themeConfig) => {
           if (themeConfig.value !== theme.value) {
             preloadTheme(themeConfig.value)
           }
         })
-        console.log("🚀 所有主题预加载完成")
       })
     } else {
       // 降级方案：使用setTimeout
@@ -249,7 +231,6 @@ export function useDesignSystem() {
             preloadTheme(themeConfig.value)
           }
         })
-        console.log("🚀 所有主题预加载完成")
       }, 1000)
     }
   }

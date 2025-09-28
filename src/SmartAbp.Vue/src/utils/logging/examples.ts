@@ -157,8 +157,8 @@ export async function performanceTrackingExample() {
 
   // 方式2: 使用计时器
   const timer = perf.start("complex-calculation", { algorithm: "fibonacci", input: 35 })
-  const fibResult = await calculateFibonacci(35)
-  timer.end({ result: fibResult, iterations: 35 })
+  await calculateFibonacci(35)
+  timer.end()
 
   // 方式3: 使用组件日志器的性能追踪
   const componentLogger = createComponentLogger("DataProcessor")
@@ -316,7 +316,7 @@ export function vueComposableExample() {
 
   const timer = startTimer("data-loading")
   setTimeout(() => {
-    timer.end({ recordsLoaded: 250 })
+    timer.end()
   }, 300)
 
   // 异步操作追踪

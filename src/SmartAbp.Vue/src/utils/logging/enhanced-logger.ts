@@ -38,7 +38,7 @@ export interface PerformanceTimer {
   name: string
   startTime: number
   context?: Record<string, any>
-  end(metadata?: Record<string, any>): number
+  end(): number
 }
 
 /**
@@ -50,7 +50,7 @@ export class EnhancedLogger {
   private transports: LogTransport[] = []
   private logs: Ref<LogEntry[]> = ref([])
   private childLoggers = new Map<string, EnhancedLogger>()
-  private subscribers: Array<(logs: LogEntry[]) => void> = []
+  private subscribers: Array<(entries: LogEntry[]) => void> = []
   private maxLogs = 1000
 
   // 批量处理配置
@@ -230,13 +230,10 @@ export class EnhancedLogger {
 
     try {
       const result = await operation()
-      timer.end({ success: true })
+      timer.end()
       return result
     } catch (error) {
-      timer.end({
-        success: false,
-        error: error instanceof Error ? error.message : String(error),
-      })
+      timer.end()
       throw error
     }
   }
@@ -246,13 +243,10 @@ export class EnhancedLogger {
 
     try {
       const result = operation()
-      timer.end({ success: true })
+      timer.end()
       return result
     } catch (error) {
-      timer.end({
-        success: false,
-        error: error instanceof Error ? error.message : String(error),
-      })
+      timer.end()
       throw error
     }
   }
@@ -389,7 +383,7 @@ export class EnhancedLogger {
 
   // ============= 订阅机制 =============
 
-  subscribe(callback: (logs: LogEntry[]) => void): () => void {
+  subscribe(callback: (entries: LogEntry[]) => void): () => void {
     this.subscribers.push(callback)
     return () => {
       const index = this.subscribers.indexOf(callback)

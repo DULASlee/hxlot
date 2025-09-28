@@ -6,12 +6,10 @@ import { logger, LogLevel } from "@/utils/logger"
 export interface PerformanceTracker {
   id: string
   name: string
-  category?: string
   startTime: number
   endTime: number
   duration: number
-  metadata: Record<string, any>
-  end: (metadata?: Record<string, any>) => PerformanceTracker | null
+  end: () => PerformanceTracker | null
 }
 
 // 性能统计接口
@@ -42,16 +40,14 @@ class LogManager {
   private errorReports = ref<any[]>([])
 
   // 开始性能追踪
-  startPerformanceTracking(name: string, category?: string): PerformanceTracker {
+  startPerformanceTracking(name: string): PerformanceTracker {
     const tracker: PerformanceTracker = {
       id: `perf_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       name,
-      category,
       startTime: performance.now(),
       endTime: 0,
       duration: 0,
-      metadata: {},
-      end: (_metadata?: Record<string, any>) => {
+      end: () => {
         return this.endPerformanceTracking(tracker.id)
       },
     }
@@ -80,12 +76,10 @@ class LogManager {
     if (tracker.duration > 1000) {
       logger.warn(`性能警告: ${tracker.name} 执行时间过长`, {
         duration: tracker.duration,
-        category: tracker.category,
       })
     } else {
       logger.debug(`性能追踪: ${tracker.name} 完成`, {
         duration: tracker.duration,
-        category: tracker.category,
       })
     }
 
@@ -233,9 +227,8 @@ export const logManager = new LogManager()
 export function trackPerformance<T>(
   name: string,
   fn: () => T | Promise<T>,
-  category?: string,
 ): T | Promise<T> {
-  const tracker = logManager.startPerformanceTracking(name, category)
+  const tracker = logManager.startPerformanceTracking(name)
 
   try {
     const result = fn()
@@ -249,7 +242,7 @@ export function trackPerformance<T>(
       return result
     }
   } catch (error) {
-    tracker.end({ error: error instanceof Error ? error.message : String(error) })
+    tracker.end()
     throw error
   }
 }

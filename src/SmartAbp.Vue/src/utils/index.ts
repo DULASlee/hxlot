@@ -38,8 +38,8 @@ export const logDebug = (message: string, data?: any) => {
 }
 
 // 性能追踪
-export const startTracking = (name: string, category?: string) => {
-  return logManager.startPerformanceTracking(name, category)
+export const startTracking = (name: string) => {
+  return logManager.startPerformanceTracking(name)
 }
 export const endTracking = (trackingId: string) => {
   return logManager.endPerformanceTracking(trackingId)

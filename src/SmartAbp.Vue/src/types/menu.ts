@@ -117,7 +117,7 @@ export interface MenuFilterOptions {
   /** 是否过滤无权限菜单 */
   filterPermissions?: boolean
   /** 自定义过滤函数 */
-  customFilter?: (menu: MenuItem) => boolean
+  customFilter?: (item: MenuItem) => boolean
 }
 
 // 扩展现有 UserInfo 类型以支持菜单权限检查

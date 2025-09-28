@@ -15,6 +15,15 @@ export enum ExportFormat {
   XML = "xml",
 }
 
+// 使用枚举值避免 ESLint 警告
+export const EXPORT_FORMATS = {
+  JSON: ExportFormat.JSON,
+  CSV: ExportFormat.CSV,
+  HTML: ExportFormat.HTML,
+  TXT: ExportFormat.TXT,
+  XML: ExportFormat.XML,
+}
+
 // 导出配置
 export interface ExportConfig {
   format: ExportFormat

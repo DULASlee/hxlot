@@ -352,8 +352,7 @@ const filteredPerformanceEntries = computed(() => {
     const query = searchQuery.value.toLowerCase()
     entries = entries.filter(
       (e) =>
-        (e && e.name && e.name.toLowerCase().includes(query)) ||
-        (e && e.category && e.category.toLowerCase().includes(query)),
+        (e && e.name && e.name.toLowerCase().includes(query)),
     )
   }
 

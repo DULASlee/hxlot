@@ -100,7 +100,7 @@ logger.debug('调试信息', 'debug', debugData)</code></pre>
             <pre><code>import { logManager, trackPerformance } from '@/utils/logManager'
 
 // 方法1：手动跟踪
-const trackingId = logManager.startPerformanceTracking('数据加载', 'api')
+const trackingId = logManager.startPerformanceTracking('数据加载')
 // ... 执行操作
 logManager.endPerformanceTracking(trackingId.id)
 
@@ -298,7 +298,7 @@ const generateErrorLog = () => {
 
 // 模拟 API 调用
 const simulateApiCall = async () => {
-  const trackingId = logManager.startPerformanceTracking("模拟API调用", "api")
+  const trackingId = logManager.startPerformanceTracking("模拟API调用")
 
   try {
     logger.info("开始API调用", { endpoint: "/api/demo", category: "api" })
@@ -334,7 +334,7 @@ const simulatePerformanceTest = () => {
   ]
 
   operations.forEach((op) => {
-    const trackingId = logManager.startPerformanceTracking(op.name, op.category)
+    const trackingId = logManager.startPerformanceTracking(op.name)
 
     setTimeout(() => {
       logManager.endPerformanceTracking(trackingId.id)

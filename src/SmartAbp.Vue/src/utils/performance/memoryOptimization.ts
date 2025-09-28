@@ -359,13 +359,13 @@ export function useDebounce<T extends (...args: any[]) => any>(
   let timer: number | null = null
 
 
-  const debouncedFn = ((..._args: Parameters<T>) => {
+  const debouncedFn = ((...functionArgs: Parameters<T>) => {
     if (timer) {
       clearTimeout(timer)
     }
 
     timer = window.setTimeout(() => {
-      fn.apply(null, _args)
+      fn.apply(null, functionArgs)
       timer = null
     }, delay)
   }) as T
@@ -395,15 +395,15 @@ export function useThrottle<T extends (...args: any[]) => any>(
   let lastExecTime = 0
 
 
-  const throttledFn = ((..._args: Parameters<T>) => {
+  const throttledFn = ((...functionArgs: Parameters<T>) => {
     const now = Date.now()
 
     if (now - lastExecTime >= delay) {
-      fn.apply(null, _args)
+      fn.apply(null, functionArgs)
       lastExecTime = now
     } else if (!timer) {
       timer = window.setTimeout(() => {
-        fn.apply(null, _args)
+        fn.apply(null, functionArgs)
         lastExecTime = Date.now()
         timer = null
       }, delay - (now - lastExecTime))
