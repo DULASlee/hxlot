@@ -17,9 +17,9 @@
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
     "downlevelIteration": true,
-    "baseUrl": ".",
+    "baseUrl": "../..",
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["src/SmartAbp.Vue/src/*"],
       "@smartabp/lowcode-api": ["packages/lowcode-api/index.ts"],
       "@smartabp/lowcode-api/*": ["packages/lowcode-api/*"],
       "@smartabp/lowcode-core": ["packages/lowcode-core/index.ts"],
@@ -31,7 +31,6 @@
       "@smartabp/lowcode-tools": ["packages/lowcode-tools/index.ts"],
       "@smartabp/lowcode-tools/*": ["packages/lowcode-tools/src/*"]
     },
-    "types": ["vite/client", "element-plus/global"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
