@@ -196,8 +196,8 @@ export class SchemaExporter {
         name: `${this.options.moduleName}${this.options.pageName}`,
         // 🔥 架构整洁修复：packages 内部必须避免引用主应用别名（主应用别名）
         // 使用包内占位组件，保持黑盒原则
-        component: () => import('../../components/DesignerPlaceholder.vue'),
-      },
+        component: () => import('../../components/DesignerPlaceholder.vue')       
+      }
     ]
 
     // 生成菜单项

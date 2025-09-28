@@ -137,7 +137,7 @@ if (Array.isArray(generatedRoutes) && generatedRoutes.length > 0) {
 // 合并菜单（运行时注入）
 if (Array.isArray(generatedMenus) && generatedMenus.length > 0) {
   try {
-    ;(menuConfig.menus as unknown as any[]).push(...generatedMenus)
+    menuConfig.menus.push(...(generatedMenus as any[]))
   } catch (_) {}
 }
 
