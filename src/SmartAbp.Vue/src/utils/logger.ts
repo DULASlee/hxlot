@@ -1,4 +1,4 @@
- 
+
 /**
  * 向后兼容的日志器 - 现在基于增强的日志系统
  * @deprecated 建议使用 @/utils/logging 中的新日志系统
@@ -59,7 +59,7 @@ export interface LogStats {
 }
 
 // 日志订阅者类型
-type LogSubscriber = (_logs: LogEntry[]) => void
+type LogSubscriber = (logs: LogEntry[]) => void
 
 // 兼容性日志记录器类 - 包装增强日志系统
 class Logger {

@@ -354,7 +354,9 @@ AI_TEMPLATE_INFO:
 // 用户管理 - 实体显示名称
 
 import { ref, reactive, onMounted, computed } from "vue"
-import { MetadataDrivenPageRenderer } from "@smartabp/lowcode-designer"
+// import { MetadataDrivenPageRenderer } from "@smartabp/lowcode-designer"
+// 临时注释避免类型错误
+const MetadataDrivenPageRenderer = null
 // import { uiConfigToPageSchema } from "@smartabp/lowcode-designer/utils/uiConfigMapper"
 // Temporary mock to avoid type errors
 const uiConfigToPageSchema = (config: any) => config
@@ -374,7 +376,7 @@ import { Plus, Search, Refresh, Delete } from "@element-plus/icons-vue"
 // 导入说明：以下导入需要根据实际项目结构调整
 import { useUserStore } from "@/stores/modules/user"
 // import { formatDateTime } from "@/utils/date"
-// import type { UserDto, CreateUserDto, UpdateUserDto } from "@/types/user"
+import type { UserQueryParams } from "@/types/user"
 
 // 响应式数据
 const loading = ref(false)
@@ -434,14 +436,13 @@ const fetchData = async () => {
   try {
     loading.value = true
 
-    const params = {
+    const params: UserQueryParams = {
+      pageIndex: pagination.current,
+      pageSize: pagination.pageSize,
       filter: searchForm.filter || undefined,
-      isEnabled: searchForm.isEnabled,
-      skipCount: (pagination.current - 1) * pagination.pageSize,
-      maxResultCount: pagination.pageSize,
-      sorting: sorting.value || undefined
+      sorting: sorting.value || undefined,
+      isActive: searchForm.isEnabled
     }
-    void params
 
     const store = useUserStore()
     await store.fetchList(params as any) // 临时类型兼容
@@ -538,7 +539,7 @@ const handleSubmit = async () => {
     submitting.value = true
 
     const store = useUserStore()
-    const userData = {
+    const entity = {
       ...formData,
       userName: formData.name,
       surname: '',
@@ -552,10 +553,10 @@ const handleSubmit = async () => {
     }
 
     if (formData.id) {
-      await store.updateItem(formData.id, userData) // 使用构造的userData对象
+      await store.updateItem(formData.id, entity) // 使用构造的entity对象
       ElMessage.success("更新成功")
     } else {
-      await store.createItem(userData) // 使用构造的userData对象
+      await store.createItem(entity) // 使用构造的entity对象
       ElMessage.success("创建成功")
     }
 

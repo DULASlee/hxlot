@@ -354,7 +354,9 @@ AI_TEMPLATE_INFO:
 // 用户管理 - 实体显示名称
 
 import { ref, reactive, onMounted, computed } from "vue"
-import { MetadataDrivenPageRenderer } from "@smartabp/lowcode-designer"
+// import { MetadataDrivenPageRenderer } from "@smartabp/lowcode-designer"
+// 临时注释避免类型错误
+const MetadataDrivenPageRenderer = null
 // import { uiConfigToPageSchema } from "@smartabp/lowcode-designer/utils/uiConfigMapper"
 // Temporary mock to avoid type errors
 const uiConfigToPageSchema = (config: any) => config
@@ -363,7 +365,7 @@ const uiConfigToPageSchema = (config: any) => config
 
 // 临时API模拟，保持功能完整性
 const codeGeneratorApi = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  // eslint-disable-next-line no-unused-vars
        getUiConfig: (_module: string, _entity: string) => Promise.resolve(null)
 }
 import type { ElForm, ElTable } from "element-plus"

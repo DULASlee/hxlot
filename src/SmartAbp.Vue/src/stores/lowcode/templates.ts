@@ -14,7 +14,7 @@ interface Template {
 // 临时API替代
 const codeGeneratorApi = {
   getTemplates: () => Promise.resolve([]),
-  getTemplate: (_id: string) => Promise.resolve(null)
+  getTemplate: () => Promise.resolve(null)
 }
 
 export const useTemplatesStore = defineStore("templates", () => {

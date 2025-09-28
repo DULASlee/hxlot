@@ -1,6 +1,6 @@
 {
   "name": "smartabp.vue",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -107,6 +107,7 @@
     "@testing-library/vue": "^8.1.0",
     "@tsconfig/node22": "^22.0.2",
     "@types/cypress": "^0.1.6",
+    "@types/echarts": "^4.9.22",
     "@types/jest": "^30.0.0",
     "@types/node": "^22.18.1",
     "@typescript-eslint/eslint-plugin": "^8.41.0",

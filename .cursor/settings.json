@@ -1,80 +1,123 @@
 {
   // ===== SmartAbp Cursor IDE 优化配置 - 解决终端卡死问题 =====
 
-  // ===== 终端配置优化 - 解决卡死和编码问题 =====
+  // ===== 终端配置优化 - 彻底解决卡死问题 =====
   "terminal.integrated.gpuAcceleration": "off",
   "terminal.integrated.allowChords": false,
   "terminal.integrated.allowMnemonics": false,
-  "terminal.integrated.windowsEnableConpty": true,
+  "terminal.integrated.windowsEnableConpty": false,
   "terminal.integrated.useWslProfiles": false,
+  "terminal.integrated.automationProfile.windows": null,
   "terminal.integrated.enableBell": false,
   "terminal.integrated.copyOnSelection": false,
   "terminal.integrated.cursorBlinking": false,
   "terminal.integrated.cursorStyle": "block",
-  "terminal.integrated.fontSize": 14,
-  "terminal.integrated.fontFamily": "Consolas, 'Courier New', monospace",
-  "terminal.integrated.scrollback": 1000,
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.fontFamily": "Consolas",
+  "terminal.integrated.scrollback": 500,
   "terminal.integrated.smoothScrolling": false,
-  "terminal.integrated.enableFileLinks": true,
+  "terminal.integrated.enableFileLinks": false,
   "terminal.integrated.enablePersistentSessions": false,
   "terminal.integrated.persistentSessionReviveProcess": "never",
-  "terminal.integrated.shellIntegration.enabled": true,
+  "terminal.integrated.shellIntegration.enabled": false,
   "terminal.integrated.shellIntegration.showWelcome": false,
   "terminal.integrated.defaultLocation": "panel",
-  "terminal.integrated.tabs.enabled": true,
+  "terminal.integrated.tabs.enabled": false,
   "terminal.integrated.confirmOnExit": false,
   "terminal.integrated.confirmOnKill": false,
   "terminal.integrated.showExitAlert": false,
-  
-  // 默认使用PowerShell（避免Git Bash的字符编码问题）
-  "terminal.integrated.defaultProfile.windows": "PowerShell",
-  
-  // 环境变量优化 - 解决字符编码问题
+
+  // 默认使用SmartAbp统一PowerShell配置
+  "terminal.integrated.defaultProfile.windows": "PowerShell (SmartAbp)",
+
+  // 环境变量优化 - 基于统一环境配置
   "terminal.integrated.env.windows": {
     "LANG": "C.UTF-8",
     "LC_ALL": "C.UTF-8",
+    "LESSCHARSET": "utf-8",
     "MSYS_NO_PATHCONV": "1",
     "MSYS2_ARG_CONV_EXCL": "*",
-    "LESSCHARSET": "utf-8"
+    "TERM": "xterm-256color",
+    "PAGER": "cat",
+    "GIT_PAGER": "cat",
+    "MANPAGER": "cat",
+    "LESS": "",
+    "SYSTEMD_PAGER": ""
   },
 
-  // ===== 终端配置文件 - 优化PowerShell，避免Git Bash问题 =====
+  // ===== SmartAbp 企业级统一终端配置文件 =====
   "terminal.integrated.profiles.windows": {
-    "PowerShell": {
-      "source": "PowerShell",
-      "args": ["-NoLogo", "-ExecutionPolicy", "Bypass", "-NoProfile"],
+    "PowerShell (SmartAbp)": {
+      "path": "pwsh.exe",
+      "args": [
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-NoExit",
+        "-File", "${workspaceFolder}\\.cursor\\unified-terminal.ps1"
+      ],
       "icon": "terminal-powershell",
-      "overrideName": true,
+      "overrideName": false,
       "env": {
+        "TERM": "xterm-256color",
+        "PAGER": "cat",
+        "GIT_PAGER": "cat"
+      }
+    },
+    "Bash (SmartAbp)": {
+      "path": "C:\\Program Files\\Git\\bin\\bash.exe",
+      "args": ["--login", "-i", "-c", "source ${workspaceFolder}/.cursor/unified-terminal.sh; exec bash"],
+      "icon": "terminal-bash",
+      "overrideName": false,
+      "env": {
+        "TERM": "xterm-256color",
+        "PAGER": "cat",
+        "GIT_PAGER": "cat",
         "LANG": "C.UTF-8",
         "LC_ALL": "C.UTF-8"
       }
     },
-    "Command Prompt": {
+    "CMD (SmartAbp)": {
       "path": "C:\\Windows\\System32\\cmd.exe",
-      "args": ["/K", "chcp 65001"],
+      "args": ["/K", "chcp 65001 >nul && call \"${workspaceFolder}\\.cursor\\unified-terminal.bat\""],
       "icon": "terminal-cmd",
-      "overrideName": true
+      "overrideName": false,
+      "env": {
+        "TERM": "xterm-256color"
+      }
     }
   },
 
 
-  // PowerShell 配置优化
-  "powershell.enableProfileLoading": true,
+  // PowerShell 配置优化 - 完全禁用避免卡死
+  "powershell.enableProfileLoading": false,
   "powershell.integratedConsole.showOnStartup": false,
   "powershell.promptToUpdatePowerShell": false,
   "powershell.integratedConsole.suppressStartupBanner": true,
+  "powershell.powerShellDefaultVersion": "",
+  "powershell.buttons.showPanelMovementButtons": false,
+  "powershell.buttons.showRunButtons": false,
 
   "terminal.integrated.cwd": "${workspaceFolder}",
   "terminal.integrated.inheritEnv": false,
-  
-  // 终端性能和稳定性优化
+
+  // 终端性能和稳定性优化 - 激进禁用模式
   "terminal.integrated.localEchoEnabled": "off",
   "terminal.integrated.localEchoLatencyThreshold": 30,
-  "terminal.integrated.localEchoExcludePrograms": ["vim", "vi", "nano"],
+  "terminal.integrated.localEchoExcludePrograms": ["vim", "vi", "nano", "git", "less", "more"],
   "terminal.integrated.autoReplies": {
-    "Terminate batch job (Y/N)?": "Y"
+    "Terminate batch job (Y/N)?": "Y",
+    "Press any key to continue...": " "
   },
+
+  // 彻底禁用可能导致卡死的功能
+  "terminal.integrated.enableVisualBell": false,
+  "terminal.integrated.experimentalUseTitleEvent": false,
+  "terminal.integrated.fastScrollSensitivity": 1,
+  "terminal.integrated.mouseWheelScrollSensitivity": 1,
+  "terminal.integrated.sendKeybindingsToShell": false,
+  "terminal.integrated.rightClickBehavior": "default",
+  "terminal.integrated.wordSeparators": " ()[]{}',\"`─''",
 
   // ===== 系统性能优化 =====
   "workbench.editor.enablePreview": false,
@@ -85,6 +128,25 @@
   "workbench.enableExperiments": false,
   "workbench.settings.enableNaturalLanguageSearch": false,
   "workbench.editor.closeEmptyGroups": true,
+
+
+  // ===== TypeScript 语言服务优化 - 解决内存不足问题 =====
+  "typescript.preferences.maxFileSize": 20971520,
+  "typescript.disableAutomaticTypeAcquisition": false,
+  "typescript.tsserver.maxTsServerMemory": 8192,
+  "typescript.tsserver.watchOptions": {
+    "watchFile": "priorityPollingInterval",
+    "watchDirectory": "dynamicPriorityPolling",
+    "fallbackPolling": "dynamicPriority",
+    "synchronousWatchDirectory": true,
+    "excludeDirectories": ["**/node_modules", "**/dist", "**/coverage", "**/reports"]
+  },
+  "typescript.tsserver.enableTracing": false,
+  "typescript.tsserver.log": "off",
+  "typescript.preferences.disableSuggestions": false,
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.includePackageJsonAutoImports": "on",
   "workbench.editor.focusRecentEditorAfterClose": true,
 
   // ===== 文件系统优化 =====
@@ -175,23 +237,33 @@
   "editor.scrollBeyondLastLine": false,
   "editor.stickyScroll.enabled": false,
 
-  // ===== Git优化 - 解决网络和编码问题 =====
+  // ===== Git优化 - 彻底解决卡死问题 =====
   "git.enabled": true,
   "git.autofetch": false,
   "git.confirmSync": false,
-  "git.autorefresh": true,
-  "git.showProgress": true,
-  "git.countBadge": "tracked",
-  "git.enableSmartCommit": true,
+  "git.autorefresh": false,
+  "git.showProgress": false,
+  "git.countBadge": "off",
+  "git.enableSmartCommit": false,
   "git.postCommitCommand": "none",
   "git.path": "C:\\Program Files\\Git\\bin\\git.exe",
   "git.terminalAuthentication": false,
   "git.useIntegratedAskpass": false,
-  
-  // Git配置优化 - 解决网络和编码问题
-  "git.ignoreLegacyWarning": true,
-  "git.decorations.enabled": true,
+  "git.decorations.enabled": false,
   "git.timeline.enabled": false,
+  "git.allowForcePush": true,
+  "git.alwaysSignOff": false,
+  "git.autoRepositoryDetection": false,
+  "git.branchProtection": [],
+
+  // ===== 彻底禁用可能导致卡死的功能 =====
+  "workbench.activityBar.visible": true,
+  "workbench.statusBar.visible": true,
+  "workbench.sideBar.location": "left",
+  "workbench.panel.defaultLocation": "bottom",
+  "workbench.panel.opensMaximized": "never",
+  "workbench.tips.enabled": false,
+  "workbench.welcomePage.walkthroughs.openOnInstall": false,
 
   // ===== 扩展优化 =====
   "extensions.autoUpdate": false,

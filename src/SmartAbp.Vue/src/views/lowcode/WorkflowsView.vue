@@ -4,7 +4,9 @@
       <template #header>
         <div class="card-header">
           <span>工作流管理</span>
-          <el-button type="primary">新建工作流</el-button>
+          <el-button type="primary">
+            新建工作流
+          </el-button>
         </div>
       </template>
       <div class="workflows-content">

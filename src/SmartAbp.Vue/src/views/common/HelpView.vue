@@ -10,23 +10,44 @@
         <el-row :gutter="20">
           <el-col :span="8">
             <el-card shadow="hover">
-              <template #header>快速入门</template>
+              <template #header>
+                快速入门
+              </template>
               <p>了解SmartAbp的基本使用方法</p>
-              <el-button type="primary" text>查看教程</el-button>
+              <el-button
+                type="primary"
+                text
+              >
+                查看教程
+              </el-button>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              <template #header>代码生成器</template>
+              <template #header>
+                代码生成器
+              </template>
               <p>学习如何使用低代码引擎</p>
-              <el-button type="primary" text>查看手册</el-button>
+              <el-button
+                type="primary"
+                text
+              >
+                查看手册
+              </el-button>
             </el-card>
           </el-col>
           <el-col :span="8">
             <el-card shadow="hover">
-              <template #header>常见问题</template>
+              <template #header>
+                常见问题
+              </template>
               <p>查看常见问题和解决方案</p>
-              <el-button type="primary" text>查看FAQ</el-button>
+              <el-button
+                type="primary"
+                text
+              >
+                查看FAQ
+              </el-button>
             </el-card>
           </el-col>
         </el-row>

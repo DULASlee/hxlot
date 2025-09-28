@@ -148,7 +148,7 @@
               <span class="project-date">{{ formatDate(project.updatedAt) }}</span>
             </div>
             <div class="project-status">
-              <el-tag :type="getProjectStatusType(project.status) as 'success' | 'info' | 'warning' | 'danger'">
+              <el-tag :type="getProjectStatusType(project.status)">
                 {{ getProjectStatusLabel(project.status) }}
               </el-tag>
             </div>

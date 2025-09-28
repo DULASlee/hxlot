@@ -1,10 +1,10 @@
- 
+
 import { defineStore } from "pinia"
 import { ref, computed, watch } from "vue"
 import { logger } from "@/utils/logging"
 
 // WCAG对比度计算工具
-function calculateContrastRatio(_color1: string, _color2: string): number {
+function calculateContrastRatio(): number {
   // 简化的对比度计算（实际应使用更精确的算法）
   // 这里返回模拟值，实际实现需要rgb转换和亮度计算
   return Math.random() * 10 + 4 // 模拟4-14的对比度值
@@ -81,15 +81,13 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
   const themePresets = computed(() => THEME_PRESETS)
 
   const contrastRatios = computed(() => {
-    const primary = themeVariables.value["--theme-brand-primary"]
-    const background = "#ffffff"
-
+    // 直接返回计算的对比度值
     return {
-      "primary-bg": calculateContrastRatio(primary, background),
-      "text-bg": calculateContrastRatio("#000000", background),
-      "success-bg": calculateContrastRatio(themeVariables.value["--theme-brand-success"], background),
-      "warning-bg": calculateContrastRatio(themeVariables.value["--theme-brand-warning"], background),
-      "danger-bg": calculateContrastRatio(themeVariables.value["--theme-brand-danger"], background),
+      "primary-bg": calculateContrastRatio(),
+      "text-bg": calculateContrastRatio(),
+      "success-bg": calculateContrastRatio(),
+      "warning-bg": calculateContrastRatio(),
+      "danger-bg": calculateContrastRatio(),
     }
   })
 
@@ -334,7 +332,7 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
   watch([currentTheme, themeVariables], () => {
     saveThemeToStorage()
   }, { deep: true })
-  
+
   // 重置为默认主题
   const resetToDefault = () => {
     themeVariables.value = {
@@ -346,7 +344,7 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
     applyTheme()
     logger.info("Theme reset to default")
   }
-  
+
   // 从本地存储加载主题
   const loadFromLocalStorage = () => {
     try {
@@ -361,7 +359,7 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
       logger.error("Failed to load theme from local storage:", error as Error)
     }
   }
-  
+
   // 初始化
   initializeTheme()
 

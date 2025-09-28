@@ -11,8 +11,16 @@ param(
     [int]$KeepDays = 7               # 保留最近N天的日志
 )
 
-# 设置错误处理
+# 设置错误处理和安全模式
 $ErrorActionPreference = "Continue"
+
+# 安全检查：确保不在管理员模式下运行危险操作
+$isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
+if ($isAdmin -and $Deep) {
+    Write-Log "⚠️ 检测到管理员模式 + 深度清理，建议在普通用户模式下运行" "Warning"
+    Write-Log "   深度清理模式已自动降级为标准模式" "Warning"
+    $Deep = $false
+}
 
 # 全局变量
 $Script:TotalCleaned = 0
@@ -317,13 +325,12 @@ function Start-CursorCleanup {
             Remove-SafelyWithBackup -Path $_.FullName -Description "临时Cursor文件"
         }
 
-    # 注册表清理（深度模式）
+    # 注册表清理（深度模式 - 仅备份，避免系统不稳定）
     if ($Deep -and -not $DryRun) {
-        Write-Log "📝 深度清理模式：清理注册表项..." "Progress"
+        Write-Log "📝 深度清理模式：备份注册表项（避免系统不稳定）..." "Progress"
         try {
             $regPaths = @(
-                "HKCU:\Software\Cursor",
-                "HKLM:\SOFTWARE\Cursor"
+                "HKCU:\Software\Cursor"
             )
 
             foreach ($regPath in $regPaths) {
@@ -331,14 +338,14 @@ function Start-CursorCleanup {
                     if ($Backup) {
                         $regBackup = Join-Path $Script:BackupPath "registry-$(Split-Path $regPath -Leaf).reg"
                         reg export $regPath.Replace(":", "") $regBackup /y 2>$null
+                        Write-Log "注册表已备份: $regPath -> $regBackup" "Success"
                     }
-                    # 注册表清理需要更谨慎，这里只是示例
-                    Write-Log "注册表路径存在: $regPath (建议手动检查)" "Warning"
                 }
             }
+            Write-Log "⚠️ 跳过HKLM注册表清理以避免系统不稳定" "Warning"
         }
         catch {
-            Write-Log "注册表清理失败: $($_.Exception.Message)" "Error"
+            Write-Log "注册表备份失败: $($_.Exception.Message)" "Error"
         }
     }
 }
