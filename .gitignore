@@ -427,6 +427,12 @@ secrets.json
 *.template.cache
 *.template.compiled
 
+# 🧪 测试示例文件
+test-login.html
+test-theme.js
+/tests/manual/
+/docs/examples/vue-tests/
+
 # 🧪 测试相关
 /test-results/
 /TestResults/
@@ -437,6 +443,7 @@ secrets.json
 # 📈 Storybook 构建产物
 storybook-static/
 chromatic-output/
+/stories/
 
 # 🎨 设计资源
 /design-assets/
@@ -445,7 +452,8 @@ chromatic-output/
 *.xd
 
 # 🔄 Git 备份
-.git-backups/
+tools/git/backups/old-backups/
+tools/git/backups/*.txt
 
 # 📦 ABP 框架特定
 **/bin/Debug/
