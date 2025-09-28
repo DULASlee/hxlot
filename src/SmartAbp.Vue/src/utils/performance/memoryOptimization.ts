@@ -180,10 +180,10 @@ export interface CacheOptions<T> {
   /** 存储到localStorage */
   persistent?: boolean
   /** 序列化函数 */
-  // eslint-disable-next-line no-unused-vars
+   
   serialize?: (value: T) => string
   /** 反序列化函数 */
-  // eslint-disable-next-line no-unused-vars
+   
   deserialize?: (value: string) => T
 }
 
@@ -431,13 +431,13 @@ export class ObjectPool<T> {
   private pool: T[] = []
   private createFn: () => T
 
-  // eslint-disable-next-line no-unused-vars
+   
   private resetFn?: (_obj: T) => void
   private maxSize: number
 
   constructor(
     createFn: () => T,
-    // eslint-disable-next-line no-unused-vars
+     
     resetFn?: (_obj: T) => void,
     maxSize: number = 50
   ) {

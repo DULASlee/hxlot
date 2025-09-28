@@ -219,7 +219,7 @@ SmartAbp Enterprise Optimized Data Table Component
 
 <script setup lang="ts">
  
-/* eslint-disable no-unused-vars */
+ 
 /* eslint-disable vue/require-default-prop */
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { ElButton, ElInput, ElSelect, ElOption, ElSwitch, ElIcon, ElLoading, ElButtonGroup } from 'element-plus'
