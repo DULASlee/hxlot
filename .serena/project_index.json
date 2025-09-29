@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-29T06:03:37.460Z",
+  "timestamp": "2025-09-29T18:06:50.634Z",
   "project": "Baobab.SmartAbp",
   "language": "typescript",
   "files": [
@@ -700,15 +700,22 @@
       "name": "EnhancedStateMachine.test.ts",
       "path": "src/SmartAbp.Vue/src/components/lowcode/EnhancedStateMachine.test.ts",
       "type": "file",
-      "size": 16242,
-      "modified": "2025-09-23T10:47:40.076Z"
+      "size": 16284,
+      "modified": "2025-09-29T06:52:24.208Z"
+    },
+    {
+      "name": "EnhancedStateMachine.vue",
+      "path": "src/SmartAbp.Vue/src/components/lowcode/EnhancedStateMachine.vue",
+      "type": "file",
+      "size": 5090,
+      "modified": "2025-09-29T08:54:19.449Z"
     },
     {
       "name": "EnhancedThemeEditor.test.ts",
       "path": "src/SmartAbp.Vue/src/components/lowcode/EnhancedThemeEditor.test.ts",
       "type": "file",
-      "size": 12097,
-      "modified": "2025-09-23T16:40:49.019Z"
+      "size": 12113,
+      "modified": "2025-09-29T06:45:28.485Z"
     },
     {
       "name": "SandboxPreview.test.ts",
@@ -721,8 +728,8 @@
       "name": "ThemeEditor.test.ts",
       "path": "src/SmartAbp.Vue/src/components/lowcode/ThemeEditor.test.ts",
       "type": "file",
-      "size": 1455,
-      "modified": "2025-09-27T04:34:09.651Z"
+      "size": 1499,
+      "modified": "2025-09-29T06:45:28.485Z"
     },
     {
       "name": "LazyImage.vue",
@@ -868,8 +875,8 @@
       "name": "useSecurityDashboard.ts",
       "path": "src/SmartAbp.Vue/src/composables/useSecurityDashboard.ts",
       "type": "file",
-      "size": 10960,
-      "modified": "2025-09-23T00:56:54.890Z"
+      "size": 10930,
+      "modified": "2025-09-29T08:23:08.419Z"
     },
     {
       "name": "useSmartWorkflow.ts",
@@ -1148,8 +1155,8 @@
       "name": "statemachine.test.ts",
       "path": "src/SmartAbp.Vue/src/stores/lowcode/statemachine.test.ts",
       "type": "file",
-      "size": 2738,
-      "modified": "2025-09-23T02:48:58.562Z"
+      "size": 2726,
+      "modified": "2025-09-29T06:45:28.486Z"
     },
     {
       "name": "statemachine.ts",
@@ -1162,15 +1169,15 @@
       "name": "templates.test.ts",
       "path": "src/SmartAbp.Vue/src/stores/lowcode/templates.test.ts",
       "type": "file",
-      "size": 948,
-      "modified": "2025-09-23T04:45:41.552Z"
+      "size": 1170,
+      "modified": "2025-09-29T06:45:28.487Z"
     },
     {
       "name": "templates.ts",
       "path": "src/SmartAbp.Vue/src/stores/lowcode/templates.ts",
       "type": "file",
-      "size": 982,
-      "modified": "2025-09-28T05:03:27.534Z"
+      "size": 723,
+      "modified": "2025-09-29T17:25:43.642Z"
     },
     {
       "name": "theme.ts",
@@ -1841,8 +1848,8 @@
       "name": "SettingsView.vue",
       "path": "src/SmartAbp.Vue/src/views/common/SettingsView.vue",
       "type": "file",
-      "size": 13746,
-      "modified": "2025-09-23T07:51:49.896Z"
+      "size": 14169,
+      "modified": "2025-09-29T17:25:43.636Z"
     },
     {
       "name": "SettingsView.vue.js",
@@ -1890,8 +1897,8 @@
       "name": "LogSystemDemo.vue",
       "path": "src/SmartAbp.Vue/src/views/log/LogSystemDemo.vue",
       "type": "file",
-      "size": 12813,
-      "modified": "2025-09-28T07:55:35.791Z"
+      "size": 12844,
+      "modified": "2025-09-29T17:25:43.636Z"
     },
     {
       "name": "LogViewer.vue",
@@ -1911,8 +1918,8 @@
       "name": "GenerationView.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/GenerationView.vue",
       "type": "file",
-      "size": 9133,
-      "modified": "2025-09-26T15:53:17.620Z"
+      "size": 9236,
+      "modified": "2025-09-29T17:25:43.636Z"
     },
     {
       "name": "LowCodeStudioContent.vue",
@@ -1939,15 +1946,15 @@
       "name": "LowCodeStudioView.test.ts",
       "path": "src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.test.ts",
       "type": "file",
-      "size": 6050,
-      "modified": "2025-09-23T16:40:49.023Z"
+      "size": 2868,
+      "modified": "2025-09-29T06:45:28.488Z"
     },
     {
       "name": "LowCodeStudioView.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.vue",
       "type": "file",
-      "size": 4402,
-      "modified": "2025-09-29T01:39:29.563Z"
+      "size": 5850,
+      "modified": "2025-09-29T17:35:33.494Z"
     },
     {
       "name": "LowCodeStudioWelcome.vue",
@@ -1960,8 +1967,8 @@
       "name": "QuickStart.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/QuickStart.vue",
       "type": "file",
-      "size": 13578,
-      "modified": "2025-09-23T09:14:51.658Z"
+      "size": 13697,
+      "modified": "2025-09-29T17:25:43.642Z"
     },
     {
       "name": "QuickStart.vue.js",
@@ -1981,22 +1988,22 @@
       "name": "TemplateConfiguration.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/templates/TemplateConfiguration.vue",
       "type": "file",
-      "size": 3890,
-      "modified": "2025-09-29T01:39:29.563Z"
+      "size": 4164,
+      "modified": "2025-09-29T06:08:08.351Z"
     },
     {
       "name": "TemplateManager.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/templates/TemplateManager.vue",
       "type": "file",
-      "size": 5138,
-      "modified": "2025-09-29T01:39:29.563Z"
+      "size": 5273,
+      "modified": "2025-09-29T06:08:08.350Z"
     },
     {
       "name": "TemplateMarketplace.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/templates/TemplateMarketplace.vue",
       "type": "file",
-      "size": 4797,
-      "modified": "2025-09-29T01:39:29.563Z"
+      "size": 4073,
+      "modified": "2025-09-29T15:45:38.222Z"
     },
     {
       "name": "ProjectAnalysisView.vue",
@@ -2100,8 +2107,8 @@
       "name": "UserManagement.vue",
       "path": "src/SmartAbp.Vue/src/views/user/UserManagement.vue",
       "type": "file",
-      "size": 17291,
-      "modified": "2025-09-28T17:43:41.404Z"
+      "size": 17262,
+      "modified": "2025-09-29T17:25:43.636Z"
     },
     {
       "name": "UserManagement.vue.js",
@@ -2125,11 +2132,25 @@
       "modified": "2025-09-22T12:38:45.354Z"
     },
     {
+      "name": "index.d.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-api/index.d.ts",
+      "type": "file",
+      "size": 913,
+      "modified": "2025-09-29T08:59:34.324Z"
+    },
+    {
+      "name": "index.js",
+      "path": "src/SmartAbp.Vue/packages/lowcode-api/index.js",
+      "type": "file",
+      "size": 2886,
+      "modified": "2025-09-29T08:59:34.322Z"
+    },
+    {
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/index.ts",
       "type": "file",
-      "size": 2385,
-      "modified": "2025-09-26T15:56:15.269Z"
+      "size": 2802,
+      "modified": "2025-09-29T06:51:14.979Z"
     },
     {
       "name": "package.json",
@@ -2156,36 +2177,43 @@
       "name": "index.d.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.d.ts",
       "type": "file",
-      "size": 8265,
-      "modified": "2025-09-29T04:29:03.012Z"
+      "size": 8239,
+      "modified": "2025-09-29T07:30:16.077Z"
     },
     {
       "name": "index.js",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.js",
       "type": "file",
-      "size": 5557,
-      "modified": "2025-09-29T04:29:03.008Z"
+      "size": 5558,
+      "modified": "2025-09-29T07:30:16.075Z"
     },
     {
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts",
       "type": "file",
-      "size": 12652,
-      "modified": "2025-09-27T04:34:09.647Z"
+      "size": 12627,
+      "modified": "2025-09-29T07:35:47.872Z"
+    },
+    {
+      "name": "tsconfig.json",
+      "path": "src/SmartAbp.Vue/packages/lowcode-api/tsconfig.json",
+      "type": "file",
+      "size": 480,
+      "modified": "2025-09-29T07:35:47.872Z"
     },
     {
       "name": "types.d.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/types.d.ts",
       "type": "file",
       "size": 200,
-      "modified": "2025-09-29T04:29:03.013Z"
+      "modified": "2025-09-29T06:26:20.365Z"
     },
     {
       "name": "types.js",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/types.js",
       "type": "file",
       "size": 143,
-      "modified": "2025-09-29T04:29:03.013Z"
+      "modified": "2025-09-29T06:26:20.365Z"
     },
     {
       "name": "types.ts",
@@ -2216,11 +2244,25 @@
       "modified": "2025-09-22T08:52:33.029Z"
     },
     {
+      "name": "index.d.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-core/index.d.ts",
+      "type": "file",
+      "size": 4317,
+      "modified": "2025-09-29T07:30:16.200Z"
+    },
+    {
+      "name": "index.js",
+      "path": "src/SmartAbp.Vue/packages/lowcode-core/index.js",
+      "type": "file",
+      "size": 5422,
+      "modified": "2025-09-29T07:30:16.197Z"
+    },
+    {
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/index.ts",
       "type": "file",
-      "size": 6428,
-      "modified": "2025-09-26T18:48:34.087Z"
+      "size": 9953,
+      "modified": "2025-09-29T12:48:35.769Z"
     },
     {
       "name": "package.json",
@@ -2247,8 +2289,15 @@
       "name": "SimpleRelationshipDetector.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/src/analyzers/SimpleRelationshipDetector.ts",
       "type": "file",
-      "size": 1625,
-      "modified": "2025-09-26T18:48:34.085Z"
+      "size": 1644,
+      "modified": "2025-09-29T09:59:28.182Z"
+    },
+    {
+      "name": "LazyComponentLoader.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-core/src/components/LazyComponentLoader.ts",
+      "type": "file",
+      "size": 17421,
+      "modified": "2025-09-29T13:44:39.822Z"
     },
     {
       "name": "useCodeGenerationProgress.ts",
@@ -2265,6 +2314,20 @@
       "modified": "2025-09-22T09:14:27.266Z"
     },
     {
+      "name": "EnterpriseCustomizationEngine.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/EnterpriseCustomizationEngine.ts",
+      "type": "file",
+      "size": 27263,
+      "modified": "2025-09-29T13:39:29.921Z"
+    },
+    {
+      "name": "ThemeDesigner.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/ThemeDesigner.ts",
+      "type": "file",
+      "size": 22515,
+      "modified": "2025-09-29T13:39:29.921Z"
+    },
+    {
       "name": "ZeroConfigGenerationEngine.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/src/engines/ZeroConfigGenerationEngine.ts",
       "type": "file",
@@ -2275,8 +2338,8 @@
       "name": "RelationshipTemplateSelector.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/src/generators/RelationshipTemplateSelector.ts",
       "type": "file",
-      "size": 1945,
-      "modified": "2025-09-26T18:48:34.085Z"
+      "size": 1964,
+      "modified": "2025-09-29T09:59:28.182Z"
     },
     {
       "name": "index.ts",
@@ -2286,25 +2349,46 @@
       "modified": "2025-09-26T20:07:38.842Z"
     },
     {
+      "name": "ComponentMemoryManager.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-core/src/memory/ComponentMemoryManager.ts",
+      "type": "file",
+      "size": 19106,
+      "modified": "2025-09-29T13:39:29.924Z"
+    },
+    {
       "name": "PerformanceMonitor.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/src/monitoring/PerformanceMonitor.ts",
       "type": "file",
-      "size": 23595,
-      "modified": "2025-09-29T03:00:47.222Z"
+      "size": 23594,
+      "modified": "2025-09-29T06:09:31.469Z"
     },
     {
       "name": "SystemHealthDashboard.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/src/monitoring/SystemHealthDashboard.vue",
       "type": "file",
-      "size": 27916,
-      "modified": "2025-09-28T06:59:36.313Z"
+      "size": 29161,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/src/monitoring/index.ts",
       "type": "file",
-      "size": 1510,
-      "modified": "2025-09-26T20:07:38.839Z"
+      "size": 1726,
+      "modified": "2025-09-29T07:35:47.872Z"
+    },
+    {
+      "name": "DynamicTemplateLoader.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/DynamicTemplateLoader.ts",
+      "type": "file",
+      "size": 19307,
+      "modified": "2025-09-29T13:39:29.924Z"
+    },
+    {
+      "name": "TemplatePluginSystem.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/TemplatePluginSystem.ts",
+      "type": "file",
+      "size": 29072,
+      "modified": "2025-09-29T14:52:43.308Z"
     },
     {
       "name": "entity-designer.ts",
@@ -2328,25 +2412,53 @@
       "modified": "2025-09-20T07:51:17.180Z"
     },
     {
+      "name": "unified-metadata.d.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts",
+      "type": "file",
+      "size": 18410,
+      "modified": "2025-09-29T06:26:49.235Z"
+    },
+    {
+      "name": "unified-metadata.js",
+      "path": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.js",
+      "type": "file",
+      "size": 151,
+      "modified": "2025-09-29T06:26:49.227Z"
+    },
+    {
       "name": "unified-metadata.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.ts",
       "type": "file",
-      "size": 18534,
-      "modified": "2025-09-24T03:55:45.194Z"
+      "size": 17900,
+      "modified": "2025-09-29T07:35:47.869Z"
     },
     {
       "name": "manifestWriter.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/src/utils/manifestWriter.ts",
       "type": "file",
-      "size": 29902,
-      "modified": "2025-09-27T07:16:56.809Z"
+      "size": 31300,
+      "modified": "2025-09-29T09:59:28.188Z"
+    },
+    {
+      "name": "TemplateVersionManager.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/TemplateVersionManager.ts",
+      "type": "file",
+      "size": 23391,
+      "modified": "2025-09-29T13:55:20.769Z"
+    },
+    {
+      "name": "UpdateNotificationSystem.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/UpdateNotificationSystem.ts",
+      "type": "file",
+      "size": 23992,
+      "modified": "2025-09-29T13:55:20.766Z"
     },
     {
       "name": "tsconfig.json",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/tsconfig.json",
       "type": "file",
-      "size": 393,
-      "modified": "2025-09-29T04:22:58.492Z"
+      "size": 493,
+      "modified": "2025-09-29T07:35:47.872Z"
     },
     {
       "name": "index.ts",
@@ -2366,15 +2478,15 @@
       "name": "CodePreview.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/components/CodeGenerator/CodePreview.vue",
       "type": "file",
-      "size": 13808,
-      "modified": "2025-09-22T08:52:35.260Z"
+      "size": 14052,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "DragPreview.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/components/CodeGenerator/DragPreview.vue",
       "type": "file",
-      "size": 8772,
-      "modified": "2025-09-29T02:59:39.427Z"
+      "size": 8877,
+      "modified": "2025-09-29T13:55:20.784Z"
     },
     {
       "name": "EntityDesigner.vue",
@@ -2387,15 +2499,15 @@
       "name": "DraggableComponent.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/components/DraggableComponent.vue",
       "type": "file",
-      "size": 8096,
-      "modified": "2025-09-22T08:52:36.416Z"
+      "size": 8188,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "PropertyInspector.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/components/PropertyInspector.vue",
       "type": "file",
-      "size": 21822,
-      "modified": "2025-09-22T12:38:45.336Z"
+      "size": 22867,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "dragDropEngine.ts",
@@ -2408,8 +2520,8 @@
       "name": "exporter.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/designer/schema/exporter.ts",
       "type": "file",
-      "size": 15064,
-      "modified": "2025-09-28T05:05:26.961Z"
+      "size": 14977,
+      "modified": "2025-09-29T15:45:38.222Z"
     },
     {
       "name": "override.ts",
@@ -2429,8 +2541,8 @@
       "name": "moduleWizardDev.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/dev/moduleWizardDev.ts",
       "type": "file",
-      "size": 10282,
-      "modified": "2025-09-26T15:53:17.614Z"
+      "size": 10212,
+      "modified": "2025-09-29T17:25:43.636Z"
     },
     {
       "name": "index.ts",
@@ -2443,8 +2555,8 @@
       "name": "MetadataDrivenPageRenderer.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/runtime/MetadataDrivenPageRenderer.vue",
       "type": "file",
-      "size": 655,
-      "modified": "2025-09-22T08:52:38.405Z"
+      "size": 6003,
+      "modified": "2025-09-29T17:25:43.642Z"
     },
     {
       "name": "designer.ts",
@@ -2466,6 +2578,13 @@
       "type": "file",
       "size": 1638,
       "modified": "2025-09-23T02:48:58.560Z"
+    },
+    {
+      "name": "types-only.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/types-only.ts",
+      "type": "file",
+      "size": 838,
+      "modified": "2025-09-29T06:09:31.469Z"
     },
     {
       "name": "zod-schemas.integration.test.ts",
@@ -2499,8 +2618,8 @@
       "name": "performance-optimizer.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/utils/performance-optimizer.ts",
       "type": "file",
-      "size": 26325,
-      "modified": "2025-09-27T04:34:28.649Z"
+      "size": 26327,
+      "modified": "2025-09-29T13:55:20.789Z"
     },
     {
       "name": "responsive-design.ts",
@@ -2541,85 +2660,78 @@
       "name": "DesignView.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/DesignView.vue",
       "type": "file",
-      "size": 2833,
-      "modified": "2025-09-26T16:21:09.358Z"
+      "size": 2877,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "EntityModelingView.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/EntityModelingView.vue",
       "type": "file",
-      "size": 4566,
-      "modified": "2025-09-26T16:21:09.358Z"
+      "size": 4972,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "ThemeCustomizationView.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/ThemeCustomizationView.vue",
       "type": "file",
-      "size": 8743,
-      "modified": "2025-09-26T16:21:09.358Z"
+      "size": 9379,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "UltraSimpleStudio.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/UltraSimpleStudio.vue",
       "type": "file",
-      "size": 26753,
-      "modified": "2025-09-28T07:55:35.791Z"
+      "size": 28444,
+      "modified": "2025-09-29T17:25:43.636Z"
     },
     {
       "name": "VisualDesignerView.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/VisualDesignerView.vue",
       "type": "file",
-      "size": 46714,
-      "modified": "2025-09-27T04:34:28.649Z"
+      "size": 48809,
+      "modified": "2025-09-29T14:47:49.666Z"
     },
     {
       "name": "DragDropFormView.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/DragDropFormView.vue",
       "type": "file",
-      "size": 44506,
-      "modified": "2025-09-27T04:34:28.649Z"
+      "size": 46683,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "LowCodeEngineView.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/LowCodeEngineView.vue",
       "type": "file",
-      "size": 20539,
-      "modified": "2025-09-26T01:54:30.687Z"
+      "size": 21501,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "PerformanceDashboard.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/PerformanceDashboard.vue",
       "type": "file",
-      "size": 41856,
-      "modified": "2025-09-27T07:16:56.809Z"
+      "size": 44488,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "SfcCompilerView.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/SfcCompilerView.vue",
       "type": "file",
-      "size": 31918,
-      "modified": "2025-09-27T04:34:09.650Z"
-    },
-    {
-      "name": "AIAssistantPanel.vue",
-      "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/designer/AIAssistantPanel.vue",
-      "type": "file",
-      "size": 443,
-      "modified": "2025-09-22T08:52:48.021Z"
+      "size": 33407,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "AdvancedCanvasComponent.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/designer/AdvancedCanvasComponent.vue",
       "type": "file",
-      "size": 5625,
-      "modified": "2025-09-22T08:52:47.957Z"
+      "size": 5903,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "Canvas.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/designer/Canvas.vue",
       "type": "file",
-      "size": 241,
-      "modified": "2025-09-22T08:52:48.164Z"
+      "size": 249,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "ComponentPalette.vue",
@@ -2632,22 +2744,22 @@
       "name": "ExportDialog.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/designer/ExportDialog.vue",
       "type": "file",
-      "size": 2186,
-      "modified": "2025-09-22T08:52:48.699Z"
+      "size": 2486,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "ImportDialog.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/designer/ImportDialog.vue",
       "type": "file",
-      "size": 3200,
-      "modified": "2025-09-22T08:52:48.904Z"
+      "size": 3606,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "Inspector.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/designer/Inspector.vue",
       "type": "file",
-      "size": 250,
-      "modified": "2025-09-22T08:52:48.955Z"
+      "size": 258,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "LayerManager.vue",
@@ -2660,22 +2772,22 @@
       "name": "MinimapComponent.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/designer/MinimapComponent.vue",
       "type": "file",
-      "size": 4438,
-      "modified": "2025-09-22T08:52:49.103Z"
+      "size": 4588,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "Palette.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/designer/Palette.vue",
       "type": "file",
-      "size": 244,
-      "modified": "2025-09-22T08:52:49.137Z"
+      "size": 252,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "PreviewModal.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/designer/PreviewModal.vue",
       "type": "file",
-      "size": 3448,
-      "modified": "2025-09-22T08:52:49.349Z"
+      "size": 3765,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "StyleEditor.vue",
@@ -2688,8 +2800,8 @@
       "name": "VersionHistory.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/designer/VersionHistory.vue",
       "type": "file",
-      "size": 2322,
-      "modified": "2025-09-22T08:52:49.526Z"
+      "size": 2507,
+      "modified": "2025-09-29T07:33:53.452Z"
     },
     {
       "name": "ModuleWizardTestView.vue",
@@ -2723,22 +2835,78 @@
       "name": "tsconfig.json",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/tsconfig.json",
       "type": "file",
-      "size": 428,
-      "modified": "2025-09-29T04:23:04.446Z"
+      "size": 618,
+      "modified": "2025-09-29T06:09:31.469Z"
+    },
+    {
+      "name": "package.json",
+      "path": "src/SmartAbp.Vue/packages/lowcode-shared/package.json",
+      "type": "file",
+      "size": 883,
+      "modified": "2025-09-29T06:37:25.076Z"
+    },
+    {
+      "name": "UnifiedCacheManager.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/cache/UnifiedCacheManager.ts",
+      "type": "file",
+      "size": 19398,
+      "modified": "2025-09-29T17:06:11.445Z"
+    },
+    {
+      "name": "BaseComponent.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/BaseComponent.ts",
+      "type": "file",
+      "size": 15664,
+      "modified": "2025-09-29T17:06:11.445Z"
+    },
+    {
+      "name": "ComponentRegistry.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts",
+      "type": "file",
+      "size": 11859,
+      "modified": "2025-09-29T13:55:20.769Z"
     },
     {
       "name": "useSafeEventListener.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/useSafeEventListener.ts",
       "type": "file",
-      "size": 4477,
-      "modified": "2025-09-29T02:58:24.777Z"
+      "size": 4508,
+      "modified": "2025-09-29T17:25:43.636Z"
+    },
+    {
+      "name": "GlobalErrorHandler.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/error/GlobalErrorHandler.ts",
+      "type": "file",
+      "size": 12265,
+      "modified": "2025-09-29T17:49:02.748Z"
     },
     {
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/index.ts",
       "type": "file",
-      "size": 747,
-      "modified": "2025-09-29T02:58:33.649Z"
+      "size": 1156,
+      "modified": "2025-09-29T09:59:28.188Z"
+    },
+    {
+      "name": "ErrorLogIntegration.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/logging/ErrorLogIntegration.ts",
+      "type": "file",
+      "size": 8334,
+      "modified": "2025-09-29T17:58:17.360Z"
+    },
+    {
+      "name": "LogPolicyManager.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/logging/LogPolicyManager.ts",
+      "type": "file",
+      "size": 13887,
+      "modified": "2025-09-29T17:58:17.360Z"
+    },
+    {
+      "name": "GlobalMemoryMonitor.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/memory/GlobalMemoryMonitor.ts",
+      "type": "file",
+      "size": 19454,
+      "modified": "2025-09-29T17:06:11.445Z"
     },
     {
       "name": "tsconfig.json",
@@ -2748,11 +2916,32 @@
       "modified": "2025-09-29T04:22:52.309Z"
     },
     {
+      "name": "index.d.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-tools/index.d.ts",
+      "type": "file",
+      "size": 1685,
+      "modified": "2025-09-29T06:26:20.462Z"
+    },
+    {
+      "name": "index.js",
+      "path": "src/SmartAbp.Vue/packages/lowcode-tools/index.js",
+      "type": "file",
+      "size": 2684,
+      "modified": "2025-09-29T06:26:20.458Z"
+    },
+    {
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-tools/index.ts",
       "type": "file",
       "size": 2891,
       "modified": "2025-09-26T15:49:24.154Z"
+    },
+    {
+      "name": "package.json",
+      "path": "src/SmartAbp.Vue/packages/lowcode-tools/package.json",
+      "type": "file",
+      "size": 1124,
+      "modified": "2025-09-29T06:37:34.410Z"
     },
     {
       "name": "build-template-index.js",
@@ -2765,8 +2954,15 @@
       "name": "simple-template-index.js",
       "path": "src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/simple-template-index.js",
       "type": "file",
-      "size": 28975,
-      "modified": "2025-09-22T08:52:51.440Z"
+      "size": 28956,
+      "modified": "2025-09-29T07:33:53.452Z"
+    },
+    {
+      "name": "tsconfig.json",
+      "path": "src/SmartAbp.Vue/packages/lowcode-tools/tsconfig.json",
+      "type": "file",
+      "size": 429,
+      "modified": "2025-09-29T06:26:41.640Z"
     },
     {
       "name": "package.json",
@@ -5958,42 +6154,77 @@
     {
       "name": "GenerationLog",
       "type": "interface",
-      "line": 189,
+      "line": 78,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/index.d.ts"
+    },
+    {
+      "name": "EntityDefinition",
+      "type": "interface",
+      "line": 87,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/index.d.ts"
+    },
+    {
+      "name": "EntityField",
+      "type": "interface",
+      "line": 89,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/index.d.ts"
+    },
+    {
+      "name": "EntityRelation",
+      "type": "interface",
+      "line": 91,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/index.d.ts"
+    },
+    {
+      "name": "MDIWindowConfig",
+      "type": "interface",
+      "line": 93,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/index.d.ts"
+    },
+    {
+      "name": "TabConfig",
+      "type": "interface",
+      "line": 117,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/index.d.ts"
+    },
+    {
+      "name": "GenerationLog",
+      "type": "interface",
+      "line": 316,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-core/index.ts"
     },
     {
       "name": "EntityDefinition",
       "type": "interface",
-      "line": 202,
+      "line": 329,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-core/index.ts"
     },
     {
       "name": "EntityField",
       "type": "interface",
-      "line": 206,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/packages/lowcode-core/index.ts"
-    },
-    {
-      "name": "EntityRelation",
-      "type": "interface",
-      "line": 210,
+      "line": 333,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-core/index.ts"
     },
     {
       "name": "MDIWindowConfig",
       "type": "interface",
-      "line": 214,
+      "line": 339,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-core/index.ts"
     },
     {
       "name": "TabConfig",
       "type": "interface",
-      "line": 234,
+      "line": 359,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-core/index.ts"
     },
@@ -6017,6 +6248,48 @@
       "line": 56,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-core/src/analyzers/SimpleRelationshipDetector.ts"
+    },
+    {
+      "name": "ComponentLoadTask",
+      "type": "interface",
+      "line": 19,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/components/LazyComponentLoader.ts"
+    },
+    {
+      "name": "LoadPerformanceMetrics",
+      "type": "interface",
+      "line": 39,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/components/LazyComponentLoader.ts"
+    },
+    {
+      "name": "UserBehaviorPattern",
+      "type": "interface",
+      "line": 59,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/components/LazyComponentLoader.ts"
+    },
+    {
+      "name": "LazyComponentLoader",
+      "type": "class",
+      "line": 77,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/components/LazyComponentLoader.ts"
+    },
+    {
+      "name": "createLazyComponentLoader",
+      "type": "function",
+      "line": 598,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/components/LazyComponentLoader.ts"
+    },
+    {
+      "name": "getGlobalLazyLoader",
+      "type": "function",
+      "line": 610,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/components/LazyComponentLoader.ts"
     },
     {
       "name": "CodeGenerationProgress",
@@ -6066,6 +6339,111 @@
       "line": 70,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-core/src/composables/useDragDrop.ts"
+    },
+    {
+      "name": "BrandAssets",
+      "type": "interface",
+      "line": 22,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/EnterpriseCustomizationEngine.ts"
+    },
+    {
+      "name": "ThemeConfiguration",
+      "type": "interface",
+      "line": 67,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/EnterpriseCustomizationEngine.ts"
+    },
+    {
+      "name": "LayoutConfiguration",
+      "type": "interface",
+      "line": 94,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/EnterpriseCustomizationEngine.ts"
+    },
+    {
+      "name": "FeatureConfiguration",
+      "type": "interface",
+      "line": 143,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/EnterpriseCustomizationEngine.ts"
+    },
+    {
+      "name": "CustomizationConfiguration",
+      "type": "interface",
+      "line": 180,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/EnterpriseCustomizationEngine.ts"
+    },
+    {
+      "name": "PreviewConfiguration",
+      "type": "interface",
+      "line": 216,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/EnterpriseCustomizationEngine.ts"
+    },
+    {
+      "name": "EnterpriseCustomizationEngine",
+      "type": "class",
+      "line": 235,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/EnterpriseCustomizationEngine.ts"
+    },
+    {
+      "name": "createEnterpriseCustomizationEngine",
+      "type": "function",
+      "line": 1050,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/EnterpriseCustomizationEngine.ts"
+    },
+    {
+      "name": "getGlobalCustomizationEngine",
+      "type": "function",
+      "line": 1062,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/EnterpriseCustomizationEngine.ts"
+    },
+    {
+      "name": "ColorConfiguration",
+      "type": "interface",
+      "line": 21,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/ThemeDesigner.ts"
+    },
+    {
+      "name": "FontConfiguration",
+      "type": "interface",
+      "line": 43,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/ThemeDesigner.ts"
+    },
+    {
+      "name": "DesignHistory",
+      "type": "interface",
+      "line": 63,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/ThemeDesigner.ts"
+    },
+    {
+      "name": "ColorPalette",
+      "type": "interface",
+      "line": 81,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/ThemeDesigner.ts"
+    },
+    {
+      "name": "ThemeDesigner",
+      "type": "class",
+      "line": 97,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/ThemeDesigner.ts"
+    },
+    {
+      "name": "createThemeDesigner",
+      "type": "function",
+      "line": 789,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/customization/ThemeDesigner.ts"
     },
     {
       "name": "MetadataConfig",
@@ -6122,6 +6500,48 @@
       "line": 55,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-core/src/generators/RelationshipTemplateSelector.ts"
+    },
+    {
+      "name": "MemoryReport",
+      "type": "interface",
+      "line": 32,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/memory/ComponentMemoryManager.ts"
+    },
+    {
+      "name": "MemoryLeakDetection",
+      "type": "interface",
+      "line": 58,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/memory/ComponentMemoryManager.ts"
+    },
+    {
+      "name": "PerformanceMonitor",
+      "type": "interface",
+      "line": 74,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/memory/ComponentMemoryManager.ts"
+    },
+    {
+      "name": "ComponentMemoryManager",
+      "type": "class",
+      "line": 263,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/memory/ComponentMemoryManager.ts"
+    },
+    {
+      "name": "createComponentMemoryManager",
+      "type": "function",
+      "line": 732,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/memory/ComponentMemoryManager.ts"
+    },
+    {
+      "name": "getGlobalMemoryManager",
+      "type": "function",
+      "line": 749,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/memory/ComponentMemoryManager.ts"
     },
     {
       "name": "SystemHealthReport",
@@ -6206,6 +6626,118 @@
       "line": 122,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-core/src/monitoring/PerformanceMonitor.ts"
+    },
+    {
+      "name": "TemplateLoadTask",
+      "type": "interface",
+      "line": 21,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/DynamicTemplateLoader.ts"
+    },
+    {
+      "name": "LoadMetrics",
+      "type": "interface",
+      "line": 41,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/DynamicTemplateLoader.ts"
+    },
+    {
+      "name": "CacheStats",
+      "type": "interface",
+      "line": 65,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/DynamicTemplateLoader.ts"
+    },
+    {
+      "name": "TemplatePrediction",
+      "type": "interface",
+      "line": 83,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/DynamicTemplateLoader.ts"
+    },
+    {
+      "name": "DynamicTemplateLoader",
+      "type": "class",
+      "line": 99,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/DynamicTemplateLoader.ts"
+    },
+    {
+      "name": "createDynamicTemplateLoader",
+      "type": "function",
+      "line": 722,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/DynamicTemplateLoader.ts"
+    },
+    {
+      "name": "TemplateVersion",
+      "type": "interface",
+      "line": 23,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/TemplatePluginSystem.ts"
+    },
+    {
+      "name": "TemplateDependency",
+      "type": "interface",
+      "line": 52,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/TemplatePluginSystem.ts"
+    },
+    {
+      "name": "EnterpriseCustomization",
+      "type": "interface",
+      "line": 68,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/TemplatePluginSystem.ts"
+    },
+    {
+      "name": "TemplatePluginMetadata",
+      "type": "interface",
+      "line": 105,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/TemplatePluginSystem.ts"
+    },
+    {
+      "name": "TemplatePluginInstance",
+      "type": "interface",
+      "line": 161,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/TemplatePluginSystem.ts"
+    },
+    {
+      "name": "PluginRegistryEntry",
+      "type": "interface",
+      "line": 190,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/TemplatePluginSystem.ts"
+    },
+    {
+      "name": "PluginLoadOptions",
+      "type": "interface",
+      "line": 208,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/TemplatePluginSystem.ts"
+    },
+    {
+      "name": "TemplatePluginSystem",
+      "type": "class",
+      "line": 226,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/TemplatePluginSystem.ts"
+    },
+    {
+      "name": "createTemplatePluginSystem",
+      "type": "function",
+      "line": 1051,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/TemplatePluginSystem.ts"
+    },
+    {
+      "name": "getGlobalTemplatePluginSystem",
+      "type": "function",
+      "line": 1069,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/templates/TemplatePluginSystem.ts"
     },
     {
       "name": "PropertyDefinition",
@@ -6434,6 +6966,160 @@
     {
       "name": "ValidationRule",
       "type": "interface",
+      "line": 16,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "EntityProperty",
+      "type": "interface",
+      "line": 31,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "EntityRelation",
+      "type": "interface",
+      "line": 85,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "BusinessRule",
+      "type": "interface",
+      "line": 114,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "EntityMetadata",
+      "type": "interface",
+      "line": 140,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "ComponentStyle",
+      "type": "interface",
+      "line": 191,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "ComponentLayout",
+      "type": "interface",
+      "line": 228,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "DataBinding",
+      "type": "interface",
+      "line": 261,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "ComponentEvent",
+      "type": "interface",
+      "line": 293,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "PermissionConfig",
+      "type": "interface",
+      "line": 310,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "UIComponentMetadata",
+      "type": "interface",
+      "line": 325,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "PageRoute",
+      "type": "interface",
+      "line": 386,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "TabConfig",
+      "type": "interface",
+      "line": 410,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "MDIWindowConfig",
+      "type": "interface",
+      "line": 433,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "PageLayoutConfig",
+      "type": "interface",
+      "line": 471,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "PageMetadata",
+      "type": "interface",
+      "line": 492,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "ModuleMetadata",
+      "type": "interface",
+      "line": 547,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "ApplicationMetadata",
+      "type": "interface",
+      "line": 580,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "CodeGenerationConfig",
+      "type": "interface",
+      "line": 624,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "CodeGenerationResult",
+      "type": "interface",
+      "line": 659,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "ApiResponse",
+      "type": "interface",
+      "line": 689,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "QueryParams",
+      "type": "interface",
+      "line": 715,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.d.ts"
+    },
+    {
+      "name": "ValidationRule",
+      "type": "interface",
       "line": 91,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.ts"
@@ -6588,9 +7274,135 @@
     {
       "name": "SmartAbpManifestWriter",
       "type": "class",
-      "line": 28,
+      "line": 53,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-core/src/utils/manifestWriter.ts"
+    },
+    {
+      "name": "ExtendedVersionInfo",
+      "type": "interface",
+      "line": 22,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/TemplateVersionManager.ts"
+    },
+    {
+      "name": "UpdatePlan",
+      "type": "interface",
+      "line": 46,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/TemplateVersionManager.ts"
+    },
+    {
+      "name": "VersionConflict",
+      "type": "interface",
+      "line": 81,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/TemplateVersionManager.ts"
+    },
+    {
+      "name": "MigrationTask",
+      "type": "interface",
+      "line": 103,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/TemplateVersionManager.ts"
+    },
+    {
+      "name": "MigrationContext",
+      "type": "interface",
+      "line": 127,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/TemplateVersionManager.ts"
+    },
+    {
+      "name": "MigrationResult",
+      "type": "interface",
+      "line": 145,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/TemplateVersionManager.ts"
+    },
+    {
+      "name": "VersionRepository",
+      "type": "interface",
+      "line": 161,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/TemplateVersionManager.ts"
+    },
+    {
+      "name": "TemplateVersionManager",
+      "type": "class",
+      "line": 179,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/TemplateVersionManager.ts"
+    },
+    {
+      "name": "createTemplateVersionManager",
+      "type": "function",
+      "line": 862,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/TemplateVersionManager.ts"
+    },
+    {
+      "name": "getGlobalVersionManager",
+      "type": "function",
+      "line": 880,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/TemplateVersionManager.ts"
+    },
+    {
+      "name": "NotificationConfig",
+      "type": "interface",
+      "line": 22,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/UpdateNotificationSystem.ts"
+    },
+    {
+      "name": "NotificationMessage",
+      "type": "interface",
+      "line": 51,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/UpdateNotificationSystem.ts"
+    },
+    {
+      "name": "NotificationAction",
+      "type": "interface",
+      "line": 85,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/UpdateNotificationSystem.ts"
+    },
+    {
+      "name": "NotificationRule",
+      "type": "interface",
+      "line": 103,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/UpdateNotificationSystem.ts"
+    },
+    {
+      "name": "NotificationStats",
+      "type": "interface",
+      "line": 134,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/UpdateNotificationSystem.ts"
+    },
+    {
+      "name": "UpdateNotificationSystem",
+      "type": "class",
+      "line": 154,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/UpdateNotificationSystem.ts"
+    },
+    {
+      "name": "createUpdateNotificationSystem",
+      "type": "function",
+      "line": 836,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/UpdateNotificationSystem.ts"
+    },
+    {
+      "name": "getGlobalNotificationSystem",
+      "type": "function",
+      "line": 848,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-core/src/versioning/UpdateNotificationSystem.ts"
     },
     {
       "name": "Position",
@@ -6679,14 +7491,14 @@
     {
       "name": "createSchemaExporter",
       "type": "function",
-      "line": 521,
+      "line": 520,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-designer/src/designer/schema/exporter.ts"
     },
     {
       "name": "exportDesignerState",
       "type": "function",
-      "line": 529,
+      "line": 528,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-designer/src/designer/schema/exporter.ts"
     },
@@ -6728,7 +7540,7 @@
     {
       "name": "MetadataDrivenPageRenderer",
       "type": "vue-component",
-      "line": 13,
+      "line": 71,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-designer/src/runtime/MetadataDrivenPageRenderer.vue"
     },
@@ -7244,13 +8056,6 @@
       "file": "src/SmartAbp.Vue/packages/lowcode-designer/src/utils/zod-schemas.ts"
     },
     {
-      "name": "AIAssistantPanel",
-      "type": "vue-component",
-      "line": 12,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/designer/AIAssistantPanel.vue"
-    },
-    {
       "name": "ComponentPalette",
       "type": "vue-component",
       "line": 12,
@@ -7300,6 +8105,160 @@
       "file": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/dev/UICustomizerTestView.vue"
     },
     {
+      "name": "CacheItem",
+      "type": "interface",
+      "line": 19,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/cache/UnifiedCacheManager.ts"
+    },
+    {
+      "name": "CacheConfig",
+      "type": "interface",
+      "line": 39,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/cache/UnifiedCacheManager.ts"
+    },
+    {
+      "name": "CacheStats",
+      "type": "interface",
+      "line": 59,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/cache/UnifiedCacheManager.ts"
+    },
+    {
+      "name": "CacheEvents",
+      "type": "interface",
+      "line": 86,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/cache/UnifiedCacheManager.ts"
+    },
+    {
+      "name": "UnifiedCacheManager",
+      "type": "class",
+      "line": 550,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/cache/UnifiedCacheManager.ts"
+    },
+    {
+      "name": "getUnifiedCacheManager",
+      "type": "function",
+      "line": 774,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/cache/UnifiedCacheManager.ts"
+    },
+    {
+      "name": "getCache",
+      "type": "function",
+      "line": 781,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/cache/UnifiedCacheManager.ts"
+    },
+    {
+      "name": "globalCacheCleanup",
+      "type": "function",
+      "line": 788,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/cache/UnifiedCacheManager.ts"
+    },
+    {
+      "name": "getCacheReport",
+      "type": "function",
+      "line": 795,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/cache/UnifiedCacheManager.ts"
+    },
+    {
+      "name": "ComponentLifecycleEvents",
+      "type": "interface",
+      "line": 19,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/BaseComponent.ts"
+    },
+    {
+      "name": "ComponentPerformanceMetrics",
+      "type": "interface",
+      "line": 37,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/BaseComponent.ts"
+    },
+    {
+      "name": "BaseComponent",
+      "type": "class",
+      "line": 57,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/BaseComponent.ts"
+    },
+    {
+      "name": "getGlobalComponentManager",
+      "type": "function",
+      "line": 603,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/BaseComponent.ts"
+    },
+    {
+      "name": "createComponentPerformanceMonitor",
+      "type": "function",
+      "line": 610,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/BaseComponent.ts"
+    },
+    {
+      "name": "ComponentMetadata",
+      "type": "interface",
+      "line": 18,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
+      "name": "ComponentInstance",
+      "type": "interface",
+      "line": 54,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
+      "name": "ComponentLoadStats",
+      "type": "interface",
+      "line": 70,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
+      "name": "ComponentRegistry",
+      "type": "class",
+      "line": 86,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
+      "name": "createComponentRegistry",
+      "type": "function",
+      "line": 418,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
+      "name": "registerComponent",
+      "type": "function",
+      "line": 425,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
+      "name": "loadComponent",
+      "type": "function",
+      "line": 432,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
+      "name": "getComponentMetadata",
+      "type": "function",
+      "line": 439,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
       "name": "useSafeEventListener",
       "type": "function",
       "line": 34,
@@ -7319,6 +8278,181 @@
       "line": 124,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/useSafeEventListener.ts"
+    },
+    {
+      "name": "ErrorContext",
+      "type": "interface",
+      "line": 15,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/error/GlobalErrorHandler.ts"
+    },
+    {
+      "name": "StandardError",
+      "type": "interface",
+      "line": 37,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/error/GlobalErrorHandler.ts"
+    },
+    {
+      "name": "ErrorHandlerOptions",
+      "type": "interface",
+      "line": 65,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/error/GlobalErrorHandler.ts"
+    },
+    {
+      "name": "ErrorRecoveryHandler",
+      "type": "interface",
+      "line": 83,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/error/GlobalErrorHandler.ts"
+    },
+    {
+      "name": "GlobalErrorHandler",
+      "type": "class",
+      "line": 97,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/error/GlobalErrorHandler.ts"
+    },
+    {
+      "name": "getGlobalErrorHandler",
+      "type": "function",
+      "line": 480,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/error/GlobalErrorHandler.ts"
+    },
+    {
+      "name": "handleError",
+      "type": "function",
+      "line": 490,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/error/GlobalErrorHandler.ts"
+    },
+    {
+      "name": "ErrorLogEntry",
+      "type": "interface",
+      "line": 9,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/logging/ErrorLogIntegration.ts"
+    },
+    {
+      "name": "ErrorLogIntegration",
+      "type": "class",
+      "line": 39,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/logging/ErrorLogIntegration.ts"
+    },
+    {
+      "name": "createErrorLogIntegration",
+      "type": "function",
+      "line": 277,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/logging/ErrorLogIntegration.ts"
+    },
+    {
+      "name": "setupGlobalErrorLogging",
+      "type": "function",
+      "line": 287,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/logging/ErrorLogIntegration.ts"
+    },
+    {
+      "name": "LogPolicyConfig",
+      "type": "interface",
+      "line": 13,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/logging/LogPolicyManager.ts"
+    },
+    {
+      "name": "LogStorageStats",
+      "type": "interface",
+      "line": 45,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/logging/LogPolicyManager.ts"
+    },
+    {
+      "name": "LogAlert",
+      "type": "interface",
+      "line": 65,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/logging/LogPolicyManager.ts"
+    },
+    {
+      "name": "LogPolicyManager",
+      "type": "class",
+      "line": 94,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/logging/LogPolicyManager.ts"
+    },
+    {
+      "name": "createLogPolicyManager",
+      "type": "function",
+      "line": 529,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/logging/LogPolicyManager.ts"
+    },
+    {
+      "name": "MemoryUsageStats",
+      "type": "interface",
+      "line": 21,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/memory/GlobalMemoryMonitor.ts"
+    },
+    {
+      "name": "MemoryPressureAlert",
+      "type": "interface",
+      "line": 39,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/memory/GlobalMemoryMonitor.ts"
+    },
+    {
+      "name": "MemoryLeakDetection",
+      "type": "interface",
+      "line": 59,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/memory/GlobalMemoryMonitor.ts"
+    },
+    {
+      "name": "GCStats",
+      "type": "interface",
+      "line": 81,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/memory/GlobalMemoryMonitor.ts"
+    },
+    {
+      "name": "MemoryMonitorConfig",
+      "type": "interface",
+      "line": 97,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/memory/GlobalMemoryMonitor.ts"
+    },
+    {
+      "name": "GlobalMemoryMonitor",
+      "type": "class",
+      "line": 119,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/memory/GlobalMemoryMonitor.ts"
+    },
+    {
+      "name": "getGlobalMemoryMonitor",
+      "type": "function",
+      "line": 680,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/memory/GlobalMemoryMonitor.ts"
+    },
+    {
+      "name": "startMemoryMonitoring",
+      "type": "function",
+      "line": 687,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/memory/GlobalMemoryMonitor.ts"
+    },
+    {
+      "name": "getMemoryReport",
+      "type": "function",
+      "line": 696,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/memory/GlobalMemoryMonitor.ts"
     },
     {
       "name": "LowCodeUIComponents",
