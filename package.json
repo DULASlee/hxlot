@@ -22,13 +22,11 @@
     "expert:finalize": "node tools/quality-assurance/expert-finalize.js",
     "expert:verify": "npm run lint && npm run type-check && npm run test:coverage && npm run build"
   },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^0.6.0",
-    "js-yaml": "^4.1.0"
-  },
   "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.2",
     "chalk": "^4.1.2",
     "cross-env": "^7.0.3",
+    "js-yaml": "^4.1.0",
     "semver": "^7.6.3",
     "typescript": "^5.0.0",
     "vue-tsc": "^3.0.7"

@@ -288,6 +288,22 @@
   "security.workspace.trust.enabled": true,
   "security.promptForLocalFileProtocolHandling": false,
 
+  // ===== MCP (Model Context Protocol) 配置 =====
+  "mcp.servers": {
+    "serena": {
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/.serena/mcp-server.js"
+      ],
+      "env": {
+        "SERENA_PROJECT_ROOT": "${workspaceFolder}",
+        "SERENA_CONFIG_PATH": "${workspaceFolder}/.serena/project.yml",
+        "SERENA_CACHE_DIR": "${workspaceFolder}/.serena",
+        "NODE_ENV": "production"
+      }
+    }
+  },
+
   // ===== 语言特定设置 =====
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features",

@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "serena": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@serena-ai/mcp-server@latest"
+      ],
+      "env": {
+        "SERENA_PROJECT_ROOT": "${workspaceFolder}",
+        "SERENA_CONFIG_PATH": "${workspaceFolder}/.serena/project.yml",
+        "SERENA_CACHE_DIR": "${workspaceFolder}/.serena",
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}
