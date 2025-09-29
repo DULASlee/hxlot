@@ -139,7 +139,7 @@
     "watchDirectory": "dynamicPriorityPolling",
     "fallbackPolling": "dynamicPriority",
     "synchronousWatchDirectory": true,
-    "excludeDirectories": ["**/node_modules", "**/dist", "**/coverage", "**/reports"]
+    "excludeDirectories": ["**/node_modules", "**/dist", "**/coverage", "**/reports", "**/.generated"]
   },
   "typescript.tsserver.enableTracing": false,
   "typescript.tsserver.log": "off",
@@ -167,6 +167,7 @@
     "**/.vscode/**": true,
     "**/tmp/**": true,
     "**/temp/**": true,
+    "**/.generated/**": true,
     "**/.pytest_cache/**": true,
     "**/__pycache__/**": true,
     "**/.mypy_cache/**": true,
@@ -196,6 +197,7 @@
     "**/.git": true,
     "**/coverage": true,
     "**/.next": true,
+    "**/.generated": true,
     "**/.angular": true,
     "**/bower_components": true,
     "**/.sass-cache": true,
