@@ -1,298 +1,77 @@
-/// <AI_TEMPLATE_INFO>
-/// 模板类型: ABP CRUD应用服务
-/// 适用场景: 标准的CRUD操作应用服务
-/// 依赖项: SmartAbpAppService, IRepository, AutoMapper
-/// 权限要求: 需要定义相应的权限常量
-/// 生成规则: 
-///   - EntityName: 实体名称（PascalCase）
-///   - entityName: 实体名称（camelCase）
-///   - ModuleName: 模块名称
-///   - 自动生成CRUD方法
-///   - 包含权限检查
-///   - 使用AutoMapper映射
-/// </AI_TEMPLATE_INFO>
-
+/*
+ * AI_TEMPLATE_INFO: {"version":"1.2","type":"C#","handler":"Handlebars"}
+ * TEMPLATE_DESCRIPTION: Generates a standard ABP Application Service with CRUD operations.
+ */
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using SmartAbp.Application.Contracts.Permissions;
+using SmartAbp.Domain.Entities;
+using SmartAbp.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using SmartAbp.Localization;
-using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using Volo.Abp.Domain.Repositories;
-using SmartAbp.Permissions;
+using Volo.Abp.Domain.Entities;
+using Volo.Abp;
 
-namespace SmartAbp.{{ModuleName}};
-
-/// <summary>
-/// {{EntityName}} CRUD应用服务
-/// </summary>
-[Authorize(SmartAbpPermissions.{{ModuleName}}.Default)]
-public class {{EntityName}}AppService : SmartAbpAppService, I{{EntityName}}AppService
+namespace SmartAbp.Application.Services
 {
-    private readonly IRepository<{{EntityName}}, Guid> _{{entityName}}Repository;
-
-    public {{EntityName}}AppService(IRepository<{{EntityName}}, Guid> {{entityName}}Repository)
+    [Authorize]
+    public class {{entityName}}AppService : CrudAppService<
+        {{entityName}},
+        {{entityName}}Dto,
+        {{primaryKeyType}},
+        Get{{entityName}}ListDto,
+        {{entityName}}CreateDto,
+        {{entityName}}UpdateDto>, I{{entityName}}AppService
     {
-        _{{entityName}}Repository = {{entityName}}Repository;
-    }
+        private readonly IRepository<{{entityName}}, {{primaryKeyType}}> _{{entityName}}Repository;
 
-    /// <summary>
-    /// 获取{{EntityName}}列表
-    /// </summary>
-    /// <param name="input">查询参数</param>
-    /// <returns>分页结果</returns>
-    [Authorize(SmartAbpPermissions.{{ModuleName}}.Default)]
-    public virtual async Task<PagedResultDto<{{EntityName}}Dto>> GetListAsync(Get{{EntityName}}ListDto input)
-    {
-        var queryable = await _{{entityName}}Repository.GetQueryableAsync();
-
-        // 应用过滤条件
-        if (!string.IsNullOrWhiteSpace(input.Filter))
+        public {{entityName}}AppService(IRepository<{{entityName}}, {{primaryKeyType}}> repository) : base(repository)
         {
-            queryable = queryable.Where(x => 
-                x.Name.Contains(input.Filter) || 
-                (x.DisplayName != null && x.DisplayName.Contains(input.Filter)));
+            _{{entityName}}Repository = repository;
+            GetPolicyName = {{permissionGroupName}}Permissions.{{entityNamePlural}}.Default;
+            GetListPolicyName = {{permissionGroupName}}Permissions.{{entityNamePlural}}.Default;
+            CreatePolicyName = {{permissionGroupName}}Permissions.{{entityNamePlural}}.Create;
+            UpdatePolicyName = {{permissionGroupName}}Permissions.{{entityNamePlural}}.Update;
+            DeletePolicyName = {{permissionGroupName}}Permissions.{{entityNamePlural}}.Delete;
         }
 
-        if (input.IsEnabled.HasValue)
+        protected override async Task<IQueryable<{{entityName}}>> CreateFilteredQueryAsync(Get{{entityName}}ListDto input)
         {
-            queryable = queryable.Where(x => x.IsEnabled == input.IsEnabled.Value);
+            var queryable = await Repository.GetQueryableAsync();
+            return queryable
+                .WhereIf(!input.Filter.IsNullOrWhiteSpace(), e => e.Name.Contains(input.Filter));
         }
 
-        // 应用排序
-        if (!string.IsNullOrWhiteSpace(input.Sorting))
+        public override async Task<{{entityName}}Dto> CreateAsync({{entityName}}CreateDto input)
         {
-            queryable = queryable.OrderBy(input.Sorting);
+            await CheckCreatePolicyAsync();
+            await CheckNameAsync(input.Name);
+            var entity = ObjectMapper.Map<{{entityName}}CreateDto, {{entityName}}>(input);
+            await Repository.InsertAsync(entity, autoSave: true);
+            return ObjectMapper.Map<{{entityName}}, {{entityName}}Dto>(entity);
         }
-        else
+
+        public override async Task<{{entityName}}Dto> UpdateAsync({{primaryKeyType}} id, {{entityName}}UpdateDto input)
         {
-            queryable = queryable.OrderBy(x => x.Sort).ThenBy(x => x.Name);
-        }
-
-        // 分页查询
-        var totalCount = await AsyncExecuter.CountAsync(queryable);
-        var items = await AsyncExecuter.ToListAsync(
-            queryable.Skip(input.SkipCount).Take(input.MaxResultCount)
-        );
-
-        // 映射到DTO
-        var dtos = ObjectMapper.Map<List<{{EntityName}}>, List<{{EntityName}}Dto>>(items);
-
-        return new PagedResultDto<{{EntityName}}Dto>(totalCount, dtos);
-    }
-
-    /// <summary>
-    /// 根据ID获取{{EntityName}}
-    /// </summary>
-    /// <param name="id">实体ID</param>
-    /// <returns>{{EntityName}}DTO</returns>
-    [Authorize(SmartAbpPermissions.{{ModuleName}}.Default)]
-    public virtual async Task<{{EntityName}}Dto> GetAsync(Guid id)
-    {
-        var entity = await _{{entityName}}Repository.GetAsync(id);
-        return ObjectMapper.Map<{{EntityName}}, {{EntityName}}Dto>(entity);
-    }
-
-    /// <summary>
-    /// 创建{{EntityName}}
-    /// </summary>
-    /// <param name="input">创建参数</param>
-    /// <returns>创建的{{EntityName}}DTO</returns>
-    [Authorize(SmartAbpPermissions.{{ModuleName}}.Create)]
-    public virtual async Task<{{EntityName}}Dto> CreateAsync(Create{{EntityName}}Dto input)
-    {
-        // 验证名称唯一性
-        await CheckNameAsync(input.Name);
-
-        // 模板: 属性验证逻辑
-        {{#each properties}}
-        {{#if validationRules}}
-        // {{name}} 验证
-        {{#each validationRules}}
-        {{#if_eq type "required"}}
-        if ({{#if_eq ../type "string"}}string.IsNullOrWhiteSpace(input.{{../name}}){{else}}input.{{../name}} == null{{/if_eq}})
-        {
-            throw new UserFriendlyException(L["Validation:FieldIsRequired", L["{{../name}}"]]);
-        }
-        {{/if_eq}}
-        {{#if_eq type "maxLength"}}
-        if (input.{{../name}}?.Length > {{value}})
-        {
-            throw new UserFriendlyException(L["Validation:MaxLength", L["{{../name}}"], {{value}}]);
-        }
-        {{/if_eq}}
-        {{#if_eq type "minLength"}}
-        if (input.{{../name}}?.Length < {{value}})
-        {
-            throw new UserFriendlyException(L["Validation:MinLength", L["{{../name}}"], {{value}}]);
-        }
-        {{/if_eq}}
-        {{#if_eq type "range"}}
-        if (input.{{../name}} < {{value.min}} || input.{{../name}} > {{value.max}})
-        {
-            throw new UserFriendlyException(L["Validation:Range", L["{{../name}}"], {{value.min}}, {{value.max}}]);
-        }
-        {{/if_eq}}
-        {{#if_eq type "pattern"}}
-        if (!System.Text.RegularExpressions.Regex.IsMatch(input.{{../name}}, "{{value}}"))
-        {
-            throw new UserFriendlyException(L["Validation:InvalidFormat", L["{{../name}}"]]);
-        }
-        {{/if_eq}}
-        {{/each}}
-        {{/if}}
-        {{/each}}
-
-        var entity = ObjectMapper.Map<Create{{EntityName}}Dto, {{EntityName}}>(input);
-
-        // 创建实体
-        // var entity = new {{EntityName}}(
-        //     GuidGenerator.Create(),
-        //     input.Name,
-        //     input.DisplayName,
-        //     input.Description
-        // )
-        // {
-        //     Sort = input.Sort,
-        //     IsEnabled = input.IsEnabled
-        // };
-
-        // 保存到数据库
-        entity = await _{{entityName}}Repository.InsertAsync(entity, autoSave: true);
-
-        // 返回DTO
-        return ObjectMapper.Map<{{EntityName}}, {{EntityName}}Dto>(entity);
-    }
-
-    /// <summary>
-    /// 更新{{EntityName}}
-    /// </summary>
-    /// <param name="id">实体ID</param>
-    /// <param name="input">更新参数</param>
-    /// <returns>更新的{{EntityName}}DTO</returns>
-    [Authorize(SmartAbpPermissions.{{ModuleName}}.Edit)]
-    public virtual async Task<{{EntityName}}Dto> UpdateAsync(Guid id, Update{{EntityName}}Dto input)
-    {
-        // 获取实体
-        var entity = await _{{entityName}}Repository.GetAsync(id);
-
-        // 验证名称唯一性（排除当前实体）
-        if (entity.Name != input.Name)
-        {
+            await CheckUpdatePolicyAsync();
             await CheckNameAsync(input.Name, id);
+            var entity = await GetEntityByIdAsync(id);
+            ObjectMapper.Map(input, entity);
+            await Repository.UpdateAsync(entity, autoSave: true);
+            return ObjectMapper.Map<{{entityName}}, {{entityName}}Dto>(entity);
         }
 
-        // 模板: 属性验证逻辑
-        {{#each properties}}
-        {{#if validationRules}}
-        // {{name}} 验证
-        {{#each validationRules}}
-        {{#if_eq type "required"}}
-        if ({{#if_eq ../type "string"}}string.IsNullOrWhiteSpace(input.{{../name}}){{else}}input.{{../name}} == null{{/if_eq}})
+        protected virtual async Task CheckNameAsync(string name, {{primaryKeyType}}? id = null)
         {
-            throw new UserFriendlyException(L["Validation:FieldIsRequired", L["{{../name}}"]]);
-        }
-        {{/if_eq}}
-        {{#if_eq type "maxLength"}}
-        if (input.{{../name}}?.Length > {{value}})
-        {
-            throw new UserFriendlyException(L["Validation:MaxLength", L["{{../name}}"], {{value}}]);
-        }
-        {{/if_eq}}
-        {{#if_eq type "minLength"}}
-        if (input.{{../name}}?.Length < {{value}})
-        {
-            throw new UserFriendlyException(L["Validation:MinLength", L["{{../name}}"], {{value}}]);
-        }
-        {{/if_eq}}
-        {{#if_eq type "range"}}
-        if (input.{{../name}} < {{value.min}} || input.{{../name}} > {{value.max}})
-        {
-            throw new UserFriendlyException(L["Validation:Range", L["{{../name}}"], {{value.min}}, {{value.max}}]);
-        }
-        {{/if_eq}}
-        {{#if_eq type "pattern"}}
-        if (!System.Text.RegularExpressions.Regex.IsMatch(input.{{../name}}, "{{value}}"))
-        {
-            throw new UserFriendlyException(L["Validation:InvalidFormat", L["{{../name}}"]]);
-        }
-        {{/if_eq}}
-        {{/each}}
-        {{/if}}
-        {{/each}}
-        
-        // 更新属性
-        ObjectMapper.Map(input, entity);
-        // entity.SetName(input.Name);
-        // entity.SetDisplayName(input.DisplayName);
-        // entity.SetDescription(input.Description);
-        // entity.Sort = input.Sort;
-        // entity.IsEnabled = input.IsEnabled;
-
-        // 保存更改
-        entity = await _{{entityName}}Repository.UpdateAsync(entity, autoSave: true);
-
-        // 返回DTO
-        return ObjectMapper.Map<{{EntityName}}, {{EntityName}}Dto>(entity);
-    }
-
-    /// <summary>
-    /// 删除{{EntityName}}
-    /// </summary>
-    /// <param name="id">实体ID</param>
-    [Authorize(SmartAbpPermissions.{{ModuleName}}.Delete)]
-    public virtual async Task DeleteAsync(Guid id)
-    {
-        await _{{entityName}}Repository.DeleteAsync(id);
-    }
-
-    /// <summary>
-    /// 批量删除{{EntityName}}
-    /// </summary>
-    /// <param name="ids">实体ID列表</param>
-    [Authorize(SmartAbpPermissions.{{ModuleName}}.Delete)]
-    public virtual async Task DeleteManyAsync(List<Guid> ids)
-    {
-        await _{{entityName}}Repository.DeleteManyAsync(ids);
-    }
-
-    /// <summary>
-    /// 启用/禁用{{EntityName}}
-    /// </summary>
-    /// <param name="id">实体ID</param>
-    /// <param name="isEnabled">是否启用</param>
-    [Authorize(SmartAbpPermissions.{{ModuleName}}.Edit)]
-    public virtual async Task SetEnabledAsync(Guid id, bool isEnabled)
-    {
-        var entity = await _{{entityName}}Repository.GetAsync(id);
-        entity.IsEnabled = isEnabled;
-        await _{{entityName}}Repository.UpdateAsync(entity, autoSave: true);
-    }
-
-    /// <summary>
-    /// 检查名称唯一性
-    /// </summary>
-    /// <param name="name">名称</param>
-    /// <param name="excludeId">排除的ID</param>
-    protected virtual async Task CheckNameAsync(string name, Guid? excludeId = null)
-    {
-        var queryable = await _{{entityName}}Repository.GetQueryableAsync();
-        
-        if (excludeId.HasValue)
-        {
-            queryable = queryable.Where(x => x.Id != excludeId.Value);
-        }
-
-        var exists = await AsyncExecuter.AnyAsync(
-            queryable.Where(x => x.Name == name)
-        );
-
-        if (exists)
-        {
-            throw new UserFriendlyException($"名称 '{name}' 已存在");
+            var existed = await _{{entityName}}Repository.FindAsync(e => e.Name == name && (id == null || !e.Id.Equals(id)));
+            if (existed != null)
+            {
+                throw new UserFriendlyException(L["DuplicateNameMessage", name]);
+            }
         }
     }
 }

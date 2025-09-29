@@ -1,0 +1,65 @@
+---
+alwaysApply: true
+---
+# AI架构铁律同心圆模型 - L1: 代码形态层 (Code Standards)
+
+## 文件说明
+- **文件标识**: `01_code_standards.mdc`
+- **层级**: L1 - 代码形态层
+- **作用**: 承接 L0 的核心理念，提供具体、可执行的编码标准、命名规范、样式指南和代码组织结构要求。AI 生成的所有代码必须严格符合此规范。
+
+---
+
+## 一、通用命名规范 (General Naming Conventions)
+
+1.  **清晰性与可读性**:
+    - 使用完整、无歧义的英文单词命名。禁止使用拼音或中英混合。
+    - 命名应清晰反映其功能或用途。例如，`getUserProfile` 而不是 `getUsr`。
+2.  **一致性**:
+    - **变量/函数**: 使用小驼峰命名法 (camelCase)。例如: `const currentUser;`
+    - **类/接口/类型/枚举**: 使用大驼峰命名法 (PascalCase)。例如: `class UserProfile;`
+    - **常量**: 使用全大写蛇形命名法 (UPPER_SNAKE_CASE)。例如: `const MAX_LOGIN_ATTEMPTS = 5;`
+    - **私有属性/方法**: 使用下划线 `_` 前缀。例如: `private _calculateInternalValue() {}`
+3.  **特定类型命名**:
+    - **布尔值**: 使用 `is`, `has`, `can`, `should` 等前缀。例如: `const isVisible = true;`
+    - **数组**: 使用复数形式。例如: `const users = [];`
+    - **函数**: 使用 `动词+名词` 结构。例如: `function formatUserName(name) {}`
+    - **Vue组件**: 遵循官方推荐，使用多词组合的 `PascalCase`。例如: `UserProfileCard.vue`。
+
+## 二、代码样式与格式化 (Code Style & Formatting)
+
+1.  **自动化格式化**:
+    - 项目已集成 Prettier 和 ESLint。所有代码提交前必须通过格式化。
+    - AI 在生成代码时，必须产出符合 `.prettierrc` 和 `.eslintrc.js` 规则的代码。
+2.  **核心样式**:
+    - **缩进**: 使用 2 个空格进行缩进。
+    - **引号**: TypeScript/JavaScript 中优先使用单引号 `'`。
+    - **分号**: 总是使用分号结束语句。
+    - **换行**: 复杂对象、数组和函数参数建议垂直对齐换行，提高可读性。
+
+## 三、架构与代码组织 (Architecture & Code Organization)
+
+1.  **`packages` 黑盒原则**:
+    - `packages` 目录下的每个包都是独立的、可复用的单元。
+    - **严禁** 包之间通过相对路径 (`../`) 互相引用。
+    - **严禁** 包内部引用主应用 `@/` 别名下的任何模块。
+    - 包与包、包与主应用之间的通信，必须通过 `package.json` 中定义的 `@smartabp` 别名进行。
+2.  **组件设计原则 (SOLID for Components)**:
+    - **单一职责**: 每个 Vue 组件只做一件事。复杂组件应拆分为更小的、高内聚的子组件。
+    - **接口隔离**: `props` 定义应清晰、最小化。只传入组件需要的数据。
+    - **依赖倒置**: 优先使用 `emit` 和 `props` 进行父子通信，避免使用 `ref` 直接操作子组件内部状态。
+3.  **IDE 性能与文件结构**:
+    - **代码生成隔离**: 所有由低代码引擎自动生成的代码，必须输出到根目录的 `.generated/` 文件夹中，并被 `.gitignore` 排除。
+    - **文件排除**: AI 必须遵循 `.vscode/settings.json` 中定义的 `files.watcherExclude` 和 `search.exclude` 规则，不在被排除的目录（如 `node_modules`, `dist`, `.generated`）中进行不必要的操作。
+
+## 四、注释规范 (Commenting Guidelines)
+
+1.  **注释目的**: 注释是为了解释“为什么”这么做，而不是“做了什么”。代码本身应该清晰地展示“做了什么”。
+2.  **何时注释**:
+    - 复杂的业务逻辑。
+    - 临时性的解决方案或 `TODO` 标记。
+    - 对外部库或 API 的非常规用法。
+3.  **格式**:
+    - `//` 用于单行注释。
+    - `/** ... */` 用于函数、类、模块的 JSDoc 注释。
+    - `TODO:` 用于标记待办事项。

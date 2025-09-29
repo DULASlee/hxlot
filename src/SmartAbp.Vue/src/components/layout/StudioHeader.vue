@@ -14,6 +14,13 @@
     <div class="header-right">
       <el-button
         text
+        @click="$emit('open-template-manager')"
+      >
+        <el-icon><MagicStick /></el-icon>
+        <span>Template Marketplace</span>
+      </el-button>
+      <el-button
+        text
         @click="togglePropertyPanel"
       >
         <el-icon><Monitor /></el-icon>
@@ -32,9 +39,11 @@
 
 <script setup lang="ts">
 import { useWorkspaceStore } from '@/stores/modules/workspace'
-import { Platform, Monitor, Fold } from '@element-plus/icons-vue'
+import { Platform, Monitor, Fold, MagicStick } from '@element-plus/icons-vue'
 
 const workspaceStore = useWorkspaceStore()
+
+const emit = defineEmits(['open-template-manager']);
 
 const toggleMenu = () => {
   workspaceStore.toggleMenu()

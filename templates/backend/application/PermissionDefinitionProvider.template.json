@@ -1,0 +1,30 @@
+{
+  "$schema": "../../template.schema.json",
+  "id": "PermissionDefinitionProvider",
+  "version": "1.0.0",
+  "name": "Permission Definition Provider",
+  "description": "为模块生成标准的权限定义提供者（Permission Definition Provider），用于在ABP框架中定义实体的CRUD权限。",
+  "tags": ["Backend", "Application", "Permissions", "ABP"],
+  "author": "SmartAbp Core Team",
+  "type": "C#",
+  "placeholders": [
+    {
+      "name": "{{permissionGroupName}}",
+      "description": "权限组的名称 (PascalCase)，通常是模块名，例如：'ProductManagement'。",
+      "required": true
+    },
+    {
+      "name": "{{entityNamePlural}}",
+      "description": "实体名称的复数形式 (PascalCase)，用于创建权限项，例如：'Products'。",
+      "required": true
+    },
+    {
+      "name": "{{entityDisplayName}}",
+      "description": "实体的显示名称，用于在UI上展示权限，例如：'商品'。",
+      "required": true
+    }
+  ],
+  "relatedTemplates": [
+    "CrudAppService"
+  ]
+}

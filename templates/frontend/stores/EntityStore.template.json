@@ -1,0 +1,35 @@
+{
+  "$schema": "../../template.schema.json",
+  "id": "EntityStore",
+  "version": "1.1.0",
+  "name": "Entity Store (Pinia)",
+  "description": "为实体生成一个标准的Pinia store，用于前端状态管理，包含列表、加载状态和CRUD操作。",
+  "tags": ["Frontend", "Store", "Pinia", "StateManagement"],
+  "author": "SmartAbp Core Team",
+  "type": "TypeScript",
+  "placeholders": [
+    {
+      "name": "{{entityName}}",
+      "description": "实体名称 (PascalCase)，例如：'Product'。",
+      "required": true
+    },
+    {
+      "name": "{{entityStoreName}}",
+      "description": "Pinia store的名称，例如：'useProductStore'。",
+      "required": true
+    },
+    {
+      "name": "{{storeId}}",
+      "description": "Pinia store的唯一ID，例如：'product'。",
+      "required": true
+    },
+    {
+      "name": "{{apiService}}",
+      "description": "对应的API服务实例名称 (camelCase)，例如：'productService'。",
+      "required": true
+    }
+  ],
+  "relatedTemplates": [
+    "CrudManagement"
+  ]
+}

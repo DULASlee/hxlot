@@ -1,58 +1,30 @@
-/// <AI_TEMPLATE_INFO>
-/// 模板类型: ABP实体DTO
-/// 适用场景: 实体数据传输对象定义
-/// 依赖项: Volo.Abp.Application.Dtos
-/// 生成规则: 
-///   - EntityName: 实体名称（PascalCase）
-///   - 继承合适的基类（EntityDto, AuditedEntityDto等）
-///   - 包含必要的属性和验证
-/// </AI_TEMPLATE_INFO>
-
+/*
+ * AI_TEMPLATE_INFO: {"version":"1.1","type":"C#","handler":"None"}
+ * TEMPLATE_DESCRIPTION: 为实体生成标准的Data Transfer Object (DTO)，包含审计字段和常用属性。
+ * USAGE_GUIDE:
+ * 1. 替换 {{entityName}} 为实体名 (如 'Product')。
+ * 2. 替换 {{primaryKeyType}} 为实体主键类型 (如 'Guid')。
+ */
 using System;
 using System.ComponentModel.DataAnnotations;
 using Volo.Abp.Application.Dtos;
 
-namespace SmartAbp.{{ModuleName}};
-
-/// <summary>
-/// {{EntityName}} 数据传输对象
-/// </summary>
-public class {{EntityName}}Dto : AuditedEntityDto<Guid>
+namespace SmartAbp.Application.Contracts
 {
-    /// <summary>
-    /// 名称
-    /// </summary>
-    [Required]
-    [StringLength({{EntityName}}Consts.MaxNameLength)]
-    public string Name { get; set; } = string.Empty;
+    public class {{entityName}}Dto : AuditedEntityDto<{{primaryKeyType}}>
+    {
+        [Required]
+        [StringLength(128)]
+        public string Name { get; set; }
 
-    /// <summary>
-    /// 显示名称
-    /// </summary>
-    [StringLength({{EntityName}}Consts.MaxDisplayNameLength)]
-    public string? DisplayName { get; set; }
+        [StringLength(256)]
+        public string DisplayName { get; set; }
 
-    /// <summary>
-    /// 描述
-    /// </summary>
-    [StringLength({{EntityName}}Consts.MaxDescriptionLength)]
-    public string? Description { get; set; }
+        [StringLength(512)]
+        public string Description { get; set; }
 
-    /// <summary>
-    /// 是否启用
-    /// </summary>
-    public bool IsEnabled { get; set; } = true;
+        public bool IsEnabled { get; set; }
 
-    /// <summary>
-    /// 排序号
-    /// </summary>
-    public int Sort { get; set; }
-
-    // TODO: 根据实际业务需求添加其他属性
-    // 示例属性：
-    // public string? Code { get; set; }
-    // public decimal? Price { get; set; }
-    // public DateTime? ExpireDate { get; set; }
-    // public Guid? CategoryId { get; set; }
-    // public string? CategoryName { get; set; }
+        public int Sort { get; set; }
+    }
 }

@@ -1,4 +1,166 @@
-<!-- 
+<template>
+  <div>
+    <!--
+      AI_TEMPLATE_INFO: {"version":"1.1","type":"Vue","handler":"Handlebars"}
+      TEMPLATE_DESCRIPTION: 生成标准的前端CRUD管理页面，包含搜索、表格、分页和弹窗表单。
+      USAGE_GUIDE:
+      1. 替换 {{entityName}} 为实体名 (如 'Product')。
+      2. 替换 {{entityStore}} 为对应的Pinia Store (如 'useProductStore')。
+      3. 替换 {{apiService}} 为对应的API服务 (如 'productService')。
+      4. 替换 {{permissionPrefix}} 为权限字符串前缀 (如 'ProductManagement.Products')。
+    -->
+    <el-card>
+      <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+        <el-form-item label="筛选">
+          <el-input v-model="searchForm.filter" placeholder="关键字"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="fetchData">查询</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button v-if="canCreate" type="success" @click="handleCreate">新建</el-button>
+        </el-form-item>
+      </el-form>
+
+      <el-table :data="pagedList.items" style="width: 100%" v-loading="loading">
+        <!-- Table Columns will be dynamically generated based on entity properties -->
+        <el-table-column prop="name" label="名称"></el-table-column>
+        <el-table-column prop="displayName" label="显示名称"></el-table-column>
+        <el-table-column prop="isEnabled" label="启用">
+          <template #default="scope">
+            <el-tag :type="scope.row.isEnabled ? 'success' : 'info'">{{ scope.row.isEnabled ? '是' : '否' }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="creationTime" label="创建时间"></el-table-column>
+        <el-table-column label="操作">
+          <template #default="scope">
+            <el-button v-if="canUpdate" size="small" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button v-if="canDelete" size="small" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <el-pagination
+        background
+        layout="prev, pager, next, total"
+        :total="pagedList.total"
+        :page-size="searchForm.maxResultCount"
+        @current-change="handlePageChange"
+        class="mt-4"
+      ></el-pagination>
+    </el-card>
+
+    <el-dialog v-model="dialogVisible" :title="isEditMode ? '编辑' : '新建'" width="500px">
+      <el-form :model="editForm" label-width="120px">
+        <el-form-item label="名称">
+          <el-input v-model="editForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="显示名称">
+          <el-input v-model="editForm.displayName"></el-input>
+        </el-form-item>
+         <el-form-item label="描述">
+          <el-input type="textarea" v-model="editForm.description"></el-input>
+        </el-form-item>
+        <el-form-item label="排序">
+          <el-input-number v-model="editForm.sort" :min="0"></el-input-number>
+        </el-form-item>
+        <el-form-item label="启用">
+          <el-switch v-model="editForm.isEnabled"></el-switch>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleSubmit">确认</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, reactive, computed } from 'vue';
+import { usePermission } from '@/composables/usePermission';
+import { ElMessage, ElMessageBox } from 'element-plus';
+
+// Store and Service will be injected by template engine
+// Example: import { use{{entityName}}Store } from '@/stores/{{entityName}}';
+// Example: import {{apiService}} from '@/services/{{apiService}}';
+
+const store = {{entityStore}}();
+const { pagedList, loading } = store;
+
+const searchForm = reactive({
+  filter: '',
+  skipCount: 0,
+  maxResultCount: 10,
+});
+
+const dialogVisible = ref(false);
+const isEditMode = ref(false);
+const editForm = ref<any>({});
+
+// Permissions
+const { hasPermission } = usePermission();
+const canCreate = computed(() => hasPermission('{{permissionPrefix}}.Create'));
+const canUpdate = computed(() => hasPermission('{{permissionPrefix}}.Update'));
+const canDelete = computed(() => hasPermission('{{permissionPrefix}}.Delete'));
+
+const fetchData = async () => {
+  await store.fetchList(searchForm);
+};
+
+const handlePageChange = (page: number) => {
+  searchForm.skipCount = (page - 1) * searchForm.maxResultCount;
+  fetchData();
+};
+
+const handleCreate = () => {
+  isEditMode.value = false;
+  editForm.value = { isEnabled: true, sort: 0 };
+  dialogVisible.value = true;
+};
+
+const handleEdit = (row: any) => {
+  isEditMode.value = true;
+  editForm.value = { ...row };
+  dialogVisible.value = true;
+};
+
+const handleDelete = async (row: any) => {
+  await ElMessageBox.confirm(`确定要删除 ${row.name} 吗?`, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  });
+  await store.deleteItem(row.id);
+  ElMessage.success('删除成功');
+  fetchData();
+};
+
+const handleSubmit = async () => {
+  if (isEditMode.value) {
+    await store.updateItem(editForm.value.id, editForm.value);
+    ElMessage.success('更新成功');
+  } else {
+    await store.createItem(editForm.value);
+    ElMessage.success('创建成功');
+  }
+  dialogVisible.value = false;
+  fetchData();
+};
+
+onMounted(() => {
+  fetchData();
+});
+</script>
+
+<style scoped>
+.mt-4 {
+  margin-top: 1rem;
+}
+</style>
+<!--
 AI_TEMPLATE_INFO:
 模板类型: Vue CRUD管理组件
 适用场景: 标准的数据管理页面，包含列表、搜索、新增、编辑、删除功能
@@ -52,7 +214,7 @@ AI_TEMPLATE_INFO:
             @keyup.enter="handleSearch"
           />
         </el-form-item>
-        
+
         <el-form-item label="状态" prop="isEnabled">
           <el-select
             v-model="searchForm.isEnabled"
@@ -108,7 +270,7 @@ AI_TEMPLATE_INFO:
         @sort-change="handleSortChange"
       >
         <el-table-column type="selection" width="50" />
-        
+
         <el-table-column
           prop="name"
           label="名称"
@@ -329,7 +491,7 @@ const sorting = ref('')
 const tableData = ref<any[]>([])
 
 // 对话框数据
-const dialogTitle = computed(() => 
+const dialogTitle = computed(() =>
   formData.id ? '编辑{{entityDisplayName}}' : '新增{{entityDisplayName}}'
 )
 
@@ -354,7 +516,7 @@ const formRules = {
 const fetchData = async () => {
   try {
     loading.value = true
-    
+
     const params = {
       filter: searchForm.filter || undefined,
       isEnabled: searchForm.isEnabled,
@@ -369,7 +531,7 @@ const fetchData = async () => {
     // const result = await {{entityName}}Store.fetchList(params)
     // tableData.value = result.items
     // pagination.total = result.totalCount
-    
+
   } catch (error) {
     ElMessage.error('获取数据失败')
   } finally {
@@ -416,10 +578,10 @@ const handleDelete = async (row: any) => {
         type: 'warning'
       }
     )
-    
+
     // TODO: 调用删除API
     // await {{entityName}}Store.delete(row.id)
-    
+
     ElMessage.success('删除成功')
     fetchData()
   } catch (error) {
@@ -429,7 +591,7 @@ const handleDelete = async (row: any) => {
 
 const handleBatchDelete = async () => {
   if (selectedRows.value.length === 0) return
-  
+
   try {
     await ElMessageBox.confirm(
       `确定要删除选中的 ${selectedRows.value.length} 项吗？`,
@@ -440,14 +602,14 @@ const handleBatchDelete = async () => {
         type: 'warning'
       }
     )
-    
+
     const ids = selectedRows.value.map(row => row.id)
     // 避免TS未使用变量错误
     void ids
-    
+
     // TODO: 调用批量删除API
     // await {{entityName}}Store.deleteMany(ids)
-    
+
     ElMessage.success('批量删除成功')
     fetchData()
   } catch (error) {
@@ -458,9 +620,9 @@ const handleBatchDelete = async () => {
 const handleSubmit = async () => {
   try {
     await formRef.value?.validate()
-    
+
     submitting.value = true
-    
+
     if (formData.id) {
       // TODO: 更新操作
       // await {{entityName}}Store.update(formData.id, formData)
@@ -470,7 +632,7 @@ const handleSubmit = async () => {
       // await {{entityName}}Store.create(formData)
       ElMessage.success('创建成功')
     }
-    
+
     dialogVisible.value = false
     fetchData()
   } catch (error) {

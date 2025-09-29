@@ -1,0 +1,38 @@
+{
+  "id": "smartabp.crud-management-page",
+  "version": "1.0.1",
+  "name": "CRUD Management Page",
+  "description": "Creates a Vue component for managing an entity with list, create, edit, and delete functionality.",
+  "tags": ["frontend", "vue", "component", "crud"],
+  "author": "SmartAbp Team",
+  "type": "frontend",
+  "placeholders": [
+    {
+      "name": "entityName",
+      "description": "The name of the entity, usually in camelCase (e.g., 'product').",
+      "defaultValue": "myEntity",
+      "required": true
+    },
+    {
+      "name": "entityStore",
+      "description": "The name of the Pinia store for this entity (e.g., 'useProductStore').",
+      "defaultValue": "useMyEntityStore",
+      "required": true
+    },
+    {
+      "name": "apiService",
+      "description": "The variable name for the injected API service.",
+      "defaultValue": "productService",
+      "required": true
+    },
+    {
+      "name": "permissionPrefix",
+      "description": "The permission prefix for CRUD operations (e.g., 'ProductManagement.Products').",
+      "defaultValue": "MyPermissionGroup.MyEntities",
+      "required": true
+    }
+  ],
+  "relatedTemplates": [
+    "smartabp.entity-store"
+  ]
+}

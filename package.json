@@ -5,22 +5,24 @@
   "scripts": {
     "expert:preflight": "node tools/quality-assurance/preflight-enforcer.js",
     "template:validate": "node src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/template-validator.cjs",
-    "template:index": "node src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/build-template-index.cjs",
+    "template:index": "node scripts/templates/build-index.js",
     "template:search": "node src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/template-search.cjs",
     "approve:plan": "node tools/quality-assurance/approve-plan.js",
-    "predev": "npm run template:validate",
-    "prebuild": "npm run template:validate",
+    "predev": "npm run template:validate && npm run template:index",
+    "prebuild": "npm run template:validate && npm run template:index",
     "type-check": "vue-tsc --build --force",
     "test:coverage": "vitest run --coverage",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "codegen": "tsx src/tools/cli.ts generate",
     "codegen:check": "tsx src/tools/cli.ts check",
+    "template:apply": "node scripts/templates/apply-template.js",
     "module:add": "tsx src/tools/add-module.ts --input",
     "module:add:codegen": "tsx src/tools/add-module.ts --input --codegen",
     "expert:auto": "node tools/quality-assurance/expert-auto.js",
     "expert:finalize": "node tools/quality-assurance/expert-finalize.js",
-    "expert:verify": "npm run lint && npm run type-check && npm run test:coverage && npm run build"
+    "expert:verify": "npm run lint && npm run type-check && npm run test:coverage && npm run build",
+    "prepare": "husky"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.6.0",
@@ -29,6 +31,7 @@
   "devDependencies": {
     "chalk": "^4.1.2",
     "cross-env": "^7.0.3",
+    "husky": "^9.1.7",
     "semver": "^7.6.3",
     "typescript": "^5.0.0",
     "vue-tsc": "^3.0.7"
