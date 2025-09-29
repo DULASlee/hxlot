@@ -4,21 +4,41 @@
       <el-aside width="300px">
         <div class="toolbar">
           <el-button-group>
-            <el-button type="primary" @click="addState">添加状态</el-button>
-            <el-button @click="addTransition">添加转换</el-button>
+            <el-button
+              type="primary"
+              @click="addState"
+            >
+              添加状态
+            </el-button>
+            <el-button @click="addTransition">
+              添加转换
+            </el-button>
           </el-button-group>
         </div>
         <div class="state-list">
-          <el-tag v-for="state in states" :key="state.id" closable @close="removeState(state.id)">
+          <el-tag
+            v-for="state in states"
+            :key="state.id"
+            closable
+            @close="removeState(state.id)"
+          >
             {{ state.label }}
           </el-tag>
         </div>
       </el-aside>
       <el-main>
         <div class="flow-container">
-          <vue-flow :nodes="nodes" :edges="edges" @node-click="onNodeClick" @edge-click="onEdgeClick">
+          <vue-flow
+            :nodes="nodes"
+            :edges="edges"
+            @node-click="onNodeClick"
+            @edge-click="onEdgeClick"
+          >
             <template #node-custom="{ data }">
-              <div class="custom-node" :class="{ 'active': data.active }">
+              <div
+                class="custom-node"
+                :class="{ 'active': data.active }"
+              >
                 {{ data.label }}
               </div>
             </template>
@@ -27,22 +47,44 @@
       </el-main>
     </el-container>
 
-    <el-dialog v-model="stateDialogVisible" title="状态配置">
-      <el-form :model="currentState" label-width="80px">
+    <el-dialog
+      v-model="stateDialogVisible"
+      title="状态配置"
+    >
+      <el-form
+        :model="currentState"
+        label-width="80px"
+      >
         <el-form-item label="状态名称">
           <el-input v-model="currentState.name" />
         </el-form-item>
         <el-form-item label="状态类型">
           <el-select v-model="currentState.type">
-            <el-option label="初始状态" value="initial" />
-            <el-option label="中间状态" value="normal" />
-            <el-option label="结束状态" value="final" />
+            <el-option
+              label="初始状态"
+              value="initial"
+            />
+            <el-option
+              label="中间状态"
+              value="normal"
+            />
+            <el-option
+              label="结束状态"
+              value="final"
+            />
           </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="stateDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="saveState">保存</el-button>
+        <el-button @click="stateDialogVisible = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="saveState"
+        >
+          保存
+        </el-button>
       </template>
     </el-dialog>
   </div>
@@ -122,6 +164,7 @@ const onNodeClick = (event: any) => {
 const onEdgeClick = (event: any) => {
   const edge = event.edge
   // 处理边点击事件
+  console.log('Edge clicked:', edge)
 }
 
 const saveState = () => {
