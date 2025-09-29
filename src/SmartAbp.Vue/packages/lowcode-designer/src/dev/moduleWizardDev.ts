@@ -129,7 +129,7 @@ const pageSize = store.pageSize
 const query = reactive<Record<string, any>>({})
 
 const onSearch = () => store.fetchList({ pageIndex: pageIndex.value, pageSize: pageSize.value, query })
-const onReset = () => { Object.keys(query).forEach(k => delete (query as any)[k]); pageIndex.value = 1; onSearch() }
+const onReset = () => { Object.keys(query).forEach(k => delete query[k]); pageIndex.value = 1; onSearch() }
 
 onMounted(() => { onSearch() })
 </script>
@@ -157,7 +157,7 @@ import { reactive } from 'vue'
 const store = use${moduleName}Store()
 const form = reactive<Record<string, any>>({})
 const onSubmit = () => store.createOrUpdate(form)
-const onCancel = () => { Object.keys(form).forEach(k => delete (form as any)[k]) }
+const onCancel = () => { Object.keys(form).forEach(k => delete form[k]) }
 </script>
 `
 

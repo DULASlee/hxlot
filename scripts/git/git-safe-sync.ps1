@@ -71,7 +71,7 @@ try {
 
     # 切换到项目根目录
     $scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
-    $projectRoot = Split-Path -Parent $scriptPath
+    $projectRoot = Split-Path -Parent (Split-Path -Parent $scriptPath)
     Set-Location $projectRoot
 
     Write-ColorLog "项目根目录: $projectRoot" "Info"
