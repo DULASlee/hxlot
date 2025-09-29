@@ -43,7 +43,7 @@ interface AbnormalBehavior {
   userName: string
   behaviorType: string
   description: string
-  timestamp: string
+  timestamp: Date
   riskLevel: RiskLevel
   details?: Record<string, any>
   actionRequired?: boolean
@@ -199,7 +199,7 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
       userName: "John Doe",
       behaviorType: "UnusualHours",
       description: "Access outside business hours",
-      timestamp: new Date(Date.now() - Math.random() * 86400000).toISOString(),
+      timestamp: new Date(Date.now() - Math.random() * 86400000),
       riskLevel: "Medium",
       details: { location: "Office Network", device: "Desktop" },
       actionRequired: true,
@@ -210,7 +210,7 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
       userName: "Jane Smith",
       behaviorType: "HighFrequency",
       description: "Unusually high permission requests",
-      timestamp: new Date(Date.now() - Math.random() * 86400000).toISOString(),
+      timestamp: new Date(Date.now() - Math.random() * 86400000),
       riskLevel: "High",
       details: { requestCount: 45, normalRange: "5-10" },
       actionRequired: true,

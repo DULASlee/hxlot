@@ -161,8 +161,8 @@ const onNodeClick = (event: any) => {
   console.log('Node clicked:', node.id)
 }
 
-const onEdgeClick = (event: any) => {
-  const edge = event.edge
+const onEdgeClick = (_event: any) => {
+  // const edge = event.edge
   // 处理边点击事件
   console.log('Edge clicked:', edge)
 }
