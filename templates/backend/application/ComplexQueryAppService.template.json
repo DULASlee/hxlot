@@ -1,0 +1,28 @@
+{
+  "$schema": "../../template.schema.json",
+  "id": "ComplexQueryAppService",
+  "version": "1.0.0",
+  "name": "Complex Query Service",
+  "description": "生成一个专门用于复杂、高性能查询的应用服务。适用于需要多表连接(join)、数据投影(projection)和自定义过滤逻辑的场景。",
+  "tags": ["Backend", "ApplicationService", "Query", "DDD"],
+  "author": "SmartAbp Core Team",
+  "type": "C#",
+  "placeholders": [
+    {
+      "name": "{{serviceName}}",
+      "description": "查询服务的名称 (PascalCase)，例如：'ProductReportService'。",
+      "required": true
+    },
+    {
+      "name": "{{primaryDto}}",
+      "description": "查询操作返回的主要DTO名称，例如：'ProductReportDto'。",
+      "required": true
+    },
+    {
+      "name": "{{permissionGroupName}}",
+      "description": "查询操作所需的权限组名称。",
+      "required": true
+    }
+  ],
+  "relatedTemplates": []
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "../../template.schema.json",
+  "id": "UpdateEntityDto",
+  "version": "1.1.0",
+  "name": "Update Entity DTO",
+  "description": "为实体生成标准的Update DTO，用于更新现有实体的数据传输。",
+  "tags": ["Backend", "Contracts", "DTO", "Update"],
+  "author": "SmartAbp Core Team",
+  "type": "C#",
+  "placeholders": [
+    {
+      "name": "{{entityName}}",
+      "description": "实体名称 (PascalCase)，例如：'Product'。",
+      "required": true
+    }
+  ],
+  "relatedTemplates": [
+    "CreateEntityDto",
+    "EntityDto",
+    "CrudAppService"
+  ]
+}

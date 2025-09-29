@@ -1,0 +1,21 @@
+{
+  "$schema": "../../template.schema.json",
+  "id": "GetEntityListDto",
+  "version": "1.1.0",
+  "name": "Get Entity List DTO",
+  "description": "为实体生成标准的GetList DTO，用于分页和排序查询。",
+  "tags": ["Backend", "Contracts", "DTO", "Query"],
+  "author": "SmartAbp Core Team",
+  "type": "C#",
+  "placeholders": [
+    {
+      "name": "{{entityName}}",
+      "description": "实体名称 (PascalCase)，例如：'Product'。",
+      "required": true
+    }
+  ],
+  "relatedTemplates": [
+    "CrudAppServiceInterface",
+    "CrudAppService"
+  ]
+}

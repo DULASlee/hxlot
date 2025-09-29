@@ -1,103 +1,54 @@
-/**
- * AI_TEMPLATE_INFO:
- * 模板类型: Pinia状态管理Store
- * 适用场景: 实体数据的状态管理，包含CRUD操作
- * 依赖项: Pinia, API服务
- * 功能特性: 缓存策略、错误处理、加载状态管理
- * 生成规则:
- *   - EntityName: 实体名称（PascalCase）
- *   - entityName: 实体名称（camelCase）
- *   - ModuleName: 模块名称
+/*
+ * AI_TEMPLATE_INFO: {"version":"1.1","type":"TypeScript","handler":"Handlebars"}
+ * TEMPLATE_DESCRIPTION: 为实体生成一个标准的Pinia store，用于前端状态管理，包含列表、加载状态和CRUD操作。
+ * USAGE_GUIDE:
+ * 1. 替换 {{entityName}} 为实体名 (如 'Product')。
+ * 2. 替换 {{entityStoreName}} 为Pinia store名称 (如 'useProductStore')。
+ * 3. 替换 {{storeId}} 为Pinia store ID (如 'product')。
+ * 4. 替换 {{apiService}} 为对应的API服务 (如 'productService')。
  */
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
 
-import { defineStore } from "pinia"
-import { ref } from "vue"
+// API service and DTO types will be injected by template engine
+// Example: import {{apiService}} from '@/services/{{apiService}}';
+// Example: import type { {{entityName}}Dto, Get{{entityName}}ListDto, {{entityName}}CreateDto, {{entityName}}UpdateDto } from '@/services/dtos/{{entityName}}Dto';
 
-// 这是一个示意性的API服务，实际生成时需要替换为真实的服务
-// import { {{EntityName}}Service } from "@/api/{{ModuleName}}/{{entityName}}"
-// import type { {{EntityName}}Dto, Create{{EntityName}}Dto, Update{{EntityName}}Dto } from "@/api/{{ModuleName}}/types"
+export const {{entityStoreName}} = defineStore('{{storeId}}', () => {
+  const pagedList = ref({ items: [], total: 0 });
+  const loading = ref(false);
 
-// 模拟 API 服务和类型
-const {{EntityName}}Service = {
-  getList: async (params: any) => {
-    console.log("Fetching list with params:", params)
-    await new Promise(resolve => setTimeout(resolve, 500))
-    return {
-      items: [{ id: "1", name: `Mock {{EntityName}} 1` }, { id: "2", name: `Mock {{EntityName}} 2` }],
-      totalCount: 2,
-    }
-  },
-  create: async (data: any) => {
-    console.log("Creating {{EntityName}}:", data)
-    await new Promise(resolve => setTimeout(resolve, 500))
-    return { id: "3", ...data }
-  },
-  update: async (id: string, data: any) => {
-    console.log(`Updating {{EntityName}} ${id}:`, data)
-    await new Promise(resolve => setTimeout(resolve, 500))
-    return { id, ...data }
-  },
-  delete: async (id: string) => {
-    console.log(`Deleting {{EntityName}} ${id}`)
-    await new Promise(resolve => setTimeout(resolve, 500))
-  },
-}
-type {{EntityName}}Dto = { id: string; name: string; [key: string]: any }
-type Create{{EntityName}}Dto = Omit<{{EntityName}}Dto, "id">
-type Update{{EntityName}}Dto = Partial<Create{{EntityName}}Dto>
-
-
-export const use{{EntityName}}Store = defineStore("{{entityName}}", () => {
-  // State
-  const list = ref<{{EntityName}}Dto[]>([])
-  const total = ref(0)
-  const loading = ref(false)
-
-  // Actions
-  const fetchList = async (params: any) => {
-    loading.value = true
+  async function fetchList(params: any /* Get{{entityName}}ListDto */) {
+    loading.value = true;
     try {
-      const response = await {{EntityName}}Service.getList(params)
-      list.value = response.items
-      total.value = response.totalCount
-    } catch (error) {
-      console.error("Failed to fetch {{EntityNamePlural}} list:", error)
+      const response = await {{apiService}}.getList(params);
+      pagedList.value = {
+        items: response.items,
+        total: response.totalCount,
+      };
     } finally {
-      loading.value = false
+      loading.value = false;
     }
   }
 
-  const createItem = async (data: Create{{EntityName}}Dto) => {
-    try {
-      await {{EntityName}}Service.create(data)
-    } catch (error) {
-      console.error("Failed to create {{EntityName}}:", error)
-    }
+  async function createItem(data: any /* {{entityName}}CreateDto */) {
+    await {{apiService}}.create(data);
   }
 
-  const updateItem = async (id: string, data: Update{{EntityName}}Dto) => {
-    try {
-      await {{EntityName}}Service.update(id, data)
-    } catch (error) {
-      console.error(`Failed to update {{EntityName}} ${id}:`, error)
-    }
+  async function updateItem(id: string, data: any /* {{entityName}}UpdateDto */) {
+    await {{apiService}}.update(id, data);
   }
 
-  const deleteItem = async (id: string) => {
-    try {
-      await {{EntityName}}Service.delete(id)
-    } catch (error) {
-      console.error(`Failed to delete {{EntityName}} ${id}:`, error)
-    }
+  async function deleteItem(id: string) {
+    await {{apiService}}.delete(id);
   }
 
   return {
-    list,
-    total,
+    pagedList,
     loading,
     fetchList,
     createItem,
     updateItem,
     deleteItem,
-  }
-})
+  };
+});

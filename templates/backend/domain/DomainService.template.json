@@ -1,0 +1,26 @@
+{
+  "id": "smartabp.domain-service",
+  "version": "1.0.0",
+  "name": "Domain Service",
+  "description": "Creates a DDD Domain Service for handling complex business logic.",
+  "tags": ["backend", "domain", "ddd"],
+  "author": "SmartAbp Team",
+  "type": "backend",
+  "placeholders": [
+    {
+      "name": "domainName",
+      "description": "The name of the domain service (e.g., 'ProductManager').",
+      "defaultValue": "MyDomainManager",
+      "required": true
+    },
+    {
+      "name": "primaryEntity",
+      "description": "The primary entity this service operates on (e.g., 'Product').",
+      "defaultValue": "MyEntity",
+      "required": true
+    }
+  ],
+  "relatedTemplates": [
+    "smartabp.entity"
+  ]
+}

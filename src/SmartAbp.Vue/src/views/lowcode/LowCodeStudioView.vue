@@ -18,6 +18,7 @@
         :workspace="currentWorkspace"
         :active-module="activeModule"
         @module-change="handleModuleChange"
+        @open-template-manager="openTemplateManager"
       />
 
       <!-- 侧边菜单 -->
@@ -62,11 +63,22 @@
       :validation-status="validationStatus"
       @clear-logs="clearLogs"
     />
+
+    <!-- Template Manager Dialog -->
+    <el-dialog
+      v-model="templateManagerVisible"
+      title="Template Marketplace"
+      width="80%"
+      top="5vh"
+      destroy-on-close
+    >
+      <TemplateManager />
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useWorkspaceStore } from '@/stores/modules/workspace'
 import StudioHeader from '@/components/layout/StudioHeader.vue'
@@ -74,6 +86,7 @@ import StudioSidebar from '@/components/layout/StudioSidebar.vue'
 import StudioPropertyPanel from '@/components/layout/StudioPropertyPanel.vue'
 import StudioFooter from '@/components/layout/StudioFooter.vue'
 import ModuleLoadingState from '@/components/common/ModuleLoadingState.vue'
+import TemplateManager from './templates/TemplateManager.vue'
 import { Loading } from '@element-plus/icons-vue'
 
 const workspaceStore = useWorkspaceStore()
@@ -84,6 +97,12 @@ const {
   loadingStates,
   showPropertyPanel
 } = storeToRefs(workspaceStore)
+
+// --- Template Manager State ---
+const templateManagerVisible = ref(false);
+const openTemplateManager = () => {
+  templateManagerVisible.value = true;
+};
 
 // --- Mock Data (to be replaced with real logic) ---
 const dynamicMenuItems = computed(() => [])

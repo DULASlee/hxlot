@@ -1,0 +1,28 @@
+{
+  "$schema": "../../../template.schema.json",
+  "id": "SelectorComponent",
+  "version": "1.0.0",
+  "name": "Selector Component",
+  "description": "生成一个通用的实体选择器组件，支持搜索、分页和单/多选功能。可通过props进行配置，用于选择不同的业务实体。",
+  "tags": ["Frontend", "Component", "Selector", "Vue"],
+  "author": "SmartAbp Core Team",
+  "type": "Vue",
+  "placeholders": [
+    {
+      "name": "{{componentName}}",
+      "description": "组件的名称 (PascalCase)，例如：'UserSelector'。",
+      "required": true
+    },
+    {
+      "name": "{{entityName}}",
+      "description": "所选实体的名称，用于显示，例如：'用户'。",
+      "required": true
+    },
+    {
+      "name": "{{apiServiceListFunction}}",
+      "description": "用于获取实体列表的API服务函数，例如：'identityService.getUsers'。",
+      "required": true
+    }
+  ],
+  "relatedTemplates": []
+}

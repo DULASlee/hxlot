@@ -1,0 +1,28 @@
+{
+  "$schema": "../../../template.schema.json",
+  "id": "DetailViewer",
+  "version": "1.0.0",
+  "name": "Detail Viewer Component",
+  "description": "生成一个用于在抽屉（Drawer）或弹窗中展示实体详细信息的组件。它以描述列表的形式清晰地呈现只读数据。",
+  "tags": ["Frontend", "Component", "Detail", "Viewer", "Vue"],
+  "author": "SmartAbp Core Team",
+  "type": "Vue",
+  "placeholders": [
+    {
+      "name": "{{componentName}}",
+      "description": "组件的名称 (PascalCase)，例如：'UserDetailViewer'。",
+      "required": true
+    },
+    {
+      "name": "{{entityName}}",
+      "description": "所展示实体的名称，用于标题等，例如：'用户'。",
+      "required": true
+    },
+    {
+      "name": "{{entityDtoName}}",
+      "description": "实体DTO的类型名称，用于props类型定义，例如：'UserDto'。",
+      "required": true
+    }
+  ],
+  "relatedTemplates": []
+}

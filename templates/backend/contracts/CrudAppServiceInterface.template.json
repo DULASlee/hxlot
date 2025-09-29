@@ -1,0 +1,27 @@
+{
+  "$schema": "../../template.schema.json",
+  "id": "CrudAppServiceInterface",
+  "version": "1.1.0",
+  "name": "CRUD App Service Interface",
+  "description": "为实体生成标准的CRUD应用服务接口。",
+  "tags": ["Backend", "Contracts", "Interface", "CRUD"],
+  "author": "SmartAbp Core Team",
+  "type": "C#",
+  "placeholders": [
+    {
+      "name": "{{entityName}}",
+      "description": "实体名称 (PascalCase)，例如：'Product'。",
+      "required": true
+    },
+    {
+      "name": "{{primaryKeyType}}",
+      "description": "实体主键类型，例如：'Guid' 或 'long'。",
+      "defaultValue": "Guid",
+      "required": false
+    }
+  ],
+  "relatedTemplates": [
+    "CrudAppService",
+    "EntityDto"
+  ]
+}

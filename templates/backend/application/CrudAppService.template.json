@@ -1,0 +1,42 @@
+{
+  "id": "smartabp.crud-app-service",
+  "version": "1.0.1",
+  "name": "CRUD Application Service",
+  "description": "Creates a standard ABP CRUD application service, including DTOs and permissions.",
+  "tags": ["backend", "app-service", "crud"],
+  "author": "SmartAbp Team",
+  "type": "backend",
+  "placeholders": [
+    {
+      "name": "entityName",
+      "description": "The name of the entity (e.g., 'Product').",
+      "defaultValue": "MyEntity",
+      "required": true
+    },
+    {
+      "name": "entityNamePlural",
+      "description": "The plural name of the entity (e.g., 'Products').",
+      "defaultValue": "MyEntities",
+      "required": true
+    },
+    {
+      "name": "permissionGroupName",
+      "description": "The name of the permission group (e.g., 'ProductManagement').",
+      "defaultValue": "MyPermissionGroup",
+      "required": true
+    },
+    {
+      "name": "primaryKeyType",
+      "description": "The data type of the primary key (e.g., 'Guid', 'long', 'int').",
+      "defaultValue": "Guid",
+      "required": true
+    }
+  ],
+  "relatedTemplates": [
+    "smartabp.entity-dto",
+    "smartabp.create-entity-dto",
+    "smartabp.update-entity-dto",
+    "smartabp.get-entity-list-dto",
+    "smartabp.permission-definition-provider"
+  ]
+}
