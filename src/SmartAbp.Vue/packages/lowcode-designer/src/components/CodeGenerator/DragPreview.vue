@@ -44,6 +44,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from "vue"
+import { useSafeEventListener, useSafeTimer } from '@smartabp/lowcode-shared'
 import { Plus } from "@element-plus/icons-vue"
 
 interface DragPreviewProps {
@@ -221,25 +222,18 @@ const getDropZoneStyle = (zone: DropZone) => ({
   height: `${zone.bounds.height}px`,
 })
 
-// Event listeners
-onMounted(() => {
-  document.addEventListener("mousemove", updateMousePosition)
+// 🛡️ 安全事件监听器 - 防止内存泄露
+// 使用 useSafeEventListener 自动处理事件监听器的清理
+useSafeEventListener(document, "mousemove", updateMousePosition)
 
-  // Update drop zones periodically during drag
-  const interval = setInterval(() => {
-    if (props.isDragging) {
-      updateDropZones()
-    }
-  }, 100)
+// 🛡️ 安全定时器 - 定期更新拖拽区域，自动清理
+useSafeTimer(() => {
+  if (props.isDragging) {
+    updateDropZones()
+  }
+}, 100, 'interval')
 
-  onUnmounted(() => {
-    clearInterval(interval)
-  })
-})
-
-onUnmounted(() => {
-  document.removeEventListener("mousemove", updateMousePosition)
-})
+// ✅ 不再需要手动清理 - useSafeEventListener 和 useSafeTimer 会自动处理
 
 // Watch for drag state changes
 watch(

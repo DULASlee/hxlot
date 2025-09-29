@@ -499,3 +499,6 @@ App_Data/
 # 🎯 智能感知缓存
 **/.vs/
 **/intellisense.cache
+
+# Generated code isolation area
+.generated/
