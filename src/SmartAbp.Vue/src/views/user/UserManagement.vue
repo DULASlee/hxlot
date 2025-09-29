@@ -445,7 +445,7 @@ const fetchData = async () => {
     }
 
     const store = useUserStore()
-    await store.fetchList(params as any) // 临时类型兼容
+    await store.fetchList(params)
     tableData.value = store.list
     pagination.total = store.total
   } catch {

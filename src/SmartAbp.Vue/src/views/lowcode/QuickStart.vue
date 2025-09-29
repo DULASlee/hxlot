@@ -88,7 +88,7 @@
             size="small"
           >
             <el-descriptions-item label="内核状态">
-              <el-tag :type="kernelStatus.type as any">
+              <el-tag :type="kernelStatus.type">
                 {{ kernelStatus.text }}
               </el-tag>
             </el-descriptions-item>
@@ -212,8 +212,8 @@ const generationCount = ref(0)
 const pluginCount = ref(0)
 const generationInfo = ref<any>(null)
 
-// 内核状态
-const kernelStatus = computed(() => {
+// 内核状态 - 类型安全的Element Plus标签类型
+const kernelStatus = computed((): { type: 'success' | 'info' | 'warning' | 'danger' | '' | undefined, text: string } => {
   if (pluginCount.value > 0) {
     return { type: "success", text: "就绪" }
   }

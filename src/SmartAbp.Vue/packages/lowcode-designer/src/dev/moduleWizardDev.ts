@@ -119,7 +119,7 @@ ${tableCols}
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue'
 // 🔥 架构整洁修复：移除主应用引用，使用相对路径（遵循黑盒原则）
-// import { use${moduleName}Store } from '@/stores/modules/${moduleLower}' // 架构整洁修复：注释掉跨包引用
+// Store引用已移除 - 遵循packages黑盒原则
 const store = use${moduleName}Store()
 const items = store.items
 const loading = store.loading
@@ -153,7 +153,7 @@ ${formItems}
 <script setup lang="ts">
 import { reactive } from 'vue'
 // 🔥 架构整洁修复：移除主应用引用，使用相对路径（遵循黑盒原则）
-// import { use${moduleName}Store } from '@/stores/modules/${moduleLower}' // 架构整洁修复：注释掉跨包引用
+// Store引用已移除 - 遵循packages黑盒原则
 const store = use${moduleName}Store()
 const form = reactive<Record<string, any>>({})
 const onSubmit = () => store.createOrUpdate(form)

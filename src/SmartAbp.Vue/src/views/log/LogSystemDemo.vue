@@ -256,7 +256,7 @@ const handleFiltered = (filteredLogs) => {
 
 <script setup lang="ts">
 import { ElMessage } from "element-plus"
-import { logger } from "@/utils/logger"
+import { logger, LogLevel } from "@/utils/logger"
 import { logManager } from "@/utils/logManager"
 import LogDashboard from "@/views/log/LogDashboard.vue"
 
@@ -380,13 +380,13 @@ const generateBatchLogs = () => {
   const logEntries = []
 
   for (let i = 0; i < 20; i++) {
-    const levels = ["info", "success", "warn", "error"]
+    const levels = [LogLevel.INFO, LogLevel.SUCCESS, LogLevel.WARN, LogLevel.ERROR]
     const categories = ["user", "system", "api", "database", "ui"]
     const level = levels[Math.floor(Math.random() * levels.length)]
     const category = categories[Math.floor(Math.random() * categories.length)]
 
     logEntries.push({
-      level: level as any,
+      level: level,
       message: `批量日志 ${i + 1}: ${category} 操作`,
       category,
       data: { batchId: Date.now(), index: i },

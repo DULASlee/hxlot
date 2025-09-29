@@ -146,9 +146,10 @@ import { useWorkspaceStore } from "@/stores/lowcode/workspace"
 // 暂时注释避免编译错误
 // import { codeGeneratorApi } from "@smartabp/lowcode-api"
 
-// 临时API替代
+// 临时API替代 - 类型安全的实现
 const codeGeneratorApi = {
-  generateCode: () => Promise.resolve({ success: true, files: [] })
+  generateCode: () => Promise.resolve({ success: true, files: [] }),
+  generateModule: (config: any) => Promise.resolve({ success: true, files: [], config })
 }
 // import type { Template } from "@smartabp/lowcode-api/types"
 
@@ -217,7 +218,7 @@ const generateCode = async () => {
       },
     }
 
-    const result = await (codeGeneratorApi as any).generateModule?.(config)
+    const result = await codeGeneratorApi.generateModule(config)
 
     if (result && (result.success === undefined || result.success === true)) {
       // Simulate generated code for preview

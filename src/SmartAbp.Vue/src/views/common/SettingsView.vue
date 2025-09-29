@@ -235,6 +235,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { useThemeStore } from "@/stores"
+import type { ThemeType } from "@/composables/useDesignSystem"
 
 const themeStore = useThemeStore()
 
@@ -269,8 +270,17 @@ const notificationSettings = ref({
 
 // 方法
 const selectTheme = (theme: string) => {
-  themeStore.setTheme(theme as any)
-  console.log(`主题已切换: ${theme}`)
+  // 类型安全的主题设置 - 验证主题值的有效性
+  const validThemes = ['tech-blue', 'deep-green', 'light-purple', 'dark'] as const
+  const isValidTheme = validThemes.includes(theme as any)
+  
+  if (isValidTheme) {
+    themeStore.setTheme(theme as ThemeType)
+    console.log(`主题已切换: ${theme}`)
+  } else {
+    console.warn(`无效的主题值: ${theme}, 使用默认主题`)
+    themeStore.setTheme('tech-blue')
+  }
 }
 
 const quickToggleDark = () => {

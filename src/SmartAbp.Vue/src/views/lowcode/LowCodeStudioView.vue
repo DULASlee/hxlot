@@ -42,7 +42,9 @@
               </template>
               <template #fallback>
                 <div class="simple-loading">
-                  <el-icon class="loading-icon"><Loading /></el-icon>
+                  <el-icon class="loading-icon">
+                    <Loading />
+                  </el-icon>
                   <span>加载中...</span>
                 </div>
               </template>
