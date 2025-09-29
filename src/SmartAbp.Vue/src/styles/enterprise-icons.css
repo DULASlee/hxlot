@@ -1,0 +1,598 @@
+/*
+🏢 SmartAbp 企业级图标系统样式
+🎯 统一的图标视觉规范和主题支持
+⚡ 高性能渲染和动画优化
+🎨 企业级设计标准
+*/
+
+/* ===== 🎯 CSS 变量定义 ===== */
+:root {
+  /* 🎨 企业级图标颜色主题 */
+  --enterprise-icon-color-primary: #409EFF;
+  --enterprise-icon-color-success: #67C23A;
+  --enterprise-icon-color-warning: #E6A23C;
+  --enterprise-icon-color-danger: #F56C6C;
+  --enterprise-icon-color-info: #909399;
+  --enterprise-icon-color-text: #303133;
+  
+  /* 📏 企业级图标尺寸规范 */
+  --enterprise-icon-size-xs: 12px;
+  --enterprise-icon-size-sm: 14px;
+  --enterprise-icon-size-md: 16px;
+  --enterprise-icon-size-lg: 20px;
+  --enterprise-icon-size-xl: 24px;
+  
+  /* 🎭 图标间距和阴影 */
+  --enterprise-icon-spacing: 4px;
+  --enterprise-icon-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --enterprise-icon-shadow-hover: 0 2px 8px rgba(0, 0, 0, 0.15);
+  
+  /* ⚡ 动画时长 */
+  --enterprise-icon-transition-fast: 0.15s;
+  --enterprise-icon-transition-normal: 0.3s;
+  --enterprise-icon-transition-slow: 0.5s;
+  
+  /* 🎯 焦点轮廓 */
+  --enterprise-icon-focus-outline: 2px solid var(--enterprise-icon-color-primary);
+  --enterprise-icon-focus-offset: 2px;
+}
+
+/* 🌓 暗色主题变量 */
+.dark {
+  --enterprise-icon-color-primary: #529de6;
+  --enterprise-icon-color-success: #7cd95a;
+  --enterprise-icon-color-warning: #e8b563;
+  --enterprise-icon-color-danger: #f78989;
+  --enterprise-icon-color-info: #a6a9ad;
+  --enterprise-icon-color-text: #e4e7ed;
+  
+  --enterprise-icon-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --enterprise-icon-shadow-hover: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== 🎯 基础图标样式 ===== */
+.enterprise-icon {
+  /* 📐 基础布局 */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  flex-shrink: 0;
+  
+  /* 📏 默认尺寸 */
+  width: var(--enterprise-icon-size-md);
+  height: var(--enterprise-icon-size-md);
+  font-size: var(--enterprise-icon-size-md);
+  
+  /* 🎨 默认颜色 */
+  color: var(--enterprise-icon-color-text);
+  
+  /* ⚡ 性能优化 */
+  will-change: transform, opacity, color;
+  
+  /* 🎭 过渡动画 */
+  transition: all var(--enterprise-icon-transition-normal) ease;
+  
+  /* 🖼️ 渲染优化 */
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* ===== 📏 图标尺寸变体 ===== */
+.enterprise-icon--xs {
+  width: var(--enterprise-icon-size-xs);
+  height: var(--enterprise-icon-size-xs);
+  font-size: var(--enterprise-icon-size-xs);
+}
+
+.enterprise-icon--sm {
+  width: var(--enterprise-icon-size-sm);
+  height: var(--enterprise-icon-size-sm);
+  font-size: var(--enterprise-icon-size-sm);
+}
+
+.enterprise-icon--md {
+  width: var(--enterprise-icon-size-md);
+  height: var(--enterprise-icon-size-md);
+  font-size: var(--enterprise-icon-size-md);
+}
+
+.enterprise-icon--lg {
+  width: var(--enterprise-icon-size-lg);
+  height: var(--enterprise-icon-size-lg);
+  font-size: var(--enterprise-icon-size-lg);
+}
+
+.enterprise-icon--xl {
+  width: var(--enterprise-icon-size-xl);
+  height: var(--enterprise-icon-size-xl);
+  font-size: var(--enterprise-icon-size-xl);
+}
+
+/* ===== 🎨 图标颜色主题 ===== */
+.enterprise-icon--primary {
+  color: var(--enterprise-icon-color-primary);
+}
+
+.enterprise-icon--success {
+  color: var(--enterprise-icon-color-success);
+}
+
+.enterprise-icon--warning {
+  color: var(--enterprise-icon-color-warning);
+}
+
+.enterprise-icon--danger {
+  color: var(--enterprise-icon-color-danger);
+}
+
+.enterprise-icon--info {
+  color: var(--enterprise-icon-color-info);
+}
+
+.enterprise-icon--text {
+  color: var(--enterprise-icon-color-text);
+}
+
+/* ===== 🎭 图标变体样式 ===== */
+.enterprise-icon--filled {
+  /* 填充样式 */
+}
+
+.enterprise-icon--outlined {
+  /* 描边样式 */
+  filter: brightness(0) saturate(100%);
+}
+
+.enterprise-icon--round {
+  /* 圆角背景样式 */
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.04);
+  padding: calc(var(--enterprise-icon-spacing) / 2);
+}
+
+.enterprise-icon--sharp {
+  /* 尖锐样式 */
+  filter: contrast(1.2);
+}
+
+/* ===== 🖱️ 图标交互状态 ===== */
+.enterprise-icon--clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.enterprise-icon--clickable:hover {
+  opacity: 0.8;
+  transform: scale(1.1) translateZ(0);
+  filter: drop-shadow(var(--enterprise-icon-shadow-hover));
+}
+
+.enterprise-icon--clickable:active {
+  opacity: 0.6;
+  transform: scale(0.95) translateZ(0);
+}
+
+/* 🚫 禁用状态 */
+.enterprise-icon--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ===== 🎬 图标动画效果 ===== */
+.enterprise-icon--animated {
+  /* 启用动画的基础样式 */
+}
+
+.enterprise-icon--spin {
+  animation: enterprise-icon-spin 1s linear infinite;
+}
+
+.enterprise-icon--pulse {
+  animation: enterprise-icon-pulse 1.5s ease-in-out infinite;
+}
+
+.enterprise-icon--bounce {
+  animation: enterprise-icon-bounce 1s ease-in-out infinite;
+}
+
+.enterprise-icon--fade {
+  animation: enterprise-icon-fade 2s ease-in-out infinite;
+}
+
+.enterprise-icon--shake {
+  animation: enterprise-icon-shake 0.8s ease-in-out infinite;
+}
+
+.enterprise-icon--flash {
+  animation: enterprise-icon-flash 1s ease-in-out infinite;
+}
+
+/* ===== 🎞️ 关键帧动画定义 ===== */
+@keyframes enterprise-icon-spin {
+  from { 
+    transform: rotate(0deg); 
+  }
+  to { 
+    transform: rotate(360deg); 
+  }
+}
+
+@keyframes enterprise-icon-pulse {
+  0%, 100% { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 0.5; 
+    transform: scale(1.05); 
+  }
+}
+
+@keyframes enterprise-icon-bounce {
+  0%, 20%, 50%, 80%, 100% { 
+    transform: translateY(0); 
+  }
+  40% { 
+    transform: translateY(-5px); 
+  }
+  60% { 
+    transform: translateY(-3px); 
+  }
+}
+
+@keyframes enterprise-icon-fade {
+  0%, 100% { 
+    opacity: 1; 
+  }
+  50% { 
+    opacity: 0.3; 
+  }
+}
+
+@keyframes enterprise-icon-shake {
+  0%, 100% { 
+    transform: translateX(0); 
+  }
+  10%, 30%, 50%, 70%, 90% { 
+    transform: translateX(-2px); 
+  }
+  20%, 40%, 60%, 80% { 
+    transform: translateX(2px); 
+  }
+}
+
+@keyframes enterprise-icon-flash {
+  0%, 100% { 
+    opacity: 1; 
+  }
+  25%, 75% { 
+    opacity: 0.3; 
+  }
+  50% { 
+    opacity: 1; 
+  }
+}
+
+/* ===== 🎯 图标组合和布局 ===== */
+.enterprise-icon-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--enterprise-icon-spacing);
+}
+
+.enterprise-icon-stack {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.enterprise-icon-stack .enterprise-icon:not(:first-child) {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 📱 响应式图标 */
+.enterprise-icon--responsive {
+  width: clamp(
+    var(--enterprise-icon-size-sm), 
+    4vw, 
+    var(--enterprise-icon-size-lg)
+  );
+  height: clamp(
+    var(--enterprise-icon-size-sm), 
+    4vw, 
+    var(--enterprise-icon-size-lg)
+  );
+  font-size: clamp(
+    var(--enterprise-icon-size-sm), 
+    4vw, 
+    var(--enterprise-icon-size-lg)
+  );
+}
+
+/* ===== ♿ 无障碍支持 ===== */
+.enterprise-icon:focus,
+.enterprise-icon:focus-visible {
+  outline: var(--enterprise-icon-focus-outline);
+  outline-offset: var(--enterprise-icon-focus-offset);
+  border-radius: 2px;
+}
+
+/* 🔧 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  .enterprise-icon {
+    filter: contrast(1.5);
+  }
+  
+  .enterprise-icon--outlined {
+    stroke-width: 2px;
+  }
+  
+  .enterprise-icon--round {
+    border: 1px solid currentColor;
+  }
+}
+
+/* 🎨 减少动画模式支持 */
+@media (prefers-reduced-motion: reduce) {
+  .enterprise-icon,
+  .enterprise-icon--spin,
+  .enterprise-icon--pulse,
+  .enterprise-icon--bounce,
+  .enterprise-icon--fade,
+  .enterprise-icon--shake,
+  .enterprise-icon--flash {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .enterprise-icon--clickable:hover {
+    transform: none;
+  }
+}
+
+/* ===== 📱 响应式设计 ===== */
+@media (max-width: 768px) {
+  /* 移动端图标适配 */
+  .enterprise-icon {
+    /* 增加触摸区域 */
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  .enterprise-icon--clickable {
+    /* 移动端增大点击区域 */
+    padding: var(--enterprise-icon-spacing);
+  }
+  
+  /* 移动端尺寸调整 */
+  .enterprise-icon--xs {
+    min-width: 32px;
+    min-height: 32px;
+  }
+  
+  .enterprise-icon--sm {
+    min-width: 36px;
+    min-height: 36px;
+  }
+  
+  .enterprise-icon--md {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  
+  .enterprise-icon--lg {
+    min-width: 48px;
+    min-height: 48px;
+  }
+  
+  .enterprise-icon--xl {
+    min-width: 56px;
+    min-height: 56px;
+  }
+}
+
+/* ===== 🎯 菜单图标特殊样式 ===== */
+.menu-icon {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.menu-icon.enterprise-icon {
+  flex-shrink: 0;
+}
+
+/* 侧边栏收起状态下的图标 */
+.sidebar-collapsed .menu-icon {
+  margin-right: 0;
+}
+
+/* ===== 🔔 状态图标样式 ===== */
+.status-icon {
+  position: relative;
+}
+
+.status-icon::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--enterprise-icon-color-danger);
+  opacity: 0;
+  transition: opacity var(--enterprise-icon-transition-fast);
+}
+
+.status-icon--active::after {
+  opacity: 1;
+}
+
+.status-icon--success::after {
+  background-color: var(--enterprise-icon-color-success);
+}
+
+.status-icon--warning::after {
+  background-color: var(--enterprise-icon-color-warning);
+}
+
+/* ===== 🎯 图标徽章样式 ===== */
+.enterprise-icon-badge {
+  position: relative;
+  display: inline-flex;
+}
+
+.enterprise-icon-badge .badge-content {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background-color: var(--enterprise-icon-color-danger);
+  color: white;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: center;
+  white-space: nowrap;
+  transform: scale(0.9);
+  transition: transform var(--enterprise-icon-transition-fast);
+}
+
+.enterprise-icon-badge:hover .badge-content {
+  transform: scale(1);
+}
+
+/* ===== 🔧 打印样式 ===== */
+@media print {
+  .enterprise-icon {
+    /* 打印时显示回退文本 */
+    color: black !important;
+  }
+  
+  .enterprise-icon--animated,
+  .enterprise-icon--spin,
+  .enterprise-icon--pulse,
+  .enterprise-icon--bounce,
+  .enterprise-icon--fade,
+  .enterprise-icon--shake,
+  .enterprise-icon--flash {
+    animation: none !important;
+  }
+}
+
+/* ===== 🎯 性能优化 ===== */
+.enterprise-icon svg {
+  /* SVG 渲染优化 */
+  shape-rendering: geometricPrecision;
+  text-rendering: optimizeLegibility;
+}
+
+.enterprise-icon img {
+  /* 图片渲染优化 */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* GPU 加速优化 */
+.enterprise-icon--gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* ===== 🌈 主题色彩扩展 ===== */
+.enterprise-theme-custom {
+  /* 自定义主题预留 */
+}
+
+/* 企业品牌色 */
+.enterprise-icon--brand {
+  color: var(--brand-primary, var(--enterprise-icon-color-primary));
+}
+
+.enterprise-icon--accent {
+  color: var(--brand-accent, var(--enterprise-icon-color-warning));
+}
+
+/* ===== 🔍 调试样式 ===== */
+.enterprise-icon-debug {
+  outline: 1px dashed rgba(255, 0, 0, 0.5);
+  background-color: rgba(255, 255, 0, 0.1);
+}
+
+.enterprise-icon-debug::before {
+  content: attr(data-icon-name);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  font-size: 10px;
+  color: red;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* ===== 📝 使用说明注释 ===== */
+/*
+🏢 SmartAbp 企业级图标系统样式使用指南:
+
+1. 🎯 基础使用:
+   <i class="enterprise-icon enterprise-icon--md enterprise-icon--primary"></i>
+
+2. 📏 尺寸控制:
+   enterprise-icon--xs    (12px)
+   enterprise-icon--sm    (14px)
+   enterprise-icon--md    (16px) - 默认
+   enterprise-icon--lg    (20px)
+   enterprise-icon--xl    (24px)
+
+3. 🎨 颜色主题:
+   enterprise-icon--primary
+   enterprise-icon--success
+   enterprise-icon--warning
+   enterprise-icon--danger
+   enterprise-icon--info
+   enterprise-icon--text
+
+4. 🎭 样式变体:
+   enterprise-icon--filled    - 填充样式
+   enterprise-icon--outlined  - 描边样式
+   enterprise-icon--round     - 圆角背景
+   enterprise-icon--sharp     - 尖锐对比
+
+5. 🎬 动画效果:
+   enterprise-icon--spin      - 旋转动画
+   enterprise-icon--pulse     - 脉冲动画
+   enterprise-icon--bounce    - 弹跳动画
+   enterprise-icon--fade      - 淡入淡出
+   enterprise-icon--shake     - 摇摆动画
+   enterprise-icon--flash     - 闪烁动画
+
+6. 🖱️ 交互状态:
+   enterprise-icon--clickable - 可点击
+   enterprise-icon--disabled  - 禁用状态
+
+7. 🎯 特殊组合:
+   enterprise-icon-group      - 图标组
+   enterprise-icon-stack      - 图标堆叠
+   enterprise-icon-badge      - 图标徽章
+
+8. 📱 响应式:
+   enterprise-icon--responsive - 自适应尺寸
+
+9. ♿ 无障碍:
+   - 自动支持焦点轮廓
+   - 高对比度模式适配
+   - 减少动画模式支持
+
+10. 🎨 自定义主题:
+    通过 CSS 变量覆盖默认主题色彩
+*/

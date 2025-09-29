@@ -1,6 +1,7 @@
  
 import "./styles/design-system/index.css" // 统一设计系统
 import "./styles/main.css" // 基础样式和工具类
+import "./styles/enterprise-icons.css" // 企业级图标系统样式
 import "./plugins/dayjs"
 
 /**
@@ -98,6 +99,7 @@ import App from "./App.vue"
 import router from "./router"
 import { logger } from "./utils/logger"
 import { i18n } from "./plugins/i18n"
+import { createEnterpriseIconSystem } from "./plugins/enterpriseIcons"
 // 低代码设计器 store 暂未对外导出，先移除硬依赖
 
 // Highlight.js for code syntax highlighting
@@ -159,7 +161,29 @@ if (storesFactory && typeof storesFactory === "object") {
 
 const app = createApp(App)
 
-app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin)
+// 🎨 配置企业级图标系统
+const enterpriseIconSystem = createEnterpriseIconSystem({
+  theme: {
+    name: 'smartabp-enterprise',
+    colors: {
+      primary: '#409EFF',
+      success: '#67C23A',
+      warning: '#E6A23C',
+      danger: '#F56C6C',
+      info: '#909399',
+      text: '#303133'
+    }
+  },
+  preloadIcons: [
+    'dashboard', 'user', 'users', 'settings', 'business', 
+    'project', 'order', 'customer', 'lowcode', 'code',
+    'add', 'edit', 'delete', 'search', 'refresh'
+  ],
+  enableCache: true,
+  debug: import.meta.env.DEV
+})
+
+app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin).use(enterpriseIconSystem)
 
 async function bootstrap() {
   // 低代码：启用IndexedDB持久化并冷启动加载
