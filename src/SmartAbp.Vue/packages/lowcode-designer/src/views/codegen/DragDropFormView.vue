@@ -9,7 +9,9 @@
         <i class="fas fa-mouse-pointer" />
         拖拽表单开发器
       </h1>
-      <p class="page-description">可视化表单设计器，支持拖拽组件、实时预览和代码生成</p>
+      <p class="page-description">
+        可视化表单设计器，支持拖拽组件、实时预览和代码生成
+      </p>
     </div>
 
     <div class="form-designer">
@@ -21,10 +23,18 @@
             组件库
           </h2>
           <div class="panel-actions">
-            <button class="action-btn" title="折叠所有" @click="collapseAllGroups">
+            <button
+              class="action-btn"
+              title="折叠所有"
+              @click="collapseAllGroups"
+            >
               <i class="fas fa-compress" />
             </button>
-            <button class="action-btn" title="展开所有" @click="expandAllGroups">
+            <button
+              class="action-btn"
+              title="展开所有"
+              @click="expandAllGroups"
+            >
               <i class="fas fa-expand" />
             </button>
           </div>
@@ -37,8 +47,14 @@
             class="component-group"
             :class="{ collapsed: group.collapsed }"
           >
-            <div class="group-header" @click="toggleGroup(group.key)">
-              <i class="group-icon" :class="group.icon" />
+            <div
+              class="group-header"
+              @click="toggleGroup(group.key)"
+            >
+              <i
+                class="group-icon"
+                :class="group.icon"
+              />
               <span class="group-title">{{ group.title }}</span>
               <i class="toggle-icon fas fa-chevron-down" />
             </div>
@@ -74,33 +90,53 @@
           </h2>
           <div class="canvas-actions">
             <div class="zoom-controls">
-              <button class="zoom-btn" :disabled="zoom <= 0.5" @click="zoomOut">
+              <button
+                class="zoom-btn"
+                :disabled="zoom <= 0.5"
+                @click="zoomOut"
+              >
                 <i class="fas fa-search-minus" />
               </button>
               <span class="zoom-display">{{ Math.round(zoom * 100) }}%</span>
-              <button class="zoom-btn" :disabled="zoom >= 2" @click="zoomIn">
+              <button
+                class="zoom-btn"
+                :disabled="zoom >= 2"
+                @click="zoomIn"
+              >
                 <i class="fas fa-search-plus" />
               </button>
             </div>
-            <button class="action-btn" @click="resetZoom">
+            <button
+              class="action-btn"
+              @click="resetZoom"
+            >
               <i class="fas fa-expand-arrows-alt" />
               重置
             </button>
-            <button class="action-btn danger" @click="clearCanvas">
+            <button
+              class="action-btn danger"
+              @click="clearCanvas"
+            >
               <i class="fas fa-trash" />
               清空
             </button>
           </div>
         </div>
 
-        <div class="canvas-container" :style="{ transform: `scale(${zoom})` }">
+        <div
+          class="canvas-container"
+          :style="{ transform: `scale(${zoom})` }"
+        >
           <div
             class="form-canvas"
             @dragover.prevent="onCanvasDragOver"
             @drop="onCanvasDrop"
             @click="clearSelection"
           >
-            <div v-if="formComponents.length === 0" class="canvas-placeholder">
+            <div
+              v-if="formComponents.length === 0"
+              class="canvas-placeholder"
+            >
               <i class="fas fa-hand-point-up" />
               <p>从左侧拖拽组件到这里开始设计表单</p>
             </div>
@@ -118,7 +154,10 @@
               @mouseleave="hoverComponentId = null"
             >
               <!-- 组件操作按钮 -->
-              <div v-if="selectedComponentId === component.id" class="component-actions">
+              <div
+                v-if="selectedComponentId === component.id"
+                class="component-actions"
+              >
                 <button
                   class="move-btn"
                   :disabled="index === 0"
@@ -133,10 +172,16 @@
                 >
                   <i class="fas fa-arrow-down" />
                 </button>
-                <button class="duplicate-btn" @click.stop="duplicateComponent(index)">
+                <button
+                  class="duplicate-btn"
+                  @click.stop="duplicateComponent(index)"
+                >
                   <i class="fas fa-copy" />
                 </button>
-                <button class="remove-btn" @click.stop="removeComponent(index)">
+                <button
+                  class="remove-btn"
+                  @click.stop="removeComponent(index)"
+                >
                   <i class="fas fa-times" />
                 </button>
               </div>
@@ -160,8 +205,15 @@
             <i class="fas fa-cog" />
             {{ selectedComponent ? "组件属性" : "表单属性" }}
           </h2>
-          <div v-if="selectedComponent" class="panel-actions">
-            <button class="action-btn" title="重置属性" @click="resetComponentProps">
+          <div
+            v-if="selectedComponent"
+            class="panel-actions"
+          >
+            <button
+              class="action-btn"
+              title="重置属性"
+              @click="resetComponentProps"
+            >
               <i class="fas fa-undo" />
             </button>
           </div>
@@ -169,16 +221,27 @@
 
         <div class="property-content">
           <!-- 表单整体属性 -->
-          <div v-if="!selectedComponent" class="form-properties">
+          <div
+            v-if="!selectedComponent"
+            class="form-properties"
+          >
             <div class="property-group">
               <h3>基础设置</h3>
               <div class="property-item">
                 <label>表单名称</label>
-                <input v-model="formConfig.name" type="text" class="prop-input" />
+                <input
+                  v-model="formConfig.name"
+                  type="text"
+                  class="prop-input"
+                />
               </div>
               <div class="property-item">
                 <label>表单描述</label>
-                <textarea v-model="formConfig.description" class="prop-textarea" rows="3" />
+                <textarea
+                  v-model="formConfig.description"
+                  class="prop-textarea"
+                  rows="3"
+                />
               </div>
               <div class="property-item">
                 <label>标签宽度</label>
@@ -195,34 +258,62 @@
               <h3>布局设置</h3>
               <div class="property-item">
                 <label>表单大小</label>
-                <select v-model="formConfig.size" class="prop-select">
-                  <option value="large">大</option>
-                  <option value="default">默认</option>
-                  <option value="small">小</option>
+                <select
+                  v-model="formConfig.size"
+                  class="prop-select"
+                >
+                  <option value="large">
+                    大
+                  </option>
+                  <option value="default">
+                    默认
+                  </option>
+                  <option value="small">
+                    小
+                  </option>
                 </select>
               </div>
               <div class="property-item">
                 <label>内联表单</label>
-                <input v-model="formConfig.inline" type="checkbox" class="prop-checkbox" />
+                <input
+                  v-model="formConfig.inline"
+                  type="checkbox"
+                  class="prop-checkbox"
+                />
               </div>
               <div class="property-item">
                 <label>禁用表单</label>
-                <input v-model="formConfig.disabled" type="checkbox" class="prop-checkbox" />
+                <input
+                  v-model="formConfig.disabled"
+                  type="checkbox"
+                  class="prop-checkbox"
+                />
               </div>
             </div>
           </div>
 
           <!-- 组件属性 -->
-          <div v-else class="component-properties">
+          <div
+            v-else
+            class="component-properties"
+          >
             <div class="property-group">
               <h3>基础属性</h3>
               <div class="property-item">
                 <label>字段名称</label>
-                <input v-model="selectedComponent.props.name" type="text" class="prop-input" />
+                <input
+                  v-model="selectedComponent.props.name"
+                  type="text"
+                  class="prop-input"
+                />
               </div>
               <div class="property-item">
                 <label>字段标签</label>
-                <input v-model="selectedComponent.props.label" type="text" class="prop-input" />
+                <input
+                  v-model="selectedComponent.props.label"
+                  type="text"
+                  class="prop-input"
+                />
               </div>
               <div class="property-item">
                 <label>占位符</label>
@@ -244,7 +335,10 @@
                   class="prop-checkbox"
                 />
               </div>
-              <div v-if="selectedComponent.type === 'input'" class="property-item">
+              <div
+                v-if="selectedComponent.type === 'input'"
+                class="property-item"
+              >
                 <label>最小长度</label>
                 <input
                   v-model.number="selectedComponent.props.minLength"
@@ -252,7 +346,10 @@
                   class="prop-input"
                 />
               </div>
-              <div v-if="selectedComponent.type === 'input'" class="property-item">
+              <div
+                v-if="selectedComponent.type === 'input'"
+                class="property-item"
+              >
                 <label>最大长度</label>
                 <input
                   v-model.number="selectedComponent.props.maxLength"
@@ -262,7 +359,10 @@
               </div>
             </div>
 
-            <div v-if="selectedComponent.type === 'select'" class="property-group">
+            <div
+              v-if="selectedComponent.type === 'select'"
+              class="property-group"
+            >
               <h3>选项设置</h3>
               <div class="options-editor">
                 <div
@@ -276,12 +376,23 @@
                     placeholder="标签"
                     class="option-input"
                   />
-                  <input v-model="option.value" type="text" placeholder="值" class="option-input" />
-                  <button class="remove-option-btn" @click="removeOption(index)">
+                  <input
+                    v-model="option.value"
+                    type="text"
+                    placeholder="值"
+                    class="option-input"
+                  />
+                  <button
+                    class="remove-option-btn"
+                    @click="removeOption(index)"
+                  >
                     <i class="fas fa-times" />
                   </button>
                 </div>
-                <button class="add-option-btn" @click="addOption">
+                <button
+                  class="add-option-btn"
+                  @click="addOption"
+                >
                   <i class="fas fa-plus" />
                   添加选项
                 </button>
@@ -295,26 +406,41 @@
     <!-- 底部操作栏 -->
     <div class="bottom-toolbar">
       <div class="toolbar-left">
-        <button class="toolbar-btn primary" @click="showPreview = true">
+        <button
+          class="toolbar-btn primary"
+          @click="showPreview = true"
+        >
           <i class="fas fa-eye" />
           预览表单
         </button>
-        <button class="toolbar-btn secondary" @click="generateCode">
+        <button
+          class="toolbar-btn secondary"
+          @click="generateCode"
+        >
           <i class="fas fa-code" />
           生成代码
         </button>
-        <button class="toolbar-btn secondary" @click="exportForm">
+        <button
+          class="toolbar-btn secondary"
+          @click="exportForm"
+        >
           <i class="fas fa-download" />
           导出配置
         </button>
       </div>
 
       <div class="toolbar-right">
-        <button class="toolbar-btn secondary" @click="importForm">
+        <button
+          class="toolbar-btn secondary"
+          @click="importForm"
+        >
           <i class="fas fa-upload" />
           导入配置
         </button>
-        <button class="toolbar-btn success" @click="saveForm">
+        <button
+          class="toolbar-btn success"
+          @click="saveForm"
+        >
           <i class="fas fa-save" />
           保存表单
         </button>
@@ -322,17 +448,30 @@
     </div>
 
     <!-- 预览模态框 -->
-    <div v-if="showPreview" class="preview-modal" @click="showPreview = false">
-      <div class="preview-content" @click.stop>
+    <div
+      v-if="showPreview"
+      class="preview-modal"
+      @click="showPreview = false"
+    >
+      <div
+        class="preview-content"
+        @click.stop
+      >
         <div class="preview-header">
           <h3>表单预览</h3>
-          <button class="close-btn" @click="showPreview = false">
+          <button
+            class="close-btn"
+            @click="showPreview = false"
+          >
             <i class="fas fa-times" />
           </button>
         </div>
 
         <div class="preview-form">
-          <form class="generated-form" @submit.prevent="handlePreviewSubmit">
+          <form
+            class="generated-form"
+            @submit.prevent="handlePreviewSubmit"
+          >
             <component
               :is="getComponentRenderer(component.type)"
               v-for="component in formComponents"
@@ -343,8 +482,19 @@
             />
 
             <div class="form-actions">
-              <button type="submit" class="submit-btn">提交</button>
-              <button type="reset" class="reset-btn" @click="resetForm">重置</button>
+              <button
+                type="submit"
+                class="submit-btn"
+              >
+                提交
+              </button>
+              <button
+                type="reset"
+                class="reset-btn"
+                @click="resetForm"
+              >
+                重置
+              </button>
             </div>
           </form>
         </div>

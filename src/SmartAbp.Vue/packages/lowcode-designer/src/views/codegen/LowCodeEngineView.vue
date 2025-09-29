@@ -9,7 +9,9 @@
         <i class="fas fa-cogs" />
         低代码引擎控制台
       </h1>
-      <p class="page-description">SmartAbp 低代码引擎管理和监控中心</p>
+      <p class="page-description">
+        SmartAbp 低代码引擎管理和监控中心
+      </p>
     </div>
 
     <div class="engine-dashboard">
@@ -17,7 +19,10 @@
       <div class="status-cards">
         <div class="status-card">
           <div class="card-icon">
-            <i class="fas fa-heartbeat" :class="{ active: engineStatus.healthy }" />
+            <i
+              class="fas fa-heartbeat"
+              :class="{ active: engineStatus.healthy }"
+            />
           </div>
           <div class="card-content">
             <h3>引擎状态</h3>
@@ -45,7 +50,9 @@
           </div>
           <div class="card-content">
             <h3>生成性能</h3>
-            <p class="metric-value">{{ engineStatus.avgGenerationTime }}ms</p>
+            <p class="metric-value">
+              {{ engineStatus.avgGenerationTime }}ms
+            </p>
           </div>
         </div>
 
@@ -55,28 +62,46 @@
           </div>
           <div class="card-content">
             <h3>成功率</h3>
-            <p class="metric-value">{{ engineStatus.successRate }}%</p>
+            <p class="metric-value">
+              {{ engineStatus.successRate }}%
+            </p>
           </div>
         </div>
       </div>
 
       <!-- 快速操作区域 -->
       <div class="quick-actions">
-        <h2 class="section-title">快速操作</h2>
+        <h2 class="section-title">
+          快速操作
+        </h2>
         <div class="action-buttons">
-          <button class="action-btn primary" :disabled="loading" @click="initializeEngine">
+          <button
+            class="action-btn primary"
+            :disabled="loading"
+            @click="initializeEngine"
+          >
             <i class="fas fa-play" />
             初始化引擎
           </button>
-          <button class="action-btn secondary" :disabled="loading" @click="runExample">
+          <button
+            class="action-btn secondary"
+            :disabled="loading"
+            @click="runExample"
+          >
             <i class="fas fa-rocket" />
             运行示例
           </button>
-          <button class="action-btn secondary" @click="showPerformanceTest">
+          <button
+            class="action-btn secondary"
+            @click="showPerformanceTest"
+          >
             <i class="fas fa-stopwatch" />
             性能测试
           </button>
-          <button class="action-btn secondary" @click="exportDiagnostic">
+          <button
+            class="action-btn secondary"
+            @click="exportDiagnostic"
+          >
             <i class="fas fa-download" />
             导出诊断
           </button>
@@ -86,24 +111,44 @@
       <!-- 实时日志区域 -->
       <div class="log-section">
         <div class="section-header">
-          <h2 class="section-title">实时日志</h2>
+          <h2 class="section-title">
+            实时日志
+          </h2>
           <div class="log-controls">
-            <button class="control-btn" @click="clearLogs">
+            <button
+              class="control-btn"
+              @click="clearLogs"
+            >
               <i class="fas fa-trash" />
               清空
             </button>
-            <button class="control-btn" :class="{ active: autoScroll }" @click="toggleAutoScroll">
+            <button
+              class="control-btn"
+              :class="{ active: autoScroll }"
+              @click="toggleAutoScroll"
+            >
               <i class="fas fa-arrow-down" />
               自动滚动
             </button>
           </div>
         </div>
-        <div ref="logViewer" class="log-viewer">
-          <div v-for="log in logs" :key="log.id" class="log-entry" :class="`log-${log.level}`">
+        <div
+          ref="logViewer"
+          class="log-viewer"
+        >
+          <div
+            v-for="log in logs"
+            :key="log.id"
+            class="log-entry"
+            :class="`log-${log.level}`"
+          >
             <span class="log-time">{{ formatTime(log.timestamp) }}</span>
             <span class="log-level">{{ log.level.toUpperCase() }}</span>
             <span class="log-message">{{ log.message }}</span>
-            <span v-if="log.metadata" class="log-metadata">
+            <span
+              v-if="log.metadata"
+              class="log-metadata"
+            >
               {{ JSON.stringify(log.metadata, null, 2) }}
             </span>
           </div>
@@ -112,7 +157,9 @@
 
       <!-- 代码生成演示区域 -->
       <div class="generation-demo">
-        <h2 class="section-title">代码生成演示</h2>
+        <h2 class="section-title">
+          代码生成演示
+        </h2>
         <div class="demo-controls">
           <div class="schema-input">
             <label for="schema-editor">输入Schema:</label>
@@ -125,26 +172,54 @@
             />
           </div>
           <div class="generation-controls">
-            <button class="generate-btn" :disabled="loading" @click="generateCode">
+            <button
+              class="generate-btn"
+              :disabled="loading"
+              @click="generateCode"
+            >
               <i class="fas fa-code" />
               生成代码
             </button>
-            <select v-model="selectedPlugin" class="plugin-selector">
-              <option value="vue3">Vue3 生成器</option>
-              <option value="react" disabled>React 生成器 (待开发)</option>
-              <option value="angular" disabled>Angular 生成器 (待开发)</option>
+            <select
+              v-model="selectedPlugin"
+              class="plugin-selector"
+            >
+              <option value="vue3">
+                Vue3 生成器
+              </option>
+              <option
+                value="react"
+                disabled
+              >
+                React 生成器 (待开发)
+              </option>
+              <option
+                value="angular"
+                disabled
+              >
+                Angular 生成器 (待开发)
+              </option>
             </select>
           </div>
         </div>
-        <div v-if="generatedCode" class="generated-output">
+        <div
+          v-if="generatedCode"
+          class="generated-output"
+        >
           <h3>生成结果:</h3>
           <pre class="code-output"><code>{{ generatedCode }}</code></pre>
           <div class="output-actions">
-            <button class="copy-btn" @click="copyCode">
+            <button
+              class="copy-btn"
+              @click="copyCode"
+            >
               <i class="fas fa-copy" />
               复制代码
             </button>
-            <button class="download-btn" @click="downloadCode">
+            <button
+              class="download-btn"
+              @click="downloadCode"
+            >
               <i class="fas fa-download" />
               下载文件
             </button>

@@ -45,13 +45,28 @@
 
         <!-- 🚀 增强操作按钮 - 基于现有架构增量开发 -->
         <div class="action-buttons">
-          <button :disabled="!canUndo" class="btn btn-icon" title="撤销 (Ctrl+Z)" @click="undo">
+          <button
+            :disabled="!canUndo"
+            class="btn btn-icon"
+            title="撤销 (Ctrl+Z)"
+            @click="undo"
+          >
             <i class="icon-undo" />
           </button>
-          <button :disabled="!canRedo" class="btn btn-icon" title="重做 (Ctrl+Y)" @click="redo">
+          <button
+            :disabled="!canRedo"
+            class="btn btn-icon"
+            title="重做 (Ctrl+Y)"
+            @click="redo"
+          >
             <i class="icon-redo" />
           </button>
-          <button :disabled="!isDirty" class="btn btn-icon" title="保存 (Ctrl+S)" @click="save">
+          <button
+            :disabled="!isDirty"
+            class="btn btn-icon"
+            title="保存 (Ctrl+S)"
+            @click="save"
+          >
             <i class="icon-save" />
           </button>
 
@@ -71,19 +86,42 @@
               title="网格大小"
               @change="setGridSize(dragState.gridSize)"
             >
-              <option :value="5">5px</option>
-              <option :value="10">10px</option>
-              <option :value="20">20px</option>
-              <option :value="25">25px</option>
-              <option :value="50">50px</option>
+              <option :value="5">
+                5px
+              </option>
+              <option :value="10">
+                10px
+              </option>
+              <option :value="20">
+                20px
+              </option>
+              <option :value="25">
+                25px
+              </option>
+              <option :value="50">
+                50px
+              </option>
             </select>
           </div>
 
-          <button class="btn btn-primary" @click="preview">预览</button>
-          <button class="btn btn-secondary" @click="exportDesign">导出</button>
+          <button
+            class="btn btn-primary"
+            @click="preview"
+          >
+            预览
+          </button>
+          <button
+            class="btn btn-secondary"
+            @click="exportDesign"
+          >
+            导出
+          </button>
 
           <!-- 🎯 预览模式工具栏 -->
-          <div v-if="previewState.isPreviewMode" class="preview-toolbar">
+          <div
+            v-if="previewState.isPreviewMode"
+            class="preview-toolbar"
+          >
             <div class="device-switcher">
               <button
                 v-for="device in ['desktop', 'tablet', 'mobile']"
@@ -115,7 +153,12 @@
               <i class="icon-refresh" />
             </button>
 
-            <button class="btn btn-danger" @click="exitPreview">退出预览</button>
+            <button
+              class="btn btn-danger"
+              @click="exitPreview"
+            >
+              退出预览
+            </button>
           </div>
         </div>
       </div>
@@ -124,7 +167,10 @@
     <!-- 主要布局 -->
     <div class="designer-layout">
       <!-- 左侧面板 -->
-      <div class="designer-sidebar left" :class="{ collapsed: leftPanelCollapsed }">
+      <div
+        class="designer-sidebar left"
+        :class="{ collapsed: leftPanelCollapsed }"
+      >
         <div class="sidebar-header">
           <div class="sidebar-tabs">
             <button
@@ -138,14 +184,23 @@
               <span v-if="!leftPanelCollapsed">{{ tab.label }}</span>
             </button>
           </div>
-          <button class="collapse-btn" @click="leftPanelCollapsed = !leftPanelCollapsed">
+          <button
+            class="collapse-btn"
+            @click="leftPanelCollapsed = !leftPanelCollapsed"
+          >
             <i :class="leftPanelCollapsed ? 'icon-expand' : 'icon-collapse'" />
           </button>
         </div>
 
-        <div v-if="!leftPanelCollapsed" class="sidebar-content">
+        <div
+          v-if="!leftPanelCollapsed"
+          class="sidebar-content"
+        >
           <!-- 组件库 -->
-          <div v-show="activeLeftTab === 'components'" class="tab-panel">
+          <div
+            v-show="activeLeftTab === 'components'"
+            class="tab-panel"
+          >
             <ComponentPalette
               v-if="designer"
               :component-library="{}"
@@ -154,7 +209,10 @@
           </div>
 
           <!-- 图层管理 -->
-          <div v-show="activeLeftTab === 'layers'" class="tab-panel">
+          <div
+            v-show="activeLeftTab === 'layers'"
+            class="tab-panel"
+          >
             <LayerManager
               :components="canvasComponents"
               :selected-components="selectedComponents"
@@ -175,14 +233,23 @@
         <div class="canvas-toolbar">
           <div class="toolbar-left">
             <div class="zoom-controls">
-              <button class="btn btn-icon" @click="zoomOut">
+              <button
+                class="btn btn-icon"
+                @click="zoomOut"
+              >
                 <i class="icon-zoom-out" />
               </button>
               <span class="zoom-level">{{ Math.round(zoomLevel * 100) }}%</span>
-              <button class="btn btn-icon" @click="zoomIn">
+              <button
+                class="btn btn-icon"
+                @click="zoomIn"
+              >
                 <i class="icon-zoom-in" />
               </button>
-              <button class="btn btn-icon" @click="resetZoom">
+              <button
+                class="btn btn-icon"
+                @click="resetZoom"
+              >
                 <i class="icon-zoom-reset" />
               </button>
             </div>
@@ -216,12 +283,17 @@
           </div>
 
           <div class="toolbar-right">
-            <div class="canvas-size-info">{{ canvasSize.width }} × {{ canvasSize.height }}</div>
+            <div class="canvas-size-info">
+              {{ canvasSize.width }} × {{ canvasSize.height }}
+            </div>
           </div>
         </div>
 
         <!-- 画布容器 -->
-        <div ref="canvasContainer" class="canvas-container">
+        <div
+          ref="canvasContainer"
+          class="canvas-container"
+        >
           <AdvancedCanvasComponent
             v-if="designer"
             ref="canvasRef"
@@ -246,7 +318,10 @@
       </div>
 
       <!-- 右侧面板 -->
-      <div class="designer-sidebar right" :class="{ collapsed: rightPanelCollapsed }">
+      <div
+        class="designer-sidebar right"
+        :class="{ collapsed: rightPanelCollapsed }"
+      >
         <div class="sidebar-header">
           <div class="sidebar-tabs">
             <button
@@ -260,14 +335,23 @@
               <span v-if="!rightPanelCollapsed">{{ tab.label }}</span>
             </button>
           </div>
-          <button class="collapse-btn" @click="rightPanelCollapsed = !rightPanelCollapsed">
+          <button
+            class="collapse-btn"
+            @click="rightPanelCollapsed = !rightPanelCollapsed"
+          >
             <i :class="rightPanelCollapsed ? 'icon-expand' : 'icon-collapse'" />
           </button>
         </div>
 
-        <div v-if="!rightPanelCollapsed" class="sidebar-content">
+        <div
+          v-if="!rightPanelCollapsed"
+          class="sidebar-content"
+        >
           <!-- 属性面板 -->
-          <div v-show="activeRightTab === 'properties'" class="tab-panel">
+          <div
+            v-show="activeRightTab === 'properties'"
+            class="tab-panel"
+          >
             <PropertyInspector
               :selected-components="selectedComponentsData"
               @update-component="updateComponent"
@@ -275,7 +359,10 @@
           </div>
 
           <!-- 样式面板 -->
-          <div v-show="activeRightTab === 'styles'" class="tab-panel">
+          <div
+            v-show="activeRightTab === 'styles'"
+            class="tab-panel"
+          >
             <StyleEditor
               :selected-components="selectedComponentsData"
               @update-styles="updateComponentStyles"
@@ -283,7 +370,10 @@
           </div>
 
           <!-- 版本历史 -->
-          <div v-show="activeRightTab === 'history'" class="tab-panel">
+          <div
+            v-show="activeRightTab === 'history'"
+            class="tab-panel"
+          >
             <VersionHistory
               v-if="designer"
               :version-control="{}"
@@ -301,7 +391,10 @@
           <i class="icon-info" />
           {{ statusMessage }}
         </span>
-        <span v-if="isDirty" class="status-item dirty">
+        <span
+          v-if="isDirty"
+          class="status-item dirty"
+        >
           <i class="icon-dot" />
           未保存
         </span>
@@ -336,51 +429,104 @@
     <el-card style="margin-top: 20px">
       <h3>兼容性功能</h3>
       <div class="actions">
-        <el-button type="primary" :disabled="!hasComponents" @click="onPreview">
+        <el-button
+          type="primary"
+          :disabled="!hasComponents"
+          @click="onPreview"
+        >
           <el-icon><View /></el-icon>
           预览页面
         </el-button>
-        <el-button :disabled="!hasComponents" :loading="generating" @click="onGenerateCode">
+        <el-button
+          :disabled="!hasComponents"
+          :loading="generating"
+          @click="onGenerateCode"
+        >
           <el-icon><Document /></el-icon>
           生成代码
         </el-button>
-        <el-button :disabled="!hasComponents" @click="onExportSchema">
+        <el-button
+          :disabled="!hasComponents"
+          @click="onExportSchema"
+        >
           <el-icon><Download /></el-icon>
           导出Schema
         </el-button>
-        <el-button :disabled="!hasComponents" type="danger" @click="onClearAll">
+        <el-button
+          :disabled="!hasComponents"
+          type="danger"
+          @click="onClearAll"
+        >
           <el-icon><Delete /></el-icon>
           清空画布
         </el-button>
       </div>
 
       <!-- 代码生成配置对话框 -->
-      <el-dialog v-model="showCodeDialog" title="代码生成配置" width="600px">
-        <el-form :model="codegenOptions" label-width="100px">
-          <el-form-item label="模块名称" required>
-            <el-input v-model="codegenOptions.moduleName" placeholder="例如：UserManagement" />
+      <el-dialog
+        v-model="showCodeDialog"
+        title="代码生成配置"
+        width="600px"
+      >
+        <el-form
+          :model="codegenOptions"
+          label-width="100px"
+        >
+          <el-form-item
+            label="模块名称"
+            required
+          >
+            <el-input
+              v-model="codegenOptions.moduleName"
+              placeholder="例如：UserManagement"
+            />
           </el-form-item>
-          <el-form-item label="页面名称" required>
-            <el-input v-model="codegenOptions.pageName" placeholder="例如：UserList" />
+          <el-form-item
+            label="页面名称"
+            required
+          >
+            <el-input
+              v-model="codegenOptions.pageName"
+              placeholder="例如：UserList"
+            />
           </el-form-item>
           <el-form-item label="作者">
-            <el-input v-model="codegenOptions.author" placeholder="可选" />
+            <el-input
+              v-model="codegenOptions.author"
+              placeholder="可选"
+            />
           </el-form-item>
           <el-form-item label="生成格式">
             <el-radio-group v-model="codegenOptions.format">
-              <el-radio value="vue-sfc"> Vue SFC </el-radio>
-              <el-radio value="designer-schema"> Designer Schema </el-radio>
-              <el-radio value="both"> 两者都要 </el-radio>
+              <el-radio value="vue-sfc">
+                Vue SFC
+              </el-radio>
+              <el-radio value="designer-schema">
+                Designer Schema
+              </el-radio>
+              <el-radio value="both">
+                两者都要
+              </el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item>
-            <el-checkbox v-model="codegenOptions.includeEvents"> 包含事件绑定 </el-checkbox>
-            <el-checkbox v-model="codegenOptions.includeValidation"> 包含校验规则 </el-checkbox>
+            <el-checkbox v-model="codegenOptions.includeEvents">
+              包含事件绑定
+            </el-checkbox>
+            <el-checkbox v-model="codegenOptions.includeValidation">
+              包含校验规则
+            </el-checkbox>
           </el-form-item>
         </el-form>
         <template #footer>
-          <el-button @click="showCodeDialog = false"> 取消 </el-button>
-          <el-button type="primary" :loading="generating" @click="handleGenerateCode">
+          <el-button @click="showCodeDialog = false">
+            取消
+          </el-button>
+          <el-button
+            type="primary"
+            :loading="generating"
+            @click="handleGenerateCode"
+          >
             生成代码
           </el-button>
         </template>
@@ -397,15 +543,25 @@
           <div class="dialog-header">
             <span>生成的代码</span>
             <div class="header-actions">
-              <el-button text @click="previewFullscreen = !previewFullscreen">
+              <el-button
+                text
+                @click="previewFullscreen = !previewFullscreen"
+              >
                 <el-icon><FullScreen v-if="!previewFullscreen" /><Aim v-else /></el-icon>
               </el-button>
             </div>
           </div>
         </template>
 
-        <el-tabs v-model="activeTab" type="border-card">
-          <el-tab-pane v-if="generatedCode?.vueSFC" label="Vue模板" name="template">
+        <el-tabs
+          v-model="activeTab"
+          type="border-card"
+        >
+          <el-tab-pane
+            v-if="generatedCode?.vueSFC"
+            label="Vue模板"
+            name="template"
+          >
             <el-input
               v-model="generatedCode.vueSFC.template"
               type="textarea"
@@ -414,7 +570,11 @@
               class="code-textarea"
             />
           </el-tab-pane>
-          <el-tab-pane v-if="generatedCode?.vueSFC" label="脚本代码" name="script">
+          <el-tab-pane
+            v-if="generatedCode?.vueSFC"
+            label="脚本代码"
+            name="script"
+          >
             <el-input
               v-model="generatedCode.vueSFC.script"
               type="textarea"
@@ -423,7 +583,11 @@
               class="code-textarea"
             />
           </el-tab-pane>
-          <el-tab-pane v-if="generatedCode?.vueSFC" label="样式代码" name="style">
+          <el-tab-pane
+            v-if="generatedCode?.vueSFC"
+            label="样式代码"
+            name="style"
+          >
             <el-input
               v-model="generatedCode.vueSFC.style"
               type="textarea"
@@ -432,7 +596,11 @@
               class="code-textarea"
             />
           </el-tab-pane>
-          <el-tab-pane v-if="generatedCode?.designerSchema" label="Designer Schema" name="schema">
+          <el-tab-pane
+            v-if="generatedCode?.designerSchema"
+            label="Designer Schema"
+            name="schema"
+          >
             <el-input
               v-model="schemaText"
               type="textarea"
@@ -441,7 +609,10 @@
               class="code-textarea"
             />
           </el-tab-pane>
-          <el-tab-pane label="路由配置" name="routes">
+          <el-tab-pane
+            label="路由配置"
+            name="routes"
+          >
             <el-input
               v-model="routesText"
               type="textarea"
@@ -453,12 +624,20 @@
         </el-tabs>
 
         <template #footer>
-          <el-button @click="showPreviewDialog = false"> 关闭 </el-button>
-          <el-button type="primary" @click="copyToClipboard">
+          <el-button @click="showPreviewDialog = false">
+            关闭
+          </el-button>
+          <el-button
+            type="primary"
+            @click="copyToClipboard"
+          >
             <el-icon><CopyDocument /></el-icon>
             复制当前代码
           </el-button>
-          <el-button type="success" @click="downloadCode">
+          <el-button
+            type="success"
+            @click="downloadCode"
+          >
             <el-icon><Download /></el-icon>
             下载文件
           </el-button>
@@ -473,7 +652,9 @@
         placeholder="粘贴包含data-block-id/data-node-id的SFC模板"
       />
       <div class="actions">
-        <el-button @click="onReadSFC"> 回读Selectors </el-button>
+        <el-button @click="onReadSFC">
+          回读Selectors
+        </el-button>
       </div>
     </el-card>
   </div>

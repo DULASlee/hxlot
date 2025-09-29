@@ -9,7 +9,7 @@ import type {
   UIComponentMetadata,
   CodeGenerationConfig,
   CodeGenerationResult
-} from '../../../lowcode-core/src/types/unified-metadata'
+} from '@smartabp/lowcode-core'
 
 // ============================================================================
 // 前后端统一API接口定义
@@ -228,7 +228,7 @@ export const codeGeneratorApi: CodeGeneratorApi = {
     return {
       success: true,
       generatedFiles: [],
-      statistics: { filesGenerated: 0, linesOfCode: 0, duration: 0 },
+      statistics: { totalFiles: 0, totalLines: 0, generationTime: 0 },
       errors: [],
       report: '',
       generatedAt: new Date().toISOString()

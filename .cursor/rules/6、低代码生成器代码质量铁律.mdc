@@ -1,0 +1,128 @@
+# AI架构铁律同心圆模型 - 第六重爆雷：低代码生成器代码质量铁律
+
+## 文件说明
+- **文件标识**: `6、低代码生成器代码质量铁律.mdc`
+- **层级**: 第六重爆雷 - 低代码生成器专项质量保证
+- **作用**: 专门针对SmartAbp.Vue/packages低代码生成器实现代码的质量检查和修复，这是低代码引擎的核心实现！
+
+---
+
+## 🔥 低代码生成器代码质量铁律 (LowCode Generator Quality Laws)
+
+### 1. 🎯 低代码生成器核心地位铁律
+- **核心思想**: packages目录下的低代码生成器是SmartAbp项目的核心价值所在，其代码质量必须达到100分标准。
+- **执行准则**:
+    - 低代码生成器的任何代码必须经过严格的TypeScript类型检查
+    - 低代码生成器的任何代码必须通过ESLint代码规范检查
+    - 低代码生成器的packages必须支持独立编译和发布
+    - 严禁在低代码生成器中出现任何架构违规问题
+
+### 2. 🏗️ packages架构完整性铁律
+- **核心思想**: 每个package都是独立的、可复用的模块，必须遵循严格的依赖管理和边界隔离。
+- **执行准则**:
+    - **lowcode-shared**: 共享基础库，零依赖，供其他packages使用
+    - **lowcode-core**: 核心引擎，依赖lowcode-shared，提供基础功能
+    - **lowcode-api**: API接口层，依赖lowcode-core，对外提供统一接口
+    - **lowcode-designer**: 设计器UI，依赖lowcode-core和lowcode-shared
+    - **lowcode-tools**: 工具库，依赖lowcode-shared
+    - 严禁packages之间的循环依赖和逆向依赖
+
+### 3. 🔍 强制质量检查门禁
+在每次编程和修改低代码生成器代码后，AI必须**自动**并**强制**执行以下检查：
+
+#### 🏗️ **第一关：packages TypeScript编译检查 (0错误)**
+```bash
+cd src/SmartAbp.Vue && npx tsc --build tsconfig.references.json --force
+```
+- **失败处理**: 如果发现任何TypeScript编译错误，必须立即中止，并优先修复所有类型错误
+
+#### 📋 **第二关：packages ESLint质量检查 (0错误)**
+```bash
+cd src/SmartAbp.Vue && npm run lint -- packages/*/src/**/*.{ts,vue} --fix
+```
+- **失败处理**: 如果发现ESLint错误，必须立即修复，不允许使用disable注释绕过
+
+#### 🔗 **第三关：packages依赖关系检查 (0违规)**
+```bash
+grep -r "import.*from '\.\./\.\./'" src/SmartAbp.Vue/packages/
+grep -r "import.*from '@/'" src/SmartAbp.Vue/packages/
+```
+- **失败处理**: 发现相对路径违规或主应用引用违规，必须立即修复为正确的@smartabp别名引用
+
+#### ⚡ **第四关：packages构建产物检查 (100%成功)**
+```bash
+cd src/SmartAbp.Vue && npm run build:packages
+```
+- **失败处理**: 如果packages构建失败，必须分析原因并修复所有构建问题
+
+### 4. 🎖️ 低代码生成器专项优化要求
+
+#### 🔧 **类型安全强化**
+- 严禁在packages中使用`as any`、`@ts-ignore`等绕过类型检查的手段
+- 所有API接口必须有完整的TypeScript类型定义
+- 跨package的类型引用必须通过正确的项目引用(Project References)
+
+#### 🧹 **代码质量优化**
+- 清理所有未使用的参数和变量
+- 修复所有全局类型未定义问题(EventListener, PropertyType等)
+- 移除所有不可达代码(unreachable code)
+- 为所有Vue组件的props提供默认值
+
+#### 📦 **模块化完善**
+- 确保每个package都有正确的package.json配置
+- 确保每个package都有独立的tsconfig.json配置
+- 确保每个package都支持增量编译
+- 确保包之间的导入导出关系清晰明确
+
+### 5. 🚨 专家模式集成 - 第六重爆雷增强
+
+在专家模式的第六重爆雷"Git版本管理和质量检查强制执行"中，增加低代码生成器专项检查：
+
+```markdown
+🚨 **Git提交前五重强制检查门禁（零容忍）**
+
+🏗️ **第一关：架构整洁检查（0违规）**
+🔄 **第二关：代码去重检查（0重复）**
+⚡ **第三关：类型和编译检查（0错误）**
+🎯 **第四关：低代码生成器专项检查（NEW！）**
+   🔧 packages TypeScript编译: npx tsc --build tsconfig.references.json
+   🔧 packages ESLint检查: npm run lint -- packages/*/src/**/*.{ts,vue}
+   🔧 packages依赖关系: 检查相对路径和主应用引用违规
+   🔧 packages构建产物: npm run build:packages
+   ❌ **有任何packages质量问题严禁提交！必须修复！**
+
+🚀 **第五关：Git提交执行（质量门禁全部通过后）**
+```
+
+### 6. 🎯 执行优先级和触发机制
+
+#### 📋 **自动触发场景**
+- 修改packages目录下任何文件时
+- 执行专家模式时
+- Git提交前检查时
+- 编写涉及低代码生成器功能的代码时
+
+#### ⚡ **响应格式**
+当触发低代码生成器质量检查时，AI必须响应：
+```
+🎯 **低代码生成器质量检查执行中...**
+🔍 正在检查packages TypeScript编译...
+🔍 正在检查packages ESLint质量...
+🔍 正在检查packages依赖关系...
+🔍 正在检查packages构建产物...
+```
+
+#### 🏆 **成功标准**
+只有当以下所有条件都满足时，才能认为低代码生成器质量检查通过：
+- ✅ packages TypeScript编译：0错误
+- ✅ packages ESLint检查：0错误
+- ✅ packages依赖关系：0违规
+- ✅ packages构建产物：100%成功
+
+---
+
+## 🎖️ 总结
+
+低代码生成器是SmartAbp项目的核心竞争力，其代码质量直接决定了整个项目的价值。通过建立专门的质量铁律和检查机制，确保低代码生成器始终保持企业级100分的代码质量标准。
+
+**🔥 这是专家模式的第六重爆雷增强版 - 低代码生成器专项质量保证！**

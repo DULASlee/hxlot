@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable */
+ 
 
 /**
  * Enhanced Simple Template Index Builder with comprehensive error handling

@@ -8,7 +8,11 @@
               <Document />
             </el-icon>
             <span class="header-title">Generated Code Preview</span>
-            <el-tag v-if="language" :type="getLanguageTagType(language)" size="small">
+            <el-tag
+              v-if="language"
+              :type="getLanguageTagType(language)"
+              size="small"
+            >
               {{ language.toUpperCase() }}
             </el-tag>
           </div>
@@ -64,7 +68,10 @@
       </template>
 
       <!-- File Tree View -->
-      <div v-if="files && Object.keys(files).length > 1" class="file-tree-container">
+      <div
+        v-if="files && Object.keys(files).length > 1"
+        class="file-tree-container"
+      >
         <div class="file-tree-header">
           <el-icon><Folder /></el-icon>
           <span>Generated Files ({{ Object.keys(files).length }})</span>
@@ -106,12 +113,23 @@
             <span class="char-count">{{ charCount }} chars</span>
           </div>
           <div class="toolbar-right">
-            <el-switch v-model="showLineNumbers" active-text="Line Numbers" size="small" />
-            <el-switch v-model="wordWrap" active-text="Word Wrap" size="small" />
+            <el-switch
+              v-model="showLineNumbers"
+              active-text="Line Numbers"
+              size="small"
+            />
+            <el-switch
+              v-model="wordWrap"
+              active-text="Word Wrap"
+              size="small"
+            />
           </div>
         </div>
 
-        <div ref="codeContainer" class="code-content">
+        <div
+          ref="codeContainer"
+          class="code-content"
+        >
           <highlightjs
             :code="currentCode"
             :language="language"
@@ -125,7 +143,10 @@
         </div>
 
         <!-- Code Statistics -->
-        <div v-if="showStatistics" class="code-statistics">
+        <div
+          v-if="showStatistics"
+          class="code-statistics"
+        >
           <div class="stats-grid">
             <div class="stat-item">
               <span class="stat-label">Lines:</span>

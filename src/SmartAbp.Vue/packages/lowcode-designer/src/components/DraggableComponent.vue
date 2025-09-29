@@ -19,7 +19,10 @@
     @mouseleave="handleMouseLeave"
   >
     <!-- 组件选中边框 -->
-    <div v-if="isSelected && !isPreviewMode" class="selection-border">
+    <div
+      v-if="isSelected && !isPreviewMode"
+      class="selection-border"
+    >
       <div class="selection-handles">
         <div class="handle handle--tl" />
         <div class="handle handle--tr" />
@@ -27,7 +30,13 @@
         <div class="handle handle--br" />
       </div>
       <div class="selection-toolbar">
-        <el-button size="small" type="primary" :icon="Edit" title="编辑属性" @click="handleEdit" />
+        <el-button
+          size="small"
+          type="primary"
+          :icon="Edit"
+          title="编辑属性"
+          @click="handleEdit"
+        />
         <el-button
           size="small"
           type="danger"
@@ -50,7 +59,10 @@
     </component>
 
     <!-- 拖拽预览 -->
-    <div v-if="isDragging" class="drag-preview">
+    <div
+      v-if="isDragging"
+      class="drag-preview"
+    >
       {{ componentDisplayName }}
     </div>
   </div>

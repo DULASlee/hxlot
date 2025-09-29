@@ -9,7 +9,9 @@
         <i class="fas fa-file-code" />
         SFC编译器演示
       </h1>
-      <p class="page-description">Vue单文件组件编译器，支持实时预览和热更新</p>
+      <p class="page-description">
+        Vue单文件组件编译器，支持实时预览和热更新
+      </p>
     </div>
 
     <div class="compiler-workspace">
@@ -19,19 +21,31 @@
           <h3>编译选项</h3>
           <div class="options-grid">
             <label class="option-item">
-              <input v-model="compilerOptions.sourceMap" type="checkbox" />
+              <input
+                v-model="compilerOptions.sourceMap"
+                type="checkbox"
+              />
               <span>生成 Source Map</span>
             </label>
             <label class="option-item">
-              <input v-model="compilerOptions.optimizeImports" type="checkbox" />
+              <input
+                v-model="compilerOptions.optimizeImports"
+                type="checkbox"
+              />
               <span>优化导入</span>
             </label>
             <label class="option-item">
-              <input v-model="compilerOptions.hoistStatic" type="checkbox" />
+              <input
+                v-model="compilerOptions.hoistStatic"
+                type="checkbox"
+              />
               <span>静态提升</span>
             </label>
             <label class="option-item">
-              <input v-model="compilerOptions.inlineProps" type="checkbox" />
+              <input
+                v-model="compilerOptions.inlineProps"
+                type="checkbox"
+              />
               <span>内联 Props</span>
             </label>
           </div>
@@ -39,29 +53,51 @@
 
         <div class="panel-section">
           <h3>编译模式</h3>
-          <select v-model="compilerMode" class="mode-selector">
-            <option value="development">开发模式</option>
-            <option value="production">生产模式</option>
-            <option value="test">测试模式</option>
+          <select
+            v-model="compilerMode"
+            class="mode-selector"
+          >
+            <option value="development">
+              开发模式
+            </option>
+            <option value="production">
+              生产模式
+            </option>
+            <option value="test">
+              测试模式
+            </option>
           </select>
         </div>
 
         <div class="panel-section">
           <h3>快速操作</h3>
           <div class="quick-buttons">
-            <button class="compile-btn" :disabled="compiling" @click="compileCode">
+            <button
+              class="compile-btn"
+              :disabled="compiling"
+              @click="compileCode"
+            >
               <i class="fas fa-play" />
               {{ compiling ? "编译中..." : "编译" }}
             </button>
-            <button class="clear-btn" @click="clearResults">
+            <button
+              class="clear-btn"
+              @click="clearResults"
+            >
               <i class="fas fa-eraser" />
               清空结果
             </button>
-            <button class="example-btn" @click="loadExample">
+            <button
+              class="example-btn"
+              @click="loadExample"
+            >
               <i class="fas fa-file-import" />
               加载示例
             </button>
-            <button class="export-btn" @click="exportResults">
+            <button
+              class="export-btn"
+              @click="exportResults"
+            >
               <i class="fas fa-download" />
               导出结果
             </button>
@@ -79,11 +115,17 @@
               源代码编辑器
             </h2>
             <div class="editor-actions">
-              <button class="format-btn" @click="formatCode">
+              <button
+                class="format-btn"
+                @click="formatCode"
+              >
                 <i class="fas fa-magic" />
                 格式化
               </button>
-              <button class="fullscreen-btn" @click="toggleFullscreen">
+              <button
+                class="fullscreen-btn"
+                @click="toggleFullscreen"
+              >
                 <i class="fas fa-expand" />
                 全屏
               </button>
@@ -122,7 +164,10 @@
 
           <div class="results-content">
             <!-- 编译统计 -->
-            <div v-if="activeTab === 'stats'" class="stats-view">
+            <div
+              v-if="activeTab === 'stats'"
+              class="stats-view"
+            >
               <div class="stats-grid">
                 <div class="stat-card">
                   <div class="stat-icon">
@@ -165,7 +210,10 @@
               </div>
 
               <!-- 编译消息 -->
-              <div v-if="compilationMessages.length > 0" class="compilation-messages">
+              <div
+                v-if="compilationMessages.length > 0"
+                class="compilation-messages"
+              >
                 <h3>编译消息</h3>
                 <div class="message-list">
                   <div
@@ -181,7 +229,10 @@
                       <p class="message-text">
                         {{ message.text }}
                       </p>
-                      <p v-if="message.location" class="message-location">
+                      <p
+                        v-if="message.location"
+                        class="message-location"
+                      >
                         {{ message.location }}
                       </p>
                     </div>
@@ -191,10 +242,16 @@
             </div>
 
             <!-- 编译输出代码 -->
-            <div v-if="activeTab === 'script'" class="code-view">
+            <div
+              v-if="activeTab === 'script'"
+              class="code-view"
+            >
               <div class="code-header">
                 <h3>Script 编译结果</h3>
-                <button class="copy-btn" @click="copyToClipboard(compilationResult.script)">
+                <button
+                  class="copy-btn"
+                  @click="copyToClipboard(compilationResult.script)"
+                >
                   <i class="fas fa-copy" />
                   复制
                 </button>
@@ -204,10 +261,16 @@
               ><code>{{ compilationResult.script || '暂无编译结果' }}</code></pre>
             </div>
 
-            <div v-if="activeTab === 'template'" class="code-view">
+            <div
+              v-if="activeTab === 'template'"
+              class="code-view"
+            >
               <div class="code-header">
                 <h3>Template 编译结果</h3>
-                <button class="copy-btn" @click="copyToClipboard(compilationResult.template)">
+                <button
+                  class="copy-btn"
+                  @click="copyToClipboard(compilationResult.template)"
+                >
                   <i class="fas fa-copy" />
                   复制
                 </button>
@@ -217,10 +280,16 @@
               ><code>{{ compilationResult.template || '暂无编译结果' }}</code></pre>
             </div>
 
-            <div v-if="activeTab === 'style'" class="code-view">
+            <div
+              v-if="activeTab === 'style'"
+              class="code-view"
+            >
               <div class="code-header">
                 <h3>Style 编译结果</h3>
-                <button class="copy-btn" @click="copyToClipboard(compilationResult.styles)">
+                <button
+                  class="copy-btn"
+                  @click="copyToClipboard(compilationResult.styles)"
+                >
                   <i class="fas fa-copy" />
                   复制
                 </button>
@@ -231,47 +300,70 @@
             </div>
 
             <!-- 实时预览 -->
-            <div v-if="activeTab === 'preview'" class="preview-view">
+            <div
+              v-if="activeTab === 'preview'"
+              class="preview-view"
+            >
               <div class="preview-header">
                 <h3>实时预览</h3>
                 <div class="preview-controls">
-                  <button class="refresh-btn" @click="refreshPreview">
+                  <button
+                    class="refresh-btn"
+                    @click="refreshPreview"
+                  >
                     <i class="fas fa-sync-alt" />
                     刷新
                   </button>
-                  <button class="mode-btn" @click="togglePreviewMode">
+                  <button
+                    class="mode-btn"
+                    @click="togglePreviewMode"
+                  >
                     <i class="fas fa-mobile-alt" />
                     {{ previewMode === "desktop" ? "移动端" : "桌面端" }}
                   </button>
                 </div>
               </div>
-              <div class="preview-container" :class="'preview-' + previewMode">
+              <div
+                class="preview-container"
+                :class="'preview-' + previewMode"
+              >
                 <div class="preview-frame">
-                  <div v-if="previewError" class="preview-error">
+                  <div
+                    v-if="previewError"
+                    class="preview-error"
+                  >
                     <i class="fas fa-exclamation-triangle" />
                     <p>预览失败: {{ previewError }}</p>
                   </div>
-                  <div v-else-if="!compilationResult.script" class="preview-empty">
+                  <div
+                    v-else-if="!compilationResult.script"
+                    class="preview-empty"
+                  >
                     <i class="fas fa-eye-slash" />
                     <p>请先编译代码以查看预览</p>
                   </div>
-                  <div v-else class="preview-content">
+                  <div
+                    v-else
+                    class="preview-content"
+                  >
                     <!-- 这里将渲染编译后的组件 -->
                     <div class="preview-component">
                       <p>组件预览功能开发中...</p>
                       <div class="mock-component">
-                        <button class="demo-button">示例按钮</button>
+                        <button class="demo-button">
+                          示例按钮
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-</div>
 </template>
 
 <script setup lang="ts">

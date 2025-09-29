@@ -4,11 +4,35 @@
  */
 
 import { ElMessage } from "element-plus"
+// 使用本地类型定义避免跨包依赖
 import type {
-  ModuleMetadata,
-  EntityDefinition,
-  PropertyDefinition,
-} from "@smartabp/lowcode-api/types"
+  ModuleMetadata as BaseModuleMetadata
+} from '../types/unified-metadata'
+
+// 扩展的模块元数据，包含manifestWriter需要的额外字段
+interface ModuleMetadata extends BaseModuleMetadata {
+  icon?: string
+  sort?: number
+}
+
+// 本地类型定义，避免跨包依赖
+interface EntityDefinition {
+  name: string
+  displayName: string
+  tableName: string
+  properties: PropertyDefinition[]
+}
+
+interface PropertyDefinition {
+  name: string
+  displayName: string
+  type: string
+  isRequired: boolean
+  isKey: boolean
+  maxLength?: number
+  defaultValue?: any
+  filterable?: boolean
+}
 
 /**
  * 本地类型定义
@@ -248,7 +272,7 @@ export class SmartAbpManifestWriter {
           showSizeChanger: true,
           showQuickJumper: true,
         },
-        filters: this.generateFilters(metadata.entities[0]),
+        filters: this.generateFilters(this.convertEntityMetadataToDefinition(metadata.entities[0])),
       }
 
       console.log(`📋 Generated list view config for module: ${metadata.name}`)
@@ -631,6 +655,27 @@ export class SmartAbpManifestWriter {
 
       // 回退到默认类型
       return "input"
+    }
+  }
+
+  /**
+   * 转换EntityMetadata到EntityDefinition
+   */
+  private convertEntityMetadataToDefinition(entityMetadata: any): EntityDefinition {
+    return {
+      name: entityMetadata.name || '',
+      displayName: entityMetadata.displayName || entityMetadata.name || '',
+      tableName: entityMetadata.tableName || entityMetadata.name || '',
+      properties: (entityMetadata.properties || []).map((prop: any) => ({
+        name: prop.name || '',
+        displayName: prop.displayName || prop.name || '',
+        type: prop.type || 'string',
+        isRequired: prop.isRequired || false,
+        isKey: prop.isKey || prop.isPrimaryKey || false,
+        maxLength: prop.maxLength,
+        defaultValue: prop.defaultValue,
+        filterable: prop.filterable || true
+      }))
     }
   }
 

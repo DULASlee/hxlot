@@ -2,8 +2,14 @@
   <div class="property-inspector">
     <!-- 面板头部 -->
     <div class="inspector-header">
-      <div v-if="selectedComponent" class="component-info">
-        <el-icon class="component-icon" :size="20">
+      <div
+        v-if="selectedComponent"
+        class="component-info"
+      >
+        <el-icon
+          class="component-icon"
+          :size="20"
+        >
           <span>{{ getComponentIcon(selectedComponent.type) }}</span>
         </el-icon>
         <div class="component-details">
@@ -13,8 +19,14 @@
           <span class="component-type">{{ selectedComponent.type }}</span>
         </div>
       </div>
-      <div v-else class="no-selection">
-        <el-icon class="no-selection-icon" :size="24">
+      <div
+        v-else
+        class="no-selection"
+      >
+        <el-icon
+          class="no-selection-icon"
+          :size="24"
+        >
           <Box />
         </el-icon>
         <span>未选择组件</span>
@@ -30,11 +42,20 @@
     </div>
 
     <!-- 属性编辑区域 -->
-    <div v-if="selectedComponent" class="inspector-content">
+    <div
+      v-if="selectedComponent"
+      class="inspector-content"
+    >
       <el-scrollbar class="inspector-scrollbar">
         <!-- 基础属性 -->
-        <el-collapse v-model="activeCollapse" class="property-sections">
-          <el-collapse-item name="basic" title="基础属性">
+        <el-collapse
+          v-model="activeCollapse"
+          class="property-sections"
+        >
+          <el-collapse-item
+            name="basic"
+            title="基础属性"
+          >
             <el-form
               ref="basicFormRef"
               :model="basicProps"
@@ -43,8 +64,14 @@
               label-position="top"
               size="small"
             >
-              <template v-for="(config, key) in basicPropertySchema" :key="key">
-                <el-form-item :label="config.label" :prop="String(key)">
+              <template
+                v-for="(config, key) in basicPropertySchema"
+                :key="key"
+              >
+                <el-form-item
+                  :label="config.label"
+                  :prop="String(key)"
+                >
                   <!-- 文本输入 -->
                   <el-input
                     v-if="config.type === 'string'"
@@ -106,7 +133,10 @@
           </el-collapse-item>
 
           <!-- 样式属性 -->
-          <el-collapse-item name="style" title="样式属性">
+          <el-collapse-item
+            name="style"
+            title="样式属性"
+          >
             <el-form
               ref="styleFormRef"
               :model="styleProps"
@@ -117,9 +147,14 @@
             >
               <!-- 尺寸设置 -->
               <div class="style-section">
-                <h5 class="section-title">尺寸</h5>
+                <h5 class="section-title">
+                  尺寸
+                </h5>
                 <div class="dimension-inputs">
-                  <el-form-item label="宽度" prop="width">
+                  <el-form-item
+                    label="宽度"
+                    prop="width"
+                  >
                     <el-input-number
                       v-model="styleProps.width"
                       placeholder="宽度"
@@ -128,7 +163,10 @@
                       @change="handleStyleChange('width', $event)"
                     />
                   </el-form-item>
-                  <el-form-item label="高度" prop="height">
+                  <el-form-item
+                    label="高度"
+                    prop="height"
+                  >
                     <el-input-number
                       v-model="styleProps.height"
                       placeholder="高度"
@@ -142,9 +180,14 @@
 
               <!-- 边距设置 -->
               <div class="style-section">
-                <h5 class="section-title">外边距</h5>
+                <h5 class="section-title">
+                  外边距
+                </h5>
                 <div class="spacing-inputs">
-                  <el-form-item label="上" prop="marginTop">
+                  <el-form-item
+                    label="上"
+                    prop="marginTop"
+                  >
                     <el-input-number
                       v-model="styleProps.marginTop"
                       size="small"
@@ -152,14 +195,20 @@
                     />
                   </el-form-item>
                   <div class="spacing-row">
-                    <el-form-item label="左" prop="marginLeft">
+                    <el-form-item
+                      label="左"
+                      prop="marginLeft"
+                    >
                       <el-input-number
                         v-model="styleProps.marginLeft"
                         size="small"
                         @change="handleStyleChange('marginLeft', $event)"
                       />
                     </el-form-item>
-                    <el-form-item label="右" prop="marginRight">
+                    <el-form-item
+                      label="右"
+                      prop="marginRight"
+                    >
                       <el-input-number
                         v-model="styleProps.marginRight"
                         size="small"
@@ -167,7 +216,10 @@
                       />
                     </el-form-item>
                   </div>
-                  <el-form-item label="下" prop="marginBottom">
+                  <el-form-item
+                    label="下"
+                    prop="marginBottom"
+                  >
                     <el-input-number
                       v-model="styleProps.marginBottom"
                       size="small"
@@ -180,9 +232,16 @@
           </el-collapse-item>
 
           <!-- 事件绑定 -->
-          <el-collapse-item name="events" title="事件绑定">
+          <el-collapse-item
+            name="events"
+            title="事件绑定"
+          >
             <div class="event-bindings">
-              <div v-for="(event, index) in eventBindings" :key="index" class="event-item">
+              <div
+                v-for="(event, index) in eventBindings"
+                :key="index"
+                class="event-item"
+              >
                 <div class="event-header">
                   <el-select
                     v-model="event.type"
@@ -213,7 +272,12 @@
                   @change="handleEventHandlerChange(index, $event)"
                 />
               </div>
-              <el-button type="primary" text :icon="Plus" @click="addEventBinding">
+              <el-button
+                type="primary"
+                text
+                :icon="Plus"
+                @click="addEventBinding"
+              >
                 添加事件
               </el-button>
             </div>
@@ -223,14 +287,30 @@
     </div>
 
     <!-- 空状态 -->
-    <div v-else class="empty-state">
+    <div
+      v-else
+      class="empty-state"
+    >
       <el-empty description="请选择一个组件来编辑其属性" />
     </div>
 
     <!-- 面板底部操作 -->
-    <div v-if="selectedComponent" class="inspector-footer">
-      <el-button size="small" @click="handleReset"> 重置 </el-button>
-      <el-button type="primary" size="small" :loading="applying" @click="handleApply">
+    <div
+      v-if="selectedComponent"
+      class="inspector-footer"
+    >
+      <el-button
+        size="small"
+        @click="handleReset"
+      >
+        重置
+      </el-button>
+      <el-button
+        type="primary"
+        size="small"
+        :loading="applying"
+        @click="handleApply"
+      >
         应用
       </el-button>
     </div>

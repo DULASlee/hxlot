@@ -9,24 +9,50 @@
         <i class="fas fa-tachometer-alt" />
         性能监控中心
       </h1>
-      <p class="page-description">低代码引擎性能指标监控与分析</p>
+      <p class="page-description">
+        低代码引擎性能指标监控与分析
+      </p>
 
       <div class="header-actions">
-        <button class="refresh-btn" :disabled="loading" @click="refreshData">
-          <i class="fas fa-sync-alt" :class="{ spinning: loading }" />
+        <button
+          class="refresh-btn"
+          :disabled="loading"
+          @click="refreshData"
+        >
+          <i
+            class="fas fa-sync-alt"
+            :class="{ spinning: loading }"
+          />
           刷新数据
         </button>
-        <button class="export-btn" @click="exportReport">
+        <button
+          class="export-btn"
+          @click="exportReport"
+        >
           <i class="fas fa-download" />
           导出报告
         </button>
         <div class="time-range-selector">
-          <select v-model="timeRange" class="time-select" @change="onTimeRangeChange">
-            <option value="1h">最近1小时</option>
-            <option value="6h">最近6小时</option>
-            <option value="24h">最近24小时</option>
-            <option value="7d">最近7天</option>
-            <option value="30d">最近30天</option>
+          <select
+            v-model="timeRange"
+            class="time-select"
+            @change="onTimeRangeChange"
+          >
+            <option value="1h">
+              最近1小时
+            </option>
+            <option value="6h">
+              最近6小时
+            </option>
+            <option value="24h">
+              最近24小时
+            </option>
+            <option value="7d">
+              最近7天
+            </option>
+            <option value="30d">
+              最近30天
+            </option>
           </select>
         </div>
       </div>
@@ -37,12 +63,22 @@
       <div class="metrics-cards">
         <div class="metric-card">
           <div class="metric-icon">
-            <i class="fas fa-bolt" :class="getStatusClass(metrics.averageGenerationTime, 200)" />
+            <i
+              class="fas fa-bolt"
+              :class="getStatusClass(metrics.averageGenerationTime, 200)"
+            />
           </div>
           <div class="metric-content">
-            <h3 class="metric-title">平均生成时间</h3>
-            <p class="metric-value">{{ metrics.averageGenerationTime }}ms</p>
-            <span class="metric-trend" :class="getTrendClass(metrics.generationTimeTrend)">
+            <h3 class="metric-title">
+              平均生成时间
+            </h3>
+            <p class="metric-value">
+              {{ metrics.averageGenerationTime }}ms
+            </p>
+            <span
+              class="metric-trend"
+              :class="getTrendClass(metrics.generationTimeTrend)"
+            >
               <i :class="getTrendIcon(metrics.generationTimeTrend)" />
               {{ Math.abs(metrics.generationTimeTrend) }}%
             </span>
@@ -51,12 +87,22 @@
 
         <div class="metric-card">
           <div class="metric-icon">
-            <i class="fas fa-check-circle" :class="getStatusClass(metrics.successRate, 95, true)" />
+            <i
+              class="fas fa-check-circle"
+              :class="getStatusClass(metrics.successRate, 95, true)"
+            />
           </div>
           <div class="metric-content">
-            <h3 class="metric-title">成功率</h3>
-            <p class="metric-value">{{ metrics.successRate }}%</p>
-            <span class="metric-trend" :class="getTrendClass(metrics.successRateTrend)">
+            <h3 class="metric-title">
+              成功率
+            </h3>
+            <p class="metric-value">
+              {{ metrics.successRate }}%
+            </p>
+            <span
+              class="metric-trend"
+              :class="getTrendClass(metrics.successRateTrend)"
+            >
               <i :class="getTrendIcon(metrics.successRateTrend)" />
               {{ Math.abs(metrics.successRateTrend) }}%
             </span>
@@ -65,12 +111,22 @@
 
         <div class="metric-card">
           <div class="metric-icon">
-            <i class="fas fa-code" :class="getStatusClass(metrics.throughput, 50, true)" />
+            <i
+              class="fas fa-code"
+              :class="getStatusClass(metrics.throughput, 50, true)"
+            />
           </div>
           <div class="metric-content">
-            <h3 class="metric-title">吞吐量</h3>
-            <p class="metric-value">{{ metrics.throughput }}/min</p>
-            <span class="metric-trend" :class="getTrendClass(metrics.throughputTrend)">
+            <h3 class="metric-title">
+              吞吐量
+            </h3>
+            <p class="metric-value">
+              {{ metrics.throughput }}/min
+            </p>
+            <span
+              class="metric-trend"
+              :class="getTrendClass(metrics.throughputTrend)"
+            >
               <i :class="getTrendIcon(metrics.throughputTrend)" />
               {{ Math.abs(metrics.throughputTrend) }}%
             </span>
@@ -79,12 +135,22 @@
 
         <div class="metric-card">
           <div class="metric-icon">
-            <i class="fas fa-memory" :class="getStatusClass(metrics.memoryUsage, 500)" />
+            <i
+              class="fas fa-memory"
+              :class="getStatusClass(metrics.memoryUsage, 500)"
+            />
           </div>
           <div class="metric-content">
-            <h3 class="metric-title">内存使用</h3>
-            <p class="metric-value">{{ metrics.memoryUsage }}MB</p>
-            <span class="metric-trend" :class="getTrendClass(metrics.memoryUsageTrend)">
+            <h3 class="metric-title">
+              内存使用
+            </h3>
+            <p class="metric-value">
+              {{ metrics.memoryUsage }}MB
+            </p>
+            <span
+              class="metric-trend"
+              :class="getTrendClass(metrics.memoryUsageTrend)"
+            >
               <i :class="getTrendIcon(metrics.memoryUsageTrend)" />
               {{ Math.abs(metrics.memoryUsageTrend) }}%
             </span>
@@ -104,11 +170,17 @@
             <div class="chart-controls">
               <div class="chart-legend">
                 <span class="legend-item">
-                  <span class="legend-color" style="background: var(--theme-brand-primary)" />
+                  <span
+                    class="legend-color"
+                    style="background: var(--theme-brand-primary)"
+                  />
                   生成时间 (ms)
                 </span>
                 <span class="legend-item">
-                  <span class="legend-color" style="background: var(--theme-success)" />
+                  <span
+                    class="legend-color"
+                    style="background: var(--theme-success)"
+                  />
                   成功率 (%)
                 </span>
               </div>
@@ -121,7 +193,11 @@
               <div class="mock-chart">
                 <!-- 模拟图表数据 -->
                 <div class="chart-bars">
-                  <div v-for="(point, index) in performanceData" :key="index" class="chart-bar">
+                  <div
+                    v-for="(point, index) in performanceData"
+                    :key="index"
+                    class="chart-bar"
+                  >
                     <div
                       class="bar-fill"
                       :style="{
@@ -146,7 +222,11 @@
           </div>
           <div class="chart-container">
             <div class="plugin-performance-list">
-              <div v-for="plugin in pluginPerformance" :key="plugin.name" class="plugin-item">
+              <div
+                v-for="plugin in pluginPerformance"
+                :key="plugin.name"
+                class="plugin-item"
+              >
                 <div class="plugin-info">
                   <div class="plugin-name">
                     {{ plugin.name }}
@@ -181,36 +261,52 @@
               <i class="fas fa-industry" />
               Worker池与缓存健康度
             </h3>
-            <button class="refresh-btn" :disabled="loading" @click="pullRuntimeHealth">刷新</button>
+            <button
+              class="refresh-btn"
+              :disabled="loading"
+              @click="pullRuntimeHealth"
+            >
+              刷新
+            </button>
           </div>
           <div class="stats-content">
             <div class="health-grid">
               <div class="health-item">
-                <div class="health-label">任务提交</div>
+                <div class="health-label">
+                  任务提交
+                </div>
                 <div class="health-value">
                   {{ workerMetrics.submitted }}
                 </div>
               </div>
               <div class="health-item">
-                <div class="health-label">进行中</div>
+                <div class="health-label">
+                  进行中
+                </div>
                 <div class="health-value">
                   {{ workerMetrics.inFlight }}
                 </div>
               </div>
               <div class="health-item">
-                <div class="health-label">完成</div>
+                <div class="health-label">
+                  完成
+                </div>
                 <div class="health-value">
                   {{ workerMetrics.completed }}
                 </div>
               </div>
               <div class="health-item">
-                <div class="health-label">失败</div>
+                <div class="health-label">
+                  失败
+                </div>
                 <div class="health-value">
                   {{ workerMetrics.failed }}
                 </div>
               </div>
               <div class="health-item">
-                <div class="health-label">队列峰值</div>
+                <div class="health-label">
+                  队列峰值
+                </div>
                 <div class="health-value">
                   {{ workerMetrics.queueMax }}
                 </div>
@@ -219,25 +315,33 @@
 
             <div class="health-grid">
               <div class="health-item">
-                <div class="health-label">缓存条目</div>
+                <div class="health-label">
+                  缓存条目
+                </div>
                 <div class="health-value">
                   {{ cacheStats.totalEntries }}
                 </div>
               </div>
               <div class="health-item">
-                <div class="health-label">缓存大小</div>
+                <div class="health-label">
+                  缓存大小
+                </div>
                 <div class="health-value">
                   {{ (cacheStats.totalSizeBytes / 1024 / 1024).toFixed(2) }} MB
                 </div>
               </div>
               <div class="health-item">
-                <div class="health-label">平均条目大小</div>
+                <div class="health-label">
+                  平均条目大小
+                </div>
                 <div class="health-value">
                   {{ (cacheStats.averageEntrySize / 1024).toFixed(2) }} KB
                 </div>
               </div>
               <div class="health-item">
-                <div class="health-label">访问计数</div>
+                <div class="health-label">
+                  访问计数
+                </div>
                 <div class="health-value">
                   {{ cacheStats.totalAccessCount }}
                 </div>
@@ -253,20 +357,33 @@
               错误分析
             </h3>
             <div class="error-summary">
-              <span class="error-count" :class="{ 'has-errors': errorStats.totalErrors > 0 }">
+              <span
+                class="error-count"
+                :class="{ 'has-errors': errorStats.totalErrors > 0 }"
+              >
                 {{ errorStats.totalErrors }} 个错误
               </span>
             </div>
           </div>
 
           <div class="stats-content">
-            <div v-if="errorStats.totalErrors === 0" class="no-errors">
+            <div
+              v-if="errorStats.totalErrors === 0"
+              class="no-errors"
+            >
               <i class="fas fa-check-circle" />
               <p>暂无错误记录</p>
             </div>
 
-            <div v-else class="error-list">
-              <div v-for="error in errorStats.errors" :key="error.type" class="error-item">
+            <div
+              v-else
+              class="error-list"
+            >
+              <div
+                v-for="error in errorStats.errors"
+                :key="error.type"
+                class="error-item"
+              >
                 <div class="error-icon">
                   <i :class="getErrorIcon(error.type)" />
                 </div>
@@ -274,7 +391,9 @@
                   <div class="error-type">
                     {{ error.type }}
                   </div>
-                  <div class="error-count">{{ error.count }} 次</div>
+                  <div class="error-count">
+                    {{ error.count }} 次
+                  </div>
                   <div class="error-description">
                     {{ error.description }}
                   </div>
@@ -302,7 +421,9 @@
           <div class="stats-content">
             <div class="resource-metrics">
               <div class="resource-item">
-                <div class="resource-label">CPU 使用率</div>
+                <div class="resource-label">
+                  CPU 使用率
+                </div>
                 <div class="resource-bar">
                   <div
                     class="resource-fill"
@@ -312,11 +433,15 @@
                     }"
                   />
                 </div>
-                <div class="resource-value">{{ systemResources.cpuUsage }}%</div>
+                <div class="resource-value">
+                  {{ systemResources.cpuUsage }}%
+                </div>
               </div>
 
               <div class="resource-item">
-                <div class="resource-label">内存使用率</div>
+                <div class="resource-label">
+                  内存使用率
+                </div>
                 <div class="resource-bar">
                   <div
                     class="resource-fill"
@@ -326,11 +451,15 @@
                     }"
                   />
                 </div>
-                <div class="resource-value">{{ systemResources.memoryUsage }}%</div>
+                <div class="resource-value">
+                  {{ systemResources.memoryUsage }}%
+                </div>
               </div>
 
               <div class="resource-item">
-                <div class="resource-label">缓存命中率</div>
+                <div class="resource-label">
+                  缓存命中率
+                </div>
                 <div class="resource-bar">
                   <div
                     class="resource-fill"
@@ -340,7 +469,9 @@
                     }"
                   />
                 </div>
-                <div class="resource-value">{{ systemResources.cacheHitRate }}%</div>
+                <div class="resource-value">
+                  {{ systemResources.cacheHitRate }}%
+                </div>
               </div>
             </div>
           </div>
@@ -356,12 +487,18 @@
           </div>
 
           <div class="stats-content">
-            <div v-if="optimizationSuggestions.length === 0" class="no-suggestions">
+            <div
+              v-if="optimizationSuggestions.length === 0"
+              class="no-suggestions"
+            >
               <i class="fas fa-thumbs-up" />
               <p>系统运行良好，暂无优化建议</p>
             </div>
 
-            <div v-else class="suggestions-list">
+            <div
+              v-else
+              class="suggestions-list"
+            >
               <div
                 v-for="suggestion in optimizationSuggestions"
                 :key="suggestion.id"
@@ -383,11 +520,17 @@
                   </div>
                 </div>
                 <div class="suggestion-actions">
-                  <button class="apply-btn" @click="applySuggestion(suggestion.id)">
+                  <button
+                    class="apply-btn"
+                    @click="applySuggestion(suggestion.id)"
+                  >
                     <i class="fas fa-check" />
                     应用
                   </button>
-                  <button class="dismiss-btn" @click="dismissSuggestion(suggestion.id)">
+                  <button
+                    class="dismiss-btn"
+                    @click="dismissSuggestion(suggestion.id)"
+                  >
                     <i class="fas fa-times" />
                     忽略
                   </button>
@@ -407,25 +550,48 @@
               实时性能日志
             </h3>
             <div class="logs-controls">
-              <button class="logs-btn" @click="clearLogs">
+              <button
+                class="logs-btn"
+                @click="clearLogs"
+              >
                 <i class="fas fa-trash" />
                 清空
               </button>
-              <button class="logs-btn" :class="{ active: autoScroll }" @click="toggleAutoScroll">
+              <button
+                class="logs-btn"
+                :class="{ active: autoScroll }"
+                @click="toggleAutoScroll"
+              >
                 <i class="fas fa-arrow-down" />
                 自动滚动
               </button>
-              <select v-model="logLevel" class="log-level-select">
-                <option value="all">全部级别</option>
-                <option value="error">错误</option>
-                <option value="warn">警告</option>
-                <option value="info">信息</option>
-                <option value="debug">调试</option>
+              <select
+                v-model="logLevel"
+                class="log-level-select"
+              >
+                <option value="all">
+                  全部级别
+                </option>
+                <option value="error">
+                  错误
+                </option>
+                <option value="warn">
+                  警告
+                </option>
+                <option value="info">
+                  信息
+                </option>
+                <option value="debug">
+                  调试
+                </option>
               </select>
             </div>
           </div>
 
-          <div ref="logsContainer" class="logs-content">
+          <div
+            ref="logsContainer"
+            class="logs-content"
+          >
             <div
               v-for="log in filteredLogs"
               :key="log.id"
@@ -435,8 +601,14 @@
               <span class="log-time">{{ formatTime(log.timestamp) }}</span>
               <span class="log-level">{{ log.level.toUpperCase() }}</span>
               <span class="log-message">{{ log.message }}</span>
-              <span v-if="log.duration" class="log-duration">{{ log.duration }}ms</span>
-              <span v-if="log.plugin" class="log-plugin">[{{ log.plugin }}]</span>
+              <span
+                v-if="log.duration"
+                class="log-duration"
+              >{{ log.duration }}ms</span>
+              <span
+                v-if="log.plugin"
+                class="log-plugin"
+              >[{{ log.plugin }}]</span>
             </div>
           </div>
         </div>
