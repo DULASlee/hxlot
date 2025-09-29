@@ -113,7 +113,8 @@ public class GenerationStateManager
 
         try
         {
-            File.Delete(stateFilePath);
+            // 使用异步方式删除文件
+            await Task.Run(() => File.Delete(stateFilePath));
             _logger.LogInformation("成功清除生成状态: {StateFilePath}", stateFilePath);
         }
         catch (Exception ex)
@@ -179,7 +180,8 @@ public class GenerationStateManager
             var backupFileName = $"generation-manifest.backup.{timestamp}.json";
             var backupFilePath = Path.Combine(Path.GetDirectoryName(stateFilePath)!, backupFileName);
             
-            File.Copy(stateFilePath, backupFilePath);
+            // 使用异步方式复制文件
+            await Task.Run(() => File.Copy(stateFilePath, backupFilePath));
             _logger.LogInformation("成功备份生成状态: {BackupFilePath}", backupFilePath);
             
             return backupFilePath;
@@ -206,7 +208,8 @@ public class GenerationStateManager
         try
         {
             var stateFilePath = GetStateFilePath(outputPath);
-            File.Copy(backupFilePath, stateFilePath, overwrite: true);
+            // 使用异步方式复制文件
+            await Task.Run(() => File.Copy(backupFilePath, stateFilePath, overwrite: true));
             _logger.LogInformation("成功恢复生成状态: {BackupFilePath} -> {StateFilePath}", 
                 backupFilePath, stateFilePath);
         }

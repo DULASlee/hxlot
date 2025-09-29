@@ -66,8 +66,30 @@ public class IncrementalGenerationEngine
                 var generationRequest = CreateGenerationRequest(request, changedInputs);
                 var generationResult = await _pipeline.ExecuteAsync(generationRequest);
                 
-                result.GeneratedFiles.AddRange(generationResult.GeneratedFiles);
-                result.Errors.AddRange(generationResult.Errors);
+                // 转换字典格式的生成文件到GeneratedFileInfo对象
+                foreach (var (relativePath, content) in generationResult.GeneratedFiles)
+                {
+                    var absolutePath = Path.Combine(request.OutputPath, relativePath);
+                    result.GeneratedFiles.Add(new GeneratedFileInfo
+                    {
+                        RelativePath = relativePath,
+                        AbsolutePath = absolutePath,
+                        Content = content,
+                        Size = content?.Length ?? 0,
+                        Type = DetermineFileType(relativePath)
+                    });
+                }
+                
+                // 检查是否生成失败并添加错误信息
+                if (!generationResult.IsSuccess)
+                {
+                    result.Errors.Add(new GenerationError
+                    {
+                        Type = GenerationErrorType.SystemError,
+                        Message = generationResult.FinalError ?? "代码生成失败",
+                        Details = generationResult.GenerationSummary
+                    });
+                }
             }
             else
             {
@@ -223,6 +245,37 @@ public class IncrementalGenerationEngine
             // 增量模式特定标记
             IncrementalMode = true,
             ChangedInputKeys = changedInputs.Select(i => i.Key).ToList()
+        };
+    }
+
+    /// <summary>
+    /// 根据文件路径确定文件类型
+    /// </summary>
+    private static GeneratedFileType DetermineFileType(string filePath)
+    {
+        var extension = Path.GetExtension(filePath).ToLowerInvariant();
+        var fileName = Path.GetFileName(filePath).ToLowerInvariant();
+
+        return extension switch
+        {
+            ".cs" => GeneratedFileType.Source,
+            ".ts" => GeneratedFileType.Source,
+            ".js" => GeneratedFileType.Source,
+            ".vue" => GeneratedFileType.Source,
+            ".json" => GeneratedFileType.Configuration,
+            ".xml" => GeneratedFileType.Configuration,
+            ".yaml" or ".yml" => GeneratedFileType.Configuration,
+            ".md" => GeneratedFileType.Documentation,
+            ".txt" => GeneratedFileType.Documentation,
+            ".sql" => GeneratedFileType.Script,
+            ".ps1" => GeneratedFileType.Script,
+            ".sh" => GeneratedFileType.Script,
+            ".bat" => GeneratedFileType.Script,
+            ".css" => GeneratedFileType.Resource,
+            ".scss" => GeneratedFileType.Resource,
+            ".png" or ".jpg" or ".jpeg" or ".gif" or ".svg" => GeneratedFileType.Resource,
+            _ when fileName.Contains("test") || fileName.Contains("spec") => GeneratedFileType.Test,
+            _ => GeneratedFileType.Source
         };
     }
 }
