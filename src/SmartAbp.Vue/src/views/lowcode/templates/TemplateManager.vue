@@ -1,30 +1,47 @@
 <template>
   <div class="template-manager">
     <!-- View Switching with Animation -->
-    <transition name="fade" mode="out-in">
+    <transition
+      name="fade"
+      mode="out-in"
+    >
       <component
         :is="activeComponent"
         :template="selectedTemplate"
+        :generation-pending="isGenerating"
         @select-template="handleTemplateSelection"
         @back="switchToMarketplace"
         @generate="handleGenerationRequest"
-        :generation-pending="isGenerating"
       />
     </transition>
 
     <!-- Generation Process Modal -->
-    <el-dialog v-model="dialogVisible" title="Code Generation">
+    <el-dialog
+      v-model="dialogVisible"
+      title="Code Generation"
+    >
       <h4>Command to be executed:</h4>
       <div class="command-container">
         <pre class="code-block">{{ generationCommand }}</pre>
-        <el-button @click="copyCommand" type="primary" :icon="CopyDocument" circle class="copy-button" />
+        <el-button
+          type="primary"
+          :icon="CopyDocument"
+          circle
+          class="copy-button"
+          @click="copyCommand"
+        />
       </div>
 
       <h4>Execution Log:</h4>
-      <pre class="log-block" :class="{ 'error': hasError }">{{ executionLog }}</pre>
+      <pre
+        class="log-block"
+        :class="{ 'error': hasError }"
+      >{{ executionLog }}</pre>
 
       <template #footer>
-        <el-button @click="dialogVisible = false">Close</el-button>
+        <el-button @click="dialogVisible = false">
+          Close
+        </el-button>
       </template>
     </el-dialog>
   </div>

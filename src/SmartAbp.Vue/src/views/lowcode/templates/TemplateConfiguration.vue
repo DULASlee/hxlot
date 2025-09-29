@@ -4,11 +4,22 @@
       <template #header>
         <div class="card-header">
           <span>Configure Template: {{ template.name }}</span>
-          <el-button type="text" @click="$emit('back')">Back to Marketplace</el-button>
+          <el-button
+            type="text"
+            @click="$emit('back')"
+          >
+            Back to Marketplace
+          </el-button>
         </div>
       </template>
 
-      <el-form ref="formRef" :model="formData" :rules="formRules" label-position="top" :disabled="generationPending">
+      <el-form
+        ref="formRef"
+        :model="formData"
+        :rules="formRules"
+        label-position="top"
+        :disabled="generationPending"
+      >
         <!-- Dynamic Placeholders -->
         <el-form-item
           v-for="placeholder in template.placeholders"
@@ -23,23 +34,40 @@
         </el-form-item>
 
         <!-- Output Path -->
-        <el-form-item label="Output Path" prop="outputPath" required>
+        <el-form-item
+          label="Output Path"
+          prop="outputPath"
+          required
+        >
           <el-input
             v-model="formData.outputPath"
             placeholder="e.g., src/SmartAbp.Vue/src/views/my-feature"
           >
-            <template #prepend>/project-root/</template>
+            <template #prepend>
+              /project-root/
+            </template>
           </el-input>
         </el-form-item>
 
         <!-- Action Buttons -->
         <el-form-item>
-          <el-button type="primary" @click="generateCode" :loading="generationPending">Generate Code</el-button>
-          <el-button @click="resetForm">Reset</el-button>
+          <el-button
+            type="primary"
+            :loading="generationPending"
+            @click="generateCode"
+          >
+            Generate Code
+          </el-button>
+          <el-button @click="resetForm">
+            Reset
+          </el-button>
         </el-form-item>
       </el-form>
     </el-card>
-     <el-empty v-else description="No template selected. Please go back to the marketplace."></el-empty>
+    <el-empty
+      v-else
+      description="No template selected. Please go back to the marketplace."
+    />
   </div>
 </template>
 
