@@ -15,25 +15,47 @@
           clearable
           class="search-input"
         />
-        <el-radio-group v-model="selectedTag" @change="filterTemplates">
-          <el-radio-button label="all">All</el-radio-button>
-          <el-radio-button v-for="tag in availableTags" :key="tag" :label="tag">{{ tag }}</el-radio-button>
+        <el-radio-group
+          v-model="selectedTag"
+          @change="filterTemplates"
+        >
+          <el-radio-button label="all">
+            All
+          </el-radio-button>
+          <el-radio-button
+            v-for="tag in availableTags"
+            :key="tag"
+            :label="tag"
+          >
+            {{ tag }}
+          </el-radio-button>
         </el-radio-group>
       </div>
 
       <!-- Templates Grid -->
-      <el-row :gutter="20" class="templates-grid">
+      <el-row
+        :gutter="20"
+        class="templates-grid"
+      >
         <el-col
           v-for="template in filteredTemplates"
           :key="template.id"
           :span="8"
         >
-          <el-card class="template-card" shadow="hover" @click="selectTemplate(template)">
+          <el-card
+            class="template-card"
+            shadow="hover"
+            @click="selectTemplate(template)"
+          >
             <div class="template-card-header">
               <span class="template-name">{{ template.name }}</span>
-              <el-tag size="small">{{ template.version }}</el-tag>
+              <el-tag size="small">
+                {{ template.version }}
+              </el-tag>
             </div>
-            <p class="template-description">{{ template.description }}</p>
+            <p class="template-description">
+              {{ template.description }}
+            </p>
             <div class="template-card-footer">
               <el-tag
                 v-for="tag in template.tags"
@@ -48,7 +70,10 @@
           </el-card>
         </el-col>
       </el-row>
-       <el-empty v-if="filteredTemplates.length === 0" description="No templates found"></el-empty>
+      <el-empty
+        v-if="filteredTemplates.length === 0"
+        description="No templates found"
+      />
     </el-card>
   </div>
 </template>

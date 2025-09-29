@@ -2,8 +2,6 @@
   "files": [],
   "include": [],
   "references": [
-    { "path": "./packages/lowcode-shared" },
-    { "path": "./packages/lowcode-core" },
-    { "path": "./packages/lowcode-designer" }
+    { "path": "./packages/lowcode-shared" }
   ]
 }

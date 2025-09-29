@@ -305,7 +305,11 @@ src/SmartAbp.Vue/packages/lowcode-api/index.ts
 src/SmartAbp.Vue/packages/lowcode-api/package.json
 src/SmartAbp.Vue/packages/lowcode-api/src/code-generator.ts
 src/SmartAbp.Vue/packages/lowcode-api/src/index.ts
+src/SmartAbp.Vue/packages/lowcode-api/src/types/index.d.ts
+src/SmartAbp.Vue/packages/lowcode-api/src/types/index.js
 src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts
+src/SmartAbp.Vue/packages/lowcode-api/types.d.ts
+src/SmartAbp.Vue/packages/lowcode-api/types.js
 src/SmartAbp.Vue/packages/lowcode-api/types.ts
 src/SmartAbp.Vue/packages/lowcode-codegen/package.json
 src/SmartAbp.Vue/packages/lowcode-codegen/src/index.ts
@@ -328,6 +332,7 @@ src/SmartAbp.Vue/packages/lowcode-core/src/types/index.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/types/manifest.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/types/unified-metadata.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/utils/manifestWriter.ts
+src/SmartAbp.Vue/packages/lowcode-core/tsconfig.json
 src/SmartAbp.Vue/packages/lowcode-designer/index.ts
 src/SmartAbp.Vue/packages/lowcode-designer/package.json
 src/SmartAbp.Vue/packages/lowcode-designer/src/components/CodeGenerator/CodePreview.vue
@@ -382,6 +387,10 @@ src/SmartAbp.Vue/packages/lowcode-designer/src/views/dev/ModuleWizardTestView.vu
 src/SmartAbp.Vue/packages/lowcode-designer/src/views/dev/PageRendererTestView.vue
 src/SmartAbp.Vue/packages/lowcode-designer/src/views/dev/RelationshipDesignerTestView.vue
 src/SmartAbp.Vue/packages/lowcode-designer/src/views/dev/UICustomizerTestView.vue
+src/SmartAbp.Vue/packages/lowcode-designer/tsconfig.json
+src/SmartAbp.Vue/packages/lowcode-shared/src/composables/useSafeEventListener.ts
+src/SmartAbp.Vue/packages/lowcode-shared/src/index.ts
+src/SmartAbp.Vue/packages/lowcode-shared/tsconfig.json
 src/SmartAbp.Vue/packages/lowcode-tools/index.ts
 src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/build-template-index.js
 src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/simple-template-index.js
