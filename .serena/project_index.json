@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-29T01:25:43.001Z",
+  "timestamp": "2025-09-29T01:53:00.970Z",
   "project": "Baobab.SmartAbp",
   "language": "typescript",
   "files": [
@@ -665,8 +665,8 @@
       "name": "StudioHeader.vue",
       "path": "src/SmartAbp.Vue/src/components/layout/StudioHeader.vue",
       "type": "file",
-      "size": 1500,
-      "modified": "2025-09-26T05:49:29.942Z"
+      "size": 1755,
+      "modified": "2025-09-29T01:39:29.562Z"
     },
     {
       "name": "StudioPropertyPanel.vue",
@@ -1946,8 +1946,8 @@
       "name": "LowCodeStudioView.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.vue",
       "type": "file",
-      "size": 3893,
-      "modified": "2025-09-28T07:26:13.631Z"
+      "size": 4402,
+      "modified": "2025-09-29T01:39:29.563Z"
     },
     {
       "name": "LowCodeStudioWelcome.vue",
@@ -1976,6 +1976,27 @@
       "type": "file",
       "size": 654,
       "modified": "2025-09-28T05:03:27.537Z"
+    },
+    {
+      "name": "TemplateConfiguration.vue",
+      "path": "src/SmartAbp.Vue/src/views/lowcode/templates/TemplateConfiguration.vue",
+      "type": "file",
+      "size": 3890,
+      "modified": "2025-09-29T01:39:29.563Z"
+    },
+    {
+      "name": "TemplateManager.vue",
+      "path": "src/SmartAbp.Vue/src/views/lowcode/templates/TemplateManager.vue",
+      "type": "file",
+      "size": 5138,
+      "modified": "2025-09-29T01:39:29.563Z"
+    },
+    {
+      "name": "TemplateMarketplace.vue",
+      "path": "src/SmartAbp.Vue/src/views/lowcode/templates/TemplateMarketplace.vue",
+      "type": "file",
+      "size": 4797,
+      "modified": "2025-09-29T01:39:29.563Z"
     },
     {
       "name": "ProjectAnalysisView.vue",

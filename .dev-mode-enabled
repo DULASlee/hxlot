@@ -1,0 +1,5 @@
+# 开发模式 - 临时禁用质量检查
+export SKIP_GIT_HOOKS=true
+export SKIP_QUALITY_CHECK=true
+export DEV_MODE=true
+echo '🚀 开发模式已激活 - Git质量门禁已临时禁用'

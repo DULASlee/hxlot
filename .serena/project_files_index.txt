@@ -280,6 +280,9 @@ src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioWelcome.vue
 src/SmartAbp.Vue/src/views/lowcode/QuickStart.vue
 src/SmartAbp.Vue/src/views/lowcode/QuickStart.vue.js
 src/SmartAbp.Vue/src/views/lowcode/WorkflowsView.vue
+src/SmartAbp.Vue/src/views/lowcode/templates/TemplateConfiguration.vue
+src/SmartAbp.Vue/src/views/lowcode/templates/TemplateManager.vue
+src/SmartAbp.Vue/src/views/lowcode/templates/TemplateMarketplace.vue
 src/SmartAbp.Vue/src/views/project/ProjectAnalysisView.vue
 src/SmartAbp.Vue/src/views/project/ProjectAnalysisView.vue.js
 src/SmartAbp.Vue/src/views/project/ProjectListView.vue
