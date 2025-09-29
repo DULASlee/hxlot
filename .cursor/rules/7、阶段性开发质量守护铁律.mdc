@@ -1,0 +1,230 @@
+---
+alwaysApply: true
+---
+# AI架构铁律同心圆模型 - 第七重爆雷：阶段性开发质量守护铁律
+
+## 文件说明
+- **文件标识**: `7、阶段性开发质量守护铁律.mdc`
+- **层级**: 第七重爆雷 - 阶段性开发质量守护
+- **作用**: 确保AI在完成每个开发阶段任务后，必须强制执行完整的质量检查和Git同步流程，这是项目质量的最终防线！
+
+---
+
+## 🔥 阶段性开发质量守护铁律 (Stage Development Quality Guardian Laws)
+
+### 1. 🎯 强制阶段完成检查铁律
+- **核心思想**: 每完成一个开发阶段任务，AI必须立即、自动、强制执行完整的质量检查和Git同步。
+- **执行准则**:
+    - 任何开发阶段任务标记为"完成"前，必须通过五重强制质量门禁
+    - 质量检查失败时，严禁标记任务完成，必须修复后重新检查
+    - 所有通过检查的代码必须立即同步到远程仓库
+    - AI不得以任何理由跳过或延迟质量检查流程
+
+### 2. 🏗️ 五重强制质量门禁 (Zero Tolerance Quality Gates)
+
+#### 🔍 **第一关：架构完整性检查 (0违规)**
+```bash
+# 架构违规检查
+grep -r "'../'" src/SmartAbp.Vue/packages/          # 相对路径违规
+grep -r "@/" src/SmartAbp.Vue/packages/             # 主应用引用违规
+grep -r "as any\|@ts-ignore" src/                   # 类型安全绕过
+```
+- **失败处理**: ❌ 发现任何违规立即中止，必须修复所有架构违规问题
+
+#### 🔄 **第二关：代码重复度检查 (0重复)**
+```bash
+# 重复代码检查
+find src/ -name "*.vue" | sort | uniq -d                    # 重复Vue组件
+grep -r "function\|const.*=" src/ | sort | uniq -d          # 重复方法函数
+grep -r "class\|interface" src/ | sort | uniq -d            # 重复类接口
+```
+- **失败处理**: ❌ 发现重复代码立即中止，必须重构消除所有重复
+
+#### ⚡ **第三关：编译与静态检查 (0错误)**
+```bash
+# 前端检查
+cd src/SmartAbp.Vue && npm run type-check              # TypeScript类型检查
+cd src/SmartAbp.Vue && npm run lint                    # ESLint代码规范
+cd src/SmartAbp.Vue && npm run build-only              # Vite生产构建
+
+# 后端检查 (如有修改)
+dotnet build src/SmartAbp.CodeGenerator/               # 后端编译检查
+dotnet build src/SmartAbp.Application/                 # 应用层编译
+```
+- **失败处理**: ❌ 任何编译或静态检查错误立即中止，必须修复所有错误
+
+#### 🎯 **第四关：低代码生成器专项检查 (100%质量)**
+```bash
+# packages TypeScript项目引用构建
+cd src/SmartAbp.Vue && npx tsc --build tsconfig.references.json
+
+# packages ESLint专项检查
+cd src/SmartAbp.Vue && npm run lint -- packages/*/src/**/*.{ts,vue} --fix
+
+# packages依赖关系检查
+grep -r "import.*from '\.\./\.\./'" src/SmartAbp.Vue/packages/
+grep -r "import.*from '@/'" src/SmartAbp.Vue/packages/
+```
+- **失败处理**: ❌ 低代码生成器质量问题立即中止，必须达到企业级100分标准
+
+#### 🚀 **第五关：技术债务监控检查 (基线控制)**
+```bash
+# 执行技术债务监控
+bash scripts/quality/tech-debt-monitor.sh
+
+# 执行架构健康检查
+bash scripts/quality/architecture-health-check.sh
+```
+- **失败处理**: ⚠️ 技术债务超标时警告，但不阻止提交（记录基线变化）
+
+### 3. 🔐 强制Git同步执行铁律
+
+#### 📋 **Git同步前置条件**
+- ✅ 必须完全通过前四关质量门禁
+- ✅ 所有修改文件必须符合编码规范
+- ✅ 所有测试必须通过
+- ✅ 技术债务监控已执行并记录
+
+#### 🚀 **标准化Git同步流程**
+```bash
+# 第一步：添加所有修改
+git add .
+
+# 第二步：生成标准化提交信息
+COMMIT_MSG="feat: 完成[阶段名称] - [核心成果描述]
+
+🔧 核心修复/实现:
+- 🎯 [具体修复项1]
+- 🔧 [具体修复项2]
+- ✨ [新功能实现]
+
+📊 质量验证结果:
+- TypeScript类型检查: ✅ 100%通过
+- ESLint代码规范: ✅ 通过
+- 架构完整性: ✅ 0违规
+- 低代码生成器: ✅ 企业级100分标准
+
+🎯 阶段价值:
+- [业务价值描述1]
+- [技术价值描述2]
+- [性能提升描述3]"
+
+# 第三步：执行提交
+git commit -m "$COMMIT_MSG" --no-verify
+
+# 第四步：强制推送到远程
+git push origin main --force-with-lease
+```
+
+#### ⚠️ **Git同步异常处理**
+- **网络问题**: 重试3次，失败后记录并继续
+- **冲突问题**: 自动拉取最新代码，解决冲突后重新推送
+- **权限问题**: 立即报告用户，暂停操作等待解决
+
+### 4. 📊 阶段性质量验收标准
+
+#### 🎯 **必达标准 (零容忍)**
+- **架构违规数量**: 0个
+- **代码重复数量**: 0个
+- **编译错误数量**: 0个
+- **TypeScript错误**: 0个
+- **ESLint错误**: 0个
+- **低代码生成器packages编译**: 100%成功
+
+#### 📈 **监控标准 (基线管理)**
+- **技术债务评分**: 记录基线变化
+- **代码覆盖率**: 监控但不阻止
+- **性能指标**: 记录性能变化
+- **文档完整性**: 建议改进但不强制
+
+### 5. 🚨 强制执行触发机制
+
+#### ⚡ **自动触发场景**
+```typescript
+// AI内置触发检测
+const STAGE_COMPLETION_TRIGGERS = [
+  '任务完成', '阶段完成', '功能实现完成', 
+  '修复完成', '重构完成', '优化完成',
+  'Phase.*完成', 'Task.*完成', '开发完成'
+];
+
+// 强制质量检查触发条件
+function shouldTriggerQualityCheck(message: string): boolean {
+  return STAGE_COMPLETION_TRIGGERS.some(trigger => 
+    message.toLowerCase().includes(trigger.toLowerCase())
+  );
+}
+```
+
+#### 📋 **强制响应格式**
+当检测到阶段完成时，AI必须立即响应：
+```
+🚨 **阶段完成检测 - 启动五重强制质量门禁！**
+
+🔍 正在执行第一关：架构完整性检查...
+🔄 正在执行第二关：代码重复度检查...
+⚡ 正在执行第三关：编译与静态检查...
+🎯 正在执行第四关：低代码生成器专项检查...
+🚀 正在执行第五关：技术债务监控检查...
+
+[检查结果显示]
+
+✅ 五重质量门禁全部通过！开始Git标准化同步...
+📝 生成标准化提交信息...
+🚀 推送到远程仓库...
+
+🎖️ 阶段质量验收完成！代码已安全同步到远程仓库！
+```
+
+### 6. 🛡️ 质量守护异常处理
+
+#### 🚨 **质量检查失败处理**
+```typescript
+// 质量检查失败时的标准处理流程
+if (qualityCheckFailed) {
+  // 1. 立即停止所有操作
+  stopAllOperations();
+  
+  // 2. 详细报告失败原因
+  reportFailureDetails(checkResults);
+  
+  // 3. 提供修复建议
+  provideFixSuggestions(failedChecks);
+  
+  // 4. 要求修复后重新检查
+  requestFixAndRecheck();
+  
+  // 5. 严禁标记任务完成
+  preventTaskCompletion();
+}
+```
+
+#### 🔄 **自动修复尝试**
+- **ESLint错误**: 自动执行 `npm run lint -- --fix`
+- **格式化问题**: 自动执行 `npm run format`
+- **简单类型错误**: 提供修复建议
+- **复杂问题**: 要求人工介入
+
+### 7. 📈 质量守护监控和改进
+
+#### 📊 **质量指标跟踪**
+- **门禁通过率**: 目标 > 95%
+- **自动修复率**: 目标 > 80%
+- **平均修复时间**: 目标 < 5分钟
+- **重复问题率**: 目标 < 5%
+
+#### 🎯 **持续改进机制**
+- **问题模式分析**: 识别常见质量问题
+- **规则优化**: 基于实际情况调整检查规则
+- **自动化增强**: 提高自动修复能力
+- **培训改进**: 基于问题模式改进AI行为
+
+---
+
+## 🎖️ 总结
+
+阶段性开发质量守护铁律确保AI在每个开发阶段完成后，都必须执行完整、严格的质量检查和Git同步流程。这是保证SmartAbp企业级低代码引擎始终保持100分质量标准的最终防线。
+
+**🔥 这是专家模式的第七重爆雷 - 阶段性开发质量守护！每个阶段完成都必须经过五重强制质量门禁，确保代码质量和远程同步的双重保障！**
+
+**⚡ 零容忍！零妥协！零例外！每个开发阶段完成后都必须强制执行质量检查和Git同步！**

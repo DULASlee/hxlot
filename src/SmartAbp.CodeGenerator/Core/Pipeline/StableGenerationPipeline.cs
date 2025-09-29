@@ -651,6 +651,42 @@ public class StableGenerationRequest
     public bool EnableCompilationCheck { get; set; } = false;
     // 🔥 明确命名空间引用：解决重复枚举冲突（遵循第十三重爆雷规则）
     public SmartAbp.CodeGenerator.Core.FileOperations.ConflictResolutionStrategy ConflictStrategy { get; set; } = SmartAbp.CodeGenerator.Core.FileOperations.ConflictResolutionStrategy.Auto;
+    
+    // 🚀 增量生成支持 (任务4.1新增)
+    /// <summary>
+    /// 是否启用增量模式
+    /// </summary>
+    public bool IncrementalMode { get; set; } = false;
+    
+    /// <summary>
+    /// 模板路径（增量模式需要）
+    /// </summary>
+    public string? TemplatesPath { get; set; }
+    
+    /// <summary>
+    /// 元数据JSON（增量模式需要）
+    /// </summary>
+    public string? MetadataJson { get; set; }
+    
+    /// <summary>
+    /// 配置文件路径（增量模式需要）
+    /// </summary>
+    public string? ConfigurationPath { get; set; }
+    
+    /// <summary>
+    /// 变更的输入键列表（增量模式内部使用）
+    /// </summary>
+    public List<string> ChangedInputKeys { get; set; } = new();
+    
+    /// <summary>
+    /// 启用验证（增量模式需要）
+    /// </summary>
+    public bool EnableValidation { get; set; } = true;
+    
+    /// <summary>
+    /// 启用优化（增量模式需要）
+    /// </summary>
+    public bool EnableOptimization { get; set; } = true;
 }
 
 /// <summary>
