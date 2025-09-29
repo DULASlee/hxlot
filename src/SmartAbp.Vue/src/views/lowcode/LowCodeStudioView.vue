@@ -35,17 +35,18 @@
             :name="(route.meta.transition as string) || 'fade'"
             mode="out-in"
           >
-            <!-- 每个路由组件 -->
-            <KeepAlive :include="cachedViews">
-              <Suspense>
-                <template #default>
-                  <component :is="Component" />
-                </template>
-                <template #fallback>
-                  <ModuleLoadingState :module="activeModule" />
-                </template>
-              </Suspense>
-            </KeepAlive>
+            <!-- 简化：移除复杂缓存策略，直接渲染组件 -->
+            <Suspense>
+              <template #default>
+                <component :is="Component" />
+              </template>
+              <template #fallback>
+                <div class="simple-loading">
+                  <el-icon class="loading-icon"><Loading /></el-icon>
+                  <span>加载中...</span>
+                </div>
+              </template>
+            </Suspense>
           </Transition>
         </router-view>
       </div>
@@ -106,8 +107,62 @@ const openTemplateManager = () => {
   templateManagerVisible.value = true;
 };
 
-// --- Mock Data (to be replaced with real logic) ---
-const dynamicMenuItems = computed(() => [])
+// --- 低代码平台核心菜单配置 (匹配实际路由) ---
+const dynamicMenuItems = computed(() => [
+  {
+    path: '/dashboard',
+    title: '工作台',
+    icon: 'Monitor',
+    children: []
+  },
+  {
+    path: '/CodeGeneration',
+    title: '代码生成',
+    icon: 'Document',
+    children: [
+      { path: '/CodeGeneration/ultra-simple', title: '极简代码生成' },
+      { path: '/CodeGeneration/engine', title: '低代码引擎控制台' },
+      { path: '/CodeGeneration/designer', title: '可视化设计' }
+    ]
+  },
+  {
+    path: '/User',
+    title: '用户管理',
+    icon: 'User',
+    children: [
+      { path: '/User', title: '用户列表' },
+      { path: '/User/management', title: '用户管理' },
+      { path: '/User/roles', title: '用户角色' }
+    ]
+  },
+  {
+    path: '/Project',
+    title: '项目管理',
+    icon: 'Folder',
+    children: [
+      { path: '/Project', title: '项目列表' },
+      { path: '/Project/analysis', title: '项目分析' }
+    ]
+  },
+  {
+    path: '/System',
+    title: '系统管理',
+    icon: 'Setting',
+    children: [
+      { path: '/System/permissions', title: '权限管理' },
+      { path: '/System/users', title: '用户管理' }
+    ]
+  },
+  {
+    path: '/Log',
+    title: '日志管理',
+    icon: 'Document',
+    children: [
+      { path: '/Log', title: '日志管理' },
+      { path: '/Log/viewer', title: '日志查看器' }
+    ]
+  }
+])
 const propertyContext = computed(() => ({}))
 const recentLogs = computed(() => [])
 const validationStatus = computed(() => 'success')
@@ -117,10 +172,7 @@ const handleModuleChange = (module: 'modeling' | 'design' | 'theme' | 'generate'
 }
 
 
-// 缓存策略
-const cachedViews = computed(() => {
-  return ['EntityModelingView', 'DesignView', 'ThemeCustomizationView']
-})
+// 简化：移除复杂缓存策略，创业项目不需要过度优化
 </script>
 
 <style scoped>

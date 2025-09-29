@@ -7,29 +7,9 @@
         </div>
       </template>
 
-      <!-- Search and Filter -->
-      <div class="filter-controls">
-        <el-input
-          v-model="searchQuery"
-          placeholder="Search templates..."
-          clearable
-          class="search-input"
-        />
-        <el-radio-group
-          v-model="selectedTag"
-          @change="filterTemplates"
-        >
-          <el-radio-button label="all">
-            All
-          </el-radio-button>
-          <el-radio-button
-            v-for="tag in availableTags"
-            :key="tag"
-            :label="tag"
-          >
-            {{ tag }}
-          </el-radio-button>
-        </el-radio-group>
+      <!-- 简化：移除搜索功能，直接显示模板 -->
+      <div class="simple-header">
+        <span class="template-count">共 {{ templates.length }} 个模板</span>
       </div>
 
       <!-- Templates Grid -->
@@ -38,7 +18,7 @@
         class="templates-grid"
       >
         <el-col
-          v-for="template in filteredTemplates"
+          v-for="template in templates"
           :key="template.id"
           :span="8"
         >
@@ -96,10 +76,11 @@ interface Template {
 }
 
 const templates = ref<Template[]>([]);
-const searchQuery = ref('');
-const selectedTag = ref('all');
 
-// --- Data Fetching ---
+// --- 简化：移除搜索和过滤功能 ---
+// 创业项目模板数量有限，直接展示所有模板更简洁高效
+
+// --- 简化的数据获取 ---
 onMounted(async () => {
   try {
     const response = await fetch('/templates.json');
@@ -109,30 +90,13 @@ onMounted(async () => {
     templates.value = await response.json();
   } catch (error) {
     console.error("Error loading templates:", error);
+    // 提供fallback数据
+    templates.value = [
+      { id: '1', name: 'CRUD模板', description: '标准增删改查模板', tags: ['basic'] },
+      { id: '2', name: '表单模板', description: '通用表单模板', tags: ['form'] }
+    ];
   }
 });
-
-// --- Computed Properties ---
-const availableTags = computed(() => {
-  const allTags = new Set<string>();
-  templates.value.forEach(t => t.tags.forEach(tag => allTags.add(tag)));
-  return Array.from(allTags);
-});
-
-const filteredTemplates = computed(() => {
-  return templates.value.filter(template => {
-    const searchMatch = template.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-                        template.description.toLowerCase().includes(searchQuery.value.toLowerCase());
-    const tagMatch = selectedTag.value === 'all' || template.tags.includes(selectedTag.value);
-    return searchMatch && tagMatch;
-  });
-});
-
-// --- Methods ---
-const filterTemplates = () => {
-  // This method is implicitly handled by the computed property `filteredTemplates`.
-  // It can be used for more complex filtering logic if needed in the future.
-};
 
 const selectTemplate = (template: Template) => {
   console.log("Selected template:", template);
