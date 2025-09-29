@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import { createPinia, setActivePinia } from "pinia"
-import { useStateMachineStore } from "@/stores/lowcode/statemachine"
+import { useStateMachineStore } from "./statemachine.ts"
 
 describe("StateMachine Store", () => {
   beforeEach(() => {

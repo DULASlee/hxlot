@@ -39,9 +39,9 @@ doskey dnr=dotnet run $*
 doskey dnb=dotnet build $*
 doskey dnt=dotnet test $*
 
-REM SmartAbp 专用别名
-doskey smartabp-sync=bash scripts/git-safe-sync.sh --non-interactive --auto-commit
+REM SmartAbp 专用别名 (符合架构铁律-质量门禁要求)
+doskey smartabp-sync=bash scripts/git/git-safe-sync.sh --non-interactive --auto-commit
 doskey smartabp-check=bash scripts/ci-quality-check.sh
-doskey smartabp-dev=powershell scripts/start-dev.ps1
+doskey smartabp-dev=powershell scripts/dev/start-dev.ps1
 
 echo ✅ SmartAbp 统一CMD终端配置已加载

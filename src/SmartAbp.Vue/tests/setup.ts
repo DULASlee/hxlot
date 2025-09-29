@@ -36,8 +36,16 @@ global.IntersectionObserver = vi.fn().mockImplementation(() => ({
 }))
 
 // 模拟 requestAnimationFrame
-global.requestAnimationFrame = vi.fn().mockImplementation((cb) => setTimeout(cb, 16))
-global.cancelAnimationFrame = vi.fn().mockImplementation((id) => clearTimeout(id))
+global.requestAnimationFrame = vi.fn((cb) => {
+  // Use setTimeout to simulate async behavior
+  const id = setTimeout(() => {
+    cb(Date.now())
+  }, 16)
+  return id as any
+})
+global.cancelAnimationFrame = vi.fn((id) => {
+  clearTimeout(id as any)
+})
 
 // 模拟 performance.memory (用于内存测试)
 if (!(performance as any).memory) {

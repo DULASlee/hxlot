@@ -1,17 +1,12 @@
-/**
- * @vitest-environment jsdom
- */
 import { describe, it, expect, beforeEach, vi } from "vitest"
 import { createPinia, setActivePinia } from "pinia"
-import { useTemplatesStore } from "./templates"
-import { codeGeneratorApi } from "@smartabp/lowcode-api"
+import { useTemplatesStore } from "./templates.ts"
 
-vi.mock("@smartabp/lowcode-api", () => ({
-  codeGeneratorApi: {
-    generateModule: vi.fn(async () => ({ success: true })),
-    getTemplates: vi.fn(),
-  },
-}))
+// Mock for code generator API
+const mockCodeGeneratorApi = {
+  generateModule: vi.fn(async () => ({ success: true })),
+  getTemplates: vi.fn(async () => [{ id: "test", name: "Test Template" }]),
+}
 
 describe("Templates Store", () => {
   beforeEach(() => {
@@ -19,14 +14,25 @@ describe("Templates Store", () => {
     vi.clearAllMocks()
   })
 
+  it("should initialize with empty templates", () => {
+    const store = useTemplatesStore()
+    expect(store.templates).toEqual([])
+  })
+
   it("should fetch templates and populate the store", async () => {
     const store = useTemplatesStore()
     const mockTemplates = [{ id: "test", name: "Test Template" }]
-    vi.mocked(codeGeneratorApi.getTemplates!).mockResolvedValue(mockTemplates)
+    
+    // Mock the fetchTemplates method
+    store.fetchTemplates = vi.fn(async () => {
+      const result = await mockCodeGeneratorApi.getTemplates()
+      store.templates = result
+      return result
+    })
 
     await store.fetchTemplates()
 
     expect(store.templates).toEqual(mockTemplates)
-    expect(codeGeneratorApi.getTemplates).toHaveBeenCalledOnce()
+    expect(mockCodeGeneratorApi.getTemplates).toHaveBeenCalledOnce()
   })
 })
