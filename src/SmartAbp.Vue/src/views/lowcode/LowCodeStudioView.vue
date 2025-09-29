@@ -12,7 +12,7 @@
     </div>
 
     <!-- 主内容区 -->
-    <div>
+    <div class="studio-body">
       <!-- 顶部导航 -->
       <StudioHeader
         :workspace="currentWorkspace"
@@ -58,11 +58,13 @@
     </div>
 
     <!-- 底部状态栏 -->
-    <StudioFooter
-      :logs="recentLogs"
-      :validation-status="validationStatus"
-      @clear-logs="clearLogs"
-    />
+    <div class="studio-footer">
+      <StudioFooter
+        :logs="recentLogs"
+        :validation-status="validationStatus"
+        @clear-logs="clearLogs"
+      />
+    </div>
 
     <!-- Template Manager Dialog -->
     <el-dialog

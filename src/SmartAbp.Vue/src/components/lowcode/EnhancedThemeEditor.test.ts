@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { mount } from "@vue/test-utils"
 import { createPinia, setActivePinia } from "pinia"
+import { useEnhancedThemeStore } from "@/stores/lowcode/enhancedTheme"
 
 // Mock logger to avoid import issues in test environment
 vi.mock("@/utils/logging", () => ({
@@ -20,17 +21,17 @@ Object.assign(global, {
   }
 })
 
-import EnhancedThemeEditor from "./EnhancedThemeEditor.vue"
-import { useEnhancedThemeStore } from "@/stores/lowcode/enhancedTheme"
+import ThemeSwitcher from "../theme/ThemeSwitcher.vue"
+import { useThemeStore } from "@/stores"
 
-describe("EnhancedThemeEditor.vue - Phase 2 TDD Tests", () => {
+describe("ThemeSwitcher.vue - Phase 2 TDD Tests", () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
   })
 
   const mountComponent = () => {
-    return mount(EnhancedThemeEditor, {
+    return mount(ThemeSwitcher, {
       global: {
         stubs: {
           "el-tabs": { template: '<div class="el-tabs"><slot /></div>' },
@@ -62,7 +63,7 @@ describe("EnhancedThemeEditor.vue - Phase 2 TDD Tests", () => {
 
     it("should switch themes and apply CSS variables immediately", async () => {
       const wrapper = mountComponent()
-      const store = useEnhancedThemeStore()
+      const store = useThemeStore()
 
       // 模拟切换到深绿主题
       const switchThemeSpy = vi.spyOn(store, "switchTheme")

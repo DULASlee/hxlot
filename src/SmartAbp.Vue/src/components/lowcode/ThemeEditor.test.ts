@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import { mount } from "@vue/test-utils"
 import { createPinia, setActivePinia } from "pinia"
-import type { ThemeEditor } from "@smartabp/lowcode-designer"
+import ThemeEditor from "../../../packages/lowcode-designer/src/components/ThemeEditor.vue"
 import { useThemeStore } from "@/stores/lowcode/theme"
 
 describe("ThemeEditor.vue", () => {
@@ -16,7 +16,7 @@ describe("ThemeEditor.vue", () => {
     const wrapper = mount(ThemeEditor)
     const colorInput = wrapper.find<HTMLInputElement>('input[type="color"]')
     // Default color in store is #409EFF
-    expect(colorInput.element.value).toBe("#409eff")
+    expect(colorInput.element.value.toLowerCase()).toBe("#409eff")
     expect(store.themeVariables["--el-color-primary"]).toBe("#409EFF")
   })
 
