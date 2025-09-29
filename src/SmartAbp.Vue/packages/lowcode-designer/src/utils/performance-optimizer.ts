@@ -91,7 +91,7 @@ const validateFunction = (value: any, fieldName: string): Function => {
   return value
 }
 
-const safeRequestAnimationFrame = (callback: FrameRequestCallback): number => {
+const safeRequestAnimationFrame = (callback: (time: number) => void): number => {
   try {
     return requestAnimationFrame(callback)
   } catch (error) {

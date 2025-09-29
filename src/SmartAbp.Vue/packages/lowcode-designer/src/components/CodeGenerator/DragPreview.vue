@@ -60,6 +60,9 @@ interface DragPreviewProps {
 
 const props = withDefaults(defineProps<DragPreviewProps>(), {
   isDragging: false,
+  dragItem: null,
+  dragPosition: () => ({ x: 0, y: 0 }),
+  targetZone: "",
   previewType: "default",
 })
 

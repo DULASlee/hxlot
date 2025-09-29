@@ -5,9 +5,10 @@
 
 import { ElMessage } from "element-plus"
 // 从API包导入类型定义
+// 使用本地类型定义避免跨包依赖
 import type {
   ModuleMetadata as BaseModuleMetadata
-} from '@smartabp/lowcode-api'
+} from '../types/unified-metadata'
 
 // 扩展的模块元数据，包含manifestWriter需要的额外字段
 interface ModuleMetadata extends BaseModuleMetadata {

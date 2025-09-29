@@ -194,9 +194,8 @@ export class SchemaExporter {
       {
         path: `/${this.options.moduleName.toLowerCase()}/${this.options.pageName.toLowerCase()}`,
         name: `${this.options.moduleName}${this.options.pageName}`,
-        // 🔥 架构整洁修复：packages 内部必须避免引用主应用别名（主应用别名）
-        // 使用包内占位组件，保持黑盒原则
-        component: () => import('../../components/DraggableComponent.vue')
+        // 🔥 架构整洁修复：使用包内组件，保持黑盒原则
+        component: () => import('../components/DraggableComponent')
       }
     ]
 
