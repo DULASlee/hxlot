@@ -1,0 +1,150 @@
+# SmartAbp 技术债务管理配置
+# 用于定义技术债务的阈值、目标和改进计划
+
+version: "1.0"
+project: "SmartAbp低代码引擎"
+baseline_date: "2025-09-29"
+
+# 技术债务基线 (当前状态)
+baseline:
+  as_any_count: 1330
+  ts_ignore_count: 235
+  duplicate_components: 5
+  console_log_count: 3842
+  relative_path_violations: 0
+  main_app_references: 1
+  overall_score: 20
+
+# 技术债务阈值配置
+thresholds:
+  critical:
+    as_any_count: 1000
+    ts_ignore_count: 200
+    duplicate_components: 3
+    console_log_count: 3000
+  warning:
+    as_any_count: 500
+    ts_ignore_count: 100
+    duplicate_components: 1
+    console_log_count: 1500
+  excellent:
+    as_any_count: 100
+    ts_ignore_count: 20
+    duplicate_components: 0
+    console_log_count: 100
+
+# 改进目标 (3个月内)
+targets:
+  phase1: # 第1个月
+    as_any_count: 1000  # 减少330个
+    ts_ignore_count: 200  # 减少35个
+    duplicate_components: 0  # 完全消除
+    console_log_count: 3000  # 减少842个
+    target_score: 35
+  
+  phase2: # 第2个月
+    as_any_count: 600   # 减少400个
+    ts_ignore_count: 150  # 减少50个
+    duplicate_components: 0
+    console_log_count: 2000  # 减少1000个
+    target_score: 55
+  
+  phase3: # 第3个月
+    as_any_count: 300   # 减少300个
+    ts_ignore_count: 80   # 减少70个
+    duplicate_components: 0
+    console_log_count: 500   # 减少1500个
+    target_score: 75
+
+# 监控策略
+monitoring:
+  frequency: "daily"  # 每日监控
+  report_retention: 30  # 保留30天的报告
+  alerts:
+    - condition: "score_decrease > 5"
+      message: "技术债务评分下降超过5分，需要立即关注"
+    - condition: "as_any_increase > 50"
+      message: "as any使用增加超过50个，违反类型安全原则"
+    - condition: "duplicate_components > 0"
+      message: "发现新的重复组件，需要立即重构"
+
+# 改进策略
+improvement_strategies:
+  type_safety:
+    priority: "high"
+    description: "类型安全改进 - 减少as any和@ts-ignore使用"
+    actions:
+      - "使用严格的TypeScript配置"
+      - "为第三方库创建类型声明"
+      - "重构复杂的类型转换逻辑"
+      - "建立类型安全的代码审查标准"
+  
+  code_duplication:
+    priority: "high"
+    description: "代码重复消除 - 提高代码复用率"
+    actions:
+      - "合并重复的Vue组件"
+      - "抽取公共逻辑到共享库"
+      - "建立组件库和设计系统"
+      - "实施代码审查检查重复"
+  
+  debug_cleanup:
+    priority: "medium"
+    description: "调试代码清理 - 建立统一日志系统"
+    actions:
+      - "使用统一的日志库替换console.log"
+      - "建立日志级别管理"
+      - "实施自动化的调试代码检测"
+      - "在生产构建中移除调试代码"
+  
+  architecture_maintenance:
+    priority: "high"
+    description: "架构完整性维护 - 保持模块化隔离"
+    actions:
+      - "定期检查包间依赖"
+      - "维护TypeScript项目引用"
+      - "执行架构违规自动检测"
+      - "更新架构文档和ADR"
+
+# 质量门禁
+quality_gates:
+  commit:
+    max_new_as_any: 5
+    max_new_ts_ignore: 2
+    max_new_console_log: 10
+    allow_new_duplicates: false
+  
+  pull_request:
+    min_score_change: -2  # PR不能让评分下降超过2分
+    require_debt_justification: true  # 需要技术债务说明
+  
+  release:
+    min_overall_score: 30  # 发布时最低评分
+    max_critical_issues: 3  # 最多3个严重问题
+
+# 报告配置
+reporting:
+  formats: ["console", "json", "html"]
+  export_path: "./reports/tech-debt"
+  include_trends: true
+  include_recommendations: true
+  team_notifications:
+    slack_webhook: ""  # 可配置Slack通知
+    email_recipients: []  # 可配置邮件通知
+
+# 工具集成
+integrations:
+  eslint:
+    rules:
+      - "@typescript-eslint/no-explicit-any"
+      - "no-console"
+    severity: "error"
+  
+  sonarqube:
+    enabled: false
+    server_url: ""
+    project_key: "smartabp-lowcode"
+  
+  github_actions:
+    workflow_file: ".github/workflows/tech-debt-check.yml"
+    trigger_on: ["push", "pull_request"]
