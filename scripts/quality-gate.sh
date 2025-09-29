@@ -34,12 +34,12 @@ else
 fi
 
 # --- 3. Linting and Type Checking ---
-# Note: This assumes `npm run lint` and `npm run type-check` are configured in the root package.json.
+# Note: This runs in the Vue project directory
 echo "🔎  Running linter..."
-npm run lint -- --quiet # Use --quiet to reduce verbose output on success
+cd src/SmartAbp.Vue && npm run lint -- --quiet # Use --quiet to reduce verbose output on success
 
 echo "🔎  Running TypeScript type checker..."
-npm run type-check
+cd src/SmartAbp.Vue && npm run type-check
 
 echo "✅  All quality gates passed! Your code is ready to be committed."
 exit 0
