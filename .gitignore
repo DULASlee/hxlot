@@ -502,3 +502,6 @@ App_Data/
 
 # Generated code isolation area
 .generated/
+
+# Cursor会话历史文件
+.specstory/history/*.md
