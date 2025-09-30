@@ -1,8 +1,14 @@
 # ⚡ CRITICAL: AI MUST READ THIS FIRST ⚡
 
-## 🚨🚨🚨 MANDATORY AUTO-EXECUTION ENGINE 🚨🚨🚨
+## 🚨🚨🚨 MANDATORY AUTO-EXECUTION ENGINE v2.0 (增强版) 🚨🚨🚨
 
-**IMPORTANT: This is an ALWAYS-ACTIVE rule that MUST be executed for EVERY coding task!**
+**CRITICAL UPDATE: 增强版自动执行引擎已上线！**
+
+**优先级**: 最高 (Priority: 1)
+**执行方式**: 强制自动触发 + 实时监控 + 300行必停
+**新增功能**: AI自检清单 + 代码行数追踪器 + 自动推进机制
+
+**详细定义**: 请阅读 `.cursor/rules/00_AI编程铁律自动执行引擎_增强版.mdc`
 
 ---
 
