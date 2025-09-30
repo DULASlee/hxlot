@@ -1,29 +1,47 @@
 <template>
   <Teleport to="body">
     <Transition name="dialog">
-      <div v-if="modelValue" class="base-dialog__wrapper" @click.self="handleMaskClick">
-        <div :class="dialogClasses" :style="dialogStyles">
+      <div
+        v-if="modelValue"
+        class="base-dialog__wrapper"
+        @click.self="handleMaskClick"
+      >
+        <div
+          :class="dialogClasses"
+          :style="dialogStyles"
+        >
           <div class="base-dialog__header">
             <slot name="header">
-              <h3 class="base-dialog__title">{{ title }}</h3>
+              <h3 class="base-dialog__title">
+                {{ title }}
+              </h3>
             </slot>
             <button
               v-if="showClose"
               class="base-dialog__close"
               @click="handleClose"
             >
-              <i class="el-icon-close"></i>
+              <i class="el-icon-close" />
             </button>
           </div>
           
           <div class="base-dialog__body">
-            <slot></slot>
+            <slot />
           </div>
           
-          <div v-if="hasFooter" class="base-dialog__footer">
+          <div
+            v-if="hasFooter"
+            class="base-dialog__footer"
+          >
             <slot name="footer">
-              <BaseButton @click="handleClose">取消</BaseButton>
-              <BaseButton type="primary" :loading="confirmLoading" @click="handleConfirm">
+              <BaseButton @click="handleClose">
+                取消
+              </BaseButton>
+              <BaseButton
+                type="primary"
+                :loading="confirmLoading"
+                @click="handleConfirm"
+              >
                 确定
               </BaseButton>
             </slot>
@@ -52,7 +70,7 @@ interface Props {
   /**
    * 对话框标题
    */
-  title?: string
+  title?: string | null
   
   /**
    * 对话框宽度

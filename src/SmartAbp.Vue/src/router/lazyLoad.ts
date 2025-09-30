@@ -144,7 +144,10 @@ export const smartPreloader = new SmartPreloader()
  */
 const requestIdleCallback = 
   window.requestIdleCallback ||
-  function (handler: IdleRequestCallback, options?: { timeout?: number }): number {
+  function (
+    handler: (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void, 
+    options?: { timeout?: number }
+  ): number {
     const startTime = Date.now()
     return window.setTimeout(() => {
       handler({

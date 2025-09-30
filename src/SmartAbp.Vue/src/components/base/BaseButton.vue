@@ -5,12 +5,21 @@
     :type="nativeType"
     @click="handleClick"
   >
-    <span v-if="loading" class="base-button__loading">
-      <i class="el-icon-loading"></i>
+    <span
+      v-if="loading"
+      class="base-button__loading"
+    >
+      <i class="el-icon-loading" />
     </span>
-    <span v-if="icon && !loading" :class="`base-button__icon ${icon}`"></span>
-    <span v-if="$slots.default" class="base-button__text">
-      <slot></slot>
+    <span
+      v-if="icon && !loading"
+      :class="`base-button__icon ${icon}`"
+    />
+    <span
+      v-if="$slots.default"
+      class="base-button__text"
+    >
+      <slot />
     </span>
   </button>
 </template>
@@ -47,7 +56,7 @@ interface Props {
   /**
    * 图标类名
    */
-  icon?: string
+  icon?: string | null
   
   /**
    * 是否圆角

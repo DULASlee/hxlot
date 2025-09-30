@@ -1,20 +1,34 @@
 <template>
   <div :class="cardClasses">
-    <div v-if="hasHeader" class="base-card__header">
+    <div
+      v-if="hasHeader"
+      class="base-card__header"
+    >
       <slot name="header">
-        <h3 v-if="title" class="base-card__title">{{ title }}</h3>
+        <h3
+          v-if="title"
+          class="base-card__title"
+        >
+          {{ title }}
+        </h3>
       </slot>
-      <div v-if="hasExtra" class="base-card__extra">
-        <slot name="extra"></slot>
+      <div
+        v-if="hasExtra"
+        class="base-card__extra"
+      >
+        <slot name="extra" />
       </div>
     </div>
     
     <div class="base-card__body">
-      <slot></slot>
+      <slot />
     </div>
     
-    <div v-if="hasFooter" class="base-card__footer">
-      <slot name="footer"></slot>
+    <div
+      v-if="hasFooter"
+      class="base-card__footer"
+    >
+      <slot name="footer" />
     </div>
   </div>
 </template>
@@ -31,7 +45,7 @@ interface Props {
   /**
    * 卡片标题
    */
-  title?: string
+  title?: string | null
   
   /**
    * 是否显示阴影
