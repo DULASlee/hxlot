@@ -31,17 +31,22 @@ else
     echo -e "${GREEN}✅ 通过：无相对路径违规${NC}"
 fi
 
-# 第二关：packages主应用引用违规检查
+# 第二关：packages主应用引用违规检查（排除合法的桥接层）
 echo -e "\n${BLUE}🔍 第二关：packages主应用引用违规检查...${NC}"
-MAIN_APP_REF=$(grep -r "from ['\"]@\/" src/SmartAbp.Vue/packages/ 2>/dev/null | wc -l || echo "0")
+# 白名单：lowcode-tools是合法的桥接层，允许使用@/别名
+# 其他packages（lowcode-core, lowcode-designer等）不应该直接引用主应用
+MAIN_APP_REF=$(grep -r "from ['\"]@\/" src/SmartAbp.Vue/packages/ 2>/dev/null | \
+    grep -v "packages/lowcode-tools/" | \
+    wc -l || echo "0")
 
 if [ "$MAIN_APP_REF" -gt 0 ]; then
     echo -e "${RED}❌ 发现 ${MAIN_APP_REF} 个主应用引用违规！${NC}"
-    echo -e "${YELLOW}违规文件：${NC}"
-    grep -r "from ['\"]@\/" src/SmartAbp.Vue/packages/ 2>/dev/null || true
+    echo -e "${YELLOW}违规文件（排除lowcode-tools桥接层）：${NC}"
+    grep -r "from ['\"]@\/" src/SmartAbp.Vue/packages/ 2>/dev/null | \
+        grep -v "packages/lowcode-tools/" || true
     VIOLATIONS=$((VIOLATIONS + MAIN_APP_REF))
 else
-    echo -e "${GREEN}✅ 通过：无主应用引用违规${NC}"
+    echo -e "${GREEN}✅ 通过：无主应用引用违规（lowcode-tools桥接层除外）${NC}"
 fi
 
 # 第三关：类型安全绕过检查
