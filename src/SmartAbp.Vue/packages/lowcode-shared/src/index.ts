@@ -44,7 +44,7 @@ export type {
 } from './components/ComponentRegistry'
 
 // 🔥 错误处理导出
-export { GlobalErrorHandler } from './error/GlobalErrorHandler'
+export * from './error'
 
 // 📋 导出版本信息
 export const LOWCODE_SHARED_VERSION = '1.0.0'
