@@ -46,6 +46,9 @@ export type {
 // 🔥 错误处理导出
 export * from './error'
 
+// 🎨 主题系统导出
+export * from './theme'
+
 // 📋 导出版本信息
 export const LOWCODE_SHARED_VERSION = '1.0.0'
 
