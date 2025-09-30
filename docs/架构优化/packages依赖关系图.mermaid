@@ -1,0 +1,40 @@
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#90EE90','primaryTextColor':'#000','primaryBorderColor':'#228B22','lineColor':'#4682B4','secondaryColor':'#87CEEB','tertiaryColor':'#FFB6C1'}}}%%
+
+graph TD
+    %% 主应用层
+    A[主应用<br/>SmartAbp.Vue/src<br/>🏠] --> B[lowcode-tools<br/>桥接工具层<br/>🌉]
+    
+    %% 桥接层到其他packages
+    B --> C[lowcode-core<br/>核心引擎层<br/>🧠]
+    B --> D[lowcode-designer<br/>设计器UI层<br/>🎨]
+    B --> E[lowcode-api<br/>API接口层<br/>🔌]
+    
+    %% 其他packages到基础层
+    C --> F[lowcode-shared<br/>基础层 零依赖<br/>📦]
+    D --> F
+    D --> C
+    E --> C
+    E --> F
+    
+    %% 样式定义
+    style F fill:#90EE90,stroke:#228B22,stroke-width:4px,color:#000
+    style C fill:#87CEEB,stroke:#4682B4,stroke-width:3px,color:#000
+    style D fill:#FFB6C1,stroke:#DC143C,stroke-width:3px,color:#000
+    style E fill:#DDA0DD,stroke:#9370DB,stroke-width:3px,color:#000
+    style B fill:#FFD700,stroke:#FF8C00,stroke-width:3px,color:#000
+    style A fill:#F0F0F0,stroke:#808080,stroke-width:2px,color:#000
+    
+    %% 图例
+    subgraph legend[" 图例 "]
+        L0[L0: 基础层 - 零依赖<br/>lowcode-shared]
+        L1[L1: 核心引擎层<br/>lowcode-core]
+        L2A[L2: 设计器UI层<br/>lowcode-designer]
+        L2B[L2: API接口层<br/>lowcode-api]
+        L3[L3: 桥接工具层<br/>lowcode-tools]
+        
+        style L0 fill:#90EE90,stroke:#228B22,stroke-width:2px
+        style L1 fill:#87CEEB,stroke:#4682B4,stroke-width:2px
+        style L2A fill:#FFB6C1,stroke:#DC143C,stroke-width:2px
+        style L2B fill:#DDA0DD,stroke:#9370DB,stroke-width:2px
+        style L3 fill:#FFD700,stroke:#FF8C00,stroke-width:2px
+    end
