@@ -1,4 +1,53 @@
-# SmartAbp AI编程铁律 - 主入口 (Master Entry)
+# ⚡ CRITICAL: AI MUST READ THIS FIRST ⚡
+
+## 🚨🚨🚨 MANDATORY AUTO-EXECUTION ENGINE 🚨🚨🚨
+
+**IMPORTANT: This is an ALWAYS-ACTIVE rule that MUST be executed for EVERY coding task!**
+
+---
+
+## 🔥 STEP 0: AUTOMATIC TRIGGER DETECTION (自动触发检测)
+
+**AI MUST automatically detect and activate the execution engine when:**
+
+### Trigger Keywords (触发关键词)
+```
+直接触发词:
+- "专家模式" / "Expert Mode"
+- "开始编程" / "开始开发" / "Start Coding"
+- "新功能" / "新建" / "创建" / "Create"
+
+代码操作触发词:
+- "创建组件" / "Create Component"
+- "创建服务" / "Create Service"  
+- "创建Store" / "创建API"
+- "修改代码" / "添加功能" / "实现功能"
+
+修复触发词:
+- "修复BUG" / "修复错误" / "Fix Bug"
+- "解决问题" / "Solve Issue"
+
+架构触发词:
+- "重构" / "Refactor"
+- "优化" / "Optimize"
+- "架构调整" / "Architecture"
+```
+
+### File Operation Triggers (文件操作触发)
+```
+- Creating any .vue, .ts, .tsx, .cs file
+- Modifying files in packages/*
+- Modifying files in src/*
+```
+
+### 🔥 CRITICAL: If ANY trigger is detected, AI MUST immediately respond with:
+
+```
+🔥 **AI编程铁律自动执行引擎已启动！**
+🚨 **Auto-Execution Engine Activated!**
+```
+
+---
 
 ## 🚨 强制执行指令 (MANDATORY EXECUTION ORDER)
 
@@ -8,11 +57,15 @@
 
 ### 第一步：立即声明执行引擎启动 🔥
 
-**AI必须在响应的第一行输出：**
+**🚨 CRITICAL: AI MUST output this as the VERY FIRST LINE of the response:**
 
 ```
 🔥 **AI编程铁律自动执行引擎已启动！**
 ```
+
+**⚠️ WARNING: Failing to include this declaration means the AI has NOT properly activated the execution engine!**
+
+**This is NON-NEGOTIABLE. No exceptions. No shortcuts.**
 
 ---
 
@@ -217,4 +270,104 @@
 
 ---
 
+## 🤖 AI自我检查清单 (AI Self-Check Checklist)
+
+**在生成响应前，AI必须在内部验证以下检查清单：**
+
+### ✅ Pre-Response Checklist
+
+```
+[ ] 1. 是否检测到触发关键词或文件操作？
+    → 如果是，必须启动执行引擎
+    
+[ ] 2. 响应的第一行是否包含启动声明？
+    🔥 **AI编程铁律自动执行引擎已启动！**
+    → 如果没有，立即添加
+    
+[ ] 3. 是否完成5项编程前学习？
+    ✅ 架构扫描
+    ✅ 代码库检索
+    ✅ ADR学习
+    ✅ 模板库检查
+    ✅ 公共组件识别
+    → 如果没有，立即执行
+    
+[ ] 4. 编程过程中是否追踪代码行数？
+    → 必须内部计数，280行警告，300行停止
+    
+[ ] 5. 是否进行架构合规检查？
+    → 禁止相对路径、主应用引用、类型绕过
+    
+[ ] 6. 是否检测代码重复？
+    → 创建前必须搜索现有实现
+    
+[ ] 7. 完成阶段任务后是否执行质量门禁？
+    → 5关检查必须全部执行
+    
+[ ] 8. 质量门禁通过后是否执行Git管理？
+    → 6步流程必须完整执行
+    
+[ ] 9. 是否使用标准响应模板？
+    → 包含emoji、分隔线、完整报告
+    
+[ ] 10. 响应是否包含完整的执行摘要？
+    → 必须明确列出每个阶段的结果
+```
+
+### 🚨 CRITICAL: Self-Correction Mechanism
+
+**If AI realizes it has NOT followed the above checklist:**
+
+1. **STOP immediately** 
+2. **Acknowledge the mistake**: "⚠️ 检测到执行引擎未正确启动，立即重新执行..."
+3. **Restart the process** from Step 1
+4. **Generate a complete response** following all steps
+
+---
+
+## 🔄 持续提醒机制 (Continuous Reminder)
+
+**在每次响应中，AI应该在内部自问：**
+
+```
+❓ "我是否启动了执行引擎？"
+❓ "我是否完成了5项学习？"
+❓ "我是否在监控代码行数？"
+❓ "我是否检查了架构合规？"
+❓ "我是否检测了代码重复？"
+❓ "我是否需要执行质量门禁？"
+```
+
+**如果任何一个答案是"否"，立即补充执行！**
+
+---
+
+## 🎯 执行保证声明 (Execution Guarantee)
+
+**By following this .cursorules file, the AI commits to:**
+
+✅ **100% activation rate** - Every coding task triggers the engine  
+✅ **0% skip rate** - No steps are skipped  
+✅ **Complete transparency** - All actions are reported  
+✅ **Quality assurance** - 5-gate quality checks are mandatory  
+✅ **Version control** - Git management is automatic  
+
+**This is the AI's contract with the user and the project.**
+
+---
+
 🔥 **SmartAbp AI编程铁律 - 100%自动识别和执行！**
+
+---
+
+## 📢 最终提醒 (Final Reminder)
+
+**⚡ EVERY TIME you (AI) see a coding request, ask yourself:**
+
+> "Did I start with 🔥 **AI编程铁律自动执行引擎已启动！** ?"
+
+**If the answer is NO → You MUST restart and follow the complete process!**
+
+**No exceptions. No shortcuts. No simplifications.**
+
+**This is the iron law. 这是铁律。**
