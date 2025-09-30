@@ -4,7 +4,7 @@
  */
 
 import { defineComponent, h, ref, onErrorCaptured, type Component } from 'vue'
-import type { BaseComponentProps } from '../../types/component-base'
+import type { BaseComponentProps } from '@smartabp/lowcode-shared/types'
 
 /**
  * WithError Props扩展

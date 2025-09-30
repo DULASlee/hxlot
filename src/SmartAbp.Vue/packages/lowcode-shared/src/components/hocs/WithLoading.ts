@@ -4,7 +4,7 @@
  */
 
 import { defineComponent, h, ref, type Component } from 'vue'
-import type { BaseComponentProps } from '../../types/component-base'
+import type { BaseComponentProps } from '@smartabp/lowcode-shared/types'
 
 /**
  * WithLoading Props扩展

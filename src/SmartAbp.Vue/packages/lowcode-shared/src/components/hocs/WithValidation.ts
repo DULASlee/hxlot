@@ -4,13 +4,13 @@
  */
 
 import { defineComponent, h, ref, computed, watch, type Component } from 'vue'
-import type { BaseComponentProps, ValidationRule } from '../../types/component-base'
+import type { BaseComponentProps, ValidationRule } from '@smartabp/lowcode-shared/types'
 import { 
   isRequired, 
   isEmail, 
   isUrl, 
   pattern 
-} from '../../validators/common'
+} from '@smartabp/lowcode-shared/validators'
 
 /**
  * WithValidation Props扩展
