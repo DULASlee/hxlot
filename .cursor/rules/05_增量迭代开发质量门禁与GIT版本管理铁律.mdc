@@ -1,0 +1,656 @@
+---
+alwaysApply: true
+---
+
+# AI架构铁律同心圆模型 - 增量迭代开发质量门禁与GIT版本管理铁律
+
+## 文件说明
+- **文件标识**: `05_增量迭代开发质量门禁与GIT版本管理铁律.mdc`
+- **层级**: 核心执行铁律 - 增量迭代开发质量门禁与版本管理
+- **作用**: 确保AI在完成阶段性开发任务或编写300行代码后，必须停止编码，强制执行质量检查，通过后再执行Git版本同步管理！
+
+---
+
+## 🎯 核心执行流程
+
+**🚨 黄金执行顺序**: 
+```
+完成阶段任务 OR 编写300行代码
+    ↓
+立即停止编码
+    ↓
+执行五重强制质量门禁检查
+    ↓
+质量检查通过
+    ↓
+执行Git版本同步管理
+    ↓
+继续下一阶段开发
+```
+
+### ⚡ 触发条件（二选一触发）
+
+#### 1️⃣ **阶段性开发任务完成**
+- 完成一个功能模块开发
+- 完成一个BUG修复任务
+- 完成一次重构优化
+- 完成一个组件开发
+- 完成任何标记为"完成"的开发任务
+
+#### 2️⃣ **编写代码达到300行**
+- 当前会话新增代码行数达到280行时警告
+- 达到300行时立即停止编码
+- 统计基于`git diff --numstat`的新增代码行数
+
+---
+
+## 🔥 第一部分：五重强制质量门禁检查
+
+### 🚨 触发时AI必须立即响应
+
+```
+🚨 **质量门禁触发检测！**
+
+📊 触发原因:
+   □ 阶段性开发任务完成
+   □ 编写代码达到300行 (当前: XXX行)
+
+⏸️ **立即停止编码，启动五重强制质量门禁检查！**
+
+🔍 执行质量检查...
+```
+
+### 🏗️ 第一关：架构完整性检查 (0违规)
+
+#### 检查项目
+```bash
+# 1. packages相对路径违规检查
+echo "🔍 检查packages相对路径违规..."
+RELATIVE_PATH_VIOLATIONS=$(grep -r "'../'" src/SmartAbp.Vue/packages/ 2>/dev/null | wc -l)
+
+# 2. packages主应用引用违规检查
+echo "🔍 检查packages主应用引用违规..."
+MAIN_APP_REF_VIOLATIONS=$(grep -r "@/" src/SmartAbp.Vue/packages/ 2>/dev/null | wc -l)
+
+# 3. 类型安全绕过检查
+echo "🔍 检查类型安全绕过..."
+AS_ANY_COUNT=$(grep -r "as any" src/ 2>/dev/null | wc -l)
+TS_IGNORE_COUNT=$(grep -r "@ts-ignore" src/ 2>/dev/null | wc -l)
+
+# 验证结果
+TOTAL_VIOLATIONS=$((RELATIVE_PATH_VIOLATIONS + MAIN_APP_REF_VIOLATIONS + AS_ANY_COUNT + TS_IGNORE_COUNT))
+
+if [ $TOTAL_VIOLATIONS -eq 0 ]; then
+    echo "✅ 第一关：架构完整性检查通过 (0违规)"
+else
+    echo "❌ 第一关：架构完整性检查失败"
+    echo "   • 相对路径违规: ${RELATIVE_PATH_VIOLATIONS}个"
+    echo "   • 主应用引用违规: ${MAIN_APP_REF_VIOLATIONS}个"
+    echo "   • as any使用: ${AS_ANY_COUNT}个"
+    echo "   • @ts-ignore使用: ${TS_IGNORE_COUNT}个"
+    echo "🚨 必须修复所有架构违规后才能继续！"
+    exit 1
+fi
+```
+
+#### 失败处理
+- ❌ **发现任何违规立即中止**
+- 🔧 **提供详细的违规文件和行号**
+- 💡 **提供修复建议**
+- 🚫 **严禁继续编码或提交**
+
+### 🔄 第二关：代码重复度检查 (0重复)
+
+#### 检查项目
+```bash
+echo "🔍 第二关：代码重复度检查..."
+
+# 1. 重复Vue组件检查
+echo "检查重复Vue组件..."
+DUPLICATE_COMPONENTS=$(find src/ -name "*.vue" 2>/dev/null | sed 's/.*\///' | sort | uniq -d | wc -l)
+
+# 2. 重复方法函数检查
+echo "检查重复方法函数..."
+DUPLICATE_FUNCTIONS=$(grep -rh "function\s\+\w\+\|const\s\+\w\+\s*=" src/ 2>/dev/null | \
+    sed 's/^[[:space:]]*//' | sort | uniq -d | wc -l)
+
+# 3. 重复类接口检查
+echo "检查重复类接口..."
+DUPLICATE_CLASSES=$(grep -rh "class\s\+\w\+\|interface\s\+\w\+" src/ 2>/dev/null | \
+    sed 's/^[[:space:]]*//' | sort | uniq -d | wc -l)
+
+# 4. 重复路由检查
+echo "检查重复路由..."
+DUPLICATE_ROUTES=$(grep -rh "path:\s*['\"].*['\"]" src/SmartAbp.Vue/src/router/ 2>/dev/null | \
+    sed 's/^[[:space:]]*//' | sort | uniq -d | wc -l)
+
+TOTAL_DUPLICATES=$((DUPLICATE_COMPONENTS + DUPLICATE_FUNCTIONS + DUPLICATE_CLASSES + DUPLICATE_ROUTES))
+
+if [ $TOTAL_DUPLICATES -eq 0 ]; then
+    echo "✅ 第二关：代码重复度检查通过 (0重复)"
+else
+    echo "❌ 第二关：代码重复度检查失败"
+    echo "   • 重复组件: ${DUPLICATE_COMPONENTS}个"
+    echo "   • 重复函数: ${DUPLICATE_FUNCTIONS}个"
+    echo "   • 重复类: ${DUPLICATE_CLASSES}个"
+    echo "   • 重复路由: ${DUPLICATE_ROUTES}个"
+    echo "🚨 必须消除所有重复代码后才能继续！"
+    exit 1
+fi
+```
+
+#### 失败处理
+- ❌ **发现重复立即中止**
+- 🔧 **列出所有重复项**
+- 💡 **提供DRY重构建议**
+- 🚫 **严禁继续编码或提交**
+
+### ⚡ 第三关：编译与静态检查 (0错误)
+
+#### 前端检查
+```bash
+echo "🔍 第三关：编译与静态检查..."
+
+# 1. TypeScript类型检查
+echo "执行TypeScript类型检查..."
+cd src/SmartAbp.Vue && npm run type-check
+TYPE_CHECK_RESULT=$?
+
+# 2. ESLint代码规范检查
+echo "执行ESLint代码规范检查..."
+cd src/SmartAbp.Vue && npm run lint
+LINT_RESULT=$?
+
+# 3. Vite生产构建测试（可选，耗时较长）
+# echo "执行Vite生产构建..."
+# cd src/SmartAbp.Vue && npm run build-only
+# BUILD_RESULT=$?
+
+if [ $TYPE_CHECK_RESULT -eq 0 ] && [ $LINT_RESULT -eq 0 ]; then
+    echo "✅ 第三关：编译与静态检查通过 (0错误)"
+else
+    echo "❌ 第三关：编译与静态检查失败"
+    [ $TYPE_CHECK_RESULT -ne 0 ] && echo "   • TypeScript类型检查失败"
+    [ $LINT_RESULT -ne 0 ] && echo "   • ESLint代码规范检查失败"
+    echo "🚨 必须修复所有编译和静态检查错误后才能继续！"
+    exit 1
+fi
+```
+
+#### 后端检查（如有修改）
+```bash
+# 检查是否有后端代码修改
+if git diff --name-only | grep -q "src/SmartAbp\.\(Application\|Domain\|EntityFrameworkCore\)"; then
+    echo "检测到后端代码修改，执行后端编译检查..."
+    
+    # 后端编译检查
+    dotnet build src/SmartAbp.sln
+    BACKEND_BUILD_RESULT=$?
+    
+    if [ $BACKEND_BUILD_RESULT -ne 0 ]; then
+        echo "❌ 后端编译检查失败"
+        echo "🚨 必须修复后端编译错误后才能继续！"
+        exit 1
+    fi
+    
+    echo "✅ 后端编译检查通过"
+fi
+```
+
+#### 失败处理
+- ❌ **任何错误立即中止**
+- 🔧 **显示详细错误信息**
+- 💡 **尝试自动修复（lint --fix）**
+- 🚫 **严禁继续编码或提交**
+
+### 🎯 第四关：低代码生成器专项检查 (100%质量)
+
+#### 检查项目
+```bash
+echo "🔍 第四关：低代码生成器专项检查..."
+
+# 1. packages TypeScript项目引用构建
+echo "执行packages TypeScript项目引用构建..."
+cd src/SmartAbp.Vue && npx tsc --build tsconfig.references.json
+TS_BUILD_RESULT=$?
+
+# 2. packages ESLint专项检查
+echo "执行packages ESLint专项检查..."
+cd src/SmartAbp.Vue && npm run lint -- "packages/*/src/**/*.{ts,vue}" --fix
+PACKAGES_LINT_RESULT=$?
+
+# 3. packages依赖关系检查
+echo "执行packages依赖关系检查..."
+PACKAGES_CROSS_REF=$(grep -r "import.*from '\.\./\.\./'"\src/SmartAbp.Vue/packages/ 2>/dev/null | wc -l)
+PACKAGES_MAIN_REF=$(grep -r "import.*from '@/'" src/SmartAbp.Vue/packages/ 2>/dev/null | wc -l)
+
+if [ $TS_BUILD_RESULT -eq 0 ] && [ $PACKAGES_LINT_RESULT -eq 0 ] && \
+   [ $PACKAGES_CROSS_REF -eq 0 ] && [ $PACKAGES_MAIN_REF -eq 0 ]; then
+    echo "✅ 第四关：低代码生成器专项检查通过 (100%质量)"
+else
+    echo "❌ 第四关：低代码生成器专项检查失败"
+    [ $TS_BUILD_RESULT -ne 0 ] && echo "   • TypeScript项目引用构建失败"
+    [ $PACKAGES_LINT_RESULT -ne 0 ] && echo "   • packages ESLint检查失败"
+    [ $PACKAGES_CROSS_REF -ne 0 ] && echo "   • packages存在跨层级引用: ${PACKAGES_CROSS_REF}个"
+    [ $PACKAGES_MAIN_REF -ne 0 ] && echo "   • packages存在主应用引用: ${PACKAGES_MAIN_REF}个"
+    echo "🚨 低代码生成器必须达到企业级100分标准！"
+    exit 1
+fi
+```
+
+#### 失败处理
+- ❌ **质量问题立即中止**
+- 🔧 **详细报告packages问题**
+- 💡 **提供架构整洁建议**
+- 🚫 **严禁继续编码或提交**
+
+### 🚀 第五关：技术债务监控检查 (基线控制)
+
+#### 检查项目
+```bash
+echo "🔍 第五关：技术债务监控检查..."
+
+# 1. 统计代码复杂度
+COMPLEX_FILES=$(find src/ -name "*.ts" -o -name "*.vue" 2>/dev/null | \
+    xargs wc -l 2>/dev/null | awk '$1 > 200 {count++} END {print count+0}')
+
+# 2. 统计技术债务标记
+TODO_COUNT=$(grep -r "TODO\|FIXME\|XXX" src/ 2>/dev/null | wc -l)
+
+# 3. 统计代码行数变化
+LINES_ADDED=$(git diff --numstat 2>/dev/null | awk '{add+=$1} END {print add+0}')
+LINES_DELETED=$(git diff --numstat 2>/dev/null | awk '{del+=$2} END {print del+0}')
+
+# 4. 计算质量评分
+QUALITY_SCORE=100
+[ $AS_ANY_COUNT -gt 5 ] && QUALITY_SCORE=$((QUALITY_SCORE - 10))
+[ $TS_IGNORE_COUNT -gt 3 ] && QUALITY_SCORE=$((QUALITY_SCORE - 15))
+[ $COMPLEX_FILES -gt 10 ] && QUALITY_SCORE=$((QUALITY_SCORE - 5))
+[ $TODO_COUNT -gt 20 ] && QUALITY_SCORE=$((QUALITY_SCORE - 5))
+
+echo "📊 技术债务监控报告:"
+echo "   • 超过200行的文件数: ${COMPLEX_FILES}个"
+echo "   • TODO标记数: ${TODO_COUNT}个"
+echo "   • 新增代码行数: ${LINES_ADDED}行"
+echo "   • 删除代码行数: ${LINES_DELETED}行"
+echo "   • 质量评分: ${QUALITY_SCORE}/100"
+
+if [ $QUALITY_SCORE -ge 85 ]; then
+    echo "✅ 第五关：技术债务监控检查通过 (评分≥85)"
+else
+    echo "⚠️ 第五关：技术债务监控警告 (评分<85)"
+    echo "💡 建议优化技术债务，但不阻止提交"
+fi
+```
+
+#### 失败处理
+- ⚠️ **评分<85时警告，但不阻止**
+- 📊 **记录技术债务基线变化**
+- 💡 **提供优化建议**
+- ✅ **允许继续Git同步**
+
+---
+
+## 🔥 第二部分：Git版本同步管理
+
+### 🚨 前置条件验证
+
+```
+✅ **五重质量门禁全部通过！**
+
+📋 质量验证结果:
+   ✅ 第一关：架构完整性检查 (0违规)
+   ✅ 第二关：代码重复度检查 (0重复)
+   ✅ 第三关：编译与静态检查 (0错误)
+   ✅ 第四关：低代码生成器专项检查 (100%质量)
+   ✅ 第五关：技术债务监控检查 (评分: XX/100)
+
+🚀 **开始执行Git版本同步管理...**
+```
+
+### 💡 核心原则：先拉取，后推送
+
+**🚨 黄金法则**: 在推送代码到远程仓库之前，**必须先拉取远程最新版本并合并到本地**！
+
+#### ⚡ 正确的Git同步流程
+```
+本地修改 → 本地提交 → 拉取远程 → 合并代码 → 推送远程
+   ↓          ↓          ↓          ↓          ↓
+git add   git commit  git pull   rebase    git push
+```
+
+### 🔐 Git同步六步强制执行流程
+
+#### 📋 第一步：代码变更检测
+```bash
+echo "🔍 第一步：检测代码变更..."
+
+if [ -n "$(git status --porcelain)" ]; then
+    CHANGED_FILES=$(git status --porcelain | wc -l)
+    echo "✅ 发现 ${CHANGED_FILES} 个文件修改"
+else
+    echo "⚠️ 无代码变更，跳过Git同步"
+    exit 0
+fi
+```
+
+#### 📦 第二步：暂存所有修改
+```bash
+echo "📦 第二步：暂存所有修改..."
+
+git add .
+
+STAGED_FILES=$(git diff --cached --name-only | wc -l)
+echo "✅ 已暂存 ${STAGED_FILES} 个文件"
+```
+
+#### 📝 第三步：生成标准化提交信息
+```bash
+echo "📝 第三步：生成标准化提交信息..."
+
+# 提交信息模板
+COMMIT_TYPE="feat"  # feat/fix/refactor/docs/style/test/chore
+STAGE_NAME="[阶段名称]"
+DESCRIPTION="[核心成果描述]"
+
+COMMIT_MSG="${COMMIT_TYPE}: 完成${STAGE_NAME} - ${DESCRIPTION}
+
+🔧 核心修复/实现:
+- 🎯 [具体修复项1]
+- 🔧 [具体修复项2]
+- ✨ [新功能实现]
+
+📊 质量验证结果:
+- 架构完整性: ✅ 0违规
+- 代码重复度: ✅ 0重复
+- 编译静态检查: ✅ 0错误
+- 低代码生成器: ✅ 100%质量
+- 技术债务评分: ✅ ${QUALITY_SCORE}/100
+
+🎯 阶段价值:
+- [业务价值描述1]
+- [技术价值描述2]
+
+📦 修改统计:
+- 修改文件: ${STAGED_FILES}个
+- 新增代码: ${LINES_ADDED}行
+- 删除代码: ${LINES_DELETED}行"
+
+echo "✅ 提交信息已生成"
+```
+
+#### 🚀 第四步：执行本地提交
+```bash
+echo "🚀 第四步：执行本地提交..."
+
+git commit -m "$COMMIT_MSG"
+
+if [ $? -eq 0 ]; then
+    COMMIT_HASH=$(git rev-parse HEAD)
+    echo "✅ 本地提交成功"
+    echo "📝 提交哈希: $COMMIT_HASH"
+else
+    echo "❌ 本地提交失败，中止同步流程"
+    exit 1
+fi
+```
+
+#### 🔄 第五步：拉取远程最新版本并合并
+```bash
+echo "🔄 第五步：拉取远程最新版本并合并..."
+echo "🚨 关键步骤：推送前必须先拉取远程最新代码！"
+
+# 使用rebase方式合并（推荐，保持线性历史）
+git pull --rebase origin main
+
+if [ $? -eq 0 ]; then
+    echo "✅ 远程代码合并成功（rebase模式）"
+    echo "📝 本地已包含远程所有最新修改"
+else
+    echo "⚠️ rebase合并失败，检查是否有冲突..."
+    
+    # 检查是否是冲突导致的失败
+    if git status | grep -q "rebase in progress"; then
+        echo "🔀 检测到合并冲突，需要解决冲突"
+        echo ""
+        echo "🔍 冲突文件列表："
+        git diff --name-only --diff-filter=U
+        echo ""
+        echo "💡 冲突解决标准流程："
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "1️⃣ 查看冲突文件内容: git diff <冲突文件>"
+        echo "2️⃣ 手动编辑冲突文件，解决冲突标记"
+        echo "3️⃣ 标记冲突已解决: git add <已解决的冲突文件>"
+        echo "4️⃣ 继续rebase操作: git rebase --continue"
+        echo "5️⃣ 重新执行Git同步"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+        echo "⚠️ 如果冲突文件是自动生成的（如components.d.ts），可以："
+        echo "   git checkout --ours <文件>   # 使用本地版本"
+        echo "   git checkout --theirs <文件>  # 使用远程版本"
+        exit 1
+    else
+        echo "❌ 拉取远程代码失败，中止同步流程"
+        exit 1
+    fi
+fi
+```
+
+#### 🌐 第六步：推送到远程仓库
+```bash
+echo "🌐 第六步：推送到远程仓库..."
+echo "🚨 确保本地已经包含远程最新代码后，执行推送"
+
+# 执行标准推送
+git push origin main
+
+if [ $? -eq 0 ]; then
+    echo "✅ 远程推送成功！"
+    echo "🌐 远程仓库已更新"
+    
+    # 验证同步完整性
+    LOCAL_HASH=$(git rev-parse HEAD)
+    REMOTE_HASH=$(git rev-parse origin/main)
+    
+    if [ "$LOCAL_HASH" = "$REMOTE_HASH" ]; then
+        echo "✅ 同步完整性验证通过"
+        echo "📝 本地哈希: $LOCAL_HASH"
+        echo "🌐 远程哈希: $REMOTE_HASH"
+    else
+        echo "⚠️ 同步完整性验证失败，需要重新同步"
+        exit 1
+    fi
+else
+    echo "❌ 远程推送失败"
+    echo "💡 可能原因："
+    echo "   1. 网络连接问题"
+    echo "   2. 远程仓库有新提交（需要重新拉取）"
+    echo "   3. 权限不足"
+    exit 1
+fi
+```
+
+---
+
+## 📋 AI强制执行响应格式
+
+当检测到触发条件时，AI必须立即按此格式响应：
+
+```
+🚨 **质量门禁触发检测！**
+
+📊 触发原因:
+   ✅ [阶段性开发任务完成] / [编写代码达到300行]
+
+⏸️ **立即停止编码，启动质量检查流程！**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 第一部分：五重强制质量门禁检查
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 第一关：架构完整性检查...
+   ✅ 通过 (0违规)
+
+🔄 第二关：代码重复度检查...
+   ✅ 通过 (0重复)
+
+⚡ 第三关：编译与静态检查...
+   ✅ 通过 (0错误)
+
+🎯 第四关：低代码生成器专项检查...
+   ✅ 通过 (100%质量)
+
+🚀 第五关：技术债务监控检查...
+   ✅ 通过 (评分: XX/100)
+
+✅ **五重质量门禁全部通过！**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 第二部分：Git版本同步管理
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 第一步：检测代码变更...
+   ✅ 发现 X 个文件修改
+
+📦 第二步：暂存所有修改...
+   ✅ 已暂存 X 个文件
+
+📝 第三步：生成标准化提交信息...
+   ✅ 提交信息已生成
+
+🚀 第四步：执行本地提交...
+   ✅ 本地提交成功 (哈希: abc123...)
+
+🔄 第五步：拉取远程最新版本并合并...
+   ✅ 远程代码已合并到本地（rebase模式）
+   📝 本地已包含远程所有最新修改
+
+🌐 第六步：推送到远程仓库...
+   ✅ 远程推送成功
+   ✅ 同步完整性验证通过
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 完整执行报告:
+   ✅ 质量门禁检查: 全部通过
+   ✅ 本地提交: 成功
+   ✅ 远程拉取合并: 成功
+   ✅ 远程推送: 成功
+   ✅ 同步完整性: 验证通过
+   📝 本地哈希: abc123...
+   🌐 远程哈希: abc123... (完全一致)
+
+🎉 **增量迭代开发质量门禁与Git版本管理完成！**
+🚀 **可以继续下一阶段开发任务！**
+```
+
+---
+
+## 🚨 异常处理协议
+
+### ❌ 质量门禁检查失败
+
+```typescript
+if (qualityCheckFailed) {
+  // 1. 立即停止所有操作
+  stopAllOperations();
+  
+  // 2. 详细报告失败原因
+  console.error("❌ 质量门禁检查失败！");
+  reportFailureDetails(checkResults);
+  
+  // 3. 提供修复建议
+  provideFixSuggestions(failedChecks);
+  
+  // 4. 要求修复后重新检查
+  console.log("🔧 请修复上述问题后重新执行质量检查");
+  
+  // 5. 严禁继续操作
+  preventFurtherOperations();
+  
+  // 6. 严禁执行Git同步
+  blockGitSync();
+}
+```
+
+### 🔀 Git合并冲突处理
+
+当出现合并冲突时：
+
+1. **自动检测冲突**
+   ```bash
+   git diff --name-only --diff-filter=U
+   ```
+
+2. **显示冲突详情**
+   ```bash
+   git status
+   ```
+
+3. **提供解决步骤**
+   - 查看冲突文件内容
+   - 手动编辑解决冲突标记
+   - 标记冲突已解决
+   - 继续rebase操作
+   - 重新执行Git同步
+
+4. **特殊文件处理**
+   - 自动生成文件（如`components.d.ts`）：建议使用本地版本
+   - 配置文件：建议手动合并
+   - 代码文件：必须手动解决
+
+### 🌐 Git推送失败处理
+
+当推送失败时：
+
+1. **检查网络连接**
+2. **检查是否需要重新拉取**
+   ```bash
+   git pull --rebase origin main
+   ```
+3. **检查仓库权限**
+4. **重试推送（最多3次）**
+5. **记录错误并报告用户**
+
+---
+
+## 🎯 质量标准总结
+
+### ✅ 必达标准（零容忍）
+
+- **架构违规数量**: 0个
+- **代码重复数量**: 0个
+- **编译错误数量**: 0个
+- **TypeScript错误**: 0个
+- **ESLint错误**: 0个
+- **低代码生成器packages编译**: 100%成功
+
+### 📈 监控标准（基线管理）
+
+- **技术债务评分**: ≥85分（建议）
+- **代码复杂度**: 记录但不阻止
+- **TODO标记数**: 监控基线变化
+
+### 🚀 Git同步标准
+
+- **同步成功率**: 目标 > 99%
+- **本地=远程**: 哈希完全一致
+- **先拉取后推送**: 100%遵循黄金法则
+
+---
+
+## 🎖️ 总结
+
+**增量迭代开发质量门禁与Git版本管理铁律**确保AI在完成阶段性开发任务或编写300行代码后：
+
+1. ⏸️ **立即停止编码**
+2. 🔍 **执行五重强制质量门禁检查**
+3. ✅ **质量检查通过**
+4. 🔄 **先拉取远程最新代码**
+5. 🚀 **再推送到远程仓库**
+6. ✅ **验证同步完整性**
+7. 🚀 **继续下一阶段开发**
+
+**🔥 这是专家模式的核心执行铁律！确保每个开发阶段都经过严格的质量检查，代码安全同步到远程仓库！**
+
+**⚡ 停止编码！质量检查！先拉后推！验证同步！继续开发！增量迭代永不停歇！**
