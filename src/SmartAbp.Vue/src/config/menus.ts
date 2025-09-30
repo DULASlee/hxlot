@@ -1,4 +1,5 @@
 import type { MenuConfig, MenuItem, PageMenuItem } from "@/types/menu"
+import { i18n } from "@/plugins/i18n"
 
 /**
  * SmartAbp 完整菜单配置
@@ -309,6 +310,22 @@ export const menuConfig: MenuConfig = {
           meta: {
             title: "系统设置",
             menuKey: "admin-settings",
+          },
+        },
+        {
+          key: "admin-performance",
+          title: i18n.global.t('menu.performanceMonitor'),
+          icon: "fas fa-tachometer-alt",
+          type: "page",
+          path: "/Admin/performance",
+          component: "@/views/system/PerformanceMonitorView.vue",
+          order: 5,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN, ROLES.GUEST],
+          closable: true,
+          meta: {
+            title: i18n.global.t('menu.performanceMonitor'),
+            menuKey: "admin-performance",
           },
         },
       ],

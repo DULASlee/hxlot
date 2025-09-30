@@ -52,6 +52,7 @@
     "sfcCompiler": "SFC编译器",
     "themeCustomization": "主题定制",
     "performanceMonitor": "性能监控",
+    "admin-performance": "性能监控",
     "divider": {
       "business": "业务功能分割线",
       "system": "系统管理分割线"

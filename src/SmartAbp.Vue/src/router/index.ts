@@ -198,6 +198,16 @@ const routes: RouteRecordRaw[] = [
         component: SettingsView,
         meta: { title: "系统设置", menuKey: "admin-settings" },
       },
+      {
+        path: "performance",
+        name: "AdminPerformance",
+        component: () => import("@/views/system/PerformanceMonitorView.vue"),
+        meta: { 
+          title: i18n.global.t('menu.performanceMonitor'), 
+          menuKey: "admin-performance",
+          requiredRoles: ["admin", "guest"]
+        },
+      },
     ],
   },
   // 测试页面

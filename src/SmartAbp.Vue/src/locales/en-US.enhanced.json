@@ -52,6 +52,7 @@
     "sfcCompiler": "SFC Compiler",
     "themeCustomization": "Theme Customization",
     "performanceMonitor": "Performance Monitor",
+    "admin-performance": "Performance Monitor",
     "divider": {
       "business": "Business Features Divider",
       "system": "System Management Divider"
