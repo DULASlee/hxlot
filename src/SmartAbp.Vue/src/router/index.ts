@@ -3,6 +3,7 @@ import SmartAbpLayout from "@/components/layout/SmartAbpLayout.vue"
 import LoginView from "@/views/auth/Login.vue"
 import { useAuthStore } from "@/stores"
 import { logger } from "@/utils/logger"
+import { ElMessage } from "element-plus"
 
 // 动态导入页面组件
 const DashboardView = () => import("@/views/common/DashboardView.vue")
@@ -434,7 +435,7 @@ const router = createRouter({
   routes,
 })
 
-// 路由守卫 - 基础认证检查
+// 路由守卫 - 增强版认证和权限检查
 router.beforeEach(async (to, from, next) => {
   logger.debug(`[路由守卫] 从 ${from.path} 跳转到 ${to.path}`)
 
@@ -442,13 +443,13 @@ router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   const isLoggedIn = authStore.isAuthenticated
 
-  // 已登录用户尝试访问登录页：重定向到工作台
+  // 1. 登录状态检查：已登录用户尝试访问登录页，重定向到工作台
   if (to.name === "Login" && isLoggedIn) {
     logger.debug("[路由守卫] 用户已登录，重定向到工作台")
     return next({ name: "Dashboard" })
   }
 
-  // 需要认证但未登录：重定向到登录页
+  // 2. 认证检查：需要认证但未登录，重定向到登录页
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
   if (requiresAuth && !isLoggedIn) {
     logger.debug("[路由守卫] 需要认证但未登录，重定向到登录页")
@@ -458,7 +459,29 @@ router.beforeEach(async (to, from, next) => {
     })
   }
 
-  // 处理根路径：根据登录状态重定向
+  // 3. 角色权限检查（新增）：检查用户是否具有所需角色
+  const requiredRoles = to.meta.requiredRoles as string[] | undefined
+  if (requiredRoles && requiredRoles.length > 0 && isLoggedIn) {
+    const userRoles = authStore.userInfo?.roles || []
+    const hasPermission = requiredRoles.some(role => userRoles.includes(role))
+    
+    if (!hasPermission) {
+      logger.warn(
+        `[路由守卫] 用户权限不足 - 需要角色: ${requiredRoles.join(', ')}, 当前角色: ${userRoles.join(', ')}`
+      )
+      ElMessage.warning({
+        message: '您没有访问该页面的权限',
+        duration: 3000,
+        showClose: true
+      })
+      // 权限不足时重定向到工作台，而不是显示403页面
+      return next({ name: 'Dashboard' })
+    }
+    
+    logger.debug(`[路由守卫] 角色权限检查通过 - 用户角色: ${userRoles.join(', ')}`)
+  }
+
+  // 4. 根路径处理：根据登录状态重定向
   if (to.path === "/") {
     if (isLoggedIn) {
       logger.debug("[路由守卫] 根路径重定向到工作台")
