@@ -9,10 +9,13 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AuthExample: typeof import('./src/components/auth/AuthExample.vue')['default']
+    DashboardIcon: typeof import('./src/components/icons/enterprise/DashboardIcon.vue')['default']
     EnhancedStateMachine: typeof import('./src/components/lowcode/EnhancedStateMachine.vue')['default']
+    EnterpriseIconSystem: typeof import('./src/components/icons/EnterpriseIconSystem.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
+    IconGallery: typeof import('./src/components/icons/IconGallery.vue')['default']
     IconGallerySimple: typeof import('./src/components/icons/IconGallerySimple.vue')['default']
     IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
@@ -21,6 +24,7 @@ declare module 'vue' {
     LogoutConfirmDialog: typeof import('./src/components/common/LogoutConfirmDialog.vue')['default']
     LogSearchFilter: typeof import('./src/components/log/LogSearchFilter.vue')['default']
     LogViewer: typeof import('./src/components/log/LogViewer.vue')['default']
+    LowCodeIcon: typeof import('./src/components/icons/enterprise/LowCodeIcon.vue')['default']
     MDIContainer: typeof import('./src/components/ui/MDIContainer.vue')['default']
     ModuleLoadingState: typeof import('./src/components/common/ModuleLoadingState.vue')['default']
     OptimizedDataTable: typeof import('./src/components/performance/OptimizedDataTable.vue')['default']
@@ -36,5 +40,6 @@ declare module 'vue' {
     StudioSidebar: typeof import('./src/components/layout/StudioSidebar.vue')['default']
     TabsContainer: typeof import('./src/components/ui/TabsContainer.vue')['default']
     ThemeSwitcher: typeof import('./src/components/theme/ThemeSwitcher.vue')['default']
+    UserIcon: typeof import('./src/components/icons/enterprise/UserIcon.vue')['default']
   }
 }
