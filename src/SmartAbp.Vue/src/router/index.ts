@@ -203,7 +203,7 @@ const routes: RouteRecordRaw[] = [
         name: "AdminPerformance",
         component: () => import("@/views/system/PerformanceMonitorView.vue"),
         meta: { 
-          title: i18n.global.t('menu.performanceMonitor'), 
+          title: "性能监控", 
           menuKey: "admin-performance",
           requiredRoles: ["admin", "guest"]
         },

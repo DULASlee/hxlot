@@ -1,5 +1,4 @@
 import type { MenuConfig, MenuItem, PageMenuItem } from "@/types/menu"
-import { i18n } from "@/plugins/i18n"
 
 /**
  * SmartAbp 完整菜单配置
@@ -314,7 +313,7 @@ export const menuConfig: MenuConfig = {
         },
         {
           key: "admin-performance",
-          title: i18n.global.t('menu.performanceMonitor'),
+          title: "性能监控",
           icon: "fas fa-tachometer-alt",
           type: "page",
           path: "/Admin/performance",
@@ -324,7 +323,7 @@ export const menuConfig: MenuConfig = {
           requiredRoles: [ROLES.ADMIN, ROLES.GUEST],
           closable: true,
           meta: {
-            title: i18n.global.t('menu.performanceMonitor'),
+            title: "性能监控",
             menuKey: "admin-performance",
           },
         },
@@ -414,7 +413,7 @@ export const menuConfig: MenuConfig = {
     {
       key: "lowcode-studio",
       title: "低代码工作台",
-      icon: "🧩",
+      icon: "fas fa-cubes",
       type: "folder",
       path: "/lowcode",
       order: 8,
@@ -586,22 +585,7 @@ export const menuConfig: MenuConfig = {
             keepAlive: true,
           },
         },
-        {
-          key: "performance-monitor",
-          title: "性能监控",
-          icon: "fas fa-tachometer-alt",
-          type: "page",
-          path: "/CodeGen/performance",
-          component: "@/views/codegen/PerformanceDashboard.vue",
-          order: 5,
-          visible: true,
-          requiredRoles: [ROLES.ADMIN, ROLES.GUEST],
-          closable: true,
-          meta: {
-            title: "性能监控中心",
-            menuKey: "performance-monitor",
-          },
-        },
+        // 性能监控已移至系统管理菜单，此处不再重复
       ],
     },
 
