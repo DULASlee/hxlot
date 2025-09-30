@@ -27,7 +27,10 @@ const routes: RouteRecordRaw[] = [
     path: "/login",
     name: "Login",
     component: LoginView,
-    meta: { requiresAuth: false },
+    meta: { 
+      title: "登录",
+      requiresAuth: false 
+    },
   },
   {
     path: "/test/login",
@@ -39,7 +42,10 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/",
     redirect: "/dashboard",
-    meta: { requiresAuth: false },
+    meta: { 
+      title: "首页",
+      requiresAuth: false 
+    },
   },
   // 工作台页面
   {
