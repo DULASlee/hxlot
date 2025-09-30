@@ -101,7 +101,8 @@ import App from "./App.vue"
 import router from "./router"
 import { logger } from "./utils/logger"
 import { i18n } from "./plugins/i18n"
-// import { createEnterpriseIconSystem } from "./plugins/enterpriseIcons" // TODO: 企业图标系统待创建
+import { createEnterpriseIconSystem } from "./plugins/enterpriseIcons"
+import { ElMessage } from "element-plus"
 // 低代码设计器 store 暂未对外导出，先移除硬依赖
 
 // Highlight.js for code syntax highlighting
@@ -165,8 +166,45 @@ if (storesFactory && typeof storesFactory === "object") {
 
 const app = createApp(App)
 
-// 🎨 配置企业级图标系统 (暂时注释，待实现)
-/* const enterpriseIconSystem = createEnterpriseIconSystem({
+// 🛡️ 配置全局错误处理
+app.config.errorHandler = (err, instance, info) => {
+  console.error('[Vue Global Error]', {
+    error: err,
+    componentName: instance?.$options.name || 'Unknown',
+    info
+  })
+  
+  // 记录到日志系统
+  logger.error('Vue组件错误', {
+    error: err,
+    component: instance?.$options.name || 'Unknown',
+    lifecycle: info,
+    stack: (err as Error)?.stack
+  })
+  
+  // 在开发环境显示友好的错误提示
+  if (import.meta.env.DEV) {
+    ElMessage.error({
+      message: `组件错误: ${(err as Error)?.message || '未知错误'}`,
+      duration: 5000,
+      showClose: true
+    })
+  }
+}
+
+// 配置全局警告处理（开发环境）
+if (import.meta.env.DEV) {
+  app.config.warnHandler = (msg, instance, trace) => {
+    console.warn('[Vue Warning]', {
+      message: msg,
+      component: instance?.$options.name || 'Unknown',
+      trace
+    })
+  }
+}
+
+// 🎨 配置企业级图标系统
+const enterpriseIconSystem = createEnterpriseIconSystem({
   theme: {
     name: 'smartabp-enterprise',
     colors: {
@@ -185,9 +223,9 @@ const app = createApp(App)
   ],
   enableCache: true,
   debug: import.meta.env.DEV
-}) */
+})
 
-app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin) // .use(enterpriseIconSystem) TODO: 企业图标系统待实现
+app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin).use(enterpriseIconSystem)
 
 async function bootstrap() {
   // 低代码：启用IndexedDB持久化并冷启动加载
