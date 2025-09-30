@@ -260,6 +260,7 @@ export const useAuthStore = defineStore(
     persist: {
       key: 'smartabp-auth',
       storage: localStorage,
+      // @ts-ignore - paths配置类型定义问题
       paths: ['token', 'refreshToken', 'userInfo']
     }
   },
