@@ -466,32 +466,27 @@ export class DataSynchronizer {
 
   /**
    * Clear synced changes
+   * @deprecated 未使用的方法，已移除以消除TypeScript警告
    */
-  private clearSyncedItems(count: number): void {
-    try {
-      if (count <= 0) return
-
-      if (count >= this.pendingChanges.length) {
-        this.pendingChanges = []
-        console.log(`🧹 Cleared all ${count} synced changes`)
-      } else {
-        // 清除前N个变更（假设它们已成功同步）
-        this.pendingChanges = this.pendingChanges.slice(count)
-        console.log(`🧹 Cleared ${count} synced changes, ${this.pendingChanges.length} remaining`)
-      }
-    } catch (error) {
-      console.error("[clearSyncedChanges] 清理已同步变更失败:", error)
-
-      const errorMessage = error instanceof Error ? error.message : String(error)
-
-      ElMessage.error({
-        message: `Failed to clear synced changes: ${errorMessage}`,
-        duration: 3000,
-      })
-
-      // 不抛出错误，因为清理失败通常不是致命错误
-    }
-  }
+  // private clearSyncedItems(count: number): void {
+  //   try {
+  //     if (count <= 0) return
+  //     if (count >= this.pendingChanges.length) {
+  //       this.pendingChanges = []
+  //       console.log(`🧹 Cleared all ${count} synced changes`)
+  //     } else {
+  //       this.pendingChanges = this.pendingChanges.slice(count)
+  //       console.log(`🧹 Cleared ${count} synced changes, ${this.pendingChanges.length} remaining`)
+  //     }
+  //   } catch (error) {
+  //     console.error("[clearSyncedChanges] 清理已同步变更失败:", error)
+  //     const errorMessage = error instanceof Error ? error.message : String(error)
+  //     ElMessage.error({
+  //       message: `Failed to clear synced changes: ${errorMessage}`,
+  //       duration: 3000,
+  //     })
+  //   }
+  // }
 
   /**
    * Schedule sync with debouncing

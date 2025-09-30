@@ -235,8 +235,8 @@ export class MemoryMonitor {
 // Auto Cleanup Decorator with error handling
 export function AutoCleanup<T extends { new (...args: any[]): {} }>(constructor: T) {
   return class extends constructor {
-    private cleanupFunctions: Array<() => void> = []
-    private originalUnmount: (() => void) | null = null
+    cleanupFunctions: Array<() => void> = []
+    originalUnmount: (() => void) | null = null
 
     constructor(...args: any[]) {
       super(...args)
@@ -272,7 +272,7 @@ export function AutoCleanup<T extends { new (...args: any[]): {} }>(constructor:
       }
     }
 
-    private runCleanup() {
+    runCleanup() {
       try {
         this.cleanupFunctions.forEach((fn, index) => {
           try {
