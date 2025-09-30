@@ -1,6 +1,6 @@
 import { createI18n } from "vue-i18n"
-import zhCN from "../locales/zh-CN.json"
-import enUS from "../locales/en-US.json"
+import zhCN from "../locales/zh-CN.enhanced.json"
+import enUS from "../locales/en-US.enhanced.json"
 
 const STORAGE_KEY = "smartabp.locale"
 
@@ -19,6 +19,7 @@ export const i18n = createI18n({
     "zh-CN": zhCN,
     "en-US": enUS,
   },
+  globalInjection: true, // 允许在组件外使用$t
 })
 
 export const setLocale = (locale: "zh-CN" | "en-US") => {

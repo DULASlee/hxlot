@@ -4,6 +4,7 @@ import LoginView from "@/views/auth/Login.vue"
 import { useAuthStore } from "@/stores"
 import { logger } from "@/utils/logger"
 import { ElMessage } from "element-plus"
+import { i18n } from "@/plugins/i18n"
 
 // 动态导入页面组件
 const DashboardView = () => import("@/views/common/DashboardView.vue")
@@ -470,7 +471,7 @@ router.beforeEach(async (to, from, next) => {
         `[路由守卫] 用户权限不足 - 需要角色: ${requiredRoles.join(', ')}, 当前角色: ${userRoles.join(', ')}`
       )
       ElMessage.warning({
-        message: '您没有访问该页面的权限',
+        message: i18n.global.t('permission.noAccess'),
         duration: 3000,
         showClose: true
       })
@@ -494,6 +495,20 @@ router.beforeEach(async (to, from, next) => {
 
   logger.debug("[路由守卫] 允许访问")
   next()
+})
+
+// 路由守卫 - 记录路由切换性能
+router.afterEach(async (to) => {
+  const startTime = performance.now()
+  
+  // 动态导入性能监控（避免循环依赖）
+  const { performanceMonitor } = await import("@/utils/performance/monitor")
+  
+  // 等待下一帧后记录，此时组件应该已经渲染完成
+  requestAnimationFrame(() => {
+    const duration = performance.now() - startTime
+    performanceMonitor.recordRoutePerformance(to.path, duration)
+  })
 })
 
 // 多标签页状态同步

@@ -185,7 +185,9 @@ app.config.errorHandler = (err, instance, info) => {
   // 在开发环境显示友好的错误提示
   if (import.meta.env.DEV) {
     ElMessage.error({
-      message: `组件错误: ${(err as Error)?.message || '未知错误'}`,
+      message: i18n.global.t('error.componentError', { 
+        message: (err as Error)?.message || i18n.global.t('error.unknownError')
+      }),
       duration: 5000,
       showClose: true
     })
@@ -246,12 +248,30 @@ async function bootstrap() {
     logger.warn("[LowCode] 启用内容缓存持久化失败（将仅使用内存缓存）", { error: e })
   }
 
+  // 初始化性能监控
+  const { performanceMonitor } = await import("./utils/performance/monitor")
+  performanceMonitor.init()
+  logger.info("[Performance Monitor] 性能监控已启动")
+
   // 初始化主题
   // 主题初始化暂时跳过外部store强依赖
 
   // 初始化认证状态（占位）
 
   app.mount("#app")
+
+  // 首屏加载完成后记录性能指标
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const metrics = performanceMonitor.getMetrics()
+      const cwv = performanceMonitor.getCoreWebVitals()
+      logger.info("[Performance Monitor] 首屏加载完成", {
+        metrics,
+        coreWebVitals: cwv,
+        rating: cwv.rating
+      })
+    }, 0)
+  })
 }
 
 void bootstrap()
