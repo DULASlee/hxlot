@@ -101,7 +101,7 @@ import App from "./App.vue"
 import router from "./router"
 import { logger } from "./utils/logger"
 import { i18n } from "./plugins/i18n"
-import { createEnterpriseIconSystem } from "./plugins/enterpriseIcons"
+// import { createEnterpriseIconSystem } from "./plugins/enterpriseIcons" // TODO: 企业图标系统待创建
 // 低代码设计器 store 暂未对外导出，先移除硬依赖
 
 // Highlight.js for code syntax highlighting
@@ -165,8 +165,8 @@ if (storesFactory && typeof storesFactory === "object") {
 
 const app = createApp(App)
 
-// 🎨 配置企业级图标系统
-const enterpriseIconSystem = createEnterpriseIconSystem({
+// 🎨 配置企业级图标系统 (暂时注释，待实现)
+/* const enterpriseIconSystem = createEnterpriseIconSystem({
   theme: {
     name: 'smartabp-enterprise',
     colors: {
@@ -185,9 +185,9 @@ const enterpriseIconSystem = createEnterpriseIconSystem({
   ],
   enableCache: true,
   debug: import.meta.env.DEV
-})
+}) */
 
-app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin).use(enterpriseIconSystem)
+app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin) // .use(enterpriseIconSystem) TODO: 企业图标系统待实现
 
 async function bootstrap() {
   // 低代码：启用IndexedDB持久化并冷启动加载

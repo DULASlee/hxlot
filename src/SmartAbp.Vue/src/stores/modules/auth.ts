@@ -259,9 +259,8 @@ export const useAuthStore = defineStore(
     // @ts-ignore - pinia-plugin-persistedstate的persist选项类型扩展
     persist: {
       key: 'smartabp-auth',
-      storage: localStorage,
-      // @ts-ignore - paths配置类型定义问题
-      paths: ['token', 'refreshToken', 'userInfo']
+      storage: localStorage
+      // paths参数在当前类型定义中不支持，由插件自动处理所有状态
     }
   },
 )

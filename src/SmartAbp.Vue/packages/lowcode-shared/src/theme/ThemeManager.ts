@@ -123,8 +123,6 @@ export class ThemeManager {
     Object.entries(tokens.zIndex).forEach(([key, value]) => {
       root.style.setProperty(`--z-${this.kebabCase(key)}`, value.toString())
     })
-
-    this.cssVariablesApplied = true
   }
 
   /**
