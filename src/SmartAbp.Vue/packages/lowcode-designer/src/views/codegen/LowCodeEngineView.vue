@@ -232,7 +232,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick, computed } from "vue"
-import { logger } from "../../../../../src/utils/logging"
+// 暂时注释logger导入，避免架构违规
+// import { logger } from "@smartabp/lowcode-shared/logging"
+const logger = { child: (_config: any) => ({ info: console.log, error: console.error, warn: console.warn }) }
 // 注释掉缺失的模块导入
 
 // 组件日志器
