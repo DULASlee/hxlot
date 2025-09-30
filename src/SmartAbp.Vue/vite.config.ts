@@ -2,6 +2,7 @@ import { defineConfig } from "vite"
 import vue from "@vitejs/plugin-vue"
 import vueDevtools from "vite-plugin-vue-devtools"
 import Icons from "unplugin-icons/vite"
+import IconsResolver from "unplugin-icons/resolver"
 import AutoImport from "unplugin-auto-import/vite"
 import Components from "unplugin-vue-components/vite"
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
@@ -26,7 +27,12 @@ export default defineConfig({
       resolvers: [
         ElementPlusResolver({
           importStyle: false,
-        })
+        }),
+        // 🎨 自动导入图标组件
+        IconsResolver({
+          prefix: 'icon', // 图标组件前缀
+          enabledCollections: ['ep', 'carbon', 'mdi', 'fa'], // 启用的图标集
+        }),
       ],
       dts: true,
     }),
@@ -36,6 +42,17 @@ export default defineConfig({
       scale: 1,
       defaultClass: "",
       defaultStyle: "",
+      // 🎨 图标集配置
+      collections: {
+        // Element Plus Icons
+        ep: () => import('@iconify-json/ep/icons.json').then(i => i.default),
+        // Carbon Icons (IBM Design)
+        carbon: () => import('@iconify-json/carbon/icons.json').then(i => i.default),
+        // Material Design Icons
+        mdi: () => import('@iconify-json/mdi/icons.json').then(i => i.default),
+        // Font Awesome
+        fa: () => import('@iconify-json/fa/icons.json').then(i => i.default),
+      },
     }),
   ],
   resolve: {

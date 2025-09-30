@@ -35,11 +35,11 @@ export const useAuthStore = defineStore(
   // 方法
   const setToken = (accessToken: string, refreshTokenValue?: string) => {
     token.value = accessToken
-      localStorage.setItem("smartabp_token", accessToken)
+    // 🗄️ 持久化由pinia-plugin-persistedstate自动处理
 
     if (refreshTokenValue) {
       refreshToken.value = refreshTokenValue
-        localStorage.setItem("smartabp_refresh_token", refreshTokenValue)
+      // 🗄️ 持久化由pinia-plugin-persistedstate自动处理
     }
   }
 
@@ -50,16 +50,14 @@ export const useAuthStore = defineStore(
       }
 
     userInfo.value = user
-      localStorage.setItem("smartabp_user", JSON.stringify(user))
+    // 🗄️ 持久化由pinia-plugin-persistedstate自动处理
   }
 
   const clearAuth = () => {
     token.value = null
     refreshToken.value = null
     userInfo.value = null
-      localStorage.removeItem("smartabp_token")
-      localStorage.removeItem("smartabp_refresh_token")
-      localStorage.removeItem("smartabp_user")
+    // 🗄️ 清除由pinia-plugin-persistedstate自动处理
   }
 
   const getAuthHeader = () => {
@@ -257,6 +255,11 @@ export const useAuthStore = defineStore(
     }
   },
   {
-    // Pinia 纯组合式不支持 persist 选项；保持手动持久化
+    // 🗄️ 持久化配置
+    persist: {
+      key: 'smartabp-auth',
+      storage: localStorage,
+      paths: ['token', 'refreshToken', 'userInfo']
+    }
   },
 )

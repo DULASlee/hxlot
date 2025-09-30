@@ -93,6 +93,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 import { createApp } from "vue"
 import { createPinia } from "pinia"
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate"
 import ElementPlus from "element-plus"
 import "element-plus/dist/index.css"
 import App from "./App.vue"
@@ -143,8 +144,10 @@ if (Array.isArray(generatedMenus) && generatedMenus.length > 0) {
   } catch (_) {}
 }
 
-// 注册pinia stores（若有）
+// 🗄️ 配置Pinia持久化插件
 const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
+
 const storesFactory = generatedStores?.()
 if (storesFactory && typeof storesFactory === "object") {
   // 占位
