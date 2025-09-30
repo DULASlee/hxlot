@@ -663,6 +663,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick, type Ref } from "vue"
 import { ElMessage } from "element-plus"
+// 添加NodeJS类型定义
+/// <reference types="node" />
 // 注释掉缺失的模块导入
 // 🚨 协作和AI相关类型导入已移除 - 遵循低代码引擎开发铁律
 
@@ -1349,7 +1351,7 @@ const toggleRealTimeData = () => {
   }
 }
 
-let realTimeDataInterval: NodeJS.Timeout | null = null
+let realTimeDataInterval: number | null = null
 
 const startRealTimeDataBinding = () => {
   if (realTimeDataInterval) return
