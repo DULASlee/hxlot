@@ -93,7 +93,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 import { createApp } from "vue"
 import { createPinia } from "pinia"
-// @ts-ignore - pinia-plugin-persistedstate类型定义问题
+// @ts-ignore - pinia-plugin-persistedstate包存在但类型定义不完整
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate"
 import ElementPlus from "element-plus"
 import "element-plus/dist/index.css"

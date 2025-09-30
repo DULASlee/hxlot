@@ -1,6 +1,6 @@
 import { defineStore } from "pinia"
 import { ref } from "vue"
-// import { databaseApi } from "@smartabp/lowcode-api" // TODO: databaseApi不存在，暂时注释
+import { databaseApi } from "@smartabp/lowcode-api"
 
 // Type definition
 interface Template {
@@ -18,8 +18,7 @@ export const useTemplatesStore = defineStore("templates", () => {
     isLoading.value = true
     error.value = null
     try {
-      // TODO: 使用正确的API替换databaseApi
-      templates.value = [] // await databaseApi.getTemplates()
+      templates.value = await databaseApi.getTemplates()
     } catch (e: any) {
       error.value = e
     } finally {

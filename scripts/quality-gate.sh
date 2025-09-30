@@ -4,7 +4,13 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
+# 📍 确保在项目根目录执行
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
+
 echo "🛡️  Starting AI Architecture Guardian Quality Check..."
+echo "📏  Project Root: $PROJECT_ROOT"
 
 # --- 1. Architecture Cleanliness Check ---
 echo "🔎  Checking for illegal cross-package imports..."
@@ -36,10 +42,10 @@ fi
 # --- 3. Linting and Type Checking ---
 # Note: This runs in the Vue project directory
 echo "🔎  Running linter..."
-cd src/SmartAbp.Vue && cd src/SmartAbp.Vue && npm run lint # Use --quiet to reduce verbose output on success
+cd "$PROJECT_ROOT/src/SmartAbp.Vue" && npm run lint # Use --quiet to reduce verbose output on success
 
 echo "🔎  Running TypeScript type checker..."
-cd src/SmartAbp.Vue && npm run type-check
+cd "$PROJECT_ROOT/src/SmartAbp.Vue" && npm run type-check
 
 echo "✅  All quality gates passed! Your code is ready to be committed."
 exit 0
