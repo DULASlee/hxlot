@@ -262,250 +262,258 @@ export class EnterpriseIconManager {
 
   // 💼 注册业务管理图标
   private registerBusinessIcons(): void {
-    const businessIcons: Omit<IconConfig, 'category'>[] = [
-      {
-        name: 'dashboard',
-        component: () => import('./enterprise/DashboardIcon.vue'),
-        tags: ['仪表板', '概览', '首页'],
-        description: '工作台仪表板图标'
-      },
-      {
-        name: 'project',
-        component: () => import('./enterprise/ProjectIcon.vue'),
-        tags: ['项目', '管理', '业务'],
-        description: '项目管理图标'
-      },
-      {
-        name: 'order',
-        component: () => import('./enterprise/OrderIcon.vue'),
-        tags: ['订单', '购物车', '交易'],
-        description: '订单管理图标'
-      },
-      {
-        name: 'customer',
-        component: () => import('./enterprise/CustomerIcon.vue'),
-        tags: ['客户', '用户群', '业务'],
-        description: '客户管理图标'
-      }
-    ]
+    // TODO: 待实现企业图标组件文件
+    // const businessIcons: Omit<IconConfig, 'category'>[] = [
+    //   {
+    //     name: 'dashboard',
+    //     component: () => import('./enterprise/DashboardIcon.vue'),
+    //     tags: ['仪表板', '概览', '首页'],
+    //     description: '工作台仪表板图标'
+    //   },
+    //   {
+    //     name: 'project',
+    //     component: () => import('./enterprise/ProjectIcon.vue'),
+    //     tags: ['项目', '管理', '业务'],
+    //     description: '项目管理图标'
+    //   },
+    //   {
+    //     name: 'order',
+    //     component: () => import('./enterprise/OrderIcon.vue'),
+    //     tags: ['订单', '购物车', '交易'],
+    //     description: '订单管理图标'
+    //   },
+    //   {
+    //     name: 'customer',
+    //     component: () => import('./enterprise/CustomerIcon.vue'),
+    //     tags: ['客户', '用户群', '业务'],
+    //     description: '客户管理图标'
+    //   }
+    // ]
 
-    businessIcons.forEach(icon => 
-      this.registerIcon({ ...icon, category: IconCategory.BUSINESS })
-    )
+    // businessIcons.forEach(icon => 
+    //   this.registerIcon({ ...icon, category: IconCategory.BUSINESS })
+    // )
   }
 
   // ⚙️ 注册系统管理图标
   private registerSystemIcons(): void {
-    const systemIcons: Omit<IconConfig, 'category'>[] = [
-      {
-        name: 'settings',
-        component: () => import('./enterprise/SettingsIcon.vue'),
-        tags: ['设置', '配置', '系统'],
-        description: '系统设置图标'
-      },
-      {
-        name: 'logs',
-        component: () => import('./enterprise/LogsIcon.vue'),
-        tags: ['日志', '记录', '审计'],
-        description: '系统日志图标'
-      },
-      {
-        name: 'monitor',
-        component: () => import('./enterprise/MonitorIcon.vue'),
-        tags: ['监控', '性能', '状态'],
-        description: '系统监控图标'
-      }
-    ]
+    // TODO: 待实现企业图标组件文件
+    // const systemIcons: Omit<IconConfig, 'category'>[] = [
+    //   {
+    //     name: 'settings',
+    //     component: () => import('./enterprise/SettingsIcon.vue'),
+    //     tags: ['设置', '配置', '系统'],
+    //     description: '系统设置图标'
+    //   },
+    //   {
+    //     name: 'logs',
+    //     component: () => import('./enterprise/LogsIcon.vue'),
+    //     tags: ['日志', '记录', '审计'],
+    //     description: '系统日志图标'
+    //   },
+    //   {
+    //     name: 'monitor',
+    //     component: () => import('./enterprise/MonitorIcon.vue'),
+    //     tags: ['监控', '性能', '状态'],
+    //     description: '系统监控图标'
+    //   }
+    // ]
 
-    systemIcons.forEach(icon => 
-      this.registerIcon({ ...icon, category: IconCategory.SYSTEM })
-    )
+    // systemIcons.forEach(icon => 
+    //   this.registerIcon({ ...icon, category: IconCategory.SYSTEM })
+    // )
   }
 
   // 👥 注册用户权限图标
   private registerUserIcons(): void {
-    const userIcons: Omit<IconConfig, 'category'>[] = [
-      {
-        name: 'user',
-        component: () => import('./enterprise/UserIcon.vue'),
-        tags: ['用户', '个人', '账户'],
-        description: '用户图标'
-      },
-      {
-        name: 'role',
-        component: () => import('./enterprise/RoleIcon.vue'),
-        tags: ['角色', '权限', '管理'],
-        description: '角色管理图标'
-      },
-      {
-        name: 'security',
-        component: () => import('./enterprise/SecurityIcon.vue'),
-        tags: ['安全', '加密', '保护'],
-        description: '安全管理图标'
-      }
-    ]
+    // TODO: 待实现企业图标组件文件
+    // const userIcons: Omit<IconConfig, 'category'>[] = [
+    //   {
+    //     name: 'user',
+    //     component: () => import('./enterprise/UserIcon.vue'),
+    //     tags: ['用户', '个人', '账户'],
+    //     description: '用户图标'
+    //   },
+    //   {
+    //     name: 'role',
+    //     component: () => import('./enterprise/RoleIcon.vue'),
+    //     tags: ['角色', '权限', '管理'],
+    //     description: '角色管理图标'
+    //   },
+    //   {
+    //     name: 'security',
+    //     component: () => import('./enterprise/SecurityIcon.vue'),
+    //     tags: ['安全', '加密', '保护'],
+    //     description: '安全管理图标'
+    //   }
+    // ]
 
-    userIcons.forEach(icon => 
-      this.registerIcon({ ...icon, category: IconCategory.USER })
-    )
+    // userIcons.forEach(icon => 
+    //   this.registerIcon({ ...icon, category: IconCategory.USER })
+    // )
   }
 
   // 📋 注册操作动作图标
   private registerActionIcons(): void {
-    const actionIcons: Omit<IconConfig, 'category'>[] = [
-      {
-        name: 'add',
-        component: () => import('./enterprise/AddIcon.vue'),
-        tags: ['添加', '新建', '创建'],
-        description: '添加操作图标'
-      },
-      {
-        name: 'edit',
-        component: () => import('./enterprise/EditIcon.vue'),
-        tags: ['编辑', '修改', '更新'],
-        description: '编辑操作图标'
-      },
-      {
-        name: 'delete',
-        component: () => import('./enterprise/DeleteIcon.vue'),
-        tags: ['删除', '移除', '清除'],
-        description: '删除操作图标'
-      },
-      {
-        name: 'search',
-        component: () => import('./enterprise/SearchIcon.vue'),
-        tags: ['搜索', '查找', '检索'],
-        description: '搜索操作图标'
-      },
-      {
-        name: 'refresh',
-        component: () => import('./enterprise/RefreshIcon.vue'),
-        tags: ['刷新', '重新加载', '更新'],
-        description: '刷新操作图标'
-      }
-    ]
+    // TODO: 待实现企业图标组件文件
+    // const actionIcons: Omit<IconConfig, 'category'>[] = [
+    //   {
+    //     name: 'add',
+    //     component: () => import('./enterprise/AddIcon.vue'),
+    //     tags: ['添加', '新建', '创建'],
+    //     description: '添加操作图标'
+    //   },
+    //   {
+    //     name: 'edit',
+    //     component: () => import('./enterprise/EditIcon.vue'),
+    //     tags: ['编辑', '修改', '更新'],
+    //     description: '编辑操作图标'
+    //   },
+    //   {
+    //     name: 'delete',
+    //     component: () => import('./enterprise/DeleteIcon.vue'),
+    //     tags: ['删除', '移除', '清除'],
+    //     description: '删除操作图标'
+    //   },
+    //   {
+    //     name: 'search',
+    //     component: () => import('./enterprise/SearchIcon.vue'),
+    //     tags: ['搜索', '查找', '检索'],
+    //     description: '搜索操作图标'
+    //   },
+    //   {
+    //     name: 'refresh',
+    //     component: () => import('./enterprise/RefreshIcon.vue'),
+    //     tags: ['刷新', '重新加载', '更新'],
+    //     description: '刷新操作图标'
+    //   }
+    // ]
 
-    actionIcons.forEach(icon => 
-      this.registerIcon({ ...icon, category: IconCategory.ACTION })
-    )
+    // actionIcons.forEach(icon => 
+    //   this.registerIcon({ ...icon, category: IconCategory.ACTION })
+    // )
   }
 
   // 📁 注册导航控制图标
   private registerNavigationIcons(): void {
-    const navigationIcons: Omit<IconConfig, 'category'>[] = [
-      {
-        name: 'menu',
-        component: () => import('./enterprise/MenuIcon.vue'),
-        tags: ['菜单', '导航', '列表'],
-        description: '菜单导航图标'
-      },
-      {
-        name: 'close',
-        component: () => import('./enterprise/CloseIcon.vue'),
-        tags: ['关闭', '取消', '退出'],
-        description: '关闭操作图标'
-      },
-      {
-        name: 'expand',
-        component: () => import('./enterprise/ExpandIcon.vue'),
-        tags: ['展开', '扩展', '显示'],
-        description: '展开控制图标'
-      }
-    ]
+    // TODO: 待实现企业图标组件文件
+    // const navigationIcons: Omit<IconConfig, 'category'>[] = [
+    //   {
+    //     name: 'menu',
+    //     component: () => import('./enterprise/MenuIcon.vue'),
+    //     tags: ['菜单', '导航', '列表'],
+    //     description: '菜单导航图标'
+    //   },
+    //   {
+    //     name: 'close',
+    //     component: () => import('./enterprise/CloseIcon.vue'),
+    //     tags: ['关闭', '取消', '退出'],
+    //     description: '关闭操作图标'
+    //   },
+    //   {
+    //     name: 'expand',
+    //     component: () => import('./enterprise/ExpandIcon.vue'),
+    //     tags: ['展开', '扩展', '显示'],
+    //     description: '展开控制图标'
+    //   }
+    // ]
 
-    navigationIcons.forEach(icon => 
-      this.registerIcon({ ...icon, category: IconCategory.NAVIGATION })
-    )
+    // navigationIcons.forEach(icon => 
+    //   this.registerIcon({ ...icon, category: IconCategory.NAVIGATION })
+    // )
   }
 
   // 🔔 注册状态提示图标
   private registerStatusIcons(): void {
-    const statusIcons: Omit<IconConfig, 'category'>[] = [
-      {
-        name: 'success',
-        component: () => import('./enterprise/SuccessIcon.vue'),
-        tags: ['成功', '完成', '正确'],
-        description: '成功状态图标'
-      },
-      {
-        name: 'warning',
-        component: () => import('./enterprise/WarningIcon.vue'),
-        tags: ['警告', '注意', '提醒'],
-        description: '警告状态图标'
-      },
-      {
-        name: 'error',
-        component: () => import('./enterprise/ErrorIcon.vue'),
-        tags: ['错误', '失败', '异常'],
-        description: '错误状态图标'
-      },
-      {
-        name: 'loading',
-        component: () => import('./enterprise/LoadingIcon.vue'),
-        tags: ['加载', '等待', '处理'],
-        description: '加载状态图标'
-      }
-    ]
+    // TODO: 待实现企业图标组件文件
+    // const statusIcons: Omit<IconConfig, 'category'>[] = [
+    //   {
+    //     name: 'success',
+    //     component: () => import('./enterprise/SuccessIcon.vue'),
+    //     tags: ['成功', '完成', '正确'],
+    //     description: '成功状态图标'
+    //   },
+    //   {
+    //     name: 'warning',
+    //     component: () => import('./enterprise/WarningIcon.vue'),
+    //     tags: ['警告', '注意', '提醒'],
+    //     description: '警告状态图标'
+    //   },
+    //   {
+    //     name: 'error',
+    //     component: () => import('./enterprise/ErrorIcon.vue'),
+    //     tags: ['错误', '失败', '异常'],
+    //     description: '错误状态图标'
+    //   },
+    //   {
+    //     name: 'loading',
+    //     component: () => import('./enterprise/LoadingIcon.vue'),
+    //     tags: ['加载', '等待', '处理'],
+    //     description: '加载状态图标'
+    //   }
+    // ]
 
-    statusIcons.forEach(icon => 
-      this.registerIcon({ ...icon, category: IconCategory.STATUS })
-    )
+    // statusIcons.forEach(icon => 
+    //   this.registerIcon({ ...icon, category: IconCategory.STATUS })
+    // )
   }
 
   // 🛠️ 注册开发工具图标
   private registerToolIcons(): void {
-    const toolIcons: Omit<IconConfig, 'category'>[] = [
-      {
-        name: 'code',
-        component: () => import('./enterprise/CodeIcon.vue'),
-        tags: ['代码', '编程', '开发'],
-        description: '代码开发图标'
-      },
-      {
-        name: 'lowcode',
-        component: () => import('./enterprise/LowCodeIcon.vue'),
-        tags: ['低代码', '可视化', '拖拽'],
-        description: '低代码开发图标'
-      },
-      {
-        name: 'api',
-        component: () => import('./enterprise/ApiIcon.vue'),
-        tags: ['接口', 'API', '集成'],
-        description: 'API接口图标'
-      }
-    ]
+    // TODO: 待实现企业图标组件文件
+    // const toolIcons: Omit<IconConfig, 'category'>[] = [
+    //   {
+    //     name: 'code',
+    //     component: () => import('./enterprise/CodeIcon.vue'),
+    //     tags: ['代码', '编程', '开发'],
+    //     description: '代码开发图标'
+    //   },
+    //   {
+    //     name: 'lowcode',
+    //     component: () => import('./enterprise/LowCodeIcon.vue'),
+    //     tags: ['低代码', '可视化', '拖拽'],
+    //     description: '低代码开发图标'
+    //   },
+    //   {
+    //     name: 'api',
+    //     component: () => import('./enterprise/ApiIcon.vue'),
+    //     tags: ['接口', 'API', '集成'],
+    //     description: 'API接口图标'
+    //   }
+    // ]
 
-    toolIcons.forEach(icon => 
-      this.registerIcon({ ...icon, category: IconCategory.TOOL })
-    )
+    // toolIcons.forEach(icon => 
+    //   this.registerIcon({ ...icon, category: IconCategory.TOOL })
+    // )
   }
 
   // 📱 注册通用图标
   private registerCommonIcons(): void {
-    const commonIcons: Omit<IconConfig, 'category'>[] = [
-      {
-        name: 'home',
-        component: () => import('./enterprise/HomeIcon.vue'),
-        tags: ['首页', '主页', '起始'],
-        description: '首页图标'
-      },
-      {
-        name: 'folder',
-        component: () => import('./enterprise/FolderIcon.vue'),
-        tags: ['文件夹', '目录', '分类'],
-        description: '文件夹图标'
-      },
-      {
-        name: 'file',
-        component: () => import('./enterprise/FileIcon.vue'),
-        tags: ['文件', '文档', '资料'],
-        description: '文件图标'
-      }
-    ]
+    // TODO: 待实现企业图标组件文件
+    // const commonIcons: Omit<IconConfig, 'category'>[] = [
+    //   {
+    //     name: 'home',
+    //     component: () => import('./enterprise/HomeIcon.vue'),
+    //     tags: ['首页', '主页', '起始'],
+    //     description: '首页图标'
+    //   },
+    //   {
+    //     name: 'folder',
+    //     component: () => import('./enterprise/FolderIcon.vue'),
+    //     tags: ['文件夹', '目录', '分类'],
+    //     description: '文件夹图标'
+    //   },
+    //   {
+    //     name: 'file',
+    //     component: () => import('./enterprise/FileIcon.vue'),
+    //     tags: ['文件', '文档', '资料'],
+    //     description: '文件图标'
+    //   }
+    // ]
 
-    commonIcons.forEach(icon => 
-      this.registerIcon({ ...icon, category: IconCategory.COMMON })
-    )
+    // commonIcons.forEach(icon => 
+    //   this.registerIcon({ ...icon, category: IconCategory.COMMON })
+    // )
   }
 
   // 🎨 更新 CSS 变量
