@@ -29,7 +29,7 @@ interface CacheOptions {
   maxSize?: number
   defaultTTL?: number // in milliseconds
   version?: string
-  storage?: Storage | Map<string, any>
+  storage?: Storage | Map<string, any> // 支持Storage或Map作为存储
 }
 
 // Error handling utilities
@@ -157,7 +157,7 @@ const isStorageAvailable = (storage: Storage): boolean => {
  */
 export class CacheManager {
   private options: Required<CacheOptions>
-  private storage: Storage
+  private storage: Storage | Map<string, any> // 支持Storage或Map作为存储
   private memoryCache: Map<string, CacheItem> = new Map()
   private fallbackCache: Map<string, CacheItem> = new Map()
   private stats = {

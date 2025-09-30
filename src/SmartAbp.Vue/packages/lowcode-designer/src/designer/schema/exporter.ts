@@ -195,7 +195,7 @@ export class SchemaExporter {
         path: `/${this.options.moduleName.toLowerCase()}/${this.options.pageName.toLowerCase()}`,
         name: `${this.options.moduleName}${this.options.pageName}`,
         // 🔥 架构整洁修复：使用包内组件，保持黑盒原则
-        component: () => import('../../components/DraggableComponent.vue')
+        component: () => import('@smartabp/lowcode-designer/src/components/DraggableComponent.vue')
       }
     ]
 

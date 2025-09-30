@@ -233,11 +233,13 @@ export class DataSynchronizer {
 
       if (result.success) {
         // 清除已成功同步的变更
-        this.clearSyncedChanges(result.syncedItems || [])
+        // 确保syncedItems是字符串数组
+        const syncedItems = Array.isArray(result.syncedItems) ? result.syncedItems : []
+        this.clearSyncedChanges(syncedItems)
         this.retryCount = 0
         this.lastSyncTime = Date.now()
 
-        console.log(`✅ Data sync completed successfully. Synced ${result.syncedItems} items`)
+        console.log(`✅ Data sync completed successfully. Synced ${syncedItems.length} items`)
 
         if (result.conflicts.length > 0) {
           console.warn(`⚠️ ${result.conflicts.length} conflicts were resolved during sync`)
