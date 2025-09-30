@@ -33,16 +33,16 @@ MASTER_SECRET_TRIGGER = "专家模式"
 📋 **第一重爆雷：项目开发规范强制加载学习**
    🔧 **执行脚本**: read_file("docs/项目开发规范总览.md")
    🔧 **执行脚本**: list_dir(".cursor/rules") → 发现所有规则文件
-   🔧 **执行脚本**: read_file(".cursor/rules/0、专家模式执行铁律.mdc")
-   🔧 **执行脚本**: read_file(".cursor/rules/1、项目开发规则铁律.mdc")
-   🔧 **执行脚本**: read_file(".cursor/rules/2、增量开发与代码去重铁律.mdc")
-   🔧 **执行脚本**: read_file(".cursor/rules/3、架构整洁铁律.mdc")
-   🔧 **执行脚本**: read_file(".cursor/rules/4、代码修复核心功能保护铁律.mdc")
-   🔧 **执行脚本**: read_file(".cursor/rules/5、git推送与代码质量铁律.mdc")
-   🔧 **执行脚本**: read_file(".cursor/rules/样式规范铁律.mdc")
-   🔧 **执行脚本**: read_file(".cursor/rules/模版使用铁律.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/00_core_philosophy.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/01_code_standards.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/02_development_process.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/03_quality_guardian.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/04_code_quality_prohibitions.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/05_增量迭代开发质量门禁与GIT版本管理铁律.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/06_低代码生成器代码质量铁律.mdc")
    ✅ **验证确认**: 极致质量律/架构先行律/独立决策律 - 完整规范体系已加载
-   ✅ **验证确认**: Git版本控制铁律 - 必须使用 `bash scripts/git-safe-sync.sh`
+   ✅ **验证确认**: 增量迭代开发质量门禁与Git版本管理铁律 - 五重质量门禁+六步Git同步
+   ✅ **验证确认**: 低代码生成器代码质量铁律 - 100分企业级标准强制执行
    ✅ **验证确认**: 所有铁律规则已加载，防止违规执行
 
 🔍 **第二重爆雷：项目智能分析强制执行**
@@ -94,44 +94,80 @@ MASTER_SECRET_TRIGGER = "专家模式"
    ✅ **验证确认**: 类型安全检查100%通过，无绕过行为
    ✅ **验证确认**: 核心功能完整保护，无删除降级行为
 
-📚 **第六重爆雷：GIT版本管理和质量检查强制执行**
-⚡ **触发机制**: 编程30分钟后或每完成一个开发任务节点自动触发
+📚 **第六重爆雷：增量迭代开发质量门禁与GIT版本管理强制执行**
+⚡ **触发机制**: 完成阶段性开发任务 OR 编写代码达到300行时自动触发
 
-🚨 **Git提交前四重强制检查门禁（零容忍）**
+🔥 **第一部分：五重强制质量门禁检查（零容忍）**
 
-   🏗️ **第一关：架构整洁检查（0违规）**
+   🏗️ **第一关：架构完整性检查（0违规）**
    🔧 相对路径违规检查: grep -r "'../'" src/SmartAbp.Vue/packages/
    🔧 主应用引用违规检查: grep -r "@/" src/SmartAbp.Vue/packages/
    🔧 类型绕过违规检查: grep -r "as any\|@ts-ignore" src/
    ❌ **有任何违规严禁提交！必须修复！**
 
-   🔄 **第二关：代码去重检查（0重复）**
+   🔄 **第二关：代码重复度检查（0重复）**
    🔧 重复组件检查: find src/ -name "*.vue" | sort | uniq -d
    🔧 重复方法检查: grep -r "function\|const.*=" src/ | sort | uniq -d
    🔧 重复类检查: grep -r "class\|interface" src/ | sort | uniq -d
+   🔧 重复路由检查: grep -rh "path:\s*['\"].*['\"]" src/SmartAbp.Vue/src/router/ | sort | uniq -d
    ❌ **有任何重复严禁提交！必须重构！**
 
-   ⚡ **第三关：类型和编译检查（0错误）**
-   🔧 前端检查: npm run type-check && npm run lint && npm run build
-   🔧 后端检查: dotnet build && dotnet test --no-build
+   ⚡ **第三关：编译与静态检查（0错误）**
+   🔧 TypeScript类型检查: cd src/SmartAbp.Vue && npm run type-check
+   🔧 ESLint代码规范: cd src/SmartAbp.Vue && npm run lint
+   🔧 后端编译检查(如有修改): dotnet build src/SmartAbp.sln
    ❌ **有任何错误严禁提交！必须修复！**
 
-   🚀 **第四关：Git提交执行（质量门禁全部通过后）**
-   🔧 强制脚本: bash scripts/git-safe-sync.sh --non-interactive --auto-commit
-   ✅ 验证: 使用项目标准Git脚本，本地与远程完全同步
+   🎯 **第四关：低代码生成器专项检查（100%质量）**
+   🔧 packages TypeScript项目引用构建: cd src/SmartAbp.Vue && npx tsc --build tsconfig.references.json
+   🔧 packages ESLint专项检查: cd src/SmartAbp.Vue && npm run lint -- "packages/*/src/**/*.{ts,vue}" --fix
+   🔧 packages依赖关系检查: 验证无跨层级引用和主应用引用
+   ❌ **低代码生成器必须达到企业级100分标准！**
 
-⚙️ **第七重爆雷：全栈代码生成器专注核心功能**
+   🚀 **第五关：技术债务监控检查（基线控制）**
+   📊 统计代码复杂度、TODO标记、代码行数变化
+   📊 计算质量评分（目标≥85分）
+   ⚠️ 评分<85时警告，但不阻止Git同步
+
+🔥 **第二部分：Git版本同步管理（六步强制执行）**
+💡 **核心原则**: 先拉取，后推送！
+   
+   📋 **第一步**: 检测代码变更
+   📦 **第二步**: 暂存所有修改 (git add .)
+   📝 **第三步**: 生成标准化提交信息（包含质量验证结果）
+   🚀 **第四步**: 执行本地提交 (git commit)
+   🔄 **第五步**: 拉取远程最新版本并合并 (git pull --rebase origin main)
+   🌐 **第六步**: 推送到远程仓库 (git push origin main)
+   ✅ **同步完整性验证**: 本地哈希 = 远程哈希
+
+⚡ **自动推进机制**: 质量检查通过后，AI必须自动继续推进后续开发任务！
+
+⚙️ **第七重爆雷：低代码生成器代码质量强制执行**
+   🎯 **核心地位**: packages目录下的低代码生成器是SmartAbp项目核心价值，代码质量必须达到100分标准
+   
+   🏗️ **packages架构完整性铁律**:
+   • lowcode-shared: 共享基础库，零依赖
+   • lowcode-core: 核心引擎，依赖lowcode-shared
+   • lowcode-api: API接口层，依赖lowcode-core
+   • lowcode-designer: 设计器UI，依赖lowcode-core和lowcode-shared
+   • lowcode-tools: 工具库，依赖lowcode-shared
+   🚨 严禁packages之间的循环依赖和逆向依赖
+
+   🔍 **强制质量检查门禁**:
+   🔧 第一关: packages TypeScript编译检查 (0错误)
+   🔧 第二关: packages ESLint质量检查 (0错误)
+   🔧 第三关: packages依赖关系检查 (0违规)
+   🔧 第四关: packages构建产物检查 (100%成功)
+   
+   🎖️ **专项优化要求**:
+   • 严禁使用`as any`、`@ts-ignore`等绕过类型检查
+   • 所有API接口必须有完整的TypeScript类型定义
+   • 清理所有未使用的参数和变量
+   • 为所有Vue组件的props提供默认值
+   
    ❌ **严禁AI智能辅助功能**: 现阶段禁止实现AI助手、智能建议、自动优化等AI功能
    ❌ **严禁多人在线功能**: 现阶段禁止实现实时协作、多用户编辑、在线协作等功能
    ✅ **专注核心**: 企业级稳定可靠的全栈代码自动生成
-   ✅ **基础优先**: 代码生成、可视化设计、元数据驱动、模板系统为核心
-   ✅ **质量第一**: 确保基础功能稳定可靠后，再考虑高级功能
-   🔧 **执行脚本**: glob_file_search("docs/architecture/adr/**/*.md")
-   🔧 **执行脚本**: list_dir("docs/architecture/adr", recursive=true)
-   🔧 **条件脚本**: read_file("docs/architecture/adr/0001-technology-stack-selection.md") # 如存在
-   ✅ **验证确认**: ADR决策记录数量和状态统计
-   ✅ **验证确认**: 技术选型约束与当前任务相关性
-   ✅ **验证确认**: 架构决策对当前实现的约束要求
 
 🔒 **第八重爆雷：Git质量门禁永久保护强制执行**
    🔧 自动检查Git hooks状态(.git/hooks/pre-commit, commit-msg, pre-push)
