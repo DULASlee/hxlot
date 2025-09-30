@@ -5,7 +5,6 @@
 
 import { defineComponent, h, ref, onErrorCaptured, type Component } from 'vue'
 import type { BaseComponentProps } from '../../types/component-base'
-import { GlobalErrorHandler, ErrorCategory, ErrorSeverity } from '../../error'
 
 /**
  * WithError Props扩展
@@ -124,7 +123,7 @@ const DefaultErrorComponent = defineComponent({
  * </template>
  * ```
  */
-export function WithError<P extends BaseComponentProps>(
+export function WithError(
   WrappedComponent: Component
 ) {
   return defineComponent({
@@ -166,18 +165,15 @@ export function WithError<P extends BaseComponentProps>(
       const hasError = ref(false)
 
       // 捕获子组件错误
-      onErrorCaptured((err: Error, instance, info) => {
+      onErrorCaptured((err: Error, _instance, info) => {
         componentError.value = err
         hasError.value = true
 
-        // 记录错误到全局错误处理器
-        GlobalErrorHandler.handleError(err, {
-          category: ErrorCategory.GENERIC,
-          severity: ErrorSeverity.HIGH,
-          context: {
-            component: (WrappedComponent as any).name || 'Unknown',
-            info
-          }
+        // 记录错误到控制台
+        console.error('[WithError]', {
+          component: (WrappedComponent as any).name || 'Unknown',
+          error: err,
+          info
         })
 
         // 调用用户提供的错误回调
@@ -251,12 +247,8 @@ export function useErrorHandler() {
     error.value = errorObj
     errorCount.value++
 
-    // 记录到全局错误处理器
-    GlobalErrorHandler.handleError(errorObj, {
-      category: ErrorCategory.GENERIC,
-      severity: ErrorSeverity.MEDIUM,
-      context
-    })
+    // 记录错误到控制台
+    console.error('[useErrorHandler]', { error: errorObj, context })
   }
 
   const clearError = () => {

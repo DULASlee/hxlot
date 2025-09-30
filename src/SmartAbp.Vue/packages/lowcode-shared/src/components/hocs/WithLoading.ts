@@ -3,7 +3,7 @@
  * 为任何组件添加加载状态管理功能
  */
 
-import { defineComponent, h, ref, type Component, type VNode } from 'vue'
+import { defineComponent, h, ref, type Component } from 'vue'
 import type { BaseComponentProps } from '../../types/component-base'
 
 /**
@@ -85,7 +85,7 @@ const DefaultLoadingComponent = defineComponent({
  * </template>
  * ```
  */
-export function WithLoading<P extends BaseComponentProps>(
+export function WithLoading(
   WrappedComponent: Component
 ) {
   return defineComponent({

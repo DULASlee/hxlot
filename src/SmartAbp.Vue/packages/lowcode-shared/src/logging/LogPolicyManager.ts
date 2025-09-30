@@ -314,21 +314,6 @@ export class LogPolicyManager {
     return { cleanedEntries, freedSpace };
   }
 
-  /**
-   * 解析保留期限
-   */
-  private parseRetentionPeriod(period: LogRetentionPeriod): number {
-    const units = {
-      '1d': 24 * 60 * 60 * 1000,
-      '3d': 3 * 24 * 60 * 60 * 1000,
-      '7d': 7 * 24 * 60 * 60 * 1000,
-      '30d': 30 * 24 * 60 * 60 * 1000,
-      '90d': 90 * 24 * 60 * 60 * 1000,
-      '1y': 365 * 24 * 60 * 60 * 1000,
-      'unlimited': Number.MAX_SAFE_INTEGER,
-    };
-    return units[period] || units['30d'];
-  }
 
   /**
    * 开始监控

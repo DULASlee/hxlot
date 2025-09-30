@@ -140,7 +140,6 @@ export class GlobalMemoryMonitor {
 
   // 内存基线
   private baselineMemory = 0;
-  private lastMemoryUsage = 0;
 
   private constructor(config?: Partial<MemoryMonitorConfig>) {
     this.config = {
@@ -428,7 +427,6 @@ export class GlobalMemoryMonitor {
     const currentUsage = this.getCurrentMemoryUsage();
     if (currentUsage) {
       this.baselineMemory = currentUsage.totalUsage;
-      this.lastMemoryUsage = currentUsage.totalUsage;
       console.log(`📊 内存基线建立: ${(this.baselineMemory / 1024 / 1024).toFixed(2)}MB`);
     }
   }
@@ -452,8 +450,6 @@ export class GlobalMemoryMonitor {
       console.log('🤖 触发自动垃圾回收...');
       this.forceGarbageCollection();
     }
-
-    this.lastMemoryUsage = currentUsage.totalUsage;
   }
 
   /**

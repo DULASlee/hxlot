@@ -8,10 +8,7 @@ import type { BaseComponentProps, ValidationRule } from '../../types/component-b
 import { 
   isRequired, 
   isEmail, 
-  isPhone, 
   isUrl, 
-  minLength, 
-  maxLength,
   pattern 
 } from '../../validators/common'
 
@@ -103,7 +100,7 @@ export interface ValidationResult {
  * </script>
  * ```
  */
-export function WithValidation<P extends BaseComponentProps>(
+export function WithValidation(
   WrappedComponent: Component
 ) {
   return defineComponent({
@@ -172,8 +169,11 @@ export function WithValidation<P extends BaseComponentProps>(
         const value = internalValue.value
 
         // 1. 检查必填
-        if (props.required && !isRequired(value)) {
-          errors.push(props.errorMessage || '此字段为必填项')
+        if (props.required) {
+          const requiredResult = isRequired(value)
+          if (!requiredResult.valid) {
+            errors.push(props.errorMessage || '此字段为必填项')
+          }
         }
 
         // 2. 执行所有验证规则
@@ -181,23 +181,31 @@ export function WithValidation<P extends BaseComponentProps>(
           let isRuleValid = true
 
           switch (rule.type) {
-            case 'required':
-              isRuleValid = isRequired(value)
+            case 'required': {
+              const result = isRequired(value)
+              isRuleValid = result.valid
               break
-            case 'email':
-              isRuleValid = !value || isEmail(value)
+            }
+            case 'email': {
+              const result = isEmail(value)
+              isRuleValid = result.valid
               break
-            case 'url':
-              isRuleValid = !value || isUrl(value)
+            }
+            case 'url': {
+              const result = isUrl(value)
+              isRuleValid = result.valid
               break
+            }
             case 'pattern':
               if (rule.pattern) {
-                isRuleValid = !value || pattern(rule.pattern)(value)
+                const result = pattern(value, rule.pattern)
+                isRuleValid = result.valid
               }
               break
             case 'custom':
               if (rule.validator) {
-                isRuleValid = await Promise.resolve(rule.validator(value))
+                const result = await Promise.resolve(rule.validator(value))
+                isRuleValid = typeof result === 'boolean' ? result : result.valid
               }
               break
           }
@@ -356,23 +364,31 @@ export function useValidation() {
       let isRuleValid = true
 
       switch (rule.type) {
-        case 'required':
-          isRuleValid = isRequired(value)
+        case 'required': {
+          const result = isRequired(value)
+          isRuleValid = result.valid
           break
-        case 'email':
-          isRuleValid = !value || isEmail(value)
+        }
+        case 'email': {
+          const result = isEmail(value)
+          isRuleValid = result.valid
           break
-        case 'url':
-          isRuleValid = !value || isUrl(value)
+        }
+        case 'url': {
+          const result = isUrl(value)
+          isRuleValid = result.valid
           break
+        }
         case 'pattern':
           if (rule.pattern) {
-            isRuleValid = !value || pattern(rule.pattern)(value)
+            const result = pattern(value, rule.pattern)
+            isRuleValid = result.valid
           }
           break
         case 'custom':
           if (rule.validator) {
-            isRuleValid = await Promise.resolve(rule.validator(value))
+            const result = await Promise.resolve(rule.validator(value))
+            isRuleValid = typeof result === 'boolean' ? result : result.valid
           }
           break
       }

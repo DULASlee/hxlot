@@ -1,11 +1,6 @@
 // 添加DOM类型定义
 /// <reference lib="dom" />
 
-import { ref, onMounted, onUnmounted } from "vue"
-
-// Placeholder export to avoid unused import error
-export {}
-
 /**
  * 🏗️ 基础组件类 - 统一生命周期管理
  * SmartAbp低代码引擎 - P0级架构优化

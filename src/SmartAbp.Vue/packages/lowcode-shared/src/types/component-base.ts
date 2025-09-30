@@ -136,9 +136,9 @@ export interface ValidationRule {
   pattern?: RegExp
 
   /**
-   * 自定义验证函数
+   * 自定义验证器函数（用于custom类型）
    */
-  validator?: (value: unknown) => boolean | Promise<boolean>
+  validator?: (value: any) => boolean | Promise<boolean> | { valid: boolean } | Promise<{ valid: boolean }>
 
   /**
    * 触发时机

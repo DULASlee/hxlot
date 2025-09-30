@@ -91,7 +91,7 @@ const DefaultPlaceholder = defineComponent({
  * </template>
  * ```
  */
-export function WithPermission<P extends BaseComponentProps>(
+export function WithPermission(
   WrappedComponent: Component
 ) {
   return defineComponent({

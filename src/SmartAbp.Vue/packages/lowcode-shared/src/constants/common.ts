@@ -2,6 +2,8 @@
  * 通用常量
  */
 
+/// <reference types="vite/client" />
+
 /**
  * 应用名称
  */
@@ -54,7 +56,7 @@ export const HTTP_TIMEOUT = 30000
 /**
  * API基础路径
  */
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
+export const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || '/api'
 
 /**
  * 分页默认配置
@@ -104,7 +106,7 @@ export const REGEX = {
  * 环境变量
  */
 export const ENV = {
-  PRODUCTION: import.meta.env.PROD,
-  DEVELOPMENT: import.meta.env.DEV,
-  MODE: import.meta.env.MODE
+  PRODUCTION: import.meta.env?.PROD || false,
+  DEVELOPMENT: import.meta.env?.DEV || true,
+  MODE: (import.meta.env?.MODE || 'development') as string
 } as const
