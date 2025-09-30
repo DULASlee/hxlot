@@ -1,0 +1,421 @@
+---
+alwaysApply: true
+---
+
+# AI架构铁律同心圆模型 - L7: AI编程架构自动识别保护铁律
+
+## 文件说明
+- **文件标识**: `07_AI编程架构自动识别保护铁律.mdc`
+- **层级**: L7 - AI编程架构保护层
+- **作用**: 防止AI编程破坏前端工程化架构优化成果，强制执行架构识别、代码复用和合规性验证
+- **紧急程度**: 🚨 **最高优先级** - 架构保护永久防线
+
+---
+
+## 🎯 核心使命
+
+**问题背景**: 前端框架工程化优化完成后，AI编程模型不能自动识别优化成果，很快又搞乱了架构。
+
+**解决目标**: 建立三层防护体系，确保AI编程100%遵循既有架构规范，永久保护工程化成果。
+
+---
+
+## 🛡️ 第一层防护：强制架构识别
+
+### 自动触发机制
+
+**🚨 每次AI编程前必须强制执行以下检查：**
+
+#### 1. packages目录结构扫描
+```typescript
+触发条件 = {
+  文件操作: ['创建*.vue', '创建*.ts', '修改packages/*'],
+  代码模式: ['新建组件', '新建工具函数', '定义类型', '错误处理'],
+  架构变更: ['修改package.json', '调整目录结构', '变更导入路径']
+}
+```
+
+**执行步骤**:
+1. 扫描`src/SmartAbp.Vue/packages`目录结构
+2. 识别现有的5个核心package：
+   - `lowcode-shared`: 共享基础库（类型、错误、工具）
+   - `lowcode-core`: 核心引擎（组件、stores、composables）
+   - `lowcode-api`: API接口层
+   - `lowcode-designer`: 设计器UI（components、views、utils）
+   - `lowcode-tools`: 工具库（模板管理、验证）
+
+#### 2. 现有组件和工具函数检索
+```bash
+# 强制执行命令
+find src/SmartAbp.Vue/packages -name "*.vue" -o -name "*.ts" | grep -E "(components|utils|composables)"
+```
+
+**必须检索的位置**:
+- `lowcode-shared/src/error/GlobalErrorHandler.ts` - 统一错误处理
+- `lowcode-core/src/components/*` - 核心组件库
+- `lowcode-core/src/composables/*` - 可复用组合函数
+- `lowcode-core/src/stores/*` - 状态管理
+- `lowcode-designer/src/components/*` - 设计器组件
+
+#### 3. 全局类型声明检查
+```typescript
+// 必须检查的类型文件
+const TYPE_FILES = [
+  'lowcode-core/src/types/entity-designer.ts',
+  'lowcode-core/src/types/manifest.ts',
+  'lowcode-core/src/types/unified-metadata.ts',
+  'lowcode-designer/src/types/designer.ts',
+  'lowcode-designer/src/types/security.ts'
+]
+```
+
+#### 4. 依赖关系验证
+```typescript
+// packages层级关系（只能向下依赖）
+const PACKAGE_LAYERS = {
+  'lowcode-shared': 0,     // 基础层 - 零依赖
+  'lowcode-core': 1,       // 核心层 - 只依赖shared
+  'lowcode-api': 1,        // API层 - 只依赖shared
+  'lowcode-tools': 1,      // 工具层 - 只依赖shared
+  'lowcode-designer': 2    // 应用层 - 依赖shared+core
+}
+```
+
+---
+
+## 🔍 第二层防护：代码重复拦截
+
+### 智能重复检测算法
+
+**🚨 发现重复立即停止操作，提供复用建议！**
+
+#### 检测维度
+
+1. **组件重复检测**
+```bash
+# 检测同名Vue组件
+find src/SmartAbp.Vue/packages -name "*.vue" | xargs basename -a | sort | uniq -d
+
+# 检测相似功能组件
+grep -r "export default defineComponent" src/SmartAbp.Vue/packages --include="*.vue"
+```
+
+2. **工具函数重复检测**
+```bash
+# 检测同名函数
+grep -rh "export \(function\|const\|class\)" src/SmartAbp.Vue/packages --include="*.ts" | sort | uniq -d
+
+# 检测相似逻辑
+grep -r "ValidationUtils\|ErrorHandler\|formatDate" src/SmartAbp.Vue/packages
+```
+
+3. **类型定义重复检测**
+```bash
+# 检测重复接口/类型
+grep -rh "export \(interface\|type\|enum\)" src/SmartAbp.Vue/packages --include="*.ts" | sort | uniq -d
+```
+
+### 复用建议生成
+
+**当检测到重复时，AI必须：**
+
+1. **立即停止编码**
+2. **展示现有实现**：
+   ```typescript
+   🛑 发现现有实现！建议复用：
+   
+   文件位置: lowcode-shared/src/error/GlobalErrorHandler.ts
+   
+   现有功能:
+   - ErrorCategory (枚举)
+   - GlobalErrorHandler (类)
+   - handleError (函数)
+   - ErrorRecoveryHandler (接口)
+   
+   使用示例:
+   import { GlobalErrorHandler, handleError } from '@smartabp/lowcode-shared/error'
+   
+   handleError(error, {
+     category: ErrorCategory.VALIDATION,
+     severity: ErrorSeverity.HIGH
+   })
+   ```
+
+3. **提供正确的导入路径**
+4. **不允许创建重复代码**
+
+---
+
+## ⚡ 第三层防护：依赖与层级验证
+
+### packages依赖层级强制检查
+
+**🚨 严禁的导入模式：**
+
+```typescript
+// ❌ 严禁：逆向依赖
+// lowcode-shared不能依赖其他package
+import { something } from '@smartabp/lowcode-core' // ❌ 错误！
+
+// ❌ 严禁：跨层级引用
+import { something } from '../../lowcode-designer' // ❌ 错误！
+
+// ❌ 严禁：相对路径跨package
+import { something } from '../../../lowcode-core/src/xxx' // ❌ 错误！
+
+// ❌ 严禁：引用主应用
+import { something } from '@/stores' // ❌ 错误！
+```
+
+**✅ 正确的导入模式：**
+
+```typescript
+// ✅ 正确：使用别名导入lower层package
+import { ErrorHandler } from '@smartabp/lowcode-shared/error'
+
+// ✅ 正确：同层级别名导入
+import { API } from '@smartabp/lowcode-api'
+
+// ✅ 正确：向下依赖
+import { useWorkspaceStore } from '@smartabp/lowcode-core/stores'
+```
+
+### 循环依赖检测
+
+**自动检测算法**:
+```bash
+# 检测跨package导入
+grep -r "from '@smartabp/" src/SmartAbp.Vue/packages --include="*.ts" --include="*.vue"
+
+# 验证依赖方向
+# lowcode-shared中不应该有任何@smartabp导入
+# lowcode-core只能导入lowcode-shared
+# lowcode-designer可以导入shared和core
+```
+
+---
+
+## 🚀 第四层防护：类型安全守护
+
+### 严禁类型绕过
+
+**🚨 零容忍规则：**
+
+```typescript
+// ❌ 严禁使用as any
+const result = someFunction() as any // ❌ 立即拒绝！
+
+// ❌ 严禁使用@ts-ignore
+// @ts-ignore
+const value = dangerousOperation() // ❌ 立即拒绝！
+
+// ❌ 严禁使用unknown后不做类型守卫
+const data: unknown = response
+data.someMethod() // ❌ 必须先类型守卫！
+
+// ✅ 正确：使用正确的类型定义
+import { StandardError } from '@smartabp/lowcode-shared/error'
+
+function handleError(error: StandardError) {
+  // 类型安全的操作
+}
+
+// ✅ 正确：使用类型守卫
+function isStandardError(error: unknown): error is StandardError {
+  return typeof error === 'object' && error !== null && 'category' in error
+}
+
+if (isStandardError(error)) {
+  // 现在可以安全使用
+  console.log(error.category)
+}
+```
+
+### 类型定义复用
+
+**必须使用lowcode-shared中的统一类型**:
+
+```typescript
+// ✅ 从lowcode-shared导入基础类型
+import { ErrorCategory, ErrorSeverity, ErrorContext } from '@smartabp/lowcode-shared/error'
+import { LowCodeProject, LowCodePage } from '@smartabp/lowcode-core/stores'
+
+// ❌ 不要在业务代码中重新定义这些类型
+```
+
+---
+
+## 🔧 自动纠正机制
+
+### 违规代码自动拦截
+
+**当检测到违规时，AI必须：**
+
+1. **立即停止操作**
+2. **展示违规信息**：
+   ```
+   🚨 架构违规检测！
+   
+   违规类型: 逆向依赖
+   问题代码: import { X } from '@smartabp/lowcode-core'
+   所在文件: lowcode-shared/src/utils/helper.ts
+   
+   ❌ 错误原因:
+   lowcode-shared是基础层(Layer 0)，不能依赖lowcode-core(Layer 1)
+   
+   ✅ 正确做法:
+   1. 将需要的功能移到lowcode-shared
+   2. 或者将当前代码移到lowcode-core
+   3. 重新审视架构设计
+   ```
+
+3. **提供正确的架构模式**
+4. **要求按规范重新实现**
+
+### 架构引导模板
+
+#### 新建组件模板
+```vue
+<!-- packages/lowcode-shared/src/components/YourComponent.vue -->
+<template>
+  <div class="your-component">
+    <!-- 组件内容 -->
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { GlobalErrorHandler } from '@smartabp/lowcode-shared/error'
+
+// 定义属性接口
+interface Props {
+  title: string
+  data?: any[]
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  data: () => []
+})
+
+// 定义事件
+const emit = defineEmits<{
+  change: [value: any]
+  error: [error: Error]
+}>()
+
+// 使用统一错误处理
+const handleError = (error: Error) => {
+  GlobalErrorHandler.handleError(error, {
+    context: 'YourComponent'
+  })
+  emit('error', error)
+}
+</script>
+
+<style scoped>
+.your-component {
+  /* 样式 */
+}
+</style>
+```
+
+#### 新建工具函数模板
+```typescript
+// packages/lowcode-shared/src/utils/yourCategory/yourFunction.ts
+import { GlobalErrorHandler, ErrorCategory } from '@smartabp/lowcode-shared/error'
+
+/**
+ * 功能描述
+ * @param input - 输入参数
+ * @returns 返回值
+ */
+export function yourFunction(input: string): string {
+  try {
+    // 输入验证
+    if (!input) {
+      throw new Error('Input is required')
+    }
+    
+    // 业务逻辑
+    const result = processInput(input)
+    
+    return result
+  } catch (error) {
+    // 使用统一错误处理
+    GlobalErrorHandler.handleError(error as Error, {
+      category: ErrorCategory.VALIDATION,
+      context: 'yourFunction',
+      details: { input }
+    })
+    throw error
+  }
+}
+
+function processInput(input: string): string {
+  // 具体实现
+  return input.toUpperCase()
+}
+```
+
+---
+
+## 📊 执行检查清单
+
+### AI编程前强制检查 (Pre-Coding Checklist)
+
+**每次编程前必须完成：**
+
+- [ ] **架构扫描**: 扫描packages目录结构
+- [ ] **组件检索**: 搜索现有组件和工具函数
+- [ ] **类型检查**: 检查全局类型声明
+- [ ] **依赖验证**: 验证package依赖关系
+- [ ] **重复检测**: 检测是否存在类似功能
+
+### AI编程中实时验证 (Real-time Validation)
+
+**编程过程中持续检查：**
+
+- [ ] **导入路径**: 确保使用正确的别名导入
+- [ ] **类型安全**: 禁止使用as any和@ts-ignore
+- [ ] **依赖方向**: 确保只向下依赖
+- [ ] **代码位置**: 确保代码放在正确的package
+
+### AI编程后强制验证 (Post-Coding Validation)
+
+**代码完成后必须检查：**
+
+- [ ] **架构合规**: 运行架构合规性检查脚本
+- [ ] **类型编译**: packages TypeScript编译检查
+- [ ] **ESLint**: packages代码规范检查
+- [ ] **依赖图**: 验证依赖关系图无循环
+
+---
+
+## 🎯 强制执行规则总结
+
+### 核心铁律（零容忍）
+
+1. **🚨 架构扫描强制执行**: 每次AI编程前必须扫描packages结构
+2. **🚨 代码重复立即拦截**: 发现重复立即停止并提供复用建议
+3. **🚨 依赖层级严格验证**: 禁止逆向依赖和循环依赖
+4. **🚨 类型安全零妥协**: 严禁as any、@ts-ignore等绕过
+5. **🚨 自动纠正机制**: 违规必须展示正确架构模式
+
+### 执行承诺
+
+✅ **AI编程100%遵循既有工程化规范**  
+✅ **前端框架优化成果得到永久保护**  
+✅ **架构再也不会被AI编程破坏**  
+✅ **工程化投入得到最大化保护**
+
+---
+
+## 🔥 立即生效
+
+**本铁律立即生效！** 所有AI编程都将自动触发架构识别和保护流程。
+
+**违规后果**: 违规代码将被自动拦截，必须按照架构规范重新实现。
+
+**保护目标**: 确保工程化优化成果永久保护，架构质量持续提升。
+
+**🛡️ SmartAbp架构保护，永不妥协！**

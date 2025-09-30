@@ -22,27 +22,49 @@ fi
 
 echo "✅ 环境检查通过"
 
-# 🏗️ 第一关：架构整洁检查
+# 🛡️ 第零关：AI编程架构保护检查（最高优先级）
 echo ""
-echo "🏗️ 第一关：架构整洁检查（0违规标准）..."
+echo "🛡️ 第零关：AI编程架构保护检查..."
+echo "🚨 防止AI编程破坏工程化架构优化成果"
 
-# 相对路径违规检查
-relative_violations=$(grep -r "'../'" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue" 2>/dev/null | wc -l)
-if [ $relative_violations -gt 0 ]; then
-    echo "❌ FAILED: 发现 $relative_violations 处相对路径违规"
-    echo "违规详情："
-    grep -r "'../'" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue" 2>/dev/null
-    exit 1
+if [ -f "scripts/quality/architecture-guard.sh" ]; then
+    bash scripts/quality/architecture-guard.sh
+    if [ $? -ne 0 ]; then
+        echo "❌ FAILED: AI编程架构保护检查失败"
+        echo "💡 请查看上述违规详情并修复"
+        echo "📚 参考文档: .cursor/rules/07_AI编程架构自动识别保护铁律.mdc"
+        exit 1
+    fi
+    echo "✅ AI编程架构保护检查通过"
+else
+    echo "⚠️  警告: 架构保护脚本不存在，跳过检查"
+    # 降级到基础架构检查
+    echo "执行基础架构完整性检查..."
+    
+    # 相对路径违规检查
+    relative_violations=$(grep -r "'../'" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue" 2>/dev/null | wc -l)
+    if [ $relative_violations -gt 0 ]; then
+        echo "❌ FAILED: 发现 $relative_violations 处相对路径违规"
+        echo "违规详情："
+        grep -r "'../'" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue" 2>/dev/null
+        exit 1
+    fi
+    
+    # @/引用违规检查
+    app_ref_violations=$(grep -r "@/" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue" 2>/dev/null | wc -l)
+    if [ $app_ref_violations -gt 0 ]; then
+        echo "❌ FAILED: 发现 $app_ref_violations 处@/引用违规"
+        echo "违规详情："
+        grep -r "@/" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue" 2>/dev/null
+        exit 1
+    fi
+    
+    echo "✅ 基础架构完整性检查通过"
 fi
 
-# @/引用违规检查
-app_ref_violations=$(grep -r "@/" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue" 2>/dev/null | wc -l)
-if [ $app_ref_violations -gt 0 ]; then
-    echo "❌ FAILED: 发现 $app_ref_violations 处@/引用违规"
-    echo "违规详情："
-    grep -r "@/" src/SmartAbp.Vue/packages/ --include="*.ts" --include="*.vue" 2>/dev/null
-    exit 1
-fi
+# 🏗️ 第一关：架构整洁检查（已由架构保护守卫执行）
+echo ""
+echo "🏗️ 第一关：架构整洁检查（已由架构保护守卫完成）..."
 
 # 类型安全违规检查
 type_violations=$(grep -r "as any\|@ts-ignore" src/ --include="*.ts" --include="*.vue" --exclude-dir="node_modules" --exclude-dir="cypress" --exclude-dir="__tests__" --exclude-dir="tests" 2>/dev/null | grep -v "\.test\.\|\.spec\.\|test.*\.ts\|spec.*\.ts\|\.cy\.\|e2e\|spec/\|performance.*\.ts\|cache-manager\.ts\|moduleWizardDev\.ts\|cypress/\|/dev/\|logger-adapter\|enhanced-logger\|optimization\.ts\|writers\.ts\|api\.ts\|templates\.ts\|memoryOptimization\|performanceBenchmark\|examples\.ts\|main\.ts\|views/\|View\.vue\|Debug\.vue\|Demo\.vue" | wc -l)
