@@ -60,7 +60,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { ElCard, ElInput, ElRadioGroup, ElRadioButton, ElRow, ElCol, ElTag, ElEmpty } from 'element-plus';
+import { ElCard, ElRow, ElCol, ElTag, ElEmpty } from 'element-plus';
 
 // Define the structure of a template based on index.json
 interface Template {
@@ -79,6 +79,7 @@ const templates = ref<Template[]>([]);
 
 // --- 简化：移除搜索和过滤功能 ---
 // 创业项目模板数量有限，直接展示所有模板更简洁高效
+const filteredTemplates = computed(() => templates.value);
 
 // --- 简化的数据获取 ---
 onMounted(async () => {
@@ -92,8 +93,8 @@ onMounted(async () => {
     console.error("Error loading templates:", error);
     // 提供fallback数据
     templates.value = [
-      { id: '1', name: 'CRUD模板', description: '标准增删改查模板', tags: ['basic'] },
-      { id: '2', name: '表单模板', description: '通用表单模板', tags: ['form'] }
+      { id: '1', version: '1.0.0', name: 'CRUD模板', description: '标准增删改查模板', tags: ['basic'], author: 'SmartAbp', type: 'frontend', templatePath: '/templates/frontend/crud' },
+      { id: '2', version: '1.0.0', name: '表单模板', description: '通用表单模板', tags: ['form'], author: 'SmartAbp', type: 'frontend', templatePath: '/templates/frontend/form' }
     ];
   }
 });

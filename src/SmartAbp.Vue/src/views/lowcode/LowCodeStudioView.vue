@@ -90,7 +90,7 @@ import StudioHeader from '@/components/layout/StudioHeader.vue'
 import StudioSidebar from '@/components/layout/StudioSidebar.vue'
 import StudioPropertyPanel from '@/components/layout/StudioPropertyPanel.vue'
 import StudioFooter from '@/components/layout/StudioFooter.vue'
-import ModuleLoadingState from '@/components/common/ModuleLoadingState.vue'
+// import ModuleLoadingState from '@/components/common/ModuleLoadingState.vue' // TODO: 未使用，暂时注释
 import TemplateManager from './templates/TemplateManager.vue'
 import { Loading } from '@element-plus/icons-vue'
 

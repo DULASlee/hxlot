@@ -1351,7 +1351,7 @@ const toggleRealTimeData = () => {
   }
 }
 
-let realTimeDataInterval: number | null = null
+let realTimeDataInterval: ReturnType<typeof setInterval> | null = null
 
 const startRealTimeDataBinding = () => {
   if (realTimeDataInterval) return

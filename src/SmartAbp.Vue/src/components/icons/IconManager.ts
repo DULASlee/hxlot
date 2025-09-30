@@ -64,6 +64,7 @@ export class EnterpriseIconManager {
   private iconRegistry = new Map<string, IconConfig>()
   private loadedIcons = new Set<string>()
   private currentTheme: IconTheme
+  // @ts-ignore - 保留用于未来功能扩展
   private app?: App
 
   // 🎨 默认企业级主题

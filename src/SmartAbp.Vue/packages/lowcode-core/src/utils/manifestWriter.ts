@@ -252,8 +252,8 @@ export class SmartAbpManifestWriter {
       const config: any = {
         type: "list",
         title: `${metadata.displayName || metadata.name}列表`,
-        entity: metadata.entities[0].name, // 默认使用第一个实体
-        columns: metadata.entities[0].properties.map((prop: any) => prop.name)
+        entity: metadata.entities[0]?.name, // 默认使用第一个实体
+        columns: metadata.entities[0]?.properties?.map((prop: any) => prop.name)
           .filter((prop: any) => prop.showInList !== false)
           .slice(0, 6) // 最多显示6列
           .map((prop: any) => ({
@@ -313,8 +313,8 @@ export class SmartAbpManifestWriter {
       const config: any = {
         type: "form",
         title: `${metadata.displayName || metadata.name}管理`,
-        entity: entity.name,
-        fields: entity.properties.map((prop: any) => ({
+        entity: entity?.name,
+        fields: entity?.properties?.map((prop: any) => ({
           name: prop.name,
           label: prop.displayName || prop.name,
           type: this.getFieldType(prop.type),
