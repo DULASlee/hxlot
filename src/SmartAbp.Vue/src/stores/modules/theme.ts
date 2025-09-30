@@ -1,11 +1,20 @@
-import { defineStore } from "pinia"
-import { computed } from "vue"
-import useDesignSystem, { ThemeType, THEMES } from "@/composables/useDesignSystem"
+import { defineStore } from 'pinia'
+import { computed, type ComputedRef, type WritableComputedRef } from 'vue'
+import useDesignSystem, { THEMES, type ThemeType, type ThemeConfig } from '@/composables/useDesignSystem'
 
-export type ThemeMode = ThemeType
+// 类型别名
+export type Theme = ThemeType
+export type ThemeMode = 'light' | 'dark' | 'auto'
 
-export const useThemeStore = defineStore("theme", () => {
-  // 使用设计系统 composable
+/**
+ * 主题Store
+ * 负责管理应用主题和暗黑模式
+ */
+export const useThemeStore = defineStore('theme', () => {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 设计系统集成
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
   const {
     theme,
     isDarkMode,
@@ -17,41 +26,65 @@ export const useThemeStore = defineStore("theme", () => {
     setThemeToken,
     applyTheme,
     watchSystemTheme,
-    initTheme,
+    initTheme
   } = useDesignSystem()
 
-  // 当前主题
-  const currentTheme = computed({
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 计算属性
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  /**
+   * 当前主题（可读写）
+   */
+  const currentTheme: WritableComputedRef<Theme> = computed({
     get: () => theme.value,
-    set: (value: ThemeType) => setTheme(value),
+    set: (value: Theme) => setTheme(value)
   })
 
-  // 设置主题
-  const setTheme = (newTheme: ThemeType) => {
-    setThemeImpl(newTheme)
-  }
-
-  // 切换暗黑模式
-  const toggleDarkMode = () => {
-    toggleDarkModeImpl()
-  }
-
-  // 获取主题配置
-  const getThemeConfig = (themeValue: ThemeType) => {
-    return THEMES.find((t) => t.value === themeValue) || THEMES[0]
-  }
-
-  // 当前主题配置
-  const currentThemeConfig = computed(() => {
+  /**
+   * 当前主题配置
+   */
+  const currentThemeConfig: ComputedRef<ThemeConfig> = computed(() => {
     return getThemeConfig(currentTheme.value)
   })
 
-  // 初始化主题
-  const init = () => {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 公共方法
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  /**
+   * 设置主题
+   */
+  const setTheme = (newTheme: Theme): void => {
+    setThemeImpl(newTheme)
+  }
+
+  /**
+   * 切换暗黑模式
+   */
+  const toggleDarkMode = (): void => {
+    toggleDarkModeImpl()
+  }
+
+  /**
+   * 获取主题配置
+   */
+  const getThemeConfig = (themeValue: Theme): ThemeConfig => {
+    return THEMES.find(t => t.value === themeValue) || THEMES[0]
+  }
+
+  /**
+   * 初始化主题
+   */
+  const init = (): (() => void) => {
     const cleanup = initTheme()
     return cleanup
   }
 
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 返回Store接口
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
   return {
     // 状态
     currentTheme,
@@ -68,7 +101,7 @@ export const useThemeStore = defineStore("theme", () => {
     applyTheme,
     watchSystemTheme,
     init,
-    getThemeConfig,
+    getThemeConfig
   }
 })
 
