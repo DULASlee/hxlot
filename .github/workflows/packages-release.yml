@@ -1,0 +1,122 @@
+name: Packages Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: '版本升级类型'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - prerelease
+      publish_tag:
+        description: '发布标签'
+        required: false
+        default: 'latest'
+        type: choice
+        options:
+          - latest
+          - beta
+          - alpha
+          - next
+
+jobs:
+  release:
+    name: 发布Packages
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: 配置Git
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+      
+      - name: 设置Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+          cache-dependency-path: src/SmartAbp.Vue/package-lock.json
+      
+      - name: 安装依赖
+        working-directory: src/SmartAbp.Vue
+        run: npm ci
+      
+      - name: 运行质量检查
+        working-directory: src/SmartAbp.Vue
+        run: |
+          npm run type-check
+          npm run lint
+          npm run packages:test
+      
+      - name: 构建packages
+        working-directory: src/SmartAbp.Vue
+        run: npm run packages:build
+      
+      - name: 升级版本
+        working-directory: src/SmartAbp.Vue
+        run: npm run packages:version:bump:${{ github.event.inputs.version_type }}
+      
+      - name: 获取新版本号
+        id: get_version
+        working-directory: src/SmartAbp.Vue
+        run: |
+          VERSION=$(node -p "require('./packages/lowcode-shared/package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "📦 新版本: $VERSION"
+      
+      - name: 提交版本变更
+        working-directory: src/SmartAbp.Vue
+        run: |
+          git add packages/*/package.json
+          git commit -m "chore(release): packages v${{ steps.get_version.outputs.version }}"
+          git tag -a "v${{ steps.get_version.outputs.version }}" -m "Release v${{ steps.get_version.outputs.version }}"
+          git push origin main --tags
+      
+      - name: 测试发布 (Dry Run)
+        working-directory: src/SmartAbp.Vue
+        run: npm run packages:publish:dry
+      
+      - name: 发布到npm
+        working-directory: src/SmartAbp.Vue
+        run: npm run packages:publish -- --tag=${{ github.event.inputs.publish_tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
+      - name: 创建GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          release_name: Packages v${{ steps.get_version.outputs.version }}
+          body: |
+            ## 📦 Packages Release v${{ steps.get_version.outputs.version }}
+            
+            ### 发布的包
+            - @smartabp/lowcode-shared@${{ steps.get_version.outputs.version }}
+            - @smartabp/lowcode-core@${{ steps.get_version.outputs.version }}
+            - @smartabp/lowcode-api@${{ steps.get_version.outputs.version }}
+            - @smartabp/lowcode-designer@${{ steps.get_version.outputs.version }}
+            - @smartabp/lowcode-tools@${{ steps.get_version.outputs.version }}
+            
+            ### 安装
+            ```bash
+            npm install @smartabp/lowcode-shared@${{ steps.get_version.outputs.version }}
+            ```
+            
+            ### 文档
+            - [Storybook](https://your-org.github.io/hxlot/storybook)
+            - [Changelog](https://github.com/DULASlee/hxlot/blob/main/docs/packages/CHANGELOG.md)
+          draft: false
+          prerelease: ${{ github.event.inputs.version_type == 'prerelease' }}
