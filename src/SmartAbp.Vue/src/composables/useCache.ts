@@ -386,7 +386,7 @@ export function useHttpCache() {
   /**
    * 生成请求缓存键
    */
-  const getRequestKey = (url: string, options?: RequestInit): string => {
+  const getRequestKey = (url: string, options?: globalThis.RequestInit): string => {
     const method = options?.method || 'GET'
     const body = options?.body ? JSON.stringify(options.body) : ''
     return `${method}:${url}:${body}`
@@ -395,7 +395,7 @@ export function useHttpCache() {
   /**
    * 缓存GET请求
    */
-  const cachedFetch = async (url: string, options?: RequestInit): Promise<Response> => {
+  const cachedFetch = async (url: string, options?: globalThis.RequestInit): Promise<Response> => {
     const key = getRequestKey(url, options)
     
     // 非GET请求不缓存

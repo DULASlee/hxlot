@@ -244,7 +244,7 @@ export function useLazyImage() {
   /**
    * 初始化图片懒加载
    */
-  const initLazyLoad = (options?: IntersectionObserverInit) => {
+  const initLazyLoad = (options?: globalThis.IntersectionObserverInit) => {
     if (!('IntersectionObserver' in window)) {
       console.warn('IntersectionObserver not supported')
       return

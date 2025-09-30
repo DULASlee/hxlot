@@ -232,7 +232,7 @@ export function useInteractionPreload() {
   const onViewportPreload = (
     el: HTMLElement,
     componentPath: string,
-    options?: IntersectionObserverInit
+    options?: globalThis.IntersectionObserverInit
   ) => {
     if (!('IntersectionObserver' in window)) {
       return () => {

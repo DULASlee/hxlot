@@ -46,7 +46,7 @@
           :key="theme.value"
           class="theme-dropdown-item"
           :class="{ active: currentTheme === theme.value }"
-          @click="setTheme(theme.value)"
+          @click="setTheme(theme.value as ThemeType)"
         >
           <div
             class="theme-preview"
@@ -68,7 +68,7 @@ import { defineComponent, ref, computed, onMounted } from "vue"
 // import { useI18n } from 'vue-i18n';
 import { storeToRefs } from "pinia"
 import { useThemeStore } from "@/stores"
-// import type { ThemeType } from '@/composables/useDesignSystem';
+import type { ThemeType } from '@/composables/useDesignSystem'
 
 // 点击外部指令
 const vClickOutside = {

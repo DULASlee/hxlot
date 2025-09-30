@@ -37,7 +37,7 @@ export const useThemeStore = defineStore('theme', () => {
    * 当前主题（可读写）
    */
   const currentTheme: WritableComputedRef<Theme> = computed({
-    get: () => theme.value,
+    get: () => theme.value as Theme,
     set: (value: Theme) => setTheme(value)
   })
 

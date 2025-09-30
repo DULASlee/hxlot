@@ -341,7 +341,7 @@ const handleLogoutCancel = () => {
   showLogoutDialog.value = false
 }
 
-const currentLocale = computed(() => i18n.global.locale.value as "zh-CN" | "en-US")
+const currentLocale = computed(() => (i18n.global.locale as any).value as "zh-CN" | "en-US")
 const toggleLocale = () => {
   setLocale(currentLocale.value === "zh-CN" ? "en-US" : "zh-CN")
 }

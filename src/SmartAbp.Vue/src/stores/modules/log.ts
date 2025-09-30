@@ -1,112 +1,194 @@
-import { defineStore } from "pinia"
-import { ref, computed } from "vue"
-import { logger, LogLevel } from "@/utils/logger"
+import { defineStore } from 'pinia'
+import { ref, computed, type Ref, type ComputedRef } from 'vue'
+import { logger, LogLevel, type LogEntry, type LogStats } from '@/utils/logger'
 
-export const useLogStore = defineStore("logs", () => {
-  // 状态
-  const isLogViewerVisible = ref(false)
-  const logFilters = ref({
-    level: null as LogLevel | null,
-    category: "",
-    search: "",
+/**
+ * 日志过滤器接口
+ */
+export interface LogFilters {
+  level: LogLevel | null
+  category: string
+  search: string
+}
+
+/**
+ * 日志Store
+ * 负责管理日志查看器和日志记录
+ */
+export const useLogStore = defineStore('logs', () => {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 状态定义
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  const isLogViewerVisible: Ref<boolean> = ref(false)
+  const logFilters: Ref<LogFilters> = ref({
+    level: null,
+    category: '',
+    search: ''
   })
 
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 计算属性
-  const logs = computed(() => logger.getLogs())
-  const logStats = computed(() => logger.getStats())
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  /**
+   * 所有日志
+   */
+  const logs: ComputedRef<LogEntry[]> = computed(() => logger.getLogs())
 
-  const filteredLogs = computed(() => {
+  /**
+   * 日志统计信息
+   */
+  const logStats: ComputedRef<LogStats> = computed(() => logger.getStats())
+
+  /**
+   * 过滤后的日志
+   */
+  const filteredLogs: ComputedRef<LogEntry[]> = computed(() => {
     let result = logs.value
 
     if (logFilters.value.level !== null) {
-      result = result.filter((log) => log.level === logFilters.value.level)
+      result = result.filter(log => log.level === logFilters.value.level)
     }
 
     if (logFilters.value.category) {
-      result = result.filter((log) => log.category === logFilters.value.category)
+      result = result.filter(log => log.category === logFilters.value.category)
     }
 
     if (logFilters.value.search) {
       const query = logFilters.value.search.toLowerCase()
       result = result.filter(
-        (log) =>
+        log =>
           log.message.toLowerCase().includes(query) ||
           log.category?.toLowerCase().includes(query) ||
-          log.source?.toLowerCase().includes(query),
+          log.source?.toLowerCase().includes(query)
       )
     }
 
     return result
   })
 
-  const errorCount = computed(() => logs.value.filter((log) => log.level === LogLevel.ERROR).length)
-
-  const warningCount = computed(
-    () => logs.value.filter((log) => log.level === LogLevel.WARN).length,
+  /**
+   * 错误数量
+   */
+  const errorCount: ComputedRef<number> = computed(
+    () => logs.value.filter(log => log.level === LogLevel.ERROR).length
   )
 
-  const hasErrors = computed(() => errorCount.value > 0)
-  const hasWarnings = computed(() => warningCount.value > 0)
+  /**
+   * 警告数量
+   */
+  const warningCount: ComputedRef<number> = computed(
+    () => logs.value.filter(log => log.level === LogLevel.WARN).length
+  )
 
-  // 方法
-  const showLogViewer = () => {
+  /**
+   * 是否有错误
+   */
+  const hasErrors: ComputedRef<boolean> = computed(() => errorCount.value > 0)
+
+  /**
+   * 是否有警告
+   */
+  const hasWarnings: ComputedRef<boolean> = computed(() => warningCount.value > 0)
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 日志查看器方法
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  /**
+   * 显示日志查看器
+   */
+  const showLogViewer = (): void => {
     isLogViewerVisible.value = true
   }
 
-  const hideLogViewer = () => {
+  /**
+   * 隐藏日志查看器
+   */
+  const hideLogViewer = (): void => {
     isLogViewerVisible.value = false
   }
 
-  const toggleLogViewer = () => {
+  /**
+   * 切换日志查看器
+   */
+  const toggleLogViewer = (): void => {
     isLogViewerVisible.value = !isLogViewerVisible.value
   }
 
-  const setLogFilter = (filters: Partial<typeof logFilters.value>) => {
+  /**
+   * 设置日志过滤器
+   */
+  const setLogFilter = (filters: Partial<LogFilters>): void => {
     Object.assign(logFilters.value, filters)
   }
 
-  const clearLogFilters = () => {
+  /**
+   * 清除日志过滤器
+   */
+  const clearLogFilters = (): void => {
     logFilters.value = {
       level: null,
-      category: "",
-      search: "",
+      category: '',
+      search: ''
     }
   }
 
-  const clearAllLogs = () => {
+  /**
+   * 清除所有日志
+   */
+  const clearAllLogs = (): void => {
     logger.clear()
   }
 
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 便捷的日志记录方法
-  const logDebug = (message: string, data?: any) => {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  const logDebug = (message: string, data?: any): void => {
     logger.debug(message, data)
   }
 
-  const logInfo = (message: string, data?: any) => {
+  const logInfo = (message: string, data?: any): void => {
     logger.info(message, data)
   }
 
-  const logWarn = (message: string, data?: any) => {
+  const logWarn = (message: string, data?: any): void => {
     logger.warn(message, data)
   }
 
-  const logError = (message: string, data?: any) => {
+  const logError = (message: string, data?: any): void => {
     logger.error(message, data)
   }
 
-  const logSuccess = (message: string, data?: any) => {
+  const logSuccess = (message: string, data?: any): void => {
     logger.success(message, data)
   }
 
-  // API 请求日志记录
-  const logApiRequest = (method: string, url: string, data?: any) => {
-    logInfo(`${method.toUpperCase()} ${url}`, { ...data, category: "api", source: "http-client" })
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 专用日志记录方法
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  /**
+   * API请求日志
+   */
+  const logApiRequest = (method: string, url: string, data?: any): void => {
+    logInfo(`${method.toUpperCase()} ${url}`, {
+      ...data,
+      category: 'api',
+      source: 'http-client'
+    })
   }
 
-  const logApiResponse = (method: string, url: string, status: number, data?: any) => {
-    const level = status >= 400 ? LogLevel.ERROR : status >= 300 ? LogLevel.WARN : LogLevel.SUCCESS
+  /**
+   * API响应日志
+   */
+  const logApiResponse = (method: string, url: string, status: number, data?: any): void => {
+    const level =
+      status >= 400 ? LogLevel.ERROR : status >= 300 ? LogLevel.WARN : LogLevel.SUCCESS
     const message = `${method.toUpperCase()} ${url} - ${status}`
-    const logData = { ...data, category: "api", source: "http-client" }
+    const logData = { ...data, category: 'api', source: 'http-client' }
 
     if (level === LogLevel.ERROR) {
       logError(message, logData)
@@ -117,21 +199,35 @@ export const useLogStore = defineStore("logs", () => {
     }
   }
 
-  // 用户操作日志记录
-  const logUserAction = (action: string, details?: any) => {
-    logInfo(`用户操作: ${action}`, { ...details, category: "user", source: "ui" })
+  /**
+   * 用户操作日志
+   */
+  const logUserAction = (action: string, details?: any): void => {
+    logInfo(`用户操作: ${action}`, {
+      ...details,
+      category: 'user',
+      source: 'ui'
+    })
   }
 
-  // 系统事件日志记录
-  const logSystemEvent = (event: string, details?: any) => {
-    logInfo(`系统事件: ${event}`, { ...details, category: "system", source: "system" })
+  /**
+   * 系统事件日志
+   */
+  const logSystemEvent = (event: string, details?: any): void => {
+    logInfo(`系统事件: ${event}`, {
+      ...details,
+      category: 'system',
+      source: 'system'
+    })
   }
 
-  // 性能日志记录
-  const logPerformance = (operation: string, duration: number, details?: any) => {
+  /**
+   * 性能日志
+   */
+  const logPerformance = (operation: string, duration: number, details?: any): void => {
     const level = duration > 1000 ? LogLevel.WARN : LogLevel.INFO
     const message = `性能: ${operation} 耗时 ${duration}ms`
-    const logData = { ...details, category: "performance", source: "performance" }
+    const logData = { ...details, category: 'performance', source: 'performance' }
 
     if (level === LogLevel.WARN) {
       logWarn(message, logData)
@@ -140,6 +236,10 @@ export const useLogStore = defineStore("logs", () => {
     }
   }
 
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 返回Store接口
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
   return {
     // 状态
     isLogViewerVisible,
@@ -154,7 +254,7 @@ export const useLogStore = defineStore("logs", () => {
     hasErrors,
     hasWarnings,
 
-    // 方法
+    // 日志查看器方法
     showLogViewer,
     hideLogViewer,
     toggleLogViewer,
@@ -174,6 +274,6 @@ export const useLogStore = defineStore("logs", () => {
     logApiResponse,
     logUserAction,
     logSystemEvent,
-    logPerformance,
+    logPerformance
   }
 })
