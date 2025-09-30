@@ -101,7 +101,7 @@ import App from "./App.vue"
 import router from "./router"
 import { logger } from "./utils/logger"
 import { i18n } from "./plugins/i18n"
-import { createEnterpriseIconSystem } from "./plugins/enterpriseIcons"
+// import { createEnterpriseIconSystem } from "./plugins/enterpriseIcons" // TODO: enterpriseIcons.ts 文件不存在，暂时注释
 import { ElMessage } from "element-plus"
 // 低代码设计器 store 暂未对外导出，先移除硬依赖
 
@@ -205,29 +205,30 @@ if (import.meta.env.DEV) {
   }
 }
 
-// 🎨 配置企业级图标系统
-const enterpriseIconSystem = createEnterpriseIconSystem({
-  theme: {
-    name: 'smartabp-enterprise',
-    colors: {
-      primary: '#409EFF',
-      success: '#67C23A',
-      warning: '#E6A23C',
-      danger: '#F56C6C',
-      info: '#909399',
-      text: '#303133'
-    }
-  },
-  preloadIcons: [
-    'dashboard', 'user', 'users', 'settings', 'business', 
-    'project', 'order', 'customer', 'lowcode', 'code',
-    'add', 'edit', 'delete', 'search', 'refresh'
-  ],
-  enableCache: true,
-  debug: import.meta.env.DEV
-})
+// 🎨 配置企业级图标系统 - TODO: 暂时注释，等待enterpriseIcons.ts实现
+// const enterpriseIconSystem = createEnterpriseIconSystem({
+//   theme: {
+//     name: 'smartabp-enterprise',
+//     colors: {
+//       primary: '#409EFF',
+//       success: '#67C23A',
+//       warning: '#E6A23C',
+//       danger: '#F56C6C',
+//       info: '#909399',
+//       text: '#303133'
+//     }
+//   },
+//   preloadIcons: [
+//     'dashboard', 'user', 'users', 'settings', 'business', 
+//     'project', 'order', 'customer', 'lowcode', 'code',
+//     'add', 'edit', 'delete', 'search', 'refresh'
+//   ],
+//   enableCache: true,
+//   debug: import.meta.env.DEV
+// })
 
-app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin).use(enterpriseIconSystem)
+app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin)
+// .use(enterpriseIconSystem) // TODO: 暂时注释
 
 async function bootstrap() {
   // 低代码：启用IndexedDB持久化并冷启动加载

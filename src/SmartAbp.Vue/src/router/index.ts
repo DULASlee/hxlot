@@ -21,23 +21,16 @@ const ProjectAnalysisView = () => import("@/views/project/ProjectAnalysisView.vu
 const PermissionsView = () => import("@/views/system/PermissionsView.vue")
 const UsersView = () => import("@/views/system/UsersView.vue")
 
-// 代码生成模块组件
-const LowCodeEngineView = () =>
-  import("../../packages/lowcode-designer/src/views/codegen/LowCodeEngineView.vue")
-const SfcCompilerView = () => import("../../packages/lowcode-designer/src/views/codegen/SfcCompilerView.vue")
-const DragDropFormView = () =>
-  import("../../packages/lowcode-designer/src/views/codegen/DragDropFormView.vue")
-const PerformanceDashboard = () =>
-  import("../../packages/lowcode-designer/src/views/codegen/PerformanceDashboard.vue")
-const VisualDesignerView = () => import("../../packages/lowcode-designer/src/views/VisualDesignerView.vue")
-
 const routes: RouteRecordRaw[] = [
   // 登录页面
   {
     path: "/login",
     name: "Login",
     component: LoginView,
-    meta: { requiresAuth: false },
+    meta: { 
+      title: "登录",
+      requiresAuth: false 
+    },
   },
   {
     path: "/test/login",
@@ -49,7 +42,10 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/",
     redirect: "/dashboard",
-    meta: { requiresAuth: false },
+    meta: { 
+      title: "首页",
+      requiresAuth: false 
+    },
   },
   // 工作台页面
   {
@@ -235,115 +231,6 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-  // 代码生成模块
-  {
-    path: "/CodeGen",
-    component: SmartAbpLayout,
-    meta: {
-      title: "代码生成",
-      icon: "⚡",
-      requiresAuth: true,
-      requiredRoles: ["user"],
-    },
-    children: [
-      {
-        path: "ultra-simple",
-        name: "UltraSimpleStudio",
-        component: () => import("../../packages/lowcode-designer/src/views/UltraSimpleStudio.vue"),
-        meta: { title: "极简代码生成", menuKey: "ultra-simple-studio" },
-      },
-      ...(import.meta.env.DEV
-        ? [
-            {
-              path: "wizard",
-              name: "ModuleWizard",
-              component: LowCodeEngineView,
-              meta: { title: "模块生成向导", menuKey: "module-wizard" },
-            },
-          ]
-        : []),
-      {
-        path: "engine",
-        name: "LowCodeEngine",
-        component: LowCodeEngineView,
-        meta: { title: "低代码引擎控制台", menuKey: "lowcode-engine" },
-      },
-      {
-        path: "designer",
-        name: "LowCodeDesigner",
-        component: VisualDesignerView,
-        meta: {
-          title: "可视化设计",
-          icon: "el-icon-brush",
-        },
-      },
-      // {
-      //   path: "relationship-designer-test",
-      //   name: "RelationshipDesignerTest",
-      //   component: () =>
-      //     import("@smartabp/lowcode-designer/views/dev/RelationshipDesignerTestView.vue"),
-      //   meta: {
-      //     title: "关系设计器测试",
-      //     icon: "el-icon-link",
-      //   },
-      // },
-      // {
-      //   path: "module-wizard-test",
-      //   name: "ModuleWizardTest",
-      //   component: () => import("@smartabp/lowcode-designer/views/dev/ModuleWizardTestView.vue"),
-      //   meta: {
-      //     title: "模块向导测试",
-      //     icon: "el-icon-guide",
-      //   },
-      // },
-      // {
-      //   path: "page-renderer-test",
-      //   name: "PageRendererTest",
-      //   component: () => import("@smartabp/lowcode-designer/views/dev/PageRendererTestView.vue"),
-      //   meta: {
-      //     title: "页面渲染器测试",
-      //     icon: "el-icon-picture-outline",
-      //   },
-      // },
-      {
-        path: "ui-customizer-test",
-        name: "UICustomizerTest",
-        component: () => import("@/components/PlaceholderView.vue"),
-        meta: {
-          title: "UI定制器测试",
-          icon: "el-icon-brush",
-        },
-      },
-      {
-        path: "sfc",
-        name: "SfcCompiler",
-        component: SfcCompilerView,
-        meta: { title: "SFC编译器演示", menuKey: "sfc-compiler" },
-      },
-      {
-        path: "visual-designer",
-        name: "VisualDesigner",
-        component: VisualDesignerView,
-        meta: { title: "可视化设计器（P2）", menuKey: "visual-designer" },
-      },
-      {
-        path: "form",
-        name: "DragDropForm",
-        component: DragDropFormView,
-        meta: { title: "拖拽表单开发器", menuKey: "drag-drop-form" },
-      },
-      {
-        path: "performance",
-        name: "PerformanceMonitor",
-        component: PerformanceDashboard,
-        meta: {
-          title: "性能监控中心",
-          menuKey: "performance-monitor",
-          requiredRoles: ["admin"],
-        },
-      },
-    ],
-  },
   // LowCode Studio 一体化工作台
   {
     path: "/lowcode",
@@ -365,13 +252,13 @@ const routes: RouteRecordRaw[] = [
       {
         path: "entity-modeling",
         name: "EntityModeling",
-        component: () => import("../../packages/lowcode-designer/src/views/EntityModelingView.vue"),
+        component: () => import("@smartabp/lowcode-designer/views/EntityModelingView.vue"),
         meta: { title: "数据建模", menuKey: "entity-modeling" },
       },
       {
         path: "design",
         name: "PageDesign",
-        component: () => import("../../packages/lowcode-designer/src/views/DesignView.vue"),
+        component: () => import("@smartabp/lowcode-designer/views/DesignView.vue"),
         meta: { title: "页面设计", menuKey: "page-design" },
       },
       {
@@ -389,7 +276,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "theme",
         name: "ThemeCustomization",
-        component: () => import("../../packages/lowcode-designer/src/views/ThemeCustomizationView.vue"),
+        component: () => import("@smartabp/lowcode-designer/views/ThemeCustomizationView.vue"),
         meta: { title: "主题定制", menuKey: "theme-customization" },
       },
     ],

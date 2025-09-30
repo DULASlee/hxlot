@@ -589,37 +589,6 @@ export const menuConfig: MenuConfig = {
       ],
     },
 
-    // 旧版代码生成模块（已废弃，保留仅供测试）
-    {
-      key: "codegen-legacy",
-      title: "代码生成(旧版)",
-      icon: "fas fa-code",
-      type: "folder",
-      order: 9,
-      visible: false, // 隐藏旧版菜单，功能已迁移到低代码工作台
-      requiredRoles: [ROLES.ADMIN],
-      defaultExpanded: false,
-      description: "已废弃：功能已迁移到低代码工作台",
-      children: [
-        {
-          key: "visual-designer-legacy",
-          title: "可视化设计器（P2-旧版）",
-          icon: "fas fa-object-group",
-          type: "page",
-          path: "/CodeGen/visual-designer",
-          component: "@/views/codegen/VisualDesignerView.vue",
-          order: 1,
-          visible: false,
-          requiredRoles: [ROLES.ADMIN],
-          closable: true,
-          meta: {
-            title: "可视化设计器（P2）",
-            menuKey: "visual-designer",
-          },
-        },
-      ],
-    },
-
     // 分割线
     {
       key: "divider-3",
