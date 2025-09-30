@@ -26,6 +26,54 @@ alwaysApply: true
 
 **🚨 每次AI编程前必须强制执行以下检查：**
 
+#### 0. JavaScript污染检测（优先级最高）
+```typescript
+触发条件 = {
+  文件操作: ['创建*.js', '创建*.vue', '修改*.js'],
+  代码模式: ['<script>', '<script setup>'],
+  危险操作: ['将.ts改为.js', '删除类型定义']
+}
+
+// 检测命令
+JavaScript污染检测 = `
+  find src/SmartAbp.Vue/src -name "*.js" -type f | 
+  grep -v "\.generated\." | 
+  grep -v "node_modules" | 
+  grep -v "vite.config" | 
+  grep -v "vitest.config" |
+  grep -v ".eslintrc"
+`
+
+// AI必须的响应
+if (发现JavaScript文件) {
+  🚨 警告: 检测到JavaScript文件污染！
+  📋 违规文件: [列出所有.js文件]
+  ❌ 必须行动: 立即迁移为TypeScript或说明必要性
+  ✅ 允许例外: 
+    - 构建脚本 (vite.config.js, vitest.config.js)
+    - 配置文件 (.eslintrc.js)
+    - 已标注的Node.js工具脚本
+  
+  停止编码，等待处理JavaScript污染！
+}
+```
+
+**Vue组件TypeScript强制检查**:
+```typescript
+// 检测Vue组件是否使用TypeScript
+Vue组件检查 = `
+  grep -r "<script>" src/SmartAbp.Vue/src --include="*.vue" | 
+  grep -v "lang=\"ts\"" |
+  grep -v "lang='ts'"
+`
+
+if (发现非TypeScript的Vue组件) {
+  ❌ 错误: Vue组件必须使用 <script setup lang="ts">
+  📋 违规组件: [列出]
+  ✅ 修复方案: 添加 lang="ts" 属性并添加类型定义
+}
+```
+
 #### 1. packages目录结构扫描
 ```typescript
 触发条件 = {

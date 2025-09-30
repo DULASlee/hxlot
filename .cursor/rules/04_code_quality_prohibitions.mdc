@@ -13,6 +13,72 @@ alwaysApply: true
 
 ## 🚨 最高优先级禁止清单 (Highest Priority Prohibitions)
 
+### 🚫 零级禁令：JavaScript污染禁止 (JavaScript Pollution Prevention)
+
+**除非特殊必要，严禁编写JavaScript代码，一律使用TypeScript：**
+
+1. **JavaScript文件创建禁令**
+   - **禁止原因**: JavaScript缺乏类型安全，容易引入运行时错误，降低代码质量和可维护性
+   - **危害程度**: 极高危 - 破坏项目类型安全体系，造成长期技术债务
+   - **允许例外**:
+     - 构建脚本（如 `vite.config.js`, `vitest.config.js`）
+     - 第三方工具配置文件（如 `.eslintrc.js`）
+     - Node.js工具脚本（明确标注用途）
+   - **强制要求**:
+     - 所有Vue组件必须使用 `<script setup lang="ts">`
+     - 所有工具函数、composables、stores、plugins必须使用 `.ts` 扩展名
+     - 所有类型定义必须在 `.ts` 或 `.d.ts` 文件中
+   - **检测命令**: `find src/ -name "*.js" -type f | grep -v "\.generated\." | grep -v node_modules`
+   - **替代方案**: 
+     - 将所有 `.js` 文件迁移为 `.ts`
+     - 添加完整的TypeScript类型定义
+     - 使用严格的类型检查模式
+
+2. **Vue组件JavaScript禁令**
+   - **禁止原因**: Vue3 + TypeScript是项目标准，使用JavaScript会失去组件类型推导和IDE支持
+   - **危害程度**: 高危 - 降低开发效率，增加维护成本
+   - **正确做法**:
+     ```vue
+     <!-- ✅ 正确 -->
+     <script setup lang="ts">
+     import { ref } from 'vue'
+     const count = ref<number>(0)
+     </script>
+     
+     <!-- ❌ 错误 -->
+     <script setup>
+     const count = ref(0) // 缺少类型注解
+     </script>
+     ```
+
+3. **类型定义缺失禁令**
+   - **禁止原因**: 未定义类型的代码等同于JavaScript，失去TypeScript的核心价值
+   - **危害程度**: 高危 - 隐藏类型错误，降低代码质量
+   - **强制要求**:
+     - 所有函数必须定义参数类型和返回值类型
+     - 所有接口和类型必须导出供其他模块使用
+     - 所有API响应必须定义DTO接口
+   - **正确示例**:
+     ```typescript
+     // ✅ 正确：完整类型定义
+     export interface UserDto {
+       id: string
+       name: string
+       email: string
+     }
+     
+     export async function fetchUser(id: string): Promise<UserDto> {
+       const response = await api.get<UserDto>(`/users/${id}`)
+       return response.data
+     }
+     
+     // ❌ 错误：缺少类型定义
+     export async function fetchUser(id) {
+       const response = await api.get(`/users/${id}`)
+       return response.data
+     }
+     ```
+
 ### 🔥 一级禁令：类型安全破坏者 (Type Safety Breakers)
 
 **这些语法会直接破坏TypeScript的类型安全系统，严禁在任何情况下使用：**
