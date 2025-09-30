@@ -72,7 +72,8 @@ const props = withDefaults(defineProps<Props>(), {
   shadow: 'hover',
   bodyPadding: '20px',
   hoverable: false,
-  bordered: true
+  bordered: true,
+  title: undefined
 })
 
 const slots = useSlots()

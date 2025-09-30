@@ -109,7 +109,8 @@ const props = withDefaults(defineProps<Props>(), {
   closeOnClickMask: true,
   closeOnPressEscape: true,
   confirmLoading: false,
-  center: false
+  center: false,
+  title: undefined
 })
 
 const emit = defineEmits<{

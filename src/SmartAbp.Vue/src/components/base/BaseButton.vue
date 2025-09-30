@@ -81,7 +81,8 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
   round: false,
   circle: false,
-  nativeType: 'button'
+  nativeType: 'button',
+  icon: undefined
 })
 
 const emit = defineEmits<{
