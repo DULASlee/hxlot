@@ -1,6 +1,8 @@
 <#
   SmartAbp 终端配置验证器
   验证所有终端配置的一致性和稳定性
+  版本: v2.1
+  更新日期: 2025-09-30
 #>
 
 param(
@@ -121,18 +123,44 @@ Test-Configuration "npm可执行文件存在" {
 # 7. 验证旧配置文件已清理
 Test-Configuration "旧配置文件已清理" {
     -not (Test-Path ".cursor/terminal-settings.json") -and
-    -not (Test-Path ".cursor/pwsh-profile.ps1")
+    -not (Test-Path ".cursor/pwsh-profile.ps1") -and
+    -not (Test-Path ".cursor/shell-config.sh")
 }
 
-# 8. 验证脚本权限
-Test-Configuration "Shell脚本可执行权限" {
+# 8. 验证环境变量配置完整性
+Test-Configuration "环境变量配置完整性" {
     try {
-        if (Test-Path ".cursor/unified-terminal.sh") {
-            # 在Windows上，只检查文件存在即可
-            $true
-        } else {
-            $false
-        }
+        $config = Get-Content ".cursor/env-vars.json" | ConvertFrom-Json
+        ($null -ne $config.encoding.LANG) -and
+        ($null -ne $config.pagers.GIT_PAGER) -and
+        ($null -ne $config.msys.MSYS_NO_PATHCONV) -and
+        ($null -ne $config.terminal.maxHistoryCount)
+    } catch {
+        $false
+    }
+}
+
+# 9. 验证Shell脚本存在
+Test-Configuration "Shell脚本存在性" {
+    try {
+        (Test-Path ".cursor/unified-terminal.sh") -and
+        (Test-Path ".cursor/unified-terminal.ps1") -and
+        (Test-Path ".cursor/unified-terminal.bat")
+    } catch {
+        $false
+    }
+}
+
+# 10. 验证配置版本一致性
+Test-Configuration "配置版本一致性" {
+    try {
+        $bashContent = Get-Content ".cursor/unified-terminal.sh" -Raw
+        $psContent = Get-Content ".cursor/unified-terminal.ps1" -Raw
+        $batContent = Get-Content ".cursor/unified-terminal.bat" -Raw
+        
+        ($bashContent -match "v2\.1") -and
+        ($psContent -match "v2\.1") -and
+        ($batContent -match "v2\.1")
     } catch {
         $false
     }
@@ -163,10 +191,15 @@ if ($FailedTests -eq 0) {
 
 Write-ValidationLog ""
 Write-ValidationLog "📚 使用指南:" "Info"
-Write-ValidationLog "   • PowerShell: pwsh -File .cursor/unified-terminal.ps1" "Info"
+Write-ValidationLog "   • PowerShell: . .cursor/unified-terminal.ps1" "Info"
 Write-ValidationLog "   • Bash: source .cursor/unified-terminal.sh" "Info"
 Write-ValidationLog "   • CMD: call .cursor/unified-terminal.bat" "Info"
 Write-ValidationLog "   • 统一别名: gs, gl, gd, gb, dnr, dnb, dnt" "Info"
 Write-ValidationLog "   • SmartAbp命令: smartabp-sync, smartabp-check, smartabp-dev" "Info"
+Write-ValidationLog "   • 快速导航: smartabp-vue, smartabp-packages, smartabp-backend" "Info"
+Write-ValidationLog "   • 质量检查: smartabp-lint, smartabp-type, smartabp-build" "Info"
+Write-ValidationLog ""
+Write-ValidationLog "🔧 配置版本: v2.1" "Info"
+Write-ValidationLog "📅 更新日期: 2025-09-30" "Info"
 
 exit $FailedTests

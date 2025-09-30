@@ -1,10 +1,46 @@
 <#
   SmartAbp 统一终端配置 - PowerShell版本
   基于 .cursor/env-vars.json 配置，确保与其他Shell完全一致
+  版本: v2.1
+  更新日期: 2025-09-30
 #>
 
+# 获取脚本所在目录和项目根目录
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectRoot = Split-Path -Parent $ScriptDir
+
 # 读取统一环境配置
-$EnvConfig = Get-Content -Path ".cursor/env-vars.json" | ConvertFrom-Json
+$EnvConfigPath = Join-Path $ScriptDir "env-vars.json"
+
+if (-not (Test-Path $EnvConfigPath)) {
+    Write-Host "⚠️ 警告: 未找到环境配置文件 $EnvConfigPath" -ForegroundColor Yellow
+    Write-Host "🔄 使用默认配置..." -ForegroundColor Yellow
+    # 创建默认配置对象
+    $EnvConfig = [PSCustomObject]@{
+        encoding = [PSCustomObject]@{
+            LANG = "C.UTF-8"
+            LC_ALL = "C.UTF-8"
+            LESSCHARSET = "utf-8"
+            TERM = "xterm-256color"
+        }
+        pagers = [PSCustomObject]@{
+            PAGER = "cat"
+            MANPAGER = "cat"
+            LESS = ""
+            SYSTEMD_PAGER = ""
+            GIT_PAGER = "cat"
+        }
+        msys = [PSCustomObject]@{
+            MSYS_NO_PATHCONV = "1"
+            MSYS2_ARG_CONV_EXCL = "*"
+        }
+        terminal = [PSCustomObject]@{
+            maxHistoryCount = 10000
+        }
+    }
+} else {
+    $EnvConfig = Get-Content -Path $EnvConfigPath | ConvertFrom-Json
+}
 
 try {
   # 统一控制台编码
@@ -29,16 +65,26 @@ $env:GIT_PAGER = $EnvConfig.pagers.GIT_PAGER
 $env:MSYS_NO_PATHCONV = $EnvConfig.msys.MSYS_NO_PATHCONV
 $env:MSYS2_ARG_CONV_EXCL = $EnvConfig.msys.MSYS2_ARG_CONV_EXCL
 
+# SmartAbp 项目特定环境变量
+$env:SMARTABP_PROJECT_ROOT = $ProjectRoot
+$env:SMARTABP_QUALITY_THRESHOLD = 95
+
 # PowerShell 交互优化
 try {
   if (Get-Module -ListAvailable -Name PSReadLine) {
     Set-PSReadLineOption -PredictionSource None -HistoryNoDuplicates -EditMode Windows -ErrorAction SilentlyContinue
   }
-} catch {}
+} catch {
+  # PSReadLine优化失败时静默继续
+}
 
 # 历史记录配置
 $MaximumHistoryCount = $EnvConfig.terminal.maxHistoryCount
-try { $host.UI.RawUI.WindowTitle = 'SmartAbp – 统一PowerShell终端' } catch {}
+try { 
+  $host.UI.RawUI.WindowTitle = 'SmartAbp – 统一PowerShell终端 v2.1' 
+} catch {
+  # 窗口标题设置失败时静默继续
+}
 
 # 统一别名
 Set-Alias ll Get-ChildItem
@@ -103,4 +149,40 @@ function global:smartabp-dev {
   }
 }
 
-Write-Host '✅ SmartAbp 统一PowerShell终端配置已加载' -ForegroundColor Green
+# 快速导航函数
+function global:smartabp-vue { Set-Location "src/SmartAbp.Vue" }
+function global:smartabp-packages { Set-Location "src/SmartAbp.Vue/packages" }
+function global:smartabp-backend { Set-Location "src/SmartAbp.Application" }
+
+# 质量检查函数
+function global:smartabp-lint {
+  Push-Location "src/SmartAbp.Vue"
+  npm run lint
+  Pop-Location
+}
+function global:smartabp-type {
+  Push-Location "src/SmartAbp.Vue"
+  npm run type-check
+  Pop-Location
+}
+function global:smartabp-build {
+  Push-Location "src/SmartAbp.Vue"
+  npm run build
+  Pop-Location
+}
+
+# 显示加载成功消息
+Write-Host ""
+Write-Host '✅ SmartAbp 统一PowerShell终端配置已加载 (v2.1)' -ForegroundColor Green
+Write-Host "📁 项目根目录: $env:SMARTABP_PROJECT_ROOT" -ForegroundColor Cyan
+Write-Host "🎯 质量阈值: $env:SMARTABP_QUALITY_THRESHOLD 分" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "💡 可用的SmartAbp命令:" -ForegroundColor Yellow
+Write-Host "   • smartabp-sync      - Git安全同步" -ForegroundColor White
+Write-Host "   • smartabp-check     - 质量检查" -ForegroundColor White
+Write-Host "   • smartabp-dev       - 启动开发环境" -ForegroundColor White
+Write-Host "   • smartabp-vue       - 进入Vue项目目录" -ForegroundColor White
+Write-Host "   • smartabp-packages  - 进入packages目录" -ForegroundColor White
+Write-Host "   • smartabp-lint      - 运行ESLint检查" -ForegroundColor White
+Write-Host "   • smartabp-type      - 运行TypeScript类型检查" -ForegroundColor White
+Write-Host ""
