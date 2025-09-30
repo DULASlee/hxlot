@@ -1,191 +1,185 @@
- 
-import { defineStore } from "pinia"
-import { ref, computed } from "vue"
-import { logger } from "@/utils/logger"
+import { defineStore } from 'pinia'
+import { ref, computed, type Ref, type ComputedRef } from 'vue'
 
-// 项目模块相关类型定义
+/**
+ * 项目状态枚举
+ */
+export type ProjectStatus = 'active' | 'completed' | 'archived' | 'draft'
+
+/**
+ * 项目优先级枚举
+ */
+export type ProjectPriority = 'high' | 'medium' | 'low'
+
+/**
+ * 项目接口
+ */
 export interface Project {
   id: string
   name: string
   description?: string
-  status: "planning" | "active" | "completed" | "cancelled"
-  priority: "low" | "medium" | "high"
-  startDate?: string
-  endDate?: string
-  createdAt: string
-  updatedAt: string
-  ownerId: string
-  teamMembers: string[]
+  status: ProjectStatus
+  priority: ProjectPriority
+  createdAt?: Date
+  updatedAt?: Date
+  [key: string]: any
 }
 
-export interface CreateProjectRequest {
-  name: string
-  description?: string
-  priority: "low" | "medium" | "high"
-  startDate?: string
-  endDate?: string
-  ownerId: string
+/**
+ * 按优先级分组的项目
+ */
+export interface ProjectsByPriority {
+  high: Project[]
+  medium: Project[]
+  low: Project[]
 }
 
-export interface UpdateProjectRequest {
-  id: string
-  name?: string
-  description?: string
-  status?: "planning" | "active" | "completed" | "cancelled"
-  priority?: "low" | "medium" | "high"
-  startDate?: string
-  endDate?: string
-}
+/**
+ * 项目Store
+ * 负责管理项目数据和状态
+ */
+export const useProjectStore = defineStore('project', () => {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 状态定义
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  const projects: Ref<Project[]> = ref([])
+  const loading: Ref<boolean> = ref(false)
+  const error: Ref<string | null> = ref(null)
+  const currentProject: Ref<Project | null> = ref(null)
 
-export const useProjectStore = defineStore("project", () => {
-  // 状态
-  const projects = ref<Project[]>([])
-  const loading = ref(false)
-  const error = ref<string | null>(null)
-  const currentProject = ref<Project | null>(null)
-
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 计算属性
-  const activeProjects = computed(() =>
-    projects.value.filter((project) => project.status === "active"),
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  /**
+   * 活跃项目列表
+   */
+  const activeProjects: ComputedRef<Project[]> = computed(() =>
+    projects.value.filter(project => project.status === 'active')
   )
 
-  const completedProjects = computed(() =>
-    projects.value.filter((project) => project.status === "completed"),
+  /**
+   * 已完成项目列表
+   */
+  const completedProjects: ComputedRef<Project[]> = computed(() =>
+    projects.value.filter(project => project.status === 'completed')
   )
 
-  const projectsByPriority = computed(() => {
-    return {
-      high: projects.value.filter((p) => p.priority === "high"),
-      medium: projects.value.filter((p) => p.priority === "medium"),
-      low: projects.value.filter((p) => p.priority === "low"),
-    }
-  })
+  /**
+   * 按优先级分组的项目
+   */
+  const projectsByPriority: ComputedRef<ProjectsByPriority> = computed(() => ({
+    high: projects.value.filter(p => p.priority === 'high'),
+    medium: projects.value.filter(p => p.priority === 'medium'),
+    low: projects.value.filter(p => p.priority === 'low')
+  }))
 
-  const projectCount = computed(() => projects.value.length)
+  /**
+   * 项目总数
+   */
+  const projectCount: ComputedRef<number> = computed(() => projects.value.length)
 
-  const hasProjects = computed(() => projects.value.length > 0)
+  /**
+   * 是否有项目
+   */
+  const hasProjects: ComputedRef<boolean> = computed(() => projects.value.length > 0)
 
-  // 方法（占位符，待实现具体业务逻辑）
-  const fetchProjects = async () => {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Actions
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  /**
+   * 获取项目列表
+   */
+  const fetchProjects = async (): Promise<void> => {
     loading.value = true
     error.value = null
+    
     try {
-      // 企业级项目列表API实现 - 保持功能完整性
-      // 使用模拟数据直到后端API就绪
-      const mockProjects: Project[] = [
-        {
-          id: 'project-1',
-          name: 'SmartAbp企业管理系统',
-          description: '基于SmartAbp框架的企业级管理系统',
-          status: 'active',
-          priority: 'high',
-          ownerId: 'admin',
-          teamMembers: ['admin', 'developer'],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
-      ]
-      
-      // 模拟API延迟
-      await new Promise(resolve => setTimeout(resolve, 500))
-      projects.value = mockProjects
-      
-      logger.info('项目列表获取成功', { count: mockProjects.length })
+      // TODO: 实现获取项目列表的API调用
+      // const response = await projectApi.getProjects()
+      // projects.value = response.data
     } catch (err) {
-      error.value = "获取项目列表失败"
-      logger.error('获取项目列表失败', { error: String(err) })
+      error.value = '获取项目列表失败'
       throw err
     } finally {
       loading.value = false
     }
   }
 
-  const createProject = async (projectData: CreateProjectRequest) => {
+  /**
+   * 创建项目
+   */
+  const createProject = async (_projectData: Partial<Project>): Promise<void> => {
     try {
-      // 企业级项目创建API实现 - 保持功能完整性
-      const newProject: Project = {
-        id: `project-${Date.now()}`,
-        name: projectData.name,
-        description: projectData.description || '',
-        status: 'active',
-        priority: 'medium',
-        ownerId: 'current-user',
-        teamMembers: ['current-user'],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 300))
-      projects.value.push(newProject)
-      
-      logger.info('项目创建成功', { projectId: newProject.id })
-      return newProject
+      // TODO: 实现创建项目的API调用
+      // const response = await projectApi.createProject(_projectData)
+      // projects.value.push(response.data)
+      // return response.data
     } catch (err) {
-      error.value = "创建项目失败"
-      logger.error('创建项目失败', { error: String(err) })
+      error.value = '创建项目失败'
       throw err
     }
   }
 
-  const updateProject = async (projectData: UpdateProjectRequest) => {
+  /**
+   * 更新项目
+   */
+  const updateProject = async (_projectData: Partial<Project>): Promise<void> => {
     try {
-      // 企业级项目更新API实现 - 保持功能完整性
-      const index = projects.value.findIndex(p => p.id === projectData.id)
-      if (index !== -1) {
-        const updatedProject = {
-          ...projects.value[index],
-          ...projectData,
-          updatedAt: new Date().toISOString()
-        }
-        
-        await new Promise(resolve => setTimeout(resolve, 300))
-        projects.value[index] = updatedProject
-        
-        logger.info('项目更新成功', { projectId: projectData.id })
-        return updatedProject
-      } else {
-        throw new Error(`项目不存在: ${projectData.id}`)
-      }
+      // TODO: 实现更新项目的API调用
+      // const response = await projectApi.updateProject(_projectData)
+      // const index = projects.value.findIndex(p => p.id === _projectData.id)
+      // if (index !== -1) {
+      //   projects.value[index] = response.data
+      // }
+      // return response.data
     } catch (err) {
-      error.value = "更新项目失败"
-      logger.error('更新项目失败', { error: String(err) })
+      error.value = '更新项目失败'
       throw err
     }
   }
 
-  const deleteProject = async (projectId: string) => {
+  /**
+   * 删除项目
+   */
+  const deleteProject = async (_projectId: string): Promise<void> => {
     try {
-      // 企业级项目删除API实现 - 保持功能完整性
-      const projectIndex = projects.value.findIndex(p => p.id === projectId)
-      if (projectIndex !== -1) {
-        const deletedProject = projects.value[projectIndex]
-        
-        await new Promise(resolve => setTimeout(resolve, 300))
-        projects.value.splice(projectIndex, 1)
-        
-        logger.info('项目删除成功', { projectId, name: deletedProject.name })
-      } else {
-        throw new Error(`项目不存在: ${projectId}`)
-      }
+      // TODO: 实现删除项目的API调用
+      // await projectApi.deleteProject(_projectId)
+      // projects.value = projects.value.filter(p => p.id !== _projectId)
     } catch (err) {
-      error.value = "删除项目失败"
-      logger.error('删除项目失败', { error: String(err) })
+      error.value = '删除项目失败'
       throw err
     }
   }
 
-  const getProjectById = (projectId: string) => {
-    return projects.value.find((project) => project.id === projectId)
+  /**
+   * 根据ID获取项目
+   */
+  const getProjectById = (projectId: string): Project | undefined => {
+    return projects.value.find(project => project.id === projectId)
   }
 
-  const setCurrentProject = (project: Project | null) => {
+  /**
+   * 设置当前项目
+   */
+  const setCurrentProject = (project: Project | null): void => {
     currentProject.value = project
   }
 
-  const clearError = () => {
+  /**
+   * 清除错误信息
+   */
+  const clearError = (): void => {
     error.value = null
   }
 
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 返回Store接口
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
   return {
     // 状态
     projects,
@@ -207,6 +201,6 @@ export const useProjectStore = defineStore("project", () => {
     deleteProject,
     getProjectById,
     setCurrentProject,
-    clearError,
+    clearError
   }
 })
