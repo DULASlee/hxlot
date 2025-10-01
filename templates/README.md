@@ -13,13 +13,16 @@ templates/
 │   ├── contracts/            # 契约层模板
 │   ├── domain/               # 领域层模板
 │   ├── httpapi/              # API控制器模板
-│   └── entityframework/      # 数据访问层模板
+│   ├── entityframework/      # 数据访问层模板
+│   └── ops-monitoring/       # 运维监控微服务模板 (NEW v19.0)
 ├── frontend/                  # 前端模板
 │   ├── components/           # Vue组件模板
 │   ├── views/                # 页面视图模板
 │   ├── stores/               # Pinia状态管理模板
 │   ├── services/             # API服务模板
-│   └── composables/          # 组合式函数模板
+│   ├── composables/          # 组合式函数模板
+│   ├── ops-monitoring/       # 运维监控仪表板模板 (NEW v19.0)
+│   └── theme/                # 主题系统模板 (NEW v19.0)
 ├── lowcode/                   # 低代码引擎模板
 │   ├── plugins/              # 插件开发模板
 │   ├── generators/           # 代码生成器模板
@@ -52,6 +55,9 @@ templates/
 | "管理页面" | frontend/views | CrudManagement.template.vue |
 | "状态管理" | frontend/stores | EntityStore.template.ts |
 | "权限定义" | backend/contracts | Permissions.template.cs |
+| "运维监控服务" | backend/ops-monitoring | OpsMonitoringAppService.template.cs |
+| "监控仪表板" | frontend/ops-monitoring | MonitoringDashboard.template.vue |
+| "主题配置" | frontend/theme | ThemeConfig.template.ts |
 
 ### 搜索命令示例
 
