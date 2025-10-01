@@ -1,0 +1,95 @@
+/**
+ * 用户相关类型定义
+ * 基于ABP框架的标准DTO模式
+ */
+export interface User {
+    id: string;
+    userName: string;
+    email: string;
+    name: string;
+    surname: string;
+    isActive: boolean;
+    phoneNumber?: string;
+    lockoutEnabled: boolean;
+    lockoutEnd?: Date;
+    roleNames: string[];
+    concurrencyStamp: string;
+    creationTime: Date;
+    creatorId?: string;
+    lastModificationTime?: Date;
+    lastModifierId?: string;
+    isDeleted: boolean;
+    deleterId?: string;
+    deletionTime?: Date;
+}
+export interface CreateUserDto {
+    userName: string;
+    name: string;
+    surname: string;
+    email: string;
+    phoneNumber?: string;
+    isActive: boolean;
+    lockoutEnabled: boolean;
+    password: string;
+    roleNames: string[];
+}
+export interface UpdateUserDto {
+    userName: string;
+    name: string;
+    surname: string;
+    email: string;
+    phoneNumber?: string;
+    isActive: boolean;
+    lockoutEnabled: boolean;
+    roleNames: string[];
+    concurrencyStamp: string;
+}
+export interface GetUserListDto {
+    filter?: string;
+    sorting?: string;
+    skipCount?: number;
+    maxResultCount?: number;
+}
+export interface PagedResultDto<T> {
+    totalCount: number;
+    items: T[];
+}
+export interface UserListItem {
+    id: string;
+    userName: string;
+    email: string;
+    name: string;
+    surname: string;
+    isActive: boolean;
+    phoneNumber?: string;
+    creationTime: Date;
+    roleNames: string[];
+}
+export interface UserQueryParams {
+    pageIndex: number;
+    pageSize: number;
+    filter?: string;
+    sorting?: string;
+    isActive?: boolean;
+}
+export interface UserStatistics {
+    totalCount: number;
+    activeCount: number;
+    lockedCount: number;
+    newUsersThisMonth: number;
+}
+export interface Role {
+    id: string;
+    name: string;
+    displayName: string;
+    isDefault: boolean;
+    isStatic: boolean;
+    isPublic: boolean;
+}
+export interface UserRole {
+    id: string;
+    userId: string;
+    roleId: string;
+    roleName: string;
+}
+//# sourceMappingURL=user.d.ts.map
