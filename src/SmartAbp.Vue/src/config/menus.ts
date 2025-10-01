@@ -409,7 +409,7 @@ export const menuConfig: MenuConfig = {
       ],
     },
 
-    // 低代码引擎 - 核心价值：即刻生成，即刻使用
+    // 🚀 低代码引擎 - 扁平化二级菜单（避免三层嵌套）
     {
       key: "lowcode-engine",
       title: "低代码引擎",
@@ -422,7 +422,7 @@ export const menuConfig: MenuConfig = {
       defaultExpanded: true,
       description: "企业级代码生成引擎 - 所想即所得",
       children: [
-        // 🔥 核心功能：代码生成 - 二级菜单直达
+        // 🔥 极简通道：快速生成（3-5分钟）
         {
           key: "code-generation",
           title: "代码生成",
@@ -440,6 +440,23 @@ export const menuConfig: MenuConfig = {
             keepAlive: true,
           },
         },
+        // 🏗️ 专业通道：深度定制（30-60分钟）
+        {
+          key: "module-wizard",
+          title: "模块向导",
+          icon: "hat-wizard",
+          type: "page",
+          path: "/CodeGen/wizard",
+          component: "@/packages/lowcode-designer/src/views/codegen/LowCodeEngineView.vue",
+          order: 2,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN, ROLES.USER],
+          closable: true,
+          meta: {
+            title: "模块生成向导",
+            menuKey: "module-wizard",
+          },
+        },
         {
           key: "entity-modeling",
           title: "实体建模",
@@ -447,7 +464,7 @@ export const menuConfig: MenuConfig = {
           type: "page",
           path: "/lowcode/entity-modeling",
           component: "@/views/lowcode/EntityModelingView.vue",
-          order: 2,
+          order: 3,
           visible: true,
           requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
           closable: true,
@@ -458,13 +475,29 @@ export const menuConfig: MenuConfig = {
           },
         },
         {
+          key: "drag-drop-form",
+          title: "表单设计器",
+          icon: "mouse-pointer",
+          type: "page",
+          path: "/CodeGen/form",
+          component: "@/views/codegen/DragDropFormView.vue",
+          order: 4,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN, ROLES.USER],
+          closable: true,
+          meta: {
+            title: "拖拽表单开发器",
+            menuKey: "drag-drop-form",
+          },
+        },
+        {
           key: "visual-design",
           title: "UI定制",
           icon: "paint-brush",
           type: "page",
           path: "/lowcode/design",
           component: "@/views/lowcode/DesignView.vue",
-          order: 3,
+          order: 5,
           visible: true,
           requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
           closable: true,
@@ -474,68 +507,6 @@ export const menuConfig: MenuConfig = {
             keepAlive: true,
           },
         },
-        // 🏗️ 专业定制通道 - 深度定制功能
-        {
-          key: "professional-tools",
-          title: "专业定制",
-          icon: "cogs",
-          type: "folder",
-          order: 4,
-          visible: true,
-          requiredRoles: [ROLES.ADMIN, ROLES.USER],
-          defaultExpanded: false,
-          description: "专业级代码定制工具 - 深度业务定制",
-          children: [
-            {
-              key: "module-wizard",
-              title: "模块向导",
-              icon: "hat-wizard",
-              type: "page",
-              path: "/CodeGen/wizard",
-              component: "@/packages/lowcode-designer/src/views/codegen/LowCodeEngineView.vue",
-              order: 1,
-              visible: true,
-              requiredRoles: [ROLES.ADMIN, ROLES.USER],
-              closable: true,
-              meta: {
-                title: "模块生成向导",
-                menuKey: "module-wizard",
-              },
-            },
-            {
-              key: "drag-drop-form",
-              title: "拖拽表单设计器",
-              icon: "mouse-pointer",
-              type: "page",
-              path: "/CodeGen/form",
-              component: "@/views/codegen/DragDropFormView.vue",
-              order: 2,
-              visible: true,
-              requiredRoles: [ROLES.ADMIN, ROLES.USER],
-              closable: true,
-              meta: {
-                title: "拖拽表单开发器",
-                menuKey: "drag-drop-form",
-              },
-            },
-            {
-              key: "sfc-compiler",
-              title: "SFC编译器",
-              icon: "file-code",
-              type: "page",
-              path: "/CodeGen/sfc",
-              component: "@/views/codegen/SfcCompilerView.vue",
-              order: 3,
-              visible: true,
-              requiredRoles: [ROLES.ADMIN, ROLES.USER],
-              closable: true,
-              meta: {
-                title: "SFC编译器演示",
-                menuKey: "sfc-compiler",
-              },
-            },
-          ],
-        },
         {
           key: "theme-customization",
           title: "主题定制",
@@ -543,7 +514,7 @@ export const menuConfig: MenuConfig = {
           type: "page",
           path: "/lowcode/theme",
           component: "@/views/lowcode/ThemeCustomizationView.vue",
-          order: 5,
+          order: 6,
           visible: true,
           requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
           closable: true,
@@ -553,7 +524,22 @@ export const menuConfig: MenuConfig = {
             keepAlive: true,
           },
         },
-        // 性能监控已移至系统管理菜单，此处不再重复
+        {
+          key: "sfc-compiler",
+          title: "SFC编译器",
+          icon: "file-code",
+          type: "page",
+          path: "/CodeGen/sfc",
+          component: "@/views/codegen/SfcCompilerView.vue",
+          order: 7,
+          visible: import.meta.env.DEV, // 仅开发环境显示
+          requiredRoles: [ROLES.ADMIN, ROLES.USER],
+          closable: true,
+          meta: {
+            title: "SFC编译器演示",
+            menuKey: "sfc-compiler",
+          },
+        },
       ],
     },
 
