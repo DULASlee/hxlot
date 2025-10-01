@@ -1,38 +1,68 @@
 <template>
   <div class="codegen-entrance">
     <div class="entrance-container">
-      <h1 class="main-title">选择代码生成模式</h1>
-      <p class="subtitle">根据您的需求选择合适的生成方式</p>
+      <h1 class="main-title">
+        选择代码生成模式
+      </h1>
+      <p class="subtitle">
+        根据您的需求选择合适的生成方式
+      </p>
 
       <div class="modes-container">
         <!-- 极简模式 -->
-        <div class="mode-card simple-mode" @click="goToSimpleMode">
-          <div class="mode-icon">⚡</div>
-          <h2 class="mode-title">极简模式</h2>
-          <p class="mode-desc">三步快速生成，适合新手和标准CRUD</p>
+        <div
+          class="mode-card simple-mode"
+          @click="goToSimpleMode"
+        >
+          <div class="mode-icon">
+            ⚡
+          </div>
+          <h2 class="mode-title">
+            极简模式
+          </h2>
+          <p class="mode-desc">
+            三步快速生成，适合新手和标准CRUD
+          </p>
           <ul class="mode-features">
             <li>✅ 5分钟上手</li>
             <li>✅ 选表→配置→生成</li>
             <li>✅ 适合80%场景</li>
             <li>✅ 零学习成本</li>
           </ul>
-          <el-button type="primary" size="large" class="mode-btn">
+          <el-button
+            type="primary"
+            size="large"
+            class="mode-btn"
+          >
             立即开始
           </el-button>
         </div>
 
         <!-- 专业模式 -->
-        <div class="mode-card pro-mode" @click="goToProMode">
-          <div class="mode-icon">🧩</div>
-          <h2 class="mode-title">专业模式</h2>
-          <p class="mode-desc">完整工作台，适合复杂业务和深度定制</p>
+        <div
+          class="mode-card pro-mode"
+          @click="goToProMode"
+        >
+          <div class="mode-icon">
+            🧩
+          </div>
+          <h2 class="mode-title">
+            专业模式
+          </h2>
+          <p class="mode-desc">
+            完整工作台，适合复杂业务和深度定制
+          </p>
           <ul class="mode-features">
             <li>✅ 数据建模</li>
             <li>✅ 页面设计</li>
             <li>✅ 工作流编排</li>
             <li>✅ 主题定制</li>
           </ul>
-          <el-button type="success" size="large" class="mode-btn">
+          <el-button
+            type="success"
+            size="large"
+            class="mode-btn"
+          >
             进入工作台
           </el-button>
         </div>
@@ -40,10 +70,26 @@
 
       <div class="comparison">
         <h3>对比一览</h3>
-        <el-table :data="comparisonData" border style="width: 100%">
-          <el-table-column prop="feature" label="特性" width="180" />
-          <el-table-column prop="simple" label="极简模式" align="center" />
-          <el-table-column prop="pro" label="专业模式" align="center" />
+        <el-table
+          :data="comparisonData"
+          border
+          style="width: 100%"
+        >
+          <el-table-column
+            prop="feature"
+            label="特性"
+            width="180"
+          />
+          <el-table-column
+            prop="simple"
+            label="极简模式"
+            align="center"
+          />
+          <el-table-column
+            prop="pro"
+            label="专业模式"
+            align="center"
+          />
         </el-table>
       </div>
     </div>
