@@ -160,12 +160,3 @@ public class PrometheusService : IPrometheusService, ITransientDependency
     }
 }
 
-/// <summary>
-/// Prometheus数据点
-/// </summary>
-public class PrometheusDataPoint
-{
-    public DateTime Timestamp { get; set; }
-    public double Value { get; set; }
-}
-

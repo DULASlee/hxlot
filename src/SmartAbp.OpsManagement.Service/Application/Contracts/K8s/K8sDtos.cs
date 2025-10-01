@@ -44,5 +44,6 @@ public class PodLogQueryDto
     public string PodName { get; set; } = string.Empty;
     public string? ContainerName { get; set; }
     public int TailLines { get; set; } = 100;
+    public bool Follow { get; set; }
 }
 

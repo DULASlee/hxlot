@@ -8,13 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\Contracts\SmartAbp.OpsManagement.Application.Contracts.csproj" />
+    <PackageReference Include="Volo.Abp.Ddd.Application.Contracts" Version="8.3.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="8.3.1" />
-    <PackageReference Include="Dapr.AspNetCore" Version="1.13.0" />
-  </ItemGroup>
 
 </Project>
 

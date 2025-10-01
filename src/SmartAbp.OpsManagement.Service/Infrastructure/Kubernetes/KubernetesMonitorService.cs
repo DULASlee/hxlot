@@ -7,6 +7,7 @@ using k8s.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SmartAbp.OpsManagement.Contracts.K8s;
+using SmartAbp.OpsManagement.Services;
 using Volo.Abp.DependencyInjection;
 
 namespace SmartAbp.OpsManagement.Infrastructure.Kubernetes;
@@ -187,15 +188,5 @@ public class KubernetesMonitorService : IKubernetesMonitorService, ITransientDep
         var value = quantity.TrimEnd('m', 'M', 'i', 'G', 'K');
         return long.TryParse(value, out var result) ? result : 0;
     }
-}
-
-/// <summary>
-/// Kubernetes监控服务接口
-/// </summary>
-public interface IKubernetesMonitorService
-{
-    Task<K8sClusterSummaryDto> GetClusterSummaryAsync();
-    Task<List<K8sResourceDto>> GetNamespaceResourcesAsync(string namespaceName, string? resourceType = null);
-    Task<string> GetPodLogsAsync(string namespaceName, string podName, string? containerName = null, int? tailLines = 100);
 }
 

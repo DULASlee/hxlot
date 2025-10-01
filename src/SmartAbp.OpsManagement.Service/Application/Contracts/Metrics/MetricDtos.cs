@@ -66,6 +66,31 @@ public class ServiceMetricsSummaryDto
     public string ServiceName { get; set; } = string.Empty;
 
     /// <summary>
+    /// 统计周期
+    /// </summary>
+    public string Period { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 平均CPU使用率（%）
+    /// </summary>
+    public double AverageCpu { get; set; }
+
+    /// <summary>
+    /// 平均内存使用（MB）
+    /// </summary>
+    public double AverageMemory { get; set; }
+
+    /// <summary>
+    /// 总请求数
+    /// </summary>
+    public long TotalRequests { get; set; }
+
+    /// <summary>
+    /// 错误率（%）
+    /// </summary>
+    public double ErrorRate { get; set; }
+
+    /// <summary>
     /// CPU使用率（%）
     /// </summary>
     public double CpuUsage { get; set; }
@@ -79,11 +104,6 @@ public class ServiceMetricsSummaryDto
     /// 请求数量
     /// </summary>
     public double RequestCount { get; set; }
-
-    /// <summary>
-    /// 错误率（%）
-    /// </summary>
-    public double ErrorRate { get; set; }
 
     /// <summary>
     /// 平均响应时间（ms）

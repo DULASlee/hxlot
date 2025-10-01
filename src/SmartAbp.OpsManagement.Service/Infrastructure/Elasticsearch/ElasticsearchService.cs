@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Nest;
 using SmartAbp.OpsManagement.Contracts.Logs;
+using SmartAbp.OpsManagement.Services;
 using Volo.Abp.DependencyInjection;
 
 namespace SmartAbp.OpsManagement.Infrastructure.Elasticsearch;
@@ -169,15 +170,5 @@ public class ElasticsearchService : IElasticsearchService, ITransientDependency
 
         return q.Bool(b => b.Must(queries.ToArray()));
     }
-}
-
-/// <summary>
-/// Elasticsearch服务接口
-/// </summary>
-public interface IElasticsearchService
-{
-    Task<bool> IndexLogAsync(LogEntryDocument log);
-    Task<bool> BulkIndexLogsAsync(List<LogEntryDocument> logs);
-    Task<(long Total, List<LogEntryDocument> Items)> SearchLogsAsync(LogSearchRequest request);
 }
 

@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\SmartAbp.OpsManagement.Domain.csproj" />
-    <ProjectReference Include="..\Application\SmartAbp.OpsManagement.Application.csproj" />
+    <ProjectReference Include="..\Application\Contracts\SmartAbp.OpsManagement.Application.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
