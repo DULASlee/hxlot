@@ -14,24 +14,34 @@ public class AlertRule : FullAuditedAggregateRoot<Guid>
     public string RuleName { get; set; } = string.Empty;
     
     /// <summary>
-    /// 服务名称过滤器
-    /// </summary>
-    public string ServiceFilter { get; set; } = string.Empty;
-    
-    /// <summary>
     /// 指标类型
     /// </summary>
-    public MetricType MetricType { get; set; }
+    public string MetricType { get; set; } = string.Empty;
     
     /// <summary>
-    /// 告警条件（阈值）
+    /// 阈值
     /// </summary>
     public double Threshold { get; set; }
     
     /// <summary>
-    /// 告警级别
+    /// 操作符（>、<、>=、<=、==）
     /// </summary>
-    public AlertLevel Level { get; set; }
+    public string Operator { get; set; } = ">";
+    
+    /// <summary>
+    /// 严重级别
+    /// </summary>
+    public string Severity { get; set; } = "Warning";
+    
+    /// <summary>
+    /// 目标资源
+    /// </summary>
+    public string TargetResource { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// 通知渠道（JSON格式）
+    /// </summary>
+    public string NotificationChannels { get; set; } = "[]";
     
     /// <summary>
     /// 是否启用
@@ -42,21 +52,20 @@ public class AlertRule : FullAuditedAggregateRoot<Guid>
     {
     }
     
-    public AlertRule(Guid id, string ruleName, MetricType metricType, double threshold, AlertLevel level)
+    public AlertRule(
+        Guid id, 
+        string ruleName, 
+        string metricType, 
+        double threshold, 
+        string @operator = ">", 
+        string severity = "Warning")
         : base(id)
     {
         RuleName = ruleName;
         MetricType = metricType;
         Threshold = threshold;
-        Level = level;
+        Operator = @operator;
+        Severity = severity;
     }
-}
-
-public enum AlertLevel
-{
-    Info = 1,
-    Warning = 2,
-    Error = 3,
-    Critical = 4
 }
 

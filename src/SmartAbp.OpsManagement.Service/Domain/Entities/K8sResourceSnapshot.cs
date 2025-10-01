@@ -9,6 +9,11 @@ namespace SmartAbp.OpsManagement.Entities;
 public class K8sResourceSnapshot : Entity<Guid>
 {
     /// <summary>
+    /// 集群名称
+    /// </summary>
+    public string ClusterName { get; set; } = "default";
+    
+    /// <summary>
     /// 命名空间
     /// </summary>
     public string Namespace { get; set; } = "default";
@@ -16,27 +21,42 @@ public class K8sResourceSnapshot : Entity<Guid>
     /// <summary>
     /// 资源类型
     /// </summary>
-    public ResourceType Type { get; set; }
+    public string ResourceType { get; set; } = string.Empty;
     
     /// <summary>
     /// 资源名称
     /// </summary>
-    public string Name { get; set; } = string.Empty;
+    public string ResourceName { get; set; } = string.Empty;
     
     /// <summary>
     /// 状态
     /// </summary>
-    public ResourceStatus Status { get; set; }
+    public string Status { get; set; } = string.Empty;
     
     /// <summary>
-    /// 资源指标（JSON格式）
+    /// CPU使用率
     /// </summary>
-    public string Metrics { get; set; } = "{}";
+    public double? CpuUsage { get; set; }
     
     /// <summary>
-    /// 采集时间
+    /// 内存使用率
     /// </summary>
-    public DateTime CapturedAt { get; set; }
+    public double? MemoryUsage { get; set; }
+    
+    /// <summary>
+    /// Pod数量
+    /// </summary>
+    public int? PodCount { get; set; }
+    
+    /// <summary>
+    /// 标签（JSON格式）
+    /// </summary>
+    public string Labels { get; set; } = "{}";
+    
+    /// <summary>
+    /// 时间戳
+    /// </summary>
+    public DateTime Timestamp { get; set; }
     
     /// <summary>
     /// 构造函数
@@ -50,40 +70,19 @@ public class K8sResourceSnapshot : Entity<Guid>
     /// </summary>
     public K8sResourceSnapshot(
         Guid id,
+        string clusterName,
         string @namespace,
-        ResourceType type,
-        string name,
-        ResourceStatus status)
+        string resourceType,
+        string resourceName,
+        string status)
         : base(id)
     {
+        ClusterName = clusterName;
         Namespace = @namespace;
-        Type = type;
-        Name = name;
+        ResourceType = resourceType;
+        ResourceName = resourceName;
         Status = status;
-        CapturedAt = DateTime.UtcNow;
+        Timestamp = DateTime.UtcNow;
     }
-}
-
-/// <summary>
-/// 资源类型
-/// </summary>
-public enum ResourceType
-{
-    Pod = 1,
-    Node = 2,
-    Deployment = 3,
-    Service = 4,
-    StatefulSet = 5
-}
-
-/// <summary>
-/// 资源状态
-/// </summary>
-public enum ResourceStatus
-{
-    Running = 1,
-    Pending = 2,
-    Failed = 3,
-    Unknown = 4
 }
 
