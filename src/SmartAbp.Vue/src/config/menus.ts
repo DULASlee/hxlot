@@ -543,6 +543,89 @@ export const menuConfig: MenuConfig = {
       ],
     },
 
+    // 🔧 运维监控模块（新增）
+    {
+      key: "ops-monitoring",
+      title: "运维监控",
+      icon: "tachometer-alt", // 使用监控相关图标
+      type: "folder",
+      order: 9,
+      visible: true,
+      requiredRoles: [ROLES.ADMIN], // 仅管理员可见
+      defaultExpanded: false,
+      description: "系统运维监控、性能分析、日志管理和告警",
+      children: [
+        {
+          key: "ops-apm",
+          title: "性能监控",
+          icon: "chart-line",
+          type: "page",
+          path: "/ops-monitoring/apm",
+          component: "@/views/ops/ApmDashboard.vue",
+          order: 1,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN],
+          closable: true,
+          meta: {
+            title: "性能监控(APM)",
+            menuKey: "ops-apm",
+            keepAlive: true,
+          },
+        },
+        {
+          key: "ops-logs",
+          title: "日志管理",
+          icon: "file-alt",
+          type: "page",
+          path: "/ops-monitoring/logs",
+          component: "@/views/ops/LogsDashboard.vue",
+          order: 2,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN],
+          closable: true,
+          meta: {
+            title: "日志管理(ELK)",
+            menuKey: "ops-logs",
+            keepAlive: true,
+          },
+        },
+        {
+          key: "ops-k8s",
+          title: "K8s监控",
+          icon: "server",
+          type: "page",
+          path: "/ops-monitoring/k8s",
+          component: "@/views/ops/K8sDashboard.vue",
+          order: 3,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN],
+          closable: true,
+          meta: {
+            title: "K8s监控",
+            menuKey: "ops-k8s",
+            keepAlive: true,
+          },
+        },
+        {
+          key: "ops-alerts",
+          title: "告警管理",
+          icon: "bell",
+          type: "page",
+          path: "/ops-monitoring/alerts",
+          component: "@/views/ops/AlertDashboard.vue",
+          order: 4,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN],
+          closable: true,
+          meta: {
+            title: "告警管理",
+            menuKey: "ops-alerts",
+            keepAlive: true,
+          },
+        },
+      ],
+    },
+
     // 分割线
     {
       key: "divider-3",
