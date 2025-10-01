@@ -59,7 +59,7 @@ echo ""
 
 echo "🔍 第二重检查：执行引擎详细定义文件..."
 
-ENGINE_FILE=".cursor/rules/00_AI编程铁律自动执行引擎.mdc"
+ENGINE_FILE=".cursor/rules/00_执行引擎.mdc"
 
 if [ ! -f "$ENGINE_FILE" ]; then
     echo "❌ 错误: 执行引擎详细定义文件不存在！"
