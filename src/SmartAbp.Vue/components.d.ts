@@ -13,6 +13,7 @@ declare module 'vue' {
     BaseCard: typeof import('./src/components/base/BaseCard.vue')['default']
     BaseDialog: typeof import('./src/components/base/BaseDialog.vue')['default']
     DashboardIcon: typeof import('./src/components/icons/enterprise/DashboardIcon.vue')['default']
+    ElButton: typeof import('element-plus/es')['ElButton']
     ElDropdown: typeof import('element-plus/es')['ElDropdown']
     ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
     ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
