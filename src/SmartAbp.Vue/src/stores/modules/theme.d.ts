@@ -5,6 +5,10 @@ export type ThemeMode = 'light' | 'dark' | 'auto';
 /**
  * 主题Store
  * 负责管理应用主题和暗黑模式
+ *
+ * 配置驱动设计：
+ * - 主题切换时自动联动图标风格
+ * - 联动关系由配置中心管理
  */
 export declare const useThemeStore: import("pinia").StoreDefinition<"theme", Pick<{
     currentTheme: WritableComputedRef<ThemeType, ThemeType>;

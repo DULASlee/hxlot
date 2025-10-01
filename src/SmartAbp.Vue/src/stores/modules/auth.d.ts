@@ -29,6 +29,7 @@ export interface LoginResponse {
 /**
  * 认证Store
  * 负责管理用户认证状态、token和用户信息
+ * 🔐 启用持久化：防止页面刷新后权限丢失
  */
 export declare const useAuthStore: import("pinia").StoreDefinition<"auth", Pick<{
     token: import("vue").Ref<string | null, string | null>;

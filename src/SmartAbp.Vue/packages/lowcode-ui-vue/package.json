@@ -1,0 +1,24 @@
+{
+  "name": "@smartabp/lowcode-ui-vue",
+  "version": "1.0.0",
+  "description": "SmartAbp LowCode UI Vue Package",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "files": [
+    "src/"
+  ],
+  "keywords": [
+    "lowcode",
+    "ui",
+    "vue",
+    "smartabp",
+    "typescript"
+  ],
+  "license": "MIT"
+}
