@@ -9,7 +9,7 @@ alwaysApply: true
 - **层级**: L4 - 代码质量禁止层
 - **作用**: 作为最严格的代码质量守卫，明确列出所有在编写代码时绝对禁止使用的危险语法和反模式。任何违反这些禁令的代码都将被视为严重违规，必须立即修复。
 
----
+
 
 ## 🚨 最高优先级禁止清单 (Highest Priority Prohibitions)
 
@@ -120,6 +120,164 @@ alwaysApply: true
    - **替代方案**: 使用@smartabp别名或重新设计包结构
    - **检测命令**: `grep -r "'../'" src/SmartAbp.Vue/packages/`
 
+### 🔥 三级禁令：packages专项禁令 (LowCode Generator Specific Prohibitions)
+
+**这些禁令专门针对低代码生成器（packages目录），违规直接影响核心竞争力！**
+
+#### 1. 逆向依赖禁令
+- **禁止原因**: 破坏packages层级架构，导致循环依赖，无法独立发包
+- **危害程度**: 🔥 极高危 - 破坏核心架构，影响可扩展性和可维护性
+- **检测命令**: 
+  ```bash
+  # 检测lowcode-core是否依赖lowcode-designer
+  grep -r "@smartabp/lowcode-designer" src/SmartAbp.Vue/packages/lowcode-core/
+  
+  # 检测lowcode-shared是否依赖任何package
+  grep -r "@smartabp/lowcode-" src/SmartAbp.Vue/packages/lowcode-shared/
+  
+  # 检测同层级循环依赖
+  grep -r "@smartabp/lowcode-api" src/SmartAbp.Vue/packages/lowcode-core/
+  grep -r "@smartabp/lowcode-core" src/SmartAbp.Vue/packages/lowcode-api/
+  ```
+- **正确做法**:
+  ```typescript
+  // ✅ 正确：向下依赖
+  // lowcode-designer (层级2) 依赖 lowcode-core (层级1)
+  import { useEntityStore } from '@smartabp/lowcode-core'
+  
+  // ✅ 正确：任何package都可以依赖lowcode-shared (层级0)
+  import { EntityType, FieldType } from '@smartabp/lowcode-shared'
+  
+  // ❌ 错误：逆向依赖
+  // lowcode-core (层级1) 不能依赖 lowcode-designer (层级2)
+  import { DesignerLayout } from '@smartabp/lowcode-designer' // 严禁！
+  
+  // ❌ 错误：lowcode-shared不能依赖任何package
+  import { useEntityStore } from '@smartabp/lowcode-core' // 严禁！
+  ```
+
+#### 2. packages构建产物污染禁令
+- **禁止原因**: 破坏构建隔离，导致类型声明混乱，Git仓库臃肿
+- **危害程度**: 🔴 高危 - 影响独立编译和发布，增加维护成本
+- **禁止操作**:
+  ```bash
+  # ❌ 严禁手动修改dist目录文件
+  vim src/SmartAbp.Vue/packages/lowcode-core/dist/index.js
+  
+  # ❌ 严禁提交构建产物到Git
+  git add src/SmartAbp.Vue/packages/*/dist/
+  
+  # ❌ 严禁在源码中引用dist目录
+  import { Entity } from '@smartabp/lowcode-core/dist/types'
+  ```
+- **正确做法**:
+  ```typescript
+  // ✅ 正确：引用源码入口
+  import { Entity } from '@smartabp/lowcode-core'
+  
+  // ✅ 正确：.gitignore排除dist
+  # .gitignore
+  packages/*/dist/
+  packages/*/es/
+  packages/*/lib/
+  ```
+
+#### 3. packages未经审核的第三方依赖禁令
+- **禁止原因**: 增加包体积，引入安全风险，破坏轻量化原则
+- **危害程度**: 🟠 中高危 - 影响包的轻量化、安全性和加载性能
+- **强制审核流程**:
+  ```typescript
+  // 添加新依赖前必须回答：
+  const DEPENDENCY_REVIEW_CHECKLIST = {
+    question1: "lowcode-shared中是否已有类似功能？",
+    question2: "这个依赖的体积是多少？（必须<50KB）",
+    question3: "这个依赖的最近更新时间？（必须<6个月）",
+    question4: "这个依赖有多少downloads？（必须>10万/周）",
+    question5: "是否有更轻量的替代方案？",
+    question6: "是否可以自己实现以减少依赖？"
+  }
+  ```
+- **正确做法**:
+  ```json
+  // ✅ 正确：优先使用lowcode-shared
+  import { formatDate } from '@smartabp/lowcode-shared'
+  
+  // ✅ 正确：必要时添加轻量依赖
+  {
+    "dependencies": {
+      "nanoid": "^4.0.0"  // 轻量UUID生成，<2KB
+    }
+  }
+  
+  // ❌ 错误：重复引入功能相似的库
+  {
+    "dependencies": {
+      "moment": "^2.29.0",      // 重，287KB
+      "dayjs": "^1.11.0",       // 轻，7KB
+      "date-fns": "^2.30.0"     // 不要同时引入！
+    }
+  }
+  ```
+
+#### 4. packages主应用耦合禁令
+- **禁止原因**: 破坏packages独立性，无法独立运行和测试
+- **危害程度**: 🔴 高危 - 破坏黑盒原则，影响可复用性
+- **检测命令**:
+  ```bash
+  # 检测@/引用（主应用别名）
+  grep -r "from '@/'" src/SmartAbp.Vue/packages/
+  
+  # 检测直接引用主应用代码
+  grep -r "from '.*src/SmartAbp.Vue/src'" src/SmartAbp.Vue/packages/
+  ```
+- **正确做法**:
+  ```typescript
+  // ❌ 错误：引用主应用
+  import { api } from '@/utils/request'
+  import { useUserStore } from '@/stores/user'
+  
+  // ✅ 正确：packages内部实现或通过props传递
+  import { request } from '@smartabp/lowcode-shared/utils'
+  
+  // ✅ 正确：通过props接收外部依赖
+  defineProps<{
+    onApiCall: (url: string, data: any) => Promise<any>
+  }>()
+  ```
+
+#### 5. packages类型声明缺失禁令
+- **禁止原因**: 失去TypeScript的核心价值，降低开发效率
+- **危害程度**: 🟠 中高危 - 影响类型推导和IDE支持
+- **强制要求**:
+  ```typescript
+  // ❌ 错误：缺少类型导出
+  export function createEntity(config) {
+    return { ...config }
+  }
+  
+  // ✅ 正确：完整类型定义和导出
+  export interface EntityConfig {
+    name: string
+    fields: FieldConfig[]
+  }
+  
+  export interface Entity extends EntityConfig {
+    id: string
+    createdAt: Date
+  }
+  
+  export function createEntity(config: EntityConfig): Entity {
+    return {
+      ...config,
+      id: nanoid(),
+      createdAt: new Date()
+    }
+  }
+  
+  // ✅ 正确：类型必须与实现一起导出
+  export type { EntityConfig, Entity }
+  ```
+
 ## ⚖️ 强制执行与处罚机制 (Mandatory Enforcement & Penalty)
 
 ### 📋 执行规则 (Enforcement Rules)
@@ -144,7 +302,7 @@ alwaysApply: true
 
 **检测脚本**: `scripts/quality-gate.sh` 自动执行所有禁令检查
 
----
+
 
 ## 📚 教育与培训 (Education & Training)
 
@@ -165,6 +323,6 @@ alwaysApply: true
 - Vue3组合式API指南：组件通信模式
 - 项目架构文档：packages黑盒原则详解
 
----
+
 
 **记住：这些禁令是项目的生命线，违反它们就像在给自己挖坑。严格遵守这些规则，才能保证代码质量达到95分的卓越标准！**

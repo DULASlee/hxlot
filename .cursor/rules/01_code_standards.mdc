@@ -8,7 +8,7 @@ alwaysApply: true
 - **层级**: L1 - 代码形态层
 - **作用**: 承接 L0 的核心理念，提供具体、可执行的编码标准、命名规范、样式指南和代码组织结构要求。AI 生成的所有代码必须严格符合此规范。
 
----
+
 
 ## 一、通用命名规范 (General Naming Conventions)
 
@@ -84,3 +84,93 @@ alwaysApply: true
     - `//` 用于单行注释。
     - `/** ... */` 用于函数、类、模块的 JSDoc 注释。
     - `TODO:` 用于标记待办事项。
+
+## 六、低代码生成器专项编码标准 (LowCode Generator Code Standards)
+
+### 1. packages架构层级规范
+
+**严格的依赖层级**（只能向下依赖）:
+- `lowcode-shared`: 基础层 (层级0) - 零依赖，提供types、utils、error、validators
+- `lowcode-core`: 核心层 (层级1) - 只依赖shared，提供components、stores、composables、directives
+- `lowcode-api`: API层 (层级1) - 只依赖shared，提供API接口封装
+- `lowcode-tools`: 工具层 (层级1) - 只依赖shared，提供模板管理、代码生成、验证工具
+- `lowcode-designer`: 应用层 (层级2) - 依赖shared+core，提供设计器UI、views、layouts
+
+**违规检测命令**:
+```bash
+# 检测逆向依赖
+grep -r "from '@smartabp/lowcode-designer'" src/SmartAbp.Vue/packages/lowcode-core/
+grep -r "from '@smartabp/lowcode-core'" src/SmartAbp.Vue/packages/lowcode-shared/
+
+# 检测循环依赖
+grep -r "from '@smartabp/lowcode-api'" src/SmartAbp.Vue/packages/lowcode-core/
+```
+
+### 2. packages模块导入导出规范
+
+**正确的导入方式**:
+```typescript
+// ✅ 正确：使用@smartabp别名进行包间引用
+import { EntityType, FieldType } from '@smartabp/lowcode-shared'
+import { useEntityStore } from '@smartabp/lowcode-core'
+
+// ✅ 正确：使用相对路径进行包内引用
+import { formatFieldName } from './utils/formatter'
+import { EntityValidator } from '../validators/entity'
+
+// ❌ 错误：使用相对路径跨越包边界
+import { EntityType } from '../../../lowcode-shared/src/types/entity'
+
+// ❌ 错误：使用@/引用主应用
+import { api } from '@/utils/request'
+import { useUserStore } from '@/stores/user'
+
+// ❌ 错误：逆向依赖
+// lowcode-core中引用lowcode-designer
+import { DesignerLayout } from '@smartabp/lowcode-designer'
+```
+
+### 3. TypeScript严格模式要求
+
+**packages必须启用最严格的TypeScript配置**:
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  }
+}
+```
+
+**禁止的类型绕过手段**:
+```typescript
+// ❌ 错误：任何形式的类型绕过
+const data: any = apiResponse
+const config = JSON.parse(str) // 返回any
+
+// ✅ 正确：完整的类型定义
+interface ApiResponse {
+  success: boolean
+  data: EntityDto
+  message?: string
+}
+const data: ApiResponse = apiResponse
+const config: ConfigType = JSON.parse(str) as ConfigType
+```
+
+### 4. packages独立性要求
+
+**每个package必须能够独立编译和发布**:
+- 必须有独立的`package.json`配置
+- 必须有独立的`tsconfig.json`配置
+- 必须有独立的`README.md`文档
+- 必须支持增量编译（TypeScript Project References）
+- 必须通过`npm run build:packages`成功构建

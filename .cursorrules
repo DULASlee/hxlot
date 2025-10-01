@@ -1,4 +1,85 @@
+⚡⚡⚡ **AI强制执行：立即自动加载所有项目规则** ⚡⚡⚡
+
+**🚨 CRITICAL: AI必须在每次对话开始时自动执行：**
+
+```bash
+# 加载核心规则（五维同心圆体系）
+read_file(".cursor/rules/00_执行引擎.mdc")
+read_file(".cursor/rules/00_core_philosophy.mdc")
+read_file(".cursor/rules/01_code_standards.mdc")
+read_file(".cursor/rules/02_development_process.mdc")
+read_file(".cursor/rules/03_quality_guardian.mdc")
+read_file(".cursor/rules/04_code_quality_prohibitions.mdc")
+read_file("docs/项目开发规范总览.md")
+```
+
+**⚠️ 如果AI未执行上述步骤，必须立即停止并重新加载！**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 # SmartAbp Cursor Rules — AI Assistant Operating Guide
+
+## 🔥 AI编程铁律自动执行引擎 - 主入口
+
+### 🚨 强制触发检测（自动识别）
+
+**AI必须在检测到以下关键词时立即启动执行引擎：**
+
+```typescript
+触发关键词 = [
+  // 直接触发
+  "专家模式", "开始编程", "开始开发", "新功能", "新建",
+  "立即执行", "立即推进", "继续", "继续推进",
+  
+  // 代码操作触发
+  "创建组件", "创建服务", "创建Store", "创建API",
+  "修改代码", "添加功能", "实现功能", "编写代码",
+  
+  // 修复触发
+  "修复BUG", "修复错误", "解决问题", "优化代码",
+  
+  // 架构触发
+  "重构", "优化", "架构调整", "性能优化"
+]
+```
+
+### ⚡ AI自检清单（每次响应前必须自问）
+
+```typescript
+const AI_SELF_CHECK = {
+  question1: "我是否已启动AI编程铁律自动执行引擎？",
+  question2: "我是否已执行编程前五项强制学习？",
+  question3: "我当前会话已编写多少行代码？",
+  question4: "我是否即将超过300行限制？",
+  question5: "我是否已在每个开发阶段完成后执行质量门禁？"
+}
+
+// 如果任何问题答案是"否"，AI必须立即重启执行引擎
+```
+
+### 📋 强制响应格式（AI必须使用）
+
+**每次检测到触发词，AI必须立即响应：**
+
+```
+🔥 **AI编程铁律自动执行引擎已启动！**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 第一阶段：编程前强制学习
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ 1. 架构扫描完成
+✅ 2. 代码库检索完成  
+✅ 3. ADR学习完成
+✅ 4. 模板库检查完成
+✅ 5. 公共组件识别完成
+
+[继续执行...]
+```
+
+**详细执行规范参见：`.cursor/rules/00_执行引擎.mdc`**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## 🎯 SECRET TRIGGER SYSTEM - 暗号爆雷机制 (HIDDEN ACTIVATION)
 
@@ -38,11 +119,8 @@ MASTER_SECRET_TRIGGER = "专家模式"
    🔧 **执行脚本**: read_file(".cursor/rules/02_development_process.mdc")
    🔧 **执行脚本**: read_file(".cursor/rules/03_quality_guardian.mdc")
    🔧 **执行脚本**: read_file(".cursor/rules/04_code_quality_prohibitions.mdc")
-   🔧 **执行脚本**: read_file(".cursor/rules/05_增量迭代开发质量门禁与GIT版本管理铁律.mdc")
-   🔧 **执行脚本**: read_file(".cursor/rules/06_低代码生成器代码质量铁律.mdc")
-   ✅ **验证确认**: 极致质量律/架构先行律/独立决策律 - 完整规范体系已加载
-   ✅ **验证确认**: 增量迭代开发质量门禁与Git版本管理铁律 - 五重质量门禁+六步Git同步
-   ✅ **验证确认**: 低代码生成器代码质量铁律 - 100分企业级标准强制执行
+   ✅ **验证确认**: 五维同心圆规则体系已加载（L0-L4核心理念层到代码质量禁止层）
+   ✅ **验证确认**: 执行引擎完整加载（包含质量门禁+Git同步+代码追踪+架构保护）
    ✅ **验证确认**: 所有铁律规则已加载，防止违规执行
 
 🔍 **第二重爆雷：项目智能分析强制执行**

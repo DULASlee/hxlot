@@ -8,11 +8,108 @@ alwaysApply: true
 - **层级**: L2 - 工作流层
 - **作用**: 规定AI在执行开发任务时的标准操作流程 (SOP)。它定义了从需求分析、技术方案设计、编码实现到代码修复的完整行为准则，确保开发过程的规范性和一致性。
 
----
+
 
 ## 一、标准开发工作流 (Standard Development Workflow)
 
 这是一个强制性的、闭环的开发流程，AI在处理任何编码请求时都必须遵循。
+
+0.  **第零步：架构自动识别与保护 (Architecture Auto-Recognition & Protection)** - **最高优先级**
+
+这是AI编程的第一道防线，必须在任何代码编写之前强制执行。
+
+#### 0.1 JavaScript污染检测（优先级最高）
+```bash
+# 检测非必要的JavaScript文件
+find src/SmartAbp.Vue/src -name "*.js" -type f | \
+grep -v node_modules | \
+grep -v "vite.config\|vitest.config\|.eslintrc\|\.generated"
+
+# 检测Vue组件是否使用TypeScript
+grep -r "<script>" src/SmartAbp.Vue/src --include="*.vue" | \
+grep -v "lang=\"ts\"" | grep -v "lang='ts'"
+```
+
+**处理规则**:
+- 发现非必要.js文件 → 立即停止 → 要求说明必要性或迁移为.ts
+- 发现非TypeScript的Vue组件 → 立即停止 → 要求添加`lang="ts"`并添加类型定义
+
+#### 0.2 packages目录结构扫描
+```bash
+# 扫描packages结构
+ls -la src/SmartAbp.Vue/packages/*/src
+
+# 识别现有组件
+find src/SmartAbp.Vue/packages -name "*.vue" | head -20
+
+# 识别现有工具函数
+find src/SmartAbp.Vue/packages -name "*.ts" | grep -E "(utils|composables|validators)"
+```
+
+**扫描目标**:
+- `lowcode-shared/src/types/` - 全局类型定义
+- `lowcode-shared/src/utils/` - 共享工具函数
+- `lowcode-shared/src/error/` - 统一错误处理
+- `lowcode-core/src/components/` - 核心组件库
+- `lowcode-core/src/stores/` - 状态管理
+- `lowcode-core/src/composables/` - 可复用组合函数
+- `lowcode-designer/src/components/` - 设计器组件
+
+#### 0.3 现有功能强制检索（代码重复拦截）
+```bash
+# 检测同名Vue组件
+find src/SmartAbp.Vue/packages -name "*.vue" | xargs basename -a | sort | uniq -d
+
+# 检测相似功能函数
+grep -r "export function" src/SmartAbp.Vue/packages --include="*.ts" | \
+awk '{print $3}' | sort | uniq -d
+
+# 检测重复的类型定义
+grep -r "export interface\|export type" src/SmartAbp.Vue/packages --include="*.ts" | \
+awk '{print $3}' | sort | uniq -d
+```
+
+**发现重复时的处理**:
+1. 立即停止编码操作
+2. 展示已存在的实现位置和代码
+3. 提供复用建议和导入示例
+4. 等待用户确认是否复用或需要新实现
+
+#### 0.4 依赖层级验证
+```typescript
+// packages层级关系（只能向下依赖）
+const PACKAGE_LAYERS = {
+  'lowcode-shared': 0,     // 基础层 - 零依赖
+  'lowcode-core': 1,       // 核心层 - 只依赖shared
+  'lowcode-api': 1,        // API层 - 只依赖shared
+  'lowcode-tools': 1,      // 工具层 - 只依赖shared
+  'lowcode-designer': 2    // 应用层 - 依赖shared+core
+}
+
+// 检测逆向依赖
+检测(lowcode-core 依赖 lowcode-designer) → 严禁
+检测(lowcode-shared 依赖 任何package) → 严禁
+检测(lowcode-designer 依赖 lowcode-api) → 严禁（不同层级）
+```
+
+**验证命令**:
+```bash
+# 检测lowcode-core是否依赖lowcode-designer
+grep -r "@smartabp/lowcode-designer" src/SmartAbp.Vue/packages/lowcode-core/
+
+# 检测lowcode-shared是否有任何包依赖
+grep -r "@smartabp/lowcode-" src/SmartAbp.Vue/packages/lowcode-shared/
+```
+
+#### 0.5 全局类型声明检查
+```bash
+# 检查关键类型文件是否存在
+ls -l src/SmartAbp.Vue/packages/lowcode-core/src/types/entity-designer.ts
+ls -l src/SmartAbp.Vue/packages/lowcode-core/src/types/manifest.ts
+ls -l src/SmartAbp.Vue/packages/lowcode-shared/src/types/index.ts
+```
+
+**执行时机**: 每次AI开始编写代码前、每次修改packages目录时、检测到架构相关操作时
 
 1.  **第一步：需求分析与澄清 (Requirement Analysis)**
     - **理解意图**: 深入理解用户请求的最终业务目标，而不仅仅是字面上的编码指令。
