@@ -26,28 +26,32 @@ export const permissionGuard = async (to: RouteLocationNormalized) => {
     }
   }
 
-  // 2. 检查路由元信息中的角色权限
+  // 2. 检查路由元信息中的角色权限（支持角色层级继承）
   const requiredRoles = to.meta.requiredRoles as string[] | undefined
   if (requiredRoles && requiredRoles.length > 0) {
     const userRoles = authStore.userInfo?.roles || []
-    const hasPermission = requiredRoles.some(role => userRoles.includes(role))
+    
+    // 🏛️ 使用角色层级系统检查权限（admin > manager > user > guest）
+    const { hasRolePermission, getHighestRole } = await import('@/utils/roleHierarchy')
+    const hasPermission = hasRolePermission(userRoles, requiredRoles)
     
     if (!hasPermission) {
+      const highestRole = getHighestRole(userRoles)
       logger.warn(
-        `[权限守卫] 用户权限不足 - 需要角色: ${requiredRoles.join(', ')}, 当前角色: ${userRoles.join(', ')}`
+        `[权限守卫] 用户权限不足 - 需要角色: ${requiredRoles.join(', ')}, 用户最高角色: ${highestRole}, 所有角色: ${userRoles.join(', ')}`
       )
       
       ElMessage.warning({
-        message: i18n.global.t('permission.noAccess') || '您没有权限访问此页面',
+        message: i18n.global.t('permission.noAccess') || '您的权限不足，无法访问此页面',
         duration: 3000,
         showClose: true
       })
       
-      // 权限不足时重定向到工作台
-      return { name: 'Dashboard' }
+      // 权限不足时重定向到403页面，避免重定向循环
+      return { name: 'Forbidden' }
     }
     
-    logger.debug(`[权限守卫] 角色权限检查通过 - 用户角色: ${userRoles.join(', ')}`)
+    logger.debug(`[权限守卫] 角色权限检查通过 - 用户角色: ${userRoles.join(', ')}, 需要角色: ${requiredRoles.join(', ')}`)
   }
 
   // 3. 检查菜单权限（如果路由关联了菜单）
@@ -90,18 +94,23 @@ export const permissionGuard = async (to: RouteLocationNormalized) => {
 }
 
 /**
- * 角色守卫 - 简化的角色检查
+ * 角色守卫 - 简化的角色检查（支持角色层级继承）
  */
 export const roleGuard = (requiredRoles: string[]) => {
   return async (_to: RouteLocationNormalized) => {
     const authStore = useAuthStore()
     const userRoles = authStore.userInfo?.roles || []
     
-    const hasPermission = requiredRoles.some(role => userRoles.includes(role))
+    // 🏛️ 使用角色层级系统检查权限
+    const { hasRolePermission, getHighestRole } = await import('@/utils/roleHierarchy')
+    const hasPermission = hasRolePermission(userRoles, requiredRoles)
     
     if (!hasPermission) {
-      logger.warn(`[角色守卫] 权限不足 - 需要: ${requiredRoles.join(', ')}`)
-      return { name: 'Dashboard' }
+      const highestRole = getHighestRole(userRoles)
+      logger.warn(
+        `[角色守卫] 权限不足 - 需要: ${requiredRoles.join(', ')}, 用户最高角色: ${highestRole}`
+      )
+      return { name: 'Forbidden' }
     }
     
     return true
@@ -109,14 +118,20 @@ export const roleGuard = (requiredRoles: string[]) => {
 }
 
 /**
- * 管理员守卫 - 仅管理员可访问
+ * 管理员守卫 - 仅管理员可访问（admin 或 manager）
  */
 export const adminGuard = async (_to: RouteLocationNormalized) => {
   const authStore = useAuthStore()
   const userRoles = authStore.userInfo?.roles || []
   
-  if (!userRoles.includes('admin')) {
-    logger.warn('[管理员守卫] 非管理员尝试访问管理页面')
+  // 🏛️ 使用角色层级系统检查管理员权限
+  const { isAdmin, getHighestRole } = await import('@/utils/roleHierarchy')
+  
+  if (!isAdmin(userRoles)) {
+    const highestRole = getHighestRole(userRoles)
+    logger.warn(
+      `[管理员守卫] 非管理员尝试访问管理页面 - 用户最高角色: ${highestRole}`
+    )
     
     ElMessage.warning({
       message: '仅管理员可访问此页面',
@@ -124,7 +139,7 @@ export const adminGuard = async (_to: RouteLocationNormalized) => {
       showClose: true
     })
     
-    return { name: 'Dashboard' }
+    return { name: 'Forbidden' }
   }
   
   return true

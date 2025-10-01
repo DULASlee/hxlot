@@ -12,6 +12,7 @@ const UserManagement = () => import("@/views/user/UserManagement.vue")
 const UserListView = () => import("@/views/user/UserListView.vue")
 const UserRolesView = () => import("@/views/user/UserRolesView.vue")
 const LoginTest = () => import("@/views/auth/LoginTest.vue")
+const ForbiddenView = () => import("@/views/error/Forbidden.vue")
 
 // 新增页面组件
 const ProfileView = () => import("@/views/common/ProfileView.vue")
@@ -37,6 +38,16 @@ const routes: RouteRecordRaw[] = [
     name: "LoginTest",
     component: LoginTest,
     meta: { requiresAuth: false, title: "登录功能测试" },
+  },
+  // 403 权限不足页面
+  {
+    path: "/403",
+    name: "Forbidden",
+    component: ForbiddenView,
+    meta: { 
+      title: "权限不足",
+      requiresAuth: false 
+    },
   },
   // 根路径重定向到工作台
   {
@@ -357,26 +368,30 @@ router.beforeEach(async (to, from, next) => {
     })
   }
 
-  // 3. 角色权限检查（新增）：检查用户是否具有所需角色
+  // 3. 角色权限检查（支持角色层级继承）：检查用户是否具有所需角色
   const requiredRoles = to.meta.requiredRoles as string[] | undefined
   if (requiredRoles && requiredRoles.length > 0 && isLoggedIn) {
     const userRoles = authStore.userInfo?.roles || []
-    const hasPermission = requiredRoles.some(role => userRoles.includes(role))
+    
+    // 🏛️ 使用角色层级系统检查权限（admin > manager > user > guest）
+    const { hasRolePermission, getHighestRole } = await import('@/utils/roleHierarchy')
+    const hasPermission = hasRolePermission(userRoles, requiredRoles)
     
     if (!hasPermission) {
+      const highestRole = getHighestRole(userRoles)
       logger.warn(
-        `[路由守卫] 用户权限不足 - 需要角色: ${requiredRoles.join(', ')}, 当前角色: ${userRoles.join(', ')}`
+        `[路由守卫] 用户权限不足 - 需要角色: ${requiredRoles.join(', ')}, 用户最高角色: ${highestRole}, 所有角色: ${userRoles.join(', ')}`
       )
       ElMessage.warning({
-        message: i18n.global.t('permission.noAccess'),
+        message: i18n.global.t('permission.noAccess') || '您的权限不足，无法访问此页面',
         duration: 3000,
         showClose: true
       })
-      // 权限不足时重定向到工作台，而不是显示403页面
-      return next({ name: 'Dashboard' })
+      // 权限不足时重定向到403页面，避免重定向循环
+      return next({ name: 'Forbidden' })
     }
     
-    logger.debug(`[路由守卫] 角色权限检查通过 - 用户角色: ${userRoles.join(', ')}`)
+    logger.debug(`[路由守卫] 角色权限检查通过 - 用户角色: ${userRoles.join(', ')}, 需要角色: ${requiredRoles.join(', ')}`)
   }
 
   // 4. 根路径处理：根据登录状态重定向
