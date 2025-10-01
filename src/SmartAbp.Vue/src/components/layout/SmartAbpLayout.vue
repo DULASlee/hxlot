@@ -51,6 +51,14 @@
         >
           <i :class="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'" />
         </button>
+        <!-- 🎨 图标风格切换按钮 -->
+        <button
+          class="icon-btn"
+          title="图标风格"
+          @click="openIconStyleSelector"
+        >
+          <i class="fas fa-icons" />
+        </button>
         <button
           class="icon-btn"
           title="设置"
@@ -231,6 +239,12 @@
       @confirm="handleLogoutConfirm"
       @cancel="handleLogoutCancel"
     />
+
+    <!-- 🎨 图标风格选择器 -->
+    <IconStyleSelector
+      v-model="showIconStyleSelector"
+      @change="handleIconStyleChange"
+    />
   </div>
 </template>
 
@@ -243,6 +257,7 @@ import { useMenu } from "@/composables/useMenu"
 import { i18n, setLocale } from "@/plugins/i18n"
 import { storeToRefs } from "pinia"
 import LogoutConfirmDialog from "@/components/common/LogoutConfirmDialog.vue"
+import IconStyleSelector from "@/components/system/IconStyleSelector.vue"
 
 const router = useRouter()
 const themeStore = useThemeStore()
@@ -256,6 +271,9 @@ const showUserDropdown = ref(false)
 // 退出登录对话框状态
 const showLogoutDialog = ref(false)
 const isLoggingOut = ref(false)
+
+// 🎨 图标风格选择器状态
+const showIconStyleSelector = ref(false)
 
 // 动态菜单系统
 const {
@@ -305,6 +323,16 @@ const openSettings = () => {
 const goToProfile = () => {
   router.push("/profile")
   showUserDropdown.value = false
+}
+
+// 🎨 打开图标风格选择器
+const openIconStyleSelector = () => {
+  showIconStyleSelector.value = true
+}
+
+// 🎨 处理图标风格切换
+const handleIconStyleChange = (style: string) => {
+  console.log(`✅ 图标风格已切换为: ${style}`)
 }
 
 const logout = () => {
