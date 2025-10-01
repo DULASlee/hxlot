@@ -1,0 +1,26 @@
+// 🏗️ Component System Exports
+
+// 从 ComponentRegistry 导出（排除与types重复的类型）
+export {
+  ComponentRegistry,
+  createComponentRegistry,
+  registerComponent,
+  loadComponent,
+  getComponentMetadata,
+  globalComponentRegistry
+} from './ComponentRegistry'
+export type {
+  ComponentCategory,
+  LoadPriority,
+  ComponentInstance,
+  ComponentLoadStats
+} from './ComponentRegistry'
+
+// 从 BaseComponent 导出（排除与types重复的类型）
+export {
+  BaseComponent
+} from './BaseComponent'
+
+// 从 hocs 导出（排除与validators重复的类型）
+export * from './hocs'
+

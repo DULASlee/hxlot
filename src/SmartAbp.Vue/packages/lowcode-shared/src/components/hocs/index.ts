@@ -13,7 +13,8 @@ export type { WithErrorProps } from './WithError'
 
 // WithValidation
 export { WithValidation, useValidation } from './WithValidation'
-export type { WithValidationProps, ValidationResult } from './WithValidation'
+export type { WithValidationProps } from './WithValidation'
+// ValidationResult 从 validators/common 导出，避免重复
 
 // WithPermission
 export { WithPermission, usePermission } from './WithPermission'

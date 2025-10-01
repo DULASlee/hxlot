@@ -240,7 +240,9 @@ publish/
 # NuGet Packages
 *.nupkg
 # The packages folder can be ignored because of Package Restore
+# 但需要排除前端的packages目录（那是我们的monorepo packages）
 **/packages/*
+!src/SmartAbp.Vue/packages/**
 # except build/, which is used as an MSBuild target.
 !**/packages/build/
 # Uncomment if necessary however generally it will be regenerated when needed

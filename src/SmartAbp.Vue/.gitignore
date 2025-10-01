@@ -29,6 +29,24 @@ coverage
 
 *.tsbuildinfo
 
+# TypeScript compilation outputs (should not be committed)
+# 但保留必要的类型声明文件
+*.d.ts
+*.d.ts.map
+# 保留项目必需的类型声明
+!src/vite-env.d.ts
+!src/components.d.ts
+!src/auto-imports.d.ts
+!src/shims-vue.d.ts
+# 保留 packages 的根级别类型声明（包入口）
+!packages/*/index.d.ts
+!packages/*/index.d.ts.map
+# packages编译产物（.js, .d.ts, .d.ts.map）应该忽略
+packages/**/src/**/*.d.ts
+packages/**/src/**/*.d.ts.map
+packages/**/src/**/*.js
+packages/**/dist/**
+
 # IDE and Editor files
 .vs/
 .vscode/
