@@ -257,7 +257,22 @@ async function bootstrap() {
   // 初始化主题
   // 主题初始化暂时跳过外部store强依赖
 
-  // 初始化认证状态（占位）
+  // 🔐 初始化认证状态 - 从localStorage恢复登录信息
+  const { useAuthStore } = await import("./stores/modules/auth")
+  const authStore = useAuthStore()
+  authStore.initialize()
+  logger.info("[Auth] 认证状态已初始化", { 
+    isAuthenticated: authStore.isAuthenticated,
+    hasUser: !!authStore.userInfo
+  })
+
+  // 🎨 初始化图标风格 - 从localStorage恢复图标风格偏好
+  const { useIconStyleStore } = await import("./stores/modules/iconStyle")
+  const iconStyleStore = useIconStyleStore()
+  iconStyleStore.loadIconStyle()
+  logger.info("[IconStyle] 图标风格已加载", { 
+    currentStyle: iconStyleStore.currentStyle 
+  })
 
   app.mount("#app")
 
