@@ -7,7 +7,7 @@
     >
       <button
         class="theme-switcher-button"
-        title="切换主题"
+        title="主题与图标风格"
         @click="toggleDropdown"
       >
         <i
@@ -40,7 +40,7 @@
 
         <div class="theme-dropdown-divider" />
 
-        <!-- 主题选择列表 -->
+        <!-- 主题选择列表（自动匹配图标风格） -->
         <div
           v-for="theme in availableThemes"
           :key="theme.value"
@@ -58,17 +58,37 @@
             class="fas fa-check"
           />
         </div>
+        
+        <!-- 图标风格选择（企业级可用风格） -->
+        <div class="theme-dropdown-divider" />
+        <div class="theme-dropdown-item icon-style-row">
+          <span class="icon-style-label">图标风格</span>
+          <el-select
+            v-model="selectedIconStyle"
+            size="small"
+            class="icon-style-select"
+            @change="onIconStyleChange"
+          >
+            <el-option
+              v-for="style in iconAvailableStyles"
+              :key="style.id"
+              :label="style.name"
+              :value="style.id"
+            />
+          </el-select>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from "vue"
+import { defineComponent, ref, computed, onMounted, watch } from "vue"
 // import { useI18n } from 'vue-i18n';
 import { storeToRefs } from "pinia"
-import { useThemeStore } from "@/stores"
+import { useThemeStore, useIconStyleStore } from "@/stores"
 import type { ThemeType } from '@/composables/useDesignSystem'
+import type { IconStyleType } from '@/stores/modules/iconStyle'
 
 // 点击外部指令
 const vClickOutside = {
@@ -94,6 +114,20 @@ export default defineComponent({
     const themeStore = useThemeStore()
     const { currentTheme, isDarkMode } = storeToRefs(themeStore)
     const { setTheme, toggleDarkMode, getAvailableThemes } = themeStore
+
+    // 图标风格选择
+    const iconStore = useIconStyleStore()
+    const { currentStyle: iconCurrentStyle, availableStyles: iconAvailableStyles } = storeToRefs(iconStore)
+    const selectedIconStyle = ref<IconStyleType>(iconCurrentStyle.value)
+    const onIconStyleChange = async (style: IconStyleType) => {
+      try {
+        await iconStore.setIconStyle(style)
+      } catch (e) {
+        // 忽略非企业级等保护性错误，回退到原值
+        selectedIconStyle.value = iconCurrentStyle.value
+      }
+    }
+    watch(iconCurrentStyle, (v) => { selectedIconStyle.value = v })
 
     const isDropdownOpen = ref(false)
 
@@ -142,6 +176,10 @@ export default defineComponent({
       toggleDropdown,
       closeDropdown,
       getAvailableThemes,
+      // 图标风格
+      iconAvailableStyles,
+      selectedIconStyle,
+      onIconStyleChange,
     }
   },
 })
@@ -342,6 +380,23 @@ export default defineComponent({
   height: 1px;
   background-color: var(--theme-border-base);
   margin: 8px 0;
+}
+
+.icon-style-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 18px;
+}
+
+.icon-style-label {
+  font-size: 13px;
+  color: var(--theme-text-secondary);
+}
+
+.icon-style-select :deep(.el-input__wrapper) {
+  background: var(--theme-bg-component);
 }
 
 /* 暗黑模式开关 */

@@ -73,7 +73,7 @@ export const useMenuStore = defineStore('menu', () => {
       {
         key: 'dashboard',
         title: '工作台',
-        icon: 'fas fa-chart-pie',
+        icon: 'chart-pie',
         path: '/dashboard',
         closable: false
       }
@@ -378,7 +378,7 @@ export const useMenuStore = defineStore('menu', () => {
         {
           key: 'dashboard',
           title: '工作台',
-          icon: 'fas fa-chart-pie',
+          icon: 'chart-pie',
           path: '/dashboard',
           closable: false
         }
@@ -399,7 +399,7 @@ export const useMenuStore = defineStore('menu', () => {
         menuState.value.openTabs.find(t => t.key === menuState.value.activeTab) || {
           key: 'dashboard',
           title: '工作台',
-          icon: 'fas fa-chart-pie',
+          icon: 'chart-pie',
           path: '/dashboard',
           closable: false
         }
@@ -409,7 +409,7 @@ export const useMenuStore = defineStore('menu', () => {
         {
           key: 'dashboard',
           title: '工作台',
-          icon: 'fas fa-chart-pie',
+          icon: 'chart-pie',
           path: '/dashboard',
           closable: false
         }

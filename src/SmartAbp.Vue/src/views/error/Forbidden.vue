@@ -140,9 +140,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useAuthStore } from '@/stores'
+import { useAuthStore, useThemeStore } from '@/stores'
 import { ElMessage } from 'element-plus'
 import { Lock, User, Key, Back, HomeFilled, Service } from '@element-plus/icons-vue'
 import { getRoleDisplayName } from '@/utils/roleHierarchy'
@@ -150,6 +150,23 @@ import { getRoleDisplayName } from '@/utils/roleHierarchy'
 const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
+const themeStore = useThemeStore()
+
+// 🎨 确保主题在403页面正确应用
+onMounted(() => {
+  // 强制重新应用主题，确保CSS变量正确加载
+  themeStore.applyTheme()
+  console.log('🎨 403页面：主题已应用', {
+    isDarkMode: themeStore.isDarkMode,
+    currentTheme: themeStore.currentTheme
+  })
+})
+
+// 🧹 清理工作
+onUnmounted(() => {
+  // 页面卸载时无需特殊处理，主题状态由store统一管理
+  console.log('👋 403页面：组件卸载')
+})
 
 // 用户角色
 const userRoles = computed(() => authStore.userInfo?.roles || [])
@@ -197,16 +214,22 @@ const contactAdmin = () => {
 </script>
 
 <style scoped lang="scss">
-// 🎨 现代企业级403页面设计
+// 🎨 现代企业级403页面设计 - 使用系统统一主题令牌
 .forbidden-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  // ✅ 使用系统主题令牌：--theme-brand-primary
+  background: linear-gradient(
+    135deg,
+    var(--theme-brand-primary) 0%,
+    var(--theme-brand-primary-hover) 100%
+  );
   padding: 20px;
   position: relative;
   overflow: hidden;
+  transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 // 背景装饰圆圈
@@ -285,10 +308,15 @@ const contactAdmin = () => {
 .top-decoration {
   width: 60px;
   height: 4px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(
+    90deg,
+    var(--theme-brand-primary),
+    var(--theme-brand-primary-hover)
+  );
   border-radius: 2px;
   margin: 0 auto 32px;
   animation: slideIn 0.8s ease-out 0.3s backwards;
+  transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes slideIn {
@@ -313,14 +341,19 @@ const contactAdmin = () => {
   position: relative;
   width: 120px;
   height: 120px;
-  background: linear-gradient(135deg, #f56c6c, #e84b4b);
+  background: linear-gradient(
+    135deg,
+    var(--theme-danger),
+    var(--theme-danger-hover)
+  );
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 30px rgba(245, 108, 108, 0.3);
+  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
   animation: iconPulse 2s ease-in-out infinite, iconAppear 0.8s ease-out 0.2s backwards;
   z-index: 1;
+  transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .lock-icon {
@@ -381,12 +414,17 @@ const contactAdmin = () => {
   font-weight: 800;
   margin: 0;
   line-height: 1;
-  background: linear-gradient(135deg, #f56c6c, #e84b4b);
+  background: linear-gradient(
+    135deg,
+    var(--theme-danger),
+    var(--theme-danger-hover)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 4px 8px rgba(245, 108, 108, 0.2));
+  filter: drop-shadow(0 4px 8px rgba(239, 68, 68, 0.2));
   letter-spacing: 8px;
+  transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .digit {
@@ -411,7 +449,7 @@ const contactAdmin = () => {
 // 标题和描述
 .error-title {
   font-size: 28px;
-  color: #303133;
+  color: var(--theme-text-inverse);
   margin: 16px 0;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -420,9 +458,10 @@ const contactAdmin = () => {
 
 .error-message {
   font-size: 15px;
-  color: #606266;
+  color: var(--theme-text-inverse);
   margin: 0 0 32px;
   line-height: 1.8;
+  opacity: 0.9;
   animation: fadeIn 0.8s ease-out 0.5s backwards;
 }
 
@@ -439,13 +478,14 @@ const contactAdmin = () => {
 
 // 角色信息卡片
 .role-card {
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  background: var(--theme-bg-component);
   border-radius: 16px;
   padding: 24px;
   margin-bottom: 32px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--theme-border-light);
+  box-shadow: var(--theme-shadow-md);
   animation: fadeIn 0.8s ease-out 0.6s backwards;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .role-item {
@@ -466,13 +506,13 @@ const contactAdmin = () => {
   gap: 8px;
   font-size: 14px;
   font-weight: 600;
-  color: #303133;
+  color: var(--theme-text-primary);
   flex-shrink: 0;
 }
 
 .label-icon {
   font-size: 18px;
-  color: #667eea;
+  color: var(--theme-brand-primary);
 }
 
 .role-tags {
@@ -537,13 +577,22 @@ const contactAdmin = () => {
   }
   
   &.primary-btn {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
+    background: linear-gradient(
+      135deg,
+      var(--theme-brand-primary),
+      var(--theme-brand-primary-hover)
+    );
+    color: var(--theme-text-inverse);
     border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
     &:hover {
-      background: linear-gradient(135deg, #5568d3, #653a8b);
-      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+      background: linear-gradient(
+        135deg,
+        var(--theme-brand-primary-hover),
+        var(--theme-brand-primary-active)
+      );
+      box-shadow: var(--theme-shadow-lg);
     }
   }
 }
@@ -552,10 +601,15 @@ const contactAdmin = () => {
 .bottom-decoration {
   width: 60px;
   height: 4px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(
+    90deg,
+    var(--theme-brand-primary),
+    var(--theme-brand-primary-hover)
+  );
   border-radius: 2px;
   margin: 32px auto 0;
   animation: slideIn 0.8s ease-out 0.8s backwards;
+  transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 // 响应式设计

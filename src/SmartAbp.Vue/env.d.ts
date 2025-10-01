@@ -8,6 +8,14 @@ declare module "*.vue" {
   export default component
 }
 
+// unplugin-icons 类型声明
+declare module "~icons/*" {
+  import type { DefineComponent } from "vue"
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  const component: DefineComponent<{}, {}, any>
+  export default component
+}
+
 interface ImportMetaEnv {
   readonly VITE_APP_TITLE: string
   readonly VITE_API_BASE_URL: string

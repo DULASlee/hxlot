@@ -1,5 +1,11 @@
 <template>
   <div class="smart-abp-layout">
+    <!-- 路由进度条（无依赖） -->
+    <div
+      v-show="isRouting"
+      class="route-progress"
+      :style="{ width: progressWidth + '%' }"
+    />
     <!-- 顶部导航栏 -->
     <header class="top-navbar">
       <div class="navbar-left">
@@ -44,96 +50,8 @@
           <i :class="currentLocale === 'zh-CN' ? 'fas fa-language' : 'fas fa-globe'" />
         </button>
         
-        <!-- 主题切换下拉菜单 -->
-        <el-dropdown
-          trigger="click"
-          @command="handleThemeCommand"
-        >
-          <button
-            class="icon-btn"
-            title="主题切换"
-          >
-            <i :class="isDarkMode ? 'fas fa-moon' : 'fas fa-sun'" />
-          </button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="light">
-                <i
-                  class="fas fa-sun"
-                  style="margin-right: 8px;"
-                />
-                浅色主题
-              </el-dropdown-item>
-              <el-dropdown-item command="dark">
-                <i
-                  class="fas fa-moon"
-                  style="margin-right: 8px;"
-                />
-                深色主题
-              </el-dropdown-item>
-              <el-dropdown-item
-                command="toggle"
-                divided
-              >
-                <i
-                  class="fas fa-adjust"
-                  style="margin-right: 8px;"
-                />
-                切换模式
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-        
-        <!-- 🎨 图标风格下拉菜单 -->
-        <el-dropdown
-          trigger="click"
-          @command="handleIconStyleCommand"
-        >
-          <button
-            class="icon-btn"
-            title="图标风格"
-          >
-            <i class="fas fa-icons" />
-          </button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item 
-                v-for="style in availableIconStyles" 
-                :key="style.id"
-                :command="style.id"
-                :disabled="currentIconStyle === style.id"
-              >
-                <span
-                  v-if="style.id === 'emoji'"
-                  style="margin-right: 8px; font-size: 16px;"
-                >
-                  {{ style.preview }}
-                </span>
-                <i
-                  v-else
-                  :class="style.preview"
-                  style="margin-right: 8px;"
-                />
-                {{ style.name }}
-                <el-tag
-                  v-if="style.enterprise"
-                  size="small"
-                  type="success"
-                  style="margin-left: 8px;"
-                >
-                  企业级
-                </el-tag>
-                <el-icon
-                  v-if="currentIconStyle === style.id"
-                  style="margin-left: 8px;"
-                >
-                  <SuccessFilled />
-                </el-icon>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        <!-- 🎨 主题&图标切换（统一入口） -->
+        <ThemeSwitcher />
         
         <button
           class="icon-btn"
@@ -142,32 +60,43 @@
         >
           <i class="fas fa-cog" />
         </button>
-        <div
-          class="user-menu"
-          @click="toggleUserDropdown"
+        
+        <!-- 👤 个人中心下拉菜单 -->
+        <el-dropdown
+          trigger="click"
+          @command="handleUserCommand"
         >
-          <img
-            src="/logo.svg"
-            alt="用户头像"
-            class="user-avatar"
-          />
-          <span class="username">{{ userInfo.name || "用户" }}</span>
-          <i class="fas fa-chevron-down dropdown-icon" />
-
-          <div
-            v-if="showUserDropdown"
-            class="user-dropdown"
-          >
-            <a
-              href="#"
-              @click="goToProfile"
-            >个人信息</a>
-            <a
-              href="#"
-              @click="logout"
-            >退出登录</a>
+          <div class="user-menu">
+            <img
+              src="/logo.svg"
+              alt="用户头像"
+              class="user-avatar"
+            />
+            <span class="username">{{ displayUserName }}</span>
+            <i class="fas fa-chevron-down dropdown-icon" />
           </div>
-        </div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="profile">
+                <i
+                  class="fas fa-user"
+                  style="margin-right: 8px;"
+                />
+                个人信息
+              </el-dropdown-item>
+              <el-dropdown-item
+                command="logout"
+                divided
+              >
+                <i
+                  class="fas fa-sign-out-alt"
+                  style="margin-right: 8px;"
+                />
+                退出登录
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </header>
 
@@ -188,52 +117,64 @@
         </div>
 
         <nav class="sidebar-nav">
-          <div
+          <template
             v-for="item in filteredMenus"
             :key="item.key"
-            class="nav-item"
           >
+            <!-- 菜单分割线（不渲染图标与标题） -->
             <div
-              class="nav-link"
-              :class="{
-                active: menuState.activeMenuKey === item.key,
-                'has-children': item.type === 'folder' && item.children,
-              }"
-              @click="handleMenuClick(item)"
-            >
-              <i :class="item.icon" />
-              <span
-                v-if="!sidebarCollapsed"
-                class="nav-text"
-              >{{ item.title }}</span>
-              <i
-                v-if="item.type === 'folder' && item.children && !sidebarCollapsed"
-                :class="[
-                  'fas fa-chevron-down',
-                  'expand-icon',
-                  { expanded: expandedMenus.includes(item.key) },
-                ]"
-              />
-            </div>
+              v-if="item.type === 'divider'"
+              class="menu-divider"
+              role="separator"
+            />
 
+            <!-- 普通菜单/文件夹 -->
             <div
-              v-if="item.type === 'folder' && item.children"
-              v-show="expandedMenus.includes(item.key)"
-              class="sub-menu"
-              :class="{ collapsed: sidebarCollapsed }"
+              v-else
+              class="nav-item"
             >
               <div
-                v-for="child in item.children"
-                :key="child.key"
-                class="sub-nav-link"
-                :class="{ active: menuState.activeSubMenuKey === child.key }"
-                @click="handleSubMenuClick(child)"
+                class="nav-link"
+                :class="{
+                  active: menuState.activeMenuKey === item.key,
+                  'has-children': item.type === 'folder' && item.children,
+                }"
+                @click="handleMenuClick(item)"
               >
-                <i :class="child.icon" />
-                <span class="nav-text">{{ child.title }}</span>
+                <DynamicIcon :icon="item.icon" />
+                <span
+                  v-if="!sidebarCollapsed"
+                  class="nav-text"
+                >{{ item.title }}</span>
+                <i
+                  v-if="item.type === 'folder' && item.children && !sidebarCollapsed"
+                  :class="[
+                    'fas fa-chevron-down',
+                    'expand-icon',
+                    { expanded: expandedMenus.includes(item.key) },
+                  ]"
+                />
+              </div>
+
+              <div
+                v-if="item.type === 'folder' && item.children"
+                v-show="expandedMenus.includes(item.key)"
+                class="sub-menu"
+                :class="{ collapsed: sidebarCollapsed }"
+              >
+                <div
+                  v-for="child in item.children"
+                  :key="child.key"
+                  class="sub-nav-link"
+                  :class="{ active: menuState.activeSubMenuKey === child.key }"
+                  @click="handleSubMenuClick(child)"
+                >
+                  <DynamicIcon :icon="child.icon" />
+                  <span class="nav-text">{{ child.title }}</span>
+                </div>
               </div>
             </div>
-          </div>
+          </template>
         </nav>
       </aside>
 
@@ -260,7 +201,7 @@
             class="submenu-item"
             @click="handleSubMenuClick(sub)"
           >
-            <i :class="sub.icon" />
+            <DynamicIcon :icon="sub.icon" />
             <span>{{ sub.title }}</span>
           </div>
         </div>
@@ -268,45 +209,162 @@
 
       <!-- 内容区域 -->
       <main class="content-area">
+        <!-- 🧭 面包屑导航 -->
+        <nav
+          v-if="breadcrumbs.length > 0"
+          class="breadcrumb-nav"
+          aria-label="breadcrumb"
+        >
+          <el-breadcrumb separator="/">
+            <el-breadcrumb-item
+              v-for="(item, index) in breadcrumbs"
+              :key="index"
+              :to="index < breadcrumbs.length - 1 ? item.path : undefined"
+            >
+              <DynamicIcon
+                v-if="item.icon"
+                :icon="item.icon"
+                :size="14"
+              />
+              {{ item.title }}
+            </el-breadcrumb-item>
+          </el-breadcrumb>
+        </nav>
+
         <!-- 标签页导航 -->
         <div
           v-if="openTabs.length > 0"
           class="tab-navigation"
         >
           <div class="tabs-container">
-            <div
+            <el-dropdown
               v-for="tab in openTabs"
               :key="tab.key"
-              class="tab-item"
-              :class="{ active: activeTab === tab.key }"
-              @click="switchTab(tab.key)"
+              trigger="contextmenu"
+              @command="onTabMenuCommand"
             >
-              <i :class="tab.icon" />
-              <span class="tab-title">{{ tab.title }}</span>
-              <button
-                v-if="tab.closable !== false"
-                class="tab-close"
-                @click.stop="closeTab(tab.key)"
+              <div
+                class="tab-item"
+                :class="{ active: activeTab === tab.key }"
+                @click="switchTab(tab.key)"
               >
-                <i class="fas fa-times" />
-              </button>
-            </div>
+                <DynamicIcon :icon="tab.icon" />
+                <span class="tab-title">{{ tab.title }}</span>
+                <button
+                  class="tab-pin"
+                  :title="isTabPinned(tab.key) ? '取消固定' : '固定标签'"
+                  @click.stop="togglePinTab(tab.key)"
+                >
+                  {{ isTabPinned(tab.key) ? '📌' : '📍' }}
+                </button>
+                <button
+                  v-if="tab.closable !== false && !isTabPinned(tab.key)"
+                  class="tab-close"
+                  @click.stop="closeTab(tab.key)"
+                >
+                  <i class="fas fa-times" />
+                </button>
+              </div>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item
+                    :command="{ action: 'close', key: tab.key }"
+                    :disabled="isTabPinned(tab.key)"
+                  >
+                    关闭当前
+                  </el-dropdown-item>
+                  <el-dropdown-item :command="{ action: 'closeRight', key: tab.key }">
+                    关闭右侧
+                  </el-dropdown-item>
+                  <el-dropdown-item :command="{ action: 'closeOthers', key: tab.key }">
+                    关闭其它
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+          <div class="tabs-actions">
+            <el-switch
+              v-model="singleTabMode"
+              active-text="单页模式"
+              inline-prompt
+              size="small"
+            />
+            <el-button
+              class="tabs-clean-btn"
+              text
+              size="small"
+              @click="closeOtherTabs"
+            >
+              仅保留当前+固定
+            </el-button>
           </div>
         </div>
 
         <!-- 页面内容 -->
         <div class="page-content">
-          <router-view />
+          <Transition
+            name="fade-page"
+            mode="out-in"
+            appear
+          >
+            <Suspense>
+              <router-view />
+              <template #fallback>
+                <div class="page-loading">
+                  <el-icon><Loading /></el-icon>
+                </div>
+              </template>
+            </Suspense>
+          </Transition>
         </div>
       </main>
     </div>
 
-    <!-- 遮罩层 -->
-    <div
-      v-if="showUserDropdown"
-      class="overlay"
-      @click="closeAllDropdowns"
-    />
+    <!-- 🔎 全局搜索（Ctrl+K） -->
+    <el-dialog
+      v-model="showGlobalSearch"
+      width="600px"
+      :show-close="false"
+      align-center
+      class="global-search-dialog"
+    >
+      <template #header>
+        <div class="global-search-header">
+          <DynamicIcon icon="ep-search" />
+          <span>全局搜索</span>
+          <span class="hint">Ctrl+K</span>
+        </div>
+      </template>
+      <div class="global-search-body">
+        <el-input
+          v-model="searchKeyword"
+          placeholder="搜索功能、菜单或页面"
+          @keydown.enter="goFirstSearchResult"
+        />
+        <div class="search-results">
+          <div
+            v-for="item in searchResults"
+            :key="item.key"
+            class="search-result-item"
+            @click="navigateSearch(item)"
+          >
+            <DynamicIcon :icon="item.icon" />
+            <span class="title">{{ item.title }}</span>
+            <span
+              v-if="item.parentTitle"
+              class="path"
+            >{{ item.parentTitle }} / {{ item.title }}</span>
+          </div>
+          <div
+            v-if="searchResults.length === 0"
+            class="search-empty"
+          >
+            无匹配结果
+          </div>
+        </div>
+      </div>
+    </el-dialog>
 
     <!-- 退出登录确认对话框 -->
     <LogoutConfirmDialog
@@ -319,31 +377,47 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue"
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue"
 import { useRouter } from "vue-router"
-import { useThemeStore, useIconStyleStore } from "@/stores"
+import { useThemeStore } from "@/stores"
 import { useAuthStore } from "@/stores/modules/auth"
 import { useMenu } from "@/composables/useMenu"
 import { i18n, setLocale } from "@/plugins/i18n"
-import { storeToRefs } from "pinia"
 import { ElMessage } from "element-plus"
-import { SuccessFilled } from "@element-plus/icons-vue"
 import LogoutConfirmDialog from "@/components/common/LogoutConfirmDialog.vue"
-import type { IconStyleType } from "@/stores"
+import DynamicIcon from "@/components/common/DynamicIcon.vue"
+import ThemeSwitcher from "@/components/theme/ThemeSwitcher.vue"
+import { Loading } from "@element-plus/icons-vue"
 
 const router = useRouter()
 const themeStore = useThemeStore()
-const { isDarkMode } = storeToRefs(themeStore)
 const authStore = useAuthStore()
+// 路由进度条状态
+const isRouting = ref(false)
+const progressWidth = ref(0)
+let progressTimer: number | undefined
 
-// 🎨 图标风格管理
-const iconStyleStore = useIconStyleStore()
-const availableIconStyles = computed(() => iconStyleStore.availableStyles)
-const currentIconStyle = computed(() => iconStyleStore.currentStyle)
+router.beforeEach(() => {
+  isRouting.value = true
+  progressWidth.value = 10
+  if (progressTimer) window.clearInterval(progressTimer)
+  progressTimer = window.setInterval(() => {
+    // 逐步增加，最多到90%
+    if (progressWidth.value < 90) progressWidth.value += 5
+  }, 120)
+})
+
+router.afterEach(() => {
+  progressWidth.value = 100
+  window.setTimeout(() => {
+    isRouting.value = false
+    progressWidth.value = 0
+    if (progressTimer) window.clearInterval(progressTimer)
+  }, 200)
+})
 
 // 侧边栏显示
 const sidebarCollapsed = ref(false)
-const showUserDropdown = ref(false)
 
 // 退出登录对话框状态
 const showLogoutDialog = ref(false)
@@ -363,9 +437,154 @@ const {
   closeTab,
 } = useMenu()
 
+// 🧭 面包屑导航（2025企业系统标准）
+const breadcrumbs = computed(() => {
+  const crumbs: Array<{ title: string; path?: string; icon?: string }> = [
+    { title: '首页', path: '/dashboard', icon: 'ep-home-filled' }
+  ]
+  
+  const activeKey = menuState.value.activeMenuKey
+  if (activeKey) {
+    // 递归查找激活的菜单项
+    for (const menu of filteredMenus.value) {
+      if (menu.key === activeKey) {
+        crumbs.push({ title: menu.title, icon: menu.icon })
+        break
+      }
+      if (menu.type === 'folder' && 'children' in menu && menu.children) {
+        for (const child of menu.children) {
+          if (child.key === activeKey) {
+            crumbs.push({ title: menu.title, icon: menu.icon })
+            crumbs.push({ title: child.title, icon: child.icon })
+            break
+          }
+        }
+      }
+    }
+  }
+  
+  return crumbs
+})
+
 const expandedMenus = computed(() => menuState.value.expandedMenuKeys)
 const openTabs = computed(() => menuState.value.openTabs)
 const activeTab = computed(() => menuState.value.activeTab)
+
+// 单页模式（仅保留当前标签，固定标签除外）
+const SINGLE_TAB_KEY = 'smartabp-single-tab-mode'
+const singleTabMode = ref(localStorage.getItem(SINGLE_TAB_KEY) === 'true')
+
+watch(singleTabMode, (val: boolean) => {
+  localStorage.setItem(SINGLE_TAB_KEY, String(val))
+  if (val) enforceSingleTab()
+})
+
+watch(activeTab, () => {
+  if (singleTabMode.value) enforceSingleTab()
+})
+
+const enforceSingleTab = () => {
+  const tabs = openTabs.value
+  const current = activeTab.value
+  if (!current || tabs.length <= 1) return
+  // 关闭除当前与已固定外的标签
+  for (const tab of tabs) {
+    if (tab.key !== current && !pinnedTabKeys.value.has(tab.key)) {
+      closeTab(tab.key)
+    }
+  }
+}
+
+const closeOtherTabs = () => {
+  const tabs = openTabs.value
+  const current = activeTab.value
+  if (!current) return
+  for (const tab of tabs) {
+    if (tab.key !== current && !pinnedTabKeys.value.has(tab.key)) {
+      closeTab(tab.key)
+    }
+  }
+}
+
+type TabMenuCommand = { action: 'close' | 'closeRight' | 'closeOthers'; key: string }
+const onTabMenuCommand = (cmd: TabMenuCommand) => {
+  const tabs = openTabs.value
+  const idx = tabs.findIndex(t => t.key === cmd.key)
+  if (idx < 0) return
+  if (cmd.action === 'close') {
+    if (!pinnedTabKeys.value.has(cmd.key)) closeTab(cmd.key)
+    return
+  }
+  if (cmd.action === 'closeRight') {
+    for (let i = tabs.length - 1; i > idx; i--) {
+      const t = tabs[i]
+      if (!pinnedTabKeys.value.has(t.key)) closeTab(t.key)
+    }
+    return
+  }
+  if (cmd.action === 'closeOthers') {
+    const keep = new Set<string>([cmd.key, ...pinnedTabKeys.value])
+    for (const t of tabs) {
+      if (!keep.has(t.key)) closeTab(t.key)
+    }
+  }
+}
+
+// 📌 标签固定（本地状态，不侵入Store）
+const pinnedTabKeys = ref<Set<string>>(new Set())
+const isTabPinned = (key: string) => pinnedTabKeys.value.has(key)
+const togglePinTab = (key: string) => {
+  if (pinnedTabKeys.value.has(key)) pinnedTabKeys.value.delete(key)
+  else pinnedTabKeys.value.add(key)
+}
+
+// 🔎 全局搜索（Ctrl+K）
+const showGlobalSearch = ref(false)
+const searchKeyword = ref("")
+type SearchItem = { key: string; title: string; icon?: string; path?: string; parentTitle?: string }
+const searchResults = computed<SearchItem[]>(() => {
+  const kw = searchKeyword.value.trim().toLowerCase()
+  if (!kw) return []
+  const results: SearchItem[] = []
+  for (const menu of filteredMenus.value) {
+    if (menu.title.toLowerCase().includes(kw)) results.push({ key: menu.key, title: menu.title, icon: menu.icon, path: (menu as any).path })
+    if ((menu as any).children) {
+      for (const child of (menu as any).children) {
+        if (child.title.toLowerCase().includes(kw)) results.push({ key: child.key, title: child.title, icon: child.icon, path: (child as any).path, parentTitle: menu.title })
+      }
+    }
+  }
+  // 简单排序：父子命中优先，长度短的优先
+  results.sort((a, b) => (a.parentTitle ? 1 : 0) - (b.parentTitle ? 1 : 0) || a.title.length - b.title.length)
+  return results.slice(0, 20)
+})
+
+const goFirstSearchResult = () => {
+  if (searchResults.value.length === 0) return
+  navigateSearch(searchResults.value[0])
+}
+
+const navigateSearch = (item: SearchItem) => {
+  showGlobalSearch.value = false
+  searchKeyword.value = ""
+  if (typeof item.path === 'string' && item.path) router.push(item.path)
+  else switchTab(item.key)
+}
+
+const keydownHandler = (e: KeyboardEvent) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault()
+    showGlobalSearch.value = true
+    // 自动聚焦
+    requestAnimationFrame(() => {
+      const el = document.querySelector('.global-search-dialog input') as HTMLInputElement | null
+      el?.focus()
+    })
+  }
+  if (e.key === 'Escape' && showGlobalSearch.value) {
+    showGlobalSearch.value = false
+  }
+}
 
 // 用户信息
 const userInfo = ref({
@@ -373,17 +592,14 @@ const userInfo = ref({
   email: "admin@smartabp.com",
 })
 
+// 显示用户名（优先使用 authStore 中的用户信息）
+const displayUserName = computed(() => {
+  return authStore.userInfo?.userName || userInfo.value.name || "用户"
+})
+
 // 方法
 const toggleSidebar = () => {
   sidebarCollapsed.value = !sidebarCollapsed.value
-}
-
-const toggleUserDropdown = () => {
-  showUserDropdown.value = !showUserDropdown.value
-}
-
-const closeAllDropdowns = () => {
-  showUserDropdown.value = false
 }
 
 const navigateToExternal = (name: string) => {
@@ -394,51 +610,25 @@ const openSettings = () => {
   router.push("/Admin/settings")
 }
 
-const goToProfile = () => {
-  router.push("/profile")
-  showUserDropdown.value = false
-}
-
-// 🎨 处理主题切换命令
-const handleThemeCommand = (command: string) => {
-  if (command === 'light') {
-    if (isDarkMode.value) {
-      themeStore.toggleDarkMode()
-    }
-    ElMessage.success('已切换到浅色主题')
-  } else if (command === 'dark') {
-    if (!isDarkMode.value) {
-      themeStore.toggleDarkMode()
-    }
-    ElMessage.success('已切换到深色主题')
-  } else if (command === 'toggle') {
-    themeStore.toggleDarkMode()
-    ElMessage.success(`已切换到${isDarkMode.value ? '深色' : '浅色'}主题`)
+// 🎨 处理用户下拉菜单命令
+const handleUserCommand = (command: string) => {
+  switch (command) {
+    case 'profile':
+      router.push("/profile")
+      ElMessage.info('跳转到个人中心')
+      break
+    case 'logout':
+      logout()
+      break
+    default:
+      console.warn(`未知的用户命令: ${command}`)
   }
 }
 
-// 🎨 处理图标风格切换命令
-const handleIconStyleCommand = async (command: IconStyleType) => {
-  if (command === currentIconStyle.value) {
-    return
-  }
-  
-  try {
-    await iconStyleStore.setIconStyle(command)
-    const styleName = iconStyleStore.styleConfig.name
-    ElMessage.success({
-      message: `✅ 图标风格已切换为: ${styleName}`,
-      duration: 2000
-    })
-  } catch (error) {
-    console.error('切换图标风格失败:', error)
-    ElMessage.error('切换失败，请重试')
-  }
-}
+// ✅ 主题和图标切换已统一到 ThemeSwitcher 组件
+// 通过配置驱动自动联动，无需独立切换按钮和处理函数
 
 const logout = () => {
-  // 关闭用户下拉菜单
-  showUserDropdown.value = false
   // 显示退出登录确认对话框
   showLogoutDialog.value = true
 }
@@ -481,12 +671,32 @@ onMounted(() => {
   authStore.initialize()
   // 同步SmartAbp认证系统状态
   authStore.syncFromSmartAbp()
+  // 绑定全局快捷键
+  window.addEventListener('keydown', keydownHandler)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', keydownHandler)
 })
 </script>
 
 <style scoped>
-/* 基础布局 */
+/* 🎨 2025 设计系统规范 */
 .smart-abp-layout {
+  /* 字体层级 */
+  --font-h1: 24px;
+  --font-h2: 20px;
+  --font-h3: 18px;
+  --font-h4: 16px;
+  --font-base: 14px;
+  --font-small: 12px;
+  
+  /* z-index层级 */
+  --z-header: 400;
+  --z-sidebar: 300;
+  --z-dropdown: 100;
+  
+  /* 基础布局 */
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -495,6 +705,7 @@ onMounted(() => {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: var(--font-base);
 }
 
 /* 顶部导航栏 */
@@ -507,7 +718,7 @@ onMounted(() => {
   border-bottom: 1px solid var(--theme-header-border);
   box-shadow: var(--theme-header-shadow);
   backdrop-filter: blur(8px);
-  z-index: 1000;
+  z-index: var(--z-header);
   position: relative;
 }
 
@@ -536,7 +747,7 @@ onMounted(() => {
 }
 
 .brand-name {
-  font-size: 22px;
+  font-size: var(--font-h2);
   font-weight: 700;
   color: var(--theme-brand-primary);
   letter-spacing: -0.02em;
@@ -662,9 +873,20 @@ onMounted(() => {
   transform: scale(0.95);
 }
 
+/* 路由进度条（无依赖） */
+.route-progress {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--theme-brand-primary), var(--theme-brand-primary-hover));
+  box-shadow: 0 0 8px rgb(0 0 0 / 10%);
+  z-index: 10000;
+  transition: width 0.2s ease;
+}
+
 /* 用户菜单 */
 .user-menu {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -698,37 +920,6 @@ onMounted(() => {
 .dropdown-icon {
   font-size: 12px;
   transition: transform 0.2s ease;
-}
-
-.user-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 8px;
-  padding: 8px;
-  background-color: var(--theme-bg-elevated);
-  border: 1px solid var(--theme-border-base);
-  border-radius: 12px;
-  box-shadow: var(--theme-shadow-lg);
-  min-width: 180px;
-  z-index: 1001;
-  backdrop-filter: blur(12px);
-}
-
-.user-dropdown a {
-  display: block;
-  padding: 10px 14px;
-  color: var(--theme-text-primary);
-  text-decoration: none;
-  border-radius: 8px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  font-weight: 500;
-}
-
-.user-dropdown a:hover {
-  background-color: var(--theme-bg-hover);
-  color: var(--theme-brand-primary);
-  transform: translateX(4px);
 }
 
 /* 主容器 */
@@ -788,6 +979,13 @@ onMounted(() => {
   padding: 20px 12px;
 }
 
+.menu-divider {
+  height: 12px;
+  margin: 8px 4px;
+  border-bottom: 1px dashed var(--theme-border-light);
+  opacity: 0.7;
+}
+
 .nav-item {
   margin-bottom: 6px;
 }
@@ -834,7 +1032,8 @@ onMounted(() => {
   border-radius: 0 2px 2px 0;
 }
 
-.sidebar-nav .nav-link i {
+.sidebar-nav .nav-link i,
+.sidebar-nav .nav-link :deep(.dynamic-icon) {
   width: 20px;
   text-align: center;
   font-size: 18px;
@@ -934,6 +1133,43 @@ onMounted(() => {
 }
 
 /* 标签页导航 */
+/* 🧭 面包屑导航 - 2025企业系统标准 */
+.breadcrumb-nav {
+  padding: 12px 24px;
+  background: var(--theme-bg-component);
+  border-bottom: 1px solid var(--theme-border-light);
+}
+
+.breadcrumb-nav :deep(.el-breadcrumb) {
+  display: flex;
+  align-items: center;
+  font-size: var(--font-small);
+}
+
+.breadcrumb-nav :deep(.el-breadcrumb__item) {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.breadcrumb-nav :deep(.el-breadcrumb__inner) {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--theme-text-secondary);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.breadcrumb-nav :deep(.el-breadcrumb__inner):hover {
+  color: var(--theme-brand-primary);
+}
+
+.breadcrumb-nav :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
+  color: var(--theme-text-primary);
+  font-weight: 600;
+}
+
 .tab-navigation {
   background: var(--theme-bg-component);
   border-bottom: 1px solid var(--theme-border-base);
@@ -947,6 +1183,20 @@ onMounted(() => {
   overflow-x: auto;
   justify-content: flex-start;
   gap: 0;
+}
+
+.tabs-actions {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+}
+
+.tabs-clean-btn {
+  margin-left: 8px;
+  color: var(--theme-text-secondary);
+}
+.tabs-clean-btn:hover {
+  color: var(--theme-brand-primary);
 }
 
 .tab-item {
@@ -1020,6 +1270,27 @@ onMounted(() => {
   transform: scale(1.1);
 }
 
+.tab-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--theme-text-tertiary);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 12px;
+}
+
+.tab-pin:hover {
+  background-color: var(--theme-bg-hover);
+  color: var(--theme-brand-primary);
+  transform: scale(1.1);
+}
+
 /* 页面内容 */
 .page-content {
   flex: 1;
@@ -1030,22 +1301,68 @@ onMounted(() => {
   margin-top: 1px;
 }
 
-/* 遮罩层 */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgb(0 0 0 / 40%);
-  backdrop-filter: blur(4px);
-  z-index: 999;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+/* 页面切换过渡与加载 */
+.page-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 160px);
+  color: var(--theme-text-secondary);
 }
 
-/* 响应式设计 */
+.fade-page-enter-active,
+.fade-page-leave-active {
+  transition: opacity .25s ease;
+}
+.fade-page-enter-from,
+.fade-page-leave-to {
+  opacity: 0;
+}
+
+/* 响应式设计 - 2025标准 */
+/* 移动端 */
 @media (width <= 768px) {
   .navbar-center {
     display: none;
   }
+  
+  .brand-name {
+    font-size: 18px;
+  }
+}
 
+/* 平板 */
+@media (width >= 768px) and (width <= 1024px) {
+  .sidebar {
+    width: 220px;
+  }
+  
+  .navbar-center .nav-link {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
+
+/* 笔记本 */
+@media (width >= 1024px) and (width <= 1440px) {
+  .sidebar {
+    width: 260px;
+  }
+}
+
+/* 桌面大屏 */
+@media (width >= 1920px) {
+  .sidebar {
+    width: 300px;
+  }
+  
+  .page-content {
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+}
+
+@media (width <= 768px) {
   .sidebar {
     position: fixed;
     left: 0;

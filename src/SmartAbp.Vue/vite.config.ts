@@ -30,7 +30,7 @@ export default defineConfig({
         }),
         // 🎨 自动导入图标组件
         IconsResolver({
-          prefix: 'icon', // 图标组件前缀
+          prefix: 'Icon', // 图标组件前缀改为Icon
           enabledCollections: ['ep', 'carbon', 'mdi', 'fa'], // 启用的图标集
         }),
       ],

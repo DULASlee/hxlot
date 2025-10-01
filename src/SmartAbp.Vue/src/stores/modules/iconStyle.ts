@@ -6,10 +6,15 @@
  * - 一键切换全局图标风格
  * - 持久化用户偏好设置
  * - 动态更新所有图标显示
+ * 
+ * 配置驱动设计：
+ * - 默认值和存储键名从配置中心读取
+ * - 遵循开闭原则，消除硬编码
  */
 
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { DEFAULT_VALUES, STORAGE_KEYS } from '@/config/theme-icon.config'
 
 // 🎨 图标风格类型定义
 export type IconStyleType = 'emoji' | 'fontawesome' | 'element-plus' | 'carbon' | 'material'
@@ -24,29 +29,26 @@ export interface IconStyleConfig {
   bundle: string
 }
 
-// 📋 图标映射接口
-export interface IconMapping {
-  emoji: string
+// 🏢 企业级图标映射接口（推荐）
+export interface EnterpriseIconMapping {
   fontawesome: string
   elementPlus: string
   carbon: string
   material: string
 }
 
+// 📋 完整图标映射接口（包含社交场景图标）
+// ⚠️ 仅在论坛、聊天等非企业级场景使用
+export interface IconMapping extends EnterpriseIconMapping {
+  emoji: string
+}
+
 // 🎨 预定义图标风格配置
 const ICON_STYLES: Record<IconStyleType, IconStyleConfig> = {
-  emoji: {
-    id: 'emoji',
-    name: '表情符号',
-    description: '轻松活泼的表情符号风格',
-    preview: '😀',
-    enterprise: false,
-    bundle: 'native'
-  },
   fontawesome: {
     id: 'fontawesome',
     name: 'Font Awesome',
-    description: '经典专业的企业级图标库',
+    description: '经典专业的企业级图标库（推荐）',
     preview: 'fa-solid fa-briefcase',
     enterprise: true,
     bundle: 'fontawesome'
@@ -54,7 +56,7 @@ const ICON_STYLES: Record<IconStyleType, IconStyleConfig> = {
   'element-plus': {
     id: 'element-plus',
     name: 'Element Plus',
-    description: 'Element UI 配套图标',
+    description: 'Element UI 配套企业级图标',
     preview: 'ep-briefcase',
     enterprise: true,
     bundle: 'element-plus'
@@ -70,16 +72,25 @@ const ICON_STYLES: Record<IconStyleType, IconStyleConfig> = {
   material: {
     id: 'material',
     name: 'Material Design',
-    description: 'Google Material Design 图标',
+    description: 'Google Material Design 企业级图标',
     preview: 'mdi-briefcase',
     enterprise: true,
     bundle: 'material'
+  },
+  emoji: {
+    id: 'emoji',
+    name: '表情符号',
+    description: '⚠️ 仅适用于论坛、聊天等社交场景',
+    preview: '😀',
+    enterprise: false,
+    bundle: 'native'
   }
 }
 
 // 📋 系统图标映射表（所有菜单和功能图标）
+// 🎯 配置驱动设计：只需在此添加新图标，无需修改组件代码
 const ICON_MAPPINGS: Record<string, IconMapping> = {
-  // 工作台
+  // 📊 工作台相关
   dashboard: {
     emoji: '📊',
     fontawesome: 'fa-solid fa-chart-line',
@@ -87,8 +98,31 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-dashboard',
     material: 'mdi-view-dashboard'
   },
+  'chart-pie': {
+    emoji: '📊',
+    fontawesome: 'fa-solid fa-chart-pie',
+    elementPlus: 'ep-pie-chart',
+    carbon: 'carbon-chart-pie',
+    material: 'mdi-chart-pie'
+  },
+  'chart-bar': {
+    emoji: '📊',
+    fontawesome: 'fa-solid fa-chart-bar',
+    elementPlus: 'ep-histogram',
+    carbon: 'carbon-chart-bar',
+    material: 'mdi-chart-bar'
+  },
+
+  // 🔧 兼容别名：fa-chart-line → 使用与 dashboard 一致的线图
+  'chart-line': {
+    emoji: '📊',
+    fontawesome: 'fa-solid fa-chart-line',
+    elementPlus: 'ep-data-line',
+    carbon: 'carbon-dashboard',
+    material: 'mdi-view-dashboard'
+  },
   
-  // 用户管理
+  // 👥 用户管理
   user: {
     emoji: '👤',
     fontawesome: 'fa-solid fa-user',
@@ -96,7 +130,6 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-user',
     material: 'mdi-account'
   },
-  
   users: {
     emoji: '👥',
     fontawesome: 'fa-solid fa-users',
@@ -104,8 +137,29 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-user-multiple',
     material: 'mdi-account-group'
   },
+  'user-circle': {
+    emoji: '👤',
+    fontawesome: 'fa-solid fa-user-circle',
+    elementPlus: 'ep-avatar',
+    carbon: 'carbon-user-avatar',
+    material: 'mdi-account-circle'
+  },
+  'user-shield': {
+    emoji: '🛡️',
+    fontawesome: 'fa-solid fa-user-shield',
+    elementPlus: 'ep-user',
+    carbon: 'carbon-user-role',
+    material: 'mdi-shield-account'
+  },
+  'users-cog': {
+    emoji: '👥⚙️',
+    fontawesome: 'fa-solid fa-users-cog',
+    elementPlus: 'ep-setting',
+    carbon: 'carbon-user-settings',
+    material: 'mdi-account-cog'
+  },
   
-  // 项目管理
+  // 📁 项目管理
   project: {
     emoji: '📁',
     fontawesome: 'fa-solid fa-project-diagram',
@@ -113,8 +167,24 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-folder',
     material: 'mdi-folder-multiple'
   },
+
+  // 🔧 兼容别名：fa-project-diagram 显式键名（与 project 等价）
+  'project-diagram': {
+    emoji: '📁',
+    fontawesome: 'fa-solid fa-project-diagram',
+    elementPlus: 'ep-folder',
+    carbon: 'carbon-folder',
+    material: 'mdi-folder-multiple'
+  },
+  tasks: {
+    emoji: '📋',
+    fontawesome: 'fa-solid fa-tasks',
+    elementPlus: 'ep-document-checked',
+    carbon: 'carbon-task',
+    material: 'mdi-format-list-checks'
+  },
   
-  // 日志管理
+  // 📋 日志管理
   log: {
     emoji: '📋',
     fontawesome: 'fa-solid fa-list-alt',
@@ -122,8 +192,36 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-document',
     material: 'mdi-file-document'
   },
+  'file-alt': {
+    emoji: '📄',
+    fontawesome: 'fa-solid fa-file-alt',
+    elementPlus: 'ep-document',
+    carbon: 'carbon-document-blank',
+    material: 'mdi-file-document-outline'
+  },
+  list: {
+    emoji: '📋',
+    fontawesome: 'fa-solid fa-list',
+    elementPlus: 'ep-menu',
+    carbon: 'carbon-list',
+    material: 'mdi-format-list-bulleted'
+  },
+  'list-ul': {
+    emoji: '📋',
+    fontawesome: 'fa-solid fa-list-ul',
+    elementPlus: 'ep-menu',
+    carbon: 'carbon-list-bulleted',
+    material: 'mdi-format-list-bulleted'
+  },
+  eye: {
+    emoji: '👁️',
+    fontawesome: 'fa-solid fa-eye',
+    elementPlus: 'ep-view',
+    carbon: 'carbon-view',
+    material: 'mdi-eye'
+  },
   
-  // 系统设置
+  // ⚙️ 系统设置
   settings: {
     emoji: '⚙️',
     fontawesome: 'fa-solid fa-cog',
@@ -131,8 +229,29 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-settings',
     material: 'mdi-cog'
   },
+  cog: {
+    emoji: '⚙️',
+    fontawesome: 'fa-solid fa-cog',
+    elementPlus: 'ep-setting',
+    carbon: 'carbon-settings',
+    material: 'mdi-cog'
+  },
+  cogs: {
+    emoji: '⚙️⚙️',
+    fontawesome: 'fa-solid fa-cogs',
+    elementPlus: 'ep-setting',
+    carbon: 'carbon-settings-adjust',
+    material: 'mdi-cogs'
+  },
+  key: {
+    emoji: '🔑',
+    fontawesome: 'fa-solid fa-key',
+    elementPlus: 'ep-key',
+    carbon: 'carbon-locked',
+    material: 'mdi-key'
+  },
   
-  // 测试中心
+  // 🧪 测试中心
   test: {
     emoji: '🧪',
     fontawesome: 'fa-solid fa-flask',
@@ -140,8 +259,29 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-chemistry',
     material: 'mdi-flask'
   },
+  vial: {
+    emoji: '🧪',
+    fontawesome: 'fa-solid fa-vial',
+    elementPlus: 'ep-test-tube',
+    carbon: 'carbon-chemistry',
+    material: 'mdi-test-tube'
+  },
+  microscope: {
+    emoji: '🔬',
+    fontawesome: 'fa-solid fa-microscope',
+    elementPlus: 'ep-view',
+    carbon: 'carbon-microscope',
+    material: 'mdi-microscope'
+  },
+  bug: {
+    emoji: '🐛',
+    fontawesome: 'fa-solid fa-bug',
+    elementPlus: 'ep-warning',
+    carbon: 'carbon-debug',
+    material: 'mdi-bug'
+  },
   
-  // 低代码
+  // 🧩 低代码
   lowcode: {
     emoji: '🧩',
     fontawesome: 'fa-solid fa-puzzle-piece',
@@ -149,8 +289,73 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-application',
     material: 'mdi-puzzle'
   },
+  cubes: {
+    emoji: '🧱',
+    fontawesome: 'fa-solid fa-cubes',
+    elementPlus: 'ep-box',
+    carbon: 'carbon-cube',
+    material: 'mdi-cube-outline'
+  },
+  code: {
+    emoji: '💻',
+    fontawesome: 'fa-solid fa-code',
+    elementPlus: 'ep-document-copy',
+    carbon: 'carbon-code',
+    material: 'mdi-code-tags'
+  },
+  magic: {
+    emoji: '✨',
+    fontawesome: 'fa-solid fa-magic',
+    elementPlus: 'ep-magic-stick',
+    carbon: 'carbon-magic-wand',
+    material: 'mdi-auto-fix'
+  },
+  'hat-wizard': {
+    emoji: '🧙',
+    fontawesome: 'fa-solid fa-hat-wizard',
+    elementPlus: 'ep-magic-stick',
+    carbon: 'carbon-magic-wand',
+    material: 'mdi-wizard-hat'
+  },
+  'mouse-pointer': {
+    emoji: '👆',
+    fontawesome: 'fa-solid fa-mouse-pointer',
+    elementPlus: 'ep-pointer',
+    carbon: 'carbon-cursor',
+    material: 'mdi-cursor-default'
+  },
+  'file-code': {
+    emoji: '📝',
+    fontawesome: 'fa-solid fa-file-code',
+    elementPlus: 'ep-document',
+    carbon: 'carbon-document-code',
+    material: 'mdi-file-code'
+  },
+  database: {
+    emoji: '🗄️',
+    fontawesome: 'fa-solid fa-database',
+    elementPlus: 'ep-coin',
+    carbon: 'carbon-data-base',
+    material: 'mdi-database'
+  },
+  'paint-brush': {
+    emoji: '🎨',
+    fontawesome: 'fa-solid fa-paint-brush',
+    elementPlus: 'ep-brush',
+    carbon: 'carbon-paint-brush',
+    material: 'mdi-brush'
+  },
   
-  // 个人中心
+  // 🏠 导航
+  home: {
+    emoji: '🏠',
+    fontawesome: 'fa-solid fa-home',
+    elementPlus: 'ep-home-filled',
+    carbon: 'carbon-home',
+    material: 'mdi-home'
+  },
+  
+  // 👤 个人中心
   profile: {
     emoji: '👤',
     fontawesome: 'fa-solid fa-user-circle',
@@ -159,7 +364,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     material: 'mdi-account-circle'
   },
   
-  // 帮助中心
+  // ❓ 帮助中心
   help: {
     emoji: '❓',
     fontawesome: 'fa-solid fa-question-circle',
@@ -167,8 +372,38 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-help',
     material: 'mdi-help-circle'
   },
+  'question-circle': {
+    emoji: '❓',
+    fontawesome: 'fa-solid fa-question-circle',
+    elementPlus: 'ep-question-filled',
+    carbon: 'carbon-help',
+    material: 'mdi-help-circle'
+  },
   
-  // 操作图标
+  // 🎨 主题
+  palette: {
+    emoji: '🎨',
+    fontawesome: 'fa-solid fa-palette',
+    elementPlus: 'ep-picture',
+    carbon: 'carbon-color-palette',
+    material: 'mdi-palette'
+  },
+  'tachometer-alt': {
+    emoji: '⚡',
+    fontawesome: 'fa-solid fa-tachometer-alt',
+    elementPlus: 'ep-odometer',
+    carbon: 'carbon-dashboard-reference',
+    material: 'mdi-speedometer'
+  },
+  'sign-in-alt': {
+    emoji: '🔐',
+    fontawesome: 'fa-solid fa-sign-in-alt',
+    elementPlus: 'ep-right',
+    carbon: 'carbon-login',
+    material: 'mdi-login'
+  },
+  
+  // 🔧 操作图标
   add: {
     emoji: '➕',
     fontawesome: 'fa-solid fa-plus',
@@ -176,7 +411,6 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-add',
     material: 'mdi-plus'
   },
-  
   edit: {
     emoji: '✏️',
     fontawesome: 'fa-solid fa-edit',
@@ -184,7 +418,6 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-edit',
     material: 'mdi-pencil'
   },
-  
   delete: {
     emoji: '🗑️',
     fontawesome: 'fa-solid fa-trash',
@@ -192,7 +425,6 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-trash-can',
     material: 'mdi-delete'
   },
-  
   search: {
     emoji: '🔍',
     fontawesome: 'fa-solid fa-search',
@@ -200,7 +432,6 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-search',
     material: 'mdi-magnify'
   },
-  
   refresh: {
     emoji: '🔄',
     fontawesome: 'fa-solid fa-sync-alt',
@@ -208,14 +439,105 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-renew',
     material: 'mdi-refresh'
   },
-  
-  // 更多图标可以继续添加...
 }
+
+// ⚠️ 以下为新增的图标映射（2025-10-01 图标系统迁移）
+
+// 📄 文档相关
+const ICON_MAPPINGS_EXTEND_DOCS = {
+  'file-alt': {
+    emoji: '📄',
+    fontawesome: 'fa-solid fa-file-alt',
+    elementPlus: 'ep-document',
+    carbon: 'carbon-document',
+    material: 'mdi-file-document'
+  },
+}
+
+// 🧪 测试相关
+const ICON_MAPPINGS_EXTEND_TEST = {
+  vial: {
+    emoji: '🧪',
+    fontawesome: 'fa-solid fa-vial',
+    elementPlus: 'ep-experiment',
+    carbon: 'carbon-chemistry',
+    material: 'mdi-test-tube'
+  },
+  microscope: {
+    emoji: '🔬',
+    fontawesome: 'fa-solid fa-microscope',
+    elementPlus: 'ep-data-analysis',
+    carbon: 'carbon-microscope',
+    material: 'mdi-microscope'
+  },
+}
+
+// 🔐 登录相关
+const ICON_MAPPINGS_EXTEND_AUTH = {
+  'sign-in-alt': {
+    emoji: '🔐',
+    fontawesome: 'fa-solid fa-sign-in-alt',
+    elementPlus: 'ep-key',
+    carbon: 'carbon-login',
+    material: 'mdi-login'
+  },
+}
+
+// 🧙 AI相关
+const ICON_MAPPINGS_EXTEND_AI = {
+  'hat-wizard': {
+    emoji: '🧙',
+    fontawesome: 'fa-solid fa-hat-wizard',
+    elementPlus: 'ep-magic-stick',
+    carbon: 'carbon-ai-status',
+    material: 'mdi-wizard-hat'
+  },
+}
+
+// 👆 交互相关
+const ICON_MAPPINGS_EXTEND_INTERACTION = {
+  'mouse-pointer': {
+    emoji: '👆',
+    fontawesome: 'fa-solid fa-mouse-pointer',
+    elementPlus: 'ep-pointer',
+    carbon: 'carbon-cursor-1',
+    material: 'mdi-cursor-default'
+  },
+}
+
+// 🖥️ 主题图标
+const ICON_MAPPINGS_EXTEND_THEME = {
+  microchip: {
+    emoji: '🖥️',
+    fontawesome: 'fa-solid fa-microchip',
+    elementPlus: 'ep-cpu',
+    carbon: 'carbon-chip',
+    material: 'mdi-chip'
+  },
+  leaf: {
+    emoji: '🍃',
+    fontawesome: 'fa-solid fa-leaf',
+    elementPlus: 'ep-orange',
+    carbon: 'carbon-tree',
+    material: 'mdi-leaf'
+  },
+}
+
+// 🔄 合并扩展映射到主映射表
+Object.assign(ICON_MAPPINGS, 
+  ICON_MAPPINGS_EXTEND_DOCS,
+  ICON_MAPPINGS_EXTEND_TEST,
+  ICON_MAPPINGS_EXTEND_AUTH,
+  ICON_MAPPINGS_EXTEND_AI,
+  ICON_MAPPINGS_EXTEND_INTERACTION,
+  ICON_MAPPINGS_EXTEND_THEME
+)
 
 // 🏪 图标风格管理 Store
 export const useIconStyleStore = defineStore('iconStyle', () => {
   // 📊 状态
-  const currentStyle = ref<IconStyleType>('emoji') // 默认表情符号
+  // ✅ 配置驱动：使用配置中心的默认值（Element Plus）
+  const currentStyle = ref<IconStyleType>(DEFAULT_VALUES.ICON_STYLE)
   const isChanging = ref(false)
 
   // 🎯 计算属性
@@ -223,17 +545,48 @@ export const useIconStyleStore = defineStore('iconStyle', () => {
   
   const isEnterpriseStyle = computed(() => styleConfig.value.enterprise)
   
-  const availableStyles = computed(() => Object.values(ICON_STYLES))
+  // 🏢 仅返回企业级图标风格（过滤掉emoji等非企业级风格）
+  const availableStyles = computed(() => 
+    Object.values(ICON_STYLES).filter(style => style.enterprise)
+  )
 
   /**
-   * 🎨 获取指定键的图标
-   * @param key 图标键名
+   * 🔍 从旧的图标类名中提取图标键名
+   * @param iconClass 旧的图标类名（如 'fas fa-chart-pie'）
+   * @returns 图标键名（如 'chart-pie'） 或 null
+   */
+  const extractIconKey = (iconClass: string): string | null => {
+    // 如果包含空格或 fa-，说明是旧的 FontAwesome 类名
+    if (!iconClass.includes(' ') && !iconClass.includes('fa-')) {
+      return null // 已经是图标键名
+    }
+    
+    // 提取最后一个部分作为键名
+    // "fas fa-chart-pie" -> "chart-pie"
+    // "fa-solid fa-users" -> "users"
+    const parts = iconClass.split(' ')
+    const lastPart = parts[parts.length - 1]
+    
+    // 移除 fa- 前缀
+    const keyName = lastPart.replace(/^fa-/, '')
+    
+    // 检查是否存在对应的映射
+    return ICON_MAPPINGS[keyName] ? keyName : null
+  }
+
+  /**
+   * 🎨 获取指定键的图标（智能解析）
+   * @param key 图标键名或旧的图标类名
    * @returns 当前风格的图标代码
    */
   const getIcon = (key: string): string => {
-    const mapping = ICON_MAPPINGS[key]
+    // 🔍 智能解析：自动处理旧的图标类名
+    const extractedKey = extractIconKey(key)
+    const iconKey = extractedKey || key
+    
+    const mapping = ICON_MAPPINGS[iconKey]
     if (!mapping) {
-      console.warn(`🚨 未找到图标映射: ${key}`)
+      console.warn(`🚨 未找到图标映射: ${key} (解析为: ${iconKey})`)
       return currentStyle.value === 'emoji' ? '🔘' : 'fa-solid fa-circle'
     }
     
@@ -244,6 +597,8 @@ export const useIconStyleStore = defineStore('iconStyle', () => {
 
   /**
    * 🔄 切换图标风格
+   * 🏢 企业级保护：阻止切换到非企业级风格
+   * 🛡️ 错误恢复：同时更新主存储和备份存储
    * @param style 目标图标风格
    */
   const setIconStyle = async (style: IconStyleType) => {
@@ -251,11 +606,20 @@ export const useIconStyleStore = defineStore('iconStyle', () => {
       return
     }
 
+    // 🏢 企业级管理系统：禁止切换到非企业级图标风格
+    if (!ICON_STYLES[style].enterprise) {
+      const errorMsg = `⚠️ 企业级管理系统禁止使用非企业级图标风格: ${ICON_STYLES[style].name}`
+      console.warn(errorMsg)
+      throw new Error(errorMsg)
+    }
+
     isChanging.value = true
     
     try {
-      // 保存到本地存储
-      localStorage.setItem('smartabp-icon-style', style)
+      // ✅ 配置驱动：使用配置的存储键名
+      // 🛡️ 同时更新主存储和备份存储
+      localStorage.setItem(STORAGE_KEYS.ICON_STYLE, style)
+      localStorage.setItem(STORAGE_KEYS.ICON_STYLE_BACKUP, style)
       
       // 更新当前风格
       currentStyle.value = style
@@ -280,16 +644,41 @@ export const useIconStyleStore = defineStore('iconStyle', () => {
 
   /**
    * 🔄 从本地存储恢复图标风格
+   * 🏢 企业级优先原则：非企业级风格自动切换为默认值
+   * 🛡️ 错误恢复机制：主存储 → 备份存储 → 默认值
    */
   const loadIconStyle = () => {
     try {
-      const saved = localStorage.getItem('smartabp-icon-style') as IconStyleType
-      if (saved && ICON_STYLES[saved]) {
-        currentStyle.value = saved
-        console.log(`📦 已恢复图标风格: ${ICON_STYLES[saved].name}`)
+      // ✅ 配置驱动：使用配置的存储键名
+      const saved = localStorage.getItem(STORAGE_KEYS.ICON_STYLE) as IconStyleType
+      const backup = localStorage.getItem(STORAGE_KEYS.ICON_STYLE_BACKUP) as IconStyleType
+      const validStyle = saved || backup
+      
+      if (validStyle && ICON_STYLES[validStyle]) {
+        // 🏢 企业级管理系统：禁止使用非企业级图标风格（如 emoji）
+        if (!ICON_STYLES[validStyle].enterprise) {
+          console.warn(`⚠️ 检测到非企业级图标风格: ${ICON_STYLES[validStyle].name}，切换为默认值`)
+          // ✅ 配置驱动：使用配置的默认值
+          currentStyle.value = DEFAULT_VALUES.ICON_STYLE
+          localStorage.setItem(STORAGE_KEYS.ICON_STYLE, DEFAULT_VALUES.ICON_STYLE)
+          localStorage.setItem(STORAGE_KEYS.ICON_STYLE_BACKUP, DEFAULT_VALUES.ICON_STYLE)
+        } else {
+          currentStyle.value = validStyle
+          // 🛡️ 更新备份以便下次恢复
+          localStorage.setItem(STORAGE_KEYS.ICON_STYLE_BACKUP, validStyle)
+          console.log(`📦 已恢复图标风格: ${ICON_STYLES[validStyle].name}`)
+        }
+      } else {
+        // ✅ 配置驱动：使用配置的默认值
+        currentStyle.value = DEFAULT_VALUES.ICON_STYLE
+        localStorage.setItem(STORAGE_KEYS.ICON_STYLE, DEFAULT_VALUES.ICON_STYLE)
+        localStorage.setItem(STORAGE_KEYS.ICON_STYLE_BACKUP, DEFAULT_VALUES.ICON_STYLE)
+        console.log(`🏢 使用默认企业级图标风格: ${ICON_STYLES[DEFAULT_VALUES.ICON_STYLE].name}`)
       }
     } catch (error) {
-      console.error('❌ 图标风格加载失败:', error)
+      console.error('❌ 图标风格加载失败，使用默认值:', error)
+      // ✅ 配置驱动：发生错误时使用配置的默认值
+      currentStyle.value = DEFAULT_VALUES.ICON_STYLE
     }
   }
 

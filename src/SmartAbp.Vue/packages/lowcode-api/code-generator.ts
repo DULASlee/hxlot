@@ -32,6 +32,9 @@ export interface GenerationProgress {
   error?: string
 }
 
+// 🔥 导出核心类型
+export type { ModuleMetadata } from "./types"
+
 // Database introspection types
 export interface DatabaseIntrospectionRequest {
   provider: "SqlServer" | "PostgreSql" | "MySql" | "Oracle"

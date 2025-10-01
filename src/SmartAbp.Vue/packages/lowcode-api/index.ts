@@ -1,5 +1,6 @@
 export * from "./code-generator"
 export * from "./types"
+export type { ModuleMetadata, TableSchema, ColumnSchema, DatabaseSchema } from "./code-generator"
 
 // ESM-friendly export of codeGeneratorApi and light mocks for templates
 import { codeGeneratorApi as api } from "./code-generator"

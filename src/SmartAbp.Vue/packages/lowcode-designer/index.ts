@@ -6,6 +6,7 @@ export { default as VisualDesignerView } from "./src/views/VisualDesignerView.vu
 export { default as DesignView } from "./src/views/DesignView.vue"
 export { default as EntityModelingView } from "./src/views/EntityModelingView.vue"
 export { default as ThemeCustomizationView } from "./src/views/ThemeCustomizationView.vue"
+export { default as UltraSimpleStudio } from "./src/views/UltraSimpleStudio.vue"
 
 // ===== 核心设计组件 =====
 export { default as EntityDesigner } from "./src/components/CodeGenerator/EntityDesigner.vue"

@@ -24,7 +24,7 @@ export const menuConfig: MenuConfig = {
     {
       key: "dashboard",
       title: "工作台",
-      icon: "fas fa-chart-pie",
+      icon: "dashboard", // 🎨 使用图标键名，支持动态切换
       type: "page",
       path: "/dashboard",
       component: "@/views/common/DashboardView.vue",
@@ -54,7 +54,7 @@ export const menuConfig: MenuConfig = {
     {
       key: "user-management",
       title: "用户管理",
-      icon: "fas fa-users",
+      icon: "users", // 🎨 使用图标键名
       type: "folder",
       order: 3,
       visible: true,
@@ -65,7 +65,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "user-list",
           title: "用户列表",
-          icon: "fas fa-list-ul",
+          icon: "user", // 🎨 使用图标键名
           type: "page",
           path: "/User",
           component: "@/views/user/UserListView.vue",
@@ -81,7 +81,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "user-management-detail",
           title: "用户管理",
-          icon: "fas fa-user-circle",
+          icon: "user", // 🎨 使用图标键名
           type: "page",
           path: "/User/management",
           component: "@/views/user/UserManagement.vue",
@@ -97,7 +97,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "user-roles",
           title: "用户角色",
-          icon: "fas fa-users-cog",
+          icon: "users", // 🎨 使用图标键名
           type: "page",
           path: "/User/roles",
           component: "@/views/user/UserRolesView.vue",
@@ -117,7 +117,7 @@ export const menuConfig: MenuConfig = {
     {
       key: "project-management",
       title: "项目管理",
-      icon: "fas fa-project-diagram",
+      icon: "project-diagram",
       type: "folder",
       order: 4,
       visible: true,
@@ -128,7 +128,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "project-list",
           title: "项目列表",
-          icon: "fas fa-tasks",
+          icon: "tasks",
           type: "page",
           path: "/Project",
           component: "@/views/project/ProjectListView.vue",
@@ -144,7 +144,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "project-analysis",
           title: "项目分析",
-          icon: "fas fa-chart-line",
+          icon: "chart-line",
           type: "page",
           path: "/Project/analysis",
           component: "@/views/project/ProjectAnalysisView.vue",
@@ -164,7 +164,7 @@ export const menuConfig: MenuConfig = {
     {
       key: "log-management",
       title: "日志管理",
-      icon: "fas fa-file-alt",
+      icon: "file-alt",
       type: "folder",
       order: 5,
       visible: true,
@@ -175,7 +175,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "log-list",
           title: "日志管理",
-          icon: "fas fa-list",
+          icon: "list-ul",
           type: "page",
           path: "/Log",
           component: "@/views/log/LogManagement.vue",
@@ -191,7 +191,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "log-viewer",
           title: "日志查看器",
-          icon: "fas fa-eye",
+          icon: "eye",
           type: "page",
           path: "/Log/viewer",
           component: "@/views/log/AdvancedLogViewer.vue",
@@ -207,7 +207,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "log-dashboard",
           title: "日志仪表板",
-          icon: "fas fa-chart-bar",
+          icon: "chart-bar",
           type: "page",
           path: "/Log/dashboard",
           component: "@/views/log/LogDashboard.vue",
@@ -239,7 +239,7 @@ export const menuConfig: MenuConfig = {
     {
       key: "system-management",
       title: "系统管理",
-      icon: "fas fa-cog",
+      icon: "cog",
       type: "folder",
       order: 7,
       visible: true,
@@ -250,7 +250,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "admin-users",
           title: "用户管理",
-          icon: "fas fa-users",
+          icon: "users",
           type: "page",
           path: "/Admin/users",
           component: "@/views/system/UsersView.vue",
@@ -266,7 +266,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "admin-roles",
           title: "角色管理",
-          icon: "fas fa-user-shield",
+          icon: "user-shield",
           type: "page",
           path: "/Admin/roles",
           component: "@/views/system/RolesView.vue",
@@ -282,7 +282,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "admin-permissions",
           title: "权限管理",
-          icon: "fas fa-key",
+          icon: "key",
           type: "page",
           path: "/Admin/permissions",
           component: "@/views/system/PermissionsView.vue",
@@ -298,7 +298,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "admin-settings",
           title: "系统设置",
-          icon: "fas fa-cogs",
+          icon: "cogs",
           type: "page",
           path: "/Admin/settings",
           component: "@/views/common/SettingsView.vue",
@@ -314,7 +314,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "admin-performance",
           title: "性能监控",
-          icon: "fas fa-tachometer-alt",
+          icon: "tachometer-alt",
           type: "page",
           path: "/Admin/performance",
           component: "@/views/system/PerformanceMonitorView.vue",
@@ -334,7 +334,7 @@ export const menuConfig: MenuConfig = {
     {
       key: "test-features",
       title: "测试功能",
-      icon: "fas fa-vial",
+      icon: "vial",
       type: "folder",
       order: 8,
       visible: import.meta.env.DEV, // 仅开发环境显示
@@ -345,7 +345,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "test-system",
           title: "系统测试",
-          icon: "fas fa-microscope",
+          icon: "microscope",
           type: "page",
           path: "/Test",
           component: "@/views/test/TestView.vue",
@@ -361,7 +361,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "test-login",
           title: "登录测试",
-          icon: "fas fa-sign-in-alt",
+          icon: "sign-in-alt",
           type: "page",
           path: "/Test/login",
           component: "@/views/auth/LoginTest.vue",
@@ -377,7 +377,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "test-theme",
           title: "主题演示",
-          icon: "fas fa-palette",
+          icon: "palette",
           type: "page",
           path: "/Test/theme",
           component: "@/views/test/ThemeDemo.vue",
@@ -393,7 +393,7 @@ export const menuConfig: MenuConfig = {
         {
           key: "test-theme-debug",
           title: "主题调试",
-          icon: "fas fa-bug",
+          icon: "bug",
           type: "page",
           path: "/Test/theme-debug",
           component: "@/views/test/ThemeDebugView.vue",
@@ -409,44 +409,45 @@ export const menuConfig: MenuConfig = {
       ],
     },
 
-    // 低代码工作台 - 统一的代码生成和低代码开发入口
+    // 低代码引擎 - 核心价值：即刻生成，即刻使用
     {
-      key: "lowcode-studio",
-      title: "低代码工作台",
-      icon: "fas fa-cubes",
+      key: "lowcode-engine",
+      title: "低代码引擎",
+      icon: "microchip",
       type: "folder",
       path: "/lowcode",
       order: 8,
       visible: true,
       requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
       defaultExpanded: true,
-      description: "企业级低代码开发工作台 - 统一的代码生成和可视化开发平台",
+      description: "企业级代码生成引擎 - 所想即所得",
       children: [
+        // 🔥 核心功能：代码生成 - 二级菜单直达
         {
-          key: "lowcode-home",
-          title: "工作台首页",
-          icon: "fas fa-home",
+          key: "code-generation",
+          title: "代码生成",
+          icon: "magic",
           type: "page",
-          path: "/lowcode",
-          component: "@/views/lowcode/LowCodeStudioView.vue",
-          order: 0,
+          path: "/CodeGen/ultra-simple",
+          component: "@/views/lowcode/UltraSimpleStudio.vue",
+          order: 1,
           visible: true,
           requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
           closable: true,
           meta: {
-            title: "低代码工作台",
-            menuKey: "lowcode-home",
+            title: "代码生成",
+            menuKey: "code-generation",
             keepAlive: true,
           },
         },
         {
           key: "entity-modeling",
           title: "实体建模",
-          icon: "fas fa-database",
+          icon: "database",
           type: "page",
           path: "/lowcode/entity-modeling",
           component: "@/views/lowcode/EntityModelingView.vue",
-          order: 1,
+          order: 2,
           visible: true,
           requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
           closable: true,
@@ -458,120 +459,25 @@ export const menuConfig: MenuConfig = {
         },
         {
           key: "visual-design",
-          title: "可视化设计",
-          icon: "fas fa-paint-brush",
+          title: "UI定制",
+          icon: "paint-brush",
           type: "page",
           path: "/lowcode/design",
           component: "@/views/lowcode/DesignView.vue",
-          order: 2,
+          order: 3,
           visible: true,
           requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
           closable: true,
           meta: {
-            title: "可视化设计",
+            title: "UI定制",
             menuKey: "visual-design",
             keepAlive: true,
           },
         },
-        // 代码生成工具集 - 统一管理所有代码生成功能
-        {
-          key: "code-generation-tools",
-          title: "代码生成工具",
-          icon: "fas fa-code",
-          type: "folder",
-          order: 3,
-          visible: true,
-          requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
-          defaultExpanded: false,
-          description: "统一的代码生成工具集合",
-          children: [
-            {
-              key: "code-generation",
-              title: "代码生成",
-              icon: "fas fa-cogs",
-              type: "page",
-              path: "/lowcode/generation",
-              component: "@/views/lowcode/GenerationView.vue",
-              order: 0,
-              visible: true,
-              requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
-              closable: true,
-              meta: {
-                title: "代码生成",
-                menuKey: "code-generation",
-                keepAlive: true,
-              },
-            },
-            {
-              key: "ultra-simple",
-              title: "极简代码生成",
-              icon: "fas fa-magic",
-              type: "page",
-              path: "/CodeGen/ultra-simple",
-              component: "../../packages/lowcode-designer/src/views/UltraSimpleStudio.vue",
-              order: 1,
-              visible: true,
-              requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
-              closable: true,
-              meta: {
-                title: "极简代码生成",
-                menuKey: "ultra-simple-studio",
-              },
-            },
-            {
-              key: "module-wizard",
-              title: "模块向导",
-              icon: "fas fa-hat-wizard",
-              type: "page",
-              path: "/CodeGen/wizard",
-              component: "@/packages/lowcode-designer/src/views/codegen/LowCodeEngineView.vue",
-              order: 2,
-              visible: import.meta.env.DEV,
-              requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
-              closable: true,
-              meta: {
-                title: "模块生成向导",
-                menuKey: "module-wizard",
-              },
-            },
-            {
-              key: "drag-drop-form",
-              title: "拖拽表单",
-              icon: "fas fa-mouse-pointer",
-              type: "page",
-              path: "/CodeGen/form",
-              component: "@/views/codegen/DragDropFormView.vue",
-              order: 3,
-              visible: true,
-              requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
-              closable: true,
-              meta: {
-                title: "拖拽表单开发器",
-                menuKey: "drag-drop-form",
-              },
-            },
-            {
-              key: "sfc-compiler",
-              title: "SFC编译器",
-              icon: "fas fa-file-code",
-              type: "page",
-              path: "/CodeGen/sfc",
-              component: "@/views/codegen/SfcCompilerView.vue",
-              order: 4,
-              visible: true,
-              requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
-              closable: true,
-              meta: {
-                title: "SFC编译器演示",
-                menuKey: "sfc-compiler",
-              },
-            },
-          ],
-        },
         {
           key: "theme-customization",
           title: "主题定制",
-          icon: "fas fa-palette",
+          icon: "palette",
           type: "page",
           path: "/lowcode/theme",
           component: "@/views/lowcode/ThemeCustomizationView.vue",
@@ -605,7 +511,7 @@ export const menuConfig: MenuConfig = {
     {
       key: "profile",
       title: "个人中心",
-      icon: "fas fa-user",
+      icon: "user",
       type: "page",
       path: "/profile",
       component: "@/views/common/ProfileView.vue",
@@ -622,7 +528,7 @@ export const menuConfig: MenuConfig = {
     {
       key: "help",
       title: "帮助中心",
-      icon: "fas fa-question-circle",
+      icon: "question-circle",
       type: "page",
       path: "/help",
       component: "@/views/common/HelpView.vue",

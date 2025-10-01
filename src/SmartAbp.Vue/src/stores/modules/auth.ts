@@ -35,6 +35,7 @@ export interface LoginResponse {
 /**
  * 认证Store
  * 负责管理用户认证状态、token和用户信息
+ * 🔐 启用持久化：防止页面刷新后权限丢失
  */
 export const useAuthStore = defineStore('auth', () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -301,6 +302,12 @@ export const useAuthStore = defineStore('auth', () => {
     // 兼容方法
     fetchUserInfo,
     refreshTokenMethod
+  }
+}, {
+  // 🔐 持久化配置：确保刷新页面后认证状态不丢失
+  persist: {
+    key: 'smartabp-auth',
+    storage: localStorage
   }
 })
 

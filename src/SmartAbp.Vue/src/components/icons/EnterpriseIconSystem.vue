@@ -170,14 +170,14 @@ const iconComponent = computed<Component | string>(() => {
     return 'i' // 返回空的 i 标签
   }
   
-  // 尝试加载自定义图标组件
+  // 尝试加载自定义图标组件，如果不存在则使用FontAwesome回退
   try {
     return defineAsyncComponent(() => 
       import(`./enterprise/${iconConfig.component}.vue`).catch(() => {
         // 如果自定义图标不存在，使用 FontAwesome 回退
-        console.info(`📦 使用回退图标: ${iconConfig.fallback} for ${props.name}`)
+        console.info(`📦 使用FontAwesome回退: ${iconConfig.fallback} for ${props.name}`)
         return Promise.resolve({
-          template: `<i class="${iconConfig.fallback}"></i>`
+          template: `<i class="${iconConfig.fallback}" style="font-size: inherit; color: inherit;"></i>`
         })
       })
     )

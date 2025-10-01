@@ -58,25 +58,42 @@ export interface ModuleMetadata {
   name: string
   displayName: string
   description?: string
-  version: string
+  version?: string
+  namespace?: string
   architecturePattern: "Crud" | "DDD" | "CQRS"
-  featureManagement: {
+  featureManagement?: {
     isEnabled: boolean
     defaultPolicy?: string
   }
-  entities: EntityDefinition[]
+  entities?: EntityDefinition[]
   databaseInfo: {
-    connectionStringName: string
+    connectionString?: string
+    connectionStringName?: string
     provider: "SqlServer" | "PostgreSql" | "MySql" | "SQLite"
-    schema?: string
+    schema?: any
+    tableName?: string
   }
-  permissionConfig: {
+  permissionConfig?: {
     customActions: CustomPermission[]
   }
   icon?: string
   sort?: number
   frontend?: {
     parentId?: string
+    routePrefix?: string
+    framework?: string
+    icon?: string
   }
-  dependencies: string[]
+  backend?: {
+    generateEntity?: boolean
+    generateAppService?: boolean
+    generateController?: boolean
+    generateDto?: boolean
+    generateRepository?: boolean
+    authorization?: {
+      enabled: boolean
+      policyPrefix?: string
+    }
+  }
+  dependencies?: string[]
 }

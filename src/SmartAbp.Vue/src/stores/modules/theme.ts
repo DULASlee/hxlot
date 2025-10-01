@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { computed, type ComputedRef, type WritableComputedRef } from 'vue'
 import useDesignSystem, { THEMES, type ThemeType, type ThemeConfig } from '@/composables/useDesignSystem'
+import { getIconStyleForTheme } from '@/config/theme-icon.config'
+import { useIconStyleStore } from './iconStyle'
 
 // 类型别名
 export type Theme = ThemeType
@@ -9,6 +11,10 @@ export type ThemeMode = 'light' | 'dark' | 'auto'
 /**
  * 主题Store
  * 负责管理应用主题和暗黑模式
+ * 
+ * 配置驱动设计：
+ * - 主题切换时自动联动图标风格
+ * - 联动关系由配置中心管理
  */
 export const useThemeStore = defineStore('theme', () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -54,9 +60,22 @@ export const useThemeStore = defineStore('theme', () => {
   
   /**
    * 设置主题
+   * ✅ 配置驱动：自动联动对应的图标风格
    */
   const setTheme = (newTheme: Theme): void => {
     setThemeImpl(newTheme)
+    
+    // 🔗 主题-图标联动（配置驱动）
+    try {
+      const iconStore = useIconStyleStore()
+      // ✅ 使用配置函数获取对应的图标风格（消除硬编码）
+      const targetIconStyle = getIconStyleForTheme(newTheme)
+      iconStore.setIconStyle(targetIconStyle)
+      console.log(`🔗 主题联动: ${newTheme} → 图标风格: ${targetIconStyle}`)
+    } catch (error) {
+      // ⚠️ 图标切换失败不影响主题切换
+      console.warn('⚠️ 图标风格联动失败，不影响主题切换:', error)
+    }
   }
 
   /**

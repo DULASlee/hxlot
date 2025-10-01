@@ -240,6 +240,12 @@ const routes: RouteRecordRaw[] = [
         component: LoginTest,
         meta: { title: "登录测试", menuKey: "test-login" },
       },
+      {
+        path: "icons",
+        name: "IconTestPage",
+        component: () => import("@/views/test/IconTest.vue"),
+        meta: { title: "图标测试", menuKey: "test-icons" },
+      },
     ],
   },
   // LowCode Studio 一体化工作台
@@ -277,6 +283,12 @@ const routes: RouteRecordRaw[] = [
         name: "CodeGeneration",
         component: () => import("@/views/lowcode/GenerationView.vue"),
         meta: { title: "代码生成", menuKey: "code-generation" },
+      },
+      {
+        path: "/CodeGen/ultra-simple",
+        name: "UltraSimpleStudio",
+        component: () => import("@/views/lowcode/UltraSimpleStudio.vue"),
+        meta: { title: "极简代码生成", menuKey: "ultra-simple-studio" },
       },
       {
         path: "workflows",

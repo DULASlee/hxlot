@@ -23,28 +23,28 @@ export const THEMES: ThemeConfig[] = [
   {
     name: '科技蓝',
     value: 'tech-blue',
-    icon: 'fas fa-microchip',
+    icon: 'microchip',
     color: '#0ea5e9',
     description: '现代科技感的蓝色主题，适合技术类企业'
   },
   {
     name: '深绿色',
     value: 'deep-green',
-    icon: 'fas fa-leaf',
+    icon: 'leaf',
     color: '#059669',
     description: '稳重专业的绿色主题,适合环保和金融行业'
   },
   {
     name: '淡紫色',
     value: 'light-purple',
-    icon: 'fas fa-palette',
+    icon: 'palette',
     color: '#8b5cf6',
     description: '优雅时尚的紫色主题,适合创意和设计行业'
   },
   {
     name: '暗黑模式',
     value: 'dark',
-    icon: 'fas fa-moon',
+    icon: 'moon',
     color: '#1f2937',
     description: '护眼的暗黑主题,适合长时间工作'
   }
