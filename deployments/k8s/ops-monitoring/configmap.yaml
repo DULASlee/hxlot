@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smartabp-ops-config
+  namespace: smartabp
+  labels:
+    app: smartabp-ops-monitoring
+data:
+  # 应用配置
+  appsettings.Production.json: |
+    {
+      "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft": "Warning",
+          "Microsoft.Hosting.Lifetime": "Information",
+          "Microsoft.EntityFrameworkCore": "Warning"
+        }
+      },
+      "AllowedHosts": "*",
+      "Cors": {
+        "AllowedOrigins": [
+          "http://localhost:3000",
+          "https://smartabp.com"
+        ]
+      },
+      "HealthChecks": {
+        "UI": {
+          "Enabled": true,
+          "Path": "/healthchecks-ui",
+          "ApiPath": "/health",
+          "PollingInterval": 10
+        }
+      },
+      "Prometheus": {
+        "Port": 8080,
+        "Path": "/metrics"
+      }
+    }
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smartabp-config
+  namespace: smartabp
+  labels:
+    app: smartabp
+data:
+  # Elasticsearch配置
+  elasticsearch-uri: "http://elasticsearch-master:9200"
+  elasticsearch-index-prefix: "logs-smartabp"
+  
+  # Prometheus配置
+  prometheus-uri: "http://prometheus-server:9090"
+  
+  # Grafana配置
+  grafana-uri: "http://grafana:3000"
+  
+  # 时区配置
+  timezone: "Asia/Shanghai"
+

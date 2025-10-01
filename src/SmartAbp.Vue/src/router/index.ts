@@ -5,6 +5,7 @@ import { useAuthStore } from "@/stores"
 import { logger } from "@/utils/logger"
 import { ElMessage } from "element-plus"
 import { i18n } from "@/plugins/i18n"
+import opsMonitoringRoutes from "./modules/ops-monitoring"
 
 // 动态导入页面组件
 const DashboardView = () => import("@/views/common/DashboardView.vue")
@@ -336,6 +337,8 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  // 运维监控模块路由
+  ...opsMonitoringRoutes,
   // 404页面 - 重定向到主框架内的404页面
   {
     path: "/:pathMatch(.*)*",

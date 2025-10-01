@@ -1,0 +1,51 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: smartabp
+
+# 资源文件
+resources:
+- deployment.yaml
+- service.yaml
+- configmap.yaml
+- secret.yaml
+- dapr-component.yaml
+- ingress.yaml
+- hpa.yaml
+
+# 通用标签
+commonLabels:
+  app.kubernetes.io/name: smartabp-ops-monitoring
+  app.kubernetes.io/part-of: smartabp-platform
+  app.kubernetes.io/managed-by: kustomize
+
+# 通用注解
+commonAnnotations:
+  description: "SmartAbp运维监控微服务"
+  version: "1.0.0"
+  maintainer: "smartabp-team"
+
+# 镜像配置
+images:
+- name: smartabp/ops-monitoring
+  newTag: v1.0.0
+
+# ConfigMap生成器
+configMapGenerator:
+- name: smartabp-ops-env
+  literals:
+  - ASPNETCORE_ENVIRONMENT=Production
+  - TZ=Asia/Shanghai
+
+# Secret生成器（生产环境建议使用sealed-secrets或外部Secret管理）
+secretGenerator:
+- name: smartabp-ops-secrets
+  literals:
+  - redis-password=REPLACE_WITH_REDIS_PASSWORD
+  type: Opaque
+
+# 资源配置
+replicas:
+- name: smartabp-ops-monitoring
+  count: 2
+

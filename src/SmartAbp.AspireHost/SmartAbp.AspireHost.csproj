@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>smartabp-aspire-host</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.Elasticsearch" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.Dapr" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartAbp.OpsManagement.Service\Host\SmartAbp.OpsManagement.Host.csproj" />
+    <ProjectReference Include="..\SmartAbp.Web\SmartAbp.Web.csproj" />
+    <ProjectReference Include="..\SmartAbp.CodeGenerator\SmartAbp.CodeGenerator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="appsettings.Development.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="prometheus\**" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="grafana\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
+

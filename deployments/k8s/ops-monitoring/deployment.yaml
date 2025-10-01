@@ -1,0 +1,268 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smartabp-ops-monitoring
+  namespace: smartabp
+  labels:
+    app: smartabp-ops-monitoring
+    version: v1.0.0
+    tier: platform
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: smartabp-ops-monitoring
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: smartabp-ops-monitoring
+        version: v1.0.0
+      annotations:
+        # Dapr配置
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "smartabp-ops-monitoring"
+        dapr.io/app-port: "8080"
+        dapr.io/app-protocol: "http"
+        dapr.io/enable-api-logging: "true"
+        dapr.io/log-level: "info"
+        dapr.io/sidecar-cpu-limit: "500m"
+        dapr.io/sidecar-memory-limit: "512Mi"
+        dapr.io/sidecar-cpu-request: "100m"
+        dapr.io/sidecar-memory-request: "128Mi"
+        # Prometheus监控抓取配置
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: smartabp-ops-monitoring
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: smartabp-ops-monitoring
+        image: smartabp/ops-monitoring:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: https
+          containerPort: 8443
+          protocol: TCP
+        env:
+        # 应用配置
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+        - name: ASPNETCORE_URLS
+          value: "http://+:8080;https://+:8443"
+        - name: TZ
+          value: "Asia/Shanghai"
+        
+        # 数据库配置
+        - name: ConnectionStrings__Default
+          valueFrom:
+            secretKeyRef:
+              name: smartabp-secrets
+              key: ops-db-connection
+        
+        # Prometheus配置
+        - name: Prometheus__Uri
+          value: "http://prometheus-server:9090"
+        
+        # Elasticsearch配置
+        - name: Elasticsearch__Uri
+          valueFrom:
+            configMapKeyRef:
+              name: smartabp-config
+              key: elasticsearch-uri
+        - name: Elasticsearch__IndexPrefix
+          value: "logs-smartabp-ops"
+        
+        # Kubernetes API配置
+        - name: Kubernetes__InCluster
+          value: "true"
+        - name: Kubernetes__Namespace
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        
+        # Dapr配置
+        - name: Dapr__HttpPort
+          value: "3500"
+        - name: Dapr__GrpcPort
+          value: "50001"
+        
+        # 健康检查配置
+        - name: HealthChecks__UI__Enabled
+          value: "true"
+        
+        # 资源限制
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        
+        # 存活探针
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        
+        # 就绪探针
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+        
+        # 启动探针（用于慢启动应用）
+        startupProbe:
+          httpGet:
+            path: /health
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 0
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 30
+        
+        # 挂载卷
+        volumeMounts:
+        - name: config
+          mountPath: /app/config
+          readOnly: true
+        - name: logs
+          mountPath: /app/logs
+        - name: temp
+          mountPath: /tmp
+      
+      # 卷定义
+      volumes:
+      - name: config
+        configMap:
+          name: smartabp-ops-config
+      - name: logs
+        emptyDir:
+          sizeLimit: 1Gi
+      - name: temp
+        emptyDir:
+          sizeLimit: 500Mi
+      
+      # 节点亲和性（可选）
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - smartabp-ops-monitoring
+              topologyKey: kubernetes.io/hostname
+      
+      # 容忍度（可选）
+      tolerations:
+      - key: "node.kubernetes.io/not-ready"
+        operator: "Exists"
+        effect: "NoExecute"
+        tolerationSeconds: 300
+      - key: "node.kubernetes.io/unreachable"
+        operator: "Exists"
+        effect: "NoExecute"
+        tolerationSeconds: 300
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: smartabp-ops-monitoring
+  namespace: smartabp
+  labels:
+    app: smartabp-ops-monitoring
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: smartabp-ops-monitoring-reader
+  labels:
+    app: smartabp-ops-monitoring
+rules:
+# 读取Pod、Node、Service等资源
+- apiGroups: [""]
+  resources:
+  - pods
+  - nodes
+  - services
+  - endpoints
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+# 读取Deployment、ReplicaSet等
+- apiGroups: ["apps"]
+  resources:
+  - deployments
+  - replicasets
+  - statefulsets
+  - daemonsets
+  verbs:
+  - get
+  - list
+  - watch
+# 读取Pod日志
+- apiGroups: [""]
+  resources:
+  - pods/log
+  verbs:
+  - get
+# 读取metrics
+- apiGroups: ["metrics.k8s.io"]
+  resources:
+  - pods
+  - nodes
+  verbs:
+  - get
+  - list
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: smartabp-ops-monitoring-reader-binding
+  labels:
+    app: smartabp-ops-monitoring
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: smartabp-ops-monitoring-reader
+subjects:
+- kind: ServiceAccount
+  name: smartabp-ops-monitoring
+  namespace: smartabp
+

@@ -1,0 +1,73 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: smartabp-ops-monitoring-hpa
+  namespace: smartabp
+  labels:
+    app: smartabp-ops-monitoring
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: smartabp-ops-monitoring
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  # 基于CPU使用率自动扩缩容
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  # 基于内存使用率自动扩缩容
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  # 基于自定义指标（请求数）自动扩缩容
+  - type: Pods
+    pods:
+      metric:
+        name: http_requests_per_second
+      target:
+        type: AverageValue
+        averageValue: "1000"
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+      - type: Pods
+        value: 2
+        periodSeconds: 60
+      selectPolicy: Min
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 30
+      - type: Pods
+        value: 4
+        periodSeconds: 30
+      selectPolicy: Max
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: smartabp-ops-monitoring-pdb
+  namespace: smartabp
+  labels:
+    app: smartabp-ops-monitoring
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: smartabp-ops-monitoring
+

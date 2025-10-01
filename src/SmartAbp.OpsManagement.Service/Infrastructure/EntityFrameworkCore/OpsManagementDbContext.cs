@@ -14,6 +14,7 @@ public class OpsManagementDbContext : AbpDbContext<OpsManagementDbContext>
     public DbSet<PerformanceMetric> PerformanceMetrics { get; set; }
     public DbSet<K8sResourceSnapshot> K8sResourceSnapshots { get; set; }
     public DbSet<AlertRule> AlertRules { get; set; }
+    public DbSet<LogEntry> LogEntries { get; set; }
 
     public OpsManagementDbContext(DbContextOptions<OpsManagementDbContext> options)
         : base(options)
@@ -84,6 +85,32 @@ public static class OpsManagementDbContextModelCreatingExtensions
             // 索引
             b.HasIndex(x => x.IsEnabled);
             b.HasIndex(x => x.MetricType);
+        });
+
+        // LogEntry配置
+        builder.Entity<LogEntry>(b =>
+        {
+            b.ToTable("LogEntries");
+            b.HasKey(x => x.Id);
+            
+            b.Property(x => x.Timestamp).IsRequired();
+            b.Property(x => x.Level).IsRequired().HasMaxLength(20);
+            b.Property(x => x.Message).IsRequired();
+            b.Property(x => x.ServiceName).IsRequired().HasMaxLength(100);
+            b.Property(x => x.InstanceId).HasMaxLength(100);
+            b.Property(x => x.Source).HasMaxLength(500);
+            b.Property(x => x.TraceId).HasMaxLength(100);
+            b.Property(x => x.RequestPath).HasMaxLength(500);
+            b.Property(x => x.UserId).HasMaxLength(100);
+            b.Property(x => x.ElasticsearchDocId).HasMaxLength(100);
+            
+            // 索引优化
+            b.HasIndex(x => x.Timestamp);
+            b.HasIndex(x => new { x.ServiceName, x.Timestamp });
+            b.HasIndex(x => x.Level);
+            b.HasIndex(x => x.TraceId);
+            b.HasIndex(x => x.IsIndexed);
+            b.HasIndex(x => x.ExpiresAt);
         });
     }
 }

@@ -1,0 +1,84 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: smartabp-ops-monitoring
+  namespace: smartabp
+  labels:
+    app: smartabp-ops-monitoring
+  annotations:
+    # Nginx Ingress配置
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    
+    # 代理配置
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    
+    # CORS配置
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization"
+    
+    # 限流配置
+    nginx.ingress.kubernetes.io/limit-rps: "100"
+    nginx.ingress.kubernetes.io/limit-connections: "50"
+    
+    # TLS证书管理（cert-manager）
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    
+    # 会话保持
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "smartabp-ops-session"
+    nginx.ingress.kubernetes.io/session-cookie-expires: "3600"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "3600"
+    
+    # 白名单（可选，生产环境建议配置）
+    # nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+
+spec:
+  tls:
+  - hosts:
+    - ops.smartabp.com
+    secretName: smartabp-ops-tls
+  rules:
+  - host: ops.smartabp.com
+    http:
+      paths:
+      # API路由
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: smartabp-ops-monitoring
+            port:
+              number: 80
+      # 健康检查路由
+      - path: /health
+        pathType: Prefix
+        backend:
+          service:
+            name: smartabp-ops-monitoring
+            port:
+              number: 80
+      # Metrics路由
+      - path: /metrics
+        pathType: Prefix
+        backend:
+          service:
+            name: smartabp-ops-monitoring
+            port:
+              number: 80
+      # Swagger文档路由
+      - path: /swagger
+        pathType: Prefix
+        backend:
+          service:
+            name: smartabp-ops-monitoring
+            port:
+              number: 80
+
