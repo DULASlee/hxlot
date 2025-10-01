@@ -5,7 +5,19 @@
  * admin (超级管理员) > manager (管理员) > user (普通用户) > guest (游客)
  * 
  * 规则：高级角色自动继承所有低级角色的权限
+ * 
+ * 🚨 开发阶段特殊处理：
+ * 超级用户白名单（admin、admin666）在权限系统未完善前拥有所有权限
  */
+
+/**
+ * 🔑 超级用户白名单（开发/测试阶段）
+ * 
+ * ⚠️ 注意：这是临时开发措施，用于在权限系统未完善时方便开发和测试
+ * 
+ * TODO: 在权限系统完善后，应该移除此白名单机制，改用正常的权限验证
+ */
+const SUPER_USER_WHITELIST = ['admin', 'admin666']
 
 /**
  * 角色定义
@@ -36,6 +48,24 @@ const ROLE_HIERARCHY: Record<string, number> = {
  */
 function getRoleWeight(role: string): number {
   return ROLE_HIERARCHY[role.toLowerCase()] ?? -1
+}
+
+/**
+ * 🔑 检查是否是超级用户（开发/测试阶段白名单）
+ * 
+ * @param username - 用户名
+ * @returns 是否是超级用户
+ * 
+ * @example
+ * isSuperUser('admin') // true
+ * isSuperUser('admin666') // true
+ * isSuperUser('normalUser') // false
+ */
+export function isSuperUser(username: string | undefined): boolean {
+  if (!username) {
+    return false
+  }
+  return SUPER_USER_WHITELIST.includes(username.toLowerCase())
 }
 
 /**

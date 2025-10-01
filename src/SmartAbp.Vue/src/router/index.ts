@@ -372,6 +372,16 @@ router.beforeEach(async (to, from, next) => {
   const requiredRoles = to.meta.requiredRoles as string[] | undefined
   if (requiredRoles && requiredRoles.length > 0 && isLoggedIn) {
     const userRoles = authStore.userInfo?.roles || []
+    const username = authStore.userInfo?.userName || authStore.userInfo?.username
+    
+    // 🔑 开发阶段特殊处理：超级用户白名单直接放行
+    const { isSuperUser } = await import('@/utils/roleHierarchy')
+    if (isSuperUser(username)) {
+      logger.debug(
+        `[路由守卫] 超级用户 "${username}" 白名单放行（开发阶段） - 拥有所有权限`
+      )
+      return next()
+    }
     
     // 🏛️ 使用角色层级系统检查权限（admin > manager > user > guest）
     const { hasRolePermission, getHighestRole } = await import('@/utils/roleHierarchy')
@@ -380,7 +390,7 @@ router.beforeEach(async (to, from, next) => {
     if (!hasPermission) {
       const highestRole = getHighestRole(userRoles)
       logger.warn(
-        `[路由守卫] 用户权限不足 - 需要角色: ${requiredRoles.join(', ')}, 用户最高角色: ${highestRole}, 所有角色: ${userRoles.join(', ')}`
+        `[路由守卫] 用户权限不足 - 用户: ${username}, 需要角色: ${requiredRoles.join(', ')}, 用户最高角色: ${highestRole}, 所有角色: ${userRoles.join(', ')}`
       )
       ElMessage.warning({
         message: i18n.global.t('permission.noAccess') || '您的权限不足，无法访问此页面',
@@ -391,7 +401,7 @@ router.beforeEach(async (to, from, next) => {
       return next({ name: 'Forbidden' })
     }
     
-    logger.debug(`[路由守卫] 角色权限检查通过 - 用户角色: ${userRoles.join(', ')}, 需要角色: ${requiredRoles.join(', ')}`)
+    logger.debug(`[路由守卫] 角色权限检查通过 - 用户: ${username}, 用户角色: ${userRoles.join(', ')}, 需要角色: ${requiredRoles.join(', ')}`)
   }
 
   // 4. 根路径处理：根据登录状态重定向

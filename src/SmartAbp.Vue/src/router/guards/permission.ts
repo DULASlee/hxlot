@@ -26,19 +26,31 @@ export const permissionGuard = async (to: RouteLocationNormalized) => {
     }
   }
 
+  // 🔑 获取用户信息用于权限检查
+  const username = authStore.userInfo?.userName || authStore.userInfo?.username
+  const userRoles = authStore.userInfo?.roles || []
+  
+  // 🔑 开发阶段特殊处理：超级用户白名单直接放行
+  const { isSuperUser, hasRolePermission, getHighestRole } = await import('@/utils/roleHierarchy')
+  const isSuperUserAccount = isSuperUser(username)
+  
+  if (isSuperUserAccount) {
+    logger.debug(
+      `[权限守卫] 超级用户 "${username}" 白名单放行（开发阶段） - 拥有所有权限`
+    )
+    return true
+  }
+  
   // 2. 检查路由元信息中的角色权限（支持角色层级继承）
   const requiredRoles = to.meta.requiredRoles as string[] | undefined
   if (requiredRoles && requiredRoles.length > 0) {
-    const userRoles = authStore.userInfo?.roles || []
-    
     // 🏛️ 使用角色层级系统检查权限（admin > manager > user > guest）
-    const { hasRolePermission, getHighestRole } = await import('@/utils/roleHierarchy')
     const hasPermission = hasRolePermission(userRoles, requiredRoles)
     
     if (!hasPermission) {
       const highestRole = getHighestRole(userRoles)
       logger.warn(
-        `[权限守卫] 用户权限不足 - 需要角色: ${requiredRoles.join(', ')}, 用户最高角色: ${highestRole}, 所有角色: ${userRoles.join(', ')}`
+        `[权限守卫] 用户权限不足 - 用户: ${username}, 需要角色: ${requiredRoles.join(', ')}, 用户最高角色: ${highestRole}, 所有角色: ${userRoles.join(', ')}`
       )
       
       ElMessage.warning({
@@ -51,16 +63,16 @@ export const permissionGuard = async (to: RouteLocationNormalized) => {
       return { name: 'Forbidden' }
     }
     
-    logger.debug(`[权限守卫] 角色权限检查通过 - 用户角色: ${userRoles.join(', ')}, 需要角色: ${requiredRoles.join(', ')}`)
+    logger.debug(`[权限守卫] 角色权限检查通过 - 用户: ${username}, 用户角色: ${userRoles.join(', ')}, 需要角色: ${requiredRoles.join(', ')}`)
   }
-
+  
   // 3. 检查菜单权限（如果路由关联了菜单）
   const menuKey = to.meta.menuKey as string | undefined
-  if (menuKey) {
+  if (menuKey && !isSuperUserAccount) {
     const hasMenuAccess = menuPermission.hasMenuPermission(menuKey)
     
     if (!hasMenuAccess) {
-      logger.warn(`[权限守卫] 菜单权限不足 - 菜单key: ${menuKey}`)
+      logger.warn(`[权限守卫] 菜单权限不足 - 用户: ${username}, 菜单key: ${menuKey}`)
       
       ElMessage.warning({
         message: '您没有权限访问此功能',
@@ -68,24 +80,26 @@ export const permissionGuard = async (to: RouteLocationNormalized) => {
         showClose: true
       })
       
-      return { name: 'Dashboard' }
+      return { name: 'Forbidden' }
     }
     
-    logger.debug(`[权限守卫] 菜单权限检查通过 - 菜单key: ${menuKey}`)
+    logger.debug(`[权限守卫] 菜单权限检查通过 - 用户: ${username}, 菜单key: ${menuKey}`)
   }
 
   // 4. 检查路径权限
-  const hasPathAccess = menuPermission.hasPathPermission(to.path)
-  if (!hasPathAccess) {
-    logger.warn(`[权限守卫] 路径权限不足 - 路径: ${to.path}`)
-    
-    ElMessage.warning({
-      message: '您没有权限访问此页面',
-      duration: 3000,
-      showClose: true
-    })
-    
-    return { name: 'Dashboard' }
+  if (!isSuperUserAccount) {
+    const hasPathAccess = menuPermission.hasPathPermission(to.path)
+    if (!hasPathAccess) {
+      logger.warn(`[权限守卫] 路径权限不足 - 用户: ${username}, 路径: ${to.path}`)
+      
+      ElMessage.warning({
+        message: '您没有权限访问此页面',
+        duration: 3000,
+        showClose: true
+      })
+      
+      return { name: 'Forbidden' }
+    }
   }
 
   // 所有权限检查通过
