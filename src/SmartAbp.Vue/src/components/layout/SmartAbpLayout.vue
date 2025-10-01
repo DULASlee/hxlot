@@ -43,22 +43,98 @@
         >
           <i :class="currentLocale === 'zh-CN' ? 'fas fa-language' : 'fas fa-globe'" />
         </button>
-        <!-- 主题切换按钮（仅图标） -->
-        <button
-          class="icon-btn"
-          title="Theme"
-          @click="themeStore.toggleDarkMode()"
+        
+        <!-- 主题切换下拉菜单 -->
+        <el-dropdown
+          trigger="click"
+          @command="handleThemeCommand"
         >
-          <i :class="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'" />
-        </button>
-        <!-- 🎨 图标风格切换按钮 -->
-        <button
-          class="icon-btn"
-          title="图标风格"
-          @click="openIconStyleSelector"
+          <button
+            class="icon-btn"
+            title="主题切换"
+          >
+            <i :class="isDarkMode ? 'fas fa-moon' : 'fas fa-sun'" />
+          </button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="light">
+                <i
+                  class="fas fa-sun"
+                  style="margin-right: 8px;"
+                />
+                浅色主题
+              </el-dropdown-item>
+              <el-dropdown-item command="dark">
+                <i
+                  class="fas fa-moon"
+                  style="margin-right: 8px;"
+                />
+                深色主题
+              </el-dropdown-item>
+              <el-dropdown-item
+                command="toggle"
+                divided
+              >
+                <i
+                  class="fas fa-adjust"
+                  style="margin-right: 8px;"
+                />
+                切换模式
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+        
+        <!-- 🎨 图标风格下拉菜单 -->
+        <el-dropdown
+          trigger="click"
+          @command="handleIconStyleCommand"
         >
-          <i class="fas fa-icons" />
-        </button>
+          <button
+            class="icon-btn"
+            title="图标风格"
+          >
+            <i class="fas fa-icons" />
+          </button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item 
+                v-for="style in availableIconStyles" 
+                :key="style.id"
+                :command="style.id"
+                :disabled="currentIconStyle === style.id"
+              >
+                <span
+                  v-if="style.id === 'emoji'"
+                  style="margin-right: 8px; font-size: 16px;"
+                >
+                  {{ style.preview }}
+                </span>
+                <i
+                  v-else
+                  :class="style.preview"
+                  style="margin-right: 8px;"
+                />
+                {{ style.name }}
+                <el-tag
+                  v-if="style.enterprise"
+                  size="small"
+                  type="success"
+                  style="margin-left: 8px;"
+                >
+                  企业级
+                </el-tag>
+                <el-icon
+                  v-if="currentIconStyle === style.id"
+                  style="margin-left: 8px;"
+                >
+                  <SuccessFilled />
+                </el-icon>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+        
         <button
           class="icon-btn"
           title="设置"
@@ -239,30 +315,31 @@
       @confirm="handleLogoutConfirm"
       @cancel="handleLogoutCancel"
     />
-
-    <!-- 🎨 图标风格选择器 -->
-    <IconStyleSelector
-      v-model="showIconStyleSelector"
-      @change="handleIconStyleChange"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue"
 import { useRouter } from "vue-router"
-import { useThemeStore } from "@/stores"
+import { useThemeStore, useIconStyleStore } from "@/stores"
 import { useAuthStore } from "@/stores/modules/auth"
 import { useMenu } from "@/composables/useMenu"
 import { i18n, setLocale } from "@/plugins/i18n"
 import { storeToRefs } from "pinia"
+import { ElMessage } from "element-plus"
+import { SuccessFilled } from "@element-plus/icons-vue"
 import LogoutConfirmDialog from "@/components/common/LogoutConfirmDialog.vue"
-import IconStyleSelector from "@/components/system/IconStyleSelector.vue"
+import type { IconStyleType } from "@/stores"
 
 const router = useRouter()
 const themeStore = useThemeStore()
 const { isDarkMode } = storeToRefs(themeStore)
 const authStore = useAuthStore()
+
+// 🎨 图标风格管理
+const iconStyleStore = useIconStyleStore()
+const availableIconStyles = computed(() => iconStyleStore.availableStyles)
+const currentIconStyle = computed(() => iconStyleStore.currentStyle)
 
 // 侧边栏显示
 const sidebarCollapsed = ref(false)
@@ -271,9 +348,6 @@ const showUserDropdown = ref(false)
 // 退出登录对话框状态
 const showLogoutDialog = ref(false)
 const isLoggingOut = ref(false)
-
-// 🎨 图标风格选择器状态
-const showIconStyleSelector = ref(false)
 
 // 动态菜单系统
 const {
@@ -325,14 +399,41 @@ const goToProfile = () => {
   showUserDropdown.value = false
 }
 
-// 🎨 打开图标风格选择器
-const openIconStyleSelector = () => {
-  showIconStyleSelector.value = true
+// 🎨 处理主题切换命令
+const handleThemeCommand = (command: string) => {
+  if (command === 'light') {
+    if (isDarkMode.value) {
+      themeStore.toggleDarkMode()
+    }
+    ElMessage.success('已切换到浅色主题')
+  } else if (command === 'dark') {
+    if (!isDarkMode.value) {
+      themeStore.toggleDarkMode()
+    }
+    ElMessage.success('已切换到深色主题')
+  } else if (command === 'toggle') {
+    themeStore.toggleDarkMode()
+    ElMessage.success(`已切换到${isDarkMode.value ? '深色' : '浅色'}主题`)
+  }
 }
 
-// 🎨 处理图标风格切换
-const handleIconStyleChange = (style: string) => {
-  console.log(`✅ 图标风格已切换为: ${style}`)
+// 🎨 处理图标风格切换命令
+const handleIconStyleCommand = async (command: IconStyleType) => {
+  if (command === currentIconStyle.value) {
+    return
+  }
+  
+  try {
+    await iconStyleStore.setIconStyle(command)
+    const styleName = iconStyleStore.styleConfig.name
+    ElMessage.success({
+      message: `✅ 图标风格已切换为: ${styleName}`,
+      duration: 2000
+    })
+  } catch (error) {
+    console.error('切换图标风格失败:', error)
+    ElMessage.error('切换失败，请重试')
+  }
 }
 
 const logout = () => {

@@ -267,8 +267,12 @@ export const useIconStyleStore = defineStore('iconStyle', () => {
       
       console.log(`🎨 图标风格已切换: ${ICON_STYLES[style].name}`)
       
+      // ⚠️ 不刷新页面，避免权限丢失
+      // 图标风格会通过响应式系统自动更新
+      
     } catch (error) {
       console.error('❌ 图标风格切换失败:', error)
+      throw error
     } finally {
       isChanging.value = false
     }
