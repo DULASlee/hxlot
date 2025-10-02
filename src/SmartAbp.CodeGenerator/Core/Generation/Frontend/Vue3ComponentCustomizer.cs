@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using SmartAbp.CodeGenerator.Services.V9;
+using SmartAbp.CodeGenerator.Core.Performance;
 using Volo.Abp.DependencyInjection;
 
 namespace SmartAbp.CodeGenerator.Core.Generation.Frontend;
@@ -37,24 +38,25 @@ public class Vue3ComponentCustomizer : ITransientDependency
         _logger.LogInformation("🎨 生成可订制Vue管理组件: {EntityName}", entity.Name);
 
         var options = customizationOptions ?? new ComponentCustomizationOptions();
-        var sb = new StringBuilder();
+        
+        // ✅ 性能优化：使用StringBuilder对象池
+        return StringBuilderPool.Build(sb =>
+        {
+            // 🔥 生成模板头部和AI信息
+            GenerateTemplateHeader(sb, entity, metadata, options);
 
-        // 🔥 生成模板头部和AI信息
-        GenerateTemplateHeader(sb, entity, metadata, options);
+            // 🎨 生成带扩展点的Template部分
+            GenerateTemplate(sb, entity, metadata, options);
 
-        // 🎨 生成带扩展点的Template部分
-        GenerateTemplate(sb, entity, metadata, options);
+            // 🔧 生成带扩展点的Script部分
+            GenerateScript(sb, entity, metadata, options);
 
-        // 🔧 生成带扩展点的Script部分
-        GenerateScript(sb, entity, metadata, options);
+            // 🎨 生成可订制的Style部分
+            GenerateStyle(sb, entity, metadata, options);
 
-        // 🎨 生成可订制的Style部分
-        GenerateStyle(sb, entity, metadata, options);
-
-        _logger.LogDebug("✅ Vue管理组件生成完成: {EntityName}, 长度: {Length}", 
-            entity.Name, sb.Length);
-
-        return sb.ToString();
+            _logger.LogDebug("✅ Vue管理组件生成完成: {EntityName}, 长度: {Length}", 
+                entity.Name, sb.Length);
+        });
     }
 
     /// <summary>
