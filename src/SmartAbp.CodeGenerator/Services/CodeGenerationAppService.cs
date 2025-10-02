@@ -1289,17 +1289,18 @@ import Generated from './__COMPONENT__.generated.vue'
 
                 var appTestsProjectPath = Path.Combine(appTestsProjectDir, $"SmartAbp.{systemName}.{moduleName}.Application.Tests.csproj");
 
-                // TODO: Re-implement test project generation using Roslyn/templates
-                var appTestsProjectContent = "";
+                // ✅ 生成测试项目文件
+                var appTestsProjectContent = GenerateTestProjectFile(systemName, moduleName);
                 await WriteAndTrackFileAsync(appTestsProjectPath, appTestsProjectContent, new List<string>());
 
                 await _solutionIntegrationService.AddProjectToSolutionAsync(solutionFile, appTestsProjectPath);
 
                 foreach (var entity in metadata.Entities)
                 {
-                    // TODO: Re-implement test class generation using Roslyn/templates
-                    var testClassContent = "";
+                    // ✅ 生成测试类文件
+                    var testClassContent = GenerateTestClass(entity, metadata);
                     var testClassPath = Path.Combine(appTestsProjectDir, "Services", $"{entity.Name}AppService_Tests.cs");
+                    Directory.CreateDirectory(Path.GetDirectoryName(testClassPath)!);
                     await WriteAndTrackFileAsync(testClassPath, testClassContent, new List<string>());
                 }
             }
@@ -1730,6 +1731,131 @@ import Generated from './__COMPONENT__.generated.vue'
             if (files.Length == 0) return null;
 
             return files.Select(f => new FileInfo(f).LastWriteTime).Max();
+        }
+
+        private string GenerateTestProjectFile(string systemName, string moduleName)
+        {
+            return $@"<Project Sdk=""Microsoft.NET.Sdk"">
+
+  <Import Project=""..\..\build\common.props"" />
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>SmartAbp.{systemName}.{moduleName}</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include=""..\..\src\SmartAbp.{systemName}.{moduleName}.Application\SmartAbp.{systemName}.{moduleName}.Application.csproj"" />
+    <ProjectReference Include=""..\SmartAbp.Domain.Tests\SmartAbp.Domain.Tests.csproj"" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include=""Microsoft.NET.Test.Sdk"" Version=""17.12.0"" />
+    <PackageReference Include=""xunit"" Version=""2.4.2"" />
+    <PackageReference Include=""xunit.runner.visualstudio"" Version=""2.4.5"">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include=""coverlet.collector"" Version=""6.0.4"">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include=""Moq"" Version=""4.20.70"" />
+    <PackageReference Include=""FluentAssertions"" Version=""6.12.0"" />
+  </ItemGroup>
+
+</Project>";
+        }
+
+        private string GenerateTestClass(EnhancedEntityModelDto entity, ModuleMetadataDto metadata)
+        {
+            var entityName = entity.Name;
+            var moduleName = metadata.Name;
+            var systemName = metadata.SystemName;
+            var namespaceName = $"SmartAbp.{systemName}.{moduleName}.Services";
+
+            return $@"using System;
+using System.Threading.Tasks;
+using Shouldly;
+using Xunit;
+using Volo.Abp.Modularity;
+using SmartAbp.{systemName}.{moduleName}.Dtos;
+
+namespace {namespaceName};
+
+/// <summary>
+/// {entity.DisplayName ?? entityName} 应用服务测试
+/// </summary>
+public class {entityName}AppService_Tests : SmartAbpApplicationTestBase<SmartAbpApplicationTestModule>
+{{
+    private readonly I{entityName}AppService _{entityName.ToCamelCase()}AppService;
+
+    public {entityName}AppService_Tests()
+    {{
+        _{entityName.ToCamelCase()}AppService = GetRequiredService<I{entityName}AppService>();
+    }}
+
+    [Fact]
+    public async Task Should_Get_{entityName}_List()
+    {{
+        // Act
+        var result = await _{entityName.ToCamelCase()}AppService.GetListAsync();
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.ShouldBeAssignableTo<List<{entityName}Dto>>();
+    }}
+
+    [Fact]
+    public async Task Should_Create_{entityName}()
+    {{
+        // Arrange
+        var input = new Create{entityName}Dto
+        {{
+            // TODO: 设置必要的属性
+        }};
+
+        // Act
+        var result = await _{entityName.ToCamelCase()}AppService.CreateAsync(input);
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.Id.ShouldNotBe(Guid.Empty);
+    }}
+
+    [Fact]
+    public async Task Should_Update_{entityName}()
+    {{
+        // Arrange
+        var entity = await _{entityName.ToCamelCase()}AppService.CreateAsync(new Create{entityName}Dto {{ /* TODO: 初始化数据 */ }});
+        var input = new Update{entityName}Dto
+        {{
+            // TODO: 设置更新的属性
+        }};
+
+        // Act
+        var result = await _{entityName.ToCamelCase()}AppService.UpdateAsync(entity.Id, input);
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.Id.ShouldBe(entity.Id);
+    }}
+
+    [Fact]
+    public async Task Should_Delete_{entityName}()
+    {{
+        // Arrange
+        var entity = await _{entityName.ToCamelCase()}AppService.CreateAsync(new Create{entityName}Dto {{ /* TODO: 初始化数据 */ }});
+
+        // Act
+        await _{entityName.ToCamelCase()}AppService.DeleteAsync(entity.Id);
+
+        // Assert
+        var deletedEntity = await _{entityName.ToCamelCase()}AppService.GetAsync(entity.Id);
+        deletedEntity.ShouldBeNull();
+    }}
+}}";
         }
 
         #endregion

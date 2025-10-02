@@ -196,6 +196,10 @@ onMounted(() => { onSearch() })
         {
             var kebab = ToKebabCase(entity.Name);
             var title = string.IsNullOrWhiteSpace(entity.DisplayName) ? entity.Name : entity.DisplayName;
+            
+            // 生成表单项
+            var formItems = GenerateFormItems(entity);
+            
             var content = @"<template>
   <div class=""__KEBAB__-management"">
     <el-card>
@@ -203,7 +207,7 @@ onMounted(() => { onSearch() })
         <div class=""card-header"">__TITLE__管理</div>
       </template>
       <el-form :model=""form"" label-width=""120px"" style=""max-width:720px"">
-        <!-- TODO: 按字段生成表单项 -->
+__FORM_ITEMS__
       </el-form>
       <div class=""actions"">
         <el-button type=""primary"" @click=""onSubmit"">保存</el-button>
@@ -232,7 +236,66 @@ const onCancel = () => { Object.keys(form).forEach(k => delete (form as any)[k])
                 .Replace("__TITLE__", title)
                 .Replace("__MODULE_LOWER__", metadata.Name.ToLower())
                 .Replace("__ENTITY__", entity.Name)
-                .Replace("__ENTITY_LOWER__", entity.Name.ToLower());
+                .Replace("__ENTITY_LOWER__", entity.Name.ToLower())
+                .Replace("__FORM_ITEMS__", formItems);
+        }
+
+        private string GenerateFormItems(EnhancedEntityModelDto entity)
+        {
+            var sb = new StringBuilder();
+            
+            foreach (var prop in entity.Properties)
+            {
+                // 跳过ID等系统字段
+                if (prop.Name.Equals("Id", StringComparison.OrdinalIgnoreCase) ||
+                    prop.Name.Equals("CreationTime", StringComparison.OrdinalIgnoreCase) ||
+                    prop.Name.Equals("CreatorId", StringComparison.OrdinalIgnoreCase) ||
+                    prop.Name.Equals("LastModificationTime", StringComparison.OrdinalIgnoreCase) ||
+                    prop.Name.Equals("LastModifierId", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+                
+                var fieldName = ToCamelCase(prop.Name);
+                var displayName = prop.DisplayName ?? prop.Name;
+                var required = prop.IsRequired ? "required" : "";
+                
+                sb.AppendLine($"        <el-form-item label=\"{displayName}\" prop=\"{fieldName}\" {required}>");
+                
+                // 根据类型选择合适的输入控件
+                if (prop.Type == "string" || prop.Type == "String")
+                {
+                    if (prop.MaxLength > 200)
+                    {
+                        sb.AppendLine($"          <el-input v-model=\"form.{fieldName}\" type=\"textarea\" :rows=\"3\" />");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"          <el-input v-model=\"form.{fieldName}\" />");
+                    }
+                }
+                else if (prop.Type == "int" || prop.Type == "long" || prop.Type == "decimal" || prop.Type == "double")
+                {
+                    sb.AppendLine($"          <el-input-number v-model=\"form.{fieldName}\" :controls=\"false\" />");
+                }
+                else if (prop.Type == "bool" || prop.Type == "Boolean")
+                {
+                    sb.AppendLine($"          <el-switch v-model=\"form.{fieldName}\" />");
+                }
+                else if (prop.Type == "DateTime" || prop.Type == "DateTimeOffset")
+                {
+                    sb.AppendLine($"          <el-date-picker v-model=\"form.{fieldName}\" type=\"datetime\" />");
+                }
+                else
+                {
+                    // 默认使用文本输入
+                    sb.AppendLine($"          <el-input v-model=\"form.{fieldName}\" />");
+                }
+                
+                sb.AppendLine($"        </el-form-item>");
+            }
+            
+            return sb.ToString().TrimEnd();
         }
 
         private string GenerateApiFile(EnhancedEntityModelDto entity, ModuleMetadataDto metadata)
