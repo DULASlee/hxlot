@@ -118,13 +118,14 @@ const dynamicMenuItems = computed(() => [
     children: []
   },
   {
-    path: '/CodeGeneration',
+    path: '/lowcode',
     title: '代码生成',
     icon: 'Document',
     children: [
-      { path: '/CodeGeneration/ultra-simple', title: '极简代码生成' },
-      { path: '/CodeGeneration/engine', title: '低代码引擎控制台' },
-      { path: '/CodeGeneration/designer', title: '可视化设计' }
+      { path: '/CodeGen/ultra-simple', title: '极简代码生成' },
+      { path: '/lowcode/entity-modeling', title: '数据建模' },
+      { path: '/lowcode/design', title: '页面设计' },
+      { path: '/lowcode/generation', title: '代码生成' }
     ]
   },
   {

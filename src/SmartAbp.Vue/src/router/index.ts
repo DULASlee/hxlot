@@ -243,7 +243,31 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-  // LowCode Studio 一体化工作台
+  // 代码生成入口选择页
+  {
+    path: "/codegen",
+    name: "CodeGenEntrance",
+    component: () => import("@/views/lowcode/CodeGenEntrance.vue"),
+    meta: {
+      title: "代码生成入口",
+      icon: "🚀",
+      requiresAuth: true,
+      requiredRoles: ["user"],
+    },
+  },
+  // 极简代码生成入口（独立路由）
+  {
+    path: "/CodeGen/ultra-simple",
+    name: "UltraSimpleStudio",
+    component: () => import("@/views/lowcode/UltraSimpleStudio.vue"),
+    meta: {
+      title: "极简代码生成",
+      icon: "⚡",
+      requiresAuth: true,
+      requiredRoles: ["user"],
+    },
+  },
+  // LowCode Studio 专业工作台
   {
     path: "/lowcode",
     component: () => import("@/views/lowcode/LowCodeStudioView.vue"),
@@ -278,12 +302,6 @@ const routes: RouteRecordRaw[] = [
         name: "CodeGeneration",
         component: () => import("@/views/lowcode/GenerationView.vue"),
         meta: { title: "代码生成", menuKey: "code-generation" },
-      },
-      {
-        path: "/CodeGen/ultra-simple",
-        name: "UltraSimpleStudio",
-        component: () => import("@/views/lowcode/UltraSimpleStudio.vue"),
-        meta: { title: "极简代码生成", menuKey: "ultra-simple-studio" },
       },
       {
         path: "workflows",

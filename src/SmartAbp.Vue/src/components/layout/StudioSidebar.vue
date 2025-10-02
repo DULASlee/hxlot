@@ -71,8 +71,20 @@ const activeMenuKey = computed(() => router.currentRoute.value.path)
 // Complete menu structure matching the routes
 const menuItems = ref([
   {
+    path: '/codegen',
+    title: '代码生成入口',
+    icon: MagicStick,
+    children: []
+  },
+  {
+    path: '/CodeGen/ultra-simple',
+    title: '极简代码生成',
+    icon: MagicStick,
+    children: []
+  },
+  {
     path: '/lowcode',
-    title: 'LowCode Studio',
+    title: '专业工作台',
     icon: MagicStick,
     children: [
       { path: '/lowcode/entity-modeling', title: '实体建模', icon: DataBoard, children: [] },
