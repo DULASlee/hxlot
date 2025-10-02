@@ -255,6 +255,7 @@ src/SmartAbp.Vue/src/views/log/LogManagement.vue
 src/SmartAbp.Vue/src/views/log/LogSearchFilter.vue
 src/SmartAbp.Vue/src/views/log/LogSystemDemo.vue
 src/SmartAbp.Vue/src/views/log/LogViewer.vue
+src/SmartAbp.Vue/src/views/lowcode/CodeGenEntrance.vue
 src/SmartAbp.Vue/src/views/lowcode/GenerationView.test.ts
 src/SmartAbp.Vue/src/views/lowcode/GenerationView.vue
 src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioContent.vue
@@ -438,8 +439,6 @@ src/SmartAbp.Vue/packages/lowcode-designer/src/utils/responsive-design.ts
 src/SmartAbp.Vue/packages/lowcode-designer/src/utils/uiConfigMapper.ts
 src/SmartAbp.Vue/packages/lowcode-designer/src/utils/zod-schemas.test.ts
 src/SmartAbp.Vue/packages/lowcode-designer/src/utils/zod-schemas.ts
-src/SmartAbp.Vue/packages/lowcode-designer/src/utils/zod-s极速模式启动，正在加速处理中...">
-<path>src/SmartAbp.Vue/packages/lowcode-designer/src/utils/zod-schemas.ts
 src/SmartAbp.Vue/packages/lowcode-designer/src/views/DesignView.vue
 src/SmartAbp.Vue/packages/lowcode-designer/src/views/EntityModelingView.vue
 src/SmartAbp.Vue/packages/lowcode-designer/src/views/ThemeCustomizationView.vue
