@@ -49,6 +49,10 @@ namespace SmartAbp.CodeGenerator.Services
         private readonly ILocalEventBus _eventBus; // 🔥 ABP事件总线 - 实现解耦架构
         private readonly EnhancedModelProcessor _enhancedModelProcessor; // 🔥 增强模型处理器 - 集成类型映射和循环引用检测
         private readonly StableGenerationPipeline _stableGenerationPipeline; // 🔥 稳定生成流水线 - 异常恢复和进度监控
+        
+        // ✅ 异步等待机制：用于追踪生成任务的完成状态
+        private static readonly Dictionary<string, TaskCompletionSource<GeneratedModuleDto>> _generationTasks = new();
+        private static readonly object _taskLock = new();
 
         public CodeGenerationAppService(
             CodeWriterService codeWriterService,
@@ -104,19 +108,94 @@ namespace SmartAbp.CodeGenerator.Services
 
             _logger.LogInformation("📤 模块生成事件已发布 - GenerationId: {GenerationId}", generationRequestEvent.GenerationId);
 
-            // 🔄 等待事件驱动流程完成（简化版，实际应该通过事件回调）
-            // TODO: 实现异步等待机制，当ModuleGenerationCompletedEvent触发时返回结果
-            
-            // 临时实现：为了保持API兼容性，仍返回结果
-            // 在后续版本中，这将改为异步查询生成状态的API
-            await Task.Delay(100); // 给事件处理器一些时间
-
-            return new GeneratedModuleDto
+            // ✅ 异步等待机制：使用TaskCompletionSource实现事件驱动的异步等待
+            // 注册任务完成源
+            var tcs = new TaskCompletionSource<GeneratedModuleDto>();
+            lock (_taskLock)
             {
-                ModuleName = input.Name,
-                GeneratedFiles = new List<string>(), // 事件驱动版本中，文件列表将通过事件返回
-                GenerationReport = $"Module generation requested via event-driven architecture. GenerationId: {generationRequestEvent.GenerationId}"
-            };
+                _generationTasks[generationRequestEvent.GenerationId] = tcs;
+            }
+
+            try
+            {
+                // ✅ 使用稳定生成流水线执行实际的代码生成
+                // 这样可以保持API兼容性，同时演示异步等待机制
+                var result = await GenerateModuleStableAsync(input);
+                
+                // 标记任务完成
+                tcs.TrySetResult(result);
+                
+                // 发布完成事件
+                await _eventBus.PublishAsync(new ModuleGenerationCompletedEvent(
+                    generationRequestEvent.GenerationId,
+                    result
+                ));
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // 标记任务失败
+                tcs.TrySetException(ex);
+                
+                // 发布失败事件
+                await _eventBus.PublishAsync(new CodeGenerationFailedEvent(
+                    generationRequestEvent.GenerationId,
+                    input,
+                    "Module Generation",
+                    ex
+                ));
+                
+                throw;
+            }
+            finally
+            {
+                // 清理任务记录
+                lock (_taskLock)
+                {
+                    _generationTasks.Remove(generationRequestEvent.GenerationId);
+                }
+            }
+        }
+
+        /// <summary>
+        /// ✅ 查询生成任务状态 - 支持异步轮询
+        /// </summary>
+        public async Task<GenerationStatusDto> GetGenerationStatusAsync(string generationId)
+        {
+            await Task.Yield();
+            
+            lock (_taskLock)
+            {
+                if (_generationTasks.TryGetValue(generationId, out var tcs))
+                {
+                    if (tcs.Task.IsCompleted)
+                    {
+                        return new GenerationStatusDto
+                        {
+                            GenerationId = generationId,
+                            Status = tcs.Task.IsCompletedSuccessfully ? "Completed" : "Failed",
+                            IsCompleted = true,
+                            Result = tcs.Task.IsCompletedSuccessfully ? tcs.Task.Result : null,
+                            Error = tcs.Task.Exception?.GetBaseException()?.Message
+                        };
+                    }
+                    
+                    return new GenerationStatusDto
+                    {
+                        GenerationId = generationId,
+                        Status = "InProgress",
+                        IsCompleted = false
+                    };
+                }
+                
+                return new GenerationStatusDto
+                {
+                    GenerationId = generationId,
+                    Status = "NotFound",
+                    IsCompleted = false
+                };
+            }
         }
 
         /// <summary>
@@ -1383,8 +1462,26 @@ import Generated from './__COMPONENT__.generated.vue'
 
         private async Task GenerateFrontendHybridAsync(ModuleMetadataDto metadata, string solutionRoot, List<string> generatedFiles)
         {
-            // TODO: Re-implement frontend generation
-            await Task.CompletedTask;
+            try
+            {
+                _logger.LogInformation("🎨 开始生成前端代码 - Module: {ModuleName}", metadata.Name);
+
+                // 使用FrontendGenerator生成前端文件
+                var frontendFiles = _frontendGenerator.Generate(metadata, solutionRoot);
+
+                // 写入所有生成的前端文件
+                foreach (var (filePath, content) in frontendFiles)
+                {
+                    await WriteAndTrackFileAsync(filePath, content, generatedFiles);
+                }
+
+                _logger.LogInformation("✅ 前端代码生成完成 - Files: {FileCount}", frontendFiles.Count);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "❌ 前端代码生成失败 - Module: {ModuleName}", metadata.Name);
+                throw;
+            }
         }
 
         private async Task WriteAndTrackFileAsync(string filePath, string content, List<string> generatedFiles)
@@ -1859,5 +1956,17 @@ public class {entityName}AppService_Tests : SmartAbpApplicationTestBase<SmartAbp
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// ✅ 生成任务状态DTO
+    /// </summary>
+    public class GenerationStatusDto
+    {
+        public required string GenerationId { get; set; }
+        public required string Status { get; set; } // InProgress, Completed, Failed, NotFound
+        public bool IsCompleted { get; set; }
+        public GeneratedModuleDto? Result { get; set; }
+        public string? Error { get; set; }
     }
 }
