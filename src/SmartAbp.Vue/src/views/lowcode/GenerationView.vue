@@ -143,21 +143,10 @@ import { logger } from "@/utils/logger"
 import { TemplateSelector } from "@smartabp/lowcode-designer"
 import { SandboxPreview } from "@smartabp/lowcode-designer"
 import { useWorkspaceStore } from "@/stores/lowcode/workspace"
-// 暂时注释避免编译错误
-// import { codeGeneratorApi } from "@smartabp/lowcode-api"
 
-// 临时API替代 - 类型安全的实现
-const codeGeneratorApi = {
-  generateCode: () => Promise.resolve({ success: true, files: [] }),
-  generateModule: (config: any) => Promise.resolve({ success: true, files: [], config })
-}
-// import type { Template } from "@smartabp/lowcode-api/types"
-
-interface Template {
-  id: string
-  name: string
-  description: string
-}
+// ✅ 使用真实的代码生成器API
+import { codeGeneratorApi } from "@smartabp/lowcode-api"
+import type { Template, GenerationResult, ModuleMetadataDto } from "@smartabp/lowcode-api"
 
 const workspaceStore = useWorkspaceStore()
 const selectedTemplate = ref<Template | null>(null)
@@ -195,51 +184,91 @@ const generateCode = async () => {
 
   generating.value = true
   try {
-    const config = {
-      metadata: {
+    // 🔥 构建符合后端ModuleMetadataDto要求的配置
+    const config: ModuleMetadataDto = {
+      systemName: 'SmartAbp',
+      name: generationParams.value.moduleName,
+      displayName: generationParams.value.displayName || generationParams.value.entityName,
+      description: `${generationParams.value.displayName || generationParams.value.entityName}模块`,
+      version: '1.0.0',
+      architecturePattern: 'Crud',
+      namespace: `SmartAbp.${generationParams.value.moduleName}`,
+      author: 'SmartAbp LowCode Generator',
+      databaseInfo: {
+        connectionStringName: 'Default',
+        provider: 'SqlServer'
+      },
+      featureManagement: {
+        isEnabled: true,
+        defaultPolicy: 'RequiresAuthentication'
+      },
+      frontend: {
+        parentId: '',
+        routePrefix: generationParams.value.moduleName.toLowerCase()
+      },
+      generateMobilePages: false,
+      dependencies: [],
+      entities: [{
         name: generationParams.value.entityName,
-        displayName: generationParams.value.displayName,
-        module: generationParams.value.moduleName,
-        projectId: workspaceStore.currentProject.id,
-        templateId: selectedTemplate.value.id,
-      },
-      options: {
-        framework: generationParams.value.framework,
-        language: generationParams.value.language,
-        architecture: "ddd",
-        testing: true,
-        documentation: true,
-      },
-      target: {
-        outputDir: "generated",
-        baseNamespace: "SmartAbp",
-        basePath: "/",
-        apiVersion: "v1",
-      },
+        displayName: generationParams.value.displayName || generationParams.value.entityName,
+        // 最简配置，更多字段由后端推断
+      }]
     }
 
-    const result = await codeGeneratorApi.generateModule(config)
+    console.log('🚀 Calling real code generator API...', config)
 
-    if (result && (result.success === undefined || result.success === true)) {
-      // Simulate generated code for preview
-      generatedCode.value = `
-        <div class="generated-component">
-          <h2>${generationParams.value.displayName}</h2>
-          <p>Generated ${generationParams.value.framework.toUpperCase()} component for ${generationParams.value.entityName}</p>
-          <div class="meta-info">
-            <span>Template: ${selectedTemplate.value.name}</span>
-            <span>Language: ${generationParams.value.language}</span>
-            <span>Project: ${workspaceStore.currentProject.name}</span>
-          </div>
-        </div>
-        <style>
-          .generated-component { padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
-          .meta-info { margin-top: 10px; display: flex; flex-direction: column; gap: 5px; }
-          .meta-info span { font-size: 12px; color: #666; }
-        </style>
-      `
+    // 🔥 调用真实的后端API
+    const result: GenerationResult = await codeGeneratorApi.generateModule(config)
 
-      ElMessage.success("Code generated successfully!")
+    console.log('✅ Code generation result:', result)
+
+    if (result.success) {
+      // 处理真实的生成结果
+      const totalFiles = result.statistics.totalFiles || result.generatedFiles.length
+      const totalLines = result.statistics.totalLines || 0
+
+      // 生成预览内容（显示所有生成的文件）
+      let preview = `<div class="generation-result">`
+      preview += `<h2>✅ 代码生成成功！</h2>`
+      preview += `<div class="stats">`
+      preview += `<div class="stat-item"><span class="label">生成文件:</span> <span class="value">${totalFiles} 个</span></div>`
+      preview += `<div class="stat-item"><span class="label">代码行数:</span> <span class="value">${totalLines} 行</span></div>`
+      preview += `<div class="stat-item"><span class="label">生成时间:</span> <span class="value">${result.statistics.generationTime || 0}ms</span></div>`
+      preview += `<div class="stat-item"><span class="label">模块:</span> <span class="value">${generationParams.value.moduleName}</span></div>`
+      preview += `<div class="stat-item"><span class="label">实体:</span> <span class="value">${generationParams.value.entityName}</span></div>`
+      preview += `</div>`
+      
+      if (result.generatedFiles && result.generatedFiles.length > 0) {
+        preview += `<h3>生成的文件列表:</h3>`
+        preview += `<div class="file-list">`
+        result.generatedFiles.forEach((file: { path: string; content?: string }) => {
+          preview += `<div class="file-item">`
+          preview += `<div class="file-path">📄 ${file.path}</div>`
+          if (file.content) {
+            preview += `<pre class="file-content">${file.content.substring(0, 500)}...</pre>`
+          }
+          preview += `</div>`
+        })
+        preview += `</div>`
+      }
+      
+      preview += `</div>`
+      preview += `<style>
+        .generation-result { padding: 20px; }
+        .generation-result h2 { color: #67C23A; margin-bottom: 20px; }
+        .stats { background: #f0f9ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .stat-item { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .stat-item .label { font-weight: 600; color: #606266; }
+        .stat-item .value { color: #409EFF; }
+        .file-list { max-height: 500px; overflow-y: auto; }
+        .file-item { background: #fff; border: 1px solid #DCDFE6; border-radius: 4px; padding: 12px; margin-bottom: 10px; }
+        .file-path { font-weight: 600; color: #409EFF; margin-bottom: 8px; }
+        .file-content { background: #f5f7fa; padding: 10px; border-radius: 4px; font-size: 12px; overflow-x: auto; }
+      </style>`
+
+      generatedCode.value = preview
+
+      ElMessage.success(`成功生成 ${totalFiles} 个文件！`)
       showPreview.value = true
 
       // Update project with generated code
@@ -248,17 +277,31 @@ const generateCode = async () => {
           id: `page-${Date.now()}`,
           name: generationParams.value.entityName,
           template: selectedTemplate.value.id,
-          code: generatedCode.value,
+          code: JSON.stringify(result.generatedFiles),
           createdAt: Date.now(),
         })
         workspaceStore.saveProject()
       }
     } else {
-      ElMessage.error("Code generation failed")
+      // 处理生成失败
+      const errors = result.errors || []
+      const errorMessage = errors.length > 0 
+        ? `生成失败：${errors.join(', ')}` 
+        : '代码生成失败，请检查配置'
+      ElMessage.error(errorMessage)
     }
   } catch (error) {
+    console.error('❌ Code generation error:', error)
     logger?.error("代码生成错误", { error: String(error) })
-    ElMessage.error("Code generation failed: " + (error instanceof Error ? error.message : "Unknown error"))
+    
+    const errorMessage = error instanceof Error 
+      ? error.message 
+      : "Unknown error"
+    
+    ElMessage.error({
+      message: `代码生成失败: ${errorMessage}`,
+      duration: 5000
+    })
   } finally {
     generating.value = false
   }
