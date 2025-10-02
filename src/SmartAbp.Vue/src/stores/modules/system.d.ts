@@ -68,7 +68,7 @@ export declare const useSystemStore: import("pinia").StoreDefinition<"system", P
     fetchSystemInfo: () => Promise<void>;
     toggleMaintenanceMode: (_enabled: boolean) => Promise<void>;
     clearError: () => void;
-}, "error" | "roles" | "loading" | "settings" | "permissions" | "systemInfo">, Pick<{
+}, "error" | "permissions" | "roles" | "loading" | "settings" | "systemInfo">, Pick<{
     settings: Ref<SystemSettings | null, SystemSettings | null>;
     roles: Ref<Role[], Role[]>;
     permissions: Ref<Permission[], Permission[]>;

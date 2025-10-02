@@ -9,19 +9,19 @@
  * - 支持智能懒加载和内存管理
  */
 
-// 从types导入基础ComponentMetadata类型
-import type { ComponentMetadata as BaseComponentMetadata } from '../types/component-base'
-
 export type ComponentCategory = 'basic' | 'layout' | 'form' | 'data' | 'chart' | 'advanced' | 'business';
 export type LoadPriority = 'high' | 'medium' | 'low';
 
 /**
- * 扩展的组件元数据接口（注册中心专用）
- * 继承基础ComponentMetadata，添加注册中心特定字段
+ * 组件元数据接口
  */
-export interface ComponentMetadata extends BaseComponentMetadata {
+export interface ComponentMetadata {
+  /** 组件名称 */
+  name: string;
   /** 组件显示名称 */
   displayName: string;
+  /** 组件描述 */
+  description?: string;
   /** 组件分类 */
   category: ComponentCategory;
   /** 加载优先级 */
@@ -34,6 +34,12 @@ export interface ComponentMetadata extends BaseComponentMetadata {
   lazy: boolean;
   /** 是否预加载 */
   preload: boolean;
+  /** 组件版本 */
+  version: string;
+  /** 组件标签 */
+  tags: string[];
+  /** 组件图标 */
+  icon?: string;
   /** 组件大小估算 (KB) */
   estimatedSize?: number;
   /** 使用频率统计 */
@@ -204,7 +210,7 @@ export class ComponentRegistry {
         metadata.name.toLowerCase().includes(lowerQuery) ||
         metadata.displayName.toLowerCase().includes(lowerQuery) ||
         metadata.description?.toLowerCase().includes(lowerQuery) ||
-        metadata.tags?.some(tag => tag.toLowerCase().includes(lowerQuery))
+        metadata.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
       );
   }
 

@@ -226,7 +226,21 @@ export class GlobalMemoryMonitor {
       return null;
     }
 
-    const memory = (performance as any).memory;
+    // ✅ 正确：使用类型扩展替代as any
+    interface PerformanceWithMemory extends Performance {
+      memory?: {
+        usedJSHeapSize: number;
+        totalJSHeapSize: number;
+        jsHeapSizeLimit: number;
+      };
+    }
+
+    const memory = (performance as PerformanceWithMemory).memory;
+    if (!memory) {
+      console.warn('浏览器不支持内存API');
+      return null;
+    }
+
     const totalUsage = memory.usedJSHeapSize;
     const heapTotal = memory.totalJSHeapSize;
     const usagePercentage = (totalUsage / heapTotal) * 100;
@@ -272,7 +286,11 @@ export class GlobalMemoryMonitor {
 
       // 浏览器垃圾回收 (如果支持)
       if (typeof window !== 'undefined' && 'gc' in window) {
-        (window as any).gc();
+        // ✅ 正确：使用类型扩展替代as any
+        interface WindowWithGC extends Window {
+          gc?: () => void;
+        }
+        (window as WindowWithGC).gc?.();
       }
 
       // 手动清理
@@ -410,9 +428,15 @@ export class GlobalMemoryMonitor {
 
       // 监听内存压力事件 (如果支持)
       if ('memory' in navigator) {
-        const memoryInfo = (navigator as any).memory;
-        if (memoryInfo && 'addEventListener' in memoryInfo) {
-          memoryInfo.addEventListener('memorypressure', (event: any) => {
+        // ✅ 正确：使用类型扩展替代as any
+        interface NavigatorWithMemory extends Navigator {
+          memory?: {
+            addEventListener?: (event: string, handler: (event: Event) => void) => void;
+          };
+        }
+        const memoryInfo = (navigator as NavigatorWithMemory).memory;
+        if (memoryInfo && 'addEventListener' in memoryInfo && memoryInfo.addEventListener) {
+          memoryInfo.addEventListener('memorypressure', (event: Event) => {
             this.handleMemoryPressureEvent(event);
           });
         }
@@ -530,7 +554,7 @@ export class GlobalMemoryMonitor {
   /**
    * 处理内存压力事件
    */
-  private handleMemoryPressureEvent(event: any): void {
+  private handleMemoryPressureEvent(event: Event): void {
     console.warn('🆘 系统内存压力事件:', event);
     this.forceGarbageCollection();
   }

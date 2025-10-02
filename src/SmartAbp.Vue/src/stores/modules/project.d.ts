@@ -49,7 +49,7 @@ export declare const useProjectStore: import("pinia").StoreDefinition<"project",
     getProjectById: (projectId: string) => Project | undefined;
     setCurrentProject: (project: Project | null) => void;
     clearError: () => void;
-}, "currentProject" | "projects" | "error" | "loading">, Pick<{
+}, "error" | "loading" | "projects" | "currentProject">, Pick<{
     projects: Ref<Project[], Project[]>;
     loading: Ref<boolean, boolean>;
     error: Ref<string | null, string | null>;
@@ -83,5 +83,5 @@ export declare const useProjectStore: import("pinia").StoreDefinition<"project",
     getProjectById: (projectId: string) => Project | undefined;
     setCurrentProject: (project: Project | null) => void;
     clearError: () => void;
-}, "createProject" | "fetchProjects" | "updateProject" | "deleteProject" | "getProjectById" | "setCurrentProject" | "clearError">>;
+}, "fetchProjects" | "createProject" | "updateProject" | "deleteProject" | "getProjectById" | "setCurrentProject" | "clearError">>;
 //# sourceMappingURL=project.d.ts.map

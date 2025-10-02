@@ -89,7 +89,8 @@ export function WithLoading(
   WrappedComponent: Component
 ) {
   return defineComponent({
-    name: `WithLoading(${(WrappedComponent as any).name || 'Component'})`,
+    // ✅ 正确：使用类型守卫替代as any
+    name: `WithLoading(${typeof WrappedComponent === 'object' && WrappedComponent !== null && 'name' in WrappedComponent ? (WrappedComponent as { name?: string }).name || 'Component' : 'Component'})`,
     
     props: {
       loading: {

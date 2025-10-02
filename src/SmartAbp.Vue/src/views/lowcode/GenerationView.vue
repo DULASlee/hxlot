@@ -145,8 +145,7 @@ import { SandboxPreview } from "@smartabp/lowcode-designer"
 import { useWorkspaceStore } from "@/stores/lowcode/workspace"
 
 // ✅ 使用真实的代码生成器API
-import { codeGeneratorApi } from "@smartabp/lowcode-api"
-import type { Template, GenerationResult, ModuleMetadataDto } from "@smartabp/lowcode-api"
+import { codeGeneratorApi, type Template, type ModuleMetadataDto, type GenerationResult } from "@smartabp/lowcode-api"
 
 const workspaceStore = useWorkspaceStore()
 const selectedTemplate = ref<Template | null>(null)
@@ -185,18 +184,18 @@ const generateCode = async () => {
   generating.value = true
   try {
     // 🔥 构建符合后端ModuleMetadataDto要求的配置
-    const config: ModuleMetadataDto = {
+    const config = {
       systemName: 'SmartAbp',
       name: generationParams.value.moduleName,
       displayName: generationParams.value.displayName || generationParams.value.entityName,
       description: `${generationParams.value.displayName || generationParams.value.entityName}模块`,
       version: '1.0.0',
-      architecturePattern: 'Crud',
+      architecturePattern: 'Crud' as const, // 明确指定为字面量类型
       namespace: `SmartAbp.${generationParams.value.moduleName}`,
       author: 'SmartAbp LowCode Generator',
       databaseInfo: {
         connectionStringName: 'Default',
-        provider: 'SqlServer'
+        provider: 'SqlServer' as const
       },
       featureManagement: {
         isEnabled: true,
@@ -213,7 +212,7 @@ const generateCode = async () => {
         displayName: generationParams.value.displayName || generationParams.value.entityName,
         // 最简配置，更多字段由后端推断
       }]
-    }
+    } satisfies ModuleMetadataDto
 
     console.log('🚀 Calling real code generator API...', config)
 
@@ -224,8 +223,8 @@ const generateCode = async () => {
 
     if (result.success) {
       // 处理真实的生成结果
-      const totalFiles = result.statistics.totalFiles || result.generatedFiles.length
-      const totalLines = result.statistics.totalLines || 0
+      const totalFiles = result.statistics?.totalFiles || result.generatedFiles?.length || 0
+      const totalLines = result.statistics?.totalLines || 0
 
       // 生成预览内容（显示所有生成的文件）
       let preview = `<div class="generation-result">`
@@ -233,7 +232,7 @@ const generateCode = async () => {
       preview += `<div class="stats">`
       preview += `<div class="stat-item"><span class="label">生成文件:</span> <span class="value">${totalFiles} 个</span></div>`
       preview += `<div class="stat-item"><span class="label">代码行数:</span> <span class="value">${totalLines} 行</span></div>`
-      preview += `<div class="stat-item"><span class="label">生成时间:</span> <span class="value">${result.statistics.generationTime || 0}ms</span></div>`
+      preview += `<div class="stat-item"><span class="label">生成时间:</span> <span class="value">${result.statistics?.generationTime || 0}ms</span></div>`
       preview += `<div class="stat-item"><span class="label">模块:</span> <span class="value">${generationParams.value.moduleName}</span></div>`
       preview += `<div class="stat-item"><span class="label">实体:</span> <span class="value">${generationParams.value.entityName}</span></div>`
       preview += `</div>`

@@ -127,11 +127,13 @@ export function WithError(
   WrappedComponent: Component
 ) {
   return defineComponent({
-    name: `WithError(${(WrappedComponent as any).name || 'Component'})`,
+    // ✅ 正确：使用类型守卫替代as any
+    name: `WithError(${typeof WrappedComponent === 'object' && WrappedComponent !== null && 'name' in WrappedComponent ? (WrappedComponent as { name?: string }).name || 'Component' : 'Component'})`,
     
     props: {
+      // ✅ 正确：使用PropType替代as any
       error: {
-        type: [Error, String, null] as any,
+        type: [Error, String, null] as import('vue').PropType<Error | string | null>,
         default: null
       },
       errorMode: {
@@ -171,7 +173,8 @@ export function WithError(
 
         // 记录错误到控制台
         console.error('[WithError]', {
-          component: (WrappedComponent as any).name || 'Unknown',
+          // ✅ 正确：使用类型守卫替代as any
+          component: typeof WrappedComponent === 'object' && WrappedComponent !== null && 'name' in WrappedComponent ? (WrappedComponent as { name?: string }).name || 'Unknown' : 'Unknown',
           error: err,
           info
         })

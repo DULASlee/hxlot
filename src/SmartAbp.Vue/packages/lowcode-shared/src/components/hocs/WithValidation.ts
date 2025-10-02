@@ -9,8 +9,7 @@ import {
   isRequired, 
   isEmail, 
   isUrl, 
-  pattern,
-  type ValidationResult // 从validators导入ValidationResult类型
+  pattern 
 } from '@smartabp/lowcode-shared/validators'
 
 /**
@@ -59,9 +58,10 @@ export interface WithValidationProps extends BaseComponentProps {
 }
 
 /**
- * 扩展的验证结果（包含错误信息数组）
+ * 验证结果
  */
-export interface ExtendedValidationResult extends ValidationResult {
+export interface ValidationResult {
+  valid: boolean
   errors: string[]
 }
 
@@ -104,7 +104,8 @@ export function WithValidation(
   WrappedComponent: Component
 ) {
   return defineComponent({
-    name: `WithValidation(${(WrappedComponent as any).name || 'Component'})`,
+    // ✅ 正确：使用类型守卫替代as any
+    name: `WithValidation(${typeof WrappedComponent === 'object' && WrappedComponent !== null && 'name' in WrappedComponent ? (WrappedComponent as { name?: string }).name || 'Component' : 'Component'})`,
     
     props: {
       modelValue: {
@@ -218,7 +219,7 @@ export function WithValidation(
         validationErrors.value = errors
         isValidating.value = false
 
-        const result: ExtendedValidationResult = {
+        const result: ValidationResult = {
           valid: errors.length === 0,
           errors
         }
@@ -357,7 +358,7 @@ export function useValidation() {
     field: string,
     value: any,
     rules: ValidationRule[]
-  ): Promise<ExtendedValidationResult> => {
+  ): Promise<ValidationResult> => {
     const fieldErrors: string[] = []
 
     for (const rule of rules) {
@@ -403,7 +404,6 @@ export function useValidation() {
 
     return {
       valid: fieldErrors.length === 0,
-      message: fieldErrors.join(', '),
       errors: fieldErrors
     }
   }

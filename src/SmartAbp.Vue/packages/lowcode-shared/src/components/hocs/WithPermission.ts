@@ -95,11 +95,13 @@ export function WithPermission(
   WrappedComponent: Component
 ) {
   return defineComponent({
-    name: `WithPermission(${(WrappedComponent as any).name || 'Component'})`,
+    // ✅ 正确：使用类型守卫替代as any
+    name: `WithPermission(${typeof WrappedComponent === 'object' && WrappedComponent !== null && 'name' in WrappedComponent ? (WrappedComponent as { name?: string }).name || 'Component' : 'Component'})`,
     
     props: {
+      // ✅ 正确：使用PropType替代as any
       permission: {
-        type: [String, Array] as any,
+        type: [String, Array] as import('vue').PropType<string | string[]>,
         default: undefined
       },
       permissionMode: {
