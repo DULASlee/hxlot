@@ -4,7 +4,9 @@ using Volo.Abp.Uow;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.PostgreSql;
 using Volo.Abp.EntityFrameworkCore.SqlServer;
+using Microsoft.Extensions.Configuration;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
@@ -21,6 +23,7 @@ namespace SmartAbp.EntityFrameworkCore;
     typeof(SmartAbpDomainModule),
     typeof(AbpPermissionManagementEntityFrameworkCoreModule),
     typeof(AbpSettingManagementEntityFrameworkCoreModule),
+    typeof(AbpEntityFrameworkCorePostgreSqlModule),
     typeof(AbpEntityFrameworkCoreSqlServerModule),
     typeof(AbpBackgroundJobsEntityFrameworkCoreModule),
     typeof(AbpAuditLoggingEntityFrameworkCoreModule),
@@ -57,8 +60,21 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
             /* The main point to change your DBMS.
              * See also SmartAbpDbContextFactory for EF Core tooling. */
 
-            options.UseSqlServer();
+            var configuration = context.Services.GetConfiguration();
+            var databaseType = configuration["Database:Type"] ?? "SqlServer";
 
+            switch (databaseType.ToLowerInvariant())
+            {
+                case "postgresql":
+                case "postgres":
+                    options.UseNpgsql();
+                    break;
+                case "sqlserver":
+                case "mssql":
+                default:
+                    options.UseSqlServer();
+                    break;
+            }
         });
         
     }

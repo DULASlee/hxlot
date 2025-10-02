@@ -16,8 +16,22 @@ public class SmartAbpDbContextFactory : IDesignTimeDbContextFactory<SmartAbpDbCo
         
         SmartAbpEfCoreEntityExtensionMappings.Configure();
 
-        var builder = new DbContextOptionsBuilder<SmartAbpDbContext>()
-            .UseSqlServer(configuration.GetConnectionString("Default"));
+        var builder = new DbContextOptionsBuilder<SmartAbpDbContext>();
+        var databaseType = configuration["Database:Type"] ?? "SqlServer";
+        var connectionString = configuration.GetConnectionString("Default");
+
+        switch (databaseType.ToLowerInvariant())
+        {
+            case "postgresql":
+            case "postgres":
+                builder.UseNpgsql(connectionString);
+                break;
+            case "sqlserver":
+            case "mssql":
+            default:
+                builder.UseSqlServer(connectionString);
+                break;
+        }
         
         return new SmartAbpDbContext(builder.Options);
     }
