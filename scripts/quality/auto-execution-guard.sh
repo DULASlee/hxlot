@@ -90,9 +90,7 @@ REQUIRED_RULES=(
     ".cursor/rules/02_development_process.mdc"
     ".cursor/rules/03_quality_guardian.mdc"
     ".cursor/rules/04_code_quality_prohibitions.mdc"
-    ".cursor/rules/05_增量迭代开发质量门禁与GIT版本管理铁律.mdc"
-    ".cursor/rules/06_低代码生成器代码质量铁律.mdc"
-    ".cursor/rules/07_AI编程架构自动识别保护铁律.mdc"
+    # 注意：05/06/07规则文件已在v3.0规则整合中合并到00-04文件中
 )
 
 MISSING_RULES=()

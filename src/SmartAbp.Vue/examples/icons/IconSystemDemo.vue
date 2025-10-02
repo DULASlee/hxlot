@@ -713,17 +713,14 @@ const codeExamples = {
       const getVueCode = () => {
       if (!selectedIcon.value) return ''
   
-      return `<EnterpriseIcon 
-        name="${selectedIcon.value.name}"
-        size="${previewSize.value}"
-        color="${previewColor.value}"
-        ${previewAnimated.value
-        ?
-        'animated'
-        :
-        ''}
-      />`
-      }
+  const animatedAttr = previewAnimated.value ? '\n    animated' : ''
+  
+  return `<EnterpriseIcon 
+    name="${selectedIcon.value.name}"
+    size="${previewSize.value}"
+    color="${previewColor.value}"${animatedAttr}
+  />`
+  }
 
       const getHtmlCode = () => {
       if (!selectedIcon.value) return ''
