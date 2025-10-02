@@ -15,7 +15,7 @@ import axios, { AxiosInstance } from 'axios'
 
 const TEST_CONFIG = {
   apiBaseUrl: 'http://localhost:44379',
-  frontendUrl: 'http://localhost:5173',
+  frontendUrl: 'http://localhost:11369',
   timeout: 120000, // 120秒
   retryAttempts: 3,
   retryDelay: 2000

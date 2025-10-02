@@ -128,7 +128,7 @@ class SecurityAudit {
       "1' AND (SELECT COUNT(*) FROM users) > 0 --"
     ]
     
-    await this.page.goto('http://localhost:5173/studio')
+    await this.page.goto('http://localhost:11369/studio')
     
     // 查找所有输入字段
     const inputs = await this.page.$$('input[type="text"], input[type="search"], textarea')
@@ -197,7 +197,7 @@ class SecurityAudit {
     let vulnerabilities = 0
     
     // 测试表单输入XSS
-    await this.page.goto('http://localhost:5173/studio/modeling')
+    await this.page.goto('http://localhost:11369/studio/modeling')
     
     for (const payload of xssPayloads) {
       try {
@@ -263,7 +263,7 @@ class SecurityAudit {
     const issues = []
     
     // 检查会话管理
-    await this.page.goto('http://localhost:5173/login')
+    await this.page.goto('http://localhost:11369/login')
     
     // 检查是否有安全的会话Cookie
     const cookies = await this.page.cookies()
@@ -343,7 +343,7 @@ class SecurityAudit {
     const exposures = []
     
     // 检查网页源码中的敏感信息
-    await this.page.goto('http://localhost:5173/studio')
+    await this.page.goto('http://localhost:11369/studio')
     const pageContent = await this.page.content()
     
     const sensitivePatterns = [
@@ -363,7 +363,7 @@ class SecurityAudit {
     }
     
     // 检查HTTP头部安全
-    const response = await this.page.goto('http://localhost:5173/studio')
+    const response = await this.page.goto('http://localhost:11369/studio')
     const headers = response.headers()
     
     const securityHeaders = [
@@ -383,7 +383,7 @@ class SecurityAudit {
     
     // 检查错误信息泄露
     try {
-      const errorResponse = await this.page.goto('http://localhost:5173/non-existent-page')
+      const errorResponse = await this.page.goto('http://localhost:11369/non-existent-page')
       const errorPage = await this.page.content()
       
       if (errorPage.includes('stack trace') || errorPage.includes('Exception')) {
@@ -417,7 +417,7 @@ class SecurityAudit {
     const issues = []
     
     // 测试垂直权限升级
-    await this.page.goto('http://localhost:5173/admin/users')
+    await this.page.goto('http://localhost:11369/admin/users')
     const unauthorizedAccess = await this.page.$('.unauthorized')
     
     if (!unauthorizedAccess) {
@@ -438,7 +438,7 @@ class SecurityAudit {
     
     for (const url of testUrls) {
       try {
-        const response = await this.page.goto(`http://localhost:5173${url}`)
+        const response = await this.page.goto(`http://localhost:11369${url}`)
         if (response.status() === 200) {
           vulnerabilities++
           issues.push(`可能存在水平权限提升: ${url}`)

@@ -71,7 +71,7 @@ if check_service "http://localhost:44379/health" "后端"; then
     BACKEND_RUNNING=true
 fi
 
-if check_service "http://localhost:5173" "前端"; then
+if check_service "http://localhost:11369" "前端"; then
     FRONTEND_RUNNING=true
 fi
 

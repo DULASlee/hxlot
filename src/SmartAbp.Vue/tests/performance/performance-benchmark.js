@@ -72,10 +72,10 @@ class PerformanceBenchmark {
     console.log('📊 执行首屏加载性能测试...')
     
     const testCases = [
-      { name: 'LowCode Studio 首页', url: 'http://localhost:5173/studio' },
-      { name: '数据建模页面', url: 'http://localhost:5173/studio/modeling' },
-      { name: '页面设计页面', url: 'http://localhost:5173/studio/design' },
-      { name: '代码生成页面', url: 'http://localhost:5173/studio/generation' }
+      { name: 'LowCode Studio 首页', url: 'http://localhost:11369/studio' },
+      { name: '数据建模页面', url: 'http://localhost:11369/studio/modeling' },
+      { name: '页面设计页面', url: 'http://localhost:11369/studio/design' },
+      { name: '代码生成页面', url: 'http://localhost:11369/studio/generation' }
     ]
 
     for (const testCase of testCases) {
@@ -145,7 +145,7 @@ class PerformanceBenchmark {
   async testCodeGenerationPerformance() {
     console.log('⚙️ 执行代码生成性能测试...')
     
-    await this.page.goto('http://localhost:5173/studio/generation')
+    await this.page.goto('http://localhost:11369/studio/generation')
     await this.page.waitForSelector('[data-testid="enhanced-generation-view"]')
     
     const generationTests = [
@@ -252,7 +252,7 @@ class PerformanceBenchmark {
       {
         name: '实体列表滚动',
         action: async () => {
-          await this.page.goto('http://localhost:5173/studio/modeling')
+          await this.page.goto('http://localhost:11369/studio/modeling')
           const startTime = performance.now()
           
           // 模拟滚动
@@ -270,7 +270,7 @@ class PerformanceBenchmark {
       {
         name: '属性面板更新',
         action: async () => {
-          await this.page.goto('http://localhost:5173/studio/design')
+          await this.page.goto('http://localhost:11369/studio/design')
           await this.page.waitForSelector('[data-testid="design-view"]')
           
           const startTime = performance.now()
@@ -320,14 +320,14 @@ class PerformanceBenchmark {
       {
         name: '基础内存使用',
         action: async () => {
-          await this.page.goto('http://localhost:5173/studio')
+          await this.page.goto('http://localhost:11369/studio')
           await this.page.waitForTimeout(2000)
         }
       },
       {
         name: '数据建模内存使用',
         action: async () => {
-          await this.page.goto('http://localhost:5173/studio/modeling')
+          await this.page.goto('http://localhost:11369/studio/modeling')
           
           // 创建多个实体
           for (let i = 1; i <= 10; i++) {
@@ -340,7 +340,7 @@ class PerformanceBenchmark {
       {
         name: '代码生成内存使用',
         action: async () => {
-          await this.page.goto('http://localhost:5173/studio/generation')
+          await this.page.goto('http://localhost:11369/studio/generation')
           await this.page.click('[data-testid="checkbox-entity-Product"]')
           await this.page.click('[data-testid="btn-generate-code"]')
           await this.page.waitForSelector('[data-testid="generation-success"]', {
