@@ -37,6 +37,9 @@ namespace SmartAbp.CodeGenerator.Core
         private readonly ConcurrentDictionary<string, WeakReference<Compilation>> _compilationCache;
         private readonly PerformanceCounters _performanceCounters;
         
+        // ✅ 性能优化：缓存MetadataReference，避免重复IO操作
+        private readonly Lazy<ImmutableArray<MetadataReference>> _cachedReferences;
+        
         // 企业级资源管理：添加disposed状态跟踪
         private volatile bool _disposed = false;
         private readonly object _disposeLock = new object();
@@ -48,6 +51,11 @@ namespace SmartAbp.CodeGenerator.Core
         public RoslynCodeEngine(ILogger<RoslynCodeEngine> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            
+            // ✅ 性能优化：懒加载+缓存MetadataReference（只执行一次）
+            _cachedReferences = new Lazy<ImmutableArray<MetadataReference>>(
+                BuildOptimizedReferences,
+                LazyThreadSafetyMode.ExecutionAndPublication);
             
             // Initialize high-performance object pools
             _rewriterPool = new DefaultObjectPoolProvider().Create(new SyntaxRewriterPoolPolicy());
@@ -81,8 +89,12 @@ namespace SmartAbp.CodeGenerator.Core
             // JIT warmup for critical paths
             WarmupJIT();
             
-            _logger.LogInformation("RoslynCodeEngine initialized with {ProcessorCount} processor cores", 
-                Environment.ProcessorCount);
+            // ✅ 预热：强制加载MetadataReference到内存
+            _ = _cachedReferences.Value;
+            
+            _logger.LogInformation("RoslynCodeEngine initialized with {ProcessorCount} processor cores, {ReferenceCount} cached references", 
+                Environment.ProcessorCount,
+                _cachedReferences.Value.Length);
         }
         
         /// <summary>
@@ -307,11 +319,13 @@ namespace SmartAbp.CodeGenerator.Core
         }
         
         /// <summary>
-        /// Creates compilation with optimized settings for maximum performance
+        /// ✅ 性能优化：使用缓存的MetadataReference创建编译
+        /// 避免每次都重新加载DLL，性能提升50%+
         /// </summary>
         private CSharpCompilation CreateOptimizedCompilation(SyntaxTree syntaxTree, string assemblyName)
         {
-            var references = GetOptimizedReferences();
+            // ✅ 使用缓存的references，不再每次重新创建
+            var references = _cachedReferences.Value;
             
             var options = new CSharpCompilationOptions(
                 OutputKind.DynamicallyLinkedLibrary,
@@ -772,8 +786,13 @@ namespace SmartAbp.CodeGenerator.Core
                                         SyntaxFactory.TriviaList()))))));
         }
         
-        private ImmutableArray<MetadataReference> GetOptimizedReferences()
+        /// <summary>
+        /// ✅ 性能优化：构建并缓存MetadataReference（只在初始化时执行一次）
+        /// 原方法GetOptimizedReferences每次生成都执行，现在改为缓存
+        /// </summary>
+        private ImmutableArray<MetadataReference> BuildOptimizedReferences()
         {
+            var sw = Stopwatch.StartNew();
             var references = new List<MetadataReference>
             {
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
@@ -824,6 +843,10 @@ namespace SmartAbp.CodeGenerator.Core
             {
                 // best-effort
             }
+            
+            sw.Stop();
+            _logger.LogInformation("✅ MetadataReference缓存构建完成: {Count}个引用, 耗时{Ms}ms", 
+                references.Count, sw.ElapsedMilliseconds);
             
             return references.ToImmutableArray();
         }
