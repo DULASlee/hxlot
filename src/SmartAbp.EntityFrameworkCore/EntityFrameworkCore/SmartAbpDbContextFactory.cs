@@ -22,6 +22,9 @@ public class SmartAbpDbContextFactory : IDesignTimeDbContextFactory<SmartAbpDbCo
 
         switch (databaseType.ToLowerInvariant())
         {
+            case "sqlite":
+                builder.UseSqlite(connectionString);
+                break;
             case "postgresql":
             case "postgres":
                 builder.UseNpgsql(connectionString);

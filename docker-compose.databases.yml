@@ -1,0 +1,174 @@
+# SmartAbp 企业级多数据库部署配置
+# 支持：PostgreSQL, MySQL, SQL Server
+# 使用方法：docker-compose -f docker-compose.databases.yml up -d [服务名]
+
+version: '3.8'
+
+networks:
+  smartabp-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  mysql-data:
+  sqlserver-data:
+
+services:
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # PostgreSQL (生产推荐)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  postgres:
+    image: postgres:15-alpine
+    container_name: smartabp-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: smartabp
+      POSTGRES_USER: smartabp_user
+      POSTGRES_PASSWORD: SmartAbp@2025
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/database/init-postgres.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - smartabp-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smartabp_user -d smartabp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      com.smartabp.description: "PostgreSQL 数据库 - 生产推荐"
+      com.smartabp.database.type: "PostgreSQL"
+      com.smartabp.database.version: "15"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # MySQL (高性价比)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  mysql:
+    image: mysql:8.0
+    container_name: smartabp-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: SmartAbp@2025
+      MYSQL_DATABASE: smartabp
+      MYSQL_USER: smartabp_user
+      MYSQL_PASSWORD: SmartAbp@2025
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./scripts/database/init-mysql.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - smartabp-network
+    command: 
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      com.smartabp.description: "MySQL 数据库 - 高性价比"
+      com.smartabp.database.type: "MySQL"
+      com.smartabp.database.version: "8.0"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # SQL Server (企业版)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: smartabp-sqlserver
+    restart: unless-stopped
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "SmartAbp@2025"
+      MSSQL_PID: "Developer"
+      MSSQL_AGENT_ENABLED: "true"
+      MSSQL_COLLATION: "Latin1_General_CI_AS"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+      - ./scripts/database/init-sqlserver.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - smartabp-network
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$$SA_PASSWORD" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    labels:
+      com.smartabp.description: "SQL Server 数据库 - 企业版"
+      com.smartabp.database.type: "SQLServer"
+      com.smartabp.database.version: "2022"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # pgAdmin (PostgreSQL管理工具)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: smartabp-pgadmin
+    restart: unless-stopped
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@smartabp.com
+      PGADMIN_DEFAULT_PASSWORD: SmartAbp@2025
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    networks:
+      - smartabp-network
+    depends_on:
+      - postgres
+    labels:
+      com.smartabp.description: "pgAdmin - PostgreSQL管理工具"
+      com.smartabp.tool: "database-admin"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # phpMyAdmin (MySQL管理工具)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: smartabp-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: SmartAbp@2025
+    networks:
+      - smartabp-network
+    depends_on:
+      - mysql
+    labels:
+      com.smartabp.description: "phpMyAdmin - MySQL管理工具"
+      com.smartabp.tool: "database-admin"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # Redis (缓存 - 可选)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  redis:
+    image: redis:7-alpine
+    container_name: smartabp-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass SmartAbp@2025
+    networks:
+      - smartabp-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      com.smartabp.description: "Redis 缓存服务器"
+      com.smartabp.service: "cache"
+

@@ -6,6 +6,7 @@ using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.PostgreSql;
 using Volo.Abp.EntityFrameworkCore.SqlServer;
+using Volo.Abp.EntityFrameworkCore.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace SmartAbp.EntityFrameworkCore;
     typeof(AbpSettingManagementEntityFrameworkCoreModule),
     typeof(AbpEntityFrameworkCorePostgreSqlModule),
     typeof(AbpEntityFrameworkCoreSqlServerModule),
+    typeof(AbpEntityFrameworkCoreSqliteModule),
     typeof(AbpBackgroundJobsEntityFrameworkCoreModule),
     typeof(AbpAuditLoggingEntityFrameworkCoreModule),
     typeof(AbpFeatureManagementEntityFrameworkCoreModule),
@@ -65,6 +67,9 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
 
             switch (databaseType.ToLowerInvariant())
             {
+                case "sqlite":
+                    options.UseSqlite();
+                    break;
                 case "postgresql":
                 case "postgres":
                     options.UseNpgsql();
