@@ -69,7 +69,9 @@ export interface NodeTemplate {
   type: RuleNodeType
   label: string
   icon: string
+  iconComponent?: any  // Element Plus 图标组件
   description: string
+  color?: string
   defaultData: Partial<RuleNodeData>
 }
 
