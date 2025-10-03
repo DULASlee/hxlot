@@ -31,9 +31,9 @@ AI_TEMPLATE_INFO:
       <!-- 页面头部 -->
       <div class="page-header">
         <div class="page-title">
-          <h2>用户管理管理</h2>
+          <h2>{{ $t('user.pageTitle') }}</h2>
           <p class="page-description">
-            管理系统中的用户管理信息
+            {{ $t('user.pageDescription') }}
           </p>
         </div>
         <div class="page-actions">
@@ -43,7 +43,7 @@ AI_TEMPLATE_INFO:
             :icon="Plus"
             @click="handleCreate"
           >
-            新增用户管理
+            {{ $t('user.actions.create') }}
           </el-button>
         </div>
       </div>
@@ -60,12 +60,12 @@ AI_TEMPLATE_INFO:
           class="search-form"
         >
           <el-form-item
-            label="名称"
+            :label="$t('user.fields.filter')"
             prop="filter"
           >
             <el-input
               v-model="searchForm.filter"
-              placeholder="请输入用户管理名称"
+              :placeholder="$t('user.placeholders.name')"
               clearable
               style="width: 200px"
               @keyup.enter="handleSearch"
@@ -73,21 +73,21 @@ AI_TEMPLATE_INFO:
           </el-form-item>
 
           <el-form-item
-            label="状态"
+            :label="$t('user.fields.isEnabled')"
             prop="isEnabled"
           >
             <el-select
               v-model="searchForm.isEnabled"
-              placeholder="请选择状态"
+              :placeholder="$t('user.placeholders.selectStatus')"
               clearable
               style="width: 120px"
             >
               <el-option
-                label="启用"
+                :label="$t('user.status.enabled')"
                 :value="true"
               />
               <el-option
-                label="禁用"
+                :label="$t('user.status.disabled')"
                 :value="false"
               />
             </el-select>
@@ -99,13 +99,13 @@ AI_TEMPLATE_INFO:
               :icon="Search"
               @click="handleSearch"
             >
-              搜索
+              {{ $t('user.actions.search') }}
             </el-button>
             <el-button
               :icon="Refresh"
               @click="handleReset"
             >
-              重置
+              {{ $t('user.actions.reset') }}
             </el-button>
           </el-form-item>
         </el-form>
@@ -126,11 +126,11 @@ AI_TEMPLATE_INFO:
               :disabled="!selectedRows.length"
               @click="handleBatchDelete"
             >
-              批量删除 ({{ selectedRows.length }})
+              {{ $t('user.actions.batchDelete') }} ({{ selectedRows.length }})
             </el-button>
           </div>
           <div class="toolbar-right">
-            <el-tooltip content="刷新数据">
+            <el-tooltip :content="$t('user.actions.refresh')">
               <el-button
                 :icon="Refresh"
                 circle
@@ -156,7 +156,7 @@ AI_TEMPLATE_INFO:
 
           <el-table-column
             prop="name"
-            label="名称"
+            :label="$t('user.fields.name')"
             sortable="custom"
             min-width="150"
           >
@@ -168,7 +168,7 @@ AI_TEMPLATE_INFO:
                   type="info"
                   size="small"
                 >
-                  已禁用
+                  {{ $t('user.status.disabled') }}
                 </el-tag>
               </div>
             </template>
@@ -176,28 +176,28 @@ AI_TEMPLATE_INFO:
 
           <el-table-column
             prop="displayName"
-            label="显示名称"
+            :label="$t('user.fields.name')"
             min-width="150"
             show-overflow-tooltip
           />
 
           <el-table-column
             prop="description"
-            label="描述"
+            :label="$t('user.fields.name')"
             min-width="200"
             show-overflow-tooltip
           />
 
           <el-table-column
             prop="sort"
-            label="排序"
+            :label="$t('user.fields.name')"
             width="80"
             sortable="custom"
           />
 
           <el-table-column
             prop="creationTime"
-            label="创建时间"
+            :label="$t('user.fields.createdAt')"
             width="160"
             sortable="custom"
           >
@@ -207,7 +207,7 @@ AI_TEMPLATE_INFO:
           </el-table-column>
 
           <el-table-column
-            label="操作"
+            :label="$t('user.fields.operations')"
             width="180"
             fixed="right"
           >
@@ -220,7 +220,7 @@ AI_TEMPLATE_INFO:
                   text
                   @click="handleEdit(row)"
                 >
-                  编辑
+                  {{ $t('user.actions.edit') }}
                 </el-button>
                 <el-button
                   v-permission="'User.Delete'"
@@ -229,7 +229,7 @@ AI_TEMPLATE_INFO:
                   text
                   @click="handleDelete(row)"
                 >
-                  删除
+                  {{ $t('user.actions.delete') }}
                 </el-button>
               </div>
             </template>
