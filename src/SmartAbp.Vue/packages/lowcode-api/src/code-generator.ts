@@ -1,67 +1,106 @@
 import type { CodeGeneratorApi, GenerationResult, ModuleGenerationConfig, ModuleMetadata, Template } from "./types/index";
+import { http } from './http-client'
 
 /**
  * 代码生成器API实现
- * 提供代码生成、模板管理、数据库检视等功能
+ * 通过HTTP客户端与后端ABP Framework API通信
  */
 export const codeGeneratorApi: CodeGeneratorApi = {
-  async generateModule(_config: ModuleGenerationConfig): Promise<GenerationResult> {
-    // 实际实现将通过HTTP请求与后端通信
-    throw new Error('Code generation API not implemented - bridge layer required');
+  /**
+   * 生成模块代码
+   * @param config 模块生成配置
+   * @returns 生成结果，包含生成的文件和状态
+   */
+  async generateModule(config: ModuleGenerationConfig): Promise<GenerationResult> {
+    return await http.post<GenerationResult>('/api/code-generator/generate', config)
   },
 
+  /**
+   * 获取可用模板列表
+   * @returns 模板列表
+   */
   async getTemplates(): Promise<Template[]> {
-    // 实际实现将通过HTTP请求与后端通信
-    throw new Error('Templates API not implemented - bridge layer required');
+    return http.get<Template[]>('/api/code-generator/templates')
   },
 
-  async getUiConfig(_moduleName: string, _entityName: string): Promise<any> {
-    // 实际实现将通过HTTP请求与后端通信
-    throw new Error('UI config API not implemented - bridge layer required');
+  /**
+   * 获取UI配置
+   * @param moduleName 模块名称
+   * @param entityName 实体名称
+   * @returns UI配置信息
+   */
+  async getUiConfig(moduleName: string, entityName: string): Promise<any> {
+    return await http.get<any>('/api/code-generator/ui-config', {
+      params: { moduleName, entityName }
+    })
   },
 
-  async introspectDatabase(_req: any): Promise<any> {
-    // 实际实现将通过HTTP请求与后端通信
-    throw new Error('Database introspection API not implemented - bridge layer required');
+  /**
+   * 数据库内省 - 扫描数据库结构
+   * @param req 数据库内省请求
+   * @returns 数据库结构信息
+   */
+  async introspectDatabase(req: any): Promise<any> {
+    return await http.post<any>('/api/code-generator/introspect-database', req)
   },
 
-  async getGenerationStatus(_sessionId: string): Promise<any> {
-    // 实际实现将通过HTTP请求与后端通信
-    throw new Error('Generation status API not implemented - bridge layer required');
+  /**
+   * 获取代码生成状态
+   * @param sessionId 会话ID
+   * @returns 生成状态信息
+   */
+  async getGenerationStatus(sessionId: string): Promise<any> {
+    return await http.get<any>(`/api/code-generator/status/${sessionId}`)
   },
 
-  async exportGeneratedCode(_sessionId: string): Promise<Blob> {
-    // 实际实现将通过HTTP请求与后端通信
-    throw new Error('Code export API not implemented - bridge layer required');
+  /**
+   * 导出生成的代码为ZIP包
+   * @param sessionId 会话ID
+   * @returns Blob对象（ZIP文件）
+   */
+  async exportGeneratedCode(sessionId: string): Promise<Blob> {
+    return http.get<Blob>(
+      `/api/code-generator/export/${sessionId}`,
+      { responseType: 'blob' }
+    )
   },
 
-  async validateModule(_metadata: ModuleMetadata): Promise<{
+  /**
+   * 验证模块元数据
+   * @param metadata 模块元数据
+   * @returns 验证结果，包含错误和建议
+   */
+  async validateModule(metadata: ModuleMetadata): Promise<{
     isValid: boolean;
     errors: Array<{ field: string; message: string; severity: 'Error' | 'Warning'; }>;
     suggestions: Array<{ type: 'Naming' | 'Structure' | 'Performance'; message: string; autoFixAvailable: boolean; }>;
   }> {
-    // 实际实现将通过HTTP请求与后端通信
-    throw new Error('Module validation API not implemented - bridge layer required');
+    return http.post<{
+      isValid: boolean;
+      errors: Array<{ field: string; message: string; severity: 'Error' | 'Warning'; }>;
+      suggestions: Array<{ type: 'Naming' | 'Structure' | 'Performance'; message: string; autoFixAvailable: boolean; }>;
+    }>('/api/code-generator/validate', metadata)
   },
 
+  /**
+   * 注册模块元数据（幂等操作）
+   * @param metadata 模块元数据
+   * @returns 注册后的模块元数据
+   */
   async registerModule(metadata: ModuleMetadata): Promise<ModuleMetadata> {
-    // 调用后端 api/metadata/register-module 幂等注册接口
-    const response = await fetch('/api/metadata/register-module', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(metadata)
-    });
-
-    if (!response.ok) {
-      throw new Error(`Module registration failed: ${response.status} ${response.statusText}`);
-    }
-
-    return await response.json();
+    return await http.post<ModuleMetadata>('/api/metadata/register-module', metadata)
   },
 
-  async testDatabaseConnection(_connection: { provider: string; connectionString: string; schema?: string; }): Promise<{
+  /**
+   * 测试数据库连接
+   * @param connection 数据库连接配置
+   * @returns 连接测试结果
+   */
+  async testDatabaseConnection(connection: { 
+    provider: string; 
+    connectionString: string; 
+    schema?: string; 
+  }): Promise<{
     success: boolean;
     message: string;
     serverVersion?: string;
@@ -69,7 +108,13 @@ export const codeGeneratorApi: CodeGeneratorApi = {
     schemaCount?: number;
     tableCount?: number;
   }> {
-    // 实际实现将通过HTTP请求与后端通信
-    throw new Error('Database connection test API not implemented - bridge layer required');
+    return http.post<{
+      success: boolean;
+      message: string;
+      serverVersion?: string;
+      databaseName?: string;
+      schemaCount?: number;
+      tableCount?: number;
+    }>('/api/code-generator/test-connection', connection)
   }
 };
