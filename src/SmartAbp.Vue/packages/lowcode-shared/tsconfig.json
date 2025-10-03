@@ -6,6 +6,7 @@
     "rootDir": "./src",
     "declaration": true,
     "declarationMap": true,
+    "declarationDir": "./dist",
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "paths": {
       "@smartabp/lowcode-shared": ["./src/index.ts"],

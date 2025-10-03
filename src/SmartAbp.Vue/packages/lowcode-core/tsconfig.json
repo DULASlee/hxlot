@@ -8,10 +8,10 @@
     "declarationMap": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "paths": {
-      "@smartabp/lowcode-shared": ["../lowcode-shared/src/index.ts"],
-      "@smartabp/lowcode-shared/*": ["../lowcode-shared/src/*"],
-      "@smartabp/lowcode-core": ["./src/index.ts"],
-      "@smartabp/lowcode-core/*": ["./src/*"]
+      "@smartabp/lowcode-shared": ["../lowcode-shared/dist/index.js"],
+      "@smartabp/lowcode-shared/*": ["../lowcode-shared/dist/*"],
+      "@smartabp/lowcode-core": ["./dist/index.js"],
+      "@smartabp/lowcode-core/*": ["./dist/*"]
     }
   },
   "include": [
