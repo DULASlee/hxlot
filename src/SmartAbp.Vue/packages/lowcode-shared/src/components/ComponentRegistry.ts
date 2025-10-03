@@ -365,9 +365,11 @@ export class ComponentRegistry {
     // 模拟动态导入组件
     // 实际实现中，这里应该根据metadata.bundle进行动态导入
     try {
-      // 示例: 根据bundle路径动态导入
-      const componentModule = await import(`@smartabp/lowcode-designer/components/${metadata.name}`);
-      return componentModule.default || componentModule;
+      // ✅ 修复：移除对lowcode-designer的依赖，使用动态加载器
+      if (this.dynamicLoader) {
+        return await this.dynamicLoader(metadata.name, metadata.bundle);
+      }
+      throw new Error(`Dynamic loader not configured for component: ${metadata.name}`);
     } catch (error) {
       // 降级处理：尝试其他路径
       console.warn(`⚠️ 主路径加载失败，尝试备用路径: ${metadata.name}`);

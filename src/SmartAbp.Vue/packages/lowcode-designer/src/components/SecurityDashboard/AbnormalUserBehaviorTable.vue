@@ -6,28 +6,52 @@
       :max-height="400"
       stripe
     >
-      <el-table-column prop="userName" label="用户名" width="120" />
-      <el-table-column prop="behaviorType" label="行为类型" width="150">
+      <el-table-column
+        prop="userName"
+        label="用户名"
+        width="120"
+      />
+      <el-table-column
+        prop="behaviorType"
+        label="行为类型"
+        width="150"
+      >
         <template #default="scope">
           <el-tag :type="getBehaviorType(scope.row.behaviorType)">
             {{ getBehaviorLabel(scope.row.behaviorType) }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="description" label="描述" min-width="200" />
-      <el-table-column prop="riskLevel" label="风险等级" width="100">
+      <el-table-column
+        prop="description"
+        label="描述"
+        min-width="200"
+      />
+      <el-table-column
+        prop="riskLevel"
+        label="风险等级"
+        width="100"
+      >
         <template #default="scope">
           <el-tag :type="getRiskType(scope.row.riskLevel)">
             {{ scope.row.riskLevel }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="timestamp" label="时间" width="160">
+      <el-table-column
+        prop="timestamp"
+        label="时间"
+        width="160"
+      >
         <template #default="scope">
           {{ formatTimestamp(scope.row.timestamp) }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150" fixed="right">
+      <el-table-column
+        label="操作"
+        width="150"
+        fixed="right"
+      >
         <template #default="scope">
           <el-button
             size="small"
@@ -46,7 +70,10 @@
       </el-table-column>
     </el-table>
 
-    <div class="table-footer" v-if="data.length > pageSize">
+    <div
+      v-if="data.length > pageSize"
+      class="table-footer"
+    >
       <el-pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"

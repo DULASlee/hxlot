@@ -1,5 +1,9 @@
 <template>
-  <div class="designer-placeholder" role="region" aria-label="Designer Placeholder">
+  <div
+    class="designer-placeholder"
+    role="region"
+    aria-label="Designer Placeholder"
+  >
     <div class="designer-placeholder__content">
       <p>Designer Placeholder</p>
       <small>此占位组件在生成页面时被替换</small>

@@ -1,0 +1,58 @@
+{
+  "// ======================================": "",
+  "// Cursor IDE 专用配置 - 文件显示修复": "",
+  "// ======================================": "",
+
+  "// ==================== 自动保存配置 ====================": "",
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "files.saveConflictResolution": "askUser",
+
+  "// ==================== 文件显示修复配置 ====================": "",
+  "explorer.fileNesting.enabled": false,
+  "explorer.compactFolders": false,
+  "files.exclude": {
+    "**/.git": true,
+    "**/node_modules": true,
+    "**/dist": false,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true
+  },
+
+  "// ==================== 搜索配置(最小化排除) ====================": "",
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.git": true
+  },
+
+  "// ==================== 文件监控(最小化排除) ====================": "",
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.git/objects/**": true
+  },
+
+  "// ==================== 资源管理器基础配置 ====================": "",
+  "explorer.sortOrder": "default",
+  "explorer.decorations.colors": true,
+  "explorer.decorations.badges": true,
+  "explorer.confirmDelete": true,
+  "explorer.confirmDragAndDrop": true,
+  "explorer.autoReveal": true,
+
+  "// ==================== 编辑器配置 ====================": "",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+
+  "// ==================== TypeScript 配置 ====================": "",
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
+  "// ==================== ESLint 配置 ====================": "",
+  "eslint.enable": true,
+  "eslint.run": "onSave",
+
+  "// ==================== Git 配置 ====================": "",
+  "git.enabled": true,
+  "git.autofetch": true
+}

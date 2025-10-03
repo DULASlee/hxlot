@@ -7,8 +7,13 @@
         class="chart-bar"
         :style="{ height: item.percentage + '%' }"
       >
-        <div class="bar-fill" :class="getBarClass(item.level)"></div>
-        <div class="bar-label">{{ item.percentage }}%</div>
+        <div
+          class="bar-fill"
+          :class="getBarClass(item.level)"
+        />
+        <div class="bar-label">
+          {{ item.percentage }}%
+        </div>
       </div>
     </div>
     <div class="chart-legend">
@@ -17,7 +22,10 @@
         :key="index"
         class="legend-item"
       >
-        <div class="legend-color" :class="getBarClass(item.level)"></div>
+        <div
+          class="legend-color"
+          :class="getBarClass(item.level)"
+        />
         <span class="legend-text">{{ item.level }} ({{ item.count }})</span>
       </div>
     </div>

@@ -4,7 +4,6 @@
   "references": [
     { "path": "./packages/lowcode-shared" },
     { "path": "./packages/lowcode-core" },
-    { "path": "./packages/lowcode-api" },
-    { "path": "./packages/lowcode-tools" }
+    { "path": "./packages/lowcode-api" }
   ]
 }

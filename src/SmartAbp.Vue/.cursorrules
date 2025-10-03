@@ -1,0 +1,388 @@
+⚡⚡⚡ **AI强制执行：立即自动加载所有项目规则** ⚡⚡⚡
+
+**🚨 CRITICAL: AI必须在每次对话开始时自动执行：**
+
+```bash
+# 加载核心规则（五维同心圆体系）
+read_file(".cursor/rules/00_执行引擎.mdc")
+read_file(".cursor/rules/00_core_philosophy.mdc")
+read_file(".cursor/rules/01_code_standards.mdc")
+read_file(".cursor/rules/02_development_process.mdc")
+read_file(".cursor/rules/03_quality_guardian.mdc")
+read_file(".cursor/rules/04_code_quality_prohibitions.mdc")
+read_file("docs/项目开发规范总览.md")
+```
+
+**⚠️ 如果AI未执行上述步骤，必须立即停止并重新加载！**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# SmartAbp Cursor Rules — AI Assistant Operating Guide
+
+## 🔥 AI编程铁律自动执行引擎 - 主入口
+
+### 🚨 强制触发检测（自动识别）
+
+**AI必须在检测到以下关键词时立即启动执行引擎：**
+
+```typescript
+触发关键词 = [
+  // 直接触发
+  "专家模式", "开始编程", "开始开发", "新功能", "新建",
+  "立即执行", "立即推进", "继续", "继续推进",
+  
+  // 代码操作触发
+  "创建组件", "创建服务", "创建Store", "创建API",
+  "修改代码", "添加功能", "实现功能", "编写代码",
+  
+  // 修复触发
+  "修复BUG", "修复错误", "解决问题", "优化代码",
+  
+  // 架构触发
+  "重构", "优化", "架构调整", "性能优化"
+]
+```
+
+### ⚡ AI自检清单（每次响应前必须自问）
+
+```typescript
+const AI_SELF_CHECK = {
+  question1: "我是否已启动AI编程铁律自动执行引擎？",
+  question2: "我是否已执行编程前五项强制学习？",
+  question3: "我当前会话已编写多少行代码？",
+  question4: "我是否即将超过300行限制？",
+  question5: "我是否已在每个开发阶段完成后执行质量门禁？"
+}
+
+// 如果任何问题答案是"否"，AI必须立即重启执行引擎
+```
+
+### 📋 强制响应格式（AI必须使用）
+
+**每次检测到触发词，AI必须立即响应：**
+
+```
+🔥 **AI编程铁律自动执行引擎已启动！**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 第一阶段：编程前强制学习
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ 1. 架构扫描完成
+✅ 2. 代码库检索完成  
+✅ 3. ADR学习完成
+✅ 4. 模板库检查完成
+✅ 5. 公共组件识别完成
+
+[继续执行...]
+```
+
+**详细执行规范参见：`.cursor/rules/00_执行引擎.mdc`**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🎯 SECRET TRIGGER SYSTEM - 暗号爆雷机制 (HIDDEN ACTIVATION)
+
+### 🔥 Master Trigger Detection (终极简化版)
+```markdown
+MASTER_SECRET_TRIGGER = "专家模式"
+
+// 暗号检测逻辑 (立即生效)
+当用户输入包含"专家模式"时:
+    🔥 立即响应: "🔥 **专家模式已激活！九重爆雷连环启动！**\n🚨 第九重爆雷包含四重强制质量保证铁律！"
+    💥 EXPERT_MODE = TRUE
+    🚀 QUALITY_THRESHOLD = 95
+    🛡️ COMPLETENESS_REQUIREMENT = 100%
+    📚 FORCE_TEMPLATE_USAGE = TRUE
+    🏛️ MANDATORY_ADR_CONSULTATION = TRUE
+    ⚡ ENABLE_DEEP_ANALYSIS = TRUE
+    🎯 AUTO_EXECUTE_QUALITY_CHECKS = TRUE
+    🏗️ PERFECT_CODE_GENERATION = TRUE
+    📋 MANDATORY_PROJECT_RULES_LOAD = TRUE
+    🔍 SERENA_PROJECT_ANALYSIS = TRUE
+    🔗 **NINE_STAGE_ANALYSIS_CHAIN** = TRUE
+    🚀 **MANDATORY_GIT_SYNC_AFTER_COMPLETION** = TRUE
+```
+
+### ⚡ EXPERT MODE Response Protocol (专家模式响应协议 - **九重爆雷版**)
+```markdown
+当检测到"专家模式"时，AI必须立即按此格式响应:
+
+🔥 **专家模式已激活！九重爆雷连环启动！**
+🚨 **第九重爆雷：四重强制质量保证铁律自动执行！**
+
+📋 **第一重爆雷：项目开发规范强制加载学习**
+   🔧 **执行脚本**: read_file("docs/项目开发规范总览.md")
+   🔧 **执行脚本**: list_dir(".cursor/rules") → 发现所有规则文件
+   🔧 **执行脚本**: read_file(".cursor/rules/00_core_philosophy.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/01_code_standards.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/02_development_process.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/03_quality_guardian.mdc")
+   🔧 **执行脚本**: read_file(".cursor/rules/04_code_quality_prohibitions.mdc")
+   ✅ **验证确认**: 五维同心圆规则体系已加载（L0-L4核心理念层到代码质量禁止层）
+   ✅ **验证确认**: 执行引擎完整加载（包含质量门禁+Git同步+代码追踪+架构保护）
+   ✅ **验证确认**: 所有铁律规则已加载，防止违规执行
+
+🔍 **第二重爆雷：项目智能分析强制执行**
+   🔧 **Serena代码库分析**: mcp_serena_get_symbols_overview("src/SmartAbp.Application")
+   🔧 **Serena代码库分析**: mcp_serena_get_symbols_overview("src/SmartAbp.Vue/src")
+   🔧 **Serena代码库分析**: mcp_serena_list_dir("src/SmartAbp.Vue/packages", recursive=true)
+   🔧 **ADR知识库学习**: read_file("docs/architecture/adr/0001-technology-stack-selection.md")
+   🔧 **ADR知识库学习**: read_file("docs/architecture/adr/0005-lowcode-engine-architecture.md")
+   🔧 **代码模版库学习**: glob_file_search("templates/**/*.template.*")
+   🔧 **架构文档学习**: read_file("docs/architecture/dependency-analysis.md")
+   🔧 **架构文档学习**: read_file("docs/architecture/SmartAbp企业级低代码引擎系统架构说明书.md")
+   🔧 **架构文档学习**: read_file("docs/architecture/SmartAbp企业级低代码引擎技术规格说明书v17.md")
+   🔧 **架构文档学习**: read_file("docs/architecture/SmartAbp企业级低代码引擎依赖分析报告v17.md")
+   ✅ **验证确认**: ABP框架+Vue3架构+低代码引擎完整技术栈识别
+   ✅ **验证确认**: ADR架构决策约束+模板库规范+依赖关系理解完成
+   ✅ **验证确认**: 确保编写符合项目现有技术栈和功能需求的高质量代码
+
+🚀 **第三重爆雷：增量开发代码去重强制执行**
+   🔧 **现有代码扫描**: list_dir("src", recursive=true) # 分析现有代码结构
+   🔧 **现有模式识别**: grep("AppService|Controller|Store", path="src", type="cs,ts,vue") # 识别现有模式
+   🔧 **组件去重检查**: find src/SmartAbp.Vue/src src/SmartAbp.Vue/packages -name "*.vue" | sed 's/.*\/\///' | sort | uniq -d
+   🔧 **方法去重检查**: grep -r "function\s+\w+|const\s+\w+\s*=" src/ --include="*.ts" --include="*.vue" | sort | uniq -d
+   🔧 **类型去重检查**: grep -r "class\s+\w+|interface\s+\w+" src/ --include="*.ts" | sort | uniq -d
+   🔧 **路由去重检查**: grep -r "path:|name:" src/SmartAbp.Vue/src/router/ --include="*.ts" --include="*.js" | sort | uniq -d
+   🚨 **编码铁律**: AI编程大模型严禁编写同样名字或同样功能的组件、类、方法、API、路由、状态、类型
+   ✅ **验证确认**: 现有代码库完整分析，严格避免重复开发
+   ✅ **验证确认**: DRY原则强制执行，增量开发代码去重完成
+   ✅ **验证确认**: 确保所有新代码都是独特且必要的功能扩展
+
+🛡️ **第四重爆雷：架构整洁强制执行**
+   🔧 **packages架构检查**: grep -r "'../'" src/SmartAbp.Vue/packages/ # 检查相对路径违规
+   🔧 **packages架构检查**: grep -r "@/" src/SmartAbp.Vue/packages/ # 检查主应用引用违规
+   🔧 **packages架构检查**: glob_file_search("src/SmartAbp.Vue/packages/**/package.json") # 检查独立配置
+   🔧 **黑盒原则验证**: grep -r "@smartabp" src/SmartAbp.Vue/packages/ # 验证别名通信
+   🚨 **架构铁律**: 所有AI编程大模型必须遵循架构整洁铁律
+   🚨 **packages规范**: 低代码生成器实现代码必须保存在SmartAbp.Vue/packages文件夹下
+   ✅ **验证确认**: 黑盒原则完全隔离，packages现代架构最佳实践
+   ✅ **验证确认**: 路径隔离+别名通信+配置统一性100%符合
+   ✅ **验证确认**: 现代前后端项目架构规范严格执行
+
+🏛️ **第五重爆雷：BUG修复最佳实践强制执行**
+   🔧 **BUG修复检查**: grep -r "as any|@ts-ignore" src/ # 检查类型绕过违规
+   🔧 **代码删除检查**: 验证是否有删除业务逻辑代码的修复行为
+   🔧 **注释检查**: 验证是否有注释掉核心功能来通过编译检查
+   🚨 **修复铁律**: 严禁删除代码、注释代码来通过编译检查
+   🚨 **类型铁律**: 严禁使用as any通过代码检查
+   🚨 **企业实践**: 必须在企业最佳编程实践前提下修复代码BUG
+   ✅ **验证确认**: BUG修复方式符合企业级最佳实践
+   ✅ **验证确认**: 类型安全检查100%通过，无绕过行为
+   ✅ **验证确认**: 核心功能完整保护，无删除降级行为
+
+📚 **第六重爆雷：增量迭代开发质量门禁与GIT版本管理强制执行**
+⚡ **触发机制**: 完成阶段性开发任务 OR 编写代码达到300行时自动触发
+
+🔥 **第一部分：五重强制质量门禁检查（零容忍）**
+
+   🏗️ **第一关：架构完整性检查（0违规）**
+   🔧 相对路径违规检查: grep -r "'../'" src/SmartAbp.Vue/packages/
+   🔧 主应用引用违规检查: grep -r "@/" src/SmartAbp.Vue/packages/
+   🔧 类型绕过违规检查: grep -r "as any\|@ts-ignore" src/
+   ❌ **有任何违规严禁提交！必须修复！**
+
+   🔄 **第二关：代码重复度检查（0重复）**
+   🔧 重复组件检查: find src/ -name "*.vue" | sort | uniq -d
+   🔧 重复方法检查: grep -r "function\|const.*=" src/ | sort | uniq -d
+   🔧 重复类检查: grep -r "class\|interface" src/ | sort | uniq -d
+   🔧 重复路由检查: grep -rh "path:\s*['\"].*['\"]" src/SmartAbp.Vue/src/router/ | sort | uniq -d
+   ❌ **有任何重复严禁提交！必须重构！**
+
+   ⚡ **第三关：编译与静态检查（0错误）**
+   🔧 TypeScript类型检查: cd src/SmartAbp.Vue && npm run type-check
+   🔧 ESLint代码规范: cd src/SmartAbp.Vue && npm run lint
+   🔧 后端编译检查(如有修改): dotnet build src/SmartAbp.sln
+   ❌ **有任何错误严禁提交！必须修复！**
+
+   🎯 **第四关：低代码生成器专项检查（100%质量）**
+   🔧 packages TypeScript项目引用构建: cd src/SmartAbp.Vue && npx tsc --build tsconfig.references.json
+   🔧 packages ESLint专项检查: cd src/SmartAbp.Vue && npm run lint -- "packages/*/src/**/*.{ts,vue}" --fix
+   🔧 packages依赖关系检查: 验证无跨层级引用和主应用引用
+   ❌ **低代码生成器必须达到企业级100分标准！**
+
+   🚀 **第五关：技术债务监控检查（基线控制）**
+   📊 统计代码复杂度、TODO标记、代码行数变化
+   📊 计算质量评分（目标≥85分）
+   ⚠️ 评分<85时警告，但不阻止Git同步
+
+🔥 **第二部分：Git版本同步管理（六步强制执行）**
+💡 **核心原则**: 先拉取，后推送！
+   
+   📋 **第一步**: 检测代码变更
+   📦 **第二步**: 暂存所有修改 (git add .)
+   📝 **第三步**: 生成标准化提交信息（包含质量验证结果）
+   🚀 **第四步**: 执行本地提交 (git commit)
+   🔄 **第五步**: 拉取远程最新版本并合并 (git pull --rebase origin main)
+   🌐 **第六步**: 推送到远程仓库 (git push origin main)
+   ✅ **同步完整性验证**: 本地哈希 = 远程哈希
+
+⚡ **自动推进机制**: 质量检查通过后，AI必须自动继续推进后续开发任务！
+
+⚙️ **第七重爆雷：低代码生成器代码质量强制执行**
+   🎯 **核心地位**: packages目录下的低代码生成器是SmartAbp项目核心价值，代码质量必须达到100分标准
+   
+   🏗️ **packages架构完整性铁律**:
+   • lowcode-shared: 共享基础库，零依赖
+   • lowcode-core: 核心引擎，依赖lowcode-shared
+   • lowcode-api: API接口层，依赖lowcode-core
+   • lowcode-designer: 设计器UI，依赖lowcode-core和lowcode-shared
+   • lowcode-tools: 工具库，依赖lowcode-shared
+   🚨 严禁packages之间的循环依赖和逆向依赖
+
+   🔍 **强制质量检查门禁**:
+   🔧 第一关: packages TypeScript编译检查 (0错误)
+   🔧 第二关: packages ESLint质量检查 (0错误)
+   🔧 第三关: packages依赖关系检查 (0违规)
+   🔧 第四关: packages构建产物检查 (100%成功)
+   
+   🎖️ **专项优化要求**:
+   • 严禁使用`as any`、`@ts-ignore`等绕过类型检查
+   • 所有API接口必须有完整的TypeScript类型定义
+   • 清理所有未使用的参数和变量
+   • 为所有Vue组件的props提供默认值
+   
+   ❌ **严禁AI智能辅助功能**: 现阶段禁止实现AI助手、智能建议、自动优化等AI功能
+   ❌ **严禁多人在线功能**: 现阶段禁止实现实时协作、多用户编辑、在线协作等功能
+   ✅ **专注核心**: 企业级稳定可靠的全栈代码自动生成
+
+🔒 **第八重爆雷：Git质量门禁永久保护强制执行**
+   🔧 自动检查Git hooks状态(.git/hooks/pre-commit, commit-msg, pre-push)
+   🔧 验证质量检查脚本完整性(scripts/ci-quality-check.sh)
+   🔧 确保无人擅自修改质量标准(严禁--no-verify, 禁用hooks)
+   🔧 一旦检测到质量门禁被修改，立即恢复标准配置并记录违规
+   🚨 紧急修改必须经过二次确认，并在1小时内强制恢复原设置
+   ✅ 验证：质量门禁100%正常运行，架构安全得到保障
+
+🧠 **第九重爆雷：AI编程架构自动识别保护强制执行**
+   🔧 **架构扫描强制执行**: 每次AI编程前必须执行packages目录结构扫描、现有组件/工具函数检索、全局类型声明检查
+   🔧 **代码重复拦截**: 自动检测新代码与lowcode-shared、packages组件的重合度，发现重复立即停止并提供复用建议
+   🔧 **依赖与层级验证**: 强制校验packages层级（lowcode-shared → lowcode-core → lowcode-designer），禁止逆向依赖与循环依赖
+   🔧 **类型安全守护**: 严禁使用`as any`、`@ts-ignore`等绕过类型检查的写法，必须引用lowcode-shared中的统一类型定义
+   🔧 **自动纠正机制**: 一旦检测到违规，立即停止操作、展示正确的架构模式与代码模板，并要求按照规范实现
+   ✅ **验证确认**: AI编程100%遵循既有工程化规范，前端框架优化成果得到永久保护
+
+
+
+## 💥 专家模式承诺 (基于新版七重爆雷)
+
+- 🏛️ **极致质量律**: 95分质量阈值是底线，代码质量零容忍，架构偏差零容忍
+- 🚀 **架构先行律**: 设计驱动实现，模式优于技巧，长远胜过短期
+- 🎯 **独立决策律**: 技术判断独立，不盲从需求，坚持最佳实践
+- 🚫 **反马屁虫铁律**: 拒绝盲目迎合，坚持技术专业性，提供建设性洞察
+- ⚡ **顶级AI格局**: 专业自信，独立思考，技术标准不妥协
+- 🔄 **智能同步铁律**: 第六重爆雷智能触发，30分钟或任务节点完成时自动执行质量检查+Git同步
+- ✅ **自动推进机制**: 质量检查通过后，AI必须自动继续推进后续开发任务，而不是停下来等待指令
+
+## 🎯 专家模式新版七重爆雷执行机制
+
+### ⚡ 第六重爆雷触发机制 (智能时间触发)
+**触发条件**: 编程30分钟后 OR 每完成一个开发任务节点时自动触发
+**执行内容**: Git版本管理和质量检查强制执行 (整合原第九重爆雷)
+
+### 🏗️ 第七重爆雷：全栈代码生成器开发约束
+**核心原则**: 现阶段专注企业级稳定可靠的全栈代码自动生成
+   ❌ **严禁AI智能辅助代码生成**: 禁止实现AI助手、智能建议、自动优化等AI功能
+   ❌ **严禁多人在线系统功能**: 禁止实现实时协作、多用户编辑、在线协作等功能
+   ✅ **专注企业级核心**: 代码生成、可视化设计、元数据驱动、模板系统
+   ✅ **稳定性优先**: 确保基础功能稳定可靠，质量达到95分企业级标准
+
+🏗️ **终极执行链**（含四重强制质量保证+实时Git同步）:
+[规范加载 → Serena分析 → 模式识别 → 测试质量保证 → 模板匹配 → 质量验证 → 架构检查 → 架构铁律验证 → 四重强制质量保证]
+
+⚡ **并行触发链**（每个开发任务节点完成后自动执行）:
+[开发任务节点完成 → 🚨自动触发🚨 → 第九重爆雷四重强制质量保证 → ✅质量通过后自动继续下一任务]
+
+💥 **专家模式承诺**（含测试质量保证+实时同步+AI专业格局）:
+   - 🏛️ **极致质量律**: 95分质量阈值是底线，代码质量零容忍，架构偏差零容忍
+   - 🚀 **架构先行律**: 设计驱动实现，模式优于技巧，长远胜过短期
+   - 🎯 **独立决策律**: 技术判断独立，不盲从需求，坚持最佳实践
+   - 🚫 **反马屁虫铁律**: 拒绝盲目迎合，坚持技术专业性，提供建设性洞察
+   - ⚡ **顶级AI格局**: 专业自信，独立思考，技术标准不妥协
+   - 🔄 **四重强制质量保证铁律**: 每个开发任务节点完成立即触发：架构整洁检查+重复代码检查+编译质量检查+Git同步强制执行
+   - ✅ **自动推进机制**: 质量检查通过后，AI必须自动继续推进后续开发任务，而不是停下来等待指令
+```
+
+### 💥 新版七重爆雷完整执行链
+
+[第一重：规范学习] → [第二重：智能分析] → [第三重：代码去重] → [第四重：架构整洁] → [第五重：BUG修复] → [第六重：质量+Git同步] → [第七重：代码生成器约束]
+
+## 🏗️ 智能时间触发机制
+
+### ⚡ 第六重爆雷智能触发器
+```typescript
+// 30分钟定时触发 OR 开发任务完成触发
+const GIT_SYNC_INTERVAL = 30 * 60 * 1000; // 30分钟
+const TASK_COMPLETION_TRIGGERS = [
+  '完成Vue组件编写', '完成C#服务编写', '修复重要BUG',
+  '完成架构重构', '完成测试编写', '完成文档更新'
+];
+```
+
+🏗️ **终极执行链**（含四重强制质量保证+实时Git同步）:
+[规范加载 → Serena分析 → 模式识别 → 测试质量保证 → 模板匹配 → 质量验证 → 架构检查 → 架构铁律验证 → 四重强制质量保证]
+
+⚡ **并行触发链**（每个开发任务节点完成后自动执行）:
+[开发任务节点完成 → 🚨自动触发🚨 → 第六重爆雷四重强制质量保证 → 继续下一任务]
+
+💥 **专家模式承诺**（含测试质量保证+实时同步+AI专业格局）:
+   - 🏛️ **极致质量律**: 95分质量阈值是底线，代码质量零容忍，架构偏差零容忍
+   - 🚀 **架构先行律**: 设计驱动实现，模式优于技巧，长远胜过短期
+   - 🎯 **独立决策律**: 技术判断独立，不盲从需求，坚持最佳实践
+   - 🚫 **反马屁虫铁律**: 拒绝盲目迎合，坚持技术专业性，提供建设性洞察
+   - ⚡ **顶级AI格局**: 专业自信，独立思考，技术标准不妥协
+   - 🔄 **四重强制质量保证铁律**: 每个开发任务节点完成立即触发：架构整洁检查+重复代码检查+编译质量检查+Git同步强制执行
+
+### 🏛️ Standard ADR-Informed Response Protocol (标准ADR响应协议)
+**When ADR consultation is triggered (outside expert mode), AI MUST respond in this format:**
+
+```
+🏛️ **ADR查询**: 正在查阅相关架构决策记录...
+📋 **ADR发现**: 找到相关决策 `ADR-{number}: {title}`
+🎯 **决策要点**:
+   - 选择方案: {decision}
+   - 主要原因: {rationale}
+   - 技术约束: {constraints}
+   - 实施指导: {implementation_guidance}
+⚙️ **应用到当前任务**:
+   - 遵循的原则: {principles}
+   - 使用的模式: {patterns}
+   - 技术选择: {technology_choices}
+🏗️ **代码生成**: 基于ADR决策和模板生成代码
+```
+
+## 🎯 项目概览
+
+**技术栈**: ABP vNext + Vue3/TypeScript + 低代码引擎
+**核心要求**: 95分质量标准 + 模板强制使用 + 架构先行
+
+
+### 核心规则
+**生成任何代码前必须执行**: `glob "templates/**/*.template.*"`
+
+### 关键词触发
+- "CRUD"、"增删改查" → 使用CrudAppService模板
+- "管理页面"、"数据管理" → 使用CrudManagement模板
+- "Store"、"状态管理" → 使用EntityStore模板
+- "DTO"、"数据传输对象" → 使用EntityDto模板
+- "低代码"、"引擎插件" → 使用LowCodePlugin模板
+
+## 🏛️ ADR架构决策
+
+### 强制咨询触发
+- "技术选型"、"框架选择" → 查阅技术栈选择ADR
+- "前端架构"、"Vue架构" → 查阅前端架构决策ADR
+- "后端架构"、"ABP架构" → 查阅后端架构决策ADR
+
+## 🚨 强制执行机制
+
+### 智能触发检查
+- "创建|生成|添加|新建" → 强制搜索模板
+- "架构|技术选型|框架" → 强制查阅ADR
+- 任何代码编辑 → 强制质量检查
+- 编辑packages目录 → 强制架构检查
+
+### 零容忍违规检查
+- 架构违规：`grep -r "'../'" src/SmartAbp.Vue/packages/`
+- 类型安全：`grep -r "as any\|@ts-ignore" src/`

@@ -35,9 +35,32 @@ export interface GenerationProgress {
 // 🔥 导出核心类型
 export type { ModuleMetadata } from "./types"
 
+// ===== 代码生成结果类型定义 =====
+export interface GenerationResult {
+  success: boolean
+  sessionId: string
+  message: string
+  generatedFiles?: Array<{
+    path: string
+    content: string
+    type: 'Entity' | 'ApplicationService' | 'DTO' | 'Controller' | 'Vue' | 'TypeScript'
+  }>
+  errors?: string[]
+  statistics?: {
+    totalFiles: number
+    totalLines: number
+    generationTime: number
+  }
+  report?: string
+  generatedAt?: string
+}
+
+// ===== 模块元数据DTO（扩展版） =====
+export type ModuleMetadataDto = ModuleMetadata
+
 // Database introspection types
 export interface DatabaseIntrospectionRequest {
-  provider: "SqlServer" | "PostgreSql" | "MySql" | "Oracle"
+  provider: "SqlServer" | "PostgreSql" | "MySql" | "SQLite"
   connectionStringName: string
   schema?: string
 }
@@ -71,7 +94,8 @@ export interface ForeignKeySchema {
 // 🚀 企业级API客户端实现 - 基于29个后端代码生成器
 class CodeGeneratorAPI {
   private baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://localhost:44379'
-  private apiPath = '/api/code-generation'
+  // 与后端HttpApi控制器保持一致
+  private apiPath = '/api/code-generator'
   // private hubConnection: any = null // 暂未使用，避免未使用变量警告
 
   private async request<T>(method: string, endpoint: string, data?: any): Promise<T> {
@@ -142,17 +166,7 @@ class CodeGeneratorAPI {
   }
 
   // 🏗️ 模块代码生成 - 对接后端CodeGenerationAppService
-  async generateModule(metadata: ModuleMetadata): Promise<{
-    success: boolean
-    sessionId: string
-    message: string
-    generatedFiles?: Array<{
-      path: string
-      content: string
-      type: 'Entity' | 'ApplicationService' | 'DTO' | 'Controller' | 'Vue' | 'TypeScript'
-    }>
-    errors?: string[]
-  }> {
+  async generateModule(metadata: ModuleMetadata): Promise<GenerationResult> {
     return this.post('/generate-module', {
       moduleMetadata: metadata,
       options: {
@@ -167,8 +181,9 @@ class CodeGeneratorAPI {
 
   // 🔍 数据库结构分析 - 对接DatabaseIntrospectionService
   async introspectDatabase(req: DatabaseIntrospectionRequest): Promise<DatabaseSchema> {
-    return this.post('/introspect-database', {
-      connectionString: req.connectionStringName,
+    // 后端控制器端点为 introspect-db
+    return this.post('/introspect-db', {
+      connectionStringName: req.connectionStringName,
       provider: req.provider,
       schema: req.schema
     })
@@ -208,6 +223,27 @@ class CodeGeneratorAPI {
     warnings: string[]
   }> {
     return this.post('/preview-module', metadata)
+  }
+
+  // 🧭 模块元数据注册（幂等）
+  async registerModule(metadata: ModuleMetadata): Promise<ModuleMetadata> {
+    // 复用 MetadataController 的 register-module 端点
+    const url = `${this.baseUrl}/api/metadata/register-module`
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${this.getAuthToken()}`,
+      },
+      credentials: 'include',
+      body: JSON.stringify(metadata)
+    })
+    if (!resp.ok) {
+      const text = await resp.text()
+      throw new APIError(resp.status, text)
+    }
+    return await resp.json()
   }
 
   // ✅ 模块元数据验证

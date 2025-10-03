@@ -1,14 +1,33 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.json", 
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src",
     "composite": true,
-    "jsx": "preserve",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "declaration": true,
     "declarationMap": true,
-    "emitDeclarationOnly": true
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "paths": {
+      "@smartabp/lowcode-shared": ["../lowcode-shared/src/index.ts"],
+      "@smartabp/lowcode-shared/*": ["../lowcode-shared/src/*"],
+      "@smartabp/lowcode-core": ["../lowcode-core/src/index.ts"],
+      "@smartabp/lowcode-core/*": ["../lowcode-core/src/*"],
+      "@smartabp/lowcode-designer": ["./src/index.ts"],
+      "@smartabp/lowcode-designer/*": ["./src/*"]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.vue"],
-  "exclude": ["src/**/*.spec.ts", "src/__tests__"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "*.ts"
+  ],
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.spec.ts",
+    "dist"
+  ],
+  "references": [
+    { "path": "../lowcode-shared" },
+    { "path": "../lowcode-core" }
+  ]
 }

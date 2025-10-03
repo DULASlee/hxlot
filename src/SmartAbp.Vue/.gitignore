@@ -1,67 +1,276 @@
-# Logs
-logs
+# ================================
+# SmartAbp Vue 项目 .gitignore 配置
+# 基于企业级最佳实践和安全性要求
+# ================================
+
+# ==================== 日志文件 ====================
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+pnpm-lock.yaml
 
-node_modules
-.DS_Store
-dist
-dist-ssr
-coverage
-*.local
+# ==================== 依赖目录 ====================
+node_modules/
+.pnp
+.pnp.js
 
-/cypress/videos/
-/cypress/screenshots/
+# ==================== 构建产物 ====================
+dist/
+dist-ssr/
+build/
+out/
+.output/
+.nuxt/
+.next/
+.vuepress/dist/
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# ==================== 测试和覆盖率报告 ====================
+coverage/
+.nyc_output/
+.coverage/
+*.lcov
+.vitest/
+cypress/videos/
+cypress/screenshots/
+test-results/
+playwright-report/
+junit.xml
 
+# ==================== 临时文件和缓存 ====================
+*.tmp
+*.temp
+.temp/
+.cache/
+.parcel-cache/
+.vite/
+.turbo/
+.eslintcache
+.stylelintcache
 *.tsbuildinfo
 
-# TypeScript compilation outputs (should not be committed)
-# 但保留必要的类型声明文件
-*.d.ts
-*.d.ts.map
-# 保留项目必需的类型声明
-!src/vite-env.d.ts
-!src/components.d.ts
-!src/auto-imports.d.ts
-!src/shims-vue.d.ts
-# 保留 packages 的根级别类型声明（包入口）
-!packages/*/index.d.ts
-!packages/*/index.d.ts.map
-# packages编译产物（.js, .d.ts, .d.ts.map）应该忽略
-packages/**/src/**/*.d.ts
-packages/**/src/**/*.d.ts.map
-packages/**/src/**/*.js
-packages/**/dist/**
+# ==================== 环境配置文件 ====================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.staging
+*.local
 
-# IDE and Editor files
-.vs/
-.vscode/
+# ==================== IDE 和编辑器文件 ====================
+# Visual Studio Code - 保留重要配置
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/snippets/
+!.vscode/*.code-snippets
+
+# Cursor AI IDE - 保留配置
+.cursor/*
+!.cursor/settings.json
+
+# JetBrains IDEs
 .idea/
-.cursor/
+*.swp
+*.swo
+*~
+
+# 其他编辑器
+*.sublime-project
+*.sublime-workspace
 .codebuddy/
 .specstory/
 
-# OS files
-Thumbs.db
-.DS_Store
+# IDE用户特定配置（不提交）
+.vscode/settings.local.json
+.cursor/settings.local.json
 
-# Project specific
+# ==================== 操作系统文件 ====================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ==================== TypeScript 编译输出 ====================
+# 全局忽略编译输出
+*.d.ts
+*.d.ts.map
+*.js.map
+
+# 但保留重要的类型声明文件
+!src/vite-env.d.ts
+!src/env.d.ts
+!src/components.d.ts
+!src/auto-imports.d.ts
+!src/shims.d.ts
+!src/shims-vue.d.ts
+!types/*.d.ts
+!typings/*.d.ts
+
+# ==================== Packages 构建产物管理 ====================
+# packages 的编译输出（严格隔离）
+packages/*/dist/
+packages/*/lib/
+packages/*/es/
+packages/*/build/
+packages/**/src/**/*.d.ts
+packages/**/src/**/*.d.ts.map
+packages/**/src/**/*.js
+packages/**/src/**/*.js.map
+
+# 但保留 packages 入口文件的类型声明
+!packages/*/index.d.ts
+!packages/*/index.d.ts.map
+
+# packages 的依赖和缓存
+packages/*/node_modules/
+packages/*/.npm/
+packages/*/.yarn/
+packages/*/package-lock.json
+packages/*/yarn.lock
+
+# ==================== 低代码生成器产物 ====================
+# 自动生成的代码（重要：防止提交生成的代码）
+.generated/
+generated/
+__generated__/
+.lowcode-generated/
+**/auto-generated/
+**/codegen-output/
+
+# 模板缓存
+.template-cache/
+templates-cache/
+
+# ==================== 安全相关文件 ====================
+# 证书和密钥
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+
+# 密码和密钥文件
+secrets/
+.secrets/
+*.secret
+auth.json
+service-account.json
+
+# ==================== 部署和运维文件 ====================
+# Docker
+.dockerignore
+
+# Kubernetes
+*.kubeconfig
+
+# 部署配置
+deploy/secrets/
+deployment-config.json
+
+# ==================== 项目特定文件 ====================
+# .NET 相关（for SmartAbp backend）
 obj/
 bin/
 *.user
 *.suo
 *.cache
+*.dll
+*.exe
+*.pdb
+*.vspscc
+*.vssscc
+.builds/
+*.pidb
+*.log
+*.dotCover
+
+# ABP 特定
+abp_io/
+logs/
+App_Data/
+
+# ==================== 性能和分析文件 ====================
+# 性能分析报告
+.clinic/
+profile-*/
+*.prof
+*.heapsnapshot
+*.cpuprofile
+
+# Bundle 分析
+bundle-analyzer-report.html
+stats.json
+.bundle-analyze/
+
+# ==================== 文档和设计文件 ====================
+# 临时文档
+*.draft
+*.wip
+~$*.docx
+~$*.pptx
+
+# ==================== 供应商和第三方 ====================
+# 供应商特定目录
+vendor/
+third-party/
+
+# ==================== 备份文件 ====================
+*.backup
+*.bak
+*.orig
+*.old
+*.restore
+
+# ==================== 其他临时文件 ====================
+.vercel/
+.netlify/
+.aws-sam/
+.serverless/
+.fusebox/
+.dynamodb/
+
+# Storybook
+storybook-static/
+
+# 错误报告
+error-report.json
+lerna-debug.log*
+
+# ==================== 严格模式：敏感文件 ====================
+# 永远不应该提交的文件
+config/production.json
+config/staging.json
+*.env.production
+*.env.staging
+.htpasswd
+wp-config.php
+
+# ==================== 注释说明 ====================
+# 此 .gitignore 文件基于 SmartAbp 企业级项目的最佳实践
+# 确保代码安全、构建产物隔离和开发环境一致性
+# 任何修改请参考项目架构决策记录 (ADR)

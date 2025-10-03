@@ -192,7 +192,6 @@ const generateCode = async () => {
       version: '1.0.0',
       architecturePattern: 'Crud' as const, // 明确指定为字面量类型
       namespace: `SmartAbp.${generationParams.value.moduleName}`,
-      author: 'SmartAbp LowCode Generator',
       databaseInfo: {
         connectionStringName: 'Default',
         provider: 'SqlServer' as const
@@ -205,12 +204,18 @@ const generateCode = async () => {
         parentId: '',
         routePrefix: generationParams.value.moduleName.toLowerCase()
       },
-      generateMobilePages: false,
       dependencies: [],
       entities: [{
         name: generationParams.value.entityName,
         displayName: generationParams.value.displayName || generationParams.value.entityName,
-        // 最简配置，更多字段由后端推断
+        module: generationParams.value.moduleName,
+        aggregate: generationParams.value.moduleName,
+        description: `${generationParams.value.displayName || generationParams.value.entityName}实体`,
+        isAggregateRoot: true,
+        isMultiTenant: false,
+        isSoftDelete: true,
+        hasExtraProperties: false,
+        properties: [] // 最简配置，更多字段由后端推断
       }]
     } satisfies ModuleMetadataDto
 

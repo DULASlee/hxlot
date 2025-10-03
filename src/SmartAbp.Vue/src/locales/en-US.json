@@ -183,5 +183,80 @@
         "message": "Are you sure you want to clear the designer?"
       }
     }
+  },
+  "ultraSimple": {
+    "title": "Ultra Simple Code Generator",
+    "subtitle": "Select database table, enter key information, generate enterprise-level management system with one click",
+    "form": {
+      "table": "Database Table",
+      "tablePlaceholder": "Select a database table",
+      "systemName": "System Name",
+      "systemNamePlaceholder": "e.g., SmartConstruction",
+      "moduleName": "Module Name",
+      "moduleNamePlaceholder": "e.g., ProjectManagement",
+      "displayName": "Display Name",
+      "displayNamePlaceholder": "e.g., Project Management",
+      "architecture": "Architecture Pattern",
+      "architecturePlaceholder": "Select architecture pattern",
+      "database": "Database Type",
+      "databasePlaceholder": "Select database type",
+      "parentMenu": "Parent Menu",
+      "parentMenuPlaceholder": "e.g., System (optional)",
+      "menuIcon": "Menu Icon",
+      "menuIconPlaceholder": "e.g., database, folder, setting"
+    },
+    "hints": {
+      "systemName": "English, PascalCase, e.g., SmartConstruction",
+      "moduleName": "English, PascalCase, e.g., ProjectManagement",
+      "displayName": "Display name, e.g., Project Management",
+      "parentMenu": "Optional, leave empty for root menu",
+      "menuIcon": "Optional, default: database"
+    },
+    "architectureTypes": {
+      "crud": "Simple CRUD",
+      "ddd": "Domain-Driven Design",
+      "cqrs": "Command Query Responsibility Segregation"
+    },
+    "derived": {
+      "title": "Auto-Derived Information",
+      "namespace": "Namespace",
+      "route": "Route Prefix",
+      "api": "API Endpoint"
+    },
+    "actions": {
+      "generate": "🚀 Generate Code",
+      "generating": "🔥 Generating...",
+      "completed": "✅ Completed",
+      "generateAnother": "🔄 Generate Another",
+      "viewCode": "📄 View Code",
+      "downloadZip": "📦 Download ZIP"
+    },
+    "validation": {
+      "tableRequired": "Please select a database table",
+      "systemNameRequired": "Please enter system name",
+      "moduleNameRequired": "Please enter module name",
+      "displayNameRequired": "Please enter display name",
+      "architectureRequired": "Please select architecture pattern",
+      "databaseRequired": "Please select database type"
+    },
+    "messages": {
+      "fillRequired": "Please fill in all required fields",
+      "success": "🎉 Code generated successfully!",
+      "error": "❌ Code generation failed, please try again",
+      "viewCode": "Session ID: {sessionId}",
+      "downloadSuccess": "✅ Download successful",
+      "downloadError": "❌ Download failed"
+    },
+    "logs": {
+      "loadingTables": "Loading database tables...",
+      "tablesLoaded": "Loaded {count} tables",
+      "usingMockData": "Using mock data (backend not connected)",
+      "starting": "Starting code generation...",
+      "generatingBackend": "Generating backend code (C# ABP vNext)...",
+      "backendCompleted": "Backend code generation completed",
+      "generatingFrontend": "Generating frontend code (Vue3 + TypeScript)...",
+      "completed": "🎉 Code generation completed!",
+      "failed": "Generation failed: {error}"
+    }
   }
 }

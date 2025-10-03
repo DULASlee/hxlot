@@ -4,13 +4,28 @@
  */
 
 import { defineComponent, h, ref, computed, watch, type Component } from 'vue'
-import type { BaseComponentProps, ValidationRule } from '@smartabp/lowcode-shared/types'
+import type { BaseComponentProps, ValidationRule } from '../../types'
 import { 
   isRequired, 
   isEmail, 
   isUrl, 
   pattern 
-} from '@smartabp/lowcode-shared/validators'
+} from '../../validators'
+
+/**
+ * 获取组件名称的类型安全函数
+ */
+function getComponentName(component: Component): string {
+  if (typeof component === 'object' && component !== null) {
+    if ('name' in component && typeof component.name === 'string') {
+      return component.name
+    }
+    if ('__name' in component && typeof component.__name === 'string') {
+      return component.__name
+    }
+  }
+  return 'Component'
+}
 
 /**
  * WithValidation Props扩展
@@ -105,7 +120,7 @@ export function WithValidation(
 ) {
   return defineComponent({
     // ✅ 正确：使用类型守卫替代as any
-    name: `WithValidation(${typeof WrappedComponent === 'object' && WrappedComponent !== null && 'name' in WrappedComponent ? (WrappedComponent as { name?: string }).name || 'Component' : 'Component'})`,
+    name: `WithValidation(${getComponentName(WrappedComponent)})`,
     
     props: {
       modelValue: {

@@ -1,7 +1,8 @@
  
 import { defineStore } from "pinia"
 import { ref, computed, watch } from "vue"
-import { logger } from "@smartabp/lowcode-tools"
+// @ts-ignore - logger will be injected by main app via lowcode-tools bridge
+const logger = (globalThis as any).__SMARTABP_LOGGER__ || console
 
 // WCAG对比度计算工具
 function calculateContrastRatio(_color1: string, _color2: string): number {

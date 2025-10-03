@@ -1,5 +1,9 @@
 <template>
-  <el-card class="security-metric-card" shadow="hover" :data-testid="props.dataTestid">
+  <el-card
+    class="security-metric-card"
+    shadow="hover"
+    :data-testid="props.dataTestid"
+  >
     <div class="metric-content">
       <div class="metric-icon">
         <el-icon :size="32">
@@ -7,9 +11,19 @@
         </el-icon>
       </div>
       <div class="metric-info">
-        <div class="metric-title">{{ title }}</div>
-        <div class="metric-value" :class="color">{{ value }}</div>
-        <div class="metric-trend" :class="trendClass">
+        <div class="metric-title">
+          {{ title }}
+        </div>
+        <div
+          class="metric-value"
+          :class="color"
+        >
+          {{ value }}
+        </div>
+        <div
+          class="metric-trend"
+          :class="trendClass"
+        >
           <el-icon :size="14">
             <component :is="trendIcon" />
           </el-icon>

@@ -1,8 +1,19 @@
 <template>
-  <div class="security-dashboard" role="main" aria-label="Security Analysis Dashboard">
+  <div
+    class="security-dashboard"
+    role="main"
+    aria-label="Security Analysis Dashboard"
+  >
     <!-- Security Overview Section -->
-    <el-row class="security-overview" :gutter="20">
-      <el-col :span="6" v-for="(metric, index) in metricCards" :key="index">
+    <el-row
+      class="security-overview"
+      :gutter="20"
+    >
+      <el-col
+        v-for="(metric, index) in metricCards"
+        :key="index"
+        :span="6"
+      >
         <SecurityMetricCard
           :data-testid="metric.testId"
           :title="metric.title"
@@ -15,14 +26,24 @@
     </el-row>
 
     <!-- Risk Alerts Card -->
-    <el-row class="alerts-row" :gutter="20">
+    <el-row
+      class="alerts-row"
+      :gutter="20"
+    >
       <el-col :span="12">
-        <el-card class="risk-alerts-card" shadow="never">
+        <el-card
+          class="risk-alerts-card"
+          shadow="never"
+        >
           <template #header>
             <div class="card-header">
               <el-icon><Warning /></el-icon>
               <span>实时风险警报</span>
-              <el-badge :value="activeAlerts.length" class="alert-badge" type="danger" />
+              <el-badge
+                :value="activeAlerts.length"
+                class="alert-badge"
+                type="danger"
+              />
             </div>
           </template>
           <div class="alerts-list">
@@ -37,17 +58,27 @@
               @keydown.enter="handleAlertClick(alert)"
             >
               <div class="alert-content">
-                <el-tag :type="getSeverityType(alert.severity || 'info')" size="small">
+                <el-tag
+                  :type="getSeverityType(alert.severity || 'info')"
+                  size="small"
+                >
                   {{ alert.severity }}
                 </el-tag>
                 <span class="alert-description">{{ alert.description || alert.message }}</span>
                 <span class="alert-time">{{ formatTime(alert.timestamp) }}</span>
               </div>
               <div class="alert-actions">
-                <el-button size="small" type="primary" @click.stop="acknowledgeAlert(alert)">
+                <el-button
+                  size="small"
+                  type="primary"
+                  @click.stop="acknowledgeAlert(alert)"
+                >
                   确认
                 </el-button>
-                <el-button size="small" @click.stop="investigateAlert(alert)">
+                <el-button
+                  size="small"
+                  @click.stop="investigateAlert(alert)"
+                >
                   调查
                 </el-button>
               </div>
@@ -57,7 +88,10 @@
       </el-col>
 
       <el-col :span="12">
-        <el-card class="compliance-card" shadow="never">
+        <el-card
+          class="compliance-card"
+          shadow="never"
+        >
           <template #header>
             <div class="card-header">
               <el-icon><DocumentChecked /></el-icon>
@@ -73,7 +107,10 @@
     </el-row>
 
     <!-- Charts Section -->
-    <el-row class="charts-row" :gutter="20">
+    <el-row
+      class="charts-row"
+      :gutter="20"
+    >
       <el-col :span="12">
         <el-card shadow="never">
           <template #header>
@@ -93,7 +130,10 @@
     </el-row>
 
     <!-- User Behavior Analysis -->
-    <el-card class="behavior-card" shadow="never">
+    <el-card
+      class="behavior-card"
+      shadow="never"
+    >
       <template #header>
         <span>异常用户行为分析</span>
       </template>
@@ -105,20 +145,27 @@
     </el-card>
 
     <!-- Accessibility: Screen reader announcements -->
-    <div class="sr-only" aria-live="polite" v-if="newAlerts.length > 0">
+    <div
+      v-if="newAlerts.length > 0"
+      class="sr-only"
+      aria-live="polite"
+    >
       {{ newAlerts.length }} 个新警报已更新
     </div>
 
     <!-- Error State -->
-        <div v-if="error" class="dashboard-error">
-          <el-alert
-            title="数据加载失败"
-            :description="typeof error === 'string' ? error : (error?.message || '未知错误')"
-            type="error"
-            show-icon
-            :closable="false"
-          />
-        </div>
+    <div
+      v-if="error"
+      class="dashboard-error"
+    >
+      <el-alert
+        title="数据加载失败"
+        :description="typeof error === 'string' ? error : (error?.message || '未知错误')"
+        type="error"
+        show-icon
+        :closable="false"
+      />
+    </div>
   </div>
 </template>
 
@@ -206,7 +253,7 @@ const metricCards = computed(() => [
 ])
 
 // Auto-refresh timer
-let refreshTimer: NodeJS.Timeout | null = null
+let refreshTimer: ReturnType<typeof setInterval> | null = null
 
 // New alerts for screen reader announcements
 const newAlerts = ref([])

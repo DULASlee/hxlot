@@ -329,8 +329,8 @@ const searchQuery = ref("")
 // 计算属性
 const contentHeight = computed(() => {
   const toolbarHeight = 60
-  const totalHeight = parseInt(props.height.replace("px", ""))
-  return `${totalHeight - toolbarHeight}px`
+  const totalHeight = parseInt(String(props.height).replace("px", ""))
+  return totalHeight - toolbarHeight
 })
 
 const logStats = computed(() => logger.getStats())

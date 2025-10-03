@@ -10,25 +10,48 @@
       <div class="preview-toolbar">
         <div class="device-selector">
           <el-radio-group v-model="previewDevice">
-            <el-radio-button value="desktop">桌面</el-radio-button>
-            <el-radio-button value="tablet">平板</el-radio-button>
-            <el-radio-button value="mobile">手机</el-radio-button>
+            <el-radio-button value="desktop">
+              桌面
+            </el-radio-button>
+            <el-radio-button value="tablet">
+              平板
+            </el-radio-button>
+            <el-radio-button value="mobile">
+              手机
+            </el-radio-button>
           </el-radio-group>
         </div>
 
         <div class="preview-actions">
-          <el-button size="small" @click="refreshPreview">刷新</el-button>
-          <el-button size="small" type="primary" @click="openInNewTab">新窗口打开</el-button>
+          <el-button
+            size="small"
+            @click="refreshPreview"
+          >
+            刷新
+          </el-button>
+          <el-button
+            size="small"
+            type="primary"
+            @click="openInNewTab"
+          >
+            新窗口打开
+          </el-button>
         </div>
       </div>
 
-      <div class="preview-frame" :class="`device-${previewDevice}`">
+      <div
+        class="preview-frame"
+        :class="`device-${previewDevice}`"
+      >
         <div class="preview-content">
           <!-- 预览内容 -->
           <div class="preview-placeholder">
             <h3>设计预览</h3>
             <p>组件数量: {{ components?.length || 0 }}</p>
-            <div v-if="components && components.length > 0" class="component-list">
+            <div
+              v-if="components && components.length > 0"
+              class="component-list"
+            >
               <div
                 v-for="(component, index) in components"
                 :key="component.id || index"

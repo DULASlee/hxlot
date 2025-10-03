@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SmartAbp.Domain\SmartAbp.Domain.csproj" />
     <ProjectReference Include="..\SmartAbp.Application.Contracts\SmartAbp.Application.Contracts.csproj" />
+    <ProjectReference Include="..\SmartAbp.CodeGenerator\SmartAbp.CodeGenerator.csproj" />
   </ItemGroup>
 
   <ItemGroup>

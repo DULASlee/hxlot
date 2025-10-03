@@ -7,7 +7,6 @@ import { ref, reactive, computed, onUnmounted, readonly } from "vue"
 import type { SecurityAlert } from "@smartabp/lowcode-designer/types/security"
 
 // Narrow local types aligned with available SecurityAlert shape
-type AlertSeverity = "low" | "medium" | "high" | "critical"
 type SecurityAlertType =
   | "VULNERABILITY"
   | "LOGIN_ATTEMPT"
@@ -20,9 +19,9 @@ type SecurityAlertType =
   interface AlertNotification {
   id: string
   message: string
-  severity: AlertSeverity
-    timestamp: number
-  acknowledged: boolean
+  severity: "Critical" | "High" | "Medium" | "Low"
+  timestamp: string
+  isAcknowledged: boolean
   type: "error" | "warning" | "info"
   duration?: number
   actions?: Array<{ text: string; handler: () => void }>
@@ -69,16 +68,16 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
   // Computed Properties
   const unreadCount = computed(
-    () => activeAlerts.value.filter((alert: SecurityAlert) => !alert.acknowledged).length,
+    () => activeAlerts.value.filter((alert: SecurityAlert) => !alert.isAcknowledged).length,
   )
 
   const criticalAlerts = computed(() =>
-    activeAlerts.value.filter((alert: SecurityAlert) => alert.severity === "critical"),
+    activeAlerts.value.filter((alert: SecurityAlert) => alert.severity === "Critical"),
   )
 
   const highPriorityAlerts = computed(() =>
     activeAlerts.value.filter(
-      (alert: SecurityAlert) => alert.severity === "high" || alert.severity === "critical",
+      (alert: SecurityAlert) => alert.severity === "High" || alert.severity === "Critical",
     ),
   )
 
@@ -94,7 +93,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
       "SUSPICIOUS_ACTIVITY",
     ]
 
-    const severities: AlertSeverity[] = ["low", "medium", "high", "critical"]
+    const severities: ("Critical" | "High" | "Medium" | "Low")[] = ["Low", "Medium", "High", "Critical"]
     const users = ["John Doe", "Jane Smith", "Alice Johnson", "Bob Wilson", "Carol Brown"]
 
     const type = alertTypes[Math.floor(Math.random() * alertTypes.length)]
@@ -102,24 +101,19 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
     const user = users[Math.floor(Math.random() * users.length)]
 
     const notificationType: "error" | "warning" | "info" =
-      severity === "critical"
+      severity === "Critical"
         ? "error"
-        : severity === "high"
+        : severity === "High"
         ? "warning"
         : "info"
 
     return {
       id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      title: getAlertDescription(type, user),
       message: getAlertDescription(type, user),
-      type: notificationType,
       severity,
-      timestamp: Date.now(),
-      acknowledged: false,
-      source: "MockProvider",
-      metadata: {
-        user,
-      },
+      timestamp: new Date().toISOString(),
+      isAcknowledged: false,
+      type: notificationType,
     }
   }
 
@@ -137,26 +131,26 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
   }
 
   // Alert Management Methods
-  const addAlert = (alertData: Omit<SecurityAlert, "id" | "timestamp" | "acknowledged">): void => {
+  const addAlert = (alertData: Omit<SecurityAlert, "id" | "timestamp" | "isAcknowledged">): void => {
     const fullAlert: SecurityAlert = {
       ...alertData,
       id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      timestamp: Date.now(),
-      acknowledged: false,
+      timestamp: new Date().toISOString(),
+      isAcknowledged: false,
     }
 
     activeAlerts.value.unshift(fullAlert)
 
     // Create notification for high-priority alerts
-    if (fullAlert.severity === "high" || fullAlert.severity === "critical") {
+    if (fullAlert.severity === "High" || fullAlert.severity === "Critical") {
       createNotification({
         id: `notification_${fullAlert.id}`,
         message: `${fullAlert.severity} security alert: ${alertData.message}`,
         severity: fullAlert.severity,
-        timestamp: Date.now(),
-        acknowledged: false,
-        type: fullAlert.severity === "critical" ? "error" : "warning",
-        duration: fullAlert.severity === "critical" ? 0 : 10000,
+        timestamp: new Date().toISOString(),
+        isAcknowledged: false,
+        type: fullAlert.severity === "Critical" ? "error" : "warning",
+        duration: fullAlert.severity === "Critical" ? 0 : 10000,
         actions: [
           {
             text: "Acknowledge",
@@ -184,7 +178,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
         activeAlerts.value[alertIndex] = {
           ...activeAlerts.value[alertIndex],
-          acknowledged: true,
+          isAcknowledged: true,
           acknowledgedBy: "Current User",
         }
       } else {
@@ -375,7 +369,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
   ): SecurityAlert[] => {
     return activeAlerts.value.filter((alert: SecurityAlert) => {
       const severityMatch = severities.length === 0 || severities.includes(alert.severity)
-      const acknowledgedMatch = acknowledged === undefined || alert.acknowledged === acknowledged
+      const acknowledgedMatch = acknowledged === undefined || alert.isAcknowledged === acknowledged
       return severityMatch && acknowledgedMatch
     })
   }

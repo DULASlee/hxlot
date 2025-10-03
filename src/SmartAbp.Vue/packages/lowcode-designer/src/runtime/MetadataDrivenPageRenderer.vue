@@ -1,13 +1,29 @@
 <template>
   <div class="page-renderer">
     <!-- 页面头部 -->
-    <div v-if="schema?.title || schema?.description" class="page-header">
-      <h2 v-if="schema.title" class="page-title">{{ schema.title }}</h2>
-      <p v-if="schema.description" class="page-description">{{ schema.description }}</p>
+    <div
+      v-if="schema?.title || schema?.description"
+      class="page-header"
+    >
+      <h2
+        v-if="schema.title"
+        class="page-title"
+      >
+        {{ schema.title }}
+      </h2>
+      <p
+        v-if="schema.description"
+        class="page-description"
+      >
+        {{ schema.description }}
+      </p>
     </div>
 
     <!-- 搜索栏 -->
-    <div v-if="schema?.searchable" class="search-bar">
+    <div
+      v-if="schema?.searchable"
+      class="search-bar"
+    >
       <el-input
         v-model="searchKeyword"
         placeholder="搜索..."
@@ -15,14 +31,24 @@
         clearable
         @input="handleSearch"
       />
-      <el-button v-if="schema?.advancedSearch" type="primary" @click="showAdvancedSearch = true">
+      <el-button
+        v-if="schema?.advancedSearch"
+        type="primary"
+        @click="showAdvancedSearch = true"
+      >
         高级搜索
       </el-button>
     </div>
 
     <!-- 筛选器 -->
-    <div v-if="schema?.filters?.length" class="filters">
-      <template v-for="(filter, index) in schema.filters" :key="index">
+    <div
+      v-if="schema?.filters?.length"
+      class="filters"
+    >
+      <template
+        v-for="(filter, index) in schema.filters"
+        :key="index"
+      >
         <el-select
           v-if="filter.type === 'select'"
           v-model="filterValues[filter.key]"
@@ -57,7 +83,10 @@
     </div>
 
     <!-- 操作按钮 -->
-    <div class="actions" v-if="schema?.actions?.length">
+    <div
+      v-if="schema?.actions?.length"
+      class="actions"
+    >
       <el-button
         v-for="(action, index) in schema.actions"
         :key="index"
@@ -106,7 +135,10 @@
         :sortable="col.sortable"
         :formatter="col.formatter ? (row: any) => formatCellValue(row, col) : undefined"
       >
-        <template #default="{ row }" v-if="col.type">
+        <template
+          v-if="col.type"
+          #default="{ row }"
+        >
           <!-- 标签类型 -->
           <el-tag
             v-if="col.type === 'tag'"
@@ -213,7 +245,10 @@
     </el-form>
 
     <!-- 底部操作 -->
-    <div class="footer-actions" v-if="schema?.footerActions?.length">
+    <div
+      v-if="schema?.footerActions?.length"
+      class="footer-actions"
+    >
       <el-button
         v-for="(action, index) in schema.footerActions"
         :key="index"
@@ -232,7 +267,10 @@
       width="600px"
     >
       <!-- 高级搜索表单 -->
-      <el-form :model="advancedSearchForm" label-width="100px">
+      <el-form
+        :model="advancedSearchForm"
+        label-width="100px"
+      >
         <el-form-item
           v-for="(field, index) in schema?.advancedSearchFields"
           :key="index"
@@ -248,9 +286,18 @@
       </el-form>
 
       <template #footer>
-        <el-button @click="showAdvancedSearch = false">取消</el-button>
-        <el-button @click="resetAdvancedSearch">重置</el-button>
-        <el-button type="primary" @click="handleAdvancedSearch">搜索</el-button>
+        <el-button @click="showAdvancedSearch = false">
+          取消
+        </el-button>
+        <el-button @click="resetAdvancedSearch">
+          重置
+        </el-button>
+        <el-button
+          type="primary"
+          @click="handleAdvancedSearch"
+        >
+          搜索
+        </el-button>
       </template>
     </el-dialog>
   </div>

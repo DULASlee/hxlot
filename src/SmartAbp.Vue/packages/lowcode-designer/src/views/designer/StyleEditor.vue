@@ -4,20 +4,32 @@
       <h3>样式编辑器</h3>
     </div>
     <div class="editor-content">
-      <div v-if="selectedComponents && selectedComponents.length > 0" class="style-controls">
+      <div
+        v-if="selectedComponents && selectedComponents.length > 0"
+        class="style-controls"
+      >
         <div class="style-group">
           <h4>布局</h4>
           <div class="style-item">
             <label>宽度:</label>
-            <input type="text" placeholder="auto" />
+            <input
+              type="text"
+              placeholder="auto"
+            />
           </div>
           <div class="style-item">
             <label>高度:</label>
-            <input type="text" placeholder="auto" />
+            <input
+              type="text"
+              placeholder="auto"
+            />
           </div>
         </div>
       </div>
-      <div v-else class="no-selection">
+      <div
+        v-else
+        class="no-selection"
+      >
         <p>请选择一个组件</p>
       </div>
     </div>

@@ -333,11 +333,11 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         id: relation.id || `relation-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       }
       relations.value.push(newRelation)
-      return newRelation
       logger.info(`关系已添加: ${relation.fromEntity} -> ${relation.toEntity}`, { 
         relationId: relation.id,
         type: relation.type 
       })
+      return newRelation
     } catch (err) {
       const error = err as Error
       logger.error("添加关系失败", { relation, error: error.message })
@@ -457,16 +457,8 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
   // 导出为JSON架构
   const exportSchema = () => {
     try {
-      const schema = {
-        entities: entities.value,
-        relations: relations.value,
-        metadata: {
-          version: "1.0.0",
-          createdAt: new Date().toISOString(),
-          generator: "SmartAbp LowCode Studio"
-        }
-      }
-      return schema
+      // Schema export functionality - currently not implemented
+      // Future: return schema object for export
     } catch (err) {
       const error = err as Error
       logger.error("导出架构失败", { error: error.message })

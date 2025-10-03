@@ -8,13 +8,22 @@
           可视化业务规则编辑器
         </h3>
         <div class="rules-stats">
-          <el-tag type="info">规则总数: {{ allRules.length }}</el-tag>
-          <el-tag type="success">已启用: {{ enabledRules.length }}</el-tag>
-          <el-tag type="warning">待审核: {{ pendingRules.length }}</el-tag>
+          <el-tag type="info">
+            规则总数: {{ allRules.length }}
+          </el-tag>
+          <el-tag type="success">
+            已启用: {{ enabledRules.length }}
+          </el-tag>
+          <el-tag type="warning">
+            待审核: {{ pendingRules.length }}
+          </el-tag>
         </div>
       </div>
       <div class="header-actions">
-        <el-button type="primary" @click="createNewRule">
+        <el-button
+          type="primary"
+          @click="createNewRule"
+        >
           <el-icon><Plus /></el-icon>
           新建规则
         </el-button>
@@ -34,33 +43,48 @@
       <div class="rules-sidebar">
         <el-menu
           :default-active="activeCategory"
-          @select="handleCategorySelect"
           class="rules-menu"
+          @select="handleCategorySelect"
         >
           <el-menu-item index="all">
             <el-icon><List /></el-icon>
             <span>全部规则</span>
-            <el-badge :value="allRules.length" class="rule-badge" />
+            <el-badge
+              :value="allRules.length"
+              class="rule-badge"
+            />
           </el-menu-item>
           <el-menu-item index="validation">
             <el-icon><Shield /></el-icon>
             <span>验证规则</span>
-            <el-badge :value="validationRules.length" class="rule-badge" />
+            <el-badge
+              :value="validationRules.length"
+              class="rule-badge"
+            />
           </el-menu-item>
           <el-menu-item index="calculation">
             <el-icon><Calculator /></el-icon>
             <span>计算规则</span>
-            <el-badge :value="calculationRules.length" class="rule-badge" />
+            <el-badge
+              :value="calculationRules.length"
+              class="rule-badge"
+            />
           </el-menu-item>
           <el-menu-item index="workflow">
             <el-icon><Share /></el-icon>
             <span>工作流规则</span>
-            <el-badge :value="workflowRules.length" class="rule-badge" />
+            <el-badge
+              :value="workflowRules.length"
+              class="rule-badge"
+            />
           </el-menu-item>
           <el-menu-item index="notification">
             <el-icon><Bell /></el-icon>
             <span>通知规则</span>
-            <el-badge :value="notificationRules.length" class="rule-badge" />
+            <el-badge
+              :value="notificationRules.length"
+              class="rule-badge"
+            />
           </el-menu-item>
         </el-menu>
       </div>
@@ -80,26 +104,49 @@
                 <el-icon><Search /></el-icon>
               </template>
             </el-input>
-            <el-select v-model="filterStatus" placeholder="状态筛选" style="width: 120px">
-              <el-option label="全部" value="all" />
-              <el-option label="启用" value="enabled" />
-              <el-option label="禁用" value="disabled" />
-              <el-option label="草稿" value="draft" />
+            <el-select
+              v-model="filterStatus"
+              placeholder="状态筛选"
+              style="width: 120px"
+            >
+              <el-option
+                label="全部"
+                value="all"
+              />
+              <el-option
+                label="启用"
+                value="enabled"
+              />
+              <el-option
+                label="禁用"
+                value="disabled"
+              />
+              <el-option
+                label="草稿"
+                value="draft"
+              />
             </el-select>
           </div>
 
           <el-table
             :data="filteredRules"
-            @row-click="selectRule"
             highlight-current-row
             class="rules-table"
             height="400"
+            @row-click="selectRule"
           >
-            <el-table-column type="selection" width="55" />
-            <el-table-column prop="name" label="规则名称" min-width="180">
+            <el-table-column
+              type="selection"
+              width="55"
+            />
+            <el-table-column
+              prop="name"
+              label="规则名称"
+              min-width="180"
+            >
               <template #default="scope">
                 <div class="rule-name">
-                  <el-icon :class="getRuleIcon(scope.row.type)"></el-icon>
+                  <el-icon :class="getRuleIcon(scope.row.type)" />
                   <span>{{ scope.row.name }}</span>
                   <el-tag
                     v-if="scope.row.priority === 'high'"
@@ -111,14 +158,25 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="type" label="类型" width="120">
+            <el-table-column
+              prop="type"
+              label="类型"
+              width="120"
+            >
               <template #default="scope">
-                <el-tag :type="getRuleTypeColor(scope.row.type)" size="small">
+                <el-tag
+                  :type="getRuleTypeColor(scope.row.type)"
+                  size="small"
+                >
                   {{ getRuleTypeText(scope.row.type) }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="status" label="状态" width="100">
+            <el-table-column
+              prop="status"
+              label="状态"
+              width="100"
+            >
               <template #default="scope">
                 <el-switch
                   v-model="scope.row.enabled"
@@ -126,12 +184,19 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column prop="lastModified" label="修改时间" width="160">
+            <el-table-column
+              prop="lastModified"
+              label="修改时间"
+              width="160"
+            >
               <template #default="scope">
                 {{ formatDate(scope.row.lastModified) }}
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="200">
+            <el-table-column
+              label="操作"
+              width="200"
+            >
               <template #default="scope">
                 <el-button-group size="small">
                   <el-button @click="editRule(scope.row)">
@@ -156,11 +221,17 @@
         </div>
 
         <!-- 规则详情面板 -->
-        <div v-if="selectedRule" class="rule-detail-panel">
+        <div
+          v-if="selectedRule"
+          class="rule-detail-panel"
+        >
           <div class="panel-header">
             <h4>规则详情</h4>
             <el-button-group size="small">
-              <el-button @click="testRule" :loading="testing">
+              <el-button
+                :loading="testing"
+                @click="testRule"
+              >
                 <el-icon><Position /></el-icon>
                 测试规则
               </el-button>
@@ -168,7 +239,11 @@
                 <el-icon><CircleCheck /></el-icon>
                 验证规则
               </el-button>
-              <el-button type="primary" @click="saveRule" :loading="saving">
+              <el-button
+                type="primary"
+                :loading="saving"
+                @click="saveRule"
+              >
                 <el-icon><Check /></el-icon>
                 保存
               </el-button>
@@ -177,12 +252,24 @@
 
           <!-- 🔧 可视化规则编辑器 -->
           <div class="visual-rule-editor">
-            <el-tabs v-model="activeTab" class="rule-tabs">
+            <el-tabs
+              v-model="activeTab"
+              class="rule-tabs"
+            >
               <!-- 基本信息 -->
-              <el-tab-pane label="基本信息" name="basic">
-                <el-form :model="selectedRule" label-width="100px">
+              <el-tab-pane
+                label="基本信息"
+                name="basic"
+              >
+                <el-form
+                  :model="selectedRule"
+                  label-width="100px"
+                >
                   <el-form-item label="规则名称">
-                    <el-input v-model="selectedRule.name" placeholder="请输入规则名称" />
+                    <el-input
+                      v-model="selectedRule.name"
+                      placeholder="请输入规则名称"
+                    />
                   </el-form-item>
                   <el-form-item label="规则描述">
                     <el-input
@@ -193,31 +280,64 @@
                     />
                   </el-form-item>
                   <el-form-item label="规则类型">
-                    <el-select v-model="selectedRule.type" style="width: 100%">
-                      <el-option label="数据验证" value="validation" />
-                      <el-option label="业务计算" value="calculation" />
-                      <el-option label="工作流触发" value="workflow" />
-                      <el-option label="通知规则" value="notification" />
-                      <el-option label="权限控制" value="permission" />
+                    <el-select
+                      v-model="selectedRule.type"
+                      style="width: 100%"
+                    >
+                      <el-option
+                        label="数据验证"
+                        value="validation"
+                      />
+                      <el-option
+                        label="业务计算"
+                        value="calculation"
+                      />
+                      <el-option
+                        label="工作流触发"
+                        value="workflow"
+                      />
+                      <el-option
+                        label="通知规则"
+                        value="notification"
+                      />
+                      <el-option
+                        label="权限控制"
+                        value="permission"
+                      />
                     </el-select>
                   </el-form-item>
                   <el-form-item label="优先级">
                     <el-radio-group v-model="selectedRule.priority">
-                      <el-radio label="low">低</el-radio>
-                      <el-radio label="medium">中</el-radio>
-                      <el-radio label="high">高</el-radio>
-                      <el-radio label="critical">严重</el-radio>
+                      <el-radio label="low">
+                        低
+                      </el-radio>
+                      <el-radio label="medium">
+                        中
+                      </el-radio>
+                      <el-radio label="high">
+                        高
+                      </el-radio>
+                      <el-radio label="critical">
+                        严重
+                      </el-radio>
                     </el-radio-group>
                   </el-form-item>
                 </el-form>
               </el-tab-pane>
 
               <!-- 条件设置 -->
-              <el-tab-pane label="触发条件" name="conditions">
+              <el-tab-pane
+                label="触发条件"
+                name="conditions"
+              >
                 <div class="condition-builder">
                   <div class="condition-header">
                     <span>当满足以下条件时触发规则：</span>
-                    <el-button type="primary" text @click="addCondition">
+                    <el-button
+                      type="primary"
+                      text
+                      @click="addCondition"
+                    >
                       <el-icon><Plus /></el-icon>
                       添加条件
                     </el-button>
@@ -229,10 +349,22 @@
                       :key="condition.id"
                       class="condition-item"
                     >
-                      <div class="condition-logic" v-if="index > 0">
-                        <el-select v-model="condition.logic" size="small">
-                          <el-option label="并且 (AND)" value="AND" />
-                          <el-option label="或者 (OR)" value="OR" />
+                      <div
+                        v-if="index > 0"
+                        class="condition-logic"
+                      >
+                        <el-select
+                          v-model="condition.logic"
+                          size="small"
+                        >
+                          <el-option
+                            label="并且 (AND)"
+                            value="AND"
+                          />
+                          <el-option
+                            label="或者 (OR)"
+                            value="OR"
+                          />
                         </el-select>
                       </div>
 
@@ -255,14 +387,38 @@
                           placeholder="选择操作符"
                           style="width: 120px"
                         >
-                          <el-option label="等于" value="equals" />
-                          <el-option label="不等于" value="notEquals" />
-                          <el-option label="大于" value="greaterThan" />
-                          <el-option label="小于" value="lessThan" />
-                          <el-option label="包含" value="contains" />
-                          <el-option label="不包含" value="notContains" />
-                          <el-option label="为空" value="isEmpty" />
-                          <el-option label="不为空" value="isNotEmpty" />
+                          <el-option
+                            label="等于"
+                            value="equals"
+                          />
+                          <el-option
+                            label="不等于"
+                            value="notEquals"
+                          />
+                          <el-option
+                            label="大于"
+                            value="greaterThan"
+                          />
+                          <el-option
+                            label="小于"
+                            value="lessThan"
+                          />
+                          <el-option
+                            label="包含"
+                            value="contains"
+                          />
+                          <el-option
+                            label="不包含"
+                            value="notContains"
+                          />
+                          <el-option
+                            label="为空"
+                            value="isEmpty"
+                          />
+                          <el-option
+                            label="不为空"
+                            value="isNotEmpty"
+                          />
                         </el-select>
 
                         <el-input
@@ -285,11 +441,18 @@
               </el-tab-pane>
 
               <!-- 执行动作 -->
-              <el-tab-pane label="执行动作" name="actions">
+              <el-tab-pane
+                label="执行动作"
+                name="actions"
+              >
                 <div class="action-builder">
                   <div class="action-header">
                     <span>当条件满足时执行以下动作：</span>
-                    <el-button type="primary" text @click="addAction">
+                    <el-button
+                      type="primary"
+                      text
+                      @click="addAction"
+                    >
                       <el-icon><Plus /></el-icon>
                       添加动作
                     </el-button>
@@ -302,19 +465,43 @@
                       class="action-item"
                     >
                       <div class="action-type">
-                        <el-select v-model="action.type" style="width: 150px">
-                          <el-option label="设置字段值" value="setField" />
-                          <el-option label="发送通知" value="notification" />
-                          <el-option label="触发工作流" value="workflow" />
-                          <el-option label="调用API" value="apiCall" />
-                          <el-option label="记录日志" value="log" />
-                          <el-option label="发送邮件" value="email" />
+                        <el-select
+                          v-model="action.type"
+                          style="width: 150px"
+                        >
+                          <el-option
+                            label="设置字段值"
+                            value="setField"
+                          />
+                          <el-option
+                            label="发送通知"
+                            value="notification"
+                          />
+                          <el-option
+                            label="触发工作流"
+                            value="workflow"
+                          />
+                          <el-option
+                            label="调用API"
+                            value="apiCall"
+                          />
+                          <el-option
+                            label="记录日志"
+                            value="log"
+                          />
+                          <el-option
+                            label="发送邮件"
+                            value="email"
+                          />
                         </el-select>
                       </div>
 
                       <div class="action-config">
                         <!-- 设置字段值配置 -->
-                        <div v-if="action.type === 'setField'" class="field-config">
+                        <div
+                          v-if="action.type === 'setField'"
+                          class="field-config"
+                        >
                           <el-select
                             v-model="action.config.targetField"
                             placeholder="目标字段"
@@ -336,12 +523,30 @@
                         </div>
 
                         <!-- 通知配置 -->
-                        <div v-else-if="action.type === 'notification'" class="notification-config">
-                          <el-select v-model="action.config.level" style="width: 100px">
-                            <el-option label="信息" value="info" />
-                            <el-option label="警告" value="warning" />
-                            <el-option label="错误" value="error" />
-                            <el-option label="成功" value="success" />
+                        <div
+                          v-else-if="action.type === 'notification'"
+                          class="notification-config"
+                        >
+                          <el-select
+                            v-model="action.config.level"
+                            style="width: 100px"
+                          >
+                            <el-option
+                              label="信息"
+                              value="info"
+                            />
+                            <el-option
+                              label="警告"
+                              value="warning"
+                            />
+                            <el-option
+                              label="错误"
+                              value="error"
+                            />
+                            <el-option
+                              label="成功"
+                              value="success"
+                            />
                           </el-select>
                           <el-input
                             v-model="action.config.message"
@@ -351,7 +556,10 @@
                         </div>
 
                         <!-- 工作流配置 -->
-                        <div v-else-if="action.type === 'workflow'" class="workflow-config">
+                        <div
+                          v-else-if="action.type === 'workflow'"
+                          class="workflow-config"
+                        >
                           <el-select
                             v-model="action.config.workflowId"
                             placeholder="选择工作流"
@@ -372,12 +580,30 @@
                         </div>
 
                         <!-- API调用配置 -->
-                        <div v-else-if="action.type === 'apiCall'" class="api-config">
-                          <el-select v-model="action.config.method" style="width: 80px">
-                            <el-option label="GET" value="GET" />
-                            <el-option label="POST" value="POST" />
-                            <el-option label="PUT" value="PUT" />
-                            <el-option label="DELETE" value="DELETE" />
+                        <div
+                          v-else-if="action.type === 'apiCall'"
+                          class="api-config"
+                        >
+                          <el-select
+                            v-model="action.config.method"
+                            style="width: 80px"
+                          >
+                            <el-option
+                              label="GET"
+                              value="GET"
+                            />
+                            <el-option
+                              label="POST"
+                              value="POST"
+                            />
+                            <el-option
+                              label="PUT"
+                              value="PUT"
+                            />
+                            <el-option
+                              label="DELETE"
+                              value="DELETE"
+                            />
                           </el-select>
                           <el-input
                             v-model="action.config.url"
@@ -400,7 +626,10 @@
               </el-tab-pane>
 
               <!-- 规则预览 -->
-              <el-tab-pane label="规则预览" name="preview">
+              <el-tab-pane
+                label="规则预览"
+                name="preview"
+              >
                 <div class="rule-preview">
                   <div class="preview-header">
                     <h4>规则执行逻辑预览</h4>
@@ -413,15 +642,27 @@
                   <!-- 🔍 生成的规则代码 -->
                   <div class="rule-code-preview">
                     <el-tabs v-model="previewTab">
-                      <el-tab-pane label="JavaScript" name="js">
+                      <el-tab-pane
+                        label="JavaScript"
+                        name="js"
+                      >
                         <pre class="code-block">{{ generateJavaScriptCode() }}</pre>
                       </el-tab-pane>
-                      <el-tab-pane label="JSON Schema" name="json">
+                      <el-tab-pane
+                        label="JSON Schema"
+                        name="json"
+                      >
                         <pre class="code-block">{{ generateJsonSchema() }}</pre>
                       </el-tab-pane>
-                      <el-tab-pane label="执行计划" name="plan">
+                      <el-tab-pane
+                        label="执行计划"
+                        name="plan"
+                      >
                         <div class="execution-plan">
-                          <el-steps :active="executionSteps.length" direction="vertical">
+                          <el-steps
+                            :active="executionSteps.length"
+                            direction="vertical"
+                          >
                             <el-step
                               v-for="(step, index) in executionSteps"
                               :key="index"

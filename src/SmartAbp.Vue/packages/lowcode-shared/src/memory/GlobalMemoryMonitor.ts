@@ -235,7 +235,8 @@ export class GlobalMemoryMonitor {
       };
     }
 
-    const memory = (performance as PerformanceWithMemory).memory;
+    const performance_typed = performance as PerformanceWithMemory;
+    const memory = performance_typed.memory;
     if (!memory) {
       console.warn('浏览器不支持内存API');
       return null;
@@ -290,7 +291,8 @@ export class GlobalMemoryMonitor {
         interface WindowWithGC extends Window {
           gc?: () => void;
         }
-        (window as WindowWithGC).gc?.();
+        const window_typed = window as WindowWithGC;
+        window_typed.gc?.();
       }
 
       // 手动清理
@@ -434,7 +436,8 @@ export class GlobalMemoryMonitor {
             addEventListener?: (event: string, handler: (event: Event) => void) => void;
           };
         }
-        const memoryInfo = (navigator as NavigatorWithMemory).memory;
+        const navigator_typed = navigator as NavigatorWithMemory;
+        const memoryInfo = navigator_typed.memory;
         if (memoryInfo && 'addEventListener' in memoryInfo && memoryInfo.addEventListener) {
           memoryInfo.addEventListener('memorypressure', (event: Event) => {
             this.handleMemoryPressureEvent(event);

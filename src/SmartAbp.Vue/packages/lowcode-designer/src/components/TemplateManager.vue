@@ -12,14 +12,39 @@
           clearable
           @input="handleSearch"
         />
-        <el-select v-model="selectedFramework" placeholder="选择框架" clearable @change="handleFrameworkChange">
-          <el-option label="全部" value="" />
-          <el-option label="后端" value="backend" />
-          <el-option label="前端" value="frontend" />
-          <el-option label="低代码" value="lowcode" />
+        <el-select
+          v-model="selectedFramework"
+          placeholder="选择框架"
+          clearable
+          @change="handleFrameworkChange"
+        >
+          <el-option
+            label="全部"
+            value=""
+          />
+          <el-option
+            label="后端"
+            value="backend"
+          />
+          <el-option
+            label="前端"
+            value="frontend"
+          />
+          <el-option
+            label="低代码"
+            value="lowcode"
+          />
         </el-select>
-        <el-select v-model="selectedCategory" placeholder="选择分类" clearable @change="handleCategoryChange">
-          <el-option label="全部" value="" />
+        <el-select
+          v-model="selectedCategory"
+          placeholder="选择分类"
+          clearable
+          @change="handleCategoryChange"
+        >
+          <el-option
+            label="全部"
+            value=""
+          />
           <el-option
             v-for="category in availableCategories"
             :key="category"
@@ -36,8 +61,12 @@
         <el-col :span="6">
           <el-card class="stat-card">
             <div class="stat-content">
-              <div class="stat-number">{{ allTemplates.length }}</div>
-              <div class="stat-label">总模板数</div>
+              <div class="stat-number">
+                {{ allTemplates.length }}
+              </div>
+              <div class="stat-label">
+                总模板数
+              </div>
             </div>
             <i class="stat-icon el-icon-document" />
           </el-card>
@@ -45,8 +74,12 @@
         <el-col :span="6">
           <el-card class="stat-card backend">
             <div class="stat-content">
-              <div class="stat-number">{{ backendTemplates.length }}</div>
-              <div class="stat-label">后端模板</div>
+              <div class="stat-number">
+                {{ backendTemplates.length }}
+              </div>
+              <div class="stat-label">
+                后端模板
+              </div>
             </div>
             <i class="stat-icon el-icon-cpu" />
           </el-card>
@@ -54,8 +87,12 @@
         <el-col :span="6">
           <el-card class="stat-card frontend">
             <div class="stat-content">
-              <div class="stat-number">{{ frontendTemplates.length }}</div>
-              <div class="stat-label">前端模板</div>
+              <div class="stat-number">
+                {{ frontendTemplates.length }}
+              </div>
+              <div class="stat-label">
+                前端模板
+              </div>
             </div>
             <i class="stat-icon el-icon-monitor" />
           </el-card>
@@ -63,8 +100,12 @@
         <el-col :span="6">
           <el-card class="stat-card lowcode">
             <div class="stat-content">
-              <div class="stat-number">{{ lowcodeTemplates.length }}</div>
-              <div class="stat-label">低代码模板</div>
+              <div class="stat-number">
+                {{ lowcodeTemplates.length }}
+              </div>
+              <div class="stat-label">
+                低代码模板
+              </div>
             </div>
             <i class="stat-icon el-icon-magic-stick" />
           </el-card>
@@ -73,25 +114,45 @@
     </div>
 
     <!-- 模板列表 -->
-    <div class="template-list" v-loading="loading">
-      <div class="category-section" v-for="(templates, category) in groupedTemplates" :key="category">
+    <div
+      v-loading="loading"
+      class="template-list"
+    >
+      <div
+        v-for="(templates, category) in groupedTemplates"
+        :key="category"
+        class="category-section"
+      >
         <div class="category-header">
           <h4>{{ category }}</h4>
           <span class="category-count">{{ templates.length }} 个模板</span>
         </div>
 
         <el-row :gutter="16">
-          <el-col :span="8" v-for="template in templates" :key="template.id">
-            <el-card class="template-card" :class="template.targetFramework" shadow="hover">
+          <el-col
+            v-for="template in templates"
+            :key="template.id"
+            :span="8"
+          >
+            <el-card
+              class="template-card"
+              :class="template.targetFramework"
+              shadow="hover"
+            >
               <div class="template-info">
                 <div class="template-title">
                   <h5>{{ template.name }}</h5>
-                  <el-tag :type="getFrameworkTagType(template.targetFramework)" size="small">
+                  <el-tag
+                    :type="getFrameworkTagType(template.targetFramework)"
+                    size="small"
+                  >
                     {{ template.targetFramework }}
                   </el-tag>
                 </div>
 
-                <p class="template-description">{{ template.metadata.description }}</p>
+                <p class="template-description">
+                  {{ template.metadata.description }}
+                </p>
 
                 <div class="template-tags">
                   <el-tag
@@ -102,7 +163,10 @@
                   >
                     {{ tag }}
                   </el-tag>
-                  <span v-if="template.metadata.tags.length > 3" class="more-tags">
+                  <span
+                    v-if="template.metadata.tags.length > 3"
+                    class="more-tags"
+                  >
                     +{{ template.metadata.tags.length - 3 }}
                   </span>
                 </div>
@@ -116,15 +180,29 @@
                     <i class="el-icon-setting" />
                     <span>{{ template.metadata.parameters.length }} 参数</span>
                   </div>
-                  <div v-if="template.metadata.permissionsRequired" class="meta-item">
+                  <div
+                    v-if="template.metadata.permissionsRequired"
+                    class="meta-item"
+                  >
                     <i class="el-icon-lock" />
                     <span>需要权限</span>
                   </div>
                 </div>
 
                 <div class="template-actions">
-                  <el-button size="small" @click="viewTemplate(template)">查看</el-button>
-                  <el-button type="primary" size="small" @click="useTemplate(template)">使用</el-button>
+                  <el-button
+                    size="small"
+                    @click="viewTemplate(template)"
+                  >
+                    查看
+                  </el-button>
+                  <el-button
+                    type="primary"
+                    size="small"
+                    @click="useTemplate(template)"
+                  >
+                    使用
+                  </el-button>
                 </div>
               </div>
             </el-card>
@@ -140,11 +218,20 @@
       width="80%"
       :destroy-on-close="true"
     >
-      <div v-if="selectedTemplate" class="template-detail">
+      <div
+        v-if="selectedTemplate"
+        class="template-detail"
+      >
         <el-tabs v-model="activeTab">
-          <el-tab-pane label="基本信息" name="info">
+          <el-tab-pane
+            label="基本信息"
+            name="info"
+          >
             <div class="template-info-detail">
-              <el-descriptions :column="2" border>
+              <el-descriptions
+                :column="2"
+                border
+              >
                 <el-descriptions-item label="模板名称">
                   {{ selectedTemplate.name }}
                 </el-descriptions-item>
@@ -159,12 +246,18 @@
                 <el-descriptions-item label="文件扩展名">
                   {{ selectedTemplate.fileExtension }}
                 </el-descriptions-item>
-                <el-descriptions-item label="需要权限" :span="2">
+                <el-descriptions-item
+                  label="需要权限"
+                  :span="2"
+                >
                   <el-tag :type="selectedTemplate.metadata.permissionsRequired ? 'warning' : 'success'">
                     {{ selectedTemplate.metadata.permissionsRequired ? '是' : '否' }}
                   </el-tag>
                 </el-descriptions-item>
-                <el-descriptions-item label="描述" :span="2">
+                <el-descriptions-item
+                  label="描述"
+                  :span="2"
+                >
                   {{ selectedTemplate.metadata.description }}
                 </el-descriptions-item>
               </el-descriptions>
@@ -183,7 +276,10 @@
               <div class="template-scenarios">
                 <h4>适用场景</h4>
                 <ul>
-                  <li v-for="scenario in selectedTemplate.metadata.scenarios" :key="scenario">
+                  <li
+                    v-for="scenario in selectedTemplate.metadata.scenarios"
+                    :key="scenario"
+                  >
                     {{ scenario }}
                   </li>
                 </ul>
@@ -191,29 +287,62 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane label="参数配置" name="parameters">
+          <el-tab-pane
+            label="参数配置"
+            name="parameters"
+          >
             <div class="template-parameters">
-              <el-table :data="selectedTemplate.metadata.parameters" border>
-                <el-table-column prop="name" label="参数名" width="120" />
-                <el-table-column prop="type" label="类型" width="80">
+              <el-table
+                :data="selectedTemplate.metadata.parameters"
+                border
+              >
+                <el-table-column
+                  prop="name"
+                  label="参数名"
+                  width="120"
+                />
+                <el-table-column
+                  prop="type"
+                  label="类型"
+                  width="80"
+                >
                   <template #default="{ row }">
-                    <el-tag size="small">{{ row.type }}</el-tag>
+                    <el-tag size="small">
+                      {{ row.type }}
+                    </el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column prop="required" label="必需" width="60">
+                <el-table-column
+                  prop="required"
+                  label="必需"
+                  width="60"
+                >
                   <template #default="{ row }">
-                    <el-tag :type="row.required ? 'danger' : 'info'" size="small">
+                    <el-tag
+                      :type="row.required ? 'danger' : 'info'"
+                      size="small"
+                    >
                       {{ row.required ? '是' : '否' }}
                     </el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column prop="description" label="描述" />
-                <el-table-column prop="example" label="示例" width="120" />
+                <el-table-column
+                  prop="description"
+                  label="描述"
+                />
+                <el-table-column
+                  prop="example"
+                  label="示例"
+                  width="120"
+                />
               </el-table>
             </div>
           </el-tab-pane>
 
-          <el-tab-pane label="使用示例" name="examples">
+          <el-tab-pane
+            label="使用示例"
+            name="examples"
+          >
             <div class="template-examples">
               <div
                 v-for="(example, index) in selectedTemplate.metadata.usageExamples"
@@ -221,7 +350,11 @@
                 class="example-item"
               >
                 <h4>{{ example.scenario }}</h4>
-                <el-descriptions :column="1" size="small" border>
+                <el-descriptions
+                  :column="1"
+                  size="small"
+                  border
+                >
                   <el-descriptions-item
                     v-for="(value, key) in example.parameters"
                     :key="key"
@@ -234,10 +367,16 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane label="验证规则" name="validation">
+          <el-tab-pane
+            label="验证规则"
+            name="validation"
+          >
             <div class="template-validation">
               <ul>
-                <li v-for="rule in selectedTemplate.metadata.validationRules" :key="rule">
+                <li
+                  v-for="rule in selectedTemplate.metadata.validationRules"
+                  :key="rule"
+                >
                   {{ rule }}
                 </li>
               </ul>
@@ -247,8 +386,15 @@
       </div>
 
       <template #footer>
-        <el-button @click="showTemplateDetail = false">关闭</el-button>
-        <el-button type="primary" @click="useTemplate(selectedTemplate!)">使用模板</el-button>
+        <el-button @click="showTemplateDetail = false">
+          关闭
+        </el-button>
+        <el-button
+          type="primary"
+          @click="useTemplate(selectedTemplate!)"
+        >
+          使用模板
+        </el-button>
       </template>
     </el-dialog>
 
@@ -259,8 +405,16 @@
       width="60%"
       :destroy-on-close="true"
     >
-      <div v-if="selectedTemplate" class="template-use">
-        <el-form :model="templateParameters" :rules="parameterRules" ref="parameterFormRef" label-width="120px">
+      <div
+        v-if="selectedTemplate"
+        class="template-use"
+      >
+        <el-form
+          ref="parameterFormRef"
+          :model="templateParameters"
+          :rules="parameterRules"
+          label-width="120px"
+        >
           <el-form-item
             v-for="param in selectedTemplate.metadata.parameters"
             :key="param.name"
@@ -271,8 +425,14 @@
             <template #label>
               <div class="parameter-label">
                 <span>{{ param.name }}</span>
-                <el-tooltip :content="param.description" placement="top">
-                  <i class="el-icon-question" style="margin-left: 4px; color: #909399" />
+                <el-tooltip
+                  :content="param.description"
+                  placement="top"
+                >
+                  <i
+                    class="el-icon-question"
+                    style="margin-left: 4px; color: #909399"
+                  />
                 </el-tooltip>
               </div>
             </template>
@@ -310,7 +470,10 @@
               :placeholder="param.description"
             />
 
-            <div v-if="param.example" class="parameter-example">
+            <div
+              v-if="param.example"
+              class="parameter-example"
+            >
               示例: <code>{{ param.example }}</code>
             </div>
           </el-form-item>
@@ -318,9 +481,19 @@
       </div>
 
       <template #footer>
-        <el-button @click="showTemplateUse = false">取消</el-button>
-        <el-button @click="resetParameters">重置</el-button>
-        <el-button type="primary" :loading="generating" @click="generateCode">生成代码</el-button>
+        <el-button @click="showTemplateUse = false">
+          取消
+        </el-button>
+        <el-button @click="resetParameters">
+          重置
+        </el-button>
+        <el-button
+          type="primary"
+          :loading="generating"
+          @click="generateCode"
+        >
+          生成代码
+        </el-button>
       </template>
     </el-dialog>
 
@@ -331,8 +504,14 @@
       width="80%"
       :destroy-on-close="true"
     >
-      <div v-if="generationResult" class="generation-result">
-        <div v-if="generationResult.success" class="success-result">
+      <div
+        v-if="generationResult"
+        class="generation-result"
+      >
+        <div
+          v-if="generationResult.success"
+          class="success-result"
+        >
           <el-alert
             title="代码生成成功"
             type="success"
@@ -354,8 +533,18 @@
               <div class="file-header">
                 <span class="file-path">{{ file.path }}</span>
                 <div class="file-actions">
-                  <el-button size="small" @click="copyFileContent(file.content)">复制</el-button>
-                  <el-button size="small" @click="downloadFile(file)">下载</el-button>
+                  <el-button
+                    size="small"
+                    @click="copyFileContent(file.content)"
+                  >
+                    复制
+                  </el-button>
+                  <el-button
+                    size="small"
+                    @click="downloadFile(file)"
+                  >
+                    下载
+                  </el-button>
                 </div>
               </div>
               <pre class="code-content"><code>{{ file.content }}</code></pre>
@@ -363,7 +552,10 @@
           </el-tabs>
         </div>
 
-        <div v-else class="error-result">
+        <div
+          v-else
+          class="error-result"
+        >
           <el-alert
             title="代码生成失败"
             type="error"
@@ -372,13 +564,21 @@
           >
             <template #default>
               <ul>
-                <li v-for="error in generationResult.errors" :key="error">{{ error }}</li>
+                <li
+                  v-for="(errorMsg, index) in generationResult.errors"
+                  :key="index"
+                >
+                  {{ errorMsg }}
+                </li>
               </ul>
             </template>
           </el-alert>
         </div>
 
-        <div v-if="generationResult.warnings.length > 0" class="warnings">
+        <div
+          v-if="generationResult.warnings.length > 0"
+          class="warnings"
+        >
           <el-alert
             title="警告信息"
             type="warning"
@@ -386,7 +586,12 @@
           >
             <template #default>
               <ul>
-                <li v-for="warning in generationResult.warnings" :key="warning">{{ warning }}</li>
+                <li
+                  v-for="warning in generationResult.warnings"
+                  :key="warning"
+                >
+                  {{ warning }}
+                </li>
               </ul>
             </template>
           </el-alert>
@@ -394,8 +599,16 @@
       </div>
 
       <template #footer>
-        <el-button @click="showGenerationResult = false">关闭</el-button>
-        <el-button v-if="generationResult?.success" type="primary" @click="downloadAllFiles">下载全部</el-button>
+        <el-button @click="showGenerationResult = false">
+          关闭
+        </el-button>
+        <el-button
+          v-if="generationResult?.success"
+          type="primary"
+          @click="downloadAllFiles"
+        >
+          下载全部
+        </el-button>
       </template>
     </el-dialog>
   </div>

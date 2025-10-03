@@ -15,7 +15,9 @@
           :on-change="handleFileChange"
           accept=".json,.vue,.html"
         >
-          <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+          <el-icon class="el-icon--upload">
+            <upload-filled />
+          </el-icon>
           <div class="el-upload__text">
             将文件拖到此处，或<em>点击上传</em>
           </div>
@@ -25,7 +27,10 @@
         </el-upload>
       </div>
 
-      <div v-if="importData" class="preview-area">
+      <div
+        v-if="importData"
+        class="preview-area"
+      >
         <h4>预览</h4>
         <div class="preview-content">
           <pre>{{ JSON.stringify(importData, null, 2) }}</pre>
@@ -36,7 +41,11 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="handleClose">取消</el-button>
-        <el-button type="primary" :disabled="!importData" @click="handleImport">导入</el-button>
+        <el-button
+          type="primary"
+          :disabled="!importData"
+          @click="handleImport"
+        >导入</el-button>
       </span>
     </template>
   </el-dialog>

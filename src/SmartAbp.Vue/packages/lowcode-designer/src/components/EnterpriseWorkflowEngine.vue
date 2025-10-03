@@ -8,14 +8,25 @@
           企业级工作流引擎
         </h3>
         <div class="workflow-stats">
-          <el-tag type="primary">活跃流程: {{ activeWorkflows.length }}</el-tag>
-          <el-tag type="success">已完成: {{ completedWorkflows.length }}</el-tag>
-          <el-tag type="warning">等待中: {{ pendingWorkflows.length }}</el-tag>
-          <el-tag type="danger">异常: {{ errorWorkflows.length }}</el-tag>
+          <el-tag type="primary">
+            活跃流程: {{ activeWorkflows.length }}
+          </el-tag>
+          <el-tag type="success">
+            已完成: {{ completedWorkflows.length }}
+          </el-tag>
+          <el-tag type="warning">
+            等待中: {{ pendingWorkflows.length }}
+          </el-tag>
+          <el-tag type="danger">
+            异常: {{ errorWorkflows.length }}
+          </el-tag>
         </div>
       </div>
       <div class="header-actions">
-        <el-button type="primary" @click="createNewWorkflow">
+        <el-button
+          type="primary"
+          @click="createNewWorkflow"
+        >
           <el-icon><Plus /></el-icon>
           新建工作流
         </el-button>
@@ -55,7 +66,9 @@
             @click="selectWorkflow(workflow)"
           >
             <div class="workflow-info">
-              <div class="workflow-name">{{ workflow.name }}</div>
+              <div class="workflow-name">
+                {{ workflow.name }}
+              </div>
               <div class="workflow-status">
                 <el-tag
                   :type="getStatusColor(workflow.status)"
@@ -104,24 +117,47 @@
           </div>
 
           <div class="toolbar-center">
-            <el-select v-model="canvasMode" size="small" style="width: 120px">
-              <el-option label="设计模式" value="design" />
-              <el-option label="预览模式" value="preview" />
-              <el-option label="调试模式" value="debug" />
+            <el-select
+              v-model="canvasMode"
+              size="small"
+              style="width: 120px"
+            >
+              <el-option
+                label="设计模式"
+                value="design"
+              />
+              <el-option
+                label="预览模式"
+                value="preview"
+              />
+              <el-option
+                label="调试模式"
+                value="debug"
+              />
             </el-select>
           </div>
 
           <div class="toolbar-right">
             <el-button-group size="small">
-              <el-button @click="validateWorkflow" :loading="validating">
+              <el-button
+                :loading="validating"
+                @click="validateWorkflow"
+              >
                 <el-icon><CircleCheck /></el-icon>
                 验证
               </el-button>
-              <el-button @click="simulateWorkflow" :loading="simulating">
+              <el-button
+                :loading="simulating"
+                @click="simulateWorkflow"
+              >
                 <el-icon><VideoPlay /></el-icon>
                 模拟执行
               </el-button>
-              <el-button type="primary" @click="deployWorkflow" :loading="deploying">
+              <el-button
+                type="primary"
+                :loading="deploying"
+                @click="deployWorkflow"
+              >
                 <el-icon><Promotion /></el-icon>
                 部署
               </el-button>
@@ -139,7 +175,10 @@
             @click="handleCanvasClick"
           >
             <!-- 网格背景 -->
-            <div v-if="showGrid" class="grid-background"></div>
+            <div
+              v-if="showGrid"
+              class="grid-background"
+            />
 
             <!-- 工作流节点 -->
             <div
@@ -159,7 +198,7 @@
               @mousedown="startNodeDrag(node, $event)"
             >
               <div class="node-header">
-                <el-icon :class="getNodeIcon(node.type)"></el-icon>
+                <el-icon :class="getNodeIcon(node.type)" />
                 <span class="node-title">{{ node.name }}</span>
                 <div class="node-actions">
                   <el-button
@@ -181,8 +220,13 @@
               </div>
 
               <div class="node-body">
-                <div class="node-description">{{ node.description }}</div>
-                <div v-if="node.config" class="node-config">
+                <div class="node-description">
+                  {{ node.description }}
+                </div>
+                <div
+                  v-if="node.config"
+                  class="node-config"
+                >
                   <div
                     v-for="(value, key) in node.config"
                     :key="key"
@@ -203,12 +247,16 @@
                   :class="connector.type"
                   :style="connector.style"
                   @mousedown="startConnection(node, connector, $event)"
-                ></div>
+                />
               </div>
             </div>
 
             <!-- 连接线 -->
-            <svg class="connections-svg" :width="canvasSize.width" :height="canvasSize.height">
+            <svg
+              class="connections-svg"
+              :width="canvasSize.width"
+              :height="canvasSize.height"
+            >
               <defs>
                 <marker
                   id="arrowhead"
@@ -240,7 +288,10 @@
             </svg>
 
             <!-- 拖拽连接线预览 -->
-            <svg v-if="draggingConnection" class="drag-connection-svg">
+            <svg
+              v-if="draggingConnection"
+              class="drag-connection-svg"
+            >
               <path
                 :d="dragConnectionPath"
                 class="drag-connection-path"
@@ -259,8 +310,14 @@
 
         <div class="properties-content">
           <!-- 工作流属性 -->
-          <div v-if="!selectedNode && selectedWorkflow" class="workflow-props">
-            <el-form :model="selectedWorkflow" label-width="80px">
+          <div
+            v-if="!selectedNode && selectedWorkflow"
+            class="workflow-props"
+          >
+            <el-form
+              :model="selectedWorkflow"
+              label-width="80px"
+            >
               <el-form-item label="流程名称">
                 <el-input v-model="selectedWorkflow.name" />
               </el-form-item>
@@ -273,28 +330,64 @@
               </el-form-item>
               <el-form-item label="触发方式">
                 <el-select v-model="selectedWorkflow.triggerType">
-                  <el-option label="手动触发" value="manual" />
-                  <el-option label="定时触发" value="scheduled" />
-                  <el-option label="事件触发" value="event" />
-                  <el-option label="条件触发" value="condition" />
+                  <el-option
+                    label="手动触发"
+                    value="manual"
+                  />
+                  <el-option
+                    label="定时触发"
+                    value="scheduled"
+                  />
+                  <el-option
+                    label="事件触发"
+                    value="event"
+                  />
+                  <el-option
+                    label="条件触发"
+                    value="condition"
+                  />
                 </el-select>
               </el-form-item>
             </el-form>
           </div>
 
           <!-- 节点属性 -->
-          <div v-if="selectedNode" class="node-props">
-            <el-form :model="selectedNode" label-width="80px">
+          <div
+            v-if="selectedNode"
+            class="node-props"
+          >
+            <el-form
+              :model="selectedNode"
+              label-width="80px"
+            >
               <el-form-item label="节点名称">
                 <el-input v-model="selectedNode.name" />
               </el-form-item>
               <el-form-item label="节点类型">
-                <el-select v-model="selectedNode.type" disabled>
-                  <el-option label="开始节点" value="start" />
-                  <el-option label="任务节点" value="task" />
-                  <el-option label="决策节点" value="decision" />
-                  <el-option label="并行节点" value="parallel" />
-                  <el-option label="结束节点" value="end" />
+                <el-select
+                  v-model="selectedNode.type"
+                  disabled
+                >
+                  <el-option
+                    label="开始节点"
+                    value="start"
+                  />
+                  <el-option
+                    label="任务节点"
+                    value="task"
+                  />
+                  <el-option
+                    label="决策节点"
+                    value="decision"
+                  />
+                  <el-option
+                    label="并行节点"
+                    value="parallel"
+                  />
+                  <el-option
+                    label="结束节点"
+                    value="end"
+                  />
                 </el-select>
               </el-form-item>
               <el-form-item label="节点描述">
@@ -306,12 +399,24 @@
               </el-form-item>
 
               <!-- 动态配置表单 -->
-              <div v-if="selectedNode.type === 'task'" class="task-config">
+              <div
+                v-if="selectedNode.type === 'task'"
+                class="task-config"
+              >
                 <el-form-item label="执行者">
                   <el-select v-model="selectedNode.config.assignee">
-                    <el-option label="指定用户" value="user" />
-                    <el-option label="指定角色" value="role" />
-                    <el-option label="动态分配" value="dynamic" />
+                    <el-option
+                      label="指定用户"
+                      value="user"
+                    />
+                    <el-option
+                      label="指定角色"
+                      value="role"
+                    />
+                    <el-option
+                      label="动态分配"
+                      value="dynamic"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="超时时间">
@@ -325,7 +430,10 @@
                 </el-form-item>
               </div>
 
-              <div v-if="selectedNode.type === 'decision'" class="decision-config">
+              <div
+                v-if="selectedNode.type === 'decision'"
+                class="decision-config"
+              >
                 <el-form-item label="判断条件">
                   <el-input
                     v-model="selectedNode.config.condition"
@@ -352,17 +460,23 @@
           draggable="true"
           @dragstart="handleNodeDragStart(nodeType, $event)"
         >
-          <el-icon :class="nodeType.icon"></el-icon>
+          <el-icon :class="nodeType.icon" />
           <span>{{ nodeType.name }}</span>
         </div>
       </div>
     </div>
 
     <!-- 🎯 工作流执行监控 -->
-    <div class="execution-monitor" v-if="isMonitoring">
+    <div
+      v-if="isMonitoring"
+      class="execution-monitor"
+    >
       <div class="monitor-header">
         <h4>执行监控</h4>
-        <el-button text @click="stopMonitoring">
+        <el-button
+          text
+          @click="stopMonitoring"
+        >
           <el-icon><VideoClose /></el-icon>
           停止监控
         </el-button>

@@ -6,7 +6,7 @@
 import { ref, reactive } from "vue"
 import { useEventListener, useThrottleFn } from "@vueuse/core"
 import { ElMessage } from "element-plus"
-import type { DesignerComponent } from "@smartabp/lowcode-designer/types/designer"
+import type { DesignerComponent } from "@smartabp/lowcode-designer"
 
 // 类型定义
 export interface Position {

@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 import { defineStore } from "pinia"
 import { ref } from "vue"
-import { logger } from "@smartabp/lowcode-tools"
+// ✅ 正确：使用lowcode-tools桥接层获取logger
+import { logger } from '@smartabp/lowcode-tools'
 
 // 代码生成配置接口
 export interface CodeGenerationConfig {
@@ -927,7 +928,7 @@ onMounted(() => {
   }
 
   const generateApiClient = (entity: any, _config: CodeGenerationConfig): string => {
-    return `import http from '@smartabp/lowcode-tools'
+    return `import { apiService } from '@smartabp/lowcode-tools'
 
 export interface ${entity.name}Dto {
 ${entity.fields.map((field: any) => `  ${field.name.toLowerCase()}: ${field.type === "DateTime" ? "Date" : field.type.toLowerCase()}`).join('\n')}
@@ -950,23 +951,23 @@ export interface ${entity.name}ListRequest {
 
 export const ${entity.name.toLowerCase()}Api = {
   getList: (params: ${entity.name}ListRequest) => {
-    return http.get<PagedResult<${entity.name}Dto>>("/api/${entity.name.toLowerCase()}s", { params })
+    return apiService.get<PagedResult<${entity.name}Dto>>("/api/${entity.name.toLowerCase()}s", { params })
   },
 
   get: (id: string) => {
-    return http.get<${entity.name}Dto>(\`/api/${entity.name.toLowerCase()}s/\${id}\`)
+    return apiService.get<${entity.name}Dto>(\`/api/${entity.name.toLowerCase()}s/\${id}\`)
   },
 
   create: (data: Create${entity.name}Dto) => {
-    return http.post<${entity.name}Dto>("/api/${entity.name.toLowerCase()}s", data)
+    return apiService.post<${entity.name}Dto>("/api/${entity.name.toLowerCase()}s", data)
   },
 
   update: (id: string, data: Update${entity.name}Dto) => {
-    return http.put<${entity.name}Dto>(\`/api/${entity.name.toLowerCase()}s/\${id}\`, data)
+    return apiService.put<${entity.name}Dto>(\`/api/${entity.name.toLowerCase()}s/\${id}\`, data)
   },
 
   delete: (id: string) => {
-    return http.delete(\`/api/${entity.name.toLowerCase()}s/\${id}\`)
+    return apiService.delete(\`/api/${entity.name.toLowerCase()}s/\${id}\`)
   }
 }`
   }

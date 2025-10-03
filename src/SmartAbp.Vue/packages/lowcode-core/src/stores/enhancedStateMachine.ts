@@ -1,6 +1,7 @@
 import { defineStore } from "pinia"
 import { ref, computed } from "vue"
-import { logger } from '@smartabp/lowcode-tools'
+// @ts-ignore - logger will be injected by main app via lowcode-tools bridge
+const logger = (globalThis as any).__SMARTABP_LOGGER__ || console
 
 // === 企业级状态机类型定义 ===
 

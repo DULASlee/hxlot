@@ -1,7 +1,13 @@
 <template>
-  <div class="trend-chart" ref="chartRef">
-    <canvas ref="canvasRef"></canvas>
-    <div v-if="loading" class="chart-loading">
+  <div
+    ref="chartRef"
+    class="trend-chart"
+  >
+    <canvas ref="canvasRef" />
+    <div
+      v-if="loading"
+      class="chart-loading"
+    >
       <el-icon class="is-loading">
         <Loading />
       </el-icon>

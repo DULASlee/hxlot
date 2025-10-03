@@ -176,5 +176,80 @@
     "confirm": {
       "clear": { "title": "确认清空", "message": "确定要清空设计器吗？" }
     }
+  },
+  "ultraSimple": {
+    "title": "极简代码生成器",
+    "subtitle": "选择数据库表，输入关键信息，一键生成企业级管理系统",
+    "form": {
+      "table": "数据库表",
+      "tablePlaceholder": "请选择数据库表",
+      "systemName": "系统名称",
+      "systemNamePlaceholder": "如：SmartConstruction",
+      "moduleName": "模块名称",
+      "moduleNamePlaceholder": "如：ProjectManagement",
+      "displayName": "显示名称",
+      "displayNamePlaceholder": "如：项目管理",
+      "architecture": "架构模式",
+      "architecturePlaceholder": "请选择架构模式",
+      "database": "数据库类型",
+      "databasePlaceholder": "请选择数据库类型",
+      "parentMenu": "上级菜单",
+      "parentMenuPlaceholder": "如：System（可为空）",
+      "menuIcon": "菜单图标",
+      "menuIconPlaceholder": "如：database、folder、setting"
+    },
+    "hints": {
+      "systemName": "英文，PascalCase，如：SmartConstruction",
+      "moduleName": "英文，PascalCase，如：ProjectManagement",
+      "displayName": "中文显示名称，如：项目管理",
+      "parentMenu": "可选，留空则为根菜单",
+      "menuIcon": "可选，默认：database"
+    },
+    "architectureTypes": {
+      "crud": "简单增删改查",
+      "ddd": "领域驱动设计",
+      "cqrs": "命令查询职责分离"
+    },
+    "derived": {
+      "title": "自动推导信息",
+      "namespace": "命名空间",
+      "route": "路由前缀",
+      "api": "API端点"
+    },
+    "actions": {
+      "generate": "🚀 一键生成代码",
+      "generating": "🔥 正在生成中...",
+      "completed": "✅ 生成完成",
+      "generateAnother": "🔄 再生成一个",
+      "viewCode": "📄 查看代码",
+      "downloadZip": "📦 下载ZIP"
+    },
+    "validation": {
+      "tableRequired": "请选择数据库表",
+      "systemNameRequired": "请输入系统名称",
+      "moduleNameRequired": "请输入模块名称",
+      "displayNameRequired": "请输入显示名称",
+      "architectureRequired": "请选择架构模式",
+      "databaseRequired": "请选择数据库类型"
+    },
+    "messages": {
+      "fillRequired": "请填写所有必填项",
+      "success": "🎉 代码生成成功！",
+      "error": "❌ 代码生成失败，请重试",
+      "viewCode": "会话ID：{sessionId}",
+      "downloadSuccess": "✅ 下载成功",
+      "downloadError": "❌ 下载失败"
+    },
+    "logs": {
+      "loadingTables": "正在加载数据库表...",
+      "tablesLoaded": "已加载 {count} 张表",
+      "usingMockData": "使用模拟数据（后端未连接）",
+      "starting": "开始生成代码...",
+      "generatingBackend": "正在生成后端代码（C# ABP vNext）...",
+      "backendCompleted": "后端代码生成完成",
+      "generatingFrontend": "正在生成前端代码（Vue3 + TypeScript）...",
+      "completed": "🎉 代码生成完成！",
+      "failed": "生成失败：{error}"
+    }
   }
 }

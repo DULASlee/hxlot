@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import type { ModuleMetadata } from "@smartabp/lowcode-api"
 
 export function uiConfigToPageSchema(metadata: ModuleMetadata): any {

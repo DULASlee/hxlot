@@ -9,23 +9,36 @@
       <div class="option-group">
         <h4>导出格式</h4>
         <el-radio-group v-model="exportFormat">
-          <el-radio value="vue">Vue 组件</el-radio>
-          <el-radio value="html">HTML</el-radio>
-          <el-radio value="json">JSON 配置</el-radio>
+          <el-radio value="vue">
+            Vue 组件
+          </el-radio>
+          <el-radio value="html">
+            HTML
+          </el-radio>
+          <el-radio value="json">
+            JSON 配置
+          </el-radio>
         </el-radio-group>
       </div>
 
       <div class="option-group">
         <h4>导出选项</h4>
-        <el-checkbox v-model="includeStyles">包含样式</el-checkbox>
-        <el-checkbox v-model="includeAssets">包含资源文件</el-checkbox>
+        <el-checkbox v-model="includeStyles">
+          包含样式
+        </el-checkbox>
+        <el-checkbox v-model="includeAssets">
+          包含资源文件
+        </el-checkbox>
       </div>
     </div>
 
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="handleClose">取消</el-button>
-        <el-button type="primary" @click="handleExport">导出</el-button>
+        <el-button
+          type="primary"
+          @click="handleExport"
+        >导出</el-button>
       </span>
     </template>
   </el-dialog>

@@ -3,8 +3,8 @@
  * 为任何组件添加错误边界和错误处理功能
  */
 
-import { defineComponent, h, ref, onErrorCaptured, type Component } from 'vue'
-import type { BaseComponentProps } from '@smartabp/lowcode-shared/types'
+import type { BaseComponentProps } from '../../types';
+import { defineComponent, h, onErrorCaptured, ref, type Component } from 'vue';
 
 /**
  * WithError Props扩展
@@ -13,37 +13,37 @@ export interface WithErrorProps extends BaseComponentProps {
   /**
    * 错误信息
    */
-  error?: Error | string | null
+  error?: Error | string | null;
 
   /**
    * 错误显示模式
    */
-  errorMode?: 'inline' | 'toast' | 'modal' | 'silent'
+  errorMode?: 'inline' | 'toast' | 'modal' | 'silent';
 
   /**
    * 自定义错误组件
    */
-  errorComponent?: Component
+  errorComponent?: Component;
 
   /**
    * 错误回调
    */
-  onError?: (error: Error) => void
+  onError?: (error: Error) => void;
 
   /**
    * 是否显示错误详情
    */
-  showErrorDetails?: boolean
+  showErrorDetails?: boolean;
 
   /**
    * 错误恢复回调
    */
-  onRecover?: () => void
+  onRecover?: () => void;
 
   /**
    * 是否允许重试
    */
-  allowRetry?: boolean
+  allowRetry?: boolean;
 }
 
 /**
@@ -70,13 +70,13 @@ const DefaultErrorComponent = defineComponent({
     }
   },
   setup(props) {
-    const errorMessage = typeof props.error === 'string' 
-      ? props.error 
-      : props.error.message
+    const errorMessage = typeof props.error === 'string'
+      ? props.error
+      : props.error.message;
 
-    const errorStack = props.error instanceof Error 
-      ? props.error.stack 
-      : undefined
+    const errorStack = props.error instanceof Error
+      ? props.error.stack
+      : undefined;
 
     return () => h('div', { class: 'with-error-boundary' }, [
       h('div', { class: 'error-header' }, [
@@ -92,24 +92,24 @@ const DefaultErrorComponent = defineComponent({
         class: 'error-retry-btn',
         onClick: props.onRetry
       }, '重试')
-    ])
+    ]);
   }
-})
+});
 
 /**
  * WithError 高阶组件工厂函数
- * 
+ *
  * @param WrappedComponent 被包装的组件
  * @returns 增强后的组件
- * 
+ *
  * @example
  * ```typescript
  * import { WithError } from '@smartabp/lowcode-shared/components/hocs'
  * import MyComponent from './MyComponent.vue'
- * 
+ *
  * const SafeComponent = WithError(MyComponent)
  * ```
- * 
+ *
  * @example
  * ```vue
  * <template>
@@ -128,8 +128,10 @@ export function WithError(
 ) {
   return defineComponent({
     // ✅ 正确：使用类型守卫替代as any
-    name: `WithError(${typeof WrappedComponent === 'object' && WrappedComponent !== null && 'name' in WrappedComponent ? (WrappedComponent as { name?: string }).name || 'Component' : 'Component'})`,
-    
+    name: `WithError(${typeof WrappedComponent === 'object' && WrappedComponent !== null && 'name' in WrappedComponent ? (WrappedComponent as { name?: string; }).name || 'Component' : 'Component'})`,
+
+    emits: ['recover'],
+
     props: {
       // ✅ 正确：使用PropType替代as any
       error: {
@@ -163,78 +165,78 @@ export function WithError(
     },
 
     setup(props, { attrs, slots, emit }) {
-      const componentError = ref<Error | null>(null)
-      const hasError = ref(false)
+      const componentError = ref<Error | null>(null);
+      const hasError = ref(false);
 
       // 捕获子组件错误
       onErrorCaptured((err: Error, _instance, info) => {
-        componentError.value = err
-        hasError.value = true
+        componentError.value = err;
+        hasError.value = true;
 
         // 记录错误到控制台
         console.error('[WithError]', {
           // ✅ 正确：使用类型守卫替代as any
-          component: typeof WrappedComponent === 'object' && WrappedComponent !== null && 'name' in WrappedComponent ? (WrappedComponent as { name?: string }).name || 'Unknown' : 'Unknown',
+          component: typeof WrappedComponent === 'object' && WrappedComponent !== null && 'name' in WrappedComponent ? (WrappedComponent as { name?: string; }).name || 'Unknown' : 'Unknown',
           error: err,
           info
-        })
+        });
 
         // 调用用户提供的错误回调
         if (props.onError) {
-          props.onError(err)
+          props.onError(err);
         }
 
         // 阻止错误继续向上传播（错误边界）
-        return false
-      })
+        return false;
+      });
 
       // 重试函数
       const handleRetry = () => {
-        componentError.value = null
-        hasError.value = false
-        
+        componentError.value = null;
+        hasError.value = false;
+
         if (props.onRecover) {
-          props.onRecover()
+          props.onRecover();
         }
-        
-        emit('recover')
-      }
+
+        emit('recover');
+      };
 
       return () => {
         // 优先使用外部传入的error
-        const displayError = props.error || componentError.value
+        const displayError = props.error || componentError.value;
 
         // 如果有错误且不是silent模式
         if (displayError && props.errorMode !== 'silent') {
-          const ErrorComp = props.errorComponent || DefaultErrorComponent
-          
+          const ErrorComp = props.errorComponent || DefaultErrorComponent;
+
           return h(ErrorComp, {
             error: displayError,
             showDetails: props.showErrorDetails,
             onRetry: props.allowRetry ? handleRetry : undefined,
             allowRetry: props.allowRetry
-          })
+          });
         }
 
         // 正常渲染组件
         return h(WrappedComponent, {
           ...attrs,
           error: displayError
-        }, slots)
-      }
+        }, slots);
+      };
     }
-  })
+  });
 }
 
 /**
  * 错误处理组合式函数
- * 
+ *
  * @example
  * ```typescript
  * import { useErrorHandler } from '@smartabp/lowcode-shared/components/hocs'
- * 
+ *
  * const { error, handleError, clearError, withErrorHandling } = useErrorHandler()
- * 
+ *
  * // 异步操作包装
  * await withErrorHandling(async () => {
  *   await riskyOperation()
@@ -242,21 +244,21 @@ export function WithError(
  * ```
  */
 export function useErrorHandler() {
-  const error = ref<Error | null>(null)
-  const errorCount = ref(0)
+  const error = ref<Error | null>(null);
+  const errorCount = ref(0);
 
   const handleError = (err: Error | string, context?: Record<string, any>) => {
-    const errorObj = typeof err === 'string' ? new Error(err) : err
-    error.value = errorObj
-    errorCount.value++
+    const errorObj = typeof err === 'string' ? new Error(err) : err;
+    error.value = errorObj;
+    errorCount.value++;
 
     // 记录错误到控制台
-    console.error('[useErrorHandler]', { error: errorObj, context })
-  }
+    console.error('[useErrorHandler]', { error: errorObj, context });
+  };
 
   const clearError = () => {
-    error.value = null
-  }
+    error.value = null;
+  };
 
   /**
    * 包装异步函数，自动捕获错误
@@ -266,18 +268,18 @@ export function useErrorHandler() {
     onError?: (error: Error) => void
   ): Promise<T | null> => {
     try {
-      return await fn()
+      return await fn();
     } catch (err) {
-      const error = err instanceof Error ? err : new Error(String(err))
-      handleError(error)
-      
+      const error = err instanceof Error ? err : new Error(String(err));
+      handleError(error);
+
       if (onError) {
-        onError(error)
+        onError(error);
       }
-      
-      return null
+
+      return null;
     }
-  }
+  };
 
   return {
     error,
@@ -285,5 +287,5 @@ export function useErrorHandler() {
     handleError,
     clearError,
     withErrorHandling
-  }
+  };
 }

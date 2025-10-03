@@ -21,7 +21,7 @@ export { default as GlobalLoadingOverlay } from './src/components/GlobalLoadingO
 
 // ===== 核心Store导出 =====
 export { useWorkspaceStore } from './src/stores/workspace'
-export { useEntityModelingStore, type EntityDefinition, type EntityField, type EntityRelation } from './src/stores/entityModeling'
+export { useEntityModelingStore } from './src/stores/entityModeling'
 export { usePageDesignStore } from './src/stores/pageDesign'
 export { useCodeGenerationStore } from './src/stores/codeGeneration'
 export { useEnhancedThemeStore } from './src/stores/enhancedTheme'
@@ -32,6 +32,8 @@ export { useTemplatesStore } from './src/stores/templates'
 // ===== 类型定义导出 =====
 export * from './src/types/manifest'
 export * from './src/types/entity-designer'
+// Entity Modeling类型单独导出
+export type { EntityDefinition, EntityField, EntityRelation } from './src/stores/entityModeling'
 // UI类型从lowcode-shared导出（已迁移）
 export type { MDIWindowConfig, TabConfig } from '@smartabp/lowcode-shared'
 

@@ -2,10 +2,15 @@
   <div class="compliance-monitor">
     <div class="compliance-overview">
       <div class="compliance-score">
-        <div class="score-circle" :class="scoreClass">
+        <div
+          class="score-circle"
+          :class="scoreClass"
+        >
           {{ overallScore }}%
         </div>
-        <div class="score-label">合规分数</div>
+        <div class="score-label">
+          合规分数
+        </div>
       </div>
       <div class="compliance-stats">
         <div class="stat-item">
@@ -19,7 +24,10 @@
       </div>
     </div>
 
-    <div class="compliance-issues" v-if="complianceData.length > 0">
+    <div
+      v-if="complianceData.length > 0"
+      class="compliance-issues"
+    >
       <div class="issues-header">
         <h4>合规问题列表</h4>
       </div>
@@ -31,12 +39,17 @@
           @click="handleIssueClick(issue)"
         >
           <div class="issue-header">
-            <el-tag :type="getSeverityType(issue.severity)" size="small">
+            <el-tag
+              :type="getSeverityType(issue.severity)"
+              size="small"
+            >
               {{ issue.severity }}
             </el-tag>
             <span class="issue-type">{{ issue.type }}</span>
           </div>
-          <div class="issue-description">{{ issue.description }}</div>
+          <div class="issue-description">
+            {{ issue.description }}
+          </div>
           <div class="issue-meta">
             <span>影响用户: {{ issue.affectedUsers }}</span>
             <span>{{ formatDate(issue.detectedAt) }}</span>
@@ -45,8 +58,14 @@
       </div>
     </div>
 
-    <div v-else class="no-issues">
-      <el-icon size="48" color="#67c23a">
+    <div
+      v-else
+      class="no-issues"
+    >
+      <el-icon
+        size="48"
+        color="#67c23a"
+      >
         <CheckCircle />
       </el-icon>
       <p>所有合规检查均通过</p>

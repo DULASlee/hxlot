@@ -8,13 +8,22 @@
           企业级权限控制系统
         </h3>
         <div class="permission-stats">
-          <el-tag type="primary">角色总数: {{ allRoles.length }}</el-tag>
-          <el-tag type="success">权限总数: {{ allPermissions.length }}</el-tag>
-          <el-tag type="info">用户总数: {{ allUsers.length }}</el-tag>
+          <el-tag type="primary">
+            角色总数: {{ allRoles.length }}
+          </el-tag>
+          <el-tag type="success">
+            权限总数: {{ allPermissions.length }}
+          </el-tag>
+          <el-tag type="info">
+            用户总数: {{ allUsers.length }}
+          </el-tag>
         </div>
       </div>
       <div class="header-actions">
-        <el-button type="primary" @click="createNewRole">
+        <el-button
+          type="primary"
+          @click="createNewRole"
+        >
           <el-icon><Plus /></el-icon>
           新建角色
         </el-button>
@@ -31,9 +40,15 @@
 
     <!-- 🎨 权限管理主体 -->
     <div class="permission-body">
-      <el-tabs v-model="activeTab" class="permission-tabs">
+      <el-tabs
+        v-model="activeTab"
+        class="permission-tabs"
+      >
         <!-- 角色管理 -->
-        <el-tab-pane label="角色管理" name="roles">
+        <el-tab-pane
+          label="角色管理"
+          name="roles"
+        >
           <div class="roles-management">
             <div class="roles-toolbar">
               <el-input
@@ -46,11 +61,27 @@
                   <el-icon><Search /></el-icon>
                 </template>
               </el-input>
-              <el-select v-model="roleFilter" placeholder="筛选" style="width: 120px">
-                <el-option label="全部" value="all" />
-                <el-option label="系统角色" value="system" />
-                <el-option label="自定义角色" value="custom" />
-                <el-option label="已禁用" value="disabled" />
+              <el-select
+                v-model="roleFilter"
+                placeholder="筛选"
+                style="width: 120px"
+              >
+                <el-option
+                  label="全部"
+                  value="all"
+                />
+                <el-option
+                  label="系统角色"
+                  value="system"
+                />
+                <el-option
+                  label="自定义角色"
+                  value="custom"
+                />
+                <el-option
+                  label="已禁用"
+                  value="disabled"
+                />
               </el-select>
             </div>
 
@@ -59,15 +90,22 @@
               <div class="roles-list">
                 <el-table
                   :data="filteredRoles"
-                  @row-click="selectRole"
                   highlight-current-row
                   height="500"
+                  @row-click="selectRole"
                 >
-                  <el-table-column type="selection" width="55" />
-                  <el-table-column prop="name" label="角色名称" min-width="150">
+                  <el-table-column
+                    type="selection"
+                    width="55"
+                  />
+                  <el-table-column
+                    prop="name"
+                    label="角色名称"
+                    min-width="150"
+                  >
                     <template #default="scope">
                       <div class="role-name">
-                        <el-icon :class="getRoleIcon(scope.row.type)"></el-icon>
+                        <el-icon :class="getRoleIcon(scope.row.type)" />
                         <span>{{ scope.row.name }}</span>
                         <el-tag
                           v-if="scope.row.isSystem"
@@ -79,31 +117,58 @@
                       </div>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="description" label="描述" min-width="200" />
-                  <el-table-column prop="userCount" label="用户数" width="80" align="center">
+                  <el-table-column
+                    prop="description"
+                    label="描述"
+                    min-width="200"
+                  />
+                  <el-table-column
+                    prop="userCount"
+                    label="用户数"
+                    width="80"
+                    align="center"
+                  >
                     <template #default="scope">
-                      <el-tag type="primary" size="small">
+                      <el-tag
+                        type="primary"
+                        size="small"
+                      >
                         {{ getUserCountByRole(scope.row.id) }}
                       </el-tag>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="permissionCount" label="权限数" width="80" align="center">
+                  <el-table-column
+                    prop="permissionCount"
+                    label="权限数"
+                    width="80"
+                    align="center"
+                  >
                     <template #default="scope">
-                      <el-tag type="success" size="small">
+                      <el-tag
+                        type="success"
+                        size="small"
+                      >
                         {{ scope.row.permissions.length }}
                       </el-tag>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="enabled" label="状态" width="100">
+                  <el-table-column
+                    prop="enabled"
+                    label="状态"
+                    width="100"
+                  >
                     <template #default="scope">
                       <el-switch
                         v-model="scope.row.enabled"
-                        @change="toggleRoleStatus(scope.row)"
                         :disabled="scope.row.isSystem"
+                        @change="toggleRoleStatus(scope.row)"
                       />
                     </template>
                   </el-table-column>
-                  <el-table-column label="操作" width="200">
+                  <el-table-column
+                    label="操作"
+                    width="200"
+                  >
                     <template #default="scope">
                       <el-button-group size="small">
                         <el-button @click="editRole(scope.row)">
@@ -129,11 +194,17 @@
               </div>
 
               <!-- 角色详情 -->
-              <div v-if="selectedRole" class="role-detail">
+              <div
+                v-if="selectedRole"
+                class="role-detail"
+              >
                 <div class="detail-header">
                   <h4>角色详情</h4>
                   <el-button-group size="small">
-                    <el-button @click="saveRole" :loading="saving">
+                    <el-button
+                      :loading="saving"
+                      @click="saveRole"
+                    >
                       <el-icon><Check /></el-icon>
                       保存
                     </el-button>
@@ -144,9 +215,15 @@
                   </el-button-group>
                 </div>
 
-                <el-form :model="selectedRole" label-width="100px">
+                <el-form
+                  :model="selectedRole"
+                  label-width="100px"
+                >
                   <el-form-item label="角色名称">
-                    <el-input v-model="selectedRole.name" :disabled="selectedRole.isSystem" />
+                    <el-input
+                      v-model="selectedRole.name"
+                      :disabled="selectedRole.isSystem"
+                    />
                   </el-form-item>
                   <el-form-item label="角色描述">
                     <el-input
@@ -156,20 +233,46 @@
                     />
                   </el-form-item>
                   <el-form-item label="角色类型">
-                    <el-select v-model="selectedRole.type" :disabled="selectedRole.isSystem">
-                      <el-option label="管理员" value="admin" />
-                      <el-option label="普通用户" value="user" />
-                      <el-option label="访客" value="guest" />
-                      <el-option label="审核员" value="auditor" />
-                      <el-option label="操作员" value="operator" />
+                    <el-select
+                      v-model="selectedRole.type"
+                      :disabled="selectedRole.isSystem"
+                    >
+                      <el-option
+                        label="管理员"
+                        value="admin"
+                      />
+                      <el-option
+                        label="普通用户"
+                        value="user"
+                      />
+                      <el-option
+                        label="访客"
+                        value="guest"
+                      />
+                      <el-option
+                        label="审核员"
+                        value="auditor"
+                      />
+                      <el-option
+                        label="操作员"
+                        value="operator"
+                      />
                     </el-select>
                   </el-form-item>
                   <el-form-item label="数据权限">
                     <el-checkbox-group v-model="selectedRole.dataScopes">
-                      <el-checkbox label="all">全部数据</el-checkbox>
-                      <el-checkbox label="department">本部门数据</el-checkbox>
-                      <el-checkbox label="self">仅本人数据</el-checkbox>
-                      <el-checkbox label="custom">自定义数据范围</el-checkbox>
+                      <el-checkbox label="all">
+                        全部数据
+                      </el-checkbox>
+                      <el-checkbox label="department">
+                        本部门数据
+                      </el-checkbox>
+                      <el-checkbox label="self">
+                        仅本人数据
+                      </el-checkbox>
+                      <el-checkbox label="custom">
+                        自定义数据范围
+                      </el-checkbox>
                     </el-checkbox-group>
                   </el-form-item>
                 </el-form>
@@ -184,12 +287,12 @@
                     node-key="id"
                     show-checkbox
                     :default-checked-keys="selectedRole.permissions"
-                    @check="handlePermissionCheck"
                     class="permission-tree"
+                    @check="handlePermissionCheck"
                   >
                     <template #default="{ data }">
                       <div class="tree-node">
-                        <el-icon :class="getPermissionIcon(data.type)"></el-icon>
+                        <el-icon :class="getPermissionIcon(data.type)" />
                         <span class="node-label">{{ data.name }}</span>
                         <el-tag
                           v-if="data.level"
@@ -208,7 +311,10 @@
         </el-tab-pane>
 
         <!-- 权限管理 -->
-        <el-tab-pane label="权限管理" name="permissions">
+        <el-tab-pane
+          label="权限管理"
+          name="permissions"
+        >
           <div class="permissions-management">
             <div class="permissions-toolbar">
               <el-input
@@ -221,52 +327,116 @@
                   <el-icon><Search /></el-icon>
                 </template>
               </el-input>
-              <el-select v-model="permissionCategoryFilter" placeholder="分类" style="width: 150px">
-                <el-option label="全部" value="all" />
-                <el-option label="页面权限" value="page" />
-                <el-option label="功能权限" value="function" />
-                <el-option label="数据权限" value="data" />
-                <el-option label="API权限" value="api" />
+              <el-select
+                v-model="permissionCategoryFilter"
+                placeholder="分类"
+                style="width: 150px"
+              >
+                <el-option
+                  label="全部"
+                  value="all"
+                />
+                <el-option
+                  label="页面权限"
+                  value="page"
+                />
+                <el-option
+                  label="功能权限"
+                  value="function"
+                />
+                <el-option
+                  label="数据权限"
+                  value="data"
+                />
+                <el-option
+                  label="API权限"
+                  value="api"
+                />
               </el-select>
             </div>
 
-            <el-table :data="filteredPermissions" height="600">
-              <el-table-column type="selection" width="55" />
-              <el-table-column prop="code" label="权限代码" width="200">
+            <el-table
+              :data="filteredPermissions"
+              height="600"
+            >
+              <el-table-column
+                type="selection"
+                width="55"
+              />
+              <el-table-column
+                prop="code"
+                label="权限代码"
+                width="200"
+              >
                 <template #default="scope">
                   <code class="permission-code">{{ scope.row.code }}</code>
                 </template>
               </el-table-column>
-              <el-table-column prop="name" label="权限名称" min-width="150" />
-              <el-table-column prop="category" label="分类" width="100">
+              <el-table-column
+                prop="name"
+                label="权限名称"
+                min-width="150"
+              />
+              <el-table-column
+                prop="category"
+                label="分类"
+                width="100"
+              >
                 <template #default="scope">
-                  <el-tag :type="getCategoryColor(scope.row.category)" size="small">
+                  <el-tag
+                    :type="getCategoryColor(scope.row.category)"
+                    size="small"
+                  >
                     {{ getCategoryText(scope.row.category) }}
                   </el-tag>
                 </template>
               </el-table-column>
-              <el-table-column prop="level" label="级别" width="80">
+              <el-table-column
+                prop="level"
+                label="级别"
+                width="80"
+              >
                 <template #default="scope">
-                  <el-tag :type="getLevelColor(scope.row.level)" size="small">
+                  <el-tag
+                    :type="getLevelColor(scope.row.level)"
+                    size="small"
+                  >
                     {{ scope.row.level }}
                   </el-tag>
                 </template>
               </el-table-column>
-              <el-table-column prop="resource" label="资源" min-width="120" />
-              <el-table-column prop="action" label="操作" width="100" />
-              <el-table-column label="使用情况" width="100">
+              <el-table-column
+                prop="resource"
+                label="资源"
+                min-width="120"
+              />
+              <el-table-column
+                prop="action"
+                label="操作"
+                width="100"
+              />
+              <el-table-column
+                label="使用情况"
+                width="100"
+              >
                 <template #default="scope">
                   <el-tooltip
                     :content="`被 ${getRoleCountByPermission(scope.row.id)} 个角色使用`"
                     placement="top"
                   >
-                    <el-tag type="info" size="small">
+                    <el-tag
+                      type="info"
+                      size="small"
+                    >
                       {{ getRoleCountByPermission(scope.row.id) }}个角色
                     </el-tag>
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="150">
+              <el-table-column
+                label="操作"
+                width="150"
+              >
                 <template #default="scope">
                   <el-button-group size="small">
                     <el-button @click="editPermission(scope.row)">
@@ -275,8 +445,8 @@
                     </el-button>
                     <el-button
                       type="danger"
-                      @click="deletePermission(scope.row)"
                       :disabled="getRoleCountByPermission(scope.row.id) > 0"
+                      @click="deletePermission(scope.row)"
                     >
                       <el-icon><Delete /></el-icon>
                       删除
@@ -289,7 +459,10 @@
         </el-tab-pane>
 
         <!-- 用户权限 -->
-        <el-tab-pane label="用户权限" name="users">
+        <el-tab-pane
+          label="用户权限"
+          name="users"
+        >
           <div class="users-permission">
             <div class="users-toolbar">
               <el-input
@@ -302,8 +475,15 @@
                   <el-icon><Search /></el-icon>
                 </template>
               </el-input>
-              <el-select v-model="userRoleFilter" placeholder="角色筛选" style="width: 150px">
-                <el-option label="全部角色" value="all" />
+              <el-select
+                v-model="userRoleFilter"
+                placeholder="角色筛选"
+                style="width: 150px"
+              >
+                <el-option
+                  label="全部角色"
+                  value="all"
+                />
                 <el-option
                   v-for="role in allRoles"
                   :key="role.id"
@@ -313,12 +493,33 @@
               </el-select>
             </div>
 
-            <el-table :data="filteredUsers" height="600">
-              <el-table-column type="selection" width="55" />
-              <el-table-column prop="username" label="用户名" width="120" />
-              <el-table-column prop="displayName" label="显示名称" min-width="120" />
-              <el-table-column prop="email" label="邮箱" min-width="180" />
-              <el-table-column label="角色" min-width="200">
+            <el-table
+              :data="filteredUsers"
+              height="600"
+            >
+              <el-table-column
+                type="selection"
+                width="55"
+              />
+              <el-table-column
+                prop="username"
+                label="用户名"
+                width="120"
+              />
+              <el-table-column
+                prop="displayName"
+                label="显示名称"
+                min-width="120"
+              />
+              <el-table-column
+                prop="email"
+                label="邮箱"
+                min-width="180"
+              />
+              <el-table-column
+                label="角色"
+                min-width="200"
+              >
                 <template #default="scope">
                   <div class="user-roles">
                     <el-tag
@@ -332,12 +533,20 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column prop="lastLogin" label="最后登录" width="160">
+              <el-table-column
+                prop="lastLogin"
+                label="最后登录"
+                width="160"
+              >
                 <template #default="scope">
                   {{ formatDate(scope.row.lastLogin) }}
                 </template>
               </el-table-column>
-              <el-table-column prop="enabled" label="状态" width="80">
+              <el-table-column
+                prop="enabled"
+                label="状态"
+                width="80"
+              >
                 <template #default="scope">
                   <el-switch
                     v-model="scope.row.enabled"
@@ -345,7 +554,10 @@
                   />
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="180">
+              <el-table-column
+                label="操作"
+                width="180"
+              >
                 <template #default="scope">
                   <el-button-group size="small">
                     <el-button @click="editUserRoles(scope.row)">
@@ -364,7 +576,10 @@
         </el-tab-pane>
 
         <!-- 权限审计 -->
-        <el-tab-pane label="权限审计" name="audit">
+        <el-tab-pane
+          label="权限审计"
+          name="audit"
+        >
           <div class="permission-audit">
             <div class="audit-toolbar">
               <el-date-picker
@@ -375,35 +590,83 @@
                 end-placeholder="结束时间"
                 style="width: 350px"
               />
-              <el-select v-model="auditActionFilter" placeholder="操作类型" style="width: 120px">
-                <el-option label="全部" value="all" />
-                <el-option label="登录" value="login" />
-                <el-option label="权限变更" value="permission_change" />
-                <el-option label="角色分配" value="role_assign" />
-                <el-option label="数据访问" value="data_access" />
+              <el-select
+                v-model="auditActionFilter"
+                placeholder="操作类型"
+                style="width: 120px"
+              >
+                <el-option
+                  label="全部"
+                  value="all"
+                />
+                <el-option
+                  label="登录"
+                  value="login"
+                />
+                <el-option
+                  label="权限变更"
+                  value="permission_change"
+                />
+                <el-option
+                  label="角色分配"
+                  value="role_assign"
+                />
+                <el-option
+                  label="数据访问"
+                  value="data_access"
+                />
               </el-select>
-              <el-button type="primary" @click="generateAuditReport">
+              <el-button
+                type="primary"
+                @click="generateAuditReport"
+              >
                 <el-icon><Document /></el-icon>
                 生成报告
               </el-button>
             </div>
 
-            <el-table :data="auditLogs" height="500">
-              <el-table-column prop="timestamp" label="时间" width="160">
+            <el-table
+              :data="auditLogs"
+              height="500"
+            >
+              <el-table-column
+                prop="timestamp"
+                label="时间"
+                width="160"
+              >
                 <template #default="scope">
                   {{ formatDateTime(scope.row.timestamp) }}
                 </template>
               </el-table-column>
-              <el-table-column prop="user" label="用户" width="120" />
-              <el-table-column prop="action" label="操作" width="120">
+              <el-table-column
+                prop="user"
+                label="用户"
+                width="120"
+              />
+              <el-table-column
+                prop="action"
+                label="操作"
+                width="120"
+              >
                 <template #default="scope">
-                  <el-tag :type="getActionColor(scope.row.action)" size="small">
+                  <el-tag
+                    :type="getActionColor(scope.row.action)"
+                    size="small"
+                  >
                     {{ getActionText(scope.row.action) }}
                   </el-tag>
                 </template>
               </el-table-column>
-              <el-table-column prop="resource" label="资源" min-width="150" />
-              <el-table-column prop="result" label="结果" width="80">
+              <el-table-column
+                prop="resource"
+                label="资源"
+                min-width="150"
+              />
+              <el-table-column
+                prop="result"
+                label="结果"
+                width="80"
+              >
                 <template #default="scope">
                   <el-tag
                     :type="scope.row.success ? 'success' : 'danger'"
@@ -413,14 +676,26 @@
                   </el-tag>
                 </template>
               </el-table-column>
-              <el-table-column prop="ip" label="IP地址" width="120" />
-              <el-table-column prop="userAgent" label="用户代理" min-width="200" show-overflow-tooltip />
+              <el-table-column
+                prop="ip"
+                label="IP地址"
+                width="120"
+              />
+              <el-table-column
+                prop="userAgent"
+                label="用户代理"
+                min-width="200"
+                show-overflow-tooltip
+              />
             </el-table>
           </div>
         </el-tab-pane>
 
         <!-- 权限矩阵 -->
-        <el-tab-pane label="权限矩阵" name="matrix">
+        <el-tab-pane
+          label="权限矩阵"
+          name="matrix"
+        >
           <div class="permission-matrix">
             <div class="matrix-toolbar">
               <el-button @click="exportMatrix">
@@ -441,10 +716,15 @@
                 height="600"
                 class="permission-matrix-table"
               >
-                <el-table-column prop="resource" label="资源/权限" width="200" fixed="left">
+                <el-table-column
+                  prop="resource"
+                  label="资源/权限"
+                  width="200"
+                  fixed="left"
+                >
                   <template #default="scope">
                     <div class="resource-cell">
-                      <el-icon :class="getResourceIcon(scope.row.type)"></el-icon>
+                      <el-icon :class="getResourceIcon(scope.row.type)" />
                       <span>{{ scope.row.resource }}</span>
                     </div>
                   </template>
@@ -459,8 +739,8 @@
                   <template #default="scope">
                     <el-checkbox
                       :model-value="hasPermission(role.id, scope.row.id)"
-                      @change="(val: any) => togglePermissionMatrix(role.id, scope.row.id, Boolean(val))"
                       :disabled="role.isSystem"
+                      @change="(val: any) => togglePermissionMatrix(role.id, scope.row.id, Boolean(val))"
                     />
                   </template>
                 </el-table-column>
@@ -481,7 +761,10 @@
     >
       <div class="policy-editor">
         <el-tabs v-model="policyTab">
-          <el-tab-pane label="可视化编辑" name="visual">
+          <el-tab-pane
+            label="可视化编辑"
+            name="visual"
+          >
             <div class="visual-policy-editor">
               <div class="policy-conditions">
                 <h4>权限条件</h4>
@@ -492,26 +775,73 @@
                     :key="condition.id"
                     class="condition-row"
                   >
-                    <el-select v-model="condition.field" placeholder="字段">
-                      <el-option label="用户ID" value="userId" />
-                      <el-option label="部门ID" value="departmentId" />
-                      <el-option label="角色" value="role" />
-                      <el-option label="时间" value="time" />
-                      <el-option label="IP地址" value="ip" />
+                    <el-select
+                      v-model="condition.field"
+                      placeholder="字段"
+                    >
+                      <el-option
+                        label="用户ID"
+                        value="userId"
+                      />
+                      <el-option
+                        label="部门ID"
+                        value="departmentId"
+                      />
+                      <el-option
+                        label="角色"
+                        value="role"
+                      />
+                      <el-option
+                        label="时间"
+                        value="time"
+                      />
+                      <el-option
+                        label="IP地址"
+                        value="ip"
+                      />
                     </el-select>
-                    <el-select v-model="condition.operator" placeholder="操作符">
-                      <el-option label="等于" value="eq" />
-                      <el-option label="不等于" value="ne" />
-                      <el-option label="包含" value="in" />
-                      <el-option label="不包含" value="not_in" />
-                      <el-option label="匹配" value="match" />
+                    <el-select
+                      v-model="condition.operator"
+                      placeholder="操作符"
+                    >
+                      <el-option
+                        label="等于"
+                        value="eq"
+                      />
+                      <el-option
+                        label="不等于"
+                        value="ne"
+                      />
+                      <el-option
+                        label="包含"
+                        value="in"
+                      />
+                      <el-option
+                        label="不包含"
+                        value="not_in"
+                      />
+                      <el-option
+                        label="匹配"
+                        value="match"
+                      />
                     </el-select>
-                    <el-input v-model="condition.value" placeholder="值" />
-                    <el-button type="danger" text @click="removePolicyCondition(index)">
+                    <el-input
+                      v-model="condition.value"
+                      placeholder="值"
+                    />
+                    <el-button
+                      type="danger"
+                      text
+                      @click="removePolicyCondition(index)"
+                    >
                       <el-icon><Close /></el-icon>
                     </el-button>
                   </div>
-                  <el-button type="primary" text @click="addPolicyCondition">
+                  <el-button
+                    type="primary"
+                    text
+                    @click="addPolicyCondition"
+                  >
                     <el-icon><Plus /></el-icon>
                     添加条件
                   </el-button>
@@ -520,7 +850,10 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane label="策略代码" name="code">
+          <el-tab-pane
+            label="策略代码"
+            name="code"
+          >
             <div class="policy-code-editor">
               <pre class="policy-code">{{ generatePolicyCode() }}</pre>
             </div>
@@ -529,8 +862,15 @@
       </div>
 
       <template #footer>
-        <el-button @click="showPolicyEditor = false">取消</el-button>
-        <el-button type="primary" @click="savePolicyChanges">保存策略</el-button>
+        <el-button @click="showPolicyEditor = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="savePolicyChanges"
+        >
+          保存策略
+        </el-button>
       </template>
     </el-dialog>
   </div>

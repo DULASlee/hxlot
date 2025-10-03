@@ -6,12 +6,14 @@ using Volo.Abp.SettingManagement;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.TenantManagement;
+using SmartAbp.CodeGenerator;
 
 namespace SmartAbp;
 
 [DependsOn(
     typeof(SmartAbpDomainModule),
     typeof(SmartAbpApplicationContractsModule),
+    typeof(SmartAbpCodeGeneratorModule),
     typeof(AbpAutoMapperModule),
     typeof(AbpFeatureManagementApplicationModule),
     typeof(AbpSettingManagementApplicationModule),

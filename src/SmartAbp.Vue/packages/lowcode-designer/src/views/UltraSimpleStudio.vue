@@ -19,31 +19,70 @@
     <div class="main-card">
       <!-- 🏠 卡片头部 -->
       <div class="card-header">
-        <h1 class="main-title">🚀 极简代码生成器</h1>
-        <p class="subtitle">选择数据库表，输入关键信息，一键生成企业级管理系统</p>
-        <el-tag type="info" effect="plain">苹果式简洁设计 · 8秒极速生成</el-tag>
+        <h1 class="main-title">
+          🚀 极简代码生成器
+        </h1>
+        <p class="subtitle">
+          选择数据库表，输入关键信息，一键生成企业级管理系统
+        </p>
+        <el-tag
+          type="info"
+          effect="plain"
+        >
+          苹果式简洁设计 · 8秒极速生成
+        </el-tag>
       </div>
 
       <!-- 📊 进度指示器 -->
       <div class="progress-indicator">
-        <div class="step-item" :class="{ active: currentStep === 1, completed: currentStep > 1 }">
-          <div class="step-circle">1</div>
-          <div class="step-label">选择数据库表</div>
+        <div
+          class="step-item"
+          :class="{ active: currentStep === 1, completed: currentStep > 1 }"
+        >
+          <div class="step-circle">
+            1
+          </div>
+          <div class="step-label">
+            选择数据库表
+          </div>
         </div>
-        <div class="step-divider" :class="{ completed: currentStep > 1 }"></div>
-        <div class="step-item" :class="{ active: currentStep === 2, completed: currentStep > 2 }">
-          <div class="step-circle">2</div>
-          <div class="step-label">配置元数据</div>
+        <div
+          class="step-divider"
+          :class="{ completed: currentStep > 1 }"
+        />
+        <div
+          class="step-item"
+          :class="{ active: currentStep === 2, completed: currentStep > 2 }"
+        >
+          <div class="step-circle">
+            2
+          </div>
+          <div class="step-label">
+            配置元数据
+          </div>
         </div>
-        <div class="step-divider" :class="{ completed: currentStep > 2 }"></div>
-        <div class="step-item" :class="{ active: currentStep === 3, completed: generationComplete }">
-          <div class="step-circle">3</div>
-          <div class="step-label">生成代码</div>
+        <div
+          class="step-divider"
+          :class="{ completed: currentStep > 2 }"
+        />
+        <div
+          class="step-item"
+          :class="{ active: currentStep === 3, completed: generationComplete }"
+        >
+          <div class="step-circle">
+            3
+          </div>
+          <div class="step-label">
+            生成代码
+          </div>
         </div>
       </div>
 
       <!-- Step 1: 数据库表选择 -->
-      <div v-show="currentStep === 1" class="step-content">
+      <div
+        v-show="currentStep === 1"
+        class="step-content"
+      >
         <div class="section-header">
           <h2>1️⃣ 选择数据库表</h2>
           <p>从现有数据库中选择要生成代码的表</p>
@@ -84,19 +123,31 @@
       </div>
 
       <!-- Step 2: 充分必要元数据配置 (3分钟完成) -->
-      <div v-show="currentStep === 2" class="step-content">
+      <div
+        v-show="currentStep === 2"
+        class="step-content"
+      >
         <div class="section-header">
           <h2>2️⃣ 配置元数据 (充分必要)</h2>
           <p>只需填写8个核心字段，其他信息自动推导</p>
         </div>
 
-        <el-form :model="config" label-position="top" class="config-form">
+        <el-form
+          :model="config"
+          label-position="top"
+          class="config-form"
+        >
           <!-- 系统基础信息组 -->
           <div class="config-group">
-            <h3 class="group-title">📋 系统基础信息</h3>
+            <h3 class="group-title">
+              📋 系统基础信息
+            </h3>
             <el-row :gutter="16">
               <el-col :span="8">
-                <el-form-item label="系统名称 *" required>
+                <el-form-item
+                  label="系统名称 *"
+                  required
+                >
                   <el-select
                     v-model="config.systemName"
                     placeholder="选择或输入系统名"
@@ -104,15 +155,30 @@
                     allow-create
                     @change="handleSystemNameChange"
                   >
-                    <el-option label="SmartConstruction (智慧工地)" value="SmartConstruction" />
-                    <el-option label="MES (制造执行系统)" value="MES" />
-                    <el-option label="HRM (人力资源管理)" value="HRM" />
-                    <el-option label="CRM (客户关系管理)" value="CRM" />
+                    <el-option
+                      label="SmartConstruction (智慧工地)"
+                      value="SmartConstruction"
+                    />
+                    <el-option
+                      label="MES (制造执行系统)"
+                      value="MES"
+                    />
+                    <el-option
+                      label="HRM (人力资源管理)"
+                      value="HRM"
+                    />
+                    <el-option
+                      label="CRM (客户关系管理)"
+                      value="CRM"
+                    />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="模块名称 *" required>
+                <el-form-item
+                  label="模块名称 *"
+                  required
+                >
                   <el-input
                     v-model="config.moduleName"
                     placeholder="如: ProjectManagement"
@@ -120,7 +186,10 @@
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="显示名称 *" required>
+                <el-form-item
+                  label="显示名称 *"
+                  required
+                >
                   <el-input
                     v-model="config.displayName"
                     placeholder="如: 项目管理"
@@ -132,23 +201,55 @@
 
           <!-- 代码生成配置组 -->
           <div class="config-group">
-            <h3 class="group-title">🏗️ 代码生成配置</h3>
+            <h3 class="group-title">
+              🏗️ 代码生成配置
+            </h3>
             <el-row :gutter="16">
               <el-col :span="12">
-                <el-form-item label="架构模式 *" required>
-                  <el-select v-model="config.architecturePattern" placeholder="选择架构模式">
-                    <el-option label="CRUD (标准增删改查)" value="Crud" />
-                    <el-option label="DDD (领域驱动设计)" value="DDD" />
-                    <el-option label="CQRS (命令查询分离)" value="CQRS" />
+                <el-form-item
+                  label="架构模式 *"
+                  required
+                >
+                  <el-select
+                    v-model="config.architecturePattern"
+                    placeholder="选择架构模式"
+                  >
+                    <el-option
+                      label="CRUD (标准增删改查)"
+                      value="Crud"
+                    />
+                    <el-option
+                      label="DDD (领域驱动设计)"
+                      value="DDD"
+                    />
+                    <el-option
+                      label="CQRS (命令查询分离)"
+                      value="CQRS"
+                    />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="数据库类型 *" required>
-                  <el-select v-model="config.databaseProvider" placeholder="选择数据库">
-                    <el-option label="SQL Server" value="SqlServer" />
-                    <el-option label="MySQL" value="MySql" />
-                    <el-option label="PostgreSQL" value="PostgreSql" />
+                <el-form-item
+                  label="数据库类型 *"
+                  required
+                >
+                  <el-select
+                    v-model="config.databaseProvider"
+                    placeholder="选择数据库"
+                  >
+                    <el-option
+                      label="SQL Server"
+                      value="SqlServer"
+                    />
+                    <el-option
+                      label="MySQL"
+                      value="MySql"
+                    />
+                    <el-option
+                      label="PostgreSQL"
+                      value="PostgreSql"
+                    />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -157,16 +258,39 @@
 
           <!-- 前端界面配置组 -->
           <div class="config-group">
-            <h3 class="group-title">🎨 前端界面配置</h3>
+            <h3 class="group-title">
+              🎨 前端界面配置
+            </h3>
             <el-row :gutter="16">
               <el-col :span="12">
-                <el-form-item label="上级菜单 *" required>
-                  <el-select v-model="config.parentMenuId" placeholder="选择上级菜单">
-                    <el-option label="🏠 工作台" value="workstation" />
-                    <el-option label="💼 业务管理" value="business" />
-                    <el-option label="📊 基础数据" value="master-data" />
-                    <el-option label="📈 报表分析" value="reports" />
-                    <el-option label="⚙️ 系统管理" value="system" />
+                <el-form-item
+                  label="上级菜单 *"
+                  required
+                >
+                  <el-select
+                    v-model="config.parentMenuId"
+                    placeholder="选择上级菜单"
+                  >
+                    <el-option
+                      label="🏠 工作台"
+                      value="workstation"
+                    />
+                    <el-option
+                      label="💼 业务管理"
+                      value="business"
+                    />
+                    <el-option
+                      label="📊 基础数据"
+                      value="master-data"
+                    />
+                    <el-option
+                      label="📈 报表分析"
+                      value="reports"
+                    />
+                    <el-option
+                      label="⚙️ 系统管理"
+                      value="system"
+                    />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -183,7 +307,11 @@
 
           <!-- 自动推导信息展示 -->
           <div class="auto-derived-info">
-            <el-alert title="🤖 以下信息已自动推导" type="success" :closable="false">
+            <el-alert
+              title="🤖 以下信息已自动推导"
+              type="success"
+              :closable="false"
+            >
               <ul>
                 <li><strong>命名空间:</strong> {{ derivedNamespace }}</li>
                 <li><strong>路由前缀:</strong> {{ derivedRoutePrefix }}</li>
@@ -194,7 +322,10 @@
         </el-form>
 
         <div class="button-group">
-          <el-button size="large" @click="goToStep1">
+          <el-button
+            size="large"
+            @click="goToStep1"
+          >
             ← 上一步
           </el-button>
           <el-button
@@ -209,7 +340,10 @@
       </div>
 
       <!-- Step 3: 代码生成与进度展示 -->
-      <div v-show="currentStep === 3" class="step-content">
+      <div
+        v-show="currentStep === 3"
+        class="step-content"
+      >
         <div class="section-header">
           <h2>3️⃣ 代码生成中</h2>
           <p>正在为您生成企业级标准代码，请稍候...</p>
@@ -237,8 +371,13 @@
           />
 
           <!-- 实时日志展示 -->
-          <div v-if="generating || generationComplete" class="log-panel">
-            <div class="log-header">📋 生成日志</div>
+          <div
+            v-if="generating || generationComplete"
+            class="log-panel"
+          >
+            <div class="log-header">
+              📋 生成日志
+            </div>
             <div class="log-content">
               <div
                 v-for="(log, index) in generationLogs"
@@ -260,13 +399,24 @@
             sub-title="已成功生成前后端完整代码，可以立即使用"
           >
             <template #extra>
-              <el-button type="primary" size="large" @click="viewGeneratedCode">
+              <el-button
+                type="primary"
+                size="large"
+                @click="viewGeneratedCode"
+              >
                 📄 查看生成的代码
               </el-button>
-              <el-button type="success" size="large" @click="downloadGeneratedCode">
+              <el-button
+                type="success"
+                size="large"
+                @click="downloadGeneratedCode"
+              >
                 📦 下载代码ZIP
               </el-button>
-              <el-button size="large" @click="resetToStart">
+              <el-button
+                size="large"
+                @click="resetToStart"
+              >
                 🔄 再生成一个
               </el-button>
             </template>

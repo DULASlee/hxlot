@@ -59,25 +59,30 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
 
         Configure<AbpDbContextOptions>(options =>
         {
-            /* The main point to change your DBMS.
-             * See also SmartAbpDbContextFactory for EF Core tooling. */
+            /* 🔥 SmartAbp多数据库支持
+             * 支持：SQLite（默认）, SQL Server LocalDB, PostgreSQL
+             * 配置方式：appsettings.json -> Database:Type */
 
             var configuration = context.Services.GetConfiguration();
-            var databaseType = configuration["Database:Type"] ?? "SqlServer";
+            var databaseType = configuration["Database:Type"] ?? "Sqlite";
 
             switch (databaseType.ToLowerInvariant())
             {
                 case "sqlite":
                     options.UseSqlite();
                     break;
+                case "sqlserver":
+                case "mssql":
+                case "localdb":
+                    options.UseSqlServer();
+                    break;
                 case "postgresql":
                 case "postgres":
                     options.UseNpgsql();
                     break;
-                case "sqlserver":
-                case "mssql":
                 default:
-                    options.UseSqlServer();
+                    // 默认使用SQLite（轻量级，无需安装服务器）
+                    options.UseSqlite();
                     break;
             }
         });

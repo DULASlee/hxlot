@@ -1,7 +1,50 @@
 {
   "recommendations": [
+    // Vue 3 开发必备
     "Vue.volar",
+    "Vue.vscode-typescript-vue-plugin",
+
+    // TypeScript 增强
+    "ms-vscode.vscode-typescript-next",
+    "bradlc.vscode-tailwindcss",
+
+    // 代码质量和格式化
+    "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
-    "EditorConfig.EditorConfig"
+    "stylelint.vscode-stylelint",
+
+    // 开发效率工具
+    "christian-kohler.path-intellisense",
+    "christian-kohler.npm-intellisense",
+    "formulahendry.auto-rename-tag",
+    "bradlc.vscode-tailwindcss",
+
+    // Git 工具
+    "eamodio.gitlens",
+    "github.vscode-pull-request-github",
+
+    // 调试和测试
+    "ms-vscode.vscode-json",
+    "vitest.explorer",
+
+    // 文档和注释
+    "aaron-bond.better-comments",
+    "shd101wyy.markdown-preview-enhanced",
+
+    // 主题和图标
+    "pkief.material-icon-theme",
+    "github.github-vscode-theme",
+
+    // 低代码开发增强
+    "bradlc.vscode-tailwindcss",
+    "antfu.iconify",
+    "antfu.unocss"
+  ],
+
+  "unwantedRecommendations": [
+    "ms-vscode.vscode-typescript",
+    "octref.vetur",
+    "hookyqr.beautify",
+    "ms-vscode.vscode-css-languageservice"
   ]
 }
