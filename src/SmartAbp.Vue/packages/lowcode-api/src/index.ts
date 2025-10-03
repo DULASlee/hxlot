@@ -1,16 +1,43 @@
-// 导出所有类型定义
+// ============================================================================
+// 类型定义导出
+// ============================================================================
 export * from "./types/index"
 export type { TableSchema } from "./types/index"
 
-// 导出HTTP客户端
+// ============================================================================
+// HTTP客户端导出
+// ============================================================================
 export * from "./http-client"
 export { http, createHttpClient } from "./http-client"
+export type { HttpClient, ApiResponse, ApiError, HttpClientConfig } from "./http-client"
 
-// 导出代码生成器API
+// ============================================================================
+// 代码生成器API导出
+// ============================================================================
 export * from "./code-generator"
 export { codeGeneratorApi } from "./code-generator"
 
-// 兼容性：保留databaseApi别名
+// ============================================================================
+// Composables导出（Task 1.2 新增）
+// ============================================================================
+export * from "./composables"
+export {
+  // 错误处理
+  useApiError,
+  
+  // Loading管理
+  useApiLoading,
+  createLoadingWrapper,
+  
+  // 统一API调用
+  useApiCall,
+  createApiCall,
+  createCodeGenApiCall
+} from "./composables"
+
+// ============================================================================
+// 兼容性接口（向后兼容）
+// ============================================================================
 import { codeGeneratorApi } from "./code-generator"
 
 interface CompatTemplate {
