@@ -161,8 +161,9 @@ export class BenchmarkEngine {
     if (config.enableOptimizer) {
       try {
         // 使用示例代码进行优化分析
-        const sampleCode = this.generateSampleCode(scenarioResults)
-        result.optimizationReport = await this.performanceOptimizer.analyze(sampleCode)
+        // TODO: 未来版本将传递sampleCode到analyze方法
+        // const sampleCode = this.generateSampleCode(scenarioResults)
+        result.optimizationReport = await this.performanceOptimizer.analyze()
         logger.info('✅ 性能优化分析完成')
       } catch (error) {
         logger.error('❌ 性能优化分析失败', error)
@@ -400,7 +401,7 @@ export class BenchmarkEngine {
   /**
    * 生成示例代码（用于优化器）
    */
-  private generateSampleCode(results: ScenarioBenchmarkResult[]): string {
+  private _generateSampleCode(results: ScenarioBenchmarkResult[]): string {
     // 生成一个包含性能指标的代码示例
     return `
 // 性能基准测试结果

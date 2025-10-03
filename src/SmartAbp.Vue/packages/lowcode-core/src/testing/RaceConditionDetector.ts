@@ -12,7 +12,6 @@
  */
 
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
-import type { ConcurrentOperation, SharedResource } from './ConcurrencyScenario'
 
 const logger = getGlobalLogger()
 

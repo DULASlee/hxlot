@@ -12,7 +12,7 @@
  */
 
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
-import type { PerformanceMetrics, PerformanceBaseline, BaselineScenario } from './PerformanceBaseline'
+import type { PerformanceBaseline, BaselineScenario } from './PerformanceBaseline'
 
 const logger = getGlobalLogger()
 
@@ -281,7 +281,7 @@ export class RegressionDetector {
    * 对比单个指标
    */
   private compareMetric(
-    metricKey: string,
+    _metricKey: string,
     metricName: string,
     baselineValue: number,
     currentValue: number,
