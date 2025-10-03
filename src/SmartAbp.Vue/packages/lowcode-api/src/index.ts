@@ -57,7 +57,7 @@ export const databaseApi = {
    */
   getTemplates: async (): Promise<CompatTemplate[]> => {
     const templates = await codeGeneratorApi.getTemplates()
-    return templates.map(t => ({
+    return templates.map((t: { id: string; name: string; description?: string }) => ({
       id: t.id,
       name: t.name,
       description: t.description || ''

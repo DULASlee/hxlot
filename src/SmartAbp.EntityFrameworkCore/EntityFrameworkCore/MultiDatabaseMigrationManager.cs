@@ -38,7 +38,7 @@ public static class MultiDatabaseMigrationManager
             "sqlite" => DatabaseType.SQLite,
             "postgresql" or "postgres" => DatabaseType.PostgreSQL,
             "mysql" => DatabaseType.MySQL,
-            "sqlserver" or "mssql" => DatabaseType.SqlServer,
+            "sqlserver" or "mssql" or "localdb" => DatabaseType.SqlServer,
             _ => DatabaseType.SqlServer
         };
     }

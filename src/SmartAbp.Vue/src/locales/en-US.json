@@ -204,12 +204,20 @@
     "form": {
       "table": "Database Table",
       "tablePlaceholder": "Select a database table",
+      "selectTable": "Select Database Table",
+      "systemBasicInfo": "System Basic Information",
+      "codeGenerationConfig": "Code Generation Configuration",
+      "frontendConfig": "Frontend Configuration",
       "systemName": "System Name",
       "systemNamePlaceholder": "e.g., SmartConstruction",
       "moduleName": "Module Name",
       "moduleNamePlaceholder": "e.g., ProjectManagement",
       "displayName": "Display Name",
       "displayNamePlaceholder": "e.g., Project Management",
+      "architecturePattern": "Architecture Pattern",
+      "architecturePatternPlaceholder": "Select architecture pattern",
+      "databaseProvider": "Database Provider",
+      "databaseProviderPlaceholder": "Select database type",
       "architecture": "Architecture Pattern",
       "architecturePlaceholder": "Select architecture pattern",
       "database": "Database Type",
@@ -227,23 +235,48 @@
       "menuIcon": "Optional, default: database"
     },
     "architectureTypes": {
+      "Crud": "Simple CRUD",
+      "DDD": "Domain-Driven Design",
+      "CQRS": "Command Query Responsibility Segregation",
       "crud": "Simple CRUD",
       "ddd": "Domain-Driven Design",
       "cqrs": "Command Query Responsibility Segregation"
     },
+    "systemNames": {
+      "SmartConstruction": "Smart Construction",
+      "MES": "Manufacturing Execution System",
+      "HRM": "Human Resource Management",
+      "CRM": "Customer Relationship Management"
+    },
+    "databaseProviders": {
+      "SqlServer": "SQL Server",
+      "MySql": "MySQL",
+      "PostgreSql": "PostgreSQL"
+    },
+    "menuOptions": {
+      "workstation": "🏠 Workstation",
+      "business": "💼 Business",
+      "masterData": "📊 Master Data",
+      "reports": "📈 Reports",
+      "system": "⚙️ System"
+    },
     "derived": {
       "title": "Auto-Derived Information",
       "namespace": "Namespace",
+      "routePrefix": "Route Prefix",
+      "apiEndpoint": "API Endpoint",
       "route": "Route Prefix",
       "api": "API Endpoint"
     },
     "actions": {
       "generate": "🚀 Generate Code",
       "generating": "🔥 Generating...",
+      "oneClickGenerate": "🚀 Generate Full-Stack Code",
       "completed": "✅ Completed",
       "generateAnother": "🔄 Generate Another",
-      "viewCode": "📄 View Code",
-      "downloadZip": "📦 Download ZIP"
+      "generateAgain": "🔄 Generate Another",
+      "viewCode": "View Code",
+      "downloadZip": "Download ZIP"
     },
     "validation": {
       "tableRequired": "Please select a database table",
@@ -251,7 +284,16 @@
       "moduleNameRequired": "Please enter module name",
       "displayNameRequired": "Please enter display name",
       "architectureRequired": "Please select architecture pattern",
-      "databaseRequired": "Please select database type"
+      "databaseRequired": "Please select database type",
+      "unknownError": "Unknown error",
+      "generationError": "Code generation error",
+      "noCodeToView": "No code to view",
+      "previewFailed": "Preview failed",
+      "noCodeToDownload": "No code to download"
+    },
+    "hints": {
+      "waitingForGeneration": "Waiting for generation...",
+      "checkOutputDir": "Please check output directory"
     },
     "messages": {
       "fillRequired": "Please fill in all required fields",
@@ -261,18 +303,38 @@
       "downloadSuccess": "✅ Download successful",
       "downloadError": "❌ Download failed",
       "languageChanged": "🌍 Language changed successfully!",
-      "themeChanged": "🌓 Theme changed successfully!"
+      "themeChanged": "🌓 Theme changed successfully!",
+      "tableSelected": "Selected table: {tableName}"
     },
     "logs": {
+      "title": "Generation Logs",
       "loadingTables": "Loading database tables...",
       "tablesLoaded": "Loaded {count} tables",
       "usingMockData": "Using mock data (backend not connected)",
       "starting": "Starting code generation...",
+      "startGeneration": "Starting code generation...",
+      "parsingSchema": "Parsing table schema...",
+      "schemaNotLoaded": "Schema not loaded, using default config",
+      "metadataComplete": "Metadata configuration completed",
+      "callingService": "Calling code generation service...",
       "generatingBackend": "Generating backend code (C# ABP vNext)...",
       "backendCompleted": "Backend code generation completed",
       "generatingFrontend": "Generating frontend code (Vue3 + TypeScript)...",
+      "generationComplete": "Code generation completed",
       "completed": "🎉 Code generation completed!",
-      "failed": "Generation failed: {error}"
+      "failed": "Generation failed: {error}",
+      "generationFailed": "Generation failed: {error}",
+      "filesGenerated": "Generated {count} files",
+      "fileList": "Files: {files}",
+      "queryTimeout": "Query timeout, please try again later",
+      "fetchingPreview": "Fetching code preview...",
+      "packagingCode": "Packaging code...",
+      "downloadComplete": "Download completed",
+      "downloadFailed": "Download failed",
+      "connectingDatabase": "Connecting to database...",
+      "databaseConnected": "Database connected: {dbName}",
+      "tablesFound": "Found {count} tables",
+      "databaseFailedMock": "Database connection failed, using mock data"
     }
   },
   "dashboard": {

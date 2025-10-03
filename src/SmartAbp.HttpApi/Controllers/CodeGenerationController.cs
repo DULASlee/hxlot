@@ -74,6 +74,12 @@ namespace SmartAbp.Controllers
             return _service.GetSchemaVersionManifestAsync();
         }
 
+        [HttpPost("test-connection")]
+        public Task<DatabaseConnectionTestResultDto> TestDatabaseConnectionAsync([FromBody] DatabaseConnectionRequestDto request)
+        {
+            return _service.TestDatabaseConnectionAsync(request);
+        }
+
         [HttpPost("introspect-db")]
         public Task<DatabaseSchemaDto> IntrospectDatabaseAsync([FromBody] DatabaseIntrospectionRequestDto request)
         {

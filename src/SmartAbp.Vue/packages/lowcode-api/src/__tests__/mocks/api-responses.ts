@@ -6,10 +6,10 @@
  */
 
 import type { 
-  GenerationResult, 
-  Template, 
+  CodeGenerationResult as GenerationResult, 
   ModuleMetadata,
-  ModuleGenerationConfig 
+  CodeGenerationConfig as ModuleGenerationConfig,
+  Template
 } from '../../types'
 
 /**

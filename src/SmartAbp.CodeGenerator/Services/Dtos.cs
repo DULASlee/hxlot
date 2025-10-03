@@ -158,6 +158,23 @@ namespace SmartAbp.CodeGenerator.Services
         }
 
         // ================= Database Introspection DTOs =================
+        public class DatabaseConnectionRequestDto
+        {
+            public string Provider { get; set; } = "SqlServer"; // SqlServer | PostgreSql | MySql | Oracle
+            public string ConnectionString { get; set; } = default!;
+            public string? Schema { get; set; }
+        }
+
+        public class DatabaseConnectionTestResultDto
+        {
+            public bool Success { get; set; }
+            public string Message { get; set; } = default!;
+            public string? ServerVersion { get; set; }
+            public string? DatabaseName { get; set; }
+            public int? SchemaCount { get; set; }
+            public int? TableCount { get; set; }
+        }
+
         public class DatabaseIntrospectionRequestDto
         {
             public string ConnectionStringName { get; set; } = default!; // e.g. "Default"

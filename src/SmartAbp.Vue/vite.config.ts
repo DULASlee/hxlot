@@ -117,8 +117,8 @@ export default defineConfig({
       Expires: "0",
     },
     proxy: {
-      "^/(connect|api|swagger|health-status)(/.*)?": {
-        target: "https://localhost:44379",
+      "^/(connect|api|swagger|health-status|Account)(/.*)?": {
+        target: "http://localhost:11369",
         changeOrigin: true,
         secure: false,
         timeout: 10000, // 增加超时时间

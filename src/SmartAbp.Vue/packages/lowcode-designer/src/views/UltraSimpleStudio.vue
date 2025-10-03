@@ -11,8 +11,25 @@
     <div class="studio-container">
       <!-- 头部 -->
       <div class="studio-header">
-        <h1 class="title">{{ t('ultraSimple.title') }}</h1>
-        <p class="subtitle">{{ t('ultraSimple.subtitle') }}</p>
+        <div class="header-content">
+          <div class="header-text">
+            <h1 class="title">{{ t('ultraSimple.title') }}</h1>
+            <p class="subtitle">{{ t('ultraSimple.subtitle') }}</p>
+          </div>
+          <div class="header-actions">
+            <el-tooltip 
+              :content="mode === 'dark' ? t('common.switchToLight') : t('common.switchToDark')"
+              placement="bottom"
+            >
+              <el-button
+                :icon="mode === 'dark' ? 'Sunny' : 'Moon'"
+                circle
+                @click="toggleTheme"
+                class="theme-toggle"
+              />
+            </el-tooltip>
+          </div>
+        </div>
       </div>
 
       <!-- 主内容区 - 左右布局 -->
@@ -50,7 +67,7 @@
             <el-divider />
 
             <!-- 2-4. 系统基础信息 -->
-            <h3 class="section-title">📋 {{ t('ultraSimple.form.systemBasicInfo') }}</h3>
+            <h3 class="section-title">{{ t('ultraSimple.form.systemBasicInfo') }}</h3>
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item
@@ -63,10 +80,10 @@
                     filterable
                     allow-create
                   >
-                    <el-option label="SmartConstruction" value="SmartConstruction" />
-                    <el-option label="MES" value="MES" />
-                    <el-option label="HRM" value="HRM" />
-                    <el-option label="CRM" value="CRM" />
+                    <el-option :label="t('ultraSimple.systemNames.SmartConstruction')" value="SmartConstruction" />
+                    <el-option :label="t('ultraSimple.systemNames.MES')" value="MES" />
+                    <el-option :label="t('ultraSimple.systemNames.HRM')" value="HRM" />
+                    <el-option :label="t('ultraSimple.systemNames.CRM')" value="CRM" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -95,7 +112,7 @@
             </el-row>
 
             <!-- 5-6. 代码生成配置 -->
-            <h3 class="section-title">🏗️ {{ t('ultraSimple.form.codeGenerationConfig') }}</h3>
+            <h3 class="section-title">{{ t('ultraSimple.form.codeGenerationConfig') }}</h3>
             <el-row :gutter="16">
               <el-col :span="12">
                 <el-form-item
@@ -130,16 +147,16 @@
                     v-model="config.databaseProvider"
                     :placeholder="t('ultraSimple.form.databaseProviderPlaceholder')"
                   >
-                    <el-option label="SQL Server" value="SqlServer" />
-                    <el-option label="MySQL" value="MySql" />
-                    <el-option label="PostgreSQL" value="PostgreSql" />
+                    <el-option :label="t('ultraSimple.databaseProviders.SqlServer')" value="SqlServer" />
+                    <el-option :label="t('ultraSimple.databaseProviders.MySql')" value="MySql" />
+                    <el-option :label="t('ultraSimple.databaseProviders.PostgreSql')" value="PostgreSql" />
                   </el-select>
                 </el-form-item>
               </el-col>
             </el-row>
 
             <!-- 7-8. 前端界面配置 -->
-            <h3 class="section-title">🎨 {{ t('ultraSimple.form.frontendConfig') }}</h3>
+            <h3 class="section-title">{{ t('ultraSimple.form.frontendConfig') }}</h3>
             <el-row :gutter="16">
               <el-col :span="12">
                 <el-form-item
@@ -150,11 +167,11 @@
                     v-model="config.parentMenuId"
                     :placeholder="t('ultraSimple.form.parentMenuPlaceholder')"
                   >
-                    <el-option label="🏠 工作台" value="workstation" />
-                    <el-option label="💼 业务管理" value="business" />
-                    <el-option label="📊 基础数据" value="master-data" />
-                    <el-option label="📈 报表分析" value="reports" />
-                    <el-option label="⚙️ 系统管理" value="system" />
+                    <el-option :label="t('ultraSimple.menuOptions.workstation')" value="workstation" />
+                    <el-option :label="t('ultraSimple.menuOptions.business')" value="business" />
+                    <el-option :label="t('ultraSimple.menuOptions.masterData')" value="master-data" />
+                    <el-option :label="t('ultraSimple.menuOptions.reports')" value="reports" />
+                    <el-option :label="t('ultraSimple.menuOptions.system')" value="system" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -197,7 +214,7 @@
         <!-- 右侧：日志和进度 -->
         <div class="log-panel">
           <div class="panel-header">
-            <span>📋 {{ t('ultraSimple.logs.title') }}</span>
+            <span>{{ t('ultraSimple.logs.title') }}</span>
           </div>
           
           <!-- 进度条 -->
@@ -261,9 +278,11 @@ import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import { codeGeneratorApi } from '@smartabp/lowcode-api'
+import { useTheme } from '@smartabp/lowcode-shared/theme'
 import type { ModuleMetadata, TableSchema } from '@smartabp/lowcode-api'
 
 const { t } = useI18n()
+const { mode, toggleTheme } = useTheme()
 
 // 类型定义
 interface DatabaseTable {
@@ -548,7 +567,7 @@ onMounted(async () => {
     
     const connectionTest = await codeGeneratorApi.testDatabaseConnection({
       provider: 'SqlServer',
-      connectionString: 'default'
+      connectionString: 'Default'
     })
     
     if (connectionTest.success) {
@@ -557,7 +576,7 @@ onMounted(async () => {
       
       const schema = await codeGeneratorApi.introspectDatabase({
         provider: 'SqlServer',
-        connectionStringName: 'default'
+        connectionStringName: 'Default'
       })
       
       if (schema.tables && schema.tables.length > 0) {
@@ -587,146 +606,305 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 <style scoped lang="scss">
 .ultra-simple-studio {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 24px;
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
+  padding: var(--spacing-lg);
 }
 
 .studio-container {
   max-width: 1400px;
   margin: 0 auto;
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  background: var(--color-bg-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
+  border: 0.5px solid var(--color-border-primary);
 }
 
 .studio-header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: var(--spacing-xl);
+  
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .header-text {
+    text-align: left;
+    flex: 1;
+  }
+  
+  .header-actions {
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      
+      &:hover {
+        background: var(--color-bg-secondary);
+      }
+    }
+  }
   
   .title {
-    font-size: 32px;
-    font-weight: 700;
-    color: #2c3e50;
-    margin: 0 0 8px 0;
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-sm) 0;
+    letter-spacing: -0.5px;
   }
   
   .subtitle {
-    font-size: 16px;
-    color: #7f8c8d;
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
     margin: 0;
+    font-weight: var(--font-weight-normal);
   }
 }
 
 .studio-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  gap: var(--spacing-lg);
 }
 
 .config-panel {
   .section-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #2c3e50;
-    margin: 16px 0 12px 0;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: var(--spacing-xl) 0 var(--spacing-lg) 0;
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--color-border-primary);
   }
   
   .derived-info {
-    margin-top: 16px;
+    margin-top: var(--spacing-xl);
+    border-radius: var(--radius-base);
     
     div {
-      margin: 4px 0;
+      margin: var(--spacing-sm) 0;
+      font-size: var(--font-size-sm);
     }
   }
   
   .generate-btn {
     width: 100%;
-    margin-top: 24px;
+    margin-top: var(--spacing-2xl);
     height: 48px;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-lg);
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.config-form {
+  :deep(.el-form-item) {
+    margin-bottom: var(--spacing-xl);
+    
+    .el-form-item__label {
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .el-input,
+    .el-select {
+      .el-input__inner {
+        border-radius: var(--radius-base);
+        border: 0.5px solid var(--color-border-primary);
+        
+        &:focus {
+          border-color: var(--color-primary);
+          box-shadow: 0 0 0 2px var(--color-primary-light);
+        }
+      }
+    }
+  }
+  
+  .el-divider {
+    margin: var(--spacing-xl) 0;
   }
 }
 
 .log-panel {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border: 0.5px solid var(--color-border-primary);
+  border-radius: var(--radius-xl);
   display: flex;
   flex-direction: column;
   height: fit-content;
   max-height: 800px;
   
   .panel-header {
-    padding: 16px;
-    border-bottom: 1px solid #e0e0e0;
-    font-weight: 600;
-    background: #f5f5f5;
-    border-radius: 8px 8px 0 0;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    border-bottom: 0.5px solid var(--color-border-primary);
+    font-weight: var(--font-weight-semibold);
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    color: var(--color-text-primary);
   }
   
   .progress-bar {
-    padding: 0 16px;
-    margin-top: 16px;
+    padding: 0 var(--spacing-xl);
+    margin-top: var(--spacing-xl);
   }
+
+.log-entry {
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-sm);
   
+  .log-time {
+    color: var(--color-text-secondary);
+    margin-right: var(--spacing-md);
+    font-weight: var(--font-weight-medium);
+  }
+}
+
   .log-list {
     flex: 1;
     overflow-y: auto;
-    padding: 16px;
+    padding: var(--spacing-xl);
     min-height: 300px;
     max-height: 600px;
     
     .log-entry {
-      margin-bottom: 8px;
-      padding: 8px;
-      border-radius: 4px;
-      font-size: 13px;
+      margin-bottom: var(--spacing-md);
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-radius: var(--radius-base);
+      font-size: var(--font-size-sm);
+      transition: all 0.2s var(--ease-out);
+      
+      &:hover {
+        transform: translateX(2px);
+        box-shadow: var(--shadow-sm);
+      }
       
       .log-time {
-        color: #999;
-        margin-right: 8px;
+        color: var(--color-text-secondary);
+        margin-right: var(--spacing-md);
+        font-weight: var(--font-weight-medium);
+        transition: color 0.2s var(--ease-out);
       }
       
       &.info {
-        background: #e3f2fd;
-        color: #1976d2;
+        background: var(--color-info-light);
+        color: var(--color-info);
+        border-left: 3px solid var(--color-info);
       }
       
       &.success {
-        background: #e8f5e9;
-        color: #388e3c;
+        background: var(--color-success-light);
+        color: var(--color-success);
+        border-left: 3px solid var(--color-success);
       }
       
       &.warning {
-        background: #fff3e0;
-        color: #f57c00;
+        background: var(--color-warning-light);
+        color: var(--color-warning);
+        border-left: 3px solid var(--color-warning);
       }
       
       &.error {
-        background: #ffebee;
-        color: #d32f2f;
+        background: var(--color-danger-light);
+        color: var(--color-danger);
+        border-left: 3px solid var(--color-danger);
       }
     }
     
     .log-empty {
       text-align: center;
-      color: #999;
-      padding: 32px;
+      color: var(--color-text-placeholder);
+      padding: var(--spacing-xl);
+      font-style: italic;
     }
   }
   
   .action-buttons {
-    padding: 16px;
-    border-top: 1px solid #e0e0e0;
+    padding: var(--spacing-xl);
+    border-top: 0.5px solid var(--color-border-primary);
     display: flex;
-    gap: 8px;
+    gap: var(--spacing-md);
+    background: var(--color-bg-secondary);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    
+    .el-button {
+      flex: 1;
+      transition: all 0.2s var(--ease-out);
+      
+      &:hover {
+        transform: translateY(-1px);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
   }
 }
 
 @media (max-width: 1200px) {
   .studio-content {
     grid-template-columns: 1fr;
+    gap: var(--spacing-xl);
+  }
+  
+  .studio-container {
+    padding: var(--spacing-lg);
+    margin: var(--spacing-md);
+  }
+  
+  .studio-header {
+    margin-bottom: var(--spacing-lg);
+    
+    .title {
+      font-size: var(--font-size-2xl);
+    }
+    
+    .subtitle {
+      font-size: var(--font-size-sm);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .ultra-simple-studio {
+    padding: var(--spacing-md);
+    background: var(--color-bg-primary);
+  }
+  
+  .studio-container {
+    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .config-panel,
+  .log-panel {
+    padding: var(--spacing-md);
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    
+    .el-button {
+      width: 100%;
+    }
+  }
+  
+  .generate-btn {
+    height: 44px;
+    font-size: var(--font-size-base);
   }
 }
 </style>

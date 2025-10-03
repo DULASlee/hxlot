@@ -197,12 +197,20 @@
     "form": {
       "table": "数据库表",
       "tablePlaceholder": "请选择数据库表",
+      "selectTable": "选择数据库表",
+      "systemBasicInfo": "系统基础信息",
+      "codeGenerationConfig": "代码生成配置",
+      "frontendConfig": "前端界面配置",
       "systemName": "系统名称",
       "systemNamePlaceholder": "如：SmartConstruction",
       "moduleName": "模块名称",
       "moduleNamePlaceholder": "如：ProjectManagement",
       "displayName": "显示名称",
       "displayNamePlaceholder": "如：项目管理",
+      "architecturePattern": "架构模式",
+      "architecturePatternPlaceholder": "请选择架构模式",
+      "databaseProvider": "数据库提供商",
+      "databaseProviderPlaceholder": "请选择数据库类型",
       "architecture": "架构模式",
       "architecturePlaceholder": "请选择架构模式",
       "database": "数据库类型",
@@ -220,23 +228,45 @@
       "menuIcon": "可选，默认：database"
     },
     "architectureTypes": {
-      "crud": "简单增删改查",
-      "ddd": "领域驱动设计",
-      "cqrs": "命令查询职责分离"
+      "Crud": "简单增删改查",
+      "DDD": "领域驱动设计",
+      "CQRS": "命令查询职责分离"
+    },
+    "systemNames": {
+      "SmartConstruction": "智慧工地",
+      "MES": "制造执行系统",
+      "HRM": "人力资源管理",
+      "CRM": "客户关系管理"
+    },
+    "databaseProviders": {
+      "SqlServer": "SQL Server",
+      "MySql": "MySQL",
+      "PostgreSql": "PostgreSQL"
+    },
+    "menuOptions": {
+      "workstation": "🏠 工作台",
+      "business": "💼 业务管理",
+      "masterData": "📊 基础数据",
+      "reports": "📈 报表分析",
+      "system": "⚙️ 系统管理"
     },
     "derived": {
       "title": "自动推导信息",
       "namespace": "命名空间",
+      "routePrefix": "路由前缀",
+      "apiEndpoint": "API端点",
       "route": "路由前缀",
       "api": "API端点"
     },
     "actions": {
       "generate": "🚀 一键生成代码",
       "generating": "🔥 正在生成中...",
+      "oneClickGenerate": "🚀 一键生成全栈代码",
       "completed": "✅ 生成完成",
       "generateAnother": "🔄 再生成一个",
-      "viewCode": "📄 查看代码",
-      "downloadZip": "📦 下载ZIP"
+      "generateAgain": "🔄 再生成一个",
+      "viewCode": "查看代码",
+      "downloadZip": "下载ZIP"
     },
     "validation": {
       "tableRequired": "请选择数据库表",
@@ -244,7 +274,16 @@
       "moduleNameRequired": "请输入模块名称",
       "displayNameRequired": "请输入显示名称",
       "architectureRequired": "请选择架构模式",
-      "databaseRequired": "请选择数据库类型"
+      "databaseRequired": "请选择数据库类型",
+      "unknownError": "未知错误",
+      "generationError": "代码生成错误",
+      "noCodeToView": "暂无可查看的代码",
+      "previewFailed": "预览失败",
+      "noCodeToDownload": "暂无可下载的代码"
+    },
+    "hints": {
+      "waitingForGeneration": "等待生成...",
+      "checkOutputDir": "请检查输出目录"
     },
     "messages": {
       "fillRequired": "请填写所有必填项",
@@ -254,18 +293,38 @@
       "downloadSuccess": "✅ 下载成功",
       "downloadError": "❌ 下载失败",
       "languageChanged": "🌍 语言切换成功！",
-      "themeChanged": "🌓 主题切换成功！"
+      "themeChanged": "🌓 主题切换成功！",
+      "tableSelected": "已选择表：{tableName}"
     },
     "logs": {
+      "title": "生成日志",
       "loadingTables": "正在加载数据库表...",
       "tablesLoaded": "已加载 {count} 张表",
       "usingMockData": "使用模拟数据（后端未连接）",
       "starting": "开始生成代码...",
+      "startGeneration": "开始生成代码...",
+      "parsingSchema": "正在解析表结构...",
+      "schemaNotLoaded": "表结构未加载，使用默认配置",
+      "metadataComplete": "元数据配置完成",
+      "callingService": "正在调用代码生成服务...",
       "generatingBackend": "正在生成后端代码（C# ABP vNext）...",
       "backendCompleted": "后端代码生成完成",
       "generatingFrontend": "正在生成前端代码（Vue3 + TypeScript）...",
+      "generationComplete": "代码生成完成",
       "completed": "🎉 代码生成完成！",
-      "failed": "生成失败：{error}"
+      "failed": "生成失败：{error}",
+      "generationFailed": "生成失败：{error}",
+      "filesGenerated": "已生成 {count} 个文件",
+      "fileList": "文件列表：{files}",
+      "queryTimeout": "查询超时，请稍后重试",
+      "fetchingPreview": "正在获取代码预览...",
+      "packagingCode": "正在打包代码...",
+      "downloadComplete": "下载完成",
+      "downloadFailed": "下载失败",
+      "connectingDatabase": "正在连接数据库...",
+      "databaseConnected": "数据库连接成功：{dbName}",
+      "tablesFound": "发现 {count} 张表",
+      "databaseFailedMock": "数据库连接失败，使用模拟数据"
     }
   },
   "dashboard": {

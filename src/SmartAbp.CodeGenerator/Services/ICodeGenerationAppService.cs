@@ -107,6 +107,11 @@ namespace SmartAbp.CodeGenerator.Services
         Task<CodeGenerationStatisticsDto> GetStatisticsAsync();
 
         /// <summary>
+        /// Tests database connection and returns basic information
+        /// </summary>
+        Task<DatabaseConnectionTestResultDto> TestDatabaseConnectionAsync(DatabaseConnectionRequestDto request);
+
+        /// <summary>
         /// Introspects a database via configured connection string and provider, returning schema tables/columns/relationships.
         /// Supports SqlServer, PostgreSql, MySql, Oracle.
         /// </summary>

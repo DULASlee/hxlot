@@ -76,20 +76,36 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
             switch (databaseType.ToLowerInvariant())
             {
                 case "sqlite":
-                    options.UseSqlite();
+                    options.UseSqlite(sqliteOptions =>
+                    {
+                        sqliteOptions.MigrationsHistoryTable("__EFMigrationsHistory");
+                        sqliteOptions.MigrationsAssembly("SmartAbp.EntityFrameworkCore");
+                    });
                     break;
                 case "sqlserver":
                 case "mssql":
                 case "localdb":
-                    options.UseSqlServer();
+                    options.UseSqlServer(sqlServerOptions =>
+                    {
+                        sqlServerOptions.MigrationsHistoryTable("__EFMigrationsHistory");
+                        sqlServerOptions.MigrationsAssembly("SmartAbp.EntityFrameworkCore");
+                    });
                     break;
                 case "postgresql":
                 case "postgres":
-                    options.UseNpgsql();
+                    options.UseNpgsql(npgsqlOptions =>
+                    {
+                        npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory");
+                        npgsqlOptions.MigrationsAssembly("SmartAbp.EntityFrameworkCore");
+                    });
                     break;
                 default:
                     // 默认使用SQLite（轻量级，无需安装服务器）
-                    options.UseSqlite();
+                    options.UseSqlite(sqliteOptions =>
+                    {
+                        sqliteOptions.MigrationsHistoryTable("__EFMigrationsHistory");
+                        sqliteOptions.MigrationsAssembly("SmartAbp.EntityFrameworkCore");
+                    });
                     break;
             }
         });

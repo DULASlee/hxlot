@@ -313,10 +313,10 @@ namespace SmartAbp.CodeGenerator.Services
             {
                 ModuleName = processedInput.Name,
                 GeneratedFiles = generatedFiles,
-                GenerationReport = $"✅ Module {processedInput.Name} generated successfully with enhanced processing.\n" +
-                                   $"📊 Processing results: {modelProcessingResult.ErrorCount} errors, {modelProcessingResult.WarningCount} warnings.\n" +
-                                   $"📁 Total files generated: {generatedFiles.Count}\n" +
-                                   $"🔍 Enhanced features: Complete type mapping + Circular reference detection"
+                GenerationReport = "✅ Module " + processedInput.Name + " generated successfully with enhanced processing.\n" +
+                                   "📊 Processing results: " + modelProcessingResult.ErrorCount + " errors, " + modelProcessingResult.WarningCount + " warnings.\n" +
+                                   "📁 Total files generated: " + generatedFiles.Count + "\n" +
+                                   "🔍 Enhanced features: Complete type mapping + Circular reference detection"
             };
         }
 
@@ -489,12 +489,76 @@ namespace SmartAbp.CodeGenerator.Services
             };
         }
 
+        public async Task<DatabaseConnectionTestResultDto> TestDatabaseConnectionAsync(DatabaseConnectionRequestDto request)
+        {
+            try
+            {
+                Check.NotNullOrWhiteSpace(request.ConnectionString, nameof(request.ConnectionString));
+                
+                // 如果是配置名称（不包含分号），从配置中读取
+                var connectionString = request.ConnectionString.Contains(";") 
+                    ? request.ConnectionString 
+                    : _configuration.GetConnectionString(request.ConnectionString) 
+                      ?? GetConnectionStringIgnoreCase(request.ConnectionString);
+                    
+                if (string.IsNullOrWhiteSpace(connectionString))
+                {
+                    return new DatabaseConnectionTestResultDto
+                    {
+                        Success = false,
+                        Message = $"连接字符串 '{request.ConnectionString}' 未找到"
+                    };
+                }
+                
+                var provider = (request.Provider ?? "SqlServer").Trim();
+
+                if (provider.Equals("SqlServer", StringComparison.OrdinalIgnoreCase))
+                {
+                    using var conn = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
+                    await conn.OpenAsync();
+                    
+                    var result = new DatabaseConnectionTestResultDto
+                    {
+                        Success = true,
+                        Message = "连接成功",
+                        ServerVersion = conn.ServerVersion,
+                        DatabaseName = conn.Database
+                    };
+
+                    // Get table count
+                    using var cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'";
+                    result.TableCount = Convert.ToInt32(await cmd.ExecuteScalarAsync());
+
+                    return result;
+                }
+                else
+                {
+                    return new DatabaseConnectionTestResultDto
+                    {
+                        Success = false,
+                        Message = $"不支持的数据库类型: {provider}"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Database connection test failed");
+                return new DatabaseConnectionTestResultDto
+                {
+                    Success = false,
+                    Message = $"连接失败: {ex.Message}"
+                };
+            }
+        }
+
         public async Task<DatabaseSchemaDto> IntrospectDatabaseAsync(DatabaseIntrospectionRequestDto request)
         {
             try
             {
                 Check.NotNullOrWhiteSpace(request.ConnectionStringName, nameof(request.ConnectionStringName));
-                var cs = _configuration.GetConnectionString(request.ConnectionStringName);
+                var cs = _configuration.GetConnectionString(request.ConnectionStringName) 
+                         ?? GetConnectionStringIgnoreCase(request.ConnectionStringName);
                 if (string.IsNullOrWhiteSpace(cs))
                 {
                     throw new AbpException($"Connection string '{request.ConnectionStringName}' not found");
@@ -1643,7 +1707,7 @@ import Generated from './__COMPONENT__.generated.vue'
                         Content = string.Empty,
                         Type = "Generated"
                     }).ToList() ?? new List<GeneratedFileDto>(),
-                    GenerationReport = $"Entity '{input.Name}' generated successfully as part of module generation."
+                    GenerationReport = "Entity '" + input.Name + "' generated successfully as part of module generation."
                 };
             }
             catch (Exception ex)
@@ -1654,7 +1718,7 @@ import Generated from './__COMPONENT__.generated.vue'
                     Success = false,
                     EntityName = input.Name,
                     GeneratedFiles = new List<GeneratedFileDto>(),
-                    GenerationReport = $"Failed to generate entity '{input.Name}': {ex.Message}"
+                    GenerationReport = "Failed to generate entity '" + input.Name + "': " + ex.Message
                 };
             }
         }
@@ -1747,7 +1811,7 @@ import Generated from './__COMPONENT__.generated.vue'
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to get code generation statistics");
-                throw new AbpException($"Failed to get code generation statistics: {ex.Message}");
+                throw new AbpException("Failed to get code generation statistics: " + ex.Message);
             }
         }
 
@@ -1956,6 +2020,19 @@ public class {entityName}AppService_Tests : SmartAbpApplicationTestBase<SmartAbp
         }
 
         #endregion
+
+        private string? GetConnectionStringIgnoreCase(string connectionStringName)
+        {
+            var connectionStrings = _configuration.GetSection("ConnectionStrings").GetChildren();
+            foreach (var connectionString in connectionStrings)
+            {
+                if (connectionString.Key.Equals(connectionStringName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return connectionString.Value;
+                }
+            }
+            return null;
+        }
     }
 
     /// <summary>

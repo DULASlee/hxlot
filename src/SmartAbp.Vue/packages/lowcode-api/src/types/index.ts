@@ -7,6 +7,10 @@ type PageMetadata = any
 export type ModuleMetadata = any
 export type ModuleMetadataDto = ModuleMetadata
 
+// 代码生成相关类型
+type CodeGenerationConfig = any
+type CodeGenerationResult = any
+
 export interface ColumnSchema {
   name: string
   dataType: string
@@ -37,8 +41,46 @@ export type DatabaseIntrospectionRequest = {
 }
 type ApplicationMetadata = any
 type UIComponentMetadata = any
-type CodeGenerationConfig = any
-type CodeGenerationResult = any
+
+// 导出统一类型
+export type { CodeGenerationConfig, CodeGenerationResult }
+
+// 兼容旧版接口
+export interface GenerationResult extends CodeGenerationResult {}
+export interface ModuleGenerationConfig extends CodeGenerationConfig {}
+export interface Template {
+  id: string
+  name: string
+  description?: string
+  category?: string
+  content: string
+  language: 'csharp' | 'typescript' | 'vue' | 'sql'
+  target: 'entity' | 'service' | 'controller' | 'vue-component' | 'store' | 'dto'
+  metadata?: Record<string, any>
+}
+
+export interface CodeGeneratorApi {
+  generateModule: (config: ModuleGenerationConfig) => Promise<GenerationResult>
+  getTemplates: () => Promise<Template[]>
+  getUiConfig: (moduleName: string, entityName: string) => Promise<any>
+  introspectDatabase: (req: any) => Promise<any>
+  getGenerationStatus: (sessionId: string) => Promise<any>
+  exportGeneratedCode: (sessionId: string) => Promise<Blob>
+  validateModule: (metadata: ModuleMetadata) => Promise<{
+    isValid: boolean
+    errors: Array<{ field: string; message: string; severity: 'Error' | 'Warning' }>
+    suggestions: Array<{ type: 'Naming' | 'Structure' | 'Performance'; message: string; autoFixAvailable: boolean }>
+  }>
+  registerModule: (metadata: ModuleMetadata) => Promise<ModuleMetadata>
+  testDatabaseConnection: (connection: { provider: string; connectionString: string; schema?: string }) => Promise<{
+    success: boolean
+    message: string
+    serverVersion?: string
+    databaseName?: string
+    schemaCount?: number
+    tableCount?: number
+  }>
+}
 
 // ============================================================================
 // 前后端统一API接口定义
@@ -233,40 +275,6 @@ export interface LowCodeEngineApi extends
   
   /** 更新用户偏好设置 */
   updateUserPreferences: (preferences: any) => Promise<ApiResponse<void>>
-}
-
-// 兼容旧版接口
-export interface GenerationResult extends CodeGenerationResult {}
-export interface ModuleGenerationConfig extends CodeGenerationConfig {}
-export interface Template {
-  id: string
-  name: string
-  description?: string
-  category?: string
-  features?: string[]
-}
-
-export interface CodeGeneratorApi {
-  generateModule: (config: ModuleGenerationConfig) => Promise<GenerationResult>
-  getTemplates: () => Promise<Template[]>
-  getUiConfig: (moduleName: string, entityName: string) => Promise<any>
-  introspectDatabase: (req: any) => Promise<any>
-  getGenerationStatus: (sessionId: string) => Promise<any>
-  exportGeneratedCode: (sessionId: string) => Promise<Blob>
-  validateModule: (metadata: ModuleMetadata) => Promise<{
-    isValid: boolean
-    errors: Array<{ field: string; message: string; severity: 'Error' | 'Warning' }>
-    suggestions: Array<{ type: 'Naming' | 'Structure' | 'Performance'; message: string; autoFixAvailable: boolean }>
-  }>
-  registerModule: (metadata: ModuleMetadata) => Promise<ModuleMetadata>
-  testDatabaseConnection: (connection: { provider: string; connectionString: string; schema?: string }) => Promise<{
-    success: boolean
-    message: string
-    serverVersion?: string
-    databaseName?: string
-    schemaCount?: number
-    tableCount?: number
-  }>
 }
 
 // 注意：此文件仅包含类型和接口定义，不包含具体实现
