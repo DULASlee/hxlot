@@ -14,11 +14,11 @@
 ### 修复详情
 1. **修复 @ts-ignore 违规**:
    - `packages/lowcode-core/src/stores/codeGeneration.ts`: 使用lowcode-tools桥接层替代
-   
+
 2. **修复 as any 违规**:
    - `packages/lowcode-shared/src/memory/GlobalMemoryMonitor.ts`: 使用类型扩展替代
    - `packages/lowcode-shared/src/components/hocs/*.ts`: 添加类型安全函数
-   
+
 3. **修复架构依赖违规**:
    - `packages/lowcode-shared/src/components/ComponentRegistry.ts`: 移除对lowcode-designer的依赖
 
@@ -104,7 +104,7 @@
 
 **整体评估**: 🟢 优秀
 - **架构合规性**: 100% ✅
-- **代码质量**: 88分 ✅  
+- **代码质量**: 88分 ✅
 - **类型安全**: 95% ✅
 - **依赖关系**: 100% ✅
 - **构建系统**: 85% ⚠️

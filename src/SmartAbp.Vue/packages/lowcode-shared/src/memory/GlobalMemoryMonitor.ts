@@ -1,7 +1,7 @@
 /**
  * 🧠 全局内存监控系统
  * SmartAbp低代码引擎 - P0级架构优化
- * 
+ *
  * 核心功能:
  * - 实时内存使用监控和告警
  * - 内存泄漏检测和自动修复
@@ -304,7 +304,7 @@ export class GlobalMemoryMonitor {
 
       if (beforeMemory && afterMemory) {
         const reclaimedMemory = beforeMemory.totalUsage - afterMemory.totalUsage;
-        
+
         // 更新GC统计
         this.gcStats.triggerCount++;
         this.gcStats.totalTime += gcTime;
@@ -313,7 +313,7 @@ export class GlobalMemoryMonitor {
         this.gcStats.totalMemoryReclaimed += Math.max(0, reclaimedMemory);
 
         console.log(`✅ 垃圾回收完成: 回收 ${(reclaimedMemory / 1024 / 1024).toFixed(2)}MB 内存, 耗时 ${gcTime}ms`);
-        
+
         this.emitEvent('gc:completed', {
           reclaimedMemory,
           gcTime,
@@ -472,8 +472,8 @@ export class GlobalMemoryMonitor {
     this.checkMemoryPressure(currentUsage);
 
     // 检查是否需要自动垃圾回收
-    if (this.config.enableAutoFix && 
-        currentUsage.usagePercentage / 100 >= this.config.autoGCThreshold) {
+    if (this.config.enableAutoFix &&
+      currentUsage.usagePercentage / 100 >= this.config.autoGCThreshold) {
       console.log('🤖 触发自动垃圾回收...');
       this.forceGarbageCollection();
     }
@@ -510,7 +510,7 @@ export class GlobalMemoryMonitor {
       };
 
       this.pressureAlerts.push(alert);
-      
+
       console.warn(`⚠️ 内存压力警报: ${level} (${usage.usagePercentage.toFixed(1)}%)`);
       this.emitEvent('memory:pressure', alert);
     }
@@ -543,7 +543,7 @@ export class GlobalMemoryMonitor {
       };
 
       this.leakDetections.push(detection);
-      
+
       console.warn(`🔍 内存泄漏检测: ${detection.description}`);
       this.emitEvent('memory:leak-detected', detection);
 
@@ -587,7 +587,7 @@ export class GlobalMemoryMonitor {
    */
   private cleanupHistoryData(): void {
     const cutoff = Date.now() - this.config.historyRetentionTime;
-    
+
     this.memoryHistory = this.memoryHistory.filter(stat => stat.timestamp > cutoff);
     this.pressureAlerts = this.pressureAlerts.filter(alert => alert.createdAt > cutoff);
     this.leakDetections = this.leakDetections.filter(detection => detection.detectedAt > cutoff);
@@ -647,7 +647,7 @@ export class GlobalMemoryMonitor {
    */
   private determineSeverity(growthRate: number): 'low' | 'medium' | 'high' | 'critical' {
     const mbPerSecond = growthRate / 1024 / 1024;
-    
+
     if (mbPerSecond > 10) return 'critical';
     if (mbPerSecond > 5) return 'high';
     if (mbPerSecond > 2) return 'medium';
@@ -662,14 +662,14 @@ export class GlobalMemoryMonitor {
 
     // 基于压力级别的建议
     if (pressureLevel !== 'low') {
-      this.generatePressureRecommendations(pressureLevel).forEach(rec => 
+      this.generatePressureRecommendations(pressureLevel).forEach(rec =>
         recommendations.add(rec)
       );
     }
 
     // 基于泄漏检测的建议
     recentLeaks.forEach(leak => {
-      leak.fixSuggestions.forEach(suggestion => 
+      leak.fixSuggestions.forEach(suggestion =>
         recommendations.add(suggestion)
       );
     });
@@ -687,7 +687,7 @@ export class GlobalMemoryMonitor {
    */
   private async attemptAutoFix(detection: MemoryLeakDetection): Promise<void> {
     console.log(`🤖 尝试自动修复内存泄漏: ${detection.type}`);
-    
+
     try {
       await this.forceGarbageCollection();
       console.log('✅ 自动修复完成');

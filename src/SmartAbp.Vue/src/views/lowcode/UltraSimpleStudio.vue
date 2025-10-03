@@ -638,8 +638,8 @@ async function pollProgress(): Promise<void> {
       const status = await codeGeneratorApi.getGenerationStatus(sessionId.value)
       
       if (status.status === 'completed') {
-        return
-      }
+    return
+  }
   
       // 与后端进度对齐并平滑过渡
       if (typeof status.percentage === 'number') {

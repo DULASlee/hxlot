@@ -1,20 +1,4 @@
-import type {
-  ModuleGenerationConfig,
-  GenerationResult,
-  CodeGeneratorApi,
-} from "./types"
-import { codeGeneratorApi as api } from "./types"
+import type { CodeGeneratorApi } from "./types/index"
+import { codeGeneratorApi as realApi } from "../code-generator"
 
-export const codeGeneratorApi: CodeGeneratorApi = {
-  async generateModule(
-    config: ModuleGenerationConfig,
-  ): Promise<GenerationResult> {
-    return api.generateModule(config)
-  },
-  async getTemplates() {
-    return api.getTemplates()
-  },
-  async getUiConfig(moduleName: string, entityName: string) {
-    return api.getUiConfig(moduleName, entityName)
-  },
-}
+export const codeGeneratorApi: CodeGeneratorApi = realApi as unknown as CodeGeneratorApi

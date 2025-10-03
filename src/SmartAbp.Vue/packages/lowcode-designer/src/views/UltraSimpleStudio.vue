@@ -819,7 +819,7 @@ onMounted(async () => {
       })
       
       if (schema.tables && schema.tables.length > 0) {
-        availableTables.value = schema.tables.map(table => ({
+        availableTables.value = schema.tables.map((table: TableSchema) => ({
           name: table.name,
           displayName: table.name,
           columnCount: table.columns.length,

@@ -1,80 +1,80 @@
- 
-import { defineStore } from "pinia"
-import { ref } from "vue"
-// ✅ 正确：使用lowcode-tools桥接层获取logger
-import { logger } from '@smartabp/lowcode-tools'
+
+import { defineStore } from "pinia";
+import { ref } from "vue";
+// @ts-ignore - logger will be injected by main app via lowcode-tools bridge
+const logger = (globalThis as any).__SMARTABP_LOGGER__ || console;
 
 // 代码生成配置接口
 export interface CodeGenerationConfig {
-  entities: string[]
+  entities: string[];
   templates: {
-    backend: string[]
-    frontend: string[]
-    database: string[]
-  }
+    backend: string[];
+    frontend: string[];
+    database: string[];
+  };
   config: {
-    projectName: string
-    namespace: string
-    databaseType: string
-    frontendFramework: string
-    features: string[]
-  }
+    projectName: string;
+    namespace: string;
+    databaseType: string;
+    frontendFramework: string;
+    features: string[];
+  };
   advanced: {
-    outputDirectory: string
-    overwriteStrategy: string
-    formatCode: boolean
-    generateComments: boolean
-    generateDocs: boolean
-    compressOutput: boolean
-  }
+    outputDirectory: string;
+    overwriteStrategy: string;
+    formatCode: boolean;
+    generateComments: boolean;
+    generateDocs: boolean;
+    compressOutput: boolean;
+  };
 }
 
 // 生成进度接口
 export interface GenerationProgress {
-  percentage: number
-  currentTask: string
-  completedTasks: number
-  totalTasks: number
+  percentage: number;
+  currentTask: string;
+  completedTasks: number;
+  totalTasks: number;
 }
 
 // 生成结果接口
 export interface GenerationResult {
-  success: boolean
-  fileCount: number
-  lineCount: number
-  duration: number
-  totalSize: number
-  errors: Array<{ message: string; detail: string }>
-  warnings: Array<{ message: string; detail: string }>
+  success: boolean;
+  fileCount: number;
+  lineCount: number;
+  duration: number;
+  totalSize: number;
+  errors: Array<{ message: string; detail: string; }>;
+  warnings: Array<{ message: string; detail: string; }>;
   files: Array<{
-    path: string
-    content: string
-    type: string
-    size: number
-  }>
+    path: string;
+    content: string;
+    type: string;
+    size: number;
+  }>;
 }
 
 // 代码模板接口
 export interface CodeTemplate {
-  id: string
-  name: string
-  description: string
-  category: "backend" | "frontend" | "database"
-  language: string
-  template: string
-  requiredFields: string[]
+  id: string;
+  name: string;
+  description: string;
+  category: "backend" | "frontend" | "database";
+  language: string;
+  template: string;
+  requiredFields: string[];
 }
 
 // 代码生成状态管理
 export const useCodeGenerationStore = defineStore("codeGeneration", () => {
   // 状态数据
-  const isGenerating = ref(false)
-  const generationHistory = ref<GenerationResult[]>([])
-  const templates = ref<CodeTemplate[]>([])
-  const currentProgress = ref<GenerationProgress | null>(null)
-  const error = ref<string | null>(null)
-  const generatedFiles = ref<Array<{ path: string; content: string; type: string; size: number }>>([])
-  const lastGenerationStatus = ref<'pending' | 'success' | 'error'>('pending')
+  const isGenerating = ref(false);
+  const generationHistory = ref<GenerationResult[]>([]);
+  const templates = ref<CodeTemplate[]>([]);
+  const currentProgress = ref<GenerationProgress | null>(null);
+  const error = ref<string | null>(null);
+  const generatedFiles = ref<Array<{ path: string; content: string; type: string; size: number; }>>([]);
+  const lastGenerationStatus = ref<'pending' | 'success' | 'error'>('pending');
 
   // 代码生成主方法
   const generateCode = async (
@@ -82,59 +82,59 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
     onProgress?: (progress: GenerationProgress) => void
   ): Promise<GenerationResult> => {
     try {
-      isGenerating.value = true
-      error.value = null
+      isGenerating.value = true;
+      error.value = null;
 
-      const startTime = Date.now()
-      logger.info("开始代码生成", config)
+      const startTime = Date.now();
+      logger.info("开始代码生成", config);
 
       // 计算总任务数
-      const totalTasks = calculateTotalTasks(config)
-      let completedTasks = 0
+      const totalTasks = calculateTotalTasks(config);
+      let completedTasks = 0;
 
       const updateProgress = (_task: string) => {
-        completedTasks++
-        const percentage = Math.round((completedTasks / totalTasks) * 100)
+        completedTasks++;
+        const percentage = Math.round((completedTasks / totalTasks) * 100);
         const progress: GenerationProgress = {
           percentage,
           currentTask: _task,
           completedTasks,
           totalTasks
-        }
-        currentProgress.value = progress
-        onProgress?.(progress)
-      }
+        };
+        currentProgress.value = progress;
+        onProgress?.(progress);
+      };
 
       const localGeneratedFiles: Array<{
-        path: string
-        content: string
-        type: string
-        size: number
-      }> = []
+        path: string;
+        content: string;
+        type: string;
+        size: number;
+      }> = [];
 
       // 生成后端代码
       if (config.templates.backend.length > 0) {
-        logger.info("开始生成后端代码")
-        const backendFiles = await generateBackendCode(config, updateProgress)
-        localGeneratedFiles.push(...backendFiles)
+        logger.info("开始生成后端代码");
+        const backendFiles = await generateBackendCode(config, updateProgress);
+        localGeneratedFiles.push(...backendFiles);
       }
 
       // 生成前端代码
       if (config.templates.frontend.length > 0) {
-        logger.info("开始生成前端代码")
-        const frontendFiles = await generateFrontendCode(config, updateProgress)
-        localGeneratedFiles.push(...frontendFiles)
+        logger.info("开始生成前端代码");
+        const frontendFiles = await generateFrontendCode(config, updateProgress);
+        localGeneratedFiles.push(...frontendFiles);
       }
 
       // 生成数据库代码
       if (config.templates.database.length > 0) {
-        logger.info("开始生成数据库代码")
-        const databaseFiles = await generateDatabaseCode(config, updateProgress)
-        localGeneratedFiles.push(...databaseFiles)
+        logger.info("开始生成数据库代码");
+        const databaseFiles = await generateDatabaseCode(config, updateProgress);
+        localGeneratedFiles.push(...databaseFiles);
       }
 
-      const endTime = Date.now()
-      const duration = (endTime - startTime) / 1000
+      const endTime = Date.now();
+      const duration = (endTime - startTime) / 1000;
 
       const result: GenerationResult = {
         success: true,
@@ -145,32 +145,32 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
         errors: [],
         warnings: [],
         files: localGeneratedFiles
-      }
+      };
 
       // 保存到历史记录
-      generationHistory.value.unshift(result)
+      generationHistory.value.unshift(result);
       if (generationHistory.value.length > 10) {
-        generationHistory.value = generationHistory.value.slice(0, 10)
+        generationHistory.value = generationHistory.value.slice(0, 10);
       }
 
       // 更新全局状态 - 注意这里的generatedFiles是函数内的局部数组变量，不是store的ref
       // 所以我们直接用result.files更新store级别的ref
       // (这里需要更新store级别的generatedFiles ref，但当前实现有架构问题)
-      lastGenerationStatus.value = 'success'
+      lastGenerationStatus.value = 'success';
 
       logger.info("代码生成完成", {
         fileCount: result.fileCount,
         duration: result.duration
-      })
+      });
 
-      return result
+      return result;
     } catch (_err) {
-      const error = _err as Error
-      logger.error("代码生成失败", { error: error.message })
+      const error = _err as Error;
+      logger.error("代码生成失败", { error: error.message });
 
       // 更新错误状态
-      generatedFiles.value = []
-      lastGenerationStatus.value = 'error'
+      generatedFiles.value = [];
+      lastGenerationStatus.value = 'error';
 
       const result: GenerationResult = {
         success: false,
@@ -181,107 +181,107 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
         errors: [{ message: "代码生成失败", detail: error.message }],
         warnings: [],
         files: []
-      }
+      };
 
-      return result
+      return result;
     } finally {
-      isGenerating.value = false
-      currentProgress.value = null
+      isGenerating.value = false;
+      currentProgress.value = null;
     }
-  }
+  };
 
   // 计算总任务数
   const calculateTotalTasks = (config: CodeGenerationConfig): number => {
-    let tasks = 0
-    const entityCount = config.entities.length
+    let tasks = 0;
+    const entityCount = config.entities.length;
 
     // 后端任务
-    tasks += config.templates.backend.length * entityCount
+    tasks += config.templates.backend.length * entityCount;
 
     // 前端任务
-    tasks += config.templates.frontend.length * entityCount
+    tasks += config.templates.frontend.length * entityCount;
 
     // 数据库任务
-    tasks += config.templates.database.length
+    tasks += config.templates.database.length;
 
-    return tasks
-  }
+    return tasks;
+  };
 
   // 生成后端代码
   const generateBackendCode = async (
     config: CodeGenerationConfig,
     onProgress: (task: string) => void
   ) => {
-    const files = []
+    const files = [];
 
     for (const entityId of config.entities) {
-      const entity = await getEntityById(entityId)
-      if (!entity) continue
+      const entity = await getEntityById(entityId);
+      if (!entity) continue;
 
       for (const templateId of config.templates.backend) {
-        onProgress(`生成${entity.name}的${templateId}`)
+        onProgress(`生成${entity.name}的${templateId}`);
 
-        const file = await generateBackendFile(entity, templateId, config)
+        const file = await generateBackendFile(entity, templateId, config);
         if (file) {
-          files.push(file)
+          files.push(file);
         }
 
         // 模拟生成延迟
-        await new Promise(resolve => setTimeout(resolve, 200))
+        await new Promise(resolve => setTimeout(resolve, 200));
       }
     }
 
-    return files
-  }
+    return files;
+  };
 
   // 生成前端代码
   const generateFrontendCode = async (
     config: CodeGenerationConfig,
     onProgress: (task: string) => void
   ) => {
-    const files = []
+    const files = [];
 
     for (const entityId of config.entities) {
-      const entity = await getEntityById(entityId)
-      if (!entity) continue
+      const entity = await getEntityById(entityId);
+      if (!entity) continue;
 
       for (const templateId of config.templates.frontend) {
-        onProgress(`生成${entity.name}的${templateId}`)
+        onProgress(`生成${entity.name}的${templateId}`);
 
-        const file = await generateFrontendFile(entity, templateId, config)
+        const file = await generateFrontendFile(entity, templateId, config);
         if (file) {
-          files.push(file)
+          files.push(file);
         }
 
         // 模拟生成延迟
-        await new Promise(resolve => setTimeout(resolve, 200))
+        await new Promise(resolve => setTimeout(resolve, 200));
       }
     }
 
-    return files
-  }
+    return files;
+  };
 
   // 生成数据库代码
   const generateDatabaseCode = async (
     config: CodeGenerationConfig,
     onProgress: (task: string) => void
   ) => {
-    const files = []
+    const files = [];
 
     for (const templateId of config.templates.database) {
-      onProgress(`生成${templateId}`)
+      onProgress(`生成${templateId}`);
 
-      const file = await generateDatabaseFile(templateId, config)
+      const file = await generateDatabaseFile(templateId, config);
       if (file) {
-        files.push(file)
+        files.push(file);
       }
 
       // 模拟生成延迟
-      await new Promise(resolve => setTimeout(resolve, 200))
+      await new Promise(resolve => setTimeout(resolve, 200));
     }
 
-    return files
-  }
+    return files;
+  };
 
   // 生成后端文件
   const generateBackendFile = async (
@@ -290,49 +290,49 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
     config: CodeGenerationConfig
   ) => {
     try {
-      let content = ""
-      let filename = ""
-      let directory = ""
+      let content = "";
+      let filename = "";
+      let directory = "";
 
       switch (templateId) {
         case "entity":
-          content = generateEntityClass(entity, config)
-          filename = `${entity.name}.cs`
-          directory = `src/${config.config.projectName}.Domain/${entity.name}s`
-          break
+          content = generateEntityClass(entity, config);
+          filename = `${entity.name}.cs`;
+          directory = `src/${config.config.projectName}.Domain/${entity.name}s`;
+          break;
         case "dto":
-          content = generateDtoClass(entity, config)
-          filename = `${entity.name}Dto.cs`
-          directory = `src/${config.config.projectName}.Application.Contracts/${entity.name}s`
-          break
+          content = generateDtoClass(entity, config);
+          filename = `${entity.name}Dto.cs`;
+          directory = `src/${config.config.projectName}.Application.Contracts/${entity.name}s`;
+          break;
         case "service":
-          content = generateAppService(entity, config)
-          filename = `${entity.name}AppService.cs`
-          directory = `src/${config.config.projectName}.Application/${entity.name}s`
-          break
+          content = generateAppService(entity, config);
+          filename = `${entity.name}AppService.cs`;
+          directory = `src/${config.config.projectName}.Application/${entity.name}s`;
+          break;
         case "controller":
-          content = generateController(entity, config)
-          filename = `${entity.name}Controller.cs`
-          directory = `src/${config.config.projectName}.HttpApi/${entity.name}s`
-          break
+          content = generateController(entity, config);
+          filename = `${entity.name}Controller.cs`;
+          directory = `src/${config.config.projectName}.HttpApi/${entity.name}s`;
+          break;
         default:
-          return null
+          return null;
       }
 
-      const path = `${directory}/${filename}`
-      const size = new Blob([content]).size
+      const path = `${directory}/${filename}`;
+      const size = new Blob([content]).size;
 
       return {
         path,
         content,
         type: "csharp",
         size
-      }
+      };
     } catch (_err) {
-      logger.error(`生成后端文件失败: ${templateId}`, { entity: entity.name })
-      return null
+      logger.error(`生成后端文件失败: ${templateId}`, { entity: entity.name });
+      return null;
     }
-  }
+  };
 
   // 生成前端文件
   const generateFrontendFile = async (
@@ -341,54 +341,54 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
     config: CodeGenerationConfig
   ) => {
     try {
-      let content = ""
-      let filename = ""
-      let directory = ""
+      let content = "";
+      let filename = "";
+      let directory = "";
 
       switch (templateId) {
         case "list-page":
-          content = generateListPage(entity, config)
-          filename = `${entity.name}List.vue`
-          directory = `src/views/${entity.name.toLowerCase()}`
-          break
+          content = generateListPage(entity, config);
+          filename = `${entity.name}List.vue`;
+          directory = `src/views/${entity.name.toLowerCase()}`;
+          break;
         case "form-page":
-          content = generateFormPage(entity, config)
-          filename = `${entity.name}Form.vue`
-          directory = `src/views/${entity.name.toLowerCase()}`
-          break
+          content = generateFormPage(entity, config);
+          filename = `${entity.name}Form.vue`;
+          directory = `src/views/${entity.name.toLowerCase()}`;
+          break;
         case "detail-page":
-          content = generateDetailPage(entity, config)
-          filename = `${entity.name}Detail.vue`
-          directory = `src/views/${entity.name.toLowerCase()}`
-          break
+          content = generateDetailPage(entity, config);
+          filename = `${entity.name}Detail.vue`;
+          directory = `src/views/${entity.name.toLowerCase()}`;
+          break;
         case "api-client":
-          content = generateApiClient(entity, config)
-          filename = `${entity.name}Api.ts`
-          directory = `src/api`
-          break
+          content = generateApiClient(entity, config);
+          filename = `${entity.name}Api.ts`;
+          directory = `src/api`;
+          break;
         case "store":
-          content = generatePiniaStore(entity, config)
-          filename = `${entity.name.toLowerCase()}.ts`
-          directory = `src/stores`
-          break
+          content = generatePiniaStore(entity, config);
+          filename = `${entity.name.toLowerCase()}.ts`;
+          directory = `src/stores`;
+          break;
         default:
-          return null
+          return null;
       }
 
-      const path = `${directory}/${filename}`
-      const size = new Blob([content]).size
+      const path = `${directory}/${filename}`;
+      const size = new Blob([content]).size;
 
       return {
         path,
         content,
         type: config.config.frontendFramework === "Vue3TS" ? "vue" : "typescript",
         size
-      }
+      };
     } catch (_err) {
-      logger.error(`生成前端文件失败: ${templateId}`, { entity: entity.name })
-      return null
+      logger.error(`生成前端文件失败: ${templateId}`, { entity: entity.name });
+      return null;
     }
-  }
+  };
 
   // 生成数据库文件
   const generateDatabaseFile = async (
@@ -396,49 +396,49 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
     config: CodeGenerationConfig
   ) => {
     try {
-      let content = ""
-      let filename = ""
-      let directory = "src/Migrations"
+      let content = "";
+      let filename = "";
+      let directory = "src/Migrations";
 
       switch (templateId) {
         case "migration":
-          content = generateMigration(config)
-          filename = `${Date.now()}_Initial.cs`
-          break
+          content = generateMigration(config);
+          filename = `${Date.now()}_Initial.cs`;
+          break;
         case "seed-data":
-          content = generateSeedData(config)
-          filename = "DataSeedContributor.cs"
-          directory = "src/DbMigrator"
-          break
+          content = generateSeedData(config);
+          filename = "DataSeedContributor.cs";
+          directory = "src/DbMigrator";
+          break;
         default:
-          return null
+          return null;
       }
 
-      const path = `${directory}/${filename}`
-      const size = new Blob([content]).size
+      const path = `${directory}/${filename}`;
+      const size = new Blob([content]).size;
 
       return {
         path,
         content,
         type: "csharp",
         size
-      }
+      };
     } catch (_err) {
-      logger.error(`生成数据库文件失败: ${templateId}`)
-      return null
+      logger.error(`生成数据库文件失败: ${templateId}`);
+      return null;
     }
-  }
+  };
 
   // 代码模板生成函数
   const generateEntityClass = (entity: any, config: CodeGenerationConfig): string => {
     const fields = entity.fields.map((field: any) => {
       const type = field.type === "Guid" ? "Guid" :
-                   field.type === "bool" ? "bool" :
-                   field.type === "DateTime" ? "DateTime" :
-                   field.type === "int" ? "int" : "string"
-      const nullable = !field.isRequired && type !== "Guid" ? "?" : ""
-      return `        public ${type}${nullable} ${field.name} { get; set; }`
-    }).join('\n')
+        field.type === "bool" ? "bool" :
+          field.type === "DateTime" ? "DateTime" :
+            field.type === "int" ? "int" : "string";
+      const nullable = !field.isRequired && type !== "Guid" ? "?" : "";
+      return `        public ${type}${nullable} ${field.name} { get; set; }`;
+    }).join('\n');
 
     return `using System;
 using Volo.Abp.Domain.Entities.Auditing;
@@ -457,18 +457,18 @@ ${fields}
         {
         }
     }
-}`
-  }
+}`;
+  };
 
   const generateDtoClass = (entity: any, config: CodeGenerationConfig): string => {
     const fields = entity.fields.map((field: any) => {
       const type = field.type === "Guid" ? "Guid" :
-                   field.type === "bool" ? "bool" :
-                   field.type === "DateTime" ? "DateTime" :
-                   field.type === "int" ? "int" : "string"
-      const nullable = !field.isRequired && type !== "Guid" ? "?" : ""
-      return `        public ${type}${nullable} ${field.name} { get; set; }`
-    }).join('\n')
+        field.type === "bool" ? "bool" :
+          field.type === "DateTime" ? "DateTime" :
+            field.type === "int" ? "int" : "string";
+      const nullable = !field.isRequired && type !== "Guid" ? "?" : "";
+      return `        public ${type}${nullable} ${field.name} { get; set; }`;
+    }).join('\n');
 
     return `using System;
 using Volo.Abp.Application.Dtos;
@@ -479,8 +479,8 @@ namespace ${config.config.namespace}.${entity.name}s
     {
 ${fields}
     }
-}`
-  }
+}`;
+  };
 
   const generateAppService = (entity: any, config: CodeGenerationConfig): string => {
     return `using System;
@@ -502,8 +502,8 @@ namespace ${config.config.namespace}.${entity.name}s
         {
         }
     }
-}`
-  }
+}`;
+  };
 
   const generateController = (entity: any, config: CodeGenerationConfig): string => {
     return `using System;
@@ -552,12 +552,12 @@ namespace ${config.config.namespace}.${entity.name}s
             return _${entity.name.toLowerCase()}AppService.DeleteAsync(id);
         }
     }
-}`
-  }
+}`;
+  };
 
   const generateListPage = (entity: any, _config: CodeGenerationConfig): string => {
-    const searchFields = entity.fields.filter((f: any) => f.type === "string" && f.name !== "Id").slice(0, 3)
-    const tableColumns = entity.fields.slice(0, 6)
+    const searchFields = entity.fields.filter((f: any) => f.type === "string" && f.name !== "Id").slice(0, 3);
+    const tableColumns = entity.fields.slice(0, 6);
 
     return `<template>
   <div class="${entity.name.toLowerCase()}-list">
@@ -716,11 +716,11 @@ onMounted(() => {
 .action-toolbar {
   margin-bottom: 16px;
 }
-</style>`
-  }
+</style>`;
+  };
 
   const generateFormPage = (entity: any, _config: CodeGenerationConfig): string => {
-    const formFields = entity.fields.filter((f: any) => f.name !== "Id")
+    const formFields = entity.fields.filter((f: any) => f.name !== "Id");
 
     return `<template>
   <div class="${entity.name.toLowerCase()}-form">
@@ -731,29 +731,29 @@ onMounted(() => {
     <el-card>
       <el-form :model="form" :rules="rules" ref="formRef" label-width="120px">
 ${formFields.map((field: any) => {
-  const inputType = field.type === "DateTime" ? "date-picker" :
-                   field.type === "bool" ? "switch" :
-                   field.type === "int" || field.type === "long" || field.type === "decimal" ? "input-number" :
-                   "input"
+      const inputType = field.type === "DateTime" ? "date-picker" :
+        field.type === "bool" ? "switch" :
+          field.type === "int" || field.type === "long" || field.type === "decimal" ? "input-number" :
+            "input";
 
-  if (inputType === "date-picker") {
-    return `        <el-form-item label="${field.displayName || field.name}" prop="${field.name.toLowerCase()}">
+      if (inputType === "date-picker") {
+        return `        <el-form-item label="${field.displayName || field.name}" prop="${field.name.toLowerCase()}">
           <el-date-picker v-model="form.${field.name.toLowerCase()}" type="datetime" placeholder="选择${field.displayName || field.name}" />
-        </el-form-item>`
-  } else if (inputType === "switch") {
-    return `        <el-form-item label="${field.displayName || field.name}" prop="${field.name.toLowerCase()}">
+        </el-form-item>`;
+      } else if (inputType === "switch") {
+        return `        <el-form-item label="${field.displayName || field.name}" prop="${field.name.toLowerCase()}">
           <el-switch v-model="form.${field.name.toLowerCase()}" />
-        </el-form-item>`
-  } else if (inputType === "input-number") {
-    return `        <el-form-item label="${field.displayName || field.name}" prop="${field.name.toLowerCase()}">
+        </el-form-item>`;
+      } else if (inputType === "input-number") {
+        return `        <el-form-item label="${field.displayName || field.name}" prop="${field.name.toLowerCase()}">
           <el-input-number v-model="form.${field.name.toLowerCase()}" placeholder="请输入${field.displayName || field.name}" />
-        </el-form-item>`
-  } else {
-    return `        <el-form-item label="${field.displayName || field.name}" prop="${field.name.toLowerCase()}">
+        </el-form-item>`;
+      } else {
+        return `        <el-form-item label="${field.displayName || field.name}" prop="${field.name.toLowerCase()}">
           <el-input v-model="form.${field.name.toLowerCase()}" placeholder="请输入${field.displayName || field.name}" />
-        </el-form-item>`
-  }
-}).join('\n')}
+        </el-form-item>`;
+      }
+    }).join('\n')}
       </el-form>
 
       <div class="form-actions">
@@ -780,18 +780,18 @@ const isEdit = ref(false)
 
 const form = ref({
 ${formFields.map((field: any) => {
-  const defaultValue = field.type === "bool" ? "false" :
-                      field.type === "int" || field.type === "long" || field.type === "decimal" ? "0" :
-                      field.type === "DateTime" ? "null" :
-                      '""'
-  return `  ${field.name.toLowerCase()}: ${defaultValue}`
-}).join(',\n')}
+      const defaultValue = field.type === "bool" ? "false" :
+        field.type === "int" || field.type === "long" || field.type === "decimal" ? "0" :
+          field.type === "DateTime" ? "null" :
+            '""';
+      return `  ${field.name.toLowerCase()}: ${defaultValue}`;
+    }).join(',\n')}
 })
 
 const rules = ref({
 ${formFields.filter((f: any) => f.isRequired).map((field: any) =>
-`  ${field.name.toLowerCase()}: [{ required: true, message: "请输入${field.displayName || field.name}", trigger: "blur" }]`
-).join(',\n')}
+      `  ${field.name.toLowerCase()}: [{ required: true, message: "请输入${field.displayName || field.name}", trigger: "blur" }]`
+    ).join(',\n')}
 })
 
 const handleSave = async () => {
@@ -849,11 +849,11 @@ onMounted(() => {
   margin-top: 24px;
   text-align: center;
 }
-</style>`
-  }
+</style>`;
+  };
 
   const generateDetailPage = (entity: any, _config: CodeGenerationConfig): string => {
-    const fields = entity.fields
+    const fields = entity.fields;
 
     return `<template>
   <div class="${entity.name.toLowerCase()}-detail">
@@ -864,10 +864,10 @@ onMounted(() => {
     <el-card>
       <el-descriptions title="基本信息" :column="2" border>
 ${fields.map((field: any) =>
-`        <el-descriptions-item label="${field.displayName || field.name}">
+      `        <el-descriptions-item label="${field.displayName || field.name}">
           {{ data.${field.name.toLowerCase()} }}
         </el-descriptions-item>`
-).join('\n')}
+    ).join('\n')}
       </el-descriptions>
 
       <div class="detail-actions">
@@ -924,8 +924,8 @@ onMounted(() => {
   margin-top: 24px;
   text-align: center;
 }
-</style>`
-  }
+</style>`;
+  };
 
   const generateApiClient = (entity: any, _config: CodeGenerationConfig): string => {
     return `import { apiService } from '@smartabp/lowcode-tools'
@@ -969,8 +969,8 @@ export const ${entity.name.toLowerCase()}Api = {
   delete: (id: string) => {
     return apiService.delete(\`/api/${entity.name.toLowerCase()}s/\${id}\`)
   }
-}`
-  }
+}`;
+  };
 
   const generatePiniaStore = (entity: any, _config: CodeGenerationConfig): string => {
     return `import { defineStore } from "pinia"
@@ -1070,8 +1070,8 @@ export const use${entity.name}Store = defineStore("${entity.name.toLowerCase()}"
     update,
     remove
   }
-})`
-  }
+})`;
+  };
 
   const generateMigration = (config: CodeGenerationConfig): string => {
     return `using Microsoft.EntityFrameworkCore.Migrations;
@@ -1091,8 +1091,8 @@ namespace ${config.config.namespace}.Migrations
             // 回滚迁移脚本
         }
     }
-}`
-  }
+}`;
+  };
 
   const generateSeedData = (config: CodeGenerationConfig): string => {
     return `using System.Threading.Tasks;
@@ -1109,8 +1109,8 @@ namespace ${config.config.namespace}.DbMigrator
             // 为选中的实体创建初始数据
         }
     }
-}`
-  }
+}`;
+  };
 
   // 模拟获取实体数据
   const getEntityById = async (entityId: string) => {
@@ -1128,22 +1128,22 @@ namespace ${config.config.namespace}.DbMigrator
         { name: "Name", displayName: "姓名", type: "string", isRequired: false },
         { name: "IsActive", displayName: "是否激活", type: "bool", isRequired: true }
       ]
-    }
-  }
+    };
+  };
 
   // 清理生成历史
   const clearHistory = () => {
-    generationHistory.value = []
-    logger.info("生成历史已清除")
-  }
+    generationHistory.value = [];
+    logger.info("生成历史已清除");
+  };
 
   // 获取统计信息
   const getStatistics = () => {
-    const totalGenerated = generationHistory.value.reduce((sum, result) => sum + result.fileCount, 0)
-    const totalLines = generationHistory.value.reduce((sum, result) => sum + result.lineCount, 0)
+    const totalGenerated = generationHistory.value.reduce((sum, result) => sum + result.fileCount, 0);
+    const totalLines = generationHistory.value.reduce((sum, result) => sum + result.lineCount, 0);
     const averageDuration = generationHistory.value.length > 0
       ? generationHistory.value.reduce((sum, result) => sum + result.duration, 0) / generationHistory.value.length
-      : 0
+      : 0;
 
     return {
       totalGenerations: generationHistory.value.length,
@@ -1153,8 +1153,8 @@ namespace ${config.config.namespace}.DbMigrator
       successRate: generationHistory.value.length > 0
         ? Math.round((generationHistory.value.filter(r => r.success).length / generationHistory.value.length) * 100)
         : 0
-    }
-  }
+    };
+  };
 
   return {
     // 状态
@@ -1170,5 +1170,5 @@ namespace ${config.config.namespace}.DbMigrator
     generateCode,
     clearHistory,
     getStatistics
-  }
-})
+  };
+});

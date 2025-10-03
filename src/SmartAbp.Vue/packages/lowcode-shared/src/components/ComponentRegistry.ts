@@ -1,7 +1,7 @@
 /**
  * 🏗️ 企业级组件注册中心
  * SmartAbp低代码引擎 - 公共组件系统革命
- * 
+ *
  * 核心功能:
  * - 统一组件注册、发现和管理
  * - 组件元数据管理和分类
@@ -89,7 +89,7 @@ export class ComponentRegistry {
   private loadingPromises = new Map<string, Promise<any>>();
   private categoryIndex = new Map<ComponentCategory, Set<string>>();
   private dependencyGraph = new Map<string, Set<string>>();
-  private usageStats = new Map<string, { count: number; lastUsed: number }>();
+  private usageStats = new Map<string, { count: number; lastUsed: number; }>();
 
   /**
    * 注册组件
@@ -150,7 +150,7 @@ export class ComponentRegistry {
 
     try {
       const component = await loadPromise;
-      
+
       // 创建组件实例
       const instance: ComponentInstance = {
         metadata,
@@ -206,7 +206,7 @@ export class ComponentRegistry {
   searchComponents(query: string): ComponentMetadata[] {
     const lowerQuery = query.toLowerCase();
     return Array.from(this.components.values())
-      .filter(metadata => 
+      .filter(metadata =>
         metadata.name.toLowerCase().includes(lowerQuery) ||
         metadata.displayName.toLowerCase().includes(lowerQuery) ||
         metadata.description?.toLowerCase().includes(lowerQuery) ||
@@ -243,14 +243,14 @@ export class ComponentRegistry {
     const loadedComponents = this.loadedComponents.size;
     const activeComponents = Array.from(this.loadedComponents.values())
       .filter(instance => instance.active).length;
-    
+
     const totalMemoryUsage = Array.from(this.loadedComponents.values())
       .reduce((total, instance) => total + (instance.memoryUsage || 0), 0);
 
     const loadTimes = Array.from(this.loadedComponents.values())
       .map(instance => Date.now() - instance.loadedAt);
-    const averageLoadTime = loadTimes.length > 0 
-      ? loadTimes.reduce((sum, time) => sum + time, 0) / loadTimes.length 
+    const averageLoadTime = loadTimes.length > 0
+      ? loadTimes.reduce((sum, time) => sum + time, 0) / loadTimes.length
       : 0;
 
     return {
@@ -265,7 +265,7 @@ export class ComponentRegistry {
   /**
    * 获取使用统计
    */
-  getUsageStats(): Map<string, { count: number; lastUsed: number }> {
+  getUsageStats(): Map<string, { count: number; lastUsed: number; }> {
     return new Map(this.usageStats);
   }
 
@@ -361,19 +361,16 @@ export class ComponentRegistry {
    */
   private async loadComponent(metadata: ComponentMetadata): Promise<any> {
     console.log(`⏳ 正在加载组件: ${metadata.name}`);
-    
+
     // 模拟动态导入组件
     // 实际实现中，这里应该根据metadata.bundle进行动态导入
     try {
-      // ✅ 修复：移除对lowcode-designer的依赖，使用动态加载器
-      if (this.dynamicLoader) {
-        return await this.dynamicLoader(metadata.name, metadata.bundle);
-      }
-      throw new Error(`Dynamic loader not configured for component: ${metadata.name}`);
+      // ✅ 简化实现：直接抛出错误，由上层处理
+      throw new Error(`Dynamic component loading not implemented for: ${metadata.name}`);
     } catch (error) {
       // 降级处理：尝试其他路径
       console.warn(`⚠️ 主路径加载失败，尝试备用路径: ${metadata.name}`);
-      
+
       // 返回占位组件
       return {
         name: metadata.name,
