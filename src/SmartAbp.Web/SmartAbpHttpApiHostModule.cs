@@ -18,6 +18,7 @@ using Volo.Abp.Account.Web;
 using Volo.Abp.Identity.Web;
 using Volo.Abp.TenantManagement.Web;
 using SmartAbp.EntityFrameworkCore;
+using SmartAbp.CodeGenerator;
 
 namespace SmartAbp.Web;
 
@@ -25,6 +26,7 @@ namespace SmartAbp.Web;
     typeof(SmartAbpApplicationModule),
     typeof(SmartAbpHttpApiModule),
     typeof(SmartAbpEntityFrameworkCoreModule),
+    typeof(SmartAbpCodeGeneratorModule),
     typeof(AbpAutofacModule),
     typeof(AbpAspNetCoreAuthenticationJwtBearerModule),
     typeof(AbpAccountWebOpenIddictModule),

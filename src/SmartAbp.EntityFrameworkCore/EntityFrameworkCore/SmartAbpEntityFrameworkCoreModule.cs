@@ -17,6 +17,7 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.Studio;
+using Volo.Abp.Timing;
 
 namespace SmartAbp.EntityFrameworkCore;
 
@@ -45,6 +46,12 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        // Configure ABP Clock to use UTC
+        Configure<AbpClockOptions>(options =>
+        {
+            options.Kind = DateTimeKind.Utc;
+        });
+
         context.Services.AddAbpDbContext<SmartAbpDbContext>(options =>
         {
                 /* Remove "includeAllEntities: true" to create

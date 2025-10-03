@@ -91,8 +91,8 @@ namespace SmartAbp.CodeGenerator
             // 🎨 Vue3组件订制优化器 - 协助请求3：业务逻辑扩展点
             services.AddScoped<Vue3ComponentCustomizer>();
             
-            // Application service
-            services.AddScoped<CodeGenerationAppService>();
+            // Application services - 正确注册接口和实现映射
+            services.AddScoped<ICodeGenerationAppService, CodeGenerationAppService>();
             services.AddScoped<DefaultUIConfigGenerator>();
             services.AddScoped<FrontendIntegrationService>();
             
