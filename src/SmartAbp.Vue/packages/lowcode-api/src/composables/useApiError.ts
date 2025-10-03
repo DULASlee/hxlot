@@ -9,7 +9,7 @@ import type { ApiError } from '../http-client'
 
 // 临时本地类型定义（待lowcode-shared完善后移除）
 type StandardError = Error & { code?: string; statusCode?: number }
-type ErrorContext = { operation?: string; params?: any }
+type ErrorContext = { operation?: string; params?: any; metadata?: any }
 const getGlobalErrorHandler = () => undefined
 
 /**
@@ -61,7 +61,7 @@ const DEFAULT_DISPLAY_OPTIONS: ApiErrorDisplayOptions = {
  * ```
  */
 export function useApiError() {
-  const errorHandler = getGlobalErrorHandler() || undefined
+  const errorHandler = getGlobalErrorHandler() as any // TODO: 待lowcode-shared完善后移除any
 
   /**
    * 处理API错误
@@ -91,8 +91,11 @@ export function useApiError() {
       }
     }
 
-    // 使用全局错误处理器处理
-    const standardError = await errorHandler.handleError(error, fullContext)
+    // 使用全局错误处理器处理（如果存在）
+    let standardError = error as StandardError
+    if (errorHandler?.handleError) {
+      standardError = await errorHandler.handleError(error, fullContext)
+    }
 
     // 显示用户友好的错误提示
     if (displayOptions.showMessage) {
@@ -198,11 +201,15 @@ export function useApiError() {
   const registerCustomHandler = (
     handler: (apiError: ApiError, context?: Partial<ErrorContext>) => Promise<void> | void
   ) => {
+    if (!errorHandler?.registerRecoveryHandler) {
+      console.warn('全局错误处理器未初始化，自定义处理器注册失败')
+      return
+    }
     return errorHandler.registerRecoveryHandler({
       name: 'custom-api-handler',
       priority: 10,
-      canHandle: (error) => error.category === 'network',
-      recover: async (error) => {
+      canHandle: (error: any) => error.category === 'network',
+      recover: async (error: any) => {
         try {
           const apiError: ApiError = {
             message: error.message,
@@ -221,6 +228,9 @@ export function useApiError() {
    * 获取错误统计
    */
   const getErrorStats = () => {
+    if (!errorHandler?.getErrorStats) {
+      return { total: 0, byLevel: {}, byCategory: {} }
+    }
     return errorHandler.getErrorStats()
   }
 
@@ -228,7 +238,9 @@ export function useApiError() {
    * 清理错误历史
    */
   const clearErrorHistory = (olderThan?: number) => {
-    errorHandler.clearErrors(olderThan)
+    if (errorHandler?.clearErrors) {
+      errorHandler.clearErrors(olderThan)
+    }
   }
 
   return {
