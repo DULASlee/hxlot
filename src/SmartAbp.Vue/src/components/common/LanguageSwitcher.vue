@@ -7,17 +7,10 @@
     >
       <button
         class="language-switcher-button"
-        :title="$t('common.switchLanguage')"
+        :title="currentLanguageName"
         @click="toggleDropdown"
       >
-        <i
-          class="fas fa-language language-icon"
-        />
-        <span class="language-name">{{ currentLanguageName }}</span>
-        <i
-          class="fas fa-chevron-down dropdown-arrow"
-          :class="{ 'rotate-180': isDropdownOpen }"
-        />
+        <i class="fas fa-globe language-icon" />
       </button>
 
       <div
@@ -166,16 +159,16 @@ export default defineComponent({
 .language-switcher-button {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: linear-gradient(135deg, var(--theme-bg-component) 0%, var(--theme-bg-elevated) 100%);
-  border: 1px solid var(--theme-border-light, var(--theme-border-base));
-  border-radius: 12px;
-  color: var(--theme-text-primary);
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: var(--theme-text-secondary);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px rgb(0 0 0 / 5%);
-  backdrop-filter: blur(8px);
   position: relative;
   overflow: hidden;
 }
@@ -190,10 +183,9 @@ export default defineComponent({
 }
 
 .language-switcher-button:hover {
-  background: linear-gradient(135deg, var(--theme-bg-hover) 0%, var(--theme-bg-component) 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
-  border-color: var(--theme-brand-primary);
+  background: var(--theme-bg-hover);
+  color: var(--theme-brand-primary);
+  transform: scale(1.05);
 }
 
 .language-switcher-button:hover::before {
@@ -201,32 +193,11 @@ export default defineComponent({
 }
 
 .language-switcher-button:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+  transform: scale(0.95);
 }
 
 .language-icon {
-  font-size: 18px;
-  background: linear-gradient(135deg, var(--theme-brand-primary), var(--theme-brand-primary-hover));
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 10%));
-}
-
-.language-name {
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.25px;
-}
-
-.dropdown-arrow {
-  font-size: 12px;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 0.7;
-}
-
-.rotate-180 {
-  transform: rotate(180deg);
+  font-size: 20px;
 }
 
 .language-dropdown-menu {
@@ -336,14 +307,6 @@ export default defineComponent({
 
 /* 响应式调整 */
 @media (width <= 768px) {
-  .language-name {
-    display: none;
-  }
-
-  .language-switcher-button {
-    padding: 8px;
-  }
-
   .language-dropdown-menu {
     width: 160px;
     right: -10px;
