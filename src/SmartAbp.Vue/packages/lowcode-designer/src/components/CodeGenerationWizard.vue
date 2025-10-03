@@ -583,8 +583,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import { 
   MagicStick, Setting, Document, Connection, Brush, Plus,
   Upload, DocumentCopy, Download, View, Folder
@@ -595,7 +595,7 @@ interface Props {
   visible?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   visible: true
 })
 

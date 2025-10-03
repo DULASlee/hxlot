@@ -52,6 +52,11 @@ export { default as AdvancedBusinessRulesEngine } from './src/components/Advance
 export { default as EnterpriseWorkflowEngine } from './src/components/EnterpriseWorkflowEngine.vue'
 export { default as EnterprisePermissionSystem } from './src/components/EnterprisePermissionSystem.vue'
 
+// ===== 新增：代码生成向导和进度监控组件导出 =====
+export { default as CodeGenerationWizard } from './src/components/CodeGenerationWizard.vue'
+export { default as GenerationProgressMonitor } from './src/components/GenerationProgressMonitor.vue'
+export type { GenerationStage, GenerationLog, GenerationStatistics } from './src/components/GenerationProgressMonitor.vue'
+
 // ===== 类型定义导出 =====
 export * from './src/types/security'
 export * from './src/types/designer'
