@@ -206,7 +206,7 @@ export const useTemplateMarketStore = defineStore('templateMarket', () => {
     }
   }
   
-  const rateTemplate = async (templateId: string, rating: number, comment: string) => {
+  const rateTemplate = async (templateId: string, rating: number, _comment: string) => {
     try {
       const template = templates.value.find(t => t.id === templateId)
       if (!template) {

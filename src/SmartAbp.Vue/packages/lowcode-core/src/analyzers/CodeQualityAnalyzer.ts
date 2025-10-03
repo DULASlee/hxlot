@@ -215,7 +215,7 @@ export class CodeQualityAnalyzer {
   /**
    * 分析安全问题
    */
-  private analyzeSecurity(code: string, language: string): SecurityReport {
+  private analyzeSecurity(code: string, _language: string): SecurityReport {
     const vulnerabilities: SecurityVulnerability[] = []
 
     // SQL注入检测
@@ -262,7 +262,7 @@ export class CodeQualityAnalyzer {
   /**
    * 分析性能问题
    */
-  private analyzePerformance(code: string, language: string): PerformanceReport {
+  private analyzePerformance(code: string, _language: string): PerformanceReport {
     const bottlenecks: PerformanceBottleneck[] = []
     const recommendations: string[] = []
 

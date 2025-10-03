@@ -114,7 +114,7 @@ export class WorkflowEngine {
 
     // 查找有效的转换
     const transition = workflow.transitions.find(
-      t => t.fromState === instance.currentState && t.event === event
+      t => t.source === instance.currentState && t.label === event
     )
 
     if (!transition) {
@@ -138,7 +138,7 @@ export class WorkflowEngine {
     // 记录转换历史
     const transitionRecord: StateTransitionRecord = {
       from: instance.currentState,
-      to: transition.toState,
+      to: transition.target,
       event,
       timestamp: Date.now(),
       context: payload
@@ -147,7 +147,7 @@ export class WorkflowEngine {
 
     // 更新状态
     const oldState = instance.currentState
-    instance.currentState = transition.toState
+    instance.currentState = transition.target
 
     // 更新上下文
     if (payload) {
@@ -155,8 +155,8 @@ export class WorkflowEngine {
     }
 
     // 检查是否到达结束状态
-    const targetState = workflow.states.find(s => s.id === transition.toState)
-    if (targetState?.type === 'final') {
+    const targetState = workflow.states.find(s => s.id === transition.target)
+    if (targetState?.type === 'end') {
       instance.status = 'completed'
       instance.endTime = Date.now()
       this.emitEvent('instance.completed', instance)

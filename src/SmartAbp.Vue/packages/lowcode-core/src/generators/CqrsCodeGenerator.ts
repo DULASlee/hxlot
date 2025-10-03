@@ -33,10 +33,10 @@ export interface CqrsQueryConfig {
  * CQRS代码生成器
  */
 export class CqrsCodeGenerator {
-  private namespace: string
+  private _namespace: string
 
   constructor(namespace: string = 'SmartAbp') {
-    this.namespace = namespace
+    this._namespace = namespace
   }
 
   /**

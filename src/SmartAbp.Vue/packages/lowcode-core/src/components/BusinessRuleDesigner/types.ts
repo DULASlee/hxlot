@@ -44,7 +44,7 @@ export interface RuleNode extends Node {
 /**
  * 规则边（扩展Vue Flow Edge）
  */
-export interface RuleEdge extends Edge {
+export interface RuleEdge extends Omit<Edge, never> {
   label?: string
   condition?: string
   animated?: boolean

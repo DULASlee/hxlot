@@ -149,7 +149,7 @@ ${rules.map((rule, i) => this.generateValidationExecution(rule, i)).join('\n')}
   /**
    * 生成前端类型定义
    */
-  private generateFrontendTypes(rules: BusinessRule[]): string {
+  private generateFrontendTypes(_rules: BusinessRule[]): string {
     return `// 自动生成的前端类型定义
 // 生成时间: ${new Date().toISOString()}
 
@@ -174,7 +174,7 @@ export interface ${this.entityName}RuleContext {
    * 生成后端业务逻辑服务
    */
   private generateBackendService(rules: BusinessRule[]): string {
-    const ruleM​ethods = rules.map(rule => this.generateBackendRuleMethod(rule))
+    const ruleMethods = rules.map(rule => this.generateBackendRuleMethod(rule))
 
     return `// 自动生成的后端业务逻辑服务
 // 生成时间: ${new Date().toISOString()}
@@ -191,14 +191,14 @@ namespace ${this.namespace}.BusinessRules
     /// </summary>
     public class ${this.entityName}BusinessRuleService : DomainService
     {
-${ruleM​ethods.join('\n\n')}
+${ruleMethods.join('\n\n')}
 
         /// <summary>
         /// 执行所有业务规则
         /// </summary>
         public async Task ExecuteAllRulesAsync(${this.entityName} entity)
         {
-${rules.map(rule => `            await Execute${this.sanitizeRuleName(rule.id)}Async(entity);`).join('\n')}
+${rules.map(rule => `            await Execute${this.sanitizeRuleName(rule.id)}Async(entity);`).join('\\n')}
         }
     }
 }`

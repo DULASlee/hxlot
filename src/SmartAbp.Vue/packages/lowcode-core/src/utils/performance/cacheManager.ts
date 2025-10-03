@@ -68,13 +68,15 @@ export class LRUCache<T = any> {
     // 如果缓存已满，删除最旧的项
     if (this.cache.size >= this.maxSize) {
       const firstKey = this.cache.keys().next().value
-      const firstEntry = this.cache.get(firstKey)
-      
-      if (this.onEvict && firstEntry) {
-        this.onEvict(firstKey, firstEntry.value)
+      if (firstKey) {
+        const firstEntry = this.cache.get(firstKey)
+        
+        if (this.onEvict && firstEntry) {
+          this.onEvict(firstKey, firstEntry.value)
+        }
+        
+        this.cache.delete(firstKey)
       }
-      
-      this.cache.delete(firstKey)
     }
 
     // 添加新项
@@ -159,10 +161,12 @@ export function memoize<T extends (...args: any[]) => any>(
     
     if (result === undefined) {
       result = fn.apply(this, args)
-      cache.set(key, result)
+      if (result !== undefined) {
+        cache.set(key, result)
+      }
     }
 
-    return result
+    return result as ReturnType<T>
   } as T
 }
 

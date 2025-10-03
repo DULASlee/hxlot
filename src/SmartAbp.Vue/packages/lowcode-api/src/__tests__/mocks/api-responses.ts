@@ -8,6 +8,7 @@
 import type { 
   ModuleMetadata
 } from '../../types'
+import type { Template } from '../../types/index'
 
 /**
  * Mock: generateModule API响应
@@ -82,6 +83,9 @@ export const mockTemplatesResponse: Template[] = [
     name: 'CRUD基础模板',
     description: '标准的增删改查模板，适用于简单的实体管理',
     category: 'basic',
+    content: 'template content here',
+    language: 'csharp',
+    target: 'entity',
     version: '1.0.0',
     author: 'SmartAbp',
     features: ['create', 'read', 'update', 'delete'],
@@ -94,6 +98,9 @@ export const mockTemplatesResponse: Template[] = [
     name: 'CRUD高级模板',
     description: '企业级CRUD模板，包含高级功能如导出、批量操作、审计日志',
     category: 'advanced',
+    content: 'advanced template content here',
+    language: 'csharp',
+    target: 'service',
     version: '2.0.0',
     author: 'SmartAbp',
     features: [
@@ -110,6 +117,9 @@ export const mockTemplatesResponse: Template[] = [
     name: '主从表模板',
     description: '一对多关系的主从表模板，如订单-订单明细',
     category: 'relationship',
+    content: 'master detail template content here',
+    language: 'vue',
+    target: 'vue-component',
     version: '1.5.0',
     author: 'SmartAbp',
     features: ['master-detail', 'cascading-delete', 'aggregate-root'],
@@ -122,6 +132,9 @@ export const mockTemplatesResponse: Template[] = [
     name: '树形结构模板',
     description: '组织架构、分类等树形结构模板',
     category: 'hierarchy',
+    content: 'tree structure template content here',
+    language: 'typescript',
+    target: 'controller',
     version: '1.2.0',
     author: 'SmartAbp',
     features: ['tree-structure', 'recursive-query', 'parent-child'],

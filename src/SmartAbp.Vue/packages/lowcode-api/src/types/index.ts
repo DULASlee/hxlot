@@ -56,6 +56,12 @@ export interface Template {
   content: string
   language: 'csharp' | 'typescript' | 'vue' | 'sql'
   target: 'entity' | 'service' | 'controller' | 'vue-component' | 'store' | 'dto'
+  version?: string
+  author?: string
+  features?: string[]
+  requiredFields?: string[]
+  optionalFields?: string[]
+  supportedDatabases?: string[]
   metadata?: Record<string, any>
 }
 
