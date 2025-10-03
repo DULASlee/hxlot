@@ -641,6 +641,7 @@ namespace SmartAbp.CodeGenerator.Services
         public string Type { get; set; } = string.Empty;
         public bool IsRequired { get; set; }
         public bool IsReadOnly { get; set; }
+        public bool IsPrivateSetter { get; set; }
         public bool IsUnique { get; set; }
         public int? MaxLength { get; set; }
         public int? MinLength { get; set; }
@@ -671,6 +672,7 @@ namespace SmartAbp.CodeGenerator.Services
         public string Name { get; set; } = string.Empty;
         public string ReturnType { get; set; } = "void";
         public bool IsAsync { get; set; }
+        public bool IsVirtual { get; set; }
         public string? Description { get; set; }
         public List<ParameterDefinitionDto> Parameters { get; set; } = new();
         public string? MethodBody { get; set; }
@@ -704,7 +706,9 @@ namespace SmartAbp.CodeGenerator.Services
     {
         public string Name { get; set; } = string.Empty;
         public string Path { get; set; } = string.Empty;
+        public string RelativePath { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
+        public string Language { get; set; } = string.Empty; // e.g., "CSharp", "TypeScript", "Vue"
         public string Type { get; set; } = string.Empty; // e.g., "Entity", "AppService", "Dto", etc.
     }
 
@@ -727,15 +731,26 @@ namespace SmartAbp.CodeGenerator.Services
         public List<DomainEventDefinitionDto> DomainEvents { get; set; } = new();
         public List<SpecificationDefinitionDto> Specifications { get; set; } = new();
         public List<DomainServiceDefinitionDto> DomainServices { get; set; } = new();
+        public List<RepositoryDefinitionDto> Repositories { get; set; } = new();
+        public bool UseMultiTenancy { get; set; }
+        public bool UseSoftDelete { get; set; }
+        public bool UseAuditing { get; set; }
+        public bool UseExtraProperties { get; set; }
+        public string DefaultKeyType { get; set; } = "Guid";
     }
 
     public class AggregateDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
+        public string KeyType { get; set; } = "Guid";
+        public bool IsMultiTenant { get; set; }
+        public bool IsSoftDelete { get; set; }
+        public bool HasExtraProperties { get; set; }
         public List<PropertyDefinitionDto> Properties { get; set; } = new();
+        public List<DomainMethodDefinitionDto> DomainMethods { get; set; } = new();
         public List<BusinessRuleDefinitionDto> BusinessRules { get; set; } = new();
-        public List<DomainEventDefinitionDto> Events { get; set; } = new();
+        public List<DomainEventDefinitionDto> DomainEvents { get; set; } = new();
     }
 
     public class ValueObjectDefinitionDto
@@ -743,12 +758,15 @@ namespace SmartAbp.CodeGenerator.Services
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public List<PropertyDefinitionDto> Properties { get; set; } = new();
+        public bool IsImmutable { get; set; } = true;
+        public bool ImplementsEquality { get; set; } = true;
     }
 
     public class DomainEventDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
+        public string AggregateType { get; set; } = string.Empty;
         public List<PropertyDefinitionDto> Properties { get; set; } = new();
     }
 
@@ -765,6 +783,8 @@ namespace SmartAbp.CodeGenerator.Services
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public List<DomainMethodDefinitionDto> Methods { get; set; } = new();
+        public List<string> Dependencies { get; set; } = new();
+        public bool IsStateless { get; set; } = true;
     }
 
     public class BusinessRuleDefinitionDto
@@ -772,6 +792,7 @@ namespace SmartAbp.CodeGenerator.Services
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string Condition { get; set; } = string.Empty;
+        public string Expression { get; set; } = string.Empty;
         public string ErrorMessage { get; set; } = string.Empty;
         public List<string> Parameters { get; set; } = new();
     }
@@ -779,11 +800,19 @@ namespace SmartAbp.CodeGenerator.Services
     public class GeneratedDddSolutionDto
     {
         public string ModuleName { get; set; } = string.Empty;
-        public Dictionary<string, string> Files { get; set; } = new();
+        public List<GeneratedFileDto> Files { get; set; } = new();
         public int AggregateCount { get; set; }
+        public int EntityCount { get; set; }
         public int ValueObjectCount { get; set; }
         public int DomainEventCount { get; set; }
+        public int RepositoryCount { get; set; }
+        public int DomainServiceCount { get; set; }
+        public int SpecificationCount { get; set; }
         public DateTime GeneratedAt { get; set; }
+        public int GenerationTimeMs { get; set; }
+        public int TotalLinesOfCode { get; set; }
+        public bool Success { get; set; }
+        public string Message { get; set; } = string.Empty;
         public string SessionId { get; set; } = string.Empty;
     }
 
@@ -873,8 +902,13 @@ namespace SmartAbp.CodeGenerator.Services
 
     public class RepositoryDefinitionDto
     {
+        public string Name { get; set; } = string.Empty;
         public string EntityName { get; set; } = string.Empty;
+        public string AggregateType { get; set; } = string.Empty;
+        public string KeyType { get; set; } = "Guid";
         public string DbContextName { get; set; } = string.Empty;
+        public bool ImplementsStandardMethods { get; set; } = true;
+        public bool SupportsSpecifications { get; set; } = true;
         public List<RepositoryMethodDefinitionDto> CustomMethods { get; set; } = new();
     }
 
