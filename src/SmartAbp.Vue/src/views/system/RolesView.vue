@@ -1,8 +1,8 @@
 <template>
   <div class="roles-view">
     <div class="page-header">
-      <h1>角色管理</h1>
-      <p>管理系统角色和权限分配</p>
+      <h1>{{ $t('role.title') }}</h1>
+      <p>{{ $t('role.description') }}</p>
     </div>
 
     <div class="page-content">
@@ -11,7 +11,7 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="搜索角色..."
+            :placeholder="$t('role.placeholders.search')"
             class="search-input"
           />
         </div>
@@ -22,7 +22,7 @@
           <svg viewBox="0 0 24 24">
             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
           </svg>
-          添加角色
+          {{ $t('role.actions.create') }}
         </button>
       </div>
 
@@ -30,12 +30,12 @@
         <table>
           <thead>
             <tr>
-              <th>角色名称</th>
-              <th>描述</th>
-              <th>用户数量</th>
-              <th>权限数量</th>
-              <th>创建时间</th>
-              <th>操作</th>
+              <th>{{ $t('role.fields.name') }}</th>
+              <th>{{ $t('role.fields.description') }}</th>
+              <th>{{ $t('role.fields.userCount') }}</th>
+              <th>{{ $t('role.fields.permissionCount') }}</th>
+              <th>{{ $t('role.fields.createdAt') }}</th>
+              <th>{{ $t('role.fields.operations') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -65,19 +65,19 @@
                     class="btn-sm"
                     @click="editRole(role)"
                   >
-                    编辑
+                    {{ $t('role.actions.edit') }}
                   </button>
                   <button
                     class="btn-sm"
                     @click="viewPermissions(role)"
                   >
-                    权限
+                    {{ $t('role.actions.assignPermissions') }}
                   </button>
                   <button
                     class="btn-sm danger"
                     @click="deleteRole(role)"
                   >
-                    删除
+                    {{ $t('role.actions.delete') }}
                   </button>
                 </div>
               </td>
@@ -98,28 +98,28 @@
         @click.stop
       >
         <div class="modal-header">
-          <h3>添加角色</h3>
+          <h3>{{ $t('role.dialog.createTitle') }}</h3>
           <button @click="showAddRole = false">
             ×
           </button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label>角色名称</label>
+            <label>{{ $t('role.fields.name') }}</label>
             <input
               v-model="newRole.name"
               type="text"
             />
           </div>
           <div class="form-group">
-            <label>角色描述</label>
+            <label>{{ $t('role.fields.description') }}</label>
             <textarea
               v-model="newRole.description"
               rows="3"
             />
           </div>
           <div class="form-group">
-            <label>权限分配</label>
+            <label>{{ $t('permission.actions.assign') }}</label>
             <div class="permissions-grid">
               <label
                 v-for="permission in availablePermissions"
@@ -141,13 +141,13 @@
             class="btn-secondary"
             @click="showAddRole = false"
           >
-            取消
+            {{ $t('role.dialog.cancel') }}
           </button>
           <button
             class="btn-primary"
             @click="addRole"
           >
-            确定
+            {{ $t('role.dialog.confirm') }}
           </button>
         </div>
       </div>
@@ -164,7 +164,7 @@
         @click.stop
       >
         <div class="modal-header">
-          <h3>{{ selectedRole?.name }} - 权限详情</h3>
+          <h3>{{ selectedRole?.name }} - {{ $t('role.dialog.permissionsTitle') }}</h3>
           <button @click="showPermissions = false">
             ×
           </button>
@@ -185,7 +185,7 @@
             class="btn-primary"
             @click="showPermissions = false"
           >
-            关闭
+            {{ $t('role.dialog.cancel') }}
           </button>
         </div>
       </div>
