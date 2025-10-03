@@ -601,6 +601,11 @@ namespace SmartAbp.CodeGenerator.Core
                             SyntaxFactory.IdentifierName("ExtraPropertyDictionary"))
                             .WithArgumentList(SyntaxFactory.ArgumentList()))));
             }
+            else
+            {
+                // No-op placeholder to keep body syntactically valid
+                statements.Add(SyntaxFactory.EmptyStatement());
+            }
             
             return SyntaxFactory.ConstructorDeclaration(definition.Name)
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword))
@@ -676,7 +681,7 @@ namespace SmartAbp.CodeGenerator.Core
                                             .WithArgumentList(SyntaxFactory.ArgumentList(
                                                 SyntaxFactory.SeparatedList(arguments))))))),
                     // Set Id only when base type exposes it; otherwise skip to avoid compile errors during warmup
-                    SyntaxFactory.ParseStatement("// entity.Id = id;"),
+                    SyntaxFactory.EmptyStatement(),
                     SyntaxFactory.ReturnStatement(SyntaxFactory.IdentifierName("entity"))));
         }
         
@@ -720,7 +725,7 @@ namespace SmartAbp.CodeGenerator.Core
                 "ValidateEntity")
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword))
                 .WithBody(SyntaxFactory.Block(
-                    SyntaxFactory.ParseStatement("// Validation logic would go here")));
+                    SyntaxFactory.EmptyStatement()));
         }
         
         private MemberDeclarationSyntax GenerateEqualsMethod(EntityDefinition definition)
