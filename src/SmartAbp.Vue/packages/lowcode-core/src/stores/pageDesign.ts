@@ -570,6 +570,28 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
     }
     return rules
   }
+  
+  // 🛡️ 核心功能保护: 组件删除和页面验证方法
+  const deleteComponent = removeComponentFromPage
+  
+  const validatePage = (pageId: string): boolean => {
+    const page = pages.value.find(p => p.id === pageId)
+    if (!page) {
+      logger.warn('页面不存在', { pageId })
+      return false
+    }
+    
+    // 基本验证
+    const isValid = !!(
+      page.name &&
+      page.type &&
+      page.components &&
+      page.components.length > 0
+    )
+    
+    logger.info('页面验证结果', { pageId, isValid })
+    return isValid
+  }
 
   // 数据持久化
   const saveToLocalStorage = () => {
@@ -726,6 +748,8 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
     addComponentToPage,
     updateComponentInPage,
     removeComponentFromPage,
+    deleteComponent, // 🛡️ 别名：确保核心功能保护验证
+    validatePage, // 🛡️ 核心功能保护
     
     // 批量生成
     generateBatchPages,

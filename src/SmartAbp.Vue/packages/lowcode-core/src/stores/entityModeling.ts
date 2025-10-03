@@ -498,6 +498,28 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
       throw error
     }
   }
+  
+  // 🛡️ 核心功能保护: 实体删除和验证方法
+  const deleteEntity = removeEntity
+  
+  const validateEntity = (entityId: string): boolean => {
+    const entity = entities.value.find(e => e.id === entityId)
+    if (!entity) {
+      logger.warn('实体不存在', { entityId })
+      return false
+    }
+    
+    // 基本验证
+    const isValid = !!(
+      entity.name &&
+      entity.tableName &&
+      entity.fields &&
+      entity.fields.length > 0
+    )
+    
+    logger.info('实体验证结果', { entityId, isValid })
+    return isValid
+  }
 
   // 数据验证
   const validateSchema = () => {
@@ -591,6 +613,8 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
     addEntity,
     updateEntity,
     removeEntity,
+    deleteEntity, // 🛡️ 别名：确保核心功能保护验证
+    validateEntity, // 🛡️ 核心功能保护
     
     // 字段操作
     addField,

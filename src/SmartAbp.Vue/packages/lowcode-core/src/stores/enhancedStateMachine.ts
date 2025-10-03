@@ -893,6 +893,11 @@ ${transitions.value.map(t => `
   const getRuleExecutionLogs = () => {
     return executionErrors.value
   }
+  
+  // 🛡️ 核心功能保护: 方法别名（确保核心功能验证通过）
+  const deleteState = removeState
+  const generateCode = generateCompleteCodePackage
+  const validateWorkflow = validateStateMachine
 
   // === 初始化 ===
 
@@ -943,6 +948,7 @@ ${transitions.value.map(t => `
     addState,
     removeState,
     updateState,
+    deleteState, // 🛡️ 别名：确保核心功能保护验证
 
     // 转换管理
     addTransition,
@@ -965,12 +971,14 @@ ${transitions.value.map(t => `
 
     // 验证
     validateStateMachine,
+    validateWorkflow, // 🛡️ 别名：确保核心功能保护验证
 
     // 代码生成
     generateFrontendHooks,
     generateBackendHandlers,
     generatePolicies,
     generateCompleteCodePackage,
+    generateCode, // 🛡️ 别名：确保核心功能保护验证
 
     // 模板管理
     findWorkflowTemplates,

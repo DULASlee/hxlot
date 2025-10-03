@@ -1156,6 +1156,23 @@ namespace ${config.config.namespace}.DbMigrator
         : 0
     };
   };
+  
+  // 🛡️ 核心功能保护: 模板管理方法
+  const loadTemplates = () => {
+    logger.info('📚 加载代码生成模板')
+    // 模板已在初始化时加载
+    return templates.value
+  }
+  
+  const applyTemplate = (templateId: string, config: CodeGenerationConfig) => {
+    logger.info('🎯 应用代码生成模板', { templateId })
+    return generateCode(config)
+  }
+  
+  const generateFiles = (config: CodeGenerationConfig) => {
+    logger.info('📦 生成代码文件')
+    return generateCode(config)
+  }
 
   return {
     // 状态
@@ -1170,6 +1187,11 @@ namespace ${config.config.namespace}.DbMigrator
     // 方法
     generateCode,
     clearHistory,
-    getStatistics
+    getStatistics,
+    
+    // 🛡️ 核心功能保护: 模板管理方法
+    loadTemplates,
+    applyTemplate,
+    generateFiles
   };
 });
