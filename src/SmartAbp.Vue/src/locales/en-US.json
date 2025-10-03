@@ -435,6 +435,37 @@
       "projectProgress": "Project Progress Distribution",
       "systemPerformance": "System Performance Monitoring",
       "recentActivities": "Recent Activities"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "userManagement": "User Management",
+      "userManagementDesc": "Manage system users",
+      "projectManagement": "Project Management",
+      "projectManagementDesc": "View project list",
+      "systemLogs": "System Logs",
+      "systemLogsDesc": "View system logs",
+      "themeTest": "Theme Test",
+      "themeTestDesc": "Test theme switching",
+      "systemSettings": "System Settings",
+      "systemSettingsDesc": "Configure system parameters",
+      "permissionManagement": "Permission Management",
+      "permissionManagementDesc": "Manage user permissions"
+    },
+    "systemStatus": {
+      "title": "System Status",
+      "databaseConnection": "Database Connection",
+      "cacheService": "Cache Service",
+      "diskSpace": "Disk Space",
+      "memoryUsage": "Memory Usage",
+      "statusNormal": "Normal"
+    },
+    "messages": {
+      "refreshed": "Dashboard data refreshed!",
+      "exportInProgress": "Report export feature in development...",
+      "currentTheme": "Current theme:",
+      "isDarkMode": "Is dark mode:",
+      "refreshingData": "Refreshing dashboard data...",
+      "exportingReport": "Exporting report..."
     }
   }
 }

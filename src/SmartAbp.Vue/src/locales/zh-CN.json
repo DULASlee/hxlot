@@ -428,6 +428,37 @@
       "projectProgress": "项目进度分布",
       "systemPerformance": "系统性能监控",
       "recentActivities": "最近活动"
+    },
+    "quickActions": {
+      "title": "快速操作",
+      "userManagement": "用户管理",
+      "userManagementDesc": "管理系统用户",
+      "projectManagement": "项目管理",
+      "projectManagementDesc": "查看项目列表",
+      "systemLogs": "系统日志",
+      "systemLogsDesc": "查看系统日志",
+      "themeTest": "主题测试",
+      "themeTestDesc": "测试主题切换",
+      "systemSettings": "系统设置",
+      "systemSettingsDesc": "配置系统参数",
+      "permissionManagement": "权限管理",
+      "permissionManagementDesc": "管理用户权限"
+    },
+    "systemStatus": {
+      "title": "系统状态",
+      "databaseConnection": "数据库连接",
+      "cacheService": "缓存服务",
+      "diskSpace": "磁盘空间",
+      "memoryUsage": "内存使用",
+      "statusNormal": "正常"
+    },
+    "messages": {
+      "refreshed": "仪表板数据已刷新！",
+      "exportInProgress": "报告导出功能开发中...",
+      "currentTheme": "当前主题:",
+      "isDarkMode": "是否暗黑模式:",
+      "refreshingData": "刷新仪表板数据...",
+      "exportingReport": "导出报告..."
     }
   }
 }

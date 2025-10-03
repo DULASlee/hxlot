@@ -3,8 +3,8 @@
     <div class="dashboard-header">
       <div class="header-content">
         <div class="header-text">
-          <h1><i class="fas fa-tachometer-alt header-icon" />SmartAbp 工作台</h1>
-          <p>欢迎使用 SmartAbp 企业管理系统</p>
+          <h1><i class="fas fa-tachometer-alt header-icon" />{{ $t('dashboard.title') }}</h1>
+          <p>{{ $t('dashboard.welcome') }}</p>
         </div>
         <div class="header-actions">
           <button
@@ -12,14 +12,14 @@
             @click="refreshDashboard"
           >
             <i class="fas fa-sync-alt" />
-            <span>刷新数据</span>
+            <span>{{ $t('dashboard.actions.refresh') }}</span>
           </button>
           <button
             class="header-btn"
             @click="exportReport"
           >
             <i class="fas fa-download" />
-            <span>导出报告</span>
+            <span>{{ $t('dashboard.actions.export') }}</span>
           </button>
         </div>
       </div>
@@ -37,11 +37,11 @@
               1,234
             </div>
             <div class="stat-label">
-              用户总数
+              {{ $t('dashboard.stats.totalUsers') }}
             </div>
             <div class="stat-trend">
               <i class="fas fa-arrow-up trend-up" />
-              <span>+12% 本月</span>
+              <span>+12% {{ $t('dashboard.trends.thisMonth') }}</span>
             </div>
           </div>
         </div>
@@ -55,11 +55,11 @@
               56
             </div>
             <div class="stat-label">
-              项目数量
+              {{ $t('dashboard.stats.totalProjects') }}
             </div>
             <div class="stat-trend">
               <i class="fas fa-arrow-up trend-up" />
-              <span>+3 本周</span>
+              <span>+3 {{ $t('dashboard.trends.thisWeek') }}</span>
             </div>
           </div>
         </div>
@@ -73,11 +73,11 @@
               89%
             </div>
             <div class="stat-label">
-              系统健康度
+              {{ $t('dashboard.stats.systemHealth') }}
             </div>
             <div class="stat-trend">
               <i class="fas fa-arrow-down trend-down" />
-              <span>-2% 今日</span>
+              <span>-2% {{ $t('dashboard.trends.today') }}</span>
             </div>
           </div>
         </div>
@@ -91,11 +91,11 @@
               2,456
             </div>
             <div class="stat-label">
-              今日日志
+              {{ $t('dashboard.stats.todayLogs') }}
             </div>
             <div class="stat-trend">
               <i class="fas fa-arrow-up trend-up" />
-              <span>+156 今日</span>
+              <span>+156 {{ $t('dashboard.trends.today') }}</span>
             </div>
           </div>
         </div>
@@ -103,7 +103,7 @@
 
       <!-- 快速操作 -->
       <div class="quick-actions">
-        <h2><i class="fas fa-bolt" />快速操作</h2>
+        <h2><i class="fas fa-bolt" />{{ $t('dashboard.quickActions.title') }}</h2>
         <div class="action-grid">
           <button
             class="action-btn"
@@ -111,8 +111,8 @@
           >
             <i class="fas fa-users" />
             <div class="action-content">
-              <span class="action-title">用户管理</span>
-              <span class="action-desc">管理系统用户</span>
+              <span class="action-title">{{ $t('dashboard.quickActions.userManagement') }}</span>
+              <span class="action-desc">{{ $t('dashboard.quickActions.userManagementDesc') }}</span>
             </div>
           </button>
 
@@ -122,8 +122,8 @@
           >
             <i class="fas fa-project-diagram" />
             <div class="action-content">
-              <span class="action-title">项目管理</span>
-              <span class="action-desc">查看项目列表</span>
+              <span class="action-title">{{ $t('dashboard.quickActions.projectManagement') }}</span>
+              <span class="action-desc">{{ $t('dashboard.quickActions.projectManagementDesc') }}</span>
             </div>
           </button>
 
@@ -133,8 +133,8 @@
           >
             <i class="fas fa-file-alt" />
             <div class="action-content">
-              <span class="action-title">系统日志</span>
-              <span class="action-desc">查看系统日志</span>
+              <span class="action-title">{{ $t('dashboard.quickActions.systemLogs') }}</span>
+              <span class="action-desc">{{ $t('dashboard.quickActions.systemLogsDesc') }}</span>
             </div>
           </button>
 
@@ -144,8 +144,8 @@
           >
             <i class="fas fa-palette" />
             <div class="action-content">
-              <span class="action-title">主题测试</span>
-              <span class="action-desc">测试主题切换</span>
+              <span class="action-title">{{ $t('dashboard.quickActions.themeTest') }}</span>
+              <span class="action-desc">{{ $t('dashboard.quickActions.themeTestDesc') }}</span>
             </div>
           </button>
 
@@ -155,8 +155,8 @@
           >
             <i class="fas fa-cog" />
             <div class="action-content">
-              <span class="action-title">系统设置</span>
-              <span class="action-desc">配置系统参数</span>
+              <span class="action-title">{{ $t('dashboard.quickActions.systemSettings') }}</span>
+              <span class="action-desc">{{ $t('dashboard.quickActions.systemSettingsDesc') }}</span>
             </div>
           </button>
 
@@ -166,8 +166,8 @@
           >
             <i class="fas fa-shield-alt" />
             <div class="action-content">
-              <span class="action-title">权限管理</span>
-              <span class="action-desc">管理用户权限</span>
+              <span class="action-title">{{ $t('dashboard.quickActions.permissionManagement') }}</span>
+              <span class="action-desc">{{ $t('dashboard.quickActions.permissionManagementDesc') }}</span>
             </div>
           </button>
         </div>
@@ -175,34 +175,34 @@
 
       <!-- 系统状态 -->
       <div class="system-status">
-        <h2><i class="fas fa-server" />系统状态</h2>
+        <h2><i class="fas fa-server" />{{ $t('dashboard.systemStatus.title') }}</h2>
         <div class="status-list">
           <div class="status-item">
             <div class="status-icon">
               <i class="fas fa-database" />
             </div>
             <div class="status-info">
-              <span class="status-name">数据库连接</span>
+              <span class="status-name">{{ $t('dashboard.systemStatus.databaseConnection') }}</span>
               <div class="status-indicator success" />
             </div>
-            <span class="status-value success">正常</span>
+            <span class="status-value success">{{ $t('dashboard.systemStatus.statusNormal') }}</span>
           </div>
           <div class="status-item">
             <div class="status-icon">
               <i class="fas fa-memory" />
             </div>
             <div class="status-info">
-              <span class="status-name">缓存服务</span>
+              <span class="status-name">{{ $t('dashboard.systemStatus.cacheService') }}</span>
               <div class="status-indicator success" />
             </div>
-            <span class="status-value success">正常</span>
+            <span class="status-value success">{{ $t('dashboard.systemStatus.statusNormal') }}</span>
           </div>
           <div class="status-item">
             <div class="status-icon">
               <i class="fas fa-hdd" />
             </div>
             <div class="status-info">
-              <span class="status-name">磁盘空间</span>
+              <span class="status-name">{{ $t('dashboard.systemStatus.diskSpace') }}</span>
               <div class="status-indicator warning" />
             </div>
             <span class="status-value warning">75%</span>
@@ -212,7 +212,7 @@
               <i class="fas fa-microchip" />
             </div>
             <div class="status-info">
-              <span class="status-name">内存使用</span>
+              <span class="status-name">{{ $t('dashboard.systemStatus.memoryUsage') }}</span>
               <div class="status-indicator success" />
             </div>
             <span class="status-value success">45%</span>
@@ -225,28 +225,30 @@
 
 <script setup lang="ts">
 import { useThemeStore } from "@/stores"
+import { useI18n } from "vue-i18n"
 
 const themeStore = useThemeStore()
+const { t } = useI18n()
 
 const testTheme = () => {
-  console.log("当前主题:", themeStore.currentTheme)
-  console.log("是否暗黑模式:", themeStore.isDarkMode)
-  console.log("主题类名:", themeStore.currentTheme)
+  console.log(t('dashboard.messages.currentTheme'), themeStore.currentTheme)
+  console.log(t('dashboard.messages.isDarkMode'), themeStore.isDarkMode)
+  console.log(t('dashboard.messages.currentTheme'), themeStore.currentTheme)
 
   // 测试主题切换
   themeStore.toggleDarkMode()
 }
 
 const refreshDashboard = () => {
-  console.log("刷新仪表板数据...")
+  console.log(t('dashboard.messages.refreshingData'))
   // 这里可以添加实际的数据刷新逻辑
-  alert("仪表板数据已刷新！")
+  alert(t('dashboard.messages.refreshed'))
 }
 
 const exportReport = () => {
-  console.log("导出报告...")
+  console.log(t('dashboard.messages.exportingReport'))
   // 这里可以添加实际的报告导出逻辑
-  alert("报告导出功能开发中...")
+  alert(t('dashboard.messages.exportInProgress'))
 }
 </script>
 
