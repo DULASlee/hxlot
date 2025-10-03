@@ -1,0 +1,248 @@
+<template>
+  <div class="action-node rule-node" :class="{ selected: data.selected, error: hasError }">
+    <div class="node-header">
+      <el-icon class="node-icon" color="#67c23a">
+        <Setting />
+      </el-icon>
+      <span class="node-title">{{ data.label || '执行动作' }}</span>
+      <el-tag v-if="data.actionType" type="success" size="small">
+        {{ getActionTypeLabel(data.actionType) }}
+      </el-tag>
+    </div>
+    <div class="node-body">
+      <div class="node-description">{{ data.description || '执行业务操作' }}</div>
+      
+      <!-- SetFieldValue -->
+      <div v-if="data.actionType === 'SetFieldValue' && data.actionParams" class="action-params">
+        <div class="param-item">
+          <span class="param-label">字段:</span>
+          <span class="param-value">{{ data.actionParams.field }}</span>
+        </div>
+        <div class="param-item">
+          <span class="param-label">值:</span>
+          <span class="param-value">{{ formatValue(data.actionParams.value) }}</span>
+        </div>
+      </div>
+      
+      <!-- ShowMessage -->
+      <div v-else-if="data.actionType === 'ShowMessage' && data.actionParams" class="action-params">
+        <div class="param-item">
+          <span class="param-label">消息:</span>
+          <span class="param-value">{{ data.actionParams.message }}</span>
+        </div>
+        <div class="param-item">
+          <el-tag :type="getMessageTypeTag(data.actionParams.type)" size="small">
+            {{ data.actionParams.type || 'info' }}
+          </el-tag>
+        </div>
+      </div>
+      
+      <!-- CallAPI -->
+      <div v-else-if="data.actionType === 'CallAPI' && data.actionParams" class="action-params">
+        <div class="param-item">
+          <span class="param-label">API:</span>
+          <code class="param-code">{{ data.actionParams.url }}</code>
+        </div>
+        <div class="param-item">
+          <el-tag type="info" size="small">{{ data.actionParams.method || 'GET' }}</el-tag>
+        </div>
+      </div>
+      
+      <!-- ValidateField -->
+      <div v-else-if="data.actionType === 'ValidateField' && data.actionParams" class="action-params">
+        <div class="param-item">
+          <span class="param-label">验证:</span>
+          <span class="param-value">{{ data.actionParams.field }}</span>
+        </div>
+        <div v-if="data.actionParams.rules" class="param-item">
+          <el-tag
+            v-for="rule in data.actionParams.rules"
+            :key="rule"
+            type="warning"
+            size="small"
+            style="margin-right: 4px"
+          >
+            {{ rule }}
+          </el-tag>
+        </div>
+      </div>
+      
+      <!-- 未配置 -->
+      <div v-else class="node-warning">
+        <el-icon><InfoFilled /></el-icon>
+        <span>请配置动作类型和参数</span>
+      </div>
+    </div>
+    <Handle type="target" position="left" :style="targetHandleStyle" />
+    <Handle type="source" position="right" :style="sourceHandleStyle" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { Handle } from '@vue-flow/core'
+import { ElIcon, ElTag } from 'element-plus'
+import { Setting, InfoFilled } from '@element-plus/icons-vue'
+import type { RuleNodeData } from '../types'
+
+interface Props {
+  data: RuleNodeData
+}
+
+const props = defineProps<Props>()
+
+const hasError = computed(() => {
+  return !props.data.actionType
+})
+
+const getActionTypeLabel = (type: string): string => {
+  const labels: Record<string, string> = {
+    SetFieldValue: '设置字段',
+    ShowMessage: '显示消息',
+    CallAPI: '调用API',
+    ValidateField: '验证字段'
+  }
+  return labels[type] || type
+}
+
+const getMessageTypeTag = (type: string): string => {
+  const tags: Record<string, string> = {
+    info: 'info',
+    success: 'success',
+    warning: 'warning',
+    error: 'danger'
+  }
+  return tags[type] || 'info'
+}
+
+const formatValue = (value: any): string => {
+  if (value === null || value === undefined) return '(空)'
+  if (typeof value === 'string') return value
+  return JSON.stringify(value)
+}
+
+const targetHandleStyle = computed(() => ({
+  width: '10px',
+  height: '10px',
+  background: '#67c23a',
+  border: '2px solid #fff'
+}))
+
+const sourceHandleStyle = computed(() => ({
+  width: '10px',
+  height: '10px',
+  background: '#67c23a',
+  border: '2px solid #fff'
+}))
+</script>
+
+<style scoped>
+.rule-node {
+  min-width: 220px;
+  max-width: 320px;
+  background: #fff;
+  border: 2px solid #e4e7ed;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+
+.action-node.selected {
+  border-color: #67c23a;
+  box-shadow: 0 4px 12px rgba(103, 194, 58, 0.3);
+}
+
+.action-node.error {
+  border-color: #f56c6c;
+  background: #fef0f0;
+}
+
+.rule-node:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.node-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e1f3f8 100%);
+  border-bottom: 1px solid #b3e19d;
+  border-radius: 6px 6px 0 0;
+}
+
+.node-icon {
+  font-size: 18px;
+}
+
+.node-title {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.node-body {
+  padding: 12px;
+}
+
+.node-description {
+  font-size: 12px;
+  color: #909399;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.action-params {
+  margin-top: 8px;
+  padding: 8px;
+  background: #f5f7fa;
+  border-radius: 4px;
+}
+
+.param-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.param-item:last-child {
+  margin-bottom: 0;
+}
+
+.param-label {
+  font-weight: 500;
+  color: #606266;
+  min-width: 50px;
+}
+
+.param-value {
+  color: #303133;
+  flex: 1;
+  word-break: break-all;
+}
+
+.param-code {
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 11px;
+  color: #67c23a;
+  background: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  word-break: break-all;
+}
+
+.node-warning {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  background: #fff3e0;
+  border: 1px dashed #e6a23c;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #e6a23c;
+}
+</style>
