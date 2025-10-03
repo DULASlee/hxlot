@@ -259,6 +259,7 @@
 - **02_development_process.mdc** - L2工作流层
 - **03_quality_guardian.mdc** - L3质量守护层
 - **04_code_quality_prohibitions.mdc** - L4代码质量禁止层
+- **05_核心功能保护铁律.mdc** - 🛡️ L5核心功能保护层（最高优先级）
 - **05_增量迭代开发质量门禁与GIT版本管理铁律.mdc** - L5增量迭代质量门禁
 - **06_低代码生成器代码质量铁律.mdc** - L6低代码生成器质量
 - **07_AI编程架构自动识别保护铁律.mdc** - L7 AI架构保护

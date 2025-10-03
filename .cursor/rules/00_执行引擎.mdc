@@ -61,6 +61,35 @@ bash scripts/quality/expert-mode-nine-layers.sh --skip-git-sync
 ## 第0阶段：独立技术判断强制执行（最高优先级）
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+### 🛡️ 核心功能保护铁律（首要检查）
+
+**在执行任何代码修改前，AI必须首先确认核心功能保护机制：**
+
+**核心功能保护文档**: `.cursor/rules/05_核心功能保护铁律.mdc`
+
+**保护原则**:
+- 🛡️ **严禁删除核心业务逻辑** - 任何情况下不得删除已完成的核心功能代码
+- 🛡️ **严禁简化已完成功能** - 类型修复不能改变业务逻辑
+- 🛡️ **严禁注释掉核心代码** - 禁止通过注释来"解决"类型错误
+- 🛡️ **严禁用空实现替代** - 禁止用空函数或默认返回替换已有实现
+- 🛡️ **类型修复不能改变业务逻辑** - 只改类型，不改逻辑
+
+**核心文件清单** (修改前必检):
+```
+前端核心:
+- enhancedStateMachine.ts (874行)
+- codeGeneration.ts (1176行)  
+- entityModeling.ts
+- pageDesign.ts
+
+后端核心:
+- CodeGenerationAppService.cs (2049行)
+- EnhancedFrontendGenerator.cs
+- DddArchitectureGenerator.cs
+```
+
+**验证脚本**: `bash scripts/quality/verify-core-protection.sh`
+
 ### 🌟 核心原则
 
 **AI必须具备世界顶尖架构师的独立技术判断力，坚持技术原则，不盲目执行用户要求。**
