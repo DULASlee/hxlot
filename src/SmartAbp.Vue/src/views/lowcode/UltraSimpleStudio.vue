@@ -5,15 +5,77 @@
 -->
 <template>
   <div class="ultra-simple-studio">
-    <!-- 头部标题区 -->
+    <!-- 🍎 苹果风格头部区域 -->
     <div class="studio-header">
-      <h1 class="studio-title">
-        <span class="icon">🚀</span>
-        {{ t('ultraSimple.title') }}
-      </h1>
-      <p class="studio-subtitle">
-        {{ t('ultraSimple.subtitle') }}
-      </p>
+      <div class="title-section">
+        <div class="title-icon">
+          🚀
+        </div>
+        <div class="title-content">
+          <h1 class="main-title">
+            {{ t('ultraSimple.title') }}
+          </h1>
+          <p class="subtitle">
+            {{ t('ultraSimple.subtitle') }}
+          </p>
+        </div>
+      </div>
+
+      <!-- 🔧 工具栏 -->
+      <div class="toolbar">
+        <!-- 语言切换器 -->
+        <el-dropdown
+          class="language-switcher"
+          @command="handleLanguageChange"
+        >
+          <el-button
+            text
+            class="toolbar-btn"
+          >
+            <el-icon>🌍</el-icon>
+            {{ currentLanguage }}
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="zh-CN">
+                🇨🇳 中文
+              </el-dropdown-item>
+              <el-dropdown-item command="en-US">
+                🇺🇸 English
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+
+        <!-- 主题切换器 -->
+        <el-dropdown
+          class="theme-switcher"
+          @command="handleThemeChange"
+        >
+          <el-button
+            text
+            class="toolbar-btn"
+          >
+            <el-icon><Moon v-if="isDarkMode" /><Sunny v-else /></el-icon>
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="light">
+                ☀️ {{ t('theme.light') }}
+              </el-dropdown-item>
+              <el-dropdown-item command="dark">
+                🌙 {{ t('theme.dark') }}
+              </el-dropdown-item>
+              <el-dropdown-item command="tech-blue">
+                💙 {{ t('theme.techBlue') }}
+              </el-dropdown-item>
+              <el-dropdown-item command="auto">
+                🔄 {{ t('theme.auto') }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </div>
 
     <!-- 主内容卡片 -->
@@ -235,18 +297,8 @@
           :class="['generate-btn', generateBtnClass]"
           @click="handleGenerate"
         >
-          <span v-if="!generating && !generationComplete">
-            <i class="icon-rocket" />
-            {{ t('ultraSimple.actions.generate') }}
-          </span>
-          <span v-else-if="generating">
-            <i class="icon-loading" />
-            {{ t('ultraSimple.actions.generating') }}
-          </span>
-          <span v-else>
-            <i class="icon-check" />
-            {{ t('ultraSimple.actions.completed') }}
-          </span>
+          <i :class="generateBtnIcon" />
+          {{ generateBtnText }}
         </el-button>
 
         <!-- 重置按钮 -->
@@ -268,19 +320,22 @@
       >
         <el-progress
           :percentage="progress"
-          :status="generationComplete ? 'success' : undefined"
+          :status="progressStatus"
+          :color="progressColor"
           :stroke-width="12"
+          class="modern-progress"
         />
-        
+
         <!-- 生成日志 -->
         <div class="generation-logs">
           <div
-            v-for="(log, index) in generationLogs"
-            :key="index"
+            v-for="log in generationLogs"
+            :key="log.id"
             :class="['log-item', log.type]"
           >
             <span class="log-icon">{{ getLogIcon(log.type) }}</span>
             <span class="log-message">{{ log.message }}</span>
+            <span class="log-timestamp">{{ formatTime(log.timestamp) }}</span>
           </div>
         </div>
 
@@ -336,11 +391,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
-import { codeGeneratorApi } from '@smartabp/lowcode-api'
+import { Moon, Sunny } from '@element-plus/icons-vue'
 import type { ModuleMetadata } from '@smartabp/lowcode-api'
+import { codeGeneratorApi } from '@smartabp/lowcode-api'
+import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 // 本地类型定义 - 修复API不匹配问题
 interface TableSchema {
@@ -363,13 +419,16 @@ interface TableSchema {
 }
 
 // 类型已从lowcode-api导入，不需要重复定义
+import { setLocale } from '@/plugins/i18n'
 import { useMenuStore } from '@/stores'
+import { useThemeStore } from '@/stores/modules/theme'
 import { useRouter } from 'vue-router'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 组合函数
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const themeStore = useThemeStore()
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 响应式状态
@@ -390,12 +449,32 @@ const formData = ref({
 const generating = ref(false)
 const generationComplete = ref(false)
 const progress = ref(0)
-const generationLogs = ref<Array<{ type: string, message: string }>>([])
+const generationLogs = ref<Array<{ type: string, message: string, timestamp: number, id: string }>>([])
 const sessionId = ref('')
 const menuStore = useMenuStore()
 const router = useRouter()
 const showReport = ref(false)
 const generationReport = ref('')
+
+// 🎯 进度条颜色动态计算
+const progressColor = computed(() => {
+  if (generationComplete.value) return '#67c23a' // 绿色 - 完成
+  if (generating.value) {
+    // 根据进度动态渐变：蓝色 → 橙色 → 绿色
+    const p = progress.value
+    if (p < 30) return '#409eff' // 蓝色 - 开始
+    if (p < 70) return '#e6a23c' // 橙色 - 进行中
+    return '#67c23a' // 绿色 - 即将完成
+  }
+  return '#409eff' // 默认蓝色
+})
+
+// 🎯 进度条状态
+const progressStatus = computed(() => {
+  if (generationComplete.value) return 'success'
+  if (generating.value && progress.value > 0) return undefined
+  return undefined
+})
 
 // 生成按钮三态（蓝/红/绿）
 const generateBtnType = computed<'primary' | 'danger' | 'success'>(() => {
@@ -408,6 +487,30 @@ const generateBtnClass = computed(() => {
   if (generating.value) return 'btn-red'
   if (generationComplete.value) return 'btn-green'
   return 'btn-blue'
+})
+
+// 🎯 按钮图标动态计算
+const generateBtnIcon = computed(() => {
+  if (generating.value) return 'icon-loading spinning'
+  if (generationComplete.value) return 'icon-check'
+  return 'icon-rocket'
+})
+
+// 🎯 按钮文本动态计算
+const generateBtnText = computed(() => {
+  if (generating.value) return t('ultraSimple.actions.generating')
+  if (generationComplete.value) return t('ultraSimple.actions.completed')
+  return t('ultraSimple.actions.generate')
+})
+
+// 🌍 国际化相关
+const currentLanguage = computed(() => {
+  return locale.value === 'zh-CN' ? '中文' : 'English'
+})
+
+// 🌓 主题相关
+const isDarkMode = computed(() => {
+  return themeStore.isDarkMode
 })
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -477,7 +580,7 @@ async function loadDatabaseTables(): Promise<void> {
       provider: mapProvider(formData.value.databaseType),
       connectionStringName: 'Default'
     })
-    
+
     // 转换DatabaseSchema到TableSchema数组
     availableTables.value = (dbSchema as any)?.tables || []
     addLog('success', t('ultraSimple.logs.tablesLoaded', { count: availableTables.value.length }))
@@ -498,7 +601,7 @@ async function loadDatabaseTables(): Promise<void> {
  */
 function handleTableChange(tableName: string): void {
   if (!tableName) return
-  
+
   // 自动推导模块名和显示名
   formData.value.moduleName = tableName.replace(/s$/, '') // 移除复数s
   formData.value.displayName = `${formData.value.moduleName} Management`
@@ -516,7 +619,7 @@ function handleInputChange(): void {
  */
 async function handleGenerate(): Promise<void> {
   if (!formRef.value) return
-  
+
   // 验证表单
   const valid = await formRef.value.validate().catch(() => false)
   if (!valid) {
@@ -636,11 +739,11 @@ async function pollProgress(): Promise<void> {
   while (attempts < maxAttempts) {
     try {
       const status = await codeGeneratorApi.getGenerationStatus(sessionId.value)
-      
+
       if (status.status === 'completed') {
     return
   }
-  
+
       // 与后端进度对齐并平滑过渡
       if (typeof status.percentage === 'number') {
         smoothTo(Math.max(progress.value, status.percentage))
@@ -674,7 +777,7 @@ async function downloadCode(): Promise<void> {
     link.download = `${formData.value.moduleName}_${Date.now()}.zip`
     link.click()
     URL.revokeObjectURL(url)
-    
+
     ElMessage.success(t('ultraSimple.messages.downloadSuccess'))
   } catch (error) {
     ElMessage.error(t('ultraSimple.messages.downloadError'))
@@ -694,10 +797,40 @@ function handleReset(): void {
 }
 
 /**
- * 添加日志
+ * 添加日志 - 增强版
  */
 function addLog(type: string, message: string): void {
-  generationLogs.value.push({ type, message })
+  const logEntry = {
+    type,
+    message,
+    timestamp: Date.now(),
+    id: `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+  }
+  generationLogs.value.push(logEntry)
+
+  // 🎯 自动滚动到最新日志
+  nextTick(() => {
+    const logsContainer = document.querySelector('.generation-logs')
+    if (logsContainer) {
+      logsContainer.scrollTop = logsContainer.scrollHeight
+    }
+  })
+}
+
+/**
+ * 🌍 处理语言切换
+ */
+function handleLanguageChange(lang: string): void {
+  setLocale(lang as 'zh-CN' | 'en-US')
+  ElMessage.success(t('ultraSimple.messages.languageChanged'))
+}
+
+/**
+ * 🌓 处理主题切换
+ */
+function handleThemeChange(theme: string): void {
+  themeStore.setTheme(theme as any)
+  ElMessage.success(t('ultraSimple.messages.themeChanged'))
 }
 
 /**
@@ -711,6 +844,13 @@ function getLogIcon(type: string): string {
     error: '❌'
   }
   return icons[type] || '📝'
+}
+
+/**
+ * 格式化时间戳
+ */
+function formatTime(timestamp: number): string {
+  return new Date(timestamp).toLocaleTimeString()
 }
 
 // provider映射（UI选择 → 后端契约）
@@ -780,35 +920,42 @@ function triggerHook(name: string, payload: unknown): void {
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--spacing-6);
-  background: var(--color-background-primary);
+  // 🌈 渐变背景，营造空间感
+  background: linear-gradient(135deg,
+    var(--color-background-base) 0%,
+    var(--color-background-soft) 100%
+  );
   min-height: calc(100vh - 200px);
-  
+
+  // 🎨 页面加载动画
+  animation: fadeSlideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 头部区域
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   .studio-header {
     text-align: center;
     margin-bottom: var(--spacing-8);
-    
+
     .studio-title {
       font-size: var(--font-size-4xl);
       font-weight: var(--font-weight-bold);
       color: var(--color-text-primary);
       margin-bottom: var(--spacing-3);
-      
+
       .icon {
         display: inline-block;
         margin-right: var(--spacing-2);
       }
     }
-    
+
     .studio-subtitle {
       font-size: var(--font-size-lg);
       color: var(--color-text-secondary);
       margin: 0;
     }
   }
-  
+
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 主卡片
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -818,34 +965,34 @@ function triggerHook(name: string, payload: unknown): void {
     padding: var(--spacing-8);
     box-shadow: var(--shadow-lg);
     border: 1px solid var(--color-border-light);
-    
+
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // 表单样式
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     .config-form {
       .form-item {
         margin-bottom: var(--spacing-6);
-        
+
         .form-control {
           width: 100%;
         }
-        
+
         .form-hint {
           display: block;
           margin-top: var(--spacing-1);
           font-size: var(--font-size-sm);
           color: var(--color-text-tertiary);
         }
-        
+
         .table-option {
   display: flex;
   align-items: center;
           gap: var(--spacing-2);
-          
+
           .icon-database {
             color: var(--color-primary-500);
           }
-          
+
           .table-name {
             color: var(--color-text-tertiary);
             font-size: var(--font-size-sm);
@@ -853,7 +1000,7 @@ function triggerHook(name: string, payload: unknown): void {
         }
       }
     }
-    
+
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // 自动推导信息
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -863,7 +1010,7 @@ function triggerHook(name: string, payload: unknown): void {
       padding: var(--spacing-5);
       margin-top: var(--spacing-6);
       border-left: 4px solid var(--color-primary-500);
-      
+
       .derived-title {
         font-size: var(--font-size-lg);
         font-weight: var(--font-weight-semibold);
@@ -872,27 +1019,27 @@ function triggerHook(name: string, payload: unknown): void {
   display: flex;
   align-items: center;
         gap: var(--spacing-2);
-        
+
         .icon-magic {
           font-size: var(--font-size-xl);
         }
       }
-      
+
       .derived-items {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: var(--spacing-3);
-        
+
         .derived-item {
   display: flex;
   align-items: center;
           gap: var(--spacing-2);
-          
+
           .label {
             font-weight: var(--font-weight-medium);
             color: var(--color-text-secondary);
           }
-          
+
           .value {
             font-family: var(--font-family-mono);
             font-size: var(--font-size-sm);
@@ -904,7 +1051,7 @@ function triggerHook(name: string, payload: unknown): void {
         }
       }
     }
-    
+
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // 操作按钮区
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -915,7 +1062,7 @@ function triggerHook(name: string, payload: unknown): void {
       margin-top: var(--spacing-8);
       padding-top: var(--spacing-6);
       border-top: 2px solid var(--color-border-light);
-      
+
       .generate-btn,
       .reset-btn {
         min-width: 200px;
@@ -924,17 +1071,17 @@ function triggerHook(name: string, payload: unknown): void {
         font-weight: var(--font-weight-semibold);
         border-radius: var(--border-radius-xl);
         transition: all var(--transition-duration-base) var(--transition-timing-easeInOut);
-        
+
         i {
           margin-right: var(--spacing-2);
         }
-        
+
         &:hover {
           transform: translateY(-2px);
           box-shadow: var(--shadow-lg);
         }
       }
-      
+
       .generate-btn {
         &.btn-blue {
           background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-primary-600) 100%);
@@ -948,7 +1095,7 @@ function triggerHook(name: string, payload: unknown): void {
           background: linear-gradient(135deg, var(--color-success-500) 0%, var(--color-success-600) 100%);
           border-color: var(--color-success-600);
         }
-        
+
         &:disabled {
           opacity: 0.5;
           cursor: not-allowed;
@@ -956,67 +1103,159 @@ function triggerHook(name: string, payload: unknown): void {
         }
       }
     }
-    
+
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // 进度区域
+    // 🎯 现代化进度区域
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     .progress-section {
       margin-top: var(--spacing-8);
       padding-top: var(--spacing-6);
       border-top: 2px solid var(--color-border-light);
-      
+
+      // 🌈 现代化进度条
+      .modern-progress {
+        :deep(.el-progress-bar__outer) {
+          background: linear-gradient(90deg,
+            rgba(64, 158, 255, 0.1) 0%,
+            rgba(64, 158, 255, 0.05) 100%
+          );
+          border-radius: var(--border-radius-full);
+          overflow: hidden;
+          position: relative;
+
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+              transparent 0%,
+              rgba(255, 255, 255, 0.3) 50%,
+              transparent 100%
+            );
+            animation: progressShimmer 2s infinite;
+          }
+        }
+
+        :deep(.el-progress-bar__inner) {
+          border-radius: var(--border-radius-full);
+          transition: all var(--transition-duration-normal) var(--transition-timing-ease-out);
+          background: linear-gradient(90deg,
+            var(--color-primary-400) 0%,
+            var(--color-primary-500) 50%,
+            var(--color-primary-600) 100%
+          );
+          box-shadow: 0 2px 8px rgba(var(--color-primary-rgb), 0.3);
+        }
+
+        :deep(.el-progress__text) {
+          font-weight: var(--font-weight-semibold);
+          color: var(--color-text-primary);
+        }
+      }
+
+      // 🚀 增强版日志显示
       .generation-logs {
         margin-top: var(--spacing-5);
         max-height: 300px;
         overflow-y: auto;
-        background: var(--color-background-primary);
-        border-radius: var(--border-radius-lg);
+        background: var(--color-background-elevated);
+        border-radius: var(--border-radius-xl);
         padding: var(--spacing-4);
-        border: 1px solid var(--color-border-base);
-        
+        border: 1px solid var(--color-border-soft);
+        box-shadow: var(--shadow-sm);
+
+        // 🎯 自定义滚动条
+        &::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: var(--color-background-muted);
+          border-radius: var(--border-radius-full);
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: var(--color-primary-300);
+          border-radius: var(--border-radius-full);
+
+          &:hover {
+            background: var(--color-primary-400);
+          }
+        }
+
         .log-item {
-          padding: var(--spacing-2) 0;
+          padding: var(--spacing-3) 0;
+          border-bottom: 1px solid var(--color-border-light);
           display: flex;
-          align-items: flex-start;
-          gap: var(--spacing-2);
+          align-items: center;
+          gap: var(--spacing-3);
           font-size: var(--font-size-sm);
           font-family: var(--font-family-mono);
-          
+          transition: all var(--transition-duration-fast) var(--transition-timing-ease-out);
+          animation: logItemSlideIn 0.3s ease-out;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &:hover {
+            background: rgba(var(--color-primary-rgb), 0.05);
+            border-radius: var(--border-radius-md);
+            transform: translateX(4px);
+          }
+
           .log-icon {
             flex-shrink: 0;
+            font-size: var(--font-size-base);
+            animation: iconPulse 2s infinite;
           }
-          
+
           .log-message {
-  flex: 1;
+            flex: 1;
+            line-height: 1.4;
           }
-          
+
+          .log-timestamp {
+            flex-shrink: 0;
+            font-size: var(--font-size-xs);
+            color: var(--color-text-tertiary);
+            opacity: 0.7;
+          }
+
           &.info {
             color: var(--color-info-600);
+            .log-icon { color: var(--color-info-500); }
           }
-          
+
           &.success {
             color: var(--color-success-600);
+            .log-icon { color: var(--color-success-500); }
           }
-          
+
           &.warning {
             color: var(--color-warning-600);
+            .log-icon { color: var(--color-warning-500); }
           }
-          
+
           &.error {
             color: var(--color-danger-600);
+            .log-icon { color: var(--color-danger-500); }
           }
         }
       }
-      
+
       .completion-actions {
   display: flex;
   justify-content: center;
         gap: var(--spacing-4);
         margin-top: var(--spacing-6);
-        
+
         button {
           min-width: 180px;
-          
+
           i {
             margin-right: var(--spacing-2);
           }
@@ -1032,48 +1271,48 @@ function triggerHook(name: string, payload: unknown): void {
 @media (max-width: 768px) {
   .ultra-simple-studio {
     padding: var(--spacing-4);
-    
+
     .studio-header {
       .studio-title {
         font-size: var(--font-size-3xl);
       }
-      
+
       .studio-subtitle {
         font-size: var(--font-size-base);
       }
     }
-    
+
     .studio-card {
       padding: var(--spacing-5);
-      
+
       .config-form {
         :deep(.el-form-item__label) {
           width: 100% !important;
           text-align: left;
           margin-bottom: var(--spacing-2);
         }
-        
+
         :deep(.el-form-item__content) {
           margin-left: 0 !important;
         }
       }
-      
+
       .derived-info .derived-items {
         grid-template-columns: 1fr;
       }
-      
+
       .actions {
         flex-direction: column;
-        
+
         .generate-btn,
         .reset-btn {
   width: 100%;
         }
       }
-      
+
       .progress-section .completion-actions {
         flex-direction: column;
-        
+
         button {
           width: 100%;
         }
@@ -1090,11 +1329,11 @@ function triggerHook(name: string, payload: unknown): void {
     .derived-info {
       background: rgba(var(--color-primary-900), 0.2);
       border-left-color: var(--color-primary-400);
-      
+
       .derived-title {
         color: var(--color-primary-300);
       }
-      
+
       .derived-items .derived-item {
         .value {
           background: var(--color-background-tertiary);
@@ -1104,4 +1343,94 @@ function triggerHook(name: string, payload: unknown): void {
     }
   }
 }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🎨 动画效果
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// 🎆 页面加载动画
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 🌈 浮动动画
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// 🌊 波纹效果
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+// 🌈 进度条闪光动画
+@keyframes progressShimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+// 🚀 日志项滑入动画
+@keyframes logItemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// 💫 图标脉冲动画
+@keyframes iconPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+// 🔄 加载旋转动画
+@keyframes spinning {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// 💫 脉冲效果
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
 </style>

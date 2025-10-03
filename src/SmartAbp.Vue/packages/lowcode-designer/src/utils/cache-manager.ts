@@ -1,4 +1,4 @@
-import { ElMessage } from "element-plus"
+import { ElMessage } from "element-plus";
 
 /**
  * Enhanced Cache Manager with comprehensive error handling
@@ -13,23 +13,23 @@ class CacheError extends Error {
     public retryable = false,
     public details?: any,
   ) {
-    super(message)
-    this.name = "CacheError"
+    super(message);
+    this.name = "CacheError";
   }
 }
 
 // Cache interfaces
 interface CacheItem<T = any> {
-  value: T
-  expiresAt: number
-  version: string
+  value: T;
+  expiresAt: number;
+  version: string;
 }
 
 interface CacheOptions {
-  maxSize?: number
-  defaultTTL?: number // in milliseconds
-  version?: string
-  storage?: Storage | Map<string, any> // 支持Storage或Map作为存储
+  maxSize?: number;
+  defaultTTL?: number; // in milliseconds
+  version?: string;
+  storage?: Storage | Map<string, any>; // 支持Storage或Map作为存储
 }
 
 // Error handling utilities
@@ -38,23 +38,23 @@ const logCacheError = (operation: string, error: any, context?: any): void => {
     error:
       error instanceof Error
         ? {
-            name: error.name,
-            message: error.message,
-            stack: error.stack,
-          }
+          name: error.name,
+          message: error.message,
+          stack: error.stack,
+        }
         : error,
     context,
     timestamp: new Date().toISOString(),
-  })
-}
+  });
+};
 
 const showCacheErrorMessage = (message: string, details?: string): void => {
   ElMessage.error({
     message: `Cache Error: ${message}${details ? ` - ${details}` : ""}`,
     duration: 3000,
     showClose: true,
-  })
-}
+  });
+};
 
 const validateKey = (key: string): void => {
   if (!key || typeof key !== "string") {
@@ -64,7 +64,7 @@ const validateKey = (key: string): void => {
       "validateKey",
       false,
       { key, type: typeof key },
-    )
+    );
   }
 
   if (key.length > 200) {
@@ -74,9 +74,9 @@ const validateKey = (key: string): void => {
       "validateKey",
       false,
       { keyLength: key.length },
-    )
+    );
   }
-}
+};
 
 const validateValue = (value: any): void => {
   if (value === undefined) {
@@ -85,9 +85,9 @@ const validateValue = (value: any): void => {
       "VALIDATION_ERROR",
       "validateValue",
       false,
-    )
+    );
   }
-}
+};
 
 const validateOptions = (options: CacheOptions): void => {
   if (
@@ -100,7 +100,7 @@ const validateOptions = (options: CacheOptions): void => {
       "validateOptions",
       false,
       { maxSize: options.maxSize },
-    )
+    );
   }
 
   if (
@@ -113,23 +113,23 @@ const validateOptions = (options: CacheOptions): void => {
       "validateOptions",
       false,
       { defaultTTL: options.defaultTTL },
-    )
+    );
   }
-}
+};
 
 const safeJsonParse = (text: string): any => {
   try {
-    return JSON.parse(text)
+    return JSON.parse(text);
   } catch (error) {
     throw new CacheError("Failed to parse cached data", "PARSE_ERROR", "safeJsonParse", false, {
       text: text.substring(0, 100),
-    })
+    });
   }
-}
+};
 
 const safeJsonStringify = (value: any): string => {
   try {
-    return JSON.stringify(value)
+    return JSON.stringify(value);
   } catch (error) {
     throw new CacheError(
       "Failed to serialize data for caching",
@@ -137,63 +137,63 @@ const safeJsonStringify = (value: any): string => {
       "safeJsonStringify",
       false,
       { valueType: typeof value },
-    )
+    );
   }
-}
+};
 
 const isStorageAvailable = (storage: Storage): boolean => {
   try {
-    const testKey = "__cache_test__"
-    storage.setItem(testKey, "test")
-    storage.removeItem(testKey)
-    return true
+    const testKey = "__cache_test__";
+    storage.setItem(testKey, "test");
+    storage.removeItem(testKey);
+    return true;
   } catch (error) {
-    return false
+    return false;
   }
-}
+};
 
 /**
  * Enhanced Cache Manager with comprehensive error handling
  */
 export class CacheManager {
-  private options: Required<CacheOptions>
-  private storage: Storage | Map<string, any> // 支持Storage或Map作为存储
-  private memoryCache: Map<string, CacheItem> = new Map()
-  private fallbackCache: Map<string, CacheItem> = new Map()
+  private options: Required<CacheOptions>;
+  private storage: Storage | Map<string, any>; // 支持Storage或Map作为存储
+  private memoryCache: Map<string, CacheItem> = new Map();
+  private fallbackCache: Map<string, CacheItem> = new Map();
   private stats = {
     hits: 0,
     misses: 0,
     errors: 0,
     evictions: 0,
-  }
+  };
 
   constructor(options: CacheOptions = {}) {
     try {
-      validateOptions(options)
+      validateOptions(options);
 
       this.options = {
         maxSize: options.maxSize ?? 50,
         defaultTTL: options.defaultTTL ?? 10 * 60 * 1000, // 10 minutes
         version: options.version ?? "1.0.0",
         storage: options.storage ?? localStorage,
-      }
+      };
 
-      this.storage = this.options.storage
+      this.storage = this.options.storage;
 
       // Check if storage is available
       if (!isStorageAvailable(this.storage)) {
-        console.warn("[CacheManager] Primary storage not available, using memory-only cache")
-        this.storage = sessionStorage
+        console.warn("[CacheManager] Primary storage not available, using memory-only cache");
+        this.storage = sessionStorage;
         if (!isStorageAvailable(this.storage)) {
-          console.warn("[CacheManager] Session storage not available, using memory-only cache")
+          console.warn("[CacheManager] Session storage not available, using memory-only cache");
         }
       }
 
       // Initialize cache from storage
-      this.initializeFromStorage()
+      this.initializeFromStorage();
     } catch (error) {
-      logCacheError("constructor", error, options)
-      showCacheErrorMessage("Failed to initialize cache manager")
+      logCacheError("constructor", error, options);
+      showCacheErrorMessage("Failed to initialize cache manager");
 
       // Fallback to minimal configuration
       this.options = {
@@ -201,116 +201,129 @@ export class CacheManager {
         defaultTTL: 10 * 60 * 1000,
         version: "1.0.0",
         storage: new Map() as Map<string, any>,
-      }
-      this.storage = this.options.storage
+      };
+      this.storage = this.options.storage;
     }
   }
 
   private initializeFromStorage(): void {
     try {
-      const keys = Object.keys(this.storage)
+      const keys = Object.keys(this.storage);
       for (const key of keys) {
         if (key.startsWith("cache_")) {
           try {
-            const item = this.getFromStorage(key)
+            const item = this.getFromStorage(key);
             if (item && !this.isExpired(item)) {
-              const cleanKey = key.replace("cache_", "")
-              this.memoryCache.set(cleanKey, item)
+              const cleanKey = key.replace("cache_", "");
+              this.memoryCache.set(cleanKey, item);
             }
           } catch (error) {
-            logCacheError("initializeFromStorage", error, { key })
+            logCacheError("initializeFromStorage", error, { key });
             // Continue with other items
           }
         }
       }
     } catch (error) {
-      logCacheError("initializeFromStorage", error)
+      logCacheError("initializeFromStorage", error);
     }
   }
 
   private getFromStorage(key: string): CacheItem | null {
     try {
-      const item = this.storage.getItem(key)
-      if (!item) return null
+      let item: string | null = null;
+      if (this.storage instanceof Map) {
+        item = this.storage.get(key) || null;
+      } else {
+        item = this.storage.getItem(key);
+      }
+      if (!item) return null;
 
-      return safeJsonParse(item)
+      return safeJsonParse(item);
     } catch (error) {
-      logCacheError("getFromStorage", error, { key })
-      return null
+      logCacheError("getFromStorage", error, { key });
+      return null;
     }
   }
 
   private setToStorage(key: string, item: CacheItem): void {
     try {
-      const serialized = safeJsonStringify(item)
-      this.storage.setItem(key, serialized)
+      const serialized = safeJsonStringify(item);
+      if (this.storage instanceof Map) {
+        this.storage.set(key, serialized);
+      } else {
+        this.storage.setItem(key, serialized);
+      }
     } catch (error) {
       if (error instanceof Error && error.name === "QuotaExceededError") {
-        logCacheError("setToStorage", error, { key, reason: "Storage quota exceeded" })
+        logCacheError("setToStorage", error, { key, reason: "Storage quota exceeded" });
         // Try to clear expired items and retry
-        this.clearExpired()
+        this.clearExpired();
         try {
-          this.storage.setItem(key, safeJsonStringify(item))
+          this.storage.setItem(key, safeJsonStringify(item));
         } catch (retryError) {
-          logCacheError("setToStorage.retry", retryError, { key })
+          logCacheError("setToStorage.retry", retryError, { key });
           throw new CacheError(
             "Storage quota exceeded after cleanup",
             "STORAGE_QUOTA_ERROR",
             "setToStorage",
             false,
             { key },
-          )
+          );
         }
       } else {
-        throw error
+        throw error;
       }
     }
   }
 
   private removeFromStorage(key: string): void {
     try {
-      this.storage.removeItem(key)
+      if (this.storage instanceof Map) {
+        this.storage.delete(key);
+      } else {
+        this.storage.removeItem(key);
+      }
     } catch (error) {
-      logCacheError("removeFromStorage", error, { key })
+      logCacheError("removeFromStorage", error, { key });
     }
   }
 
   private isExpired(item: CacheItem): boolean {
-    return Date.now() > item.expiresAt
+    return Date.now() > item.expiresAt;
   }
 
   private evictLRU(): void {
     try {
       if (this.memoryCache.size >= this.options.maxSize) {
-        const oldestKey = this.memoryCache.keys().next().value
+        const oldestKey = this.memoryCache.keys().next().value;
         if (oldestKey) {
-          this.memoryCache.delete(oldestKey)
-          this.removeFromStorage(`cache_${oldestKey}`)
-          this.stats.evictions++
+          this.memoryCache.delete(oldestKey);
+          this.removeFromStorage(`cache_${oldestKey}`);
+          this.stats.evictions++;
         }
       }
     } catch (error) {
-      logCacheError("evictLRU", error)
+      logCacheError("evictLRU", error);
     }
   }
 
   private clearExpired(): void {
     try {
       // const now = Date.now() // Removed unused variable
-      const expiredKeys: string[] = []
+      const expiredKeys: string[] = [];
 
       for (const [key, item] of this.memoryCache.entries()) {
         if (this.isExpired(item)) {
-          expiredKeys.push(key)
+          expiredKeys.push(key);
         }
       }
 
       for (const key of expiredKeys) {
-        this.memoryCache.delete(key)
-        this.removeFromStorage(`cache_${key}`)
+        this.memoryCache.delete(key);
+        this.removeFromStorage(`cache_${key}`);
       }
     } catch (error) {
-      logCacheError("clearExpired", error)
+      logCacheError("clearExpired", error);
     }
   }
 
@@ -319,46 +332,46 @@ export class CacheManager {
    */
   set<T>(key: string, value: T, ttl?: number): boolean {
     try {
-      validateKey(key)
-      validateValue(value)
+      validateKey(key);
+      validateValue(value);
 
-      const effectiveTTL = ttl ?? this.options.defaultTTL
+      const effectiveTTL = ttl ?? this.options.defaultTTL;
       const item: CacheItem<T> = {
         value,
         expiresAt: Date.now() + effectiveTTL,
         version: this.options.version,
-      }
+      };
 
       // Clear expired items before adding new one
-      this.clearExpired()
+      this.clearExpired();
 
       // Evict LRU if cache is full
       if (!this.memoryCache.has(key)) {
-        this.evictLRU()
+        this.evictLRU();
       }
 
       // Store in memory cache
-      this.memoryCache.set(key, item)
+      this.memoryCache.set(key, item);
 
       // Try to store in persistent storage
       try {
-        this.setToStorage(`cache_${key}`, item)
+        this.setToStorage(`cache_${key}`, item);
       } catch (storageError) {
-        logCacheError("set.storage", storageError, { key })
+        logCacheError("set.storage", storageError, { key });
         // Continue with memory-only cache
       }
 
-      return true
+      return true;
     } catch (error) {
-      this.stats.errors++
-      logCacheError("set", error, { key })
+      this.stats.errors++;
+      logCacheError("set", error, { key });
 
       if (error instanceof CacheError && error.code === "VALIDATION_ERROR") {
-        showCacheErrorMessage("Invalid cache key or value", error.message)
+        showCacheErrorMessage("Invalid cache key or value", error.message);
       } else if (error instanceof CacheError && error.code === "STORAGE_QUOTA_ERROR") {
-        showCacheErrorMessage("Storage quota exceeded", "Cache will use memory-only storage")
+        showCacheErrorMessage("Storage quota exceeded", "Cache will use memory-only storage");
       } else {
-        showCacheErrorMessage("Failed to set cache value")
+        showCacheErrorMessage("Failed to set cache value");
       }
 
       // Try fallback to memory cache
@@ -367,12 +380,12 @@ export class CacheManager {
           value,
           expiresAt: Date.now() + (ttl ?? this.options.defaultTTL),
           version: this.options.version,
-        }
-        this.fallbackCache.set(key, item)
-        return true
+        };
+        this.fallbackCache.set(key, item);
+        return true;
       } catch (fallbackError) {
-        logCacheError("set.fallback", fallbackError, { key })
-        return false
+        logCacheError("set.fallback", fallbackError, { key });
+        return false;
       }
     }
   }
@@ -382,54 +395,54 @@ export class CacheManager {
    */
   get<T>(key: string): T | undefined {
     try {
-      validateKey(key)
+      validateKey(key);
 
       // Check memory cache first
-      const item = this.memoryCache.get(key)
+      const item = this.memoryCache.get(key);
       if (item) {
         if (this.isExpired(item)) {
-          this.memoryCache.delete(key)
-          this.removeFromStorage(`cache_${key}`)
-          this.stats.misses++
-          return undefined
+          this.memoryCache.delete(key);
+          this.removeFromStorage(`cache_${key}`);
+          this.stats.misses++;
+          return undefined;
         }
 
-        this.stats.hits++
-        return item.value as T
+        this.stats.hits++;
+        return item.value as T;
       }
 
       // Check fallback cache
-      const fallbackItem = this.fallbackCache.get(key)
+      const fallbackItem = this.fallbackCache.get(key);
       if (fallbackItem && !this.isExpired(fallbackItem)) {
-        this.stats.hits++
-        return fallbackItem.value as T
+        this.stats.hits++;
+        return fallbackItem.value as T;
       }
 
       // Try to load from storage
       try {
-        const storageItem = this.getFromStorage(`cache_${key}`)
+        const storageItem = this.getFromStorage(`cache_${key}`);
         if (storageItem && !this.isExpired(storageItem)) {
-          this.memoryCache.set(key, storageItem)
-          this.stats.hits++
-          return storageItem.value as T
+          this.memoryCache.set(key, storageItem);
+          this.stats.hits++;
+          return storageItem.value as T;
         }
       } catch (storageError) {
-        logCacheError("get.storage", storageError, { key })
+        logCacheError("get.storage", storageError, { key });
       }
 
-      this.stats.misses++
-      return undefined
+      this.stats.misses++;
+      return undefined;
     } catch (error) {
-      this.stats.errors++
-      logCacheError("get", error, { key })
+      this.stats.errors++;
+      logCacheError("get", error, { key });
 
       if (error instanceof CacheError && error.code === "VALIDATION_ERROR") {
-        showCacheErrorMessage("Invalid cache key", error.message)
+        showCacheErrorMessage("Invalid cache key", error.message);
       } else {
-        showCacheErrorMessage("Failed to retrieve cached value")
+        showCacheErrorMessage("Failed to retrieve cached value");
       }
 
-      return undefined
+      return undefined;
     }
   }
 
@@ -438,33 +451,33 @@ export class CacheManager {
    */
   getOrSet<T>(key: string, factory: () => T | Promise<T>, ttl?: number): T | Promise<T> {
     try {
-      validateKey(key)
+      validateKey(key);
 
-      const existing = this.get<T>(key)
+      const existing = this.get<T>(key);
       if (existing !== undefined) {
-        return existing
+        return existing;
       }
 
-      const result = factory()
+      const result = factory();
 
       if (result instanceof Promise) {
         return result
           .then((value) => {
-            this.set(key, value, ttl)
-            return value
+            this.set(key, value, ttl);
+            return value;
           })
           .catch((error) => {
-            logCacheError("getOrSet.factory", error, { key })
-            showCacheErrorMessage("Failed to generate cache value")
-            throw error
-          })
+            logCacheError("getOrSet.factory", error, { key });
+            showCacheErrorMessage("Failed to generate cache value");
+            throw error;
+          });
       } else {
-        this.set(key, result, ttl)
-        return result
+        this.set(key, result, ttl);
+        return result;
       }
     } catch (error) {
-      logCacheError("getOrSet", error, { key })
-      throw error
+      logCacheError("getOrSet", error, { key });
+      throw error;
     }
   }
 
@@ -473,29 +486,29 @@ export class CacheManager {
    */
   delete(key: string): boolean {
     try {
-      validateKey(key)
+      validateKey(key);
 
-      const hadInMemory = this.memoryCache.delete(key)
-      const hadInFallback = this.fallbackCache.delete(key)
+      const hadInMemory = this.memoryCache.delete(key);
+      const hadInFallback = this.fallbackCache.delete(key);
 
       try {
-        this.removeFromStorage(`cache_${key}`)
+        this.removeFromStorage(`cache_${key}`);
       } catch (storageError) {
-        logCacheError("delete.storage", storageError, { key })
+        logCacheError("delete.storage", storageError, { key });
       }
 
-      return hadInMemory || hadInFallback
+      return hadInMemory || hadInFallback;
     } catch (error) {
-      this.stats.errors++
-      logCacheError("delete", error, { key })
+      this.stats.errors++;
+      logCacheError("delete", error, { key });
 
       if (error instanceof CacheError && error.code === "VALIDATION_ERROR") {
-        showCacheErrorMessage("Invalid cache key", error.message)
+        showCacheErrorMessage("Invalid cache key", error.message);
       } else {
-        showCacheErrorMessage("Failed to delete cached value")
+        showCacheErrorMessage("Failed to delete cached value");
       }
 
-      return false
+      return false;
     }
   }
 
@@ -504,24 +517,24 @@ export class CacheManager {
    */
   clear(): void {
     try {
-      this.memoryCache.clear()
-      this.fallbackCache.clear()
+      this.memoryCache.clear();
+      this.fallbackCache.clear();
 
       // Clear storage items
       try {
-        const keys = Object.keys(this.storage)
+        const keys = Object.keys(this.storage);
         for (const key of keys) {
           if (key.startsWith("cache_")) {
-            this.removeFromStorage(key)
+            this.removeFromStorage(key);
           }
         }
       } catch (storageError) {
-        logCacheError("clear.storage", storageError)
+        logCacheError("clear.storage", storageError);
       }
     } catch (error) {
-      this.stats.errors++
-      logCacheError("clear", error)
-      showCacheErrorMessage("Failed to clear cache")
+      this.stats.errors++;
+      logCacheError("clear", error);
+      showCacheErrorMessage("Failed to clear cache");
     }
   }
 
@@ -537,7 +550,7 @@ export class CacheManager {
         this.stats.hits + this.stats.misses > 0
           ? (this.stats.hits / (this.stats.hits + this.stats.misses)) * 100
           : 0,
-    }
+    };
   }
 
   /**
@@ -545,17 +558,17 @@ export class CacheManager {
    */
   isHealthy(): boolean {
     try {
-      const testKey = "__health_check__"
-      const testValue = { test: true, timestamp: Date.now() }
+      const testKey = "__health_check__";
+      const testValue = { test: true, timestamp: Date.now() };
 
-      this.set(testKey, testValue, 1000) // 1 second TTL
-      const retrieved = this.get(testKey)
-      this.delete(testKey)
+      this.set(testKey, testValue, 1000); // 1 second TTL
+      const retrieved = this.get(testKey);
+      this.delete(testKey);
 
-      return (retrieved as { test: boolean; timestamp: number } | null)?.test === true
+      return (retrieved as { test: boolean; timestamp: number; } | null)?.test === true;
     } catch (error) {
-      logCacheError("healthCheck", error)
-      return false
+      logCacheError("healthCheck", error);
+      return false;
     }
   }
 }
@@ -564,52 +577,52 @@ export class CacheManager {
  * Vue Composition API wrapper with error handling
  */
 export function useCacheManager() {
-  const cache = globalCache
+  const cache = globalCache;
 
   const withCache = async <T>(key: string, factory: () => Promise<T>, ttl?: number): Promise<T> => {
     try {
-      return await cache.getOrSet(key, factory, ttl)
+      return await cache.getOrSet(key, factory, ttl);
     } catch (error) {
-      logCacheError("withCache", error, { key })
-      showCacheErrorMessage("Cache operation failed, executing factory function")
+      logCacheError("withCache", error, { key });
+      showCacheErrorMessage("Cache operation failed, executing factory function");
 
       // Fallback to direct factory execution
       try {
-        return await factory()
+        return await factory();
       } catch (factoryError) {
-        logCacheError("withCache.fallback", factoryError)
-        throw factoryError
+        logCacheError("withCache.fallback", factoryError);
+        throw factoryError;
       }
     }
-  }
+  };
 
   const clearCache = (): void => {
     try {
-      cache.clear()
-      ElMessage.success("Cache cleared successfully")
+      cache.clear();
+      ElMessage.success("Cache cleared successfully");
     } catch (error) {
-      logCacheError("clearCache", error)
-      showCacheErrorMessage("Failed to clear cache")
+      logCacheError("clearCache", error);
+      showCacheErrorMessage("Failed to clear cache");
     }
-  }
+  };
 
   const getCacheStats = () => {
     try {
-      return cache.getStats()
+      return cache.getStats();
     } catch (error) {
-      logCacheError("getCacheStats", error)
-      return { hits: 0, misses: 0, errors: 1, evictions: 0, size: 0, fallbackSize: 0, hitRatio: 0 }
+      logCacheError("getCacheStats", error);
+      return { hits: 0, misses: 0, errors: 1, evictions: 0, size: 0, fallbackSize: 0, hitRatio: 0 };
     }
-  }
+  };
 
   const checkCacheHealth = (): boolean => {
     try {
-      return cache.isHealthy()
+      return cache.isHealthy();
     } catch (error) {
-      logCacheError("checkCacheHealth", error)
-      return false
+      logCacheError("checkCacheHealth", error);
+      return false;
     }
-  }
+  };
 
   return {
     cache,
@@ -617,7 +630,7 @@ export function useCacheManager() {
     clearCache,
     getCacheStats,
     checkCacheHealth,
-  }
+  };
 }
 
 // Global cache instance with error handling
@@ -627,15 +640,15 @@ export const globalCache = new CacheManager({
   version: "1.0.0",
   storage: (() => {
     try {
-      return localStorage
+      return localStorage;
     } catch (error) {
-      console.warn("[CacheManager] localStorage not available, using sessionStorage")
+      console.warn("[CacheManager] localStorage not available, using sessionStorage");
       try {
-        return sessionStorage
+        return sessionStorage;
       } catch (sessionError) {
-        console.warn("[CacheManager] sessionStorage not available, using memory-only cache")
-        return new Map() as Map<string, any>
+        console.warn("[CacheManager] sessionStorage not available, using memory-only cache");
+        return new Map() as Map<string, any>;
       }
     }
   })(),
-})
+});

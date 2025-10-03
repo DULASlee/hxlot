@@ -4,3 +4,4 @@
 
 export * from './component-base'
 export * from './ui'
+export * from './logger'

@@ -5,15 +5,19 @@
  * 确保packages独立编译和类型检查
  */
 
-const { execSync } = require('child_process');
-const path = require('path');
-const fs = require('fs');
+import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 console.log('🚀 开始构建SmartAbp LowCode Packages...\n');
 
 const packages = [
   'lowcode-shared',
-  'lowcode-core', 
+  'lowcode-core',
   'lowcode-api',
   'lowcode-tools',
   'lowcode-designer'
@@ -23,14 +27,14 @@ let allPassed = true;
 
 for (const pkg of packages) {
   const packagePath = path.join(__dirname, '..', 'packages', pkg);
-  
+
   if (!fs.existsSync(packagePath)) {
     console.log(`⚠️ Package ${pkg} 不存在，跳过...`);
     continue;
   }
 
   console.log(`📦 正在构建 ${pkg}...`);
-  
+
   try {
     // 检查tsconfig.json是否存在
     const tsconfigPath = path.join(packagePath, 'tsconfig.json');
@@ -40,13 +44,13 @@ for (const pkg of packages) {
     }
 
     // 运行TypeScript编译
-    execSync(`cd "${packagePath}" && npx tsc`, { 
+    execSync(`cd "${packagePath}" && npx tsc`, {
       stdio: 'inherit',
-      cwd: packagePath 
+      cwd: packagePath
     });
-    
+
     console.log(`✅ ${pkg} 构建成功\n`);
-    
+
   } catch (error) {
     console.error(`❌ ${pkg} 构建失败:`, error.message);
     allPassed = false;

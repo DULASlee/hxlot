@@ -1,79 +1,88 @@
 // 🚀 企业级模板引擎 - 基于21个模板文件构建完整的代码生成系统
-import { ref, computed } from 'vue'
-import type { Template } from '@smartabp/lowcode-api/types'
+import { computed, ref } from 'vue';
+// 本地模板类型定义
+interface Template {
+  id: string;
+  name: string;
+  description?: string;
+  content: string;
+  parameters?: TemplateParameter[];
+}
 
 // 模板参数接口
 export interface TemplateParameter {
-  name: string
-  type: 'string' | 'number' | 'boolean' | 'array' | 'object'
-  description: string
-  required: boolean
-  example?: any
-  defaultValue?: any
+  name: string;
+  type: 'string' | 'number' | 'boolean' | 'array' | 'object';
+  description: string;
+  required: boolean;
+  example?: any;
+  defaultValue?: any;
   validation?: {
-    pattern?: string
-    min?: number
-    max?: number
-    options?: Array<{ label: string; value: any }>
-  }
+    pattern?: string;
+    min?: number;
+    max?: number;
+    options?: Array<{ label: string; value: any; }>;
+  };
 }
 
 // 模板元数据接口
 export interface TemplateMetadata {
-  name: string
-  category: string
-  description: string
-  tags: string[]
-  scenarios: string[]
-  aiTriggers: string[]
-  dependencies: string[]
-  parameters: TemplateParameter[]
-  permissionsRequired: boolean
-  validationRules: string[]
+  name: string;
+  category: string;
+  description: string;
+  tags: string[];
+  scenarios: string[];
+  aiTriggers: string[];
+  dependencies: string[];
+  parameters: TemplateParameter[];
+  permissionsRequired: boolean;
+  validationRules: string[];
   usageExamples: Array<{
-    scenario: string
-    parameters: Record<string, any>
-  }>
-  relatedTemplates: string[]
+    scenario: string;
+    parameters: Record<string, any>;
+  }>;
+  relatedTemplates: string[];
 }
 
 // 模板文件接口
 export interface TemplateFile {
-  id: string
-  name: string
-  category: string
-  filePath: string
-  content: string
-  metadata: TemplateMetadata
-  fileExtension: string
-  targetFramework: 'backend' | 'frontend' | 'lowcode'
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  filePath: string;
+  content: string;
+  metadata: TemplateMetadata;
+  fileExtension: string;
+  targetFramework: 'backend' | 'frontend' | 'lowcode';
+  tags: string[];
 }
 
 // 代码生成结果接口
 export interface GenerationResult {
-  success: boolean
+  success: boolean;
   files: Array<{
-    path: string
-    content: string
-    type: 'cs' | 'vue' | 'ts' | 'js' | 'yml' | 'json'
-  }>
-  warnings: string[]
-  errors: string[]
+    path: string;
+    content: string;
+    type: 'cs' | 'vue' | 'ts' | 'js' | 'yml' | 'json';
+  }>;
+  warnings: string[];
+  errors: string[];
   metadata: {
-    templateId: string
-    parameters: Record<string, any>
-    generatedAt: Date
-    linesOfCode: number
-  }
+    templateId: string;
+    parameters: Record<string, any>;
+    generatedAt: Date;
+    linesOfCode: number;
+  };
 }
 
 // 🏗️ 企业级模板引擎类
 export class TemplateEngine {
-  private templates = new Map<string, TemplateFile>()
-  private readonly templateRegistry: TemplateFile[] = []
+  private templates = new Map<string, TemplateFile>();
+  private readonly templateRegistry: TemplateFile[] = [];
 
   constructor() {
-    this.initializeTemplates()
+    this.initializeTemplates();
   }
 
   // 初始化所有21个模板
@@ -88,7 +97,7 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('CrudAppService'),
       fileExtension: 'cs',
       targetFramework: 'backend'
-    })
+    });
 
     this.registerTemplate({
       id: 'backend-permission-provider',
@@ -99,7 +108,7 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('PermissionDefinitionProvider'),
       fileExtension: 'cs',
       targetFramework: 'backend'
-    })
+    });
 
     // 🔧 后端契约层模板
     this.registerTemplate({
@@ -111,7 +120,7 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('EntityDto'),
       fileExtension: 'cs',
       targetFramework: 'backend'
-    })
+    });
 
     this.registerTemplate({
       id: 'backend-create-dto',
@@ -122,7 +131,7 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('CreateEntityDto'),
       fileExtension: 'cs',
       targetFramework: 'backend'
-    })
+    });
 
     this.registerTemplate({
       id: 'backend-update-dto',
@@ -133,7 +142,7 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('UpdateEntityDto'),
       fileExtension: 'cs',
       targetFramework: 'backend'
-    })
+    });
 
     this.registerTemplate({
       id: 'backend-list-dto',
@@ -144,7 +153,7 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('GetEntityListDto'),
       fileExtension: 'cs',
       targetFramework: 'backend'
-    })
+    });
 
     this.registerTemplate({
       id: 'backend-service-interface',
@@ -155,7 +164,7 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('CrudAppServiceInterface'),
       fileExtension: 'cs',
       targetFramework: 'backend'
-    })
+    });
 
     // 🔧 后端数据访问层模板
     this.registerTemplate({
@@ -167,7 +176,7 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('DbContextConfiguration'),
       fileExtension: 'cs',
       targetFramework: 'backend'
-    })
+    });
 
     // 🔧 后端测试模板
     this.registerTemplate({
@@ -179,7 +188,7 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('ApplicationTests'),
       fileExtension: 'cs',
       targetFramework: 'backend'
-    })
+    });
 
     // 🎨 前端组件模板
     this.registerTemplate({
@@ -191,7 +200,7 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('CrudManagement'),
       fileExtension: 'vue',
       targetFramework: 'frontend'
-    })
+    });
 
     // 🎨 前端状态管理模板
     this.registerTemplate({
@@ -203,7 +212,7 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('EntityStore'),
       fileExtension: 'ts',
       targetFramework: 'frontend'
-    })
+    });
 
     // 🎨 前端路由模板
     this.registerTemplate({
@@ -215,7 +224,7 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('ModuleRoutes'),
       fileExtension: 'ts',
       targetFramework: 'frontend'
-    })
+    });
 
     // 🧩 低代码引擎模板
     this.registerTemplate({
@@ -227,7 +236,7 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('CodeGenerator'),
       fileExtension: 'ts',
       targetFramework: 'lowcode'
-    })
+    });
 
     this.registerTemplate({
       id: 'lowcode-plugin',
@@ -238,7 +247,7 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('LowCodePlugin'),
       fileExtension: 'ts',
       targetFramework: 'lowcode'
-    })
+    });
 
     this.registerTemplate({
       id: 'lowcode-runtime-component',
@@ -249,13 +258,13 @@ export class TemplateEngine {
       metadata: this.loadTemplateMetadata('RuntimeComponent'),
       fileExtension: 'vue',
       targetFramework: 'lowcode'
-    })
+    });
   }
 
   // 注册模板
   private registerTemplate(template: TemplateFile) {
-    this.templates.set(template.id, template)
-    this.templateRegistry.push(template)
+    this.templates.set(template.id, template);
+    this.templateRegistry.push(template);
   }
 
   // 加载模板内容（模拟实现）
@@ -276,7 +285,7 @@ export class TemplateEngine {
 
 // 生成时间: {{GENERATION_TIMESTAMP}}
 // 模板版本: 1.0.0
-`
+`;
   }
 
   // 加载模板元数据（模拟实现）
@@ -326,43 +335,43 @@ export class TemplateEngine {
         }
       ],
       relatedTemplates: []
-    }
+    };
   }
 
   // 🔍 获取所有模板
   getAllTemplates(): TemplateFile[] {
-    return [...this.templateRegistry]
+    return [...this.templateRegistry];
   }
 
   // 🔍 根据ID获取模板
   getTemplate(id: string): TemplateFile | undefined {
-    return this.templates.get(id)
+    return this.templates.get(id);
   }
 
   // 🔍 根据分类获取模板
   getTemplatesByCategory(category: string): TemplateFile[] {
-    return this.templateRegistry.filter(t => t.category === category)
+    return this.templateRegistry.filter(t => t.category === category);
   }
 
   // 🔍 根据框架获取模板
   getTemplatesByFramework(framework: 'backend' | 'frontend' | 'lowcode'): TemplateFile[] {
-    return this.templateRegistry.filter(t => t.targetFramework === framework)
+    return this.templateRegistry.filter(t => t.targetFramework === framework);
   }
 
   // 🔍 搜索模板
   searchTemplates(keyword: string): TemplateFile[] {
-    const lowerKeyword = keyword.toLowerCase()
+    const lowerKeyword = keyword.toLowerCase();
     return this.templateRegistry.filter(t =>
       t.name.toLowerCase().includes(lowerKeyword) ||
       t.description.toLowerCase().includes(lowerKeyword) ||
       t.tags.some(tag => tag.toLowerCase().includes(lowerKeyword)) ||
       t.metadata.aiTriggers.some(trigger => trigger.toLowerCase().includes(lowerKeyword))
-    )
+    );
   }
 
   // 🏗️ 生成代码
   async generateCode(templateId: string, parameters: Record<string, any>): Promise<GenerationResult> {
-    const template = this.getTemplate(templateId)
+    const template = this.getTemplate(templateId);
     if (!template) {
       return {
         success: false,
@@ -375,12 +384,12 @@ export class TemplateEngine {
           generatedAt: new Date(),
           linesOfCode: 0
         }
-      }
+      };
     }
 
     try {
       // 验证参数
-      const validationResult = this.validateParameters(template, parameters)
+      const validationResult = this.validateParameters(template, parameters);
       if (!validationResult.valid) {
         return {
           success: false,
@@ -393,23 +402,23 @@ export class TemplateEngine {
             generatedAt: new Date(),
             linesOfCode: 0
           }
-        }
+        };
       }
 
       // 替换模板参数
-      let generatedContent = template.content
+      let generatedContent = template.content;
       Object.entries(parameters).forEach(([key, value]) => {
-        const regex = new RegExp(`{{${key}}}`, 'g')
-        generatedContent = generatedContent.replace(regex, String(value))
-      })
+        const regex = new RegExp(`{{${key}}}`, 'g');
+        generatedContent = generatedContent.replace(regex, String(value));
+      });
 
       // 替换特殊标记
-      generatedContent = generatedContent.replace(/{{GENERATION_TIMESTAMP}}/g, new Date().toISOString())
-      generatedContent = generatedContent.replace(/{{TEMPLATE_CONTENT_PLACEHOLDER}}/g, this.getActualTemplateContent(templateId))
+      generatedContent = generatedContent.replace(/{{GENERATION_TIMESTAMP}}/g, new Date().toISOString());
+      generatedContent = generatedContent.replace(/{{TEMPLATE_CONTENT_PLACEHOLDER}}/g, this.getActualTemplateContent(templateId));
 
       // 计算生成的文件信息
-      const fileName = this.generateFileName(template, parameters)
-      const linesOfCode = generatedContent.split('\n').length
+      const fileName = this.generateFileName(template, parameters);
+      const linesOfCode = generatedContent.split('\n').length;
 
       return {
         success: true,
@@ -417,7 +426,7 @@ export class TemplateEngine {
           {
             path: fileName,
             content: generatedContent,
-            type: template.fileExtension as string
+            type: template.fileExtension as "cs" | "vue" | "ts" | "js" | "yml" | "json"
           }
         ],
         warnings: [],
@@ -428,7 +437,7 @@ export class TemplateEngine {
           generatedAt: new Date(),
           linesOfCode
         }
-      }
+      };
     } catch (error) {
       return {
         success: false,
@@ -441,28 +450,28 @@ export class TemplateEngine {
           generatedAt: new Date(),
           linesOfCode: 0
         }
-      }
+      };
     }
   }
 
   // 🏗️ 批量生成代码
   async generateMultipleFiles(templateIds: string[], parameters: Record<string, any>): Promise<GenerationResult> {
-    const results: GenerationResult[] = []
-    const allFiles: GenerationResult['files'] = []
-    const allWarnings: string[] = []
-    const allErrors: string[] = []
-    let totalLinesOfCode = 0
+    const results: GenerationResult[] = [];
+    const allFiles: GenerationResult['files'] = [];
+    const allWarnings: string[] = [];
+    const allErrors: string[] = [];
+    let totalLinesOfCode = 0;
 
     for (const templateId of templateIds) {
-      const result = await this.generateCode(templateId, parameters)
-      results.push(result)
+      const result = await this.generateCode(templateId, parameters);
+      results.push(result);
 
       if (result.success) {
-        allFiles.push(...result.files)
-        allWarnings.push(...result.warnings)
-        totalLinesOfCode += result.metadata.linesOfCode
+        allFiles.push(...result.files);
+        allWarnings.push(...result.warnings);
+        totalLinesOfCode += result.metadata.linesOfCode;
       } else {
-        allErrors.push(...result.errors)
+        allErrors.push(...result.errors);
       }
     }
 
@@ -477,80 +486,80 @@ export class TemplateEngine {
         generatedAt: new Date(),
         linesOfCode: totalLinesOfCode
       }
-    }
+    };
   }
 
   // 验证参数
-  private validateParameters(template: TemplateFile, parameters: Record<string, any>): { valid: boolean; errors: string[] } {
-    const errors: string[] = []
+  private validateParameters(template: TemplateFile, parameters: Record<string, any>): { valid: boolean; errors: string[]; } {
+    const errors: string[] = [];
 
     template.metadata.parameters.forEach(param => {
-      const value = parameters[param.name]
+      const value = parameters[param.name];
 
       if (param.required && (value === undefined || value === null || value === '')) {
-        errors.push(`参数 ${param.name} 是必需的`)
-        return
+        errors.push(`参数 ${param.name} 是必需的`);
+        return;
       }
 
       if (value !== undefined && value !== null) {
         // 类型验证
         if (param.type === 'string' && typeof value !== 'string') {
-          errors.push(`参数 ${param.name} 必须是字符串类型`)
+          errors.push(`参数 ${param.name} 必须是字符串类型`);
         } else if (param.type === 'number' && typeof value !== 'number') {
-          errors.push(`参数 ${param.name} 必须是数字类型`)
+          errors.push(`参数 ${param.name} 必须是数字类型`);
         } else if (param.type === 'boolean' && typeof value !== 'boolean') {
-          errors.push(`参数 ${param.name} 必须是布尔类型`)
+          errors.push(`参数 ${param.name} 必须是布尔类型`);
         }
 
         // 验证规则
         if (param.validation) {
           if (param.validation.pattern && typeof value === 'string') {
-            const regex = new RegExp(param.validation.pattern)
+            const regex = new RegExp(param.validation.pattern);
             if (!regex.test(value)) {
-              errors.push(`参数 ${param.name} 格式不正确`)
+              errors.push(`参数 ${param.name} 格式不正确`);
             }
           }
 
           if (param.validation.min !== undefined && typeof value === 'string' && value.length < param.validation.min) {
-            errors.push(`参数 ${param.name} 长度不能小于 ${param.validation.min}`)
+            errors.push(`参数 ${param.name} 长度不能小于 ${param.validation.min}`);
           }
 
           if (param.validation.max !== undefined && typeof value === 'string' && value.length > param.validation.max) {
-            errors.push(`参数 ${param.name} 长度不能大于 ${param.validation.max}`)
+            errors.push(`参数 ${param.name} 长度不能大于 ${param.validation.max}`);
           }
         }
       }
-    })
+    });
 
-    return { valid: errors.length === 0, errors }
+    return { valid: errors.length === 0, errors };
   }
 
   // 生成文件名
   private generateFileName(template: TemplateFile, parameters: Record<string, any>): string {
-    const entityName = parameters.EntityName || 'Entity'
-    const moduleName = parameters.ModuleName || 'Module'
+    const entityName = parameters.EntityName || 'Entity';
+    const moduleName = parameters.ModuleName || 'Module';
 
     switch (template.id) {
       case 'backend-crud-app-service':
-        return `${entityName}AppService.cs`
+        return `${entityName}AppService.cs`;
       case 'backend-entity-dto':
-        return `${entityName}Dto.cs`
+        return `${entityName}Dto.cs`;
       case 'backend-create-dto':
-        return `Create${entityName}Dto.cs`
+        return `Create${entityName}Dto.cs`;
       case 'backend-update-dto':
-        return `Update${entityName}Dto.cs`
+        return `Update${entityName}Dto.cs`;
       case 'backend-list-dto':
-        return `Get${entityName}ListDto.cs`
+        return `Get${entityName}ListDto.cs`;
       case 'backend-service-interface':
-        return `I${entityName}AppService.cs`
+        return `I${entityName}AppService.cs`;
       case 'frontend-crud-management':
-        return `${entityName}Management.vue`
+        return `${entityName}Management.vue`;
       case 'frontend-entity-store':
-        return `${entityName.toLowerCase()}Store.ts`
+        return `${entityName.toLowerCase()}Store.ts`;
       case 'frontend-module-routes':
-        return `${moduleName.toLowerCase()}Routes.ts`
+        return `${moduleName.toLowerCase()}Routes.ts`;
       default:
-        return `${entityName}.${template.fileExtension}`
+        return `${entityName}.${template.fileExtension}`;
     }
   }
 
@@ -574,7 +583,7 @@ public class {{EntityName}}AppService : SmartAbpAppService, I{{EntityName}}AppSe
     }
 
     // CRUD方法实现...
-}`
+}`;
       case 'frontend-crud-management':
         return `
 <template>
@@ -598,79 +607,79 @@ public class {{EntityName}}AppService : SmartAbpAppService, I{{EntityName}}AppSe
 import { ref, onMounted } from 'vue'
 
 // 组件逻辑...
-</script>`
+</script>`;
       default:
-        return `// ${templateId} 模板内容`
+        return `// ${templateId} 模板内容`;
     }
   }
 }
 
 // 🚀 创建全局模板引擎实例
-export const templateEngine = new TemplateEngine()
+export const templateEngine = new TemplateEngine();
 
 // 🎯 Vue Composition API 支持
 export function useTemplateEngine() {
-  const templates = ref<TemplateFile[]>([])
-  const loading = ref(false)
-  const error = ref<string | null>(null)
+  const templates = ref<TemplateFile[]>([]);
+  const loading = ref(false);
+  const error = ref<string | null>(null);
 
   // 加载所有模板
   const loadTemplates = async () => {
-    loading.value = true
-    error.value = null
+    loading.value = true;
+    error.value = null;
 
     try {
-      templates.value = templateEngine.getAllTemplates()
+      templates.value = templateEngine.getAllTemplates();
     } catch (err) {
-      error.value = (err as Error).message
+      error.value = (err as Error).message;
     } finally {
-      loading.value = false
+      loading.value = false;
     }
-  }
+  };
 
   // 搜索模板
   const searchTemplates = (keyword: string) => {
-    return templateEngine.searchTemplates(keyword)
-  }
+    return templateEngine.searchTemplates(keyword);
+  };
 
   // 生成代码
   const generateCode = async (templateId: string, parameters: Record<string, any>) => {
-    loading.value = true
-    error.value = null
+    loading.value = true;
+    error.value = null;
 
     try {
-      return await templateEngine.generateCode(templateId, parameters)
+      return await templateEngine.generateCode(templateId, parameters);
     } catch (err) {
-      error.value = (err as Error).message
-      throw err
+      error.value = (err as Error).message;
+      throw err;
     } finally {
-      loading.value = false
+      loading.value = false;
     }
-  }
+  };
 
   // 计算属性
   const backendTemplates = computed(() =>
     templates.value.filter(t => t.targetFramework === 'backend')
-  )
+  );
 
   const frontendTemplates = computed(() =>
     templates.value.filter(t => t.targetFramework === 'frontend')
-  )
+  );
 
   const lowcodeTemplates = computed(() =>
     templates.value.filter(t => t.targetFramework === 'lowcode')
-  )
+  );
 
   const templatesByCategory = computed(() => {
-    const grouped: Record<string, TemplateFile[]> = {}
+    const grouped: Record<string, TemplateFile[]> = {};
     templates.value.forEach(template => {
       if (!grouped[template.category]) {
-        grouped[template.category] = []
+        grouped[template.category] = [];
       }
-      grouped[template.category].push(template)
-    })
-    return grouped
-  })
+      grouped[template.category].push(template);
+    });
+    return grouped;
+  });
 
   return {
     templates,
@@ -683,7 +692,7 @@ export function useTemplateEngine() {
     loadTemplates,
     searchTemplates,
     generateCode
-  }
+  };
 }
 
-export default templateEngine
+export default templateEngine;

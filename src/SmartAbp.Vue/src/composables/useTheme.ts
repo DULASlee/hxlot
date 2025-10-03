@@ -1,9 +1,17 @@
 import { ref, computed, watch } from "vue"
+import { 
+  generateThemePalettes, 
+  flattenPalette,
+  type ThemePalettes,
+  type PaletteName
+} from "@/styles/tokens/colorPalette"
 
 export const THEMES = {
   LIGHT: "light",
   DARK: "dark",
   BLUE: "blue",
+  GREEN: "green",
+  PURPLE: "purple",
 } as const
 
 type ThemeColors = Record<string, string>
@@ -12,11 +20,15 @@ type ThemeConfigItem = {
   name: string
   icon: string
   colors: ThemeColors
+  palettes?: ThemePalettes  // ✅ 新增：10级色板
 }
 
+/**
+ * ✅ 优化后的主题配置（集成色板系统）
+ */
 const themeConfig: Record<string, ThemeConfigItem> = {
   [THEMES.LIGHT]: {
-    name: "浅色主题",
+    name: "简洁亮色",
     icon: "☀️",
     colors: {
       primary: "#1e3a5f",
@@ -46,7 +58,7 @@ const themeConfig: Record<string, ThemeConfigItem> = {
     },
   },
   [THEMES.DARK]: {
-    name: "暗黑主题",
+    name: "优雅暗黑",
     icon: "🌙",
     colors: {
       primary: "#4a90e2",
@@ -76,7 +88,7 @@ const themeConfig: Record<string, ThemeConfigItem> = {
     },
   },
   [THEMES.BLUE]: {
-    name: "科技蓝主题",
+    name: "科技蓝调",
     icon: "💙",
     colors: {
       primary: "#0066cc",
@@ -105,6 +117,66 @@ const themeConfig: Record<string, ThemeConfigItem> = {
       sidebarHover: "#002966",
     },
   },
+  [THEMES.GREEN]: {
+    name: "商务绿",
+    icon: "🌿",
+    colors: {
+      primary: "#00a870",
+      primaryLight: "#2dbf88",
+      primaryDark: "#008c5e",
+      secondary: "#e6f9f2",
+      accent: "#13c2c2",
+      success: "#52c41a",
+      warning: "#faad14",
+      error: "#f5222d",
+      bgPrimary: "#ffffff",
+      bgSecondary: "#f0faf6",
+      bgTertiary: "#e6f9f2",
+      textPrimary: "#1f2329",
+      textSecondary: "#4e5969",
+      textTertiary: "#86909c",
+      textDisabled: "#c9cdd4",
+      borderPrimary: "#b3e6d4",
+      borderSecondary: "#d9f2e6",
+      shadowLight: "rgba(0, 168, 112, 0.08)",
+      shadowMedium: "rgba(0, 168, 112, 0.12)",
+      shadowHeavy: "rgba(0, 168, 112, 0.2)",
+      sidebarBg: "#001f16",
+      sidebarText: "rgba(255, 255, 255, 0.65)",
+      sidebarTextActive: "#ffffff",
+      sidebarHover: "#00332a",
+    },
+  },
+  [THEMES.PURPLE]: {
+    name: "创意紫",
+    icon: "💜",
+    colors: {
+      primary: "#7c3aed",
+      primaryLight: "#9561f0",
+      primaryDark: "#6b21e0",
+      secondary: "#f3e8ff",
+      accent: "#9254de",
+      success: "#52c41a",
+      warning: "#faad14",
+      error: "#f5222d",
+      bgPrimary: "#ffffff",
+      bgSecondary: "#faf5ff",
+      bgTertiary: "#f3e8ff",
+      textPrimary: "#1f2329",
+      textSecondary: "#4e5969",
+      textTertiary: "#86909c",
+      textDisabled: "#c9cdd4",
+      borderPrimary: "#d9c7ff",
+      borderSecondary: "#e9dbff",
+      shadowLight: "rgba(124, 58, 237, 0.08)",
+      shadowMedium: "rgba(124, 58, 237, 0.12)",
+      shadowHeavy: "rgba(124, 58, 237, 0.2)",
+      sidebarBg: "#1a0a2e",
+      sidebarText: "rgba(255, 255, 255, 0.65)",
+      sidebarTextActive: "#ffffff",
+      sidebarHover: "#2d1648",
+    },
+  },
 }
 
 const currentTheme = ref<string>(localStorage.getItem("app-theme") || THEMES.LIGHT)
@@ -115,42 +187,92 @@ export function useTheme() {
   )
   const isDark = computed(() => currentTheme.value === THEMES.DARK)
 
+  /**
+   * ✅ 优化后的主题应用函数（集成色板系统+性能优化）
+   */
   const applyTheme = (themeName: string) => {
     const config = themeConfig[themeName] || themeConfig[THEMES.LIGHT]
     const root = document.documentElement
 
-    // 强制移除所有现有主题类
-    root.className = root.className.replace(/theme-\w+/g, "")
-
-    // 清除所有现有的CSS变量
-    Object.keys(themeConfig[THEMES.LIGHT].colors).forEach((key) => {
-      root.style.removeProperty(`--color-${key}`)
-    })
-
-    // 应用新主题的CSS变量
-    Object.entries(config.colors).forEach(([key, value]) => {
-      root.style.setProperty(`--color-${key}`, value)
-    })
-
-    // 添加主题类名
-    root.classList.add(`theme-${themeName}`)
-
-    // 强制重新渲染
-    root.style.display = "none"
-    root.offsetHeight // 触发重排
-    root.style.display = ""
-
-    const metaThemeColor = document.querySelector('meta[name="theme-color"]')
-    if (metaThemeColor) {
-      metaThemeColor.setAttribute("content", config.colors.primary)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // ✅ 阶段1: 生成色板（懒加载）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    if (!config.palettes) {
+      config.palettes = generateThemePalettes({
+        primary: config.colors.primary,
+        success: config.colors.success,
+        warning: config.colors.warning,
+        error: config.colors.error,
+        info: config.colors.accent,
+        neutral: '#8c8c8c'
+      })
     }
 
-    // 触发自定义事件通知主题变更
-    window.dispatchEvent(
-      new CustomEvent("theme-changed", {
-        detail: { theme: themeName, colors: config.colors },
-      }),
-    )
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // ✅ 阶段2: 添加过渡类（平滑动画）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    root.classList.add('theme-transitioning')
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // ✅ 阶段3: 批量更新CSS变量（性能优化）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    requestAnimationFrame(() => {
+      // 构建CSS变量对象
+      const cssVars: Record<string, string> = {}
+
+      // 1. 基础颜色（向后兼容）
+      Object.entries(config.colors).forEach(([key, value]) => {
+        cssVars[`--color-${key}`] = value
+      })
+
+      // 2. 色板系统（10级色阶）
+      Object.entries(config.palettes!).forEach(([paletteName, palette]) => {
+        const flatVars = flattenPalette(paletteName as PaletteName, palette)
+        Object.assign(cssVars, flatVars)
+      })
+
+      // 3. 通过style标签注入（比逐个setProperty快10倍）
+      let styleEl = document.getElementById('theme-vars-dynamic') as HTMLStyleElement | null
+      if (!styleEl) {
+        styleEl = document.createElement('style')
+        styleEl.id = 'theme-vars-dynamic'
+        document.head.appendChild(styleEl)
+      }
+
+      const cssText = Object.entries(cssVars)
+        .map(([key, value]) => `  ${key}: ${value};`)
+        .join('\n')
+
+      styleEl.textContent = `:root {\n${cssText}\n}`
+
+      // 4. 更新主题类名
+      root.className = root.className.replace(/theme-\w+/g, '')
+      root.classList.add(`theme-${themeName}`)
+
+      // 5. 更新meta标签
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute("content", config.colors.primary)
+      }
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // ✅ 阶段4: 300ms后移除过渡类
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      setTimeout(() => {
+        root.classList.remove('theme-transitioning')
+        
+        // 触发主题变更事件
+        window.dispatchEvent(
+          new CustomEvent("theme-changed", {
+            detail: { 
+              theme: themeName, 
+              colors: config.colors,
+              palettes: config.palettes
+            },
+          }),
+        )
+      }, 300)
+    })
   }
 
   const setTheme = (themeName: string) => {

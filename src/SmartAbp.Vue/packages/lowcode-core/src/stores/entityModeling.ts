@@ -1,7 +1,8 @@
 import { defineStore } from "pinia"
 import { ref } from "vue"
-// @ts-ignore - logger will be injected by main app via lowcode-tools bridge
-const logger = (globalThis as any).__SMARTABP_LOGGER__ || console
+import { getGlobalLogger, type ILogger } from "@smartabp/lowcode-shared"
+
+const logger: ILogger = getGlobalLogger()
 
 // 字段定义接口
 export interface EntityField {

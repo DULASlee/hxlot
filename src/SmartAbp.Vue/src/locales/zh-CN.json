@@ -177,6 +177,12 @@
       "clear": { "title": "确认清空", "message": "确定要清空设计器吗？" }
     }
   },
+  "theme": {
+    "light": "浅色",
+    "dark": "深色",
+    "techBlue": "科技蓝",
+    "auto": "跟随系统"
+  },
   "ultraSimple": {
     "title": "极简代码生成器",
     "subtitle": "选择数据库表，输入关键信息，一键生成企业级管理系统",
@@ -238,7 +244,9 @@
       "error": "❌ 代码生成失败，请重试",
       "viewCode": "会话ID：{sessionId}",
       "downloadSuccess": "✅ 下载成功",
-      "downloadError": "❌ 下载失败"
+      "downloadError": "❌ 下载失败",
+      "languageChanged": "🌍 语言切换成功！",
+      "themeChanged": "🌓 主题切换成功！"
     },
     "logs": {
       "loadingTables": "正在加载数据库表...",

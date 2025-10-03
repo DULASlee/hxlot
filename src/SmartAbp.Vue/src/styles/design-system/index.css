@@ -3,8 +3,14 @@
 /* 导入设计令牌 */
 @import "./tokens/index.css";
 
+/* ✅ 导入阴影系统 */
+@import "./tokens/shadows.css";
+
 /* 导入主题系统 */
 @import "./themes/index.css";
+
+/* ✅ 导入过渡动画系统 */
+@import "./transitions.css";
 
 /* 导入组件样式 */
 @import "./components/index.css";

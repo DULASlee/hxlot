@@ -1,0 +1,408 @@
+/**
+ * 主题系统过渡动画
+ * 
+ * 功能：
+ * 1. 主题切换平滑过渡（300ms）
+ * 2. 微交互动画（悬停、点击）
+ * 3. 组件状态过渡
+ * 
+ * 性能要求：
+ * - 动画帧率 ≥ 55fps
+ * - GPU加速（transform, opacity）
+ * - 避免layout thrashing
+ * 
+ * @author AI首席架构师
+ * @version 1.0
+ * @date 2025-10-03
+ */
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   主题切换动画
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * 主题过渡状态（主题切换时全局应用）
+ * 
+ * 使用说明：
+ * - 主题切换时自动添加.theme-transitioning类
+ * - 300ms后自动移除
+ * - !important确保优先级最高
+ */
+.theme-transitioning,
+.theme-transitioning * {
+  transition:
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important,
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important,
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important,
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important,
+    fill 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important,
+    stroke 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   通用过渡缓动函数
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+:root {
+  /* 标准缓动（Material Design） */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-decelerate: cubic-bezier(0, 0, 0.2, 1);  /* 减速 */
+  --ease-accelerate: cubic-bezier(0.4, 0, 1, 1);  /* 加速 */
+  --ease-sharp: cubic-bezier(0.4, 0, 0.6, 1);     /* 锐利 */
+
+  /* 过渡时长 */
+  --duration-fast: 0.1s;
+  --duration-normal: 0.2s;
+  --duration-slow: 0.3s;
+  --duration-slower: 0.5s;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   微交互动画 - 按钮
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * 按钮基础过渡
+ */
+.el-button,
+button:not([class*="el-"]) {
+  transition:
+    background-color var(--duration-normal) var(--ease-standard),
+    color var(--duration-normal) var(--ease-standard),
+    border-color var(--duration-normal) var(--ease-standard),
+    box-shadow var(--duration-normal) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+/**
+ * 按钮悬停效果
+ */
+.el-button:hover:not(:disabled),
+button:hover:not(:disabled):not([class*="el-"]) {
+  transform: translateY(-1px);
+}
+
+/**
+ * 按钮点击反馈（微缩放）
+ */
+.el-button:active:not(:disabled),
+button:active:not(:disabled):not([class*="el-"]) {
+  transform: scale(0.98);
+  transition-duration: var(--duration-fast);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   微交互动画 - 卡片
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * 卡片基础过渡
+ */
+.el-card,
+.card {
+  transition:
+    transform var(--duration-normal) var(--ease-standard),
+    box-shadow var(--duration-normal) var(--ease-standard);
+}
+
+/**
+ * 卡片悬浮效果（可交互卡片）
+ */
+.el-card:hover:not(.is-never-shadow),
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/**
+ * 卡片点击反馈（可点击卡片）
+ */
+.el-card.is-clickable:active,
+.card.clickable:active {
+  transform: translateY(-1px);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   微交互动画 - 链接
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * 链接下划线动画
+ */
+a {
+  position: relative;
+  transition: color var(--duration-normal) var(--ease-standard);
+}
+
+a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: currentColor;
+  transition: width var(--duration-slow) var(--ease-standard);
+}
+
+a:hover::after {
+  width: 100%;
+}
+
+/**
+ * 导航链接（无下划线动画）
+ */
+.el-menu-item a::after,
+.el-sub-menu__title a::after,
+nav a::after {
+  display: none;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   微交互动画 - 表单元素
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * 输入框焦点效果
+ */
+.el-input__inner,
+.el-textarea__inner,
+input:not([type="checkbox"]):not([type="radio"]),
+textarea {
+  transition:
+    border-color var(--duration-normal) var(--ease-standard),
+    box-shadow var(--duration-normal) var(--ease-standard);
+}
+
+/**
+ * 复选框/单选框过渡
+ */
+.el-checkbox,
+.el-radio {
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.el-checkbox:active,
+.el-radio:active {
+  transform: scale(0.95);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   微交互动画 - 开关
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * 开关滑块动画
+ */
+.el-switch__core {
+  transition: background-color var(--duration-normal) var(--ease-standard);
+}
+
+.el-switch__core::after {
+  transition: transform var(--duration-normal) var(--ease-standard);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   微交互动画 - 下拉菜单
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * 菜单项悬停效果
+ */
+.el-menu-item,
+.el-sub-menu__title {
+  transition:
+    background-color var(--duration-normal) var(--ease-standard),
+    color var(--duration-normal) var(--ease-standard);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   微交互动画 - 标签页
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * 标签页切换效果
+ */
+.el-tabs__item {
+  transition:
+    color var(--duration-normal) var(--ease-standard),
+    border-color var(--duration-normal) var(--ease-standard);
+}
+
+.el-tabs__active-bar {
+  transition:
+    transform var(--duration-slow) var(--ease-standard),
+    width var(--duration-slow) var(--ease-standard);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   微交互动画 - 弹窗/抽屉
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * 弹窗淡入淡出
+ */
+.el-dialog,
+.el-drawer {
+  transition:
+    opacity var(--duration-slow) var(--ease-standard),
+    transform var(--duration-slow) var(--ease-standard);
+}
+
+/**
+ * 遮罩层淡入淡出
+ */
+.el-overlay {
+  transition: opacity var(--duration-slow) var(--ease-standard);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   微交互动画 - 消息提示
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * 消息滑入滑出
+ */
+.el-message,
+.el-notification {
+  transition:
+    opacity var(--duration-slow) var(--ease-decelerate),
+    transform var(--duration-slow) var(--ease-decelerate);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   微交互动画 - 加载中
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * 骨架屏脉冲动画
+ */
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.el-skeleton__item {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/**
+ * 加载旋转动画
+ */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.el-loading-spinner .circular {
+  animation: rotate 2s linear infinite;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   微交互动画 - 图标
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * 图标基础过渡
+ */
+.el-icon,
+i[class*="icon-"],
+svg.icon {
+  transition:
+    color var(--duration-normal) var(--ease-standard),
+    transform var(--duration-normal) var(--ease-standard);
+}
+
+/**
+ * 图标悬停效果
+ */
+.el-icon:hover,
+i[class*="icon-"]:hover,
+svg.icon:hover {
+  transform: scale(1.1);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   微交互动画 - 徽章/标签
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * 徽章弹出动画
+ */
+@keyframes badge-bounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.el-badge__content.is-fixed {
+  animation: badge-bounce 0.5s var(--ease-standard);
+}
+
+/**
+ * 标签过渡
+ */
+.el-tag {
+  transition:
+    background-color var(--duration-normal) var(--ease-standard),
+    color var(--duration-normal) var(--ease-standard),
+    border-color var(--duration-normal) var(--ease-standard),
+    opacity var(--duration-fast) var(--ease-standard);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   性能优化
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * GPU加速（仅用于transform和opacity）
+ */
+.el-button,
+.el-card,
+a,
+.el-icon,
+.el-dialog,
+.el-drawer {
+  will-change: transform;
+}
+
+/**
+ * 减少移动端动画（省电）
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/**
+ * 低端设备禁用复杂动画
+ */
+@media (max-width: 768px) {
+  .el-card:hover {
+    transform: none;
+  }
+  
+  a::after {
+    display: none;
+  }
+}
+

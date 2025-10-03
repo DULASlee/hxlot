@@ -1,0 +1,311 @@
+/**
+ * 阴影系统（Shadow System）
+ * 
+ * 设计原理：
+ * - 基于Material Design双层阴影（环境光+关键光）
+ * - 3个层级（小/中/大）满足90%场景
+ * - 暗色主题自动调整阴影强度
+ * 
+ * 使用场景：
+ * - shadow-sm: 悬停卡片、工具提示
+ * - shadow-md: 浮起元素、下拉菜单
+ * - shadow-lg: 弹窗、抽屉、模态框
+ * 
+ * @author AI首席架构师
+ * @version 1.0
+ * @date 2025-10-03
+ */
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   亮色主题阴影
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+:root,
+.theme-light,
+.theme-blue,
+.theme-green,
+.theme-purple {
+  /* ===== 小阴影（1dp elevation） ===== */
+  /* 适用于：悬停卡片、工具提示、下拉选项 */
+  --shadow-sm-ambient: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm-key: 0 1px 4px rgba(0, 0, 0, 0.08);
+  --shadow-sm: var(--shadow-sm-ambient), var(--shadow-sm-key);
+
+  /* ===== 中阴影（4dp elevation） ===== */
+  /* 适用于：浮起卡片、下拉菜单、按钮悬停 */
+  --shadow-md-ambient: 0 4px 6px rgba(0, 0, 0, 0.08);
+  --shadow-md-key: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --shadow-md: var(--shadow-md-ambient), var(--shadow-md-key);
+
+  /* ===== 大阴影（8dp elevation） ===== */
+  /* 适用于：弹窗、抽屉、模态框、固定头部 */
+  --shadow-lg-ambient: 0 8px 16px rgba(0, 0, 0, 0.12);
+  --shadow-lg-key: 0 4px 16px rgba(0, 0, 0, 0.16);
+  --shadow-lg: var(--shadow-lg-ambient), var(--shadow-lg-key);
+
+  /* ===== 特大阴影（16dp elevation） ===== */
+  /* 适用于：全屏弹窗、导航抽屉 */
+  --shadow-xl-ambient: 0 16px 24px rgba(0, 0, 0, 0.16);
+  --shadow-xl-key: 0 8px 24px rgba(0, 0, 0, 0.20);
+  --shadow-xl: var(--shadow-xl-ambient), var(--shadow-xl-key);
+
+  /* ===== 内阴影 ===== */
+  /* 适用于：输入框、凹陷效果 */
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+
+  /* ===== 无阴影 ===== */
+  --shadow-none: none;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   暗色主题阴影（加深）
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.theme-dark {
+  /* 小阴影 */
+  --shadow-sm-ambient: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm-key: 0 1px 4px rgba(0, 0, 0, 0.4);
+  --shadow-sm: var(--shadow-sm-ambient), var(--shadow-sm-key);
+
+  /* 中阴影 */
+  --shadow-md-ambient: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-md-key: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md: var(--shadow-md-ambient), var(--shadow-md-key);
+
+  /* 大阴影 */
+  --shadow-lg-ambient: 0 8px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg-key: 0 4px 16px rgba(0, 0, 0, 0.6);
+  --shadow-lg: var(--shadow-lg-ambient), var(--shadow-lg-key);
+
+  /* 特大阴影 */
+  --shadow-xl-ambient: 0 16px 24px rgba(0, 0, 0, 0.6);
+  --shadow-xl-key: 0 8px 24px rgba(0, 0, 0, 0.7);
+  --shadow-xl: var(--shadow-xl-ambient), var(--shadow-xl-key);
+
+  /* 内阴影 */
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   专用阴影（特殊场景）
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+:root {
+  /* 彩色阴影（与主题色相关） */
+  --shadow-primary: 0 4px 12px rgba(30, 58, 95, 0.2);
+  --shadow-success: 0 4px 12px rgba(82, 196, 26, 0.2);
+  --shadow-warning: 0 4px 12px rgba(250, 173, 20, 0.2);
+  --shadow-error: 0 4px 12px rgba(245, 34, 45, 0.2);
+  --shadow-info: 0 4px 12px rgba(24, 144, 255, 0.2);
+
+  /* 光晕效果（用于focus状态） */
+  --shadow-focus: 0 0 0 4px rgba(24, 144, 255, 0.2);
+  --shadow-focus-error: 0 0 0 4px rgba(245, 34, 45, 0.2);
+  --shadow-focus-success: 0 0 0 4px rgba(82, 196, 26, 0.2);
+
+  /* 扩散阴影（背景光效） */
+  --shadow-diffuse: 0 0 32px rgba(0, 0, 0, 0.1);
+  --shadow-diffuse-strong: 0 0 48px rgba(0, 0, 0, 0.15);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   工具类（Utility Classes）
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+.shadow-xl {
+  box-shadow: var(--shadow-xl);
+}
+
+.shadow-inner {
+  box-shadow: var(--shadow-inner);
+}
+
+.shadow-none {
+  box-shadow: var(--shadow-none);
+}
+
+/* 彩色阴影工具类 */
+.shadow-primary {
+  box-shadow: var(--shadow-primary);
+}
+
+.shadow-success {
+  box-shadow: var(--shadow-success);
+}
+
+.shadow-warning {
+  box-shadow: var(--shadow-warning);
+}
+
+.shadow-error {
+  box-shadow: var(--shadow-error);
+}
+
+.shadow-info {
+  box-shadow: var(--shadow-info);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   组件默认阴影应用
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* 卡片 */
+.el-card {
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.el-card:hover:not(.is-never-shadow) {
+  box-shadow: var(--shadow-md);
+}
+
+.el-card.is-always-shadow {
+  box-shadow: var(--shadow-md);
+}
+
+/* 按钮 */
+.el-button--primary,
+.el-button--success,
+.el-button--warning,
+.el-button--danger {
+  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.el-button--primary:hover:not(:disabled) {
+  box-shadow: var(--shadow-primary);
+}
+
+.el-button--success:hover:not(:disabled) {
+  box-shadow: var(--shadow-success);
+}
+
+.el-button--warning:hover:not(:disabled) {
+  box-shadow: var(--shadow-warning);
+}
+
+.el-button--danger:hover:not(:disabled) {
+  box-shadow: var(--shadow-error);
+}
+
+/* 下拉菜单 */
+.el-dropdown-menu,
+.el-select-dropdown,
+.el-picker-panel {
+  box-shadow: var(--shadow-md);
+}
+
+/* 弹窗/抽屉 */
+.el-dialog,
+.el-drawer {
+  box-shadow: var(--shadow-lg);
+}
+
+/* 消息提示 */
+.el-message,
+.el-notification {
+  box-shadow: var(--shadow-md);
+}
+
+/* 输入框焦点 */
+.el-input__inner:focus,
+.el-textarea__inner:focus {
+  box-shadow: var(--shadow-focus);
+}
+
+.el-input.is-error .el-input__inner:focus,
+.el-textarea.is-error .el-textarea__inner:focus {
+  box-shadow: var(--shadow-focus-error);
+}
+
+.el-input.is-success .el-input__inner:focus,
+.el-textarea.is-success .el-textarea__inner:focus {
+  box-shadow: var(--shadow-focus-success);
+}
+
+/* 工具提示 */
+.el-tooltip__popper {
+  box-shadow: var(--shadow-sm);
+}
+
+/* 气泡确认 */
+.el-popconfirm,
+.el-popover {
+  box-shadow: var(--shadow-md);
+}
+
+/* 表格固定列 */
+.el-table__fixed,
+.el-table__fixed-right {
+  box-shadow: var(--shadow-md);
+}
+
+/* 固定头部 */
+.el-table__header-wrapper {
+  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.el-table--scrollable-y .el-table__header-wrapper {
+  box-shadow: var(--shadow-sm);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   响应式优化
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* 移动端减弱阴影（省电+性能） */
+@media (max-width: 768px) {
+  :root {
+    --shadow-md-ambient: 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-md-key: 0 1px 6px rgba(0, 0, 0, 0.10);
+    
+    --shadow-lg-ambient: 0 4px 8px rgba(0, 0, 0, 0.10);
+    --shadow-lg-key: 0 2px 12px rgba(0, 0, 0, 0.14);
+  }
+}
+
+/* 打印时移除所有阴影 */
+@media print {
+  * {
+    box-shadow: none !important;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   性能优化提示
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/**
+ * 📝 使用建议：
+ * 
+ * 1. 优先使用CSS变量而非硬编码
+ *    ✅ box-shadow: var(--shadow-md);
+ *    ❌ box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+ * 
+ * 2. 避免过度使用阴影（影响性能）
+ *    - 一个视图中最多15个阴影元素
+ *    - 静态卡片使用shadow-sm
+ *    - 交互元素使用:hover切换到shadow-md
+ * 
+ * 3. 使用transition平滑过渡
+ *    transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+ * 
+ * 4. GPU加速（仅在必要时使用）
+ *    will-change: box-shadow; // 谨慎使用
+ * 
+ * 5. 主题切换时自动适配
+ *    - 无需手动修改
+ *    - 暗色主题自动加深阴影
+ */
+

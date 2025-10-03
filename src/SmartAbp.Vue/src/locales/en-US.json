@@ -184,6 +184,12 @@
       }
     }
   },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "techBlue": "Tech Blue",
+    "auto": "Auto"
+  },
   "ultraSimple": {
     "title": "Ultra Simple Code Generator",
     "subtitle": "Select database table, enter key information, generate enterprise-level management system with one click",
@@ -245,7 +251,9 @@
       "error": "❌ Code generation failed, please try again",
       "viewCode": "Session ID: {sessionId}",
       "downloadSuccess": "✅ Download successful",
-      "downloadError": "❌ Download failed"
+      "downloadError": "❌ Download failed",
+      "languageChanged": "🌍 Language changed successfully!",
+      "themeChanged": "🌓 Theme changed successfully!"
     },
     "logs": {
       "loadingTables": "Loading database tables...",
