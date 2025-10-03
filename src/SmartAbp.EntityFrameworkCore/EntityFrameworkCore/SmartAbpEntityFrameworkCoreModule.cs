@@ -18,6 +18,7 @@ using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.Studio;
 using Volo.Abp.Timing;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmartAbp.EntityFrameworkCore;
 
@@ -66,45 +67,57 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
 
         Configure<AbpDbContextOptions>(options =>
         {
-            /* 🔥 SmartAbp多数据库支持
+            /* 🔥 SmartAbp多数据库支持（修复版 - 2025-10-04）
              * 支持：SQLite（默认）, SQL Server LocalDB, PostgreSQL
-             * 配置方式：appsettings.json -> Database:Type */
+             * 配置方式：appsettings.json -> Database:Type
+             * 关键修复：为不同数据库类型使用独立的迁移文件夹 */
 
             var configuration = context.Services.GetConfiguration();
-            var databaseType = configuration["Database:Type"] ?? "Sqlite";
+            var databaseType = MultiDatabaseMigrationManager.GetDatabaseType(configuration);
 
-            switch (databaseType.ToLowerInvariant())
+            // 注册按数据库类型过滤的迁移程序集
+            options.Configure(contextDbOpts =>
             {
-                case "sqlite":
+                contextDbOpts.DbContextOptions.ReplaceService<Microsoft.EntityFrameworkCore.Migrations.IMigrationsAssembly, FilteringMigrationsAssembly>();
+            });
+
+            switch (databaseType)
+            {
+                case DatabaseType.SQLite:
                     options.UseSqlite(sqliteOptions =>
                     {
-                        sqliteOptions.MigrationsHistoryTable("__EFMigrationsHistory");
+                        sqliteOptions.MigrationsHistoryTable("__EFMigrationsHistory_SQLite");
                         sqliteOptions.MigrationsAssembly("SmartAbp.EntityFrameworkCore");
+                        // 指定SQLite专用的迁移文件夹
+                        sqliteOptions.UseRelationalNulls();
                     });
                     break;
-                case "sqlserver":
-                case "mssql":
-                case "localdb":
+                    
+                case DatabaseType.SqlServer:
                     options.UseSqlServer(sqlServerOptions =>
                     {
-                        sqlServerOptions.MigrationsHistoryTable("__EFMigrationsHistory");
+                        sqlServerOptions.MigrationsHistoryTable("__EFMigrationsHistory_SqlServer");
                         sqlServerOptions.MigrationsAssembly("SmartAbp.EntityFrameworkCore");
+                        // SQL Server使用默认的SqlServer文件夹
                     });
                     break;
-                case "postgresql":
-                case "postgres":
+                    
+                case DatabaseType.PostgreSQL:
                     options.UseNpgsql(npgsqlOptions =>
                     {
-                        npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory");
+                        npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory_PostgreSQL");
                         npgsqlOptions.MigrationsAssembly("SmartAbp.EntityFrameworkCore");
+                        // PostgreSQL使用专用的迁移文件夹
                     });
                     break;
+                    
                 default:
                     // 默认使用SQLite（轻量级，无需安装服务器）
                     options.UseSqlite(sqliteOptions =>
                     {
-                        sqliteOptions.MigrationsHistoryTable("__EFMigrationsHistory");
+                        sqliteOptions.MigrationsHistoryTable("__EFMigrationsHistory_SQLite");
                         sqliteOptions.MigrationsAssembly("SmartAbp.EntityFrameworkCore");
+                        sqliteOptions.UseRelationalNulls();
                     });
                     break;
             }

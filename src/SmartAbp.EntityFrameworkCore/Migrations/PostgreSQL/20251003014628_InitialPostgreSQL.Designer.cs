@@ -10,7 +10,7 @@ using Volo.Abp.EntityFrameworkCore;
 
 #nullable disable
 
-namespace SmartAbp.Migrations
+namespace SmartAbp.Migrations.PostgreSQL
 {
     [DbContext(typeof(SmartAbpDbContext))]
     [Migration("20251003014628_InitialPostgreSQL")]

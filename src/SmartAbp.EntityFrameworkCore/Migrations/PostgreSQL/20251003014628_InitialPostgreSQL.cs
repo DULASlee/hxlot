@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SmartAbp.Migrations
+namespace SmartAbp.Migrations.PostgreSQL
 {
     /// <inheritdoc />
     public partial class InitialPostgreSQL : Migration

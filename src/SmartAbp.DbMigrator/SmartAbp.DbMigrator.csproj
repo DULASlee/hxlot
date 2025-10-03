@@ -3,50 +3,34 @@
   <Import Project="..\..\build\common.props" />
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
+    <OutputType>Exe</OutputType>
     <Nullable>enable</Nullable>
+    <RootNamespace>SmartAbp.DbMigrator</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
+    <ProjectReference Include="..\SmartAbp.Application.Contracts\SmartAbp.Application.Contracts.csproj" />
+    <ProjectReference Include="..\SmartAbp.EntityFrameworkCore\SmartAbp.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Volo.Abp.Autofac" Version="$(AbpVersion)" />
-    <ProjectReference Include="..\SmartAbp.EntityFrameworkCore\SmartAbp.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\SmartAbp.Application.Contracts\SmartAbp.Application.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Logs\**" />
-    <Content Remove="Logs\**" />
-
-    <EmbeddedResource Remove="Logs\**" />
-    <None Remove="Logs\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="appsettings.json" />
-    <Content Include="appsettings.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Remove="appsettings.secrets.json" />
-    <Content Include="appsettings.secrets.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- Force update Roslyn packages to resolve version conflicts -->
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.14.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.14.0" />
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.secrets.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
+
