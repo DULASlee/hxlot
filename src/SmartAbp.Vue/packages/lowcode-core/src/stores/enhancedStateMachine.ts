@@ -2,6 +2,8 @@ import { defineStore } from "pinia"
 import { ref, computed } from "vue"
 // @ts-ignore - logger will be injected by main app via lowcode-tools bridge
 const logger = (globalThis as any).__SMARTABP_LOGGER__ || console
+// Day01新增: 引入规则执行引擎
+import { RuleExecutionEngine } from '../engines/ruleExecutionEngine'
 
 // === 企业级状态机类型定义 ===
 
@@ -74,6 +76,53 @@ export interface CodeGenerationOptions {
   tests: boolean
   namespace?: string
   outputPath?: string
+}
+
+// === Day01新增: 规则执行引擎接口定义 ===
+
+/**
+ * 规则执行上下文
+ */
+export interface RuleContext {
+  entity: Record<string, any>      // 实体数据
+  user?: any                        // 当前用户
+  environment?: 'dev' | 'prod'      // 运行环境
+  previousResult?: any              // 上一个规则的执行结果
+}
+
+/**
+ * 规则执行结果
+ */
+export interface RuleExecutionResult {
+  success: boolean
+  executedCount: number
+  failedCount: number
+  results: SingleRuleResult[]
+  errors: RuleExecutionError[]
+  duration: number                  // 执行耗时(ms)
+}
+
+/**
+ * 单条规则执行结果
+ */
+export interface SingleRuleResult {
+  ruleId: string
+  success: boolean
+  conditionMet: boolean            // 条件是否满足
+  actionExecuted: boolean          // 动作是否执行
+  result?: any                     // 执行结果
+  error?: string                   // 错误信息
+  duration: number                 // 执行耗时
+}
+
+/**
+ * 规则执行错误
+ */
+export interface RuleExecutionError {
+  ruleId: string
+  error: string
+  timestamp: number
+  context?: any
 }
 
 // === 增强状态机Store ===
@@ -785,6 +834,66 @@ ${transitions.value.map(t => `
     return pascal.charAt(0).toLowerCase() + pascal.slice(1)
   }
 
+  // === Day01新增: 规则执行引擎实例 ===
+  const ruleEngine = new RuleExecutionEngine()
+
+  // 🔥 Day01新增: 增强的规则执行方法
+  const executeBusinessRulesEnhanced = async (
+    context: RuleContext
+  ): Promise<RuleExecutionResult> => {
+    isExecuting.value = true
+    executionErrors.value = [] // 清空之前的错误
+    
+    try {
+      logger.info('🚀 开始执行业务规则（增强版）', {
+        ruleCount: businessRules.value.length,
+        context
+      })
+      
+      // 使用新的规则执行引擎
+      const result = await ruleEngine.executeRules(
+        businessRules.value,
+        context
+      )
+      
+      // 记录执行错误
+      if (result.errors.length > 0) {
+        executionErrors.value = result.errors
+      }
+      
+      logger.info('✅ 业务规则执行完成', {
+        success: result.success,
+        executed: result.executedCount,
+        failed: result.failedCount,
+        duration: result.duration
+      })
+      
+      return result
+    } catch (error) {
+      logger.error('❌ 业务规则执行失败', error)
+      throw error
+    } finally {
+      isExecuting.value = false
+    }
+  }
+  
+  // 🔥 Day01新增: 启用规则调试
+  const enableRuleDebug = () => {
+    ruleEngine.enableDebug()
+    logger.info('🐛 规则调试模式已启用')
+  }
+  
+  // 🔥 Day01新增: 禁用规则调试
+  const disableRuleDebug = () => {
+    ruleEngine.disableDebug()
+    logger.info('🐛 规则调试模式已禁用')
+  }
+  
+  // 🔥 Day01新增: 获取执行错误日志
+  const getRuleExecutionLogs = () => {
+    return executionErrors.value
+  }
+
   // === 初始化 ===
 
   // 加载默认模板
@@ -847,6 +956,12 @@ ${transitions.value.map(t => `
     logRuleExecution,
     getExecutionErrors,
     clearExecutionErrors,
+    
+    // 🔥 Day01新增: 增强的规则执行
+    executeBusinessRulesEnhanced,
+    enableRuleDebug,
+    disableRuleDebug,
+    getRuleExecutionLogs,
 
     // 验证
     validateStateMachine,
