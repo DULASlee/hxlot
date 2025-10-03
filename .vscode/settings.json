@@ -31,9 +31,6 @@
   // 终端shell配置
   "terminal.integrated.defaultProfile.osx": "zsh",
   "terminal.integrated.defaultProfile.windows": "PowerShell",
-  
-  // 减少不必要的输出
-  "terminal.integrated.enableBell": false,
   "terminal.integrated.confirmOnExit": "hasChildProcesses",
   
   // 文件监控优化（减少资源消耗）
@@ -76,5 +73,9 @@
   "files.associations": {
     "*.mdc": "markdown",
     "*.command": "shellscript"
-  }
+  },
+  "accessibility.signals.terminalBell": {
+    "sound": "off"
+  },
+  "terminal.integrated.enableVisualBell": false
 }

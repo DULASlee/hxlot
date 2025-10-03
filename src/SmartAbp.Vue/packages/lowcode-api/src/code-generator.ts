@@ -44,9 +44,21 @@ export const codeGeneratorApi: CodeGeneratorApi = {
     throw new Error('Module validation API not implemented - bridge layer required');
   },
 
-  async registerModule(_metadata: ModuleMetadata): Promise<ModuleMetadata> {
-    // 实际实现将通过HTTP请求与后端通信
-    throw new Error('Module registration API not implemented - bridge layer required');
+  async registerModule(metadata: ModuleMetadata): Promise<ModuleMetadata> {
+    // 调用后端 api/metadata/register-module 幂等注册接口
+    const response = await fetch('/api/metadata/register-module', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(metadata)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Module registration failed: ${response.status} ${response.statusText}`);
+    }
+
+    return await response.json();
   },
 
   async testDatabaseConnection(_connection: { provider: string; connectionString: string; schema?: string; }): Promise<{
