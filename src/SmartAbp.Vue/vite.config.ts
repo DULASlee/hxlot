@@ -100,6 +100,10 @@ export default defineConfig({
     strictPort: false, // 允许端口自动切换，避免冲突
     open: false, // 禁用自动打开浏览器
     cors: true,
+    // ✅ 添加 SPA 历史回退支持，确保所有路由都能正确访问
+    fs: {
+      strict: false,
+    },
     watch: {
       ignored: [
         "**/packages/**/__tests__/**",
@@ -118,7 +122,7 @@ export default defineConfig({
     },
     proxy: {
       "^/(connect|api|swagger|health-status|Account)(/.*)?": {
-        target: "http://localhost:11369",
+        target: "https://localhost:44379", // ✅ 修正：指向后端API服务器正确端口（44379），使用https协议
         changeOrigin: true,
         secure: false,
         timeout: 10000, // 增加超时时间
