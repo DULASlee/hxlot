@@ -3,14 +3,46 @@ alwaysApply: true
 priority: 1
 ---
 
-# AI编程铁律自动执行引擎 v5.0
+# AI编程铁律自动执行引擎 v6.0
 
 ## 📋 文档说明
 
-**版本**: v5.0（结构重构版）
-**更新日期**: 2025-10-03
+**版本**: v6.0（统一脚本版）
+**更新日期**: 2025-10-04
 **核心使命**: 强制触发、自动暂停、实时监控、独立决策
 **基本原则**: 零容忍、零跳过、自动化、强制化、独立思考
+
+## 🚀 统一自动执行脚本
+
+**核心变更**: 所有九重爆雷检查已统一到自动化脚本中
+
+### ⚡ 使用统一脚本执行（推荐）
+
+**Windows PowerShell**:
+```powershell
+# 完整执行（包含Git同步）
+pwsh -File scripts/quality/expert-mode-nine-layers.ps1
+
+# 跳过Git同步
+pwsh -File scripts/quality/expert-mode-nine-layers.ps1 -SkipGitSync
+```
+
+**Linux/Mac Bash**:
+```bash
+# 完整执行（包含Git同步）
+bash scripts/quality/expert-mode-nine-layers.sh
+
+# 跳过Git同步
+bash scripts/quality/expert-mode-nine-layers.sh --skip-git-sync
+```
+
+**脚本功能**:
+- 自动执行九重爆雷所有检查
+- 调用独立的Git安全同步脚本（第5阶段）
+- 生成完整的质量报告和评分
+- 支持预演模式和详细输出
+
+**详细文档**: 参见 `scripts/quality/README-expert-mode.md`
 
 ## 目录结构
 
@@ -425,70 +457,176 @@ cd src/SmartAbp.Vue && npm run lint -- "packages/*/src/**/*.{ts,vue}"
 ```
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 第5阶段：Git版本管理（6步执行）
+## 第5阶段：Git版本管理（统一脚本自动执行）
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### 🚨 强制使用企业级Git安全同步脚本
+
+**核心原则**: 
+- ✅ **禁止手动执行零散Git命令**
+- ✅ **统一使用自动化脚本**
+- ✅ **强制非交互模式**
+- ✅ **自动备份机制**
 
 ### 前置条件
 
 **五重质量门禁必须全部通过**
 
-### 六步强制执行流程
+### ⚡ 统一执行命令（唯一正确方式）
 
-#### 第1步：代码变更检测
-```bash
-git status --porcelain
+**Windows PowerShell环境**:
+```powershell
+# 强制使用带参数的无交互自动执行脚本
+pwsh -File scripts/git/git-safe-sync.ps1 --non-interactive --auto-commit
 ```
 
-#### 第2步：暂存所有修改
+**Linux/Mac Bash环境**:
 ```bash
-git add .
+# 强制使用带参数的无交互自动执行脚本
+bash scripts/git/git-safe-sync.sh --non-interactive --auto-commit
 ```
 
-#### 第3步：生成标准化提交信息
-```bash
-COMMIT_MSG="类型: 完成[阶段] - [描述]
+### 🔧 脚本自动执行的六步流程
 
-🔧 核心实现:
-- [具体实现]
+脚本内部自动按顺序执行以下步骤：
 
-📊 质量验证:
-✅ 架构完整性: 0违规
-✅ 代码重复度: 0重复
-✅ 编译静态检查: 0错误
-✅ 低代码生成器: 100%质量
-✅ 技术债务: XX/100
+```yaml
+步骤1 - 环境检查:
+  - 验证Git环境
+  - 检查项目根目录
+  - 确认Git仓库有效
 
-📦 修改统计:
-- 代码行数: XX行
-- 文件数: XX个"
+步骤2 - 本地状态检查:
+  - 检测未提交更改
+  - 自动暂存所有修改
+  - 自动生成提交信息（如有更改）
+
+步骤3 - 创建本地备份:
+  - 创建备份标签（backup_TIMESTAMP）
+  - 保存当前HEAD和分支信息
+  - 提供回滚能力
+
+步骤4 - 拉取远程更新:
+  - git fetch origin
+  - 检测远程更新数量
+  - 显示远程提交概要
+
+步骤5 - 合并远程更新:
+  - git merge origin/main --no-edit
+  - 自动检测冲突
+  - 提供冲突解决指南
+
+步骤6 - 推送到远程:
+  - git push origin main
+  - 验证推送成功
+  - 确认本地与远程同步
 ```
 
-#### 第4步：执行本地提交
-```bash
-git commit -m "$COMMIT_MSG"
-```
+### 📊 自动同步验证
 
-#### 第5步：拉取远程并合并（先拉后推）
-```bash
-git pull --rebase origin main
-```
+脚本自动执行完整性验证：
 
-#### 第6步：推送到远程
-```bash
-git push origin main
-```
-
-### 📊 同步验证
-
-```bash
+```powershell
+# 脚本自动验证本地与远程哈希
 LOCAL_HASH=$(git rev-parse HEAD)
 REMOTE_HASH=$(git rev-parse origin/main)
 
 if [ "$LOCAL_HASH" = "$REMOTE_HASH" ]; then
   echo "✅ Git同步完成！本地与远程完全一致"
+  echo "📊 最终提交哈希: $LOCAL_HASH"
 else
   echo "⚠️ 同步异常：本地和远程哈希不一致"
+  echo "   本地: $LOCAL_HASH"
+  echo "   远程: $REMOTE_HASH"
 fi
+```
+
+### ❌ 严禁的错误做法
+
+```bash
+# ❌ 错误1：手动执行零散命令
+git add .
+git commit -m "..."
+git pull
+git push
+
+# ❌ 错误2：先commit后pull（顺序错误）
+git commit -m "..."
+git pull --rebase origin main
+git push origin main
+
+# ❌ 错误3：忘记拉取直接推送
+git add .
+git commit -m "..."
+git push origin main  # 可能被拒绝
+
+# ❌ 错误4：使用交互模式（需要人工干预）
+bash scripts/git/git-safe-sync.sh  # 缺少参数
+```
+
+### ✅ 标准化执行模板
+
+AI每次执行Git同步时必须使用：
+
+```typescript
+// AI内部执行逻辑
+async function executeGitSync() {
+  console.log("🔄 执行Git版本管理六步铁律...")
+  
+  // 前置条件检查
+  if (!五重质量门禁全部通过()) {
+    throw new Error("质量门禁未通过，禁止Git同步！")
+  }
+  
+  // 🚨 唯一正确的执行方式
+  if (isWindows) {
+    await exec("pwsh -File scripts/git/git-safe-sync.ps1 --non-interactive --auto-commit")
+  } else {
+    await exec("bash scripts/git/git-safe-sync.sh --non-interactive --auto-commit")
+  }
+  
+  console.log("✅ Git同步脚本执行完成")
+}
+```
+
+### 🛡️ 脚本安全特性
+
+1. **自动备份**: 每次同步前创建备份标签，可随时回滚
+2. **冲突检测**: 自动检测合并冲突并提供解决方案
+3. **错误恢复**: 提供完整的错误恢复指南
+4. **日志记录**: 详细的执行日志和统计信息
+5. **清理机制**: 自动清理旧备份（保留最近10个）
+
+### 📋 脚本输出示例
+
+```
+========================================
+   SmartAbp 企业级Git安全同步工具
+========================================
+
+功能: 备份 → 拉取 → 合并 → 推送
+时间: 2025-10-04 00:45:38
+模式: 非交互模式
+
+[1/6] 环境检查... ✓
+[2/6] 检查本地Git状态... ✓
+[3/6] 创建本地Git备份... ✓
+      备份标签: backup_20251004_004538
+[4/6] 拉取远程仓库更新... ✓
+      远程提交: 0个
+[5/6] 跳过合并 (无远程更新)
+[6/6] 推送合并后的版本到远程仓库... ✓
+      本地提交: 0个
+
+========================================
+          🎉 Git同步完成!
+========================================
+
+📊 同步统计:
+   📥 远程提交合并: 0个
+   📤 本地提交推送: 0个
+   💾 备份标签: backup_20251004_004538
+   🔄 同步结果: 本地与远程仓库完全同步
 ```
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
