@@ -5,7 +5,7 @@
 
 import { ref, computed } from 'vue'
 import { ElLoading } from 'element-plus'
-import { useLoading } from '@smartabp/lowcode-shared'
+// import { useLoading } from '@smartabp/lowcode-shared'
 
 /**
  * Loading显示选项
@@ -76,12 +76,15 @@ interface LoadingTracker {
  * ```
  */
 export function useApiLoading() {
-  // 使用lowcode-shared的useLoading
-  const { 
-    isLoading: isBaseLoading, 
-    startLoading: baseStartLoading, 
-    stopLoading: baseStopLoading 
-  } = useLoading()
+  // TODO: 使用lowcode-shared的useLoading（待lowcode-shared完善后启用）
+  // const { 
+  //   isLoading: isBaseLoading, 
+  //   startLoading: baseStartLoading, 
+  //   stopLoading: baseStopLoading 
+  // } = useLoading()
+  const isBaseLoading = ref(false)
+  const baseStartLoading = () => { isBaseLoading.value = true }
+  const baseStopLoading = () => { isBaseLoading.value = false }
 
   // Loading跟踪器
   const loadingTrackers = ref<Map<string, LoadingTracker>>(new Map())

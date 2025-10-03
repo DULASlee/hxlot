@@ -57,7 +57,7 @@ export interface HttpClient {
  */
 export function createHttpClient(config?: HttpClientConfig): HttpClient {
   const {
-    baseURL = import.meta.env.VITE_API_BASE_URL || 'https://localhost:44379',
+    baseURL = (import.meta as any).env?.VITE_API_BASE_URL || 'https://localhost:44379',
     timeout = 30000, // 代码生成可能耗时较长，设置30秒超时
     getToken,
     onUnauthorized,

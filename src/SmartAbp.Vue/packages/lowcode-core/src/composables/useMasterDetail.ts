@@ -21,7 +21,7 @@
 
 import { ref, computed, watch, type Ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { useDebounceFn, useThrottleFn } from '@vueuse/core'
+import { useDebounceFn } from '@vueuse/core'
 
 export interface MasterDetailConfig<TMaster = any, TDetail = any> {
   /** 主表API路径 */

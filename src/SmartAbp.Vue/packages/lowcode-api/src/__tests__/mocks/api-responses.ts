@@ -322,9 +322,9 @@ export const mockIntrospectDatabaseResponse = {
       comment: '系统角色表',
       rowCount: 15,
       columns: [
-        { name: 'Id', type: 'uuid', isPrimaryKey: true, isNullable: false },
-        { name: 'Name', type: 'varchar', maxLength: 256, isNullable: false, isUnique: true },
-        { name: 'DisplayName', type: 'varchar', maxLength: 256, isNullable: true },
+        { name: 'Id', type: 'uuid', isPrimaryKey: true, isNullable: false, isRequired: true, description: 'ID' },
+        { name: 'Name', type: 'varchar', maxLength: 256, isNullable: false, isUnique: true, isRequired: true, description: '角色名称' },
+        { name: 'DisplayName', type: 'varchar', maxLength: 256, isNullable: true, isRequired: false, description: '显示名称' },
         { name: 'IsDefault', type: 'boolean', isNullable: false, defaultValue: 'false' }
       ],
       relationships: [
@@ -446,8 +446,8 @@ export const mockRegisterModuleResponse: ModuleMetadata = {
         { name: 'Name', type: 'string', maxLength: 200, isRequired: true },
         { name: 'Description', type: 'string', maxLength: 1000 },
         { name: 'Price', type: 'decimal', precision: 18, scale: 2, isRequired: true },
-        { name: 'Stock', type: 'int', defaultValue: '0' },
-        { name: 'IsActive', type: 'bool', defaultValue: 'true' }
+        { name: 'Stock', type: 'int', defaultValue: '0', isRequired: false, description: '库存' },
+        { name: 'IsActive', type: 'bool', defaultValue: 'true', isRequired: false, description: '是否激活' }
       ],
       navigationProperties: [
         {

@@ -24,7 +24,7 @@ import { ref, computed, watch, type Ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useDebounceFn } from '@vueuse/core'
 
-export interface ManyToManyConfig<TEntity = any, TTarget = any> {
+export interface ManyToManyConfig<_TEntity = any, TTarget = any> {
   /** 当前实体API */
   entityApi: string
   /** 目标实体API */
@@ -49,7 +49,7 @@ export interface ManyToManyConfig<TEntity = any, TTarget = any> {
   onRelationChange?: (selected: TTarget[], available: TTarget[]) => void | Promise<void>
 }
 
-export interface ManyToManyOperations<TEntity = any, TTarget = any> {
+export interface ManyToManyOperations<_TEntity = any, TTarget = any> {
   /** 已选择的项目 */
   selectedItems: Ref<TTarget[]>
   /** 可选择的项目 */
@@ -85,7 +85,7 @@ export interface ManyToManyOperations<TEntity = any, TTarget = any> {
 /**
  * 多对多关系Composable实现
  */
-export function useManyToMany<TEntity = any, TTarget = any>(
+export function useManyToMany<_TEntity = any, TTarget = any>(
   config: ManyToManyConfig<TEntity, TTarget>
 ): ManyToManyOperations<TEntity, TTarget> {
   

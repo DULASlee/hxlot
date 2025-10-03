@@ -12,7 +12,6 @@ import {
   mockIntrospectDatabaseResponse,
   mockGenerationStatusResponse,
   mockValidateModuleResponse,
-  mockRegisterModuleResponse,
   mockTestConnectionSuccessResponse
 } from './api-responses'
 
@@ -25,7 +24,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
  * Mock Server配置
  */
 export const mockServerConfig = {
-  enabled: import.meta.env.VITE_USE_MOCK_API === 'true',
+  enabled: (import.meta as any).env?.VITE_USE_MOCK_API === 'true',
   baseURL: '/api',
   delay: {
     min: 100,
@@ -49,7 +48,7 @@ export const mockApiHandlers = {
   /**
    * Mock: POST /api/code-generator/generate
    */
-  async generateModule(config: any) {
+  async generateModule(_config: any) {
     await randomDelay()
     
     // 模拟10%的失败率
