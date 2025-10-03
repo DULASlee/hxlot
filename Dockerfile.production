@@ -1,0 +1,113 @@
+# ==========================================
+# SmartAbp 低代码生成器生产环境Dockerfile
+# 多阶段构建，优化镜像大小和安全性
+# ==========================================
+
+# ==========================================
+# Stage 1: 前端构建
+# ==========================================
+FROM node:20-alpine AS frontend-builder
+
+LABEL stage=frontend-builder
+LABEL maintainer="SmartAbp Team"
+
+WORKDIR /app/frontend
+
+# 复制package文件并安装依赖
+COPY src/SmartAbp.Vue/package*.json ./
+RUN npm ci --only=production --ignore-scripts
+
+# 复制源代码并构建
+COPY src/SmartAbp.Vue .
+RUN npm run build
+
+# ==========================================
+# Stage 2: 后端构建
+# ==========================================
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS backend-builder
+
+LABEL stage=backend-builder
+
+WORKDIR /app/backend
+
+# 复制解决方案和项目文件
+COPY SmartAbp.sln ./
+COPY src/SmartAbp.Domain/*.csproj ./src/SmartAbp.Domain/
+COPY src/SmartAbp.Application/*.csproj ./src/SmartAbp.Application/
+COPY src/SmartAbp.Application.Contracts/*.csproj ./src/SmartAbp.Application.Contracts/
+COPY src/SmartAbp.Domain.Shared/*.csproj ./src/SmartAbp.Domain.Shared/
+COPY src/SmartAbp.EntityFrameworkCore/*.csproj ./src/SmartAbp.EntityFrameworkCore/
+COPY src/SmartAbp.HttpApi/*.csproj ./src/SmartAbp.HttpApi/
+COPY src/SmartAbp.HttpApi.Host/*.csproj ./src/SmartAbp.HttpApi.Host/
+
+# 还原依赖
+RUN dotnet restore
+
+# 复制所有源代码
+COPY src ./src
+COPY build ./build
+
+# 构建和发布
+RUN dotnet publish src/SmartAbp.HttpApi.Host/SmartAbp.HttpApi.Host.csproj \
+    -c Release \
+    -o /app/publish \
+    --no-restore \
+    /p:PublishTrimmed=false
+
+# ==========================================
+# Stage 3: 运行时镜像
+# ==========================================
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
+
+LABEL maintainer="SmartAbp Team"
+LABEL version="1.0.0"
+LABEL description="SmartAbp Low-Code Generator Production Runtime"
+
+# 安装必要的运行时依赖
+RUN apk add --no-cache \
+    ca-certificates \
+    tzdata \
+    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone
+
+# 创建非root用户
+RUN addgroup -g 1000 smartabp \
+    && adduser -D -u 1000 -G smartabp smartabp
+
+# 创建应用目录
+WORKDIR /app
+
+# 从构建阶段复制前端构建产物
+COPY --from=frontend-builder --chown=smartabp:smartabp /app/frontend/dist ./wwwroot
+
+# 从构建阶段复制后端发布产物
+COPY --from=backend-builder --chown=smartabp:smartabp /app/publish .
+
+# 复制生产环境配置
+COPY --chown=smartabp:smartabp config/production.json ./config/
+
+# 创建必要的目录
+RUN mkdir -p \
+    /app/logs \
+    /app/temp \
+    /app/generated \
+    && chown -R smartabp:smartabp /app
+
+# 切换到非root用户
+USER smartabp
+
+# 环境变量
+ENV ASPNETCORE_ENVIRONMENT=Production \
+    ASPNETCORE_URLS=http://+:5000 \
+    DOTNET_RUNNING_IN_CONTAINER=true \
+    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:5000/health || exit 1
+
+# 暴露端口
+EXPOSE 5000
+
+# 启动命令
+ENTRYPOINT ["dotnet", "SmartAbp.HttpApi.Host.dll"]

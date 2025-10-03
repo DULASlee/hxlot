@@ -1,0 +1,309 @@
+{
+  "$schema": "./production.schema.json",
+  "name": "SmartAbp Production Configuration",
+  "version": "1.0.0",
+  "description": "SmartAbp低代码生成器生产环境配置",
+  
+  "environment": {
+    "name": "production",
+    "debug": false,
+    "logLevel": "info",
+    "enableDetailedErrors": false
+  },
+  
+  "performance": {
+    "codeGeneration": {
+      "maxConcurrentJobs": 50,
+      "jobQueueSize": 200,
+      "jobTimeout": 300000,
+      "enableCaching": true,
+      "cacheExpiration": 3600,
+      "enableIncrementalCompilation": true,
+      "metadataReferenceCaching": true,
+      "compilationPoolSize": 10,
+      "memoryLimitMB": 2048
+    },
+    
+    "frontend": {
+      "enableCodeSplitting": true,
+      "enableLazyLoading": true,
+      "enableVirtualScroll": true,
+      "bundleOptimization": {
+        "minify": true,
+        "treeshake": true,
+        "compress": true,
+        "splitChunks": true
+      },
+      "caching": {
+        "enableBrowserCache": true,
+        "enableServiceWorker": true,
+        "staticAssetsCacheDuration": 31536000,
+        "apiResponseCacheDuration": 300
+      },
+      "performanceTargets": {
+        "firstContentfulPaint": 1500,
+        "largestContentfulPaint": 2500,
+        "firstInputDelay": 100,
+        "cumulativeLayoutShift": 0.1
+      }
+    },
+    
+    "database": {
+      "connectionPooling": {
+        "minPoolSize": 5,
+        "maxPoolSize": 50,
+        "connectionTimeout": 30,
+        "commandTimeout": 30,
+        "idleTimeout": 600
+      },
+      "queryOptimization": {
+        "enableQueryCache": true,
+        "queryCacheDuration": 300,
+        "enableIndexHints": true,
+        "maxQueryComplexity": 10
+      }
+    },
+    
+    "api": {
+      "rateLimiting": {
+        "enabled": true,
+        "requestsPerMinute": 1000,
+        "requestsPerHour": 10000,
+        "burstSize": 100
+      },
+      "compression": {
+        "enabled": true,
+        "algorithm": "gzip",
+        "level": 6
+      },
+      "timeout": {
+        "requestTimeout": 30000,
+        "keepAliveTimeout": 60000
+      }
+    }
+  },
+  
+  "security": {
+    "https": {
+      "enabled": true,
+      "enforceHttps": true,
+      "hsts": {
+        "enabled": true,
+        "maxAge": 31536000,
+        "includeSubDomains": true,
+        "preload": true
+      }
+    },
+    
+    "cors": {
+      "enabled": true,
+      "allowedOrigins": ["https://yourdomain.com"],
+      "allowedMethods": ["GET", "POST", "PUT", "DELETE"],
+      "allowedHeaders": ["Content-Type", "Authorization"],
+      "allowCredentials": true,
+      "maxAge": 86400
+    },
+    
+    "authentication": {
+      "jwt": {
+        "issuer": "SmartAbp",
+        "audience": "SmartAbp.Client",
+        "secretKey": "${JWT_SECRET_KEY}",
+        "expirationMinutes": 60,
+        "refreshTokenExpirationDays": 30,
+        "requireHttpsMetadata": true
+      },
+      "lockout": {
+        "enabled": true,
+        "maxFailedAttempts": 5,
+        "lockoutDuration": 900
+      }
+    },
+    
+    "dataProtection": {
+      "enableEncryption": true,
+      "encryptionAlgorithm": "AES-256-GCM",
+      "keyRotationDays": 90,
+      "enableAuditLogging": true
+    },
+    
+    "contentSecurityPolicy": {
+      "enabled": true,
+      "defaultSrc": ["'self'"],
+      "scriptSrc": ["'self'", "'unsafe-inline'"],
+      "styleSrc": ["'self'", "'unsafe-inline'"],
+      "imgSrc": ["'self'", "data:", "https:"],
+      "connectSrc": ["'self'"],
+      "fontSrc": ["'self'"],
+      "objectSrc": ["'none'"],
+      "mediaSrc": ["'self'"],
+      "frameSrc": ["'none'"]
+    }
+  },
+  
+  "monitoring": {
+    "healthCheck": {
+      "enabled": true,
+      "endpoint": "/health",
+      "intervalSeconds": 30,
+      "timeout": 10
+    },
+    
+    "metrics": {
+      "enabled": true,
+      "provider": "prometheus",
+      "endpoint": "/metrics",
+      "includeSystemMetrics": true,
+      "includeCustomMetrics": true
+    },
+    
+    "logging": {
+      "level": "info",
+      "format": "json",
+      "outputs": ["console", "file", "elasticsearch"],
+      "file": {
+        "path": "/var/log/smartabp",
+        "maxSize": "100MB",
+        "maxFiles": 10,
+        "compress": true
+      },
+      "elasticsearch": {
+        "enabled": true,
+        "url": "${ELASTICSEARCH_URL}",
+        "index": "smartabp-logs",
+        "bulkSize": 100,
+        "flushInterval": 5
+      }
+    },
+    
+    "tracing": {
+      "enabled": true,
+      "provider": "opentelemetry",
+      "samplingRate": 0.1,
+      "exporters": ["jaeger", "zipkin"]
+    },
+    
+    "alerting": {
+      "enabled": true,
+      "channels": ["email", "slack", "webhook"],
+      "rules": [
+        {
+          "name": "HighErrorRate",
+          "condition": "error_rate > 0.05",
+          "severity": "critical",
+          "cooldownMinutes": 15
+        },
+        {
+          "name": "HighMemoryUsage",
+          "condition": "memory_usage > 0.85",
+          "severity": "warning",
+          "cooldownMinutes": 5
+        },
+        {
+          "name": "SlowCodeGeneration",
+          "condition": "avg_generation_time > 30000",
+          "severity": "warning",
+          "cooldownMinutes": 10
+        }
+      ]
+    }
+  },
+  
+  "deployment": {
+    "platform": "kubernetes",
+    "region": "cn-shanghai",
+    "availabilityZones": ["cn-shanghai-a", "cn-shanghai-b", "cn-shanghai-c"],
+    
+    "scaling": {
+      "enabled": true,
+      "minReplicas": 3,
+      "maxReplicas": 10,
+      "targetCPUUtilization": 70,
+      "targetMemoryUtilization": 80,
+      "scaleUpStabilizationSeconds": 60,
+      "scaleDownStabilizationSeconds": 300
+    },
+    
+    "resources": {
+      "api": {
+        "requests": {
+          "cpu": "500m",
+          "memory": "512Mi"
+        },
+        "limits": {
+          "cpu": "2000m",
+          "memory": "2Gi"
+        }
+      },
+      "worker": {
+        "requests": {
+          "cpu": "1000m",
+          "memory": "1Gi"
+        },
+        "limits": {
+          "cpu": "4000m",
+          "memory": "4Gi"
+        }
+      }
+    },
+    
+    "networking": {
+      "ingress": {
+        "enabled": true,
+        "className": "nginx",
+        "annotations": {
+          "cert-manager.io/cluster-issuer": "letsencrypt-prod",
+          "nginx.ingress.kubernetes.io/ssl-redirect": "true",
+          "nginx.ingress.kubernetes.io/proxy-body-size": "50m"
+        },
+        "hosts": ["smartabp.yourdomain.com"],
+        "tls": true
+      },
+      "service": {
+        "type": "ClusterIP",
+        "port": 80,
+        "targetPort": 5000
+      }
+    }
+  },
+  
+  "backup": {
+    "enabled": true,
+    "schedule": "0 2 * * *",
+    "retention": {
+      "daily": 7,
+      "weekly": 4,
+      "monthly": 12
+    },
+    "targets": ["database", "config", "generated-code"],
+    "storage": {
+      "type": "s3",
+      "bucket": "${BACKUP_BUCKET}",
+      "encryption": true
+    }
+  },
+  
+  "maintenance": {
+    "updateWindow": {
+      "enabled": true,
+      "schedule": "0 3 * * 0",
+      "duration": 120,
+      "notification": true
+    },
+    "autoUpdate": {
+      "enabled": false,
+      "securityUpdatesOnly": true
+    }
+  },
+  
+  "features": {
+    "templateMarket": true,
+    "intelligentRecommendation": true,
+    "businessRuleEngine": true,
+    "workflowEngine": true,
+    "codeQualityAnalyzer": true,
+    "performanceOptimizer": true,
+    "multiTenancy": true,
+    "audit": true
+  }
+}

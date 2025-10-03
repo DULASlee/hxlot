@@ -1,0 +1,305 @@
+version: '3.8'
+
+# ==========================================
+# SmartAbp 生产环境Docker Compose配置
+# ==========================================
+
+services:
+  # ==========================================
+  # PostgreSQL 数据库
+  # ==========================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: smartabp-postgres-prod
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-SmartAbp}
+      POSTGRES_USER: ${DB_USER:-smartabp}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Database password required}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/database/init-production.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - smartabp-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-smartabp}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # ==========================================
+  # Redis 缓存
+  # ==========================================
+  redis:
+    image: redis:7-alpine
+    container_name: smartabp-redis-prod
+    restart: always
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD:?Redis password required}
+      --maxmemory 1gb
+      --maxmemory-policy allkeys-lru
+      --appendonly yes
+      --appendfsync everysec
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - smartabp-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  # ==========================================
+  # SmartAbp 应用服务器
+  # ==========================================
+  smartabp:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+      args:
+        - BUILD_DATE=${BUILD_DATE:-2025-10-03}
+        - VERSION=${VERSION:-1.0.0}
+    image: smartabp/lowcode-generator:${VERSION:-1.0.0}
+    container_name: smartabp-app-prod
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      # 数据库配置
+      - ConnectionStrings__Default=Host=postgres;Port=5432;Database=${DB_NAME:-SmartAbp};Username=${DB_USER:-smartabp};Password=${DB_PASSWORD}
+      
+      # Redis配置
+      - Redis__Configuration=redis:6379,password=${REDIS_PASSWORD},defaultDatabase=0
+      
+      # JWT配置
+      - Authentication__JwtBearer__SecurityKey=${JWT_SECRET_KEY:?JWT secret key required}
+      - Authentication__JwtBearer__Issuer=SmartAbp
+      - Authentication__JwtBearer__Audience=SmartAbp.Client
+      
+      # 应用配置
+      - App__SelfUrl=https://${DOMAIN:-localhost}
+      - App__CorsOrigins=https://${DOMAIN:-localhost}
+      - App__EnableSwagger=false
+      
+      # 日志配置
+      - Logging__LogLevel__Default=Information
+      - Logging__LogLevel__Microsoft=Warning
+      - Logging__LogLevel__Microsoft.Hosting.Lifetime=Information
+      
+      # 性能配置
+      - Performance__MaxConcurrentJobs=50
+      - Performance__EnableCaching=true
+      - Performance__CacheExpiration=3600
+    volumes:
+      - ./config/production.json:/app/config/production.json:ro
+      - smartabp_logs:/app/logs
+      - smartabp_temp:/app/temp
+      - smartabp_generated:/app/generated
+    ports:
+      - "${APP_PORT:-5000}:5000"
+    networks:
+      - smartabp-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+  # ==========================================
+  # Nginx 反向代理
+  # ==========================================
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: smartabp-nginx-prod
+    restart: always
+    depends_on:
+      - smartabp
+    volumes:
+      - ./deployment/nginx/nginx.production.conf:/etc/nginx/nginx.conf:ro
+      - ./deployment/nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_cache:/var/cache/nginx
+      - nginx_logs:/var/log/nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - smartabp-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+  # ==========================================
+  # Elasticsearch (日志存储)
+  # ==========================================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: smartabp-elasticsearch-prod
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:?Elasticsearch password required}
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - smartabp-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200 >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+
+  # ==========================================
+  # Prometheus (监控指标)
+  # ==========================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: smartabp-prometheus-prod
+    restart: always
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+    volumes:
+      - ./deployment/prometheus/prometheus.production.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - smartabp-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  # ==========================================
+  # Grafana (监控仪表板)
+  # ==========================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: smartabp-grafana-prod
+    restart: always
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:?Grafana password required}
+      - GF_SERVER_ROOT_URL=https://${DOMAIN:-localhost}/grafana
+      - GF_INSTALL_PLUGINS=redis-datasource
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./deployment/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./deployment/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    ports:
+      - "3000:3000"
+    networks:
+      - smartabp-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+# ==========================================
+# 网络配置
+# ==========================================
+networks:
+  smartabp-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# ==========================================
+# 数据卷
+# ==========================================
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  elasticsearch_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  smartabp_logs:
+    driver: local
+  smartabp_temp:
+    driver: local
+  smartabp_generated:
+    driver: local
+  nginx_cache:
+    driver: local
+  nginx_logs:
+    driver: local
