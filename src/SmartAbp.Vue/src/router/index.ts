@@ -9,9 +9,6 @@ import opsMonitoringRoutes from "./modules/ops-monitoring"
 
 // 动态导入页面组件
 const DashboardView = () => import("@/views/common/DashboardView.vue")
-const UserManagement = () => import("@/views/user/UserManagement.vue")
-const UserListView = () => import("@/views/user/UserListView.vue")
-const UserRolesView = () => import("@/views/user/UserRolesView.vue")
 const LoginTest = () => import("@/views/auth/LoginTest.vue")
 const ForbiddenView = () => import("@/views/error/Forbidden.vue")
 
@@ -20,8 +17,6 @@ const ProfileView = () => import("@/views/common/ProfileView.vue")
 const SettingsView = () => import("@/views/common/SettingsView.vue")
 const ProjectListView = () => import("@/views/project/ProjectListView.vue")
 const ProjectAnalysisView = () => import("@/views/project/ProjectAnalysisView.vue")
-const PermissionsView = () => import("@/views/system/PermissionsView.vue")
-const UsersView = () => import("@/views/system/UsersView.vue")
 
 const routes: RouteRecordRaw[] = [
   // 登录页面
@@ -75,37 +70,6 @@ const routes: RouteRecordRaw[] = [
         path: "",
         component: DashboardView,
         meta: { title: "工作台" },
-      },
-    ],
-  },
-  // 用户管理模块
-  {
-    path: "/User",
-    component: SmartAbpLayout,
-    meta: {
-      title: "用户管理",
-      icon: "👥",
-      requiresAuth: true,
-      requiredRoles: ["user"],
-    },
-    children: [
-      {
-        path: "",
-        name: "UserList",
-        component: UserListView,
-        meta: { title: "用户列表", menuKey: "user-list" },
-      },
-      {
-        path: "management",
-        name: "UserManagement",
-        component: UserManagement,
-        meta: { title: "用户管理", menuKey: "user-management" },
-      },
-      {
-        path: "roles",
-        name: "UserRoles",
-        component: UserRolesView,
-        meta: { title: "用户角色", menuKey: "user-roles" },
       },
     ],
   },
@@ -181,24 +145,6 @@ const routes: RouteRecordRaw[] = [
         name: "AdminDashboard",
         component: DashboardView,
         meta: { title: "系统概览", menuKey: "admin-dashboard" },
-      },
-      {
-        path: "users",
-        name: "AdminUsers",
-        component: UsersView,
-        meta: { title: "用户管理", menuKey: "admin-users" },
-      },
-      {
-        path: "roles",
-        name: "AdminRoles",
-        component: () => import("@/views/system/RolesView.vue"),
-        meta: { title: "角色管理", menuKey: "admin-roles" },
-      },
-      {
-        path: "permissions",
-        name: "AdminPermissions",
-        component: PermissionsView,
-        meta: { title: "权限管理", menuKey: "admin-permissions" },
       },
       {
         path: "settings",

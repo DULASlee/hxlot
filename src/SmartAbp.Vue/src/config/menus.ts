@@ -50,69 +50,6 @@ export const menuConfig: MenuConfig = {
       description: "业务功能分割线",
     },
 
-    // 用户管理模块
-    {
-      key: "user-management",
-      title: "用户管理",
-      icon: "users", // 🎨 使用图标键名
-      type: "folder",
-      order: 3,
-      visible: true,
-      requiredRoles: [ROLES.USER, ROLES.ADMIN],
-      defaultExpanded: true,
-      description: "用户信息管理、角色分配等功能",
-      children: [
-        {
-          key: "user-list",
-          title: "用户列表",
-          icon: "user", // 🎨 使用图标键名
-          type: "page",
-          path: "/User",
-          component: "@/views/user/UserListView.vue",
-          order: 1,
-          visible: true,
-          requiredRoles: [ROLES.USER, ROLES.ADMIN],
-          closable: true,
-          meta: {
-            title: "用户列表",
-            menuKey: "user-list",
-          },
-        },
-        {
-          key: "user-management-detail",
-          title: "用户管理",
-          icon: "user", // 🎨 使用图标键名
-          type: "page",
-          path: "/User/management",
-          component: "@/views/user/UserManagement.vue",
-          order: 2,
-          visible: true,
-          requiredRoles: [ROLES.ADMIN],
-          closable: true,
-          meta: {
-            title: "用户管理",
-            menuKey: "user-management",
-          },
-        },
-        {
-          key: "user-roles",
-          title: "用户角色",
-          icon: "users", // 🎨 使用图标键名
-          type: "page",
-          path: "/User/roles",
-          component: "@/views/user/UserRolesView.vue",
-          order: 3,
-          visible: true,
-          requiredRoles: [ROLES.ADMIN],
-          closable: true,
-          meta: {
-            title: "用户角色",
-            menuKey: "user-roles",
-          },
-        },
-      ],
-    },
-
     // 项目管理模块
     {
       key: "project-management",
@@ -247,54 +184,6 @@ export const menuConfig: MenuConfig = {
       defaultExpanded: false,
       description: "系统级配置和管理功能",
       children: [
-        {
-          key: "admin-users",
-          title: "用户管理",
-          icon: "users",
-          type: "page",
-          path: "/Admin/users",
-          component: "@/views/system/UsersView.vue",
-          order: 1,
-          visible: true,
-          requiredRoles: [ROLES.ADMIN],
-          closable: true,
-          meta: {
-            title: "用户管理",
-            menuKey: "admin-users",
-          },
-        },
-        {
-          key: "admin-roles",
-          title: "角色管理",
-          icon: "user-shield",
-          type: "page",
-          path: "/Admin/roles",
-          component: "@/views/system/RolesView.vue",
-          order: 2,
-          visible: true,
-          requiredRoles: [ROLES.ADMIN],
-          closable: true,
-          meta: {
-            title: "角色管理",
-            menuKey: "admin-roles",
-          },
-        },
-        {
-          key: "admin-permissions",
-          title: "权限管理",
-          icon: "key",
-          type: "page",
-          path: "/Admin/permissions",
-          component: "@/views/system/PermissionsView.vue",
-          order: 3,
-          visible: true,
-          requiredRoles: [ROLES.ADMIN],
-          closable: true,
-          meta: {
-            title: "权限管理",
-            menuKey: "admin-permissions",
-          },
-        },
         {
           key: "admin-settings",
           title: "系统设置",
