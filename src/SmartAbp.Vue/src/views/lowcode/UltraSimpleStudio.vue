@@ -1343,7 +1343,6 @@ function triggerHook(name: string, payload: unknown): void {
     }
   }
 }
-}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎨 动画效果

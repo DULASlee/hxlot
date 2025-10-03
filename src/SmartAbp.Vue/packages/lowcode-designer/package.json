@@ -1,0 +1,22 @@
+{
+  "name": "@smartabp/lowcode-designer",
+  "version": "1.0.0",
+  "description": "SmartAbp LowCode Designer - Visual Design Tools",
+  "main": "index.ts",
+  "types": "index.ts",
+  "author": "SmartAbp Team",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@smartabp/lowcode-shared": "^1.0.0",
+    "@smartabp/lowcode-core": "^1.0.0",
+    "vue": "^3.3.0",
+    "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  }
+}

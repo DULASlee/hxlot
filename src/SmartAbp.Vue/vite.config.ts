@@ -58,6 +58,9 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "@smartabp/lowcode-shared": fileURLToPath(
+        new URL("./packages/lowcode-shared/src", import.meta.url),
+      ),
       "@smartabp/lowcode-core": fileURLToPath(
         new URL("./packages/lowcode-core", import.meta.url),
       ),

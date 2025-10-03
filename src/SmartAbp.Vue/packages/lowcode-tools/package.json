@@ -1,0 +1,20 @@
+{
+  "name": "@smartabp/lowcode-tools",
+  "version": "1.0.0",
+  "description": "SmartAbp LowCode Tools - Template Management and Utilities",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "author": "SmartAbp Team",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@smartabp/lowcode-shared": "^1.0.0",
+    "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  }
+}
