@@ -267,5 +267,167 @@
       "completed": "🎉 代码生成完成！",
       "failed": "生成失败：{error}"
     }
+  },
+  "user": {
+    "title": "用户管理",
+    "description": "管理系统中的用户信息",
+    "pageTitle": "用户管理管理",
+    "pageDescription": "管理系统中的用户管理信息",
+    "actions": {
+      "create": "新增用户",
+      "edit": "编辑用户",
+      "delete": "删除用户",
+      "search": "搜索",
+      "reset": "重置",
+      "export": "导出数据",
+      "batchDelete": "批量删除",
+      "refresh": "刷新"
+    },
+    "fields": {
+      "name": "名称",
+      "filter": "名称",
+      "username": "用户名",
+      "email": "邮箱",
+      "phone": "电话",
+      "status": "状态",
+      "isEnabled": "状态",
+      "roles": "角色",
+      "createdAt": "创建时间",
+      "updatedAt": "更新时间",
+      "operations": "操作"
+    },
+    "status": {
+      "enabled": "启用",
+      "disabled": "禁用",
+      "all": "全部"
+    },
+    "placeholders": {
+      "name": "请输入用户管理名称",
+      "selectStatus": "请选择状态",
+      "username": "请输入用户名",
+      "email": "请输入邮箱",
+      "phone": "请输入手机号",
+      "password": "请输入密码",
+      "confirmPassword": "请确认密码"
+    },
+    "messages": {
+      "created": "用户创建成功",
+      "updated": "用户更新成功",
+      "deleted": "用户删除成功",
+      "batchDeleted": "批量删除成功",
+      "confirmDelete": "确定要删除该用户吗？",
+      "confirmBatchDelete": "确定要删除选中的用户吗？",
+      "selectAtLeastOne": "请至少选择一条记录",
+      "exportSuccess": "导出成功",
+      "exportFailed": "导出失败"
+    },
+    "dialog": {
+      "createTitle": "新增用户",
+      "editTitle": "编辑用户",
+      "viewTitle": "查看用户",
+      "confirm": "确定",
+      "cancel": "取消"
+    },
+    "validation": {
+      "nameRequired": "请输入名称",
+      "usernameRequired": "请输入用户名",
+      "emailRequired": "请输入邮箱",
+      "emailFormat": "邮箱格式不正确",
+      "phoneFormat": "手机号格式不正确",
+      "passwordRequired": "请输入密码",
+      "passwordLength": "密码长度至少6位",
+      "confirmPasswordRequired": "请确认密码",
+      "passwordNotMatch": "两次输入的密码不一致"
+    }
+  },
+  "role": {
+    "title": "角色管理",
+    "description": "管理系统角色和权限分配",
+    "actions": {
+      "create": "添加角色",
+      "edit": "编辑",
+      "delete": "删除",
+      "assignPermissions": "权限",
+      "search": "搜索角色..."
+    },
+    "fields": {
+      "name": "角色名称",
+      "description": "描述",
+      "userCount": "用户数量",
+      "permissionCount": "权限数量",
+      "createdAt": "创建时间",
+      "operations": "操作"
+    },
+    "placeholders": {
+      "name": "请输入角色名称",
+      "description": "请输入角色描述",
+      "search": "搜索角色..."
+    },
+    "messages": {
+      "created": "角色创建成功",
+      "updated": "角色更新成功",
+      "deleted": "角色删除成功",
+      "confirmDelete": "确定要删除该角色吗？",
+      "permissionsUpdated": "权限更新成功"
+    },
+    "dialog": {
+      "createTitle": "添加角色",
+      "editTitle": "编辑角色",
+      "permissionsTitle": "配置权限",
+      "confirm": "确定",
+      "cancel": "取消"
+    },
+    "validation": {
+      "nameRequired": "请输入角色名称",
+      "descriptionRequired": "请输入描述"
+    }
+  },
+  "permission": {
+    "title": "权限管理",
+    "description": "管理系统权限配置",
+    "actions": {
+      "assign": "分配权限",
+      "revoke": "撤销权限",
+      "save": "保存",
+      "cancel": "取消"
+    },
+    "fields": {
+      "name": "权限名称",
+      "displayName": "显示名称",
+      "description": "描述",
+      "category": "分类"
+    },
+    "messages": {
+      "assigned": "权限分配成功",
+      "revoked": "权限撤销成功",
+      "saved": "权限保存成功"
+    }
+  },
+  "dashboard": {
+    "title": "SmartAbp 工作台",
+    "welcome": "欢迎使用 SmartAbp 企业管理系统",
+    "actions": {
+      "refresh": "刷新数据",
+      "export": "导出报告"
+    },
+    "stats": {
+      "totalUsers": "用户总数",
+      "totalProjects": "项目数量",
+      "systemHealth": "系统健康度",
+      "todayLogs": "今日日志"
+    },
+    "trends": {
+      "up": "上升",
+      "down": "下降",
+      "thisMonth": "本月",
+      "thisWeek": "本周",
+      "today": "今日"
+    },
+    "charts": {
+      "userActivity": "用户活动趋势",
+      "projectProgress": "项目进度分布",
+      "systemPerformance": "系统性能监控",
+      "recentActivities": "最近活动"
+    }
   }
 }
