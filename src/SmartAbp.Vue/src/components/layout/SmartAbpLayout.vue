@@ -41,14 +41,8 @@
       </nav>
 
       <div class="navbar-right">
-        <!-- 语言切换器 -->
-        <button
-          class="icon-btn"
-          title="Language"
-          @click="toggleLocale"
-        >
-          <i :class="currentLocale === 'zh-CN' ? 'fas fa-language' : 'fas fa-globe'" />
-        </button>
+        <!-- 🌍 语言切换器（增强版） -->
+        <LanguageSwitcher />
         
         <!-- 🎨 主题&图标切换（统一入口） -->
         <ThemeSwitcher />
@@ -382,11 +376,11 @@ import { useRouter } from "vue-router"
 import { useThemeStore } from "@/stores"
 import { useAuthStore } from "@/stores/modules/auth"
 import { useMenu } from "@/composables/useMenu"
-import { i18n, setLocale } from "@/plugins/i18n"
 import { ElMessage } from "element-plus"
 import LogoutConfirmDialog from "@/components/common/LogoutConfirmDialog.vue"
 import DynamicIcon from "@/components/common/DynamicIcon.vue"
 import ThemeSwitcher from "@/components/theme/ThemeSwitcher.vue"
+import LanguageSwitcher from "@/components/common/LanguageSwitcher.vue"
 import { Loading } from "@element-plus/icons-vue"
 
 const router = useRouter()
@@ -658,11 +652,6 @@ const handleLogoutConfirm = async () => {
 
 const handleLogoutCancel = () => {
   showLogoutDialog.value = false
-}
-
-const currentLocale = computed(() => (i18n.global.locale as any).value as "zh-CN" | "en-US")
-const toggleLocale = () => {
-  setLocale(currentLocale.value === "zh-CN" ? "en-US" : "zh-CN")
 }
 
 onMounted(() => {

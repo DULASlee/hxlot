@@ -1,4 +1,12 @@
 {
+  "common": {
+    "switchLanguage": "切换语言",
+    "languageChanged": "语言已切换",
+    "languageName": {
+      "zh-CN": "简体中文",
+      "en-US": "English"
+    }
+  },
   "wizard": {
     "title": "模块向导",
     "steps": ["新建", "架构", "建模", "特性", "生成"],

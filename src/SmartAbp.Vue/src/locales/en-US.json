@@ -1,4 +1,12 @@
 {
+  "common": {
+    "switchLanguage": "Switch Language",
+    "languageChanged": "Language Changed",
+    "languageName": {
+      "zh-CN": "简体中文",
+      "en-US": "English"
+    }
+  },
   "wizard": {
     "title": "Module Wizard",
     "steps": ["New", "Architecture", "Model", "Features", "Generate"],
