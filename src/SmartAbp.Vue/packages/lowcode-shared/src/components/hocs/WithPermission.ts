@@ -170,12 +170,13 @@ export function WithPermission(
               title: props.unauthorizedMessage
             }, slots);
 
-          case 'placeholder':
+          case 'placeholder': {
             // 显示占位符
             const PlaceholderComp = props.placeholderComponent || DefaultPlaceholder;
             return h(PlaceholderComp, {
               message: props.unauthorizedMessage
             });
+          }
 
           default:
             return null;

@@ -130,8 +130,6 @@ export function WithError(
     // ✅ 正确：使用类型守卫替代as any
     name: `WithError(${typeof WrappedComponent === 'object' && WrappedComponent !== null && 'name' in WrappedComponent ? (WrappedComponent as { name?: string; }).name || 'Component' : 'Component'})`,
 
-    emits: ['recover'],
-
     props: {
       // ✅ 正确：使用PropType替代as any
       error: {
@@ -163,6 +161,8 @@ export function WithError(
         default: true
       }
     },
+
+    emits: ['recover'],
 
     setup(props, { attrs, slots, emit }) {
       const componentError = ref<Error | null>(null);

@@ -386,7 +386,7 @@ import { logAnalyzer } from "@/utils/logAnalyzer"
 import { logExporter, ExportFormat, type ExportConfig } from "@/utils/logExporter"
 import { logManager } from "@/utils/logManager"
 import LogSearchFilter from "./LogSearchFilter.vue"
-import LogViewer from "@/components/log/LogViewer.vue"
+import LogViewer from "./LogViewer.vue"
 import dayjs from "dayjs"
 
 // 响应式数据

@@ -7,6 +7,9 @@
     "node": "^20.19.0 || >=22.12.0"
   },
   "scripts": {
+    "build:packages": "npm run build:packages:types && npm run build:packages:dist",
+    "build:packages:types": "npx tsc --build tsconfig.references.json",
+    "build:packages:dist": "node scripts/build-packages.js",
     "stylelint": "stylelint \"src/views/codegen/designer/**/*.{css,scss,vue}\" \"src/views/codegen/VisualDesignerView.vue\" \"src/styles/**/*.{css,scss,vue}\"",
     "stylelint:fix": "stylelint \"src/views/codegen/designer/**/*.{css,scss,vue}\" \"src/views/codegen/VisualDesignerView.vue\" \"src/styles/**/*.{css,scss,vue}\" --fix",
     "gen:api": "openapi --input %VITE_API_BASE_URL%/swagger/v1/swagger.json --output src/core/api --client axios",
