@@ -86,8 +86,8 @@ export interface ManyToManyOperations<_TEntity = any, TTarget = any> {
  * 多对多关系Composable实现
  */
 export function useManyToMany<_TEntity = any, TTarget = any>(
-  config: ManyToManyConfig<TEntity, TTarget>
-): ManyToManyOperations<TEntity, TTarget> {
+  config: ManyToManyConfig<_TEntity, TTarget>
+): ManyToManyOperations<_TEntity, TTarget> {
   
   // ==================== 配置默认值 ====================
   
@@ -95,8 +95,6 @@ export function useManyToMany<_TEntity = any, TTarget = any>(
     displayField = 'name',
     valueField = 'id',
     enableSearch = true,
-    enableVirtualScroll = false,
-    pageSize = 50,
     searchDebounce = 300
   } = config
   
@@ -133,11 +131,6 @@ export function useManyToMany<_TEntity = any, TTarget = any>(
     })
   })
   
-  /** 选中项目数量 */
-  const selectedCount = computed(() => selectedItems.value.length)
-  
-  /** 可选项目数量 */
-  const availableCount = computed(() => availableItems.value.length)
   
   // ==================== 核心操作 ====================
   

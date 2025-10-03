@@ -182,7 +182,7 @@ export function useMasterDetail<TMaster = any, TDetail = any>(
         detailList.value.splice(index, 1)
       } else {
         // 否则标记为删除，稍后批量删除
-        deletedDetails.value.push(detail)
+        deletedDetails.value.push(detail as any)
         detailList.value.splice(index, 1)
       }
       
@@ -223,7 +223,7 @@ export function useMasterDetail<TMaster = any, TDetail = any>(
         
         if (index !== -1) {
           if (!(detail as any)._isNew) {
-            deletedDetails.value.push(detail)
+            deletedDetails.value.push(detail as any)
           }
           detailList.value.splice(index, 1)
         }
@@ -366,8 +366,8 @@ export function useMasterDetail<TMaster = any, TDetail = any>(
   const undo = (): void => {
     const lastHistory = history.value.pop()
     if (lastHistory) {
-      masterForm.value = lastHistory.master
-      detailList.value = lastHistory.details
+      masterForm.value = lastHistory.master as any
+      detailList.value = lastHistory.details as any
       hasUnsavedChanges.value = history.value.length > 0
       ElMessage.info('已撤销上一步操作')
     } else {

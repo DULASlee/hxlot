@@ -6,16 +6,13 @@
  */
 
 import type { 
-  CodeGenerationResult as GenerationResult, 
-  ModuleMetadata,
-  CodeGenerationConfig as ModuleGenerationConfig,
-  Template
+  ModuleMetadata
 } from '../../types'
 
 /**
  * Mock: generateModule API响应
  */
-export const mockGenerateModuleResponse: GenerationResult = {
+export const mockGenerateModuleResponse: any = {
   success: true,
   generatedFiles: [
     {
@@ -436,41 +433,42 @@ export const mockValidateModuleResponseWithErrors = {
  * Mock: registerModule API响应
  */
 export const mockRegisterModuleResponse: ModuleMetadata = {
-  id: 'module-uuid-67890',
-  moduleName: 'ProductManagement',
+  systemName: 'ProductManagement',
+  name: 'ProductManagement',
+  displayName: '产品管理',
+  description: '产品管理模块，支持产品的增删改查和库存管理',
+  version: '1.0.0',
+  architecturePattern: 'Crud',
+  featureManagement: {
+    isEnabled: true
+  },
+  databaseInfo: {
+    connectionStringName: 'Default',
+    provider: 'SqlServer'
+  },
+  permissionConfig: {
+    customActions: []
+  },
   entities: [
     {
       name: 'Product',
+      module: 'ProductManagement',
+      aggregate: 'Product',
+      description: '产品实体',
+      isAggregateRoot: true,
+      isMultiTenant: false,
+      isSoftDelete: true,
+      hasExtraProperties: false,
       properties: [
-        { name: 'Id', type: 'Guid', isKey: true, isRequired: true },
-        { name: 'Name', type: 'string', maxLength: 200, isRequired: true },
-        { name: 'Description', type: 'string', maxLength: 1000 },
-        { name: 'Price', type: 'decimal', precision: 18, scale: 2, isRequired: true },
+        { name: 'Id', type: 'Guid', isRequired: true, description: '主键ID' },
+        { name: 'Name', type: 'string', maxLength: 200, isRequired: true, description: '产品名称' },
+        { name: 'Description', type: 'string', maxLength: 1000, isRequired: false, description: '产品描述' },
+        { name: 'Price', type: 'decimal', isRequired: true, description: '产品价格' },
         { name: 'Stock', type: 'int', defaultValue: '0', isRequired: false, description: '库存' },
         { name: 'IsActive', type: 'bool', defaultValue: 'true', isRequired: false, description: '是否激活' }
-      ],
-      navigationProperties: [
-        {
-          name: 'Category',
-          type: 'ProductCategory',
-          relationType: 'ManyToOne',
-          foreignKey: 'CategoryId',
-          isRequired: true
-        },
-        {
-          name: 'OrderItems',
-          type: 'OrderItem',
-          relationType: 'OneToMany',
-          inverseProperty: 'Product'
-        }
       ]
     }
-  ],
-  version: '1.0.0',
-  author: 'SmartAbp',
-  description: '产品管理模块，支持产品的增删改查和库存管理',
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString()
+  ]
 }
 
 /**
