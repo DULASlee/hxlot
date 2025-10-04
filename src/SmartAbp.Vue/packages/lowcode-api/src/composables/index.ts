@@ -34,3 +34,7 @@ export { useSecurityPolicy } from './useSecurityPolicy'
 // 可观测性管理
 export * from './useObservability'
 export { useObservability } from './useObservability'
+
+// 弹性策略管理
+export * from './useResiliencePolicy'
+export { useResiliencePolicy } from './useResiliencePolicy'
