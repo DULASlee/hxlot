@@ -38,3 +38,7 @@ export { useObservability } from './useObservability'
 // 弹性策略管理
 export * from './useResiliencePolicy'
 export { useResiliencePolicy } from './useResiliencePolicy'
+
+// Git工作流管理
+export * from './useGitWorkflow'
+export { useGitWorkflow } from './useGitWorkflow'
