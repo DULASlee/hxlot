@@ -767,76 +767,365 @@ glob_file_search("templates/**/*.template.*")
 
 ## 阶段E：持续质量监控（核心精华，不能丢）⭐
 
-**本质**: v7.0核心精华 - 300行代码追踪器
+**本质**: v7.0核心精华 - 300行代码追踪器（完整迁移）
 
-### 📊 代码行数追踪机制
+### 📊 v7.0增强代码行数追踪器（真实机制）
 
 ```typescript
-// 实时追踪会话代码行数
+// ========================================
+// v7.0真实机制 - 完整迁移到v9.0
+// ========================================
+
+interface Checkpoint {
+  id: string
+  type: 'USER_REVIEW' | 'FORCED_STOP' | 'MANUAL'
+  lines: number
+  files: FileInfo[]
+  timestamp: Date
+  canRestore: boolean
+}
+
+interface FileInfo {
+  fileName: string
+  lines: number
+  timestamp: Date
+}
+
 class EnhancedCodeLineTracker {
-  private 会话总代码行数 = 0
-  private 当前文件代码行数 = 0
-  private 检查点记录 = []
+  private currentSessionLines: number = 0
+  private checkpoints: Checkpoint[] = []
+  private filesCreated: FileInfo[] = []
   
-  // 100行审查点
-  async 检查点100() {
-    if (this.会话总代码行数 >= 100) {
-      await this.用户干预审查({
-        级别: "一般审查",
-        当前行数: 100,
-        建议: "代码审查，确认方向正确"
-      })
+  // 添加代码时自动计算行数
+  addCode(fileName: string, code: string) {
+    const lines = code.split('\n').length
+    this.currentSessionLines += lines
+    this.filesCreated.push({ 
+      fileName, 
+      lines, 
+      timestamp: new Date() 
+    })
+    
+    // 自动检查阈值
+    this.checkSmartThresholds()
+  }
+  
+  // 智能阈值检查（核心机制）
+  checkSmartThresholds() {
+    const current = this.currentSessionLines
+    
+    // 100行审查点
+    if (current >= 100 && current < 120 && !this.hasCheckpoint('100lines')) {
+      this.createCheckpoint('100lines', 'USER_REVIEW')
+      this.triggerUserIntervention(1)
+    }
+    
+    // 200行审查点
+    if (current >= 200 && current < 220 && !this.hasCheckpoint('200lines')) {
+      this.createCheckpoint('200lines', 'USER_REVIEW')
+      this.triggerUserIntervention(2)
+    }
+    
+    // 280行警告
+    if (current >= 280 && current < 300) {
+      console.warn(`⚠️ 警告：已编写${current}行，接近300行限制`)
+    }
+    
+    // 300行强制停止
+    if (current >= 300) {
+      this.createCheckpoint('300lines', 'FORCED_STOP')
+      this.triggerQualityGate()
+      return false
+    }
+    
+    return true
+  }
+  
+  // 创建检查点
+  createCheckpoint(id: string, type: CheckpointType) {
+    const checkpoint: Checkpoint = {
+      id,
+      type,
+      lines: this.currentSessionLines,
+      files: [...this.filesCreated],
+      timestamp: new Date(),
+      canRestore: true
+    }
+    
+    this.checkpoints.push(checkpoint)
+    this.saveToFS(checkpoint)
+    
+    console.log(`💾 检查点已保存: ${id} (${this.currentSessionLines}行)`)
+  }
+  
+  // 从检查点恢复
+  async restoreFromCheckpoint(checkpointId: string): Promise<boolean> {
+    const checkpoint = this.checkpoints.find(cp => cp.id === checkpointId)
+    if (!checkpoint) {
+      throw new Error(`检查点不存在: ${checkpointId}`)
+    }
+    
+    console.log(`🔄 从检查点恢复: ${checkpointId}`)
+    this.currentSessionLines = checkpoint.lines
+    this.filesCreated = checkpoint.files
+    
+    return true
+  }
+  
+  // 检查是否存在检查点
+  private hasCheckpoint(id: string): boolean {
+    return this.checkpoints.some(cp => cp.id === id)
+  }
+  
+  // 保存检查点到文件系统
+  private saveToFS(checkpoint: Checkpoint) {
+    // 保存到 .ai-engine/checkpoints/
+    const path = `.ai-engine/checkpoints/checkpoint_${checkpoint.id}_${this.formatTimestamp(checkpoint.timestamp)}.json`
+    // 实际实现由AI工具支持
+  }
+  
+  // 格式化时间戳
+  private formatTimestamp(date: Date): string {
+    return date.toISOString().replace(/[:.]/g, '').slice(0, 15)
+  }
+  
+  // 触发用户干预
+  private triggerUserIntervention(level: number) {
+    if (level === 1) {
+      this.showUserIntervention100()
+    } else if (level === 2) {
+      this.showUserIntervention200()
     }
   }
   
-  // 200行审查点
-  async 检查点200() {
-    if (this.会话总代码行数 >= 200) {
-      await this.用户干预审查({
-        级别: "深度审查",
-        当前行数: 200,
-        建议: "深度审查，检查架构合规性"
-      })
+  // 触发质量门禁
+  private triggerQualityGate() {
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    console.log("🛑 已达到300行代码限制！")
+    console.log("⚡ 自动触发质量门禁检查！")
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+  }
+  
+  // 100行用户干预
+  private showUserIntervention100() {
+    const output = `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛑 用户干预点1: 100行代码审查
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 当前进度:
+  • 已编写: ${this.currentSessionLines}行
+  • 创建文件: ${this.filesCreated.length}个
+  • 预计剩余: ~${300 - this.currentSessionLines}行
+
+📋 已创建文件:
+${this.filesCreated.map((f, i) => `  ${i+1}. ${f.fileName} (${f.lines}行)`).join('\n')}
+
+💡 建议:
+  1. 代码方向是否正确？
+  2. 是否有重复代码？
+  3. 是否需要重构？
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+选项:
+  [C] 继续编程（已确认代码质量）
+  [R] 重构当前代码（回到100行检查点）
+  [P] 暂停并查看详细报告
+  [S] 停止并执行质量门禁
+
+⏳ 10秒后自动选择 [C]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`
+    console.log(output)
+  }
+  
+  // 200行用户干预
+  private showUserIntervention200() {
+    const output = `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛑 用户干预点2: 200行深度审查
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 当前进度:
+  • 已编写: ${this.currentSessionLines}行
+  • 创建文件: ${this.filesCreated.length}个
+  • 预计剩余: ~${300 - this.currentSessionLines}行
+
+📋 已创建文件:
+${this.filesCreated.map((f, i) => `  ${i+1}. ${f.fileName} (${f.lines}行)`).join('\n')}
+
+🚨 重要提醒:
+  • 接近300行限制，建议提前执行质量门禁
+  • 避免在接近限制时进行大量修改
+
+💡 强烈建议:
+  1. 立即执行质量门禁（推荐）
+  2. 补充单元测试
+  3. 添加文档注释
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+选项:
+  [C] 继续编程到300行
+  [Q] 立即执行质量门禁（推荐）✅
+  [T] 补充单元测试后继续
+  [R] 重构优化
+
+⏳ 15秒后自动选择 [Q]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`
+    console.log(output)
+  }
+}
+
+// ========================================
+// AI必须实例化并使用此追踪器
+// ========================================
+const codeTracker = new EnhancedCodeLineTracker()
+
+// 每次写代码时必须调用
+// 示例: codeTracker.addCode('EntityStore.ts', code)
+```
+
+---
+
+### ⏰ AI自动执行引擎自我守护机制（新增v9.0）
+
+**核心理念**: AI可能会"忘记"规则，必须定期自动加载！
+
+```typescript
+// ========================================
+// 30分钟自我守护机制
+// ========================================
+
+class AIEngineGuardian {
+  private lastLoadTime: Date = new Date()
+  private guardInterval: number = 30 * 60 * 1000  // 30分钟
+  private isEngineLoaded: boolean = false
+  
+  // 启动守护进程
+  startGuarding() {
+    // 立即加载一次
+    this.loadEngine()
+    
+    // 设置定时器，每30分钟自动加载
+    setInterval(() => {
+      this.checkAndReload()
+    }, this.guardInterval)
+    
+    console.log("🛡️ AI自动执行引擎守护进程已启动")
+    console.log(`⏰ 每30分钟自动重新加载执行引擎规则`)
+  }
+  
+  // 检查并重新加载
+  private checkAndReload() {
+    const now = new Date()
+    const elapsed = now.getTime() - this.lastLoadTime.getTime()
+    
+    if (elapsed >= this.guardInterval) {
+      console.log("⏰ 30分钟已到，自动重新加载执行引擎...")
+      this.loadEngine()
     }
   }
   
-  // 280行警告
-  async 警告280() {
-    if (this.会话总代码行数 >= 280) {
-      await this.紧急警告({
-        级别: "紧急警告",
-        当前行数: 280,
-        警告: "⚠️ 即将达到300行限制！请准备质量检查！"
-      })
-    }
+  // 加载执行引擎
+  private loadEngine() {
+    this.lastLoadTime = new Date()
+    this.isEngineLoaded = true
+    
+    // 显示启动声明（在聊天框）
+    this.showStartupDeclaration()
+    
+    // 强制加载所有MDC规则
+    this.forceLoadRules()
   }
   
-  // 300行强制停止
-  async 强制停止300() {
-    if (this.会话总代码行数 >= 300) {
-      // 强制停止编程
-      this.停止编程()
-      
-      // 触发质量门禁
-      await this.触发质量门禁()
-      
-      // 保存检查点
-      await this.保存检查点({
-        代码行数: 300,
-        时间戳: Date.now(),
-        状态: "强制停止"
-      })
-      
-      // 提示用户
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-      console.log("🛑 已达到300行代码限制！")
-      console.log("⚡ 自动触发质量门禁检查！")
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-      
-      return "STOP"
+  // 显示启动声明（必须在聊天框显示）
+  private showStartupDeclaration() {
+    const declaration = `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔥 AI编程铁律执行引擎 v9.0 (Ultimate Edition) 已启动！
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⏰ 加载时间: ${this.lastLoadTime.toLocaleString('zh-CN')}
+🛡️ 守护状态: 已启动（每30分钟自动重新加载）
+📚 规则状态: 已加载所有MDC规则
+
+✅ 核心功能保护铁律（置顶）
+✅ 四大基石（第一性原理、15节点、追求卓越、用户需求理解）
+✅ 六阶段执行流程（0/A/B/C/D/E/F）
+✅ 300行监控机制（v7.0核心精华）
+✅ 深度测试铁律（独立触发）
+
+💡 提示: 
+   - 检测到触发关键词后，AI将自动启动执行引擎
+   - 每30分钟自动重新加载规则，确保AI不会"忘记"
+   - 编写代码时自动追踪行数（100/200/300行检查点）
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+准备就绪！请开始您的编程任务！
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`
+    // 在聊天框显示
+    console.log(declaration)
+    
+    // 同时发送AI消息（确保用户看到）
+    this.sendChatMessage(declaration)
+  }
+  
+  // 强制加载所有规则
+  private forceLoadRules() {
+    // AI必须重新阅读所有MDC文件
+    const rules = [
+      ".cursor/rules/00_执行引擎.mdc",
+      ".cursor/rules/00_core_philosophy.mdc",
+      ".cursor/rules/01_code_standards.mdc",
+      ".cursor/rules/02_development_process.mdc",
+      ".cursor/rules/03_quality_guardian.mdc",
+      ".cursor/rules/04_code_quality_prohibitions.mdc",
+      "docs/项目开发规范总览.md"
+    ]
+    
+    console.log("📚 正在重新加载所有规则...")
+    rules.forEach(rule => {
+      console.log(`   ✅ ${rule}`)
+      // AI工具会自动读取这些文件
+    })
+    console.log("✅ 所有规则已重新加载完成")
+  }
+  
+  // 发送聊天消息（确保用户看到）
+  private sendChatMessage(message: string) {
+    // AI在聊天框中显示消息
+    // 这是一个提示，AI必须在响应中包含这个声明
+  }
+  
+  // 获取守护状态
+  getStatus() {
+    return {
+      lastLoadTime: this.lastLoadTime,
+      isEngineLoaded: this.isEngineLoaded,
+      nextReloadTime: new Date(this.lastLoadTime.getTime() + this.guardInterval)
     }
   }
 }
+
+// ========================================
+// 全局守护实例（AI必须启动）
+// ========================================
+const engineGuardian = new AIEngineGuardian()
+engineGuardian.startGuarding()
+
+// ========================================
+// AI必须遵守的守护规则
+// ========================================
+/**
+ * 1. 每30分钟，AI必须自动在聊天框显示启动声明
+ * 2. 启动声明格式固定：
+ *    🔥 AI编程铁律执行引擎 v9.0 (Ultimate Edition) 已启动！
+ * 3. 显示后，AI必须重新加载所有MDC规则
+ * 4. 确保AI不会"忘记"执行引擎规则
+ * 5. 守护进程在整个会话期间持续运行
+ */
 ```
 
 ### 🎯 自动触发机制（强制执行）
@@ -1305,7 +1594,7 @@ if (所有质量门禁通过 && Git同步成功) {
 
 **AI必须在检测到以下关键词时立即启动执行引擎**:
 
-   ```typescript
+```typescript
 触发关键词 = [
   // 直接触发
   "专家模式", "开始编程", "开始开发", "新功能", "新建",
