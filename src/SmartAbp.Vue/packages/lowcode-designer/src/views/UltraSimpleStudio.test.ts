@@ -1050,5 +1050,283 @@ describe('UltraSimpleStudio.vue - 极简代码生成器完整功能测试', () =
       expect(vm.config.systemName).toBe('')
     })
   })
+
+  // ==========================================================================
+  // 11. 高级边界条件测试（扩展覆盖率）
+  // ==========================================================================
+  
+  describe('高级边界条件测试', () => {
+    it('应该处理特殊字符的系统名称', async () => {
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      vm.config.systemName = 'Smart@Construction#2024'
+      vm.config.moduleName = 'Project'
+      await nextTick()
+      
+      expect(vm.derivedNamespace).toContain('Smart@Construction#2024')
+    })
+
+    it('应该处理极长的表名', async () => {
+      const mockConnection = {
+        success: true,
+        tables: ['A'.repeat(200)]
+      }
+      vi.mocked(codeGeneratorApi.testDatabaseConnection).mockResolvedValue(mockConnection)
+      
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      expect(vm.availableTables[0].name).toHaveLength(200)
+    })
+
+    it('应该处理数据库返回超大表数量', async () => {
+      const mockConnection = {
+        success: true,
+        tableCount: 1000,
+        tables: Array.from({ length: 1000 }, (_, i) => `Table${i + 1}`)
+      }
+      vi.mocked(codeGeneratorApi.testDatabaseConnection).mockResolvedValue(mockConnection)
+      
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      expect(vm.availableTables).toHaveLength(1000)
+    })
+
+    it('应该处理生成进度状态为error', async () => {
+      const mockConnection = {
+        success: true,
+        tables: ['Projects']
+      }
+      const mockGenerationResult = {
+        success: true,
+        sessionId: 'session-error'
+      }
+      vi.mocked(codeGeneratorApi.testDatabaseConnection).mockResolvedValue(mockConnection)
+      vi.mocked(codeGeneratorApi.generateModule).mockResolvedValue(mockGenerationResult)
+      vi.mocked(codeGeneratorApi.getGenerationStatus).mockResolvedValue({
+        status: 'error',
+        percentage: 50,
+        error: '生成过程中出错',
+        currentStep: '错误'
+      })
+
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      vm.selectedTable = 'Projects'
+      vm.config.systemName = 'Test'
+      vm.config.moduleName = 'Test'
+      vm.config.displayName = 'Test'
+      vm.config.architecturePattern = 'Crud'
+      vm.config.databaseProvider = 'SqlServer'
+      vm.config.parentMenuId = 'business'
+      
+      await vm.startGeneration().catch(() => {})
+      await waitForAsyncUpdate()
+      
+      const errorLogs = vm.generationLogs.filter((log: any) => log.type === 'error')
+      expect(errorLogs.length).toBeGreaterThan(0)
+    })
+
+    it('应该处理所有架构模式', async () => {
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      const patterns = ['Crud', 'DDD', 'CQRS']
+      for (const pattern of patterns) {
+        vm.config.architecturePattern = pattern
+        await nextTick()
+        expect(vm.config.architecturePattern).toBe(pattern)
+      }
+    })
+
+    it('应该处理所有数据库提供者', async () => {
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      const providers = ['SqlServer', 'MySql', 'PostgreSql']
+      for (const provider of providers) {
+        vm.config.databaseProvider = provider
+        await nextTick()
+        expect(vm.config.databaseProvider).toBe(provider)
+      }
+    })
+
+    it('应该处理查看预览时API返回空数据', async () => {
+      const { ElMessage } = await import('element-plus')
+      vi.mocked(codeGeneratorApi.getGenerationStatus).mockResolvedValue({
+        status: 'completed',
+        percentage: 100,
+        currentStep: '完成',
+        completedFiles: []
+      })
+
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      vm.generationSessionId = 'test-session'
+      await vm.viewGeneratedCode()
+      await nextTick()
+      
+      expect(ElMessage.info).toHaveBeenCalled()
+    })
+
+    it('应该处理下载时Blob创建失败', async () => {
+      const { ElMessage } = await import('element-plus')
+      vi.mocked(codeGeneratorApi.exportGeneratedCode).mockRejectedValue(new Error('Blob error'))
+
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      vm.generationSessionId = 'test-session'
+      vm.config.moduleName = 'Test'
+      
+      await vm.downloadGeneratedCode()
+      await nextTick()
+      
+      expect(ElMessage.error).toHaveBeenCalled()
+    })
+
+    it('应该处理表选择为空字符串', async () => {
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      vm.handleTableSelected('')
+      await nextTick()
+      
+      expect(vm.config.moduleName).toBe('')
+    })
+
+    it('应该处理未找到表架构时的情况', async () => {
+      const mockConnection = {
+        success: true,
+        tables: ['Projects', 'Tasks']
+      }
+      vi.mocked(codeGeneratorApi.testDatabaseConnection).mockResolvedValue(mockConnection)
+
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      vm.handleTableSelected('NonExistent')
+      await nextTick()
+      
+      expect(vm.config.moduleName).toBe('NonExistent')
+    })
+  })
+
+  // ==========================================================================
+  // 12. 性能和并发测试
+  // ==========================================================================
+  
+  describe('性能和并发测试', () => {
+    it('应该能快速处理大量日志', async () => {
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      const startTime = Date.now()
+      for (let i = 0; i < 100; i++) {
+        vm.addLog(`日志 ${i}`, 'info')
+      }
+      const endTime = Date.now()
+      
+      expect(vm.generationLogs).toHaveLength(100)
+      expect(endTime - startTime).toBeLessThan(100)
+    })
+
+    it('应该处理快速连续的表选择', async () => {
+      const mockConnection = {
+        success: true,
+        tables: ['Table1', 'Table2', 'Table3']
+      }
+      vi.mocked(codeGeneratorApi.testDatabaseConnection).mockResolvedValue(mockConnection)
+
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      vm.handleTableSelected('Table1')
+      vm.handleTableSelected('Table2')
+      vm.handleTableSelected('Table3')
+      await nextTick()
+      
+      expect(vm.selectedTable).toBe('Table3')
+    })
+
+    it('应该处理配置的快速连续修改', async () => {
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      for (let i = 0; i < 10; i++) {
+        vm.config.systemName = `System${i}`
+        vm.config.moduleName = `Module${i}`
+      }
+      await nextTick()
+      
+      expect(vm.config.systemName).toBe('System9')
+      expect(vm.derivedNamespace).toBe('System9.Module9')
+    })
+  })
+
+  // ==========================================================================
+  // 13. 国际化和本地化测试
+  // ==========================================================================
+  
+  describe('国际化测试', () => {
+    it('应该正确使用i18n翻译键', async () => {
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      
+      expect(wrapper.html()).toContain('极简代码生成')
+    })
+
+    it('应该在日志中使用翻译', async () => {
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      expect(vm.generationLogs.length).toBeGreaterThan(0)
+      expect(vm.generationLogs[0].message).toBeTruthy()
+    })
+  })
+
+  // ==========================================================================
+  // 14. 组件生命周期测试
+  // ==========================================================================
+  
+  describe('组件生命周期测试', () => {
+    it('应该在挂载时初始化所有状态', async () => {
+      const wrapper = createWrapper()
+      await waitForAsyncUpdate()
+      const vm = wrapper.vm as any
+      
+      expect(vm.selectedTable).toBe('')
+      expect(vm.generating).toBe(false)
+      expect(vm.generationComplete).toBe(false)
+      expect(vm.generationProgress).toBe(0)
+      expect(vm.generationLogs).toBeDefined()
+      expect(vm.config).toBeDefined()
+    })
+
+    it('应该在卸载时清理资源', () => {
+      const wrapper = createWrapper()
+      wrapper.unmount()
+      
+      expect(wrapper.vm).toBeUndefined()
+    })
+  })
 })
 
