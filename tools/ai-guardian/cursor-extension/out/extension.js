@@ -3,6 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = exports.AIGuardianExtension = void 0;
 const vscode = require("vscode");
 const path = require("path");
+const child_process_1 = require("child_process");
+const util_1 = require("util");
+const execAsync = (0, util_1.promisify)(child_process_1.exec);
 class AIGuardianExtension {
     constructor(context) {
         this.context = context;
@@ -86,6 +89,8 @@ class AIGuardianExtension {
         this.aiState.lastActivity = Date.now();
         this.aiState.activityCount++;
         this.aiState.isOnline = true;
+        // 如果正在恢复中，现在停止
+        this.stopRecoveryPolling();
         this.log(`📝 活动记录: ${activity}`);
         this.updateStatusBar();
         this.saveState(); // 保存状态
@@ -389,20 +394,169 @@ class AIGuardianExtension {
         }
         this.updateStatusBar();
     }
-    async onAIOffline() {
-        this.log('⚠️ 检测到AI离线！');
-        // 显示通知
-        const action = await vscode.window.showWarningMessage('AI可能已断线，是否自动恢复？', '自动恢复', '手动恢复', '忽略');
-        if (action === '自动恢复' && this.config.get('autoRecover', true)) {
-            await this.autoRecover();
+    onAIOffline() {
+        // 避免在已经在恢复时重复触发
+        if (this.recoveryInterval) {
+            return;
         }
-        else if (action === '手动恢复') {
-            await this.manualRecover();
+        this.log('🔴 AI connection lost.');
+        if (this.config.get('autoRecover', true)) {
+            this.log('🚀 Starting silent auto-recovery sequence...');
+            // 核心逻辑变更：不再使用轮询，而是尝试直接调用内部命令
+            this.attemptDirectReconnect();
         }
+        else {
+            this.log('ℹ️ Auto-recovery disabled. Manual intervention required.');
+            this.updateStatusBar();
+            vscode.window.showWarningMessage('AI大模型已断线，请手动处理。');
+        }
+    }
+    async attemptDirectReconnect() {
+        this.updateStatusBar(); // 更新为恢复中状态
+        // ==================================================
+        // Level 1: 智能新会话恢复（最优雅）
+        // ==================================================
+        this.log('⚡️ [Level 1] Attempting intelligent new session recovery...');
+        try {
+            // 1.1 开启新聊天会话
+            await vscode.commands.executeCommand('workbench.action.chat.newChat');
+            this.log('✅ [Level 1] New chat session opened.');
+            // 1.2 等待会话激活
+            await new Promise(resolve => setTimeout(resolve, 800));
+            // 1.3 构建智能上下文恢复指令
+            const contextMessage = this.buildRecoveryContext();
+            // 1.4 复制到剪贴板（作为输入的桥梁）
+            await vscode.env.clipboard.writeText(contextMessage);
+            this.log('✅ [Level 1] Recovery context prepared and copied to clipboard.');
+            // 1.5 尝试通过剪贴板输入到聊天框
+            // 注意：这里我们依赖用户的IDE快捷键配置（通常是Ctrl+V）
+            // 但为了实现真正自动化，我们直接尝试发送continue命令
+            await vscode.commands.executeCommand('cursor.continue');
+            this.log('✅ [Level 1] Continue command sent. Recovery should be in progress.');
+            return; // Level 1 成功，结束流程
+        }
+        catch (errorLvl1) {
+            this.log(`⚠️ [Level 1] Failed: ${errorLvl1}. Escalating to Level 2...`);
+        }
+        // ==================================================
+        // Level 2: 强制重载窗口（强力手段）
+        // ==================================================
+        this.log('🚀 [Level 2] Attempting forced window reload...');
+        try {
+            await vscode.commands.executeCommand('workbench.action.reloadWindow');
+            // 注意：此命令执行后，当前插件实例会被销毁，后续代码不会执行
+            // 这正是我们想要的——一个全新的开始
+        }
+        catch (errorLvl2) {
+            this.log(`❌ [Level 2] Failed: ${errorLvl2}. Escalating to Level 3...`);
+        }
+        // ==================================================
+        // Level 3: 完全重启Cursor IDE（终极保险）
+        // ==================================================
+        this.log('🆘 [Level 3] Attempting complete Cursor restart...');
+        try {
+            await this.restartCursorIDE();
+        }
+        catch (errorLvl3) {
+            this.log(`❌ [Level 3] Failed: ${errorLvl3}. All recovery methods exhausted.`);
+            // 所有方法都失败了，但我们不弹窗，静默记录即可
+            // 下一个检测周期会再次尝试
+        }
+    }
+    /**
+     * 构建智能恢复上下文
+     */
+    buildRecoveryContext() {
+        const context = this.aiState.lastWorkContext || '继续之前的开发任务';
+        const timestamp = new Date().toLocaleString('zh-CN');
+        return `# AI恢复指令 (${timestamp})
+
+${context}
+
+**请继续执行上述任务。**`;
+    }
+    /**
+     * 完全重启Cursor IDE
+     */
+    async restartCursorIDE() {
+        const platform = process.platform;
+        const restartMessage = '请继续';
+        // 先将恢复指令保存到持久存储，以便重启后使用
+        await vscode.env.clipboard.writeText(restartMessage);
+        await this.saveState();
+        this.log(`🔄 [Level 3] Initiating Cursor restart on platform: ${platform}`);
+        if (platform === 'win32') {
+            // Windows: 使用taskkill杀死进程，然后重新启动
+            const cursorExePath = process.execPath; // Cursor的可执行文件路径
+            try {
+                // 异步执行重启脚本（不等待结果，因为当前进程即将终止）
+                (0, child_process_1.exec)(`taskkill /F /IM Cursor.exe && timeout /t 2 && start "" "${cursorExePath}"`, (error) => {
+                    if (error) {
+                        this.log(`⚠️ [Level 3] Restart command error: ${error}`);
+                    }
+                });
+                this.log('✅ [Level 3] Windows restart command issued.');
+            }
+            catch (error) {
+                this.log(`❌ [Level 3] Windows restart failed: ${error}`);
+                throw error;
+            }
+        }
+        else if (platform === 'darwin') {
+            // macOS: 使用osascript重启应用
+            try {
+                (0, child_process_1.exec)(`osascript -e 'quit app "Cursor"' && sleep 2 && open -a Cursor`, (error) => {
+                    if (error) {
+                        this.log(`⚠️ [Level 3] Restart command error: ${error}`);
+                    }
+                });
+                this.log('✅ [Level 3] macOS restart command issued.');
+            }
+            catch (error) {
+                this.log(`❌ [Level 3] macOS restart failed: ${error}`);
+                throw error;
+            }
+        }
+        else {
+            // Linux: 使用killall和启动命令
+            try {
+                (0, child_process_1.exec)(`killall cursor && sleep 2 && cursor &`, (error) => {
+                    if (error) {
+                        this.log(`⚠️ [Level 3] Restart command error: ${error}`);
+                    }
+                });
+                this.log('✅ [Level 3] Linux restart command issued.');
+            }
+            catch (error) {
+                this.log(`❌ [Level 3] Linux restart failed: ${error}`);
+                throw error;
+            }
+        }
+    }
+    stopRecoveryPolling() {
+        if (this.recoveryInterval) {
+            clearInterval(this.recoveryInterval);
+            this.recoveryInterval = undefined;
+            this.log('✅ [Recovery Polling] Stopped.');
+        }
+        if (this.recoveryTimeout) {
+            clearTimeout(this.recoveryTimeout);
+            this.recoveryTimeout = undefined;
+        }
+    }
+    recoverAI() {
+        this.log('⚙️ Executing AI recovery command...');
+        vscode.commands.executeCommand('cursor.continue');
+        // 立即将状态更新为“恢复中”，提供即时反馈
+        this.aiState.isOnline = true; // 假设恢复会成功
+        this.aiState.lastActivity = Date.now();
+        this.updateStatusBar();
+        this.log('🟡 AI recovery in progress...');
     }
     onAIOnline() {
         this.log('✅ AI已恢复在线');
-        vscode.window.showInformationMessage('AI已恢复连接');
+        this.stopRecoveryPolling(); // 如果在线了，确保停止恢复轮询
+        this.updateStatusBar();
     }
     async autoRecover() {
         try {
@@ -478,12 +632,18 @@ class AIGuardianExtension {
     updateStatusBar() {
         const inactiveDuration = Math.floor((Date.now() - this.aiState.lastActivity) / 1000);
         const engineStatus = this.aiState.engineLoaded ? '🔧' : '⚠️';
+        if (this.recoveryInterval) {
+            this.statusBarItem.text = `🟡 AI 恢复中 (等待时机...)`;
+            this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
+            this.statusBarItem.tooltip = `AI Guardian - 正在尝试自动恢复AI连接...`;
+            return;
+        }
         if (this.aiState.isOnline) {
-            this.statusBarItem.text = `${engineStatus}$(pulse) AI在线 (${inactiveDuration}s)`;
+            this.statusBarItem.text = `${engineStatus}$(pulse) AI 在线 (${inactiveDuration}s)`;
             this.statusBarItem.backgroundColor = undefined;
         }
         else {
-            this.statusBarItem.text = `${engineStatus}$(warning) AI离线 (${inactiveDuration}s)`;
+            this.statusBarItem.text = `${engineStatus}$(warning) AI 离线 (${inactiveDuration}s)`;
             this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
         }
         const engineInfo = this.aiState.engineLoaded ? '执行引擎已加载' : '执行引擎未加载';
@@ -504,6 +664,7 @@ ${engineInfo}
         if (this.monitorTimer) {
             clearInterval(this.monitorTimer);
         }
+        this.stopRecoveryPolling();
         if (this.engineCheckTimer) {
             clearInterval(this.engineCheckTimer);
         }

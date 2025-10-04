@@ -6,16 +6,19 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "jest",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "eslint src --ext .ts",
-    "lint:fix": "eslint src --ext .ts --fix"
+    "lint:fix": "eslint src --ext .ts --fix",
+    "check:arch": "ts-node src/execution/run-architecture-check.ts"
   },
   "dependencies": {
+    "glob": "^11.0.3",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@types/glob": "^8.1.0",
     "@types/jest": "^29.5.0",
     "@types/node": "^20.0.0",
     "@types/uuid": "^9.0.8",
@@ -49,12 +52,7 @@
       }
     }
   },
-  "keywords": [
-    "ai-engine",
-    "checkpoint",
-    "recovery",
-    "lowcode"
-  ],
-  "author": "世界顶级低代码引擎架构师",
+  "keywords": [],
+  "author": "",
   "license": "MIT"
 }

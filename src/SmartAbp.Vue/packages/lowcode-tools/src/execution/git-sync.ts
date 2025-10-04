@@ -10,8 +10,10 @@
 
 import { exec } from 'child_process'
 import { promisify } from 'util'
-import * as path from 'path'
-import { learningManager } from './simple-checkpoint'
+import * as fs from 'fs';
+import { simpleLogger } from './simple-logger';
+import { performanceMonitor } from './simple-checkpoint';
+import { executeCommand, GitSyncResult, GitSyncStatus } from './git-sync-utils';
 
 const execAsync = promisify(exec)
 
@@ -179,7 +181,7 @@ export async function gitSyncWithFallback(): Promise<GitSyncResult> {
       console.log(`❌ ${strategy.name} 失败: ${error}`)
       
       // 记录错误到AI学习系统
-      learningManager.recordError('GIT_SYNC_FAILED', strategy.method)
+      // learningManager.recordError('GIT_SYNC_FAILED', strategy.method) // This line was removed as per the edit hint
       
       // 继续尝试下一个策略
       continue
@@ -188,7 +190,7 @@ export async function gitSyncWithFallback(): Promise<GitSyncResult> {
   
   // 记录成功到AI学习系统
   if (result.success) {
-    learningManager.recordSuccess('GIT_SYNC_SUCCESS', result.method!)
+    // learningManager.recordSuccess('GIT_SYNC_SUCCESS', result.method!) // This line was removed as per the edit hint
   }
   
   return result

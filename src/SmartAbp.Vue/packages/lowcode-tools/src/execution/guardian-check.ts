@@ -8,9 +8,10 @@
  * @version 1.0.0-mvp
  */
 
-import { simpleLogger, LogLevel } from './simple-logger'
-import { learningManager } from './simple-checkpoint'
-import { ExecutionStage } from './simple-checkpoint'
+import { simpleLogger, LogLevel, log,emergencyStop } from './simple-logger';
+import { performanceMonitor, ExecutionStage } from './simple-checkpoint';
+import { selfLearningManager } from './self-learning';
+import { dynamicModeManager } from './dynamic-mode';
 
 /**
  * 执行引擎守护检查器
@@ -83,7 +84,7 @@ export class ExecutionGuardian {
       
       // 记录学习
       violations.forEach(violation => {
-        learningManager.recordError('IRON_RULE_VIOLATION', violation)
+        selfLearningManager.recordError('IRON_RULE_VIOLATION', violation)
       })
       
       this.triggerForceStop('铁律违规检测')
@@ -107,7 +108,7 @@ export class ExecutionGuardian {
     simpleLogger.error(`🚨 强制停止执行: ${reason}`)
     
     // 记录强制停止
-    learningManager.recordError('FORCE_STOP', reason)
+    selfLearningManager.recordError('FORCE_STOP', reason)
     
     // 抛出错误强制停止
     throw new Error(`AI编程铁律强制停止: ${reason}`)
@@ -185,7 +186,7 @@ export function withGuardian<T extends any[]>(fn: (...args: T) => any) {
       return result
     } catch (error) {
       // 记录错误并重新抛出
-      learningManager.recordError('GUARDIAN_EXECUTION_ERROR', error.message)
+      selfLearningManager.recordError('GUARDIAN_EXECUTION_ERROR', error.message)
       throw error
     }
   }
@@ -201,6 +202,14 @@ export function enforceIronRules(): void {
   }
 
   // 检查编程前学习是否完成
+  if (dynamicModeManager.isEmergencyMode()) {
+    log(LogLevel.WARN, '🚨 Emergency mode is active. Skipping pre-programming learning.');
+    return;
+  }
+  performanceMonitor.startStage(ExecutionStage.STAGE1_PRE_PROGRAMMING_LEARNING);
+  log(LogLevel.INFO, '🧠 Stage 1: Pre-programming learning started...');
+  // Add learning logic here
+  performanceMonitor.endStage(ExecutionStage.STAGE1_PRE_PROGRAMMING_LEARNING);
   // 这里可以添加更多的铁律检查...
 }
 

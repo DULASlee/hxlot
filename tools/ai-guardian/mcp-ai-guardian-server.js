@@ -215,12 +215,38 @@ ${pendingTasks?.map(t => `  - ${t}`).join('\n') || '  无'}
     setInterval(() => {
       if (this.isAIOffline()) {
         console.log('[AI Guardian] ⚠️ 检测到AI可能已离线！');
-        this.attemptAutoRecovery();
+        this.autoSendContinue();
       } else {
         const inactiveDuration = Math.floor((Date.now() - this.lastActivity) / 1000);
         console.log(`[AI Guardian] 💚 AI在线 (最后活动: ${inactiveDuration}秒前)`);
       }
     }, this.heartbeatInterval);
+  }
+
+  /**
+   * 自动发送"请继续"到Cursor聊天框
+   */
+  autoSendContinue() {
+    if (this.recoveryAttempts >= this.maxRecoveryAttempts) {
+      return;
+    }
+
+    this.recoveryAttempts++;
+    console.log(`[AI Guardian] 🔄 自动恢复 (${this.recoveryAttempts}/${this.maxRecoveryAttempts})`);
+    
+    // 通过MCP协议主动发送消息
+    const notification = {
+      jsonrpc: '2.0',
+      method: 'notifications/message',
+      params: {
+        level: 'info',
+        message: '请继续执行上一个任务'
+      }
+    };
+    
+    // 发送通知到Cursor
+    process.stdout.write(JSON.stringify(notification) + '\n');
+    console.log('[AI Guardian] ✅ 已自动发送"请继续"到聊天框');
   }
 
   /**
