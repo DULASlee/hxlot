@@ -1911,9 +1911,146 @@ import Generated from './__COMPONENT__.generated.vue'
             };
         }
 
-        public Task<GeneratedCqrsSolutionDto> GenerateCqrsAsync(CqrsDefinitionDto input)
+        /// <summary>
+        /// 🔥 生成CQRS模式代码 - Day 8实现
+        /// 生成Command、Query、Handler、Validator等完整CQRS架构代码
+        /// </summary>
+        public async Task<GeneratedCqrsSolutionDto> GenerateCqrsAsync(CqrsDefinitionDto input)
         {
-            throw new NotImplementedException("CQRS pattern generation will be implemented in a future iteration using the new Roslyn-based architecture.");
+            Logger.LogInformation("🔥 Starting CQRS pattern generation for module: {ModuleName}", input.ModuleName);
+            
+            try
+            {
+                // 1. 验证输入
+                if (string.IsNullOrWhiteSpace(input.ModuleName))
+                {
+                    throw new AbpException("ModuleName is required for CQRS generation.");
+                }
+
+                if (string.IsNullOrWhiteSpace(input.Namespace))
+                {
+                    throw new AbpException("Namespace is required for CQRS generation.");
+                }
+                
+                // 2. 转换DTO到CQRS定义
+                var definition = MapToCqrsDefinition(input);
+                
+                // 3. 使用CqrsPatternGenerator生成代码
+                var cqrsLogger = _loggerFactory.CreateLogger<CQRS.CqrsPatternGenerator>();
+                var cqrsGenerator = new CQRS.CqrsPatternGenerator(
+                    cqrsLogger,
+                    _memoryManager
+                );
+                
+                var result = await cqrsGenerator.GenerateCompleteCqrsAsync(definition);
+                
+                // 4. 转换结果到DTO
+                var dto = new GeneratedCqrsSolutionDto
+                {
+                    ModuleName = result.AggregateName,
+                    Files = result.Files.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+                    CommandCount = result.CommandCount,
+                    QueryCount = result.QueryCount,
+                    EventCount = 0, // Events暂不支持，后续版本添加
+                    GeneratedAt = result.GeneratedAt,
+                    SessionId = Guid.NewGuid().ToString()
+                };
+                
+                Logger.LogInformation("✅ CQRS pattern generation completed: {FileCount} files, {CommandCount} commands, {QueryCount} queries", 
+                    dto.Files.Count, dto.CommandCount, dto.QueryCount);
+                
+                return dto;
+            }
+            catch (ArgumentException ex)
+            {
+                Logger.LogError(ex, "❌ Invalid argument for CQRS generation");
+                throw new AbpException($"Invalid CQRS definition: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "❌ Failed to generate CQRS pattern");
+                throw new AbpException($"Failed to generate CQRS pattern: {ex.Message}", ex);
+            }
+        }
+        
+        /// <summary>
+        /// 映射CqrsDefinitionDto到CqrsDefinition
+        /// </summary>
+        private CQRS.CqrsDefinition MapToCqrsDefinition(CqrsDefinitionDto dto)
+        {
+            var definition = new CQRS.CqrsDefinition
+            {
+                AggregateName = dto.ModuleName,
+                Namespace = dto.Namespace,
+                Description = $"CQRS pattern for {dto.ModuleName}",
+                Commands = dto.Commands.Select(MapToCommandDefinition).ToList(),
+                Queries = dto.Queries.Select(MapToQueryDefinition).ToList(),
+                DTOs = new List<CQRS.DtoDefinition>(),
+                UseCaching = true,
+                UseValidation = true,
+                UseAutoMapper = true,
+                UsePerformanceLogging = true,
+                DatabaseProvider = "EntityFramework"
+            };
+            
+            return definition;
+        }
+        
+        /// <summary>
+        /// 映射CommandDefinitionDto到CommandDefinition (CQRS)
+        /// </summary>
+        private CQRS.CommandDefinition MapToCommandDefinition(CommandDefinitionDto dto)
+        {
+            return new CQRS.CommandDefinition
+            {
+                Name = dto.Name,
+                Description = dto.Description,
+                ReturnType = string.IsNullOrWhiteSpace(dto.ReturnType) || dto.ReturnType == "void" ? null : dto.ReturnType,
+                Properties = dto.Properties.Select(p => new Core.PropertyDefinition
+                {
+                    Name = p.Name,
+                    Type = p.Type,
+                    IsRequired = p.IsRequired,
+                    DefaultValue = p.DefaultValue,
+                    Description = p.Description
+                }).ToList(),
+                RequiresTransaction = dto.RequiresTransaction,
+                RequiresAuthorization = dto.RequiresAuthorization,
+                AuthorizePolicy = null,
+                PublishEvents = true,
+                TimeoutSeconds = 30,
+                Type = CQRS.CommandType.Custom
+            };
+        }
+        
+        /// <summary>
+        /// 映射QueryDefinitionDto到QueryDefinition (CQRS)
+        /// </summary>
+        private CQRS.QueryDefinition MapToQueryDefinition(QueryDefinitionDto dto)
+        {
+            return new CQRS.QueryDefinition
+            {
+                Name = dto.Name,
+                Description = dto.Description,
+                ReturnType = dto.ReturnType,
+                Parameters = dto.Parameters.Select(p => new Core.ParameterDefinition
+                {
+                    Name = p.Name,
+                    Type = p.Type,
+                    IsOptional = p.IsOptional,
+                    DefaultValue = p.DefaultValue
+                }).ToList(),
+                IsPaged = dto.IsPaged,
+                IsCacheable = dto.IsCacheable,
+                CacheExpirationMinutes = 5,
+                HasValidator = false,
+                RequiresAuthorization = true,
+                AuthorizePolicy = null,
+                TimeoutSeconds = 30,
+                Type = dto.IsPaged ? CQRS.QueryType.Paged : CQRS.QueryType.Single,
+                Includes = new List<string>(),
+                Filters = new List<CQRS.FilterDefinition>()
+            };
         }
 
         public Task<GeneratedApplicationLayerDto> GenerateApplicationServicesAsync(ApplicationServiceDefinitionDto input)
