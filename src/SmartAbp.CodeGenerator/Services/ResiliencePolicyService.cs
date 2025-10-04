@@ -69,12 +69,82 @@ namespace SmartAbp.CodeGenerator.Services
         }
 
         /// <summary>
-        /// 生成Polly策略代码 - Day 20 Part 2实现
+        /// 生成Polly策略代码 - 完整实现
         /// </summary>
-        public Task<GeneratedPollyCodeDto> GeneratePollyCodeAsync(ResiliencePolicyDto policy)
+        public async Task<GeneratedPollyCodeDto> GeneratePollyCodeAsync(ResiliencePolicyDto policy)
         {
-            // TODO: Day 20 Part 2 实现
-            throw new NotImplementedException("将在Day 20 Part 2实现");
+            var code = new StringBuilder();
+            var policies = new List<string>();
+
+            // 生成命名空间和引用
+            code.AppendLine("using System;");
+            code.AppendLine("using System.Net.Http;");
+            code.AppendLine("using Microsoft.Extensions.DependencyInjection;");
+            code.AppendLine("using Polly;");
+            code.AppendLine("using Polly.CircuitBreaker;");
+            code.AppendLine("using Polly.Timeout;");
+            code.AppendLine("using Polly.RateLimiting;");
+            code.AppendLine();
+
+            // 1. 生成Retry策略
+            if (policy.Retry.Enabled)
+            {
+                policies.Add(GenerateRetryPolicy(policy.Retry));
+            }
+
+            // 2. 生成Circuit Breaker策略
+            if (policy.CircuitBreaker.Enabled)
+            {
+                policies.Add(GenerateCircuitBreakerPolicy(policy.CircuitBreaker));
+            }
+
+            // 3. 生成Timeout策略
+            if (policy.Timeout.Enabled)
+            {
+                policies.Add(GenerateTimeoutPolicy(policy.Timeout));
+            }
+
+            // 4. 生成Bulkhead策略
+            if (policy.Bulkhead.Enabled)
+            {
+                policies.Add(GenerateBulkheadPolicy(policy.Bulkhead));
+            }
+
+            // 5. 生成Rate Limit策略
+            if (policy.RateLimit.Enabled)
+            {
+                policies.Add(GenerateRateLimitPolicy(policy.RateLimit));
+            }
+
+            // 6. 生成Fallback策略
+            if (policy.Fallback.Enabled)
+            {
+                policies.Add(GenerateFallbackPolicy(policy.Fallback));
+            }
+
+            // 生成组合策略代码
+            code.AppendLine("// 弹性策略配置");
+            foreach (var policyCode in policies)
+            {
+                code.AppendLine(policyCode);
+                code.AppendLine();
+            }
+
+            // 生成AddHttpClient扩展方法
+            var configMethod = GenerateAddHttpClientConfiguration(policy, policies);
+
+            return await Task.FromResult(new GeneratedPollyCodeDto
+            {
+                CSharpCode = code.ToString(),
+                ConfigurationMethod = configMethod,
+                RequiredNugetPackages = new List<string>
+                {
+                    "Polly",
+                    "Polly.Extensions.Http",
+                    "Microsoft.Extensions.Http.Polly"
+                },
+                GeneratedAt = DateTime.UtcNow
+            });
         }
 
         /// <summary>
@@ -273,6 +343,209 @@ namespace SmartAbp.CodeGenerator.Services
                 result.Warnings.Add("缓存时长小于1秒，缓存效果可能不佳");
                 result.Suggestions["Fallback.CacheDurationMs"] = "建议至少60秒";
             }
+        }
+
+        #endregion
+
+        #region Polly代码生成方法
+
+        private string GenerateRetryPolicy(RetryPolicyDto retry)
+        {
+            var code = new StringBuilder();
+            code.AppendLine("// Retry策略");
+            code.AppendLine("var retryPolicy = Policy");
+            code.AppendLine("    .Handle<HttpRequestException>()");
+            
+            // 添加可重试的异常类型
+            foreach (var exception in retry.RetryableExceptions.Skip(1))
+            {
+                code.AppendLine($"    .Or<{exception}>()");
+            }
+
+            // 生成退避策略
+            switch (retry.BackoffStrategy)
+            {
+                case "Exponential":
+                    code.AppendLine($"    .WaitAndRetryAsync({retry.MaxAttempts},");
+                    code.AppendLine($"        retryAttempt => TimeSpan.FromMilliseconds({retry.InitialDelayMs} * Math.Pow(2, retryAttempt - 1)),");
+                    code.AppendLine("        onRetry: (outcome, timespan, retryCount, context) =>");
+                    code.AppendLine("        {");
+                    code.AppendLine($"            Console.WriteLine($\"Retry {{retryCount}} after {{timespan.TotalMilliseconds}}ms\");");
+                    code.AppendLine("        });");
+                    break;
+                case "Linear":
+                    code.AppendLine($"    .WaitAndRetryAsync({retry.MaxAttempts},");
+                    code.AppendLine($"        retryAttempt => TimeSpan.FromMilliseconds({retry.InitialDelayMs} * retryAttempt),");
+                    code.AppendLine("        onRetry: (outcome, timespan, retryCount, context) =>");
+                    code.AppendLine("        {");
+                    code.AppendLine($"            Console.WriteLine($\"Retry {{retryCount}} after {{timespan.TotalMilliseconds}}ms\");");
+                    code.AppendLine("        });");
+                    break;
+                case "Fixed":
+                    code.AppendLine($"    .WaitAndRetryAsync({retry.MaxAttempts},");
+                    code.AppendLine($"        retryAttempt => TimeSpan.FromMilliseconds({retry.InitialDelayMs}),");
+                    code.AppendLine("        onRetry: (outcome, timespan, retryCount, context) =>");
+                    code.AppendLine("        {");
+                    code.AppendLine($"            Console.WriteLine($\"Retry {{retryCount}} after {{timespan.TotalMilliseconds}}ms\");");
+                    code.AppendLine("        });");
+                    break;
+            }
+
+            return code.ToString();
+        }
+
+        private string GenerateCircuitBreakerPolicy(CircuitBreakerDto circuitBreaker)
+        {
+            var code = new StringBuilder();
+            code.AppendLine("// Circuit Breaker策略");
+            code.AppendLine("var circuitBreakerPolicy = Policy");
+            code.AppendLine("    .Handle<HttpRequestException>()");
+            code.AppendLine($"    .AdvancedCircuitBreakerAsync(");
+            code.AppendLine($"        failureThreshold: {circuitBreaker.FailureThreshold},");
+            code.AppendLine($"        samplingDuration: TimeSpan.FromMilliseconds({circuitBreaker.SamplingDurationMs}),");
+            code.AppendLine($"        minimumThroughput: {circuitBreaker.MinimumThroughput},");
+            code.AppendLine($"        durationOfBreak: TimeSpan.FromMilliseconds({circuitBreaker.BreakDurationMs}),");
+            code.AppendLine("        onBreak: (outcome, timespan) =>");
+            code.AppendLine("        {");
+            code.AppendLine($"            Console.WriteLine($\"Circuit breaker opened for {{timespan.TotalSeconds}}s\");");
+            code.AppendLine("        },");
+            code.AppendLine("        onReset: () =>");
+            code.AppendLine("        {");
+            code.AppendLine("            Console.WriteLine(\"Circuit breaker reset\");");
+            code.AppendLine("        },");
+            code.AppendLine("        onHalfOpen: () =>");
+            code.AppendLine("        {");
+            code.AppendLine("            Console.WriteLine(\"Circuit breaker half-open\");");
+            code.AppendLine("        });");
+
+            return code.ToString();
+        }
+
+        private string GenerateTimeoutPolicy(TimeoutDto timeout)
+        {
+            var code = new StringBuilder();
+            code.AppendLine("// Timeout策略");
+            code.AppendLine($"var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(");
+            code.AppendLine($"    TimeSpan.FromMilliseconds({timeout.TimeoutMs}),");
+            code.AppendLine("    onTimeoutAsync: (context, timespan, task) =>");
+            code.AppendLine("    {");
+            code.AppendLine($"        Console.WriteLine($\"Timeout after {{timespan.TotalMilliseconds}}ms\");");
+            code.AppendLine("        return Task.CompletedTask;");
+            code.AppendLine("    });");
+
+            return code.ToString();
+        }
+
+        private string GenerateBulkheadPolicy(BulkheadDto bulkhead)
+        {
+            var code = new StringBuilder();
+            code.AppendLine("// Bulkhead策略");
+            code.AppendLine($"var bulkheadPolicy = Policy.BulkheadAsync<HttpResponseMessage>(");
+            code.AppendLine($"    maxParallelization: {bulkhead.MaxParallelization},");
+            code.AppendLine($"    maxQueuingActions: {bulkhead.MaxQueuingActions},");
+            code.AppendLine("    onBulkheadRejectedAsync: context =>");
+            code.AppendLine("    {");
+            code.AppendLine("        Console.WriteLine(\"Bulkhead rejected\");");
+            code.AppendLine("        return Task.CompletedTask;");
+            code.AppendLine("    });");
+
+            return code.ToString();
+        }
+
+        private string GenerateRateLimitPolicy(RateLimitDto rateLimit)
+        {
+            var code = new StringBuilder();
+            code.AppendLine("// Rate Limit策略");
+            code.AppendLine($"var rateLimitPolicy = Policy.RateLimitAsync<HttpResponseMessage>(");
+            code.AppendLine($"    numberOfExecutions: {rateLimit.MaxRequests},");
+            code.AppendLine($"    perTimeSpan: TimeSpan.FromMilliseconds({rateLimit.WindowSizeMs}),");
+            code.AppendLine($"    maxBurst: {rateLimit.QueueLimit},");
+            code.AppendLine("    onRejected: (retryAfter, context) =>");
+            code.AppendLine("    {");
+            code.AppendLine($"        Console.WriteLine($\"Rate limit exceeded, retry after {{retryAfter}}\");");
+            code.AppendLine("    });");
+
+            return code.ToString();
+        }
+
+        private string GenerateFallbackPolicy(FallbackDto fallback)
+        {
+            var code = new StringBuilder();
+            code.AppendLine("// Fallback策略");
+            code.AppendLine("var fallbackPolicy = Policy<HttpResponseMessage>");
+            code.AppendLine("    .Handle<HttpRequestException>()");
+            code.AppendLine("    .FallbackAsync(");
+            
+            if (fallback.FallbackType == "Default")
+            {
+                code.AppendLine("        fallbackAction: (cancellationToken) =>");
+                code.AppendLine("        {");
+                code.AppendLine($"            var response = new HttpResponseMessage(System.Net.HttpStatusCode.OK);");
+                code.AppendLine($"            response.Content = new StringContent(\"{fallback.FallbackValue}\");");
+                code.AppendLine("            return Task.FromResult(response);");
+                code.AppendLine("        },");
+            }
+            else if (fallback.FallbackType == "AlternativeService")
+            {
+                code.AppendLine("        fallbackAction: async (cancellationToken) =>");
+                code.AppendLine("        {");
+                code.AppendLine("            using var client = new HttpClient();");
+                code.AppendLine($"            return await client.GetAsync(\"{fallback.AlternativeServiceUrl}\", cancellationToken);");
+                code.AppendLine("        },");
+            }
+
+            code.AppendLine("        onFallbackAsync: (outcome, context) =>");
+            code.AppendLine("        {");
+            code.AppendLine("            Console.WriteLine(\"Fallback executed\");");
+            code.AppendLine("            return Task.CompletedTask;");
+            code.AppendLine("        });");
+
+            return code.ToString();
+        }
+
+        private string GenerateAddHttpClientConfiguration(ResiliencePolicyDto policy, List<string> policies)
+        {
+            var code = new StringBuilder();
+            code.AppendLine("// 在Startup.cs或Program.cs中配置HttpClient");
+            code.AppendLine($"services.AddHttpClient(\"{policy.ServiceName}\")");
+
+            if (policies.Count > 0)
+            {
+                code.AppendLine("    .AddPolicyHandler((services, request) =>");
+                code.AppendLine("    {");
+                code.AppendLine("        // 组合所有策略");
+                code.AppendLine("        IAsyncPolicy<HttpResponseMessage> policyWrap = Policy.NoOpAsync<HttpResponseMessage>();");
+                
+                if (policy.Retry.Enabled)
+                {
+                    code.AppendLine("        policyWrap = policyWrap.WrapAsync(retryPolicy);");
+                }
+                if (policy.CircuitBreaker.Enabled)
+                {
+                    code.AppendLine("        policyWrap = policyWrap.WrapAsync(circuitBreakerPolicy);");
+                }
+                if (policy.Timeout.Enabled)
+                {
+                    code.AppendLine("        policyWrap = policyWrap.WrapAsync(timeoutPolicy);");
+                }
+                if (policy.Bulkhead.Enabled)
+                {
+                    code.AppendLine("        policyWrap = policyWrap.WrapAsync(bulkheadPolicy);");
+                }
+                if (policy.RateLimit.Enabled)
+                {
+                    code.AppendLine("        policyWrap = policyWrap.WrapAsync(rateLimitPolicy);");
+                }
+                if (policy.Fallback.Enabled)
+                {
+                    code.AppendLine("        policyWrap = policyWrap.WrapAsync(fallbackPolicy);");
+                }
+
+                code.AppendLine("        return policyWrap;");
+                code.AppendLine("    });");
+            }
+
+            return code.ToString();
         }
 
         #endregion
