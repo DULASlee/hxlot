@@ -13,7 +13,7 @@ param(
     [switch]$DryRun,
     
     [Parameter(Mandatory=$false)]
-    [switch]$Verbose
+    [switch]$ShowVerbose
 )
 
 # 设置错误处理
