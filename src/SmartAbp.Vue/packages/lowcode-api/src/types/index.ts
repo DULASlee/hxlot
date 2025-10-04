@@ -85,6 +85,7 @@ export interface CodeGeneratorApi {
     databaseName?: string
     schemaCount?: number
     tableCount?: number
+    tables?: string[] // 🔥 关键修复：添加表名列表字段
   }>
 }
 

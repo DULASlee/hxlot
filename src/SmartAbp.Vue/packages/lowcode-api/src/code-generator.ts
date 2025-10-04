@@ -107,6 +107,7 @@ export const codeGeneratorApi: CodeGeneratorApi = {
     databaseName?: string;
     schemaCount?: number;
     tableCount?: number;
+    tables?: string[]; // 🔥 关键修复：添加表名列表
   }> {
     return http.post<{
       success: boolean;
@@ -115,6 +116,7 @@ export const codeGeneratorApi: CodeGeneratorApi = {
       databaseName?: string;
       schemaCount?: number;
       tableCount?: number;
+      tables?: string[]; // 🔥 关键修复：添加表名列表
     }>('/api/code-generator/test-connection', connection)
   }
 };
