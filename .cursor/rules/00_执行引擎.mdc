@@ -444,17 +444,45 @@ grep -rh "export class\|export interface" src/ --include="*.ts" | sort | uniq -d
 
 ### ⚡ 第三关：编译与静态检查（0错误）
 
-**检查命令**:
+**前端检查命令**:
 ```bash
 cd src/SmartAbp.Vue && npm run type-check
 cd src/SmartAbp.Vue && npm run lint
 ```
 
+**后端检查命令（增量编译 + 性能优化）**:
+```bash
+# ✅ 推荐方式：增量编译 + 最小详细度（避免终端卡死）
+cd /path/to/project && dotnet build src/SmartAbp.CodeGenerator/SmartAbp.CodeGenerator.csproj \
+  --no-dependencies \
+  --verbosity minimal
+
+# 🚨 禁止使用完整编译（会导致终端卡死）
+# ❌ 错误：dotnet build src/SmartAbp.sln（耗时过长，容易超时）
+
+# 💡 性能对比：
+# 完整编译: 30-60秒（容易卡死）
+# 增量编译: 3-5秒（快速稳定）
+```
+
+**编译优化原则**:
+1. **增量编译**: 使用 `--no-dependencies` 只编译当前项目
+2. **最小输出**: 使用 `--verbosity minimal` 减少输出，避免终端阻塞
+3. **限时保护**: 编译超过10秒应终止并重试
+4. **错误处理**: 编译失败时自动重试一次
+
 **必须显示**:
 ```
 ⚡ 第三关：编译与静态检查
+  【前端】
   • TypeScript错误: 0个 ✅
   • ESLint错误: 0个 ✅
+  
+  【后端】
+  • C#编译: ✅ 通过 (增量编译 4.5秒)
+  • 编译警告: 0个 ✅
+  • 编译错误: 0个 ✅
+
 ✅ 第三关通过 (0错误)
 ```
 

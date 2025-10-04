@@ -1530,4 +1530,156 @@ namespace SmartAbp.CodeGenerator.Services
         public int RoleBindingCount { get; set; }
         public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
     }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Day 14: 基础可观测性配置 DTOs
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 可观测性配置DTO - 完整的可观测性配置
+    /// </summary>
+    public class ObservabilityConfigDto
+    {
+        public PrometheusConfigDto Prometheus { get; set; } = new();
+        public GrafanaDashboardDto Grafana { get; set; } = new();
+        public JaegerConfigDto Tracing { get; set; } = new();
+        public LokiConfigDto Logging { get; set; } = new();
+    }
+
+    /// <summary>
+    /// Prometheus配置DTO
+    /// </summary>
+    public class PrometheusConfigDto
+    {
+        public string ScrapeInterval { get; set; } = "15s";
+        public string EvaluationInterval { get; set; } = "15s";
+        public List<ScrapeConfigDto> ScrapeConfigs { get; set; } = new();
+        public List<AlertRuleDto> AlertRules { get; set; } = new();
+        public bool EnableServiceMonitor { get; set; } = true;
+    }
+
+    /// <summary>
+    /// 抓取配置DTO
+    /// </summary>
+    public class ScrapeConfigDto
+    {
+        public string JobName { get; set; } = string.Empty;
+        public List<string> StaticTargets { get; set; } = new();
+        public string MetricsPath { get; set; } = "/metrics";
+        public Dictionary<string, string> Labels { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 告警规则DTO
+    /// </summary>
+    public class AlertRuleDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Expression { get; set; } = string.Empty;
+        public string Duration { get; set; } = "5m";
+        public string Severity { get; set; } = "warning"; // critical/warning/info
+        public Dictionary<string, string> Labels { get; set; } = new();
+        public Dictionary<string, string> Annotations { get; set; } = new();
+    }
+
+    /// <summary>
+    /// Grafana仪表板DTO
+    /// </summary>
+    public class GrafanaDashboardDto
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public List<PanelDto> Panels { get; set; } = new();
+        public List<string> Tags { get; set; } = new();
+        public int RefreshInterval { get; set; } = 5; // 秒
+    }
+
+    /// <summary>
+    /// 面板DTO
+    /// </summary>
+    public class PanelDto
+    {
+        public string Title { get; set; } = string.Empty;
+        public string Type { get; set; } = "graph"; // graph/singlestat/table/heatmap
+        public List<MetricQueryDto> Queries { get; set; } = new();
+        public int GridX { get; set; }
+        public int GridY { get; set; }
+        public int GridWidth { get; set; } = 12;
+        public int GridHeight { get; set; } = 8;
+    }
+
+    /// <summary>
+    /// 指标查询DTO
+    /// </summary>
+    public class MetricQueryDto
+    {
+        public string Expression { get; set; } = string.Empty;
+        public string Legend { get; set; } = string.Empty;
+        public string RefId { get; set; } = "A";
+    }
+
+    /// <summary>
+    /// Jaeger追踪配置DTO
+    /// </summary>
+    public class JaegerConfigDto
+    {
+        public string SamplingType { get; set; } = "probabilistic"; // const/probabilistic/ratelimiting
+        public double SamplingRate { get; set; } = 0.1;
+        public string AgentHost { get; set; } = "jaeger-agent";
+        public int AgentPort { get; set; } = 6831;
+        public bool EnableBaggage { get; set; } = true;
+    }
+
+    /// <summary>
+    /// Loki日志配置DTO
+    /// </summary>
+    public class LokiConfigDto
+    {
+        public string Url { get; set; } = "http://loki:3100";
+        public List<string> Labels { get; set; } = new();
+        public string RetentionPeriod { get; set; } = "30d";
+        public bool EnableMultiTenancy { get; set; } = false;
+    }
+
+    /// <summary>
+    /// 黄金指标DTO
+    /// </summary>
+    public class GoldenSignalsDto
+    {
+        public MetricQueryDto Latency { get; set; } = new(); // P50/P95/P99
+        public MetricQueryDto Traffic { get; set; } = new(); // RPS
+        public MetricQueryDto Errors { get; set; } = new(); // Error Rate
+        public MetricQueryDto Saturation { get; set; } = new(); // Resource Usage
+    }
+
+    /// <summary>
+    /// RED指标DTO (Rate, Errors, Duration)
+    /// </summary>
+    public class REDMetricsDto
+    {
+        public MetricQueryDto Rate { get; set; } = new();
+        public MetricQueryDto Errors { get; set; } = new();
+        public MetricQueryDto Duration { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 生成的Prometheus配置结果
+    /// </summary>
+    public class GeneratedPrometheusConfigDto
+    {
+        public string ConfigYaml { get; set; } = string.Empty;
+        public string ServiceMonitorYaml { get; set; } = string.Empty;
+        public string AlertRulesYaml { get; set; } = string.Empty;
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// 生成的Grafana仪表板结果
+    /// </summary>
+    public class GeneratedGrafanaDashboardDto
+    {
+        public string DashboardJson { get; set; } = string.Empty;
+        public int PanelCount { get; set; }
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    }
 }
