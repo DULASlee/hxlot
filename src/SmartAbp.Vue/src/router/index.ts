@@ -314,6 +314,28 @@ const routes: RouteRecordRaw[] = [
             },
           },
           {
+            path: "observability-dashboard",
+            name: "ObservabilityDashboard",
+            component: () => import("@smartabp/lowcode-designer/src/views/codegen/ObservabilityDashboard.vue"),
+            meta: { 
+              title: "可观测性仪表板", 
+              menuKey: "observability-dashboard",
+              icon: "📊",
+              description: "黄金指标与RED指标实时监控"
+            },
+          },
+          {
+            path: "observability-config",
+            name: "ObservabilityConfig",
+            component: () => import("@smartabp/lowcode-designer/src/views/codegen/ObservabilityConfigPanel.vue"),
+            meta: { 
+              title: "可观测性配置", 
+              menuKey: "observability-config",
+              icon: "⚙️",
+              description: "Prometheus、Grafana和告警规则配置"
+            },
+          },
+          {
             path: "theme",
             name: "ThemeCustomization",
             component: () => import("@smartabp/lowcode-designer/src/views/ThemeCustomizationView.vue"),
