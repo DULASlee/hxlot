@@ -2402,10 +2402,13 @@ namespace SmartAbp.CodeGenerator.Services
     {
         public string ServiceName { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty; // Healthy, Degraded, Unhealthy
+        public string OverallStatus { get; set; } = string.Empty; // For TroubleshootingService compatibility
         public string? Description { get; set; }
         public Dictionary<string, HealthCheckItemDto> Checks { get; set; } = new();
+        public List<HealthCheckItemDto> Issues { get; set; } = new(); // For TroubleshootingService compatibility
         public long TotalDurationMs { get; set; }
         public DateTime CheckedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CheckTime { get; set; } // For TroubleshootingService compatibility
     }
 
     /// <summary>
@@ -2413,7 +2416,10 @@ namespace SmartAbp.CodeGenerator.Services
     /// </summary>
     public class HealthCheckItemDto
     {
-        public string Status { get; set; } = string.Empty; // Healthy, Degraded, Unhealthy
+        public string Name { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty; // Healthy, Degraded, Unhealthy, Warning, Critical
+        public string Message { get; set; } = string.Empty;
+        public string Details { get; set; } = string.Empty;
         public string? Description { get; set; }
         public Dictionary<string, string> Data { get; set; } = new();
         public long DurationMs { get; set; }
