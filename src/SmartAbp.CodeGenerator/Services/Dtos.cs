@@ -2185,4 +2185,118 @@ namespace SmartAbp.CodeGenerator.Services
         public List<string> Errors { get; set; } = new();
         public Dictionary<string, string> Suggestions { get; set; } = new();
     }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Day 29: 本地开发环境自动化 DTOs - Phase 3 开发者体验
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 开发环境配置DTO - Development Environment Configuration
+    /// </summary>
+    public class DevEnvironmentConfigDto
+    {
+        public string ProjectName { get; set; } = string.Empty;
+        public string ProjectPath { get; set; } = string.Empty;
+        public List<string> Services { get; set; } = new();
+        public Dictionary<string, string> EnvironmentVariables { get; set; } = new();
+        public bool EnableHotReload { get; set; } = true;
+        public bool EnableDebugMode { get; set; } = true;
+        public bool EnableHealthCheck { get; set; } = true;
+    }
+
+    /// <summary>
+    /// Docker Compose服务配置DTO - Docker Compose Service Configuration
+    /// </summary>
+    public class DockerComposeServiceDto
+    {
+        public string ServiceName { get; set; } = string.Empty;
+        public string Image { get; set; } = string.Empty;
+        public List<string> Ports { get; set; } = new();
+        public Dictionary<string, string> Environment { get; set; } = new();
+        public List<string> Volumes { get; set; } = new();
+        public List<string> DependsOn { get; set; } = new();
+        public Dictionary<string, object> HealthCheck { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 生成的Docker Compose配置DTO - Generated Docker Compose Configuration
+    /// </summary>
+    public class GeneratedDockerComposeDto
+    {
+        public string YamlContent { get; set; } = string.Empty;
+        public string FileName { get; set; } = "docker-compose.dev.yml";
+        public List<DockerComposeServiceDto> Services { get; set; } = new();
+        public List<string> Instructions { get; set; } = new();
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// 启动脚本配置DTO - Startup Script Configuration
+    /// </summary>
+    public class StartupScriptConfigDto
+    {
+        public string ScriptType { get; set; } = "bash"; // bash, powershell, batch
+        public List<string> PreStartCommands { get; set; } = new();
+        public List<string> StartCommands { get; set; } = new();
+        public List<string> PostStartCommands { get; set; } = new();
+        public int HealthCheckTimeout { get; set; } = 60;
+    }
+
+    /// <summary>
+    /// 生成的启动脚本DTO - Generated Startup Script
+    /// </summary>
+    public class GeneratedStartupScriptDto
+    {
+        public string ScriptContent { get; set; } = string.Empty;
+        public string FileName { get; set; } = string.Empty;
+        public string ScriptType { get; set; } = string.Empty;
+        public List<string> Instructions { get; set; } = new();
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// 环境变量配置DTO - Environment Variables Configuration
+    /// </summary>
+    public class EnvironmentVariablesDto
+    {
+        public Dictionary<string, string> Development { get; set; } = new();
+        public Dictionary<string, string> Staging { get; set; } = new();
+        public Dictionary<string, string> Production { get; set; } = new();
+        public List<string> SecretKeys { get; set; } = new(); // 需要保密的key列表
+    }
+
+    /// <summary>
+    /// 生成的环境变量文件DTO - Generated Environment Variables File
+    /// </summary>
+    public class GeneratedEnvFileDto
+    {
+        public string Content { get; set; } = string.Empty;
+        public string FileName { get; set; } = ".env.development";
+        public string Environment { get; set; } = "development";
+        public List<string> Instructions { get; set; } = new();
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// 服务健康检查配置DTO - Service Health Check Configuration
+    /// </summary>
+    public class ServiceHealthCheckDto
+    {
+        public string ServiceName { get; set; } = string.Empty;
+        public string HealthCheckUrl { get; set; } = string.Empty;
+        public int TimeoutSeconds { get; set; } = 30;
+        public int RetryCount { get; set; } = 3;
+        public int IntervalSeconds { get; set; } = 5;
+    }
+
+    /// <summary>
+    /// 开发环境验证结果DTO - Development Environment Validation Result
+    /// </summary>
+    public class DevEnvironmentValidationResultDto
+    {
+        public bool IsValid { get; set; }
+        public List<string> Warnings { get; set; } = new();
+        public List<string> Errors { get; set; } = new();
+        public Dictionary<string, string> Suggestions { get; set; } = new();
+    }
 }
