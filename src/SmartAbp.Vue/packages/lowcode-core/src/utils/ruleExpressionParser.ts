@@ -1,7 +1,7 @@
 import type { RuleContext } from '../stores/enhancedStateMachine'
-import { getGlobalLogger } from '@smartabp/lowcode-shared'
 
-const logger = getGlobalLogger()
+// @ts-ignore - logger will be injected by main app
+const logger = (globalThis as any).__SMARTABP_LOGGER__ || console
 
 /**
  * 🔥 表达式解析器 - 安全沙箱执行

@@ -49,6 +49,8 @@ namespace SmartAbp.CodeGenerator.Services
         private readonly ILocalEventBus _eventBus; // 🔥 ABP事件总线 - 实现解耦架构
         private readonly EnhancedModelProcessor _enhancedModelProcessor; // 🔥 增强模型处理器 - 集成类型映射和循环引用检测
         private readonly StableGenerationPipeline _stableGenerationPipeline; // 🔥 稳定生成流水线 - 异常恢复和进度监控
+        private readonly AdvancedMemoryManager _memoryManager; // 🔥 内存管理器 - Day 7业务规则引擎支持
+        private readonly ILoggerFactory _loggerFactory; // 🔥 日志工厂 - 创建特定类型logger
         
         // ✅ 异步等待机制：用于追踪生成任务的完成状态
         private static readonly Dictionary<string, TaskCompletionSource<GeneratedModuleDto>> _generationTasks = new();
@@ -67,7 +69,9 @@ namespace SmartAbp.CodeGenerator.Services
             SchemaVersioningService schemaVersioningService,
             ILocalEventBus eventBus, // 🔥 注入ABP事件总线
             EnhancedModelProcessor enhancedModelProcessor, // 🔥 注入增强模型处理器
-            StableGenerationPipeline stableGenerationPipeline) // 🔥 注入稳定生成流水线
+            StableGenerationPipeline stableGenerationPipeline, // 🔥 注入稳定生成流水线
+            AdvancedMemoryManager memoryManager, // 🔥 注入内存管理器
+            ILoggerFactory loggerFactory) // 🔥 注入日志工厂
         {
             _codeWriterService = codeWriterService;
             _solutionIntegrationService = solutionIntegrationService;
@@ -82,6 +86,8 @@ namespace SmartAbp.CodeGenerator.Services
             _eventBus = eventBus; // 🔥 ABP事件总线设置
             _enhancedModelProcessor = enhancedModelProcessor; // 🔥 增强模型处理器设置
             _stableGenerationPipeline = stableGenerationPipeline; // 🔥 稳定生成流水线设置
+            _memoryManager = memoryManager; // 🔥 内存管理器设置
+            _loggerFactory = loggerFactory; // 🔥 日志工厂设置
         }
 
         /// <summary>
@@ -1741,14 +1747,328 @@ import Generated from './__COMPONENT__.generated.vue'
             }
         }
 
-        public Task<GeneratedDddSolutionDto> GenerateDddDomainAsync(DddDefinitionDto input)
+        public async Task<GeneratedDddSolutionDto> GenerateDddDomainAsync(DddDefinitionDto input)
         {
-            throw new NotImplementedException("DDD pattern generation will be implemented in a future iteration using the new Roslyn-based architecture.");
+            Logger.LogInformation("🔥 Starting DDD domain generation for module: {ModuleName}", input.ModuleName);
+            
+            try
+            {
+                // Convert DTO to domain definition
+                var definition = MapToDddDefinition(input);
+                
+                // Generate DDD domain layer using DomainDrivenDesignGenerator
+                var dddLogger = _loggerFactory.CreateLogger<DDD.DomainDrivenDesignGenerator>();
+                var dddGenerator = new DDD.DomainDrivenDesignGenerator(
+                    dddLogger,
+                    _memoryManager
+                );
+                
+                var result = await dddGenerator.GenerateCompleteDomainAsync(definition);
+                
+                // Convert to DTO
+                var dto = new GeneratedDddSolutionDto
+                {
+                    ModuleName = result.ModuleName,
+                    Files = result.Files.Select(kvp => new GeneratedFileDto 
+                    { 
+                        RelativePath = kvp.Key, 
+                        Content = kvp.Value,
+                        Language = "CSharp"
+                    }).ToList(),
+                    AggregateCount = result.AggregateCount,
+                    EntityCount = result.EntityCount,
+                    ValueObjectCount = result.ValueObjectCount,
+                    DomainEventCount = result.DomainEventCount,
+                    RepositoryCount = result.RepositoryCount,
+                    DomainServiceCount = result.DomainServiceCount,
+                    SpecificationCount = result.SpecificationCount,
+                    GeneratedAt = result.GeneratedAt,
+                    GenerationTimeMs = (int)result.GenerationTime.TotalMilliseconds,
+                    TotalLinesOfCode = result.TotalLinesOfCode,
+                    Success = true,
+                    Message = $"Successfully generated DDD domain layer with {result.AggregateCount} aggregates, {result.ValueObjectCount} value objects"
+                };
+                
+                Logger.LogInformation("✅ DDD domain generation completed: {FileCount} files, {LinesOfCode} lines of code", 
+                    dto.Files.Count, dto.TotalLinesOfCode);
+                
+                return dto;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "❌ Failed to generate DDD domain layer");
+                return new GeneratedDddSolutionDto
+                {
+                    Success = false,
+                    Message = $"Failed to generate DDD domain: {ex.Message}",
+                    Files = new List<GeneratedFileDto>()
+                };
+            }
+        }
+        
+        private DDD.DddDefinition MapToDddDefinition(DddDefinitionDto dto)
+        {
+            return new DDD.DddDefinition
+            {
+                ModuleName = dto.ModuleName ?? "UnknownModule",
+                Namespace = dto.Namespace ?? "MyCompany.MyProject",
+                Description = dto.Description,
+                Aggregates = dto.Aggregates?.Select(MapToAggregateDefinition).ToList() ?? new List<DDD.AggregateDefinition>(),
+                ValueObjects = dto.ValueObjects?.Select(MapToValueObjectDefinition).ToList() ?? new List<DDD.ValueObjectDefinition>(),
+                DomainEvents = dto.DomainEvents?.Select(MapToDomainEventDefinition).ToList() ?? new List<DDD.DomainEventDefinition>(),
+                DomainServices = dto.DomainServices?.Select(MapToDomainServiceDefinition).ToList() ?? new List<DDD.DomainServiceDefinition>(),
+                Repositories = dto.Repositories?.Select(MapToRepositoryDefinition).ToList() ?? new List<DDD.RepositoryDefinition>(),
+                UseMultiTenancy = dto.UseMultiTenancy,
+                UseSoftDelete = dto.UseSoftDelete,
+                UseAuditing = dto.UseAuditing,
+                UseExtraProperties = dto.UseExtraProperties,
+                DefaultKeyType = dto.DefaultKeyType ?? "Guid"
+            };
+        }
+        
+        private DDD.AggregateDefinition MapToAggregateDefinition(AggregateDefinitionDto dto)
+        {
+            return new DDD.AggregateDefinition
+            {
+                Name = dto.Name ?? "UnnamedAggregate",
+                Description = dto.Description,
+                KeyType = dto.KeyType ?? "Guid",
+                IsMultiTenant = dto.IsMultiTenant,
+                IsSoftDelete = dto.IsSoftDelete,
+                HasExtraProperties = dto.HasExtraProperties,
+                Properties = dto.Properties?.Select(MapToPropertyDefinition).ToList() ?? new List<DDD.PropertyDefinition>(),
+                DomainMethods = dto.DomainMethods?.Select(MapToDomainMethodDefinition).ToList() ?? new List<DDD.DomainMethodDefinition>(),
+                BusinessRules = dto.BusinessRules?.Select(MapToBusinessRuleDefinition).ToList() ?? new List<DDD.BusinessRuleDefinition>(),
+                DomainEvents = dto.DomainEvents?.Select(MapToDomainEventDefinition).ToList() ?? new List<DDD.DomainEventDefinition>()
+            };
+        }
+        
+        private DDD.ValueObjectDefinition MapToValueObjectDefinition(ValueObjectDefinitionDto dto)
+        {
+            return new DDD.ValueObjectDefinition
+            {
+                Name = dto.Name ?? "UnnamedValueObject",
+                Description = dto.Description,
+                Properties = dto.Properties?.Select(MapToPropertyDefinition).ToList() ?? new List<DDD.PropertyDefinition>(),
+                IsImmutable = dto.IsImmutable,
+                ImplementsEquality = dto.ImplementsEquality
+            };
+        }
+        
+        private DDD.DomainEventDefinition MapToDomainEventDefinition(DomainEventDefinitionDto dto)
+        {
+            return new DDD.DomainEventDefinition
+            {
+                Name = dto.Name ?? "UnnamedEvent",
+                Description = dto.Description,
+                AggregateType = dto.AggregateType ?? string.Empty,
+                Properties = dto.Properties?.Select(MapToPropertyDefinition).ToList() ?? new List<DDD.PropertyDefinition>()
+            };
+        }
+        
+        private DDD.DomainServiceDefinition MapToDomainServiceDefinition(DomainServiceDefinitionDto dto)
+        {
+            return new DDD.DomainServiceDefinition
+            {
+                Name = dto.Name ?? "UnnamedService",
+                Description = dto.Description,
+                Methods = dto.Methods?.Select(MapToDomainMethodDefinition).ToList() ?? new List<DDD.DomainMethodDefinition>(),
+                Dependencies = dto.Dependencies ?? new List<string>(),
+                IsStateless = dto.IsStateless
+            };
+        }
+        
+        private DDD.RepositoryDefinition MapToRepositoryDefinition(RepositoryDefinitionDto dto)
+        {
+            return new DDD.RepositoryDefinition
+            {
+                Name = dto.Name ?? "UnnamedRepository",
+                AggregateType = dto.AggregateType ?? string.Empty,
+                KeyType = dto.KeyType ?? "Guid",
+                ImplementsStandardMethods = dto.ImplementsStandardMethods,
+                SupportsSpecifications = dto.SupportsSpecifications
+            };
+        }
+        
+        private DDD.PropertyDefinition MapToPropertyDefinition(PropertyDefinitionDto dto)
+        {
+            return new DDD.PropertyDefinition
+            {
+                Name = dto.Name ?? "UnnamedProperty",
+                Type = dto.Type ?? "string",
+                IsRequired = dto.IsRequired,
+                MaxLength = dto.MaxLength,
+                MinLength = dto.MinLength,
+                Description = dto.Description,
+                DefaultValue = dto.DefaultValue,
+                IsReadOnly = dto.IsReadOnly,
+                IsPrivateSetter = dto.IsPrivateSetter
+            };
+        }
+        
+        private DDD.DomainMethodDefinition MapToDomainMethodDefinition(DomainMethodDefinitionDto dto)
+        {
+            return new DDD.DomainMethodDefinition
+            {
+                Name = dto.Name ?? "UnnamedMethod",
+                Description = dto.Description,
+                ReturnType = dto.ReturnType ?? "void",
+                IsAsync = dto.IsAsync,
+                IsVirtual = dto.IsVirtual
+            };
+        }
+        
+        private DDD.BusinessRuleDefinition MapToBusinessRuleDefinition(BusinessRuleDefinitionDto dto)
+        {
+            return new DDD.BusinessRuleDefinition
+            {
+                Name = dto.Name ?? "UnnamedRule",
+                Description = dto.Description,
+                Expression = dto.Expression ?? string.Empty,
+                ErrorMessage = dto.ErrorMessage ?? string.Empty
+            };
         }
 
-        public Task<GeneratedCqrsSolutionDto> GenerateCqrsAsync(CqrsDefinitionDto input)
+        /// <summary>
+        /// 🔥 生成CQRS模式代码 - Day 8实现
+        /// 生成Command、Query、Handler、Validator等完整CQRS架构代码
+        /// </summary>
+        public async Task<GeneratedCqrsSolutionDto> GenerateCqrsAsync(CqrsDefinitionDto input)
         {
-            throw new NotImplementedException("CQRS pattern generation will be implemented in a future iteration using the new Roslyn-based architecture.");
+            Logger.LogInformation("🔥 Starting CQRS pattern generation for module: {ModuleName}", input.ModuleName);
+            
+            try
+            {
+                // 1. 验证输入
+                if (string.IsNullOrWhiteSpace(input.ModuleName))
+                {
+                    throw new AbpException("ModuleName is required for CQRS generation.");
+                }
+
+                if (string.IsNullOrWhiteSpace(input.Namespace))
+                {
+                    throw new AbpException("Namespace is required for CQRS generation.");
+                }
+                
+                // 2. 转换DTO到CQRS定义
+                var definition = MapToCqrsDefinition(input);
+                
+                // 3. 使用CqrsPatternGenerator生成代码
+                var cqrsLogger = _loggerFactory.CreateLogger<CQRS.CqrsPatternGenerator>();
+                var cqrsGenerator = new CQRS.CqrsPatternGenerator(
+                    cqrsLogger,
+                    _memoryManager
+                );
+                
+                var result = await cqrsGenerator.GenerateCompleteCqrsAsync(definition);
+                
+                // 4. 转换结果到DTO
+                var dto = new GeneratedCqrsSolutionDto
+                {
+                    ModuleName = result.AggregateName,
+                    Files = result.Files.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+                    CommandCount = result.CommandCount,
+                    QueryCount = result.QueryCount,
+                    EventCount = 0, // Events暂不支持，后续版本添加
+                    GeneratedAt = result.GeneratedAt,
+                    SessionId = Guid.NewGuid().ToString()
+                };
+                
+                Logger.LogInformation("✅ CQRS pattern generation completed: {FileCount} files, {CommandCount} commands, {QueryCount} queries", 
+                    dto.Files.Count, dto.CommandCount, dto.QueryCount);
+                
+                return dto;
+            }
+            catch (ArgumentException ex)
+            {
+                Logger.LogError(ex, "❌ Invalid argument for CQRS generation");
+                throw new AbpException($"Invalid CQRS definition: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "❌ Failed to generate CQRS pattern");
+                throw new AbpException($"Failed to generate CQRS pattern: {ex.Message}", ex);
+            }
+        }
+        
+        /// <summary>
+        /// 映射CqrsDefinitionDto到CqrsDefinition
+        /// </summary>
+        private CQRS.CqrsDefinition MapToCqrsDefinition(CqrsDefinitionDto dto)
+        {
+            var definition = new CQRS.CqrsDefinition
+            {
+                AggregateName = dto.ModuleName,
+                Namespace = dto.Namespace,
+                Description = $"CQRS pattern for {dto.ModuleName}",
+                Commands = dto.Commands.Select(MapToCommandDefinition).ToList(),
+                Queries = dto.Queries.Select(MapToQueryDefinition).ToList(),
+                DTOs = new List<CQRS.DtoDefinition>(),
+                UseCaching = true,
+                UseValidation = true,
+                UseAutoMapper = true,
+                UsePerformanceLogging = true,
+                DatabaseProvider = "EntityFramework"
+            };
+            
+            return definition;
+        }
+        
+        /// <summary>
+        /// 映射CommandDefinitionDto到CommandDefinition (CQRS)
+        /// </summary>
+        private CQRS.CommandDefinition MapToCommandDefinition(CommandDefinitionDto dto)
+        {
+            return new CQRS.CommandDefinition
+            {
+                Name = dto.Name,
+                Description = dto.Description,
+                ReturnType = string.IsNullOrWhiteSpace(dto.ReturnType) || dto.ReturnType == "void" ? null : dto.ReturnType,
+                Properties = dto.Properties.Select(p => new Core.PropertyDefinition
+                {
+                    Name = p.Name,
+                    Type = p.Type,
+                    IsRequired = p.IsRequired,
+                    DefaultValue = p.DefaultValue,
+                    Description = p.Description
+                }).ToList(),
+                RequiresTransaction = dto.RequiresTransaction,
+                RequiresAuthorization = dto.RequiresAuthorization,
+                AuthorizePolicy = null,
+                PublishEvents = true,
+                TimeoutSeconds = 30,
+                Type = CQRS.CommandType.Custom
+            };
+        }
+        
+        /// <summary>
+        /// 映射QueryDefinitionDto到QueryDefinition (CQRS)
+        /// </summary>
+        private CQRS.QueryDefinition MapToQueryDefinition(QueryDefinitionDto dto)
+        {
+            return new CQRS.QueryDefinition
+            {
+                Name = dto.Name,
+                Description = dto.Description,
+                ReturnType = dto.ReturnType,
+                Parameters = dto.Parameters.Select(p => new Core.ParameterDefinition
+                {
+                    Name = p.Name,
+                    Type = p.Type,
+                    IsOptional = p.IsOptional,
+                    DefaultValue = p.DefaultValue
+                }).ToList(),
+                IsPaged = dto.IsPaged,
+                IsCacheable = dto.IsCacheable,
+                CacheExpirationMinutes = 5,
+                HasValidator = false,
+                RequiresAuthorization = true,
+                AuthorizePolicy = null,
+                TimeoutSeconds = 30,
+                Type = dto.IsPaged ? CQRS.QueryType.Paged : CQRS.QueryType.Single,
+                Includes = new List<string>(),
+                Filters = new List<CQRS.FilterDefinition>()
+            };
         }
 
         public Task<GeneratedApplicationLayerDto> GenerateApplicationServicesAsync(ApplicationServiceDefinitionDto input)

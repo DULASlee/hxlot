@@ -18,6 +18,39 @@ export * from "./code-generator"
 export { codeGeneratorApi } from "./code-generator"
 
 // ============================================================================
+// DDD生成器API导出（Day 7 新增）
+// ============================================================================
+export * from "./ddd-generator"
+export { dddGeneratorApi } from "./ddd-generator"
+export type {
+  DddDefinitionDto,
+  AggregateDefinitionDto,
+  ValueObjectDefinitionDto,
+  DomainEventDefinitionDto,
+  DomainServiceDefinitionDto,
+  RepositoryDefinitionDto,
+  PropertyDefinitionDto,
+  DomainMethodDefinitionDto,
+  BusinessRuleDefinitionDto,
+  GeneratedDddSolutionDto,
+  GeneratedFileDto
+} from "./ddd-generator"
+
+// ============================================================================
+// CQRS生成器API导出（Day 8 新增）
+// ============================================================================
+export * from "./cqrs-generator"
+export { cqrsGeneratorApi } from "./cqrs-generator"
+export type {
+  CqrsDefinitionDto,
+  CommandDefinitionDto,
+  QueryDefinitionDto,
+  EventDefinitionDto,
+  ParameterDefinitionDto,
+  GeneratedCqrsSolutionDto
+} from "./cqrs-generator"
+
+// ============================================================================
 // Composables导出（Task 1.2 新增）
 // ============================================================================
 export * from "./composables"
