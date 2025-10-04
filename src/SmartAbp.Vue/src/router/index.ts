@@ -286,6 +286,17 @@ const routes: RouteRecordRaw[] = [
             },
           },
           {
+            path: "cqrs-designer",
+            name: "CqrsDesigner",
+            component: () => import("@/views/lowcode/CqrsDesignerView.vue"),
+            meta: { 
+              title: "CQRS模式设计器", 
+              menuKey: "cqrs-designer",
+              icon: "⚡",
+              description: "CQRS模式代码生成器"
+            },
+          },
+          {
             path: "workflows",
             name: "WorkflowsManagement",
             component: () => import("@/views/lowcode/WorkflowsView.vue"),
