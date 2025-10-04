@@ -2079,4 +2079,110 @@ namespace SmartAbp.CodeGenerator.Services
         public string ReadmeTemplate { get; set; } = string.Empty;
         public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
     }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Day 27: CI/CD模板生成 DTOs - Phase 3 开发者体验
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// CI/CD平台配置DTO - CI/CD Platform Configuration
+    /// </summary>
+    public class CICDPlatformConfigDto
+    {
+        public string Platform { get; set; } = "github"; // github, gitlab, azuredevops, jenkins
+        public string ProjectName { get; set; } = string.Empty;
+        public string RepositoryUrl { get; set; } = string.Empty;
+        public bool EnableDotnetBuild { get; set; } = true;
+        public bool EnableVueBuild { get; set; } = true;
+        public bool EnableTests { get; set; } = true;
+        public bool EnableDockerBuild { get; set; } = true;
+        public bool EnableDeployment { get; set; } = false;
+        public string DotnetVersion { get; set; } = "8.0";
+        public string NodeVersion { get; set; } = "20";
+    }
+
+    /// <summary>
+    /// 构建阶段配置DTO - Build Stage Configuration
+    /// </summary>
+    public class BuildStageConfigDto
+    {
+        public string StageName { get; set; } = string.Empty;
+        public int Order { get; set; }
+        public List<string> Commands { get; set; } = new();
+        public List<string> DependsOn { get; set; } = new();
+        public Dictionary<string, string> Environment { get; set; } = new();
+        public bool RunOnlyOnBranches { get; set; } = false;
+        public List<string> Branches { get; set; } = new() { "main", "develop" };
+    }
+
+    /// <summary>
+    /// GitHub Actions配置DTO - GitHub Actions Configuration
+    /// </summary>
+    public class GitHubActionsConfigDto
+    {
+        public string WorkflowName { get; set; } = "CI/CD Pipeline";
+        public List<string> TriggerBranches { get; set; } = new() { "main", "develop" };
+        public List<string> TriggerEvents { get; set; } = new() { "push", "pull_request" };
+        public List<BuildStageConfigDto> Jobs { get; set; } = new();
+        public Dictionary<string, string> Secrets { get; set; } = new();
+    }
+
+    /// <summary>
+    /// GitLab CI配置DTO - GitLab CI Configuration
+    /// </summary>
+    public class GitLabCIConfigDto
+    {
+        public string Image { get; set; } = "mcr.microsoft.com/dotnet/sdk:8.0";
+        public List<string> Stages { get; set; } = new() { "build", "test", "deploy" };
+        public List<BuildStageConfigDto> Jobs { get; set; } = new();
+        public Dictionary<string, string> Variables { get; set; } = new();
+        public List<string> BeforeScript { get; set; } = new();
+    }
+
+    /// <summary>
+    /// Azure DevOps配置DTO - Azure DevOps Configuration
+    /// </summary>
+    public class AzureDevOpsConfigDto
+    {
+        public string PipelineName { get; set; } = string.Empty;
+        public List<string> TriggerBranches { get; set; } = new() { "main" };
+        public string VmImage { get; set; } = "ubuntu-latest";
+        public List<BuildStageConfigDto> Stages { get; set; } = new();
+        public Dictionary<string, string> Variables { get; set; } = new();
+    }
+
+    /// <summary>
+    /// Jenkinsfile配置DTO - Jenkinsfile Configuration
+    /// </summary>
+    public class JenkinsfileConfigDto
+    {
+        public string Agent { get; set; } = "any";
+        public List<BuildStageConfigDto> Stages { get; set; } = new();
+        public Dictionary<string, string> Environment { get; set; } = new();
+        public List<string> Tools { get; set; } = new() { "dotnet", "nodejs" };
+    }
+
+    /// <summary>
+    /// 生成的CI/CD配置DTO - Generated CI/CD Configuration
+    /// </summary>
+    public class GeneratedCICDConfigDto
+    {
+        public string Platform { get; set; } = string.Empty;
+        public string YamlContent { get; set; } = string.Empty;
+        public string FileName { get; set; } = string.Empty;
+        public string FilePath { get; set; } = string.Empty;
+        public List<string> Instructions { get; set; } = new();
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// CI/CD模板验证结果DTO - CI/CD Template Validation Result
+    /// </summary>
+    public class CICDTemplateValidationResultDto
+    {
+        public bool IsValid { get; set; }
+        public List<string> Warnings { get; set; } = new();
+        public List<string> Errors { get; set; } = new();
+        public Dictionary<string, string> Suggestions { get; set; } = new();
+    }
 }
