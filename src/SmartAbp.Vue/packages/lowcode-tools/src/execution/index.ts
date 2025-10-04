@@ -22,3 +22,9 @@ export { smartCheck, type CheckResult } from './smart-check'
 
 // 简单日志
 export { SimpleLogger, LogLevel, simpleLogger } from './simple-logger'
+
+// 性能监控（优化2）
+export { PerformanceMonitor, performanceMonitor, PERFORMANCE_BASELINE, type PerformanceMetric } from './simple-checkpoint'
+
+// AI自我学习（优化3）
+export { SimpleLearningManager, learningManager } from './simple-checkpoint'

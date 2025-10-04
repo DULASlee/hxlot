@@ -303,6 +303,16 @@
         "SERENA_CACHE_DIR": "${workspaceFolder}/.serena",
         "NODE_ENV": "production"
       }
+    },
+    "ai-guardian": {
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/tools/ai-guardian/mcp-ai-guardian-server.js"
+      ],
+      "env": {
+        "AI_GUARDIAN_PROJECT_ROOT": "${workspaceFolder}",
+        "NODE_ENV": "production"
+      }
     }
   },
 

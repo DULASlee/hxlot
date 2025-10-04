@@ -11,6 +11,7 @@
 import { exec } from 'child_process'
 import { promisify } from 'util'
 import * as path from 'path'
+import { learningManager } from './simple-checkpoint'
 
 const execAsync = promisify(exec)
 
@@ -19,6 +20,8 @@ export interface GitSyncResult {
   message: string
   stdout?: string
   stderr?: string
+  method?: string  // 添加method字段
+  error?: Error    // 添加error字段
 }
 
 /**
@@ -102,5 +105,92 @@ export async function checkGitStatus(): Promise<{
     console.warn('⚠️ 检查Git状态失败')
     return { hasChanges: false, changedFiles: [] }
   }
+}
+
+/**
+ * Git同步多层降级策略 - 优化4
+ * 三层降级: 项目脚本 → 内联命令 → 手动指导
+ */
+export async function gitSyncWithFallback(): Promise<GitSyncResult> {
+  const strategies = [
+    // 第一层: 项目成熟脚本 (最高优先级)
+    { 
+      method: 'SCRIPT', 
+      name: '项目Git安全同步脚本',
+      command: process.platform === 'win32' 
+        ? 'pwsh -File scripts/git/git-safe-sync.ps1 --auto-commit --non-interactive'
+        : 'bash scripts/git/git-safe-sync.sh --auto-commit --non-interactive'
+    },
+    
+    // 第二层: 内联Git命令 (降级方案)
+    { 
+      method: 'INLINE', 
+      name: '内联Git命令',
+      steps: [
+        'git add .',
+        'git commit -m "Auto: Quality gates passed"',
+        'git pull --rebase origin main',
+        'git push origin main'
+      ]
+    },
+    
+    // 第三层: 手动指导 (最终降级)
+    { 
+      method: 'MANUAL', 
+      name: '手动Git操作指导',
+      handler: () => {
+        console.log('🚨 所有自动方法失败，请手动执行以下命令:')
+        console.log('1. git add .')
+        console.log('2. git commit -m "Your commit message"')
+        console.log('3. git pull --rebase origin main')
+        console.log('4. git push origin main')
+      }
+    }
+  ]
+
+  let result: GitSyncResult = { success: false, message: '未执行', method: 'NONE' }
+  
+  for (const strategy of strategies) {
+    try {
+      console.log(`🔄 尝试方法: ${strategy.name}`)
+      
+      if (strategy.method === 'SCRIPT') {
+        // 执行项目脚本
+        await execAsync(strategy.command!)
+        result = { success: true, message: '项目脚本执行成功', method: strategy.method }
+        break
+        
+      } else if (strategy.method === 'INLINE') {
+        // 执行内联命令
+        for (const step of strategy.steps!) {
+          await execAsync(step)
+        }
+        result = { success: true, message: '内联命令执行成功', method: strategy.method }
+        break
+        
+      } else if (strategy.method === 'MANUAL') {
+        // 提供手动指导
+        strategy.handler!()
+        result = { success: false, message: '需要手动Git操作', method: strategy.method, error: new Error('需要手动Git操作') }
+        break
+      }
+      
+    } catch (error) {
+      console.log(`❌ ${strategy.name} 失败: ${error}`)
+      
+      // 记录错误到AI学习系统
+      learningManager.recordError('GIT_SYNC_FAILED', strategy.method)
+      
+      // 继续尝试下一个策略
+      continue
+    }
+  }
+  
+  // 记录成功到AI学习系统
+  if (result.success) {
+    learningManager.recordSuccess('GIT_SYNC_SUCCESS', result.method!)
+  }
+  
+  return result
 }
 

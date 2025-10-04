@@ -175,3 +175,31 @@ export interface RecoveryResult {
   error?: Error                       // 错误信息
 }
 
+/**
+ * 性能指标接口 - 优化2: 执行性能监控
+ */
+export interface PerformanceMetric {
+  stage: ExecutionStage
+  startTime: number
+  duration: number
+  baseline: number
+  deviation: number
+  status: 'NORMAL' | 'SLOW' | 'CRITICAL'
+}
+
+/**
+ * 性能基准配置类型
+ */
+export type PerformanceBaseline = Record<ExecutionStage, number>
+
+/**
+ * 性能报告接口
+ */
+export interface PerformanceReport {
+  totalTime: number
+  stages: PerformanceMetric[]
+  slowStages: PerformanceMetric[]
+  criticalStages: PerformanceMetric[]
+  averageDeviation: number
+}
+

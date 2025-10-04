@@ -164,3 +164,170 @@ export class SimpleCheckpoint {
  */
 export const simpleCheckpoint = new SimpleCheckpoint()
 
+/**
+ * 性能监控器 - 优化2: 执行性能监控与时间预估
+ */
+export class PerformanceMonitor {
+  private metrics: Map<string, PerformanceMetric> = new Map()
+  
+  /**
+   * 开始监控执行阶段
+   */
+  start(stage: ExecutionStage, baselineMs: number) {
+    const metric: PerformanceMetric = {
+      stage,
+      startTime: Date.now(),
+      baseline: baselineMs,
+      duration: 0,
+      deviation: 0,
+      status: 'NORMAL'
+    }
+    this.metrics.set(stage, metric)
+    console.log(`⏱️ [${stage}] 开始执行 (基准: ${baselineMs}ms)`)
+  }
+  
+  /**
+   * 结束监控并报告结果
+   */
+  end(stage: ExecutionStage): PerformanceMetric | null {
+    const metric = this.metrics.get(stage)
+    if (!metric) return null
+    
+    metric.duration = Date.now() - metric.startTime
+    metric.deviation = ((metric.duration - metric.baseline) / metric.baseline) * 100
+    
+    // 判断性能状态
+    if (metric.duration > metric.baseline * 1.5) {
+      metric.status = 'CRITICAL'
+      console.warn(`🔴 [${stage}] 执行缓慢: ${metric.duration}ms (基准: ${metric.baseline}ms, 超出 ${metric.deviation.toFixed(1)}%)`)
+    } else if (metric.duration > metric.baseline) {
+      metric.status = 'SLOW'
+      console.warn(`🟡 [${stage}] 执行偏慢: ${metric.duration}ms (基准: ${metric.baseline}ms, 超出 ${metric.deviation.toFixed(1)}%)`)
+    } else {
+      metric.status = 'NORMAL'
+      console.log(`🟢 [${stage}] 执行完成: ${metric.duration}ms`)
+    }
+    
+    return metric
+  }
+  
+  /**
+   * 获取性能报告
+   */
+  getReport(): PerformanceMetric[] {
+    return Array.from(this.metrics.values())
+  }
+}
+
+/**
+ * 性能指标接口
+ */
+export interface PerformanceMetric {
+  stage: ExecutionStage
+  startTime: number
+  duration: number
+  baseline: number
+  deviation: number
+  status: 'NORMAL' | 'SLOW' | 'CRITICAL'
+}
+
+/**
+ * 性能基准配置
+ */
+export const PERFORMANCE_BASELINE: Record<ExecutionStage, number> = {
+  [ExecutionStage.STAGE0_INDEPENDENT_JUDGMENT]: 100,    // <100ms
+  [ExecutionStage.STAGE1_TRIGGER_DETECTION]: 200,        // <200ms
+  [ExecutionStage.STAGE2_PRE_LEARNING]: 5000,            // <5s
+  [ExecutionStage.STAGE3_INCREMENTAL_CODING]: 0,         // 不定
+  [ExecutionStage.STAGE4_QUALITY_GATES]: 30000,          // <30s
+  [ExecutionStage.STAGE5_GIT_SYNC]: 15000,               // <15s
+  [ExecutionStage.STAGE6_AUTO_CONTINUE]: 500             // <500ms
+}
+
+// 导出性能监控器实例
+export const performanceMonitor = new PerformanceMonitor()
+
+/**
+ * AI自我学习管理器 - 优化3: AI自我学习与质量改进循环
+ */
+export class SimpleLearningManager {
+  private errorCounts: Map<string, number> = new Map()
+  private successCounts: Map<string, number> = new Map()
+  
+  /**
+   * 记录错误
+   */
+  recordError(errorType: string, context?: string) {
+    const key = context ? `${errorType}:${context}` : errorType
+    const count = (this.errorCounts.get(key) || 0) + 1
+    this.errorCounts.set(key, count)
+    
+    // 高频错误警告
+    if (count >= 3) {
+      console.log(`🧠 AI学习: "${key}" 已发生 ${count} 次，建议加强检查`)
+    }
+  }
+  
+  /**
+   * 记录成功
+   */
+  recordSuccess(successType: string, context?: string) {
+    const key = context ? `${successType}:${context}` : successType
+    const count = (this.successCounts.get(key) || 0) + 1
+    this.successCounts.set(key, count)
+  }
+  
+  /**
+   * 获取错误报告（仅显示TOP5）
+   */
+  getErrorReport(): [string, number][] {
+    return Array.from(this.errorCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+  }
+  
+  /**
+   * 获取成功率报告
+   */
+  getSuccessRate(): Record<string, number> {
+    const result: Record<string, number> = {}
+    
+    // 计算每个错误类型的成功率
+    for (const [errorKey, errorCount] of this.errorCounts.entries()) {
+      const baseKey = errorKey.split(':')[0] // 去掉上下文
+      const successCount = this.successCounts.get(baseKey) || 0
+      const total = errorCount + successCount
+      result[baseKey] = total > 0 ? (successCount / total) * 100 : 100
+    }
+    
+    return result
+  }
+  
+  /**
+   * 生成学习建议
+   */
+  generateSuggestions(): string[] {
+    const suggestions: string[] = []
+    const errorReport = this.getErrorReport()
+    
+    for (const [errorKey, count] of errorReport) {
+      if (count >= 3) {
+        suggestions.push(`高频错误 "${errorKey}" (${count}次): 建议增加前置检查或优化处理逻辑`)
+      }
+    }
+    
+    return suggestions
+  }
+  
+  /**
+   * 清空学习记录
+   */
+  clear() {
+    this.errorCounts.clear()
+    this.successCounts.clear()
+  }
+}
+
+// 导出AI学习管理器实例
+export const learningManager = new SimpleLearningManager()
+
