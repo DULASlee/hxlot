@@ -1682,4 +1682,137 @@ namespace SmartAbp.CodeGenerator.Services
         public int PanelCount { get; set; }
         public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
     }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Day 20: 弹性策略配置 DTOs - Phase 2 弹性工程
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 弹性策略配置DTO - 完整的弹性模式配置
+    /// </summary>
+    public class ResiliencePolicyDto
+    {
+        public string ServiceName { get; set; } = string.Empty;
+        public RetryPolicyDto Retry { get; set; } = new();
+        public CircuitBreakerDto CircuitBreaker { get; set; } = new();
+        public TimeoutDto Timeout { get; set; } = new();
+        public BulkheadDto Bulkhead { get; set; } = new();
+        public RateLimitDto RateLimit { get; set; } = new();
+        public FallbackDto Fallback { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 重试策略DTO - Retry Pattern
+    /// </summary>
+    public class RetryPolicyDto
+    {
+        public bool Enabled { get; set; } = true;
+        public int MaxAttempts { get; set; } = 3;
+        public string BackoffStrategy { get; set; } = "Exponential"; // Exponential, Linear, Fixed
+        public int InitialDelayMs { get; set; } = 100;
+        public int MaxDelayMs { get; set; } = 5000;
+        public List<string> RetryableExceptions { get; set; } = new()
+        {
+            "HttpRequestException",
+            "TimeoutException",
+            "SocketException"
+        };
+        public List<int> RetryableStatusCodes { get; set; } = new() { 408, 429, 502, 503, 504 };
+    }
+
+    /// <summary>
+    /// 断路器DTO - Circuit Breaker Pattern
+    /// </summary>
+    public class CircuitBreakerDto
+    {
+        public bool Enabled { get; set; } = true;
+        public double FailureThreshold { get; set; } = 0.5; // 50% failure rate
+        public int SamplingDurationMs { get; set; } = 10000; // 10 seconds
+        public int MinimumThroughput { get; set; } = 10; // Minimum requests in sampling period
+        public int BreakDurationMs { get; set; } = 30000; // 30 seconds
+        public int HalfOpenMaxAttempts { get; set; } = 3; // Half-open state试探请求数
+    }
+
+    /// <summary>
+    /// 超时控制DTO - Timeout Pattern
+    /// </summary>
+    public class TimeoutDto
+    {
+        public bool Enabled { get; set; } = true;
+        public int TimeoutMs { get; set; } = 5000; // 5 seconds
+        public bool ThrowOnTimeout { get; set; } = true;
+    }
+
+    /// <summary>
+    /// 舱壁隔离DTO - Bulkhead Pattern
+    /// </summary>
+    public class BulkheadDto
+    {
+        public bool Enabled { get; set; } = false;
+        public int MaxParallelization { get; set; } = 10; // 最大并发数
+        public int MaxQueuingActions { get; set; } = 5; // 队列大小
+        public string BulkheadType { get; set; } = "Semaphore"; // Semaphore, FixedThreadPool
+    }
+
+    /// <summary>
+    /// 限流策略DTO - Rate Limit Pattern
+    /// </summary>
+    public class RateLimitDto
+    {
+        public bool Enabled { get; set; } = true;
+        public int MaxRequests { get; set; } = 100; // 最大请求数
+        public int WindowSizeMs { get; set; } = 1000; // 时间窗口（毫秒）
+        public string Algorithm { get; set; } = "SlidingWindow"; // SlidingWindow, FixedWindow, TokenBucket
+        public int QueueLimit { get; set; } = 10; // 排队限制
+    }
+
+    /// <summary>
+    /// 回退策略DTO - Fallback Pattern
+    /// </summary>
+    public class FallbackDto
+    {
+        public bool Enabled { get; set; } = false;
+        public string FallbackType { get; set; } = "Default"; // Default, Cache, AlternativeService
+        public string FallbackValue { get; set; } = string.Empty; // 默认返回值（JSON）
+        public string AlternativeServiceUrl { get; set; } = string.Empty; // 备用服务URL
+        public bool EnableCache { get; set; } = false;
+        public int CacheDurationMs { get; set; } = 60000; // 缓存时长
+    }
+
+    /// <summary>
+    /// 生成的Polly策略代码结果
+    /// </summary>
+    public class GeneratedPollyCodeDto
+    {
+        public string CSharpCode { get; set; } = string.Empty;
+        public List<string> RequiredNugetPackages { get; set; } = new()
+        {
+            "Polly",
+            "Polly.Extensions.Http"
+        };
+        public string ConfigurationMethod { get; set; } = string.Empty; // AddHttpClient配置方法
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// 生成的Istio策略结果
+    /// </summary>
+    public class GeneratedIstioPolicyDto
+    {
+        public string VirtualServiceYaml { get; set; } = string.Empty; // VirtualService YAML
+        public string DestinationRuleYaml { get; set; } = string.Empty; // DestinationRule YAML
+        public string FaultInjectionYaml { get; set; } = string.Empty; // 故障注入 YAML
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// 弹性策略验证结果
+    /// </summary>
+    public class ResiliencePolicyValidationResultDto
+    {
+        public bool IsValid { get; set; }
+        public List<string> Warnings { get; set; } = new();
+        public List<string> Errors { get; set; } = new();
+        public Dictionary<string, string> Suggestions { get; set; } = new();
+    }
 }
