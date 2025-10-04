@@ -517,31 +517,76 @@ export class AIGuardianExtension {
     this.updateStatusBar(); // 更新为恢复中状态
     
     // ==================================================
-    // Level 1: 智能新会话恢复（最优雅）
+    // Level 1: 查找真正的聊天命令 + 直接AI大模型通信恢复
     // ==================================================
-    this.log('⚡️ [Level 1] Attempting intelligent new session recovery...');
+    this.log('⚡️ [Level 1] Finding real chat commands and attempting recovery...');
     try {
-      // 1.1 开启新聊天会话
-      await vscode.commands.executeCommand('workbench.action.chat.newChat');
-      this.log('✅ [Level 1] New chat session opened.');
+      // 1.1 列出所有可用命令，找到聊天相关的
+      const allCommands = await vscode.commands.getCommands();
+      const chatCommands = allCommands.filter(cmd => 
+        cmd.includes('chat') || cmd.includes('ai') || cmd.includes('copilot') || cmd.includes('cursor')
+      );
       
-      // 1.2 等待会话激活
-      await new Promise(resolve => setTimeout(resolve, 800));
+      this.log(`🔍 [Level 1] Found ${chatCommands.length} potential chat commands:`);
+      chatCommands.forEach(cmd => this.log(`  - ${cmd}`));
       
-      // 1.3 构建智能上下文恢复指令
-      const contextMessage = this.buildRecoveryContext();
+      // 1.2 尝试最可能的聊天命令
+      const possibleChatCommands = [
+        'workbench.action.chat.open',
+        'workbench.action.chat.newChat',
+        'workbench.panel.chat.view.copilot.focus',
+        'github.copilot.interactiveEditor.explain',
+        'cursor.chat.new',
+        'cursor.chat.open'
+      ];
       
-      // 1.4 复制到剪贴板（作为输入的桥梁）
-      await vscode.env.clipboard.writeText(contextMessage);
-      this.log('✅ [Level 1] Recovery context prepared and copied to clipboard.');
+      let chatOpened = false;
+      for (const cmd of possibleChatCommands) {
+        if (allCommands.includes(cmd)) {
+          try {
+            await vscode.commands.executeCommand(cmd);
+            this.log(`✅ [Level 1] Successfully executed: ${cmd}`);
+            chatOpened = true;
+            break;
+          } catch (error) {
+            this.log(`⚠️ [Level 1] Failed to execute ${cmd}: ${error}`);
+          }
+        }
+      }
       
-      // 1.5 尝试通过剪贴板输入到聊天框
-      // 注意：这里我们依赖用户的IDE快捷键配置（通常是Ctrl+V）
-      // 但为了实现真正自动化，我们直接尝试发送continue命令
-      await vscode.commands.executeCommand('cursor.continue');
-      this.log('✅ [Level 1] Continue command sent. Recovery should be in progress.');
+      if (!chatOpened) {
+        this.log('⚠️ [Level 1] No working chat command found, proceeding with direct AI communication...');
+      }
       
-      return; // Level 1 成功，结束流程
+      // 1.3 短暂等待
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // 1.3 获取可用的语言模型
+      const models = await vscode.lm.selectChatModels();
+      if (models && models.length > 0) {
+        const model = models[0];
+        this.log(`✅ [Level 1] Found AI model: ${model.name || 'Unknown'}`);
+        
+        // 1.4 构建智能恢复上下文
+        const contextMessage = this.buildRecoveryContext();
+        
+        // 1.5 直接发送消息给AI大模型
+        const message = vscode.LanguageModelChatMessage.User(contextMessage);
+        const cancellationSource = new vscode.CancellationTokenSource();
+        
+        this.log('📤 [Level 1] Sending recovery message to AI model...');
+        await model.sendRequest([message], {}, cancellationSource.token);
+        
+        this.log('✅ [Level 1] Recovery message sent successfully to AI model.');
+        
+        // 1.6 记录活动，标记为在线
+        this.recordActivity('AI恢复消息已发送');
+        
+        return; // Level 1 成功，结束流程
+      } else {
+        this.log('⚠️ [Level 1] No AI models available. Escalating to Level 2...');
+        throw new Error('No AI models available');
+      }
     } catch (errorLvl1) {
       this.log(`⚠️ [Level 1] Failed: ${errorLvl1}. Escalating to Level 2...`);
     }
