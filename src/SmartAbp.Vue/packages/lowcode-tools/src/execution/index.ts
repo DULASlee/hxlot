@@ -1,17 +1,24 @@
 /**
- * AI编程铁律执行引擎 v7.0 - 执行模块导出
+ * AI编程铁律执行引擎 v7.0 - MVP极简版
  * 
  * @file index.ts
- * @description 执行引擎模块的统一导出入口
+ * @description 极简实用，直接使用项目现有工具
  * @author 世界顶级低代码引擎架构师
  * @date 2025-10-04
- * @version 1.0.0
+ * @version 1.0.0-mvp
  */
 
-// 导出类型
+// 类型定义
 export * from './types'
 
-// 导出检查点管理器
-export { CheckpointManager, checkpointManager } from './checkpoint-manager'
-export type { CheckpointManagerConfig } from './checkpoint-manager'
+// 简单断点续传
+export { SimpleCheckpoint, ExecutionStage as SimpleExecutionStage, simpleCheckpoint } from './simple-checkpoint'
 
+// Git同步（使用项目成熟脚本）
+export { gitSync, checkGitStatus, type GitSyncResult } from './git-sync'
+
+// 智能检查（增量）
+export { smartCheck, type CheckResult } from './smart-check'
+
+// 简单日志
+export { SimpleLogger, LogLevel, simpleLogger } from './simple-logger'
