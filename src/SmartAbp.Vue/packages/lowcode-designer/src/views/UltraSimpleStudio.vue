@@ -576,48 +576,58 @@ onMounted(async () => {
       addLog(t('ultraSimple.logs.databaseConnected', { dbName: connectionTest.databaseName }), 'success')
       addLog(t('ultraSimple.logs.tablesFound', { count: connectionTest.tableCount || 0 }), 'info')
       
-      // 🔥 第一步：尝试获取完整的表架构
-      try {
-        const schema = await codeGeneratorApi.introspectDatabase({
-          provider: 'SqlServer',
-          connectionStringName: 'Default'
-        })
-        
-        if (schema.tables && schema.tables.length > 0) {
-          // ✅ 成功获取完整架构
-          availableTables.value = schema.tables.map((table: TableSchema) => ({
-            name: table.name,
-            displayName: table.displayName || table.name,
-            columnCount: (table.columns && Array.isArray(table.columns)) ? table.columns.length : 0,
-            schema: table
-          }))
+      // 🔥 优先级1：检查 connectionTest 是否直接包含表名列表
+      if (connectionTest.tables && Array.isArray(connectionTest.tables) && connectionTest.tables.length > 0) {
+        // ✅ 最佳方案：直接使用 connectionTest 返回的表名列表
+        availableTables.value = connectionTest.tables.map((tableName: string) => ({
+          name: tableName,
+          displayName: tableName,
+          columnCount: 0,
+          schema: null
+        }))
+        addLog(`✅ 成功加载 ${availableTables.value.length} 个真实表名`, 'success')
+        console.log('✅ 数据库表加载成功（真实表名）:', availableTables.value)
+      } else {
+        // 🔥 优先级2：尝试获取完整的表架构
+        try {
+          const schema = await codeGeneratorApi.introspectDatabase({
+            provider: 'SqlServer',
+            connectionStringName: 'Default'
+          })
           
-          addLog(t('ultraSimple.logs.tablesLoaded', { count: schema.tables.length }), 'success')
-          console.log('✅ 数据库表加载成功（完整架构）:', availableTables.value.length, '个表')
-        } else {
-          throw new Error('schema.tables 为空')
-        }
-      } catch (schemaError) {
-        // 🔥 降级方案：introspectDatabase 失败时，使用模拟数据
-        console.warn('⚠️ introspectDatabase 失败，使用降级方案:', schemaError)
-        addLog('⚠️ 无法获取详细表架构，使用基础模式', 'warning')
-        
-        // 降级方案：创建基于 tableCount 的模拟表列表
-        if (connectionTest.tableCount && connectionTest.tableCount > 0) {
-          // 创建模拟的表列表（使用通用命名）
-          availableTables.value = Array.from({ length: connectionTest.tableCount }, (_, i) => ({
-            name: `Table${i + 1}`,
-            displayName: `表${i + 1}`,
-            columnCount: 0,
-            schema: null
-          }))
+          if (schema.tables && schema.tables.length > 0) {
+            // ✅ 成功获取完整架构
+            availableTables.value = schema.tables.map((table: TableSchema) => ({
+              name: table.name,
+              displayName: table.displayName || table.name,
+              columnCount: (table.columns && Array.isArray(table.columns)) ? table.columns.length : 0,
+              schema: table
+            }))
+            
+            addLog(t('ultraSimple.logs.tablesLoaded', { count: schema.tables.length }), 'success')
+            console.log('✅ 数据库表加载成功（完整架构）:', availableTables.value.length, '个表')
+          } else {
+            throw new Error('schema.tables 为空')
+          }
+        } catch (schemaError) {
+          // 🔥 优先级3（最后降级）：使用表占位符
+          console.warn('⚠️ introspectDatabase 失败，使用最终降级方案:', schemaError)
+          addLog('⚠️ 无法获取详细表架构，使用表占位符', 'warning')
           
-          addLog(`✅ 已生成 ${availableTables.value.length} 个表占位符（基础模式）`, 'success')
-          addLog('ℹ️ 表架构信息将在生成时自动推断', 'info')
-          addLog('💡 提示：如需查看真实表名，请确保后端API可用', 'info')
-          console.log('✅ 数据库表加载成功（降级模式）:', availableTables.value.length, '个表')
-        } else {
-          throw schemaError
+          if (connectionTest.tableCount && connectionTest.tableCount > 0) {
+            availableTables.value = Array.from({ length: connectionTest.tableCount }, (_, i) => ({
+              name: `Table${i + 1}`,
+              displayName: `表${i + 1}`,
+              columnCount: 0,
+              schema: null
+            }))
+            
+            addLog(`⚠️ 已生成 ${availableTables.value.length} 个表占位符（最终降级）`, 'warning')
+            addLog('❌ 无法获取真实表名，请检查后端API配置', 'error')
+            console.log('⚠️ 降级到表占位符:', availableTables.value.length, '个表')
+          } else {
+            throw schemaError
+          }
         }
       }
     } else {
@@ -627,8 +637,19 @@ onMounted(async () => {
     console.error('❌ 数据库连接完全失败:', error)
     addLog(t('ultraSimple.logs.usingMockData'), 'warning')
     
-    // 🔥 最终降级：如果前面的 connectionTest 成功且有 tableCount，仍然尝试使用
-    if (connectionTest?.tableCount && connectionTest.tableCount > 0) {
+    // 🔥 最终降级：优先尝试使用 connectionTest 中的表名
+    if (connectionTest?.tables && Array.isArray(connectionTest.tables) && connectionTest.tables.length > 0) {
+      // 最佳：使用真实表名
+      availableTables.value = connectionTest.tables.map((tableName: string) => ({
+        name: tableName,
+        displayName: tableName,
+        columnCount: 0,
+        schema: null
+      }))
+      addLog(`✅ 使用真实表名列表（${availableTables.value.length}个）`, 'success')
+      console.log('✅ 最终降级成功，使用真实表名:', availableTables.value.length, '个表')
+    } else if (connectionTest?.tableCount && connectionTest.tableCount > 0) {
+      // 次选：使用表占位符
       availableTables.value = Array.from({ length: connectionTest.tableCount }, (_, i) => ({
         name: `Table${i + 1}`,
         displayName: `表${i + 1}`,
@@ -636,7 +657,7 @@ onMounted(async () => {
         schema: null
       }))
       addLog(`⚠️ 使用基础表占位符（${availableTables.value.length}个）`, 'warning')
-      console.log('⚠️ 最终降级成功，生成了', availableTables.value.length, '个表占位符')
+      console.log('⚠️ 最终降级，生成了', availableTables.value.length, '个表占位符')
     }
   } finally {
     loadingTables.value = false

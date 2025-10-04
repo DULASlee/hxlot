@@ -486,14 +486,28 @@ export const mockRegisterModuleResponse: ModuleMetadata = {
 
 /**
  * Mock: 测试数据库连接响应（成功）
+ * 🔥 修复：添加真实表名列表
  */
 export const mockTestConnectionSuccessResponse = {
   success: true,
   message: '数据库连接成功',
-  serverVersion: 'PostgreSQL 15.3',
+  serverVersion: 'SQL Server 2019',
   databaseName: 'SmartAbp',
-  schemaCount: 2,
-  tableCount: 25
+  schemaCount: 1,
+  tableCount: 39,
+  // 🔥 关键修复：返回真实的表名列表
+  tables: [
+    'Users', 'Roles', 'UserRoles', 'Permissions', 'RolePermissions',
+    'Organizations', 'OrganizationUnits', 'Tenants', 'TenantConnections',
+    'AuditLogs', 'EntityChanges', 'EntityPropertyChanges',
+    'Projects', 'ProjectMembers', 'ProjectTasks', 'TaskAssignments',
+    'Departments', 'Employees', 'EmployeeAttendance',
+    'Products', 'Categories', 'Suppliers', 'Warehouses', 'Inventory',
+    'Orders', 'OrderDetails', 'Customers', 'CustomerAddresses',
+    'Invoices', 'InvoiceItems', 'Payments', 'PaymentMethods',
+    'Settings', 'ConfigItems', 'Notifications', 'NotificationSubscriptions',
+    'Files', 'FileStorages', 'BackgroundJobs'
+  ]
 }
 
 /**
