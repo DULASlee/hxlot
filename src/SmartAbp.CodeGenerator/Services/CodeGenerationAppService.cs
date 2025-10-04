@@ -24,6 +24,7 @@ using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using SmartAbp.Permissions; // 🔥 权限集成：引用权限常量定义
+using SmartAbp.CodeGenerator.Aspire; // 🔥 Aspire集成：引用Aspire生成器
 
 namespace SmartAbp.CodeGenerator.Services
 {
@@ -2081,9 +2082,110 @@ import Generated from './__COMPONENT__.generated.vue'
             throw new NotImplementedException();
         }
 
-        public Task<GeneratedAspireSolutionDto> GenerateAspireSolutionAsync(AspireSolutionDefinitionDto input)
+        /// <summary>
+        /// 🔥 Aspire解决方案生成 - 企业级微服务编排
+        /// Day 9: 集成.NET Aspire、服务发现、健康检查、Telemetry
+        /// </summary>
+        [Authorize(SmartAbpPermissions.CodeGeneration.Generate)]
+        public async Task<GeneratedAspireSolutionDto> GenerateAspireSolutionAsync(AspireSolutionDefinitionDto input)
         {
-            throw new NotImplementedException();
+            Check.NotNullOrWhiteSpace(input.SolutionName, nameof(input.SolutionName));
+            Check.NotNullOrWhiteSpace(input.RootNamespace, nameof(input.RootNamespace));
+            Check.NotNull(input.Microservices, nameof(input.Microservices));
+            
+            _logger.LogInformation("🚀 开始生成Aspire解决方案: {SolutionName}, 微服务数量: {Count}", 
+                input.SolutionName, input.Microservices.Count);
+            
+            try
+            {
+                // 1. DTO转换为内部定义
+                var definition = MapToAspireSolutionDefinition(input);
+                
+                // 2. 使用AspireMicroservicesGenerator生成代码
+                var aspireMicroservicesGenerator = new AspireMicroservicesGenerator(
+                    _loggerFactory.CreateLogger<AspireMicroservicesGenerator>(),
+                    _memoryManager
+                );
+                
+                var generatedSolution = await aspireMicroservicesGenerator.GenerateAspireSolutionAsync(definition);
+                
+                // 3. 写入文件到磁盘
+                var outputPath = Path.Combine(FindSolutionRoot() ?? throw new AbpException("Solution root not found"), 
+                    ".generated", "aspire", input.SolutionName);
+                
+                _logger.LogInformation("📁 写入Aspire代码到目录: {OutputPath}", outputPath);
+                
+                foreach (var file in generatedSolution.Files)
+                {
+                    var filePath = Path.Combine(outputPath, file.Key);
+                    var directory = Path.GetDirectoryName(filePath);
+                    if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+                    
+                    await File.WriteAllTextAsync(filePath, file.Value);
+                    _logger.LogDebug("✅ 生成文件: {FilePath}", file.Key);
+                }
+                
+                // 4. 发布生成完成事件
+                await _eventBus.PublishAsync(new AspireGenerationCompletedEvent
+                {
+                    SolutionName = input.SolutionName,
+                    MicroserviceCount = input.Microservices.Count,
+                    GeneratedAt = DateTime.UtcNow,
+                    OutputPath = outputPath
+                });
+                
+                _logger.LogInformation("✅ Aspire解决方案生成完成: {FileCount}个文件", generatedSolution.Files.Count);
+                
+                // 5. 转换返回DTO
+                return new GeneratedAspireSolutionDto
+                {
+                    SolutionName = generatedSolution.SolutionName,
+                    Files = generatedSolution.Files.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+                    MicroserviceCount = generatedSolution.MicroserviceCount,
+                    GeneratedAt = generatedSolution.GeneratedAt
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "❌ 生成Aspire解决方案失败: {SolutionName}", input.SolutionName);
+                throw new UserFriendlyException($"生成Aspire解决方案失败: {ex.Message}");
+            }
+        }
+        
+        /// <summary>
+        /// DTO映射: AspireSolutionDefinitionDto -> AspireSolutionDefinition
+        /// </summary>
+        private AspireSolutionDefinition MapToAspireSolutionDefinition(AspireSolutionDefinitionDto dto)
+        {
+            return new AspireSolutionDefinition
+            {
+                SolutionName = dto.SolutionName,
+                RootNamespace = dto.RootNamespace,
+                Description = dto.Description,
+                IncludeApiGateway = dto.IncludeApiGateway,
+                DatabaseName = dto.DatabaseName,
+                UsePostgreSQL = dto.UsePostgreSQL,
+                UseRedis = dto.UseRedis,
+                UseRabbitMQ = dto.UseRabbitMQ,
+                UseElasticsearch = dto.UseElasticsearch,
+                UseSeq = dto.UseSeq,
+                Microservices = dto.Microservices.Select(m => new MicroserviceDefinition
+                {
+                    Name = m.Name,
+                    ProjectName = m.ProjectName,
+                    DisplayName = m.DisplayName,
+                    Description = m.Description,
+                    BaseNamespace = dto.RootNamespace + "." + m.Name,
+                    Replicas = m.Replicas,
+                    UseDapr = m.UseDapr,
+                    UseServiceDiscovery = m.UseServiceDiscovery,
+                    UseHealthChecks = m.UseHealthChecks,
+                    UseOpenTelemetry = m.UseOpenTelemetry
+                }).ToList()
+            };
         }
 
         public Task<GeneratedCachingSolutionDto> GenerateCachingSolutionAsync(CachingDefinitionDto input)

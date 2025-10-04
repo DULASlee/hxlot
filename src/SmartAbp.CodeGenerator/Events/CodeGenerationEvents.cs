@@ -171,4 +171,18 @@ namespace SmartAbp.CodeGenerator.Events
         public int LineNumber { get; set; }
         public string RuleId { get; set; } = string.Empty;
     }
+    
+    /// <summary>
+    /// Aspire解决方案生成完成事件 - Day 9
+    /// </summary>
+    public class AspireGenerationCompletedEvent
+    {
+        public string SolutionName { get; set; } = string.Empty;
+        public int MicroserviceCount { get; set; }
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+        public string OutputPath { get; set; } = string.Empty;
+        public List<string> GeneratedFiles { get; set; } = new();
+        public bool Success { get; set; } = true;
+        public TimeSpan GenerationTime { get; set; }
+    }
 }

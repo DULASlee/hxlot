@@ -19,3 +19,6 @@ export {
   createCodeGenApiCall 
 } from './useApiCall'
 
+// Aspire代码生成
+export * from './useAspireCodeGen'
+export { useAspireCodeGen } from './useAspireCodeGen'

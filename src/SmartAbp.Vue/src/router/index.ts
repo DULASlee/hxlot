@@ -303,6 +303,17 @@ const routes: RouteRecordRaw[] = [
             meta: { title: "工作流", menuKey: "workflows" },
           },
           {
+            path: "aspire-designer",
+            name: "AspireDesigner",
+            component: () => import("@smartabp/lowcode-designer/src/views/codegen/AspireDesignerView.vue"),
+            meta: { 
+              title: ".NET Aspire设计器", 
+              menuKey: "aspire-designer",
+              icon: "🌐",
+              description: "微服务编排与云原生架构设计"
+            },
+          },
+          {
             path: "theme",
             name: "ThemeCustomization",
             component: () => import("@smartabp/lowcode-designer/src/views/ThemeCustomizationView.vue"),
