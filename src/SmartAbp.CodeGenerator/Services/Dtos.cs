@@ -1191,4 +1191,152 @@ namespace SmartAbp.CodeGenerator.Services
         public long PeakMemoryUsageMB { get; set; }
         public long MemoryUsageMB { get; set; }
     }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Day 10: 多环境配置管理 DTOs
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 环境类型枚举 - Dev/Staging/Prod
+    /// </summary>
+    public enum EnvironmentType
+    {
+        Development,
+        Staging,
+        Production
+    }
+
+    /// <summary>
+    /// 部署策略类型
+    /// </summary>
+    public enum DeploymentStrategyType
+    {
+        RollingUpdate,   // 滚动更新
+        BlueGreen,       // 蓝绿部署
+        Canary           // 金丝雀发布
+    }
+
+    /// <summary>
+    /// 环境配置DTO - 核心配置
+    /// </summary>
+    public class EnvironmentConfigDto
+    {
+        public string Environment { get; set; } = "Development";
+        public int DefaultReplicas { get; set; } = 1;
+        public ResourceLimitsDto Resources { get; set; } = new();
+        public Dictionary<string, string> EnvironmentVariables { get; set; } = new();
+        public FeatureFlagsDto Features { get; set; } = new();
+        public DeploymentStrategyConfigDto DeploymentStrategy { get; set; } = new();
+        public bool EnableAutoScaling { get; set; } = false;
+        public AutoScalingConfigDto? AutoScaling { get; set; }
+    }
+
+    /// <summary>
+    /// 资源限制配置
+    /// </summary>
+    public class ResourceLimitsDto
+    {
+        public string CpuRequest { get; set; } = "100m";
+        public string CpuLimit { get; set; } = "500m";
+        public string MemoryRequest { get; set; } = "128Mi";
+        public string MemoryLimit { get; set; } = "512Mi";
+        public string StorageRequest { get; set; } = "1Gi";
+        public string StorageLimit { get; set; } = "10Gi";
+    }
+
+    /// <summary>
+    /// 特性开关配置
+    /// </summary>
+    public class FeatureFlagsDto
+    {
+        public bool EnableTelemetry { get; set; } = true;
+        public bool EnableMetrics { get; set; } = true;
+        public bool EnableTracing { get; set; } = true;
+        public bool EnableLogging { get; set; } = true;
+        public bool EnableHealthChecks { get; set; } = true;
+        public bool EnableSwagger { get; set; } = true;
+        public Dictionary<string, bool> CustomFlags { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 部署策略配置
+    /// </summary>
+    public class DeploymentStrategyConfigDto
+    {
+        public string Type { get; set; } = "RollingUpdate";
+        public string MaxSurge { get; set; } = "25%";
+        public string MaxUnavailable { get; set; } = "0";
+        public int MinReadySeconds { get; set; } = 5;
+        public int ProgressDeadlineSeconds { get; set; } = 600;
+    }
+
+    /// <summary>
+    /// 自动扩缩容配置
+    /// </summary>
+    public class AutoScalingConfigDto
+    {
+        public int MinReplicas { get; set; } = 1;
+        public int MaxReplicas { get; set; } = 10;
+        public int TargetCPUUtilization { get; set; } = 70;
+        public int TargetMemoryUtilization { get; set; } = 80;
+        public List<CustomMetricDto> CustomMetrics { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 自定义指标配置
+    /// </summary>
+    public class CustomMetricDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Type { get; set; } = "Pods";
+        public string TargetType { get; set; } = "AverageValue";
+        public string TargetValue { get; set; } = "1k";
+    }
+
+    /// <summary>
+    /// 环境对比结果DTO
+    /// </summary>
+    public class EnvironmentComparisonDto
+    {
+        public string Environment1 { get; set; } = string.Empty;
+        public string Environment2 { get; set; } = string.Empty;
+        public List<ConfigDifferenceDto> Differences { get; set; } = new();
+        public int TotalDifferences { get; set; }
+        public DateTime ComparedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// 配置差异项
+    /// </summary>
+    public class ConfigDifferenceDto
+    {
+        public string Path { get; set; } = string.Empty;
+        public string Property { get; set; } = string.Empty;
+        public string? Value1 { get; set; }
+        public string? Value2 { get; set; }
+        public string DifferenceType { get; set; } = "Modified"; // Added, Removed, Modified
+    }
+
+    /// <summary>
+    /// Kubernetes Manifest生成结果
+    /// </summary>
+    public class GeneratedKubernetesManifestDto
+    {
+        public string Environment { get; set; } = string.Empty;
+        public Dictionary<string, string> Manifests { get; set; } = new(); // Key: filename, Value: YAML content
+        public int ResourceCount { get; set; }
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// Helm Chart生成结果
+    /// </summary>
+    public class GeneratedHelmChartDto
+    {
+        public string ChartName { get; set; } = string.Empty;
+        public string ChartVersion { get; set; } = "1.0.0";
+        public Dictionary<string, string> Files { get; set; } = new(); // Key: path, Value: content
+        public int TemplateCount { get; set; }
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    }
 }
