@@ -1339,4 +1339,195 @@ namespace SmartAbp.CodeGenerator.Services
         public int TemplateCount { get; set; }
         public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
     }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Day 12: 安全策略配置 DTOs
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 安全策略配置DTO - 完整的安全配置
+    /// </summary>
+    public class SecurityPolicyDto
+    {
+        public NetworkPolicyDto NetworkPolicy { get; set; } = new();
+        public AuthenticationDto Authentication { get; set; } = new();
+        public AuthorizationDto Authorization { get; set; } = new();
+        public SecretsManagementDto Secrets { get; set; } = new();
+        public ApiSecurityDto ApiSecurity { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 网络策略DTO
+    /// </summary>
+    public class NetworkPolicyDto
+    {
+        public string PolicyType { get; set; } = "Allow"; // Allow/Deny
+        public List<NetworkRuleDto> IngressRules { get; set; } = new();
+        public List<NetworkRuleDto> EgressRules { get; set; } = new();
+        public bool EnablePodSelector { get; set; } = true;
+        public Dictionary<string, string> PodSelector { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 网络规则DTO
+    /// </summary>
+    public class NetworkRuleDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public List<string> Ports { get; set; } = new();
+        public string Protocol { get; set; } = "TCP"; // TCP/UDP/SCTP
+        public List<string> FromCIDR { get; set; } = new();
+        public List<string> ToCIDR { get; set; } = new();
+        public Dictionary<string, string> FromPodSelector { get; set; } = new();
+        public Dictionary<string, string> ToPodSelector { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 身份认证DTO
+    /// </summary>
+    public class AuthenticationDto
+    {
+        public string Type { get; set; } = "JWT"; // JWT/OAuth2/OIDC
+        public string Issuer { get; set; } = string.Empty;
+        public string Audience { get; set; } = string.Empty;
+        public string Authority { get; set; } = string.Empty;
+        public int TokenExpirationMinutes { get; set; } = 60;
+        public bool RequireHttpsMetadata { get; set; } = true;
+        public List<string> ValidIssuers { get; set; } = new();
+        public List<string> ValidAudiences { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 授权策略DTO
+    /// </summary>
+    public class AuthorizationDto
+    {
+        public string Type { get; set; } = "RBAC"; // RBAC/ABAC
+        public List<RoleDto> Roles { get; set; } = new();
+        public List<RoleBindingDto> RoleBindings { get; set; } = new();
+        public List<PolicyDto> Policies { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 角色DTO
+    /// </summary>
+    public class RoleDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public List<string> Permissions { get; set; } = new();
+        public Dictionary<string, string> Labels { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 角色绑定DTO
+    /// </summary>
+    public class RoleBindingDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public string RoleName { get; set; } = string.Empty;
+        public List<string> Subjects { get; set; } = new();
+        public string SubjectType { get; set; } = "ServiceAccount"; // User/Group/ServiceAccount
+    }
+
+    /// <summary>
+    /// 策略DTO
+    /// </summary>
+    public class PolicyDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Effect { get; set; } = "Allow"; // Allow/Deny
+        public List<string> Actions { get; set; } = new();
+        public List<string> Resources { get; set; } = new();
+        public Dictionary<string, string> Conditions { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 密钥管理DTO
+    /// </summary>
+    public class SecretsManagementDto
+    {
+        public string Provider { get; set; } = "Kubernetes"; // Kubernetes/AzureKeyVault/HashiCorpVault
+        public string KeyVaultName { get; set; } = string.Empty;
+        public string KeyVaultUri { get; set; } = string.Empty;
+        public bool UseSystemManagedIdentity { get; set; } = true;
+        public List<SecretDto> Secrets { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 密钥DTO
+    /// </summary>
+    public class SecretDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Key { get; set; } = string.Empty;
+        public string? Value { get; set; }
+        public string Type { get; set; } = "Opaque"; // Opaque/TLS/DockerConfigJson
+    }
+
+    /// <summary>
+    /// API安全DTO
+    /// </summary>
+    public class ApiSecurityDto
+    {
+        public bool EnableRateLimiting { get; set; } = true;
+        public int RateLimitPerMinute { get; set; } = 100;
+        public bool EnableCORS { get; set; } = true;
+        public List<string> AllowedOrigins { get; set; } = new();
+        public List<string> AllowedMethods { get; set; } = new() { "GET", "POST", "PUT", "DELETE" };
+        public List<string> AllowedHeaders { get; set; } = new();
+        public bool EnableApiKey { get; set; } = false;
+        public string ApiKeyHeaderName { get; set; } = "X-API-Key";
+    }
+
+    /// <summary>
+    /// 安全扫描报告DTO
+    /// </summary>
+    public class SecurityScanReportDto
+    {
+        public string ScanType { get; set; } = string.Empty; // Image/Dependency/Configuration
+        public DateTime ScanTime { get; set; } = DateTime.UtcNow;
+        public string Status { get; set; } = "Completed"; // Running/Completed/Failed
+        public int TotalVulnerabilities { get; set; }
+        public int CriticalCount { get; set; }
+        public int HighCount { get; set; }
+        public int MediumCount { get; set; }
+        public int LowCount { get; set; }
+        public List<VulnerabilityDto> Vulnerabilities { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 漏洞DTO
+    /// </summary>
+    public class VulnerabilityDto
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Severity { get; set; } = "Low"; // Critical/High/Medium/Low
+        public string PackageName { get; set; } = string.Empty;
+        public string InstalledVersion { get; set; } = string.Empty;
+        public string FixedVersion { get; set; } = string.Empty;
+        public List<string> References { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 网络策略生成结果DTO
+    /// </summary>
+    public class GeneratedNetworkPolicyDto
+    {
+        public string PolicyName { get; set; } = string.Empty;
+        public string YamlContent { get; set; } = string.Empty;
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// RBAC配置生成结果DTO
+    /// </summary>
+    public class GeneratedRBACManifestDto
+    {
+        public Dictionary<string, string> Manifests { get; set; } = new(); // Key: filename, Value: YAML content
+        public int RoleCount { get; set; }
+        public int RoleBindingCount { get; set; }
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    }
 }
