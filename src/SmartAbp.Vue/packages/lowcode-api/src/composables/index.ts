@@ -42,3 +42,7 @@ export { useResiliencePolicy } from './useResiliencePolicy'
 // Git工作流管理
 export * from './useGitWorkflow'
 export { useGitWorkflow } from './useGitWorkflow'
+
+// CI/CD模板管理
+export * from './useCICDTemplate'
+export { useCICDTemplate } from './useCICDTemplate'
