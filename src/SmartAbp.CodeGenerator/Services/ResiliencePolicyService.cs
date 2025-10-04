@@ -148,12 +148,21 @@ namespace SmartAbp.CodeGenerator.Services
         }
 
         /// <summary>
-        /// 生成Istio策略YAML - Day 20 Part 2实现
+        /// 生成Istio策略YAML - 完整实现
         /// </summary>
-        public Task<GeneratedIstioPolicyDto> GenerateIstioPolicyAsync(ResiliencePolicyDto policy)
+        public async Task<GeneratedIstioPolicyDto> GenerateIstioPolicyAsync(ResiliencePolicyDto policy)
         {
-            // TODO: Day 20 Part 2 实现
-            throw new NotImplementedException("将在Day 20 Part 2实现");
+            var virtualService = GenerateVirtualService(policy);
+            var destinationRule = GenerateDestinationRule(policy);
+            var faultInjection = GenerateFaultInjection(policy);
+
+            return await Task.FromResult(new GeneratedIstioPolicyDto
+            {
+                VirtualServiceYaml = virtualService,
+                DestinationRuleYaml = destinationRule,
+                FaultInjectionYaml = faultInjection,
+                GeneratedAt = DateTime.UtcNow
+            });
         }
 
         #region 私有验证方法
@@ -546,6 +555,110 @@ namespace SmartAbp.CodeGenerator.Services
             }
 
             return code.ToString();
+        }
+
+        #endregion
+
+        #region Istio YAML生成方法
+
+        private string GenerateVirtualService(ResiliencePolicyDto policy)
+        {
+            var yaml = new StringBuilder();
+            yaml.AppendLine("apiVersion: networking.istio.io/v1beta1");
+            yaml.AppendLine("kind: VirtualService");
+            yaml.AppendLine("metadata:");
+            yaml.AppendLine($"  name: {policy.ServiceName}-vs");
+            yaml.AppendLine("spec:");
+            yaml.AppendLine("  hosts:");
+            yaml.AppendLine($"    - {policy.ServiceName}");
+            yaml.AppendLine("  http:");
+            yaml.AppendLine("  - route:");
+            yaml.AppendLine("    - destination:");
+            yaml.AppendLine($"        host: {policy.ServiceName}");
+            yaml.AppendLine("        port:");
+            yaml.AppendLine("          number: 80");
+
+            // 添加超时配置
+            if (policy.Timeout.Enabled)
+            {
+                yaml.AppendLine($"    timeout: {policy.Timeout.TimeoutMs}ms");
+            }
+
+            // 添加重试配置
+            if (policy.Retry.Enabled)
+            {
+                yaml.AppendLine("    retries:");
+                yaml.AppendLine($"      attempts: {policy.Retry.MaxAttempts}");
+                yaml.AppendLine($"      perTryTimeout: {policy.Timeout.TimeoutMs}ms");
+                yaml.AppendLine("      retryOn: 5xx,reset,connect-failure,refused-stream");
+            }
+
+            return yaml.ToString();
+        }
+
+        private string GenerateDestinationRule(ResiliencePolicyDto policy)
+        {
+            var yaml = new StringBuilder();
+            yaml.AppendLine("apiVersion: networking.istio.io/v1beta1");
+            yaml.AppendLine("kind: DestinationRule");
+            yaml.AppendLine("metadata:");
+            yaml.AppendLine($"  name: {policy.ServiceName}-dr");
+            yaml.AppendLine("spec:");
+            yaml.AppendLine($"  host: {policy.ServiceName}");
+            yaml.AppendLine("  trafficPolicy:");
+
+            // 连接池配置（Bulkhead）
+            if (policy.Bulkhead.Enabled)
+            {
+                yaml.AppendLine("    connectionPool:");
+                yaml.AppendLine("      tcp:");
+                yaml.AppendLine($"        maxConnections: {policy.Bulkhead.MaxParallelization}");
+                yaml.AppendLine("      http:");
+                yaml.AppendLine($"        http1MaxPendingRequests: {policy.Bulkhead.MaxQueuingActions}");
+                yaml.AppendLine($"        http2MaxRequests: {policy.Bulkhead.MaxParallelization}");
+                yaml.AppendLine($"        maxRequestsPerConnection: {policy.RateLimit.MaxRequests}");
+            }
+
+            // 断路器配置
+            if (policy.CircuitBreaker.Enabled)
+            {
+                yaml.AppendLine("    outlierDetection:");
+                yaml.AppendLine($"      consecutiveErrors: {(int)(policy.CircuitBreaker.MinimumThroughput * policy.CircuitBreaker.FailureThreshold)}");
+                yaml.AppendLine($"      interval: {policy.CircuitBreaker.SamplingDurationMs}ms");
+                yaml.AppendLine($"      baseEjectionTime: {policy.CircuitBreaker.BreakDurationMs}ms");
+                yaml.AppendLine($"      maxEjectionPercent: 100");
+                yaml.AppendLine($"      minHealthPercent: 0");
+            }
+
+            return yaml.ToString();
+        }
+
+        private string GenerateFaultInjection(ResiliencePolicyDto policy)
+        {
+            var yaml = new StringBuilder();
+            yaml.AppendLine("# 故障注入配置（用于混沌工程测试）");
+            yaml.AppendLine("apiVersion: networking.istio.io/v1beta1");
+            yaml.AppendLine("kind: VirtualService");
+            yaml.AppendLine("metadata:");
+            yaml.AppendLine($"  name: {policy.ServiceName}-fault-injection");
+            yaml.AppendLine("spec:");
+            yaml.AppendLine("  hosts:");
+            yaml.AppendLine($"    - {policy.ServiceName}");
+            yaml.AppendLine("  http:");
+            yaml.AppendLine("  - fault:");
+            yaml.AppendLine("      delay:");
+            yaml.AppendLine("        percentage:");
+            yaml.AppendLine("          value: 10.0");
+            yaml.AppendLine($"        fixedDelay: {policy.Timeout.TimeoutMs / 2}ms");
+            yaml.AppendLine("      abort:");
+            yaml.AppendLine("        percentage:");
+            yaml.AppendLine("          value: 5.0");
+            yaml.AppendLine("        httpStatus: 500");
+            yaml.AppendLine("    route:");
+            yaml.AppendLine("    - destination:");
+            yaml.AppendLine($"        host: {policy.ServiceName}");
+
+            return yaml.ToString();
         }
 
         #endregion
