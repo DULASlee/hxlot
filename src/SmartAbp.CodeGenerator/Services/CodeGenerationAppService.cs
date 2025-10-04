@@ -351,12 +351,20 @@ namespace SmartAbp.CodeGenerator.Services
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// 🔓 获取连接字符串名称列表（开发辅助接口 - 无需授权）
+        /// </summary>
+        [AllowAnonymous]
         public Task<List<string>> GetConnectionStringNamesAsync()
         {
             var connectionStrings = _configuration.GetSection("ConnectionStrings").GetChildren().Select(x => x.Key).ToList();
             return Task.FromResult(connectionStrings);
         }
 
+        /// <summary>
+        /// 🔓 获取菜单树（开发辅助接口 - 无需授权）
+        /// </summary>
+        [AllowAnonymous]
         public Task<List<MenuItemDto>> GetMenuTreeAsync()
         {
             // This is a mock implementation. In a real application, you would fetch this from a database or a service.
@@ -489,6 +497,11 @@ namespace SmartAbp.CodeGenerator.Services
             };
         }
 
+        /// <summary>
+        /// 🔓 测试数据库连接（开发辅助接口 - 无需授权）
+        /// 此接口仅用于前端开发阶段验证数据库连接，不涉及敏感操作
+        /// </summary>
+        [AllowAnonymous]
         public async Task<DatabaseConnectionTestResultDto> TestDatabaseConnectionAsync(DatabaseConnectionRequestDto request)
         {
             try
@@ -552,6 +565,11 @@ namespace SmartAbp.CodeGenerator.Services
             }
         }
 
+        /// <summary>
+        /// 🔓 数据库结构内省（开发辅助接口 - 无需授权）
+        /// 此接口用于前端获取数据库表结构信息，方便开发阶段使用
+        /// </summary>
+        [AllowAnonymous]
         public async Task<DatabaseSchemaDto> IntrospectDatabaseAsync(DatabaseIntrospectionRequestDto request)
         {
             try
