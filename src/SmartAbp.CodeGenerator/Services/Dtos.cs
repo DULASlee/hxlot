@@ -1932,4 +1932,151 @@ namespace SmartAbp.CodeGenerator.Services
         public List<string> Errors { get; set; } = new();
         public Dictionary<string, string> Suggestions { get; set; } = new();
     }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Day 25: Git工作流集成 DTOs - Phase 3 开发者体验
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// Git仓库初始化配置DTO - Git Repository Initialization Configuration
+    /// </summary>
+    public class GitRepositoryInitDto
+    {
+        public string ProjectName { get; set; } = string.Empty;
+        public string ProjectPath { get; set; } = string.Empty;
+        public string DefaultBranch { get; set; } = "main";
+        public bool InitializeWithReadme { get; set; } = true;
+        public bool GenerateGitignore { get; set; } = true;
+        public string GitignoreTemplate { get; set; } = "dotnet-vue"; // dotnet, vue, dotnet-vue
+        public bool SetupGitHooks { get; set; } = true;
+        public bool GeneratePullRequestTemplate { get; set; } = true;
+    }
+
+    /// <summary>
+    /// Git分支管理DTO - Git Branch Management
+    /// </summary>
+    public class GitBranchDto
+    {
+        public string BranchName { get; set; } = string.Empty;
+        public string BaseBranch { get; set; } = "main";
+        public string BranchType { get; set; } = "feature"; // feature, bugfix, hotfix, release
+        public string Description { get; set; } = string.Empty;
+        public bool CheckoutAfterCreate { get; set; } = true;
+    }
+
+    /// <summary>
+    /// Git提交配置DTO - Git Commit Configuration
+    /// </summary>
+    public class GitCommitDto
+    {
+        public string CommitMessage { get; set; } = string.Empty;
+        public string CommitType { get; set; } = "feat"; // feat, fix, docs, style, refactor, test, chore
+        public string Scope { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Body { get; set; } = string.Empty;
+        public List<string> FilesToCommit { get; set; } = new();
+        public bool RunPreCommitHooks { get; set; } = true;
+    }
+
+    /// <summary>
+    /// Git钩子配置DTO - Git Hook Configuration
+    /// </summary>
+    public class GitHookConfigDto
+    {
+        public string HookType { get; set; } = "pre-commit"; // pre-commit, pre-push, commit-msg
+        public bool EnableCodeFormatCheck { get; set; } = true;
+        public bool EnableLintCheck { get; set; } = true;
+        public bool EnableTestExecution { get; set; } = false;
+        public bool EnableCommitMsgValidation { get; set; } = true;
+        public List<string> CustomScripts { get; set; } = new();
+    }
+
+    /// <summary>
+    /// .gitignore配置DTO - .gitignore Configuration
+    /// </summary>
+    public class GitignoreConfigDto
+    {
+        public List<string> DotNetPatterns { get; set; } = new()
+        {
+            "bin/",
+            "obj/",
+            "*.user",
+            "*.suo",
+            ".vs/",
+            "*.DotSettings.user"
+        };
+        public List<string> VuePatterns { get; set; } = new()
+        {
+            "node_modules/",
+            "dist/",
+            ".DS_Store",
+            "*.local",
+            ".vscode/"
+        };
+        public List<string> CommonPatterns { get; set; } = new()
+        {
+            "*.log",
+            "*.tmp",
+            ".env",
+            ".generated/"
+        };
+        public List<string> CustomPatterns { get; set; } = new();
+    }
+
+    /// <summary>
+    /// PR模板配置DTO - Pull Request Template Configuration
+    /// </summary>
+    public class PullRequestTemplateDto
+    {
+        public string TemplateName { get; set; } = "default";
+        public List<string> Sections { get; set; } = new()
+        {
+            "## 变更说明",
+            "## 变更类型",
+            "## 测试情况",
+            "## 检查清单"
+        };
+        public List<string> ChangeTypes { get; set; } = new()
+        {
+            "- [ ] 新功能",
+            "- [ ] Bug修复",
+            "- [ ] 重构",
+            "- [ ] 文档更新"
+        };
+        public List<string> Checklist { get; set; } = new()
+        {
+            "- [ ] 代码已通过编译",
+            "- [ ] 代码已通过Lint检查",
+            "- [ ] 代码已添加单元测试",
+            "- [ ] 文档已更新"
+        };
+    }
+
+    /// <summary>
+    /// Git工作流操作结果DTO - Git Workflow Operation Result
+    /// </summary>
+    public class GitWorkflowResultDto
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = string.Empty;
+        public string RepositoryPath { get; set; } = string.Empty;
+        public string CurrentBranch { get; set; } = string.Empty;
+        public List<string> CreatedFiles { get; set; } = new();
+        public List<string> Warnings { get; set; } = new();
+        public List<string> Errors { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 生成的Git配置文件DTO - Generated Git Configuration Files
+    /// </summary>
+    public class GeneratedGitConfigDto
+    {
+        public string GitignoreContent { get; set; } = string.Empty;
+        public string PreCommitHookContent { get; set; } = string.Empty;
+        public string PrePushHookContent { get; set; } = string.Empty;
+        public string CommitMsgHookContent { get; set; } = string.Empty;
+        public string PullRequestTemplate { get; set; } = string.Empty;
+        public string ReadmeTemplate { get; set; } = string.Empty;
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    }
 }
