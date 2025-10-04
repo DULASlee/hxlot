@@ -46,3 +46,7 @@ export { useGitWorkflow } from './useGitWorkflow'
 // CI/CD模板管理
 export * from './useCICDTemplate'
 export { useCICDTemplate } from './useCICDTemplate'
+
+// 开发环境配置管理
+export * from './useDevEnvironment'
+export { useDevEnvironment } from './useDevEnvironment'
