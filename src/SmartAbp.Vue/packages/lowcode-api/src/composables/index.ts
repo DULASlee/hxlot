@@ -26,3 +26,7 @@ export { useAspireCodeGen } from './useAspireCodeGen'
 // 环境配置管理
 export * from './useEnvironmentConfig'
 export { useEnvironmentConfig } from './useEnvironmentConfig'
+
+// 安全策略管理
+export * from './useSecurityPolicy'
+export { useSecurityPolicy } from './useSecurityPolicy'
