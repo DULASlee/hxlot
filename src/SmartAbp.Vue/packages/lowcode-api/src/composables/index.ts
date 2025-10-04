@@ -22,3 +22,7 @@ export {
 // Aspire代码生成
 export * from './useAspireCodeGen'
 export { useAspireCodeGen } from './useAspireCodeGen'
+
+// 环境配置管理
+export * from './useEnvironmentConfig'
+export { useEnvironmentConfig } from './useEnvironmentConfig'
