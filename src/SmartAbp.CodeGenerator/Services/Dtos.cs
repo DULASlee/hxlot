@@ -2299,4 +2299,162 @@ namespace SmartAbp.CodeGenerator.Services
         public List<string> Errors { get; set; } = new();
         public Dictionary<string, string> Suggestions { get; set; } = new();
     }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Day 31: 调试测试工具 DTOs - Debug & Testing Tools
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// API测试请求DTO - API Test Request
+    /// </summary>
+    public class ApiTestRequestDto
+    {
+        public string Method { get; set; } = "GET"; // GET, POST, PUT, DELETE, PATCH
+        public string Url { get; set; } = string.Empty;
+        public Dictionary<string, string> Headers { get; set; } = new();
+        public Dictionary<string, string> QueryParameters { get; set; } = new();
+        public string? Body { get; set; }
+        public string ContentType { get; set; } = "application/json";
+        public int TimeoutSeconds { get; set; } = 30;
+        public bool FollowRedirects { get; set; } = true;
+        public bool ValidateSsl { get; set; } = true;
+    }
+
+    /// <summary>
+    /// API测试响应DTO - API Test Response
+    /// </summary>
+    public class ApiTestResponseDto
+    {
+        public int StatusCode { get; set; }
+        public string StatusText { get; set; } = string.Empty;
+        public Dictionary<string, string> Headers { get; set; } = new();
+        public string Body { get; set; } = string.Empty;
+        public long ResponseTimeMs { get; set; }
+        public long ContentLength { get; set; }
+        public bool IsSuccess { get; set; }
+        public string? ErrorMessage { get; set; }
+        public DateTime TestedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// 日志查询DTO - Log Query
+    /// </summary>
+    public class LogQueryDto
+    {
+        public string Level { get; set; } = "All"; // All, Trace, Debug, Information, Warning, Error, Critical
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+        public string? SearchText { get; set; }
+        public string? Source { get; set; }
+        public int PageSize { get; set; } = 100;
+        public int PageNumber { get; set; } = 1;
+    }
+
+    /// <summary>
+    /// 日志条目DTO - Log Entry
+    /// </summary>
+    public class LogEntryDto
+    {
+        public DateTime Timestamp { get; set; }
+        public string Level { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+        public string? Exception { get; set; }
+        public string? Source { get; set; }
+        public Dictionary<string, string> Properties { get; set; } = new();
+        public string TraceId { get; set; } = string.Empty;
+    }
+
+    /// <summary>
+    /// 日志查询结果DTO - Log Query Result
+    /// </summary>
+    public class LogQueryResultDto
+    {
+        public List<LogEntryDto> Logs { get; set; } = new();
+        public int TotalCount { get; set; }
+        public int PageSize { get; set; }
+        public int PageNumber { get; set; }
+        public int TotalPages { get; set; }
+    }
+
+    /// <summary>
+    /// 性能指标DTO - Performance Metrics
+    /// </summary>
+    public class PerformanceMetricsDto
+    {
+        public string ServiceName { get; set; } = string.Empty;
+        public double CpuUsagePercent { get; set; }
+        public long MemoryUsageMb { get; set; }
+        public long TotalMemoryMb { get; set; }
+        public int ActiveConnections { get; set; }
+        public long RequestsPerSecond { get; set; }
+        public double AverageResponseTimeMs { get; set; }
+        public double P95ResponseTimeMs { get; set; }
+        public double P99ResponseTimeMs { get; set; }
+        public long ErrorCount { get; set; }
+        public double ErrorRate { get; set; }
+        public DateTime CollectedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// 健康检查结果DTO - Health Check Result
+    /// </summary>
+    public class HealthCheckResultDto
+    {
+        public string ServiceName { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty; // Healthy, Degraded, Unhealthy
+        public string? Description { get; set; }
+        public Dictionary<string, HealthCheckItemDto> Checks { get; set; } = new();
+        public long TotalDurationMs { get; set; }
+        public DateTime CheckedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// 健康检查项DTO - Health Check Item
+    /// </summary>
+    public class HealthCheckItemDto
+    {
+        public string Status { get; set; } = string.Empty; // Healthy, Degraded, Unhealthy
+        public string? Description { get; set; }
+        public Dictionary<string, string> Data { get; set; } = new();
+        public long DurationMs { get; set; }
+        public string? Exception { get; set; }
+    }
+
+    /// <summary>
+    /// 性能测试配置DTO - Performance Test Configuration
+    /// </summary>
+    public class PerformanceTestConfigDto
+    {
+        public string TestName { get; set; } = string.Empty;
+        public string TargetUrl { get; set; } = string.Empty;
+        public int ConcurrentUsers { get; set; } = 10;
+        public int DurationSeconds { get; set; } = 60;
+        public int RampUpSeconds { get; set; } = 10;
+        public string HttpMethod { get; set; } = "GET";
+        public string? RequestBody { get; set; }
+        public Dictionary<string, string> Headers { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 性能测试结果DTO - Performance Test Result
+    /// </summary>
+    public class PerformanceTestResultDto
+    {
+        public string TestName { get; set; } = string.Empty;
+        public int TotalRequests { get; set; }
+        public int SuccessfulRequests { get; set; }
+        public int FailedRequests { get; set; }
+        public double SuccessRate { get; set; }
+        public double AverageResponseTimeMs { get; set; }
+        public double MinResponseTimeMs { get; set; }
+        public double MaxResponseTimeMs { get; set; }
+        public double MedianResponseTimeMs { get; set; }
+        public double P95ResponseTimeMs { get; set; }
+        public double P99ResponseTimeMs { get; set; }
+        public double RequestsPerSecond { get; set; }
+        public long TotalDataTransferredBytes { get; set; }
+        public DateTime TestStartTime { get; set; }
+        public DateTime TestEndTime { get; set; }
+        public int TestDurationSeconds { get; set; }
+    }
 }
