@@ -275,6 +275,17 @@ const routes: RouteRecordRaw[] = [
             meta: { title: "代码生成", menuKey: "code-generation" },
           },
           {
+            path: "ddd-designer",
+            name: "DddDomainDesigner",
+            component: () => import("@/views/lowcode/DddDomainDesignerView.vue"),
+            meta: { 
+              title: "DDD领域设计器", 
+              menuKey: "ddd-designer",
+              icon: "🏛️",
+              description: "领域驱动设计代码生成器"
+            },
+          },
+          {
             path: "workflows",
             name: "WorkflowsManagement",
             component: () => import("@/views/lowcode/WorkflowsView.vue"),
