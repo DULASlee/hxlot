@@ -17,7 +17,7 @@ import { HtmlReportExporter, type ReportSection } from './HtmlReportExporter'
 import type { LoadTestResult } from './LoadTestEngine'
 import type { ConcurrencyTestResult } from './ConcurrencyTestEngine'
 import type { BenchmarkResult } from './BenchmarkEngine'
-import type { RegressionReport } from './RegressionDetector'
+// import type { RegressionReport } from './RegressionDetector'
 
 const logger = getGlobalLogger()
 
@@ -280,7 +280,7 @@ export class TestReportGenerator {
   </thead>
   <tbody>
     <tr>
-      <td>${latestResult.scenario.name}</td>
+      <td>${latestResult.scenarioName}</td>
       <td>${latestResult.overallStats.totalRequests}</td>
       <td>${latestResult.overallStats.successRate.toFixed(2)}%</td>
       <td>${latestResult.overallStats.averageResponseTime.toFixed(2)}ms</td>

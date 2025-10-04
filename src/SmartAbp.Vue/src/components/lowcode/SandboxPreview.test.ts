@@ -3,7 +3,7 @@
  */
 import { describe, it, expect } from "vitest"
 import { mount } from "@vue/test-utils"
-import { SandboxPreview } from "@smartabp/lowcode-designer"
+import SandboxPreview from "@smartabp/lowcode-designer/components/SandboxPreview.vue"
 
 describe("SandboxPreview.vue", () => {
   it("should render an iframe with the correct sandbox attributes", () => {

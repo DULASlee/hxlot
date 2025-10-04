@@ -140,8 +140,8 @@
 import { ref, computed } from "vue"
 import { ElButton, ElCard, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElTag, ElMessage } from "element-plus"
 import { logger } from "@/utils/logger"
-import { TemplateSelector } from "@smartabp/lowcode-designer"
-import { SandboxPreview } from "@smartabp/lowcode-designer"
+import TemplateSelector from "@smartabp/lowcode-designer/components/TemplateSelector.vue"
+import SandboxPreview from "@smartabp/lowcode-designer/components/SandboxPreview.vue"
 import { useWorkspaceStore } from "@/stores/lowcode/workspace"
 
 // ✅ 使用真实的代码生成器API

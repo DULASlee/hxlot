@@ -259,13 +259,13 @@ const routes: RouteRecordRaw[] = [
           {
             path: "entity-modeling",
             name: "EntityModeling",
-            component: () => import("@smartabp/lowcode-designer/src/views/EntityModelingView.vue"),
+            component: () => import("@smartabp/lowcode-designer/views/EntityModelingView.vue"),
             meta: { title: "数据建模", menuKey: "entity-modeling" },
           },
           {
             path: "design",
             name: "PageDesign",
-            component: () => import("@smartabp/lowcode-designer/src/views/DesignView.vue"),
+            component: () => import("@smartabp/lowcode-designer/views/DesignView.vue"),
             meta: { title: "页面设计", menuKey: "page-design" },
           },
           {
@@ -305,7 +305,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: "aspire-designer",
             name: "AspireDesigner",
-            component: () => import("@smartabp/lowcode-designer/src/views/codegen/AspireDesignerView.vue"),
+            component: () => import("@smartabp/lowcode-designer/views/codegen/AspireDesignerView.vue"),
             meta: { 
               title: ".NET Aspire设计器", 
               menuKey: "aspire-designer",
@@ -316,7 +316,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: "observability-dashboard",
             name: "ObservabilityDashboard",
-            component: () => import("@smartabp/lowcode-designer/src/views/codegen/ObservabilityDashboard.vue"),
+            component: () => import("@smartabp/lowcode-designer/views/codegen/ObservabilityDashboard.vue"),
             meta: { 
               title: "可观测性仪表板", 
               menuKey: "observability-dashboard",
@@ -327,7 +327,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: "observability-config",
             name: "ObservabilityConfig",
-            component: () => import("@smartabp/lowcode-designer/src/views/codegen/ObservabilityConfigPanel.vue"),
+            component: () => import("@smartabp/lowcode-designer/views/codegen/ObservabilityConfigPanel.vue"),
             meta: { 
               title: "可观测性配置", 
               menuKey: "observability-config",
@@ -338,7 +338,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: "theme",
             name: "ThemeCustomization",
-            component: () => import("@smartabp/lowcode-designer/src/views/ThemeCustomizationView.vue"),
+            component: () => import("@smartabp/lowcode-designer/views/ThemeCustomizationView.vue"),
             meta: { title: "主题定制", menuKey: "theme-customization" },
           },
         ],

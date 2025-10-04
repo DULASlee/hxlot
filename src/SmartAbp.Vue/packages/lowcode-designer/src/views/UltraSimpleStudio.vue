@@ -619,7 +619,7 @@ onMounted(async () => {
               name: `Table${i + 1}`,
               displayName: `表${i + 1}`,
               columnCount: 0,
-              schema: null
+              schema: undefined
             }))
             
             addLog(`⚠️ 已生成 ${availableTables.value.length} 个表占位符（最终降级）`, 'warning')
@@ -644,7 +644,7 @@ onMounted(async () => {
         name: tableName,
         displayName: tableName,
         columnCount: 0,
-        schema: null
+        schema: undefined
       }))
       addLog(`✅ 使用真实表名列表（${availableTables.value.length}个）`, 'success')
       console.log('✅ 最终降级成功，使用真实表名:', availableTables.value.length, '个表')
@@ -654,7 +654,7 @@ onMounted(async () => {
         name: `Table${i + 1}`,
         displayName: `表${i + 1}`,
         columnCount: 0,
-        schema: null
+        schema: undefined
       }))
       addLog(`⚠️ 使用基础表占位符（${availableTables.value.length}个）`, 'warning')
       console.log('⚠️ 最终降级，生成了', availableTables.value.length, '个表占位符')

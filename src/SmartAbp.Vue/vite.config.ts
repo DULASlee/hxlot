@@ -65,19 +65,19 @@ export default defineConfig({
         new URL("./packages/lowcode-core", import.meta.url),
       ),
       "@smartabp/lowcode-designer": fileURLToPath(
-        new URL("./packages/lowcode-designer", import.meta.url),
+        new URL("./packages/lowcode-designer/src", import.meta.url),
       ),
       "@smartabp/lowcode-codegen": fileURLToPath(
-        new URL("./packages/lowcode-codegen", import.meta.url),
+        new URL("./packages/lowcode-codegen/src", import.meta.url),
       ),
       "@smartabp/lowcode-api": fileURLToPath(
-        new URL("./packages/lowcode-api", import.meta.url),
+        new URL("./packages/lowcode-api/src", import.meta.url),
       ),
       "@smartabp/lowcode-tools": fileURLToPath(
-        new URL("./packages/lowcode-tools", import.meta.url),
+        new URL("./packages/lowcode-tools/src", import.meta.url),
       ),
       "@smartabp/lowcode-ui-vue": fileURLToPath(
-        new URL("./packages/lowcode-ui-vue", import.meta.url),
+        new URL("./packages/lowcode-ui-vue/src", import.meta.url),
       ),
     },
   },

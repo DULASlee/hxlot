@@ -871,7 +871,9 @@ import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { logger } from '@smartabp/lowcode-tools'
 import { useEntityModelingStore, usePageDesignStore, type MDIWindowConfig, type TabConfig } from '@smartabp/lowcode-core'
-import { VisualComponentPalette, VisualDesignCanvas, ComponentPropertyPanel } from '@smartabp/lowcode-designer'
+import VisualComponentPalette from '@smartabp/lowcode-designer/components/VisualComponentPalette.vue'
+import VisualDesignCanvas from '@smartabp/lowcode-designer/components/VisualDesignCanvas.vue'
+import ComponentPropertyPanel from '@smartabp/lowcode-designer/components/ComponentPropertyPanel.vue'
 // import { MDIContainer, TabsContainer } from '@smartabp/lowcode-ui-vue' // 暂时注释模块问题
 // 使用简化的类型定义
 

@@ -28,6 +28,7 @@ export interface ForeignKeySchema {
 
 export interface TableSchema {
   name: string
+  displayName?: string
   columns: ColumnSchema[]
   primaryKeys: string[]
   foreignKeys: ForeignKeySchema[]

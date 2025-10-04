@@ -7,6 +7,8 @@
     "declaration": true,
     "declarationMap": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "paths": {
       "@smartabp/lowcode-shared": ["../lowcode-shared/src/index.ts"],
       "@smartabp/lowcode-shared/*": ["../lowcode-shared/src/*"],
