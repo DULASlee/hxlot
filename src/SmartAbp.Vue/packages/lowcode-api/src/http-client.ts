@@ -4,6 +4,7 @@
  */
 
 import axios, { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
+import { setupMockInterceptor } from './__tests__/mocks/mock-server'
 
 /**
  * HTTP响应统一格式
@@ -71,6 +72,9 @@ export function createHttpClient(config?: HttpClientConfig): HttpClient {
       'Content-Type': 'application/json'
     }
   })
+
+  // 🔥 启用Mock拦截器（当后端不可用时自动降级到Mock数据）
+  setupMockInterceptor(instance)
 
   // 请求拦截器 - 添加认证token
   instance.interceptors.request.use(

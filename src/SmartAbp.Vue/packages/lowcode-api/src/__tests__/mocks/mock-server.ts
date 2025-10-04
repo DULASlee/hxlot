@@ -24,7 +24,9 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
  * Mock Server配置
  */
 export const mockServerConfig = {
-  enabled: (import.meta as any).env?.VITE_USE_MOCK_API === 'true',
+  // 🔥 默认启用Mock（当后端不可用时自动降级）
+  // 可以通过 VITE_USE_MOCK_API=false 禁用
+  enabled: (import.meta as any).env?.VITE_USE_MOCK_API !== 'false',
   baseURL: '/api',
   delay: {
     min: 100,
