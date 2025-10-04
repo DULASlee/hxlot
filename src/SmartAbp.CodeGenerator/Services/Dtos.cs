@@ -1815,4 +1815,121 @@ namespace SmartAbp.CodeGenerator.Services
         public List<string> Errors { get; set; } = new();
         public Dictionary<string, string> Suggestions { get; set; } = new();
     }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Day 24: 混沌工程实验 DTOs - Phase 2 弹性工程
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 混沌实验配置DTO - Chaos Engineering Experiment
+    /// </summary>
+    public class ChaosExperimentDto
+    {
+        public string ExperimentName { get; set; } = string.Empty;
+        public string ServiceName { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public FaultInjectionDto FaultInjection { get; set; } = new();
+        public ExperimentScheduleDto Schedule { get; set; } = new();
+        public ExperimentMetricsDto Metrics { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 故障注入配置DTO - Fault Injection Configuration
+    /// </summary>
+    public class FaultInjectionDto
+    {
+        public DelayFaultDto Delay { get; set; } = new();
+        public AbortFaultDto Abort { get; set; } = new();
+        public string TargetEndpoint { get; set; } = string.Empty; // 目标端点
+        public double InjectionPercentage { get; set; } = 10.0; // 注入比例（0-100）
+    }
+
+    /// <summary>
+    /// 延迟故障DTO - Delay Fault
+    /// </summary>
+    public class DelayFaultDto
+    {
+        public bool Enabled { get; set; } = true;
+        public int FixedDelayMs { get; set; } = 5000; // 固定延迟（毫秒）
+        public double Percentage { get; set; } = 100.0; // 延迟注入比例
+    }
+
+    /// <summary>
+    /// 中止故障DTO - Abort Fault
+    /// </summary>
+    public class AbortFaultDto
+    {
+        public bool Enabled { get; set; } = false;
+        public int HttpStatusCode { get; set; } = 500; // HTTP状态码
+        public double Percentage { get; set; } = 100.0; // 中止注入比例
+    }
+
+    /// <summary>
+    /// 实验调度配置DTO - Experiment Schedule
+    /// </summary>
+    public class ExperimentScheduleDto
+    {
+        public string ScheduleType { get; set; } = "Manual"; // Manual, Scheduled, Continuous
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+        public int DurationMinutes { get; set; } = 10; // 实验持续时间
+        public string CronExpression { get; set; } = string.Empty; // Cron表达式
+    }
+
+    /// <summary>
+    /// 实验指标配置DTO - Experiment Metrics
+    /// </summary>
+    public class ExperimentMetricsDto
+    {
+        public List<string> MonitoredMetrics { get; set; } = new()
+        {
+            "ResponseTime",
+            "ErrorRate",
+            "Throughput"
+        };
+        public Dictionary<string, double> Thresholds { get; set; } = new()
+        {
+            { "MaxResponseTimeMs", 5000 },
+            { "MaxErrorRate", 0.05 }
+        };
+        public bool EnableRollback { get; set; } = true; // 超过阈值时自动回滚
+    }
+
+    /// <summary>
+    /// 混沌实验执行结果DTO - Chaos Experiment Result
+    /// </summary>
+    public class ChaosExperimentResultDto
+    {
+        public string ExperimentId { get; set; } = string.Empty;
+        public string ExperimentName { get; set; } = string.Empty;
+        public string Status { get; set; } = "Pending"; // Pending, Running, Completed, Failed, Aborted
+        public DateTime StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+        public Dictionary<string, double> ObservedMetrics { get; set; } = new();
+        public List<string> Incidents { get; set; } = new(); // 事件列表
+        public bool ThresholdExceeded { get; set; } = false;
+        public string Report { get; set; } = string.Empty;
+    }
+
+    /// <summary>
+    /// 生成的混沌实验配置DTO - Generated Chaos Configuration
+    /// </summary>
+    public class GeneratedChaosConfigDto
+    {
+        public string IstioFaultInjectionYaml { get; set; } = string.Empty; // Istio故障注入YAML
+        public string KubernetesChaosYaml { get; set; } = string.Empty; // Kubernetes Chaos Mesh YAML
+        public string PrometheusAlertsYaml { get; set; } = string.Empty; // Prometheus告警规则
+        public DateTime GeneratedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    /// <summary>
+    /// 混沌实验验证结果DTO - Chaos Experiment Validation
+    /// </summary>
+    public class ChaosExperimentValidationResultDto
+    {
+        public bool IsValid { get; set; }
+        public List<string> Warnings { get; set; } = new();
+        public List<string> Errors { get; set; } = new();
+        public Dictionary<string, string> Suggestions { get; set; } = new();
+    }
 }
