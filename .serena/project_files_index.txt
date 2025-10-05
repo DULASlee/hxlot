@@ -167,6 +167,7 @@ src/SmartAbp.Vue/src/performance/optimization.ts
 src/SmartAbp.Vue/src/plugins/dayjs.ts
 src/SmartAbp.Vue/src/plugins/i18n.ts
 src/SmartAbp.Vue/src/plugins/performance-monitor.ts
+src/SmartAbp.Vue/src/router/auto-load.ts
 src/SmartAbp.Vue/src/router/guards/permission.ts
 src/SmartAbp.Vue/src/router/index.ts
 src/SmartAbp.Vue/src/router/lazyLoad.ts

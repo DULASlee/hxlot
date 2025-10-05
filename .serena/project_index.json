@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-05T05:20:28.981Z",
+  "timestamp": "2025-10-05T11:47:12.060Z",
   "project": "Baobab.SmartAbp",
   "language": "typescript",
   "files": [
@@ -994,50 +994,50 @@
       "name": "assembly-config.ts",
       "path": "src/SmartAbp.Vue/src/core/assembly/assembly-config.ts",
       "type": "file",
-      "size": 11318,
-      "modified": "2025-10-05T03:16:56.072Z"
+      "size": 11511,
+      "modified": "2025-10-05T06:30:05.268Z"
     },
     {
       "name": "assembly-loader.ts",
       "path": "src/SmartAbp.Vue/src/core/assembly/assembly-loader.ts",
       "type": "file",
-      "size": 6480,
-      "modified": "2025-10-05T03:16:56.072Z"
+      "size": 6685,
+      "modified": "2025-10-05T06:30:05.268Z"
     },
     {
       "name": "assembly-manager.ts",
       "path": "src/SmartAbp.Vue/src/core/assembly/assembly-manager.ts",
       "type": "file",
-      "size": 13793,
-      "modified": "2025-10-05T03:16:56.073Z"
+      "size": 13605,
+      "modified": "2025-10-05T06:40:40.195Z"
     },
     {
       "name": "assembly-registry.ts",
       "path": "src/SmartAbp.Vue/src/core/assembly/assembly-registry.ts",
       "type": "file",
-      "size": 11239,
-      "modified": "2025-10-05T03:16:56.073Z"
+      "size": 11587,
+      "modified": "2025-10-05T06:40:40.196Z"
     },
     {
       "name": "assembly-system-integration.ts",
       "path": "src/SmartAbp.Vue/src/core/assembly/assembly-system-integration.ts",
       "type": "file",
-      "size": 11063,
-      "modified": "2025-10-05T03:16:56.073Z"
+      "size": 11288,
+      "modified": "2025-10-05T07:17:57.676Z"
     },
     {
       "name": "assembly-types.ts",
       "path": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts",
       "type": "file",
-      "size": 6642,
-      "modified": "2025-10-05T03:16:56.073Z"
+      "size": 7720,
+      "modified": "2025-10-05T07:17:50.003Z"
     },
     {
       "name": "assembly-utils.ts",
       "path": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts",
       "type": "file",
-      "size": 11028,
-      "modified": "2025-10-05T03:16:56.073Z"
+      "size": 11198,
+      "modified": "2025-10-05T07:20:16.855Z"
     },
     {
       "name": "basic-usage.ts",
@@ -1187,6 +1187,13 @@
       "modified": "2025-10-05T02:55:20.544Z"
     },
     {
+      "name": "auto-load.ts",
+      "path": "src/SmartAbp.Vue/src/router/auto-load.ts",
+      "type": "file",
+      "size": 2857,
+      "modified": "2025-10-05T08:19:15.686Z"
+    },
+    {
       "name": "permission.ts",
       "path": "src/SmartAbp.Vue/src/router/guards/permission.ts",
       "type": "file",
@@ -1197,8 +1204,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/src/router/index.ts",
       "type": "file",
-      "size": 14776,
-      "modified": "2025-10-04T22:33:38.984Z"
+      "size": 15182,
+      "modified": "2025-10-05T08:19:49.911Z"
     },
     {
       "name": "lazyLoad.ts",
@@ -3809,7 +3816,7 @@
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/UltraSimpleStudio.vue",
       "type": "file",
       "size": 30825,
-      "modified": "2025-10-04T22:33:38.983Z"
+      "modified": "2025-10-05T05:42:10.109Z"
     },
     {
       "name": "VisualDesignerView.vue",
@@ -6728,7 +6735,7 @@
     {
       "name": "createAssemblyConfigManager",
       "type": "function",
-      "line": 451,
+      "line": 454,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-config.ts"
     },
@@ -6742,42 +6749,42 @@
     {
       "name": "createAssemblyLoader",
       "type": "function",
-      "line": 252,
+      "line": 260,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-loader.ts"
     },
     {
       "name": "AssemblyManager",
       "type": "class",
-      "line": 31,
+      "line": 27,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-manager.ts"
     },
     {
       "name": "createAssemblyManager",
       "type": "function",
-      "line": 524,
+      "line": 514,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-manager.ts"
     },
     {
       "name": "AssemblyRegistryItem",
       "type": "interface",
-      "line": 11,
+      "line": 9,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-registry.ts"
     },
     {
       "name": "AssemblyRegistry",
       "type": "class",
-      "line": 31,
+      "line": 29,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-registry.ts"
     },
     {
       "name": "useAssemblyRegistry",
       "type": "function",
-      "line": 332,
+      "line": 337,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-registry.ts"
     },
@@ -6791,105 +6798,105 @@
     {
       "name": "getAssemblySystemIntegrator",
       "type": "function",
-      "line": 384,
+      "line": 392,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-system-integration.ts"
     },
     {
       "name": "installAssemblySystem",
       "type": "function",
-      "line": 394,
+      "line": 402,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-system-integration.ts"
     },
     {
       "name": "useAssemblySystem",
       "type": "function",
-      "line": 409,
+      "line": 417,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-system-integration.ts"
     },
     {
       "name": "AssemblyConfig",
       "type": "interface",
-      "line": 35,
+      "line": 33,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
     },
     {
       "name": "AssemblyInstance",
       "type": "interface",
-      "line": 65,
+      "line": 69,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
     },
     {
       "name": "AssemblyEvent",
       "type": "interface",
-      "line": 101,
+      "line": 123,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
     },
     {
       "name": "AssemblyHealth",
       "type": "interface",
-      "line": 117,
+      "line": 139,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
     },
     {
       "name": "AssemblyValidationResult",
       "type": "interface",
-      "line": 131,
+      "line": 157,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
     },
     {
       "name": "AssemblyStorage",
       "type": "interface",
-      "line": 145,
+      "line": 173,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
     },
     {
       "name": "DependencyNode",
       "type": "interface",
-      "line": 161,
+      "line": 191,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
     },
     {
       "name": "DependencyGraph",
       "type": "interface",
-      "line": 175,
+      "line": 207,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
     },
     {
       "name": "IAssemblyManager",
       "type": "interface",
-      "line": 189,
+      "line": 221,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
     },
     {
       "name": "IAssemblyLoader",
       "type": "interface",
-      "line": 223,
+      "line": 257,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
     },
     {
       "name": "AssemblyManagerOptions",
       "type": "interface",
-      "line": 240,
+      "line": 274,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
     },
     {
       "name": "AssemblyLoaderOptions",
       "type": "interface",
-      "line": 254,
+      "line": 294,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
     },
@@ -6910,140 +6917,140 @@
     {
       "name": "deepMerge",
       "type": "function",
-      "line": 81,
+      "line": 82,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "createDefaultConfig",
       "type": "function",
-      "line": 98,
+      "line": 99,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "buildDependencyGraph",
       "type": "function",
-      "line": 110,
+      "line": 111,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "serializeConfig",
       "type": "function",
-      "line": 249,
+      "line": 250,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "deserializeConfig",
       "type": "function",
-      "line": 256,
+      "line": 257,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "compareVersions",
       "type": "function",
-      "line": 280,
+      "line": 283,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "isCompatibleVersion",
       "type": "function",
-      "line": 298,
+      "line": 301,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "generateConfigHash",
       "type": "function",
-      "line": 308,
+      "line": 311,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "debounce",
       "type": "function",
-      "line": 324,
+      "line": 327,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "throttle",
       "type": "function",
-      "line": 345,
+      "line": 348,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "deepClone",
       "type": "function",
-      "line": 365,
+      "line": 368,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "sleep",
       "type": "function",
-      "line": 394,
+      "line": 397,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "retry",
       "type": "function",
-      "line": 401,
+      "line": 404,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "generateRandomColor",
       "type": "function",
-      "line": 425,
+      "line": 428,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "formatFileSize",
       "type": "function",
-      "line": 436,
+      "line": 439,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "isValidUrl",
       "type": "function",
-      "line": 449,
+      "line": 452,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "getFileExtension",
       "type": "function",
-      "line": 461,
+      "line": 464,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "isJavaScriptFile",
       "type": "function",
-      "line": 468,
+      "line": 471,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "isTypeScriptFile",
       "type": "function",
-      "line": 473,
+      "line": 476,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
     {
       "name": "isJSONFile",
       "type": "function",
-      "line": 478,
+      "line": 481,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
     },
@@ -7291,6 +7298,27 @@
       "line": 132,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/plugins/performance-monitor.ts"
+    },
+    {
+      "name": "autoLoadModuleRoutes",
+      "type": "function",
+      "line": 20,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/router/auto-load.ts"
+    },
+    {
+      "name": "getLoadedModuleInfo",
+      "type": "function",
+      "line": 64,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/router/auto-load.ts"
+    },
+    {
+      "name": "printRouteLoadInfo",
+      "type": "function",
+      "line": 86,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/router/auto-load.ts"
     },
     {
       "name": "SmartPreloader",

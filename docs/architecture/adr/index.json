@@ -1,7 +1,7 @@
 {
-  "version": "17.0.0",
-  "description": "SmartAbp项目架构决策记录索引 (十七重爆雷完整版)",
-  "lastUpdated": "2024-12-24T09:30:00.000Z",
+  "version": "20.0.0",
+  "description": "SmartAbp项目架构决策记录索引 (v19.0微服务编排与智能化升级版)",
+  "lastUpdated": "2025-10-05T12:00:00.000Z",
   "adrs": [
     {
       "id": "0001",
@@ -362,6 +362,51 @@
       "aiTriggers": ["TypeScript", "模块解析", "类型系统", "包管理", "模块导入"],
       "relatedADRs": ["0002", "0016"],
       "summary": "第6重爆雷：完整的TypeScript企业级模块解析系统，确保包管理和类型安全"
+    },
+    {
+      "id": "0031",
+      "title": "Aspire微服务编排架构决策",
+      "path": "./0031-aspire-microservice-orchestration.md",
+      "status": "已接受",
+      "category": "微服务架构",
+      "tags": [".NET Aspire", "微服务编排", "分布式应用", "云原生", "可观测性"],
+      "createdDate": "2025-10-05",
+      "lastUpdated": "2025-10-05",
+      "decisionMakers": ["首席架构师", "微服务团队"],
+      "impactScope": "微服务编排和云原生部署能力",
+      "aiTriggers": ["微服务", "Aspire", "服务编排", "分布式应用", "云原生部署", "OpenTelemetry"],
+      "relatedADRs": ["0003", "0025"],
+      "summary": "v19.0新增：采用.NET Aspire进行微服务编排，实现分布式应用的开发、部署、监控一体化"
+    },
+    {
+      "id": "0032",
+      "title": "Assembly插件管理系统架构决策",
+      "path": "./0032-assembly-plugin-management-system.md",
+      "status": "已接受",
+      "category": "插件架构",
+      "tags": ["插件系统", "Assembly", "动态加载", "热插拔", "扩展架构"],
+      "createdDate": "2025-10-05",
+      "lastUpdated": "2025-10-05",
+      "decisionMakers": ["首席架构师", "前端团队"],
+      "impactScope": "系统的可扩展性和插件化能力",
+      "aiTriggers": ["插件", "Assembly", "动态加载", "热插拔", "扩展系统", "模块化"],
+      "relatedADRs": ["0013", "0016"],
+      "summary": "v19.0新增：基于Assembly动态加载的智能插件管理系统，支持热插拔和灵活扩展"
+    },
+    {
+      "id": "0033",
+      "title": "架构健康度监控系统架构决策",
+      "path": "./0033-architecture-health-monitoring.md",
+      "status": "已接受",
+      "category": "架构治理",
+      "tags": ["架构监控", "健康度评估", "依赖分析", "质量门禁", "自动化检查"],
+      "createdDate": "2025-10-05",
+      "lastUpdated": "2025-10-05",
+      "decisionMakers": ["首席架构师", "质量团队"],
+      "impactScope": "架构质量和持续治理能力",
+      "aiTriggers": ["架构监控", "健康度", "依赖分析", "架构治理", "质量检查"],
+      "relatedADRs": ["0026", "0011"],
+      "summary": "v19.0新增：完整的架构健康度监控体系，实时检测架构违规，持续评估架构质量（92分）"
     }
   ],
   "categories": {
@@ -439,6 +484,21 @@
       "description": "云原生部署和运维相关的决策",
       "adrs": ["0025"],
       "importance": "核心"
+    },
+    "微服务架构": {
+      "description": "微服务编排和分布式应用相关的决策",
+      "adrs": ["0031"],
+      "importance": "核心"
+    },
+    "插件架构": {
+      "description": "插件系统和动态扩展相关的决策",
+      "adrs": ["0032"],
+      "importance": "核心"
+    },
+    "架构治理": {
+      "description": "架构监控和质量治理相关的决策",
+      "adrs": ["0033"],
+      "importance": "核心"
     }
   },
   "aiUsageGuidelines": {
@@ -471,8 +531,8 @@
     ]
   },
   "statistics": {
-    "totalADRs": 17,
-    "acceptedADRs": 17,
+    "totalADRs": 20,
+    "acceptedADRs": 20,
     "proposedADRs": 0,
     "deprecatedADRs": 0,
     "supersededADRs": 0,
