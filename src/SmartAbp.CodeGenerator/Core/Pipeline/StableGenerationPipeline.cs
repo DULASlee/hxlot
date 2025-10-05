@@ -429,39 +429,31 @@ public class StableGenerationPipeline
 
     /// <summary>
     /// 生成前端代码 - 使用EnhancedFrontendGenerator（模板驱动）
+    /// 低代码平台原则：要么生成完整可用的标准代码，要么失败报错，绝不接受降级不可用代码
     /// </summary>
     private async Task<Dictionary<string, string>> GenerateFrontendCodeAsync(StableGenerationRequest request)
     {
         _logger.LogInformation("🎨 使用增强前端生成器生成Vue3代码: {ModuleName}", request.ProcessedMetadata!.Name);
         
-        // ✅ 修复：使用EnhancedFrontendGenerator替代硬编码空壳实现
+        // ✅ 企业级低代码平台标准：只生成完整可用的代码，不接受降级方案
         // 这将生成完整的Vue3组件、API服务、Store、类型定义、路由和菜单配置
-        try
+        var generatedFiles = await _frontendGenerator.GenerateAsync(
+            request.ProcessedMetadata!, 
+            request.OutputPath
+        );
+        
+        _logger.LogInformation("✅ 前端代码生成成功: {FileCount}个文件", generatedFiles.Count);
+        
+        // 验证生成结果的完整性
+        if (generatedFiles.Count == 0)
         {
-            var generatedFiles = await _frontendGenerator.GenerateAsync(
-                request.ProcessedMetadata!, 
-                request.OutputPath
+            throw new InvalidOperationException(
+                $"前端代码生成失败：EnhancedFrontendGenerator未生成任何文件。" +
+                $"模块名称：{request.ProcessedMetadata!.Name}"
             );
-            
-            _logger.LogInformation("✅ 前端代码生成成功: {FileCount}个文件", generatedFiles.Count);
-            return generatedFiles;
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "❌ 前端代码生成失败，使用降级方案");
-            
-            // 🔄 降级方案：如果EnhancedFrontendGenerator失败，生成基本组件框架
-            var fallbackFiles = new Dictionary<string, string>();
-            foreach (var entity in request.ProcessedMetadata!.Entities!)
-            {
-                var componentPath = Path.Combine(request.OutputPath, "src", "SmartAbp.Vue", "src", "views", 
-                    request.ProcessedMetadata.Name.ToLowerInvariant(), $"{entity.Name}Management.vue");
-                var componentContent = GenerateBasicVueComponent(entity, request.ProcessedMetadata);
-                fallbackFiles[componentPath] = componentContent;
-            }
-            
-            return fallbackFiles;
-        }
+        
+        return generatedFiles;
     }
 
     /// <summary>
@@ -614,111 +606,6 @@ namespace {module.Namespace}.Services
 }}";
     }
 
-    /// <summary>
-    /// 生成基础Vue组件（降级方案）
-    /// 注意：这是EnhancedFrontendGenerator失败时的兜底方案
-    /// 正常情况下应该使用EnhancedFrontendGenerator生成完整的模板驱动组件
-    /// </summary>
-    private string GenerateBasicVueComponent(EnhancedEntityModelDto entity, ModuleMetadataDto module)
-    {
-        return $@"<!-- 
-  🔄 基础Vue组件框架（降级方案）
-  这是由于完整代码生成器失败时的兜底实现
-  建议：检查EnhancedFrontendGenerator的日志找出失败原因
--->
-<template>
-  <div class=""{entity.Name.ToLowerInvariant()}-management"">
-    <el-card>
-      <template #header>
-        <div class=""card-header"">
-          <span>{entity.DisplayName ?? entity.Name}管理</span>
-          <el-button type=""primary"" @click=""handleAdd"">新增</el-button>
-        </div>
-      </template>
-      
-      <!-- 数据表格 -->
-      <el-table :data=""tableData"" border style=""width: 100%"">
-        <el-table-column type=""index"" label=""序号"" width=""60"" />
-        <!-- ⚠️ 需要补充实际列定义 -->
-        <el-table-column label=""操作"" width=""180"">
-          <template #default=""{{ row }}"">
-            <el-button size=""small"" @click=""handleEdit(row)"">编辑</el-button>
-            <el-button size=""small"" type=""danger"" @click=""handleDelete(row)"">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      
-      <!-- 分页 -->
-      <el-pagination
-        v-model:current-page=""currentPage""
-        v-model:page-size=""pageSize""
-        :total=""total""
-        layout=""total, sizes, prev, pager, next, jumper""
-        @current-change=""handlePageChange""
-      />
-    </el-card>
-  </div>
-</template>
-
-<script setup lang=""ts"">
-import {{ ref, onMounted }} from 'vue'
-import {{ ElMessage }} from 'element-plus'
-
-// 响应式状态
-const tableData = ref([])
-const currentPage = ref(1)
-const pageSize = ref(10)
-const total = ref(0)
-
-// 加载数据
-const loadData = async () => {{
-  try {{
-    // ⚠️ 需要实现API调用
-    ElMessage.warning('基础组件框架 - 请实现API调用')
-  }} catch (error) {{
-    ElMessage.error('加载数据失败')
-  }}
-}}
-
-const handleAdd = () => {{
-  ElMessage.info('新增功能 - 待实现')
-}}
-
-const handleEdit = (row: any) => {{
-  ElMessage.info('编辑功能 - 待实现')
-}}
-
-const handleDelete = (row: any) => {{
-  ElMessage.info('删除功能 - 待实现')
-}}
-
-const handlePageChange = (page: number) => {{
-  currentPage.value = page
-  loadData()
-}}
-
-onMounted(() => {{
-  loadData()
-}})
-</script>
-
-<style scoped lang=""scss"">
-.{entity.Name.ToLowerInvariant()}-management {{
-  padding: 20px;
-  
-  .card-header {{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }}
-  
-  .el-pagination {{
-    margin-top: 20px;
-    justify-content: flex-end;
-  }}
-}}
-</style>";
-    }
 
     private string GenerateModuleConfigCode(ModuleMetadataDto module)
     {
