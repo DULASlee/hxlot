@@ -10,15 +10,31 @@ import type { AssemblyConfig, AssemblyStorage } from '../assembly-types'
 export class LocalStorageAdapter implements AssemblyStorage {
   private readonly storageKey = 'smartabp-assemblies'
 
-  async save(configs: AssemblyConfig[]): Promise<void> {
+  async saveConfig(config: AssemblyConfig): Promise<void> {
     try {
+      const configs = await this.loadAllConfigs()
+      const index = configs.findIndex(c => c.name === config.name)
+      if (index >= 0) {
+        configs[index] = config
+      } else {
+        configs.push(config)
+      }
       localStorage.setItem(this.storageKey, JSON.stringify(configs))
     } catch (error) {
       throw new Error(`本地存储保存失败: ${error}`)
     }
   }
 
-  async load(): Promise<AssemblyConfig[]> {
+  async loadConfig(name: string): Promise<AssemblyConfig | null> {
+    try {
+      const configs = await this.loadAllConfigs()
+      return configs.find(c => c.name === name) || null
+    } catch (error) {
+      throw new Error(`本地存储加载失败: ${error}`)
+    }
+  }
+
+  async loadAllConfigs(): Promise<AssemblyConfig[]> {
     try {
       const data = localStorage.getItem(this.storageKey)
       return data ? JSON.parse(data) : []
@@ -27,11 +43,22 @@ export class LocalStorageAdapter implements AssemblyStorage {
     }
   }
 
-  async clear(): Promise<void> {
+  async deleteConfig(name: string): Promise<void> {
     try {
-      localStorage.removeItem(this.storageKey)
+      const configs = await this.loadAllConfigs()
+      const filtered = configs.filter(c => c.name !== name)
+      localStorage.setItem(this.storageKey, JSON.stringify(filtered))
     } catch (error) {
-      throw new Error(`本地存储清空失败: ${error}`)
+      throw new Error(`本地存储删除失败: ${error}`)
+    }
+  }
+
+  async configExists(name: string): Promise<boolean> {
+    try {
+      const config = await this.loadConfig(name)
+      return config !== null
+    } catch (error) {
+      return false
     }
   }
 }
@@ -40,18 +67,26 @@ export class LocalStorageAdapter implements AssemblyStorage {
  * 内存存储适配器（主要用于测试）
  */
 export class MemoryStorageAdapter implements AssemblyStorage {
-  private storage: AssemblyConfig[] = []
+  private storage: Map<string, AssemblyConfig> = new Map()
 
-  async save(configs: AssemblyConfig[]): Promise<void> {
-    this.storage = [...configs]
+  async saveConfig(config: AssemblyConfig): Promise<void> {
+    this.storage.set(config.name, config)
   }
 
-  async load(): Promise<AssemblyConfig[]> {
-    return [...this.storage]
+  async loadConfig(name: string): Promise<AssemblyConfig | null> {
+    return this.storage.get(name) || null
   }
 
-  async clear(): Promise<void> {
-    this.storage = []
+  async loadAllConfigs(): Promise<AssemblyConfig[]> {
+    return Array.from(this.storage.values())
+  }
+
+  async deleteConfig(name: string): Promise<void> {
+    this.storage.delete(name)
+  }
+
+  async configExists(name: string): Promise<boolean> {
+    return this.storage.has(name)
   }
 }
 
@@ -88,7 +123,7 @@ export class IndexedDBStorageAdapter implements AssemblyStorage {
     })
   }
 
-  async save(configs: AssemblyConfig[]): Promise<void> {
+  async saveConfig(config: AssemblyConfig): Promise<void> {
     if (!this.db) {
       await this.init()
     }
@@ -96,21 +131,29 @@ export class IndexedDBStorageAdapter implements AssemblyStorage {
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([this.storeName], 'readwrite')
       const store = transaction.objectStore(this.storeName)
-      
-      // 清空现有数据
-      store.clear()
+      const request = store.put(config)
 
-      // 保存新数据
-      for (const config of configs) {
-        store.add(config)
-      }
-
-      transaction.oncomplete = () => resolve()
-      transaction.onerror = () => reject(new Error('IndexedDB保存失败'))
+      request.onsuccess = () => resolve()
+      request.onerror = () => reject(new Error('IndexedDB保存失败'))
     })
   }
 
-  async load(): Promise<AssemblyConfig[]> {
+  async loadConfig(name: string): Promise<AssemblyConfig | null> {
+    if (!this.db) {
+      await this.init()
+    }
+
+    return new Promise((resolve, reject) => {
+      const transaction = this.db!.transaction([this.storeName], 'readonly')
+      const store = transaction.objectStore(this.storeName)
+      const request = store.get(name)
+
+      request.onsuccess = () => resolve(request.result || null)
+      request.onerror = () => reject(new Error('IndexedDB加载失败'))
+    })
+  }
+
+  async loadAllConfigs(): Promise<AssemblyConfig[]> {
     if (!this.db) {
       await this.init()
     }
@@ -125,7 +168,7 @@ export class IndexedDBStorageAdapter implements AssemblyStorage {
     })
   }
 
-  async clear(): Promise<void> {
+  async deleteConfig(name: string): Promise<void> {
     if (!this.db) {
       await this.init()
     }
@@ -133,11 +176,16 @@ export class IndexedDBStorageAdapter implements AssemblyStorage {
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([this.storeName], 'readwrite')
       const store = transaction.objectStore(this.storeName)
-      const request = store.clear()
+      const request = store.delete(name)
 
       request.onsuccess = () => resolve()
-      request.onerror = () => reject(new Error('IndexedDB清空失败'))
+      request.onerror = () => reject(new Error('IndexedDB删除失败'))
     })
+  }
+
+  async configExists(name: string): Promise<boolean> {
+    const config = await this.loadConfig(name)
+    return config !== null
   }
 }
 
@@ -148,7 +196,7 @@ export class ApiStorageAdapter implements AssemblyStorage {
   constructor(
     private baseUrl: string,
     private authToken?: string
-  ) {}
+  ) { }
 
   private async request<T>(endpoint: string, options: any = {}): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`
@@ -173,21 +221,35 @@ export class ApiStorageAdapter implements AssemblyStorage {
     return response.json()
   }
 
-  async save(configs: AssemblyConfig[]): Promise<void> {
-    await this.request('/api/assemblies', {
+  async saveConfig(config: AssemblyConfig): Promise<void> {
+    await this.request(`/api/assemblies/${config.name}`, {
       method: 'PUT',
-      body: JSON.stringify(configs)
+      body: JSON.stringify(config)
     })
   }
 
-  async load(): Promise<AssemblyConfig[]> {
+  async loadConfig(name: string): Promise<AssemblyConfig | null> {
+    try {
+      return await this.request<AssemblyConfig>(`/api/assemblies/${name}`)
+    } catch (error) {
+      // 404 means config not found
+      return null
+    }
+  }
+
+  async loadAllConfigs(): Promise<AssemblyConfig[]> {
     return this.request<AssemblyConfig[]>('/api/assemblies')
   }
 
-  async clear(): Promise<void> {
-    await this.request('/api/assemblies', {
+  async deleteConfig(name: string): Promise<void> {
+    await this.request(`/api/assemblies/${name}`, {
       method: 'DELETE'
     })
+  }
+
+  async configExists(name: string): Promise<boolean> {
+    const config = await this.loadConfig(name)
+    return config !== null
   }
 }
 
@@ -208,11 +270,11 @@ export class HybridStorageAdapter implements AssemblyStorage {
     this.remoteAdapter = new ApiStorageAdapter(baseUrl, authToken)
   }
 
-  async save(configs: AssemblyConfig[]): Promise<void> {
+  async saveConfig(config: AssemblyConfig): Promise<void> {
     // 同时保存到本地和远程
     await Promise.all([
-      this.localAdapter.save(configs),
-      this.remoteAdapter.save(configs).catch(error => {
+      this.localAdapter.saveConfig(config),
+      this.remoteAdapter.saveConfig(config).catch(error => {
         console.warn('远程保存失败，使用本地存储:', error)
       })
     ])
@@ -220,13 +282,13 @@ export class HybridStorageAdapter implements AssemblyStorage {
     this.lastSyncTime = Date.now()
   }
 
-  async load(): Promise<AssemblyConfig[]> {
+  async loadConfig(name: string): Promise<AssemblyConfig | null> {
     const now = Date.now()
 
     // 如果最近同步过，优先使用本地数据
     if (now - this.lastSyncTime < this.syncInterval) {
       try {
-        return await this.localAdapter.load()
+        return await this.localAdapter.loadConfig(name)
       } catch (error) {
         console.warn('本地加载失败，尝试远程加载:', error)
       }
@@ -234,25 +296,67 @@ export class HybridStorageAdapter implements AssemblyStorage {
 
     // 从远程加载并同步到本地
     try {
-      const remoteConfigs = await this.remoteAdapter.load()
-      await this.localAdapter.save(remoteConfigs)
+      const remoteConfig = await this.remoteAdapter.loadConfig(name)
+      if (remoteConfig) {
+        await this.localAdapter.saveConfig(remoteConfig)
+        this.lastSyncTime = now
+      }
+      return remoteConfig
+    } catch (error) {
+      console.warn('远程加载失败，使用本地数据:', error)
+      return this.localAdapter.loadConfig(name)
+    }
+  }
+
+  async loadAllConfigs(): Promise<AssemblyConfig[]> {
+    const now = Date.now()
+
+    // 如果最近同步过，优先使用本地数据
+    if (now - this.lastSyncTime < this.syncInterval) {
+      try {
+        return await this.localAdapter.loadAllConfigs()
+      } catch (error) {
+        console.warn('本地加载失败，尝试远程加载:', error)
+      }
+    }
+
+    // 从远程加载并同步到本地
+    try {
+      const remoteConfigs = await this.remoteAdapter.loadAllConfigs()
+      for (const config of remoteConfigs) {
+        await this.localAdapter.saveConfig(config)
+      }
       this.lastSyncTime = now
       return remoteConfigs
     } catch (error) {
       console.warn('远程加载失败，使用本地数据:', error)
-      return this.localAdapter.load()
+      return this.localAdapter.loadAllConfigs()
     }
   }
 
-  async clear(): Promise<void> {
+  async deleteConfig(name: string): Promise<void> {
     await Promise.all([
-      this.localAdapter.clear(),
-      this.remoteAdapter.clear().catch(error => {
-        console.warn('远程清空失败:', error)
+      this.localAdapter.deleteConfig(name),
+      this.remoteAdapter.deleteConfig(name).catch(error => {
+        console.warn('远程删除失败:', error)
       })
     ])
 
     this.lastSyncTime = Date.now()
+  }
+
+  async configExists(name: string): Promise<boolean> {
+    // 优先检查本地，然后检查远程
+    const localExists = await this.localAdapter.configExists(name)
+    if (localExists) {
+      return true
+    }
+
+    try {
+      return await this.remoteAdapter.configExists(name)
+    } catch (error) {
+      return false
+    }
   }
 }
 

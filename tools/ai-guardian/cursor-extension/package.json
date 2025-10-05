@@ -1,8 +1,8 @@
 {
   "name": "ai-guardian",
   "displayName": "AI Guardian - 断线守护",
-  "description": "AI大模型断线检测与自动恢复插件",
-  "version": "1.0.0",
+  "description": "AI大模型断线检测与自动恢复插件 - 智能重试策略版本（v1.4.0新增：交替聊天框重试、30秒检测、5次重试）",
+  "version": "1.4.0",
   "publisher": "smartabp",
   "engines": {
     "vscode": "^1.74.0"
@@ -59,6 +59,26 @@
       {
         "command": "aiGuardian.resetState",
         "title": "重置守护状态",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.forceRestart",
+        "title": "强制重启IDE",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.selfCheck",
+        "title": "自我检查",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.listChatCommands",
+        "title": "🔍 列出所有聊天相关命令",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.testChatboxOpen",
+        "title": "🧪 测试打开聊天框",
         "category": "AI Guardian"
       }
     ],

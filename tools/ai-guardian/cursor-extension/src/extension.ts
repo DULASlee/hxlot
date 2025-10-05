@@ -1,8 +1,7 @@
-import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as path from 'path';
 import { exec } from 'child_process';
+import * as path from 'path';
 import { promisify } from 'util';
+import * as vscode from 'vscode';
 
 const execAsync = promisify(exec);
 
@@ -18,6 +17,11 @@ export interface AIState {
   engineLoaded: boolean;
   lastEngineCheck: number;
   lastWorkContext?: string; // 记录最后的工作上下文
+  isRestarting: boolean; // 标记是否正在重启
+  restartCount: number; // 重启次数
+  lastRestartTime: number; // 最后重启时间
+  guardianActive: boolean; // 守护状态
+  autoRecoveryEnabled: boolean; // 自动恢复是否启用
 }
 
 export class AIGuardianExtension {
@@ -34,18 +38,18 @@ export class AIGuardianExtension {
   constructor(private context: vscode.ExtensionContext) {
     this.config = vscode.workspace.getConfiguration('aiGuardian');
     this.outputChannel = vscode.window.createOutputChannel('AI Guardian');
-    
+
     // 1. 加载持久化状态
     this.aiState = this.loadState();
-    
+
     // 2. 如果是首次加载，确保lastActivity是最新的
     if (this.aiState.activityCount === 0) {
       this.aiState.lastActivity = Date.now();
     }
-    
+
     // 创建状态栏
     this.statusBarItem = vscode.window.createStatusBarItem(
-      vscode.StatusBarAlignment.Right, 
+      vscode.StatusBarAlignment.Right,
       100
     );
     this.context.subscriptions.push(this.statusBarItem);
@@ -61,20 +65,46 @@ export class AIGuardianExtension {
       isOnline: true,
       activityCount: 0,
       engineLoaded: false,
-      lastEngineCheck: 0
+      lastEngineCheck: 0,
+      isRestarting: false,
+      restartCount: 0,
+      lastRestartTime: 0,
+      guardianActive: true,
+      autoRecoveryEnabled: true
     };
-    
+
     try {
       const storedState = this.context.workspaceState.get<AIState>(AIGuardianExtension.STATE_KEY);
-      this.log('✅ 成功加载持久化状态');
-      return storedState || defaultState;
+      if (storedState) {
+        // 合并状态，确保新字段有默认值
+        const mergedState = { ...defaultState, ...storedState };
+        this.log('✅ 成功加载持久化状态');
+
+        // 检查是否是重启后的恢复
+        if (storedState.isRestarting) {
+          this.log('🔄 检测到重启恢复，准备自动恢复AI连接...');
+          mergedState.isRestarting = false;
+          mergedState.restartCount++;
+          mergedState.lastRestartTime = Date.now();
+
+          // 延迟执行自动恢复
+          setTimeout(() => {
+            this.handleRestartRecovery();
+          }, 3000);
+        }
+
+        return mergedState;
+      } else {
+        this.log('📝 使用默认状态');
+        return defaultState;
+      }
     } catch (error) {
       this.log(`⚠️ 加载持久化状态失败: ${error}`);
       return defaultState;
     }
   }
 
-  private async saveState(): Promise<void> {
+  public async saveState(): Promise<void> {
     try {
       await this.context.workspaceState.update(AIGuardianExtension.STATE_KEY, this.aiState);
       this.log('💾 状态已保存');
@@ -86,7 +116,10 @@ export class AIGuardianExtension {
   private initialize() {
     this.log('🛡️ AI Guardian 插件已启动');
     this.updateStatusBar();
-    
+
+    // 自我检查功能
+    this.performSelfCheck();
+
     // 监听配置变更
     this.context.subscriptions.push(
       vscode.workspace.onDidChangeConfiguration(e => {
@@ -95,14 +128,17 @@ export class AIGuardianExtension {
         }
       })
     );
-    
-    if (this.config.get('enabled', true)) {
+
+    if (this.config.get('enabled', true) && this.aiState.guardianActive) {
       this.startMonitoring();
       this.startEngineCheck();
     }
 
     // 监听编辑器活动
     this.setupActivityListeners();
+
+    // 启动自我监控
+    this.startSelfMonitoring();
   }
 
   private setupActivityListeners() {
@@ -132,7 +168,7 @@ export class AIGuardianExtension {
     this.aiState.lastActivity = Date.now();
     this.aiState.activityCount++;
     this.aiState.isOnline = true;
-    
+
     // 如果正在恢复中，现在停止
     this.stopRecoveryPolling();
 
@@ -159,21 +195,21 @@ export class AIGuardianExtension {
 
   public startMonitoring() {
     const interval = this.config.get('checkInterval', 30) * 1000;
-    
+
     this.monitorTimer = setInterval(() => {
       this.checkAIStatus();
     }, interval);
 
     this.context.subscriptions.push({ dispose: () => clearInterval(this.monitorTimer) });
-    this.log(`🚀 开始监控 (间隔: ${interval/1000}秒)`);
+    this.log(`🚀 开始监控 (间隔: ${interval / 1000}秒)`);
   }
 
   private startEngineCheck() {
     const engineCheckInterval = this.config.get('engineCheckInterval', 30) * 60 * 1000;
-    
+
     // 立即执行一次检查
     this.checkExecutionEngine();
-    
+
     // 设置定时检查
     this.engineCheckTimer = setInterval(() => {
       this.checkExecutionEngine();
@@ -186,7 +222,7 @@ export class AIGuardianExtension {
   public async checkExecutionEngine() {
     try {
       this.log('🔍 检查AI编程铁律执行引擎...');
-      
+
       // 检查方法1: 查找执行引擎规则文件
       const workspaceFolders = vscode.workspace.workspaceFolders;
       if (!workspaceFolders) {
@@ -196,7 +232,7 @@ export class AIGuardianExtension {
 
       const workspaceRoot = workspaceFolders[0].uri.fsPath;
       const engineRulesPath = path.join(workspaceRoot, '.cursor', 'rules', '00_执行引擎.mdc');
-      
+
       let engineFileExists = false;
       try {
         await vscode.workspace.fs.stat(vscode.Uri.file(engineRulesPath));
@@ -207,15 +243,15 @@ export class AIGuardianExtension {
 
       // 检查方法2: 发送测试消息检查AI响应
       const testPassed = await this.testEngineResponse();
-      
+
       // 综合判断
       const engineLoaded = engineFileExists && testPassed;
       const wasLoaded = this.aiState.engineLoaded;
-      
+
       this.aiState.engineLoaded = engineLoaded;
       this.aiState.lastEngineCheck = Date.now();
       this.saveState(); // 保存状态
-      
+
       if (engineLoaded && !wasLoaded) {
         this.log('✅ 执行引擎已加载');
         vscode.window.showInformationMessage('✅ AI编程铁律执行引擎已加载');
@@ -226,9 +262,9 @@ export class AIGuardianExtension {
         this.log('⚠️ 执行引擎检查失败');
         await this.promptLoadEngine();
       }
-      
+
       this.updateStatusBar();
-      
+
     } catch (error) {
       this.log(`❌ 执行引擎检查出错: ${error}`);
     }
@@ -237,16 +273,16 @@ export class AIGuardianExtension {
   private async testEngineResponse(): Promise<boolean> {
     try {
       this.log('🧪 开始交互式验证AI执行引擎...');
-      
+
       // 方法1: 使用VSCode Language Model API
       const canUseLanguageModel = await this.testWithLanguageModelAPI();
       if (canUseLanguageModel !== null) {
         return canUseLanguageModel;
       }
-      
+
       // 方法2: 备用检测 - 检查执行引擎相关文件和活动
       return await this.testEngineFiles();
-      
+
     } catch (error) {
       this.log(`❌ 引擎响应测试失败: ${error}`);
       return false;
@@ -271,13 +307,13 @@ export class AIGuardianExtension {
           // 发送测试指令
           const testPrompt = '请开启专家模式';
           const message = vscode.LanguageModelChatMessage.User(testPrompt);
-          
+
           this.log(`📤 发送测试指令: ${testPrompt}`);
-          
+
           // 创建取消令牌（5秒超时）
           const cancellationSource = new vscode.CancellationTokenSource();
           setTimeout(() => cancellationSource.cancel(), 5000);
-          
+
           const request = await model.sendRequest(
             [message],
             {},
@@ -303,7 +339,7 @@ export class AIGuardianExtension {
             '质量门禁检查'
           ]);
 
-          const hasEngineResponse = engineKeywords.some(keyword => 
+          const hasEngineResponse = engineKeywords.some(keyword =>
             response.includes(keyword)
           );
 
@@ -327,7 +363,7 @@ export class AIGuardianExtension {
           }
         }
       }
-      
+
       return null; // 循环结束后应该返回一个值
     } catch (error) {
       this.log(`❌ Language Model API测试失败: ${error}`);
@@ -340,15 +376,15 @@ export class AIGuardianExtension {
       // 备用方案：检查执行引擎相关文件和活动
       const workspaceFolders = vscode.workspace.workspaceFolders;
       if (!workspaceFolders) return false;
-      
+
       const workspaceRoot = workspaceFolders[0].uri.fsPath;
-      
+
       // 检查关键文件
       const keyFiles = [
         path.join(workspaceRoot, '.cursor', 'rules', '00_执行引擎.mdc'),
         path.join(workspaceRoot, '.ai-engine', 'ai-state.json')
       ];
-      
+
       let keyFilesExist = 0;
       for (const file of keyFiles) {
         try {
@@ -358,13 +394,13 @@ export class AIGuardianExtension {
           continue;
         }
       }
-      
+
       // 检查执行引擎目录
       const engineDirs = [
         path.join(workspaceRoot, 'src', 'SmartAbp.Vue', 'packages', 'lowcode-tools', 'src', 'execution'),
         path.join(workspaceRoot, '.ai-engine')
       ];
-      
+
       let engineDirsExist = 0;
       for (const dir of engineDirs) {
         try {
@@ -374,14 +410,14 @@ export class AIGuardianExtension {
           continue;
         }
       }
-      
+
       // 综合判断：至少有1个关键文件和1个执行引擎目录
       const hasBasicInfrastructure = keyFilesExist >= 1 && engineDirsExist >= 1;
-      
+
       this.log(`📊 备用检测结果: 关键文件${keyFilesExist}/2, 引擎目录${engineDirsExist}/2`);
-      
+
       return hasBasicInfrastructure;
-      
+
     } catch (error) {
       this.log(`❌ 文件检测失败: ${error}`);
       return false;
@@ -410,14 +446,14 @@ export class AIGuardianExtension {
       const workspaceFolders = vscode.workspace.workspaceFolders;
       if (workspaceFolders) {
         const engineRulesPath = path.join(
-          workspaceFolders[0].uri.fsPath, 
+          workspaceFolders[0].uri.fsPath,
           '.cursor', 'rules', '00_执行引擎.mdc'
         );
-        
+
         try {
           const document = await vscode.workspace.openTextDocument(engineRulesPath);
           await vscode.window.showTextDocument(document);
-          
+
           vscode.window.showInformationMessage(
             '📖 执行引擎规则文件已打开，请AI学习加载'
           );
@@ -452,22 +488,22 @@ export class AIGuardianExtension {
 
     // 复制到剪贴板
     await vscode.env.clipboard.writeText(loadCommand);
-    
+
     // 尝试打开聊天框
     try {
       await vscode.commands.executeCommand('workbench.action.chat.open');
     } catch (error) {
       // 如果无法打开聊天框，显示文档
     }
-    
+
     // 显示加载指令
     const document = await vscode.workspace.openTextDocument({
       content: loadCommand,
       language: 'markdown'
     });
-    
+
     await vscode.window.showTextDocument(document);
-    
+
     vscode.window.showInformationMessage(
       '📋 执行引擎加载指令已复制到剪贴板并打开文档，请发送给AI'
     );
@@ -476,7 +512,7 @@ export class AIGuardianExtension {
   private checkAIStatus() {
     const threshold = this.config.get('offlineThreshold', 90) * 1000;
     const inactiveDuration = Date.now() - this.aiState.lastActivity;
-    
+
     if (inactiveDuration > threshold) {
       if (this.aiState.isOnline) {
         this.aiState.isOnline = false;
@@ -515,81 +551,56 @@ export class AIGuardianExtension {
 
   private async attemptDirectReconnect() {
     this.updateStatusBar(); // 更新为恢复中状态
-    
+
     // ==================================================
-    // Level 1: 查找真正的聊天命令 + 直接AI大模型通信恢复
+    // Level 1: 智能三级恢复策略（集成Python脚本功能）
     // ==================================================
-    this.log('⚡️ [Level 1] Finding real chat commands and attempting recovery...');
-    try {
-      // 1.1 列出所有可用命令，找到聊天相关的
-      const allCommands = await vscode.commands.getCommands();
-      const chatCommands = allCommands.filter(cmd => 
-        cmd.includes('chat') || cmd.includes('ai') || cmd.includes('copilot') || cmd.includes('cursor')
-      );
-      
-      this.log(`🔍 [Level 1] Found ${chatCommands.length} potential chat commands:`);
-      chatCommands.forEach(cmd => this.log(`  - ${cmd}`));
-      
-      // 1.2 尝试最可能的聊天命令
-      const possibleChatCommands = [
-        'workbench.action.chat.open',
-        'workbench.action.chat.newChat',
-        'workbench.panel.chat.view.copilot.focus',
-        'github.copilot.interactiveEditor.explain',
-        'cursor.chat.new',
-        'cursor.chat.open'
-      ];
-      
-      let chatOpened = false;
-      for (const cmd of possibleChatCommands) {
-        if (allCommands.includes(cmd)) {
-          try {
-            await vscode.commands.executeCommand(cmd);
-            this.log(`✅ [Level 1] Successfully executed: ${cmd}`);
-            chatOpened = true;
-            break;
-          } catch (error) {
-            this.log(`⚠️ [Level 1] Failed to execute ${cmd}: ${error}`);
+    this.log('⚡️ [Level 1] Starting intelligent three-phase recovery strategy...');
+
+    // 第一阶段：在当前会话中尝试3次
+    for (let phase1Attempt = 1; phase1Attempt <= 3; phase1Attempt++) {
+      this.log(`🔄 [Phase 1] Recovery attempt ${phase1Attempt}/3`);
+
+      // 先尝试关闭可能的对话框
+      await this.closeDialogsAndModals();
+
+      if (await this.smartSendRecoveryMessage(1)) {
+        // 等待15秒检测连接
+        if (await this.waitForConnection(15)) {
+          this.log('✅ [Phase 1] AI connection recovered successfully');
+          return;
+        }
+      }
+
+      if (phase1Attempt < 3) {
+        await new Promise(resolve => setTimeout(resolve, 5000)); // 等待5秒再重试
+      }
+    }
+
+    // 第二阶段：开启新会话尝试3次
+    for (let phase2Attempt = 1; phase2Attempt <= 3; phase2Attempt++) {
+      this.log(`🔄 [Phase 2] Recovery attempt ${phase2Attempt}/3 - New session`);
+
+      // 开启新会话
+      if (await this.openNewChatSession()) {
+        // 先尝试关闭可能的对话框
+        await this.closeDialogsAndModals();
+
+        if (await this.smartSendRecoveryMessage(2)) {
+          // 等待15秒检测连接
+          if (await this.waitForConnection(15)) {
+            this.log('✅ [Phase 2] AI connection recovered successfully (new session)');
+            return;
           }
         }
       }
-      
-      if (!chatOpened) {
-        this.log('⚠️ [Level 1] No working chat command found, proceeding with direct AI communication...');
+
+      if (phase2Attempt < 3) {
+        await new Promise(resolve => setTimeout(resolve, 5000)); // 等待5秒再重试
       }
-      
-      // 1.3 短暂等待
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // 1.3 获取可用的语言模型
-      const models = await vscode.lm.selectChatModels();
-      if (models && models.length > 0) {
-        const model = models[0];
-        this.log(`✅ [Level 1] Found AI model: ${model.name || 'Unknown'}`);
-        
-        // 1.4 构建智能恢复上下文
-        const contextMessage = this.buildRecoveryContext();
-        
-        // 1.5 直接发送消息给AI大模型
-        const message = vscode.LanguageModelChatMessage.User(contextMessage);
-        const cancellationSource = new vscode.CancellationTokenSource();
-        
-        this.log('📤 [Level 1] Sending recovery message to AI model...');
-        await model.sendRequest([message], {}, cancellationSource.token);
-        
-        this.log('✅ [Level 1] Recovery message sent successfully to AI model.');
-        
-        // 1.6 记录活动，标记为在线
-        this.recordActivity('AI恢复消息已发送');
-        
-        return; // Level 1 成功，结束流程
-      } else {
-        this.log('⚠️ [Level 1] No AI models available. Escalating to Level 2...');
-        throw new Error('No AI models available');
-      }
-    } catch (errorLvl1) {
-      this.log(`⚠️ [Level 1] Failed: ${errorLvl1}. Escalating to Level 2...`);
     }
+
+    this.log('⚠️ [Level 1] All recovery attempts failed, escalating to Level 2...');
 
     // ==================================================
     // Level 2: 强制重载窗口（强力手段）
@@ -617,12 +628,213 @@ export class AIGuardianExtension {
   }
 
   /**
+   * 关闭对话框和模态框（集成Python脚本功能）
+   */
+  private async closeDialogsAndModals(): Promise<void> {
+    try {
+      this.log('🔧 [Dialog Control] Attempting to close dialogs and modals...');
+
+      // 方法1: 尝试ESC键序列（模拟Python脚本的pyautogui.press('esc')）
+      await this.sendEscapeKeySequence();
+
+      // 方法2: 尝试关闭活动的编辑器
+      try {
+        await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+        await new Promise(resolve => setTimeout(resolve, 300));
+      } catch (error) {
+        this.log(`⚠️ [Dialog Control] Close active editor failed: ${error}`);
+      }
+
+      // 方法3: 尝试取消当前操作
+      try {
+        await vscode.commands.executeCommand('workbench.action.cancelOperation');
+        await new Promise(resolve => setTimeout(resolve, 300));
+      } catch (error) {
+        this.log(`⚠️ [Dialog Control] Cancel operation failed: ${error}`);
+      }
+
+      // 方法4: 尝试关闭通知
+      try {
+        await vscode.commands.executeCommand('notifications.clearAll');
+        await new Promise(resolve => setTimeout(resolve, 300));
+      } catch (error) {
+        this.log(`⚠️ [Dialog Control] Clear notifications failed: ${error}`);
+      }
+
+      // 方法5: 尝试关闭快速选择
+      try {
+        await vscode.commands.executeCommand('workbench.action.closeQuickOpen');
+        await new Promise(resolve => setTimeout(resolve, 300));
+      } catch (error) {
+        this.log(`⚠️ [Dialog Control] Close quick open failed: ${error}`);
+      }
+
+      this.log('✅ [Dialog Control] Dialog close attempts completed');
+    } catch (error) {
+      this.log(`❌ [Dialog Control] Failed to close dialogs: ${error}`);
+    }
+  }
+
+  /**
+   * 发送ESC键序列（模拟Python脚本的pyautogui.press('esc')）
+   */
+  private async sendEscapeKeySequence(): Promise<void> {
+    try {
+      // 使用VSCode的键盘快捷键API
+      await vscode.commands.executeCommand('workbench.action.acceptSelectedSuggestion');
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // 尝试ESC键的替代命令
+      await vscode.commands.executeCommand('workbench.action.closeQuickOpen');
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // 再次尝试ESC键
+      await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      this.log('✅ [Escape Key] ESC key sequence sent');
+    } catch (error) {
+      this.log(`⚠️ [Escape Key] ESC key sequence failed: ${error}`);
+    }
+  }
+
+  /**
+   * 智能发送恢复消息（集成Python脚本的smart_send_continue功能）
+   */
+  private async smartSendRecoveryMessage(phase: number): Promise<boolean> {
+    try {
+      this.log(`📤 [Smart Send] Phase ${phase} - Sending recovery message...`);
+
+      // 阶段1: 使用当前聊天框
+      if (phase === 1) {
+        // 尝试打开聊天
+        await vscode.commands.executeCommand('workbench.action.chat.open');
+        await new Promise(resolve => setTimeout(resolve, 800));
+      }
+
+      // 阶段2: 开启新会话
+      if (phase === 2) {
+        this.log('🔄 [Smart Send] Attempting new session recovery...');
+        await vscode.commands.executeCommand('workbench.action.chat.newChat');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+
+      // 获取可用的语言模型
+      const models = await vscode.lm.selectChatModels();
+      if (models && models.length > 0) {
+        const model = models[0];
+        this.log(`✅ [Smart Send] Found AI model: ${model.name || 'Unknown'}`);
+
+        // 构建智能恢复上下文
+        const contextMessage = this.buildRecoveryContext();
+
+        // 直接发送消息给AI大模型
+        const message = vscode.LanguageModelChatMessage.User(contextMessage);
+        const cancellationSource = new vscode.CancellationTokenSource();
+
+        this.log('📤 [Smart Send] Sending recovery message to AI model...');
+        await model.sendRequest([message], {}, cancellationSource.token);
+
+        this.log(`✅ [Smart Send] Recovery message sent successfully (Phase ${phase})`);
+
+        // 记录活动，标记为在线
+        this.recordActivity(`AI恢复消息已发送 (Phase ${phase})`);
+
+        return true;
+      } else {
+        this.log('⚠️ [Smart Send] No AI models available');
+        return false;
+      }
+    } catch (error) {
+      this.log(`❌ [Smart Send] Failed to send recovery message: ${error}`);
+      return false;
+    }
+  }
+
+  /**
+   * 开启新聊天会话（集成Python脚本的open_new_chat_session功能）
+   */
+  private async openNewChatSession(): Promise<boolean> {
+    try {
+      this.log('🔄 [New Session] Opening new chat session...');
+
+      // 尝试多种新会话命令
+      const newSessionCommands = [
+        'workbench.action.chat.newChat',
+        'cursor.chat.new',
+        'workbench.action.chat.open'
+      ];
+
+      for (const cmd of newSessionCommands) {
+        try {
+          await vscode.commands.executeCommand(cmd);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          this.log(`✅ [New Session] Successfully executed: ${cmd}`);
+          return true;
+        } catch (error) {
+          this.log(`⚠️ [New Session] Failed to execute ${cmd}: ${error}`);
+        }
+      }
+
+      this.log('❌ [New Session] All new session commands failed');
+      return false;
+    } catch (error) {
+      this.log(`❌ [New Session] Failed to open new session: ${error}`);
+      return false;
+    }
+  }
+
+  /**
+   * 等待连接检测（集成Python脚本的wait_for_connection功能）
+   */
+  private async waitForConnection(timeoutSeconds: number): Promise<boolean> {
+    this.log(`⏳ [Wait Connection] Waiting for AI connection (${timeoutSeconds}s)...`);
+
+    for (let i = 0; i < timeoutSeconds; i++) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // 检测AI是否已连接
+      if (this.isAIConnected()) {
+        this.log('✅ [Wait Connection] AI connection detected!');
+        return true;
+      }
+    }
+
+    this.log('❌ [Wait Connection] AI connection timeout');
+    return false;
+  }
+
+  /**
+   * 检测AI是否已连接（集成Python脚本的is_ai_connected功能）
+   */
+  private isAIConnected(): boolean {
+    try {
+      const lastActivity = this.aiState.lastActivity || 0;
+      const inactiveSeconds = (Date.now() - lastActivity) / 1000;
+
+      // 30秒内有活动认为已连接
+      const isConnected = inactiveSeconds < 30;
+
+      if (isConnected) {
+        this.log(`✅ [AI Status] AI is connected (last activity: ${inactiveSeconds.toFixed(1)}s ago)`);
+      } else {
+        this.log(`⚠️ [AI Status] AI appears disconnected (last activity: ${inactiveSeconds.toFixed(1)}s ago)`);
+      }
+
+      return isConnected;
+    } catch (error) {
+      this.log(`❌ [AI Status] Error checking AI connection: ${error}`);
+      return false;
+    }
+  }
+
+  /**
    * 构建智能恢复上下文
    */
   private buildRecoveryContext(): string {
     const context = this.aiState.lastWorkContext || '继续之前的开发任务';
     const timestamp = new Date().toLocaleString('zh-CN');
-    
+
     return `# AI恢复指令 (${timestamp})
 
 ${context}
@@ -631,33 +843,137 @@ ${context}
   }
 
   /**
-   * 完全重启Cursor IDE
+   * 🔥 新增：列出所有可用的聊天相关命令
+   */
+  public async listAvailableChatCommands(): Promise<void> {
+    try {
+      this.log('🔍 [List Commands] 正在列出所有聊天相关命令...');
+
+      const allCommands = await vscode.commands.getCommands();
+      const chatRelatedCommands = allCommands.filter(cmd =>
+        cmd.includes('chat') ||
+        cmd.includes('cursor') ||
+        cmd.includes('ai') ||
+        cmd.includes('copilot') ||
+        cmd.includes('composer')
+      );
+
+      // 创建报告文档
+      const report = `# Cursor/AI 相关命令列表
+      
+## 总计：${chatRelatedCommands.length} 个命令
+
+${chatRelatedCommands.map((cmd, index) => `${index + 1}. \`${cmd}\``).join('\n')}
+
+---
+
+**建议测试这些命令以找到正确的打开聊天框命令**
+
+使用方法：
+1. 打开命令面板（Ctrl+Shift+P）
+2. 输入命令名称
+3. 观察是否打开聊天框
+`;
+
+      // 显示报告
+      const document = await vscode.workspace.openTextDocument({
+        content: report,
+        language: 'markdown'
+      });
+
+      await vscode.window.showTextDocument(document);
+
+      this.log(`✅ [List Commands] 找到 ${chatRelatedCommands.length} 个相关命令`);
+      vscode.window.showInformationMessage(`找到 ${chatRelatedCommands.length} 个聊天相关命令，已在新文档中显示`);
+
+    } catch (error) {
+      this.log(`❌ [List Commands] 列出命令失败: ${error}`);
+      vscode.window.showErrorMessage('列出命令失败');
+    }
+  }
+
+  /**
+   * 🔥 新增：测试打开聊天框的各种方法
+   */
+  public async testOpenChatbox(): Promise<void> {
+    try {
+      this.log('🧪 [Test Chatbox] 开始测试打开聊天框...');
+
+      await vscode.window.showInformationMessage('开始测试打开聊天框，请观察IDE行为');
+
+      // 测试所有可能的命令
+      const testCommands = [
+        'aichat.newchat',                      // 🔥 Cursor AI Chat
+        'workbench.action.chat.open',          // VSCode Chat
+        'cursor.openChat',                     // Cursor Chat
+        'cursor.newChat',                      // Cursor New Chat
+        'composer.open',                       // Cursor Composer
+        'workbench.panel.chat.view.copilot.focus'
+      ];
+
+      let successCount = 0;
+      const results: string[] = [];
+
+      for (const cmd of testCommands) {
+        try {
+          this.log(`🧪 [Test Chatbox] 测试命令: ${cmd}`);
+          await vscode.commands.executeCommand(cmd);
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          successCount++;
+          results.push(`✅ ${cmd} - 成功执行`);
+          this.log(`✅ [Test Chatbox] ${cmd} 成功`);
+
+        } catch (error) {
+          results.push(`❌ ${cmd} - 失败: ${error}`);
+          this.log(`❌ [Test Chatbox] ${cmd} 失败: ${error}`);
+        }
+      }
+
+      // 显示测试结果
+      const report = `# 聊天框打开测试报告
+
+## 测试结果：${successCount}/${testCommands.length} 个命令成功
+
+${results.join('\n')}
+
+---
+
+**建议**：使用成功的命令来打开聊天框
+`;
+
+      const document = await vscode.workspace.openTextDocument({
+        content: report,
+        language: 'markdown'
+      });
+
+      await vscode.window.showTextDocument(document);
+
+      vscode.window.showInformationMessage(`测试完成：${successCount}/${testCommands.length} 个命令成功`);
+
+    } catch (error) {
+      this.log(`❌ [Test Chatbox] 测试失败: ${error}`);
+      vscode.window.showErrorMessage('测试失败');
+    }
+  }
+
+  /**
+   * 完全重启Cursor IDE（智能重试版本）
    */
   private async restartCursorIDE(): Promise<void> {
     const platform = process.platform;
-    const restartMessage = '请继续';
-    
-    // 先将恢复指令保存到持久存储，以便重启后使用
-    await vscode.env.clipboard.writeText(restartMessage);
+    const restartMessage = '请继续推进';
+
+    // 标记正在重启，保存状态
+    this.aiState.isRestarting = true;
+    this.aiState.lastWorkContext = 'AI Guardian重启恢复 - 请继续推进';
     await this.saveState();
-    
+
     this.log(`🔄 [Level 3] Initiating Cursor restart on platform: ${platform}`);
-    
+
     if (platform === 'win32') {
-      // Windows: 使用taskkill杀死进程，然后重新启动
-      const cursorExePath = process.execPath; // Cursor的可执行文件路径
-      try {
-        // 异步执行重启脚本（不等待结果，因为当前进程即将终止）
-        exec(`taskkill /F /IM Cursor.exe && timeout /t 2 && start "" "${cursorExePath}"`, (error) => {
-          if (error) {
-            this.log(`⚠️ [Level 3] Restart command error: ${error}`);
-          }
-        });
-        this.log('✅ [Level 3] Windows restart command issued.');
-      } catch (error) {
-        this.log(`❌ [Level 3] Windows restart failed: ${error}`);
-        throw error;
-      }
+      // Windows: 使用智能重试策略
+      await this.restartCursorIDEWithRetry();
     } else if (platform === 'darwin') {
       // macOS: 使用osascript重启应用
       try {
@@ -686,6 +1002,539 @@ ${context}
       }
     }
   }
+
+  /**
+   * Windows平台智能重试重启策略
+   */
+  private async restartCursorIDEWithRetry(): Promise<void> {
+    const cursorExePath = process.execPath;
+    const autoInputScript = path.join(__dirname, '..', '..', '..', 'tools', 'ai-guardian', 'restart-auto-input.ps1');
+
+    try {
+      // 步骤1: 重启IDE
+      this.log('🔄 [Restart] 正在重启Cursor IDE...');
+      const restartCommand = `taskkill /F /IM Cursor.exe && timeout /t 2 && start "" "${cursorExePath}"`;
+
+      exec(restartCommand, (error) => {
+        if (error) {
+          this.log(`⚠️ [Restart] Restart command error: ${error}`);
+        } else {
+          this.log('✅ [Restart] IDE重启命令已执行');
+        }
+      });
+
+      // 步骤2: 等待IDE启动后，开始智能重试
+      setTimeout(async () => {
+        await this.startIntelligentRetry(autoInputScript);
+      }, 10000); // 等待10秒让IDE完全启动
+
+    } catch (error) {
+      this.log(`❌ [Restart] Windows restart failed: ${error}`);
+      throw error;
+    }
+  }
+
+  /**
+   * 智能重试策略：交替向两个聊天框发送消息
+   */
+  private async startIntelligentRetry(autoInputScript: string): Promise<void> {
+    const maxRetries = 5; // 最多重试5次
+    let retryCount = 0;
+    let useNormalChatbox = true; // 交替使用：true=正常聊天框，false=新会话对话框
+
+    this.log('🧠 [Smart Retry] 开始智能重试策略...');
+
+    const retryLoop = async (): Promise<void> => {
+      if (retryCount >= maxRetries) {
+        this.log('❌ [Smart Retry] 达到最大重试次数，停止重试');
+        this.aiState.isRestarting = false;
+        await this.saveState();
+        return;
+      }
+
+      retryCount++;
+      const mode = useNormalChatbox ? 'normal' : 'newSession';
+      const modeName = useNormalChatbox ? '正常聊天框' : '新会话对话框';
+
+      this.log(`🔄 [Smart Retry] 第${retryCount}次尝试 - 向${modeName}发送消息`);
+
+      try {
+        // 执行PowerShell脚本
+        const command = `pwsh -NoProfile -ExecutionPolicy Bypass -File "${autoInputScript}" -Mode ${mode} -DelaySeconds 2`;
+
+        exec(command, (error, stdout, stderr) => {
+          if (error) {
+            this.log(`⚠️ [Smart Retry] PowerShell脚本执行错误: ${error}`);
+          } else {
+            this.log(`✅ [Smart Retry] 消息已发送到${modeName}`);
+          }
+        });
+
+        // 等待30秒检测AI回复
+        setTimeout(async () => {
+          const isConnected = this.isAIConnected();
+
+          if (isConnected) {
+            this.log('🎉 [Smart Retry] AI已回复！停止重试循环');
+            this.aiState.isRestarting = false;
+            await this.saveState();
+            return;
+          } else {
+            this.log(`⏰ [Smart Retry] 30秒后AI未回复，准备下次重试`);
+            useNormalChatbox = !useNormalChatbox; // 切换聊天框
+            setTimeout(retryLoop, 1000); // 1秒后继续下次重试
+          }
+        }, 30000); // 等待30秒
+
+      } catch (error) {
+        this.log(`❌ [Smart Retry] 重试失败: ${error}`);
+        useNormalChatbox = !useNormalChatbox; // 切换聊天框
+        setTimeout(retryLoop, 2000); // 2秒后重试
+      }
+    };
+
+    // 开始重试循环
+    await retryLoop();
+  }
+
+  /**
+   * 自我检查功能
+   */
+  public async performSelfCheck(): Promise<void> {
+    try {
+      this.log('🔍 [Self Check] 开始自我检查...');
+
+      // 检查1: 插件状态
+      if (!this.aiState.guardianActive) {
+        this.log('⚠️ [Self Check] 守护功能未激活，正在激活...');
+        this.aiState.guardianActive = true;
+        await this.saveState();
+      }
+
+      // 检查2: 监控定时器
+      if (!this.monitorTimer) {
+        this.log('⚠️ [Self Check] 监控定时器未启动，正在启动...');
+        this.startMonitoring();
+      }
+
+      // 检查3: 引擎检查定时器
+      if (!this.engineCheckTimer) {
+        this.log('⚠️ [Self Check] 引擎检查定时器未启动，正在启动...');
+        this.startEngineCheck();
+      }
+
+      // 检查4: 状态栏
+      if (!this.statusBarItem) {
+        this.log('⚠️ [Self Check] 状态栏未创建，正在创建...');
+        this.statusBarItem = vscode.window.createStatusBarItem(
+          vscode.StatusBarAlignment.Right,
+          100
+        );
+        this.statusBarItem.command = 'aiGuardian.status';
+        this.statusBarItem.show();
+      }
+
+      // 检查5: 输出通道
+      if (!this.outputChannel) {
+        this.log('⚠️ [Self Check] 输出通道未创建，正在创建...');
+        this.outputChannel = vscode.window.createOutputChannel('AI Guardian');
+      }
+
+      this.log('✅ [Self Check] 自我检查完成，所有组件正常');
+      this.updateStatusBar();
+
+    } catch (error) {
+      this.log(`❌ [Self Check] 自我检查失败: ${error}`);
+    }
+  }
+
+  /**
+   * 启动自我监控
+   */
+  private startSelfMonitoring(): void {
+    // 每5分钟执行一次自我检查
+    setInterval(() => {
+      this.performSelfCheck();
+    }, 5 * 60 * 1000);
+
+    this.log('🔄 [Self Monitoring] 自我监控已启动 (间隔: 5分钟)');
+  }
+
+  /**
+   * 处理重启后的恢复
+   */
+  private async handleRestartRecovery(): Promise<void> {
+    try {
+      this.log('🔄 [Restart Recovery] 开始处理重启恢复...');
+
+      // 等待IDE完全启动
+      await new Promise(resolve => setTimeout(resolve, 5000));
+
+      // 恢复消息
+      const recoveryMessage = this.aiState.lastWorkContext || '请继续推进';
+
+      this.log(`📤 [Restart Recovery] 准备发送恢复消息: ${recoveryMessage}`);
+
+      // 🔥 核心改进：使用多种方法尝试在聊天框中输入并发送消息
+      const success = await this.sendMessageToChatbox(recoveryMessage);
+
+      if (success) {
+        this.log('✅ [Restart Recovery] 恢复消息已发送到聊天框');
+        this.recordActivity('重启恢复成功');
+
+        // 等待AI响应
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
+        // 检测AI是否已连接
+        if (this.isAIConnected()) {
+          vscode.window.showInformationMessage('✅ AI Guardian: 重启恢复成功，AI已重新连接');
+        } else {
+          this.log('⚠️ [Restart Recovery] AI未检测到响应，可能需要手动干预');
+          vscode.window.showWarningMessage(
+            `⚠️ AI可能未响应，请检查聊天框。恢复消息: "${recoveryMessage}"`
+          );
+        }
+      } else {
+        this.log('❌ [Restart Recovery] 所有发送方法失败，使用备用方案');
+
+        // 备用方案：复制到剪贴板并提示用户
+        await vscode.env.clipboard.writeText(recoveryMessage);
+        vscode.window.showWarningMessage(
+          `📋 自动发送失败，恢复消息已复制到剪贴板: "${recoveryMessage}"\n请在聊天框粘贴并发送`,
+          '打开聊天框'
+        ).then(selection => {
+          if (selection === '打开聊天框') {
+            vscode.commands.executeCommand('workbench.action.chat.open');
+          }
+        });
+      }
+
+    } catch (error) {
+      this.log(`❌ [Restart Recovery] 重启恢复失败: ${error}`);
+
+      // 最终备用方案
+      const recoveryMessage = this.aiState.lastWorkContext || '请继续推进';
+      await vscode.env.clipboard.writeText(recoveryMessage);
+      vscode.window.showWarningMessage(
+        `⚠️ 自动恢复失败，恢复消息已复制到剪贴板: "${recoveryMessage}"\n请在聊天框粘贴并发送`,
+        '打开聊天框'
+      ).then(selection => {
+        if (selection === '打开聊天框') {
+          vscode.commands.executeCommand('workbench.action.chat.open');
+        }
+      });
+    }
+  }
+
+  /**
+   * 发送消息到聊天框（尝试多种方法）
+   */
+  private async sendMessageToChatbox(message: string): Promise<boolean> {
+    this.log('📤 [Send to Chatbox] 尝试多种方法发送消息到聊天框...');
+
+    // 🔥 关键改进：首先确保聊天框打开
+    this.log('📤 [Pre-Step] 首先尝试打开聊天框...');
+    await this.ensureChatboxOpen();
+
+    // 方法1: 使用Cursor特定命令（优先）
+    if (await this.tryCursorSpecificCommands(message)) {
+      return true;
+    }
+
+    // 方法2: 使用Language Model API + 聊天框命令组合
+    if (await this.tryLanguageModelAPI(message)) {
+      return true;
+    }
+
+    // 方法3: 使用模拟键盘输入（如果可用）
+    if (await this.trySimulatedKeyboardInput(message)) {
+      return true;
+    }
+
+    // 方法4: 使用工作区命令发送
+    if (await this.tryWorkbenchCommands(message)) {
+      return true;
+    }
+
+    this.log('❌ [Send to Chatbox] 所有方法失败');
+    return false;
+  }
+
+  /**
+   * 🔥 新增：确保聊天框打开（使用Ctrl+L快捷键）
+   */
+  private async ensureChatboxOpen(): Promise<boolean> {
+    try {
+      this.log('🔄 [Ensure Chatbox] 尝试打开聊天框...');
+
+      const platform = process.platform;
+      const isMac = platform === 'darwin';
+
+      // 策略1: 尝试所有可能的打开聊天框的命令
+      const openCommands = [
+        'aichat.newchat',                      // Cursor AI Chat (可能是正确的)
+        'workbench.action.chat.open',          // VSCode Chat
+        'cursor.openChat',                     // Cursor Chat
+        'cursor.newChat',                      // Cursor New Chat
+        'composer.open',                       // Cursor Composer
+        'workbench.panel.chat.view.copilot.focus'
+      ];
+
+      this.log(`📝 [Ensure Chatbox] 当前平台: ${platform}, 快捷键: ${isMac ? 'Cmd+L' : 'Ctrl+L'}`);
+
+      for (const cmd of openCommands) {
+        try {
+          this.log(`🔄 [Ensure Chatbox] 尝试命令: ${cmd}`);
+          await vscode.commands.executeCommand(cmd);
+          await new Promise(resolve => setTimeout(resolve, 1500)); // 等待聊天框打开
+
+          // 验证是否成功
+          this.log(`✅ [Ensure Chatbox] 命令 ${cmd} 执行成功`);
+          return true; // 至少一个命令成功了
+
+        } catch (error) {
+          this.log(`⚠️ [Ensure Chatbox] 命令 ${cmd} 失败: ${error}`);
+          // 继续尝试下一个命令
+        }
+      }
+
+      // 策略2: 如果所有命令都失败，记录可用的命令
+      try {
+        const allCommands = await vscode.commands.getCommands();
+        const chatRelatedCommands = allCommands.filter(cmd =>
+          cmd.includes('chat') ||
+          cmd.includes('cursor') ||
+          cmd.includes('ai') ||
+          cmd.includes('copilot') ||
+          cmd.includes('composer')
+        );
+
+        this.log(`📋 [Ensure Chatbox] 可用的聊天相关命令 (${chatRelatedCommands.length}个):`);
+        chatRelatedCommands.slice(0, 20).forEach(cmd => {
+          this.log(`   - ${cmd}`);
+        });
+      } catch (error) {
+        this.log(`⚠️ [Ensure Chatbox] 无法获取命令列表: ${error}`);
+      }
+
+      this.log('⚠️ [Ensure Chatbox] 所有命令失败，但继续尝试发送消息...');
+      return false;
+
+    } catch (error) {
+      this.log(`❌ [Ensure Chatbox] 打开聊天框失败: ${error}`);
+      return false;
+    }
+  }
+
+  /**
+   * 方法1: 尝试键盘快捷键（最可靠）
+   */
+  private async tryCursorSpecificCommands(message: string): Promise<boolean> {
+    try {
+      this.log('🔄 [Method 1] 尝试键盘快捷键 Ctrl+L...');
+
+      // 🔥 关键改进：使用键盘快捷键打开聊天框
+      // Windows/Linux: Ctrl+L
+      // macOS: Cmd+L
+      const platform = process.platform;
+      const isMac = platform === 'darwin';
+
+      // 方法1A: 使用VSCode的命令模拟快捷键
+      try {
+        // 尝试直接使用Cursor的快捷键命令
+        await vscode.commands.executeCommand('workbench.action.terminal.sendSequence', {
+          text: isMac ? '\u001b[cmd+l]' : '\u001b[ctrl+l]'
+        });
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        this.log('✅ [Method 1A] 快捷键命令已发送');
+      } catch (error) {
+        this.log(`⚠️ [Method 1A] 快捷键命令失败: ${error}`);
+      }
+
+      // 方法1B: 尝试Cursor的聊天命令
+      const cursorCommands = [
+        'aichat.newchat',              // Cursor AI Chat
+        'cursor.openChat',
+        'cursor.chat.open',
+        'cursor.chat.newChat',
+        'cursor.chat.send',
+        'workbench.action.chat.open',
+        'workbench.action.chat.newChat',
+        'workbench.panel.chat.view.copilot.focus'  // GitHub Copilot
+      ];
+
+      for (const cmd of cursorCommands) {
+        try {
+          await vscode.commands.executeCommand(cmd);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+
+          this.log(`✅ [Method 1B] 成功执行命令: ${cmd}`);
+
+          // 验证聊天框是否真的打开了
+          // 尝试发送消息命令
+          if (cmd.includes('send')) {
+            await vscode.commands.executeCommand(cmd, message);
+            this.log(`✅ [Method 1B] 消息已通过命令发送`);
+            return true;
+          }
+
+          // 如果不是send命令，继续尝试其他方法
+          // 至少聊天框应该已经打开了
+          return false; // 返回false继续下一个方法
+
+        } catch (error) {
+          this.log(`⚠️ [Method 1B] 命令 ${cmd} 失败: ${error}`);
+        }
+      }
+
+      return false;
+    } catch (error) {
+      this.log(`❌ [Method 1] Cursor命令失败: ${error}`);
+      return false;
+    }
+  }
+
+  /**
+   * 方法2: 使用Language Model API + 聊天框
+   */
+  private async tryLanguageModelAPI(message: string): Promise<boolean> {
+    try {
+      this.log('🔄 [Method 2] 尝试Language Model API...');
+
+      // 打开聊天框
+      await vscode.commands.executeCommand('workbench.action.chat.open');
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // 使用Language Model API发送消息
+      const models = await vscode.lm.selectChatModels();
+      if (models && models.length > 0) {
+        const model = models[0];
+        const userMessage = vscode.LanguageModelChatMessage.User(message);
+
+        const cancellationSource = new vscode.CancellationTokenSource();
+        setTimeout(() => cancellationSource.cancel(), 10000);
+
+        const request = await model.sendRequest([userMessage], {}, cancellationSource.token);
+
+        // 等待一小段时间让响应开始
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        this.log('✅ [Method 2] Language Model API发送成功');
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      this.log(`❌ [Method 2] Language Model API失败: ${error}`);
+      return false;
+    }
+  }
+
+  /**
+   * 方法3: 尝试模拟键盘输入
+   */
+  private async trySimulatedKeyboardInput(message: string): Promise<boolean> {
+    try {
+      this.log('🔄 [Method 3] 尝试模拟键盘输入...');
+
+      // 打开聊天框
+      await vscode.commands.executeCommand('workbench.action.chat.open');
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // 将消息复制到剪贴板
+      await vscode.env.clipboard.writeText(message);
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      // 尝试执行粘贴命令
+      await vscode.commands.executeCommand('editor.action.clipboardPasteAction');
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // 尝试模拟回车（发送消息）
+      // 注意：这可能在不同平台上行为不同
+      const enterCommands = [
+        'workbench.action.acceptSelectedSuggestion',
+        'editor.action.submitComment',
+        'chat.action.submit',
+        'workbench.action.chat.submit'
+      ];
+
+      for (const cmd of enterCommands) {
+        try {
+          await vscode.commands.executeCommand(cmd);
+          await new Promise(resolve => setTimeout(resolve, 500));
+          this.log(`✅ [Method 3] 成功执行发送命令: ${cmd}`);
+          return true;
+        } catch (error) {
+          this.log(`⚠️ [Method 3] 命令 ${cmd} 失败: ${error}`);
+        }
+      }
+
+      return false;
+    } catch (error) {
+      this.log(`❌ [Method 3] 模拟键盘输入失败: ${error}`);
+      return false;
+    }
+  }
+
+  /**
+   * 方法4: 使用工作区命令
+   */
+  private async tryWorkbenchCommands(message: string): Promise<boolean> {
+    try {
+      this.log('🔄 [Method 4] 尝试工作区命令...');
+
+      // 打开聊天框
+      await vscode.commands.executeCommand('workbench.action.chat.open');
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // 将消息复制到剪贴板
+      await vscode.env.clipboard.writeText(message);
+
+      // 尝试使用快速输入
+      const quickInput = vscode.window.createInputBox();
+      quickInput.value = message;
+      quickInput.prompt = 'AI恢复消息（按回车发送）';
+
+      return new Promise((resolve) => {
+        quickInput.onDidAccept(async () => {
+          quickInput.hide();
+
+          // 尝试将输入发送到聊天框
+          await vscode.env.clipboard.writeText(quickInput.value);
+          await vscode.commands.executeCommand('editor.action.clipboardPasteAction');
+          await new Promise(r => setTimeout(r, 500));
+
+          // 尝试提交
+          try {
+            await vscode.commands.executeCommand('chat.action.submit');
+            this.log('✅ [Method 4] 工作区命令发送成功');
+            resolve(true);
+          } catch {
+            resolve(false);
+          }
+        });
+
+        quickInput.onDidHide(() => {
+          quickInput.dispose();
+          resolve(false);
+        });
+
+        quickInput.show();
+
+        // 3秒后自动关闭
+        setTimeout(() => {
+          if (quickInput) {
+            quickInput.hide();
+          }
+        }, 3000);
+      });
+    } catch (error) {
+      this.log(`❌ [Method 4] 工作区命令失败: ${error}`);
+      return false;
+    }
+  }
+
+
 
   private stopRecoveryPolling() {
     if (this.recoveryInterval) {
@@ -719,18 +1568,18 @@ ${context}
   private async autoRecover() {
     try {
       this.log('🔄 开始自动恢复...');
-      
+
       // 方法1: 尝试执行聊天命令
       await vscode.commands.executeCommand('workbench.action.chat.open');
-      
+
       // 等待聊天框打开
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // 方法2: 发送恢复消息
       await this.sendRecoveryMessage();
-      
+
       this.log('✅ 自动恢复完成');
-      
+
     } catch (error) {
       this.log(`❌ 自动恢复失败: ${error}`);
       await this.manualRecover();
@@ -748,15 +1597,15 @@ ${context}
     for (const command of recoveryCommands) {
       try {
         await vscode.commands.executeCommand(command);
-        
+
         // 模拟输入"请继续"
         await vscode.env.clipboard.writeText('请继续执行上一个任务');
-        
+
         // 显示提示
         vscode.window.showInformationMessage(
           '恢复指令已复制到剪贴板，请在聊天框粘贴发送'
         );
-        
+
         break;
       } catch (error) {
         continue;
@@ -766,18 +1615,18 @@ ${context}
 
   public async manualRecover() {
     const recovery = this.generateRecoveryInstructions();
-    
+
     // 复制到剪贴板
     await vscode.env.clipboard.writeText(recovery);
-    
+
     // 显示恢复指令
     const document = await vscode.workspace.openTextDocument({
       content: recovery,
       language: 'markdown'
     });
-    
+
     await vscode.window.showTextDocument(document);
-    
+
     vscode.window.showInformationMessage(
       '恢复指令已复制到剪贴板并打开文档'
     );
@@ -809,7 +1658,7 @@ ${context}
   private updateStatusBar() {
     const inactiveDuration = Math.floor((Date.now() - this.aiState.lastActivity) / 1000);
     const engineStatus = this.aiState.engineLoaded ? '🔧' : '⚠️';
-    
+
     if (this.recoveryInterval) {
       this.statusBarItem.text = `🟡 AI 恢复中 (等待时机...)`;
       this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
@@ -824,11 +1673,11 @@ ${context}
       this.statusBarItem.text = `${engineStatus}$(warning) AI 离线 (${inactiveDuration}s)`;
       this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
     }
-    
+
     const engineInfo = this.aiState.engineLoaded ? '执行引擎已加载' : '执行引擎未加载';
-    const lastCheck = this.aiState.lastEngineCheck ? 
+    const lastCheck = this.aiState.lastEngineCheck ?
       new Date(this.aiState.lastEngineCheck).toLocaleTimeString() : '未检查';
-    
+
     this.statusBarItem.tooltip = `AI Guardian - 点击查看详情
 活动次数: ${this.aiState.activityCount}
 ${engineInfo}
@@ -838,23 +1687,56 @@ ${engineInfo}
   private log(message: string) {
     const timestamp = new Date().toLocaleTimeString();
     const logMessage = `[${timestamp}] ${message}`;
-    
+
     this.outputChannel.appendLine(logMessage);
     console.log(logMessage);
   }
 
   public dispose() {
+    this.log('🧹 [Dispose] 正在清理所有资源...');
+
+    // 1. 清理所有定时器
     if (this.monitorTimer) {
       clearInterval(this.monitorTimer);
+      this.monitorTimer = undefined;
     }
-    this.stopRecoveryPolling();
-    
+
     if (this.engineCheckTimer) {
       clearInterval(this.engineCheckTimer);
+      this.engineCheckTimer = undefined;
     }
-    
-    this.statusBarItem.dispose();
-    this.outputChannel.dispose();
+
+    if (this.recoveryInterval) {
+      clearInterval(this.recoveryInterval);
+      this.recoveryInterval = undefined;
+    }
+
+    if (this.recoveryTimeout) {
+      clearTimeout(this.recoveryTimeout);
+      this.recoveryTimeout = undefined;
+    }
+
+    // 2. 停止恢复轮询
+    this.stopRecoveryPolling();
+
+    // 3. 清理状态，确保不会继续重启
+    this.aiState.isRestarting = false;
+    this.aiState.guardianActive = false;
+    this.aiState.autoRecoveryEnabled = false;
+
+    // 4. 保存清理后的状态
+    this.saveState();
+
+    // 5. 清理UI元素
+    if (this.statusBarItem) {
+      this.statusBarItem.dispose();
+    }
+
+    if (this.outputChannel) {
+      this.outputChannel.dispose();
+    }
+
+    this.log('✅ [Dispose] 所有资源已清理完成');
   }
 
   public resetState() {
@@ -863,49 +1745,79 @@ ${engineInfo}
       isOnline: true,
       activityCount: 0,
       engineLoaded: false,
-      lastEngineCheck: 0
+      lastEngineCheck: 0,
+      isRestarting: false,
+      restartCount: 0,
+      lastRestartTime: 0,
+      guardianActive: true,
+      autoRecoveryEnabled: true
     };
     this.saveState();
     this.log('🔄 AI Guardian 状态已重置');
     vscode.window.showInformationMessage('AI Guardian 状态已重置');
   }
+
+  /**
+   * 强制重启IDE并发送恢复消息
+   */
+  public async forceRestartIDE(): Promise<void> {
+    try {
+      this.log('🚀 [Force Restart] 开始强制重启IDE...');
+
+      // 标记重启状态
+      this.aiState.isRestarting = true;
+      this.aiState.lastWorkContext = '请继续推进';
+      await this.saveState();
+
+      // 执行重启
+      await this.restartCursorIDE();
+
+    } catch (error) {
+      this.log(`❌ [Force Restart] 强制重启失败: ${error}`);
+      vscode.window.showErrorMessage('强制重启失败，请手动重启IDE');
+    }
+  }
 }
+
+// 全局变量存储guardian实例，用于deactivate时清理
+let globalGuardian: AIGuardianExtension | undefined;
 
 // 插件激活函数
 export function activate(context: vscode.ExtensionContext) {
   console.log('🛡️ AI Guardian 插件正在激活...');
-  
+
   const guardian = new AIGuardianExtension(context);
-  
+  globalGuardian = guardian; // 保存全局引用
+
   // 注册命令
   const commands = [
     vscode.commands.registerCommand('aiGuardian.start', () => {
       guardian.startMonitoring();
       vscode.window.showInformationMessage('AI Guardian 已启动');
     }),
-    
+
     vscode.commands.registerCommand('aiGuardian.stop', () => {
       guardian.dispose();
       vscode.window.showInformationMessage('AI Guardian 已停止');
     }),
-    
+
     vscode.commands.registerCommand('aiGuardian.resetState', () => {
       guardian.resetState();
       vscode.window.showInformationMessage('AI Guardian 状态已重置');
     }),
-    
+
     vscode.commands.registerCommand('aiGuardian.status', () => {
       const state = guardian.aiState;
       const duration = Math.floor((Date.now() - state.lastActivity) / 1000);
       const engineStatus = state.engineLoaded ? '已加载' : '未加载';
-      const lastCheck = state.lastEngineCheck ? 
+      const lastCheck = state.lastEngineCheck ?
         new Date(state.lastEngineCheck).toLocaleString() : '未检查';
-      
+
       vscode.window.showInformationMessage(
         `AI状态: ${state.isOnline ? '在线' : '离线'} | 最后活动: ${duration}秒前 | 活动次数: ${state.activityCount}\n执行引擎: ${engineStatus} | 上次检查: ${lastCheck}`
       );
     }),
-    
+
     vscode.commands.registerCommand('aiGuardian.recover', async () => {
       await guardian.manualRecover();
     }),
@@ -917,16 +1829,54 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('aiGuardian.loadEngine', async () => {
       await guardian.loadExecutionEngine();
+    }),
+
+    vscode.commands.registerCommand('aiGuardian.forceRestart', async () => {
+      await guardian.forceRestartIDE();
+    }),
+
+    vscode.commands.registerCommand('aiGuardian.selfCheck', async () => {
+      await guardian.performSelfCheck();
+      vscode.window.showInformationMessage('AI Guardian 自我检查完成');
+    }),
+
+    vscode.commands.registerCommand('aiGuardian.listChatCommands', async () => {
+      await guardian.listAvailableChatCommands();
+    }),
+
+    vscode.commands.registerCommand('aiGuardian.testChatboxOpen', async () => {
+      await guardian.testOpenChatbox();
     })
   ];
-  
+
   // 添加到上下文
   context.subscriptions.push(guardian, ...commands);
-  
+
   console.log('✅ AI Guardian 插件已激活');
 }
 
 // 插件停用函数
 export function deactivate() {
-  console.log('👋 AI Guardian 插件已停用');
+  console.log('👋 AI Guardian 插件正在停用...');
+
+  if (globalGuardian) {
+    try {
+      // 1. 停止所有监控和定时器
+      globalGuardian.dispose();
+
+      // 2. 清理状态，确保不会继续重启
+      globalGuardian.aiState.isRestarting = false;
+      globalGuardian.aiState.guardianActive = false;
+      globalGuardian.aiState.autoRecoveryEnabled = false;
+
+      // 3. 保存清理后的状态
+      globalGuardian.saveState();
+
+      console.log('✅ AI Guardian 插件已完全停用，所有资源已清理');
+    } catch (error) {
+      console.error('❌ AI Guardian 停用时发生错误:', error);
+    } finally {
+      globalGuardian = undefined;
+    }
+  }
 }

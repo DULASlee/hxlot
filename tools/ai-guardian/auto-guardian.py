@@ -115,42 +115,102 @@ class AutoAIGuardian:
             print(f"❌ 自动恢复失败: {e}")
             return False
     
-    def monitor_and_recover(self):
-        """监控并自动恢复"""
-        print("🚀 开始自动监控...")
+    def smart_recovery_with_retry(self):
+        """智能恢复策略 - 避免无限循环"""
+        print("🤖 启动智能恢复策略...")
         
-        while True:
-            try:
-                if self.is_ai_offline():
-                    if self.recovery_attempts < self.max_recovery_attempts:
-                        self.recovery_attempts += 1
-                        print(f"⚠️ AI离线！自动恢复 ({self.recovery_attempts}/{self.max_recovery_attempts})")
-                        
-                        if self.auto_send_recovery():
-                            print("✅ 恢复指令已自动发送")
-                            # 等待AI响应
-                            time.sleep(30)
-                        else:
-                            print("❌ 自动恢复失败")
-                    else:
-                        print("⚠️ 达到最大恢复次数，停止自动恢复")
-                        time.sleep(60)  # 等待1分钟后重置
-                        self.recovery_attempts = 0
-                else:
-                    if self.recovery_attempts > 0:
-                        print("✅ AI已恢复在线")
-                        self.recovery_attempts = 0
-                    
-                    print("💚 AI在线")
+        # 第一阶段：在当前会话中尝试3次
+        for phase1_attempt in range(1, 4):
+            print(f"🔄 第一阶段恢复尝试 {phase1_attempt}/3")
+            
+            # 先尝试关闭可能的对话框
+            self.close_dialogs()
+            
+            if self.auto_send_recovery():
+                # 等待15秒检测连接
+                if self.wait_for_connection(15):
+                    print("✅ AI连接恢复成功")
+                    return True
+            
+            if phase1_attempt < 3:
+                time.sleep(5)  # 等待5秒再重试
+        
+        # 第二阶段：开启新会话尝试2次
+        for phase2_attempt in range(1, 3):
+            print(f"🔄 第二阶段恢复尝试 {phase2_attempt}/2 - 新会话")
+            
+            # 开启新会话
+            if self.open_new_chat_session():
+                # 先尝试关闭可能的对话框
+                self.close_dialogs()
                 
-                time.sleep(self.check_interval)
+                if self.auto_send_recovery():
+                    # 等待15秒检测连接
+                    if self.wait_for_connection(15):
+                        print("✅ AI连接恢复成功（新会话）")
+                        return True
+            
+            if phase2_attempt < 2:
+                time.sleep(5)  # 等待5秒再重试
+        
+        print("⚠️ 所有恢复尝试失败，需要人工干预")
+        return False
+    
+    def close_dialogs(self):
+        """尝试关闭可能弹出的对话框或模态框"""
+        try:
+            # 按ESC键关闭对话框
+            pyautogui.press('esc')
+            time.sleep(0.5)
+            pyautogui.press('esc')  # 再次确保
+            time.sleep(0.5)
+            print("✅ 已尝试关闭对话框")
+            return True
+        except Exception as e:
+            print(f"❌ 关闭对话框失败: {e}")
+            return False
+    
+    def open_new_chat_session(self):
+        """开启新的聊天会话"""
+        try:
+            cursor_window = self.find_cursor_window()
+            if cursor_window:
+                cursor_window.activate()
+                time.sleep(0.5)
                 
-            except KeyboardInterrupt:
-                print("\n🛑 自动守护已停止")
-                break
-            except Exception as e:
-                print(f"❌ 监控错误: {e}")
-                time.sleep(self.check_interval)
+                # 按Ctrl+L开启新会话
+                pyautogui.hotkey('ctrl', 'l')
+                time.sleep(1)
+                print("✅ 已开启新聊天会话")
+                return True
+            return False
+        except Exception as e:
+            print(f"❌ 开启新会话失败: {e}")
+            return False
+    
+    def wait_for_connection(self, wait_seconds):
+        """等待AI连接"""
+        print(f"⏳ 等待AI连接... ({wait_seconds}秒)")
+        
+        for i in range(wait_seconds):
+            time.sleep(1)
+            if not self.is_ai_offline():
+                return True
+        
+        return False
+    
+    def monitor_and_recover(self):
+        """智能监控恢复 - 避免无限循环"""
+        print("🚀 启动智能监控恢复...")
+        
+        # 只执行一次恢复流程，避免无限循环
+        if self.is_ai_offline():
+            print("⚠️ 检测到AI离线，开始智能恢复")
+            self.smart_recovery_with_retry()
+        else:
+            print("💚 AI在线，无需恢复")
+        
+        print("🔚 智能恢复流程完成")
 
 class ProcessMonitor:
     """进程级监控 - 更可靠的检测"""
@@ -204,28 +264,24 @@ class ProcessMonitor:
         return False
 
 def main():
-    """主入口"""
+    """主入口 - 智能恢复，避免无限循环"""
     if not UI_AUTOMATION_AVAILABLE:
         print("❌ 缺少依赖，请运行: pip install pyautogui pygetwindow")
         return
     
-    print("🤖 启动AI大模型自动守护系统")
+    print("🤖 启动AI大模型智能恢复系统")
     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    print("✅ 自动检测AI断线")
-    print("✅ 自动发送恢复指令")
-    print("✅ 无需人工干预")
+    print("✅ 智能检测AI断线")
+    print("✅ 避免无限循环输入")
+    print("✅ 三级恢复策略")
+    print("✅ 需要时人工干预")
     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
     
-    # 启动自动守护
+    # 启动智能守护
     guardian = AutoAIGuardian()
     
-    # 启动进程监控
-    process_monitor = ProcessMonitor()
-    
-    try:
-        guardian.monitor_and_recover()
-    except KeyboardInterrupt:
-        print("\n👋 自动守护已停止")
+    # 执行单次智能恢复
+    guardian.monitor_and_recover()
 
 if __name__ == '__main__':
     main()

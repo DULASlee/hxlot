@@ -4,18 +4,10 @@
 
 // 核心类型和接口
 export type {
-  AssemblyConfig,
-  AssemblyInstance,
-  AssemblyEvent,
+  AssemblyConfig, AssemblyEvent,
   AssemblyEventType,
-  AssemblyHealth,
-  AssemblyValidationResult,
-  IAssemblyManager,
-  IAssemblyLoader,
-  AssemblyManagerOptions,
-  AssemblyLoaderOptions,
-  DependencyGraph,
-  DependencyNode
+  AssemblyHealth, AssemblyInstance, AssemblyLoaderOptions, AssemblyManagerOptions, AssemblyValidationResult, DependencyGraph,
+  DependencyNode, IAssemblyLoader, IAssemblyManager
 } from './assembly-types'
 
 // 核心管理器
@@ -36,34 +28,31 @@ export {
 
 // 工具函数
 export {
-  validateAssemblyConfig,
-  generateId,
-  deepClone,
-  debounce,
   buildDependencyGraph,
-  validateDependencies,
-  topologicalSort
+  debounce,
+  deepClone,
+  generateId,
+  validateAssemblyConfig
 } from './assembly-utils'
 
 // 存储适配器
 export {
-  LocalStorageAdapter,
-  IndexedDBAdapter,
-  RemoteStorageAdapter,
-  createStorageAdapter
+  ApiStorageAdapter,
+  HybridStorageAdapter, IndexedDBStorageAdapter, LocalStorageAdapter,
+  MemoryStorageAdapter, StorageAdapterFactory
 } from './storage-adapters'
 
 // 插件系统
 export {
+  CachePlugin,
+  DefaultPluginBundle,
+  DependencyAnalysisPlugin,
   LoggingPlugin,
   PerformancePlugin,
-  DependencyAnalysisPlugin,
-  SecurityPlugin,
-  CachePlugin,
   PluginManager,
-  DefaultPluginBundle,
+  SecurityPlugin,
   type AssemblyPlugin
-} from './plugins'
+} from './plugins/index'
 
 // Vue 组件
 export { default as AssemblyForm } from '../components/assembly/AssemblyForm.vue'
@@ -112,10 +101,10 @@ export const AssemblyUtils = {
    * 检查当前环境是否支持装配件系统
    */
   isSupported(): boolean {
-    return typeof window !== 'undefined' && 
-           typeof Promise !== 'undefined' &&
-           typeof Map !== 'undefined' &&
-           typeof Set !== 'undefined'
+    return typeof window !== 'undefined' &&
+      typeof Promise !== 'undefined' &&
+      typeof Map !== 'undefined' &&
+      typeof Set !== 'undefined'
   },
 
   /**
@@ -136,7 +125,7 @@ export const AssemblyUtils = {
    */
   async benchmark(): Promise<PerformanceBenchmark> {
     const startTime = performance.now()
-    
+
     // 简单的性能测试
     const results = {
       loadTime: 0,
