@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using SmartAbp.CodeGenerator.Services.V9;
 using SmartAbp.CodeGenerator.Core.FileOperations;
 using SmartAbp.CodeGenerator.Core.Validation;
+using SmartAbp.CodeGenerator.Core.Generation.Frontend;
 
 namespace SmartAbp.CodeGenerator.Core.Pipeline;
 
@@ -17,19 +18,22 @@ public class StableGenerationPipeline
     private readonly EnhancedModelProcessor _modelProcessor;
     private readonly GenerationProgressTracker _progressTracker;
     private readonly GenerationQualityChecker _qualityChecker;
+    private readonly EnhancedFrontendGenerator _frontendGenerator;
 
     public StableGenerationPipeline(
         ILogger<StableGenerationPipeline> logger,
         AtomicFileWriter atomicFileWriter,
         EnhancedModelProcessor modelProcessor,
         GenerationProgressTracker progressTracker,
-        GenerationQualityChecker qualityChecker)
+        GenerationQualityChecker qualityChecker,
+        EnhancedFrontendGenerator frontendGenerator)
     {
         _logger = logger;
         _atomicFileWriter = atomicFileWriter;
         _modelProcessor = modelProcessor;
         _progressTracker = progressTracker;
         _qualityChecker = qualityChecker;
+        _frontendGenerator = frontendGenerator;
     }
 
     /// <summary>
@@ -424,22 +428,40 @@ public class StableGenerationPipeline
     }
 
     /// <summary>
-    /// 生成前端代码
+    /// 生成前端代码 - 使用EnhancedFrontendGenerator（模板驱动）
     /// </summary>
     private async Task<Dictionary<string, string>> GenerateFrontendCodeAsync(StableGenerationRequest request)
     {
-        var files = new Dictionary<string, string>();
-
-        foreach (var entity in request.ProcessedMetadata!.Entities!)
+        _logger.LogInformation("🎨 使用增强前端生成器生成Vue3代码: {ModuleName}", request.ProcessedMetadata!.Name);
+        
+        // ✅ 修复：使用EnhancedFrontendGenerator替代硬编码空壳实现
+        // 这将生成完整的Vue3组件、API服务、Store、类型定义、路由和菜单配置
+        try
         {
-            // 生成 Vue 组件
-            var componentPath = Path.Combine(request.OutputPath, "Views", $"{entity.Name}Management.vue");
-            var componentContent = GenerateVueComponentCode(entity, request.ProcessedMetadata);
-            files[componentPath] = componentContent;
+            var generatedFiles = await _frontendGenerator.GenerateAsync(
+                request.ProcessedMetadata!, 
+                request.OutputPath
+            );
+            
+            _logger.LogInformation("✅ 前端代码生成成功: {FileCount}个文件", generatedFiles.Count);
+            return generatedFiles;
         }
-
-        await Task.CompletedTask;
-        return files;
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "❌ 前端代码生成失败，使用降级方案");
+            
+            // 🔄 降级方案：如果EnhancedFrontendGenerator失败，生成基本组件框架
+            var fallbackFiles = new Dictionary<string, string>();
+            foreach (var entity in request.ProcessedMetadata!.Entities!)
+            {
+                var componentPath = Path.Combine(request.OutputPath, "src", "SmartAbp.Vue", "src", "views", 
+                    request.ProcessedMetadata.Name.ToLowerInvariant(), $"{entity.Name}Management.vue");
+                var componentContent = GenerateBasicVueComponent(entity, request.ProcessedMetadata);
+                fallbackFiles[componentPath] = componentContent;
+            }
+            
+            return fallbackFiles;
+        }
     }
 
     /// <summary>
@@ -592,23 +614,108 @@ namespace {module.Namespace}.Services
 }}";
     }
 
-    private string GenerateVueComponentCode(EnhancedEntityModelDto entity, ModuleMetadataDto module)
+    /// <summary>
+    /// 生成基础Vue组件（降级方案）
+    /// 注意：这是EnhancedFrontendGenerator失败时的兜底方案
+    /// 正常情况下应该使用EnhancedFrontendGenerator生成完整的模板驱动组件
+    /// </summary>
+    private string GenerateBasicVueComponent(EnhancedEntityModelDto entity, ModuleMetadataDto module)
     {
-        return $@"<!-- Auto-generated Vue component -->
+        return $@"<!-- 
+  🔄 基础Vue组件框架（降级方案）
+  这是由于完整代码生成器失败时的兜底实现
+  建议：检查EnhancedFrontendGenerator的日志找出失败原因
+-->
 <template>
   <div class=""{entity.Name.ToLowerInvariant()}-management"">
-    <h1>{entity.DisplayName ?? entity.Name} 管理</h1>
-    <!-- TODO: Implement component UI -->
+    <el-card>
+      <template #header>
+        <div class=""card-header"">
+          <span>{entity.DisplayName ?? entity.Name}管理</span>
+          <el-button type=""primary"" @click=""handleAdd"">新增</el-button>
+        </div>
+      </template>
+      
+      <!-- 数据表格 -->
+      <el-table :data=""tableData"" border style=""width: 100%"">
+        <el-table-column type=""index"" label=""序号"" width=""60"" />
+        <!-- ⚠️ 需要补充实际列定义 -->
+        <el-table-column label=""操作"" width=""180"">
+          <template #default=""{{ row }}"">
+            <el-button size=""small"" @click=""handleEdit(row)"">编辑</el-button>
+            <el-button size=""small"" type=""danger"" @click=""handleDelete(row)"">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      
+      <!-- 分页 -->
+      <el-pagination
+        v-model:current-page=""currentPage""
+        v-model:page-size=""pageSize""
+        :total=""total""
+        layout=""total, sizes, prev, pager, next, jumper""
+        @current-change=""handlePageChange""
+      />
+    </el-card>
   </div>
 </template>
 
 <script setup lang=""ts"">
-// TODO: Implement component logic
+import {{ ref, onMounted }} from 'vue'
+import {{ ElMessage }} from 'element-plus'
+
+// 响应式状态
+const tableData = ref([])
+const currentPage = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
+
+// 加载数据
+const loadData = async () => {{
+  try {{
+    // ⚠️ 需要实现API调用
+    ElMessage.warning('基础组件框架 - 请实现API调用')
+  }} catch (error) {{
+    ElMessage.error('加载数据失败')
+  }}
+}}
+
+const handleAdd = () => {{
+  ElMessage.info('新增功能 - 待实现')
+}}
+
+const handleEdit = (row: any) => {{
+  ElMessage.info('编辑功能 - 待实现')
+}}
+
+const handleDelete = (row: any) => {{
+  ElMessage.info('删除功能 - 待实现')
+}}
+
+const handlePageChange = (page: number) => {{
+  currentPage.value = page
+  loadData()
+}}
+
+onMounted(() => {{
+  loadData()
+}})
 </script>
 
-<style scoped>
+<style scoped lang=""scss"">
 .{entity.Name.ToLowerInvariant()}-management {{
   padding: 20px;
+  
+  .card-header {{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }}
+  
+  .el-pagination {{
+    margin-top: 20px;
+    justify-content: flex-end;
+  }}
 }}
 </style>";
     }
