@@ -4,7 +4,7 @@
  * 基于 Performance API + web-vitals 实现前端性能监控
  */
 
-import { onCLS, onFCP, onFID, onINP, onLCP, onTTFB, type Metric } from 'web-vitals'
+import { onCLS, onFCP, onINP, onLCP, onTTFB, type Metric } from 'web-vitals'
 
 interface PerformanceMetrics {
   // Core Web Vitals（使用 web-vitals 库）
@@ -90,13 +90,7 @@ class PerformanceMonitor {
       console.log(`[Performance Monitor] 📊 LCP: ${metric.value.toFixed(2)}ms ${this.rateMetric('LCP', metric.value)}`)
     })
 
-    // First Input Delay
-    onFID((metric: Metric) => {
-      this.metrics.firstInputDelay = metric.value
-      console.log(`[Performance Monitor] 📊 FID: ${metric.value.toFixed(2)}ms ${this.rateMetric('FID', metric.value)}`)
-    })
-
-    // Interaction to Next Paint
+    // Interaction to Next Paint (替代已废弃的FID)
     onINP((metric: Metric) => {
       this.metrics.interactionToNextPaint = metric.value
       console.log(`[Performance Monitor] 📊 INP: ${metric.value.toFixed(2)}ms ${this.rateMetric('INP', metric.value)}`)
@@ -203,9 +197,6 @@ class PerformanceMonitor {
         break
       case 'LCP':
         rating = value <= 2500 ? 'good' : value <= 4000 ? 'needs-improvement' : 'poor'
-        break
-      case 'FID':
-        rating = value <= 100 ? 'good' : value <= 300 ? 'needs-improvement' : 'poor'
         break
       case 'INP':
         rating = value <= 200 ? 'good' : value <= 500 ? 'needs-improvement' : 'poor'
@@ -314,7 +305,7 @@ class PerformanceMonitor {
     return {
       fcp: this.metrics.firstContentfulPaint,
       lcp: this.metrics.largestContentfulPaint,
-      fid: this.metrics.firstInputDelay,
+      inp: this.metrics.interactionToNextPaint, // 使用 INP 替代废弃的 FID
       cls: this.metrics.cumulativeLayoutShift,
       rating: this.getRating()
     }
@@ -324,7 +315,7 @@ class PerformanceMonitor {
    * 获取性能评级
    */
   private getRating(): 'good' | 'needs-improvement' | 'poor' {
-    const { firstContentfulPaint, largestContentfulPaint, firstInputDelay, cumulativeLayoutShift } = this.metrics
+    const { firstContentfulPaint, largestContentfulPaint, interactionToNextPaint, cumulativeLayoutShift } = this.metrics
 
     let score = 0
     let count = 0
@@ -343,10 +334,10 @@ class PerformanceMonitor {
       count++
     }
 
-    // FID 评分 (< 100ms good, < 300ms needs-improvement, >= 300ms poor)
-    if (firstInputDelay !== undefined) {
-      if (firstInputDelay < 100) score += 2
-      else if (firstInputDelay < 300) score += 1
+    // INP 评分 (< 200ms good, < 500ms needs-improvement, >= 500ms poor) - 替代废弃的 FID
+    if (interactionToNextPaint !== undefined) {
+      if (interactionToNextPaint < 200) score += 2
+      else if (interactionToNextPaint < 500) score += 1
       count++
     }
 

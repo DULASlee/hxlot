@@ -1,10 +1,10 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 import SmartAbpLayout from "@/components/layout/SmartAbpLayout.vue"
-import LoginView from "@/views/auth/Login.vue"
+import { i18n } from "@/plugins/i18n"
 import { useAuthStore } from "@/stores"
 import { logger } from "@/utils/logger"
+import LoginView from "@/views/auth/Login.vue"
 import { ElMessage } from "element-plus"
-import { i18n } from "@/plugins/i18n"
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 import opsMonitoringRoutes from "./modules/ops-monitoring"
 import { autoLoadModuleRoutes, printRouteLoadInfo } from "./auto-load"
 
@@ -25,9 +25,9 @@ const routes: RouteRecordRaw[] = [
     path: "/login",
     name: "Login",
     component: LoginView,
-    meta: { 
+    meta: {
       title: "登录",
-      requiresAuth: false 
+      requiresAuth: false
     },
   },
   {
@@ -41,18 +41,18 @@ const routes: RouteRecordRaw[] = [
     path: "/403",
     name: "Forbidden",
     component: ForbiddenView,
-    meta: { 
+    meta: {
       title: "权限不足",
-      requiresAuth: false 
+      requiresAuth: false
     },
   },
   // 根路径重定向到工作台
   {
     path: "/",
     redirect: "/dashboard",
-    meta: { 
+    meta: {
       title: "首页",
-      requiresAuth: false 
+      requiresAuth: false
     },
   },
   // 工作台页面
@@ -69,6 +69,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
+        name: "DashboardHome",
         component: DashboardView,
         meta: { title: "工作台" },
       },
@@ -157,8 +158,8 @@ const routes: RouteRecordRaw[] = [
         path: "performance",
         name: "AdminPerformance",
         component: () => import("@/views/system/PerformanceMonitorView.vue"),
-        meta: { 
-          title: "性能监控", 
+        meta: {
+          title: "性能监控",
           menuKey: "admin-performance",
           requiredRoles: ["admin", "guest"]
         },
@@ -279,8 +280,8 @@ const routes: RouteRecordRaw[] = [
             path: "ddd-designer",
             name: "DddDomainDesigner",
             component: () => import("@/views/lowcode/DddDomainDesignerView.vue"),
-            meta: { 
-              title: "DDD领域设计器", 
+            meta: {
+              title: "DDD领域设计器",
               menuKey: "ddd-designer",
               icon: "🏛️",
               description: "领域驱动设计代码生成器"
@@ -290,8 +291,8 @@ const routes: RouteRecordRaw[] = [
             path: "cqrs-designer",
             name: "CqrsDesigner",
             component: () => import("@/views/lowcode/CqrsDesignerView.vue"),
-            meta: { 
-              title: "CQRS模式设计器", 
+            meta: {
+              title: "CQRS模式设计器",
               menuKey: "cqrs-designer",
               icon: "⚡",
               description: "CQRS模式代码生成器"
@@ -307,8 +308,8 @@ const routes: RouteRecordRaw[] = [
             path: "aspire-designer",
             name: "AspireDesigner",
             component: () => import("@smartabp/lowcode-designer/views/codegen/AspireDesignerView.vue"),
-            meta: { 
-              title: ".NET Aspire设计器", 
+            meta: {
+              title: ".NET Aspire设计器",
               menuKey: "aspire-designer",
               icon: "🌐",
               description: "微服务编排与云原生架构设计"
@@ -318,8 +319,8 @@ const routes: RouteRecordRaw[] = [
             path: "observability-dashboard",
             name: "ObservabilityDashboard",
             component: () => import("@smartabp/lowcode-designer/views/codegen/ObservabilityDashboard.vue"),
-            meta: { 
-              title: "可观测性仪表板", 
+            meta: {
+              title: "可观测性仪表板",
               menuKey: "observability-dashboard",
               icon: "📊",
               description: "黄金指标与RED指标实时监控"
@@ -329,8 +330,8 @@ const routes: RouteRecordRaw[] = [
             path: "observability-config",
             name: "ObservabilityConfig",
             component: () => import("@smartabp/lowcode-designer/views/codegen/ObservabilityConfigPanel.vue"),
-            meta: { 
-              title: "可观测性配置", 
+            meta: {
+              title: "可观测性配置",
               menuKey: "observability-config",
               icon: "⚙️",
               description: "Prometheus、Grafana和告警规则配置"
@@ -360,6 +361,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
+        name: "ProfileHome",
         component: ProfileView,
         meta: { title: "个人中心" },
       },
@@ -379,6 +381,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: "",
+        name: "HelpHome",
         component: () => import("@/views/common/HelpView.vue"),
         meta: { title: "帮助中心" },
       },
@@ -438,7 +441,7 @@ router.beforeEach(async (to, from, next) => {
   if (requiredRoles && requiredRoles.length > 0 && isLoggedIn) {
     const userRoles = authStore.userInfo?.roles || []
     const username = authStore.userInfo?.userName || authStore.userInfo?.username
-    
+
     // 🔑 开发阶段特殊处理：超级用户白名单直接放行
     const { isSuperUser } = await import('@/utils/roleHierarchy')
     if (isSuperUser(username)) {
@@ -447,11 +450,11 @@ router.beforeEach(async (to, from, next) => {
       )
       return next()
     }
-    
+
     // 🏛️ 使用角色层级系统检查权限（admin > manager > user > guest）
     const { hasRolePermission, getHighestRole } = await import('@/utils/roleHierarchy')
     const hasPermission = hasRolePermission(userRoles, requiredRoles)
-    
+
     if (!hasPermission) {
       const highestRole = getHighestRole(userRoles)
       logger.warn(
@@ -465,7 +468,7 @@ router.beforeEach(async (to, from, next) => {
       // 权限不足时重定向到403页面，避免重定向循环
       return next({ name: 'Forbidden' })
     }
-    
+
     logger.debug(`[路由守卫] 角色权限检查通过 - 用户: ${username}, 用户角色: ${userRoles.join(', ')}, 需要角色: ${requiredRoles.join(', ')}`)
   }
 
@@ -487,10 +490,10 @@ router.beforeEach(async (to, from, next) => {
 // 路由守卫 - 记录路由切换性能
 router.afterEach(async (to) => {
   const startTime = performance.now()
-  
+
   // 动态导入性能监控（避免循环依赖）
   const { performanceMonitor } = await import("@/utils/performance/monitor")
-  
+
   // 等待下一帧后记录，此时组件应该已经渲染完成
   requestAnimationFrame(() => {
     const duration = performance.now() - startTime

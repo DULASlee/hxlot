@@ -6,7 +6,7 @@
  * 基于业界最佳实践：Google Web Vitals
  */
 
-import { onCLS, onFCP, onFID, onINP, onLCP, onTTFB, type Metric } from 'web-vitals'
+import { onCLS, onFCP, onINP, onLCP, onTTFB, type Metric } from 'web-vitals'
 
 /**
  * 性能指标类型
@@ -19,22 +19,22 @@ export interface PerformanceMetrics {
   INP: number | null // Interaction to Next Paint - 交互到下一次绘制
   CLS: number | null // Cumulative Layout Shift - 累积布局偏移
   TTFB: number | null // Time to First Byte - 首字节时间
-  
+
   // 自定义指标
   TTI: number | null // Time to Interactive - 可交互时间
   TBT: number | null // Total Blocking Time - 总阻塞时间
   FMP: number | null // First Meaningful Paint - 首次有意义绘制
-  
+
   // 资源加载
   resourceLoadTime: number | null // 资源加载时间
   domReadyTime: number | null // DOM就绪时间
   windowLoadTime: number | null // 窗口加载时间
-  
+
   // 内存
   memoryUsed: number | null // 已使用内存 (MB)
   memoryTotal: number | null // 总内存 (MB)
   memoryLimit: number | null // 内存限制 (MB)
-  
+
   // 长任务
   longTasksCount: number // 长任务数量 (>50ms)
   totalBlockingTime: number // 总阻塞时间
@@ -145,13 +145,7 @@ export class WebVitalsMonitor {
       this.reportMetric('LCP', metric.value)
     })
 
-    // First Input Delay
-    onFID((metric: Metric) => {
-      this.metrics.FID = metric.value
-      this.reportMetric('FID', metric.value)
-    })
-
-    // Interaction to Next Paint
+    // Interaction to Next Paint (替代已废弃的FID)
     onINP((metric: Metric) => {
       this.metrics.INP = metric.value
       this.reportMetric('INP', metric.value)
@@ -183,16 +177,16 @@ export class WebVitalsMonitor {
           for (const entry of list.getEntries()) {
             if (entry.entryType === 'navigation') {
               const navEntry = entry as PerformanceNavigationTiming
-              
+
               // DOM就绪时间
               this.metrics.domReadyTime = navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart
-              
+
               // 窗口加载时间
               this.metrics.windowLoadTime = navEntry.loadEventEnd - navEntry.loadEventStart
-              
+
               // 资源加载时间
               this.metrics.resourceLoadTime = navEntry.responseEnd - navEntry.requestStart
-              
+
               // Time to Interactive (简化估算)
               this.metrics.TTI = navEntry.domInteractive - navEntry.fetchStart
             }
@@ -209,11 +203,11 @@ export class WebVitalsMonitor {
     if ('performance' in window && 'getEntriesByType' in window.performance) {
       window.addEventListener('load', () => {
         const navigation = window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
-        
+
         if (navigation) {
           // First Meaningful Paint (简化：使用 domContentLoadedEventEnd)
           this.metrics.FMP = navigation.domContentLoadedEventEnd - navigation.fetchStart
-          
+
           // Total Blocking Time (需要通过 Long Tasks 计算)
           this.metrics.TBT = this.metrics.totalBlockingTime
         }
@@ -231,15 +225,15 @@ export class WebVitalsMonitor {
       this.longTaskObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           const taskDuration = entry.duration
-          
+
           // 长任务定义：执行时间 > 50ms
           if (taskDuration > 50) {
             this.metrics.longTasksCount++
-            
+
             // 计算阻塞时间（超过50ms的部分）
             const blockingTime = taskDuration - 50
             this.metrics.totalBlockingTime += blockingTime
-            
+
             // 报告长任务
             console.warn(`⚠️ Long Task Detected: ${taskDuration.toFixed(2)}ms`, {
               name: entry.name,
@@ -281,7 +275,7 @@ export class WebVitalsMonitor {
 
           // 内存使用率检查
           const memoryUsagePercent = (this.metrics.memoryUsed / this.metrics.memoryLimit) * 100
-          
+
           if (memoryUsagePercent > 90) {
             console.error('🚨 Memory Usage Critical: ' + memoryUsagePercent.toFixed(2) + '%')
           } else if (memoryUsagePercent > 75) {
@@ -335,12 +329,7 @@ export class WebVitalsMonitor {
       ratings.push(this.rateMetric('LCP', this.metrics.LCP, 2500, 4000))
     }
 
-    // FID 评分
-    if (this.metrics.FID !== null) {
-      ratings.push(this.rateMetric('FID', this.metrics.FID, 100, 300))
-    }
-
-    // INP 评分
+    // INP 评分 (替代废弃的FID)
     if (this.metrics.INP !== null) {
       ratings.push(this.rateMetric('INP', this.metrics.INP, 200, 500))
     }
@@ -484,7 +473,7 @@ export function initializePerformanceMonitoring(config?: PerformanceMonitorConfi
   }
 
   monitorInstance = new WebVitalsMonitor(config)
-  
+
   // 在开发环境下，5分钟后自动生成报告
   if (import.meta.env.DEV) {
     setTimeout(() => {
