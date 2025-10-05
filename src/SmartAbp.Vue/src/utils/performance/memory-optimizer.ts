@@ -182,7 +182,7 @@ export function useMemoryOptimizer(options: MemoryOptimizerOptions = {}) {
    * 获取内存信息
    */
   function getMemoryInfo(): MemoryMetrics {
-    if (typeof performance === 'undefined' || !(performance as any).memory) {
+    if (typeof performance === 'undefined' || !performance.memory) {
       return {
         usedMemory: 0,
         totalMemory: 0,
@@ -192,7 +192,7 @@ export function useMemoryOptimizer(options: MemoryOptimizerOptions = {}) {
       }
     }
 
-    const memory = (performance as any).memory
+    const memory = performance.memory
     const usedMemory = memory.usedJSHeapSize / 1048576 // MB
     const totalMemory = memory.totalJSHeapSize / 1048576 // MB
     const usagePercentage = (usedMemory / totalMemory) * 100
@@ -251,9 +251,9 @@ export function useMemoryOptimizer(options: MemoryOptimizerOptions = {}) {
    * 触发垃圾回收（仅Chrome DevTools可用）
    */
   function triggerGC(): boolean {
-    if (typeof (window as any).gc === 'function') {
+    if (typeof window.gc === 'function') {
       console.log('[Memory Optimizer] 🗑️ 触发手动GC')
-      ;(window as any).gc()
+      window.gc()
       return true
     }
     

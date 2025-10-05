@@ -188,7 +188,7 @@ export class ApiStorageAdapter implements AssemblyStorage {
     this.token = token
   }
 
-  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  private async request<T>(endpoint: string, options: Parameters<typeof fetch>[1] = {}): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',

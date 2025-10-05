@@ -133,6 +133,7 @@ import { generatedStores } from "@/appshell/stores/stores.generated"
 import { runPreInit, runInit, runPostInit } from "@/appshell/lifecycle.generated"
 import { generatedMenus } from "@/appshell/menu/menu.generated"
 import { menuConfig } from "@/config/menus"
+import type { MenuItem } from "@/types/menu"
 
 // 动态注册路由
 if (Array.isArray(generatedRoutes) && generatedRoutes.length > 0) {
@@ -142,7 +143,7 @@ if (Array.isArray(generatedRoutes) && generatedRoutes.length > 0) {
 // 合并菜单（运行时注入）
 if (Array.isArray(generatedMenus) && generatedMenus.length > 0) {
   try {
-    menuConfig.menus.push(...(generatedMenus as any[]))
+    menuConfig.menus.push(...(generatedMenus as MenuItem[]))
   } catch (_) {}
 }
 

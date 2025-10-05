@@ -257,46 +257,46 @@ export function useSmartDataWorker() {
   /**
    * 智能排序（根据数据量自动选择策略）
    */
-  async function smartSort<T = any>(
+  async function smartSort<T extends Record<string, any>>(
     data: T[],
-    key: string,
+    key: keyof T,
     order: 'asc' | 'desc' = 'asc'
   ): Promise<T[]> {
     if (data.length < threshold) {
       // 小数据量：主线程直接处理
       return [...data].sort((a, b) => {
-        const valueA = (a as any)[key]
-        const valueB = (b as any)[key]
+        const valueA = a[key]
+        const valueB = b[key]
         const result = valueA < valueB ? -1 : valueA > valueB ? 1 : 0
         return order === 'asc' ? result : -result
       })
     }
 
     // 大数据量：Worker处理
-    return worker.sortData(data, key, order)
+    return worker.sortData(data, String(key), order)
   }
 
   /**
    * 智能搜索
    */
-  async function smartSearch<T = any>(
+  async function smartSearch<T extends Record<string, any>>(
     data: T[],
     keyword: string,
-    fields: string[]
+    fields: Array<keyof T>
   ): Promise<T[]> {
     if (data.length < threshold) {
       // 主线程处理
       const lowerKeyword = keyword.toLowerCase()
       return data.filter(item => {
         return fields.some(field => {
-          const value = (item as any)[field]
+          const value = item[field]
           return String(value).toLowerCase().includes(lowerKeyword)
         })
       })
     }
 
     // Worker处理
-    return worker.searchData(data, keyword, fields)
+    return worker.searchData(data, keyword, fields.map(String))
   }
 
   return {
