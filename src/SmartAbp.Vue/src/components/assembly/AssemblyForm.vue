@@ -1,5 +1,8 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="assembly-form">
+  <form
+    class="assembly-form"
+    @submit.prevent="handleSubmit"
+  >
     <div class="form-section">
       <h4>基本信息</h4>
       <div class="form-grid">
@@ -13,7 +16,12 @@
             :disabled="isEditing"
             class="form-control"
           />
-          <div v-if="errors.name" class="error">{{ errors.name }}</div>
+          <div
+            v-if="errors.name"
+            class="error"
+          >
+            {{ errors.name }}
+          </div>
         </div>
 
         <div class="form-group">
@@ -37,7 +45,9 @@
             pattern="^\d+\.\d+\.\d+$"
             class="form-control"
           />
-          <div class="help-text">格式: x.y.z (例如: 1.0.0)</div>
+          <div class="help-text">
+            格式: x.y.z (例如: 1.0.0)
+          </div>
         </div>
 
         <div class="form-group">
@@ -49,7 +59,9 @@
             required
             class="form-control"
           />
-          <div class="help-text">相对于装配件根目录的路径</div>
+          <div class="help-text">
+            相对于装配件根目录的路径
+          </div>
         </div>
       </div>
     </div>
@@ -92,18 +104,30 @@
       <div class="form-group">
         <label>依赖项</label>
         <div class="dependencies-input">
-          <div v-for="(dep, index) in formData.dependencies" :key="index" class="dependency-item">
+          <div
+            v-for="(dep, index) in formData.dependencies"
+            :key="index"
+            class="dependency-item"
+          >
             <input
               v-model="formData.dependencies[index]"
               type="text"
               placeholder="依赖名称"
               class="form-control"
             />
-            <button type="button" @click="removeDependency(index)" class="btn btn-danger btn-sm">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              @click="removeDependency(index)"
+            >
               删除
             </button>
           </div>
-          <button type="button" @click="addDependency" class="btn btn-outline btn-sm">
+          <button
+            type="button"
+            class="btn btn-outline btn-sm"
+            @click="addDependency"
+          >
             + 添加依赖
           </button>
         </div>
@@ -122,7 +146,9 @@
             />
             <span>启用装配件</span>
           </label>
-          <div class="help-text">是否在启动时自动加载此装配件</div>
+          <div class="help-text">
+            是否在启动时自动加载此装配件
+          </div>
         </div>
 
         <div class="form-group">
@@ -135,7 +161,9 @@
             max="100"
             class="form-control"
           />
-          <div class="help-text">数值越小越先加载 (0-100)</div>
+          <div class="help-text">
+            数值越小越先加载 (0-100)
+          </div>
         </div>
 
         <div class="form-group">
@@ -148,7 +176,9 @@
             max="300"
             class="form-control"
           />
-          <div class="help-text">加载装配件的最大等待时间</div>
+          <div class="help-text">
+            加载装配件的最大等待时间
+          </div>
         </div>
       </div>
     </div>
@@ -163,19 +193,34 @@
             v-model="configJson"
             rows="6"
             class="form-control"
-            placeholder='{"key": "value"}'
+            placeholder="{&quot;key&quot;: &quot;value&quot;}"
           />
-          <div v-if="configError" class="error">{{ configError }}</div>
+          <div
+            v-if="configError"
+            class="error"
+          >
+            {{ configError }}
+          </div>
         </div>
-        <div class="help-text">JSON格式的自定义配置</div>
+        <div class="help-text">
+          JSON格式的自定义配置
+        </div>
       </div>
     </div>
 
     <div class="form-actions">
-      <button type="button" @click="$emit('cancel')" class="btn btn-secondary">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        @click="$emit('cancel')"
+      >
         取消
       </button>
-      <button type="submit" :disabled="!isValid" class="btn btn-primary">
+      <button
+        type="submit"
+        :disabled="!isValid"
+        class="btn btn-primary"
+      >
         {{ isEditing ? '更新' : '创建' }}
       </button>
     </div>

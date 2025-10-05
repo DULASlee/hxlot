@@ -143,15 +143,135 @@ export default defineConfig({
   build: {
     outDir: "../SmartAbp.Web/wwwroot/dist",
     chunkSizeWarningLimit: 1600,
+    // Phoenix Week 2 优化：启用CSS代码分割
+    cssCodeSplit: true,
+    // 启用源码映射（生产环境使用hidden以保护源码）
+    sourcemap: process.env.NODE_ENV === 'production' ? 'hidden' : true,
+    // 优化模块预加载
+    modulePreload: {
+      polyfill: true,
+    },
     rollupOptions: {
       output: {
-        manualChunks: {
-          vue: ["vue", "vue-router", "pinia"],
-          elementPlus: ["element-plus", "@element-plus/icons-vue"],
-          echarts: ["echarts"],
-          highlight: ["highlight.js", "@highlightjs/vue-plugin"],
+        // Phoenix Week 2 优化：智能代码分割策略
+        manualChunks: (id) => {
+          // Vue核心生态
+          if (id.includes('node_modules/vue') || 
+              id.includes('node_modules/vue-router') || 
+              id.includes('node_modules/pinia')) {
+            return 'vue-core'
+          }
+          
+          // Element Plus UI库
+          if (id.includes('node_modules/element-plus')) {
+            return 'element-plus'
+          }
+          
+          // Element Plus Icons
+          if (id.includes('node_modules/@element-plus/icons-vue')) {
+            return 'element-icons'
+          }
+          
+          // ECharts可视化库（按需加载）
+          if (id.includes('node_modules/echarts')) {
+            return 'echarts'
+          }
+          
+          // 代码高亮库
+          if (id.includes('node_modules/highlight.js') || 
+              id.includes('node_modules/@highlightjs')) {
+            return 'highlight'
+          }
+          
+          // Monaco Editor（如有使用）
+          if (id.includes('node_modules/monaco-editor')) {
+            return 'monaco'
+          }
+          
+          // 日期处理库
+          if (id.includes('node_modules/dayjs')) {
+            return 'dayjs'
+          }
+          
+          // 工具库
+          if (id.includes('node_modules/lodash')) {
+            return 'lodash'
+          }
+          
+          // Phoenix Week 2 优化：低代码引擎按包分割
+          if (id.includes('/packages/lowcode-shared/')) {
+            return 'lowcode-shared'
+          }
+          if (id.includes('/packages/lowcode-core/')) {
+            return 'lowcode-core'
+          }
+          if (id.includes('/packages/lowcode-designer/')) {
+            return 'lowcode-designer'
+          }
+          if (id.includes('/packages/lowcode-api/')) {
+            return 'lowcode-api'
+          }
+          if (id.includes('/packages/lowcode-tools/')) {
+            return 'lowcode-tools'
+          }
+          
+          // 其他node_modules（小型库统一打包）
+          if (id.includes('node_modules')) {
+            return 'vendor'
+          }
+        },
+        
+        // Phoenix Week 2 优化：文件命名策略（带hash缓存）
+        chunkFileNames: (chunkInfo) => {
+          const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').slice(-2).join('/') : 'chunk'
+          return `js/[name]-[hash].js`
+        },
+        entryFileNames: 'js/[name]-[hash].js',
+        assetFileNames: (assetInfo) => {
+          // 按资源类型分类存储
+          if (assetInfo.name?.endsWith('.css')) {
+            return 'css/[name]-[hash][extname]'
+          }
+          if (/\.(png|jpe?g|gif|svg|webp|avif)$/i.test(assetInfo.name || '')) {
+            return 'images/[name]-[hash][extname]'
+          }
+          if (/\.(woff2?|eot|ttf|otf)$/i.test(assetInfo.name || '')) {
+            return 'fonts/[name]-[hash][extname]'
+          }
+          return 'assets/[name]-[hash][extname]'
         },
       },
+      
+      // Phoenix Week 2 优化：Tree-shaking优化
+      treeshake: {
+        moduleSideEffects: 'no-external',
+        propertyReadSideEffects: false,
+        tryCatchDeoptimization: false,
+      },
     },
+    
+    // Phoenix Week 2 优化：压缩配置
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        // 移除console（生产环境）
+        drop_console: process.env.NODE_ENV === 'production',
+        drop_debugger: true,
+        // 移除无用代码
+        pure_funcs: process.env.NODE_ENV === 'production' 
+          ? ['console.log', 'console.info', 'console.debug'] 
+          : [],
+      },
+      format: {
+        // 移除注释
+        comments: false,
+      },
+    },
+    
+    // Phoenix Week 2 优化：报告分析
+    reportCompressedSize: true,
+    
+    // 提高构建性能
+    target: 'es2015',
   },
 })

@@ -1,45 +1,53 @@
 <template>
-  <div class="assembly-item" :class="itemClasses">
+  <div
+    class="assembly-item"
+    :class="itemClasses"
+  >
     <div class="item-header">
       <div class="item-info">
-        <h4 class="item-name">{{ registryItem.config.displayName }}</h4>
+        <h4 class="item-name">
+          {{ registryItem.config.displayName }}
+        </h4>
         <span class="item-version">v{{ registryItem.config.version }}</span>
-        <span class="item-status" :class="statusClass">{{ statusText }}</span>
+        <span
+          class="item-status"
+          :class="statusClass"
+        >{{ statusText }}</span>
       </div>
       <div class="item-actions">
         <button 
           v-if="isLoaded" 
-          @click="$emit('unload')" 
-          class="btn btn-warning btn-sm"
+          class="btn btn-warning btn-sm" 
           :disabled="isLoading"
+          @click="$emit('unload')"
         >
           卸载
         </button>
         <button 
           v-else 
-          @click="$emit('load')" 
-          class="btn btn-primary btn-sm"
+          class="btn btn-primary btn-sm" 
           :disabled="isLoading || !registryItem.config.enabled"
+          @click="$emit('load')"
         >
           加载
         </button>
         <button 
-          @click="$emit('reload')" 
-          class="btn btn-secondary btn-sm"
+          class="btn btn-secondary btn-sm" 
           :disabled="isLoading || !isLoaded"
+          @click="$emit('reload')"
         >
           重载
         </button>
         <button 
-          @click="$emit('toggle')" 
-          class="btn btn-sm"
+          class="btn btn-sm" 
           :class="toggleButtonClass"
+          @click="$emit('toggle')"
         >
           {{ registryItem.config.enabled ? '禁用' : '启用' }}
         </button>
         <button 
-          @click="$emit('edit')" 
-          class="btn btn-outline btn-sm"
+          class="btn btn-outline btn-sm" 
+          @click="$emit('edit')"
         >
           编辑
         </button>
@@ -47,7 +55,10 @@
     </div>
 
     <div class="item-content">
-      <p class="item-description" v-if="registryItem.config.description">
+      <p
+        v-if="registryItem.config.description"
+        class="item-description"
+      >
         {{ registryItem.config.description }}
       </p>
       
@@ -60,7 +71,10 @@
           <span class="meta-label">入口:</span>
           <code class="meta-value">{{ registryItem.config.entry }}</code>
         </div>
-        <div v-if="registryItem.config.dependencies.length > 0" class="meta-item">
+        <div
+          v-if="registryItem.config.dependencies.length > 0"
+          class="meta-item"
+        >
           <span class="meta-label">依赖:</span>
           <div class="dependencies">
             <span 
@@ -87,13 +101,19 @@
           <span class="stat-label">注册时间:</span>
           <span class="stat-value">{{ formatDate(registryItem.registeredAt) }}</span>
         </div>
-        <div v-if="registryItem.lastLoadedAt" class="stat">
+        <div
+          v-if="registryItem.lastLoadedAt"
+          class="stat"
+        >
           <span class="stat-label">最后加载:</span>
           <span class="stat-value">{{ formatDate(registryItem.lastLoadedAt) }}</span>
         </div>
       </div>
 
-      <div v-if="registryItem.lastError" class="item-error">
+      <div
+        v-if="registryItem.lastError"
+        class="item-error"
+      >
         <div class="error-header">
           <span class="error-icon">⚠️</span>
           <strong>最后错误:</strong>
@@ -101,8 +121,14 @@
         <pre class="error-message">{{ registryItem.lastError }}</pre>
       </div>
 
-      <div v-if="registryItem.instance" class="item-health">
-        <div class="health-status" :class="healthClass">
+      <div
+        v-if="registryItem.instance"
+        class="item-health"
+      >
+        <div
+          class="health-status"
+          :class="healthClass"
+        >
           <span class="health-icon">{{ healthIcon }}</span>
           <span>健康状态: {{ registryItem.instance.health.status }}</span>
           <span class="last-check">

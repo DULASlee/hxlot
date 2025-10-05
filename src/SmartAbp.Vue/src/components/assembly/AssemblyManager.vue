@@ -3,13 +3,23 @@
     <div class="manager-header">
       <h2>装配件管理器</h2>
       <div class="header-actions">
-        <button @click="refresh" :disabled="isLoading" class="btn btn-secondary">
+        <button
+          :disabled="isLoading"
+          class="btn btn-secondary"
+          @click="refresh"
+        >
           <span class="icon">🔄</span> 刷新
         </button>
-        <button @click="exportConfig" class="btn btn-secondary">
+        <button
+          class="btn btn-secondary"
+          @click="exportConfig"
+        >
           <span class="icon">📥</span> 导出配置
         </button>
-        <button @click="showImportDialog = true" class="btn btn-secondary">
+        <button
+          class="btn btn-secondary"
+          @click="showImportDialog = true"
+        >
           <span class="icon">📤</span> 导入配置
         </button>
       </div>
@@ -18,20 +28,36 @@
     <!-- 统计信息 -->
     <div class="statistics">
       <div class="stat-item">
-        <div class="stat-value">{{ statistics.total }}</div>
-        <div class="stat-label">总装配件</div>
+        <div class="stat-value">
+          {{ statistics.total }}
+        </div>
+        <div class="stat-label">
+          总装配件
+        </div>
       </div>
       <div class="stat-item">
-        <div class="stat-value">{{ statistics.loaded }}</div>
-        <div class="stat-label">已加载</div>
+        <div class="stat-value">
+          {{ statistics.loaded }}
+        </div>
+        <div class="stat-label">
+          已加载
+        </div>
       </div>
       <div class="stat-item">
-        <div class="stat-value">{{ statistics.enabled }}</div>
-        <div class="stat-label">已启用</div>
+        <div class="stat-value">
+          {{ statistics.enabled }}
+        </div>
+        <div class="stat-label">
+          已启用
+        </div>
       </div>
       <div class="stat-item">
-        <div class="stat-value">{{ statistics.errors }}</div>
-        <div class="stat-label">错误数</div>
+        <div class="stat-value">
+          {{ statistics.errors }}
+        </div>
+        <div class="stat-label">
+          错误数
+        </div>
       </div>
     </div>
 
@@ -40,12 +66,25 @@
       <div class="list-header">
         <h3>装配件列表</h3>
         <div class="filter-controls">
-          <select v-model="filterStatus" class="filter-select">
-            <option value="all">全部状态</option>
-            <option value="loaded">已加载</option>
-            <option value="enabled">已启用</option>
-            <option value="disabled">已禁用</option>
-            <option value="error">错误</option>
+          <select
+            v-model="filterStatus"
+            class="filter-select"
+          >
+            <option value="all">
+              全部状态
+            </option>
+            <option value="loaded">
+              已加载
+            </option>
+            <option value="enabled">
+              已启用
+            </option>
+            <option value="disabled">
+              已禁用
+            </option>
+            <option value="error">
+              错误
+            </option>
           </select>
           <input 
             v-model="searchQuery" 
@@ -55,11 +94,22 @@
         </div>
       </div>
 
-      <div v-if="isLoading" class="loading">加载中...</div>
-      <div v-else-if="filteredAssemblies.length === 0" class="empty-state">
+      <div
+        v-if="isLoading"
+        class="loading"
+      >
+        加载中...
+      </div>
+      <div
+        v-else-if="filteredAssemblies.length === 0"
+        class="empty-state"
+      >
         暂无装配件
       </div>
-      <div v-else class="assembly-items">
+      <div
+        v-else
+        class="assembly-items"
+      >
         <AssemblyItem
           v-for="item in filteredAssemblies"
           :key="item.config.name"
@@ -74,11 +124,19 @@
     </div>
 
     <!-- 导入配置对话框 -->
-    <div v-if="showImportDialog" class="modal-overlay">
+    <div
+      v-if="showImportDialog"
+      class="modal-overlay"
+    >
       <div class="modal">
         <div class="modal-header">
           <h3>导入配置</h3>
-          <button @click="showImportDialog = false" class="close-btn">×</button>
+          <button
+            class="close-btn"
+            @click="showImportDialog = false"
+          >
+            ×
+          </button>
         </div>
         <div class="modal-body">
           <textarea 
@@ -86,11 +144,25 @@
             placeholder="粘贴配置JSON..."
             class="import-textarea"
           />
-          <div v-if="importError" class="error-message">{{ importError }}</div>
+          <div
+            v-if="importError"
+            class="error-message"
+          >
+            {{ importError }}
+          </div>
         </div>
         <div class="modal-footer">
-          <button @click="showImportDialog = false" class="btn btn-secondary">取消</button>
-          <button @click="importConfig" :disabled="!importJson" class="btn btn-primary">
+          <button
+            class="btn btn-secondary"
+            @click="showImportDialog = false"
+          >
+            取消
+          </button>
+          <button
+            :disabled="!importJson"
+            class="btn btn-primary"
+            @click="importConfig"
+          >
             导入
           </button>
         </div>
@@ -98,11 +170,19 @@
     </div>
 
     <!-- 编辑装配件对话框 -->
-    <div v-if="showEditDialog && editingAssembly" class="modal-overlay">
+    <div
+      v-if="showEditDialog && editingAssembly"
+      class="modal-overlay"
+    >
       <div class="modal">
         <div class="modal-header">
           <h3>编辑装配件</h3>
-          <button @click="showEditDialog = false" class="close-btn">×</button>
+          <button
+            class="close-btn"
+            @click="showEditDialog = false"
+          >
+            ×
+          </button>
         </div>
         <div class="modal-body">
           <AssemblyForm
