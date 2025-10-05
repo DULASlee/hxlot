@@ -1,9 +1,7 @@
-import { ref, reactive, computed, watch } from 'vue'
-import type { Ref } from 'vue'
-import type { AssemblyConfig, AssemblyConfigManager } from './assembly-config'
-import type { AssemblyLoader, AssemblyInstance, AssemblyStatus } from './assembly-loader'
-import { useAssemblyLoader } from './assembly-loader'
-import { useAssemblyConfig } from './assembly-config'
+import { computed, ref } from 'vue'
+import { AssemblyConfigManager } from './assembly-config'
+import { AssemblyLoader } from './assembly-loader'
+import type { AssemblyConfig, AssemblyInstance } from './assembly-types'
 
 /**
  * 装配件注册项接口
@@ -31,13 +29,14 @@ export interface AssemblyRegistryItem {
 export class AssemblyRegistry {
   private registry: Map<string, AssemblyRegistryItem> = new Map()
   private loader: AssemblyLoader
-  private configManager: AssemblyConfigManager
+  // private configManager: AssemblyConfigManager
 
-  constructor(loader: AssemblyLoader, configManager: AssemblyConfigManager) {
+  constructor(loader: AssemblyLoader, _configManager?: AssemblyConfigManager) {
     this.loader = loader
-    this.configManager = configManager
+    // this.configManager = configManager
 
     // 监听装配件事件
+    // 注意：AssemblyLoader没有'on'方法，这部分功能待实现
     this.setupEventListeners()
   }
 
@@ -45,32 +44,36 @@ export class AssemblyRegistry {
    * 设置事件监听器
    */
   private setupEventListeners() {
-    // 监听装配件加载事件
-    this.loader.on('loaded', (args) => {
-      const item = this.registry.get(args.assemblyName)
-      if (item) {
-        item.lastLoadedAt = new Date()
-        item.loadCount++
-        item.instance = this.loader.getAssembly(args.assemblyName)
-      }
-    })
+    // TODO: 实现事件监听
+    // AssemblyLoader类当前不支持事件系统
+    // 需要使用AssemblyManager来监听事件
 
-    // 监听装配件错误事件
-    this.loader.on('error', (args) => {
-      const item = this.registry.get(args.assemblyName)
-      if (item) {
-        item.errorCount++
-        item.lastError = args.data?.message || '未知错误'
-      }
-    })
+    // // 监听装配件加载事件
+    // this.loader.on('loaded', (args: any) => {
+    //   const item = this.registry.get(args.assemblyName)
+    //   if (item) {
+    //     item.lastLoadedAt = new Date()
+    //     item.loadCount++
+    //     item.instance = this.loader.getAssembly(args.assemblyName)
+    //   }
+    // })
 
-    // 监听装配件卸载事件
-    this.loader.on('unloaded', (args) => {
-      const item = this.registry.get(args.assemblyName)
-      if (item) {
-        item.instance = undefined
-      }
-    })
+    // // 监听装配件错误事件
+    // this.loader.on('error', (args: any) => {
+    //   const item = this.registry.get(args.assemblyName)
+    //   if (item) {
+    //     item.errorCount++
+    //     item.lastError = args.data?.message || '未知错误'
+    //   }
+    // })
+
+    // // 监听装配件卸载事件
+    // this.loader.on('unloaded', (args: any) => {
+    //   const item = this.registry.get(args.assemblyName)
+    //   if (item) {
+    //     item.instance = undefined
+    //   }
+    // })
   }
 
   /**
@@ -127,7 +130,7 @@ export class AssemblyRegistry {
     }
 
     try {
-      const instance = await this.loader.loadAssembly(assemblyName)
+      const instance = await this.loader.loadAssembly(item.config)
       item.instance = instance
       item.lastLoadedAt = new Date()
       item.loadCount++
@@ -300,7 +303,7 @@ export class AssemblyRegistry {
    */
   async importRegistry(json: string): Promise<void> {
     const data = JSON.parse(json)
-    
+
     for (const itemData of data) {
       const config: AssemblyConfig = itemData.config
       const registryItem: AssemblyRegistryItem = {
@@ -328,11 +331,15 @@ export class AssemblyRegistry {
 
 /**
  * Vue组合式函数：使用装配件注册表
+ * TODO: 实现这个组合式函数
+ * 依赖的useAssemblyLoader和useAssemblyConfig函数尚未实现
  */
 export function useAssemblyRegistry() {
-  const { loader } = useAssemblyLoader()
-  const { manager, configs, initialize: initializeConfig } = useAssemblyConfig()
-  
+  // const { loader } = useAssemblyLoader()
+  // const { manager, configs, initialize: initializeConfig } = useAssemblyConfig()
+
+  const loader = new AssemblyLoader()
+  const manager = new AssemblyConfigManager()
   const registry = new AssemblyRegistry(loader, manager)
   const registryItems = ref<AssemblyRegistryItem[]>([])
   const isLoading = ref(false)
@@ -345,12 +352,12 @@ export function useAssemblyRegistry() {
     isLoading.value = true
     error.value = null
     try {
-      await initializeConfig()
-      
+      // await initializeConfig()
+
       // 注册所有配置
-      const configsToRegister = configs.value
+      const configsToRegister = manager.getAllConfigs()
       await registry.registerMultiple(configsToRegister)
-      
+
       registryItems.value = registry.getAllRegistryItems()
     } catch (err) {
       error.value = err instanceof Error ? err.message : '初始化注册表失败'
@@ -402,14 +409,14 @@ export function useAssemblyRegistry() {
   /**
    * 获取已加载的装配件
    */
-  const loadedAssemblies = computed(() => 
+  const loadedAssemblies = computed(() =>
     registryItems.value.filter(item => item.instance !== undefined)
   )
 
   /**
    * 获取启用的装配件
    */
-  const enabledAssemblies = computed(() => 
+  const enabledAssemblies = computed(() =>
     registryItems.value.filter(item => item.config.enabled)
   )
 

@@ -3,14 +3,14 @@
  * 将装配件系统集成到 SmartAbp.Vue 项目中
  */
 
+import type { AssemblyConfig, IAssemblyManager } from './assembly-types'
 import { createDefaultAssemblyManager } from './index'
-import type { AssemblyManager, AssemblyConfig } from './assembly-types'
 
 /**
  * SmartAbp 装配件系统集成器
  */
 export class AssemblySystemIntegrator {
-  private manager: AssemblyManager | null = null
+  private manager: IAssemblyManager | null = null
   private isIntegrated: boolean = false
   private registeredAssemblies: Map<string, AssemblyConfig> = new Map()
 
@@ -25,12 +25,12 @@ export class AssemblySystemIntegrator {
     try {
       this.manager = await createDefaultAssemblyManager()
       this.isIntegrated = true
-      
+
       console.log('装配件系统集成完成')
-      
+
       // 注册项目核心装配件
       await this.registerCoreAssemblies()
-      
+
     } catch (error) {
       console.error('装配件系统集成失败:', error)
       this.isIntegrated = false
@@ -45,13 +45,13 @@ export class AssemblySystemIntegrator {
 
     // 低代码引擎装配件
     await this.registerLowCodeEngineAssembly()
-    
+
     // Aspire 微服务编排器装配件
     await this.registerAspireOrchestratorAssembly()
-    
+
     // 代码生成器装配件
     await this.registerCodeGeneratorAssembly()
-    
+
     // 运维管理装配件
     await this.registerOpsManagementAssembly()
 
@@ -87,7 +87,9 @@ export class AssemblySystemIntegrator {
           codeGeneration: true,
           validation: true
         }
-      }
+      },
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
 
     await this.manager.registerAssembly(config)
@@ -126,7 +128,9 @@ export class AssemblySystemIntegrator {
           enabled: true,
           failureThreshold: 5
         }
-      }
+      },
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
 
     await this.manager.registerAssembly(config)
@@ -164,7 +168,9 @@ export class AssemblySystemIntegrator {
           format: 'typescript',
           style: 'abp'
         }
-      }
+      },
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
 
     await this.manager.registerAssembly(config)
@@ -204,7 +210,9 @@ export class AssemblySystemIntegrator {
           level: 'info',
           retention: '30d'
         }
-      }
+      },
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
 
     await this.manager.registerAssembly(config)
@@ -214,7 +222,7 @@ export class AssemblySystemIntegrator {
   /**
    * 获取装配件管理器实例
    */
-  getManager(): AssemblyManager | null {
+  getManager(): IAssemblyManager | null {
     return this.manager
   }
 
@@ -301,7 +309,7 @@ export class AssemblySystemIntegrator {
 
     const assemblies = this.manager.getAllAssemblyInstances()
     const healthChecks = await Promise.allSettled(
-      assemblies.map(instance => 
+      assemblies.map(instance =>
         this.manager!.checkAssemblyHealth(instance.name)
       )
     )
@@ -368,7 +376,7 @@ export class AssemblySystemIntegrator {
    */
   async dispose(): Promise<void> {
     if (this.manager) {
-      await this.manager.dispose()
+      await this.manager.dispose?.()
       this.manager = null
     }
     this.isIntegrated = false
@@ -393,13 +401,13 @@ export function getAssemblySystemIntegrator(): AssemblySystemIntegrator {
  */
 export function installAssemblySystem(app: any): void {
   const integrator = getAssemblySystemIntegrator()
-  
+
   // 将装配件管理器注入到Vue应用
   app.config.globalProperties.$assemblySystem = integrator
-  
+
   // 提供装配件系统给组件使用
   app.provide('assemblySystem', integrator)
-  
+
   console.log('装配件系统Vue插件安装完成')
 }
 
@@ -408,7 +416,7 @@ export function installAssemblySystem(app: any): void {
  */
 export function useAssemblySystem() {
   const integrator = getAssemblySystemIntegrator()
-  
+
   return {
     manager: integrator.getManager(),
     isIntegrated: integrator.isSystemIntegrated(),
@@ -432,6 +440,7 @@ interface ReloadResult {
   assembly?: string
   success: boolean
   message: string
+  details?: ReloadResult[]
 }
 
 export default {

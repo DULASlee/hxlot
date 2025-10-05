@@ -219,8 +219,8 @@ export interface DependencyGraph {
  * 装配件管理器接口
  */
 export interface IAssemblyManager {
-  /** 注册装配件配置 */
-  registerAssembly(config: AssemblyConfig): Promise<void>
+  /** 注册装配件配置（返回验证结果） */
+  registerAssembly(config: AssemblyConfig): Promise<AssemblyValidationResult>
   /** 加载装配件 */
   loadAssembly(name: string): Promise<AssemblyInstance>
   /** 卸载装配件 */
@@ -231,8 +231,8 @@ export interface IAssemblyManager {
   enableAssembly(name: string): Promise<void>
   /** 禁用装配件 */
   disableAssembly(name: string): Promise<void>
-  /** 获取装配件实例 */
-  getAssembly(name: string): AssemblyInstance | undefined
+  /** 获取装配件实例（允许返回null） */
+  getAssembly(name: string): AssemblyInstance | null | undefined
   /** 获取所有装配件配置 */
   getAllAssemblyConfigs(): AssemblyConfig[]
   /** 获取所有装配件实例 */
@@ -247,6 +247,8 @@ export interface IAssemblyManager {
   on(event: AssemblyEventType | '*', callback: (event: AssemblyEvent) => void): void
   /** 移除事件监听 */
   off(event: AssemblyEventType | '*', callback: (event: AssemblyEvent) => void): void
+  /** 清理资源（可选） */
+  dispose?(): Promise<void>
 }
 
 /**

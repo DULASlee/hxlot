@@ -71,7 +71,8 @@ export function validateAssemblyConfig(config: AssemblyConfig): AssemblyValidati
   return {
     isValid: errors.length === 0,
     errors,
-    warnings
+    warnings,
+    timestamp: new Date()
   }
 }
 
@@ -206,7 +207,7 @@ function topologicalSort(
  */
 function checkForCycles(
   nodes: Map<string, DependencyNode>,
-  edges: [string, string][]
+  _edges: [string, string][]
 ): boolean {
   const visited = new Set<string>()
   const recursionStack = new Set<string>()
@@ -270,7 +271,9 @@ export function deserializeConfig(json: string): AssemblyConfig {
     enabled: data.enabled !== false,
     dependencies: data.dependencies || [],
     metadata: data.metadata || {},
-    config: data.config || {}
+    config: data.config || {},
+    createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
+    updatedAt: data.updatedAt ? new Date(data.updatedAt) : new Date()
   }
 }
 

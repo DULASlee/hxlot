@@ -3,23 +3,22 @@
  */
 
 import type {
-    AssemblyConfig,
-    AssemblyEvent,
-    AssemblyEventType,
-    AssemblyHealth,
-    AssemblyInstance,
-    AssemblyManagerOptions,
-    AssemblyValidationResult,
-    DependencyGraph,
-    IAssemblyLoader,
-    IAssemblyManager
+  AssemblyConfig,
+  AssemblyEvent,
+  AssemblyEventType,
+  AssemblyHealth,
+  AssemblyInstance,
+  AssemblyManagerOptions,
+  AssemblyValidationResult,
+  DependencyGraph,
+  IAssemblyManager
 } from './assembly-types'
 
 import { AssemblyConfigManager } from './assembly-config'
 import { AssemblyLoader } from './assembly-loader'
 import {
-    deepClone,
-    validateAssemblyConfig
+  deepClone,
+  validateAssemblyConfig
 } from './assembly-utils'
 
 /**
@@ -27,7 +26,7 @@ import {
  */
 export class AssemblyManager implements IAssemblyManager {
   private configManager: AssemblyConfigManager
-  private loader: IAssemblyLoader
+  private loader: AssemblyLoader
   private instances: Map<string, AssemblyInstance> = new Map()
   private eventHandlers: Map<AssemblyEventType | '*', Function[]> = new Map()
   private options: AssemblyManagerOptions
@@ -39,13 +38,12 @@ export class AssemblyManager implements IAssemblyManager {
       autoLoad: true,
       enableHealthChecks: true,
       healthCheckInterval: 30000, // 30秒
-      enablePlugins: true,
       debug: false,
       ...options
     }
 
     this.configManager = new AssemblyConfigManager(options.storage)
-    this.loader = new AssemblyLoader(options.loaderOptions)
+    this.loader = new AssemblyLoader()
 
     this.initialize()
   }
@@ -55,7 +53,7 @@ export class AssemblyManager implements IAssemblyManager {
 
     try {
       // 加载配置
-      await this.configManager.load()
+      await this.configManager.loadFromStorage()
 
       // 启动健康检查
       if (this.options.enableHealthChecks) {
@@ -114,7 +112,7 @@ export class AssemblyManager implements IAssemblyManager {
 
   private async performHealthChecks(): Promise<void> {
     const instances = Array.from(this.instances.values())
-    
+
     for (const instance of instances) {
       if (instance.loaded && instance.enabled) {
         try {
@@ -134,9 +132,9 @@ export class AssemblyManager implements IAssemblyManager {
     }
   }
 
-  async registerAssembly(config: AssemblyConfig): Promise<void> {
+  async registerAssembly(config: AssemblyConfig): Promise<AssemblyValidationResult> {
     const validation = validateAssemblyConfig(config)
-    
+
     if (!validation.isValid) {
       this.emit('validation-failed', {
         type: 'validation-failed',
@@ -165,7 +163,7 @@ export class AssemblyManager implements IAssemblyManager {
       })
     }
 
-    await this.configManager.saveConfig(config)
+    await this.configManager.addConfig(config)
 
     // 如果装配件已启用且自动加载，则立即加载
     if (config.enabled && this.options.autoLoad) {
@@ -190,7 +188,7 @@ export class AssemblyManager implements IAssemblyManager {
       await this.unloadAssembly(name)
     }
 
-    await this.configManager.removeConfig(name)
+    await this.configManager.deleteConfig(name)
 
     this.emit('unregistered', {
       type: 'unregistered',
@@ -224,16 +222,11 @@ export class AssemblyManager implements IAssemblyManager {
       await this.loadDependencies(config.dependencies)
 
       // 加载装配件
-      const instance = await this.loader.load(config.entry, config)
-      
-      const assemblyInstance: AssemblyInstance = {
-        name: config.name,
-        config: deepClone(config),
-        loaded: true,
-        enabled: config.enabled,
-        instance: instance,
-        error: undefined
-      }
+      const assemblyInstance = await this.loader.loadAssembly(config)
+
+      // 更新实例信息
+      assemblyInstance.config = deepClone(config)
+      assemblyInstance.enabled = config.enabled
 
       this.instances.set(name, assemblyInstance)
 
@@ -282,7 +275,7 @@ export class AssemblyManager implements IAssemblyManager {
     })
 
     try {
-      await this.loader.unload(instance)
+      await this.loader.unloadAssembly(name)
       this.instances.delete(name)
 
       this.emit('unloaded', {
@@ -318,7 +311,7 @@ export class AssemblyManager implements IAssemblyManager {
     }
 
     config.enabled = true
-    await this.configManager.saveConfig(config)
+    await this.configManager.updateConfig(name, { enabled: true })
 
     // 如果自动加载启用，则加载装配件
     if (this.options.autoLoad) {
@@ -344,7 +337,7 @@ export class AssemblyManager implements IAssemblyManager {
     }
 
     config.enabled = false
-    await this.configManager.saveConfig(config)
+    await this.configManager.updateConfig(name, { enabled: false })
 
     // 如果装配件已加载，则卸载
     if (this.instances.has(name)) {
