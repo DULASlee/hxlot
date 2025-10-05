@@ -30,6 +30,10 @@ show_help() {
     echo "  update          更新包依赖"
     echo "  validate        验证依赖完整性"
     echo "  graph           显示依赖关系图"
+    echo "  scan            扫描依赖健康度（新增）⭐"
+    echo "  report          生成详细依赖报告（新增）⭐"
+    echo "  outdated        检查过时的依赖（新增）⭐"
+    echo "  security        执行安全漏洞扫描（新增）⭐"
     echo ""
     echo "选项:"
     echo "  --fix           自动修复发现的问题"
@@ -288,6 +292,241 @@ validate_dependencies() {
     return $issues
 }
 
+# 扫描依赖健康度（新增功能）
+scan_dependencies() {
+    log "扫描依赖健康度..."
+    
+    local total_score=0
+    local max_score=20
+    
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "📊 外部依赖管理评估"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # 1. 检测npm依赖版本新鲜度 (10分)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    echo "🔍 [1/3] 检测npm依赖版本新鲜度..."
+    cd "$FRONTEND_DIR"
+    
+    if ! command -v npm &> /dev/null; then
+        error "npm未安装，无法检测依赖"
+        cd - > /dev/null
+        return 1
+    fi
+    
+    # 检测过时的依赖
+    local outdated_output=$(npm outdated --json 2>/dev/null || echo "{}")
+    local outdated_count=$(echo "$outdated_output" | jq -r 'length' 2>/dev/null || echo "0")
+    outdated_count=$(echo "$outdated_count" | tr -d '\n' | tr -d ' ')
+    
+    local freshness_score=0
+    if [ "$outdated_count" -eq 0 ] 2>/dev/null; then
+        freshness_score=10
+        success "  ✅ 所有npm依赖均为最新版本 (+10分)"
+    elif [ "$outdated_count" -le 5 ] 2>/dev/null; then
+        freshness_score=7
+        warn "  ⚠️  发现 $outdated_count 个过时依赖 (+7分)"
+        echo "$outdated_output" | jq -r 'to_entries[] | "     - \(.key): \(.value.current) → \(.value.latest)"' 2>/dev/null | head -5
+    elif [ "$outdated_count" -le 15 ] 2>/dev/null; then
+        freshness_score=4
+        warn "  ⚠️  发现 $outdated_count 个过时依赖 (+4分)"
+    else
+        freshness_score=2
+        error "  ❌ 发现 $outdated_count 个过时依赖，严重滞后 (+2分)"
+    fi
+    
+    total_score=$((total_score + freshness_score))
+    echo ""
+    
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # 2. 检测安全漏洞 (10分)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    echo "🔍 [2/3] 检测npm安全漏洞..."
+    
+    local audit_output=$(npm audit --json 2>/dev/null || echo '{"metadata":{"vulnerabilities":{"total":0}}}')
+    local total_vulnerabilities=$(echo "$audit_output" | jq -r '.metadata.vulnerabilities.total // 0' 2>/dev/null || echo "0")
+    local critical_vulnerabilities=$(echo "$audit_output" | jq -r '.metadata.vulnerabilities.critical // 0' 2>/dev/null || echo "0")
+    local high_vulnerabilities=$(echo "$audit_output" | jq -r '.metadata.vulnerabilities.high // 0' 2>/dev/null || echo "0")
+    
+    # 清理换行符和空格
+    total_vulnerabilities=$(echo "$total_vulnerabilities" | tr -d '\n' | tr -d ' ')
+    critical_vulnerabilities=$(echo "$critical_vulnerabilities" | tr -d '\n' | tr -d ' ')
+    high_vulnerabilities=$(echo "$high_vulnerabilities" | tr -d '\n' | tr -d ' ')
+    
+    local security_score=0
+    if [ "$total_vulnerabilities" -eq 0 ] 2>/dev/null; then
+        security_score=10
+        success "  ✅ 未发现安全漏洞 (+10分)"
+    elif [ "$critical_vulnerabilities" -eq 0 ] 2>/dev/null && [ "$high_vulnerabilities" -eq 0 ] 2>/dev/null; then
+        security_score=8
+        warn "  ⚠️  发现 $total_vulnerabilities 个低危漏洞 (+8分)"
+    elif [ "$critical_vulnerabilities" -eq 0 ] 2>/dev/null; then
+        security_score=5
+        warn "  ⚠️  发现 $high_vulnerabilities 个高危漏洞 (+5分)"
+    else
+        security_score=2
+        error "  ❌ 发现 $critical_vulnerabilities 个严重漏洞 (+2分)"
+    fi
+    
+    total_score=$((total_score + security_score))
+    cd - > /dev/null
+    echo ""
+    
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # 3. 生成评分和建议
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "📊 外部依赖管理评分: $total_score/$max_score"
+    echo ""
+    
+    # 评级
+    if [ $total_score -ge 19 ]; then
+        echo "🎉 评级: 卓越 ⭐⭐⭐⭐⭐ (95-100分)"
+    elif [ $total_score -ge 16 ]; then
+        echo "✅ 评级: 优秀 ⭐⭐⭐⭐ (85-94分)"
+    elif [ $total_score -ge 12 ]; then
+        echo "⚠️  评级: 良好 ⭐⭐⭐ (70-84分)"
+    else
+        echo "❌ 评级: 需改进 ⚠️ (<70分)"
+    fi
+    
+    echo ""
+    
+    # 改进建议
+    if [ $total_score -lt 16 ]; then
+        echo "💡 改进建议:"
+        if [ $freshness_score -lt 7 ]; then
+            echo "  1. 更新过时的依赖: npm update"
+        fi
+        if [ $security_score -lt 8 ]; then
+            echo "  2. 修复安全漏洞: npm audit fix"
+        fi
+        echo "  3. 启用自动化依赖更新: GitHub Dependabot"
+        echo "  4. 定期执行: bash scripts/package/dependency-manager.sh scan"
+    else
+        echo "✅ 依赖管理状况良好，继续保持！"
+    fi
+    
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    
+    return 0
+}
+
+# 生成详细依赖报告（新增功能）
+generate_report() {
+    log "生成依赖健康度详细报告..."
+    
+    local report_file="docs/architecture/dependency-health-report-$(date +%Y%m%d).md"
+    
+    echo "# SmartAbp 依赖健康度报告" > "$report_file"
+    echo "" >> "$report_file"
+    echo "**生成时间**: $(date '+%Y年%m月%d日 %H:%M:%S')" >> "$report_file"
+    echo "**报告类型**: 外部依赖管理评估" >> "$report_file"
+    echo "" >> "$report_file"
+    
+    # 执行扫描并捕获输出
+    local scan_output=$(scan_dependencies 2>&1)
+    
+    echo "## 📊 评估结果" >> "$report_file"
+    echo "" >> "$report_file"
+    echo '```' >> "$report_file"
+    echo "$scan_output" >> "$report_file"
+    echo '```' >> "$report_file"
+    echo "" >> "$report_file"
+    
+    # 添加详细的过时依赖列表
+    cd "$FRONTEND_DIR"
+    local outdated_json=$(npm outdated --json 2>/dev/null || echo "{}")
+    local outdated_length=$(echo "$outdated_json" | jq -r 'length' 2>/dev/null || echo "0")
+    outdated_length=$(echo "$outdated_length" | tr -d '\n' | tr -d ' ')
+    
+    if [ "$outdated_length" -gt 0 ] 2>/dev/null; then
+        echo "## 📋 过时依赖详情" >> "$report_file"
+        echo "" >> "$report_file"
+        echo "| 包名 | 当前版本 | 期望版本 | 最新版本 |" >> "$report_file"
+        echo "|------|---------|---------|---------|" >> "$report_file"
+        echo "$outdated_json" | jq -r 'to_entries[] | "| \(.key) | \(.value.current) | \(.value.wanted) | \(.value.latest) |"' >> "$report_file"
+        echo "" >> "$report_file"
+    fi
+    
+    # 添加安全漏洞详情
+    local audit_json=$(npm audit --json 2>/dev/null || echo '{"metadata":{"vulnerabilities":{"total":0}}}')
+    local vuln_count=$(echo "$audit_json" | jq -r '.metadata.vulnerabilities.total // 0' 2>/dev/null || echo "0")
+    vuln_count=$(echo "$vuln_count" | tr -d '\n' | tr -d ' ')
+    
+    if [ "$vuln_count" -gt 0 ] 2>/dev/null; then
+        echo "## 🔒 安全漏洞详情" >> "$report_file"
+        echo "" >> "$report_file"
+        echo "| 严重程度 | 数量 |" >> "$report_file"
+        echo "|---------|------|" >> "$report_file"
+        echo "| Critical | $(echo "$audit_json" | jq '.metadata.vulnerabilities.critical' 2>/dev/null || echo "0") |" >> "$report_file"
+        echo "| High | $(echo "$audit_json" | jq '.metadata.vulnerabilities.high' 2>/dev/null || echo "0") |" >> "$report_file"
+        echo "| Moderate | $(echo "$audit_json" | jq '.metadata.vulnerabilities.moderate' 2>/dev/null || echo "0") |" >> "$report_file"
+        echo "| Low | $(echo "$audit_json" | jq '.metadata.vulnerabilities.low' 2>/dev/null || echo "0") |" >> "$report_file"
+        echo "" >> "$report_file"
+    fi
+    
+    cd - > /dev/null
+    
+    echo "## 💡 改进建议" >> "$report_file"
+    echo "" >> "$report_file"
+    echo "1. **启用GitHub Dependabot**: 自动检测和创建依赖更新PR" >> "$report_file"
+    echo "2. **定期执行扫描**: 建议每周执行一次依赖健康度扫描" >> "$report_file"
+    echo "3. **及时更新依赖**: 优先更新有安全漏洞的依赖" >> "$report_file"
+    echo "4. **版本锁定策略**: 对关键依赖使用锁定策略，防止意外升级" >> "$report_file"
+    echo "" >> "$report_file"
+    
+    success "报告已生成: $report_file"
+}
+
+# 检查过时依赖（新增功能）
+check_outdated() {
+    log "检查过时的依赖..."
+    
+    cd "$FRONTEND_DIR"
+    
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "📦 npm过时依赖检查"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    
+    npm outdated
+    
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    
+    cd - > /dev/null
+}
+
+# 安全漏洞扫描（新增功能）
+security_scan() {
+    log "执行安全漏洞扫描..."
+    
+    cd "$FRONTEND_DIR"
+    
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "🔒 npm安全漏洞扫描"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    
+    npm audit
+    
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "💡 修复建议:"
+    echo "  • 自动修复: npm audit fix"
+    echo "  • 强制修复: npm audit fix --force"
+    echo "  • 仅查看: npm audit --json"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    
+    cd - > /dev/null
+}
+
 # 显示依赖关系图
 show_dependency_graph() {
     log "生成依赖关系图..."
@@ -375,6 +614,18 @@ main() {
             ;;
         graph)
             show_dependency_graph
+            ;;
+        scan)
+            scan_dependencies
+            ;;
+        report)
+            generate_report
+            ;;
+        outdated)
+            check_outdated
+            ;;
+        security)
+            security_scan
             ;;
         *)
             error "未知命令: $command"

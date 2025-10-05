@@ -1,0 +1,290 @@
+# GitHub Actions工作流：依赖健康度自动扫描
+# 用于定期检测项目依赖的健康状况，包括版本新鲜度和安全漏洞
+# 触发方式：每日自动、PR触发、手动触发
+
+name: Dependency Health Scan
+
+on:
+  # 定时触发：每天早上9点（北京时间）
+  schedule:
+    - cron: '0 1 * * *'  # UTC 1:00 = 北京时间 9:00
+  
+  # PR触发：当修改依赖文件时
+  pull_request:
+    branches: 
+      - main
+      - develop
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'src/SmartAbp.Vue/package.json'
+      - 'src/SmartAbp.Vue/package-lock.json'
+      - '**/*.csproj'
+      - '**/packages.lock.json'
+  
+  # 手动触发
+  workflow_dispatch:
+    inputs:
+      full_report:
+        description: '生成完整报告'
+        required: false
+        default: 'true'
+        type: boolean
+
+# 并发控制：同时只运行一个扫描任务
+concurrency:
+  group: dependency-health-scan-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # 任务1：前端依赖扫描
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  frontend-scan:
+    name: 前端依赖扫描
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: 📥 Checkout代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整历史，用于趋势分析
+      
+      - name: 🔧 设置Node.js环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: src/SmartAbp.Vue/package-lock.json
+      
+      - name: 📦 安装依赖
+        working-directory: src/SmartAbp.Vue
+        run: |
+          npm ci --prefer-offline --no-audit
+      
+      - name: 🔍 执行依赖健康度扫描
+        id: scan
+        run: |
+          echo "::group::依赖健康度扫描"
+          bash scripts/package/dependency-manager.sh scan
+          echo "::endgroup::"
+      
+      - name: 📊 检查过时依赖
+        id: outdated
+        continue-on-error: true
+        working-directory: src/SmartAbp.Vue
+        run: |
+          echo "::group::过时依赖列表"
+          npm outdated --json > outdated-report.json || true
+          npm outdated || echo "发现过时依赖"
+          echo "::endgroup::"
+      
+      - name: 🔒 执行安全审计
+        id: audit
+        continue-on-error: true
+        working-directory: src/SmartAbp.Vue
+        run: |
+          echo "::group::npm安全审计"
+          npm audit --json > audit-report.json || true
+          npm audit || echo "发现安全漏洞"
+          echo "::endgroup::"
+      
+      - name: 📈 生成前端依赖报告
+        if: always()
+        run: |
+          bash scripts/package/dependency-manager.sh report
+      
+      - name: 📤 上传前端依赖报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dependency-report
+          path: |
+            docs/architecture/dependency-health-report-*.md
+            src/SmartAbp.Vue/outdated-report.json
+            src/SmartAbp.Vue/audit-report.json
+          retention-days: 30
+  
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # 任务2：后端依赖扫描
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  backend-scan:
+    name: 后端依赖扫描
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: 📥 Checkout代码
+        uses: actions/checkout@v4
+      
+      - name: 🔧 设置.NET环境
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      
+      - name: 🔍 检查过时的NuGet包
+        id: nuget-outdated
+        continue-on-error: true
+        run: |
+          echo "::group::NuGet过时依赖检查"
+          dotnet list package --outdated --format json > nuget-outdated-report.json || true
+          dotnet list package --outdated || echo "发现过时依赖"
+          echo "::endgroup::"
+      
+      - name: 🔒 检查NuGet漏洞
+        id: nuget-vulnerable
+        continue-on-error: true
+        run: |
+          echo "::group::NuGet安全漏洞检查"
+          dotnet list package --vulnerable --include-transitive --format json > nuget-vulnerable-report.json || true
+          dotnet list package --vulnerable --include-transitive || echo "发现安全漏洞"
+          echo "::endgroup::"
+      
+      - name: 📤 上传后端依赖报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-dependency-report
+          path: |
+            nuget-outdated-report.json
+            nuget-vulnerable-report.json
+          retention-days: 30
+  
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # 任务3：综合评估与报告
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  report-summary:
+    name: 生成综合报告
+    needs: [frontend-scan, backend-scan]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: 📥 Checkout代码
+        uses: actions/checkout@v4
+      
+      - name: 📥 下载所有报告
+        uses: actions/download-artifact@v4
+        with:
+          path: reports
+      
+      - name: 📊 生成综合评估报告
+        run: |
+          echo "# 📊 SmartAbp依赖健康度综合报告" > summary-report.md
+          echo "" >> summary-report.md
+          echo "**扫描时间**: $(date '+%Y-%m-%d %H:%M:%S')" >> summary-report.md
+          echo "**触发方式**: ${{ github.event_name }}" >> summary-report.md
+          echo "**分支**: ${{ github.ref_name }}" >> summary-report.md
+          echo "" >> summary-report.md
+          
+          echo "## 🎯 扫描结果总览" >> summary-report.md
+          echo "" >> summary-report.md
+          echo "| 检查项 | 状态 |" >> summary-report.md
+          echo "|--------|------|" >> summary-report.md
+          echo "| 前端依赖扫描 | ${{ needs.frontend-scan.result == 'success' && '✅ 通过' || '⚠️ 发现问题' }} |" >> summary-report.md
+          echo "| 后端依赖扫描 | ${{ needs.backend-scan.result == 'success' && '✅ 通过' || '⚠️ 发现问题' }} |" >> summary-report.md
+          echo "" >> summary-report.md
+          
+          echo "## 📋 详细报告" >> summary-report.md
+          echo "" >> summary-report.md
+          echo "完整的扫描报告已上传到GitHub Actions Artifacts，请查看：" >> summary-report.md
+          echo "- [前端依赖报告](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> summary-report.md
+          echo "- [后端依赖报告](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> summary-report.md
+          echo "" >> summary-report.md
+          
+          cat summary-report.md
+      
+      - name: 📤 上传综合报告
+        uses: actions/upload-artifact@v4
+        with:
+          name: summary-report
+          path: summary-report.md
+          retention-days: 90
+      
+      - name: 💬 评论到PR（如果是PR触发）
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summaryReport = fs.readFileSync('summary-report.md', 'utf8');
+            
+            const comment = `## 🔍 依赖健康度自动扫描报告
+            
+            ${summaryReport}
+            
+            ---
+            *此报告由GitHub Actions自动生成，查看[完整工作流程详情](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})*`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+      
+      - name: 🚨 检查失败时通知（可选）
+        if: failure()
+        run: |
+          echo "::warning::依赖健康度扫描发现问题，请查看详细报告"
+  
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # 任务4：自动创建Issue（如果发现严重问题）
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  create-issue:
+    name: 创建问题跟踪Issue
+    needs: [frontend-scan, backend-scan]
+    runs-on: ubuntu-latest
+    if: |
+      always() && 
+      (needs.frontend-scan.result == 'failure' || needs.backend-scan.result == 'failure') &&
+      github.event_name == 'schedule'
+    
+    steps:
+      - name: 📥 Checkout代码
+        uses: actions/checkout@v4
+      
+      - name: 📝 创建Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const today = new Date().toISOString().split('T')[0];
+            const issueTitle = `🚨 依赖健康度扫描发现问题 (${today})`;
+            
+            const issueBody = `
+            ## 📊 自动扫描报告
+            
+            **扫描时间**: ${today}
+            **工作流**: [查看详情](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+            
+            ## ⚠️ 发现的问题
+            
+            定期依赖健康度扫描发现以下问题：
+            
+            - ${{ needs.frontend-scan.result == 'failure' && '❌ 前端依赖扫描失败' || '✅ 前端依赖正常' }}
+            - ${{ needs.backend-scan.result == 'failure' && '❌ 后端依赖扫描失败' || '✅ 后端依赖正常' }}
+            
+            ## 📋 建议操作
+            
+            1. 查看[完整扫描报告](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+            2. 执行本地扫描: \`bash scripts/package/dependency-manager.sh scan\`
+            3. 更新过时依赖: \`bash scripts/package/dependency-manager.sh update\`
+            4. 修复安全漏洞: \`npm audit fix\` 或 \`dotnet restore\`
+            
+            ## 🔗 相关资源
+            
+            - [依赖管理指南](docs/architecture/dependency-management.md)
+            - [架构健康度监控ADR](docs/architecture/adr/0033-architecture-health-monitoring.md)
+            
+            ---
+            *此Issue由GitHub Actions自动创建*
+            `;
+            
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: issueTitle,
+              body: issueBody,
+              labels: ['dependencies', 'auto-generated', 'needs-attention']
+            });

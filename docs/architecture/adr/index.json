@@ -9,58 +9,127 @@
       "path": "./0001-technology-stack-selection.md",
       "status": "已接受",
       "category": "技术选型",
-      "tags": ["技术栈", "框架选择", "架构基础"],
+      "tags": [
+        "技术栈",
+        "框架选择",
+        "架构基础"
+      ],
       "createdDate": "2025-09-11",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["架构团队"],
+      "decisionMakers": [
+        "架构团队"
+      ],
       "impactScope": "整个项目的技术基础",
-      "aiTriggers": ["技术选型", "框架选择", "技术栈", "架构基础", "技术决策"],
-      "relatedADRs": ["0002", "0003", "0021"],
+      "aiTriggers": [
+        "技术选型",
+        "框架选择",
+        "技术栈",
+        "架构基础",
+        "技术决策"
+      ],
+      "relatedADRs": [
+        "0002",
+        "0003",
+        "0021"
+      ],
       "summary": "选择Vue3 + TypeScript + .NET + ABP Framework + Kubernetes的世界顶尖技术栈"
     },
     {
       "id": "0002",
       "title": "前端架构设计",
-      "path": "./0002-frontend-architecture-decisions.md", 
+      "path": "./0002-frontend-architecture-decisions.md",
       "status": "已接受",
       "category": "架构设计",
-      "tags": ["前端架构", "Vue.js", "组件设计", "TypeScript"],
+      "tags": [
+        "前端架构",
+        "Vue.js",
+        "组件设计",
+        "TypeScript"
+      ],
       "createdDate": "2025-09-11",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["架构团队", "前端团队"],
+      "decisionMakers": [
+        "架构团队",
+        "前端团队"
+      ],
       "impactScope": "前端应用架构",
-      "aiTriggers": ["前端架构", "Vue架构", "组件设计", "TypeScript", "页面架构"],
-      "relatedADRs": ["0001", "0021", "0023"],
+      "aiTriggers": [
+        "前端架构",
+        "Vue架构",
+        "组件设计",
+        "TypeScript",
+        "页面架构"
+      ],
+      "relatedADRs": [
+        "0001",
+        "0021",
+        "0023"
+      ],
       "summary": "基于Vue3 + TypeScript + Element Plus + Pinia的现代化前端架构"
     },
     {
       "id": "0003",
-      "title": "后端架构设计", 
+      "title": "后端架构设计",
       "path": "./0003-backend-architecture-decisions.md",
       "status": "已接受",
       "category": "架构设计",
-      "tags": ["后端架构", "ABP Framework", "DDD", "微服务"],
+      "tags": [
+        "后端架构",
+        "ABP Framework",
+        "DDD",
+        "微服务"
+      ],
       "createdDate": "2025-09-11",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["架构团队", "后端团队"],
+      "decisionMakers": [
+        "架构团队",
+        "后端团队"
+      ],
       "impactScope": "后端服务架构",
-      "aiTriggers": ["后端架构", "ABP架构", "领域驱动设计", "微服务架构", "服务设计"],
-      "relatedADRs": ["0001", "0021", "0025"],
+      "aiTriggers": [
+        "后端架构",
+        "ABP架构",
+        "领域驱动设计",
+        "微服务架构",
+        "服务设计"
+      ],
+      "relatedADRs": [
+        "0001",
+        "0021",
+        "0025"
+      ],
       "summary": "基于ABP Framework的DDD分层架构和云原生微服务设计"
     },
     {
       "id": "0004",
       "title": "开发工作流决策",
       "path": "./0004-development-workflow-decisions.md",
-      "status": "已接受", 
+      "status": "已接受",
       "category": "开发流程",
-      "tags": ["开发流程", "Git工作流", "CI/CD", "质量门控"],
+      "tags": [
+        "开发流程",
+        "Git工作流",
+        "CI/CD",
+        "质量门控"
+      ],
       "createdDate": "2025-09-11",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["架构团队", "开发团队"],
+      "decisionMakers": [
+        "架构团队",
+        "开发团队"
+      ],
       "impactScope": "开发效率和代码质量",
-      "aiTriggers": ["开发流程", "Git工作流", "CI/CD", "持续集成", "质量控制"],
-      "relatedADRs": ["0019", "0026"],
+      "aiTriggers": [
+        "开发流程",
+        "Git工作流",
+        "CI/CD",
+        "持续集成",
+        "质量控制"
+      ],
+      "relatedADRs": [
+        "0019",
+        "0026"
+      ],
       "summary": "基于TDD + Git安全同步 + 95分质量门控的开发工作流"
     },
     {
@@ -68,14 +137,33 @@
       "title": "低代码引擎架构",
       "path": "./0005-lowcode-engine-architecture.md",
       "status": "已接受",
-      "category": "架构设计", 
-      "tags": ["低代码", "引擎架构", "可视化设计", "代码生成"],
+      "category": "架构设计",
+      "tags": [
+        "低代码",
+        "引擎架构",
+        "可视化设计",
+        "代码生成"
+      ],
       "createdDate": "2025-09-11",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["架构团队", "低代码团队"],
+      "decisionMakers": [
+        "架构团队",
+        "低代码团队"
+      ],
       "impactScope": "低代码引擎的整体架构",
-      "aiTriggers": ["低代码", "引擎架构", "可视化设计", "代码生成", "低代码平台"],
-      "relatedADRs": ["0021", "0022", "0023", "0024"],
+      "aiTriggers": [
+        "低代码",
+        "引擎架构",
+        "可视化设计",
+        "代码生成",
+        "低代码平台"
+      ],
+      "relatedADRs": [
+        "0021",
+        "0022",
+        "0023",
+        "0024"
+      ],
       "summary": "世界顶尖的企业级低代码引擎架构，包含智能化、可视化、企业级三大核心能力"
     },
     {
@@ -84,13 +172,29 @@
       "path": "./0006-incremental-code-generation.md",
       "status": "已接受",
       "category": "代码生成",
-      "tags": ["增量生成", "代码生成", "模板系统"],
-      "createdDate": "2025-09-11", 
+      "tags": [
+        "增量生成",
+        "代码生成",
+        "模板系统"
+      ],
+      "createdDate": "2025-09-11",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["架构团队", "代码生成团队"],
+      "decisionMakers": [
+        "架构团队",
+        "代码生成团队"
+      ],
       "impactScope": "代码生成的效率和质量",
-      "aiTriggers": ["增量生成", "代码生成", "模板", "智能生成", "代码模板"],
-      "relatedADRs": ["0005", "0024"],
+      "aiTriggers": [
+        "增量生成",
+        "代码生成",
+        "模板",
+        "智能生成",
+        "代码模板"
+      ],
+      "relatedADRs": [
+        "0005",
+        "0024"
+      ],
       "summary": "基于智能模板匹配和95分质量保证的增量代码生成策略"
     },
     {
@@ -99,13 +203,30 @@
       "path": "./0009-performance-optimization.md",
       "status": "已接受",
       "category": "性能优化",
-      "tags": ["性能优化", "虚拟滚动", "懒加载", "内存优化"],
+      "tags": [
+        "性能优化",
+        "虚拟滚动",
+        "懒加载",
+        "内存优化"
+      ],
       "createdDate": "2025-09-11",
-      "lastUpdated": "2024-12-24", 
-      "decisionMakers": ["架构团队", "性能团队"],
+      "lastUpdated": "2024-12-24",
+      "decisionMakers": [
+        "架构团队",
+        "性能团队"
+      ],
       "impactScope": "整个系统的性能表现",
-      "aiTriggers": ["性能优化", "虚拟滚动", "懒加载", "内存优化", "性能提升"],
-      "relatedADRs": ["0014", "0025"],
+      "aiTriggers": [
+        "性能优化",
+        "虚拟滚动",
+        "懒加载",
+        "内存优化",
+        "性能提升"
+      ],
+      "relatedADRs": [
+        "0014",
+        "0025"
+      ],
       "summary": "第一重爆雷：虚拟滚动+懒加载+内存优化的企业级性能优化体系"
     },
     {
@@ -114,28 +235,61 @@
       "path": "./0010-design-patterns.md",
       "status": "已接受",
       "category": "代码设计",
-      "tags": ["设计模式", "代码质量", "架构模式"],
+      "tags": [
+        "设计模式",
+        "代码质量",
+        "架构模式"
+      ],
       "createdDate": "2025-09-11",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["架构团队", "开发团队"],
+      "decisionMakers": [
+        "架构团队",
+        "开发团队"
+      ],
       "impactScope": "代码结构和设计质量",
-      "aiTriggers": ["设计模式", "代码结构", "架构模式", "代码设计", "最佳实践"],
-      "relatedADRs": ["0001", "0019"],
+      "aiTriggers": [
+        "设计模式",
+        "代码结构",
+        "架构模式",
+        "代码设计",
+        "最佳实践"
+      ],
+      "relatedADRs": [
+        "0001",
+        "0019"
+      ],
       "summary": "企业级设计模式应用和95分代码质量标准"
     },
     {
-      "id": "0011", 
+      "id": "0011",
       "title": "AI代码质量保证",
       "path": "./0011-ai-code-quality-assurance.md",
       "status": "已接受",
       "category": "质量保证",
-      "tags": ["代码质量", "智能检查", "自动修复", "95分标准"],
+      "tags": [
+        "代码质量",
+        "智能检查",
+        "自动修复",
+        "95分标准"
+      ],
       "createdDate": "2025-09-11",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["架构团队", "质量团队"],
+      "decisionMakers": [
+        "架构团队",
+        "质量团队"
+      ],
       "impactScope": "代码质量和开发效率",
-      "aiTriggers": ["代码质量", "质量检查", "自动修复", "智能分析", "质量保证"],
-      "relatedADRs": ["0019", "0024"],
+      "aiTriggers": [
+        "代码质量",
+        "质量检查",
+        "自动修复",
+        "智能分析",
+        "质量保证"
+      ],
+      "relatedADRs": [
+        "0019",
+        "0024"
+      ],
       "summary": "基于智能分析和自动修复的95分企业级代码质量保证体系"
     },
     {
@@ -144,13 +298,30 @@
       "path": "./0012-p1-backend-code-generation-engine.md",
       "status": "已接受",
       "category": "代码生成",
-      "tags": ["后端生成", "ABP模板", "代码质量"],
+      "tags": [
+        "后端生成",
+        "ABP模板",
+        "代码质量"
+      ],
       "createdDate": "2025-09-11",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["架构团队", "后端团队"],
+      "decisionMakers": [
+        "架构团队",
+        "后端团队"
+      ],
       "impactScope": "后端代码生成的质量和效率",
-      "aiTriggers": ["后端生成", "ABP模板", "服务生成", "实体生成", "后端代码"],
-      "relatedADRs": ["0003", "0006", "0024"],
+      "aiTriggers": [
+        "后端生成",
+        "ABP模板",
+        "服务生成",
+        "实体生成",
+        "后端代码"
+      ],
+      "relatedADRs": [
+        "0003",
+        "0006",
+        "0024"
+      ],
       "summary": "基于ABP Framework和智能模板的企业级后端代码生成引擎"
     },
     {
@@ -159,13 +330,28 @@
       "path": "./0013-pluggable-strategy-architecture.md",
       "status": "已接受",
       "category": "架构设计",
-      "tags": ["可插拔", "策略模式", "扩展性"],
+      "tags": [
+        "可插拔",
+        "策略模式",
+        "扩展性"
+      ],
       "createdDate": "2025-09-11",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["架构团队"],
+      "decisionMakers": [
+        "架构团队"
+      ],
       "impactScope": "系统的可扩展性和灵活性",
-      "aiTriggers": ["可插拔", "策略模式", "扩展性", "插件系统", "模块化"],
-      "relatedADRs": ["0005", "0016"],
+      "aiTriggers": [
+        "可插拔",
+        "策略模式",
+        "扩展性",
+        "插件系统",
+        "模块化"
+      ],
+      "relatedADRs": [
+        "0005",
+        "0016"
+      ],
       "summary": "支持插件化扩展的可插拔策略架构设计"
     },
     {
@@ -174,13 +360,29 @@
       "path": "./0014-enterprise-memory-monitoring.md",
       "status": "已接受",
       "category": "性能优化",
-      "tags": ["内存监控", "性能分析", "企业级监控"],
+      "tags": [
+        "内存监控",
+        "性能分析",
+        "企业级监控"
+      ],
       "createdDate": "2025-09-11",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["架构团队", "性能团队"],
+      "decisionMakers": [
+        "架构团队",
+        "性能团队"
+      ],
       "impactScope": "系统性能监控和优化",
-      "aiTriggers": ["内存监控", "性能分析", "监控系统", "内存优化", "性能监控"],
-      "relatedADRs": ["0009", "0025"],
+      "aiTriggers": [
+        "内存监控",
+        "性能分析",
+        "监控系统",
+        "内存优化",
+        "性能监控"
+      ],
+      "relatedADRs": [
+        "0009",
+        "0025"
+      ],
       "summary": "企业级内存监控和性能分析系统设计"
     },
     {
@@ -189,28 +391,63 @@
       "path": "./0015-visual-designer-architecture.md",
       "status": "已接受",
       "category": "架构设计",
-      "tags": ["可视化设计器", "拖拽", "WYSIWYG", "Schema"],
+      "tags": [
+        "可视化设计器",
+        "拖拽",
+        "WYSIWYG",
+        "Schema"
+      ],
       "createdDate": "2025-09-11",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["架构团队", "前端团队"],
+      "decisionMakers": [
+        "架构团队",
+        "前端团队"
+      ],
       "impactScope": "可视化设计器的架构和用户体验",
-      "aiTriggers": ["可视化设计器", "拖拽设计", "WYSIWYG", "Schema回写", "可视化编辑"],
-      "relatedADRs": ["0005", "0023"],
+      "aiTriggers": [
+        "可视化设计器",
+        "拖拽设计",
+        "WYSIWYG",
+        "Schema回写",
+        "可视化编辑"
+      ],
+      "relatedADRs": [
+        "0005",
+        "0023"
+      ],
       "summary": "企业级WYSIWYG可视化设计器架构，支持拖拽、智能对齐、实时预览"
     },
     {
       "id": "0016",
       "title": "低代码引擎Monorepo重构架构",
-      "path": "./0016-lowcode-engine-monorepo-refactoring.md", 
+      "path": "./0016-lowcode-engine-monorepo-refactoring.md",
       "status": "已接受",
       "category": "架构重构",
-      "tags": ["Monorepo", "包管理", "独立发包", "架构重构"],
+      "tags": [
+        "Monorepo",
+        "包管理",
+        "独立发包",
+        "架构重构"
+      ],
       "createdDate": "2025-01-12",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["架构团队"],
+      "decisionMakers": [
+        "架构团队"
+      ],
       "impactScope": "全栈低代码引擎架构",
-      "aiTriggers": ["Monorepo", "独立发包", "包管理", "架构重构", "代码拆分", "模块化架构"],
-      "relatedADRs": ["0005", "0015", "0001"],
+      "aiTriggers": [
+        "Monorepo",
+        "独立发包",
+        "包管理",
+        "架构重构",
+        "代码拆分",
+        "模块化架构"
+      ],
+      "relatedADRs": [
+        "0005",
+        "0015",
+        "0001"
+      ],
       "summary": "Monorepo架构重构，5个@smartabp/lowcode-*独立包的企业级包管理体系"
     },
     {
@@ -219,13 +456,34 @@
       "path": "./0021-user-experience-revolution.md",
       "status": "已接受",
       "category": "用户体验",
-      "tags": ["用户体验", "5分钟上手", "一键生成", "智能引导", "零配置"],
+      "tags": [
+        "用户体验",
+        "5分钟上手",
+        "一键生成",
+        "智能引导",
+        "零配置"
+      ],
       "createdDate": "2024-12-24",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["首席架构师", "UX团队", "产品团队"],
+      "decisionMakers": [
+        "首席架构师",
+        "UX团队",
+        "产品团队"
+      ],
       "impactScope": "整个产品的用户体验和易用性",
-      "aiTriggers": ["用户体验", "易用性", "新手上手", "一键生成", "智能引导", "零配置"],
-      "relatedADRs": ["0001", "0002", "0022"],
+      "aiTriggers": [
+        "用户体验",
+        "易用性",
+        "新手上手",
+        "一键生成",
+        "智能引导",
+        "零配置"
+      ],
+      "relatedADRs": [
+        "0001",
+        "0002",
+        "0022"
+      ],
       "summary": "第14重爆雷：从'能用'到'好用'的用户体验革命，实现5分钟上手+一键生成企业应用"
     },
     {
@@ -234,13 +492,32 @@
       "path": "./0022-enterprise-data-modeling-architecture.md",
       "status": "已接受",
       "category": "数据建模",
-      "tags": ["数据建模", "Level 5建模", "高级关系", "业务规则", "智能建模"],
+      "tags": [
+        "数据建模",
+        "Level 5建模",
+        "高级关系",
+        "业务规则",
+        "智能建模"
+      ],
       "createdDate": "2024-12-24",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["首席架构师", "数据团队"],
+      "decisionMakers": [
+        "首席架构师",
+        "数据团队"
+      ],
       "impactScope": "数据建模的专业深度和企业级能力",
-      "aiTriggers": ["数据建模", "实体关系", "业务规则", "数据字典", "建模工具"],
-      "relatedADRs": ["0005", "0021", "0023"],
+      "aiTriggers": [
+        "数据建模",
+        "实体关系",
+        "业务规则",
+        "数据字典",
+        "建模工具"
+      ],
+      "relatedADRs": [
+        "0005",
+        "0021",
+        "0023"
+      ],
       "summary": "第15重爆雷：Level 5企业级数据建模器，支持8种高级关系+业务规则引擎+智能建模助手"
     },
     {
@@ -249,13 +526,33 @@
       "path": "./0023-visual-page-designer-revolution.md",
       "status": "已接受",
       "category": "可视化设计",
-      "tags": ["可视化设计", "WYSIWYG", "拖拽设计", "组件面板", "属性面板"],
+      "tags": [
+        "可视化设计",
+        "WYSIWYG",
+        "拖拽设计",
+        "组件面板",
+        "属性面板"
+      ],
       "createdDate": "2024-12-24",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["首席架构师", "前端团队", "UX团队"],
+      "decisionMakers": [
+        "首席架构师",
+        "前端团队",
+        "UX团队"
+      ],
       "impactScope": "页面设计的可视化程度和用户体验",
-      "aiTriggers": ["页面设计", "可视化设计", "拖拽设计", "WYSIWYG", "组件设计"],
-      "relatedADRs": ["0002", "0015", "0022"],
+      "aiTriggers": [
+        "页面设计",
+        "可视化设计",
+        "拖拽设计",
+        "WYSIWYG",
+        "组件设计"
+      ],
+      "relatedADRs": [
+        "0002",
+        "0015",
+        "0022"
+      ],
       "summary": "第16重爆雷：真正的WYSIWYG页面设计器，支持拖拽组件+智能对齐+实时预览+响应式设计"
     },
     {
@@ -264,13 +561,32 @@
       "path": "./0024-intelligent-code-generator-evolution.md",
       "status": "已接受",
       "category": "代码生成",
-      "tags": ["智能生成", "模板匹配", "参数智能填充", "95分质量", "完整生成"],
+      "tags": [
+        "智能生成",
+        "模板匹配",
+        "参数智能填充",
+        "95分质量",
+        "完整生成"
+      ],
       "createdDate": "2024-12-24",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["首席架构师", "代码生成团队"],
+      "decisionMakers": [
+        "首席架构师",
+        "代码生成团队"
+      ],
       "impactScope": "代码生成的智能化程度和质量标准",
-      "aiTriggers": ["代码生成", "智能生成", "模板匹配", "质量保证", "自动生成"],
-      "relatedADRs": ["0005", "0006", "0011"],
+      "aiTriggers": [
+        "代码生成",
+        "智能生成",
+        "模板匹配",
+        "质量保证",
+        "自动生成"
+      ],
+      "relatedADRs": [
+        "0005",
+        "0006",
+        "0011"
+      ],
       "summary": "第17重爆雷：智能代码生成器，95%置信度模板匹配+智能参数填充+95分质量保证"
     },
     {
@@ -279,28 +595,65 @@
       "path": "./0025-cloud-native-deployment-architecture.md",
       "status": "已接受",
       "category": "部署架构",
-      "tags": ["云原生", "Kubernetes", "Helm Charts", "CI/CD", "Level 5成熟度"],
+      "tags": [
+        "云原生",
+        "Kubernetes",
+        "Helm Charts",
+        "CI/CD",
+        "Level 5成熟度"
+      ],
       "createdDate": "2024-12-24",
-      "lastUpdated": "2024-12-24", 
-      "decisionMakers": ["首席架构师", "DevOps团队"],
+      "lastUpdated": "2024-12-24",
+      "decisionMakers": [
+        "首席架构师",
+        "DevOps团队"
+      ],
       "impactScope": "系统的部署能力和运维成熟度",
-      "aiTriggers": ["云原生", "Kubernetes", "容器化", "自动部署", "微服务部署"],
-      "relatedADRs": ["0003", "0026"],
+      "aiTriggers": [
+        "云原生",
+        "Kubernetes",
+        "容器化",
+        "自动部署",
+        "微服务部署"
+      ],
+      "relatedADRs": [
+        "0003",
+        "0026"
+      ],
       "summary": "第13重爆雷：Level 5云原生部署架构，完整Kubernetes编排+自动伸缩+多环境CI/CD"
     },
     {
       "id": "0026",
-      "title": "生产就绪验证体系架构决策", 
+      "title": "生产就绪验证体系架构决策",
       "path": "./0026-production-readiness-validation.md",
       "status": "已接受",
       "category": "质量保证",
-      "tags": ["生产就绪", "质量验证", "企业级标准", "自动化测试"],
+      "tags": [
+        "生产就绪",
+        "质量验证",
+        "企业级标准",
+        "自动化测试"
+      ],
       "createdDate": "2024-12-24",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["首席架构师", "质量团队", "运维团队"],
+      "decisionMakers": [
+        "首席架构师",
+        "质量团队",
+        "运维团队"
+      ],
       "impactScope": "系统的生产就绪能力和企业级质量标准",
-      "aiTriggers": ["生产就绪", "质量验证", "企业级", "自动化测试", "质量门控"],
-      "relatedADRs": ["0004", "0019", "0025"],
+      "aiTriggers": [
+        "生产就绪",
+        "质量验证",
+        "企业级",
+        "自动化测试",
+        "质量门控"
+      ],
+      "relatedADRs": [
+        "0004",
+        "0019",
+        "0025"
+      ],
       "summary": "第12重爆雷：完整的生产就绪验证体系，确保95分企业级质量和生产环境部署能力"
     },
     {
@@ -309,58 +662,129 @@
       "path": "./0027-domain-specific-template-ecosystem.md",
       "status": "已接受",
       "category": "模板生态",
-      "tags": ["领域模板", "企业权限", "智慧工地", "MES制造", "专业化"],
+      "tags": [
+        "领域模板",
+        "企业权限",
+        "智慧工地",
+        "MES制造",
+        "专业化"
+      ],
       "createdDate": "2024-12-24",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["首席架构师", "业务团队"],
+      "decisionMakers": [
+        "首席架构师",
+        "业务团队"
+      ],
       "impactScope": "低代码引擎的领域专业化能力",
-      "aiTriggers": ["领域模板", "企业权限", "智慧工地", "MES", "专业化", "行业模板"],
-      "relatedADRs": ["0005", "0021"],
+      "aiTriggers": [
+        "领域模板",
+        "企业权限",
+        "智慧工地",
+        "MES",
+        "专业化",
+        "行业模板"
+      ],
+      "relatedADRs": [
+        "0005",
+        "0021"
+      ],
       "summary": "领域特定模板生态建设，支持企业权限管理、智慧工地、MES制造三大专业领域"
     },
     {
       "id": "0028",
       "title": "企业级模板库扩展架构决策",
-      "path": "./0028-enterprise-template-library-expansion.md", 
+      "path": "./0028-enterprise-template-library-expansion.md",
       "status": "已接受",
       "category": "模板系统",
-      "tags": ["模板库", "企业级", "33个模板", "16个领域", "业务模板"],
+      "tags": [
+        "模板库",
+        "企业级",
+        "33个模板",
+        "16个领域",
+        "业务模板"
+      ],
       "createdDate": "2024-12-24",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["首席架构师", "模板团队"],
+      "decisionMakers": [
+        "首席架构师",
+        "模板团队"
+      ],
       "impactScope": "模板库的完整性和企业级覆盖度",
-      "aiTriggers": ["模板库", "企业模板", "业务模板", "模板扩展", "模板生态"],
-      "relatedADRs": ["0006", "0027"],
+      "aiTriggers": [
+        "模板库",
+        "企业模板",
+        "业务模板",
+        "模板扩展",
+        "模板生态"
+      ],
+      "relatedADRs": [
+        "0006",
+        "0027"
+      ],
       "summary": "第11重爆雷：企业级模板库扩展，从21个增加到33个专业模板，覆盖16个业务领域"
     },
     {
-      "id": "0029", 
+      "id": "0029",
       "title": "智能工作流编排架构决策",
       "path": "./0029-intelligent-workflow-orchestration.md",
       "status": "已接受",
       "category": "工作流管理",
-      "tags": ["智能工作流", "自动引导", "步骤依赖", "状态持久化"],
+      "tags": [
+        "智能工作流",
+        "自动引导",
+        "步骤依赖",
+        "状态持久化"
+      ],
       "createdDate": "2024-12-24",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["首席架构师", "工作流团队"],
+      "decisionMakers": [
+        "首席架构师",
+        "工作流团队"
+      ],
       "impactScope": "开发工作流的智能化和用户引导",
-      "aiTriggers": ["工作流", "智能引导", "开发流程", "步骤管理", "状态管理"],
-      "relatedADRs": ["0021", "0004"],
+      "aiTriggers": [
+        "工作流",
+        "智能引导",
+        "开发流程",
+        "步骤管理",
+        "状态管理"
+      ],
+      "relatedADRs": [
+        "0021",
+        "0004"
+      ],
       "summary": "智能工作流编排系统，实现全流程智能引导和自动化状态管理"
     },
     {
       "id": "0030",
       "title": "TypeScript企业级模块解析架构决策",
       "path": "./0030-typescript-enterprise-module-resolution.md",
-      "status": "已接受", 
+      "status": "已接受",
       "category": "技术架构",
-      "tags": ["TypeScript", "模块解析", "包管理", "类型系统"],
+      "tags": [
+        "TypeScript",
+        "模块解析",
+        "包管理",
+        "类型系统"
+      ],
       "createdDate": "2024-12-24",
       "lastUpdated": "2024-12-24",
-      "decisionMakers": ["首席架构师", "前端团队"],
+      "decisionMakers": [
+        "首席架构师",
+        "前端团队"
+      ],
       "impactScope": "TypeScript模块系统和类型安全",
-      "aiTriggers": ["TypeScript", "模块解析", "类型系统", "包管理", "模块导入"],
-      "relatedADRs": ["0002", "0016"],
+      "aiTriggers": [
+        "TypeScript",
+        "模块解析",
+        "类型系统",
+        "包管理",
+        "模块导入"
+      ],
+      "relatedADRs": [
+        "0002",
+        "0016"
+      ],
       "summary": "第6重爆雷：完整的TypeScript企业级模块解析系统，确保包管理和类型安全"
     },
     {
@@ -369,13 +793,32 @@
       "path": "./0031-aspire-microservice-orchestration.md",
       "status": "已接受",
       "category": "微服务架构",
-      "tags": [".NET Aspire", "微服务编排", "分布式应用", "云原生", "可观测性"],
+      "tags": [
+        ".NET Aspire",
+        "微服务编排",
+        "分布式应用",
+        "云原生",
+        "可观测性"
+      ],
       "createdDate": "2025-10-05",
       "lastUpdated": "2025-10-05",
-      "decisionMakers": ["首席架构师", "微服务团队"],
+      "decisionMakers": [
+        "首席架构师",
+        "微服务团队"
+      ],
       "impactScope": "微服务编排和云原生部署能力",
-      "aiTriggers": ["微服务", "Aspire", "服务编排", "分布式应用", "云原生部署", "OpenTelemetry"],
-      "relatedADRs": ["0003", "0025"],
+      "aiTriggers": [
+        "微服务",
+        "Aspire",
+        "服务编排",
+        "分布式应用",
+        "云原生部署",
+        "OpenTelemetry"
+      ],
+      "relatedADRs": [
+        "0003",
+        "0025"
+      ],
       "summary": "v19.0新增：采用.NET Aspire进行微服务编排，实现分布式应用的开发、部署、监控一体化"
     },
     {
@@ -384,13 +827,32 @@
       "path": "./0032-assembly-plugin-management-system.md",
       "status": "已接受",
       "category": "插件架构",
-      "tags": ["插件系统", "Assembly", "动态加载", "热插拔", "扩展架构"],
+      "tags": [
+        "插件系统",
+        "Assembly",
+        "动态加载",
+        "热插拔",
+        "扩展架构"
+      ],
       "createdDate": "2025-10-05",
       "lastUpdated": "2025-10-05",
-      "decisionMakers": ["首席架构师", "前端团队"],
+      "decisionMakers": [
+        "首席架构师",
+        "前端团队"
+      ],
       "impactScope": "系统的可扩展性和插件化能力",
-      "aiTriggers": ["插件", "Assembly", "动态加载", "热插拔", "扩展系统", "模块化"],
-      "relatedADRs": ["0013", "0016"],
+      "aiTriggers": [
+        "插件",
+        "Assembly",
+        "动态加载",
+        "热插拔",
+        "扩展系统",
+        "模块化"
+      ],
+      "relatedADRs": [
+        "0013",
+        "0016"
+      ],
       "summary": "v19.0新增：基于Assembly动态加载的智能插件管理系统，支持热插拔和灵活扩展"
     },
     {
@@ -399,105 +861,200 @@
       "path": "./0033-architecture-health-monitoring.md",
       "status": "已接受",
       "category": "架构治理",
-      "tags": ["架构监控", "健康度评估", "依赖分析", "质量门禁", "自动化检查"],
+      "tags": [
+        "架构监控",
+        "健康度评估",
+        "依赖分析",
+        "质量门禁",
+        "自动化检查"
+      ],
       "createdDate": "2025-10-05",
       "lastUpdated": "2025-10-05",
-      "decisionMakers": ["首席架构师", "质量团队"],
+      "decisionMakers": [
+        "首席架构师",
+        "质量团队"
+      ],
       "impactScope": "架构质量和持续治理能力",
-      "aiTriggers": ["架构监控", "健康度", "依赖分析", "架构治理", "质量检查"],
-      "relatedADRs": ["0026", "0011"],
+      "aiTriggers": [
+        "架构监控",
+        "健康度",
+        "依赖分析",
+        "架构治理",
+        "质量检查"
+      ],
+      "relatedADRs": [
+        "0026",
+        "0011"
+      ],
       "summary": "v19.0新增：完整的架构健康度监控体系，实时检测架构违规，持续评估架构质量（92分）"
+    },
+    {
+      "id": "0034",
+      "title": "依赖管理自动化与架构演进记录体系",
+      "path": "./0034-dependency-automation-and-evolution.md",
+      "status": "已接受",
+      "category": "架构优化",
+      "tags": [
+        "依赖管理",
+        "自动化",
+        "Dependabot",
+        "架构演进",
+        "持续改进"
+      ],
+      "createdDate": "2025-10-05",
+      "lastUpdated": "2025-10-05",
+      "decisionMakers": [
+        "首席架构师"
+      ],
+      "impactScope": "依赖管理和架构演进流程",
+      "aiTriggers": [
+        "依赖管理",
+        "自动化",
+        "Dependabot",
+        "架构演进",
+        "健康度提升"
+      ],
+      "relatedADRs": [
+        "0033"
+      ],
+      "summary": "v19.0新增：自动化依赖管理（Dependabot+GitHub Actions+扩展脚本）和架构演进记录体系，提升架构健康度至95分"
     }
   ],
   "categories": {
     "技术选型": {
       "description": "技术栈和框架选择相关的决策",
-      "adrs": ["0001"],
+      "adrs": [
+        "0001"
+      ],
       "importance": "基础"
     },
     "架构设计": {
-      "description": "系统架构和设计相关的决策", 
-      "adrs": ["0002", "0003", "0005", "0013", "0015"],
+      "description": "系统架构和设计相关的决策",
+      "adrs": [
+        "0002",
+        "0003",
+        "0005",
+        "0013",
+        "0015"
+      ],
       "importance": "核心"
     },
     "架构重构": {
       "description": "架构重构和模块化相关的决策",
-      "adrs": ["0016"],
+      "adrs": [
+        "0016"
+      ],
       "importance": "重要"
     },
     "数据建模": {
       "description": "数据建模和实体设计相关的决策",
-      "adrs": ["0022"],
+      "adrs": [
+        "0022"
+      ],
       "importance": "核心"
     },
     "用户体验": {
       "description": "用户界面和用户体验相关的决策",
-      "adrs": ["0021", "0029"],
+      "adrs": [
+        "0021",
+        "0029"
+      ],
       "importance": "核心"
     },
     "可视化设计": {
       "description": "可视化设计器和WYSIWYG相关的决策",
-      "adrs": ["0023"],
+      "adrs": [
+        "0023"
+      ],
       "importance": "核心"
     },
     "代码生成": {
       "description": "代码生成和模板系统相关的决策",
-      "adrs": ["0006", "0012", "0024"],
+      "adrs": [
+        "0006",
+        "0012",
+        "0024"
+      ],
       "importance": "核心"
     },
     "模板系统": {
       "description": "模板库和模板生态相关的决策",
-      "adrs": ["0028"],
+      "adrs": [
+        "0028"
+      ],
       "importance": "重要"
     },
     "模板生态": {
       "description": "领域特定模板和专业化相关的决策",
-      "adrs": ["0027"],
+      "adrs": [
+        "0027"
+      ],
       "importance": "重要"
     },
     "性能优化": {
       "description": "性能优化和系统性能相关的决策",
-      "adrs": ["0009", "0014"],
+      "adrs": [
+        "0009",
+        "0014"
+      ],
       "importance": "重要"
     },
     "质量保证": {
       "description": "代码质量和质量保证相关的决策",
-      "adrs": ["0011", "0026"],
+      "adrs": [
+        "0011",
+        "0026"
+      ],
       "importance": "核心"
     },
     "开发流程": {
       "description": "开发工作流和流程规范相关的决策",
-      "adrs": ["0004"],
+      "adrs": [
+        "0004"
+      ],
       "importance": "基础"
     },
     "工作流管理": {
       "description": "智能工作流和流程编排相关的决策",
-      "adrs": ["0029"],
+      "adrs": [
+        "0029"
+      ],
       "importance": "重要"
     },
     "技术架构": {
       "description": "技术架构和技术实现相关的决策",
-      "adrs": ["0030"],
+      "adrs": [
+        "0030"
+      ],
       "importance": "基础"
     },
     "部署架构": {
       "description": "云原生部署和运维相关的决策",
-      "adrs": ["0025"],
+      "adrs": [
+        "0025"
+      ],
       "importance": "核心"
     },
     "微服务架构": {
       "description": "微服务编排和分布式应用相关的决策",
-      "adrs": ["0031"],
+      "adrs": [
+        "0031"
+      ],
       "importance": "核心"
     },
     "插件架构": {
       "description": "插件系统和动态扩展相关的决策",
-      "adrs": ["0032"],
+      "adrs": [
+        "0032"
+      ],
       "importance": "核心"
     },
     "架构治理": {
       "description": "架构监控和质量治理相关的决策",
-      "adrs": ["0033"],
+      "adrs": [
+        "0033",
+        "0034"
+      ],
       "importance": "核心"
     }
   },
@@ -538,7 +1095,7 @@
     "supersededADRs": 0,
     "thunderboltPhases": {
       "phase1-6": 6,
-      "phase7-13": 7, 
+      "phase7-13": 7,
       "phase14-17": 4
     },
     "categoryCounts": {
@@ -565,7 +1122,7 @@
     },
     "thunderboltCoverage": {
       "userExperience": "100%",
-      "dataModeling": "100%", 
+      "dataModeling": "100%",
       "visualDesign": "100%",
       "codeGeneration": "100%",
       "deployment": "100%",
@@ -575,27 +1132,51 @@
   "decisionDrivers": {
     "qualityFirst": {
       "description": "质量优先原则",
-      "relatedADRs": ["0011", "0019", "0024", "0026"],
+      "relatedADRs": [
+        "0011",
+        "0019",
+        "0024",
+        "0026"
+      ],
       "impact": "确保95分企业级质量标准"
     },
     "userExperienceFirst": {
-      "description": "用户体验优先原则", 
-      "relatedADRs": ["0021", "0023", "0029"],
+      "description": "用户体验优先原则",
+      "relatedADRs": [
+        "0021",
+        "0023",
+        "0029"
+      ],
       "impact": "实现5分钟上手的革命性体验"
     },
     "enterpriseGrade": {
       "description": "企业级标准原则",
-      "relatedADRs": ["0022", "0025", "0026", "0027"],
+      "relatedADRs": [
+        "0022",
+        "0025",
+        "0026",
+        "0027"
+      ],
       "impact": "达到世界顶尖企业级标准"
     },
     "intelligentAutomation": {
       "description": "智能自动化原则",
-      "relatedADRs": ["0024", "0029", "0022"],
+      "relatedADRs": [
+        "0024",
+        "0029",
+        "0022"
+      ],
       "impact": "实现智能化但不依赖AI的自动化体验"
     },
     "incrementalDevelopment": {
       "description": "增量开发原则",
-      "relatedADRs": ["0006", "0021", "0022", "0023", "0024"],
+      "relatedADRs": [
+        "0006",
+        "0021",
+        "0022",
+        "0023",
+        "0024"
+      ],
       "impact": "100%避免重复开发，保持架构整洁"
     }
   }

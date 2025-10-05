@@ -1,0 +1,195 @@
+# GitHub Dependabot 配置
+# 用于自动检测和更新项目依赖
+# 详见: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # 前端npm依赖 (Vue3 + TypeScript)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  - package-ecosystem: "npm"
+    directory: "/src/SmartAbp.Vue"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Shanghai"
+    
+    # PR限制（避免过多PR）
+    open-pull-requests-limit: 10
+    
+    # 自动审核者
+    reviewers:
+      - "huanyuan"  # 首席架构师
+    
+    # PR标签
+    labels:
+      - "dependencies"
+      - "auto-update"
+      - "frontend"
+    
+    # 提交信息前缀
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    
+    # 版本策略
+    versioning-strategy: "increase"
+    
+    # 分组更新（减少PR数量）
+    groups:
+      # Vue生态系统
+      vue-ecosystem:
+        patterns:
+          - "vue"
+          - "vue-*"
+          - "@vue/*"
+          - "vite"
+          - "vite-*"
+      
+      # TypeScript相关
+      typescript:
+        patterns:
+          - "typescript"
+          - "@typescript-eslint/*"
+          - "vue-tsc"
+      
+      # ABP相关
+      abp-packages:
+        patterns:
+          - "@abp/*"
+          - "@volo/*"
+      
+      # 低代码引擎packages
+      lowcode-packages:
+        patterns:
+          - "@smartabp/lowcode-*"
+      
+      # 开发工具
+      dev-tools:
+        patterns:
+          - "eslint"
+          - "eslint-*"
+          - "prettier"
+          - "@vitest/*"
+          - "vitest"
+    
+    # 忽略特定依赖（如需锁定版本）
+    ignore:
+      # 暂时忽略major版本更新（需手动评估）
+      - dependency-name: "vue"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # 后端NuGet依赖 (ABP vNext + .NET 8)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "10:00"
+      timezone: "Asia/Shanghai"
+    
+    # PR限制
+    open-pull-requests-limit: 5
+    
+    # 自动审核者
+    reviewers:
+      - "huanyuan"
+    
+    # PR标签
+    labels:
+      - "dependencies"
+      - "auto-update"
+      - "backend"
+    
+    # 提交信息前缀
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    
+    # 分组更新
+    groups:
+      # ABP Framework
+      abp-framework:
+        patterns:
+          - "Volo.Abp.*"
+      
+      # Microsoft核心库
+      microsoft-core:
+        patterns:
+          - "Microsoft.Extensions.*"
+          - "Microsoft.EntityFrameworkCore.*"
+      
+      # 测试相关
+      test-packages:
+        patterns:
+          - "xunit"
+          - "xunit.*"
+          - "Shouldly"
+          - "NSubstitute"
+    
+    # 忽略特定依赖
+    ignore:
+      # 暂时忽略major版本更新
+      - dependency-name: "Volo.Abp.*"
+        update-types: ["version-update:semver-major"]
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # Docker依赖
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "11:00"
+      timezone: "Asia/Shanghai"
+    
+    # PR限制
+    open-pull-requests-limit: 3
+    
+    # 自动审核者
+    reviewers:
+      - "huanyuan"
+    
+    # PR标签
+    labels:
+      - "dependencies"
+      - "auto-update"
+      - "docker"
+    
+    # 提交信息前缀
+    commit-message:
+      prefix: "chore(docker)"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # GitHub Actions依赖
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "12:00"
+      timezone: "Asia/Shanghai"
+    
+    # PR限制
+    open-pull-requests-limit: 3
+    
+    # 自动审核者
+    reviewers:
+      - "huanyuan"
+    
+    # PR标签
+    labels:
+      - "dependencies"
+      - "auto-update"
+      - "ci-cd"
+    
+    # 提交信息前缀
+    commit-message:
+      prefix: "chore(ci)"
