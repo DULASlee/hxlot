@@ -72,7 +72,10 @@
     "packages:test:coverage": "vitest run --coverage --config packages/vitest.config.ts",
     "packages:perf": "node scripts/test-packages-performance.js",
     "packages:precheck": "node scripts/pre-publish-check.js",
-    "packages:release": "npm run packages:build && npm run packages:precheck && npm run packages:publish:dry"
+    "packages:release": "npm run packages:build && npm run packages:precheck && npm run packages:publish:dry",
+    "perf:baseline": "node scripts/performance-baseline-test.js",
+    "perf:web-vitals": "node scripts/web-vitals-report.js",
+    "perf:full-analysis": "npm run perf:baseline && npm run perf:analyze"
   },
   "lint-staged": {
     "*.ts": [
@@ -118,6 +121,7 @@
     "vue": "^3.5.13",
     "vue-router": "^4.5.1",
     "vuedraggable": "^4.1.0",
+    "web-vitals": "^4.2.4",
     "zod": "^4.1.9"
   },
   "devDependencies": {

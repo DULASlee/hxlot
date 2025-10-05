@@ -1,14 +1,19 @@
 /**
  * 性能监控服务
- * 基于 Performance API 实现前端性能监控
+ * Phoenix计划增强版 - 集成 Web Vitals 库
+ * 基于 Performance API + web-vitals 实现前端性能监控
  */
 
+import { onCLS, onFCP, onFID, onINP, onLCP, onTTFB, type Metric } from 'web-vitals'
+
 interface PerformanceMetrics {
-  // 首屏加载指标
+  // Core Web Vitals（使用 web-vitals 库）
   firstContentfulPaint?: number // FCP - 首次内容绘制
   largestContentfulPaint?: number // LCP - 最大内容绘制
   firstInputDelay?: number // FID - 首次输入延迟
+  interactionToNextPaint?: number // INP - 交互到下一次绘制
   cumulativeLayoutShift?: number // CLS - 累积布局偏移
+  timeToFirstByte?: number // TTFB - 首字节时间
   timeToInteractive?: number // TTI - 可交互时间
 
   // 导航时间指标
@@ -22,6 +27,12 @@ interface PerformanceMetrics {
   // 资源加载指标
   resourceLoadTime?: number // 资源加载总时间
   resourceCount?: number // 资源数量
+
+  // Phoenix增强：内存和长任务
+  memoryUsed?: number // 已使用内存 (MB)
+  memoryTotal?: number // 总内存 (MB)
+  longTasksCount?: number // 长任务数量 (>50ms)
+  totalBlockingTime?: number // 总阻塞时间
 }
 
 interface RoutePerformance {
@@ -34,9 +45,11 @@ class PerformanceMonitor {
   private metrics: PerformanceMetrics = {}
   private routePerformances: RoutePerformance[] = []
   private observer: PerformanceObserver | null = null
+  private longTaskObserver: PerformanceObserver | null = null
+  private memoryMonitorInterval: ReturnType<typeof setInterval> | null = null
 
   /**
-   * 初始化性能监控
+   * 初始化性能监控（Phoenix增强版）
    */
   init() {
     if (typeof window === 'undefined' || !window.performance) {
@@ -44,11 +57,171 @@ class PerformanceMonitor {
       return
     }
 
+    console.log('[Performance Monitor] 🚀 Phoenix增强版启动中...')
+
+    // 使用 web-vitals 库监控 Core Web Vitals
+    this.initWebVitals()
+
+    // 保留原有的监控
     this.observeNavigationTiming()
-    this.observePaintTiming()
-    this.observeLayoutShift()
-    this.observeFirstInputDelay()
-    this.observeLargestContentfulPaint()
+
+    // Phoenix增强：长任务监控
+    this.observeLongTasks()
+
+    // Phoenix增强：内存监控
+    this.observeMemoryUsage()
+
+    console.log('[Performance Monitor] ✅ 性能监控已启动')
+  }
+
+  /**
+   * 初始化 Web Vitals 监控（Phoenix增强）
+   */
+  private initWebVitals() {
+    // First Contentful Paint
+    onFCP((metric: Metric) => {
+      this.metrics.firstContentfulPaint = metric.value
+      console.log(`[Performance Monitor] 📊 FCP: ${metric.value.toFixed(2)}ms ${this.rateMetric('FCP', metric.value)}`)
+    })
+
+    // Largest Contentful Paint
+    onLCP((metric: Metric) => {
+      this.metrics.largestContentfulPaint = metric.value
+      console.log(`[Performance Monitor] 📊 LCP: ${metric.value.toFixed(2)}ms ${this.rateMetric('LCP', metric.value)}`)
+    })
+
+    // First Input Delay
+    onFID((metric: Metric) => {
+      this.metrics.firstInputDelay = metric.value
+      console.log(`[Performance Monitor] 📊 FID: ${metric.value.toFixed(2)}ms ${this.rateMetric('FID', metric.value)}`)
+    })
+
+    // Interaction to Next Paint
+    onINP((metric: Metric) => {
+      this.metrics.interactionToNextPaint = metric.value
+      console.log(`[Performance Monitor] 📊 INP: ${metric.value.toFixed(2)}ms ${this.rateMetric('INP', metric.value)}`)
+    })
+
+    // Cumulative Layout Shift
+    onCLS((metric: Metric) => {
+      this.metrics.cumulativeLayoutShift = metric.value
+      console.log(`[Performance Monitor] 📊 CLS: ${metric.value.toFixed(3)} ${this.rateMetric('CLS', metric.value)}`)
+    })
+
+    // Time to First Byte
+    onTTFB((metric: Metric) => {
+      this.metrics.timeToFirstByte = metric.value
+      console.log(`[Performance Monitor] 📊 TTFB: ${metric.value.toFixed(2)}ms ${this.rateMetric('TTFB', metric.value)}`)
+    })
+  }
+
+  /**
+   * 监控长任务（Phoenix增强）
+   */
+  private observeLongTasks() {
+    if (typeof window === 'undefined' || !('PerformanceObserver' in window)) return
+
+    try {
+      this.metrics.longTasksCount = 0
+      this.metrics.totalBlockingTime = 0
+
+      this.longTaskObserver = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          const taskDuration = entry.duration
+
+          // 长任务定义：执行时间 > 50ms
+          if (taskDuration > 50) {
+            this.metrics.longTasksCount = (this.metrics.longTasksCount || 0) + 1
+
+            // 计算阻塞时间（超过50ms的部分）
+            const blockingTime = taskDuration - 50
+            this.metrics.totalBlockingTime = (this.metrics.totalBlockingTime || 0) + blockingTime
+
+            // 仅在开发环境警告
+            if (import.meta.env.DEV) {
+              console.warn(`[Performance Monitor] ⚠️ Long Task: ${taskDuration.toFixed(2)}ms`, {
+                name: entry.name,
+                startTime: entry.startTime,
+              })
+            }
+          }
+        }
+      })
+
+      this.longTaskObserver.observe({ entryTypes: ['longtask'] })
+    } catch (error) {
+      console.warn('[Performance Monitor] Long Task monitoring not supported')
+    }
+  }
+
+  /**
+   * 监控内存使用（Phoenix增强）
+   */
+  private observeMemoryUsage() {
+    if (typeof window === 'undefined') return
+
+    // 检查是否支持 Performance Memory API (Chrome)
+    const performance = window.performance as Performance & {
+      memory?: {
+        usedJSHeapSize: number
+        totalJSHeapSize: number
+        jsHeapSizeLimit: number
+      }
+    }
+
+    if (performance.memory) {
+      // 定期检查内存使用
+      this.memoryMonitorInterval = setInterval(() => {
+        if (performance.memory) {
+          this.metrics.memoryUsed = performance.memory.usedJSHeapSize / (1024 * 1024) // MB
+          this.metrics.memoryTotal = performance.memory.totalJSHeapSize / (1024 * 1024) // MB
+
+          // 仅在开发环境监控内存
+          if (import.meta.env.DEV) {
+            const memoryLimit = performance.memory.jsHeapSizeLimit / (1024 * 1024)
+            const memoryUsagePercent = (this.metrics.memoryUsed / memoryLimit) * 100
+
+            if (memoryUsagePercent > 90) {
+              console.error(`[Performance Monitor] 🚨 Memory Critical: ${memoryUsagePercent.toFixed(1)}% (${this.metrics.memoryUsed.toFixed(2)} MB)`)
+            }
+          }
+        }
+      }, 10000) // 每10秒检查一次
+    }
+  }
+
+  /**
+   * 评估单个指标（Phoenix增强）
+   */
+  private rateMetric(metric: string, value: number): string {
+    let rating: 'good' | 'needs-improvement' | 'poor'
+    let emoji: string
+
+    switch (metric) {
+      case 'FCP':
+        rating = value <= 1800 ? 'good' : value <= 3000 ? 'needs-improvement' : 'poor'
+        break
+      case 'LCP':
+        rating = value <= 2500 ? 'good' : value <= 4000 ? 'needs-improvement' : 'poor'
+        break
+      case 'FID':
+        rating = value <= 100 ? 'good' : value <= 300 ? 'needs-improvement' : 'poor'
+        break
+      case 'INP':
+        rating = value <= 200 ? 'good' : value <= 500 ? 'needs-improvement' : 'poor'
+        break
+      case 'CLS':
+        rating = value <= 0.1 ? 'good' : value <= 0.25 ? 'needs-improvement' : 'poor'
+        break
+      case 'TTFB':
+        rating = value <= 800 ? 'good' : value <= 1800 ? 'needs-improvement' : 'poor'
+        break
+      default:
+        return ''
+    }
+
+    emoji = rating === 'good' ? '✅' : rating === 'needs-improvement' ? '⚠️' : '❌'
+    return `${emoji} (${rating})`
   }
 
   /**
@@ -90,88 +263,6 @@ class PerformanceMonitor {
     }
   }
 
-  /**
-   * 观察绘制时间（FCP）
-   */
-  private observePaintTiming() {
-    if ('PerformanceObserver' in window) {
-      try {
-        const paintObserver = new PerformanceObserver((entryList) => {
-          for (const entry of entryList.getEntries()) {
-            if (entry.name === 'first-contentful-paint') {
-              this.metrics.firstContentfulPaint = entry.startTime
-              console.log(`[Performance Monitor] FCP: ${entry.startTime.toFixed(2)}ms`)
-            }
-          }
-        })
-        paintObserver.observe({ entryTypes: ['paint'] })
-      } catch (error) {
-        console.warn('[Performance Monitor] Paint timing not supported')
-      }
-    }
-  }
-
-  /**
-   * 观察累积布局偏移（CLS）
-   */
-  private observeLayoutShift() {
-    if ('PerformanceObserver' in window) {
-      try {
-        let clsValue = 0
-        const clsObserver = new PerformanceObserver((entryList) => {
-          for (const entry of entryList.getEntries()) {
-            if (!(entry as any).hadRecentInput) {
-              clsValue += (entry as any).value
-              this.metrics.cumulativeLayoutShift = clsValue
-            }
-          }
-        })
-        clsObserver.observe({ entryTypes: ['layout-shift'] })
-      } catch (error) {
-        console.warn('[Performance Monitor] Layout shift not supported')
-      }
-    }
-  }
-
-  /**
-   * 观察首次输入延迟（FID）
-   */
-  private observeFirstInputDelay() {
-    if ('PerformanceObserver' in window) {
-      try {
-        const fidObserver = new PerformanceObserver((entryList) => {
-          for (const entry of entryList.getEntries()) {
-            // 使用类型断言处理FID entry
-            const firstInput = entry as any
-            this.metrics.firstInputDelay = firstInput.processingStart - firstInput.startTime
-            console.log(`[Performance Monitor] FID: ${this.metrics.firstInputDelay.toFixed(2)}ms`)
-          }
-        })
-        fidObserver.observe({ entryTypes: ['first-input'] })
-      } catch (error) {
-        console.warn('[Performance Monitor] First input delay not supported')
-      }
-    }
-  }
-
-  /**
-   * 观察最大内容绘制（LCP）
-   */
-  private observeLargestContentfulPaint() {
-    if ('PerformanceObserver' in window) {
-      try {
-        const lcpObserver = new PerformanceObserver((entryList) => {
-          const entries = entryList.getEntries()
-          const lastEntry = entries[entries.length - 1]
-          this.metrics.largestContentfulPaint = lastEntry.startTime
-          console.log(`[Performance Monitor] LCP: ${lastEntry.startTime.toFixed(2)}ms`)
-        })
-        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] })
-      } catch (error) {
-        console.warn('[Performance Monitor] Largest contentful paint not supported')
-      }
-    }
-  }
 
   /**
    * 记录路由切换性能
@@ -275,13 +366,25 @@ class PerformanceMonitor {
   }
 
   /**
-   * 清理监听器
+   * 清理监听器（Phoenix增强）
    */
   destroy() {
     if (this.observer) {
       this.observer.disconnect()
       this.observer = null
     }
+
+    if (this.longTaskObserver) {
+      this.longTaskObserver.disconnect()
+      this.longTaskObserver = null
+    }
+
+    if (this.memoryMonitorInterval) {
+      clearInterval(this.memoryMonitorInterval)
+      this.memoryMonitorInterval = null
+    }
+
+    console.log('[Performance Monitor] 已清理所有监听器')
   }
 }
 
