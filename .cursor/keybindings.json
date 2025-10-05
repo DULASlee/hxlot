@@ -1,0 +1,15 @@
+[
+  {
+    "key": "ctrl+shift+k",
+    "command": "workbench.action.terminal.kill"
+  },
+  {
+    "key": "ctrl+shift+r", 
+    "command": "workbench.action.terminal.restart"
+  },
+  {
+    "key": "ctrl+alt+c",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": {"text": "\u0003"}
+  }
+]

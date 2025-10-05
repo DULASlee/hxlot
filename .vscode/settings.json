@@ -1,81 +1,406 @@
 {
   // ============================================
-  // 终端性能优化配置（Windows 11 + macOS通用）
+  // 🚀 终极防卡死核心配置
   // ============================================
   
-  // 终端渲染优化
-  "terminal.integrated.gpuAcceleration": "on",
-  "terminal.integrated.smoothScrolling": true,
-  "terminal.integrated.fastScrollSensitivity": 5,
-  
-  // 终端缓冲区优化（防止卡顿）
-  "terminal.integrated.scrollback": 5000,
-  
-  // 终端性能模式
-  "terminal.integrated.enablePersistentSessions": false,
-  
-  // macOS终端优化
-  "terminal.integrated.macOptionIsMeta": true,
-  "terminal.integrated.macOptionClickForcesSelection": false,
-  
-  // Windows终端优化
+  "terminal.integrated.gpuAcceleration": "auto",
   "terminal.integrated.windowsEnableConpty": true,
+  "terminal.integrated.windowsUseConptyDll": false,
+  "terminal.integrated.smoothScrolling": false,
+  "terminal.integrated.fastScrollSensitivity": 2,
+  "terminal.integrated.mouseWheelScrollSensitivity": 1,
+  "terminal.integrated.scrollback": 1500,
+  "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.persistentSessionReviveProcess": "never",
+
+  // ============================================
+  // 🤖 AI防呆神器 - 安全版（已修复高危配置）
+  // ============================================
   
-  // 通用终端配置
-  "terminal.integrated.cursorBlinking": true,
-  "terminal.integrated.cursorStyle": "line",
-  "terminal.integrated.fontFamily": "Menlo, Monaco, 'Courier New', monospace",
-  "terminal.integrated.fontSize": 13,
-  "terminal.integrated.lineHeight": 1.2,
+  "terminal.integrated.autoReplies": {
+    // === 基础确认类（安全） ===
+    "Terminate batch job (Y/N)?": "Y\n",
+    "Continue? (y/n)": "y\n",
+    "Do you want to continue? (Y/n)": "Y\n",
+    "OK to proceed? (y)": "y\n",
+    "Would you like to run the app? (Y/n)": "Y\n",
+    "Do you wish to continue? [Y/n]": "Y\n",
+    
+    // === 等待按键类（安全） ===
+    "Press any key to continue...": " \n",
+    "Press Enter to continue...": "\n",
+    "Hit any key to close this window...": " \n",
+    "Press any key to exit...": " \n",
+    
+    // === Git连接确认（安全） ===
+    "Are you sure you want to continue connecting (yes/no/[fingerprint])?": "yes\n",
+    
+    // === 包管理器确认（安全） ===
+    "Ok to proceed? (y)": "y\n",
+    
+    // === 密码提示（安全处理 - 空回车而非Ctrl+C） ===
+    "Password:": "\n",
+    "password:": "\n",
+    "Enter password:": "\n",
+    "passphrase:": "\n",
+    
+    // === 其他安全提示 ===
+    "Press ^C to stop or Enter to continue": "\n",
+    "Type 'yes' to continue, or 'no' to cancel": "yes\n"
+    
+    // ⚠️ 已移除所有破坏性操作的自动回复：
+    // - Delete database
+    // - Remove/Delete file
+    // - Overwrite
+    // - Drop database
+    // 这些操作需要用户手动确认，确保数据安全！
+  },
+
+  // ============================================
+  // ⚡ 智能输入优化
+  // ============================================
   
-  // 终端shell配置
-  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.localEchoEnabled": "auto",
+  "terminal.integrated.localEchoLatencyThreshold": 80,
+  "terminal.integrated.localEchoStyle": "dim",
+  "terminal.integrated.localEchoExcludePrograms": [
+    "vim", "vi", "nano", "micro", "emacs", "git", "less", "more", 
+    "ssh", "htop", "top", "python", "node", "npm", "yarn", "pnpm",
+    "docker", "kubectl", "mysql", "psql", "mongo", "redis-cli",
+    "bash", "zsh", "fish", "pwsh", "cmd", "deno", "go", "rustc"
+  ],
+
+  // ============================================
+  // 🎨 终端视觉优化
+  // ============================================
+  
+  "terminal.integrated.cursorBlinking": false,
+  "terminal.integrated.cursorStyle": "block",
+  "terminal.integrated.fontFamily": "'Cascadia Code', Consolas, 'Courier New', monospace",
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.lineHeight": 1.1,
+  "terminal.integrated.letterSpacing": 0,
+  "terminal.integrated.enableBell": false,
+  "terminal.integrated.enableVisualBell": false,
+  "accessibility.signals.terminalBell": { "sound": "off" },
+
+  // ============================================
+  // 🔧 Shell配置
+  // ============================================
+  
   "terminal.integrated.defaultProfile.windows": "PowerShell",
-  "terminal.integrated.confirmOnExit": "hasChildProcesses",
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.defaultProfile.linux": "bash",
   
-  // 文件监控优化（减少资源消耗）
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell",
+      "args": ["-NoLogo"]
+    },
+    "Command Prompt": {
+      "path": "cmd.exe",
+      "icon": "terminal-cmd"
+    },
+    "Git Bash": {
+      "path": "C:\\Program Files\\Git\\bin\\bash.exe",
+      "icon": "terminal-bash"
+    }
+  },
+  
+  "terminal.integrated.profiles.osx": {
+    "zsh": { "path": "zsh", "icon": "terminal-bash" },
+    "bash": { "path": "bash", "icon": "terminal-bash" }
+  },
+  
+  "terminal.integrated.profiles.linux": {
+    "bash": { "path": "bash", "icon": "terminal-bash" },
+    "zsh": { "path": "zsh", "icon": "terminal-bash" }
+  },
+
+  // ============================================
+  // 🛡️ 防卡死保护机制
+  // ============================================
+  
+  "terminal.integrated.confirmOnExit": "never",
+  "terminal.integrated.confirmOnKill": "never",
+  "terminal.integrated.showExitAlert": false,
+  "terminal.integrated.shellIntegration.enabled": true,
+  "terminal.integrated.shellIntegration.showWelcome": false,
+  "terminal.integrated.shellIntegration.decorationsEnabled": false,
+  "terminal.integrated.copyOnSelection": true,
+  "terminal.integrated.rightClickBehavior": "default",
+
+  // ============================================
+  // 📁 文件系统性能优化（SmartAbp专项）
+  // ============================================
+  
   "files.watcherExclude": {
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,
     "**/node_modules/**": true,
+    "**/node_modules/*/**": true,
     "**/dist/**": true,
+    "**/build/**": true,
     "**/.generated/**": true,
     "**/bin/**": true,
     "**/obj/**": true,
-    "**/*.log": true
+    "**/.next/**": true,
+    "**/coverage/**": true,
+    "**/.nuxt/**": true,
+    "**/.output/**": true,
+    "**/tmp/**": true,
+    "**/temp/**": true,
+    "**/*.log": true,
+    "**/logs/**": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/__pycache__/**": true,
+    "**/.pytest_cache/**": true,
+    "**/.cursor/**": true,
+    "**/.vscode/**": true,
+    
+    // ABP Framework 专项排除
+    "**/Migrations/**": true,
+    "**/DbMigrations/**": true,
+    "**/*.db": true,
+    "**/*.db-shm": true,
+    "**/*.db-wal": true,
+    
+    // 低代码引擎生成产物
+    "**/packages/*/dist/**": true,
+    "**/packages/*/es/**": true,
+    "**/packages/*/lib/**": true,
+    "**/appshell/**": true,
+    
+    // C# 编译产物
+    "**/*.dll": true,
+    "**/*.pdb": true
   },
   
-  // 搜索优化
   "search.exclude": {
     "**/node_modules": true,
+    "**/node_modules/**": true,
     "**/dist": true,
+    "**/build": true,
     "**/.generated": true,
     "**/bin": true,
     "**/obj": true,
-    "**/*.log": true
+    "**/.next": true,
+    "**/coverage": true,
+    "**/*.log": true,
+    "**/logs": true,
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.cursor": true,
+    
+    // SmartAbp 专项
+    "**/Migrations": true,
+    "**/DbMigrations": true,
+    "**/packages/*/dist": true,
+    "**/appshell": true
   },
   
-  // 编辑器性能优化
-  "editor.renderWhitespace": "selection",
+  "files.watcherPollInterval": 5000,
+  "files.useExperimentalFileWatcher": false,
+  "files.maxMemoryForLargeFilesMB": 4096,
+
+  // ============================================
+  // ✏️ 编辑器性能优化（增强版）
+  // ============================================
+  
+  "editor.renderWhitespace": "none",
   "editor.renderControlCharacters": false,
   "editor.minimap.enabled": true,
-  "editor.minimap.maxColumn": 120,
+  "editor.minimap.maxColumn": 100,
+  "editor.minimap.scale": 1,
+  "editor.smoothScrolling": false,
+  "editor.cursorSmoothCaretAnimation": "off",
+  "editor.cursorBlinking": "blink",
+  "editor.occurrencesHighlight": false,
+  "editor.selectionHighlight": false,
+  "editor.renderLineHighlight": "none",
+  "editor.hover.delay": 600,
+  "editor.hover.sticky": false,
   
-  // Git性能优化
-  "git.autorefresh": false,
-  "git.enableSmartCommit": false,
+  // 大文件优化
+  "editor.largeFileOptimizations": true,
   
-  // TypeScript性能优化
+  // 括号对着色（提升可读性）
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  
+  // IntelliSense优化
+  "editor.suggest.localityBonus": true,
+  "editor.suggest.shareSuggestSelections": true,
+  "editor.acceptSuggestionOnCommitCharacter": true,
+  "editor.quickSuggestions": { 
+    "other": true, 
+    "comments": false, 
+    "strings": false 
+  },
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "editor.suggest.maxVisibleSuggestions": 8,
+  
+  // 折叠优化
+  "editor.foldingStrategy": "indentation",
+  "editor.showFoldingControls": "mouseover",
+  "editor.foldingHighlight": false,
+
+  // ============================================
+  // 🔗 Git优化（修复版）
+  // ============================================
+  
+  "git.autorefresh": true,
+  "git.autofetch": true,
+  "git.autofetchPeriod": 180,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "git.showProgress": true,
+  "git.countBadge": "off",
+  "git.decorations.enabled": true,
+  "git.terminalAuthentication": false,
+  "git.useIntegratedAskpass": false,
+  "git.pruneOnFetch": true,
+  "git.fetchOnPull": true,
+  "git.rebaseWhenSync": false,
+
+  // ============================================
+  // 📦 TypeScript/JavaScript优化（SmartAbp专项）
+  // ============================================
+  
   "typescript.tsserver.maxTsServerMemory": 4096,
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  "typescript.tsserver.useSyntaxServer": "auto",
+  "typescript.tsserver.watchOptions": {
+    "watchFile": "priorityPollingInterval",
+    "watchDirectory": "dynamicPriorityPolling",
+    "fallbackPolling": "dynamicPriority",
+    "excludeDirectories": ["**/node_modules", "**/dist", "**/build", "**/.next"]
+  },
   "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.suggest.autoImports": true,
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
   
-  // 文件关联
+  "javascript.suggest.autoImports": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+
+  // ============================================
+  // 🏗️ 工作台性能优化
+  // ============================================
+  
+  "workbench.editor.enablePreview": false,
+  "workbench.startupEditor": "none",
+  "workbench.enableExperiments": false,
+  "workbench.settings.enableNaturalLanguageSearch": false,
+  "workbench.panel.defaultLocation": "bottom",
+  "workbench.panel.opensMaximized": "never",
+  "workbench.editor.limit.enabled": true,
+  "workbench.editor.limit.value": 10,
+  "workbench.editor.limit.perEditorGroup": true,
+  "workbench.colorTheme": "Default Dark Modern",
+  "workbench.iconTheme": "vs-seti",
+
+  // ============================================
+  // 🔌 扩展和更新优化
+  // ============================================
+  
+  "extensions.autoUpdate": false,
+  "extensions.autoCheckUpdates": false,
+  "extensions.closeExtensionDetailsOnViewChange": true,
+  "extensions.showRecommendationsOnlyOnDemand": true,
+  "extensions.confirmUninstall": false,
+
+  // ============================================
+  // 🌐 网络和遥测优化
+  // ============================================
+  
+  "telemetry.telemetryLevel": "off",
+  "update.mode": "manual",
+  "update.enableWindowsBackgroundUpdates": false,
+
+  // ============================================
+  // 🪟 窗口和界面优化
+  // ============================================
+  
+  "window.restoreWindows": "none",
+  "window.titleBarStyle": "custom",
+  "window.dialogStyle": "native",
+  "window.nativeTabs": false,
+
+  // ============================================
+  // 📝 文件关联
+  // ============================================
+  
   "files.associations": {
     "*.mdc": "markdown",
-    "*.command": "shellscript"
+    "*.command": "shellscript",
+    "*.env.*": "properties",
+    "*.config.js": "javascript",
+    "*.config.ts": "typescript"
   },
-  "accessibility.signals.terminalBell": {
-    "sound": "off"
+  
+  // ============================================
+  // 💾 自动保存优化
+  // ============================================
+  
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 2000,
+  "files.hotExit": "on",
+  "files.restoreUndoStack": false,
+
+  // ============================================
+  // 🎯 语言特定设置（SmartAbp专项）
+  // ============================================
+  
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
   },
-  "terminal.integrated.enableVisualBell": false
+  
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": true
+  },
+  
+  "[vue]": {
+    "editor.defaultFormatter": "Vue.volar",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  
+  "[csharp]": {
+    "editor.defaultFormatter": "ms-dotnettools.csharp",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.formatOnSave": true
+  },
+  
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.formatOnSave": false
+  },
+
+  // ============================================
+  // ⚠️ 最后的安全措施
+  // ============================================
+  
+  "terminal.integrated.experimentalUseTitleEvent": false,
+  "terminal.integrated.sendKeybindingsToShell": false,
+  "terminal.integrated.allowChords": false,
+  "terminal.integrated.allowMnemonics": false,
+  "terminal.integrated.tabs.enabled": true,
+  "terminal.integrated.tabs.showActions": "hover",
+  "terminal.integrated.tabs.focusMode": "singleClick"
 }

@@ -173,6 +173,7 @@ namespace SmartAbp.CodeGenerator.Services
             public string? DatabaseName { get; set; }
             public int? SchemaCount { get; set; }
             public int? TableCount { get; set; }
+            public List<string>? Tables { get; set; }
         }
 
         public class DatabaseIntrospectionRequestDto

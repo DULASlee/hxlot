@@ -545,10 +545,20 @@ namespace SmartAbp.CodeGenerator.Services
                         DatabaseName = conn.Database
                     };
 
-                    // Get table count
+                    // Get table count and table names
                     using var cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'";
                     result.TableCount = Convert.ToInt32(await cmd.ExecuteScalarAsync());
+                    
+                    // Get table names
+                    cmd.CommandText = "SELECT TOP 100 TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' ORDER BY TABLE_NAME";
+                    using var reader = await cmd.ExecuteReaderAsync();
+                    var tableNames = new List<string>();
+                    while (await reader.ReadAsync())
+                    {
+                        tableNames.Add(reader.GetString(0));
+                    }
+                    result.Tables = tableNames;
 
                     return result;
                 }

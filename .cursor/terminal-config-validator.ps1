@@ -1,8 +1,8 @@
 <#
   SmartAbp 终端配置验证器
   验证所有终端配置的一致性和稳定性
-  版本: v2.1
-  更新日期: 2025-09-30
+  版本: v2.2
+  更新日期: 2025-01-02
 #>
 
 param(
@@ -24,7 +24,7 @@ function Write-ValidationLog {
 }
 
 Write-ValidationLog "========================================" "Test"
-Write-ValidationLog "   SmartAbp 终端配置一致性验证" "Test"
+Write-ValidationLog "   SmartAbp 终端配置一致性验证 v2.2" "Test"
 Write-ValidationLog "========================================" "Test"
 Write-ValidationLog ""
 
@@ -158,9 +158,50 @@ Test-Configuration "配置版本一致性" {
         $psContent = Get-Content ".cursor/unified-terminal.ps1" -Raw
         $batContent = Get-Content ".cursor/unified-terminal.bat" -Raw
         
-        ($bashContent -match "v2\.1") -and
-        ($psContent -match "v2\.1") -and
-        ($batContent -match "v2\.1")
+        ($bashContent -match "v2\.2") -and
+        ($psContent -match "v2\.2") -and
+        ($batContent -match "v2\.2")
+    } catch {
+        $false
+    }
+}
+
+# 11. 验证错误处理机制
+Test-Configuration "错误处理机制完整性" {
+    try {
+        $psContent = Get-Content ".cursor/unified-terminal.ps1" -Raw
+        $bashContent = Get-Content ".cursor/unified-terminal.sh" -Raw
+        $batContent = Get-Content ".cursor/unified-terminal.bat" -Raw
+        
+        ($psContent -match "try\s*\{") -and
+        ($psContent -match "catch\s*\{") -and
+        ($bashContent -match "2>/dev/null") -and
+        ($batContent -match "2>nul")
+    } catch {
+        $false
+    }
+}
+
+# 12. 验证jq依赖检查
+Test-Configuration "jq依赖检查机制" {
+    try {
+        $bashContent = Get-Content ".cursor/unified-terminal.sh" -Raw
+        $bashContent -match "JQ_AVAILABLE"
+    } catch {
+        $false
+    }
+}
+
+# 13. 验证路径存在性检查
+Test-Configuration "路径存在性检查机制" {
+    try {
+        $psContent = Get-Content ".cursor/unified-terminal.ps1" -Raw
+        $bashContent = Get-Content ".cursor/unified-terminal.sh" -Raw
+        $batContent = Get-Content ".cursor/unified-terminal.bat" -Raw
+        
+        ($psContent -match "Test-Path") -and
+        ($bashContent -match "if.*-d") -and
+        ($batContent -match "if exist")
     } catch {
         $false
     }
@@ -199,7 +240,7 @@ Write-ValidationLog "   • SmartAbp命令: smartabp-sync, smartabp-check, smart
 Write-ValidationLog "   • 快速导航: smartabp-vue, smartabp-packages, smartabp-backend" "Info"
 Write-ValidationLog "   • 质量检查: smartabp-lint, smartabp-type, smartabp-build" "Info"
 Write-ValidationLog ""
-Write-ValidationLog "🔧 配置版本: v2.1" "Info"
-Write-ValidationLog "📅 更新日期: 2025-09-30" "Info"
+Write-ValidationLog "🔧 配置版本: v2.2" "Info"
+Write-ValidationLog "📅 更新日期: 2025-01-02" "Info"
 
 exit $FailedTests
