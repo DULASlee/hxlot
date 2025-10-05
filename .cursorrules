@@ -31,6 +31,81 @@ AI必须在以下情况立即在聊天响应的开头显示启动声明：
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+## 🚫 终端执行优化规则（最高优先级）
+
+**🚨 CRITICAL: AI必须优化终端命令输出，避免阻塞聊天框！**
+
+### 核心原则
+
+```yaml
+AI的职责:
+  ✅ 可以使用 run_terminal_cmd 执行命令
+  ✅ 必须优化命令参数，减少输出
+  ✅ 对于长输出命令，使用后台模式
+  
+目标:
+  - 保持聊天框清爽
+  - 避免大量输出阻塞对话
+  - 提供关键信息即可
+```
+
+### 命令优化策略
+
+**后端编译（dotnet build）**:
+```bash
+# ✅ 正确：使用 --verbosity minimal 减少输出
+dotnet build src/SmartAbp.sln --verbosity minimal --no-incremental
+
+# ❌ 错误：默认输出过多
+dotnet build src/SmartAbp.sln
+```
+
+**前端构建**:
+```bash
+# ✅ 正确：安静模式
+npm run build --silent
+
+# ❌ 错误：默认输出过多
+npm run build
+```
+
+**Git操作**:
+```bash
+# ✅ 正确：简洁输出
+git status --short
+git add .
+git commit -m "message" --quiet
+git pull --rebase origin main --quiet
+git push origin main --quiet
+
+# ❌ 错误：冗余输出
+git status
+git push origin main --verbose
+```
+
+### 长时间命令处理
+
+**对于可能长时间运行的命令**:
+```yaml
+策略:
+  1. 提前告知用户"正在执行，请稍候"
+  2. 使用 --quiet 或 --silent 参数
+  3. 只显示最终结果
+  4. 错误时显示完整输出
+```
+
+### AI执行检查清单
+
+**执行前必须确认**:
+```yaml
+☑️ 命令是否必要？（能用文件工具解决吗？）
+☑️ 输出是否会很多？（需要优化参数吗？）
+☑️ 是否使用了 --verbosity minimal / --quiet / --silent？
+☑️ 是否告知用户正在执行？
+```
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 # SmartAbp Cursor Rules — AI Assistant Operating Guide
 
 ## 📋 引擎版本
