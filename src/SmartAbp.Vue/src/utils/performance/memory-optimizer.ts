@@ -10,7 +10,7 @@
  * 5. 对象池（Object Pool）
  */
 
-import { ref, onBeforeUnmount } from 'vue'
+import { onBeforeUnmount, ref } from 'vue'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 类型定义
@@ -256,7 +256,7 @@ export function useMemoryOptimizer(options: MemoryOptimizerOptions = {}) {
       window.gc()
       return true
     }
-    
+
     console.warn('[Memory Optimizer] ⚠️ Manual GC not available. Enable --js-flags="--expose-gc" in Chrome')
     return false
   }
@@ -369,7 +369,7 @@ class LRUNode<K, V> {
     public value: V,
     public prev: LRUNode<K, V> | null = null,
     public next: LRUNode<K, V> | null = null
-  ) {}
+  ) { }
 }
 
 /**

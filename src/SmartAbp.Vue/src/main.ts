@@ -1,8 +1,8 @@
- 
-import "./styles/design-system/index.css" // 统一设计系统
-import "./styles/main.css" // 基础样式和工具类
-import "./styles/enterprise-icons.css" // 企业级图标系统样式
-import "./plugins/dayjs"
+
+import "./plugins/dayjs";
+import "./styles/design-system/index.css"; // 统一设计系统
+import "./styles/enterprise-icons.css"; // 企业级图标系统样式
+import "./styles/main.css"; // 基础样式和工具类
 
 /**
  * 全局Promise rejection处理器
@@ -18,103 +18,103 @@ window.addEventListener('unhandledrejection', (event) => {
   // event.preventDefault()
 })
 
-/**
- * 低代码运行时能力注入：
- * - getEnhancedLoggerFactory：提供结构化日志创建工厂
- * - logManager：提供性能跟踪 start/end
- * - trackPerformance：Promise 化的通用性能包装
- * 说明：仅注入接口，不在此处引入低代码源或打破编译边界
- */
-;(function injectLowcodeRuntime() {
-  const rt = (globalThis as unknown as { __lowcodeRuntime?: any }).__lowcodeRuntime || ((globalThis as unknown as { __lowcodeRuntime: any }).__lowcodeRuntime = {})
-  // 引用宿主现有日志系统与性能系统
-  try {
-    // 延迟读取，保持与项目路径解耦
-    const { createLogger } = require("./utils/logging/enhanced-logger") as { createLogger: any }
-    const logMgrMod = require("./utils/logManager") as { default: any }
+  /**
+   * 低代码运行时能力注入：
+   * - getEnhancedLoggerFactory：提供结构化日志创建工厂
+   * - logManager：提供性能跟踪 start/end
+   * - trackPerformance：Promise 化的通用性能包装
+   * 说明：仅注入接口，不在此处引入低代码源或打破编译边界
+   */
+  ; (function injectLowcodeRuntime() {
+    const rt = (globalThis as unknown as { __lowcodeRuntime?: any }).__lowcodeRuntime || ((globalThis as unknown as { __lowcodeRuntime: any }).__lowcodeRuntime = {})
+    // 引用宿主现有日志系统与性能系统
+    try {
+      // 延迟读取，保持与项目路径解耦
+      const { createLogger } = require("./utils/logging/enhanced-logger") as { createLogger: any }
+      const logMgrMod = require("./utils/logManager") as { default: any }
 
-    rt.getEnhancedLoggerFactory = (opts: {
-      level?: number
-      context?: Record<string, any>
-      transports?: any[]
-    }) => {
-      // 创建增强日志器实例，使用传入的配置选项
-      const logger = createLogger({
-        level: opts?.level,
-        context: opts?.context,
-        transports: opts?.transports,
-      })
-      return { logger }
-    }
-
-    rt.logManager = {
-      startPerformanceTracking: logMgrMod?.default?.logManager?.startPerformanceTracking,
-      endPerformanceTracking: logMgrMod?.default?.logManager?.endPerformanceTracking,
-    }
-
-    rt.trackPerformance = async <T>(name: string, fn: () => Promise<T> | T): Promise<T> => {
-      if (typeof logMgrMod?.default?.trackPerformance === "function") {
-        return await logMgrMod.default.trackPerformance(name, fn)
+      rt.getEnhancedLoggerFactory = (opts: {
+        level?: number
+        context?: Record<string, any>
+        transports?: any[]
+      }) => {
+        // 创建增强日志器实例，使用传入的配置选项
+        const logger = createLogger({
+          level: opts?.level,
+          context: opts?.context,
+          transports: opts?.transports,
+        })
+        return { logger }
       }
-      // 回退：直接执行
-      return await Promise.resolve().then(fn)
-    }
-  } catch (e) {
-    // 回退注入：仅提供最小能力，避免影响运行
-    rt.getEnhancedLoggerFactory = (opts: {
-      level?: number
-      context?: Record<string, any>
-      transports?: any[]
-    }) => {
-      // 使用console作为回退，忽略opts配置以保持简单性
-      const base = console
-      void opts // 显式标记参数为已使用但不需要处理
-      const logger = {
-        debug: base.debug.bind(base),
-        info: base.info.bind(base),
-        warn: base.warn.bind(base),
-        error: (m: string, _err?: Error, ctx?: Record<string, any>) => base.error(m, ctx),
-        success: base.info.bind(base),
-        fatal: (m: string, _err?: Error, ctx?: Record<string, any>) => base.error(m, ctx),
-        child: (_ctx: Record<string, any>) => logger,
-        addTransport: (_t: unknown) => {},
-        removeTransport: (_n: string) => {},
-        getTransports: () => [],
-        setLevel: (_: number) => {},
-        getLevel: () => 1,
-      }
-      return { logger }
-    }
-    rt.logManager = {}
-    rt.trackPerformance = async <T>(_name: string, fn: () => Promise<T> | T): Promise<T> =>
-      Promise.resolve().then(fn)
-  }
-})()
 
-import { createApp } from "vue"
-import { createPinia } from "pinia"
+      rt.logManager = {
+        startPerformanceTracking: logMgrMod?.default?.logManager?.startPerformanceTracking,
+        endPerformanceTracking: logMgrMod?.default?.logManager?.endPerformanceTracking,
+      }
+
+      rt.trackPerformance = async <T>(name: string, fn: () => Promise<T> | T): Promise<T> => {
+        if (typeof logMgrMod?.default?.trackPerformance === "function") {
+          return await logMgrMod.default.trackPerformance(name, fn)
+        }
+        // 回退：直接执行
+        return await Promise.resolve().then(fn)
+      }
+    } catch (e) {
+      // 回退注入：仅提供最小能力，避免影响运行
+      rt.getEnhancedLoggerFactory = (opts: {
+        level?: number
+        context?: Record<string, any>
+        transports?: any[]
+      }) => {
+        // 使用console作为回退，忽略opts配置以保持简单性
+        const base = console
+        void opts // 显式标记参数为已使用但不需要处理
+        const logger = {
+          debug: base.debug.bind(base),
+          info: base.info.bind(base),
+          warn: base.warn.bind(base),
+          error: (m: string, _err?: Error, ctx?: Record<string, any>) => base.error(m, ctx),
+          success: base.info.bind(base),
+          fatal: (m: string, _err?: Error, ctx?: Record<string, any>) => base.error(m, ctx),
+          child: (_ctx: Record<string, any>) => logger,
+          addTransport: (_t: unknown) => { },
+          removeTransport: (_n: string) => { },
+          getTransports: () => [],
+          setLevel: (_: number) => { },
+          getLevel: () => 1,
+        }
+        return { logger }
+      }
+      rt.logManager = {}
+      rt.trackPerformance = async <T>(_name: string, fn: () => Promise<T> | T): Promise<T> =>
+        Promise.resolve().then(fn)
+    }
+  })()
+
+import { createPinia } from "pinia";
+import { createApp } from "vue";
 // pinia-plugin-persistedstate插件
-import piniaPluginPersistedstate from "pinia-plugin-persistedstate"
-import ElementPlus from "element-plus"
-import "element-plus/dist/index.css"
-import App from "./App.vue"
-import router from "./router"
-import { logger } from "./utils/logger"
-import { i18n } from "./plugins/i18n"
+import ElementPlus from "element-plus";
+import "element-plus/dist/index.css";
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
+import App from "./App.vue";
+import { i18n } from "./plugins/i18n";
+import router from "./router";
+import { logger } from "./utils/logger";
 // import { createEnterpriseIconSystem } from "./plugins/enterpriseIcons" // TODO: enterpriseIcons.ts 文件不存在，暂时注释
-import { ElMessage } from "element-plus"
+import { ElMessage } from "element-plus";
 // 低代码设计器 store 暂未对外导出，先移除硬依赖
 
 // Highlight.js for code syntax highlighting
-import hljs from "highlight.js/lib/core"
-import "highlight.js/styles/vs2015.css"
+import hljs from "highlight.js/lib/core";
+import "highlight.js/styles/vs2015.css";
 // Import specific languages
-import csharp from "highlight.js/lib/languages/csharp"
-import typescript from "highlight.js/lib/languages/typescript"
-import javascript from "highlight.js/lib/languages/javascript"
-import json from "highlight.js/lib/languages/json"
-import xml from "highlight.js/lib/languages/xml"
-import sql from "highlight.js/lib/languages/sql"
+import csharp from "highlight.js/lib/languages/csharp";
+import javascript from "highlight.js/lib/languages/javascript";
+import json from "highlight.js/lib/languages/json";
+import sql from "highlight.js/lib/languages/sql";
+import typescript from "highlight.js/lib/languages/typescript";
+import xml from "highlight.js/lib/languages/xml";
 
 // Register languages
 hljs.registerLanguage("csharp", csharp)
@@ -125,15 +125,15 @@ hljs.registerLanguage("xml", xml)
 hljs.registerLanguage("sql", sql)
 
 // Vue plugin for highlight.js
-import hljsVuePlugin from "@highlightjs/vue-plugin"
+import hljsVuePlugin from "@highlightjs/vue-plugin";
 
 // 引入 appshell 聚合产物
-import { generatedRoutes } from "@/appshell/router/routes.generated"
-import { generatedStores } from "@/appshell/stores/stores.generated"
-import { runPreInit, runInit, runPostInit } from "@/appshell/lifecycle.generated"
-import { generatedMenus } from "@/appshell/menu/menu.generated"
-import { menuConfig } from "@/config/menus"
-import type { MenuItem } from "@/types/menu"
+import { runInit, runPostInit, runPreInit } from "@/appshell/lifecycle.generated";
+import { generatedMenus } from "@/appshell/menu/menu.generated";
+import { generatedRoutes } from "@/appshell/router/routes.generated";
+import { generatedStores } from "@/appshell/stores/stores.generated";
+import { menuConfig } from "@/config/menus";
+import type { MenuItem } from "@/types/menu";
 
 // 动态注册路由
 if (Array.isArray(generatedRoutes) && generatedRoutes.length > 0) {
@@ -144,7 +144,7 @@ if (Array.isArray(generatedRoutes) && generatedRoutes.length > 0) {
 if (Array.isArray(generatedMenus) && generatedMenus.length > 0) {
   try {
     menuConfig.menus.push(...(generatedMenus as MenuItem[]))
-  } catch (_) {}
+  } catch (_) { }
 }
 
 // 🗄️ 配置Pinia持久化插件
@@ -157,12 +157,12 @@ if (storesFactory && typeof storesFactory === "object") {
 }
 
 // 运行生命周期占位（忽略错误）
-;(async () => {
+; (async () => {
   try {
     await runPreInit?.({ app: null })
     await runInit?.({ app: null })
     await runPostInit?.({ app: null })
-  } catch (_e) {}
+  } catch (_e) { }
 })()
 
 const app = createApp(App)
@@ -174,7 +174,7 @@ app.config.errorHandler = (err, instance, info) => {
     componentName: instance?.$options.name || 'Unknown',
     info
   })
-  
+
   // 记录到日志系统
   logger.error('Vue组件错误', {
     error: err,
@@ -182,11 +182,11 @@ app.config.errorHandler = (err, instance, info) => {
     lifecycle: info,
     stack: (err as Error)?.stack
   })
-  
+
   // 在开发环境显示友好的错误提示
   if (import.meta.env.DEV) {
     ElMessage.error({
-      message: i18n.global.t('error.componentError', { 
+      message: i18n.global.t('error.componentError', {
         message: (err as Error)?.message || i18n.global.t('error.unknownError')
       }),
       duration: 5000,
@@ -262,7 +262,7 @@ async function bootstrap() {
   const { useAuthStore } = await import("./stores/modules/auth")
   const authStore = useAuthStore()
   authStore.initialize()
-  logger.info("[Auth] 认证状态已初始化", { 
+  logger.info("[Auth] 认证状态已初始化", {
     isAuthenticated: authStore.isAuthenticated,
     hasUser: !!authStore.userInfo
   })
@@ -271,8 +271,8 @@ async function bootstrap() {
   const { useIconStyleStore } = await import("./stores/modules/iconStyle")
   const iconStyleStore = useIconStyleStore()
   iconStyleStore.loadIconStyle()
-  logger.info("[IconStyle] 图标风格已加载", { 
-    currentStyle: iconStyleStore.currentStyle 
+  logger.info("[IconStyle] 图标风格已加载", {
+    currentStyle: iconStyleStore.currentStyle
   })
 
   app.mount("#app")

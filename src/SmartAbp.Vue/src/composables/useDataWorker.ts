@@ -9,15 +9,15 @@
  * - 性能监控
  */
 
-import { ref, onBeforeUnmount } from 'vue'
 import type {
-  WorkerMessage,
-  WorkerResponse,
-  SortPayload,
+  AggregatePayload,
   FilterPayload,
   SearchPayload,
-  AggregatePayload
+  SortPayload,
+  WorkerMessage,
+  WorkerResponse
 } from '@/workers/data-processing.worker'
+import { onBeforeUnmount, ref } from 'vue'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 类型定义
@@ -44,7 +44,7 @@ interface WorkerStats {
 export function useDataWorker() {
   let worker: Worker | null = null
   const pendingTasks = new Map<string, PendingTask>()
-  
+
   const stats = ref<WorkerStats>({
     totalTasks: 0,
     completedTasks: 0,

@@ -9,13 +9,13 @@ export class LocalStorageAdapter implements AssemblyStorage {
   async saveConfig(config: AssemblyConfig): Promise<void> {
     const configs = await this.loadAllConfigs()
     const existingIndex = configs.findIndex(c => c.name === config.name)
-    
+
     if (existingIndex >= 0) {
       configs[existingIndex] = config
     } else {
       configs.push(config)
     }
-    
+
     localStorage.setItem(this.storageKey, JSON.stringify(configs))
   }
 
@@ -28,9 +28,9 @@ export class LocalStorageAdapter implements AssemblyStorage {
     try {
       const stored = localStorage.getItem(this.storageKey)
       if (!stored) return []
-      
+
       const configs = JSON.parse(stored) as AssemblyConfig[]
-      
+
       // 转换日期字符串为Date对象
       return configs.map(config => ({
         ...config,
@@ -100,16 +100,16 @@ export class IndexedDBStorageAdapter implements AssemblyStorage {
 
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.dbName, this.dbVersion)
-      
+
       request.onerror = () => reject(request.error)
       request.onsuccess = () => {
         this.db = request.result
         resolve(this.db)
       }
-      
+
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result
-        
+
         if (!db.objectStoreNames.contains('assemblies')) {
           const store = db.createObjectStore('assemblies', { keyPath: 'name' })
           store.createIndex('updatedAt', 'updatedAt', { unique: false })
@@ -120,12 +120,12 @@ export class IndexedDBStorageAdapter implements AssemblyStorage {
 
   async saveConfig(config: AssemblyConfig): Promise<void> {
     const db = await this.getDB()
-    
+
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(['assemblies'], 'readwrite')
       const store = transaction.objectStore('assemblies')
       const request = store.put(config)
-      
+
       request.onerror = () => reject(request.error)
       request.onsuccess = () => resolve()
     })
@@ -133,12 +133,12 @@ export class IndexedDBStorageAdapter implements AssemblyStorage {
 
   async loadConfig(name: string): Promise<AssemblyConfig | null> {
     const db = await this.getDB()
-    
+
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(['assemblies'], 'readonly')
       const store = transaction.objectStore('assemblies')
       const request = store.get(name)
-      
+
       request.onerror = () => reject(request.error)
       request.onsuccess = () => resolve(request.result || null)
     })
@@ -146,12 +146,12 @@ export class IndexedDBStorageAdapter implements AssemblyStorage {
 
   async loadAllConfigs(): Promise<AssemblyConfig[]> {
     const db = await this.getDB()
-    
+
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(['assemblies'], 'readonly')
       const store = transaction.objectStore('assemblies')
       const request = store.getAll()
-      
+
       request.onerror = () => reject(request.error)
       request.onsuccess = () => resolve(request.result || [])
     })
@@ -159,12 +159,12 @@ export class IndexedDBStorageAdapter implements AssemblyStorage {
 
   async deleteConfig(name: string): Promise<void> {
     const db = await this.getDB()
-    
+
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(['assemblies'], 'readwrite')
       const store = transaction.objectStore('assemblies')
       const request = store.delete(name)
-      
+
       request.onerror = () => reject(request.error)
       request.onsuccess = () => resolve()
     })
@@ -262,7 +262,7 @@ export class HybridStorageAdapter implements AssemblyStorage {
   async saveConfig(config: AssemblyConfig): Promise<void> {
     // 先保存到本地
     await this.local.saveConfig(config)
-    
+
     // 如果启用同步，再保存到远程
     if (this.syncEnabled) {
       try {
@@ -276,7 +276,7 @@ export class HybridStorageAdapter implements AssemblyStorage {
   async loadConfig(name: string): Promise<AssemblyConfig | null> {
     // 先尝试从本地加载
     let config = await this.local.loadConfig(name)
-    
+
     // 如果本地没有且启用同步，尝试从远程加载
     if (!config && this.syncEnabled) {
       try {
@@ -289,14 +289,14 @@ export class HybridStorageAdapter implements AssemblyStorage {
         console.warn('远程加载失败:', error)
       }
     }
-    
+
     return config
   }
 
   async loadAllConfigs(): Promise<AssemblyConfig[]> {
     // 优先使用本地配置
     let configs = await this.local.loadAllConfigs()
-    
+
     // 如果本地为空且启用同步，尝试从远程加载
     if (configs.length === 0 && this.syncEnabled) {
       try {
@@ -309,14 +309,14 @@ export class HybridStorageAdapter implements AssemblyStorage {
         console.warn('远程加载全部配置失败:', error)
       }
     }
-    
+
     return configs
   }
 
   async deleteConfig(name: string): Promise<void> {
     // 先删除本地
     await this.local.deleteConfig(name)
-    
+
     // 如果启用同步，再删除远程
     if (this.syncEnabled) {
       try {
@@ -338,18 +338,18 @@ export class HybridStorageAdapter implements AssemblyStorage {
     try {
       const remoteConfigs = await this.remote.loadAllConfigs()
       const localConfigs = await this.local.loadAllConfigs()
-      
+
       const localMap = new Map(localConfigs.map(c => [c.name, c]))
-      
+
       for (const remoteConfig of remoteConfigs) {
         const localConfig = localMap.get(remoteConfig.name)
-        
+
         if (!localConfig || new Date(remoteConfig.updatedAt!) > new Date(localConfig.updatedAt!)) {
           // 远程配置更新，更新本地
           await this.local.saveConfig(remoteConfig)
         }
       }
-      
+
       console.log('配置同步完成')
     } catch (error) {
       console.error('配置同步失败:', error)
