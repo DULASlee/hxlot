@@ -26,6 +26,21 @@ SmartAbp Enterprise Optimized Data Table Component
           <span class="label">显示行数:</span>
           <span class="value">{{ visibleItems.length }}/{{ totalRows }}</span>
         </div>
+        <!-- Phoenix Week 3: Enhanced Virtual Scroll性能指标 -->
+        <div
+          v-if="performanceMetrics"
+          class="metric enhanced"
+        >
+          <span class="label">平均渲染:</span>
+          <span class="value">{{ performanceMetrics.avgRenderTime.toFixed(2) }}ms</span>
+        </div>
+        <div
+          v-if="performanceMetrics"
+          class="metric enhanced"
+        >
+          <span class="label">FPS:</span>
+          <span class="value">{{ performanceMetrics.fps }}</span>
+        </div>
       </div>
       <div class="performance-actions">
         <el-button
@@ -221,10 +236,11 @@ SmartAbp Enterprise Optimized Data Table Component
  
  
 /* eslint-disable vue/require-default-prop */
-import { ref, computed, onMounted, watch, nextTick } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { ElButton, ElInput, ElSelect, ElOption, ElSwitch, ElIcon, ElLoading, ElButtonGroup } from 'element-plus'
 import { Search, Refresh, Loading } from '@element-plus/icons-vue'
-import { useVirtualScroll, type VirtualScrollOptions } from '@/utils/performance/virtualScrolling'
+// Phoenix Week 3: 升级到Enhanced Virtual Scroll
+import { useEnhancedVirtualScroll, type EnhancedVirtualScrollOptions } from '@/utils/performance/virtualScrolling-enhanced'
 import { useInfiniteScroll } from '@/utils/performance/lazyLoading'
 import { useMemoryMonitor, useCache, useDebounce } from '@/utils/performance/memoryOptimization'
 import { usePerformanceMonitor } from '@/utils/performance/virtualScrolling'
@@ -291,24 +307,32 @@ const cache = useCache<any[]>('optimized-data-table', {
   persistent: true
 })
 
-// 虚拟滚动配置
-const virtualScrollOptions: VirtualScrollOptions = {
+// Phoenix Week 3: Enhanced Virtual Scroll配置
+const virtualScrollOptions: EnhancedVirtualScrollOptions = {
   itemHeight: props.itemHeight,
   containerHeight: props.containerHeight,
   bufferSize: 10,
-  throttleDelay: 16
+  preloadFactor: 0.5, // 预加载因子（50%的buffer）
+  enableRAF: true, // 启用RequestAnimationFrame优化
+  enableIntersectionObserver: true, // 启用Intersection Observer
+  enablePerformanceMonitoring: true // 启用性能监控
 }
 
-// 使用虚拟滚动
+// Phoenix Week 3: 使用Enhanced Virtual Scroll
 const {
   visibleItems,
   scrollContainer: virtualScrollContainer,
   totalHeight,
   startIndex,
   endIndex,
-  // scrollToIndex, // 暂时注释未使用变量
-  updateData
-} = useVirtualScroll(tableData, virtualScrollOptions)
+  performanceMetrics, // 新增：性能指标
+  scrollToIndex: _scrollToIndex, // 暂未使用，预留
+  updateData,
+  updateItemHeight: _updateItemHeight, // 新增：动态更新行高（预留）
+  observeElement: _observeElement, // 新增：观察元素可见性（预留）
+  unobserveElement: _unobserveElement, // 新增：取消观察（预留）
+  destroy // 新增：清理资源
+} = useEnhancedVirtualScroll(tableData, virtualScrollOptions)
 
 // 无限滚动
 const infiniteScrollTarget = ref<HTMLElement | null>(null)
@@ -445,6 +469,11 @@ watch(scrollContainer, (el) => {
 onMounted(() => {
   startMonitoring(3000) // 每3秒更新内存信息
 })
+
+// Phoenix Week 3: 清理Enhanced Virtual Scroll资源
+onBeforeUnmount(() => {
+  destroy() // 清理RAF、Intersection Observer等资源
+})
 </script>
 
 <style scoped>
@@ -481,6 +510,17 @@ onMounted(() => {
   font-size: 12px;
   font-weight: 600;
   color: #409eff;
+}
+
+/* Phoenix Week 3: Enhanced Virtual Scroll指标样式 */
+.metric.enhanced {
+  border-left: 2px solid #67c23a;
+  padding-left: 8px;
+}
+
+.metric.enhanced .value {
+  color: #67c23a;
+  font-weight: 700;
 }
 
 .performance-actions {
