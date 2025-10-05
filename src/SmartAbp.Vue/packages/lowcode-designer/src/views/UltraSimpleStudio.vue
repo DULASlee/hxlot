@@ -591,8 +591,8 @@ onMounted(async () => {
         // 🔥 优先级2：尝试获取完整的表架构
         try {
           const schema = await codeGeneratorApi.introspectDatabase({
-            provider: 'SqlServer',
-            connectionStringName: 'Default'
+            connectionStringName: 'Default',
+            provider: 'SqlServer'
           })
           
           if (schema.tables && schema.tables.length > 0) {
