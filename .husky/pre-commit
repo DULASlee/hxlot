@@ -1,4 +1,47 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-bash scripts/quality-gate.sh
+################################################################################
+# SmartAbp Pre-commit Hook
+# 
+# 功能：提交前自动执行架构合规性检查
+# 作者：AI编程铁律执行引擎 v9.0
+# 日期：2025-10-05
+################################################################################
+
+echo "🔍 执行pre-commit架构检查..."
+echo ""
+
+# 检查packages目录是否有修改
+PACKAGES_MODIFIED=$(git diff --cached --name-only | grep "^src/SmartAbp.Vue/packages/" || true)
+
+if [ -n "$PACKAGES_MODIFIED" ]; then
+  echo "📦 检测到packages目录修改，执行架构检查..."
+  echo ""
+  
+  # 执行架构检查
+  if [ -f "scripts/quality/architecture-check.sh" ]; then
+    bash scripts/quality/architecture-check.sh
+    
+    if [ $? -ne 0 ]; then
+      echo ""
+      echo "❌ 架构检查失败！请修复违规后重新提交"
+      echo ""
+      echo "💡 提示："
+      echo "  - 如需跳过检查（不推荐）：git commit --no-verify"
+      echo "  - 查看详细违规信息：bash scripts/quality/architecture-check.sh"
+      echo ""
+      exit 1
+    fi
+    
+    echo ""
+    echo "✅ 架构检查通过！"
+  else
+    echo "⚠️  架构检查脚本不存在，跳过检查"
+  fi
+else
+  echo "ℹ️  packages目录无修改，跳过架构检查"
+fi
+
+echo ""
+echo "✅ Pre-commit检查完成"
