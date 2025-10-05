@@ -2,27 +2,24 @@
  * 装配件管理器主类
  */
 
-import type { 
-  AssemblyConfig, 
-  AssemblyInstance, 
-  AssemblyEvent, 
-  AssemblyEventType,
-  AssemblyHealth,
-  AssemblyValidationResult,
-  IAssemblyManager,
-  IAssemblyLoader,
-  AssemblyManagerOptions,
-  AssemblyLoaderOptions,
-  DependencyGraph
+import type {
+    AssemblyConfig,
+    AssemblyEvent,
+    AssemblyEventType,
+    AssemblyHealth,
+    AssemblyInstance,
+    AssemblyManagerOptions,
+    AssemblyValidationResult,
+    DependencyGraph,
+    IAssemblyLoader,
+    IAssemblyManager
 } from './assembly-types'
 
-import { AssemblyLoader } from './assembly-loader'
 import { AssemblyConfigManager } from './assembly-config'
-import { 
-  validateAssemblyConfig, 
-  generateId, 
-  deepClone,
-  debounce
+import { AssemblyLoader } from './assembly-loader'
+import {
+    deepClone,
+    validateAssemblyConfig
 } from './assembly-utils'
 
 /**
@@ -137,7 +134,7 @@ export class AssemblyManager implements IAssemblyManager {
     }
   }
 
-  async registerAssembly(config: AssemblyConfig): Promise<AssemblyValidationResult> {
+  async registerAssembly(config: AssemblyConfig): Promise<void> {
     const validation = validateAssemblyConfig(config)
     
     if (!validation.isValid) {

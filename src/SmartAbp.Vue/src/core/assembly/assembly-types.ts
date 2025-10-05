@@ -6,16 +6,14 @@ declare global {
     // 用于存储适配器
     indexedDB?: IDBFactory
   }
-  
+
   // NodeJS类型声明（用于setTimeout等）
   namespace NodeJS {
-    interface Timeout {}
-    interface Immediate {}
+    interface Timeout { }
+    interface Immediate { }
   }
-  
-  // Fetch API类型声明
-  interface RequestInit {}
-  interface HeadersInit {}
+
+  // Fetch API类型声明已由lib.dom.d.ts提供，无需重复声明
 }
 
 /**
@@ -39,12 +37,18 @@ export interface AssemblyConfig {
   version: string
   /** 描述信息 */
   description?: string
+  /** 显示名称 */
+  displayName?: string
   /** 入口文件路径或URL */
   entry: string
   /** 装配件类型 */
   type: AssemblyType | string
   /** 是否启用 */
   enabled: boolean
+  /** 加载顺序（数字越小越先加载） */
+  loadOrder?: number
+  /** 超时时间（毫秒） */
+  timeout?: number
   /** 依赖的装配件名称列表 */
   dependencies: string[]
   /** 元数据 */
@@ -65,6 +69,8 @@ export interface AssemblyConfig {
 export interface AssemblyInstance {
   /** 装配件名称 */
   name: string
+  /** 装配件版本 */
+  version?: string
   /** 装配件配置 */
   config: AssemblyConfig
   /** 加载状态 */
@@ -79,21 +85,37 @@ export interface AssemblyInstance {
   loadTime?: Date
   /** 卸载时间 */
   unloadTime?: Date
+  /** 健康状态 */
+  health?: AssemblyHealth
+  /** 卸载方法 */
+  unload?: () => Promise<void>
+  /** 清理方法 */
+  cleanup?: () => Promise<void>
+  /** 健康检查方法 */
+  healthCheck?: () => Promise<AssemblyHealth>
 }
 
 /**
  * 装配件事件类型
  */
-export type AssemblyEventType = 
-  | 'loading'      // 开始加载
-  | 'loaded'       // 加载完成
-  | 'unloading'    // 开始卸载
-  | 'unloaded'     // 卸载完成
-  | 'enabled'      // 启用
-  | 'disabled'     // 禁用
-  | 'error'        // 错误
-  | 'validated'    // 验证完成
-  | 'healthCheck'  // 健康检查
+export type AssemblyEventType =
+  | 'loading'            // 开始加载
+  | 'loaded'             // 加载完成
+  | 'unloading'          // 开始卸载
+  | 'unloaded'           // 卸载完成
+  | 'enabled'            // 启用
+  | 'disabled'           // 禁用
+  | 'error'              // 错误
+  | 'validated'          // 验证完成
+  | 'healthCheck'        // 健康检查
+  | 'initialized'        // 已初始化
+  | 'registered'         // 已注册
+  | 'unregistered'       // 已注销
+  | 'updated'            // 已更新
+  | 'validation-failed'  // 验证失败
+  | 'health-changed'     // 健康状态变化
+  | 'disposed'           // 已释放
+  | '*'                  // 所有事件
 
 /**
  * 装配件事件接口
@@ -116,13 +138,17 @@ export interface AssemblyEvent {
  */
 export interface AssemblyHealth {
   /** 健康状态 */
-  status: 'healthy' | 'degraded' | 'unhealthy'
+  status: 'healthy' | 'degraded' | 'unhealthy' | 'unknown'
   /** 健康检查时间 */
   timestamp: Date
+  /** 最后检查时间 */
+  lastCheck?: Date
   /** 详细信息 */
   details?: Record<string, any>
   /** 错误信息 */
-  error?: string
+  error?: string | Error
+  /** 状态消息 */
+  message?: string
 }
 
 /**
@@ -137,12 +163,16 @@ export interface AssemblyValidationResult {
   warnings: string[]
   /** 验证时间 */
   timestamp: Date
+  /** 依赖关系 */
+  dependencies?: string[]
 }
 
 /**
  * 存储适配器接口
  */
 export interface AssemblyStorage {
+  /** 存储类型 */
+  type?: string
   /** 保存配置 */
   saveConfig(config: AssemblyConfig): Promise<void>
   /** 加载配置 */
@@ -161,6 +191,8 @@ export interface AssemblyStorage {
 export interface DependencyNode {
   /** 节点名称 */
   name: string
+  /** 节点版本 */
+  version?: string
   /** 依赖的节点名称列表 */
   dependencies: string[]
   /** 被哪些节点依赖 */
@@ -246,6 +278,12 @@ export interface AssemblyManagerOptions {
   debug?: boolean
   /** 默认配置 */
   defaultConfig?: Partial<AssemblyConfig>
+  /** 加载器选项 */
+  loaderOptions?: AssemblyLoaderOptions
+  /** 启用健康检查 */
+  enableHealthChecks?: boolean
+  /** 健康检查间隔（毫秒） */
+  healthCheckInterval?: number
 }
 
 /**
@@ -269,21 +307,4 @@ export interface AssemblyLoaderOptions {
   }
 }
 
-// 导出类型别名以保持向后兼容
-export type { AssemblyEventType, AssemblyEventHandler }
-
-export {
-  AssemblyType,
-  AssemblyConfig,
-  AssemblyInstance,
-  AssemblyEvent,
-  AssemblyHealth,
-  AssemblyValidationResult,
-  AssemblyStorage,
-  DependencyNode,
-  DependencyGraph,
-  IAssemblyManager,
-  IAssemblyLoader,
-  AssemblyManagerOptions,
-  AssemblyLoaderOptions
-}
+// 所有类型已在上方使用 export 关键字导出，无需重复导出

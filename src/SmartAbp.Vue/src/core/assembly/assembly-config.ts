@@ -54,7 +54,7 @@ export class AssemblyConfigManager {
    * 获取所有配置
    */
   getAllConfigs(): AssemblyConfig[] {
-    return Array.from(this.configs.values()).sort((a, b) => a.loadOrder - b.loadOrder)
+    return Array.from(this.configs.values()).sort((a, b) => (a.loadOrder ?? 0) - (b.loadOrder ?? 0))
   }
 
   /**
@@ -185,12 +185,12 @@ export class AssemblyConfigManager {
     }
 
     // 验证加载顺序
-    if (config.loadOrder < 0 || config.loadOrder > 100) {
+    if (config.loadOrder !== undefined && (config.loadOrder < 0 || config.loadOrder > 100)) {
       errors.push('加载顺序必须在 0-100 之间')
     }
 
     // 验证超时时间
-    if (config.timeout < 1 || config.timeout > 300) {
+    if (config.timeout !== undefined && (config.timeout < 1 || config.timeout > 300)) {
       errors.push('超时时间必须在 1-300 秒之间')
     }
 
@@ -214,7 +214,8 @@ export class AssemblyConfigManager {
       isValid: errors.length === 0,
       errors,
       warnings,
-      dependencies
+      dependencies,
+      timestamp: new Date()
     }
   }
 
@@ -231,7 +232,8 @@ export class AssemblyConfigManager {
         isValid: true,
         errors: [],
         warnings: [],
-        dependencies: []
+        dependencies: [],
+        timestamp: new Date()
       }
     }
 
@@ -239,7 +241,7 @@ export class AssemblyConfigManager {
 
     for (const depName of config.dependencies) {
       const depConfig = availableConfigs.get(depName)
-      
+
       if (!depConfig) {
         errors.push(`依赖的装配件 ${depName} 不存在`)
         dependencies.push({
@@ -272,7 +274,8 @@ export class AssemblyConfigManager {
       isValid: errors.length === 0,
       errors,
       warnings,
-      dependencies
+      dependencies,
+      timestamp: new Date()
     }
   }
 
@@ -280,8 +283,8 @@ export class AssemblyConfigManager {
    * 检查循环依赖
    */
   private checkCircularDependencies(
-    assemblyName: string, 
-    allConfigs: AssemblyConfig[], 
+    assemblyName: string,
+    allConfigs: AssemblyConfig[],
     visited: Set<string> = new Set(),
     path: string[] = []
   ): string[] | null {
@@ -316,14 +319,14 @@ export class AssemblyConfigManager {
   getTopologicalOrder(): AssemblyConfig[] {
     const configs = this.getAllConfigs()
     const graph = this.buildDependencyGraph(configs)
-    
+
     if (graph.hasCycles) {
       throw new Error('存在循环依赖，无法进行拓扑排序')
     }
 
     return graph.topologicalOrder
-      .map(name => this.configs.get(name))
-      .filter((config): config is AssemblyConfig => config !== undefined)
+      .map((name: string) => this.configs.get(name))
+      .filter((config: AssemblyConfig | undefined): config is AssemblyConfig => config !== undefined)
   }
 
   /**
@@ -431,7 +434,7 @@ export class AssemblyConfigManager {
   async importFromJson(json: string): Promise<void> {
     try {
       const configs = JSON.parse(json) as AssemblyConfig[]
-      
+
       if (!Array.isArray(configs)) {
         throw new Error('配置数据必须是数组格式')
       }

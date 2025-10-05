@@ -1,4 +1,4 @@
-import type { AssemblyConfig, AssemblyInstance, AssemblyHealth } from './assembly-types'
+import type { AssemblyConfig, AssemblyHealth, AssemblyInstance } from './assembly-types'
 
 /**
  * 装配件加载器
@@ -12,7 +12,7 @@ export class AssemblyLoader {
    * 加载装配件
    */
   async loadAssembly(config: AssemblyConfig): Promise<AssemblyInstance> {
-    const { name, entry, timeout } = config
+    const { name, timeout } = config
 
     // 检查是否已加载
     if (this.loadedAssemblies.has(name)) {
@@ -30,11 +30,11 @@ export class AssemblyLoader {
 
     try {
       // 设置超时
-      const instance = await this._withTimeout(loadPromise, timeout * 1000)
-      
+      const instance = await this._withTimeout(loadPromise, (timeout ?? 30) * 1000)
+
       this.loadedAssemblies.set(name, instance)
       this.loadPromises.delete(name)
-      
+
       return instance
     } catch (error) {
       this.loadPromises.delete(name)
@@ -99,6 +99,7 @@ export class AssemblyLoader {
     if (!instance) {
       return {
         status: 'unhealthy',
+        timestamp: new Date(),
         lastCheck: new Date(),
         message: '装配件未加载'
       }
@@ -117,12 +118,14 @@ export class AssemblyLoader {
       // 默认健康状态
       return {
         status: 'healthy',
+        timestamp: new Date(),
         lastCheck: new Date(),
         message: '装配件运行正常'
       }
     } catch (error) {
       return {
         status: 'unhealthy',
+        timestamp: new Date(),
         lastCheck: new Date(),
         message: `健康检查失败: ${error instanceof Error ? error.message : '未知错误'}`
       }
@@ -134,7 +137,7 @@ export class AssemblyLoader {
    */
   async checkAllAssembliesHealth(): Promise<Map<string, AssemblyHealth>> {
     const healthResults = new Map<string, AssemblyHealth>()
-    
+
     for (const [name] of this.loadedAssemblies) {
       const health = await this.checkAssemblyHealth(name)
       healthResults.set(name, health)
@@ -152,7 +155,7 @@ export class AssemblyLoader {
     try {
       // 动态导入装配件
       const module = await import(/* @vite-ignore */ entry)
-      
+
       if (!module.default) {
         throw new Error(`装配件 ${name} 没有导出默认对象`)
       }
@@ -166,9 +169,14 @@ export class AssemblyLoader {
       const instance: AssemblyInstance = {
         name: config.name,
         version: config.version,
-        module: assemblyModule,
+        config: config,
+        loaded: true,
+        enabled: true,
+        instance: assemblyModule,
+        loadTime: new Date(),
         health: {
           status: 'unknown',
+          timestamp: new Date(),
           lastCheck: new Date()
         }
       }
@@ -234,7 +242,7 @@ export class AssemblyLoader {
    * 清理所有装配件
    */
   async cleanup(): Promise<void> {
-    const unloadPromises = Array.from(this.loadedAssemblies.keys()).map(name => 
+    const unloadPromises = Array.from(this.loadedAssemblies.keys()).map(name =>
       this.unloadAssembly(name).catch(error => {
         console.error(`清理装配件 ${name} 时出错:`, error)
       })
