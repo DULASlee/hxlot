@@ -37,11 +37,12 @@ export default defineConfig({
       "@stores": resolve(__dirname, "src/stores"),
       "@utils": resolve(__dirname, "src/utils"),
       "@assets": resolve(__dirname, "src/assets"),
-      "@smartabp/lowcode-shared": resolve(__dirname, "packages/lowcode-shared/src/index.ts"),
-      "@smartabp/lowcode-core": resolve(__dirname, "packages/lowcode-core/src/index.ts"),
-      "@smartabp/lowcode-api": resolve(__dirname, "packages/lowcode-api/src/index.ts"),
-      "@smartabp/lowcode-tools": resolve(__dirname, "packages/lowcode-tools/src/index.ts"),
-      "@smartabp/lowcode-designer": resolve(__dirname, "packages/lowcode-designer/src/index.ts"),
+      // 📦 支持子路径导入（如 @smartabp/lowcode-shared/theme）
+      "@smartabp/lowcode-shared": resolve(__dirname, "packages/lowcode-shared/src"),
+      "@smartabp/lowcode-core": resolve(__dirname, "packages/lowcode-core/src"),
+      "@smartabp/lowcode-api": resolve(__dirname, "packages/lowcode-api/src"),
+      "@smartabp/lowcode-tools": resolve(__dirname, "packages/lowcode-tools/src"),
+      "@smartabp/lowcode-designer": resolve(__dirname, "packages/lowcode-designer/src"),
     },
   },
 })

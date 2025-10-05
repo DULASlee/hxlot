@@ -282,7 +282,7 @@ public class ReliableTemplatePathResolver
     {
         try
         {
-            var assembly = Assembly.GetExecutingAssembly();
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             var resourceNames = assembly.GetManifestResourceNames();
             return resourceNames.Any(name => name.Contains("Templates") && name.Contains("template"));
         }

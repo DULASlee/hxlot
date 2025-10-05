@@ -19,7 +19,7 @@ namespace SmartAbp.CodeGenerator.Core.Templates;
 public class EmbeddedTemplateExtractor : IEmbeddedTemplateExtractor, ITransientDependency
 {
     private readonly ILogger<EmbeddedTemplateExtractor> _logger;
-    private readonly Assembly _assembly;
+    private readonly System.Reflection.Assembly _assembly;
     private readonly string _temporaryPath;
     private readonly ConcurrentDictionary<string, string> _extractedTemplates;
     private readonly object _extractionLock = new();
@@ -30,7 +30,7 @@ public class EmbeddedTemplateExtractor : IEmbeddedTemplateExtractor, ITransientD
     public EmbeddedTemplateExtractor(ILogger<EmbeddedTemplateExtractor> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _assembly = Assembly.GetExecutingAssembly();
+        _assembly = System.Reflection.Assembly.GetExecutingAssembly();
         _temporaryPath = Path.Combine(Path.GetTempPath(), "SmartAbp", "Templates", Guid.NewGuid().ToString("N")[..8]);
         _extractedTemplates = new ConcurrentDictionary<string, string>();
         

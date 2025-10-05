@@ -1,0 +1,91 @@
+{
+  "$schema": "./assembly-schema.json",
+  "assemblies": {
+    "lowcode-engine": {
+      "name": "lowcode-engine",
+      "displayName": "低代码引擎",
+      "version": "1.0.0",
+      "enabled": true,
+      "type": "frontend",
+      "category": "core",
+      "description": "企业级低代码可视化设计引擎",
+      "dependencies": ["shared-core"],
+      "exports": {
+        "core": "@smartabp/lowcode-core",
+        "designer": "@smartabp/lowcode-designer", 
+        "tools": "@smartabp/lowcode-tools"
+      },
+      "config": {
+        "designer": {
+          "enableAdvancedFeatures": true,
+          "maxComponents": 1000,
+          "theme": "default"
+        },
+        "codegen": {
+          "targetFrameworks": ["vue3", "react", "angular"],
+          "outputFormat": "typescript"
+        }
+      }
+    },
+    "aspire-orchestrator": {
+      "name": "aspire-orchestrator", 
+      "displayName": "微服务编排器",
+      "version": "1.0.0",
+      "enabled": true,
+      "type": "backend",
+      "category": "orchestration",
+      "description": "基于Aspire的微服务编排和依赖管理",
+      "dependencies": ["lowcode-engine", "shared-core"],
+      "services": ["orchestration", "dependency-resolution", "health-monitoring"],
+      "config": {
+        "orchestration": {
+          "autoDiscovery": true,
+          "healthCheckInterval": 30,
+          "timeout": 300
+        }
+      }
+    },
+    "code-generator": {
+      "name": "code-generator",
+      "displayName": "代码生成器",
+      "version": "1.0.0", 
+      "enabled": true,
+      "type": "backend",
+      "category": "development",
+      "description": "基于模板的智能代码生成服务",
+      "dependencies": ["lowcode-engine"],
+      "services": ["template-management", "code-generation", "validation"],
+      "config": {
+        "templates": {
+          "autoUpdate": true,
+          "cacheEnabled": true,
+          "validationStrict": true
+        }
+      }
+    },
+    "ops-management": {
+      "name": "ops-management",
+      "displayName": "运维管理",
+      "version": "1.0.0",
+      "enabled": true,
+      "type": "backend", 
+      "category": "operations",
+      "description": "系统运维监控和管理服务",
+      "dependencies": ["shared-core"],
+      "services": ["monitoring", "logging", "alerting"],
+      "config": {
+        "monitoring": {
+          "metricsCollection": true,
+          "logAggregation": true,
+          "alertThreshold": 80
+        }
+      }
+    }
+  },
+  "dependencyGraph": {
+    "lowcode-engine": ["shared-core"],
+    "aspire-orchestrator": ["lowcode-engine", "shared-core"],
+    "code-generator": ["lowcode-engine"],
+    "ops-management": ["shared-core"]
+  }
+}
