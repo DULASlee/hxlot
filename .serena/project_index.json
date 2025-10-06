@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-06T08:37:30.854Z",
+  "timestamp": "2025-10-06T08:46:50.010Z",
   "project": "Baobab.SmartAbp",
   "language": "typescript",
   "files": [
@@ -2647,7 +2647,7 @@
       "path": "src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/nodes/index.ts",
       "type": "file",
       "size": 862,
-      "modified": "2025-10-06T08:35:09.905Z"
+      "modified": "2025-10-06T08:46:08.144Z"
     },
     {
       "name": "types.ts",
