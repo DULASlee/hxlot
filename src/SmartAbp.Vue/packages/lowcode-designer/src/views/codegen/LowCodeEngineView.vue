@@ -231,7 +231,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, computed } from "vue"
+import { computed, nextTick, onMounted, onUnmounted, ref } from "vue"
 // 暂时注释logger导入，避免架构违规
 // import { logger } from "@smartabp/lowcode-shared/logging"
 const logger = { child: (_config: any) => ({ info: console.log, error: console.error, warn: console.warn }) }
@@ -503,6 +503,9 @@ const toggleAutoScroll = () => {
   addLog("info", `自动滚动已${autoScroll.value ? "启用" : "禁用"}`)
 }
 
+// 定时器引用（用于清理）
+let statusUpdateTimer: number | null = null
+
 // 生命周期
 onMounted(() => {
   componentLogger.info("低代码引擎控制台加载完成")
@@ -512,7 +515,16 @@ onMounted(() => {
   void getEngineStatusDisplay // 显式引用函数避免未使用警告
 
   // 定时更新状态
-  setInterval(updateEngineStatus, 5000)
+  statusUpdateTimer = setInterval(updateEngineStatus, 5000) as unknown as number
+})
+
+// 组件卸载时清理定时器（防止内存泄漏）
+onUnmounted(() => {
+  if (statusUpdateTimer !== null) {
+    clearInterval(statusUpdateTimer)
+    statusUpdateTimer = null
+    componentLogger.info("低代码引擎控制台卸载，定时器已清理")
+  }
 })
 </script>
 

@@ -5,8 +5,8 @@ import { logger } from "@/utils/logger"
 import LoginView from "@/views/auth/Login.vue"
 import { ElMessage } from "element-plus"
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
-import opsMonitoringRoutes from "./modules/ops-monitoring"
 import { autoLoadModuleRoutes, printRouteLoadInfo } from "./auto-load"
+import opsMonitoringRoutes from "./modules/ops-monitoring"
 
 // 动态导入页面组件
 const DashboardView = () => import("@/views/common/DashboardView.vue")
@@ -231,6 +231,17 @@ const routes: RouteRecordRaw[] = [
           title: "极简代码生成",
           icon: "⚡",
           menuKey: "ultra-simple-studio"
+        },
+      },
+      // 🏗️ 模块向导 - 专业通道
+      {
+        path: "wizard",
+        name: "ModuleWizard",
+        component: () => import("@smartabp/lowcode-designer/views/codegen/LowCodeEngineView.vue"),
+        meta: {
+          title: "模块生成向导",
+          icon: "🧙",
+          menuKey: "module-wizard"
         },
       },
     ],

@@ -1,5 +1,5 @@
+import { http } from './http-client';
 import type { CodeGeneratorApi, GenerationResult, ModuleGenerationConfig, ModuleMetadata, Template } from "./types/index";
-import { http } from './http-client'
 
 /**
  * 代码生成器API实现
@@ -12,7 +12,7 @@ export const codeGeneratorApi: CodeGeneratorApi = {
    * @returns 生成结果，包含生成的文件和状态
    */
   async generateModule(config: ModuleGenerationConfig): Promise<GenerationResult> {
-    return await http.post<GenerationResult>('/api/code-generator/generate', config)
+    return await http.post<GenerationResult>('/api/code-generator/generate-module', config)
   },
 
   /**
@@ -96,10 +96,10 @@ export const codeGeneratorApi: CodeGeneratorApi = {
    * @param connection 数据库连接配置
    * @returns 连接测试结果
    */
-  async testDatabaseConnection(connection: { 
-    provider: string; 
-    connectionString: string; 
-    schema?: string; 
+  async testDatabaseConnection(connection: {
+    provider: string;
+    connectionString: string;
+    schema?: string;
   }): Promise<{
     success: boolean;
     message: string;

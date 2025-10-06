@@ -336,7 +336,7 @@ export const menuConfig: MenuConfig = {
           icon: "hat-wizard",
           type: "page",
           path: "/CodeGen/wizard",
-          component: "@/packages/lowcode-designer/src/views/codegen/LowCodeEngineView.vue",
+          component: "@smartabp/lowcode-designer/views/codegen/LowCodeEngineView.vue",
           order: 2,
           visible: true,
           requiredRoles: [ROLES.ADMIN, ROLES.USER],
