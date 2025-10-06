@@ -1,16 +1,17 @@
 {
   "name": "@smartabp/metadata-core",
   "version": "1.0.0",
-  "description": "SmartAbp统一元数据模型核心包 - Schema-First元数据定义（企业级）",
+  "description": "SmartAbp元数据Schema定义、验证和版本管理库（不包含代码生成）",
   "keywords": [
     "smartabp",
     "metadata",
     "schema",
-    "lowcode",
-    "code-generation",
+    "schema-validation",
+    "schema-versioning",
     "typescript",
     "zod",
-    "validation"
+    "validation",
+    "compatibility-checker"
   ],
   "author": "SmartAbp Team <team@smartabp.io>",
   "homepage": "https://github.com/smartabp/smartabp",

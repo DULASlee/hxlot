@@ -1,16 +1,61 @@
 # @smartabp/metadata-core
 
-> SmartAbp统一元数据模型核心包 - Schema-First元数据定义，支持前后端类型安全的代码生成
+> SmartAbp元数据Schema定义、验证和版本管理库  
+> ⚠️ **重要**：本包不包含代码生成功能，专注于元数据的定义、验证和Schema管理
 
 [![Version](https://img.shields.io/npm/v/@smartabp/metadata-core.svg)](https://www.npmjs.com/package/@smartabp/metadata-core)
 [![License](https://img.shields.io/npm/l/@smartabp/metadata-core.svg)](https://github.com/smartabp/metadata-core/blob/main/LICENSE)
 
-## 🎯 核心特性
+## 🎯 核心定位
 
-- ✅ **统一元数据模型** - 前后端高度一致的元数据定义
-- ✅ **类型安全验证** - 基于Zod的运行时类型验证
-- ✅ **Schema版本管理** - 语义化版本控制和兼容性检查
-- ✅ **旧格式迁移** - 零代码侵入的格式转换器
+**metadata-core是什么**：
+- ✅ 元数据Schema的**类型定义**（TypeScript接口）
+- ✅ 元数据的**运行时验证**（基于Zod）
+- ✅ Schema的**版本管理**（语义化版本控制）
+- ✅ Schema的**兼容性检查**（向后兼容性分析）
+- ✅ 旧格式的**迁移转换**（零侵入格式升级）
+
+**metadata-core不是什么**：
+- ❌ **不是代码生成器**（不生成C#、TypeScript、Vue代码）
+- ❌ **不替代现有生成器**（与lowcode-core、SmartAbp.CodeGenerator互补）
+- ❌ **不是完整的低代码引擎**（只是元数据基础设施层）
+
+## 🏗️ 架构定位
+
+```
+架构分层：
+  L2层: lowcode-designer (设计器UI)
+    ↓
+  L1层: lowcode-core (代码生成引擎) ← 实际生成代码的地方
+    ↓
+  L0层: lowcode-shared (共享基础组件)
+    ↓
+  L-1层: metadata-core (元数据Schema定义和验证) ← 本包的位置
+```
+
+**使用流程**：
+```typescript
+// 1. 使用metadata-core定义和验证元数据
+import { EntityMetadata, validateEntityMetadata } from '@smartabp/metadata-core'
+
+const bookEntity: EntityMetadata = { /* ... */ }
+const validated = validateEntityMetadata(bookEntity) // ✅ 确保正确性
+
+// 2. 传递给代码生成器生成代码（前端或后端）
+// 前端生成：使用lowcode-core
+import { useCodeGenerationStore } from '@smartabp/lowcode-core'
+await codeGenStore.generateCode(validated)
+
+// 后端生成：调用SmartAbp.CodeGenerator API
+await codeGenApi.generateModule(validated)
+```
+
+## ✨ 核心特性
+
+- ✅ **统一Schema定义** - 前后端一致的元数据类型
+- ✅ **强类型验证** - 基于Zod的运行时验证，IDE智能提示
+- ✅ **版本控制** - 语义化版本管理和兼容性检查
+- ✅ **格式迁移** - 零代码侵入的旧格式转换
 - ✅ **轻量依赖** - 仅依赖zod和nanoid，包体积<150KB
 - ✅ **TypeScript优先** - 100%类型安全，完整的IDE支持
 
@@ -628,18 +673,42 @@ lowcode-designer（L2层）
 ### 1. Schema-First设计
 
 ```typescript
-// ✅ 正确：先定义Schema
+// ✅ 正确：先定义和验证Schema
+import { EntityMetadata, validateEntityMetadata } from '@smartabp/metadata-core'
+
 const bookEntity: EntityMetadata = {
   name: 'Book',
   module: 'Library',
-  // ...
+  keyType: 'Guid',
+  isAggregateRoot: true,
+  isMultiTenant: true,
+  isSoftDelete: true,
+  hasExtraProperties: true,
+  properties: [
+    {
+      name: 'title',
+      type: 'string',
+      isRequired: true,
+      isReadOnly: false,
+      isUnique: false,
+      maxLength: 200,
+      displayName: '标题',
+      validationRules: []
+    }
+  ]
 }
 
-validateEntityMetadata(bookEntity)
+// 验证Schema（在前端拦截错误）
+const validated = validateEntityMetadata(bookEntity)
 
-// 然后使用Schema生成代码
-generateBackendCode(bookEntity)
-generateFrontendCode(bookEntity)
+// 然后传递给代码生成器（lowcode-core或后端API）
+// 注意：代码生成不是metadata-core的功能！
+import { useCodeGenerationStore } from '@smartabp/lowcode-core'
+const codeGenStore = useCodeGenerationStore()
+await codeGenStore.generateCode({
+  entities: [validated],
+  // ... 其他配置
+})
 ```
 
 ### 2. 版本兼容性检查
@@ -672,14 +741,17 @@ import { convertManifestToModule } from '@smartabp/metadata-core'
 // 保持旧代码正常运行
 const legacyManifest = loadLegacyManifest()
 
-// 同时生成新格式
+// 转换为新格式（metadata-core只负责转换，不生成代码）
 const moduleMetadata = convertManifestToModule(legacyManifest, {
   validate: true,
   preserveLegacyFields: true  // 保留旧字段
 })
 
-// 逐步替换旧代码
-// saveNewFormat(moduleMetadata)
+// 保存新格式，供代码生成器使用
+saveNewFormat(moduleMetadata)
+
+// 使用转换后的元数据生成代码（由其他组件负责）
+// await codeGenerator.generate(moduleMetadata)
 ```
 
 ### 4. 使用Schema Registry
@@ -688,22 +760,24 @@ const moduleMetadata = convertManifestToModule(legacyManifest, {
 // ✅ 正确：集中管理Schema
 import { registerEntity, lookupEntity } from '@smartabp/metadata-core'
 
-// 应用启动时注册
+// 应用启动时注册所有Schema
 function initSchemas() {
   registerEntity(bookEntity)
   registerEntity(authorEntity)
+  registerEntity(orderEntity)
   // ...
 }
 
-// 运行时查找
-function generateEntityCode(entityName: string, moduleName: string) {
+// 运行时查找Schema并验证
+function validateBeforeGeneration(entityName: string, moduleName: string) {
   const schema = lookupEntity(entityName, moduleName)
   if (!schema) {
     throw new Error(`Schema不存在: ${moduleName}.${entityName}`)
   }
   
-  // 使用Schema生成代码
-  return generateCode(schema)
+  // metadata-core只负责验证，不生成代码
+  // 代码生成由lowcode-core或SmartAbp.CodeGenerator负责
+  return schema
 }
 ```
 
