@@ -14,6 +14,34 @@
             :stroke-width="6"
             status="success"
           />
+          <!-- 🔥 新增：自动保存状态提示 -->
+          <div class="save-status">
+            <el-tag 
+              v-if="saveStatus === 'saved'" 
+              type="success" 
+              size="small"
+              effect="plain"
+            >
+              <i class="el-icon-check" /> 已保存
+            </el-tag>
+            <el-tag 
+              v-else-if="saveStatus === 'saving'" 
+              type="info" 
+              size="small"
+            >
+              <i class="el-icon-loading" /> 保存中...
+            </el-tag>
+            <el-tag 
+              v-else 
+              type="warning" 
+              size="small"
+            >
+              <i class="el-icon-warning" /> 未保存
+            </el-tag>
+            <span v-if="lastSaveTime" class="save-time">
+              {{ new Date(lastSaveTime).toLocaleTimeString('zh-CN') }}
+            </span>
+          </div>
         </div>
       </div>
       <div class="header-actions">
@@ -229,6 +257,7 @@
                   v-model="scope.row.name"
                   size="small"
                   @change="validateField(scope.row)"
+                  @blur="() => selectedEntity && autoSaveEntity(selectedEntity)"
                 />
               </template>
             </el-table-column>
@@ -241,6 +270,7 @@
                 <el-input
                   v-model="scope.row.displayName"
                   size="small"
+                  @blur="() => selectedEntity && autoSaveEntity(selectedEntity)"
                 />
               </template>
             </el-table-column>
@@ -253,6 +283,7 @@
                 <el-select
                   v-model="scope.row.type"
                   size="small"
+                  @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
                 >
                   <el-option
                     v-for="type in fieldTypes"
@@ -275,6 +306,7 @@
                   size="small"
                   :min="1"
                   :max="5000"
+                  @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
                 />
               </template>
             </el-table-column>
@@ -284,7 +316,10 @@
               width="80"
             >
               <template #default="scope">
-                <el-checkbox v-model="scope.row.isRequired" />
+                <el-checkbox 
+                  v-model="scope.row.isRequired" 
+                  @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
+                />
               </template>
             </el-table-column>
             <el-table-column
@@ -295,7 +330,7 @@
               <template #default="scope">
                 <el-checkbox
                   v-model="scope.row.isPrimaryKey"
-                  @change="handlePrimaryKeyChange(scope.row)"
+                  @change="() => { handlePrimaryKeyChange(scope.row); selectedEntity && autoSaveEntity(selectedEntity) }"
                 />
               </template>
             </el-table-column>
@@ -308,6 +343,7 @@
                 <el-input
                   v-model="scope.row.defaultValue"
                   size="small"
+                  @blur="() => selectedEntity && autoSaveEntity(selectedEntity)"
                 />
               </template>
             </el-table-column>
@@ -442,6 +478,7 @@
                 <el-select
                   v-model="scope.row.fieldName"
                   size="small"
+                  @change="() => autoSaveEntity(selectedEntity)"
                 >
                   <el-option
                     v-for="field in selectedEntity.fields"
@@ -461,6 +498,7 @@
                 <el-select
                   v-model="scope.row.ruleType"
                   size="small"
+                  @change="() => autoSaveEntity(selectedEntity)"
                 >
                   <el-option
                     label="长度限制"
@@ -494,6 +532,7 @@
                 <el-input
                   v-model="scope.row.ruleValue"
                   size="small"
+                  @blur="() => autoSaveEntity(selectedEntity)"
                 />
               </template>
             </el-table-column>
@@ -505,6 +544,7 @@
                 <el-input
                   v-model="scope.row.errorMessage"
                   size="small"
+                  @blur="() => autoSaveEntity(selectedEntity)"
                 />
               </template>
             </el-table-column>
@@ -587,23 +627,36 @@
           label-width="80px"
         >
           <el-form-item label="实体名">
-            <el-input v-model="selectedEntity.name" />
+            <el-input 
+              v-model="selectedEntity.name" 
+              @blur="() => autoSaveEntity(selectedEntity)"
+            />
           </el-form-item>
           <el-form-item label="表名">
-            <el-input v-model="selectedEntity.tableName" />
+            <el-input 
+              v-model="selectedEntity.tableName" 
+              @blur="() => autoSaveEntity(selectedEntity)"
+            />
           </el-form-item>
           <el-form-item label="显示名">
-            <el-input v-model="selectedEntity.displayName" />
+            <el-input 
+              v-model="selectedEntity.displayName" 
+              @blur="() => autoSaveEntity(selectedEntity)"
+            />
           </el-form-item>
           <el-form-item label="描述">
             <el-input
               v-model="selectedEntity.description"
               type="textarea"
               :rows="3"
+              @blur="() => autoSaveEntity(selectedEntity)"
             />
           </el-form-item>
           <el-form-item label="分类">
-            <el-select v-model="selectedEntity.category">
+            <el-select 
+              v-model="selectedEntity.category"
+              @change="() => autoSaveEntity(selectedEntity)"
+            >
               <el-option
                 label="核心实体"
                 value="core"
@@ -623,13 +676,22 @@
             </el-select>
           </el-form-item>
           <el-form-item label="启用软删除">
-            <el-checkbox v-model="selectedEntity.enableSoftDelete" />
+            <el-checkbox 
+              v-model="selectedEntity.enableSoftDelete" 
+              @change="() => autoSaveEntity(selectedEntity)"
+            />
           </el-form-item>
           <el-form-item label="启用审计">
-            <el-checkbox v-model="selectedEntity.enableAudit" />
+            <el-checkbox 
+              v-model="selectedEntity.enableAudit" 
+              @change="() => autoSaveEntity(selectedEntity)"
+            />
           </el-form-item>
           <el-form-item label="启用多租户">
-            <el-checkbox v-model="selectedEntity.enableMultiTenant" />
+            <el-checkbox 
+              v-model="selectedEntity.enableMultiTenant" 
+              @change="() => autoSaveEntity(selectedEntity)"
+            />
           </el-form-item>
         </el-form>
 
@@ -1157,6 +1219,10 @@ const showSchemaPreview = ref(false)
 const previewTab = ref("entity")
 const schemaPreviewTab = ref("diagram")
 
+// 🔥 新增：自动保存状态跟踪
+const lastSaveTime = ref<Date | null>(null)
+const saveStatus = ref<'saved' | 'saving' | 'unsaved'>('saved')
+
 // 表单数据
 const newEntityForm = ref({
   name: "",
@@ -1299,9 +1365,30 @@ const addPresetEntity = (preset: any) => {
 const showEntityEditDialog = ref(false)
 const editingEntity = ref<EntityDefinition | null>(null)
 const entityEditFormRef = ref()
-const entityFeatures = ref<string[]>([])
 
-// 移除未使用的表单规则和方法
+// 🔥 修复：实体特性复选框双向绑定（类型正确）
+const entityFeatures = computed({
+  get: () => {
+    if (!editingEntity.value) return []
+    const features: string[] = []
+    if ((editingEntity.value as any).isAggregateRoot) features.push('isAggregateRoot')
+    if (editingEntity.value.enableSoftDelete) features.push('enableSoftDelete')
+    if (editingEntity.value.enableAudit) features.push('enableAudit')
+    if (editingEntity.value.enableMultiTenant) features.push('enableMultiTenant')
+    if ((editingEntity.value as any).hasExtraProperties) features.push('hasExtraProperties')
+    if ((editingEntity.value as any).enableCaching) features.push('enableCaching')
+    return features
+  },
+  set: (values: string[]) => {
+    if (!editingEntity.value) return
+    (editingEntity.value as any).isAggregateRoot = values.includes('isAggregateRoot')
+    editingEntity.value.enableSoftDelete = values.includes('enableSoftDelete')
+    editingEntity.value.enableAudit = values.includes('enableAudit')
+    editingEntity.value.enableMultiTenant = values.includes('enableMultiTenant')
+    ;(editingEntity.value as any).hasExtraProperties = values.includes('hasExtraProperties')
+    ;(editingEntity.value as any).enableCaching = values.includes('enableCaching')
+  }
+})
 
 const editEntity = (entity: EntityDefinition) => {
   editingEntity.value = { ...entity } // 深拷贝避免直接修改
@@ -1329,6 +1416,29 @@ const handleEntityEditConfirm = async () => {
 const handleEntityEditCancel = () => {
   showEntityEditDialog.value = false
   editingEntity.value = null
+}
+
+// 🔥 新增：自动保存功能（防止数据丢失）
+const autoSaveEntity = (entity: EntityDefinition) => {
+  try {
+    saveStatus.value = 'saving'
+    
+    // 静默保存到store和localStorage
+    store.updateEntity(entity.id, entity)
+    store.saveToLocalStorage()
+    
+    // 更新保存时间和状态
+    lastSaveTime.value = new Date()
+    saveStatus.value = 'saved'
+    
+    logger?.info('自动保存成功', { entityId: entity.id, entityName: entity.name })
+    return true
+  } catch (error: any) {
+    saveStatus.value = 'unsaved'
+    logger?.error('自动保存失败', { error: error.message })
+    ElMessage.error('自动保存失败，请手动保存')
+    return false
+  }
 }
 
 // 🔥 核心CRUD功能实现 - 确保真实可用
@@ -1964,6 +2074,21 @@ onMounted(() => {
 
 .progress-info .el-progress {
   width: 200px;
+}
+
+/* 🔥 新增：自动保存状态样式 */
+.save-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 16px;
+  padding-left: 16px;
+  border-left: 1px solid var(--el-border-color);
+}
+
+.save-time {
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
 }
 
 .modeling-body {
