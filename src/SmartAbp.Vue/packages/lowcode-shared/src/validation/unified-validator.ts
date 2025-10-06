@@ -51,6 +51,13 @@ import {
     validateConversion
 } from './metadata-adapter'
 
+// 🔥 阶段4：国际化错误信息
+import {
+    translateValidationMessage,
+    getMessageKeyFromZodError,
+    extractZodErrorParams
+} from '../i18n/validation-i18n'
+
 // ============================================================================
 // Feature Flag 控制
 // ============================================================================
@@ -78,6 +85,9 @@ export interface UnifiedValidationFeatureFlags {
     enableChangelogGeneration?: boolean
     /** 是否启用破坏性变更检测 */
     enableBreakingChangeDetection?: boolean
+    
+    /** 🔥 阶段4：是否启用国际化错误消息 */
+    enableI18nErrorMessages?: boolean
 }
 
 /**
@@ -92,7 +102,8 @@ const DEFAULT_FEATURE_FLAGS: UnifiedValidationFeatureFlags = {
     enableAutoMigrationSuggestions: true,  // 🔥 阶段2：默认启用迁移建议
     enableSchemaDiffComparison: true,      // 🔥 阶段3：默认启用差异对比
     enableChangelogGeneration: true,       // 🔥 阶段3：默认启用变更日志
-    enableBreakingChangeDetection: true    // 🔥 阶段3：默认启用破坏性变更检测
+    enableBreakingChangeDetection: true,   // 🔥 阶段3：默认启用破坏性变更检测
+    enableI18nErrorMessages: true          // 🔥 阶段4：默认启用国际化错误消息
 }
 
 /**
@@ -416,8 +427,19 @@ export class UnifiedSchemaValidator {
 
     /**
      * 从Zod错误生成修复建议
+     * 🔥 阶段4：集成国际化错误消息
      */
     private generateSuggestionFromZodError(error: any): string | undefined {
+        // 🔥 如果启用国际化，使用翻译后的消息
+        if (this.featureFlags.enableI18nErrorMessages) {
+            const messageKey = getMessageKeyFromZodError(error)
+            if (messageKey) {
+                const params = extractZodErrorParams(error)
+                return translateValidationMessage(messageKey, params)
+            }
+        }
+
+        // 降级：使用英文默认消息
         const errorCode = error.code
 
         if (errorCode === 'invalid_type') {

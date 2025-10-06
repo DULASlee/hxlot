@@ -60,6 +60,20 @@ export {
     type DiffSummary
 } from '@smartabp/metadata-core/schema'
 
+// 🔥 阶段4：国际化错误信息 (Validation I18n) - v1.0.0
+export {
+  ValidationMessageKey,
+  ZOD_ERROR_TO_MESSAGE_KEY,
+  ZOD_STRING_VALIDATION_TO_KEY,
+  setValidationI18nConfig,
+  getValidationI18nConfig,
+  translateValidationMessage,
+  getMessageKeyFromZodError,
+  extractZodErrorParams,
+  type ValidationMessageParams,
+  type ValidationI18nConfig
+} from './i18n'
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎯 组合式API (Composables) - v1.0.0
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
