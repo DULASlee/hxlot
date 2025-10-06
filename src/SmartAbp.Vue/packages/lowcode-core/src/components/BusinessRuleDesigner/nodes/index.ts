@@ -6,11 +6,11 @@
  * @version 1.0.0
  */
 
-export { default as StartNode } from './StartNode.vue'
-export { default as EndNode } from './EndNode.vue'
-export { default as ConditionNode } from './ConditionNode.vue'
-export { default as ActionNode } from './ActionNode.vue'
-export { default as DecisionNode } from './DecisionNode.vue'
+import ActionNode from './ActionNode.vue'
+import ConditionNode from './ConditionNode.vue'
+import DecisionNode from './DecisionNode.vue'
+import EndNode from './EndNode.vue'
+import StartNode from './StartNode.vue'
 
 /**
  * 节点类型映射
@@ -26,12 +26,6 @@ export const NODE_TYPES = {
 /**
  * 节点组件注册配置
  */
-import StartNode from './StartNode.vue'
-import EndNode from './EndNode.vue'
-import ConditionNode from './ConditionNode.vue'
-import ActionNode from './ActionNode.vue'
-import DecisionNode from './DecisionNode.vue'
-
 export const nodeComponents = {
   start: StartNode,
   end: EndNode,
@@ -39,3 +33,9 @@ export const nodeComponents = {
   action: ActionNode,
   decision: DecisionNode
 }
+
+/**
+ * 导出各个节点组件
+ */
+export { ActionNode, ConditionNode, DecisionNode, EndNode, StartNode }
+
