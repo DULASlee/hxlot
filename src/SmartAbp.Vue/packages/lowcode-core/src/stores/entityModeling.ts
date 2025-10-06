@@ -1,10 +1,25 @@
+import { getGlobalLogger, type ILogger } from "@smartabp/lowcode-shared"
 import { defineStore } from "pinia"
 import { ref } from "vue"
-import { getGlobalLogger, type ILogger } from "@smartabp/lowcode-shared"
+
+// 🔥 v9.0修复：导入真实API（符合packages架构原则）
+import {
+  createEntity as createEntityApi,
+  deleteEntity as deleteEntityApi,
+  getAllEntities,
+  getAllRelations,
+  updateEntity as updateEntityApi
+} from '@smartabp/lowcode-api'
 
 const logger: ILogger = getGlobalLogger()
 
-// 字段定义接口
+// ============================================================================
+// 类型别名和兼容层（向后兼容 + 保持Store接口不变）
+// ============================================================================
+
+/**
+ * 实体字段类型（保持原有接口）
+ */
 export interface EntityField {
   name: string
   displayName: string
@@ -16,7 +31,9 @@ export interface EntityField {
   description?: string
 }
 
-// 验证规则接口
+/**
+ * 验证规则类型（保持原有接口）
+ */
 export interface ValidationRule {
   fieldName: string
   ruleType: "length" | "range" | "regex" | "unique" | "custom"
@@ -24,7 +41,9 @@ export interface ValidationRule {
   errorMessage: string
 }
 
-// 实体定义接口
+/**
+ * 实体定义类型（保持原有接口）
+ */
 export interface EntityDefinition {
   id: string
   name: string
@@ -32,7 +51,7 @@ export interface EntityDefinition {
   displayName: string
   description: string
   category: "core" | "relation" | "config" | "log"
-  module: string // 模块名称，用于代码生成
+  module: string
   fields: EntityField[]
   validationRules: ValidationRule[]
   enableSoftDelete: boolean
@@ -41,7 +60,9 @@ export interface EntityDefinition {
   isCompleted: boolean
 }
 
-// 实体关系接口
+/**
+ * 实体关系类型（保持原有接口）
+ */
 export interface EntityRelation {
   id: string
   fromEntity: string
@@ -124,66 +145,118 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
   const error = ref<string | null>(null)
 
   // 实体操作
-  const addEntity = (entity: Omit<EntityDefinition, "id"> & { id?: string }): EntityDefinition => {
+  // 🔥 v9.0修复：使用真实API替代localStorage伪实现
+  const addEntity = async (entity: Omit<EntityDefinition, "id"> & { id?: string }): Promise<EntityDefinition> => {
     try {
+      isLoading.value = true
+      error.value = null
+
+      // 🔥 调用后端真实API创建实体
+      const response = await createEntityApi({
+        name: entity.name,
+        tableName: entity.tableName,
+        displayName: entity.displayName,
+        description: entity.description || '',
+        entityType: entity.category || 'core',
+        baseType: 'Entity',
+        namespace: entity.module || 'SmartAbp.Domain'
+      })
+
+      // 更新本地状态
       const newEntity: EntityDefinition = {
         ...entity,
-        id: entity.id || `entity-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        id: response.id!,
       }
-      
       entities.value.push(newEntity)
-      logger.info(`实体已添加: ${newEntity.name}`, { entityId: newEntity.id })
-      
+
+      logger.info(`✅ 实体已创建（后端）: ${newEntity.name}`, { entityId: newEntity.id })
+
       // 检查实体完成状态
-      checkEntityCompletion(newEntity.id)
-      
+      checkEntityCompletion(newEntity.id!)
+
       return newEntity
     } catch (err) {
-      const error = err as Error
-      logger.error("添加实体失败", { error: error.message })
-      throw error
+      const errorObj = err as Error
+      error.value = `添加实体失败: ${errorObj.message}`
+      logger.error("❌ 添加实体失败", { error: errorObj.message })
+      throw errorObj
+    } finally {
+      isLoading.value = false
     }
   }
 
-  const updateEntity = (entityId: string, updates: Partial<EntityDefinition>) => {
+  // 🔥 v9.0修复：使用真实API
+  const updateEntity = async (entityId: string, updates: Partial<EntityDefinition>): Promise<void> => {
     try {
-      const index = entities.value.findIndex(e => e.id === entityId)
-      if (index === -1) {
-        throw new Error(`未找到实体: ${entityId}`)
-      }
+      isLoading.value = true
+      error.value = null
 
-      entities.value[index] = { ...entities.value[index], ...updates }
-      logger.info(`实体已更新: ${entityId}`, { updates })
-      
-      // 重新检查完成状态
-      checkEntityCompletion(entityId)
-    } catch (err) {
-      const error = err as Error
-      logger.error("更新实体失败", { entityId, error: error.message })
-      throw error
-    }
-  }
-
-  const removeEntity = (entityId: string) => {
-    try {
       const index = entities.value.findIndex(e => e.id === entityId)
       if (index === -1) {
         throw new Error(`未找到实体: ${entityId}`)
       }
 
       const entity = entities.value[index]
+
+      // 🔥 调用后端真实API更新实体
+      await updateEntityApi(entityId, {
+        name: updates.name || entity.name,
+        tableName: updates.tableName || entity.tableName,
+        displayName: updates.displayName || entity.displayName,
+        description: updates.description || entity.description || '',
+        entityType: updates.category || entity.category || 'core',
+        baseType: 'Entity',
+        namespace: updates.module || entity.module || 'SmartAbp.Domain'
+      })
+
+      // 更新本地状态
+      entities.value[index] = { ...entity, ...updates }
+      logger.info(`✅ 实体已更新（后端）: ${entityId}`, { updates })
+
+      // 重新检查完成状态
+      checkEntityCompletion(entityId)
+    } catch (err) {
+      const errorObj = err as Error
+      error.value = `更新实体失败: ${errorObj.message}`
+      logger.error("❌ 更新实体失败", { entityId, error: errorObj.message })
+      throw errorObj
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  // 🔥 v9.0修复：使用真实API
+  const removeEntity = async (entityId: string): Promise<void> => {
+    try {
+      isLoading.value = true
+      error.value = null
+
+      const index = entities.value.findIndex(e => e.id === entityId)
+      if (index === -1) {
+        throw new Error(`未找到实体: ${entityId}`)
+      }
+
+      const entity = entities.value[index]
+
+      // 🔥 调用后端真实API删除实体
+      await deleteEntityApi(entityId)
+
+      // 更新本地状态
       entities.value.splice(index, 1)
-      
+
       // 移除相关关系
-      relations.value = relations.value.filter(r => 
+      relations.value = relations.value.filter(r =>
         r.fromEntity !== entity.name && r.toEntity !== entity.name
       )
-      
-      logger.info(`实体已删除: ${entity.name}`, { entityId })
+
+      logger.info(`✅ 实体已删除（后端）: ${entity.name}`, { entityId })
     } catch (err) {
-      const error = err as Error
-      logger.error("删除实体失败", { entityId, error: error.message })
-      throw error
+      const errorObj = err as Error
+      error.value = `删除实体失败: ${errorObj.message}`
+      logger.error("❌ 删除实体失败", { entityId, error: errorObj.message })
+      throw errorObj
+    } finally {
+      isLoading.value = false
     }
   }
 
@@ -202,7 +275,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
 
       entity.fields.push(field)
       logger.info(`字段已添加: ${field.name}`, { entityId, fieldName: field.name })
-      
+
       // 重新检查完成状态
       checkEntityCompletion(entityId)
     } catch (err) {
@@ -225,7 +298,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
 
       entity.fields[fieldIndex] = { ...entity.fields[fieldIndex], ...updates }
       logger.info(`字段已更新: ${entity.fields[fieldIndex].name}`, { entityId, fieldIndex })
-      
+
       // 重新检查完成状态
       checkEntityCompletion(entityId)
     } catch (err) {
@@ -249,7 +322,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
       const fieldName = entity.fields[fieldIndex].name
       entity.fields.splice(fieldIndex, 1)
       logger.info(`字段已删除: ${fieldName}`, { entityId, fieldIndex })
-      
+
       // 重新检查完成状态
       checkEntityCompletion(entityId)
     } catch (err) {
@@ -320,9 +393,9 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
   const addRelation = (relation: Omit<EntityRelation, "id"> & { id?: string }): EntityRelation => {
     try {
       // 检查关系是否已存在
-      const exists = relations.value.some(r => 
-        r.fromEntity === relation.fromEntity && 
-        r.toEntity === relation.toEntity && 
+      const exists = relations.value.some(r =>
+        r.fromEntity === relation.fromEntity &&
+        r.toEntity === relation.toEntity &&
         r.type === relation.type
       )
 
@@ -335,9 +408,9 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         id: relation.id || `relation-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       }
       relations.value.push(newRelation)
-      logger.info(`关系已添加: ${relation.fromEntity} -> ${relation.toEntity}`, { 
+      logger.info(`关系已添加: ${relation.fromEntity} -> ${relation.toEntity}`, {
         relationId: relation.id,
-        type: relation.type 
+        type: relation.type
       })
       return newRelation
     } catch (err) {
@@ -371,8 +444,8 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
 
       const relation = relations.value[relationIndex]
       relations.value.splice(relationIndex, 1)
-      logger.info(`关系已删除: ${relation.fromEntity} -> ${relation.toEntity}`, { 
-        relationId: relation.id 
+      logger.info(`关系已删除: ${relation.fromEntity} -> ${relation.toEntity}`, {
+        relationId: relation.id
       })
     } catch (err) {
       const error = err as Error
@@ -391,12 +464,12 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
       // 1. 至少有一个主键字段
       // 2. 至少有2个字段（包括主键）
       // 3. 实体名和表名不为空
-        const hasPrimaryKey = entity.fields.some(f => f.isPrimaryKey)
-        const hasMinFields = entity.fields.length >= 2
-        const hasBasicInfo = Boolean(entity.name && entity.tableName)
+      const hasPrimaryKey = entity.fields.some(f => f.isPrimaryKey)
+      const hasMinFields = entity.fields.length >= 2
+      const hasBasicInfo = Boolean(entity.name && entity.tableName)
 
-        const isCompleted = hasPrimaryKey && hasMinFields && hasBasicInfo
-      
+      const isCompleted = hasPrimaryKey && hasMinFields && hasBasicInfo
+
       if (entity.isCompleted !== isCompleted) {
         entity.isCompleted = isCompleted
         logger.info(`实体完成状态更新: ${entity.name} = ${isCompleted}`, { entityId })
@@ -408,39 +481,59 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
   }
 
   // 数据持久化
+  // 🔥 v9.0修复：localStorage伪实现已废弃
   const saveToLocalStorage = () => {
-    try {
-      const data = {
-        entities: entities.value,
-        relations: relations.value,
-        timestamp: new Date().toISOString()
-      }
-      localStorage.setItem("smartabp-entity-modeling", JSON.stringify(data))
-      logger.info("实体建模数据已保存到本地存储")
-    } catch (err) {
-      const error = err as Error
-      logger.error("保存到本地存储失败", { error: error.message })
-    }
+    logger.warn("⚠️ saveToLocalStorage已废弃，数据由后端API自动持久化")
   }
 
-  const loadFromLocalStorage = () => {
+  // 🔥 v9.0修复：从后端API加载数据
+  const loadFromLocalStorage = async (): Promise<void> => {
     try {
-      const data = localStorage.getItem("smartabp-entity-modeling")
-      if (data) {
-        const parsed = JSON.parse(data)
-        entities.value = parsed.entities || []
-        relations.value = parsed.relations || []
-        logger.info("实体建模数据已从本地存储加载", { 
-          entitiesCount: entities.value.length,
-          relationsCount: relations.value.length 
-        })
-      }
+      isLoading.value = true
+      error.value = null
+
+      // 🔥 从后端API加载所有实体
+      const entitiesData = await getAllEntities()
+      entities.value = entitiesData.map((e: any) => ({
+        id: e.id,
+        name: e.name,
+        tableName: e.tableName,
+        displayName: e.displayName,
+        description: e.description || '',
+        category: e.entityType as any,
+        module: e.namespace,
+        fields: e.fields || [],
+        validationRules: e.validationRules || [],
+        enableSoftDelete: false,
+        enableAudit: true,
+        enableMultiTenant: false,
+        isCompleted: false
+      }))
+
+      // 🔥 从后端API加载所有关系
+      const relationsData = await getAllRelations()
+      relations.value = relationsData.map((r: any) => ({
+        id: r.id,
+        fromEntity: r.fromEntity,
+        toEntity: r.toEntity,
+        type: r.relationType as any,
+        foreignKey: r.foreignKey,
+        navigationProperty: r.navigationProperty
+      }))
+
+      logger.info("✅ 实体建模数据已从后端加载", {
+        entitiesCount: entities.value.length,
+        relationsCount: relations.value.length
+      })
     } catch (err) {
-      const error = err as Error
-      logger.error("从本地存储加载失败", { error: error.message })
-      // 加载失败时初始化为空
+      const errorObj = err as Error
+      error.value = `加载数据失败: ${errorObj.message}`
+      logger.error("❌ 从后端加载数据失败", { error: errorObj.message })
+      // 降级到空数据
       entities.value = []
       relations.value = []
+    } finally {
+      isLoading.value = false
     }
   }
 
@@ -484,13 +577,13 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
 
       entities.value = schema.entities
       relations.value = schema.relations || []
-      
+
       // 重新检查所有实体的完成状态
       entities.value.forEach(entity => checkEntityCompletion(entity.id))
-      
-      logger.info("架构导入成功", { 
+
+      logger.info("架构导入成功", {
         entitiesCount: entities.value.length,
-        relationsCount: relations.value.length 
+        relationsCount: relations.value.length
       })
     } catch (err) {
       const error = err as Error
@@ -498,17 +591,17 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
       throw error
     }
   }
-  
+
   // 🛡️ 核心功能保护: 实体删除和验证方法
   const deleteEntity = removeEntity
-  
+
   const validateEntity = (entityId: string): boolean => {
     const entity = entities.value.find(e => e.id === entityId)
     if (!entity) {
       logger.warn('实体不存在', { entityId })
       return false
     }
-    
+
     // 基本验证
     const isValid = !!(
       entity.name &&
@@ -516,7 +609,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
       entity.fields &&
       entity.fields.length > 0
     )
-    
+
     logger.info('实体验证结果', { entityId, isValid })
     return isValid
   }
@@ -531,7 +624,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         // 检查基本信息
         if (!entity.name) errors.push(`实体缺少名称: ${entity.id}`)
         if (!entity.tableName) errors.push(`实体缺少表名: ${entity.name}`)
-        
+
         // 检查主键
         const primaryKeys = entity.fields.filter(f => f.isPrimaryKey)
         if (primaryKeys.length === 0) {
@@ -539,7 +632,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         } else if (primaryKeys.length > 1) {
           errors.push(`实体有多个主键: ${entity.name}`)
         }
-        
+
         // 检查字段名重复
         const fieldNames = entity.fields.map(f => f.name)
         const duplicates = fieldNames.filter((name, index) => fieldNames.indexOf(name) !== index)
@@ -552,7 +645,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
       relations.value.forEach(relation => {
         const fromExists = entities.value.some(e => e.name === relation.fromEntity)
         const toExists = entities.value.some(e => e.name === relation.toEntity)
-        
+
         if (!fromExists) errors.push(`关系引用不存在的源实体: ${relation.fromEntity}`)
         if (!toExists) errors.push(`关系引用不存在的目标实体: ${relation.toEntity}`)
       })
@@ -608,29 +701,29 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
     relations,
     isLoading,
     error,
-    
+
     // 实体操作
     addEntity,
     updateEntity,
     removeEntity,
     deleteEntity, // 🛡️ 别名：确保核心功能保护验证
     validateEntity, // 🛡️ 核心功能保护
-    
+
     // 字段操作
     addField,
     updateField,
     removeField,
-    
+
     // 验证规则操作
     addValidationRule,
     updateValidationRule,
     removeValidationRule,
-    
+
     // 关系操作
     addRelation,
     updateRelation,
     removeRelation,
-    
+
     // 工具方法
     checkEntityCompletion,
     saveToLocalStorage,
@@ -640,15 +733,15 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
     importSchema,
     validateSchema,
     getStatistics,
-    
+
     // 初始化方法 - 确保用户能立即使用
     initialize: () => {
       loadFromLocalStorage()
-      
+
       // 如果没有实体，创建示例实体供用户立即测试代码生成
       if (entities.value.length === 0) {
         logger.info('创建示例实体，便于用户测试代码生成功能')
-        
+
         const userEntity = {
           name: 'User',
           tableName: 'Users',
@@ -668,7 +761,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
           enableMultiTenant: false,
           isCompleted: true
         }
-        
+
         addEntity(userEntity)
         saveToLocalStorage()
       }

@@ -1,7 +1,7 @@
 // 添加DOM类型定义
 /// <reference lib="dom" />
 
-import { onUnmounted, onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 
 /**
  * 🛡️ 安全事件监听器 - 防止内存泄露
@@ -57,40 +57,72 @@ export function useSafeEventListener(
  * 🎯 核心功能: 安全地监听事件总线事件，并在组件卸载时自动取消订阅
  * 🚨 解决问题: EventBus/EventEmitter 事件监听器未清理导致的内存泄露
  * 
- * @param eventBus 事件总线实例
+ * @param eventBus 事件总线实例（推荐使用UnifiedEventBus）
  * @param event 事件名称
  * @param listener 事件处理函数
+ * @returns 订阅Token（用于手动取消订阅）
  * 
  * @example
- * // 在 Vue 组合式 API 中使用
+ * // ✅ 推荐：使用UnifiedEventBus（类型安全）
  * import { useSafeEventBusListener } from '@smartabp/lowcode-shared'
- * // 事件总线应通过@smartabp别名引用 - 遵循packages黑盒原则
+ * import { UnifiedEventName, type EventSubscriptionToken } from '@smartabp/lowcode-shared/events'
+ * import { unifiedEventBus } from '@smartabp/lowcode-shared/events'
  * 
  * export default defineComponent({
  *   setup() {
  *     // 监听业务事件 - 自动在组件卸载时取消订阅
- *     useSafeEventBusListener(eventBus, 'user-updated', (userData) => {
- *       console.log('User updated:', userData)
- *     })
+ *     const token = useSafeEventBusListener(
+ *       unifiedEventBus,
+ *       UnifiedEventName.ENTITY_CREATED,
+ *       (data) => {
+ *         console.log('Entity created:', data.entity.name)
+ *       }
+ *     )
  * 
  *     return {}
  *   }
  * })
  */
 export function useSafeEventBusListener<T = any>(
-  eventBus: { on: (event: string, listener: (data: T) => void) => void; off: (event: string, listener: (data: T) => void) => void },
+  eventBus: {
+    on: (event: string, listener: (data: T) => void) => { unsubscribe: () => void } | void
+    off?: (event: string, listener: (data: T) => void) => void
+  },
   event: string,
   listener: (data: T) => void
-) {
+): { unsubscribe: () => void } {
+  let subscriptionToken: { unsubscribe: () => void } | null = null;
+
   // 🔧 在组件挂载时订阅事件
   onMounted(() => {
-    eventBus.on(event, listener);
+    const result = eventBus.on(event, listener);
+
+    // 支持返回订阅Token的事件总线（如UnifiedEventBus）
+    if (result && typeof result === 'object' && 'unsubscribe' in result) {
+      subscriptionToken = result;
+    }
   });
 
   // 🧹 在组件卸载时自动取消订阅，防止内存泄露
   onUnmounted(() => {
-    eventBus.off(event, listener);
+    if (subscriptionToken) {
+      subscriptionToken.unsubscribe();
+    } else if (eventBus.off) {
+      // 兼容旧的事件总线接口
+      eventBus.off(event, listener);
+    }
   });
+
+  // 返回手动取消订阅函数
+  return {
+    unsubscribe: () => {
+      if (subscriptionToken) {
+        subscriptionToken.unsubscribe();
+      } else if (eventBus.off) {
+        eventBus.off(event, listener);
+      }
+    }
+  };
 }
 
 /**

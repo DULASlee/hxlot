@@ -5,7 +5,8 @@
 
 import type { 
   AssemblyConfig, 
-  AssemblyInstance,
+  // ✅ 修复: AssemblyInstance已声明但未使用,注释掉
+  // AssemblyInstance,
   AssemblyHealth
 } from '../assembly-types'
 
@@ -165,7 +166,10 @@ export function createSampleAssemblyConfig(name: string = 'sample-assembly'): As
       retryCount: 3,
       allowFileAccess: false,
       maxMemory: 1024
-    }
+    },
+    // ✅ 修复: 添加缺少的AssemblyConfig必需字段
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   }
 }
 
@@ -265,9 +269,9 @@ export class ApiClientAssembly {
 
   async healthCheck(): Promise<AssemblyHealth> {
     try {
+      // ✅ 修复: fetch不支持timeout参数,移除
       const response = await fetch(new URL('/health', this.baseUrl), {
-        method: 'GET',
-        timeout: 5000
+        method: 'GET'
       })
 
       if (response.ok) {

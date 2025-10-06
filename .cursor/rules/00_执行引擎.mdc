@@ -519,6 +519,7 @@ read_file(".cursor/rules/01_code_standards.mdc")
 read_file(".cursor/rules/02_development_process.mdc")
 read_file(".cursor/rules/03_quality_guardian.mdc")
 read_file(".cursor/rules/04_code_quality_prohibitions.mdc")
+read_file(".cursor/rules/06_后端编译优化铁律.mdc")
 read_file("docs/项目开发规范总览.md")
 ```
 
@@ -1271,6 +1272,11 @@ ESLint检查:
   ☑️ TypeScript类型检查: 0错误
   ☑️ ESLint代码规范: 0错误/警告
   ☑️ 后端编译检查: 0错误（如有修改）
+     🔥 强制规则（详见06_后端编译优化铁律.mdc）:
+     • 必须使用增量编译（--no-dependencies）
+     • 必须使用最小详细度（--verbosity minimal）
+     • 必须限制输出（2>&1 | tail -20）
+     • 编译时间必须<10秒
 
 第四关：低代码生成器专项（100%质量，如涉及）
   ☑️ packages TypeScript编译: 0错误

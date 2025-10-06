@@ -8,8 +8,8 @@ export type { TableSchema } from "./types/index"
 // HTTP客户端导出
 // ============================================================================
 export * from "./http-client"
-export { http, createHttpClient } from "./http-client"
-export type { HttpClient, ApiResponse, ApiError, HttpClientConfig } from "./http-client"
+export { createHttpClient, http } from "./http-client"
+export type { ApiError, ApiResponse, HttpClient, HttpClientConfig } from "./http-client"
 
 // ============================================================================
 // 代码生成器API导出
@@ -23,17 +23,8 @@ export { codeGeneratorApi } from "./code-generator"
 export * from "./ddd-generator"
 export { dddGeneratorApi } from "./ddd-generator"
 export type {
-  DddDefinitionDto,
-  AggregateDefinitionDto,
-  ValueObjectDefinitionDto,
-  DomainEventDefinitionDto,
-  DomainServiceDefinitionDto,
-  RepositoryDefinitionDto,
-  PropertyDefinitionDto,
-  DomainMethodDefinitionDto,
-  BusinessRuleDefinitionDto,
-  GeneratedDddSolutionDto,
-  GeneratedFileDto
+  AggregateDefinitionDto, BusinessRuleDefinitionDto, DddDefinitionDto, DomainEventDefinitionDto, DomainMethodDefinitionDto, DomainServiceDefinitionDto, GeneratedDddSolutionDto,
+  GeneratedFileDto, PropertyDefinitionDto, RepositoryDefinitionDto, ValueObjectDefinitionDto
 } from "./ddd-generator"
 
 // ============================================================================
@@ -42,30 +33,40 @@ export type {
 export * from "./cqrs-generator"
 export { cqrsGeneratorApi } from "./cqrs-generator"
 export type {
-  CqrsDefinitionDto,
-  CommandDefinitionDto,
-  QueryDefinitionDto,
-  EventDefinitionDto,
-  ParameterDefinitionDto,
-  GeneratedCqrsSolutionDto
+  CommandDefinitionDto, CqrsDefinitionDto, EventDefinitionDto, GeneratedCqrsSolutionDto, ParameterDefinitionDto, QueryDefinitionDto
 } from "./cqrs-generator"
+
+// ============================================================================
+// 实体建模API导出（v9.0 审计修复）
+// ============================================================================
+export * from "./entity-modeling"
+export {
+  addField, createEntity, createRelation, deleteEntity, deleteField, deleteRelation, getAllEntities, getAllRelations, getEntityById,
+  getEntityByName, updateEntity, updateField, updateRelation, validateSchema
+} from "./entity-modeling"
+export type {
+  CreateOrUpdateEntityDefinitionDto,
+  CreateOrUpdateEntityFieldDto,
+  CreateOrUpdateEntityRelationDto, EntityDefinition,
+  EntityField,
+  EntityRelation, SchemaValidationResult, ValidationRule
+} from "./entity-modeling"
 
 // ============================================================================
 // Composables导出（Task 1.2 新增）
 // ============================================================================
 export * from "./composables"
 export {
-  // 错误处理
-  useApiError,
-  
-  // Loading管理
-  useApiLoading,
-  createLoadingWrapper,
-  
+  createApiCall,
+  createCodeGenApiCall, createLoadingWrapper,
+
   // 统一API调用
   useApiCall,
-  createApiCall,
-  createCodeGenApiCall
+  // 错误处理
+  useApiError,
+
+  // Loading管理
+  useApiLoading
 } from "./composables"
 
 // ============================================================================

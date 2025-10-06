@@ -194,7 +194,8 @@ async function errorHandlingExample(manager: any) {
     const validation = manager.validateAssembly(invalidConfig)
     console.log('配置验证结果:', validation)
   } catch (error) {
-    console.log('配置验证错误:', error.message)
+    // ✅ 修复: error类型为unknown,需要类型守卫
+    console.log('配置验证错误:', error instanceof Error ? error.message : String(error))
   }
 }
 

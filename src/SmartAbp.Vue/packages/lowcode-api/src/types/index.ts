@@ -1,15 +1,66 @@
-// 导入统一元数据结构（类型定义，无需实际引用lowcode-core）
-// @ts-ignore - types are for documentation only
-type ApiResponse<T = any> = { data: T; success: boolean; message?: string }
-type QueryParams = Record<string, any>
-type EntityMetadata = any
-type PageMetadata = any
-export type ModuleMetadata = any
-export type ModuleMetadataDto = ModuleMetadata
+// ============================================================================
+// 导入统一Schema（Single Source of Truth）
+// ============================================================================
+import type {
+  UnifiedApiResponse,
+  UnifiedEntityDefinition,
+  UnifiedModuleMetadata,
+} from '@smartabp/lowcode-shared'
 
+// ============================================================================
+// 类型别名（向后兼容 + 语义化）
+// ============================================================================
+
+/** API响应统一类型 */
+export type ApiResponse<T = unknown> = UnifiedApiResponse<T>
+
+/** 查询参数类型 */
+export type QueryParams = Record<string, unknown>
+
+/** 实体元数据类型 */
+export type EntityMetadata = UnifiedEntityDefinition
+
+/** 页面元数据类型（TODO: 待定义PageMetadata统一Schema） */
+export type PageMetadata = any
+
+/** 模块元数据类型 */
+export type ModuleMetadata = UnifiedModuleMetadata
+
+/** 模块元数据DTO类型 */
+export type ModuleMetadataDto = UnifiedModuleMetadata
+
+// ============================================================================
 // 代码生成相关类型
-type CodeGenerationConfig = any
-type CodeGenerationResult = any
+// ============================================================================
+
+/** 代码生成配置 */
+export interface CodeGenerationConfig {
+  moduleMetadata: ModuleMetadata
+  targetPath: string
+  overwriteExisting: boolean
+  generateTests: boolean
+  generateDocs: boolean
+  templateIds?: string[]
+}
+
+/** 代码生成结果 */
+export interface CodeGenerationResult {
+  success: boolean
+  message: string
+  generatedFiles: Array<{
+    path: string
+    content: string
+    type: 'entity' | 'dto' | 'service' | 'controller' | 'vue' | 'test'
+  }>
+  errors?: string[]
+  warnings?: string[]
+  /** ✅ 修复: 添加statistics字段 */
+  statistics?: {
+    totalFiles: number
+    totalLines: number
+    generationTime: number
+  }
+}
 
 export interface ColumnSchema {
   name: string
@@ -40,15 +91,19 @@ export type DatabaseIntrospectionRequest = {
   connectionStringName: string
   schema?: string
 }
-type ApplicationMetadata = any
-type UIComponentMetadata = any
+
+/** 应用元数据类型（TODO: 待定义ApplicationMetadata统一Schema） */
+export type ApplicationMetadata = any
+
+/** UI组件元数据类型（TODO: 待定义UIComponentMetadata统一Schema） */
+export type UIComponentMetadata = any
 
 // 导出统一类型
-export type { CodeGenerationConfig, CodeGenerationResult }
+export type { UnifiedEntityDefinition, UnifiedModuleMetadata }
 
 // 兼容旧版接口
-export interface GenerationResult extends CodeGenerationResult {}
-export interface ModuleGenerationConfig extends CodeGenerationConfig {}
+export interface GenerationResult extends CodeGenerationResult { }
+export interface ModuleGenerationConfig extends CodeGenerationConfig { }
 export interface Template {
   id: string
   name: string
@@ -251,7 +306,7 @@ export interface MDIApi {
 /**
  * 统一的低代码引擎API
  */
-export interface LowCodeEngineApi extends 
+export interface LowCodeEngineApi extends
   EntityApi,
   PageApi,
   UIComponentApi,
@@ -259,10 +314,10 @@ export interface LowCodeEngineApi extends
   CodeGenerationApi,
   ApplicationApi,
   MDIApi {
-  
+
   /** 健康检查 */
   healthCheck: () => Promise<ApiResponse<{ status: "healthy" | "unhealthy"; timestamp: string }>>
-  
+
   /** 获取引擎信息 */
   getEngineInfo: () => Promise<ApiResponse<{
     version: string
@@ -271,16 +326,16 @@ export interface LowCodeEngineApi extends
     maxEntitiesPerModule: number
     maxComponentsPerPage: number
   }>>
-  
+
   /** 全文搜索 */
   search: (query: string, type?: "entity" | "page" | "component" | "module") => Promise<ApiResponse<any[]>>
-  
+
   /** 获取最近使用的项目 */
   getRecentProjects: () => Promise<ApiResponse<any[]>>
-  
+
   /** 获取用户偏好设置 */
   getUserPreferences: () => Promise<ApiResponse<any>>
-  
+
   /** 更新用户偏好设置 */
   updateUserPreferences: (preferences: any) => Promise<ApiResponse<void>>
 }

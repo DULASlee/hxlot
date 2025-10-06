@@ -1,0 +1,33 @@
+<Project>
+  <!-- 🍎 Mac Pro ARM (Apple Silicon) 专项优化配置 -->
+  
+  <PropertyGroup Condition="'$(OS)' == 'Unix' AND '$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture)' == 'Arm64'">
+    <!-- ARM64原生优化 -->
+    <UseRidGraph>true</UseRidGraph>
+    <RuntimeIdentifier>osx-arm64</RuntimeIdentifier>
+    
+    <!-- 启用ReadyToRun编译 (AOT优化) -->
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishReadyToRunComposite>true</PublishReadyToRunComposite>
+    
+    <!-- 启用分层编译 -->
+    <TieredCompilation>true</TieredCompilation>
+    <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+    
+    <!-- 并行构建优化 -->
+    <BuildInParallel>true</BuildInParallel>
+    <MaxCpuCount>0</MaxCpuCount>
+    
+    <!-- 增量构建 -->
+    <UseSharedCompilation>true</UseSharedCompilation>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <!-- 通用性能优化 -->
+    <DebugType>portable</DebugType>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+</Project>
+

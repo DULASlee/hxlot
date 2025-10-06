@@ -1,14 +1,15 @@
 {
   "name": "@smartabp/lowcode-shared",
   "version": "1.0.0",
-  "description": "SmartAbp LowCode Engine Shared Library - Memory Safe Utilities",
+  "description": "SmartAbp LowCode Engine Shared Library - Unified Schema v1.0.0 + Memory Safe Utilities",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "SmartAbp Team",
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "typescript": "^5.0.0"

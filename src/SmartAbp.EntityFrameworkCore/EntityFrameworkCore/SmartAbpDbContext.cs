@@ -15,6 +15,7 @@ using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using SmartAbp.CodeGenerator.Domain;
+using SmartAbp.Domain.Entities.LowCode;
 
 namespace SmartAbp.EntityFrameworkCore;
 
@@ -29,6 +30,12 @@ public class SmartAbpDbContext :
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
 
     public DbSet<MetadataStore> MetadataStores { get; set; }
+    
+    // 🔥 低代码引擎实体建模
+    public DbSet<EntityDefinition> EntityDefinitions { get; set; }
+    public DbSet<EntityField> EntityFields { get; set; }
+    public DbSet<EntityRelation> EntityRelations { get; set; }
+    public DbSet<ValidationRule> ValidationRules { get; set; }
 
 
     #region Entities from the modules
@@ -91,6 +98,90 @@ public class SmartAbpDbContext :
             b.Property(x => x.ModuleName).IsRequired().HasMaxLength(256);
             b.Property(x => x.MetadataJson).IsRequired();
             b.HasIndex(x => x.ModuleName);
+        });
+
+        // 🔥 低代码引擎实体建模配置
+        builder.Entity<EntityDefinition>(b =>
+        {
+            b.ToTable(SmartAbpConsts.DbTablePrefix + "EntityDefinitions", SmartAbpConsts.DbSchema);
+            b.ConfigureByConvention();
+            
+            // 属性配置
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.Property(x => x.TableName).IsRequired().HasMaxLength(128);
+            b.Property(x => x.DisplayName).IsRequired().HasMaxLength(256);
+            b.Property(x => x.Description).HasMaxLength(1000);
+            b.Property(x => x.Category).IsRequired().HasMaxLength(64);
+            b.Property(x => x.Module).IsRequired().HasMaxLength(128);
+            
+            // 索引
+            b.HasIndex(x => x.Name);
+            b.HasIndex(x => x.Module);
+            b.HasIndex(x => x.Category);
+            
+            // 关系配置
+            b.HasMany(x => x.Fields)
+                .WithOne(x => x.EntityDefinition)
+                .HasForeignKey(x => x.EntityDefinitionId)
+                .OnDelete(DeleteBehavior.Cascade);
+                
+            b.HasMany(x => x.ValidationRules)
+                .WithOne(x => x.EntityDefinition)
+                .HasForeignKey(x => x.EntityDefinitionId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<EntityField>(b =>
+        {
+            b.ToTable(SmartAbpConsts.DbTablePrefix + "EntityFields", SmartAbpConsts.DbSchema);
+            b.ConfigureByConvention();
+            
+            // 属性配置
+            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.Property(x => x.DisplayName).IsRequired().HasMaxLength(256);
+            b.Property(x => x.Type).IsRequired().HasMaxLength(64);
+            b.Property(x => x.DefaultValue).HasMaxLength(256);
+            b.Property(x => x.Description).HasMaxLength(500);
+            
+            // 索引
+            b.HasIndex(x => x.EntityDefinitionId);
+            b.HasIndex(x => new { x.EntityDefinitionId, x.Name });
+        });
+
+        builder.Entity<EntityRelation>(b =>
+        {
+            b.ToTable(SmartAbpConsts.DbTablePrefix + "EntityRelations", SmartAbpConsts.DbSchema);
+            b.ConfigureByConvention();
+            
+            // 属性配置
+            b.Property(x => x.FromEntity).IsRequired().HasMaxLength(128);
+            b.Property(x => x.ToEntity).IsRequired().HasMaxLength(128);
+            b.Property(x => x.RelationType).IsRequired().HasMaxLength(64);
+            b.Property(x => x.ForeignKey).IsRequired().HasMaxLength(128);
+            b.Property(x => x.NavigationProperty).HasMaxLength(128);
+            b.Property(x => x.Description).HasMaxLength(500);
+            
+            // 索引
+            b.HasIndex(x => x.FromEntity);
+            b.HasIndex(x => x.ToEntity);
+            b.HasIndex(x => new { x.FromEntity, x.ToEntity });
+        });
+
+        builder.Entity<ValidationRule>(b =>
+        {
+            b.ToTable(SmartAbpConsts.DbTablePrefix + "ValidationRules", SmartAbpConsts.DbSchema);
+            b.ConfigureByConvention();
+            
+            // 属性配置
+            b.Property(x => x.FieldName).IsRequired().HasMaxLength(128);
+            b.Property(x => x.RuleType).IsRequired().HasMaxLength(64);
+            b.Property(x => x.RuleValue).IsRequired().HasMaxLength(500);
+            b.Property(x => x.ErrorMessage).IsRequired().HasMaxLength(500);
+            b.Property(x => x.Description).HasMaxLength(500);
+            
+            // 索引
+            b.HasIndex(x => x.EntityDefinitionId);
+            b.HasIndex(x => new { x.EntityDefinitionId, x.FieldName });
         });
     }
 }

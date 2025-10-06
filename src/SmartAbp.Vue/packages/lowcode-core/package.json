@@ -8,10 +8,12 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@smartabp/lowcode-shared": "^1.0.0",
+    "@smartabp/lowcode-api": "^1.0.0",
     "pinia": "^2.1.0",
     "vue": "^3.3.0",
     "typescript": "^5.0.0"

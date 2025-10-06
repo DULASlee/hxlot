@@ -145,7 +145,7 @@ import SandboxPreview from "@smartabp/lowcode-designer/components/SandboxPreview
 import { useWorkspaceStore } from "@/stores/lowcode/workspace"
 
 // ✅ 使用真实的代码生成器API
-import { codeGeneratorApi, type Template, type ModuleMetadataDto, type GenerationResult } from "@smartabp/lowcode-api"
+import { codeGeneratorApi, type Template, type ModuleMetadataDto, type GenerationResult, type ModuleGenerationConfig } from "@smartabp/lowcode-api"
 
 const workspaceStore = useWorkspaceStore()
 const selectedTemplate = ref<Template | null>(null)
@@ -194,6 +194,7 @@ const generateCode = async () => {
       namespace: `SmartAbp.${generationParams.value.moduleName}`,
       databaseInfo: {
         connectionStringName: 'Default',
+        schema: 'dbo', // ✅ 修复: 添加必需的schema字段
         provider: 'SqlServer' as const
       },
       featureManagement: {
@@ -209,20 +210,31 @@ const generateCode = async () => {
         name: generationParams.value.entityName,
         displayName: generationParams.value.displayName || generationParams.value.entityName,
         module: generationParams.value.moduleName,
-        aggregate: generationParams.value.moduleName,
+        // ✅ 修复: aggregate不是UnifiedEntityDefinition的属性，移除
         description: `${generationParams.value.displayName || generationParams.value.entityName}实体`,
         isAggregateRoot: true,
         isMultiTenant: false,
         isSoftDelete: true,
-        hasExtraProperties: false,
-        properties: [] // 最简配置，更多字段由后端推断
+        // ✅ 修复: hasExtraProperties不是UnifiedEntityDefinition的属性,移除
+        // hasExtraProperties: false,
+        fields: [], // ✅ 修复: 使用fields而不是properties
+        relations: [] // ✅ 修复: 添加必需的relations字段
       }]
     } satisfies ModuleMetadataDto
 
-    console.log('🚀 Calling real code generator API...', config)
+    // ✅ 修复: 构建符合ModuleGenerationConfig接口的完整配置
+    const generationConfig: ModuleGenerationConfig = {
+      moduleMetadata: config,
+      targetPath: './generated', // 默认生成路径
+      overwriteExisting: true,
+      generateTests: false,
+      generateDocs: false
+    }
+
+    console.log('🚀 Calling real code generator API...', generationConfig)
 
     // 🔥 调用真实的后端API
-    const result: GenerationResult = await codeGeneratorApi.generateModule(config)
+    const result: GenerationResult = await codeGeneratorApi.generateModule(generationConfig)
 
     console.log('✅ Code generation result:', result)
 

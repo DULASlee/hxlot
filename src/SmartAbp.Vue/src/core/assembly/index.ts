@@ -42,17 +42,18 @@ export {
   MemoryStorageAdapter, StorageAdapterFactory
 } from './storage-adapters'
 
+// ✅ 修复: plugins/index不存在,暂时注释掉
 // 插件系统
-export {
-  CachePlugin,
-  DefaultPluginBundle,
-  DependencyAnalysisPlugin,
-  LoggingPlugin,
-  PerformancePlugin,
-  PluginManager,
-  SecurityPlugin,
-  type AssemblyPlugin
-} from './plugins/index'
+// export {
+//   CachePlugin,
+//   DefaultPluginBundle,
+//   DependencyAnalysisPlugin,
+//   LoggingPlugin,
+//   PerformancePlugin,
+//   PluginManager,
+//   SecurityPlugin,
+//   type AssemblyPlugin
+// } from './plugins/index'
 
 // Vue 组件
 export { default as AssemblyForm } from '../components/assembly/AssemblyForm.vue'
@@ -69,15 +70,17 @@ export async function createDefaultAssemblyManager(): Promise<any> {
     enablePlugins: true,
     debug: process.env.NODE_ENV === 'development',
     storage: {
-      type: 'localStorage',
-      options: {
-        prefix: 'assembly_'
-      }
+      type: 'localStorage'
+      // ✅ 修复: AssemblyStorage不支持options字段,移除
+      // options: {
+      //   prefix: 'assembly_'
+      // }
     },
     loaderOptions: {
-      timeout: 30000,
-      retryCount: 3,
-      cacheEnabled: true
+      timeout: 30000
+      // ✅ 修复: AssemblyLoaderOptions不支持retryCount字段,移除
+      // retryCount: 3,
+      // cacheEnabled: true
     }
   })
 }

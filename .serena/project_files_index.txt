@@ -1,3 +1,5 @@
+src/SmartAbp.Application/LowCode/EntityModelingAppService.cs
+src/SmartAbp.Application/LowCode/EntityModelingAutoMapperProfile.cs
 src/SmartAbp.Application/Permissions/Alerting/EnterpriseAlertingService.cs
 src/SmartAbp.Application/Permissions/Alerting/PermissionAlertingService.cs
 src/SmartAbp.Application/Permissions/Analytics/EnterpriseAnalyticsService.cs
@@ -45,6 +47,10 @@ src/SmartAbp.Application/SmartAbpApplicationModule.cs
 src/SmartAbp.Domain/Data/ISmartAbpDbSchemaMigrator.cs
 src/SmartAbp.Domain/Data/NullSmartAbpDbSchemaMigrator.cs
 src/SmartAbp.Domain/Data/SmartAbpDbMigrationService.cs
+src/SmartAbp.Domain/Entities/LowCode/EntityDefinition.cs
+src/SmartAbp.Domain/Entities/LowCode/EntityField.cs
+src/SmartAbp.Domain/Entities/LowCode/EntityRelation.cs
+src/SmartAbp.Domain/Entities/LowCode/ValidationRule.cs
 src/SmartAbp.Domain/Identity/ChangeIdentityPasswordPolicySettingDefinitionProvider.cs
 src/SmartAbp.Domain/Identity/SmartAbpProfileService.cs
 src/SmartAbp.Domain/OpenIddict/OpenIddictDataSeedContributor.cs
@@ -56,6 +62,7 @@ src/SmartAbp.Domain/SmartAbp.Domain.abppkg.analyze.json
 src/SmartAbp.Domain/SmartAbpConsts.cs
 src/SmartAbp.Domain/SmartAbpDomainModule.cs
 src/SmartAbp.Vue/src/App.vue
+src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts
 src/SmartAbp.Vue/src/appshell/generation-report.md
 src/SmartAbp.Vue/src/appshell/lifecycle.generated.js
 src/SmartAbp.Vue/src/appshell/lifecycle.generated.ts
@@ -333,6 +340,7 @@ src/SmartAbp.Vue/packages/lowcode-api/src/composables/useResiliencePolicy.ts
 src/SmartAbp.Vue/packages/lowcode-api/src/composables/useSecurityPolicy.ts
 src/SmartAbp.Vue/packages/lowcode-api/src/cqrs-generator.ts
 src/SmartAbp.Vue/packages/lowcode-api/src/ddd-generator.ts
+src/SmartAbp.Vue/packages/lowcode-api/src/entity-modeling.ts
 src/SmartAbp.Vue/packages/lowcode-api/src/http-client.ts
 src/SmartAbp.Vue/packages/lowcode-api/src/index.ts
 src/SmartAbp.Vue/packages/lowcode-api/src/types/index.d.ts
@@ -613,6 +621,8 @@ src/SmartAbp.Vue/packages/lowcode-shared/src/error/GlobalErrorHandler.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/error/GlobalErrorHandler.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/error/index.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/error/index.ts
+src/SmartAbp.Vue/packages/lowcode-shared/src/events/UnifiedEventBus.ts
+src/SmartAbp.Vue/packages/lowcode-shared/src/events/index.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/index.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/index.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/logging/ErrorLogIntegration.d.ts
@@ -639,12 +649,14 @@ src/SmartAbp.Vue/packages/lowcode-shared/src/types/index.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/logger.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/ui.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/ui.ts
+src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/array.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/array.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/index.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/index.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/object.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/object.ts
+src/SmartAbp.Vue/packages/lowcode-shared/src/utils/schema-converter.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/string.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/string.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/validators/common.d.ts

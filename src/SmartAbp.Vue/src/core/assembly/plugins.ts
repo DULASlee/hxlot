@@ -1,8 +1,10 @@
 import type { 
   AssemblyConfig, 
-  AssemblyInstance, 
+  // ✅ 修复: AssemblyInstance已声明但未使用,注释掉
+  // AssemblyInstance, 
   AssemblyEvent,
-  AssemblyManager 
+  // ✅ 修复: 使用IAssemblyManager而不是AssemblyManager
+  IAssemblyManager as AssemblyManager  // 别名,避免全局替换
 } from './assembly-types'
 
 /**

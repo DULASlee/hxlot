@@ -14,9 +14,14 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit"
   },
-  "keywords": ["smartabp", "lowcode", "api"],
+  "keywords": [
+    "smartabp",
+    "lowcode",
+    "api"
+  ],
   "author": "SmartAbp Team",
   "license": "MIT",
   "dependencies": {},
@@ -24,7 +29,6 @@
     "typescript": "^5.2.0"
   },
   "peerDependencies": {
-    "@smartabp/lowcode-shared": "workspace:*",
-    "@smartabp/lowcode-core": "workspace:*"
+    "@smartabp/lowcode-shared": "^1.0.0"
   }
 }
