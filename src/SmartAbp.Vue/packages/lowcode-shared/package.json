@@ -2,14 +2,95 @@
   "name": "@smartabp/lowcode-shared",
   "version": "1.0.0",
   "description": "SmartAbp LowCode Engine Shared Library - Unified Schema v1.0.0 + Memory Safe Utilities",
+  "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./validation": {
+      "types": "./dist/validation/index.d.ts",
+      "import": "./dist/validation/index.mjs",
+      "require": "./dist/validation/index.js"
+    },
+    "./validation/adapter": {
+      "types": "./dist/validation/adapter.d.ts",
+      "import": "./dist/validation/adapter.mjs",
+      "require": "./dist/validation/adapter.js"
+    },
+    "./version": {
+      "types": "./dist/version/index.d.ts",
+      "import": "./dist/version/index.mjs",
+      "require": "./dist/version/index.js"
+    },
+    "./cache": {
+      "types": "./dist/cache/index.d.ts",
+      "import": "./dist/cache/index.mjs",
+      "require": "./dist/cache/index.js"
+    },
+    "./memory": {
+      "types": "./dist/memory/index.d.ts",
+      "import": "./dist/memory/index.mjs",
+      "require": "./dist/memory/index.js"
+    },
+    "./events": {
+      "types": "./dist/events/index.d.ts",
+      "import": "./dist/events/index.mjs",
+      "require": "./dist/events/index.js"
+    },
+    "./logging": {
+      "types": "./dist/logging/index.d.ts",
+      "import": "./dist/logging/index.mjs",
+      "require": "./dist/logging/index.js"
+    },
+    "./error": {
+      "types": "./dist/error/index.d.ts",
+      "import": "./dist/error/index.mjs",
+      "require": "./dist/error/index.js"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "import": "./dist/theme/index.mjs",
+      "require": "./dist/theme/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.mjs",
+      "require": "./dist/components/index.js"
+    },
+    "./composables": {
+      "types": "./dist/composables/index.d.ts",
+      "import": "./dist/composables/index.mjs",
+      "require": "./dist/composables/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.mjs",
+      "require": "./dist/utils/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.mjs",
+      "require": "./dist/types/index.js"
+    },
+    "./i18n": {
+      "types": "./dist/i18n/index.d.ts",
+      "import": "./dist/i18n/index.mjs",
+      "require": "./dist/i18n/index.js"
+    }
+  },
+  "sideEffects": false,
   "author": "SmartAbp Team",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
-    "type-check": "tsc --noEmit"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "typescript": "^5.0.0"
@@ -20,6 +101,7 @@
   "devDependencies": {
     "@smartabp/metadata-core": "workspace:*",
     "@types/node": "^20.0.0",
+    "tsup": "^8.0.0",
     "zod": "^4.1.11"
   }
 }

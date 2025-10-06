@@ -1,5 +1,9 @@
 /**
- * 🛡️ 错误处理模块统一导出
+ * 🔥 Error Handling Module Entry
+ * 
+ * 全局错误处理系统入口
+ * 
+ * @module @smartabp/lowcode-shared/error
  */
 
-export * from './GlobalErrorHandler'
+export { GlobalErrorHandler } from './GlobalErrorHandler'

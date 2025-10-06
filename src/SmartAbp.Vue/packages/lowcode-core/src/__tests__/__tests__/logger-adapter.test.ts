@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest"
+import { describe, expect, it, vi } from "vitest"
 
 type LogLevel = "debug" | "info" | "warn" | "error"
 
@@ -64,7 +64,7 @@ class LoggerAdapter implements Logger {
 describe("LoggerAdapter", () => {
   it("should log info level messages by default", () => {
     const logger = new LoggerAdapter()
-    const consoleSpy = vi.spyOn(console, "info").mockImplementation(() => {})
+    const consoleSpy = vi.spyOn(console, "info").mockImplementation(() => { })
 
     logger.info("Test info message")
 
@@ -74,7 +74,7 @@ describe("LoggerAdapter", () => {
 
   it("should not log debug messages when min level is info", () => {
     const logger = new LoggerAdapter("info")
-    const consoleSpy = vi.spyOn(console, "debug").mockImplementation(() => {})
+    const consoleSpy = vi.spyOn(console, "debug").mockImplementation(() => { })
 
     logger.debug("Test debug message")
 
@@ -84,7 +84,7 @@ describe("LoggerAdapter", () => {
 
   it("should log debug messages when min level is debug", () => {
     const logger = new LoggerAdapter("debug")
-    const consoleSpy = vi.spyOn(console, "debug").mockImplementation(() => {})
+    const consoleSpy = vi.spyOn(console, "debug").mockImplementation(() => { })
 
     logger.debug("Test debug message")
 
@@ -94,22 +94,22 @@ describe("LoggerAdapter", () => {
 
   it("should log warn and error messages regardless of min level", () => {
     const logger = new LoggerAdapter("error")
-    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {})
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => { })
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => { })
 
     logger.warn("Test warn message")
     logger.error("Test error message")
 
     expect(warnSpy).not.toHaveBeenCalled() // warn不应被记录（min level是error）
     expect(errorSpy).toHaveBeenCalledWith("Test error message")
-    
+
     warnSpy.mockRestore()
     errorSpy.mockRestore()
   })
 
   it("should change log level dynamically", () => {
     const logger = new LoggerAdapter("info")
-    const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {})
+    const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => { })
 
     logger.debug("Should not log")
     expect(debugSpy).not.toHaveBeenCalled()
@@ -123,8 +123,8 @@ describe("LoggerAdapter", () => {
 
   it("should store logs internally", () => {
     const logger = new LoggerAdapter("debug")
-    vi.spyOn(console, "debug").mockImplementation(() => {})
-    vi.spyOn(console, "info").mockImplementation(() => {})
+    vi.spyOn(console, "debug").mockImplementation(() => { })
+    vi.spyOn(console, "info").mockImplementation(() => { })
 
     logger.debug("Debug message")
     logger.info("Info message")
@@ -147,7 +147,7 @@ describe("LoggerAdapter", () => {
 
   it("should clear logs", () => {
     const logger = new LoggerAdapter()
-    vi.spyOn(console, "info").mockImplementation(() => {})
+    vi.spyOn(console, "info").mockImplementation(() => { })
 
     logger.info("Test message")
     expect(logger.getLogs()).toHaveLength(1)
@@ -160,7 +160,7 @@ describe("LoggerAdapter", () => {
 
   it("should handle additional arguments", () => {
     const logger = new LoggerAdapter()
-    const consoleSpy = vi.spyOn(console, "info").mockImplementation(() => {})
+    const consoleSpy = vi.spyOn(console, "info").mockImplementation(() => { })
 
     const data = { user: "test", id: 123 }
     logger.info("User action", data)

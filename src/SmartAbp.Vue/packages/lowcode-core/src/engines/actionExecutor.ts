@@ -1,5 +1,5 @@
-import type { RuleContext } from '../stores/enhancedStateMachine'
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
+import type { RuleContext } from '../stores/enhancedStateMachine'
 
 const logger = getGlobalLogger()
 
@@ -11,12 +11,12 @@ export interface IActionExecutor {
    * 执行器名称
    */
   readonly name: string
-  
+
   /**
    * 执行器优先级
    */
   readonly priority: number
-  
+
   /**
    * 执行动作
    */
@@ -46,12 +46,12 @@ export interface ActionExecutionResult {
  */
 export class ActionExecutor {
   private executors: Map<string, IActionExecutor> = new Map()
-  
+
   constructor() {
     // 注册内置执行器
     this.registerBuiltInExecutors()
   }
-  
+
   /**
    * 执行动作
    * 
@@ -63,7 +63,7 @@ export class ActionExecutor {
     try {
       // 1. 解析动作表达式
       const { executorName, params } = this.parseAction(action)
-      
+
       // 2. 获取执行器
       const executor = this.executors.get(executorName)
       if (!executor) {
@@ -72,25 +72,25 @@ export class ActionExecutor {
           executorName
         )
       }
-      
+
       // 3. 执行动作
-      logger.debug('⚡ 执行动作', { 
-        executorName, 
+      logger.debug('⚡ 执行动作', {
+        executorName,
         params,
         context: this.sanitizeContext(context)
       })
-      
+
       const result = await executor.execute(params, context)
-      
+
       logger.debug('✅ 动作执行成功', { executorName, result })
-      
+
       return result
     } catch (error) {
       logger.error('❌ 动作执行失败', { action, error })
       throw error
     }
   }
-  
+
   /**
    * 注册自定义执行器
    * 
@@ -100,11 +100,11 @@ export class ActionExecutor {
     if (this.executors.has(executor.name)) {
       logger.warn(`⚠️ 覆盖已存在的执行器: ${executor.name}`)
     }
-    
+
     this.executors.set(executor.name, executor)
     logger.info(`✅ 注册执行器: ${executor.name}`)
   }
-  
+
   /**
    * 注销执行器
    * 
@@ -115,14 +115,14 @@ export class ActionExecutor {
       logger.info(`✅ 注销执行器: ${executorName}`)
     }
   }
-  
+
   /**
    * 获取所有已注册的执行器
    */
   getExecutors(): string[] {
     return Array.from(this.executors.keys())
   }
-  
+
   /**
    * 解析动作表达式
    * 
@@ -132,7 +132,7 @@ export class ActionExecutor {
   private parseAction(action: string): { executorName: string; params: any } {
     // 简单解析：executorName(params)
     // 例如：SetFieldValue({field: 'status', value: 'approved'})
-    
+
     const match = action.match(/^(\w+)\((.*)\)$/)
     if (!match) {
       // 如果没有参数，就是简单的执行器名称
@@ -141,10 +141,10 @@ export class ActionExecutor {
         params: {}
       }
     }
-    
+
     const executorName = match[1]
     const paramsStr = match[2].trim()
-    
+
     // 解析参数（JSON格式）
     let params: any = {}
     if (paramsStr) {
@@ -155,10 +155,10 @@ export class ActionExecutor {
         logger.warn('⚠️ 参数解析失败，使用默认值', { paramsStr, error })
       }
     }
-    
+
     return { executorName, params }
   }
-  
+
   /**
    * 清理上下文敏感数据（用于日志）
    */
@@ -169,23 +169,23 @@ export class ActionExecutor {
       hasUser: !!context.user
     }
   }
-  
+
   /**
    * 注册内置执行器
    */
   private registerBuiltInExecutors(): void {
     // 1. SetFieldValue - 设置字段值
     this.register(new SetFieldValueExecutor())
-    
+
     // 2. ShowMessage - 显示消息
     this.register(new ShowMessageExecutor())
-    
+
     // 3. CallAPI - 调用API（占位实现）
     this.register(new CallAPIExecutor())
-    
+
     // 4. ValidateField - 验证字段
     this.register(new ValidateFieldExecutor())
-    
+
     logger.info('✅ 内置动作执行器注册完成')
   }
 }
@@ -196,17 +196,17 @@ export class ActionExecutor {
 class SetFieldValueExecutor implements IActionExecutor {
   readonly name = 'SetFieldValue'
   readonly priority = 100
-  
+
   async execute(params: { field: string; value: any }, context: RuleContext): Promise<any> {
     if (!params.field) {
       throw new Error('缺少必需参数: field')
     }
-    
+
     // 设置字段值
     context.entity[params.field] = params.value
-    
+
     logger.debug(`✅ 设置字段值: ${params.field} = ${params.value}`)
-    
+
     return {
       field: params.field,
       value: params.value,
@@ -221,14 +221,14 @@ class SetFieldValueExecutor implements IActionExecutor {
 class ShowMessageExecutor implements IActionExecutor {
   readonly name = 'ShowMessage'
   readonly priority = 50
-  
+
   async execute(params: { message: string; type?: 'info' | 'success' | 'warning' | 'error' }, _context: RuleContext): Promise<any> {
     if (!params.message) {
       throw new Error('缺少必需参数: message')
     }
-    
+
     const type = params.type || 'info'
-    
+
     // 记录消息（实际应用中可能会显示UI通知）
     if (type === 'error') {
       logger.error(`📢 ${params.message}`)
@@ -237,7 +237,7 @@ class ShowMessageExecutor implements IActionExecutor {
     } else {
       logger.info(`📢 ${params.message}`)
     }
-    
+
     return {
       message: params.message,
       type,
@@ -252,16 +252,16 @@ class ShowMessageExecutor implements IActionExecutor {
 class CallAPIExecutor implements IActionExecutor {
   readonly name = 'CallAPI'
   readonly priority = 80
-  
+
   async execute(params: { url: string; method?: string; data?: any; headers?: Record<string, string> }, _context: RuleContext): Promise<any> {
     if (!params.url) {
       throw new Error('缺少必需参数: url')
     }
-    
+
     const method = (params.method || 'GET').toUpperCase()
-    
+
     logger.debug(`🌐 调用API: ${method} ${params.url}`)
-    
+
     try {
       // 使用fetch API进行实际的HTTP调用
       const fetchOptions: RequestInit = {
@@ -278,7 +278,7 @@ class CallAPIExecutor implements IActionExecutor {
       }
 
       const response = await fetch(params.url, fetchOptions)
-      
+
       if (!response.ok) {
         throw new Error(`API调用失败: ${response.status} ${response.statusText}`)
       }
@@ -304,7 +304,7 @@ class CallAPIExecutor implements IActionExecutor {
       }
     } catch (error) {
       logger.error(`❌ API调用失败: ${method} ${params.url}`, error)
-      
+
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -321,33 +321,33 @@ class CallAPIExecutor implements IActionExecutor {
 class ValidateFieldExecutor implements IActionExecutor {
   readonly name = 'ValidateField'
   readonly priority = 90
-  
+
   async execute(params: { field: string; rules: string[] }, context: RuleContext): Promise<any> {
     if (!params.field) {
       throw new Error('缺少必需参数: field')
     }
-    
+
     const fieldValue = context.entity[params.field]
     const rules = params.rules || []
     const errors: string[] = []
-    
+
     // 执行验证规则
     for (const rule of rules) {
       if (rule === 'required' && !fieldValue) {
         errors.push(`${params.field}不能为空`)
       }
-      
+
       if (rule === 'email' && fieldValue && !this.isValidEmail(fieldValue)) {
         errors.push(`${params.field}不是有效的邮箱地址`)
       }
-      
+
       if (rule.startsWith('min:')) {
         const minLength = parseInt(rule.split(':')[1])
         if (fieldValue && fieldValue.length < minLength) {
           errors.push(`${params.field}长度不能小于${minLength}`)
         }
       }
-      
+
       if (rule.startsWith('max:')) {
         const maxLength = parseInt(rule.split(':')[1])
         if (fieldValue && fieldValue.length > maxLength) {
@@ -355,13 +355,13 @@ class ValidateFieldExecutor implements IActionExecutor {
         }
       }
     }
-    
+
     const isValid = errors.length === 0
-    
+
     if (!isValid) {
       logger.warn(`⚠️ 字段验证失败: ${params.field}`, { errors })
     }
-    
+
     return {
       field: params.field,
       isValid,
@@ -369,7 +369,7 @@ class ValidateFieldExecutor implements IActionExecutor {
       success: true
     }
   }
-  
+
   private isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     return emailRegex.test(email)

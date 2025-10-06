@@ -10,5 +10,5 @@ export type { WorkflowDefinition, WorkflowNode, WorkflowTransition } from './Wor
 export { IntelligentRecommendationEngine } from './IntelligentRecommendationEngine'
 
 export { ActionExecutor, ActionExecutorRegistry } from './actionExecutor'
-export type { IActionExecutor, ActionExecutorContext, RuleContext } from './actionExecutor'
+export type { ActionExecutorContext, IActionExecutor, RuleContext } from './actionExecutor'
 

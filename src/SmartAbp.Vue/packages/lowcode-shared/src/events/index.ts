@@ -1,8 +1,13 @@
 /**
- * 🚀 统一事件系统导出
+ * 🚀 Event System Module Entry
+ * 
+ * 统一事件总线系统入口
+ * 
+ * @module @smartabp/lowcode-shared/events
  */
 
 export {
-    UnifiedEventName, clear, emit, getStats, off, on, unifiedEventBus, type EventSubscriptionToken, type UnifiedEventDataMap
-} from './UnifiedEventBus';
-
+  unifiedEventBus,
+  type UnifiedEventDataMap,
+  type EventSubscriptionToken,
+} from './UnifiedEventBus'

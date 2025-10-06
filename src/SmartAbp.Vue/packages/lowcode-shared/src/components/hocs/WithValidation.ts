@@ -4,7 +4,18 @@
  */
 
 import { computed, defineComponent, h, ref, watch, type Component } from 'vue';
-import type { BaseComponentProps, ValidationRule } from '../../types';
+import type { BaseComponentProps } from '../../types';
+
+/**
+ * 本地验证规则接口（与WithValidation组件内部逻辑匹配）
+ * Note: 这与 UnifiedValidationRule 不同，是组件内部使用的规则结构
+ */
+interface ValidationRule {
+  type?: string;
+  pattern?: string | RegExp;
+  validator?: (value: any) => boolean | Promise<boolean>;
+  message?: string;
+}
 import {
   isEmail,
   isRequired,
@@ -214,20 +225,21 @@ export function WithValidation(
             }
             case 'pattern':
               if (rule.pattern) {
-                const result = pattern(value, rule.pattern);
+                const regex = typeof rule.pattern === 'string' ? new RegExp(rule.pattern) : rule.pattern;
+                const result = pattern(value, regex);
                 isRuleValid = result.valid;
               }
               break;
             case 'custom':
               if (rule.validator) {
                 const result = await Promise.resolve(rule.validator(value));
-                isRuleValid = typeof result === 'boolean' ? result : result.valid;
+                isRuleValid = typeof result === 'boolean' ? result : (result as any).valid;
               }
               break;
           }
 
           if (!isRuleValid) {
-            errors.push(rule.message);
+            errors.push(rule.message || '验证失败');
           }
         }
 
@@ -397,20 +409,21 @@ export function useValidation() {
         }
         case 'pattern':
           if (rule.pattern) {
-            const result = pattern(value, rule.pattern);
+            const regex = typeof rule.pattern === 'string' ? new RegExp(rule.pattern) : rule.pattern;
+            const result = pattern(value, regex);
             isRuleValid = result.valid;
           }
           break;
         case 'custom':
           if (rule.validator) {
             const result = await Promise.resolve(rule.validator(value));
-            isRuleValid = typeof result === 'boolean' ? result : result.valid;
+            isRuleValid = typeof result === 'boolean' ? result : (result as any).valid;
           }
           break;
       }
 
       if (!isRuleValid) {
-        fieldErrors.push(rule.message);
+        fieldErrors.push(rule.message || '验证失败');
       }
     }
 

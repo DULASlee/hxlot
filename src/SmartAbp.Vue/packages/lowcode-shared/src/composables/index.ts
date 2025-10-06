@@ -1,22 +1,16 @@
 /**
- * @fileoverview Composables Index - 组合式API统一导出
- * @description 导出所有组合式API钩子函数
- * @version 1.0.0
- * @author SmartAbp Team
+ * 🎣 Composables Module Entry
+ * 
+ * Vue组合式API入口
+ * 
+ * @module @smartabp/lowcode-shared/composables
  */
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🔍 验证相关组合式API (Validation Composables)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export { useSafeEventListener } from './useSafeEventListener'
 
 export {
-    DEFAULT_VALIDATION_OPTIONS, useValidation, type ValidationOptions, type ValidationState
-} from './useValidation';
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎯 未来扩展 (Future Extensions)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-// export { useEntityModeling } from './useEntityModeling'
-// export { useCodeGeneration } from './useCodeGeneration'
-// export { useSchemaVersion } from './useSchemaVersion'
+  useValidation,
+  DEFAULT_VALIDATION_OPTIONS,
+  type ValidationState,
+  type ValidationOptions,
+} from './useValidation'

@@ -1,5 +1,10 @@
-// 📋 Logging System Exports
-export * from './ErrorLogIntegration'
-export * from './LogPolicyManager'
-export { getGlobalLogger, type ILogger } from '../types/logger'
+/**
+ * 📋 Logging System Module Entry
+ * 
+ * 日志系统入口
+ * 
+ * @module @smartabp/lowcode-shared/logging
+ */
 
+export { LogPolicyManager } from './LogPolicyManager'
+export { ErrorLogIntegration } from './ErrorLogIntegration'
