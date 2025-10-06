@@ -2482,16 +2482,4 @@ public class {entityName}AppService_Tests : SmartAbpApplicationTestBase<SmartAbp
             return null;
         }
     }
-
-    /// <summary>
-    /// ✅ 生成任务状态DTO
-    /// </summary>
-    public class GenerationStatusDto
-    {
-        public required string GenerationId { get; set; }
-        public required string Status { get; set; } // InProgress, Completed, Failed, NotFound
-        public bool IsCompleted { get; set; }
-        public GeneratedModuleDto? Result { get; set; }
-        public string? Error { get; set; }
-    }
 }
