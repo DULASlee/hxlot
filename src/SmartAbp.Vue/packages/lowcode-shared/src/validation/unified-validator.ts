@@ -9,23 +9,15 @@
  * @date 2025-10-06
  */
 
-// 注意：metadata-core包的验证功能暂时通过本地路径导入
-// import { z } from 'zod'
-// TODO: 等metadata-core包正式发布后启用
-// import { 
-//   validateEntityMetadata, 
-//   validateModuleMetadata,
-//   safeValidateEntityMetadata,
-//   safeValidateModuleMetadata,
-//   type EntityMetadata,
-//   type ModuleMetadata
-// } from '@smartabp/metadata-core'
-
-// 临时类型定义，等metadata-core包完善后移除
-interface MetadataValidationResult {
-    success: boolean
-    errors?: any[]
-}
+// 🔥 启用真实的metadata-core验证
+import { 
+  validateEntityMetadata, 
+  validateModuleMetadata,
+  safeValidateEntityMetadata,
+  safeValidateModuleMetadata,
+  getEntityMetadataErrors,
+  getModuleMetadataErrors
+} from '@smartabp/metadata-core'
 
 import type {
     UnifiedEntityDefinition,
@@ -225,25 +217,26 @@ export class UnifiedSchemaValidator {
                 )
             }
 
-            // 执行metadata-core验证（临时实现）
-            let validationResult: MetadataValidationResult
-            if (this.featureFlags.enableStrictValidation) {
-                // 严格模式：模拟验证
-                // TODO: 替换为真实的validateEntityMetadata调用
-                validationResult = this.mockValidateEntity(metadataEntity)
-                if (!validationResult.success) {
-                    throw new Error('Entity validation failed in strict mode')
-                }
-            } else {
-                // 安全模式：模拟验证
-                // TODO: 替换为真实的safeValidateEntityMetadata调用
-                validationResult = this.mockValidateEntity(metadataEntity)
-            }
-
-            if (!validationResult.success) {
-                const errors = this.convertMetadataCoreErrors(validationResult.errors || [])
-                return this.createErrorResult(errors, startTime, entity)
-            }
+      // 🔥 执行metadata-core真实验证
+      if (this.featureFlags.enableStrictValidation) {
+        // 严格模式：抛出异常
+        try {
+          validateEntityMetadata(metadataEntity)
+        } catch (error) {
+          // 验证失败，获取详细错误
+          const zodErrors = getEntityMetadataErrors(metadataEntity)
+          const errors = this.convertZodErrors(zodErrors)
+          return this.createErrorResult(errors, startTime, entity)
+        }
+      } else {
+        // 安全模式：返回结果
+        const validationResult = safeValidateEntityMetadata(metadataEntity)
+        
+        if (!validationResult.success) {
+          const errors = this.convertZodErrors(validationResult.error?.errors || [])
+          return this.createErrorResult(errors, startTime, entity)
+        }
+      }
 
             // 验证成功
             return this.createSuccessResult(entity, startTime, {
@@ -279,25 +272,26 @@ export class UnifiedSchemaValidator {
             // 转换为metadata-core格式
             const metadataModule = convertModuleToMetadataCore(module)
 
-            // 执行metadata-core验证（临时实现）
-            let validationResult: MetadataValidationResult
-            if (this.featureFlags.enableStrictValidation) {
-                // 严格模式：模拟验证
-                // TODO: 替换为真实的validateModuleMetadata调用
-                validationResult = this.mockValidateModule(metadataModule)
-                if (!validationResult.success) {
-                    throw new Error('Module validation failed in strict mode')
-                }
-            } else {
-                // 安全模式：模拟验证
-                // TODO: 替换为真实的safeValidateModuleMetadata调用
-                validationResult = this.mockValidateModule(metadataModule)
-            }
-
-            if (!validationResult.success) {
-                const errors = this.convertMetadataCoreErrors(validationResult.errors || [])
-                return this.createErrorResult(errors, startTime, module)
-            }
+      // 🔥 执行metadata-core真实验证
+      if (this.featureFlags.enableStrictValidation) {
+        // 严格模式：抛出异常
+        try {
+          validateModuleMetadata(metadataModule)
+        } catch (error) {
+          // 验证失败，获取详细错误
+          const zodErrors = getModuleMetadataErrors(metadataModule)
+          const errors = this.convertZodErrors(zodErrors)
+          return this.createErrorResult(errors, startTime, module)
+        }
+      } else {
+        // 安全模式：返回结果
+        const validationResult = safeValidateModuleMetadata(metadataModule)
+        
+        if (!validationResult.success) {
+          const errors = this.convertZodErrors(validationResult.error?.errors || [])
+          return this.createErrorResult(errors, startTime, module)
+        }
+      }
 
             // 验证成功
             return this.createSuccessResult(module, startTime, {
@@ -353,55 +347,75 @@ export class UnifiedSchemaValidator {
         }, warnings)
     }
 
-    // ============================================================================
-    // 临时模拟验证方法（等metadata-core包完善后移除）
-    // ============================================================================
-
-    /**
-     * 模拟实体验证（临时实现）
-     */
-    private mockValidateEntity(entity: any): MetadataValidationResult {
-        const errors: any[] = []
-
-        // 基础验证规则
-        if (!entity.name || typeof entity.name !== 'string') {
-            errors.push({ code: 'INVALID_NAME', message: 'Entity name is required and must be a string' })
-        }
-
-        if (!entity.module || typeof entity.module !== 'string') {
-            errors.push({ code: 'INVALID_MODULE', message: 'Entity module is required and must be a string' })
-        }
-
-        if (!entity.properties || !Array.isArray(entity.properties)) {
-            errors.push({ code: 'INVALID_PROPERTIES', message: 'Entity properties must be an array' })
-        }
-
-        return {
-            success: errors.length === 0,
-            errors: errors.length > 0 ? errors : undefined
-        }
+  // ============================================================================
+  // Zod错误转换（真实验证）
+  // ============================================================================
+  
+  /**
+   * 转换Zod错误为ValidationError格式
+   */
+  private convertZodErrors(zodErrors: any[]): ValidationError[] {
+    return zodErrors.map(error => ({
+      code: error.code || 'VALIDATION_ERROR',
+      message: error.message || 'Validation failed',
+      path: Array.isArray(error.path) ? error.path.join('.') : error.path || 'unknown',
+      details: error,
+      suggestion: this.generateSuggestionFromZodError(error)
+    }))
+  }
+  
+  /**
+   * 从Zod错误生成修复建议
+   */
+  private generateSuggestionFromZodError(error: any): string | undefined {
+    const errorCode = error.code
+    
+    if (errorCode === 'invalid_type') {
+      return `Expected type: ${error.expected}, received: ${error.received}`
     }
-
-    /**
-     * 模拟模块验证（临时实现）
-     */
-    private mockValidateModule(module: any): MetadataValidationResult {
-        const errors: any[] = []
-
-        // 基础验证规则
-        if (!module.name || typeof module.name !== 'string') {
-            errors.push({ code: 'INVALID_NAME', message: 'Module name is required and must be a string' })
-        }
-
-        if (!module.version || typeof module.version !== 'string') {
-            errors.push({ code: 'INVALID_VERSION', message: 'Module version is required and must be a string' })
-        }
-
-        return {
-            success: errors.length === 0,
-            errors: errors.length > 0 ? errors : undefined
-        }
+    
+    if (errorCode === 'too_small') {
+      if (error.type === 'string') {
+        return `String length must be at least ${error.minimum} characters`
+      }
+      if (error.type === 'number') {
+        return `Value must be at least ${error.minimum}`
+      }
+      if (error.type === 'array') {
+        return `Array must contain at least ${error.minimum} items`
+      }
     }
+    
+    if (errorCode === 'too_big') {
+      if (error.type === 'string') {
+        return `String length must not exceed ${error.maximum} characters`
+      }
+      if (error.type === 'number') {
+        return `Value must not exceed ${error.maximum}`
+      }
+      if (error.type === 'array') {
+        return `Array must not contain more than ${error.maximum} items`
+      }
+    }
+    
+    if (errorCode === 'invalid_string') {
+      if (error.validation === 'email') {
+        return 'Please enter a valid email address'
+      }
+      if (error.validation === 'url') {
+        return 'Please enter a valid URL'
+      }
+      if (error.validation === 'regex') {
+        return 'Value does not match the required pattern'
+      }
+    }
+    
+    if (errorCode === 'invalid_enum_value') {
+      return `Value must be one of: ${error.options?.join(', ')}`
+    }
+    
+    return undefined
+  }
 
     // ============================================================================
     // 私有辅助方法
@@ -460,32 +474,6 @@ export class UnifiedSchemaValidator {
         }
     }
 
-    /**
-     * 转换metadata-core错误格式
-     */
-    private convertMetadataCoreErrors(metadataErrors: any[]): ValidationError[] {
-        return metadataErrors.map(error => ({
-            code: error.code || 'METADATA_VALIDATION_ERROR',
-            message: error.message || 'Unknown metadata validation error',
-            path: error.path,
-            details: error,
-            suggestion: this.generateSuggestion(error)
-        }))
-    }
-
-    /**
-     * 生成修复建议
-     */
-    private generateSuggestion(error: any): string | undefined {
-        // 基于错误类型生成具体的修复建议
-        if (error.code === 'REQUIRED_FIELD_MISSING') {
-            return `请添加必需字段: ${error.field}`
-        }
-        if (error.code === 'INVALID_TYPE') {
-            return `请检查字段类型，期望: ${error.expected}, 实际: ${error.actual}`
-        }
-        return undefined
-    }
 }
 
 // ============================================================================
