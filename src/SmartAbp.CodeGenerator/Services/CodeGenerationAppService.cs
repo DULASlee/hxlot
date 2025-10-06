@@ -35,7 +35,7 @@ namespace SmartAbp.CodeGenerator.Services
     [RemoteService(Name = "CodeGeneration")]
     // 🔥 权限集成修复：使用标准权限常量（遵循ABP最佳实践）
     [Authorize(SmartAbpPermissions.CodeGeneration.Default)]
-    public class CodeGenerationAppService : ApplicationService, ICodeGenerationAppService
+    public partial class CodeGenerationAppService : ApplicationService, ICodeGenerationAppService
     {
         private readonly CodeWriterService _codeWriterService;
         private readonly SolutionIntegrationService _solutionIntegrationService;
@@ -200,45 +200,8 @@ namespace SmartAbp.CodeGenerator.Services
             }
         }
 
-        /// <summary>
-        /// ✅ 查询生成任务状态 - 支持异步轮询
-        /// </summary>
-        public async Task<GenerationStatusDto> GetGenerationStatusAsync(string generationId)
-        {
-            await Task.Yield();
-            
-            lock (_taskLock)
-            {
-                if (_generationTasks.TryGetValue(generationId, out var tcs))
-                {
-                    if (tcs.Task.IsCompleted)
-                    {
-                        return new GenerationStatusDto
-                        {
-                            GenerationId = generationId,
-                            Status = tcs.Task.IsCompletedSuccessfully ? "Completed" : "Failed",
-                            IsCompleted = true,
-                            Result = tcs.Task.IsCompletedSuccessfully ? tcs.Task.Result : null,
-                            Error = tcs.Task.Exception?.GetBaseException()?.Message
-                        };
-                    }
-                    
-                    return new GenerationStatusDto
-                    {
-                        GenerationId = generationId,
-                        Status = "InProgress",
-                        IsCompleted = false
-                    };
-                }
-                
-                return new GenerationStatusDto
-                {
-                    GenerationId = generationId,
-                    Status = "NotFound",
-                    IsCompleted = false
-                };
-            }
-        }
+        // ✅ GetGenerationStatusAsync方法已移至CodeGenerationStatusMethods.cs partial类中
+        // 避免重复定义
 
         /// <summary>
         /// 🔥 稳定生成流水线版本 - 企业级安全可靠的代码生成

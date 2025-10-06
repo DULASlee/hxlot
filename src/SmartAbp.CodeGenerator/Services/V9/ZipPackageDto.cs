@@ -29,6 +29,8 @@ namespace SmartAbp.CodeGenerator.Services.V9
 
         public ZipPackageDto()
         {
+            Content = Array.Empty<byte>();
+            FileName = string.Empty;
             CreatedAt = DateTime.Now;
         }
     }

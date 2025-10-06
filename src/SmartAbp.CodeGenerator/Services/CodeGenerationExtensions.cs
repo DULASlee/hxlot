@@ -156,8 +156,8 @@ namespace SmartAbp.CodeGenerator.Services
     /// </summary>
     public class GeneratedFileInfo
     {
-        public string Path { get; set; }
-        public string Content { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public string Path { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

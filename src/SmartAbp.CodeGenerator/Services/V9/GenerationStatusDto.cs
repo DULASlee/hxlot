@@ -55,8 +55,12 @@ namespace SmartAbp.CodeGenerator.Services.V9
 
         public GenerationStatusDto()
         {
-            CompletedFiles = new List<string>();
+            SessionId = string.Empty;
             Status = "pending"; // pending, processing, completed, error
+            CurrentStep = string.Empty;
+            Error = string.Empty;
+            ModuleName = string.Empty;
+            CompletedFiles = new List<string>();
             StartedAt = DateTime.Now;
         }
     }
