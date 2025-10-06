@@ -5,6 +5,7 @@
 
 import { z } from 'zod'
 import type { ModuleMetadata } from '../types'
+import { moduleErrorMap, formatErrorMessage } from './error-map'
 
 // ========================================
 // Zod Schema定义
@@ -12,10 +13,13 @@ import type { ModuleMetadata } from '../types'
 
 /**
  * 路由元数据Schema
+ * 注意：嵌套路由的子路由path可以是相对路径（如'books'），不强制以'/'开头
  */
 const RouteMetadataSchema: z.ZodType<any, any, any> = z.lazy(() => z.object({
-    path: z.string().min(1, '路由路径不能为空').startsWith('/', '路由路径必须以/开头'),
-    name: z.string().min(1, '路由名称不能为空'),
+    path: z.string().min(1, '路由路径不能为空'),
+    name: z.string()
+        .min(1, '路由名称不能为空')
+        .regex(/^[A-Z][a-zA-Z0-9_]*$/, '路由名称必须是PascalCase格式（首字母大写，可包含下划线）'),
     component: z.string().optional(),
     meta: z.record(z.string(), z.unknown()).optional(),
     children: z.array(RouteMetadataSchema).optional()
@@ -25,7 +29,9 @@ const RouteMetadataSchema: z.ZodType<any, any, any> = z.lazy(() => z.object({
  * Store元数据Schema
  */
 const StoreMetadataSchema = z.object({
-    name: z.string().min(1, 'Store名称不能为空'),
+    name: z.string()
+        .min(1, 'Store名称不能为空')
+        .regex(/^[a-z][a-zA-Z0-9]*$/, 'Store名称必须是camelCase格式（首字母小写）'),
     type: z.enum(['entity', 'ui', 'global']),
     entityName: z.string().optional()
 }).refine(
@@ -74,10 +80,10 @@ export const ModuleMetadataSchema = z.object({
     name: z.string()
         .min(1, '模块名称不能为空')
         .max(128, '模块名称不能超过128个字符')
-        .regex(/^[a-zA-Z][a-zA-Z0-9]*$/, '模块名称必须是有效的标识符'),
+        .regex(/^[A-Z][a-zA-Z0-9]*$/, '模块名称必须是PascalCase格式（首字母大写）'),
     displayName: z.string().optional(),
     version: z.string()
-        .regex(/^\d+\.\d+\.\d+$/, '版本号必须符合SemVer格式（如1.0.0）'),
+        .regex(/^\d+\.\d+\.\d+(-[a-zA-Z0-9.-]+)?(\+[a-zA-Z0-9.-]+)?$/, '模块版本必须遵循语义化版本格式（如1.0.0）'),
     description: z.string().max(500, '描述不能超过500个字符').optional(),
     author: z.string().optional(),
     abpStyle: z.boolean(),
@@ -89,6 +95,71 @@ export const ModuleMetadataSchema = z.object({
     lifecycle: LifecycleMetadataSchema,
     features: FeatureConfigSchema,
     menuConfig: MenuConfigSchema
+}).superRefine((data, ctx) => {
+    // ========================================
+    // 高级验证：跨字段验证
+    // ========================================
+
+    // 1. 检查顶层路由path必须以/开头（嵌套路由可以是相对路径）
+    data.routes.forEach((route, index) => {
+        if (!route.path.startsWith('/')) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: '顶层路由路径必须以/开头',
+                path: ['routes', index, 'path']
+            })
+        }
+    })
+
+    // 2. 检查路由名称重复
+    function collectRouteNames(routes: any[], names: string[] = []): string[] {
+        routes.forEach(route => {
+            names.push(route.name)
+            if (route.children) {
+                collectRouteNames(route.children, names)
+            }
+        })
+        return names
+    }
+
+    const routeNames = collectRouteNames(data.routes)
+    const duplicateRoutes = routeNames.filter((name, index) => 
+        routeNames.indexOf(name) !== index
+    )
+    if (duplicateRoutes.length > 0) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `路由名称不能重复: ${duplicateRoutes[0]}`,
+            path: ['routes']
+        })
+    }
+
+    // 3. 检查顶层路由路径重复（嵌套路由的相对路径在不同父路由下可以相同）
+    const topLevelPaths = data.routes.map(r => r.path)
+    const duplicateTopPaths = topLevelPaths.filter((path, index) => 
+        topLevelPaths.indexOf(path) !== index
+    )
+    if (duplicateTopPaths.length > 0) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `路由路径不能重复: ${duplicateTopPaths[0]}`,
+            path: ['routes']
+        })
+    }
+    // 注意：仅检查顶层路由路径重复。嵌套路由的相对路径（如'detail'）在不同父路由下是合法的
+
+    // 4. 检查Store名称重复
+    const storeNames = data.stores.map(s => s.name)
+    const duplicateStores = storeNames.filter((name, index) => 
+        storeNames.indexOf(name) !== index
+    )
+    if (duplicateStores.length > 0) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Store名称不能重复: ${duplicateStores[0]}`,
+            path: ['stores']
+        })
+    }
 })
 
 // ========================================
@@ -115,24 +186,25 @@ export function safeValidateModuleMetadata(data: unknown) {
  * 获取格式化的验证错误信息
  */
 export function getModuleMetadataErrors(data: unknown): string[] {
-    const result = safeValidateModuleMetadata(data)
+    const result = ModuleMetadataSchema.safeParse(data, { errorMap: moduleErrorMap })
 
     if (result.success) {
         return []
     }
 
     return result.error.issues.map(err => {
-        const path = err.path.length > 0 ? `${err.path.join('.')}: ` : ''
-        return `${path}${err.message}`
+        const path = err.path.length > 0 ? err.path.join('.') : ''
+        return formatErrorMessage(path, err.message)
     })
 }
 
 /**
  * 验证模块元数据（异步，支持复杂验证）
+ * @returns true表示验证通过，抛出异常表示验证失败
  */
 export async function validateModuleMetadataAsync(
     data: unknown
-): Promise<ModuleMetadata> {
+): Promise<boolean> {
     // 基础验证
     const result = ModuleMetadataSchema.safeParse(data)
 
@@ -147,6 +219,6 @@ export async function validateModuleMetadataAsync(
     //   if (!exists) throw new Error(`依赖的模块${dep}不存在`)
     // }
 
-    return result.data as ModuleMetadata
+    return true
 }
 

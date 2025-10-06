@@ -5,6 +5,7 @@
 
 import { z } from 'zod'
 import type { AspireSolutionMetadata } from '../types'
+import { aspireErrorMap, formatErrorMessage } from './error-map'
 
 // ========================================
 // Zod Schema定义
@@ -27,7 +28,7 @@ const MicroserviceMetadataSchema = z.object({
         .min(1, '微服务名称不能为空')
         .regex(/^[A-Z][a-zA-Z0-9]*$/, '微服务名称必须是PascalCase格式'),
     displayName: z.string().optional(),
-    port: z.number().int().min(1000).max(65535, '端口号必须在1000-65535之间'),
+    port: z.number().int().min(1, '端口号必须在1-65535之间').max(65535, '端口号必须在1-65535之间'),
     type: z.enum(['WebApi', 'gRPC', 'Worker', 'Gateway']),
     description: z.string().optional(),
     dependencies: z.array(z.string()).default([]),
@@ -94,40 +95,49 @@ const SecurityConfigSchema = z.object({
 export const AspireSolutionMetadataSchema = z.object({
     schemaVersion: z.string().default('1.0.0'),
     solutionName: z.string()
-        .min(1, '方案名称不能为空')
-        .regex(/^[A-Z][a-zA-Z0-9.]*$/, '方案名称必须是PascalCase格式'),
+        .min(1, '解决方案名称不能为空')
+        .regex(/^[A-Z][a-zA-Z0-9.]*$/, '解决方案名称必须是PascalCase格式（首字母大写）'),
     rootNamespace: z.string()
         .min(1, '根命名空间不能为空')
-        .regex(/^[A-Z][a-zA-Z0-9.]*$/, '根命名空间格式错误'),
+        .regex(/^[A-Z][a-zA-Z0-9.]*$/, '根命名空间必须是PascalCase格式（首字母大写）'),
     description: z.string().optional(),
-    microservices: z.array(MicroserviceMetadataSchema)
-        .min(1, 'Aspire方案至少需要一个微服务')
-        .refine(
-            services => {
-                // 自定义验证：微服务名称不能重复
-                const names = services.map(s => s.name)
-                return new Set(names).size === names.length
-            },
-            {
-                message: '微服务名称不能重复',
-                path: ['microservices']
-            }
-        )
-        .refine(
-            services => {
-                // 自定义验证：端口号不能重复
-                const ports = services.map(s => s.port)
-                return new Set(ports).size === ports.length
-            },
-            {
-                message: '微服务端口号不能重复',
-                path: ['microservices']
-            }
-        ),
+    microservices: z.array(MicroserviceMetadataSchema).default([]),
     includeApiGateway: z.boolean(),
     infrastructure: InfrastructureConfigSchema,
     observability: ObservabilityConfigSchema,
     security: SecurityConfigSchema
+}).superRefine((data, ctx) => {
+    // ========================================
+    // 高级验证：跨字段验证
+    // ========================================
+
+    // 1. 检查微服务名称重复
+    if (data.microservices.length > 0) {
+        const serviceNames = data.microservices.map(s => s.name)
+        const duplicateServices = serviceNames.filter((name, index) => 
+            serviceNames.indexOf(name) !== index
+        )
+        if (duplicateServices.length > 0) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `微服务名称不能重复: ${duplicateServices[0]}`,
+                path: ['microservices']
+            })
+        }
+
+        // 2. 检查端口号重复
+        const ports = data.microservices.map(s => s.port)
+        const duplicatePorts = ports.filter((port, index) => 
+            ports.indexOf(port) !== index
+        )
+        if (duplicatePorts.length > 0) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `微服务端口号不能重复: ${duplicatePorts[0]}`,
+                path: ['microservices']
+            })
+        }
+    }
 })
 
 // ========================================
@@ -154,24 +164,25 @@ export function safeValidateAspireSolutionMetadata(data: unknown) {
  * 获取格式化的验证错误信息
  */
 export function getAspireSolutionMetadataErrors(data: unknown): string[] {
-    const result = safeValidateAspireSolutionMetadata(data)
+    const result = AspireSolutionMetadataSchema.safeParse(data, { errorMap: aspireErrorMap })
 
     if (result.success) {
         return []
     }
 
     return result.error.issues.map(err => {
-        const path = err.path.length > 0 ? `${err.path.join('.')}: ` : ''
-        return `${path}${err.message}`
+        const path = err.path.length > 0 ? err.path.join('.') : ''
+        return formatErrorMessage(path, err.message)
     })
 }
 
 /**
  * 验证Aspire方案元数据（异步，支持复杂验证）
+ * @returns true表示验证通过，抛出异常表示验证失败
  */
 export async function validateAspireSolutionMetadataAsync(
     data: unknown
-): Promise<AspireSolutionMetadata> {
+): Promise<boolean> {
     // 基础验证
     const result = AspireSolutionMetadataSchema.safeParse(data)
 
@@ -188,6 +199,6 @@ export async function validateAspireSolutionMetadataAsync(
     //   }
     // }
 
-    return result.data as AspireSolutionMetadata
+    return true
 }
 
