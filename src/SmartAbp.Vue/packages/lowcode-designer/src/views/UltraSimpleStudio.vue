@@ -77,13 +77,17 @@
                   <el-select
                     v-model="config.systemName"
                     :placeholder="t('ultraSimple.form.systemNamePlaceholder')"
+                    size="large"
                     filterable
                     allow-create
+                    default-first-option
+                    style="width: 100%"
                   >
-                    <el-option :label="t('ultraSimple.systemNames.SmartConstruction')" value="SmartConstruction" />
-                    <el-option :label="t('ultraSimple.systemNames.MES')" value="MES" />
-                    <el-option :label="t('ultraSimple.systemNames.HRM')" value="HRM" />
-                    <el-option :label="t('ultraSimple.systemNames.CRM')" value="CRM" />
+                    <el-option label="智慧建造 (SmartConstruction)" value="SmartConstruction" />
+                    <el-option label="生产执行系统 (MES)" value="MES" />
+                    <el-option label="人力资源 (HRM)" value="HRM" />
+                    <el-option label="客户关系 (CRM)" value="CRM" />
+                    <el-option label="SmartAbp" value="SmartAbp" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -95,6 +99,8 @@
                   <el-input
                     v-model="config.moduleName"
                     :placeholder="t('ultraSimple.form.moduleNamePlaceholder')"
+                    size="large"
+                    clearable
                   />
                 </el-form-item>
               </el-col>
@@ -106,6 +112,8 @@
                   <el-input
                     v-model="config.displayName"
                     :placeholder="t('ultraSimple.form.displayNamePlaceholder')"
+                    size="large"
+                    clearable
                   />
                 </el-form-item>
               </el-col>
@@ -122,17 +130,19 @@
                   <el-select
                     v-model="config.architecturePattern"
                     :placeholder="t('ultraSimple.form.architecturePatternPlaceholder')"
+                    size="large"
+                    style="width: 100%"
                   >
                     <el-option
-                      :label="t('ultraSimple.architectureTypes.Crud')"
+                      label="基础 CRUD"
                       value="Crud"
                     />
                     <el-option
-                      :label="t('ultraSimple.architectureTypes.DDD')"
+                      label="领域驱动设计 (DDD)"
                       value="DDD"
                     />
                     <el-option
-                      :label="t('ultraSimple.architectureTypes.CQRS')"
+                      label="命令查询分离 (CQRS)"
                       value="CQRS"
                     />
                   </el-select>
@@ -146,10 +156,12 @@
                   <el-select
                     v-model="config.databaseProvider"
                     :placeholder="t('ultraSimple.form.databaseProviderPlaceholder')"
+                    size="large"
+                    style="width: 100%"
                   >
-                    <el-option :label="t('ultraSimple.databaseProviders.SqlServer')" value="SqlServer" />
-                    <el-option :label="t('ultraSimple.databaseProviders.MySql')" value="MySql" />
-                    <el-option :label="t('ultraSimple.databaseProviders.PostgreSql')" value="PostgreSql" />
+                    <el-option label="SQL Server" value="SqlServer" />
+                    <el-option label="MySQL" value="MySql" />
+                    <el-option label="PostgreSQL" value="PostgreSql" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -166,12 +178,14 @@
                   <el-select
                     v-model="config.parentMenuId"
                     :placeholder="t('ultraSimple.form.parentMenuPlaceholder')"
+                    size="large"
+                    style="width: 100%"
                   >
-                    <el-option :label="t('ultraSimple.menuOptions.workstation')" value="workstation" />
-                    <el-option :label="t('ultraSimple.menuOptions.business')" value="business" />
-                    <el-option :label="t('ultraSimple.menuOptions.masterData')" value="master-data" />
-                    <el-option :label="t('ultraSimple.menuOptions.reports')" value="reports" />
-                    <el-option :label="t('ultraSimple.menuOptions.system')" value="system" />
+                    <el-option label="工作台" value="workstation" />
+                    <el-option label="业务管理" value="business" />
+                    <el-option label="基础数据" value="master-data" />
+                    <el-option label="报表中心" value="reports" />
+                    <el-option label="系统管理" value="system" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -180,6 +194,8 @@
                   <el-input
                     v-model="config.menuIcon"
                     :placeholder="t('ultraSimple.form.menuIconPlaceholder')"
+                    size="large"
+                    clearable
                   />
                 </el-form-item>
               </el-col>
@@ -274,12 +290,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { useI18n } from 'vue-i18n'
+import type { ModuleMetadata, TableSchema } from '@smartabp/lowcode-api'
 import { codeGeneratorApi } from '@smartabp/lowcode-api'
 import { useTheme } from '@smartabp/lowcode-shared/theme'
-import type { ModuleMetadata, TableSchema } from '@smartabp/lowcode-api'
+import { ElMessage } from 'element-plus'
+import { computed, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const { mode, toggleTheme } = useTheme()
@@ -314,7 +330,7 @@ const availableTables = ref<DatabaseTable[]>([])
 const loadingTables = ref(false)
 
 const config = ref<MetadataConfig>({
-  systemName: '',
+  systemName: 'SmartAbp',  // ✅ 设置默认值
   moduleName: '',
   displayName: '',
   architecturePattern: 'Crud',
@@ -455,9 +471,42 @@ const startGeneration = async () => {
     ElMessage.success(t('ultraSimple.messages.success'))
   } catch (error) {
     const errorMsg = (error as Error).message || t('ultraSimple.validation.unknownError')
-    addLog(t('ultraSimple.logs.generationFailed', { error: errorMsg }), 'error')
-    ElMessage.error(t('ultraSimple.messages.error'))
+    
+    // 增强错误处理 - 分类错误类型
+    if (errorMsg.includes('404') || errorMsg.includes('not found')) {
+      // API端点不存在
+      addLog(t('ultraSimple.logs.apiNotFound'), 'error')
+      addLog('尝试检查API路径是否正确，后端服务是否启动', 'info')
+    } else if (errorMsg.includes('Network') || errorMsg.includes('fetch')) {
+      // 网络连接问题
+      addLog(t('ultraSimple.logs.networkError'), 'error')
+      addLog('请检查网络连接和后端服务状态', 'info')
+    } else if (errorMsg.includes('timed out') || errorMsg.includes('timeout')) {
+      // 请求超时
+      addLog(t('ultraSimple.logs.requestTimeout'), 'error')
+      addLog('服务器响应超时，请重试或减小数据量', 'info')
+    } else if (errorMsg.includes('session') || errorMsg.includes('Session')) {
+      // 会话问题
+      addLog(t('ultraSimple.logs.sessionError'), 'error')
+      addLog('会话无效或已过期，请刷新页面重试', 'info')
+    } else {
+      // 其他错误
+      addLog(t('ultraSimple.logs.generationFailed', { error: errorMsg }), 'error')
+    }
+    
+    // 记录完整错误信息和堆栈，便于调试
     console.error('Code generation error:', error)
+    
+    // 用户友好提示
+    ElMessage({
+      message: t('ultraSimple.messages.error'),
+      type: 'error',
+      duration: 5000,
+      showClose: true
+    })
+    
+    // 重置状态以便重试
+    generationComplete.value = false
   } finally {
     generating.value = false
   }
@@ -466,31 +515,59 @@ const startGeneration = async () => {
 const pollGenerationProgress = async (sessionId: string) => {
   const maxAttempts = 60
   let attempts = 0
+  let backoffDelay = 1000 // 初始延迟1秒
   
   while (attempts < maxAttempts) {
     try {
+      // 获取生成状态
       const progress = await codeGeneratorApi.getGenerationStatus(sessionId)
       
+      // 有进度更新，重置退避延迟
       if (progress.percentage > generationProgress.value) {
+        backoffDelay = 1000 // 重置为初始值
         generationProgress.value = Math.min(progress.percentage, 95)
-        addLog(`📊 ${progress.currentStep}`, 'info')
+        
+        // 添加进度日志
+        if (progress.currentStep) {
+          addLog(`📊 ${progress.currentStep}`, 'info')
+        }
       }
       
+      // 处理不同状态
       if (progress.status === 'completed') {
+        addLog('✅ 代码生成已完成', 'success')
         return
       } else if (progress.status === 'error') {
         throw new Error(progress.error || t('ultraSimple.validation.generationError'))
+      } else if (progress.status === 'processing') {
+        // 处理中
+        addLog(`⏳ 生成中: ${progress.percentage}%`, 'info')
       }
       
-      await sleep(1000)
+      // 指数退避策略：每次重试延迟增加，但不超过10秒
+      await sleep(backoffDelay)
+      backoffDelay = Math.min(backoffDelay * 1.5, 10000)
       attempts++
     } catch (error) {
-      await sleep(1000)
+      const errorMsg = (error as Error).message || 'Unknown error'
+      addLog(`⚠️ 轮询状态错误: ${errorMsg}`, 'warning')
+      console.warn('Status polling error:', error)
+      
+      // 指数退避策略，但错误情况下增长更快
+      await sleep(backoffDelay)
+      backoffDelay = Math.min(backoffDelay * 2, 10000)
       attempts++
+      
+      // 到达一定尝试次数后如果还有错误，提供建议
+      if (attempts >= 5 && attempts % 5 === 0) {
+        addLog('💡 提示: 如果长时间无响应，请检查网络连接或后端服务状态', 'info')
+      }
     }
   }
   
+  // 超过最大尝试次数
   addLog(t('ultraSimple.logs.queryTimeout'), 'warning')
+  addLog('生成可能仍在继续，请稍后查看结果', 'info')
 }
 
 const viewGeneratedCode = async () => {
@@ -522,8 +599,37 @@ const downloadGeneratedCode = async () => {
   
   try {
     addLog(t('ultraSimple.logs.packagingCode'), 'info')
+    
+    // 添加下载进度指示
+    const downloadStartTime = Date.now()
+    generationProgress.value = 75
+    
+    // 发起导出请求
     const blob = await codeGeneratorApi.exportGeneratedCode(generationSessionId.value)
     
+    // 检查返回的是否是有效的Blob
+    if (!(blob instanceof Blob)) {
+      throw new Error('服务器未返回有效的ZIP文件')
+    }
+    
+    // 检查blob大小
+    if (blob.size < 100) { // 小于100字节可能是错误
+      const text = await new Response(blob).text()
+      try {
+        const errorJson = JSON.parse(text)
+        throw new Error(errorJson.message || '导出失败，服务器返回错误')
+      } catch (jsonError) {
+        // 如果不是JSON错误，则可能是真的小文件
+        if (blob.size === 0) {
+          throw new Error('导出失败，服务器返回空文件')
+        }
+      }
+    }
+    
+    // 计算下载耗时
+    const downloadDuration = Date.now() - downloadStartTime
+    
+    // 创建下载链接
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
@@ -531,13 +637,36 @@ const downloadGeneratedCode = async () => {
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
-    window.URL.revokeObjectURL(url)
     
-    addLog(t('ultraSimple.logs.downloadComplete'), 'success')
+    // 延迟释放URL对象，以确保下载开始
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url)
+    }, 1000)
+    
+    generationProgress.value = 100
+    addLog(`✅ 下载完成 (${(blob.size / 1024).toFixed(1)} KB, ${downloadDuration}ms)`, 'success')
     ElMessage.success(t('ultraSimple.messages.downloadSuccess'))
   } catch (error) {
-    addLog(t('ultraSimple.logs.downloadFailed'), 'error')
-    ElMessage.error(t('ultraSimple.messages.downloadError'))
+    const errorMsg = (error as Error).message || '未知错误'
+    
+    // 错误分类处理
+    if (errorMsg.includes('404') || errorMsg.includes('not found')) {
+      addLog('⚠️ 导出API不存在，请检查API路径', 'error')
+    } else if (errorMsg.includes('Network') || errorMsg.includes('fetch')) {
+      addLog('⚠️ 网络错误，请检查网络连接', 'error')
+    } else if (errorMsg.includes('session') || errorMsg.includes('Session')) {
+      addLog('⚠️ 会话错误，会话可能已过期', 'error')
+    } else {
+      addLog(`⚠️ ${t('ultraSimple.logs.downloadFailed')}: ${errorMsg}`, 'error')
+    }
+    
+    console.error('Download error:', error)
+    ElMessage({
+      message: t('ultraSimple.messages.downloadError'),
+      type: 'error',
+      duration: 5000,
+      showClose: true
+    })
   }
 }
 

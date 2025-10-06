@@ -146,8 +146,8 @@ export const AssemblyUtils = {
     results.operationsPerSecond = 1000 / (results.loadTime / 1000)
 
     // 估算内存使用
-    if ('memory' in performance) {
-      results.memoryUsage = (performance as any).memory.usedJSHeapSize
+    if (performance.memory) {
+      results.memoryUsage = performance.memory.usedJSHeapSize
     }
 
     results.loadTime = performance.now() - startTime

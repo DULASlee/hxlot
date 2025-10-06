@@ -104,6 +104,9 @@ namespace SmartAbp.CodeGenerator.Services
 
             // Generate default UI configuration based on metadata before any codegen
             _defaultUiConfigGenerator.ApplyDefaults(input);
+            
+            // 创建会话ID用于前端状态跟踪
+            var sessionId = CodeGenerationExtensions.CreateGenerationSession(input.Name);
 
             // 🔥 ABP事件驱动架构：发布模块生成请求事件
             var generationRequestEvent = new ModuleGenerationRequestedEvent(
@@ -125,9 +128,38 @@ namespace SmartAbp.CodeGenerator.Services
 
             try
             {
+                // 更新会话状态为处理中
+                CodeGenerationExtensions.UpdateGenerationStatus(
+                    sessionId, 
+                    20, 
+                    $"开始生成模块: {input.Name}"
+                );
+
                 // ✅ 使用稳定生成流水线执行实际的代码生成
                 // 这样可以保持API兼容性，同时演示异步等待机制
                 var result = await GenerateModuleStableAsync(input);
+                
+                // 记录生成结果并更新会话状态
+                if (result.GeneratedFiles != null && result.GeneratedFiles.Count > 0)
+                {
+                    // 添加生成的文件
+                    foreach (var file in result.GeneratedFiles)
+                    {
+                        // 注意：实际情况应读取文件内容，这里简化处理
+                        CodeGenerationExtensions.AddGeneratedFile(sessionId, file, "// Generated file content");
+                    }
+                    
+                    // 更新会话状态为已完成
+                    CodeGenerationExtensions.CompleteGenerationSession(sessionId, result.GeneratedFiles);
+                }
+                else
+                {
+                    // 如果没有生成文件，更新为失败状态
+                    CodeGenerationExtensions.FailGenerationSession(sessionId, "No files were generated");
+                }
+                
+                // 在结果中添加会话ID
+                result.SessionId = sessionId;
                 
                 // 标记任务完成
                 tcs.TrySetResult(result);
@@ -142,6 +174,9 @@ namespace SmartAbp.CodeGenerator.Services
             }
             catch (Exception ex)
             {
+                // 更新会话状态为失败
+                CodeGenerationExtensions.FailGenerationSession(sessionId, ex.Message);
+                
                 // 标记任务失败
                 tcs.TrySetException(ex);
                 

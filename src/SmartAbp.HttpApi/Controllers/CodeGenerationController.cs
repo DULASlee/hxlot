@@ -97,6 +97,28 @@ namespace SmartAbp.Controllers
         {
             return _service.SaveUiConfigAsync(module, entity, config);
         }
+
+        // 新增：获取代码生成状态端点
+        [HttpGet("status/{sessionId}")]
+        public async Task<GenerationStatusDto> GetGenerationStatusAsync(string sessionId)
+        {
+            // 调用业务逻辑服务方法获取生成状态
+            var status = await _service.GetGenerationStatusAsync(sessionId);
+            return status;
+        }
+
+        // 新增：导出生成代码为ZIP
+        [HttpGet("export/{sessionId}")]
+        public async Task<IActionResult> ExportGeneratedCodeAsync(string sessionId)
+        {
+            var zipPackage = await _service.ExportGeneratedCodeAsync(sessionId);
+            
+            // 返回文件下载
+            return File(
+                zipPackage.Content,
+                "application/zip",
+                $"generated-code-{sessionId}.zip");
+        }
     }
 }
 

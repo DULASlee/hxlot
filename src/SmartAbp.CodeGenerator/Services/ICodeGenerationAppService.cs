@@ -141,6 +141,20 @@ namespace SmartAbp.CodeGenerator.Services
         /// Returns backend-supported schema version manifest for preflight checks.
         /// </summary>
         Task<SmartAbp.CodeGenerator.Services.V9.SchemaVersionManifestDto> GetSchemaVersionManifestAsync();
+
+        /// <summary>
+        /// Gets the generation status for a specific session
+        /// </summary>
+        /// <param name="sessionId">The unique session identifier</param>
+        /// <returns>Current status of the code generation process</returns>
+        Task<GenerationStatusDto> GetGenerationStatusAsync(string sessionId);
+
+        /// <summary>
+        /// Exports generated code as a ZIP package
+        /// </summary>
+        /// <param name="sessionId">The unique session identifier</param>
+        /// <returns>ZIP package with generated code</returns>
+        Task<ZipPackageDto> ExportGeneratedCodeAsync(string sessionId);
     }
 }
 
