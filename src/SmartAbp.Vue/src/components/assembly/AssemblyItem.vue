@@ -15,38 +15,38 @@
         >{{ statusText }}</span>
       </div>
       <div class="item-actions">
-        <button 
-          v-if="isLoaded" 
-          class="btn btn-warning btn-sm" 
+        <button
+          v-if="isLoaded"
+          class="btn btn-warning btn-sm"
           :disabled="isLoading"
           @click="$emit('unload')"
         >
           卸载
         </button>
-        <button 
-          v-else 
-          class="btn btn-primary btn-sm" 
+        <button
+          v-else
+          class="btn btn-primary btn-sm"
           :disabled="isLoading || !registryItem.config.enabled"
           @click="$emit('load')"
         >
           加载
         </button>
-        <button 
-          class="btn btn-secondary btn-sm" 
+        <button
+          class="btn btn-secondary btn-sm"
           :disabled="isLoading || !isLoaded"
           @click="$emit('reload')"
         >
           重载
         </button>
-        <button 
-          class="btn btn-sm" 
+        <button
+          class="btn btn-sm"
           :class="toggleButtonClass"
           @click="$emit('toggle')"
         >
           {{ registryItem.config.enabled ? '禁用' : '启用' }}
         </button>
-        <button 
-          class="btn btn-outline btn-sm" 
+        <button
+          class="btn btn-outline btn-sm"
           @click="$emit('edit')"
         >
           编辑
@@ -61,7 +61,7 @@
       >
         {{ registryItem.config.description }}
       </p>
-      
+
       <div class="item-meta">
         <div class="meta-item">
           <span class="meta-label">名称:</span>
@@ -77,8 +77,8 @@
         >
           <span class="meta-label">依赖:</span>
           <div class="dependencies">
-            <span 
-              v-for="dep in registryItem.config.dependencies" 
+            <span
+              v-for="dep in registryItem.config.dependencies"
               :key="dep"
               class="dependency-tag"
             >
@@ -132,7 +132,8 @@
           <span class="health-icon">{{ healthIcon }}</span>
           <span>健康状态: {{ registryItem.instance.health?.status || 'Unknown' }}</span>
           <span class="last-check">
-            最后检查: {{ registryItem.instance.health?.lastCheck ? formatDate(registryItem.instance.health.lastCheck) : 'Never' }}
+            最后检查: {{ registryItem.instance.health?.lastCheck ? formatDate(registryItem.instance.health.lastCheck) :
+              'Never' }}
           </span>
         </div>
       </div>
@@ -141,8 +142,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { AssemblyRegistryItem } from '../../core/assembly/assembly-registry'
+import { computed } from 'vue';
+import type { AssemblyRegistryItem } from '../../core/assembly/assembly-registry';
 
 interface Props {
   registryItem: AssemblyRegistryItem
@@ -185,14 +186,14 @@ const statusText = computed(() => {
   return '就绪'
 })
 
-const toggleButtonClass = computed(() => 
+const toggleButtonClass = computed(() =>
   isEnabled.value ? 'btn-warning' : 'btn-success'
 )
 
 const healthClass = computed(() => {
   const health = props.registryItem.instance?.health
   if (!health) return 'health-unknown'
-  
+
   switch (health.status) {
     case 'healthy': return 'health-healthy'
     case 'unhealthy': return 'health-unhealthy'
@@ -203,7 +204,7 @@ const healthClass = computed(() => {
 const healthIcon = computed(() => {
   const health = props.registryItem.instance?.health
   if (!health) return '❓'
-  
+
   switch (health.status) {
     case 'healthy': return '✅'
     case 'unhealthy': return '❌'
@@ -227,7 +228,7 @@ const formatDate = (date: Date) => {
 }
 
 .assembly-item:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .assembly-item.loaded {
