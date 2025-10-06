@@ -344,17 +344,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import { 
-  TrendCharts, 
-  Tools, 
-  OfficeBuilding, 
-  MoreFilled,
-  ArrowDown,
-  Check
+import {
+    ArrowDown,
+    Check,
+    MoreFilled,
+    OfficeBuilding,
+    Tools,
+    TrendCharts
 } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { codeGenStatsApi, userProfileApi } from '@smartabp/lowcode-api'
+import type { CodeGenStatsDto, IndustryRecommendationDto } from '@smartabp/lowcode-api'
 
 const router = useRouter()
 
@@ -369,27 +371,17 @@ interface ComparisonItem {
   highlight?: 'simple' | 'industry' | 'pro' | 'neutral'
 }
 
-interface CodeGenStats {
-  totalProjects: number
-  monthlyGenerations: number
-  savedHours: number
-  qualityScore: number
-}
-
-interface IndustryRecommendation {
-  template: string
-  name: string
-  reason: string
-  benefits: string
-}
+// ========== 使用API类型 ==========
+// 已从@smartabp/lowcode-api导入CodeGenStatsDto和IndustryRecommendationDto
 
 // ========== 状态管理 ==========
 
-const stats = ref<CodeGenStats>({
+const stats = ref<CodeGenStatsDto>({
   totalProjects: 0,
   monthlyGenerations: 0,
   savedHours: 0,
-  qualityScore: 0
+  qualityScore: 0,
+  lastUpdated: new Date().toISOString()
 })
 
 const statsLoading = ref(false)
@@ -397,6 +389,7 @@ const showWelcomeGuide = ref(false)
 const isFirstVisit = ref(false)
 const lastUsedMode = ref<'simple' | 'industry' | 'pro' | null>(null)
 const userIndustry = ref<string>('')
+const industryRecommendation = ref<IndustryRecommendationDto | null>(null)
 
 // ========== 对比数据 ==========
 
@@ -484,101 +477,131 @@ const recommendedMode = computed(() => {
   return 'industry'
 })
 
-const industryRecommendation = computed((): IndustryRecommendation | null => {
-  if (userIndustry.value === 'manufacturing') {
-    return {
-      template: 'saas-mes',
-      name: 'SaaS云MES系统',
-      reason: '检测到您的企业是制造业',
-      benefits: '30分钟生成完整MES系统，包含生产管理、设备监控、质量追溯、移动报工APP和实时监控大屏'
-    }
-  }
-  
-  if (userIndustry.value === 'construction') {
-    return {
-      template: 'smart-construction',
-      name: '智慧工地管理系统',
-      reason: '检测到您的企业是建筑施工业',
-      benefits: '1小时生成智慧工地平台，包含人员管理、安全监控、进度管理、环境监测、移动APP和数字大屏'
-    }
-  }
-  
-  return null
-})
+// industryRecommendation 已改为ref，通过API加载
 
 // ========== 生命周期 ==========
 
 onMounted(async () => {
-  // 检查是否首次访问
-  const visited = localStorage.getItem('codeGenVisited')
-  isFirstVisit.value = !visited
-  
-  // 加载上次使用模式
-  lastUsedMode.value = localStorage.getItem('lastCodeGenMode') as any
-  
-  // 获取用户行业信息（从localStorage或API）
-  userIndustry.value = localStorage.getItem('userIndustry') || ''
-  
-  // 加载统计数据（模拟数据，待后端API实现）
-  await loadStats()
+  // 并行加载所有数据
+  await Promise.all([
+    loadStats(),
+    loadUserProfile(),
+    loadRecommendation()
+  ])
   
   // 首次访问显示引导
   if (isFirstVisit.value) {
     setTimeout(() => {
       showWelcomeGuide.value = true
     }, 800)
-    localStorage.setItem('codeGenVisited', 'true')
   }
 })
 
 // ========== 方法 ==========
 
+/**
+ * 加载统计数据（真实API）
+ */
 const loadStats = async () => {
   statsLoading.value = true
   try {
-    // TODO: 替换为真实API调用
-    // stats.value = await codeGenStatsApi.getStats()
-    
-    // 临时模拟数据
-    await new Promise(resolve => setTimeout(resolve, 500))
+    const data = await codeGenStatsApi.getMyStats()
     stats.value = {
-      totalProjects: 156,
-      monthlyGenerations: 28,
-      savedHours: 6240,
-      qualityScore: 94.5
+      totalProjects: data.totalProjects,
+      monthlyGenerations: data.monthlyGenerations,
+      savedHours: data.savedHours,
+      qualityScore: data.qualityScore,
+      lastUpdated: data.lastUpdated
     }
   } catch (error) {
     console.error('加载统计数据失败:', error)
-    // 失败时不显示统计横幅
+    // 失败时不显示统计横幅（优雅降级）
     stats.value = {
       totalProjects: 0,
       monthlyGenerations: 0,
       savedHours: 0,
-      qualityScore: 0
+      qualityScore: 0,
+      lastUpdated: new Date().toISOString()
     }
   } finally {
     statsLoading.value = false
   }
 }
 
-const goToSimpleMode = () => {
-  localStorage.setItem('lastCodeGenMode', 'simple')
+/**
+ * 加载用户配置（真实API）
+ */
+const loadUserProfile = async () => {
+  try {
+    const profile = await userProfileApi.getMyProfile()
+    userIndustry.value = profile.industry || ''
+    isFirstVisit.value = profile.isFirstVisit
+    lastUsedMode.value = profile.lastUsedMode as any
+  } catch (error) {
+    console.error('加载用户配置失败:', error)
+    // 优雅降级到localStorage
+    userIndustry.value = localStorage.getItem('userIndustry') || ''
+    const visited = localStorage.getItem('codeGenVisited')
+    isFirstVisit.value = !visited
+    lastUsedMode.value = localStorage.getItem('lastCodeGenMode') as any
+  }
+}
+
+/**
+ * 加载行业推荐（真实API）
+ */
+const loadRecommendation = async () => {
+  try {
+    const recommendation = await userProfileApi.getRecommendation()
+    industryRecommendation.value = recommendation
+  } catch (error) {
+    console.error('加载推荐失败:', error)
+    industryRecommendation.value = null
+  }
+}
+
+/**
+ * 跳转到极简模式（同步后端）
+ */
+const goToSimpleMode = async () => {
+  try {
+    await userProfileApi.updateMyProfile({ lastUsedMode: 'simple' })
+  } catch (error) {
+    // 降级到localStorage
+    localStorage.setItem('lastCodeGenMode', 'simple')
+  }
   router.push('/CodeGen/ultra-simple')
 }
 
-const goToProMode = () => {
-  localStorage.setItem('lastCodeGenMode', 'pro')
-  // ✅ 修复：跳转到具体功能页
+/**
+ * 跳转到专业模式（同步后端）
+ */
+const goToProMode = async () => {
+  try {
+    await userProfileApi.updateMyProfile({ lastUsedMode: 'pro' })
+  } catch (error) {
+    // 降级到localStorage
+    localStorage.setItem('lastCodeGenMode', 'pro')
+  }
   router.push('/lowcode/entity-modeling')
 }
 
-const selectIndustryTemplate = (template: string) => {
+/**
+ * 选择行业模板（同步后端）
+ */
+const selectIndustryTemplate = async (template: string) => {
   if (template === 'coming-soon') {
     ElMessage.info('更多行业模板即将推出，敬请期待！')
     return
   }
   
-  localStorage.setItem('lastCodeGenMode', 'industry')
+  try {
+    await userProfileApi.updateMyProfile({ lastUsedMode: 'industry' })
+  } catch (error) {
+    // 降级到localStorage
+    localStorage.setItem('lastCodeGenMode', 'industry')
+  }
+  
   localStorage.setItem('selectedIndustryTemplate', template)
   
   ElMessage.success({
@@ -586,14 +609,15 @@ const selectIndustryTemplate = (template: string) => {
     duration: 2000
   })
   
-  // 跳转到行业模板配置页（待实现）
-  // TODO: 创建行业模板配置页面
   router.push({
     path: '/lowcode/industry-template',
     query: { template }
   })
 }
 
+/**
+ * 使用推荐的模板
+ */
 const useRecommendedTemplate = () => {
   showWelcomeGuide.value = false
   if (industryRecommendation.value) {

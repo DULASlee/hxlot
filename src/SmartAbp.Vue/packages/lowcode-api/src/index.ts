@@ -17,6 +17,10 @@ export type { ApiError, ApiResponse, HttpClient, HttpClientConfig } from "./http
 export * from "./code-generator"
 export { codeGeneratorApi } from "./code-generator"
 
+// 代码生成统计和用户配置
+export * from "./code-gen-stats"
+export { codeGenStatsApi, userProfileApi } from "./code-gen-stats"
+
 // ============================================================================
 // DDD生成器API导出（Day 7 新增）
 // ============================================================================
