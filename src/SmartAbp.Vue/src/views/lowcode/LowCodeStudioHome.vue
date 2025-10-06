@@ -8,10 +8,11 @@
         </el-icon>
         <h1>{{ greetingMessage }}，{{ userName }}</h1>
         <p class="welcome-desc">
-          SmartAbp全栈代码生成器 - 已为您生成 <strong>{{ stats.totalProjects }}</strong> 个项目，节省 <strong>{{ stats.savedHours }}</strong> 小时开发时间
+          SmartAbp全栈代码生成器 - 已为您生成 <strong>{{ stats.totalProjects }}</strong> 个项目，节省 <strong>{{ stats.savedHours
+          }}</strong> 小时开发时间
         </p>
       </div>
-      
+
       <!-- 统计卡片 -->
       <div v-loading="statsLoading" class="stats-cards">
         <div class="stat-card">
@@ -41,13 +42,8 @@
       </div>
 
       <div class="nav-cards">
-        <div
-          v-for="nav in quickNavItems"
-          :key="nav.path"
-          class="nav-card"
-          :class="{ 'most-used': nav.isMostUsed }"
-          @click="navigateTo(nav.path)"
-        >
+        <div v-for="nav in quickNavItems" :key="nav.path" class="nav-card" :class="{ 'most-used': nav.isMostUsed }"
+          @click="navigateTo(nav.path)">
           <div class="card-icon">
             <el-icon :size="32">
               <component :is="nav.icon" />
@@ -77,12 +73,7 @@
     <div class="recent-section">
       <div class="section-title">
         <h2>最近生成的项目</h2>
-        <el-button
-          v-if="recentProjects.length > 0"
-          type="primary"
-          text
-          @click="viewAllProjects"
-        >
+        <el-button v-if="recentProjects.length > 0" type="primary" text @click="viewAllProjects">
           查看全部
         </el-button>
       </div>
@@ -90,18 +81,11 @@
       <div v-loading="projectsLoading" class="recent-projects">
         <!-- 有数据时显示项目卡片 -->
         <div v-if="recentProjects.length > 0" class="projects-grid">
-          <div
-            v-for="project in recentProjects"
-            :key="project.id"
-            class="project-card"
-          >
+          <div v-for="project in recentProjects" :key="project.id" class="project-card">
             <div class="project-header">
               <div class="project-info">
                 <h3>{{ project.projectName }}</h3>
-                <el-tag
-                  :type="project.status === 'success' ? 'success' : 'danger'"
-                  size="small"
-                >
+                <el-tag :type="project.status === 'success' ? 'success' : 'danger'" size="small">
                   {{ project.status === 'success' ? '生成成功' : '生成失败' }}
                 </el-tag>
               </div>
@@ -109,7 +93,7 @@
                 <span>{{ formatTime(project.creationTime) }}</span>
               </div>
             </div>
-            
+
             <div class="project-stats">
               <div class="stat-item">
                 <span class="label">模式：</span>
@@ -132,23 +116,18 @@
                 <span class="value">{{ project.generationDuration }}s</span>
               </div>
             </div>
-            
+
             <div class="project-actions">
               <el-button size="small" @click="continueEdit(project)">
                 继续编辑
               </el-button>
-              <el-button
-                size="small"
-                type="danger"
-                text
-                @click="deleteProject(project)"
-              >
+              <el-button size="small" type="danger" text @click="deleteProject(project)">
                 删除
               </el-button>
             </div>
           </div>
         </div>
-        
+
         <!-- 无数据时显示Empty -->
         <div v-else class="project-placeholder">
           <el-empty description="暂无生成记录" :image-size="80">
@@ -163,12 +142,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { MagicStick, DataBoard, Brush, Setting, ArrowRight, Opportunity } from '@element-plus/icons-vue'
-import { codeGenStatsApi, userProfileApi, generationHistoryApi } from '@smartabp/lowcode-api'
+import { ArrowRight, Brush, DataBoard, MagicStick, Opportunity } from '@element-plus/icons-vue'
 import type { CodeGenStatsDto, GenerationHistoryDto } from '@smartabp/lowcode-api'
+import { codeGenStatsApi, generationHistoryApi, userProfileApi } from '@smartabp/lowcode-api'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
@@ -240,7 +219,7 @@ onMounted(async () => {
     loadRecentProjects(),
     loadUserProfile()
   ])
-  
+
   calculateMostUsed()
 })
 
@@ -304,18 +283,18 @@ const loadUserProfile = async () => {
 const calculateMostUsed = () => {
   // 基于最近项目统计使用次数
   const modeCounts: Record<string, number> = {}
-  
+
   recentProjects.value.forEach(p => {
     modeCounts[p.mode] = (modeCounts[p.mode] || 0) + 1
   })
-  
+
   // 映射mode到导航项
   const modeToPath: Record<string, string> = {
     'simple': '/CodeGen/ultra-simple',
     'industry': '/lowcode/industry-template',
     'pro': '/lowcode/entity-modeling'
   }
-  
+
   // 更新使用次数
   quickNavItems.value.forEach(item => {
     const mode = Object.keys(modeToPath).find(k => modeToPath[k] === item.path)
@@ -323,7 +302,7 @@ const calculateMostUsed = () => {
       item.usageCount = modeCounts[mode] || 0
     }
   })
-  
+
   // 标记最常用
   const maxCount = Math.max(...quickNavItems.value.map(item => item.usageCount))
   if (maxCount > 0) {
@@ -340,16 +319,16 @@ const formatTime = (time: string): string => {
   const date = new Date(time)
   const now = new Date()
   const diff = now.getTime() - date.getTime()
-  
+
   const minutes = Math.floor(diff / 60000)
   const hours = Math.floor(diff / 3600000)
   const days = Math.floor(diff / 86400000)
-  
+
   if (minutes < 1) return '刚刚'
   if (minutes < 60) return `${minutes}分钟前`
   if (hours < 24) return `${hours}小时前`
   if (days < 7) return `${days}天前`
-  
+
   return date.toLocaleDateString('zh-CN')
 }
 
@@ -417,15 +396,15 @@ const deleteProject = async (project: GenerationHistoryDto) => {
         type: 'warning'
       }
     )
-    
+
     await generationHistoryApi.deleteProject(project.id)
-    
+
     ElMessage.success('删除成功')
-    
+
     // 重新加载列表
     await loadRecentProjects()
     await loadStats()
-    
+
   } catch (error: any) {
     if (error !== 'cancel') {
       console.error('删除项目失败:', error)
@@ -461,7 +440,7 @@ const deleteProject = async (project: GenerationHistoryDto) => {
   font-size: 16px;
   color: var(--el-text-color-regular);
   margin: 0 0 32px 0;
-  
+
   strong {
     color: var(--el-color-primary);
     font-weight: 600;
@@ -487,7 +466,7 @@ const deleteProject = async (project: GenerationHistoryDto) => {
   text-align: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
-  
+
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     transform: translateY(-2px);
@@ -545,12 +524,12 @@ const deleteProject = async (project: GenerationHistoryDto) => {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+
   &.most-used {
     border-color: var(--el-color-success);
     background: var(--el-color-success-light-9);
   }
-  
+
   &:hover {
     border-color: var(--el-color-primary);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -613,7 +592,7 @@ const deleteProject = async (project: GenerationHistoryDto) => {
   border-radius: 8px;
   padding: 16px;
   transition: all 0.3s ease;
-  
+
   &:hover {
     border-color: var(--el-color-primary);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -631,7 +610,7 @@ const deleteProject = async (project: GenerationHistoryDto) => {
 
 .project-info {
   flex: 1;
-  
+
   h3 {
     font-size: 16px;
     font-weight: 600;
@@ -654,11 +633,11 @@ const deleteProject = async (project: GenerationHistoryDto) => {
 
 .stat-item {
   font-size: 14px;
-  
+
   .label {
     color: var(--el-text-color-secondary);
   }
-  
+
   .value {
     color: var(--el-text-color-primary);
     font-weight: 500;
@@ -693,11 +672,11 @@ const deleteProject = async (project: GenerationHistoryDto) => {
   .stats-cards {
     grid-template-columns: 1fr;
   }
-  
+
   .nav-cards {
     grid-template-columns: 1fr;
   }
-  
+
   .projects-grid {
     grid-template-columns: 1fr;
   }
