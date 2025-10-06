@@ -9,29 +9,21 @@
     <div class="node-body">
       <div class="node-description">{{ data.description || '多条件分支决策' }}</div>
       <div v-if="data.branches && data.branches.length > 0" class="branches-list">
-        <div
-          v-for="(branch, index) in data.branches"
-          :key="index"
-          class="branch-item"
-        >
+        <div v-for="(branch, index) in data.branches" :key="index" class="branch-item">
           <div class="branch-label">分支 {{ index + 1 }}</div>
           <code class="branch-condition">{{ formatCondition(branch.condition) }}</code>
         </div>
       </div>
       <div v-else class="node-warning">
-        <el-icon><InfoFilled /></el-icon>
+        <el-icon>
+          <InfoFilled />
+        </el-icon>
         <span>请配置分支条件</span>
       </div>
     </div>
-    <Handle type="target" position="left" :style="targetHandleStyle" />
-    <Handle
-      v-for="(branch, index) in visibleBranches"
-      :key="index"
-      :id="`branch-${index}`"
-      type="source"
-      :position="getBranchPosition(index)"
-      :style="getBranchHandleStyle(index)"
-    >
+    <Handle type="target" :position="Position.Left" :style="targetHandleStyle" />
+    <Handle v-for="(branch, index) in visibleBranches" :key="index" :id="`branch-${index}`" type="source"
+      :position="getBranchPosition(index)" :style="getBranchHandleStyle(index)">
       <div class="handle-label" :style="getHandleLabelStyle(index)">
         {{ branch.label || `分支${index + 1}` }}
       </div>
@@ -40,10 +32,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { InfoFilled, Operation } from '@element-plus/icons-vue'
 import { Handle, Position } from '@vue-flow/core'
 import { ElIcon } from 'element-plus'
-import { Operation, InfoFilled } from '@element-plus/icons-vue'
+import { computed } from 'vue'
 import type { RuleNodeData } from '../types'
 
 interface Branch {
@@ -103,7 +95,7 @@ const getHandleLabelStyle = (index: number) => {
     whiteSpace: 'nowrap',
     pointerEvents: 'none'
   }
-  
+
   switch (position) {
     case Position.Right:
       return { ...baseStyle, right: '-60px', top: '50%', transform: 'translateY(-50%)' }

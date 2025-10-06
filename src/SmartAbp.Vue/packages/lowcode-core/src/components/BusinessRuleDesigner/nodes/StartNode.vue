@@ -9,15 +9,15 @@
     <div class="node-body">
       <div class="node-description">{{ data.description || '工作流起始节点' }}</div>
     </div>
-    <Handle type="source" position="right" :style="handleStyle" />
+    <Handle type="source" :position="Position.Right" :style="handleStyle" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { VideoPlay } from '@element-plus/icons-vue'
 import { Handle, Position } from '@vue-flow/core'
 import { ElIcon } from 'element-plus'
-import { VideoPlay } from '@element-plus/icons-vue'
+import { computed } from 'vue'
 import type { RuleNodeData } from '../types'
 
 interface Props {

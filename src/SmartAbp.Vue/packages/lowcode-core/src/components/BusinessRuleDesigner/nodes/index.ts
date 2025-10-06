@@ -1,3 +1,4 @@
+import type { Component } from 'vue'
 /**
  * 业务规则节点组件库
  * 
@@ -26,7 +27,7 @@ export const NODE_TYPES = {
 /**
  * 节点组件注册配置
  */
-export const nodeComponents = {
+export const nodeComponents: Record<'start' | 'end' | 'condition' | 'action' | 'decision', Component> = {
   start: StartNode,
   end: EndNode,
   condition: ConditionNode,

@@ -1,34 +1,35 @@
 <template>
   <div class="workflow-designer">
-    <VueFlow
-      :nodes="nodes"
-      :edges="edges"
-      @nodes-change="onNodesChange"
-      @edges-change="onEdgesChange"
-      @connect="onConnect"
-      fit-view-on-init
-    >
+    <VueFlow v-model:nodes="nodes" v-model:edges="edges" fit-view-on-init>
       <Background />
       <Controls />
-      <MiniMap />
+      <!-- MiniMap 暂不启用，避免外部依赖未安装导致类型错误 -->
 
       <!-- 工具栏 -->
       <div class="workflow-toolbar">
         <el-button-group>
           <el-button type="primary" size="small" @click="addState">
-            <el-icon><Plus /></el-icon>
+            <el-icon>
+              <Plus />
+            </el-icon>
             添加状态
           </el-button>
           <el-button size="small" @click="validate">
-            <el-icon><Check /></el-icon>
+            <el-icon>
+              <Check />
+            </el-icon>
             验证
           </el-button>
           <el-button size="small" @click="save">
-            <el-icon><Document /></el-icon>
+            <el-icon>
+              <Document />
+            </el-icon>
             保存
           </el-button>
           <el-button size="small" @click="exportWorkflow">
-            <el-icon><Download /></el-icon>
+            <el-icon>
+              <Download />
+            </el-icon>
             导出
           </el-button>
         </el-button-group>
@@ -38,22 +39,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { VueFlow, useVueFlow } from '@vue-flow/core'
+import { Check, Document, Download, Plus } from '@element-plus/icons-vue'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
-import { MiniMap } from '@vue-flow/minimap'
+import { VueFlow, useVueFlow } from '@vue-flow/core'
 import { ElButton, ElButtonGroup, ElIcon, ElMessage } from 'element-plus'
-import { Plus, Check, Document, Download } from '@element-plus/icons-vue'
+import { ref } from 'vue'
 
-const {
-  nodes,
-  edges,
-  addNodes,
-  onNodesChange,
-  onEdgesChange,
-  onConnect
-} = useVueFlow()
+const { addNodes } = useVueFlow()
+const nodes = ref([])
+const edges = ref([])
 
 const addState = () => {
   const newNode = {

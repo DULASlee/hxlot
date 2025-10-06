@@ -11,7 +11,7 @@
     </div>
     <div class="node-body">
       <div class="node-description">{{ data.description || '执行业务操作' }}</div>
-      
+
       <!-- SetFieldValue -->
       <div v-if="data.actionType === 'SetFieldValue' && data.actionParams" class="action-params">
         <div class="param-item">
@@ -23,7 +23,7 @@
           <span class="param-value">{{ formatValue(data.actionParams.value) }}</span>
         </div>
       </div>
-      
+
       <!-- ShowMessage -->
       <div v-else-if="data.actionType === 'ShowMessage' && data.actionParams" class="action-params">
         <div class="param-item">
@@ -31,12 +31,12 @@
           <span class="param-value">{{ data.actionParams.message }}</span>
         </div>
         <div class="param-item">
-          <el-tag :type="getMessageTypeTag(data.actionParams.type)" size="small">
+          <el-tag :type="(getMessageTypeTag(data.actionParams.type) as any)" size="small">
             {{ data.actionParams.type || 'info' }}
           </el-tag>
         </div>
       </div>
-      
+
       <!-- CallAPI -->
       <div v-else-if="data.actionType === 'CallAPI' && data.actionParams" class="action-params">
         <div class="param-item">
@@ -47,7 +47,7 @@
           <el-tag type="info" size="small">{{ data.actionParams.method || 'GET' }}</el-tag>
         </div>
       </div>
-      
+
       <!-- ValidateField -->
       <div v-else-if="data.actionType === 'ValidateField' && data.actionParams" class="action-params">
         <div class="param-item">
@@ -55,34 +55,31 @@
           <span class="param-value">{{ data.actionParams.field }}</span>
         </div>
         <div v-if="data.actionParams.rules" class="param-item">
-          <el-tag
-            v-for="rule in data.actionParams.rules"
-            :key="rule"
-            type="warning"
-            size="small"
-            style="margin-right: 4px"
-          >
+          <el-tag v-for="rule in data.actionParams.rules" :key="rule" type="warning" size="small"
+            style="margin-right: 4px">
             {{ rule }}
           </el-tag>
         </div>
       </div>
-      
+
       <!-- 未配置 -->
       <div v-else class="node-warning">
-        <el-icon><InfoFilled /></el-icon>
+        <el-icon>
+          <InfoFilled />
+        </el-icon>
         <span>请配置动作类型和参数</span>
       </div>
     </div>
-    <Handle type="target" position="left" :style="targetHandleStyle" />
-    <Handle type="source" position="right" :style="sourceHandleStyle" />
+    <Handle type="target" :position="Position.Left" :style="targetHandleStyle" />
+    <Handle type="source" :position="Position.Right" :style="sourceHandleStyle" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Handle } from '@vue-flow/core'
+import { InfoFilled, Setting } from '@element-plus/icons-vue'
+import { Handle, Position } from '@vue-flow/core'
 import { ElIcon, ElTag } from 'element-plus'
-import { Setting, InfoFilled } from '@element-plus/icons-vue'
+import { computed } from 'vue'
 import type { RuleNodeData } from '../types'
 
 interface Props {

@@ -14,6 +14,7 @@
   "dependencies": {
     "@smartabp/lowcode-shared": "^1.0.0",
     "@smartabp/lowcode-api": "^1.0.0",
+    "@vue-flow/minimap": "^1.3.0",
     "pinia": "^2.1.0",
     "vue": "^3.3.0",
     "typescript": "^5.0.0"

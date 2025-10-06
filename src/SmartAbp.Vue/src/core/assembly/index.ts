@@ -2,6 +2,7 @@
  * 装配件系统主入口
  */
 
+import { StorageAdapterFactory } from './storage-adapters'
 // 核心类型和接口
 export type {
   AssemblyConfig, AssemblyEvent,
@@ -67,15 +68,8 @@ export async function createDefaultAssemblyManager(): Promise<any> {
     autoLoad: true,
     enableHealthChecks: true,
     healthCheckInterval: 30000,
-    enablePlugins: true,
     debug: process.env.NODE_ENV === 'development',
-    storage: {
-      type: 'localStorage'
-      // ✅ 修复: AssemblyStorage不支持options字段,移除
-      // options: {
-      //   prefix: 'assembly_'
-      // }
-    },
+    storage: StorageAdapterFactory.createLocalStorage(),
     loaderOptions: {
       timeout: 30000
       // ✅ 修复: AssemblyLoaderOptions不支持retryCount字段,移除

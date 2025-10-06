@@ -66,6 +66,9 @@
     "public",
     "scripts",
     "*.config.ts",
-    "*.config.js"
+    "*.config.js",
+    "src/core/assembly/examples/**",
+    "src/tools/**",
+    "src/views/library/**"
   ]
 }

@@ -2,7 +2,9 @@
   <div class="property-panel">
     <!-- 面板标题 -->
     <div class="panel-header">
-      <el-icon><Setting /></el-icon>
+      <el-icon>
+        <Setting />
+      </el-icon>
       <span>属性配置</span>
     </div>
 
@@ -21,25 +23,16 @@
             <el-input v-model="selectedNode.id" disabled />
           </el-form-item>
           <el-form-item label="节点标签">
-            <el-input
-              v-model="selectedNode.data.label"
-              placeholder="请输入节点标签"
-              @input="onPropertyChange"
-            />
+            <el-input v-model="selectedNode.data.label" placeholder="请输入节点标签" @input="onPropertyChange" />
           </el-form-item>
           <el-form-item label="节点类型">
-            <el-tag :type="getNodeTypeTagType(selectedNode.type)">
+            <el-tag :type="(getNodeTypeTagType(selectedNode.type) as any)">
               {{ getNodeTypeLabel(selectedNode.type) }}
             </el-tag>
           </el-form-item>
           <el-form-item label="节点描述">
-            <el-input
-              v-model="selectedNode.data.description"
-              type="textarea"
-              :rows="2"
-              placeholder="请输入节点描述"
-              @input="onPropertyChange"
-            />
+            <el-input v-model="selectedNode.data.description" type="textarea" :rows="2" placeholder="请输入节点描述"
+              @input="onPropertyChange" />
           </el-form-item>
         </el-form>
       </div>
@@ -49,13 +42,8 @@
         <div class="section-title">条件配置</div>
         <el-form label-position="top" size="small">
           <el-form-item label="条件表达式">
-            <el-input
-              v-model="selectedNode.data.expression"
-              type="textarea"
-              :rows="3"
-              placeholder="例如: entity.status == 'approved'"
-              @input="onPropertyChange"
-            />
+            <el-input v-model="selectedNode.data.expression" type="textarea" :rows="3"
+              placeholder="例如: entity.status == 'approved'" @input="onPropertyChange" />
             <div class="form-item-tip">
               支持JavaScript表达式，可使用entity、user等上下文变量
             </div>
@@ -68,11 +56,7 @@
         <div class="section-title">动作配置</div>
         <el-form label-position="top" size="small">
           <el-form-item label="动作类型">
-            <el-select
-              v-model="selectedNode.data.actionType"
-              placeholder="选择动作类型"
-              @change="onActionTypeChange"
-            >
+            <el-select v-model="selectedNode.data.actionType" placeholder="选择动作类型" @change="onActionTypeChange">
               <el-option label="设置字段值" value="SetFieldValue" />
               <el-option label="显示消息" value="ShowMessage" />
               <el-option label="调用API" value="CallAPI" />
@@ -83,37 +67,21 @@
           <!-- SetFieldValue 参数 -->
           <template v-if="selectedNode.data.actionType === 'SetFieldValue'">
             <el-form-item label="字段名">
-              <el-input
-                v-model="actionParams.field"
-                placeholder="例如: status"
-                @input="onPropertyChange"
-              />
+              <el-input v-model="actionParams.field" placeholder="例如: status" @input="onPropertyChange" />
             </el-form-item>
             <el-form-item label="字段值">
-              <el-input
-                v-model="actionParams.value"
-                placeholder="例如: approved"
-                @input="onPropertyChange"
-              />
+              <el-input v-model="actionParams.value" placeholder="例如: approved" @input="onPropertyChange" />
             </el-form-item>
           </template>
 
           <!-- ShowMessage 参数 -->
           <template v-if="selectedNode.data.actionType === 'ShowMessage'">
             <el-form-item label="消息内容">
-              <el-input
-                v-model="actionParams.message"
-                type="textarea"
-                :rows="2"
-                placeholder="请输入消息内容"
-                @input="onPropertyChange"
-              />
+              <el-input v-model="actionParams.message" type="textarea" :rows="2" placeholder="请输入消息内容"
+                @input="onPropertyChange" />
             </el-form-item>
             <el-form-item label="消息类型">
-              <el-select
-                v-model="actionParams.type"
-                @change="onPropertyChange"
-              >
+              <el-select v-model="actionParams.type" @change="onPropertyChange">
                 <el-option label="信息" value="info" />
                 <el-option label="成功" value="success" />
                 <el-option label="警告" value="warning" />
@@ -125,17 +93,10 @@
           <!-- CallAPI 参数 -->
           <template v-if="selectedNode.data.actionType === 'CallAPI'">
             <el-form-item label="API地址">
-              <el-input
-                v-model="actionParams.url"
-                placeholder="/api/..."
-                @input="onPropertyChange"
-              />
+              <el-input v-model="actionParams.url" placeholder="/api/..." @input="onPropertyChange" />
             </el-form-item>
             <el-form-item label="请求方法">
-              <el-select
-                v-model="actionParams.method"
-                @change="onPropertyChange"
-              >
+              <el-select v-model="actionParams.method" @change="onPropertyChange">
                 <el-option label="GET" value="GET" />
                 <el-option label="POST" value="POST" />
                 <el-option label="PUT" value="PUT" />
@@ -147,17 +108,10 @@
           <!-- ValidateField 参数 -->
           <template v-if="selectedNode.data.actionType === 'ValidateField'">
             <el-form-item label="验证字段">
-              <el-input
-                v-model="actionParams.field"
-                placeholder="例如: email"
-                @input="onPropertyChange"
-              />
+              <el-input v-model="actionParams.field" placeholder="例如: email" @input="onPropertyChange" />
             </el-form-item>
             <el-form-item label="验证规则">
-              <el-checkbox-group
-                v-model="actionParams.rules"
-                @change="onPropertyChange"
-              >
+              <el-checkbox-group v-model="actionParams.rules" @change="onPropertyChange">
                 <el-checkbox label="required">必填</el-checkbox>
                 <el-checkbox label="email">邮箱格式</el-checkbox>
                 <el-checkbox label="min:6">最小长度6</el-checkbox>
@@ -181,11 +135,15 @@
       <!-- 操作按钮 -->
       <div class="panel-actions">
         <el-button type="primary" size="small" @click="saveProperties">
-          <el-icon><Check /></el-icon>
+          <el-icon>
+            <Check />
+          </el-icon>
           保存
         </el-button>
         <el-button size="small" @click="resetProperties">
-          <el-icon><RefreshLeft /></el-icon>
+          <el-icon>
+            <RefreshLeft />
+          </el-icon>
           重置
         </el-button>
       </div>
@@ -194,24 +152,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { Check, RefreshLeft, Setting } from '@element-plus/icons-vue'
+import { getGlobalLogger } from '@smartabp/lowcode-shared'
 import {
+  ElButton,
+  ElCheckbox,
+  ElCheckboxGroup,
+  ElEmpty,
   ElForm,
   ElFormItem,
-  ElInput,
-  ElSelect,
-  ElOption,
-  ElCheckboxGroup,
-  ElCheckbox,
-  ElButton,
   ElIcon,
-  ElTag,
-  ElEmpty,
-  ElMessage
+  ElInput,
+  ElMessage,
+  ElOption,
+  ElSelect,
+  ElTag
 } from 'element-plus'
-import { Setting, Check, RefreshLeft } from '@element-plus/icons-vue'
+import { ref, watch } from 'vue'
 import type { RuleNode, RuleNodeType } from './types'
-import { getGlobalLogger } from '@smartabp/lowcode-shared'
 
 const logger = getGlobalLogger()
 
@@ -303,7 +261,7 @@ const saveProperties = () => {
 
   emit('update-node', props.selectedNode)
   ElMessage.success('✅ 属性已保存')
-  
+
   logger.info('💾 保存节点属性', {
     nodeId: props.selectedNode.id,
     data: props.selectedNode.data
@@ -318,7 +276,7 @@ const resetProperties = () => {
 
   // 重置为初始值（简化实现）
   ElMessage.info('重置功能待完善')
-  
+
   logger.debug('🔄 重置节点属性', {
     nodeId: props.selectedNode.id
   })

@@ -1,4 +1,4 @@
-import type { Node, Edge } from '@vue-flow/core'
+import type { Edge, Node } from '@vue-flow/core'
 
 /**
  * 🔥 业务规则设计器类型定义
@@ -21,6 +21,7 @@ export interface RuleNodeData {
   label: string
   type: RuleNodeType
   description?: string
+  selected?: boolean
   // 条件节点特有
   expression?: string
   // 动作节点特有
@@ -31,6 +32,8 @@ export interface RuleNodeData {
     condition: string
     label: string
   }>
+  // 结束节点特有
+  returnValue?: string
 }
 
 /**

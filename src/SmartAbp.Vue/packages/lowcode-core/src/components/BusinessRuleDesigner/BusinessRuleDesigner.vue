@@ -4,25 +4,35 @@
     <div class="designer-toolbar">
       <div class="toolbar-left">
         <el-button type="primary" size="small" @click="addNode('condition')">
-          <el-icon><Plus /></el-icon>
+          <el-icon>
+            <Plus />
+          </el-icon>
           添加条件
         </el-button>
         <el-button type="success" size="small" @click="addNode('action')">
-          <el-icon><Setting /></el-icon>
+          <el-icon>
+            <Setting />
+          </el-icon>
           添加动作
         </el-button>
         <el-button size="small" @click="validateRules">
-          <el-icon><Check /></el-icon>
+          <el-icon>
+            <Check />
+          </el-icon>
           验证规则
         </el-button>
       </div>
       <div class="toolbar-right">
         <el-button size="small" @click="saveRules">
-          <el-icon><Document /></el-icon>
+          <el-icon>
+            <Document />
+          </el-icon>
           保存
         </el-button>
         <el-button size="small" @click="exportRules">
-          <el-icon><Download /></el-icon>
+          <el-icon>
+            <Download />
+          </el-icon>
           导出
         </el-button>
       </div>
@@ -30,27 +40,15 @@
 
     <!-- Vue Flow 画布 -->
     <div class="designer-canvas">
-      <VueFlow
-        v-model:nodes="nodes"
-        v-model:edges="edges"
-        :default-viewport="{ zoom: 1.5 }"
-        :min-zoom="0.2"
-        :max-zoom="4"
-        fit-view-on-init
-        @nodes-change="onNodesChange"
-        @edges-change="onEdgesChange"
-        @node-click="onNodeClick"
-        @edge-click="onEdgeClick"
-        @pane-click="onPaneClick"
-      >
+      <VueFlow v-model:nodes="nodes" v-model:edges="edges" :default-viewport="{ zoom: 1.5 }" :min-zoom="0.2"
+        :max-zoom="4" fit-view-on-init @node-click="onNodeClick" @edge-click="onEdgeClick" @pane-click="onPaneClick">
         <!-- 背景网格 -->
         <Background pattern-color="#aaa" :gap="16" />
-        
+
         <!-- 控制器 -->
         <Controls />
-        
-        <!-- 小地图 -->
-        <MiniMap />
+
+        <!-- 小地图（暂不启用，避免外部依赖未安装导致类型错误） -->
       </VueFlow>
     </div>
 
@@ -64,21 +62,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { VueFlow, useVueFlow } from '@vue-flow/core'
+import { Check, Document, Download, Plus, Setting } from '@element-plus/icons-vue'
+import { getGlobalLogger } from '@smartabp/lowcode-shared'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
-import { MiniMap } from '@vue-flow/minimap'
+import { VueFlow } from '@vue-flow/core'
 import { ElButton, ElIcon, ElMessage } from 'element-plus'
-import { Plus, Setting, Check, Document, Download } from '@element-plus/icons-vue'
+import { onMounted, ref } from 'vue'
 import { useEnhancedStateMachineStore } from '../../stores/enhancedStateMachine'
-import type { RuleNode, RuleEdge, RuleNodeType, RuleNodeData } from './types'
-import { getGlobalLogger } from '@smartabp/lowcode-shared'
+import type { RuleEdge, RuleNode, RuleNodeData, RuleNodeType } from './types'
 
 const logger = getGlobalLogger()
 
 // Vue Flow 实例
-const { onNodesChange, onEdgesChange, addEdges, project, vueFlowRef } = useVueFlow()
+// 使用 v-model 双向绑定 nodes/edges，避免直接绑定事件签名不匹配
 
 // Store
 const stateMachineStore = useEnhancedStateMachineStore()
@@ -95,14 +92,14 @@ const nodeIdCounter = ref(0)
  */
 const addNode = (type: RuleNodeType) => {
   const id = `node-${++nodeIdCounter.value}`
-  
+
   // 创建节点数据
   const nodeData: RuleNodeData = {
     label: getNodeLabel(type),
     type,
     description: `${getNodeLabel(type)}节点`
   }
-  
+
   // 创建节点
   const newNode: RuleNode = {
     id,
@@ -117,7 +114,7 @@ const addNode = (type: RuleNodeType) => {
       backgroundColor: '#fff'
     }
   }
-  
+
   nodes.value.push(newNode)
   logger.info('✅ 添加节点', { id, type })
 }
@@ -158,11 +155,11 @@ const getNextNodePosition = () => {
   const baseY = 100
   const offsetX = 250
   const offsetY = 150
-  
+
   const count = nodes.value.length
   const row = Math.floor(count / 3)
   const col = count % 3
-  
+
   return {
     x: baseX + col * offsetX,
     y: baseY + row * offsetY
@@ -215,12 +212,12 @@ const getSelectedNodeLabel = (): string => {
  */
 const validateRules = () => {
   const errors: string[] = []
-  
+
   // 检查是否有节点
   if (nodes.value.length === 0) {
     errors.push('至少需要一个节点')
   }
-  
+
   // 检查开始节点
   const startNodes = nodes.value.filter(n => n.type === 'start')
   if (startNodes.length === 0) {
@@ -228,26 +225,26 @@ const validateRules = () => {
   } else if (startNodes.length > 1) {
     errors.push('只能有一个开始节点')
   }
-  
+
   // 检查结束节点
   const endNodes = nodes.value.filter(n => n.type === 'end')
   if (endNodes.length === 0) {
     errors.push('缺少结束节点')
   }
-  
+
   // 检查孤立节点
   const connectedNodeIds = new Set<string>()
   edges.value.forEach(edge => {
     connectedNodeIds.add(edge.source)
     connectedNodeIds.add(edge.target)
   })
-  
+
   nodes.value.forEach(node => {
     if (!connectedNodeIds.has(node.id) && nodes.value.length > 1) {
       errors.push(`节点 "${node.data.label}" 未连接`)
     }
   })
-  
+
   if (errors.length === 0) {
     ElMessage.success('✅ 规则验证通过！')
   } else {
@@ -256,7 +253,7 @@ const validateRules = () => {
       duration: 5000
     })
   }
-  
+
   logger.info('🔍 规则验证', { errors })
 }
 
@@ -271,7 +268,7 @@ const saveRules = () => {
       nodeCount: nodes.value.length,
       edgeCount: edges.value.length
     })
-    
+
     ElMessage.success('✅ 规则已保存！')
   } catch (error) {
     logger.error('❌ 保存失败', error)
@@ -292,7 +289,7 @@ const exportRules = () => {
         createdAt: new Date().toISOString()
       }
     }
-    
+
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: 'application/json'
     })
@@ -302,7 +299,7 @@ const exportRules = () => {
     a.download = `business-rules-${Date.now()}.json`
     a.click()
     URL.revokeObjectURL(url)
-    
+
     logger.info('📥 导出规则', { nodeCount: nodes.value.length })
     ElMessage.success('✅ 规则已导出！')
   } catch (error) {
@@ -316,7 +313,7 @@ const exportRules = () => {
  */
 onMounted(() => {
   logger.info('🚀 业务规则设计器已加载')
-  
+
   // 添加默认的开始和结束节点
   addNode('start')
   addNode('end')

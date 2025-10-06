@@ -8,19 +8,19 @@
     </div>
     <div class="node-body">
       <div class="node-description">{{ data.description || '工作流结束节点' }}</div>
-      <div v-if="data.returnValue" class="node-info">
-        <el-tag type="danger" size="small">返回: {{ data.returnValue }}</el-tag>
+      <div v-if="(data as any).returnValue" class="node-info">
+        <el-tag type="danger" size="small">返回: {{ (data as any).returnValue }}</el-tag>
       </div>
     </div>
-    <Handle type="target" position="left" :style="handleStyle" />
+    <Handle type="target" :position="Position.Left" :style="handleStyle" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { VideoPause } from '@element-plus/icons-vue'
 import { Handle, Position } from '@vue-flow/core'
 import { ElIcon, ElTag } from 'element-plus'
-import { VideoPause } from '@element-plus/icons-vue'
+import { computed } from 'vue'
 import type { RuleNodeData } from '../types'
 
 interface Props {

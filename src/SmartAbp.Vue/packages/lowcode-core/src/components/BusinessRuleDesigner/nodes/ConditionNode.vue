@@ -16,25 +16,27 @@
         <code class="expression-code">{{ formatExpression(data.expression) }}</code>
       </div>
       <div v-else class="node-warning">
-        <el-icon><InfoFilled /></el-icon>
+        <el-icon>
+          <InfoFilled />
+        </el-icon>
         <span>请配置条件表达式</span>
       </div>
     </div>
-    <Handle type="target" position="left" :style="targetHandleStyle" />
-    <Handle id="true" type="source" position="right" :style="trueHandleStyle">
+    <Handle type="target" :position="Position.Left" :style="targetHandleStyle" />
+    <Handle id="true" type="source" :position="Position.Right" :style="trueHandleStyle">
       <div class="handle-label handle-label-true">True</div>
     </Handle>
-    <Handle id="false" type="source" position="bottom" :style="falseHandleStyle">
+    <Handle id="false" type="source" :position="Position.Bottom" :style="falseHandleStyle">
       <div class="handle-label handle-label-false">False</div>
     </Handle>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Handle } from '@vue-flow/core'
+import { InfoFilled, Share, Warning } from '@element-plus/icons-vue'
+import { Handle, Position } from '@vue-flow/core'
 import { ElIcon } from 'element-plus'
-import { Share, Warning, InfoFilled } from '@element-plus/icons-vue'
+import { computed } from 'vue'
 import type { RuleNodeData } from '../types'
 
 interface Props {

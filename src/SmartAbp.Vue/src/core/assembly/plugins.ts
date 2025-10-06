@@ -1,10 +1,10 @@
-import type { 
-  AssemblyConfig, 
+import type {
+  AssemblyConfig,
   // ✅ 修复: AssemblyInstance已声明但未使用,注释掉
   // AssemblyInstance, 
   AssemblyEvent,
   // ✅ 修复: 使用IAssemblyManager而不是AssemblyManager
-  IAssemblyManager as AssemblyManager  // 别名,避免全局替换
+  IAssemblyManager as AssemblyManager // 别名,避免全局替换
 } from './assembly-types'
 
 /**
@@ -45,7 +45,7 @@ export class LoggingPlugin implements AssemblyPlugin {
   private logEvent(event: AssemblyEvent): void {
     const timestamp = event.timestamp.toISOString()
     const message = `[${timestamp}] ${event.type.toUpperCase()} - ${event.assemblyName}`
-    
+
     switch (event.type) {
       case 'error':
         if (this.shouldLog('error')) {
@@ -128,7 +128,7 @@ export class PerformancePlugin implements AssemblyPlugin {
    */
   getMetrics(): Record<string, any> {
     const result: Record<string, any> = {}
-    
+
     for (const [key, metrics] of this.metrics) {
       const validMetrics = metrics.filter(m => m.duration !== undefined)
       if (validMetrics.length > 0) {
@@ -142,7 +142,7 @@ export class PerformancePlugin implements AssemblyPlugin {
         }
       }
     }
-    
+
     return result
   }
 
@@ -176,7 +176,7 @@ export class DependencyAnalysisPlugin implements AssemblyPlugin {
 
     const graph = this.manager.buildDependencyGraph()
     const configs = this.manager.getAllAssemblyConfigs()
-    
+
     return {
       graph,
       statistics: {
@@ -223,13 +223,13 @@ export class DependencyAnalysisPlugin implements AssemblyPlugin {
 
   private calculateMaxDepth(graph: any): number {
     let maxDepth = 0
-    
+
     const dfs = (nodeName: string, depth: number, visited: Set<string> = new Set()): void => {
       if (visited.has(nodeName)) return
-      
+
       visited.add(nodeName)
       maxDepth = Math.max(maxDepth, depth)
-      
+
       const node = graph.nodes.get(nodeName)
       if (node) {
         for (const depName of node.dependencies) {
@@ -237,11 +237,11 @@ export class DependencyAnalysisPlugin implements AssemblyPlugin {
         }
       }
     }
-    
+
     for (const rootName of graph.roots) {
       dfs(rootName, 1)
     }
-    
+
     return maxDepth
   }
 }
@@ -255,9 +255,9 @@ export class SecurityPlugin implements AssemblyPlugin {
   private allowedOrigins: string[] = []
   private signatureVerification = false
 
-  constructor(config?: { 
+  constructor(config?: {
     allowedOrigins?: string[]
-    signatureVerification?: boolean 
+    signatureVerification?: boolean
   }) {
     this.allowedOrigins = config?.allowedOrigins || []
     this.signatureVerification = config?.signatureVerification || false
@@ -266,16 +266,16 @@ export class SecurityPlugin implements AssemblyPlugin {
   install(manager: AssemblyManager): void {
     // 在加载前验证安全性
     const originalLoad = manager.loadAssembly.bind(manager)
-    
+
     manager.loadAssembly = async (name: string) => {
-      const config = manager.getAssemblyConfig(name)
+      const config = manager.getAllAssemblyConfigs().find(c => c.name === name)
       if (config) {
         const securityCheck = await this.validateSecurity(config)
         if (!securityCheck.isSafe) {
           throw new Error(`安全验证失败: ${securityCheck.issues.join(', ')}`)
         }
       }
-      
+
       return originalLoad(name)
     }
   }
@@ -344,7 +344,7 @@ export class HotReloadPlugin implements AssemblyPlugin {
    */
   startWatching(pollInterval: number = 2000): void {
     this.stopWatching()
-    
+
     this.watchInterval = window.setInterval(async () => {
       if (this.manager) {
         await this.checkForUpdates()
@@ -366,7 +366,7 @@ export class HotReloadPlugin implements AssemblyPlugin {
     if (!this.manager) return
 
     const configs = this.manager.getAllAssemblyConfigs()
-    
+
     for (const config of configs) {
       try {
         // 简化的更新检查逻辑
@@ -445,12 +445,12 @@ export class PluginManager {
 export class DefaultPluginBundle {
   static create(manager: AssemblyManager): PluginManager {
     const pluginManager = new PluginManager(manager)
-    
+
     // 安装默认插件
     pluginManager.install(new LoggingPlugin())
     pluginManager.install(new PerformancePlugin())
     pluginManager.install(new DependencyAnalysisPlugin())
-    
+
     return pluginManager
   }
 }
