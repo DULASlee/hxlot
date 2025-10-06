@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Users;
@@ -36,11 +35,12 @@ namespace SmartAbp.Application.CodeGenerator
         {
             var userId = _currentUser.GetId();
             
-            var histories = await _historyRepository
+            var queryable = await _historyRepository.GetQueryableAsync();
+            var histories = queryable
                 .Where(x => x.UserId == userId)
                 .OrderByDescending(x => x.CreationTime)
                 .Take(limit)
-                .ToListAsync();
+                .ToList();
                 
             return ObjectMapper.Map<List<SmartAbp.CodeGenerator.GenerationHistory>, List<GenerationHistoryDto>>(histories);
         }
@@ -52,12 +52,13 @@ namespace SmartAbp.Application.CodeGenerator
         {
             var userId = _currentUser.GetId();
             
-            var histories = await _historyRepository
+            var queryable = await _historyRepository.GetQueryableAsync();
+            var histories = queryable
                 .Where(x => x.UserId == userId)
                 .OrderByDescending(x => x.CreationTime)
                 .Skip(skipCount)
                 .Take(maxResultCount)
-                .ToListAsync();
+                .ToList();
                 
             return ObjectMapper.Map<List<SmartAbp.CodeGenerator.GenerationHistory>, List<GenerationHistoryDto>>(histories);
         }
@@ -99,7 +100,8 @@ namespace SmartAbp.Application.CodeGenerator
         public virtual async Task DeleteAsync(Guid id)
         {
             var userId = _currentUser.GetId();
-            var history = await _historyRepository.FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
+            var queryable = await _historyRepository.GetQueryableAsync();
+            var history = queryable.FirstOrDefault(x => x.Id == id && x.UserId == userId);
             
             if (history == null)
             {
@@ -117,7 +119,8 @@ namespace SmartAbp.Application.CodeGenerator
             if (status != "success") return;
             
             var userId = _currentUser.GetId();
-            var stats = await _statsRepository.FirstOrDefaultAsync(x => x.UserId == userId);
+            var statsQueryable = await _statsRepository.GetQueryableAsync();
+            var stats = statsQueryable.FirstOrDefault(x => x.UserId == userId);
             
             if (stats == null)
             {

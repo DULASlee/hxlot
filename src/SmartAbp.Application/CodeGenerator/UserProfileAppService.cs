@@ -1,6 +1,6 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Users;
@@ -30,7 +30,8 @@ namespace SmartAbp.Application.CodeGenerator
         public virtual async Task<UserProfileDto> GetMyProfileAsync()
         {
             var userId = _currentUser.GetId();
-            var profile = await _profileRepository.FirstOrDefaultAsync(x => x.UserId == userId);
+            var queryable = await _profileRepository.GetQueryableAsync();
+            var profile = queryable.FirstOrDefault(x => x.UserId == userId);
             
             if (profile == null)
             {
@@ -49,7 +50,8 @@ namespace SmartAbp.Application.CodeGenerator
         public virtual async Task<UserProfileDto> UpdateMyProfileAsync(UpdateUserProfileDto input)
         {
             var userId = _currentUser.GetId();
-            var profile = await _profileRepository.FirstOrDefaultAsync(x => x.UserId == userId);
+            var queryable = await _profileRepository.GetQueryableAsync();
+            var profile = queryable.FirstOrDefault(x => x.UserId == userId);
             
             if (profile == null)
             {
@@ -80,7 +82,8 @@ namespace SmartAbp.Application.CodeGenerator
         public virtual async Task<IndustryRecommendationDto> GetIndustryRecommendationAsync()
         {
             var userId = _currentUser.GetId();
-            var profile = await _profileRepository.FirstOrDefaultAsync(x => x.UserId == userId);
+            var queryable = await _profileRepository.GetQueryableAsync();
+            var profile = queryable.FirstOrDefault(x => x.UserId == userId);
             
             if (profile?.Industry == null)
             {

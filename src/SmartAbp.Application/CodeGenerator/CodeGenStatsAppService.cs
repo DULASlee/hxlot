@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Users;
@@ -36,8 +35,8 @@ namespace SmartAbp.Application.CodeGenerator
             var userId = _currentUser.GetId();
             
             // 获取或创建统计记录
-            var stats = await _statsRepository
-                .FirstOrDefaultAsync(x => x.UserId == userId);
+            var queryable = await _statsRepository.GetQueryableAsync();
+            var stats = queryable.FirstOrDefault(x => x.UserId == userId);
                 
             if (stats == null)
             {
@@ -57,17 +56,18 @@ namespace SmartAbp.Application.CodeGenerator
             {
                 // 实时计算当月生成次数
                 var monthStart = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
-                var monthlyCount = await _historyRepository
-                    .CountAsync(x => x.UserId == userId && x.CreationTime >= monthStart);
+                var historyQueryable = await _historyRepository.GetQueryableAsync();
+                var monthlyCount = historyQueryable
+                    .Count(x => x.UserId == userId && x.CreationTime >= monthStart);
                     
                 stats.MonthlyGenerations = monthlyCount;
                 
                 // 计算平均质量评分
-                var recentHistory = await _historyRepository
+                var recentHistory = historyQueryable
                     .Where(x => x.UserId == userId && x.Status == "success")
                     .OrderByDescending(x => x.CreationTime)
                     .Take(10)
-                    .ToListAsync();
+                    .ToList();
                     
                 if (recentHistory.Any())
                 {
@@ -99,7 +99,8 @@ namespace SmartAbp.Application.CodeGenerator
             int durationSeconds)
         {
             var userId = _currentUser.GetId();
-            var stats = await _statsRepository.FirstOrDefaultAsync(x => x.UserId == userId);
+            var queryable = await _statsRepository.GetQueryableAsync();
+            var stats = queryable.FirstOrDefault(x => x.UserId == userId);
             
             if (stats == null)
             {
