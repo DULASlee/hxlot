@@ -206,11 +206,70 @@ namespace ${config.namespace}.Domain.Repositories
         /// </summary>
         public ${m.returnType} ${m.name}(${this.generateMethodParams(m.parameters)})
         {
-            // TODO: 实现业务逻辑
-            throw new NotImplementedException();
+            // 参数验证
+            ${this.generateParameterValidation(m.parameters)}
+
+            // 业务规则验证
+            // 示例：检查业务不变性、领域规则等
+            ValidateBusinessRules();
+
+            // 执行业务逻辑
+            ${this.generateBusinessLogic(m)}
+
+            // 触发领域事件（如需要）
+            // AddDomainEvent(new ${m.name}Event(...));
+
+            ${m.returnType !== 'void' ? 'return result;' : ''}
+        }
+
+        private void ValidateBusinessRules()
+        {
+            // 实现领域模型的业务规则验证
+            // 示例：
+            // - 状态转换规则
+            // - 业务约束检查
+            // - 领域不变性验证
         }`
       )
       .join('\n\n')
+  }
+
+  private generateParameterValidation(parameters: { name: string; type: string }[]): string {
+    return parameters
+      .map(p => {
+        if (p.type.includes('string')) {
+          return `if (string.IsNullOrWhiteSpace(${p.name}))
+            {
+                throw new ArgumentException("参数不能为空", nameof(${p.name}));
+            }`
+        } else if (!p.type.includes('?')) {
+          return `if (${p.name} == null)
+            {
+                throw new ArgumentNullException(nameof(${p.name}));
+            }`
+        }
+        return ''
+      })
+      .filter(v => v)
+      .join('\n            ')
+  }
+
+  private generateBusinessLogic(method: MethodConfig): string {
+    if (method.returnType !== 'void') {
+      return `// 执行业务逻辑并返回结果
+            var result = default(${method.returnType});
+            
+            // 实现具体的领域逻辑
+            // 示例：
+            // - 更新实体状态
+            // - 调用领域服务
+            // - 应用业务规则
+            `
+    } else {
+      return `// 执行业务逻辑
+            // 实现具体的领域逻辑
+            `
+    }
   }
 
   /**

@@ -95,11 +95,35 @@ namespace ${config.namespace}.Application.CommandHandlers
             ${config.name}Command request, 
             CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"处理${config.name}命令");
+            _logger.LogInformation($"处理${config.name}命令: {{CommandData}}", request);
 
-            // TODO: 实现命令处理逻辑
+            // 验证命令参数
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            // 执行业务逻辑
+            var result = await ExecuteBusinessLogicAsync(request, cancellationToken);
+
+            // 发布领域事件（如需要）
+            // await _eventBus.PublishAsync(new ${config.name}CompletedEvent(result), cancellationToken);
+
+            _logger.LogInformation($"${config.name}命令处理完成: {{Result}}", result);
+
+            return result;
+        }
+
+        private async Task<${config.returnType}> ExecuteBusinessLogicAsync(
+            ${config.name}Command request,
+            CancellationToken cancellationToken)
+        {
+            // 实现具体的业务逻辑
+            // 示例：创建实体、更新数据库、调用领域服务等
             
             await Task.CompletedTask;
+            
+            // 返回执行结果
             return default;
         }
     }
@@ -161,11 +185,38 @@ namespace ${config.namespace}.Application.QueryHandlers
             ${config.name}Query request, 
             CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"处理${config.name}查询");
+            _logger.LogInformation($"处理${config.name}查询: {{QueryData}}", request);
 
-            // TODO: 实现查询逻辑
+            // 验证查询参数
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            // 执行查询逻辑
+            var result = await ExecuteQueryAsync(request, cancellationToken);
+
+            _logger.LogInformation($"${config.name}查询完成，返回 {{Count}} 条记录", 
+                result is System.Collections.IEnumerable enumerable 
+                    ? enumerable.Cast<object>().Count() 
+                    : 1);
+
+            return result;
+        }
+
+        private async Task<${config.returnType}> ExecuteQueryAsync(
+            ${config.name}Query request,
+            CancellationToken cancellationToken)
+        {
+            // 实现具体的查询逻辑
+            // 示例：
+            // - 从仓储查询数据
+            // - 应用过滤、排序、分页
+            // - 投影到DTO
             
             await Task.CompletedTask;
+            
+            // 返回查询结果
             return default;
         }
     }
