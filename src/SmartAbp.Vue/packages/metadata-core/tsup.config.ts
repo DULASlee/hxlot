@@ -4,7 +4,8 @@ export default defineConfig({
   entry: {
     index: 'src/index.ts',
     'validators/index': 'src/validators/index.ts',
-    'types/index': 'src/types/index.ts'
+    'types/index': 'src/types/index.ts',
+    'schema/index': 'src/schema/index.ts'
   },
   format: ['cjs', 'esm'],
   dts: true,

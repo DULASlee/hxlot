@@ -33,9 +33,32 @@ export * from './version/useSchemaVersion'
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export * from './validation/metadata-adapter'
 export {
-  SchemaValidationError, UnifiedSchemaValidator, ValidateSchema, getUnifiedEntityErrors, getValidationFeatureFlags, setValidationFeatureFlags, validateUnifiedEntities, validateUnifiedEntity,
+  getUnifiedEntityErrors, getValidationFeatureFlags, SchemaValidationError, setValidationFeatureFlags, UnifiedSchemaValidator, ValidateSchema, validateUnifiedEntities, validateUnifiedEntity,
   validateUnifiedModule, type ValidationError as UnifiedValidationError, type UnifiedValidationFeatureFlags, type ValidationPerformance as UnifiedValidationPerformance, type ValidationResult as UnifiedValidationResult, type ValidationWarning as UnifiedValidationWarning
 } from './validation/unified-validator'
+
+// 🔥 阶段2：版本管理和兼容性检查 (Version Management & Compatibility Check) - v1.0.0
+export {
+    compareVersions, CURRENT_SCHEMA_VERSION, findUpgradePath as getUpgradePath, isCompatibleVersion as isCompatible, parseVersion, type SemanticVersion,
+    type VersionComparison
+} from '@smartabp/metadata-core/schema'
+
+export {
+    checkEntityCompatibility,
+    checkModuleCompatibility, type BreakingChange, type CompatibilityResult, type CompatibilityWarning as CompatibilityWarningType
+} from '@smartabp/metadata-core/schema'
+
+// 🔥 阶段3：Schema差异对比与变更日志 (Schema Diff & Changelog) - v1.0.0
+export {
+    diffEntitySchema,
+    generateChangelog,
+    generateDiffSummary,
+    filterDiffByPath,
+    type DiffOperation,
+    type FieldDiff,
+    type SchemaDiff,
+    type DiffSummary
+} from '@smartabp/metadata-core/schema'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎯 组合式API (Composables) - v1.0.0

@@ -10,14 +10,35 @@
  */
 
 // 🔥 启用真实的metadata-core验证
-import { 
-  validateEntityMetadata, 
-  validateModuleMetadata,
-  safeValidateEntityMetadata,
-  safeValidateModuleMetadata,
-  getEntityMetadataErrors,
-  getModuleMetadataErrors
+import {
+    getEntityMetadataErrors,
+    getModuleMetadataErrors,
+    safeValidateEntityMetadata,
+    safeValidateModuleMetadata,
+    validateEntityMetadata,
+    validateModuleMetadata
 } from '@smartabp/metadata-core'
+
+// 🔥 阶段2：版本管理和兼容性检查
+import {
+    compareVersions,
+    CURRENT_SCHEMA_VERSION,
+    findUpgradePath as getUpgradePath,
+    isCompatibleVersion as isCompatible,
+    parseVersion
+} from '@smartabp/metadata-core/schema'
+
+import {
+    type CompatibilityResult
+} from '@smartabp/metadata-core/schema'
+
+// 🔥 阶段3：Schema差异对比
+import {
+    diffEntitySchema,
+    generateChangelog,
+    generateDiffSummary,
+    type SchemaDiff
+} from '@smartabp/metadata-core/schema'
 
 import type {
     UnifiedEntityDefinition,
@@ -46,6 +67,17 @@ export interface UnifiedValidationFeatureFlags {
     enablePerformanceMonitoring: boolean
     /** 是否启用详细错误报告 */
     enableDetailedErrorReporting: boolean
+    /** 🔥 阶段2：是否启用版本兼容性检查 */
+    enableVersionCompatibilityCheck?: boolean
+    /** 🔥 阶段2：是否启用自动版本迁移建议 */
+    enableAutoMigrationSuggestions?: boolean
+    
+    /** 🔥 阶段3：是否启用Schema差异对比 */
+    enableSchemaDiffComparison?: boolean
+    /** 是否启用变更日志生成 */
+    enableChangelogGeneration?: boolean
+    /** 是否启用破坏性变更检测 */
+    enableBreakingChangeDetection?: boolean
 }
 
 /**
@@ -55,7 +87,12 @@ const DEFAULT_FEATURE_FLAGS: UnifiedValidationFeatureFlags = {
     enableMetadataCoreValidation: true,
     enableStrictValidation: false, // 渐进式启用
     enablePerformanceMonitoring: true,
-    enableDetailedErrorReporting: true
+    enableDetailedErrorReporting: true,
+    enableVersionCompatibilityCheck: true, // 🔥 阶段2：默认启用版本检查
+    enableAutoMigrationSuggestions: true,  // 🔥 阶段2：默认启用迁移建议
+    enableSchemaDiffComparison: true,      // 🔥 阶段3：默认启用差异对比
+    enableChangelogGeneration: true,       // 🔥 阶段3：默认启用变更日志
+    enableBreakingChangeDetection: true    // 🔥 阶段3：默认启用破坏性变更检测
 }
 
 /**
@@ -217,32 +254,45 @@ export class UnifiedSchemaValidator {
                 )
             }
 
-      // 🔥 执行metadata-core真实验证
-      if (this.featureFlags.enableStrictValidation) {
-        // 严格模式：抛出异常
-        try {
-          validateEntityMetadata(metadataEntity)
-        } catch (error) {
-          // 验证失败，获取详细错误
-          const zodErrors = getEntityMetadataErrors(metadataEntity)
-          const errors = this.convertZodErrors(zodErrors)
-          return this.createErrorResult(errors, startTime, entity)
-        }
-      } else {
-        // 安全模式：返回结果
-        const validationResult = safeValidateEntityMetadata(metadataEntity)
-        
-        if (!validationResult.success) {
-          const errors = this.convertZodErrors(validationResult.error?.errors || [])
-          return this.createErrorResult(errors, startTime, entity)
-        }
-      }
+            // 🔥 执行metadata-core真实验证
+            if (this.featureFlags.enableStrictValidation) {
+                // 严格模式：抛出异常
+                try {
+                    validateEntityMetadata(metadataEntity)
+                } catch (error) {
+                    // 验证失败，获取详细错误
+                    const zodErrors = getEntityMetadataErrors(metadataEntity)
+                    const errors = this.convertZodErrors(zodErrors)
+                    return this.createErrorResult(errors, startTime, entity)
+                }
+            } else {
+                // 安全模式：返回结果
+                const validationResult = safeValidateEntityMetadata(metadataEntity)
+
+                if (!validationResult.success) {
+                    const errors = this.convertZodErrors(validationResult.error?.errors || [])
+                    return this.createErrorResult(errors, startTime, entity)
+                }
+            }
+
+            // 🔥 阶段2：版本兼容性检查
+            const warnings: ValidationWarning[] = []
+            if (this.featureFlags.enableVersionCompatibilityCheck) {
+                const versionCheck = this.checkSchemaVersion(entity.schemaVersion || '1.0.0')
+                if (versionCheck.warnings.length > 0) {
+                    warnings.push(...versionCheck.warnings.map(w => ({
+                        code: 'VERSION_WARNING',
+                        message: w,
+                        path: 'schemaVersion'
+                    })))
+                }
+            }
 
             // 验证成功
             return this.createSuccessResult(entity, startTime, {
                 fieldCount: entity.fields.length,
                 ruleCount: entity.fields.reduce((sum, field) => sum + (field.validationRules?.length || 0), 0)
-            })
+            }, warnings)
 
         } catch (error) {
             return this.createErrorResult(
@@ -272,26 +322,26 @@ export class UnifiedSchemaValidator {
             // 转换为metadata-core格式
             const metadataModule = convertModuleToMetadataCore(module)
 
-      // 🔥 执行metadata-core真实验证
-      if (this.featureFlags.enableStrictValidation) {
-        // 严格模式：抛出异常
-        try {
-          validateModuleMetadata(metadataModule)
-        } catch (error) {
-          // 验证失败，获取详细错误
-          const zodErrors = getModuleMetadataErrors(metadataModule)
-          const errors = this.convertZodErrors(zodErrors)
-          return this.createErrorResult(errors, startTime, module)
-        }
-      } else {
-        // 安全模式：返回结果
-        const validationResult = safeValidateModuleMetadata(metadataModule)
-        
-        if (!validationResult.success) {
-          const errors = this.convertZodErrors(validationResult.error?.errors || [])
-          return this.createErrorResult(errors, startTime, module)
-        }
-      }
+            // 🔥 执行metadata-core真实验证
+            if (this.featureFlags.enableStrictValidation) {
+                // 严格模式：抛出异常
+                try {
+                    validateModuleMetadata(metadataModule)
+                } catch (error) {
+                    // 验证失败，获取详细错误
+                    const zodErrors = getModuleMetadataErrors(metadataModule)
+                    const errors = this.convertZodErrors(zodErrors)
+                    return this.createErrorResult(errors, startTime, module)
+                }
+            } else {
+                // 安全模式：返回结果
+                const validationResult = safeValidateModuleMetadata(metadataModule)
+
+                if (!validationResult.success) {
+                    const errors = this.convertZodErrors(validationResult.error?.errors || [])
+                    return this.createErrorResult(errors, startTime, module)
+                }
+            }
 
             // 验证成功
             return this.createSuccessResult(module, startTime, {
@@ -347,75 +397,336 @@ export class UnifiedSchemaValidator {
         }, warnings)
     }
 
-  // ============================================================================
-  // Zod错误转换（真实验证）
-  // ============================================================================
-  
-  /**
-   * 转换Zod错误为ValidationError格式
-   */
-  private convertZodErrors(zodErrors: any[]): ValidationError[] {
-    return zodErrors.map(error => ({
-      code: error.code || 'VALIDATION_ERROR',
-      message: error.message || 'Validation failed',
-      path: Array.isArray(error.path) ? error.path.join('.') : error.path || 'unknown',
-      details: error,
-      suggestion: this.generateSuggestionFromZodError(error)
-    }))
-  }
-  
-  /**
-   * 从Zod错误生成修复建议
-   */
-  private generateSuggestionFromZodError(error: any): string | undefined {
-    const errorCode = error.code
-    
-    if (errorCode === 'invalid_type') {
-      return `Expected type: ${error.expected}, received: ${error.received}`
+    // ============================================================================
+    // Zod错误转换（真实验证）
+    // ============================================================================
+
+    /**
+     * 转换Zod错误为ValidationError格式
+     */
+    private convertZodErrors(zodErrors: any[]): ValidationError[] {
+        return zodErrors.map(error => ({
+            code: error.code || 'VALIDATION_ERROR',
+            message: error.message || 'Validation failed',
+            path: Array.isArray(error.path) ? error.path.join('.') : error.path || 'unknown',
+            details: error,
+            suggestion: this.generateSuggestionFromZodError(error)
+        }))
     }
-    
-    if (errorCode === 'too_small') {
-      if (error.type === 'string') {
-        return `String length must be at least ${error.minimum} characters`
-      }
-      if (error.type === 'number') {
-        return `Value must be at least ${error.minimum}`
-      }
-      if (error.type === 'array') {
-        return `Array must contain at least ${error.minimum} items`
-      }
+
+    /**
+     * 从Zod错误生成修复建议
+     */
+    private generateSuggestionFromZodError(error: any): string | undefined {
+        const errorCode = error.code
+
+        if (errorCode === 'invalid_type') {
+            return `Expected type: ${error.expected}, received: ${error.received}`
+        }
+
+        if (errorCode === 'too_small') {
+            if (error.type === 'string') {
+                return `String length must be at least ${error.minimum} characters`
+            }
+            if (error.type === 'number') {
+                return `Value must be at least ${error.minimum}`
+            }
+            if (error.type === 'array') {
+                return `Array must contain at least ${error.minimum} items`
+            }
+        }
+
+        if (errorCode === 'too_big') {
+            if (error.type === 'string') {
+                return `String length must not exceed ${error.maximum} characters`
+            }
+            if (error.type === 'number') {
+                return `Value must not exceed ${error.maximum}`
+            }
+            if (error.type === 'array') {
+                return `Array must not contain more than ${error.maximum} items`
+            }
+        }
+
+        if (errorCode === 'invalid_string') {
+            if (error.validation === 'email') {
+                return 'Please enter a valid email address'
+            }
+            if (error.validation === 'url') {
+                return 'Please enter a valid URL'
+            }
+            if (error.validation === 'regex') {
+                return 'Value does not match the required pattern'
+            }
+        }
+
+        if (errorCode === 'invalid_enum_value') {
+            return `Value must be one of: ${error.options?.join(', ')}`
+        }
+
+        return undefined
     }
-    
-    if (errorCode === 'too_big') {
-      if (error.type === 'string') {
-        return `String length must not exceed ${error.maximum} characters`
-      }
-      if (error.type === 'number') {
-        return `Value must not exceed ${error.maximum}`
-      }
-      if (error.type === 'array') {
-        return `Array must not contain more than ${error.maximum} items`
-      }
+
+    // ============================================================================
+    // 🔥 阶段2：版本管理和兼容性检查方法
+    // ============================================================================
+
+    /**
+     * 检查Schema版本
+     */
+    private checkSchemaVersion(version: string): {
+        isValid: boolean
+        warnings: string[]
+        suggestions: string[]
+    } {
+        const warnings: string[] = []
+        const suggestions: string[] = []
+
+        try {
+            parseVersion(version) // 验证版本格式
+            parseVersion(CURRENT_SCHEMA_VERSION) // 验证当前版本格式
+
+            // 版本兼容性检查
+            if (!isCompatible(version, CURRENT_SCHEMA_VERSION)) {
+                warnings.push(
+                    `Schema version ${version} may not be fully compatible with current version ${CURRENT_SCHEMA_VERSION}`
+                )
+
+                // 生成迁移建议
+                if (this.featureFlags.enableAutoMigrationSuggestions) {
+                    const upgradePath = getUpgradePath(version, CURRENT_SCHEMA_VERSION)
+                    if (upgradePath && upgradePath.length > 0) {
+                        suggestions.push(
+                            `Suggested upgrade path: ${upgradePath.map(p => `${p.from} -> ${p.to}`).join(', ')}`
+                        )
+                    }
+                }
+            }
+
+            // 检查是否是旧版本
+            const comparison = compareVersions(version, CURRENT_SCHEMA_VERSION)
+            if (comparison < 0) {
+                warnings.push(
+                    `Schema version ${version} is older than current version ${CURRENT_SCHEMA_VERSION}. Consider upgrading.`
+                )
+            } else if (comparison > 0) {
+                warnings.push(
+                    `Schema version ${version} is newer than current version ${CURRENT_SCHEMA_VERSION}. Some features may not be supported.`
+                )
+            }
+
+            return { isValid: true, warnings, suggestions }
+        } catch (error) {
+            return {
+                isValid: false,
+                warnings: [`Invalid schema version format: ${version}`],
+                suggestions: [`Use semantic versioning (e.g., 1.0.0)`]
+            }
+        }
     }
-    
-    if (errorCode === 'invalid_string') {
-      if (error.validation === 'email') {
-        return 'Please enter a valid email address'
-      }
-      if (error.validation === 'url') {
-        return 'Please enter a valid URL'
-      }
-      if (error.validation === 'regex') {
-        return 'Value does not match the required pattern'
-      }
+
+    /**
+     * 检查实体兼容性（用于更新场景）
+     * 
+     * 🔥 阶段3增强：集成Schema差异对比
+     */
+    checkEntityCompatibility(
+        oldEntity: UnifiedEntityDefinition,
+        newEntity: UnifiedEntityDefinition
+    ): CompatibilityResult & { diff?: SchemaDiff } {
+        // 版本兼容性检查
+        const versionCheck = this.checkSchemaVersion(newEntity.schemaVersion || '1.0.0')
+
+        // 🔥 Schema差异对比
+        let diff: SchemaDiff | undefined
+        const breakingChanges: any[] = []
+        const warnings: any[] = []
+
+        if (this.featureFlags.enableSchemaDiffComparison) {
+            try {
+                // 转换为metadata-core格式
+                const oldMetadata = convertEntityToMetadataCore(oldEntity) as any
+                const newMetadata = convertEntityToMetadataCore(newEntity) as any
+
+                // 执行差异对比
+                diff = diffEntitySchema(oldMetadata, newMetadata)
+
+                // 分析差异，识别破坏性变更
+                diff.removals.forEach(removal => {
+                    // 删除必填字段是破坏性变更
+                    if (removal.path.includes('properties.') && removal.oldValue?.isRequired) {
+                        breakingChanges.push({
+                            type: 'FIELD_REMOVED' as const,
+                            field: removal.path,
+                            message: `删除必填字段 '${removal.path}'`,
+                            oldValue: removal.oldValue,
+                            suggestion: '保留该字段或提供迁移脚本'
+                        })
+                    }
+                })
+
+                diff.modifications.forEach(modification => {
+                    // 类型变更是破坏性变更
+                    if (modification.path.includes('.type')) {
+                        breakingChanges.push({
+                            type: 'TYPE_CHANGED' as const,
+                            field: modification.path,
+                            message: `字段类型变更: ${modification.oldValue} -> ${modification.newValue}`,
+                            oldValue: modification.oldValue,
+                            newValue: modification.newValue,
+                            suggestion: '保持类型兼容或提供数据迁移'
+                        })
+                    }
+
+                    // 必填性增强是破坏性变更
+                    if (modification.path.includes('.isRequired') && 
+                        !modification.oldValue && modification.newValue) {
+                        breakingChanges.push({
+                            type: 'FIELD_REQUIRED' as const,
+                            field: modification.path.replace('.isRequired', ''),
+                            message: `字段变为必填`,
+                            suggestion: '提供默认值或迁移脚本'
+                        })
+                    }
+                })
+
+                // 添加变更提示到警告
+                if (diff.hasChanges) {
+                    warnings.push({
+                        type: 'SCHEMA_CHANGED' as const,
+                        field: 'schema',
+                        message: `Schema发生变更: ${generateDiffSummary(diff)}`,
+                        suggestion: '请审查变更日志'
+                    })
+                }
+
+            } catch (error) {
+                console.warn('Schema差异对比失败:', error)
+            }
+        }
+
+        // 合并版本检查的警告
+        warnings.push(...versionCheck.warnings.map(w => ({
+            type: 'VERSION_WARNING' as const,
+            field: 'schemaVersion',
+            message: w,
+            suggestion: versionCheck.suggestions[0]
+        })))
+
+        return {
+            isCompatible: versionCheck.isValid && breakingChanges.length === 0,
+            breakingChanges,
+            warnings,
+            suggestions: [...versionCheck.suggestions],
+            diff
+        }
     }
-    
-    if (errorCode === 'invalid_enum_value') {
-      return `Value must be one of: ${error.options?.join(', ')}`
+
+    /**
+     * 检查模块兼容性（用于更新场景）
+     * 
+     * 注意：由于类型系统的复杂性，此方法暂时不使用metadata-core的兼容性检查
+     * 而是基于版本号进行简单的兼容性判断
+     */
+    checkModuleCompatibility(
+        _oldModule: UnifiedModuleMetadata,
+        newModule: UnifiedModuleMetadata
+    ): CompatibilityResult {
+        // 简化实现：基于版本号的兼容性检查
+        const isCompatible = this.checkSchemaVersion(newModule.schemaVersion || '1.0.0')
+
+        return {
+            isCompatible: isCompatible.isValid,
+            breakingChanges: [],
+            warnings: isCompatible.warnings.map(w => ({
+                type: 'FIELD_DEPRECATED' as const,
+                field: 'schemaVersion',
+                message: w,
+                suggestion: isCompatible.suggestions[0]
+            })),
+            suggestions: isCompatible.suggestions
+        }
     }
-    
-    return undefined
-  }
+
+    // ============================================================================
+    // 🔥 阶段3：Schema差异分析与变更日志生成
+    // ============================================================================
+
+    /**
+     * 生成实体变更日志
+     * 
+     * @param oldEntity 旧实体定义
+     * @param newEntity 新实体定义
+     * @param version 版本号
+     * @returns Markdown格式的变更日志
+     */
+    generateEntityChangelog(
+        oldEntity: UnifiedEntityDefinition,
+        newEntity: UnifiedEntityDefinition,
+        version?: string
+    ): string {
+        if (!this.featureFlags.enableChangelogGeneration) {
+            return '变更日志生成功能未启用'
+        }
+
+        try {
+            const oldMetadata = convertEntityToMetadataCore(oldEntity) as any
+            const newMetadata = convertEntityToMetadataCore(newEntity) as any
+            const diff = diffEntitySchema(oldMetadata, newMetadata)
+            
+            const changelogVersion = version || newEntity.schemaVersion || newEntity.version || '1.0.0'
+            return generateChangelog(diff, changelogVersion)
+        } catch (error) {
+            console.error('生成变更日志失败:', error)
+            return `生成变更日志失败: ${error}`
+        }
+    }
+
+    /**
+     * 获取Schema差异摘要
+     * 
+     * @param oldEntity 旧实体定义
+     * @param newEntity 新实体定义
+     * @returns 差异摘要文本
+     */
+    getSchemaDiffSummary(
+        oldEntity: UnifiedEntityDefinition,
+        newEntity: UnifiedEntityDefinition
+    ): string {
+        if (!this.featureFlags.enableSchemaDiffComparison) {
+            return '差异对比功能未启用'
+        }
+
+        try {
+            const oldMetadata = convertEntityToMetadataCore(oldEntity) as any
+            const newMetadata = convertEntityToMetadataCore(newEntity) as any
+            const diff = diffEntitySchema(oldMetadata, newMetadata)
+            
+            return generateDiffSummary(diff)
+        } catch (error) {
+            console.error('获取差异摘要失败:', error)
+            return '差异分析失败'
+        }
+    }
+
+    /**
+     * 检测破坏性变更
+     * 
+     * @param oldEntity 旧实体定义
+     * @param newEntity 新实体定义
+     * @returns 破坏性变更列表
+     */
+    detectBreakingChanges(
+        oldEntity: UnifiedEntityDefinition,
+        newEntity: UnifiedEntityDefinition
+    ): any[] {
+        if (!this.featureFlags.enableBreakingChangeDetection) {
+            return []
+        }
+
+        const compatibilityResult = this.checkEntityCompatibility(oldEntity, newEntity)
+        return compatibilityResult.breakingChanges || []
+    }
 
     // ============================================================================
     // 私有辅助方法
