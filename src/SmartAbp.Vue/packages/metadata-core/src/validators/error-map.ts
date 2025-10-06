@@ -8,7 +8,7 @@ import { z } from 'zod'
 /**
  * 自定义错误映射（Entity上下文）
  */
-export const entityErrorMap: z.ZodErrorMap = (issue, ctx) => {
+export const entityErrorMap: z.ZodErrorMap = (issue, ctx): { message: string } => {
     // 处理Required错误
     if (issue.code === z.ZodIssueCode.invalid_type) {
         if (issue.received === 'undefined') {
@@ -20,20 +20,22 @@ export const entityErrorMap: z.ZodErrorMap = (issue, ctx) => {
             }
             
             if (typeof path === 'string' && path in fieldMessages) {
-                return { message: fieldMessages[path] }
+                return { message: fieldMessages[path] as string }
             }
             
-            return { message: `${path}不能为空` }
+            return { message: `${String(path)}不能为空` }
         }
     }
     
-    return { message: ctx.defaultError }
+    // 确保总是返回一个包含message的对象（明确的string类型）
+    const defaultMsg: string = ctx.defaultError ?? 'Validation error'
+    return { message: defaultMsg }
 }
 
 /**
  * 自定义错误映射（Module上下文）
  */
-export const moduleErrorMap: z.ZodErrorMap = (issue, ctx) => {
+export const moduleErrorMap: z.ZodErrorMap = (issue, ctx): { message: string } => {
     if (issue.code === z.ZodIssueCode.invalid_type) {
         if (issue.received === 'undefined') {
             const path = issue.path[issue.path.length - 1]
@@ -44,20 +46,22 @@ export const moduleErrorMap: z.ZodErrorMap = (issue, ctx) => {
             }
             
             if (typeof path === 'string' && path in fieldMessages) {
-                return { message: fieldMessages[path] }
+                return { message: fieldMessages[path] as string }
             }
             
-            return { message: `${path}不能为空` }
+            return { message: `${String(path)}不能为空` }
         }
     }
     
-    return { message: ctx.defaultError }
+    // 确保总是返回一个包含message的对象（明确的string类型）
+    const defaultMsg: string = ctx.defaultError ?? 'Validation error'
+    return { message: defaultMsg }
 }
 
 /**
  * 自定义错误映射（Aspire上下文）
  */
-export const aspireErrorMap: z.ZodErrorMap = (issue, ctx) => {
+export const aspireErrorMap: z.ZodErrorMap = (issue, ctx): { message: string } => {
     if (issue.code === z.ZodIssueCode.invalid_type) {
         if (issue.received === 'undefined') {
             const path = issue.path[issue.path.length - 1]
@@ -68,14 +72,16 @@ export const aspireErrorMap: z.ZodErrorMap = (issue, ctx) => {
             }
             
             if (typeof path === 'string' && path in fieldMessages) {
-                return { message: fieldMessages[path] }
+                return { message: fieldMessages[path] as string }
             }
             
-            return { message: `${path}不能为空` }
+            return { message: `${String(path)}不能为空` }
         }
     }
     
-    return { message: ctx.defaultError }
+    // 确保总是返回一个包含message的对象（明确的string类型）
+    const defaultMsg: string = ctx.defaultError ?? 'Validation error'
+    return { message: defaultMsg }
 }
 
 /**
