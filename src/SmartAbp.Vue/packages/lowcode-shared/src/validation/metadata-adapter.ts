@@ -25,12 +25,12 @@ interface EntityMetadata {
     schemaVersion: string
     name: string
     module: string
-    keyType: string
+    keyType: 'string' | 'Guid' | 'int' | 'long'  // 修复：使用字面量联合类型
     description?: string
-    isAggregateRoot?: boolean
-    isMultiTenant?: boolean
-    isSoftDelete?: boolean
-    hasExtraProperties?: boolean
+    isAggregateRoot: boolean  // 修复：不能是undefined
+    isMultiTenant: boolean  // 修复：不能是undefined
+    isSoftDelete: boolean  // 修复：不能是undefined
+    hasExtraProperties: boolean  // 修复：不能是undefined
     properties: PropertyMetadata[]
     navigationProperties?: NavigationPropertyMetadata[]
     xUiConfig?: UIConfig
@@ -89,9 +89,9 @@ interface ModuleMetadata {
     version: string
     description?: string
     author?: string
-    abpStyle?: boolean
-    order?: number
-    dependsOn?: string[]
+    abpStyle: boolean  // 修复：不能是undefined
+    order: number  // 修复：不能是undefined
+    dependsOn: string[]  // 修复：不能是undefined
     routes?: any[]
     stores?: any[]
     policies?: any[]
@@ -126,11 +126,11 @@ export function convertEntityToMetadataCore(entity: UnifiedEntityDefinition): En
         schemaVersion: '1.0.0',
         name: entity.name,
         module: entity.module,
-        keyType: 'Guid', // 默认使用Guid，可根据实际需求调整
+        keyType: 'Guid' as const, // 修复：使用字面量类型
         description: entity.description,
-        isAggregateRoot: entity.isAggregateRoot,
-        isMultiTenant: entity.isMultiTenant || false,
-        isSoftDelete: entity.isSoftDelete,
+        isAggregateRoot: entity.isAggregateRoot ?? false,  // 修复：提供默认值
+        isMultiTenant: entity.isMultiTenant ?? false,  // 修复：提供默认值
+        isSoftDelete: entity.isSoftDelete ?? false,  // 修复：提供默认值
         hasExtraProperties: true, // 默认支持扩展属性
         properties: entity.fields.map(convertFieldToProperty),
         navigationProperties: entity.relationships?.map(convertRelationshipToNavigation) || [],
