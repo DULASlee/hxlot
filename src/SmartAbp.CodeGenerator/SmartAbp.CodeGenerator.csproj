@@ -43,11 +43,11 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
 
     <!-- Microsoft Extensions -->
-    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.9" />
 
     <!-- Other Dependencies -->
     <PackageReference Include="System.Threading.Channels" Version="9.0.0" />
@@ -73,6 +73,7 @@
   <!-- 🏢 企业版特性：内嵌模板资源配置 - 容器化环境零配置部署 -->
   <ItemGroup>
     <!-- 后端模板文件 -->
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.9" />
     <EmbeddedResource Include="..\..\templates\backend\application\*.template.*">
       <LogicalName>SmartAbp.CodeGenerator.Templates.backend.application.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
