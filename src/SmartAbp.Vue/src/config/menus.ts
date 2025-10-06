@@ -15,7 +15,7 @@ export const ROLES = {
 
 // 完整菜单配置
 export const menuConfig: MenuConfig = {
-  defaultPath: "/dashboard",
+  defaultPath: "/codegen-entrance",  // ✅ Week 1修改：默认进入代码生成入口
   loginPath: "/login",
   forbiddenPath: "/403",
 
@@ -311,6 +311,44 @@ export const menuConfig: MenuConfig = {
       defaultExpanded: true,
       description: "企业级代码生成引擎 - 所想即所得",
       children: [
+        // 🆕 模式选择入口（Week 1新增）
+        {
+          key: "codegen-entrance",
+          title: "模式选择",
+          icon: "route",
+          type: "page",
+          path: "/codegen-entrance",
+          component: "@/views/lowcode/CodeGenEntrance.vue",
+          order: 0,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
+          closable: true,
+          meta: {
+            title: "代码生成模式选择",
+            menuKey: "codegen-entrance",
+            keepAlive: true,
+            description: "选择极简/行业模板/专业模式",
+          },
+        },
+        // 🆕 工作台首页（Week 1新增）
+        {
+          key: "lowcode-home",
+          title: "工作台首页",
+          icon: "home",
+          type: "page",
+          path: "/lowcode/home",
+          component: "@/views/lowcode/LowCodeStudioHome.vue",
+          order: 0.5,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
+          closable: true,
+          meta: {
+            title: "低代码工作台",
+            menuKey: "lowcode-home",
+            keepAlive: true,
+            description: "查看最近项目和统计数据",
+          },
+        },
         // 🔥 极简通道：快速生成（3-5分钟）
         {
           key: "code-generation",
