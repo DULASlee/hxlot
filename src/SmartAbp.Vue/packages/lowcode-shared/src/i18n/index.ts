@@ -1,6 +1,9 @@
 /**
- * @smartabp/lowcode-shared
- * 国际化工具入口
+ * 🌐 Internationalization Module Entry
+ * 
+ * 国际化系统入口（专注于验证错误消息）
+ * 
+ * @module @smartabp/lowcode-shared/i18n
  */
 
 export {
@@ -13,6 +16,5 @@ export {
   getMessageKeyFromZodError,
   extractZodErrorParams,
   type ValidationMessageParams,
-  type ValidationI18nConfig
+  type ValidationI18nConfig,
 } from './validation-i18n'
-

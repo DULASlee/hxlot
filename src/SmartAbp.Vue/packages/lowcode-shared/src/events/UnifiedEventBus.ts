@@ -14,7 +14,7 @@
  * - Schema Driven（元数据驱动）
  */
 
-import { getGlobalLogger, type ILogger } from '../logging'
+import { getGlobalLogger, type ILogger } from '../types/logger'
 import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from '../types/unified-schema'
 
 const logger: ILogger = getGlobalLogger()

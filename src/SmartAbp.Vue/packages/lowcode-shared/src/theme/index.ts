@@ -1,31 +1,18 @@
 /**
- * 主题系统统一导出
- * Theme System Exports
+ * 🎨 Theme System Module Entry
+ * 
+ * 主题管理系统入口
+ * 
+ * @module @smartabp/lowcode-shared/theme
  */
 
-// 设计令牌
-export {
-  lightTokens,
-  darkTokens,
-  presetThemes
-} from './tokens'
+export { ThemeManager } from './ThemeManager'
 
-export type {
-  ColorTokens,
-  SpacingTokens,
-  TypographyTokens,
-  BorderRadiusTokens,
-  ShadowTokens,
-  TransitionTokens,
-  ZIndexTokens,
-  DesignTokens,
-  ThemeMode,
-  ThemeConfig
-} from './tokens'
-
-// 主题管理器
 export {
-  ThemeManager,
-  getThemeManager,
-  useTheme
-} from './ThemeManager'
+  type ColorTokens,
+  type SpacingTokens,
+  type TypographyTokens,
+  type ShadowTokens,
+  type ZIndexTokens,
+  type TransitionTokens,
+} from './tokens'
