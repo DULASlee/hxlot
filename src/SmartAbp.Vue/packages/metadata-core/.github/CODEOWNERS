@@ -1,0 +1,36 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# @smartabp/metadata-core - 代码所有权配置
+# 🛡️ 第5层保护：代码审查强制执行
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 所有文件默认由架构团队审查
+* @smartabp/architects @smartabp/core-team
+
+# 核心验证逻辑（双重审查）
+/src/validators/** @smartabp/architects @smartabp/security-team
+
+# 类型定义（严格审查）
+/src/types/** @smartabp/architects
+
+# Schema管理（架构师审查）
+/src/schema/** @smartabp/architects
+
+# 配置文件（安全审查）
+package.json @smartabp/architects @smartabp/security-team
+tsconfig.json @smartabp/architects
+tsup.config.ts @smartabp/architects
+
+# 安全文档（安全团队审查）
+SECURITY.md @smartabp/security-team
+.npmignore @smartabp/security-team
+
+# 构建系统（DevOps审查）
+scripts/** @smartabp/devops-team
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 注意事项:
+# 1. 所有PR必须至少1位CODEOWNERS成员批准
+# 2. 核心文件修改需要2位CODEOWNERS成员批准
+# 3. 安全相关修改需要安全团队审查
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+

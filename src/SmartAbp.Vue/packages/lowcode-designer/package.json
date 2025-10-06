@@ -11,8 +11,8 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@smartabp/lowcode-shared": "^1.0.0",
-    "@smartabp/lowcode-core": "^1.0.0",
+    "@smartabp/lowcode-shared": "workspace:*",
+    "@smartabp/lowcode-core": "workspace:*",
     "vue": "^3.3.0",
     "typescript": "^5.0.0"
   },

@@ -48,6 +48,8 @@
     "dangerous-patterns": "tsx src/tools/dangerous-patterns.ts",
     "perf:analyze": "node scripts/performance-analysis.js full",
     "perf:bundle": "node scripts/performance-analysis.js bundle",
+    "validate:workspace": "node scripts/validate-workspace.cjs",
+    "preinstall": "node scripts/validate-workspace.cjs || echo '⚠️  Workspace validation skipped (first install)'",
     "perf:build": "node scripts/performance-analysis.js build",
     "perf:lighthouse": "node scripts/performance-analysis.js lighthouse",
     "build:analyze": "cross-env ANALYZE_BUNDLE=true npm run build",
