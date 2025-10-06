@@ -300,8 +300,8 @@ After (修复后):
    npm run dev
 
 5. 测试两个页面
-   - http://localhost:5173/codegen-entrance
-   - http://localhost:5173/lowcode/home
+   - http://localhost:11369/codegen-entrance
+   - http://localhost:11369/lowcode/home
 
 6. 报告测试结果
    - ✅ 成功的功能

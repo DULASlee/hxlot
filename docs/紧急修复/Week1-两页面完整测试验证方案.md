@@ -122,14 +122,13 @@ dotnet run
 
 **预期结果**:
 ```
-✅ Now listening on: https://localhost:5001
-✅ Now listening on: http://localhost:5000
+✅ Now listening on: https://localhost:44379
 ✅ Application started. Press Ctrl+C to shut down.
 ```
 
 **验证Swagger**:
 ```
-1. 浏览器打开: https://localhost:5001/swagger
+1. 浏览器打开: https://localhost:44379/swagger
 
 2. 验证API端点存在:
    ✅ GET /api/code-gen/stats/my
@@ -175,16 +174,16 @@ npm run dev
 
 **预期结果**:
 ```
-✅ VITE v5.x.x ready in XXXms
+✅ VITE v7.x.x ready in XXXms
 
-  ➜  Local:   http://localhost:5173/
+  ➜  Local:   http://localhost:11369/
   ➜  Network: use --host to expose
   ➜  press h to show help
 ```
 
 **访问测试**:
 ```
-浏览器打开: http://localhost:5173
+浏览器打开: http://localhost:11369
 ```
 
 ---
@@ -329,7 +328,7 @@ API调用验证:
 
 ##### **测试点1: 页面加载**
 ```yaml
-操作: 访问 http://localhost:5173/lowcode/home
+操作: 访问 http://localhost:11369/lowcode/home
       或从导航菜单进入
 
 预期:
