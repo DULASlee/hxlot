@@ -130,9 +130,9 @@
           :class="healthClass"
         >
           <span class="health-icon">{{ healthIcon }}</span>
-          <span>健康状态: {{ registryItem.instance.health.status }}</span>
+          <span>健康状态: {{ registryItem.instance.health?.status || 'Unknown' }}</span>
           <span class="last-check">
-            最后检查: {{ formatDate(registryItem.instance.health.lastCheck) }}
+            最后检查: {{ registryItem.instance.health?.lastCheck ? formatDate(registryItem.instance.health.lastCheck) : 'Never' }}
           </span>
         </div>
       </div>

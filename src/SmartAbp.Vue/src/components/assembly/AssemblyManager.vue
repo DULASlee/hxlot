@@ -207,7 +207,7 @@ const {
   registryItems, 
   statistics, 
   isLoading, 
-  error,
+  error: _error,
   initialize,
   loadAssembly,
   unloadAssembly,
@@ -252,7 +252,7 @@ const filteredAssemblies = computed(() => {
     const query = searchQuery.value.toLowerCase()
     items = items.filter(item => 
       item.config.name.toLowerCase().includes(query) ||
-      item.config.displayName.toLowerCase().includes(query) ||
+      item.config.displayName?.toLowerCase().includes(query) ||
       item.config.description?.toLowerCase().includes(query)
     )
   }

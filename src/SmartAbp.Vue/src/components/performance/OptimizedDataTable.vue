@@ -129,22 +129,22 @@ SmartAbp Enterprise Optimized Data Table Component
         <!-- 可见行渲染 -->
         <div
           v-for="item in visibleItems"
-          :key="item._virtualIndex"
+          :key="item.index"
           class="virtual-row"
           :style="{
             position: 'absolute',
-            top: `${item._virtualIndex * itemHeight}px`,
+            top: `${item.index * itemHeight}px`,
             width: '100%',
             height: `${itemHeight}px`
           }"
         >
           <div
             class="table-row"
-            :class="{ 'row-even': item._virtualIndex % 2 === 0 }"
+            :class="{ 'row-even': item.index % 2 === 0 }"
           >
             <!-- 序号列 -->
             <div class="table-cell index-cell">
-              {{ item._virtualIndex + 1 }}
+              {{ item.index + 1 }}
             </div>
 
             <!-- 数据列 -->
@@ -158,22 +158,22 @@ SmartAbp Enterprise Optimized Data Table Component
               <template v-if="column.render">
                 <component
                   :is="column.render"
-                  :value="item[column.key]"
+                  :value="(item as any)[column.key]"
                   :record="item"
-                  :index="item._virtualIndex"
+                  :index="item.index"
                 />
               </template>
               <!-- 懒加载图片 -->
               <template v-else-if="column.type === 'image'">
                 <LazyImage
-                  :src="item[column.key]"
+                  :src="(item as any)[column.key]"
                   :alt="column.title"
                   class="table-image"
                 />
               </template>
               <!-- 普通文本 -->
               <template v-else>
-                {{ item[column.key] }}
+                {{ (item as any)[column.key] }}
               </template>
             </div>
 

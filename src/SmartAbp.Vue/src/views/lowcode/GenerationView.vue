@@ -207,19 +207,90 @@ const generateCode = async () => {
       },
       dependencies: [],
       entities: [{
+        id: crypto.randomUUID(),
         name: generationParams.value.entityName,
         displayName: generationParams.value.displayName || generationParams.value.entityName,
+        tableName: generationParams.value.entityName,
         module: generationParams.value.moduleName,
-        // ✅ 修复: aggregate不是UnifiedEntityDefinition的属性，移除
+        namespace: `${generationParams.value.moduleName}.Entities`,
         description: `${generationParams.value.displayName || generationParams.value.entityName}实体`,
+        schema: 'dbo',
         isAggregateRoot: true,
-        isMultiTenant: false,
+        baseClass: 'FullAuditedAggregateRoot<Guid>',
+        interfaces: [],
+        isAudited: true,
         isSoftDelete: true,
-        // ✅ 修复: hasExtraProperties不是UnifiedEntityDefinition的属性,移除
-        // hasExtraProperties: false,
-        fields: [], // ✅ 修复: 使用fields而不是properties
-        relations: [] // ✅ 修复: 添加必需的relations字段
-      }]
+        isMultiTenant: false,
+        fields: [],
+        relationships: [],
+        validationRules: [],
+        businessRules: [],
+        indexes: [],
+        constraints: [],
+        permissions: [],
+        uiConfig: {
+          listPage: {
+            pageSize: 20,
+            sortField: 'name',
+            sortOrder: 'asc',
+            searchFields: ['name'],
+            displayFields: ['name', 'description']
+          },
+          formPage: {
+            layout: 'vertical',
+            labelWidth: 120,
+            fieldGroups: [{
+              name: 'basic',
+              displayName: '基本信息',
+              fields: ['name', 'description']
+            }]
+          },
+          detailPage: {
+            layout: 'tabs',
+            displayFields: ['name', 'description']
+          }
+        },
+        codeGeneration: {
+          generateEntity: true,
+          generateDto: true,
+          generateAppService: true,
+          generateController: true,
+          generateRepository: true,
+          generateFrontend: true,
+          generateTests: true
+        },
+        isCompleted: false,
+        tags: [],
+        schemaVersion: '1.0.0',
+        version: '1.0.0',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }],
+      // ✅ 添加缺少的必需字段
+      id: crypto.randomUUID(),
+      author: 'SmartAbp Team',
+      generateMobilePages: false,
+      menuConfig: [{
+        id: crypto.randomUUID(),
+        label: generationParams.value.displayName || generationParams.value.entityName,
+        icon: 'el-icon-document',
+        route: `/${generationParams.value.moduleName.toLowerCase()}`,
+        children: []
+      }],
+      permissionConfig: {
+        groupName: generationParams.value.moduleName,
+        permissions: [
+          {
+            name: `${generationParams.value.moduleName}.Default`,
+            displayName: `${generationParams.value.displayName || generationParams.value.entityName}管理`,
+            description: `${generationParams.value.displayName || generationParams.value.entityName}模块的默认权限`,
+            isGrantedByDefault: false
+          }
+        ]
+      },
+      schemaVersion: '1.0.0',
+      createdAt: new Date(),
+      updatedAt: new Date()
     } satisfies ModuleMetadataDto
 
     // ✅ 修复: 构建符合ModuleGenerationConfig接口的完整配置

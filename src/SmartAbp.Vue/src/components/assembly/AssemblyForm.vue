@@ -105,7 +105,7 @@
         <label>依赖项</label>
         <div class="dependencies-input">
           <div
-            v-for="(dep, index) in formData.dependencies"
+            v-for="(_dep, index) in formData.dependencies"
             :key="index"
             class="dependency-item"
           >
