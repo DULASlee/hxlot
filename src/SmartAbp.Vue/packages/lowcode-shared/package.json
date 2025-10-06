@@ -18,7 +18,7 @@
     "vue": "^3.3.0"
   },
   "devDependencies": {
-    "@smartabp/metadata-core": "file:../metadata-core",
+    "@smartabp/metadata-core": "workspace:*",
     "@types/node": "^20.0.0",
     "zod": "^4.1.11"
   }
