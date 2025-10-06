@@ -37,7 +37,7 @@ async function request<T>(
     params?: QueryParams
 ): Promise<T> {
     const finalUrl = buildUrl(url, params)
-    const init: RequestInit = {
+    const init: globalThis.RequestInit = {
         method,
         headers: {
             'Content-Type': 'application/json'

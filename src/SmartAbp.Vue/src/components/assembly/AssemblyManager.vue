@@ -86,9 +86,9 @@
               错误
             </option>
           </select>
-          <input 
-            v-model="searchQuery" 
-            placeholder="搜索装配件..." 
+          <input
+            v-model="searchQuery"
+            placeholder="搜索装配件..."
             class="search-input"
           />
         </div>
@@ -139,8 +139,8 @@
           </button>
         </div>
         <div class="modal-body">
-          <textarea 
-            v-model="importJson" 
+          <textarea
+            v-model="importJson"
             placeholder="粘贴配置JSON..."
             class="import-textarea"
           />
@@ -197,16 +197,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useAssemblyRegistry } from '../../core/assembly/assembly-registry'
-import AssemblyItem from './AssemblyItem.vue'
 import AssemblyForm from './AssemblyForm.vue'
+import AssemblyItem from './AssemblyItem.vue'
 
 // 使用装配件注册表
-const { 
-  registryItems, 
-  statistics, 
-  isLoading, 
+const {
+  registryItems,
+  statistics,
+  isLoading,
   error: _error,
   initialize,
   loadAssembly,
@@ -250,7 +250,7 @@ const filteredAssemblies = computed(() => {
   // 根据搜索查询过滤
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
-    items = items.filter(item => 
+    items = items.filter(item =>
       item.config.name.toLowerCase().includes(query) ||
       item.config.displayName?.toLowerCase().includes(query) ||
       item.config.description?.toLowerCase().includes(query)
@@ -371,7 +371,7 @@ const saveAssembly = async (config: any) => {
 .assembly-list {
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .list-header {
@@ -387,7 +387,8 @@ const saveAssembly = async (config: any) => {
   gap: 10px;
 }
 
-.filter-select, .search-input {
+.filter-select,
+.search-input {
   padding: 8px 12px;
   border: 1px solid #ced4da;
   border-radius: 4px;
@@ -402,7 +403,8 @@ const saveAssembly = async (config: any) => {
   padding: 0;
 }
 
-.loading, .empty-state {
+.loading,
+.empty-state {
   padding: 40px;
   text-align: center;
   color: #6c757d;
@@ -414,7 +416,7 @@ const saveAssembly = async (config: any) => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;

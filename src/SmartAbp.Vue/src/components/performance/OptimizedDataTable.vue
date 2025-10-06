@@ -75,7 +75,9 @@ SmartAbp Enterprise Optimized Data Table Component
           @input="handleSearch"
         >
           <template #prefix>
-            <el-icon><Search /></el-icon>
+            <el-icon>
+              <Search />
+            </el-icon>
           </template>
         </el-input>
         <el-select
@@ -112,7 +114,9 @@ SmartAbp Enterprise Optimized Data Table Component
           type="primary"
           @click="refreshData"
         >
-          <el-icon><Refresh /></el-icon>
+          <el-icon>
+            <Refresh />
+          </el-icon>
           刷新数据
         </el-button>
       </div>
@@ -233,17 +237,17 @@ SmartAbp Enterprise Optimized Data Table Component
 </template>
 
 <script setup lang="ts">
- 
- 
+
+
 /* eslint-disable vue/require-default-prop */
-import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
-import { ElButton, ElInput, ElSelect, ElOption, ElSwitch, ElIcon, ElLoading, ElButtonGroup } from 'element-plus'
-import { Search, Refresh, Loading } from '@element-plus/icons-vue'
+import { Loading, Refresh, Search } from '@element-plus/icons-vue'
+import { ElButton, ElButtonGroup, ElIcon, ElInput, ElLoading, ElOption, ElSelect, ElSwitch } from 'element-plus'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 // Phoenix Week 3: 升级到Enhanced Virtual Scroll
-import { useEnhancedVirtualScroll, type EnhancedVirtualScrollOptions } from '@/utils/performance/virtualScrolling-enhanced'
 import { useInfiniteScroll } from '@/utils/performance/lazyLoading'
-import { useMemoryMonitor, useCache, useDebounce } from '@/utils/performance/memoryOptimization'
+import { useCache, useDebounce, useMemoryMonitor } from '@/utils/performance/memoryOptimization'
 import { usePerformanceMonitor } from '@/utils/performance/virtualScrolling'
+import { useEnhancedVirtualScroll, type EnhancedVirtualScrollOptions } from '@/utils/performance/virtualScrolling-enhanced'
 import LazyImage from './LazyImage.vue'
 
 // 组件属性
@@ -630,7 +634,12 @@ onBeforeUnmount(() => {
 }
 
 @keyframes rotating {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

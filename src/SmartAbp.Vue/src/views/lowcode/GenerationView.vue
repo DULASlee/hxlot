@@ -2,10 +2,7 @@
   <div class="generation-view">
     <div class="generation-header">
       <h2>Code Generation</h2>
-      <div
-        v-if="workspaceStore.currentProject"
-        class="project-info"
-      >
+      <div v-if="workspaceStore.currentProject" class="project-info">
         <el-tag type="info">
           Project: {{ workspaceStore.currentProject.name }}
         </el-tag>
@@ -21,110 +18,87 @@
           <TemplateSelector @select="(template: any) => onTemplateSelect(template)" />
         </el-card>
 
-        <el-card
-          v-if="selectedTemplate"
-          class="parameters-section"
-        >
+        <el-card v-if="selectedTemplate" class="parameters-section">
           <template #header>
-            <span>2. Configure Parameters</span>
+            <div class="parameters-header">
+              <span>2. Configure Parameters</span>
+              <!-- 🔥 新增：验证状态显示 -->
+              <div class="validation-status">
+                <el-tag v-if="validationState.isValidating" type="info" size="small">
+                  <i class="el-icon-loading" /> Validating...
+                </el-tag>
+                <el-tag v-else-if="isValid" type="success" size="small">
+                  <i class="el-icon-check" /> Valid
+                </el-tag>
+                <el-tag v-else-if="errorCount > 0" type="danger" size="small">
+                  <i class="el-icon-close" /> {{ errorCount }} Error{{ errorCount > 1 ? 's' : '' }}
+                </el-tag>
+                <el-tag v-if="warningCount > 0" type="warning" size="small">
+                  <i class="el-icon-warning" /> {{ warningCount }} Warning{{ warningCount > 1 ? 's' : '' }}
+                </el-tag>
+              </div>
+            </div>
           </template>
-          <el-form
-            :model="generationParams"
-            label-width="120px"
-          >
-            <el-form-item
-              label="Entity Name"
-              required
-            >
-              <el-input
-                v-model="generationParams.entityName"
-                placeholder="User"
-              />
+
+          <!-- 🔥 新增：验证错误显示 -->
+          <div v-if="errorCount > 0" class="validation-errors">
+            <el-alert v-for="error in validationState.errors" :key="error.path" :title="error.message" type="error"
+              size="small" :closable="false" show-icon />
+          </div>
+
+          <!-- 🔥 新增：验证警告显示 -->
+          <div v-if="warningCount > 0" class="validation-warnings">
+            <el-alert v-for="warning in validationState.warnings" :key="warning.path" :title="warning.message"
+              type="warning" size="small" :closable="false" show-icon />
+          </div>
+
+          <el-form :model="generationParams" label-width="120px">
+            <el-form-item label="Entity Name" required>
+              <el-input v-model="generationParams.entityName" placeholder="User" />
             </el-form-item>
-            <el-form-item
-              label="Module Name"
-              required
-            >
-              <el-input
-                v-model="generationParams.moduleName"
-                placeholder="Identity"
-              />
+            <el-form-item label="Module Name" required>
+              <el-input v-model="generationParams.moduleName" placeholder="Identity" />
             </el-form-item>
             <el-form-item label="Display Name">
-              <el-input
-                v-model="generationParams.displayName"
-                placeholder="用户管理"
-              />
+              <el-input v-model="generationParams.displayName" placeholder="用户管理" />
             </el-form-item>
             <el-form-item label="Framework">
               <el-select v-model="generationParams.framework">
-                <el-option
-                  label="Vue 3"
-                  value="vue"
-                />
-                <el-option
-                  label="React"
-                  value="react"
-                />
-                <el-option
-                  label="Angular"
-                  value="angular"
-                />
+                <el-option label="Vue 3" value="vue" />
+                <el-option label="React" value="react" />
+                <el-option label="Angular" value="angular" />
               </el-select>
             </el-form-item>
             <el-form-item label="Language">
               <el-select v-model="generationParams.language">
-                <el-option
-                  label="TypeScript"
-                  value="typescript"
-                />
-                <el-option
-                  label="JavaScript"
-                  value="javascript"
-                />
+                <el-option label="TypeScript" value="typescript" />
+                <el-option label="JavaScript" value="javascript" />
               </el-select>
             </el-form-item>
           </el-form>
         </el-card>
 
-        <el-card
-          v-if="selectedTemplate"
-          class="generation-actions"
-        >
+        <el-card v-if="selectedTemplate" class="generation-actions">
           <template #header>
             <span>3. Generate Code</span>
           </template>
           <div class="action-buttons">
-            <el-button
-              type="primary"
-              :loading="generating"
-              :disabled="!canGenerate"
-              @click="generateCode"
-            >
+            <el-button type="primary" :loading="generating" :disabled="!canGenerate" @click="generateCode">
               Generate Code
             </el-button>
-            <el-button
-              :disabled="!generatedCode"
-              @click="previewCode"
-            >
+            <el-button :disabled="!generatedCode" @click="previewCode">
               Preview
             </el-button>
           </div>
         </el-card>
       </div>
 
-      <div
-        v-if="showPreview && generatedCode"
-        class="right-panel"
-      >
+      <div v-if="showPreview && generatedCode" class="right-panel">
         <el-card class="preview-section">
           <template #header>
             <div class="preview-header">
               <span>Code Preview</span>
-              <el-button
-                size="small"
-                @click="copyCode"
-              >
+              <el-button size="small" @click="copyCode">
                 Copy
               </el-button>
             </div>
@@ -137,15 +111,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue"
-import { ElButton, ElCard, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElTag, ElMessage } from "element-plus"
-import { logger } from "@/utils/logger"
-import TemplateSelector from "@smartabp/lowcode-designer/components/TemplateSelector.vue"
-import SandboxPreview from "@smartabp/lowcode-designer/components/SandboxPreview.vue"
 import { useWorkspaceStore } from "@/stores/lowcode/workspace"
+import { logger } from "@/utils/logger"
+import SandboxPreview from "@smartabp/lowcode-designer/components/SandboxPreview.vue"
+import TemplateSelector from "@smartabp/lowcode-designer/components/TemplateSelector.vue"
+import { ElAlert, ElButton, ElCard, ElForm, ElFormItem, ElInput, ElMessage, ElOption, ElSelect, ElTag } from "element-plus"
+import { computed, ref, watch } from "vue"
 
 // ✅ 使用真实的代码生成器API
-import { codeGeneratorApi, type Template, type ModuleMetadataDto, type GenerationResult, type ModuleGenerationConfig } from "@smartabp/lowcode-api"
+import { codeGeneratorApi, type GenerationResult, type ModuleGenerationConfig, type ModuleMetadataDto, type Template } from "@smartabp/lowcode-api"
+
+// 🔥 新增：导入验证功能
+import type { UnifiedModuleMetadata } from "@smartabp/lowcode-shared"
+import { useValidation, type ValidationOptions } from "@smartabp/lowcode-shared/composables/useValidation"
 
 const workspaceStore = useWorkspaceStore()
 const selectedTemplate = ref<Template | null>(null)
@@ -161,10 +139,33 @@ const generationParams = ref({
   language: "typescript",
 })
 
+// 🔥 新增：初始化验证功能
+const validationOptions: ValidationOptions = {
+  debounceMs: 300,
+  enableCache: true,
+  realtime: true,
+  mode: 'standard',
+  featureFlags: {
+    enablePerformanceMonitoring: true,
+    enableDetailedErrorReporting: true,
+    enableStrictValidation: false
+  }
+}
+
+const {
+  validationState,
+  isValid,
+  errorCount,
+  warningCount,
+  validateModule,
+  clearErrors
+} = useValidation(validationOptions)
+
 const canGenerate = computed(() => {
   return selectedTemplate.value &&
-         generationParams.value.entityName &&
-         generationParams.value.moduleName
+    generationParams.value.entityName &&
+    generationParams.value.moduleName &&
+    isValid.value // 🔥 新增：只有验证通过才能生成代码
 })
 
 const onTemplateSelect = (template: Template) => {
@@ -173,11 +174,167 @@ const onTemplateSelect = (template: Template) => {
   if (template.id === "crud") {
     generationParams.value.displayName = `${generationParams.value.entityName}管理`
   }
+
+  // 🔥 新增：模板选择后清除之前的验证错误
+  clearErrors()
 }
+
+// 🔥 新增：创建UnifiedModuleMetadata用于验证
+const createUnifiedModuleMetadata = (): UnifiedModuleMetadata => {
+  return {
+    id: crypto.randomUUID(),
+    systemName: 'SmartAbp',
+    name: generationParams.value.moduleName,
+    displayName: generationParams.value.displayName || generationParams.value.entityName,
+    description: `${generationParams.value.displayName || generationParams.value.entityName}模块`,
+    version: '1.0.0',
+    author: 'SmartAbp',
+    namespace: `SmartAbp.${generationParams.value.moduleName}`,
+    architecturePattern: 'Crud' as const,
+    databaseInfo: {
+      connectionStringName: 'Default',
+      schema: 'dbo',
+      provider: 'SqlServer' as const
+    },
+    frontend: {
+      parentId: '',
+      routePrefix: generationParams.value.moduleName.toLowerCase()
+    },
+    generateMobilePages: false,
+    featureManagement: {
+      isEnabled: true,
+      defaultPolicy: 'RequiresAuthentication'
+    },
+    dependencies: [],
+    schemaVersion: '1.0.0',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    entities: [{
+      id: crypto.randomUUID(),
+      name: generationParams.value.entityName,
+      displayName: generationParams.value.displayName || generationParams.value.entityName,
+      tableName: generationParams.value.entityName,
+      module: generationParams.value.moduleName,
+      namespace: `SmartAbp.${generationParams.value.moduleName}.Entities`,
+      description: `${generationParams.value.displayName || generationParams.value.entityName}实体`,
+      schema: 'dbo',
+      isAggregateRoot: true,
+      baseClass: 'FullAuditedAggregateRoot<Guid>',
+      interfaces: [],
+      isAudited: true,
+      isSoftDelete: true,
+      isMultiTenant: false,
+      fields: [
+        {
+          id: crypto.randomUUID(),
+          name: 'Id',
+          displayName: 'ID',
+          type: 'Guid',
+          isRequired: true,
+          isPrimaryKey: true,
+          isReadonly: true,
+          description: '主键ID',
+          helpText: '',
+          isUnique: true,
+          isIndexed: true,
+          enumValues: [],
+          defaultValue: undefined,
+          minLength: undefined,
+          maxLength: undefined,
+          minValue: undefined,
+          maxValue: undefined,
+          pattern: undefined,
+          validationRules: [],
+          displayOrder: 1,
+          groupName: 'Basic',
+          isVisible: true,
+          listVisible: true,
+          detailVisible: true,
+          formVisible: false,
+          searchable: false,
+          sortable: true,
+          filterable: false,
+          disabled: false,
+          columnName: 'Id',
+          columnType: 'uniqueidentifier',
+          isAuditField: false,
+          isSoftDeleteField: false,
+          isTenantField: false
+        }
+      ],
+      relationships: [],
+      validationRules: [],
+      businessRules: [],
+      indexes: [],
+      constraints: [],
+      permissions: [],
+      uiConfig: {
+        listPage: {
+          pageSize: 20,
+          sortField: 'Id',
+          sortOrder: 'desc' as const,
+          searchFields: ['Name'],
+          displayFields: ['Id', 'Name']
+        },
+        formPage: {
+          layout: 'vertical' as const,
+          labelWidth: 120,
+          fieldGroups: [{
+            name: 'basic',
+            displayName: 'Basic Information',
+            fields: ['Name']
+          }]
+        },
+        detailPage: {
+          layout: 'card' as const,
+          displayFields: ['Id', 'Name']
+        }
+      },
+      codeGeneration: {
+        generateEntity: true,
+        generateDto: true,
+        generateAppService: true,
+        generateController: true,
+        generateRepository: true,
+        generateFrontend: true,
+        generateTests: false
+      },
+      isCompleted: false,
+      tags: [],
+      schemaVersion: '1.0.0',
+      version: '1.0.0',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }],
+    permissionConfig: {
+      groupName: generationParams.value.moduleName,
+      permissions: []
+    },
+    menuConfig: []
+  }
+}
+
+// 🔥 新增：实时验证参数变化
+watch(
+  [() => generationParams.value.entityName, () => generationParams.value.moduleName, () => generationParams.value.displayName],
+  async () => {
+    if (generationParams.value.entityName && generationParams.value.moduleName) {
+      const moduleMetadata = createUnifiedModuleMetadata()
+      await validateModule(moduleMetadata)
+    }
+  },
+  { deep: true }
+)
 
 const generateCode = async () => {
   if (!selectedTemplate.value || !workspaceStore.currentProject) {
     ElMessage.error("Please select a template and ensure a project is active")
+    return
+  }
+
+  // 🔥 新增：生成前最终验证
+  if (!isValid.value) {
+    ElMessage.error(`Validation failed: ${errorCount.value} errors found`)
     return
   }
 
@@ -324,7 +481,7 @@ const generateCode = async () => {
       preview += `<div class="stat-item"><span class="label">模块:</span> <span class="value">${generationParams.value.moduleName}</span></div>`
       preview += `<div class="stat-item"><span class="label">实体:</span> <span class="value">${generationParams.value.entityName}</span></div>`
       preview += `</div>`
-      
+
       if (result.generatedFiles && result.generatedFiles.length > 0) {
         preview += `<h3>生成的文件列表:</h3>`
         preview += `<div class="file-list">`
@@ -338,7 +495,7 @@ const generateCode = async () => {
         })
         preview += `</div>`
       }
-      
+
       preview += `</div>`
       preview += `<style>
         .generation-result { padding: 20px; }
@@ -372,19 +529,19 @@ const generateCode = async () => {
     } else {
       // 处理生成失败
       const errors = result.errors || []
-      const errorMessage = errors.length > 0 
-        ? `生成失败：${errors.join(', ')}` 
+      const errorMessage = errors.length > 0
+        ? `生成失败：${errors.join(', ')}`
         : '代码生成失败，请检查配置'
       ElMessage.error(errorMessage)
     }
   } catch (error) {
     console.error('❌ Code generation error:', error)
     logger?.error("代码生成错误", { error: String(error) })
-    
-    const errorMessage = error instanceof Error 
-      ? error.message 
+
+    const errorMessage = error instanceof Error
+      ? error.message
       : "Unknown error"
-    
+
     ElMessage.error({
       message: `代码生成失败: ${errorMessage}`,
       duration: 5000
@@ -464,5 +621,43 @@ const copyCode = async () => {
 .project-info {
   display: flex;
   gap: 8px;
+}
+
+/* 🔥 新增：验证相关样式 */
+.parameters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.validation-status {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.validation-errors,
+.validation-warnings {
+  margin-bottom: 16px;
+}
+
+.validation-errors .el-alert,
+.validation-warnings .el-alert {
+  margin-bottom: 8px;
+}
+
+.validation-errors .el-alert:last-child,
+.validation-warnings .el-alert:last-child {
+  margin-bottom: 0;
+}
+
+/* 验证状态动画 */
+.validation-status .el-tag {
+  transition: all 0.3s ease;
+}
+
+.validation-status .el-tag i {
+  margin-right: 4px;
 }
 </style>

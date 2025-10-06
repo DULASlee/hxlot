@@ -228,7 +228,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 interface AssemblyConfig {
   name: string
@@ -283,12 +283,12 @@ const configJson = ref('')
 
 // 计算属性
 const isValid = computed(() => {
-  return !Object.values(errors.value).some(error => error) && 
-         formData.value.name.trim() !== '' &&
-         formData.value.displayName.trim() !== '' &&
-         formData.value.version.trim() !== '' &&
-         formData.value.entry.trim() !== '' &&
-         !configError.value
+  return !Object.values(errors.value).some(error => error) &&
+    formData.value.name.trim() !== '' &&
+    formData.value.displayName.trim() !== '' &&
+    formData.value.version.trim() !== '' &&
+    formData.value.entry.trim() !== '' &&
+    !configError.value
 })
 
 // 监听配置变化
