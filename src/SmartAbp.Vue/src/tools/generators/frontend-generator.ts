@@ -5,7 +5,7 @@
 
 import { promises as fs } from 'fs'
 import path from 'node:path'
-import type { EntityMetadata, PropertyMetadata } from '../../../packages/metadata-core/dist/index.js'
+import type { EntityMetadata, PropertyMetadata } from '../../../packages/metadata-core/src/types/index'
 
 export interface GeneratorOptions {
   dryRun?: boolean

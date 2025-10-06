@@ -5,7 +5,7 @@
  * 注意：此为占位符实现，实际生成逻辑需要调用后端 CodeGenerationAppService API
  */
 
-import type { EntityMetadata } from '../../../packages/metadata-core/dist/index.js'
+import type { EntityMetadata } from '../../../packages/metadata-core/src/types/index'
 
 export interface GeneratorOptions {
   dryRun?: boolean
