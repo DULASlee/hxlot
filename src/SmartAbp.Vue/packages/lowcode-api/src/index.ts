@@ -21,6 +21,10 @@ export { codeGeneratorApi } from "./code-generator"
 export * from "./code-gen-stats"
 export { codeGenStatsApi, userProfileApi } from "./code-gen-stats"
 
+// 生成历史
+export * from "./generation-history"
+export { generationHistoryApi } from "./generation-history"
+
 // ============================================================================
 // DDD生成器API导出（Day 7 新增）
 // ============================================================================

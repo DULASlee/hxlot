@@ -30,6 +30,9 @@ public class SmartAbpApplicationAutoMapperProfile : Profile
         // 统计数据映射
         CreateMap<global::SmartAbp.CodeGenerator.CodeGenStat, global::SmartAbp.CodeGenerator.Dtos.CodeGenStatsDto>();
         
+        // 生成历史映射
+        CreateMap<global::SmartAbp.CodeGenerator.GenerationHistory, global::SmartAbp.CodeGenerator.Dtos.GenerationHistoryDto>();
+        
         // ========== V9元数据映射（待实现）==========
         // 🔧 基于SmartAbp.CodeGenerator.Services.V9命名空间的DTO映射
         // TODO: 当V9 DTO与领域实体定义完善后，添加具体映射配置
