@@ -7,31 +7,63 @@
     </el-page-header>
 
     <div class="config-container">
-      <el-card shadow="never" class="template-info-card">
+      <el-card
+        shadow="never"
+        class="template-info-card"
+      >
         <template #header>
           <div class="card-header">
             <span>{{ templateInfo?.icon }} {{ templateInfo?.name }}</span>
-            <el-tag type="success">行业模板</el-tag>
+            <el-tag type="success">
+              行业模板
+            </el-tag>
           </div>
         </template>
-        <p class="template-description">{{ templateInfo?.description }}</p>
+        <p class="template-description">
+          {{ templateInfo?.description }}
+        </p>
       </el-card>
 
       <!-- 配置步骤 -->
-      <el-steps :active="currentStep" align-center class="config-steps">
-        <el-step title="基础信息" description="系统名称和描述" />
-        <el-step title="模块选择" description="选择需要的功能模块" />
-        <el-step title="硬件配置" description="IoT设备和硬件" />
-        <el-step title="生成预览" description="确认并生成" />
+      <el-steps
+        :active="currentStep"
+        align-center
+        class="config-steps"
+      >
+        <el-step
+          title="基础信息"
+          description="系统名称和描述"
+        />
+        <el-step
+          title="模块选择"
+          description="选择需要的功能模块"
+        />
+        <el-step
+          title="硬件配置"
+          description="IoT设备和硬件"
+        />
+        <el-step
+          title="生成预览"
+          description="确认并生成"
+        />
       </el-steps>
 
       <!-- 步骤内容 -->
       <div class="step-content">
         <!-- Step 1: 基础信息 -->
-        <div v-if="currentStep === 0" class="step-panel">
-          <el-form :model="configForm" label-width="120px">
+        <div
+          v-if="currentStep === 0"
+          class="step-panel"
+        >
+          <el-form
+            :model="configForm"
+            label-width="120px"
+          >
             <el-form-item label="系统名称">
-              <el-input v-model="configForm.systemName" placeholder="如：华宇制造MES" />
+              <el-input
+                v-model="configForm.systemName"
+                placeholder="如：华宇制造MES"
+              />
             </el-form-item>
             <el-form-item label="系统描述">
               <el-input
@@ -42,29 +74,51 @@
               />
             </el-form-item>
             <el-form-item label="公司名称">
-              <el-input v-model="configForm.companyName" placeholder="如：华宇科技有限公司" />
+              <el-input
+                v-model="configForm.companyName"
+                placeholder="如：华宇科技有限公司"
+              />
             </el-form-item>
           </el-form>
         </div>
 
         <!-- Step 2: 模块选择 -->
-        <div v-if="currentStep === 1" class="step-panel">
-          <p class="step-desc">请选择需要的功能模块（已根据行业预选核心模块）</p>
-          <el-checkbox-group v-model="selectedModules" class="module-list">
+        <div
+          v-if="currentStep === 1"
+          class="step-panel"
+        >
+          <p class="step-desc">
+            请选择需要的功能模块（已根据行业预选核心模块）
+          </p>
+          <el-checkbox-group
+            v-model="selectedModules"
+            class="module-list"
+          >
             <el-card
               v-for="module in availableModules"
               :key="module.id"
               shadow="hover"
               :class="['module-card', { selected: selectedModules.includes(module.id) }]"
             >
-              <el-checkbox :label="module.id" :disabled="module.required">
+              <el-checkbox
+                :label="module.id"
+                :disabled="module.required"
+              >
                 <div class="module-info">
                   <div class="module-header">
                     <span class="module-icon">{{ module.icon }}</span>
                     <span class="module-name">{{ module.name }}</span>
-                    <el-tag v-if="module.required" type="danger" size="small">必选</el-tag>
+                    <el-tag
+                      v-if="module.required"
+                      type="danger"
+                      size="small"
+                    >
+                      必选
+                    </el-tag>
                   </div>
-                  <p class="module-desc">{{ module.description }}</p>
+                  <p class="module-desc">
+                    {{ module.description }}
+                  </p>
                 </div>
               </el-checkbox>
             </el-card>
@@ -72,8 +126,13 @@
         </div>
 
         <!-- Step 3: 硬件配置 -->
-        <div v-if="currentStep === 2" class="step-panel">
-          <p class="step-desc">配置需要集成的IoT设备和硬件</p>
+        <div
+          v-if="currentStep === 2"
+          class="step-panel"
+        >
+          <p class="step-desc">
+            配置需要集成的IoT设备和硬件
+          </p>
           <el-alert
             type="info"
             :closable="false"
@@ -100,7 +159,10 @@
         </div>
 
         <!-- Step 4: 生成预览 -->
-        <div v-if="currentStep === 3" class="step-panel">
+        <div
+          v-if="currentStep === 3"
+          class="step-panel"
+        >
           <el-result
             icon="success"
             title="配置完成"
@@ -134,8 +196,19 @@
 
       <!-- 步骤导航 -->
       <div class="step-actions">
-        <el-button v-if="currentStep > 0" @click="prevStep">上一步</el-button>
-        <el-button v-if="currentStep < 3" type="primary" @click="nextStep">下一步</el-button>
+        <el-button
+          v-if="currentStep > 0"
+          @click="prevStep"
+        >
+          上一步
+        </el-button>
+        <el-button
+          v-if="currentStep < 3"
+          type="primary"
+          @click="nextStep"
+        >
+          下一步
+        </el-button>
       </div>
     </div>
 

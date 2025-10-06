@@ -10,14 +10,19 @@
       </p>
 
       <!-- 统计横幅 -->
-      <div v-if="stats.totalProjects > 0" class="stats-banner">
+      <div
+        v-if="stats.totalProjects > 0"
+        class="stats-banner"
+      >
         <div class="stat-item">
           <el-statistic 
             title="累计生成" 
             :value="stats.totalProjects"
             :loading="statsLoading"
           >
-            <template #suffix>个项目</template>
+            <template #suffix>
+              个项目
+            </template>
           </el-statistic>
         </div>
         <div class="stat-item">
@@ -26,7 +31,9 @@
             :value="stats.monthlyGenerations"
             :loading="statsLoading"
           >
-            <template #suffix>次</template>
+            <template #suffix>
+              次
+            </template>
           </el-statistic>
         </div>
         <div class="stat-item">
@@ -35,7 +42,9 @@
             :value="stats.savedHours"
             :loading="statsLoading"
           >
-            <template #suffix>小时</template>
+            <template #suffix>
+              小时
+            </template>
           </el-statistic>
         </div>
         <div class="stat-item">
@@ -45,7 +54,9 @@
             :precision="1"
             :loading="statsLoading"
           >
-            <template #suffix>分</template>
+            <template #suffix>
+              分
+            </template>
           </el-statistic>
         </div>
       </div>
@@ -54,8 +65,12 @@
       <div class="modes-container">
         <!-- 极简模式 -->
         <div class="mode-card simple-mode">
-          <div class="mode-icon">⚡</div>
-          <h2 class="mode-title">极简模式</h2>
+          <div class="mode-icon">
+            ⚡
+          </div>
+          <h2 class="mode-title">
+            极简模式
+          </h2>
           <p class="mode-desc">
             三步快速生成，适合标准CRUD功能
           </p>
@@ -85,8 +100,12 @@
 
         <!-- 🆕 行业模板模式 -->
         <div class="mode-card industry-mode">
-          <div class="mode-icon">🏭</div>
-          <h2 class="mode-title">行业模板</h2>
+          <div class="mode-icon">
+            🏭
+          </div>
+          <h2 class="mode-title">
+            行业模板
+          </h2>
           <p class="mode-desc">
             一键生成MES/智慧工地完整系统
           </p>
@@ -114,34 +133,57 @@
               size="large"
               class="mode-btn"
             >
-              选择行业 <el-icon class="el-icon--right"><arrow-down /></el-icon>
+              选择行业 <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item command="saas-mes">
                   <div class="template-item">
-                    <el-icon size="20"><Tools /></el-icon>
+                    <el-icon size="20">
+                      <Tools />
+                    </el-icon>
                     <div class="template-info">
-                      <div class="template-name">🏭 SaaS云MES系统</div>
-                      <div class="template-desc">生产管理、设备监控、质量追溯</div>
+                      <div class="template-name">
+                        🏭 SaaS云MES系统
+                      </div>
+                      <div class="template-desc">
+                        生产管理、设备监控、质量追溯
+                      </div>
                     </div>
                   </div>
                 </el-dropdown-item>
                 <el-dropdown-item command="smart-construction">
                   <div class="template-item">
-                    <el-icon size="20"><OfficeBuilding /></el-icon>
+                    <el-icon size="20">
+                      <OfficeBuilding />
+                    </el-icon>
                     <div class="template-info">
-                      <div class="template-name">🏗️ 智慧工地管理</div>
-                      <div class="template-desc">人员、安全、进度、环境监测</div>
+                      <div class="template-name">
+                        🏗️ 智慧工地管理
+                      </div>
+                      <div class="template-desc">
+                        人员、安全、进度、环境监测
+                      </div>
                     </div>
                   </div>
                 </el-dropdown-item>
-                <el-dropdown-item command="coming-soon" disabled>
+                <el-dropdown-item
+                  command="coming-soon"
+                  disabled
+                >
                   <div class="template-item">
-                    <el-icon size="20"><MoreFilled /></el-icon>
+                    <el-icon size="20">
+                      <MoreFilled />
+                    </el-icon>
                     <div class="template-info">
-                      <div class="template-name">📊 更多行业模板</div>
-                      <div class="template-desc">即将推出：仓储、零售、医疗...</div>
+                      <div class="template-name">
+                        📊 更多行业模板
+                      </div>
+                      <div class="template-desc">
+                        即将推出：仓储、零售、医疗...
+                      </div>
                     </div>
                   </div>
                 </el-dropdown-item>
@@ -152,8 +194,12 @@
 
         <!-- 专业模式 -->
         <div class="mode-card pro-mode">
-          <div class="mode-icon">🧩</div>
-          <h2 class="mode-title">专业模式</h2>
+          <div class="mode-icon">
+            🧩
+          </div>
+          <h2 class="mode-title">
+            专业模式
+          </h2>
           <p class="mode-desc">
             完整工作台，适合复杂业务和深度定制
           </p>
@@ -202,7 +248,10 @@
             fixed
           >
             <template #default="{ row }">
-              <span v-if="row.icon" class="feature-icon">{{ row.icon }}</span>
+              <span
+                v-if="row.icon"
+                class="feature-icon"
+              >{{ row.icon }}</span>
               {{ row.feature }}
             </template>
           </el-table-column>
@@ -255,7 +304,10 @@
       </div>
 
       <!-- 行业推荐提示 -->
-      <div v-if="industryRecommendation" class="industry-recommendation">
+      <div
+        v-if="industryRecommendation"
+        class="industry-recommendation"
+      >
         <el-alert
           type="success"
           :closable="false"
@@ -290,10 +342,22 @@
       :close-on-click-modal="false"
     >
       <div class="welcome-guide-content">
-        <el-steps :active="1" align-center>
-          <el-step title="选择模式" description="根据需求选择" />
-          <el-step title="配置参数" description="简单配置" />
-          <el-step title="生成代码" description="一键生成" />
+        <el-steps
+          :active="1"
+          align-center
+        >
+          <el-step
+            title="选择模式"
+            description="根据需求选择"
+          />
+          <el-step
+            title="配置参数"
+            description="简单配置"
+          />
+          <el-step
+            title="生成代码"
+            description="一键生成"
+          />
         </el-steps>
         
         <div class="guide-tips">
@@ -304,10 +368,15 @@
             <li><strong>专业模式</strong>：完整工作台，支持复杂业务和深度定制</li>
           </ul>
           
-          <div v-if="industryRecommendation" class="guide-recommendation">
+          <div
+            v-if="industryRecommendation"
+            class="guide-recommendation"
+          >
             <el-divider />
             <p style="margin-bottom: 12px;">
-              <el-icon color="#67c23a"><Check /></el-icon>
+              <el-icon color="#67c23a">
+                <Check />
+              </el-icon>
               根据您的企业信息，我们推荐使用：
             </p>
             <el-card shadow="hover">

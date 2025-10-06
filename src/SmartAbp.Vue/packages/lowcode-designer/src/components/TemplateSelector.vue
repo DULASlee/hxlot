@@ -111,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 
 interface Template {
   id: string
@@ -129,8 +129,8 @@ interface Props {
 defineProps<Props>()
 
 const emit = defineEmits<{
-  'template-selected': [template: Template]
-  'template-preview': [template: Template]
+  'select': [template: Template]  // 🔥 修复: 改为匹配GenerationView期望的事件名
+  'preview': [template: Template]  // 🔥 修复: 改为更简洁的事件名
 }>()
 
 // 响应式数据
@@ -222,11 +222,11 @@ const handleCategoryChange = () => {
 
 const selectTemplate = (template: Template) => {
   selectedTemplate.value = template
-  emit('template-selected', template)
+  emit('select', template)  // 🔥 修复: 使用新的事件名
 }
 
 const previewTemplate = (template: Template) => {
-  emit('template-preview', template)
+  emit('preview', template)  // 🔥 修复: 使用新的事件名
 }
 
 const resetSearch = () => {
