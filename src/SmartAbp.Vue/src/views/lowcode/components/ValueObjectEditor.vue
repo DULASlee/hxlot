@@ -75,9 +75,15 @@ const emit = defineEmits<{
 
 const localVO = ref<ValueObjectDefinitionDto>({ ...props.modelValue })
 
+// ✅ 修复死循环：监听props变化而不是local对象
+watch(() => props.modelValue, (newValue) => {
+  localVO.value = { ...newValue }
+}, { deep: true })
+
+// ✅ 修复死循环：手动触发emit而不是watch
 watch(localVO, (newValue) => {
   emit('update:modelValue', newValue)
-}, { deep: true })
+}, { deep: false }) // ⚠️ 移除deep:true避免性能问题
 
 const addProperty = () => {
   const newProperty: PropertyDefinitionDto = {
