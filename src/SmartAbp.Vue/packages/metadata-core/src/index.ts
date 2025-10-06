@@ -16,6 +16,9 @@ export * from './validators'
 // ========== Schema工具 ==========
 export * from './schema'
 
+// ========== 转换器 ==========
+export * from './converters'
+
 // ========== 版本信息 ==========
 export const VERSION = '1.0.0'
 export const SCHEMA_VERSION = '1.0.0'
