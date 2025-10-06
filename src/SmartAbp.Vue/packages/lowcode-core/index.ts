@@ -45,6 +45,46 @@ export * from './src/composables/useSecurityDashboard'
 export * from './src/composables/useRealTimeAlerts'
 export * from './src/composables/useFullscreen'
 
+// ===== 代码生成器导出 =====
+export { CqrsCodeGenerator } from './src/generators/CqrsCodeGenerator'
+export type { CqrsCommandConfig, CqrsQueryConfig } from './src/generators/CqrsCodeGenerator'
+
+export { DddCodeGenerator } from './src/generators/DddCodeGenerator'
+export type { EntityConfig, PropertyConfig, MethodConfig } from './src/generators/DddCodeGenerator'
+
+export { DddDomainEventGenerator } from './src/generators/DddDomainEventGenerator'
+export type { DomainEventConfig, EventHandlerConfig } from './src/generators/DddDomainEventGenerator'
+
+export { MicroserviceGenerator } from './src/generators/MicroserviceGenerator'
+export type { MicroserviceConfig } from './src/generators/MicroserviceGenerator'
+
+export { BusinessRuleCodeGenerator } from './src/generators/BusinessRuleCodeGenerator'
+export { RelationshipUIGenerator } from './src/generators/RelationshipUIGenerator'
+export { WorkflowCodeGenerator } from './src/generators/WorkflowCodeGenerator'
+
+// ===== 引擎导出 =====
+export { RuleExecutionEngine } from './src/engines/ruleExecutionEngine'
+export type { BusinessRule, RuleCondition } from './src/engines/ruleExecutionEngine'
+
+export { WorkflowEngine } from './src/engines/WorkflowEngine'
+export type { WorkflowDefinition, WorkflowNode, WorkflowTransition } from './src/engines/WorkflowEngine'
+
+export { IntelligentRecommendationEngine } from './src/engines/IntelligentRecommendationEngine'
+export { ActionExecutor, ActionExecutorRegistry } from './src/engines/actionExecutor'
+export type { IActionExecutor, ActionExecutorContext, RuleContext } from './src/engines/actionExecutor'
+
+// ===== 安全工具导出 =====
+export { VulnerabilityScannerEngine } from './src/security/VulnerabilityScannerEngine'
+export { SqlInjectionDetector } from './src/security/SqlInjectionDetector'
+export { XssDetector } from './src/security/XssDetector'
+export type { SecurityIssue, SecurityScanResult } from './src/security/SecurityIssue'
+
+// ===== 测试工具导出（可选，按需使用） =====
+export { LoadTestEngine } from './src/testing/LoadTestEngine'
+export { PerformanceBaseline } from './src/testing/PerformanceBaseline'
+export { BenchmarkEngine } from './src/testing/BenchmarkEngine'
+export type { LoadTestScenario } from './src/testing/LoadTestScenario'
+
 // ===== 核心引擎工厂 =====
 export const createLowCodeEngine = (): LowCodeEngine => {
   return {

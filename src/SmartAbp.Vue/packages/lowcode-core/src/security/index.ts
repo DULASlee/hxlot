@@ -1,21 +1,7 @@
-/**
- * 安全审计模块导出
- */
+// 安全工具统一导出入口
+// 支持按需加载，优化包体积
 
-// 数据结构
-export type {
-  VulnerabilityType,
-  SeverityLevel,
-  SecurityIssue,
-  IssueLocation,
-  RemediationSuggestion,
-  ScanResult,
-  SecurityIssueUtils
-} from './SecurityIssue'
-
-// 检测器
-export type { SqlInjectionDetector } from './SqlInjectionDetector'
-export type { XssDetector } from './XssDetector'
-
-// 扫描引擎
-export { VulnerabilityScannerEngine, type ScanConfig, type ScanProgressCallback } from './VulnerabilityScannerEngine'
+export { VulnerabilityScannerEngine } from './VulnerabilityScannerEngine'
+export { SqlInjectionDetector } from './SqlInjectionDetector'
+export { XssDetector } from './XssDetector'
+export type { SecurityIssue, SecurityScanResult } from './SecurityIssue'

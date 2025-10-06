@@ -253,22 +253,64 @@ class CallAPIExecutor implements IActionExecutor {
   readonly name = 'CallAPI'
   readonly priority = 80
   
-  async execute(params: { url: string; method?: string; data?: any }, _context: RuleContext): Promise<any> {
+  async execute(params: { url: string; method?: string; data?: any; headers?: Record<string, string> }, _context: RuleContext): Promise<any> {
     if (!params.url) {
       throw new Error('缺少必需参数: url')
     }
     
-    const method = params.method || 'GET'
+    const method = (params.method || 'GET').toUpperCase()
     
     logger.debug(`🌐 调用API: ${method} ${params.url}`)
     
-    // TODO: 实际的API调用实现
-    // 这里返回一个占位结果
-    return {
-      url: params.url,
-      method,
-      status: 'pending',
-      message: 'API调用功能待实现'
+    try {
+      // 使用fetch API进行实际的HTTP调用
+      const fetchOptions: RequestInit = {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          ...params.headers
+        }
+      }
+
+      // 如果有请求体数据（非GET/HEAD请求）
+      if (params.data && !['GET', 'HEAD'].includes(method)) {
+        fetchOptions.body = JSON.stringify(params.data)
+      }
+
+      const response = await fetch(params.url, fetchOptions)
+      
+      if (!response.ok) {
+        throw new Error(`API调用失败: ${response.status} ${response.statusText}`)
+      }
+
+      const contentType = response.headers.get('content-type')
+      let result: any
+
+      if (contentType?.includes('application/json')) {
+        result = await response.json()
+      } else if (contentType?.includes('text/')) {
+        result = await response.text()
+      } else {
+        result = await response.blob()
+      }
+
+      logger.debug(`✅ API调用成功: ${method} ${params.url}`, { status: response.status })
+
+      return {
+        success: true,
+        status: response.status,
+        data: result,
+        headers: Object.fromEntries(response.headers.entries())
+      }
+    } catch (error) {
+      logger.error(`❌ API调用失败: ${method} ${params.url}`, error)
+      
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        url: params.url,
+        method
+      }
     }
   }
 }

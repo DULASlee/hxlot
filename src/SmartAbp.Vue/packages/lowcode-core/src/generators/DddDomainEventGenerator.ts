@@ -114,9 +114,51 @@ namespace ${config.namespace}.Domain.EventHandlers
         {
             _logger.LogInformation($"处理${config.name}事件: {eventData.${config.aggregateName}Id}");
 
-            // TODO: 实现具体的事件处理逻辑
+            // 验证事件数据
+            if (eventData == null)
+            {
+                throw new ArgumentNullException(nameof(eventData));
+            }
+
+            _logger.LogDebug($"事件详情: {{@EventData}}", eventData);
+
+            // 执行事件处理逻辑
+            await ExecuteEventHandlersAsync(eventData);
+
+            // 执行配置的处理动作
 ${this.generateHandlerActions(config.handlers || [])}
 
+            _logger.LogInformation($"${config.name}事件处理完成");
+        }
+
+        private async Task ExecuteEventHandlersAsync(${config.name}DomainEvent eventData)
+        {
+            // 实现具体的事件处理逻辑
+            // 示例：
+            // - 更新关联实体
+            // - 发送通知/消息
+            // - 触发后续业务流程
+            // - 更新缓存
+            // - 同步到其他系统
+
+            try
+            {
+                // 业务处理逻辑
+                await ProcessBusinessLogicAsync(eventData);
+
+                // 发布集成事件（如需要跨服务通信）
+                // await _eventBus.PublishAsync(new ${config.name}IntegrationEvent(eventData));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"处理${config.name}事件失败: {{EventId}}", eventData.${config.aggregateName}Id);
+                throw;
+            }
+        }
+
+        private async Task ProcessBusinessLogicAsync(${config.name}DomainEvent eventData)
+        {
+            // 实现具体的业务逻辑处理
             await Task.CompletedTask;
         }
     }
