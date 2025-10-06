@@ -2,13 +2,35 @@
   "name": "@smartabp/lowcode-designer",
   "version": "1.0.0",
   "description": "SmartAbp LowCode Designer - Visual Design Tools",
-  "main": "index.ts",
-  "types": "index.ts",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.mjs",
+      "require": "./dist/components/index.js"
+    },
+    "./views": {
+      "types": "./dist/views/index.d.ts",
+      "import": "./dist/views/index.mjs",
+      "require": "./dist/views/index.js"
+    }
+  },
+  "sideEffects": false,
   "author": "SmartAbp Team",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@smartabp/lowcode-shared": "workspace:*",
@@ -17,6 +39,7 @@
     "typescript": "^5.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "tsup": "^8.0.0"
   }
 }
