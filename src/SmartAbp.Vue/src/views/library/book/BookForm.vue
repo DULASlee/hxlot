@@ -7,40 +7,107 @@
   >
     <el-form
       ref="formRef"
+      v-loading="loading"
       :model="formData"
       :rules="rules"
       label-width="120px"
-      v-loading="loading"
     >
-      <el-form-item label="书名" prop="title" required>
-        <el-input v-model="formData.title" placeholder="请输入书名" />
+      <el-form-item
+        label="书名"
+        prop="title"
+        required
+      >
+        <el-input
+          v-model="formData.title"
+          placeholder="请输入书名"
+        />
       </el-form-item>
-      <el-form-item label="ISBN" prop="isbn" required>
-        <el-input v-model="formData.isbn" placeholder="请输入ISBN" />
+      <el-form-item
+        label="ISBN"
+        prop="isbn"
+        required
+      >
+        <el-input
+          v-model="formData.isbn"
+          placeholder="请输入ISBN"
+        />
       </el-form-item>
-      <el-form-item label="作者" prop="author" required>
-        <el-input v-model="formData.author" placeholder="请输入作者" />
+      <el-form-item
+        label="作者"
+        prop="author"
+        required
+      >
+        <el-input
+          v-model="formData.author"
+          placeholder="请输入作者"
+        />
       </el-form-item>
-      <el-form-item label="出版社" prop="publisher">
-        <el-input v-model="formData.publisher" placeholder="请输入出版社" />
+      <el-form-item
+        label="出版社"
+        prop="publisher"
+      >
+        <el-input
+          v-model="formData.publisher"
+          placeholder="请输入出版社"
+        />
       </el-form-item>
-      <el-form-item label="出版日期" prop="publishDate">
-        <el-date-picker v-model="formData.publishDate" type="datetime" placeholder="选择日期时间" style="width: 100%" />
+      <el-form-item
+        label="出版日期"
+        prop="publishDate"
+      >
+        <el-date-picker
+          v-model="formData.publishDate"
+          type="datetime"
+          placeholder="选择日期时间"
+          style="width: 100%"
+        />
       </el-form-item>
-      <el-form-item label="价格" prop="price" required>
-        <el-input-number v-model="formData.price" :controls="false" style="width: 100%" />
+      <el-form-item
+        label="价格"
+        prop="price"
+        required
+      >
+        <el-input-number
+          v-model="formData.price"
+          :controls="false"
+          style="width: 100%"
+        />
       </el-form-item>
-      <el-form-item label="库存数量" prop="stock" required>
-        <el-input-number v-model="formData.stock" :controls="false" style="width: 100%" />
+      <el-form-item
+        label="库存数量"
+        prop="stock"
+        required
+      >
+        <el-input-number
+          v-model="formData.stock"
+          :controls="false"
+          style="width: 100%"
+        />
       </el-form-item>
-      <el-form-item label="简介" prop="description">
-        <el-input v-model="formData.description" type="textarea" :rows="4" placeholder="请输入简介" />
+      <el-form-item
+        label="简介"
+        prop="description"
+      >
+        <el-input
+          v-model="formData.description"
+          type="textarea"
+          :rows="4"
+          placeholder="请输入简介"
+        />
       </el-form-item>
     </el-form>
 
     <template #footer>
-      <el-button @click="handleClose">取消</el-button>
-      <el-button type="primary" @click="handleSubmit" :loading="submitting">确定</el-button>
+      <el-button @click="handleClose">
+        取消
+      </el-button>
+      <el-button
+        type="primary"
+        :loading="submitting"
+        @click="handleSubmit"
+      >
+        确定
+      </el-button>
     </template>
   </el-dialog>
 </template>

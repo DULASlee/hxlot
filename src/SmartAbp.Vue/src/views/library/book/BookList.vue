@@ -2,48 +2,125 @@
   <div class="book-list">
     <el-card>
       <!-- 搜索栏 -->
-      <el-form :inline="true" :model="searchForm" class="search-form">
+      <el-form
+        :inline="true"
+        :model="searchForm"
+        class="search-form"
+      >
         <el-form-item label="书名">
-          <el-input v-model="searchForm.title" placeholder="请输入书名" clearable />
+          <el-input
+            v-model="searchForm.title"
+            placeholder="请输入书名"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="作者">
-          <el-input v-model="searchForm.author" placeholder="请输入作者" clearable />
+          <el-input
+            v-model="searchForm.author"
+            placeholder="请输入作者"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="ISBN">
-          <el-input v-model="searchForm.isbn" placeholder="请输入ISBN" clearable />
+          <el-input
+            v-model="searchForm.isbn"
+            placeholder="请输入ISBN"
+            clearable
+          />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleSearch">查询</el-button>
-          <el-button @click="handleReset">重置</el-button>
+          <el-button
+            type="primary"
+            @click="handleSearch"
+          >
+            查询
+          </el-button>
+          <el-button @click="handleReset">
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
 
       <!-- 操作栏 -->
       <div class="toolbar">
-        <el-button type="primary" icon="Plus" @click="handleCreate">新增</el-button>
-        <el-button type="danger" icon="Delete" :disabled="!selectedRows.length" @click="handleBatchDelete">
+        <el-button
+          type="primary"
+          icon="Plus"
+          @click="handleCreate"
+        >
+          新增
+        </el-button>
+        <el-button
+          type="danger"
+          icon="Delete"
+          :disabled="!selectedRows.length"
+          @click="handleBatchDelete"
+        >
           批量删除
         </el-button>
       </div>
 
       <!-- 数据表格 -->
       <el-table
-        :data="tableData"
         v-loading="loading"
+        :data="tableData"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" />
-        <el-table-column prop="title" label="书名" />
-        <el-table-column prop="author" label="作者" />
-        <el-table-column prop="isbn" label="ISBN" />
-        <el-table-column prop="publisher" label="出版社" />
-        <el-table-column prop="price" label="价格" />
-        <el-table-column prop="stock" label="库存数量" />
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column
+          type="selection"
+          width="55"
+        />
+        <el-table-column
+          prop="title"
+          label="书名"
+        />
+        <el-table-column
+          prop="author"
+          label="作者"
+        />
+        <el-table-column
+          prop="isbn"
+          label="ISBN"
+        />
+        <el-table-column
+          prop="publisher"
+          label="出版社"
+        />
+        <el-table-column
+          prop="price"
+          label="价格"
+        />
+        <el-table-column
+          prop="stock"
+          label="库存数量"
+        />
+        <el-table-column
+          label="操作"
+          width="200"
+          fixed="right"
+        >
           <template #default="{ row }">
-            <el-button link type="primary" @click="handleView(row)">查看</el-button>
-            <el-button link type="primary" @click="handleEdit(row)">编辑</el-button>
-            <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button
+              link
+              type="primary"
+              @click="handleView(row)"
+            >
+              查看
+            </el-button>
+            <el-button
+              link
+              type="primary"
+              @click="handleEdit(row)"
+            >
+              编辑
+            </el-button>
+            <el-button
+              link
+              type="danger"
+              @click="handleDelete(row)"
+            >
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>

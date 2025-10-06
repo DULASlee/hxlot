@@ -13,8 +13,12 @@
       <div class="studio-header">
         <div class="header-content">
           <div class="header-text">
-            <h1 class="title">{{ t('ultraSimple.title') }}</h1>
-            <p class="subtitle">{{ t('ultraSimple.subtitle') }}</p>
+            <h1 class="title">
+              {{ t('ultraSimple.title') }}
+            </h1>
+            <p class="subtitle">
+              {{ t('ultraSimple.subtitle') }}
+            </p>
           </div>
           <div class="header-actions">
             <el-tooltip 
@@ -24,8 +28,8 @@
               <el-button
                 :icon="mode === 'dark' ? 'Sunny' : 'Moon'"
                 circle
-                @click="toggleTheme"
                 class="theme-toggle"
+                @click="toggleTheme"
               />
             </el-tooltip>
           </div>
@@ -67,7 +71,9 @@
             <el-divider />
 
             <!-- 2-4. 系统基础信息 -->
-            <h3 class="section-title">{{ t('ultraSimple.form.systemBasicInfo') }}</h3>
+            <h3 class="section-title">
+              {{ t('ultraSimple.form.systemBasicInfo') }}
+            </h3>
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item
@@ -83,11 +89,26 @@
                     default-first-option
                     style="width: 100%"
                   >
-                    <el-option label="智慧建造 (SmartConstruction)" value="SmartConstruction" />
-                    <el-option label="生产执行系统 (MES)" value="MES" />
-                    <el-option label="人力资源 (HRM)" value="HRM" />
-                    <el-option label="客户关系 (CRM)" value="CRM" />
-                    <el-option label="SmartAbp" value="SmartAbp" />
+                    <el-option
+                      label="智慧建造 (SmartConstruction)"
+                      value="SmartConstruction"
+                    />
+                    <el-option
+                      label="生产执行系统 (MES)"
+                      value="MES"
+                    />
+                    <el-option
+                      label="人力资源 (HRM)"
+                      value="HRM"
+                    />
+                    <el-option
+                      label="客户关系 (CRM)"
+                      value="CRM"
+                    />
+                    <el-option
+                      label="SmartAbp"
+                      value="SmartAbp"
+                    />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -120,7 +141,9 @@
             </el-row>
 
             <!-- 5-6. 代码生成配置 -->
-            <h3 class="section-title">{{ t('ultraSimple.form.codeGenerationConfig') }}</h3>
+            <h3 class="section-title">
+              {{ t('ultraSimple.form.codeGenerationConfig') }}
+            </h3>
             <el-row :gutter="16">
               <el-col :span="12">
                 <el-form-item
@@ -159,16 +182,27 @@
                     size="large"
                     style="width: 100%"
                   >
-                    <el-option label="SQL Server" value="SqlServer" />
-                    <el-option label="MySQL" value="MySql" />
-                    <el-option label="PostgreSQL" value="PostgreSql" />
+                    <el-option
+                      label="SQL Server"
+                      value="SqlServer"
+                    />
+                    <el-option
+                      label="MySQL"
+                      value="MySql"
+                    />
+                    <el-option
+                      label="PostgreSQL"
+                      value="PostgreSql"
+                    />
                   </el-select>
                 </el-form-item>
               </el-col>
             </el-row>
 
             <!-- 7-8. 前端界面配置 -->
-            <h3 class="section-title">{{ t('ultraSimple.form.frontendConfig') }}</h3>
+            <h3 class="section-title">
+              {{ t('ultraSimple.form.frontendConfig') }}
+            </h3>
             <el-row :gutter="16">
               <el-col :span="12">
                 <el-form-item
@@ -181,11 +215,26 @@
                     size="large"
                     style="width: 100%"
                   >
-                    <el-option label="工作台" value="workstation" />
-                    <el-option label="业务管理" value="business" />
-                    <el-option label="基础数据" value="master-data" />
-                    <el-option label="报表中心" value="reports" />
-                    <el-option label="系统管理" value="system" />
+                    <el-option
+                      label="工作台"
+                      value="workstation"
+                    />
+                    <el-option
+                      label="业务管理"
+                      value="business"
+                    />
+                    <el-option
+                      label="基础数据"
+                      value="master-data"
+                    />
+                    <el-option
+                      label="报表中心"
+                      value="reports"
+                    />
+                    <el-option
+                      label="系统管理"
+                      value="system"
+                    />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -211,6 +260,24 @@
               <div><strong>{{ t('ultraSimple.derived.namespace') }}:</strong> {{ derivedNamespace }}</div>
               <div><strong>{{ t('ultraSimple.derived.routePrefix') }}:</strong> {{ derivedRoutePrefix }}</div>
               <div><strong>{{ t('ultraSimple.derived.apiEndpoint') }}:</strong> {{ derivedApiEndpoint }}</div>
+            </el-alert>
+
+            <!-- ✅ B方案优化：验证错误显示 -->
+            <el-alert
+              v-if="validationState.errors.length > 0 && validationState.isDirty"
+              title="配置验证失败"
+              type="error"
+              :closable="false"
+              class="validation-errors"
+            >
+              <ul class="error-list">
+                <li
+                  v-for="(error, index) in validationState.errors"
+                  :key="index"
+                >
+                  <strong>{{ error.field }}:</strong> {{ error.message }}
+                </li>
+              </ul>
             </el-alert>
 
             <!-- 生成按钮 -->
@@ -293,8 +360,10 @@
 import type { ModuleMetadata, TableSchema } from '@smartabp/lowcode-api'
 import { codeGeneratorApi } from '@smartabp/lowcode-api'
 import { useTheme } from '@smartabp/lowcode-shared/theme'
+import { safeValidateModuleMetadata } from '@smartabp/metadata-core'
+import { useDebounceFn } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -345,6 +414,14 @@ const generationProgress = ref(0)
 const generationLogs = ref<GenerationLog[]>([])
 const generationSessionId = ref<string>('')
 
+// ✅ B方案优化：验证状态
+const validationState = reactive({
+  errors: [] as Array<{ field: string; message: string }>,
+  isValid: false,
+  isDirty: false,
+  isValidating: false
+})
+
 // 计算属性
 const derivedNamespace = computed(() => {
   if (!config.value.systemName || !config.value.moduleName) return ''
@@ -369,8 +446,111 @@ const isConfigValid = computed(() => {
     config.value.displayName &&
     config.value.architecturePattern &&
     config.value.databaseProvider &&
-    config.value.parentMenuId
+    config.value.parentMenuId &&
+    validationState.isValid // ✅ B方案优化：依赖验证状态
   )
+})
+
+// ✅ B方案优化：将config转换为ModuleMetadata进行验证
+const convertToModuleMetadata = (): Partial<ModuleMetadata> => {
+  const selectedTableData = availableTables.value.find(t => t.name === selectedTable.value)
+  
+  return {
+    name: config.value.moduleName,
+    displayName: config.value.displayName,
+    version: '1.0.0',
+    schemaVersion: '1.0.0',
+    abpStyle: true,
+    order: 0,
+    namespace: derivedNamespace.value,
+    systemName: config.value.systemName,
+    architecturePattern: config.value.architecturePattern,
+    databaseInfo: {
+      provider: config.value.databaseProvider,
+      connectionString: 'default',
+      tableName: selectedTable.value,
+      schema: selectedTableData?.schema || null
+    },
+    frontend: {
+      framework: 'Vue3',
+      parentId: config.value.parentMenuId,
+      routePrefix: derivedRoutePrefix.value,
+      icon: config.value.menuIcon || 'database'
+    },
+    backend: {
+      generateEntity: true,
+      generateAppService: true,
+      generateController: true,
+      generateDto: true,
+      generateRepository: false,
+      authorization: {
+        enabled: true,
+        policyPrefix: config.value.systemName
+      }
+    },
+    routes: [],
+    stores: [],
+    dependsOn: [],
+    policies: []
+  }
+}
+
+// ✅ B方案优化：使用metadata-core验证
+const performValidation = () => {
+  try {
+    validationState.isValidating = true
+    
+    // 转换为ModuleMetadata
+    const metadata = convertToModuleMetadata()
+    
+    // 使用safeValidate避免异常
+    const result = safeValidateModuleMetadata(metadata)
+    
+    if (result.success) {
+      validationState.errors = []
+      validationState.isValid = true
+    } else {
+      validationState.errors = result.error.errors?.map((err: any) => ({
+        field: err.path?.join?.('.') ?? 'unknown',
+        message: err.message ?? '验证失败'
+      })) ?? []
+      validationState.isValid = false
+    }
+  } catch (error) {
+    console.error('验证异常:', error)
+    validationState.errors = [{
+      field: 'system',
+      message: '系统错误，请刷新重试'
+    }]
+    validationState.isValid = false
+  } finally {
+    validationState.isValidating = false
+  }
+}
+
+// ✅ B方案优化：使用@vueuse/core的防抖函数（自动管理资源）
+const debouncedValidate = useDebounceFn(performValidation, 300)
+
+// ✅ B方案优化：精确监听关键字段（避免deep: true的性能问题）
+const watchedFields = computed(() => [
+  selectedTable.value,
+  config.value.systemName,
+  config.value.moduleName,
+  config.value.displayName,
+  config.value.architecturePattern,
+  config.value.databaseProvider,
+  config.value.parentMenuId
+])
+
+// 监听关键字段变化，触发防抖验证
+watch(watchedFields, () => {
+  validationState.isDirty = true
+  debouncedValidate()
+}, { immediate: true })
+
+// ✅ B方案优化：组件销毁时自动清理（防止内存泄漏）
+onUnmounted(() => {
+  // useDebounceFn会自动处理清理，无需手动调用cancel
 })
 
 // 事件处理
@@ -412,36 +592,8 @@ const startGeneration = async () => {
     
     generationProgress.value = 15
 
-    const metadata: ModuleMetadata = {
-      systemName: config.value.systemName,
-      name: config.value.moduleName,
-      displayName: config.value.displayName,
-      namespace: derivedNamespace.value,
-      architecturePattern: config.value.architecturePattern,
-      databaseInfo: {
-        provider: config.value.databaseProvider,
-        connectionString: 'default',
-        tableName: selectedTable.value,
-        schema: selectedTableData?.schema || null
-      },
-      frontend: {
-        framework: 'Vue3',
-        parentId: config.value.parentMenuId,
-        routePrefix: derivedRoutePrefix.value,
-        icon: config.value.menuIcon || 'database'
-      },
-      backend: {
-        generateEntity: true,
-        generateAppService: true,
-        generateController: true,
-        generateDto: true,
-        generateRepository: false,
-        authorization: {
-          enabled: true,
-          policyPrefix: config.value.systemName
-        }
-      }
-    }
+    // ✅ B方案优化：复用转换函数，避免重复代码
+    const metadata = convertToModuleMetadata() as ModuleMetadata
 
     addLog(t('ultraSimple.logs.metadataComplete'), 'success')
     generationProgress.value = 25
@@ -890,6 +1042,27 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
     div {
       margin: var(--spacing-sm) 0;
       font-size: var(--font-size-sm);
+    }
+  }
+  
+  // ✅ B方案优化：验证错误样式
+  .validation-errors {
+    margin-top: var(--spacing-xl);
+    border-radius: var(--radius-base);
+    
+    .error-list {
+      margin: 0;
+      padding-left: var(--spacing-lg);
+      
+      li {
+        margin: var(--spacing-sm) 0;
+        font-size: var(--font-size-sm);
+        
+        strong {
+          color: var(--color-danger);
+          margin-right: var(--spacing-xs);
+        }
+      }
     }
   }
   

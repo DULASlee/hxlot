@@ -5,7 +5,11 @@
     width="600px"
     @close="handleClose"
   >
-    <el-descriptions :column="1" border v-loading="loading">
+    <el-descriptions
+      v-loading="loading"
+      :column="1"
+      border
+    >
       <el-descriptions-item label="书名">
         {{ data?.title }}
       </el-descriptions-item>
@@ -33,7 +37,9 @@
     </el-descriptions>
 
     <template #footer>
-      <el-button @click="handleClose">关闭</el-button>
+      <el-button @click="handleClose">
+        关闭
+      </el-button>
     </template>
   </el-dialog>
 </template>
