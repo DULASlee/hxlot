@@ -24,6 +24,7 @@ using SmartAbp.CodeGenerator.Testing;
 using Volo.Abp;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
+using SmartAbp.CodeGenerator.ABP;
 
 namespace SmartAbp.CodeGenerator
 {
@@ -91,6 +92,10 @@ namespace SmartAbp.CodeGenerator
             // 🎨 Vue3组件订制优化器 - 协助请求3：业务逻辑扩展点
             services.AddScoped<Vue3ComponentCustomizer>();
             
+            // ABP Integration
+            services.AddScoped<AbpModuleGenerator>();
+            services.AddTransient<ITemplateService, FileBasedTemplateService>();
+
             // Application services - 正确注册接口和实现映射
             services.AddScoped<ICodeGenerationAppService, CodeGenerationAppService>();
             services.AddScoped<DefaultUIConfigGenerator>();

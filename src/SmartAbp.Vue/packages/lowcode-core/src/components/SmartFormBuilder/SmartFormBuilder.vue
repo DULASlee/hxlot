@@ -11,9 +11,9 @@ import type { Api } from '@form-create/element-ui'
 import formCreate from '@form-create/element-ui'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { FormSchemaAdapter } from './adapters/FormSchemaAdapter'
-import type { FormCreateConfig, FormCreateRule } from './types/form-create-types'
 import { FormLinkageEngine } from './engine/FormLinkageEngine'
-import type { LinkageRule, CascadeConfig, DynamicFieldConfig, CalculatedFieldConfig } from './types/linkage-types'
+import type { FormCreateConfig, FormCreateRule } from './types/form-create-types'
+import type { CalculatedFieldConfig, CascadeConfig, DynamicFieldConfig, LinkageRule } from './types/linkage-types'
 
 /**
  * @component SmartFormBuilder
@@ -322,7 +322,7 @@ defineExpose({
   updateRule,
   /** 重置表单 */
   reset: handleReset,
-  
+
   // 🆕 联动引擎相关方法
   /** 联动引擎实例 */
   linkageEngine,
