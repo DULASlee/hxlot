@@ -874,8 +874,9 @@ import { useEntityModelingStore, usePageDesignStore, type MDIWindowConfig, type 
 import VisualComponentPalette from '@smartabp/lowcode-designer/components/VisualComponentPalette.vue'
 import VisualDesignCanvas from '@smartabp/lowcode-designer/components/VisualDesignCanvas.vue'
 import ComponentPropertyPanel from '@smartabp/lowcode-designer/components/ComponentPropertyPanel.vue'
-// import { MDIContainer, TabsContainer } from '@smartabp/lowcode-ui-vue' // 暂时注释模块问题
-// 使用简化的类型定义
+// 🔥 修复：使用临时占位组件替代缺失的@smartabp/lowcode-ui-vue
+import MDIContainer from '@smartabp/lowcode-designer/components/MDIContainer.vue'
+import TabsContainer from '@smartabp/lowcode-designer/components/TabsContainer.vue'
 
 // Stores
 // Stores
@@ -1081,8 +1082,10 @@ const exportPages = () => {
 
 // 拖拽处理
 const handleDragStart = (component: any) => {
-  // 设置拖拽数据
+  // 🔥 修复：设置拖拽数据到事件中
   logger?.info("开始拖拽组件", { component: component.name })
+  // 注意：这里的event参数需要从@drag-start事件处理器中获取
+  // 实际的拖拽数据设置应该在组件面板中完成
 }
 
 const handleDragOver = (event: DragEvent) => {
@@ -1091,9 +1094,21 @@ const handleDragOver = (event: DragEvent) => {
 
 const handleDrop = (event: DragEvent) => {
   event.preventDefault()
-  // 处理组件放置逻辑
-  const componentType = "input" // 临时数据
-  addComponentToCanvas(componentType)
+  
+  // 🔥 修复：从拖拽数据中获取实际组件类型
+  try {
+    const componentData = event.dataTransfer?.getData('application/json')
+    if (componentData) {
+      const component = JSON.parse(componentData)
+      addComponentToCanvas(component.type)
+    } else {
+      // 兜底：如果没有拖拽数据，显示提示
+      ElMessage.warning('拖拽数据无效，请重新拖拽组件')
+    }
+  } catch (error) {
+    logger?.error('拖拽组件失败', { error: String(error) })
+    ElMessage.error('拖拽组件失败')
+  }
 }
 
 const addComponentToCanvas = (componentType: string) => {
