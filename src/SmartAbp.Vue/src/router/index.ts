@@ -354,6 +354,28 @@ const routes: RouteRecordRaw[] = [
             component: () => import("@smartabp/lowcode-designer/views/ThemeCustomizationView.vue"),
             meta: { title: "主题定制", menuKey: "theme-customization" },
           },
+          {
+            path: "form-designer",
+            name: "FormDesigner",
+            component: () => import("@smartabp/lowcode-core/components/SmartFormBuilder/SmartFormDesigner.vue"),
+            meta: {
+              title: "表单设计器",
+              menuKey: "form-designer",
+              icon: "📝",
+              description: "可视化表单设计器 2.0 - 拖拽式设计，40种字段类型"
+            },
+          },
+          {
+            path: "form-builder-demo",
+            name: "FormBuilderDemo",
+            component: () => import("@/views/lowcode/FormBuilderDemo.vue"),
+            meta: {
+              title: "表单构建器演示",
+              menuKey: "form-builder-demo",
+              icon: "🎯",
+              description: "SmartFormBuilder 2.0 使用示例和API文档"
+            },
+          },
         ],
       },
     ],
