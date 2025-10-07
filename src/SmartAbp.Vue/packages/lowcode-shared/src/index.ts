@@ -12,7 +12,13 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎯 类型系统 (Type System)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export type { AuditedEntityDto, EntityDto, ListResultDto, PagedResultDto } from './dtos'
 export * from './types'
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🚀 HTTP客户端 (HTTP Client)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export { API_BASE_URL, request } from './api'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔥 统一Schema系统 (Unified Schema System) - v1.0.0
@@ -33,45 +39,33 @@ export * from './version/useSchemaVersion'
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export * from './validation/metadata-adapter'
 export {
-  getUnifiedEntityErrors, getValidationFeatureFlags, SchemaValidationError, setValidationFeatureFlags, UnifiedSchemaValidator, ValidateSchema, validateUnifiedEntities, validateUnifiedEntity,
+  SchemaValidationError, UnifiedSchemaValidator, ValidateSchema, getUnifiedEntityErrors, getValidationFeatureFlags, setValidationFeatureFlags, validateUnifiedEntities, validateUnifiedEntity,
   validateUnifiedModule, type ValidationError as UnifiedValidationError, type UnifiedValidationFeatureFlags, type ValidationPerformance as UnifiedValidationPerformance, type ValidationResult as UnifiedValidationResult, type ValidationWarning as UnifiedValidationWarning
 } from './validation/unified-validator'
 
 // 🔥 阶段2：版本管理和兼容性检查 (Version Management & Compatibility Check) - v1.0.0
 export {
-    compareVersions, CURRENT_SCHEMA_VERSION, findUpgradePath as getUpgradePath, isCompatibleVersion as isCompatible, parseVersion, type SemanticVersion,
-    type VersionComparison
+  CURRENT_SCHEMA_VERSION, compareVersions, findUpgradePath as getUpgradePath, isCompatibleVersion as isCompatible, parseVersion, type SemanticVersion,
+  type VersionComparison
 } from '@smartabp/metadata-core/schema'
 
 export {
-    checkEntityCompatibility,
-    checkModuleCompatibility, type BreakingChange, type CompatibilityResult, type CompatibilityWarning as CompatibilityWarningType
+  checkEntityCompatibility,
+  checkModuleCompatibility, type BreakingChange, type CompatibilityResult, type CompatibilityWarning as CompatibilityWarningType
 } from '@smartabp/metadata-core/schema'
 
 // 🔥 阶段3：Schema差异对比与变更日志 (Schema Diff & Changelog) - v1.0.0
 export {
-    diffEntitySchema,
-    generateChangelog,
-    generateDiffSummary,
-    filterDiffByPath,
-    type DiffOperation,
-    type FieldDiff,
-    type SchemaDiff,
-    type DiffSummary
+  diffEntitySchema, filterDiffByPath, generateChangelog,
+  generateDiffSummary, type DiffOperation, type DiffSummary, type FieldDiff,
+  type SchemaDiff
 } from '@smartabp/metadata-core/schema'
 
 // 🔥 阶段4：国际化错误信息 (Validation I18n) - v1.0.0
 export {
   ValidationMessageKey,
   ZOD_ERROR_TO_MESSAGE_KEY,
-  ZOD_STRING_VALIDATION_TO_KEY,
-  setValidationI18nConfig,
-  getValidationI18nConfig,
-  translateValidationMessage,
-  getMessageKeyFromZodError,
-  extractZodErrorParams,
-  type ValidationMessageParams,
-  type ValidationI18nConfig
+  ZOD_STRING_VALIDATION_TO_KEY, extractZodErrorParams, getMessageKeyFromZodError, getValidationI18nConfig, setValidationI18nConfig, translateValidationMessage, type ValidationI18nConfig, type ValidationMessageParams
 } from './i18n'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -130,6 +124,7 @@ export * from './memory'
 // 📋 日志系统 (Logging System)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export * from './logging'
+export { getGlobalLogger } from './logging'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🚀 统一事件系统 (Unified Event System) - v1.0.0

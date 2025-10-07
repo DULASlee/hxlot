@@ -270,6 +270,12 @@ const routes: RouteRecordRaw[] = [
             meta: { title: "欢迎页", menuKey: "welcome" }
           },
           {
+            path: "industry-template-config",
+            name: "IndustryTemplateConfig",
+            component: () => import("@/views/lowcode/IndustryTemplateConfig.vue"),
+            meta: { title: "行业模板配置", menuKey: "industry-template-config" },
+          },
+          {
             path: "entity-modeling",
             name: "EntityModeling",
             component: () => import("@smartabp/lowcode-designer/views/EntityModelingView.vue"),
@@ -446,8 +452,8 @@ const routes: RouteRecordRaw[] = [
         path: "",
         name: "BusinessRulesEngine",
         component: () => import("@/views/business-rules/BusinessRulesEngine.vue"),
-        meta: { 
-          title: "业务规则引擎", 
+        meta: {
+          title: "业务规则引擎",
           menuKey: "business-rules-engine",
           keepAlive: true,
           description: "动态业务规则配置与执行引擎"

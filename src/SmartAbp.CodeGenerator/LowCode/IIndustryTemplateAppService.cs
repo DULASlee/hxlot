@@ -9,3 +9,4 @@ namespace SmartAbp.CodeGenerator.LowCode
         Task<IndustryTemplateGenerationResultDto> GenerateAsync(IndustryTemplateConfigDto input);
     }
 }
+

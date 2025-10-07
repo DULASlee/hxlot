@@ -9,3 +9,4 @@ class IndustryTemplateApi {
 }
 
 export const industryTemplateApi = new IndustryTemplateApi();
+

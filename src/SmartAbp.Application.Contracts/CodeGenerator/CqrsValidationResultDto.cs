@@ -15,3 +15,4 @@ namespace SmartAbp.Application.Contracts.CodeGenerator
         public string Severity { get; set; } = "Error"; // "Error" or "Warning"
     }
 }
+

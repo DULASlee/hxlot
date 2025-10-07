@@ -421,11 +421,11 @@ import {
     Tools,
     TrendCharts
 } from '@element-plus/icons-vue'
+import type { CodeGenStatsDto, IndustryRecommendationDto } from '@smartabp/lowcode-api'
+import { codeGenStatsApi, userProfileApi } from '@smartabp/lowcode-api'
 import { ElMessage } from 'element-plus'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { codeGenStatsApi, userProfileApi } from '@smartabp/lowcode-api'
-import type { CodeGenStatsDto, IndustryRecommendationDto } from '@smartabp/lowcode-api'
 
 const router = useRouter()
 
@@ -439,6 +439,8 @@ interface ComparisonItem {
   icon?: string
   highlight?: 'simple' | 'industry' | 'pro' | 'neutral'
 }
+
+type LastUsedMode = 'simple' | 'industry' | 'pro' | null;
 
 // ========== 使用API类型 ==========
 // 已从@smartabp/lowcode-api导入CodeGenStatsDto和IndustryRecommendationDto
@@ -456,7 +458,7 @@ const stats = ref<CodeGenStatsDto>({
 const statsLoading = ref(false)
 const showWelcomeGuide = ref(false)
 const isFirstVisit = ref(false)
-const lastUsedMode = ref<'simple' | 'industry' | 'pro' | null>(null)
+const lastUsedMode = ref<LastUsedMode>(null)
 const userIndustry = ref<string>('')
 const industryRecommendation = ref<IndustryRecommendationDto | null>(null)
 
@@ -605,14 +607,14 @@ const loadUserProfile = async () => {
     const profile = await userProfileApi.getMyProfile()
     userIndustry.value = profile.industry || ''
     isFirstVisit.value = profile.isFirstVisit
-    lastUsedMode.value = profile.lastUsedMode as any
+    lastUsedMode.value = profile.lastUsedMode as LastUsedMode
   } catch (error) {
     console.error('加载用户配置失败:', error)
     // 优雅降级到localStorage
     userIndustry.value = localStorage.getItem('userIndustry') || ''
     const visited = localStorage.getItem('codeGenVisited')
     isFirstVisit.value = !visited
-    lastUsedMode.value = localStorage.getItem('lastCodeGenMode') as any
+    lastUsedMode.value = localStorage.getItem('lastCodeGenMode') as LastUsedMode
   }
 }
 
@@ -679,7 +681,7 @@ const selectIndustryTemplate = async (template: string) => {
   })
   
   router.push({
-    path: '/lowcode/industry-template',
+    path: '/lowcode/industry-template-config',
     query: { template }
   })
 }

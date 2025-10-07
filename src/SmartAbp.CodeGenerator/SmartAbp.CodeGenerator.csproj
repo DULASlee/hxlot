@@ -38,6 +38,9 @@
     <PackageReference Include="Volo.Abp.Autofac" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.Ddd.Application" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.EventBus" Version="$(AbpVersion)" />
+    <PackageReference Include="Volo.Abp.Studio.Core" Version="2.0.0" />
+    <PackageReference Include="Volo.Abp.EventBus.Local" Version="$(AbpVersion)" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.14.0" />
 
     <!-- SignalR -->
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />

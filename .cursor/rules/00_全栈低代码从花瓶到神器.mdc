@@ -1,0 +1,174 @@
+# AI编程铁律 - @00_全栈低代码从花瓶到神器
+
+## 核心原则: 任何AI生成的代码都必须是端到端完整、功能可用的垂直切片，绝不能是“花瓶”Demo。
+
+---
+
+## 🚨 第一部分：问题根源 (WHY)
+
+### 基本真理: 系统质量 = 组件质量 × 协作质量
+- **当前状态**: 组件质量低下 (90%是空架子) × 协作质量缺失 (前后端脱节) = **系统几乎不可用**。
+- **根因**: 缺乏强制的端到端完整性标准。
+
+### 六大崩溃症状 (“花瓶”代码的表现)
+1.  **页面崩溃**: 路由缺失、布局坍塌。
+2.  **控件残废**: 事件悬空、数据硬编码。
+3.  **前端API虚拟化**: 返回假数据，不调用后端。
+4.  **后端API残缺**: 空实现，不操作数据库。
+5.  **数据不一致**: 前后端DTO类型、字段不匹配。
+6.  **代码重复冲突**: 同样功能反复造轮子。
+
+---
+
+## 🛡️ 第二部分：六大强制铁律 (WHAT)
+
+### 铁律1: 页面完整性 - 杜绝页面崩溃
+**必检清单**:
+- `☑️ 路由与菜单`: 必须在统一文件中注册。
+- `☑️ 布局规范`: 必须使用标准Layout。
+- `☑️ 权限定义`: 必须有关联的权限标识。
+- `☑️ 核心状态`: 必须包含`加载(loading)`、`错误(error)`、`空(empty)`三种状态处理。
+
+**AI强制执行检查 (示例)**:
+```typescript
+// AI在生成任何页面代码前，必须在内部执行类似检查
+async function enforcePageCompleteness(pageCode: string): Promise<void> {
+  const checks = [
+    { name: 'Layout使用', check: () => pageCode.includes('<MainLayout'), fix: '必须包裹在MainLayout组件中' },
+    { name: '加载状态', check: () => pageCode.includes('loading'), fix: '必须添加loading加载状态' },
+    { name: '错误处理', check: () => pageCode.includes('try') && pageCode.includes('catch'), fix: '必须添加try-catch错误处理' },
+    { name: '空状态显示', check: () => pageCode.includes('empty'), fix: '必须添加empty空状态显示' }
+  ];
+  const failures = checks.filter(c => !c.check());
+  if (failures.length > 0) {
+    const errorMessages = failures.map(f => `  ❌ ${f.name}: ${f.fix}`).join('\n');
+    throw new Error(`页面完整性检查失败!\n${errorMessages}`);
+  }
+}
+```
+
+### 铁律2: 控件完整性 - 杜绝控件残废
+**必检清单**:
+- `☑️ 事件绑定`: 所有交互控件（按钮、下拉框）必须绑定真实、非空的事件处理函数。
+- `☑️ 数据来源`: 禁止硬编码选项，数据必须来自API。
+- `☑️ 禁用状态`: 必须有`disabled`逻辑（如加载中、无权限）。
+- `☑️ 验证规则`: 所有表单输入必须有关联的验证规则。
+
+**AI强制执行检查 (示例)**:
+```typescript
+// AI在生成任何控件代码前，必须在内部执行类似检查
+function enforceComponentCompleteness(componentCode: string): void {
+  const errors: string[] = [];
+  if (componentCode.includes('<el-select') && !componentCode.includes('@change')) errors.push('❌ el-select缺少@change事件绑定!');
+  if (componentCode.includes('<el-button') && !componentCode.includes('@click')) errors.push('❌ el-button缺少@click事件绑定!');
+  if (/<el-option\s+label="[^"]+"/.test(componentCode)) errors.push('❌ el-select使用硬编码数据!必须从API获取');
+  if (componentCode.includes('<el-form') && !componentCode.includes(':rules=')) errors.push('❌ el-form缺少验证规则!');
+  if (errors.length > 0) throw new Error(`控件完整性检查失败!\n${errors.join('\n')}`);
+}
+```
+
+### 铁律3: 前端API真实性 - 杜绝虚拟API
+**必检清单**:
+- `☑️ 真实HTTP调用`: 必须调用`http.get/post/put/delete`等方法。
+- `☑️ 禁止假数据`: 严禁`Promise.resolve`返回硬编码数据（除非有`// @mock`标记）。
+- `☑️ 完整类型定义`: API函数的返回值必须有明确的`Promise<Type>`类型。
+- `☑️ 错误处理`: 必须包含`try-catch`或`.catch()`。
+
+**AI强制执行检查 (示例)**:
+```typescript
+// AI在生成任何API代码前，必须在内部执行类似检查
+function enforceAPIImplementation(apiCode: string, filePath: string): void {
+  const errors: string[] = [];
+  if (apiCode.includes('Promise.resolve({') && !apiCode.includes('// @mock')) errors.push(`❌ ${filePath} 使用假数据!禁止Promise.resolve,必须调用http`);
+  const hasHttpCall = /http\.(get|post|put|delete|patch)/.test(apiCode);
+  if (!hasHttpCall && !apiCode.includes('// @mock')) errors.push(`❌ ${filePath} API未实现!必须调用http`);
+  if (!apiCode.includes(': Promise<')) errors.push(`❌ ${filePath} 缺少返回类型定义!`);
+  if (hasHttpCall && !apiCode.includes('try') && !apiCode.includes('.catch(')) errors.push(`❌ ${filePath} 缺少错误处理!`);
+  if (errors.length > 0) throw new Error(`API实现检查失败!\n${errors.join('\n')}`);
+}
+```
+
+### 铁律4: 后端持久化 - 杜绝API空实现
+**必检清单**:
+- `☑️ Repository注入`: AppService中必须注入`IRepository`。
+- `☑️ 真实数据库操作`:
+  - 查: 必须调用`_repository.GetListAsync()`或`GetQueryableAsync`。
+  - 增: 必须调用`_repository.InsertAsync()`。
+  - 改: 必须调用`_repository.UpdateAsync()`。
+  - 删: 必须调用`_repository.DeleteAsync()`。
+- `☑️ 事务管理`: 写操作必须在工作单元(Unit of Work)内。
+
+**AI强制执行检查 (示例)**:
+```csharp
+// AI在生成任何后端Service前，必须在内部执行类似检查
+public static void EnforceBackendPersistence(string serviceCode, string filePath) {
+    var errors = new List<string>();
+    if (!serviceCode.Contains("IRepository<")) errors.Add($"❌ {filePath} 未注入Repository!");
+    if (serviceCode.Contains("CreateAsync") && !serviceCode.Contains("_repository.InsertAsync")) errors.Add($"❌ {filePath} CreateAsync未落库!");
+    if (serviceCode.Contains("UpdateAsync") && !serviceCode.Contains("_repository.UpdateAsync")) errors.Add($"❌ {filePath} UpdateAsync未落库!");
+    if (serviceCode.Contains("DeleteAsync") && !serviceCode.Contains("_repository.DeleteAsync")) errors.Add($"❌ {filePath} DeleteAsync未落库!");
+    if (serviceCode.Contains("GetListAsync") && serviceCode.Contains("new List<") && !serviceCode.Contains("_repository.")) errors.Add($"❌ {filePath} GetListAsync使用假数据!");
+    if (errors.Count > 0) throw new Exception($"后端落库检查失败!\n{string.Join("\n", errors)}");
+}
+```
+
+### 铁律5: DTO一致性 - 杜绝数据不一致
+**必检清单**:
+- `☑️ 单一事实源`: DTO应基于统一的Schema定义生成。
+- `☑️ 类型与字段名匹配`: 前后端DTO的字段名（camelCase vs PascalCase）和核心类型必须能一一对应。
+- `☑️ AutoMapper配置`: 后端必须存在对应的`AutoMapperProfile`。
+
+**AI强制执行检查 (示例)**:
+```typescript
+// AI在生成任何DTO前，必须在内部执行类似检查
+async function enforceDTOConsistency(entityName: string): Promise<void> {
+  // 伪代码: 检查相关文件是否存在
+  const checks = {
+    '前端DTO': `src/types/${entityName}Dto.ts`,
+    '后端DTO': `src/SmartAbp.Application.Contracts/${entityName}/${entityName}Dto.cs`,
+    'AutoMapper': `src/SmartAbp.Application/${entityName}/${entityName}AutoMapperProfile.cs`
+  };
+  for (const [key, path] of Object.entries(checks)) {
+    // if (!await fileExists(path)) throw new Error(`DTO一致性检查失败: ${key}缺失 at ${path}!`);
+  }
+}
+```
+
+### 铁律6: 代码复用 (DRY) - 杜绝重复造轮子
+**必检清单**:
+- `☑️ 强制检索`: 创建任何新组件、工具函数或服务前，必须先在项目中搜索是否存在可复用项。
+- `☑️ 强制模板`: 所有标准的CRUD功能，必须使用项目提供的模板生成。
+
+**AI强制执行检查**:
+```typescript
+// AI在生成任何代码前，必须在内部执行类似检查
+async function enforceCodeReuse(fileName: string, code: string): Promise<void> {
+  // 伪代码:
+  // 1. 检查是否存在同名组件/函数
+  // const isDuplicate = await fileExists(`src/**/${fileName}`);
+  // if (isDuplicate) throw new Error(`代码复用检查失败: ${fileName} 已存在!`);
+  
+  // 2. 检查CRUD页面是否未使用模板
+  const isCrudPage = /(List|Form|Detail)\.vue$/.test(fileName);
+  if (isCrudPage && !code.includes('// @generated-by-template')) {
+    // throw new Error(`代码复用检查失败: CRUD页面 ${fileName} 必须使用模板生成!`);
+  }
+}
+```
+
+---
+
+## ⚙️ 第三部分：强制执行协议 (HOW)
+
+### AI编程前置协议
+在生成任何代码前, AI必须在内部完成以下流程:
+1.  **识别代码意图**: 判断将要生成的代码属于六大铁律中的哪一类（页面、组件、API等）。
+2.  **执行对应检查**: 运行相应铁律的“AI强制执行检查”逻辑。
+3.  **验证通过**: 只有在所有检查通过后，才能生成代码。
+4.  **失败与修复**: 如果检查失败，必须向用户报告失败原因，并**立即自动修复**，然后重新验证，直至通过。
+
+### 质量保证声明
+在完成任何开发任务后, AI必须在响应的末尾附上以下声明:
+```
+✅ **质量保证声明**: 本次开发已强制执行“从花瓶到神器”六大铁律，确保了代码的端到端功能完整性。所有实现均为真实、可用的企业级代码，杜绝了任何“花瓶”式空架子。
+```
