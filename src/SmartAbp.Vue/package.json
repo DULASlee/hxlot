@@ -84,7 +84,8 @@
     "packages:release": "npm run packages:build && npm run packages:precheck && npm run packages:publish:dry",
     "perf:baseline": "node scripts/performance-baseline-test.js",
     "perf:web-vitals": "node scripts/web-vitals-report.js",
-    "perf:full-analysis": "npm run perf:baseline && npm run perf:analyze"
+    "perf:full-analysis": "npm run perf:baseline && npm run perf:analyze",
+    "validate:components": "node scripts/validate-component-names.cjs"
   },
   "lint-staged": {
     "*.ts": [

@@ -1,14 +1,15 @@
-import { defineConfig } from "vite"
 import vue from "@vitejs/plugin-vue"
-import vueDevtools from "vite-plugin-vue-devtools"
-import Icons from "unplugin-icons/vite"
-import IconsResolver from "unplugin-icons/resolver"
-import AutoImport from "unplugin-auto-import/vite"
-import Components from "unplugin-vue-components/vite"
-import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
-import { fileURLToPath, URL } from "node:url"
 import dns from "dns"
+import { fileURLToPath, URL } from "node:url"
+import AutoImport from "unplugin-auto-import/vite"
+import IconsResolver from "unplugin-icons/resolver"
+import Icons from "unplugin-icons/vite"
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
+import Components from "unplugin-vue-components/vite"
+import { defineConfig } from "vite"
+import vueDevtools from "vite-plugin-vue-devtools"
 import moduleWizardDev from "./packages/lowcode-designer/src/dev/moduleWizardDev"
+import { createPackagesResolver } from "./src/utils/vite/packagesResolver"
 
 // 保证 DNS 解析 localhost 时不过滤非匹配网卡
 dns.setDefaultResultOrder("verbatim")
@@ -33,8 +34,39 @@ export default defineConfig({
           prefix: 'Icon', // 图标组件前缀改为Icon
           enabledCollections: ['ep', 'carbon', 'mdi', 'fa'], // 启用的图标集
         }),
+        // 🎯 自动导入packages组件
+        createPackagesResolver({
+          packagesRoot: 'packages',
+          enableCache: true,
+          debug: process.env.NODE_ENV === 'development'
+        }),
       ],
-      dts: true,
+      // 🔍 组件扫描目录配置
+      dirs: [
+        'src/components',
+        // 🎯 packages组件目录（按依赖层级顺序）
+        'packages/lowcode-shared/src/components',
+        'packages/lowcode-core/src/components',
+        'packages/lowcode-designer/src/components',
+        'packages/lowcode-api/src/components',
+        'packages/lowcode-tools/src/components',
+        'packages/metadata-core/src/components',
+      ],
+      // 🎯 启用深度扫描（支持嵌套目录）
+      deep: true,
+      // 📝 自动生成TypeScript类型声明
+      dts: 'components.d.ts',
+      // 🎯 支持的文件扩展名
+      extensions: ['vue'],
+      // 🎯 包含的文件模式
+      include: [/\.vue$/, /\.vue\?vue/],
+      // 🎯 排除的目录
+      exclude: [
+        /[\\/]node_modules[\\/]/,
+        /[\\/]\.git[\\/]/,
+        /[\\/]__tests__[\\/]/,
+        /[\\/]examples[\\/]/,
+      ],
     }),
     Icons({
       autoInstall: true,
@@ -156,48 +188,48 @@ export default defineConfig({
         // Phoenix Week 2 优化：智能代码分割策略
         manualChunks: (id) => {
           // Vue核心生态
-          if (id.includes('node_modules/vue') || 
-              id.includes('node_modules/vue-router') || 
-              id.includes('node_modules/pinia')) {
+          if (id.includes('node_modules/vue') ||
+            id.includes('node_modules/vue-router') ||
+            id.includes('node_modules/pinia')) {
             return 'vue-core'
           }
-          
+
           // Element Plus UI库
           if (id.includes('node_modules/element-plus')) {
             return 'element-plus'
           }
-          
+
           // Element Plus Icons
           if (id.includes('node_modules/@element-plus/icons-vue')) {
             return 'element-icons'
           }
-          
+
           // ECharts可视化库（按需加载）
           if (id.includes('node_modules/echarts')) {
             return 'echarts'
           }
-          
+
           // 代码高亮库
-          if (id.includes('node_modules/highlight.js') || 
-              id.includes('node_modules/@highlightjs')) {
+          if (id.includes('node_modules/highlight.js') ||
+            id.includes('node_modules/@highlightjs')) {
             return 'highlight'
           }
-          
+
           // Monaco Editor（如有使用）
           if (id.includes('node_modules/monaco-editor')) {
             return 'monaco'
           }
-          
+
           // 日期处理库
           if (id.includes('node_modules/dayjs')) {
             return 'dayjs'
           }
-          
+
           // 工具库
           if (id.includes('node_modules/lodash')) {
             return 'lodash'
           }
-          
+
           // Phoenix Week 2 优化：低代码引擎按包分割
           if (id.includes('/packages/lowcode-shared/')) {
             return 'lowcode-shared'
@@ -214,13 +246,13 @@ export default defineConfig({
           if (id.includes('/packages/lowcode-tools/')) {
             return 'lowcode-tools'
           }
-          
+
           // 其他node_modules（小型库统一打包）
           if (id.includes('node_modules')) {
             return 'vendor'
           }
         },
-        
+
         // Phoenix Week 2 优化：文件命名策略（带hash缓存）
         chunkFileNames: (chunkInfo) => {
           const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').slice(-2).join('/') : 'chunk'
@@ -241,7 +273,7 @@ export default defineConfig({
           return 'assets/[name]-[hash][extname]'
         },
       },
-      
+
       // Phoenix Week 2 优化：Tree-shaking优化
       treeshake: {
         moduleSideEffects: 'no-external',
@@ -249,7 +281,7 @@ export default defineConfig({
         tryCatchDeoptimization: false,
       },
     },
-    
+
     // Phoenix Week 2 优化：压缩配置
     minify: 'terser',
     terserOptions: {
@@ -258,8 +290,8 @@ export default defineConfig({
         drop_console: process.env.NODE_ENV === 'production',
         drop_debugger: true,
         // 移除无用代码
-        pure_funcs: process.env.NODE_ENV === 'production' 
-          ? ['console.log', 'console.info', 'console.debug'] 
+        pure_funcs: process.env.NODE_ENV === 'production'
+          ? ['console.log', 'console.info', 'console.debug']
           : [],
       },
       format: {
@@ -267,10 +299,10 @@ export default defineConfig({
         comments: false,
       },
     },
-    
+
     // Phoenix Week 2 优化：报告分析
     reportCompressedSize: true,
-    
+
     // 提高构建性能
     target: 'es2015',
   },
