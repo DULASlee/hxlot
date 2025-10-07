@@ -182,11 +182,12 @@
 
   "files.maxMemoryForLargeFilesMB": 256,
   "files.watcherPollInterval": 5000,
-  "files.hotExit": "on",
+  "files.hotExit": "onExitAndWindowClose",
   "files.restoreUndoStack": false,
-  "files.saveConflictResolution": "overwriteFileContents",
+  "files.saveConflictResolution": "acceptIncoming",
   "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 1000,
+  "files.autoSaveDelay": 500,
+  "files.refactoring.autoSave": true,
 
   // ===== 编辑器性能优化 =====
   "editor.largeFileOptimizations": true,
@@ -295,42 +296,65 @@
     }
   },
 
-  // ===== 语言特定设置 =====
+  // ===== 语言特定设置（AI编程专用强化版）=====
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features",
     "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
+      "source.organizeImports": "always",
+      "source.fixAll.eslint": "always"
     }
   },
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always",
+      "source.fixAll.eslint": "always"
+    }
   },
   "[vue]": {
     "editor.defaultFormatter": "Vue.volar",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always",
+      "source.fixAll.eslint": "always"
+    }
   },
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true
   },
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true
   },
   "[markdown]": {
     "editor.wordWrap": "on",
-    "editor.formatOnSave": false
+    "editor.formatOnSave": false,
+    "files.trimTrailingWhitespace": false
   },
   "[powershell]": {
     "editor.wordWrap": "off",
-    "editor.formatOnSave": false
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true
   },
   "[csharp]": {
+    "editor.defaultFormatter": "ms-dotnettools.csharp",
     "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
+      "source.organizeImports": "always",
+      "source.fixAll": "always"
     }
   },
 

@@ -17,6 +17,9 @@ build/
 
 # IDE files
 .vscode/
+# 但保留重要的项目配置文件
+!.vscode/settings.json
+!.cursor/settings.json
 .idea/
 *.swp
 *.swo
@@ -97,6 +100,9 @@ jspm_packages/
 
 # Visual Studio Code
 .vscode/
+# 但保留重要的项目配置文件
+!.vscode/settings.json
+!.cursor/settings.json
 
 # JetBrains IDEs
 .idea/

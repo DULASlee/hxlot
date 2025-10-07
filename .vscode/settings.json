@@ -342,13 +342,15 @@
   },
   
   // ============================================
-  // 💾 自动保存优化
+  // 💾 自动保存优化（AI编程专用）
   // ============================================
   
   "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 2000,
-  "files.hotExit": "on",
+  "files.autoSaveDelay": 500,
+  "files.hotExit": "onExitAndWindowClose",
   "files.restoreUndoStack": false,
+  "files.saveConflictResolution": "acceptIncoming",
+  "files.refactoring.autoSave": true,
 
   // ============================================
   // 🎯 语言特定设置（SmartAbp专项）
@@ -357,40 +359,57 @@
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features",
     "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
+      "source.organizeImports": "always",
+      "source.fixAll.eslint": "always"
     }
   },
   
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always",
+      "source.fixAll.eslint": "always"
+    }
   },
   
   "[vue]": {
     "editor.defaultFormatter": "Vue.volar",
     "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
+      "source.organizeImports": "always",
+      "source.fixAll.eslint": "always"
     }
   },
   
   "[csharp]": {
     "editor.defaultFormatter": "ms-dotnettools.csharp",
     "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
+      "source.organizeImports": "always",
+      "source.fixAll": "always"
     }
   },
   
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true
   },
   
   "[markdown]": {
     "editor.wordWrap": "on",
-    "editor.formatOnSave": false
+    "editor.formatOnSave": false,
+    "files.trimTrailingWhitespace": false
   },
 
   // ============================================
