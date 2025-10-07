@@ -23,7 +23,17 @@ export { default as WorkspaceContainer } from './src/components/WorkspaceContain
 export { SmartFormBuilder, SmartFormDesigner } from './src/components/SmartFormBuilder'
 export type { FormCreateRule, FormCreateConfig } from './src/components/SmartFormBuilder'
 
+// 表单联动相关导出
+export { LinkageRuleBuilder } from './src/components/SmartFormBuilder/types/linkage-types'
+export type { 
+  LinkageRule, 
+  CalculatedFieldConfig, 
+  CascadeConfig, 
+  DynamicFieldConfig 
+} from './src/components/SmartFormBuilder/types/linkage-types'
+
 // ===== 核心Store导出 =====
+export { useBusinessRuleStore } from './src/stores/businessRuleStore'
 export { useCodeGenerationStore } from './src/stores/codeGeneration'
 export { useEnhancedStateMachineStore } from './src/stores/enhancedStateMachine'
 export { useEnhancedThemeStore } from './src/stores/enhancedTheme'
