@@ -37,3 +37,10 @@ export type {
 // 📋 日志类型
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export type { ILogger } from './logger'
+export { getGlobalLogger, createComponentLogger } from './logger'
+
+// UI 配置类型（供上层包重用）
+export type { MDIWindowConfig, TabConfig } from './ui'
+
+// 通用DTO类型（供API层重用）
+export type { EntityDto, AuditedEntityDto, ListResultDto, PagedResultDto } from './dtos'

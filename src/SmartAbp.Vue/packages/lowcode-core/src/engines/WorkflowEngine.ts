@@ -41,6 +41,23 @@ export interface StateTransitionRecord {
   context?: Record<string, any>
 }
 
+// 工作流节点接口
+export interface WorkflowNode {
+  id: string
+  name: string
+  type: 'start' | 'end' | 'task' | 'decision' | 'parallel'
+  properties?: Record<string, any>
+}
+
+// 工作流转换接口
+export interface WorkflowTransition {
+  id: string
+  from: string
+  to: string
+  condition?: string
+  action?: string
+}
+
 /**
  * 工作流定义
  */

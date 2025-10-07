@@ -33,6 +33,42 @@ export interface ActionExecutionResult {
 }
 
 /**
+ * 动作执行器上下文
+ */
+export interface ActionExecutorContext {
+  actionName: string
+  parameters: Record<string, any>
+  ruleContext: RuleContext
+  timestamp: number
+}
+
+/**
+ * 动作执行器注册表
+ */
+export class ActionExecutorRegistry {
+  private static instance: ActionExecutorRegistry
+  private executors: Map<string, IActionExecutor> = new Map()
+
+  static getInstance(): ActionExecutorRegistry {
+    if (!ActionExecutorRegistry.instance) {
+      ActionExecutorRegistry.instance = new ActionExecutorRegistry()
+    }
+    return ActionExecutorRegistry.instance
+  }
+
+  register(name: string, executor: IActionExecutor): void {
+    this.executors.set(name, executor)
+  }
+
+  get(name: string): IActionExecutor | undefined {
+    return this.executors.get(name)
+  }
+}
+
+// 重新导出RuleContext类型
+export type { RuleContext } from '../stores/enhancedStateMachine'
+
+/**
  * 🔥 动作执行器框架 - 企业级实现
  * 
  * 功能：

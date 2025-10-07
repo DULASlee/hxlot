@@ -444,7 +444,7 @@ const viewAllProjects = () => {
  * 开始新项目
  */
 const startNewProject = () => {
-  router.push('/codegen-entrance')
+  router.push('/lowcode/codegen-entrance')
 }
 
 /**
@@ -453,10 +453,10 @@ const startNewProject = () => {
 const continueEdit = (project: GenerationHistoryDto) => {
   // 根据模式跳转到对应页面
   if (project.mode === 'simple') {
-    router.push('/CodeGen/ultra-simple')
+    router.push('/lowcode/ultra-simple')
   } else if (project.mode === 'industry') {
     router.push({
-      path: '/lowcode/industry-template',
+      path: '/lowcode/industry-template-config',
       query: { template: project.templateName || '' }
     })
   } else {

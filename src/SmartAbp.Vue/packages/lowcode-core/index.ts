@@ -30,15 +30,16 @@ export { useTemplatesStore } from './src/stores/templates'
 export { useWorkspaceStore } from './src/stores/workspace'
 
 // ===== 类型定义导出 =====
-export * from './src/types/entity-designer'
-export * from './src/types/manifest'
+export type * from './src/types/entity-designer'
+export type * from './src/types/manifest'
 // Entity Modeling类型单独导出
 export type { EntityDefinition, EntityField, EntityRelation } from './src/stores/entityModeling'
 // UI类型从lowcode-shared导出（已迁移）
-export type { MDIWindowConfig, TabConfig } from '@smartabp/lowcode-shared'
+export type { MDIWindowConfig } from '@smartabp/lowcode-shared'
+export type { TabConfig } from '@smartabp/lowcode-shared'
 
 // ===== 工具函数导出 =====
-export * from './src/composables/useCodeGenerationProgress'
+export type * from './src/composables/useCodeGenerationProgress'
 export * from './src/composables/useDragDrop'
 export * from './src/composables/useFullscreen'
 export * from './src/composables/useRealTimeAlerts'
@@ -50,7 +51,7 @@ export { CqrsCodeGenerator } from './src/generators/CqrsCodeGenerator'
 export type { CqrsCommandConfig, CqrsQueryConfig } from './src/generators/CqrsCodeGenerator'
 
 export { DddCodeGenerator } from './src/generators/DddCodeGenerator'
-export type { EntityConfig, MethodConfig, PropertyConfig } from './src/generators/DddCodeGenerator'
+export type { DddEntityConfig, MethodConfig, PropertyConfig } from './src/generators/DddCodeGenerator'
 
 export { DddDomainEventGenerator } from './src/generators/DddDomainEventGenerator'
 export type { DomainEventConfig, EventHandlerConfig } from './src/generators/DddDomainEventGenerator'
@@ -64,17 +65,21 @@ export { WorkflowCodeGenerator } from './src/generators/WorkflowCodeGenerator'
 
 // ===== 引擎导出 =====
 export { RuleExecutionEngine } from './src/engines/ruleExecutionEngine'
-export type { BusinessRule, RuleCondition } from './src/engines/ruleExecutionEngine'
+export type { BusinessRule } from './src/engines/ruleExecutionEngine'
+export type { RuleCondition } from './src/engines/ruleExecutionEngine'
 
 export { WorkflowEngine } from './src/engines/WorkflowEngine'
-export type { WorkflowDefinition, WorkflowNode, WorkflowTransition } from './src/engines/WorkflowEngine'
+export type { WorkflowDefinition } from './src/engines/WorkflowEngine'
+export type { WorkflowNode, WorkflowTransition } from './src/engines/WorkflowEngine'
 
 export { ActionExecutor, ActionExecutorRegistry } from './src/engines/actionExecutor'
-export type { ActionExecutorContext, IActionExecutor, RuleContext } from './src/engines/actionExecutor'
+export type { ActionExecutorContext, IActionExecutor } from './src/engines/actionExecutor'
+export type { RuleContext } from './src/engines/actionExecutor'
 export { IntelligentRecommendationEngine } from './src/engines/IntelligentRecommendationEngine'
 
 // ===== 安全工具导出 =====
-export type { SecurityIssue, SecurityScanResult } from './src/security/SecurityIssue'
+export type { SecurityIssue } from './src/security/SecurityIssue'
+// SecurityScanResult已在SecurityIssue中定义
 export { SqlInjectionDetector } from './src/security/SqlInjectionDetector'
 export { VulnerabilityScannerEngine } from './src/security/VulnerabilityScannerEngine'
 export { XssDetector } from './src/security/XssDetector'
@@ -83,7 +88,7 @@ export { XssDetector } from './src/security/XssDetector'
 export { BenchmarkEngine } from './src/testing/BenchmarkEngine'
 export { LoadTestEngine } from './src/testing/LoadTestEngine'
 export type { LoadTestScenario } from './src/testing/LoadTestScenario'
-export { PerformanceBaseline } from './src/testing/PerformanceBaseline'
+export type { PerformanceBaseline } from './src/testing/PerformanceBaseline'
 
 // ===== 核心引擎工厂 =====
 export const createLowCodeEngine = (): LowCodeEngine => {

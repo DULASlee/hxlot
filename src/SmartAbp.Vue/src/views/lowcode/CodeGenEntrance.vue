@@ -641,7 +641,7 @@ const goToSimpleMode = async () => {
     // 降级到localStorage
     localStorage.setItem('lastCodeGenMode', 'simple')
   }
-  router.push('/CodeGen/ultra-simple')
+  router.push('/lowcode/ultra-simple')
 }
 
 /**
@@ -654,7 +654,7 @@ const goToProMode = async () => {
     // 降级到localStorage
     localStorage.setItem('lastCodeGenMode', 'pro')
   }
-  router.push('/lowcode/entity-modeling')
+  router.push('/lowcode')
 }
 
 /**

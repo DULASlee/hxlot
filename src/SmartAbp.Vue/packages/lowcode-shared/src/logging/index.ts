@@ -6,5 +6,9 @@
  * @module @smartabp/lowcode-shared/logging
  */
 
-export { LogPolicyManager } from './LogPolicyManager'
 export { ErrorLogIntegration } from './ErrorLogIntegration'
+export { LogPolicyManager } from './LogPolicyManager'
+
+// 从types导出logger相关函数（用于向后兼容）
+export { createComponentLogger, getGlobalLogger } from '../types/logger'
+

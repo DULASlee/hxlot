@@ -5,6 +5,16 @@ import type {
   SingleRuleResult,
   RuleExecutionError
 } from '../stores/enhancedStateMachine'
+
+// 重新导出类型供外部使用
+export type { BusinessRule, RuleContext } from '../stores/enhancedStateMachine'
+
+// 规则条件接口
+export interface RuleCondition {
+  expression: string
+  operator: 'AND' | 'OR' | 'NOT'
+  operands?: RuleCondition[]
+}
 import { ExpressionParser } from '../utils/ruleExpressionParser'
 import { ActionExecutor } from './actionExecutor'
 import { getGlobalLogger } from '@smartabp/lowcode-shared'

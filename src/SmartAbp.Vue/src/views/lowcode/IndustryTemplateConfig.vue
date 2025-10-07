@@ -232,7 +232,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { industryTemplateApi, type IndustryTemplateConfigDto, type GenerationResult } from '@smartabp/lowcode-api';
+import { industryTemplateApi } from '@smartabp/lowcode-api'
+import type { IndustryTemplateConfigDto, GenerationResultDto } from '@smartabp/lowcode-api'
 
 const router = useRouter()
 const route = useRoute()
@@ -427,7 +428,7 @@ const startGeneration = async () => {
     };
 
     try {
-        const result: GenerationResult = await industryTemplateApi.generate(config);
+        const result: GenerationResultDto = await industryTemplateApi.generate(config);
 
         if (result.success) {
             ElMessage.success({
