@@ -13,7 +13,8 @@
 
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
 
-const logger = getGlobalLogger()
+const __logger = getGlobalLogger()
+void __logger // 保留用于未来图表生成日志
 
 /**
  * 图表类型

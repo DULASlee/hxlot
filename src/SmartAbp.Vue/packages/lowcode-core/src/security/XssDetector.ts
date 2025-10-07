@@ -192,7 +192,7 @@ export class XssDetector {
    * 计算问题位置
    */
   private calculateLocation(
-    code: string,
+    _code: string,
     matchIndex: number,
     matchText: string,
     filePath: string,
@@ -233,7 +233,7 @@ export class XssDetector {
    */
   private generateRemediation(
     patternName: string,
-    category: string
+    _category: string
   ): SecurityIssue['remediation'] {
     const baseRemediation = {
       description: '对所有用户输入进行适当的输出编码，使用安全的DOM操作方法',

@@ -246,6 +246,8 @@ interface TemplateInfo {
   icon: string
   description: string
   dashboardCount: number
+  industry?: string
+  templateType?: string
 }
 
 interface Module {
@@ -408,7 +410,7 @@ const prevStep = () => {
 /**
  * ✅ 下载生成的文件（打包为ZIP）
  */
-const downloadGeneratedFiles = async (result: GenerationResultDto) => {
+const downloadGeneratedFiles = async (result: GenerationResultDto | any) => {
   try {
     // 动态导入JSZip
     const JSZip = (await import('jszip')).default;

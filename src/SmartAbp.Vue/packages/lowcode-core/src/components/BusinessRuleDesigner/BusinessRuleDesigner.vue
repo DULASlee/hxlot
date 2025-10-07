@@ -78,7 +78,8 @@ const logger = getGlobalLogger()
 // 使用 v-model 双向绑定 nodes/edges，避免直接绑定事件签名不匹配
 
 // Store
-const stateMachineStore = useEnhancedStateMachineStore()
+const _stateMachineStore = useEnhancedStateMachineStore()
+void _stateMachineStore // 保留用于未来扩展
 
 // 状态
 const nodes = ref<RuleNode[]>([])

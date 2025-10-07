@@ -401,7 +401,8 @@ export class BenchmarkEngine {
   /**
    * 生成示例代码（用于优化器）
    */
-  private _generateSampleCode(results: ScenarioBenchmarkResult[]): string {
+  private ___generateSampleCode(results: ScenarioBenchmarkResult[]): string {
+    void results // 保留用于未来代码优化器集成
     // 生成一个包含性能指标的代码示例
     return `
 // 性能基准测试结果

@@ -327,7 +327,7 @@ export class TestReportGenerator {
    */
   private generateConcurrencyTestSection(
     results: ConcurrencyTestResult[],
-    includeCharts: boolean = true
+    _includeCharts: boolean = true
   ): ReportSection {
     const latestResult = results[results.length - 1]
 
@@ -380,7 +380,7 @@ export class TestReportGenerator {
    */
   private generateBenchmarkSection(
     results: BenchmarkResult[],
-    includeCharts: boolean = true
+    _includeCharts: boolean = true
   ): ReportSection {
     const latestResult = results[results.length - 1]
 

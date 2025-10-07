@@ -38,10 +38,11 @@ export interface ProjectFeatures {
  * 智能推荐引擎
  */
 export class IntelligentRecommendationEngine {
-  private _logger: ILogger
+  private __logger: ILogger
 
   constructor() {
-    this._logger = logger
+    this.__logger = logger
+    void this.__logger // 保留用于未来日志记录
   }
 
   /**

@@ -144,7 +144,7 @@ export class SqlInjectionDetector {
    * 计算问题位置
    */
   private calculateLocation(
-    code: string,
+    _code: string,
     matchIndex: number,
     matchText: string,
     filePath: string,

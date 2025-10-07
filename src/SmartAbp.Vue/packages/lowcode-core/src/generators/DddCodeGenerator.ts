@@ -41,10 +41,11 @@ export interface MethodConfig {
  * DDD代码生成器
  */
 export class DddCodeGenerator {
-  private _namespace: string
+  private ___namespace: string
 
   constructor(namespace: string = 'SmartAbp') {
-    this._namespace = namespace
+    this.___namespace = namespace
+    void this.___namespace // 保留用于未来命名空间定制
   }
 
   /**

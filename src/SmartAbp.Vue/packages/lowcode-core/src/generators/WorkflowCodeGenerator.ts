@@ -65,7 +65,7 @@ export class WorkflowCodeGenerator {
    */
   private generateFrontendComponent(
     nodes: Node[],
-    edges: Edge[],
+    _edges: Edge[],
     options: WorkflowCodeGenerationOptions
   ): string {
     const stateNames = nodes.filter(n => n.type !== 'start' && n.type !== 'end')
