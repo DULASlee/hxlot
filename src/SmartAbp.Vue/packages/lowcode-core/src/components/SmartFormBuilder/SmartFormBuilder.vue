@@ -1,24 +1,19 @@
 <template>
   <div class="smart-form-builder">
     <!-- form-create核心渲染器 -->
-    <form-create 
-      v-model:api="formApi"
-      v-model="formData"
-      :rule="formRules"
-      :option="formOptions"
-      @submit="handleSubmit"
-      @reset="handleReset"
-    />
+    <form-create v-model:api="formApi" v-model="formData" :rule="formRules" :option="formOptions" @submit="handleSubmit"
+      @reset="handleReset" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
-import formCreate from '@form-create/element-ui'
 import type { Api } from '@form-create/element-ui'
-import type { FormCreateRule, FormCreateConfig } from './types/form-create-types'
+import formCreate from '@form-create/element-ui'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { FormSchemaAdapter } from './adapters/FormSchemaAdapter'
-import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from '@smartabp/lowcode-shared'
+import type { FormCreateConfig, FormCreateRule } from './types/form-create-types'
+import { FormLinkageEngine } from './engine/FormLinkageEngine'
+import type { LinkageRule, CascadeConfig, DynamicFieldConfig, CalculatedFieldConfig } from './types/linkage-types'
 
 /**
  * @component SmartFormBuilder
@@ -31,6 +26,10 @@ import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from '@smartabp/l
  * - ✅ 完整的验证规则转换
  * - ✅ 动态表单数据绑定
  * - ✅ 实时验证反馈
+ * - ✅ 🆕 动态表单与字段联动
+ * - ✅ 🆕 级联选择器
+ * - ✅ 🆕 动态字段添加/删除
+ * - ✅ 🆕 字段联动计算
  */
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -50,6 +49,14 @@ interface Props {
   readonly?: boolean
   /** 是否禁用所有字段 */
   disabled?: boolean
+  /** 🆕 联动规则数组 */
+  linkageRules?: LinkageRule[]
+  /** 🆕 级联配置数组 */
+  cascadeConfigs?: CascadeConfig[]
+  /** 🆕 动态字段配置数组 */
+  dynamicFieldConfigs?: DynamicFieldConfig[]
+  /** 🆕 计算字段配置数组 */
+  calculatedFieldConfigs?: CalculatedFieldConfig[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -58,7 +65,11 @@ const props = withDefaults(defineProps<Props>(), {
   config: () => ({}),
   modelValue: () => ({}),
   readonly: false,
-  disabled: false
+  disabled: false,
+  linkageRules: () => [],
+  cascadeConfigs: () => [],
+  dynamicFieldConfigs: () => [],
+  calculatedFieldConfigs: () => []
 })
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -78,10 +89,13 @@ const emit = defineEmits<{
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 /** form-create API实例 */
-const formApi = ref<Api>()
+const formApi = ref<Api | null>(null)
 
 /** 表单数据（v-model双向绑定） */
 const formData = ref<Record<string, any>>({ ...props.modelValue })
+
+/** 🆕 联动引擎实例 */
+const linkageEngine = new FormLinkageEngine(formApi, formData)
 
 /** form-create规则数组 */
 const formRules = computed<FormCreateRule[]>(() => {
@@ -89,7 +103,7 @@ const formRules = computed<FormCreateRule[]>(() => {
   if (props.rules && props.rules.length > 0) {
     return props.rules
   }
-  
+
   // 否则从schema转换
   if (props.schema) {
     try {
@@ -99,7 +113,7 @@ const formRules = computed<FormCreateRule[]>(() => {
       return []
     }
   }
-  
+
   return []
 })
 
@@ -120,7 +134,7 @@ const formOptions = computed<FormCreateConfig>(() => {
       innerText: '重置'
     }
   }
-  
+
   // 合并用户配置
   if (props.schema?.config) {
     const schemaConfig = FormSchemaAdapter.toFormCreateConfig(props.schema.config)
@@ -130,7 +144,7 @@ const formOptions = computed<FormCreateConfig>(() => {
       ...props.config
     }
   }
-  
+
   return {
     ...baseConfig,
     ...props.config
@@ -163,6 +177,8 @@ watch(formData, (newData, oldData) => {
   for (const key in newData) {
     if (newData[key] !== oldData?.[key]) {
       emit('change', key, newData[key])
+      // 🆕 触发联动引擎
+      linkageEngine.triggerFieldChange(key)
     }
   }
 }, { deep: true })
@@ -174,7 +190,7 @@ watch(formData, (newData, oldData) => {
 /** 提交表单 */
 const handleSubmit = async (formData: Record<string, any>) => {
   if (!formApi.value) return
-  
+
   // 执行验证
   try {
     const valid = await formApi.value.validate()
@@ -200,7 +216,7 @@ const handleReset = () => {
 /** 验证整个表单 */
 const validate = async (): Promise<boolean> => {
   if (!formApi.value) return false
-  
+
   try {
     const valid = await formApi.value.validate()
     emit('validate', { valid })
@@ -214,7 +230,7 @@ const validate = async (): Promise<boolean> => {
 /** 验证单个字段 */
 const validateField = async (field: string): Promise<boolean> => {
   if (!formApi.value) return false
-  
+
   try {
     await formApi.value.validateField(field)
     return true
@@ -305,7 +321,23 @@ defineExpose({
   /** 更新字段规则 */
   updateRule,
   /** 重置表单 */
-  reset: handleReset
+  reset: handleReset,
+  
+  // 🆕 联动引擎相关方法
+  /** 联动引擎实例 */
+  linkageEngine,
+  /** 添加联动规则 */
+  addLinkageRule: (rule: LinkageRule) => linkageEngine.addRule(rule),
+  /** 移除联动规则 */
+  removeLinkageRule: (ruleId: string) => linkageEngine.removeRule(ruleId),
+  /** 添加级联配置 */
+  addCascadeConfig: (cascade: CascadeConfig) => linkageEngine.addCascade(cascade),
+  /** 添加动态字段配置 */
+  addDynamicFieldConfig: (config: DynamicFieldConfig) => linkageEngine.addDynamicField(config),
+  /** 添加计算字段配置 */
+  addCalculatedFieldConfig: (config: CalculatedFieldConfig) => linkageEngine.addCalculatedField(config),
+  /** 手动触发字段变化 */
+  triggerFieldChange: (fieldName: string) => linkageEngine.triggerFieldChange(fieldName)
 })
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -317,6 +349,35 @@ onMounted(() => {
   if (props.readonly || props.disabled) {
     disableForm(true)
   }
+
+  // 🆕 初始化联动引擎
+  // 添加联动规则
+  if (props.linkageRules && props.linkageRules.length > 0) {
+    props.linkageRules.forEach(rule => linkageEngine.addRule(rule))
+  }
+
+  // 添加级联配置
+  if (props.cascadeConfigs && props.cascadeConfigs.length > 0) {
+    props.cascadeConfigs.forEach(cascade => linkageEngine.addCascade(cascade))
+  }
+
+  // 添加动态字段配置
+  if (props.dynamicFieldConfigs && props.dynamicFieldConfigs.length > 0) {
+    props.dynamicFieldConfigs.forEach(config => linkageEngine.addDynamicField(config))
+  }
+
+  // 添加计算字段配置
+  if (props.calculatedFieldConfigs && props.calculatedFieldConfigs.length > 0) {
+    props.calculatedFieldConfigs.forEach(config => linkageEngine.addCalculatedField(config))
+  }
+
+  // 初始化所有联动
+  linkageEngine.initializeAll()
+})
+
+// 🆕 清理联动引擎
+onUnmounted(() => {
+  linkageEngine.cleanup()
 })
 </script>
 

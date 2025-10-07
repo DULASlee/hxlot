@@ -37,6 +37,13 @@ export { default as SmartFormDesigner } from './SmartFormDesigner.vue'
 export { FormSchemaAdapter } from './adapters/FormSchemaAdapter'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🆕 联动引擎导出
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export { FormLinkageEngine } from './engine/FormLinkageEngine'
+export { LinkageRuleBuilder, LinkageRuleValidator, LINKAGE_TEMPLATES } from './types/linkage-types'
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 类型定义导出
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -60,4 +67,16 @@ export type {
 
 // Note: FormSchema types are exported from the adapter
 export type * from './types/FormSchema'
+
+// 🆕 联动引擎类型定义
+export type {
+  LinkageRule,
+  LinkageCondition,
+  LinkageAction,
+  LinkageConditionType,
+  LinkageActionType,
+  CascadeConfig,
+  DynamicFieldConfig,
+  CalculatedFieldConfig
+} from './types/linkage-types'
 
