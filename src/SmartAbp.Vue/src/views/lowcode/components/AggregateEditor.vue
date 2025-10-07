@@ -23,54 +23,193 @@
         <el-button
           size="small"
           type="primary"
-          @click="addProperty"
+          @click="showPropertyDialog(null)"
         >
+          <el-icon><Plus /></el-icon>
           Add Property
         </el-button>
+        
+        <!-- 🔥 改进：属性列表（只读，双击编辑） -->
         <el-table
           :data="localAggregate.properties"
           style="margin-top: 10px"
+          @row-dblclick="handleRowDoubleClick"
         >
           <el-table-column
             prop="name"
             label="Name"
+            width="150"
           />
           <el-table-column
             prop="type"
             label="Type"
+            width="120"
           />
           <el-table-column
             label="Required"
             width="80"
+            align="center"
           >
             <template #default="{ row }">
-              <el-checkbox v-model="row.isRequired" />
+              <el-tag v-if="row.isRequired" type="danger" size="small">
+                Required
+              </el-tag>
+              <el-tag v-else type="info" size="small">
+                Optional
+              </el-tag>
             </template>
           </el-table-column>
           <el-table-column
+            prop="description"
+            label="Description"
+            show-overflow-tooltip
+          />
+          <el-table-column
             label="Actions"
-            width="80"
+            width="140"
+            align="center"
           >
             <template #default="{ $index }">
+              <el-button
+                size="small"
+                @click="showPropertyDialog($index)"
+              >
+                <el-icon><Edit /></el-icon>
+                Edit
+              </el-button>
               <el-button
                 size="small"
                 type="danger"
                 text
                 @click="removeProperty($index)"
               >
-                Delete
+                <el-icon><Delete /></el-icon>
               </el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-form-item>
     </el-form>
+    
+    <!-- 🔥 新增：属性编辑对话框 -->
+    <el-dialog
+      v-model="propertyDialogVisible"
+      :title="editingPropertyIndex === null ? 'Add Property' : 'Edit Property'"
+      width="600px"
+    >
+      <el-form
+        :model="currentProperty"
+        label-width="140px"
+      >
+        <el-form-item label="Property Name" required>
+          <el-input
+            v-model="currentProperty.name"
+            placeholder="e.g. Title, Description"
+          />
+        </el-form-item>
+        
+        <el-form-item label="Property Type" required>
+          <el-select v-model="currentProperty.type" style="width: 100%">
+            <el-option label="string" value="string">
+              <span>string</span>
+              <span style="float: right; color: var(--el-text-color-secondary)">文本</span>
+            </el-option>
+            <el-option label="int" value="int">
+              <span>int</span>
+              <span style="float: right; color: var(--el-text-color-secondary)">整数</span>
+            </el-option>
+            <el-option label="long" value="long">
+              <span>long</span>
+              <span style="float: right; color: var(--el-text-color-secondary)">长整数</span>
+            </el-option>
+            <el-option label="decimal" value="decimal">
+              <span>decimal</span>
+              <span style="float: right; color: var(--el-text-color-secondary)">小数</span>
+            </el-option>
+            <el-option label="DateTime" value="DateTime">
+              <span>DateTime</span>
+              <span style="float: right; color: var(--el-text-color-secondary)">日期时间</span>
+            </el-option>
+            <el-option label="bool" value="bool">
+              <span>bool</span>
+              <span style="float: right; color: var(--el-text-color-secondary)">布尔值</span>
+            </el-option>
+            <el-option label="Guid" value="Guid">
+              <span>Guid</span>
+              <span style="float: right; color: var(--el-text-color-secondary)">唯一标识符</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+        
+        <el-form-item label="Required">
+          <el-switch
+            v-model="currentProperty.isRequired"
+            active-text="必填"
+            inactive-text="可选"
+          />
+        </el-form-item>
+        
+        <el-form-item label="Default Value">
+          <el-input
+            v-model="currentProperty.defaultValue"
+            placeholder="e.g. '', 0, false"
+          />
+        </el-form-item>
+        
+        <el-form-item label="Validation Rules">
+          <el-input
+            v-model="currentProperty.validation"
+            type="textarea"
+            :rows="3"
+            placeholder="e.g. [MaxLength(100)], [Range(1, 999)]"
+          />
+        </el-form-item>
+        
+        <el-form-item label="Description">
+          <el-input
+            v-model="currentProperty.description"
+            type="textarea"
+            :rows="2"
+            placeholder="Property description"
+          />
+        </el-form-item>
+      </el-form>
+      
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="propertyDialogVisible = false">
+            Cancel
+          </el-button>
+          <el-button
+            type="primary"
+            @click="saveProperty"
+            :disabled="!currentProperty.name || !currentProperty.type"
+          >
+            Save
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { ElForm, ElFormItem, ElInput, ElButton, ElTable, ElTableColumn, ElCheckbox } from 'element-plus'
+import {
+  ElForm,
+  ElFormItem,
+  ElInput,
+  ElButton,
+  ElTable,
+  ElTableColumn,
+  ElDialog,
+  ElSelect,
+  ElOption,
+  ElSwitch,
+  ElTag,
+  ElIcon
+} from 'element-plus'
+import { Plus, Edit, Delete } from '@element-plus/icons-vue'
 import type { AggregateDefinitionDto, PropertyDefinitionDto } from '@smartabp/lowcode-api'
 
 const props = defineProps<{
@@ -83,6 +222,18 @@ const emit = defineEmits<{
 
 const localAggregate = ref<AggregateDefinitionDto>({ ...props.modelValue })
 
+// 🔥 新增：属性编辑对话框状态
+const propertyDialogVisible = ref(false)
+const editingPropertyIndex = ref<number | null>(null)
+const currentProperty = ref<PropertyDefinitionDto>({
+  name: '',
+  type: 'string',
+  isRequired: false,
+  defaultValue: '',
+  validation: '',
+  description: ''
+})
+
 // ✅ 修复死循环：监听props变化而不是local对象
 watch(() => props.modelValue, (newValue) => {
   localAggregate.value = { ...newValue }
@@ -93,13 +244,51 @@ watch(localAggregate, (newValue) => {
   emit('update:modelValue', newValue)
 }, { deep: false }) // ⚠️ 移除deep:true避免性能问题
 
-const addProperty = () => {
-  const newProperty: PropertyDefinitionDto = {
-    name: '',
-    type: 'string',
-    isRequired: false
+// 🔥 新增：显示属性编辑对话框
+const showPropertyDialog = (index: number | null) => {
+  editingPropertyIndex.value = index
+  
+  if (index === null) {
+    // 新建属性
+    currentProperty.value = {
+      name: '',
+      type: 'string',
+      isRequired: false,
+      defaultValue: '',
+      validation: '',
+      description: ''
+    }
+  } else {
+    // 编辑现有属性
+    currentProperty.value = { ...localAggregate.value.properties[index] }
   }
-  localAggregate.value.properties.push(newProperty)
+  
+  propertyDialogVisible.value = true
+}
+
+// 🔥 新增：保存属性
+const saveProperty = () => {
+  if (!currentProperty.value.name || !currentProperty.value.type) {
+    return
+  }
+  
+  if (editingPropertyIndex.value === null) {
+    // 添加新属性
+    localAggregate.value.properties.push({ ...currentProperty.value })
+  } else {
+    // 更新现有属性
+    localAggregate.value.properties[editingPropertyIndex.value] = { ...currentProperty.value }
+  }
+  
+  propertyDialogVisible.value = false
+}
+
+// 🔥 新增：双击行编辑
+const handleRowDoubleClick = (row: PropertyDefinitionDto) => {
+  const index = localAggregate.value.properties.indexOf(row)
+  if (index >= 0) {
+    showPropertyDialog(index)
+  }
 }
 
 const removeProperty = (index: number) => {
