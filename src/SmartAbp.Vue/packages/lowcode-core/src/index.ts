@@ -95,7 +95,7 @@ export { useSecurityDashboard } from './composables/useSecurityDashboard'
 // ============================================================================
 
 // Note: EntityDefinition已从stores/entityModeling导出，避免重复
-export type { UnifiedEntityDefinition, UnifiedFieldDefinition } from './types/unified-metadata'
+export type { ModuleMetadata, EntityMetadata, PropertyMetadata, ManifestData } from './types/unified-metadata'
 export type { EntityModel } from './types/entity-designer'
-export type { ManifestConfig } from './types/manifest'
+export type { ModuleManifest } from './types/manifest'
 
