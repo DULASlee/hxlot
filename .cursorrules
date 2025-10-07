@@ -4,6 +4,8 @@
 
 ```bash
 # 加载核心规则（AI编程铁律自动执行引擎 v9.0）
+# 🔥🔥🔥 第一条：编程完整性铁律（最高优先级，自动应用）
+read_file(".cursor/rules/00_编程完整性铁律.mdc")
 read_file(".cursor/rules/00_执行引擎.mdc")
 read_file(".cursor/rules/00_core_philosophy.mdc")
 read_file(".cursor/rules/01_code_standards.mdc")
