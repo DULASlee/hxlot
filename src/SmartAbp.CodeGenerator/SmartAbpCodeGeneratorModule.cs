@@ -95,6 +95,8 @@ namespace SmartAbp.CodeGenerator
             // ABP Integration
             services.AddScoped<AbpModuleGenerator>();
             services.AddScoped<AbpBackgroundJobGenerator>();
+            services.AddScoped<AbpAuditLoggingGenerator>();
+            services.AddScoped<AbpSettingsGenerator>();
             services.AddTransient<ITemplateService, FileBasedTemplateService>();
 
             // Application services - 正确注册接口和实现映射
