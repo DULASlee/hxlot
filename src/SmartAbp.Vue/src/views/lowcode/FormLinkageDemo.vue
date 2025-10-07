@@ -170,7 +170,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { SmartFormBuilder, LinkageRuleBuilder, LINKAGE_TEMPLATES, type LinkageRule, type CascadeConfig, type DynamicFieldConfig, type CalculatedFieldConfig } from '@smartabp/lowcode-core/components/SmartFormBuilder'
+import { SmartFormBuilder, LinkageRuleBuilder, LINKAGE_TEMPLATES, type LinkageRule, type CascadeConfig, type DynamicFieldConfig, type CalculatedFieldConfig } from '@smartabp/lowcode-core'
 import { ElMessage } from 'element-plus'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

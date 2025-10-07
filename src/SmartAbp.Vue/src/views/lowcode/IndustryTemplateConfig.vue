@@ -229,7 +229,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GenerationResultDto, IndustryTemplateConfigDto } from '@smartabp/lowcode-api'
+import type { GenerationResult as GenerationResultDto, IndustryTemplateConfigDto } from '@smartabp/lowcode-api'
 import { industryTemplateApi } from '@smartabp/lowcode-api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { computed, onMounted, ref } from 'vue'
