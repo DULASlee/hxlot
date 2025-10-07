@@ -1,55 +1,25 @@
 <template>
   <div class="aggregate-editor">
-    <el-form
-      :model="localAggregate"
-      label-width="120px"
-    >
-      <el-form-item
-        label="Name"
-        required
-      >
-        <el-input
-          v-model="localAggregate.name"
-          placeholder="Project"
-        />
+    <el-form :model="localAggregate" label-width="120px">
+      <el-form-item label="Name" required>
+        <el-input v-model="localAggregate.name" placeholder="Project" />
       </el-form-item>
       <el-form-item label="Description">
-        <el-input
-          v-model="localAggregate.description"
-          type="textarea"
-        />
+        <el-input v-model="localAggregate.description" type="textarea" />
       </el-form-item>
       <el-form-item label="Properties">
-        <el-button
-          size="small"
-          type="primary"
-          @click="showPropertyDialog(null)"
-        >
-          <el-icon><Plus /></el-icon>
+        <el-button size="small" type="primary" @click="showPropertyDialog(null)">
+          <el-icon>
+            <Plus />
+          </el-icon>
           Add Property
         </el-button>
-        
+
         <!-- 🔥 改进：属性列表（只读，双击编辑） -->
-        <el-table
-          :data="localAggregate.properties"
-          style="margin-top: 10px"
-          @row-dblclick="handleRowDoubleClick"
-        >
-          <el-table-column
-            prop="name"
-            label="Name"
-            width="150"
-          />
-          <el-table-column
-            prop="type"
-            label="Type"
-            width="120"
-          />
-          <el-table-column
-            label="Required"
-            width="80"
-            align="center"
-          >
+        <el-table :data="localAggregate.properties" style="margin-top: 10px" @row-dblclick="handleRowDoubleClick">
+          <el-table-column prop="name" label="Name" width="150" />
+          <el-table-column prop="type" label="Type" width="120" />
+          <el-table-column label="Required" width="80" align="center">
             <template #default="{ row }">
               <el-tag v-if="row.isRequired" type="danger" size="small">
                 Required
@@ -59,55 +29,34 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="description"
-            label="Description"
-            show-overflow-tooltip
-          />
-          <el-table-column
-            label="Actions"
-            width="140"
-            align="center"
-          >
+          <el-table-column prop="description" label="Description" show-overflow-tooltip />
+          <el-table-column label="Actions" width="140" align="center">
             <template #default="{ $index }">
-              <el-button
-                size="small"
-                @click="showPropertyDialog($index)"
-              >
-                <el-icon><Edit /></el-icon>
+              <el-button size="small" @click="showPropertyDialog($index)">
+                <el-icon>
+                  <Edit />
+                </el-icon>
                 Edit
               </el-button>
-              <el-button
-                size="small"
-                type="danger"
-                text
-                @click="removeProperty($index)"
-              >
-                <el-icon><Delete /></el-icon>
+              <el-button size="small" type="danger" text @click="removeProperty($index)">
+                <el-icon>
+                  <Delete />
+                </el-icon>
               </el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-form-item>
     </el-form>
-    
+
     <!-- 🔥 新增：属性编辑对话框 -->
-    <el-dialog
-      v-model="propertyDialogVisible"
-      :title="editingPropertyIndex === null ? 'Add Property' : 'Edit Property'"
-      width="600px"
-    >
-      <el-form
-        :model="currentProperty"
-        label-width="140px"
-      >
+    <el-dialog v-model="propertyDialogVisible" :title="editingPropertyIndex === null ? 'Add Property' : 'Edit Property'"
+      width="600px">
+      <el-form :model="currentProperty" label-width="140px">
         <el-form-item label="Property Name" required>
-          <el-input
-            v-model="currentProperty.name"
-            placeholder="e.g. Title, Description"
-          />
+          <el-input v-model="currentProperty.name" placeholder="e.g. Title, Description" />
         </el-form-item>
-        
+
         <el-form-item label="Property Type" required>
           <el-select v-model="currentProperty.type" style="width: 100%">
             <el-option label="string" value="string">
@@ -140,51 +89,32 @@
             </el-option>
           </el-select>
         </el-form-item>
-        
+
         <el-form-item label="Required">
-          <el-switch
-            v-model="currentProperty.isRequired"
-            active-text="必填"
-            inactive-text="可选"
-          />
+          <el-switch v-model="currentProperty.isRequired" active-text="必填" inactive-text="可选" />
         </el-form-item>
-        
+
         <el-form-item label="Default Value">
-          <el-input
-            v-model="currentProperty.defaultValue"
-            placeholder="e.g. '', 0, false"
-          />
+          <el-input v-model="currentProperty.defaultValue" placeholder="e.g. '', 0, false" />
         </el-form-item>
-        
+
         <el-form-item label="Validation Rules">
-          <el-input
-            v-model="currentProperty.validation"
-            type="textarea"
-            :rows="3"
-            placeholder="e.g. [MaxLength(100)], [Range(1, 999)]"
-          />
+          <el-input v-model="currentProperty.validation" type="textarea" :rows="3"
+            placeholder="e.g. [MaxLength(100)], [Range(1, 999)]" />
         </el-form-item>
-        
+
         <el-form-item label="Description">
-          <el-input
-            v-model="currentProperty.description"
-            type="textarea"
-            :rows="2"
-            placeholder="Property description"
-          />
+          <el-input v-model="currentProperty.description" type="textarea" :rows="2"
+            placeholder="Property description" />
         </el-form-item>
       </el-form>
-      
+
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="propertyDialogVisible = false">
             Cancel
           </el-button>
-          <el-button
-            type="primary"
-            @click="saveProperty"
-            :disabled="!currentProperty.name || !currentProperty.type"
-          >
+          <el-button type="primary" @click="saveProperty" :disabled="!currentProperty.name || !currentProperty.type">
             Save
           </el-button>
         </div>
@@ -194,23 +124,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { Delete, Edit, Plus } from '@element-plus/icons-vue';
+import type { AggregateDefinitionDto, PropertyDefinitionDto } from '@smartabp/lowcode-api';
 import {
+  ElButton,
+  ElDialog,
   ElForm,
   ElFormItem,
+  ElIcon,
   ElInput,
-  ElButton,
+  ElOption,
+  ElSelect,
+  ElSwitch,
   ElTable,
   ElTableColumn,
-  ElDialog,
-  ElSelect,
-  ElOption,
-  ElSwitch,
-  ElTag,
-  ElIcon
-} from 'element-plus'
-import { Plus, Edit, Delete } from '@element-plus/icons-vue'
-import type { AggregateDefinitionDto, PropertyDefinitionDto } from '@smartabp/lowcode-api'
+  ElTag
+} from 'element-plus';
+import { ref, watch } from 'vue';
 
 const props = defineProps<{
   modelValue: AggregateDefinitionDto
@@ -247,7 +177,7 @@ watch(localAggregate, (newValue) => {
 // 🔥 新增：显示属性编辑对话框
 const showPropertyDialog = (index: number | null) => {
   editingPropertyIndex.value = index
-  
+
   if (index === null) {
     // 新建属性
     currentProperty.value = {
@@ -262,7 +192,7 @@ const showPropertyDialog = (index: number | null) => {
     // 编辑现有属性
     currentProperty.value = { ...localAggregate.value.properties[index] }
   }
-  
+
   propertyDialogVisible.value = true
 }
 
@@ -271,7 +201,7 @@ const saveProperty = () => {
   if (!currentProperty.value.name || !currentProperty.value.type) {
     return
   }
-  
+
   if (editingPropertyIndex.value === null) {
     // 添加新属性
     localAggregate.value.properties.push({ ...currentProperty.value })
@@ -279,7 +209,7 @@ const saveProperty = () => {
     // 更新现有属性
     localAggregate.value.properties[editingPropertyIndex.value] = { ...currentProperty.value }
   }
-  
+
   propertyDialogVisible.value = false
 }
 
@@ -301,4 +231,3 @@ const removeProperty = (index: number) => {
   padding: 12px;
 }
 </style>
-

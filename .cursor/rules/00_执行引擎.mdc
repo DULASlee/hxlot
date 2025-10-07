@@ -513,6 +513,7 @@ async function 提供下一步方案() {
 
 ```bash
 # 自动执行脚本
+read_file(".cursor/rules/00_编程完整性铁律.mdc")  # 🔥 最高优先级第一条
 read_file(".cursor/rules/00_执行引擎.mdc")
 read_file(".cursor/rules/00_core_philosophy.mdc")
 read_file(".cursor/rules/01_code_standards.mdc")

@@ -2,13 +2,10 @@
   <div class="ddd-domain-designer">
     <div class="designer-header">
       <h2>DDD Domain Designer</h2>
-      <el-button
-        type="primary"
-        :loading="generating"
-        :disabled="!canGenerate"
-        @click="handleGenerate"
-      >
-        <el-icon><Document /></el-icon>
+      <el-button type="primary" :loading="generating" :disabled="!canGenerate" @click="handleGenerate">
+        <el-icon>
+          <Document />
+        </el-icon>
         Generate DDD Domain
       </el-button>
     </div>
@@ -21,33 +18,15 @@
           <template #header>
             <span>📦 Module Configuration</span>
           </template>
-          <el-form
-            :model="dddDefinition"
-            label-width="140px"
-          >
-            <el-form-item
-              label="Module Name"
-              required
-            >
-              <el-input
-                v-model="dddDefinition.moduleName"
-                placeholder="ProjectManagement"
-              />
+          <el-form :model="dddDefinition" label-width="140px">
+            <el-form-item label="Module Name" required>
+              <el-input v-model="dddDefinition.moduleName" placeholder="ProjectManagement" />
             </el-form-item>
             <el-form-item label="Key Type">
               <el-select v-model="dddDefinition.defaultKeyType">
-                <el-option
-                  label="Guid"
-                  value="Guid"
-                />
-                <el-option
-                  label="Int"
-                  value="int"
-                />
-                <el-option
-                  label="Long"
-                  value="long"
-                />
+                <el-option label="Guid" value="Guid" />
+                <el-option label="Int" value="int" />
+                <el-option label="Long" value="long" />
               </el-select>
             </el-form-item>
             <el-form-item label="Features">
@@ -74,37 +53,24 @@
           <template #header>
             <div class="section-header">
               <span>🏛️ Aggregate Roots</span>
-              <el-button
-                size="small"
-                type="primary"
-                @click="addAggregate"
-              >
+              <el-button size="small" type="primary" @click="addAggregate">
                 Add
               </el-button>
             </div>
           </template>
           <el-collapse v-model="activeAggregates">
-            <el-collapse-item
-              v-for="(aggregate, index) in dddDefinition.aggregates"
-              :key="index"
-              :name="index"
-            >
+            <el-collapse-item v-for="(aggregate, index) in dddDefinition.aggregates" :key="index" :name="index">
               <template #title>
                 <div class="aggregate-title">
                   <span>{{ aggregate.name || `Aggregate ${index + 1}` }}</span>
-                  <el-button
-                    size="small"
-                    type="danger"
-                    text
-                    @click.stop="removeAggregate(index)"
-                  >
-                    <el-icon><Delete /></el-icon>
+                  <el-button size="small" type="danger" text @click.stop="removeAggregate(index)">
+                    <el-icon>
+                      <Delete />
+                    </el-icon>
                   </el-button>
                 </div>
               </template>
-              <AggregateEditor
-                v-model="dddDefinition.aggregates[index]"
-              />
+              <AggregateEditor v-model="dddDefinition.aggregates[index]" />
             </el-collapse-item>
           </el-collapse>
         </el-card>
@@ -114,56 +80,39 @@
           <template #header>
             <div class="section-header">
               <span>💎 Value Objects</span>
-              <el-button
-                size="small"
-                type="primary"
-                @click="addValueObject"
-              >
+              <el-button size="small" type="primary" @click="addValueObject">
                 Add
               </el-button>
             </div>
           </template>
           <el-collapse v-model="activeValueObjects">
-            <el-collapse-item
-              v-for="(vo, index) in dddDefinition.valueObjects"
-              :key="index"
-              :name="index"
-            >
+            <el-collapse-item v-for="(vo, index) in dddDefinition.valueObjects" :key="index" :name="index">
               <template #title>
                 <div class="vo-title">
                   <span>{{ vo.name || `Value Object ${index + 1}` }}</span>
-                  <el-button
-                    size="small"
-                    type="danger"
-                    text
-                    @click.stop="removeValueObject(index)"
-                  >
-                    <el-icon><Delete /></el-icon>
+                  <el-button size="small" type="danger" text @click.stop="removeValueObject(index)">
+                    <el-icon>
+                      <Delete />
+                    </el-icon>
                   </el-button>
                 </div>
               </template>
-              <ValueObjectEditor
-                v-model="dddDefinition.valueObjects[index]"
-              />
+              <ValueObjectEditor v-model="dddDefinition.valueObjects[index]" />
             </el-collapse-item>
           </el-collapse>
         </el-card>
       </div>
 
       <!-- Right Panel: Result Preview -->
-      <div
-        v-if="showResult && generationResult"
-        class="right-panel"
-      >
+      <div v-if="showResult && generationResult" class="right-panel">
         <el-card class="result-section">
           <template #header>
             <div class="result-header">
               <span>✅ Generation Result</span>
-              <el-button
-                size="small"
-                @click="downloadCode"
-              >
-                <el-icon><Download /></el-icon>
+              <el-button size="small" @click="downloadCode">
+                <el-icon>
+                  <Download />
+                </el-icon>
                 Download
               </el-button>
             </div>
@@ -171,47 +120,22 @@
 
           <!-- Statistics -->
           <div class="stats">
-            <el-statistic
-              title="Aggregates"
-              :value="generationResult.aggregateCount"
-            />
-            <el-statistic
-              title="Value Objects"
-              :value="generationResult.valueObjectCount"
-            />
-            <el-statistic
-              title="Repositories"
-              :value="generationResult.repositoryCount"
-            />
-            <el-statistic
-              title="Domain Events"
-              :value="generationResult.domainEventCount"
-            />
-            <el-statistic
-              title="Files"
-              :value="generationResult.files.length"
-            />
-            <el-statistic
-              title="Lines of Code"
-              :value="generationResult.totalLinesOfCode"
-            />
+            <el-statistic title="Aggregates" :value="generationResult.aggregateCount" />
+            <el-statistic title="Value Objects" :value="generationResult.valueObjectCount" />
+            <el-statistic title="Repositories" :value="generationResult.repositoryCount" />
+            <el-statistic title="Domain Events" :value="generationResult.domainEventCount" />
+            <el-statistic title="Files" :value="generationResult.files.length" />
+            <el-statistic title="Lines of Code" :value="generationResult.totalLinesOfCode" />
           </div>
 
           <!-- File List -->
           <div class="files-section">
             <h4>Generated Files ({{ generationResult.files.length }})</h4>
-            <el-tree
-              :data="fileTree"
-              :props="{ label: 'name', children: 'children' }"
-              @node-click="handleFileClick"
-            />
+            <el-tree :data="fileTree" :props="{ label: 'name', children: 'children' }" @node-click="handleFileClick" />
           </div>
 
           <!-- Code Preview -->
-          <div
-            v-if="selectedFile"
-            class="code-preview"
-          >
+          <div v-if="selectedFile" class="code-preview">
             <h4>{{ selectedFile.relativePath }}</h4>
             <pre><code>{{ selectedFile.content }}</code></pre>
           </div>
@@ -222,37 +146,37 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { Delete, Document, Download } from '@element-plus/icons-vue'
+import {
+  dddGeneratorApi,
+  type AggregateDefinitionDto,
+  type DddDefinitionDto,
+  type GeneratedDddSolutionDto,
+  type GeneratedFileDto,
+  type ValueObjectDefinitionDto
+} from '@smartabp/lowcode-api'
+import { getGlobalLogger } from '@smartabp/lowcode-shared'
 import {
   ElButton,
   ElCard,
-  ElForm,
-  ElFormItem,
-  ElInput,
-  ElSelect,
-  ElOption,
   ElCheckbox,
   ElCheckboxGroup,
   ElCollapse,
   ElCollapseItem,
-  ElStatistic,
-  ElTree,
+  ElForm,
+  ElFormItem,
+  ElIcon,
+  ElInput,
   ElMessage,
-  ElIcon
+  ElOption,
+  ElSelect,
+  ElStatistic,
+  ElTree
 } from 'element-plus'
-import { Document, Download, Delete } from '@element-plus/icons-vue'
-import {
-  dddGeneratorApi,
-  type DddDefinitionDto,
-  type AggregateDefinitionDto,
-  type ValueObjectDefinitionDto,
-  type GeneratedDddSolutionDto,
-  type GeneratedFileDto
-} from '@smartabp/lowcode-api'
+import JSZip from 'jszip'; // 🔥 新增：用于生成真正的ZIP包
+import { computed, ref, watch } from 'vue'
 import AggregateEditor from './components/AggregateEditor.vue'
 import ValueObjectEditor from './components/ValueObjectEditor.vue'
-import { getGlobalLogger } from '@smartabp/lowcode-shared'
-import JSZip from 'jszip' // 🔥 新增：用于生成真正的ZIP包
 
 const logger = getGlobalLogger()
 
@@ -288,24 +212,24 @@ const selectedFile = ref<GeneratedFileDto | null>(null)
 
 const canGenerate = computed(() => {
   return dddDefinition.value.moduleName.length > 0 &&
-         dddDefinition.value.aggregates.length > 0
+    dddDefinition.value.aggregates.length > 0
 })
 
 const fileTree = computed(() => {
   if (!generationResult.value) return []
-  
+
   // Build file tree from flat file list
   const tree: any[] = []
   const map = new Map()
-  
+
   generationResult.value.files.forEach((file) => {
     const parts = file.relativePath.split('/')
     let current = tree
     let path = ''
-    
+
     parts.forEach((part, index) => {
       path = path ? `${path}/${part}` : part
-      
+
       if (!map.has(path)) {
         const node = {
           name: part,
@@ -315,7 +239,7 @@ const fileTree = computed(() => {
         }
         map.set(path, node)
         current.push(node)
-        
+
         if (node.children) {
           current = node.children
         }
@@ -327,7 +251,7 @@ const fileTree = computed(() => {
       }
     })
   })
-  
+
   return tree
 })
 
@@ -387,18 +311,18 @@ const handleGenerate = async () => {
   try {
     generating.value = true
     logger.info('🚀 Starting DDD domain generation', dddDefinition.value)
-    
+
     const result = await dddGeneratorApi.generateDddDomain(dddDefinition.value)
-    
+
     if (result.success) {
       generationResult.value = result
       showResult.value = true
-      
+
       ElMessage.success({
         message: `✅ Successfully generated ${result.files.length} files!`,
         duration: 3000
       })
-      
+
       logger.info('✅ DDD domain generation completed', {
         files: result.files.length,
         aggregates: result.aggregateCount,
@@ -409,7 +333,7 @@ const handleGenerate = async () => {
         message: `❌ Generation failed: ${result.message}`,
         duration: 5000
       })
-      
+
       logger.error('❌ DDD domain generation failed', result.message)
     }
   } catch (error) {
@@ -417,7 +341,7 @@ const handleGenerate = async () => {
       message: `❌ Error: ${error instanceof Error ? error.message : String(error)}`,
       duration: 5000
     })
-    
+
     logger.error('❌ DDD domain generation error', error)
   } finally {
     generating.value = false
@@ -433,20 +357,20 @@ const handleFileClick = (data: any) => {
 // 🔥 修复：使用JSZip生成真正的ZIP包
 const downloadCode = async () => {
   if (!generationResult.value) return
-  
+
   try {
     logger.info('📦 开始生成ZIP包', {
       files: generationResult.value.files.length,
       moduleName: generationResult.value.moduleName
     })
-    
+
     const zip = new JSZip()
-    
+
     // 按目录结构添加所有生成的文件
     generationResult.value.files.forEach(file => {
       zip.file(file.relativePath, file.content)
     })
-    
+
     // 添加README文件
     const readme = `# ${generationResult.value.moduleName} - DDD Domain Model
 
@@ -472,7 +396,7 @@ ${generationResult.value.files.map(f => `- ${f.relativePath}`).join('\n')}
 Generated by SmartAbp Low-Code Platform
 `
     zip.file('README.md', readme)
-    
+
     // 生成ZIP文件（异步）
     ElMessage.info('正在生成ZIP包，请稍候...')
     const content = await zip.generateAsync({
@@ -480,7 +404,7 @@ Generated by SmartAbp Low-Code Platform
       compression: 'DEFLATE',
       compressionOptions: { level: 9 }
     })
-    
+
     // 下载ZIP文件
     const url = URL.createObjectURL(content)
     const a = document.createElement('a')
@@ -488,12 +412,12 @@ Generated by SmartAbp Low-Code Platform
     a.download = `${generationResult.value.moduleName}_DDD_Domain.zip`
     a.click()
     URL.revokeObjectURL(url)
-    
+
     logger.info('✅ ZIP包下载成功', {
       fileName: `${generationResult.value.moduleName}_DDD_Domain.zip`,
       size: content.size
     })
-    
+
     ElMessage.success({
       message: '📦 代码包下载成功！',
       duration: 3000
@@ -603,4 +527,3 @@ Generated by SmartAbp Low-Code Platform
   }
 }
 </style>
-

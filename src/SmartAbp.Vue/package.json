@@ -120,6 +120,7 @@
     "echarts": "^6.0.0",
     "element-plus": "^2.8.8",
     "highlight.js": "^11.11.1",
+    "jszip": "^3.10.1",
     "lodash-es": "^4.17.21",
     "mitt": "^3.0.1",
     "monaco-editor": "^0.44.0",

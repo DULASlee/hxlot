@@ -119,6 +119,50 @@ namespace SmartAbp.Controllers
                 "application/zip",
                 $"generated-code-{sessionId}.zip");
         }
+
+        // 🔥 CQRS生成API端点
+        [HttpPost("generate-cqrs")]
+        public Task<GeneratedCqrsSolutionDto> GenerateCqrsAsync([FromBody] CqrsDefinitionDto input)
+        {
+            return _service.GenerateCqrsAsync(input);
+        }
+
+        [HttpPost("validate-cqrs-definition")]
+        public Task<ValidationReportDto> ValidateCqrsDefinitionAsync([FromBody] CqrsDefinitionDto input)
+        {
+            return _service.ValidateCqrsDefinitionAsync(input);
+        }
+
+        [HttpGet("cqrs-templates")]
+        public Task<List<CqrsTemplateDto>> GetCqrsTemplatesAsync()
+        {
+            return _service.GetCqrsTemplatesAsync();
+        }
+
+        [HttpGet("command-template/{commandType}")]
+        public Task<CommandDefinitionDto> GetCommandTemplateAsync(string commandType)
+        {
+            return _service.GetCommandTemplateAsync(commandType);
+        }
+
+        [HttpGet("query-template/{queryType}")]
+        public Task<QueryDefinitionDto> GetQueryTemplateAsync(string queryType)
+        {
+            return _service.GetQueryTemplateAsync(queryType);
+        }
+
+        // 🔥 DDD生成API端点
+        [HttpPost("generate-ddd")]
+        public Task<GeneratedDddSolutionDto> GenerateDddAsync([FromBody] DddDefinitionDto input)
+        {
+            return _service.GenerateDddAsync(input);
+        }
+
+        [HttpPost("validate-ddd-definition")]
+        public Task<ValidationReportDto> ValidateDddDefinitionAsync([FromBody] DddDefinitionDto input)
+        {
+            return _service.ValidateDddDefinitionAsync(input);
+        }
     }
 }
 

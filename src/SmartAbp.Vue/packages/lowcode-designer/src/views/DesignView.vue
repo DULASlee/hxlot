@@ -4,33 +4,18 @@
     <!-- 企业级可视化页面设计器 -->
     <div class="visual-page-designer">
       <!-- 左侧组件面板 -->
-      <VisualComponentPalette
-        :search-filter="componentSearchFilter"
-        @drag-start="handleComponentDragStart"
-        @drag-end="handleComponentDragEnd"
-        @component-selected="handleComponentSelected"
-      />
+      <VisualComponentPalette :search-filter="componentSearchFilter" @drag-start="handleComponentDragStart"
+        @drag-end="handleComponentDragEnd" @component-selected="handleComponentSelected" />
 
       <!-- 中央设计画布 -->
-      <VisualDesignCanvas
-        :page-data="currentPage"
-        :entity-data="selectedEntity"
-        @component-added="handleComponentAdded"
-        @component-selected="handleComponentSelected"
-        @component-updated="handleComponentUpdated"
-        @component-deleted="handleComponentDeleted"
-        @preview-generated="handlePreviewGenerated"
-      />
+      <VisualDesignCanvas :page-data="currentPage" :entity-data="selectedEntity" @component-added="handleComponentAdded"
+        @component-selected="handleComponentSelected" @component-updated="handleComponentUpdated"
+        @component-deleted="handleComponentDeleted" @preview-generated="handlePreviewGenerated" />
 
       <!-- 右侧属性面板 -->
-      <ComponentPropertyPanel
-        :selected-component="selectedComponent"
-        :available-entities="availableEntities"
-        @property-changed="handlePropertyChanged"
-        @layout-changed="handleLayoutChanged"
-        @style-changed="handleStyleChanged"
-        @data-binding-changed="handleDataBindingChanged"
-      />
+      <ComponentPropertyPanel :selected-component="selectedComponent" :available-entities="availableEntities"
+        @property-changed="handlePropertyChanged" @layout-changed="handleLayoutChanged"
+        @style-changed="handleStyleChanged" @data-binding-changed="handleDataBindingChanged" />
     </div>
 
     <!-- 原有的批量生成功能保留 -->
@@ -43,20 +28,13 @@
         </h2>
         <div class="design-progress">
           <span>设计进度: {{ completedPages }}/{{ totalPages }}</span>
-          <el-progress
-            :percentage="designProgressPercentage"
-            :stroke-width="6"
-            status="success"
-          />
+          <el-progress :percentage="designProgressPercentage" :stroke-width="6" status="success" />
         </div>
       </div>
       <div class="header-center">
         <!-- 界面模式选择器 -->
         <div class="layout-mode-selector">
-          <el-radio-group
-            v-model="layoutMode"
-            @change="(val: any) => onLayoutModeChange(val)"
-          >
+          <el-radio-group v-model="layoutMode" @change="(val: any) => onLayoutModeChange(val)">
             <el-radio-button value="single">
               单页面
             </el-radio-button>
@@ -74,25 +52,14 @@
       </div>
       <div class="header-actions">
         <el-button-group>
-          <el-button
-            type="primary"
-            :icon="designMode === 'batch' ? 'el-icon-magic-stick' : 'el-icon-rank'"
-            @click="toggleDesignMode"
-          >
+          <el-button type="primary" :icon="designMode === 'batch' ? 'el-icon-magic-stick' : 'el-icon-rank'"
+            @click="toggleDesignMode">
             {{ designMode === 'batch' ? '切换单页设计' : '智能批量生成' }}
           </el-button>
-          <el-button
-            type="success"
-            icon="el-icon-view"
-            @click="previewPages"
-          >
+          <el-button type="success" icon="el-icon-view" @click="previewPages">
             预览页面
           </el-button>
-          <el-button
-            type="warning"
-            icon="el-icon-download"
-            @click="exportPages"
-          >
+          <el-button type="warning" icon="el-icon-download" @click="exportPages">
             导出设计
           </el-button>
         </el-button-group>
@@ -102,28 +69,16 @@
     <!-- 主体设计区域 -->
     <div class="design-body">
       <!-- MDI窗口设计模式 -->
-      <div
-        v-if="layoutMode === 'mdi'"
-        class="mdi-design-mode"
-      >
+      <div v-if="layoutMode === 'mdi'" class="mdi-design-mode">
         <div class="mdi-designer-toolbar">
           <el-button-group>
-            <el-button
-              icon="el-icon-plus"
-              @click="addMDIWindow"
-            >
+            <el-button icon="el-icon-plus" @click="addMDIWindow">
               添加窗口
             </el-button>
-            <el-button
-              icon="el-icon-setting"
-              @click="configureMDI"
-            >
+            <el-button icon="el-icon-setting" @click="configureMDI">
               MDI配置
             </el-button>
-            <el-button
-              icon="el-icon-view"
-              @click="previewMDI"
-            >
+            <el-button icon="el-icon-view" @click="previewMDI">
               预览MDI
             </el-button>
           </el-button-group>
@@ -131,26 +86,15 @@
 
         <div class="mdi-design-container">
           <!-- MDI窗口设计器 -->
-          <MDIContainer
-            :windows="mdiWindows"
-            :active-window-id="activeMDIWindow"
-            @window-activated="handleMDIWindowActivated"
-            @window-closed="handleMDIWindowClosed"
-            @window-moved="handleMDIWindowMoved"
-            @window-resized="handleMDIWindowResized"
-          />
+          <MDIContainer :windows="mdiWindows" :active-window-id="activeMDIWindow"
+            @window-activated="handleMDIWindowActivated" @window-closed="handleMDIWindowClosed"
+            @window-moved="handleMDIWindowMoved" @window-resized="handleMDIWindowResized" />
 
           <!-- MDI窗口配置面板 -->
           <div class="mdi-config-panel">
             <h4>窗口配置</h4>
-            <div
-              v-if="selectedMDIWindow"
-              class="window-config"
-            >
-              <el-form
-                :model="selectedMDIWindow"
-                label-width="80px"
-              >
+            <div v-if="selectedMDIWindow" class="window-config">
+              <el-form :model="selectedMDIWindow" label-width="80px">
                 <el-form-item label="窗口标题">
                   <el-input v-model="selectedMDIWindow.title" />
                 </el-form-item>
@@ -173,28 +117,16 @@
       </div>
 
       <!-- Tabs标签页设计模式 -->
-      <div
-        v-else-if="layoutMode === 'tabs'"
-        class="tabs-design-mode"
-      >
+      <div v-else-if="layoutMode === 'tabs'" class="tabs-design-mode">
         <div class="tabs-designer-toolbar">
           <el-button-group>
-            <el-button
-              icon="el-icon-plus"
-              @click="addTabPage"
-            >
+            <el-button icon="el-icon-plus" @click="addTabPage">
               添加标签页
             </el-button>
-            <el-button
-              icon="el-icon-setting"
-              @click="configureTabs"
-            >
+            <el-button icon="el-icon-setting" @click="configureTabs">
               标签配置
             </el-button>
-            <el-button
-              icon="el-icon-view"
-              @click="previewTabs"
-            >
+            <el-button icon="el-icon-view" @click="previewTabs">
               预览标签页
             </el-button>
           </el-button-group>
@@ -202,26 +134,14 @@
 
         <div class="tabs-design-container">
           <!-- 标签页设计器 -->
-          <TabsContainer
-            :tabs="tabPages"
-            :active-tab-id="activeTab"
-            @tab-activated="handleTabActivated"
-            @tab-closed="handleTabClosed"
-            @tab-moved="handleTabMoved"
-            @add-tab="addTabPage"
-          />
+          <TabsContainer :tabs="tabPages" :active-tab-id="activeTab" @tab-activated="handleTabActivated"
+            @tab-closed="handleTabClosed" @tab-moved="handleTabMoved" @add-tab="addTabPage" />
 
           <!-- 标签页配置面板 -->
           <div class="tabs-config-panel">
             <h4>标签配置</h4>
-            <div
-              v-if="selectedTab"
-              class="tab-config"
-            >
-              <el-form
-                :model="selectedTab"
-                label-width="80px"
-              >
+            <div v-if="selectedTab" class="tab-config">
+              <el-form :model="selectedTab" label-width="80px">
                 <el-form-item label="标签标题">
                   <el-input v-model="selectedTab.title" />
                 </el-form-item>
@@ -241,27 +161,14 @@
       </div>
 
       <!-- 智能批量生成模式 -->
-      <div
-        v-else-if="designMode === 'batch'"
-        class="batch-design-mode"
-      >
+      <div v-else-if="designMode === 'batch'" class="batch-design-mode">
         <div class="batch-sidebar">
           <div class="batch-section">
             <h3>实体选择</h3>
             <div class="entity-selector">
-              <el-checkbox-group
-                v-model="selectedEntities"
-                @change="updateBatchGeneration"
-              >
-                <div
-                  v-for="entity in availableEntities"
-                  :key="entity.id"
-                  class="entity-option"
-                >
-                  <el-checkbox
-                    :label="entity.id"
-                    class="entity-checkbox"
-                  >
+              <el-checkbox-group v-model="selectedEntities" @change="updateBatchGeneration">
+                <div v-for="entity in availableEntities" :key="entity.id" class="entity-option">
+                  <el-checkbox :label="entity.id" class="entity-checkbox">
                     <div class="entity-info">
                       <div class="entity-name">
                         {{ entity.name }}
@@ -271,10 +178,7 @@
                       </div>
                     </div>
                   </el-checkbox>
-                  <el-tag
-                    :type="entity.category === 'core' ? 'primary' : 'info'"
-                    size="small"
-                  >
+                  <el-tag :type="entity.category === 'core' ? 'primary' : 'info'" size="small">
                     {{ getCategoryLabel(entity.category) }}
                   </el-tag>
                 </div>
@@ -317,10 +221,7 @@
 
           <div class="batch-section">
             <h3>UI风格选择</h3>
-            <el-radio-group
-              v-model="uiStyle"
-              @change="updatePreview"
-            >
+            <el-radio-group v-model="uiStyle" @change="updatePreview">
               <el-radio label="modern">
                 现代简约
               </el-radio>
@@ -334,13 +235,8 @@
           </div>
 
           <div class="batch-actions">
-            <el-button
-              type="primary"
-              size="large"
-              :loading="generating"
-              style="width: 100%;"
-              @click="generateBatchPages"
-            >
+            <el-button type="primary" size="large" :loading="generating" style="width: 100%;"
+              @click="generateBatchPages">
               <i class="el-icon-magic-stick" />
               智能生成 {{ selectedEntities.length }} 个模块页面
             </el-button>
@@ -351,31 +247,17 @@
           <div class="preview-header">
             <h3>生成预览</h3>
             <div class="preview-stats">
-              <el-statistic
-                title="将生成页面数"
-                :value="estimatedPageCount"
-                suffix="个"
-              />
+              <el-statistic title="将生成页面数" :value="estimatedPageCount" suffix="个" />
             </div>
           </div>
 
           <div class="preview-content">
-            <el-tabs
-              v-model="previewTab"
-              type="card"
-            >
-              <el-tab-pane
-                v-for="entity in selectedEntityObjects"
-                :key="entity.id"
-                :label="entity.name"
-                :name="entity.id"
-              >
+            <el-tabs v-model="previewTab" type="card">
+              <el-tab-pane v-for="entity in selectedEntityObjects" :key="entity.id" :label="entity.name"
+                :name="entity.id">
                 <div class="entity-page-preview">
                   <div class="page-type-preview">
-                    <div
-                      v-if="pageTypes.list"
-                      class="preview-card"
-                    >
+                    <div v-if="pageTypes.list" class="preview-card">
                       <h4>{{ entity.name }}列表页面</h4>
                       <div class="preview-mockup list-mockup">
                         <div class="mockup-toolbar">
@@ -388,30 +270,19 @@
                         <div class="mockup-table">
                           <div class="table-header" />
                           <div class="table-rows">
-                            <div
-                              v-for="i in 5"
-                              :key="i"
-                              class="table-row"
-                            />
+                            <div v-for="i in 5" :key="i" class="table-row" />
                           </div>
                         </div>
                         <div class="mockup-pagination" />
                       </div>
                     </div>
 
-                    <div
-                      v-if="pageTypes.form"
-                      class="preview-card"
-                    >
+                    <div v-if="pageTypes.form" class="preview-card">
                       <h4>{{ entity.name }}表单页面</h4>
                       <div class="preview-mockup form-mockup">
                         <div class="form-header" />
                         <div class="form-fields">
-                          <div
-                            v-for="field in entity.fields.slice(0, 6)"
-                            :key="field.name"
-                            class="form-field"
-                          >
+                          <div v-for="field in entity.fields.slice(0, 6)" :key="field.name" class="form-field">
                             <div class="field-label">
                               {{ field.displayName }}
                             </div>
@@ -425,10 +296,7 @@
                       </div>
                     </div>
 
-                    <div
-                      v-if="pageTypes.detail"
-                      class="preview-card"
-                    >
+                    <div v-if="pageTypes.detail" class="preview-card">
                       <h4>{{ entity.name }}详情页面</h4>
                       <div class="preview-mockup detail-mockup">
                         <div class="detail-header" />
@@ -438,11 +306,7 @@
                               基本信息
                             </div>
                             <div class="detail-fields">
-                              <div
-                                v-for="field in entity.fields.slice(0, 4)"
-                                :key="field.name"
-                                class="detail-field"
-                              />
+                              <div v-for="field in entity.fields.slice(0, 4)" :key="field.name" class="detail-field" />
                             </div>
                           </div>
                         </div>
@@ -457,90 +321,50 @@
       </div>
 
       <!-- 单页设计模式 -->
-      <div
-        v-else
-        class="single-design-mode"
-      >
+      <div v-else class="single-design-mode">
         <!-- 左侧组件面板 -->
         <div class="components-panel">
           <div class="panel-header">
             <h3>组件库</h3>
-            <el-input
-              v-model="componentSearch"
-              size="small"
-              placeholder="搜索组件..."
-              prefix-icon="el-icon-search"
-            />
+            <el-input v-model="componentSearch" size="small" placeholder="搜索组件..." prefix-icon="el-icon-search" />
           </div>
 
           <div class="component-categories">
             <el-collapse v-model="activeCategories">
-              <el-collapse-item
-                title="布局组件"
-                name="layout"
-              >
+              <el-collapse-item title="布局组件" name="layout">
                 <div class="component-list">
-                  <div
-                    v-for="component in layoutComponents"
-                    :key="component.type"
-                    class="component-item"
-                    draggable="true"
-                    @dragstart="handleDragStart(component)"
-                  >
+                  <div v-for="component in layoutComponents" :key="component.type" class="component-item"
+                    draggable="true" @dragstart="handleDragStart(component)">
                     <i :class="component.icon" />
                     <span>{{ component.name }}</span>
                   </div>
                 </div>
               </el-collapse-item>
 
-              <el-collapse-item
-                title="表单组件"
-                name="form"
-              >
+              <el-collapse-item title="表单组件" name="form">
                 <div class="component-list">
-                  <div
-                    v-for="component in formComponents"
-                    :key="component.type"
-                    class="component-item"
-                    draggable="true"
-                    @dragstart="handleDragStart(component)"
-                  >
+                  <div v-for="component in formComponents" :key="component.type" class="component-item" draggable="true"
+                    @dragstart="handleDragStart(component)">
                     <i :class="component.icon" />
                     <span>{{ component.name }}</span>
                   </div>
                 </div>
               </el-collapse-item>
 
-              <el-collapse-item
-                title="数据展示"
-                name="display"
-              >
+              <el-collapse-item title="数据展示" name="display">
                 <div class="component-list">
-                  <div
-                    v-for="component in displayComponents"
-                    :key="component.type"
-                    class="component-item"
-                    draggable="true"
-                    @dragstart="handleDragStart(component)"
-                  >
+                  <div v-for="component in displayComponents" :key="component.type" class="component-item"
+                    draggable="true" @dragstart="handleDragStart(component)">
                     <i :class="component.icon" />
                     <span>{{ component.name }}</span>
                   </div>
                 </div>
               </el-collapse-item>
 
-              <el-collapse-item
-                title="业务组件"
-                name="business"
-              >
+              <el-collapse-item title="业务组件" name="business">
                 <div class="component-list">
-                  <div
-                    v-for="component in businessComponents"
-                    :key="component.type"
-                    class="component-item"
-                    draggable="true"
-                    @dragstart="handleDragStart(component)"
-                  >
+                  <div v-for="component in businessComponents" :key="component.type" class="component-item"
+                    draggable="true" @dragstart="handleDragStart(component)">
                     <i :class="component.icon" />
                     <span>{{ component.name }}</span>
                   </div>
@@ -570,74 +394,43 @@
                 <el-button @click="redoCanvas">
                   <i class="el-icon-refresh-right" /> 重做
                 </el-button>
-                <el-button
-                  type="primary"
-                  @click="previewPage"
-                >
+                <el-button type="primary" @click="previewPage">
                   <i class="el-icon-view" /> 预览
                 </el-button>
               </el-button-group>
             </div>
           </div>
 
-          <div
-            class="canvas-workspace"
-            @drop="handleDrop"
-            @dragover="handleDragOver"
-            @click="selectCanvas"
-          >
-            <div
-              v-if="canvasComponents.length === 0"
-              class="canvas-empty"
-            >
+          <div class="canvas-workspace" @drop="handleDrop" @dragover="handleDragOver" @click="selectCanvas">
+            <div v-if="canvasComponents.length === 0" class="canvas-empty">
               <i class="el-icon-plus" />
               <p>拖拽组件到这里开始设计</p>
               <p class="empty-hint">
                 或者使用快速模板：
               </p>
               <div class="quick-templates">
-                <el-button
-                  size="small"
-                  @click="applyTemplate('list')"
-                >
+                <el-button size="small" @click="applyTemplate('list')">
                   列表页面
                 </el-button>
-                <el-button
-                  size="small"
-                  @click="applyTemplate('form')"
-                >
+                <el-button size="small" @click="applyTemplate('form')">
                   表单页面
                 </el-button>
-                <el-button
-                  size="small"
-                  @click="applyTemplate('detail')"
-                >
+                <el-button size="small" @click="applyTemplate('detail')">
                   详情页面
                 </el-button>
               </div>
             </div>
 
             <!-- 渲染画布组件 -->
-            <div
-              v-for="(component, index) in canvasComponents"
-              :key="component.id"
-              class="canvas-component"
-              :class="{ selected: selectedComponent?.id === component.id }"
-              @click.stop="selectComponent(component)"
-            >
+            <div v-for="(component, index) in canvasComponents" :key="component.id" class="canvas-component"
+              :class="{ selected: selectedComponent?.id === component.id }" @click.stop="selectComponent(component)">
               <div class="component-wrapper">
                 <!-- 组件渲染区域 -->
-                <component
-                  :is="getComponentRenderer(component.type)"
-                  v-bind="component.props"
-                  :component-data="component"
-                />
+                <component :is="getComponentRenderer(component.type)" v-bind="component.props"
+                  :component-data="component" />
 
                 <!-- 组件操作栏 -->
-                <div
-                  v-if="selectedComponent?.id === component.id"
-                  class="component-toolbar"
-                >
+                <div v-if="selectedComponent?.id === component.id" class="component-toolbar">
                   <el-button-group size="small">
                     <el-button @click="moveComponent(index, -1)">
                       <i class="el-icon-top" />
@@ -648,10 +441,7 @@
                     <el-button @click="copyComponent(component)">
                       <i class="el-icon-document-copy" />
                     </el-button>
-                    <el-button
-                      type="danger"
-                      @click="removeComponent(index)"
-                    >
+                    <el-button type="danger" @click="removeComponent(index)">
                       <i class="el-icon-delete" />
                     </el-button>
                   </el-button-group>
@@ -667,143 +457,69 @@
             <h3>属性配置</h3>
           </div>
 
-          <div
-            v-if="selectedComponent"
-            class="property-editor"
-          >
+          <div v-if="selectedComponent" class="property-editor">
             <el-tabs v-model="propertyTab">
-              <el-tab-pane
-                label="属性"
-                name="props"
-              >
+              <el-tab-pane label="属性" name="props">
                 <div class="props-editor">
                   <el-form label-width="80px">
                     <!-- 通用属性 -->
                     <el-form-item label="组件ID">
-                      <el-input
-                        v-model="selectedComponent.id"
-                        size="small"
-                        disabled
-                      />
+                      <el-input v-model="selectedComponent.id" size="small" disabled />
                     </el-form-item>
                     <el-form-item label="组件名称">
-                      <el-input
-                        v-model="selectedComponent.name"
-                        size="small"
-                      />
+                      <el-input v-model="selectedComponent.name" size="small" />
                     </el-form-item>
 
                     <!-- 动态属性渲染 -->
-                    <template
-                      v-for="(propDef, propKey) in getComponentPropDefs(selectedComponent.type)"
-                      :key="propKey"
-                    >
+                    <template v-for="(propDef, propKey) in getComponentPropDefs(selectedComponent.type)" :key="propKey">
                       <el-form-item :label="propDef.label">
-                        <component
-                          :is="getPropertyEditor(propDef.type)"
-                          v-model="selectedComponent.props[propKey]"
-                          v-bind="propDef.attrs"
-                          size="small"
-                        />
+                        <component :is="getPropertyEditor(propDef.type)" v-model="selectedComponent.props[propKey]"
+                          v-bind="propDef.attrs" size="small" />
                       </el-form-item>
                     </template>
                   </el-form>
                 </div>
               </el-tab-pane>
 
-              <el-tab-pane
-                label="样式"
-                name="style"
-              >
+              <el-tab-pane label="样式" name="style">
                 <div class="style-editor">
                   <el-form label-width="80px">
                     <el-form-item label="宽度">
-                      <el-input
-                        v-model="selectedComponent.style.width"
-                        size="small"
-                        placeholder="auto"
-                      />
+                      <el-input v-model="selectedComponent.style.width" size="small" placeholder="auto" />
                     </el-form-item>
                     <el-form-item label="高度">
-                      <el-input
-                        v-model="selectedComponent.style.height"
-                        size="small"
-                        placeholder="auto"
-                      />
+                      <el-input v-model="selectedComponent.style.height" size="small" placeholder="auto" />
                     </el-form-item>
                     <el-form-item label="边距">
-                      <el-input
-                        v-model="selectedComponent.style.margin"
-                        size="small"
-                        placeholder="0"
-                      />
+                      <el-input v-model="selectedComponent.style.margin" size="small" placeholder="0" />
                     </el-form-item>
                     <el-form-item label="内边距">
-                      <el-input
-                        v-model="selectedComponent.style.padding"
-                        size="small"
-                        placeholder="0"
-                      />
+                      <el-input v-model="selectedComponent.style.padding" size="small" placeholder="0" />
                     </el-form-item>
                     <el-form-item label="背景色">
-                      <el-color-picker
-                        v-model="selectedComponent.style.backgroundColor"
-                        size="small"
-                      />
+                      <el-color-picker v-model="selectedComponent.style.backgroundColor" size="small" />
                     </el-form-item>
                     <el-form-item label="边框">
-                      <el-input
-                        v-model="selectedComponent.style.border"
-                        size="small"
-                        placeholder="none"
-                      />
+                      <el-input v-model="selectedComponent.style.border" size="small" placeholder="none" />
                     </el-form-item>
                   </el-form>
                 </div>
               </el-tab-pane>
 
-              <el-tab-pane
-                label="事件"
-                name="events"
-              >
+              <el-tab-pane label="事件" name="events">
                 <div class="events-editor">
                   <el-form label-width="80px">
                     <el-form-item label="点击事件">
-                      <el-select
-                        v-model="selectedComponent.events.click"
-                        size="small"
-                        placeholder="选择事件"
-                      >
-                        <el-option
-                          label="无"
-                          value=""
-                        />
-                        <el-option
-                          label="提交表单"
-                          value="submit"
-                        />
-                        <el-option
-                          label="打开弹窗"
-                          value="openDialog"
-                        />
-                        <el-option
-                          label="跳转页面"
-                          value="navigate"
-                        />
-                        <el-option
-                          label="自定义函数"
-                          value="custom"
-                        />
+                      <el-select v-model="selectedComponent.events.click" size="small" placeholder="选择事件">
+                        <el-option label="无" value="" />
+                        <el-option label="提交表单" value="submit" />
+                        <el-option label="打开弹窗" value="openDialog" />
+                        <el-option label="跳转页面" value="navigate" />
+                        <el-option label="自定义函数" value="custom" />
                       </el-select>
                     </el-form-item>
-                    <el-form-item
-                      v-if="selectedComponent.events.click === 'custom'"
-                      label="函数名"
-                    >
-                      <el-input
-                        v-model="selectedComponent.events.customFunction"
-                        size="small"
-                      />
+                    <el-form-item v-if="selectedComponent.events.click === 'custom'" label="函数名">
+                      <el-input v-model="selectedComponent.events.customFunction" size="small" />
                     </el-form-item>
                   </el-form>
                 </div>
@@ -811,10 +527,7 @@
             </el-tabs>
           </div>
 
-          <div
-            v-else
-            class="no-selection"
-          >
+          <div v-else class="no-selection">
             <el-empty description="请选择一个组件进行配置" />
           </div>
         </div>
@@ -822,44 +535,24 @@
     </div>
 
     <!-- 页面预览对话框 -->
-    <el-dialog
-      v-model="showPreview"
-      title="页面预览"
-      width="90%"
-      top="5vh"
-    >
+    <el-dialog v-model="showPreview" title="页面预览" width="90%" top="5vh">
       <div class="page-preview">
         <div class="preview-toolbar">
           <el-button-group size="small">
-            <el-button
-              :type="previewDevice === 'desktop' ? 'primary' : ''"
-              @click="previewDevice = 'desktop'"
-            >
+            <el-button :type="previewDevice === 'desktop' ? 'primary' : ''" @click="previewDevice = 'desktop'">
               <i class="el-icon-monitor" /> 桌面
             </el-button>
-            <el-button
-              :type="previewDevice === 'tablet' ? 'primary' : ''"
-              @click="previewDevice = 'tablet'"
-            >
+            <el-button :type="previewDevice === 'tablet' ? 'primary' : ''" @click="previewDevice = 'tablet'">
               <i class="el-icon-mobile" /> 平板
             </el-button>
-            <el-button
-              :type="previewDevice === 'mobile' ? 'primary' : ''"
-              @click="previewDevice = 'mobile'"
-            >
+            <el-button :type="previewDevice === 'mobile' ? 'primary' : ''" @click="previewDevice = 'mobile'">
               <i class="el-icon-mobile-phone" /> 手机
             </el-button>
           </el-button-group>
         </div>
 
-        <div
-          class="preview-container"
-          :class="`device-${previewDevice}`"
-        >
-          <iframe
-            :src="getPreviewUrl()"
-            class="preview-frame"
-          />
+        <div class="preview-container" :class="`device-${previewDevice}`">
+          <iframe :src="getPreviewUrl()" class="preview-frame" />
         </div>
       </div>
     </el-dialog>
@@ -867,13 +560,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue"
-import { ElMessage, ElMessageBox } from "element-plus"
-import { logger } from '@smartabp/lowcode-tools'
 import { useEntityModelingStore, usePageDesignStore, type MDIWindowConfig, type TabConfig } from '@smartabp/lowcode-core'
+import ComponentPropertyPanel from '@smartabp/lowcode-designer/components/ComponentPropertyPanel.vue'
 import VisualComponentPalette from '@smartabp/lowcode-designer/components/VisualComponentPalette.vue'
 import VisualDesignCanvas from '@smartabp/lowcode-designer/components/VisualDesignCanvas.vue'
-import ComponentPropertyPanel from '@smartabp/lowcode-designer/components/ComponentPropertyPanel.vue'
+import { logger } from '@smartabp/lowcode-tools'
+import { ElMessage, ElMessageBox } from "element-plus"
+import { computed, onMounted, ref } from "vue"
 // 🔥 修复：使用临时占位组件替代缺失的@smartabp/lowcode-ui-vue
 import MDIContainer from '@smartabp/lowcode-designer/components/MDIContainer.vue'
 import TabsContainer from '@smartabp/lowcode-designer/components/TabsContainer.vue'
@@ -1094,7 +787,7 @@ const handleDragOver = (event: DragEvent) => {
 
 const handleDrop = (event: DragEvent) => {
   event.preventDefault()
-  
+
   // 🔥 修复：从拖拽数据中获取实际组件类型
   try {
     const componentData = event.dataTransfer?.getData('application/json')
@@ -1708,7 +1401,7 @@ onMounted(() => {
   background: var(--el-bg-color-page);
 }
 
-.visual-page-designer > * {
+.visual-page-designer>* {
   flex-shrink: 0;
 }
 
@@ -1978,7 +1671,8 @@ onMounted(() => {
   gap: 8px;
 }
 
-.btn-add, .btn-export {
+.btn-add,
+.btn-export {
   width: 60px;
   height: 32px;
   background: #409eff;
@@ -2045,7 +1739,8 @@ onMounted(() => {
   justify-content: flex-end;
 }
 
-.btn-save, .btn-cancel {
+.btn-save,
+.btn-cancel {
   width: 60px;
   height: 32px;
   border-radius: 4px;
