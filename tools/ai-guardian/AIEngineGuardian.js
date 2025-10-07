@@ -40,7 +40,6 @@ const CONFIG = {
     '.cursor/rules/03_quality_guardian.mdc',
     '.cursor/rules/04_code_quality_prohibitions.mdc',
     '.cursor/rules/05_deep_testing_tenet.mdc',
-    'docs/项目开发规范总览.md',
   ],
   
   // 重新加载间隔（毫秒）
