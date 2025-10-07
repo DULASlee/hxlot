@@ -6,7 +6,7 @@
  * @module @smartabp/lowcode-shared/theme
  */
 
-export { ThemeManager } from './ThemeManager'
+export { ThemeManager, useTheme } from './ThemeManager'
 
 export {
   type ColorTokens,
@@ -15,4 +15,6 @@ export {
   type ShadowTokens,
   type ZIndexTokens,
   type TransitionTokens,
+  type ThemeMode,
+  type DesignTokens
 } from './tokens'

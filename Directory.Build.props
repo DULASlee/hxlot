@@ -1,0 +1,6 @@
+<Project>
+  <!-- 只定义AbpVersion，避免重复导入build/common.props -->
+  <PropertyGroup>
+    <AbpVersion>9.1.1</AbpVersion>
+  </PropertyGroup>
+</Project>

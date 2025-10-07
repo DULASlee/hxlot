@@ -11,10 +11,8 @@
  * @version 1.0.0
  */
 
-import { getGlobalLogger } from '@smartabp/lowcode-shared'
-
-const __logger = getGlobalLogger()
-void __logger // 保留用于未来图表生成日志
+// import { getGlobalLogger } from '@smartabp/lowcode-shared'
+// const logger = getGlobalLogger() // 未使用，保留以备将来使用
 
 /**
  * 图表类型
@@ -391,11 +389,11 @@ export class ChartBuilder {
   private generateColors(count: number): string[] {
     const baseColors = Object.values(this.colors)
     const colors: string[] = []
-
+    
     for (let i = 0; i < count; i++) {
       colors.push(baseColors[i % baseColors.length])
     }
-
+    
     return colors
   }
 

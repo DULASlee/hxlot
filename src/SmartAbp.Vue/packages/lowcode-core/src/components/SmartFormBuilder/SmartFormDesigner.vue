@@ -426,7 +426,12 @@ const codeTab = ref('json')
 
 const selectedField = computed(() => {
   if (selectedFieldIndex.value === null) return null
-  return formRules.value[selectedFieldIndex.value]
+  const field = formRules.value[selectedFieldIndex.value]
+  // 确保props和col属性总是存在
+  if (!field.props) field.props = {}
+  if (!field.col) field.col = { span: 24 }
+  // 类型断言：确保返回的field有props和col
+  return field as typeof field & { props: NonNullable<typeof field.props>; col: NonNullable<typeof field.col> }
 })
 
 const fieldRequired = computed({

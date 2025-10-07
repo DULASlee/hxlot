@@ -417,7 +417,7 @@ const downloadGeneratedFiles = async (result: GenerationResultDto | any) => {
     const zip = new JSZip();
 
     // 将所有文件添加到ZIP
-    result.files?.forEach((file) => {
+    result.files?.forEach((file: { path: string; content: string }) => {
       const folderPath = file.path.split('/').slice(0, -1).join('/');
       const fileName = file.path.split('/').pop() || 'unknown';
       const folder = folderPath ? zip.folder(folderPath) : zip;

@@ -363,7 +363,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: "form-designer",
             name: "FormDesigner",
-            component: () => import("@smartabp/lowcode-core/components/SmartFormBuilder/SmartFormDesigner.vue"),
+            component: () => import("@smartabp/lowcode-core/src/components/SmartFormBuilder/SmartFormDesigner.vue"),
             meta: {
               title: "表单设计器",
               menuKey: "form-designer",
@@ -451,7 +451,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "",
         name: "BusinessRulesEngine",
-        component: () => import("@/views/business-rules/BusinessRulesEngine.vue"),
+        component: () => import("@smartabp/lowcode-designer/components/BusinessRulesEngine.vue"),
         meta: {
           title: "业务规则引擎",
           menuKey: "business-rules-engine",

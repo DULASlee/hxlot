@@ -1,12 +1,13 @@
 import type {
     BusinessRuleDto,
+    BusinessRuleExecutionResultDto,
     BusinessRuleStatsDto,
     BusinessRuleValidationResultDto,
     CreateBusinessRuleDto,
     EntityDefinitionDto,
     EntityFieldDto,
     GetBusinessRulesInput,
-    UpdateBusinessRuleDto
+    UpdateBusinessRuleDto,
 } from '@smartabp/lowcode-api'
 import { businessRuleApi } from '@smartabp/lowcode-api'
 import { logger } from '@smartabp/lowcode-tools'
@@ -104,7 +105,7 @@ export const useBusinessRuleStore = defineStore('businessRule', () => {
     /** 规则类型统计 */
     const ruleTypeStats = computed(() => {
         const typeMap: Record<string, number> = {}
-        businessRules.value.forEach(rule => {
+        businessRules.value.forEach((rule: BusinessRuleDto) => {
             typeMap[rule.type] = (typeMap[rule.type] || 0) + 1
         })
         return typeMap
@@ -330,7 +331,7 @@ export const useBusinessRuleStore = defineStore('businessRule', () => {
 
             // 添加到执行日志
             results.forEach((result, index) => {
-                const rule = businessRules.value.find(r => r.id === ruleIds[index])
+                const rule = businessRules.value.find((r: BusinessRuleDto) => r.id === ruleIds[index])
                 if (rule) {
                     const logEntry = {
                         id: `${Date.now()}_${index}`,
@@ -360,7 +361,7 @@ export const useBusinessRuleStore = defineStore('businessRule', () => {
                 fetchStats()
             ])
 
-            const successCount = results.filter(r => r.success).length
+            const successCount = results.filter((r: BusinessRuleExecutionResultDto) => r.success).length
             ElMessage.success(`执行完成：${successCount}/${results.length} 个规则成功`)
 
             logger?.info('Business rules executed successfully', {
@@ -428,7 +429,7 @@ export const useBusinessRuleStore = defineStore('businessRule', () => {
                 }
             })
 
-            const invalidCount = results.filter(r => !r.isValid).length
+            const invalidCount = results.filter((r: BusinessRuleValidationResultDto) => !r.isValid).length
 
             if (invalidCount === 0) {
                 ElMessage.success('所有规则验证通过')

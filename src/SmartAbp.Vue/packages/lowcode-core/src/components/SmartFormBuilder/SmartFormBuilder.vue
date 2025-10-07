@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import type { Api } from '@form-create/element-ui'
 import formCreate from '@form-create/element-ui'
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch, type Ref } from 'vue'
 import { FormSchemaAdapter } from './adapters/FormSchemaAdapter'
 import { FormLinkageEngine } from './engine/FormLinkageEngine'
 import type { FormCreateConfig, FormCreateRule } from './types/form-create-types'
@@ -199,7 +199,7 @@ const handleSubmit = async (formData: Record<string, any>) => {
       emit('validate', { valid: true })
     }
   } catch (errors) {
-    emit('validate', { valid: false, errors })
+    emit('validate', { valid: false, errors: Array.isArray(errors) ? errors : [errors] })
     console.error('Form validation failed:', errors)
   }
 }
@@ -352,7 +352,10 @@ onMounted(() => {
 
   // 🆕 初始化联动引擎
   if (formApi.value && !linkageEngine) {
-    linkageEngine = new FormLinkageEngine(formApi, formData)
+    linkageEngine = new FormLinkageEngine(
+      formApi as Ref<Api | null>, 
+      formData as Ref<Record<string, any>>
+    )
     
     // 添加联动规则
     if (props.linkageRules && props.linkageRules.length > 0) {

@@ -28,7 +28,15 @@ export { generationHistoryApi } from "./generation-history"
 // 业务规则引擎API
 export { businessRuleApi } from "./business-rule"
 export type { BusinessRuleApi } from "./business-rule"
-export type { BusinessRuleActionDto, BusinessRuleConditionDto } from "./types/business-rule"
+export type {
+  BusinessRuleActionDto,
+  BusinessRuleConditionDto, BusinessRuleDto, BusinessRuleExecutionResultDto, BusinessRuleStatsDto,
+  BusinessRuleValidationResultDto,
+  CreateBusinessRuleDto, GetBusinessRulesInput, UpdateBusinessRuleDto
+} from "./types/business-rule"
+
+// 业务规则相关实体/字段DTO（用于UI消费）
+export type { EntityDefinitionDto, EntityFieldDto } from "./types/business-rule"
 
 // 行业模板配置API
 export { industryTemplateApi } from "./industryTemplate"

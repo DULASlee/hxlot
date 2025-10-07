@@ -2616,9 +2616,6 @@ public class {entityName}AppService_Tests : SmartAbpApplicationTestBase<SmartAbp
             return keywords.Contains(name);
         }
 
-        public async Task<ZipPackageDto> ExportGeneratedCodeAsync(string sessionId)
-        {
-            throw new NotImplementedException();
-        }
+        // ExportGeneratedCodeAsync method moved to CodeGenerationStatusMethods.cs
     }
 }
