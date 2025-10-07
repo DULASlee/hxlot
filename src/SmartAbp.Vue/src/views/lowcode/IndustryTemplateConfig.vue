@@ -229,11 +229,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import type { GenerationResultDto, IndustryTemplateConfigDto } from '@smartabp/lowcode-api'
 import { industryTemplateApi } from '@smartabp/lowcode-api'
-import type { IndustryTemplateConfigDto, GenerationResultDto } from '@smartabp/lowcode-api'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
