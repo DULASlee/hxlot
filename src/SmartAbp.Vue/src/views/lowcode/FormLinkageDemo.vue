@@ -4,13 +4,21 @@
       <template #header>
         <div class="card-header">
           <h2>🔗 SmartFormBuilder 联动演示</h2>
-          <el-tag type="success">企业级动态表单</el-tag>
+          <el-tag type="success">
+            企业级动态表单
+          </el-tag>
         </div>
       </template>
 
-      <el-tabs v-model="activeTab" type="border-card">
+      <el-tabs
+        v-model="activeTab"
+        type="border-card"
+      >
         <!-- Tab 1: 条件显示/隐藏 -->
-        <el-tab-pane label="📋 条件显示/隐藏" name="conditional">
+        <el-tab-pane
+          label="📋 条件显示/隐藏"
+          name="conditional"
+        >
           <div class="demo-section">
             <h3>场景：根据用户类型显示不同字段</h3>
             <p>当选择"企业用户"时，显示公司名称和税号；选择"个人用户"时，显示身份证号</p>
@@ -21,21 +29,26 @@
               ref="conditionalFormRef"
               v-model="conditionalData"
               :rules="conditionalRules"
-              :linkageRules="conditionalLinkageRules"
+              :linkage-rules="conditionalLinkageRules"
               @submit="handleConditionalSubmit"
             />
             
             <el-divider />
             
             <el-card class="result-card">
-              <template #header>表单数据</template>
+              <template #header>
+                表单数据
+              </template>
               <pre>{{ JSON.stringify(conditionalData, null, 2) }}</pre>
             </el-card>
           </div>
         </el-tab-pane>
 
         <!-- Tab 2: 级联选择 -->
-        <el-tab-pane label="🌏 级联选择" name="cascade">
+        <el-tab-pane
+          label="🌏 级联选择"
+          name="cascade"
+        >
           <div class="demo-section">
             <h3>场景：省市区三级联动</h3>
             <p>选择省份后自动加载城市，选择城市后自动加载区县</p>
@@ -46,21 +59,26 @@
               ref="cascadeFormRef"
               v-model="cascadeData"
               :rules="cascadeRules"
-              :cascadeConfigs="cascadeConfigs"
+              :cascade-configs="cascadeConfigs"
               @submit="handleCascadeSubmit"
             />
             
             <el-divider />
             
             <el-card class="result-card">
-              <template #header>表单数据</template>
+              <template #header>
+                表单数据
+              </template>
               <pre>{{ JSON.stringify(cascadeData, null, 2) }}</pre>
             </el-card>
           </div>
         </el-tab-pane>
 
         <!-- Tab 3: 动态字段 -->
-        <el-tab-pane label="⚡ 动态字段" name="dynamic">
+        <el-tab-pane
+          label="⚡ 动态字段"
+          name="dynamic"
+        >
           <div class="demo-section">
             <h3>场景：根据产品类型动态添加字段</h3>
             <p>选择"软件产品"时添加许可证字段，选择"硬件产品"时添加序列号字段</p>
@@ -71,21 +89,26 @@
               ref="dynamicFormRef"
               v-model="dynamicData"
               :rules="dynamicRules"
-              :dynamicFieldConfigs="dynamicFieldConfigs"
+              :dynamic-field-configs="dynamicFieldConfigs"
               @submit="handleDynamicSubmit"
             />
             
             <el-divider />
             
             <el-card class="result-card">
-              <template #header>表单数据</template>
+              <template #header>
+                表单数据
+              </template>
               <pre>{{ JSON.stringify(dynamicData, null, 2) }}</pre>
             </el-card>
           </div>
         </el-tab-pane>
 
         <!-- Tab 4: 计算字段 -->
-        <el-tab-pane label="🧮 计算字段" name="calculated">
+        <el-tab-pane
+          label="🧮 计算字段"
+          name="calculated"
+        >
           <div class="demo-section">
             <h3>场景：订单总价自动计算</h3>
             <p>输入数量和单价后，自动计算总价 = 数量 × 单价</p>
@@ -96,28 +119,35 @@
               ref="calculatedFormRef"
               v-model="calculatedData"
               :rules="calculatedRules"
-              :calculatedFieldConfigs="calculatedFieldConfigs"
+              :calculated-field-configs="calculatedFieldConfigs"
               @submit="handleCalculatedSubmit"
             />
             
             <el-divider />
             
             <el-card class="result-card">
-              <template #header>表单数据</template>
+              <template #header>
+                表单数据
+              </template>
               <pre>{{ JSON.stringify(calculatedData, null, 2) }}</pre>
             </el-card>
           </div>
         </el-tab-pane>
 
         <!-- Tab 5: Builder API -->
-        <el-tab-pane label="🔧 Builder API" name="builder">
+        <el-tab-pane
+          label="🔧 Builder API"
+          name="builder"
+        >
           <div class="demo-section">
             <h3>使用LinkageRuleBuilder快速构建联动规则</h3>
             
             <el-divider />
             
             <el-card>
-              <template #header>示例代码</template>
+              <template #header>
+                示例代码
+              </template>
               <pre class="code-block">{{ builderExample }}</pre>
             </el-card>
             
@@ -128,20 +158,25 @@
               ref="builderFormRef"
               v-model="builderData"
               :rules="builderRules"
-              :linkageRules="builderLinkageRules"
+              :linkage-rules="builderLinkageRules"
             />
             
             <el-divider />
             
             <el-card class="result-card">
-              <template #header>表单数据</template>
+              <template #header>
+                表单数据
+              </template>
               <pre>{{ JSON.stringify(builderData, null, 2) }}</pre>
             </el-card>
           </div>
         </el-tab-pane>
 
         <!-- Tab 6: 模板库 -->
-        <el-tab-pane label="📚 模板库" name="templates">
+        <el-tab-pane
+          label="📚 模板库"
+          name="templates"
+        >
           <div class="demo-section">
             <h3>LINKAGE_TEMPLATES 预定义模板</h3>
             <p>开箱即用的常用联动模板</p>
@@ -149,16 +184,38 @@
             <el-divider />
             
             <el-space wrap>
-              <el-tag type="info" size="large">条件显示模板</el-tag>
-              <el-tag type="success" size="large">省市区三级联动</el-tag>
-              <el-tag type="warning" size="large">价格计算模板</el-tag>
-              <el-tag type="danger" size="large">表单类型切换</el-tag>
+              <el-tag
+                type="info"
+                size="large"
+              >
+                条件显示模板
+              </el-tag>
+              <el-tag
+                type="success"
+                size="large"
+              >
+                省市区三级联动
+              </el-tag>
+              <el-tag
+                type="warning"
+                size="large"
+              >
+                价格计算模板
+              </el-tag>
+              <el-tag
+                type="danger"
+                size="large"
+              >
+                表单类型切换
+              </el-tag>
             </el-space>
             
             <el-divider />
             
             <el-card>
-              <template #header>模板示例代码</template>
+              <template #header>
+                模板示例代码
+              </template>
               <pre class="code-block">{{ templatesExample }}</pre>
             </el-card>
           </div>

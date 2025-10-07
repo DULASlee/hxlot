@@ -1,14 +1,30 @@
 <template>
   <div class="value-object-editor">
-    <el-form :model="localVO" label-width="120px">
-      <el-form-item label="Name" required>
-        <el-input v-model="localVO.name" placeholder="Address" />
+    <el-form
+      :model="localVO"
+      label-width="120px"
+    >
+      <el-form-item
+        label="Name"
+        required
+      >
+        <el-input
+          v-model="localVO.name"
+          placeholder="Address"
+        />
       </el-form-item>
       <el-form-item label="Description">
-        <el-input v-model="localVO.description" type="textarea" />
+        <el-input
+          v-model="localVO.description"
+          type="textarea"
+        />
       </el-form-item>
       <el-form-item label="Properties">
-        <el-button size="small" type="primary" @click="showPropertyDialog(null)">
+        <el-button
+          size="small"
+          type="primary"
+          @click="showPropertyDialog(null)"
+        >
           <el-icon>
             <Plus />
           </el-icon>
@@ -16,19 +32,47 @@
         </el-button>
 
         <!-- 🔥 改进：属性列表（只读，双击编辑） -->
-        <el-table :data="localVO.properties" style="margin-top: 10px" @row-dblclick="handleRowDoubleClick">
-          <el-table-column prop="name" label="Name" width="150" />
-          <el-table-column prop="type" label="Type" width="120" />
-          <el-table-column prop="description" label="Description" show-overflow-tooltip />
-          <el-table-column label="Actions" width="140" align="center">
+        <el-table
+          :data="localVO.properties"
+          style="margin-top: 10px"
+          @row-dblclick="handleRowDoubleClick"
+        >
+          <el-table-column
+            prop="name"
+            label="Name"
+            width="150"
+          />
+          <el-table-column
+            prop="type"
+            label="Type"
+            width="120"
+          />
+          <el-table-column
+            prop="description"
+            label="Description"
+            show-overflow-tooltip
+          />
+          <el-table-column
+            label="Actions"
+            width="140"
+            align="center"
+          >
             <template #default="{ $index }">
-              <el-button size="small" @click="showPropertyDialog($index)">
+              <el-button
+                size="small"
+                @click="showPropertyDialog($index)"
+              >
                 <el-icon>
                   <Edit />
                 </el-icon>
                 Edit
               </el-button>
-              <el-button size="small" type="danger" text @click="removeProperty($index)">
+              <el-button
+                size="small"
+                type="danger"
+                text
+                @click="removeProperty($index)"
+              >
                 <el-icon>
                   <Delete />
                 </el-icon>
@@ -40,32 +84,65 @@
     </el-form>
 
     <!-- 🔥 新增：属性编辑对话框 -->
-    <el-dialog v-model="propertyDialogVisible" :title="editingPropertyIndex === null ? 'Add Property' : 'Edit Property'"
-      width="600px">
-      <el-form :model="currentProperty" label-width="140px">
-        <el-form-item label="Property Name" required>
-          <el-input v-model="currentProperty.name" placeholder="e.g. Street, City, PostalCode" />
+    <el-dialog
+      v-model="propertyDialogVisible"
+      :title="editingPropertyIndex === null ? 'Add Property' : 'Edit Property'"
+      width="600px"
+    >
+      <el-form
+        :model="currentProperty"
+        label-width="140px"
+      >
+        <el-form-item
+          label="Property Name"
+          required
+        >
+          <el-input
+            v-model="currentProperty.name"
+            placeholder="e.g. Street, City, PostalCode"
+          />
         </el-form-item>
 
-        <el-form-item label="Property Type" required>
-          <el-select v-model="currentProperty.type" style="width: 100%">
-            <el-option label="string" value="string">
+        <el-form-item
+          label="Property Type"
+          required
+        >
+          <el-select
+            v-model="currentProperty.type"
+            style="width: 100%"
+          >
+            <el-option
+              label="string"
+              value="string"
+            >
               <span>string</span>
               <span style="float: right; color: var(--el-text-color-secondary)">文本</span>
             </el-option>
-            <el-option label="int" value="int">
+            <el-option
+              label="int"
+              value="int"
+            >
               <span>int</span>
               <span style="float: right; color: var(--el-text-color-secondary)">整数</span>
             </el-option>
-            <el-option label="decimal" value="decimal">
+            <el-option
+              label="decimal"
+              value="decimal"
+            >
               <span>decimal</span>
               <span style="float: right; color: var(--el-text-color-secondary)">小数</span>
             </el-option>
-            <el-option label="DateTime" value="DateTime">
+            <el-option
+              label="DateTime"
+              value="DateTime"
+            >
               <span>DateTime</span>
               <span style="float: right; color: var(--el-text-color-secondary)">日期时间</span>
             </el-option>
-            <el-option label="bool" value="bool">
+            <el-option
+              label="bool"
+              value="bool"
+            >
               <span>bool</span>
               <span style="float: right; color: var(--el-text-color-secondary)">布尔值</span>
             </el-option>
@@ -73,8 +150,12 @@
         </el-form-item>
 
         <el-form-item label="Description">
-          <el-input v-model="currentProperty.description" type="textarea" :rows="2"
-            placeholder="Property description" />
+          <el-input
+            v-model="currentProperty.description"
+            type="textarea"
+            :rows="2"
+            placeholder="Property description"
+          />
         </el-form-item>
       </el-form>
 
@@ -83,7 +164,11 @@
           <el-button @click="propertyDialogVisible = false">
             Cancel
           </el-button>
-          <el-button type="primary" @click="saveProperty" :disabled="!currentProperty.name || !currentProperty.type">
+          <el-button
+            type="primary"
+            :disabled="!currentProperty.name || !currentProperty.type"
+            @click="saveProperty"
+          >
             Save
           </el-button>
         </div>

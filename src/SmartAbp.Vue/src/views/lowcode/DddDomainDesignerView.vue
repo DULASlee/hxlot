@@ -2,7 +2,12 @@
   <div class="ddd-domain-designer">
     <div class="designer-header">
       <h2>DDD Domain Designer</h2>
-      <el-button type="primary" :loading="generating" :disabled="!canGenerate" @click="handleGenerate">
+      <el-button
+        type="primary"
+        :loading="generating"
+        :disabled="!canGenerate"
+        @click="handleGenerate"
+      >
         <el-icon>
           <Document />
         </el-icon>
@@ -18,15 +23,33 @@
           <template #header>
             <span>📦 Module Configuration</span>
           </template>
-          <el-form :model="dddDefinition" label-width="140px">
-            <el-form-item label="Module Name" required>
-              <el-input v-model="dddDefinition.moduleName" placeholder="ProjectManagement" />
+          <el-form
+            :model="dddDefinition"
+            label-width="140px"
+          >
+            <el-form-item
+              label="Module Name"
+              required
+            >
+              <el-input
+                v-model="dddDefinition.moduleName"
+                placeholder="ProjectManagement"
+              />
             </el-form-item>
             <el-form-item label="Key Type">
               <el-select v-model="dddDefinition.defaultKeyType">
-                <el-option label="Guid" value="Guid" />
-                <el-option label="Int" value="int" />
-                <el-option label="Long" value="long" />
+                <el-option
+                  label="Guid"
+                  value="Guid"
+                />
+                <el-option
+                  label="Int"
+                  value="int"
+                />
+                <el-option
+                  label="Long"
+                  value="long"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="Features">
@@ -53,17 +76,30 @@
           <template #header>
             <div class="section-header">
               <span>🏛️ Aggregate Roots</span>
-              <el-button size="small" type="primary" @click="addAggregate">
+              <el-button
+                size="small"
+                type="primary"
+                @click="addAggregate"
+              >
                 Add
               </el-button>
             </div>
           </template>
           <el-collapse v-model="activeAggregates">
-            <el-collapse-item v-for="(aggregate, index) in dddDefinition.aggregates" :key="index" :name="index">
+            <el-collapse-item
+              v-for="(aggregate, index) in dddDefinition.aggregates"
+              :key="index"
+              :name="index"
+            >
               <template #title>
                 <div class="aggregate-title">
                   <span>{{ aggregate.name || `Aggregate ${index + 1}` }}</span>
-                  <el-button size="small" type="danger" text @click.stop="removeAggregate(index)">
+                  <el-button
+                    size="small"
+                    type="danger"
+                    text
+                    @click.stop="removeAggregate(index)"
+                  >
                     <el-icon>
                       <Delete />
                     </el-icon>
@@ -80,17 +116,30 @@
           <template #header>
             <div class="section-header">
               <span>💎 Value Objects</span>
-              <el-button size="small" type="primary" @click="addValueObject">
+              <el-button
+                size="small"
+                type="primary"
+                @click="addValueObject"
+              >
                 Add
               </el-button>
             </div>
           </template>
           <el-collapse v-model="activeValueObjects">
-            <el-collapse-item v-for="(vo, index) in dddDefinition.valueObjects" :key="index" :name="index">
+            <el-collapse-item
+              v-for="(vo, index) in dddDefinition.valueObjects"
+              :key="index"
+              :name="index"
+            >
               <template #title>
                 <div class="vo-title">
                   <span>{{ vo.name || `Value Object ${index + 1}` }}</span>
-                  <el-button size="small" type="danger" text @click.stop="removeValueObject(index)">
+                  <el-button
+                    size="small"
+                    type="danger"
+                    text
+                    @click.stop="removeValueObject(index)"
+                  >
                     <el-icon>
                       <Delete />
                     </el-icon>
@@ -104,12 +153,18 @@
       </div>
 
       <!-- Right Panel: Result Preview -->
-      <div v-if="showResult && generationResult" class="right-panel">
+      <div
+        v-if="showResult && generationResult"
+        class="right-panel"
+      >
         <el-card class="result-section">
           <template #header>
             <div class="result-header">
               <span>✅ Generation Result</span>
-              <el-button size="small" @click="downloadCode">
+              <el-button
+                size="small"
+                @click="downloadCode"
+              >
                 <el-icon>
                   <Download />
                 </el-icon>
@@ -120,22 +175,47 @@
 
           <!-- Statistics -->
           <div class="stats">
-            <el-statistic title="Aggregates" :value="generationResult.aggregateCount" />
-            <el-statistic title="Value Objects" :value="generationResult.valueObjectCount" />
-            <el-statistic title="Repositories" :value="generationResult.repositoryCount" />
-            <el-statistic title="Domain Events" :value="generationResult.domainEventCount" />
-            <el-statistic title="Files" :value="generationResult.files.length" />
-            <el-statistic title="Lines of Code" :value="generationResult.totalLinesOfCode" />
+            <el-statistic
+              title="Aggregates"
+              :value="generationResult.aggregateCount"
+            />
+            <el-statistic
+              title="Value Objects"
+              :value="generationResult.valueObjectCount"
+            />
+            <el-statistic
+              title="Repositories"
+              :value="generationResult.repositoryCount"
+            />
+            <el-statistic
+              title="Domain Events"
+              :value="generationResult.domainEventCount"
+            />
+            <el-statistic
+              title="Files"
+              :value="generationResult.files.length"
+            />
+            <el-statistic
+              title="Lines of Code"
+              :value="generationResult.totalLinesOfCode"
+            />
           </div>
 
           <!-- File List -->
           <div class="files-section">
             <h4>Generated Files ({{ generationResult.files.length }})</h4>
-            <el-tree :data="fileTree" :props="{ label: 'name', children: 'children' }" @node-click="handleFileClick" />
+            <el-tree
+              :data="fileTree"
+              :props="{ label: 'name', children: 'children' }"
+              @node-click="handleFileClick"
+            />
           </div>
 
           <!-- Code Preview -->
-          <div v-if="selectedFile" class="code-preview">
+          <div
+            v-if="selectedFile"
+            class="code-preview"
+          >
             <h4>{{ selectedFile.relativePath }}</h4>
             <pre><code>{{ selectedFile.content }}</code></pre>
           </div>

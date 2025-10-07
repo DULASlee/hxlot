@@ -1,146 +1,227 @@
 <template>
-    <div class="form-builder-demo">
-        <!-- 页面头部 -->
-        <div class="demo-header">
-            <h2>SmartFormBuilder 2.0 演示</h2>
-            <el-tag type="success">企业级表单构建器</el-tag>
-        </div>
-
-        <!-- 内容区 -->
-        <el-tabs v-model="activeTab" type="border-card">
-            <!-- Tab 1: 表单渲染器演示 -->
-            <el-tab-pane label="📝 表单渲染器" name="renderer">
-                <div class="demo-section">
-                    <h3>基础表单渲染</h3>
-                    <p>SmartFormBuilder基于form-create，支持动态表单渲染和验证</p>
-
-                    <el-divider />
-
-                    <SmartFormBuilder ref="formBuilderRef" v-model="formData" :rules="demoFormRules"
-                        :config="demoFormConfig" @submit="handleFormSubmit" @reset="handleFormReset" />
-
-                    <el-divider />
-
-                    <el-card>
-                        <template #header>
-                            <span>当前表单数据</span>
-                        </template>
-                        <pre>{{ JSON.stringify(formData, null, 2) }}</pre>
-                    </el-card>
-                </div>
-            </el-tab-pane>
-
-            <!-- Tab 2: 可视化设计器 -->
-            <el-tab-pane label="🎨 可视化设计器" name="designer">
-                <div class="demo-section">
-                    <el-alert title="进入完整设计器" type="info" :closable="false" style="margin-bottom: 20px">
-                        <template #default>
-                            <p>完整的可视化表单设计器请访问：</p>
-                            <el-button type="primary" @click="goToFullDesigner">
-                                🚀 打开表单设计器
-                            </el-button>
-                        </template>
-                    </el-alert>
-
-                    <h3>设计器功能特性</h3>
-                    <el-row :gutter="20">
-                        <el-col :span="8">
-                            <el-card>
-                                <template #header>
-                                    <el-icon>
-                                        <Edit />
-                                    </el-icon>
-                                    拖拽式设计
-                                </template>
-                                <ul>
-                                    <li>40种字段类型</li>
-                                    <li>拖拽添加字段</li>
-                                    <li>实时预览</li>
-                                </ul>
-                            </el-card>
-                        </el-col>
-
-                        <el-col :span="8">
-                            <el-card>
-                                <template #header>
-                                    <el-icon>
-                                        <Setting />
-                                    </el-icon>
-                                    属性配置
-                                </template>
-                                <ul>
-                                    <li>字段属性配置</li>
-                                    <li>验证规则设置</li>
-                                    <li>布局配置</li>
-                                </ul>
-                            </el-card>
-                        </el-col>
-
-                        <el-col :span="8">
-                            <el-card>
-                                <template #header>
-                                    <el-icon>
-                                        <Document />
-                                    </el-icon>
-                                    代码导出
-                                </template>
-                                <ul>
-                                    <li>JSON Schema</li>
-                                    <li>Vue Template</li>
-                                    <li>即时可用</li>
-                                </ul>
-                            </el-card>
-                        </el-col>
-                    </el-row>
-                </div>
-            </el-tab-pane>
-
-            <!-- Tab 3: API文档 -->
-            <el-tab-pane label="📖 API文档" name="api">
-                <div class="demo-section">
-                    <h3>SmartFormBuilder Props</h3>
-                    <el-table :data="propsData" border>
-                        <el-table-column prop="name" label="属性名" width="180" />
-                        <el-table-column prop="type" label="类型" width="180" />
-                        <el-table-column prop="default" label="默认值" width="120" />
-                        <el-table-column prop="description" label="说明" />
-                    </el-table>
-
-                    <el-divider />
-
-                    <h3>SmartFormBuilder Events</h3>
-                    <el-table :data="eventsData" border>
-                        <el-table-column prop="name" label="事件名" width="180" />
-                        <el-table-column prop="params" label="参数" width="250" />
-                        <el-table-column prop="description" label="说明" />
-                    </el-table>
-
-                    <el-divider />
-
-                    <h3>SmartFormBuilder Methods</h3>
-                    <el-table :data="methodsData" border>
-                        <el-table-column prop="name" label="方法名" width="180" />
-                        <el-table-column prop="params" label="参数" width="180" />
-                        <el-table-column prop="returns" label="返回值" width="120" />
-                        <el-table-column prop="description" label="说明" />
-                    </el-table>
-                </div>
-            </el-tab-pane>
-
-            <!-- Tab 4: 使用示例 -->
-            <el-tab-pane label="💡 使用示例" name="examples">
-                <div class="demo-section">
-                    <h3>基础使用示例</h3>
-                    <pre class="code-block">{{ basicExample }}</pre>
-
-                    <el-divider />
-
-                    <h3>高级使用示例（动态规则）</h3>
-                    <pre class="code-block">{{ advancedExample }}</pre>
-                </div>
-            </el-tab-pane>
-        </el-tabs>
+  <div class="form-builder-demo">
+    <!-- 页面头部 -->
+    <div class="demo-header">
+      <h2>SmartFormBuilder 2.0 演示</h2>
+      <el-tag type="success">
+        企业级表单构建器
+      </el-tag>
     </div>
+
+    <!-- 内容区 -->
+    <el-tabs
+      v-model="activeTab"
+      type="border-card"
+    >
+      <!-- Tab 1: 表单渲染器演示 -->
+      <el-tab-pane
+        label="📝 表单渲染器"
+        name="renderer"
+      >
+        <div class="demo-section">
+          <h3>基础表单渲染</h3>
+          <p>SmartFormBuilder基于form-create，支持动态表单渲染和验证</p>
+
+          <el-divider />
+
+          <SmartFormBuilder
+            ref="formBuilderRef"
+            v-model="formData"
+            :rules="demoFormRules"
+            :config="demoFormConfig"
+            @submit="handleFormSubmit"
+            @reset="handleFormReset"
+          />
+
+          <el-divider />
+
+          <el-card>
+            <template #header>
+              <span>当前表单数据</span>
+            </template>
+            <pre>{{ JSON.stringify(formData, null, 2) }}</pre>
+          </el-card>
+        </div>
+      </el-tab-pane>
+
+      <!-- Tab 2: 可视化设计器 -->
+      <el-tab-pane
+        label="🎨 可视化设计器"
+        name="designer"
+      >
+        <div class="demo-section">
+          <el-alert
+            title="进入完整设计器"
+            type="info"
+            :closable="false"
+            style="margin-bottom: 20px"
+          >
+            <template #default>
+              <p>完整的可视化表单设计器请访问：</p>
+              <el-button
+                type="primary"
+                @click="goToFullDesigner"
+              >
+                🚀 打开表单设计器
+              </el-button>
+            </template>
+          </el-alert>
+
+          <h3>设计器功能特性</h3>
+          <el-row :gutter="20">
+            <el-col :span="8">
+              <el-card>
+                <template #header>
+                  <el-icon>
+                    <Edit />
+                  </el-icon>
+                  拖拽式设计
+                </template>
+                <ul>
+                  <li>40种字段类型</li>
+                  <li>拖拽添加字段</li>
+                  <li>实时预览</li>
+                </ul>
+              </el-card>
+            </el-col>
+
+            <el-col :span="8">
+              <el-card>
+                <template #header>
+                  <el-icon>
+                    <Setting />
+                  </el-icon>
+                  属性配置
+                </template>
+                <ul>
+                  <li>字段属性配置</li>
+                  <li>验证规则设置</li>
+                  <li>布局配置</li>
+                </ul>
+              </el-card>
+            </el-col>
+
+            <el-col :span="8">
+              <el-card>
+                <template #header>
+                  <el-icon>
+                    <Document />
+                  </el-icon>
+                  代码导出
+                </template>
+                <ul>
+                  <li>JSON Schema</li>
+                  <li>Vue Template</li>
+                  <li>即时可用</li>
+                </ul>
+              </el-card>
+            </el-col>
+          </el-row>
+        </div>
+      </el-tab-pane>
+
+      <!-- Tab 3: API文档 -->
+      <el-tab-pane
+        label="📖 API文档"
+        name="api"
+      >
+        <div class="demo-section">
+          <h3>SmartFormBuilder Props</h3>
+          <el-table
+            :data="propsData"
+            border
+          >
+            <el-table-column
+              prop="name"
+              label="属性名"
+              width="180"
+            />
+            <el-table-column
+              prop="type"
+              label="类型"
+              width="180"
+            />
+            <el-table-column
+              prop="default"
+              label="默认值"
+              width="120"
+            />
+            <el-table-column
+              prop="description"
+              label="说明"
+            />
+          </el-table>
+
+          <el-divider />
+
+          <h3>SmartFormBuilder Events</h3>
+          <el-table
+            :data="eventsData"
+            border
+          >
+            <el-table-column
+              prop="name"
+              label="事件名"
+              width="180"
+            />
+            <el-table-column
+              prop="params"
+              label="参数"
+              width="250"
+            />
+            <el-table-column
+              prop="description"
+              label="说明"
+            />
+          </el-table>
+
+          <el-divider />
+
+          <h3>SmartFormBuilder Methods</h3>
+          <el-table
+            :data="methodsData"
+            border
+          >
+            <el-table-column
+              prop="name"
+              label="方法名"
+              width="180"
+            />
+            <el-table-column
+              prop="params"
+              label="参数"
+              width="180"
+            />
+            <el-table-column
+              prop="returns"
+              label="返回值"
+              width="120"
+            />
+            <el-table-column
+              prop="description"
+              label="说明"
+            />
+          </el-table>
+        </div>
+      </el-tab-pane>
+
+      <!-- Tab 4: 使用示例 -->
+      <el-tab-pane
+        label="💡 使用示例"
+        name="examples"
+      >
+        <div class="demo-section">
+          <h3>基础使用示例</h3>
+          <pre class="code-block">{{ basicExample }}</pre>
+
+          <el-divider />
+
+          <h3>高级使用示例（动态规则）</h3>
+          <pre class="code-block">{{ advancedExample }}</pre>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
 </template>
 
 <script setup lang="ts">
