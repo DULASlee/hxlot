@@ -94,8 +94,8 @@ const formApi = ref<Api | null>(null)
 /** 表单数据（v-model双向绑定） */
 const formData = ref<Record<string, any>>({ ...props.modelValue })
 
-/** 🆕 联动引擎实例 */
-const linkageEngine = new FormLinkageEngine(formApi, formData)
+/** 🆕 联动引擎实例（延迟初始化） */
+let linkageEngine: FormLinkageEngine | null = null
 
 /** form-create规则数组 */
 const formRules = computed<FormCreateRule[]>(() => {
@@ -177,8 +177,8 @@ watch(formData, (newData, oldData) => {
   for (const key in newData) {
     if (newData[key] !== oldData?.[key]) {
       emit('change', key, newData[key])
-      // 🆕 触发联动引擎
-      linkageEngine.triggerFieldChange(key)
+      // 🆕 触发联动引擎（需要确保引擎已初始化）
+      linkageEngine?.triggerFieldChange(key)
     }
   }
 }, { deep: true })
@@ -219,10 +219,10 @@ const validate = async (): Promise<boolean> => {
 
   try {
     const valid = await formApi.value.validate()
-    emit('validate', { valid })
+    emit('validate', { valid, errors: [] })
     return valid
-  } catch (errors) {
-    emit('validate', { valid: false, errors })
+  } catch (errors: unknown) {
+    emit('validate', { valid: false, errors: Array.isArray(errors) ? errors : [errors] })
     return false
   }
 }
@@ -327,17 +327,17 @@ defineExpose({
   /** 联动引擎实例 */
   linkageEngine,
   /** 添加联动规则 */
-  addLinkageRule: (rule: LinkageRule) => linkageEngine.addRule(rule),
+  addLinkageRule: (rule: LinkageRule) => linkageEngine?.addRule(rule),
   /** 移除联动规则 */
-  removeLinkageRule: (ruleId: string) => linkageEngine.removeRule(ruleId),
+  removeLinkageRule: (ruleId: string) => linkageEngine?.removeRule(ruleId),
   /** 添加级联配置 */
-  addCascadeConfig: (cascade: CascadeConfig) => linkageEngine.addCascade(cascade),
+  addCascadeConfig: (cascade: CascadeConfig) => linkageEngine?.addCascade(cascade),
   /** 添加动态字段配置 */
-  addDynamicFieldConfig: (config: DynamicFieldConfig) => linkageEngine.addDynamicField(config),
+  addDynamicFieldConfig: (config: DynamicFieldConfig) => linkageEngine?.addDynamicField(config),
   /** 添加计算字段配置 */
-  addCalculatedFieldConfig: (config: CalculatedFieldConfig) => linkageEngine.addCalculatedField(config),
+  addCalculatedFieldConfig: (config: CalculatedFieldConfig) => linkageEngine?.addCalculatedField(config),
   /** 手动触发字段变化 */
-  triggerFieldChange: (fieldName: string) => linkageEngine.triggerFieldChange(fieldName)
+  triggerFieldChange: (fieldName: string) => linkageEngine?.triggerFieldChange(fieldName)
 })
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -351,33 +351,37 @@ onMounted(() => {
   }
 
   // 🆕 初始化联动引擎
-  // 添加联动规则
-  if (props.linkageRules && props.linkageRules.length > 0) {
-    props.linkageRules.forEach(rule => linkageEngine.addRule(rule))
-  }
+  if (formApi.value && !linkageEngine) {
+    linkageEngine = new FormLinkageEngine(formApi, formData)
+    
+    // 添加联动规则
+    if (props.linkageRules && props.linkageRules.length > 0) {
+      props.linkageRules.forEach(rule => linkageEngine!.addRule(rule))
+    }
 
-  // 添加级联配置
-  if (props.cascadeConfigs && props.cascadeConfigs.length > 0) {
-    props.cascadeConfigs.forEach(cascade => linkageEngine.addCascade(cascade))
-  }
+    // 添加级联配置
+    if (props.cascadeConfigs && props.cascadeConfigs.length > 0) {
+      props.cascadeConfigs.forEach(cascade => linkageEngine!.addCascade(cascade))
+    }
 
-  // 添加动态字段配置
-  if (props.dynamicFieldConfigs && props.dynamicFieldConfigs.length > 0) {
-    props.dynamicFieldConfigs.forEach(config => linkageEngine.addDynamicField(config))
-  }
+    // 添加动态字段配置
+    if (props.dynamicFieldConfigs && props.dynamicFieldConfigs.length > 0) {
+      props.dynamicFieldConfigs.forEach(config => linkageEngine!.addDynamicField(config))
+    }
 
-  // 添加计算字段配置
-  if (props.calculatedFieldConfigs && props.calculatedFieldConfigs.length > 0) {
-    props.calculatedFieldConfigs.forEach(config => linkageEngine.addCalculatedField(config))
-  }
+    // 添加计算字段配置
+    if (props.calculatedFieldConfigs && props.calculatedFieldConfigs.length > 0) {
+      props.calculatedFieldConfigs.forEach(config => linkageEngine!.addCalculatedField(config))
+    }
 
-  // 初始化所有联动
-  linkageEngine.initializeAll()
+    // 初始化所有联动
+    linkageEngine.initializeAll()
+  }
 })
 
 // 🆕 清理联动引擎
 onUnmounted(() => {
-  linkageEngine.cleanup()
+  linkageEngine?.cleanup()
 })
 </script>
 

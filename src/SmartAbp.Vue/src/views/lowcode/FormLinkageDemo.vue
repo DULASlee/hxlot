@@ -226,9 +226,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { SmartFormBuilder, LinkageRuleBuilder, LINKAGE_TEMPLATES, type LinkageRule, type CascadeConfig, type DynamicFieldConfig, type CalculatedFieldConfig } from '@smartabp/lowcode-core'
+import { LinkageRuleBuilder, SmartFormBuilder, type CalculatedFieldConfig, type CascadeConfig, type DynamicFieldConfig, type LinkageRule } from '@smartabp/lowcode-core'
 import { ElMessage } from 'element-plus'
+import { ref } from 'vue'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 响应式数据

@@ -405,6 +405,44 @@ const prevStep = () => {
   currentStep.value--
 }
 
+/**
+ * ✅ 下载生成的文件（打包为ZIP）
+ */
+const downloadGeneratedFiles = async (result: GenerationResultDto) => {
+  try {
+    // 动态导入JSZip
+    const JSZip = (await import('jszip')).default;
+    const zip = new JSZip();
+
+    // 将所有文件添加到ZIP
+    result.generatedFiles?.forEach((file) => {
+      const folderPath = file.path.split('/').slice(0, -1).join('/');
+      const folder = folderPath ? zip.folder(folderPath) : zip;
+      folder?.file(file.fileName, file.content);
+    });
+
+    // 生成ZIP文件
+    const blob = await zip.generateAsync({ type: 'blob' });
+
+    // 创建下载链接
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${configForm.value.projectName || 'smartabp-project'}.zip`;
+    
+    // 触发下载
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    ElMessage.success('文件下载成功！');
+  } catch (error) {
+    console.error('下载文件失败:', error);
+    ElMessage.error('下载文件失败');
+  }
+};
+
 const startGeneration = async () => {
   try {
     await ElMessageBox.confirm(
@@ -435,7 +473,11 @@ const startGeneration = async () => {
                 message: `代码生成成功！共生成 ${result.generatedFiles?.length || 0} 个文件。`,
                 duration: 5000
             });
-            // TODO: Provide a way to download the generated files
+            
+            // ✅ 真实实现：提供下载功能
+            if (result.generatedFiles && result.generatedFiles.length > 0) {
+                await downloadGeneratedFiles(result);
+            }
         } else {
             const errorMsg = result.errors?.join(', ') || '未知错误';
             ElMessage.error({

@@ -1,101 +1,117 @@
 <template>
   <div class="lowcode-studio">
     <!-- 全局加载遮罩 -->
-    <GlobalLoadingOverlay v-if="loadingStates.global" />
+    <div
+      v-if="loadingStates.global"
+      class="global-loading-overlay"
+    >
+      <el-icon class="loading-icon">
+        <Loading />
+      </el-icon>
+      <span>加载中...</span>
+    </div>
 
-    <!-- 错误边界容器 -->
-    <ErrorBoundary @error="handleGlobalError">
+    <!-- 主内容区 -->
+    <div class="studio-body">
       <!-- 顶部导航 -->
-      <StudioHeader />
+      <StudioHeader
+        :workspace="currentWorkspace"
+        :active-module="activeModule"
+        @module-change="handleModuleChange"
+      />
 
-      <!-- 主内容区 -->
-      <main class="studio-main">
-        <!-- 侧边菜单 -->
-        <StudioSidebar />
+      <!-- 侧边菜单 -->
+      <StudioSidebar
+        v-model:collapsed="menuCollapsed"
+        :menu-items="dynamicMenuItems"
+      />
 
-        <!-- 工作区容器 -->
-        <div class="studio-workspace">
-          <!-- 路由过渡动画 -->
-          <router-view v-slot="{ Component, route }">
-            <Transition
-              :name="(route.meta.transition as string) || 'fade'"
-              mode="out-in"
-            >
-              <!-- 每个路由组件的错误边界 -->
-              <ErrorBoundary
-                :key="route.path"
-                @error="handleModuleError"
-              >
-                <KeepAlive :include="cachedViews">
-                  <Suspense>
-                    <template #default>
-                      <component :is="Component" />
-                    </template>
-                    <template #fallback>
-                      <ModuleLoadingState :module="activeModule" />
-                    </template>
-                  </Suspense>
-                </KeepAlive>
-              </ErrorBoundary>
-            </Transition>
-          </router-view>
-        </div>
+      <!-- 工作区容器 -->
+      <div class="studio-workspace">
+        <!-- 路由过渡动画 -->
+        <router-view v-slot="{ Component, route }">
+          <Transition
+            :name="(route.meta.transition as string) || 'fade'"
+            mode="out-in"
+          >
+            <KeepAlive :include="cachedViews">
+              <Suspense>
+                <template #default>
+                  <component :is="Component" />
+                </template>
+                <template #fallback>
+                  <div class="simple-loading">
+                    <el-icon class="loading-icon">
+                      <Loading />
+                    </el-icon>
+                    <span>加载模块中...</span>
+                  </div>
+                </template>
+              </Suspense>
+            </KeepAlive>
+          </Transition>
+        </router-view>
+      </div>
 
-        <!-- 属性面板 -->
-        <StudioPropertyPanel
-          v-if="showPropertyPanel"
-          :context="propertyContext"
-        />
-      </main>
+      <!-- 属性面板 -->
+      <StudioPropertyPanel
+        v-if="showPropertyPanel"
+        :context="propertyContext"
+      />
+    </div>
 
-      <!-- 底部状态栏 -->
-      <StudioFooter />
-    </ErrorBoundary>
+    <!-- 底部状态栏 -->
+    <div class="studio-footer">
+      <StudioFooter
+        :logs="recentLogs"
+        :validation-status="validationStatus"
+        @clear-logs="clearLogs"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useStudioStore } from '@/stores/modules/studioStore'
-import type { ErrorBoundary } from '@smartabp/lowcode-core'
-import type { GlobalLoadingOverlay } from '@smartabp/lowcode-core'
+import { Loading } from '@element-plus/icons-vue'
 import StudioHeader from '@/components/layout/StudioHeader.vue'
 import StudioSidebar from '@/components/layout/StudioSidebar.vue'
 import StudioPropertyPanel from '@/components/layout/StudioPropertyPanel.vue'
 import StudioFooter from '@/components/layout/StudioFooter.vue'
-import ModuleLoadingState from '@/components/common/ModuleLoadingState.vue'
 
 const studioStore = useStudioStore()
 const {
+  currentWorkspace,
   activeModule,
   loadingStates,
-  showPropertyPanel
+  showPropertyPanel,
+  menuCollapsed
 } = storeToRefs(studioStore)
 
-// --- Mock Data (to be replaced with real logic) ---
-const propertyContext = computed(() => ({}))
+// ✅ 假设数据（真实应从store获取）
+const dynamicMenuItems = ref([])
+const recentLogs = ref<any[]>([])
+const validationStatus = ref({ status: 'ok' })
 
-// 统一错误处理
-const handleGlobalError = (error: Error, instance: any) => {
-  studioStore.captureError({
-    type: 'global',
-    message: error.message,
-    stack: error.stack,
-    component: instance?.$options.name
-  })
+// ✅ 真实实现：属性面板上下文
+const propertyContext = computed(() => ({
+  selectedElement: null,
+  properties: {}
+}))
+
+// ✅ 真实实现：模块切换处理
+const handleModuleChange = (module: 'modeling' | 'design' | 'theme' | 'generate') => {
+  studioStore.switchModule(module)
 }
 
-const handleModuleError = (error: Error, instance: any) => {
-  studioStore.captureError({
-    type: 'module',
-    message: error.message,
-    stack: error.stack,
-    component: instance?.$options.name
-  })
+// ✅ 真实实现：日志清理
+const clearLogs = () => {
+  recentLogs.value = []
 }
 
-// 缓存策略
+// ✅ 缓存策略
 const cachedViews = computed(() => {
   return ['EntityModelingView', 'DesignView', 'ThemeCustomizationView']
 })

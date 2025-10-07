@@ -458,7 +458,10 @@ export class FormLinkageEngine {
       // 移除字段
       if (config.fieldsToRemove) {
         config.fieldsToRemove.forEach(fieldName => {
-          this.api.value!.removeRule(fieldName)
+          const rule = this.api.value!.getRule(fieldName)
+          if (rule) {
+            this.api.value!.removeRule(rule)
+          }
         })
       }
     }
