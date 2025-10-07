@@ -192,11 +192,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from "vue"
+import { codeGeneratorApi, type ModuleGenerationConfig, type ModuleMetadataDto } from "@smartabp/lowcode-api"
 import { ElMessage } from "element-plus"
-
-// 导入低代码引擎 (暂时注释，等待迁移完成)
-// import { LowCodeKernel, Vue3Plugin } from '@/lowcode'
+import { computed, onMounted, reactive, ref } from "vue"
 
 // 表单数据
 const form = reactive({
@@ -305,150 +303,91 @@ const currentSchema = computed(() => {
   }
 })
 
-// 生成代码
+// ✅ 真实代码生成（使用SmartAbp后端API）
 const generateCode = async () => {
   generating.value = true
   generationInfo.value = null
 
   try {
-    // 模拟低代码引擎（迁移完成后使用真实的引擎）
-    await simulateCodeGeneration()
-
-    generationCount.value++
-    ElMessage.success("代码生成成功！")
+    const startTime = Date.now()
+    
+    // ✅ 构建模块元数据
+    const moduleMetadata: ModuleMetadataDto = {
+      id: crypto.randomUUID(),
+      systemName: 'SmartAbp',
+      name: form.componentName,
+      displayName: form.componentName,
+      description: `Auto-generated ${form.componentName} component`,
+      version: '1.0.0',
+      author: 'SmartAbp QuickStart',
+      namespace: `SmartAbp.${form.componentName}`,
+      architecturePattern: 'Crud',
+      databaseInfo: {
+        connectionStringName: 'Default',
+        schema: 'dbo',
+        provider: 'SqlServer'
+      },
+      frontend: {
+        parentId: '',
+        routePrefix: form.componentName.toLowerCase()
+      },
+      generateMobilePages: false,
+      featureManagement: {
+        isEnabled: true,
+        defaultPolicy: 'RequiresAuthentication'
+      },
+      dependencies: [],
+      entities: [],
+      permissionConfig: {
+        groupName: form.componentName,
+        permissions: []
+      },
+      menuConfig: [],
+      schemaVersion: '1.0.0',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+    
+    // ✅ 调用真实API
+    const config: ModuleGenerationConfig = {
+      moduleMetadata,
+      targetPath: './generated',
+      overwriteExisting: true,
+      generateTests: false,
+      generateDocs: false
+    }
+    
+    const result = await codeGeneratorApi.generateModule(config)
+    
+    const endTime = Date.now()
+    
+    if (result.success && result.generatedFiles && result.generatedFiles.length > 0) {
+      // 提取第一个Vue组件文件
+      const vueFile = result.generatedFiles.find(f => f.path.endsWith('.vue'))
+      generatedCode.value = vueFile?.content || '// No Vue component generated'
+      
+      generationInfo.value = {
+        duration: endTime - startTime,
+        size: generatedCode.value.length,
+        plugin: "SmartAbp CodeGen",
+        filesGenerated: result.generatedFiles.length,
+        totalLines: result.statistics?.totalLines || 0
+      }
+      
+      generationCount.value++
+      ElMessage.success(`代码生成成功！生成了${result.generatedFiles.length}个文件`)
+    } else {
+      throw new Error(result.errors?.join(', ') || '代码生成失败')
+    }
   } catch (error) {
     console.error("代码生成失败：", error)
-    ElMessage.error("代码生成失败，请检查配置")
+    ElMessage.error(`代码生成失败: ${error instanceof Error ? error.message : String(error)}`)
   } finally {
     generating.value = false
   }
 }
 
-// 模拟代码生成（迁移完成后替换为真实实现）
-const simulateCodeGeneration = async () => {
-  return new Promise<boolean>((resolve) => {
-    setTimeout(() => {
-      const startTime = Date.now()
-
-      // 生成模拟的Vue代码
-      const template = generateTemplate()
-      const script = generateScript()
-      const style = generateStyle()
-
-      // 构建最终代码
-      const scriptTag = "<" + 'script setup lang="ts">'
-      const scriptEndTag = "</" + "script>"
-      const styleTag = "<" + "style scoped>"
-      const styleEndTag = "</" + "style>"
-
-      const parts = ["<template>", template, "</template>", "", scriptTag, script, scriptEndTag]
-
-      if (style) {
-        parts.push("", styleTag, style, styleEndTag)
-      }
-
-      generatedCode.value = parts.join("\n")
-
-      const endTime = Date.now()
-
-      generationInfo.value = {
-        duration: endTime - startTime,
-        size: generatedCode.value.length,
-        plugin: "Vue3Plugin",
-      }
-
-      resolve(true)
-    }, 1000)
-  })
-}
-
-// 生成模板
-const generateTemplate = () => {
-  return `  <div class="${form.componentName.toLowerCase()}">
-    <h3 v-if="title">{{ displayTitle || title }}</h3>
-    <p>Hello from ${form.componentName}!</p>
-    <el-button v-if="handleClick" @click="handleClick">Click Me</el-button>
-  </div>`
-}
-
-// 生成脚本
-const generateScript = () => {
-  const parts = []
-
-  const imports = []
-  if (form.features.includes("computed")) imports.push("computed")
-  if (form.features.includes("lifecycle")) imports.push("onMounted")
-
-  if (imports.length > 0) {
-    parts.push(`import { ${imports.join(", ")} } from 'vue'`)
-  }
-
-  if (form.features.includes("props")) {
-    parts.push(`
-interface Props {
-  title?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  title: 'Default Title'
-})`)
-  }
-
-  if (form.features.includes("emits")) {
-    parts.push(`
-interface Emits {
-  click: [event: MouseEvent]
-}
-
-const emit = defineEmits<Emits>()`)
-  }
-
-  if (form.features.includes("computed")) {
-    parts.push(`
-const displayTitle = computed(() => props.title || 'No Title')`)
-  }
-
-  if (form.features.includes("methods")) {
-    parts.push(`
-const handleClick = (event: MouseEvent) => {
-  emit('click', event)
-}`)
-  }
-
-  if (form.features.includes("lifecycle")) {
-    parts.push(
-      `
-onMounted(() => {
-  console.log('` +
-        form.componentName +
-        ` mounted')
-})`,
-    )
-  }
-
-  return parts.join("\n")
-}
-
-// 生成样式
-const generateStyle = () => {
-  if (!form.features.includes("style")) return ""
-
-  return `.${form.componentName.toLowerCase()} {
-  padding: 16px;
-  border-radius: 8px;
-  background: #f5f5f5;
-}
-
-.${form.componentName.toLowerCase()} h3 {
-  margin: 0 0 8px 0;
-  color: #333;
-}
-
-.${form.componentName.toLowerCase()} p {
-  margin: 0 0 16px 0;
-  color: #666;
-}`
-}
+// ✅ 已移除模拟函数，现在使用真实的后端API生成代码
 
 // 复制代码
 const copyCode = async () => {
@@ -483,7 +422,7 @@ const resetForm = () => {
 
 // 初始化
 onMounted(() => {
-  pluginCount.value = 1 // 模拟插件数量
+  pluginCount.value = 1 // SmartAbp CodeGen插件
 })
 </script>
 

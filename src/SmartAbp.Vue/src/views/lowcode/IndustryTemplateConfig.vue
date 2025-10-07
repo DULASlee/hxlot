@@ -232,6 +232,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { industryTemplateApi, type IndustryTemplateConfigDto, type GenerationResult } from '@smartabp/lowcode-api';
 
 const router = useRouter()
 const route = useRoute()
@@ -417,26 +418,42 @@ const startGeneration = async () => {
     
     generating.value = true
     
-    ElMessage.info({
-      message: '代码生成功能将在Phase 2实现，当前为演示模式',
-      duration: 3000
-    })
-    
-    // TODO: 调用实际的代码生成API
-    // await generateFromTemplate({
-    //   template: templateInfo.value.id,
-    //   config: configForm.value,
-    //   modules: selectedModules.value,
-    //   hardware: selectedHardware.value
-    // })
-    
-    setTimeout(() => {
-      generating.value = false
-      ElMessage.success('演示完成！实际功能开发中...')
-    }, 2000)
+    // ✅ 调用真实的代码生成API
+    const config: IndustryTemplateConfigDto = {
+        templateId: templateInfo.value.id,
+        ...configForm.value,
+        selectedModules: selectedModules.value,
+        selectedHardware: selectedHardware.value
+    };
+
+    try {
+        const result: GenerationResult = await industryTemplateApi.generate(config);
+
+        if (result.success) {
+            ElMessage.success({
+                message: `代码生成成功！共生成 ${result.generatedFiles?.length || 0} 个文件。`,
+                duration: 5000
+            });
+            // TODO: Provide a way to download the generated files
+        } else {
+            const errorMsg = result.errors?.join(', ') || '未知错误';
+            ElMessage.error({
+                message: `代码生成失败: ${errorMsg}`,
+                duration: 5000
+            });
+        }
+    } catch (apiError) {
+        ElMessage.error({
+            message: `API调用失败: ${apiError instanceof Error ? apiError.message : String(apiError)}`,
+            duration: 5000
+        });
+    } finally {
+        generating.value = false;
+    }
     
   } catch {
     // 用户取消
+    generating.value = false;
   }
 }
 </script>

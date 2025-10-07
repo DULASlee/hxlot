@@ -155,5 +155,10 @@ namespace SmartAbp.CodeGenerator.Services
         /// <param name="sessionId">The unique session identifier</param>
         /// <returns>ZIP package with generated code</returns>
         Task<ZipPackageDto> ExportGeneratedCodeAsync(string sessionId);
+
+        /// <summary>
+        /// Validates a CQRS definition.
+        /// </summary>
+        Task<SmartAbp.Application.Contracts.CodeGenerator.CqrsValidationResultDto> ValidateCqrsDefinitionAsync(CqrsDefinitionDto input);
     }
 }

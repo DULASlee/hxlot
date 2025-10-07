@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useWorkspaceStore } from '@/stores/modules/workspace'
+import { useStudioStore } from '@/stores/modules/studioStore'
 import type { ErrorBoundary } from '@smartabp/lowcode-core'
 import type { GlobalLoadingOverlay } from '@smartabp/lowcode-core'
 import StudioHeader from '@/components/layout/StudioHeader.vue'
@@ -66,19 +66,19 @@ import StudioPropertyPanel from '@/components/layout/StudioPropertyPanel.vue'
 import StudioFooter from '@/components/layout/StudioFooter.vue'
 import ModuleLoadingState from '@/components/common/ModuleLoadingState.vue'
 
-const workspaceStore = useWorkspaceStore()
+const studioStore = useStudioStore()
 const {
   activeModule,
   loadingStates,
   showPropertyPanel
-} = storeToRefs(workspaceStore)
+} = storeToRefs(studioStore)
 
 // --- Mock Data (to be replaced with real logic) ---
 const propertyContext = computed(() => ({}))
 
 // 统一错误处理
 const handleGlobalError = (error: Error, instance: any) => {
-  workspaceStore.captureError({
+  studioStore.captureError({
     type: 'global',
     message: error.message,
     stack: error.stack,
@@ -87,7 +87,7 @@ const handleGlobalError = (error: Error, instance: any) => {
 }
 
 const handleModuleError = (error: Error, instance: any) => {
-  workspaceStore.captureError({
+  studioStore.captureError({
     type: 'module',
     message: error.message,
     stack: error.stack,

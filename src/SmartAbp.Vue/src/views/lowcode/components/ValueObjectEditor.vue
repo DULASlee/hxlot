@@ -95,17 +95,18 @@
 <script setup lang="ts">
 import { Delete, Edit, Plus } from '@element-plus/icons-vue';
 import type { PropertyDefinitionDto, ValueObjectDefinitionDto } from '@smartabp/lowcode-api';
+import { useDebounceFn } from '@vueuse/core';
 import {
-  ElButton,
-  ElDialog,
-  ElForm,
-  ElFormItem,
-  ElIcon,
-  ElInput,
-  ElOption,
-  ElSelect,
-  ElTable,
-  ElTableColumn
+    ElButton,
+    ElDialog,
+    ElForm,
+    ElFormItem,
+    ElIcon,
+    ElInput,
+    ElOption,
+    ElSelect,
+    ElTable,
+    ElTableColumn
 } from 'element-plus';
 import { ref, watch } from 'vue';
 
@@ -128,15 +129,19 @@ const currentProperty = ref<PropertyDefinitionDto>({
   description: ''
 })
 
-// ✅ 修复死循环：监听props变化而不是local对象
+// ✅ 最佳实践：单向数据流，只监听props变化
 watch(() => props.modelValue, (newValue) => {
   localVO.value = { ...newValue }
 }, { deep: true })
 
-// ✅ 修复死循环：手动触发emit而不是watch
+// ✅ 业界最佳：使用防抖优化emit性能，避免频繁触发父组件更新
+const debouncedEmit = useDebounceFn((value: ValueObjectDefinitionDto) => {
+  emit('update:modelValue', value)
+}, 300) // 300ms防抖
+
 watch(localVO, (newValue) => {
-  emit('update:modelValue', newValue)
-}, { deep: false }) // ⚠️ 移除deep:true避免性能问题
+  debouncedEmit(newValue)
+}, { deep: true })
 
 // 🔥 新增：显示属性编辑对话框
 const showPropertyDialog = (index: number | null) => {

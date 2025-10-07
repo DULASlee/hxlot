@@ -16,17 +16,17 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useWorkspaceStore } from '@/stores/modules/workspace'
+import { useStudioStore } from '@/stores/modules/studioStore'
 
 defineProps<{
   context?: object
 }>()
 
-const workspaceStore = useWorkspaceStore()
-const showPropertyPanel = computed(() => workspaceStore.showPropertyPanel)
+const studioStore = useStudioStore()
+const showPropertyPanel = computed(() => studioStore.showPropertyPanel)
 
 const closePanel = () => {
-  workspaceStore.togglePropertyPanel()
+  studioStore.togglePropertyPanel()
 }
 </script>
 

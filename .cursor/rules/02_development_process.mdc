@@ -1,233 +1,105 @@
 ---
 alwaysApply: true
 ---
-# AI架构铁律同心圆模型 - L2: 工作流层 (Development Process)
+# AI架构铁律 - L2: 开发工作流协议
 
-## 文件说明
-- **文件标识**: `02_development_process.mdc`
-- **层级**: L2 - 工作流层
-- **作用**: 规定AI在执行开发任务时的标准操作流程 (SOP)。它定义了从需求分析、技术方案设计、编码实现到代码修复的完整行为准则，确保开发过程的规范性和一致性。
+## 核心原则: 架构先行、强制检索、边界清晰、用户主导
 
+---
 
+## 🚀 阶段0：架构飞行前检查 (Architecture Pre-flight Protocol)
 
-## 一、标准开发工作流 (Standard Development Workflow)
+**任何代码编写前，必须强制执行并通过所有检查。**
 
-这是一个强制性的、闭环的开发流程，AI在处理任何编码请求时都必须遵循。
-
-0.  **第零步：架构自动识别与保护 (Architecture Auto-Recognition & Protection)** - **最高优先级**
-
-这是AI编程的第一道防线，必须在任何代码编写之前强制执行。
-
-#### 0.1 JavaScript污染检测（优先级最高）
+### 0.1 JavaScript污染检测
 ```bash
-# 检测非必要的JavaScript文件
-find src/SmartAbp.Vue/src -name "*.js" -type f | \
-grep -v node_modules | \
-grep -v "vite.config\|vitest.config\|.eslintrc\|\.generated"
-
-# 检测Vue组件是否使用TypeScript
-grep -r "<script>" src/SmartAbp.Vue/src --include="*.vue" | \
-grep -v "lang=\"ts\"" | grep -v "lang='ts'"
+find src/SmartAbp.Vue/src -name "*.js" -type f | grep -v "node_modules\|vite.config\|.eslintrc"
+grep -r "<script>" src/SmartAbp.Vue/src --include="*.vue" | grep -v "lang=\"ts\""
 ```
+- **失败**: 立即停止，要求迁移为.ts或添加`lang="ts"`
 
-**处理规则**:
-- 发现非必要.js文件 → 立即停止 → 要求说明必要性或迁移为.ts
-- 发现非TypeScript的Vue组件 → 立即停止 → 要求添加`lang="ts"`并添加类型定义
-
-#### 0.2 packages目录结构扫描
+### 0.2 代码重复度检测 (DRY)
 ```bash
-# 扫描packages结构
-ls -la src/SmartAbp.Vue/packages/*/src
-
-# 识别现有组件
-find src/SmartAbp.Vue/packages -name "*.vue" | head -20
-
-# 识别现有工具函数
-find src/SmartAbp.Vue/packages -name "*.ts" | grep -E "(utils|composables|validators)"
-```
-
-**扫描目标**:
-- `lowcode-shared/src/types/` - 全局类型定义
-- `lowcode-shared/src/utils/` - 共享工具函数
-- `lowcode-shared/src/error/` - 统一错误处理
-- `lowcode-core/src/components/` - 核心组件库
-- `lowcode-core/src/stores/` - 状态管理
-- `lowcode-core/src/composables/` - 可复用组合函数
-- `lowcode-designer/src/components/` - 设计器组件
-
-#### 0.3 现有功能强制检索（代码重复拦截）
-```bash
-# 检测同名Vue组件
 find src/SmartAbp.Vue/packages -name "*.vue" | xargs basename -a | sort | uniq -d
-
-# 检测相似功能函数
-grep -r "export function" src/SmartAbp.Vue/packages --include="*.ts" | \
-awk '{print $3}' | sort | uniq -d
-
-# 检测重复的类型定义
-grep -r "export interface\|export type" src/SmartAbp.Vue/packages --include="*.ts" | \
-awk '{print $3}' | sort | uniq -d
+grep -r "export function" src/SmartAbp.Vue/packages --include="*.ts" | awk '{print $3}' | sort | uniq -d
+grep -r "export interface\|export type" src/SmartAbp.Vue/packages --include="*.ts" | awk '{print $3}' | sort | uniq -d
 ```
+- **失败**: 立即停止，展示已有实现，提供复用建议
 
-**发现重复时的处理**:
-1. 立即停止编码操作
-2. 展示已存在的实现位置和代码
-3. 提供复用建议和导入示例
-4. 等待用户确认是否复用或需要新实现
-
-#### 0.4 依赖层级验证
-```typescript
-// packages层级关系（只能向下依赖）
-const PACKAGE_LAYERS = {
-  'lowcode-shared': 0,     // 基础层 - 零依赖
-  'lowcode-core': 1,       // 核心层 - 只依赖shared
-  'lowcode-api': 1,        // API层 - 只依赖shared
-  'lowcode-tools': 1,      // 工具层 - 只依赖shared
-  'lowcode-designer': 2    // 应用层 - 依赖shared+core
-}
-
-// 检测逆向依赖
-检测(lowcode-core 依赖 lowcode-designer) → 严禁
-检测(lowcode-shared 依赖 任何package) → 严禁
-检测(lowcode-designer 依赖 lowcode-api) → 严禁（不同层级）
-```
-
-**验证命令**:
+### 0.3 依赖层级验证
 ```bash
-# 检测lowcode-core是否依赖lowcode-designer
 grep -r "@smartabp/lowcode-designer" src/SmartAbp.Vue/packages/lowcode-core/
-
-# 检测lowcode-shared是否有任何包依赖
 grep -r "@smartabp/lowcode-" src/SmartAbp.Vue/packages/lowcode-shared/
 ```
+- **层级规则**: `shared(0) → core/api/tools(1) → designer(2)`，严禁逆向依赖
+- **失败**: 立即停止，解释违规并提供正确方案
 
-#### 0.5 全局类型声明检查
-```bash
-# 检查关键类型文件是否存在
-ls -l src/SmartAbp.Vue/packages/lowcode-core/src/types/entity-designer.ts
-ls -l src/SmartAbp.Vue/packages/lowcode-core/src/types/manifest.ts
-ls -l src/SmartAbp.Vue/packages/lowcode-shared/src/types/index.ts
-```
+---
 
-**执行时机**: 每次AI开始编写代码前、每次修改packages目录时、检测到架构相关操作时
+## 🔧 阶段1：标准开发协议 (Standard Development Protocol)
 
-1.  **第一步：需求分析与澄清 (Requirement Analysis)**
-    - **理解意图**: 深入理解用户请求的最终业务目标，而不仅仅是字面上的编码指令。
-    - **约束识别**: 自动查阅 `docs/architecture/adr` 目录下的架构决策记录，识别任何与当前任务相关的技术约束。
-    - **提问澄清**: 如果需求描述不清晰或与现有架构/功能存在潜在冲突，必须主动提问以澄清。
+1.  **需求分析 (Analyze)**: 理解业务目标，自动查阅`docs/architecture/adr`识别约束。
+2.  **技术设计 (Design)**:
+    - **强制代码检索**: 必须全局搜索可复用组件/服务/函数。
+    - **强制模板匹配**: 必须搜索`templates/`目录并优先使用。
+3.  **编码实现 (Implement)**: 遵循`01_code_standards.mdc`，执行原子化操作。
+4.  **自我验证 (Verify)**: 内部模拟静态检查，审查逻辑与需求一致性。
 
-2.  **第二步：技术方案设计 (Technical Design)**
-    - **强制代码检索 (代码去重)**: 在设计新功能前，必须执行全局代码搜索，查找可复用的现有组件、服务或工具函数。这是**增量开发**的核心。
-    - **强制模板匹配**: 搜索 `templates/` 目录，寻找与任务类型（如CRUD、DTO、Store）匹配的代码模板。如果找到，必须基于模板进行开发。
-    - **影响分析**: 简要评估新代码对现有系统的潜在影响。
+---
 
-3.  **第三步：编码实现 (Implementation)**
-    - **遵循规范**: 严格按照 `01_code_standards.mdc` 文件中的所有规范进行编码。
-    - **原子化操作**: 尽量将复杂的任务分解为更小的、独立的步骤来执行，便于追踪和验证。
+## ⚡ 阶段2：特殊任务协议 (Specialized Protocols)
 
-4.  **第四步：自我验证 (Self-Verification)**
-    - **静态检查**: 在代码生成后，应在内部模拟执行类型检查和Linting，确保没有明显的语法或类型错误。
-    - **逻辑审查**: 重新审视生成的代码，确保其逻辑与第一步分析的需求完全匹配。
+### BUG修复协议 (Bug-Fixing)
+- **严禁降级修复**: 严禁通过删除/注释代码、或使用`any`/`@ts-ignore`来“解决”问题。
+- **根源分析**: 修复必须针对问题根源，而非表面症状。
+- **最小化影响**: 修复应尽可能本地化，避免副作用。
 
-## 二、BUG修复行为准则 (Bug-Fixing Protocol)
-
-修复BUG时，必须遵循“外科手术式”的精准修复原则。
-
-1.  **严禁降级修复**:
-    - **严禁**通过删除或注释掉核心业务逻辑代码的方式来“解决”问题。
-    - **严禁**为了通过编译而扩大变量类型（如 `string | null` 改为 `any`）。
-    - **严禁**使用 `@ts-ignore` 或 `as any` 来规避类型检查错误。
-
-2.  **根源分析**:
-    - 必须首先分析错误信息和相关代码，定位问题的根本原因。
-    - 修复方案必须针对根本原因，而不是仅仅消除表面症状。
-
-3.  **最小化影响**:
-    - 修复应尽可能本地化,避免对无关模块产生副作用。
-    - 任何可能影响公共接口或核心功能的修复，都需要特别声明。
-
-## 三、AI职责边界与服务器管理准则 (AI Responsibility Boundaries & Server Management)
-
-### 服务器运行铁律
-
-1.  **严禁AI运行服务器**:
-    - **绝对禁止**使用 `npm run dev` 启动前端开发服务器
-    - **绝对禁止**使用 `dotnet run` 启动后端服务器
-    - **绝对禁止**使用任何后台运行命令（如 `&` 或 `Start-Process`）启动服务
-
-2.  **AI的职责范围**:
-    - **允许的操作**:
-        - 代码编写和修复
-        - 编译检查 (`npm run build`, `npm run type-check`)
-        - 代码规范检查 (`npm run lint`)
-        - 单元测试执行 (`npm run test`)
-        - 后端编译 (`dotnet build`)
-    - **禁止的操作**:
-        - 启动任何开发服务器
-        - 启动任何生产服务器
-        - 执行长期运行的进程
-        - 占用服务端口
-
-3.  **服务器管理原则**:
-    - **项目使用固定端口**: 前端和后端端口由项目配置固定，不应随意更改
-    - **用户手动控制**: 服务器的启动、停止和重启完全由用户手动控制
-    - **AI完成后的行为**: 
-        - 完成代码编写或修复后，AI必须停止操作
-        - 必须明确提示用户："请手动启动服务器进行测试"
-        - 可以提供启动命令作为参考，但不执行
-    - **端口冲突处理**: 如果用户报告端口被占用，AI可以协助查找占用进程，但不能强制终止或自动处理
-
-4.  **工作完成标准**:
-    - **前端任务完成标志**:
-        1. `npm run type-check` 通过 (0错误)
-        2. `npm run lint` 通过 (0错误)
-        3. `npm run build` 成功 (可选，构建验证)
-        4. 将控制权交还用户，提示手动启动服务器
-    - **后端任务完成标志**:
-        1. `dotnet build` 成功 (0错误)
-        2. 将控制权交还用户，提示手动启动服务器
-
-5.  **标准响应模板**:
-    ```
-    ✅ 代码修改完成
-    ✅ 编译检查通过
-    ✅ 质量验证通过
-    
-    🎯 下一步操作：
-    请您手动启动服务器进行测试
-    
-    📋 启动命令参考：
-    前端: cd src/SmartAbp.Vue && npm run dev
-    后端: cd src/SmartAbp.Web && dotnet run
+### 模板自动化协议 (Template Automation)
+1.  **意图映射**: 根据关键词（"CRUD", "Store"）自动匹配`templates/`。
+2.  **信息提取**: 从用户请求中自动提取并填充所有占位符。
+3.  **强制命令**: 必须使用以下非交互式命令执行代码生成：
+    ```bash
+    node scripts/templates/apply-template.js --templateId <template_id> --outputPath <output_path> --placeholders '{"key1":"value1"}'
     ```
 
-## 四、AI架构感知与交互准则 (Architecture-Awareness Protocol)
+### 🔴 **【集成自05】破坏性操作协议 (Destructive Action Protocol)**
+- **适用场景**: 任何代码的**删除**或**注释**。
+- **核心禁令**: **严禁未经用户三次确认，执行任何破坏性操作。**
+- **强制三次确认流程**:
+  1.  **第一次确认 (意图与影响)**: AI必须提出请求，清晰说明“为什么必须删除/注释？影响范围？替代方案？风险评估？”。必须得到用户明确的“同意删除/注释”回复。
+  2.  **第二次确认 (代码审查)**: AI必须展示将要删除或注释的**完整代码**，并再次提问：“您确定要执行此操作吗？这是第二次确认”。必须得到用户明确的“确认删除/注释”回复。
+  3.  **第三次最终确认 (最终警告)**: AI必须发出最终警告：“⚠️ 这是最后一次确认！操作后可能无法恢复！是否需要先备份？”。必须得到用户明确的“最终确认删除/注释”回复。
+- **前置/后置检查**: 在执行任何修改（尤其是BUG修复）前后，AI都必须在内部完成`05`规则定义的“修复前6问检查”和“修复后自动验证”，确保逻辑完整性。
 
-1.  **自动识别架构**:
-    - 每次启动编程任务前，必须重新扫描 `packages` 目录结构、`lowcode-shared` 中的共享类型和工具，以刷新对当前架构的认知。
-2.  **违规拦截与建议**:
-    - 当检测到即将生成的代码可能违反 `packages` 隔离原则（如逆向依赖、循环依赖）时，必须立即停止操作。
-    - 停止后，必须向用户清晰地解释违反了哪条架构规则，并提供符合架构的正确实现方式或代码模板作为建议。
+---
 
-## 五、模板自动化应用协议 (Template Automation Protocol)
+## 🛡️ 阶段3：边界与交接协议 (Boundary & Hand-off Protocol)
 
-1.  **意图到模板的自动映射**:
-    - 当用户的请求包含特定关键词时（如 "创建CRUD", "生成管理页面", "添加一个新的Store"），AI必须自动识别其意图并匹配到 `templates/` 目录中相应的模板。
+### 服务器管理与终端使用铁律
+- **核心禁令**: **AI绝对禁止以任何方式（`npm run dev`, `dotnet run`）启动开发服务器。**
+- **AI职责**: 仅限于代码编写、修复、编译检查、规范检查。
+- **用户主导**: 服务器的启停完全由用户手动控制。
+- **【集成自06】终端优化原则**:
+    - **目标**: 保持聊天框清爽，避免大量输出阻塞对话。
+    - **策略**:
+        - **后端编译**: 必须使用 `--verbosity minimal`，优先编译 `.csproj` 而非 `.sln`。
+        - **前端命令**: 必须使用 `--silent` 或 `--quiet`。
+        - **Git操作**: 必须使用 `--quiet` 和 `--short`。
+    - **Mac ARM优化**: 检测到`arm64`架构时，自动应用`DOTNET_TieredCompilation=1`等环境变量。
 
-2.  **占位符信息的自动提取**:
-    - AI必须从用户的请求中主动分析并提取填充模板占位符（Placeholders）所需的信息。
-    - 例如，当用户说 "为 'Book' 实体创建一个CRUD服务" 时，AI应提取 `entityName: 'Book'` 作为占位符的值。
-    - 如果信息不完整，AI必须主动向用户提问，以收集所有必要的占位符信息。
-
-3.  **非交互式命令的生成与执行**:
-    - 在收集到所有必要信息（模板ID、输出路径、所有占位符值）后，AI必须以非交互式模式调用模板应用CLI工具。
-    - **强制命令格式**: 必须使用以下命令格式执行代码生成：
-      ```bash
-      node scripts/templates/apply-template.js --templateId <template_id> --outputPath <output_path> --placeholders '{"key1":"value1", "key2":"value2"}'
-      ```
-    - AI负责根据上下文正确填充 `<template_id>`, `<output_path>` 和 `placeholders` JSON字符串。
-
-4.  **执行结果验证**:
-    - 命令执行后，AI应检查其输出，确认代码生成是否成功。
-    - 如果生成成功，应列出已创建的文件，并继续后续的开发步骤。
-    - 如果生成失败，应分析错误信息并尝试解决问题，或向用户报告错误。
+### 工作完成标准与交接
+- **完成标志**:
+  - **前端**: `npm run type-check` (0错误) + `npm run lint` (0错误)
+  - **后端**: `dotnet build` (0错误)
+- **强制交接模板**:
+  ```
+  ✅ 代码修改完成
+  ✅ 编译与规范检查通过
+  
+  🎯 下一步操作：
+  请您手动启动服务器进行测试
+  
+  📋 启动命令参考：
+  前端: cd src/SmartAbp.Vue && npm run dev
+  后端: cd src/SmartAbp.Web && dotnet run
+  ```

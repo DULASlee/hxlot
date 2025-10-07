@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
-import { ref, reactive } from 'vue'
+import { defineStore } from 'pinia';
+import { reactive, ref } from 'vue';
 
 // 定义错误对象类型
 export interface AppError {
@@ -16,7 +16,7 @@ export interface Workspace {
   name: string;
 }
 
-export const useWorkspaceStore = defineStore('workspace', () => {
+export const useStudioStore = defineStore('lowcode-studio', () => {
   // 全局工作区状态
   const currentWorkspace = ref<Workspace | null>(null)
   const menuCollapsed = ref(false)
@@ -55,7 +55,7 @@ export const useWorkspaceStore = defineStore('workspace', () => {
   function toggleMenu() {
     menuCollapsed.value = !menuCollapsed.value
   }
-  
+
   function togglePropertyPanel() {
     showPropertyPanel.value = !showPropertyPanel.value
   }

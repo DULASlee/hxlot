@@ -1,392 +1,81 @@
+# AI架构铁律 - L3: 质量守护协议
+
+## 核心原则: 零失败、零跳过、自动化、强制化
+
 ---
-alwaysApply: true
----
-# AI架构铁律同心圆模型 - L3: 质量守护层 (Quality Guardian)
 
-## 文件说明
-- **文件标识**: `03_quality_guardian.mdc`
-- **层级**: L3 - 质量守护层
-- **作用**: 作为AI开发流程的最终防线，定义了在代码交付前必须执行的自动化质量检查和版本控制操作。它确保所有产出都经过严格验证，符合项目集成的最高标准。
+## 🚀 七关强制质量门禁 (Pre-Delivery Quality Gates)
 
+**任何代码交付前，必须自动、依次、强制执行。任何一关失败，严禁进入下一关或Git提交。**
 
+### 🏗️ **第一关：架构符合性 (0违规)**
+```bash
+grep -r "'../'" src/SmartAbp.Vue/packages/
+grep -r "@/" src/SmartAbp.Vue/packages/
+grep -r "as any\|@ts-ignore" src/
+```
 
-## 一、交付前强制质量门禁 (Pre-Delivery Quality Gates)
-
-在任何开发任务节点被标记为“完成”或准备提交代码之前，AI必须**自动**并**依次**执行以下四重检查。**任何一关失败，都严禁进入下一关或执行Git提交**。
-
-### 🏗️ **第一关：架构符合性检查 (0违规)**
-- **目的**: 确保代码没有破坏核心架构原则和类型安全。
-- **强制命令**:
-    - **相对路径违规检查**: `grep -r "'../'" src/SmartAbp.Vue/packages/`
-    - **主应用引用违规检查**: `grep -r "@/" src/SmartAbp.Vue/packages/`
-    - **类型安全绕过检查**: `grep -r "as any\|@ts-ignore" src/`
-- **失败处理**:
-  - 如果发现任何违规，必须立即中止交付流程
-  - 参考L4代码质量禁止层的具体修复指导
-  - 返回L2工作流层进行代码修复，严禁使用任何绕过手段
-
-### 🔄 **第二关：代码重复度检查 (0重复)**
-- **目的**: 确保遵循了 L0 层的 DRY 原则。
-- **强制命令**:
-    - **重复Vue组件检查**: `find src/ -name "*.vue" | sed 's/.*\/\///' | sort | uniq -d`
-    - **重复方法/函数检查**: `grep -r "function\s+\w+\|const\s+\w+\s*=" src/ --include="*.ts" --include="*.vue" | sed -e 's/.*function\s\+\(\w\+\).*/\1/' -e 's/.*const\s\+\(\w\+\).*/\1/' | sort | uniq -d`
-- **失败处理**: 如果发现重复，必须中止交付，并基于 L2 工作流层的“代码去重”原则进行重构。
+### 🔄 **第二关：代码重复度 (0重复)**
+```bash
+find src/ -name "*.vue" | sed 's/.*\/\///' | sort | uniq -d
+grep -r "function\s+\w+\|const\s+\w+\s*=" src/ --include="*.ts,*.vue" | sed -e 's/.*function\s\+\(\w\+\).*/\1/' -e 's/.*const\s\+\(\w\+\).*/\1/' | sort | uniq -d
+```
 
 ### ⚡ **第三关：编译与静态检查 (0错误)**
-- **目的**: 确保代码在技术上是正确和可运行的。
-- **强制命令**:
-    - **前端检查**:
-        1. `npm run type-check` (TypeScript 类型检查)
-        2. `npm run lint` (ESLint 风格和错误检查)
-    - **后端检查** (如果修改了后端代码):
-        1. `dotnet build` (编译检查)
-- **失败处理**: 如果出现任何错误，必须中止交付，并返回 L2 工作流层的“BUG修复”流程进行修复。
-
-### 🎯 **第四关：低代码生成器专项检查 (100%质量) - 四子关卡详细版**
-
-低代码生成器是SmartAbp项目的核心竞争力，必须达到企业级100分标准。
-
-#### 子关卡4.1：packages TypeScript编译检查 (0错误)
 ```bash
-cd src/SmartAbp.Vue && npx tsc --build tsconfig.references.json --force
+# 前端
+npm run type-check --silent
+npm run lint --silent
+
+# 后端 (如修改)
+# 【集成自06】必须使用优化参数进行增量编译
+dotnet build <project_name>.csproj --no-dependencies --verbosity minimal
 ```
 
-**检查要点**:
-- 所有packages必须0错误编译通过
-- 类型引用必须通过正确的项目引用(Project References)
-- 不允许any类型泄漏到公共API
-- 所有导出的函数和类必须有完整的类型签名
-
-**失败处理**:
-- 记录所有TypeScript编译错误
-- 按优先级排序（类型安全问题 > 未使用变量）
-- 优先修复类型安全问题
-- 严禁使用`@ts-ignore`或`as any`绕过
-
-#### 子关卡4.2：packages ESLint质量检查 (0错误)
+### 🎯 **第四关：低代码生成器专项 (100%质量)**
 ```bash
-cd src/SmartAbp.Vue && npm run lint -- "packages/*/src/**/*.{ts,vue}" --fix
+# packages TypeScript项目引用构建
+cd src/SmartAbp.Vue && npx tsc --build tsconfig.references.json
+
+# packages ESLint专项检查
+cd src/SmartAbp.Vue && npm run lint -- "packages/*/src/**/*.{ts,vue}"
 ```
 
-**检查要点**:
-- 所有ESLint规则必须通过
-- 不允许使用`eslint-disable`注释绕过（除非有充分理由和注释说明）
-- 自动修复可修复的问题（格式、imports排序等）
-- 清理所有未使用的imports和变量
-
-**重点检查规则**:
-- `no-explicit-any`: 严禁any类型
-- `no-unused-vars`: 清理未使用变量
-- `prefer-const`: 优先使用const
-- `@typescript-eslint/no-floating-promises`: 所有Promise必须处理
-
-#### 子关卡4.3：packages依赖关系检查 (0违规)
+###  debt **第五关：技术债务监控 (≥85分)**
 ```bash
-# 1. 检测相对路径跨包引用
-grep -r "import.*from '\.\./\.\./'" src/SmartAbp.Vue/packages/ | \
-grep -v node_modules
+# 统计大文件数量 (>200行)
+find src/ -name "*.ts" -o -name "*.vue" | xargs wc -l | awk '$1 > 200 {count++} END {print count+0}'
 
-# 2. 检测主应用引用
-grep -r "import.*from '@/'" src/SmartAbp.Vue/packages/ | \
-grep -v node_modules
+# 统计TODO/FIXME标记
+grep -r "TODO\|FIXME" src/ --exclude-dir=node_modules | wc -l
 
-# 3. 检测逆向依赖（核心检查）
-echo "检测 lowcode-core 是否依赖 lowcode-designer..."
-grep -r "@smartabp/lowcode-designer" src/SmartAbp.Vue/packages/lowcode-core/
-
-echo "检测 lowcode-shared 是否有任何包依赖..."
-grep -r "@smartabp/lowcode-" src/SmartAbp.Vue/packages/lowcode-shared/
-
-# 4. 检测循环依赖
-echo "检测 lowcode-api 和 lowcode-core 的循环依赖..."
-grep -r "@smartabp/lowcode-api" src/SmartAbp.Vue/packages/lowcode-core/
-grep -r "@smartabp/lowcode-core" src/SmartAbp.Vue/packages/lowcode-api/
+# 统计类型安全问题
+grep -r "as any\|@ts-ignore" src/ | wc -l
 ```
 
-**依赖层级规则**（强制执行）:
+### 🏆 **第六关：卓越工程评分 (≥90分)**
+```yaml
+# 此关为AI基于以下维度的综合评估:
+评估维度:
+  - 代码质量: 可读性、可维护性
+  - 架构设计: 是否遵循最佳实践
+  - 性能考量: 是否存在明显性能问题
+  - 测试覆盖: (建议)
+  - 文档完整性: (建议)
+最终评分: "≥90分"
 ```
-层级0: lowcode-shared (零依赖)
-层级1: lowcode-core, lowcode-api, lowcode-tools (只依赖shared)
-层级2: lowcode-designer (依赖shared+core)
 
-✅ 允许：层级2 → 层级1 → 层级0
-❌ 禁止：层级0 → 任何
-❌ 禁止：层级1 → 层级2
-❌ 禁止：同层级相互依赖
-```
-
-#### 子关卡4.4：packages构建产物检查 (100%成功)
+###  Git **第七关：Git版本同步 (100%成功)**
 ```bash
-cd src/SmartAbp.Vue && npm run build:packages
+# 强制使用企业级Git安全同步脚本
+# Windows
+pwsh -File scripts/git/git-safe-sync.ps1 -AutoCommit
+
+# Linux/Mac
+bash scripts/git/git-safe-sync.sh --auto-commit
+
+# 核心验证：本地哈希 == 远程哈希
+LOCAL_HASH=$(git rev-parse HEAD)
+REMOTE_HASH=$(git rev-parse origin/main)
+if [ "$LOCAL_HASH" != "$REMOTE_HASH" ]; then exit 1; fi
 ```
-
-**检查要点**:
-- 所有packages必须成功构建
-- 检查每个package的`dist/`目录结构完整性
-- 验证类型声明文件(.d.ts)正确生成
-- 验证source map文件(.map)正确生成
-
-**构建产物验证**:
-```bash
-# 验证每个package的dist目录
-for pkg in lowcode-shared lowcode-core lowcode-api lowcode-tools lowcode-designer; do
-  echo "验证 $pkg 构建产物..."
-  ls -la src/SmartAbp.Vue/packages/$pkg/dist/
-  # 检查关键文件存在
-  test -f "src/SmartAbp.Vue/packages/$pkg/dist/index.js" && echo "✅ index.js"
-  test -f "src/SmartAbp.Vue/packages/$pkg/dist/index.d.ts" && echo "✅ index.d.ts"
-done
-```
-
-**失败处理**:
-- 记录构建失败的package和错误信息
-- 分析是否是依赖问题、类型问题还是配置问题
-- 优先修复阻塞性问题
-- 确保修复后所有packages能独立编译和发布
-
-### 🏆 **第五关：卓越工程检查 (≥90分)**
-- **目的**: 确保代码不仅正确，而且卓越，达到或超越业界顶尖水平。
-- **执行前提**: 必须**完全通过**前四关的所有检查。
-- **强制检查项**:
-    - **功能完整性评估** (25分): 
-      - 是否有完整的用户体验（加载/错误/空状态/成功）？
-      - 是否考虑了所有边界情况？
-      - 是否有完整的数据验证？
-    - **算法优化评估** (25分):
-      - 时间复杂度是否最优？
-      - 空间复杂度是否合理？
-      - 数据结构选择是否正确？
-      - 是否使用了合适的设计模式？
-      - 是否进行了第一性思维分析？
-    - **BUG预防评估** (20分):
-      - 是否有完整的输入验证？
-      - 是否处理了所有边界条件？
-      - 是否有完整的错误处理？
-      - 是否通过了严格的静态分析？
-    - **性能优化评估** (15分):
-      - 是否满足性能标准（FCP<1.8s, API<200ms）？
-      - 是否有性能监控？
-      - 是否有缓存策略？
-    - **可维护性评估** (15分):
-      - 代码是否易读？
-      - 是否符合SOLID原则？
-      - 是否有单元测试？
-- **评分标准**: 
-    - 95-100分: 卓越 (Excellence) - 超越业界顶尖水平 ⭐⭐⭐⭐⭐
-    - 90-94分: 优秀+ (Excellent) - 达到业界顶尖水平 ⭐⭐⭐⭐
-    - 85-89分: 优秀 (Very Good) - 接近业界顶尖水平 ⭐⭐⭐⭐
-    - <85分: 不合格 - 必须重构优化 ❌
-- **失败处理**: 
-    - 评分<90时，AI必须重构代码直到达到优秀+标准
-    - 参考L5卓越工程层（08_卓越工程铁律.mdc）的详细指导
-    - 必须体现第一性思维和降维打击能力
-    - 禁止做夸夸其谈的文档写手，必须关注实现质量
-
-### 🔄 **第六关：Git版本同步管理 (六步强制执行)**
-
-**核心原则**: 先拉取，后推送！(Pull First, Push Later)
-
-**触发条件**: 前五关质量门禁全部通过后自动触发
-
-#### 第1步：代码变更检测
-```bash
-CHANGED_FILES=$(git status --porcelain | wc -l)
-if [ $CHANGED_FILES -eq 0 ]; then
-  echo "✅ 无代码变更，跳过Git同步"
-  exit 0
-fi
-
-echo "📊 检测到 $CHANGED_FILES 个文件变更"
-git status --short
-```
-
-#### 第2步：暂存所有修改
-```bash
-# 暂存所有修改
-git add .
-
-# 确认暂存成功
-STAGED_FILES=$(git diff --cached --name-only | wc -l)
-echo "✅ 已暂存 $STAGED_FILES 个文件"
-```
-
-#### 第3步：生成标准化提交信息
-```bash
-COMMIT_TYPE="feat"  # 或 fix, refactor, perf, style, docs
-STAGE_NAME="低代码生成器菜单重构"  # 阶段名称
-CORE_ACHIEVEMENT="完成入口选择页和路由优化"  # 核心成果
-
-COMMIT_MSG=$(cat << EOF
-$COMMIT_TYPE: 完成$STAGE_NAME - $CORE_ACHIEVEMENT
-
-🔧 核心修复/实现:
-- 🎯 [具体修复项1]
-- 🔧 [具体修复项2]
-
-📊 质量验证结果:
-✅ 架构完整性: 0违规
-✅ 代码重复度: 0重复
-✅ 编译静态检查: 0错误
-✅ 低代码生成器: 100%质量
-✅ 卓越工程评分: XX/100
-
-📦 修改统计:
-- 修改文件: $STAGED_FILES个
-- 新增代码: XXX行
-- 删除代码: XXX行
-EOF
-)
-```
-
-#### 第4步：执行本地提交
-```bash
-git commit -m "$COMMIT_MSG"
-
-# 记录提交哈希
-LOCAL_COMMIT_HASH=$(git rev-parse HEAD)
-echo "✅ 本地提交成功: $LOCAL_COMMIT_HASH"
-```
-
-#### 第5步：拉取远程并合并（关键步骤）⚡
-```bash
-echo "🔄 正在拉取远程最新版本..."
-git pull --rebase origin main
-
-# 检测冲突
-CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null | wc -l)
-
-if [ $CONFLICTS -gt 0 ]; then
-  echo "⚠️ 检测到 $CONFLICTS 个冲突文件:"
-  git diff --name-only --diff-filter=U
-  
-  # 冲突处理协议
-  echo "📋 冲突处理建议:"
-  echo "  • 自动生成文件(如components.d.ts): 使用本地版本 → git checkout --ours"
-  echo "  • 代码文件: 必须手动解决冲突"
-  echo "  • 配置文件: 仔细合并，保留双方修改"
-  
-  # 停止自动处理，等待手动解决
-  echo "🚨 请手动解决冲突后执行: git rebase --continue"
-  exit 1
-fi
-
-echo "✅ 远程代码拉取成功，无冲突"
-```
-
-#### 第6步：推送到远程
-```bash
-echo "🚀 正在推送到远程仓库..."
-git push origin main
-
-# 验证推送成功
-if [ $? -eq 0 ]; then
-  # 同步完整性验证
-  LOCAL_HASH=$(git rev-parse HEAD)
-  REMOTE_HASH=$(git rev-parse origin/main)
-  
-  if [ "$LOCAL_HASH" = "$REMOTE_HASH" ]; then
-    echo "✅ Git同步完成！本地与远程完全一致"
-    echo "📊 最终提交哈希: $LOCAL_HASH"
-  else
-    echo "⚠️ 同步异常：本地和远程哈希不一致"
-    echo "   本地: $LOCAL_HASH"
-    echo "   远程: $REMOTE_HASH"
-  fi
-else
-  echo "❌ 推送失败！"
-  echo "🔍 可能原因:"
-  echo "   • 网络问题"
-  echo "   • 远程有新的提交（需要重新pull）"
-  echo "   • 权限问题"
-  echo "请手动执行: git pull --rebase origin main && git push origin main"
-  exit 1
-fi
-```
-
-**异常处理协议**:
-- **推送被拒绝**: 重新执行第5步（pull --rebase）
-- **网络错误**: 使用指数退避重试（1s, 2s, 4s, 8s, 16s）
-- **冲突无法自动解决**: 停止操作，生成冲突报告，提示手动处理
-
-### 📊 **第七关：技术债务监控检查 (≥85分)**
-
-**目的**: 持续监控代码质量，防止技术债务积累
-
-**执行时机**: 每次Git同步前自动执行
-
-#### 监控指标
-
-**1. 代码复杂度监控**
-```bash
-# 统计超过200行的大文件
-LARGE_FILES=$(find src/ -name "*.ts" -o -name "*.vue" | \
-  xargs wc -l | awk '$1 > 200 {count++} END {print count+0}')
-
-echo "📊 大文件数量: $LARGE_FILES 个"
-SCORE_COMPLEXITY=$((100 - LARGE_FILES * 2))  # 每个大文件扣2分
-```
-
-**2. 技术债务标记统计**
-```bash
-# 统计TODO/FIXME/XXX标记
-TODO_COUNT=$(grep -r "TODO\|FIXME\|XXX" src/ --exclude-dir=node_modules | wc -l)
-
-echo "📋 技术债务标记: $TODO_COUNT 个"
-SCORE_TODO=$((100 - TODO_COUNT / 4))  # 每4个扣1分
-```
-
-**3. 代码重复度检查**
-```bash
-# 统计重复的组件名
-DUPLICATE_COMPONENTS=$(find src/ -name "*.vue" | xargs basename -a | \
-  sort | uniq -d | wc -l)
-
-echo "🔄 重复组件: $DUPLICATE_COMPONENTS 个"
-SCORE_DUP=$((100 - DUPLICATE_COMPONENTS * 10))  # 每个重复扣10分
-```
-
-**4. 类型安全评分**
-```bash
-# 统计as any和@ts-ignore使用
-AS_ANY_COUNT=$(grep -r "as any" src/ | wc -l)
-TS_IGNORE_COUNT=$(grep -r "@ts-ignore" src/ | wc -l)
-
-echo "⚠️ as any使用: $AS_ANY_COUNT 次"
-echo "⚠️ @ts-ignore使用: $TS_IGNORE_COUNT 次"
-
-SCORE_TYPE=$((100 - AS_ANY_COUNT * 2 - TS_IGNORE_COUNT * 3))
-```
-
-**5. 综合质量评分**
-```typescript
-QUALITY_SCORE = (
-  SCORE_COMPLEXITY * 0.25 +  // 复杂度 25%
-  SCORE_TODO * 0.20 +         // 技术债务 20%
-  SCORE_DUP * 0.25 +          // 重复度 25%
-  SCORE_TYPE * 0.30           // 类型安全 30%
-)
-```
-
-**评分标准**:
-- **95-100分**: 优秀 ⭐⭐⭐⭐⭐ - 代码质量卓越
-- **85-94分**: 良好 ⭐⭐⭐⭐ - 代码质量健康
-- **70-84分**: 合格 ⭐⭐⭐ - 需要改进
-- **<70分**: 警告 ⚠️ - 必须立即优化
-
-**处理规则**:
-- 评分≥85: 通过检查，继续Git同步
-- 评分<85: 发出警告，但不阻止Git同步
-- 评分<70: 强烈建议修复后再同步
-
-**持续改进**:
-- 每次检查记录评分历史
-- 生成质量趋势图
-- 识别质量回归
-- 提供优化建议
-
-## 二、Git质量门禁永久保护协议
-- **目的**: 确保上述质量门禁的完整性和权威性，防止被绕过。
-- **行为准则**:
-    - **严禁绕过**: AI在任何情况下都不得使用 `--no-verify` 标志来绕过Git钩子或CI/CD检查。
-    - **严禁修改**: AI不得修改 `.git/hooks/` 下的任何脚本，或修改 `scripts/ci-quality-check.sh` 等质量检查脚本。
-    - **异常报告**: 如果检测到质量门禁被禁用或修改，AI必须立即停止所有Git操作，并向用户报告此安全风险。

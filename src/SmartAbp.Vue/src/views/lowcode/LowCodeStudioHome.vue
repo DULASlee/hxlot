@@ -276,7 +276,7 @@ const quickNavItems = ref([
     isMostUsed: false
   },
   {
-    path: '/lowcode/page-design',
+    path: '/lowcode/design',
     title: '页面设计',
     description: '可视化设计，生成Vue组件代码',
     icon: Brush,

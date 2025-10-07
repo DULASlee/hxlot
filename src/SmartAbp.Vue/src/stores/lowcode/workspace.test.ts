@@ -3,7 +3,7 @@
  */
 import { beforeEach, describe, expect, it, vi, afterEach } from "vitest"
 import { setActivePinia, createPinia } from "pinia"
-import { useWorkspaceStore } from "./workspace"
+import { useStudioStore } from "./workspace"
 
 // Mockup of project.json structure
 const MOCK_PROJECT = {
@@ -33,7 +33,7 @@ describe("Low-code Workspace Store", () => {
   })
 
   it("createProject should initialize a new project and set it as current", () => {
-    const store = useWorkspaceStore()
+    const store = useStudioStore()
     expect(store.currentProject).toBeNull()
 
     store.createProject({
@@ -50,7 +50,7 @@ describe("Low-code Workspace Store", () => {
   })
 
   it("saveProject should call localStorage.setItem with the serialized project", () => {
-    const store = useWorkspaceStore()
+    const store = useStudioStore()
     const setItemSpy = vi.spyOn(Storage.prototype, "setItem")
 
     store.createProject({ name: "Project to Save" })
@@ -82,7 +82,7 @@ describe("Low-code Workspace Store", () => {
     )
 
     // 2. Action: Load the project in a new store instance
-    const store = useWorkspaceStore()
+    const store = useStudioStore()
     store.loadProject(projectId)
 
     // 3. Assertion: Verify the project is loaded correctly
@@ -92,7 +92,7 @@ describe("Low-code Workspace Store", () => {
   })
 
   it("closeProject should clear the current project", () => {
-    const store = useWorkspaceStore()
+    const store = useStudioStore()
     store.createProject({ name: "Project to Close" })
     expect(store.currentProject).not.toBeNull()
 

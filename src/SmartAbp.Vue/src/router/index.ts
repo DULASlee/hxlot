@@ -398,6 +398,30 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  // 业务规则引擎路由
+  {
+    path: "/business-rules",
+    component: SmartAbpLayout,
+    meta: {
+      title: "业务规则引擎",
+      icon: "⚙️",
+      requiresAuth: true,
+      requiredRoles: ["user", "admin"],
+    },
+    children: [
+      {
+        path: "",
+        name: "BusinessRulesEngine",
+        component: () => import("@/views/business-rules/BusinessRulesEngine.vue"),
+        meta: { 
+          title: "业务规则引擎", 
+          menuKey: "business-rules-engine",
+          keepAlive: true,
+          description: "动态业务规则配置与执行引擎"
+        },
+      },
+    ],
+  },
   // 运维监控模块路由
   ...opsMonitoringRoutes,
   // 🚀 自动加载router/modules目录下的所有路由模块

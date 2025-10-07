@@ -25,6 +25,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using SmartAbp.Permissions; // 🔥 权限集成：引用权限常量定义
 using SmartAbp.CodeGenerator.Aspire; // 🔥 Aspire集成：引用Aspire生成器
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
+using SmartAbp.Application.Contracts.CodeGenerator;
 
 namespace SmartAbp.CodeGenerator.Services
 {
@@ -2480,6 +2483,142 @@ public class {entityName}AppService_Tests : SmartAbpApplicationTestBase<SmartAbp
                 }
             }
             return null;
+        }
+
+        public Task<CqrsValidationResultDto> ValidateCqrsDefinitionAsync(CqrsDefinitionDto input)
+        {
+            var result = new CqrsValidationResultDto();
+            var errors = new List<ValidationErrorDto>();
+
+            if (string.IsNullOrWhiteSpace(input.ModuleName))
+            {
+                errors.Add(new ValidationErrorDto { Field = "moduleName", Message = "Module Name is required." });
+            }
+            else if (!IsValidIdentifier(input.ModuleName))
+            {
+                errors.Add(new ValidationErrorDto { Field = "moduleName", Message = "Module Name is not a valid C# identifier." });
+            }
+
+            if (string.IsNullOrWhiteSpace(input.Namespace))
+            {
+                errors.Add(new ValidationErrorDto { Field = "namespace", Message = "Namespace is required." });
+            }
+            else if (!IsValidNamespace(input.Namespace))
+            {
+                errors.Add(new ValidationErrorDto { Field = "namespace", Message = "Namespace is not a valid C# namespace." });
+            }
+
+            if (input.Commands.Count == 0 && input.Queries.Count == 0)
+            {
+                errors.Add(new ValidationErrorDto { Field = "general", Message = "At least one Command or Query must be defined.", Severity = "Warning" });
+            }
+
+            for (var i = 0; i < input.Commands.Count; i++)
+            {
+                var command = input.Commands[i];
+                if (string.IsNullOrWhiteSpace(command.Name))
+                {
+                    errors.Add(new ValidationErrorDto { Field = $"commands[{i}].name", Message = "Command Name is required." });
+                }
+                else if (!IsValidIdentifier(command.Name))
+                {
+                    errors.Add(new ValidationErrorDto { Field = $"commands[{i}].name", Message = $"Command Name '{command.Name}' is not a valid C# identifier." });
+                }
+
+                foreach (var prop in command.Properties)
+                {
+                    if (string.IsNullOrWhiteSpace(prop.Name))
+                    {
+                        errors.Add(new ValidationErrorDto { Field = $"commands[{i}].properties.name", Message = "Property Name is required." });
+                    }
+                    else if (!IsValidIdentifier(prop.Name))
+                    {
+                        errors.Add(new ValidationErrorDto { Field = $"commands[{i}].properties.name", Message = $"Property Name '{prop.Name}' is not a valid C# identifier." });
+                    }
+                    if (string.IsNullOrWhiteSpace(prop.Type))
+                    {
+                        errors.Add(new ValidationErrorDto { Field = $"commands[{i}].properties.type", Message = "Property Type is required." });
+                    }
+                }
+            }
+            
+            for (var i = 0; i < input.Queries.Count; i++)
+            {
+                var query = input.Queries[i];
+                if (string.IsNullOrWhiteSpace(query.Name))
+                {
+                    errors.Add(new ValidationErrorDto { Field = $"queries[{i}].name", Message = "Query Name is required." });
+                }
+                else if (!IsValidIdentifier(query.Name))
+                {
+                    errors.Add(new ValidationErrorDto { Field = $"queries[{i}].name", Message = $"Query Name '{query.Name}' is not a valid C# identifier." });
+                }
+                
+                if (string.IsNullOrWhiteSpace(query.ReturnType))
+                {
+                    errors.Add(new ValidationErrorDto { Field = $"queries[{i}].returnType", Message = "Query Return Type is required." });
+                }
+
+                foreach (var param in query.Parameters)
+                {
+                    if (string.IsNullOrWhiteSpace(param.Name))
+                    {
+                        errors.Add(new ValidationErrorDto { Field = $"queries[{i}].parameters.name", Message = "Parameter Name is required." });
+                    }
+                    else if (!IsValidIdentifier(param.Name))
+                    {
+                        errors.Add(new ValidationErrorDto { Field = $"queries[{i}].parameters.name", Message = $"Parameter Name '{param.Name}' is not a valid C# identifier." });
+                    }
+                    if (string.IsNullOrWhiteSpace(param.Type))
+                    {
+                        errors.Add(new ValidationErrorDto { Field = $"queries[{i}].parameters.type", Message = "Parameter Type is required." });
+                    }
+                }
+            }
+
+            result.Errors = errors;
+            result.IsValid = errors.All(e => e.Severity != "Error");
+
+            return Task.FromResult(result);
+        }
+
+        private bool IsValidIdentifier(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            if (!char.IsLetter(name[0]) && name[0] != '_') return false;
+            for (int i = 1; i < name.Length; i++)
+            {
+                if (!char.IsLetterOrDigit(name[i]) && name[i] != '_') return false;
+            }
+            return !IsCSharpKeyword(name);
+        }
+
+        private bool IsValidNamespace(string ns)
+        {
+            if (string.IsNullOrEmpty(ns)) return false;
+            var parts = ns.Split('.');
+            return parts.All(IsValidIdentifier);
+        }
+
+        private bool IsCSharpKeyword(string name)
+        {
+            var keywords = new HashSet<string> {
+                "abstract", "as", "base", "bool", "break", "byte", "case", "catch", "char", "checked",
+                "class", "const", "continue", "decimal", "default", "delegate", "do", "double", "else",
+                "enum", "event", "explicit", "extern", "false", "finally", "fixed", "float", "for",
+                "foreach", "goto", "if", "implicit", "in", "int", "interface", "internal", "is", "lock",
+                "long", "namespace", "new", "null", "object", "operator", "out", "override", "params",
+                "private", "protected", "public", "readonly", "ref", "return", "sbyte", "sealed",
+                "short", "sizeof", "stackalloc", "static", "string", "struct", "switch", "this", "throw",
+                "true", "try", "typeof", "uint", "ulong", "unchecked", "unsafe", "ushort", "using",
+                "virtual", "void", "volatile", "while"
+            };
+            return keywords.Contains(name);
+        }
+
+        public async Task<ZipPackageDto> ExportGeneratedCodeAsync(string sessionId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

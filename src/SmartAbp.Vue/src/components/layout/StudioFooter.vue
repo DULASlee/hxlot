@@ -10,11 +10,11 @@
 </template>
 
 <script setup lang="ts">
-import { useWorkspaceStore } from '@/stores/modules/workspace'
+import { useStudioStore } from '@/stores/modules/studioStore'
 import { storeToRefs } from 'pinia'
 
-const workspaceStore = useWorkspaceStore()
-const { errors } = storeToRefs(workspaceStore)
+const studioStore = useStudioStore()
+const { errors } = storeToRefs(studioStore)
 </script>
 
 <style scoped>

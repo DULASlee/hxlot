@@ -1,6 +1,6 @@
+import { ElMessage } from "element-plus"
 import { defineStore } from "pinia"
 import { ref } from "vue"
-import { ElMessage } from "element-plus"
 
 export interface LowCodePage {
   id: string
@@ -21,7 +21,7 @@ export interface LowCodeProject {
   workflows: any[] // Placeholder for workflow definitions
 }
 
-export const useWorkspaceStore = defineStore("workspace", () => {
+export const useProjectStore = defineStore("lowcode-project", () => {
   const currentProject = ref<LowCodeProject | null>(null)
   const projects = ref<Record<string, LowCodeProject>>({})
 

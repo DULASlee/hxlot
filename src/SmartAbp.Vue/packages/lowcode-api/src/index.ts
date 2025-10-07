@@ -25,6 +25,11 @@ export { codeGenStatsApi, userProfileApi } from "./code-gen-stats"
 export * from "./generation-history"
 export { generationHistoryApi } from "./generation-history"
 
+// 业务规则引擎API
+export * from "./business-rule"
+export { businessRuleApi } from "./business-rule"
+export type * from "./types/business-rule"
+
 // ============================================================================
 // DDD生成器API导出（Day 7 新增）
 // ============================================================================
@@ -106,3 +111,9 @@ export const databaseApi = {
     }))
   },
 }
+
+export * from './dddGenerator';
+export * from './dtos';
+export * from './generationHistory';
+export * from './industryTemplate';
+export * from './userProfile';

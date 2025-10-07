@@ -3,11 +3,11 @@
     <div class="generation-header">
       <h2>Code Generation</h2>
       <div
-        v-if="workspaceStore.currentProject"
+        v-if="projectStore.currentProject"
         class="project-info"
       >
         <el-tag type="info">
-          Project: {{ workspaceStore.currentProject.name }}
+          Project: {{ projectStore.currentProject.name }}
         </el-tag>
       </div>
       <!-- 🔥 新增：无项目提示 -->
@@ -227,7 +227,7 @@
 </template>
 
 <script setup lang="ts">
-import { useWorkspaceStore } from "@/stores/lowcode/workspace"
+import { useProjectStore } from "@/stores/lowcode/projectStore"
 import { logger } from "@/utils/logger"
 import SandboxPreview from "@smartabp/lowcode-designer/components/SandboxPreview.vue"
 import TemplateSelector from "@smartabp/lowcode-designer/components/TemplateSelector.vue"
@@ -241,7 +241,7 @@ import { codeGeneratorApi, type GenerationResult, type ModuleGenerationConfig, t
 import type { UnifiedModuleMetadata } from "@smartabp/lowcode-shared"
 import { useValidation, type ValidationOptions } from "@smartabp/lowcode-shared/composables/useValidation"
 
-const workspaceStore = useWorkspaceStore()
+const projectStore = useProjectStore()
 const selectedTemplate = ref<Template | null>(null)
 const generating = ref(false)
 const showPreview = ref(false)
@@ -443,7 +443,7 @@ watch(
 )
 
 const generateCode = async () => {
-  if (!selectedTemplate.value || !workspaceStore.currentProject) {
+  if (!selectedTemplate.value || !projectStore.currentProject) {
     ElMessage.error("Please select a template and ensure a project is active")
     return
   }
@@ -632,15 +632,15 @@ const generateCode = async () => {
       showPreview.value = true
 
       // Update project with generated code
-      if (workspaceStore.currentProject) {
-        workspaceStore.currentProject.pages.push({
+      if (projectStore.currentProject) {
+        projectStore.currentProject.pages.push({
           id: `page-${Date.now()}`,
           name: generationParams.value.entityName,
           template: selectedTemplate.value.id,
           code: JSON.stringify(result.generatedFiles),
           createdAt: Date.now(),
         })
-        workspaceStore.saveProject()
+        projectStore.saveProject()
       }
     } else {
       // 处理生成失败
@@ -682,7 +682,7 @@ const copyCode = async () => {
 
 // 🔥 新增：创建默认项目的方法
 const createDefaultProject = () => {
-  workspaceStore.createProject({
+  projectStore.createProject({
     name: `SmartAbp Project ${Date.now()}`,
     description: "默认低代码项目，用于代码生成"
   })

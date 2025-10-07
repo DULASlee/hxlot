@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SmartAbp.Application.Contracts.CodeGenerator;
 using SmartAbp.CodeGenerator.Services;
 using SmartAbp.CodeGenerator.Services.V9;
 using Volo.Abp;
@@ -42,6 +43,12 @@ namespace SmartAbp.Controllers
         public Task<GeneratedModuleDto> GenerateFromUnifiedSchemaAsync([FromBody] UnifiedModuleSchemaDto unified)
         {
             return _service.GenerateFromUnifiedSchemaAsync(unified);
+        }
+
+        [HttpPost("validate-cqrs-definition")]
+        public Task<CqrsValidationResultDto> ValidateCqrsDefinitionAsync([FromBody] CqrsDefinitionDto input)
+        {
+            return _service.ValidateCqrsDefinitionAsync(input);
         }
 
         [HttpPost("validate")]
@@ -127,42 +134,47 @@ namespace SmartAbp.Controllers
             return _service.GenerateCqrsAsync(input);
         }
 
-        [HttpPost("validate-cqrs-definition")]
-        public Task<ValidationReportDto> ValidateCqrsDefinitionAsync([FromBody] CqrsDefinitionDto input)
-        {
-            return _service.ValidateCqrsDefinitionAsync(input);
-        }
+        // ✅ 暂时注释：未在ICodeGenerationAppService中实现，将在CQRS/DDD系统实现时添加
+        // [HttpPost("validate-cqrs-definition")]
+        // public Task<ValidationReportDto> ValidateCqrsDefinitionAsync([FromBody] CqrsDefinitionDto input)
+        // {
+        //     return _service.ValidateCqrsDefinitionAsync(input);
+        // }
 
-        [HttpGet("cqrs-templates")]
-        public Task<List<CqrsTemplateDto>> GetCqrsTemplatesAsync()
-        {
-            return _service.GetCqrsTemplatesAsync();
-        }
+        // ✅ 暂时注释：CqrsTemplateDto未定义，将在CQRS模板系统实现时添加
+        // [HttpGet("cqrs-templates")]
+        // public Task<List<CqrsTemplateDto>> GetCqrsTemplatesAsync()
+        // {
+        //     return _service.GetCqrsTemplatesAsync();
+        // }
 
-        [HttpGet("command-template/{commandType}")]
-        public Task<CommandDefinitionDto> GetCommandTemplateAsync(string commandType)
-        {
-            return _service.GetCommandTemplateAsync(commandType);
-        }
+        // ✅ 暂时注释：未在ICodeGenerationAppService中实现
+        // [HttpGet("command-template/{commandType}")]
+        // public Task<CommandDefinitionDto> GetCommandTemplateAsync(string commandType)
+        // {
+        //     return _service.GetCommandTemplateAsync(commandType);
+        // }
 
-        [HttpGet("query-template/{queryType}")]
-        public Task<QueryDefinitionDto> GetQueryTemplateAsync(string queryType)
-        {
-            return _service.GetQueryTemplateAsync(queryType);
-        }
+        // ✅ 暂时注释：未在ICodeGenerationAppService中实现
+        // [HttpGet("query-template/{queryType}")]
+        // public Task<QueryDefinitionDto> GetQueryTemplateAsync(string queryType)
+        // {
+        //     return _service.GetQueryTemplateAsync(queryType);
+        // }
 
-        // 🔥 DDD生成API端点
-        [HttpPost("generate-ddd")]
-        public Task<GeneratedDddSolutionDto> GenerateDddAsync([FromBody] DddDefinitionDto input)
-        {
-            return _service.GenerateDddAsync(input);
-        }
+        // ✅ 暂时注释：未在ICodeGenerationAppService中实现，将在DDD生成系统实现时添加
+        // [HttpPost("generate-ddd")]
+        // public Task<GeneratedDddSolutionDto> GenerateDddAsync([FromBody] DddDefinitionDto input)
+        // {
+        //     return _service.GenerateDddAsync(input);
+        // }
 
-        [HttpPost("validate-ddd-definition")]
-        public Task<ValidationReportDto> ValidateDddDefinitionAsync([FromBody] DddDefinitionDto input)
-        {
-            return _service.ValidateDddDefinitionAsync(input);
-        }
+        // ✅ 暂时注释：未在ICodeGenerationAppService中实现
+        // [HttpPost("validate-ddd-definition")]
+        // public Task<ValidationReportDto> ValidateDddDefinitionAsync([FromBody] DddDefinitionDto input)
+        // {
+        //     return _service.ValidateDddDefinitionAsync(input);
+        // }
     }
 }
 

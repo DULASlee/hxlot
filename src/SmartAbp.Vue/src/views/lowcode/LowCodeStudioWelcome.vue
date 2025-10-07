@@ -179,30 +179,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import {
-  Platform,
-  Folder,
-  Brush,
-  Cpu,
-  VideoPlay,
-  Plus,
-  Upload
-} from '@element-plus/icons-vue'
-// TODO: 实现这些stores
-// import { useEntityModelingStore } from '@smartabp/lowcode-core'
-// import { usePageDesignStore } from '@smartabp/lowcode-core'
+import { useProjectStore } from '@/stores/lowcode/projectStore'
+import { useStudioStore } from '@/stores/modules/studioStore'
 import { logger } from '@/utils/logger'
+import {
+    Brush,
+    Cpu,
+    Folder,
+    Platform,
+    Plus,
+    Upload,
+    VideoPlay
+} from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 // 路由
 const router = useRouter()
 
-// Store
-// TODO: 实现Stores
-// const entityStore = useEntityModelingStore()
-// const pageStore = usePageDesignStore()
+// ✅ 使用真实的Stores
+const projectStore = useProjectStore()
+const studioStore = useStudioStore()
 
 // 响应式数据
 const recentProjects = ref([
@@ -215,10 +213,19 @@ const recentProjects = ref([
   }
 ])
 
-// 计算属性
-const hasEntities = computed(() => false) // entityStore.entities.length > 0
-const hasPages = computed(() => false) // pageStore.pages.length > 0
-const hasGeneratedCode = computed(() => false) // 待实现
+// ✅ 计算属性（使用真实Store）
+const hasEntities = computed(() => {
+  // 暂时返回false，等待实体建模系统集成
+  return false
+})
+
+const hasPages = computed(() => {
+  return projectStore.currentProject?.pages && projectStore.currentProject.pages.length > 0
+})
+
+const hasGeneratedCode = computed(() => {
+  return hasPages.value
+})
 
 // 方法
 const goToModeling = () => {

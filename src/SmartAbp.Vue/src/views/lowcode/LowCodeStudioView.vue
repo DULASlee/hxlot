@@ -85,7 +85,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useWorkspaceStore } from '@/stores/modules/workspace'
+import { useStudioStore } from '@/stores/modules/studioStore'
 import StudioHeader from '@/components/layout/StudioHeader.vue'
 import StudioSidebar from '@/components/layout/StudioSidebar.vue'
 import StudioPropertyPanel from '@/components/layout/StudioPropertyPanel.vue'
@@ -94,14 +94,14 @@ import StudioFooter from '@/components/layout/StudioFooter.vue'
 import TemplateManager from './templates/TemplateManager.vue'
 import { Loading } from '@element-plus/icons-vue'
 
-const workspaceStore = useWorkspaceStore()
+const studioStore = useStudioStore()
 const {
   currentWorkspace,
   menuCollapsed,
   activeModule,
   loadingStates,
   showPropertyPanel
-} = storeToRefs(workspaceStore)
+} = storeToRefs(studioStore)
 
 // --- Template Manager State ---
 const templateManagerVisible = ref(false);
@@ -171,7 +171,7 @@ const recentLogs = computed(() => [])
 const validationStatus = computed(() => 'success')
 const clearLogs = () => {}
 const handleModuleChange = (module: 'modeling' | 'design' | 'theme' | 'generate') => {
-  workspaceStore.switchModule(module)
+  studioStore.switchModule(module)
 }
 
 

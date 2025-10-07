@@ -1,13 +1,13 @@
 /**
  * @vitest-environment jsdom
  */
-import { describe, it, expect, beforeEach, vi } from "vitest"
-import { mount } from "@vue/test-utils"
-import { createPinia, setActivePinia } from "pinia"
-import { ElMessage } from "element-plus"
-import GenerationView from "./GenerationView.vue"
-import { useWorkspaceStore } from "@/stores/lowcode/workspace"
+import { useProjectStore } from "@/stores/lowcode/projectStore"
 import { codeGeneratorApi } from "@smartabp/lowcode-api"
+import { mount } from "@vue/test-utils"
+import { ElMessage } from "element-plus"
+import { createPinia, setActivePinia } from "pinia"
+import { beforeEach, describe, expect, it, vi } from "vitest"
+import GenerationView from "./GenerationView.vue"
 
 // Mock ElementPlus
 vi.mock("element-plus", async () => {
@@ -61,10 +61,10 @@ describe("GenerationView E2E", () => {
   }
 
   it("should complete full generation workflow", async () => {
-    const workspaceStore = useWorkspaceStore()
+    const projectStore = useProjectStore()
 
     // Step 1: Create a project first
-    workspaceStore.createProject({
+    projectStore.createProject({
       name: "Test Project",
       description: "E2E test project",
     })
@@ -74,7 +74,7 @@ describe("GenerationView E2E", () => {
     await wrapper.vm.$nextTick()
 
     // Step 3: Verify project is accessible via store (simpler check)
-    expect(workspaceStore.currentProject?.name).toBe("Test Project")
+    expect(projectStore.currentProject?.name).toBe("Test Project")
 
     // Step 4: Simulate template selection via direct store access
     const vm = wrapper.vm as any
@@ -95,16 +95,16 @@ describe("GenerationView E2E", () => {
     expect(ElMessage.success).toHaveBeenCalledWith("Code generated successfully!")
 
     // Step 7: Verify project was updated with generated page
-    expect(workspaceStore.currentProject?.pages).toHaveLength(1)
-    expect(workspaceStore.currentProject?.pages[0].name).toBe("Product")
-    expect(workspaceStore.currentProject?.pages[0].template).toBe("crud")
+    expect(projectStore.currentProject?.pages).toHaveLength(1)
+    expect(projectStore.currentProject?.pages[0].name).toBe("Product")
+    expect(projectStore.currentProject?.pages[0].template).toBe("crud")
   })
 
   it("should handle generation errors gracefully", async () => {
-    const workspaceStore = useWorkspaceStore()
+    const projectStore = useProjectStore()
 
     // Create project but mock API failure
-    workspaceStore.createProject({ name: "Test Project" })
+    projectStore.createProject({ name: "Test Project" })
     vi.spyOn(codeGeneratorApi, "generateModule").mockRejectedValueOnce(
       new Error("Generation failed")
     )
@@ -127,11 +127,11 @@ describe("GenerationView E2E", () => {
   })
 
   it("should copy generated code to clipboard", async () => {
-    const workspaceStore = useWorkspaceStore()
+    const projectStore = useProjectStore()
 
     // Setup: Create project and generate code
-    workspaceStore.createProject({ name: "Test Project" })
-    
+    projectStore.createProject({ name: "Test Project" })
+
     const wrapper = mountComponent()
     await wrapper.vm.$nextTick()
 
@@ -147,7 +147,7 @@ describe("GenerationView E2E", () => {
 
     // Test copy functionality via direct method call
     await vm.copyCode()
-    
+
     expect(navigator.clipboard.writeText).toHaveBeenCalled()
     expect(ElMessage.success).toHaveBeenCalledWith("Code copied to clipboard!")
   })

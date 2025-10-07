@@ -16,6 +16,7 @@ using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using SmartAbp.CodeGenerator.Domain;
 using SmartAbp.Domain.Entities.LowCode;
+using SmartAbp.Domain.BusinessRules;
 
 namespace SmartAbp.EntityFrameworkCore;
 
@@ -36,6 +37,15 @@ public class SmartAbpDbContext :
     public DbSet<EntityField> EntityFields { get; set; }
     public DbSet<EntityRelation> EntityRelations { get; set; }
     public DbSet<ValidationRule> ValidationRules { get; set; }
+    
+    // 🔥 业务规则引擎
+    public DbSet<BusinessRule> BusinessRules { get; set; }
+    public DbSet<BusinessRuleVersion> BusinessRuleVersions { get; set; }
+    
+    // 🔥 代码生成器统计和配置
+    public DbSet<SmartAbp.CodeGenerator.CodeGenStat> CodeGenStats { get; set; }
+    public DbSet<SmartAbp.CodeGenerator.UserProfile> UserProfiles { get; set; }
+    public DbSet<SmartAbp.CodeGenerator.GenerationHistory> GenerationHistories { get; set; }
 
 
     #region Entities from the modules
@@ -182,6 +192,121 @@ public class SmartAbpDbContext :
             // 索引
             b.HasIndex(x => x.EntityDefinitionId);
             b.HasIndex(x => new { x.EntityDefinitionId, x.FieldName });
+        });
+
+        // 🔥 业务规则引擎实体配置
+        builder.Entity<BusinessRule>(b =>
+        {
+            b.ToTable(SmartAbpConsts.DbTablePrefix + "BusinessRules", SmartAbpConsts.DbSchema);
+            b.ConfigureByConvention();
+            
+            // 属性配置
+            b.Property(x => x.Name).IsRequired().HasMaxLength(256);
+            b.Property(x => x.EntityName).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Type).IsRequired().HasMaxLength(64);
+            b.Property(x => x.Description).HasMaxLength(1000);
+            b.Property(x => x.Conditions).IsRequired();
+            b.Property(x => x.Actions).IsRequired();
+            b.Property(x => x.ExecutionTiming).IsRequired();
+            b.Property(x => x.LastExecutionResult).HasMaxLength(4000);
+            
+            // 索引
+            b.HasIndex(x => x.EntityName);
+            b.HasIndex(x => x.Type);
+            b.HasIndex(x => x.IsActive);
+            b.HasIndex(x => x.Priority);
+            b.HasIndex(x => new { x.EntityName, x.IsActive });
+            b.HasIndex(x => new { x.Type, x.IsActive });
+        });
+
+        // 🔥 业务规则版本配置
+        builder.Entity<BusinessRuleVersion>(b =>
+        {
+            b.ToTable(SmartAbpConsts.DbTablePrefix + "BusinessRuleVersions", SmartAbpConsts.DbSchema);
+            b.ConfigureByConvention();
+            
+            // 属性配置
+            b.Property(x => x.Name).IsRequired().HasMaxLength(256);
+            b.Property(x => x.EntityName).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Description).HasMaxLength(1000);
+            b.Property(x => x.Type).IsRequired().HasMaxLength(64);
+            b.Property(x => x.Conditions).IsRequired();
+            b.Property(x => x.Actions).IsRequired();
+            b.Property(x => x.ExecutionTiming).IsRequired();
+            b.Property(x => x.ChangeDescription).HasMaxLength(1000);
+            b.Property(x => x.ChangeReason).HasMaxLength(500);
+            
+            // 外键关系
+            b.HasOne(x => x.BusinessRule)
+             .WithMany(x => x.Versions)
+             .HasForeignKey(x => x.BusinessRuleId)
+             .OnDelete(DeleteBehavior.Cascade);
+            
+            // 索引
+            b.HasIndex(x => x.BusinessRuleId);
+            b.HasIndex(x => x.Version);
+            b.HasIndex(x => x.IsCurrent);
+            b.HasIndex(x => x.ChangeType);
+            b.HasIndex(x => new { x.BusinessRuleId, x.Version });
+            b.HasIndex(x => new { x.BusinessRuleId, x.IsCurrent });
+        });
+        
+        // 🔥 配置CodeGenStat实体
+        builder.Entity<SmartAbp.CodeGenerator.CodeGenStat>(b =>
+        {
+            b.ToTable(SmartAbpConsts.DbTablePrefix + "CodeGenStats", SmartAbpConsts.DbSchema);
+            b.ConfigureByConvention();
+            
+            b.Property(x => x.UserId).IsRequired();
+            b.Property(x => x.TotalProjects).IsRequired();
+            b.Property(x => x.MonthlyGenerations).IsRequired();
+            b.Property(x => x.SavedHours).IsRequired();
+            b.Property(x => x.QualityScore).IsRequired().HasPrecision(5, 2);
+            b.Property(x => x.LastUpdated).IsRequired();
+            
+            b.HasIndex(x => x.UserId).IsUnique();
+        });
+        
+        // 🔥 配置UserProfile实体
+        builder.Entity<SmartAbp.CodeGenerator.UserProfile>(b =>
+        {
+            b.ToTable(SmartAbpConsts.DbTablePrefix + "UserProfiles", SmartAbpConsts.DbSchema);
+            b.ConfigureByConvention();
+            
+            b.Property(x => x.UserId).IsRequired();
+            b.Property(x => x.Industry).HasMaxLength(64);
+            b.Property(x => x.CompanyName).HasMaxLength(256);
+            b.Property(x => x.CompanySize).HasMaxLength(32);
+            b.Property(x => x.LastUsedMode).HasMaxLength(32);
+            b.Property(x => x.IsFirstVisit).IsRequired();
+            b.Property(x => x.Preferences).HasMaxLength(2000);
+            
+            b.HasIndex(x => x.UserId).IsUnique();
+            b.HasIndex(x => x.Industry);
+        });
+        
+        // 🔥 配置GenerationHistory实体
+        builder.Entity<SmartAbp.CodeGenerator.GenerationHistory>(b =>
+        {
+            b.ToTable(SmartAbpConsts.DbTablePrefix + "GenerationHistories", SmartAbpConsts.DbSchema);
+            b.ConfigureByConvention();
+            
+            b.Property(x => x.UserId).IsRequired();
+            b.Property(x => x.Mode).IsRequired().HasMaxLength(32);
+            b.Property(x => x.TemplateName).HasMaxLength(128);
+            b.Property(x => x.ProjectName).IsRequired().HasMaxLength(256);
+            b.Property(x => x.EntityCount).IsRequired();
+            b.Property(x => x.GeneratedFileCount).IsRequired();
+            b.Property(x => x.GenerationDuration).IsRequired();
+            b.Property(x => x.Status).IsRequired().HasMaxLength(32);
+            b.Property(x => x.ErrorMessage).HasMaxLength(2000);
+            b.Property(x => x.Metadata).HasMaxLength(4000);
+            
+            b.HasIndex(x => x.UserId);
+            b.HasIndex(x => x.Status);
+            b.HasIndex(x => x.Mode);
+            b.HasIndex(x => new { x.UserId, x.Status });
+            b.HasIndex(x => new { x.UserId, x.CreationTime });
         });
     }
 }

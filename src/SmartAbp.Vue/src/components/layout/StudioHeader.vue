@@ -38,19 +38,19 @@
 </template>
 
 <script setup lang="ts">
-import { useWorkspaceStore } from '@/stores/modules/workspace'
+import { useStudioStore } from '@/stores/modules/studioStore'
 import { Platform, Monitor, Fold, MagicStick } from '@element-plus/icons-vue'
 
-const workspaceStore = useWorkspaceStore()
+const studioStore = useStudioStore()
 
 const emit = defineEmits(['open-template-manager']);
 
 const toggleMenu = () => {
-  workspaceStore.toggleMenu()
+  studioStore.toggleMenu()
 }
 
 const togglePropertyPanel = () => {
-  workspaceStore.togglePropertyPanel()
+  studioStore.togglePropertyPanel()
 }
 </script>
 

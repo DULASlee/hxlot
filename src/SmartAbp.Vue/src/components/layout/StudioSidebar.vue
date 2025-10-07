@@ -52,17 +52,17 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useWorkspaceStore } from '@/stores/modules/workspace'
+import { useStudioStore } from '@/stores/modules/studioStore'
 import { useRouter } from 'vue-router'
 import { DataBoard, Brush, MagicStick } from '@element-plus/icons-vue'
 
-const workspaceStore = useWorkspaceStore()
+const studioStore = useStudioStore()
 const router = useRouter()
 
 const collapsed = computed({
-  get: () => workspaceStore.menuCollapsed,
+  get: () => studioStore.menuCollapsed,
   set: () => {
-    workspaceStore.toggleMenu()
+    studioStore.toggleMenu()
   }
 })
 
