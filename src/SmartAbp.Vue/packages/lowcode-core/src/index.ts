@@ -10,33 +10,14 @@
 
 // SmartFormBuilder 2.0 - 企业级表单构建器
 export {
-  SmartFormBuilder,
-  SmartFormDesigner,
-  FormSchemaAdapter,
-  FormLinkageEngine,
-  LinkageRuleBuilder,
-  LinkageRuleValidator,
-  LINKAGE_TEMPLATES
+  FormLinkageEngine, FormSchemaAdapter, LINKAGE_TEMPLATES, LinkageRuleBuilder,
+  LinkageRuleValidator, SmartFormBuilder,
+  SmartFormDesigner
 } from './components/SmartFormBuilder'
 
 export type {
-  FormCreateRule,
-  FormCreateConfig,
-  SmartFieldType,
-  SmartFormItem,
-  DeviceParameterField,
-  QualityInspectionField,
-  WorkOrderField,
-  MaterialField,
-  DictionaryField,
-  LinkageRule,
-  LinkageCondition,
-  LinkageAction,
-  LinkageConditionType,
-  LinkageActionType,
-  CascadeConfig,
-  DynamicFieldConfig,
-  CalculatedFieldConfig
+  CalculatedFieldConfig, CascadeConfig, DeviceParameterField, DictionaryField, DynamicFieldConfig, FormCreateConfig, FormCreateRule, LinkageAction, LinkageActionType, LinkageCondition, LinkageConditionType, LinkageRule, MaterialField, QualityInspectionField, SmartFieldType,
+  SmartFormItem, WorkOrderField
 } from './components/SmartFormBuilder'
 
 // BusinessRuleDesigner - 业务规则可视化设计器
@@ -49,11 +30,11 @@ export { default as WorkflowDesigner } from './components/WorkflowDesigner/Workf
 // 📦 Stores导出
 // ============================================================================
 
+export * from './stores/businessRuleStore'
 export * from './stores/codeGeneration'
 export * from './stores/enhancedStateMachine'
 export * from './stores/entityModeling'
 export * from './stores/pageDesign'
-export * from './stores/businessRuleStore'
 export * from './stores/workspace'
 
 // ============================================================================
@@ -95,7 +76,7 @@ export { useSecurityDashboard } from './composables/useSecurityDashboard'
 // ============================================================================
 
 // Note: EntityDefinition已从stores/entityModeling导出，避免重复
-export type { UnifiedEntityDefinition, UnifiedFieldDefinition } from './types/unified-metadata'
 export type { EntityModel } from './types/entity-designer'
-export type { ManifestConfig } from './types/manifest'
+export type { ModuleManifest } from './types/manifest'
+export type { EntityMetadata, ManifestData, ModuleMetadata, PropertyMetadata } from './types/unified-metadata'
 
