@@ -2,20 +2,38 @@
   "name": "@smartabp/lowcode-api",
   "version": "1.0.0",
   "description": "SmartAbp LowCode API Layer",
+  "type": "module",
   "main": "dist/index.js",
-  "module": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./http-client": {
+      "types": "./dist/http-client/index.d.ts",
+      "import": "./dist/http-client/index.mjs",
+      "require": "./dist/http-client/index.js"
+    },
+    "./generators": {
+      "types": "./dist/generators/index.d.ts",
+      "import": "./dist/generators/index.mjs",
+      "require": "./dist/generators/index.js"
+    },
+    "./composables": {
+      "types": "./dist/composables/index.d.ts",
+      "import": "./dist/composables/index.mjs",
+      "require": "./dist/composables/index.js"
     }
   },
+  "sideEffects": false,
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
-    "type-check": "tsc --noEmit"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
   },
   "keywords": [
     "smartabp",
@@ -24,11 +42,11 @@
   ],
   "author": "SmartAbp Team",
   "license": "MIT",
-  "dependencies": {},
-  "devDependencies": {
-    "typescript": "^5.2.0"
-  },
   "peerDependencies": {
-    "@smartabp/lowcode-shared": "^1.0.0"
+    "@smartabp/lowcode-shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.0",
+    "tsup": "^8.0.0"
   }
 }
