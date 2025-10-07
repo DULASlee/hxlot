@@ -40,7 +40,7 @@ export type { EntityDefinitionDto, EntityFieldDto } from "./types/business-rule"
 
 // 行业模板配置API
 export { industryTemplateApi } from "./industryTemplate"
-export type { IndustryTemplateConfigDto } from "./industryTemplate"
+export type { IndustryTemplateConfigDto, IndustryTemplateGenerationResultDto } from "./industryTemplate"
 
 // ============================================================================
 // DDD生成器API导出（Day 7 新增）

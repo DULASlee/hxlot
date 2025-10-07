@@ -229,7 +229,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GenerationResult as GenerationResultDto, IndustryTemplateConfigDto } from '@smartabp/lowcode-api'
+import type { IndustryTemplateConfigDto, IndustryTemplateGenerationResultDto } from '@smartabp/lowcode-api'
 import { industryTemplateApi } from '@smartabp/lowcode-api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { computed, onMounted, ref } from 'vue'
@@ -410,14 +410,14 @@ const prevStep = () => {
 /**
  * ✅ 下载生成的文件（打包为ZIP）
  */
-const downloadGeneratedFiles = async (result: GenerationResultDto | any) => {
+const downloadGeneratedFiles = async (result: IndustryTemplateGenerationResultDto) => {
   try {
     // 动态导入JSZip
     const JSZip = (await import('jszip')).default;
     const zip = new JSZip();
 
     // 将所有文件添加到ZIP
-    result.files?.forEach((file: { path: string; content: string }) => {
+    result.generatedFiles?.forEach((file: { path: string; content: string }) => {
       const folderPath = file.path.split('/').slice(0, -1).join('/');
       const fileName = file.path.split('/').pop() || 'unknown';
       const folder = folderPath ? zip.folder(folderPath) : zip;
@@ -467,18 +467,14 @@ const startGeneration = async () => {
       return
     }
     
-    // ✅ 调用真实的代码生成API
+    // ✅ 调用真实的代码生成API（与后端DTO完全一致）
     const config: IndustryTemplateConfigDto = {
-        industry: templateInfo.value.industry || 'Manufacturing',
-        templateType: templateInfo.value.templateType || 'MES',
-        projectName: configForm.value.systemName,
-        namespace: `SmartAbp.${configForm.value.systemName}`,
-        options: {
-            description: configForm.value.description,
-            companyName: configForm.value.companyName,
-            selectedModules: selectedModules.value,
-            selectedHardware: selectedHardware.value
-        }
+        templateId: templateInfo.value.id,
+        systemName: configForm.value.systemName,
+        description: configForm.value.description,
+        companyName: configForm.value.companyName,
+        selectedModules: selectedModules.value,
+        selectedHardware: selectedHardware.value
     };
 
     try {
@@ -486,12 +482,12 @@ const startGeneration = async () => {
 
         if (result.success) {
             ElMessage.success({
-                message: `代码生成成功！共生成 ${result.files?.length || 0} 个文件。`,
+                message: `代码生成成功！共生成 ${result.generatedFiles?.length || 0} 个文件。`,
                 duration: 5000
             });
             
             // ✅ 真实实现：提供下载功能
-            if (result.files && result.files.length > 0) {
+            if (result.generatedFiles && result.generatedFiles.length > 0) {
                 await downloadGeneratedFiles(result);
             }
         } else {

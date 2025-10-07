@@ -1,23 +1,35 @@
-import type { GenerationResultDto } from './dtos'
 import { http } from './http-client'
 
 /**
- * 行业模板配置DTO
+ * 行业模板生成结果DTO（与后端C#完全一致）
+ */
+export interface IndustryTemplateGenerationResultDto {
+  success: boolean
+  generatedFiles: Array<{
+    path: string
+    content: string
+  }>
+  errors: string[]
+}
+
+/**
+ * 行业模板配置DTO（与后端C#完全一致）
  */
 export interface IndustryTemplateConfigDto {
-  industry: string
-  templateType: string
-  projectName: string
-  namespace: string
-  options?: Record<string, any>
+  templateId: string
+  systemName: string
+  description: string
+  companyName: string
+  selectedModules: string[]
+  selectedHardware: string[]
 }
 
 /**
  * 行业模板API服务
  */
 class IndustryTemplateApi {
-  async generate(config: IndustryTemplateConfigDto): Promise<GenerationResultDto> {
-    return await http.post<GenerationResultDto>(
+  async generate(config: IndustryTemplateConfigDto): Promise<IndustryTemplateGenerationResultDto> {
+    return await http.post<IndustryTemplateGenerationResultDto>(
       '/api/lowcode/industry-templates/generate',
       config
     )
