@@ -2,8 +2,8 @@
   "version": "1.0.0",
   "sessionId": "guardian_1759820408451",
   "startTime": "2025-10-07T07:00:08.452Z",
-  "lastReloadTime": "2025-10-07T07:00:08.509Z",
-  "reloadCount": 1,
+  "lastReloadTime": "2025-10-07T07:02:28.285Z",
+  "reloadCount": 2,
   "rulesLoaded": [
     ".cursor/rules/00_编程完整性铁律.mdc",
     ".cursor/rules/00_执行引擎.mdc",
