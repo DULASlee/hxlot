@@ -19,6 +19,10 @@ export { default as ErrorBoundary } from './src/components/ErrorBoundary.vue'
 export { default as GlobalLoadingOverlay } from './src/components/GlobalLoadingOverlay.vue'
 export { default as WorkspaceContainer } from './src/components/WorkspaceContainer.vue'
 
+// SmartFormBuilder组件导出
+export { SmartFormBuilder, SmartFormDesigner } from './src/components/SmartFormBuilder'
+export type { FormCreateRule, FormCreateConfig } from './src/components/SmartFormBuilder'
+
 // ===== 核心Store导出 =====
 export { useCodeGenerationStore } from './src/stores/codeGeneration'
 export { useEnhancedStateMachineStore } from './src/stores/enhancedStateMachine'

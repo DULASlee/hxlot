@@ -145,8 +145,8 @@
 
 <script setup lang="ts">
 import { Document, Edit, Setting } from '@element-plus/icons-vue'
-import type { FormCreateConfig, FormCreateRule } from '@smartabp/lowcode-core/components/SmartFormBuilder'
-import { SmartFormBuilder } from '@smartabp/lowcode-core/components/SmartFormBuilder'
+import type { FormCreateConfig, FormCreateRule } from '@smartabp/lowcode-core'
+import { SmartFormBuilder } from '@smartabp/lowcode-core'
 import {
     ElAlert,
     ElButton,
@@ -405,7 +405,7 @@ const basicExample = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { SmartFormBuilder } from '@smartabp/lowcode-core/components/SmartFormBuilder'
+import { SmartFormBuilder } from '@smartabp/lowcode-core'
 
 const formData = ref({})
 const formRules = [
@@ -436,7 +436,7 @@ const advancedExample = `<template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { SmartFormBuilder } from '@smartabp/lowcode-core/components/SmartFormBuilder'
+import { SmartFormBuilder } from '@smartabp/lowcode-core'
 
 const formRef = ref()
 const formData = ref({ type: 'personal' })
