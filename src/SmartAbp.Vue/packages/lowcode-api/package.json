@@ -43,7 +43,7 @@
   "author": "SmartAbp Team",
   "license": "MIT",
   "peerDependencies": {
-    "@smartabp/lowcode-shared": "workspace:*"
+    "@smartabp/lowcode-shared": "file:../lowcode-shared"
   },
   "devDependencies": {
     "typescript": "^5.2.0",

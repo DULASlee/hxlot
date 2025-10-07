@@ -44,8 +44,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@smartabp/lowcode-shared": "workspace:*",
-    "@smartabp/lowcode-api": "workspace:*",
+    "@smartabp/lowcode-shared": "file:../lowcode-shared",
+    "@smartabp/lowcode-api": "file:../lowcode-api",
     "@form-create/element-ui": "^3.2.0",
     "@vue-flow/minimap": "^1.3.0",
     "pinia": "^2.1.0",
