@@ -11,7 +11,7 @@
  * @version 1.0.0
  */
 
-import type { Node, Edge } from '@vue-flow/core'
+import type { Edge, Node } from '@vue-flow/core'
 
 export interface WorkflowCodeGenerationOptions {
   workflowName: string
@@ -530,23 +530,23 @@ namespace ${options.namespace}.Workflow
    */
   private generateStateTransitionLogic(nodes: Node[], edges: Edge[]): string {
     const transitions: string[] = []
-    
+
     edges.forEach(edge => {
       const sourceNode = nodes.find(n => n.id === edge.source)
       const targetNode = nodes.find(n => n.id === edge.target)
-      
+
       if (sourceNode && targetNode) {
         const fromState = sourceNode.data.label || sourceNode.id
         const toState = targetNode.data.label || targetNode.id
         const actionName = edge.label || `to_${toState}`
-        
+
         transitions.push(`            if (currentState == "${fromState}" && action == "${actionName}")
             {
                 return "${toState}";
             }`)
       }
     })
-    
+
     return transitions.join('\n\n')
   }
 }

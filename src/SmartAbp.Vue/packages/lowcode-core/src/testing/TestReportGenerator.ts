@@ -12,11 +12,11 @@
  */
 
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
+import type { BenchmarkResult } from './BenchmarkEngine'
 import { ChartBuilder } from './ChartBuilder'
+import type { ConcurrencyTestResult } from './ConcurrencyTestEngine'
 import { HtmlReportExporter, type ReportSection } from './HtmlReportExporter'
 import type { LoadTestResult } from './LoadTestEngine'
-import type { ConcurrencyTestResult } from './ConcurrencyTestEngine'
-import type { BenchmarkResult } from './BenchmarkEngine'
 // import type { RegressionReport } from './RegressionDetector'
 
 const logger = getGlobalLogger()

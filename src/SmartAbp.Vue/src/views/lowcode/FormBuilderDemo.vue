@@ -504,7 +504,7 @@ const formConfig = {
 const handleSubmit = (data) => {
   console.log('提交数据:', data)
 }
-<\/script>`
+<` + `/script>`
 
 const advancedExample = `<template>
   <SmartFormBuilder
@@ -556,7 +556,7 @@ const dynamicRules = computed(() => {
 const handleFieldChange = (field, value) => {
   console.log(\`字段 \${field} 变化为 \${value}\`)
 }
-<\/script>`
+<` + `/script>`
 
 // 事件处理
 const handleFormSubmit = (data: Record<string, any>) => {

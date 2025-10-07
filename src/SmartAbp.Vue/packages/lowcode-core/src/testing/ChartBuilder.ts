@@ -391,11 +391,11 @@ export class ChartBuilder {
   private generateColors(count: number): string[] {
     const baseColors = Object.values(this.colors)
     const colors: string[] = []
-    
+
     for (let i = 0; i < count; i++) {
       colors.push(baseColors[i % baseColors.length])
     }
-    
+
     return colors
   }
 

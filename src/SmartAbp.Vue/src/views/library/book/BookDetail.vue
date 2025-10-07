@@ -1,9 +1,10 @@
 <template>
   <el-dialog
-    v-model="visible"
+    :model-value="visible"
     title="详情"
     width="600px"
     @close="handleClose"
+    @update:model-value="(val) => emit('update:visible', val)"
   >
     <el-descriptions
       v-loading="loading"
@@ -45,8 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
+import { ref, watch } from 'vue'
 import { getBookById } from './book-api'
 import type { BookDto } from './book.types'
 
