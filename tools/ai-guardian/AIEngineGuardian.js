@@ -268,7 +268,9 @@ class AIEngineGuardian {
       console.log('\n\n🛑 收到停止信号，正在清理...\n');
       clearInterval(reloadTimer);
       clearInterval(changeCheckTimer);
-      fs.unlinkSync(pidPath);
+      if (fs.existsSync(pidPath)) {
+        fs.unlinkSync(pidPath);
+      }
       console.log('✅ 守护进程已停止\n');
       process.exit(0);
     });
@@ -276,7 +278,9 @@ class AIEngineGuardian {
     process.on('SIGTERM', () => {
       clearInterval(reloadTimer);
       clearInterval(changeCheckTimer);
-      fs.unlinkSync(pidPath);
+      if (fs.existsSync(pidPath)) {
+        fs.unlinkSync(pidPath);
+      }
       process.exit(0);
     });
   }
@@ -296,7 +300,9 @@ class AIEngineGuardian {
     
     try {
       process.kill(parseInt(pid), 'SIGTERM');
-      fs.unlinkSync(pidPath);
+      if (fs.existsSync(pidPath)) {
+        fs.unlinkSync(pidPath);
+      }
       console.log(`✅ 守护进程已停止 (PID: ${pid})\n`);
     } catch (error) {
       console.error(`❌ 停止守护进程失败: ${error.message}`);
