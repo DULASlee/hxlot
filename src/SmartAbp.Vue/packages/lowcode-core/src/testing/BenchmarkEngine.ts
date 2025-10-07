@@ -13,18 +13,18 @@
 
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
 import { PerformanceOptimizer } from '../analyzers/PerformanceOptimizer'
-import { 
-  PerformanceBaselineManager, 
-  type PerformanceBaseline, 
-  type BaselineScenario, 
-  type PerformanceMetrics,
+import {
+  LocalStorageBaselineStorage,
   MemoryBaselineStorage,
-  LocalStorageBaselineStorage
+  PerformanceBaselineManager,
+  type BaselineScenario,
+  type PerformanceBaseline,
+  type PerformanceMetrics
 } from './PerformanceBaseline'
-import { 
-  RegressionDetector, 
-  type RegressionReport,
-  DEFAULT_REGRESSION_CONFIG
+import {
+  DEFAULT_REGRESSION_CONFIG,
+  RegressionDetector,
+  type RegressionReport
 } from './RegressionDetector'
 
 const logger = getGlobalLogger()
@@ -120,10 +120,10 @@ export class BenchmarkEngine {
   private performanceOptimizer: PerformanceOptimizer
 
   constructor(useLocalStorage: boolean = false) {
-    const storage = useLocalStorage 
-      ? new LocalStorageBaselineStorage() 
+    const storage = useLocalStorage
+      ? new LocalStorageBaselineStorage()
       : new MemoryBaselineStorage()
-    
+
     this.baselineManager = new PerformanceBaselineManager(storage)
     this.regressionDetector = new RegressionDetector(DEFAULT_REGRESSION_CONFIG)
     this.performanceOptimizer = new PerformanceOptimizer()
@@ -305,7 +305,7 @@ export class BenchmarkEngine {
     const average = sum / responseTimes.length
     const min = sorted[0]
     const max = sorted[sorted.length - 1]
-    
+
     const p50 = this.getPercentile(sorted, 50)
     const p95 = this.getPercentile(sorted, 95)
     const p99 = this.getPercentile(sorted, 99)
