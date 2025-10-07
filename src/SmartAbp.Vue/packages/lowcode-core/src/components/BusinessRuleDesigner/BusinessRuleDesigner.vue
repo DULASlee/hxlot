@@ -69,7 +69,7 @@ import { Controls } from '@vue-flow/controls'
 import { VueFlow } from '@vue-flow/core'
 import { ElButton, ElIcon, ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
-import { useEnhancedStateMachineStore } from '../../stores/enhancedStateMachine'
+// import { useEnhancedStateMachineStore } from '../../stores/enhancedStateMachine' // 未使用，保留以备将来使用
 import type { RuleEdge, RuleNode, RuleNodeData, RuleNodeType } from './types'
 
 const logger = getGlobalLogger()
@@ -78,7 +78,7 @@ const logger = getGlobalLogger()
 // 使用 v-model 双向绑定 nodes/edges，避免直接绑定事件签名不匹配
 
 // Store
-const stateMachineStore = useEnhancedStateMachineStore()
+// const stateMachineStore = useEnhancedStateMachineStore() // 未使用，保留以备将来使用
 
 // 状态
 const nodes = ref<RuleNode[]>([])

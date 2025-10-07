@@ -11,9 +11,8 @@
  * @version 1.0.0
  */
 
-import { getGlobalLogger } from '@smartabp/lowcode-shared'
-
-const logger = getGlobalLogger()
+// import { getGlobalLogger } from '@smartabp/lowcode-shared'
+// const logger = getGlobalLogger() // 未使用，保留以备将来使用
 
 /**
  * 图表类型

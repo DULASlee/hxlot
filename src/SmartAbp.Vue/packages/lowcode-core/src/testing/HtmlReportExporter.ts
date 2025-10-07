@@ -146,7 +146,7 @@ export class HtmlReportExporter {
   /**
    * 生成报告尾部
    */
-  private generateFooter(config: HtmlReportConfig): string {
+  private generateFooter(_config: HtmlReportConfig): string {
     return `
 <footer class="report-footer">
   <p>SmartAbp 低代码生成器 - 压力测试报告</p>
