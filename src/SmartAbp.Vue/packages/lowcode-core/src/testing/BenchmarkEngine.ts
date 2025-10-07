@@ -400,16 +400,17 @@ export class BenchmarkEngine {
 
   /**
    * 生成示例代码（用于优化器）
+   * TODO: 暂时注释，保留用于未来代码优化器集成
    */
-  private ___generateSampleCode(results: ScenarioBenchmarkResult[]): string {
-    void results // 保留用于未来代码优化器集成
-    // 生成一个包含性能指标的代码示例
-    return `
-// 性能基准测试结果
-// 场景数量: ${results.length}
-// 平均响应时间: ${results.reduce((sum, r) => sum + r.metrics.averageResponseTime, 0) / results.length}ms
-    `.trim()
-  }
+  // private _generateSampleCode(_results: ScenarioBenchmarkResult[]): string {
+  //   void _results // 保留用于未来代码优化器集成
+  //   // 生成一个包含性能指标的代码示例
+  //   return `
+  // // 性能基准测试结果
+  // // 场景数量: ${_results.length}
+  // // 平均响应时间: ${_results.reduce((sum, r) => sum + r.metrics.averageResponseTime, 0) / _results.length}ms
+  //     `.trim()
+  // }
 
   /**
    * 超时Promise
