@@ -13,6 +13,13 @@ export type { DomainEventConfig, EventHandlerConfig } from './DddDomainEventGene
 export { MicroserviceGenerator } from './MicroserviceGenerator'
 export type { MicroserviceConfig } from './MicroserviceGenerator'
 
+export { AspireGenerator } from './AspireGenerator'
+export type {
+  AspireConfiguration,
+  AspireGenerationResult,
+  AspireServiceDefinition,
+} from './AspireGenerator'
+
 export { BusinessRuleCodeGenerator } from './BusinessRuleCodeGenerator'
 export { RelationshipUIGenerator } from './RelationshipUIGenerator'
 export { WorkflowCodeGenerator } from './WorkflowCodeGenerator'
