@@ -376,6 +376,17 @@ const routes: RouteRecordRaw[] = [
               description: "SmartFormBuilder 2.0 使用示例和API文档"
             },
           },
+          {
+            path: "form-linkage-demo",
+            name: "FormLinkageDemo",
+            component: () => import("@/views/lowcode/FormLinkageDemo.vue"),
+            meta: {
+              title: "表单联动演示",
+              menuKey: "form-linkage-demo",
+              icon: "🔗",
+              description: "动态表单与字段联动完整演示"
+            },
+          },
         ],
       },
     ],
