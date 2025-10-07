@@ -1199,7 +1199,9 @@
 import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { useEntityModelingStore, type EntityDefinition, type EntityField } from "@smartabp/lowcode-core"
-import { logger } from "@smartabp/lowcode-tools"
+import { getGlobalLogger } from "@smartabp/lowcode-shared"
+
+const logger = getGlobalLogger()
 import AdvancedEntityRelationshipDesigner from '../components/AdvancedEntityRelationshipDesigner.vue'
 import AdvancedFieldTypeDesigner from '../components/AdvancedFieldTypeDesigner.vue'
 import BusinessRulesEngine from '../components/BusinessRulesEngine.vue'
