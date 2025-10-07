@@ -520,8 +520,11 @@ glob_file_search("templates/**/*.template.*")
 
 **核心协议**: AI自身必须在内部严格执行代码追踪与自我守护两大机制。这两个机制的实现蓝图定义在 `tools/ai-guardian/` 目录中，AI必须严格遵循其逻辑。
 
-### 📊 代码行数追踪器（AI内置责任）
+### 📊 代码行数追踪器（AI内置责任 + 自动化工具）
+
 **执行铁律**: AI在生成任何代码时，**必须**在内部维护一个会话期间的代码行数计数器。
+
+**AI内部协议**:
 - **`addCode(fileName, code)`**: 每生成一段代码，AI必须立即累加其行数到对应文件的计数器和总计数器。
 - **`checkSmartThresholds()`**: AI必须在每次累加后，立即检查当前总行数是否达到阈值：
     - **100行**: AI必须主动暂停，并触发**用户干预点1（代码方向审查）**。
@@ -529,10 +532,55 @@ glob_file_search("templates/**/*.template.*")
     - **280行**: AI必须在响应中发出明确警告。
     - **300行**: AI必须**强制停止**所有编码活动，并立即触发**阶段F的质量门禁**。
 
-### ⏰ 自我守护机制（AI内置责任）
+**自动化工具** (路径: `tools/ai-guardian/CodeLineTracker.js`):
+```bash
+# AI编程后，用户或CI/CD自动执行检查
+node tools/ai-guardian/CodeLineTracker.js check
+
+# 生成质量监控报告
+node tools/ai-guardian/CodeLineTracker.js report
+
+# 质量门禁通过后，重置计数器
+node tools/ai-guardian/CodeLineTracker.js reset
+```
+
+**集成方式**:
+- **Git Hook**: 在 `pre-commit` 中自动检查，超出300行禁止提交
+- **package.json**: 添加 `"ai:check": "node tools/ai-guardian/CodeLineTracker.js check"` 脚本
+- **CI/CD**: 在GitHub Actions中自动检查代码行数
+
+### ⏰ 自我守护机制（AI内置责任 + 自动化工具）
+
 **执行铁律**: AI必须模拟 `AIEngineGuardian` 的行为，以防止在长会话中"忘记"核心规则。
+
+**AI内部协议**:
 - **启动时**: 在会话开始或检测到触发关键词时，AI必须加载所有规则并显示启动声明。
 - **每30分钟**: 如果会话持续时间较长（约30分钟），AI必须主动重新加载所有核心规则，并在响应中再次显示启动声明，以刷新自己的上下文记忆。
+
+**自动化工具** (路径: `tools/ai-guardian/AIEngineGuardian.js`):
+```bash
+# 会话开始时，手动加载所有规则（推荐）
+node tools/ai-guardian/AIEngineGuardian.js load
+
+# 启动守护进程（30分钟自动重载）
+node tools/ai-guardian/AIEngineGuardian.js start
+
+# 查看守护状态
+node tools/ai-guardian/AIEngineGuardian.js status
+
+# 停止守护进程
+node tools/ai-guardian/AIEngineGuardian.js stop
+
+# 生成守护报告
+node tools/ai-guardian/AIEngineGuardian.js report
+```
+
+**集成方式**:
+- **会话启动**: 在VSCode/Cursor工作区打开时自动执行 `node tools/ai-guardian/AIEngineGuardian.js load`
+- **长会话**: 考虑启动守护进程，自动30分钟重载规则
+- **package.json**: 添加 `"ai:guard": "node tools/ai-guardian/AIEngineGuardian.js load"` 脚本
+
+**📚 详细文档**: 参见 `tools/ai-guardian/README.md`
 
 ### 🎯 自动触发机制（强制执行）
 

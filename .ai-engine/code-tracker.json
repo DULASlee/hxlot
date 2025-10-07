@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "sessions": {
+    "session_1759820416484": {
+      "sessionId": "session_1759820416484",
+      "startTime": "2025-10-07T07:00:16.484Z",
+      "totalLines": 2879,
+      "files": [
+        {
+          "path": "src/SmartAbp.Vue/src/views/lowcode/DddDomainDesignerView.vue",
+          "lines": 610,
+          "timestamp": "2025-10-07T07:00:16.526Z"
+        },
+        {
+          "path": "src/SmartAbp.Vue/src/views/lowcode/FormBuilderDemo.vue",
+          "lines": 635,
+          "timestamp": "2025-10-07T07:00:16.526Z"
+        },
+        {
+          "path": "src/SmartAbp.Vue/src/views/lowcode/FormLinkageDemo.vue",
+          "lines": 713,
+          "timestamp": "2025-10-07T07:00:16.526Z"
+        },
+        {
+          "path": "src/SmartAbp.Vue/src/views/lowcode/components/AggregateEditor.vue",
+          "lines": 353,
+          "timestamp": "2025-10-07T07:00:16.526Z"
+        },
+        {
+          "path": "src/SmartAbp.Vue/src/views/lowcode/components/ValueObjectEditor.vue",
+          "lines": 285,
+          "timestamp": "2025-10-07T07:00:16.526Z"
+        },
+        {
+          "path": "tools/ai-guardian/README.md",
+          "lines": 283,
+          "timestamp": "2025-10-07T07:00:16.526Z"
+        }
+      ],
+      "checkpoints": [
+        {
+          "id": "300lines",
+          "type": "FORCED_STOP",
+          "description": "强制停止",
+          "lines": 2879,
+          "timestamp": "2025-10-07T07:00:16.526Z"
+        }
+      ],
+      "violations": [
+        {
+          "type": "超出300行限制",
+          "lines": 2879,
+          "timestamp": "2025-10-07T07:00:16.526Z"
+        }
+      ]
+    }
+  },
+  "lastSessionId": "session_1759820416484"
+}
