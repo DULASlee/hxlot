@@ -229,32 +229,32 @@
 
 <script setup lang="ts">
 import {
-  Check,
-  CopyDocument,
-  Delete,
-  Document,
-  Rank,
-  View
+    Check,
+    CopyDocument,
+    Delete,
+    Document,
+    Rank,
+    View
 } from '@element-plus/icons-vue'
 import {
-  ElButton,
-  ElCollapse,
-  ElCollapseItem,
-  ElDialog,
-  ElDivider,
-  ElEmpty,
-  ElForm,
-  ElFormItem,
-  ElIcon,
-  ElInput,
-  ElInputNumber,
-  ElMessage,
-  ElScrollbar,
-  ElSlider,
-  ElSwitch,
-  ElTabPane,
-  ElTabs,
-  ElTag
+    ElButton,
+    ElCollapse,
+    ElCollapseItem,
+    ElDialog,
+    ElDivider,
+    ElEmpty,
+    ElForm,
+    ElFormItem,
+    ElIcon,
+    ElInput,
+    ElInputNumber,
+    ElMessage,
+    ElScrollbar,
+    ElSlider,
+    ElSwitch,
+    ElTabPane,
+    ElTabs,
+    ElTag
 } from 'element-plus'
 import { computed, ref } from 'vue'
 import SmartFormBuilder from './SmartFormBuilder.vue'
@@ -503,7 +503,8 @@ const handleDrop = () => {
     ...draggedField.defaultConfig,
     field: `field_${Date.now()}`,
     title: draggedField.label,
-    col: { span: 24 }
+    props: draggedField.defaultConfig.props || {},
+    col: draggedField.defaultConfig.col || { span: 24 }
   } as FormCreateRule
 
   formRules.value.push(newRule)
@@ -519,6 +520,14 @@ const handleDrop = () => {
 
 const selectField = (index: number) => {
   selectedFieldIndex.value = index
+  // 确保props和col已初始化
+  const field = formRules.value[index]
+  if (field && !field.props) {
+    field.props = {}
+  }
+  if (field && !field.col) {
+    field.col = { span: 24 }
+  }
 }
 
 const copyField = (index: number) => {

@@ -30,6 +30,10 @@ export { businessRuleApi } from "./business-rule"
 export type { BusinessRuleApi } from "./business-rule"
 export type { BusinessRuleActionDto, BusinessRuleConditionDto } from "./types/business-rule"
 
+// 行业模板配置API
+export { industryTemplateApi } from "./industryTemplate"
+export type { IndustryTemplateConfigDto } from "./industryTemplate"
+
 // ============================================================================
 // DDD生成器API导出（Day 7 新增）
 // ============================================================================

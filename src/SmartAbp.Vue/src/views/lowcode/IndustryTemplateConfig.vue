@@ -417,8 +417,9 @@ const downloadGeneratedFiles = async (result: GenerationResultDto) => {
     // 将所有文件添加到ZIP
     result.generatedFiles?.forEach((file) => {
       const folderPath = file.path.split('/').slice(0, -1).join('/');
+      const fileName = file.path.split('/').pop() || 'unknown';
       const folder = folderPath ? zip.folder(folderPath) : zip;
-      folder?.file(file.fileName, file.content);
+      folder?.file(fileName, file.content);
     });
 
     // 生成ZIP文件
@@ -428,7 +429,7 @@ const downloadGeneratedFiles = async (result: GenerationResultDto) => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${configForm.value.projectName || 'smartabp-project'}.zip`;
+    link.download = `${configForm.value.systemName || 'smartabp-project'}.zip`;
     
     // 触发下载
     document.body.appendChild(link);
@@ -456,6 +457,13 @@ const startGeneration = async () => {
     )
     
     generating.value = true
+    
+    // 检查模板信息
+    if (!templateInfo.value) {
+      ElMessage.error('模板信息未加载')
+      generating.value = false
+      return
+    }
     
     // ✅ 调用真实的代码生成API
     const config: IndustryTemplateConfigDto = {

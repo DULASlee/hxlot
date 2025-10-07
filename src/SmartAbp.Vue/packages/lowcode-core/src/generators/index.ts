@@ -5,7 +5,7 @@ export { CqrsCodeGenerator } from './CqrsCodeGenerator'
 export type { CqrsCommandConfig, CqrsQueryConfig } from './CqrsCodeGenerator'
 
 export { DddCodeGenerator } from './DddCodeGenerator'
-export type { EntityConfig, MethodConfig, PropertyConfig } from './DddCodeGenerator'
+export type { DddEntityConfig, MethodConfig, PropertyConfig } from './DddCodeGenerator'
 
 export { DddDomainEventGenerator } from './DddDomainEventGenerator'
 export type { DomainEventConfig, EventHandlerConfig } from './DddDomainEventGenerator'

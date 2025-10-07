@@ -4,12 +4,12 @@
 export { BenchmarkEngine } from './BenchmarkEngine'
 export { ConcurrencyTestEngine } from './ConcurrencyTestEngine'
 export { LoadTestEngine } from './LoadTestEngine'
-export { PerformanceBaseline } from './PerformanceBaseline'
 export { RaceConditionDetector } from './RaceConditionDetector'
 export { RegressionDetector } from './RegressionDetector'
 export { TestReportGenerator } from './TestReportGenerator'
 
-export type { ConcurrencyScenario } from './ConcurrencyScenario'
+export type { PerformanceBaseline } from './PerformanceBaseline'
+export type { ConcurrencyTestScenario, ConcurrencyTestScenarioConfig } from './ConcurrencyScenario'
 export type { LoadTestScenario } from './LoadTestScenario'
 export type { VirtualUser } from './VirtualUser'
 
