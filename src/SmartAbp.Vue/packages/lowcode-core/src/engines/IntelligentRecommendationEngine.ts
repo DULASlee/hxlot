@@ -3,10 +3,6 @@
  * 基于规则的智能模板推荐和代码优化建议
  */
 
-import { getGlobalLogger, type ILogger } from '@smartabp/lowcode-shared'
-
-const logger: ILogger = getGlobalLogger()
-
 // 推荐类型
 export interface Recommendation {
   id: string
@@ -38,10 +34,8 @@ export interface ProjectFeatures {
  * 智能推荐引擎
  */
 export class IntelligentRecommendationEngine {
-  private _logger: ILogger
-
   constructor() {
-    this._logger = logger
+    // 初始化推荐引擎
   }
 
   /**
@@ -104,7 +98,7 @@ export class IntelligentRecommendationEngine {
       })
     }
 
-    return recommendations.sort((a, b) => 
+    return recommendations.sort((a, b) =>
       b.priority - a.priority || b.confidence - a.confidence
     )
   }
@@ -175,7 +169,7 @@ export class IntelligentRecommendationEngine {
       }
     }
 
-    return recommendations.sort((a, b) => 
+    return recommendations.sort((a, b) =>
       b.priority - a.priority || b.confidence - a.confidence
     )
   }
@@ -258,7 +252,7 @@ export class IntelligentRecommendationEngine {
 
     // 去重和排序
     const uniqueRecs = this.deduplicateRecommendations(allRecommendations)
-    return uniqueRecs.sort((a, b) => 
+    return uniqueRecs.sort((a, b) =>
       b.priority - a.priority || b.confidence - a.confidence
     ).slice(0, 10) // 最多返回10条
   }

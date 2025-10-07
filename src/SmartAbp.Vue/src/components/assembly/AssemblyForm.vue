@@ -256,6 +256,7 @@ interface Emits {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  config: undefined,
   isEditing: false
 })
 const emit = defineEmits<Emits>()

@@ -1,9 +1,10 @@
 <template>
   <el-dialog
-    v-model="visible"
+    :model-value="visible"
     :title="title"
     width="600px"
     @close="handleClose"
+    @update:model-value="(val) => emit('update:visible', val)"
   >
     <el-form
       ref="formRef"
@@ -113,10 +114,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
-import { getBookById, createBook, updateBook } from './book-api'
+import { ElMessage } from 'element-plus'
+import { computed, ref, watch } from 'vue'
+import { createBook, getBookById, updateBook } from './book-api'
 import type { CreateBookDto } from './book.types'
 
 interface Props {

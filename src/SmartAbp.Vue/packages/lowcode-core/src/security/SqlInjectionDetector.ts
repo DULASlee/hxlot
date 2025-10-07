@@ -12,7 +12,7 @@
  */
 
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
-import { SecurityIssue, VulnerabilityType, SeverityLevel, IssueLocation, SecurityIssueUtils } from './SecurityIssue'
+import { IssueLocation, SecurityIssue, SecurityIssueUtils, SeverityLevel, VulnerabilityType } from './SecurityIssue'
 
 const logger = getGlobalLogger()
 
@@ -144,7 +144,7 @@ export class SqlInjectionDetector {
    * 计算问题位置
    */
   private calculateLocation(
-    code: string,
+    _code: string,
     matchIndex: number,
     matchText: string,
     filePath: string,
@@ -156,12 +156,12 @@ export class SqlInjectionDetector {
 
     for (let i = 0; i < lines.length; i++) {
       const lineLength = lines[i].length + 1 // +1 for newline
-      
+
       if (currentPos + lineLength > matchIndex) {
         startLine = i + 1
         break
       }
-      
+
       currentPos += lineLength
     }
 
