@@ -366,7 +366,7 @@ export class HtmlReportExporter {
       link.download = filename
       link.click()
       URL.revokeObjectURL(url)
-      
+
       logger.info('✅ 报告已导出', { filename })
     } catch (error) {
       logger.error('❌ 导出报告失败', error)

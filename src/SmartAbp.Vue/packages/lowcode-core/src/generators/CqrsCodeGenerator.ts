@@ -16,34 +16,37 @@ import { getGlobalLogger } from '@smartabp/lowcode-shared'
 const logger = getGlobalLogger()
 
 export interface CqrsCommandConfig {
-    name: string
-    namespace: string
-    properties: { name: string; type: string }[]
-    returnType: string
+  name: string
+  namespace: string
+  properties: { name: string; type: string }[]
+  returnType: string
 }
 
 export interface CqrsQueryConfig {
-    name: string
-    namespace: string
-    parameters: { name: string; type: string }[]
-    returnType: string
+  name: string
+  namespace: string
+  parameters: { name: string; type: string }[]
+  returnType: string
 }
 
 /**
  * CQRS代码生成器
  */
 export class CqrsCodeGenerator {
-    constructor(_namespace: string = 'SmartAbp') {
-        // 命名空间参数保留以供未来扩展使用
-    }
+  private ___namespace: string
 
-    /**
-     * 生成Command命令
-     */
-    generateCommand(config: CqrsCommandConfig): string {
-        logger.info('🚀 生成CQRS Command', { name: config.name })
+  constructor(namespace: string = 'SmartAbp') {
+    this.___namespace = namespace
+    void this.___namespace // 保留用于未来命名空间定制
+  }
 
-        return `// 自动生成的CQRS Command
+  /**
+   * 生成Command命令
+   */
+  generateCommand(config: CqrsCommandConfig): string {
+    logger.info('🚀 生成CQRS Command', { name: config.name })
+
+    return `// 自动生成的CQRS Command
 // 生成时间: ${new Date().toISOString()}
 
 using System;
@@ -59,13 +62,13 @@ namespace ${config.namespace}.Application.Commands
 ${this.generateProperties(config.properties)}
     }
 }`
-    }
+  }
 
-    /**
-     * 生成Command Handler
-     */
-    generateCommandHandler(config: CqrsCommandConfig): string {
-        return `// 自动生成的Command Handler
+  /**
+   * 生成Command Handler
+   */
+  generateCommandHandler(config: CqrsCommandConfig): string {
+    return `// 自动生成的Command Handler
 // 生成时间: ${new Date().toISOString()}
 
 using System;
@@ -126,15 +129,15 @@ namespace ${config.namespace}.Application.CommandHandlers
         }
     }
 }`
-    }
+  }
 
-    /**
-     * 生成Query查询
-     */
-    generateQuery(config: CqrsQueryConfig): string {
-        logger.info('🚀 生成CQRS Query', { name: config.name })
+  /**
+   * 生成Query查询
+   */
+  generateQuery(config: CqrsQueryConfig): string {
+    logger.info('🚀 生成CQRS Query', { name: config.name })
 
-        return `// 自动生成的CQRS Query
+    return `// 自动生成的CQRS Query
 // 生成时间: ${new Date().toISOString()}
 
 using System;
@@ -150,13 +153,13 @@ namespace ${config.namespace}.Application.Queries
 ${this.generateProperties(config.parameters)}
     }
 }`
-    }
+  }
 
-    /**
-     * 生成Query Handler
-     */
-    generateQueryHandler(config: CqrsQueryConfig): string {
-        return `// 自动生成的Query Handler
+  /**
+   * 生成Query Handler
+   */
+  generateQueryHandler(config: CqrsQueryConfig): string {
+    return `// 自动生成的Query Handler
 // 生成时间: ${new Date().toISOString()}
 
 using System;
@@ -219,19 +222,19 @@ namespace ${config.namespace}.Application.QueryHandlers
         }
     }
 }`
-    }
+  }
 
-    /**
-     * 生成属性
-     */
-    private generateProperties(properties: { name: string; type: string }[]): string {
-        return properties
-            .map(
-                p => `        /// <summary>
+  /**
+   * 生成属性
+   */
+  private generateProperties(properties: { name: string; type: string }[]): string {
+    return properties
+      .map(
+        p => `        /// <summary>
         /// ${p.name}
         /// </summary>
         public ${p.type} ${p.name} { get; set; }`
-            )
-            .join('\n\n')
-    }
+      )
+      .join('\n\n')
+  }
 }
