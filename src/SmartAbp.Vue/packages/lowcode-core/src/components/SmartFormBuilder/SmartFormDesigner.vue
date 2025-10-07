@@ -430,7 +430,8 @@ const selectedField = computed(() => {
   // 确保props和col属性总是存在
   if (!field.props) field.props = {}
   if (!field.col) field.col = { span: 24 }
-  return field
+  // 类型断言：确保返回的field有props和col
+  return field as typeof field & { props: NonNullable<typeof field.props>; col: NonNullable<typeof field.col> }
 })
 
 const fieldRequired = computed({
