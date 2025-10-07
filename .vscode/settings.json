@@ -267,18 +267,37 @@
   "git.rebaseWhenSync": false,
 
   // ============================================
-  // 📦 TypeScript/JavaScript优化（SmartAbp专项）
+  // 📦 TypeScript/JavaScript优化（SmartAbp专项 - 合理优化版）
   // ============================================
   
-  "typescript.tsserver.maxTsServerMemory": 4096,
+  // 🎯 折中方案：TypeScript内存限制2.5GB（既节省内存又保持智能）
+  "typescript.tsserver.maxTsServerMemory": 2560,
+  
+  // ✅ 保持项目诊断以确保代码智能
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  
+  // 自动模式：让TS Server智能选择
   "typescript.tsserver.useSyntaxServer": "auto",
+  
+  // 优化文件监控（仅排除非代码目录）
   "typescript.tsserver.watchOptions": {
     "watchFile": "priorityPollingInterval",
     "watchDirectory": "dynamicPriorityPolling",
     "fallbackPolling": "dynamicPriority",
-    "excludeDirectories": ["**/node_modules", "**/dist", "**/build", "**/.next"]
+    "excludeDirectories": [
+      "**/node_modules", 
+      "**/dist", 
+      "**/build", 
+      "**/.next",
+      "**/bin",
+      "**/obj",
+      "**/docs",
+      "**/__tests__",
+      "**/coverage"
+    ]
   },
+  
+  // ✅ 保持自动导入以确保开发体验
   "typescript.updateImportsOnFileMove.enabled": "always",
   "typescript.suggest.autoImports": true,
   "typescript.preferences.includePackageJsonAutoImports": "auto",
@@ -287,7 +306,7 @@
   "javascript.updateImportsOnFileMove.enabled": "always",
 
   // ============================================
-  // 🏗️ 工作台性能优化
+  // 🏗️ 工作台性能优化（合理优化版 - 不影响AI）
   // ============================================
   
   "workbench.editor.enablePreview": false,
@@ -296,9 +315,12 @@
   "workbench.settings.enableNaturalLanguageSearch": false,
   "workbench.panel.defaultLocation": "bottom",
   "workbench.panel.opensMaximized": "never",
+  
+  // 适度限制同时打开的编辑器数量
   "workbench.editor.limit.enabled": true,
   "workbench.editor.limit.value": 10,
   "workbench.editor.limit.perEditorGroup": true,
+  
   "workbench.colorTheme": "Default Dark Modern",
   "workbench.iconTheme": "vs-seti",
 

@@ -203,6 +203,69 @@ export const mockApiHandlers = {
     }
     
     return mockTestConnectionSuccessResponse
+  },
+
+  /**
+   * Mock: GET /api/code-gen/stats/my
+   */
+  async getMyStats() {
+    await randomDelay()
+    
+    return {
+      totalProjects: 12,
+      monthlyGenerations: 8,
+      savedHours: 96,
+      qualityScore: 94.5,
+      lastUpdated: new Date().toISOString()
+    }
+  },
+
+  /**
+   * Mock: GET /api/code-gen/user-profile/my
+   */
+  async getMyProfile() {
+    await randomDelay()
+    
+    return {
+      id: 'mock-profile-001',
+      userId: 'mock-user-001',
+      industry: 'manufacturing',
+      companyName: '示例制造企业',
+      companySize: 'medium',
+      lastUsedMode: 'industry',
+      isFirstVisit: false
+    }
+  },
+
+  /**
+   * Mock: PUT /api/code-gen/user-profile/my
+   */
+  async updateMyProfile(input: any) {
+    await randomDelay()
+    
+    return {
+      id: 'mock-profile-001',
+      userId: 'mock-user-001',
+      industry: input.industry || 'manufacturing',
+      companyName: input.companyName || '示例制造企业',
+      companySize: input.companySize || 'medium',
+      lastUsedMode: input.lastUsedMode || 'industry',
+      isFirstVisit: false
+    }
+  },
+
+  /**
+   * Mock: GET /api/code-gen/user-profile/recommendation
+   */
+  async getRecommendation() {
+    await randomDelay()
+    
+    return {
+      template: 'saas-mes',
+      name: 'SaaS云MES系统',
+      reason: '检测到您的企业是制造业',
+      benefits: '30分钟生成完整MES系统，包含生产管理、设备监控、质量追溯、移动报工APP和实时监控大屏'
+    }
   }
 }
 
@@ -298,6 +361,26 @@ async function routeToMockHandler(config: any) {
     // POST /api/code-generator/test-connection
     if (method === 'post' && url?.includes('/code-generator/test-connection')) {
       return await mockApiHandlers.testDatabaseConnection(data)
+    }
+    
+    // GET /api/code-gen/stats/my
+    if (method === 'get' && url?.includes('/code-gen/stats/my')) {
+      return await mockApiHandlers.getMyStats()
+    }
+    
+    // GET /api/code-gen/user-profile/my
+    if (method === 'get' && url?.includes('/code-gen/user-profile/my')) {
+      return await mockApiHandlers.getMyProfile()
+    }
+    
+    // PUT /api/code-gen/user-profile/my
+    if (method === 'put' && url?.includes('/code-gen/user-profile/my')) {
+      return await mockApiHandlers.updateMyProfile(data)
+    }
+    
+    // GET /api/code-gen/user-profile/recommendation
+    if (method === 'get' && url?.includes('/code-gen/user-profile/recommendation')) {
+      return await mockApiHandlers.getRecommendation()
     }
     
     return null

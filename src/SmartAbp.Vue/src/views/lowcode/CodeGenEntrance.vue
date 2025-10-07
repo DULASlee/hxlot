@@ -571,12 +571,14 @@ onMounted(async () => {
 // ========== 方法 ==========
 
 /**
- * 加载统计数据（真实API）
+ * 加载统计数据（真实API + 优雅降级）
  */
 const loadStats = async () => {
   statsLoading.value = true
   try {
+    console.log('🔄 正在加载统计数据...')
     const data = await codeGenStatsApi.getMyStats()
+    console.log('✅ 统计数据加载成功:', data)
     stats.value = {
       totalProjects: data.totalProjects,
       monthlyGenerations: data.monthlyGenerations,
@@ -585,7 +587,7 @@ const loadStats = async () => {
       lastUpdated: data.lastUpdated
     }
   } catch (error) {
-    console.error('加载统计数据失败:', error)
+    console.warn('⚠️ 统计数据加载失败，使用默认值:', error)
     // 失败时不显示统计横幅（优雅降级）
     stats.value = {
       totalProjects: 0,
@@ -594,22 +596,25 @@ const loadStats = async () => {
       qualityScore: 0,
       lastUpdated: new Date().toISOString()
     }
+    // 不向用户显示错误，保持体验流畅
   } finally {
     statsLoading.value = false
   }
 }
 
 /**
- * 加载用户配置（真实API）
+ * 加载用户配置（真实API + localStorage降级）
  */
 const loadUserProfile = async () => {
   try {
+    console.log('🔄 正在加载用户配置...')
     const profile = await userProfileApi.getMyProfile()
+    console.log('✅ 用户配置加载成功:', profile)
     userIndustry.value = profile.industry || ''
     isFirstVisit.value = profile.isFirstVisit
     lastUsedMode.value = profile.lastUsedMode as LastUsedMode
   } catch (error) {
-    console.error('加载用户配置失败:', error)
+    console.warn('⚠️ 用户配置加载失败，使用本地存储:', error)
     // 优雅降级到localStorage
     userIndustry.value = localStorage.getItem('userIndustry') || ''
     const visited = localStorage.getItem('codeGenVisited')
@@ -619,46 +624,71 @@ const loadUserProfile = async () => {
 }
 
 /**
- * 加载行业推荐（真实API）
+ * 加载行业推荐（真实API + 优雅降级）
  */
 const loadRecommendation = async () => {
   try {
+    console.log('🔄 正在加载行业推荐...')
     const recommendation = await userProfileApi.getRecommendation()
+    console.log('✅ 行业推荐加载成功:', recommendation)
     industryRecommendation.value = recommendation
   } catch (error) {
-    console.error('加载推荐失败:', error)
+    console.warn('⚠️ 行业推荐加载失败:', error)
     industryRecommendation.value = null
+    // 不影响主要功能，静默失败
   }
 }
 
 /**
- * 跳转到极简模式（同步后端）
+ * 跳转到极简模式（同步后端 + 确保导航）
  */
 const goToSimpleMode = async () => {
   try {
+    console.log('🔄 更新用户偏好为极简模式...')
     await userProfileApi.updateMyProfile({ lastUsedMode: 'simple' })
+    console.log('✅ 用户偏好更新成功')
   } catch (error) {
+    console.warn('⚠️ 用户偏好更新失败，使用本地存储:', error)
     // 降级到localStorage
     localStorage.setItem('lastCodeGenMode', 'simple')
   }
-  router.push('/lowcode/ultra-simple')
+  
+  // 确保导航不受API失败影响
+  try {
+    console.log('🚀 导航到极简模式...')
+    await router.push('/lowcode/ultra-simple')
+  } catch (navError) {
+    console.error('❌ 导航失败:', navError)
+    ElMessage.error('页面跳转失败，请刷新后重试')
+  }
 }
 
 /**
- * 跳转到专业模式（同步后端）
+ * 跳转到专业模式（同步后端 + 确保导航）
  */
 const goToProMode = async () => {
   try {
+    console.log('🔄 更新用户偏好为专业模式...')
     await userProfileApi.updateMyProfile({ lastUsedMode: 'pro' })
+    console.log('✅ 用户偏好更新成功')
   } catch (error) {
+    console.warn('⚠️ 用户偏好更新失败，使用本地存储:', error)
     // 降级到localStorage
     localStorage.setItem('lastCodeGenMode', 'pro')
   }
-  router.push('/lowcode')
+  
+  // 确保导航不受API失败影响
+  try {
+    console.log('🚀 导航到专业模式...')
+    await router.push('/lowcode')
+  } catch (navError) {
+    console.error('❌ 导航失败:', navError)
+    ElMessage.error('页面跳转失败，请刷新后重试')
+  }
 }
 
 /**
- * 选择行业模板（同步后端）
+ * 选择行业模板（同步后端 + 确保导航）
  */
 const selectIndustryTemplate = async (template: string) => {
   if (template === 'coming-soon') {
@@ -667,23 +697,34 @@ const selectIndustryTemplate = async (template: string) => {
   }
   
   try {
+    console.log('🔄 更新用户偏好为行业模板模式...')
     await userProfileApi.updateMyProfile({ lastUsedMode: 'industry' })
+    console.log('✅ 用户偏好更新成功')
   } catch (error) {
+    console.warn('⚠️ 用户偏好更新失败，使用本地存储:', error)
     // 降级到localStorage
     localStorage.setItem('lastCodeGenMode', 'industry')
   }
   
   localStorage.setItem('selectedIndustryTemplate', template)
   
+  const templateName = template === 'saas-mes' ? 'SaaS云MES系统' : '智慧工地管理'
   ElMessage.success({
-    message: `已选择 ${template === 'saas-mes' ? 'SaaS云MES系统' : '智慧工地管理'} 模板`,
+    message: `已选择 ${templateName} 模板`,
     duration: 2000
   })
   
-  router.push({
-    path: '/lowcode/industry-template-config',
-    query: { template }
-  })
+  // 确保导航不受API失败影响
+  try {
+    console.log('🚀 导航到行业模板配置...')
+    await router.push({
+      path: '/lowcode/industry-template-config',
+      query: { template }
+    })
+  } catch (navError) {
+    console.error('❌ 导航失败:', navError)
+    ElMessage.error('页面跳转失败，请刷新后重试')
+  }
 }
 
 /**
