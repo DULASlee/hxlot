@@ -1,0 +1,929 @@
+{
+  "timestamp": "2025-10-07T11:22:01.026Z",
+  "statistics": {
+    "packages": {
+      "lowcode-shared": {
+        "count": 0,
+        "components": [],
+        "totalSize": 0,
+        "totalLines": 0
+      },
+      "lowcode-core": {
+        "count": 20,
+        "components": [
+          {
+            "name": "BusinessRuleDesigner",
+            "size": 8989,
+            "lines": 387
+          },
+          {
+            "name": "PropertyPanel",
+            "size": 10666,
+            "lines": 386
+          },
+          {
+            "name": "RuleToolbox",
+            "size": 9345,
+            "lines": 399
+          },
+          {
+            "name": "ActionNode",
+            "size": 6067,
+            "lines": 246
+          },
+          {
+            "name": "ConditionNode",
+            "size": 4335,
+            "lines": 201
+          },
+          {
+            "name": "DecisionNode",
+            "size": 5144,
+            "lines": 218
+          },
+          {
+            "name": "EndNode",
+            "size": 2009,
+            "lines": 94
+          },
+          {
+            "name": "StartNode",
+            "size": 1778,
+            "lines": 86
+          },
+          {
+            "name": "ErrorBoundary",
+            "size": 6573,
+            "lines": 307
+          },
+          {
+            "name": "GlobalLoadingOverlay",
+            "size": 7870,
+            "lines": 462
+          },
+          {
+            "name": "PageBuilder",
+            "size": 5554,
+            "lines": 236
+          },
+          {
+            "name": "SmartDataTable",
+            "size": 2992,
+            "lines": 121
+          },
+          {
+            "name": "SmartFormBuilder",
+            "size": 12182,
+            "lines": 415
+          },
+          {
+            "name": "SmartFormDesigner",
+            "size": 20963,
+            "lines": 790
+          },
+          {
+            "name": "WorkflowDesigner",
+            "size": 2280,
+            "lines": 95
+          },
+          {
+            "name": "EndNode",
+            "size": 833,
+            "lines": 36
+          },
+          {
+            "name": "GatewayNode",
+            "size": 1845,
+            "lines": 73
+          },
+          {
+            "name": "StartNode",
+            "size": 1530,
+            "lines": 76
+          },
+          {
+            "name": "TaskNode",
+            "size": 2025,
+            "lines": 95
+          },
+          {
+            "name": "WorkspaceContainer",
+            "size": 11237,
+            "lines": 532
+          }
+        ],
+        "totalSize": 124217,
+        "totalLines": 5255
+      },
+      "lowcode-designer": {
+        "count": 58,
+        "components": [
+          {
+            "name": "AdvancedBusinessRulesEngine",
+            "size": 41926,
+            "lines": 1472
+          },
+          {
+            "name": "AdvancedEntityRelationshipDesigner",
+            "size": 24007,
+            "lines": 969
+          },
+          {
+            "name": "AdvancedFieldTypeDesigner",
+            "size": 27596,
+            "lines": 1119
+          },
+          {
+            "name": "BusinessRulesEngine",
+            "size": 30337,
+            "lines": 999
+          },
+          {
+            "name": "CodeGenerationWizard",
+            "size": 29838,
+            "lines": 1011
+          },
+          {
+            "name": "CodePreview",
+            "size": 14052,
+            "lines": 615
+          },
+          {
+            "name": "DragPreview",
+            "size": 8877,
+            "lines": 406
+          },
+          {
+            "name": "EntityDesigner",
+            "size": 310,
+            "lines": 17
+          },
+          {
+            "name": "ComponentPropertyPanel",
+            "size": 719,
+            "lines": 39
+          },
+          {
+            "name": "DataDictionaryManager",
+            "size": 7556,
+            "lines": 334
+          },
+          {
+            "name": "DesignerPlaceholder",
+            "size": 946,
+            "lines": 41
+          },
+          {
+            "name": "DraggableComponent",
+            "size": 8188,
+            "lines": 394
+          },
+          {
+            "name": "EnhancedStateMachine",
+            "size": 32009,
+            "lines": 1282
+          },
+          {
+            "name": "EnhancedThemeEditor",
+            "size": 24117,
+            "lines": 991
+          },
+          {
+            "name": "EnterpriseCodeGenerationEngine",
+            "size": 19663,
+            "lines": 778
+          },
+          {
+            "name": "EnterpriseModelingAssistant",
+            "size": 4408,
+            "lines": 203
+          },
+          {
+            "name": "EnterprisePermissionSystem",
+            "size": 47016,
+            "lines": 1738
+          },
+          {
+            "name": "EnterpriseQualityAssurance",
+            "size": 6617,
+            "lines": 291
+          },
+          {
+            "name": "EnterpriseWorkflowEngine",
+            "size": 39711,
+            "lines": 1617
+          },
+          {
+            "name": "ExecutionMonitor",
+            "size": 12908,
+            "lines": 498
+          },
+          {
+            "name": "GenerationProgressMonitor",
+            "size": 15443,
+            "lines": 620
+          },
+          {
+            "name": "MDIContainer",
+            "size": 5117,
+            "lines": 181
+          },
+          {
+            "name": "OneClickSolution",
+            "size": 1265,
+            "lines": 67
+          },
+          {
+            "name": "ProjectWizard",
+            "size": 15182,
+            "lines": 625
+          },
+          {
+            "name": "PropertyInspector",
+            "size": 22852,
+            "lines": 871
+          },
+          {
+            "name": "RuleActionBuilder",
+            "size": 21538,
+            "lines": 768
+          },
+          {
+            "name": "RuleConditionBuilder",
+            "size": 17354,
+            "lines": 631
+          },
+          {
+            "name": "SandboxPreview",
+            "size": 11961,
+            "lines": 494
+          },
+          {
+            "name": "AbnormalUserBehaviorTable",
+            "size": 4566,
+            "lines": 191
+          },
+          {
+            "name": "ComplianceStatusMonitor",
+            "size": 5981,
+            "lines": 300
+          },
+          {
+            "name": "PermissionAccessTrendChart",
+            "size": 3559,
+            "lines": 172
+          },
+          {
+            "name": "RiskLevelDistributionChart",
+            "size": 2671,
+            "lines": 154
+          },
+          {
+            "name": "SecurityDashboard",
+            "size": 11299,
+            "lines": 468
+          },
+          {
+            "name": "SecurityMetricCard",
+            "size": 2400,
+            "lines": 143
+          },
+          {
+            "name": "StateMachineEditor",
+            "size": 1735,
+            "lines": 74
+          },
+          {
+            "name": "TabsContainer",
+            "size": 3662,
+            "lines": 147
+          },
+          {
+            "name": "TemplateManager",
+            "size": 30240,
+            "lines": 1209
+          },
+          {
+            "name": "TemplateSelector",
+            "size": 9436,
+            "lines": 408
+          },
+          {
+            "name": "ThemeEditor",
+            "size": 960,
+            "lines": 44
+          },
+          {
+            "name": "VisualComponentPalette",
+            "size": 5609,
+            "lines": 207
+          },
+          {
+            "name": "VisualDesignCanvas",
+            "size": 32417,
+            "lines": 1275
+          },
+          {
+            "name": "AdvancedSettingsPanel",
+            "size": 4145,
+            "lines": 149
+          },
+          {
+            "name": "MetricsChart",
+            "size": 2409,
+            "lines": 130
+          },
+          {
+            "name": "MicroserviceForm",
+            "size": 2978,
+            "lines": 98
+          },
+          {
+            "name": "ServiceConfigPanel",
+            "size": 4534,
+            "lines": 167
+          },
+          {
+            "name": "ServiceTopologyCanvas",
+            "size": 8374,
+            "lines": 314
+          },
+          {
+            "name": "ChaosExperimentDesigner",
+            "size": 10958,
+            "lines": 404
+          },
+          {
+            "name": "FaultInjectionConfig",
+            "size": 6395,
+            "lines": 273
+          },
+          {
+            "name": "CICDTemplateDesigner",
+            "size": 15620,
+            "lines": 524
+          },
+          {
+            "name": "EnhancedCodePreview",
+            "size": 19794,
+            "lines": 747
+          },
+          {
+            "name": "DevEnvironmentSetup",
+            "size": 21090,
+            "lines": 682
+          },
+          {
+            "name": "GitWorkflowPanel",
+            "size": 17471,
+            "lines": 558
+          },
+          {
+            "name": "BulkheadConfig",
+            "size": 3982,
+            "lines": 183
+          },
+          {
+            "name": "CircuitBreakerConfig",
+            "size": 3876,
+            "lines": 172
+          },
+          {
+            "name": "FallbackConfig",
+            "size": 5249,
+            "lines": 209
+          },
+          {
+            "name": "RateLimitConfig",
+            "size": 4063,
+            "lines": 185
+          },
+          {
+            "name": "ResiliencePolicyDesigner",
+            "size": 7600,
+            "lines": 265
+          },
+          {
+            "name": "RetryPolicyConfig",
+            "size": 3599,
+            "lines": 158
+          }
+        ],
+        "totalSize": 748185,
+        "totalLines": 29081
+      },
+      "lowcode-api": {
+        "count": 0,
+        "components": [],
+        "totalSize": 0,
+        "totalLines": 0
+      },
+      "lowcode-tools": {
+        "count": 0,
+        "components": [],
+        "totalSize": 0,
+        "totalLines": 0
+      },
+      "metadata-core": {
+        "count": 0,
+        "components": [],
+        "totalSize": 0,
+        "totalLines": 0
+      }
+    },
+    "mainApp": {
+      "count": 38,
+      "components": [
+        {
+          "name": "AssemblyForm",
+          "size": 11136,
+          "lines": 536
+        },
+        {
+          "name": "AssemblyItem",
+          "size": 9904,
+          "lines": 503
+        },
+        {
+          "name": "AssemblyManager",
+          "size": 10621,
+          "lines": 511
+        },
+        {
+          "name": "AuthExample",
+          "size": 7662,
+          "lines": 360
+        },
+        {
+          "name": "LoginForm",
+          "size": 21979,
+          "lines": 896
+        },
+        {
+          "name": "BaseButton",
+          "size": 4251,
+          "lines": 257
+        },
+        {
+          "name": "BaseCard",
+          "size": 2652,
+          "lines": 164
+        },
+        {
+          "name": "BaseDialog",
+          "size": 4993,
+          "lines": 273
+        },
+        {
+          "name": "DynamicIcon",
+          "size": 7293,
+          "lines": 266
+        },
+        {
+          "name": "LanguageSwitcher",
+          "size": 7844,
+          "lines": 333
+        },
+        {
+          "name": "LogoutConfirmDialog",
+          "size": 5463,
+          "lines": 288
+        },
+        {
+          "name": "ModuleLoadingState",
+          "size": 177,
+          "lines": 13
+        },
+        {
+          "name": "SmartAbp",
+          "size": 0,
+          "lines": 1
+        },
+        {
+          "name": "EnterpriseIconSystem",
+          "size": 11328,
+          "lines": 386
+        },
+        {
+          "name": "IconCommunity",
+          "size": 1054,
+          "lines": 8
+        },
+        {
+          "name": "IconDemo",
+          "size": 5122,
+          "lines": 218
+        },
+        {
+          "name": "IconDocumentation",
+          "size": 1254,
+          "lines": 8
+        },
+        {
+          "name": "IconEcosystem",
+          "size": 1977,
+          "lines": 8
+        },
+        {
+          "name": "IconGallerySimple",
+          "size": 10620,
+          "lines": 425
+        },
+        {
+          "name": "IconSupport",
+          "size": 288,
+          "lines": 8
+        },
+        {
+          "name": "IconTooling",
+          "size": 907,
+          "lines": 20
+        },
+        {
+          "name": "SimpleIconTest",
+          "size": 4457,
+          "lines": 187
+        },
+        {
+          "name": "DashboardIcon",
+          "size": 5881,
+          "lines": 300
+        },
+        {
+          "name": "LowCodeIcon",
+          "size": 11463,
+          "lines": 552
+        },
+        {
+          "name": "UserIcon",
+          "size": 7275,
+          "lines": 361
+        },
+        {
+          "name": "SmartAbpLayout",
+          "size": 36781,
+          "lines": 1549
+        },
+        {
+          "name": "StudioFooter",
+          "size": 854,
+          "lines": 40
+        },
+        {
+          "name": "StudioHeader",
+          "size": 1742,
+          "lines": 80
+        },
+        {
+          "name": "StudioPropertyPanel",
+          "size": 758,
+          "lines": 38
+        },
+        {
+          "name": "StudioSidebar",
+          "size": 2991,
+          "lines": 116
+        },
+        {
+          "name": "EnhancedStateMachine",
+          "size": 5091,
+          "lines": 225
+        },
+        {
+          "name": "LazyImage",
+          "size": 6667,
+          "lines": 354
+        },
+        {
+          "name": "OptimizedDataTable",
+          "size": 15365,
+          "lines": 646
+        },
+        {
+          "name": "PermissionMatrix",
+          "size": 27344,
+          "lines": 1064
+        },
+        {
+          "name": "SimpleThemeSwitcher",
+          "size": 7848,
+          "lines": 291
+        },
+        {
+          "name": "ThemeSwitcher",
+          "size": 11366,
+          "lines": 472
+        },
+        {
+          "name": "MDIContainer",
+          "size": 16942,
+          "lines": 689
+        },
+        {
+          "name": "TabsContainer",
+          "size": 21592,
+          "lines": 905
+        }
+      ],
+      "totalSize": 310942,
+      "totalLines": 13351
+    },
+    "total": 116,
+    "totalSize": 1183344,
+    "totalLines": 47687
+  },
+  "performance": {
+    "avgWithPrefix": 0.1754438000000164,
+    "avgWithoutPrefix": 0.42652509999996935,
+    "avgCacheHit": 0.01502588000000742,
+    "worstCase": 2.194291999999905,
+    "bestCase": 0.015249999999923602
+  },
+  "stability": {
+    "issues": [
+      {
+        "type": "conflict",
+        "severity": "high",
+        "message": "组件名冲突: LcEndNode (在lowcode-core和lowcode-core中)"
+      },
+      {
+        "type": "conflict",
+        "severity": "high",
+        "message": "组件名冲突: LcStartNode (在lowcode-core和lowcode-core中)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LcBusinessRuleDesigner (387行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LcPropertyPanel (386行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LcRuleToolbox (399行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LcErrorBoundary (307行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LcGlobalLoadingOverlay (462行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LcSmartFormBuilder (415行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LcSmartFormDesigner (790行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LcWorkspaceContainer (532行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdAdvancedBusinessRulesEngine (1472行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdAdvancedEntityRelationshipDesigner (969行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdAdvancedFieldTypeDesigner (1119行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdBusinessRulesEngine (999行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdCodeGenerationWizard (1011行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdCodePreview (615行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdDragPreview (406行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdDataDictionaryManager (334行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdDraggableComponent (394行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdEnhancedStateMachine (1282行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdEnhancedThemeEditor (991行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdEnterpriseCodeGenerationEngine (778行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdEnterprisePermissionSystem (1738行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdEnterpriseWorkflowEngine (1617行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdExecutionMonitor (498行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdGenerationProgressMonitor (620行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdProjectWizard (625行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdPropertyInspector (871行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdRuleActionBuilder (768行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdRuleConditionBuilder (631行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdSandboxPreview (494行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdSecurityDashboard (468行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdTemplateManager (1209行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdTemplateSelector (408行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdVisualDesignCanvas (1275行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdServiceTopologyCanvas (314行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdChaosExperimentDesigner (404行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdCICDTemplateDesigner (524行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdEnhancedCodePreview (747行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdDevEnvironmentSetup (682行)"
+      },
+      {
+        "type": "large-file",
+        "severity": "medium",
+        "message": "大文件: LdGitWorkflowPanel (558行)"
+      },
+      {
+        "type": "structure",
+        "severity": "low",
+        "message": "目录不存在: lowcode-api/src/components"
+      },
+      {
+        "type": "structure",
+        "severity": "low",
+        "message": "目录不存在: lowcode-tools/src/components"
+      },
+      {
+        "type": "structure",
+        "severity": "low",
+        "message": "目录不存在: metadata-core/src/components"
+      }
+    ],
+    "conflictCount": 2,
+    "largeFileCount": 39,
+    "structureIssueCount": 3
+  },
+  "scalability": {
+    "currentComponents": 116,
+    "projections": [
+      100,
+      200,
+      500,
+      1000,
+      2000
+    ],
+    "memoryPerComponent": 184
+  },
+  "recommendations": [
+    {
+      "category": "稳定性增强",
+      "priority": "critical",
+      "title": "解决组件名冲突",
+      "description": "发现2个组件名冲突，必须立即解决",
+      "impact": "避免运行时组件解析错误",
+      "implementation": "重命名冲突组件或调整前缀规则"
+    },
+    {
+      "category": "代码质量",
+      "priority": "medium",
+      "title": "拆分大型组件",
+      "description": "发现39个超过300行的组件文件",
+      "impact": "提升代码可维护性和复用性",
+      "implementation": "使用组合式API拆分逻辑，提取子组件"
+    },
+    {
+      "category": "扩展性增强",
+      "priority": "medium",
+      "title": "实现懒加载机制",
+      "description": "组件数量较多，建议实现按需加载",
+      "impact": "减少初始包体积，提升首屏加载速度",
+      "implementation": "使用动态import和异步组件"
+    },
+    {
+      "category": "监控系统",
+      "priority": "medium",
+      "title": "添加组件解析监控",
+      "description": "实时监控组件解析性能和错误",
+      "impact": "及时发现性能问题和解析错误",
+      "implementation": "在packagesResolver中添加性能埋点和错误上报"
+    },
+    {
+      "category": "开发体验",
+      "priority": "low",
+      "title": "增强TypeScript智能提示",
+      "description": "当前components.d.ts已生成，可以进一步优化",
+      "impact": "提升开发效率，减少错误",
+      "implementation": "添加组件Props类型导出，生成JSDoc注释"
+    }
+  ],
+  "scores": {
+    "performance": 100,
+    "stability": 45,
+    "scalability": 95,
+    "codeQuality": 0,
+    "overall": 67.5
+  }
+}
