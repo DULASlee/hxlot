@@ -3,9 +3,9 @@
  * 基于元数据生成 TypeScript 类型、API、表单、列表、Store等
  */
 
+import type { EntityMetadata, PropertyMetadata } from '@smartabp/metadata-core'
 import { promises as fs } from 'fs'
 import path from 'node:path'
-import type { EntityMetadata, PropertyMetadata } from '../../../packages/metadata-core/src/types/index'
 
 export interface GeneratorOptions {
   dryRun?: boolean
