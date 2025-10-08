@@ -130,7 +130,12 @@ export function move<T>(arr: T[], from: number, to: number): T[] {
  */
 export function swap<T>(arr: T[], index1: number, index2: number): T[] {
   const result = [...arr]
-  ;[result[index1], result[index2]] = [result[index2], result[index1]]
+  const temp1 = result[index1]
+  const temp2 = result[index2]
+  if (temp1 !== undefined && temp2 !== undefined) {
+    result[index1] = temp2
+    result[index2] = temp1
+  }
   return result
 }
 
@@ -141,7 +146,12 @@ export function shuffle<T>(arr: T[]): T[] {
   const result = [...arr]
   for (let i = result.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
-    ;[result[i], result[j]] = [result[j], result[i]]
+    const temp1 = result[i]
+    const temp2 = result[j]
+    if (temp1 !== undefined && temp2 !== undefined) {
+      result[i] = temp2
+      result[j] = temp1
+    }
   }
   return result
 }

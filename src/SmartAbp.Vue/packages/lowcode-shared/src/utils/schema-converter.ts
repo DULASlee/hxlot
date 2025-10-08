@@ -87,12 +87,14 @@ interface BackendPropertyDto {
     name?: string
     displayName?: string
     description?: string
+    helpText?: string
     type?: string
     isRequired?: boolean
     isNullable?: boolean
     isUnique?: boolean
     isIndexed?: boolean
     isPrimaryKey?: boolean
+    isKey?: boolean
     maxLength?: number
     minLength?: number
     precision?: number
@@ -101,6 +103,15 @@ interface BackendPropertyDto {
     enumType?: string
     enumValues?: any[]
     comment?: string
+    pattern?: string
+    minValue?: number
+    maxValue?: number
+    displayOrder?: number
+    groupName?: string
+    isVisible?: boolean
+    isReadonly?: boolean
+    listVisible?: boolean
+    formVisible?: boolean
     validationRules?: BackendValidationRuleDto[]
 }
 
@@ -158,7 +169,7 @@ export class SchemaConverter {
             description: dto.description || '',
             version: dto.version || '1.0.0',
             namespace: dto.namespace || '',
-            architecturePattern: dto.architecturePattern || 'Crud',
+            architecturePattern: (dto.architecturePattern as 'Crud' | 'DDD' | 'CQRS') || 'Crud',
             author: dto.author || 'SmartAbp Generator',
             databaseInfo: {
                 connectionStringName: dto.databaseInfo?.connectionStringName || 'Default',
