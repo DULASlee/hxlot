@@ -1,5 +1,5 @@
 /**
- * 🏗️ 企业级组件注册中心
+ * 🏗️ 企业级组件注册中心 v2.0
  * SmartAbp低代码引擎 - 公共组件系统革命
  *
  * 核心功能:
@@ -7,10 +7,78 @@
  * - 组件元数据管理和分类
  * - 依赖关系管理和解析
  * - 支持智能懒加载和内存管理
+ * - 热更新支持（开发模式）
+ * - 权限控制和版本管理
+ * - 生命周期钩子和扩展点
+ * - 性能监控和错误追踪
  */
 
 export type ComponentCategory = 'basic' | 'layout' | 'form' | 'data' | 'chart' | 'advanced' | 'business';
 export type LoadPriority = 'high' | 'medium' | 'low';
+
+/**
+ * 组件生命周期钩子
+ */
+export interface ComponentLifecycleHooks {
+  /** 组件注册前 */
+  beforeRegister?: (metadata: ComponentMetadata) => Promise<void> | void;
+  /** 组件注册后 */
+  afterRegister?: (metadata: ComponentMetadata) => Promise<void> | void;
+  /** 组件加载前 */
+  beforeLoad?: (name: string) => Promise<void> | void;
+  /** 组件加载后 */
+  afterLoad?: (name: string, component: any) => Promise<void> | void;
+  /** 组件卸载前 */
+  beforeUnload?: (name: string) => Promise<void> | void;
+  /** 组件卸载后 */
+  afterUnload?: (name: string) => Promise<void> | void;
+}
+
+/**
+ * 组件扩展点
+ */
+export interface ComponentExtensionPoint {
+  /** 扩展点名称 */
+  name: string;
+  /** 扩展点描述 */
+  description?: string;
+  /** 扩展点类型 */
+  type: 'hook' | 'middleware' | 'plugin' | 'adapter';
+  /** 扩展点优先级 */
+  priority?: number;
+  /** 扩展点处理器 */
+  handler: (...args: any[]) => Promise<any> | any;
+}
+
+/**
+ * 组件权限配置
+ */
+export interface ComponentPermission {
+  /** 允许的角色 */
+  roles?: string[];
+  /** 允许的权限 */
+  permissions?: string[];
+  /** 是否公开访问 */
+  public?: boolean;
+  /** 自定义权限检查函数 */
+  customCheck?: (user: any) => boolean;
+}
+
+/**
+ * 组件版本信息
+ */
+export interface ComponentVersion {
+  /** 版本号 */
+  version: string;
+  /** 变更日志 */
+  changelog?: string;
+  /** 是否已废弃 */
+  deprecated?: boolean;
+  /** 废弃信息 */
+  deprecationMessage?: string;
+  /** 兼容性信息 */
+  compatibility?: string[];
+}
 
 /**
  * 组件元数据接口
@@ -46,6 +114,14 @@ export interface ComponentMetadata {
   usageCount?: number;
   /** 最后使用时间 */
   lastUsed?: number;
+  /** 权限配置 */
+  permissions?: ComponentPermission;
+  /** 生命周期钩子 */
+  lifecycleHooks?: ComponentLifecycleHooks;
+  /** 扩展点 */
+  extensionPoints?: ComponentExtensionPoint[];
+  /** 版本信息 */
+  versionInfo?: ComponentVersion;
 }
 
 /**
@@ -62,6 +138,8 @@ export interface ComponentInstance {
   memoryUsage?: number;
   /** 是否已激活 */
   active: boolean;
+  /** 组件状态 */
+  state?: Record<string, any>;
 }
 
 /**
@@ -78,10 +156,34 @@ export interface ComponentLoadStats {
   totalMemoryUsage: number;
   /** 加载时间统计 */
   averageLoadTime: number;
+  /** 错误统计 */
+  errorCount: number;
+  /** 性能统计 */
+  performanceMetrics: {
+    averageLoadTime: number;
+    slowestComponent: string;
+    fastestComponent: string;
+  };
 }
 
 /**
- * 🏗️ 企业级组件注册中心
+ * 性能监控指标
+ */
+export interface PerformanceMetric {
+  /** 指标类型 */
+  type: 'load' | 'render' | 'error' | 'memory';
+  /** 组件名称 */
+  component: string;
+  /** 指标值 */
+  value: number;
+  /** 时间戳 */
+  timestamp: number;
+  /** 额外信息 */
+  metadata?: Record<string, any>;
+}
+
+/**
+ * 🏗️ 企业级组件注册中心 v2.0
  */
 export class ComponentRegistry {
   private components = new Map<string, ComponentMetadata>();
@@ -90,13 +192,32 @@ export class ComponentRegistry {
   private categoryIndex = new Map<ComponentCategory, Set<string>>();
   private dependencyGraph = new Map<string, Set<string>>();
   private usageStats = new Map<string, { count: number; lastUsed: number; }>();
+  private performanceMetrics = new Map<string, PerformanceMetric[]>();
+  private globalLifecycleHooks: ComponentLifecycleHooks = {};
+  private extensionPoints = new Map<string, ComponentExtensionPoint[]>();
+  private hotReloadEnabled = false;
 
   /**
    * 注册组件
    */
-  register(metadata: ComponentMetadata): void {
+  async register(metadata: ComponentMetadata): Promise<void> {
+    // 执行全局beforeRegister钩子
+    if (this.globalLifecycleHooks.beforeRegister) {
+      await this.globalLifecycleHooks.beforeRegister(metadata);
+    }
+
+    // 执行组件beforeRegister钩子
+    if (metadata.lifecycleHooks?.beforeRegister) {
+      await metadata.lifecycleHooks.beforeRegister(metadata);
+    }
+
     // 验证组件元数据
     this.validateMetadata(metadata);
+
+    // 检查版本冲突
+    if (this.checkVersionConflict(metadata.name, metadata.version)) {
+      console.warn(`⚠️ 版本冲突: ${metadata.name} v${metadata.version}`);
+    }
 
     // 注册组件
     this.components.set(metadata.name, metadata);
@@ -107,32 +228,50 @@ export class ComponentRegistry {
     // 构建依赖图
     this.buildDependencyGraph(metadata);
 
-    console.log(`✅ 组件已注册: ${metadata.name} (${metadata.category})`);
+    // 注册扩展点
+    if (metadata.extensionPoints) {
+      this.registerExtensionPoints(metadata.name, metadata.extensionPoints);
+    }
+
+    console.log(`✅ 组件已注册: ${metadata.name} (${metadata.category}) v${metadata.version}`);
+
+    // 执行全局afterRegister钩子
+    if (this.globalLifecycleHooks.afterRegister) {
+      await this.globalLifecycleHooks.afterRegister(metadata);
+    }
+
+    // 执行组件afterRegister钩子
+    if (metadata.lifecycleHooks?.afterRegister) {
+      await metadata.lifecycleHooks.afterRegister(metadata);
+    }
   }
 
   /**
    * 批量注册组件
    */
-  registerBatch(metadataList: ComponentMetadata[]): void {
-    metadataList.forEach(metadata => this.register(metadata));
+  async registerBatch(metadataList: ComponentMetadata[]): Promise<void> {
+    console.log(`🚀 开始批量注册 ${metadataList.length} 个组件`);
+
+    for (const metadata of metadataList) {
+      try {
+        await this.register(metadata);
+      } catch (error) {
+        console.error(`❌ 组件注册失败: ${metadata.name}`, error);
+      }
+    }
+
     console.log(`✅ 批量注册完成: ${metadataList.length} 个组件`);
   }
 
   /**
    * 异步加载组件
    */
-  async load(name: string): Promise<any> {
-    // 检查是否已加载
-    if (this.loadedComponents.has(name)) {
-      const instance = this.loadedComponents.get(name)!;
-      this.updateUsageStats(name);
-      instance.active = true;
-      return instance.component;
-    }
+  async load(name: string, user?: any): Promise<any> {
+    const startTime = performance.now();
 
-    // 检查是否正在加载
-    if (this.loadingPromises.has(name)) {
-      return await this.loadingPromises.get(name)!;
+    // 执行全局beforeLoad钩子
+    if (this.globalLifecycleHooks.beforeLoad) {
+      await this.globalLifecycleHooks.beforeLoad(name);
     }
 
     // 获取组件元数据
@@ -141,8 +280,40 @@ export class ComponentRegistry {
       throw new Error(`组件未注册: ${name}`);
     }
 
+    // 执行组件beforeLoad钩子
+    if (metadata.lifecycleHooks?.beforeLoad) {
+      await metadata.lifecycleHooks.beforeLoad(name);
+    }
+
+    // 权限检查
+    if (user && !this.checkPermission(name, user)) {
+      throw new Error(`权限不足: ${name}`);
+    }
+
+    // 检查是否已加载
+    if (this.loadedComponents.has(name)) {
+      const instance = this.loadedComponents.get(name)!;
+      this.updateUsageStats(name);
+      instance.active = true;
+
+      // 记录性能指标
+      this.recordPerformanceMetric({
+        type: 'load',
+        component: name,
+        value: performance.now() - startTime,
+        timestamp: Date.now()
+      });
+
+      return instance.component;
+    }
+
+    // 检查是否正在加载
+    if (this.loadingPromises.has(name)) {
+      return await this.loadingPromises.get(name)!;
+    }
+
     // 加载依赖组件
-    await this.loadDependencies(metadata.dependencies);
+    await this.loadDependencies(metadata.dependencies, user);
 
     // 创建加载Promise
     const loadPromise = this.loadComponent(metadata);
@@ -157,15 +328,46 @@ export class ComponentRegistry {
         component,
         loadedAt: Date.now(),
         memoryUsage: this.estimateMemoryUsage(component),
-        active: true
+        active: true,
+        state: {}
       };
 
       // 缓存组件实例
       this.loadedComponents.set(name, instance);
       this.updateUsageStats(name);
 
-      console.log(`✅ 组件已加载: ${name}`);
+      // 记录性能指标
+      const loadTime = performance.now() - startTime;
+      this.recordPerformanceMetric({
+        type: 'load',
+        component: name,
+        value: loadTime,
+        timestamp: Date.now()
+      });
+
+      console.log(`✅ 组件已加载: ${name} (${loadTime.toFixed(2)}ms)`);
+
+      // 执行全局afterLoad钩子
+      if (this.globalLifecycleHooks.afterLoad) {
+        await this.globalLifecycleHooks.afterLoad(name, component);
+      }
+
+      // 执行组件afterLoad钩子
+      if (metadata.lifecycleHooks?.afterLoad) {
+        await metadata.lifecycleHooks.afterLoad(name, component);
+      }
+
       return component;
+    } catch (error) {
+      // 记录错误指标
+      this.recordPerformanceMetric({
+        type: 'error',
+        component: name,
+        value: 1,
+        timestamp: Date.now(),
+        metadata: { error: error.message }
+      });
+      throw error;
     } finally {
       this.loadingPromises.delete(name);
     }
@@ -174,13 +376,168 @@ export class ComponentRegistry {
   /**
    * 卸载组件
    */
-  unload(name: string): void {
+  async unload(name: string): Promise<void> {
     const instance = this.loadedComponents.get(name);
-    if (instance) {
-      instance.active = false;
-      this.loadedComponents.delete(name);
-      console.log(`🗑️ 组件已卸载: ${name}`);
+    if (!instance) return;
+
+    // 执行全局beforeUnload钩子
+    if (this.globalLifecycleHooks.beforeUnload) {
+      await this.globalLifecycleHooks.beforeUnload(name);
     }
+
+    // 执行组件beforeUnload钩子
+    if (instance.metadata.lifecycleHooks?.beforeUnload) {
+      await instance.metadata.lifecycleHooks.beforeUnload(name);
+    }
+
+    instance.active = false;
+    this.loadedComponents.delete(name);
+
+    // 执行全局afterUnload钩子
+    if (this.globalLifecycleHooks.afterUnload) {
+      await this.globalLifecycleHooks.afterUnload(name);
+    }
+
+    // 执行组件afterUnload钩子
+    if (instance.metadata.lifecycleHooks?.afterUnload) {
+      await instance.metadata.lifecycleHooks.afterUnload(name);
+    }
+
+    console.log(`🗑️ 组件已卸载: ${name}`);
+  }
+
+  /**
+   * 热更新组件（开发模式）
+   */
+  async hotReload(componentName: string): Promise<void> {
+    if (!this.hotReloadEnabled) {
+      console.warn('⚠️ 热更新未启用');
+      return;
+    }
+
+    const oldComponent = this.loadedComponents.get(componentName);
+    if (!oldComponent) {
+      throw new Error(`组件未加载: ${componentName}`);
+    }
+
+    console.log(`🔄 开始热更新: ${componentName}`);
+
+    // 1. 保存状态
+    const state = oldComponent.state || {};
+
+    // 2. 卸载旧组件
+    await this.unload(componentName);
+
+    // 3. 清除缓存
+    this.loadingPromises.delete(componentName);
+
+    // 4. 重新加载
+    const newComponent = await this.load(componentName);
+
+    // 5. 恢复状态
+    const newInstance = this.loadedComponents.get(componentName);
+    if (newInstance) {
+      newInstance.state = state;
+    }
+
+    console.log(`✅ 热更新完成: ${componentName}`);
+  }
+
+  /**
+   * 启用热更新
+   */
+  enableHotReload(): void {
+    this.hotReloadEnabled = true;
+
+    if (import.meta.hot) {
+      import.meta.hot.on('component-update', (data: any) => {
+        this.hotReload(data.componentName);
+      });
+    }
+
+    console.log('🔥 热更新已启用');
+  }
+
+  /**
+   * 设置全局生命周期钩子
+   */
+  setGlobalLifecycleHooks(hooks: ComponentLifecycleHooks): void {
+    this.globalLifecycleHooks = { ...this.globalLifecycleHooks, ...hooks };
+  }
+
+  /**
+   * 注册扩展点
+   */
+  registerExtensionPoints(componentName: string, extensionPoints: ComponentExtensionPoint[]): void {
+    this.extensionPoints.set(componentName, extensionPoints);
+  }
+
+  /**
+   * 执行扩展点
+   */
+  async executeExtensionPoint(componentName: string, pointName: string, ...args: any[]): Promise<any> {
+    const points = this.extensionPoints.get(componentName) || [];
+    const point = points.find(p => p.name === pointName);
+
+    if (!point) {
+      throw new Error(`扩展点不存在: ${componentName}.${pointName}`);
+    }
+
+    return await point.handler(...args);
+  }
+
+  /**
+   * 权限检查
+   */
+  checkPermission(componentName: string, user: any): boolean {
+    const metadata = this.components.get(componentName);
+    if (!metadata?.permissions) return true;
+
+    const permission = metadata.permissions;
+
+    // 公开访问
+    if (permission.public) return true;
+
+    // 自定义权限检查
+    if (permission.customCheck) {
+      return permission.customCheck(user);
+    }
+
+    // 角色检查
+    if (permission.roles && permission.roles.length > 0) {
+      if (!user.roles || !permission.roles.some(role => user.roles.includes(role))) {
+        return false;
+      }
+    }
+
+    // 权限检查
+    if (permission.permissions && permission.permissions.length > 0) {
+      if (!user.permissions || !permission.permissions.some(perm => user.permissions.includes(perm))) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * 获取用户可用组件
+   */
+  getAvailableComponents(user?: any): ComponentMetadata[] {
+    return Array.from(this.components.values()).filter(component =>
+      this.checkPermission(component.name, user)
+    );
+  }
+
+  /**
+   * 版本冲突检查
+   */
+  checkVersionConflict(componentName: string, version: string): boolean {
+    const existing = this.components.get(componentName);
+    if (!existing) return false;
+
+    // 简单的版本比较（实际项目中应使用semver）
+    return existing.version !== version;
   }
 
   /**
@@ -253,12 +610,36 @@ export class ComponentRegistry {
       ? loadTimes.reduce((sum, time) => sum + time, 0) / loadTimes.length
       : 0;
 
+    // 性能指标
+    const loadMetrics = Array.from(this.performanceMetrics.values())
+      .flat()
+      .filter(m => m.type === 'load');
+
+    const performanceMetrics = {
+      averageLoadTime: loadMetrics.length > 0
+        ? loadMetrics.reduce((sum, m) => sum + m.value, 0) / loadMetrics.length
+        : 0,
+      slowestComponent: loadMetrics.length > 0
+        ? loadMetrics.reduce((slowest, m) => m.value > slowest.value ? m : slowest).component
+        : '',
+      fastestComponent: loadMetrics.length > 0
+        ? loadMetrics.reduce((fastest, m) => m.value < fastest.value ? m : fastest).component
+        : ''
+    };
+
+    // 错误统计
+    const errorCount = Array.from(this.performanceMetrics.values())
+      .flat()
+      .filter(m => m.type === 'error').length;
+
     return {
       totalComponents,
       loadedComponents,
       activeComponents,
       totalMemoryUsage,
-      averageLoadTime
+      averageLoadTime,
+      errorCount,
+      performanceMetrics
     };
   }
 
@@ -267,6 +648,16 @@ export class ComponentRegistry {
    */
   getUsageStats(): Map<string, { count: number; lastUsed: number; }> {
     return new Map(this.usageStats);
+  }
+
+  /**
+   * 获取性能指标
+   */
+  getPerformanceMetrics(componentName?: string): PerformanceMetric[] {
+    if (componentName) {
+      return this.performanceMetrics.get(componentName) || [];
+    }
+    return Array.from(this.performanceMetrics.values()).flat();
   }
 
   /**
@@ -327,6 +718,9 @@ export class ComponentRegistry {
     if (!metadata.bundle) {
       throw new Error('组件bundle不能为空');
     }
+    if (!metadata.version) {
+      throw new Error('组件版本不能为空');
+    }
   }
 
   /**
@@ -349,11 +743,11 @@ export class ComponentRegistry {
   /**
    * 加载依赖组件
    */
-  private async loadDependencies(dependencies: string[]): Promise<void> {
+  private async loadDependencies(dependencies: string[], user?: any): Promise<void> {
     if (dependencies.length === 0) return;
 
     console.log(`🔗 加载依赖组件: ${dependencies.join(', ')}`);
-    await Promise.all(dependencies.map(dep => this.load(dep)));
+    await Promise.all(dependencies.map(dep => this.load(dep, user)));
   }
 
   /**
@@ -404,6 +798,21 @@ export class ComponentRegistry {
       metadata.lastUsed = Date.now();
     }
   }
+
+  /**
+   * 记录性能指标
+   */
+  private recordPerformanceMetric(metric: PerformanceMetric): void {
+    const existing = this.performanceMetrics.get(metric.component) || [];
+    existing.push(metric);
+
+    // 只保留最近100个指标
+    if (existing.length > 100) {
+      existing.splice(0, existing.length - 100);
+    }
+
+    this.performanceMetrics.set(metric.component, existing);
+  }
 }
 
 /**
@@ -421,15 +830,15 @@ export function createComponentRegistry(): ComponentRegistry {
 /**
  * 快捷函数：注册组件
  */
-export function registerComponent(metadata: ComponentMetadata): void {
-  globalComponentRegistry.register(metadata);
+export async function registerComponent(metadata: ComponentMetadata): Promise<void> {
+  await globalComponentRegistry.register(metadata);
 }
 
 /**
  * 快捷函数：加载组件
  */
-export async function loadComponent(name: string): Promise<any> {
-  return await globalComponentRegistry.load(name);
+export async function loadComponent(name: string, user?: any): Promise<any> {
+  return await globalComponentRegistry.load(name, user);
 }
 
 /**
@@ -437,4 +846,18 @@ export async function loadComponent(name: string): Promise<any> {
  */
 export function getComponentMetadata(name: string): ComponentMetadata | null {
   return globalComponentRegistry.getMetadata(name);
+}
+
+/**
+ * 快捷函数：热更新组件
+ */
+export async function hotReloadComponent(name: string): Promise<void> {
+  return await globalComponentRegistry.hotReload(name);
+}
+
+/**
+ * 快捷函数：启用热更新
+ */
+export function enableHotReload(): void {
+  globalComponentRegistry.enableHotReload();
 }

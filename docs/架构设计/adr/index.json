@@ -823,37 +823,38 @@
     },
     {
       "id": "0032",
-      "title": "Assembly插件管理系统架构决策",
-      "path": "./0032-assembly-plugin-management-system.md",
+      "title": "ComponentRegistry企业级组件管理架构决策",
+      "path": "./0032-component-registry-enterprise-management.md",
       "status": "已接受",
-      "category": "插件架构",
+      "category": "组件架构",
       "tags": [
-        "插件系统",
-        "Assembly",
-        "动态加载",
-        "热插拔",
-        "扩展架构"
+        "组件管理",
+        "ComponentRegistry",
+        "生命周期钩子",
+        "权限控制",
+        "热更新"
       ],
-      "createdDate": "2025-10-05",
-      "lastUpdated": "2025-10-05",
+      "createdDate": "2025-10-08",
+      "lastUpdated": "2025-10-08",
       "decisionMakers": [
         "首席架构师",
         "前端团队"
       ],
-      "impactScope": "系统的可扩展性和插件化能力",
+      "impactScope": "企业级组件管理和系统架构统一",
       "aiTriggers": [
-        "插件",
-        "Assembly",
-        "动态加载",
-        "热插拔",
-        "扩展系统",
-        "模块化"
+        "组件管理",
+        "ComponentRegistry",
+        "生命周期钩子",
+        "权限控制",
+        "热更新",
+        "企业级架构"
       ],
       "relatedADRs": [
         "0013",
-        "0016"
+        "0016",
+        "0002"
       ],
-      "summary": "v19.0新增：基于Assembly动态加载的智能插件管理系统，支持热插拔和灵活扩展"
+      "summary": "v2.0升级：企业级ComponentRegistry组件管理平台，融合生命周期钩子、权限控制、热更新、性能监控等企业级能力"
     },
     {
       "id": "0033",
@@ -1042,8 +1043,8 @@
       ],
       "importance": "核心"
     },
-    "插件架构": {
-      "description": "插件系统和动态扩展相关的决策",
+    "组件架构": {
+      "description": "组件管理和企业级架构相关的决策",
       "adrs": [
         "0032"
       ],
