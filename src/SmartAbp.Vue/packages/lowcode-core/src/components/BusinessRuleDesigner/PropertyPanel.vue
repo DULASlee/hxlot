@@ -243,8 +243,11 @@ const onPropertyChange = () => {
   if (!props.selectedNode) return
 
   // 同步动作参数到节点数据
-  if (props.selectedNode.type === 'action') {
-    props.selectedNode.data.actionParams = { ...actionParams.value }
+  if (props.selectedNode.type === 'action' && props.selectedNode.data.actionType) {
+    props.selectedNode.data.actionParams = { 
+      ...actionParams.value,
+      actionType: props.selectedNode.data.actionType
+    } as ActionParams
   }
 
   logger.debug('📝 属性变更', {

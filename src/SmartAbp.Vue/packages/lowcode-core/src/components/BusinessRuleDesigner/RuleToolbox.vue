@@ -195,7 +195,11 @@ const nodeTemplates: Record<string, NodeTemplate[]> = {
         label: '执行动作',
         type: 'action',
         actionType: 'SetFieldValue',
-        actionParams: {}
+        actionParams: {
+          actionType: 'SetFieldValue',
+          field: '',
+          value: ''
+        }
       }
     },
     {
@@ -210,6 +214,7 @@ const nodeTemplates: Record<string, NodeTemplate[]> = {
         type: 'action',
         actionType: 'ValidateField',
         actionParams: {
+          actionType: 'ValidateField',
           field: '',
           rules: ['required']
         }
