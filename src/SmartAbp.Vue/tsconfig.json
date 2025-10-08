@@ -81,7 +81,6 @@
     "scripts",
     "*.config.ts",
     "*.config.js",
-    "src/core/assembly/examples/**",
     "src/tools/**",
     "src/views/library/**"
   ]
