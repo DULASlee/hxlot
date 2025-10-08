@@ -122,6 +122,8 @@ interface BackendPropertyDto {
     columnName?: string
     columnType?: string
     isAuditField?: boolean
+    isSoftDeleteField?: boolean
+    isTenantField?: boolean
     validationRules?: BackendValidationRuleDto[]
 }
 
@@ -199,7 +201,10 @@ export class SchemaConverter {
                 SchemaConverter.fromBackendEntityDto(e)
             ),
             menuConfig: dto.menuConfig || [],
-            permissionConfig: dto.permissionConfig || { groupName: '', permissions: [] },
+            permissionConfig: dto.permissionConfig ? {
+                groupName: dto.permissionConfig.groupName || '',
+                permissions: dto.permissionConfig.permissions || []
+            } : { groupName: '', permissions: [] },
             dependencies: dto.dependencies || [],
             schemaVersion: '1.0.0',
             createdAt: dto.createdAt ? new Date(dto.createdAt) : new Date(),
@@ -359,7 +364,7 @@ export class SchemaConverter {
             displayName: dto.displayName || '',
             sourceEntityId: dto.sourceEntityId || '',
             targetEntityId: dto.targetEntityId || '',
-            targetEntity: dto.targetEntity || '',
+            targetEntity: dto.targetEntityId || '',
             type: (dto.type as 'OneToMany' | 'OneToOne' | 'ManyToMany') || 'OneToMany',
             sourceProperty: dto.sourceProperty || '',
             targetProperty: dto.targetProperty || '',
