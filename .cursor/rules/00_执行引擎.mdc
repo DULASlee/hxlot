@@ -14,6 +14,7 @@ priority: 1
 **核心改进**: 任务分级 + 弹性流程 + 独立判断 + 质量保证
 
 **v10.0核心升级**:
+- 🔥 **架构三大铁律**（优先级-2，格杀勿论）
 - 🎯 **任务分级响应**（根据复杂度选择流程）
 - 🧠 **独立技术判断**（AI有决策权）
 - ⚡ **弹性执行流程**（不再强制六阶段）
@@ -23,41 +24,113 @@ priority: 1
 ---
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# 🚨 第0章：核心保护铁律（P0优先级，绝不妥协）
+# 🚨 第0章：架构三大铁律（P0最高优先级，格杀勿论）
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-> **核心原则**: AI是编程助手，无权擅自删除代码！
+> **核心原则**: 严格遵循统一类型系统、组件注册系统、架构层级！违反者格杀勿论！
 
-## 🛡️ 五大P0铁律（违反禁止提交）
+## 🔥 架构三大铁律（优先级-2，最高）
 
-### 1. 类型安全铁律
+### 铁律一：强制使用统一类型系统
+```yaml
+规则:
+  ✅ 所有类型在 lowcode-shared/types 定义
+  ❌ 禁止主应用定义底层类型
+  ❌ 禁止相对路径导入类型
+  ❌ 禁止每个文件重复定义类型
+
+检测:
+  find src/core -name "*types.ts" -o -name "*types.d.ts"
+  grep -r "from '\.\./.*types" src/
+  
+修复:
+  1. 删除主应用中的类型文件
+  2. 在 lowcode-shared/types 中创建正确类型
+  3. 使用 @smartabp/lowcode-shared 导入
+
+违反处罚: 💀 立即删除，重新实现
+```
+
+### 铁律二：强制使用组件注册系统
+```yaml
+规则:
+  ✅ 所有组件必须注册到 ComponentRegistry
+  ✅ 提供完整的 ComponentMetadata
+  ✅ 声明所有依赖关系
+  ❌ 禁止跳过注册直接使用
+  ❌ 禁止硬编码组件路径
+
+检测:
+  find packages/*/src/components -name "*.vue"
+  grep -r "registerComponent" packages/*/src/
+  
+修复:
+  1. 在 ComponentRegistry 注册组件
+  2. 补充完整的 ComponentMetadata
+  3. 通过 loadComponent() 加载使用
+
+违反处罚: 💀 立即补充注册，否则删除
+```
+
+### 铁律三：严格遵循架构层级
+```yaml
+规则:
+  ✅ 只能向下依赖（Layer 2→1→0→-1）
+  ✅ 使用 @smartabp/* 别名
+  ❌ 禁止逆向依赖
+  ❌ 禁止跨层级引用
+  ❌ 禁止主应用定义底层类型
+
+架构层级:
+  Layer 2: lowcode-designer
+  Layer 1: lowcode-core, lowcode-api, lowcode-tools
+  Layer 0: lowcode-shared
+  Layer -1: metadata-core
+  主应用 (src/): 只使用，不定义
+
+检测:
+  grep -r "@smartabp/lowcode-core" packages/lowcode-shared/
+  grep -r "@smartabp/lowcode-designer" packages/lowcode-core/
+  grep -r "'\.\./" packages/*/src/
+  
+修复:
+  1. 删除主应用中的底层类型定义
+  2. 将类型移至正确的 package
+  3. 修复所有依赖关系
+
+违反处罚: 💀 架构违规，格杀勿论
+```
+
+## 🛡️ 其他P0铁律（违反禁止提交）
+
+### 4. 类型安全铁律
 ```yaml
 规则: TypeScript编译0错误，禁止as any/@ts-ignore
 检测: npm run type-check
 修复: 定义类型、使用类型守卫
 ```
 
-### 2. 架构完整性铁律
+### 5. 架构完整性铁律（补充）
 ```yaml
 规则: packages黑盒独立，禁止../和@/引用
 检测: grep -r "'../'" packages/ 和 grep -r "@/" packages/
 修复: 使用@smartabp/别名
 ```
 
-### 3. 功能完整性铁律
+### 6. 功能完整性铁律
 ```yaml
 规则: 前后端链路完整（UI→API→Service→DB）
 检测: 手动验证功能可用
 修复: 补全完整实现链路
 ```
 
-### 4. Git安全铁律
+### 7. Git安全铁律
 ```yaml
 规则: 先pull后push，使用标准化脚本
 执行: pwsh git-safe-sync.ps1 -AutoCommit
 ```
 
-### 5. 代码保护铁律
+### 8. 代码保护铁律
 ```yaml
 规则: AI无权删除代码（需用户三次确认）
 原则: 优先注释，保留历史
