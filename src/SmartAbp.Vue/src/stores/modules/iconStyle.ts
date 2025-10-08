@@ -12,9 +12,9 @@
  * - 遵循开闭原则，消除硬编码
  */
 
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
 import { DEFAULT_VALUES, STORAGE_KEYS } from '@/config/theme-icon.config'
+import { defineStore } from 'pinia'
+import { computed, ref } from 'vue'
 
 // 🎨 图标风格类型定义
 export type IconStyleType = 'emoji' | 'fontawesome' | 'element-plus' | 'carbon' | 'material'
@@ -121,7 +121,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-dashboard',
     material: 'mdi-view-dashboard'
   },
-  
+
   // 👥 用户管理
   user: {
     emoji: '👤',
@@ -158,7 +158,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-user-settings',
     material: 'mdi-account-cog'
   },
-  
+
   // 📁 项目管理
   project: {
     emoji: '📁',
@@ -183,7 +183,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-task',
     material: 'mdi-format-list-checks'
   },
-  
+
   // 📋 日志管理
   log: {
     emoji: '📋',
@@ -220,7 +220,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-view',
     material: 'mdi-eye'
   },
-  
+
   // ⚙️ 系统设置
   settings: {
     emoji: '⚙️',
@@ -250,7 +250,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-locked',
     material: 'mdi-key'
   },
-  
+
   // 🧪 测试中心
   test: {
     emoji: '🧪',
@@ -280,7 +280,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-debug',
     material: 'mdi-bug'
   },
-  
+
   // 🧩 低代码
   lowcode: {
     emoji: '🧩',
@@ -345,7 +345,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-paint-brush',
     material: 'mdi-brush'
   },
-  
+
   // 🏠 导航
   home: {
     emoji: '🏠',
@@ -354,7 +354,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-home',
     material: 'mdi-home'
   },
-  
+
   // 👤 个人中心
   profile: {
     emoji: '👤',
@@ -363,7 +363,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-user-avatar',
     material: 'mdi-account-circle'
   },
-  
+
   // ❓ 帮助中心
   help: {
     emoji: '❓',
@@ -379,7 +379,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-help',
     material: 'mdi-help-circle'
   },
-  
+
   // 🎨 主题
   palette: {
     emoji: '🎨',
@@ -402,7 +402,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-login',
     material: 'mdi-login'
   },
-  
+
   // 🔧 操作图标
   add: {
     emoji: '➕',
@@ -524,7 +524,7 @@ const ICON_MAPPINGS_EXTEND_THEME = {
 }
 
 // 🔄 合并扩展映射到主映射表
-Object.assign(ICON_MAPPINGS, 
+Object.assign(ICON_MAPPINGS,
   ICON_MAPPINGS_EXTEND_DOCS,
   ICON_MAPPINGS_EXTEND_TEST,
   ICON_MAPPINGS_EXTEND_AUTH,
@@ -542,11 +542,11 @@ export const useIconStyleStore = defineStore('iconStyle', () => {
 
   // 🎯 计算属性
   const styleConfig = computed(() => ICON_STYLES[currentStyle.value])
-  
+
   const isEnterpriseStyle = computed(() => styleConfig.value.enterprise)
-  
+
   // 🏢 仅返回企业级图标风格（过滤掉emoji等非企业级风格）
-  const availableStyles = computed(() => 
+  const availableStyles = computed(() =>
     Object.values(ICON_STYLES).filter(style => style.enterprise)
   )
 
@@ -560,17 +560,17 @@ export const useIconStyleStore = defineStore('iconStyle', () => {
     if (!iconClass.includes(' ') && !iconClass.includes('fa-')) {
       return null // 已经是图标键名
     }
-    
+
     // 提取最后一个部分作为键名
     // "fas fa-chart-pie" -> "chart-pie"
     // "fa-solid fa-users" -> "users"
     const parts = iconClass.split(' ')
     const lastPart = parts[parts.length - 1]
     if (!lastPart) return null
-    
+
     // 移除 fa- 前缀
     const keyName = lastPart.replace(/^fa-/, '')
-    
+
     // 检查是否存在对应的映射
     return ICON_MAPPINGS[keyName] ? keyName : null
   }
@@ -584,13 +584,13 @@ export const useIconStyleStore = defineStore('iconStyle', () => {
     // 🔍 智能解析：自动处理旧的图标类名
     const extractedKey = extractIconKey(key)
     const iconKey = extractedKey || key
-    
+
     const mapping = ICON_MAPPINGS[iconKey]
     if (!mapping) {
       console.warn(`🚨 未找到图标映射: ${key} (解析为: ${iconKey})`)
       return currentStyle.value === 'emoji' ? '🔘' : 'fa-solid fa-circle'
     }
-    
+
     // 将 'element-plus' 转换为 'elementPlus' 以匹配接口定义
     const styleKey = currentStyle.value === 'element-plus' ? 'elementPlus' : currentStyle.value as keyof IconMapping
     return mapping[styleKey] || mapping.emoji
@@ -615,26 +615,26 @@ export const useIconStyleStore = defineStore('iconStyle', () => {
     }
 
     isChanging.value = true
-    
+
     try {
       // ✅ 配置驱动：使用配置的存储键名
       // 🛡️ 同时更新主存储和备份存储
       localStorage.setItem(STORAGE_KEYS.ICON_STYLE, style)
       localStorage.setItem(STORAGE_KEYS.ICON_STYLE_BACKUP, style)
-      
+
       // 更新当前风格
       currentStyle.value = style
-      
+
       // 触发全局事件（供其他组件监听）
       window.dispatchEvent(new CustomEvent('icon-style-changed', {
         detail: { style }
       }))
-      
+
       console.log(`🎨 图标风格已切换: ${ICON_STYLES[style].name}`)
-      
+
       // ⚠️ 不刷新页面，避免权限丢失
       // 图标风格会通过响应式系统自动更新
-      
+
     } catch (error) {
       console.error('❌ 图标风格切换失败:', error)
       throw error
@@ -654,7 +654,7 @@ export const useIconStyleStore = defineStore('iconStyle', () => {
       const saved = localStorage.getItem(STORAGE_KEYS.ICON_STYLE) as IconStyleType
       const backup = localStorage.getItem(STORAGE_KEYS.ICON_STYLE_BACKUP) as IconStyleType
       const validStyle = saved || backup
-      
+
       if (validStyle && ICON_STYLES[validStyle]) {
         // 🏢 企业级管理系统：禁止使用非企业级图标风格（如 emoji）
         if (!ICON_STYLES[validStyle].enterprise) {
@@ -723,12 +723,12 @@ export const useIconStyleStore = defineStore('iconStyle', () => {
     // 状态
     currentStyle,
     isChanging,
-    
+
     // 计算属性
     styleConfig,
     isEnterpriseStyle,
     availableStyles,
-    
+
     // 方法
     getIcon,
     getIcons,

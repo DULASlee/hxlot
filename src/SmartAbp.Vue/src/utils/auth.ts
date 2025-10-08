@@ -1,5 +1,5 @@
-import { ref, computed, type ComputedRef } from 'vue'
 import { logger } from '@/utils/logger'
+import { computed, ref, type ComputedRef } from 'vue'
 
 // 类型定义
 export interface TokenInfo {
@@ -71,7 +71,7 @@ export class AuthService {
   private static instance: AuthService | null = null
   private refreshTimer: number | null = null
 
-  private constructor() {}
+  private constructor() { }
 
   /**
    * 获取单例实例
