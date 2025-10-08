@@ -182,9 +182,11 @@ const themeConfig: Record<string, ThemeConfigItem> = {
 const currentTheme = ref<string>(localStorage.getItem("app-theme") || THEMES.LIGHT)
 
 export function useTheme() {
-  const theme = computed<ThemeConfigItem>(
-    () => themeConfig[currentTheme.value] || themeConfig[THEMES.LIGHT],
-  )
+  const theme = computed<ThemeConfigItem>(() => {
+    const config = themeConfig[currentTheme.value]
+    if (config) return config
+    return themeConfig[THEMES.LIGHT]!
+  })
   const isDark = computed(() => currentTheme.value === THEMES.DARK)
 
   /**
@@ -311,7 +313,7 @@ export function useTheme() {
     { immediate: true },
   )
 
-  const watchSystemTheme = () => {
+  const watchSystemTheme = (): (() => void) | undefined => {
     if (window.matchMedia) {
       const mq = window.matchMedia("(prefers-color-scheme: dark)")
       const handler = (e: MediaQueryListEvent) => {
