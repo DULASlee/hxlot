@@ -1,0 +1,680 @@
+{
+  "checker": "Performance",
+  "timestamp": "2025-10-08T13:44:38.997Z",
+  "passed": true,
+  "summary": {
+    "P0": 0,
+    "P1": 30,
+    "P2": 61,
+    "total": 91
+  },
+  "violations": {
+    "P0": [],
+    "P1": [
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/components/layout/SmartAbpLayout.vue",
+        "message": "文件过大: 1548行 (建议<500行)",
+        "lineCount": 1548
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/components/permissions/PermissionMatrix.vue",
+        "message": "文件过大: 1063行 (建议<500行)",
+        "lineCount": 1063
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/lowcode/CodeGenEntrance.vue",
+        "message": "文件过大: 1037行 (建议<500行)",
+        "lineCount": 1037
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/EntityModelingView.vue",
+        "message": "文件过大: 2400行 (建议<500行)",
+        "lineCount": 2400
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-codegen/EnhancedGenerationView.vue",
+        "message": "文件过大: 2154行 (建议<500行)",
+        "lineCount": 2154
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/DesignView.vue",
+        "message": "文件过大: 2013行 (建议<500行)",
+        "lineCount": 2013
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/VisualDesignerView.vue",
+        "message": "文件过大: 1800行 (建议<500行)",
+        "lineCount": 1800
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/PerformanceDashboard.vue",
+        "message": "文件过大: 1749行 (建议<500行)",
+        "lineCount": 1749
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/DragDropFormView.vue",
+        "message": "文件过大: 1746行 (建议<500行)",
+        "lineCount": 1746
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/EnterprisePermissionSystem.vue",
+        "message": "文件过大: 1737行 (建议<500行)",
+        "lineCount": 1737
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/EnterpriseWorkflowEngine.vue",
+        "message": "文件过大: 1616行 (建议<500行)",
+        "lineCount": 1616
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/AdvancedBusinessRulesEngine.vue",
+        "message": "文件过大: 1471行 (建议<500行)",
+        "lineCount": 1471
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/SfcCompilerView.vue",
+        "message": "文件过大: 1338行 (建议<500行)",
+        "lineCount": 1338
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/UltraSimpleStudio.test.ts",
+        "message": "文件过大: 1332行 (建议<500行)",
+        "lineCount": 1332
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/UltraSimpleStudio.vue",
+        "message": "文件过大: 1299行 (建议<500行)",
+        "lineCount": 1299
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/TemplateMarketplace.vue",
+        "message": "文件过大: 1291行 (建议<500行)",
+        "lineCount": 1291
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/EnhancedStateMachine.vue",
+        "message": "文件过大: 1281行 (建议<500行)",
+        "lineCount": 1281
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/VisualDesignCanvas.vue",
+        "message": "文件过大: 1274行 (建议<500行)",
+        "lineCount": 1274
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/stores/codeGeneration.ts",
+        "message": "文件过大: 1247行 (建议<500行)",
+        "lineCount": 1247
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/TemplateManager.vue",
+        "message": "文件过大: 1208行 (建议<500行)",
+        "lineCount": 1208
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/AdvancedFieldTypeDesigner.vue",
+        "message": "文件过大: 1118行 (建议<500行)",
+        "lineCount": 1118
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/utils/manifestWriter.ts",
+        "message": "文件过大: 1056行 (建议<500行)",
+        "lineCount": 1056
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/tools/generators/frontend-generator.ts",
+        "message": "函数过长: generateListComponent (223行，建议<100行)",
+        "functionName": "generateListComponent",
+        "lineCount": 223
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/composables/useMenu.ts",
+        "message": "函数过长: useMenu (322行，建议<100行)",
+        "functionName": "useMenu",
+        "lineCount": 322
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/composables/useRealTimeAlerts.ts",
+        "message": "函数过长: useRealTimeAlerts (359行，建议<100行)",
+        "functionName": "useRealTimeAlerts",
+        "lineCount": 359
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/composables/useDataWorker.ts",
+        "message": "函数过长: useDataWorker (205行，建议<100行)",
+        "functionName": "useDataWorker",
+        "lineCount": 205
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/composables/useSecurityDashboard.ts",
+        "message": "函数过长: useSecurityDashboard (287行，建议<100行)",
+        "functionName": "useSecurityDashboard",
+        "lineCount": 287
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/composables/usePerformance.ts",
+        "message": "函数过长: usePerformance (201行，建议<100行)",
+        "functionName": "usePerformance",
+        "lineCount": 201
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/composables/useCache.ts",
+        "message": "函数过长: useCache (317行，建议<100行)",
+        "functionName": "useCache",
+        "lineCount": 317
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P1",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/composables/useDesignSystem.ts",
+        "message": "函数过长: useDesignSystem (258行，建议<100行)",
+        "functionName": "useDesignSystem",
+        "lineCount": 258
+      }
+    ],
+    "P2": [
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/tools/generators/frontend-generator.ts",
+        "message": "文件过大: 941行 (建议<500行)",
+        "lineCount": 941
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/lowcode/CqrsDesignerView.vue",
+        "message": "文件过大: 926行 (建议<500行)",
+        "lineCount": 926
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/components/ui/TabsContainer.vue",
+        "message": "文件过大: 904行 (建议<500行)",
+        "lineCount": 904
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/components/auth/LoginForm.vue",
+        "message": "文件过大: 895行 (建议<500行)",
+        "lineCount": 895
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/log/LogDashboard.vue",
+        "message": "文件过大: 892行 (建议<500行)",
+        "lineCount": 892
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/stores/lowcode/enhancedStateMachine.ts",
+        "message": "文件过大: 872行 (建议<500行)",
+        "lineCount": 872
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/lowcode/GenerationView.vue",
+        "message": "文件过大: 801行 (建议<500行)",
+        "lineCount": 801
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/log/LogManagement.vue",
+        "message": "文件过大: 768行 (建议<500行)",
+        "lineCount": 768
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioHome.vue",
+        "message": "文件过大: 766行 (建议<500行)",
+        "lineCount": 766
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/stores/modules/iconStyle.ts",
+        "message": "文件过大: 740行 (建议<500行)",
+        "lineCount": 740
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/config/menus.ts",
+        "message": "文件过大: 729行 (建议<500行)",
+        "lineCount": 729
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/lowcode/FormLinkageDemo.vue",
+        "message": "文件过大: 712行 (建议<500行)",
+        "lineCount": 712
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/components/ui/MDIContainer.vue",
+        "message": "文件过大: 688行 (建议<500行)",
+        "lineCount": 688
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/ops/LogsDashboard.vue",
+        "message": "文件过大: 686行 (建议<500行)",
+        "lineCount": 686
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/error/Forbidden.vue",
+        "message": "文件过大: 685行 (建议<500行)",
+        "lineCount": 685
+      },
+      {
+        "rule": "performance.large-file",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/common/DashboardView.vue",
+        "message": "文件过大: 684行 (建议<500行)",
+        "lineCount": 684
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/tools/generators/frontend-generator.ts",
+        "message": "函数过长: generateFormComponent (129行，建议<100行)",
+        "functionName": "generateFormComponent",
+        "lineCount": 129
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/tools/generators/frontend-generator.ts",
+        "message": "函数过长: generateStore (120行，建议<100行)",
+        "functionName": "generateStore",
+        "lineCount": 120
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/composables/useTheme.ts",
+        "message": "函数过长: useTheme (151行，建议<100行)",
+        "functionName": "useTheme",
+        "lineCount": 151
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/composables/useBreakpoints.ts",
+        "message": "函数过长: useBreakpoints (149行，建议<100行)",
+        "functionName": "useBreakpoints",
+        "lineCount": 149
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/composables/useFullscreen.ts",
+        "message": "函数过长: useFullscreen (110行，建议<100行)",
+        "functionName": "useFullscreen",
+        "lineCount": 110
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/composables/useMenuPermission.ts",
+        "message": "函数过长: useMenuPermission (157行，建议<100行)",
+        "functionName": "useMenuPermission",
+        "lineCount": 157
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/composables/useCodeSplitting.ts",
+        "message": "函数过长: useInteractionPreload (124行，建议<100行)",
+        "functionName": "useInteractionPreload",
+        "lineCount": 124
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/composables/useRBAC.ts",
+        "message": "函数过长: useRBAC (170行，建议<100行)",
+        "functionName": "useRBAC",
+        "lineCount": 170
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/composables/useEnterpriseIcon.ts",
+        "message": "函数过长: useEnterpriseIcon (143行，建议<100行)",
+        "functionName": "useEnterpriseIcon",
+        "lineCount": 143
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useApiError.ts",
+        "message": "函数过长: useApiError (193行，建议<100行)",
+        "functionName": "useApiError",
+        "lineCount": 193
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useApiCall.ts",
+        "message": "函数过长: useApiCall (195行，建议<100行)",
+        "functionName": "useApiCall",
+        "lineCount": 195
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useApiLoading.ts",
+        "message": "函数过长: useApiLoading (199行，建议<100行)",
+        "functionName": "useApiLoading",
+        "lineCount": 199
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useEnvironmentConfig.ts",
+        "message": "函数过长: useEnvironmentConfig (168行，建议<100行)",
+        "functionName": "useEnvironmentConfig",
+        "lineCount": 168
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useResiliencePolicy.ts",
+        "message": "函数过长: useResiliencePolicy (110行，建议<100行)",
+        "functionName": "useResiliencePolicy",
+        "lineCount": 110
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useDevEnvironment.ts",
+        "message": "函数过长: useDevEnvironment (132行，建议<100行)",
+        "functionName": "useDevEnvironment",
+        "lineCount": 132
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/http-client.ts",
+        "message": "函数过长: createHttpClient (115行，建议<100行)",
+        "functionName": "createHttpClient",
+        "lineCount": 115
+      },
+      {
+        "rule": "performance.complex-function",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/utils/data-sync.ts",
+        "message": "函数过长: useDataSync (148行，建议<100行)",
+        "functionName": "useDataSync",
+        "lineCount": 148
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/components/layout/SmartAbpLayout.vue",
+        "message": "组件过大: 1548行 (建议<300行，考虑拆分)",
+        "lineCount": 1548
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/components/permissions/PermissionMatrix.vue",
+        "message": "组件过大: 1063行 (建议<300行，考虑拆分)",
+        "lineCount": 1063
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/lowcode/CodeGenEntrance.vue",
+        "message": "组件过大: 1037行 (建议<300行，考虑拆分)",
+        "lineCount": 1037
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/lowcode/CqrsDesignerView.vue",
+        "message": "组件过大: 926行 (建议<300行，考虑拆分)",
+        "lineCount": 926
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/components/ui/TabsContainer.vue",
+        "message": "组件过大: 904行 (建议<300行，考虑拆分)",
+        "lineCount": 904
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/components/auth/LoginForm.vue",
+        "message": "组件过大: 895行 (建议<300行，考虑拆分)",
+        "lineCount": 895
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/log/LogDashboard.vue",
+        "message": "组件过大: 892行 (建议<300行，考虑拆分)",
+        "lineCount": 892
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/lowcode/GenerationView.vue",
+        "message": "组件过大: 801行 (建议<300行，考虑拆分)",
+        "lineCount": 801
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/log/LogManagement.vue",
+        "message": "组件过大: 768行 (建议<300行，考虑拆分)",
+        "lineCount": 768
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioHome.vue",
+        "message": "组件过大: 766行 (建议<300行，考虑拆分)",
+        "lineCount": 766
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/lowcode/FormLinkageDemo.vue",
+        "message": "组件过大: 712行 (建议<300行，考虑拆分)",
+        "lineCount": 712
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/components/ui/MDIContainer.vue",
+        "message": "组件过大: 688行 (建议<300行，考虑拆分)",
+        "lineCount": 688
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/ops/LogsDashboard.vue",
+        "message": "组件过大: 686行 (建议<300行，考虑拆分)",
+        "lineCount": 686
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/error/Forbidden.vue",
+        "message": "组件过大: 685行 (建议<300行，考虑拆分)",
+        "lineCount": 685
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/EntityModelingView.vue",
+        "message": "组件过大: 2400行 (建议<300行，考虑拆分)",
+        "lineCount": 2400
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-codegen/EnhancedGenerationView.vue",
+        "message": "组件过大: 2154行 (建议<300行，考虑拆分)",
+        "lineCount": 2154
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/DesignView.vue",
+        "message": "组件过大: 2013行 (建议<300行，考虑拆分)",
+        "lineCount": 2013
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/VisualDesignerView.vue",
+        "message": "组件过大: 1800行 (建议<300行，考虑拆分)",
+        "lineCount": 1800
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/PerformanceDashboard.vue",
+        "message": "组件过大: 1749行 (建议<300行，考虑拆分)",
+        "lineCount": 1749
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/DragDropFormView.vue",
+        "message": "组件过大: 1746行 (建议<300行，考虑拆分)",
+        "lineCount": 1746
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/EnterprisePermissionSystem.vue",
+        "message": "组件过大: 1737行 (建议<300行，考虑拆分)",
+        "lineCount": 1737
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/EnterpriseWorkflowEngine.vue",
+        "message": "组件过大: 1616行 (建议<300行，考虑拆分)",
+        "lineCount": 1616
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/AdvancedBusinessRulesEngine.vue",
+        "message": "组件过大: 1471行 (建议<300行，考虑拆分)",
+        "lineCount": 1471
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/SfcCompilerView.vue",
+        "message": "组件过大: 1338行 (建议<300行，考虑拆分)",
+        "lineCount": 1338
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/UltraSimpleStudio.vue",
+        "message": "组件过大: 1299行 (建议<300行，考虑拆分)",
+        "lineCount": 1299
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/TemplateMarketplace.vue",
+        "message": "组件过大: 1291行 (建议<300行，考虑拆分)",
+        "lineCount": 1291
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/EnhancedStateMachine.vue",
+        "message": "组件过大: 1281行 (建议<300行，考虑拆分)",
+        "lineCount": 1281
+      },
+      {
+        "rule": "performance.large-component",
+        "level": "P2",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/VisualDesignCanvas.vue",
+        "message": "组件过大: 1274行 (建议<300行，考虑拆分)",
+        "lineCount": 1274
+      }
+    ]
+  }
+}

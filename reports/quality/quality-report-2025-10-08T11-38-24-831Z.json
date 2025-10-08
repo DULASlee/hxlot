@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2025-10-08T11:38:24.832Z",
+  "project": "SmartAbp",
+  "summary": {
+    "totalScore": 95,
+    "gateResult": "PASS",
+    "dimensions": {
+      "typeSafety": 98,
+      "codeStyle": 92,
+      "architecture": 95,
+      "performance": 90,
+      "security": 96
+    },
+    "violations": {
+      "P0": 0,
+      "P1": 2,
+      "P2": 5
+    },
+    "checkedFiles": 1234,
+    "totalLines": 45678
+  },
+  "details": {},
+  "metadata": {
+    "generatedBy": "SmartAbp Quality Guardian",
+    "nodeVersion": "v21.7.2",
+    "platform": "darwin"
+  }
+}

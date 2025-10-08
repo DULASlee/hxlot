@@ -1,76 +1,72 @@
 {
-  "qualityStandards": {
-    "overallScoreThreshold": 80,
-    "testCoverageThreshold": 75,
-    "codeStyleThreshold": 85,
-    "securityThreshold": 90,
-    "performanceThreshold": 85,
-    "maintainabilityThreshold": 80
+  "version": "1.0.0",
+  "project": "SmartAbp",
+  "description": "企业级代码质量配置",
+  "global": {
+    "autoFix": false,
+    "failOnError": true,
+    "failOnWarning": false,
+    "maxWarnings": 10,
+    "outputFormat": "detailed",
+    "reportPath": "reports/quality"
   },
-  "securityRules": {
-    "sqlInjectionPatterns": [
-      "\\.ExecuteSqlRaw\\(",
-      "\\.ExecuteSqlRawAsync\\(",
-      "\\.FromSql\\(",
-      "\\.FromSqlRaw\\(",
-      "string\\.Format.*SELECT",
-      "\\+.*SELECT"
-    ],
-    "hardcodedSecretsPatterns": [
-      "password.*=.*['\"].*['\"]",
-      "apiKey.*=.*['\"].*['\"]",
-      "secret.*=.*['\"].*['\"]",
-      "connectionString.*=.*['\"][^'\"]*['\"]"
-    ]
-  },
-  "performanceRules": {
-    "nPlusOnePatterns": [
-      "\\.FirstOrDefault\\(\\)\\.\\w+\\.FirstOrDefault\\(\\)",
-      "\\.Find\\(\\)\\.\\w+\\.FirstOrDefault\\(\\)",
-      "foreach.*\\.Select.*\\.FirstOrDefault\\(\\)"
-    ],
-    "memoryLeakPatterns": ["event.*\\+=.*;.*没有-="]
-  },
-  "maintainabilityRules": {
-    "maxFunctionLength": 50,
-    "complexConditionPatterns": [
-      "if.*&&.*&&.*&&",
-      "if.*\\|\\|.*\\|\\|.*\\|\\|",
-      "if.*\\(.*\\(.*\\(.*\\)"
-    ]
-  },
-  "testConfig": {
-    "unitTestPattern": "**/*.test.ts",
-    "integrationTestPattern": "**/*.integration.test.ts",
-    "e2eTestPattern": "**/*.e2e.test.ts",
-    "coverageThresholds": {
-      "statements": 80,
-      "branches": 75,
-      "functions": 80,
-      "lines": 80
+  "paths": {
+    "frontend": {
+      "include": [
+        "src/SmartAbp.Vue/src/**/*.{ts,vue,js}",
+        "src/SmartAbp.Vue/packages/**/*.{ts,vue,js}"
+      ],
+      "exclude": [
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/*.d.ts",
+        "**/tests/**",
+        "**/__tests__/**"
+      ]
+    },
+    "backend": {
+      "include": [
+        "src/**/*.cs"
+      ],
+      "exclude": [
+        "**/obj/**",
+        "**/bin/**",
+        "**/Migrations/**",
+        "**/*.Designer.cs"
+      ]
     }
   },
-  "reporting": {
-    "outputDirectory": "quality-reports",
-    "reportFormats": ["json", "html"],
-    "notifications": {
-      "slack": true,
-      "email": true,
-      "teams": false
+  "scoring": {
+    "weights": {
+      "typeSafety": 25,
+      "codeStyle": 15,
+      "architecture": 25,
+      "performance": 15,
+      "security": 10,
+      "maintainability": 10
+    },
+    "thresholds": {
+      "excellent": 95,
+      "good": 90,
+      "acceptable": 85,
+      "poor": 70
     }
   },
-  "scanDirectories": [
-    "src/SmartAbp.CodeGenerator",
-    "src/SmartAbp.Application",
-    "src/SmartAbp.Application.Contracts",
-    "src/SmartAbp.Domain",
-    "src/SmartAbp.EntityFrameworkCore"
-  ],
-  "excludedPatterns": [
-    "**/bin/**",
-    "**/obj/**",
-    "**/node_modules/**",
-    "**/TestResults/**",
-    "**/coverage/**"
-  ]
+  "qualityGate": {
+    "P0": {
+      "description": "阻断性问题（必须解决）",
+      "failBuild": true,
+      "maxViolations": 0
+    },
+    "P1": {
+      "description": "严重问题（强烈建议解决）",
+      "failBuild": true,
+      "maxViolations": 0
+    },
+    "P2": {
+      "description": "一般问题（建议解决）",
+      "failBuild": false,
+      "maxViolations": 10
+    }
+  }
 }

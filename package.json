@@ -4,6 +4,11 @@
   "version": "1.0.0",
   "description": "SmartAbp项目代码模板库",
   "scripts": {
+    "quality": "node scripts/quality/index.js",
+    "quality:gate": "node scripts/quality/gate.js",
+    "quality:report": "node scripts/quality/report.js",
+    "quality:fix": "node scripts/quality/fix.js --auto-fix",
+    "quality:ci": "npm run quality:gate -- --ci-mode",
     "expert:preflight": "node tools/quality-assurance/preflight-enforcer.js",
     "template:validate": "node src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/template-validator.cjs",
     "template:index": "node scripts/templates/build-index.js",

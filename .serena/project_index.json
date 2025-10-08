@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-08T02:21:48.204Z",
+  "timestamp": "2025-10-08T07:38:24.952Z",
   "project": "Baobab.SmartAbp",
   "language": "typescript",
   "files": [
@@ -655,27 +655,6 @@
       "modified": "2025-09-30T07:06:43.044Z"
     },
     {
-      "name": "AssemblyForm.vue",
-      "path": "src/SmartAbp.Vue/src/components/assembly/AssemblyForm.vue",
-      "type": "file",
-      "size": 11136,
-      "modified": "2025-10-07T09:47:49.729Z"
-    },
-    {
-      "name": "AssemblyItem.vue",
-      "path": "src/SmartAbp.Vue/src/components/assembly/AssemblyItem.vue",
-      "type": "file",
-      "size": 9904,
-      "modified": "2025-10-07T06:04:14.996Z"
-    },
-    {
-      "name": "AssemblyManager.vue",
-      "path": "src/SmartAbp.Vue/src/components/assembly/AssemblyManager.vue",
-      "type": "file",
-      "size": 10621,
-      "modified": "2025-10-07T06:04:14.997Z"
-    },
-    {
       "name": "AuthExample.vue",
       "path": "src/SmartAbp.Vue/src/components/auth/AuthExample.vue",
       "type": "file",
@@ -1136,104 +1115,6 @@
       "type": "file",
       "size": 5969,
       "modified": "2025-10-01T13:39:40.341Z"
-    },
-    {
-      "name": "README.md",
-      "path": "src/SmartAbp.Vue/src/core/assembly/README.md",
-      "type": "file",
-      "size": 9464,
-      "modified": "2025-10-05T03:16:56.072Z"
-    },
-    {
-      "name": "assembly-config.ts",
-      "path": "src/SmartAbp.Vue/src/core/assembly/assembly-config.ts",
-      "type": "file",
-      "size": 11512,
-      "modified": "2025-10-07T06:04:15.002Z"
-    },
-    {
-      "name": "assembly-loader.ts",
-      "path": "src/SmartAbp.Vue/src/core/assembly/assembly-loader.ts",
-      "type": "file",
-      "size": 6686,
-      "modified": "2025-10-07T06:04:15.003Z"
-    },
-    {
-      "name": "assembly-manager.ts",
-      "path": "src/SmartAbp.Vue/src/core/assembly/assembly-manager.ts",
-      "type": "file",
-      "size": 13606,
-      "modified": "2025-10-07T06:04:15.003Z"
-    },
-    {
-      "name": "assembly-registry.ts",
-      "path": "src/SmartAbp.Vue/src/core/assembly/assembly-registry.ts",
-      "type": "file",
-      "size": 11588,
-      "modified": "2025-10-07T06:04:15.003Z"
-    },
-    {
-      "name": "assembly-system-integration.ts",
-      "path": "src/SmartAbp.Vue/src/core/assembly/assembly-system-integration.ts",
-      "type": "file",
-      "size": 11289,
-      "modified": "2025-10-07T06:04:15.004Z"
-    },
-    {
-      "name": "assembly-types.ts",
-      "path": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts",
-      "type": "file",
-      "size": 7721,
-      "modified": "2025-10-07T06:04:15.004Z"
-    },
-    {
-      "name": "assembly-utils.ts",
-      "path": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts",
-      "type": "file",
-      "size": 11361,
-      "modified": "2025-10-07T06:04:15.004Z"
-    },
-    {
-      "name": "basic-usage.ts",
-      "path": "src/SmartAbp.Vue/src/core/assembly/examples/basic-usage.ts",
-      "type": "file",
-      "size": 6119,
-      "modified": "2025-10-07T06:04:15.005Z"
-    },
-    {
-      "name": "sample-assembly.ts",
-      "path": "src/SmartAbp.Vue/src/core/assembly/examples/sample-assembly.ts",
-      "type": "file",
-      "size": 8228,
-      "modified": "2025-10-07T06:04:15.005Z"
-    },
-    {
-      "name": "index.ts",
-      "path": "src/SmartAbp.Vue/src/core/assembly/index.ts",
-      "type": "file",
-      "size": 3802,
-      "modified": "2025-10-07T06:04:15.006Z"
-    },
-    {
-      "name": "plugins.ts",
-      "path": "src/SmartAbp.Vue/src/core/assembly/plugins.ts",
-      "type": "file",
-      "size": 11976,
-      "modified": "2025-10-07T06:04:15.006Z"
-    },
-    {
-      "name": "index.ts",
-      "path": "src/SmartAbp.Vue/src/core/assembly/storage-adapters/index.ts",
-      "type": "file",
-      "size": 10880,
-      "modified": "2025-10-07T06:04:15.007Z"
-    },
-    {
-      "name": "storage-adapters.ts",
-      "path": "src/SmartAbp.Vue/src/core/assembly/storage-adapters.ts",
-      "type": "file",
-      "size": 11275,
-      "modified": "2025-10-07T06:04:15.006Z"
     },
     {
       "name": "http-interceptor-example.ts",
@@ -4760,8 +4641,8 @@
       "name": "ComponentRegistry.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts",
       "type": "file",
-      "size": 11785,
-      "modified": "2025-10-03T06:11:49.755Z"
+      "size": 23384,
+      "modified": "2025-10-08T04:41:25.962Z"
     },
     {
       "name": "WithError.d.ts",
@@ -8082,524 +7963,6 @@
       "line": 158,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/config/theme-icon.config.ts"
-    },
-    {
-      "name": "AssemblyConfigManager",
-      "type": "class",
-      "line": 7,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-config.ts"
-    },
-    {
-      "name": "createAssemblyConfigManager",
-      "type": "function",
-      "line": 454,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-config.ts"
-    },
-    {
-      "name": "AssemblyLoader",
-      "type": "class",
-      "line": 7,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-loader.ts"
-    },
-    {
-      "name": "createAssemblyLoader",
-      "type": "function",
-      "line": 260,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-loader.ts"
-    },
-    {
-      "name": "AssemblyManager",
-      "type": "class",
-      "line": 27,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-manager.ts"
-    },
-    {
-      "name": "createAssemblyManager",
-      "type": "function",
-      "line": 514,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-manager.ts"
-    },
-    {
-      "name": "AssemblyRegistryItem",
-      "type": "interface",
-      "line": 9,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-registry.ts"
-    },
-    {
-      "name": "AssemblyRegistry",
-      "type": "class",
-      "line": 29,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-registry.ts"
-    },
-    {
-      "name": "useAssemblyRegistry",
-      "type": "function",
-      "line": 337,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-registry.ts"
-    },
-    {
-      "name": "AssemblySystemIntegrator",
-      "type": "class",
-      "line": 12,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-system-integration.ts"
-    },
-    {
-      "name": "getAssemblySystemIntegrator",
-      "type": "function",
-      "line": 392,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-system-integration.ts"
-    },
-    {
-      "name": "installAssemblySystem",
-      "type": "function",
-      "line": 402,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-system-integration.ts"
-    },
-    {
-      "name": "useAssemblySystem",
-      "type": "function",
-      "line": 417,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-system-integration.ts"
-    },
-    {
-      "name": "AssemblyConfig",
-      "type": "interface",
-      "line": 33,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
-    },
-    {
-      "name": "AssemblyInstance",
-      "type": "interface",
-      "line": 69,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
-    },
-    {
-      "name": "AssemblyEvent",
-      "type": "interface",
-      "line": 123,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
-    },
-    {
-      "name": "AssemblyHealth",
-      "type": "interface",
-      "line": 139,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
-    },
-    {
-      "name": "AssemblyValidationResult",
-      "type": "interface",
-      "line": 157,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
-    },
-    {
-      "name": "AssemblyStorage",
-      "type": "interface",
-      "line": 173,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
-    },
-    {
-      "name": "DependencyNode",
-      "type": "interface",
-      "line": 191,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
-    },
-    {
-      "name": "DependencyGraph",
-      "type": "interface",
-      "line": 207,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
-    },
-    {
-      "name": "IAssemblyManager",
-      "type": "interface",
-      "line": 221,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
-    },
-    {
-      "name": "IAssemblyLoader",
-      "type": "interface",
-      "line": 257,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
-    },
-    {
-      "name": "AssemblyManagerOptions",
-      "type": "interface",
-      "line": 274,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
-    },
-    {
-      "name": "AssemblyLoaderOptions",
-      "type": "interface",
-      "line": 294,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-types.ts"
-    },
-    {
-      "name": "generateId",
-      "type": "function",
-      "line": 15,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "validateAssemblyConfig",
-      "type": "function",
-      "line": 22,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "deepMerge",
-      "type": "function",
-      "line": 82,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "createDefaultConfig",
-      "type": "function",
-      "line": 102,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "buildDependencyGraph",
-      "type": "function",
-      "line": 114,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "serializeConfig",
-      "type": "function",
-      "line": 255,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "deserializeConfig",
-      "type": "function",
-      "line": 262,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "compareVersions",
-      "type": "function",
-      "line": 288,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "isCompatibleVersion",
-      "type": "function",
-      "line": 306,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "generateConfigHash",
-      "type": "function",
-      "line": 316,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "debounce",
-      "type": "function",
-      "line": 332,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "throttle",
-      "type": "function",
-      "line": 353,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "deepClone",
-      "type": "function",
-      "line": 373,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "sleep",
-      "type": "function",
-      "line": 402,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "retry",
-      "type": "function",
-      "line": 409,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "generateRandomColor",
-      "type": "function",
-      "line": 433,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "formatFileSize",
-      "type": "function",
-      "line": 444,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "isValidUrl",
-      "type": "function",
-      "line": 457,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "getFileExtension",
-      "type": "function",
-      "line": 469,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "isJavaScriptFile",
-      "type": "function",
-      "line": 476,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "isTypeScriptFile",
-      "type": "function",
-      "line": 481,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "isJSONFile",
-      "type": "function",
-      "line": 486,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/assembly-utils.ts"
-    },
-    {
-      "name": "SampleAssembly",
-      "type": "class",
-      "line": 16,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/examples/sample-assembly.ts"
-    },
-    {
-      "name": "createSampleAssemblyConfig",
-      "type": "function",
-      "line": 149,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/examples/sample-assembly.ts"
-    },
-    {
-      "name": "DataProcessorAssembly",
-      "type": "class",
-      "line": 179,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/examples/sample-assembly.ts"
-    },
-    {
-      "name": "ApiClientAssembly",
-      "type": "class",
-      "line": 219,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/examples/sample-assembly.ts"
-    },
-    {
-      "name": "createAssembly",
-      "type": "function",
-      "line": 304,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/examples/sample-assembly.ts"
-    },
-    {
-      "name": "AssemblyRegistry",
-      "type": "class",
-      "line": 323,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/examples/sample-assembly.ts"
-    },
-    {
-      "name": "createDefaultAssemblyManager",
-      "type": "function",
-      "line": 65,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/index.ts"
-    },
-    {
-      "name": "AssemblyPlugin",
-      "type": "interface",
-      "line": 13,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/plugins.ts"
-    },
-    {
-      "name": "LoggingPlugin",
-      "type": "class",
-      "line": 29,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/plugins.ts"
-    },
-    {
-      "name": "PerformancePlugin",
-      "type": "class",
-      "line": 85,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/plugins.ts"
-    },
-    {
-      "name": "DependencyAnalysisPlugin",
-      "type": "class",
-      "line": 160,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/plugins.ts"
-    },
-    {
-      "name": "SecurityPlugin",
-      "type": "class",
-      "line": 252,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/plugins.ts"
-    },
-    {
-      "name": "HotReloadPlugin",
-      "type": "class",
-      "line": 332,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/plugins.ts"
-    },
-    {
-      "name": "PluginManager",
-      "type": "class",
-      "line": 390,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/plugins.ts"
-    },
-    {
-      "name": "DefaultPluginBundle",
-      "type": "class",
-      "line": 445,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/plugins.ts"
-    },
-    {
-      "name": "LocalStorageAdapter",
-      "type": "class",
-      "line": 10,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/storage-adapters/index.ts"
-    },
-    {
-      "name": "MemoryStorageAdapter",
-      "type": "class",
-      "line": 69,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/storage-adapters/index.ts"
-    },
-    {
-      "name": "IndexedDBStorageAdapter",
-      "type": "class",
-      "line": 96,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/storage-adapters/index.ts"
-    },
-    {
-      "name": "ApiStorageAdapter",
-      "type": "class",
-      "line": 195,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/storage-adapters/index.ts"
-    },
-    {
-      "name": "HybridStorageAdapter",
-      "type": "class",
-      "line": 259,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/storage-adapters/index.ts"
-    },
-    {
-      "name": "StorageAdapterFactory",
-      "type": "class",
-      "line": 366,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/storage-adapters/index.ts"
-    },
-    {
-      "name": "LocalStorageAdapter",
-      "type": "class",
-      "line": 6,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/storage-adapters.ts"
-    },
-    {
-      "name": "MemoryStorageAdapter",
-      "type": "class",
-      "line": 61,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/storage-adapters.ts"
-    },
-    {
-      "name": "IndexedDBStorageAdapter",
-      "type": "class",
-      "line": 93,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/storage-adapters.ts"
-    },
-    {
-      "name": "ApiStorageAdapter",
-      "type": "class",
-      "line": 182,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/storage-adapters.ts"
-    },
-    {
-      "name": "HybridStorageAdapter",
-      "type": "class",
-      "line": 251,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/storage-adapters.ts"
-    },
-    {
-      "name": "StorageAdapterFactory",
-      "type": "class",
-      "line": 363,
-      "exported": true,
-      "file": "src/SmartAbp.Vue/src/core/assembly/storage-adapters.ts"
     },
     {
       "name": "setupHttpInterceptors",
@@ -15420,58 +14783,107 @@
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.d.ts"
     },
     {
-      "name": "ComponentMetadata",
+      "name": "ComponentLifecycleHooks",
       "type": "interface",
-      "line": 18,
+      "line": 22,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
     },
     {
-      "name": "ComponentInstance",
+      "name": "ComponentExtensionPoint",
       "type": "interface",
-      "line": 54,
+      "line": 40,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
     },
     {
-      "name": "ComponentLoadStats",
+      "name": "ComponentPermission",
+      "type": "interface",
+      "line": 56,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
+      "name": "ComponentVersion",
       "type": "interface",
       "line": 70,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
     },
     {
+      "name": "ComponentMetadata",
+      "type": "interface",
+      "line": 86,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
+      "name": "ComponentInstance",
+      "type": "interface",
+      "line": 130,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
+      "name": "ComponentLoadStats",
+      "type": "interface",
+      "line": 148,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
+      "name": "PerformanceMetric",
+      "type": "interface",
+      "line": 172,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
       "name": "ComponentRegistry",
       "type": "class",
-      "line": 86,
+      "line": 188,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
     },
     {
       "name": "createComponentRegistry",
       "type": "function",
-      "line": 417,
+      "line": 826,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
     },
     {
       "name": "registerComponent",
       "type": "function",
-      "line": 424,
+      "line": 833,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
     },
     {
       "name": "loadComponent",
       "type": "function",
-      "line": 431,
+      "line": 840,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
     },
     {
       "name": "getComponentMetadata",
       "type": "function",
-      "line": 438,
+      "line": 847,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
+      "name": "hotReloadComponent",
+      "type": "function",
+      "line": 854,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
+    },
+    {
+      "name": "enableHotReload",
+      "type": "function",
+      "line": 861,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts"
     },

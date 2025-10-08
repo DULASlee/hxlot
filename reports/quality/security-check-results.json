@@ -1,0 +1,92 @@
+{
+  "checker": "Security",
+  "timestamp": "2025-10-08T13:47:28.249Z",
+  "passed": true,
+  "summary": {
+    "P0": 0,
+    "P1": 8,
+    "P2": 0,
+    "total": 8
+  },
+  "violations": {
+    "P0": [],
+    "P1": [
+      {
+        "rule": "security.xss-innerhtml",
+        "level": "P1",
+        "message": "发现 1 处使用innerHTML（可能导致XSS，建议使用textContent）",
+        "count": 1,
+        "samples": [
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/utils/performance/performanceBenchmark.ts:393:      testComponent.innerHTML = '<div>测试组件</div>'"
+        ]
+      },
+      {
+        "rule": "security.xss-innerhtml",
+        "level": "P1",
+        "message": "发现 8 处使用innerHTML（可能导致XSS，建议使用textContent）",
+        "count": 8,
+        "samples": [
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/analyzers/__tests__/CodeQualityAnalyzer.spec.ts:173:      const code = `element.innerHTML = userInput`",
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/analyzers/__tests__/CodeQualityAnalyzer.spec.ts:245:                element.innerHTML = data.value",
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/composables/useDragDrop.ts:522:      preview.innerHTML = `${icon}<strong>${data.name}</strong>${description}`"
+        ]
+      },
+      {
+        "rule": "security.xss-v-html",
+        "level": "P1",
+        "message": "发现 2 处使用v-html（可能导致XSS，确保数据已消毒）",
+        "count": 2,
+        "samples": [
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/SandboxPreview.vue:55:          <pre><code v-html=\"highlightedCode\" /></pre>",
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/AIAssistantPanel.vue:75:                <div class=\"message-text\" v-html=\"renderMarkdown(message.content)\"></div>"
+        ]
+      },
+      {
+        "rule": "security.hardcoded-credentials",
+        "level": "P1",
+        "message": "发现 15 处可能的硬编码密钥（应使用环境变量）",
+        "count": 15,
+        "samples": [
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/stores/modules/auth.ts:159:      if (credentials",
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/components/auth/LoginForm.vue:175:              ",
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/components/auth/LoginForm.vue:327:const password"
+        ]
+      },
+      {
+        "rule": "security.hardcoded-credentials",
+        "level": "P1",
+        "message": "发现 12 处可能的硬编码密钥（应使用环境变量）",
+        "count": 12,
+        "samples": [
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/__tests__/code-generator.te",
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/Security",
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/Security"
+        ]
+      },
+      {
+        "rule": "security.unsafe-function-constructor",
+        "level": "P1",
+        "message": "发现 4 处使用Function构造器（安全风险）",
+        "count": 4
+      },
+      {
+        "rule": "security.unsafe-eval",
+        "level": "P1",
+        "message": "发现 3 处使用eval（严重安全风险）",
+        "count": 3,
+        "samples": [
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/security/XssDetector.ts:275:eval(userInput);",
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/security/__tests__/VulnerabilityScannerEngine.spec.ts:105:          eval(req.body.code);",
+          "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/utils/__tests__/ruleExpressionParser.spec.ts:66:        parser.evaluate('eval(\"malicious code\")', mockContext)"
+        ]
+      },
+      {
+        "rule": "security.unsafe-function-constructor",
+        "level": "P1",
+        "message": "发现 5 处使用Function构造器（安全风险）",
+        "count": 5
+      }
+    ],
+    "P2": []
+  }
+}

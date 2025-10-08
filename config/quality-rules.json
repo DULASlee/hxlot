@@ -1,0 +1,130 @@
+{
+  "version": "1.0.0",
+  "description": "代码质量检查规则配置",
+  "frontend": {
+    "typescript": {
+      "no-any": {
+        "level": "P0",
+        "enabled": true,
+        "autoFix": false
+      },
+      "no-ts-ignore": {
+        "level": "P0",
+        "enabled": true,
+        "autoFix": false
+      },
+      "strict-null-checks": {
+        "level": "P0",
+        "enabled": true,
+        "autoFix": false
+      },
+      "no-implicit-any": {
+        "level": "P0",
+        "enabled": true,
+        "autoFix": false
+      },
+      "no-unused-vars": {
+        "level": "P1",
+        "enabled": true,
+        "autoFix": true
+      }
+    },
+    "eslint": {
+      "no-console": {
+        "level": "P2",
+        "enabled": true,
+        "autoFix": false
+      },
+      "no-debugger": {
+        "level": "P0",
+        "enabled": true,
+        "autoFix": true
+      },
+      "prefer-const": {
+        "level": "P1",
+        "enabled": true,
+        "autoFix": true
+      }
+    },
+    "architecture": {
+      "no-relative-imports-in-packages": {
+        "level": "P0",
+        "enabled": true,
+        "autoFix": false
+      },
+      "no-main-app-imports-in-packages": {
+        "level": "P0",
+        "enabled": true,
+        "autoFix": false
+      },
+      "no-circular-dependencies": {
+        "level": "P1",
+        "enabled": true,
+        "autoFix": false
+      }
+    }
+  },
+  "backend": {
+    "compilation": {
+      "no-compilation-errors": {
+        "level": "P0",
+        "enabled": true,
+        "autoFix": false
+      },
+      "no-compilation-warnings": {
+        "level": "P1",
+        "enabled": true,
+        "autoFix": false
+      }
+    },
+    "styleCode": {
+      "naming-conventions": {
+        "level": "P1",
+        "enabled": true,
+        "autoFix": true
+      },
+      "code-formatting": {
+        "level": "P2",
+        "enabled": true,
+        "autoFix": true
+      }
+    }
+  },
+  "smartabp": {
+    "component-registration-consistency": {
+      "level": "P0",
+      "enabled": true,
+      "autoFix": false
+    },
+    "type-registration-consistency": {
+      "level": "P0",
+      "enabled": true,
+      "autoFix": false
+    },
+    "no-hardcoded-urls": {
+      "level": "P1",
+      "enabled": true,
+      "autoFix": false
+    },
+    "no-hardcoded-credentials": {
+      "level": "P0",
+      "enabled": true,
+      "autoFix": false
+    },
+    "no-empty-implementations": {
+      "level": "P1",
+      "enabled": true,
+      "autoFix": false
+    },
+    "no-mock-code-in-production": {
+      "level": "P0",
+      "enabled": true,
+      "autoFix": false
+    },
+    "no-todo-in-production": {
+      "level": "P2",
+      "enabled": true,
+      "autoFix": false
+    }
+  }
+}

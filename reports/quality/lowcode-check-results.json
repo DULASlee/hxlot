@@ -1,0 +1,79 @@
+{
+  "checker": "LowCode",
+  "timestamp": "2025-10-08T12:43:41.491Z",
+  "passed": false,
+  "summary": {
+    "P0": 9,
+    "P1": 0,
+    "P2": 0,
+    "total": 9
+  },
+  "violations": {
+    "P0": [
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.d.ts",
+        "line": 175,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts",
+        "line": 833,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/index.ts",
+        "line": 7,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/index.d.ts",
+        "line": 1,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-metadata-integrity",
+        "level": "P0",
+        "file": "unknown",
+        "message": "某些组件可能缺少必填字段: name"
+      },
+      {
+        "rule": "lowcode.component-metadata-integrity",
+        "level": "P0",
+        "file": "unknown",
+        "message": "某些组件可能缺少必填字段: displayName"
+      },
+      {
+        "rule": "lowcode.component-metadata-integrity",
+        "level": "P0",
+        "file": "unknown",
+        "message": "某些组件可能缺少必填字段: category"
+      },
+      {
+        "rule": "lowcode.component-metadata-integrity",
+        "level": "P0",
+        "file": "unknown",
+        "message": "某些组件可能缺少必填字段: priority"
+      },
+      {
+        "rule": "lowcode.component-metadata-integrity",
+        "level": "P0",
+        "file": "unknown",
+        "message": "某些组件可能缺少必填字段: dependencies"
+      }
+    ],
+    "P1": [],
+    "P2": []
+  }
+}

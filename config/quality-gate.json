@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "description": "质量门禁配置",
+  "strategy": {
+    "mode": "strict",
+    "failFast": false,
+    "generateReport": true,
+    "notifyOnFailure": true
+  },
+  "P0": {
+    "maxViolations": 0,
+    "rules": [
+      "typescript.no-any",
+      "typescript.no-ts-ignore",
+      "architecture.no-relative-imports-in-packages",
+      "architecture.no-main-app-imports-in-packages",
+      "backend.no-compilation-errors",
+      "smartabp.component-registration-consistency",
+      "smartabp.type-registration-consistency",
+      "smartabp.no-hardcoded-credentials",
+      "smartabp.no-mock-code-in-production"
+    ]
+  },
+  "P1": {
+    "maxViolations": 0,
+    "rules": [
+      "typescript.no-unused-vars",
+      "architecture.no-circular-dependencies",
+      "backend.no-compilation-warnings",
+      "smartabp.no-hardcoded-urls",
+      "smartabp.no-empty-implementations"
+    ]
+  },
+  "P2": {
+    "maxViolations": 10,
+    "rules": [
+      "eslint.no-console",
+      "backend.code-formatting",
+      "smartabp.no-todo-in-production"
+    ]
+  },
+  "scoring": {
+    "minScore": 90,
+    "formula": "weighted",
+    "breakdown": {
+      "P0violations": -10,
+      "P1violations": -5,
+      "P2violations": -1
+    }
+  }
+}

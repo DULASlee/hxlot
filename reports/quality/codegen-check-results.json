@@ -1,0 +1,881 @@
+{
+  "checker": "CodeGen",
+  "timestamp": "2025-10-08T12:46:49.826Z",
+  "passed": false,
+  "summary": {
+    "P0": 144,
+    "P1": 0,
+    "P2": 0,
+    "total": 144
+  },
+  "violations": {
+    "P0": [
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/reporting/DataAnalysisReport.template.vue",
+        "message": "可能的非法变量引用: formatDateTime(lastUpdateTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/reporting/DataAnalysisReport.template.vue",
+        "message": "可能的非法变量引用: getDataStatusText(dataStatus)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/reporting/DataAnalysisReport.template.vue",
+        "message": "可能的非法变量引用: autoRefresh ? '停止' : '自动'"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/reporting/DataAnalysisReport.template.vue",
+        "message": "可能的非法变量引用: formatKpiValue(kpi.value, kpi.format)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/reporting/DataAnalysisReport.template.vue",
+        "message": "可能的非法变量引用: Math.abs(kpi.trend).toFixed(1)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/forms/AdvancedForm.template.vue",
+        "message": "可能的非法变量引用: formatTime(lastSaveTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/frontend/components/CrudManagement.template.json",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/frontend/components/ManyToManyCrudManagement.template.vue",
+        "message": "可能的非法变量引用: row.status === 'active' ? '生效' : '待生效'"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/frontend/components/DetailViewer.template.vue",
+        "message": "可能的非法变量引用: entityData.isEnabled ? '是' : '否'"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/frontend/components/CrudManagement.template.vue",
+        "message": "可能的非法变量引用: scope.row.isEnabled ? '是' : '否'"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/frontend/components/CrudManagement.template.vue",
+        "message": "可能的非法变量引用: formatDateTime(row.creationTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/frontend/theme/ThemeConfig.template.ts",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/frontend/ops-monitoring/MonitoringDashboard.template.vue",
+        "message": "可能的非法变量引用: kebab-case entityName"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/frontend/ops-monitoring/MonitoringDashboard.template.vue",
+        "message": "可能的非法变量引用: formatTime(row.createdTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/frontend/ops-monitoring/MonitoringDashboard.template.vue",
+        "message": "可能的非法变量引用: PascalCase entityName"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/frontend/ops-monitoring/MonitoringDashboard.template.vue",
+        "message": "可能的非法变量引用: camelCase entityName"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/frontend/ops-monitoring/MonitoringDashboard.template.vue",
+        "message": "可能的非法变量引用: PascalCase entityName"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/frontend/ops-monitoring/MonitoringDashboard.template.vue",
+        "message": "可能的非法变量引用: kebab-case entityName"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/frontend/router/ModuleRoutes.template.ts",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/config/ConfigManager.template.vue",
+        "message": "可能的非法变量引用: JSON.stringify(row.value, null, 2)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/config/ConfigManager.template.vue",
+        "message": "可能的非法变量引用: row.value ? 'true' : 'false'"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/config/ConfigManager.template.vue",
+        "message": "可能的非法变量引用: formatTime(row.lastModified)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/config/ConfigManager.template.vue",
+        "message": "可能的非法变量引用: JSON.stringify(row.value, null, 2)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/config/ConfigManager.template.vue",
+        "message": "可能的非法变量引用: formatTime(row.modifiedTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/ui-components/DataTable.template.vue",
+        "message": "可能的非法变量引用: column.formatter(scope.row, column, scope.row[column.prop], scope.$index)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/integration/ApiConnector.template.vue",
+        "message": "可能的非法变量引用: getConnectionStatusText(connectionStatus)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/integration/ApiConnector.template.vue",
+        "message": "可能的非法变量引用: formatDateTime(lastTestTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/integration/ApiConnector.template.vue",
+        "message": "可能的非法变量引用: endpoint.lastTestResult.success ? '正常' : '异常'"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/integration/ApiConnector.template.vue",
+        "message": "可能的非法变量引用: endpoint.enabled ? '禁用' : '启用'"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/integration/ApiConnector.template.vue",
+        "message": "可能的非法变量引用: formatDateTime(row.timestamp)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/integration/ApiConnector.template.vue",
+        "message": "可能的非法变量引用: getLogLevelText(row.level)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/permission-management/UserManagement.template.vue",
+        "message": "可能的非法变量引用: row.userName.charAt(0).toUpperCase()"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/permission-management/UserManagement.template.vue",
+        "message": "可能的非法变量引用: formatDateTime(row.lastLoginTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/permission-management/UserManagement.template.vue",
+        "message": "可能的非法变量引用: formatDateTime(row.creationTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: formatDate(new Date())"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: station.currentProduct || '空闲'"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: getOrderCountByStatus('all')"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: getOrderCountByStatus('Planned')"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: getOrderCountByStatus('InProduction')"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: getOrderCountByStatus('Completed')"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: row.product?.productName"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: row.product?.productCode"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: row.completedQuantity || 0"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: row.workstation?.name"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: getPriorityLabel(row.priority)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: getStatusLabel(row.status)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: formatDateTime(row.plannedStartTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: formatDateTime(row.plannedEndTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "可能的非法变量引用: formatDateTime(row.actualStartTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/smart-construction/ProjectManagement.template.vue",
+        "message": "可能的非法变量引用: formatCurrency(projectStats.totalBudget)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/smart-construction/ProjectManagement.template.vue",
+        "message": "可能的非法变量引用: showMapView ? '列表视图' : '地图视图'"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/smart-construction/ProjectManagement.template.vue",
+        "message": "可能的非法变量引用: getProjectTypeLabel(row.projectType)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/smart-construction/ProjectManagement.template.vue",
+        "message": "可能的非法变量引用: getStatusLabel(row.status)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/smart-construction/ProjectManagement.template.vue",
+        "message": "可能的非法变量引用: formatCurrency(row.totalBudget)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/smart-construction/ProjectManagement.template.vue",
+        "message": "可能的非法变量引用: formatDate(row.startDate)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/domain-specific/smart-construction/ProjectManagement.template.vue",
+        "message": "可能的非法变量引用: formatDate(row.endDate)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/data-processing/DataImportExport.template.vue",
+        "message": "可能的非法变量引用: row.fileType.toUpperCase()"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/data-processing/DataImportExport.template.vue",
+        "message": "可能的非法变量引用: getStatusText(row.status)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/data-processing/DataImportExport.template.vue",
+        "message": "可能的非法变量引用: formatDateTime(row.createdAt)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/data-processing/DataImportExport.template.vue",
+        "message": "可能的非法变量引用: getExportTypeText(row.exportType)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/data-processing/DataImportExport.template.vue",
+        "message": "可能的非法变量引用: formatFileSize(row.fileSize)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/data-processing/DataImportExport.template.vue",
+        "message": "可能的非法变量引用: getStatusText(row.status)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/data-processing/DataImportExport.template.vue",
+        "message": "可能的非法变量引用: formatDateTime(row.createdAt)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/contracts/CrudAppServiceInterface.template.cs",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/contracts/GetEntityListDto.template.cs",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/contracts/UpdateEntityDto.template.cs",
+        "message": "可能的非法变量引用: #each properties"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/contracts/UpdateEntityDto.template.cs",
+        "message": "可能的非法变量引用: /each"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/contracts/UpdateEntityDto.template.cs",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/contracts/CreateEntityDto.template.cs",
+        "message": "可能的非法变量引用: #each properties"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/contracts/CreateEntityDto.template.cs",
+        "message": "可能的非法变量引用: /each"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/contracts/CreateEntityDto.template.cs",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/contracts/EntityDto.template.cs",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/tests/Application.Tests.template.cs",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/application/PermissionDefinitionProvider.template.cs",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/application/ComplexQueryAppService.template.cs",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/application/CrudAppService.template.json",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/application/CrudAppService.template.cs",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/domain/DomainService.template.cs",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/domain/DomainService.template.json",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: #each Relationships"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: #if (eq Type 'OneToMany')"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: #if IsRequired"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: /if"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: /if"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: #if (eq Type 'ManyToOne')"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: #if IsRequired"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: /if"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: /if"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: #if (eq Type 'OneToOne')"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: #if IsRequired"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: /if"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: /if"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: #if (eq Type 'ManyToMany')"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: /if"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: /each"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: #each Indexes"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: #each Columns"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: #unless @last"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: /unless"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: /each"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: #if IsUnique"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: /if"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "可能的非法变量引用: /each"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/backend/ops-monitoring/OpsMonitoringAppService.template.cs",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/document/DocumentManager.template.vue",
+        "message": "可能的非法变量引用: getTypeLabel(row.type)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/document/DocumentManager.template.vue",
+        "message": "可能的非法变量引用: formatFileSize(row.size)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/document/DocumentManager.template.vue",
+        "message": "可能的非法变量引用: formatTime(row.modifiedTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/document/DocumentManager.template.vue",
+        "message": "可能的非法变量引用: getStatusLabel(row.status)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/document/DocumentManager.template.vue",
+        "message": "可能的非法变量引用: formatFileSize(doc.size)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/document/DocumentManager.template.vue",
+        "message": "可能的非法变量引用: formatTime(doc.modifiedTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/document/DocumentManager.template.vue",
+        "message": "可能的非法变量引用: formatFileSize(row.size)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/document/DocumentManager.template.vue",
+        "message": "可能的非法变量引用: formatTime(row.modifiedTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/project/ProjectManager.template.vue",
+        "message": "可能的非法变量引用: getStatusLabel(row.status)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/project/ProjectManager.template.vue",
+        "message": "可能的非法变量引用: getPriorityLabel(row.priority)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/project/ProjectManager.template.vue",
+        "message": "可能的非法变量引用: row.team.length - 3"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/project/ProjectManager.template.vue",
+        "message": "可能的非法变量引用: formatDate(row.startDate)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/project/ProjectManager.template.vue",
+        "message": "可能的非法变量引用: formatDate(row.endDate)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/dashboard/ExecutiveDashboard.template.vue",
+        "message": "可能的非法变量引用: formatTime(lastUpdateTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/dashboard/ExecutiveDashboard.template.vue",
+        "message": "可能的非法变量引用: getDataFreshnessText(dataFreshness)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/dashboard/ExecutiveDashboard.template.vue",
+        "message": "可能的非法变量引用: formatKpiValue(kpi.value, kpi.format)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/dashboard/ExecutiveDashboard.template.vue",
+        "message": "可能的非法变量引用: Math.abs(kpi.change)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/dashboard/ExecutiveDashboard.template.vue",
+        "message": "可能的非法变量引用: formatKpiValue(kpi.target, kpi.format)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/dashboard/ExecutiveDashboard.template.vue",
+        "message": "可能的非法变量引用: formatTime(alert.timestamp)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/system/SystemMonitor.template.vue",
+        "message": "可能的非法变量引用: row.status === 'running' ? '运行中' : '已停止'"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/system/SystemMonitor.template.vue",
+        "message": "可能的非法变量引用: row.status === 'running' ? '停止' : '启动'"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/system/SystemMonitor.template.vue",
+        "message": "可能的非法变量引用: formatTime(alert.time)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/communication/NotificationCenter.template.vue",
+        "message": "可能的非法变量引用: getTypeText(row.type)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/communication/NotificationCenter.template.vue",
+        "message": "可能的非法变量引用: getStatusText(row.status)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/communication/NotificationCenter.template.vue",
+        "message": "可能的非法变量引用: formatDateTime(row.scheduledAt)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/lowcode/plugins/LowCodePlugin.template.meta.yml",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/lowcode/plugins/LowCodePlugin.template.ts",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/lowcode/runtime/RuntimeComponent.template.vue",
+        "message": "可能的非法变量引用: title || 'ComponentDescription"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/lowcode/runtime/RuntimeComponent.template.meta.yml",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/lowcode/generators/CodeGenerator.template.meta.yml",
+        "message": "模板缺少@template标记"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/business-workflow/ApprovalWorkflow.template.vue",
+        "message": "可能的非法变量引用: getStatusText(currentStatus)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/business-workflow/ApprovalWorkflow.template.vue",
+        "message": "可能的非法变量引用: formatDate(workflowInstance.createdTime)"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/business-workflow/ApprovalWorkflow.template.vue",
+        "message": "可能的非法变量引用: businessData[field.name]"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/business-workflow/ApprovalWorkflow.template.vue",
+        "message": "可能的非法变量引用: formatAmount(businessData[field.name])"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/business-workflow/ApprovalWorkflow.template.vue",
+        "message": "可能的非法变量引用: formatDate(businessData[field.name])"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/business-workflow/ApprovalWorkflow.template.vue",
+        "message": "可能的非法变量引用: businessData[field.name]"
+      },
+      {
+        "rule": "codegen.template-syntax-error",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/templates/business-workflow/ApprovalWorkflow.template.vue",
+        "message": "可能的非法变量引用: formatDuration(step.duration)"
+      },
+      {
+        "rule": "codegen.incomplete-certification",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/library/book/book.types.ts",
+        "message": "生成代码缺少完整的认证标记（应包含：生成器、时间、版本）"
+      },
+      {
+        "rule": "codegen.incomplete-certification",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/views/library/book/book-api.ts",
+        "message": "生成代码缺少完整的认证标记（应包含：生成器、时间、版本）"
+      },
+      {
+        "rule": "codegen.incomplete-certification",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/src/stores/library/useBookStore.ts",
+        "message": "生成代码缺少完整的认证标记（应包含：生成器、时间、版本）"
+      }
+    ],
+    "P1": [],
+    "P2": []
+  }
+}
