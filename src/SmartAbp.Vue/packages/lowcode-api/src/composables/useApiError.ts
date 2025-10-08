@@ -158,7 +158,8 @@ export function useApiError() {
         return '请求的资源不存在'
       case 'BAD_REQUEST':
         if (apiError.validationErrors && apiError.validationErrors.length > 0) {
-          return `参数验证失败：${apiError.validationErrors[0].message}`
+          const firstError = apiError.validationErrors[0]
+          return `参数验证失败：${firstError?.message || '未知错误'}`
         }
         return '请求参数错误，请检查输入'
       case 'INTERNAL_ERROR':
