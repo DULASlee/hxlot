@@ -35,6 +35,11 @@ export * from './version/useSchemaVersion'
 // export { default as VersionWarningBanner } from './version/VersionWarningBanner.vue'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🏗️ 装配件类型系统 (Assembly Type System) - v1.0.0
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export * from './types/assembly'
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔍 验证系统 (Validation System) - v1.0.0
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export * from './validation/metadata-adapter'
