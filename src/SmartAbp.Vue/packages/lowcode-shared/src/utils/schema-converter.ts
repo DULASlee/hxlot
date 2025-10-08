@@ -114,6 +114,14 @@ interface BackendPropertyDto {
     isReadonly?: boolean
     listVisible?: boolean
     formVisible?: boolean
+    detailVisible?: boolean
+    searchable?: boolean
+    sortable?: boolean
+    filterable?: boolean
+    disabled?: boolean
+    columnName?: string
+    columnType?: string
+    isAuditField?: boolean
     validationRules?: BackendValidationRuleDto[]
 }
 

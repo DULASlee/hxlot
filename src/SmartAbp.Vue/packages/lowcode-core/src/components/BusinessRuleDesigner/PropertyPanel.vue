@@ -169,7 +169,7 @@ import {
   ElTag
 } from 'element-plus'
 import { ref, watch } from 'vue'
-import type { RuleNode, RuleNodeType } from './types'
+import type { RuleNode, RuleNodeType, ActionParams } from './types'
 
 const logger = getGlobalLogger()
 
