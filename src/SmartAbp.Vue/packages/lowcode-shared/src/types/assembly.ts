@@ -35,6 +35,24 @@ export interface DependencyEdge {
 }
 
 /**
+ * 验证结果接口（先定义，被IAssemblyManager引用）
+ */
+export interface ValidationResult {
+    isValid: boolean
+    errors: string[]
+    warnings: string[]
+}
+
+/**
+ * 生成代码结果接口（先定义，被IAssemblyManager引用）
+ */
+export interface GeneratedCode {
+    frontend: Record<string, string>
+    backend: Record<string, string>
+    metadata: Record<string, any>
+}
+
+/**
  * 装配件管理器接口
  */
 export interface IAssemblyManager {
@@ -42,6 +60,9 @@ export interface IAssemblyManager {
     unregisterPlugin(name: string): void
     getPlugin(name: string): AssemblyPlugin | undefined
     getAllPlugins(): AssemblyPlugin[]
+    registerAssembly?(config: AssemblyConfig): void
+    loadAssembly?(name: string): Promise<any>
+    getAllAssemblyConfigs?(): AssemblyConfig[]
     validateAssembly(): ValidationResult
     generateCode(): GeneratedCode
     on(event: string, callback: (...args: any[]) => void): void
@@ -76,20 +97,18 @@ export interface AssemblyPlugin {
     name: string
     version: string
     dependencies: string[]
-    initialize(): Promise<void>
-    destroy(): Promise<void>
-    validate(): ValidationResult
-    generate(): GeneratedCode
+    initialize?(): Promise<void>
+    destroy?(): Promise<void>
+    validate?(): ValidationResult
+    generate?(): GeneratedCode
+    install(manager: IAssemblyManager): void
+    uninstall?(): void
 }
 
 /**
- * 验证结果
+ * 装配验证结果（已被ValidationResult替代，保留向后兼容）
  */
-export interface ValidationResult {
-    isValid: boolean
-    errors: ValidationError[]
-    warnings: ValidationWarning[]
-}
+export type AssemblyValidationResult = ValidationResult
 
 /**
  * 验证错误
