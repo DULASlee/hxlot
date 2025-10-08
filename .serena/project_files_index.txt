@@ -437,6 +437,7 @@ src/SmartAbp.Vue/packages/lowcode-core/src/components/WorkflowDesigner/nodes/Tas
 src/SmartAbp.Vue/packages/lowcode-core/src/components/WorkflowDesigner/nodes/WorkflowEndNode.vue
 src/SmartAbp.Vue/packages/lowcode-core/src/components/WorkflowDesigner/nodes/WorkflowStartNode.vue
 src/SmartAbp.Vue/packages/lowcode-core/src/components/WorkspaceContainer.vue
+src/SmartAbp.Vue/packages/lowcode-core/src/components/index.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/composables/useCodeGenerationProgress.d.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/composables/useCodeGenerationProgress.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/composables/useDragDrop.d.ts
@@ -477,6 +478,8 @@ src/SmartAbp.Vue/packages/lowcode-core/src/generators/aspire/service-discovery/s
 src/SmartAbp.Vue/packages/lowcode-core/src/generators/aspire/service-discovery/types.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/generators/index.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/index.ts
+src/SmartAbp.Vue/packages/lowcode-core/src/runtime/ComponentSandbox.ts
+src/SmartAbp.Vue/packages/lowcode-core/src/runtime/index.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/security/SecurityIssue.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/security/SqlInjectionDetector.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/security/VulnerabilityScannerEngine.ts
@@ -597,6 +600,7 @@ src/SmartAbp.Vue/packages/lowcode-designer/src/components/code/EnhancedCodePrevi
 src/SmartAbp.Vue/packages/lowcode-designer/src/components/devenv/DevEnvironmentSetup.vue
 src/SmartAbp.Vue/packages/lowcode-designer/src/components/dragDropEngine.ts
 src/SmartAbp.Vue/packages/lowcode-designer/src/components/git/GitWorkflowPanel.vue
+src/SmartAbp.Vue/packages/lowcode-designer/src/components/index.ts
 src/SmartAbp.Vue/packages/lowcode-designer/src/components/resilience/BulkheadConfig.vue
 src/SmartAbp.Vue/packages/lowcode-designer/src/components/resilience/CircuitBreakerConfig.vue
 src/SmartAbp.Vue/packages/lowcode-designer/src/components/resilience/FallbackConfig.vue
@@ -608,6 +612,7 @@ src/SmartAbp.Vue/packages/lowcode-designer/src/designer/schema/exporter.ts
 src/SmartAbp.Vue/packages/lowcode-designer/src/designer/schema/override.ts
 src/SmartAbp.Vue/packages/lowcode-designer/src/designer/schema/reader.ts
 src/SmartAbp.Vue/packages/lowcode-designer/src/dev/moduleWizardDev.ts
+src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts
 src/SmartAbp.Vue/packages/lowcode-designer/src/runtime/MetadataDrivenPageRenderer.vue
 src/SmartAbp.Vue/packages/lowcode-designer/src/types/designer.ts
 src/SmartAbp.Vue/packages/lowcode-designer/src/types/security.ts
@@ -775,9 +780,11 @@ src/SmartAbp.Vue/packages/lowcode-tools/src/execution/types.ts
 src/SmartAbp.Vue/packages/lowcode-tools/src/index.ts
 src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/build-template-index.js
 src/SmartAbp.Vue/packages/lowcode-tools/src/template-management/simple-template-index.js
+src/SmartAbp.Vue/packages/lowcode-tools/src/vite/index.ts
 src/SmartAbp.Vue/packages/lowcode-tools/tsconfig.json
 src/SmartAbp.Vue/packages/lowcode-tools/tsup.config.ts
 src/SmartAbp.Vue/packages/lowcode-ui-vue/index.ts
+src/SmartAbp.Vue/packages/lowcode-ui-vue/src/index.ts
 src/SmartAbp.Vue/packages/metadata-core/ARCHITECTURE.md
 src/SmartAbp.Vue/packages/metadata-core/INTEGRATION-PLAN.md
 src/SmartAbp.Vue/packages/metadata-core/NPM-PACKAGE-READINESS.md
