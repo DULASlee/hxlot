@@ -74,6 +74,7 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
 
             var configuration = context.Services.GetConfiguration();
             var databaseType = MultiDatabaseMigrationManager.GetDatabaseType(configuration);
+            var connectionString = MultiDatabaseMigrationManager.GetConnectionString(configuration);
 
             // 注册按数据库类型过滤的迁移程序集
             options.Configure(contextDbOpts =>

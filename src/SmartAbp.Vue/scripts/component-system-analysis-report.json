@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-07T11:22:01.026Z",
+  "timestamp": "2025-10-07T13:03:36.800Z",
   "statistics": {
     "packages": {
       "lowcode-shared": {
@@ -42,12 +42,12 @@
             "lines": 218
           },
           {
-            "name": "EndNode",
+            "name": "RuleEndNode",
             "size": 2009,
             "lines": 94
           },
           {
-            "name": "StartNode",
+            "name": "RuleStartNode",
             "size": 1778,
             "lines": 86
           },
@@ -87,24 +87,24 @@
             "lines": 95
           },
           {
-            "name": "EndNode",
-            "size": 833,
-            "lines": 36
-          },
-          {
             "name": "GatewayNode",
             "size": 1845,
             "lines": 73
           },
           {
-            "name": "StartNode",
-            "size": 1530,
-            "lines": 76
-          },
-          {
             "name": "TaskNode",
             "size": 2025,
             "lines": 95
+          },
+          {
+            "name": "WorkflowEndNode",
+            "size": 833,
+            "lines": 36
+          },
+          {
+            "name": "WorkflowStartNode",
+            "size": 1530,
+            "lines": 76
           },
           {
             "name": "WorkspaceContainer",
@@ -633,24 +633,14 @@
     "totalLines": 47687
   },
   "performance": {
-    "avgWithPrefix": 0.1754438000000164,
-    "avgWithoutPrefix": 0.42652509999996935,
-    "avgCacheHit": 0.01502588000000742,
-    "worstCase": 2.194291999999905,
-    "bestCase": 0.015249999999923602
+    "avgWithPrefix": 2.103124899999989,
+    "avgWithoutPrefix": 0.4136374499999761,
+    "avgCacheHit": 0.2725158099999885,
+    "worstCase": 4.911583000000064,
+    "bestCase": 0.014416999999866675
   },
   "stability": {
     "issues": [
-      {
-        "type": "conflict",
-        "severity": "high",
-        "message": "组件名冲突: LcEndNode (在lowcode-core和lowcode-core中)"
-      },
-      {
-        "type": "conflict",
-        "severity": "high",
-        "message": "组件名冲突: LcStartNode (在lowcode-core和lowcode-core中)"
-      },
       {
         "type": "large-file",
         "severity": "medium",
@@ -862,7 +852,7 @@
         "message": "目录不存在: metadata-core/src/components"
       }
     ],
-    "conflictCount": 2,
+    "conflictCount": 0,
     "largeFileCount": 39,
     "structureIssueCount": 3
   },
@@ -878,14 +868,6 @@
     "memoryPerComponent": 184
   },
   "recommendations": [
-    {
-      "category": "稳定性增强",
-      "priority": "critical",
-      "title": "解决组件名冲突",
-      "description": "发现2个组件名冲突，必须立即解决",
-      "impact": "避免运行时组件解析错误",
-      "implementation": "重命名冲突组件或调整前缀规则"
-    },
     {
       "category": "代码质量",
       "priority": "medium",
@@ -920,10 +902,10 @@
     }
   ],
   "scores": {
-    "performance": 100,
-    "stability": 45,
+    "performance": 70,
+    "stability": 85,
     "scalability": 95,
     "codeQuality": 0,
-    "overall": 67.5
+    "overall": 69
   }
 }

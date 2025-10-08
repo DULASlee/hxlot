@@ -1,0 +1,617 @@
+---
+alwaysApply: true
+priority: 1
+---
+
+# AI开发指南
+
+## 📋 文档说明
+
+**版本**: v2.0 精简版
+**作用**: 提供具体的开发流程、代码标准、质量检查指南
+
+---
+
+## 🚀 开发流程（弹性版）
+
+### 通用流程原则
+
+```yaml
+核心原则:
+  - 根据任务复杂度选择流程
+  - 简单任务快速响应
+  - 复杂任务深入分析
+  - 始终保证质量
+
+不再强制:
+  - 所有任务都执行完整六阶段
+  - 所有任务都15节点分析
+  - 所有任务都等待用户确认
+```
+
+### Level 1流程：微小任务
+
+```yaml
+适用:
+  - 修改变量名、添加注释
+  - 简单样式调整
+  - 明显的小BUG修复
+
+步骤:
+  1. 快速理解需求（30秒）
+  2. 直接修改
+  3. TypeScript检查
+  4. 完成
+
+示例:
+  用户: "把这个变量名改成更清晰的"
+  AI: 
+    - 分析当前命名
+    - 提供更好的命名
+    - 直接修改
+    - 确认TypeScript通过
+```
+
+### Level 2流程：中等任务
+
+```yaml
+适用:
+  - 添加新组件
+  - 修复复杂BUG
+  - 功能优化
+
+步骤:
+  1. 理解需求（2-3分钟）
+     - 用户想要什么
+     - 为什么需要
+     - 成功标准是什么
+  
+  2. 检索现有实现（DRY原则）
+     - 搜索相似组件/函数
+     - 检查是否可复用
+     - 参考现有模式
+  
+  3. 简要技术分析（8节点）
+     - 技术方案选择
+     - 实现路径
+     - 潜在问题
+  
+  4. 编码实现
+     - 遵循代码标准
+     - 完整的类型定义
+     - 适当的错误处理
+  
+  5. 质量检查
+     - TypeScript: npm run type-check
+     - ESLint: npm run lint
+     - 架构合规检查
+  
+  6. 功能验证
+     - 手动测试主要功能
+     - 确认符合预期
+
+示例:
+  用户: "添加一个用户选择器组件"
+  AI:
+    - 搜索现有选择器组件
+    - 评估是否可复用或需要新建
+    - 简要设计（Props、Events、状态）
+    - 实现组件
+    - 检查类型和规范
+    - 提供使用示例
+```
+
+### Level 3流程：重大任务
+
+```yaml
+适用:
+  - 新功能模块（>200行）
+  - 架构调整
+  - 大规模重构
+
+步骤:
+  1. 深度需求分析（15节点）
+     节点1-5: 理解层
+       - 表面需求
+       - 业务价值
+       - 真实痛点
+       - 成功标准
+       - 隐性需求
+     
+     节点6-10: 技术调研层
+       - 现有架构分析
+       - 技术约束识别
+       - 业界最佳实践搜索（2-3个关键问题）
+       - 可复用组件检索
+       - 边界条件分析
+     
+     节点11-13: 方案对比层
+       - 方案A: 保守方案
+       - 方案B: 推荐方案
+       - 方案C: 创新方案
+     
+     节点14: 技术建议
+       - 架构建议
+       - 性能建议
+       - 用户体验建议
+     
+     节点15: 验证
+       - 能达到95分标准吗？
+  
+  2. 用户确认
+     - 展示分析结果
+     - 提供方案对比
+     - 等待用户选择
+  
+  3. 分步实现
+     - 按功能模块分步
+     - 每100-200行自检一次
+     - 保持代码质量
+  
+  4. 完整测试
+     - 功能测试
+     - 边界测试
+     - 性能测试（如需要）
+  
+  5. 质量门禁
+     - TypeScript检查
+     - ESLint检查
+     - 架构合规检查
+     - 功能验证
+  
+  6. Git同步
+     - 使用标准化脚本
+     - 验证同步成功
+
+示例:
+  用户: "实现完整的低代码表单设计器"
+  AI:
+    - 15节点深度分析
+    - 搜索业界方案（FormBuilder、表单渲染引擎）
+    - 提供3个方案对比
+    - 用户确认后分步实现
+    - 每个模块完成后检查
+    - 最终完整测试
+```
+
+---
+
+## 📐 代码标准
+
+### TypeScript/JavaScript标准
+
+#### 命名规范
+
+```typescript
+// ✅ 正确
+const userName = "张三"                    // camelCase - 变量
+const MAX_RETRY_COUNT = 3                 // UPPER_SNAKE_CASE - 常量
+class UserService { }                     // PascalCase - 类
+interface UserDto { }                     // PascalCase - 接口
+type UserId = string                      // PascalCase - 类型
+function getUserById(id: string) { }      // camelCase - 函数
+const isActive = true                     // is/has/can - 布尔值
+const userList = []                       // 复数 - 数组
+
+// ❌ 错误
+const username = "张三"                    // 不清晰
+const max_retry_count = 3                 // 常量应该大写
+class userService { }                     // 类应该PascalCase
+const active = true                       // 布尔值应该is/has/can
+const user = []                           // 数组应该复数
+```
+
+#### 类型定义
+
+```typescript
+// ✅ 正确 - 100%类型安全
+interface User {
+  id: string
+  name: string
+  age: number
+  email?: string                          // 可选属性
+}
+
+function getUser(id: string): Promise<User> {
+  return api.get<User>(`/users/${id}`)
+}
+
+// Props定义
+interface UserCardProps {
+  user: User
+  onEdit?: (user: User) => void
+}
+
+// ❌ 错误 - 使用any
+function getUser(id: any): any {          // ❌ 严禁any
+  return api.get(`/users/${id}`)
+}
+
+// ❌ 错误 - 缺少类型
+function getUser(id) {                    // ❌ 缺少类型定义
+  return api.get(`/users/${id}`)
+}
+```
+
+#### 导入规范
+
+```typescript
+// ✅ 正确 - packages使用别名
+import { Schema } from '@smartabp/lowcode-shared'
+import { Designer } from '@smartabp/lowcode-core'
+
+// ✅ 正确 - 主应用使用@/
+import { UserService } from '@/services/UserService'
+import type { User } from '@/types/user'
+
+// ❌ 错误 - packages使用相对路径
+import { Schema } from '../../../lowcode-shared'    // ❌ 违反架构
+
+// ❌ 错误 - packages引用主应用
+import { UserService } from '@/services/UserService' // ❌ 在packages中
+```
+
+### Vue3标准
+
+```vue
+<!-- ✅ 正确 - 使用TypeScript和setup -->
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+
+interface Props {
+  userId: string
+  editable?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  editable: false
+})
+
+const emit = defineEmits<{
+  edit: [user: User]
+  delete: [userId: string]
+}>()
+
+const user = ref<User | null>(null)
+const isLoading = ref(false)
+
+const displayName = computed(() => {
+  return user.value?.name || '未知用户'
+})
+
+async function loadUser() {
+  isLoading.value = true
+  try {
+    user.value = await UserService.getUser(props.userId)
+  } catch (error) {
+    ElMessage.error('加载用户失败')
+  } finally {
+    isLoading.value = false
+  }
+}
+</script>
+
+<!-- ❌ 错误 - 不使用TypeScript -->
+<script setup>  <!-- ❌ 缺少 lang="ts" -->
+const props = defineProps(['userId'])  // ❌ 缺少类型
+</script>
+```
+
+### C#标准
+
+```csharp
+// ✅ 正确 - 完整的AppService实现
+public class UserAppService : ApplicationService, IUserAppService
+{
+    private readonly IRepository<User, Guid> _userRepository;
+    
+    public UserAppService(IRepository<User, Guid> userRepository)
+    {
+        _userRepository = userRepository;
+    }
+    
+    public async Task<PagedResultDto<UserDto>> GetListAsync(GetUserListInput input)
+    {
+        // 真实的数据库查询
+        var query = await _userRepository.GetQueryableAsync();
+        
+        // 应用过滤条件
+        if (!string.IsNullOrEmpty(input.Filter))
+        {
+            query = query.Where(u => u.Name.Contains(input.Filter));
+        }
+        
+        // 分页
+        var totalCount = await AsyncExecuter.CountAsync(query);
+        var items = await AsyncExecuter.ToListAsync(
+            query.Skip(input.SkipCount).Take(input.MaxResultCount)
+        );
+        
+        // 映射到DTO
+        return new PagedResultDto<UserDto>(
+            totalCount,
+            ObjectMapper.Map<List<User>, List<UserDto>>(items)
+        );
+    }
+}
+
+// ❌ 错误 - 空实现
+public async Task<PagedResultDto<UserDto>> GetListAsync(GetUserListInput input)
+{
+    return new PagedResultDto<UserDto>();  // ❌ 返回空数据
+}
+
+// ❌ 错误 - Mock数据
+public async Task<PagedResultDto<UserDto>> GetListAsync(GetUserListInput input)
+{
+    var mockUsers = new List<UserDto>   // ❌ 写死的数据
+    {
+        new UserDto { Name = "测试用户" }
+    };
+    return new PagedResultDto<UserDto>(1, mockUsers);
+}
+```
+
+---
+
+## 🔍 质量检查
+
+### 编码中检查（每100行）
+
+```yaml
+轻量级检查:
+  1. TypeScript类型是否正确
+     - 无any类型
+     - 函数有返回类型
+     - Props有类型定义
+  
+  2. 关键逻辑是否有注释
+     - 复杂算法有说明
+     - 业务规则有注释
+     - 非常规用法有解释
+  
+  3. 错误处理是否完善
+     - API调用有try-catch
+     - 用户操作有反馈
+     - 边界条件有处理
+
+执行方式:
+  - AI自我审查（心理检查清单）
+  - 不需要停下来等待
+  - 发现问题立即修正
+```
+
+### 阶段完成检查（每个功能）
+
+```yaml
+必检项目:
+  1. TypeScript类型检查（P0）
+     cd src/SmartAbp.Vue && npm run type-check
+     结果: 必须0错误
+  
+  2. ESLint代码规范（P0）
+     cd src/SmartAbp.Vue && npm run lint
+     结果: 必须0错误，0警告
+  
+  3. 架构合规检查（P0）
+     # packages相对路径检查
+     grep -r "'../'" src/SmartAbp.Vue/packages/
+     结果: 必须0结果
+     
+     # packages主应用引用检查
+     grep -r "@/" src/SmartAbp.Vue/packages/
+     结果: 必须0结果
+  
+  4. 功能验证（P0）
+     手动测试:
+       - 页面能正常打开
+       - 按钮点击有响应
+       - 数据正常加载
+       - 操作正确保存
+
+执行方式:
+  - 功能完成后立即执行
+  - 所有检查必须通过
+  - 失败则修复后重新检查
+```
+
+### Git提交前检查（最终门禁）
+
+```yaml
+使用标准化脚本:
+  # Windows
+  pwsh -File scripts/git/git-safe-sync.ps1 -AutoCommit
+  
+  # Linux/Mac
+  bash scripts/git/git-safe-sync.sh --auto-commit
+
+脚本自动执行:
+  1. 环境检查: 验证Git环境
+  2. 状态检查: 检查本地修改
+  3. 质量检查: TypeScript + ESLint + 架构合规
+  4. 备份创建: 创建本地备份
+  5. 拉取更新: git pull origin main
+  6. 合并代码: 处理可能的冲突
+  7. 推送同步: git push origin main
+  8. 同步验证: 本地哈希 = 远程哈希
+
+禁止行为:
+  ❌ 使用零散Git命令（git add/commit/push单独执行）
+  ❌ 跳过质量检查
+  ❌ 使用--no-verify绕过检查
+  ❌ force push到main/master
+```
+
+---
+
+## 🛠️ 常见场景处理
+
+### 场景1：修复编译错误
+
+```yaml
+优先级顺序:
+  1. 添加缺失的import
+     import { XXX } from '@/types/xxx'
+  
+  2. 定义缺失的interface/type
+     interface XXX {
+       property: string
+     }
+  
+  3. 修复类型注解
+     function foo(param: string): Promise<Result>
+  
+  4. 使用类型断言（仅在100%确定类型时）
+     const user = data as User  // 确定data就是User
+  
+  5. 使用类型守卫
+     if (typeof value === 'string') {
+       // TypeScript知道value是string
+     }
+  
+  ❌ 严禁使用as any解决类型问题
+```
+
+### 场景2：架构违规处理
+
+```yaml
+发现违规:
+  grep检测到../ 或 @/在packages中
+
+处理流程:
+  1. 立即停止当前操作
+  
+  2. 向用户说明问题
+     "检测到架构违规：packages中使用了相对路径/主应用引用"
+  
+  3. 说明原因
+     - 破坏模块独立性
+     - 影响复用性
+     - 违反P0规则
+  
+  4. 提供正确方案
+     '../../../shared' → '@smartabp/lowcode-shared'
+     '@/services/xxx' → '@smartabp/lowcode-core'
+  
+  5. 修复后重新检查
+     grep -r "'../'" packages/  # 必须0结果
+```
+
+### 场景3：代码重复处理
+
+```yaml
+发现重复:
+  搜索发现同名组件/函数
+
+处理流程:
+  1. 评估现有实现
+     - 功能是否完全匹配
+     - 质量是否满足要求
+     - 是否可直接复用
+  
+  2. 决策
+     a. 可直接复用 → 使用现有实现
+     b. 需要修改 → 扩展现有实现
+     c. 完全不同 → 重新命名新实现
+  
+  3. 向用户说明
+     "发现现有实现XXX，建议复用"
+     或
+     "现有实现不满足需求，建议创建新实现并重命名"
+```
+
+### 场景4：用户要求违反规则
+
+```yaml
+示例:
+  用户: "使用as any跳过这个类型检查"
+
+处理流程:
+  1. 不盲目执行
+  
+  2. 专业分析
+     "使用as any会带来以下问题：
+      - 失去类型安全
+      - 可能导致运行时错误
+      - 降低代码可维护性"
+  
+  3. 提供替代方案
+     方案A: 补充类型定义
+     方案B: 使用类型守卫
+     方案C: 定义unknown后逐步收窄
+  
+  4. 用户选择
+     - 如用户坚持，再次确认后执行
+     - 如用户接受建议，使用替代方案
+```
+
+---
+
+## 📝 Git提交信息规范
+
+```yaml
+格式:
+  类型(范围): 简短描述
+  
+  详细说明（可选）
+  
+  关联问题（可选）
+
+类型:
+  - feat: 新功能
+  - fix: BUG修复
+  - refactor: 重构
+  - perf: 性能优化
+  - style: 代码格式
+  - docs: 文档更新
+  - test: 测试相关
+  - chore: 构建/工具相关
+
+示例:
+  feat(lowcode): 添加表单设计器拖拽功能
+  
+  - 实现组件拖拽逻辑
+  - 添加拖拽状态管理
+  - 更新设计器UI
+  
+  Closes #123
+
+不要:
+  - "修改"、"更新"、"优化"这种模糊的描述
+  - 包含多个不相关的修改
+  - 超过500行的大提交（应该拆分）
+```
+
+---
+
+## 🎯 总结
+
+### 核心要点
+
+```yaml
+1. 弹性流程: 根据任务复杂度选择流程
+2. 质量底线: P0规则绝不妥协
+3. 专业判断: 不盲目执行用户要求
+4. 持续检查: 编码中、阶段完成、Git提交三重检查
+5. 工具辅助: 使用自动化脚本和工具
+```
+
+### AI工作原则
+
+```yaml
+做一个智能助手:
+  ✅ 理解需求本质
+  ✅ 灵活应对场景
+  ✅ 主动发现问题
+  ✅ 提供专业建议
+  ✅ 保证代码质量
+
+而不是:
+  ❌ 规则执行机器
+  ❌ 死板僵化
+  ❌ 盲目服从
+  ❌ 过度分析
+  ❌ 降低标准
+```
+
+**让开发既高效又高质量！**

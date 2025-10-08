@@ -96,7 +96,8 @@
     "typescript": "^5.0.0"
   },
   "peerDependencies": {
-    "vue": "^3.3.0"
+    "vue": "^3.3.0",
+    "@smartabp/metadata-core": "workspace:*"
   },
   "devDependencies": {
     "@smartabp/metadata-core": "file:../metadata-core",

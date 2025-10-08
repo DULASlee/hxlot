@@ -17,22 +17,20 @@ public class SmartAbpDbContextFactory : IDesignTimeDbContextFactory<SmartAbpDbCo
         SmartAbpEfCoreEntityExtensionMappings.Configure();
 
         var builder = new DbContextOptionsBuilder<SmartAbpDbContext>();
-        var databaseType = configuration["Database:Type"] ?? "Sqlite";
-        var connectionString = configuration.GetConnectionString("Default") 
-            ?? "Data Source=smartabp.db";
+        
+        // 使用MultiDatabaseMigrationManager智能检测数据库类型和连接字符串
+        var databaseType = MultiDatabaseMigrationManager.GetDatabaseType(configuration);
+        var connectionString = MultiDatabaseMigrationManager.GetConnectionString(configuration);
 
-        switch (databaseType.ToLowerInvariant())
+        switch (databaseType)
         {
-            case "sqlite":
+            case DatabaseType.SQLite:
                 builder.UseSqlite(connectionString);
                 break;
-            case "sqlserver":
-            case "mssql":
-            case "localdb":
+            case DatabaseType.SqlServer:
                 builder.UseSqlServer(connectionString);
                 break;
-            case "postgresql":
-            case "postgres":
+            case DatabaseType.PostgreSQL:
                 builder.UseNpgsql(connectionString);
                 break;
             default:

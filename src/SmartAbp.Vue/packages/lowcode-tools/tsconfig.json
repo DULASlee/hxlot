@@ -10,6 +10,8 @@
     "declarationMap": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "paths": {
+      "@smartabp/metadata-core": ["../metadata-core/src/index.ts"],
+      "@smartabp/metadata-core/*": ["../metadata-core/src/*"],
       "@smartabp/lowcode-shared": ["../lowcode-shared/src/index.ts"],
       "@smartabp/lowcode-shared/*": ["../lowcode-shared/src/*"],
       "@smartabp/lowcode-tools": ["./src/index.ts"],
@@ -25,6 +27,7 @@
     "dist"
   ],
   "references": [
+    { "path": "../metadata-core" },
     { "path": "../lowcode-shared" }
   ]
 }

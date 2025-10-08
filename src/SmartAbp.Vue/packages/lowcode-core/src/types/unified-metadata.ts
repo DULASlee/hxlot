@@ -1,5 +1,13 @@
-// 统一元数据类型定义
-export interface ModuleMetadata {
+// 🚀 从metadata-core导入统一类型定义
+import type {
+  EntityMetadata as CoreEntityMetadata,
+  ModuleMetadata as CoreModuleMetadata,
+  PropertyMetadata as CorePropertyMetadata
+} from '@smartabp/metadata-core'
+
+// 🔄 向后兼容性别名（逐步弃用）
+/** @deprecated 请使用 @smartabp/metadata-core 中的 ModuleMetadata */
+export interface ModuleMetadata extends Partial<CoreModuleMetadata> {
   name: string
   displayName?: string
   description?: string
@@ -8,7 +16,8 @@ export interface ModuleMetadata {
   [key: string]: any
 }
 
-export interface EntityMetadata {
+/** @deprecated 请使用 @smartabp/metadata-core 中的 EntityMetadata */
+export interface EntityMetadata extends Partial<CoreEntityMetadata> {
   name: string
   displayName?: string
   description?: string
@@ -16,7 +25,8 @@ export interface EntityMetadata {
   [key: string]: any
 }
 
-export interface PropertyMetadata {
+/** @deprecated 请使用 @smartabp/metadata-core 中的 PropertyMetadata */
+export interface PropertyMetadata extends Partial<CorePropertyMetadata> {
   name: string
   type: string
   displayName?: string
@@ -24,6 +34,11 @@ export interface PropertyMetadata {
   isRequired?: boolean
   defaultValue?: any
   [key: string]: any
+}
+
+// 🚀 重新导出标准类型（推荐使用）
+export type {
+  CoreEntityMetadata as StandardEntityMetadata, CoreModuleMetadata as StandardModuleMetadata, CorePropertyMetadata as StandardPropertyMetadata
 }
 
 export interface ManifestData {

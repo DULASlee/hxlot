@@ -295,7 +295,7 @@ function convertPropertiesReverse(
             name: prop.name,
             displayName: prop.displayName,
             type: prop.type,
-            isRequired: prop.isRequired,
+            isRequired: prop.isRequired ?? false,
             description: prop.description || '',
             showInList: uiConfig?.listColumns?.includes(prop.name),
             filterable: uiConfig?.searchFields?.includes(prop.name),

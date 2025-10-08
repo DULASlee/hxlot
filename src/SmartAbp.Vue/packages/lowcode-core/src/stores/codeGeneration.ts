@@ -1,7 +1,12 @@
 
+import { getGlobalLogger, type ILogger } from "@smartabp/lowcode-shared";
+import {
+  getEntityMetadataErrors,
+  validateEntityMetadata,
+  type EntityMetadata
+} from "@smartabp/metadata-core";
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { getGlobalLogger, type ILogger } from "@smartabp/lowcode-shared";
 
 const logger: ILogger = getGlobalLogger();
 
@@ -284,6 +289,29 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
     return files;
   };
 
+  // 验证实体元数据
+  const validateEntityForGeneration = (entity: any): { isValid: boolean; errors: string[] } => {
+    try {
+      // 如果entity已经是EntityMetadata格式，直接验证
+      if (entity && typeof entity === 'object') {
+        const validatedEntity = validateEntityMetadata(entity as EntityMetadata);
+        if (validatedEntity) {
+          return { isValid: true, errors: [] };
+        }
+      }
+      return { isValid: false, errors: ['实体数据格式不正确'] };
+    } catch (error) {
+      // 获取详细的验证错误信息
+      const errors = getEntityMetadataErrors(entity as EntityMetadata);
+      logger.warn('实体验证失败', {
+        entity: entity?.name || 'unknown',
+        errors,
+        error: error instanceof Error ? error.message : String(error)
+      });
+      return { isValid: false, errors };
+    }
+  };
+
   // 生成后端文件
   const generateBackendFile = async (
     entity: any,
@@ -291,6 +319,17 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
     config: CodeGenerationConfig
   ) => {
     try {
+      // 🚀 Phase 2新增：集成验证逻辑
+      const validation = validateEntityForGeneration(entity);
+      if (!validation.isValid) {
+        logger.error(`实体验证失败，跳过${templateId}生成`, {
+          entity: entity?.name || 'unknown',
+          errors: validation.errors
+        });
+        throw new Error(`实体验证失败: ${validation.errors.join(', ')}`);
+      }
+
+      logger.info(`实体验证通过，开始生成${templateId}`, { entity: entity.name });
       let content = "";
       let filename = "";
       let directory = "";
@@ -342,6 +381,17 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
     config: CodeGenerationConfig
   ) => {
     try {
+      // 🚀 Phase 2新增：集成验证逻辑
+      const validation = validateEntityForGeneration(entity);
+      if (!validation.isValid) {
+        logger.error(`实体验证失败，跳过${templateId}生成`, {
+          entity: entity?.name || 'unknown',
+          errors: validation.errors
+        });
+        throw new Error(`实体验证失败: ${validation.errors.join(', ')}`);
+      }
+
+      logger.info(`实体验证通过，开始生成${templateId}`, { entity: entity.name });
       let content = "";
       let filename = "";
       let directory = "";
@@ -1156,19 +1206,19 @@ namespace ${config.config.namespace}.DbMigrator
         : 0
     };
   };
-  
+
   // 🛡️ 核心功能保护: 模板管理方法
   const loadTemplates = () => {
     logger.info('📚 加载代码生成模板')
     // 模板已在初始化时加载
     return templates.value
   }
-  
+
   const applyTemplate = (templateId: string, config: CodeGenerationConfig) => {
     logger.info('🎯 应用代码生成模板', { templateId })
     return generateCode(config)
   }
-  
+
   const generateFiles = (config: CodeGenerationConfig) => {
     logger.info('📦 生成代码文件')
     return generateCode(config)
@@ -1188,7 +1238,7 @@ namespace ${config.config.namespace}.DbMigrator
     generateCode,
     clearHistory,
     getStatistics,
-    
+
     // 🛡️ 核心功能保护: 模板管理方法
     loadTemplates,
     applyTemplate,

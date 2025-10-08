@@ -32,14 +32,16 @@
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
-  "dependencies": {
+  "peerDependencies": {
+    "@smartabp/metadata-core": "workspace:*",
     "@smartabp/lowcode-shared": "file:../lowcode-shared",
     "@smartabp/lowcode-core": "file:../lowcode-core",
-    "vue": "^3.3.0",
-    "typescript": "^5.0.0"
+    "vue": "^3.3.0"
   },
   "devDependencies": {
+    "@smartabp/metadata-core": "file:../metadata-core",
     "@types/node": "^20.0.0",
-    "tsup": "^8.0.0"
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
   }
 }

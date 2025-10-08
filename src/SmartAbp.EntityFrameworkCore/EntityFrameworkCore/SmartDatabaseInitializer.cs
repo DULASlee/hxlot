@@ -31,6 +31,7 @@ public class SmartDatabaseInitializer : ITransientDependency
     /// </summary>
     public async Task InitializeAsync(DbContext context)
     {
+        var initMode = _configuration["Database:InitMode"]?.Trim();
         var dbType = MultiDatabaseMigrationManager.GetDatabaseType(_configuration);
         var dbName = MultiDatabaseMigrationManager.GetDatabaseDisplayName(dbType);
         
@@ -38,6 +39,15 @@ public class SmartDatabaseInitializer : ITransientDependency
 
         try
         {
+            // 快速路径：显式要求使用 EnsureCreated（绕过迁移冲突，开发期使用）
+            if (!string.IsNullOrWhiteSpace(initMode) && initMode.Equals("EnsureCreated", StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogWarning("⚠️ Database:InitMode=EnsureCreated，跳过迁移，直接执行 EnsureCreated()");
+                await context.Database.EnsureCreatedAsync();
+                _logger.LogInformation("✅ EnsureCreated 完成！");
+                return;
+            }
+
             // 统一使用迁移模式，确保ABP框架所有表都被正确创建
             _logger.LogInformation("🔄 使用EF Core迁移模式（企业级标准）");
             
@@ -81,11 +91,10 @@ public class SmartDatabaseInitializer : ITransientDependency
                 _logger.LogWarning("⚠️  迁移失败，尝试快速创建模式...");
                 _logger.LogWarning("💡 这将清空现有数据并重新创建数据库结构");
                 
-                // 先删除数据库（如果存在）
-                await context.Database.EnsureDeletedAsync();
-                // 再创建数据库
+                // 避免DROP DATABASE权限问题，直接EnsureCreated
                 await context.Database.EnsureCreatedAsync();
                 _logger.LogInformation("✅ 数据库快速创建成功！");
+                return;
             }
             else
             {

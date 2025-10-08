@@ -31,6 +31,15 @@ export {
 } from './aspire-converter'
 
 // ========================================
+// 后端DTO转换器
+// ========================================
+export {
+    getBackendConversionStats, toEntityMetadataDto, toEntityMetadataDtoBatch, toMenuConfigDto, toModuleMetadataDto, toModuleMetadataDtoBatch, toNavigationPropertyMetadataDto, toPropertyMetadataDto, toRouteMetadataDto,
+    toStoreMetadataDto, type AttributeDto, type AuditFieldDto, type ConfigurationDto, type ConstraintDto, type ConvertToBackendOptions, type EntityMetadataDto, type FeatureDto, type IndexDto, type LocalizationDto, type MenuConfigDto, type ModuleMetadataDto, type NavigationPropertyMetadataDto, type PropertyMetadataDto, type RouteMetadataDto,
+    type StoreMetadataDto, type ValidationRuleDto
+} from './backend-dto-converter'
+
+// ========================================
 // 通用转换工具
 // ========================================
 
