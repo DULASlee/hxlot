@@ -3,7 +3,7 @@
  * Stage 5.3 TDD Implementation - Vue 3 Composition API
  */
 
-import { ref, reactive, computed, readonly } from "vue"
+import { computed, reactive, readonly, ref } from "vue"
 // Narrow local dashboard types aligned with available designer security types
 type RiskLevel = "Low" | "Medium" | "High" | "Critical"
 

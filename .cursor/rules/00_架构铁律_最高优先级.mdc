@@ -1,0 +1,483 @@
+---
+description: 架构三大铁律 - P0最高优先级，违反者格杀勿论
+alwaysApply: true
+priority: -2
+---
+
+# 🔥 架构三大铁律 - P0最高优先级（生死线）
+
+**优先级**: -2（最高，覆盖所有规则）  
+**执行级别**: 格杀勿论，零容忍  
+**适用范围**: 全项目所有代码  
+
+---
+
+## ⚠️ 核心问题诊断
+
+**问题根源**: 项目存在大量TypeScript错误，根本原因是**严重违反架构设计**：
+
+1. **未使用统一类型系统** → 类型定义散乱
+2. **未使用组件注册系统** → 组件管理混乱
+3. **架构层级混乱** → 主应用定义底层类型
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🔥 铁律一：强制使用统一类型系统
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### 核心原则
+
+```yaml
+所有类型定义必须集中在以下位置:
+  1. @smartabp/metadata-core (元数据相关)
+  2. @smartabp/lowcode-shared/types (共享类型)
+  3. packages内部类型 (仅限package内使用)
+
+严禁:
+  ❌ 在主应用 src/ 中定义可复用类型
+  ❌ 在组件文件中定义跨文件使用的类型
+  ❌ 使用相对路径 import '../types'
+  ❌ 每个文件自己定义重复的类型
+```
+
+### 正确做法
+
+```typescript
+// ✅ 正确：所有共享类型在 lowcode-shared 中定义
+// packages/lowcode-shared/src/types/assembly.ts
+export interface DependencyGraph {
+  nodes: Map<string, DependencyNode>
+  roots: string[]
+  hasCycles: boolean
+}
+
+export interface DependencyNode {
+  id: string
+  name: string
+  dependencies: string[]
+}
+
+// ✅ 正确：其他地方使用
+// src/core/assembly/plugins/index.ts
+import type { DependencyGraph, DependencyNode } from '@smartabp/lowcode-shared'
+
+// ✅ 正确：主应用导出到 index.ts
+// packages/lowcode-shared/src/index.ts
+export * from './types/assembly'
+```
+
+### 错误做法（格杀勿论）
+
+```typescript
+// ❌ 错误：在主应用中定义类型
+// src/core/assembly/assembly-types.d.ts
+interface DependencyGraph { ... }  // 💀 枪毙
+
+// ❌ 错误：使用相对路径导入
+import { DependencyGraph } from '../assembly-types'  // 💀 枪毙
+
+// ❌ 错误：在组件中定义共享类型
+// SomeComponent.vue
+interface SharedType { ... }  // 💀 枪毙
+export { SharedType }  // 其他文件还要用
+
+// ❌ 错误：每个文件重复定义
+// fileA.ts
+interface User { id: string }
+// fileB.ts
+interface User { id: string }  // 💀 枪毙（重复定义）
+```
+
+### 强制检查
+
+```bash
+# 检查主应用是否定义了类型文件（除了业务DTO）
+find src/ -name "*types.ts" -o -name "*types.d.ts" | grep -v "src/types/"
+
+# 检查是否使用相对路径导入类型
+grep -r "from '\.\./.*types" src/
+grep -r "from '\.\./.*\.d\.ts" src/
+
+# 结果必须为空，否则全部删除重写
+```
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🔥 铁律二：强制使用组件注册系统
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### 核心原则
+
+```yaml
+所有低代码组件必须通过 ComponentRegistry 注册:
+  位置: @smartabp/lowcode-shared/components/ComponentRegistry
+  
+强制要求:
+  1. ✅ 组件创建后立即注册
+  2. ✅ 提供完整的 ComponentMetadata
+  3. ✅ 声明所有依赖关系
+  4. ✅ 指定正确的 category 和 bundle
+  
+严禁:
+  ❌ 创建组件不注册
+  ❌ 直接 import 组件路径使用
+  ❌ 跳过 ComponentRegistry
+```
+
+### 正确做法
+
+```typescript
+// ✅ 步骤1: 创建组件
+// packages/lowcode-core/src/components/SmartForm.vue
+<script setup lang="ts">
+import { defineProps } from 'vue'
+// ... 组件逻辑
+</script>
+
+// ✅ 步骤2: 导出组件
+// packages/lowcode-core/src/components/index.ts
+export { default as SmartForm } from './SmartForm.vue'
+
+// ✅ 步骤3: 注册组件（必须！）
+// packages/lowcode-core/src/index.ts
+import { registerComponent } from '@smartabp/lowcode-shared'
+import { SmartForm } from './components'
+
+export function registerCoreComponents() {
+  registerComponent({
+    name: 'SmartForm',
+    displayName: '智能表单',
+    category: 'form',
+    priority: 'high',
+    dependencies: ['BaseComponent'],
+    bundle: '@smartabp/lowcode-core',
+    lazy: false,
+    preload: true,
+    version: '1.0.0',
+    tags: ['form', 'smart']
+  })
+}
+
+// 在应用启动时调用
+registerCoreComponents()
+
+// ✅ 步骤4: 使用组件（通过注册系统）
+import { loadComponent } from '@smartabp/lowcode-shared'
+const SmartForm = await loadComponent('SmartForm')
+```
+
+### 错误做法（格杀勿论）
+
+```typescript
+// ❌ 错误：创建组件不注册
+// packages/lowcode-core/src/components/NewComponent.vue
+<script setup lang="ts">
+// ... 组件实现
+</script>
+// 💀 枪毙：创建了但没在 ComponentRegistry 注册
+
+// ❌ 错误：直接导入使用
+import NewComponent from '@/components/NewComponent.vue'  // 💀 枪毙
+
+// ❌ 错误：不提供完整 metadata
+registerComponent({
+  name: 'MyComponent'
+  // 💀 枪毙：缺少 category, bundle, version 等
+})
+
+// ❌ 错误：不声明依赖
+registerComponent({
+  name: 'MyComponent',
+  dependencies: []  // 💀 枪毙：实际依赖了 BaseComponent 但没声明
+})
+```
+
+### 强制检查
+
+```bash
+# 检查所有 Vue 组件是否已注册
+# 1. 列出所有组件
+find packages/*/src/components -name "*.vue"
+
+# 2. 检查是否在 ComponentRegistry 中
+grep -r "registerComponent" packages/*/src/index.ts
+
+# 3. 数量必须匹配，否则格杀勿论
+```
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🔥 铁律三：严格遵循架构层级
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### 架构层级（只能向下依赖）
+
+```
+Layer 2: lowcode-designer
+  ↓ 只能依赖
+Layer 1: lowcode-core, lowcode-api, lowcode-tools
+  ↓ 只能依赖
+Layer 0: lowcode-shared
+  ↓ 只能依赖
+Layer -1: metadata-core
+  ↓ 零依赖
+
+主应用 (src/):
+  ↓ 只能使用
+  所有 packages (不能定义底层类型)
+```
+
+### 核心原则
+
+```yaml
+类型定义位置严格规定:
+  metadata-core: 元数据 Schema
+  lowcode-shared: 共享类型（Assembly, Component 等）
+  lowcode-core: 核心引擎类型
+  lowcode-designer: 设计器特定类型
+  主应用 src/: 只定义业务 DTO，不定义底层类型
+
+严禁:
+  ❌ 主应用定义底层类型（如 DependencyGraph）
+  ❌ 逆向依赖（lowcode-shared 依赖 lowcode-core）
+  ❌ 同层级相互依赖（lowcode-api ↔ lowcode-tools）
+  ❌ 跨层级引用（lowcode-designer → metadata-core）
+```
+
+### 正确做法
+
+```typescript
+// ✅ 正确：底层类型在 lowcode-shared
+// packages/lowcode-shared/src/types/assembly.ts
+export interface DependencyGraph { ... }
+export interface AssemblyPlugin { ... }
+
+// ✅ 正确：lowcode-core 使用 lowcode-shared 的类型
+// packages/lowcode-core/src/engine.ts
+import type { DependencyGraph } from '@smartabp/lowcode-shared'
+
+// ✅ 正确：主应用只使用，不定义
+// src/core/assembly/plugins/index.ts
+import type { 
+  DependencyGraph, 
+  DependencyNode,
+  AssemblyPlugin 
+} from '@smartabp/lowcode-shared'
+
+// ✅ 正确：主应用只定义业务 DTO
+// src/types/user.ts (业务特定)
+export interface UserProfileDto {
+  id: string
+  name: string
+}
+```
+
+### 错误做法（格杀勿论）
+
+```typescript
+// ❌ 错误：主应用定义底层类型
+// src/core/assembly/assembly-types.d.ts
+export interface DependencyGraph { ... }  // 💀 枪毙
+export interface AssemblyPlugin { ... }   // 💀 枪毙
+
+// ❌ 错误：逆向依赖
+// packages/lowcode-shared/src/index.ts
+import { CodeGenerator } from '@smartabp/lowcode-core'  // 💀 枪毙
+
+// ❌ 错误：同层级相互依赖
+// packages/lowcode-api/src/index.ts
+import { Template } from '@smartabp/lowcode-tools'  // 💀 枪毙
+
+// ❌ 错误：跨层级引用
+// packages/lowcode-designer/src/index.ts
+import { EntityMetadata } from '@smartabp/metadata-core'  // 💀 枪毙
+// 应该通过 lowcode-shared 或 lowcode-core
+```
+
+### 强制检查
+
+```bash
+# 检查主应用是否定义了底层类型
+ls src/core/*/types.ts 2>/dev/null
+ls src/core/*/*.d.ts 2>/dev/null
+# 💀 如果有结果，全部删除
+
+# 检查 packages 依赖关系
+grep -r "@smartabp/lowcode-core" packages/lowcode-shared/
+grep -r "@smartabp/lowcode-designer" packages/lowcode-core/
+grep -r "@smartabp/lowcode-tools" packages/lowcode-api/
+# 💀 如果有结果，全部重写
+
+# 检查相对路径引用
+grep -r "'\.\./" packages/*/src/ | grep -v "node_modules"
+# 💀 如果有跨 package 引用，全部删除
+```
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🚨 违规处罚（零容忍）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### 发现违规代码的处理流程
+
+```yaml
+步骤1: 立即停止所有开发工作
+步骤2: AI 报告违规位置和类型
+步骤3: 提供正确的修复方案
+步骤4: 用户确认后，AI 执行以下操作：
+  
+  对于铁律一违规:
+    → 删除主应用中的类型文件
+    → 在 lowcode-shared/types 中创建正确的类型
+    → 更新所有引用为 @smartabp/lowcode-shared
+  
+  对于铁律二违规:
+    → 立即在 ComponentRegistry 注册组件
+    → 补充完整的 ComponentMetadata
+    → 更新使用方式为通过注册系统加载
+  
+  对于铁律三违规:
+    → 删除主应用中的底层类型定义
+    → 将类型移至正确的 package
+    → 修复所有依赖关系
+    → 确保架构层级正确
+
+步骤5: 运行强制检查确认修复
+步骤6: 提交代码并标记 "fix: 修复架构违规"
+```
+
+### 违规示例清单（必须立即修复）
+
+```bash
+# 当前项目中的违规代码（全部格杀）:
+
+1. src/core/assembly/assembly-types.d.ts
+   违规: 铁律一、铁律三
+   处理: 💀 立即删除，类型移至 @smartabp/lowcode-shared/types/assembly
+
+2. src/core/assembly/plugins/index.ts
+   违规: 铁律一（import from '../assembly-types'）
+   处理: 💀 修改为 import from '@smartabp/lowcode-shared'
+
+3. 所有未注册的组件
+   违规: 铁律二
+   处理: 💀 立即注册到 ComponentRegistry
+
+4. packages 中的相对路径引用
+   违规: 铁律一、铁律三
+   处理: 💀 全部改为 @smartabp/* 别名
+```
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## ✅ AI 执行承诺
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### 我承诺
+
+```yaml
+在任何代码操作前，我必须:
+  1. ✅ 检查是否违反三大铁律
+  2. ✅ 如发现违规，立即报告并停止
+  3. ✅ 提供符合铁律的正确方案
+  4. ✅ 修复后运行强制检查
+  5. ✅ 确保架构100%合规
+
+我绝不:
+  ❌ 在主应用中定义底层类型
+  ❌ 创建组件不注册
+  ❌ 使用相对路径跨 package 引用
+  ❌ 违反架构层级依赖规则
+  ❌ 容忍任何架构违规代码存在
+```
+
+### 强制执行检查清单
+
+```yaml
+每次编写代码前:
+  ☑️ 类型定义位置是否正确？
+  ☑️ 是否在 lowcode-shared/types 中？
+  ☑️ 组件是否已注册到 ComponentRegistry？
+  ☑️ ComponentMetadata 是否完整？
+  ☑️ 是否使用 @smartabp/* 别名？
+  ☑️ 架构层级依赖是否正确？
+  ☑️ 是否有逆向依赖？
+
+每次提交代码前:
+  ☑️ 运行架构合规检查
+  ☑️ TypeScript 编译 0 错误
+  ☑️ 无相对路径跨 package 引用
+  ☑️ 所有组件已注册
+  ☑️ 类型定义位置正确
+```
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 🎯 立即执行：全项目清理计划
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### 第一步：清理违规类型定义
+
+```bash
+# 1. 删除主应用中的类型文件
+rm -f src/core/assembly/assembly-types.d.ts
+
+# 2. 在 lowcode-shared 中创建正确的类型
+# packages/lowcode-shared/src/types/assembly.ts (已创建)
+
+# 3. 更新 lowcode-shared 导出
+# packages/lowcode-shared/src/index.ts 添加:
+export * from './types/assembly'
+```
+
+### 第二步：修复所有引用
+
+```bash
+# 查找所有违规引用
+grep -r "from '\.\./assembly-types'" src/
+grep -r "from '\.\./.*types'" src/
+
+# 全部替换为
+import type { ... } from '@smartabp/lowcode-shared'
+```
+
+### 第三步：验证组件注册
+
+```bash
+# 列出所有组件
+find packages/*/src/components -name "*.vue"
+
+# 检查注册情况
+grep -r "registerComponent" packages/*/src/
+```
+
+### 第四步：运行强制检查
+
+```bash
+# TypeScript 编译
+cd src/SmartAbp.Vue && npm run type-check
+
+# 架构合规检查
+grep -r "'\.\./" packages/ | grep -v node_modules
+grep -r "@/" packages/ | grep -v node_modules
+
+# 结果必须为空
+```
+
+---
+
+**🔥 三大铁律 - 违反者格杀勿论！麻辣戈壁！**
+
+**执行时间**: 立即  
+**容忍度**: 零  
+**例外**: 无  
+
+---
+
+**AI必读**: 这是项目最高优先级规则，任何其他规则与此冲突时，以此为准。每次编程前必须检查，发现违规立即停止并报告。

@@ -3,8 +3,8 @@
  * Stage 5.3 TDD Implementation - Vue 3 Composition API
  */
 
-import { ref, reactive, computed, onUnmounted, readonly } from "vue"
 import type { SecurityAlert } from "@smartabp/lowcode-designer/types/security"
+import { computed, onUnmounted, reactive, readonly, ref } from "vue"
 
 // Narrow local types aligned with available SecurityAlert shape
 type SecurityAlertType =
@@ -16,7 +16,7 @@ type SecurityAlertType =
   | "SENSITIVE_DATA_ACCESS"
   | "SUSPICIOUS_ACTIVITY"
 
-  interface AlertNotification {
+interface AlertNotification {
   id: string
   message: string
   severity: "Critical" | "High" | "Medium" | "Low"
@@ -104,13 +104,13 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
       severity === "Critical"
         ? "error"
         : severity === "High"
-        ? "warning"
-        : "info"
+          ? "warning"
+          : "info"
 
     return {
       id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      message: getAlertDescription(type, user),
-      severity,
+      message: getAlertDescription((type as SecurityAlertType) || 'VULNERABILITY', user),
+      severity: severity || 'Critical',
       timestamp: new Date().toISOString(),
       isAcknowledged: false,
       type: notificationType,
