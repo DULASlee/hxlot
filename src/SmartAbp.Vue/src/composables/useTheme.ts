@@ -221,15 +221,19 @@ export function useTheme() {
       const cssVars: Record<string, string> = {}
 
       // 1. 基础颜色（向后兼容）
-      Object.entries(config.colors).forEach(([key, value]) => {
-        cssVars[`--color-${key}`] = value
-      })
+      if (config?.colors) {
+        Object.entries(config.colors).forEach(([key, value]) => {
+          cssVars[`--color-${key}`] = value
+        })
+      }
 
       // 2. 色板系统（10级色阶）
-      Object.entries(config.palettes!).forEach(([paletteName, palette]) => {
-        const flatVars = flattenPalette(paletteName as PaletteName, palette)
-        Object.assign(cssVars, flatVars)
-      })
+      if (config?.palettes) {
+        Object.entries(config.palettes).forEach(([paletteName, palette]) => {
+          const flatVars = flattenPalette(paletteName as PaletteName, palette)
+          Object.assign(cssVars, flatVars)
+        })
+      }
 
       // 3. 通过style标签注入（比逐个setProperty快10倍）
       let styleEl = document.getElementById('theme-vars-dynamic') as HTMLStyleElement | null
@@ -251,7 +255,7 @@ export function useTheme() {
 
       // 5. 更新meta标签
       const metaThemeColor = document.querySelector('meta[name="theme-color"]')
-      if (metaThemeColor) {
+      if (metaThemeColor && config?.colors?.primary) {
         metaThemeColor.setAttribute("content", config.colors.primary)
       }
 
@@ -262,15 +266,17 @@ export function useTheme() {
         root.classList.remove('theme-transitioning')
         
         // 触发主题变更事件
-        window.dispatchEvent(
-          new CustomEvent("theme-changed", {
-            detail: { 
-              theme: themeName, 
-              colors: config.colors,
-              palettes: config.palettes
-            },
-          }),
-        )
+        if (config) {
+          window.dispatchEvent(
+            new CustomEvent("theme-changed", {
+              detail: { 
+                theme: themeName, 
+                colors: config.colors,
+                palettes: config.palettes
+              },
+            }),
+          )
+        }
       }, 300)
     })
   }
