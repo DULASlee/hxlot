@@ -1,10 +1,10 @@
-import { ref, computed, watch } from "vue"
-import { 
-  generateThemePalettes, 
+import {
   flattenPalette,
-  type ThemePalettes,
-  type PaletteName
+  generateThemePalettes,
+  type PaletteName,
+  type ThemePalettes
 } from "@/styles/tokens/colorPalette"
+import { computed, ref, watch } from "vue"
 
 export const THEMES = {
   LIGHT: "light",
@@ -266,13 +266,13 @@ export function useTheme() {
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       setTimeout(() => {
         root.classList.remove('theme-transitioning')
-        
+
         // 触发主题变更事件
         if (config) {
           window.dispatchEvent(
             new CustomEvent("theme-changed", {
-              detail: { 
-                theme: themeName, 
+              detail: {
+                theme: themeName,
                 colors: config.colors,
                 palettes: config.palettes
               },
@@ -327,6 +327,7 @@ export function useTheme() {
       }
       return () => mq.removeEventListener("change", handler)
     }
+    return undefined
   }
 
   return {

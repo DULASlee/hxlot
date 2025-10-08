@@ -89,7 +89,7 @@ export const useThemeStore = defineStore('theme', () => {
    * 获取主题配置
    */
   const getThemeConfig = (themeValue: Theme): ThemeConfig => {
-    return THEMES.find(t => t.value === themeValue) || THEMES[0]
+    return THEMES.find(t => t.value === themeValue) || THEMES[0]!
   }
 
   /**

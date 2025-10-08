@@ -555,7 +555,8 @@ const searchResults = computed<SearchItem[]>(() => {
 
 const goFirstSearchResult = () => {
   if (searchResults.value.length === 0) return
-  navigateSearch(searchResults.value[0])
+  const firstItem = searchResults.value[0]
+  if (firstItem) navigateSearch(firstItem)
 }
 
 const navigateSearch = (item: SearchItem) => {
