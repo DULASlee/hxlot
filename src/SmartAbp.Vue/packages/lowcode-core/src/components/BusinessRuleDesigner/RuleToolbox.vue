@@ -2,20 +2,19 @@
   <div class="rule-toolbox">
     <!-- 工具箱标题 -->
     <div class="toolbox-header">
-      <el-icon><Grid /></el-icon>
+      <el-icon>
+        <Grid />
+      </el-icon>
       <span>节点工具箱</span>
     </div>
 
     <!-- 搜索框 -->
     <div class="toolbox-search">
-      <el-input
-        v-model="searchText"
-        placeholder="搜索节点..."
-        size="small"
-        clearable
-      >
+      <el-input v-model="searchText" placeholder="搜索节点..." size="small" clearable>
         <template #prefix>
-          <el-icon><Search /></el-icon>
+          <el-icon>
+            <Search />
+          </el-icon>
         </template>
       </el-input>
     </div>
@@ -26,14 +25,8 @@
         <!-- 基础节点 -->
         <el-collapse-item name="basic" title="基础节点">
           <div class="node-templates">
-            <div
-              v-for="template in filteredTemplates.basic"
-              :key="template.type"
-              class="node-template"
-              draggable="true"
-              @dragstart="onDragStart($event, template)"
-              @click="onTemplateClick(template)"
-            >
+            <div v-for="template in filteredTemplates.basic" :key="template.type" class="node-template" draggable="true"
+              @dragstart="onDragStart($event, template)" @click="onTemplateClick(template)">
               <div class="template-icon" :style="{ color: template.color }">
                 <component :is="template.iconComponent" />
               </div>
@@ -48,14 +41,8 @@
         <!-- 流程控制 -->
         <el-collapse-item name="control" title="流程控制">
           <div class="node-templates">
-            <div
-              v-for="template in filteredTemplates.control"
-              :key="template.type"
-              class="node-template"
-              draggable="true"
-              @dragstart="onDragStart($event, template)"
-              @click="onTemplateClick(template)"
-            >
+            <div v-for="template in filteredTemplates.control" :key="template.type" class="node-template"
+              draggable="true" @dragstart="onDragStart($event, template)" @click="onTemplateClick(template)">
               <div class="template-icon" :style="{ color: template.color }">
                 <component :is="template.iconComponent" />
               </div>
@@ -70,14 +57,8 @@
         <!-- 业务规则 -->
         <el-collapse-item name="business" title="业务规则">
           <div class="node-templates">
-            <div
-              v-for="template in filteredTemplates.business"
-              :key="template.type"
-              class="node-template"
-              draggable="true"
-              @dragstart="onDragStart($event, template)"
-              @click="onTemplateClick(template)"
-            >
+            <div v-for="template in filteredTemplates.business" :key="template.type" class="node-template"
+              draggable="true" @dragstart="onDragStart($event, template)" @click="onTemplateClick(template)">
               <div class="template-icon" :style="{ color: template.color }">
                 <component :is="template.iconComponent" />
               </div>
@@ -93,11 +74,7 @@
 
     <!-- 使用提示 -->
     <div class="toolbox-tips">
-      <el-alert
-        type="info"
-        :closable="false"
-        show-icon
-      >
+      <el-alert type="info" :closable="false" show-icon>
         <template #title>
           <span style="font-size: 12px;">拖拽或点击添加节点</span>
         </template>
@@ -107,14 +84,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { ElCollapse, ElCollapseItem, ElInput, ElIcon, ElAlert } from 'element-plus'
-import { 
-  Grid, Search, VideoPlay, VideoPause, 
-  Check, Setting, Share, Operation 
+import {
+  Check,
+  Grid,
+  Operation,
+  Search,
+  Setting, Share,
+  VideoPause,
+  VideoPlay
 } from '@element-plus/icons-vue'
-import type { NodeTemplate } from './types'
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
+import { ElAlert, ElCollapse, ElCollapseItem, ElIcon, ElInput } from 'element-plus'
+import { computed, ref } from 'vue'
+import type { NodeTemplate } from './types'
 
 const logger = getGlobalLogger()
 
@@ -239,7 +221,7 @@ const filteredTemplates = computed(() => {
   Object.entries(nodeTemplates).forEach(([category, templates]) => {
     result[category] = templates.filter(
       t => t.label.toLowerCase().includes(keyword) ||
-           t.description.toLowerCase().includes(keyword)
+        t.description.toLowerCase().includes(keyword)
     )
   })
 
@@ -251,10 +233,10 @@ const filteredTemplates = computed(() => {
  */
 const onDragStart = (event: DragEvent, template: NodeTemplate) => {
   if (!event.dataTransfer) return
-  
+
   event.dataTransfer.effectAllowed = 'copy'
   event.dataTransfer.setData('application/vueflow', JSON.stringify(template))
-  
+
   logger.debug('🎯 开始拖拽节点模板', { type: template.type })
 }
 

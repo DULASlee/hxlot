@@ -454,7 +454,7 @@ const closeTabsToRight = (fromTabId?: string) => {
   
   for (let i = fromIndex + 1; i < props.tabs.length; i++) {
     const tab = props.tabs[i]
-    if (tab.closable) {
+    if (tab && tab.closable) {
       emit('tab-closed', tab.id)
     }
   }

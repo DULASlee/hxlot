@@ -197,13 +197,13 @@ export function useTheme() {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // ✅ 阶段1: 生成色板（懒加载）
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    if (!config.palettes) {
+    if (config && !config.palettes) {
       config.palettes = generateThemePalettes({
-        primary: config.colors.primary,
-        success: config.colors.success,
-        warning: config.colors.warning,
-        error: config.colors.error,
-        info: config.colors.accent,
+        primary: config.colors?.primary || '#409eff',
+        success: config.colors?.success || '#67c23a',
+        warning: config.colors?.warning || '#e6a23c',
+        error: config.colors?.error || '#f56c6c',
+        info: config.colors?.accent || '#909399',
         neutral: '#8c8c8c'
       })
     }

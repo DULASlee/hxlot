@@ -512,7 +512,7 @@ const onTabMenuCommand = (cmd: TabMenuCommand) => {
   if (cmd.action === 'closeRight') {
     for (let i = tabs.length - 1; i > idx; i--) {
       const t = tabs[i]
-      if (!pinnedTabKeys.value.has(t.key)) closeTab(t.key)
+      if (t && !pinnedTabKeys.value.has(t.key)) closeTab(t.key)
     }
     return
   }
