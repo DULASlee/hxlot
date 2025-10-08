@@ -29,6 +29,19 @@ namespace SmartAbp.Application.CodeGenerator
         /// </summary>
         public virtual async Task<UserProfileDto> GetMyProfileAsync()
         {
+            // ✅ 处理用户未登录的情况，返回默认配置
+            if (!_currentUser.IsAuthenticated)
+            {
+                return new UserProfileDto
+                {
+                    Industry = null,
+                    CompanyName = null,
+                    CompanySize = null,
+                    LastUsedMode = null,
+                    IsFirstVisit = true
+                };
+            }
+            
             var userId = _currentUser.GetId();
             var queryable = await _profileRepository.GetQueryableAsync();
             var profile = queryable.FirstOrDefault(x => x.UserId == userId);
@@ -49,6 +62,19 @@ namespace SmartAbp.Application.CodeGenerator
         /// </summary>
         public virtual async Task<UserProfileDto> UpdateMyProfileAsync(UpdateUserProfileDto input)
         {
+            // ✅ 处理用户未登录的情况，返回默认配置
+            if (!_currentUser.IsAuthenticated)
+            {
+                return new UserProfileDto
+                {
+                    Industry = input.Industry,
+                    CompanyName = input.CompanyName,
+                    CompanySize = input.CompanySize,
+                    LastUsedMode = input.LastUsedMode,
+                    IsFirstVisit = false
+                };
+            }
+            
             var userId = _currentUser.GetId();
             var queryable = await _profileRepository.GetQueryableAsync();
             var profile = queryable.FirstOrDefault(x => x.UserId == userId);
@@ -81,6 +107,12 @@ namespace SmartAbp.Application.CodeGenerator
         /// </summary>
         public virtual async Task<IndustryRecommendationDto> GetIndustryRecommendationAsync()
         {
+            // ✅ 处理用户未登录的情况，返回null
+            if (!_currentUser.IsAuthenticated)
+            {
+                return null;
+            }
+            
             var userId = _currentUser.GetId();
             var queryable = await _profileRepository.GetQueryableAsync();
             var profile = queryable.FirstOrDefault(x => x.UserId == userId);

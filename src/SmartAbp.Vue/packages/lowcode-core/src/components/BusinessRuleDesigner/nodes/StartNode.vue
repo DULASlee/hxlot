@@ -1,7 +1,7 @@
 <template>
   <div class="start-node rule-node" :class="{ selected: data.selected }">
     <div class="node-header">
-      <el-icon class="node-icon" color="#909399">
+      <el-icon class="node-icon" :style="{ color: '#909399' }">
         <VideoPlay />
       </el-icon>
       <span class="node-title">{{ data.label || '开始' }}</span>
@@ -24,7 +24,7 @@ interface Props {
   data: RuleNodeData
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 
 const handleStyle = computed(() => ({
   width: '10px',

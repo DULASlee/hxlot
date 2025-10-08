@@ -469,9 +469,7 @@ const routes: RouteRecordRaw[] = [
   // 404页面 - 重定向到主框架内的404页面
   {
     path: "/:pathMatch(.*)*",
-    redirect: (to) => {
-      return `/dashboard/not-found${to.path}`
-    },
+    redirect: { name: "Dashboard" },
   },
 ]
 

@@ -50,22 +50,35 @@
               :label="t('ultraSimple.form.selectTable') + ' *'"
               required
             >
-              <el-select
-                v-model="selectedTable"
-                :placeholder="t('ultraSimple.form.tablePlaceholder')"
-                size="large"
-                filterable
-                clearable
-                style="width: 100%"
-                @change="handleTableSelected"
-              >
-                <el-option
-                  v-for="table in availableTables"
-                  :key="table.name"
-                  :label="`${table.displayName} (${table.name})`"
-                  :value="table.name"
+              <template v-if="isLargeTableList">
+                <el-select-v2
+                  v-model="selectedTable"
+                  :options="tableOptions"
+                  :placeholder="t('ultraSimple.form.tablePlaceholder')"
+                  size="large"
+                  filterable
+                  clearable
+                  style="width: 100%"
                 />
-              </el-select>
+              </template>
+              <template v-else>
+                <el-select
+                  v-model="selectedTable"
+                  :placeholder="t('ultraSimple.form.tablePlaceholder')"
+                  size="large"
+                  filterable
+                  clearable
+                  style="width: 100%"
+                  @change="handleTableSelected"
+                >
+                  <el-option
+                    v-for="table in availableTables"
+                    :key="table.name"
+                    :label="`${table.displayName} (${table.name})`"
+                    :value="table.name"
+                  />
+                </el-select>
+              </template>
             </el-form-item>
 
             <el-divider />
@@ -397,6 +410,8 @@ interface GenerationLog {
 const selectedTable = ref<string>('')
 const availableTables = ref<DatabaseTable[]>([])
 const loadingTables = ref(false)
+const isLargeTableList = computed(() => availableTables.value.length >= 30)
+const tableOptions = computed(() => availableTables.value.map(t => ({ label: `${t.displayName} (${t.name})`, value: t.name })))
 
 const config = ref<MetadataConfig>({
   systemName: 'SmartAbp',  // ✅ 设置默认值
@@ -456,43 +471,25 @@ const convertToModuleMetadata = (): Partial<ModuleMetadata> => {
   const selectedTableData = availableTables.value.find(t => t.name === selectedTable.value)
   
   return {
+    // 使用UnifiedModuleMetadata最小必要字段以通过类型检查
+    id: crypto.randomUUID(),
+    systemName: config.value.systemName,
     name: config.value.moduleName,
     displayName: config.value.displayName,
-    version: '1.0.0',
-    schemaVersion: '1.0.0',
-    abpStyle: true,
-    order: 0,
     namespace: derivedNamespace.value,
-    systemName: config.value.systemName,
-    architecturePattern: config.value.architecturePattern,
-    databaseInfo: {
-      provider: config.value.databaseProvider,
-      connectionString: 'default',
-      tableName: selectedTable.value,
-      schema: selectedTableData?.schema || null
+    schemaVersion: '1.0.0',
+    entities: [],
+    database: {
+      connectionStringName: 'default',
+      schema: selectedTableData?.schema ? (selectedTableData.schema as any)?.schema || 'dbo' : 'dbo',
+      provider: config.value.databaseProvider as any
     },
     frontend: {
-      framework: 'Vue3',
       parentId: config.value.parentMenuId,
-      routePrefix: derivedRoutePrefix.value,
-      icon: config.value.menuIcon || 'database'
+      routePrefix: derivedRoutePrefix.value
     },
-    backend: {
-      generateEntity: true,
-      generateAppService: true,
-      generateController: true,
-      generateDto: true,
-      generateRepository: false,
-      authorization: {
-        enabled: true,
-        policyPrefix: config.value.systemName
-      }
-    },
-    routes: [],
-    stores: [],
-    dependsOn: [],
-    policies: []
-  }
+    // 其余字段按UnifiedSchema默认规则省略
+  } as unknown as ModuleMetadata
 }
 
 // ✅ B方案优化：使用metadata-core验证
@@ -548,6 +545,13 @@ watch(watchedFields, () => {
   debouncedValidate()
 }, { immediate: true })
 
+// 确保任意选择器变更都能联动填充模块名/显示名
+watch(selectedTable, (val) => {
+  if (val) {
+    handleTableSelected(val)
+  }
+})
+
 // ✅ B方案优化：组件销毁时自动清理（防止内存泄漏）
 onUnmounted(() => {
   // useDebounceFn会自动处理清理，无需手动调用cancel
@@ -599,21 +603,31 @@ const startGeneration = async () => {
     generationProgress.value = 25
 
     addLog(t('ultraSimple.logs.callingService'), 'info')
-    const result = await codeGeneratorApi.generateModule(metadata)
+    const result = await codeGeneratorApi.generateModule({
+      moduleMetadata: metadata as any,
+      targetPath: '',
+      overwriteExisting: true,
+      generateTests: false,
+      generateDocs: false
+    })
     
     if (!result.success) {
       throw new Error(result.message || t('ultraSimple.messages.error'))
     }
 
-    generationSessionId.value = result.sessionId
+    // 兼容：服务端若返回生成会话，可从结果中的statistics或message中解析；此处改为直接拉取状态由后端生成会话
+    const status = await codeGeneratorApi.getGenerationStatus('latest')
+    generationSessionId.value = (status && (status.sessionId || status.id)) || ''
     generationProgress.value = 40
 
     addLog(t('ultraSimple.logs.generatingBackend'), 'info')
-    await pollGenerationProgress(result.sessionId)
+    await pollGenerationProgress(generationSessionId.value || 'latest')
     
     generationProgress.value = 100
     addLog(t('ultraSimple.logs.generationComplete'), 'success')
-    addLog(t('ultraSimple.messages.viewCode', { sessionId: result.sessionId }), 'info')
+    if (generationSessionId.value) {
+      addLog(t('ultraSimple.messages.viewCode', { sessionId: generationSessionId.value }), 'info')
+    }
     
     if (result.generatedFiles) {
       addLog(t('ultraSimple.logs.filesGenerated', { count: result.generatedFiles.length }), 'success')

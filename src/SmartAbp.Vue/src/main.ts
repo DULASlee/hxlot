@@ -101,8 +101,10 @@ import App from "./App.vue";
 import { i18n } from "./plugins/i18n";
 import router from "./router";
 import { logger } from "./utils/logger";
+// 应用层统一组件注册入口（不依赖特定包聚合）
+import LowCodeComponentsPlugin from "./plugins/lowcode-components";
 // import { createEnterpriseIconSystem } from "./plugins/enterpriseIcons" // TODO: enterpriseIcons.ts 文件不存在，暂时注释
-import { ElMessage } from "element-plus";
+// Element Plus message在此文件不强依赖，避免类型噪声
 // 低代码设计器 store 暂未对外导出，先移除硬依赖
 
 // Highlight.js for code syntax highlighting
@@ -184,14 +186,9 @@ app.config.errorHandler = (err, instance, info) => {
   })
 
   // 在开发环境显示友好的错误提示
+  // 开发环境控制台提示（避免在入口耦合UI提示）
   if (import.meta.env.DEV) {
-    ElMessage.error({
-      message: i18n.global.t('error.componentError', {
-        message: (err as Error)?.message || i18n.global.t('error.unknownError')
-      }),
-      duration: 5000,
-      showClose: true
-    })
+    console.error('[UI Error]', (err as Error)?.message)
   }
 }
 
@@ -228,7 +225,7 @@ if (import.meta.env.DEV) {
 //   debug: import.meta.env.DEV
 // })
 
-app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin)
+app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin).use(LowCodeComponentsPlugin)
 // .use(enterpriseIconSystem) // TODO: 暂时注释
 
 async function bootstrap() {

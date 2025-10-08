@@ -10,6 +10,17 @@ import { defineConfig } from "vite"
 import vueDevtools from "vite-plugin-vue-devtools"
 import moduleWizardDev from "./packages/lowcode-designer/src/dev/moduleWizardDev"
 import { createPackagesResolver } from "./src/utils/vite/packagesResolver"
+import vitePluginLowCode from "./packages/lowcode-tools/src/vite"
+// Offline icon collections (static JSON)
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore - json modules
+import epCollection from '@iconify-json/ep/icons.json'
+// @ts-ignore
+import carbonCollection from '@iconify-json/carbon/icons.json'
+// @ts-ignore
+import mdiCollection from '@iconify-json/mdi/icons.json'
+// @ts-ignore
+import faCollection from '@iconify-json/fa/icons.json'
 
 // 保证 DNS 解析 localhost 时不过滤非匹配网卡
 dns.setDefaultResultOrder("verbatim")
@@ -74,18 +85,16 @@ export default defineConfig({
       scale: 1,
       defaultClass: "",
       defaultStyle: "",
-      // 🎨 图标集配置
-      collections: {
-        // Element Plus Icons
-        ep: () => import('@iconify-json/ep/icons.json').then(i => i.default),
-        // Carbon Icons (IBM Design)
-        carbon: () => import('@iconify-json/carbon/icons.json').then(i => i.default),
-        // Material Design Icons
-        mdi: () => import('@iconify-json/mdi/icons.json').then(i => i.default),
-        // Font Awesome
-        fa: () => import('@iconify-json/fa/icons.json').then(i => i.default),
+      // 🎨 图标集配置（使用自定义集合，避免类型不匹配）
+      customCollections: {
+        ep: epCollection as any,
+        carbon: carbonCollection as any,
+        mdi: mdiCollection as any,
+        fa: faCollection as any,
       },
     }),
+    // 🔧 SmartAbp低代码插件（开发期）
+    vitePluginLowCode(),
   ],
   resolve: {
     alias: {
@@ -162,7 +171,7 @@ export default defineConfig({
           proxy.on("error", (err, _req, _res) => {
             console.log("proxy error", err)
           })
-          proxy.on("proxyReq", (proxyReq, req, _res) => {
+          proxy.on("proxyReq", (_proxyReq, req, _res) => {
             console.log("Sending Request to the Target:", req.method, req.url)
           })
           proxy.on("proxyRes", (proxyRes, req, _res) => {
@@ -254,8 +263,7 @@ export default defineConfig({
         },
 
         // Phoenix Week 2 优化：文件命名策略（带hash缓存）
-        chunkFileNames: (chunkInfo) => {
-          const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').slice(-2).join('/') : 'chunk'
+        chunkFileNames: (_chunkInfo) => {
           return `js/[name]-[hash].js`
         },
         entryFileNames: 'js/[name]-[hash].js',

@@ -32,6 +32,19 @@ namespace SmartAbp.Application.CodeGenerator
         /// </summary>
         public virtual async Task<CodeGenStatsDto> GetMyStatsAsync()
         {
+            // ✅ 处理用户未登录的情况，返回默认值而不是抛出500错误
+            if (!_currentUser.IsAuthenticated)
+            {
+                return new CodeGenStatsDto
+                {
+                    TotalProjects = 0,
+                    MonthlyGenerations = 0,
+                    SavedHours = 0,
+                    QualityScore = 0,
+                    LastUpdated = DateTime.UtcNow
+                };
+            }
+            
             var userId = _currentUser.GetId();
             
             // 获取或创建统计记录
@@ -98,6 +111,12 @@ namespace SmartAbp.Application.CodeGenerator
             int fileCount,
             int durationSeconds)
         {
+            // ✅ 处理用户未登录的情况，静默返回
+            if (!_currentUser.IsAuthenticated)
+            {
+                return;
+            }
+            
             var userId = _currentUser.GetId();
             var queryable = await _statsRepository.GetQueryableAsync();
             var stats = queryable.FirstOrDefault(x => x.UserId == userId);

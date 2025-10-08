@@ -553,12 +553,20 @@ const recommendedMode = computed(() => {
 // ========== 生命周期 ==========
 
 onMounted(async () => {
-  // 并行加载所有数据
-  await Promise.all([
+  // ✅ 企业级代码：使用Promise.allSettled，确保页面不会因API失败而卡死
+  const results = await Promise.allSettled([
     loadStats(),
     loadUserProfile(),
     loadRecommendation()
   ])
+  
+  // 记录失败的API（用于调试）
+  results.forEach((result, index) => {
+    if (result.status === 'rejected') {
+      const apiNames = ['stats', 'userProfile', 'recommendation']
+      console.warn(`⚠️ API ${apiNames[index]} 加载失败，但不影响页面使用`)
+    }
+  })
   
   // 首次访问显示引导
   if (isFirstVisit.value) {
@@ -656,7 +664,7 @@ const goToSimpleMode = async () => {
   // 确保导航不受API失败影响
   try {
     console.log('🚀 导航到极简模式...')
-    await router.push('/lowcode/ultra-simple')
+    await router.push({ name: 'UltraSimpleStudio' })
   } catch (navError) {
     console.error('❌ 导航失败:', navError)
     ElMessage.error('页面跳转失败，请刷新后重试')

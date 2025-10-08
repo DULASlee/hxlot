@@ -185,10 +185,20 @@ export function useApiCall<T = any>() {
     apiFns: Array<() => Promise<R>>,
     options: ApiCallOptions = {}
   ): Promise<Array<R | null>> => {
-    const results = await Promise.all(
+    const results = await Promise.allSettled(
       apiFns.map(fn => execute(fn as any, options) as Promise<R | null>)
     )
-    return results
+
+    // 处理每个请求的结果，失败时返回null作为降级值
+    return results.map(result => {
+      if (result.status === 'fulfilled') {
+        return result.value
+      } else {
+        // 记录错误但不阻塞其他请求
+        console.warn('API调用失败:', result.reason)
+        return null
+      }
+    })
   }
 
   /**
@@ -202,18 +212,52 @@ export function useApiCall<T = any>() {
     options: ApiCallOptions = {}
   ): Promise<Array<R | null>> => {
     const results: Array<R | null> = []
-    
+
     for (const fn of apiFns) {
       const result = await execute(fn as any, options) as R | null
       results.push(result)
-      
+
       // 如果有错误且需要停止，则中断执行
       if (result === null && options.error?.showMessage) {
         break
       }
     }
-    
+
     return results
+  }
+
+  /**
+   * 执行多个API调用（并行，使用Promise.allSettled）
+   * 即使部分请求失败，也不会阻塞其他请求，适合非关键数据加载
+   * @param apiFns API调用函数数组
+   * @param options 调用选项
+   * @returns 所有API调用结果和状态信息
+   */
+  const executeAllSettled = async <R = any>(
+    apiFns: Array<() => Promise<R>>,
+    options: ApiCallOptions = {}
+  ): Promise<Array<{ data: R | null; status: 'fulfilled' | 'rejected'; error?: any }>> => {
+    const results = await Promise.allSettled(
+      apiFns.map(fn => execute(fn as any, options) as Promise<R | null>)
+    )
+
+    // 返回详细的结果信息，包括状态和错误信息
+    return results.map(result => {
+      if (result.status === 'fulfilled') {
+        return {
+          data: result.value,
+          status: 'fulfilled'
+        }
+      } else {
+        // 记录错误但不阻塞其他请求
+        console.warn('API调用失败:', result.reason)
+        return {
+          data: null,
+          status: 'rejected',
+          error: result.reason
+        }
+      }
+    })
   }
 
   return {
@@ -228,6 +272,7 @@ export function useApiCall<T = any>() {
     // 方法
     execute,
     executeAll,
+    executeAllSettled,
     executeSequential,
     resetState
   }
