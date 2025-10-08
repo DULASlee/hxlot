@@ -10,15 +10,15 @@ import type { Component } from 'vue'
 import ActionNode from './ActionNode.vue'
 import ConditionNode from './ConditionNode.vue'
 import DecisionNode from './DecisionNode.vue'
-import EndNode from './EndNode.vue'
-import StartNode from './StartNode.vue'
+import RuleEndNode from './RuleEndNode.vue'
+import RuleStartNode from './RuleStartNode.vue'
 
 /**
  * 节点类型映射
  */
 export const NODE_TYPES = {
-  start: 'StartNode',
-  end: 'EndNode',
+  start: 'RuleStartNode',
+  end: 'RuleEndNode',
   condition: 'ConditionNode',
   action: 'ActionNode',
   decision: 'DecisionNode'
@@ -28,8 +28,8 @@ export const NODE_TYPES = {
  * 节点组件注册配置
  */
 export const nodeComponents: Record<'start' | 'end' | 'condition' | 'action' | 'decision', Component> = {
-  start: StartNode,
-  end: EndNode,
+  start: RuleStartNode,
+  end: RuleEndNode,
   condition: ConditionNode,
   action: ActionNode,
   decision: DecisionNode
@@ -38,5 +38,5 @@ export const nodeComponents: Record<'start' | 'end' | 'condition' | 'action' | '
 /**
  * 导出各个节点组件
  */
-export { ActionNode, ConditionNode, DecisionNode, EndNode, StartNode }
+export { ActionNode, ConditionNode, DecisionNode, RuleEndNode, RuleStartNode }
 

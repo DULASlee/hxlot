@@ -85,12 +85,13 @@ echo ""
 echo "🔍 第三重检查：铁律规则文件完整性..."
 
 REQUIRED_RULES=(
-    ".cursor/rules/00_core_philosophy.mdc"
-    ".cursor/rules/01_code_standards.mdc"
-    ".cursor/rules/02_development_process.mdc"
-    ".cursor/rules/03_quality_guardian.mdc"
-    ".cursor/rules/04_code_quality_prohibitions.mdc"
-    # 注意：05/06/07规则文件已在v3.0规则整合中合并到00-04文件中
+    ".cursor/rules/00_执行引擎.mdc"
+    ".cursor/rules/00_全栈低代码从花瓶到神器.mdc"
+    ".cursor/rules/00_核心原则.mdc"
+    ".cursor/rules/01_开发指南.mdc"
+    ".cursor/rules/02_最佳实践.mdc"
+    ".cursor/rules/03_项目架构指南.mdc"
+    # 注意：规则系统v10.0 - 精简灵活版（2025-10-08更新）
 )
 
 MISSING_RULES=()

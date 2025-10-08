@@ -15,43 +15,49 @@
 export interface EntityMetadata {
   /** Schema版本 */
   schemaVersion?: string
-  
+
   /** 实体名称（PascalCase） */
   name: string
-  
+
+  /** 显示名称（用于UI） */
+  displayName?: string
+
+  /** API路径（用于代码生成） */
+  apiPath?: string
+
   /** 所属模块 */
   module: string
-  
+
   /** 聚合根名称（可选） */
   aggregate?: string
-  
+
   /** 主键类型 */
   keyType: 'Guid' | 'int' | 'long' | 'string'
-  
+
   /** 实体描述 */
   description?: string
-  
+
   /** 是否为聚合根 */
   isAggregateRoot: boolean
-  
+
   /** 是否支持多租户 */
   isMultiTenant: boolean
-  
+
   /** 是否软删除 */
   isSoftDelete: boolean
-  
+
   /** 是否支持扩展属性 */
   hasExtraProperties: boolean
-  
+
   /** 属性列表 */
   properties: PropertyMetadata[]
-  
+
   /** 导航属性列表 */
   navigationProperties?: NavigationPropertyMetadata[]
-  
+
   /** 前端UI配置（可选） */
   xUiConfig?: UIConfig
-  
+
   /** 后端代码生成配置（可选） */
   xBackendConfig?: BackendConfig
 }
@@ -62,9 +68,9 @@ export interface EntityMetadata {
 export interface PropertyMetadata {
   name: string
   type: string
-  isRequired: boolean
-  isReadOnly: boolean
-  isUnique: boolean
+  isRequired?: boolean
+  isReadOnly?: boolean
+  isUnique?: boolean
   maxLength?: number
   minLength?: number
   minValue?: number

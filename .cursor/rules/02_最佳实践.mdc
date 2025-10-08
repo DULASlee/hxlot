@@ -1,0 +1,713 @@
+---
+alwaysApply: true
+priority: 2
+---
+
+# AI编程最佳实践
+
+## 📋 文档说明
+
+**版本**: v2.0 精简版
+**作用**: 提供性能优化、用户体验、测试等最佳实践指导
+
+---
+
+## ⚡ 性能优化
+
+### 前端性能
+
+#### 首屏加载优化
+
+```typescript
+// ✅ 正确 - 路由懒加载
+const routes = [
+  {
+    path: '/lowcode/designer',
+    component: () => import('@/views/lowcode/DesignerView.vue')  // 懒加载
+  }
+]
+
+// ✅ 正确 - 组件懒加载
+const HeavyComponent = defineAsyncComponent(() =>
+  import('./HeavyComponent.vue')
+)
+
+// ❌ 错误 - 全部导入
+import DesignerView from '@/views/lowcode/DesignerView.vue'  // 打包到主bundle
+```
+
+#### 大列表优化
+
+```vue
+<!-- ✅ 正确 - 使用虚拟滚动 -->
+<template>
+  <el-virtual-list
+    :data="largeDataList"
+    :item-size="50"
+    :height="600"
+  >
+    <template #default="{ item }">
+      <div class="list-item">{{ item.name }}</div>
+    </template>
+  </el-virtual-list>
+</template>
+
+<!-- ❌ 错误 - 直接渲染大列表 -->
+<template>
+  <div v-for="item in largeDataList" :key="item.id">
+    {{ item.name }}
+  </div>
+</template>
+```
+
+#### 组件优化
+
+```vue
+<script setup lang="ts">
+// ✅ 正确 - 合理使用computed
+const filteredList = computed(() => {
+  return list.value.filter(item => item.active)
+})
+
+// ✅ 正确 - 使用v-memo优化渲染
+</script>
+
+<template>
+  <div v-for="item in list" :key="item.id" v-memo="[item.id, item.name]">
+    {{ item.name }}
+  </div>
+</template>
+```
+
+### 后端性能
+
+#### API响应优化
+
+```csharp
+// ✅ 正确 - 使用分页避免大数据量
+public async Task<PagedResultDto<UserDto>> GetListAsync(GetUserListInput input)
+{
+    var query = await _userRepository.GetQueryableAsync();
+    
+    // 只查询需要的字段
+    var totalCount = await AsyncExecuter.CountAsync(query);
+    var items = await AsyncExecuter.ToListAsync(
+        query
+            .Skip(input.SkipCount)
+            .Take(input.MaxResultCount)  // 限制数量
+    );
+    
+    return new PagedResultDto<UserDto>(totalCount, ObjectMapper.Map<List<User>, List<UserDto>>(items));
+}
+
+// ❌ 错误 - 查询所有数据
+public async Task<List<UserDto>> GetAllAsync()
+{
+    var allUsers = await _userRepository.GetListAsync();  // 可能非常慢
+    return ObjectMapper.Map<List<User>, List<UserDto>>(allUsers);
+}
+```
+
+#### 数据库查询优化
+
+```csharp
+// ✅ 正确 - 使用Include避免N+1查询
+var orders = await _orderRepository
+    .Include(o => o.OrderItems)  // 预加载关联数据
+    .Include(o => o.Customer)
+    .ToListAsync();
+
+// ❌ 错误 - N+1查询问题
+var orders = await _orderRepository.GetListAsync();
+foreach (var order in orders)
+{
+    var items = await _orderItemRepository.GetListAsync(o => o.OrderId == order.Id);  // N次查询
+}
+```
+
+#### 缓存使用
+
+```csharp
+// ✅ 正确 - 缓存静态数据
+[HttpGet("lookup")]
+[ResponseCache(Duration = 3600)]  // 缓存1小时
+public async Task<ListResultDto<LookupDto>> GetLookupAsync()
+{
+    // 返回静态下拉数据
+}
+
+// ✅ 正确 - 使用分布式缓存
+public async Task<UserDto> GetUserAsync(Guid id)
+{
+    var cacheKey = $"User_{id}";
+    var cached = await _cache.GetAsync(cacheKey);
+    
+    if (cached != null)
+        return cached;
+    
+    var user = await _userRepository.GetAsync(id);
+    var dto = ObjectMapper.Map<User, UserDto>(user);
+    
+    await _cache.SetAsync(cacheKey, dto, TimeSpan.FromMinutes(10));
+    return dto;
+}
+```
+
+---
+
+## 🎨 用户体验
+
+### 交互反馈
+
+#### 加载状态
+
+```vue
+<script setup lang="ts">
+const isLoading = ref(false)
+const data = ref([])
+
+async function loadData() {
+  isLoading.value = true  // ✅ 显示加载状态
+  try {
+    data.value = await api.getData()
+  } catch (error) {
+    ElMessage.error('加载失败')
+  } finally {
+    isLoading.value = false  // ✅ 无论成功失败都关闭loading
+  }
+}
+</script>
+
+<template>
+  <div v-loading="isLoading">
+    <el-table :data="data">
+      <!-- 表格内容 -->
+    </el-table>
+  </div>
+</template>
+```
+
+#### 操作反馈
+
+```vue
+<script setup lang="ts">
+async function handleSave() {
+  try {
+    await api.save(formData)
+    ElMessage.success('保存成功')  // ✅ 成功提示
+    emit('saved')                   // ✅ 触发事件
+    router.back()                   // ✅ 返回列表
+  } catch (error) {
+    ElMessage.error('保存失败：' + error.message)  // ✅ 错误提示
+  }
+}
+</script>
+```
+
+#### 错误提示
+
+```typescript
+// ✅ 正确 - 友好的错误提示
+try {
+  await api.deleteUser(userId)
+} catch (error) {
+  if (error.code === 'USER_HAS_ORDERS') {
+    ElMessage.error('该用户有未完成的订单，无法删除')  // 业务友好提示
+  } else if (error.code === 'PERMISSION_DENIED') {
+    ElMessage.error('您没有权限删除用户')
+  } else {
+    ElMessage.error('删除失败，请稍后重试')
+  }
+}
+
+// ❌ 错误 - 技术错误直接展示
+catch (error) {
+  ElMessage.error(error.message)  // 可能是："FK_CONSTRAINT_VIOLATION"
+}
+```
+
+### 边界处理
+
+#### 空状态
+
+```vue
+<template>
+  <div>
+    <!-- ✅ 正确 - 有意义的空状态 -->
+    <el-empty v-if="!isLoading && data.length === 0" 
+              description="暂无数据，点击右上角添加">
+      <el-button type="primary" @click="handleAdd">添加第一条数据</el-button>
+    </el-empty>
+    
+    <el-table v-else :data="data">
+      <!-- 表格内容 -->
+    </el-table>
+  </div>
+</template>
+```
+
+#### 输入验证
+
+```vue
+<script setup lang="ts">
+const formRules = {
+  name: [
+    { required: true, message: '请输入用户名', trigger: 'blur' },
+    { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+  ],
+  email: [
+    { required: true, message: '请输入邮箱', trigger: 'blur' },
+    { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
+  ],
+  phone: [
+    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur' }
+  ]
+}
+</script>
+
+<template>
+  <el-form :model="form" :rules="formRules" ref="formRef">
+    <el-form-item label="用户名" prop="name">
+      <el-input v-model="form.name" />
+    </el-form-item>
+    <!-- 其他字段 -->
+  </el-form>
+</template>
+```
+
+#### 权限检查
+
+```vue
+<script setup lang="ts">
+import { usePermission } from '@/hooks/usePermission'
+
+const { hasPermission } = usePermission()
+</script>
+
+<template>
+  <div>
+    <!-- ✅ 正确 - 根据权限显示按钮 -->
+    <el-button v-if="hasPermission('User.Create')" 
+               type="primary" 
+               @click="handleAdd">
+      新增
+    </el-button>
+    
+    <el-button v-if="hasPermission('User.Delete')"
+               type="danger"
+               @click="handleDelete">
+      删除
+    </el-button>
+  </div>
+</template>
+```
+
+---
+
+## 🧪 测试指南
+
+### AI的测试职责
+
+#### 生成单元测试
+
+```typescript
+// AI可以生成这样的测试代码
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
+import UserCard from '@/components/UserCard.vue'
+
+describe('UserCard', () => {
+  it('应该正确显示用户信息', () => {
+    const user = {
+      id: '1',
+      name: '张三',
+      email: 'zhangsan@example.com'
+    }
+    
+    const wrapper = mount(UserCard, {
+      props: { user }
+    })
+    
+    expect(wrapper.text()).toContain('张三')
+    expect(wrapper.text()).toContain('zhangsan@example.com')
+  })
+  
+  it('点击编辑按钮应该触发edit事件', async () => {
+    const user = { id: '1', name: '张三' }
+    const wrapper = mount(UserCard, {
+      props: { user }
+    })
+    
+    await wrapper.find('.edit-btn').trigger('click')
+    expect(wrapper.emitted('edit')).toBeTruthy()
+    expect(wrapper.emitted('edit')?.[0]).toEqual([user])
+  })
+  
+  it('加载状态应该正确显示', async () => {
+    const wrapper = mount(UserCard, {
+      props: { user: null, loading: true }
+    })
+    
+    expect(wrapper.find('.loading').exists()).toBe(true)
+  })
+})
+```
+
+#### 生成E2E测试脚本
+
+```typescript
+// AI可以生成Playwright测试脚本
+import { test, expect } from '@playwright/test'
+
+test('用户管理完整流程', async ({ page }) => {
+  // 1. 登录
+  await page.goto('/login')
+  await page.fill('[name="username"]', 'admin')
+  await page.fill('[name="password"]', 'password')
+  await page.click('button[type="submit"]')
+  
+  // 2. 进入用户管理页面
+  await page.click('text=用户管理')
+  await expect(page).toHaveURL('/users')
+  
+  // 3. 添加用户
+  await page.click('text=新增')
+  await page.fill('[name="name"]', '测试用户')
+  await page.fill('[name="email"]', 'test@example.com')
+  await page.click('text=保存')
+  
+  // 4. 验证添加成功
+  await expect(page.locator('text=测试用户')).toBeVisible()
+  
+  // 5. 编辑用户
+  await page.click('[data-action="edit"]')
+  await page.fill('[name="name"]', '测试用户2')
+  await page.click('text=保存')
+  
+  // 6. 验证编辑成功
+  await expect(page.locator('text=测试用户2')).toBeVisible()
+  
+  // 7. 删除用户
+  await page.click('[data-action="delete"]')
+  await page.click('text=确认')
+  
+  // 8. 验证删除成功
+  await expect(page.locator('text=测试用户2')).not.toBeVisible()
+})
+```
+
+#### 静态代码分析
+
+```typescript
+// AI可以分析代码并提供建议
+// 示例：分析这段代码
+function getUserData(userId) {  // ❌ 缺少类型
+  return fetch(`/api/users/${userId}`)
+    .then(res => res.json())  // ❌ 缺少错误处理
+}
+
+// AI的分析：
+/*
+问题1: 函数缺少TypeScript类型定义
+建议: 添加参数类型和返回类型
+  function getUserData(userId: string): Promise<User>
+
+问题2: 缺少错误处理
+建议: 添加try-catch或.catch()
+  
+问题3: 缺少响应验证
+建议: 验证响应状态码
+
+优化后的代码:
+*/
+async function getUserData(userId: string): Promise<User> {
+  try {
+    const response = await fetch(`/api/users/${userId}`)
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    
+    const data = await response.json()
+    return data as User
+  } catch (error) {
+    console.error('获取用户数据失败:', error)
+    throw error
+  }
+}
+```
+
+### 用户/工具的测试职责
+
+> **这些是AI做不到的，需要用户或自动化工具执行**
+
+```yaml
+实际运行测试:
+  ✅ npm run test                  # 运行单元测试
+  ✅ npm run test:e2e              # 运行E2E测试
+  ✅ npm run test:coverage         # 生成覆盖率报告
+
+性能测试:
+  ✅ Chrome DevTools Lighthouse   # 性能评分
+  ✅ Network面板                   # 网络请求分析
+  ✅ Performance面板               # 运行时性能
+  ✅ k6/JMeter                     # 压力测试
+
+用户体验验证:
+  ✅ 手动测试各种交互
+  ✅ 不同浏览器测试
+  ✅ 不同屏幕尺寸测试
+  ✅ 无障碍测试
+
+浏览器调试:
+  ✅ 断点调试
+  ✅ 网络抓包
+  ✅ 控制台日志分析
+```
+
+---
+
+## 🏗️ 架构最佳实践
+
+### 组件设计
+
+```typescript
+// ✅ 正确 - 单一职责的组件
+// UserCard.vue - 只负责展示用户卡片
+interface UserCardProps {
+  user: User
+  editable?: boolean
+}
+
+// UserList.vue - 只负责用户列表
+interface UserListProps {
+  users: User[]
+  loading?: boolean
+}
+
+// UserManagement.vue - 协调组件和数据
+// 组合UserList和UserCard，处理数据加载和操作
+
+// ❌ 错误 - 职责过多的组件
+// UserComponent.vue - 既负责列表、又负责表单、还负责数据加载
+// 这样的组件难以维护和测试
+```
+
+### 状态管理
+
+```typescript
+// ✅ 正确 - 清晰的Store设计
+// stores/user.ts
+export const useUserStore = defineStore('user', () => {
+  // State
+  const users = ref<User[]>([])
+  const currentUser = ref<User | null>(null)
+  const loading = ref(false)
+  
+  // Getters
+  const activeUsers = computed(() => 
+    users.value.filter(u => u.isActive)
+  )
+  
+  // Actions
+  async function fetchUsers() {
+    loading.value = true
+    try {
+      users.value = await UserService.getList()
+    } finally {
+      loading.value = false
+    }
+  }
+  
+  async function updateUser(id: string, data: UpdateUserInput) {
+    const user = await UserService.update(id, data)
+    const index = users.value.findIndex(u => u.id === id)
+    if (index >= 0) {
+      users.value[index] = user
+    }
+  }
+  
+  return {
+    users,
+    currentUser,
+    loading,
+    activeUsers,
+    fetchUsers,
+    updateUser
+  }
+})
+```
+
+### API设计
+
+```typescript
+// ✅ 正确 - 统一的API Client
+// services/user.service.ts
+export class UserService {
+  static async getList(params: GetUserListInput): Promise<PagedResultDto<UserDto>> {
+    return http.get<PagedResultDto<UserDto>>('/api/users', { params })
+  }
+  
+  static async get(id: string): Promise<UserDto> {
+    return http.get<UserDto>(`/api/users/${id}`)
+  }
+  
+  static async create(data: CreateUserInput): Promise<UserDto> {
+    return http.post<UserDto>('/api/users', data)
+  }
+  
+  static async update(id: string, data: UpdateUserInput): Promise<UserDto> {
+    return http.put<UserDto>(`/api/users/${id}`, data)
+  }
+  
+  static async delete(id: string): Promise<void> {
+    return http.delete(`/api/users/${id}`)
+  }
+}
+
+// ❌ 错误 - 零散的API调用
+// 在组件中直接写fetch('/api/users')
+// 没有类型定义、没有错误处理、难以维护
+```
+
+---
+
+## 📚 常见模式
+
+### 表单处理模式
+
+```vue
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
+import type { FormInstance, FormRules } from 'element-plus'
+
+const formRef = ref<FormInstance>()
+const form = reactive({
+  name: '',
+  email: '',
+  phone: ''
+})
+
+const rules: FormRules = {
+  name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+  email: [
+    { required: true, message: '请输入邮箱', trigger: 'blur' },
+    { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
+  ]
+}
+
+const loading = ref(false)
+
+async function handleSubmit() {
+  if (!formRef.value) return
+  
+  // 验证表单
+  const valid = await formRef.value.validate().catch(() => false)
+  if (!valid) return
+  
+  // 提交数据
+  loading.value = true
+  try {
+    await UserService.create(form)
+    ElMessage.success('保存成功')
+    emit('saved')
+  } catch (error) {
+    ElMessage.error('保存失败')
+  } finally {
+    loading.value = false
+  }
+}
+
+function handleReset() {
+  formRef.value?.resetFields()
+}
+</script>
+```
+
+### 列表查询模式
+
+```vue
+<script setup lang="ts">
+const loading = ref(false)
+const data = ref<User[]>([])
+const total = ref(0)
+
+const queryParams = reactive({
+  filter: '',
+  skipCount: 0,
+  maxResultCount: 10
+})
+
+async function fetchData() {
+  loading.value = true
+  try {
+    const result = await UserService.getList(queryParams)
+    data.value = result.items
+    total.value = result.totalCount
+  } catch (error) {
+    ElMessage.error('加载失败')
+  } finally {
+    loading.value = false
+  }
+}
+
+function handleSearch() {
+  queryParams.skipCount = 0  // 重置页码
+  fetchData()
+}
+
+function handlePageChange(page: number) {
+  queryParams.skipCount = (page - 1) * queryParams.maxResultCount
+  fetchData()
+}
+
+// 组件加载时获取数据
+onMounted(() => {
+  fetchData()
+})
+</script>
+```
+
+---
+
+## 🎯 总结
+
+### 核心要点
+
+```yaml
+性能优化:
+  - 前端: 懒加载、虚拟滚动、合理缓存
+  - 后端: 分页查询、避免N+1、使用缓存
+
+用户体验:
+  - 加载状态、操作反馈、错误提示
+  - 空状态处理、输入验证、权限检查
+
+测试:
+  - AI: 生成测试代码、静态分析
+  - 工具: 运行测试、性能测试、浏览器调试
+
+架构:
+  - 单一职责组件
+  - 清晰的状态管理
+  - 统一的API设计
+```
+
+### AI的角色
+
+```yaml
+我可以:
+  ✅ 提供最佳实践建议
+  ✅ 生成优化后的代码
+  ✅ 生成测试代码
+  ✅ 分析代码质量
+  ✅ 识别潜在问题
+
+我做不到:
+  ❌ 实际运行测试
+  ❌ 浏览器性能测试
+  ❌ 用户体验验证
+  ❌ 生产环境监控
+```
+
+**这些最佳实践是建议性的，可根据实际场景灵活应用！**

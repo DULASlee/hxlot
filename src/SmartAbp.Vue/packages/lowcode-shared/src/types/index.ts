@@ -7,40 +7,38 @@
  */
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🔥 统一Schema类型系统
+// 🚀 统一元数据类型系统 (从metadata-core导入)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export type {
-  UnifiedModuleMetadata,
-  UnifiedEntityDefinition,
+  AspireSolutionMetadata, BackendConfig, EndpointMetadata, EntityMetadata, FeatureConfig, LifecycleMetadata, MenuConfig, MicroserviceMetadata, ModuleMetadata, NavigationPropertyMetadata, PropertyMetadata, RouteMetadata,
+  StoreMetadata, UIConfig, ValidationRule
+} from '@smartabp/metadata-core'
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🔄 向后兼容：统一Schema类型系统 (逐步弃用)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export type {
+  UnifiedCodeGenerationConfig, UnifiedEntityDefinition,
   UnifiedEntityField,
-  UnifiedEntityRelationship,
-  UnifiedValidationRule,
-  UnifiedFrontendConfig,
-  UnifiedCodeGenerationConfig,
-  UnifiedEntityUIConfig,
-  UnifiedPermissionConfig,
-  UnifiedMenuConfig,
-  UnifiedValidationRuleType,
+  UnifiedEntityRelationship, UnifiedEntityUIConfig, UnifiedFrontendConfig, UnifiedMenuConfig, UnifiedModuleMetadata, UnifiedPermissionConfig, UnifiedValidationRule, UnifiedValidationRuleType
 } from './unified-schema'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🏗️ 组件基础类型
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export type {
-  BaseComponentProps,
-  ComponentState,
-  ComponentSize,
-  ComponentVariant,
+  BaseComponentProps, ComponentSize, ComponentState, ComponentVariant
 } from './component-base'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📋 日志类型
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export { createComponentLogger, getGlobalLogger } from './logger'
 export type { ILogger } from './logger'
-export { getGlobalLogger, createComponentLogger } from './logger'
 
 // UI 配置类型（供上层包重用）
 export type { MDIWindowConfig, TabConfig } from './ui'
 
 // 通用DTO类型（供API层重用）
-export type { EntityDto, AuditedEntityDto, ListResultDto, PagedResultDto } from './dtos'
+export type { AuditedEntityDto, EntityDto, ListResultDto, PagedResultDto } from './dtos'
+

@@ -26,11 +26,15 @@
     "lint:fix": "eslint src --ext .ts --fix",
     "check:arch": "ts-node src/execution/run-architecture-check.ts"
   },
+  "peerDependencies": {
+    "@smartabp/metadata-core": "workspace:*"
+  },
   "dependencies": {
     "glob": "^11.0.3",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@smartabp/metadata-core": "file:../metadata-core",
     "@types/glob": "^8.1.0",
     "@types/jest": "^29.5.0",
     "@types/node": "^20.0.0",

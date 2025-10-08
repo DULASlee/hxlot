@@ -1,0 +1,862 @@
+---
+alwaysApply: true
+priority: 1
+---
+
+# SmartAbp项目架构指南
+
+## 📋 文档说明
+
+**版本**: v1.0
+**更新日期**: 2025-10-08
+**应用方式**: ⚡ **永久自动应用** (alwaysApply: true)
+**核心使命**: 帮助AI理解SmartAbp特有的架构模式和技术实现
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🏗️ 第1章：核心架构三大支柱
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 支柱1：企业级组件注册系统
+
+### 📍 位置与作用
+
+```yaml
+位置: src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts
+作用: 统一管理所有低代码组件的注册、加载、卸载和生命周期
+```
+
+### 🎯 核心功能
+
+```typescript
+// 1. 组件注册
+import { registerComponent, ComponentMetadata } from '@smartabp/lowcode-shared'
+
+registerComponent({
+  name: 'SmartFormBuilder',
+  displayName: '智能表单构建器',
+  category: 'form',
+  priority: 'high',
+  dependencies: ['BaseComponent'],
+  bundle: '@smartabp/lowcode-core',
+  lazy: true,
+  preload: false,
+  version: '1.0.0',
+  tags: ['form', 'builder']
+})
+
+// 2. 组件加载
+import { loadComponent } from '@smartabp/lowcode-shared'
+
+const FormBuilder = await loadComponent('SmartFormBuilder')
+
+// 3. 组件查找
+import { getComponentMetadata, globalComponentRegistry } from '@smartabp/lowcode-shared'
+
+const metadata = getComponentMetadata('SmartFormBuilder')
+const formComponents = globalComponentRegistry.getCategoryComponents('form')
+```
+
+### ✅ AI编程时必须遵循
+
+```yaml
+创建新组件时:
+  1. ✅ 必须在ComponentRegistry中注册
+  2. ✅ 必须提供完整的ComponentMetadata
+  3. ✅ 必须声明依赖关系
+  4. ✅ 必须指定正确的category
+  5. ✅ 必须设置合理的加载优先级
+
+禁止行为:
+  ❌ 不注册直接使用组件
+  ❌ 硬编码组件路径
+  ❌ 跳过依赖声明
+  ❌ 创建重复名称的组件
+```
+
+### 📝 标准组件创建流程
+
+```typescript
+// 步骤1: 创建组件文件
+// src/SmartAbp.Vue/packages/lowcode-core/src/components/SmartDatePicker.vue
+
+<script setup lang="ts">
+import { BaseComponent } from '@smartabp/lowcode-shared'
+
+interface Props {
+  modelValue: string
+  format?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  format: 'YYYY-MM-DD'
+})
+
+const emit = defineEmits<{
+  'update:modelValue': [value: string]
+}>()
+</script>
+
+// 步骤2: 导出组件
+// src/SmartAbp.Vue/packages/lowcode-core/src/components/index.ts
+
+export { default as SmartDatePicker } from './SmartDatePicker.vue'
+
+// 步骤3: 注册组件
+// src/SmartAbp.Vue/packages/lowcode-core/src/index.ts
+
+import { registerComponent } from '@smartabp/lowcode-shared'
+import { SmartDatePicker } from './components'
+
+export function registerCoreComponents() {
+  registerComponent({
+    name: 'SmartDatePicker',
+    displayName: '智能日期选择器',
+    category: 'form',
+    priority: 'medium',
+    dependencies: ['BaseComponent'],
+    bundle: '@smartabp/lowcode-core',
+    lazy: false,
+    preload: true,
+    version: '1.0.0',
+    tags: ['form', 'date', 'picker']
+  })
+}
+```
+
+---
+
+## 支柱2：元数据驱动的统一类型系统
+
+### 📍 位置与作用
+
+```yaml
+核心包: src/SmartAbp.Vue/packages/metadata-core
+元数据定义: metadata/entities/
+作用: 
+  - 统一前后端的类型定义
+  - 基于元数据驱动代码生成
+  - 类型验证和版本管理
+```
+
+### 🎯 核心概念
+
+```typescript
+// 1. EntityMetadata（实体元数据）
+import type { EntityMetadata } from '@smartabp/metadata-core'
+
+const BookMetadata: EntityMetadata = {
+  name: 'Book',
+  module: 'Library',
+  keyType: 'Guid',
+  isAggregateRoot: true,
+  isMultiTenant: true,
+  isSoftDelete: true,
+  hasExtraProperties: true,
+  properties: [
+    {
+      name: 'title',
+      type: 'string',
+      isRequired: true,
+      isReadOnly: false,
+      isUnique: false,
+      maxLength: 200,
+      displayName: '书名',
+      validationRules: []
+    },
+    {
+      name: 'author',
+      type: 'string',
+      isRequired: true,
+      maxLength: 100,
+      displayName: '作者',
+      validationRules: []
+    }
+  ]
+}
+
+// 2. 验证元数据
+import { validateEntityMetadata } from '@smartabp/metadata-core'
+
+const validated = validateEntityMetadata(BookMetadata)
+
+// 3. 使用元数据生成代码（由其他系统负责）
+import { useCodeGenerationStore } from '@smartabp/lowcode-core'
+
+const codeGenStore = useCodeGenerationStore()
+await codeGenStore.generateCode({
+  entities: [validated],
+  generateFrontend: true,
+  generateBackend: true
+})
+```
+
+### ✅ AI编程时必须遵循
+
+```yaml
+定义新实体时:
+  1. ✅ 必须创建.metadata.ts文件在metadata/entities/{module}/
+  2. ✅ 必须使用EntityMetadata类型
+  3. ✅ 实体名必须使用PascalCase
+  4. ✅ 属性名必须使用camelCase
+  5. ✅ 必须通过validateEntityMetadata验证
+  6. ✅ 字符串类型必须指定maxLength
+  7. ✅ 必需字段必须标记isRequired: true
+
+生成代码时:
+  1. ✅ 前端代码由lowcode-core生成
+  2. ✅ 后端代码由SmartAbp.CodeGenerator API生成
+  3. ✅ metadata-core只负责定义和验证，不生成代码
+
+禁止行为:
+  ❌ 手动创建DTO（应该从元数据生成）
+  ❌ 前后端类型不一致
+  ❌ 跳过元数据验证
+  ❌ 使用any类型绕过类型系统
+```
+
+### 📝 标准元数据开发流程
+
+```typescript
+// 步骤1: 创建元数据定义
+// metadata/entities/library/book.metadata.ts
+
+import type { EntityMetadata } from '@smartabp/metadata-core'
+
+export const BookMetadata: EntityMetadata = {
+  name: 'Book',
+  module: 'Library',
+  keyType: 'Guid',
+  isAggregateRoot: true,
+  isMultiTenant: true,
+  isSoftDelete: true,
+  hasExtraProperties: true,
+  properties: [
+    {
+      name: 'title',
+      type: 'string',
+      isRequired: true,
+      isReadOnly: false,
+      isUnique: false,
+      maxLength: 200,
+      displayName: '书名',
+      validationRules: []
+    }
+  ]
+}
+
+export default BookMetadata
+
+// 步骤2: 验证元数据
+import { validateEntityMetadata } from '@smartabp/metadata-core'
+
+try {
+  const validated = validateEntityMetadata(BookMetadata)
+  console.log('✅ 验证通过')
+} catch (error) {
+  console.error('❌ 验证失败:', error)
+}
+
+// 步骤3: 使用元数据生成代码
+// 前端代码生成
+import { useCodeGenerationStore } from '@smartabp/lowcode-core'
+
+const codeGenStore = useCodeGenerationStore()
+await codeGenStore.generateFrontendCode({
+  entity: validated,
+  generateViews: true,
+  generateStore: true,
+  generateApi: true
+})
+
+// 后端代码生成（调用API）
+import { codeGenApi } from '@/api/code-generator'
+
+await codeGenApi.generateBackendCode({
+  entity: validated,
+  generateController: true,
+  generateAppService: true,
+  generateRepository: true
+})
+
+// 步骤4: 生成的文件位置
+/*
+前端:
+  ✅ src/views/library/book/BookList.vue
+  ✅ src/views/library/book/BookForm.vue
+  ✅ src/stores/library/useBookStore.ts
+  ✅ src/api/library/book-api.ts
+  ✅ src/types/library/book.types.ts
+
+后端:
+  ✅ src/SmartAbp.Application/Library/BookAppService.cs
+  ✅ src/SmartAbp.Application.Contracts/Library/Dtos/BookDto.cs
+  ✅ src/SmartAbp.HttpApi/Library/BookController.cs
+  ✅ src/SmartAbp.Domain/Library/Book.cs
+*/
+```
+
+---
+
+## 支柱3：Packages独立组件架构
+
+### 📍 架构层级
+
+```
+层级关系（只能向下依赖）:
+
+Layer 2: lowcode-designer
+  ↓ 依赖
+Layer 1: lowcode-core, lowcode-api, lowcode-tools
+  ↓ 依赖
+Layer 0: lowcode-shared
+  ↓ 依赖
+Layer -1: metadata-core
+
+主应用:
+  src/SmartAbp.Vue/src/
+  ↓ 依赖
+  所有packages
+```
+
+### 🎯 Packages清单
+
+```yaml
+@smartabp/metadata-core (Layer -1):
+  作用: 元数据Schema定义和验证
+  依赖: zod, nanoid
+  导出: EntityMetadata, validateEntityMetadata
+
+@smartabp/lowcode-shared (Layer 0):
+  作用: 共享基础组件和工具
+  依赖: metadata-core
+  导出: 
+    - ComponentRegistry（组件注册系统）
+    - BaseComponent（基础组件）
+    - 通用工具函数
+    - 共享类型定义
+
+@smartabp/lowcode-core (Layer 1):
+  作用: 核心引擎和代码生成
+  依赖: lowcode-shared, metadata-core
+  导出:
+    - 代码生成引擎
+    - 核心组件
+    - Store管理
+    - 分析器和生成器
+
+@smartabp/lowcode-api (Layer 1):
+  作用: API通信和业务规则
+  依赖: lowcode-shared
+  导出:
+    - API Client
+    - 业务规则引擎
+    - HTTP通信
+
+@smartabp/lowcode-tools (Layer 1):
+  作用: 开发工具和模板管理
+  依赖: lowcode-shared
+  导出:
+    - 模板管理
+    - 执行工具
+    - CLI工具
+
+@smartabp/lowcode-designer (Layer 2):
+  作用: 可视化设计器UI
+  依赖: lowcode-core, lowcode-shared
+  导出:
+    - 设计器组件
+    - 拖拽系统
+    - 属性面板
+```
+
+### ✅ AI编程时必须遵循
+
+```yaml
+Package依赖规则（P0铁律）:
+  1. ✅ 只能依赖更低层级的package
+  2. ✅ 使用@smartabp/别名引用其他package
+  3. ❌ 严禁使用相对路径（../）跨package引用
+  4. ❌ 严禁使用@/引用主应用（在packages中）
+  5. ❌ 严禁逆向依赖（低层依赖高层）
+  6. ❌ 严禁同层级相互依赖
+
+检测命令:
+  # 检查相对路径违规
+  grep -r "'../'" src/SmartAbp.Vue/packages/
+  
+  # 检查主应用引用违规
+  grep -r "@/" src/SmartAbp.Vue/packages/
+  
+  # 检查逆向依赖
+  grep -r "@smartabp/lowcode-designer" src/SmartAbp.Vue/packages/lowcode-core/
+  grep -r "@smartabp/lowcode-core" src/SmartAbp.Vue/packages/lowcode-shared/
+```
+
+### 📝 正确的引用方式
+
+```typescript
+// ✅ 正确：在lowcode-core中引用lowcode-shared
+import { ComponentRegistry } from '@smartabp/lowcode-shared'
+import { BaseComponent } from '@smartabp/lowcode-shared'
+import type { EntityMetadata } from '@smartabp/metadata-core'
+
+// ✅ 正确：在lowcode-designer中引用lowcode-core
+import { useCodeGenerationStore } from '@smartabp/lowcode-core'
+import { SmartFormBuilder } from '@smartabp/lowcode-core'
+
+// ✅ 正确：在主应用中引用packages
+import { ComponentRegistry } from '@smartabp/lowcode-shared'
+import { DesignerView } from '@smartabp/lowcode-designer'
+
+// ❌ 错误：在lowcode-core中使用相对路径
+import { ComponentRegistry } from '../../../lowcode-shared/src/components/ComponentRegistry'
+
+// ❌ 错误：在package中引用主应用
+import { UserService } from '@/services/UserService'
+
+// ❌ 错误：逆向依赖（lowcode-shared引用lowcode-core）
+import { CodeGenerator } from '@smartabp/lowcode-core'  // 在lowcode-shared中
+
+// ❌ 错误：同层级相互依赖（lowcode-api引用lowcode-tools）
+import { TemplateManager } from '@smartabp/lowcode-tools'  // 在lowcode-api中
+```
+
+### 📝 创建新Package的标准流程
+
+```bash
+# 步骤1: 创建package目录
+mkdir -p src/SmartAbp.Vue/packages/lowcode-newpackage/src
+
+# 步骤2: 创建package.json
+cat > src/SmartAbp.Vue/packages/lowcode-newpackage/package.json << 'EOF'
+{
+  "name": "@smartabp/lowcode-newpackage",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "peerDependencies": {
+    "@smartabp/lowcode-shared": "workspace:*",
+    "@smartabp/metadata-core": "workspace:*"
+  }
+}
+EOF
+
+# 步骤3: 创建tsconfig.json
+cat > src/SmartAbp.Vue/packages/lowcode-newpackage/tsconfig.json << 'EOF'
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../lowcode-shared" },
+    { "path": "../metadata-core" }
+  ]
+}
+EOF
+
+# 步骤4: 创建入口文件
+cat > src/SmartAbp.Vue/packages/lowcode-newpackage/src/index.ts << 'EOF'
+// 导出公共API
+export * from './components'
+export * from './utils'
+export * from './types'
+EOF
+
+# 步骤5: 更新pnpm-workspace.yaml（如需要）
+echo "  - 'src/SmartAbp.Vue/packages/lowcode-newpackage'" >> pnpm-workspace.yaml
+
+# 步骤6: 安装依赖
+cd src/SmartAbp.Vue
+pnpm install
+```
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🎯 第2章：AI编程实战指南
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 场景1：创建新的表单组件
+
+```typescript
+// 任务: 创建一个智能地址选择器组件
+
+// ✅ 步骤1: 创建组件文件
+// src/SmartAbp.Vue/packages/lowcode-core/src/components/SmartAddressSelector.vue
+
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { BaseComponent } from '@smartabp/lowcode-shared'
+
+interface Props {
+  modelValue?: {
+    province: string
+    city: string
+    district: string
+  }
+  readonly?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  readonly: false
+})
+
+const emit = defineEmits<{
+  'update:modelValue': [value: Props['modelValue']]
+}>()
+
+const provinces = ref<string[]>([])
+const cities = ref<string[]>([])
+const districts = ref<string[]>([])
+
+// 组件逻辑...
+</script>
+
+// ✅ 步骤2: 导出组件
+// src/SmartAbp.Vue/packages/lowcode-core/src/components/index.ts
+
+export { default as SmartAddressSelector } from './SmartAddressSelector.vue'
+
+// ✅ 步骤3: 注册组件
+// src/SmartAbp.Vue/packages/lowcode-core/src/index.ts
+
+import { registerComponent } from '@smartabp/lowcode-shared'
+
+registerComponent({
+  name: 'SmartAddressSelector',
+  displayName: '智能地址选择器',
+  category: 'form',
+  priority: 'medium',
+  dependencies: ['BaseComponent'],
+  bundle: '@smartabp/lowcode-core',
+  lazy: false,
+  preload: false,
+  version: '1.0.0',
+  tags: ['form', 'address', 'selector', 'cascader']
+})
+```
+
+## 场景2：基于元数据生成CRUD页面
+
+```typescript
+// 任务: 为Library模块的Book实体生成完整的CRUD页面
+
+// ✅ 步骤1: 创建元数据定义
+// metadata/entities/library/book.metadata.ts
+
+import type { EntityMetadata } from '@smartabp/metadata-core'
+
+export const BookMetadata: EntityMetadata = {
+  name: 'Book',
+  module: 'Library',
+  keyType: 'Guid',
+  isAggregateRoot: true,
+  isMultiTenant: true,
+  isSoftDelete: true,
+  hasExtraProperties: true,
+  properties: [
+    {
+      name: 'title',
+      type: 'string',
+      isRequired: true,
+      isReadOnly: false,
+      isUnique: false,
+      maxLength: 200,
+      displayName: '书名',
+      validationRules: [
+        { type: 'required', message: '书名不能为空' }
+      ]
+    },
+    {
+      name: 'author',
+      type: 'string',
+      isRequired: true,
+      maxLength: 100,
+      displayName: '作者',
+      validationRules: [
+        { type: 'required', message: '作者不能为空' }
+      ]
+    },
+    {
+      name: 'isbn',
+      type: 'string',
+      isRequired: false,
+      maxLength: 20,
+      displayName: 'ISBN',
+      validationRules: []
+    },
+    {
+      name: 'publishDate',
+      type: 'DateTime',
+      isRequired: false,
+      displayName: '出版日期',
+      validationRules: []
+    }
+  ]
+}
+
+export default BookMetadata
+
+// ✅ 步骤2: 验证元数据
+import { validateEntityMetadata } from '@smartabp/metadata-core'
+
+const validated = validateEntityMetadata(BookMetadata)
+console.log('✅ Book元数据验证通过')
+
+// ✅ 步骤3: 生成代码
+import { useCodeGenerationStore } from '@smartabp/lowcode-core'
+
+const codeGenStore = useCodeGenerationStore()
+
+// 生成前端代码
+await codeGenStore.generateFrontendCode({
+  entity: validated,
+  generateViews: true,      // 生成List/Form/Detail视图
+  generateStore: true,       // 生成Pinia Store
+  generateApi: true,         // 生成API Client
+  generateTypes: true,       // 生成TypeScript类型
+  generateRoutes: true       // 生成路由配置
+})
+
+// 生成后端代码（调用API）
+import { codeGenApi } from '@/api/code-generator'
+
+await codeGenApi.generateBackendCode({
+  entity: validated,
+  generateController: true,  // 生成Controller
+  generateAppService: true,  // 生成AppService
+  generateRepository: true,  // 生成Repository
+  generateDto: true,         // 生成DTO
+  generateEntity: true,      // 生成Entity
+  generateAutoMapper: true   // 生成AutoMapper配置
+})
+
+// ✅ 步骤4: 生成的文件验证
+/*
+前端文件:
+  ✅ src/views/library/book/BookList.vue
+  ✅ src/views/library/book/BookForm.vue
+  ✅ src/views/library/book/BookDetail.vue
+  ✅ src/stores/library/useBookStore.ts
+  ✅ src/api/library/book-api.ts
+  ✅ src/types/library/book.types.ts
+  ✅ src/router/modules/library.ts
+
+后端文件:
+  ✅ src/SmartAbp.HttpApi/Library/BookController.cs
+  ✅ src/SmartAbp.Application/Library/BookAppService.cs
+  ✅ src/SmartAbp.Application.Contracts/Library/Dtos/BookDto.cs
+  ✅ src/SmartAbp.Application.Contracts/Library/Dtos/CreateBookDto.cs
+  ✅ src/SmartAbp.Application.Contracts/Library/Dtos/UpdateBookDto.cs
+  ✅ src/SmartAbp.Domain/Library/Book.cs
+  ✅ src/SmartAbp.EntityFrameworkCore/Library/BookRepository.cs
+*/
+```
+
+## 场景3：在lowcode-designer中使用lowcode-core
+
+```typescript
+// 任务: 在设计器中添加代码预览功能
+
+// ✅ 步骤1: 在lowcode-designer中正确引用lowcode-core
+// src/SmartAbp.Vue/packages/lowcode-designer/src/components/CodePreview.vue
+
+<script setup lang="ts">
+// ✅ 正确：使用@smartabp别名
+import { useCodeGenerationStore } from '@smartabp/lowcode-core'
+import type { EntityMetadata } from '@smartabp/metadata-core'
+
+interface Props {
+  entity: EntityMetadata
+  previewType: 'frontend' | 'backend'
+}
+
+const props = defineProps<Props>()
+const codeGenStore = useCodeGenerationStore()
+
+const previewCode = computed(() => {
+  if (props.previewType === 'frontend') {
+    return codeGenStore.previewFrontendCode(props.entity)
+  } else {
+    return codeGenStore.previewBackendCode(props.entity)
+  }
+})
+</script>
+
+<template>
+  <div class="code-preview">
+    <pre><code>{{ previewCode }}</code></pre>
+  </div>
+</template>
+```
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ✅ 第3章：AI快速检查清单
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 创建新组件时检查
+
+```yaml
+☑️ 组件是否已在ComponentRegistry中注册？
+☑️ ComponentMetadata是否完整（name, category, dependencies等）？
+☑️ 组件是否继承或使用BaseComponent？
+☑️ 组件是否导出（在index.ts中）？
+☑️ 组件是否有完整的TypeScript类型？
+```
+
+## 创建新实体时检查
+
+```yaml
+☑️ 元数据文件是否在metadata/entities/{module}/？
+☑️ 实体名是否使用PascalCase？
+☑️ 属性名是否使用camelCase？
+☑️ 是否通过validateEntityMetadata验证？
+☑️ 字符串类型是否指定maxLength？
+☑️ 必需字段是否标记isRequired: true？
+☑️ 是否有至少一个属性？
+```
+
+## 跨Package引用时检查
+
+```yaml
+☑️ 是否使用@smartabp/别名？
+☑️ 是否避免使用../相对路径？
+☑️ 是否避免使用@/引用主应用？
+☑️ 依赖层级是否正确（只向下依赖）？
+☑️ 是否避免逆向依赖？
+☑️ 是否避免同层级相互依赖？
+```
+
+## Package质量检查
+
+```bash
+# TypeScript编译检查
+cd src/SmartAbp.Vue && npx tsc --build tsconfig.references.json
+
+# ESLint检查
+cd src/SmartAbp.Vue && npm run lint -- "packages/*/src/**/*.{ts,vue}"
+
+# 依赖关系检查
+grep -r "'../'" src/SmartAbp.Vue/packages/
+grep -r "@/" src/SmartAbp.Vue/packages/
+grep -r "@smartabp/lowcode-designer" src/SmartAbp.Vue/packages/lowcode-core/
+
+# 构建检查
+cd src/SmartAbp.Vue && npm run build:packages
+```
+
+---
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 📚 第4章：常见问题与解决方案
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Q1: 如何判断应该在哪个package中创建代码？
+
+```yaml
+判断标准:
+  
+  metadata-core:
+    - 元数据Schema定义
+    - 类型验证逻辑
+    - 版本管理
+
+  lowcode-shared:
+    - 组件注册系统
+    - 基础组件（被多个package使用）
+    - 通用工具函数
+    - 共享类型定义
+
+  lowcode-core:
+    - 代码生成引擎
+    - 核心业务组件
+    - Store管理
+    - 分析器和生成器
+
+  lowcode-api:
+    - API通信
+    - 业务规则引擎
+    - HTTP Client
+
+  lowcode-designer:
+    - 设计器UI组件
+    - 拖拽系统
+    - 属性面板
+
+  主应用（src/SmartAbp.Vue/src/）:
+    - 业务页面
+    - 路由配置
+    - 全局配置
+    - 业务特定逻辑
+```
+
+## Q2: 如何处理循环依赖？
+
+```yaml
+问题: lowcode-core需要使用lowcode-api的功能，但lowcode-api也需要lowcode-core
+
+解决方案:
+  1. 提取共享部分到lowcode-shared
+  2. 使用依赖注入（Dependency Injection）
+  3. 使用事件总线（Event Bus）
+  4. 重新设计模块边界
+
+示例:
+  # 错误：循环依赖
+  lowcode-core → lowcode-api → lowcode-core
+
+  # 正确：提取到shared
+  lowcode-core → lowcode-shared
+  lowcode-api → lowcode-shared
+```
+
+## Q3: 元数据验证失败怎么办？
+
+```typescript
+// 问题：验证失败
+import { validateEntityMetadata, getEntityMetadataErrors } from '@smartabp/metadata-core'
+
+const errors = getEntityMetadataErrors(invalidEntity)
+console.error('验证失败:', errors)
+// ['name: 实体名称必须是PascalCase', 'properties: 至少需要一个属性']
+
+// 解决：逐步修复错误
+const fixedEntity = {
+  ...invalidEntity,
+  name: 'Book',  // 修复PascalCase
+  properties: [  // 添加属性
+    {
+      name: 'title',
+      type: 'string',
+      isRequired: true,
+      isReadOnly: false,
+      isUnique: false,
+      maxLength: 200,
+      displayName: '标题',
+      validationRules: []
+    }
+  ]
+}
+
+const validated = validateEntityMetadata(fixedEntity)
+console.log('✅ 验证通过')
+```
+
+---
+
+**SmartAbp项目架构指南 - 让AI更懂你的项目！** 🚀

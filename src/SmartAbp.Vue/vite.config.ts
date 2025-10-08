@@ -9,6 +9,7 @@ import Components from "unplugin-vue-components/vite"
 import { defineConfig } from "vite"
 import vueDevtools from "vite-plugin-vue-devtools"
 import moduleWizardDev from "./packages/lowcode-designer/src/dev/moduleWizardDev"
+import { createComponentConflictDetector } from "./src/utils/vite/conflictDetector"
 import { createPackagesResolver } from "./src/utils/vite/packagesResolver"
 import vitePluginLowCode from "./packages/lowcode-tools/src/vite"
 // Offline icon collections (static JSON)
@@ -28,6 +29,30 @@ dns.setDefaultResultOrder("verbatim")
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    // 编译期组件名冲突检测（Fail Build）
+    createComponentConflictDetector({
+      packagesRoot: 'packages',
+      packageComponentDirs: [
+        'lowcode-shared/src/components',
+        'lowcode-core/src/components',
+        'lowcode-designer/src/components',
+        'lowcode-api/src/components',
+        'lowcode-tools/src/components',
+        'metadata-core/src/components',
+      ],
+      namingRules: {
+        'lowcode-shared': 'Ls',
+        'lowcode-core': 'Lc',
+        'lowcode-designer': 'Ld',
+        'lowcode-api': 'La',
+        'lowcode-tools': 'Lt',
+        'metadata-core': 'Mc',
+      },
+      includeMainApp: true,
+      mainComponentsDir: 'src/components',
+      failOnConflict: true,
+      largeFileLineThreshold: 300,
+    }),
     vue(),
     ...(process.env.NODE_ENV !== "production" ? [moduleWizardDev()] : []),
     ...(process.env.NODE_ENV !== "production" ? [vueDevtools()] : []),

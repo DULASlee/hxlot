@@ -15,30 +15,18 @@
  * ```
  */
 
-export interface NavigationPropertyMetadata {
-  name: string
-  type: string
-  relationType: 'OneToOne' | 'OneToMany' | 'ManyToMany' | 'ManyToOne'
-  foreignKey?: string
-  inverseProperty?: string
+// 🚀 从metadata-core导入统一类型定义
+import type {
+  NavigationPropertyMetadata as CoreNavigationPropertyMetadata,
+  EntityMetadata,
+  PropertyMetadata
+} from '@smartabp/metadata-core'
+
+// 🔄 扩展NavigationPropertyMetadata以支持UI特定属性
+export interface NavigationPropertyMetadata extends CoreNavigationPropertyMetadata {
   isLazyLoaded?: boolean
   displayField?: string
   valueField?: string
-}
-
-export interface EntityMetadata {
-  name: string
-  displayName: string
-  apiPath: string
-  properties: PropertyMetadata[]
-}
-
-export interface PropertyMetadata {
-  name: string
-  type: string
-  displayName: string
-  isRequired?: boolean
-  maxLength?: number
 }
 
 export interface RelationshipUICodeResult {
@@ -54,7 +42,7 @@ export interface RelationshipUICodeResult {
  * 关联关系UI生成器
  */
 export class RelationshipUIGenerator {
-  
+
   /**
    * 生成关联关系UI
    */
@@ -63,23 +51,23 @@ export class RelationshipUIGenerator {
     masterEntity: EntityMetadata,
     targetEntity: EntityMetadata
   ): RelationshipUICodeResult {
-    
+
     switch (navigation.relationType) {
       case 'OneToMany':
         return this.generateOneToManyUI(navigation, masterEntity, targetEntity)
-      
+
       case 'ManyToMany':
         return this.generateManyToManyUI(navigation, masterEntity, targetEntity)
-      
+
       case 'OneToOne':
       case 'ManyToOne':
         return this.generateOneToOneUI(navigation, masterEntity, targetEntity)
-      
+
       default:
         throw new Error(`Unsupported relation type: ${navigation.relationType}`)
     }
   }
-  
+
   /**
    * 生成一对多（主从表）UI
    */
@@ -88,11 +76,11 @@ export class RelationshipUIGenerator {
     masterEntity: EntityMetadata,
     detailEntity: EntityMetadata
   ): RelationshipUICodeResult {
-    
+
     const masterFormFields = this.generateFormFields(masterEntity.properties)
     const detailTableColumns = this.generateTableColumns(detailEntity.properties)
     const detailFormFields = this.generateFormFields(detailEntity.properties)
-    
+
     const vueCode = `<template>
   <div class="master-detail-container">
     <!-- 主表区域 -->
@@ -367,10 +355,10 @@ if (props.masterId) {
 
     const typeCode = this.generateTypeDefinitions(masterEntity, detailEntity)
     const composableCode = '' // 已经使用了useMasterDetail
-    
+
     return { vueCode, typeCode, composableCode }
   }
-  
+
   /**
    * 生成多对多UI
    */
@@ -379,10 +367,10 @@ if (props.masterId) {
     sourceEntity: EntityMetadata,
     targetEntity: EntityMetadata
   ): RelationshipUICodeResult {
-    
+
     const displayField = navigation.displayField || 'name'
     const valueField = navigation.valueField || 'id'
-    
+
     const vueCode = `<template>
   <div class="many-to-many-selector">
     <el-card shadow="never">
@@ -570,10 +558,10 @@ const handleRefresh = async () => {
 
     const typeCode = this.generateTypeDefinitions(sourceEntity, targetEntity)
     const composableCode = '' // 已经使用了useManyToMany
-    
+
     return { vueCode, typeCode, composableCode }
   }
-  
+
   /**
    * 生成一对一/多对一UI（关联选择器）
    */
@@ -582,10 +570,10 @@ const handleRefresh = async () => {
     sourceEntity: EntityMetadata,
     targetEntity: EntityMetadata
   ): RelationshipUICodeResult {
-    
+
     const displayField = navigation.displayField || 'name'
     const valueField = navigation.valueField || 'id'
-    
+
     const vueCode = `<template>
   <el-form-item 
     :label="label" 
@@ -681,10 +669,10 @@ watch(() => props.modelValue, (newValue) => {
 
     const typeCode = this.generateTypeDefinitions(sourceEntity, targetEntity)
     const composableCode = ''
-    
+
     return { vueCode, typeCode, composableCode }
   }
-  
+
   /**
    * 生成表单字段
    */
@@ -701,7 +689,7 @@ watch(() => props.modelValue, (newValue) => {
         </el-form-item>`
     }).join('\n')
   }
-  
+
   /**
    * 生成表格列
    */
@@ -715,7 +703,7 @@ watch(() => props.modelValue, (newValue) => {
         />`
     }).join('\n')
   }
-  
+
   /**
    * 生成验证规则
    */
@@ -728,7 +716,7 @@ watch(() => props.modelValue, (newValue) => {
   ]`
       }).join(',\n')
   }
-  
+
   /**
    * 生成类型定义
    */
@@ -741,7 +729,7 @@ export interface ${entity2.name} {
 ${entity2.properties.map(p => `  ${p.name}: ${this.mapToTypeScriptType(p.type)}`).join('\n')}
 }`
   }
-  
+
   /**
    * 获取输入控件类型
    */
@@ -764,7 +752,7 @@ ${entity2.properties.map(p => `  ${p.name}: ${this.mapToTypeScriptType(p.type)}`
         return 'input'
     }
   }
-  
+
   /**
    * 映射到TypeScript类型
    */

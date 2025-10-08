@@ -9,100 +9,16 @@
  * @date 2025-10-06
  */
 
-// 临时类型定义，等metadata-core包完善后替换为真实导入
-// import type {
-//     BackendConfig,
-//     EntityMetadata,
-//     ValidationRule as MetadataCoreValidationRule,
-//     ModuleMetadata,
-//     NavigationPropertyMetadata,
-//     PropertyMetadata,
-//     UIConfig
-// } from '@smartabp/metadata-core'
-
-// 临时类型定义
-interface EntityMetadata {
-    schemaVersion: string
-    name: string
-    module: string
-    keyType: 'string' | 'Guid' | 'int' | 'long'  // 修复：使用字面量联合类型
-    description?: string
-    isAggregateRoot: boolean  // 修复：不能是undefined
-    isMultiTenant: boolean  // 修复：不能是undefined
-    isSoftDelete: boolean  // 修复：不能是undefined
-    hasExtraProperties: boolean  // 修复：不能是undefined
-    properties: PropertyMetadata[]
-    navigationProperties?: NavigationPropertyMetadata[]
-    xUiConfig?: UIConfig
-    xBackendConfig?: BackendConfig
-}
-
-interface PropertyMetadata {
-    name: string
-    type: string
-    isRequired?: boolean
-    isReadOnly?: boolean
-    isUnique?: boolean
-    maxLength?: number
-    minLength?: number
-    minValue?: number
-    maxValue?: number
-    defaultValue?: any
-    description?: string
-    displayName?: string
-    validationRules?: MetadataCoreValidationRule[]
-}
-
-interface NavigationPropertyMetadata {
-    name: string
-    targetEntity: string
-    relationType: 'OneToOne' | 'OneToMany' | 'ManyToOne' | 'ManyToMany'
-    foreignKey?: string
-    inverseName?: string
-}
-
-interface MetadataCoreValidationRule {
-    name: string
-    condition: string
-    errorMessage: string
-}
-
-interface UIConfig {
-    listColumns?: string[]
-    formFields?: string[]
-    searchFields?: string[]
-    defaultSort?: string
-    pageSize?: number
-}
-
-interface BackendConfig {
-    generateRepository?: boolean
-    generateAppService?: boolean
-    generateController?: boolean
-    generateDto?: boolean
-}
-
-interface ModuleMetadata {
-    schemaVersion: string
-    name: string
-    displayName?: string
-    version: string
-    description?: string
-    author?: string
-    abpStyle: boolean  // 修复：不能是undefined
-    order: number  // 修复：不能是undefined
-    dependsOn: string[]  // 修复：不能是undefined
-    routes?: any[]
-    stores?: any[]
-    policies?: any[]
-    lifecycle?: any
-    features?: any
-    menuConfig?: {
-        title?: string
-        icon?: string
-        order?: number
-    }
-}
+// 🚀 从metadata-core导入统一类型定义
+import type {
+    BackendConfig,
+    EntityMetadata,
+    ValidationRule as MetadataCoreValidationRule,
+    ModuleMetadata,
+    NavigationPropertyMetadata,
+    PropertyMetadata,
+    UIConfig
+} from '@smartabp/metadata-core'
 
 import type {
     UnifiedCodeGenerationConfig,
@@ -153,7 +69,7 @@ function convertFieldToProperty(field: UnifiedEntityField): PropertyMetadata {
         minLength: field.minLength,
         minValue: field.minValue,
         maxValue: field.maxValue,
-        defaultValue: field.defaultValue,
+        defaultValue: field.defaultValue as string | undefined,
         description: field.description,
         displayName: field.displayName,
         validationRules: field.validationRules?.map(convertValidationRule) || []
@@ -174,7 +90,7 @@ function convertRelationshipToNavigation(relationship: UnifiedEntityRelationship
 }
 
 /**
- * 将UnifiedValidationRule转换为MetadataCoreValidationRule
+ * 将UnifiedValidationRule转换为ValidationRule
  */
 function convertValidationRule(rule: UnifiedValidationRule): MetadataCoreValidationRule {
     return {
