@@ -210,7 +210,9 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
     }
 
     const snapshot = snapshots.value.splice(index, 1)[0]
-    logger.info(`Deleted theme snapshot: ${snapshot.name}`)
+    if (snapshot) {
+      logger.info(`Deleted theme snapshot: ${snapshot.name}`)
+    }
     return true
   }
 

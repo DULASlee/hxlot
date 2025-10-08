@@ -178,7 +178,11 @@ export class ConcurrencyTestScenario {
    */
   selectOperation(): ConcurrentOperation {
     if (this.config.operations.length === 1) {
-      return this.config.operations[0]
+      const operation = this.config.operations[0]
+      if (!operation) {
+        throw new Error('操作列表不能为空')
+      }
+      return operation
     }
 
     const random = Math.random() * this.totalWeight
@@ -191,7 +195,12 @@ export class ConcurrencyTestScenario {
       }
     }
 
-    return this.config.operations[0]
+    // 后备方案：返回第一个操作
+    const fallbackOperation = this.config.operations[0]
+    if (!fallbackOperation) {
+      throw new Error('操作列表不能为空')
+    }
+    return fallbackOperation
   }
 
   /**

@@ -331,12 +331,15 @@ export const useBusinessRuleStore = defineStore('businessRule', () => {
 
             // 添加到执行日志
             results.forEach((result, index) => {
-                const rule = businessRules.value.find((r: BusinessRuleDto) => r.id === ruleIds[index])
+                const ruleId = ruleIds[index]
+                if (!ruleId) return
+
+                const rule = businessRules.value.find((r: BusinessRuleDto) => r.id === ruleId)
                 if (rule) {
                     const logEntry = {
                         id: `${Date.now()}_${index}`,
                         timestamp: result.timestamp,
-                        ruleId: ruleIds[index],
+                        ruleId: ruleId,
                         ruleName: rule.name,
                         success: result.success,
                         executionTime: result.executionTime,

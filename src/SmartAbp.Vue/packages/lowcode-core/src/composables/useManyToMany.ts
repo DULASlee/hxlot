@@ -254,10 +254,12 @@ export function useManyToMany<_TEntity = any, TTarget = any>(
       
       if (index !== -1) {
         const removedItem = selectedItems.value[index]
-        selectedItems.value.splice(index, 1)
-        availableItems.value.push(removedItem)
+        if (removedItem) { // 添加undefined检查
+          selectedItems.value.splice(index, 1)
+          availableItems.value.push(removedItem)
         
-        await config.onRelationChange?.(selectedItems.value, availableItems.value)
+          await config.onRelationChange?.(selectedItems.value, availableItems.value)
+        }
       }
     } catch (error) {
       ElMessage.error('移除关联失败')
@@ -340,8 +342,10 @@ export function useManyToMany<_TEntity = any, TTarget = any>(
         
         if (index !== -1) {
           const removedItem = selectedItems.value[index]
-          selectedItems.value.splice(index, 1)
-          removedItems.push(removedItem)
+          if (removedItem) { // 添加undefined检查
+            selectedItems.value.splice(index, 1)
+            removedItems.push(removedItem)
+          }
         }
       }
       

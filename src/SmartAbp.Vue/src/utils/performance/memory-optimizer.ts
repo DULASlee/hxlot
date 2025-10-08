@@ -236,7 +236,9 @@ export function useMemoryOptimizer(options: MemoryOptimizerOptions = {}) {
     // 分析趋势：如果内存持续增长，可能存在泄漏
     let consecutiveGrowth = 0
     for (let i = 1; i < memoryHistory.length; i++) {
-      if (memoryHistory[i] > memoryHistory[i - 1]) {
+      const current = memoryHistory[i]
+      const previous = memoryHistory[i - 1]
+      if (current !== undefined && previous !== undefined && current > previous) {
         consecutiveGrowth++
       } else {
         consecutiveGrowth = 0

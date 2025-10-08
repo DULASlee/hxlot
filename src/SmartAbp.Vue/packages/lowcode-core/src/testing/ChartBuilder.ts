@@ -391,7 +391,10 @@ export class ChartBuilder {
     const colors: string[] = []
     
     for (let i = 0; i < count; i++) {
-      colors.push(baseColors[i % baseColors.length])
+      const color = baseColors[i % baseColors.length]
+      if (color) {
+        colors.push(color)
+      }
     }
     
     return colors

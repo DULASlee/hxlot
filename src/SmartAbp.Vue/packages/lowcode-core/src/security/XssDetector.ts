@@ -12,7 +12,8 @@
  */
 
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
-import { IssueLocation, SecurityIssue, SecurityIssueUtils, SeverityLevel, VulnerabilityType } from './SecurityIssue'
+import type { IssueLocation, SecurityIssue } from './SecurityIssue'
+import { SecurityIssueUtils, SeverityLevel, VulnerabilityType } from './SecurityIssue'
 
 const logger = getGlobalLogger()
 
@@ -203,7 +204,9 @@ export class XssDetector {
     let endLine = 1
 
     for (let i = 0; i < lines.length; i++) {
-      const lineLength = lines[i].length + 1
+      const line = lines[i]
+      if (!line) continue
+      const lineLength = line.length + 1
 
       if (currentPos + lineLength > matchIndex) {
         startLine = i + 1

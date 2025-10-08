@@ -1,6 +1,6 @@
- 
+
 import { defineStore } from "pinia"
-import { ref, computed, watch } from "vue"
+import { computed, ref, watch } from "vue"
 // @ts-ignore - logger will be injected by main app via lowcode-tools bridge
 const logger = (globalThis as any).__SMARTABP_LOGGER__ || console
 
@@ -82,15 +82,15 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
   const themePresets = computed(() => THEME_PRESETS)
 
   const contrastRatios = computed(() => {
-    const primary = themeVariables.value["--theme-brand-primary"]
+    const primary = themeVariables.value["--theme-brand-primary"] ?? "#007bff"
     const background = "#ffffff"
 
     return {
       "primary-bg": calculateContrastRatio(primary, background),
       "text-bg": calculateContrastRatio("#000000", background),
-      "success-bg": calculateContrastRatio(themeVariables.value["--theme-brand-success"], background),
-      "warning-bg": calculateContrastRatio(themeVariables.value["--theme-brand-warning"], background),
-      "danger-bg": calculateContrastRatio(themeVariables.value["--theme-brand-danger"], background),
+      "success-bg": calculateContrastRatio(themeVariables.value["--theme-brand-success"] ?? "#28a745", background),
+      "warning-bg": calculateContrastRatio(themeVariables.value["--theme-brand-warning"] ?? "#ffc107", background),
+      "danger-bg": calculateContrastRatio(themeVariables.value["--theme-brand-danger"] ?? "#dc3545", background),
     }
   })
 
@@ -212,9 +212,15 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
       return false
     }
 
-    const snapshot = snapshots.value.splice(index, 1)[0]
-    logger.info(`Deleted theme snapshot: ${snapshot.name}`)
-    return true
+    const removedSnapshots = snapshots.value.splice(index, 1)
+    const snapshot = removedSnapshots[0]
+    if (snapshot) {
+      logger.info(`Deleted theme snapshot: ${snapshot.name}`)
+      return true
+    } else {
+      logger.warn(`Failed to delete snapshot: ${snapshotId}`)
+      return false
+    }
   }
 
   // === 导出导入功能 ===
@@ -335,7 +341,7 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
   watch([currentTheme, themeVariables], () => {
     saveThemeToStorage()
   }, { deep: true })
-  
+
   // 重置为默认主题
   const resetToDefault = () => {
     themeVariables.value = {
@@ -347,7 +353,7 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
     applyTheme()
     logger.info("Theme reset to default")
   }
-  
+
   // 从本地存储加载主题
   const loadFromLocalStorage = () => {
     try {
@@ -362,7 +368,7 @@ export const useEnhancedThemeStore = defineStore("enhancedTheme", () => {
       logger.error("Failed to load theme from local storage:", error as Error)
     }
   }
-  
+
   // 初始化
   initializeTheme()
 

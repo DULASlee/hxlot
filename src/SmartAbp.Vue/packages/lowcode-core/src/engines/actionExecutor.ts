@@ -170,7 +170,7 @@ export class ActionExecutor {
     // 例如：SetFieldValue({field: 'status', value: 'approved'})
 
     const match = action.match(/^(\w+)\((.*)\)$/)
-    if (!match) {
+    if (!match || match.length < 3) {
       // 如果没有参数，就是简单的执行器名称
       return {
         executorName: action,
@@ -178,8 +178,8 @@ export class ActionExecutor {
       }
     }
 
-    const executorName = match[1]
-    const paramsStr = match[2].trim()
+    const executorName = match[1]!
+    const paramsStr = match[2]!.trim()
 
     // 解析参数（JSON格式）
     let params: any = {}
@@ -378,16 +378,24 @@ class ValidateFieldExecutor implements IActionExecutor {
       }
 
       if (rule.startsWith('min:')) {
-        const minLength = parseInt(rule.split(':')[1])
-        if (fieldValue && fieldValue.length < minLength) {
-          errors.push(`${params.field}长度不能小于${minLength}`)
+        const parts = rule.split(':')
+        const minLengthStr = parts[1]
+        if (minLengthStr) {
+          const minLength = parseInt(minLengthStr)
+          if (fieldValue && fieldValue.length < minLength) {
+            errors.push(`${params.field}长度不能小于${minLength}`)
+          }
         }
       }
 
       if (rule.startsWith('max:')) {
-        const maxLength = parseInt(rule.split(':')[1])
-        if (fieldValue && fieldValue.length > maxLength) {
-          errors.push(`${params.field}长度不能大于${maxLength}`)
+        const parts = rule.split(':')
+        const maxLengthStr = parts[1]
+        if (maxLengthStr) {
+          const maxLength = parseInt(maxLengthStr)
+          if (fieldValue && fieldValue.length > maxLength) {
+            errors.push(`${params.field}长度不能大于${maxLength}`)
+          }
         }
       }
     }

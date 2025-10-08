@@ -1,5 +1,5 @@
 // SmartAbp Enterprise Memory Optimization & Cache Management
-import { ref, onBeforeUnmount } from 'vue'
+import { onBeforeUnmount, ref } from 'vue'
 
 /**
  * 内存监控Hook
@@ -180,10 +180,10 @@ export interface CacheOptions<T> {
   /** 存储到localStorage */
   persistent?: boolean
   /** 序列化函数 */
-   
+
   serialize?: (value: T) => string
   /** 反序列化函数 */
-   
+
   deserialize?: (value: string) => T
 }
 
@@ -234,9 +234,11 @@ export function useCache<T>(
       try {
         const data: Record<string, CacheItem<T>> = {}
         for (const [k] of cache.keys()) {
-          const item = cache.get(k)
-          if (item) {
-            data[k] = item
+          if (k) {
+            const item = cache.get(k)
+            if (item) {
+              data[k] = item
+            }
           }
         }
         localStorage.setItem(`cache_${key}`, JSON.stringify(data))
@@ -431,13 +433,13 @@ export class ObjectPool<T> {
   private pool: T[] = []
   private createFn: () => T
 
-   
+
   private resetFn?: (_obj: T) => void
   private maxSize: number
 
   constructor(
     createFn: () => T,
-     
+
     resetFn?: (_obj: T) => void,
     maxSize: number = 50
   ) {

@@ -175,13 +175,16 @@ export function useEnhancedVirtualScroll<T>(
     const end = Math.min(data.value.length, endIndex.value + bufferSize + extraBuffer)
 
     for (let i = start; i < end; i++) {
-      items.push({
-        data: data.value[i],
-        index: i,
-        height: getItemHeight(i),
-        offsetTop: getItemOffsetTop(i),
-        isVisible: i >= startIndex.value && i < endIndex.value
-      })
+      const itemData = data.value[i]
+      if (itemData !== undefined) {
+        items.push({
+          data: itemData as T,
+          index: i,
+          height: getItemHeight(i),
+          offsetTop: getItemOffsetTop(i),
+          isVisible: i >= startIndex.value && i < endIndex.value
+        })
+      }
     }
 
     return items

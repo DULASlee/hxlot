@@ -1,6 +1,6 @@
-import { defineStore } from "pinia"
-import { ref, computed } from "vue"
 import { getGlobalLogger, type ILogger } from "@smartabp/lowcode-shared"
+import { defineStore } from "pinia"
+import { computed, ref } from "vue"
 
 const logger: ILogger = getGlobalLogger()
 
@@ -56,23 +56,24 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
   const currentPageId = ref<string>("")
 
   // 计算属性
-  const completedPages = computed(() => 
+  const completedPages = computed(() =>
     pages.value.filter(p => p.isCompleted).length
   )
 
   const totalPages = computed(() => pages.value.length)
 
-  const currentPage = computed(() => 
+  const currentPage = computed(() =>
     pages.value.find(p => p.id === currentPageId.value)
   )
 
   const pagesByType = computed(() => {
     const grouped: Record<string, PageDefinition[]> = {}
     pages.value.forEach(page => {
-      if (!grouped[page.type]) {
-        grouped[page.type] = []
+      const pageType = page.type || 'default'
+      if (!grouped[pageType]) {
+        grouped[pageType] = []
       }
-      grouped[page.type].push(page)
+      grouped[pageType].push(page)
     })
     return grouped
   })
@@ -81,10 +82,11 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
     const grouped: Record<string, PageDefinition[]> = {}
     pages.value.forEach(page => {
       if (page.entityId) {
-        if (!grouped[page.entityId]) {
-          grouped[page.entityId] = []
+        const entityId = page.entityId
+        if (!grouped[entityId]) {
+          grouped[entityId] = []
         }
-        grouped[page.entityId].push(page)
+        grouped[entityId].push(page)
       }
     })
     return grouped
@@ -99,11 +101,11 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
         createdAt: new Date(),
         updatedAt: new Date()
       }
-      
+
       pages.value.push(newPage)
       currentPageId.value = newPage.id
       logger.info(`页面已添加: ${newPage.name}`, { pageId: newPage.id })
-      
+
       return newPage.id
     } catch (err) {
       const error = err as Error
@@ -119,8 +121,13 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
         throw new Error(`未找到页面: ${pageId}`)
       }
 
-      pages.value[index] = { 
-        ...pages.value[index], 
+      const currentPage = pages.value[index]
+      if (!currentPage) {
+        throw new Error(`页面数据无效: ${pageId}`)
+      }
+
+      pages.value[index] = {
+        ...currentPage,
         ...updates,
         updatedAt: new Date()
       }
@@ -140,12 +147,17 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
       }
 
       const page = pages.value[index]
-      pages.value.splice(index, 1)
-      
-      if (currentPageId.value === pageId) {
-        currentPageId.value = pages.value.length > 0 ? pages.value[0].id : ""
+      if (!page) {
+        throw new Error(`页面数据无效: ${pageId}`)
       }
-      
+
+      pages.value.splice(index, 1)
+
+      if (currentPageId.value === pageId) {
+        const firstPage = pages.value[0]
+        currentPageId.value = firstPage ? firstPage.id : ""
+      }
+
       logger.info(`页面已删除: ${page.name}`, { pageId })
     } catch (err) {
       const error = err as Error
@@ -176,11 +188,11 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
 
       pages.value.push(duplicatedPage)
       currentPageId.value = duplicatedPage.id
-      logger.info(`页面已复制: ${duplicatedPage.name}`, { 
+      logger.info(`页面已复制: ${duplicatedPage.name}`, {
         originalId: pageId,
-        newId: duplicatedPage.id 
+        newId: duplicatedPage.id
       })
-      
+
       return duplicatedPage.id
     } catch (err) {
       const error = err as Error
@@ -204,12 +216,12 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
 
       page.components.push(newComponent)
       page.updatedAt = new Date()
-      
-      logger.info(`组件已添加到页面: ${component.name}`, { 
-        pageId, 
-        componentId: newComponent.id 
+
+      logger.info(`组件已添加到页面: ${component.name}`, {
+        pageId,
+        componentId: newComponent.id
       })
-      
+
       return newComponent.id
     } catch (err) {
       const error = err as Error
@@ -230,12 +242,17 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
         throw new Error(`未找到组件: ${componentId}`)
       }
 
-      page.components[componentIndex] = { 
-        ...page.components[componentIndex], 
-        ...updates 
+      const currentComponent = page.components[componentIndex]
+      if (!currentComponent) {
+        throw new Error(`组件数据无效: ${componentId}`)
+      }
+
+      page.components[componentIndex] = {
+        ...currentComponent,
+        ...updates
       }
       page.updatedAt = new Date()
-      
+
       logger.info(`页面组件已更新: ${componentId}`, { pageId, updates })
     } catch (err) {
       const error = err as Error
@@ -257,9 +274,13 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
       }
 
       const component = page.components[componentIndex]
+      if (!component) {
+        throw new Error(`组件不存在: ${componentId}`)
+      }
+
       page.components.splice(componentIndex, 1)
       page.updatedAt = new Date()
-      
+
       logger.info(`组件已从页面删除: ${component.name}`, { pageId, componentId })
     } catch (err) {
       const error = err as Error
@@ -273,11 +294,11 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
     try {
       isLoading.value = true
       error.value = null
-      
+
       logger.info("开始批量生成页面", config)
-      
+
       const generatedPages: PageDefinition[] = []
-      
+
       // 模拟实体数据（实际应该从entityStore获取）
       const mockEntities = config.entities.map(id => ({
         id,
@@ -317,7 +338,7 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
       })
 
       logger.info(`批量生成完成，共生成 ${generatedPages.length} 个页面`)
-      
+
       return generatedPages.length
     } catch (err) {
       const error = err as Error
@@ -347,7 +368,7 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
       },
       {
         id: "action-toolbar",
-        type: "action-toolbar", 
+        type: "action-toolbar",
         name: "操作工具栏",
         props: {
           actions: [
@@ -376,7 +397,7 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
           selectable: true
         },
         style: {},
-        events: { 
+        events: {
           edit: "handleEdit",
           delete: "handleDelete",
           view: "handleView"
@@ -449,7 +470,7 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
           align: "right"
         },
         style: {},
-        events: { 
+        events: {
           save: "handleSave",
           saveAndNew: "handleSaveAndNew",
           cancel: "handleCancel"
@@ -489,7 +510,7 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
           breadcrumb: [`${entity.name}管理`, "详情"]
         },
         style: { marginBottom: "24px" },
-        events: { 
+        events: {
           back: "handleBack",
           edit: "handleEdit"
         }
@@ -570,17 +591,17 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
     }
     return rules
   }
-  
+
   // 🛡️ 核心功能保护: 组件删除和页面验证方法
   const deleteComponent = removeComponentFromPage
-  
+
   const validatePage = (pageId: string): boolean => {
     const page = pages.value.find(p => p.id === pageId)
     if (!page) {
       logger.warn('页面不存在', { pageId })
       return false
     }
-    
+
     // 基本验证
     const isValid = !!(
       page.name &&
@@ -588,7 +609,7 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
       page.components &&
       page.components.length > 0
     )
-    
+
     logger.info('页面验证结果', { pageId, isValid })
     return isValid
   }
@@ -616,8 +637,8 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
         const parsed = JSON.parse(data)
         pages.value = parsed.pages || []
         currentPageId.value = parsed.currentPageId || ""
-        logger.info("页面设计数据已从本地存储加载", { 
-          pagesCount: pages.value.length 
+        logger.info("页面设计数据已从本地存储加载", {
+          pagesCount: pages.value.length
         })
       }
     } catch (err) {
@@ -651,9 +672,9 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
           generator: "SmartAbp LowCode Studio"
         }
       }
-      
-      const blob = new Blob([JSON.stringify(exportData, null, 2)], { 
-        type: "application/json" 
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+        type: "application/json"
       })
       const url = URL.createObjectURL(blob)
       const link = document.createElement("a")
@@ -661,7 +682,7 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
       link.download = `page-designs-${Date.now()}.json`
       link.click()
       URL.revokeObjectURL(url)
-      
+
       logger.info("页面设计已导出", { pagesCount: pages.value.length })
     } catch (err) {
       const error = err as Error
@@ -680,15 +701,17 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
       // 验证页面数据格式
       for (const page of designData.pages) {
         if (!page.name || !page.type || !Array.isArray(page.components)) {
-          throw new Error(`无效的页面数据格式：${page.name || "未知页面"}`)
+          const pageName = page.name || "未知页面"
+          throw new Error(`无效的页面数据格式：${pageName}`)
         }
       }
 
       pages.value = designData.pages
-      currentPageId.value = pages.value.length > 0 ? pages.value[0].id : ""
-      
-      logger.info("页面设计导入成功", { 
-        pagesCount: pages.value.length 
+      const firstPage = pages.value[0]
+      currentPageId.value = firstPage ? firstPage.id : ""
+
+      logger.info("页面设计导入成功", {
+        pagesCount: pages.value.length
       })
     } catch (err) {
       const error = err as Error
@@ -710,7 +733,7 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
           custom: pages.value.filter(p => p.type === "custom").length
         },
         totalComponents: pages.value.reduce((sum, p) => sum + p.components.length, 0),
-        avgComponentsPerPage: pages.value.length > 0 
+        avgComponentsPerPage: pages.value.length > 0
           ? Math.round(pages.value.reduce((sum, p) => sum + p.components.length, 0) / pages.value.length)
           : 0
       }
@@ -730,30 +753,30 @@ export const usePageDesignStore = defineStore("pageDesign", () => {
     isLoading,
     error,
     currentPageId,
-    
+
     // 计算属性
     completedPages,
     totalPages,
     currentPage,
     pagesByType,
     pagesByEntity,
-    
+
     // 页面操作
     addPage,
     updatePage,
     removePage,
     duplicatePage,
-    
+
     // 组件操作
     addComponentToPage,
     updateComponentInPage,
     removeComponentFromPage,
     deleteComponent, // 🛡️ 别名：确保核心功能保护验证
     validatePage, // 🛡️ 核心功能保护
-    
+
     // 批量生成
     generateBatchPages,
-    
+
     // 工具方法
     saveToLocalStorage,
     loadFromLocalStorage,

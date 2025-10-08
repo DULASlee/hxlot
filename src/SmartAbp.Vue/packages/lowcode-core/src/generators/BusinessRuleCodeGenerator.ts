@@ -269,10 +269,10 @@ ${rules.map(rule => `        /// <summary>\n        /// ${rule.description || ru
 
     // 解析动作字符串，例如: "SetFieldValue(field='status', value='approved')"
     const match = action.match(/^(\w+)\((.*)\)$/)
-    if (!match) return `// 未知动作: ${action}`
+    if (!match || match.length < 3) return `// 未知动作: ${action}`
 
-    const actionType = match[1]
-    const params = this.parseActionParams(match[2])
+    const actionType = match[1]!
+    const params = this.parseActionParams(match[2]!)
 
     switch (actionType) {
       case 'SetFieldValue':
@@ -306,10 +306,10 @@ ${rules.map(rule => `        /// <summary>\n        /// ${rule.description || ru
     if (!action) return '// 无动作'
 
     const match = action.match(/^(\w+)\((.*)\)$/)
-    if (!match) return `// 未知动作: ${action}`
+    if (!match || match.length < 3) return `// 未知动作: ${action}`
 
-    const actionType = match[1]
-    const params = this.parseActionParams(match[2])
+    const actionType = match[1]!
+    const params = this.parseActionParams(match[2]!)
 
     switch (actionType) {
       case 'SetFieldValue':
@@ -332,7 +332,7 @@ ${rules.map(rule => `        /// <summary>\n        /// ${rule.description || ru
 
     for (const pair of pairs) {
       const match = pair.trim().match(/^(\w+)\s*=\s*(?:'([^']*)'|(\d+\.?\d*)|(true|false))$/)
-      if (match) {
+      if (match && match[1]) {
         const key = match[1]
         if (match[2] !== undefined) { // 字符串
           params[key] = match[2]

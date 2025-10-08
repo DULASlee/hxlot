@@ -123,7 +123,9 @@ const simulateCliExecution = async () => {
     // 由于模板系统在Phase 2实现，暂时返回成功提示
     await new Promise(resolve => setTimeout(resolve, 800));
     
-    executionLog.value += `\n\n✅ Template applied successfully!\nFiles created in '${generationCommand.value.split('--outputPath ')[1].split(' ')[0]}'`;
+    const outputPathParts = generationCommand.value.split('--outputPath ')
+    const outputPath = outputPathParts[1]?.split(' ')[0] || 'unknown'
+    executionLog.value += `\n\n✅ Template applied successfully!\nFiles created in '${outputPath}'`;
     ElMessage({
         message: 'Code generated successfully!',
         type: 'success',

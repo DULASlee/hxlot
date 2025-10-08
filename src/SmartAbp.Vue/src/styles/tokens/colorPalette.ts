@@ -102,8 +102,15 @@ export function generateDarkThemePalettes(lightPalettes: ThemePalettes): ThemePa
       const inverseLevelIndex = levels.length - 1 - index
       const inverseLevel = levels[inverseLevelIndex]
       
+      if (!inverseLevel) {
+        return
+      }
+      
       // 使用暗色反转算法
-      darkPalette[level] = ColorUtils.invertForDarkTheme(palette[inverseLevel])
+      const inverseColor = palette[inverseLevel]
+      if (inverseColor) {
+        darkPalette[level] = ColorUtils.invertForDarkTheme(inverseColor)
+      }
     })
 
     darkPalette.DEFAULT = darkPalette[600]!

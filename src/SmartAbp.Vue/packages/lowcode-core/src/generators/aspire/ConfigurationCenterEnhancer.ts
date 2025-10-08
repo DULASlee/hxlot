@@ -517,10 +517,12 @@ export class ConfigurationCenterEnhancer {
 
     // 按应用分组配置
     const configsByApp = configItems.reduce((acc, item) => {
-      if (!acc[item.application]) {
-        acc[item.application] = []
+      // 确保application不为undefined
+      const appName = item.application || 'default'
+      if (!acc[appName]) {
+        acc[appName] = []
       }
-      acc[item.application].push(item)
+      acc[appName].push(item)
       return acc
     }, {} as Record<string, ConfigurationItem[]>)
 

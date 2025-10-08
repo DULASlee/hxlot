@@ -308,15 +308,18 @@ export class ConcurrencyTestEngine {
 
     // 使用滑动窗口计算并发数
     for (let i = 0; i < sortedResults.length; i++) {
-      const currentTime = sortedResults[i].timestamp
-      const windowEnd = currentTime + sortedResults[i].duration
+      const currentResult = sortedResults[i]
+      if (!currentResult) continue
+
+      const currentTime = currentResult.timestamp
+      const windowEnd = currentTime + currentResult.duration
 
       // 计算在当前时间窗口内有多少操作在执行
       let concurrent = 0
       for (const result of sortedResults) {
         const opStart = result.timestamp
         const opEnd = result.timestamp + result.duration
-        
+
         // 检查时间窗口是否重叠
         if (opStart < windowEnd && opEnd > currentTime) {
           concurrent++

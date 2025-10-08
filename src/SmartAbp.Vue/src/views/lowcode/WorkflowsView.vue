@@ -249,10 +249,17 @@ const saveWorkflow = () => {
     // 更新现有工作流
     const index = workflows.value.findIndex(w => w.id === editingWorkflow.value!.id)
     if (index >= 0) {
-      workflows.value[index] = {
-        ...workflows.value[index],
-        ...workflowForm.value,
-        updatedAt: new Date().toISOString()
+      const currentWorkflow = workflows.value[index]
+      if (currentWorkflow) {
+        workflows.value[index] = {
+          id: currentWorkflow.id,
+          name: workflowForm.value.name || currentWorkflow.name,
+          description: workflowForm.value.description || currentWorkflow.description,
+          nodeCount: currentWorkflow.nodeCount,
+          status: workflowForm.value.status || currentWorkflow.status,
+          updatedAt: new Date().toISOString(),
+          definition: currentWorkflow.definition
+        }
       }
     }
     ElMessage.success('工作流更新成功')

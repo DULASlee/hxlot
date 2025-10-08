@@ -14,7 +14,7 @@ export interface ConflictDetectorOptions {
 
 interface ScannedComponentInfo {
     name: string
-    fullName: string
+    fullName: string | null
     packageName: string | null
     filePath: string
     lines: number
@@ -40,18 +40,24 @@ export function createComponentConflictDetector(options: ConflictDetectorOptions
             // 扫描packages内组件
             for (const relDir of packageComponentDirs) {
                 const packageName = relDir.split('/')[0]
+                if (!packageName) {
+                    continue
+                }
                 const absDir = join(process.cwd(), packagesRoot, relDir)
                 if (!existsSync(absDir)) {
                     // 目录不存在，忽略
                     continue
                 }
                 const prefix = namingRules[packageName]
+                if (!prefix) {
+                    continue
+                }
                 scanVueFiles(absDir).forEach(filePath => {
                     const compName = inferComponentName(filePath)
-                    const fullName = prefix ? `${prefix}${compName}` : compName
+                    const fullName = `${prefix}${compName}`
                     components.push({
                         name: compName,
-                        fullName,
+                        fullName: fullName || null,
                         packageName,
                         filePath,
                         lines: countLines(filePath),
@@ -80,7 +86,7 @@ export function createComponentConflictDetector(options: ConflictDetectorOptions
             const map = new Map<string, ScannedComponentInfo[]>()
             for (const c of components) {
                 // 仅对带前缀组件进行冲突检测（packages）
-                if (c.packageName) {
+                if (c.packageName && c.fullName) {
                     const list = map.get(c.fullName) || []
                     list.push(c)
                     map.set(c.fullName, list)

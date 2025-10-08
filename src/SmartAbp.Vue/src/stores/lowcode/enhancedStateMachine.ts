@@ -317,8 +317,10 @@ export const useEnhancedStateMachineStore = defineStore("enhancedStateMachine", 
         const match = rule.action.match(/setValue\(['"]([^'"]+)['"],\s*['"]([^'"]+)['"]\)/)
         if (match) {
           const [, fieldName, fieldValue] = match
-          context[fieldName] = fieldValue
-          logger.debug(`字段设置: ${fieldName} = ${fieldValue}`)
+          if (fieldName) {
+            context[fieldName] = fieldValue
+            logger.debug(`字段设置: ${fieldName} = ${fieldValue}`)
+          }
         }
       } else if (rule.action.includes('allowTransition')) {
         // 处理权限检查动作
@@ -697,9 +699,9 @@ ${transitions.value.map(t => `
     // 添加默认转换
     for (let i = 0; i < template.states.length - 1; i++) {
       addTransition({
-        id: `${template.states[i]}-${template.states[i + 1]}`,
-        source: template.states[i],
-        target: template.states[i + 1]
+        id: `${template.states[i] || ''}-${template.states[i + 1] || ''}`,
+        source: template.states[i] || '',
+        target: template.states[i + 1] || ''
       })
     }
 

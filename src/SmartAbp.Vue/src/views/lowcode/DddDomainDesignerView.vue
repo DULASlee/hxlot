@@ -106,7 +106,10 @@
                   </el-button>
                 </div>
               </template>
-              <AggregateEditor v-model="dddDefinition.aggregates[index]" />
+              <AggregateEditor 
+                v-if="dddDefinition.aggregates[index]" 
+                v-model="dddDefinition.aggregates[index]" 
+              />
             </el-collapse-item>
           </el-collapse>
         </el-card>
@@ -146,7 +149,10 @@
                   </el-button>
                 </div>
               </template>
-              <ValueObjectEditor v-model="dddDefinition.valueObjects[index]" />
+              <ValueObjectEditor 
+                v-if="dddDefinition.valueObjects[index]" 
+                v-model="dddDefinition.valueObjects[index]" 
+              />
             </el-collapse-item>
           </el-collapse>
         </el-card>
@@ -226,37 +232,37 @@
 </template>
 
 <script setup lang="ts">
-import { Delete, Document, Download } from '@element-plus/icons-vue'
+import { Delete, Document, Download } from '@element-plus/icons-vue';
 import {
-  dddGeneratorApi,
-  type AggregateDefinitionDto,
-  type DddDefinitionDto,
-  type GeneratedDddSolutionDto,
-  type GeneratedFileDto,
-  type ValueObjectDefinitionDto
-} from '@smartabp/lowcode-api'
-import { getGlobalLogger } from '@smartabp/lowcode-shared'
+    dddGeneratorApi,
+    type AggregateDefinitionDto,
+    type DddDefinitionDto,
+    type GeneratedDddSolutionDto,
+    type GeneratedFileDto,
+    type ValueObjectDefinitionDto
+} from '@smartabp/lowcode-api';
+import { getGlobalLogger } from '@smartabp/lowcode-shared';
 import {
-  ElButton,
-  ElCard,
-  ElCheckbox,
-  ElCheckboxGroup,
-  ElCollapse,
-  ElCollapseItem,
-  ElForm,
-  ElFormItem,
-  ElIcon,
-  ElInput,
-  ElMessage,
-  ElOption,
-  ElSelect,
-  ElStatistic,
-  ElTree
-} from 'element-plus'
+    ElButton,
+    ElCard,
+    ElCheckbox,
+    ElCheckboxGroup,
+    ElCollapse,
+    ElCollapseItem,
+    ElForm,
+    ElFormItem,
+    ElIcon,
+    ElInput,
+    ElMessage,
+    ElOption,
+    ElSelect,
+    ElStatistic,
+    ElTree
+} from 'element-plus';
 import JSZip from 'jszip'; // 🔥 新增：用于生成真正的ZIP包
-import { computed, ref, watch } from 'vue'
-import AggregateEditor from './components/AggregateEditor.vue'
-import ValueObjectEditor from './components/ValueObjectEditor.vue'
+import { computed, ref, watch } from 'vue';
+import AggregateEditor from './components/AggregateEditor.vue';
+import ValueObjectEditor from './components/ValueObjectEditor.vue';
 
 const logger = getGlobalLogger()
 

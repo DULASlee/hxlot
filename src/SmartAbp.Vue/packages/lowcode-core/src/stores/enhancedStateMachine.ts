@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import { ref, computed } from "vue"
+import { computed, ref } from "vue"
 // @ts-ignore - logger will be injected by main app via lowcode-tools bridge
 const logger = (globalThis as any).__SMARTABP_LOGGER__ || console
 // Day01新增: 引入规则执行引擎
@@ -365,10 +365,13 @@ export const useEnhancedStateMachineStore = defineStore("enhancedStateMachine", 
       if (rule.action.includes('setValue')) {
         // 处理字段设置动作
         const match = rule.action.match(/setValue\(['"]([^'"]+)['"],\s*['"]([^'"]+)['"]\)/)
-        if (match) {
-          const [, fieldName, fieldValue] = match
-          context[fieldName] = fieldValue
-          logger.debug(`字段设置: ${fieldName} = ${fieldValue}`)
+        if (match && match.length >= 3) {
+          const fieldName = match[1]
+          const fieldValue = match[2]
+          if (fieldName && fieldValue) {
+            context[fieldName] = fieldValue
+            logger.debug(`字段设置: ${fieldName} = ${fieldValue}`)
+          }
         }
       } else if (rule.action.includes('allowTransition')) {
         // 处理权限检查动作
@@ -734,7 +737,7 @@ ${transitions.value.map(t => `
     // 应用模板状态
     template.states.forEach((stateId, index) => {
       const stateType = index === 0 ? "start" :
-                      index === template.states.length - 1 ? "end" : "intermediate"
+        index === template.states.length - 1 ? "end" : "intermediate"
 
       addState({
         id: stateId,
@@ -746,11 +749,15 @@ ${transitions.value.map(t => `
 
     // 添加默认转换
     for (let i = 0; i < template.states.length - 1; i++) {
-      addTransition({
-        id: `${template.states[i]}-${template.states[i + 1]}`,
-        source: template.states[i],
-        target: template.states[i + 1]
-      })
+      const currentState = template.states[i]
+      const nextState = template.states[i + 1]
+      if (currentState && nextState) {
+        addTransition({
+          id: `${currentState}-${nextState}`,
+          source: currentState,
+          target: nextState
+        })
+      }
     }
 
     logger.info(`应用工作流模板: ${template.name}`)
@@ -843,31 +850,31 @@ ${transitions.value.map(t => `
   ): Promise<RuleExecutionResult> => {
     isExecuting.value = true
     executionErrors.value = [] // 清空之前的错误
-    
+
     try {
       logger.info('🚀 开始执行业务规则（增强版）', {
         ruleCount: businessRules.value.length,
         context
       })
-      
+
       // 使用新的规则执行引擎
       const result = await ruleEngine.executeRules(
         businessRules.value,
         context
       )
-      
+
       // 记录执行错误
       if (result.errors.length > 0) {
         executionErrors.value = result.errors
       }
-      
+
       logger.info('✅ 业务规则执行完成', {
         success: result.success,
         executed: result.executedCount,
         failed: result.failedCount,
         duration: result.duration
       })
-      
+
       return result
     } catch (error) {
       logger.error('❌ 业务规则执行失败', error)
@@ -876,24 +883,24 @@ ${transitions.value.map(t => `
       isExecuting.value = false
     }
   }
-  
+
   // 🔥 Day01新增: 启用规则调试
   const enableRuleDebug = () => {
     ruleEngine.enableDebug()
     logger.info('🐛 规则调试模式已启用')
   }
-  
+
   // 🔥 Day01新增: 禁用规则调试
   const disableRuleDebug = () => {
     ruleEngine.disableDebug()
     logger.info('🐛 规则调试模式已禁用')
   }
-  
+
   // 🔥 Day01新增: 获取执行错误日志
   const getRuleExecutionLogs = () => {
     return executionErrors.value
   }
-  
+
   // 🛡️ 核心功能保护: 方法别名（确保核心功能验证通过）
   const deleteState = removeState
   const generateCode = generateCompleteCodePackage
@@ -962,7 +969,7 @@ ${transitions.value.map(t => `
     logRuleExecution,
     getExecutionErrors,
     clearExecutionErrors,
-    
+
     // 🔥 Day01新增: 增强的规则执行
     executeBusinessRulesEnhanced,
     enableRuleDebug,

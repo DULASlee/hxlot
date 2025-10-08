@@ -423,15 +423,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
-import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
-import { Document, CircleCheck, Download, Plus } from '@element-plus/icons-vue'
-import JSZip from 'jszip'
+import { CircleCheck, Document, Download, Plus } from '@element-plus/icons-vue'
 import {
-  cqrsGeneratorApi,
-  type CqrsDefinitionDto,
-  type GeneratedCqrsSolutionDto
+    cqrsGeneratorApi,
+    type CqrsDefinitionDto,
+    type GeneratedCqrsSolutionDto
 } from '@smartabp/lowcode-api'
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
+import JSZip from 'jszip'
+import { computed, onMounted, ref, watch } from 'vue'
 
 // ================================
 // 持久化Key
@@ -686,7 +686,10 @@ async function handleDownload() {
     
     // 按目录结构添加所有生成的C#代码文件
     Object.keys(files).forEach(filePath => {
-      zip.file(filePath, files[filePath])
+      const content = files[filePath]
+      if (content) {
+        zip.file(filePath, content)
+      }
     })
     
     // 添加README文件

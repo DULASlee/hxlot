@@ -303,8 +303,8 @@ export class BenchmarkEngine {
     const sorted = [...responseTimes].sort((a, b) => a - b)
     const sum = responseTimes.reduce((acc, val) => acc + val, 0)
     const average = sum / responseTimes.length
-    const min = sorted[0]
-    const max = sorted[sorted.length - 1]
+    const min = sorted[0] ?? 0
+    const max = sorted[sorted.length - 1] ?? 0
 
     const p50 = this.getPercentile(sorted, 50)
     const p95 = this.getPercentile(sorted, 95)
@@ -341,10 +341,10 @@ export class BenchmarkEngine {
     if (sortedData.length === 0) return 0
     const index = (percentile / 100) * (sortedData.length - 1)
     if (index % 1 === 0) {
-      return sortedData[index]
+      return sortedData[Math.floor(index)] ?? 0
     }
-    const lower = sortedData[Math.floor(index)]
-    const upper = sortedData[Math.ceil(index)]
+    const lower = sortedData[Math.floor(index)] ?? 0
+    const upper = sortedData[Math.ceil(index)] ?? 0
     return lower + (upper - lower) * (index % 1)
   }
 

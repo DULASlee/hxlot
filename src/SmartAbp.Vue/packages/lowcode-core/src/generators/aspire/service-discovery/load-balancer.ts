@@ -44,7 +44,7 @@ export class RoundRobinLoadBalancer implements LoadBalancer {
 
         const instance = availableInstances[this.currentIndex % availableInstances.length]
         this.currentIndex = (this.currentIndex + 1) % availableInstances.length
-        return instance
+        return instance || null // 处理undefined情况
     }
 
     updateInstanceWeight(instanceId: string, weight: number): void {

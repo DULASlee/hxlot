@@ -309,7 +309,18 @@ const showPropertyDialog = (index: number | null) => {
     }
   } else {
     // 编辑现有属性
-    currentProperty.value = { ...localAggregate.value.properties[index] }
+    const existingProperty = localAggregate.value.properties[index]
+    if (existingProperty) {
+      currentProperty.value = { 
+        name: existingProperty.name || '',
+        type: existingProperty.type || '',
+        isRequired: existingProperty.isRequired,
+        defaultValue: existingProperty.defaultValue,
+        validation: existingProperty.validation,
+        description: existingProperty.description,
+        isPrivateSetter: existingProperty.isPrivateSetter
+      }
+    }
   }
 
   propertyDialogVisible.value = true

@@ -109,7 +109,7 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
 
     return {
       id: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      message: getAlertDescription((type as SecurityAlertType) || 'VULNERABILITY', user),
+      message: getAlertDescription((type as SecurityAlertType) || 'VULNERABILITY', user || 'system'),
       severity: severity || 'Critical',
       timestamp: new Date().toISOString(),
       isAcknowledged: false,
@@ -176,10 +176,13 @@ export function useRealTimeAlerts(options: UseRealTimeAlertsOptions = {}) {
         // Mock API call
         await new Promise((resolve) => setTimeout(resolve, 300))
 
-        activeAlerts.value[alertIndex] = {
-          ...activeAlerts.value[alertIndex],
-          isAcknowledged: true,
-          acknowledgedBy: "Current User",
+        const currentAlert = activeAlerts.value[alertIndex]
+        if (currentAlert) {
+          activeAlerts.value[alertIndex] = {
+            ...currentAlert,
+            isAcknowledged: true,
+            acknowledgedBy: "Current User",
+          }
         }
       } else {
         // TODO: Implement actual API call

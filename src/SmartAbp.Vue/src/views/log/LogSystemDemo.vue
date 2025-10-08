@@ -255,10 +255,10 @@ const handleFiltered = (filteredLogs) => {
 </template>
 
 <script setup lang="ts">
-import { ElMessage } from "element-plus"
 import { logger, LogLevel } from "@/utils/logger"
 import { logManager } from "@/utils/logManager"
 import LogDashboard from "@/views/log/LogDashboard.vue"
+import { ElMessage } from "element-plus"
 
 // 生成不同类型的日志
 const generateInfoLog = () => {
@@ -386,9 +386,9 @@ const generateBatchLogs = () => {
     const category = categories[Math.floor(Math.random() * categories.length)]
 
     logEntries.push({
-      level: level,
-      message: `批量日志 ${i + 1}: ${category} 操作`,
-      category,
+      level: (level || LogLevel.INFO) as LogLevel,
+      message: `批量日志 ${i + 1}: ${category || '未知'} 操作`,
+      category: category || undefined,
       data: { batchId: Date.now(), index: i },
       source: "batch-generator",
     })

@@ -173,7 +173,7 @@ export function useSecurityDashboard(options: UseSecurityDashboardOptions = {}) 
       date.setDate(date.getDate() - i)
 
       data.push({
-        date: date.toISOString().split("T")[0],
+        date: date.toISOString().split("T")[0] || '',
         count: Math.floor(Math.random() * 50) + 100,
         permissions: Math.floor(Math.random() * 50) + 100,
         risks: Math.floor(Math.random() * 10) + 2,
