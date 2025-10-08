@@ -16,9 +16,9 @@ export type { TabConfig } from './stores/entityModeling'
 
 // Backward-compatible type exports for consumers expecting these from root
 export type {
-  BarcodeScannerField, CalculatedFieldConfig, CascadeConfig, DeviceParameterField, DictionaryField, DynamicFieldConfig, FormCreateConfig,
-  FormCreateRule, LinkageAction, LinkageActionType, LinkageCondition, LinkageConditionType, LinkageRule, MaterialField, ProductionLineField, QualityInspectionField, SensorDataField, SmartFieldType,
-  SmartFormItem, WorkOrderField
+    BarcodeScannerField, CalculatedFieldConfig, CascadeConfig, DeviceParameterField, DictionaryField, DynamicFieldConfig, FormCreateConfig,
+    FormCreateRule, LinkageAction, LinkageActionType, LinkageCondition, LinkageConditionType, LinkageRule, MaterialField, ProductionLineField, QualityInspectionField, SensorDataField, SmartFieldType,
+    SmartFormItem, WorkOrderField
 } from './components/SmartFormBuilder'
 
 // Note: utilities/composables/services are internal; re-exports removed to avoid path index issues

@@ -50,9 +50,30 @@ export function registerDesignerComponents(): void {
     { name: 'PropertyInspector', displayName: '属性检查器', category: 'inspector', priority: 'medium' as const },
     { name: 'ServiceTopologyCanvas', displayName: '服务拓扑画布', category: 'aspire', priority: 'medium' as const },
     { name: 'ServiceConfigPanel', displayName: '服务配置面板', category: 'aspire', priority: 'medium' as const },
+    { name: 'MicroserviceForm', displayName: '微服务表单', category: 'aspire', priority: 'low' as const },
+    { name: 'AdvancedSettingsPanel', displayName: '高级设置面板', category: 'aspire', priority: 'low' as const },
+    { name: 'MetricsChart', displayName: '指标图表', category: 'aspire', priority: 'low' as const },
     { name: 'SecurityDashboard', displayName: '安全仪表板', category: 'security', priority: 'low' as const },
+    { name: 'SecurityMetricCard', displayName: '安全指标卡片', category: 'security', priority: 'low' as const },
+    { name: 'RiskLevelDistributionChart', displayName: '风险等级分布图', category: 'security', priority: 'low' as const },
+    { name: 'PermissionAccessTrendChart', displayName: '权限访问趋势图', category: 'security', priority: 'low' as const },
+    { name: 'ComplianceStatusMonitor', displayName: '合规状态监控', category: 'security', priority: 'low' as const },
+    { name: 'AbnormalUserBehaviorTable', displayName: '异常用户行为表', category: 'security', priority: 'low' as const },
     { name: 'TemplateSelector', displayName: '模板选择器', category: 'template', priority: 'low' as const },
-    { name: 'GenerationProgressMonitor', displayName: '生成进度监控', category: 'monitor', priority: 'low' as const }
+    { name: 'GenerationProgressMonitor', displayName: '生成进度监控', category: 'monitor', priority: 'low' as const },
+    { name: 'ResiliencePolicyDesigner', displayName: '弹性策略设计器', category: 'resilience', priority: 'low' as const },
+    { name: 'CircuitBreakerConfig', displayName: '断路器配置', category: 'resilience', priority: 'low' as const },
+    { name: 'RetryPolicyConfig', displayName: '重试策略配置', category: 'resilience', priority: 'low' as const },
+    { name: 'RateLimitConfig', displayName: '限流配置', category: 'resilience', priority: 'low' as const },
+    { name: 'FallbackConfig', displayName: '降级配置', category: 'resilience', priority: 'low' as const },
+    { name: 'BulkheadConfig', displayName: '隔离配置', category: 'resilience', priority: 'low' as const },
+    { name: 'DevEnvironmentSetup', displayName: '开发环境设置', category: 'devops', priority: 'low' as const },
+    { name: 'GitWorkflowPanel', displayName: 'Git工作流面板', category: 'git', priority: 'low' as const },
+    { name: 'CICDTemplateDesigner', displayName: 'CI/CD模板设计器', category: 'cicd', priority: 'low' as const },
+    { name: 'EnhancedCodePreview', displayName: '增强代码预览', category: 'code', priority: 'low' as const },
+    { name: 'ChaosExperimentDesigner', displayName: '混沌实验设计器', category: 'chaos', priority: 'low' as const },
+    { name: 'FaultInjectionConfig', displayName: '故障注入配置', category: 'chaos', priority: 'low' as const },
+    { name: 'EnterpriseWorkflowEngine', displayName: '企业工作流引擎', category: 'workflow', priority: 'low' as const }
   ]
 
   coreDesignerComponents.forEach(comp => {
@@ -70,7 +91,34 @@ export function registerDesignerComponents(): void {
     })
   })
 
-  console.log('[SmartAbp] ✅ lowcode-designer 设计器组件已全部注册')
+  // 视图组件批量注册（Views作为顶层容器也需要注册）
+  const viewComponents = [
+    { name: 'EntityModelingView', displayName: '实体建模视图', category: 'view', priority: 'high' as const },
+    { name: 'VisualDesignerView', displayName: '可视化设计器视图', category: 'view', priority: 'high' as const },
+    { name: 'LowCodeEngineView', displayName: '低代码引擎视图', category: 'view', priority: 'high' as const },
+    { name: 'AspireDesignerView', displayName: 'Aspire设计器视图', category: 'view', priority: 'medium' as const },
+    { name: 'UltraSimpleStudio', displayName: '极简工作室', category: 'view', priority: 'medium' as const },
+    { name: 'ThemeCustomizationView', displayName: '主题定制视图', category: 'view', priority: 'low' as const },
+    { name: 'EntityDesignerTestView', displayName: '实体设计器测试视图', category: 'view', priority: 'low' as const }
+  ]
+
+  viewComponents.forEach(comp => {
+    registerComponent({
+      name: comp.name,
+      displayName: comp.displayName,
+      category: comp.category,
+      priority: comp.priority,
+      dependencies: ['BaseComponent'],
+      bundle: '@smartabp/lowcode-designer',
+      lazy: comp.priority !== 'high',
+      preload: comp.priority === 'high',
+      version: '1.0.0',
+      tags: [comp.category, 'view', 'designer']
+    })
+  })
+
+  const totalComponents = coreDesignerComponents.length + viewComponents.length
+  console.log('[SmartAbp] ✅ lowcode-designer 设计器组件已全部注册（共' + totalComponents + '个）')
 }
 
 /**
