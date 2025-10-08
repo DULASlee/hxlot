@@ -70,8 +70,8 @@ const getBranchPosition = (index: number): Position => {
   if (count <= 2) {
     return index === 0 ? Position.Right : Position.Bottom
   }
-  const positions = [Position.Right, Position.Bottom, Position.Left]
-  return positions[index % 3]
+  const positions: Position[] = [Position.Right, Position.Bottom, Position.Left]
+  return positions[index % 3] || Position.Right
 }
 
 const getBranchHandleStyle = (index: number) => {

@@ -373,7 +373,16 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         throw new Error(`验证规则索引超出范围: ${ruleIndex}`)
       }
 
-      entity.validationRules[ruleIndex] = { ...entity.validationRules[ruleIndex], ...updates }
+      const rule = entity.validationRules[ruleIndex]
+      if (!rule) {
+        throw new Error(`验证规则不存在: ${ruleIndex}`)
+      }
+      entity.validationRules[ruleIndex] = {
+        fieldName: updates.fieldName || rule.fieldName,
+        ruleType: updates.ruleType || rule.ruleType,
+        ruleValue: updates.ruleValue || rule.ruleValue,
+        errorMessage: updates.errorMessage || rule.errorMessage,
+      }
       logger.info(`验证规则已更新`, { entityId, ruleIndex })
     } catch (err) {
       const error = err as Error
