@@ -1,8 +1,53 @@
 # ⚡ CRITICAL: AI MUST READ THIS FIRST ⚡
 
-## 🚨🚨🚨 第0条铁律：AI永远禁止删除任何代码和文件 🚨🚨🚨
+## 🚨🚨🚨 第0条：架构三大铁律（优先级-2，最高） 🚨🚨🚨
 
-**⛔ 最高优先级：AI无删除权限 ⛔**
+**🔥 SmartAbp项目架构三大铁律 - 格杀勿论 🔥**
+
+### 铁律一：强制使用统一类型系统
+```yaml
+规则:
+  ✅ 所有类型在 lowcode-shared/types 定义
+  ❌ 禁止主应用定义底层类型
+  ❌ 禁止相对路径导入类型
+  
+检测:
+  find src/core -name "*types.ts" -o -name "*types.d.ts"
+  grep -r "from '\.\./.*types" src/
+  
+违反处罚: 💀 立即删除，重新实现
+```
+
+### 铁律二：强制使用组件注册系统
+```yaml
+规则:
+  ✅ 所有组件必须注册到 ComponentRegistry
+  ✅ 提供完整的 ComponentMetadata
+  ❌ 禁止跳过注册直接使用
+  
+检测:
+  find packages/*/src/components -name "*.vue"
+  grep -r "registerComponent" packages/*/src/
+  
+违反处罚: 💀 立即补充注册，否则删除
+```
+
+### 铁律三：严格遵循架构层级
+```yaml
+规则:
+  ✅ 只能向下依赖（Layer 2→1→0→-1）
+  ❌ 禁止逆向依赖
+  ❌ 禁止跨层级引用
+  
+检测:
+  grep -r "'\.\./" packages/*/src/
+  
+违反处罚: 💀 架构违规，格杀勿论
+```
+
+## 🚨 第1条铁律：AI永远禁止删除任何代码和文件 🚨
+
+**⛔ AI无删除权限 ⛔**
 
 ```yaml
 核心原则:
