@@ -228,9 +228,20 @@ function resolveComponentPath(
 
     for (const path of searchPaths) {
         if (existsSync(path)) {
-            // ✅ 修复：返回绝对文件系统路径，而非别名路径
-            // 这样 unplugin-vue-components 才能正确解析
-            return path
+            // ✅ D爷混合方案：返回别名路径，依赖Vite的alias解析
+            // 
+            // 优点：
+            // 1. npm包发布兼容（别名可重定向到node_modules/@smartabp/xxx）
+            // 2. 可移植性强（不依赖文件系统绝对路径）
+            // 3. Monorepo友好（其他团队可直接引用）
+            // 
+            // 关键：路径格式必须与vite.config.ts中的alias配置匹配
+            // 例如: @smartabp/lowcode-core -> ./packages/lowcode-core
+            //       则应返回: @smartabp/lowcode-core/src/components/XXX
+            // 
+            // 检测：别名配置指向 ./packages/lowcode-core (无/src)
+            //       所以需要加上 /src 前缀
+            return `@smartabp/${packageName}/src/components/${componentBaseName}`
         }
     }
 
