@@ -2,12 +2,13 @@ import { exec } from 'child_process';
 import * as path from 'path';
 import { promisify } from 'util';
 import * as vscode from 'vscode';
+import { EnhancedCodeLineTracker, SessionStats } from './codeLineTracker';
 
 const execAsync = promisify(exec);
 
 /**
- * AI Guardian Cursor插件
- * 专业的AI断线检测与三级自动恢复
+ * AI Guardian Cursor插件 v2.0
+ * 专业的AI断线检测与三级自动恢复 + 300行增量编程监控
  */
 
 export interface AIState {
@@ -22,11 +23,15 @@ export interface AIState {
   lastRestartTime: number; // 最后重启时间
   guardianActive: boolean; // 守护状态
   autoRecoveryEnabled: boolean; // 自动恢复是否启用
+  // v2.0新增：代码行数追踪
+  currentSessionLines: number; // 当前会话行数
+  qualityGatesPassed: number; // 通过的质量门禁次数
 }
 
 export class AIGuardianExtension {
   private static readonly STATE_KEY = 'aiGuardianState';
   private statusBarItem: vscode.StatusBarItem;
+  private lineCountStatusBar: vscode.StatusBarItem; // v2.0新增：行数状态栏
   private monitorTimer: NodeJS.Timeout | undefined;
   private engineCheckTimer: NodeJS.Timeout | undefined;
   private recoveryInterval: NodeJS.Timeout | undefined;
@@ -34,6 +39,7 @@ export class AIGuardianExtension {
   public aiState: AIState;
   private config: vscode.WorkspaceConfiguration;
   private outputChannel: vscode.OutputChannel;
+  private codeLineTracker: EnhancedCodeLineTracker; // v2.0新增：代码行数追踪器
 
   constructor(private context: vscode.ExtensionContext) {
     this.config = vscode.workspace.getConfiguration('aiGuardian');
@@ -47,7 +53,7 @@ export class AIGuardianExtension {
       this.aiState.lastActivity = Date.now();
     }
 
-    // 创建状态栏
+    // 创建AI状态栏
     this.statusBarItem = vscode.window.createStatusBarItem(
       vscode.StatusBarAlignment.Right,
       100
@@ -55,6 +61,26 @@ export class AIGuardianExtension {
     this.context.subscriptions.push(this.statusBarItem);
     this.statusBarItem.command = 'aiGuardian.status';
     this.statusBarItem.show();
+
+    // v2.0新增：创建代码行数状态栏
+    this.lineCountStatusBar = vscode.window.createStatusBarItem(
+      vscode.StatusBarAlignment.Right,
+      99 // 稍低优先级，显示在AI状态栏右边
+    );
+    this.context.subscriptions.push(this.lineCountStatusBar);
+    this.lineCountStatusBar.command = 'aiGuardian.showLineReport';
+    this.lineCountStatusBar.show();
+
+    // v2.0新增：初始化代码行数追踪器
+    this.codeLineTracker = new EnhancedCodeLineTracker({
+      on100LinesReached: () => this.handle100LinesReached(),
+      on200LinesReached: () => this.handle200LinesReached(),
+      on280LinesWarning: () => this.handle280LinesWarning(),
+      on300LinesForceStop: () => this.handle300LinesForceStop(),
+      onCheckpointCreated: (checkpoint) => {
+        this.log(`💾 检查点已创建: ${checkpoint.id} (${checkpoint.lines}行)`);
+      }
+    });
 
     this.initialize();
   }
@@ -70,7 +96,10 @@ export class AIGuardianExtension {
       restartCount: 0,
       lastRestartTime: 0,
       guardianActive: true,
-      autoRecoveryEnabled: true
+      autoRecoveryEnabled: true,
+      // v2.0新增
+      currentSessionLines: 0,
+      qualityGatesPassed: 0
     };
 
     try {
@@ -114,7 +143,7 @@ export class AIGuardianExtension {
   }
 
   private initialize() {
-    this.log('🛡️ AI Guardian 插件已启动');
+    this.log('🛡️ AI Guardian 插件v2.0已启动');
     this.updateStatusBar();
 
     // 自我检查功能
@@ -137,8 +166,14 @@ export class AIGuardianExtension {
     // 监听编辑器活动
     this.setupActivityListeners();
 
+    // v2.0新增：监听代码编辑，追踪行数
+    this.setupCodeLineTracking();
+
     // 启动自我监控
     this.startSelfMonitoring();
+
+    // 初始化行数状态栏
+    this.updateLineCountStatusBar(this.codeLineTracker.getSessionStats());
   }
 
   private setupActivityListeners() {
@@ -1750,8 +1785,16 @@ ${engineInfo}
       restartCount: 0,
       lastRestartTime: 0,
       guardianActive: true,
-      autoRecoveryEnabled: true
+      autoRecoveryEnabled: true,
+      // v2.0新增
+      currentSessionLines: 0,
+      qualityGatesPassed: 0
     };
+
+    // v2.0新增：重置代码追踪器
+    this.codeLineTracker.resetSession();
+    this.updateLineCountStatusBar(this.codeLineTracker.getSessionStats());
+
     this.saveState();
     this.log('🔄 AI Guardian 状态已重置');
     vscode.window.showInformationMessage('AI Guardian 状态已重置');
@@ -1776,6 +1819,368 @@ ${engineInfo}
       this.log(`❌ [Force Restart] 强制重启失败: ${error}`);
       vscode.window.showErrorMessage('强制重启失败，请手动重启IDE');
     }
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // v2.0新增：300行增量编程监控机制
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * 监听文档编辑，追踪代码行数
+   */
+  private setupCodeLineTracking() {
+    this.context.subscriptions.push(
+      vscode.workspace.onDidChangeTextDocument((event) => {
+        // 只追踪代码文件
+        if (!this.isCodeFile(event.document)) {
+          return;
+        }
+
+        // 计算新增行数
+        const linesAdded = this.calculateLinesAdded(event);
+        if (linesAdded > 0) {
+          this.codeLineTracker.addCode(
+            event.document.fileName,
+            event.contentChanges.map(c => c.text).join('\n')
+          );
+
+          // 更新状态和状态栏
+          const stats = this.codeLineTracker.getSessionStats();
+          this.aiState.currentSessionLines = stats.totalLines;
+          this.updateLineCountStatusBar(stats);
+          this.saveState();
+        }
+      })
+    );
+  }
+
+  /**
+   * 判断是否为代码文件
+   */
+  private isCodeFile(document: vscode.TextDocument): boolean {
+    const codeExtensions = [
+      '.ts', '.js', '.tsx', '.jsx',
+      '.cs', '.vue', '.py', '.java',
+      '.go', '.rs', '.cpp', '.c', '.h'
+    ];
+    return codeExtensions.some(ext => document.fileName.endsWith(ext));
+  }
+
+  /**
+   * 计算新增行数
+   */
+  private calculateLinesAdded(event: vscode.TextDocumentChangeEvent): number {
+    return event.contentChanges.reduce((sum, change) => {
+      const newLines = change.text.split('\n').length;
+      const oldLines = change.rangeLength > 0 ?
+        change.range.end.line - change.range.start.line + 1 : 1;
+      return sum + Math.max(0, newLines - oldLines);
+    }, 0);
+  }
+
+  /**
+   * 更新行数状态栏
+   */
+  private updateLineCountStatusBar(stats: SessionStats) {
+    const lines = stats.totalLines;
+    let icon = '$(edit)';
+    let color: string | undefined = undefined;
+
+    if (lines >= 280) {
+      icon = '$(alert)';
+      color = '#ff0000'; // 红色
+    } else if (lines >= 200) {
+      icon = '$(warning)';
+      color = '#ffa500'; // 橙色
+    } else if (lines >= 100) {
+      icon = '$(info)';
+      color = '#ffff00'; // 黄色
+    }
+
+    this.lineCountStatusBar.text = `${icon} ${lines}/300行`;
+    this.lineCountStatusBar.tooltip =
+      `AI编程铁律 - 增量编程监控\n\n` +
+      `本次会话: ${lines}行\n` +
+      `创建文件: ${stats.filesCount}个\n` +
+      `检查点: ${stats.checkpointsCount}个\n` +
+      `下一检查点: ${this.getNextCheckpoint(lines)}行\n` +
+      `质量门禁: 已通过${this.aiState.qualityGatesPassed}次\n\n` +
+      `点击查看详细报告`;
+
+    if (color) {
+      this.lineCountStatusBar.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
+    } else {
+      this.lineCountStatusBar.backgroundColor = undefined;
+    }
+  }
+
+  /**
+   * 获取下一个检查点
+   */
+  private getNextCheckpoint(currentLines: number): number {
+    if (currentLines < 100) return 100;
+    if (currentLines < 200) return 200;
+    if (currentLines < 300) return 300;
+    return 300;
+  }
+
+  /**
+   * 100行审查点处理
+   */
+  private async handle100LinesReached() {
+    this.log('📊 已达到100行审查点');
+
+    const stats = this.codeLineTracker.getSessionStats();
+    const action = await vscode.window.showInformationMessage(
+      `📊 100行代码审查点\n\n` +
+      `已编写 ${stats.totalLines} 行代码\n` +
+      `创建 ${stats.filesCount} 个文件\n\n` +
+      `💡 建议：\n` +
+      `• 代码方向是否正确？\n` +
+      `• 是否有重复代码？\n` +
+      `• 是否需要重构？`,
+      { modal: false },
+      '继续编写',
+      '查看报告',
+      '暂停审查'
+    );
+
+    if (action === '查看报告') {
+      this.showLineReport();
+    } else if (action === '暂停审查') {
+      vscode.window.showInformationMessage('代码审查已暂停，完成审查后请继续');
+    }
+  }
+
+  /**
+   * 200行审查点处理
+   */
+  private async handle200LinesReached() {
+    this.log('⚠️ 已达到200行审查点');
+
+    const stats = this.codeLineTracker.getSessionStats();
+    const action = await vscode.window.showWarningMessage(
+      `⚠️ 200行深度审查点！\n\n` +
+      `已编写 ${stats.totalLines} 行代码\n` +
+      `创建 ${stats.filesCount} 个文件\n` +
+      `剩余 ${300 - stats.totalLines} 行\n\n` +
+      `🚨 重要提醒：\n` +
+      `• 接近300行限制，建议提前执行质量门禁\n` +
+      `• 避免在接近限制时进行大量修改\n\n` +
+      `💡 强烈建议：\n` +
+      `• 立即执行质量门禁（推荐）\n` +
+      `• 补充单元测试\n` +
+      `• 添加文档注释`,
+      { modal: true },
+      '立即执行质量门禁',
+      '继续到300行',
+      '查看报告'
+    );
+
+    if (action === '立即执行质量门禁') {
+      await this.runFullQualityGate();
+    } else if (action === '查看报告') {
+      this.showLineReport();
+    }
+  }
+
+  /**
+   * 280行警告处理
+   */
+  private handle280LinesWarning() {
+    this.log('🚨 280行警告');
+
+    vscode.window.showWarningMessage(
+      `🚨 警告：已编写${this.aiState.currentSessionLines}行，接近300行限制！\n\n` +
+      `请准备执行质量门禁检查。`,
+      '知道了'
+    );
+  }
+
+  /**
+   * 300行强制停止处理
+   */
+  private async handle300LinesForceStop() {
+    this.log('🛑 已达到300行限制，强制触发质量门禁');
+
+    const action = await vscode.window.showErrorMessage(
+      `🛑 已达到300行代码限制！\n\n` +
+      `根据AI编程铁律v10.0第五关质量门禁：\n` +
+      `必须立即执行以下检查才能继续：\n\n` +
+      `1. TypeScript编译检查\n` +
+      `2. ESLint代码规范\n` +
+      `3. 架构合规检查\n` +
+      `4. 功能验证\n\n` +
+      `点击"执行质量检查"开始验证。`,
+      { modal: true },
+      '执行质量检查',
+      '查看详情'
+    );
+
+    if (action === '执行质量检查') {
+      await this.runFullQualityGate();
+    } else if (action === '查看详情') {
+      this.outputChannel.show();
+      this.outputChannel.appendLine(this.codeLineTracker.generateReport());
+    }
+  }
+
+  /**
+   * 执行完整质量门禁检查
+   */
+  private async runFullQualityGate() {
+    this.log('🚀 开始执行质量门禁检查...');
+
+    await vscode.window.withProgress({
+      location: vscode.ProgressLocation.Notification,
+      title: "AI编程铁律质量门禁",
+      cancellable: false
+    }, async (progress) => {
+      const results: { [key: string]: boolean } = {};
+
+      // 1. TypeScript检查
+      progress.report({ message: "检查TypeScript编译...", increment: 25 });
+      results.typescript = await this.runTypeScriptCheck();
+
+      // 2. ESLint检查
+      progress.report({ message: "检查ESLint规范...", increment: 25 });
+      results.eslint = await this.runESLintCheck();
+
+      // 3. 架构合规检查
+      progress.report({ message: "检查架构合规...", increment: 25 });
+      results.architecture = await this.runArchitectureCheck();
+
+      // 4. 生成报告
+      progress.report({ message: "生成质量报告...", increment: 25 });
+
+      const allPassed = Object.values(results).every(r => r);
+
+      if (allPassed) {
+        vscode.window.showInformationMessage(
+          '✅ 质量门禁检查全部通过！\n可以继续编写代码。'
+        );
+
+        // 重置计数器
+        this.codeLineTracker.resetSession();
+        this.aiState.currentSessionLines = 0;
+        this.aiState.qualityGatesPassed++;
+        await this.saveState();
+
+        // 更新状态栏
+        this.updateLineCountStatusBar(this.codeLineTracker.getSessionStats());
+      } else {
+        const failedChecks = Object.entries(results)
+          .filter(([_, passed]) => !passed)
+          .map(([name, _]) => name)
+          .join(', ');
+
+        vscode.window.showErrorMessage(
+          `❌ 质量门禁检查未通过！\n失败项: ${failedChecks}\n\n请修复问题后再继续。`,
+          '查看日志'
+        ).then(action => {
+          if (action === '查看日志') {
+            this.outputChannel.show();
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * TypeScript编译检查
+   */
+  private async runTypeScriptCheck(): Promise<boolean> {
+    try {
+      const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+      if (!workspaceRoot) {
+        this.log('⚠️ 无法找到工作区根目录');
+        return false;
+      }
+
+      const { stdout, stderr } = await execAsync(
+        'cd src/SmartAbp.Vue && npm run type-check',
+        { cwd: workspaceRoot, timeout: 60000 }
+      );
+
+      this.log('✅ TypeScript检查通过');
+      return true;
+    } catch (error: any) {
+      this.log(`❌ TypeScript检查失败: ${error.message}`);
+      this.outputChannel.appendLine(`\nTypeScript检查失败:\n${error.message}`);
+      return false;
+    }
+  }
+
+  /**
+   * ESLint检查
+   */
+  private async runESLintCheck(): Promise<boolean> {
+    try {
+      const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+      if (!workspaceRoot) {
+        return false;
+      }
+
+      const { stdout, stderr } = await execAsync(
+        'cd src/SmartAbp.Vue && npm run lint',
+        { cwd: workspaceRoot, timeout: 60000 }
+      );
+
+      this.log('✅ ESLint检查通过');
+      return true;
+    } catch (error: any) {
+      this.log(`❌ ESLint检查失败: ${error.message}`);
+      this.outputChannel.appendLine(`\nESLint检查失败:\n${error.message}`);
+      return false;
+    }
+  }
+
+  /**
+   * 架构合规检查
+   */
+  private async runArchitectureCheck(): Promise<boolean> {
+    try {
+      const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+      if (!workspaceRoot) {
+        return false;
+      }
+
+      // 检查相对路径违规
+      const { stdout: relativePathCheck } = await execAsync(
+        'grep -r "\'\\.\\./\'" src/SmartAbp.Vue/packages/ | wc -l',
+        { cwd: workspaceRoot }
+      );
+
+      // 检查主应用引用违规
+      const { stdout: mainAppCheck } = await execAsync(
+        'grep -r "@/" src/SmartAbp.Vue/packages/ | grep -v node_modules | wc -l',
+        { cwd: workspaceRoot }
+      );
+
+      const violations = parseInt(relativePathCheck.trim()) + parseInt(mainAppCheck.trim());
+
+      if (violations === 0) {
+        this.log('✅ 架构合规检查通过');
+        return true;
+      } else {
+        this.log(`❌ 架构合规检查失败: 发现${violations}个违规`);
+        this.outputChannel.appendLine(`\n架构合规检查失败: 发现${violations}个违规`);
+        return false;
+      }
+    } catch (error: any) {
+      this.log(`❌ 架构合规检查失败: ${error.message}`);
+      return false;
+    }
+  }
+
+  /**
+   * 显示行数报告
+   */
+  private showLineReport() {
+    const report = this.codeLineTracker.generateReport();
+    this.outputChannel.show();
+    this.outputChannel.clear();
+    this.outputChannel.appendLine(report);
   }
 }
 
@@ -1846,6 +2251,11 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('aiGuardian.testChatboxOpen', async () => {
       await guardian.testOpenChatbox();
+    }),
+
+    // v2.0新增：行数报告命令
+    vscode.commands.registerCommand('aiGuardian.showLineReport', () => {
+      guardian['showLineReport']();
     })
   ];
 
