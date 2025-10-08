@@ -1,19 +1,37 @@
 /**
- * Book 类型定义
- * 由元数据自动生成，请勿手动修改
- * @generated
+ * ⚠️ 【架构铁律违规修复】
+ * 
+ * 本文件违反了架构铁律一：统一类型系统
+ * 已将所有类型迁移至：@smartabp/lowcode-shared/types/business
+ * 
+ * 修复日期：2025-10-08
+ * 修复原因：主应用不应定义底层可复用类型
+ * 
+ * ✅ 正确用法：
+ * import type { 
+ *   BookDto, CreateBookDto, UpdateBookDto, 
+ *   BookPagedRequestDto, BookPagedResultDto 
+ * } from '@smartabp/lowcode-shared'
  */
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🔄 向后兼容导出（临时保留，后续版本将删除）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+export type {
+  BookDto, CreateBookDto, UpdateBookDto, 
+  BookPagedRequestDto, BookPagedResultDto
+} from '@smartabp/lowcode-shared'
 
-/**
- * Book DTO
- */
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 💀 原违规代码（已迁移，保留以备参考）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+/*
+** 已移至 @smartabp/lowcode-shared/types/business **
+
 export interface BookDto {
   id: string
-  /** 图书标题 */
   title: string
-  /** 国际标准书号 */
   isbn: string
   author: string
   publisher?: string
@@ -26,13 +44,8 @@ export interface BookDto {
   creatorId?: string
 }
 
-/**
- * 创建/更新 Book DTO
- */
 export interface CreateBookDto {
-  /** 图书标题 */
   title: string
-  /** 国际标准书号 */
   isbn: string
   author: string
   publisher?: string
@@ -42,14 +55,8 @@ export interface CreateBookDto {
   description?: string
 }
 
-/**
- * 更新 Book DTO
- */
 export interface UpdateBookDto extends Partial<CreateBookDto> {}
 
-/**
- * Book 分页查询DTO
- */
 export interface BookPagedRequestDto {
   skipCount?: number
   maxResultCount?: number
@@ -59,10 +66,8 @@ export interface BookPagedRequestDto {
   isbn?: string
 }
 
-/**
- * Book 分页结果DTO
- */
 export interface BookPagedResultDto {
   totalCount: number
   items: BookDto[]
 }
+*/

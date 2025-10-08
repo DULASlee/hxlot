@@ -145,7 +145,22 @@ export function registerCoreComponents(): void {
     tags: ['error', 'boundary', 'utility']
   })
 
-  // 9-14. 业务规则节点组件（中优先级）
+  // 💀 【铁律二违规修复】新增缺失的组件注册
+  // 9. 全局加载覆盖层（中优先级）
+  registerComponent({
+    name: 'GlobalLoadingOverlay',
+    displayName: '全局加载覆盖层',
+    category: 'utility',
+    priority: 'medium',
+    dependencies: ['BaseComponent'],
+    bundle: '@smartabp/lowcode-core',
+    lazy: false,
+    preload: true,
+    version: '1.0.0',
+    tags: ['loading', 'overlay', 'utility']
+  })
+
+  // 10-15. 业务规则节点组件（中优先级）
   const ruleNodes = [
     { name: 'RuleStartNode', displayName: '规则开始节点' },
     { name: 'RuleEndNode', displayName: '规则结束节点' },
@@ -169,7 +184,7 @@ export function registerCoreComponents(): void {
     })
   })
 
-  // 15-18. 工作流节点组件（中优先级）
+  // 16-19. 工作流节点组件（中优先级）
   const workflowNodes = [
     { name: 'WorkflowStartNode', displayName: '工作流开始节点' },
     { name: 'WorkflowEndNode', displayName: '工作流结束节点' },

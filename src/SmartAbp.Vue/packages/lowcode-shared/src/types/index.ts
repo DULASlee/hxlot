@@ -42,3 +42,11 @@ export type { MDIWindowConfig, TabConfig } from './ui'
 // 通用DTO类型（供API层重用）
 export type { AuditedEntityDto, EntityDto, ListResultDto, PagedResultDto } from './dtos'
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 💼 业务类型（从主应用迁移至统一类型系统）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export type {
+  BookDto, CreateBookDto, UpdateBookDto, BookPagedRequestDto, BookPagedResultDto,
+  BaseEntityDto, BasePagedRequestDto, BasePagedResultDto
+} from './business'
+
