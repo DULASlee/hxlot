@@ -285,6 +285,7 @@ export class AuthService {
   private parseTokenClaims(token: string): TokenClaims {
     try {
       const payload = token.split('.')[1]
+      if (!payload) return {}
       const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'))
       return JSON.parse(decoded)
     } catch (error) {

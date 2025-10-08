@@ -566,6 +566,7 @@ export const useIconStyleStore = defineStore('iconStyle', () => {
     // "fa-solid fa-users" -> "users"
     const parts = iconClass.split(' ')
     const lastPart = parts[parts.length - 1]
+    if (!lastPart) return null
     
     // 移除 fa- 前缀
     const keyName = lastPart.replace(/^fa-/, '')
