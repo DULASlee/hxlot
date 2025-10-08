@@ -109,10 +109,10 @@ export class GlobalErrorHandler {
       retryDelay: 1000,
       enableReporting: true,
       reportingDelay: 5000,
-      showDetailedErrors: process.env.NODE_ENV === 'development',
+      showDetailedErrors: ((import.meta as unknown as ImportMeta).env?.['MODE'] || 'development') === 'development',
       ...options
     };
-    
+
     this.sessionId = this.generateSessionId();
     this.setupGlobalHandlers();
     this.startReportingTimer();
@@ -123,23 +123,23 @@ export class GlobalErrorHandler {
    */
   async handleError(error: Error, context: Partial<ErrorContext> = {}): Promise<StandardError> {
     const standardError = this.standardizeError(error, context);
-    
+
     // 存储错误
     this.errors.set(standardError.id, standardError);
-    
+
     // 记录到控制台
     this.logError(standardError);
-    
+
     // 尝试自动恢复
     if (this.options.enableAutoRecovery) {
       await this.attemptRecovery(standardError);
     }
-    
+
     // 添加到上报队列
     if (this.options.enableReporting) {
       this.queueForReporting(standardError);
     }
-    
+
     return standardError;
   }
 
@@ -163,7 +163,7 @@ export class GlobalErrorHandler {
   } {
     const errors = Array.from(this.errors.values());
     const total = errors.length;
-    
+
     const byCategory: Record<ErrorCategory, number> = {
       network: 0,
       validation: 0,
@@ -172,22 +172,22 @@ export class GlobalErrorHandler {
       ui: 0,
       unknown: 0
     };
-    
+
     const bySeverity: Record<ErrorSeverity, number> = {
       low: 0,
       medium: 0,
       high: 0,
       critical: 0
     };
-    
+
     let recoveredCount = 0;
-    
+
     errors.forEach(error => {
       byCategory[error.category]++;
       bySeverity[error.severity]++;
       if (error.recovered) recoveredCount++;
     });
-    
+
     return {
       total,
       byCategory,
@@ -204,7 +204,7 @@ export class GlobalErrorHandler {
       this.errors.clear();
       return;
     }
-    
+
     const cutoff = Date.now() - olderThan;
     const entriesToDelete: string[] = [];
     this.errors.forEach((error, id) => {
@@ -269,10 +269,10 @@ export class GlobalErrorHandler {
    */
   private logError(error: StandardError): void {
     const logLevel = this.getLogLevel(error.severity);
-    const message = this.options.showDetailedErrors 
+    const message = this.options.showDetailedErrors
       ? `[${error.category}] ${error.message}\nContext: ${JSON.stringify(error.context, null, 2)}`
       : `[${error.category}] ${error.message}`;
-    
+
     console[logLevel](message, error.originalError);
   }
 
@@ -299,10 +299,10 @@ export class GlobalErrorHandler {
    */
   private async flushReportingQueue(): Promise<void> {
     if (this.reportingQueue.length === 0) return;
-    
+
     const errors = [...this.reportingQueue];
     this.reportingQueue = [];
-    
+
     try {
       // 这里可以集成实际的错误上报服务
       await this.reportErrors(errors);
@@ -319,7 +319,7 @@ export class GlobalErrorHandler {
   private async reportErrors(errors: StandardError[]): Promise<void> {
     // 模拟错误上报
     console.log(`Reporting ${errors.length} errors to monitoring service`);
-    
+
     // 实际实现中，这里会调用错误监控服务的API
     // 例如：Sentry, LogRocket, 或自定义错误监控服务
   }
@@ -340,7 +340,7 @@ export class GlobalErrorHandler {
     window.addEventListener('error', (event) => {
       this.handleError(
         new Error(event.message),
-        { 
+        {
           operation: 'javascript_error',
           metadata: {
             filename: event.filename,
@@ -360,12 +360,12 @@ export class GlobalErrorHandler {
     if ('code' in error) {
       return String(error.code);
     }
-    
+
     // 根据错误类型生成代码
     if (error.name === 'TypeError') return 'TYPE_ERROR';
     if (error.name === 'ReferenceError') return 'REFERENCE_ERROR';
     if (error.name === 'NetworkError') return 'NETWORK_ERROR';
-    
+
     return 'UNKNOWN_ERROR';
   }
 
@@ -374,19 +374,19 @@ export class GlobalErrorHandler {
    */
   private determineSeverity(error: Error): ErrorSeverity {
     const message = error.message.toLowerCase();
-    
+
     if (message.includes('critical') || message.includes('fatal')) {
       return 'critical';
     }
-    
+
     if (error.name === 'TypeError' || error.name === 'ReferenceError') {
       return 'high';
     }
-    
+
     if (message.includes('network') || message.includes('timeout')) {
       return 'medium';
     }
-    
+
     return 'low';
   }
 
@@ -395,19 +395,19 @@ export class GlobalErrorHandler {
    */
   private categorizeError(error: Error): ErrorCategory {
     const message = error.message.toLowerCase();
-    
+
     if (message.includes('network') || message.includes('fetch') || message.includes('xhr')) {
       return 'network';
     }
-    
+
     if (message.includes('validation') || message.includes('invalid')) {
       return 'validation';
     }
-    
+
     if (error.name === 'TypeError' || error.name === 'ReferenceError') {
       return 'system';
     }
-    
+
     return 'unknown';
   }
 
@@ -416,7 +416,7 @@ export class GlobalErrorHandler {
    */
   private determineRecoveryStrategy(error: Error): RecoveryStrategy {
     const category = this.categorizeError(error);
-    
+
     switch (category) {
       case 'network':
         return 'retry';

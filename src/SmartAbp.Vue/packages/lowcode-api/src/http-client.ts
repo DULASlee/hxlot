@@ -3,7 +3,7 @@
  * 符合packages黑盒原则，不依赖主应用
  */
 
-import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
 import { setupMockInterceptor } from './__tests__/mocks/mock-server'
 
 /**

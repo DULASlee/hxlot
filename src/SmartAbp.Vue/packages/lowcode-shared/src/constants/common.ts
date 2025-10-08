@@ -56,7 +56,7 @@ export const HTTP_TIMEOUT = 30000
 /**
  * API基础路径
  */
-export const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || '/api'
+export const API_BASE_URL = (import.meta as unknown as ImportMeta).env?.['VITE_API_BASE_URL'] || '/api'
 
 /**
  * 分页默认配置
@@ -106,7 +106,7 @@ export const REGEX = {
  * 环境变量
  */
 export const ENV = {
-  PRODUCTION: import.meta.env?.PROD || false,
-  DEVELOPMENT: import.meta.env?.DEV || true,
-  MODE: (import.meta.env?.MODE || 'development') as string
+  PRODUCTION: (import.meta as unknown as ImportMeta).env?.['PROD'] || false,
+  DEVELOPMENT: (import.meta as unknown as ImportMeta).env?.['DEV'] || true,
+  MODE: ((import.meta as unknown as ImportMeta).env?.['MODE'] || 'development') as string
 } as const

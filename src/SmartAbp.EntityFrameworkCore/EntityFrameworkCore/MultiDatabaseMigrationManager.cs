@@ -13,20 +13,14 @@ namespace SmartAbp.EntityFrameworkCore;
 public static class MultiDatabaseMigrationManager
 {
     /// <summary>
-    /// 获取当前数据库类型对应的迁移程序集名称
+    /// 获取迁移程序集名称
+    /// 说明：当前实现将所有提供程序的迁移放在单一程序集 SmartAbp.EntityFrameworkCore 内，
+    ///       通过 FilteringMigrationsAssembly 按命名空间过滤（SmartAbp.Migrations.{Provider}）。
+    ///       因此此处统一返回同一程序集名称。
     /// </summary>
     public static string GetMigrationsAssembly(IConfiguration configuration)
     {
-        var databaseType = GetDatabaseType(configuration);
-        
-        return databaseType switch
-        {
-            DatabaseType.SqlServer => "SmartAbp.EntityFrameworkCore",
-            DatabaseType.PostgreSQL => "SmartAbp.EntityFrameworkCore.PostgreSQL",
-            DatabaseType.SQLite => "SmartAbp.EntityFrameworkCore.SQLite",
-            DatabaseType.MySQL => "SmartAbp.EntityFrameworkCore.MySQL",
-            _ => "SmartAbp.EntityFrameworkCore" // 默认SQL Server
-        };
+        return "SmartAbp.EntityFrameworkCore";
     }
 
     /// <summary>

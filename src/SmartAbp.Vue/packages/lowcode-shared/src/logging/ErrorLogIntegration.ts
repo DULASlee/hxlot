@@ -3,7 +3,7 @@
  * 将GlobalErrorHandler与现有日志系统无缝集成，提供统一的错误日志记录
  */
 
-import { GlobalErrorHandler, StandardError, ErrorSeverity, ErrorCategory } from '../error/GlobalErrorHandler';
+import { GlobalErrorHandler, type ErrorCategory, type ErrorSeverity, type StandardError } from '../error/GlobalErrorHandler';
 
 // 集成接口定义
 export interface ErrorLogEntry {
@@ -60,13 +60,13 @@ export class ErrorLogIntegration {
   private hookIntoErrorHandler(): void {
     // 扩展错误处理器以包含日志记录
     const originalHandleError = this.errorHandler.handleError.bind(this.errorHandler);
-    
+
     this.errorHandler.handleError = async (error: Error, context = {}) => {
       const standardError = await originalHandleError(error, context);
-      
+
       // 记录错误到日志系统
       await this.logError(standardError);
-      
+
       return standardError;
     };
   }
@@ -167,7 +167,7 @@ export class ErrorLogIntegration {
     criticalErrorsLast24h: number;
   } {
     const errorStats = this.errorHandler.getErrorStats();
-    
+
     // 计算过去24小时的严重错误数量
     // const twentyFourHoursAgo = Date.now() - 24 * 60 * 60 * 1000;
     const recentCriticalErrors = 0; // 这里需要从日志系统查询
@@ -233,7 +233,7 @@ export class ErrorLogIntegration {
    */
   private getMostCommonErrors(errors: ErrorLogEntry[]): Array<{ message: string; count: number; category: ErrorCategory }> {
     const errorCounts = new Map<string, { count: number; category: ErrorCategory }>();
-    
+
     errors.forEach(error => {
       const key = error.message;
       const existing = errorCounts.get(key);
@@ -256,7 +256,7 @@ export class ErrorLogIntegration {
   private calculateRecoveryRate(errors: ErrorLogEntry[]): number {
     const errorsWithRecovery = errors.filter(e => e.recoveryInfo?.attempted);
     if (errorsWithRecovery.length === 0) return 0;
-    
+
     const successful = errorsWithRecovery.filter(e => e.recoveryInfo?.successful).length;
     return successful / errorsWithRecovery.length;
   }
@@ -288,6 +288,6 @@ export function setupGlobalErrorLogging(logger: any): ErrorLogIntegration {
   // 假设有全局错误处理器
   const { getGlobalErrorHandler } = require('../error/GlobalErrorHandler');
   const errorHandler = getGlobalErrorHandler();
-  
+
   return createErrorLogIntegration(errorHandler, logger);
 }

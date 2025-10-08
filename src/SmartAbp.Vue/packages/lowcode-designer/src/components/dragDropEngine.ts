@@ -12,6 +12,10 @@ export interface DesignerComponent {
   type: string;
   props: Record<string, any>;
   children?: DesignerComponent[];
+  position: Position;
+  name?: string;
+  category?: string;
+  version?: string;
 }
 
 // 类型定义

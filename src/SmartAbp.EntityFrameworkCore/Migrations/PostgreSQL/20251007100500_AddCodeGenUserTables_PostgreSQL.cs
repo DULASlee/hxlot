@@ -1,12 +1,12 @@
 using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace SmartAbp.Migrations
+namespace SmartAbp.Migrations.PostgreSQL
 {
     /// <summary>
-    /// 添加代码生成器用户相关表
+    /// 添加代码生成器用户相关表 (PostgreSQL版本)
     /// </summary>
-    public partial class AddCodeGenUserTables : Migration
+    public partial class AddCodeGenUserTables_PostgreSQL : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

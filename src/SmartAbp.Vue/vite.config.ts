@@ -9,19 +9,14 @@ import Components from "unplugin-vue-components/vite"
 import { defineConfig } from "vite"
 import vueDevtools from "vite-plugin-vue-devtools"
 import moduleWizardDev from "./packages/lowcode-designer/src/dev/moduleWizardDev"
+import vitePluginLowCode from "./packages/lowcode-tools/src/vite"
 import { createComponentConflictDetector } from "./src/utils/vite/conflictDetector"
 import { createPackagesResolver } from "./src/utils/vite/packagesResolver"
-import vitePluginLowCode from "./packages/lowcode-tools/src/vite"
-// Offline icon collections (static JSON)
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore - json modules
-import epCollection from '@iconify-json/ep/icons.json'
-// @ts-ignore
-import carbonCollection from '@iconify-json/carbon/icons.json'
-// @ts-ignore
-import mdiCollection from '@iconify-json/mdi/icons.json'
-// @ts-ignore
-import faCollection from '@iconify-json/fa/icons.json'
+// Offline icon collections (static JSON) with import assertions
+import carbonCollection from '@iconify-json/carbon/icons.json' with { type: 'json' }
+import epCollection from '@iconify-json/ep/icons.json' with { type: 'json' }
+import faCollection from '@iconify-json/fa/icons.json' with { type: 'json' }
+import mdiCollection from '@iconify-json/mdi/icons.json' with { type: 'json' }
 
 // 保证 DNS 解析 localhost 时不过滤非匹配网卡
 dns.setDefaultResultOrder("verbatim")

@@ -75,6 +75,7 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
             var configuration = context.Services.GetConfiguration();
             var databaseType = MultiDatabaseMigrationManager.GetDatabaseType(configuration);
             var connectionString = MultiDatabaseMigrationManager.GetConnectionString(configuration);
+            var migrationsAssembly = MultiDatabaseMigrationManager.GetMigrationsAssembly(configuration);
 
             // 注册按数据库类型过滤的迁移程序集
             options.Configure(contextDbOpts =>
@@ -88,7 +89,7 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
                     options.UseSqlite(sqliteOptions =>
                     {
                         sqliteOptions.MigrationsHistoryTable("__EFMigrationsHistory_SQLite");
-                        sqliteOptions.MigrationsAssembly("SmartAbp.EntityFrameworkCore");
+                        sqliteOptions.MigrationsAssembly(migrationsAssembly);
                         // 指定SQLite专用的迁移文件夹
                         sqliteOptions.UseRelationalNulls();
                     });
@@ -98,7 +99,7 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
                     options.UseSqlServer(sqlServerOptions =>
                     {
                         sqlServerOptions.MigrationsHistoryTable("__EFMigrationsHistory_SqlServer");
-                        sqlServerOptions.MigrationsAssembly("SmartAbp.EntityFrameworkCore");
+                        sqlServerOptions.MigrationsAssembly(migrationsAssembly);
                         // SQL Server使用默认的SqlServer文件夹
                     });
                     break;
@@ -107,7 +108,7 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
                     options.UseNpgsql(npgsqlOptions =>
                     {
                         npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory_PostgreSQL");
-                        npgsqlOptions.MigrationsAssembly("SmartAbp.EntityFrameworkCore");
+                        npgsqlOptions.MigrationsAssembly(migrationsAssembly);
                         // PostgreSQL使用专用的迁移文件夹
                     });
                     break;
@@ -117,7 +118,7 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
                     options.UseSqlite(sqliteOptions =>
                     {
                         sqliteOptions.MigrationsHistoryTable("__EFMigrationsHistory_SQLite");
-                        sqliteOptions.MigrationsAssembly("SmartAbp.EntityFrameworkCore");
+                        sqliteOptions.MigrationsAssembly(migrationsAssembly);
                         sqliteOptions.UseRelationalNulls();
                     });
                     break;

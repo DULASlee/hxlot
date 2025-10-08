@@ -22,20 +22,22 @@ public class SmartAbpDbContextFactory : IDesignTimeDbContextFactory<SmartAbpDbCo
         var databaseType = MultiDatabaseMigrationManager.GetDatabaseType(configuration);
         var connectionString = MultiDatabaseMigrationManager.GetConnectionString(configuration);
 
+        var migrationsAssembly = MultiDatabaseMigrationManager.GetMigrationsAssembly(configuration);
+
         switch (databaseType)
         {
             case DatabaseType.SQLite:
-                builder.UseSqlite(connectionString);
+                builder.UseSqlite(connectionString, x => x.MigrationsAssembly(migrationsAssembly));
                 break;
             case DatabaseType.SqlServer:
-                builder.UseSqlServer(connectionString);
+                builder.UseSqlServer(connectionString, x => x.MigrationsAssembly(migrationsAssembly));
                 break;
             case DatabaseType.PostgreSQL:
-                builder.UseNpgsql(connectionString);
+                builder.UseNpgsql(connectionString, x => x.MigrationsAssembly(migrationsAssembly));
                 break;
             default:
                 // 默认使用SQLite
-                builder.UseSqlite(connectionString);
+                builder.UseSqlite(connectionString, x => x.MigrationsAssembly(migrationsAssembly));
                 break;
         }
         

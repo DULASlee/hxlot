@@ -8,10 +8,10 @@
  * @version 1.0.0-mvp
  */
 
-import { simpleLogger, LogLevel, log,emergencyStop } from './simple-logger';
-import { performanceMonitor, ExecutionStage } from './simple-checkpoint';
-import { selfLearningManager } from './self-learning';
 import { dynamicModeManager } from './dynamic-mode';
+import { selfLearningManager } from './self-learning';
+import { ExecutionStage, performanceMonitor } from './simple-checkpoint';
+import { simpleLogger } from './simple-logger';
 
 /**
  * 执行引擎守护检查器
@@ -32,7 +32,7 @@ export class ExecutionGuardian {
     this.codeLines = 0
     this.filesModified.clear()
     this.ironRulesViolated.clear()
-    
+
     simpleLogger.startStage(ExecutionStage[stage])
     simpleLogger.info(`🚀 开始执行阶段: ${ExecutionStage[stage]}`)
   }
@@ -42,15 +42,15 @@ export class ExecutionGuardian {
    */
   endStage(): void {
     if (!this.currentStage) return
-    
+
     const stageName = ExecutionStage[this.currentStage]
-    
+
     // 记录阶段完成
     simpleLogger.success(`✅ 完成阶段: ${stageName}`)
-    
+
     // 检查铁律违规
     this.checkIronRulesViolation()
-    
+
     this.currentStage = null
   }
 
@@ -61,7 +61,7 @@ export class ExecutionGuardian {
     const lines = code.split('\n').length
     this.codeLines += lines
     this.filesModified.add(filePath)
-    
+
     // 300行强制检查
     if (this.codeLines >= 300) {
       this.triggerForceStop('已达到300行代码限制')
@@ -75,18 +75,18 @@ export class ExecutionGuardian {
    */
   private checkIronRulesViolation(): void {
     const violations = Array.from(this.ironRulesViolated)
-    
+
     if (violations.length > 0) {
       simpleLogger.error('🚨 检测到铁律违规！', {
         violations: violations,
         stage: this.currentStage ? ExecutionStage[this.currentStage] : 'unknown'
       })
-      
+
       // 记录学习
       violations.forEach(violation => {
         selfLearningManager.recordError('IRON_RULE_VIOLATION', violation)
       })
-      
+
       this.triggerForceStop('铁律违规检测')
     }
   }
@@ -97,7 +97,7 @@ export class ExecutionGuardian {
   recordViolation(rule: string, details?: string): void {
     const violation = details ? `${rule}: ${details}` : rule
     this.ironRulesViolated.add(violation)
-    
+
     simpleLogger.warning(`⚠️ 铁律违规记录: ${violation}`)
   }
 
@@ -106,10 +106,10 @@ export class ExecutionGuardian {
    */
   private triggerForceStop(reason: string): void {
     simpleLogger.error(`🚨 强制停止执行: ${reason}`)
-    
+
     // 记录强制停止
     selfLearningManager.recordError('FORCE_STOP', reason)
-    
+
     // 抛出错误强制停止
     throw new Error(`AI编程铁律强制停止: ${reason}`)
   }
@@ -177,12 +177,12 @@ export function withGuardian<T extends any[]>(fn: (...args: T) => any) {
     try {
       // 开始守护
       executionGuardian.startStage(ExecutionStage.STAGE3_INCREMENTAL_CODING)
-      
+
       const result = fn(...args)
-      
+
       // 结束守护
       executionGuardian.endStage()
-      
+
       return result
     } catch (error) {
       // 记录错误并重新抛出
@@ -203,11 +203,11 @@ export function enforceIronRules(): void {
 
   // 检查编程前学习是否完成
   if (dynamicModeManager.isEmergencyMode()) {
-    log(LogLevel.WARN, '🚨 Emergency mode is active. Skipping pre-programming learning.');
+    simpleLogger.warn('🚨 Emergency mode is active. Skipping pre-programming learning.');
     return;
   }
   performanceMonitor.startStage(ExecutionStage.STAGE1_PRE_PROGRAMMING_LEARNING);
-  log(LogLevel.INFO, '🧠 Stage 1: Pre-programming learning started...');
+  simpleLogger.info('🧠 Stage 1: Pre-programming learning started...');
   // Add learning logic here
   performanceMonitor.endStage(ExecutionStage.STAGE1_PRE_PROGRAMMING_LEARNING);
   // 这里可以添加更多的铁律检查...
