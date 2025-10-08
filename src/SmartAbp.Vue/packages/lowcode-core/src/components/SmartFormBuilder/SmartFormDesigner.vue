@@ -427,6 +427,7 @@ const codeTab = ref('json')
 const selectedField = computed(() => {
   if (selectedFieldIndex.value === null) return null
   const field = formRules.value[selectedFieldIndex.value]
+  if (!field) return null
   // 确保props和col属性总是存在
   if (!field.props) field.props = {}
   if (!field.col) field.col = { span: 24 }
@@ -537,6 +538,7 @@ const selectField = (index: number) => {
 
 const copyField = (index: number) => {
   const field = formRules.value[index]
+  if (!field) return
   const newField = {
     ...field,
     field: `${field.field}_copy_${Date.now()}`

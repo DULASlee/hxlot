@@ -524,9 +524,13 @@ export class GlobalMemoryMonitor {
     if (recentHistory.length < 10) return; // 数据不足
 
     // 计算内存增长率
-    const oldestUsage = recentHistory[0].totalUsage;
-    const newestUsage = recentHistory[recentHistory.length - 1].totalUsage;
-    const timeSpan = recentHistory[recentHistory.length - 1].timestamp - recentHistory[0].timestamp;
+    const oldest = recentHistory[0]
+    const newest = recentHistory[recentHistory.length - 1]
+    if (!oldest || !newest) return
+    
+    const oldestUsage = oldest.totalUsage
+    const newestUsage = newest.totalUsage
+    const timeSpan = newest.timestamp - oldest.timestamp
     const growthRate = (newestUsage - oldestUsage) / (timeSpan / 1000); // bytes/second
 
     // 检测异常增长

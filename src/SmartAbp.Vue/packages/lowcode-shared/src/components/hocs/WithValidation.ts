@@ -366,7 +366,7 @@ export function useValidation() {
 
   const hasErrors = (field?: string) => {
     if (field) {
-      return errors.value[field]?.length > 0;
+      return (errors.value[field]?.length ?? 0) > 0;
     }
     return !isValid.value;
   };

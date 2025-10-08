@@ -197,6 +197,10 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
       }
 
       const entity = entities.value[index]
+      if (!entity) {
+        logger.error(`❌ 实体不存在: ${entityId}`)
+        return
+      }
 
       // 🔥 调用后端真实API更新实体
       await updateEntityApi(entityId, {
@@ -237,6 +241,10 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
       }
 
       const entity = entities.value[index]
+      if (!entity) {
+        logger.error(`❌ 实体不存在: ${entityId}`)
+        return
+      }
 
       // 🔥 调用后端真实API删除实体
       await deleteEntityApi(entityId)
@@ -296,8 +304,12 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         throw new Error(`字段索引超出范围: ${fieldIndex}`)
       }
 
-      entity.fields[fieldIndex] = { ...entity.fields[fieldIndex], ...updates }
-      logger.info(`字段已更新: ${entity.fields[fieldIndex].name}`, { entityId, fieldIndex })
+      const field = entity.fields[fieldIndex]
+      if (!field) {
+        throw new Error(`字段不存在: ${fieldIndex}`)
+      }
+      entity.fields[fieldIndex] = { ...field, ...updates }
+      logger.info(`字段已更新: ${field.name}`, { entityId, fieldIndex })
 
       // 重新检查完成状态
       checkEntityCompletion(entityId)
@@ -311,15 +323,16 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
   const removeField = (entityId: string, fieldIndex: number) => {
     try {
       const entity = entities.value.find(e => e.id === entityId)
-      if (!entity) {
-        throw new Error(`未找到实体: ${entityId}`)
+      if (!entity || !entity.fields) {
+        throw new Error(`未找到实体或字段列表: ${entityId}`)
       }
 
       if (fieldIndex < 0 || fieldIndex >= entity.fields.length) {
         throw new Error(`字段索引超出范围: ${fieldIndex}`)
       }
 
-      const fieldName = entity.fields[fieldIndex].name
+      const field = entity.fields[fieldIndex]
+      const fieldName = field?.name || 'Unknown'
       entity.fields.splice(fieldIndex, 1)
       logger.info(`字段已删除: ${fieldName}`, { entityId, fieldIndex })
 
@@ -427,7 +440,11 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         throw new Error(`未找到关系: ${relationId}`)
       }
 
-      relations.value[index] = { ...relations.value[index], ...updates }
+      const relation = relations.value[index]
+      if (!relation) {
+        throw new Error(`关系不存在: ${relationId}`)
+      }
+      relations.value[index] = { ...relation, ...updates }
       logger.info(`关系已更新: ${relationId}`, { updates })
     } catch (err) {
       const error = err as Error
@@ -443,6 +460,9 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
       }
 
       const relation = relations.value[relationIndex]
+      if (!relation) {
+        throw new Error(`关系不存在: ${relationIndex}`)
+      }
       relations.value.splice(relationIndex, 1)
       logger.info(`关系已删除: ${relation.fromEntity} -> ${relation.toEntity}`, {
         relationId: relation.id
