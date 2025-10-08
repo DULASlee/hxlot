@@ -365,7 +365,7 @@ export class ComponentRegistry {
         component: name,
         value: 1,
         timestamp: Date.now(),
-        metadata: { error: error.message }
+        metadata: { error: (error as Error).message }
       });
       throw error;
     } finally {
@@ -432,7 +432,7 @@ export class ComponentRegistry {
     this.loadingPromises.delete(componentName);
 
     // 4. 重新加载
-    const newComponent = await this.load(componentName);
+    await this.load(componentName);
 
     // 5. 恢复状态
     const newInstance = this.loadedComponents.get(componentName);

@@ -311,8 +311,8 @@ export class SchemaConverter {
             minValue: dto.minValue,
             maxValue: dto.maxValue,
             enumValues: dto.enumValues || [],
-            validationRules: (dto.validationRules || []).map((r: Record<string, any>) =>
-                SchemaConverter.fromBackendValidationRuleDto(r, dto.name)
+            validationRules: (dto.validationRules || []).map((r: BackendValidationRuleDto) =>
+                SchemaConverter.fromBackendValidationRuleDto(r, dto.name || '')
             ),
             displayOrder: dto.displayOrder || 0,
             groupName: dto.groupName || '',

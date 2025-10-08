@@ -121,7 +121,9 @@ export function union<T>(arr1: T[], arr2: T[]): T[] {
 export function move<T>(arr: T[], from: number, to: number): T[] {
   const result = [...arr]
   const [removed] = result.splice(from, 1)
-  result.splice(to, 0, removed)
+  if (removed !== undefined) {
+    result.splice(to, 0, removed)
+  }
   return result
 }
 
@@ -169,7 +171,10 @@ export function sample<T>(arr: T[], count = 1): T[] {
     const index = Math.floor(Math.random() * arr.length)
     if (!used.has(index)) {
       used.add(index)
-      result.push(arr[index])
+      const item = arr[index]
+      if (item !== undefined) {
+        result.push(item)
+      }
     }
   }
 
