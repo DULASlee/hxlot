@@ -11,9 +11,9 @@ import type {
     UnifiedEntityDefinition,
     UnifiedEntityField,
     UnifiedEntityRelationship,
+    UnifiedFieldType,
     UnifiedModuleMetadata,
     UnifiedValidationRule,
-    UnifiedFieldType,
     UnifiedValidationRuleType,
 } from '../types/unified-schema'
 
@@ -199,7 +199,7 @@ export class SchemaConverter {
                 SchemaConverter.fromBackendEntityDto(e)
             ),
             menuConfig: dto.menuConfig || [],
-            permissionConfig: dto.permissionConfig || { groupName: '', permissions: [], policies: [] },
+            permissionConfig: dto.permissionConfig || { groupName: '', permissions: [] },
             dependencies: dto.dependencies || [],
             schemaVersion: '1.0.0',
             createdAt: dto.createdAt ? new Date(dto.createdAt) : new Date(),
@@ -320,7 +320,7 @@ export class SchemaConverter {
             sortable: dto.sortable || false,
             filterable: dto.filterable || false,
             disabled: dto.disabled || false,
-            columnName: dto.columnName || dto.name,
+            columnName: dto.columnName || dto.name || '',
             columnType: dto.columnType || '',
             isAuditField: dto.isAuditField || false,
             isSoftDeleteField: dto.isSoftDeleteField || false,
@@ -360,7 +360,7 @@ export class SchemaConverter {
             sourceEntityId: dto.sourceEntityId || '',
             targetEntityId: dto.targetEntityId || '',
             targetEntity: dto.targetEntity || '',
-            type: dto.type || 'OneToMany',
+            type: (dto.type as 'OneToMany' | 'OneToOne' | 'ManyToMany') || 'OneToMany',
             sourceProperty: dto.sourceProperty || '',
             targetProperty: dto.targetProperty || '',
             sourceNavigationProperty: dto.sourceNavigationProperty || '',
