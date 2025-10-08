@@ -1,8 +1,8 @@
 {
   "name": "ai-guardian",
-  "displayName": "AI Guardian - 断线守护",
-  "description": "AI大模型断线检测与自动恢复插件 - 智能重试策略版本（v1.4.0新增：交替聊天框重试、30秒检测、5次重试）",
-  "version": "1.4.0",
+  "displayName": "AI Guardian - 断线守护 + 300行监控",
+  "description": "AI大模型断线检测与自动恢复插件 + 增量编程300行监控（v2.0新增：实时行数追踪、100/200/300检查点、质量门禁自动触发）",
+  "version": "2.0.0",
   "publisher": "smartabp",
   "engines": {
     "vscode": "^1.74.0"
