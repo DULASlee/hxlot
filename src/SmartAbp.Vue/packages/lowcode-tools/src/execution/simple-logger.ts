@@ -42,10 +42,7 @@ export enum LogLevel {
 export class SimpleLogger {
   private readonly LOG_DIR = '.ai-engine/logs'
   private readonly LOG_FILE = 'execution.log'
-  private sessionId: string
-  
   constructor() {
-    this.sessionId = new Date().toISOString().replace(/[:.]/g, '-')
     this.ensureLogDir()
   }
   

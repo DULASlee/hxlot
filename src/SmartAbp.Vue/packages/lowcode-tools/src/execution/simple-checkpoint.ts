@@ -119,7 +119,7 @@ export class SimpleCheckpoint {
       const [stage, timestamp] = content.split('\n')
       
       console.log(`🔄 恢复检查点: ${stage} (${timestamp})`)
-      return stage
+      return stage ?? null
     } catch (error) {
       console.warn('⚠️ 恢复检查点失败:', error)
       return null
@@ -295,6 +295,7 @@ export class SimpleLearningManager {
     // 计算每个错误类型的成功率
     for (const [errorKey, errorCount] of this.errorCounts.entries()) {
       const baseKey = errorKey.split(':')[0] // 去掉上下文
+      if (!baseKey) continue
       const successCount = this.successCounts.get(baseKey) || 0
       const total = errorCount + successCount
       result[baseKey] = total > 0 ? (successCount / total) * 100 : 100

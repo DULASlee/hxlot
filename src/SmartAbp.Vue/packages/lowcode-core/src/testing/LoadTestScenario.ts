@@ -142,7 +142,11 @@ export class LoadTestScenario {
     }
 
     // 默认返回第一个端点
-    return this.config.endpoints[0]
+    const firstEndpoint = this.config.endpoints[0]
+    if (!firstEndpoint) {
+      throw new Error('没有可用的测试端点')
+    }
+    return firstEndpoint
   }
 
   /**

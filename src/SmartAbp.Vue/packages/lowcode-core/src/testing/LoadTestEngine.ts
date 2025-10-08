@@ -191,8 +191,10 @@ export class LoadTestEngine {
       // 启动用户
       for (let i = 0; i < usersToStart && startedUsers < this.virtualUsers.length; i++) {
         const user = this.virtualUsers[startedUsers]
-        this.runUser(user) // 不等待，异步启动
-        startedUsers++
+        if (user) { // 添加undefined检查
+          this.runUser(user) // 不等待，异步启动
+          startedUsers++
+        }
       }
 
       // 等待1秒

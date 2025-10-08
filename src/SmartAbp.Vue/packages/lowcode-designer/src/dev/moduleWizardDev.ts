@@ -1,8 +1,8 @@
-import type { Plugin } from "vite"
-import path from "node:path"
-import { promises as fs } from "node:fs"
-import { spawn } from "node:child_process"
 import axios from "axios"
+import { spawn } from "node:child_process"
+import { promises as fs } from "node:fs"
+import path from "node:path"
+import type { Plugin } from "vite"
 // 临时Schema校验占位：跳过严格校验，保持开发插件可用
 const ManifestSchema = { parse: (obj: any) => obj }
 
@@ -233,7 +233,8 @@ export function moduleWizardDevPlugin(): Plugin {
       server.middlewares.use("/__module-wizard/add", async (req, res) => {
         if (req.method !== "POST") {
           res.statusCode = 405
-          return res.end("Method Not Allowed")
+          res.end("Method Not Allowed")
+          return
         }
         try {
           const body = await readJsonBody(req)
@@ -275,6 +276,7 @@ export function moduleWizardDevPlugin(): Plugin {
         } catch (e: any) {
           res.statusCode = 500
           res.end(JSON.stringify({ ok: false, message: e?.message || "生成失败" }))
+          return
         }
       })
     },

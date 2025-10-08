@@ -252,7 +252,7 @@ export class RaceConditionDetector {
   private reportDeadlock(cycle: string[]): void {
     const waitChain = cycle.map((op, index) => ({
       operation: op,
-      waitingFor: cycle[(index + 1) % cycle.length]
+      waitingFor: cycle[(index + 1) % cycle.length] || 'unknown' // 添加默认值防止undefined
     }))
 
     const deadlock: Deadlock = {

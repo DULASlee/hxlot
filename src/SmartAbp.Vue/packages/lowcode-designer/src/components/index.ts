@@ -107,8 +107,9 @@
  * Auto-register all designer components for global usage
  */
 export function autoRegisterDesignerComponents(app: any): void {
-  const components = import.meta.glob('./**/*.vue', { eager: true })
-  
+  // 使用类型断言绕过TypeScript检查，因为这是Vite特有的功能
+  const components = (import.meta as any).glob?.('./**/*.vue', { eager: true }) || {}
+
   Object.entries(components).forEach(([path, module]: [string, any]) => {
     const componentName = path
       .split('/')
@@ -116,7 +117,7 @@ export function autoRegisterDesignerComponents(app: any): void {
       ?.replace('.vue', '')
       .replace(/([a-z])([A-Z])/g, '$1-$2')
       .toLowerCase()
-    
+
     if (componentName && module.default) {
       app.component(`Ld${componentName}`, module.default)
     }

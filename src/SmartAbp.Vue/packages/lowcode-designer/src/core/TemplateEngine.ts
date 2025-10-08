@@ -1,13 +1,5 @@
 // 🚀 企业级模板引擎 - 基于21个模板文件构建完整的代码生成系统
 import { computed, ref } from 'vue';
-// 本地模板类型定义
-interface Template {
-  id: string;
-  name: string;
-  description?: string;
-  content: string;
-  parameters?: TemplateParameter[];
-}
 
 // 模板参数接口
 export interface TemplateParameter {
@@ -91,173 +83,203 @@ export class TemplateEngine {
     this.registerTemplate({
       id: 'backend-crud-app-service',
       name: 'ABP CRUD应用服务',
+      description: 'ABP框架CRUD应用服务模板',
       category: 'backend/application',
       filePath: 'templates/backend/application/CrudAppService.template.cs',
       content: this.loadTemplateContent('CrudAppService'),
       metadata: this.loadTemplateMetadata('CrudAppService'),
       fileExtension: 'cs',
-      targetFramework: 'backend'
+      targetFramework: 'backend',
+      tags: ['crud', 'app-service', 'backend']
     });
 
     this.registerTemplate({
       id: 'backend-permission-provider',
       name: 'ABP权限定义提供者',
+      description: 'ABP框架权限定义提供者模板',
       category: 'backend/application',
       filePath: 'templates/backend/application/PermissionDefinitionProvider.template.cs',
       content: this.loadTemplateContent('PermissionDefinitionProvider'),
       metadata: this.loadTemplateMetadata('PermissionDefinitionProvider'),
       fileExtension: 'cs',
-      targetFramework: 'backend'
+      targetFramework: 'backend',
+      tags: ['permission', 'provider', 'backend']
     });
 
     // 🔧 后端契约层模板
     this.registerTemplate({
       id: 'backend-entity-dto',
       name: 'ABP实体DTO',
+      description: 'ABP框架实体DTO模板',
       category: 'backend/contracts',
       filePath: 'templates/backend/contracts/EntityDto.template.cs',
       content: this.loadTemplateContent('EntityDto'),
       metadata: this.loadTemplateMetadata('EntityDto'),
       fileExtension: 'cs',
-      targetFramework: 'backend'
+      targetFramework: 'backend',
+      tags: ['template', 'backend']
     });
 
     this.registerTemplate({
       id: 'backend-create-dto',
       name: 'ABP创建DTO',
+      description: 'ABP框架创建DTO模板',
       category: 'backend/contracts',
       filePath: 'templates/backend/contracts/CreateEntityDto.template.cs',
       content: this.loadTemplateContent('CreateEntityDto'),
       metadata: this.loadTemplateMetadata('CreateEntityDto'),
       fileExtension: 'cs',
-      targetFramework: 'backend'
+      targetFramework: 'backend',
+      tags: ['template', 'backend']
     });
 
     this.registerTemplate({
       id: 'backend-update-dto',
       name: 'ABP更新DTO',
+      description: 'ABP框架更新DTO模板',
       category: 'backend/contracts',
       filePath: 'templates/backend/contracts/UpdateEntityDto.template.cs',
       content: this.loadTemplateContent('UpdateEntityDto'),
       metadata: this.loadTemplateMetadata('UpdateEntityDto'),
       fileExtension: 'cs',
-      targetFramework: 'backend'
+      targetFramework: 'backend',
+      tags: ['template', 'backend']
     });
 
     this.registerTemplate({
       id: 'backend-list-dto',
       name: 'ABP列表查询DTO',
+      description: 'ABP框架列表查询DTO模板',
       category: 'backend/contracts',
       filePath: 'templates/backend/contracts/GetEntityListDto.template.cs',
       content: this.loadTemplateContent('GetEntityListDto'),
       metadata: this.loadTemplateMetadata('GetEntityListDto'),
       fileExtension: 'cs',
-      targetFramework: 'backend'
+      targetFramework: 'backend',
+      tags: ['template', 'backend']
     });
 
     this.registerTemplate({
       id: 'backend-service-interface',
       name: 'ABP服务接口',
+      description: 'ABP框架服务接口模板',
       category: 'backend/contracts',
       filePath: 'templates/backend/contracts/CrudAppServiceInterface.template.cs',
       content: this.loadTemplateContent('CrudAppServiceInterface'),
       metadata: this.loadTemplateMetadata('CrudAppServiceInterface'),
       fileExtension: 'cs',
-      targetFramework: 'backend'
+      targetFramework: 'backend',
+      tags: ['template', 'backend']
     });
 
     // 🔧 后端数据访问层模板
     this.registerTemplate({
       id: 'backend-dbcontext-config',
       name: 'EF Core数据库上下文配置',
+      description: 'EF Core数据库上下文配置模板',
       category: 'backend/efcore',
       filePath: 'templates/backend/efcore/DbContextConfiguration.template.cs',
       content: this.loadTemplateContent('DbContextConfiguration'),
       metadata: this.loadTemplateMetadata('DbContextConfiguration'),
       fileExtension: 'cs',
-      targetFramework: 'backend'
+      targetFramework: 'backend',
+      tags: ['template', 'backend']
     });
 
     // 🔧 后端测试模板
     this.registerTemplate({
       id: 'backend-application-tests',
       name: 'ABP应用层测试',
+      description: 'ABP框架应用层测试模板',
       category: 'backend/tests',
       filePath: 'templates/backend/tests/Application.Tests.template.cs',
       content: this.loadTemplateContent('ApplicationTests'),
       metadata: this.loadTemplateMetadata('ApplicationTests'),
       fileExtension: 'cs',
-      targetFramework: 'backend'
+      targetFramework: 'backend',
+      tags: ['template', 'backend']
     });
 
     // 🎨 前端组件模板
     this.registerTemplate({
       id: 'frontend-crud-management',
       name: 'Vue3 CRUD管理组件',
+      description: 'Vue3 CRUD管理组件模板',
       category: 'frontend/components',
       filePath: 'templates/frontend/components/CrudManagement.template.vue',
       content: this.loadTemplateContent('CrudManagement'),
       metadata: this.loadTemplateMetadata('CrudManagement'),
       fileExtension: 'vue',
-      targetFramework: 'frontend'
+      targetFramework: 'frontend',
+      tags: ['template', 'frontend']
     });
 
     // 🎨 前端状态管理模板
     this.registerTemplate({
       id: 'frontend-entity-store',
       name: 'Pinia实体Store',
+      description: 'Pinia实体Store模板',
       category: 'frontend/stores',
       filePath: 'templates/frontend/stores/EntityStore.template.ts',
       content: this.loadTemplateContent('EntityStore'),
       metadata: this.loadTemplateMetadata('EntityStore'),
       fileExtension: 'ts',
-      targetFramework: 'frontend'
+      targetFramework: 'frontend',
+      tags: ['template', 'frontend']
     });
 
     // 🎨 前端路由模板
     this.registerTemplate({
       id: 'frontend-module-routes',
       name: 'Vue Router模块路由',
+      description: 'Vue Router模块路由模板',
       category: 'frontend/router',
       filePath: 'templates/frontend/router/ModuleRoutes.template.ts',
       content: this.loadTemplateContent('ModuleRoutes'),
       metadata: this.loadTemplateMetadata('ModuleRoutes'),
       fileExtension: 'ts',
-      targetFramework: 'frontend'
+      targetFramework: 'frontend',
+      tags: ['template', 'frontend']
     });
 
     // 🧩 低代码引擎模板
     this.registerTemplate({
       id: 'lowcode-code-generator',
       name: '低代码代码生成器',
+      description: '低代码代码生成器模板',
       category: 'lowcode/generators',
       filePath: 'templates/lowcode/generators/CodeGenerator.template.ts',
       content: this.loadTemplateContent('CodeGenerator'),
       metadata: this.loadTemplateMetadata('CodeGenerator'),
       fileExtension: 'ts',
-      targetFramework: 'lowcode'
+      targetFramework: 'lowcode',
+      tags: ['template', 'lowcode', 'generator']
     });
 
     this.registerTemplate({
       id: 'lowcode-plugin',
       name: '低代码引擎插件',
+      description: '低代码引擎插件模板',
       category: 'lowcode/plugins',
       filePath: 'templates/lowcode/plugins/LowCodePlugin.template.ts',
       content: this.loadTemplateContent('LowCodePlugin'),
       metadata: this.loadTemplateMetadata('LowCodePlugin'),
       fileExtension: 'ts',
-      targetFramework: 'lowcode'
+      targetFramework: 'lowcode',
+      tags: ['template', 'lowcode']
     });
 
     this.registerTemplate({
       id: 'lowcode-runtime-component',
       name: '低代码运行时组件',
+      description: '低代码运行时组件模板',
       category: 'lowcode/runtime',
       filePath: 'templates/lowcode/runtime/RuntimeComponent.template.vue',
       content: this.loadTemplateContent('RuntimeComponent'),
       metadata: this.loadTemplateMetadata('RuntimeComponent'),
       fileExtension: 'vue',
-      targetFramework: 'lowcode'
+      targetFramework: 'lowcode',
+      tags: ['template', 'lowcode']
     });
   }
 
@@ -676,7 +698,7 @@ export function useTemplateEngine() {
       if (!grouped[template.category]) {
         grouped[template.category] = [];
       }
-      grouped[template.category].push(template);
+      grouped[template.category]!.push(template);
     });
     return grouped;
   });

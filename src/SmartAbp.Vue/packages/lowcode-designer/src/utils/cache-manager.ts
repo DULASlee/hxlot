@@ -181,11 +181,13 @@ export class CacheManager {
       this.storage = this.options.storage;
 
       // Check if storage is available
-      if (!isStorageAvailable(this.storage)) {
-        console.warn("[CacheManager] Primary storage not available, using memory-only cache");
-        this.storage = sessionStorage;
+      if (this.storage instanceof Storage) {
         if (!isStorageAvailable(this.storage)) {
-          console.warn("[CacheManager] Session storage not available, using memory-only cache");
+          console.warn("[CacheManager] Primary storage not available, using memory-only cache");
+          this.storage = sessionStorage;
+          if (!isStorageAvailable(this.storage)) {
+            console.warn("[CacheManager] Session storage not available, using memory-only cache");
+          }
         }
       }
 
@@ -259,7 +261,11 @@ export class CacheManager {
         // Try to clear expired items and retry
         this.clearExpired();
         try {
-          this.storage.setItem(key, safeJsonStringify(item));
+          if (this.storage instanceof Storage) {
+            this.storage.setItem(key, safeJsonStringify(item));
+          } else {
+            this.storage.set(key, item);
+          }
         } catch (retryError) {
           logCacheError("setToStorage.retry", retryError, { key });
           throw new CacheError(

@@ -266,6 +266,14 @@ export class TestReportGenerator {
   ): ReportSection {
     const latestResult = results[results.length - 1]
 
+    if (!latestResult) {
+      return {
+        title: '负载测试结果',
+        content: '<p>暂无负载测试结果</p>',
+        charts: []
+      }
+    }
+
     let content = `
 <table>
   <thead>
@@ -331,6 +339,14 @@ export class TestReportGenerator {
   ): ReportSection {
     const latestResult = results[results.length - 1]
 
+    if (!latestResult) {
+      return {
+        title: '并发测试结果',
+        content: '<p>暂无并发测试结果</p>',
+        charts: []
+      }
+    }
+
     let content = `
 <table>
   <thead>
@@ -383,6 +399,14 @@ export class TestReportGenerator {
     _includeCharts: boolean = true
   ): ReportSection {
     const latestResult = results[results.length - 1]
+
+    if (!latestResult) {
+      return {
+        title: '基准测试结果',
+        content: '<p>暂无基准测试结果</p>',
+        charts: []
+      }
+    }
 
     let content = `
 <table>

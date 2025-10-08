@@ -10,10 +10,6 @@
 
 import { exec } from 'child_process'
 import { promisify } from 'util'
-import * as fs from 'fs';
-import { simpleLogger } from './simple-logger';
-import { performanceMonitor } from './simple-checkpoint';
-import { executeCommand, GitSyncResult, GitSyncStatus } from './git-sync-utils';
 
 const execAsync = promisify(exec)
 

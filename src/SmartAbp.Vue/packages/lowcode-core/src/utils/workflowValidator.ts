@@ -11,7 +11,7 @@
  * @version 1.0.0
  */
 
-import type { Node, Edge } from '@vue-flow/core'
+import type { Edge, Node } from '@vue-flow/core'
 
 export interface ValidationError {
   type: 'error' | 'warning' | 'info'
@@ -42,16 +42,16 @@ export class WorkflowValidator {
 
     // 1. 基础结构验证
     this.validateBasicStructure(nodes, edges, errors)
-    
+
     // 2. BPMN规范验证
     this.validateBPMNRules(nodes, edges, errors, warnings)
-    
+
     // 3. 连通性验证
     this.validateConnectivity(nodes, edges, warnings)
-    
+
     // 4. 循环检测
     this.detectCycles(nodes, edges, warnings)
-    
+
     // 5. 死锁检测
     this.detectDeadlocks(nodes, edges, errors)
 
@@ -67,8 +67,8 @@ export class WorkflowValidator {
    * 基础结构验证
    */
   private validateBasicStructure(
-    nodes: Node[], 
-    _edges: Edge[], 
+    nodes: Node[],
+    _edges: Edge[],
     errors: ValidationError[]
   ): void {
     // 检查是否有节点
@@ -259,7 +259,7 @@ export class WorkflowValidator {
       const outgoingEdges = edges.filter(e => e.source === nodeId)
       for (const edge of outgoingEdges) {
         const targetId = edge.target
-        
+
         if (!visited.has(targetId)) {
           if (hasCycle(targetId)) {
             return true
@@ -303,7 +303,10 @@ export class WorkflowValidator {
     }
 
     // 检查从开始节点是否能到达结束节点
-    const reachableFromStart = this.getReachableNodes(startNodes[0].id, edges)
+    const firstStartNode = startNodes[0]
+    if (!firstStartNode) return
+
+    const reachableFromStart = this.getReachableNodes(firstStartNode.id, edges)
     const hasPathToEnd = endNodes.some(endNode => reachableFromStart.has(endNode.id))
 
     if (!hasPathToEnd) {

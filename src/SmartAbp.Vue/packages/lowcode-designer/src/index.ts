@@ -33,13 +33,13 @@ export * from './views'
  * 注册所有设计器组件到 ComponentRegistry
  * @遵循架构铁律二：强制使用组件注册系统
  */
-import { registerComponent } from '@smartabp/lowcode-shared'
+import { registerComponent, type ComponentCategory } from '@smartabp/lowcode-shared'
 
 export function registerDesignerComponents(): void {
   // 核心设计器组件批量注册
-  const coreDesignerComponents = [
-    { name: 'CodeGenerationWizard', displayName: '代码生成向导', category: 'codegen', priority: 'high' as const },
-    { name: 'TemplateManager', displayName: '模板管理器', category: 'template', priority: 'high' as const },
+  const coreDesignerComponents: Array<{ name: string, displayName: string, category: ComponentCategory, priority: 'high' | 'medium' | 'low' }> = [
+    { name: 'CodeGenerationWizard', displayName: '代码生成向导', category: 'codegen' as const, priority: 'high' as const },
+    { name: 'TemplateManager', displayName: '模板管理器', category: 'template' as const, priority: 'high' as const },
     { name: 'BusinessRulesEngine', displayName: '业务规则引擎', category: 'business', priority: 'high' as const },
     { name: 'RuleConditionBuilder', displayName: '规则条件构建器', category: 'business', priority: 'medium' as const },
     { name: 'RuleActionBuilder', displayName: '规则动作构建器', category: 'business', priority: 'medium' as const },
@@ -74,7 +74,7 @@ export function registerDesignerComponents(): void {
     { name: 'ChaosExperimentDesigner', displayName: '混沌实验设计器', category: 'chaos', priority: 'low' as const },
     { name: 'FaultInjectionConfig', displayName: '故障注入配置', category: 'chaos', priority: 'low' as const },
     { name: 'EnterpriseWorkflowEngine', displayName: '企业工作流引擎', category: 'workflow', priority: 'low' as const },
-    
+
     // 💀 【铁律二违规修复】新增缺失的组件注册
     { name: 'AdvancedBusinessRulesEngine', displayName: '高级业务规则引擎', category: 'business', priority: 'medium' as const },
     { name: 'AdvancedEntityRelationshipDesigner', displayName: '高级实体关系设计器', category: 'designer', priority: 'medium' as const },
@@ -95,7 +95,7 @@ export function registerDesignerComponents(): void {
     { name: 'ThemeEditor', displayName: '主题编辑器', category: 'theme', priority: 'medium' as const },
     { name: 'VisualComponentPalette', displayName: '可视化组件面板', category: 'designer', priority: 'high' as const },
     { name: 'VisualDesignCanvas', displayName: '可视化设计画布', category: 'designer', priority: 'high' as const },
-    
+
     // CodeGenerator子组件
     { name: 'CodePreview', displayName: '代码预览', category: 'codegen', priority: 'medium' as const },
     { name: 'DragPreview', displayName: '拖拽预览', category: 'designer', priority: 'low' as const },
@@ -118,8 +118,8 @@ export function registerDesignerComponents(): void {
   })
 
   // 视图组件批量注册（Views作为顶层容器也需要注册）
-  const viewComponents = [
-    { name: 'EntityModelingView', displayName: '实体建模视图', category: 'view', priority: 'high' as const },
+  const viewComponents: Array<{ name: string, displayName: string, category: ComponentCategory, priority: 'high' | 'medium' | 'low' }> = [
+    { name: 'EntityModelingView', displayName: '实体建模视图', category: 'view' as const, priority: 'high' as const },
     { name: 'VisualDesignerView', displayName: '可视化设计器视图', category: 'view', priority: 'high' as const },
     { name: 'LowCodeEngineView', displayName: '低代码引擎视图', category: 'view', priority: 'high' as const },
     { name: 'AspireDesignerView', displayName: 'Aspire设计器视图', category: 'view', priority: 'medium' as const },
@@ -144,8 +144,8 @@ export function registerDesignerComponents(): void {
   })
 
   // CodeGen子视图组件批量注册
-  const codegenViewComponents = [
-    { name: 'TemplateMarketplace', displayName: '模板市场', category: 'codegen', priority: 'low' as const },
+  const codegenViewComponents: Array<{ name: string, displayName: string, category: ComponentCategory, priority: 'high' | 'medium' | 'low' }> = [
+    { name: 'TemplateMarketplace', displayName: '模板市场', category: 'codegen' as const, priority: 'low' as const },
     { name: 'AIAssistantPanel', displayName: 'AI助手面板', category: 'codegen', priority: 'low' as const },
     { name: 'ScalingHistoryChart', displayName: '扩容历史图表', category: 'codegen', priority: 'low' as const },
     { name: 'CostDashboard', displayName: '成本仪表板', category: 'codegen', priority: 'low' as const },
@@ -179,8 +179,8 @@ export function registerDesignerComponents(): void {
   })
 
   // Designer子组件批量注册
-  const designerSubComponents = [
-    { name: 'Canvas', displayName: '画布', category: 'designer', priority: 'medium' as const },
+  const designerSubComponents: Array<{ name: string, displayName: string, category: ComponentCategory, priority: 'high' | 'medium' | 'low' }> = [
+    { name: 'Canvas', displayName: '画布', category: 'designer' as const, priority: 'medium' as const },
     { name: 'Palette', displayName: '组件面板', category: 'designer', priority: 'medium' as const },
     { name: 'Inspector', displayName: '检查器', category: 'designer', priority: 'medium' as const },
     { name: 'StyleEditor', displayName: '样式编辑器', category: 'designer', priority: 'low' as const },
@@ -210,8 +210,8 @@ export function registerDesignerComponents(): void {
   })
 
   // 其他辅助组件
-  const utilityComponents = [
-    { name: 'DesignView', displayName: '设计视图', category: 'view', priority: 'medium' as const }
+  const utilityComponents: Array<{ name: string, displayName: string, category: ComponentCategory, priority: 'high' | 'medium' | 'low' }> = [
+    { name: 'DesignView', displayName: '设计视图', category: 'view', priority: 'medium' }
   ]
 
   utilityComponents.forEach(comp => {

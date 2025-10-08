@@ -304,7 +304,7 @@ export class PerformanceBaselineManager {
     // 按更新时间排序，返回最新的
     filtered.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
     
-    return filtered[0]
+    return filtered[0] || null // 转换undefined为null
   }
 
   /**

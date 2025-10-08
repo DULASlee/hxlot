@@ -2,8 +2,8 @@
  * Data synchronization utilities with conflict resolution
  */
 
-import { ref, computed, onUnmounted } from "vue"
 import { ElMessage } from "element-plus"
+import { computed, onUnmounted, ref } from "vue"
 
 /**
  * Conflict resolution strategies
@@ -133,11 +133,13 @@ export class DataSynchronizer {
       if (existingIndex >= 0) {
         // 合并变更或替换
         const existing = this.pendingChanges[existingIndex]
-        if (change.timestamp > existing.timestamp) {
-          this.pendingChanges[existingIndex] = change
-          console.log(`🔄 Updated pending change for ${change.entity}:${change.id}`)
-        } else {
-          console.log(`⏭️ Skipped older change for ${change.entity}:${change.id}`)
+        if (existing) {
+          if (change.timestamp > existing.timestamp) {
+            this.pendingChanges[existingIndex] = change
+            console.log(`🔄 Updated pending change for ${change.entity}:${change.id}`)
+          } else {
+            console.log(`⏭️ Skipped older change for ${change.entity}:${change.id}`)
+          }
         }
       } else {
         this.pendingChanges.push(change)

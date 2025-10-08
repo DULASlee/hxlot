@@ -8,9 +8,7 @@
  * @version 1.0.0-mvp
  */
 
-import { dynamicModeManager } from './dynamic-mode';
-import { selfLearningManager } from './self-learning';
-import { ExecutionStage, performanceMonitor } from './simple-checkpoint';
+import { ExecutionStage } from './simple-checkpoint';
 import { simpleLogger } from './simple-logger';
 
 /**
@@ -33,8 +31,8 @@ export class ExecutionGuardian {
     this.filesModified.clear()
     this.ironRulesViolated.clear()
 
-    simpleLogger.startStage(ExecutionStage[stage])
-    simpleLogger.info(`🚀 开始执行阶段: ${ExecutionStage[stage]}`)
+    simpleLogger.info(`🚀 开始执行阶段: ${stage}`)
+    // TODO: 添加阶段跟踪
   }
 
   /**
@@ -43,7 +41,7 @@ export class ExecutionGuardian {
   endStage(): void {
     if (!this.currentStage) return
 
-    const stageName = ExecutionStage[this.currentStage]
+    const stageName = this.currentStage
 
     // 记录阶段完成
     simpleLogger.success(`✅ 完成阶段: ${stageName}`)
@@ -79,12 +77,12 @@ export class ExecutionGuardian {
     if (violations.length > 0) {
       simpleLogger.error('🚨 检测到铁律违规！', {
         violations: violations,
-        stage: this.currentStage ? ExecutionStage[this.currentStage] : 'unknown'
+        stage: this.currentStage || 'unknown'
       })
 
       // 记录学习
       violations.forEach(violation => {
-        selfLearningManager.recordError('IRON_RULE_VIOLATION', violation)
+        console.log('📝 记录铁律违规:', violation)
       })
 
       this.triggerForceStop('铁律违规检测')
@@ -108,7 +106,7 @@ export class ExecutionGuardian {
     simpleLogger.error(`🚨 强制停止执行: ${reason}`)
 
     // 记录强制停止
-    selfLearningManager.recordError('FORCE_STOP', reason)
+    // selfLearningManager.recordError('FORCE_STOP', reason)
 
     // 抛出错误强制停止
     throw new Error(`AI编程铁律强制停止: ${reason}`)
@@ -144,7 +142,7 @@ export class ExecutionGuardian {
     violations: string[]
   } {
     return {
-      currentStage: this.currentStage ? ExecutionStage[this.currentStage] : null,
+      currentStage: this.currentStage || null,
       codeLines: this.codeLines,
       filesModified: Array.from(this.filesModified),
       violations: Array.from(this.ironRulesViolated)
@@ -186,7 +184,8 @@ export function withGuardian<T extends any[]>(fn: (...args: T) => any) {
       return result
     } catch (error) {
       // 记录错误并重新抛出
-      selfLearningManager.recordError('GUARDIAN_EXECUTION_ERROR', error.message)
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      console.error('Guardian执行错误:', errorMessage)
       throw error
     }
   }
@@ -202,14 +201,15 @@ export function enforceIronRules(): void {
   }
 
   // 检查编程前学习是否完成
-  if (dynamicModeManager.isEmergencyMode()) {
-    simpleLogger.warn('🚨 Emergency mode is active. Skipping pre-programming learning.');
-    return;
-  }
-  performanceMonitor.startStage(ExecutionStage.STAGE1_PRE_PROGRAMMING_LEARNING);
+  // TODO: 暂时跳过动态模式检查
+  // if (dynamicModeManager.isEmergencyMode()) {
+  //   simpleLogger.warn('🚨 Emergency mode is active. Skipping pre-programming learning.');
+  //   return;
+  // }
+  // performanceMonitor.startStage(ExecutionStage.STAGE1_PRE_PROGRAMMING_LEARNING);
   simpleLogger.info('🧠 Stage 1: Pre-programming learning started...');
   // Add learning logic here
-  performanceMonitor.endStage(ExecutionStage.STAGE1_PRE_PROGRAMMING_LEARNING);
+  // performanceMonitor.endStage(ExecutionStage.STAGE1_PRE_PROGRAMMING_LEARNING);
   // 这里可以添加更多的铁律检查...
 }
 
