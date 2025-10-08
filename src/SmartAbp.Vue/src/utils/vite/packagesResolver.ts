@@ -135,7 +135,7 @@ export function createPackagesResolver(options?: {
 
             // 情况2: 不带前缀的组件名（尝试所有package）
             for (const dir of PACKAGES_COMPONENT_DIRS) {
-                const packageName = dir.split('/')[0]
+                const packageName = dir.split('/')[0] || ''
                 const componentPath = resolveComponentPath(
                     packagesRoot,
                     packageName,
@@ -228,8 +228,9 @@ function resolveComponentPath(
 
     for (const path of searchPaths) {
         if (existsSync(path)) {
-            // 返回别名路径（而非绝对路径）
-            return `@smartabp/${packageName}/components/${componentBaseName}`
+            // ✅ 修复：返回绝对文件系统路径，而非别名路径
+            // 这样 unplugin-vue-components 才能正确解析
+            return path
         }
     }
 

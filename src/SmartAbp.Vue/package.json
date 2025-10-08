@@ -38,6 +38,7 @@
     "codegen": "tsx src/tools/cli.ts generate",
     "codegen:check": "tsx src/tools/cli.ts check",
     "codegen:entity": "tsx --tsconfig tsconfig.json src/tools/metadata-codegen.ts",
+    "diagnose:components": "tsx ../../scripts/tools/diagnose-component-system.ts",
     "codegen:frontend": "tsx --tsconfig tsconfig.json src/tools/metadata-codegen.ts frontend",
     "codegen:backend": "tsx --tsconfig tsconfig.json src/tools/metadata-codegen.ts backend",
     "codegen:all": "tsx --tsconfig tsconfig.json src/tools/metadata-codegen.ts all",
