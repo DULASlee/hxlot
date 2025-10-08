@@ -13,6 +13,8 @@ import type {
     UnifiedEntityRelationship,
     UnifiedModuleMetadata,
     UnifiedValidationRule,
+    UnifiedFieldType,
+    UnifiedValidationRuleType,
 } from '../types/unified-schema'
 
 /**
@@ -174,7 +176,7 @@ export class SchemaConverter {
             databaseInfo: {
                 connectionStringName: dto.databaseInfo?.connectionStringName || 'Default',
                 schema: dto.databaseInfo?.schema || 'dbo',
-                provider: dto.databaseInfo?.provider || 'SqlServer',
+                provider: (dto.databaseInfo?.provider as 'SqlServer' | 'PostgreSql' | 'MySql' | 'Oracle' | 'SQLite') || 'SqlServer',
             },
             frontend: {
                 parentId: dto.frontend?.parentId || '',
@@ -189,7 +191,7 @@ export class SchemaConverter {
                 SchemaConverter.fromBackendEntityDto(e)
             ),
             menuConfig: dto.menuConfig || [],
-            permissionConfig: dto.permissionConfig || { groupName: '', permissions: [] },
+            permissionConfig: dto.permissionConfig || { groupName: '', permissions: [], policies: [] },
             dependencies: dto.dependencies || [],
             schemaVersion: '1.0.0',
             createdAt: dto.createdAt ? new Date(dto.createdAt) : new Date(),
@@ -280,7 +282,7 @@ export class SchemaConverter {
             id: dto.id || '',
             name: dto.name || '',
             displayName: dto.displayName || '',
-            type: dto.type || 'string',
+            type: (dto.type as UnifiedFieldType) || 'string',
             description: dto.description || '',
             helpText: dto.helpText || '',
             isRequired: dto.isRequired || false,
@@ -329,10 +331,10 @@ export class SchemaConverter {
         return {
             id: dto.id,
             fieldName: fieldName,
-            ruleType: dto.ruleType || dto.type || 'required',
+            ruleType: (dto.ruleType || dto.type || 'required') as UnifiedValidationRuleType,
             ruleValue: dto.ruleValue || dto.value?.toString() || '',
             errorMessage: dto.errorMessage || dto.message || '',
-            trigger: dto.trigger || 'blur',
+            trigger: (dto.trigger as 'blur' | 'change' | 'submit') || 'blur',
         }
     }
 
