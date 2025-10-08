@@ -219,6 +219,7 @@ const getMetricClass = (type: string, value: number | undefined) => {
   }
 
   const threshold = thresholds[type]
+  if (!threshold) return 'metric-poor'
   if (value < threshold.good) return 'metric-good'
   if (value < threshold.needsImprovement) return 'metric-warning'
   return 'metric-poor'
@@ -236,6 +237,7 @@ const getProgress = (type: string, value: number | undefined) => {
   }
 
   const max = maxValues[type]
+  if (!max) return 0
   return Math.min((value / max) * 100, 100)
 }
 

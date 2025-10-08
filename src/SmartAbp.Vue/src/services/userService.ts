@@ -6,12 +6,12 @@ Based on SmartAbp template library
 DO NOT EDIT MANUALLY - Regenerate using module wizard
 */
 
-import {
-  User,
+import type {
   CreateUserDto,
-  UpdateUserDto,
   GetUserListDto,
   PagedResultDto,
+  UpdateUserDto,
+  User,
   UserListItem,
   UserQueryParams,
   UserStatistics,

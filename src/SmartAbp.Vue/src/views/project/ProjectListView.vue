@@ -190,7 +190,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue"
+import { computed, ref } from "vue"
 
 interface Project {
   id: number
@@ -291,7 +291,7 @@ const addProject = () => {
     members: 1,
     tasks: 0,
     progress: 0,
-    createdAt: new Date().toISOString().split("T")[0],
+    createdAt: new Date().toISOString().split("T")[0] || "",
   }
   projects.value.push(project)
   showAddProject.value = false

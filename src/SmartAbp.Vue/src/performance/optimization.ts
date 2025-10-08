@@ -4,7 +4,7 @@
  * Component lazy loading, dynamic imports, and runtime performance optimizations
  */
 
-import { defineAsyncComponent, Component } from "vue"
+import { defineAsyncComponent, type Component } from "vue"
 
 // Performance monitoring configuration
 export const performanceConfig = {

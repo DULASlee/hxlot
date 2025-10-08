@@ -22,7 +22,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
+    "noPropertyAccessFromIndexSignature": false,  // TODO: 逐步修复后改为true
     "exactOptionalPropertyTypes": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

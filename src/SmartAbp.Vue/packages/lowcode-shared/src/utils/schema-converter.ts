@@ -16,6 +16,129 @@ import type {
 } from '../types/unified-schema'
 
 /**
+ * 后端DTO类型定义
+ */
+interface BackendModuleDto {
+    id?: string
+    systemName?: string
+    name?: string
+    displayName?: string
+    description?: string
+    version?: string
+    namespace?: string
+    architecturePattern?: string
+    author?: string
+    databaseInfo?: {
+        connectionStringName?: string
+        schema?: string
+        provider?: string
+    }
+    frontend?: {
+        parentId?: string
+        routePrefix?: string
+    }
+    generateMobilePages?: boolean
+    featureManagement?: {
+        isEnabled?: boolean
+        defaultPolicy?: string
+    }
+    entities?: BackendEntityDto[]
+    menuConfig?: any[]
+    permissionConfig?: { groupName?: string; permissions?: any[] }
+    dependencies?: any[]
+    createdAt?: string
+    updatedAt?: string
+}
+
+interface BackendEntityDto {
+    id?: string
+    name?: string
+    displayName?: string
+    tableName?: string
+    module?: string
+    namespace?: string
+    description?: string
+    schema?: string
+    isAggregateRoot?: boolean
+    baseClass?: string
+    interfaces?: string[]
+    isAudited?: boolean
+    isSoftDelete?: boolean
+    isMultiTenant?: boolean
+    properties?: BackendPropertyDto[]
+    relationships?: BackendRelationshipDto[]
+    businessRules?: any[]
+    indexes?: any[]
+    constraints?: any[]
+    permissions?: any[]
+    uiConfig?: any
+    frontendConfig?: any
+    backendConfig?: any
+    codeGeneration?: any
+    isCompleted?: boolean
+    tags?: string[]
+    version?: string
+    createdAt?: string
+    updatedAt?: string
+}
+
+interface BackendPropertyDto {
+    id?: string
+    name?: string
+    displayName?: string
+    description?: string
+    type?: string
+    isRequired?: boolean
+    isNullable?: boolean
+    isUnique?: boolean
+    isIndexed?: boolean
+    isPrimaryKey?: boolean
+    maxLength?: number
+    minLength?: number
+    precision?: number
+    scale?: number
+    defaultValue?: any
+    enumType?: string
+    enumValues?: any[]
+    comment?: string
+    validationRules?: BackendValidationRuleDto[]
+}
+
+interface BackendRelationshipDto {
+    id?: string
+    name?: string
+    displayName?: string
+    description?: string
+    type?: string
+    relationshipType?: string
+    sourceEntityId?: string
+    sourceEntityName?: string
+    sourceProperty?: string
+    sourceNavigationProperty?: string
+    targetEntityId?: string
+    targetEntityName?: string
+    targetProperty?: string
+    targetNavigationProperty?: string
+    foreignKey?: string
+    principalKey?: string
+    cascadeDelete?: boolean
+    isRequired?: boolean
+    navigationPropertyName?: string
+}
+
+interface BackendValidationRuleDto {
+    id?: string
+    type?: string
+    ruleType?: string
+    value?: any
+    ruleValue?: string
+    errorMessage?: string
+    message?: string
+    trigger?: string
+    parameters?: Record<string, any>
+}
+
+/**
  * 后端DTO → 前端统一Schema转换器
  */
 export class SchemaConverter {
@@ -26,7 +149,7 @@ export class SchemaConverter {
      * @param dto 后端DTO
      * @returns 前端统一Schema
      */
-    static fromBackendModuleDto(dto: Record<string, any>): UnifiedModuleMetadata {
+    static fromBackendModuleDto(dto: BackendModuleDto): UnifiedModuleMetadata {
         return {
             id: dto.id || '',
             systemName: dto.systemName || '',
@@ -51,7 +174,7 @@ export class SchemaConverter {
                 isEnabled: dto.featureManagement?.isEnabled || false,
                 defaultPolicy: dto.featureManagement?.defaultPolicy || '',
             },
-            entities: (dto.entities || []).map((e: Record<string, any>) =>
+            entities: (dto.entities || []).map((e) =>
                 SchemaConverter.fromBackendEntityDto(e)
             ),
             menuConfig: dto.menuConfig || [],
@@ -69,7 +192,7 @@ export class SchemaConverter {
      * @param dto 后端DTO
      * @returns 前端统一Schema
      */
-    static fromBackendEntityDto(dto: Record<string, any>): UnifiedEntityDefinition {
+    static fromBackendEntityDto(dto: BackendEntityDto): UnifiedEntityDefinition {
         return {
             id: dto.id || '',
             name: dto.name || '',
@@ -85,15 +208,15 @@ export class SchemaConverter {
             isAudited: dto.isAudited || false,
             isSoftDelete: dto.isSoftDelete || false,
             isMultiTenant: dto.isMultiTenant || false,
-            fields: (dto.properties || []).map((p: Record<string, any>) =>
+            fields: (dto.properties || []).map((p) =>
                 SchemaConverter.fromBackendPropertyDto(p)
             ),
-            relationships: (dto.relationships || []).map((r: Record<string, any>) =>
+            relationships: (dto.relationships || []).map((r) =>
                 SchemaConverter.fromBackendRelationshipDto(r)
             ),
             validationRules: (dto.properties || [])
-                .flatMap((p: Record<string, any>) => (p.validationRules || []).map((r: Record<string, any>) =>
-                    SchemaConverter.fromBackendValidationRuleDto(r, p.name)
+                .flatMap((p) => (p.validationRules || []).map((r) =>
+                    SchemaConverter.fromBackendValidationRuleDto(r, p.name || '')
                 )),
             businessRules: dto.businessRules || [],
             indexes: dto.indexes || [],
@@ -141,7 +264,7 @@ export class SchemaConverter {
      * @param dto 后端DTO
      * @returns 前端统一Schema
      */
-    static fromBackendPropertyDto(dto: Record<string, any>): UnifiedEntityField {
+    static fromBackendPropertyDto(dto: BackendPropertyDto): UnifiedEntityField {
         return {
             id: dto.id || '',
             name: dto.name || '',
@@ -191,7 +314,7 @@ export class SchemaConverter {
      * @param fieldName 字段名称
      * @returns 前端统一Schema
      */
-    static fromBackendValidationRuleDto(dto: Record<string, any>, fieldName: string): UnifiedValidationRule {
+    static fromBackendValidationRuleDto(dto: BackendValidationRuleDto, fieldName: string): UnifiedValidationRule {
         return {
             id: dto.id,
             fieldName: fieldName,
@@ -208,7 +331,7 @@ export class SchemaConverter {
      * @param dto 后端DTO
      * @returns 前端统一Schema
      */
-    static fromBackendRelationshipDto(dto: Record<string, any>): UnifiedEntityRelationship {
+    static fromBackendRelationshipDto(dto: BackendRelationshipDto): UnifiedEntityRelationship {
         return {
             id: dto.id || '',
             name: dto.name || '',

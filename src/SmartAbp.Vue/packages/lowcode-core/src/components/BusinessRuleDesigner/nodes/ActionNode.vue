@@ -13,49 +13,49 @@
       <div class="node-description">{{ data.description || '执行业务操作' }}</div>
 
       <!-- SetFieldValue -->
-      <div v-if="data.actionType === 'SetFieldValue' && data.actionParams" class="action-params">
+      <div v-if="setFieldValueParams" class="action-params">
         <div class="param-item">
           <span class="param-label">字段:</span>
-          <span class="param-value">{{ data.actionParams.field }}</span>
+          <span class="param-value">{{ setFieldValueParams.field }}</span>
         </div>
         <div class="param-item">
           <span class="param-label">值:</span>
-          <span class="param-value">{{ formatValue(data.actionParams.value) }}</span>
+          <span class="param-value">{{ formatValue(setFieldValueParams.value) }}</span>
         </div>
       </div>
 
       <!-- ShowMessage -->
-      <div v-else-if="data.actionType === 'ShowMessage' && data.actionParams" class="action-params">
+      <div v-else-if="showMessageParams" class="action-params">
         <div class="param-item">
           <span class="param-label">消息:</span>
-          <span class="param-value">{{ data.actionParams.message }}</span>
+          <span class="param-value">{{ showMessageParams.message }}</span>
         </div>
         <div class="param-item">
-          <el-tag :type="(getMessageTypeTag(data.actionParams.type) as any)" size="small">
-            {{ data.actionParams.type || 'info' }}
+          <el-tag :type="getMessageTypeTag(showMessageParams.type)" size="small">
+            {{ showMessageParams.type || 'info' }}
           </el-tag>
         </div>
       </div>
 
       <!-- CallAPI -->
-      <div v-else-if="data.actionType === 'CallAPI' && data.actionParams" class="action-params">
+      <div v-else-if="callAPIParams" class="action-params">
         <div class="param-item">
           <span class="param-label">API:</span>
-          <code class="param-code">{{ data.actionParams.url }}</code>
+          <code class="param-code">{{ callAPIParams.url }}</code>
         </div>
         <div class="param-item">
-          <el-tag type="info" size="small">{{ data.actionParams.method || 'GET' }}</el-tag>
+          <el-tag type="info" size="small">{{ callAPIParams.method || 'GET' }}</el-tag>
         </div>
       </div>
 
       <!-- ValidateField -->
-      <div v-else-if="data.actionType === 'ValidateField' && data.actionParams" class="action-params">
+      <div v-else-if="validateFieldParams" class="action-params">
         <div class="param-item">
           <span class="param-label">验证:</span>
-          <span class="param-value">{{ data.actionParams.field }}</span>
+          <span class="param-value">{{ validateFieldParams.field }}</span>
         </div>
-        <div v-if="data.actionParams.rules" class="param-item">
-          <el-tag v-for="rule in data.actionParams.rules" :key="rule" type="warning" size="small"
+        <div v-if="validateFieldParams.rules" class="param-item">
+          <el-tag v-for="rule in validateFieldParams.rules" :key="rule" type="warning" size="small"
             style="margin-right: 4px">
             {{ rule }}
           </el-tag>
@@ -80,7 +80,7 @@ import { InfoFilled, Setting } from '@element-plus/icons-vue'
 import { Handle, Position } from '@vue-flow/core'
 import { ElIcon, ElTag } from 'element-plus'
 import { computed } from 'vue'
-import type { RuleNodeData } from '../types'
+import type { RuleNodeData, SetFieldValueParams, ShowMessageParams, CallAPIParams, ValidateFieldParams, ActionType } from '../types'
 
 interface Props {
   data: RuleNodeData
@@ -92,8 +92,37 @@ const hasError = computed(() => {
   return !props.data.actionType
 })
 
-const getActionTypeLabel = (type: string): string => {
-  const labels: Record<string, string> = {
+// 类型守卫计算属性
+const setFieldValueParams = computed((): SetFieldValueParams | null => {
+  if (props.data.actionType === 'SetFieldValue' && props.data.actionParams?.actionType === 'SetFieldValue') {
+    return props.data.actionParams as SetFieldValueParams
+  }
+  return null
+})
+
+const showMessageParams = computed((): ShowMessageParams | null => {
+  if (props.data.actionType === 'ShowMessage' && props.data.actionParams?.actionType === 'ShowMessage') {
+    return props.data.actionParams as ShowMessageParams
+  }
+  return null
+})
+
+const callAPIParams = computed((): CallAPIParams | null => {
+  if (props.data.actionType === 'CallAPI' && props.data.actionParams?.actionType === 'CallAPI') {
+    return props.data.actionParams as CallAPIParams
+  }
+  return null
+})
+
+const validateFieldParams = computed((): ValidateFieldParams | null => {
+  if (props.data.actionType === 'ValidateField' && props.data.actionParams?.actionType === 'ValidateField') {
+    return props.data.actionParams as ValidateFieldParams
+  }
+  return null
+})
+
+const getActionTypeLabel = (type: ActionType): string => {
+  const labels: Record<ActionType, string> = {
     SetFieldValue: '设置字段',
     ShowMessage: '显示消息',
     CallAPI: '调用API',
@@ -102,14 +131,14 @@ const getActionTypeLabel = (type: string): string => {
   return labels[type] || type
 }
 
-const getMessageTypeTag = (type: string): string => {
-  const tags: Record<string, string> = {
-    info: 'info',
-    success: 'success',
-    warning: 'warning',
-    error: 'danger'
+const getMessageTypeTag = (type?: 'success' | 'warning' | 'info' | 'error'): 'success' | 'warning' | 'info' | 'danger' => {
+  const tags = {
+    info: 'info' as const,
+    success: 'success' as const,
+    warning: 'warning' as const,
+    error: 'danger' as const
   }
-  return tags[type] || 'info'
+  return type ? (tags[type] || 'info') : 'info'
 }
 
 const formatValue = (value: any): string => {

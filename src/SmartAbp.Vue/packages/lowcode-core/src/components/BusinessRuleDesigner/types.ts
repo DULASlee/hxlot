@@ -15,6 +15,61 @@ import type { Edge, Node } from '@vue-flow/core'
 export type RuleNodeType = 'condition' | 'action' | 'decision' | 'start' | 'end'
 
 /**
+ * 动作类型
+ */
+export type ActionType = 'SetFieldValue' | 'ShowMessage' | 'CallAPI' | 'ValidateField'
+
+/**
+ * 动作参数基类型
+ */
+export interface BaseActionParams {
+  actionType: ActionType
+}
+
+/**
+ * 设置字段值参数
+ */
+export interface SetFieldValueParams extends BaseActionParams {
+  actionType: 'SetFieldValue'
+  field: string
+  value: any
+}
+
+/**
+ * 显示消息参数
+ */
+export interface ShowMessageParams extends BaseActionParams {
+  actionType: 'ShowMessage'
+  message: string
+  type?: 'success' | 'warning' | 'info' | 'error'
+}
+
+/**
+ * 调用API参数
+ */
+export interface CallAPIParams extends BaseActionParams {
+  actionType: 'CallAPI'
+  url: string
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
+  body?: Record<string, any>
+  headers?: Record<string, string>
+}
+
+/**
+ * 验证字段参数
+ */
+export interface ValidateFieldParams extends BaseActionParams {
+  actionType: 'ValidateField'
+  field: string
+  rules?: string[]
+}
+
+/**
+ * 所有动作参数的联合类型
+ */
+export type ActionParams = SetFieldValueParams | ShowMessageParams | CallAPIParams | ValidateFieldParams
+
+/**
  * 规则节点数据
  */
 export interface RuleNodeData {
@@ -25,8 +80,8 @@ export interface RuleNodeData {
   // 条件节点特有
   expression?: string
   // 动作节点特有
-  actionType?: string
-  actionParams?: Record<string, any>
+  actionType?: ActionType
+  actionParams?: ActionParams
   // 决策节点特有
   branches?: Array<{
     condition: string

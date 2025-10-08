@@ -6,8 +6,8 @@
 
 import { ref, computed, type Ref } from "vue"
 import {
-  LogTransport,
-  LogEntry,
+  type LogTransport,
+  type LogEntry,
   LogLevel,
   LOG_LEVEL_NAMES,
   ConsoleTransport,

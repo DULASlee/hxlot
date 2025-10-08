@@ -4,7 +4,7 @@ import { useAuthStore } from "@/stores"
 import { logger } from "@/utils/logger"
 import LoginView from "@/views/auth/Login.vue"
 import { ElMessage } from "element-plus"
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
+import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router"
 import { autoLoadModuleRoutes, printRouteLoadInfo } from "./auto-load"
 import opsMonitoringRoutes from "./modules/ops-monitoring"
 
