@@ -13,12 +13,12 @@
  * - 性能监控和错误追踪
  */
 
-export type ComponentCategory = 
-  | 'basic' | 'layout' | 'form' | 'data' | 'chart' | 'advanced' | 'business' 
-  | 'workflow' | 'utility' | 'designer' | 'inspector' | 'preview' | 'monitor' 
-  | 'template' | 'codegen' | 'aspire' | 'security' | 'theme' | 'modeling' 
-  | 'quality' | 'solution' | 'wizard' | 'resilience' | 'devops' | 'git' | 'cicd' 
-  | 'code' | 'chaos';
+export type ComponentCategory =
+  | 'basic' | 'layout' | 'form' | 'data' | 'chart' | 'advanced' | 'business'
+  | 'workflow' | 'utility' | 'designer' | 'inspector' | 'preview' | 'monitor'
+  | 'template' | 'codegen' | 'aspire' | 'security' | 'theme' | 'modeling'
+  | 'quality' | 'solution' | 'wizard' | 'resilience' | 'devops' | 'git' | 'cicd'
+  | 'code' | 'chaos' | 'observability' | 'view';
 export type LoadPriority = 'high' | 'medium' | 'low';
 
 /**

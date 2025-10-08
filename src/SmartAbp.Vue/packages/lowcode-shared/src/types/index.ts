@@ -43,10 +43,14 @@ export type { MDIWindowConfig, TabConfig } from './ui'
 export type { AuditedEntityDto, EntityDto, ListResultDto, PagedResultDto } from './dtos'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🔧 装配件系统类型（Assembly System Types）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export type { AssemblyConfig, AssemblyEvent, AssemblyPlugin, AssemblyValidationResult, DependencyEdge, DependencyGraph, DependencyNode, GeneratedCode, IAssemblyManager, ValidationError, ValidationWarning } from './assembly'
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 💼 业务类型（从主应用迁移至统一类型系统）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export type {
-  BookDto, CreateBookDto, UpdateBookDto, BookPagedRequestDto, BookPagedResultDto,
-  BaseEntityDto, BasePagedRequestDto, BasePagedResultDto
+  BaseEntityDto, BasePagedRequestDto, BasePagedResultDto, BookDto, BookPagedRequestDto, BookPagedResultDto, CreateBookDto, UpdateBookDto
 } from './business'
 

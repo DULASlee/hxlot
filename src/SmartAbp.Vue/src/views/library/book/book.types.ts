@@ -19,9 +19,8 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 export type {
-  BookDto, CreateBookDto, UpdateBookDto, 
-  BookPagedRequestDto, BookPagedResultDto
-} from '@smartabp/lowcode-shared'
+  BookDto, BookPagedRequestDto, BookPagedResultDto, CreateBookDto, UpdateBookDto
+} from '@smartabp/lowcode-shared';
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 💀 原违规代码（已迁移，保留以备参考）

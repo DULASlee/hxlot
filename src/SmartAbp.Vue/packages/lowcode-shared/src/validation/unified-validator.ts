@@ -53,9 +53,9 @@ import {
 
 // 🔥 阶段4：国际化错误信息
 import {
-    translateValidationMessage,
+    extractZodErrorParams,
     getMessageKeyFromZodError,
-    extractZodErrorParams
+    translateValidationMessage
 } from '../i18n/validation-i18n'
 
 // ============================================================================
@@ -78,14 +78,14 @@ export interface UnifiedValidationFeatureFlags {
     enableVersionCompatibilityCheck?: boolean
     /** 🔥 阶段2：是否启用自动版本迁移建议 */
     enableAutoMigrationSuggestions?: boolean
-    
+
     /** 🔥 阶段3：是否启用Schema差异对比 */
     enableSchemaDiffComparison?: boolean
     /** 是否启用变更日志生成 */
     enableChangelogGeneration?: boolean
     /** 是否启用破坏性变更检测 */
     enableBreakingChangeDetection?: boolean
-    
+
     /** 🔥 阶段4：是否启用国际化错误消息 */
     enableI18nErrorMessages?: boolean
 }
@@ -130,9 +130,9 @@ export function getValidationFeatureFlags(): UnifiedValidationFeatureFlags {
 // ============================================================================
 
 /**
- * 验证结果
+ * 统一验证结果
  */
-export interface ValidationResult<T = any> {
+export interface UnifiedValidationResult<T = any> {
     /** 验证是否成功 */
     success: boolean
     /** 验证后的数据（如果成功） */
@@ -244,7 +244,7 @@ export class UnifiedSchemaValidator {
     /**
      * 验证实体定义
      */
-    async validateEntity(entity: UnifiedEntityDefinition): Promise<ValidationResult<UnifiedEntityDefinition>> {
+    async validateEntity(entity: UnifiedEntityDefinition): Promise<UnifiedValidationResult<UnifiedEntityDefinition>> {
         const startTime = performance.now()
 
         try {
@@ -321,7 +321,7 @@ export class UnifiedSchemaValidator {
     /**
      * 验证模块定义
      */
-    async validateModule(module: UnifiedModuleMetadata): Promise<ValidationResult<UnifiedModuleMetadata>> {
+    async validateModule(module: UnifiedModuleMetadata): Promise<UnifiedValidationResult<UnifiedModuleMetadata>> {
         const startTime = performance.now()
 
         try {
@@ -377,7 +377,7 @@ export class UnifiedSchemaValidator {
     /**
      * 批量验证实体
      */
-    async validateEntities(entities: UnifiedEntityDefinition[]): Promise<ValidationResult<UnifiedEntityDefinition[]>> {
+    async validateEntities(entities: UnifiedEntityDefinition[]): Promise<UnifiedValidationResult<UnifiedEntityDefinition[]>> {
         const startTime = performance.now()
         const results = await Promise.all(entities.map(entity => this.validateEntity(entity)))
 
@@ -601,7 +601,7 @@ export class UnifiedSchemaValidator {
                     }
 
                     // 必填性增强是破坏性变更
-                    if (modification.path.includes('.isRequired') && 
+                    if (modification.path.includes('.isRequired') &&
                         !modification.oldValue && modification.newValue) {
                         breakingChanges.push({
                             type: 'FIELD_REQUIRED' as const,
@@ -695,7 +695,7 @@ export class UnifiedSchemaValidator {
             const oldMetadata = convertEntityToMetadataCore(oldEntity) as any
             const newMetadata = convertEntityToMetadataCore(newEntity) as any
             const diff = diffEntitySchema(oldMetadata, newMetadata)
-            
+
             const changelogVersion = version || newEntity.schemaVersion || newEntity.version || '1.0.0'
             return generateChangelog(diff, changelogVersion)
         } catch (error) {
@@ -723,7 +723,7 @@ export class UnifiedSchemaValidator {
             const oldMetadata = convertEntityToMetadataCore(oldEntity) as any
             const newMetadata = convertEntityToMetadataCore(newEntity) as any
             const diff = diffEntitySchema(oldMetadata, newMetadata)
-            
+
             return generateDiffSummary(diff)
         } catch (error) {
             console.error('获取差异摘要失败:', error)
@@ -762,7 +762,7 @@ export class UnifiedSchemaValidator {
         startTime: number,
         additionalStats?: Partial<ValidationPerformance>,
         warnings: ValidationWarning[] = []
-    ): ValidationResult<T> {
+    ): UnifiedValidationResult<T> {
         const endTime = performance.now()
 
         return {
@@ -789,7 +789,7 @@ export class UnifiedSchemaValidator {
         startTime: number,
         originalData?: T,
         warnings: ValidationWarning[] = []
-    ): ValidationResult<T> {
+    ): UnifiedValidationResult<T> {
         const endTime = performance.now()
 
         return {
@@ -833,7 +833,7 @@ export function ValidateSchema(options?: {
 
             try {
                 // 根据Schema类型选择验证方法
-                let validationResult: ValidationResult
+                let validationResult: UnifiedValidationResult
 
                 if (schema && typeof schema === 'object') {
                     if ('entities' in schema) {

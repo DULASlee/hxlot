@@ -5,9 +5,9 @@
 import { REGEX } from '../constants'
 
 /**
- * 验证结果
+ * 字段验证结果
  */
-export interface ValidationResult {
+export interface FieldValidationResult {
   valid: boolean
   message?: string
 }
@@ -15,7 +15,7 @@ export interface ValidationResult {
 /**
  * 验证是否为空
  */
-export function isRequired(value: unknown): ValidationResult {
+export function isRequired(value: unknown): FieldValidationResult {
   const valid = value !== null && value !== undefined && value !== ''
   return {
     valid,
@@ -26,7 +26,7 @@ export function isRequired(value: unknown): ValidationResult {
 /**
  * 验证邮箱
  */
-export function isEmail(value: string): ValidationResult {
+export function isEmail(value: string): FieldValidationResult {
   if (!value) {
     return { valid: true }
   }
@@ -41,7 +41,7 @@ export function isEmail(value: string): ValidationResult {
 /**
  * 验证手机号
  */
-export function isPhone(value: string): ValidationResult {
+export function isPhone(value: string): FieldValidationResult {
   if (!value) {
     return { valid: true }
   }
@@ -56,7 +56,7 @@ export function isPhone(value: string): ValidationResult {
 /**
  * 验证URL
  */
-export function isUrl(value: string): ValidationResult {
+export function isUrl(value: string): FieldValidationResult {
   if (!value) {
     return { valid: true }
   }
@@ -71,7 +71,7 @@ export function isUrl(value: string): ValidationResult {
 /**
  * 验证IP地址
  */
-export function isIP(value: string): ValidationResult {
+export function isIP(value: string): FieldValidationResult {
   if (!value) {
     return { valid: true }
   }
@@ -86,7 +86,7 @@ export function isIP(value: string): ValidationResult {
 /**
  * 验证数字
  */
-export function isNumber(value: string | number): ValidationResult {
+export function isNumber(value: string | number): FieldValidationResult {
   if (!value && value !== 0) {
     return { valid: true }
   }
@@ -101,7 +101,7 @@ export function isNumber(value: string | number): ValidationResult {
 /**
  * 验证整数
  */
-export function isInteger(value: string | number): ValidationResult {
+export function isInteger(value: string | number): FieldValidationResult {
   if (!value && value !== 0) {
     return { valid: true }
   }
@@ -116,7 +116,7 @@ export function isInteger(value: string | number): ValidationResult {
 /**
  * 验证正整数
  */
-export function isPositiveInteger(value: string | number): ValidationResult {
+export function isPositiveInteger(value: string | number): FieldValidationResult {
   if (!value && value !== 0) {
     return { valid: true }
   }
@@ -131,7 +131,7 @@ export function isPositiveInteger(value: string | number): ValidationResult {
 /**
  * 验证身份证号
  */
-export function isIdCard(value: string): ValidationResult {
+export function isIdCard(value: string): FieldValidationResult {
   if (!value) {
     return { valid: true }
   }
@@ -146,7 +146,7 @@ export function isIdCard(value: string): ValidationResult {
 /**
  * 验证最小长度
  */
-export function minLength(value: string, min: number): ValidationResult {
+export function minLength(value: string, min: number): FieldValidationResult {
   if (!value) {
     return { valid: true }
   }
@@ -161,7 +161,7 @@ export function minLength(value: string, min: number): ValidationResult {
 /**
  * 验证最大长度
  */
-export function maxLength(value: string, max: number): ValidationResult {
+export function maxLength(value: string, max: number): FieldValidationResult {
   if (!value) {
     return { valid: true }
   }
@@ -176,7 +176,7 @@ export function maxLength(value: string, max: number): ValidationResult {
 /**
  * 验证范围长度
  */
-export function rangeLength(value: string, min: number, max: number): ValidationResult {
+export function rangeLength(value: string, min: number, max: number): FieldValidationResult {
   if (!value) {
     return { valid: true }
   }
@@ -191,7 +191,7 @@ export function rangeLength(value: string, min: number, max: number): Validation
 /**
  * 验证最小值
  */
-export function minValue(value: number, min: number): ValidationResult {
+export function minValue(value: number, min: number): FieldValidationResult {
   if (value === null || value === undefined) {
     return { valid: true }
   }
@@ -206,7 +206,7 @@ export function minValue(value: number, min: number): ValidationResult {
 /**
  * 验证最大值
  */
-export function maxValue(value: number, max: number): ValidationResult {
+export function maxValue(value: number, max: number): FieldValidationResult {
   if (value === null || value === undefined) {
     return { valid: true }
   }
@@ -221,7 +221,7 @@ export function maxValue(value: number, max: number): ValidationResult {
 /**
  * 验证范围值
  */
-export function rangeValue(value: number, min: number, max: number): ValidationResult {
+export function rangeValue(value: number, min: number, max: number): FieldValidationResult {
   if (value === null || value === undefined) {
     return { valid: true }
   }
@@ -236,7 +236,7 @@ export function rangeValue(value: number, min: number, max: number): ValidationR
 /**
  * 验证正则表达式
  */
-export function pattern(value: string, regex: RegExp, message?: string): ValidationResult {
+export function pattern(value: string, regex: RegExp, message?: string): FieldValidationResult {
   if (!value) {
     return { valid: true }
   }
@@ -255,7 +255,7 @@ export function custom(
   value: unknown,
   validator: (value: unknown) => boolean | Promise<boolean>,
   message?: string
-): ValidationResult | Promise<ValidationResult> {
+): FieldValidationResult | Promise<FieldValidationResult> {
   const result = validator(value)
 
   if (result instanceof Promise) {

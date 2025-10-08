@@ -13,8 +13,8 @@ import type {
 import {
     UnifiedSchemaValidator,
     type UnifiedValidationFeatureFlags,
-    type ValidationError,
-    type ValidationResult
+    type UnifiedValidationResult,
+    type ValidationError
 } from '../validation/unified-validator'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -67,7 +67,7 @@ export interface ValidationOptions {
  * 验证结果缓存项
  */
 interface ValidationCacheItem {
-    result: ValidationResult
+    result: UnifiedValidationResult
     timestamp: number
     hash: string
 }
@@ -182,7 +182,7 @@ export function useValidation(options: ValidationOptions = {}) {
     /**
      * 更新验证状态
      */
-    function updateValidationState(result: ValidationResult): void {
+    function updateValidationState(result: UnifiedValidationResult): void {
         validationState.hasErrors = !result.success
         validationState.hasWarnings = result.warnings.length > 0
         validationState.errors = result.errors
@@ -201,12 +201,12 @@ export function useValidation(options: ValidationOptions = {}) {
      * 
      * @param entity 实体定义
      * @param immediate 是否立即验证（跳过防抖）
-     * @returns Promise<ValidationResult>
+     * @returns Promise<UnifiedValidationResult>
      */
     async function validateEntity(
         entity: UnifiedEntityDefinition,
         immediate: boolean = false
-    ): Promise<ValidationResult> {
+    ): Promise<UnifiedValidationResult> {
         return new Promise((resolve) => {
             const performValidation = async () => {
                 validationState.isValidating = true
@@ -257,7 +257,7 @@ export function useValidation(options: ValidationOptions = {}) {
 
                 } catch (error) {
                     console.error('Entity validation failed:', error)
-                    const errorResult: ValidationResult = {
+                    const errorResult: UnifiedValidationResult = {
                         success: false,
                         errors: [{
                             path: 'root',
@@ -297,12 +297,12 @@ export function useValidation(options: ValidationOptions = {}) {
      * 
      * @param module 模块定义
      * @param immediate 是否立即验证（跳过防抖）
-     * @returns Promise<ValidationResult>
+     * @returns Promise<UnifiedValidationResult>
      */
     async function validateModule(
         module: UnifiedModuleMetadata,
         immediate: boolean = false
-    ): Promise<ValidationResult> {
+    ): Promise<UnifiedValidationResult> {
         return new Promise((resolve) => {
             const performValidation = async () => {
                 validationState.isValidating = true
@@ -353,7 +353,7 @@ export function useValidation(options: ValidationOptions = {}) {
 
                 } catch (error) {
                     console.error('Module validation failed:', error)
-                    const errorResult: ValidationResult = {
+                    const errorResult: UnifiedValidationResult = {
                         success: false,
                         errors: [{
                             path: 'root',

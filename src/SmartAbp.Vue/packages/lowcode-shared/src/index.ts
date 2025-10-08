@@ -45,7 +45,7 @@ export * from './types/assembly'
 export * from './validation/metadata-adapter'
 export {
   SchemaValidationError, UnifiedSchemaValidator, ValidateSchema, getUnifiedEntityErrors, getValidationFeatureFlags, setValidationFeatureFlags, validateUnifiedEntities, validateUnifiedEntity,
-  validateUnifiedModule, type ValidationError as UnifiedValidationError, type UnifiedValidationFeatureFlags, type ValidationPerformance as UnifiedValidationPerformance, type ValidationResult as UnifiedValidationResult, type ValidationWarning as UnifiedValidationWarning
+  validateUnifiedModule, type ValidationError as UnifiedValidationError, type UnifiedValidationFeatureFlags, type ValidationPerformance as UnifiedValidationPerformance, type UnifiedValidationResult, type ValidationWarning as UnifiedValidationWarning
 } from './validation/unified-validator'
 
 // 🔥 阶段2：版本管理和兼容性检查 (Version Management & Compatibility Check) - v1.0.0

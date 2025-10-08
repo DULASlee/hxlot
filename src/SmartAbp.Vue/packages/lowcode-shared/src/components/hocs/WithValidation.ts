@@ -5,6 +5,12 @@
 
 import { computed, defineComponent, h, ref, watch, type Component } from 'vue';
 import type { BaseComponentProps } from '../../types';
+import {
+  isEmail,
+  isRequired,
+  isUrl,
+  pattern
+} from '../../validators';
 
 /**
  * 本地验证规则接口（与WithValidation组件内部逻辑匹配）
@@ -16,12 +22,6 @@ interface ValidationRule {
   validator?: (value: any) => boolean | Promise<boolean>;
   message?: string;
 }
-import {
-  isEmail,
-  isRequired,
-  isUrl,
-  pattern
-} from '../../validators';
 
 /**
  * 获取组件名称的类型安全函数
@@ -84,9 +84,9 @@ export interface WithValidationProps extends BaseComponentProps {
 }
 
 /**
- * 验证结果
+ * 组件验证结果
  */
-export interface ValidationResult {
+export interface ComponentValidationResult {
   valid: boolean;
   errors: string[];
 }
@@ -189,7 +189,7 @@ export function WithValidation(
       /**
        * 执行验证
        */
-      const validate = async (): Promise<ValidationResult> => {
+      const validate = async (): Promise<ComponentValidationResult> => {
         isValidating.value = true;
         const errors: string[] = [];
 
@@ -246,7 +246,7 @@ export function WithValidation(
         validationErrors.value = errors;
         isValidating.value = false;
 
-        const result: ValidationResult = {
+        const result: ComponentValidationResult = {
           valid: errors.length === 0,
           errors
         };
@@ -385,7 +385,7 @@ export function useValidation() {
     field: string,
     value: any,
     rules: ValidationRule[]
-  ): Promise<ValidationResult> => {
+  ): Promise<ComponentValidationResult> => {
     const fieldErrors: string[] = [];
 
     for (const rule of rules) {
