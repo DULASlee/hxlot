@@ -34,6 +34,19 @@ export interface QualityConfig {
   };
   /** 是否启用基线对比 */
   enableBaselineComparison?: boolean;
+  /** 性能优化配置 */
+  performance?: {
+    /** 是否启用并发执行 */
+    enableParallel?: boolean;
+    /** 并发批次大小 */
+    parallelBatchSize?: number;
+    /** 文件扫描并发数 */
+    fileScanConcurrency?: number;
+    /** 是否启用文件缓存 */
+    enableFileCache?: boolean;
+    /** 最大内存使用限制（MB） */
+    maxMemoryMB?: number;
+  };
   /** 基线对比配置 */
   baselineConfig?: {
     baselineName?: string;

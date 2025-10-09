@@ -6,7 +6,7 @@
 import chalk from 'chalk';
 import execa from 'execa';
 import glob from 'fast-glob';
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import path from 'path';
 import { performance } from 'perf_hooks';
 
@@ -180,7 +180,27 @@ export abstract class BaseChecker implements CheckerPlugin {
       ? filePath
       : path.join(this.config.projectRoot, filePath);
 
-    return await fs.readFile(fullPath, 'utf8');
+    try {
+      return await fs.readFile(fullPath, 'utf8');
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error(String(error));
+
+      // 权限错误
+      if (err.message.includes('EACCES') || err.message.includes('EPERM')) {
+        this.logProgress(`权限不足，跳过文件: ${filePath}`, 'warning');
+        return '';
+      }
+
+      // 文件不存在
+      if (err.message.includes('ENOENT')) {
+        this.logProgress(`文件不存在，跳过: ${filePath}`, 'warning');
+        return '';
+      }
+
+      // 其他错误也返回空字符串，继续执行
+      this.logProgress(`读取文件失败，跳过: ${filePath} (${err.message})`, 'warning');
+      return '';
+    }
   }
 
   /**

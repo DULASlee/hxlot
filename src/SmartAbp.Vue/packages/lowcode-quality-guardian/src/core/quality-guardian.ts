@@ -19,16 +19,25 @@ import type {
 import { ReportGenerator } from '../reporters/report-generator.js';
 import { BaselineManager } from '../utils/baseline-manager.js';
 import { EnvironmentChecker } from '../utils/environment-checker.js';
+import { MemoryManager } from '../utils/memory-manager.js';
+import { PerformanceMonitor } from '../utils/performance-config.js';
 import { ScoreCalculator } from '../utils/score-calculator.js';
 import { TechnicalDebtAnalyzer } from '../utils/technical-debt-analyzer.js';
+import { ParallelExecutor } from './parallel-executor.js';
 
 // 导入所有检查器
 import { ArchitectureChecker } from '../checkers/architecture-checker.js';
+import { ArchitectureDefectChecker } from '../checkers/architecture-defect-checker.js';
+import { CodeDefectChecker } from '../checkers/code-defect-checker.js';
+import { CodeSmellChecker } from '../checkers/code-smell-checker.js';
 import { CodeGenChecker } from '../checkers/codegen-checker.js';
 import { DependencyChecker } from '../checkers/dependency-checker.js';
 import { LowCodeChecker } from '../checkers/lowcode-checker.js';
+import { LowCodePlatformChecker } from '../checkers/lowcode-platform-checker.js';
+import { MemoryPerformanceChecker } from '../checkers/memory-performance-checker.js';
 import { PerformanceChecker } from '../checkers/performance-checker.js';
 import { SecurityChecker } from '../checkers/security-checker.js';
+import { SmartAbpArchitectureChecker } from '../checkers/smartabp-architecture-checker.js';
 import { SmartAbpChecker } from '../checkers/smartabp-checker.js';
 import { SmartAbpProductionChecker } from '../checkers/smartabp-production-checker.js';
 import { TypeScriptChecker } from '../checkers/typescript-checker.js';
@@ -38,10 +47,14 @@ export class QualityGuardian {
   private checkers: Map<string, CheckerPlugin> = new Map();
   private results: QualityReport;
   private startTime: number = 0;
+  private performanceMonitor: PerformanceMonitor;
+  private memoryManager: MemoryManager;
 
   constructor(config: Partial<QualityConfig> = {}) {
     this.config = this.mergeDefaultConfig(config);
     this.results = this.initializeResults();
+    this.performanceMonitor = new PerformanceMonitor();
+    this.memoryManager = new MemoryManager(this.config.performance?.maxMemoryMB || 1024);
     this.registerBuiltinCheckers();
   }
 
@@ -50,31 +63,38 @@ export class QualityGuardian {
    */
   async run(): Promise<QualityReport> {
     this.startTime = performance.now();
+    this.performanceMonitor.start();
 
     try {
       this.printHeader();
 
       // 阶段0: 环境检查
+      this.performanceMonitor.checkpoint('环境检查');
       await this.checkEnvironment();
 
       // 阶段1: 执行所有检查器
+      this.performanceMonitor.checkpoint('检查器执行');
       await this.runAllCheckers();
 
       // 阶段2: 计算质量评分
+      this.performanceMonitor.checkpoint('评分计算');
       this.calculateScores();
 
       // 阶段2.5: 技术债务分析（可选）
       if (this.config.enableDebtAnalysis) {
+        this.performanceMonitor.checkpoint('债务分析');
         await this.analyzeTechnicalDebt();
       }
 
       // 阶段2.6: 基线对比（可选）
       if (this.config.enableBaselineComparison) {
+        this.performanceMonitor.checkpoint('基线对比');
         await this.compareWithBaseline();
       }
 
       // 阶段3: 生成报告
       if (this.config.generateReport) {
+        this.performanceMonitor.checkpoint('报告生成');
         await this.generateReports();
       }
 
@@ -97,6 +117,7 @@ export class QualityGuardian {
     } finally {
       const duration = performance.now() - this.startTime;
       this.results.statistics.totalDuration = Math.round(duration);
+      this.memoryManager.cleanup();
     }
   }
 
@@ -195,7 +216,13 @@ export class QualityGuardian {
     this.checkers.set('architecture', new ArchitectureChecker());
     this.checkers.set('smartabp', new SmartAbpChecker());
     this.checkers.set('smartabp-production', new SmartAbpProductionChecker());
+    this.checkers.set('smartabp-architecture', new SmartAbpArchitectureChecker());
     this.checkers.set('lowcode', new LowCodeChecker());
+    this.checkers.set('lowcode-platform', new LowCodePlatformChecker());
+    this.checkers.set('code-smell', new CodeSmellChecker());
+    this.checkers.set('memory-performance', new MemoryPerformanceChecker());
+    this.checkers.set('architecture-defect', new ArchitectureDefectChecker());
+    this.checkers.set('code-defect', new CodeDefectChecker());
     this.checkers.set('codegen', new CodeGenChecker());
     this.checkers.set('performance', new PerformanceChecker());
     this.checkers.set('security', new SecurityChecker());
@@ -228,70 +255,97 @@ export class QualityGuardian {
   }
 
   private async runAllCheckers(): Promise<void> {
-    console.log(chalk.cyan('\\n📋 阶段1: 执行质量检查'));
+    const enableParallel = this.config.performance?.enableParallel !== false;
+
+    if (enableParallel) {
+      console.log(chalk.cyan('\\n📋 阶段1: 执行质量检查 (🚀 并发模式)'));
+    } else {
+      console.log(chalk.cyan('\\n📋 阶段1: 执行质量检查'));
+    }
     console.log('');
 
-    let checkIndex = 1;
+    if (enableParallel) {
+      // 并发执行
+      const batchSize = this.config.performance?.parallelBatchSize || 5;
+      const results = await ParallelExecutor.executeBatches(
+        this.checkers,
+        this.config.checkers,
+        this.config,
+        batchSize
+      );
 
-    for (const checkerType of this.config.checkers) {
-      const checker = this.checkers.get(checkerType);
+      // 处理结果
+      let hasP0 = false;
+      results.forEach(({ type, result, duration, success, error }) => {
+        this.results.checkers[type] = { ...result, duration };
 
-      if (!checker || !checker.enabled) {
-        console.log(chalk.gray(`     ⏭️  跳过 ${checkerType} 检查器（已禁用）`));
-        continue;
-      }
+        if (success) {
+          this.mergeViolations(result.violations);
+          this.results.statistics.filesChecked += result.filesChecked;
 
-      console.log(chalk.blue(`  🔍 检查器 ${checkIndex++}: ${checker.name}`));
-
-      const checkStartTime = performance.now();
-
-      try {
-        const result = await checker.check(this.config);
-        const duration = Math.round(performance.now() - checkStartTime);
-
-        // 记录结果
-        this.results.checkers[checkerType] = { ...result, duration };
-
-        // 合并违规
-        this.mergeViolations(result.violations);
-
-        // 更新统计
-        this.results.statistics.filesChecked += result.filesChecked;
-
-        // 打印结果
-        if (result.passed) {
-          console.log(chalk.green(`     ✅ 通过 (${duration}ms, ${result.filesChecked} 文件)`));
-        } else {
-          const p0Count = result.violations.filter(v => v.level === 'P0').length;
-          const p1Count = result.violations.filter(v => v.level === 'P1').length;
-          const p2Count = result.violations.filter(v => v.level === 'P2').length;
-
-          console.log(chalk.red(`     ❌ 失败 (${duration}ms, P0:${p0Count} P1:${p1Count} P2:${p2Count})`));
-
-          // 快速失败模式
-          if (this.config.failFast && p0Count > 0) {
-            throw new Error(`${checker.name} 检查器发现P0问题，停止后续检查`);
+          if (result.passed) {
+            console.log(chalk.green(`  ✅ ${result.checker} (${duration}ms, ${result.filesChecked}文件)`));
+          } else {
+            const p0 = result.violations.filter(v => v.level === 'P0').length;
+            const p1 = result.violations.filter(v => v.level === 'P1').length;
+            const p2 = result.violations.filter(v => v.level === 'P2').length;
+            console.log(chalk.red(`  ❌ ${result.checker} (${duration}ms, P0:${p0} P1:${p1} P2:${p2})`));
+            if (p0 > 0) hasP0 = true;
           }
+        } else {
+          console.log(chalk.red(`  ❌ ${result.checker} 异常: ${error}`));
+        }
+      });
+
+      if (this.config.failFast && hasP0) {
+        throw new Error('发现P0问题');
+      }
+    } else {
+      // 串行执行（保留原逻辑）
+      let checkIndex = 1;
+      for (const checkerType of this.config.checkers) {
+        const checker = this.checkers.get(checkerType);
+        if (!checker || !checker.enabled) {
+          console.log(chalk.gray(`     ⏭️  跳过 ${checkerType}`));
+          continue;
         }
 
-      } catch (error) {
-        const duration = Math.round(performance.now() - checkStartTime);
-        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.log(chalk.blue(`  🔍 检查器 ${checkIndex++}: ${checker.name}`));
+        const checkStartTime = performance.now();
 
-        console.log(chalk.red(`     💥 异常 (${duration}ms): ${errorMessage}`));
+        try {
+          const result = await checker.check(this.config);
+          const duration = Math.round(performance.now() - checkStartTime);
+          this.results.checkers[checkerType] = { ...result, duration };
+          this.mergeViolations(result.violations);
+          this.results.statistics.filesChecked += result.filesChecked;
 
-        // 记录异常结果
-        this.results.checkers[checkerType] = {
-          checker: checker.name,
-          passed: false,
-          duration,
-          filesChecked: 0,
-          violations: [],
-          error: errorMessage
-        };
-
-        if (this.config.failFast) {
-          throw error;
+          if (result.passed) {
+            console.log(chalk.green(`     ✅ 通过 (${duration}ms, ${result.filesChecked} 文件)`));
+          } else {
+            const p0Count = result.violations.filter(v => v.level === 'P0').length;
+            const p1Count = result.violations.filter(v => v.level === 'P1').length;
+            const p2Count = result.violations.filter(v => v.level === 'P2').length;
+            console.log(chalk.red(`     ❌ 失败 (${duration}ms, P0:${p0Count} P1:${p1Count} P2:${p2Count})`));
+            if (this.config.failFast && p0Count > 0) {
+              throw new Error(`${checker.name} 检查器发现P0问题，停止后续检查`);
+            }
+          }
+        } catch (error) {
+          const duration = Math.round(performance.now() - checkStartTime);
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          console.log(chalk.red(`     💥 异常 (${duration}ms): ${errorMessage}`));
+          this.results.checkers[checkerType] = {
+            checker: checker.name,
+            passed: false,
+            duration,
+            filesChecked: 0,
+            violations: [],
+            error: errorMessage
+          };
+          if (this.config.failFast) {
+            throw error;
+          }
         }
       }
     }

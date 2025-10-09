@@ -32,7 +32,18 @@ export class ReportGenerator {
         const filePath = await this.generateFormat(report, format);
         generatedFiles.push(filePath);
       } catch (error) {
-        console.error(chalk.red(`生成${format}报告失败:`), error);
+        const err = error instanceof Error ? error : new Error(String(error));
+
+        // 友好的错误提示
+        if (err.message.includes('ENOSPC')) {
+          console.error(chalk.red(`  ⚠️  磁盘空间不足，无法生成${format}报告`));
+        } else if (err.message.includes('EACCES') || err.message.includes('EPERM')) {
+          console.error(chalk.red(`  ⚠️  权限不足，无法生成${format}报告`));
+        } else {
+          console.error(chalk.red(`  ⚠️  生成${format}报告失败: ${err.message}`));
+        }
+
+        // 继续生成其他格式
       }
     }
 
