@@ -24,6 +24,7 @@
 
 import { defineAsyncComponent, type Component, type AsyncComponentLoader } from 'vue'
 import type { ComponentRegistry, ComponentMetadata } from './ComponentRegistry'
+import { globalPluginManager } from '../plugins/PluginManager'
 
 /**
  * LRU缓存实现
@@ -258,9 +259,13 @@ export class VirtualAssembly {
    */
   private createAsyncComponent(name: string, metadata: ComponentMetadata): Component {
     const startTime = this.options.enablePerformanceMonitoring ? performance.now() : 0
+    const fromCache = this.cache.has(name)
 
     const loader: AsyncComponentLoader = async () => {
       try {
+        // 触发加载前钩子
+        await globalPluginManager.triggerHook('beforeComponentLoad', { fromCache }, name)
+
         // 动态import加载组件
         // @ts-ignore - Vite动态import
         const module = await import(/* @vite-ignore */ metadata.path)
@@ -273,6 +278,12 @@ export class VirtualAssembly {
           if (this.options.debug) {
             console.log(`[VirtualAssembly] 加载完成: ${name} (${loadTime.toFixed(2)}ms)`)
           }
+
+          // 触发加载后钩子（包含性能数据）
+          await globalPluginManager.triggerHook('afterComponentLoad', {
+            duration: loadTime,
+            fromCache
+          }, name)
         }
 
         this.stats.totalLoads++
@@ -281,6 +292,10 @@ export class VirtualAssembly {
         return module.default || module[name]
       } catch (error) {
         console.error(`[VirtualAssembly] 加载失败: ${name}`, error)
+        
+        // 触发错误钩子
+        await globalPluginManager.triggerHook('onError', { error }, name)
+        
         throw error
       }
     }
