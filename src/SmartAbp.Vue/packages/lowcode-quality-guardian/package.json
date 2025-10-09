@@ -2,7 +2,7 @@
   "name": "@smartabp/lowcode-quality-guardian",
   "version": "2.0.0",
   "description": "Enterprise-grade code quality assurance tool for SmartAbp low-code platform",
-  "private": true,
+  "private": false,
   "type": "module",
   "bin": {
     "quality-guardian": "./dist/cli.js",
@@ -55,10 +55,6 @@
     "glob": "^10.3.10",
     "yaml": "^2.3.4",
     "lodash-es": "^4.17.21"
-  },
-  "peerDependencies": {
-    "@smartabp/lowcode-shared": "1.0.0",
-    "@smartabp/metadata-core": "1.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",

@@ -1,0 +1,25 @@
+{
+    "$schema": "./node_modules/@smartabp/lowcode-quality-guardian/dist/types/schema.json",
+    "projectRoot": ".",
+    "mode": "strict",
+    "failFast": false,
+    "generateReport": true,
+    "reportDir": "reports/quality-full",
+    "checkers": [
+        "typescript",
+        "architecture",
+        "smartabp",
+        "lowcode",
+        "codegen",
+        "code-smell",
+        "memory-performance",
+        "architecture-defect",
+        "code-defect",
+        "security"
+    ],
+    "performance": {
+        "enableParallel": true
+    },
+    "enableDebtAnalysis": true,
+    "enableBaselineComparison": true
+}

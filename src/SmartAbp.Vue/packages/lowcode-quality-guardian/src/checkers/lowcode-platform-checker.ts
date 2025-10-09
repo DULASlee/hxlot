@@ -3,11 +3,11 @@
  * 专门检查SmartAbp低代码平台的代码质量和规范性
  */
 
-import { BaseChecker } from './base-checker.js';
-import type { CheckResult } from '../types/index.js';
-import { glob } from 'glob';
 import * as fs from 'fs-extra';
+import { glob } from 'glob';
 import path from 'path';
+import type { CheckResult } from '../types/index.js';
+import { BaseChecker } from './base-checker.js';
 
 export class LowCodePlatformChecker extends BaseChecker {
   public override readonly name = '低代码平台特定检查器';
@@ -18,7 +18,7 @@ export class LowCodePlatformChecker extends BaseChecker {
   private totalIssuesFound = 0;
   private checkedFiles = 0;
 
-  protected override async doCheck(): Promise<void> {}
+  protected override async doCheck(): Promise<void> { }
 
   public override async check(): Promise<CheckResult> {
     const startTime = Date.now();
@@ -97,13 +97,13 @@ export class LowCodePlatformChecker extends BaseChecker {
 
         // 检查组件命名规范
         await this.checkComponentNaming(file, content);
-        
+
         // 检查Props定义完整性
         await this.checkPropsDefinition(file, content);
-        
+
         // 检查事件定义规范
         await this.checkEventDefinition(file, content);
-        
+
         // 检查组件文档注释
         await this.checkComponentDocumentation(file, content);
 
@@ -113,9 +113,9 @@ export class LowCodePlatformChecker extends BaseChecker {
     }
   }
 
-  private async checkComponentNaming(file: string, content: string): Promise<void> {
+  private async checkComponentNaming(file: string, _content: string): Promise<void> {
     const fileName = path.basename(file, path.extname(file));
-    
+
     // 检查组件名称是否符合PascalCase
     if (!/^[A-Z][a-zA-Z0-9]*$/.test(fileName) && !fileName.includes('index')) {
       this.totalIssuesFound++;
@@ -303,10 +303,10 @@ export class LowCodePlatformChecker extends BaseChecker {
 
         // 检查Schema版本控制
         await this.checkSchemaVersioning(file, content);
-        
+
         // 检查Schema验证规则
         await this.checkSchemaValidation(file, content);
-        
+
         // 检查Schema字段完整性
         await this.checkSchemaCompleteness(file, content);
       }
@@ -364,7 +364,7 @@ export class LowCodePlatformChecker extends BaseChecker {
 
   private async checkSchemaCompleteness(file: string, content: string): Promise<void> {
     const requiredFields = ['name', 'type', 'displayName'];
-    
+
     requiredFields.forEach(field => {
       if (!content.includes(field)) {
         this.totalIssuesFound++;
@@ -398,7 +398,7 @@ export class LowCodePlatformChecker extends BaseChecker {
 
         // 检查模板语法安全性
         await this.checkTemplateSecurity(file, content);
-        
+
         // 检查模板性能优化
         await this.checkTemplatePerformance(file, content);
       }
@@ -454,7 +454,7 @@ export class LowCodePlatformChecker extends BaseChecker {
 
         // 检查生成器错误处理
         await this.checkGeneratorErrorHandling(file, content);
-        
+
         // 检查生成器可扩展性
         await this.checkGeneratorExtensibility(file, content);
       }

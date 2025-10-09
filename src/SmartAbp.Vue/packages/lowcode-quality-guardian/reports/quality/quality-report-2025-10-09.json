@@ -1,0 +1,163 @@
+{
+  "version": "2.0.0",
+  "timestamp": "2025-10-09T07:37:00.644Z",
+  "project": {
+    "name": "SmartAbp",
+    "path": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian"
+  },
+  "config": {
+    "projectRoot": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian",
+    "mode": "strict",
+    "ciMode": false,
+    "failFast": true,
+    "generateReport": true,
+    "reportDir": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian/reports/quality",
+    "checkers": [
+      "typescript",
+      "architecture",
+      "smartabp",
+      "lowcode",
+      "codegen",
+      "performance",
+      "security"
+    ],
+    "checkerConfigs": {}
+  },
+  "gate": {
+    "passed": false,
+    "mode": "strict"
+  },
+  "scores": {
+    "overall": 95,
+    "dimensions": {
+      "correctness": 92,
+      "security": 100,
+      "maintainability": 100,
+      "architecture": 92,
+      "style": 100,
+      "performance": 100
+    },
+    "breakdown": {
+      "baseScore": 100,
+      "deductions": {
+        "P0": 0,
+        "P1": 5,
+        "P2": 0
+      },
+      "deductionDetails": [
+        {
+          "rule": "lowcode.typescript-project-references",
+          "level": "P1",
+          "count": 1,
+          "points": 5
+        }
+      ]
+    }
+  },
+  "checkers": {
+    "typescript": {
+      "checker": "TypeScript类型检查器",
+      "passed": true,
+      "duration": 1118,
+      "filesChecked": 0,
+      "violations": []
+    },
+    "architecture": {
+      "checker": "架构合规性检查器",
+      "passed": true,
+      "duration": 6,
+      "filesChecked": 0,
+      "violations": []
+    },
+    "smartabp": {
+      "checker": "SmartAbp专用规则检查器",
+      "passed": true,
+      "duration": 26,
+      "filesChecked": 0,
+      "violations": [],
+      "details": {
+        "totalViolationsFound": 0
+      }
+    },
+    "lowcode": {
+      "checker": "低代码引擎质量检查器",
+      "passed": true,
+      "duration": 46,
+      "filesChecked": 0,
+      "violations": [
+        {
+          "rule": "lowcode.typescript-project-references",
+          "level": "P1",
+          "file": "src/SmartAbp.Vue/",
+          "message": "缺少 tsconfig.references.json 项目引用配置",
+          "suggestion": "创建 tsconfig.references.json 配置项目引用"
+        }
+      ],
+      "details": {
+        "packagesChecked": 6,
+        "architectureLayers": {
+          "metadata-core": -1,
+          "lowcode-shared": 0,
+          "lowcode-core": 1,
+          "lowcode-api": 1,
+          "lowcode-tools": 1,
+          "lowcode-designer": 2
+        },
+        "checksPerformed": [
+          "架构层级依赖检查",
+          "组件注册完整性检查",
+          "类型系统统一性检查",
+          "包导出完整性检查",
+          "代码生成质量检查",
+          "TypeScript项目引用检查"
+        ]
+      }
+    },
+    "codegen": {
+      "checker": "代码生成质量检查器",
+      "passed": true,
+      "duration": 3,
+      "filesChecked": 0,
+      "violations": []
+    },
+    "performance": {
+      "checker": "性能质量检查器",
+      "passed": true,
+      "duration": 5,
+      "filesChecked": 38,
+      "violations": []
+    },
+    "security": {
+      "checker": "安全质量检查器",
+      "passed": true,
+      "duration": 7,
+      "filesChecked": 0,
+      "violations": []
+    }
+  },
+  "violations": {
+    "P0": [],
+    "P1": [
+      {
+        "rule": "lowcode.typescript-project-references",
+        "level": "P1",
+        "file": "src/SmartAbp.Vue/",
+        "message": "缺少 tsconfig.references.json 项目引用配置",
+        "suggestion": "创建 tsconfig.references.json 配置项目引用"
+      }
+    ],
+    "P2": []
+  },
+  "statistics": {
+    "totalFiles": 0,
+    "filesChecked": 38,
+    "totalLines": 0,
+    "totalDuration": 0
+  },
+  "metadata": {
+    "generatedBy": "@smartabp/lowcode-quality-guardian v2.0.0",
+    "nodeVersion": "v21.7.2",
+    "platform": "darwin",
+    "cwd": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian"
+  }
+}

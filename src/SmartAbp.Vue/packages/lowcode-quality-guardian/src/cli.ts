@@ -21,6 +21,8 @@ program
 program
   .command('check')
   .description('执行代码质量检查')
+  .option('-p, --project-root <path>', '项目根目录', process.cwd())
+  .option('-f, --config-file <path>', '配置文件路径')
   .option('-m, --mode <mode>', '检查模式: strict|moderate|lenient', 'strict')
   .option('--ci-mode', '启用CI模式', false)
   .option('--no-fail-fast', '禁用快速失败（继续检查所有问题）')
@@ -32,12 +34,12 @@ program
       printBanner();
 
       const config: Partial<QualityConfig> = {
-        projectRoot: process.cwd(),
+        projectRoot: path.resolve(options.projectRoot),
         mode: options.mode as 'strict' | 'moderate' | 'lenient',
         ciMode: options.ciMode,
         failFast: options.failFast,
         generateReport: options.report,
-        reportDir: path.resolve(process.cwd(), options.reportDir)
+        reportDir: path.resolve(options.projectRoot, options.reportDir)
       };
 
       if (options.checkers) {

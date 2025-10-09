@@ -1,15 +1,17 @@
 # SmartAbp - 代码质量报告
 
-**生成时间**: 2025/10/9 11:51:55
+**生成时间**: 2025/10/9 17:32:02
 
 **项目路径**: /Users/huanyuan/SmartAbp/hxlot
+
+**项目版本**: 1.0.0
 
 ---
 
 ## 📊 质量评分
 
 - **综合评分**: 0/100 (❌ 较差)
-- **质量门禁**: ❌ 失败 (moderate模式)
+- **质量门禁**: ❌ 失败 (strict模式)
 
 ## 🎯 维度评分
 
@@ -24,27 +26,36 @@
 
 ## 🚨 问题统计
 
-- **P0 阻断性问题**: 36个
-- **P1 严重问题**: 0个
-- **P2 一般问题**: 0个
+- **P0 阻断性问题**: 38个
+- **P1 严重问题**: 7个
+- **P2 一般问题**: 120个
 
 ### 📋 问题排行榜
 
 | 规则 | 级别 | 数量 | 扣分 |
 |------|------|------|------|
-| `lowcode.no-relative-package-imports` | P0 | 26 | 260 |
-| `lowcode.no-main-app-imports` | P0 | 9 | 90 |
+| `lowcode.no-relative-package-imports` | P0 | 24 | 240 |
+| `lowcode.template-completeness` | P2 | 120 | 120 |
+| `lowcode.no-main-app-imports` | P0 | 10 | 100 |
+| `lowcode.no-hardcoded-in-templates` | P1 | 7 | 35 |
+| `lowcode.component-registration-required` | P0 | 3 | 30 |
 | `lowcode.no-reverse-dependencies` | P0 | 1 | 10 |
 
 ## 🔍 检查器执行情况
 
 | 检查器 | 状态 | 文件数 | 问题数 | 耗时 |
 |--------|------|--------|--------|------|
-| 低代码引擎质量检查器 | ❌ | 78 | 36 | 255ms |
+| TypeScript类型检查器 | ✅ | 0 | 0 | 6742ms |
+| 架构合规性检查器 | ✅ | 0 | 0 | 6ms |
+| SmartAbp专用规则检查器 | ✅ | 0 | 0 | 134ms |
+| 低代码引擎质量检查器 | ❌ | 141 | 165 | 301ms |
+| 代码生成质量检查器 | ✅ | 0 | 0 | 2ms |
+| 性能质量检查器 | ✅ | 1238 | 0 | 167ms |
+| 安全质量检查器 | ✅ | 0 | 0 | 5891ms |
 
 ## 📈 统计信息
 
-- 检查文件数: 78个
+- 检查文件数: 1379个
 - 总耗时: 0ms
 
 ---
