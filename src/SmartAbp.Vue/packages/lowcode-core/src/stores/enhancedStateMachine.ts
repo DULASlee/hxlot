@@ -3,7 +3,7 @@ import { computed, ref } from "vue"
 // @ts-ignore - logger will be injected by main app via lowcode-tools bridge
 const logger = (globalThis as any).__SMARTABP_LOGGER__ || console
 // Day01新增: 引入规则执行引擎
-import { RuleExecutionEngine } from '../engines/ruleExecutionEngine'
+import { RuleExecutionEngine } from './engines/ruleExecutionEngine'
 
 // === 企业级状态机类型定义 ===
 

@@ -9,8 +9,8 @@
  * - 验证转换结果
  */
 
-import type { AspireSolutionMetadata, MicroserviceMetadata } from '../types'
-import { validateAspireSolutionMetadata } from '../validators/aspire-validator'
+import type { AspireSolutionMetadata, MicroserviceMetadata } from '@smartabp/lowcode-shared/types'
+import { validateAspireSolutionMetadata } from './validators/aspire-validator'
 
 // ========================================
 // 后端Aspire类型定义（简化版）

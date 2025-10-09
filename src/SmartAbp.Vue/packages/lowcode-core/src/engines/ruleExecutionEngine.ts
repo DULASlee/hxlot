@@ -4,10 +4,10 @@ import type {
   RuleExecutionResult, 
   SingleRuleResult,
   RuleExecutionError
-} from '../stores/enhancedStateMachine'
+} from './stores/enhancedStateMachine'
 
 // 重新导出类型供外部使用
-export type { BusinessRule, RuleContext } from '../stores/enhancedStateMachine'
+export type { BusinessRule, RuleContext } from './stores/enhancedStateMachine'
 
 // 规则条件接口
 export interface RuleCondition {
@@ -15,7 +15,7 @@ export interface RuleCondition {
   operator: 'AND' | 'OR' | 'NOT'
   operands?: RuleCondition[]
 }
-import { ExpressionParser } from '../utils/ruleExpressionParser'
+import { ExpressionParser } from '@smartabp/lowcode-shared/utils/ruleExpressionParser'
 import { ActionExecutor } from './actionExecutor'
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
 

@@ -14,7 +14,7 @@ import type {
     QualityReport,
     TechnicalDebt,
     Violation
-} from '../types/index.js';
+} from '@smartabp/lowcode-shared/types/index.js';
 
 /**
  * 技术债务分析器配置

@@ -43,7 +43,7 @@ import {
 import type {
     UnifiedEntityDefinition,
     UnifiedModuleMetadata
-} from '../types/unified-schema'
+} from '@smartabp/lowcode-shared/types/unified-schema'
 
 import {
     convertEntityToMetadataCore,
@@ -56,7 +56,7 @@ import {
     extractZodErrorParams,
     getMessageKeyFromZodError,
     translateValidationMessage
-} from '../i18n/validation-i18n'
+} from './i18n/validation-i18n'
 
 // ============================================================================
 // Feature Flag 控制

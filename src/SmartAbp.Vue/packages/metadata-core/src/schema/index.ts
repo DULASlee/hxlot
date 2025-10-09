@@ -31,14 +31,14 @@ export {
   SUPPORTED_SCHEMA_VERSIONS,
   CURRENT_SCHEMA_VERSION,
   UPGRADE_PATHS
-} from './version-manager'
+} from './version-manager.js'
 
 export type {
   SemanticVersion,
   VersionComparison,
   SchemaType,
   UpgradePath
-} from './version-manager'
+} from './version-manager.js'
 
 // 兼容性检查
 export {
@@ -48,13 +48,13 @@ export {
   isBackwardCompatible,
   generateCompatibilityReport,
   assessBreakingChangeImpact
-} from './compatibility-checker'
+} from './compatibility-checker.js'
 
 export type {
   CompatibilityResult,
   BreakingChange,
   CompatibilityWarning
-} from './compatibility-checker'
+} from './compatibility-checker.js'
 
 // 差异对比
 export {
@@ -63,7 +63,7 @@ export {
   mergeSchemas,
   generateDiffSummary,
   filterDiffByPath
-} from './schema-diff'
+} from './schema-diff.js'
 
 export type {
   DiffOperation,
@@ -71,7 +71,7 @@ export type {
   SchemaDiff,
   DiffSummary,
   MergeOptions
-} from './schema-diff'
+} from './schema-diff.js'
 
 // Schema注册表
 export {
@@ -83,11 +83,11 @@ export {
   lookupModule,
   registerAspireSolution,
   lookupAspireSolution
-} from './schema-registry'
+} from './schema-registry.js'
 
 export type {
   SchemaMetadata,
   RegisterOptions,
   LookupOptions
-} from './schema-registry'
+} from './schema-registry.js'
 

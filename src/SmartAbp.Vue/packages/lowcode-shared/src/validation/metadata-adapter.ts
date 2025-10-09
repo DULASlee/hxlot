@@ -28,7 +28,7 @@ import type {
     UnifiedEntityUIConfig,
     UnifiedModuleMetadata,
     UnifiedValidationRule
-} from '../types/unified-schema'
+} from '@smartabp/lowcode-shared/types/unified-schema'
 
 // ============================================================================
 // 实体转换器

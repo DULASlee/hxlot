@@ -20,7 +20,7 @@ import type {
     QualityReport,
     QualityTrend,
     Violation,
-} from '../types/index.js';
+} from '@smartabp/lowcode-shared/types/index.js';
 
 /**
  * 基线管理器

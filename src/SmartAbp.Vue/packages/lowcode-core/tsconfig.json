@@ -2,10 +2,21 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "types": [
+      "vitest/globals"
+    ]
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*",
+    "src/**/*.vue"
+  ],
   "references": [
-    { "path": "../lowcode-shared" }
+    {
+      "path": "../lowcode-shared"
+    },
+    {
+      "path": "../metadata-core"
+    }
   ]
 }

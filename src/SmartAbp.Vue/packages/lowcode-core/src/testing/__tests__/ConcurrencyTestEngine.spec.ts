@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest'
-import { ConcurrencyTestEngine } from '../ConcurrencyTestEngine'
-import { ConcurrencyTestScenarioBuilder } from '../ConcurrencyScenario'
+import { ConcurrencyTestEngine } from './ConcurrencyTestEngine'
+import { ConcurrencyTestScenarioBuilder } from './ConcurrencyScenario'
 
 describe('ConcurrencyTestEngine', () => {
   let engine: ConcurrencyTestEngine

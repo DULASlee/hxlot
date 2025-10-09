@@ -21,36 +21,36 @@ export type {
   UnifiedCodeGenerationConfig, UnifiedEntityDefinition,
   UnifiedEntityField,
   UnifiedEntityRelationship, UnifiedEntityUIConfig, UnifiedFrontendConfig, UnifiedMenuConfig, UnifiedModuleMetadata, UnifiedPermissionConfig, UnifiedValidationRule, UnifiedValidationRuleType
-} from './unified-schema'
+} from './unified-schema.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🏗️ 组件基础类型
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export type {
   BaseComponentProps, ComponentSize, ComponentState, ComponentVariant
-} from './component-base'
+} from './component-base.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📋 日志类型
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export { createComponentLogger, getGlobalLogger } from './logger'
-export type { ILogger } from './logger'
+export { createComponentLogger, getGlobalLogger } from './logger.js'
+export type { ILogger } from './logger.js'
 
 // UI 配置类型（供上层包重用）
-export type { MDIWindowConfig, TabConfig } from './ui'
+export type { MDIWindowConfig, TabConfig } from './ui.js'
 
 // 通用DTO类型（供API层重用）
-export type { AuditedEntityDto, EntityDto, ListResultDto, PagedResultDto } from './dtos'
+export type { AuditedEntityDto, EntityDto, ListResultDto, PagedResultDto } from './dtos.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔧 装配件系统类型（Assembly System Types）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export type { AssemblyConfig, AssemblyEvent, AssemblyPlugin, AssemblyValidationResult, DependencyEdge, DependencyGraph, DependencyNode, GeneratedCode, IAssemblyManager, ValidationError, ValidationWarning } from './assembly'
+export type { AssemblyConfig, AssemblyEvent, AssemblyPlugin, AssemblyValidationResult, DependencyEdge, DependencyGraph, DependencyNode, GeneratedCode, IAssemblyManager, ValidationError, ValidationWarning } from './assembly.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 💼 业务类型（从主应用迁移至统一类型系统）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export type {
   BaseEntityDto, BasePagedRequestDto, BasePagedResultDto, BookDto, BookPagedRequestDto, BookPagedResultDto, CreateBookDto, UpdateBookDto
-} from './business'
+} from './business.js'
 

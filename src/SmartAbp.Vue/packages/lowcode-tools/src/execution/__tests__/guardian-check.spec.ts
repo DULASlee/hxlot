@@ -8,8 +8,8 @@
  * @version 1.0.0-mvp
  */
 
-import { ExecutionGuardian, executionGuardian, enforceIronRules, withGuardian } from '../guardian-check'
-import { learningManager, ExecutionStage } from '../simple-checkpoint'
+import { ExecutionGuardian, executionGuardian, enforceIronRules, withGuardian } from './guardian-check'
+import { learningManager, ExecutionStage } from './simple-checkpoint'
 
 describe('ExecutionGuardian 执行引擎守护', () => {
   let guardian: ExecutionGuardian

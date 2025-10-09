@@ -4,7 +4,7 @@
  */
 
 import { BaseChecker } from './base-checker.js';
-import type { CheckResult } from '../types/index.js';
+import type { CheckResult } from '@smartabp/lowcode-shared/types/index.js';
 import { glob } from 'glob';
 import * as fs from 'fs-extra';
 import path from 'path';

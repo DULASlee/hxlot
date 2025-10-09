@@ -1,4 +1,4 @@
-import type { QualityConfig } from '../types/index.js';
+import type { QualityConfig } from '@smartabp/lowcode-shared/types/index.js';
 
 export const DEFAULT_PERFORMANCE_CONFIG = {
     enableParallel: true,

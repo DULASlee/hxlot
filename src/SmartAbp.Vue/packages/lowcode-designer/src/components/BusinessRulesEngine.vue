@@ -283,7 +283,7 @@ import type {
   BusinessRule,
   RuleCondition,
   RuleAction
-} from '../types/designer'
+} from '@smartabp/lowcode-designer/types'
 
 // Props
 const props = withDefaults(defineProps<BusinessRulesEngineProps>(), {

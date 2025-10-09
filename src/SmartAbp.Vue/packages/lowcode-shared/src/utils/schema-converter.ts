@@ -15,7 +15,7 @@ import type {
     UnifiedModuleMetadata,
     UnifiedValidationRule,
     UnifiedValidationRuleType,
-} from '../types/unified-schema'
+} from '@smartabp/lowcode-shared/types/unified-schema'
 
 /**
  * 后端DTO类型定义

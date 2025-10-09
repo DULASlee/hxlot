@@ -124,7 +124,7 @@ export class WorkflowCodeGenerator {
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { use${options.workflowName}WorkflowStore } from '../stores/${options.workflowName.toLowerCase()}Workflow'
+import { use${options.workflowName}WorkflowStore } from './stores/${options.workflowName.toLowerCase()}Workflow'
 
 interface Props {
   entityId: string

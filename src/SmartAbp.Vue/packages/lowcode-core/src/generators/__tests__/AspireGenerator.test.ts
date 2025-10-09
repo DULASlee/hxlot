@@ -3,11 +3,11 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 import { describe, it, expect } from 'vitest'
-import { AspireGenerator } from '../AspireGenerator'
+import { AspireGenerator } from './AspireGenerator'
 import type {
   AspireConfiguration,
   AspireServiceDefinition,
-} from '../AspireGenerator'
+} from './AspireGenerator'
 import type { UnifiedModuleMetadata, UnifiedEntityDefinition } from '@smartabp/lowcode-shared'
 
 describe('AspireGenerator', () => {

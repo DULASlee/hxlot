@@ -6,9 +6,9 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { setActivePinia, createPinia } from 'pinia'
-import BusinessRuleDesigner from '../../components/BusinessRuleDesigner/BusinessRuleDesigner.vue'
-import WorkflowDesigner from '../../components/WorkflowDesigner/WorkflowDesigner.vue'
-import type { RuleNode } from '../../components/BusinessRuleDesigner/types'
+import BusinessRuleDesigner from './../components/BusinessRuleDesigner/BusinessRuleDesigner.vue'
+import WorkflowDesigner from './../components/WorkflowDesigner/WorkflowDesigner.vue'
+import type { RuleNode } from './../components/BusinessRuleDesigner/types'
 
 describe('UI组件集成测试', () => {
   beforeEach(() => {

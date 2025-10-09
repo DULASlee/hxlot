@@ -19,7 +19,7 @@ export {
   escapeHtml,
   unescapeHtml,
   stripHtml,
-} from './string'
+} from './string.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔢 数组工具
@@ -39,7 +39,7 @@ export {
   max,
   min,
   sortBy,
-} from './array'
+} from './array.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📦 对象工具
@@ -55,9 +55,9 @@ export {
   isEqual,
   flatten as flattenObject,
   unflatten,
-} from './object'
+} from './object.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔄 Schema转换工具
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export { SchemaConverter } from './schema-converter'
+export { SchemaConverter } from './schema-converter.js'

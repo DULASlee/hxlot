@@ -1,310 +1,67 @@
 {
   "checker": "Architecture",
-  "timestamp": "2025-10-08T11:42:41.839Z",
+  "timestamp": "2025-10-09T17:54:49.587Z",
   "passed": false,
   "summary": {
-    "P0": 117,
+    "P0": 24,
     "P1": 2,
     "P2": 0,
-    "total": 119
+    "total": 26
   },
   "violations": {
     "P0": [
       {
         "rule": "architecture.no-relative-imports-in-packages",
         "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useApiError.ts",
-        "line": 8,
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian/src/checkers/smartabp-architecture-checker.ts",
+        "line": 341,
         "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { ApiError } from '../http-client'",
+        "snippet": "if (line.includes('import') && line.includes('../')) {",
         "fix": null
       },
       {
         "rule": "architecture.no-relative-imports-in-packages",
         "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useGitWorkflow.ts",
-        "line": 2,
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian/src/checkers/lowcode-checker.ts",
+        "line": 78,
         "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { http } from '../http-client'",
+        "snippet": "\"'../\",",
         "fix": null
       },
       {
         "rule": "architecture.no-relative-imports-in-packages",
         "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useApiCall.ts",
-        "line": 7,
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian/src/core/backend-checker.ts",
+        "line": 6,
         "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { ApiError } from '../http-client'",
+        "snippet": "const rootDir = path.resolve(process.cwd(), '../../..');",
         "fix": null
       },
       {
         "rule": "architecture.no-relative-imports-in-packages",
         "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useSecurityPolicy.ts",
-        "line": 2,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { http as httpClient } from '../http-client'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useObservability.ts",
-        "line": 2,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { http as httpClient } from '../http-client'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useAspireCodeGen.ts",
-        "line": 2,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { http as httpClient } from '../http-client'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useEnvironmentConfig.ts",
-        "line": 2,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { http as httpClient } from '../http-client'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useCICDTemplate.ts",
-        "line": 2,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { http } from '../http-client'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/composables/useDevEnvironment.ts",
-        "line": 10,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { http } from '../http-client'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/http-client/index.ts",
-        "line": 16,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../http-client'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/generators/index.ts",
-        "line": 12,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "export { codeGeneratorApi } from '../code-generator'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/generators/index.ts",
-        "line": 18,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "export { dddGeneratorApi } from '../ddd-generator'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/generators/index.ts",
-        "line": 31,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../ddd-generator'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/generators/index.ts",
-        "line": 36,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "export { cqrsGeneratorApi } from '../cqrs-generator'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/generators/index.ts",
-        "line": 44,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../cqrs-generator'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/generators/index.ts",
-        "line": 64,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../entity-modeling'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/generators/index.ts",
-        "line": 75,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../entity-modeling'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/generators/index.ts",
-        "line": 80,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "export { codeGenStatsApi, userProfileApi } from '../code-gen-stats'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-api/src/generators/index.ts",
-        "line": 85,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "export { generationHistoryApi } from '../generation-history'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/TemplateManager.vue",
-        "line": 621,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { useTemplateEngine, type TemplateFile, type GenerationResult } from '../core/TemplateEngine'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/designer/schema/exporter.ts",
-        "line": 206,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "component: () => import('../../components/DraggableComponent.vue')",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/EntityModelingView.vue",
-        "line": 1205,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import AdvancedEntityRelationshipDesigner from '../components/AdvancedEntityRelationshipDesigner.vue'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/EntityModelingView.vue",
-        "line": 1206,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import AdvancedFieldTypeDesigner from '../components/AdvancedFieldTypeDesigner.vue'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/EntityModelingView.vue",
-        "line": 1207,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import BusinessRulesEngine from '../components/BusinessRulesEngine.vue'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/EntityModelingView.vue",
-        "line": 1208,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import DataDictionaryManager from '../components/DataDictionaryManager.vue'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/EntityModelingView.vue",
-        "line": 1209,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import EnterpriseModelingAssistant from '../components/EnterpriseModelingAssistant.vue'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/AspireDesignerView.vue",
-        "line": 213,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import ServiceTopologyCanvas from '../../components/aspire/ServiceTopologyCanvas.vue'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/AspireDesignerView.vue",
-        "line": 214,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import ServiceConfigPanel from '../../components/aspire/ServiceConfigPanel.vue'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/AspireDesignerView.vue",
-        "line": 215,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import MicroserviceForm from '../../components/aspire/MicroserviceForm.vue'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/AspireDesignerView.vue",
-        "line": 216,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import AdvancedSettingsPanel from '../../components/aspire/AdvancedSettingsPanel.vue'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-ui-vue/index.ts",
-        "line": 4,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "export { default as MDIContainer } from '../src/components/ui/MDIContainer.vue'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-ui-vue/index.ts",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian/src/core/security-checker.ts",
         "line": 5,
         "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "export { default as TabsContainer } from '../src/components/ui/TabsContainer.vue'",
+        "snippet": "const rootDir = path.resolve(process.cwd(), '../../..');",
         "fix": null
       },
       {
         "rule": "architecture.no-relative-imports-in-packages",
         "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-ui-vue/index.ts",
-        "line": 8,
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian/src/core/frontend-checker.ts",
+        "line": 5,
         "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "export type { MDIWindowConfig, TabConfig } from '../src/types/ui'",
+        "snippet": "const frontendDir = path.resolve(process.cwd(), '../');",
+        "fix": null
+      },
+      {
+        "rule": "architecture.no-relative-imports-in-packages",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian/src/core/frontend-checker.ts",
+        "line": 27,
+        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
+        "snippet": "const relativePathCheck = await runCommand('grep', ['-r', \"'../'\"], packagesDir, {",
         "fix": null
       },
       {
@@ -320,18 +77,9 @@
         "rule": "architecture.no-relative-imports-in-packages",
         "level": "P0",
         "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-tools/src/execution/guardian-check.ts",
-        "line": 122,
+        "line": 120,
         "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
         "snippet": "if (filePath.includes('/packages/') && code.includes(\"'../'\")) {",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-codegen/EnhancedGenerationView.vue",
-        "line": 1470,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { ${entity.name}, ${entity.name}CreateInput, ${entity.name}UpdateInput, ${entity.name}QueryParams } from '../types/generated/${entity.name}.types'",
         "fix": null
       },
       {
@@ -364,573 +112,6 @@
       {
         "rule": "architecture.no-relative-imports-in-packages",
         "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-codegen/EnhancedGenerationView.vue",
-        "line": 1617,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { use${entity.name}Store } from '../stores/generated/${entity.name.toLowerCase()}.store'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/demo/integration-test.ts",
-        "line": 10,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../src/types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/demo/integration-test.ts",
-        "line": 17,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../src/validators'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/converters/aspire-converter.ts",
-        "line": 12,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { AspireSolutionMetadata, MicroserviceMetadata } from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/converters/aspire-converter.ts",
-        "line": 13,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { validateAspireSolutionMetadata } from '../validators/aspire-validator'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/converters/manifest-to-module.ts",
-        "line": 12,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { ModuleMetadata, RouteMetadata, StoreMetadata } from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/converters/manifest-to-module.ts",
-        "line": 13,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { validateModuleMetadata } from '../validators/module-validator'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/converters/backend-dto-converter.ts",
-        "line": 18,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/converters/legacy-entity-converter.ts",
-        "line": 12,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { EntityMetadata, PropertyMetadata } from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/converters/legacy-entity-converter.ts",
-        "line": 13,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { validateEntityMetadata } from '../validators/entity-validator'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/schema/schema-registry.ts",
-        "line": 12,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { EntityMetadata, ModuleMetadata, AspireSolutionMetadata } from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/schema/schema-registry.ts",
-        "line": 13,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { validateEntityMetadata } from '../validators/entity-validator'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/schema/schema-registry.ts",
-        "line": 14,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { validateModuleMetadata } from '../validators/module-validator'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/schema/schema-registry.ts",
-        "line": 15,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { validateAspireSolutionMetadata } from '../validators/aspire-validator'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/schema/compatibility-checker.ts",
-        "line": 17,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/schema/schema-diff.ts",
-        "line": 12,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { EntityMetadata } from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/validators/entity-validator.ts",
-        "line": 7,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { EntityMetadata } from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/validators/module-validator.ts",
-        "line": 7,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { ModuleMetadata } from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/metadata-core/src/validators/aspire-validator.ts",
-        "line": 7,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { AspireSolutionMetadata } from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/runtime/index.ts",
-        "line": 12,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "export type { TabConfig } from '../stores/entityModeling'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/stores/enhancedStateMachine.ts",
-        "line": 6,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { RuleExecutionEngine } from '../engines/ruleExecutionEngine'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/utils/ruleExpressionParser.ts",
-        "line": 1,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { RuleContext } from '../stores/enhancedStateMachine'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/utils/manifestWriter.ts",
-        "line": 11,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../types/unified-metadata'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/utils/manifestWriter.d.ts",
-        "line": 5,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { ModuleMetadata as BaseModuleMetadata } from '../types/unified-metadata';",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/testing/BenchmarkEngine.ts",
-        "line": 15,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { PerformanceOptimizer } from '../analyzers/PerformanceOptimizer'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/testing/LoadTestEngine.ts",
-        "line": 17,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { PerformanceOptimizer } from '../analyzers/PerformanceOptimizer'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/components/SmartFormBuilder/types/linkage-types.ts",
-        "line": 9,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "export * from '../engine/FormLinkageEngine'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/components/SmartFormBuilder/adapters/FormSchemaAdapter.ts",
-        "line": 23,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { FormCreateConfig, FormCreateRule } from '../types/form-create-types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/components/WorkspaceContainer.vue",
-        "line": 121,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "// import { useWorkspaceStore } from '../stores/workspace' // 暂时注释",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/nodes/ActionNode.vue",
-        "line": 83,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { RuleNodeData } from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/nodes/ConditionNode.vue",
-        "line": 40,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { RuleNodeData } from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/nodes/RuleEndNode.vue",
-        "line": 24,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { RuleNodeData } from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/nodes/RuleStartNode.vue",
-        "line": 21,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { RuleNodeData } from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/nodes/DecisionNode.vue",
-        "line": 39,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { RuleNodeData } from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/BusinessRuleDesigner.vue",
-        "line": 72,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "// import { useEnhancedStateMachineStore } from '../../stores/enhancedStateMachine' // 未使用，保留以备将来使用",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/components/ErrorBoundary.vue",
-        "line": 77,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { useWorkspaceStore } from '../stores/workspace'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/engines/WorkflowEngine.ts",
-        "line": 14,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { EnhancedState, StateTransition } from '../stores/enhancedStateMachine'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/engines/actionExecutor.ts",
-        "line": 2,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { RuleContext } from '../stores/enhancedStateMachine'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/engines/actionExecutor.ts",
-        "line": 69,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "export type { RuleContext } from '../stores/enhancedStateMachine'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/engines/ruleExecutionEngine.ts",
-        "line": 7,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../stores/enhancedStateMachine'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/engines/ruleExecutionEngine.ts",
-        "line": 10,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "export type { BusinessRule, RuleContext } from '../stores/enhancedStateMachine'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/engines/ruleExecutionEngine.ts",
-        "line": 18,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { ExpressionParser } from '../utils/ruleExpressionParser'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/generators/WorkflowCodeGenerator.ts",
-        "line": 127,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { use${options.workflowName}WorkflowStore } from '../stores/${options.workflowName.toLowerCase()}Workflow'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/generators/BusinessRuleCodeGenerator.ts",
-        "line": 14,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { BusinessRule } from '../stores/enhancedStateMachine'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/composables/useValidation.ts",
-        "line": 12,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../types/unified-schema'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/composables/useValidation.ts",
-        "line": 18,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../validation/unified-validator'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/memory/GlobalMemoryMonitor.ts",
-        "line": 13,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { getGlobalComponentManager } from '../components/BaseComponent';",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/constants/component.ts",
-        "line": 5,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { ComponentSize, ComponentVariant } from '../types'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/constants/component.d.ts",
-        "line": 4,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { ComponentSize, ComponentVariant } from '../types';",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/utils/schema-converter.ts",
-        "line": 16,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../types/unified-schema'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.d.ts",
-        "line": 11,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { ComponentMetadata as BaseComponentMetadata } from '../types/component-base';",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/hocs/WithPermission.ts",
-        "line": 7,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { BaseComponentProps } from '../../types';",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/hocs/WithLoading.ts",
-        "line": 7,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { BaseComponentProps } from '../../types';",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/hocs/WithError.ts",
-        "line": 7,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { BaseComponentProps } from '../../types';",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/hocs/WithValidation.ts",
-        "line": 7,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { BaseComponentProps } from '../../types';",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/hocs/WithValidation.ts",
-        "line": 24,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../../validators';",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/version/SchemaVersionManager.ts",
-        "line": 15,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { SUPPORTED_SCHEMA_VERSIONS, UNIFIED_SCHEMA_VERSION } from '../types/unified-schema'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/theme/ThemeManager.ts",
-        "line": 9,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { SESSION_STORAGE_KEYS } from '../constants/common'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/validators/common.ts",
-        "line": 5,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { REGEX } from '../constants'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/events/UnifiedEventBus.ts",
-        "line": 17,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { getGlobalLogger, type ILogger } from '../types/logger'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/events/UnifiedEventBus.ts",
-        "line": 18,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from '../types/unified-schema'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/error/GlobalErrorHandler.ts",
-        "line": 6,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "// import { getGlobalMemoryMonitor } from '../memory/GlobalMemoryMonitor';",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/logging/ErrorLogIntegration.ts",
-        "line": 6,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { GlobalErrorHandler, StandardError, ErrorSeverity, ErrorCategory } from '../error/GlobalErrorHandler';",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
         "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/logging/ErrorLogIntegration.ts",
         "line": 289,
         "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
@@ -938,49 +119,28 @@
         "fix": null
       },
       {
-        "rule": "architecture.no-relative-imports-in-packages",
+        "rule": "architecture.no-main-app-imports-in-packages",
         "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/logging/ErrorLogIntegration.d.ts",
-        "line": 5,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "import { GlobalErrorHandler, ErrorSeverity, ErrorCategory } from '../error/GlobalErrorHandler';",
-        "fix": null
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/components/CodeGenerationWizard.vue",
+        "line": 1258,
+        "message": "packages禁止引用主应用（@/），必须使用@smartabp/别名",
+        "snippet": "import { ${entity.name}Api } from '@/api/${entity.name.toLowerCase()}'"
       },
       {
-        "rule": "architecture.no-relative-imports-in-packages",
+        "rule": "architecture.no-main-app-imports-in-packages",
         "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/logging/index.ts",
-        "line": 13,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "export { createComponentLogger, getGlobalLogger } from '../types/logger'",
-        "fix": null
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian/src/checkers/smartabp-checker.ts",
+        "line": 353,
+        "message": "packages禁止引用主应用（@/），必须使用@smartabp/别名",
+        "snippet": "if (line.includes(\"from '@/\") && file.includes('/packages/')) {"
       },
       {
-        "rule": "architecture.no-relative-imports-in-packages",
+        "rule": "architecture.no-main-app-imports-in-packages",
         "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts",
-        "line": 46,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../types/unified-schema'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts",
-        "line": 59,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../i18n/validation-i18n'",
-        "fix": null
-      },
-      {
-        "rule": "architecture.no-relative-imports-in-packages",
-        "level": "P0",
-        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/validation/metadata-adapter.ts",
-        "line": 31,
-        "message": "packages间禁止使用相对路径，必须使用@smartabp/别名",
-        "snippet": "} from '../types/unified-schema'",
-        "fix": null
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian/src/checkers/lowcode-checker.ts",
+        "line": 132,
+        "message": "packages禁止引用主应用（@/），必须使用@smartabp/别名",
+        "snippet": "\"from '@/\","
       },
       {
         "rule": "architecture.no-main-app-imports-in-packages",

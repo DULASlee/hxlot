@@ -2,7 +2,7 @@
  * 通用验证函数
  */
 
-import { REGEX } from '../constants'
+import { REGEX } from './constants'
 
 /**
  * 字段验证结果

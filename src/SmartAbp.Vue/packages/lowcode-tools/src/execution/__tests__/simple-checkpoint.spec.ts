@@ -8,7 +8,7 @@
  * @version 1.0.0-mvp
  */
 
-import { PerformanceMonitor, PERFORMANCE_BASELINE, performanceMonitor, SimpleLearningManager, learningManager, ExecutionStage } from '../simple-checkpoint'
+import { PerformanceMonitor, PERFORMANCE_BASELINE, performanceMonitor, SimpleLearningManager, learningManager, ExecutionStage } from './simple-checkpoint'
 
 describe('PerformanceMonitor 性能监控', () => {
   let monitor: PerformanceMonitor

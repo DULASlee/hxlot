@@ -3,10 +3,10 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest'
-import { TestReportGenerator } from '../TestReportGenerator'
-import type { LoadTestResult } from '../LoadTestEngine'
-import type { ConcurrencyTestResult } from '../ConcurrencyTestEngine'
-import type { BenchmarkResult } from '../BenchmarkEngine'
+import { TestReportGenerator } from './TestReportGenerator'
+import type { LoadTestResult } from './LoadTestEngine'
+import type { ConcurrencyTestResult } from './ConcurrencyTestEngine'
+import type { BenchmarkResult } from './BenchmarkEngine'
 
 describe('TestReportGenerator', () => {
   let generator: TestReportGenerator

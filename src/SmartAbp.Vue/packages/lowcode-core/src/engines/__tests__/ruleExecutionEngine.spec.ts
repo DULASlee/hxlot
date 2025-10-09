@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest'
-import { RuleExecutionEngine } from '../ruleExecutionEngine'
-import type { BusinessRule, RuleContext } from '../../stores/enhancedStateMachine'
+import { RuleExecutionEngine } from './ruleExecutionEngine'
+import type { BusinessRule, RuleContext } from './../stores/enhancedStateMachine'
 
 describe('RuleExecutionEngine', () => {
   let engine: RuleExecutionEngine

@@ -6,7 +6,7 @@
  * @version 2.0
  */
 
-export * from '../engine/FormLinkageEngine'
+export * from './engine/FormLinkageEngine'
 
 /**
  * 预定义的常用联动规则模板

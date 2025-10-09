@@ -8,16 +8,16 @@
  */
 
 // ========== 类型定义 ==========
-export * from './types'
+export * from './types/index.js'
 
 // ========== 验证器 ==========
-export * from './validators'
+export * from './validators/index.js'
 
 // ========== Schema工具 ==========
-export * from './schema'
+export * from './schema/index.js'
 
 // ========== 转换器 ==========
-export * from './converters'
+export * from './converters/index.js'
 
 // ========== 版本信息 ==========
 export const VERSION = '1.0.0'

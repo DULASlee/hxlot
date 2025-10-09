@@ -9,22 +9,22 @@
  */
 
 // Export components
-export * from './components'
+export * from './components/index.js'
 
 // Export selected types for consumers
-export type { TabConfig } from './stores/entityModeling'
+export type { TabConfig } from './stores/entityModeling.js'
 
 // Backward-compatible type exports for consumers expecting these from root
 export type {
   BarcodeScannerField, CalculatedFieldConfig, CascadeConfig, DeviceParameterField, DictionaryField, DynamicFieldConfig, FormCreateConfig,
   FormCreateRule, LinkageAction, LinkageActionType, LinkageCondition, LinkageConditionType, LinkageRule, MaterialField, ProductionLineField, QualityInspectionField, SensorDataField, SmartFieldType,
   SmartFormItem, WorkOrderField
-} from './components/SmartFormBuilder'
+} from './components/SmartFormBuilder/types.js'
 
 // Note: utilities/composables/services are internal; re-exports removed to avoid path index issues
 
 // Export runtime
-export * from './runtime'
+export * from './runtime/index.js'
 
 /**
  * 注册所有核心组件到 ComponentRegistry

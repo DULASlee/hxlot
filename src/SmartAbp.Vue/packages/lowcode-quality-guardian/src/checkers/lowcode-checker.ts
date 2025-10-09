@@ -4,7 +4,7 @@
  */
 
 import path from 'path';
-import type { ArchitectureViolation } from '../types/index.js';
+import type { ArchitectureViolation } from '@smartabp/lowcode-shared/types/index.js';
 import { BaseChecker } from './base-checker.js';
 
 export class LowCodeChecker extends BaseChecker {

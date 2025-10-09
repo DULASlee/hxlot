@@ -11,8 +11,8 @@ import {
   SchemaValidationError,
   setValidationFeatureFlags,
   getValidationFeatureFlags
-} from '../unified-validator'
-import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from '../../types/unified-schema'
+} from './unified-validator'
+import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from './../types/unified-schema'
 
 describe('UnifiedSchemaValidator - 真实验证器集成测试', () => {
   

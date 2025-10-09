@@ -1,4 +1,4 @@
-import type { RuleContext } from '../stores/enhancedStateMachine'
+import type { RuleContext } from './stores/enhancedStateMachine'
 
 // @ts-ignore - logger will be injected by main app
 const logger = (globalThis as any).__SMARTABP_LOGGER__ || console

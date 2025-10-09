@@ -161,7 +161,7 @@ import {
   View, Document, DataAnalysis, Refresh, CopyDocument, Download,
   Monitor, Iphone, Cellphone
 } from '@element-plus/icons-vue'
-import type { CodeQualityReport } from '../core/TemplateEngine'
+import type { CodeQualityReport } from './core/TemplateEngine'
 
 interface GeneratedFile {
   path: string

@@ -1467,7 +1467,7 @@ export interface ${entity.name}QueryParams {
 
 const generateEntityStore = (entity: EntityDefinition) => {
   return `import { defineStore } from 'pinia'
-import type { ${entity.name}, ${entity.name}CreateInput, ${entity.name}UpdateInput, ${entity.name}QueryParams } from '../types/generated/${entity.name}.types'
+import type { ${entity.name}, ${entity.name}CreateInput, ${entity.name}UpdateInput, ${entity.name}QueryParams } from './types/generated/${entity.name}.types'
 
 export const use${entity.name}Store = defineStore('${entity.name.toLowerCase()}', {
   state: () => ({
@@ -1614,7 +1614,7 @@ ${routes}
 
 const generateUnitTests = (entity: EntityDefinition) => {
   return `import { describe, it, expect, beforeEach } from 'vitest'
-import { use${entity.name}Store } from '../stores/generated/${entity.name.toLowerCase()}.store'
+import { use${entity.name}Store } from './stores/generated/${entity.name.toLowerCase()}.store'
 import { createPinia, setActivePinia } from 'pinia'
 
 describe('${entity.name}Store', () => {

@@ -9,78 +9,51 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔧 代码生成器API
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export { codeGeneratorApi } from '../code-generator'
+export { codeGeneratorApi } from './code-generator.js'
 // Note: 类型定义从 types/index 导出，不在 code-generator.ts 中
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🏗️ DDD生成器API
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export { dddGeneratorApi } from '../ddd-generator'
+export { dddGeneratorApi } from './ddd-generator.js'
 export type {
-  DddDefinitionDto,
-  AggregateDefinitionDto,
-  ValueObjectDefinitionDto,
-  DomainServiceDefinitionDto,
-  DomainEventDefinitionDto,
-  DomainMethodDefinitionDto,
-  PropertyDefinitionDto,
-  BusinessRuleDefinitionDto,
-  RepositoryDefinitionDto,
-  GeneratedDddSolutionDto,
-  GeneratedFileDto,
-} from '../ddd-generator'
+  AggregateDefinitionDto, BusinessRuleDefinitionDto, DddDefinitionDto, DomainEventDefinitionDto,
+  DomainMethodDefinitionDto, DomainServiceDefinitionDto, GeneratedDddSolutionDto,
+  GeneratedFileDto, PropertyDefinitionDto, RepositoryDefinitionDto, ValueObjectDefinitionDto
+} from './ddd-generator.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ⚡ CQRS生成器API
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export { cqrsGeneratorApi } from '../cqrs-generator'
+export { cqrsGeneratorApi } from './cqrs-generator.js'
 export type {
-  CqrsDefinitionDto,
-  CommandDefinitionDto,
-  QueryDefinitionDto,
-  EventDefinitionDto,
-  ParameterDefinitionDto,
-  GeneratedCqrsSolutionDto,
-} from '../cqrs-generator'
+  CommandDefinitionDto, CqrsDefinitionDto, EventDefinitionDto, GeneratedCqrsSolutionDto, ParameterDefinitionDto, QueryDefinitionDto
+} from './cqrs-generator.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎨 实体建模API
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export {
-  createEntity,
-  updateEntity,
-  deleteEntity,
-  getEntityById,
-  getEntityByName,
-  getAllEntities,
-  addField,
-  updateField,
-  deleteField,
-  createRelation,
-  updateRelation,
-  deleteRelation,
-  getAllRelations,
-  validateSchema,
-} from '../entity-modeling'
+  addField, createEntity, createRelation, deleteEntity, deleteField, deleteRelation, getAllEntities, getAllRelations, getEntityById,
+  getEntityByName, updateEntity, updateField, updateRelation, validateSchema
+} from './entity-modeling.js'
 
 export type {
-  EntityDefinition,
-  EntityField,
-  EntityRelation,
   CreateOrUpdateEntityDefinitionDto,
   CreateOrUpdateEntityFieldDto,
-  CreateOrUpdateEntityRelationDto,
-  SchemaValidationResult,
-  ValidationRule,
-} from '../entity-modeling'
+  CreateOrUpdateEntityRelationDto, EntityDefinition,
+  EntityField,
+  EntityRelation, SchemaValidationResult,
+  ValidationRule
+} from './entity-modeling.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📊 代码生成统计API
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export { codeGenStatsApi, userProfileApi } from '../code-gen-stats'
+export { codeGenStatsApi, userProfileApi } from './code-gen-stats.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📜 生成历史API
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export { generationHistoryApi } from '../generation-history'
+export { generationHistoryApi } from './generation-history.js'
 

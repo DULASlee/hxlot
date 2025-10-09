@@ -135,6 +135,9 @@ importers:
       fs-extra:
         specifier: ^11.2.0
         version: 11.3.2
+      glob:
+        specifier: ^10.4.1
+        version: 10.4.5
     devDependencies:
       '@types/babel__traverse':
         specifier: ^7.20.5

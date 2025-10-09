@@ -34,14 +34,14 @@ export { default as SmartFormDesigner } from './SmartFormDesigner.vue'
 // 适配器导出
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export { FormSchemaAdapter } from './adapters/FormSchemaAdapter'
+export { FormSchemaAdapter } from './adapters/FormSchemaAdapter.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🆕 联动引擎导出
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export { FormLinkageEngine } from './engine/FormLinkageEngine'
-export { LinkageRuleBuilder, LinkageRuleValidator, LINKAGE_TEMPLATES } from './types/linkage-types'
+export { FormLinkageEngine } from './engine/FormLinkageEngine.js'
+export { LinkageRuleBuilder, LinkageRuleValidator, LINKAGE_TEMPLATES } from './types/linkage-types.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 类型定义导出
@@ -50,7 +50,7 @@ export { LinkageRuleBuilder, LinkageRuleValidator, LINKAGE_TEMPLATES } from './t
 export type {
   FormCreateRule,
   FormCreateConfig
-} from './types/form-create-types'
+} from './types/form-create-types.js'
 
 export type {
   SmartFieldType,
@@ -63,10 +63,10 @@ export type {
   ProductionLineField,
   MaterialField,
   DictionaryField
-} from './types/smart-form-types'
+} from './types/smart-form-types.js'
 
 // Note: FormSchema types are exported from the adapter
-export type * from './types/FormSchema'
+export type * from './types/FormSchema.js'
 
 // 🆕 联动引擎类型定义
 export type {
@@ -78,5 +78,5 @@ export type {
   CascadeConfig,
   DynamicFieldConfig,
   CalculatedFieldConfig
-} from './types/linkage-types'
+} from './types/linkage-types.js'
 

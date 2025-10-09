@@ -4,7 +4,7 @@
  */
 
 import { z } from 'zod'
-import type { ModuleMetadata } from '../types'
+import type { ModuleMetadata } from '@smartabp/lowcode-shared/types'
 import { moduleErrorMap, formatErrorMessage } from './error-map'
 
 // ========================================

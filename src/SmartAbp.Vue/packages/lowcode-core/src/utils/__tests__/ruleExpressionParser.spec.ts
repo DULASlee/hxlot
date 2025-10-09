@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest'
-import { ExpressionParser, SecurityError, ExecutionTimeoutError } from '../ruleExpressionParser'
-import type { RuleContext } from '../../stores/enhancedStateMachine'
+import { ExpressionParser, SecurityError, ExecutionTimeoutError } from './ruleExpressionParser'
+import type { RuleContext } from './../stores/enhancedStateMachine'
 
 describe('ExpressionParser', () => {
   let parser: ExpressionParser

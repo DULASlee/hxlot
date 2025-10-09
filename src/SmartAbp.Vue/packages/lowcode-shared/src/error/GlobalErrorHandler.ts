@@ -3,7 +3,7 @@
  * 统一处理应用中的所有错误，提供错误分类、恢复策略和监控上报
  */
 
-// import { getGlobalMemoryMonitor } from '../memory/GlobalMemoryMonitor';
+// import { getGlobalMemoryMonitor } from './memory/GlobalMemoryMonitor';
 
 export type ErrorSeverity = 'low' | 'medium' | 'high' | 'critical';
 export type ErrorCategory = 'network' | 'validation' | 'business' | 'system' | 'ui' | 'unknown';

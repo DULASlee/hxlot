@@ -1,7 +1,7 @@
 import { BaseChecker } from './base-checker.js';
-import { DependencyGraph } from '../utils/dependency-graph.js';
-import { Tarjan } from '../utils/tarjan.js';
-import { PageRank } from '../utils/pagerank.js';
+import { DependencyGraph } from '@smartabp/lowcode-shared/utils/dependency-graph.js';
+import { Tarjan } from '@smartabp/lowcode-shared/utils/tarjan.js';
+import { PageRank } from '@smartabp/lowcode-shared/utils/pagerank.js';
 
 export class ArchitectureDefectChecker extends BaseChecker {
   public readonly name = 'ArchitectureDefectChecker';

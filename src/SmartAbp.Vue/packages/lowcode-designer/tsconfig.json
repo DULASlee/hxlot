@@ -4,8 +4,16 @@
     "outDir": "dist",
     "rootDir": "src"
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*",
+    "src/**/*.vue"
+  ],
   "references": [
-    { "path": "../lowcode-core" }
+    {
+      "path": "../lowcode-core"
+    },
+    {
+      "path": "../lowcode-shared"
+    }
   ]
 }

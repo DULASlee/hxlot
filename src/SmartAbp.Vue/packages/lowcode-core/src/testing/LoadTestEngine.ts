@@ -14,7 +14,7 @@
  */
 
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
-import { PerformanceOptimizer } from '../analyzers/PerformanceOptimizer'
+import { PerformanceOptimizer } from './analyzers/PerformanceOptimizer'
 import { LoadTestScenario } from './LoadTestScenario'
 import { VirtualUser, type RequestResult, type VirtualUserStats } from './VirtualUser'
 

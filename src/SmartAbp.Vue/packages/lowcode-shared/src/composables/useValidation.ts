@@ -9,13 +9,13 @@ import { computed, reactive, readonly } from 'vue'
 import type {
     UnifiedEntityDefinition,
     UnifiedModuleMetadata
-} from '../types/unified-schema'
+} from '@smartabp/lowcode-shared/types/unified-schema'
 import {
     UnifiedSchemaValidator,
     type UnifiedValidationFeatureFlags,
     type UnifiedValidationResult,
     type ValidationError
-} from '../validation/unified-validator'
+} from './validation/unified-validator'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎯 类型定义

@@ -11,7 +11,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { mount, VueWrapper } from '@vue/test-utils'
 import { ElMessage } from 'element-plus'
-import CodeGenerationWizard from '../components/CodeGenerationWizard.vue'
+import CodeGenerationWizard from './components/CodeGenerationWizard.vue'
 
 // Mock Element Plus组件
 vi.mock('element-plus', async () => {

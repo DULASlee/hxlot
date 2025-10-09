@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest'
-import { CodeQualityAnalyzer } from '../CodeQualityAnalyzer'
+import { CodeQualityAnalyzer } from './CodeQualityAnalyzer'
 
 describe('CodeQualityAnalyzer', () => {
   let analyzer: CodeQualityAnalyzer

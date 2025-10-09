@@ -37,7 +37,7 @@ import { InfoFilled, Share, Warning } from '@element-plus/icons-vue'
 import { Handle, Position } from '@vue-flow/core'
 import { ElIcon } from 'element-plus'
 import { computed } from 'vue'
-import type { RuleNodeData } from '../types'
+import type { RuleNodeData } from './types'
 
 interface Props {
   data: RuleNodeData

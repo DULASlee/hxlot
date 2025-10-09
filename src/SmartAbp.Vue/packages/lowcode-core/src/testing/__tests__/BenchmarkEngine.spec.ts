@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest'
-import { BenchmarkEngine } from '../BenchmarkEngine'
-import type { BenchmarkConfig } from '../BenchmarkEngine'
+import { BenchmarkEngine } from './BenchmarkEngine'
+import type { BenchmarkConfig } from './BenchmarkEngine'
 
 describe('BenchmarkEngine', () => {
   let engine: BenchmarkEngine

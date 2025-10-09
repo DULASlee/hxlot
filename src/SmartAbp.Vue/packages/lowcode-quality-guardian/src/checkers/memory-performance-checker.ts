@@ -16,8 +16,8 @@ import traverse from '@babel/traverse';
 import type { Node } from '@babel/types';
 import { compileScript, parse as vueParse } from '@vue/compiler-sfc';
 
-import { ControlFlowGraph } from '../utils/control-flow-graph.js';
-import { TaintAnalyzer } from '../utils/taint-analyzer.js';
+import { ControlFlowGraph } from '@smartabp/lowcode-shared/utils/control-flow-graph.js';
+import { TaintAnalyzer } from '@smartabp/lowcode-shared/utils/taint-analyzer.js';
 import { BaseChecker } from './base-checker.js';
 
 interface ResourceLeakInfo {

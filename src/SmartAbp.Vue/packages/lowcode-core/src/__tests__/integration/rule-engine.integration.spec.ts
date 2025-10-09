@@ -5,8 +5,8 @@
 
 import { describe, it, expect, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
-import { useEnhancedStateMachineStore } from '../../stores/enhancedStateMachine'
-import type { BusinessRule, RuleContext } from '../../stores/enhancedStateMachine'
+import { useEnhancedStateMachineStore } from './../stores/enhancedStateMachine'
+import type { BusinessRule, RuleContext } from './../stores/enhancedStateMachine'
 
 describe('规则引擎端到端集成测试', () => {
   let store: ReturnType<typeof useEnhancedStateMachineStore>

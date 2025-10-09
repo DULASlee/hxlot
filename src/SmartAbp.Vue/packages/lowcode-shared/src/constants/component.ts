@@ -2,7 +2,7 @@
  * 组件相关常量
  */
 
-import type { ComponentSize, ComponentVariant } from '../types'
+import type { ComponentSize, ComponentVariant } from '@smartabp/lowcode-shared/types'
 
 /**
  * 默认组件尺寸

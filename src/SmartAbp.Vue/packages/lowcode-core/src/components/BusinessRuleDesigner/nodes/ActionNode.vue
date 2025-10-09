@@ -80,7 +80,7 @@ import { InfoFilled, Setting } from '@element-plus/icons-vue'
 import { Handle, Position } from '@vue-flow/core'
 import { ElIcon, ElTag } from 'element-plus'
 import { computed } from 'vue'
-import type { RuleNodeData, SetFieldValueParams, ShowMessageParams, CallAPIParams, ValidateFieldParams, ActionType } from '../types'
+import type { RuleNodeData, SetFieldValueParams, ShowMessageParams, CallAPIParams, ValidateFieldParams, ActionType } from './types'
 
 interface Props {
   data: RuleNodeData

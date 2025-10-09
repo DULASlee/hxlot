@@ -6,7 +6,7 @@
 import * as fs from 'fs-extra';
 import { glob } from 'glob';
 import path from 'path';
-import type { CheckResult } from '../types/index.js';
+import type { CheckResult } from '@smartabp/lowcode-shared/types/index.js';
 import { BaseChecker } from './base-checker.js';
 
 export class LowCodePlatformChecker extends BaseChecker {

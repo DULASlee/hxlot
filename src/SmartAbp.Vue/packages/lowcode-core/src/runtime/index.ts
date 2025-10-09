@@ -9,9 +9,9 @@
  */
 
 // Export component sandbox system (named + default)
-export type { TabConfig } from '../stores/entityModeling'
-export * from './ComponentSandbox'
-export { default as ComponentSandbox } from './ComponentSandbox'
+export type { TabConfig } from './stores/entityModeling.js'
+export * from './ComponentSandbox.js'
+export { default as ComponentSandbox } from './ComponentSandbox.js'
 
 /**
  * Runtime system initialization

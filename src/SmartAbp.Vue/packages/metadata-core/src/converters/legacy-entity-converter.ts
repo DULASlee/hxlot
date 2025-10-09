@@ -9,8 +9,8 @@
  * - 验证转换结果
  */
 
-import type { EntityMetadata, PropertyMetadata } from '../types'
-import { validateEntityMetadata } from '../validators/entity-validator'
+import type { EntityMetadata, PropertyMetadata } from '@smartabp/lowcode-shared/types'
+import { validateEntityMetadata } from './validators/entity-validator'
 
 // ========================================
 // 旧版EntityDefinition类型定义

@@ -74,7 +74,7 @@
 import { ref, computed, onErrorCaptured, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { RefreshRight, Warning, Refresh } from '@element-plus/icons-vue'
-import { useWorkspaceStore } from '../stores/workspace'
+import { useWorkspaceStore } from './stores/workspace'
 import { logger } from '@smartabp/lowcode-tools'
 
 interface Props {

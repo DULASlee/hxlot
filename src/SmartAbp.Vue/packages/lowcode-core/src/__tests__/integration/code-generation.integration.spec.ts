@@ -5,8 +5,8 @@
 
 import { describe, it, expect, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
-import { useCodeGenerationStore } from '../../stores/codeGeneration'
-import type { CodeGenerationConfig } from '../../stores/codeGeneration'
+import { useCodeGenerationStore } from './../stores/codeGeneration'
+import type { CodeGenerationConfig } from './../stores/codeGeneration'
 
 describe('代码生成完整流程集成测试', () => {
   let store: ReturnType<typeof useCodeGenerationStore>

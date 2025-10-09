@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest'
-import { WorkflowEngine } from '../WorkflowEngine'
-import type { WorkflowDefinition, WorkflowInstance } from '../WorkflowEngine'
+import { WorkflowEngine } from './WorkflowEngine'
+import type { WorkflowDefinition, WorkflowInstance } from './WorkflowEngine'
 
 describe('WorkflowEngine', () => {
   let engine: WorkflowEngine

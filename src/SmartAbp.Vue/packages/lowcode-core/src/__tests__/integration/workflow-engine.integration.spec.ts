@@ -4,8 +4,8 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest'
-import { WorkflowEngine } from '../../engines/WorkflowEngine'
-import type { WorkflowDefinition } from '../../engines/WorkflowEngine'
+import { WorkflowEngine } from './../engines/WorkflowEngine'
+import type { WorkflowDefinition } from './../engines/WorkflowEngine'
 
 describe('工作流引擎端到端集成测试', () => {
   let engine: WorkflowEngine

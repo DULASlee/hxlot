@@ -9,8 +9,8 @@
  * - 验证转换结果
  */
 
-import type { ModuleMetadata, RouteMetadata, StoreMetadata } from '../types'
-import { validateModuleMetadata } from '../validators/module-validator'
+import type { ModuleMetadata, RouteMetadata, StoreMetadata } from '@smartabp/lowcode-shared/types'
+import { validateModuleMetadata } from './validators/module-validator'
 
 // ========================================
 // 旧版Manifest类型定义

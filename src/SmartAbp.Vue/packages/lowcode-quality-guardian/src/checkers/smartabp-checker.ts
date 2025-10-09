@@ -6,7 +6,7 @@
 import * as fs from 'fs-extra';
 import { glob } from 'glob';
 import path from 'path';
-import type { CheckResult } from '../types/index.js';
+import type { CheckResult } from '@smartabp/lowcode-shared/types/index.js';
 import { BaseChecker } from './base-checker.js';
 
 export class SmartAbpChecker extends BaseChecker {
@@ -336,7 +336,7 @@ export class SmartAbpChecker extends BaseChecker {
                 const line = lines[i];
 
                 // 检查相对路径引用（packages间）
-                if (line.includes("from '../") && line.includes('/packages/')) {
+                if (line.includes("from './") && line.includes('/packages/')) {
                     this.addViolation({
                         rule: 'lowcode.no-relative-package-imports',
                         level: 'P0',

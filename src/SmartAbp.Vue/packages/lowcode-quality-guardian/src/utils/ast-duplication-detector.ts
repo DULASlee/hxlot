@@ -2,7 +2,7 @@ import * as parser from '@babel/parser';
 import traverse, { type NodePath } from '@babel/traverse';
 import type { Function as BabelFunction, Node } from '@babel/types';
 import { parse as parseSfc } from '@vue/compiler-sfc';
-import { simhash as localSimhash } from '../utils/simhash.js';
+import { simhash as localSimhash } from '@smartabp/lowcode-shared/utils/simhash.js';
 
 /**
  * 代码指纹，用于唯一标识一个代码块的逻辑结构

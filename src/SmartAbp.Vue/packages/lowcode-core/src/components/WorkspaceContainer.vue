@@ -118,7 +118,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { ArrowLeft, ArrowRight } from '@element-plus/icons-vue'
-// import { useWorkspaceStore } from '../stores/workspace' // 暂时注释
+// import { useWorkspaceStore } from './stores/workspace' // 暂时注释
 // import { storeToRefs } from 'pinia' // 暂时注释
 import GlobalLoadingOverlay from './GlobalLoadingOverlay.vue'
 

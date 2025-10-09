@@ -6,7 +6,7 @@
 import { ref, computed } from 'vue'
 import type { DesignTokens, ThemeMode } from './tokens'
 import { lightTokens, darkTokens } from './tokens'
-import { SESSION_STORAGE_KEYS } from '../constants/common'
+import { SESSION_STORAGE_KEYS } from './constants/common'
 
 /**
  * 主题管理器类

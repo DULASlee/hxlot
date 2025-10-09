@@ -13,14 +13,14 @@
  */
 
 import { describe, expect, it } from 'vitest'
-import type { ModuleMetadata } from '../types'
+import type { ModuleMetadata } from '@smartabp/lowcode-shared/types'
 import {
     getModuleMetadataErrors,
     ModuleMetadataSchema,
     safeValidateModuleMetadata,
     validateModuleMetadata,
     validateModuleMetadataAsync
-} from '../validators/module-validator'
+} from './validators/module-validator'
 
 // ========================================
 // 测试数据工厂

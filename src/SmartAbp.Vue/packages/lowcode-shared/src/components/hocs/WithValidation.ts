@@ -4,13 +4,13 @@
  */
 
 import { computed, defineComponent, h, ref, watch, type Component } from 'vue';
-import type { BaseComponentProps } from '../../types';
+import type { BaseComponentProps } from './../types';
 import {
   isEmail,
   isRequired,
   isUrl,
   pattern
-} from '../../validators';
+} from './../validators';
 
 /**
  * 本地验证规则接口（与WithValidation组件内部逻辑匹配）

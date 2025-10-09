@@ -7,14 +7,14 @@
 import type {
     EntityMetadata,
     ModuleMetadata
-} from '../src/types'
+} from './src/types'
 
 import {
     getEntityMetadataErrors,
     getModuleMetadataErrors,
     validateEntityMetadata,
     validateModuleMetadata
-} from '../src/validators'
+} from './src/validators'
 
 // ========== 测试2: 创建测试数据 ==========
 const testEntity: EntityMetadata = {

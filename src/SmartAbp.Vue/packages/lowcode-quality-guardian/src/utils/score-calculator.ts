@@ -3,7 +3,7 @@
  * 基于违规记录计算多维度质量评分
  */
 
-import type { QualityScore, Violation, ViolationLevel } from '../types/index.js';
+import type { QualityScore, Violation, ViolationLevel } from '@smartabp/lowcode-shared/types/index.js';
 
 export class ScoreCalculator {
     /**

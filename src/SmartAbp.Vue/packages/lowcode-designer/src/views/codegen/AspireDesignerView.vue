@@ -210,10 +210,10 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { 
   Connection, Edit, View, Check, Setting, Plus, Box, Delete 
 } from '@element-plus/icons-vue'
-import ServiceTopologyCanvas from '../../components/aspire/ServiceTopologyCanvas.vue'
-import ServiceConfigPanel from '../../components/aspire/ServiceConfigPanel.vue'
-import MicroserviceForm from '../../components/aspire/MicroserviceForm.vue'
-import AdvancedSettingsPanel from '../../components/aspire/AdvancedSettingsPanel.vue'
+import ServiceTopologyCanvas from './../components/aspire/ServiceTopologyCanvas.vue'
+import ServiceConfigPanel from './../components/aspire/ServiceConfigPanel.vue'
+import MicroserviceForm from './../components/aspire/MicroserviceForm.vue'
+import AdvancedSettingsPanel from './../components/aspire/AdvancedSettingsPanel.vue'
 import { useAspireCodeGen } from '@smartabp/lowcode-api'
 
 // 类型定义

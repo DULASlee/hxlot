@@ -9,10 +9,10 @@
  * - Schema依赖追踪
  */
 
-import type { EntityMetadata, ModuleMetadata, AspireSolutionMetadata } from '../types'
-import { validateEntityMetadata } from '../validators/entity-validator'
-import { validateModuleMetadata } from '../validators/module-validator'
-import { validateAspireSolutionMetadata } from '../validators/aspire-validator'
+import type { EntityMetadata, ModuleMetadata, AspireSolutionMetadata } from '@smartabp/lowcode-shared/types'
+import { validateEntityMetadata } from './validators/entity-validator'
+import { validateModuleMetadata } from './validators/module-validator'
+import { validateAspireSolutionMetadata } from './validators/aspire-validator'
 import { getCurrentSchemaVersion } from './version-manager'
 
 // ========================================

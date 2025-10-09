@@ -316,7 +316,7 @@ import type {
   MoveDirection,
   ResizeDirection,
   VisualDesignCanvasProps
-} from '../types/designer'
+} from '@smartabp/lowcode-designer/types'
 
 // Props定义
 defineProps<VisualDesignCanvasProps>()

@@ -101,8 +101,12 @@ import App from "./App.vue";
 import { i18n } from "./plugins/i18n";
 import router from "./router";
 import { logger } from "./utils/logger";
-// 应用层统一组件注册入口（不依赖特定包聚合）
-import LowCodeComponentsPlugin from "./plugins/lowcode-components";
+// 🔥 【架构铁律二】统一组件注册系统
+// 使用ComponentRegistry替代Vue原生注册
+import { registerCoreComponents } from '@smartabp/lowcode-core';
+import { registerDesignerComponents } from '@smartabp/lowcode-designer';
+import { registerSharedComponents } from '@smartabp/lowcode-shared';
+import ComponentRegistryBridge from './plugins/component-registry-bridge';
 // import { createEnterpriseIconSystem } from "./plugins/enterpriseIcons" // TODO: enterpriseIcons.ts 文件不存在，暂时注释
 // Element Plus message在此文件不强依赖，避免类型噪声
 // 低代码设计器 store 暂未对外导出，先移除硬依赖
@@ -225,7 +229,14 @@ if (import.meta.env.DEV) {
 //   debug: import.meta.env.DEV
 // })
 
-app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin).use(LowCodeComponentsPlugin)
+// 🔥 【架构铁律二】统一组件注册 - 按依赖顺序注册
+console.log('🚀 开始统一组件注册系统初始化...')
+registerSharedComponents()   // 1. 基础组件（无依赖）
+registerCoreComponents()     // 2. 核心组件（依赖shared）
+registerDesignerComponents() // 3. 设计器组件（依赖core+shared）
+console.log('✅ 所有组件已注册到ComponentRegistry')
+
+app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin).use(ComponentRegistryBridge)
 // .use(enterpriseIconSystem) // TODO: 暂时注释
 
 async function bootstrap() {

@@ -12,45 +12,45 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎯 类型系统 (Type System)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export type { AuditedEntityDto, EntityDto, ListResultDto, PagedResultDto } from './dtos'
-export * from './types'
+export type { AuditedEntityDto, EntityDto, ListResultDto, PagedResultDto } from './dtos.js'
+export * from './types/index.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🚀 HTTP客户端 (HTTP Client)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export { API_BASE_URL, request } from './api'
+export { API_BASE_URL, request } from './api.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔥 统一Schema系统 (Unified Schema System) - v1.0.0
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './types/unified-schema'
-export * from './utils/schema-converter'
+export * from './types/unified-schema.js'
+export * from './utils/schema-converter.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📦 版本管理系统 (Version Management System) - v1.0.0
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './version/SchemaVersionManager'
-export * from './version/useSchemaVersion'
+export * from './version/SchemaVersionManager.js'
+export * from './version/useSchemaVersion.js'
 // Vue组件通过全局注册或直接导入使用
 // export { default as VersionWarningBanner } from './version/VersionWarningBanner.vue'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🏗️ 装配件类型系统 (Assembly Type System) - v1.0.0
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './types/assembly'
+export * from './types/assembly.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔍 验证系统 (Validation System) - v1.0.0
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './validation/metadata-adapter'
+export * from './validation/metadata-adapter.js'
 export {
-  SchemaValidationError, UnifiedSchemaValidator, ValidateSchema, getUnifiedEntityErrors, getValidationFeatureFlags, setValidationFeatureFlags, validateUnifiedEntities, validateUnifiedEntity,
+  getUnifiedEntityErrors, getValidationFeatureFlags, SchemaValidationError, setValidationFeatureFlags, UnifiedSchemaValidator, ValidateSchema, validateUnifiedEntities, validateUnifiedEntity,
   validateUnifiedModule, type ValidationError as UnifiedValidationError, type UnifiedValidationFeatureFlags, type ValidationPerformance as UnifiedValidationPerformance, type UnifiedValidationResult, type ValidationWarning as UnifiedValidationWarning
-} from './validation/unified-validator'
+} from './validation/unified-validator.js'
 
 // 🔥 阶段2：版本管理和兼容性检查 (Version Management & Compatibility Check) - v1.0.0
 export {
-  CURRENT_SCHEMA_VERSION, compareVersions, findUpgradePath as getUpgradePath, isCompatibleVersion as isCompatible, parseVersion, type SemanticVersion,
+  compareVersions, CURRENT_SCHEMA_VERSION, findUpgradePath as getUpgradePath, isCompatibleVersion as isCompatible, parseVersion, type SemanticVersion,
   type VersionComparison
 } from '@smartabp/metadata-core/schema'
 
@@ -68,117 +68,112 @@ export {
 
 // 🔥 阶段4：国际化错误信息 (Validation I18n) - v1.0.0
 export {
-  ValidationMessageKey,
+  extractZodErrorParams, getMessageKeyFromZodError, getValidationI18nConfig, setValidationI18nConfig, translateValidationMessage, ValidationMessageKey,
   ZOD_ERROR_TO_MESSAGE_KEY,
-  ZOD_STRING_VALIDATION_TO_KEY, extractZodErrorParams, getMessageKeyFromZodError, getValidationI18nConfig, setValidationI18nConfig, translateValidationMessage, type ValidationI18nConfig, type ValidationMessageParams
-} from './i18n'
+  ZOD_STRING_VALIDATION_TO_KEY, type ValidationI18nConfig, type ValidationMessageParams
+} from './i18n/index.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎯 组合式API (Composables) - v1.0.0
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export {
   DEFAULT_VALIDATION_OPTIONS, useValidation, type ValidationOptions, type ValidationState
-} from './composables/useValidation'
+} from './composables/useValidation.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🏗️ 组件系统 (Component System)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './components'
+export * from './components/index.js'
+
+// 🔥 组件统一注册 (Component Registration)
+// @遵循架构铁律二：强制使用组件注册系统
+export { registerSharedComponents } from './components/register.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎣 Composables (Composition API)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './composables'
+export * from './composables/index.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔧 工具函数 (Utilities)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './utils'
+export * from './utils/index.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📋 常量 (Constants)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './constants'
+export * from './constants/index.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ✅ 验证器 (Validators)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './validators'
+export * from './validators/index.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔥 错误处理 (Error Handling)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './error'
+export * from './error/index.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎨 主题系统 (Theme System)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './theme'
+export * from './theme/index.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 💾 缓存管理 (Cache Management)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './cache'
+export * from './cache/index.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🧠 内存管理 (Memory Management)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './memory'
+export * from './memory/index.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📋 日志系统 (Logging System)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './logging'
-export { getGlobalLogger } from './logging'
+export * from './logging/index.js'
+export { getGlobalLogger } from './logging/index.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🚀 统一事件系统 (Unified Event System) - v1.0.0
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './events'
+export * from './events/index.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🧠 ComponentGenie - 超微AI组件智能识别系统 - v1.0.0
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export {
-  ComponentGenie, analyzeBatch, analyzeComponent, componentGenie, getAIStatistics, predictCategory, type ComponentAnalysis,
+  analyzeBatch, analyzeComponent, ComponentGenie, componentGenie, getAIStatistics, predictCategory, type ComponentAnalysis,
   type ComponentCategory, type ComponentDNA, type OptimizationSuggestion
-} from './ai/ComponentGenie'
+} from './ai/ComponentGenie.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🚀 全自动组件发现系统 - v1.0.0 (半自动→全自动的重大突破)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export {
   AutoComponentDiscoveryEngine,
-  autoDiscovery,
-  startAutoDiscovery,
-  stopAutoDiscovery, 
-  rescanComponents,
-  getDiscoveryStats,
-  handleComponentFileChange,
-  type AutoDiscoveryConfig,
+  autoDiscovery, getDiscoveryStats,
+  handleComponentFileChange, rescanComponents, startAutoDiscovery,
+  stopAutoDiscovery, type AutoDiscoveryConfig,
   type DiscoveredComponent
-} from './ai/AutoComponentDiscovery'
+} from './ai/AutoComponentDiscovery.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // ⚡ 毫秒级高性能并行分析引擎 - v1.0.0
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export {
-  TurboAnalysisEngine,
-  turboEngine,
   analyzeBatchTurbo,
-  getTurboStats,
-  type TurboFileMetadata,
-  type IncrementalAnalysisResult
-} from './ai/TurboAnalysisEngine'
+  getTurboStats, TurboAnalysisEngine,
+  turboEngine, type IncrementalAnalysisResult, type TurboFileMetadata
+} from './ai/TurboAnalysisEngine.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔧 Vite开发环境集成插件 - v1.0.0
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export {
-  viteAutoDiscoveryPlugin,
-  defaultAutoDiscoveryPlugin,
-  type ViteAutoDiscoveryOptions
-} from './ai/ViteAutoDiscoveryPlugin'
+  defaultAutoDiscoveryPlugin, viteAutoDiscoveryPlugin, type ViteAutoDiscoveryOptions
+} from './ai/ViteAutoDiscoveryPlugin.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📦 包信息 (Package Metadata)
@@ -230,8 +225,8 @@ export const PACKAGE_INFO = {
  * @since 2.0.0
  * @public
  */
-import { VirtualAssembly } from './components/VirtualAssembly'
-import { globalComponentRegistry } from './components/ComponentRegistry'
+import { globalComponentRegistry } from './components/ComponentRegistry.js'
+import { VirtualAssembly } from './components/VirtualAssembly.js'
 
 export const Components = new VirtualAssembly(
   globalComponentRegistry,

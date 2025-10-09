@@ -4,7 +4,7 @@
 
 import fs from 'fs-extra';
 import path from 'path';
-import { ErrorHandler, QualityGuardian } from '../src/index.js';
+import { ErrorHandler, QualityGuardian } from './src/index.js';
 
 async function testRobustness() {
     console.log('🛡️  健壮性测试开始...\n');

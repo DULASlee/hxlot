@@ -32,10 +32,10 @@ export { default as LcSmartFormBuilder } from './SmartFormBuilder/SmartFormBuild
 export { default as LcSmartFormDesigner } from './SmartFormBuilder/SmartFormDesigner.vue'
 
 // Form Builder Adapters
-export { default as LcFormSchemaAdapter } from './SmartFormBuilder/adapters/FormSchemaAdapter'
+export { default as LcFormSchemaAdapter } from './SmartFormBuilder/adapters/FormSchemaAdapter.js'
 
 // Form Builder Engine
-export { FormLinkageEngine as LcFormLinkageEngine } from './SmartFormBuilder/engine/FormLinkageEngine'
+export { FormLinkageEngine as LcFormLinkageEngine } from './SmartFormBuilder/engine/FormLinkageEngine.js'
 
 // Workflow Designer Components
 export { default as LcWorkflowDesigner } from './WorkflowDesigner/WorkflowDesigner.vue'
@@ -52,10 +52,10 @@ export { default as LcGlobalLoadingOverlay } from './GlobalLoadingOverlay.vue'
 export { default as LcWorkspaceContainer } from './WorkspaceContainer.vue'
 
 // Re-export full SmartFormBuilder API (组件 + 类型 + 引擎工具)
-export * from './SmartFormBuilder'
+export * from './SmartFormBuilder/index.js'
 
 // Types exports
-export * from './BusinessRuleDesigner/types'
+export * from './BusinessRuleDesigner/types/index.js'
 
 /**
  * Auto-register all components for global usage

@@ -231,13 +231,13 @@ import {
   Grid, ZoomIn, ZoomOut, DocumentChecked, More, Plus,
   FolderOpened, Download, Setting, Component, Box, Position, Clock
 } from '@element-plus/icons-vue'
-import { useDesignerStore } from '../stores/useDesignerStore'
+import { useDesignerStore } from './stores/useDesignerStore'
 import {
   LdVisualComponentPalette,
   LdVisualDesignCanvas,
   LdComponentPropertyPanel
-} from '../components'
-import type { CanvasComponent } from '../types/designer'
+} from './components'
+import type { CanvasComponent } from '@smartabp/lowcode-designer/types'
 
 // ==================== 状态管理 ====================
 

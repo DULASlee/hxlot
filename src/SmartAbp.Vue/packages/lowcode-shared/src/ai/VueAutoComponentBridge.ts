@@ -6,7 +6,7 @@
  */
 
 import type { App } from 'vue'
-import { globalComponentRegistry } from '../components/ComponentRegistry'
+import { globalComponentRegistry } from './components/ComponentRegistry'
 
 /**
  * 🔥 真正的自动消费：将ComponentRegistry中的组件注册到Vue应用

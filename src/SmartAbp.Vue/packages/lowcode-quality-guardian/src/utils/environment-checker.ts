@@ -6,7 +6,7 @@
 import chalk from 'chalk';
 import { execa } from 'execa';
 import { performance } from 'perf_hooks';
-import type { EnvironmentInfo } from '../types/index.js';
+import type { EnvironmentInfo } from '@smartabp/lowcode-shared/types/index.js';
 
 export class EnvironmentChecker {
     private requirements = {

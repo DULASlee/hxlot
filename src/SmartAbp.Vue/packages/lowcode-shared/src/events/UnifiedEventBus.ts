@@ -14,8 +14,8 @@
  * - Schema Driven（元数据驱动）
  */
 
-import { getGlobalLogger, type ILogger } from '../types/logger'
-import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from '../types/unified-schema'
+import { getGlobalLogger, type ILogger } from '@smartabp/lowcode-shared/types/logger'
+import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from '@smartabp/lowcode-shared/types/unified-schema'
 
 const logger: ILogger = getGlobalLogger()
 

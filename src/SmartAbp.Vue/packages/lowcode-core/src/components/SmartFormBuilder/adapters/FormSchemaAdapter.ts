@@ -20,7 +20,7 @@
  */
 
 import type { UnifiedValidationRule } from '@smartabp/lowcode-shared'
-import type { FormCreateConfig, FormCreateRule } from '../types/form-create-types'
+import type { FormCreateConfig, FormCreateRule } from '@smartabp/lowcode-shared/types/form-create-types'
 
 /**
  * @interface FormSchema

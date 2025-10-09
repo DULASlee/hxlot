@@ -12,7 +12,7 @@
  */
 
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
-import { PerformanceOptimizer } from '../analyzers/PerformanceOptimizer'
+import { PerformanceOptimizer } from './analyzers/PerformanceOptimizer'
 import {
   LocalStorageBaselineStorage,
   MemoryBaselineStorage,

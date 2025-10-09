@@ -9,7 +9,7 @@
  */
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import type { CanvasComponent } from '../types/designer'
+import type { CanvasComponent } from '@smartabp/lowcode-shared/types/designer'
 
 export const useDesignerStore = defineStore('lowcode-designer', () => {
     // ==================== 状态 ====================

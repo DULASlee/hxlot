@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "types": [
+      "node",
+      "vite/client",
+      "vitest/globals"
+    ]
+  },
+  "include": [
+    "src/SmartAbp.Vue/packages/**/src/shims-vue.d.ts"
+  ]
+}

@@ -210,7 +210,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import type { CanvasComponent, ComponentProperty } from '../types/designer'
+import type { CanvasComponent, ComponentProperty } from '@smartabp/lowcode-designer/types'
 
 // Props
 interface Props {

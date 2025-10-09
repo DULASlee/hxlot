@@ -3,9 +3,9 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { LoadTestEngine } from '../LoadTestEngine'
-import { LoadTestScenarioBuilder } from '../LoadTestScenario'
-import { PerformanceOptimizer } from '../../analyzers/PerformanceOptimizer'
+import { LoadTestEngine } from './LoadTestEngine'
+import { LoadTestScenarioBuilder } from './LoadTestScenario'
+import { PerformanceOptimizer } from './../analyzers/PerformanceOptimizer'
 
 describe('LoadTestEngine', () => {
   let engine: LoadTestEngine

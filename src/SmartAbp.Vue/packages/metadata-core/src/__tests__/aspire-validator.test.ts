@@ -13,14 +13,14 @@
  */
 
 import { describe, expect, it } from 'vitest'
-import type { AspireSolutionMetadata } from '../types'
+import type { AspireSolutionMetadata } from '@smartabp/lowcode-shared/types'
 import {
     AspireSolutionMetadataSchema,
     getAspireSolutionMetadataErrors,
     safeValidateAspireSolutionMetadata,
     validateAspireSolutionMetadata,
     validateAspireSolutionMetadataAsync
-} from '../validators/aspire-validator'
+} from './validators/aspire-validator'
 
 // ========================================
 // 测试数据工厂

@@ -1,6 +1,6 @@
 // 🚀 企业级模板引擎 - 基于21个模板文件构建完整的代码生成系统
 import { computed, ref } from 'vue';
-import type { TemplateFile } from '../types/designer'
+import type { TemplateFile } from '@smartabp/lowcode-shared/types/designer'
 
 // 模板参数接口
 export interface TemplateParameter {

@@ -69,7 +69,7 @@ import { Controls } from '@vue-flow/controls'
 import { VueFlow } from '@vue-flow/core'
 import { ElButton, ElIcon, ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
-// import { useEnhancedStateMachineStore } from '../../stores/enhancedStateMachine' // 未使用，保留以备将来使用
+// import { useEnhancedStateMachineStore } from './../stores/enhancedStateMachine' // 未使用，保留以备将来使用
 import type { RuleEdge, RuleNode, RuleNodeData, RuleNodeType } from './types'
 
 const logger = getGlobalLogger()

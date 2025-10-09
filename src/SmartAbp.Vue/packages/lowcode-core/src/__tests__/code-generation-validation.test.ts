@@ -7,7 +7,7 @@
 import type { EntityMetadata } from '@smartabp/metadata-core'
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { useCodeGenerationStore } from '../stores/codeGeneration'
+import { useCodeGenerationStore } from './stores/codeGeneration'
 
 describe('代码生成验证集成', () => {
     beforeEach(() => {

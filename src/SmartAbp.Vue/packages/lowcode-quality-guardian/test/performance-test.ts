@@ -2,7 +2,7 @@
  * 性能和内存测试
  */
 
-import { MemoryManager, PerformanceMonitor, QualityGuardian } from '../src/index.js';
+import { MemoryManager, PerformanceMonitor, QualityGuardian } from './src/index.js';
 
 async function testPerformance() {
     console.log('🚀 性能和内存测试开始...\n');

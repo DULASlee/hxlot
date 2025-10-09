@@ -1,5 +1,5 @@
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
-import type { RuleContext } from '../stores/enhancedStateMachine'
+import type { RuleContext } from './stores/enhancedStateMachine'
 
 const logger = getGlobalLogger()
 
@@ -66,7 +66,7 @@ export class ActionExecutorRegistry {
 }
 
 // 重新导出RuleContext类型
-export type { RuleContext } from '../stores/enhancedStateMachine'
+export type { RuleContext } from './stores/enhancedStateMachine'
 
 /**
  * 🔥 动作执行器框架 - 企业级实现

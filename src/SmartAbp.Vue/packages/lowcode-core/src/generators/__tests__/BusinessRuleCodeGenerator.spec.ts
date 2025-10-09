@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest'
-import { BusinessRuleCodeGenerator } from '../BusinessRuleCodeGenerator'
-import type { BusinessRule } from '../../stores/enhancedStateMachine'
+import { BusinessRuleCodeGenerator } from './BusinessRuleCodeGenerator'
+import type { BusinessRule } from './../stores/enhancedStateMachine'
 
 describe('BusinessRuleCodeGenerator', () => {
   let generator: BusinessRuleCodeGenerator

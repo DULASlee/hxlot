@@ -16,7 +16,7 @@ import type {
   QualityConfig,
   Violation,
   ViolationLevel
-} from '../types/index.js';
+} from '@smartabp/lowcode-shared/types/index.js';
 
 const chalk = new Chalk();
 

@@ -1,15 +1,207 @@
 {
   "checker": "LowCode",
-  "timestamp": "2025-10-08T12:43:41.491Z",
+  "timestamp": "2025-10-09T17:45:15.715Z",
   "passed": false,
   "summary": {
-    "P0": 9,
+    "P0": 40,
     "P1": 0,
     "P2": 0,
-    "total": 9
+    "total": 40
   },
   "violations": {
     "P0": [
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts",
+        "line": 39,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts",
+        "line": 109,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts",
+        "line": 135,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts",
+        "line": 170,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts",
+        "line": 201,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts",
+        "line": 221,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian/src/checkers/lowcode-platform-checker.ts",
+        "line": 255,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian/src/checkers/lowcode-checker.ts",
+        "line": 277,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian/src/checkers/lowcode-checker.ts",
+        "line": 303,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-quality-guardian/src/checkers/lowcode-checker.ts",
+        "line": 304,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-codegen/index.ts",
+        "line": 22,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-codegen/index.ts",
+        "line": 25,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/index.ts",
+        "line": 33,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/index.ts",
+        "line": 37,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/index.ts",
+        "line": 51,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/index.ts",
+        "line": 65,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/index.ts",
+        "line": 79,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/index.ts",
+        "line": 93,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/index.ts",
+        "line": 107,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/index.ts",
+        "line": 121,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/index.ts",
+        "line": 135,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/index.ts",
+        "line": 150,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/index.ts",
+        "line": 173,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-core/src/index.ts",
+        "line": 196,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
       {
         "rule": "lowcode.component-registration-consistency",
         "level": "P0",
@@ -22,7 +214,7 @@
         "rule": "lowcode.component-registration-consistency",
         "level": "P0",
         "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/ComponentRegistry.ts",
-        "line": 833,
+        "line": 1019,
         "message": "组件已注册但未找到实现文件: Unknown",
         "componentName": "Unknown"
       },
@@ -30,7 +222,63 @@
         "rule": "lowcode.component-registration-consistency",
         "level": "P0",
         "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/index.ts",
-        "line": 7,
+        "line": 5,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/register.ts",
+        "line": 8,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/register.ts",
+        "line": 17,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/register.ts",
+        "line": 32,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/register.ts",
+        "line": 47,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/register.ts",
+        "line": 61,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/register.ts",
+        "line": 75,
+        "message": "组件已注册但未找到实现文件: Unknown",
+        "componentName": "Unknown"
+      },
+      {
+        "rule": "lowcode.component-registration-consistency",
+        "level": "P0",
+        "file": "/Users/huanyuan/SmartAbp/hxlot/src/SmartAbp.Vue/packages/lowcode-shared/src/components/register.ts",
+        "line": 90,
         "message": "组件已注册但未找到实现文件: Unknown",
         "componentName": "Unknown"
       },
