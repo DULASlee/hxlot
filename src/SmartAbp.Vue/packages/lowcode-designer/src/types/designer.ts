@@ -161,3 +161,162 @@ export interface EntityDesignerProps {
   modelValue?: EntityDefinition
   readonly?: boolean
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 📋 TemplateManager 类型定义
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * 模板类型
+ */
+export type TemplateType = 'entity' | 'service' | 'controller' | 'view' | 'component' | 'workflow' | 'custom'
+
+/**
+ * 模板分类
+ */
+export type TemplateCategory = 'frontend' | 'backend' | 'fullstack' | 'database' | 'devops'
+
+/**
+ * 模板标签
+ */
+export interface TemplateTag {
+  id: string
+  name: string
+  color?: string
+}
+
+/**
+ * 模板变量
+ */
+export interface TemplateVariable {
+  name: string
+  displayName: string
+  type: 'string' | 'number' | 'boolean' | 'array' | 'object'
+  defaultValue?: any
+  required: boolean
+  description?: string
+}
+
+/**
+ * 模板文件
+ */
+export interface TemplateFile {
+  id: string
+  path: string
+  content: string
+  language: string
+  description?: string
+}
+
+/**
+ * 模板定义
+ */
+export interface TemplateDefinition {
+  id: string
+  name: string
+  displayName: string
+  description: string
+  type: TemplateType
+  category: TemplateCategory
+  version: string
+  author: string
+  tags: TemplateTag[]
+  variables: TemplateVariable[]
+  files: TemplateFile[]
+  preview?: string
+  icon?: string
+  isBuiltIn: boolean
+  isPublic: boolean
+  usageCount: number
+  rating: number
+  createdAt: string
+  updatedAt: string
+}
+
+/**
+ * TemplateManager Props接口
+ */
+export interface TemplateManagerProps {
+  selectedTemplate?: TemplateDefinition
+  readonly?: boolean
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🔧 BusinessRulesEngine 类型定义
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * 规则条件操作符
+ */
+export type RuleOperator = 
+  | 'equals' 
+  | 'notEquals' 
+  | 'greaterThan' 
+  | 'lessThan' 
+  | 'contains' 
+  | 'startsWith' 
+  | 'endsWith' 
+  | 'in' 
+  | 'notIn'
+  | 'isEmpty'
+  | 'isNotEmpty'
+
+/**
+ * 规则条件
+ */
+export interface RuleCondition {
+  id: string
+  field: string
+  operator: RuleOperator
+  value: any
+  logicalOperator?: 'and' | 'or'
+}
+
+/**
+ * 规则动作类型
+ */
+export type RuleActionType = 
+  | 'setValue' 
+  | 'showField' 
+  | 'hideField' 
+  | 'enableField' 
+  | 'disableField'
+  | 'showMessage'
+  | 'callApi'
+  | 'runScript'
+
+/**
+ * 规则动作
+ */
+export interface RuleAction {
+  id: string
+  type: RuleActionType
+  target?: string
+  value?: any
+  message?: string
+  apiUrl?: string
+  script?: string
+}
+
+/**
+ * 业务规则
+ */
+export interface BusinessRule {
+  id: string
+  name: string
+  description: string
+  enabled: boolean
+  priority: number
+  conditions: RuleCondition[]
+  actions: RuleAction[]
+  createdAt: string
+  updatedAt: string
+}
+
+/**
+ * BusinessRulesEngine Props接口
+ */
+export interface BusinessRulesEngineProps {
+  entityName?: string
+  readonly?: boolean
+}
