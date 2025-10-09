@@ -6,6 +6,8 @@
 export interface QualityConfig {
   /** 项目根目录 */
   projectRoot: string;
+  /** 配置文件路径 */
+  configFile?: string;
   /** 工作模式：strict=严格模式，moderate=适中模式，lenient=宽松模式 */
   mode: 'strict' | 'moderate' | 'lenient';
   /** 是否为CI模式 */
@@ -19,7 +21,7 @@ export interface QualityConfig {
   /** 要执行的检查器列表 */
   checkers: CheckerType[];
   /** 检查器配置 */
-  checkerConfigs: Record<string, any>;
+  checkerConfigs?: Record<string, any>;
   /** 是否启用技术债务分析 */
   enableDebtAnalysis?: boolean;
   /** 技术债务分析配置 */
@@ -52,6 +54,12 @@ export interface QualityConfig {
     baselineName?: string;
     autoSave?: boolean;
     storageDir?: string;
+  };
+  /**
+   * 规则配置
+   */
+  rules?: {
+    [key: string]: 'off' | 'warn' | 'error' | Record<string, any>;
   };
 }
 

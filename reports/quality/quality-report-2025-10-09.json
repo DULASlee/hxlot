@@ -1,9 +1,10 @@
 {
   "version": "2.0.0",
-  "timestamp": "2025-10-09T08:55:58.988Z",
+  "timestamp": "2025-10-09T09:32:02.260Z",
   "project": {
     "name": "SmartAbp",
-    "path": "/Users/huanyuan/SmartAbp/hxlot"
+    "path": "/Users/huanyuan/SmartAbp/hxlot",
+    "version": "1.0.0"
   },
   "config": {
     "projectRoot": "/Users/huanyuan/SmartAbp/hxlot",
@@ -21,7 +22,17 @@
       "performance",
       "security"
     ],
-    "checkerConfigs": {}
+    "checkerConfigs": {},
+    "performance": {
+      "enableParallel": true,
+      "parallelBatchSize": 5,
+      "fileScanConcurrency": 10,
+      "enableFileCache": true,
+      "maxMemoryMB": 1024
+    },
+    "enableDebtAnalysis": false,
+    "enableBaselineComparison": false,
+    "rules": {}
   },
   "gate": {
     "passed": false,
@@ -40,7 +51,7 @@
     "breakdown": {
       "baseScore": 100,
       "deductions": {
-        "P0": 370,
+        "P0": 380,
         "P1": 35,
         "P2": 120
       },
@@ -72,8 +83,8 @@
         {
           "rule": "lowcode.component-registration-required",
           "level": "P0",
-          "count": 2,
-          "points": 20
+          "count": 3,
+          "points": 30
         },
         {
           "rule": "lowcode.no-reverse-dependencies",
@@ -88,21 +99,21 @@
     "typescript": {
       "checker": "TypeScript类型检查器",
       "passed": true,
-      "duration": 5989,
+      "duration": 6742,
       "filesChecked": 0,
       "violations": []
     },
     "architecture": {
       "checker": "架构合规性检查器",
       "passed": true,
-      "duration": 5,
+      "duration": 6,
       "filesChecked": 0,
       "violations": []
     },
     "smartabp": {
       "checker": "SmartAbp专用规则检查器",
       "passed": true,
-      "duration": 136,
+      "duration": 134,
       "filesChecked": 0,
       "violations": [],
       "details": {
@@ -112,8 +123,8 @@
     "lowcode": {
       "checker": "低代码引擎质量检查器",
       "passed": false,
-      "duration": 230,
-      "filesChecked": 140,
+      "duration": 301,
+      "filesChecked": 141,
       "violations": [
         {
           "rule": "lowcode.no-relative-package-imports",
@@ -468,6 +479,13 @@
         {
           "rule": "lowcode.component-registration-required",
           "level": "P0",
+          "file": "src/SmartAbp.Vue/packages/lowcode-designer/src/components/CodePreviewPanel.vue",
+          "message": "组件 CodePreviewPanel 未在ComponentRegistry中注册",
+          "suggestion": "在对应package的index.ts中调用registerComponent()注册组件"
+        },
+        {
+          "rule": "lowcode.component-registration-required",
+          "level": "P0",
           "file": "src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/PropertyPanel.vue",
           "message": "组件 PropertyPanel 未在ComponentRegistry中注册",
           "suggestion": "在对应package的index.ts中调用registerComponent()注册组件"
@@ -510,41 +528,6 @@
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/dashboard/ExecutiveDashboard.template.vue",
-          "message": "模板缺少必需的占位符: {{name}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/dashboard/ExecutiveDashboard.template.vue",
-          "message": "模板缺少必需的占位符: {{namespace}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/config/ConfigManager.template.vue",
-          "message": "模板缺少必需的占位符: {{name}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/config/ConfigManager.template.vue",
-          "message": "模板缺少必需的占位符: {{namespace}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.no-hardcoded-in-templates",
-          "level": "P1",
-          "file": "templates/config/ConfigManager.template.vue",
-          "message": "模板中不应包含硬编码的测试数据",
-          "suggestion": "使用占位符代替硬编码"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
           "file": "templates/data-processing/DataImportExport.template.vue",
           "message": "模板缺少必需的占位符: {{name}}",
           "suggestion": "添加标准化的占位符"
@@ -559,23 +542,16 @@
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/document/DocumentManager.template.vue",
+          "file": "templates/dashboard/ExecutiveDashboard.template.vue",
           "message": "模板缺少必需的占位符: {{name}}",
           "suggestion": "添加标准化的占位符"
         },
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/document/DocumentManager.template.vue",
+          "file": "templates/dashboard/ExecutiveDashboard.template.vue",
           "message": "模板缺少必需的占位符: {{namespace}}",
           "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.no-hardcoded-in-templates",
-          "level": "P1",
-          "file": "templates/document/DocumentManager.template.vue",
-          "message": "模板中不应包含硬编码的测试数据",
-          "suggestion": "使用占位符代替硬编码"
         },
         {
           "rule": "lowcode.template-completeness",
@@ -615,28 +591,56 @@
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/project/ProjectManager.template.vue",
+          "file": "templates/config/ConfigManager.template.vue",
           "message": "模板缺少必需的占位符: {{name}}",
           "suggestion": "添加标准化的占位符"
         },
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/project/ProjectManager.template.vue",
+          "file": "templates/config/ConfigManager.template.vue",
           "message": "模板缺少必需的占位符: {{namespace}}",
           "suggestion": "添加标准化的占位符"
         },
         {
+          "rule": "lowcode.no-hardcoded-in-templates",
+          "level": "P1",
+          "file": "templates/config/ConfigManager.template.vue",
+          "message": "模板中不应包含硬编码的测试数据",
+          "suggestion": "使用占位符代替硬编码"
+        },
+        {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/reporting/DataAnalysisReport.template.vue",
+          "file": "templates/document/DocumentManager.template.vue",
           "message": "模板缺少必需的占位符: {{name}}",
           "suggestion": "添加标准化的占位符"
         },
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/reporting/DataAnalysisReport.template.vue",
+          "file": "templates/document/DocumentManager.template.vue",
+          "message": "模板缺少必需的占位符: {{namespace}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.no-hardcoded-in-templates",
+          "level": "P1",
+          "file": "templates/document/DocumentManager.template.vue",
+          "message": "模板中不应包含硬编码的测试数据",
+          "suggestion": "使用占位符代替硬编码"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/project/ProjectManager.template.vue",
+          "message": "模板缺少必需的占位符: {{name}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/project/ProjectManager.template.vue",
           "message": "模板缺少必需的占位符: {{namespace}}",
           "suggestion": "添加标准化的占位符"
         },
@@ -657,6 +661,20 @@
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
+          "file": "templates/system/SystemMonitor.template.vue",
+          "message": "模板缺少必需的占位符: {{name}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/system/SystemMonitor.template.vue",
+          "message": "模板缺少必需的占位符: {{namespace}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
           "file": "templates/ui-components/DataTable.template.vue",
           "message": "模板缺少必需的占位符: {{name}}",
           "suggestion": "添加标准化的占位符"
@@ -671,14 +689,14 @@
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/system/SystemMonitor.template.vue",
+          "file": "templates/reporting/DataAnalysisReport.template.vue",
           "message": "模板缺少必需的占位符: {{name}}",
           "suggestion": "添加标准化的占位符"
         },
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/system/SystemMonitor.template.vue",
+          "file": "templates/reporting/DataAnalysisReport.template.vue",
           "message": "模板缺少必需的占位符: {{namespace}}",
           "suggestion": "添加标准化的占位符"
         },
@@ -805,34 +823,6 @@
           "rule": "lowcode.template-completeness",
           "level": "P2",
           "file": "templates/backend/application/PermissionDefinitionProvider.template.json",
-          "message": "模板缺少必需的占位符: {{namespace}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/backend/domain/DomainService.template.cs",
-          "message": "模板缺少必需的占位符: {{name}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/backend/domain/DomainService.template.cs",
-          "message": "模板缺少必需的占位符: {{namespace}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/backend/domain/DomainService.template.json",
-          "message": "模板缺少必需的占位符: {{name}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/backend/domain/DomainService.template.json",
           "message": "模板缺少必需的占位符: {{namespace}}",
           "suggestion": "添加标准化的占位符"
         },
@@ -965,14 +955,28 @@
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/backend/efcore/DbContextConfiguration.template.cs",
+          "file": "templates/backend/domain/DomainService.template.cs",
           "message": "模板缺少必需的占位符: {{name}}",
           "suggestion": "添加标准化的占位符"
         },
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/backend/efcore/DbContextConfiguration.template.cs",
+          "file": "templates/backend/domain/DomainService.template.cs",
+          "message": "模板缺少必需的占位符: {{namespace}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/backend/domain/DomainService.template.json",
+          "message": "模板缺少必需的占位符: {{name}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/backend/domain/DomainService.template.json",
           "message": "模板缺少必需的占位符: {{namespace}}",
           "suggestion": "添加标准化的占位符"
         },
@@ -987,6 +991,55 @@
           "rule": "lowcode.template-completeness",
           "level": "P2",
           "file": "templates/backend/ops-monitoring/OpsMonitoringAppService.template.cs",
+          "message": "模板缺少必需的占位符: {{namespace}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/backend/tests/Application.Tests.template.cs",
+          "message": "模板缺少必需的占位符: {{name}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/backend/tests/Application.Tests.template.cs",
+          "message": "模板缺少必需的占位符: {{namespace}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.no-hardcoded-in-templates",
+          "level": "P1",
+          "file": "templates/backend/tests/Application.Tests.template.cs",
+          "message": "模板中不应包含硬编码的测试数据",
+          "suggestion": "使用占位符代替硬编码"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/backend/efcore/DbContextConfiguration.template.cs",
+          "message": "模板缺少必需的占位符: {{name}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/backend/efcore/DbContextConfiguration.template.cs",
+          "message": "模板缺少必需的占位符: {{namespace}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+          "message": "模板缺少必需的占位符: {{name}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
           "message": "模板缺少必需的占位符: {{namespace}}",
           "suggestion": "添加标准化的占位符"
         },
@@ -1010,20 +1063,6 @@
           "file": "templates/domain-specific/permission-management/UserManagement.template.vue",
           "message": "模板中不应包含硬编码的测试数据",
           "suggestion": "使用占位符代替硬编码"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
-          "message": "模板缺少必需的占位符: {{name}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
-          "message": "模板缺少必需的占位符: {{namespace}}",
-          "suggestion": "添加标准化的占位符"
         },
         {
           "rule": "lowcode.template-completeness",
@@ -1175,6 +1214,20 @@
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
+          "file": "templates/frontend/router/ModuleRoutes.template.ts",
+          "message": "模板缺少必需的占位符: {{name}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/frontend/router/ModuleRoutes.template.ts",
+          "message": "模板缺少必需的占位符: {{namespace}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
           "file": "templates/frontend/ops-monitoring/MonitoringDashboard.template.vue",
           "message": "模板缺少必需的占位符: {{name}}",
           "suggestion": "添加标准化的占位符"
@@ -1189,16 +1242,37 @@
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/frontend/router/ModuleRoutes.template.ts",
+          "file": "templates/lowcode/generators/CodeGenerator.template.meta.yml",
           "message": "模板缺少必需的占位符: {{name}}",
           "suggestion": "添加标准化的占位符"
         },
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/frontend/router/ModuleRoutes.template.ts",
+          "file": "templates/lowcode/generators/CodeGenerator.template.meta.yml",
           "message": "模板缺少必需的占位符: {{namespace}}",
           "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/lowcode/generators/CodeGenerator.template.ts",
+          "message": "模板缺少必需的占位符: {{name}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/lowcode/generators/CodeGenerator.template.ts",
+          "message": "模板缺少必需的占位符: {{namespace}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.no-hardcoded-in-templates",
+          "level": "P1",
+          "file": "templates/lowcode/generators/CodeGenerator.template.ts",
+          "message": "模板中不应包含硬编码的测试数据",
+          "suggestion": "使用占位符代替硬编码"
         },
         {
           "rule": "lowcode.template-completeness",
@@ -1245,41 +1319,6 @@
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/lowcode/generators/CodeGenerator.template.meta.yml",
-          "message": "模板缺少必需的占位符: {{name}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/lowcode/generators/CodeGenerator.template.meta.yml",
-          "message": "模板缺少必需的占位符: {{namespace}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/lowcode/generators/CodeGenerator.template.ts",
-          "message": "模板缺少必需的占位符: {{name}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/lowcode/generators/CodeGenerator.template.ts",
-          "message": "模板缺少必需的占位符: {{namespace}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.no-hardcoded-in-templates",
-          "level": "P1",
-          "file": "templates/lowcode/generators/CodeGenerator.template.ts",
-          "message": "模板中不应包含硬编码的测试数据",
-          "suggestion": "使用占位符代替硬编码"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
           "file": "templates/frontend/theme/ThemeConfig.template.ts",
           "message": "模板缺少必需的占位符: {{name}}",
           "suggestion": "添加标准化的占位符"
@@ -1288,34 +1327,6 @@
           "rule": "lowcode.template-completeness",
           "level": "P2",
           "file": "templates/frontend/theme/ThemeConfig.template.ts",
-          "message": "模板缺少必需的占位符: {{namespace}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/lowcode/plugins/LowCodePlugin.template.meta.yml",
-          "message": "模板缺少必需的占位符: {{name}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/lowcode/plugins/LowCodePlugin.template.meta.yml",
-          "message": "模板缺少必需的占位符: {{namespace}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/lowcode/plugins/LowCodePlugin.template.ts",
-          "message": "模板缺少必需的占位符: {{name}}",
-          "suggestion": "添加标准化的占位符"
-        },
-        {
-          "rule": "lowcode.template-completeness",
-          "level": "P2",
-          "file": "templates/lowcode/plugins/LowCodePlugin.template.ts",
           "message": "模板缺少必需的占位符: {{namespace}}",
           "suggestion": "添加标准化的占位符"
         },
@@ -1350,23 +1361,30 @@
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/backend/tests/Application.Tests.template.cs",
+          "file": "templates/lowcode/plugins/LowCodePlugin.template.meta.yml",
           "message": "模板缺少必需的占位符: {{name}}",
           "suggestion": "添加标准化的占位符"
         },
         {
           "rule": "lowcode.template-completeness",
           "level": "P2",
-          "file": "templates/backend/tests/Application.Tests.template.cs",
+          "file": "templates/lowcode/plugins/LowCodePlugin.template.meta.yml",
           "message": "模板缺少必需的占位符: {{namespace}}",
           "suggestion": "添加标准化的占位符"
         },
         {
-          "rule": "lowcode.no-hardcoded-in-templates",
-          "level": "P1",
-          "file": "templates/backend/tests/Application.Tests.template.cs",
-          "message": "模板中不应包含硬编码的测试数据",
-          "suggestion": "使用占位符代替硬编码"
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/lowcode/plugins/LowCodePlugin.template.ts",
+          "message": "模板缺少必需的占位符: {{name}}",
+          "suggestion": "添加标准化的占位符"
+        },
+        {
+          "rule": "lowcode.template-completeness",
+          "level": "P2",
+          "file": "templates/lowcode/plugins/LowCodePlugin.template.ts",
+          "message": "模板缺少必需的占位符: {{namespace}}",
+          "suggestion": "添加标准化的占位符"
         }
       ],
       "details": {
@@ -1399,14 +1417,14 @@
     "performance": {
       "checker": "性能质量检查器",
       "passed": true,
-      "duration": 154,
-      "filesChecked": 1231,
+      "duration": 167,
+      "filesChecked": 1238,
       "violations": []
     },
     "security": {
       "checker": "安全质量检查器",
       "passed": true,
-      "duration": 5102,
+      "duration": 5891,
       "filesChecked": 0,
       "violations": []
     }
@@ -1766,6 +1784,13 @@
       {
         "rule": "lowcode.component-registration-required",
         "level": "P0",
+        "file": "src/SmartAbp.Vue/packages/lowcode-designer/src/components/CodePreviewPanel.vue",
+        "message": "组件 CodePreviewPanel 未在ComponentRegistry中注册",
+        "suggestion": "在对应package的index.ts中调用registerComponent()注册组件"
+      },
+      {
+        "rule": "lowcode.component-registration-required",
+        "level": "P0",
         "file": "src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/PropertyPanel.vue",
         "message": "组件 PropertyPanel 未在ComponentRegistry中注册",
         "suggestion": "在对应package的index.ts中调用registerComponent()注册组件"
@@ -1779,6 +1804,13 @@
       }
     ],
     "P1": [
+      {
+        "rule": "lowcode.no-hardcoded-in-templates",
+        "level": "P1",
+        "file": "templates/integration/ApiConnector.template.vue",
+        "message": "模板中不应包含硬编码的测试数据",
+        "suggestion": "使用占位符代替硬编码"
+      },
       {
         "rule": "lowcode.no-hardcoded-in-templates",
         "level": "P1",
@@ -1796,7 +1828,7 @@
       {
         "rule": "lowcode.no-hardcoded-in-templates",
         "level": "P1",
-        "file": "templates/integration/ApiConnector.template.vue",
+        "file": "templates/backend/tests/Application.Tests.template.cs",
         "message": "模板中不应包含硬编码的测试数据",
         "suggestion": "使用占位符代替硬编码"
       },
@@ -1818,13 +1850,6 @@
         "rule": "lowcode.no-hardcoded-in-templates",
         "level": "P1",
         "file": "templates/lowcode/generators/CodeGenerator.template.ts",
-        "message": "模板中不应包含硬编码的测试数据",
-        "suggestion": "使用占位符代替硬编码"
-      },
-      {
-        "rule": "lowcode.no-hardcoded-in-templates",
-        "level": "P1",
-        "file": "templates/backend/tests/Application.Tests.template.cs",
         "message": "模板中不应包含硬编码的测试数据",
         "suggestion": "使用占位符代替硬编码"
       }
@@ -1861,34 +1886,6 @@
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/dashboard/ExecutiveDashboard.template.vue",
-        "message": "模板缺少必需的占位符: {{name}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
-        "file": "templates/dashboard/ExecutiveDashboard.template.vue",
-        "message": "模板缺少必需的占位符: {{namespace}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
-        "file": "templates/config/ConfigManager.template.vue",
-        "message": "模板缺少必需的占位符: {{name}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
-        "file": "templates/config/ConfigManager.template.vue",
-        "message": "模板缺少必需的占位符: {{namespace}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
         "file": "templates/data-processing/DataImportExport.template.vue",
         "message": "模板缺少必需的占位符: {{name}}",
         "suggestion": "添加标准化的占位符"
@@ -1903,14 +1900,14 @@
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/document/DocumentManager.template.vue",
+        "file": "templates/dashboard/ExecutiveDashboard.template.vue",
         "message": "模板缺少必需的占位符: {{name}}",
         "suggestion": "添加标准化的占位符"
       },
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/document/DocumentManager.template.vue",
+        "file": "templates/dashboard/ExecutiveDashboard.template.vue",
         "message": "模板缺少必需的占位符: {{namespace}}",
         "suggestion": "添加标准化的占位符"
       },
@@ -1945,28 +1942,42 @@
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/project/ProjectManager.template.vue",
+        "file": "templates/config/ConfigManager.template.vue",
         "message": "模板缺少必需的占位符: {{name}}",
         "suggestion": "添加标准化的占位符"
       },
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/project/ProjectManager.template.vue",
+        "file": "templates/config/ConfigManager.template.vue",
         "message": "模板缺少必需的占位符: {{namespace}}",
         "suggestion": "添加标准化的占位符"
       },
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/reporting/DataAnalysisReport.template.vue",
+        "file": "templates/document/DocumentManager.template.vue",
         "message": "模板缺少必需的占位符: {{name}}",
         "suggestion": "添加标准化的占位符"
       },
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/reporting/DataAnalysisReport.template.vue",
+        "file": "templates/document/DocumentManager.template.vue",
+        "message": "模板缺少必需的占位符: {{namespace}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
+        "file": "templates/project/ProjectManager.template.vue",
+        "message": "模板缺少必需的占位符: {{name}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
+        "file": "templates/project/ProjectManager.template.vue",
         "message": "模板缺少必需的占位符: {{namespace}}",
         "suggestion": "添加标准化的占位符"
       },
@@ -1987,6 +1998,20 @@
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
+        "file": "templates/system/SystemMonitor.template.vue",
+        "message": "模板缺少必需的占位符: {{name}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
+        "file": "templates/system/SystemMonitor.template.vue",
+        "message": "模板缺少必需的占位符: {{namespace}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
         "file": "templates/ui-components/DataTable.template.vue",
         "message": "模板缺少必需的占位符: {{name}}",
         "suggestion": "添加标准化的占位符"
@@ -2001,14 +2026,14 @@
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/system/SystemMonitor.template.vue",
+        "file": "templates/reporting/DataAnalysisReport.template.vue",
         "message": "模板缺少必需的占位符: {{name}}",
         "suggestion": "添加标准化的占位符"
       },
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/system/SystemMonitor.template.vue",
+        "file": "templates/reporting/DataAnalysisReport.template.vue",
         "message": "模板缺少必需的占位符: {{namespace}}",
         "suggestion": "添加标准化的占位符"
       },
@@ -2135,34 +2160,6 @@
         "rule": "lowcode.template-completeness",
         "level": "P2",
         "file": "templates/backend/application/PermissionDefinitionProvider.template.json",
-        "message": "模板缺少必需的占位符: {{namespace}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
-        "file": "templates/backend/domain/DomainService.template.cs",
-        "message": "模板缺少必需的占位符: {{name}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
-        "file": "templates/backend/domain/DomainService.template.cs",
-        "message": "模板缺少必需的占位符: {{namespace}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
-        "file": "templates/backend/domain/DomainService.template.json",
-        "message": "模板缺少必需的占位符: {{name}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
-        "file": "templates/backend/domain/DomainService.template.json",
         "message": "模板缺少必需的占位符: {{namespace}}",
         "suggestion": "添加标准化的占位符"
       },
@@ -2295,14 +2292,28 @@
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/backend/efcore/DbContextConfiguration.template.cs",
+        "file": "templates/backend/domain/DomainService.template.cs",
         "message": "模板缺少必需的占位符: {{name}}",
         "suggestion": "添加标准化的占位符"
       },
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/backend/efcore/DbContextConfiguration.template.cs",
+        "file": "templates/backend/domain/DomainService.template.cs",
+        "message": "模板缺少必需的占位符: {{namespace}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
+        "file": "templates/backend/domain/DomainService.template.json",
+        "message": "模板缺少必需的占位符: {{name}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
+        "file": "templates/backend/domain/DomainService.template.json",
         "message": "模板缺少必需的占位符: {{namespace}}",
         "suggestion": "添加标准化的占位符"
       },
@@ -2323,14 +2334,28 @@
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/domain-specific/permission-management/UserManagement.template.vue",
+        "file": "templates/backend/tests/Application.Tests.template.cs",
         "message": "模板缺少必需的占位符: {{name}}",
         "suggestion": "添加标准化的占位符"
       },
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/domain-specific/permission-management/UserManagement.template.vue",
+        "file": "templates/backend/tests/Application.Tests.template.cs",
+        "message": "模板缺少必需的占位符: {{namespace}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
+        "file": "templates/backend/efcore/DbContextConfiguration.template.cs",
+        "message": "模板缺少必需的占位符: {{name}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
+        "file": "templates/backend/efcore/DbContextConfiguration.template.cs",
         "message": "模板缺少必需的占位符: {{namespace}}",
         "suggestion": "添加标准化的占位符"
       },
@@ -2345,6 +2370,20 @@
         "rule": "lowcode.template-completeness",
         "level": "P2",
         "file": "templates/domain-specific/mes-system/ProductionOrderManagement.template.vue",
+        "message": "模板缺少必需的占位符: {{namespace}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
+        "file": "templates/domain-specific/permission-management/UserManagement.template.vue",
+        "message": "模板缺少必需的占位符: {{name}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
+        "file": "templates/domain-specific/permission-management/UserManagement.template.vue",
         "message": "模板缺少必需的占位符: {{namespace}}",
         "suggestion": "添加标准化的占位符"
       },
@@ -2491,6 +2530,20 @@
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
+        "file": "templates/frontend/router/ModuleRoutes.template.ts",
+        "message": "模板缺少必需的占位符: {{name}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
+        "file": "templates/frontend/router/ModuleRoutes.template.ts",
+        "message": "模板缺少必需的占位符: {{namespace}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
         "file": "templates/frontend/ops-monitoring/MonitoringDashboard.template.vue",
         "message": "模板缺少必需的占位符: {{name}}",
         "suggestion": "添加标准化的占位符"
@@ -2505,14 +2558,28 @@
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/frontend/router/ModuleRoutes.template.ts",
+        "file": "templates/lowcode/generators/CodeGenerator.template.meta.yml",
         "message": "模板缺少必需的占位符: {{name}}",
         "suggestion": "添加标准化的占位符"
       },
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/frontend/router/ModuleRoutes.template.ts",
+        "file": "templates/lowcode/generators/CodeGenerator.template.meta.yml",
+        "message": "模板缺少必需的占位符: {{namespace}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
+        "file": "templates/lowcode/generators/CodeGenerator.template.ts",
+        "message": "模板缺少必需的占位符: {{name}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
+        "file": "templates/lowcode/generators/CodeGenerator.template.ts",
         "message": "模板缺少必需的占位符: {{namespace}}",
         "suggestion": "添加标准化的占位符"
       },
@@ -2561,34 +2628,6 @@
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/lowcode/generators/CodeGenerator.template.meta.yml",
-        "message": "模板缺少必需的占位符: {{name}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
-        "file": "templates/lowcode/generators/CodeGenerator.template.meta.yml",
-        "message": "模板缺少必需的占位符: {{namespace}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
-        "file": "templates/lowcode/generators/CodeGenerator.template.ts",
-        "message": "模板缺少必需的占位符: {{name}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
-        "file": "templates/lowcode/generators/CodeGenerator.template.ts",
-        "message": "模板缺少必需的占位符: {{namespace}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
         "file": "templates/frontend/theme/ThemeConfig.template.ts",
         "message": "模板缺少必需的占位符: {{name}}",
         "suggestion": "添加标准化的占位符"
@@ -2597,34 +2636,6 @@
         "rule": "lowcode.template-completeness",
         "level": "P2",
         "file": "templates/frontend/theme/ThemeConfig.template.ts",
-        "message": "模板缺少必需的占位符: {{namespace}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
-        "file": "templates/lowcode/plugins/LowCodePlugin.template.meta.yml",
-        "message": "模板缺少必需的占位符: {{name}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
-        "file": "templates/lowcode/plugins/LowCodePlugin.template.meta.yml",
-        "message": "模板缺少必需的占位符: {{namespace}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
-        "file": "templates/lowcode/plugins/LowCodePlugin.template.ts",
-        "message": "模板缺少必需的占位符: {{name}}",
-        "suggestion": "添加标准化的占位符"
-      },
-      {
-        "rule": "lowcode.template-completeness",
-        "level": "P2",
-        "file": "templates/lowcode/plugins/LowCodePlugin.template.ts",
         "message": "模板缺少必需的占位符: {{namespace}}",
         "suggestion": "添加标准化的占位符"
       },
@@ -2659,14 +2670,28 @@
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/backend/tests/Application.Tests.template.cs",
+        "file": "templates/lowcode/plugins/LowCodePlugin.template.meta.yml",
         "message": "模板缺少必需的占位符: {{name}}",
         "suggestion": "添加标准化的占位符"
       },
       {
         "rule": "lowcode.template-completeness",
         "level": "P2",
-        "file": "templates/backend/tests/Application.Tests.template.cs",
+        "file": "templates/lowcode/plugins/LowCodePlugin.template.meta.yml",
+        "message": "模板缺少必需的占位符: {{namespace}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
+        "file": "templates/lowcode/plugins/LowCodePlugin.template.ts",
+        "message": "模板缺少必需的占位符: {{name}}",
+        "suggestion": "添加标准化的占位符"
+      },
+      {
+        "rule": "lowcode.template-completeness",
+        "level": "P2",
+        "file": "templates/lowcode/plugins/LowCodePlugin.template.ts",
         "message": "模板缺少必需的占位符: {{namespace}}",
         "suggestion": "添加标准化的占位符"
       }
@@ -2674,7 +2699,7 @@
   },
   "statistics": {
     "totalFiles": 0,
-    "filesChecked": 1371,
+    "filesChecked": 1379,
     "totalLines": 0,
     "totalDuration": 0
   },

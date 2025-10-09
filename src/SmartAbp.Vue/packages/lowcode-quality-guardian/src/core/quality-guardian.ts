@@ -4,9 +4,12 @@
  */
 
 import chalk from 'chalk';
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import path from 'path';
 import { performance } from 'perf_hooks';
+import {
+  DEFAULT_CONFIG,
+} from '../config/default-config.js';
 
 import type {
   CheckerPlugin,
@@ -51,10 +54,13 @@ export class QualityGuardian {
   private memoryManager: MemoryManager;
 
   constructor(config: Partial<QualityConfig> = {}) {
-    this.config = this.mergeDefaultConfig(config);
+    const externalConfig = this.loadExternalConfig(config);
+    const mergedConfig = { ...DEFAULT_CONFIG, ...config, ...externalConfig };
+    this.config = this.mergeDefaultConfig(mergedConfig);
+
     this.results = this.initializeResults();
     this.performanceMonitor = new PerformanceMonitor();
-    this.memoryManager = new MemoryManager(this.config.performance?.maxMemoryMB || 1024);
+    this.memoryManager = new MemoryManager(this.config.performance?.maxMemoryMB);
     this.registerBuiltinCheckers();
   }
 
@@ -143,6 +149,23 @@ export class QualityGuardian {
   }
 
   // ========== 私有方法 ==========
+
+  private loadExternalConfig(config: Partial<QualityConfig>): Partial<QualityConfig> {
+    const configFile = config.configFile || 'quality-guardian.config.json';
+    const configPath = path.resolve(config.projectRoot || process.cwd(), configFile);
+
+    if (fs.existsSync(configPath)) {
+      try {
+        console.log(chalk.blue(`  ℹ️  使用配置文件: ${configFile}`));
+        const configContent = fs.readFileSync(configPath, 'utf8');
+        return JSON.parse(configContent);
+      } catch (error) {
+        console.warn(chalk.yellow(`  ⚠️  无法读取或解析配置文件: ${configPath}`));
+        return {};
+      }
+    }
+    return {};
+  }
 
   private mergeDefaultConfig(userConfig: Partial<QualityConfig>): QualityConfig {
     const defaultConfig: QualityConfig = {
