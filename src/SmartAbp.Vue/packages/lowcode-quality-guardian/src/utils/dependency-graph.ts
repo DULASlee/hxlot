@@ -32,11 +32,11 @@ export class DependencyGraph {
         errorRecovery: true,
       });
 
-      traverse(ast, {
-        ImportDeclaration: ({ node }) => {
+      babelTraverse(ast, {
+        ImportDeclaration: ({ node }: any) => {
           this.addDependency(node, relativePath);
         },
-        CallExpression: ({ node }) => {
+        CallExpression: ({ node }: any) => {
           if (
             (node.callee.type === 'Identifier' && node.callee.name === 'require') ||
             (node.callee.type === 'Import') // Dynamic import()
