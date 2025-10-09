@@ -8,7 +8,8 @@ export const DESIGNER_VIEWS = [
   'ThemeCustomizationView',
   'UltraSimpleStudio',
   'VisualDesignerView',
-  'EntityDesignerTestView'
+  'EntityDesignerTestView',
+  'LowCodeStudioView' // ✅ 新增：低代码工作室主界面
 ] as const
 
 export const CODEGEN_VIEWS = [

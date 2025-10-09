@@ -29,6 +29,9 @@ export * from './utils'
 // Export views
 export * from './views'
 
+// Export stores
+export * from './stores'
+
 /**
  * 注册所有设计器组件到 ComponentRegistry
  * @遵循架构铁律二：强制使用组件注册系统

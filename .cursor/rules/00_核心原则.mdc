@@ -39,7 +39,170 @@ priority: 0
 
 ---
 
-## 🚨 P0 阻断性规则（5条铁律）
+## 🔥 架构三大铁律（P0最高优先级）
+
+> **优先级**: -2（最高，覆盖所有规则）  
+> **执行级别**: 格杀勿论，零容忍  
+> **适用范围**: 全项目所有代码
+
+### ⚠️ 核心问题诊断
+
+**问题根源**: 项目存在大量TypeScript错误，根本原因是**严重违反架构设计**：
+
+1. **未使用统一类型系统** → 类型定义散乱
+2. **未使用组件注册系统** → 组件管理混乱
+3. **架构层级混乱** → 主应用定义底层类型
+
+---
+
+### 铁律一：强制使用统一类型系统
+
+```yaml
+所有类型定义必须集中在以下位置:
+  1. @smartabp/metadata-core (元数据相关)
+  2. @smartabp/lowcode-shared/types (共享类型)
+  3. packages内部类型 (仅限package内使用)
+
+严禁:
+  ❌ 在主应用 src/ 中定义可复用类型
+  ❌ 在组件文件中定义跨文件使用的类型
+  ❌ 使用相对路径 import '../types'
+  ❌ 每个文件自己定义重复的类型
+
+检测:
+  find src/ -name "*types.ts" -o -name "*types.d.ts" | grep -v "src/types/"
+  grep -r "from '\.\./.*types" src/
+  # 结果必须为空
+```
+
+**正确示例**:
+```typescript
+// ✅ 在 lowcode-shared 中定义共享类型
+// packages/lowcode-shared/src/types/assembly.ts
+export interface DependencyGraph {
+  nodes: Map<string, DependencyNode>
+  roots: string[]
+  hasCycles: boolean
+}
+
+// ✅ 使用别名导入
+import type { DependencyGraph } from '@smartabp/lowcode-shared'
+```
+
+---
+
+### 铁律二：强制使用组件注册系统
+
+```yaml
+所有低代码组件必须通过 ComponentRegistry 注册:
+  位置: @smartabp/lowcode-shared/components/ComponentRegistry
+  
+强制要求:
+  1. ✅ 组件创建后立即注册
+  2. ✅ 提供完整的 ComponentMetadata
+  3. ✅ 声明所有依赖关系
+  4. ✅ 指定正确的 category 和 bundle
+  
+严禁:
+  ❌ 创建组件不注册
+  ❌ 直接 import 组件路径使用
+  ❌ 跳过 ComponentRegistry
+
+检测:
+  find packages/*/src/components -name "*.vue"
+  grep -r "registerComponent" packages/*/src/index.ts
+  # 数量必须匹配
+```
+
+**正确示例**:
+```typescript
+// ✅ 步骤1: 创建组件
+// packages/lowcode-core/src/components/SmartForm.vue
+
+// ✅ 步骤2: 导出组件
+export { default as SmartForm } from './SmartForm.vue'
+
+// ✅ 步骤3: 注册组件
+registerComponent({
+  name: 'SmartForm',
+  displayName: '智能表单',
+  category: 'form',
+  priority: 'high',
+  dependencies: ['BaseComponent'],
+  bundle: '@smartabp/lowcode-core',
+  version: '1.0.0'
+})
+
+// ✅ 步骤4: 通过注册系统使用
+const SmartForm = await loadComponent('SmartForm')
+```
+
+---
+
+### 铁律三：严格遵循架构层级
+
+```yaml
+架构层级（只能向下依赖）:
+  Layer 2: lowcode-designer
+    ↓ 只能依赖
+  Layer 1: lowcode-core, lowcode-api, lowcode-tools
+    ↓ 只能依赖
+  Layer 0: lowcode-shared
+    ↓ 只能依赖
+  Layer -1: metadata-core
+    ↓ 零依赖
+
+主应用 (src/):
+  ↓ 只能使用
+  所有 packages (不能定义底层类型)
+
+严禁:
+  ❌ 主应用定义底层类型
+  ❌ 逆向依赖（lowcode-shared 依赖 lowcode-core）
+  ❌ 同层级相互依赖
+  ❌ 跨层级引用
+
+检测:
+  grep -r "@smartabp/lowcode-core" packages/lowcode-shared/
+  grep -r "@smartabp/lowcode-designer" packages/lowcode-core/
+  # 必须0结果
+```
+
+**正确示例**:
+```typescript
+// ✅ 底层类型在 lowcode-shared
+// packages/lowcode-shared/src/types/assembly.ts
+export interface DependencyGraph { ... }
+
+// ✅ lowcode-core 使用 lowcode-shared
+import type { DependencyGraph } from '@smartabp/lowcode-shared'
+
+// ✅ 主应用只使用，不定义底层类型
+import type { DependencyGraph } from '@smartabp/lowcode-shared'
+```
+
+---
+
+### 🚨 违规处罚（零容忍）
+
+```yaml
+发现违规代码的处理流程:
+  步骤1: 立即停止所有开发工作
+  步骤2: AI 报告违规位置和类型
+  步骤3: 提供正确的修复方案
+  步骤4: 用户确认后执行修复
+  步骤5: 运行强制检查确认修复
+  步骤6: 提交代码并标记 "fix: 修复架构违规"
+
+处理措施:
+  铁律一违规: 删除主应用类型文件 → 在 lowcode-shared/types 创建 → 更新所有引用
+  铁律二违规: 立即注册组件 → 补充完整 ComponentMetadata → 更新使用方式
+  铁律三违规: 删除底层类型定义 → 移至正确 package → 修复依赖关系
+```
+
+---
+
+## 🚨 P0 阻断性规则（8条铁律）
 
 > **违反任何一条 = 禁止提交代码**
 
