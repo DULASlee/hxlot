@@ -1,5 +1,6 @@
 // 🚀 企业级模板引擎 - 基于21个模板文件构建完整的代码生成系统
 import { computed, ref } from 'vue';
+import type { TemplateFile } from '../types/designer'
 
 // 模板参数接口
 export interface TemplateParameter {
@@ -36,19 +37,7 @@ export interface TemplateMetadata {
   relatedTemplates: string[];
 }
 
-// 模板文件接口
-export interface TemplateFile {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  filePath: string;
-  content: string;
-  metadata: TemplateMetadata;
-  fileExtension: string;
-  targetFramework: 'backend' | 'frontend' | 'lowcode';
-  tags: string[];
-}
+// 模板文件接口 - 已移至 types/designer.ts，此处仅导入使用
 
 // 代码生成结果接口
 export interface GenerationResult {
@@ -387,7 +376,7 @@ export class TemplateEngine {
       t.name.toLowerCase().includes(lowerKeyword) ||
       t.description.toLowerCase().includes(lowerKeyword) ||
       t.tags.some(tag => tag.toLowerCase().includes(lowerKeyword)) ||
-      t.metadata.aiTriggers.some(trigger => trigger.toLowerCase().includes(lowerKeyword))
+      t.metadata.aiTriggers.some((trigger: string) => trigger.toLowerCase().includes(lowerKeyword))
     );
   }
 
@@ -515,7 +504,7 @@ export class TemplateEngine {
   private validateParameters(template: TemplateFile, parameters: Record<string, any>): { valid: boolean; errors: string[]; } {
     const errors: string[] = [];
 
-    template.metadata.parameters.forEach(param => {
+    template.metadata.parameters.forEach((param: any) => {
       const value = parameters[param.name];
 
       if (param.required && (value === undefined || value === null || value === '')) {

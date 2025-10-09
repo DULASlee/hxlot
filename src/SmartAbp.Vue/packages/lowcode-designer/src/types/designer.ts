@@ -250,14 +250,22 @@ export interface TemplateVariable {
 }
 
 /**
- * 模板文件
+ * 模板文件（扩展版 - 用于TemplateEngine）
  */
 export interface TemplateFile {
   id: string
-  path: string
+  name: string
+  description: string
+  category: string
+  filePath: string
+  path?: string // 兼容简化版
   content: string
-  language: string
-  description?: string
+  language?: string // 兼容简化版
+  metadata?: any // TemplateMetadata
+  fileExtension?: string
+  targetFramework?: 'backend' | 'frontend' | 'lowcode'
+  tags: string[]
+  version?: string
 }
 
 /**
