@@ -80,6 +80,7 @@ export { default as LdVisualDesignCanvas } from './VisualDesignCanvas.vue'
 export { default as LdEntityDesigner } from './EntityDesigner.vue'
 export { default as LdTemplateManager } from './TemplateManager.vue'
 export { default as LdBusinessRulesEngine } from './BusinessRulesEngine.vue'
+export { default as LdVisualComponentPalette } from './VisualComponentPalette.vue'
 
 // ✅ Development Environment Components - 已注册到ComponentRegistry
 // export { default as LdDevEnvironmentSetup } from './devenv/DevEnvironmentSetup.vue'

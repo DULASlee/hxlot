@@ -7,7 +7,8 @@ export const DESIGNER_VIEWS = [
   'EntityModelingView',
   'ThemeCustomizationView',
   'UltraSimpleStudio',
-  'VisualDesignerView'
+  'VisualDesignerView',
+  'EntityDesignerTestView'
 ] as const
 
 export const CODEGEN_VIEWS = [

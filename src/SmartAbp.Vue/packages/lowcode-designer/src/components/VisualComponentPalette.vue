@@ -1,206 +1,509 @@
 <template>
   <div class="visual-component-palette">
-    <el-card>
-      <template #header>
-        <span>组件面板</span>
-      </template>
+    <!-- 搜索栏 -->
+    <div v-if="searchable" class="palette-search">
+      <el-input
+        v-model="searchKeyword"
+        placeholder="搜索组件..."
+        prefix-icon="el-icon-search"
+        clearable
+        size="small"
+        @input="handleSearch"
+      />
+    </div>
 
-      <div class="content">
-        <!-- 基础组件 -->
-        <div class="component-category">
-          <h4 class="category-title">
-            <i class="el-icon-collection" />
-            基础组件
-          </h4>
-          <div class="components-grid">
-            <div
-              v-for="component in basicComponents"
-              :key="component.type"
-              class="component-item"
-              draggable="true"
-              @dragstart="handleDragStart($event, component)"
-            >
-              <div class="component-icon">
-                <i :class="component.icon" />
-              </div>
-              <span class="component-name">{{ component.name }}</span>
+    <!-- 分类标签 -->
+    <div class="palette-categories">
+      <el-button-group size="small">
+        <el-button
+          v-for="category in categories"
+          :key="category.value"
+          :type="currentCategory === category.value ? 'primary' : 'default'"
+          @click="handleCategoryChange(category.value)"
+        >
+          <i :class="category.icon" />
+          {{ category.label }}
+        </el-button>
+      </el-button-group>
+    </div>
+
+    <!-- 组件列表 -->
+    <div class="palette-components">
+      <el-scrollbar height="calc(100vh - 200px)">
+        <div class="component-grid">
+          <div
+            v-for="component in filteredComponents"
+            :key="component.id"
+            class="component-item"
+            :draggable="draggable"
+            @dragstart="handleDragStart(component, $event)"
+            @dragend="handleDragEnd"
+            @click="handleComponentClick(component)"
+          >
+            <div class="component-icon">
+              <i :class="component.icon" />
             </div>
+            <div class="component-name">{{ component.displayName }}</div>
+            <div class="component-description">{{ component.description }}</div>
+            <el-tag
+              v-if="component.isCustom"
+              size="small"
+              type="warning"
+              class="custom-tag"
+            >
+              自定义
+            </el-tag>
           </div>
         </div>
 
-        <!-- 表单组件 -->
-        <div class="component-category">
-          <h4 class="category-title">
-            <i class="el-icon-edit-outline" />
-            表单组件
-          </h4>
-          <div class="components-grid">
-            <div
-              v-for="component in formComponents"
-              :key="component.type"
-              class="component-item"
-              draggable="true"
-              @dragstart="handleDragStart($event, component)"
-            >
-              <div class="component-icon">
-                <i :class="component.icon" />
-              </div>
-              <span class="component-name">{{ component.name }}</span>
-            </div>
+        <!-- 空状态 -->
+        <el-empty
+          v-if="filteredComponents.length === 0"
+          description="暂无组件"
+          :image-size="100"
+        />
+      </el-scrollbar>
+    </div>
+
+    <!-- 组件详情抽屉 -->
+    <el-drawer
+      v-model="detailDrawerVisible"
+      title="组件详情"
+      size="400px"
+    >
+      <div v-if="selectedComponent" class="component-detail">
+        <div class="detail-header">
+          <div class="detail-icon">
+            <i :class="selectedComponent.icon" />
           </div>
+          <h3>{{ selectedComponent.displayName }}</h3>
+          <p class="detail-name">{{ selectedComponent.name }}</p>
         </div>
 
-        <!-- 数据展示 -->
-        <div class="component-category">
-          <h4 class="category-title">
-            <i class="el-icon-data-analysis" />
-            数据展示
-          </h4>
-          <div class="components-grid">
-            <div
-              v-for="component in dataComponents"
-              :key="component.type"
-              class="component-item"
-              draggable="true"
-              @dragstart="handleDragStart($event, component)"
+        <el-divider />
+
+        <div class="detail-section">
+          <h4>描述</h4>
+          <p>{{ selectedComponent.description }}</p>
+        </div>
+
+        <div class="detail-section">
+          <h4>分类</h4>
+          <el-tag :type="getCategoryType(selectedComponent.category)">
+            {{ getCategoryLabel(selectedComponent.category) }}
+          </el-tag>
+        </div>
+
+        <div v-if="selectedComponent.tags.length > 0" class="detail-section">
+          <h4>标签</h4>
+          <el-tag
+            v-for="tag in selectedComponent.tags"
+            :key="tag"
+            size="small"
+            style="margin-right: 8px"
+          >
+            {{ tag }}
+          </el-tag>
+        </div>
+
+        <div v-if="selectedComponent.props" class="detail-section">
+          <h4>默认属性</h4>
+          <el-descriptions :column="1" border size="small">
+            <el-descriptions-item
+              v-for="(value, key) in selectedComponent.props"
+              :key="key"
+              :label="key"
             >
-              <div class="component-icon">
-                <i :class="component.icon" />
-              </div>
-              <span class="component-name">{{ component.name }}</span>
-            </div>
-          </div>
+              {{ value }}
+            </el-descriptions-item>
+          </el-descriptions>
+        </div>
+
+        <div class="detail-actions">
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            @click="handleAddComponent"
+          >
+            添加到画布
+          </el-button>
         </div>
       </div>
-    </el-card>
+    </el-drawer>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { ElMessage } from 'element-plus'
+import type {
+  VisualComponentPaletteProps,
+  PaletteComponent,
+  ComponentPaletteCategory
+} from '../types/designer'
 
-interface Props {
-  components?: any[]
-}
+// Props
+const props = withDefaults(defineProps<VisualComponentPaletteProps>(), {
+  searchable: true,
+  draggable: true
+})
 
-defineProps<Props>()
-
+// Emits
 const emit = defineEmits<{
-  'component-selected': [component: any]
-  'component-drag-start': [component: any, event: DragEvent]
+  'component-select': [component: PaletteComponent]
+  'component-drag-start': [component: PaletteComponent, event: DragEvent]
+  'component-drag-end': []
 }>()
 
-// 基础组件
-const basicComponents = ref([
-  { type: 'div', name: '容器', icon: 'el-icon-box' },
-  { type: 'button', name: '按钮', icon: 'el-icon-switch-button' },
-  { type: 'text', name: '文本', icon: 'el-icon-document' },
-  { type: 'image', name: '图片', icon: 'el-icon-picture' },
-  { type: 'link', name: '链接', icon: 'el-icon-link' },
-  { type: 'icon', name: '图标', icon: 'el-icon-star-off' },
-])
+// 状态
+const searchKeyword = ref('')
+const currentCategory = ref<ComponentPaletteCategory>('basic')
+const detailDrawerVisible = ref(false)
+const selectedComponent = ref<PaletteComponent | null>(null)
 
-// 表单组件
-const formComponents = ref([
-  { type: 'input', name: '输入框', icon: 'el-icon-edit' },
-  { type: 'textarea', name: '文本域', icon: 'el-icon-document-copy' },
-  { type: 'select', name: '选择器', icon: 'el-icon-arrow-down' },
-  { type: 'checkbox', name: '复选框', icon: 'el-icon-check' },
-  { type: 'radio', name: '单选框', icon: 'el-icon-circle-check' },
-  { type: 'date-picker', name: '日期选择', icon: 'el-icon-date' },
-  { type: 'upload', name: '文件上传', icon: 'el-icon-upload' },
-])
+// 分类定义
+const categories = [
+  { value: 'basic' as const, label: '基础', icon: 'el-icon-box' },
+  { value: 'form' as const, label: '表单', icon: 'el-icon-edit' },
+  { value: 'data' as const, label: '数据', icon: 'el-icon-s-data' },
+  { value: 'layout' as const, label: '布局', icon: 'el-icon-s-grid' },
+  { value: 'navigation' as const, label: '导航', icon: 'el-icon-menu' },
+  { value: 'feedback' as const, label: '反馈', icon: 'el-icon-message-solid' },
+  { value: 'chart' as const, label: '图表', icon: 'el-icon-s-data' },
+  { value: 'custom' as const, label: '自定义', icon: 'el-icon-setting' }
+]
 
-// 数据展示组件
-const dataComponents = ref([
-  { type: 'table', name: '表格', icon: 'el-icon-menu' },
-  { type: 'list', name: '列表', icon: 'el-icon-tickets' },
-  { type: 'card', name: '卡片', icon: 'el-icon-postcard' },
-  { type: 'chart', name: '图表', icon: 'el-icon-data-line' },
-  { type: 'progress', name: '进度条', icon: 'el-icon-loading' },
-  { type: 'tag', name: '标签', icon: 'el-icon-price-tag' },
-])
-
-// 拖拽开始
-const handleDragStart = (event: DragEvent, component: any) => {
-  if (event.dataTransfer) {
-    event.dataTransfer.setData('application/json', JSON.stringify(component))
-    event.dataTransfer.effectAllowed = 'copy'
+// 组件库（模拟数据）
+const components = ref<PaletteComponent[]>([
+  // 基础组件
+  {
+    id: 'comp_button',
+    name: 'el-button',
+    displayName: '按钮',
+    category: 'basic',
+    icon: 'el-icon-s-promotion',
+    description: '常用的操作按钮',
+    props: { type: 'primary', size: 'default' },
+    defaultStyle: { width: '100px', height: '32px' },
+    isCustom: false,
+    tags: ['button', 'action']
+  },
+  {
+    id: 'comp_input',
+    name: 'el-input',
+    displayName: '输入框',
+    category: 'form',
+    icon: 'el-icon-edit',
+    description: '通过键盘输入字符',
+    props: { placeholder: '请输入', clearable: true },
+    defaultStyle: { width: '200px' },
+    isCustom: false,
+    tags: ['input', 'form']
+  },
+  {
+    id: 'comp_select',
+    name: 'el-select',
+    displayName: '选择器',
+    category: 'form',
+    icon: 'el-icon-arrow-down',
+    description: '当选项过多时，使用下拉菜单展示并选择内容',
+    props: { placeholder: '请选择', clearable: true },
+    defaultStyle: { width: '200px' },
+    isCustom: false,
+    tags: ['select', 'form', 'dropdown']
+  },
+  {
+    id: 'comp_table',
+    name: 'el-table',
+    displayName: '表格',
+    category: 'data',
+    icon: 'el-icon-s-grid',
+    description: '用于展示多条结构类似的数据',
+    props: { border: true, stripe: true },
+    defaultStyle: { width: '100%', minHeight: '200px' },
+    isCustom: false,
+    tags: ['table', 'data', 'grid']
+  },
+  {
+    id: 'comp_card',
+    name: 'el-card',
+    displayName: '卡片',
+    category: 'layout',
+    icon: 'el-icon-postcard',
+    description: '将信息聚合在卡片容器中展示',
+    props: { shadow: 'hover' },
+    defaultStyle: { width: '300px', minHeight: '150px' },
+    isCustom: false,
+    tags: ['card', 'container']
+  },
+  {
+    id: 'comp_dialog',
+    name: 'el-dialog',
+    displayName: '对话框',
+    category: 'feedback',
+    icon: 'el-icon-s-comment',
+    description: '在保留当前页面状态的情况下，告知用户并承载相关操作',
+    props: { width: '50%', title: '提示' },
+    defaultStyle: {},
+    isCustom: false,
+    tags: ['dialog', 'modal', 'popup']
+  },
+  {
+    id: 'comp_chart',
+    name: 'echarts-chart',
+    displayName: '图表',
+    category: 'chart',
+    icon: 'el-icon-s-data',
+    description: 'ECharts 图表组件',
+    props: { type: 'line' },
+    defaultStyle: { width: '400px', height: '300px' },
+    isCustom: false,
+    tags: ['chart', 'visualization']
   }
+])
+
+// 过滤后的组件列表
+const filteredComponents = computed(() => {
+  let result = components.value
+
+  // 分类过滤
+  result = result.filter(c => c.category === currentCategory.value)
+
+  // 搜索过滤
+  if (searchKeyword.value) {
+    const keyword = searchKeyword.value.toLowerCase()
+    result = result.filter(
+      c =>
+        c.displayName.toLowerCase().includes(keyword) ||
+        c.name.toLowerCase().includes(keyword) ||
+        c.description.toLowerCase().includes(keyword) ||
+        c.tags.some(tag => tag.toLowerCase().includes(keyword))
+    )
+  }
+
+  return result
+})
+
+// 处理分类切换
+const handleCategoryChange = (category: ComponentPaletteCategory) => {
+  currentCategory.value = category
+}
+
+// 处理搜索
+const handleSearch = () => {
+  // 搜索逻辑已在computed中处理
+}
+
+// 处理组件点击
+const handleComponentClick = (component: PaletteComponent) => {
+  selectedComponent.value = component
+  detailDrawerVisible.value = true
+  emit('component-select', component)
+}
+
+// 处理拖拽开始
+const handleDragStart = (component: PaletteComponent, event: DragEvent) => {
+  if (!props.draggable) return
+  
+  // 设置拖拽数据
+  if (event.dataTransfer) {
+    event.dataTransfer.effectAllowed = 'copy'
+    event.dataTransfer.setData('component', JSON.stringify(component))
+  }
+  
   emit('component-drag-start', component, event)
+  ElMessage.info(`开始拖拽：${component.displayName}`)
+}
+
+// 处理拖拽结束
+const handleDragEnd = () => {
+  emit('component-drag-end')
+}
+
+// 添加组件到画布
+const handleAddComponent = () => {
+  if (!selectedComponent.value) return
+  
+  emit('component-select', selectedComponent.value)
+  ElMessage.success(`已添加组件：${selectedComponent.value.displayName}`)
+  detailDrawerVisible.value = false
+}
+
+// 获取分类标签
+const getCategoryLabel = (category: ComponentPaletteCategory): string => {
+  const categoryMap: Record<ComponentPaletteCategory, string> = {
+    basic: '基础',
+    form: '表单',
+    data: '数据',
+    layout: '布局',
+    navigation: '导航',
+    feedback: '反馈',
+    chart: '图表',
+    custom: '自定义'
+  }
+  return categoryMap[category]
+}
+
+// 获取分类类型
+const getCategoryType = (category: ComponentPaletteCategory): string => {
+  const typeMap: Record<ComponentPaletteCategory, string> = {
+    basic: 'primary',
+    form: 'success',
+    data: 'info',
+    layout: 'warning',
+    navigation: 'danger',
+    feedback: '',
+    chart: 'success',
+    custom: 'warning'
+  }
+  return typeMap[category]
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .visual-component-palette {
   height: 100%;
-}
-
-.content {
-  padding: 16px;
-}
-
-.component-category {
-  margin-bottom: 24px;
-}
-
-.category-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--el-text-color-primary);
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--el-border-color-lighter);
-}
-
-.components-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-}
-
-.component-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 12px 8px;
-  border: 1px solid var(--el-border-color);
-  border-radius: 6px;
-  cursor: grab;
-  transition: all 0.2s ease;
-  background: var(--el-bg-color);
-  min-height: 70px;
-  justify-content: center;
-}
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 
-.component-item:hover {
-  border-color: var(--el-color-primary);
-  background: var(--el-color-primary-light-9);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(64, 158, 255, 0.15);
-}
+  .palette-search {
+    padding: 16px;
+    border-bottom: 1px solid #ebeef5;
+  }
 
-.component-item:active {
-  cursor: grabbing;
-  transform: translateY(0);
-}
+  .palette-categories {
+    padding: 16px;
+    border-bottom: 1px solid #ebeef5;
+    overflow-x: auto;
 
-.component-icon {
-  margin-bottom: 6px;
-}
+    :deep(.el-button-group) {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
 
-.component-icon i {
-  font-size: 20px;
-  color: var(--el-color-primary);
-}
+      .el-button {
+        margin: 0;
+        flex-shrink: 0;
+      }
+    }
+  }
 
-.component-name {
-  font-size: 12px;
-  color: var(--el-text-color-regular);
-  text-align: center;
-  line-height: 1.2;
+  .palette-components {
+    flex: 1;
+    overflow: hidden;
+
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .component-item {
+      position: relative;
+      padding: 16px;
+      border: 1px solid #ebeef5;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: #fff;
+      text-align: center;
+
+      &:hover {
+        border-color: #409eff;
+        box-shadow: 0 2px 12px rgba(64, 158, 255, 0.2);
+        transform: translateY(-2px);
+      }
+
+      &[draggable='true'] {
+        cursor: move;
+      }
+
+      .component-icon {
+        font-size: 32px;
+        color: #409eff;
+        margin-bottom: 8px;
+      }
+
+      .component-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #303133;
+        margin-bottom: 4px;
+      }
+
+      .component-description {
+        font-size: 12px;
+        color: #909399;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .custom-tag {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+      }
+    }
+  }
+
+  .component-detail {
+    .detail-header {
+      text-align: center;
+      padding: 20px 0;
+
+      .detail-icon {
+        font-size: 48px;
+        color: #409eff;
+        margin-bottom: 12px;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+        color: #303133;
+      }
+
+      .detail-name {
+        margin: 0;
+        font-size: 12px;
+        color: #909399;
+        font-family: 'Consolas', monospace;
+      }
+    }
+
+    .detail-section {
+      margin-bottom: 20px;
+
+      h4 {
+        margin: 0 0 12px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #303133;
+      }
+
+      p {
+        margin: 0;
+        font-size: 14px;
+        color: #606266;
+        line-height: 1.6;
+      }
+    }
+
+    .detail-actions {
+      margin-top: 24px;
+      text-align: center;
+
+      .el-button {
+        width: 100%;
+      }
+    }
+  }
 }
 </style>

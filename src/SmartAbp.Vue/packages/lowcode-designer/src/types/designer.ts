@@ -348,3 +348,46 @@ export interface BusinessRulesEngineProps {
   entityName?: string
   readonly?: boolean
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🎨 VisualComponentPalette 类型定义
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * 组件分类
+ */
+export type ComponentPaletteCategory = 
+  | 'basic'
+  | 'form'
+  | 'data'
+  | 'layout'
+  | 'navigation'
+  | 'feedback'
+  | 'chart'
+  | 'custom'
+
+/**
+ * 组件面板项
+ */
+export interface PaletteComponent {
+  id: string
+  name: string
+  displayName: string
+  category: ComponentPaletteCategory
+  icon: string
+  description: string
+  props?: Record<string, any>
+  defaultStyle?: Record<string, any>
+  previewImage?: string
+  isCustom: boolean
+  tags: string[]
+}
+
+/**
+ * VisualComponentPalette Props接口
+ */
+export interface VisualComponentPaletteProps {
+  selectedCategory?: ComponentPaletteCategory
+  searchable?: boolean
+  draggable?: boolean
+}
