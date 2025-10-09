@@ -1,0 +1,4 @@
+# ComponentGenie Workspace Configuration
+packages:
+  - 'packages/*'
+  - 'examples/*'

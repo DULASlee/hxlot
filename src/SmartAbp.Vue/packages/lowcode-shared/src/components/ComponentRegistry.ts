@@ -1,5 +1,5 @@
 /**
- * 🏗️ 企业级组件注册中心 v2.0
+ * 🏗️ 企业级组件注册中心 v2.1 + ComponentGenie AI
  * SmartAbp低代码引擎 - 公共组件系统革命
  *
  * 核心功能:
@@ -11,7 +11,11 @@
  * - 权限控制和版本管理
  * - 生命周期钩子和扩展点
  * - 性能监控和错误追踪
+ * - 🧠 ComponentGenie AI智能分析与建议
  */
+
+// ComponentGenie AI智能分析
+import { analyzeComponent, type ComponentAnalysis as AIAnalysis } from '../ai/ComponentGenie'
 
 export type ComponentCategory =
   | 'basic' | 'layout' | 'form' | 'data' | 'chart' | 'advanced' | 'business'
@@ -127,6 +131,21 @@ export interface ComponentMetadata {
   extensionPoints?: ComponentExtensionPoint[];
   /** 版本信息 */
   versionInfo?: ComponentVersion;
+  
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 🧠 ComponentGenie AI分析结果
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  /** ComponentGenie AI分析结果 */
+  aiAnalysis?: AIAnalysis;
+  /** AI建议分类（与手动分类比对） */
+  aiSuggestedCategory?: ComponentCategory;
+  /** AI分析置信度 (0-1) */
+  aiConfidence?: number;
+  /** AI优化建议数量 */
+  aiSuggestionsCount?: number;
+  /** 源代码（用于AI分析） */
+  sourceCode?: string;
 }
 
 /**
@@ -222,6 +241,35 @@ export class ComponentRegistry {
     // 检查版本冲突
     if (this.checkVersionConflict(metadata.name, metadata.version)) {
       console.warn(`⚠️ 版本冲突: ${metadata.name} v${metadata.version}`);
+    }
+
+    // 🧠 ComponentGenie AI智能分析
+    if (metadata.sourceCode) {
+      try {
+        const aiAnalysis = analyzeComponent(metadata.name, metadata.sourceCode);
+        
+        // 增强元数据
+        metadata.aiAnalysis = aiAnalysis;
+        metadata.aiSuggestedCategory = this.mapAICategoryToRegistry(aiAnalysis.category);
+        metadata.aiConfidence = aiAnalysis.confidence;
+        metadata.aiSuggestionsCount = aiAnalysis.suggestions.length;
+        
+        // AI建议与手动分类比对
+        if (metadata.aiSuggestedCategory !== metadata.category) {
+          console.log(`🤔 AI建议分类: ${metadata.name} -> ${metadata.aiSuggestedCategory} (当前: ${metadata.category}, 置信度: ${(aiAnalysis.confidence * 100).toFixed(1)}%)`);
+        }
+        
+        // 输出AI优化建议
+        if (aiAnalysis.suggestions.length > 0) {
+          console.log(`💡 ${metadata.name} AI优化建议 (${aiAnalysis.suggestions.length}个):`);
+          aiAnalysis.suggestions.forEach((suggestion, index) => {
+            console.log(`   ${index + 1}. [${suggestion.type}] ${suggestion.message} (影响: ${suggestion.impact}/5, 难度: ${suggestion.difficulty}/5)`);
+          });
+        }
+        
+      } catch (error) {
+        console.warn(`⚠️ ComponentGenie分析失败: ${metadata.name}`, error);
+      }
     }
 
     // 注册组件
@@ -817,6 +865,139 @@ export class ComponentRegistry {
     }
 
     this.performanceMetrics.set(metric.component, existing);
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 🧠 ComponentGenie AI相关方法
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * 将ComponentGenie的AI分类映射到组件注册系统的分类
+   */
+  private mapAICategoryToRegistry(aiCategory: string): ComponentCategory {
+    const categoryMap: Record<string, ComponentCategory> = {
+      'FORM_COMPONENT': 'form',
+      'DATA_DISPLAY': 'data',
+      'LAYOUT_COMPONENT': 'layout',
+      'INTERACTIVE_COMPONENT': 'basic',
+      'UTILITY_COMPONENT': 'utility',
+      'BUSINESS_COMPONENT': 'business',
+      'UNKNOWN': 'basic'
+    };
+    
+    return categoryMap[aiCategory] || 'basic';
+  }
+
+  /**
+   * 获取组件的AI分析结果
+   */
+  getComponentAIAnalysis(name: string): AIAnalysis | undefined {
+    const metadata = this.components.get(name);
+    return metadata?.aiAnalysis;
+  }
+
+  /**
+   * 获取所有组件的AI统计信息
+   */
+  getAIStatistics(): {
+    totalAnalyzed: number;
+    averageConfidence: number;
+    categoryDistribution: Record<string, number>;
+    totalSuggestions: number;
+    highConfidenceComponents: string[];
+  } {
+    const stats = {
+      totalAnalyzed: 0,
+      averageConfidence: 0,
+      categoryDistribution: {} as Record<string, number>,
+      totalSuggestions: 0,
+      highConfidenceComponents: [] as string[]
+    };
+
+    let totalConfidence = 0;
+    
+    for (const [name, metadata] of this.components) {
+      if (metadata.aiAnalysis) {
+        stats.totalAnalyzed++;
+        totalConfidence += metadata.aiConfidence || 0;
+        stats.totalSuggestions += metadata.aiSuggestionsCount || 0;
+        
+        // 高置信度组件（置信度 > 80%）
+        if ((metadata.aiConfidence || 0) > 0.8) {
+          stats.highConfidenceComponents.push(name);
+        }
+        
+        // 分类分布
+        const category = metadata.aiAnalysis.category;
+        stats.categoryDistribution[category] = (stats.categoryDistribution[category] || 0) + 1;
+      }
+    }
+    
+    stats.averageConfidence = stats.totalAnalyzed > 0 ? totalConfidence / stats.totalAnalyzed : 0;
+    
+    return stats;
+  }
+
+  /**
+   * 批量重新分析所有有源代码的组件
+   */
+  async reanalyzeAllComponents(): Promise<void> {
+    console.log('🧠 开始批量重新分析所有组件...');
+    
+    let analyzed = 0;
+    for (const [name, metadata] of this.components) {
+      if (metadata.sourceCode) {
+        try {
+          const aiAnalysis = analyzeComponent(name, metadata.sourceCode);
+          
+          // 更新AI分析结果
+          metadata.aiAnalysis = aiAnalysis;
+          metadata.aiSuggestedCategory = this.mapAICategoryToRegistry(aiAnalysis.category);
+          metadata.aiConfidence = aiAnalysis.confidence;
+          metadata.aiSuggestionsCount = aiAnalysis.suggestions.length;
+          
+          analyzed++;
+        } catch (error) {
+          console.warn(`⚠️ 重新分析失败: ${name}`, error);
+        }
+      }
+    }
+    
+    console.log(`✅ 批量重新分析完成: ${analyzed}个组件`);
+    
+    // 输出整体AI统计
+    const stats = this.getAIStatistics();
+    console.log('📊 AI分析统计:', stats);
+  }
+
+  /**
+   * 获取AI建议最多的组件（需要优化的组件）
+   */
+  getComponentsNeedingOptimization(minSuggestions: number = 2): Array<{
+    name: string;
+    suggestions: number;
+    confidence: number;
+    category: string;
+  }> {
+    const results: Array<{
+      name: string;
+      suggestions: number;
+      confidence: number;
+      category: string;
+    }> = [];
+    
+    for (const [name, metadata] of this.components) {
+      if (metadata.aiAnalysis && (metadata.aiSuggestionsCount || 0) >= minSuggestions) {
+        results.push({
+          name,
+          suggestions: metadata.aiSuggestionsCount || 0,
+          confidence: metadata.aiConfidence || 0,
+          category: metadata.aiAnalysis.category
+        });
+      }
+    }
+    
+    return results.sort((a, b) => b.suggestions - a.suggestions);
   }
 }
 

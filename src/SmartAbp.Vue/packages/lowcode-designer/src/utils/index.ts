@@ -4,8 +4,9 @@
 export * from './cache-manager'
 export * from './data-sync'
 export * from './error-recovery'
+export * from './errorHandler'
+export * from './performance'
 export * from './performance-optimizer'
 export * from './responsive-design'
 export * from './uiConfigMapper'
-export * from './performance'
-export * from './errorHandler'
+
