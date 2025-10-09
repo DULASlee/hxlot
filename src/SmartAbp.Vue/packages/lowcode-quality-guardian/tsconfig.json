@@ -1,12 +1,12 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": false,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "esModuleInterop": true,
-    "types": ["node"]
+    "outDir": "dist",
+    "rootDir": "src",
+    "isolatedModules": false
   },
   "include": ["src/**/*"],
-  "exclude": ["dist"]
+  "references": [
+    { "path": "../lowcode-shared" }
+  ]
 }

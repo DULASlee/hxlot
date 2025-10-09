@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true
+  },
+  "include": [
+    "src/SmartAbp.Vue/**/*.ts",
+    "src/SmartAbp.Vue/**/*.vue",
+    "src/SmartAbp.Vue/tests/**/*.ts"
+  ]
+}

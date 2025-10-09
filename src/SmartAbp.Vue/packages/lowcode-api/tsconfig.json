@@ -1,27 +1,10 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "declaration": true,
-    "declarationMap": true,
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
-    "paths": {
-      "@smartabp/lowcode-shared": ["../lowcode-shared/src/index.ts"],
-      "@smartabp/lowcode-shared/*": ["../lowcode-shared/src/*"],
-      "@smartabp/lowcode-api": ["./src/index.ts"],
-      "@smartabp/lowcode-api/*": ["./src/*"]
-    }
+    "outDir": "dist",
+    "rootDir": "src"
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "src/**/*.test.ts",
-    "src/**/*.spec.ts",
-    "dist"
-  ],
+  "include": ["src/**/*"],
   "references": [
     { "path": "../lowcode-shared" }
   ]

@@ -3,8 +3,10 @@
  * 检查运行环境是否满足要求
  */
 
-import execa from 'execa';
-import type { CheckResult } from '../types/index.js';
+import chalk from 'chalk';
+import { execa } from 'execa';
+import { performance } from 'perf_hooks';
+import type { EnvironmentInfo } from '../types/index.js';
 
 export class EnvironmentChecker {
     private requirements = {

@@ -9,7 +9,7 @@
  * - 自动管理基线历史记录
  */
 
-import execa from 'execa';
+import { execa } from 'execa';
 import * as fs from 'fs-extra';
 import path from 'path';
 import type {

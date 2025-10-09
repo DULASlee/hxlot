@@ -1,11 +1,9 @@
 /**
- * 并发文件扫描器
- * 使用 Promise 并发扫描多个文件，提升性能
+ * 并行文件扫描器
+ * 提供高效的文件扫描和过滤功能
  */
 
 import glob from 'fast-glob';
-import * as fs from 'fs-extra';
-import path from 'path';
 
 export interface ScanResult {
     file: string;
@@ -14,85 +12,45 @@ export interface ScanResult {
     size: number;
 }
 
+/**
+ * 并行文件扫描器
+ * 提供高效的文件扫描和过滤功能
+ */
 export class ParallelFileScanner {
     /**
-     * 并发扫描多个文件
-     * @param patterns Glob 模式数组
-     * @param options 选项
-     * @returns 扫描结果数组
+     * 扫描文件系统，返回匹配glob模式的文件列表
      */
-    static async scanFiles(
-        patterns: string[],
-        options: {
-            cwd?: string;
-            ignore?: string[];
-            concurrency?: number;
-            maxFileSize?: number; // bytes
-        } = {}
-    ): Promise<ScanResult[]> {
-        const {
-            cwd = process.cwd(),
-            ignore = ['**/node_modules/**', '**/dist/**', '**/.git/**'],
-            concurrency = 10,
-            maxFileSize = 5 * 1024 * 1024 // 5MB
-        } = options;
+    static async scan(
+        patterns: string | string[],
+        cwd: string,
+        ignore: string[] = []
+    ): Promise<string[]> {
+        const defaultIgnore = [
+            '**/node_modules/**',
+            '**/dist/**',
+            '**/build/**',
+            '**/.git/**',
+            '**/coverage/**',
+            '**/.cache/**',
+        ];
 
-        // 1. 查找所有匹配的文件（已经很快）
-        const files = await glob(patterns, {
-            cwd,
-            ignore,
-            absolute: false,
-            onlyFiles: true
-        });
-
-        // 2. 并发读取文件内容
-        const results: ScanResult[] = [];
-
-        // 分批并发执行
-        for (let i = 0; i < files.length; i += concurrency) {
-            const batch = files.slice(i, i + concurrency);
-
-            const batchResults = await Promise.all(
-                batch.map(async (file) => {
-                    try {
-                        const fullPath = path.join(cwd, file);
-
-                        // 检查文件大小
-                        const stats = await fs.stat(fullPath);
-                        if (stats.size > maxFileSize) {
-                            // 跳过过大的文件
-                            return null;
-                        }
-
-                        const content = await fs.readFile(fullPath, 'utf8');
-                        const lines = content.split('\n').length;
-
-                        return {
-                            file,
-                            content,
-                            lines,
-                            size: stats.size
-                        };
-                    } catch (error) {
-                        // 读取失败，跳过
-                        return null;
-                    }
-                })
-            );
-
-            // 过滤掉失败的结果
-            results.push(...batchResults.filter((r): r is ScanResult => r !== null));
+        try {
+            const files = await glob(patterns, {
+                cwd,
+                ignore: [...defaultIgnore, ...ignore],
+                absolute: false,
+                onlyFiles: true,
+                dot: false,
+            });
+            return files;
+        } catch (error) {
+            console.error(`[ParallelFileScanner] 文件扫描失败: ${error}`);
+            return [];
         }
-
-        return results;
     }
 
     /**
-     * 并发检查文件是否匹配规则
-     * @param files 文件数组
-     * @param checkFn 检查函数
-     * @param concurrency 并发数
-     * @returns 匹配的文件数组
+     * 并行过滤文件列表
      */
     static async filterFiles<T>(
         files: string[],
@@ -104,8 +62,8 @@ export class ParallelFileScanner {
         for (let i = 0; i < files.length; i += concurrency) {
             const batch = files.slice(i, i + concurrency);
             const batchResults = await Promise.all(batch.map(checkFn));
-            const filtered = batchResults.filter((r): r is Exclude<typeof r, null> => r !== null) as T[];
-            results.push(...filtered);
+            const filtered = batchResults.filter((r): r is Exclude<typeof r, null> => r !== null);
+            results.push(...(filtered as T[]));
         }
 
         return results;

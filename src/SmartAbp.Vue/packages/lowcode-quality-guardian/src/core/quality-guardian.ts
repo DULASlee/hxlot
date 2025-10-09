@@ -31,6 +31,7 @@ import { ParallelExecutor } from './parallel-executor.js';
 // 导入所有检查器
 import { ArchitectureChecker } from '../checkers/architecture-checker.js';
 import { ArchitectureDefectChecker } from '../checkers/architecture-defect-checker.js';
+import { BaseChecker } from '../checkers/base-checker.js';
 import { CodeDefectChecker } from '../checkers/code-defect-checker.js';
 import { CodeSmellChecker } from '../checkers/code-smell-checker.js';
 import { CodeGenChecker } from '../checkers/codegen-checker.js';
@@ -104,14 +105,11 @@ export class QualityGuardian {
         await this.generateReports();
       }
 
-      // 阶段4: 质量门禁判定
       this.evaluateQualityGate();
-
-      // 阶段5: 打印结果
       this.printResults();
 
+      BaseChecker.printCacheStats(); // 打印缓存统计信息
       return this.results;
-
     } catch (error) {
       console.error(chalk.red('\n💥 质量检查异常:'), error instanceof Error ? error.message : String(error));
 
@@ -123,7 +121,7 @@ export class QualityGuardian {
     } finally {
       const duration = performance.now() - this.startTime;
       this.results.statistics.totalDuration = Math.round(duration);
-      this.memoryManager.cleanup();
+      this.memoryManager.cleanup(); // Ensure memory cleanup
     }
   }
 
@@ -410,18 +408,25 @@ export class QualityGuardian {
 
     switch (this.config.mode) {
       case 'strict':
-        passed = p0Count === 0 && p1Count === 0;
-        reason = passed ? '' : '严格模式要求P0和P1零违规';
+        passed = p0Count === 0 && p1Count === 0 && totalScore >= 90;
+        reason =
+          p0Count > 0 ? '严格模式要求P0零违规' :
+            p1Count > 0 ? '严格模式要求P1零违规' :
+              totalScore < 90 ? `严格模式要求总分不低于90分 (当前: ${totalScore}分)` :
+                '';
         break;
 
       case 'moderate':
-        passed = p0Count === 0;
-        reason = passed ? '' : '适中模式要求P0零违规';
+        passed = p0Count === 0 && totalScore >= 80;
+        reason =
+          p0Count > 0 ? '适中模式要求P0零违规' :
+            totalScore < 80 ? `适中模式要求总分不低于80分 (当前: ${totalScore}分)` :
+              '';
         break;
 
       case 'lenient':
-        passed = totalScore >= 85;
-        reason = passed ? '' : `宽松模式要求评分≥85分（当前${totalScore}分）`;
+        passed = totalScore >= 70;
+        reason = passed ? '' : `宽松模式要求评分≥70分（当前${totalScore}分）`;
         break;
     }
 

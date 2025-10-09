@@ -150,3 +150,16 @@ export class ErrorHandler {
     }
 }
 
+/**
+ * Custom error class to signal that an operation is worth retrying.
+ */
+export class RetriableError extends Error {
+    public readonly originalError?: Error;
+
+    constructor(message: string, originalError?: Error) {
+        super(message);
+        this.name = 'RetriableError';
+        this.originalError = originalError;
+    }
+}
+
