@@ -1,4 +1,5 @@
 import vue from "@vitejs/plugin-vue"
+import vueJsx from "@vitejs/plugin-vue-jsx"
 import dns from "dns"
 import { fileURLToPath, URL } from "node:url"
 import AutoImport from "unplugin-auto-import/vite"
@@ -7,6 +8,7 @@ import Icons from "unplugin-icons/vite"
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
 import Components from "unplugin-vue-components/vite"
 import { defineConfig } from "vite"
+import viteCompression from "vite-plugin-compression"
 import vueDevtools from "vite-plugin-vue-devtools"
 import moduleWizardDev from "./packages/lowcode-designer/src/dev/moduleWizardDev"
 import vitePluginLowCode from "./packages/lowcode-tools/src/vite"
@@ -24,6 +26,15 @@ dns.setDefaultResultOrder("verbatim")
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    // Brotli压缩配置
+    viteCompression({
+      algorithm: 'brotliCompress',
+      ext: '.br',
+      threshold: 1024, // 只压缩大于1KB的文件
+      deleteOriginFile: false,
+      filter: /\.(js|css|html|json|svg)$/i, // 只压缩指定类型
+      compressionOptions: { level: 11 }, // 最高压缩级别
+    }),
     // 编译期组件名冲突检测（Fail Build）
     createComponentConflictDetector({
       packagesRoot: 'packages',
@@ -49,6 +60,7 @@ export default defineConfig({
       largeFileLineThreshold: 300,
     }),
     vue(),
+    vueJsx(),
     ...(process.env.NODE_ENV !== "production" ? [moduleWizardDev()] : []),
     ...(process.env.NODE_ENV !== "production" ? [vueDevtools()] : []),
     AutoImport({
@@ -123,7 +135,7 @@ export default defineConfig({
         new URL("./packages/lowcode-shared/src", import.meta.url),
       ),
       "@smartabp/lowcode-core": fileURLToPath(
-        new URL("./packages/lowcode-core", import.meta.url),
+        new URL("./packages/lowcode-core/src", import.meta.url),
       ),
       "@smartabp/lowcode-designer": fileURLToPath(
         new URL("./packages/lowcode-designer/src", import.meta.url),

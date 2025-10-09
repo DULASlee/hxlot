@@ -23,7 +23,7 @@
     "build": "run-s type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit",
+    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --compositeFalse",
     "lint": "eslint \"src/**/*.{ts,tsx,vue}\" --fix",
     "format": "prettier --write .",
     "qa:check": "npm-run-all -s type-check lint test:coverage build-only",
@@ -87,7 +87,10 @@
     "perf:web-vitals": "node scripts/web-vitals-report.js",
     "perf:full-analysis": "npm run perf:baseline && npm run perf:analyze",
     "validate:components": "node scripts/validate-component-names.cjs",
-    "analyze:components": "node scripts/analyze-component-system.cjs"
+    "analyze:components": "node scripts/analyze-component-system.cjs",
+    "lint:style": "stylelint \"src/**/*.{css,scss,vue}\" --fix",
+    "lint:prettier": "prettier --write \"**/*.{js,cjs,ts,json,css,scss,vue,html,md}\"",
+    "quality": "quality-guardian check"
   },
   "lint-staged": {
     "*.ts": [
@@ -209,6 +212,7 @@
     "vue-i18n": "^9.14.5",
     "vue-tsc": "^3.1.0",
     "web-vitals": "^5.1.0",
-    "webpack-bundle-analyzer": "^4.10.2"
+    "webpack-bundle-analyzer": "^4.10.2",
+    "vite-plugin-compression": "^0.5.1"
   }
 }

@@ -1,0 +1,14 @@
+{
+    "projectRoot": "/Users/huanyuan/SmartAbp/hxlot",
+    "mode": "moderate",
+    "enableDebtAnalysis": true,
+    "debtAnalysisConfig": {
+        "hourlyRate": 800,
+        "currency": "CNY"
+    },
+    "enableBaselineComparison": true,
+    "baselineConfig": {
+        "baselineName": "test",
+        "autoSave": true
+    }
+}

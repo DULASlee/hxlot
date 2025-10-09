@@ -1,0 +1,79 @@
+{
+  "name": "@smartabp/lowcode-quality-guardian",
+  "version": "2.0.0",
+  "description": "Enterprise-grade code quality assurance tool for SmartAbp low-code platform",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "quality-guardian": "./dist/cli.js",
+    "smart-quality": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./checkers": {
+      "types": "./dist/checkers/index.d.ts",
+      "import": "./dist/checkers/index.js"
+    },
+    "./reporters": {
+      "types": "./dist/reporters/index.d.ts",
+      "import": "./dist/reporters/index.js"
+    }
+  },
+  "files": [
+    "dist/**/*",
+    "package.json",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc && npm run build:post",
+    "build:post": "chmod +x dist/cli.js",
+    "dev": "tsc -w",
+    "test": "echo \"Tests coming soon\"",
+    "lint": "tsc --noEmit",
+    "quality:self": "node dist/cli.js check --strict"
+  },
+  "keywords": [
+    "smartabp",
+    "lowcode",
+    "quality",
+    "guardian",
+    "typescript",
+    "code-analysis",
+    "enterprise"
+  ],
+  "dependencies": {
+    "commander": "^12.0.0",
+    "execa": "^8.0.1",
+    "chalk": "^5.3.0",
+    "fs-extra": "^11.2.0",
+    "fast-glob": "^3.3.2",
+    "glob": "^10.3.10",
+    "yaml": "^2.3.4",
+    "lodash-es": "^4.17.21"
+  },
+  "peerDependencies": {
+    "@smartabp/lowcode-shared": "1.0.0",
+    "@smartabp/metadata-core": "1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "@types/fs-extra": "^11.0.4",
+    "@types/lodash-es": "^4.17.12",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20.19.0",
+    "npm": ">=10.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "./SmartAbp/src/SmartAbp.Vue/packages/lowcode-quality-guardian"
+  },
+  "author": "SmartAbp Team",
+  "license": "MIT"
+}
