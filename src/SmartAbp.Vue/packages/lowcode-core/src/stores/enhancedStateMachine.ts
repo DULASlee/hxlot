@@ -4,7 +4,7 @@ import { computed, ref } from "vue"
 type GlobalLogger = typeof console
 const logger: GlobalLogger = (globalThis as { __SMARTABP_LOGGER__?: GlobalLogger }).__SMARTABP_LOGGER__ || console
 // Day01新增: 引入规则执行引擎
-import { RuleExecutionEngine } from './engines/ruleExecutionEngine'
+import { RuleExecutionEngine } from '../engines/ruleExecutionEngine'
 
 // === 企业级状态机类型定义 ===
 

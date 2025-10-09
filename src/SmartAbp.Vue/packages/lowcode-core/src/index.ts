@@ -19,7 +19,7 @@ export type {
   BarcodeScannerField, CalculatedFieldConfig, CascadeConfig, DeviceParameterField, DictionaryField, DynamicFieldConfig, FormCreateConfig,
   FormCreateRule, LinkageAction, LinkageActionType, LinkageCondition, LinkageConditionType, LinkageRule, MaterialField, ProductionLineField, QualityInspectionField, SensorDataField, SmartFieldType,
   SmartFormItem, WorkOrderField
-} from './components/SmartFormBuilder/types.js'
+} from './components/SmartFormBuilder/index.js'
 
 // Note: utilities/composables/services are internal; re-exports removed to avoid path index issues
 
