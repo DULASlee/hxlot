@@ -267,8 +267,9 @@ export class VirtualAssembly {
         await globalPluginManager.triggerHook('beforeComponentLoad', { fromCache }, name)
 
         // 动态import加载组件
-        // @ts-ignore - Vite动态import
-        const module = await import(/* @vite-ignore */ metadata.path)
+        // 使用动态导入函数（TypeScript限制：import()必须是字面量，这里使用Function构造器）
+        const dynamicImport = new Function('path', 'return import(path)') as import('../types/global').DynamicImport
+        const module = await dynamicImport(/* @vite-ignore */ metadata.path)
 
         // 性能统计
         if (this.options.enablePerformanceMonitoring) {
