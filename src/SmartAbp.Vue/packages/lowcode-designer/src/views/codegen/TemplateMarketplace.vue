@@ -4,14 +4,24 @@
     <el-card class="header-card">
       <div class="marketplace-header">
         <div class="header-left">
-          <el-icon class="store-icon" size="32"><Shop /></el-icon>
+          <el-icon
+            class="store-icon"
+            size="32"
+          >
+            <Shop />
+          </el-icon>
           <div class="title-area">
             <h2>🏪 模板市场</h2>
-            <p class="subtitle">发现优秀的微服务架构模板，一键部署到您的环境</p>
+            <p class="subtitle">
+              发现优秀的微服务架构模板，一键部署到您的环境
+            </p>
           </div>
         </div>
         <div class="header-right">
-          <el-button type="primary" @click="showPublishDialog = true">
+          <el-button
+            type="primary"
+            @click="showPublishDialog = true"
+          >
             <el-icon><Upload /></el-icon>
             发布模板
           </el-button>
@@ -57,7 +67,10 @@
       <el-card class="filter-panel">
         <div class="filter-section">
           <h3>📂 分类</h3>
-          <el-checkbox-group v-model="selectedCategories" @change="onFilterChange">
+          <el-checkbox-group
+            v-model="selectedCategories"
+            @change="onFilterChange"
+          >
             <el-checkbox
               v-for="cat in categories"
               :key="cat.name"
@@ -73,13 +86,46 @@
 
         <div class="filter-section">
           <h3>🏷️ 类型</h3>
-          <el-radio-group v-model="selectedType" @change="onFilterChange">
-            <el-radio label="" style="display: block; margin: 10px 0">全部</el-radio>
-            <el-radio label="Full Stack" style="display: block; margin: 10px 0">全栈应用</el-radio>
-            <el-radio label="Backend" style="display: block; margin: 10px 0">后端服务</el-radio>
-            <el-radio label="Frontend" style="display: block; margin: 10px 0">前端应用</el-radio>
-            <el-radio label="Infrastructure" style="display: block; margin: 10px 0">基础设施</el-radio>
-            <el-radio label="Pipeline" style="display: block; margin: 10px 0">CI/CD流水线</el-radio>
+          <el-radio-group
+            v-model="selectedType"
+            @change="onFilterChange"
+          >
+            <el-radio
+              label=""
+              style="display: block; margin: 10px 0"
+            >
+              全部
+            </el-radio>
+            <el-radio
+              label="Full Stack"
+              style="display: block; margin: 10px 0"
+            >
+              全栈应用
+            </el-radio>
+            <el-radio
+              label="Backend"
+              style="display: block; margin: 10px 0"
+            >
+              后端服务
+            </el-radio>
+            <el-radio
+              label="Frontend"
+              style="display: block; margin: 10px 0"
+            >
+              前端应用
+            </el-radio>
+            <el-radio
+              label="Infrastructure"
+              style="display: block; margin: 10px 0"
+            >
+              基础设施
+            </el-radio>
+            <el-radio
+              label="Pipeline"
+              style="display: block; margin: 10px 0"
+            >
+              CI/CD流水线
+            </el-radio>
           </el-radio-group>
         </div>
 
@@ -87,12 +133,26 @@
 
         <div class="filter-section">
           <h3>⭐ 评分</h3>
-          <el-radio-group v-model="minRating" @change="onFilterChange">
-            <el-radio :label="0" style="display: block; margin: 10px 0">全部</el-radio>
-            <el-radio :label="4" style="display: block; margin: 10px 0">
+          <el-radio-group
+            v-model="minRating"
+            @change="onFilterChange"
+          >
+            <el-radio
+              :label="0"
+              style="display: block; margin: 10px 0"
+            >
+              全部
+            </el-radio>
+            <el-radio
+              :label="4"
+              style="display: block; margin: 10px 0"
+            >
               ⭐⭐⭐⭐ 以上
             </el-radio>
-            <el-radio :label="4.5" style="display: block; margin: 10px 0">
+            <el-radio
+              :label="4.5"
+              style="display: block; margin: 10px 0"
+            >
               ⭐⭐⭐⭐⭐ 精选
             </el-radio>
           </el-radio-group>
@@ -125,13 +185,33 @@
               <span class="result-count">找到 {{ totalTemplates }} 个模板</span>
             </div>
             <div class="toolbar-right">
-              <el-select v-model="sortBy" size="small" style="width: 150px" @change="onSortChange">
-                <el-option label="下载量" value="downloads" />
-                <el-option label="评分" value="rating" />
-                <el-option label="最新发布" value="created" />
-                <el-option label="最近更新" value="updated" />
+              <el-select
+                v-model="sortBy"
+                size="small"
+                style="width: 150px"
+                @change="onSortChange"
+              >
+                <el-option
+                  label="下载量"
+                  value="downloads"
+                />
+                <el-option
+                  label="评分"
+                  value="rating"
+                />
+                <el-option
+                  label="最新发布"
+                  value="created"
+                />
+                <el-option
+                  label="最近更新"
+                  value="updated"
+                />
               </el-select>
-              <el-radio-group v-model="viewMode" size="small">
+              <el-radio-group
+                v-model="viewMode"
+                size="small"
+              >
                 <el-radio-button label="grid">
                   <el-icon><Grid /></el-icon>
                 </el-radio-button>
@@ -144,11 +224,23 @@
         </el-card>
 
         <!-- 推荐模板 -->
-        <el-card v-if="featuredTemplates.length > 0 && !searchKeyword" class="featured-section">
+        <el-card
+          v-if="featuredTemplates.length > 0 && !searchKeyword"
+          class="featured-section"
+        >
           <h3>⭐ 推荐模板</h3>
-          <el-carousel :interval="5000" height="200px">
-            <el-carousel-item v-for="template in featuredTemplates" :key="template.id">
-              <div class="featured-card" @click="viewTemplateDetail(template)">
+          <el-carousel
+            :interval="5000"
+            height="200px"
+          >
+            <el-carousel-item
+              v-for="template in featuredTemplates"
+              :key="template.id"
+            >
+              <div
+                class="featured-card"
+                @click="viewTemplateDetail(template)"
+              >
                 <div class="featured-content">
                   <h2>{{ template.displayName }}</h2>
                   <p>{{ template.description }}</p>
@@ -164,7 +256,10 @@
         </el-card>
 
         <!-- 模板网格视图 -->
-        <div v-if="viewMode === 'grid'" class="template-grid">
+        <div
+          v-if="viewMode === 'grid'"
+          class="template-grid"
+        >
           <el-card
             v-for="template in templates"
             :key="template.id"
@@ -173,13 +268,29 @@
             @click="viewTemplateDetail(template)"
           >
             <div class="card-header">
-              <div class="template-icon">📦</div>
-              <el-tag v-if="template.isFeatured" type="warning" size="small">推荐</el-tag>
+              <div class="template-icon">
+                📦
+              </div>
+              <el-tag
+                v-if="template.isFeatured"
+                type="warning"
+                size="small"
+              >
+                推荐
+              </el-tag>
             </div>
-            <h3 class="template-name">{{ template.displayName }}</h3>
-            <p class="template-desc">{{ template.description }}</p>
+            <h3 class="template-name">
+              {{ template.displayName }}
+            </h3>
+            <p class="template-desc">
+              {{ template.description }}
+            </p>
             <div class="template-tags">
-              <el-tag v-for="tag in template.tags.slice(0, 3)" :key="tag" size="small">
+              <el-tag
+                v-for="tag in template.tags.slice(0, 3)"
+                :key="tag"
+                size="small"
+              >
                 {{ tag }}
               </el-tag>
             </div>
@@ -197,11 +308,18 @@
               </span>
             </div>
             <div class="card-actions">
-              <el-button type="primary" size="small" @click.stop="quickDeploy(template)">
+              <el-button
+                type="primary"
+                size="small"
+                @click.stop="quickDeploy(template)"
+              >
                 <el-icon><Promotion /></el-icon>
                 快速部署
               </el-button>
-              <el-button size="small" @click.stop="viewTemplateDetail(template)">
+              <el-button
+                size="small"
+                @click.stop="viewTemplateDetail(template)"
+              >
                 查看详情
               </el-button>
             </div>
@@ -209,7 +327,10 @@
         </div>
 
         <!-- 模板列表视图 -->
-        <div v-else class="template-list">
+        <div
+          v-else
+          class="template-list"
+        >
           <el-card
             v-for="template in templates"
             :key="template.id"
@@ -218,7 +339,9 @@
           >
             <div class="list-item-content">
               <div class="item-left">
-                <div class="template-icon-large">📦</div>
+                <div class="template-icon-large">
+                  📦
+                </div>
                 <div class="item-info">
                   <h3>{{ template.displayName }}</h3>
                   <p>{{ template.description }}</p>
@@ -244,14 +367,21 @@
                     <el-icon><Download /></el-icon>
                     <span>{{ template.downloads }}</span>
                   </div>
-                  <div class="stat">{{ template.author }}</div>
+                  <div class="stat">
+                    {{ template.author }}
+                  </div>
                 </div>
                 <div class="item-actions">
-                  <el-button type="primary" @click="quickDeploy(template)">
+                  <el-button
+                    type="primary"
+                    @click="quickDeploy(template)"
+                  >
                     <el-icon><Promotion /></el-icon>
                     快速部署
                   </el-button>
-                  <el-button @click="viewTemplateDetail(template)">查看详情</el-button>
+                  <el-button @click="viewTemplateDetail(template)">
+                    查看详情
+                  </el-button>
                 </div>
               </div>
             </div>
@@ -280,9 +410,15 @@
       size="60%"
       direction="rtl"
     >
-      <div v-if="currentTemplate" class="template-detail">
+      <div
+        v-if="currentTemplate"
+        class="template-detail"
+      >
         <!-- 基本信息 -->
-        <el-descriptions :column="2" border>
+        <el-descriptions
+          :column="2"
+          border
+        >
           <el-descriptions-item label="模板名称">
             {{ currentTemplate.displayName }}
           </el-descriptions-item>
@@ -299,7 +435,11 @@
             {{ currentTemplate.author }}
           </el-descriptions-item>
           <el-descriptions-item label="评分">
-            <el-rate v-model="currentTemplate.rating" disabled show-score />
+            <el-rate
+              v-model="currentTemplate.rating"
+              disabled
+              show-score
+            />
             <span>({{ currentTemplate.ratingCount }}人评分)</span>
           </el-descriptions-item>
           <el-descriptions-item label="下载次数">
@@ -321,7 +461,11 @@
         <el-card style="margin-top: 20px">
           <h3>🏷️ 标签</h3>
           <el-space wrap>
-            <el-tag v-for="tag in currentTemplate.tags" :key="tag" type="info">
+            <el-tag
+              v-for="tag in currentTemplate.tags"
+              :key="tag"
+              type="info"
+            >
               {{ tag }}
             </el-tag>
           </el-space>
@@ -347,7 +491,10 @@
           <h3>💬 用户评论 ({{ templateComments.length }})</h3>
           
           <!-- 添加评论 -->
-          <el-form :model="commentForm" style="margin-top: 20px">
+          <el-form
+            :model="commentForm"
+            style="margin-top: 20px"
+          >
             <el-form-item label="评分">
               <el-rate v-model="commentForm.rating" />
             </el-form-item>
@@ -360,18 +507,33 @@
               />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitComment">提交评论</el-button>
+              <el-button
+                type="primary"
+                @click="submitComment"
+              >
+                提交评论
+              </el-button>
             </el-form-item>
           </el-form>
 
           <!-- 评论列表 -->
           <div class="comments-list">
-            <div v-for="comment in templateComments" :key="comment.id" class="comment-item">
+            <div
+              v-for="comment in templateComments"
+              :key="comment.id"
+              class="comment-item"
+            >
               <div class="comment-header">
                 <strong>{{ comment.author }}</strong>
-                <el-rate v-model="comment.rating" disabled size="small" />
+                <el-rate
+                  v-model="comment.rating"
+                  disabled
+                  size="small"
+                />
               </div>
-              <p class="comment-content">{{ comment.content }}</p>
+              <p class="comment-content">
+                {{ comment.content }}
+              </p>
               <span class="comment-time">{{ formatDate(comment.createdAt) }}</span>
             </div>
           </div>
@@ -381,8 +543,15 @@
         <el-card style="margin-top: 20px">
           <h3>🔗 相关模板</h3>
           <el-row :gutter="20">
-            <el-col v-for="related in relatedTemplates" :key="related.id" :span="12">
-              <div class="related-item" @click="viewTemplateDetail(related)">
+            <el-col
+              v-for="related in relatedTemplates"
+              :key="related.id"
+              :span="12"
+            >
+              <div
+                class="related-item"
+                @click="viewTemplateDetail(related)"
+              >
                 <h4>{{ related.displayName }}</h4>
                 <p>{{ related.description }}</p>
                 <div class="related-meta">
@@ -396,15 +565,25 @@
 
         <!-- 操作按钮 -->
         <div class="detail-actions">
-          <el-button type="primary" size="large" @click="deployTemplate(currentTemplate)">
+          <el-button
+            type="primary"
+            size="large"
+            @click="deployTemplate(currentTemplate)"
+          >
             <el-icon><Promotion /></el-icon>
             立即部署
           </el-button>
-          <el-button size="large" @click="downloadTemplate(currentTemplate)">
+          <el-button
+            size="large"
+            @click="downloadTemplate(currentTemplate)"
+          >
             <el-icon><Download /></el-icon>
             下载模板
           </el-button>
-          <el-button size="large" @click="rateTemplate(currentTemplate)">
+          <el-button
+            size="large"
+            @click="rateTemplate(currentTemplate)"
+          >
             <el-icon><Star /></el-icon>
             评分
           </el-button>
@@ -413,15 +592,37 @@
     </el-drawer>
 
     <!-- 发布模板对话框 -->
-    <el-dialog v-model="showPublishDialog" title="发布新模板" width="800px">
-      <el-form :model="publishForm" label-width="100px">
-        <el-form-item label="模板名称" required>
-          <el-input v-model="publishForm.name" placeholder="例如: aspnet-microservice" />
+    <el-dialog
+      v-model="showPublishDialog"
+      title="发布新模板"
+      width="800px"
+    >
+      <el-form
+        :model="publishForm"
+        label-width="100px"
+      >
+        <el-form-item
+          label="模板名称"
+          required
+        >
+          <el-input
+            v-model="publishForm.name"
+            placeholder="例如: aspnet-microservice"
+          />
         </el-form-item>
-        <el-form-item label="显示名称" required>
-          <el-input v-model="publishForm.displayName" placeholder="例如: ASP.NET Core微服务" />
+        <el-form-item
+          label="显示名称"
+          required
+        >
+          <el-input
+            v-model="publishForm.displayName"
+            placeholder="例如: ASP.NET Core微服务"
+          />
         </el-form-item>
-        <el-form-item label="描述" required>
+        <el-form-item
+          label="描述"
+          required
+        >
           <el-input
             v-model="publishForm.description"
             type="textarea"
@@ -429,8 +630,14 @@
             placeholder="描述您的模板..."
           />
         </el-form-item>
-        <el-form-item label="分类" required>
-          <el-select v-model="publishForm.category" placeholder="选择分类">
+        <el-form-item
+          label="分类"
+          required
+        >
+          <el-select
+            v-model="publishForm.category"
+            placeholder="选择分类"
+          >
             <el-option
               v-for="cat in categories"
               :key="cat.name"
@@ -439,13 +646,34 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="类型" required>
-          <el-select v-model="publishForm.type" placeholder="选择类型">
-            <el-option label="全栈应用" value="Full Stack" />
-            <el-option label="后端服务" value="Backend" />
-            <el-option label="前端应用" value="Frontend" />
-            <el-option label="基础设施" value="Infrastructure" />
-            <el-option label="CI/CD流水线" value="Pipeline" />
+        <el-form-item
+          label="类型"
+          required
+        >
+          <el-select
+            v-model="publishForm.type"
+            placeholder="选择类型"
+          >
+            <el-option
+              label="全栈应用"
+              value="Full Stack"
+            />
+            <el-option
+              label="后端服务"
+              value="Backend"
+            />
+            <el-option
+              label="前端应用"
+              value="Frontend"
+            />
+            <el-option
+              label="基础设施"
+              value="Infrastructure"
+            />
+            <el-option
+              label="CI/CD流水线"
+              value="Pipeline"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="标签">
@@ -464,7 +692,10 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="模板内容" required>
+        <el-form-item
+          label="模板内容"
+          required
+        >
           <el-input
             v-model="publishForm.content"
             type="textarea"
@@ -477,19 +708,45 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="showPublishDialog = false">取消</el-button>
-        <el-button type="primary" @click="publishTemplate">发布</el-button>
+        <el-button @click="showPublishDialog = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="publishTemplate"
+        >
+          发布
+        </el-button>
       </template>
     </el-dialog>
 
     <!-- 快速部署对话框 -->
-    <el-dialog v-model="showDeployDialog" title="快速部署" width="600px">
-      <el-form :model="deployForm" label-width="100px">
+    <el-dialog
+      v-model="showDeployDialog"
+      title="快速部署"
+      width="600px"
+    >
+      <el-form
+        :model="deployForm"
+        label-width="100px"
+      >
         <el-form-item label="环境">
-          <el-select v-model="deployForm.environment" placeholder="选择部署环境">
-            <el-option label="开发环境" value="development" />
-            <el-option label="测试环境" value="staging" />
-            <el-option label="生产环境" value="production" />
+          <el-select
+            v-model="deployForm.environment"
+            placeholder="选择部署环境"
+          >
+            <el-option
+              label="开发环境"
+              value="development"
+            />
+            <el-option
+              label="测试环境"
+              value="staging"
+            />
+            <el-option
+              label="生产环境"
+              value="production"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="配置">
@@ -497,14 +754,22 @@
             v-model="deployForm.configJson"
             type="textarea"
             :rows="8"
-            placeholder='{"key": "value"}'
+            placeholder="{&quot;key&quot;: &quot;value&quot;}"
           />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="showDeployDialog = false">取消</el-button>
-        <el-button type="primary" :loading="deploying" @click="confirmDeploy">
-          <el-icon v-if="!deploying"><Promotion /></el-icon>
+        <el-button @click="showDeployDialog = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          :loading="deploying"
+          @click="confirmDeploy"
+        >
+          <el-icon v-if="!deploying">
+            <Promotion />
+          </el-icon>
           {{ deploying ? '部署中...' : '开始部署' }}
         </el-button>
       </template>

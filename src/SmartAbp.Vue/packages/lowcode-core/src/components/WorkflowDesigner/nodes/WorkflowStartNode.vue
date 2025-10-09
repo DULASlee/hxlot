@@ -1,10 +1,20 @@
 <template>
-  <div class="bpmn-node start-node" :class="{ selected: isSelected }">
+  <div
+    class="bpmn-node start-node"
+    :class="{ selected: isSelected }"
+  >
     <div class="node-icon">
-      <el-icon :size="24"><VideoPlay /></el-icon>
+      <el-icon :size="24">
+        <VideoPlay />
+      </el-icon>
     </div>
-    <div class="node-label">{{ data.label || '开始' }}</div>
-    <Handle type="source" :position="Position.Bottom" />
+    <div class="node-label">
+      {{ data.label || '开始' }}
+    </div>
+    <Handle
+      type="source"
+      :position="Position.Bottom"
+    />
   </div>
 </template>
 

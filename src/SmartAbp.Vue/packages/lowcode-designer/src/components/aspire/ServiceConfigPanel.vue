@@ -1,24 +1,45 @@
 <template>
   <div class="service-config-panel">
     <div class="panel-header">
-      <h3 class="panel-title">{{ service.displayName }}</h3>
-      <el-button text :icon="Close" @click="$emit('close')" />
+      <h3 class="panel-title">
+        {{ service.displayName }}
+      </h3>
+      <el-button
+        text
+        :icon="Close"
+        @click="$emit('close')"
+      />
     </div>
     
     <el-scrollbar class="panel-body">
-      <el-form :model="formData" label-width="120px" size="default">
-        <el-divider content-position="left">基本信息</el-divider>
+      <el-form
+        :model="formData"
+        label-width="120px"
+        size="default"
+      >
+        <el-divider content-position="left">
+          基本信息
+        </el-divider>
         
         <el-form-item label="服务名称">
-          <el-input v-model="formData.name" placeholder="例如: user-service" />
+          <el-input
+            v-model="formData.name"
+            placeholder="例如: user-service"
+          />
         </el-form-item>
         
         <el-form-item label="项目名称">
-          <el-input v-model="formData.projectName" placeholder="例如: UserService" />
+          <el-input
+            v-model="formData.projectName"
+            placeholder="例如: UserService"
+          />
         </el-form-item>
         
         <el-form-item label="显示名称">
-          <el-input v-model="formData.displayName" placeholder="例如: 用户服务" />
+          <el-input
+            v-model="formData.displayName"
+            placeholder="例如: 用户服务"
+          />
         </el-form-item>
         
         <el-form-item label="描述">
@@ -30,7 +51,9 @@
           />
         </el-form-item>
         
-        <el-divider content-position="left">部署配置</el-divider>
+        <el-divider content-position="left">
+          部署配置
+        </el-divider>
         
         <el-form-item label="副本数量">
           <el-input-number
@@ -40,7 +63,9 @@
           />
         </el-form-item>
         
-        <el-divider content-position="left">功能特性</el-divider>
+        <el-divider content-position="left">
+          功能特性
+        </el-divider>
         
         <el-form-item label="Dapr支持">
           <el-switch v-model="formData.useDapr" />
@@ -62,7 +87,9 @@
           <span class="form-hint">OpenTelemetry分布式追踪</span>
         </el-form-item>
         
-        <el-divider content-position="left">依赖服务</el-divider>
+        <el-divider content-position="left">
+          依赖服务
+        </el-divider>
         
         <el-form-item label="依赖项">
           <el-select
@@ -83,8 +110,15 @@
     </el-scrollbar>
     
     <div class="panel-footer">
-      <el-button @click="$emit('close')">取消</el-button>
-      <el-button type="primary" @click="handleSave">保存更改</el-button>
+      <el-button @click="$emit('close')">
+        取消
+      </el-button>
+      <el-button
+        type="primary"
+        @click="handleSave"
+      >
+        保存更改
+      </el-button>
     </div>
   </div>
 </template>

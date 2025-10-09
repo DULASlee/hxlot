@@ -1,18 +1,45 @@
 <template>
-  <div class="bpmn-node gateway-node" :class="{ selected: isSelected }">
-    <Handle type="target" :position="Position.Top" />
+  <div
+    class="bpmn-node gateway-node"
+    :class="{ selected: isSelected }"
+  >
+    <Handle
+      type="target"
+      :position="Position.Top"
+    />
     <div class="node-content">
       <div class="node-icon">
-        <el-icon :size="20"><Operation /></el-icon>
+        <el-icon :size="20">
+          <Operation />
+        </el-icon>
       </div>
-      <div class="node-label">{{ data.label || '决策' }}</div>
-      <div class="gateway-type" v-if="data.gatewayType">
+      <div class="node-label">
+        {{ data.label || '决策' }}
+      </div>
+      <div
+        v-if="data.gatewayType"
+        class="gateway-type"
+      >
         {{ getGatewayTypeLabel(data.gatewayType) }}
       </div>
     </div>
-    <Handle type="source" :position="Position.Bottom" id="default" />
-    <Handle type="source" :position="Position.Right" id="true" style="top: 50%" />
-    <Handle type="source" :position="Position.Left" id="false" style="top: 50%" />
+    <Handle
+      id="default"
+      type="source"
+      :position="Position.Bottom"
+    />
+    <Handle
+      id="true"
+      type="source"
+      :position="Position.Right"
+      style="top: 50%"
+    />
+    <Handle
+      id="false"
+      type="source"
+      :position="Position.Left"
+      style="top: 50%"
+    />
   </div>
 </template>
 

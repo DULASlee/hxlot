@@ -4,19 +4,48 @@
     <el-card class="toolbar-card">
       <div class="toolbar">
         <div class="toolbar-left">
-          <el-icon class="robot-icon"><ChatDotRound /></el-icon>
+          <el-icon class="robot-icon">
+            <ChatDotRound />
+          </el-icon>
           <span class="title">🤖 AI智能助手</span>
-          <el-tag type="success" size="small">GPT-4</el-tag>
+          <el-tag
+            type="success"
+            size="small"
+          >
+            GPT-4
+          </el-tag>
         </div>
         <div class="toolbar-right">
-          <el-select v-model="assistantMode" size="small" style="width: 200px">
-            <el-option label="💬 智能对话" value="chat" />
-            <el-option label="⚙️ 配置推荐" value="config" />
-            <el-option label="🏗️ 架构设计" value="architecture" />
-            <el-option label="🔍 问题诊断" value="diagnostic" />
-            <el-option label="📚 知识库" value="knowledge" />
+          <el-select
+            v-model="assistantMode"
+            size="small"
+            style="width: 200px"
+          >
+            <el-option
+              label="💬 智能对话"
+              value="chat"
+            />
+            <el-option
+              label="⚙️ 配置推荐"
+              value="config"
+            />
+            <el-option
+              label="🏗️ 架构设计"
+              value="architecture"
+            />
+            <el-option
+              label="🔍 问题诊断"
+              value="diagnostic"
+            />
+            <el-option
+              label="📚 知识库"
+              value="knowledge"
+            />
           </el-select>
-          <el-button size="small" @click="clearConversation">
+          <el-button
+            size="small"
+            @click="clearConversation"
+          >
             <el-icon><Delete /></el-icon>
             清空对话
           </el-button>
@@ -27,14 +56,28 @@
     <!-- 主内容区 -->
     <div class="main-content">
       <!-- 对话模式 -->
-      <div v-if="assistantMode === 'chat'" class="chat-mode">
+      <div
+        v-if="assistantMode === 'chat'"
+        class="chat-mode"
+      >
         <el-card class="chat-card">
           <!-- 对话历史 -->
-          <div ref="chatHistoryRef" class="chat-history">
-            <div v-if="messages.length === 0" class="welcome-message">
+          <div
+            ref="chatHistoryRef"
+            class="chat-history"
+          >
+            <div
+              v-if="messages.length === 0"
+              class="welcome-message"
+            >
               <el-empty description="开始与AI助手对话">
                 <template #image>
-                  <el-icon :size="80" color="#409EFF"><ChatDotRound /></el-icon>
+                  <el-icon
+                    :size="80"
+                    color="#409EFF"
+                  >
+                    <ChatDotRound />
+                  </el-icon>
                 </template>
               </el-empty>
               <div class="quick-actions">
@@ -58,10 +101,17 @@
               :class="['message', message.role]"
             >
               <div class="message-avatar">
-                <el-avatar v-if="message.role === 'user'" :size="36">
+                <el-avatar
+                  v-if="message.role === 'user'"
+                  :size="36"
+                >
                   <el-icon><User /></el-icon>
                 </el-avatar>
-                <el-avatar v-else :size="36" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
+                <el-avatar
+                  v-else
+                  :size="36"
+                  style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+                >
                   <el-icon><ChatDotRound /></el-icon>
                 </el-avatar>
               </div>
@@ -72,11 +122,22 @@
                   </span>
                   <span class="message-time">{{ formatTime(message.timestamp) }}</span>
                 </div>
-                <div class="message-text" v-html="renderMarkdown(message.content)"></div>
-                <div v-if="message.suggestions && message.suggestions.length > 0" class="suggestions">
-                  <el-divider content-position="left">建议</el-divider>
+                <div
+                  class="message-text"
+                  v-html="renderMarkdown(message.content)"
+                />
+                <div
+                  v-if="message.suggestions && message.suggestions.length > 0"
+                  class="suggestions"
+                >
+                  <el-divider content-position="left">
+                    建议
+                  </el-divider>
                   <ul>
-                    <li v-for="(suggestion, i) in message.suggestions" :key="i">
+                    <li
+                      v-for="(suggestion, i) in message.suggestions"
+                      :key="i"
+                    >
                       {{ suggestion }}
                     </li>
                   </ul>
@@ -84,17 +145,23 @@
               </div>
             </div>
 
-            <div v-if="isThinking" class="message assistant thinking">
+            <div
+              v-if="isThinking"
+              class="message assistant thinking"
+            >
               <div class="message-avatar">
-                <el-avatar :size="36" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
+                <el-avatar
+                  :size="36"
+                  style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+                >
                   <el-icon><ChatDotRound /></el-icon>
                 </el-avatar>
               </div>
               <div class="message-content">
                 <div class="thinking-animation">
-                  <span></span>
-                  <span></span>
-                  <span></span>
+                  <span />
+                  <span />
+                  <span />
                 </div>
                 <span>AI正在思考...</span>
               </div>
@@ -115,7 +182,11 @@
                 <el-icon><Document /></el-icon>
                 <span>{{ totalTokens }} tokens</span>
               </div>
-              <el-button type="primary" :loading="isThinking" @click="sendMessage">
+              <el-button
+                type="primary"
+                :loading="isThinking"
+                @click="sendMessage"
+              >
                 <el-icon><Promotion /></el-icon>
                 发送 (Ctrl+Enter)
               </el-button>
@@ -125,21 +196,42 @@
       </div>
 
       <!-- 配置推荐模式 -->
-      <div v-if="assistantMode === 'config'" class="config-mode">
+      <div
+        v-if="assistantMode === 'config'"
+        class="config-mode"
+      >
         <el-row :gutter="20">
           <el-col :span="12">
             <el-card header="服务需求">
-              <el-form :model="serviceRequirements" label-width="140px">
+              <el-form
+                :model="serviceRequirements"
+                label-width="140px"
+              >
                 <el-form-item label="服务类型">
                   <el-select v-model="serviceRequirements.serviceType">
-                    <el-option label="Web API" value="web-api" />
-                    <el-option label="后台任务" value="background-job" />
-                    <el-option label="数据处理" value="data-processing" />
-                    <el-option label="消息队列消费者" value="message-consumer" />
+                    <el-option
+                      label="Web API"
+                      value="web-api"
+                    />
+                    <el-option
+                      label="后台任务"
+                      value="background-job"
+                    />
+                    <el-option
+                      label="数据处理"
+                      value="data-processing"
+                    />
+                    <el-option
+                      label="消息队列消费者"
+                      value="message-consumer"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="预期QPS">
-                  <el-input-number v-model="serviceRequirements.expectedQPS" :min="1" />
+                  <el-input-number
+                    v-model="serviceRequirements.expectedQPS"
+                    :min="1"
+                  />
                 </el-form-item>
                 <el-form-item label="高可用性">
                   <el-switch v-model="serviceRequirements.highAvailability" />
@@ -149,13 +241,25 @@
                 </el-form-item>
                 <el-form-item label="安全级别">
                   <el-select v-model="serviceRequirements.securityLevel">
-                    <el-option label="标准" value="standard" />
-                    <el-option label="高" value="high" />
-                    <el-option label="企业级" value="enterprise" />
+                    <el-option
+                      label="标准"
+                      value="standard"
+                    />
+                    <el-option
+                      label="高"
+                      value="high"
+                    />
+                    <el-option
+                      label="企业级"
+                      value="enterprise"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" @click="getConfigRecommendation">
+                  <el-button
+                    type="primary"
+                    @click="getConfigRecommendation"
+                  >
                     获取AI推荐
                   </el-button>
                 </el-form-item>
@@ -164,8 +268,14 @@
           </el-col>
           <el-col :span="12">
             <el-card header="AI推荐配置">
-              <div v-if="configRecommendation" class="recommendation-result">
-                <el-descriptions :column="1" border>
+              <div
+                v-if="configRecommendation"
+                class="recommendation-result"
+              >
+                <el-descriptions
+                  :column="1"
+                  border
+                >
                   <el-descriptions-item label="CPU Request">
                     {{ configRecommendation.cpuRequest }}
                   </el-descriptions-item>
@@ -189,26 +299,44 @@
                   </el-descriptions-item>
                 </el-descriptions>
 
-                <el-divider content-position="left">理由说明</el-divider>
-                <p class="reasoning">{{ configRecommendation.reasoning }}</p>
+                <el-divider content-position="left">
+                  理由说明
+                </el-divider>
+                <p class="reasoning">
+                  {{ configRecommendation.reasoning }}
+                </p>
 
-                <el-divider content-position="left">备选方案</el-divider>
+                <el-divider content-position="left">
+                  备选方案
+                </el-divider>
                 <ul class="alternatives">
-                  <li v-for="(alt, i) in configRecommendation.alternatives" :key="i">
+                  <li
+                    v-for="(alt, i) in configRecommendation.alternatives"
+                    :key="i"
+                  >
                     {{ alt }}
                   </li>
                 </ul>
               </div>
-              <el-empty v-else description="请填写服务需求后获取AI推荐" />
+              <el-empty
+                v-else
+                description="请填写服务需求后获取AI推荐"
+              />
             </el-card>
           </el-col>
         </el-row>
       </div>
 
       <!-- 架构设计模式 -->
-      <div v-if="assistantMode === 'architecture'" class="architecture-mode">
+      <div
+        v-if="assistantMode === 'architecture'"
+        class="architecture-mode"
+      >
         <el-card header="项目需求">
-          <el-form :model="projectRequirements" label-width="140px">
+          <el-form
+            :model="projectRequirements"
+            label-width="140px"
+          >
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="项目名称">
@@ -218,45 +346,103 @@
                   <el-input v-model="projectRequirements.domain" />
                 </el-form-item>
                 <el-form-item label="预期用户规模">
-                  <el-input-number v-model="projectRequirements.expectedUsers" :min="100" />
+                  <el-input-number
+                    v-model="projectRequirements.expectedUsers"
+                    :min="100"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="核心功能">
-                  <el-select v-model="projectRequirements.coreFeatures" multiple>
-                    <el-option label="用户管理" value="user-management" />
-                    <el-option label="订单处理" value="order-processing" />
-                    <el-option label="支付集成" value="payment" />
-                    <el-option label="消息通知" value="notification" />
-                    <el-option label="数据分析" value="analytics" />
+                  <el-select
+                    v-model="projectRequirements.coreFeatures"
+                    multiple
+                  >
+                    <el-option
+                      label="用户管理"
+                      value="user-management"
+                    />
+                    <el-option
+                      label="订单处理"
+                      value="order-processing"
+                    />
+                    <el-option
+                      label="支付集成"
+                      value="payment"
+                    />
+                    <el-option
+                      label="消息通知"
+                      value="notification"
+                    />
+                    <el-option
+                      label="数据分析"
+                      value="analytics"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="技术栈偏好">
-                  <el-select v-model="projectRequirements.preferredTech" multiple>
-                    <el-option label=".NET Core" value="dotnet" />
-                    <el-option label="Node.js" value="nodejs" />
-                    <el-option label="Go" value="go" />
-                    <el-option label="PostgreSQL" value="postgresql" />
-                    <el-option label="MongoDB" value="mongodb" />
-                    <el-option label="Redis" value="redis" />
+                  <el-select
+                    v-model="projectRequirements.preferredTech"
+                    multiple
+                  >
+                    <el-option
+                      label=".NET Core"
+                      value="dotnet"
+                    />
+                    <el-option
+                      label="Node.js"
+                      value="nodejs"
+                    />
+                    <el-option
+                      label="Go"
+                      value="go"
+                    />
+                    <el-option
+                      label="PostgreSQL"
+                      value="postgresql"
+                    />
+                    <el-option
+                      label="MongoDB"
+                      value="mongodb"
+                    />
+                    <el-option
+                      label="Redis"
+                      value="redis"
+                    />
                   </el-select>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-form-item>
-              <el-button type="primary" @click="getArchitectureRecommendation">
+              <el-button
+                type="primary"
+                @click="getArchitectureRecommendation"
+              >
                 生成架构设计
               </el-button>
             </el-form-item>
           </el-form>
         </el-card>
 
-        <el-card v-if="architectureRecommendation" header="AI架构设计方案" style="margin-top: 20px">
+        <el-card
+          v-if="architectureRecommendation"
+          header="AI架构设计方案"
+          style="margin-top: 20px"
+        >
           <el-tabs>
             <el-tab-pane label="服务拆分">
-              <el-table :data="architectureRecommendation.services" stripe>
-                <el-table-column prop="name" label="服务名称" />
-                <el-table-column prop="responsibility" label="职责" />
+              <el-table
+                :data="architectureRecommendation.services"
+                stripe
+              >
+                <el-table-column
+                  prop="name"
+                  label="服务名称"
+                />
+                <el-table-column
+                  prop="responsibility"
+                  label="职责"
+                />
               </el-table>
             </el-tab-pane>
             <el-tab-pane label="通信模式">
@@ -275,8 +461,13 @@
               <p>{{ architectureRecommendation.observabilityStack }}</p>
             </el-tab-pane>
             <el-tab-pane label="成本估算">
-              <el-statistic title="月度成本估算" :value="architectureRecommendation.estimatedCost">
-                <template #prefix>$</template>
+              <el-statistic
+                title="月度成本估算"
+                :value="architectureRecommendation.estimatedCost"
+              >
+                <template #prefix>
+                  $
+                </template>
               </el-statistic>
             </el-tab-pane>
           </el-tabs>
@@ -284,7 +475,10 @@
       </div>
 
       <!-- 问题诊断模式 -->
-      <div v-if="assistantMode === 'diagnostic'" class="diagnostic-mode">
+      <div
+        v-if="assistantMode === 'diagnostic'"
+        class="diagnostic-mode"
+      >
         <el-card header="问题信息">
           <el-form label-width="120px">
             <el-form-item label="服务名称">
@@ -294,36 +488,77 @@
               <el-input v-model="diagnosticInput.podStatus" />
             </el-form-item>
             <el-form-item label="错误信息">
-              <el-input v-model="diagnosticInput.errorMessage" type="textarea" :rows="3" />
+              <el-input
+                v-model="diagnosticInput.errorMessage"
+                type="textarea"
+                :rows="3"
+              />
             </el-form-item>
             <el-form-item label="事件日志">
-              <el-input v-model="diagnosticInput.events" type="textarea" :rows="5" />
+              <el-input
+                v-model="diagnosticInput.events"
+                type="textarea"
+                :rows="5"
+              />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="diagnoseIssue">
+              <el-button
+                type="primary"
+                @click="diagnoseIssue"
+              >
                 开始诊断
               </el-button>
             </el-form-item>
           </el-form>
         </el-card>
 
-        <el-card v-if="diagnosticResult" header="诊断结果" style="margin-top: 20px">
-          <el-alert :title="diagnosticResult.rootCause" type="error" :closable="false">
-            <p style="margin-top: 10px">根因已识别</p>
+        <el-card
+          v-if="diagnosticResult"
+          header="诊断结果"
+          style="margin-top: 20px"
+        >
+          <el-alert
+            :title="diagnosticResult.rootCause"
+            type="error"
+            :closable="false"
+          >
+            <p style="margin-top: 10px">
+              根因已识别
+            </p>
           </el-alert>
 
-          <el-divider content-position="left">可能原因</el-divider>
-          <el-table :data="diagnosticResult.possibleCauses" stripe>
-            <el-table-column prop="cause" label="原因" />
-            <el-table-column prop="probability" label="概率" width="120">
+          <el-divider content-position="left">
+            可能原因
+          </el-divider>
+          <el-table
+            :data="diagnosticResult.possibleCauses"
+            stripe
+          >
+            <el-table-column
+              prop="cause"
+              label="原因"
+            />
+            <el-table-column
+              prop="probability"
+              label="概率"
+              width="120"
+            >
               <template #default="{ row }">
-                <el-progress :percentage="row.probability" :color="getProbabilityColor(row.probability)" />
+                <el-progress
+                  :percentage="row.probability"
+                  :color="getProbabilityColor(row.probability)"
+                />
               </template>
             </el-table-column>
           </el-table>
 
-          <el-divider content-position="left">修复步骤</el-divider>
-          <el-steps direction="vertical" :active="0">
+          <el-divider content-position="left">
+            修复步骤
+          </el-divider>
+          <el-steps
+            direction="vertical"
+            :active="0"
+          >
             <el-step
               v-for="(step, index) in diagnosticResult.fixSteps"
               :key="index"
@@ -335,7 +570,10 @@
       </div>
 
       <!-- 知识库模式 -->
-      <div v-if="assistantMode === 'knowledge'" class="knowledge-mode">
+      <div
+        v-if="assistantMode === 'knowledge'"
+        class="knowledge-mode"
+      >
         <el-card>
           <el-input
             v-model="knowledgeQuery"
@@ -343,11 +581,19 @@
             size="large"
           >
             <template #append>
-              <el-button :icon="Search" @click="searchKnowledge">搜索</el-button>
+              <el-button
+                :icon="Search"
+                @click="searchKnowledge"
+              >
+                搜索
+              </el-button>
             </template>
           </el-input>
 
-          <div v-if="knowledgeAnswer" class="knowledge-result">
+          <div
+            v-if="knowledgeAnswer"
+            class="knowledge-result"
+          >
             <h3>{{ knowledgeAnswer.question }}</h3>
             <el-divider />
             <div class="answer-content">
@@ -359,7 +605,10 @@
 
               <h4>最佳实践</h4>
               <ul>
-                <li v-for="(practice, i) in knowledgeAnswer.bestPractices" :key="i">
+                <li
+                  v-for="(practice, i) in knowledgeAnswer.bestPractices"
+                  :key="i"
+                >
                   {{ practice }}
                 </li>
               </ul>

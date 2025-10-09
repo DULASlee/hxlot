@@ -14,25 +14,47 @@
         <span class="condition-count">{{ conditions.length }} 个条件</span>
       </div>
       <div class="header-right">
-        <el-button @click="addCondition" type="primary" :icon="Plus">
+        <el-button
+          type="primary"
+          :icon="Plus"
+          @click="addCondition"
+        >
           添加条件
         </el-button>
-        <el-button @click="importConditions" :icon="Upload">
+        <el-button
+          :icon="Upload"
+          @click="importConditions"
+        >
           导入条件
         </el-button>
-        <el-button @click="exportConditions" :icon="Download">
+        <el-button
+          :icon="Download"
+          @click="exportConditions"
+        >
           导出条件
         </el-button>
       </div>
     </div>
 
     <!-- 条件组合逻辑选择 -->
-    <div class="logic-selector" v-if="conditions.length > 1">
+    <div
+      v-if="conditions.length > 1"
+      class="logic-selector"
+    >
       <span class="logic-label">条件组合逻辑：</span>
-      <el-radio-group v-model="logicOperator" @change="handleLogicChange">
-        <el-radio value="AND">全部满足 (AND)</el-radio>
-        <el-radio value="OR">任一满足 (OR)</el-radio>
-        <el-radio value="CUSTOM">自定义组合</el-radio>
+      <el-radio-group
+        v-model="logicOperator"
+        @change="handleLogicChange"
+      >
+        <el-radio value="AND">
+          全部满足 (AND)
+        </el-radio>
+        <el-radio value="OR">
+          任一满足 (OR)
+        </el-radio>
+        <el-radio value="CUSTOM">
+          自定义组合
+        </el-radio>
       </el-radio-group>
     </div>
 
@@ -47,7 +69,10 @@
         <!-- 条件序号和连接符 -->
         <div class="condition-index">
           <span class="index-number">{{ index + 1 }}</span>
-          <span v-if="index > 0" class="logic-connector">
+          <span
+            v-if="index > 0"
+            class="logic-connector"
+          >
             {{ getLogicConnector(index) }}
           </span>
         </div>
@@ -131,8 +156,14 @@
                   v-model="condition.value"
                   placeholder="选择值"
                 >
-                  <el-option label="是" :value="true" />
-                  <el-option label="否" :value="false" />
+                  <el-option
+                    label="是"
+                    :value="true"
+                  />
+                  <el-option
+                    label="否"
+                    :value="false"
+                  />
                 </el-select>
                 <!-- 枚举选择 -->
                 <el-select
@@ -171,19 +202,19 @@
               <el-form-item label=" ">
                 <div class="condition-actions">
                   <el-button
-                    @click="duplicateCondition(index)"
                     :icon="CopyDocument"
                     circle
                     size="small"
                     title="复制条件"
+                    @click="duplicateCondition(index)"
                   />
                   <el-button
-                    @click="removeCondition(index)"
                     :icon="Delete"
                     circle
                     size="small"
                     type="danger"
                     title="删除条件"
+                    @click="removeCondition(index)"
                   />
                 </div>
               </el-form-item>
@@ -194,25 +225,42 @@
     </div>
 
     <!-- 空状态 -->
-    <div v-if="conditions.length === 0" class="empty-state">
+    <div
+      v-if="conditions.length === 0"
+      class="empty-state"
+    >
       <el-empty description="暂无条件，点击添加条件开始配置">
-        <el-button @click="addCondition" type="primary" :icon="Plus">
+        <el-button
+          type="primary"
+          :icon="Plus"
+          @click="addCondition"
+        >
           添加第一个条件
         </el-button>
       </el-empty>
     </div>
 
     <!-- 条件预览 -->
-    <div v-if="conditions.length > 0" class="condition-preview">
+    <div
+      v-if="conditions.length > 0"
+      class="condition-preview"
+    >
       <h4>条件预览</h4>
       <div class="preview-content">
         <code>{{ generateConditionExpression() }}</code>
       </div>
       <div class="preview-actions">
-        <el-button @click="testCondition" :icon="VideoPlay">
+        <el-button
+          :icon="VideoPlay"
+          @click="testCondition"
+        >
           测试条件
         </el-button>
-        <el-button @click="saveConditions" type="primary" :icon="Check">
+        <el-button
+          type="primary"
+          :icon="Check"
+          @click="saveConditions"
+        >
           保存条件
         </el-button>
       </div>

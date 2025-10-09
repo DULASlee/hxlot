@@ -1,6 +1,9 @@
 <template>
   <div class="dev-environment-setup">
-    <el-card class="setup-header" shadow="never">
+    <el-card
+      class="setup-header"
+      shadow="never"
+    >
       <template #header>
         <div class="card-header">
           <span class="title">
@@ -20,7 +23,10 @@
       />
     </el-card>
 
-    <el-row :gutter="20" class="content-row">
+    <el-row
+      :gutter="20"
+      class="content-row"
+    >
       <!-- 左侧配置面板 -->
       <el-col :span="12">
         <el-card shadow="hover">
@@ -28,13 +34,20 @@
             <span><el-icon><Tools /></el-icon> 配置面板</span>
           </template>
 
-          <el-form :model="config" label-width="120px" label-position="right">
+          <el-form
+            :model="config"
+            label-width="120px"
+            label-position="right"
+          >
             <!-- 项目信息 -->
             <el-divider content-position="left">
               <el-icon><Folder /></el-icon> 项目信息
             </el-divider>
             
-            <el-form-item label="项目名称" required>
+            <el-form-item
+              label="项目名称"
+              required
+            >
               <el-input
                 v-model="config.projectName"
                 placeholder="例如: SmartAbp"
@@ -46,7 +59,10 @@
               </el-input>
             </el-form-item>
 
-            <el-form-item label="项目路径" required>
+            <el-form-item
+              label="项目路径"
+              required
+            >
               <el-input
                 v-model="config.projectPath"
                 placeholder="例如: /Users/xxx/Projects/SmartAbp"
@@ -66,7 +82,12 @@
             <el-form-item label="数据库">
               <el-checkbox-group v-model="config.services">
                 <el-checkbox label="postgresql">
-                  <el-tag type="primary" size="small">PostgreSQL</el-tag>
+                  <el-tag
+                    type="primary"
+                    size="small"
+                  >
+                    PostgreSQL
+                  </el-tag>
                   <span class="service-desc">关系型数据库</span>
                 </el-checkbox>
               </el-checkbox-group>
@@ -75,7 +96,12 @@
             <el-form-item label="缓存">
               <el-checkbox-group v-model="config.services">
                 <el-checkbox label="redis">
-                  <el-tag type="danger" size="small">Redis</el-tag>
+                  <el-tag
+                    type="danger"
+                    size="small"
+                  >
+                    Redis
+                  </el-tag>
                   <span class="service-desc">分布式缓存</span>
                 </el-checkbox>
               </el-checkbox-group>
@@ -84,7 +110,12 @@
             <el-form-item label="消息队列">
               <el-checkbox-group v-model="config.services">
                 <el-checkbox label="rabbitmq">
-                  <el-tag type="warning" size="small">RabbitMQ</el-tag>
+                  <el-tag
+                    type="warning"
+                    size="small"
+                  >
+                    RabbitMQ
+                  </el-tag>
                   <span class="service-desc">消息中间件</span>
                 </el-checkbox>
               </el-checkbox-group>
@@ -93,7 +124,12 @@
             <el-form-item label="搜索引擎">
               <el-checkbox-group v-model="config.services">
                 <el-checkbox label="elasticsearch">
-                  <el-tag type="success" size="small">Elasticsearch</el-tag>
+                  <el-tag
+                    type="success"
+                    size="small"
+                  >
+                    Elasticsearch
+                  </el-tag>
                   <span class="service-desc">全文搜索</span>
                 </el-checkbox>
               </el-checkbox-group>
@@ -102,7 +138,12 @@
             <el-form-item label="日志服务">
               <el-checkbox-group v-model="config.services">
                 <el-checkbox label="seq">
-                  <el-tag type="info" size="small">Seq</el-tag>
+                  <el-tag
+                    type="info"
+                    size="small"
+                  >
+                    Seq
+                  </el-tag>
                   <span class="service-desc">结构化日志</span>
                 </el-checkbox>
               </el-checkbox-group>
@@ -138,7 +179,10 @@
               >
                 生成所有配置
               </el-button>
-              <el-button :icon="View" @click="previewDialogVisible = true">
+              <el-button
+                :icon="View"
+                @click="previewDialogVisible = true"
+              >
                 预览配置
               </el-button>
             </el-form-item>
@@ -148,15 +192,27 @@
 
       <!-- 右侧预览和下载 -->
       <el-col :span="12">
-        <el-card shadow="hover" class="preview-card">
+        <el-card
+          shadow="hover"
+          class="preview-card"
+        >
           <template #header>
             <span><el-icon><Document /></el-icon> 生成结果</span>
           </template>
 
-          <el-tabs v-model="activeTab" class="result-tabs">
+          <el-tabs
+            v-model="activeTab"
+            class="result-tabs"
+          >
             <!-- Docker Compose -->
-            <el-tab-pane label="Docker Compose" name="docker">
-              <div v-if="dockerCompose" class="result-content">
+            <el-tab-pane
+              label="Docker Compose"
+              name="docker"
+            >
+              <div
+                v-if="dockerCompose"
+                class="result-content"
+              >
                 <div class="result-actions">
                   <el-button
                     size="small"
@@ -176,13 +232,19 @@
                 </div>
                 
                 <div class="instructions">
-                  <el-alert type="success" :closable="false">
+                  <el-alert
+                    type="success"
+                    :closable="false"
+                  >
                     <template #title>
                       <el-icon><CircleCheck /></el-icon>
                       使用说明
                     </template>
                     <ul>
-                      <li v-for="(instruction, index) in dockerCompose.instructions" :key="index">
+                      <li
+                        v-for="(instruction, index) in dockerCompose.instructions"
+                        :key="index"
+                      >
                         {{ instruction }}
                       </li>
                     </ul>
@@ -197,14 +259,27 @@
                   class="code-preview"
                 />
               </div>
-              <el-empty v-else description="请先生成配置" />
+              <el-empty
+                v-else
+                description="请先生成配置"
+              />
             </el-tab-pane>
 
             <!-- 启动脚本 -->
-            <el-tab-pane label="启动脚本" name="script">
-              <div v-if="startupScript" class="result-content">
+            <el-tab-pane
+              label="启动脚本"
+              name="script"
+            >
+              <div
+                v-if="startupScript"
+                class="result-content"
+              >
                 <div class="script-type-selector">
-                  <el-radio-group v-model="scriptType" size="small" @change="generateScript">
+                  <el-radio-group
+                    v-model="scriptType"
+                    size="small"
+                    @change="generateScript"
+                  >
                     <el-radio-button label="bash">
                       <el-icon><Monitor /></el-icon> Linux/Mac
                     </el-radio-button>
@@ -236,13 +311,19 @@
                 </div>
 
                 <div class="instructions">
-                  <el-alert type="info" :closable="false">
+                  <el-alert
+                    type="info"
+                    :closable="false"
+                  >
                     <template #title>
                       <el-icon><InfoFilled /></el-icon>
                       使用说明
                     </template>
                     <ul>
-                      <li v-for="(instruction, index) in startupScript.instructions" :key="index">
+                      <li
+                        v-for="(instruction, index) in startupScript.instructions"
+                        :key="index"
+                      >
                         {{ instruction }}
                       </li>
                     </ul>
@@ -257,14 +338,27 @@
                   class="code-preview"
                 />
               </div>
-              <el-empty v-else description="请先生成配置" />
+              <el-empty
+                v-else
+                description="请先生成配置"
+              />
             </el-tab-pane>
 
             <!-- 环境变量 -->
-            <el-tab-pane label="环境变量" name="env">
-              <div v-if="envFile" class="result-content">
+            <el-tab-pane
+              label="环境变量"
+              name="env"
+            >
+              <div
+                v-if="envFile"
+                class="result-content"
+              >
                 <div class="env-selector">
-                  <el-radio-group v-model="envType" size="small" @change="generateEnv">
+                  <el-radio-group
+                    v-model="envType"
+                    size="small"
+                    @change="generateEnv"
+                  >
                     <el-radio-button label="development">
                       <el-icon><Laptop /></el-icon> Development
                     </el-radio-button>
@@ -296,13 +390,19 @@
                 </div>
 
                 <div class="instructions">
-                  <el-alert type="warning" :closable="false">
+                  <el-alert
+                    type="warning"
+                    :closable="false"
+                  >
                     <template #title>
                       <el-icon><Warning /></el-icon>
                       安全提示
                     </template>
                     <ul>
-                      <li v-for="(instruction, index) in envFile.instructions" :key="index">
+                      <li
+                        v-for="(instruction, index) in envFile.instructions"
+                        :key="index"
+                      >
                         {{ instruction }}
                       </li>
                     </ul>
@@ -317,7 +417,10 @@
                   class="code-preview"
                 />
               </div>
-              <el-empty v-else description="请先生成配置" />
+              <el-empty
+                v-else
+                description="请先生成配置"
+              />
             </el-tab-pane>
           </el-tabs>
         </el-card>
@@ -331,14 +434,20 @@
       width="60%"
       :close-on-click-modal="false"
     >
-      <el-descriptions :column="2" border>
+      <el-descriptions
+        :column="2"
+        border
+      >
         <el-descriptions-item label="项目名称">
           {{ config.projectName || '-' }}
         </el-descriptions-item>
         <el-descriptions-item label="项目路径">
           {{ config.projectPath || '-' }}
         </el-descriptions-item>
-        <el-descriptions-item label="选择服务" :span="2">
+        <el-descriptions-item
+          label="选择服务"
+          :span="2"
+        >
           <el-tag
             v-for="service in config.services"
             :key="service"
@@ -351,24 +460,35 @@
           <span v-if="config.services.length === 0">未选择</span>
         </el-descriptions-item>
         <el-descriptions-item label="热重载">
-          <el-tag :type="config.enableHotReload ? 'success' : 'info'" size="small">
+          <el-tag
+            :type="config.enableHotReload ? 'success' : 'info'"
+            size="small"
+          >
             {{ config.enableHotReload ? '启用' : '禁用' }}
           </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="调试模式">
-          <el-tag :type="config.enableDebugMode ? 'success' : 'info'" size="small">
+          <el-tag
+            :type="config.enableDebugMode ? 'success' : 'info'"
+            size="small"
+          >
             {{ config.enableDebugMode ? '启用' : '禁用' }}
           </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="健康检查">
-          <el-tag :type="config.enableHealthCheck ? 'success' : 'info'" size="small">
+          <el-tag
+            :type="config.enableHealthCheck ? 'success' : 'info'"
+            size="small"
+          >
             {{ config.enableHealthCheck ? '启用' : '禁用' }}
           </el-tag>
         </el-descriptions-item>
       </el-descriptions>
 
       <template #footer>
-        <el-button @click="previewDialogVisible = false">关闭</el-button>
+        <el-button @click="previewDialogVisible = false">
+          关闭
+        </el-button>
       </template>
     </el-dialog>
   </div>

@@ -1,7 +1,10 @@
 <template>
   <div class="visual-component-palette">
     <!-- 搜索栏 -->
-    <div v-if="searchable" class="palette-search">
+    <div
+      v-if="searchable"
+      class="palette-search"
+    >
       <el-input
         v-model="searchKeyword"
         placeholder="搜索组件..."
@@ -43,8 +46,12 @@
             <div class="component-icon">
               <i :class="component.icon" />
             </div>
-            <div class="component-name">{{ component.displayName }}</div>
-            <div class="component-description">{{ component.description }}</div>
+            <div class="component-name">
+              {{ component.displayName }}
+            </div>
+            <div class="component-description">
+              {{ component.description }}
+            </div>
             <el-tag
               v-if="component.isCustom"
               size="small"
@@ -71,13 +78,18 @@
       title="组件详情"
       size="400px"
     >
-      <div v-if="selectedComponent" class="component-detail">
+      <div
+        v-if="selectedComponent"
+        class="component-detail"
+      >
         <div class="detail-header">
           <div class="detail-icon">
             <i :class="selectedComponent.icon" />
           </div>
           <h3>{{ selectedComponent.displayName }}</h3>
-          <p class="detail-name">{{ selectedComponent.name }}</p>
+          <p class="detail-name">
+            {{ selectedComponent.name }}
+          </p>
         </div>
 
         <el-divider />
@@ -94,7 +106,10 @@
           </el-tag>
         </div>
 
-        <div v-if="selectedComponent.tags.length > 0" class="detail-section">
+        <div
+          v-if="selectedComponent.tags.length > 0"
+          class="detail-section"
+        >
           <h4>标签</h4>
           <el-tag
             v-for="tag in selectedComponent.tags"
@@ -106,9 +121,16 @@
           </el-tag>
         </div>
 
-        <div v-if="selectedComponent.props" class="detail-section">
+        <div
+          v-if="selectedComponent.props"
+          class="detail-section"
+        >
           <h4>默认属性</h4>
-          <el-descriptions :column="1" border size="small">
+          <el-descriptions
+            :column="1"
+            border
+            size="small"
+          >
             <el-descriptions-item
               v-for="(value, key) in selectedComponent.props"
               :key="key"

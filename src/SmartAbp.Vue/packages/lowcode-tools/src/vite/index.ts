@@ -14,10 +14,10 @@ export function vitePluginLowCode(): Plugin {
                 // runtime hook; packagesResolver has an exported clear method
                 try {
                     // dynamic import to avoid hard dep
-                    // eslint-disable-next-line @typescript-eslint/no-var-requires
+                     
                     const mod = require('../../../src/utils/vite/packagesResolver')
                     mod?.clearComponentPathCache?.()
-                    // eslint-disable-next-line no-console
+                     
                     console.log('[vitePluginLowCode] cleared component path cache')
                 } catch { }
             })

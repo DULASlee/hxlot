@@ -21,13 +21,18 @@
     </el-form-item>
 
     <!-- 舱壁隔离示意图 -->
-    <el-card class="bulkhead-visualization" shadow="never">
+    <el-card
+      class="bulkhead-visualization"
+      shadow="never"
+    >
       <template #header>
         <span>舱壁隔离原理</span>
       </template>
       <div class="bulkhead-diagram">
         <div class="pool">
-          <div class="pool-header">线程池（{{ localConfig.maxParallelization }}个并发）</div>
+          <div class="pool-header">
+            线程池（{{ localConfig.maxParallelization }}个并发）
+          </div>
           <div class="threads">
             <div
               v-for="i in Math.min(localConfig.maxParallelization, 10)"
@@ -36,13 +41,21 @@
             >
               {{ i }}
             </div>
-            <div v-if="localConfig.maxParallelization > 10" class="thread-more">
+            <div
+              v-if="localConfig.maxParallelization > 10"
+              class="thread-more"
+            >
               ...
             </div>
           </div>
         </div>
-        <div class="queue" v-if="localConfig.maxQueuingActions > 0">
-          <div class="queue-header">等待队列（{{ localConfig.maxQueuingActions }}个）</div>
+        <div
+          v-if="localConfig.maxQueuingActions > 0"
+          class="queue"
+        >
+          <div class="queue-header">
+            等待队列（{{ localConfig.maxQueuingActions }}个）
+          </div>
           <div class="queue-items">
             <div
               v-for="i in Math.min(localConfig.maxQueuingActions, 5)"
@@ -51,7 +64,10 @@
             >
               等待
             </div>
-            <div v-if="localConfig.maxQueuingActions > 5" class="queue-more">
+            <div
+              v-if="localConfig.maxQueuingActions > 5"
+              class="queue-more"
+            >
               ...
             </div>
           </div>

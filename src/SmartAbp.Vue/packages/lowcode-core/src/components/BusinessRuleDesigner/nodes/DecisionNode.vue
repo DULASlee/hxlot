@@ -1,30 +1,63 @@
 <template>
-  <div class="decision-node rule-node" :class="{ selected: data.selected }">
+  <div
+    class="decision-node rule-node"
+    :class="{ selected: data.selected }"
+  >
     <div class="node-header">
-      <el-icon class="node-icon" color="#e6a23c">
+      <el-icon
+        class="node-icon"
+        color="#e6a23c"
+      >
         <Operation />
       </el-icon>
       <span class="node-title">{{ data.label || '多路分支' }}</span>
     </div>
     <div class="node-body">
-      <div class="node-description">{{ data.description || '多条件分支决策' }}</div>
-      <div v-if="data.branches && data.branches.length > 0" class="branches-list">
-        <div v-for="(branch, index) in data.branches" :key="index" class="branch-item">
-          <div class="branch-label">分支 {{ index + 1 }}</div>
+      <div class="node-description">
+        {{ data.description || '多条件分支决策' }}
+      </div>
+      <div
+        v-if="data.branches && data.branches.length > 0"
+        class="branches-list"
+      >
+        <div
+          v-for="(branch, index) in data.branches"
+          :key="index"
+          class="branch-item"
+        >
+          <div class="branch-label">
+            分支 {{ index + 1 }}
+          </div>
           <code class="branch-condition">{{ formatCondition(branch.condition) }}</code>
         </div>
       </div>
-      <div v-else class="node-warning">
+      <div
+        v-else
+        class="node-warning"
+      >
         <el-icon>
           <InfoFilled />
         </el-icon>
         <span>请配置分支条件</span>
       </div>
     </div>
-    <Handle type="target" :position="Position.Left" :style="targetHandleStyle" />
-    <Handle v-for="(branch, index) in visibleBranches" :key="index" :id="`branch-${index}`" type="source"
-      :position="getBranchPosition(index)" :style="getBranchHandleStyle(index)">
-      <div class="handle-label" :style="getHandleLabelStyle(index)">
+    <Handle
+      type="target"
+      :position="Position.Left"
+      :style="targetHandleStyle"
+    />
+    <Handle
+      v-for="(branch, index) in visibleBranches"
+      :id="`branch-${index}`"
+      :key="index"
+      type="source"
+      :position="getBranchPosition(index)"
+      :style="getBranchHandleStyle(index)"
+    >
+      <div
+        class="handle-label"
+        :style="getHandleLabelStyle(index)"
+      >
         {{ branch.label || `分支${index + 1}` }}
       </div>
     </Handle>

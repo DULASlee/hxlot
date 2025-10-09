@@ -4,36 +4,92 @@
     <el-card class="toolbar-card">
       <div class="toolbar">
         <div class="toolbar-left">
-          <el-icon class="code-icon"><Document /></el-icon>
+          <el-icon class="code-icon">
+            <Document />
+          </el-icon>
           <span class="title">💻 代码预览</span>
-          <el-tag v-if="currentFile" type="primary" size="small">
+          <el-tag
+            v-if="currentFile"
+            type="primary"
+            size="small"
+          >
             {{ currentFile.name }}
           </el-tag>
         </div>
         
         <div class="toolbar-right">
           <!-- 语言选择 -->
-          <el-select v-model="selectedLanguage" size="small" style="width: 150px" @change="onLanguageChange">
-            <el-option label="YAML" value="yaml" />
-            <el-option label="TypeScript" value="typescript" />
-            <el-option label="C#" value="csharp" />
-            <el-option label="JSON" value="json" />
-            <el-option label="JavaScript" value="javascript" />
-            <el-option label="XML" value="xml" />
-            <el-option label="Dockerfile" value="dockerfile" />
-            <el-option label="Shell" value="shell" />
+          <el-select
+            v-model="selectedLanguage"
+            size="small"
+            style="width: 150px"
+            @change="onLanguageChange"
+          >
+            <el-option
+              label="YAML"
+              value="yaml"
+            />
+            <el-option
+              label="TypeScript"
+              value="typescript"
+            />
+            <el-option
+              label="C#"
+              value="csharp"
+            />
+            <el-option
+              label="JSON"
+              value="json"
+            />
+            <el-option
+              label="JavaScript"
+              value="javascript"
+            />
+            <el-option
+              label="XML"
+              value="xml"
+            />
+            <el-option
+              label="Dockerfile"
+              value="dockerfile"
+            />
+            <el-option
+              label="Shell"
+              value="shell"
+            />
           </el-select>
 
           <!-- 主题选择 -->
-          <el-select v-model="editorTheme" size="small" style="width: 150px" @change="onThemeChange">
-            <el-option label="VS Code Light" value="vs" />
-            <el-option label="VS Code Dark" value="vs-dark" />
-            <el-option label="High Contrast Dark" value="hc-black" />
-            <el-option label="GitHub Light" value="github-light" />
+          <el-select
+            v-model="editorTheme"
+            size="small"
+            style="width: 150px"
+            @change="onThemeChange"
+          >
+            <el-option
+              label="VS Code Light"
+              value="vs"
+            />
+            <el-option
+              label="VS Code Dark"
+              value="vs-dark"
+            />
+            <el-option
+              label="High Contrast Dark"
+              value="hc-black"
+            />
+            <el-option
+              label="GitHub Light"
+              value="github-light"
+            />
           </el-select>
 
           <!-- 视图模式 -->
-          <el-radio-group v-model="viewMode" size="small" @change="onViewModeChange">
+          <el-radio-group
+            v-model="viewMode"
+            size="small"
+            @change="onViewModeChange"
+          >
             <el-radio-button label="single">
               <el-icon><Document /></el-icon>
               单窗口
@@ -69,14 +125,26 @@
             @change="onReadOnlyChange"
           />
 
-          <el-button size="small" :icon="FullScreen" circle @click="toggleFullscreen" />
+          <el-button
+            size="small"
+            :icon="FullScreen"
+            circle
+            @click="toggleFullscreen"
+          />
         </div>
       </div>
     </el-card>
 
     <!-- 文件标签页 -->
-    <el-card v-if="files.length > 1" class="tabs-card">
-      <el-tabs v-model="activeFileIndex" type="card" @tab-change="onTabChange">
+    <el-card
+      v-if="files.length > 1"
+      class="tabs-card"
+    >
+      <el-tabs
+        v-model="activeFileIndex"
+        type="card"
+        @tab-change="onTabChange"
+      >
         <el-tab-pane
           v-for="(file, index) in files"
           :key="index"
@@ -87,7 +155,10 @@
             <span class="tab-label">
               <el-icon><Document /></el-icon>
               {{ file.name }}
-              <el-icon class="close-icon" @click.stop="closeFile(index)">
+              <el-icon
+                class="close-icon"
+                @click.stop="closeFile(index)"
+              >
                 <Close />
               </el-icon>
             </span>
@@ -97,34 +168,61 @@
     </el-card>
 
     <!-- 编辑器区域 -->
-    <div ref="editorContainer" class="editor-container" :class="{ fullscreen: isFullscreen }">
+    <div
+      ref="editorContainer"
+      class="editor-container"
+      :class="{ fullscreen: isFullscreen }"
+    >
       <!-- 单窗口模式 -->
-      <div v-if="viewMode === 'single'" class="single-editor">
-        <div ref="monacoEditor" class="monaco-editor"></div>
+      <div
+        v-if="viewMode === 'single'"
+        class="single-editor"
+      >
+        <div
+          ref="monacoEditor"
+          class="monaco-editor"
+        />
       </div>
 
       <!-- 分屏对比模式 -->
-      <div v-else class="split-editor">
+      <div
+        v-else
+        class="split-editor"
+      >
         <div class="editor-panel">
           <div class="panel-header">
             <span>原始代码</span>
-            <el-button size="small" text @click="loadOriginalCode">
+            <el-button
+              size="small"
+              text
+              @click="loadOriginalCode"
+            >
               <el-icon><RefreshRight /></el-icon>
               重新加载
             </el-button>
           </div>
-          <div ref="originalEditor" class="monaco-editor"></div>
+          <div
+            ref="originalEditor"
+            class="monaco-editor"
+          />
         </div>
-        <div class="editor-divider"></div>
+        <div class="editor-divider" />
         <div class="editor-panel">
           <div class="panel-header">
             <span>修改后代码</span>
-            <el-button size="small" text @click="acceptChanges">
+            <el-button
+              size="small"
+              text
+              @click="acceptChanges"
+            >
               <el-icon><Check /></el-icon>
               接受更改
             </el-button>
           </div>
-          <div ref="modifiedEditor" class="monaco-editor"></div>
+          <div
+            ref="modifiedEditor"
+            class="monaco-editor"
+          />
         </div>
       </div>
 
@@ -139,13 +237,22 @@
           <span>{{ selectedLanguage.toUpperCase() }}</span>
           <span>UTF-8</span>
           <span>LF</span>
-          <el-icon v-if="hasUnsavedChanges" color="#f56c6c"><WarningFilled /></el-icon>
+          <el-icon
+            v-if="hasUnsavedChanges"
+            color="#f56c6c"
+          >
+            <WarningFilled />
+          </el-icon>
         </div>
       </div>
     </div>
 
     <!-- 搜索面板 -->
-    <el-drawer v-model="searchDrawerVisible" title="搜索和替换" size="400px">
+    <el-drawer
+      v-model="searchDrawerVisible"
+      title="搜索和替换"
+      size="400px"
+    >
       <el-form label-width="80px">
         <el-form-item label="查找">
           <el-input
@@ -161,23 +268,49 @@
           </el-input>
         </el-form-item>
         <el-form-item label="替换为">
-          <el-input v-model="replaceText" placeholder="输入替换内容" />
+          <el-input
+            v-model="replaceText"
+            placeholder="输入替换内容"
+          />
         </el-form-item>
         <el-form-item>
-          <el-checkbox v-model="searchOptions.caseSensitive">区分大小写</el-checkbox>
-          <el-checkbox v-model="searchOptions.wholeWord">全字匹配</el-checkbox>
-          <el-checkbox v-model="searchOptions.regex">正则表达式</el-checkbox>
+          <el-checkbox v-model="searchOptions.caseSensitive">
+            区分大小写
+          </el-checkbox>
+          <el-checkbox v-model="searchOptions.wholeWord">
+            全字匹配
+          </el-checkbox>
+          <el-checkbox v-model="searchOptions.regex">
+            正则表达式
+          </el-checkbox>
         </el-form-item>
         <el-form-item>
           <el-space>
-            <el-button type="primary" @click="replaceOne">替换</el-button>
-            <el-button type="primary" @click="replaceAll">全部替换</el-button>
-            <el-button @click="findPrevious">上一个</el-button>
-            <el-button @click="findNext">下一个</el-button>
+            <el-button
+              type="primary"
+              @click="replaceOne"
+            >
+              替换
+            </el-button>
+            <el-button
+              type="primary"
+              @click="replaceAll"
+            >
+              全部替换
+            </el-button>
+            <el-button @click="findPrevious">
+              上一个
+            </el-button>
+            <el-button @click="findNext">
+              下一个
+            </el-button>
           </el-space>
         </el-form-item>
         <el-form-item>
-          <el-alert v-if="searchResults.total > 0" :closable="false">
+          <el-alert
+            v-if="searchResults.total > 0"
+            :closable="false"
+          >
             找到 {{ searchResults.total }} 个匹配项
             (当前: {{ searchResults.current }})
           </el-alert>
@@ -186,32 +319,64 @@
     </el-drawer>
 
     <!-- 设置面板 -->
-    <el-drawer v-model="settingsDrawerVisible" title="编辑器设置" size="400px">
+    <el-drawer
+      v-model="settingsDrawerVisible"
+      title="编辑器设置"
+      size="400px"
+    >
       <el-form label-width="120px">
         <el-form-item label="字体大小">
-          <el-slider v-model="editorSettings.fontSize" :min="10" :max="32" @change="updateSettings" />
+          <el-slider
+            v-model="editorSettings.fontSize"
+            :min="10"
+            :max="32"
+            @change="updateSettings"
+          />
           <span>{{ editorSettings.fontSize }}px</span>
         </el-form-item>
         <el-form-item label="Tab大小">
-          <el-input-number v-model="editorSettings.tabSize" :min="2" :max="8" @change="updateSettings" />
+          <el-input-number
+            v-model="editorSettings.tabSize"
+            :min="2"
+            :max="8"
+            @change="updateSettings"
+          />
         </el-form-item>
         <el-form-item label="自动换行">
-          <el-switch v-model="editorSettings.wordWrap" @change="updateSettings" />
+          <el-switch
+            v-model="editorSettings.wordWrap"
+            @change="updateSettings"
+          />
         </el-form-item>
         <el-form-item label="显示行号">
-          <el-switch v-model="editorSettings.lineNumbers" @change="updateSettings" />
+          <el-switch
+            v-model="editorSettings.lineNumbers"
+            @change="updateSettings"
+          />
         </el-form-item>
         <el-form-item label="显示空格">
-          <el-switch v-model="editorSettings.renderWhitespace" @change="updateSettings" />
+          <el-switch
+            v-model="editorSettings.renderWhitespace"
+            @change="updateSettings"
+          />
         </el-form-item>
         <el-form-item label="代码折叠">
-          <el-switch v-model="editorSettings.folding" @change="updateSettings" />
+          <el-switch
+            v-model="editorSettings.folding"
+            @change="updateSettings"
+          />
         </el-form-item>
         <el-form-item label="小地图">
-          <el-switch v-model="editorSettings.minimap" @change="updateSettings" />
+          <el-switch
+            v-model="editorSettings.minimap"
+            @change="updateSettings"
+          />
         </el-form-item>
         <el-form-item label="括号匹配">
-          <el-switch v-model="editorSettings.bracketMatching" @change="updateSettings" />
+          <el-switch
+            v-model="editorSettings.bracketMatching"
+            @change="updateSettings"
+          />
         </el-form-item>
       </el-form>
     </el-drawer>

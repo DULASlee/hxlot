@@ -1,11 +1,14 @@
 <template>
   <div class="business-rules-engine">
     <!-- 规则列表 -->
-    <el-card class="rules-list" shadow="never">
+    <el-card
+      class="rules-list"
+      shadow="never"
+    >
       <template #header>
         <div class="card-header">
           <span class="title">业务规则列表</span>
-              <el-button 
+          <el-button 
             v-if="!readonly"
             type="primary"
             size="small"
@@ -14,49 +17,85 @@
           >
             新建规则
           </el-button>
-                </div>
-              </template>
+        </div>
+      </template>
 
-      <el-table :data="rules" border>
-        <el-table-column type="index" label="#" width="50" />
-        <el-table-column prop="name" label="规则名称" min-width="200" />
-        <el-table-column prop="description" label="描述" min-width="250" />
-        <el-table-column label="优先级" width="100" align="center">
-              <template #default="{ row }">
+      <el-table
+        :data="rules"
+        border
+      >
+        <el-table-column
+          type="index"
+          label="#"
+          width="50"
+        />
+        <el-table-column
+          prop="name"
+          label="规则名称"
+          min-width="200"
+        />
+        <el-table-column
+          prop="description"
+          label="描述"
+          min-width="250"
+        />
+        <el-table-column
+          label="优先级"
+          width="100"
+          align="center"
+        >
+          <template #default="{ row }">
             <el-tag :type="getPriorityType(row.priority)">
               {{ row.priority }}
-                </el-tag>
-              </template>
-            </el-table-column>
-        <el-table-column label="状态" width="100" align="center">
-              <template #default="{ row }">
-                <el-switch 
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="状态"
+          width="100"
+          align="center"
+        >
+          <template #default="{ row }">
+            <el-switch 
               v-model="row.enabled"
               :disabled="readonly"
               @change="handleToggleRule(row)"
-                />
-              </template>
-            </el-table-column>
-        <el-table-column label="条件数" width="100" align="center">
-              <template #default="{ row }">
+            />
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="条件数"
+          width="100"
+          align="center"
+        >
+          <template #default="{ row }">
             {{ row.conditions.length }}
-              </template>
-            </el-table-column>
-        <el-table-column label="动作数" width="100" align="center">
-              <template #default="{ row }">
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="动作数"
+          width="100"
+          align="center"
+        >
+          <template #default="{ row }">
             {{ row.actions.length }}
-              </template>
-            </el-table-column>
-        <el-table-column label="操作" width="180" align="center" fixed="right">
-              <template #default="{ row }">
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          width="180"
+          align="center"
+          fixed="right"
+        >
+          <template #default="{ row }">
             <el-button
               type="text"
               size="small"
               icon="el-icon-edit"
               @click="handleEditRule(row)"
             >
-                    编辑
-                  </el-button>
+              编辑
+            </el-button>
             <el-button
               type="text"
               size="small"
@@ -64,7 +103,7 @@
               @click="handleTestRule(row)"
             >
               测试
-                  </el-button>
+            </el-button>
             <el-button
               v-if="!readonly"
               type="text"
@@ -72,11 +111,11 @@
               icon="el-icon-delete"
               @click="handleDeleteRule(row)"
             >
-                    删除
-                  </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+              删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-card>
 
     <!-- 规则编辑对话框 -->
@@ -104,12 +143,18 @@
       >
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="规则名称" required>
+            <el-form-item
+              label="规则名称"
+              required
+            >
               <el-input v-model="currentRule.name" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="优先级" required>
+            <el-form-item
+              label="优先级"
+              required
+            >
               <el-input-number
                 v-model="currentRule.priority"
                 :min="1"
@@ -145,44 +190,118 @@
           </el-button>
         </el-divider>
 
-        <el-table :data="currentRule.conditions" border>
-          <el-table-column type="index" label="#" width="50" />
-          <el-table-column label="字段" width="150">
+        <el-table
+          :data="currentRule.conditions"
+          border
+        >
+          <el-table-column
+            type="index"
+            label="#"
+            width="50"
+          />
+          <el-table-column
+            label="字段"
+            width="150"
+          >
             <template #default="{ row }">
-              <el-input v-model="row.field" size="small" />
+              <el-input
+                v-model="row.field"
+                size="small"
+              />
             </template>
           </el-table-column>
-          <el-table-column label="操作符" width="150">
+          <el-table-column
+            label="操作符"
+            width="150"
+          >
             <template #default="{ row }">
-              <el-select v-model="row.operator" size="small">
-                <el-option label="等于" value="equals" />
-                <el-option label="不等于" value="notEquals" />
-                <el-option label="大于" value="greaterThan" />
-                <el-option label="小于" value="lessThan" />
-                <el-option label="包含" value="contains" />
-                <el-option label="开始于" value="startsWith" />
-                <el-option label="结束于" value="endsWith" />
-                <el-option label="在列表中" value="in" />
-                <el-option label="不在列表中" value="notIn" />
-                <el-option label="为空" value="isEmpty" />
-                <el-option label="不为空" value="isNotEmpty" />
+              <el-select
+                v-model="row.operator"
+                size="small"
+              >
+                <el-option
+                  label="等于"
+                  value="equals"
+                />
+                <el-option
+                  label="不等于"
+                  value="notEquals"
+                />
+                <el-option
+                  label="大于"
+                  value="greaterThan"
+                />
+                <el-option
+                  label="小于"
+                  value="lessThan"
+                />
+                <el-option
+                  label="包含"
+                  value="contains"
+                />
+                <el-option
+                  label="开始于"
+                  value="startsWith"
+                />
+                <el-option
+                  label="结束于"
+                  value="endsWith"
+                />
+                <el-option
+                  label="在列表中"
+                  value="in"
+                />
+                <el-option
+                  label="不在列表中"
+                  value="notIn"
+                />
+                <el-option
+                  label="为空"
+                  value="isEmpty"
+                />
+                <el-option
+                  label="不为空"
+                  value="isNotEmpty"
+                />
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="值" min-width="150">
+          <el-table-column
+            label="值"
+            min-width="150"
+          >
             <template #default="{ row }">
-              <el-input v-model="row.value" size="small" />
+              <el-input
+                v-model="row.value"
+                size="small"
+              />
             </template>
           </el-table-column>
-          <el-table-column label="逻辑" width="100">
+          <el-table-column
+            label="逻辑"
+            width="100"
+          >
             <template #default="{ row }">
-              <el-select v-model="row.logicalOperator" size="small">
-                <el-option label="AND" value="and" />
-                <el-option label="OR" value="or" />
+              <el-select
+                v-model="row.logicalOperator"
+                size="small"
+              >
+                <el-option
+                  label="AND"
+                  value="and"
+                />
+                <el-option
+                  label="OR"
+                  value="or"
+                />
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="80" align="center">
+          <el-table-column
+            label="操作"
+            width="80"
+            align="center"
+          >
             <template #default="{ $index }">
               <el-button
                 type="text"
@@ -207,28 +326,74 @@
           </el-button>
         </el-divider>
 
-        <el-table :data="currentRule.actions" border>
-          <el-table-column type="index" label="#" width="50" />
-          <el-table-column label="动作类型" width="150">
+        <el-table
+          :data="currentRule.actions"
+          border
+        >
+          <el-table-column
+            type="index"
+            label="#"
+            width="50"
+          />
+          <el-table-column
+            label="动作类型"
+            width="150"
+          >
             <template #default="{ row }">
-              <el-select v-model="row.type" size="small">
-                <el-option label="设置值" value="setValue" />
-                <el-option label="显示字段" value="showField" />
-                <el-option label="隐藏字段" value="hideField" />
-                <el-option label="启用字段" value="enableField" />
-                <el-option label="禁用字段" value="disableField" />
-                <el-option label="显示消息" value="showMessage" />
-                <el-option label="调用API" value="callApi" />
-                <el-option label="执行脚本" value="runScript" />
+              <el-select
+                v-model="row.type"
+                size="small"
+              >
+                <el-option
+                  label="设置值"
+                  value="setValue"
+                />
+                <el-option
+                  label="显示字段"
+                  value="showField"
+                />
+                <el-option
+                  label="隐藏字段"
+                  value="hideField"
+                />
+                <el-option
+                  label="启用字段"
+                  value="enableField"
+                />
+                <el-option
+                  label="禁用字段"
+                  value="disableField"
+                />
+                <el-option
+                  label="显示消息"
+                  value="showMessage"
+                />
+                <el-option
+                  label="调用API"
+                  value="callApi"
+                />
+                <el-option
+                  label="执行脚本"
+                  value="runScript"
+                />
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="目标" width="150">
+          <el-table-column
+            label="目标"
+            width="150"
+          >
             <template #default="{ row }">
-              <el-input v-model="row.target" size="small" />
+              <el-input
+                v-model="row.target"
+                size="small"
+              />
             </template>
           </el-table-column>
-          <el-table-column label="值/消息/URL/脚本" min-width="200">
+          <el-table-column
+            label="值/消息/URL/脚本"
+            min-width="200"
+          >
             <template #default="{ row }">
               <el-input
                 v-if="row.type === 'setValue'"
@@ -254,7 +419,11 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="80" align="center">
+          <el-table-column
+            label="操作"
+            width="80"
+            align="center"
+          >
             <template #default="{ $index }">
               <el-button
                 type="text"
@@ -268,8 +437,15 @@
       </el-form>
       
       <template #footer>
-        <el-button @click="editDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSaveRule">保存</el-button>
+        <el-button @click="editDialogVisible = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="handleSaveRule"
+        >
+          保存
+        </el-button>
       </template>
     </el-dialog>
   </div>

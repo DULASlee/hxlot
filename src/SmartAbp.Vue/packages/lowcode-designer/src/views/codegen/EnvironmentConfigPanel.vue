@@ -3,16 +3,40 @@
     <!-- 顶部工具栏 -->
     <div class="panel-header">
       <div class="header-left">
-        <el-icon class="title-icon"><Setting /></el-icon>
-        <h2 class="panel-title">多环境配置管理</h2>
-        <el-tag type="success" size="small">Day 11: 生产就绪配置</el-tag>
+        <el-icon class="title-icon">
+          <Setting />
+        </el-icon>
+        <h2 class="panel-title">
+          多环境配置管理
+        </h2>
+        <el-tag
+          type="success"
+          size="small"
+        >
+          Day 11: 生产就绪配置
+        </el-tag>
       </div>
       
       <div class="header-right">
         <el-button-group>
-          <el-button :icon="Refresh" @click="handleRefresh">刷新</el-button>
-          <el-button :icon="Connection" @click="handleCompare">环境对比</el-button>
-          <el-button type="primary" :icon="Check" @click="handleSave" :loading="saving">
+          <el-button
+            :icon="Refresh"
+            @click="handleRefresh"
+          >
+            刷新
+          </el-button>
+          <el-button
+            :icon="Connection"
+            @click="handleCompare"
+          >
+            环境对比
+          </el-button>
+          <el-button
+            type="primary"
+            :icon="Check"
+            :loading="saving"
+            @click="handleSave"
+          >
             保存配置
           </el-button>
         </el-button-group>
@@ -20,7 +44,11 @@
     </div>
 
     <!-- 环境标签页 -->
-    <el-tabs v-model="activeEnv" type="border-card" class="env-tabs">
+    <el-tabs
+      v-model="activeEnv"
+      type="border-card"
+      class="env-tabs"
+    >
       <el-tab-pane
         v-for="env in environments"
         :key="env"
@@ -41,7 +69,10 @@
             </el-divider>
             
             <el-form-item label="环境名称">
-              <el-input :value="env" disabled />
+              <el-input
+                :value="env"
+                disabled
+              />
             </el-form-item>
             
             <el-form-item label="默认副本数">
@@ -62,12 +93,18 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="CPU请求">
-                  <el-input v-model="configs[env].resources.cpuRequest" placeholder="100m" />
+                  <el-input
+                    v-model="configs[env].resources.cpuRequest"
+                    placeholder="100m"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="CPU限制">
-                  <el-input v-model="configs[env].resources.cpuLimit" placeholder="500m" />
+                  <el-input
+                    v-model="configs[env].resources.cpuLimit"
+                    placeholder="500m"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -75,12 +112,18 @@
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="内存请求">
-                  <el-input v-model="configs[env].resources.memoryRequest" placeholder="128Mi" />
+                  <el-input
+                    v-model="configs[env].resources.memoryRequest"
+                    placeholder="128Mi"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="内存限制">
-                  <el-input v-model="configs[env].resources.memoryLimit" placeholder="512Mi" />
+                  <el-input
+                    v-model="configs[env].resources.memoryLimit"
+                    placeholder="512Mi"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -120,19 +163,34 @@
             
             <el-form-item label="策略类型">
               <el-select v-model="configs[env].deploymentStrategy.type">
-                <el-option label="滚动更新" value="RollingUpdate" />
-                <el-option label="蓝绿部署" value="BlueGreen" />
-                <el-option label="金丝雀发布" value="Canary" />
+                <el-option
+                  label="滚动更新"
+                  value="RollingUpdate"
+                />
+                <el-option
+                  label="蓝绿部署"
+                  value="BlueGreen"
+                />
+                <el-option
+                  label="金丝雀发布"
+                  value="Canary"
+                />
               </el-select>
             </el-form-item>
             
             <el-form-item label="最大增量">
-              <el-input v-model="configs[env].deploymentStrategy.maxSurge" placeholder="25%" />
+              <el-input
+                v-model="configs[env].deploymentStrategy.maxSurge"
+                placeholder="25%"
+              />
               <span class="form-tip">可以是数字或百分比</span>
             </el-form-item>
             
             <el-form-item label="最大不可用">
-              <el-input v-model="configs[env].deploymentStrategy.maxUnavailable" placeholder="0" />
+              <el-input
+                v-model="configs[env].deploymentStrategy.maxUnavailable"
+                placeholder="0"
+              />
             </el-form-item>
 
             <!-- 自动扩缩容 -->
@@ -188,7 +246,12 @@
             </el-divider>
             
             <el-form-item>
-              <el-button :icon="Plus" @click="addEnvVar(env)">添加环境变量</el-button>
+              <el-button
+                :icon="Plus"
+                @click="addEnvVar(env)"
+              >
+                添加环境变量
+              </el-button>
             </el-form-item>
             
             <el-form-item
@@ -198,7 +261,10 @@
             >
               <el-input v-model="configs[env].environmentVariables[key]">
                 <template #append>
-                  <el-button :icon="Delete" @click="deleteEnvVar(env, key)" />
+                  <el-button
+                    :icon="Delete"
+                    @click="deleteEnvVar(env, key)"
+                  />
                 </template>
               </el-input>
             </el-form-item>

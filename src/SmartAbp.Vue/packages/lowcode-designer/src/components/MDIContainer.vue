@@ -1,44 +1,76 @@
 <template>
-    <div class="mdi-container">
-        <!-- 🔥 临时占位组件：MDI容器 -->
-        <div class="mdi-workspace">
-            <div v-for="window in windows" :key="window.id" class="mdi-window"
-                :class="{ active: window.id === activeWindowId }" :style="getWindowStyle(window)"
-                @mousedown="handleWindowActivate(window.id)">
-                <!-- 窗口标题栏 -->
-                <div class="window-header" @mousedown.stop="startDrag(window.id, $event)">
-                    <div class="window-title">
-                        <i :class="window.icon || 'el-icon-document'" />
-                        <span>{{ window.title }}</span>
-                    </div>
-                    <div class="window-controls">
-                        <el-button size="small" text icon="el-icon-minus" @click.stop="handleMinimize(window.id)" />
-                        <el-button size="small" text
-                            :icon="window.maximized ? 'el-icon-copy-document' : 'el-icon-full-screen'"
-                            @click.stop="handleMaximize(window.id)" />
-                        <el-button size="small" text icon="el-icon-close" @click.stop="handleClose(window.id)" />
-                    </div>
-                </div>
-
-                <!-- 窗口内容 -->
-                <div class="window-content">
-                    <el-result icon="info" title="MDI窗口模式" sub-title="此功能将在Phase 2实现">
-                        <template #extra>
-                            <el-tag>{{ window.component }}</el-tag>
-                        </template>
-                    </el-result>
-                </div>
-
-                <!-- 调整大小手柄 -->
-                <div v-if="window.resizable" class="resize-handle" @mousedown.stop="startResize(window.id, $event)" />
-            </div>
+  <div class="mdi-container">
+    <!-- 🔥 临时占位组件：MDI容器 -->
+    <div class="mdi-workspace">
+      <div
+        v-for="window in windows"
+        :key="window.id"
+        class="mdi-window"
+        :class="{ active: window.id === activeWindowId }"
+        :style="getWindowStyle(window)"
+        @mousedown="handleWindowActivate(window.id)"
+      >
+        <!-- 窗口标题栏 -->
+        <div
+          class="window-header"
+          @mousedown.stop="startDrag(window.id, $event)"
+        >
+          <div class="window-title">
+            <i :class="window.icon || 'el-icon-document'" />
+            <span>{{ window.title }}</span>
+          </div>
+          <div class="window-controls">
+            <el-button
+              size="small"
+              text
+              icon="el-icon-minus"
+              @click.stop="handleMinimize(window.id)"
+            />
+            <el-button
+              size="small"
+              text
+              :icon="window.maximized ? 'el-icon-copy-document' : 'el-icon-full-screen'"
+              @click.stop="handleMaximize(window.id)"
+            />
+            <el-button
+              size="small"
+              text
+              icon="el-icon-close"
+              @click.stop="handleClose(window.id)"
+            />
+          </div>
         </div>
 
-        <!-- 空状态提示 -->
-        <div v-if="windows.length === 0" class="mdi-empty">
-            <el-empty description="暂无窗口，点击'添加窗口'创建" />
+        <!-- 窗口内容 -->
+        <div class="window-content">
+          <el-result
+            icon="info"
+            title="MDI窗口模式"
+            sub-title="此功能将在Phase 2实现"
+          >
+            <template #extra>
+              <el-tag>{{ window.component }}</el-tag>
+            </template>
+          </el-result>
         </div>
+
+        <!-- 调整大小手柄 -->
+        <div
+          v-if="window.resizable"
+          class="resize-handle"
+          @mousedown.stop="startResize(window.id, $event)"
+        />
+      </div>
     </div>
+
+    <!-- 空状态提示 -->
+    <div
+      v-if="windows.length === 0"
+      class="mdi-empty"
+    >
+      <el-empty description="暂无窗口，点击'添加窗口'创建" />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

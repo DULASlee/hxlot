@@ -1,7 +1,10 @@
 <template>
   <div class="cost-dashboard">
     <!-- 顶部统计卡片 -->
-    <el-row :gutter="20" class="stats-row">
+    <el-row
+      :gutter="20"
+      class="stats-row"
+    >
       <el-col :span="6">
         <el-card class="stat-card">
           <div class="stat-content">
@@ -9,9 +12,16 @@
               <el-icon><Cpu /></el-icon>
             </div>
             <div class="stat-info">
-              <div class="stat-label">月度成本</div>
-              <div class="stat-value">${{ formatCurrency(monthlyCost) }}</div>
-              <div class="stat-trend" :class="costTrend">
+              <div class="stat-label">
+                月度成本
+              </div>
+              <div class="stat-value">
+                ${{ formatCurrency(monthlyCost) }}
+              </div>
+              <div
+                class="stat-trend"
+                :class="costTrend"
+              >
                 {{ costTrendText }}
               </div>
             </div>
@@ -25,9 +35,15 @@
               <el-icon><TrendCharts /></el-icon>
             </div>
             <div class="stat-info">
-              <div class="stat-label">潜在节省</div>
-              <div class="stat-value">${{ formatCurrency(potentialSavings) }}</div>
-              <div class="stat-subtitle">{{ savingsPercentage }}%</div>
+              <div class="stat-label">
+                潜在节省
+              </div>
+              <div class="stat-value">
+                ${{ formatCurrency(potentialSavings) }}
+              </div>
+              <div class="stat-subtitle">
+                {{ savingsPercentage }}%
+              </div>
             </div>
           </div>
         </el-card>
@@ -39,9 +55,15 @@
               <el-icon><Calendar /></el-icon>
             </div>
             <div class="stat-info">
-              <div class="stat-label">年度预测</div>
-              <div class="stat-value">${{ formatCurrency(annualForecast) }}</div>
-              <div class="stat-subtitle">基于当前趋势</div>
+              <div class="stat-label">
+                年度预测
+              </div>
+              <div class="stat-value">
+                ${{ formatCurrency(annualForecast) }}
+              </div>
+              <div class="stat-subtitle">
+                基于当前趋势
+              </div>
             </div>
           </div>
         </el-card>
@@ -53,9 +75,15 @@
               <el-icon><Setting /></el-icon>
             </div>
             <div class="stat-info">
-              <div class="stat-label">优化建议</div>
-              <div class="stat-value">{{ recommendationCount }}</div>
-              <div class="stat-subtitle">待实施</div>
+              <div class="stat-label">
+                优化建议
+              </div>
+              <div class="stat-value">
+                {{ recommendationCount }}
+              </div>
+              <div class="stat-subtitle">
+                待实施
+              </div>
             </div>
           </div>
         </el-card>
@@ -77,7 +105,10 @@
           />
         </div>
       </template>
-      <div ref="trendChartRef" class="chart-container"></div>
+      <div
+        ref="trendChartRef"
+        class="chart-container"
+      />
     </el-card>
 
     <!-- 成本分解饼图 -->
@@ -87,7 +118,10 @@
           <template #header>
             <span>🥧 成本构成分析</span>
           </template>
-          <div ref="breakdownChartRef" class="chart-container-small"></div>
+          <div
+            ref="breakdownChartRef"
+            class="chart-container-small"
+          />
         </el-card>
       </el-col>
       <el-col :span="12">
@@ -95,7 +129,10 @@
           <template #header>
             <span>☁️ 多云成本对比</span>
           </template>
-          <div ref="comparisonChartRef" class="chart-container-small"></div>
+          <div
+            ref="comparisonChartRef"
+            class="chart-container-small"
+          />
         </el-card>
       </el-col>
     </el-row>
@@ -105,7 +142,11 @@
       <template #header>
         <div class="card-header">
           <span>💡 成本优化建议</span>
-          <el-button type="primary" size="small" @click="generateRecommendations">
+          <el-button
+            type="primary"
+            size="small"
+            @click="generateRecommendations"
+          >
             重新分析
           </el-button>
         </div>
@@ -127,42 +168,71 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="优先级" width="100">
+        <el-table-column
+          label="优先级"
+          width="100"
+        >
           <template #default="{ row }">
             <el-tag :type="getPriorityType(row.priority)">
               {{ row.priority }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="category" label="分类" width="120" />
-        <el-table-column prop="title" label="优化项" />
-        <el-table-column label="月节省" width="120">
+        <el-table-column
+          prop="category"
+          label="分类"
+          width="120"
+        />
+        <el-table-column
+          prop="title"
+          label="优化项"
+        />
+        <el-table-column
+          label="月节省"
+          width="120"
+        >
           <template #default="{ row }">
             <span class="savings-amount">
               ${{ formatCurrency(row.potentialMonthlySavings) }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="年节省" width="120">
+        <el-table-column
+          label="年节省"
+          width="120"
+        >
           <template #default="{ row }">
             <span class="savings-amount">
               ${{ formatCurrency(row.potentialMonthlySavings * 12) }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150">
+        <el-table-column
+          label="操作"
+          width="150"
+        >
           <template #default="{ row }">
-            <el-button size="small" type="primary" @click="applyRecommendation(row)">
+            <el-button
+              size="small"
+              type="primary"
+              @click="applyRecommendation(row)"
+            >
               应用
             </el-button>
-            <el-button size="small" @click="viewDetails(row)">
+            <el-button
+              size="small"
+              @click="viewDetails(row)"
+            >
               详情
             </el-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <el-empty v-else description="暂无优化建议" />
+      <el-empty
+        v-else
+        description="暂无优化建议"
+      />
     </el-card>
 
     <!-- 服务成本明细 -->
@@ -170,11 +240,18 @@
       <template #header>
         <span>📋 服务成本明细</span>
       </template>
-      <el-table :data="serviceCosts" stripe show-summary>
+      <el-table
+        :data="serviceCosts"
+        stripe
+        show-summary
+      >
         <el-table-column type="expand">
           <template #default="{ row }">
             <div class="cost-breakdown">
-              <el-descriptions :column="2" border>
+              <el-descriptions
+                :column="2"
+                border
+              >
                 <el-descriptions-item
                   v-for="item in row.costBreakdown"
                   :key="item.category"
@@ -182,25 +259,39 @@
                 >
                   <div>
                     <div>{{ item.description }}</div>
-                    <div class="breakdown-cost">${{ formatCurrency(item.monthlyCost) }}/月</div>
+                    <div class="breakdown-cost">
+                      ${{ formatCurrency(item.monthlyCost) }}/月
+                    </div>
                   </div>
                 </el-descriptions-item>
               </el-descriptions>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="serviceName" label="服务名称" />
-        <el-table-column label="月成本" width="150">
+        <el-table-column
+          prop="serviceName"
+          label="服务名称"
+        />
+        <el-table-column
+          label="月成本"
+          width="150"
+        >
           <template #default="{ row }">
             ${{ formatCurrency(row.monthlyCost) }}
           </template>
         </el-table-column>
-        <el-table-column label="年成本" width="150">
+        <el-table-column
+          label="年成本"
+          width="150"
+        >
           <template #default="{ row }">
             ${{ formatCurrency(row.annualCost) }}
           </template>
         </el-table-column>
-        <el-table-column label="成本占比" width="120">
+        <el-table-column
+          label="成本占比"
+          width="120"
+        >
           <template #default="{ row }">
             {{ ((row.monthlyCost / totalMonthlyCost) * 100).toFixed(1) }}%
           </template>

@@ -7,7 +7,9 @@
             <el-icon><FolderOpened /></el-icon>
             Git工作流配置
           </h2>
-          <el-tag type="info">自动化Git管理</el-tag>
+          <el-tag type="info">
+            自动化Git管理
+          </el-tag>
         </div>
       </template>
 
@@ -21,9 +23,15 @@
     </el-card>
 
     <!-- 功能Tab页 -->
-    <el-tabs v-model="activeTab" class="workflow-tabs">
+    <el-tabs
+      v-model="activeTab"
+      class="workflow-tabs"
+    >
       <!-- Tab 1: 仓库初始化 -->
-      <el-tab-pane label="仓库初始化" name="init">
+      <el-tab-pane
+        label="仓库初始化"
+        name="init"
+      >
         <el-card>
           <el-form
             ref="initFormRef"
@@ -31,7 +39,10 @@
             :rules="initRules"
             label-width="140px"
           >
-            <el-form-item label="项目名称" prop="projectName">
+            <el-form-item
+              label="项目名称"
+              prop="projectName"
+            >
               <el-input
                 v-model="initConfig.projectName"
                 placeholder="请输入项目名称"
@@ -39,19 +50,27 @@
               />
             </el-form-item>
 
-            <el-form-item label="项目路径" prop="projectPath">
+            <el-form-item
+              label="项目路径"
+              prop="projectPath"
+            >
               <el-input
                 v-model="initConfig.projectPath"
                 placeholder="/path/to/project"
                 clearable
               >
                 <template #append>
-                  <el-button @click="selectPath">浏览</el-button>
+                  <el-button @click="selectPath">
+                    浏览
+                  </el-button>
                 </template>
               </el-input>
             </el-form-item>
 
-            <el-form-item label="默认分支" prop="defaultBranch">
+            <el-form-item
+              label="默认分支"
+              prop="defaultBranch"
+            >
               <el-input
                 v-model="initConfig.defaultBranch"
                 placeholder="main"
@@ -59,11 +78,26 @@
               />
             </el-form-item>
 
-            <el-form-item label=".gitignore模板" prop="gitignoreTemplate">
-              <el-select v-model="initConfig.gitignoreTemplate" placeholder="选择模板">
-                <el-option label=".NET项目" value="dotnet" />
-                <el-option label="Vue项目" value="vue" />
-                <el-option label=".NET + Vue（推荐）" value="dotnet-vue" />
+            <el-form-item
+              label=".gitignore模板"
+              prop="gitignoreTemplate"
+            >
+              <el-select
+                v-model="initConfig.gitignoreTemplate"
+                placeholder="选择模板"
+              >
+                <el-option
+                  label=".NET项目"
+                  value="dotnet"
+                />
+                <el-option
+                  label="Vue项目"
+                  value="vue"
+                />
+                <el-option
+                  label=".NET + Vue（推荐）"
+                  value="dotnet-vue"
+                />
               </el-select>
             </el-form-item>
 
@@ -112,13 +146,23 @@
               <div v-if="initResult.createdFiles.length > 0">
                 <strong>已创建文件：</strong>
                 <ul>
-                  <li v-for="file in initResult.createdFiles" :key="file">{{ file }}</li>
+                  <li
+                    v-for="file in initResult.createdFiles"
+                    :key="file"
+                  >
+                    {{ file }}
+                  </li>
                 </ul>
               </div>
               <div v-if="initResult.warnings.length > 0">
                 <strong>警告：</strong>
                 <ul>
-                  <li v-for="warning in initResult.warnings" :key="warning">{{ warning }}</li>
+                  <li
+                    v-for="warning in initResult.warnings"
+                    :key="warning"
+                  >
+                    {{ warning }}
+                  </li>
                 </ul>
               </div>
             </div>
@@ -127,7 +171,10 @@
       </el-tab-pane>
 
       <!-- Tab 2: 分支管理 -->
-      <el-tab-pane label="分支管理" name="branch">
+      <el-tab-pane
+        label="分支管理"
+        name="branch"
+      >
         <el-card>
           <el-form
             ref="branchFormRef"
@@ -135,16 +182,37 @@
             :rules="branchRules"
             label-width="140px"
           >
-            <el-form-item label="分支类型" prop="branchType">
-              <el-select v-model="branchConfig.branchType" placeholder="选择分支类型">
-                <el-option label="Feature（功能）" value="feature" />
-                <el-option label="Bugfix（修复）" value="bugfix" />
-                <el-option label="Hotfix（热修复）" value="hotfix" />
-                <el-option label="Release（发布）" value="release" />
+            <el-form-item
+              label="分支类型"
+              prop="branchType"
+            >
+              <el-select
+                v-model="branchConfig.branchType"
+                placeholder="选择分支类型"
+              >
+                <el-option
+                  label="Feature（功能）"
+                  value="feature"
+                />
+                <el-option
+                  label="Bugfix（修复）"
+                  value="bugfix"
+                />
+                <el-option
+                  label="Hotfix（热修复）"
+                  value="hotfix"
+                />
+                <el-option
+                  label="Release（发布）"
+                  value="release"
+                />
               </el-select>
             </el-form-item>
 
-            <el-form-item label="分支名称" prop="branchName">
+            <el-form-item
+              label="分支名称"
+              prop="branchName"
+            >
               <el-input
                 v-model="branchConfig.branchName"
                 placeholder="user-authentication"
@@ -157,7 +225,10 @@
               </template>
             </el-form-item>
 
-            <el-form-item label="基于分支" prop="baseBranch">
+            <el-form-item
+              label="基于分支"
+              prop="baseBranch"
+            >
               <el-input
                 v-model="branchConfig.baseBranch"
                 placeholder="main"
@@ -165,7 +236,10 @@
               />
             </el-form-item>
 
-            <el-form-item label="分支描述" prop="description">
+            <el-form-item
+              label="分支描述"
+              prop="description"
+            >
               <el-input
                 v-model="branchConfig.description"
                 type="textarea"
@@ -193,7 +267,10 @@
       </el-tab-pane>
 
       <!-- Tab 3: 提交管理 -->
-      <el-tab-pane label="提交管理" name="commit">
+      <el-tab-pane
+        label="提交管理"
+        name="commit"
+      >
         <el-card>
           <el-form
             ref="commitFormRef"
@@ -201,19 +278,49 @@
             :rules="commitRules"
             label-width="140px"
           >
-            <el-form-item label="提交类型" prop="commitType">
-              <el-select v-model="commitConfig.commitType" placeholder="选择提交类型">
-                <el-option label="feat: 新功能" value="feat" />
-                <el-option label="fix: Bug修复" value="fix" />
-                <el-option label="docs: 文档更新" value="docs" />
-                <el-option label="style: 代码格式" value="style" />
-                <el-option label="refactor: 代码重构" value="refactor" />
-                <el-option label="test: 测试相关" value="test" />
-                <el-option label="chore: 构建/工具" value="chore" />
+            <el-form-item
+              label="提交类型"
+              prop="commitType"
+            >
+              <el-select
+                v-model="commitConfig.commitType"
+                placeholder="选择提交类型"
+              >
+                <el-option
+                  label="feat: 新功能"
+                  value="feat"
+                />
+                <el-option
+                  label="fix: Bug修复"
+                  value="fix"
+                />
+                <el-option
+                  label="docs: 文档更新"
+                  value="docs"
+                />
+                <el-option
+                  label="style: 代码格式"
+                  value="style"
+                />
+                <el-option
+                  label="refactor: 代码重构"
+                  value="refactor"
+                />
+                <el-option
+                  label="test: 测试相关"
+                  value="test"
+                />
+                <el-option
+                  label="chore: 构建/工具"
+                  value="chore"
+                />
               </el-select>
             </el-form-item>
 
-            <el-form-item label="作用域" prop="scope">
+            <el-form-item
+              label="作用域"
+              prop="scope"
+            >
               <el-input
                 v-model="commitConfig.scope"
                 placeholder="auth, ui, api（可选）"
@@ -221,7 +328,10 @@
               />
             </el-form-item>
 
-            <el-form-item label="简短描述" prop="description">
+            <el-form-item
+              label="简短描述"
+              prop="description"
+            >
               <el-input
                 v-model="commitConfig.description"
                 placeholder="简洁地描述此次提交..."
@@ -229,7 +339,10 @@
               />
             </el-form-item>
 
-            <el-form-item label="详细说明" prop="body">
+            <el-form-item
+              label="详细说明"
+              prop="body"
+            >
               <el-input
                 v-model="commitConfig.body"
                 type="textarea"
@@ -256,12 +369,20 @@
           </el-form>
 
           <!-- 生成的提交信息预览 -->
-          <el-card v-if="generatedCommitMessage" class="commit-preview" shadow="never">
+          <el-card
+            v-if="generatedCommitMessage"
+            class="commit-preview"
+            shadow="never"
+          >
             <template #header>
               <span>生成的提交信息（Conventional Commits格式）</span>
             </template>
             <pre class="commit-message">{{ generatedCommitMessage }}</pre>
-            <el-button type="success" size="small" @click="copyCommitMessage">
+            <el-button
+              type="success"
+              size="small"
+              @click="copyCommitMessage"
+            >
               <el-icon><CopyDocument /></el-icon>
               复制
             </el-button>
@@ -278,16 +399,28 @@
       :destroy-on-close="true"
     >
       <el-tabs v-model="previewTab">
-        <el-tab-pane label=".gitignore" name="gitignore">
+        <el-tab-pane
+          label=".gitignore"
+          name="gitignore"
+        >
           <pre class="config-preview">{{ generatedConfigs?.gitignoreContent }}</pre>
         </el-tab-pane>
-        <el-tab-pane label="Pre-commit钩子" name="precommit">
+        <el-tab-pane
+          label="Pre-commit钩子"
+          name="precommit"
+        >
           <pre class="config-preview">{{ generatedConfigs?.preCommitHookContent }}</pre>
         </el-tab-pane>
-        <el-tab-pane label="PR模板" name="pr">
+        <el-tab-pane
+          label="PR模板"
+          name="pr"
+        >
           <pre class="config-preview">{{ generatedConfigs?.pullRequestTemplate }}</pre>
         </el-tab-pane>
-        <el-tab-pane label="README" name="readme">
+        <el-tab-pane
+          label="README"
+          name="readme"
+        >
           <pre class="config-preview">{{ generatedConfigs?.readmeTemplate }}</pre>
         </el-tab-pane>
       </el-tabs>

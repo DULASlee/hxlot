@@ -1,8 +1,14 @@
 <template>
   <div class="smart-form-builder">
     <!-- form-create核心渲染器 -->
-    <form-create v-model:api="formApi" v-model="formData" :rule="formRules" :option="formOptions" @submit="handleSubmit"
-      @reset="handleReset" />
+    <form-create
+      v-model:api="formApi"
+      v-model="formData"
+      :rule="formRules"
+      :option="formOptions"
+      @submit="handleSubmit"
+      @reset="handleReset"
+    />
   </div>
 </template>
 

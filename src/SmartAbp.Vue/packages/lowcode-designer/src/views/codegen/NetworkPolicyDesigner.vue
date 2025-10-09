@@ -9,11 +9,18 @@
       class="mb-4"
     />
 
-    <el-form :model="localPolicy" label-width="120px">
+    <el-form
+      :model="localPolicy"
+      label-width="120px"
+    >
       <el-form-item label="策略类型">
         <el-radio-group v-model="localPolicy.policyType">
-          <el-radio label="Allow">允许</el-radio>
-          <el-radio label="Deny">拒绝</el-radio>
+          <el-radio label="Allow">
+            允许
+          </el-radio>
+          <el-radio label="Deny">
+            拒绝
+          </el-radio>
         </el-radio-group>
       </el-form-item>
 
@@ -24,7 +31,12 @@
 
       <el-divider>Ingress规则</el-divider>
 
-      <el-button :icon="Plus" @click="addIngressRule" size="small" class="mb-2">
+      <el-button
+        :icon="Plus"
+        size="small"
+        class="mb-2"
+        @click="addIngressRule"
+      >
         添加Ingress规则
       </el-button>
 
@@ -36,16 +48,29 @@
         <template #header>
           <div class="card-header">
             <span>Ingress规则 {{ index + 1 }}</span>
-            <el-button :icon="Delete" text @click="removeIngressRule(index)" />
+            <el-button
+              :icon="Delete"
+              text
+              @click="removeIngressRule(index)"
+            />
           </div>
         </template>
 
         <el-form-item label="规则名称">
-          <el-input v-model="rule.name" placeholder="例如: allow-http" />
+          <el-input
+            v-model="rule.name"
+            placeholder="例如: allow-http"
+          />
         </el-form-item>
 
         <el-form-item label="端口">
-          <el-select v-model="rule.ports" multiple filterable allow-create placeholder="输入端口号">
+          <el-select
+            v-model="rule.ports"
+            multiple
+            filterable
+            allow-create
+            placeholder="输入端口号"
+          >
             <el-option
               v-for="port in rule.ports"
               :key="port"
@@ -57,14 +82,29 @@
 
         <el-form-item label="协议">
           <el-select v-model="rule.protocol">
-            <el-option label="TCP" value="TCP" />
-            <el-option label="UDP" value="UDP" />
-            <el-option label="SCTP" value="SCTP" />
+            <el-option
+              label="TCP"
+              value="TCP"
+            />
+            <el-option
+              label="UDP"
+              value="UDP"
+            />
+            <el-option
+              label="SCTP"
+              value="SCTP"
+            />
           </el-select>
         </el-form-item>
 
         <el-form-item label="来源CIDR">
-          <el-select v-model="rule.fromCIDR" multiple filterable allow-create placeholder="例如: 10.0.0.0/16">
+          <el-select
+            v-model="rule.fromCIDR"
+            multiple
+            filterable
+            allow-create
+            placeholder="例如: 10.0.0.0/16"
+          >
             <el-option
               v-for="cidr in rule.fromCIDR"
               :key="cidr"
@@ -77,7 +117,12 @@
 
       <el-divider>Egress规则</el-divider>
 
-      <el-button :icon="Plus" @click="addEgressRule" size="small" class="mb-2">
+      <el-button
+        :icon="Plus"
+        size="small"
+        class="mb-2"
+        @click="addEgressRule"
+      >
         添加Egress规则
       </el-button>
 
@@ -89,16 +134,29 @@
         <template #header>
           <div class="card-header">
             <span>Egress规则 {{ index + 1 }}</span>
-            <el-button :icon="Delete" text @click="removeEgressRule(index)" />
+            <el-button
+              :icon="Delete"
+              text
+              @click="removeEgressRule(index)"
+            />
           </div>
         </template>
 
         <el-form-item label="规则名称">
-          <el-input v-model="rule.name" placeholder="例如: allow-dns" />
+          <el-input
+            v-model="rule.name"
+            placeholder="例如: allow-dns"
+          />
         </el-form-item>
 
         <el-form-item label="端口">
-          <el-select v-model="rule.ports" multiple filterable allow-create placeholder="输入端口号">
+          <el-select
+            v-model="rule.ports"
+            multiple
+            filterable
+            allow-create
+            placeholder="输入端口号"
+          >
             <el-option
               v-for="port in rule.ports"
               :key="port"
@@ -110,14 +168,29 @@
 
         <el-form-item label="协议">
           <el-select v-model="rule.protocol">
-            <el-option label="TCP" value="TCP" />
-            <el-option label="UDP" value="UDP" />
-            <el-option label="SCTP" value="SCTP" />
+            <el-option
+              label="TCP"
+              value="TCP"
+            />
+            <el-option
+              label="UDP"
+              value="UDP"
+            />
+            <el-option
+              label="SCTP"
+              value="SCTP"
+            />
           </el-select>
         </el-form-item>
 
         <el-form-item label="目标CIDR">
-          <el-select v-model="rule.toCIDR" multiple filterable allow-create placeholder="例如: 0.0.0.0/0">
+          <el-select
+            v-model="rule.toCIDR"
+            multiple
+            filterable
+            allow-create
+            placeholder="例如: 0.0.0.0/0"
+          >
             <el-option
               v-for="cidr in rule.toCIDR"
               :key="cidr"

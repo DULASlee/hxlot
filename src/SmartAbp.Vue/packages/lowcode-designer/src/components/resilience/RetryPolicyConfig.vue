@@ -12,9 +12,15 @@
 
     <el-form-item label="退避策略">
       <el-radio-group v-model="localConfig.backoffStrategy">
-        <el-radio label="Exponential">指数退避</el-radio>
-        <el-radio label="Linear">线性退避</el-radio>
-        <el-radio label="Fixed">固定延迟</el-radio>
+        <el-radio label="Exponential">
+          指数退避
+        </el-radio>
+        <el-radio label="Linear">
+          线性退避
+        </el-radio>
+        <el-radio label="Fixed">
+          固定延迟
+        </el-radio>
       </el-radio-group>
     </el-form-item>
 
@@ -39,7 +45,10 @@
     </el-form-item>
 
     <!-- 退避策略可视化 -->
-    <el-card class="backoff-visualization" shadow="never">
+    <el-card
+      class="backoff-visualization"
+      shadow="never"
+    >
       <template #header>
         <span>退避策略示意（{{ localConfig.backoffStrategy }}）</span>
       </template>

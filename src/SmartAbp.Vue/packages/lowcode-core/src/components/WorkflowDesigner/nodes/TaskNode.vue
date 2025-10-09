@@ -1,16 +1,33 @@
 <template>
-  <div class="bpmn-node task-node" :class="{ selected: isSelected }">
-    <Handle type="target" :position="Position.Top" />
+  <div
+    class="bpmn-node task-node"
+    :class="{ selected: isSelected }"
+  >
+    <Handle
+      type="target"
+      :position="Position.Top"
+    />
     <div class="node-icon">
-      <el-icon :size="20"><Document /></el-icon>
+      <el-icon :size="20">
+        <Document />
+      </el-icon>
     </div>
-    <div class="node-label">{{ data.label || '任务' }}</div>
-    <div class="node-status" v-if="data.status" :class="`status-${data.status}`">
+    <div class="node-label">
+      {{ data.label || '任务' }}
+    </div>
+    <div
+      v-if="data.status"
+      class="node-status"
+      :class="`status-${data.status}`"
+    >
       <el-icon :size="12">
         <component :is="getStatusIcon(data.status)" />
       </el-icon>
     </div>
-    <Handle type="source" :position="Position.Bottom" />
+    <Handle
+      type="source"
+      :position="Position.Bottom"
+    />
   </div>
 </template>
 

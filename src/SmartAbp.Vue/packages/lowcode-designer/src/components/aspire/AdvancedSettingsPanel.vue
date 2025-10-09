@@ -9,16 +9,39 @@
       class="mb-4"
     />
     
-    <el-form :model="settings" label-width="140px">
-      <el-divider content-position="left">环境配置</el-divider>
+    <el-form
+      :model="settings"
+      label-width="140px"
+    >
+      <el-divider content-position="left">
+        环境配置
+      </el-divider>
       
       <el-form-item label="开发环境日志">
-        <el-select v-model="settings.devLogLevel" style="width: 100%">
-          <el-option label="Trace" value="Trace" />
-          <el-option label="Debug" value="Debug" />
-          <el-option label="Information" value="Information" />
-          <el-option label="Warning" value="Warning" />
-          <el-option label="Error" value="Error" />
+        <el-select
+          v-model="settings.devLogLevel"
+          style="width: 100%"
+        >
+          <el-option
+            label="Trace"
+            value="Trace"
+          />
+          <el-option
+            label="Debug"
+            value="Debug"
+          />
+          <el-option
+            label="Information"
+            value="Information"
+          />
+          <el-option
+            label="Warning"
+            value="Warning"
+          />
+          <el-option
+            label="Error"
+            value="Error"
+          />
         </el-select>
       </el-form-item>
       
@@ -26,7 +49,9 @@
         <el-switch v-model="settings.enableDetailedErrors" />
       </el-form-item>
       
-      <el-divider content-position="left">安全配置</el-divider>
+      <el-divider content-position="left">
+        安全配置
+      </el-divider>
       
       <el-form-item label="HTTPS重定向">
         <el-switch v-model="settings.useHttpsRedirection" />
@@ -36,7 +61,10 @@
         <el-switch v-model="settings.useCors" />
       </el-form-item>
       
-      <el-form-item label="允许的源" v-if="settings.useCors">
+      <el-form-item
+        v-if="settings.useCors"
+        label="允许的源"
+      >
         <el-input
           v-model="settings.allowedOrigins"
           type="textarea"
@@ -45,7 +73,9 @@
         />
       </el-form-item>
       
-      <el-divider content-position="left">可观测性</el-divider>
+      <el-divider content-position="left">
+        可观测性
+      </el-divider>
       
       <el-form-item label="Prometheus">
         <el-switch v-model="settings.usePrometheus" />
@@ -59,24 +89,48 @@
         <el-switch v-model="settings.useSeq" />
       </el-form-item>
       
-      <el-divider content-position="left">服务网格</el-divider>
+      <el-divider content-position="left">
+        服务网格
+      </el-divider>
       
       <el-form-item label="启用服务网格">
         <el-switch v-model="settings.useServiceMesh" />
       </el-form-item>
       
-      <el-form-item label="网格类型" v-if="settings.useServiceMesh">
-        <el-select v-model="settings.serviceMeshType" style="width: 100%">
-          <el-option label="Istio" value="Istio" />
-          <el-option label="Linkerd" value="Linkerd" />
-          <el-option label="Consul Connect" value="ConsulConnect" />
+      <el-form-item
+        v-if="settings.useServiceMesh"
+        label="网格类型"
+      >
+        <el-select
+          v-model="settings.serviceMeshType"
+          style="width: 100%"
+        >
+          <el-option
+            label="Istio"
+            value="Istio"
+          />
+          <el-option
+            label="Linkerd"
+            value="Linkerd"
+          />
+          <el-option
+            label="Consul Connect"
+            value="ConsulConnect"
+          />
         </el-select>
       </el-form-item>
     </el-form>
     
     <div class="panel-actions">
-      <el-button @click="handleReset">重置为默认</el-button>
-      <el-button type="primary" @click="handleApply">应用设置</el-button>
+      <el-button @click="handleReset">
+        重置为默认
+      </el-button>
+      <el-button
+        type="primary"
+        @click="handleApply"
+      >
+        应用设置
+      </el-button>
     </div>
   </div>
 </template>

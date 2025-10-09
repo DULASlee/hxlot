@@ -1,6 +1,9 @@
 <template>
   <div class="entity-designer-test-view">
-    <el-card class="header-card" shadow="never">
+    <el-card
+      class="header-card"
+      shadow="never"
+    >
       <template #header>
         <div class="card-header">
           <h2>EntityDesigner 组件测试</h2>
@@ -48,7 +51,10 @@
     </el-card>
 
     <!-- EntityDesigner 组件 -->
-    <el-card class="designer-card" shadow="never">
+    <el-card
+      class="designer-card"
+      shadow="never"
+    >
       <ld-entity-designer
         v-model="entityData"
         :readonly="false"
@@ -74,12 +80,21 @@
       </template>
 
       <el-tabs v-model="activeTab">
-        <el-tab-pane label="JSON格式" name="json">
+        <el-tab-pane
+          label="JSON格式"
+          name="json"
+        >
           <pre class="json-preview"><code>{{ formattedEntityData }}</code></pre>
         </el-tab-pane>
 
-        <el-tab-pane label="实体信息" name="info">
-          <el-descriptions :column="2" border>
+        <el-tab-pane
+          label="实体信息"
+          name="info"
+        >
+          <el-descriptions
+            :column="2"
+            border
+          >
             <el-descriptions-item label="实体名称">
               {{ entityData?.name || '-' }}
             </el-descriptions-item>
@@ -116,33 +131,69 @@
           </el-descriptions>
         </el-tab-pane>
 
-        <el-tab-pane label="字段列表" name="fields">
-          <el-table :data="entityData?.fields" border>
-            <el-table-column prop="name" label="字段名" />
-            <el-table-column prop="displayName" label="显示名称" />
-            <el-table-column prop="type" label="类型" />
-            <el-table-column label="必填" align="center">
+        <el-tab-pane
+          label="字段列表"
+          name="fields"
+        >
+          <el-table
+            :data="entityData?.fields"
+            border
+          >
+            <el-table-column
+              prop="name"
+              label="字段名"
+            />
+            <el-table-column
+              prop="displayName"
+              label="显示名称"
+            />
+            <el-table-column
+              prop="type"
+              label="类型"
+            />
+            <el-table-column
+              label="必填"
+              align="center"
+            >
               <template #default="{ row }">
-                <el-tag :type="row.isRequired ? 'danger' : 'info'" size="small">
+                <el-tag
+                  :type="row.isRequired ? 'danger' : 'info'"
+                  size="small"
+                >
                   {{ row.isRequired ? '是' : '否' }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="唯一" align="center">
+            <el-table-column
+              label="唯一"
+              align="center"
+            >
               <template #default="{ row }">
-                <el-tag :type="row.isUnique ? 'warning' : 'info'" size="small">
+                <el-tag
+                  :type="row.isUnique ? 'warning' : 'info'"
+                  size="small"
+                >
                   {{ row.isUnique ? '是' : '否' }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="索引" align="center">
+            <el-table-column
+              label="索引"
+              align="center"
+            >
               <template #default="{ row }">
-                <el-tag :type="row.isIndexed ? 'success' : 'info'" size="small">
+                <el-tag
+                  :type="row.isIndexed ? 'success' : 'info'"
+                  size="small"
+                >
                   {{ row.isIndexed ? '是' : '否' }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="验证规则" align="center">
+            <el-table-column
+              label="验证规则"
+              align="center"
+            >
               <template #default="{ row }">
                 {{ row.validationRules?.length || 0 }}
               </template>
@@ -150,14 +201,35 @@
           </el-table>
         </el-tab-pane>
 
-        <el-tab-pane label="关系列表" name="relations">
-          <el-table :data="entityData?.relations" border>
-            <el-table-column prop="name" label="关系名" />
-            <el-table-column prop="type" label="类型" />
-            <el-table-column prop="targetEntity" label="目标实体" />
-            <el-table-column label="级联删除" align="center">
+        <el-tab-pane
+          label="关系列表"
+          name="relations"
+        >
+          <el-table
+            :data="entityData?.relations"
+            border
+          >
+            <el-table-column
+              prop="name"
+              label="关系名"
+            />
+            <el-table-column
+              prop="type"
+              label="类型"
+            />
+            <el-table-column
+              prop="targetEntity"
+              label="目标实体"
+            />
+            <el-table-column
+              label="级联删除"
+              align="center"
+            >
               <template #default="{ row }">
-                <el-tag :type="row.cascadeDelete ? 'danger' : 'info'" size="small">
+                <el-tag
+                  :type="row.cascadeDelete ? 'danger' : 'info'"
+                  size="small"
+                >
                   {{ row.cascadeDelete ? '是' : '否' }}
                 </el-tag>
               </template>
@@ -167,8 +239,15 @@
       </el-tabs>
 
       <template #footer>
-        <el-button @click="previewDialogVisible = false">关闭</el-button>
-        <el-button type="primary" @click="handleCopyJson">复制JSON</el-button>
+        <el-button @click="previewDialogVisible = false">
+          关闭
+        </el-button>
+        <el-button
+          type="primary"
+          @click="handleCopyJson"
+        >
+          复制JSON
+        </el-button>
       </template>
     </el-dialog>
   </div>

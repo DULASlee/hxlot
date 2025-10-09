@@ -488,25 +488,71 @@
           border
           size="small"
         >
-          <el-table-column type="index" label="#" width="50" />
-          <el-table-column label="规则类型" width="150">
+          <el-table-column
+            type="index"
+            label="#"
+            width="50"
+          />
+          <el-table-column
+            label="规则类型"
+            width="150"
+          >
             <template #default="{ row }">
-              <el-select v-model="row.type" size="small">
-                <el-option label="必填" value="required" />
-                <el-option label="最小长度" value="minLength" />
-                <el-option label="最大长度" value="maxLength" />
-                <el-option label="正则表达式" value="pattern" />
-                <el-option label="邮箱" value="email" />
-                <el-option label="URL" value="url" />
-                <el-option label="数字" value="numeric" />
-                <el-option label="整数" value="integer" />
-                <el-option label="最小值" value="min" />
-                <el-option label="最大值" value="max" />
-                <el-option label="自定义" value="custom" />
+              <el-select
+                v-model="row.type"
+                size="small"
+              >
+                <el-option
+                  label="必填"
+                  value="required"
+                />
+                <el-option
+                  label="最小长度"
+                  value="minLength"
+                />
+                <el-option
+                  label="最大长度"
+                  value="maxLength"
+                />
+                <el-option
+                  label="正则表达式"
+                  value="pattern"
+                />
+                <el-option
+                  label="邮箱"
+                  value="email"
+                />
+                <el-option
+                  label="URL"
+                  value="url"
+                />
+                <el-option
+                  label="数字"
+                  value="numeric"
+                />
+                <el-option
+                  label="整数"
+                  value="integer"
+                />
+                <el-option
+                  label="最小值"
+                  value="min"
+                />
+                <el-option
+                  label="最大值"
+                  value="max"
+                />
+                <el-option
+                  label="自定义"
+                  value="custom"
+                />
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="值" width="120">
+          <el-table-column
+            label="值"
+            width="120"
+          >
             <template #default="{ row }">
               <el-input
                 v-if="['minLength', 'maxLength', 'min', 'max', 'pattern'].includes(row.type)"
@@ -515,12 +561,22 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="错误消息" min-width="200">
+          <el-table-column
+            label="错误消息"
+            min-width="200"
+          >
             <template #default="{ row }">
-              <el-input v-model="row.message" size="small" />
+              <el-input
+                v-model="row.message"
+                size="small"
+              />
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="80" align="center">
+          <el-table-column
+            label="操作"
+            width="80"
+            align="center"
+          >
             <template #default="{ $index }">
               <el-button
                 type="text"

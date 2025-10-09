@@ -25,22 +25,37 @@
         </el-button-group>
       </div>
       <div class="toolbar-right">
-        <el-button size="small" @click="refreshPreview">
+        <el-button
+          size="small"
+          @click="refreshPreview"
+        >
           <i class="el-icon-refresh" /> 刷新
         </el-button>
-        <el-button size="small" @click="copyCode">
+        <el-button
+          size="small"
+          @click="copyCode"
+        >
           <i class="el-icon-document-copy" /> 复制
         </el-button>
-        <el-button size="small" @click="downloadCode">
+        <el-button
+          size="small"
+          @click="downloadCode"
+        >
           <i class="el-icon-download" /> 下载
         </el-button>
       </div>
     </div>
 
     <!-- 🔥 优化：支持多种预览模式 -->
-    <div class="preview-content" :class="'mode-' + viewMode">
+    <div
+      class="preview-content"
+      :class="'mode-' + viewMode"
+    >
       <!-- 预览模式：显示渲染结果 -->
-      <div v-if="viewMode === 'preview' || viewMode === 'split'" class="preview-panel">
+      <div
+        v-if="viewMode === 'preview' || viewMode === 'split'"
+        class="preview-panel"
+      >
         <iframe
           ref="iframeRef"
           :srcdoc="htmlContent"
@@ -50,7 +65,10 @@
       </div>
 
       <!-- 代码模式：显示源代码 -->
-      <div v-if="viewMode === 'code' || viewMode === 'split'" class="code-panel">
+      <div
+        v-if="viewMode === 'code' || viewMode === 'split'"
+        class="code-panel"
+      >
         <div class="code-content">
           <pre><code v-html="highlightedCode" /></pre>
         </div>
@@ -58,8 +76,13 @@
     </div>
 
     <!-- 🔥 新增：加载状态 -->
-    <div v-if="loading" class="loading-overlay">
-      <el-icon class="is-loading"><Loading /></el-icon>
+    <div
+      v-if="loading"
+      class="loading-overlay"
+    >
+      <el-icon class="is-loading">
+        <Loading />
+      </el-icon>
       <span>预览加载中...</span>
     </div>
   </div>

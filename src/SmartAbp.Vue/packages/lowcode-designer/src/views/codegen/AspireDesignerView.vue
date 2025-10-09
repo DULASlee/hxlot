@@ -3,26 +3,52 @@
     <!-- 顶部工具栏 -->
     <div class="designer-toolbar">
       <div class="toolbar-left">
-        <el-icon class="title-icon"><Connection /></el-icon>
-        <h2 class="view-title">.NET Aspire 微服务编排设计器</h2>
-        <el-tag type="info" size="small">Day 9: 企业级云原生架构</el-tag>
+        <el-icon class="title-icon">
+          <Connection />
+        </el-icon>
+        <h2 class="view-title">
+          .NET Aspire 微服务编排设计器
+        </h2>
+        <el-tag
+          type="info"
+          size="small"
+        >
+          Day 9: 企业级云原生架构
+        </el-tag>
       </div>
       
       <div class="toolbar-right">
         <el-button-group>
-          <el-button :icon="Edit" @click="handleEditMode" :type="editMode ? 'primary' : 'default'">
+          <el-button
+            :icon="Edit"
+            :type="editMode ? 'primary' : 'default'"
+            @click="handleEditMode"
+          >
             编辑模式
           </el-button>
-          <el-button :icon="View" @click="handleViewMode" :type="!editMode ? 'primary' : 'default'">
+          <el-button
+            :icon="View"
+            :type="!editMode ? 'primary' : 'default'"
+            @click="handleViewMode"
+          >
             预览模式
           </el-button>
         </el-button-group>
         
-        <el-button type="success" :icon="Check" @click="handleGenerate" :loading="generating">
+        <el-button
+          type="success"
+          :icon="Check"
+          :loading="generating"
+          @click="handleGenerate"
+        >
           生成Aspire解决方案
         </el-button>
         
-        <el-button :icon="Setting" circle @click="showSettingsDrawer = true" />
+        <el-button
+          :icon="Setting"
+          circle
+          @click="showSettingsDrawer = true"
+        />
       </div>
     </div>
 
@@ -30,21 +56,46 @@
     <div class="designer-content">
       <!-- 左侧：微服务配置面板 -->
       <div class="left-panel">
-        <el-card class="panel-card" shadow="never">
+        <el-card
+          class="panel-card"
+          shadow="never"
+        >
           <template #header>
             <div class="card-header">
               <span>解决方案配置</span>
-              <el-button text :icon="Plus" @click="showSolutionDialog = true">新建</el-button>
+              <el-button
+                text
+                :icon="Plus"
+                @click="showSolutionDialog = true"
+              >
+                新建
+              </el-button>
             </div>
           </template>
           
-          <el-form :model="solutionConfig" label-width="120px" size="default">
-            <el-form-item label="解决方案名称" required>
-              <el-input v-model="solutionConfig.solutionName" placeholder="例如: SmartAbp.Microservices" />
+          <el-form
+            :model="solutionConfig"
+            label-width="120px"
+            size="default"
+          >
+            <el-form-item
+              label="解决方案名称"
+              required
+            >
+              <el-input
+                v-model="solutionConfig.solutionName"
+                placeholder="例如: SmartAbp.Microservices"
+              />
             </el-form-item>
             
-            <el-form-item label="根命名空间" required>
-              <el-input v-model="solutionConfig.rootNamespace" placeholder="例如: SmartAbp" />
+            <el-form-item
+              label="根命名空间"
+              required
+            >
+              <el-input
+                v-model="solutionConfig.rootNamespace"
+                placeholder="例如: SmartAbp"
+              />
             </el-form-item>
             
             <el-form-item label="描述">
@@ -57,7 +108,10 @@
             </el-form-item>
             
             <el-form-item label="数据库名称">
-              <el-input v-model="solutionConfig.databaseName" placeholder="AppDatabase" />
+              <el-input
+                v-model="solutionConfig.databaseName"
+                placeholder="AppDatabase"
+              />
             </el-form-item>
             
             <el-divider>基础设施服务</el-divider>
@@ -89,23 +143,41 @@
         </el-card>
         
         <!-- 微服务列表 -->
-        <el-card class="panel-card mt-4" shadow="never">
+        <el-card
+          class="panel-card mt-4"
+          shadow="never"
+        >
           <template #header>
             <div class="card-header">
               <span>微服务列表 ({{ microservices.length }})</span>
-              <el-button text :icon="Plus" type="primary" @click="handleAddMicroservice">
+              <el-button
+                text
+                :icon="Plus"
+                type="primary"
+                @click="handleAddMicroservice"
+              >
                 添加微服务
               </el-button>
             </div>
           </template>
           
-          <el-empty v-if="microservices.length === 0" description="暂无微服务，点击上方按钮添加">
-            <el-button type="primary" :icon="Plus" @click="handleAddMicroservice">
+          <el-empty
+            v-if="microservices.length === 0"
+            description="暂无微服务，点击上方按钮添加"
+          >
+            <el-button
+              type="primary"
+              :icon="Plus"
+              @click="handleAddMicroservice"
+            >
               添加第一个微服务
             </el-button>
           </el-empty>
           
-          <div v-else class="microservice-list">
+          <div
+            v-else
+            class="microservice-list"
+          >
             <div
               v-for="service in microservices"
               :key="service.name"
@@ -114,9 +186,13 @@
               @click="handleSelectService(service)"
             >
               <div class="service-info">
-                <el-icon class="service-icon"><Box /></el-icon>
+                <el-icon class="service-icon">
+                  <Box />
+                </el-icon>
                 <div class="service-details">
-                  <div class="service-name">{{ service.displayName }}</div>
+                  <div class="service-name">
+                    {{ service.displayName }}
+                  </div>
                   <div class="service-meta">
                     {{ service.projectName }} · {{ service.replicas }}副本
                   </div>
@@ -155,7 +231,10 @@
       </div>
 
       <!-- 右侧：服务详情配置 -->
-      <div class="right-panel" v-if="selectedService">
+      <div
+        v-if="selectedService"
+        class="right-panel"
+      >
         <ServiceConfigPanel
           :service="selectedService"
           :all-services="microservices"
@@ -164,7 +243,10 @@
         />
       </div>
       
-      <div v-else class="right-panel-empty">
+      <div
+        v-else
+        class="right-panel-empty"
+      >
         <el-empty description="请从左侧选择一个微服务进行配置" />
       </div>
     </div>
@@ -183,8 +265,13 @@
       />
       
       <template #footer>
-        <el-button @click="showServiceDialog = false">取消</el-button>
-        <el-button type="primary" @click="handleSaveService">
+        <el-button @click="showServiceDialog = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="handleSaveService"
+        >
           {{ editingService ? '保存' : '添加' }}
         </el-button>
       </template>

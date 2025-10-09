@@ -1,7 +1,10 @@
 <template>
   <div class="template-manager">
     <!-- 搜索和筛选栏 -->
-    <el-card class="search-bar" shadow="never">
+    <el-card
+      class="search-bar"
+      shadow="never"
+    >
       <el-row :gutter="20">
         <el-col :span="8">
           <el-input
@@ -19,13 +22,34 @@
             clearable
             @change="handleFilter"
           >
-            <el-option label="实体模板" value="entity" />
-            <el-option label="服务模板" value="service" />
-            <el-option label="控制器模板" value="controller" />
-            <el-option label="视图模板" value="view" />
-            <el-option label="组件模板" value="component" />
-            <el-option label="工作流模板" value="workflow" />
-            <el-option label="自定义模板" value="custom" />
+            <el-option
+              label="实体模板"
+              value="entity"
+            />
+            <el-option
+              label="服务模板"
+              value="service"
+            />
+            <el-option
+              label="控制器模板"
+              value="controller"
+            />
+            <el-option
+              label="视图模板"
+              value="view"
+            />
+            <el-option
+              label="组件模板"
+              value="component"
+            />
+            <el-option
+              label="工作流模板"
+              value="workflow"
+            />
+            <el-option
+              label="自定义模板"
+              value="custom"
+            />
           </el-select>
         </el-col>
         <el-col :span="4">
@@ -35,11 +59,26 @@
             clearable
             @change="handleFilter"
           >
-            <el-option label="前端" value="frontend" />
-            <el-option label="后端" value="backend" />
-            <el-option label="全栈" value="fullstack" />
-            <el-option label="数据库" value="database" />
-            <el-option label="DevOps" value="devops" />
+            <el-option
+              label="前端"
+              value="frontend"
+            />
+            <el-option
+              label="后端"
+              value="backend"
+            />
+            <el-option
+              label="全栈"
+              value="fullstack"
+            />
+            <el-option
+              label="数据库"
+              value="database"
+            />
+            <el-option
+              label="DevOps"
+              value="devops"
+            />
           </el-select>
         </el-col>
         <el-col :span="4">
@@ -48,10 +87,22 @@
             placeholder="排序方式"
             @change="handleSort"
           >
-            <el-option label="最新创建" value="createdAt" />
-            <el-option label="最多使用" value="usageCount" />
-            <el-option label="评分最高" value="rating" />
-            <el-option label="名称排序" value="name" />
+            <el-option
+              label="最新创建"
+              value="createdAt"
+            />
+            <el-option
+              label="最多使用"
+              value="usageCount"
+            />
+            <el-option
+              label="评分最高"
+              value="rating"
+            />
+            <el-option
+              label="名称排序"
+              value="name"
+            />
           </el-select>
         </el-col>
         <el-col :span="4">
@@ -82,25 +133,45 @@
             @click="handleSelectTemplate(template)"
           >
             <div class="template-icon">
-              <i v-if="template.icon" :class="template.icon" />
-              <i v-else class="el-icon-document" />
+              <i
+                v-if="template.icon"
+                :class="template.icon"
+              />
+              <i
+                v-else
+                class="el-icon-document"
+              />
             </div>
 
             <div class="template-header">
-              <h3 class="template-name">{{ template.displayName }}</h3>
-              <el-tag v-if="template.isBuiltIn" type="success" size="small">
+              <h3 class="template-name">
+                {{ template.displayName }}
+              </h3>
+              <el-tag
+                v-if="template.isBuiltIn"
+                type="success"
+                size="small"
+              >
                 内置
               </el-tag>
             </div>
 
-            <p class="template-description">{{ template.description }}</p>
+            <p class="template-description">
+              {{ template.description }}
+            </p>
 
             <div class="template-meta">
               <div class="meta-item">
-                <el-tag size="small" :type="getCategoryType(template.category)">
+                <el-tag
+                  size="small"
+                  :type="getCategoryType(template.category)"
+                >
                   {{ getCategoryLabel(template.category) }}
                 </el-tag>
-                <el-tag size="small" type="info">
+                <el-tag
+                  size="small"
+                  type="info"
+                >
                   {{ getTypeLabel(template.type) }}
                 </el-tag>
               </div>
@@ -190,9 +261,15 @@
         </div>
       </template>
 
-      <div v-if="currentTemplate" class="template-preview">
+      <div
+        v-if="currentTemplate"
+        class="template-preview"
+      >
         <!-- 模板信息 -->
-        <el-descriptions :column="2" border>
+        <el-descriptions
+          :column="2"
+          border
+        >
           <el-descriptions-item label="模板名称">
             {{ currentTemplate.displayName }}
           </el-descriptions-item>
@@ -209,31 +286,66 @@
             {{ getCategoryLabel(currentTemplate.category) }}
           </el-descriptions-item>
           <el-descriptions-item label="评分">
-            <el-rate v-model="currentTemplate.rating" disabled />
+            <el-rate
+              v-model="currentTemplate.rating"
+              disabled
+            />
           </el-descriptions-item>
-          <el-descriptions-item label="描述" :span="2">
+          <el-descriptions-item
+            label="描述"
+            :span="2"
+          >
             {{ currentTemplate.description }}
           </el-descriptions-item>
         </el-descriptions>
 
         <!-- 模板变量 -->
-        <el-divider content-position="left">模板变量</el-divider>
-        <el-table :data="currentTemplate.variables" border>
-          <el-table-column prop="displayName" label="变量名" width="150" />
-          <el-table-column prop="type" label="类型" width="100" />
-          <el-table-column label="必填" width="80" align="center">
+        <el-divider content-position="left">
+          模板变量
+        </el-divider>
+        <el-table
+          :data="currentTemplate.variables"
+          border
+        >
+          <el-table-column
+            prop="displayName"
+            label="变量名"
+            width="150"
+          />
+          <el-table-column
+            prop="type"
+            label="类型"
+            width="100"
+          />
+          <el-table-column
+            label="必填"
+            width="80"
+            align="center"
+          >
             <template #default="{ row }">
-              <el-tag :type="row.required ? 'danger' : 'info'" size="small">
+              <el-tag
+                :type="row.required ? 'danger' : 'info'"
+                size="small"
+              >
                 {{ row.required ? '是' : '否' }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="defaultValue" label="默认值" width="150" />
-          <el-table-column prop="description" label="说明" />
+          <el-table-column
+            prop="defaultValue"
+            label="默认值"
+            width="150"
+          />
+          <el-table-column
+            prop="description"
+            label="说明"
+          />
         </el-table>
 
         <!-- 模板文件 -->
-        <el-divider content-position="left">模板文件</el-divider>
+        <el-divider content-position="left">
+          模板文件
+        </el-divider>
         <el-tabs v-model="activeFileTab">
           <el-tab-pane
             v-for="file in currentTemplate.files"
@@ -244,7 +356,9 @@
             <div class="file-preview">
               <div class="file-header">
                 <span class="file-path">{{ file.path }}</span>
-                <el-tag size="small">{{ file.language }}</el-tag>
+                <el-tag size="small">
+                  {{ file.language }}
+                </el-tag>
               </div>
               <pre class="file-content"><code>{{ file.content }}</code></pre>
             </div>
@@ -253,8 +367,13 @@
       </div>
 
       <template #footer>
-        <el-button @click="previewDialogVisible = false">关闭</el-button>
-        <el-button type="primary" @click="handleUseTemplate(currentTemplate!)">
+        <el-button @click="previewDialogVisible = false">
+          关闭
+        </el-button>
+        <el-button
+          type="primary"
+          @click="handleUseTemplate(currentTemplate!)"
+        >
           使用此模板
         </el-button>
       </template>
@@ -271,42 +390,99 @@
         :model="editingTemplate"
         label-width="120px"
       >
-        <el-form-item label="模板名称" required>
+        <el-form-item
+          label="模板名称"
+          required
+        >
           <el-input v-model="editingTemplate.displayName" />
         </el-form-item>
 
-        <el-form-item label="模板标识" required>
+        <el-form-item
+          label="模板标识"
+          required
+        >
           <el-input v-model="editingTemplate.name" />
         </el-form-item>
 
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="类型" required>
-              <el-select v-model="editingTemplate.type" style="width: 100%">
-                <el-option label="实体模板" value="entity" />
-                <el-option label="服务模板" value="service" />
-                <el-option label="控制器模板" value="controller" />
-                <el-option label="视图模板" value="view" />
-                <el-option label="组件模板" value="component" />
-                <el-option label="工作流模板" value="workflow" />
-                <el-option label="自定义模板" value="custom" />
+            <el-form-item
+              label="类型"
+              required
+            >
+              <el-select
+                v-model="editingTemplate.type"
+                style="width: 100%"
+              >
+                <el-option
+                  label="实体模板"
+                  value="entity"
+                />
+                <el-option
+                  label="服务模板"
+                  value="service"
+                />
+                <el-option
+                  label="控制器模板"
+                  value="controller"
+                />
+                <el-option
+                  label="视图模板"
+                  value="view"
+                />
+                <el-option
+                  label="组件模板"
+                  value="component"
+                />
+                <el-option
+                  label="工作流模板"
+                  value="workflow"
+                />
+                <el-option
+                  label="自定义模板"
+                  value="custom"
+                />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="分类" required>
-              <el-select v-model="editingTemplate.category" style="width: 100%">
-                <el-option label="前端" value="frontend" />
-                <el-option label="后端" value="backend" />
-                <el-option label="全栈" value="fullstack" />
-                <el-option label="数据库" value="database" />
-                <el-option label="DevOps" value="devops" />
+            <el-form-item
+              label="分类"
+              required
+            >
+              <el-select
+                v-model="editingTemplate.category"
+                style="width: 100%"
+              >
+                <el-option
+                  label="前端"
+                  value="frontend"
+                />
+                <el-option
+                  label="后端"
+                  value="backend"
+                />
+                <el-option
+                  label="全栈"
+                  value="fullstack"
+                />
+                <el-option
+                  label="数据库"
+                  value="database"
+                />
+                <el-option
+                  label="DevOps"
+                  value="devops"
+                />
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
-        <el-form-item label="描述" required>
+        <el-form-item
+          label="描述"
+          required
+        >
           <el-input
             v-model="editingTemplate.description"
             type="textarea"
@@ -333,8 +509,15 @@
       </el-form>
 
       <template #footer>
-        <el-button @click="editDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSaveTemplate">保存</el-button>
+        <el-button @click="editDialogVisible = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="handleSaveTemplate"
+        >
+          保存
+        </el-button>
       </template>
     </el-dialog>
   </div>

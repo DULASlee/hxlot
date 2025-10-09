@@ -7,7 +7,9 @@
             <el-icon><Setting /></el-icon>
             CI/CD模板生成器
           </h2>
-          <el-tag type="success">自动化DevOps</el-tag>
+          <el-tag type="success">
+            自动化DevOps
+          </el-tag>
         </div>
       </template>
 
@@ -28,31 +30,46 @@
         :rules="rules"
         label-width="140px"
       >
-        <el-form-item label="CI/CD平台" prop="platform">
+        <el-form-item
+          label="CI/CD平台"
+          prop="platform"
+        >
           <el-select
             v-model="config.platform"
             placeholder="选择CI/CD平台"
             @change="handlePlatformChange"
           >
-            <el-option label="GitHub Actions" value="github">
+            <el-option
+              label="GitHub Actions"
+              value="github"
+            >
               <span class="platform-option">
                 <el-icon><Promotion /></el-icon>
                 GitHub Actions
               </span>
             </el-option>
-            <el-option label="GitLab CI" value="gitlab">
+            <el-option
+              label="GitLab CI"
+              value="gitlab"
+            >
               <span class="platform-option">
                 <el-icon><Orange /></el-icon>
                 GitLab CI
               </span>
             </el-option>
-            <el-option label="Azure DevOps" value="azuredevops">
+            <el-option
+              label="Azure DevOps"
+              value="azuredevops"
+            >
               <span class="platform-option">
                 <el-icon><Platform /></el-icon>
                 Azure DevOps
               </span>
             </el-option>
-            <el-option label="Jenkins" value="jenkins">
+            <el-option
+              label="Jenkins"
+              value="jenkins"
+            >
               <span class="platform-option">
                 <el-icon><Operation /></el-icon>
                 Jenkins
@@ -61,7 +78,10 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="项目名称" prop="projectName">
+        <el-form-item
+          label="项目名称"
+          prop="projectName"
+        >
           <el-input
             v-model="config.projectName"
             placeholder="SmartAbp"
@@ -69,7 +89,10 @@
           />
         </el-form-item>
 
-        <el-form-item label="仓库URL" prop="repositoryUrl">
+        <el-form-item
+          label="仓库URL"
+          prop="repositoryUrl"
+        >
           <el-input
             v-model="config.repositoryUrl"
             placeholder="https://github.com/user/repo.git"
@@ -77,21 +100,47 @@
           />
         </el-form-item>
 
-        <el-divider content-position="left">构建选项</el-divider>
+        <el-divider content-position="left">
+          构建选项
+        </el-divider>
 
         <el-form-item label=".NET版本">
-          <el-select v-model="config.dotnetVersion" placeholder="选择.NET版本">
-            <el-option label=".NET 8.0（推荐）" value="8.0" />
-            <el-option label=".NET 7.0" value="7.0" />
-            <el-option label=".NET 6.0" value="6.0" />
+          <el-select
+            v-model="config.dotnetVersion"
+            placeholder="选择.NET版本"
+          >
+            <el-option
+              label=".NET 8.0（推荐）"
+              value="8.0"
+            />
+            <el-option
+              label=".NET 7.0"
+              value="7.0"
+            />
+            <el-option
+              label=".NET 6.0"
+              value="6.0"
+            />
           </el-select>
         </el-form-item>
 
         <el-form-item label="Node.js版本">
-          <el-select v-model="config.nodeVersion" placeholder="选择Node.js版本">
-            <el-option label="Node.js 20（推荐）" value="20" />
-            <el-option label="Node.js 18" value="18" />
-            <el-option label="Node.js 16" value="16" />
+          <el-select
+            v-model="config.nodeVersion"
+            placeholder="选择Node.js版本"
+          >
+            <el-option
+              label="Node.js 20（推荐）"
+              value="20"
+            />
+            <el-option
+              label="Node.js 18"
+              value="18"
+            />
+            <el-option
+              label="Node.js 16"
+              value="16"
+            />
           </el-select>
         </el-form-item>
 
@@ -137,7 +186,10 @@
     </el-card>
 
     <!-- 生成结果 -->
-    <el-card v-if="generatedConfig" class="result-card">
+    <el-card
+      v-if="generatedConfig"
+      class="result-card"
+    >
       <template #header>
         <div class="result-header">
           <span>生成结果：{{ generatedConfig.fileName }}</span>
@@ -168,8 +220,13 @@
       </div>
 
       <!-- 使用说明 -->
-      <el-divider content-position="left">使用说明</el-divider>
-      <el-steps direction="vertical" :active="generatedConfig.instructions.length">
+      <el-divider content-position="left">
+        使用说明
+      </el-divider>
+      <el-steps
+        direction="vertical"
+        :active="generatedConfig.instructions.length"
+      >
         <el-step
           v-for="(instruction, index) in generatedConfig.instructions"
           :key="index"
@@ -180,11 +237,20 @@
     </el-card>
 
     <!-- 验证结果 -->
-    <el-card v-if="validationResult" class="validation-card">
+    <el-card
+      v-if="validationResult"
+      class="validation-card"
+    >
       <template #header>
         <span>
-          <el-icon v-if="validationResult.isValid" color="green"><CircleCheck /></el-icon>
-          <el-icon v-else color="red"><CircleClose /></el-icon>
+          <el-icon
+            v-if="validationResult.isValid"
+            color="green"
+          ><CircleCheck /></el-icon>
+          <el-icon
+            v-else
+            color="red"
+          ><CircleClose /></el-icon>
           配置验证结果
         </span>
       </template>
@@ -199,7 +265,12 @@
           错误（{{ validationResult.errors.length }}）
         </template>
         <ul>
-          <li v-for="(err, idx) in validationResult.errors" :key="idx">{{ err }}</li>
+          <li
+            v-for="(err, idx) in validationResult.errors"
+            :key="idx"
+          >
+            {{ err }}
+          </li>
         </ul>
       </el-alert>
 
@@ -214,7 +285,12 @@
           警告（{{ validationResult.warnings.length }}）
         </template>
         <ul>
-          <li v-for="(warn, idx) in validationResult.warnings" :key="idx">{{ warn }}</li>
+          <li
+            v-for="(warn, idx) in validationResult.warnings"
+            :key="idx"
+          >
+            {{ warn }}
+          </li>
         </ul>
       </el-alert>
 
@@ -236,21 +312,33 @@
     </el-card>
 
     <!-- 平台特性说明 -->
-    <el-card v-if="platformInfo" class="platform-info">
+    <el-card
+      v-if="platformInfo"
+      class="platform-info"
+    >
       <template #header>
         <span>{{ platformInfo.name }} 特性</span>
       </template>
-      <el-descriptions :column="2" border>
+      <el-descriptions
+        :column="2"
+        border
+      >
         <el-descriptions-item label="配置文件">
           {{ platformInfo.fileName }}
         </el-descriptions-item>
         <el-descriptions-item label="存放路径">
           {{ platformInfo.filePath }}
         </el-descriptions-item>
-        <el-descriptions-item label="触发方式" :span="2">
+        <el-descriptions-item
+          label="触发方式"
+          :span="2"
+        >
           {{ platformInfo.trigger }}
         </el-descriptions-item>
-        <el-descriptions-item label="特点" :span="2">
+        <el-descriptions-item
+          label="特点"
+          :span="2"
+        >
           {{ platformInfo.features }}
         </el-descriptions-item>
       </el-descriptions>

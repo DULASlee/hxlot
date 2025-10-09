@@ -22,18 +22,39 @@
       </template>
 
       <!-- CI/CD配置面板 -->
-      <div v-if="activeTab === 'cicd'" class="config-panel">
-        <el-form :model="cicdConfig" label-width="140px">
+      <div
+        v-if="activeTab === 'cicd'"
+        class="config-panel"
+      >
+        <el-form
+          :model="cicdConfig"
+          label-width="140px"
+        >
           <el-form-item label="CI/CD平台">
-            <el-select v-model="cicdPlatform" @change="onPlatformChange">
-              <el-option label="GitHub Actions" value="github" />
-              <el-option label="GitLab CI" value="gitlab" />
-              <el-option label="Azure DevOps" value="azure" />
+            <el-select
+              v-model="cicdPlatform"
+              @change="onPlatformChange"
+            >
+              <el-option
+                label="GitHub Actions"
+                value="github"
+              />
+              <el-option
+                label="GitLab CI"
+                value="gitlab"
+              />
+              <el-option
+                label="Azure DevOps"
+                value="azure"
+              />
             </el-select>
           </el-form-item>
 
           <el-form-item label="服务名称">
-            <el-input v-model="cicdConfig.serviceName" placeholder="请输入服务名称" />
+            <el-input
+              v-model="cicdConfig.serviceName"
+              placeholder="请输入服务名称"
+            />
           </el-form-item>
 
           <el-form-item label="触发分支">
@@ -42,24 +63,51 @@
               multiple
               placeholder="选择触发分支"
             >
-              <el-option label="main" value="main" />
-              <el-option label="master" value="master" />
-              <el-option label="develop" value="develop" />
-              <el-option label="release/*" value="release/*" />
+              <el-option
+                label="main"
+                value="main"
+              />
+              <el-option
+                label="master"
+                value="master"
+              />
+              <el-option
+                label="develop"
+                value="develop"
+              />
+              <el-option
+                label="release/*"
+                value="release/*"
+              />
             </el-select>
           </el-form-item>
 
           <el-form-item label="容器镜像仓库">
             <el-select v-model="cicdConfig.containerRegistry">
-              <el-option label="GitHub Container Registry" value="ghcr.io" />
-              <el-option label="Docker Hub" value="docker.io" />
-              <el-option label="Azure Container Registry" value="xxx.azurecr.io" />
-              <el-option label="阿里云容器镜像服务" value="registry.cn-hangzhou.aliyuncs.com" />
+              <el-option
+                label="GitHub Container Registry"
+                value="ghcr.io"
+              />
+              <el-option
+                label="Docker Hub"
+                value="docker.io"
+              />
+              <el-option
+                label="Azure Container Registry"
+                value="xxx.azurecr.io"
+              />
+              <el-option
+                label="阿里云容器镜像服务"
+                value="registry.cn-hangzhou.aliyuncs.com"
+              />
             </el-select>
           </el-form-item>
 
           <el-form-item label="Dockerfile路径">
-            <el-input v-model="cicdConfig.dockerfilePath" placeholder="Dockerfile" />
+            <el-input
+              v-model="cicdConfig.dockerfilePath"
+              placeholder="Dockerfile"
+            />
           </el-form-item>
 
           <el-form-item label="启用测试">
@@ -74,16 +122,31 @@
             <el-switch v-model="cicdConfig.enableAutoDeploy" />
           </el-form-item>
 
-          <el-form-item v-if="cicdConfig.enableAutoDeploy" label="部署环境">
+          <el-form-item
+            v-if="cicdConfig.enableAutoDeploy"
+            label="部署环境"
+          >
             <el-select v-model="cicdConfig.deployEnvironment">
-              <el-option label="Development" value="development" />
-              <el-option label="Staging" value="staging" />
-              <el-option label="Production" value="production" />
+              <el-option
+                label="Development"
+                value="development"
+              />
+              <el-option
+                label="Staging"
+                value="staging"
+              />
+              <el-option
+                label="Production"
+                value="production"
+              />
             </el-select>
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="generateCICDPipeline">
+            <el-button
+              type="primary"
+              @click="generateCICDPipeline"
+            >
               生成Pipeline配置
             </el-button>
             <el-button @click="previewPipeline">
@@ -93,18 +156,30 @@
         </el-form>
 
         <!-- Pipeline预览 -->
-        <el-card v-if="generatedPipeline" class="pipeline-preview">
+        <el-card
+          v-if="generatedPipeline"
+          class="pipeline-preview"
+        >
           <template #header>
             <div class="card-header">
               <span>生成的Pipeline配置</span>
               <div>
-                <el-tag type="info" style="margin-right: 10px">
+                <el-tag
+                  type="info"
+                  style="margin-right: 10px"
+                >
                   {{ generatedPipeline.platform }}
                 </el-tag>
-                <el-button size="small" @click="copyPipeline">
+                <el-button
+                  size="small"
+                  @click="copyPipeline"
+                >
                   复制配置
                 </el-button>
-                <el-button size="small" @click="downloadPipeline">
+                <el-button
+                  size="small"
+                  @click="downloadPipeline"
+                >
                   下载文件
                 </el-button>
               </div>
@@ -119,12 +194,27 @@
       </div>
 
       <!-- GitOps配置面板 -->
-      <div v-if="activeTab === 'gitops'" class="config-panel">
-        <el-form :model="gitopsConfig" label-width="140px">
+      <div
+        v-if="activeTab === 'gitops'"
+        class="config-panel"
+      >
+        <el-form
+          :model="gitopsConfig"
+          label-width="140px"
+        >
           <el-form-item label="GitOps平台">
-            <el-select v-model="gitopsPlatform" @change="onGitOpsPlatformChange">
-              <el-option label="ArgoCD" value="argocd" />
-              <el-option label="Flux CD" value="flux" />
+            <el-select
+              v-model="gitopsPlatform"
+              @change="onGitOpsPlatformChange"
+            >
+              <el-option
+                label="ArgoCD"
+                value="argocd"
+              />
+              <el-option
+                label="Flux CD"
+                value="flux"
+              />
             </el-select>
           </el-form-item>
 
@@ -143,18 +233,31 @@
               />
             </el-form-item>
             <el-form-item label="目标分支/标签">
-              <el-input v-model="gitopsConfig.argocd.targetRevision" placeholder="HEAD" />
+              <el-input
+                v-model="gitopsConfig.argocd.targetRevision"
+                placeholder="HEAD"
+              />
             </el-form-item>
             <el-form-item label="Manifest路径">
-              <el-input v-model="gitopsConfig.argocd.manifestPath" placeholder="k8s/" />
+              <el-input
+                v-model="gitopsConfig.argocd.manifestPath"
+                placeholder="k8s/"
+              />
             </el-form-item>
             <el-form-item label="目标命名空间">
-              <el-input v-model="gitopsConfig.argocd.targetNamespace" placeholder="default" />
+              <el-input
+                v-model="gitopsConfig.argocd.targetNamespace"
+                placeholder="default"
+              />
             </el-form-item>
             <el-form-item label="同步策略">
               <el-radio-group v-model="gitopsConfig.argocd.syncPolicy">
-                <el-radio label="Automated">自动同步</el-radio>
-                <el-radio label="Manual">手动同步</el-radio>
+                <el-radio label="Automated">
+                  自动同步
+                </el-radio>
+                <el-radio label="Manual">
+                  手动同步
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </template>
@@ -174,17 +277,35 @@
               />
             </el-form-item>
             <el-form-item label="目标分支">
-              <el-input v-model="gitopsConfig.flux.targetBranch" placeholder="main" />
+              <el-input
+                v-model="gitopsConfig.flux.targetBranch"
+                placeholder="main"
+              />
             </el-form-item>
             <el-form-item label="Manifest路径">
-              <el-input v-model="gitopsConfig.flux.manifestPath" placeholder="./k8s" />
+              <el-input
+                v-model="gitopsConfig.flux.manifestPath"
+                placeholder="./k8s"
+              />
             </el-form-item>
             <el-form-item label="同步间隔">
               <el-select v-model="gitopsConfig.flux.syncInterval">
-                <el-option label="1分钟" value="1m" />
-                <el-option label="5分钟" value="5m" />
-                <el-option label="10分钟" value="10m" />
-                <el-option label="30分钟" value="30m" />
+                <el-option
+                  label="1分钟"
+                  value="1m"
+                />
+                <el-option
+                  label="5分钟"
+                  value="5m"
+                />
+                <el-option
+                  label="10分钟"
+                  value="10m"
+                />
+                <el-option
+                  label="30分钟"
+                  value="30m"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="使用Helm">
@@ -193,18 +314,26 @@
           </template>
 
           <el-form-item>
-            <el-button type="primary" @click="generateGitOpsConfig">
+            <el-button
+              type="primary"
+              @click="generateGitOpsConfig"
+            >
               生成GitOps配置
             </el-button>
           </el-form-item>
         </el-form>
 
         <!-- GitOps配置预览 -->
-        <el-card v-if="generatedGitOpsConfig" class="gitops-preview">
+        <el-card
+          v-if="generatedGitOpsConfig"
+          class="gitops-preview"
+        >
           <template #header>
             <div class="card-header">
               <span>生成的GitOps配置</span>
-              <el-tag type="success">{{ gitopsPlatform === 'argocd' ? 'ArgoCD' : 'Flux CD' }}</el-tag>
+              <el-tag type="success">
+                {{ gitopsPlatform === 'argocd' ? 'ArgoCD' : 'Flux CD' }}
+              </el-tag>
             </div>
           </template>
 
@@ -214,7 +343,12 @@
               <div class="section-header">
                 <el-icon><Document /></el-icon>
                 <span>application.yaml</span>
-                <el-button size="small" @click="copyConfig('argocd-app')">复制</el-button>
+                <el-button
+                  size="small"
+                  @click="copyConfig('argocd-app')"
+                >
+                  复制
+                </el-button>
               </div>
               <pre><code>{{ generatedGitOpsConfig.argocd.applicationYaml }}</code></pre>
             </div>
@@ -223,7 +357,12 @@
               <div class="section-header">
                 <el-icon><Document /></el-icon>
                 <span>project.yaml</span>
-                <el-button size="small" @click="copyConfig('argocd-project')">复制</el-button>
+                <el-button
+                  size="small"
+                  @click="copyConfig('argocd-project')"
+                >
+                  复制
+                </el-button>
               </div>
               <pre><code>{{ generatedGitOpsConfig.argocd.projectYaml }}</code></pre>
             </div>
@@ -235,7 +374,12 @@
               <div class="section-header">
                 <el-icon><Document /></el-icon>
                 <span>gitrepository.yaml</span>
-                <el-button size="small" @click="copyConfig('flux-repo')">复制</el-button>
+                <el-button
+                  size="small"
+                  @click="copyConfig('flux-repo')"
+                >
+                  复制
+                </el-button>
               </div>
               <pre><code>{{ generatedGitOpsConfig.flux.gitRepositoryYaml }}</code></pre>
             </div>
@@ -244,16 +388,29 @@
               <div class="section-header">
                 <el-icon><Document /></el-icon>
                 <span>kustomization.yaml</span>
-                <el-button size="small" @click="copyConfig('flux-kustomization')">复制</el-button>
+                <el-button
+                  size="small"
+                  @click="copyConfig('flux-kustomization')"
+                >
+                  复制
+                </el-button>
               </div>
               <pre><code>{{ generatedGitOpsConfig.flux.kustomizationYaml }}</code></pre>
             </div>
 
-            <div v-if="gitopsConfig.flux.useHelm" class="config-section">
+            <div
+              v-if="gitopsConfig.flux.useHelm"
+              class="config-section"
+            >
               <div class="section-header">
                 <el-icon><Document /></el-icon>
                 <span>helmrelease.yaml</span>
-                <el-button size="small" @click="copyConfig('flux-helm')">复制</el-button>
+                <el-button
+                  size="small"
+                  @click="copyConfig('flux-helm')"
+                >
+                  复制
+                </el-button>
               </div>
               <pre><code>{{ generatedGitOpsConfig.flux.helmReleaseYaml }}</code></pre>
             </div>
@@ -267,11 +424,26 @@
       <template #header>
         <span>📚 快速开始指南</span>
       </template>
-      <el-steps :active="currentStep" finish-status="success">
-        <el-step title="选择平台" description="选择CI/CD和GitOps平台" />
-        <el-step title="配置参数" description="填写服务名称、仓库等信息" />
-        <el-step title="生成配置" description="生成Pipeline和GitOps配置" />
-        <el-step title="部署应用" description="提交配置到Git仓库" />
+      <el-steps
+        :active="currentStep"
+        finish-status="success"
+      >
+        <el-step
+          title="选择平台"
+          description="选择CI/CD和GitOps平台"
+        />
+        <el-step
+          title="配置参数"
+          description="填写服务名称、仓库等信息"
+        />
+        <el-step
+          title="生成配置"
+          description="生成Pipeline和GitOps配置"
+        />
+        <el-step
+          title="部署应用"
+          description="提交配置到Git仓库"
+        />
       </el-steps>
 
       <div class="guide-content">

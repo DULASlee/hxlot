@@ -1,19 +1,34 @@
 <template>
-  <div class="action-node rule-node" :class="{ selected: data.selected, error: hasError }">
+  <div
+    class="action-node rule-node"
+    :class="{ selected: data.selected, error: hasError }"
+  >
     <div class="node-header">
-      <el-icon class="node-icon" color="#67c23a">
+      <el-icon
+        class="node-icon"
+        color="#67c23a"
+      >
         <Setting />
       </el-icon>
       <span class="node-title">{{ data.label || '执行动作' }}</span>
-      <el-tag v-if="data.actionType" type="success" size="small">
+      <el-tag
+        v-if="data.actionType"
+        type="success"
+        size="small"
+      >
         {{ getActionTypeLabel(data.actionType) }}
       </el-tag>
     </div>
     <div class="node-body">
-      <div class="node-description">{{ data.description || '执行业务操作' }}</div>
+      <div class="node-description">
+        {{ data.description || '执行业务操作' }}
+      </div>
 
       <!-- SetFieldValue -->
-      <div v-if="setFieldValueParams" class="action-params">
+      <div
+        v-if="setFieldValueParams"
+        class="action-params"
+      >
         <div class="param-item">
           <span class="param-label">字段:</span>
           <span class="param-value">{{ setFieldValueParams.field }}</span>
@@ -25,53 +40,89 @@
       </div>
 
       <!-- ShowMessage -->
-      <div v-else-if="showMessageParams" class="action-params">
+      <div
+        v-else-if="showMessageParams"
+        class="action-params"
+      >
         <div class="param-item">
           <span class="param-label">消息:</span>
           <span class="param-value">{{ showMessageParams.message }}</span>
         </div>
         <div class="param-item">
-          <el-tag :type="getMessageTypeTag(showMessageParams.type)" size="small">
+          <el-tag
+            :type="getMessageTypeTag(showMessageParams.type)"
+            size="small"
+          >
             {{ showMessageParams.type || 'info' }}
           </el-tag>
         </div>
       </div>
 
       <!-- CallAPI -->
-      <div v-else-if="callAPIParams" class="action-params">
+      <div
+        v-else-if="callAPIParams"
+        class="action-params"
+      >
         <div class="param-item">
           <span class="param-label">API:</span>
           <code class="param-code">{{ callAPIParams.url }}</code>
         </div>
         <div class="param-item">
-          <el-tag type="info" size="small">{{ callAPIParams.method || 'GET' }}</el-tag>
+          <el-tag
+            type="info"
+            size="small"
+          >
+            {{ callAPIParams.method || 'GET' }}
+          </el-tag>
         </div>
       </div>
 
       <!-- ValidateField -->
-      <div v-else-if="validateFieldParams" class="action-params">
+      <div
+        v-else-if="validateFieldParams"
+        class="action-params"
+      >
         <div class="param-item">
           <span class="param-label">验证:</span>
           <span class="param-value">{{ validateFieldParams.field }}</span>
         </div>
-        <div v-if="validateFieldParams.rules" class="param-item">
-          <el-tag v-for="rule in validateFieldParams.rules" :key="rule" type="warning" size="small"
-            style="margin-right: 4px">
+        <div
+          v-if="validateFieldParams.rules"
+          class="param-item"
+        >
+          <el-tag
+            v-for="rule in validateFieldParams.rules"
+            :key="rule"
+            type="warning"
+            size="small"
+            style="margin-right: 4px"
+          >
             {{ rule }}
           </el-tag>
         </div>
       </div>
 
       <!-- 未配置 -->
-      <div v-else class="node-warning">
+      <div
+        v-else
+        class="node-warning"
+      >
         <el-icon>
           <InfoFilled />
         </el-icon>
         <span>请配置动作类型和参数</span>
       </div>
     </div>
-    <Handle type="target" :position="Position.Left" :style="targetHandleStyle" />
-    <Handle type="source" :position="Position.Right" :style="sourceHandleStyle" />
+    <Handle
+      type="target"
+      :position="Position.Left"
+      :style="targetHandleStyle"
+    />
+    <Handle
+      type="source"
+      :position="Position.Right"
+      :style="sourceHandleStyle"
+    />
   </div>
 </template>
 

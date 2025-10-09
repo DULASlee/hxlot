@@ -21,22 +21,37 @@
     </el-form-item>
 
     <!-- RPS计算和可视化 -->
-    <el-card class="rate-limit-visualization" shadow="never">
+    <el-card
+      class="rate-limit-visualization"
+      shadow="never"
+    >
       <template #header>
         <span>限流统计</span>
       </template>
       <div class="stats">
         <div class="stat-item">
-          <div class="stat-label">每秒请求数（RPS）</div>
-          <div class="stat-value">{{ calculateRPS() }}</div>
+          <div class="stat-label">
+            每秒请求数（RPS）
+          </div>
+          <div class="stat-value">
+            {{ calculateRPS() }}
+          </div>
         </div>
         <div class="stat-item">
-          <div class="stat-label">时间窗口</div>
-          <div class="stat-value">{{ (localConfig.windowSizeMs / 1000).toFixed(1) }}秒</div>
+          <div class="stat-label">
+            时间窗口
+          </div>
+          <div class="stat-value">
+            {{ (localConfig.windowSizeMs / 1000).toFixed(1) }}秒
+          </div>
         </div>
         <div class="stat-item">
-          <div class="stat-label">每分钟请求数（RPM）</div>
-          <div class="stat-value">{{ calculateRPM() }}</div>
+          <div class="stat-label">
+            每分钟请求数（RPM）
+          </div>
+          <div class="stat-value">
+            {{ calculateRPM() }}
+          </div>
         </div>
       </div>
       <div class="rate-limit-timeline">

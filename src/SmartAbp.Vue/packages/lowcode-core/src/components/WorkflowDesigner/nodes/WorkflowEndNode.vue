@@ -1,10 +1,20 @@
 <template>
-  <div class="bpmn-node end-node" :class="{ selected: isSelected }">
-    <Handle type="target" :position="Position.Top" />
+  <div
+    class="bpmn-node end-node"
+    :class="{ selected: isSelected }"
+  >
+    <Handle
+      type="target"
+      :position="Position.Top"
+    />
     <div class="node-icon">
-      <el-icon :size="24"><CircleCheck /></el-icon>
+      <el-icon :size="24">
+        <CircleCheck />
+      </el-icon>
     </div>
-    <div class="node-label">{{ data.label || '结束' }}</div>
+    <div class="node-label">
+      {{ data.label || '结束' }}
+    </div>
   </div>
 </template>
 

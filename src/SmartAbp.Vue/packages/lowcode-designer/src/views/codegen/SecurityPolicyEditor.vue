@@ -3,18 +3,41 @@
     <!-- 顶部工具栏 -->
     <div class="editor-header">
       <div class="header-left">
-        <el-icon class="title-icon"><Lock /></el-icon>
-        <h2 class="editor-title">安全策略配置</h2>
-        <el-tag type="warning" size="small">Day 13: 零信任安全架构</el-tag>
+        <el-icon class="title-icon">
+          <Lock />
+        </el-icon>
+        <h2 class="editor-title">
+          安全策略配置
+        </h2>
+        <el-tag
+          type="warning"
+          size="small"
+        >
+          Day 13: 零信任安全架构
+        </el-tag>
       </div>
       
       <div class="header-right">
         <el-button-group>
-          <el-button :icon="Refresh" @click="handleRefresh">重置</el-button>
-          <el-button :icon="View" @click="handleValidate" :loading="validating">
+          <el-button
+            :icon="Refresh"
+            @click="handleRefresh"
+          >
+            重置
+          </el-button>
+          <el-button
+            :icon="View"
+            :loading="validating"
+            @click="handleValidate"
+          >
             验证策略
           </el-button>
-          <el-button type="primary" :icon="Check" @click="handleGenerate" :loading="generating">
+          <el-button
+            type="primary"
+            :icon="Check"
+            :loading="generating"
+            @click="handleGenerate"
+          >
             生成配置
           </el-button>
         </el-button-group>
@@ -22,38 +45,73 @@
     </div>
 
     <!-- 配置标签页 -->
-    <el-tabs v-model="activeTab" type="border-card" class="config-tabs">
+    <el-tabs
+      v-model="activeTab"
+      type="border-card"
+      class="config-tabs"
+    >
       <!-- 网络策略 -->
-      <el-tab-pane label="网络策略" name="network">
+      <el-tab-pane
+        label="网络策略"
+        name="network"
+      >
         <el-icon><Connection /></el-icon>
         <network-policy-designer
           v-model="policy.networkPolicy"
-          @update:modelValue="handlePolicyChange"
+          @update:model-value="handlePolicyChange"
         />
       </el-tab-pane>
 
       <!-- 认证配置 -->
-      <el-tab-pane label="身份认证" name="auth">
+      <el-tab-pane
+        label="身份认证"
+        name="auth"
+      >
         <el-icon><User /></el-icon>
-        <el-form :model="policy.authentication" label-width="140px" class="auth-form">
+        <el-form
+          :model="policy.authentication"
+          label-width="140px"
+          class="auth-form"
+        >
           <el-form-item label="认证类型">
-            <el-select v-model="policy.authentication.type" style="width: 100%">
-              <el-option label="JWT" value="JWT" />
-              <el-option label="OAuth2" value="OAuth2" />
-              <el-option label="OIDC" value="OIDC" />
+            <el-select
+              v-model="policy.authentication.type"
+              style="width: 100%"
+            >
+              <el-option
+                label="JWT"
+                value="JWT"
+              />
+              <el-option
+                label="OAuth2"
+                value="OAuth2"
+              />
+              <el-option
+                label="OIDC"
+                value="OIDC"
+              />
             </el-select>
           </el-form-item>
 
           <el-form-item label="Issuer">
-            <el-input v-model="policy.authentication.issuer" placeholder="https://auth.example.com" />
+            <el-input
+              v-model="policy.authentication.issuer"
+              placeholder="https://auth.example.com"
+            />
           </el-form-item>
 
           <el-form-item label="Audience">
-            <el-input v-model="policy.authentication.audience" placeholder="api://default" />
+            <el-input
+              v-model="policy.authentication.audience"
+              placeholder="api://default"
+            />
           </el-form-item>
 
           <el-form-item label="Authority">
-            <el-input v-model="policy.authentication.authority" placeholder="https://auth.example.com" />
+            <el-input
+              v-model="policy.authentication.authority"
+              placeholder="https://auth.example.com"
+            />
           </el-form-item>
 
           <el-form-item label="Token过期时间">
@@ -72,33 +130,61 @@
       </el-tab-pane>
 
       <!-- 授权策略 -->
-      <el-tab-pane label="授权策略" name="authorization">
+      <el-tab-pane
+        label="授权策略"
+        name="authorization"
+      >
         <el-icon><Management /></el-icon>
         <rbac-editor
           v-model="policy.authorization"
-          @update:modelValue="handlePolicyChange"
+          @update:model-value="handlePolicyChange"
         />
       </el-tab-pane>
 
       <!-- 密钥管理 -->
-      <el-tab-pane label="密钥管理" name="secrets">
+      <el-tab-pane
+        label="密钥管理"
+        name="secrets"
+      >
         <el-icon><Key /></el-icon>
-        <el-form :model="policy.secrets" label-width="140px" class="secrets-form">
+        <el-form
+          :model="policy.secrets"
+          label-width="140px"
+          class="secrets-form"
+        >
           <el-form-item label="密钥提供商">
-            <el-select v-model="policy.secrets.provider" style="width: 100%">
-              <el-option label="Kubernetes Secrets" value="Kubernetes" />
-              <el-option label="Azure Key Vault" value="AzureKeyVault" />
-              <el-option label="HashiCorp Vault" value="HashiCorpVault" />
+            <el-select
+              v-model="policy.secrets.provider"
+              style="width: 100%"
+            >
+              <el-option
+                label="Kubernetes Secrets"
+                value="Kubernetes"
+              />
+              <el-option
+                label="Azure Key Vault"
+                value="AzureKeyVault"
+              />
+              <el-option
+                label="HashiCorp Vault"
+                value="HashiCorpVault"
+              />
             </el-select>
           </el-form-item>
 
           <template v-if="policy.secrets.provider === 'AzureKeyVault'">
             <el-form-item label="Key Vault名称">
-              <el-input v-model="policy.secrets.keyVaultName" placeholder="my-keyvault" />
+              <el-input
+                v-model="policy.secrets.keyVaultName"
+                placeholder="my-keyvault"
+              />
             </el-form-item>
 
             <el-form-item label="Key Vault URI">
-              <el-input v-model="policy.secrets.keyVaultUri" placeholder="https://my-keyvault.vault.azure.net/" />
+              <el-input
+                v-model="policy.secrets.keyVaultUri"
+                placeholder="https://my-keyvault.vault.azure.net/"
+              />
             </el-form-item>
 
             <el-form-item label="使用托管标识">
@@ -110,14 +196,24 @@
       </el-tab-pane>
 
       <!-- API安全 -->
-      <el-tab-pane label="API安全" name="api">
+      <el-tab-pane
+        label="API安全"
+        name="api"
+      >
         <el-icon><Setting /></el-icon>
-        <el-form :model="policy.apiSecurity" label-width="140px" class="api-form">
+        <el-form
+          :model="policy.apiSecurity"
+          label-width="140px"
+          class="api-form"
+        >
           <el-form-item label="启用限流">
             <el-switch v-model="policy.apiSecurity.enableRateLimiting" />
           </el-form-item>
 
-          <el-form-item v-if="policy.apiSecurity.enableRateLimiting" label="限流速率">
+          <el-form-item
+            v-if="policy.apiSecurity.enableRateLimiting"
+            label="限流速率"
+          >
             <el-input-number
               v-model="policy.apiSecurity.rateLimitPerMinute"
               :min="1"
@@ -130,7 +226,10 @@
             <el-switch v-model="policy.apiSecurity.enableCORS" />
           </el-form-item>
 
-          <el-form-item v-if="policy.apiSecurity.enableCORS" label="允许的源">
+          <el-form-item
+            v-if="policy.apiSecurity.enableCORS"
+            label="允许的源"
+          >
             <el-select
               v-model="policy.apiSecurity.allowedOrigins"
               multiple
@@ -152,21 +251,34 @@
             <el-switch v-model="policy.apiSecurity.enableApiKey" />
           </el-form-item>
 
-          <el-form-item v-if="policy.apiSecurity.enableApiKey" label="API Key Header">
-            <el-input v-model="policy.apiSecurity.apiKeyHeaderName" placeholder="X-API-Key" />
+          <el-form-item
+            v-if="policy.apiSecurity.enableApiKey"
+            label="API Key Header"
+          >
+            <el-input
+              v-model="policy.apiSecurity.apiKeyHeaderName"
+              placeholder="X-API-Key"
+            />
           </el-form-item>
         </el-form>
       </el-tab-pane>
     </el-tabs>
 
     <!-- 验证结果对话框 -->
-    <el-dialog v-model="validationVisible" title="策略验证结果" width="600px">
+    <el-dialog
+      v-model="validationVisible"
+      title="策略验证结果"
+      width="600px"
+    >
       <el-result
         :icon="validationResult.isValid ? 'success' : 'error'"
         :title="validationResult.isValid ? '验证通过' : '验证失败'"
       >
         <template #sub-title>
-          <div v-if="!validationResult.isValid" class="error-list">
+          <div
+            v-if="!validationResult.isValid"
+            class="error-list"
+          >
             <el-alert
               v-for="(error, index) in validationResult.errors"
               :key="index"

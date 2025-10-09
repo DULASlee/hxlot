@@ -1,33 +1,71 @@
 <template>
-  <div class="condition-node rule-node" :class="{ selected: data.selected, error: hasError }">
+  <div
+    class="condition-node rule-node"
+    :class="{ selected: data.selected, error: hasError }"
+  >
     <div class="node-header">
-      <el-icon class="node-icon" color="#409eff">
+      <el-icon
+        class="node-icon"
+        color="#409eff"
+      >
         <Share />
       </el-icon>
       <span class="node-title">{{ data.label || '条件判断' }}</span>
-      <el-icon v-if="hasError" class="error-icon" color="#f56c6c">
+      <el-icon
+        v-if="hasError"
+        class="error-icon"
+        color="#f56c6c"
+      >
         <Warning />
       </el-icon>
     </div>
     <div class="node-body">
-      <div class="node-description">{{ data.description || '根据条件分支执行' }}</div>
-      <div v-if="data.expression" class="node-expression">
-        <div class="expression-label">条件表达式:</div>
+      <div class="node-description">
+        {{ data.description || '根据条件分支执行' }}
+      </div>
+      <div
+        v-if="data.expression"
+        class="node-expression"
+      >
+        <div class="expression-label">
+          条件表达式:
+        </div>
         <code class="expression-code">{{ formatExpression(data.expression) }}</code>
       </div>
-      <div v-else class="node-warning">
+      <div
+        v-else
+        class="node-warning"
+      >
         <el-icon>
           <InfoFilled />
         </el-icon>
         <span>请配置条件表达式</span>
       </div>
     </div>
-    <Handle type="target" :position="Position.Left" :style="targetHandleStyle" />
-    <Handle id="true" type="source" :position="Position.Right" :style="trueHandleStyle">
-      <div class="handle-label handle-label-true">True</div>
+    <Handle
+      type="target"
+      :position="Position.Left"
+      :style="targetHandleStyle"
+    />
+    <Handle
+      id="true"
+      type="source"
+      :position="Position.Right"
+      :style="trueHandleStyle"
+    >
+      <div class="handle-label handle-label-true">
+        True
+      </div>
     </Handle>
-    <Handle id="false" type="source" :position="Position.Bottom" :style="falseHandleStyle">
-      <div class="handle-label handle-label-false">False</div>
+    <Handle
+      id="false"
+      type="source"
+      :position="Position.Bottom"
+      :style="falseHandleStyle"
+    >
+      <div class="handle-label handle-label-false">
+        False
+      </div>
     </Handle>
   </div>
 </template>

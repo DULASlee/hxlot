@@ -3,28 +3,45 @@
     <div class="dashboard-header">
       <h2>⚡ 性能监控Dashboard</h2>
       <div class="header-actions">
-        <button @click="refresh" :disabled="isRefreshing">
+        <button
+          :disabled="isRefreshing"
+          @click="refresh"
+        >
           {{ isRefreshing ? '刷新中...' : '刷新数据' }}
         </button>
-        <button @click="clearData">清除数据</button>
-        <button @click="exportData">导出数据</button>
+        <button @click="clearData">
+          清除数据
+        </button>
+        <button @click="exportData">
+          导出数据
+        </button>
       </div>
     </div>
 
     <div class="dashboard-grid">
       <!-- 关键指标卡片 -->
       <div class="metric-card">
-        <div class="card-icon">📊</div>
+        <div class="card-icon">
+          📊
+        </div>
         <div class="card-content">
-          <div class="card-label">总加载次数</div>
-          <div class="card-value">{{ report?.totalLoads || 0 }}</div>
+          <div class="card-label">
+            总加载次数
+          </div>
+          <div class="card-value">
+            {{ report?.totalLoads || 0 }}
+          </div>
         </div>
       </div>
 
       <div class="metric-card">
-        <div class="card-icon">⚡</div>
+        <div class="card-icon">
+          ⚡
+        </div>
         <div class="card-content">
-          <div class="card-label">缓存命中率</div>
+          <div class="card-label">
+            缓存命中率
+          </div>
           <div class="card-value">
             {{ formatPercent(report?.cacheHitRate || 0) }}
           </div>
@@ -32,9 +49,13 @@
       </div>
 
       <div class="metric-card">
-        <div class="card-icon">⏱️</div>
+        <div class="card-icon">
+          ⏱️
+        </div>
         <div class="card-content">
-          <div class="card-label">平均加载时间</div>
+          <div class="card-label">
+            平均加载时间
+          </div>
           <div class="card-value">
             {{ formatMs(report?.avgLoadTime || 0) }}
           </div>
@@ -42,9 +63,13 @@
       </div>
 
       <div class="metric-card">
-        <div class="card-icon">🎯</div>
+        <div class="card-icon">
+          🎯
+        </div>
         <div class="card-content">
-          <div class="card-label">P95加载时间</div>
+          <div class="card-label">
+            P95加载时间
+          </div>
           <div class="card-value">
             {{ formatMs(report?.p95LoadTime || 0) }}
           </div>
@@ -52,19 +77,30 @@
       </div>
 
       <div class="metric-card">
-        <div class="card-icon">❌</div>
+        <div class="card-icon">
+          ❌
+        </div>
         <div class="card-content">
-          <div class="card-label">错误率</div>
-          <div class="card-value" :class="{ 'error-high': (report?.errorRate || 0) > 0.05 }">
+          <div class="card-label">
+            错误率
+          </div>
+          <div
+            class="card-value"
+            :class="{ 'error-high': (report?.errorRate || 0) > 0.05 }"
+          >
             {{ formatPercent(report?.errorRate || 0) }}
           </div>
         </div>
       </div>
 
       <div class="metric-card">
-        <div class="card-icon">🔮</div>
+        <div class="card-icon">
+          🔮
+        </div>
         <div class="card-content">
-          <div class="card-label">预加载命中率</div>
+          <div class="card-label">
+            预加载命中率
+          </div>
           <div class="card-value">
             {{ formatPercent(report?.preloadEffectiveness?.hitRate || 0) }}
           </div>
@@ -76,7 +112,7 @@
     <div class="chart-section">
       <h3>📈 内存使用趋势</h3>
       <div class="memory-chart">
-        <canvas ref="memoryChartCanvas"></canvas>
+        <canvas ref="memoryChartCanvas" />
       </div>
     </div>
 
@@ -94,25 +130,39 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(comp, index) in report?.slowestComponents || []" :key="comp.name">
+          <tr
+            v-for="(comp, index) in report?.slowestComponents || []"
+            :key="comp.name"
+          >
             <td>{{ index + 1 }}</td>
             <td>
               <code>{{ comp.name }}</code>
             </td>
             <td>
-              <span class="load-time" :class="getLoadTimeClass(comp.avgLoadTime)">
+              <span
+                class="load-time"
+                :class="getLoadTimeClass(comp.avgLoadTime)"
+              >
                 {{ formatMs(comp.avgLoadTime) }}
               </span>
             </td>
             <td>{{ comp.loadCount }}</td>
             <td>
-              <span class="status-badge" :class="getStatusClass(comp.avgLoadTime)">
+              <span
+                class="status-badge"
+                :class="getStatusClass(comp.avgLoadTime)"
+              >
                 {{ getStatusText(comp.avgLoadTime) }}
               </span>
             </td>
           </tr>
           <tr v-if="!report?.slowestComponents?.length">
-            <td colspan="5" class="empty-message">暂无数据</td>
+            <td
+              colspan="5"
+              class="empty-message"
+            >
+              暂无数据
+            </td>
           </tr>
         </tbody>
       </table>
@@ -132,7 +182,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(comp, index) in report?.hottestComponents || []" :key="comp.name">
+          <tr
+            v-for="(comp, index) in report?.hottestComponents || []"
+            :key="comp.name"
+          >
             <td>{{ index + 1 }}</td>
             <td>
               <code>{{ comp.name }}</code>
@@ -146,7 +199,12 @@
             </td>
           </tr>
           <tr v-if="!report?.hottestComponents?.length">
-            <td colspan="5" class="empty-message">暂无数据</td>
+            <td
+              colspan="5"
+              class="empty-message"
+            >
+              暂无数据
+            </td>
           </tr>
         </tbody>
       </table>

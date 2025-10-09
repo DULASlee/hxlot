@@ -9,21 +9,39 @@
     </div>
 
     <!-- 无选中节点提示 -->
-    <div v-if="!selectedNode" class="panel-empty">
+    <div
+      v-if="!selectedNode"
+      class="panel-empty"
+    >
       <el-empty description="请选择一个节点进行配置" />
     </div>
 
     <!-- 节点属性表单 -->
-    <div v-else class="panel-content">
+    <div
+      v-else
+      class="panel-content"
+    >
       <!-- 基础信息 -->
       <div class="property-section">
-        <div class="section-title">基础信息</div>
-        <el-form label-position="top" size="small">
+        <div class="section-title">
+          基础信息
+        </div>
+        <el-form
+          label-position="top"
+          size="small"
+        >
           <el-form-item label="节点ID">
-            <el-input v-model="selectedNode.id" disabled />
+            <el-input
+              v-model="selectedNode.id"
+              disabled
+            />
           </el-form-item>
           <el-form-item label="节点标签">
-            <el-input v-model="selectedNode.data.label" placeholder="请输入节点标签" @input="onPropertyChange" />
+            <el-input
+              v-model="selectedNode.data.label"
+              placeholder="请输入节点标签"
+              @input="onPropertyChange"
+            />
           </el-form-item>
           <el-form-item label="节点类型">
             <el-tag :type="(getNodeTypeTagType(selectedNode.type) as any)">
@@ -31,19 +49,37 @@
             </el-tag>
           </el-form-item>
           <el-form-item label="节点描述">
-            <el-input v-model="selectedNode.data.description" type="textarea" :rows="2" placeholder="请输入节点描述"
-              @input="onPropertyChange" />
+            <el-input
+              v-model="selectedNode.data.description"
+              type="textarea"
+              :rows="2"
+              placeholder="请输入节点描述"
+              @input="onPropertyChange"
+            />
           </el-form-item>
         </el-form>
       </div>
 
       <!-- 条件节点特有配置 -->
-      <div v-if="selectedNode.type === 'condition'" class="property-section">
-        <div class="section-title">条件配置</div>
-        <el-form label-position="top" size="small">
+      <div
+        v-if="selectedNode.type === 'condition'"
+        class="property-section"
+      >
+        <div class="section-title">
+          条件配置
+        </div>
+        <el-form
+          label-position="top"
+          size="small"
+        >
           <el-form-item label="条件表达式">
-            <el-input v-model="selectedNode.data.expression" type="textarea" :rows="3"
-              placeholder="例如: entity.status == 'approved'" @input="onPropertyChange" />
+            <el-input
+              v-model="selectedNode.data.expression"
+              type="textarea"
+              :rows="3"
+              placeholder="例如: entity.status == 'approved'"
+              @input="onPropertyChange"
+            />
             <div class="form-item-tip">
               支持JavaScript表达式，可使用entity、user等上下文变量
             </div>
@@ -52,40 +88,92 @@
       </div>
 
       <!-- 动作节点特有配置 -->
-      <div v-if="selectedNode.type === 'action'" class="property-section">
-        <div class="section-title">动作配置</div>
-        <el-form label-position="top" size="small">
+      <div
+        v-if="selectedNode.type === 'action'"
+        class="property-section"
+      >
+        <div class="section-title">
+          动作配置
+        </div>
+        <el-form
+          label-position="top"
+          size="small"
+        >
           <el-form-item label="动作类型">
-            <el-select v-model="selectedNode.data.actionType" placeholder="选择动作类型" @change="onActionTypeChange">
-              <el-option label="设置字段值" value="SetFieldValue" />
-              <el-option label="显示消息" value="ShowMessage" />
-              <el-option label="调用API" value="CallAPI" />
-              <el-option label="验证字段" value="ValidateField" />
+            <el-select
+              v-model="selectedNode.data.actionType"
+              placeholder="选择动作类型"
+              @change="onActionTypeChange"
+            >
+              <el-option
+                label="设置字段值"
+                value="SetFieldValue"
+              />
+              <el-option
+                label="显示消息"
+                value="ShowMessage"
+              />
+              <el-option
+                label="调用API"
+                value="CallAPI"
+              />
+              <el-option
+                label="验证字段"
+                value="ValidateField"
+              />
             </el-select>
           </el-form-item>
 
           <!-- SetFieldValue 参数 -->
           <template v-if="selectedNode.data.actionType === 'SetFieldValue'">
             <el-form-item label="字段名">
-              <el-input v-model="actionParams.field" placeholder="例如: status" @input="onPropertyChange" />
+              <el-input
+                v-model="actionParams.field"
+                placeholder="例如: status"
+                @input="onPropertyChange"
+              />
             </el-form-item>
             <el-form-item label="字段值">
-              <el-input v-model="actionParams.value" placeholder="例如: approved" @input="onPropertyChange" />
+              <el-input
+                v-model="actionParams.value"
+                placeholder="例如: approved"
+                @input="onPropertyChange"
+              />
             </el-form-item>
           </template>
 
           <!-- ShowMessage 参数 -->
           <template v-if="selectedNode.data.actionType === 'ShowMessage'">
             <el-form-item label="消息内容">
-              <el-input v-model="actionParams.message" type="textarea" :rows="2" placeholder="请输入消息内容"
-                @input="onPropertyChange" />
+              <el-input
+                v-model="actionParams.message"
+                type="textarea"
+                :rows="2"
+                placeholder="请输入消息内容"
+                @input="onPropertyChange"
+              />
             </el-form-item>
             <el-form-item label="消息类型">
-              <el-select v-model="actionParams.type" @change="onPropertyChange">
-                <el-option label="信息" value="info" />
-                <el-option label="成功" value="success" />
-                <el-option label="警告" value="warning" />
-                <el-option label="错误" value="error" />
+              <el-select
+                v-model="actionParams.type"
+                @change="onPropertyChange"
+              >
+                <el-option
+                  label="信息"
+                  value="info"
+                />
+                <el-option
+                  label="成功"
+                  value="success"
+                />
+                <el-option
+                  label="警告"
+                  value="warning"
+                />
+                <el-option
+                  label="错误"
+                  value="error"
+                />
               </el-select>
             </el-form-item>
           </template>
@@ -93,14 +181,33 @@
           <!-- CallAPI 参数 -->
           <template v-if="selectedNode.data.actionType === 'CallAPI'">
             <el-form-item label="API地址">
-              <el-input v-model="actionParams.url" placeholder="/api/..." @input="onPropertyChange" />
+              <el-input
+                v-model="actionParams.url"
+                placeholder="/api/..."
+                @input="onPropertyChange"
+              />
             </el-form-item>
             <el-form-item label="请求方法">
-              <el-select v-model="actionParams.method" @change="onPropertyChange">
-                <el-option label="GET" value="GET" />
-                <el-option label="POST" value="POST" />
-                <el-option label="PUT" value="PUT" />
-                <el-option label="DELETE" value="DELETE" />
+              <el-select
+                v-model="actionParams.method"
+                @change="onPropertyChange"
+              >
+                <el-option
+                  label="GET"
+                  value="GET"
+                />
+                <el-option
+                  label="POST"
+                  value="POST"
+                />
+                <el-option
+                  label="PUT"
+                  value="PUT"
+                />
+                <el-option
+                  label="DELETE"
+                  value="DELETE"
+                />
               </el-select>
             </el-form-item>
           </template>
@@ -108,14 +215,29 @@
           <!-- ValidateField 参数 -->
           <template v-if="selectedNode.data.actionType === 'ValidateField'">
             <el-form-item label="验证字段">
-              <el-input v-model="actionParams.field" placeholder="例如: email" @input="onPropertyChange" />
+              <el-input
+                v-model="actionParams.field"
+                placeholder="例如: email"
+                @input="onPropertyChange"
+              />
             </el-form-item>
             <el-form-item label="验证规则">
-              <el-checkbox-group v-model="actionParams.rules" @change="onPropertyChange">
-                <el-checkbox label="required">必填</el-checkbox>
-                <el-checkbox label="email">邮箱格式</el-checkbox>
-                <el-checkbox label="min:6">最小长度6</el-checkbox>
-                <el-checkbox label="max:50">最大长度50</el-checkbox>
+              <el-checkbox-group
+                v-model="actionParams.rules"
+                @change="onPropertyChange"
+              >
+                <el-checkbox label="required">
+                  必填
+                </el-checkbox>
+                <el-checkbox label="email">
+                  邮箱格式
+                </el-checkbox>
+                <el-checkbox label="min:6">
+                  最小长度6
+                </el-checkbox>
+                <el-checkbox label="max:50">
+                  最大长度50
+                </el-checkbox>
               </el-checkbox-group>
             </el-form-item>
           </template>
@@ -123,9 +245,17 @@
       </div>
 
       <!-- 决策节点特有配置 -->
-      <div v-if="selectedNode.type === 'decision'" class="property-section">
-        <div class="section-title">分支配置</div>
-        <el-form label-position="top" size="small">
+      <div
+        v-if="selectedNode.type === 'decision'"
+        class="property-section"
+      >
+        <div class="section-title">
+          分支配置
+        </div>
+        <el-form
+          label-position="top"
+          size="small"
+        >
           <div class="form-item-tip">
             多路分支决策功能待实现...
           </div>
@@ -134,13 +264,20 @@
 
       <!-- 操作按钮 -->
       <div class="panel-actions">
-        <el-button type="primary" size="small" @click="saveProperties">
+        <el-button
+          type="primary"
+          size="small"
+          @click="saveProperties"
+        >
           <el-icon>
             <Check />
           </el-icon>
           保存
         </el-button>
-        <el-button size="small" @click="resetProperties">
+        <el-button
+          size="small"
+          @click="resetProperties"
+        >
           <el-icon>
             <RefreshLeft />
           </el-icon>

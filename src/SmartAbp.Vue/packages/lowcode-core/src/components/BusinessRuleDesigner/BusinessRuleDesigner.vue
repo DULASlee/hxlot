@@ -3,19 +3,30 @@
     <!-- 顶部工具栏 -->
     <div class="designer-toolbar">
       <div class="toolbar-left">
-        <el-button type="primary" size="small" @click="addNode('condition')">
+        <el-button
+          type="primary"
+          size="small"
+          @click="addNode('condition')"
+        >
           <el-icon>
             <Plus />
           </el-icon>
           添加条件
         </el-button>
-        <el-button type="success" size="small" @click="addNode('action')">
+        <el-button
+          type="success"
+          size="small"
+          @click="addNode('action')"
+        >
           <el-icon>
             <Setting />
           </el-icon>
           添加动作
         </el-button>
-        <el-button size="small" @click="validateRules">
+        <el-button
+          size="small"
+          @click="validateRules"
+        >
           <el-icon>
             <Check />
           </el-icon>
@@ -23,13 +34,19 @@
         </el-button>
       </div>
       <div class="toolbar-right">
-        <el-button size="small" @click="saveRules">
+        <el-button
+          size="small"
+          @click="saveRules"
+        >
           <el-icon>
             <Document />
           </el-icon>
           保存
         </el-button>
-        <el-button size="small" @click="exportRules">
+        <el-button
+          size="small"
+          @click="exportRules"
+        >
           <el-icon>
             <Download />
           </el-icon>
@@ -40,10 +57,22 @@
 
     <!-- Vue Flow 画布 -->
     <div class="designer-canvas">
-      <VueFlow v-model:nodes="nodes" v-model:edges="edges" :default-viewport="{ zoom: 1.5 }" :min-zoom="0.2"
-        :max-zoom="4" fit-view-on-init @node-click="onNodeClick" @edge-click="onEdgeClick" @pane-click="onPaneClick">
+      <VueFlow
+        v-model:nodes="nodes"
+        v-model:edges="edges"
+        :default-viewport="{ zoom: 1.5 }"
+        :min-zoom="0.2"
+        :max-zoom="4"
+        fit-view-on-init
+        @node-click="onNodeClick"
+        @edge-click="onEdgeClick"
+        @pane-click="onPaneClick"
+      >
         <!-- 背景网格 -->
-        <Background pattern-color="#aaa" :gap="16" />
+        <Background
+          pattern-color="#aaa"
+          :gap="16"
+        />
 
         <!-- 控制器 -->
         <Controls />

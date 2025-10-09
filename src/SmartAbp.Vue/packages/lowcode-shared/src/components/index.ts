@@ -5,7 +5,7 @@ export {
   ComponentRegistry, getComponentMetadata, globalComponentRegistry, loadComponent, registerComponent, type ComponentBundle, type ComponentCategory, type ComponentMetadata, type ComponentPriority
 } from './ComponentRegistry.js'
 export type {
-  ComponentCategory, ComponentInstance,
+  ComponentInstance,
   ComponentLoadStats, LoadPriority
 } from './ComponentRegistry.js'
 

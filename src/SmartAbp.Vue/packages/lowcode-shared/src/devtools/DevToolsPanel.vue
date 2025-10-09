@@ -16,17 +16,30 @@
 
     <div class="panel-content">
       <!-- Tab 1: 组件树 -->
-      <div v-show="activeTab === 'components'" class="tab-panel">
+      <div
+        v-show="activeTab === 'components'"
+        class="tab-panel"
+      >
         <h3>组件树</h3>
         <div class="component-tree">
-          <div v-for="comp in componentRegistry" :key="comp.name" class="component-node">
-            <div class="node-header" @click="toggleNode(comp.name)">
+          <div
+            v-for="comp in componentRegistry"
+            :key="comp.name"
+            class="component-node"
+          >
+            <div
+              class="node-header"
+              @click="toggleNode(comp.name)"
+            >
               <span class="expand-icon">{{ expandedNodes.has(comp.name) ? '▼' : '▶' }}</span>
               <span class="component-icon">📦</span>
               <code>{{ comp.name }}</code>
               <span class="component-category">{{ comp.category }}</span>
             </div>
-            <div v-if="expandedNodes.has(comp.name)" class="node-details">
+            <div
+              v-if="expandedNodes.has(comp.name)"
+              class="node-details"
+            >
               <div class="detail-item">
                 <span class="label">Bundle:</span>
                 <code>{{ comp.bundle }}</code>
@@ -39,25 +52,41 @@
                 <span class="label">Priority:</span>
                 <span :class="['priority-badge', comp.priority]">{{ comp.priority }}</span>
               </div>
-              <div v-if="comp.dependencies?.length" class="detail-item">
+              <div
+                v-if="comp.dependencies?.length"
+                class="detail-item"
+              >
                 <span class="label">Dependencies:</span>
                 <div class="dependencies">
-                  <code v-for="dep in comp.dependencies" :key="dep">{{ dep }}</code>
+                  <code
+                    v-for="dep in comp.dependencies"
+                    :key="dep"
+                  >{{ dep }}</code>
                 </div>
               </div>
             </div>
           </div>
-          <div v-if="componentRegistry.length === 0" class="empty-message">
+          <div
+            v-if="componentRegistry.length === 0"
+            class="empty-message"
+          >
             暂无组件
           </div>
         </div>
       </div>
 
       <!-- Tab 2: 插件管理 -->
-      <div v-show="activeTab === 'plugins'" class="tab-panel">
+      <div
+        v-show="activeTab === 'plugins'"
+        class="tab-panel"
+      >
         <h3>插件管理</h3>
         <div class="plugin-list">
-          <div v-for="plugin in pluginList" :key="plugin.plugin.metadata.id" class="plugin-card">
+          <div
+            v-for="plugin in pluginList"
+            :key="plugin.plugin.metadata.id"
+            class="plugin-card"
+          >
             <div class="plugin-header">
               <div class="plugin-info">
                 <h4>{{ plugin.plugin.metadata.name }}</h4>
@@ -67,21 +96,23 @@
                 <span :class="['status-badge', plugin.status]">{{ plugin.status }}</span>
                 <button 
                   v-if="plugin.status === 'enabled'"
-                  @click="disablePlugin(plugin.plugin.metadata.id)"
                   class="control-btn"
+                  @click="disablePlugin(plugin.plugin.metadata.id)"
                 >
                   禁用
                 </button>
                 <button 
                   v-else-if="plugin.status === 'disabled'"
-                  @click="enablePlugin(plugin.plugin.metadata.id)"
                   class="control-btn primary"
+                  @click="enablePlugin(plugin.plugin.metadata.id)"
                 >
                   启用
                 </button>
               </div>
             </div>
-            <p class="plugin-description">{{ plugin.plugin.metadata.description }}</p>
+            <p class="plugin-description">
+              {{ plugin.plugin.metadata.description }}
+            </p>
             <div class="plugin-meta">
               <span>版本: {{ plugin.plugin.metadata.version }}</span>
               <span v-if="plugin.plugin.metadata.author">作者: {{ plugin.plugin.metadata.author }}</span>
@@ -89,37 +120,67 @@
                 安装时间: {{ formatDate(plugin.installedAt) }}
               </span>
             </div>
-            <div v-if="plugin.plugin.metadata.tags" class="plugin-tags">
-              <span v-for="tag in plugin.plugin.metadata.tags" :key="tag" class="tag">
+            <div
+              v-if="plugin.plugin.metadata.tags"
+              class="plugin-tags"
+            >
+              <span
+                v-for="tag in plugin.plugin.metadata.tags"
+                :key="tag"
+                class="tag"
+              >
                 {{ tag }}
               </span>
             </div>
           </div>
-          <div v-if="pluginList.length === 0" class="empty-message">
+          <div
+            v-if="pluginList.length === 0"
+            class="empty-message"
+          >
             暂无插件
           </div>
         </div>
       </div>
 
       <!-- Tab 3: 性能监控 -->
-      <div v-show="activeTab === 'performance'" class="tab-panel">
+      <div
+        v-show="activeTab === 'performance'"
+        class="tab-panel"
+      >
         <h3>性能监控</h3>
         <div class="performance-stats">
           <div class="stat-card">
-            <div class="stat-label">缓存命中率</div>
-            <div class="stat-value">{{ formatPercent(cacheHitRate) }}</div>
+            <div class="stat-label">
+              缓存命中率
+            </div>
+            <div class="stat-value">
+              {{ formatPercent(cacheHitRate) }}
+            </div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">平均加载时间</div>
-            <div class="stat-value">{{ avgLoadTime.toFixed(1) }}ms</div>
+            <div class="stat-label">
+              平均加载时间
+            </div>
+            <div class="stat-value">
+              {{ avgLoadTime.toFixed(1) }}ms
+            </div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">总加载次数</div>
-            <div class="stat-value">{{ totalLoads }}</div>
+            <div class="stat-label">
+              总加载次数
+            </div>
+            <div class="stat-value">
+              {{ totalLoads }}
+            </div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">错误率</div>
-            <div class="stat-value" :class="{ 'error-high': errorRate > 0.05 }">
+            <div class="stat-label">
+              错误率
+            </div>
+            <div
+              class="stat-value"
+              :class="{ 'error-high': errorRate > 0.05 }"
+            >
               {{ formatPercent(errorRate) }}
             </div>
           </div>
@@ -139,14 +200,17 @@
                   height: `${(metric.duration / maxDuration) * 100}%`,
                   background: getBarColor(metric.duration)
                 }"
-              ></div>
+              />
             </div>
           </div>
         </div>
       </div>
 
       <!-- Tab 4: 事件日志 -->
-      <div v-show="activeTab === 'events'" class="tab-panel">
+      <div
+        v-show="activeTab === 'events'"
+        class="tab-panel"
+      >
         <h3>事件日志</h3>
         <div class="event-log">
           <div 
@@ -159,7 +223,10 @@
             <span class="event-target">{{ event.target || '-' }}</span>
             <span class="event-data">{{ formatEventData(event.data) }}</span>
           </div>
-          <div v-if="eventLog.length === 0" class="empty-message">
+          <div
+            v-if="eventLog.length === 0"
+            class="empty-message"
+          >
             暂无事件
           </div>
         </div>

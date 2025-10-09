@@ -15,8 +15,12 @@
             <el-icon><CircleCheck /></el-icon>
           </div>
           <div class="card-content">
-            <div class="card-value">{{ stats.successfulExecutions || 0 }}</div>
-            <div class="card-label">成功执行</div>
+            <div class="card-value">
+              {{ stats.successfulExecutions || 0 }}
+            </div>
+            <div class="card-label">
+              成功执行
+            </div>
           </div>
         </div>
 
@@ -25,8 +29,12 @@
             <el-icon><CircleClose /></el-icon>
           </div>
           <div class="card-content">
-            <div class="card-value">{{ stats.failedExecutions || 0 }}</div>
-            <div class="card-label">执行失败</div>
+            <div class="card-value">
+              {{ stats.failedExecutions || 0 }}
+            </div>
+            <div class="card-label">
+              执行失败
+            </div>
           </div>
         </div>
 
@@ -35,8 +43,12 @@
             <el-icon><Clock /></el-icon>
           </div>
           <div class="card-content">
-            <div class="card-value">{{ averageExecutionTime }}ms</div>
-            <div class="card-label">平均执行时间</div>
+            <div class="card-value">
+              {{ averageExecutionTime }}ms
+            </div>
+            <div class="card-label">
+              平均执行时间
+            </div>
           </div>
         </div>
 
@@ -45,8 +57,12 @@
             <el-icon><Warning /></el-icon>
           </div>
           <div class="card-content">
-            <div class="card-value">{{ stats.totalRules || 0 }}</div>
-            <div class="card-label">活跃规则</div>
+            <div class="card-value">
+              {{ stats.totalRules || 0 }}
+            </div>
+            <div class="card-label">
+              活跃规则
+            </div>
           </div>
         </div>
       </div>
@@ -57,8 +73,16 @@
       <div class="log-header">
         <h3>执行日志</h3>
         <div class="log-controls">
-          <el-button @click="refreshLog" :icon="Refresh" circle />
-          <el-button @click="clearLog" :icon="Delete" circle />
+          <el-button
+            :icon="Refresh"
+            circle
+            @click="refreshLog"
+          />
+          <el-button
+            :icon="Delete"
+            circle
+            @click="clearLog"
+          />
           <el-switch
             v-model="autoRefresh"
             active-text="自动刷新"
@@ -68,20 +92,32 @@
       </div>
 
       <el-table
+        v-loading="loading"
         :data="filteredExecutionLog"
         stripe
         :height="400"
-        v-loading="loading"
       >
-        <el-table-column prop="timestamp" label="执行时间" width="180">
+        <el-table-column
+          prop="timestamp"
+          label="执行时间"
+          width="180"
+        >
           <template #default="{ row }">
             <span>{{ formatTime(row.timestamp) }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="ruleName" label="规则名称" width="200" />
+        <el-table-column
+          prop="ruleName"
+          label="规则名称"
+          width="200"
+        />
 
-        <el-table-column prop="status" label="执行状态" width="120">
+        <el-table-column
+          prop="status"
+          label="执行状态"
+          width="120"
+        >
           <template #default="{ row }">
             <el-tag
               :type="getStatusType(row.status)"
@@ -92,39 +128,59 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="executionTime" label="执行时间" width="120">
+        <el-table-column
+          prop="executionTime"
+          label="执行时间"
+          width="120"
+        >
           <template #default="{ row }">
             <span>{{ row.executionTime }}ms</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="result" label="执行结果" min-width="150">
+        <el-table-column
+          prop="result"
+          label="执行结果"
+          min-width="150"
+        >
           <template #default="{ row }">
-            <span v-if="row.status === 'success'" class="result-success">
+            <span
+              v-if="row.status === 'success'"
+              class="result-success"
+            >
               {{ row.result }}
             </span>
-            <span v-else-if="row.status === 'error'" class="result-error">
+            <span
+              v-else-if="row.status === 'error'"
+              class="result-error"
+            >
               {{ row.error }}
             </span>
-            <span v-else class="result-pending">执行中...</span>
+            <span
+              v-else
+              class="result-pending"
+            >执行中...</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" width="120">
+        <el-table-column
+          label="操作"
+          width="120"
+        >
           <template #default="{ row }">
             <el-button
-              @click="viewDetails(row)"
               :icon="View"
               circle
               size="small"
+              @click="viewDetails(row)"
             />
             <el-button
               v-if="row.status === 'error'"
-              @click="retryExecution(row)"
               :icon="Refresh"
               circle
               size="small"
               type="warning"
+              @click="retryExecution(row)"
             />
           </template>
         </el-table-column>
@@ -138,8 +194,14 @@
       width="60%"
       :close-on-click-modal="false"
     >
-      <div v-if="selectedExecution" class="execution-details">
-        <el-descriptions :column="2" border>
+      <div
+        v-if="selectedExecution"
+        class="execution-details"
+      >
+        <el-descriptions
+          :column="2"
+          border
+        >
           <el-descriptions-item label="规则ID">
             {{ selectedExecution.ruleId }}
           </el-descriptions-item>
@@ -162,7 +224,10 @@
           </el-descriptions-item>
         </el-descriptions>
 
-        <div class="execution-context" v-if="selectedExecution.context">
+        <div
+          v-if="selectedExecution.context"
+          class="execution-context"
+        >
           <h4>执行上下文</h4>
           <el-input
             :model-value="selectedExecution.context"
@@ -172,7 +237,10 @@
           />
         </div>
 
-        <div class="execution-result" v-if="selectedExecution.result || selectedExecution.error">
+        <div
+          v-if="selectedExecution.result || selectedExecution.error"
+          class="execution-result"
+        >
           <h4>{{ selectedExecution.status === 'error' ? '错误信息' : '执行结果' }}</h4>
           <el-input
             :model-value="selectedExecution.status === 'error' ? selectedExecution.error : selectedExecution.result"

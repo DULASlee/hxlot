@@ -14,25 +14,47 @@
         <span class="action-count">{{ actions.length }} 个动作</span>
       </div>
       <div class="header-right">
-        <el-button @click="addAction" type="primary" :icon="Plus">
+        <el-button
+          type="primary"
+          :icon="Plus"
+          @click="addAction"
+        >
           添加动作
         </el-button>
-        <el-button @click="importActions" :icon="Upload">
+        <el-button
+          :icon="Upload"
+          @click="importActions"
+        >
           导入动作
         </el-button>
-        <el-button @click="exportActions" :icon="Download">
+        <el-button
+          :icon="Download"
+          @click="exportActions"
+        >
           导出动作
         </el-button>
       </div>
     </div>
 
     <!-- 动作执行模式 -->
-    <div class="execution-mode" v-if="actions.length > 1">
+    <div
+      v-if="actions.length > 1"
+      class="execution-mode"
+    >
       <span class="mode-label">执行模式：</span>
-      <el-radio-group v-model="executionMode" @change="handleModeChange">
-        <el-radio value="SEQUENTIAL">顺序执行</el-radio>
-        <el-radio value="PARALLEL">并行执行</el-radio>
-        <el-radio value="CONDITIONAL">条件执行</el-radio>
+      <el-radio-group
+        v-model="executionMode"
+        @change="handleModeChange"
+      >
+        <el-radio value="SEQUENTIAL">
+          顺序执行
+        </el-radio>
+        <el-radio value="PARALLEL">
+          并行执行
+        </el-radio>
+        <el-radio value="CONDITIONAL">
+          条件执行
+        </el-radio>
       </el-radio-group>
     </div>
 
@@ -47,10 +69,19 @@
         <!-- 动作序号和连接符 -->
         <div class="action-index">
           <span class="index-number">{{ index + 1 }}</span>
-          <div v-if="index < actions.length - 1" class="flow-connector">
-            <el-icon v-if="executionMode === 'SEQUENTIAL'"><ArrowDown /></el-icon>
-            <el-icon v-else-if="executionMode === 'PARALLEL'"><Share /></el-icon>
-            <el-icon v-else><Switch /></el-icon>
+          <div
+            v-if="index < actions.length - 1"
+            class="flow-connector"
+          >
+            <el-icon v-if="executionMode === 'SEQUENTIAL'">
+              <ArrowDown />
+            </el-icon>
+            <el-icon v-else-if="executionMode === 'PARALLEL'">
+              <Share />
+            </el-icon>
+            <el-icon v-else>
+              <Switch />
+            </el-icon>
           </div>
         </div>
 
@@ -106,7 +137,10 @@
             <el-col :span="7">
               <el-form-item label="参数配置">
                 <!-- 字段赋值参数 -->
-                <div v-if="action.type === 'SET_FIELD'" class="param-config">
+                <div
+                  v-if="action.type === 'SET_FIELD'"
+                  class="param-config"
+                >
                   <el-input
                     v-model="action.parameters.field"
                     placeholder="字段名"
@@ -120,7 +154,10 @@
                 </div>
 
                 <!-- API调用参数 -->
-                <div v-else-if="action.type === 'API_CALL'" class="param-config">
+                <div
+                  v-else-if="action.type === 'API_CALL'"
+                  class="param-config"
+                >
                   <el-input
                     v-model="action.parameters.url"
                     placeholder="API地址"
@@ -130,15 +167,30 @@
                     v-model="action.parameters.method"
                     style="width: 38%"
                   >
-                    <el-option label="GET" value="GET" />
-                    <el-option label="POST" value="POST" />
-                    <el-option label="PUT" value="PUT" />
-                    <el-option label="DELETE" value="DELETE" />
+                    <el-option
+                      label="GET"
+                      value="GET"
+                    />
+                    <el-option
+                      label="POST"
+                      value="POST"
+                    />
+                    <el-option
+                      label="PUT"
+                      value="PUT"
+                    />
+                    <el-option
+                      label="DELETE"
+                      value="DELETE"
+                    />
                   </el-select>
                 </div>
 
                 <!-- 发送通知参数 -->
-                <div v-else-if="action.type === 'SEND_NOTIFICATION'" class="param-config">
+                <div
+                  v-else-if="action.type === 'SEND_NOTIFICATION'"
+                  class="param-config"
+                >
                   <el-input
                     v-model="action.parameters.template"
                     placeholder="通知模板"
@@ -148,14 +200,26 @@
                     v-model="action.parameters.channel"
                     style="width: 38%"
                   >
-                    <el-option label="邮件" value="email" />
-                    <el-option label="短信" value="sms" />
-                    <el-option label="站内信" value="internal" />
+                    <el-option
+                      label="邮件"
+                      value="email"
+                    />
+                    <el-option
+                      label="短信"
+                      value="sms"
+                    />
+                    <el-option
+                      label="站内信"
+                      value="internal"
+                    />
                   </el-select>
                 </div>
 
                 <!-- 工作流触发参数 -->
-                <div v-else-if="action.type === 'TRIGGER_WORKFLOW'" class="param-config">
+                <div
+                  v-else-if="action.type === 'TRIGGER_WORKFLOW'"
+                  class="param-config"
+                >
                   <el-select
                     v-model="action.parameters.workflowId"
                     placeholder="选择工作流"
@@ -196,19 +260,19 @@
               <el-form-item label=" ">
                 <div class="action-controls">
                   <el-button
-                    @click="duplicateAction(index)"
                     :icon="CopyDocument"
                     circle
                     size="small"
                     title="复制动作"
+                    @click="duplicateAction(index)"
                   />
                   <el-button
-                    @click="removeAction(index)"
                     :icon="Delete"
                     circle
                     size="small"
                     type="danger"
                     title="删除动作"
+                    @click="removeAction(index)"
                   />
                 </div>
               </el-form-item>
@@ -216,7 +280,10 @@
           </el-row>
 
           <!-- 条件执行配置 -->
-          <div v-if="executionMode === 'CONDITIONAL' && index > 0" class="conditional-config">
+          <div
+            v-if="executionMode === 'CONDITIONAL' && index > 0"
+            class="conditional-config"
+          >
             <el-form-item label="执行条件">
               <el-input
                 v-model="action.condition"
@@ -229,16 +296,26 @@
     </div>
 
     <!-- 空状态 -->
-    <div v-if="actions.length === 0" class="empty-state">
+    <div
+      v-if="actions.length === 0"
+      class="empty-state"
+    >
       <el-empty description="暂无动作，点击添加动作开始配置">
-        <el-button @click="addAction" type="primary" :icon="Plus">
+        <el-button
+          type="primary"
+          :icon="Plus"
+          @click="addAction"
+        >
           添加第一个动作
         </el-button>
       </el-empty>
     </div>
 
     <!-- 动作预览 -->
-    <div v-if="actions.length > 0" class="action-preview">
+    <div
+      v-if="actions.length > 0"
+      class="action-preview"
+    >
       <h4>动作序列预览</h4>
       <div class="preview-content">
         <div class="execution-flow">
@@ -252,7 +329,10 @@
               <span class="step-type">{{ getActionTypeLabel(action.type) }}</span>
               <span class="step-target">{{ action.target }}</span>
             </div>
-            <div v-if="index < actions.length - 1" class="flow-arrow">
+            <div
+              v-if="index < actions.length - 1"
+              class="flow-arrow"
+            >
               <el-icon><ArrowRight /></el-icon>
             </div>
           </div>
@@ -263,10 +343,17 @@
         </div>
       </div>
       <div class="preview-actions">
-        <el-button @click="testActions" :icon="VideoPlay">
+        <el-button
+          :icon="VideoPlay"
+          @click="testActions"
+        >
           测试动作
         </el-button>
-        <el-button @click="saveActions" type="primary" :icon="Check">
+        <el-button
+          type="primary"
+          :icon="Check"
+          @click="saveActions"
+        >
           保存动作
         </el-button>
       </div>

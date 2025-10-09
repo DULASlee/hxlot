@@ -1,18 +1,35 @@
 <template>
-  <div class="end-node rule-node" :class="{ selected: data.selected }">
+  <div
+    class="end-node rule-node"
+    :class="{ selected: data.selected }"
+  >
     <div class="node-header">
-      <el-icon class="node-icon" :style="{ color: '#f56c6c' }">
+      <el-icon
+        class="node-icon"
+        :style="{ color: '#f56c6c' }"
+      >
         <VideoPause />
       </el-icon>
       <span class="node-title">{{ data.label || '结束' }}</span>
     </div>
     <div class="node-body">
-      <div class="node-description">{{ data.description || '工作流结束节点' }}</div>
-      <div v-if="(data as any).returnValue" class="node-info">
-        <el-tag type="danger">返回: {{ (data as any).returnValue }}</el-tag>
+      <div class="node-description">
+        {{ data.description || '工作流结束节点' }}
+      </div>
+      <div
+        v-if="(data as any).returnValue"
+        class="node-info"
+      >
+        <el-tag type="danger">
+          返回: {{ (data as any).returnValue }}
+        </el-tag>
       </div>
     </div>
-    <Handle type="target" :position="Position.Left" :style="handleStyle" />
+    <Handle
+      type="target"
+      :position="Position.Left"
+      :style="handleStyle"
+    />
   </div>
 </template>
 

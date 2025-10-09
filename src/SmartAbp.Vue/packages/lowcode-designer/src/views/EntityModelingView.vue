@@ -38,7 +38,10 @@
             >
               <i class="el-icon-warning" /> 未保存
             </el-tag>
-            <span v-if="lastSaveTime" class="save-time">
+            <span
+              v-if="lastSaveTime"
+              class="save-time"
+            >
               {{ new Date(lastSaveTime).toLocaleTimeString('zh-CN') }}
             </span>
           </div>

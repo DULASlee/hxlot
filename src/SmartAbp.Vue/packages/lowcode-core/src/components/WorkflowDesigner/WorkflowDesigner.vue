@@ -1,6 +1,10 @@
 <template>
   <div class="workflow-designer">
-    <VueFlow v-model:nodes="nodes" v-model:edges="edges" fit-view-on-init>
+    <VueFlow
+      v-model:nodes="nodes"
+      v-model:edges="edges"
+      fit-view-on-init
+    >
       <Background />
       <Controls />
       <!-- MiniMap 暂不启用，避免外部依赖未安装导致类型错误 -->
@@ -8,25 +12,38 @@
       <!-- 工具栏 -->
       <div class="workflow-toolbar">
         <el-button-group>
-          <el-button type="primary" size="small" @click="addState">
+          <el-button
+            type="primary"
+            size="small"
+            @click="addState"
+          >
             <el-icon>
               <Plus />
             </el-icon>
             添加状态
           </el-button>
-          <el-button size="small" @click="validate">
+          <el-button
+            size="small"
+            @click="validate"
+          >
             <el-icon>
               <Check />
             </el-icon>
             验证
           </el-button>
-          <el-button size="small" @click="save">
+          <el-button
+            size="small"
+            @click="save"
+          >
             <el-icon>
               <Document />
             </el-icon>
             保存
           </el-button>
-          <el-button size="small" @click="exportWorkflow">
+          <el-button
+            size="small"
+            @click="exportWorkflow"
+          >
             <el-icon>
               <Download />
             </el-icon>

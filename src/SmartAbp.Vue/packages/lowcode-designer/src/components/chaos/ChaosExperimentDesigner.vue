@@ -4,11 +4,19 @@
       <template #header>
         <div class="card-header">
           <span>混沌工程实验设计器</span>
-          <el-button type="primary" @click="handleGenerate">生成配置</el-button>
+          <el-button
+            type="primary"
+            @click="handleGenerate"
+          >
+            生成配置
+          </el-button>
         </div>
       </template>
 
-      <el-form :model="experimentConfig" label-width="120px">
+      <el-form
+        :model="experimentConfig"
+        label-width="120px"
+      >
         <!-- 基本信息 -->
         <el-divider content-position="left">
           <el-icon><DocumentAdd /></el-icon>
@@ -56,9 +64,15 @@
 
         <el-form-item label="调度类型">
           <el-radio-group v-model="experimentConfig.schedule.scheduleType">
-            <el-radio label="Manual">手动执行</el-radio>
-            <el-radio label="Scheduled">定时执行</el-radio>
-            <el-radio label="Continuous">持续执行</el-radio>
+            <el-radio label="Manual">
+              手动执行
+            </el-radio>
+            <el-radio label="Scheduled">
+              定时执行
+            </el-radio>
+            <el-radio label="Continuous">
+              持续执行
+            </el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -90,11 +104,21 @@
 
         <el-form-item label="监控指标">
           <el-checkbox-group v-model="experimentConfig.metrics.monitoredMetrics">
-            <el-checkbox label="ResponseTime">响应时间</el-checkbox>
-            <el-checkbox label="ErrorRate">错误率</el-checkbox>
-            <el-checkbox label="Throughput">吞吐量</el-checkbox>
-            <el-checkbox label="CPUUsage">CPU使用率</el-checkbox>
-            <el-checkbox label="MemoryUsage">内存使用率</el-checkbox>
+            <el-checkbox label="ResponseTime">
+              响应时间
+            </el-checkbox>
+            <el-checkbox label="ErrorRate">
+              错误率
+            </el-checkbox>
+            <el-checkbox label="Throughput">
+              吞吐量
+            </el-checkbox>
+            <el-checkbox label="CPUUsage">
+              CPU使用率
+            </el-checkbox>
+            <el-checkbox label="MemoryUsage">
+              内存使用率
+            </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
 
@@ -104,50 +128,88 @@
         </el-form-item>
 
         <!-- 实验状态预览 -->
-        <el-divider content-position="left">实验流程预览</el-divider>
+        <el-divider content-position="left">
+          实验流程预览
+        </el-divider>
 
         <div class="experiment-flow">
           <div class="flow-step">
-            <div class="step-icon success">1</div>
+            <div class="step-icon success">
+              1
+            </div>
             <div class="step-content">
-              <div class="step-title">准备阶段</div>
-              <div class="step-desc">验证配置、创建备份</div>
+              <div class="step-title">
+                准备阶段
+              </div>
+              <div class="step-desc">
+                验证配置、创建备份
+              </div>
             </div>
           </div>
-          <div class="flow-arrow">→</div>
+          <div class="flow-arrow">
+            →
+          </div>
           <div class="flow-step">
-            <div class="step-icon warning">2</div>
+            <div class="step-icon warning">
+              2
+            </div>
             <div class="step-content">
-              <div class="step-title">注入故障</div>
+              <div class="step-title">
+                注入故障
+              </div>
               <div class="step-desc">
                 {{ experimentConfig.faultInjection.delay.enabled ? '延迟故障' : '' }}
                 {{ experimentConfig.faultInjection.abort.enabled ? '中止故障' : '' }}
               </div>
             </div>
           </div>
-          <div class="flow-arrow">→</div>
+          <div class="flow-arrow">
+            →
+          </div>
           <div class="flow-step">
-            <div class="step-icon info">3</div>
+            <div class="step-icon info">
+              3
+            </div>
             <div class="step-content">
-              <div class="step-title">监控观察</div>
-              <div class="step-desc">持续{{ experimentConfig.schedule.durationMinutes }}分钟</div>
+              <div class="step-title">
+                监控观察
+              </div>
+              <div class="step-desc">
+                持续{{ experimentConfig.schedule.durationMinutes }}分钟
+              </div>
             </div>
           </div>
-          <div class="flow-arrow">→</div>
+          <div class="flow-arrow">
+            →
+          </div>
           <div class="flow-step">
-            <div class="step-icon primary">4</div>
+            <div class="step-icon primary">
+              4
+            </div>
             <div class="step-content">
-              <div class="step-title">分析报告</div>
-              <div class="step-desc">生成实验结果</div>
+              <div class="step-title">
+                分析报告
+              </div>
+              <div class="step-desc">
+                生成实验结果
+              </div>
             </div>
           </div>
         </div>
       </el-form>
 
       <!-- 生成的配置预览 -->
-      <el-divider content-position="left">配置预览</el-divider>
-      <el-tabs v-model="activeTab" type="card">
-        <el-tab-pane label="Istio故障注入" name="istio">
+      <el-divider content-position="left">
+        配置预览
+      </el-divider>
+      <el-tabs
+        v-model="activeTab"
+        type="card"
+      >
+        <el-tab-pane
+          label="Istio故障注入"
+          name="istio"
+        >
           <el-input
             v-model="generatedConfig.istio"
             type="textarea"
@@ -156,7 +218,10 @@
             class="code-preview"
           />
         </el-tab-pane>
-        <el-tab-pane label="Kubernetes Chaos" name="k8s">
+        <el-tab-pane
+          label="Kubernetes Chaos"
+          name="k8s"
+        >
           <el-input
             v-model="generatedConfig.k8s"
             type="textarea"
@@ -165,7 +230,10 @@
             class="code-preview"
           />
         </el-tab-pane>
-        <el-tab-pane label="Prometheus告警" name="prometheus">
+        <el-tab-pane
+          label="Prometheus告警"
+          name="prometheus"
+        >
           <el-input
             v-model="generatedConfig.prometheus"
             type="textarea"

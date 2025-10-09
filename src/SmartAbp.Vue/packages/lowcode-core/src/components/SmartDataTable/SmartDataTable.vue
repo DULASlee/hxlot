@@ -7,7 +7,11 @@
       @selection-change="handleSelectionChange"
       @sort-change="handleSortChange"
     >
-      <el-table-column v-if="selectable" type="selection" width="55" />
+      <el-table-column
+        v-if="selectable"
+        type="selection"
+        width="55"
+      />
       <el-table-column
         v-for="column in columns"
         :key="column.prop"
@@ -17,11 +21,29 @@
         :sortable="column.sortable"
         :formatter="column.formatter"
       />
-      <el-table-column v-if="hasActions" label="操作" :width="actionWidth">
+      <el-table-column
+        v-if="hasActions"
+        label="操作"
+        :width="actionWidth"
+      >
         <template #default="{ row }">
-          <slot name="actions" :row="row">
-            <el-button size="small" @click="$emit('edit', row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="$emit('delete', row)">删除</el-button>
+          <slot
+            name="actions"
+            :row="row"
+          >
+            <el-button
+              size="small"
+              @click="$emit('edit', row)"
+            >
+              编辑
+            </el-button>
+            <el-button
+              size="small"
+              type="danger"
+              @click="$emit('delete', row)"
+            >
+              删除
+            </el-button>
           </slot>
         </template>
       </el-table-column>

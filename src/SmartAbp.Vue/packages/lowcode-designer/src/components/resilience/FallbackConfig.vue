@@ -2,9 +2,15 @@
   <div class="fallback-config">
     <el-form-item label="回退类型">
       <el-radio-group v-model="localConfig.fallbackType">
-        <el-radio label="Default">默认值</el-radio>
-        <el-radio label="Cache">缓存</el-radio>
-        <el-radio label="AlternativeService">备用服务</el-radio>
+        <el-radio label="Default">
+          默认值
+        </el-radio>
+        <el-radio label="Cache">
+          缓存
+        </el-radio>
+        <el-radio label="AlternativeService">
+          备用服务
+        </el-radio>
       </el-radio-group>
     </el-form-item>
 
@@ -38,7 +44,10 @@
       <el-form-item label="启用缓存">
         <el-switch v-model="localConfig.enableCache" />
       </el-form-item>
-      <el-form-item label="缓存时长(ms)" v-if="localConfig.enableCache">
+      <el-form-item
+        v-if="localConfig.enableCache"
+        label="缓存时长(ms)"
+      >
         <el-input-number
           v-model="localConfig.cacheDurationMs"
           :min="1000"
@@ -50,14 +59,21 @@
     </template>
 
     <!-- 回退策略可视化 -->
-    <el-card class="fallback-visualization" shadow="never">
+    <el-card
+      class="fallback-visualization"
+      shadow="never"
+    >
       <template #header>
         <span>回退策略流程</span>
       </template>
       <div class="fallback-flow">
         <div class="flow-step">
-          <div class="step-box primary">主服务</div>
-          <div class="step-arrow">失败 →</div>
+          <div class="step-box primary">
+            主服务
+          </div>
+          <div class="step-arrow">
+            失败 →
+          </div>
         </div>
         <div class="flow-step">
           <div

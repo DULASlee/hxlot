@@ -1,5 +1,9 @@
 <template>
-  <div v-if="shouldShow" :class="bannerClass" class="version-warning-banner">
+  <div
+    v-if="shouldShow"
+    :class="bannerClass"
+    class="version-warning-banner"
+  >
     <div class="banner-icon">
       <span v-if="isError">⚠️</span>
       <span v-else-if="isWarning">⚡</span>
@@ -7,9 +11,18 @@
     </div>
     
     <div class="banner-content">
-      <div class="banner-title">{{ title }}</div>
-      <div class="banner-message">{{ message }}</div>
-      <div v-if="details" class="banner-details">{{ details }}</div>
+      <div class="banner-title">
+        {{ title }}
+      </div>
+      <div class="banner-message">
+        {{ message }}
+      </div>
+      <div
+        v-if="details"
+        class="banner-details"
+      >
+        {{ details }}
+      </div>
     </div>
     
     <div class="banner-actions">

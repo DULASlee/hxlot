@@ -9,17 +9,29 @@
       class="mb-4"
     />
 
-    <el-form :model="localAuthorization" label-width="120px">
+    <el-form
+      :model="localAuthorization"
+      label-width="120px"
+    >
       <el-form-item label="授权类型">
         <el-radio-group v-model="localAuthorization.type">
-          <el-radio label="RBAC">基于角色</el-radio>
-          <el-radio label="ABAC">基于属性</el-radio>
+          <el-radio label="RBAC">
+            基于角色
+          </el-radio>
+          <el-radio label="ABAC">
+            基于属性
+          </el-radio>
         </el-radio-group>
       </el-form-item>
 
       <el-divider>角色定义</el-divider>
 
-      <el-button :icon="Plus" @click="addRole" size="small" class="mb-2">
+      <el-button
+        :icon="Plus"
+        size="small"
+        class="mb-2"
+        @click="addRole"
+      >
         添加角色
       </el-button>
 
@@ -31,12 +43,19 @@
         <template #header>
           <div class="card-header">
             <span>角色 {{ index + 1 }}</span>
-            <el-button :icon="Delete" text @click="removeRole(index)" />
+            <el-button
+              :icon="Delete"
+              text
+              @click="removeRole(index)"
+            />
           </div>
         </template>
 
         <el-form-item label="角色名称">
-          <el-input v-model="role.name" placeholder="例如: reader" />
+          <el-input
+            v-model="role.name"
+            placeholder="例如: reader"
+          />
         </el-form-item>
 
         <el-form-item label="权限列表">
@@ -63,7 +82,12 @@
 
       <el-divider>角色绑定</el-divider>
 
-      <el-button :icon="Plus" @click="addRoleBinding" size="small" class="mb-2">
+      <el-button
+        :icon="Plus"
+        size="small"
+        class="mb-2"
+        @click="addRoleBinding"
+      >
         添加角色绑定
       </el-button>
 
@@ -75,16 +99,26 @@
         <template #header>
           <div class="card-header">
             <span>角色绑定 {{ index + 1 }}</span>
-            <el-button :icon="Delete" text @click="removeRoleBinding(index)" />
+            <el-button
+              :icon="Delete"
+              text
+              @click="removeRoleBinding(index)"
+            />
           </div>
         </template>
 
         <el-form-item label="绑定名称">
-          <el-input v-model="binding.name" placeholder="例如: reader-binding" />
+          <el-input
+            v-model="binding.name"
+            placeholder="例如: reader-binding"
+          />
         </el-form-item>
 
         <el-form-item label="绑定角色">
-          <el-select v-model="binding.roleName" placeholder="选择角色">
+          <el-select
+            v-model="binding.roleName"
+            placeholder="选择角色"
+          >
             <el-option
               v-for="role in localAuthorization.roles"
               :key="role.name"
@@ -96,9 +130,18 @@
 
         <el-form-item label="主体类型">
           <el-select v-model="binding.subjectType">
-            <el-option label="ServiceAccount" value="ServiceAccount" />
-            <el-option label="User" value="User" />
-            <el-option label="Group" value="Group" />
+            <el-option
+              label="ServiceAccount"
+              value="ServiceAccount"
+            />
+            <el-option
+              label="User"
+              value="User"
+            />
+            <el-option
+              label="Group"
+              value="Group"
+            />
           </el-select>
         </el-form-item>
 

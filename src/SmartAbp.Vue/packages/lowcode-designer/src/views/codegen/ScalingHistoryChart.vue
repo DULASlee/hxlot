@@ -4,7 +4,10 @@
       <template #header>
         <span>📈 伸缩历史趋势图</span>
       </template>
-      <div ref="chartRef" class="chart-container"></div>
+      <div
+        ref="chartRef"
+        class="chart-container"
+      />
     </el-card>
   </div>
 </template>

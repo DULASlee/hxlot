@@ -2,19 +2,31 @@
   <div class="page-builder">
     <div class="builder-toolbar">
       <el-button-group>
-        <el-button size="small" @click="addComponent">
+        <el-button
+          size="small"
+          @click="addComponent"
+        >
           <el-icon><Plus /></el-icon>
           添加组件
         </el-button>
-        <el-button size="small" @click="preview">
+        <el-button
+          size="small"
+          @click="preview"
+        >
           <el-icon><View /></el-icon>
           预览
         </el-button>
-        <el-button size="small" @click="save">
+        <el-button
+          size="small"
+          @click="save"
+        >
           <el-icon><Document /></el-icon>
           保存
         </el-button>
-        <el-button size="small" @click="exportPage">
+        <el-button
+          size="small"
+          @click="exportPage"
+        >
           <el-icon><Download /></el-icon>
           导出
         </el-button>
@@ -54,10 +66,24 @@
               :class="{ selected: selectedIndex === index }"
               @click="selectComponent(index)"
             >
-              <component :is="element.component" v-bind="element.props" />
+              <component
+                :is="element.component"
+                v-bind="element.props"
+              />
               <div class="component-actions">
-                <el-button size="small" @click.stop="editComponent(index)">编辑</el-button>
-                <el-button size="small" type="danger" @click.stop="deleteComponent(index)">删除</el-button>
+                <el-button
+                  size="small"
+                  @click.stop="editComponent(index)"
+                >
+                  编辑
+                </el-button>
+                <el-button
+                  size="small"
+                  type="danger"
+                  @click.stop="deleteComponent(index)"
+                >
+                  删除
+                </el-button>
               </div>
             </div>
           </template>
@@ -78,7 +104,10 @@
             </el-form-item>
           </el-form>
         </div>
-        <el-empty v-else description="请选择一个组件" />
+        <el-empty
+          v-else
+          description="请选择一个组件"
+        />
       </div>
     </div>
   </div>

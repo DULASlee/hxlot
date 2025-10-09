@@ -53,16 +53,29 @@
     </el-form-item>
 
     <!-- 断路器状态图 -->
-    <el-card class="state-diagram" shadow="never">
+    <el-card
+      class="state-diagram"
+      shadow="never"
+    >
       <template #header>
         <span>断路器状态机</span>
       </template>
       <div class="state-flow">
-        <div class="state closed">关闭状态<br/>(Closed)</div>
-        <div class="arrow">→</div>
-        <div class="state open">打开状态<br/>(Open)</div>
-        <div class="arrow">→</div>
-        <div class="state half-open">半开状态<br/>(Half-Open)</div>
+        <div class="state closed">
+          关闭状态<br />(Closed)
+        </div>
+        <div class="arrow">
+          →
+        </div>
+        <div class="state open">
+          打开状态<br />(Open)
+        </div>
+        <div class="arrow">
+          →
+        </div>
+        <div class="state half-open">
+          半开状态<br />(Half-Open)
+        </div>
       </div>
       <div class="state-desc">
         <p><strong>关闭:</strong> 正常处理请求，统计失败率</p>

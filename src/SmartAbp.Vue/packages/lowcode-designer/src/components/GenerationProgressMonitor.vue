@@ -15,11 +15,19 @@
       <template #header>
         <div class="monitor-header">
           <div class="header-left">
-            <i :class="statusIcon" class="status-icon" />
+            <i
+              :class="statusIcon"
+              class="status-icon"
+            />
             <span class="status-text">{{ statusText }}</span>
           </div>
           <div class="header-right">
-            <el-tag :type="statusTagType" size="small">{{ statusLabel }}</el-tag>
+            <el-tag
+              :type="statusTagType"
+              size="small"
+            >
+              {{ statusLabel }}
+            </el-tag>
             <el-button
               v-if="canCancel"
               link
@@ -89,11 +97,21 @@
                 :stroke-width="6"
                 :show-text="false"
               />
-              <div v-if="stage.details" class="stage-details">
+              <div
+                v-if="stage.details"
+                class="stage-details"
+              >
                 {{ stage.details }}
               </div>
-              <div v-if="stage.error" class="stage-error">
-                <el-alert type="error" :closable="false" show-icon>
+              <div
+                v-if="stage.error"
+                class="stage-error"
+              >
+                <el-alert
+                  type="error"
+                  :closable="false"
+                  show-icon
+                >
                   <template #title>
                     {{ stage.error }}
                   </template>
@@ -109,12 +127,30 @@
         <div class="log-header">
           <span>实时日志</span>
           <div class="log-controls">
-            <el-checkbox v-model="autoScroll" label="自动滚动" />
-            <el-button link size="small" @click="clearLogs">清空</el-button>
-            <el-button link size="small" @click="exportLogs">导出</el-button>
+            <el-checkbox
+              v-model="autoScroll"
+              label="自动滚动"
+            />
+            <el-button
+              link
+              size="small"
+              @click="clearLogs"
+            >
+              清空
+            </el-button>
+            <el-button
+              link
+              size="small"
+              @click="exportLogs"
+            >
+              导出
+            </el-button>
           </div>
         </div>
-        <div ref="logContainer" class="log-container">
+        <div
+          ref="logContainer"
+          class="log-container"
+        >
           <div
             v-for="(log, index) in logs"
             :key="index"
@@ -126,15 +162,25 @@
             </span>
             <span class="log-message">{{ log.message }}</span>
           </div>
-          <div v-if="logs.length === 0" class="log-empty">
+          <div
+            v-if="logs.length === 0"
+            class="log-empty"
+          >
             暂无日志
           </div>
         </div>
       </div>
 
       <!-- 生成统计 -->
-      <div v-if="statistics" class="statistics-panel">
-        <el-descriptions title="生成统计" :column="3" border>
+      <div
+        v-if="statistics"
+        class="statistics-panel"
+      >
+        <el-descriptions
+          title="生成统计"
+          :column="3"
+          border
+        >
           <el-descriptions-item label="文件总数">
             {{ statistics.totalFiles }}
           </el-descriptions-item>

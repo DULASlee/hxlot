@@ -1,17 +1,40 @@
 <template>
-  <div class="service-topology-canvas" ref="canvasContainer">
+  <div
+    ref="canvasContainer"
+    class="service-topology-canvas"
+  >
     <div class="canvas-header">
-      <h3 class="canvas-title">服务拓扑图</h3>
+      <h3 class="canvas-title">
+        服务拓扑图
+      </h3>
       <div class="canvas-controls">
         <el-button-group size="small">
-          <el-button :icon="ZoomIn" @click="handleZoomIn">放大</el-button>
-          <el-button :icon="ZoomOut" @click="handleZoomOut">缩小</el-button>
-          <el-button :icon="RefreshRight" @click="handleReset">重置</el-button>
+          <el-button
+            :icon="ZoomIn"
+            @click="handleZoomIn"
+          >
+            放大
+          </el-button>
+          <el-button
+            :icon="ZoomOut"
+            @click="handleZoomOut"
+          >
+            缩小
+          </el-button>
+          <el-button
+            :icon="RefreshRight"
+            @click="handleReset"
+          >
+            重置
+          </el-button>
         </el-button-group>
       </div>
     </div>
     
-    <div class="canvas-body" ref="canvasBody">
+    <div
+      ref="canvasBody"
+      class="canvas-body"
+    >
       <svg
         :width="canvasWidth"
         :height="canvasHeight"
@@ -22,41 +45,112 @@
       >
         <!-- 网格背景 -->
         <defs>
-          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-            <rect width="20" height="20" fill="none" stroke="#e4e7ed" stroke-width="0.5"/>
+          <pattern
+            id="grid"
+            width="20"
+            height="20"
+            patternUnits="userSpaceOnUse"
+          >
+            <rect
+              width="20"
+              height="20"
+              fill="none"
+              stroke="#e4e7ed"
+              stroke-width="0.5"
+            />
           </pattern>
         </defs>
-        <rect width="100%" height="100%" fill="url(#grid)" />
+        <rect
+          width="100%"
+          height="100%"
+          fill="url(#grid)"
+        />
         
         <!-- 基础设施服务 -->
         <g v-if="solutionConfig.usePostgreSQL || solutionConfig.useRedis || solutionConfig.useRabbitMQ">
-          <text x="50" y="30" class="section-title">基础设施</text>
+          <text
+            x="50"
+            y="30"
+            class="section-title"
+          >基础设施</text>
           
           <!-- PostgreSQL -->
-          <g v-if="solutionConfig.usePostgreSQL" transform="translate(50, 50)">
-            <rect width="120" height="60" rx="4" class="infra-node database" />
-            <text x="60" y="30" class="node-label">PostgreSQL</text>
-            <text x="60" y="45" class="node-meta">数据库</text>
+          <g
+            v-if="solutionConfig.usePostgreSQL"
+            transform="translate(50, 50)"
+          >
+            <rect
+              width="120"
+              height="60"
+              rx="4"
+              class="infra-node database"
+            />
+            <text
+              x="60"
+              y="30"
+              class="node-label"
+            >PostgreSQL</text>
+            <text
+              x="60"
+              y="45"
+              class="node-meta"
+            >数据库</text>
           </g>
           
           <!-- Redis -->
-          <g v-if="solutionConfig.useRedis" transform="translate(200, 50)">
-            <rect width="120" height="60" rx="4" class="infra-node cache" />
-            <text x="60" y="30" class="node-label">Redis</text>
-            <text x="60" y="45" class="node-meta">缓存</text>
+          <g
+            v-if="solutionConfig.useRedis"
+            transform="translate(200, 50)"
+          >
+            <rect
+              width="120"
+              height="60"
+              rx="4"
+              class="infra-node cache"
+            />
+            <text
+              x="60"
+              y="30"
+              class="node-label"
+            >Redis</text>
+            <text
+              x="60"
+              y="45"
+              class="node-meta"
+            >缓存</text>
           </g>
           
           <!-- RabbitMQ -->
-          <g v-if="solutionConfig.useRabbitMQ" transform="translate(350, 50)">
-            <rect width="120" height="60" rx="4" class="infra-node messaging" />
-            <text x="60" y="30" class="node-label">RabbitMQ</text>
-            <text x="60" y="45" class="node-meta">消息队列</text>
+          <g
+            v-if="solutionConfig.useRabbitMQ"
+            transform="translate(350, 50)"
+          >
+            <rect
+              width="120"
+              height="60"
+              rx="4"
+              class="infra-node messaging"
+            />
+            <text
+              x="60"
+              y="30"
+              class="node-label"
+            >RabbitMQ</text>
+            <text
+              x="60"
+              y="45"
+              class="node-meta"
+            >消息队列</text>
           </g>
         </g>
         
         <!-- 微服务 -->
         <g v-if="microservices.length > 0">
-          <text x="50" y="150" class="section-title">微服务</text>
+          <text
+            x="50"
+            y="150"
+            class="section-title"
+          >微服务</text>
           
           <g
             v-for="(service, index) in microservices"
@@ -66,10 +160,27 @@
             :class="{ selected: selectedService?.name === service.name }"
             @click="$emit('select-service', service)"
           >
-            <rect width="160" height="80" rx="6" class="service-rect" />
-            <text x="80" y="30" class="service-name">{{ service.displayName }}</text>
-            <text x="80" y="50" class="service-project">{{ service.projectName }}</text>
-            <text x="80" y="65" class="service-replicas">{{ service.replicas }}副本</text>
+            <rect
+              width="160"
+              height="80"
+              rx="6"
+              class="service-rect"
+            />
+            <text
+              x="80"
+              y="30"
+              class="service-name"
+            >{{ service.displayName }}</text>
+            <text
+              x="80"
+              y="50"
+              class="service-project"
+            >{{ service.projectName }}</text>
+            <text
+              x="80"
+              y="65"
+              class="service-replicas"
+            >{{ service.replicas }}副本</text>
             
             <!-- 健康状态指示器 -->
             <circle
@@ -83,16 +194,40 @@
         </g>
         
         <!-- API Gateway -->
-        <g v-if="solutionConfig.includeApiGateway" transform="translate(50, 400)">
-          <rect width="180" height="70" rx="6" class="gateway-node" />
-          <text x="90" y="30" class="node-label">API Gateway</text>
-          <text x="90" y="50" class="node-meta">统一入口</text>
+        <g
+          v-if="solutionConfig.includeApiGateway"
+          transform="translate(50, 400)"
+        >
+          <rect
+            width="180"
+            height="70"
+            rx="6"
+            class="gateway-node"
+          />
+          <text
+            x="90"
+            y="30"
+            class="node-label"
+          >API Gateway</text>
+          <text
+            x="90"
+            y="50"
+            class="node-meta"
+          >统一入口</text>
         </g>
         
         <!-- 空状态 -->
         <g v-if="microservices.length === 0">
-          <text x="300" y="250" class="empty-text">暂无微服务</text>
-          <text x="260" y="280" class="empty-hint">点击左侧添加按钮开始设计</text>
+          <text
+            x="300"
+            y="250"
+            class="empty-text"
+          >暂无微服务</text>
+          <text
+            x="260"
+            y="280"
+            class="empty-hint"
+          >点击左侧添加按钮开始设计</text>
         </g>
       </svg>
     </div>

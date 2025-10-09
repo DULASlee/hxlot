@@ -1,15 +1,27 @@
 <template>
-  <div class="start-node rule-node" :class="{ selected: data.selected }">
+  <div
+    class="start-node rule-node"
+    :class="{ selected: data.selected }"
+  >
     <div class="node-header">
-      <el-icon class="node-icon" :style="{ color: '#909399' }">
+      <el-icon
+        class="node-icon"
+        :style="{ color: '#909399' }"
+      >
         <VideoPlay />
       </el-icon>
       <span class="node-title">{{ data.label || '开始' }}</span>
     </div>
     <div class="node-body">
-      <div class="node-description">{{ data.description || '工作流起始节点' }}</div>
+      <div class="node-description">
+        {{ data.description || '工作流起始节点' }}
+      </div>
     </div>
-    <Handle type="source" :position="Position.Right" :style="handleStyle" />
+    <Handle
+      type="source"
+      :position="Position.Right"
+      :style="handleStyle"
+    />
   </div>
 </template>
 

@@ -34,8 +34,14 @@
       </template>
 
       <!-- HPA配置面板 -->
-      <div v-if="activeTab === 'hpa'" class="config-panel">
-        <el-form :model="hpaConfig" label-width="140px">
+      <div
+        v-if="activeTab === 'hpa'"
+        class="config-panel"
+      >
+        <el-form
+          :model="hpaConfig"
+          label-width="140px"
+        >
           <el-form-item label="服务名称">
             <el-input
               v-model="hpaConfig.serviceName"
@@ -103,9 +109,18 @@
                 placeholder="类型"
                 style="width: 120px"
               >
-                <el-option label="Pods" value="Pods" />
-                <el-option label="Object" value="Object" />
-                <el-option label="External" value="External" />
+                <el-option
+                  label="Pods"
+                  value="Pods"
+                />
+                <el-option
+                  label="Object"
+                  value="Object"
+                />
+                <el-option
+                  label="External"
+                  value="External"
+                />
               </el-select>
               <el-input
                 v-model="metric.targetValue"
@@ -122,7 +137,10 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="generateHPAConfig">
+            <el-button
+              type="primary"
+              @click="generateHPAConfig"
+            >
               生成HPA配置
             </el-button>
             <el-button @click="getRecommendation">
@@ -135,11 +153,17 @@
         </el-form>
 
         <!-- 生成的YAML预览 -->
-        <el-card v-if="generatedYaml" class="yaml-preview">
+        <el-card
+          v-if="generatedYaml"
+          class="yaml-preview"
+        >
           <template #header>
             <div class="card-header">
               <span>生成的HPA配置</span>
-              <el-button size="small" @click="copyYaml">
+              <el-button
+                size="small"
+                @click="copyYaml"
+              >
                 复制YAML
               </el-button>
             </div>
@@ -149,8 +173,14 @@
       </div>
 
       <!-- VPA配置面板 -->
-      <div v-if="activeTab === 'vpa'" class="config-panel">
-        <el-form :model="vpaConfig" label-width="140px">
+      <div
+        v-if="activeTab === 'vpa'"
+        class="config-panel"
+      >
+        <el-form
+          :model="vpaConfig"
+          label-width="140px"
+        >
           <el-form-item label="服务名称">
             <el-input
               v-model="vpaConfig.serviceName"
@@ -160,10 +190,22 @@
 
           <el-form-item label="更新模式">
             <el-select v-model="vpaConfig.updateMode">
-              <el-option label="Off - 仅推荐" value="Off" />
-              <el-option label="Initial - 仅初始创建" value="Initial" />
-              <el-option label="Recreate - 重建Pod" value="Recreate" />
-              <el-option label="Auto - 自动更新" value="Auto" />
+              <el-option
+                label="Off - 仅推荐"
+                value="Off"
+              />
+              <el-option
+                label="Initial - 仅初始创建"
+                value="Initial"
+              />
+              <el-option
+                label="Recreate - 重建Pod"
+                value="Recreate"
+              />
+              <el-option
+                label="Auto - 自动更新"
+                value="Auto"
+              />
             </el-select>
           </el-form-item>
 
@@ -171,36 +213,57 @@
             <div class="resource-policy">
               <div class="resource-row">
                 <span>最小CPU:</span>
-                <el-input v-model="vpaConfig.minCPU" placeholder="100m" />
+                <el-input
+                  v-model="vpaConfig.minCPU"
+                  placeholder="100m"
+                />
               </div>
               <div class="resource-row">
                 <span>最大CPU:</span>
-                <el-input v-model="vpaConfig.maxCPU" placeholder="4000m" />
+                <el-input
+                  v-model="vpaConfig.maxCPU"
+                  placeholder="4000m"
+                />
               </div>
               <div class="resource-row">
                 <span>最小内存:</span>
-                <el-input v-model="vpaConfig.minMemory" placeholder="128Mi" />
+                <el-input
+                  v-model="vpaConfig.minMemory"
+                  placeholder="128Mi"
+                />
               </div>
               <div class="resource-row">
                 <span>最大内存:</span>
-                <el-input v-model="vpaConfig.maxMemory" placeholder="8Gi" />
+                <el-input
+                  v-model="vpaConfig.maxMemory"
+                  placeholder="8Gi"
+                />
               </div>
             </div>
           </el-form-item>
 
           <el-form-item>
-            <el-button type="primary" @click="generateVPAConfig">
+            <el-button
+              type="primary"
+              @click="generateVPAConfig"
+            >
               生成VPA配置
             </el-button>
           </el-form-item>
         </el-form>
 
         <!-- VPA YAML预览 -->
-        <el-card v-if="generatedVPAYaml" class="yaml-preview">
+        <el-card
+          v-if="generatedVPAYaml"
+          class="yaml-preview"
+        >
           <template #header>
             <div class="card-header">
               <span>生成的VPA配置</span>
-              <el-button size="small" @click="copyVPAYaml">
+              <el-button
+                size="small"
+                @click="copyVPAYaml"
+              >
                 复制YAML
               </el-button>
             </div>
@@ -210,7 +273,10 @@
       </div>
 
       <!-- 伸缩历史面板 -->
-      <div v-if="activeTab === 'history'" class="history-panel">
+      <div
+        v-if="activeTab === 'history'"
+        class="history-panel"
+      >
         <el-form inline>
           <el-form-item label="服务名称">
             <el-input
@@ -228,7 +294,10 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="loadScalingHistory">
+            <el-button
+              type="primary"
+              @click="loadScalingHistory"
+            >
               查询历史
             </el-button>
           </el-form-item>
@@ -241,44 +310,77 @@
         />
 
         <!-- 伸缩事件列表 -->
-        <el-card v-if="scalingHistory" class="events-card">
+        <el-card
+          v-if="scalingHistory"
+          class="events-card"
+        >
           <template #header>
             <span>伸缩事件列表 (共{{ scalingHistory.events.length }}个事件)</span>
           </template>
-          <el-table :data="scalingHistory.events" stripe>
-            <el-table-column prop="timestamp" label="时间" width="180">
+          <el-table
+            :data="scalingHistory.events"
+            stripe
+          >
+            <el-table-column
+              prop="timestamp"
+              label="时间"
+              width="180"
+            >
               <template #default="{ row }">
                 {{ formatTime(row.timestamp) }}
               </template>
             </el-table-column>
-            <el-table-column prop="eventType" label="类型" width="100">
+            <el-table-column
+              prop="eventType"
+              label="类型"
+              width="100"
+            >
               <template #default="{ row }">
                 <el-tag :type="row.eventType === 'ScaleUp' ? 'success' : 'warning'">
                   {{ row.eventType === 'ScaleUp' ? '扩容' : '缩容' }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="副本数变化" width="150">
+            <el-table-column
+              label="副本数变化"
+              width="150"
+            >
               <template #default="{ row }">
                 {{ row.oldReplicas }} → {{ row.newReplicas }}
               </template>
             </el-table-column>
-            <el-table-column prop="metric" label="指标" width="100" />
-            <el-table-column label="当前值/目标值" width="150">
+            <el-table-column
+              prop="metric"
+              label="指标"
+              width="100"
+            />
+            <el-table-column
+              label="当前值/目标值"
+              width="150"
+            >
               <template #default="{ row }">
                 {{ row.currentValue }}% / {{ row.targetValue }}%
               </template>
             </el-table-column>
-            <el-table-column prop="reason" label="原因" />
+            <el-table-column
+              prop="reason"
+              label="原因"
+            />
           </el-table>
         </el-card>
 
         <!-- 统计信息 -->
-        <el-card v-if="scalingHistory" class="statistics-card">
+        <el-card
+          v-if="scalingHistory"
+          class="statistics-card"
+        >
           <template #header>
             <span>统计信息</span>
           </template>
-          <el-descriptions :column="3" border>
+          <el-descriptions
+            :column="3"
+            border
+          >
             <el-descriptions-item label="扩容次数">
               {{ scalingHistory.statistics.totalScaleUpEvents }}
             </el-descriptions-item>
@@ -302,7 +404,10 @@
       </div>
 
       <!-- 效率分析面板 -->
-      <div v-if="activeTab === 'analysis'" class="analysis-panel">
+      <div
+        v-if="activeTab === 'analysis'"
+        class="analysis-panel"
+      >
         <el-form inline>
           <el-form-item label="服务名称">
             <el-input
@@ -320,14 +425,20 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="analyzeEfficiency">
+            <el-button
+              type="primary"
+              @click="analyzeEfficiency"
+            >
               开始分析
             </el-button>
           </el-form-item>
         </el-form>
 
         <!-- 效率分析结果 -->
-        <el-card v-if="efficiencyAnalysis" class="analysis-result">
+        <el-card
+          v-if="efficiencyAnalysis"
+          class="analysis-result"
+        >
           <template #header>
             <span>效率分析报告</span>
           </template>
@@ -347,7 +458,10 @@
             </div>
           </div>
 
-          <el-descriptions :column="2" border>
+          <el-descriptions
+            :column="2"
+            border
+          >
             <el-descriptions-item label="扩容延迟">
               {{ efficiencyAnalysis.scaleUpLatency }}秒
             </el-descriptions-item>

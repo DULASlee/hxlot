@@ -2,7 +2,11 @@
   <div class="environment-comparison-view">
     <!-- 环境选择 -->
     <div class="comparison-header">
-      <el-select v-model="selectedEnv1" placeholder="选择环境1" style="width: 200px">
+      <el-select
+        v-model="selectedEnv1"
+        placeholder="选择环境1"
+        style="width: 200px"
+      >
         <el-option
           v-for="env in environments"
           :key="env"
@@ -11,9 +15,15 @@
         />
       </el-select>
       
-      <el-icon class="comparison-icon"><Right /></el-icon>
+      <el-icon class="comparison-icon">
+        <Right />
+      </el-icon>
       
-      <el-select v-model="selectedEnv2" placeholder="选择环境2" style="width: 200px">
+      <el-select
+        v-model="selectedEnv2"
+        placeholder="选择环境2"
+        style="width: 200px"
+      >
         <el-option
           v-for="env in environments"
           :key="env"
@@ -22,13 +32,21 @@
         />
       </el-select>
       
-      <el-button type="primary" :icon="Search" @click="handleCompare" :loading="loading">
+      <el-button
+        type="primary"
+        :icon="Search"
+        :loading="loading"
+        @click="handleCompare"
+      >
         对比
       </el-button>
     </div>
 
     <!-- 对比结果 -->
-    <div v-if="comparison" class="comparison-results">
+    <div
+      v-if="comparison"
+      class="comparison-results"
+    >
       <el-alert
         :title="`发现 ${comparison.totalDifferences} 个配置差异`"
         :type="comparison.totalDifferences > 0 ? 'warning' : 'success'"
@@ -43,25 +61,46 @@
         max-height="500"
         stripe
       >
-        <el-table-column prop="property" label="配置项" width="200" />
-        <el-table-column prop="path" label="路径" width="250" />
-        <el-table-column :label="selectedEnv1" width="200">
+        <el-table-column
+          prop="property"
+          label="配置项"
+          width="200"
+        />
+        <el-table-column
+          prop="path"
+          label="路径"
+          width="250"
+        />
+        <el-table-column
+          :label="selectedEnv1"
+          width="200"
+        >
           <template #default="{ row }">
             <el-tag :type="getDifferenceTagType(row.differenceType)">
               {{ row.value1 || '-' }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column :label="selectedEnv2" width="200">
+        <el-table-column
+          :label="selectedEnv2"
+          width="200"
+        >
           <template #default="{ row }">
             <el-tag :type="getDifferenceTagType(row.differenceType)">
               {{ row.value2 || '-' }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="differenceType" label="差异类型" width="120">
+        <el-table-column
+          prop="differenceType"
+          label="差异类型"
+          width="120"
+        >
           <template #default="{ row }">
-            <el-tag :type="getDifferenceTypeTag(row.differenceType)" size="small">
+            <el-tag
+              :type="getDifferenceTypeTag(row.differenceType)"
+              size="small"
+            >
               {{ getDifferenceTypeLabel(row.differenceType) }}
             </el-tag>
           </template>
@@ -69,7 +108,10 @@
       </el-table>
     </div>
 
-    <div v-else-if="!loading" class="empty-state">
+    <div
+      v-else-if="!loading"
+      class="empty-state"
+    >
       <el-empty description="请选择两个环境进行对比" />
     </div>
   </div>

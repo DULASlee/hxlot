@@ -10,7 +10,12 @@
 
     <!-- 搜索框 -->
     <div class="toolbox-search">
-      <el-input v-model="searchText" placeholder="搜索节点..." size="small" clearable>
+      <el-input
+        v-model="searchText"
+        placeholder="搜索节点..."
+        size="small"
+        clearable
+      >
         <template #prefix>
           <el-icon>
             <Search />
@@ -21,50 +26,101 @@
 
     <!-- 节点分类 -->
     <div class="toolbox-categories">
-      <el-collapse v-model="activeCategories" accordion>
+      <el-collapse
+        v-model="activeCategories"
+        accordion
+      >
         <!-- 基础节点 -->
-        <el-collapse-item name="basic" title="基础节点">
+        <el-collapse-item
+          name="basic"
+          title="基础节点"
+        >
           <div class="node-templates">
-            <div v-for="template in filteredTemplates.basic" :key="template.type" class="node-template" draggable="true"
-              @dragstart="onDragStart($event, template)" @click="onTemplateClick(template)">
-              <div class="template-icon" :style="{ color: template.color }">
+            <div
+              v-for="template in filteredTemplates.basic"
+              :key="template.type"
+              class="node-template"
+              draggable="true"
+              @dragstart="onDragStart($event, template)"
+              @click="onTemplateClick(template)"
+            >
+              <div
+                class="template-icon"
+                :style="{ color: template.color }"
+              >
                 <component :is="template.iconComponent" />
               </div>
               <div class="template-info">
-                <div class="template-label">{{ template.label }}</div>
-                <div class="template-desc">{{ template.description }}</div>
+                <div class="template-label">
+                  {{ template.label }}
+                </div>
+                <div class="template-desc">
+                  {{ template.description }}
+                </div>
               </div>
             </div>
           </div>
         </el-collapse-item>
 
         <!-- 流程控制 -->
-        <el-collapse-item name="control" title="流程控制">
+        <el-collapse-item
+          name="control"
+          title="流程控制"
+        >
           <div class="node-templates">
-            <div v-for="template in filteredTemplates.control" :key="template.type" class="node-template"
-              draggable="true" @dragstart="onDragStart($event, template)" @click="onTemplateClick(template)">
-              <div class="template-icon" :style="{ color: template.color }">
+            <div
+              v-for="template in filteredTemplates.control"
+              :key="template.type"
+              class="node-template"
+              draggable="true"
+              @dragstart="onDragStart($event, template)"
+              @click="onTemplateClick(template)"
+            >
+              <div
+                class="template-icon"
+                :style="{ color: template.color }"
+              >
                 <component :is="template.iconComponent" />
               </div>
               <div class="template-info">
-                <div class="template-label">{{ template.label }}</div>
-                <div class="template-desc">{{ template.description }}</div>
+                <div class="template-label">
+                  {{ template.label }}
+                </div>
+                <div class="template-desc">
+                  {{ template.description }}
+                </div>
               </div>
             </div>
           </div>
         </el-collapse-item>
 
         <!-- 业务规则 -->
-        <el-collapse-item name="business" title="业务规则">
+        <el-collapse-item
+          name="business"
+          title="业务规则"
+        >
           <div class="node-templates">
-            <div v-for="template in filteredTemplates.business" :key="template.type" class="node-template"
-              draggable="true" @dragstart="onDragStart($event, template)" @click="onTemplateClick(template)">
-              <div class="template-icon" :style="{ color: template.color }">
+            <div
+              v-for="template in filteredTemplates.business"
+              :key="template.type"
+              class="node-template"
+              draggable="true"
+              @dragstart="onDragStart($event, template)"
+              @click="onTemplateClick(template)"
+            >
+              <div
+                class="template-icon"
+                :style="{ color: template.color }"
+              >
                 <component :is="template.iconComponent" />
               </div>
               <div class="template-info">
-                <div class="template-label">{{ template.label }}</div>
-                <div class="template-desc">{{ template.description }}</div>
+                <div class="template-label">
+                  {{ template.label }}
+                </div>
+                <div class="template-desc">
+                  {{ template.description }}
+                </div>
               </div>
             </div>
           </div>
@@ -74,7 +130,11 @@
 
     <!-- 使用提示 -->
     <div class="toolbox-tips">
-      <el-alert type="info" :closable="false" show-icon>
+      <el-alert
+        type="info"
+        :closable="false"
+        show-icon
+      >
         <template #title>
           <span style="font-size: 12px;">拖拽或点击添加节点</span>
         </template>

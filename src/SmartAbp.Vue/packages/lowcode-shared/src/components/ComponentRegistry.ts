@@ -15,7 +15,7 @@
  */
 
 // ComponentGenie AI智能分析
-import { analyzeComponent, type ComponentAnalysis as AIAnalysis } from './ai/ComponentGenie'
+import { analyzeComponent, type ComponentAnalysis as AIAnalysis } from '../ai/ComponentGenie'
 
 export type ComponentCategory =
   | 'basic' | 'layout' | 'form' | 'data' | 'chart' | 'advanced' | 'business'

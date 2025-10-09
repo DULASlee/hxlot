@@ -5,7 +5,11 @@
         <div class="card-header">
           <span>可观测性仪表板</span>
           <div class="actions">
-            <el-select v-model="selectedService" placeholder="选择服务" style="width: 200px; margin-right: 12px">
+            <el-select
+              v-model="selectedService"
+              placeholder="选择服务"
+              style="width: 200px; margin-right: 12px"
+            >
               <el-option
                 v-for="service in services"
                 :key="service"
@@ -13,30 +17,66 @@
                 :value="service"
               />
             </el-select>
-            <el-select v-model="timeRange" placeholder="时间范围" style="width: 150px; margin-right: 12px">
-              <el-option label="最近5分钟" value="5m" />
-              <el-option label="最近15分钟" value="15m" />
-              <el-option label="最近1小时" value="1h" />
-              <el-option label="最近6小时" value="6h" />
-              <el-option label="最近24小时" value="24h" />
+            <el-select
+              v-model="timeRange"
+              placeholder="时间范围"
+              style="width: 150px; margin-right: 12px"
+            >
+              <el-option
+                label="最近5分钟"
+                value="5m"
+              />
+              <el-option
+                label="最近15分钟"
+                value="15m"
+              />
+              <el-option
+                label="最近1小时"
+                value="1h"
+              />
+              <el-option
+                label="最近6小时"
+                value="6h"
+              />
+              <el-option
+                label="最近24小时"
+                value="24h"
+              />
             </el-select>
-            <el-button :icon="RefreshRight" @click="refreshData">刷新</el-button>
+            <el-button
+              :icon="RefreshRight"
+              @click="refreshData"
+            >
+              刷新
+            </el-button>
           </div>
         </div>
       </template>
     </el-card>
 
     <!-- 黄金指标卡片 -->
-    <el-row :gutter="16" class="metrics-row">
+    <el-row
+      :gutter="16"
+      class="metrics-row"
+    >
       <el-col :span="6">
         <el-card class="metric-card latency-card">
           <div class="metric-icon">
-            <el-icon :size="32"><Timer /></el-icon>
+            <el-icon :size="32">
+              <Timer />
+            </el-icon>
           </div>
           <div class="metric-content">
-            <div class="metric-label">延迟 (P99)</div>
-            <div class="metric-value">{{ goldenSignals.latency.value }}ms</div>
-            <div class="metric-trend" :class="getTrendClass(goldenSignals.latency.trend)">
+            <div class="metric-label">
+              延迟 (P99)
+            </div>
+            <div class="metric-value">
+              {{ goldenSignals.latency.value }}ms
+            </div>
+            <div
+              class="metric-trend"
+              :class="getTrendClass(goldenSignals.latency.trend)"
+            >
               <el-icon><CaretTop v-if="goldenSignals.latency.trend > 0" /><CaretBottom v-else /></el-icon>
               {{ Math.abs(goldenSignals.latency.trend) }}%
             </div>
@@ -47,12 +87,21 @@
       <el-col :span="6">
         <el-card class="metric-card traffic-card">
           <div class="metric-icon">
-            <el-icon :size="32"><TrendCharts /></el-icon>
+            <el-icon :size="32">
+              <TrendCharts />
+            </el-icon>
           </div>
           <div class="metric-content">
-            <div class="metric-label">流量 (RPS)</div>
-            <div class="metric-value">{{ goldenSignals.traffic.value }}</div>
-            <div class="metric-trend" :class="getTrendClass(goldenSignals.traffic.trend)">
+            <div class="metric-label">
+              流量 (RPS)
+            </div>
+            <div class="metric-value">
+              {{ goldenSignals.traffic.value }}
+            </div>
+            <div
+              class="metric-trend"
+              :class="getTrendClass(goldenSignals.traffic.trend)"
+            >
               <el-icon><CaretTop v-if="goldenSignals.traffic.trend > 0" /><CaretBottom v-else /></el-icon>
               {{ Math.abs(goldenSignals.traffic.trend) }}%
             </div>
@@ -63,12 +112,21 @@
       <el-col :span="6">
         <el-card class="metric-card errors-card">
           <div class="metric-icon">
-            <el-icon :size="32"><Warning /></el-icon>
+            <el-icon :size="32">
+              <Warning />
+            </el-icon>
           </div>
           <div class="metric-content">
-            <div class="metric-label">错误率</div>
-            <div class="metric-value">{{ goldenSignals.errors.value }}%</div>
-            <div class="metric-trend" :class="getTrendClass(-goldenSignals.errors.trend)">
+            <div class="metric-label">
+              错误率
+            </div>
+            <div class="metric-value">
+              {{ goldenSignals.errors.value }}%
+            </div>
+            <div
+              class="metric-trend"
+              :class="getTrendClass(-goldenSignals.errors.trend)"
+            >
               <el-icon><CaretTop v-if="goldenSignals.errors.trend > 0" /><CaretBottom v-else /></el-icon>
               {{ Math.abs(goldenSignals.errors.trend) }}%
             </div>
@@ -79,12 +137,21 @@
       <el-col :span="6">
         <el-card class="metric-card saturation-card">
           <div class="metric-icon">
-            <el-icon :size="32"><Odometer /></el-icon>
+            <el-icon :size="32">
+              <Odometer />
+            </el-icon>
           </div>
           <div class="metric-content">
-            <div class="metric-label">饱和度 (CPU)</div>
-            <div class="metric-value">{{ goldenSignals.saturation.value }}%</div>
-            <div class="metric-trend" :class="getTrendClass(-goldenSignals.saturation.trend)">
+            <div class="metric-label">
+              饱和度 (CPU)
+            </div>
+            <div class="metric-value">
+              {{ goldenSignals.saturation.value }}%
+            </div>
+            <div
+              class="metric-trend"
+              :class="getTrendClass(-goldenSignals.saturation.trend)"
+            >
               <el-icon><CaretTop v-if="goldenSignals.saturation.trend > 0" /><CaretBottom v-else /></el-icon>
               {{ Math.abs(goldenSignals.saturation.trend) }}%
             </div>
@@ -94,13 +161,19 @@
     </el-row>
 
     <!-- RED指标图表 -->
-    <el-row :gutter="16" class="charts-row">
+    <el-row
+      :gutter="16"
+      class="charts-row"
+    >
       <el-col :span="8">
         <el-card>
           <template #header>
             <span>请求速率 (Rate)</span>
           </template>
-          <div ref="rateChartRef" class="chart-container"></div>
+          <div
+            ref="rateChartRef"
+            class="chart-container"
+          />
         </el-card>
       </el-col>
 
@@ -109,7 +182,10 @@
           <template #header>
             <span>错误率 (Errors)</span>
           </template>
-          <div ref="errorsChartRef" class="chart-container"></div>
+          <div
+            ref="errorsChartRef"
+            class="chart-container"
+          />
         </el-card>
       </el-col>
 
@@ -118,7 +194,10 @@
           <template #header>
             <span>响应时间 (Duration)</span>
           </template>
-          <div ref="durationChartRef" class="chart-container"></div>
+          <div
+            ref="durationChartRef"
+            class="chart-container"
+          />
         </el-card>
       </el-col>
     </el-row>
@@ -128,22 +207,49 @@
       <template #header>
         <span>活跃告警</span>
       </template>
-      <el-table :data="activeAlerts" style="width: 100%">
-        <el-table-column prop="name" label="告警名称" width="200" />
-        <el-table-column prop="severity" label="严重程度" width="120">
+      <el-table
+        :data="activeAlerts"
+        style="width: 100%"
+      >
+        <el-table-column
+          prop="name"
+          label="告警名称"
+          width="200"
+        />
+        <el-table-column
+          prop="severity"
+          label="严重程度"
+          width="120"
+        >
           <template #default="{ row }">
-            <el-tag :type="getSeverityType(row.severity)">{{ row.severity }}</el-tag>
+            <el-tag :type="getSeverityType(row.severity)">
+              {{ row.severity }}
+            </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="message" label="消息" />
-        <el-table-column prop="triggeredAt" label="触发时间" width="180">
+        <el-table-column
+          prop="message"
+          label="消息"
+        />
+        <el-table-column
+          prop="triggeredAt"
+          label="触发时间"
+          width="180"
+        >
           <template #default="{ row }">
             {{ formatDate(row.triggeredAt) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column
+          label="操作"
+          width="120"
+        >
           <template #default="{ row }">
-            <el-button size="small" type="primary" @click="acknowledgeAlert(row.id)">
+            <el-button
+              size="small"
+              type="primary"
+              @click="acknowledgeAlert(row.id)"
+            >
               确认
             </el-button>
           </template>

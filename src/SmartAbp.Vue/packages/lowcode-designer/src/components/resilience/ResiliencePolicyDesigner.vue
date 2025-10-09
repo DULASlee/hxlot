@@ -4,11 +4,19 @@
       <template #header>
         <div class="card-header">
           <span>弹性策略配置器</span>
-          <el-button type="primary" @click="handleGenerate">生成代码</el-button>
+          <el-button
+            type="primary"
+            @click="handleGenerate"
+          >
+            生成代码
+          </el-button>
         </div>
       </template>
 
-      <el-form :model="policyConfig" label-width="120px">
+      <el-form
+        :model="policyConfig"
+        label-width="120px"
+      >
         <el-form-item label="服务名称">
           <el-input
             v-model="policyConfig.serviceName"
@@ -17,16 +25,30 @@
           />
         </el-form-item>
 
-        <el-divider content-position="left">弹性策略选择</el-divider>
+        <el-divider content-position="left">
+          弹性策略选择
+        </el-divider>
 
         <el-form-item label="启用的策略">
           <el-checkbox-group v-model="enabledPolicies">
-            <el-checkbox label="retry">重试策略</el-checkbox>
-            <el-checkbox label="circuitBreaker">断路器</el-checkbox>
-            <el-checkbox label="timeout">超时控制</el-checkbox>
-            <el-checkbox label="bulkhead">舱壁隔离</el-checkbox>
-            <el-checkbox label="rateLimit">限流策略</el-checkbox>
-            <el-checkbox label="fallback">回退策略</el-checkbox>
+            <el-checkbox label="retry">
+              重试策略
+            </el-checkbox>
+            <el-checkbox label="circuitBreaker">
+              断路器
+            </el-checkbox>
+            <el-checkbox label="timeout">
+              超时控制
+            </el-checkbox>
+            <el-checkbox label="bulkhead">
+              舱壁隔离
+            </el-checkbox>
+            <el-checkbox label="rateLimit">
+              限流策略
+            </el-checkbox>
+            <el-checkbox label="fallback">
+              回退策略
+            </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
 
@@ -69,9 +91,17 @@
       </el-form>
 
       <!-- 代码预览 -->
-      <el-divider content-position="left">代码预览</el-divider>
-      <el-tabs v-model="activeTab" type="card">
-        <el-tab-pane label="Polly C#代码" name="polly">
+      <el-divider content-position="left">
+        代码预览
+      </el-divider>
+      <el-tabs
+        v-model="activeTab"
+        type="card"
+      >
+        <el-tab-pane
+          label="Polly C#代码"
+          name="polly"
+        >
           <el-input
             v-model="generatedCode.polly"
             type="textarea"
@@ -80,7 +110,10 @@
             class="code-preview"
           />
         </el-tab-pane>
-        <el-tab-pane label="Istio YAML" name="istio">
+        <el-tab-pane
+          label="Istio YAML"
+          name="istio"
+        >
           <el-input
             v-model="generatedCode.istio"
             type="textarea"

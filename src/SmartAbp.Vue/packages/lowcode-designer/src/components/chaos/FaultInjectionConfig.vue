@@ -21,7 +21,10 @@
     </el-form-item>
 
     <!-- 延迟故障 -->
-    <el-card shadow="never" class="fault-type-card">
+    <el-card
+      shadow="never"
+      class="fault-type-card"
+    >
       <template #header>
         <el-checkbox v-model="localConfig.delay.enabled">
           <span class="fault-title">延迟故障 (Delay)</span>
@@ -50,11 +53,18 @@
         </el-form-item>
 
         <div class="fault-preview">
-          <div class="preview-label">延迟效果预览:</div>
+          <div class="preview-label">
+            延迟效果预览:
+          </div>
           <div class="preview-content">
             <div class="timeline">
-              <div class="timeline-normal">正常响应</div>
-              <div class="timeline-delay" :style="{ width: `${Math.min(localConfig.delay.fixedDelayMs / 50, 300)}px` }">
+              <div class="timeline-normal">
+                正常响应
+              </div>
+              <div
+                class="timeline-delay"
+                :style="{ width: `${Math.min(localConfig.delay.fixedDelayMs / 50, 300)}px` }"
+              >
                 +{{ localConfig.delay.fixedDelayMs }}ms
               </div>
             </div>
@@ -67,7 +77,10 @@
     </el-card>
 
     <!-- 中止故障 -->
-    <el-card shadow="never" class="fault-type-card">
+    <el-card
+      shadow="never"
+      class="fault-type-card"
+    >
       <template #header>
         <el-checkbox v-model="localConfig.abort.enabled">
           <span class="fault-title">中止故障 (Abort)</span>
@@ -76,14 +89,38 @@
 
       <template v-if="localConfig.abort.enabled">
         <el-form-item label="HTTP状态码">
-          <el-select v-model="localConfig.abort.httpStatusCode" placeholder="选择状态码">
-            <el-option label="400 Bad Request" :value="400" />
-            <el-option label="403 Forbidden" :value="403" />
-            <el-option label="404 Not Found" :value="404" />
-            <el-option label="500 Internal Server Error" :value="500" />
-            <el-option label="502 Bad Gateway" :value="502" />
-            <el-option label="503 Service Unavailable" :value="503" />
-            <el-option label="504 Gateway Timeout" :value="504" />
+          <el-select
+            v-model="localConfig.abort.httpStatusCode"
+            placeholder="选择状态码"
+          >
+            <el-option
+              label="400 Bad Request"
+              :value="400"
+            />
+            <el-option
+              label="403 Forbidden"
+              :value="403"
+            />
+            <el-option
+              label="404 Not Found"
+              :value="404"
+            />
+            <el-option
+              label="500 Internal Server Error"
+              :value="500"
+            />
+            <el-option
+              label="502 Bad Gateway"
+              :value="502"
+            />
+            <el-option
+              label="503 Service Unavailable"
+              :value="503"
+            />
+            <el-option
+              label="504 Gateway Timeout"
+              :value="504"
+            />
           </el-select>
         </el-form-item>
 
@@ -98,15 +135,27 @@
         </el-form-item>
 
         <div class="fault-preview">
-          <div class="preview-label">中止效果预览:</div>
+          <div class="preview-label">
+            中止效果预览:
+          </div>
           <div class="preview-content">
             <div class="abort-demo">
               <div class="request-flow">
-                <div class="flow-box">Client</div>
-                <div class="flow-arrow">→</div>
-                <div class="flow-box error">{{ localConfig.abort.httpStatusCode }}</div>
-                <div class="flow-arrow blocked">✗</div>
-                <div class="flow-box disabled">Service</div>
+                <div class="flow-box">
+                  Client
+                </div>
+                <div class="flow-arrow">
+                  →
+                </div>
+                <div class="flow-box error">
+                  {{ localConfig.abort.httpStatusCode }}
+                </div>
+                <div class="flow-arrow blocked">
+                  ✗
+                </div>
+                <div class="flow-box disabled">
+                  Service
+                </div>
               </div>
             </div>
             <div class="preview-stats error">

@@ -1,20 +1,49 @@
 <template>
-  <el-form :model="formData" :rules="rules" ref="formRef" label-width="120px">
-    <el-form-item label="服务名称" prop="name" required>
-      <el-input v-model="formData.name" placeholder="例如: user-service" />
+  <el-form
+    ref="formRef"
+    :model="formData"
+    :rules="rules"
+    label-width="120px"
+  >
+    <el-form-item
+      label="服务名称"
+      prop="name"
+      required
+    >
+      <el-input
+        v-model="formData.name"
+        placeholder="例如: user-service"
+      />
       <span class="field-hint">用于服务标识，建议使用kebab-case</span>
     </el-form-item>
     
-    <el-form-item label="项目名称" prop="projectName" required>
-      <el-input v-model="formData.projectName" placeholder="例如: UserService" />
+    <el-form-item
+      label="项目名称"
+      prop="projectName"
+      required
+    >
+      <el-input
+        v-model="formData.projectName"
+        placeholder="例如: UserService"
+      />
       <span class="field-hint">C#项目名称，使用PascalCase</span>
     </el-form-item>
     
-    <el-form-item label="显示名称" prop="displayName" required>
-      <el-input v-model="formData.displayName" placeholder="例如: 用户服务" />
+    <el-form-item
+      label="显示名称"
+      prop="displayName"
+      required
+    >
+      <el-input
+        v-model="formData.displayName"
+        placeholder="例如: 用户服务"
+      />
     </el-form-item>
     
-    <el-form-item label="描述" prop="description">
+    <el-form-item
+      label="描述"
+      prop="description"
+    >
       <el-input
         v-model="formData.description"
         type="textarea"
@@ -23,8 +52,15 @@
       />
     </el-form-item>
     
-    <el-form-item label="副本数量" prop="replicas">
-      <el-input-number v-model="formData.replicas" :min="1" :max="10" />
+    <el-form-item
+      label="副本数量"
+      prop="replicas"
+    >
+      <el-input-number
+        v-model="formData.replicas"
+        :min="1"
+        :max="10"
+      />
       <span class="field-hint">生产环境建议至少2个副本</span>
     </el-form-item>
     

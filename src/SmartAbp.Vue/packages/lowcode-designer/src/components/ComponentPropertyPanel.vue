@@ -11,15 +11,28 @@
 
     <el-divider />
 
-    <div v-if="!selectedComponent" class="empty-state">
-      <el-empty description="请选择一个组件" :image-size="80" />
+    <div
+      v-if="!selectedComponent"
+      class="empty-state"
+    >
+      <el-empty
+        description="请选择一个组件"
+        :image-size="80"
+      />
     </div>
 
-    <div v-else class="panel-content">
+    <div
+      v-else
+      class="panel-content"
+    >
       <!-- 基本信息 -->
       <div class="info-section">
         <h4>基本信息</h4>
-        <el-descriptions :column="1" border size="small">
+        <el-descriptions
+          :column="1"
+          border
+          size="small"
+        >
           <el-descriptions-item label="组件ID">
             {{ selectedComponent.id }}
           </el-descriptions-item>
@@ -35,7 +48,10 @@
       <!-- 属性编辑 -->
       <div class="properties-section">
         <h4>属性配置</h4>
-        <el-form label-width="100px" size="small">
+        <el-form
+          label-width="100px"
+          size="small"
+        >
           <el-form-item
             v-for="prop in componentProperties"
             :key="prop.name"
@@ -96,7 +112,10 @@
               @change="handlePropertyChange(prop.name, prop.value)"
             />
 
-            <span v-if="prop.description" class="property-description">
+            <span
+              v-if="prop.description"
+              class="property-description"
+            >
               {{ prop.description }}
             </span>
           </el-form-item>
@@ -106,12 +125,27 @@
       <!-- 样式编辑 -->
       <div class="style-section">
         <h4>样式配置</h4>
-        <el-form label-width="100px" size="small">
+        <el-form
+          label-width="100px"
+          size="small"
+        >
           <el-form-item label="位置">
-            <el-select v-model="componentStyle.position" size="small">
-              <el-option label="绝对定位" value="absolute" />
-              <el-option label="相对定位" value="relative" />
-              <el-option label="固定定位" value="fixed" />
+            <el-select
+              v-model="componentStyle.position"
+              size="small"
+            >
+              <el-option
+                label="绝对定位"
+                value="absolute"
+              />
+              <el-option
+                label="相对定位"
+                value="relative"
+              />
+              <el-option
+                label="固定定位"
+                value="fixed"
+              />
             </el-select>
           </el-form-item>
 
