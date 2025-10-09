@@ -591,8 +591,8 @@ const fieldRequired = computed({
     if (!selectedField.value.validate) {
       selectedField.value.validate = []
     }
-    const validates = selectedField.value.validate as any[]
-    const requiredIndex = validates.findIndex((rule: any) => rule.required !== undefined)
+    const validates = selectedField.value.validate as import('../../types/form').FormValidateRule[]
+    const requiredIndex = validates.findIndex(rule => rule.required !== undefined)
 
     if (val) {
       if (requiredIndex === -1) {

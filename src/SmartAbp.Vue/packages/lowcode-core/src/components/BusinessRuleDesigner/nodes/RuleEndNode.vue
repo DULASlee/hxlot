@@ -17,11 +17,11 @@
         {{ data.description || '工作流结束节点' }}
       </div>
       <div
-        v-if="(data as any).returnValue"
+        v-if="isEndNodeData(data)"
         class="node-info"
       >
         <el-tag type="danger">
-          返回: {{ (data as any).returnValue }}
+          返回: {{ data.returnValue }}
         </el-tag>
       </div>
     </div>
@@ -39,6 +39,7 @@ import { Handle, Position } from '@vue-flow/core'
 import { ElIcon, ElTag } from 'element-plus'
 import { computed } from 'vue'
 import type { RuleNodeData } from './types'
+import { isRuleEndNodeData as isEndNodeData } from '../../../types/business-rule'
 
 interface Props {
   data: RuleNodeData

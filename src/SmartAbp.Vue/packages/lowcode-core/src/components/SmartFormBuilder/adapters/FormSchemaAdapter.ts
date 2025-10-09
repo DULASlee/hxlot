@@ -435,7 +435,7 @@ export class FormSchemaAdapter {
                 },
                 labelPosition: config.form?.labelPosition || 'right',
                 labelWidth: (typeof config.form?.labelWidth === 'number' ? `${config.form.labelWidth}px` : config.form?.labelWidth) || '100px',
-                size: (config.form?.size || 'default') as any,
+                size: (config.form?.size || 'default') as import('../../types/form').ElementSize,
                 showSubmitButton: config.submitBtn !== false,
                 showResetButton: config.resetBtn !== false,
                 submitButtonText: typeof config.submitBtn === 'object' ? config.submitBtn.innerText : '提交',
@@ -465,7 +465,7 @@ export class FormSchemaAdapter {
             readonly: rule.props?.readonly || false,
             hidden: rule.hidden || false,
             className: (Array.isArray(rule.class) ? rule.class.join(' ') : rule.class) as string | undefined,
-            style: rule.style as any
+            style: rule.style as import('../../types/form').CSSStyleObject | undefined
         }
 
         // 转换选项

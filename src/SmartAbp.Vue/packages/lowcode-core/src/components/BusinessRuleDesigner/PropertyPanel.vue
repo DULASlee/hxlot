@@ -44,7 +44,7 @@
             />
           </el-form-item>
           <el-form-item label="节点类型">
-            <el-tag :type="(getNodeTypeTagType(selectedNode.type) as any)">
+            <el-tag :type="(getNodeTypeTagType(selectedNode.type) as import('../../types/business-rule').ElementTagType)">
               {{ getNodeTypeLabel(selectedNode.type) }}
             </el-tag>
           </el-form-item>
