@@ -181,12 +181,12 @@ export function useApiCall<T = any>() {
    * @param options 调用选项
    * @returns 所有API调用结果
    */
-  const executeAll = async <R = any>(
+  const executeAll = async <R = unknown>(
     apiFns: Array<() => Promise<R>>,
     options: ApiCallOptions = {}
   ): Promise<Array<R | null>> => {
     const results = await Promise.allSettled(
-      apiFns.map(fn => execute(fn as any, options) as Promise<R | null>)
+      apiFns.map(fn => fn())
     )
 
     // 处理每个请求的结果，失败时返回null作为降级值
@@ -207,19 +207,24 @@ export function useApiCall<T = any>() {
    * @param options 调用选项
    * @returns 所有API调用结果
    */
-  const executeSequential = async <R = any>(
+  const executeSequential = async <R = unknown>(
     apiFns: Array<() => Promise<R>>,
     options: ApiCallOptions = {}
   ): Promise<Array<R | null>> => {
     const results: Array<R | null> = []
 
     for (const fn of apiFns) {
-      const result = await execute(fn as any, options) as R | null
-      results.push(result)
-
-      // 如果有错误且需要停止，则中断执行
-      if (result === null && options.error?.showMessage) {
-        break
+      try {
+        const result = await fn()
+        results.push(result)
+      } catch (error) {
+        console.warn('API调用失败:', error)
+        results.push(null)
+        
+        // 如果有错误且需要停止，则中断执行
+        if (options.error?.showMessage) {
+          break
+        }
       }
     }
 
@@ -233,12 +238,12 @@ export function useApiCall<T = any>() {
    * @param options 调用选项
    * @returns 所有API调用结果和状态信息
    */
-  const executeAllSettled = async <R = any>(
+  const executeAllSettled = async <R = unknown>(
     apiFns: Array<() => Promise<R>>,
     options: ApiCallOptions = {}
-  ): Promise<Array<{ data: R | null; status: 'fulfilled' | 'rejected'; error?: any }>> => {
+  ): Promise<Array<{ data: R | null; status: 'fulfilled' | 'rejected'; error?: unknown }>> => {
     const results = await Promise.allSettled(
-      apiFns.map(fn => execute(fn as any, options) as Promise<R | null>)
+      apiFns.map(fn => fn())
     )
 
     // 返回详细的结果信息，包括状态和错误信息

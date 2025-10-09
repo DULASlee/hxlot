@@ -340,4 +340,18 @@ export interface LowCodeEngineApi extends
   updateUserPreferences: (preferences: any) => Promise<ApiResponse<void>>
 }
 
+// ============================================================================
+// ABP错误响应类型
+// ============================================================================
+export type {
+  AbpValidationError,
+  AbpErrorResponse,
+  AbpErrorData
+} from './error'
+
+export {
+  isAbpErrorResponse,
+  isAbpErrorData
+} from './error'
+
 // 注意：此文件仅包含类型和接口定义，不包含具体实现

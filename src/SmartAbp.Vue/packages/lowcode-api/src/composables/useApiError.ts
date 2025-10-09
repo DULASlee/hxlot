@@ -10,7 +10,16 @@ import type { ApiError } from '@smartabp/lowcode-api';
 // 临时本地类型定义（待lowcode-shared完善后移除）
 type StandardError = Error & { code?: string; statusCode?: number }
 type ErrorContext = { operation?: string; params?: any; metadata?: any }
-const getGlobalErrorHandler = () => undefined
+
+/** 全局错误处理器接口 */
+interface GlobalErrorHandler {
+  handleError?: (error: Error, context: ErrorContext) => Promise<StandardError>
+  registerRecoveryHandler?: (handler: unknown) => void
+  getErrorStats?: () => { total: number; byLevel: Record<string, number>; byCategory: Record<string, number> }
+  clearErrors?: (olderThan?: Date) => void
+}
+
+const getGlobalErrorHandler = (): GlobalErrorHandler | undefined => undefined
 
 /**
  * API错误显示选项
@@ -61,7 +70,7 @@ const DEFAULT_DISPLAY_OPTIONS: ApiErrorDisplayOptions = {
  * ```
  */
 export function useApiError() {
-  const errorHandler = getGlobalErrorHandler() as any // TODO: 待lowcode-shared完善后移除any
+  const errorHandler = getGlobalErrorHandler()
 
   /**
    * 处理API错误

@@ -5,6 +5,7 @@
 
 import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
 import { setupMockInterceptor } from './__tests__/mocks/mock-server'
+import type { AbpErrorData } from './types/error'
 
 /**
  * HTTP响应统一格式
@@ -95,9 +96,9 @@ export function createHttpClient(config?: HttpClientConfig): HttpClient {
 
   // 响应拦截器 - 统一错误处理
   instance.interceptors.response.use(
-    (response: AxiosResponse) => {
-      // 直接返回data，简化调用
-      return response.data as any // 类型转换由调用方泛型决定
+    <T = unknown>(response: AxiosResponse<T>): T => {
+      // 直接返回data，类型由调用方泛型决定
+      return response.data
     },
     (error: AxiosError) => {
       const apiError: ApiError = {
@@ -114,8 +115,9 @@ export function createHttpClient(config?: HttpClientConfig): HttpClient {
             apiError.message = '请求参数错误'
             apiError.code = 'BAD_REQUEST'
             if (data && typeof data === 'object') {
-              apiError.message = (data as any).message || apiError.message
-              apiError.validationErrors = (data as any).validationErrors
+              const errorData = data as AbpErrorData
+              apiError.message = errorData.message || apiError.message
+              apiError.validationErrors = errorData.validationErrors
             }
             break
 
@@ -141,8 +143,9 @@ export function createHttpClient(config?: HttpClientConfig): HttpClient {
             apiError.message = '服务器内部错误'
             apiError.code = 'INTERNAL_ERROR'
             if (data && typeof data === 'object') {
-              apiError.message = (data as any).message || apiError.message
-              apiError.details = (data as any).details
+              const errorData = data as AbpErrorData
+              apiError.message = errorData.message || apiError.message
+              apiError.details = errorData.details
             }
             break
 
