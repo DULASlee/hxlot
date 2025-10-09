@@ -91,7 +91,10 @@
     "analyze:components": "node scripts/analyze-component-system.cjs",
     "lint:style": "stylelint \"src/**/*.{css,scss,vue}\" --fix",
     "lint:prettier": "prettier --write \"**/*.{js,cjs,ts,json,css,scss,vue,html,md}\"",
-    "quality": "quality-guardian check"
+    "quality": "quality-guardian check",
+    "arch:check": "tsx scripts/arch-check.ts check",
+    "arch:fix": "tsx scripts/arch-check.ts fix",
+    "arch:report": "tsx scripts/arch-check.ts report"
   },
   "lint-staged": {
     "*.ts": [
