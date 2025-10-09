@@ -264,9 +264,9 @@ export class ServiceDiscoveryEnhancer {
 
         try {
             const response = await fetch(url)
-            const data = await response.json() as any[]
+            const data = await response.json() as import('./types').ConsulServiceResponse
 
-            return data.map((item: any) => ({
+            return data.map(item => ({
                 instanceId: item.Service.ID,
                 serviceName: item.Service.Service,
                 host: item.Service.Address,
@@ -296,11 +296,11 @@ export class ServiceDiscoveryEnhancer {
             const response = await fetch(url, {
                 headers: { 'Accept': 'application/json' }
             })
-            const data = await response.json() as any
+            const data = await response.json() as import('./types').EurekaServiceResponse
 
             const instances = data.application?.instance || []
 
-            return instances.map((instance: any) => ({
+            return instances.map(instance => ({
                 instanceId: instance.instanceId,
                 serviceName: instance.app,
                 host: instance.ipAddr,
