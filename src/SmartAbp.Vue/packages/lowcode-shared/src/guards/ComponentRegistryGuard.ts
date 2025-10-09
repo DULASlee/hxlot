@@ -116,10 +116,10 @@ export class ComponentRegistryGuard {
   }) {
     // 这里可以将数据发送到统计系统
     // 暂时只记录到console
-    if (typeof window !== 'undefined' && (window as any).__ARCH_VIOLATIONS__) {
-      (window as any).__ARCH_VIOLATIONS__.push(data)
+    if (typeof window !== 'undefined' && window.__ARCH_VIOLATIONS__) {
+      window.__ARCH_VIOLATIONS__.push(data)
     } else if (typeof window !== 'undefined') {
-      (window as any).__ARCH_VIOLATIONS__ = [data]
+      window.__ARCH_VIOLATIONS__ = [data]
     }
   }
   

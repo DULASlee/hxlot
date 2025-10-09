@@ -365,8 +365,8 @@ export class FormSchemaAdapter {
         return function (value: any) {
             try {
                 // 如果handler是函数名，从全局查找
-                if (typeof window !== 'undefined' && (window as any)[handler]) {
-                    return (window as any)[handler](value)
+                if (typeof window !== 'undefined' && window[handler]) {
+                    return window[handler](value)
                 }
                 // 否则尝试作为表达式执行
                 const func = new Function('value', handler)

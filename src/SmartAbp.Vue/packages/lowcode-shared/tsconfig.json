@@ -6,7 +6,8 @@
   },
   "include": [
     "src/**/*",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "types/**/*.d.ts"
   ],
   "references": [
     {
