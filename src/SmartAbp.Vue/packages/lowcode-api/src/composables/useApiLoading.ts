@@ -254,7 +254,7 @@ export function useApiLoading() {
   const hasLongRunningLoading = (): boolean => {
     const now = Date.now()
     return Array.from(loadingTrackers.value.values()).some(
-      tracker => now - tracker.startTime > 10000
+      (tracker: any) => now - tracker.startTime > 10000
     )
   }
 
