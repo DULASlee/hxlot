@@ -8,11 +8,11 @@
  */
 
 import {
-  createEntity as createEntityApi,
-  deleteEntity as deleteEntityApi,
-  getAllEntities,
-  getAllRelations,
-  updateEntity as updateEntityApi
+    createEntity as createEntityApi,
+    deleteEntity as deleteEntityApi,
+    getAllEntities,
+    getAllRelations,
+    updateEntity as updateEntityApi
 } from './entity-modeling.js'
 
 /**
@@ -20,11 +20,11 @@ import {
  * 供lowcode-core使用，避免直接导入循环依赖
  */
 export const entityModelingApiBridge = {
-  createEntity: createEntityApi,
-  deleteEntity: deleteEntityApi,
-  updateEntity: updateEntityApi,
-  getAllEntities,
-  getAllRelations
+    createEntity: createEntityApi,
+    deleteEntity: deleteEntityApi,
+    updateEntity: updateEntityApi,
+    getAllEntities,
+    getAllRelations
 }
 
 export type EntityModelingApiBridge = typeof entityModelingApiBridge
