@@ -22,8 +22,12 @@
 import { ref, computed, watch, type Ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useDebounceFn } from '@vueuse/core'
+import type { MasterEntity, DetailEntity } from '../types/entity'
 
-export interface MasterDetailConfig<TMaster = any, TDetail = any> {
+export interface MasterDetailConfig<
+  TMaster extends MasterEntity = MasterEntity, 
+  TDetail extends DetailEntity = DetailEntity
+> {
   /** 主表API路径 */
   masterApi: string
   /** 从表API路径 */
@@ -46,7 +50,10 @@ export interface MasterDetailConfig<TMaster = any, TDetail = any> {
   onDetailChange?: (details: TDetail[]) => void | Promise<void>
 }
 
-export interface MasterDetailOperations<TMaster = any, TDetail = any> {
+export interface MasterDetailOperations<
+  TMaster extends MasterEntity = MasterEntity, 
+  TDetail extends DetailEntity = DetailEntity
+> {
   /** 主表表单数据 */
   masterForm: Ref<TMaster>
   /** 从表列表数据 */
@@ -80,7 +87,10 @@ export interface MasterDetailOperations<TMaster = any, TDetail = any> {
 /**
  * 主从表Composable实现
  */
-export function useMasterDetail<TMaster = any, TDetail = any>(
+export function useMasterDetail<
+  TMaster extends MasterEntity = MasterEntity, 
+  TDetail extends DetailEntity = DetailEntity
+>(
   config: MasterDetailConfig<TMaster, TDetail>
 ): MasterDetailOperations<TMaster, TDetail> {
   
@@ -105,7 +115,7 @@ export function useMasterDetail<TMaster = any, TDetail = any>(
   
   /** 主表ID */
   const masterId = computed(() => {
-    return (masterForm.value as any)?.id
+    return masterForm.value?.id
   })
   
   /** 从表记录数 */
@@ -150,13 +160,13 @@ export function useMasterDetail<TMaster = any, TDetail = any>(
    * 编辑从表记录
    */
   const editDetail = async (detail: TDetail): Promise<void> => {
-    const index = detailList.value.findIndex((d: any) => d === detail || d.id === (detail as any).id)
+    const index = detailList.value.findIndex(d => d === detail || d.id === detail.id)
     if (index === -1) {
       throw new Error('Detail not found')
     }
     
     // 标记为编辑模式
-    ;(detailList.value[index] as any)._editMode = true
+    detailList.value[index]._editMode = true
     hasUnsavedChanges.value = true
   }
   
@@ -171,18 +181,19 @@ export function useMasterDetail<TMaster = any, TDetail = any>(
         type: 'warning'
       })
       
-      const index = detailList.value.findIndex((d: any) => 
-        d === detail || d.id === (detail as any).id
+      const index = detailList.value.findIndex(d => 
+        d === detail || d.id === detail.id
       )
       
       if (index === -1) return
       
       // 如果是新增的记录，直接从列表移除
-      if ((detail as any)._isNew) {
+      if (detail._isNew) {
         detailList.value.splice(index, 1)
       } else {
         // 否则标记为删除，稍后批量删除
-        deletedDetails.value.push(detail as any)
+        // 注意：使用类型断言处理ref的UnwrapRefSimple类型（Vue ref类型推断限制）
+        deletedDetails.value.push(detailList.value[index] as any)
         detailList.value.splice(index, 1)
       }
       
@@ -217,13 +228,14 @@ export function useMasterDetail<TMaster = any, TDetail = any>(
       
       // 批量移除
       for (const detail of details) {
-        const index = detailList.value.findIndex((d: any) => 
-          d === detail || d.id === (detail as any).id
+        const index = detailList.value.findIndex(d => 
+          d === detail || d.id === detail.id
         )
         
         if (index !== -1) {
-          if (!(detail as any)._isNew) {
-            deletedDetails.value.push(detail as any)
+          if (!detail._isNew) {
+            // 注意：使用类型断言处理ref的UnwrapRefSimple类型（Vue ref类型推断限制）
+            deletedDetails.value.push(detailList.value[index] as any)
           }
           detailList.value.splice(index, 1)
         }
@@ -268,7 +280,7 @@ export function useMasterDetail<TMaster = any, TDetail = any>(
    */
   const validate = async (): Promise<boolean> => {
     // 1. 验证主表数据
-    if (!masterForm.value || !(masterForm.value as any).id) {
+    if (!masterForm.value || !masterForm.value.id) {
       ElMessage.error('请先填写主表信息')
       return false
     }
@@ -366,8 +378,9 @@ export function useMasterDetail<TMaster = any, TDetail = any>(
   const undo = (): void => {
     const lastHistory = history.value.pop()
     if (lastHistory) {
-      masterForm.value = lastHistory.master as any
-      detailList.value = lastHistory.details as any
+      // 注意：需要类型断言处理ref的UnwrapRef类型
+      masterForm.value = lastHistory.master as TMaster
+      detailList.value = lastHistory.details as TDetail[]
       hasUnsavedChanges.value = history.value.length > 0
       ElMessage.info('已撤销上一步操作')
     } else {
@@ -381,11 +394,11 @@ export function useMasterDetail<TMaster = any, TDetail = any>(
   watch(
     () => masterForm.value,
     useDebounceFn(async (newMaster) => {
-      if (newMaster && (newMaster as any).id) {
+      if (newMaster && newMaster.id) {
         await config.onMasterChange?.(newMaster)
         
         if (config.autoLoadDetails !== false) {
-          await loadDetails((newMaster as any).id)
+          await loadDetails(newMaster.id)
         }
       }
     }, 300),
