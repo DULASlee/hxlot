@@ -23,10 +23,10 @@ export class VueComponentBridge {
      * 🎯 核心方法：自动注册所有发现的组件到Vue
      */
     async syncComponentsToVue(): Promise<void> {
-        const allComponents = Array.from((globalComponentRegistry as any).components?.values() || [])
+        const allComponents = Array.from(globalComponentRegistry.componentsMap.values())
 
         for (const metadata of allComponents) {
-            if (!this.registeredComponents.has((metadata as any).name)) {
+            if (!this.registeredComponents.has(metadata.name)) {
                 await this.registerSingleComponent(metadata)
             }
         }
@@ -67,7 +67,7 @@ export class VueComponentBridge {
         }
 
         // 方案2：从已有的组件加载器获取
-        return await (globalComponentRegistry as any).load(metadata.name)
+        return await globalComponentRegistry.load(metadata.name)
     }
 
     /**
@@ -100,10 +100,10 @@ export class VueComponentBridge {
         // const sync = this.syncComponentsToVue.bind(this)
         // sync().catch(console.error)
 
-        // 监听新组件注册事件
-        (globalComponentRegistry as any).on?.('componentRegistered', (metadata: any) => {
-            this.registerSingleComponent(metadata)
-        })
+        // TODO: 监听新组件注册事件（需要ComponentRegistry实现事件系统）
+        // globalComponentRegistry.on('componentRegistered', (metadata) => {
+        //     this.registerSingleComponent(metadata)
+        // })
 
         console.log('🔄 Vue组件自动同步已启动')
     }

@@ -269,7 +269,7 @@ export class AutoComponentDiscoveryEngine {
         }
 
         // 🔍 检查是否已注册（避免重复注册）
-        if ((globalComponentRegistry as any).components?.has(componentName)) {
+        if (globalComponentRegistry.has(componentName)) {
             // console.log(`⏭️ 组件已注册，跳过: ${componentName}`)
             return false
         }
@@ -454,7 +454,7 @@ export class AutoComponentDiscoveryEngine {
     private startPeriodicScan(): void {
         console.log(`⏰ 启动定时扫描：每${this.config.scanIntervalMs / 1000}秒检查一次`)
 
-        this.scanTimer = (setInterval as any)(async () => {
+        this.scanTimer = setInterval(async () => {
             try {
                 await this.performIncrementalScan()
             } catch (error) {

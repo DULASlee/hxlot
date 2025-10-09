@@ -316,8 +316,8 @@ export class BenchmarkEngine {
 
     // 内存使用（如果可用）
     let memoryUsage: number | undefined
-    if (typeof performance !== 'undefined' && (performance as any).memory) {
-      memoryUsage = (performance as any).memory.usedJSHeapSize / 1048576 // 转换为MB
+    if (typeof performance !== 'undefined' && performance.memory) {
+      memoryUsage = performance.memory.usedJSHeapSize / 1048576 // 转换为MB
     }
 
     return {

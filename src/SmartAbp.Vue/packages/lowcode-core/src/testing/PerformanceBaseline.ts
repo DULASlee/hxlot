@@ -338,9 +338,9 @@ export class PerformanceBaselineManager {
     return {
       os: typeof navigator !== 'undefined' ? navigator.platform : 'Unknown',
       nodeVersion: typeof process !== 'undefined' ? process.version : 'Unknown',
-      cpuModel: typeof navigator !== 'undefined' ? (navigator as any).hardwareConcurrency?.toString() : undefined,
-      memory: typeof performance !== 'undefined' && (performance as any).memory 
-        ? `${Math.round((performance as any).memory.jsHeapSizeLimit / 1048576)}MB`
+      cpuModel: typeof navigator !== 'undefined' ? navigator.hardwareConcurrency?.toString() : undefined,
+      memory: typeof performance !== 'undefined' && performance.memory 
+        ? `${Math.round(performance.memory.jsHeapSizeLimit / 1048576)}MB`
         : undefined
     }
   }

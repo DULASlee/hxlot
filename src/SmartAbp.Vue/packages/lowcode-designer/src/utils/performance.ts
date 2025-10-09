@@ -305,8 +305,8 @@ export class PerformanceMonitor {
     }
 
     getMetrics(): PerformanceMetrics {
-        const memory = (performance as any).memory
-            ? (performance as any).memory.usedJSHeapSize / 1048576
+        const memory = performance.memory
+            ? performance.memory.usedJSHeapSize / 1048576
             : undefined
 
         return {

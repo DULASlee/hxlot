@@ -601,6 +601,20 @@ export class ComponentRegistry {
   }
 
   /**
+   * 检查组件是否已注册
+   */
+  has(name: string): boolean {
+    return this.components.has(name);
+  }
+
+  /**
+   * 获取所有已注册的组件Map（只读访问）
+   */
+  get componentsMap(): ReadonlyMap<string, ComponentMetadata> {
+    return this.components;
+  }
+
+  /**
    * 获取分类下的所有组件
    */
   getCategoryComponents(category: ComponentCategory): ComponentMetadata[] {

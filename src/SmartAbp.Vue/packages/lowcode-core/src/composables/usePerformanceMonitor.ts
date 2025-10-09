@@ -76,8 +76,8 @@ export function usePerformanceMonitor(options: {
    * 测量内存使用
    */
   const measureMemory = () => {
-    if ((performance as any).memory) {
-      const memory = (performance as any).memory
+    if (performance.memory) {
+      const memory = performance.memory
       metrics.value.memory = {
         used: Math.round(memory.usedJSHeapSize / 1048576), // MB
         total: Math.round(memory.totalJSHeapSize / 1048576), // MB
