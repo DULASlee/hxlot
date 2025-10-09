@@ -207,18 +207,18 @@ export const PACKAGE_INFO = {
 
 /**
  * 全局组件虚拟程序集
- * 
+ *
  * 核心创新：通过Proxy实现"全局组件可见性"，类似C#程序集
- * 
+ *
  * 使用方式：
  * ```typescript
  * import { Components } from '@smartabp/lowcode-shared'
- * 
+ *
  * // ✅ 自动加载，无需手动import
  * const SmartForm = Components.SmartForm
  * const DataTable = Components.DataTable
  * ```
- * 
+ *
  * 工作原理：
  * 1. 访问 Components.SmartForm
  * 2. Proxy拦截get操作
@@ -226,7 +226,7 @@ export const PACKAGE_INFO = {
  * 4. 动态import加载组件
  * 5. 创建Vue3异步组件
  * 6. LRU缓存，提升性能
- * 
+ *
  * @since 2.0.0
  * @public
  */
@@ -234,9 +234,15 @@ import { VirtualAssembly } from './components/VirtualAssembly'
 import { globalComponentRegistry } from './components/ComponentRegistry'
 
 export const Components = new VirtualAssembly(
-  globalComponentRegistry, 
+  globalComponentRegistry,
   {
     debug: import.meta.env.DEV,
     enablePerformanceMonitoring: true
   }
 ).createProxy()
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🚀 性能优化与监控模块（微AI 2.0 - 阶段3）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export * from './performance'
