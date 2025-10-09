@@ -307,49 +307,19 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
+import type { 
+  CanvasComponent,
+  GuideLine,
+  CanvasHistory,
+  DeviceType,
+  CanvasMode,
+  MoveDirection,
+  ResizeDirection,
+  VisualDesignCanvasProps
+} from '../types/designer'
 
-// 🎯 类型定义 - 内联定义避免复杂导入
-interface CanvasComponent {
-  id: string
-  type: string
-  name: string
-  props: Record<string, any>
-  style: {
-    position: 'absolute' | 'relative' | 'fixed'
-    left: string
-    top: string
-    width: string
-    height: string
-    [key: string]: any
-  }
-  children: CanvasComponent[]
-}
-
-interface GuideLine {
-  id: string
-  type: 'vertical' | 'horizontal'
-  style: Record<string, string | undefined>
-}
-
-interface CanvasHistory {
-  timestamp: number
-  components: CanvasComponent[]
-}
-
-type DeviceType = 'desktop' | 'tablet' | 'mobile'
-type CanvasMode = 'design' | 'preview' | 'code'
-type MoveDirection = 'up' | 'down'
-type ResizeDirection = 'se' | 'sw' | 'ne' | 'nw'
-
-// Props
-// Props接口 - 简化定义
-interface Props {
-  pageData?: Record<string, any>
-  entityData?: Record<string, any>
-}
-
-// Props定义 - 避免未使用警告
-defineProps<Props>()
+// Props定义
+defineProps<VisualDesignCanvasProps>()
 
 // 响应式数据 - 完整类型安全
 const canvasMode = ref<CanvasMode>('design')

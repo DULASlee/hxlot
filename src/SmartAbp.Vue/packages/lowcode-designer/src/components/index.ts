@@ -74,6 +74,11 @@
 // export { default as LdDragPreview } from './CodeGenerator/DragPreview.vue'
 // export { default as LdEntityDesigner } from './CodeGenerator/EntityDesigner.vue'
 
+// ✅ 已实现的核心组件
+export { default as LdCodeGenerationWizard } from './CodeGenerationWizard.vue'
+export { default as LdVisualDesignCanvas } from './VisualDesignCanvas.vue'
+export { default as LdEntityDesigner } from './EntityDesigner.vue'
+
 // ✅ Development Environment Components - 已注册到ComponentRegistry
 // export { default as LdDevEnvironmentSetup } from './devenv/DevEnvironmentSetup.vue'
 
