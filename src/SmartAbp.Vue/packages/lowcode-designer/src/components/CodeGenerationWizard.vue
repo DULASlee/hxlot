@@ -595,6 +595,13 @@
                   <el-icon><MagicStick /></el-icon>
                   开始生成代码
                 </el-button>
+                <el-button 
+                  size="large"
+                  @click="showTemplatePreview"
+                >
+                  <el-icon><View /></el-icon>
+                  预览模板
+                </el-button>
               </template>
             </el-result>
           </div>
@@ -813,11 +820,53 @@
         </el-button>
       </template>
     </el-dialog>
+
+    <!-- 模板预览对话框 -->
+    <el-dialog
+      v-model="templatePreviewVisible"
+      title="模板预览"
+      width="80%"
+      :fullscreen="isTemplatePreviewFullscreen"
+    >
+      <template #header>
+        <div class="dialog-header">
+          <span>模板预览</span>
+          <el-button
+            text
+            :icon="isTemplatePreviewFullscreen ? 'el-icon-copy-document' : 'el-icon-full-screen'"
+            @click="isTemplatePreviewFullscreen = !isTemplatePreviewFullscreen"
+          />
+        </div>
+      </template>
+
+      <el-tabs v-model="activeTemplateTab">
+        <el-tab-pane label="实体类模板" name="entity">
+          <pre class="code-preview"><code>{{ entityTemplate }}</code></pre>
+        </el-tab-pane>
+        <el-tab-pane label="DTO模板" name="dto">
+          <pre class="code-preview"><code>{{ dtoTemplate }}</code></pre>
+        </el-tab-pane>
+        <el-tab-pane label="AppService模板" name="service">
+          <pre class="code-preview"><code>{{ serviceTemplate }}</code></pre>
+        </el-tab-pane>
+        <el-tab-pane label="Controller模板" name="controller">
+          <pre class="code-preview"><code>{{ controllerTemplate }}</code></pre>
+        </el-tab-pane>
+        <el-tab-pane label="Vue组件模板" name="vue">
+          <pre class="code-preview"><code>{{ vueTemplate }}</code></pre>
+        </el-tab-pane>
+      </el-tabs>
+
+      <template #footer>
+        <el-button @click="templatePreviewVisible = false">关闭</el-button>
+        <el-button type="primary" @click="copyTemplate">复制当前模板</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { 
   MagicStick, Setting, Document, Connection, Brush, Plus,
@@ -893,6 +942,11 @@ const generationProgress = ref(0)
 const currentTask = ref('')
 const generationLogs = ref<any[]>([])
 const generatedFiles = ref<any[]>([])
+
+// 模板预览
+const templatePreviewVisible = ref(false)
+const isTemplatePreviewFullscreen = ref(false)
+const activeTemplateTab = ref('entity')
 const fileTreeData = ref<any[]>([])
 
 // ==================== 步骤导航 ====================
@@ -1061,6 +1115,177 @@ const previewCode = () => {
 
 const deployCode = () => {
   ElMessage.info('一键部署功能开发中...')
+}
+
+// 显示模板预览
+const showTemplatePreview = () => {
+  templatePreviewVisible.value = true
+}
+
+// 生成模板预览内容
+const entityTemplate = computed(() => {
+  const entity = entities.value[0]
+  if (!entity) return '// 请先添加实体'
+  
+  return `// ${entity.name}.cs
+using System;
+using Volo.Abp.Domain.Entities.Auditing;
+
+namespace ${projectConfig.value.namespace}.Entities
+{
+    /// <summary>
+    /// ${entity.description || entity.name}
+    /// </summary>
+    public class ${entity.name} : AuditedAggregateRoot<Guid>
+    {
+${entity.properties?.map((p: any) => `        /// <summary>
+        /// ${p.description || p.name}
+        /// </summary>
+        public ${p.type} ${p.name} { get; set; }`).join('\n\n')}
+    }
+}`
+})
+
+const dtoTemplate = computed(() => {
+  const entity = entities.value[0]
+  if (!entity) return '// 请先添加实体'
+  
+  return `// ${entity.name}Dto.cs
+using System;
+
+namespace ${projectConfig.value.namespace}.Dtos
+{
+    /// <summary>
+    /// ${entity.description || entity.name} DTO
+    /// </summary>
+    public class ${entity.name}Dto
+    {
+        public Guid Id { get; set; }
+${entity.properties?.map((p: any) => `        public ${p.type} ${p.name} { get; set; }`).join('\n')}
+        public DateTime CreationTime { get; set; }
+    }
+}`
+})
+
+const serviceTemplate = computed(() => {
+  const entity = entities.value[0]
+  if (!entity) return '// 请先添加实体'
+  
+  return `// ${entity.name}AppService.cs
+using System;
+using System.Threading.Tasks;
+using Volo.Abp.Application.Services;
+using Volo.Abp.Application.Dtos;
+
+namespace ${projectConfig.value.namespace}.Services
+{
+    public class ${entity.name}AppService : CrudAppService<
+        ${entity.name},
+        ${entity.name}Dto,
+        Guid,
+        PagedAndSortedResultRequestDto,
+        Create${entity.name}Dto,
+        Update${entity.name}Dto>
+    {
+        public ${entity.name}AppService(IRepository<${entity.name}, Guid> repository)
+            : base(repository)
+        {
+        }
+    }
+}`
+})
+
+const controllerTemplate = computed(() => {
+  const entity = entities.value[0]
+  if (!entity) return '// 请先添加实体'
+  
+  return `// ${entity.name}Controller.cs
+using System;
+using Microsoft.AspNetCore.Mvc;
+using Volo.Abp.AspNetCore.Mvc;
+
+namespace ${projectConfig.value.namespace}.Controllers
+{
+    [Route("api/[controller]")]
+    public class ${entity.name}Controller : AbpController
+    {
+        private readonly ${entity.name}AppService _${entity.name.toLowerCase()}AppService;
+
+        public ${entity.name}Controller(${entity.name}AppService ${entity.name.toLowerCase()}AppService)
+        {
+            _${entity.name.toLowerCase()}AppService = ${entity.name.toLowerCase()}AppService;
+        }
+
+        [HttpGet]
+        public async Task<PagedResultDto<${entity.name}Dto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        {
+            return await _${entity.name.toLowerCase()}AppService.GetListAsync(input);
+        }
+    }
+}`
+})
+
+const vueTemplate = computed(() => {
+  const entity = entities.value[0]
+  if (!entity) return '<!-- 请先添加实体 -->'
+  
+  return `<!-- ${entity.name}List.vue -->
+<template>
+  <div class="${entity.name.toLowerCase()}-list">
+    <el-card>
+      <template #header>
+        <div class="card-header">
+          <span>${entity.description || entity.name}管理</span>
+          <el-button type="primary" @click="handleAdd">新增</el-button>
+        </div>
+      </template>
+
+      <el-table :data="list" border>
+${entity.properties?.slice(0, 3).map((p: any) => `        <el-table-column prop="${p.name}" label="${p.description || p.name}" />`).join('\n')}
+        <el-table-column label="操作" width="180">
+          <template #default="{ row }">
+            <el-button size="small" @click="handleEdit(row)">编辑</el-button>
+            <el-button size="small" type="danger" @click="handleDelete(row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { ${entity.name}Api } from '@/api/${entity.name.toLowerCase()}'
+
+const list = ref([])
+
+const fetchList = async () => {
+  const result = await ${entity.name}Api.getList({ skipCount: 0, maxResultCount: 10 })
+  list.value = result.items
+}
+
+onMounted(() => {
+  fetchList()
+})
+</script>`
+})
+
+// 复制模板
+const copyTemplate = async () => {
+  const templates: Record<string, any> = {
+    entity: entityTemplate.value,
+    dto: dtoTemplate.value,
+    service: serviceTemplate.value,
+    controller: controllerTemplate.value,
+    vue: vueTemplate.value
+  }
+  
+  try {
+    await navigator.clipboard.writeText(templates[activeTemplateTab.value])
+    ElMessage.success('模板已复制到剪贴板')
+  } catch {
+    ElMessage.error('复制失败，请手动复制')
+  }
 }
 
 const finish = () => {
@@ -1238,6 +1463,31 @@ const saveProgress = () => {
     display: flex;
     justify-content: center;
     gap: 12px;
+  }
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.code-preview {
+  background: #282c34;
+  color: #abb2bf;
+  padding: 20px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  max-height: 600px;
+  overflow: auto;
+
+  code {
+    display: block;
+    white-space: pre-wrap;
+    word-break: break-word;
   }
 }
 </style>

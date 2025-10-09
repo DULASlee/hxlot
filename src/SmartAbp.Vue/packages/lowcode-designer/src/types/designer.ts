@@ -76,11 +76,35 @@ export type MoveDirection = 'up' | 'down'
 export type ResizeDirection = 'se' | 'sw' | 'ne' | 'nw'
 
 /**
+ * 组件属性类型
+ */
+export type ComponentPropertyType = 
+  | 'string'
+  | 'number'
+  | 'boolean'
+  | 'color'
+  | 'select'
+  | 'json'
+
+/**
+ * 组件属性定义
+ */
+export interface ComponentProperty {
+  name: string
+  label: string
+  type: ComponentPropertyType
+  value: any
+  options?: Array<{ label: string; value: any }>
+  description?: string
+}
+
+/**
  * 画布Props接口
  */
 export interface VisualDesignCanvasProps {
   pageData?: Record<string, any>
   entityData?: Record<string, any>
+  showPropertyPanel?: boolean
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
