@@ -2,14 +2,22 @@ import { getGlobalLogger, type ILogger } from "@smartabp/lowcode-shared"
 import { defineStore } from "pinia"
 import { ref } from "vue"
 
-// 🔥 v9.0修复：导入真实API（符合packages架构原则）
-import {
-  createEntity as createEntityApi,
-  deleteEntity as deleteEntityApi,
-  getAllEntities,
-  getAllRelations,
-  updateEntity as updateEntityApi
-} from '@smartabp/lowcode-api'
+// 🔥 v10.0修复：通过桥接层导入API，避免循环依赖
+import type { EntityModelingApiBridge } from '@smartabp/lowcode-api'
+
+// API桥接实例（运行时注入）
+let apiBridge: EntityModelingApiBridge | null = null
+
+export function injectEntityModelingApi(bridge: EntityModelingApiBridge) {
+  apiBridge = bridge
+}
+
+// API包装函数（向后兼容）
+const createEntityApi = (...args: any[]) => apiBridge?.createEntity(...args) || Promise.reject(new Error('API未注入'))
+const deleteEntityApi = (...args: any[]) => apiBridge?.deleteEntity(...args) || Promise.reject(new Error('API未注入'))
+const updateEntityApi = (...args: any[]) => apiBridge?.updateEntity(...args) || Promise.reject(new Error('API未注入'))
+const getAllEntities = (...args: any[]) => apiBridge?.getAllEntities(...args) || Promise.reject(new Error('API未注入'))
+const getAllRelations = (...args: any[]) => apiBridge?.getAllRelations(...args) || Promise.reject(new Error('API未注入'))
 
 const logger: ILogger = getGlobalLogger()
 

@@ -10,7 +10,9 @@ import type {
     UpdateBusinessRuleDto,
 } from '@smartabp/lowcode-api'
 import { businessRuleApi } from '@smartabp/lowcode-api'
-import { logger } from '@smartabp/lowcode-tools'
+// 使用全局logger避免循环依赖
+import { getGlobalLogger } from '@smartabp/lowcode-shared'
+const logger = getGlobalLogger()
 import { ElMessage } from 'element-plus'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'

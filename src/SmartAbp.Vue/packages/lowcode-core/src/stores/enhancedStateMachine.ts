@@ -519,7 +519,8 @@ export const useEnhancedStateMachineStore = defineStore("enhancedStateMachine", 
 
     return `// AUTO-GENERATED FILE - DO NOT EDIT
 import { ref, computed } from "vue"
-import { logger } from '@smartabp/lowcode-tools'
+// 使用已定义的logger避免循环依赖
+// const logger已在文件顶部定义
 
 export type ${workflowName}State = ${stateNames}
 
