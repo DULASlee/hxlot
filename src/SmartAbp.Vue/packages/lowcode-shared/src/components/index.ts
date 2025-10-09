@@ -34,3 +34,14 @@ export type {
   VirtualAssemblyOptions
 } from './VirtualAssembly'
 
+// 🎯 TypeScript类型生成器导出（微AI 2.0 - 阶段2）
+export {
+  TypeDefinitionGenerator,
+  createTypeGenerator,
+  generateTypes
+} from './TypeDefinitionGenerator'
+export type {
+  TypeGeneratorOptions,
+  GeneratedTypeDefinition
+} from './TypeDefinitionGenerator'
+

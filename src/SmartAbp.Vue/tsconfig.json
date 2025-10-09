@@ -11,6 +11,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "types": ["./types/components.d.ts"],
     "strict": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -59,7 +60,8 @@
     "src/icon-types.d.ts",
     "src/**/*.vue",
     "src/**/*.tsx",
-    "src/**/*.js"
+    "src/**/*.js",
+    "types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules",
