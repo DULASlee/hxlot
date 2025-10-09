@@ -24,3 +24,13 @@ export {
 // 从 hocs 导出（排除与validators重复的类型）
 export * from './hocs'
 
+// 🌟 虚拟程序集导出（微AI 2.0核心）
+export {
+  VirtualAssembly,
+  createVirtualAssembly
+} from './VirtualAssembly'
+export type {
+  ComponentProxy,
+  VirtualAssemblyOptions
+} from './VirtualAssembly'
+

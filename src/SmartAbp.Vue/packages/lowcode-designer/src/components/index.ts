@@ -75,14 +75,14 @@
 // export { default as LdEntityDesigner } from './CodeGenerator/EntityDesigner.vue'
 
 // ✅ 已实现的核心组件
+export { default as LdBusinessRulesEngine } from './BusinessRulesEngine.vue'
 export { default as LdCodeGenerationWizard } from './CodeGenerationWizard.vue'
-export { default as LdVisualDesignCanvas } from './VisualDesignCanvas.vue'
+export { default as LdCodePreviewPanel } from './CodePreviewPanel.vue'
+export { default as LdComponentPropertyPanel } from './ComponentPropertyPanel.vue'
 export { default as LdEntityDesigner } from './EntityDesigner.vue'
 export { default as LdTemplateManager } from './TemplateManager.vue'
-export { default as LdBusinessRulesEngine } from './BusinessRulesEngine.vue'
 export { default as LdVisualComponentPalette } from './VisualComponentPalette.vue'
-export { default as LdComponentPropertyPanel } from './ComponentPropertyPanel.vue'
-export { default as LdCodePreviewPanel } from './CodePreviewPanel.vue'
+export { default as LdVisualDesignCanvas } from './VisualDesignCanvas.vue'
 
 // ✅ Development Environment Components - 已注册到ComponentRegistry
 // export { default as LdDevEnvironmentSetup } from './devenv/DevEnvironmentSetup.vue'

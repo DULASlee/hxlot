@@ -21,13 +21,11 @@ LOG_FILE="$PROJECT_ROOT/logs/ai-rule-reminder.log"
 
 # 规则文件列表（按优先级排序）
 RULE_FILES=(
-    ".cursor/rules/00_架构铁律_最高优先级.mdc"
     ".cursor/rules/00_执行引擎.mdc"
     ".cursor/rules/00_核心原则.mdc"
-    ".cursor/rules/01_code_standards.mdc"
-    ".cursor/rules/02_development_process.mdc"
-    ".cursor/rules/03_quality_guardian.mdc"
-    ".cursor/rules/04_code_quality_prohibitions.mdc"
+    ".cursor/rules/01_开发指南.mdc"
+    ".cursor/rules/02_最佳实践.mdc"
+    ".cursor/rules/03_项目架构指南.mdc"
     "docs/项目开发规范总览.md"
 )
 
