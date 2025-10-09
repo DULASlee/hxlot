@@ -10,7 +10,10 @@
 -->
 <template>
   <div class="code-generation-wizard">
-    <el-card shadow="never" class="wizard-card">
+    <el-card
+      shadow="never"
+      class="wizard-card"
+    >
       <template #header>
         <div class="wizard-header">
           <div class="header-left">
@@ -18,7 +21,12 @@
             <span class="wizard-title">智能代码生成向导</span>
           </div>
           <div class="header-right">
-            <el-tag type="success" size="small">企业级</el-tag>
+            <el-tag
+              type="success"
+              size="small"
+            >
+              企业级
+            </el-tag>
             <el-button 
               v-if="currentStep > 0" 
               size="small" 
@@ -37,17 +45,35 @@
         process-status="process"
         class="wizard-steps"
       >
-        <el-step title="项目配置" description="基础信息设置" />
-        <el-step title="实体设计" description="数据模型定义" />
-        <el-step title="关系配置" description="实体关联设置" />
-        <el-step title="UI定制" description="界面风格配置" />
-        <el-step title="代码生成" description="生成并导出" />
+        <el-step
+          title="项目配置"
+          description="基础信息设置"
+        />
+        <el-step
+          title="实体设计"
+          description="数据模型定义"
+        />
+        <el-step
+          title="关系配置"
+          description="实体关联设置"
+        />
+        <el-step
+          title="UI定制"
+          description="界面风格配置"
+        />
+        <el-step
+          title="代码生成"
+          description="生成并导出"
+        />
       </el-steps>
 
       <!-- 步骤内容区 -->
       <div class="step-content">
         <!-- 步骤1：项目配置 -->
-        <div v-show="currentStep === 0" class="step-panel">
+        <div
+          v-show="currentStep === 0"
+          class="step-panel"
+        >
           <h3 class="step-title">
             <el-icon><Setting /></el-icon>
             项目基础配置
@@ -62,7 +88,10 @@
           >
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="项目名称" prop="projectName">
+                <el-form-item
+                  label="项目名称"
+                  prop="projectName"
+                >
                   <el-input 
                     v-model="projectConfig.projectName"
                     placeholder="例如：智慧工地管理系统"
@@ -72,7 +101,10 @@
               </el-col>
               
               <el-col :span="12">
-                <el-form-item label="项目代码" prop="projectCode">
+                <el-form-item
+                  label="项目代码"
+                  prop="projectCode"
+                >
                   <el-input 
                     v-model="projectConfig.projectCode"
                     placeholder="例如：SmartConstruction"
@@ -84,7 +116,10 @@
 
             <el-row :gutter="20">
               <el-col :span="12">
-                <el-form-item label="命名空间" prop="namespace">
+                <el-form-item
+                  label="命名空间"
+                  prop="namespace"
+                >
                   <el-input 
                     v-model="projectConfig.namespace"
                     placeholder="例如：SmartConstruction"
@@ -94,22 +129,40 @@
               </el-col>
               
               <el-col :span="12">
-                <el-form-item label="数据库类型" prop="databaseType">
+                <el-form-item
+                  label="数据库类型"
+                  prop="databaseType"
+                >
                   <el-select 
                     v-model="projectConfig.databaseType"
                     placeholder="选择数据库"
                     style="width: 100%"
                   >
-                    <el-option label="SQL Server" value="SqlServer" />
-                    <el-option label="PostgreSQL" value="PostgreSQL" />
-                    <el-option label="MySQL" value="MySQL" />
-                    <el-option label="SQLite" value="SQLite" />
+                    <el-option
+                      label="SQL Server"
+                      value="SqlServer"
+                    />
+                    <el-option
+                      label="PostgreSQL"
+                      value="PostgreSQL"
+                    />
+                    <el-option
+                      label="MySQL"
+                      value="MySQL"
+                    />
+                    <el-option
+                      label="SQLite"
+                      value="SQLite"
+                    />
                   </el-select>
                 </el-form-item>
               </el-col>
             </el-row>
 
-            <el-form-item label="项目描述" prop="description">
+            <el-form-item
+              label="项目描述"
+              prop="description"
+            >
               <el-input 
                 v-model="projectConfig.description"
                 type="textarea"
@@ -122,10 +175,26 @@
 
             <el-form-item label="技术栈选择">
               <el-checkbox-group v-model="projectConfig.techStack">
-                <el-checkbox label="ABP vNext" disabled checked />
-                <el-checkbox label="Vue3" disabled checked />
-                <el-checkbox label="TypeScript" disabled checked />
-                <el-checkbox label="Element Plus" disabled checked />
+                <el-checkbox
+                  label="ABP vNext"
+                  disabled
+                  checked
+                />
+                <el-checkbox
+                  label="Vue3"
+                  disabled
+                  checked
+                />
+                <el-checkbox
+                  label="TypeScript"
+                  disabled
+                  checked
+                />
+                <el-checkbox
+                  label="Element Plus"
+                  disabled
+                  checked
+                />
                 <el-checkbox label="Pinia" />
                 <el-checkbox label="Vue Router" />
                 <el-checkbox label="Axios" />
@@ -151,7 +220,10 @@
         </div>
 
         <!-- 步骤2：实体设计 -->
-        <div v-show="currentStep === 1" class="step-panel">
+        <div
+          v-show="currentStep === 1"
+          class="step-panel"
+        >
           <h3 class="step-title">
             <el-icon><Document /></el-icon>
             实体模型设计
@@ -159,7 +231,10 @@
 
           <div class="entity-designer">
             <div class="designer-toolbar">
-              <el-button type="primary" @click="addEntity">
+              <el-button
+                type="primary"
+                @click="addEntity"
+              >
                 <el-icon><Plus /></el-icon>
                 添加实体
               </el-button>
@@ -179,8 +254,16 @@
               stripe
               max-height="400"
             >
-              <el-table-column type="index" label="#" width="60" />
-              <el-table-column prop="name" label="实体名称" min-width="150">
+              <el-table-column
+                type="index"
+                label="#"
+                width="60"
+              />
+              <el-table-column
+                prop="name"
+                label="实体名称"
+                min-width="150"
+              >
                 <template #default="{ row }">
                   <el-input 
                     v-model="row.name" 
@@ -189,7 +272,11 @@
                   />
                 </template>
               </el-table-column>
-              <el-table-column prop="displayName" label="显示名称" min-width="150">
+              <el-table-column
+                prop="displayName"
+                label="显示名称"
+                min-width="150"
+              >
                 <template #default="{ row }">
                   <el-input 
                     v-model="row.displayName" 
@@ -197,12 +284,21 @@
                   />
                 </template>
               </el-table-column>
-              <el-table-column prop="properties" label="属性数量" width="100" align="center">
+              <el-table-column
+                prop="properties"
+                label="属性数量"
+                width="100"
+                align="center"
+              >
                 <template #default="{ row }">
                   <el-tag>{{ row.properties?.length || 0 }}</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="200" fixed="right">
+              <el-table-column
+                label="操作"
+                width="200"
+                fixed="right"
+              >
                 <template #default="{ row, $index }">
                   <el-button 
                     size="small" 
@@ -243,7 +339,10 @@
         </div>
 
         <!-- 步骤3：关系配置 -->
-        <div v-show="currentStep === 2" class="step-panel">
+        <div
+          v-show="currentStep === 2"
+          class="step-panel"
+        >
           <h3 class="step-title">
             <el-icon><Connection /></el-icon>
             实体关系配置
@@ -251,7 +350,10 @@
 
           <div class="relationship-designer">
             <div class="designer-toolbar">
-              <el-button type="primary" @click="addRelationship">
+              <el-button
+                type="primary"
+                @click="addRelationship"
+              >
                 <el-icon><Plus /></el-icon>
                 添加关系
               </el-button>
@@ -267,19 +369,44 @@
               stripe
               max-height="400"
             >
-              <el-table-column type="index" label="#" width="60" />
-              <el-table-column label="关系类型" width="150">
+              <el-table-column
+                type="index"
+                label="#"
+                width="60"
+              />
+              <el-table-column
+                label="关系类型"
+                width="150"
+              >
                 <template #default="{ row }">
-                  <el-select v-model="row.type" placeholder="选择类型">
-                    <el-option label="一对多" value="OneToMany" />
-                    <el-option label="多对多" value="ManyToMany" />
-                    <el-option label="一对一" value="OneToOne" />
+                  <el-select
+                    v-model="row.type"
+                    placeholder="选择类型"
+                  >
+                    <el-option
+                      label="一对多"
+                      value="OneToMany"
+                    />
+                    <el-option
+                      label="多对多"
+                      value="ManyToMany"
+                    />
+                    <el-option
+                      label="一对一"
+                      value="OneToOne"
+                    />
                   </el-select>
                 </template>
               </el-table-column>
-              <el-table-column label="源实体" width="150">
+              <el-table-column
+                label="源实体"
+                width="150"
+              >
                 <template #default="{ row }">
-                  <el-select v-model="row.sourceEntity" placeholder="选择">
+                  <el-select
+                    v-model="row.sourceEntity"
+                    placeholder="选择"
+                  >
                     <el-option 
                       v-for="entity in entities" 
                       :key="entity.name"
@@ -289,9 +416,15 @@
                   </el-select>
                 </template>
               </el-table-column>
-              <el-table-column label="目标实体" width="150">
+              <el-table-column
+                label="目标实体"
+                width="150"
+              >
                 <template #default="{ row }">
-                  <el-select v-model="row.targetEntity" placeholder="选择">
+                  <el-select
+                    v-model="row.targetEntity"
+                    placeholder="选择"
+                  >
                     <el-option 
                       v-for="entity in entities" 
                       :key="entity.name"
@@ -301,12 +434,23 @@
                   </el-select>
                 </template>
               </el-table-column>
-              <el-table-column prop="foreignKey" label="外键" width="150">
+              <el-table-column
+                prop="foreignKey"
+                label="外键"
+                width="150"
+              >
                 <template #default="{ row }">
-                  <el-input v-model="row.foreignKey" placeholder="自动生成" />
+                  <el-input
+                    v-model="row.foreignKey"
+                    placeholder="自动生成"
+                  />
                 </template>
               </el-table-column>
-              <el-table-column label="操作" width="100" fixed="right">
+              <el-table-column
+                label="操作"
+                width="100"
+                fixed="right"
+              >
                 <template #default="{ $index }">
                   <el-button 
                     size="small" 
@@ -339,7 +483,10 @@
         </div>
 
         <!-- 步骤4：UI定制 -->
-        <div v-show="currentStep === 3" class="step-panel">
+        <div
+          v-show="currentStep === 3"
+          class="step-panel"
+        >
           <h3 class="step-title">
             <el-icon><Brush /></el-icon>
             UI界面定制
@@ -352,35 +499,62 @@
           >
             <el-form-item label="主题风格">
               <el-radio-group v-model="uiConfig.theme">
-                <el-radio label="light">浅色主题</el-radio>
-                <el-radio label="dark">深色主题</el-radio>
-                <el-radio label="auto">自动切换</el-radio>
+                <el-radio label="light">
+                  浅色主题
+                </el-radio>
+                <el-radio label="dark">
+                  深色主题
+                </el-radio>
+                <el-radio label="auto">
+                  自动切换
+                </el-radio>
               </el-radio-group>
             </el-form-item>
 
             <el-form-item label="主色调">
               <el-color-picker v-model="uiConfig.primaryColor" />
-              <span class="color-preview" :style="{ background: uiConfig.primaryColor }">
+              <span
+                class="color-preview"
+                :style="{ background: uiConfig.primaryColor }"
+              >
                 {{ uiConfig.primaryColor }}
               </span>
             </el-form-item>
 
             <el-form-item label="布局模式">
               <el-radio-group v-model="uiConfig.layout">
-                <el-radio label="classic">经典布局</el-radio>
-                <el-radio label="sidebar">侧边栏</el-radio>
-                <el-radio label="top">顶部导航</el-radio>
+                <el-radio label="classic">
+                  经典布局
+                </el-radio>
+                <el-radio label="sidebar">
+                  侧边栏
+                </el-radio>
+                <el-radio label="top">
+                  顶部导航
+                </el-radio>
               </el-radio-group>
             </el-form-item>
 
             <el-form-item label="表单组件">
               <el-checkbox-group v-model="uiConfig.components">
-                <el-checkbox label="form">表单</el-checkbox>
-                <el-checkbox label="table">表格</el-checkbox>
-                <el-checkbox label="search">搜索</el-checkbox>
-                <el-checkbox label="detail">详情</el-checkbox>
-                <el-checkbox label="tree">树形</el-checkbox>
-                <el-checkbox label="chart">图表</el-checkbox>
+                <el-checkbox label="form">
+                  表单
+                </el-checkbox>
+                <el-checkbox label="table">
+                  表格
+                </el-checkbox>
+                <el-checkbox label="search">
+                  搜索
+                </el-checkbox>
+                <el-checkbox label="detail">
+                  详情
+                </el-checkbox>
+                <el-checkbox label="tree">
+                  树形
+                </el-checkbox>
+                <el-checkbox label="chart">
+                  图表
+                </el-checkbox>
               </el-checkbox-group>
             </el-form-item>
           </el-form>
@@ -394,13 +568,19 @@
         </div>
 
         <!-- 步骤5：代码生成 -->
-        <div v-show="currentStep === 4" class="step-panel">
+        <div
+          v-show="currentStep === 4"
+          class="step-panel"
+        >
           <h3 class="step-title">
             <el-icon><Document /></el-icon>
             代码生成与导出
           </h3>
 
-          <div v-if="!isGenerating && !generationComplete" class="generation-ready">
+          <div
+            v-if="!isGenerating && !generationComplete"
+            class="generation-ready"
+          >
             <el-result
               icon="success"
               title="准备就绪"
@@ -419,12 +599,17 @@
             </el-result>
           </div>
 
-          <div v-if="isGenerating" class="generation-progress">
+          <div
+            v-if="isGenerating"
+            class="generation-progress"
+          >
             <el-progress 
               :percentage="generationProgress"
               :status="generationProgress === 100 ? 'success' : undefined"
             />
-            <p class="current-task">{{ currentTask }}</p>
+            <p class="current-task">
+              {{ currentTask }}
+            </p>
             
             <div class="generation-logs">
               <h4>生成日志</h4>
@@ -442,7 +627,10 @@
             </div>
           </div>
 
-          <div v-if="generationComplete" class="generation-result">
+          <div
+            v-if="generationComplete"
+            class="generation-result"
+          >
             <el-result
               icon="success"
               title="代码生成成功！"
@@ -519,7 +707,10 @@
       width="800px"
       destroy-on-close
     >
-      <div v-if="currentEditEntity" class="property-editor">
+      <div
+        v-if="currentEditEntity"
+        class="property-editor"
+      >
         <el-button 
           type="primary" 
           size="small"
@@ -533,33 +724,69 @@
           border 
           style="margin-top: 12px"
         >
-          <el-table-column label="属性名" width="150">
+          <el-table-column
+            label="属性名"
+            width="150"
+          >
             <template #default="{ row }">
-              <el-input v-model="row.name" placeholder="Name" />
+              <el-input
+                v-model="row.name"
+                placeholder="Name"
+              />
             </template>
           </el-table-column>
-          <el-table-column label="显示名" width="150">
+          <el-table-column
+            label="显示名"
+            width="150"
+          >
             <template #default="{ row }">
-              <el-input v-model="row.displayName" placeholder="名称" />
+              <el-input
+                v-model="row.displayName"
+                placeholder="名称"
+              />
             </template>
           </el-table-column>
-          <el-table-column label="类型" width="120">
+          <el-table-column
+            label="类型"
+            width="120"
+          >
             <template #default="{ row }">
               <el-select v-model="row.type">
-                <el-option label="String" value="string" />
-                <el-option label="Int" value="int" />
-                <el-option label="Decimal" value="decimal" />
-                <el-option label="DateTime" value="datetime" />
-                <el-option label="Bool" value="bool" />
+                <el-option
+                  label="String"
+                  value="string"
+                />
+                <el-option
+                  label="Int"
+                  value="int"
+                />
+                <el-option
+                  label="Decimal"
+                  value="decimal"
+                />
+                <el-option
+                  label="DateTime"
+                  value="datetime"
+                />
+                <el-option
+                  label="Bool"
+                  value="bool"
+                />
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="必填" width="80">
+          <el-table-column
+            label="必填"
+            width="80"
+          >
             <template #default="{ row }">
               <el-checkbox v-model="row.isRequired" />
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="100">
+          <el-table-column
+            label="操作"
+            width="100"
+          >
             <template #default="{ $index }">
               <el-button 
                 size="small" 
@@ -575,8 +802,15 @@
       </div>
 
       <template #footer>
-        <el-button @click="propertyDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="saveProperties">确定</el-button>
+        <el-button @click="propertyDialogVisible = false">
+          取消
+        </el-button>
+        <el-button
+          type="primary"
+          @click="saveProperties"
+        >
+          确定
+        </el-button>
       </template>
     </el-dialog>
   </div>

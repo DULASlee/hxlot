@@ -1,6 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { codeGeneratorApi } from '../code-generator'
-import type { ModuleGenerationConfig, ModuleMetadata } from '../types'
+import type { ModuleGenerationConfig, ModuleMetadata } from '@smartabp/lowcode-api'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 /**
  * 代码生成器API契约测试
@@ -330,7 +329,7 @@ describe('CodeGeneratorApi Contract Tests', () => {
 
       // 第一次注册
       const firstResult = { id: 'module-order-001', ...metadata }
-      
+
       // 第二次注册（幂等）
       const secondResult = { id: 'module-order-001', ...metadata }
 

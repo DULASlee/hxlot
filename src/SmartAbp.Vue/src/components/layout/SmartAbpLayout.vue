@@ -1,19 +1,43 @@
 <template>
   <div class="smart-abp-layout">
     <!-- 路由进度条（无依赖） -->
-    <div v-show="isRouting" class="route-progress" :style="{ width: progressWidth + '%' }" />
+    <div
+      v-show="isRouting"
+      class="route-progress"
+      :style="{ width: progressWidth + '%' }"
+    />
     <!-- 顶部导航栏 -->
     <header class="top-navbar">
       <div class="navbar-left">
-        <img src="/logo.svg" alt="SmartAbp" class="logo" />
+        <img
+          src="/logo.svg"
+          alt="SmartAbp"
+          class="logo"
+        />
         <span class="brand-name">SmartAbp</span>
       </div>
 
       <nav class="navbar-center">
-        <a href="#" class="nav-link" @click="navigateToExternal('智慧工地')">智慧工地</a>
-        <a href="#" class="nav-link" @click="navigateToExternal('MES')">MES</a>
-        <a href="#" class="nav-link" @click="navigateToExternal('系统配置')">系统配置</a>
-        <a href="#" class="nav-link" @click="navigateToExternal('APP')">APP</a>
+        <a
+          href="#"
+          class="nav-link"
+          @click="navigateToExternal('智慧工地')"
+        >智慧工地</a>
+        <a
+          href="#"
+          class="nav-link"
+          @click="navigateToExternal('MES')"
+        >MES</a>
+        <a
+          href="#"
+          class="nav-link"
+          @click="navigateToExternal('系统配置')"
+        >系统配置</a>
+        <a
+          href="#"
+          class="nav-link"
+          @click="navigateToExternal('APP')"
+        >APP</a>
       </nav>
 
       <div class="navbar-right">
@@ -23,25 +47,45 @@
         <!-- 🎨 主题&图标切换（统一入口） -->
         <ThemeSwitcher />
 
-        <button class="icon-btn" title="设置" @click="openSettings">
+        <button
+          class="icon-btn"
+          title="设置"
+          @click="openSettings"
+        >
           <i class="fas fa-cog" />
         </button>
 
         <!-- 👤 个人中心下拉菜单 -->
-        <el-dropdown trigger="click" @command="handleUserCommand">
+        <el-dropdown
+          trigger="click"
+          @command="handleUserCommand"
+        >
           <div class="user-menu">
-            <img src="/logo.svg" alt="用户头像" class="user-avatar" />
+            <img
+              src="/logo.svg"
+              alt="用户头像"
+              class="user-avatar"
+            />
             <span class="username">{{ displayUserName }}</span>
             <i class="fas fa-chevron-down dropdown-icon" />
           </div>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item command="profile">
-                <i class="fas fa-user" style="margin-right: 8px;" />
+                <i
+                  class="fas fa-user"
+                  style="margin-right: 8px;"
+                />
                 个人信息
               </el-dropdown-item>
-              <el-dropdown-item command="logout" divided>
-                <i class="fas fa-sign-out-alt" style="margin-right: 8px;" />
+              <el-dropdown-item
+                command="logout"
+                divided
+              >
+                <i
+                  class="fas fa-sign-out-alt"
+                  style="margin-right: 8px;"
+                />
                 退出登录
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -53,37 +97,72 @@
     <!-- 主内容区域 -->
     <div class="main-container">
       <!-- 侧边栏 -->
-      <aside class="sidebar" :class="{ collapsed: sidebarCollapsed }">
+      <aside
+        class="sidebar"
+        :class="{ collapsed: sidebarCollapsed }"
+      >
         <div class="sidebar-header">
-          <button class="collapse-btn" @click="toggleSidebar">
+          <button
+            class="collapse-btn"
+            @click="toggleSidebar"
+          >
             <i :class="sidebarCollapsed ? 'fas fa-chevron-right' : 'fas fa-chevron-left'" />
           </button>
         </div>
 
         <nav class="sidebar-nav">
-          <template v-for="item in filteredMenus" :key="item.key">
+          <template
+            v-for="item in filteredMenus"
+            :key="item.key"
+          >
             <!-- 菜单分割线（不渲染图标与标题） -->
-            <div v-if="item.type === 'divider'" class="menu-divider" role="separator" />
+            <div
+              v-if="item.type === 'divider'"
+              class="menu-divider"
+              role="separator"
+            />
 
             <!-- 普通菜单/文件夹 -->
-            <div v-else class="nav-item">
-              <div class="nav-link" :class="{
-                active: menuState.activeMenuKey === item.key,
-                'has-children': item.type === 'folder' && item.children,
-              }" @click="handleMenuClick(item)">
+            <div
+              v-else
+              class="nav-item"
+            >
+              <div
+                class="nav-link"
+                :class="{
+                  active: menuState.activeMenuKey === item.key,
+                  'has-children': item.type === 'folder' && item.children,
+                }"
+                @click="handleMenuClick(item)"
+              >
                 <DynamicIcon :icon="item.icon" />
-                <span v-if="!sidebarCollapsed" class="nav-text">{{ item.title }}</span>
-                <i v-if="item.type === 'folder' && item.children && !sidebarCollapsed" :class="[
-                  'fas fa-chevron-down',
-                  'expand-icon',
-                  { expanded: expandedMenus.includes(item.key) },
-                ]" />
+                <span
+                  v-if="!sidebarCollapsed"
+                  class="nav-text"
+                >{{ item.title }}</span>
+                <i
+                  v-if="item.type === 'folder' && item.children && !sidebarCollapsed"
+                  :class="[
+                    'fas fa-chevron-down',
+                    'expand-icon',
+                    { expanded: expandedMenus.includes(item.key) },
+                  ]"
+                />
               </div>
 
-              <div v-if="item.type === 'folder' && item.children" v-show="expandedMenus.includes(item.key)"
-                class="sub-menu" :class="{ collapsed: sidebarCollapsed }">
-                <div v-for="child in item.children" :key="child.key" class="sub-nav-link"
-                  :class="{ active: menuState.activeSubMenuKey === child.key }" @click="handleSubMenuClick(child)">
+              <div
+                v-if="item.type === 'folder' && item.children"
+                v-show="expandedMenus.includes(item.key)"
+                class="sub-menu"
+                :class="{ collapsed: sidebarCollapsed }"
+              >
+                <div
+                  v-for="child in item.children"
+                  :key="child.key"
+                  class="sub-nav-link"
+                  :class="{ active: menuState.activeSubMenuKey === child.key }"
+                  @click="handleSubMenuClick(child)"
+                >
                   <DynamicIcon :icon="child.icon" />
                   <span class="nav-text">{{ child.title }}</span>
                 </div>
@@ -94,16 +173,28 @@
       </aside>
 
       <!-- 副菜单 -->
-      <aside v-if="!sidebarCollapsed" class="submenu-panel" :class="{ show: shouldShowSubmenu }">
+      <aside
+        v-if="!sidebarCollapsed"
+        class="submenu-panel"
+        :class="{ show: shouldShowSubmenu }"
+      >
         <div class="submenu-header">
           <h3>{{ submenuTitle }}</h3>
-          <button class="close-submenu" @click="closeSubmenu">
+          <button
+            class="close-submenu"
+            @click="closeSubmenu"
+          >
             <i class="fas fa-times" />
           </button>
         </div>
 
         <div class="submenu-content">
-          <div v-for="sub in currentSubmenuItems" :key="sub.key" class="submenu-item" @click="handleSubMenuClick(sub)">
+          <div
+            v-for="sub in currentSubmenuItems"
+            :key="sub.key"
+            class="submenu-item"
+            @click="handleSubMenuClick(sub)"
+          >
             <DynamicIcon :icon="sub.icon" />
             <span>{{ sub.title }}</span>
           </div>
@@ -113,35 +204,67 @@
       <!-- 内容区域 -->
       <main class="content-area">
         <!-- 🧭 面包屑导航 -->
-        <nav v-if="breadcrumbs.length > 0" class="breadcrumb-nav" aria-label="breadcrumb">
+        <nav
+          v-if="breadcrumbs.length > 0"
+          class="breadcrumb-nav"
+          aria-label="breadcrumb"
+        >
           <el-breadcrumb separator="/">
-            <el-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="index"
-              :to="index < breadcrumbs.length - 1 ? item.path : undefined">
-              <DynamicIcon v-if="item.icon" :icon="item.icon" :size="14" />
+            <el-breadcrumb-item
+              v-for="(item, index) in breadcrumbs"
+              :key="index"
+              :to="index < breadcrumbs.length - 1 ? item.path : undefined"
+            >
+              <DynamicIcon
+                v-if="item.icon"
+                :icon="item.icon"
+                :size="14"
+              />
               {{ item.title }}
             </el-breadcrumb-item>
           </el-breadcrumb>
         </nav>
 
         <!-- 标签页导航 -->
-        <div v-if="openTabs.length > 0" class="tab-navigation">
+        <div
+          v-if="openTabs.length > 0"
+          class="tab-navigation"
+        >
           <div class="tabs-container">
-            <el-dropdown v-for="tab in openTabs" :key="tab.key" trigger="contextmenu" @command="onTabMenuCommand">
-              <div class="tab-item" :class="{ active: activeTab === tab.key }" @click="switchTab(tab.key)">
+            <el-dropdown
+              v-for="tab in openTabs"
+              :key="tab.key"
+              trigger="contextmenu"
+              @command="onTabMenuCommand"
+            >
+              <div
+                class="tab-item"
+                :class="{ active: activeTab === tab.key }"
+                @click="switchTab(tab.key)"
+              >
                 <DynamicIcon :icon="tab.icon" />
                 <span class="tab-title">{{ tab.title }}</span>
-                <button class="tab-pin" :title="isTabPinned(tab.key) ? '取消固定' : '固定标签'"
-                  @click.stop="togglePinTab(tab.key)">
+                <button
+                  class="tab-pin"
+                  :title="isTabPinned(tab.key) ? '取消固定' : '固定标签'"
+                  @click.stop="togglePinTab(tab.key)"
+                >
                   {{ isTabPinned(tab.key) ? '📌' : '📍' }}
                 </button>
-                <button v-if="tab.closable !== false && !isTabPinned(tab.key)" class="tab-close"
-                  @click.stop="closeTab(tab.key)">
+                <button
+                  v-if="tab.closable !== false && !isTabPinned(tab.key)"
+                  class="tab-close"
+                  @click.stop="closeTab(tab.key)"
+                >
                   <i class="fas fa-times" />
                 </button>
               </div>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item :command="{ action: 'close', key: tab.key }" :disabled="isTabPinned(tab.key)">
+                  <el-dropdown-item
+                    :command="{ action: 'close', key: tab.key }"
+                    :disabled="isTabPinned(tab.key)"
+                  >
                     关闭当前
                   </el-dropdown-item>
                   <el-dropdown-item :command="{ action: 'closeRight', key: tab.key }">
@@ -155,8 +278,18 @@
             </el-dropdown>
           </div>
           <div class="tabs-actions">
-            <el-switch v-model="singleTabMode" active-text="单页模式" inline-prompt size="small" />
-            <el-button class="tabs-clean-btn" text size="small" @click="closeOtherTabs">
+            <el-switch
+              v-model="singleTabMode"
+              active-text="单页模式"
+              inline-prompt
+              size="small"
+            />
+            <el-button
+              class="tabs-clean-btn"
+              text
+              size="small"
+              @click="closeOtherTabs"
+            >
               仅保留当前+固定
             </el-button>
           </div>
@@ -164,7 +297,11 @@
 
         <!-- 页面内容 -->
         <div class="page-content">
-          <Transition name="fade-page" mode="out-in" appear>
+          <Transition
+            name="fade-page"
+            mode="out-in"
+            appear
+          >
             <Suspense>
               <router-view />
               <template #fallback>
@@ -181,7 +318,13 @@
     </div>
 
     <!-- 🔎 全局搜索（Ctrl+K） -->
-    <el-dialog v-model="showGlobalSearch" width="600px" :show-close="false" align-center class="global-search-dialog">
+    <el-dialog
+      v-model="showGlobalSearch"
+      width="600px"
+      :show-close="false"
+      align-center
+      class="global-search-dialog"
+    >
       <template #header>
         <div class="global-search-header">
           <DynamicIcon icon="ep-search" />
@@ -190,14 +333,29 @@
         </div>
       </template>
       <div class="global-search-body">
-        <el-input v-model="searchKeyword" placeholder="搜索功能、菜单或页面" @keydown.enter="goFirstSearchResult" />
+        <el-input
+          v-model="searchKeyword"
+          placeholder="搜索功能、菜单或页面"
+          @keydown.enter="goFirstSearchResult"
+        />
         <div class="search-results">
-          <div v-for="item in searchResults" :key="item.key" class="search-result-item" @click="navigateSearch(item)">
+          <div
+            v-for="item in searchResults"
+            :key="item.key"
+            class="search-result-item"
+            @click="navigateSearch(item)"
+          >
             <DynamicIcon :icon="item.icon" />
             <span class="title">{{ item.title }}</span>
-            <span v-if="item.parentTitle" class="path">{{ item.parentTitle }} / {{ item.title }}</span>
+            <span
+              v-if="item.parentTitle"
+              class="path"
+            >{{ item.parentTitle }} / {{ item.title }}</span>
           </div>
-          <div v-if="searchResults.length === 0" class="search-empty">
+          <div
+            v-if="searchResults.length === 0"
+            class="search-empty"
+          >
             无匹配结果
           </div>
         </div>
@@ -205,8 +363,12 @@
     </el-dialog>
 
     <!-- 退出登录确认对话框 -->
-    <LogoutConfirmDialog v-model:visible="showLogoutDialog" :is-loading="isLoggingOut" @confirm="handleLogoutConfirm"
-      @cancel="handleLogoutCancel" />
+    <LogoutConfirmDialog
+      v-model:visible="showLogoutDialog"
+      :is-loading="isLoggingOut"
+      @confirm="handleLogoutConfirm"
+      @cancel="handleLogoutCancel"
+    />
   </div>
 </template>
 

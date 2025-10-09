@@ -5,10 +5,9 @@
  * 符合后端ABP Framework的DTO结构规范
  */
 
-import type { 
-  ModuleMetadata
-} from '../../types'
-import type { Template } from '../../types/index'
+import type {
+  Template
+} from '@smartabp/lowcode-api'
 
 /**
  * Mock: generateModule API响应
@@ -445,7 +444,7 @@ export const mockValidateModuleResponseWithErrors = {
 /**
  * Mock: registerModule API响应
  */
-export const mockRegisterModuleResponse: ModuleMetadata = {
+export const mockRegisterModuleResponse = {
   systemName: 'ProductManagement',
   name: 'ProductManagement',
   displayName: '产品管理',
@@ -453,34 +452,47 @@ export const mockRegisterModuleResponse: ModuleMetadata = {
   version: '1.0.0',
   architecturePattern: 'Crud',
   featureManagement: {
-    isEnabled: true
+    isEnabled: true,
+    defaultPolicy: 'Allow'
   },
   databaseInfo: {
     connectionStringName: 'Default',
-    provider: 'SqlServer'
+    provider: 'SqlServer',
+    schema: 'dbo'
   },
   permissionConfig: {
-    customActions: []
+    groupName: 'ProductManagement',
+    permissions: []
   },
   entities: [
     {
+      id: 'product-001',
       name: 'Product',
+      displayName: '产品',
+      tableName: 'Products',
       module: 'ProductManagement',
-      aggregate: 'Product',
+      namespace: 'SmartAbp.ProductManagement',
       description: '产品实体',
+      schema: 'dbo',
       isAggregateRoot: true,
-      isMultiTenant: false,
+      baseClass: 'FullAuditedAggregateRoot<Guid>',
+      interfaces: [],
+      isAudited: true,
       isSoftDelete: true,
-      hasExtraProperties: false,
-      properties: [
+      isMultiTenant: false,
+      fields: [
         { name: 'Id', type: 'Guid', isRequired: true, description: '主键ID' },
         { name: 'Name', type: 'string', maxLength: 200, isRequired: true, description: '产品名称' },
         { name: 'Description', type: 'string', maxLength: 1000, isRequired: false, description: '产品描述' },
         { name: 'Price', type: 'decimal', isRequired: true, description: '产品价格' },
         { name: 'Stock', type: 'int', defaultValue: '0', isRequired: false, description: '库存' },
         { name: 'IsActive', type: 'bool', defaultValue: 'true', isRequired: false, description: '是否激活' }
-      ]
-    }
+      ],
+      relationships: [],
+      indexes: [],
+      validationRules: [],
+      businessRules: []
+    } as any
   ]
 }
 

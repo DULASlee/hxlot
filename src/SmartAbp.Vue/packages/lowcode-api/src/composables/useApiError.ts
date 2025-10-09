@@ -3,9 +3,9 @@
  * 整合lowcode-shared的全局错误处理器和Element Plus消息提示
  */
 
-import { ElMessage, ElNotification } from 'element-plus'
+import { ElMessage, ElNotification } from 'element-plus';
 // import { getGlobalErrorHandler, type StandardError, type ErrorContext } from '@smartabp/lowcode-shared'
-import type { ApiError } from '../http-client'
+import type { ApiError } from '@smartabp/lowcode-api';
 
 // 临时本地类型定义（待lowcode-shared完善后移除）
 type StandardError = Error & { code?: string; statusCode?: number }
@@ -114,7 +114,7 @@ export function useApiError() {
    */
   const showErrorMessage = (apiError: ApiError, options: ApiErrorDisplayOptions) => {
     const message = options.customMessage || getUserFriendlyMessage(apiError)
-    
+
     ElMessage({
       message,
       type: options.messageType || 'error',
@@ -129,7 +129,7 @@ export function useApiError() {
   const showErrorNotification = (apiError: ApiError, options: ApiErrorDisplayOptions) => {
     const title = getErrorTitle(apiError)
     const message = options.customMessage || getUserFriendlyMessage(apiError)
-    
+
     ElNotification({
       title,
       message,

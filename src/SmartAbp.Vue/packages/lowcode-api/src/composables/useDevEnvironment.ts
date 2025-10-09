@@ -7,7 +7,7 @@
  */
 
 import { ref } from 'vue'
-import { http } from '../http-client'
+import { http } from '@smartabp/lowcode-api'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // TypeScript类型定义 - Type Definitions
