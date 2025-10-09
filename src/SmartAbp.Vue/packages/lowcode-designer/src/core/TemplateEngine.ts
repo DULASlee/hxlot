@@ -55,7 +55,28 @@ export interface GenerationResult {
     generatedAt: Date;
     linesOfCode: number;
   };
+  qualityReport?: CodeQualityReport;
 }
+
+// 代码质量报告接口
+export interface CodeQualityReport {
+  score: number; // 0-100
+  issues: Array<{
+    severity: 'error' | 'warning' | 'info';
+    message: string;
+    line?: number;
+    file?: string;
+  }>;
+  metrics: {
+    complexity: number;
+    maintainability: number;
+    testability: number;
+  };
+  suggestions: string[];
+}
+
+// 框架类型
+export type FrameworkType = 'vue3' | 'react' | 'angular' | 'abp' | 'dotnet'
 
 // 🏗️ 企业级模板引擎类
 export class TemplateEngine {
@@ -431,6 +452,15 @@ export class TemplateEngine {
       const fileName = this.generateFileName(template, parameters);
       const linesOfCode = generatedContent.split('\n').length;
 
+      // 执行代码质量检查
+      const qualityReport = this.checkCodeQuality(generatedContent, template.fileExtension || 'ts');
+
+      // 如果质量分数低于60，添加警告
+      const warnings: string[] = [];
+      if (qualityReport.score < 60) {
+        warnings.push(`代码质量评分较低(${qualityReport.score}/100)，建议优化`);
+      }
+
       return {
         success: true,
         files: [
@@ -440,14 +470,15 @@ export class TemplateEngine {
             type: template.fileExtension as "cs" | "vue" | "ts" | "js" | "yml" | "json"
           }
         ],
-        warnings: [],
+        warnings,
         errors: [],
         metadata: {
           templateId,
           parameters,
           generatedAt: new Date(),
           linesOfCode
-        }
+        },
+        qualityReport
       };
     } catch (error) {
       return {
@@ -572,6 +603,174 @@ export class TemplateEngine {
       default:
         return `${entityName}.${template.fileExtension}`;
     }
+  }
+
+  // 🔍 代码质量检查
+  private checkCodeQuality(content: string, fileType: string): CodeQualityReport {
+    const issues: CodeQualityReport['issues'] = [];
+    const suggestions: string[] = [];
+    let complexityScore = 100;
+    let maintainabilityScore = 100;
+    let testabilityScore = 100;
+
+    const lines = content.split('\n');
+
+    // 检查代码长度
+    if (lines.length > 500) {
+      issues.push({
+        severity: 'warning',
+        message: '文件过长，建议拆分为多个文件',
+        line: lines.length
+      });
+      maintainabilityScore -= 10;
+    }
+
+    // 检查注释率
+    const commentLines = lines.filter(line => 
+      line.trim().startsWith('//') || 
+      line.trim().startsWith('/*') || 
+      line.trim().startsWith('*') ||
+      line.trim().startsWith('<!--')
+    ).length;
+    const commentRatio = commentLines / lines.length;
+    if (commentRatio < 0.1) {
+      suggestions.push('建议增加代码注释，提高可读性');
+      maintainabilityScore -= 5;
+    }
+
+    // TypeScript/JavaScript特定检查
+    if (fileType === 'ts' || fileType === 'js' || fileType === 'vue') {
+      // 检查any类型使用
+      const anyCount = (content.match(/:\s*any/g) || []).length;
+      if (anyCount > 0) {
+        issues.push({
+          severity: 'warning',
+          message: `发现${anyCount}处使用any类型，建议使用具体类型`,
+        });
+        testabilityScore -= anyCount * 5;
+      }
+
+      // 检查函数复杂度（简化版）
+      const functionMatches = content.match(/function\s+\w+|const\s+\w+\s*=\s*\(/g) || [];
+      functionMatches.forEach(() => {
+        // 简化的圈复杂度计算
+        const ifCount = (content.match(/\bif\b/g) || []).length;
+        const forCount = (content.match(/\bfor\b/g) || []).length;
+        const whileCount = (content.match(/\bwhile\b/g) || []).length;
+        const switchCount = (content.match(/\bswitch\b/g) || []).length;
+        const complexity = ifCount + forCount + whileCount + switchCount;
+        
+        if (complexity > 10) {
+          issues.push({
+            severity: 'warning',
+            message: '函数复杂度过高，建议重构',
+          });
+          complexityScore -= 10;
+        }
+      });
+
+      // 检查console.log
+      const consoleCount = (content.match(/console\.(log|warn|error)/g) || []).length;
+      if (consoleCount > 0) {
+        issues.push({
+          severity: 'info',
+          message: `发现${consoleCount}处console语句，生产环境建议移除`,
+        });
+      }
+    }
+
+    // C#特定检查
+    if (fileType === 'cs') {
+      // 检查异常处理
+      const tryCount = (content.match(/\btry\b/g) || []).length;
+      const catchCount = (content.match(/\bcatch\b/g) || []).length;
+      if (tryCount !== catchCount) {
+        issues.push({
+          severity: 'error',
+          message: 'try-catch块不匹配',
+        });
+        testabilityScore -= 20;
+      }
+
+      // 检查命名规范
+      const publicMethods = content.match(/public\s+\w+\s+(\w+)\s*\(/g) || [];
+      publicMethods.forEach(method => {
+        const methodName = method.match(/public\s+\w+\s+(\w+)\s*\(/)?.[1];
+        if (methodName && !/^[A-Z]/.test(methodName)) {
+          issues.push({
+            severity: 'warning',
+            message: `方法${methodName}应使用PascalCase命名`,
+          });
+          maintainabilityScore -= 5;
+        }
+      });
+    }
+
+    // 计算总分
+    const score = Math.max(0, Math.min(100, 
+      (complexityScore + maintainabilityScore + testabilityScore) / 3
+    ));
+
+    // 生成建议
+    if (score < 60) {
+      suggestions.push('代码质量较低，建议进行重构');
+    } else if (score < 80) {
+      suggestions.push('代码质量一般，建议进行优化');
+    } else if (score >= 95) {
+      suggestions.push('代码质量优秀！');
+    }
+
+    return {
+      score: Math.round(score),
+      issues,
+      metrics: {
+        complexity: Math.round(complexityScore),
+        maintainability: Math.round(maintainabilityScore),
+        testability: Math.round(testabilityScore)
+      },
+      suggestions
+    };
+  }
+
+  // 🎨 多框架代码转换
+  convertToFramework(content: string, fromFramework: FrameworkType, toFramework: FrameworkType): string {
+    if (fromFramework === toFramework) return content;
+
+    // Vue3 → React 转换示例
+    if (fromFramework === 'vue3' && toFramework === 'react') {
+      let converted = content;
+      
+      // 转换ref
+      converted = converted.replace(/const\s+(\w+)\s*=\s*ref\((.*?)\)/g, 
+        'const [$1, set$1] = useState($2)');
+      
+      // 转换computed
+      converted = converted.replace(/const\s+(\w+)\s*=\s*computed\(\(\)\s*=>\s*{/g,
+        'const $1 = useMemo(() => {');
+      
+      // 转换watch
+      converted = converted.replace(/watch\(\(\)\s*=>\s*(\w+)\.value,\s*\(/g,
+        'useEffect(() => {');
+      
+      return converted;
+    }
+
+    // React → Vue3 转换示例
+    if (fromFramework === 'react' && toFramework === 'vue3') {
+      let converted = content;
+      
+      // 转换useState
+      converted = converted.replace(/const\s*\[(\w+),\s*set\w+\]\s*=\s*useState\((.*?)\)/g,
+        'const $1 = ref($2)');
+      
+      // 转换useMemo
+      converted = converted.replace(/const\s+(\w+)\s*=\s*useMemo\(\(\)\s*=>\s*{/g,
+        'const $1 = computed(() => {');
+      
+      return converted;
+    }
+
+    return content;
   }
 
   // 获取实际模板内容（简化实现）
