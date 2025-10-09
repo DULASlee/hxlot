@@ -9,7 +9,7 @@ import path from 'path';
 import { performance } from 'perf_hooks';
 import {
   DEFAULT_CONFIG,
-} from './config/default-config.js';
+} from '../config/default-config.js';
 
 import type {
   CheckerPlugin,
@@ -17,34 +17,34 @@ import type {
   QualityReport,
   QualityScore,
   Violation
-} from '@smartabp/lowcode-shared/types/index.js';
+} from '../types/index.js';
 
-import { ReportGenerator } from './reporters/report-generator.js';
-import { BaselineManager } from '@smartabp/lowcode-shared/utils/baseline-manager.js';
-import { EnvironmentChecker } from '@smartabp/lowcode-shared/utils/environment-checker.js';
-import { MemoryManager } from '@smartabp/lowcode-shared/utils/memory-manager.js';
-import { PerformanceMonitor } from '@smartabp/lowcode-shared/utils/performance-config.js';
-import { ScoreCalculator } from '@smartabp/lowcode-shared/utils/score-calculator.js';
-import { TechnicalDebtAnalyzer } from '@smartabp/lowcode-shared/utils/technical-debt-analyzer.js';
+import { ReportGenerator } from '../reporters/report-generator.js';
+import { BaselineManager } from '../utils/baseline-manager.js';
+import { EnvironmentChecker } from '../utils/environment-checker.js';
+import { MemoryManager } from '../utils/memory-manager.js';
+import { PerformanceMonitor } from '../utils/performance-config.js';
+import { ScoreCalculator } from '../utils/score-calculator.js';
+import { TechnicalDebtAnalyzer } from '../utils/technical-debt-analyzer.js';
 import { ParallelExecutor } from './parallel-executor.js';
 
 // 导入所有检查器
-import { ArchitectureChecker } from './checkers/architecture-checker.js';
-import { ArchitectureDefectChecker } from './checkers/architecture-defect-checker.js';
-import { BaseChecker } from './checkers/base-checker.js';
-import { CodeDefectChecker } from './checkers/code-defect-checker.js';
-import { CodeSmellChecker } from './checkers/code-smell-checker.js';
-import { CodeGenChecker } from './checkers/codegen-checker.js';
-import { DependencyChecker } from './checkers/dependency-checker.js';
-import { LowCodeChecker } from './checkers/lowcode-checker.js';
-import { LowCodePlatformChecker } from './checkers/lowcode-platform-checker.js';
-import { MemoryPerformanceChecker } from './checkers/memory-performance-checker.js';
-import { PerformanceChecker } from './checkers/performance-checker.js';
-import { SecurityChecker } from './checkers/security-checker.js';
-import { SmartAbpArchitectureChecker } from './checkers/smartabp-architecture-checker.js';
-import { SmartAbpChecker } from './checkers/smartabp-checker.js';
-import { SmartAbpProductionChecker } from './checkers/smartabp-production-checker.js';
-import { TypeScriptChecker } from './checkers/typescript-checker.js';
+import { ArchitectureChecker } from '../checkers/architecture-checker.js';
+import { ArchitectureDefectChecker } from '../checkers/architecture-defect-checker.js';
+import { BaseChecker } from '../checkers/base-checker.js';
+import { CodeDefectChecker } from '../checkers/code-defect-checker.js';
+import { CodeSmellChecker } from '../checkers/code-smell-checker.js';
+import { CodeGenChecker } from '../checkers/codegen-checker.js';
+import { DependencyChecker } from '../checkers/dependency-checker.js';
+import { LowCodeChecker } from '../checkers/lowcode-checker.js';
+import { LowCodePlatformChecker } from '../checkers/lowcode-platform-checker.js';
+import { MemoryPerformanceChecker } from '../checkers/memory-performance-checker.js';
+import { PerformanceChecker } from '../checkers/performance-checker.js';
+import { SecurityChecker } from '../checkers/security-checker.js';
+import { SmartAbpArchitectureChecker } from '../checkers/smartabp-architecture-checker.js';
+import { SmartAbpChecker } from '../checkers/smartabp-checker.js';
+import { SmartAbpProductionChecker } from '../checkers/smartabp-production-checker.js';
+import { TypeScriptChecker } from '../checkers/typescript-checker.js';
 
 export class QualityGuardian {
   private config: QualityConfig;

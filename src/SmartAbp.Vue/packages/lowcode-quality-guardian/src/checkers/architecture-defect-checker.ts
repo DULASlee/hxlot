@@ -1,7 +1,7 @@
+import { DependencyGraph } from '../utils/dependency-graph.js';
+import { PageRank } from '../utils/pagerank.js';
+import { Tarjan } from '../utils/tarjan.js';
 import { BaseChecker } from './base-checker.js';
-import { DependencyGraph } from '@smartabp/lowcode-shared/utils/dependency-graph.js';
-import { Tarjan } from '@smartabp/lowcode-shared/utils/tarjan.js';
-import { PageRank } from '@smartabp/lowcode-shared/utils/pagerank.js';
 
 export class ArchitectureDefectChecker extends BaseChecker {
   public readonly name = 'ArchitectureDefectChecker';
@@ -20,7 +20,7 @@ export class ArchitectureDefectChecker extends BaseChecker {
       }
     }
     this.logProgress(`依赖图构建完成，包含 ${graph.getGraph().size} 个模块。`, 'success');
-    
+
     // 1. 使用 Tarjan 算法检测循环依赖
     this.logProgress('使用 Tarjan 算法检测循环依赖...', 'info');
     const tarjan = new Tarjan(graph.getGraph());
@@ -37,13 +37,13 @@ export class ArchitectureDefectChecker extends BaseChecker {
     for (const scc of sccs) {
       // 找出循环依赖组中 PageRank 最高的模块作为“核心”
       const coreNode = scc.sort((a, b) => (ranks.get(b.id) ?? 0) - (ranks.get(a.id) ?? 0))[0];
-      
+
       if (!coreNode) continue;
 
       const cyclePath = scc.map(n => n.id).join(' -> ') + ` -> ${scc[0].id}`;
       const coreRank = ranks.get(coreNode.id) ?? 0;
       const normalizedRank = (coreRank * 1000).toFixed(2);
-      
+
       this.addViolation({
         rule: 'architecture.circular-dependency',
         level: 'P1',
@@ -55,20 +55,20 @@ export class ArchitectureDefectChecker extends BaseChecker {
 
     // 可以在此添加其他基于PageRank的检查，例如找出排名最高但非循环的“上帝模块”
     const topRanked = [...ranks.entries()]
-        .sort(([, rankA], [, rankB]) => rankB - rankA)
-        .slice(0, 5);
+      .sort(([, rankA], [, rankB]) => rankB - rankA)
+      .slice(0, 5);
 
     for (const [id, rank] of topRanked) {
-        const node = graph.getGraph().get(id);
-        if (node && !sccs.flat().some(sccNode => sccNode.id === id)) {
-            this.addViolation({
-                rule: 'architecture.god-module',
-                level: 'P2',
-                message: `模块 '${id}' 具有极高的影响力 (${(rank * 1000).toFixed(2)})，可能成为“上帝模块”，请审查其职责是否过于集中。`,
-                file: id,
-                suggestion: '请考虑将此模块的功能拆分到更小的、单一职责的模块中，以降低耦合度。'
-            });
-        }
+      const node = graph.getGraph().get(id);
+      if (node && !sccs.flat().some(sccNode => sccNode.id === id)) {
+        this.addViolation({
+          rule: 'architecture.god-module',
+          level: 'P2',
+          message: `模块 '${id}' 具有极高的影响力 (${(rank * 1000).toFixed(2)})，可能成为“上帝模块”，请审查其职责是否过于集中。`,
+          file: id,
+          suggestion: '请考虑将此模块的功能拆分到更小的、单一职责的模块中，以降低耦合度。'
+        });
+      }
     }
   }
 }

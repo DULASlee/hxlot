@@ -3,6 +3,9 @@ import traverse from '@babel/traverse';
 import type { Node } from '@babel/types';
 import path from 'path';
 
+// @babel/traverse类型兼容性修复
+const babelTraverse = typeof traverse === 'function' ? traverse : (traverse as any).default;
+
 export interface ModuleNode {
   id: string; // File path relative to project root
   dependencies: Set<string>;
@@ -46,18 +49,18 @@ export class DependencyGraph {
       // Ignore parsing errors for now
     }
   }
-  
+
   public getGraph(): Map<string, ModuleNode> {
     return this.nodes;
   }
 
   private addDependency(importNode: Node, sourcePath: string): void {
     if (importNode.type === 'ImportDeclaration' && importNode.source.type === 'StringLiteral') {
-        const targetPath = this.resolvePath(importNode.source.value, sourcePath);
-        this.linkNodes(sourcePath, targetPath);
+      const targetPath = this.resolvePath(importNode.source.value, sourcePath);
+      this.linkNodes(sourcePath, targetPath);
     } else if (importNode.type === 'CallExpression' && importNode.arguments[0]?.type === 'StringLiteral') {
-        const targetPath = this.resolvePath(importNode.arguments[0].value, sourcePath);
-        this.linkNodes(sourcePath, targetPath);
+      const targetPath = this.resolvePath(importNode.arguments[0].value, sourcePath);
+      this.linkNodes(sourcePath, targetPath);
     }
   }
 
@@ -88,7 +91,7 @@ export class DependencyGraph {
       // It's a relative or absolute path
       const resolved = path.resolve(path.dirname(sourceFile), importPath);
       let relative = path.relative(this.projectRoot, resolved);
-      
+
       // Attempt to resolve extensions
       const extensions = ['.ts', '.tsx', '.js', '.jsx', '.json', '.vue'];
       for (const ext of extensions) {

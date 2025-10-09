@@ -2,7 +2,7 @@ import * as parser from '@babel/parser';
 import traverse, { type NodePath } from '@babel/traverse';
 import type { Function as BabelFunction, Node } from '@babel/types';
 import { parse as parseSfc } from '@vue/compiler-sfc';
-import { simhash as localSimhash } from '@smartabp/lowcode-shared/utils/simhash.js';
+import { simhash as localSimhash } from './simhash.js';
 
 /**
  * 代码指纹，用于唯一标识一个代码块的逻辑结构
@@ -167,7 +167,7 @@ export class AstDuplicationDetector {
         const seenPairs = new Set<string>();
 
         if (fingerprints.length < 2) {
-          return [];
+            return [];
         }
 
         const bands = 4;
@@ -175,49 +175,49 @@ export class AstDuplicationDetector {
         const buckets: Record<string, CodeFingerprint[]> = {};
 
         for (let b = 0; b < bands; b++) {
-          for (const f of fingerprints) {
-            const bandValue = this.getBand(f.hash, b, rows);
-            const bucketKey = `${b}-${bandValue}`;
-            if (!buckets[bucketKey]) {
-              buckets[bucketKey] = [];
+            for (const f of fingerprints) {
+                const bandValue = this.getBand(f.hash, b, rows);
+                const bucketKey = `${b}-${bandValue}`;
+                if (!buckets[bucketKey]) {
+                    buckets[bucketKey] = [];
+                }
+                buckets[bucketKey].push(f);
             }
-            buckets[bucketKey].push(f);
-          }
         }
-        
+
         for (const bucketKey in buckets) {
-          const bucket = buckets[bucketKey];
-          if (bucket.length > 1) {
-            for (let i = 0; i < bucket.length; i++) {
-              for (let j = i + 1; j < bucket.length; j++) {
-                const f1 = bucket[i];
-                const f2 = bucket[j];
+            const bucket = buckets[bucketKey];
+            if (bucket.length > 1) {
+                for (let i = 0; i < bucket.length; i++) {
+                    for (let j = i + 1; j < bucket.length; j++) {
+                        const f1 = bucket[i];
+                        const f2 = bucket[j];
 
-                // Ensure we don't compare the same pair twice
-                const pairKey = [f1.hash, f2.hash].sort().join('-');
-                if (seenPairs.has(pairKey)) {
-                  continue;
-                }
-                seenPairs.add(pairKey);
+                        // Ensure we don't compare the same pair twice
+                        const pairKey = [f1.hash, f2.hash].sort().join('-');
+                        if (seenPairs.has(pairKey)) {
+                            continue;
+                        }
+                        seenPairs.add(pairKey);
 
-                const distance = this.calculateHammingDistance(f1.hash, f2.hash);
-                if (distance <= this.config.maxDistance) {
-                  duplicates.push({ a: f1, b: f2, distance });
+                        const distance = this.calculateHammingDistance(f1.hash, f2.hash);
+                        if (distance <= this.config.maxDistance) {
+                            duplicates.push({ a: f1, b: f2, distance });
+                        }
+                    }
                 }
-              }
             }
-          }
         }
-        
-        return duplicates;
-      }
 
-      /**
-       * 从哈希中提取特定频带的值
-       */
-      private getBand(hash: string, bandIndex: number, rows: number): string {
+        return duplicates;
+    }
+
+    /**
+     * 从哈希中提取特定频带的值
+     */
+    private getBand(hash: string, bandIndex: number, rows: number): string {
         return hash.substring(bandIndex * rows, (bandIndex + 1) * rows);
-      }
+    }
 
     /**
      * 计算两个Simhash指纹之间的汉明距离

@@ -6,7 +6,7 @@
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import path from 'path';
-import type { QualityReport, ReportFormat } from '@smartabp/lowcode-shared/types/index.js';
+import type { QualityReport, ReportFormat } from '../types/index.js';
 
 export class ReportGenerator {
   private reportDir: string;

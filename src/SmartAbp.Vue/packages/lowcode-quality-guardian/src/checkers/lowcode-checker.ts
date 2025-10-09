@@ -4,7 +4,7 @@
  */
 
 import path from 'path';
-import type { ArchitectureViolation } from '@smartabp/lowcode-shared/types/index.js';
+import type { ArchitectureViolation } from '../types/index.js';
 import { BaseChecker } from './base-checker.js';
 
 export class LowCodeChecker extends BaseChecker {
@@ -335,7 +335,7 @@ export class LowCodeChecker extends BaseChecker {
                         level: 'P0',
                         file: typeFile,
                         message: `主应用不应定义底层类型 ${pattern}，应在lowcode-shared/types中定义`,
-                        suggestion: '将类型定义移至 @smartabp/lowcode-shared/types'
+                        suggestion: '将类型定义移至 ../types/index.js'
                     });
                     violations++;
                 }

@@ -3,10 +3,10 @@
  * 使用 Promise.all 实现检查器并发执行
  */
 
-import type { CheckerPlugin, CheckResult, QualityConfig } from '@smartabp/lowcode-shared/types/index.js';
-import { ErrorHandler } from '@smartabp/lowcode-shared/utils/error-handler.js';
-import { MemoryManager } from '@smartabp/lowcode-shared/utils/memory-manager.js';
-import { RetryHandler } from '@smartabp/lowcode-shared/utils/retry-handler.js';
+import type { CheckerPlugin, CheckResult, QualityConfig } from '../types/index.js';
+import { ErrorHandler } from '../utils/error-handler.js';
+import { MemoryManager } from '../utils/memory-manager.js';
+import { RetryHandler } from '../utils/retry-handler.js';
 
 export interface ParallelCheckResult {
     type: string;

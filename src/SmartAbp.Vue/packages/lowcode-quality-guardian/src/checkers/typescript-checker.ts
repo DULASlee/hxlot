@@ -4,7 +4,7 @@
 
 import { execa, ExecaChildProcess } from 'execa';
 import path from 'path';
-import type { Violation } from '@smartabp/lowcode-shared/types/index.js';
+import type { Violation } from '../types/index.js';
 import { BaseChecker } from './base-checker.js';
 
 export class TypeScriptChecker extends BaseChecker {

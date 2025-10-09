@@ -14,7 +14,7 @@
 import {
     AstDuplicationDetector,
     type CodeFingerprint,
-} from '@smartabp/lowcode-shared/utils/ast-duplication-detector.js';
+} from '../utils/ast-duplication-detector.js';
 import { BaseChecker } from './base-checker.js';
 
 export class CodeSmellChecker extends BaseChecker {

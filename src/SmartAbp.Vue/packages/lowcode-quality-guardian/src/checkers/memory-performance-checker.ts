@@ -16,8 +16,11 @@ import traverse from '@babel/traverse';
 import type { Node } from '@babel/types';
 import { compileScript, parse as vueParse } from '@vue/compiler-sfc';
 
-import { ControlFlowGraph } from '@smartabp/lowcode-shared/utils/control-flow-graph.js';
-import { TaintAnalyzer } from '@smartabp/lowcode-shared/utils/taint-analyzer.js';
+// @babel/traverse类型兼容性修复
+const babelTraverse = typeof traverse === 'function' ? traverse : (traverse as any).default;
+
+import { ControlFlowGraph } from '../utils/control-flow-graph.js';
+import { TaintAnalyzer } from '../utils/taint-analyzer.js';
 import { BaseChecker } from './base-checker.js';
 
 interface ResourceLeakInfo {
@@ -63,8 +66,8 @@ export class MemoryPerformanceChecker extends BaseChecker {
                     });
                 }
 
-                traverse(ast, {
-                    Function: (path) => {
+                babelTraverse(ast, {
+                    Function: (path: any) => {
                         const functionNode = path.node;
                         try {
                             const cfg = new ControlFlowGraph(functionNode);
