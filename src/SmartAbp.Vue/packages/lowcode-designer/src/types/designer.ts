@@ -101,6 +101,33 @@ export type EntityFieldType =
   | 'array'
 
 /**
+ * 字段验证规则类型
+ */
+export type ValidationRuleType = 
+  | 'required'
+  | 'minLength'
+  | 'maxLength'
+  | 'pattern'
+  | 'email'
+  | 'url'
+  | 'numeric'
+  | 'integer'
+  | 'min'
+  | 'max'
+  | 'custom'
+
+/**
+ * 字段验证规则
+ */
+export interface FieldValidationRule {
+  id: string
+  type: ValidationRuleType
+  value?: any
+  message: string
+  customValidator?: string
+}
+
+/**
  * 实体字段接口
  */
 export interface EntityField {
@@ -118,6 +145,7 @@ export interface EntityField {
   enumValues?: string[]
   referenceEntity?: string
   description?: string
+  validationRules?: FieldValidationRule[]
 }
 
 /**
