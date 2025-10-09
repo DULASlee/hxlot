@@ -9,7 +9,7 @@
  * - 验证转换结果
  */
 
-import type { ModuleMetadata, RouteMetadata, StoreMetadata } from '@smartabp/lowcode-shared/types'
+import type { ModuleMetadata, RouteMetadata, StoreMetadata } from '@smartabp/lowcode-shared'
 import { validateModuleMetadata } from './validators/module-validator'
 
 // ========================================

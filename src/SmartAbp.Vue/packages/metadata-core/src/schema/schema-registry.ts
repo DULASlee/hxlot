@@ -9,7 +9,7 @@
  * - Schema依赖追踪
  */
 
-import type { EntityMetadata, ModuleMetadata, AspireSolutionMetadata } from '@smartabp/lowcode-shared/types'
+import type { EntityMetadata, ModuleMetadata, AspireSolutionMetadata } from '@smartabp/lowcode-shared'
 import { validateEntityMetadata } from './validators/entity-validator'
 import { validateModuleMetadata } from './validators/module-validator'
 import { validateAspireSolutionMetadata } from './validators/aspire-validator'

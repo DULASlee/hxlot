@@ -4,7 +4,7 @@
  */
 
 import { z } from 'zod'
-import type { AspireSolutionMetadata } from '@smartabp/lowcode-shared/types'
+import type { AspireSolutionMetadata } from '@smartabp/lowcode-shared'
 import { aspireErrorMap, formatErrorMessage } from './error-map'
 
 // ========================================

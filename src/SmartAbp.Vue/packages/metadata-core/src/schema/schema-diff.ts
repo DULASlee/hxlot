@@ -9,7 +9,7 @@
  * - 生成补丁(Patch)
  */
 
-import type { EntityMetadata } from '@smartabp/lowcode-shared/types'
+import type { EntityMetadata } from '@smartabp/lowcode-shared'
 
 // ========================================
 // 差异类型定义

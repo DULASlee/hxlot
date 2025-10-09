@@ -13,7 +13,7 @@
  */
 
 import { describe, expect, it } from 'vitest'
-import type { AspireSolutionMetadata } from '@smartabp/lowcode-shared/types'
+import type { AspireSolutionMetadata } from '@smartabp/lowcode-shared'
 import {
     AspireSolutionMetadataSchema,
     getAspireSolutionMetadataErrors,

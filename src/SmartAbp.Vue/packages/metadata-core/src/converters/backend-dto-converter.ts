@@ -15,7 +15,7 @@ import type {
     PropertyMetadata,
     RouteMetadata,
     StoreMetadata
-} from '@smartabp/lowcode-shared/types'
+} from '@smartabp/lowcode-shared'
 
 // ========================================
 // 后端DTO接口定义

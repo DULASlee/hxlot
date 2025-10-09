@@ -14,7 +14,7 @@ import type {
   ModuleMetadata, 
   AspireSolutionMetadata,
   PropertyMetadata
-} from '@smartabp/lowcode-shared/types'
+} from '@smartabp/lowcode-shared'
 import { isBreakingChange } from './version-manager'
 
 // ========================================

@@ -9,7 +9,7 @@
  * - 验证转换结果
  */
 
-import type { EntityMetadata, PropertyMetadata } from '@smartabp/lowcode-shared/types'
+import type { EntityMetadata, PropertyMetadata } from '@smartabp/lowcode-shared'
 import { validateEntityMetadata } from './validators/entity-validator'
 
 // ========================================

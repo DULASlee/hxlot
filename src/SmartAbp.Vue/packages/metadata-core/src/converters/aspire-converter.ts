@@ -9,7 +9,7 @@
  * - 验证转换结果
  */
 
-import type { AspireSolutionMetadata, MicroserviceMetadata } from '@smartabp/lowcode-shared/types'
+import type { AspireSolutionMetadata, MicroserviceMetadata } from '@smartabp/lowcode-shared'
 import { validateAspireSolutionMetadata } from './validators/aspire-validator'
 
 // ========================================

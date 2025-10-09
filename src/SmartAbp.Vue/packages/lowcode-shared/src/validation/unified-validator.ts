@@ -43,7 +43,7 @@ import {
 import type {
     UnifiedEntityDefinition,
     UnifiedModuleMetadata
-} from '@smartabp/lowcode-shared/types/unified-schema'
+} from '@smartabp/lowcode-shared'
 
 import {
     convertEntityToMetadataCore,

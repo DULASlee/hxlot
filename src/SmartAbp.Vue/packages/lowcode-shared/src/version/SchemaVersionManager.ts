@@ -12,7 +12,7 @@
  * @date 2025-10-06
  */
 
-import { SUPPORTED_SCHEMA_VERSIONS, UNIFIED_SCHEMA_VERSION } from '@smartabp/lowcode-shared/types/unified-schema'
+import { SUPPORTED_SCHEMA_VERSIONS, UNIFIED_SCHEMA_VERSION } from '@smartabp/lowcode-shared'
 
 /**
  * 版本比较结果

@@ -13,7 +13,7 @@
  */
 
 import { describe, expect, it } from 'vitest'
-import type { ModuleMetadata } from '@smartabp/lowcode-shared/types'
+import type { ModuleMetadata } from '@smartabp/lowcode-shared'
 import {
     getModuleMetadataErrors,
     ModuleMetadataSchema,

@@ -15,7 +15,7 @@
  */
 
 import { getGlobalLogger, type ILogger } from '@smartabp/lowcode-shared/types/logger'
-import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from '@smartabp/lowcode-shared/types/unified-schema'
+import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from '@smartabp/lowcode-shared'
 
 const logger: ILogger = getGlobalLogger()
 

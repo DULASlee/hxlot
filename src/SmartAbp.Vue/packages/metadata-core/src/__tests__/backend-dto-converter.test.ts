@@ -11,7 +11,7 @@ import {
     toModuleMetadataDto,
     toPropertyMetadataDto
 } from './converters/backend-dto-converter'
-import type { EntityMetadata, ModuleMetadata } from '@smartabp/lowcode-shared/types'
+import type { EntityMetadata, ModuleMetadata } from '@smartabp/lowcode-shared'
 
 describe('后端DTO转换器', () => {
 

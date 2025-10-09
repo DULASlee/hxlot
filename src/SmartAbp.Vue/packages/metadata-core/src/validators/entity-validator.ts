@@ -4,7 +4,7 @@
  */
 
 import { z } from 'zod'
-import type { EntityMetadata } from '@smartabp/lowcode-shared/types'
+import type { EntityMetadata } from '@smartabp/lowcode-shared'
 import { entityErrorMap, formatErrorMessage } from './error-map'
 
 // ========================================
