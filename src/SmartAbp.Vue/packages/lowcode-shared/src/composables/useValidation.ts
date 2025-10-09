@@ -15,7 +15,7 @@ import {
     type UnifiedValidationFeatureFlags,
     type UnifiedValidationResult,
     type ValidationError
-} from './validation/unified-validator'
+} from '../validation/unified-validator.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎯 类型定义

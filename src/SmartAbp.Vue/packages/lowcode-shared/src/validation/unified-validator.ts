@@ -26,11 +26,11 @@ import {
     findUpgradePath as getUpgradePath,
     isCompatibleVersion as isCompatible,
     parseVersion
-} from '@smartabp/metadata-core/schema'
+} from '@smartabp/metadata-core'
 
 import {
     type CompatibilityResult
-} from '@smartabp/metadata-core/schema'
+} from '@smartabp/metadata-core'
 
 // 🔥 阶段3：Schema差异对比
 import {
@@ -38,7 +38,7 @@ import {
     generateChangelog,
     generateDiffSummary,
     type SchemaDiff
-} from '@smartabp/metadata-core/schema'
+} from '@smartabp/metadata-core'
 
 import type {
     UnifiedEntityDefinition,
@@ -56,7 +56,7 @@ import {
     extractZodErrorParams,
     getMessageKeyFromZodError,
     translateValidationMessage
-} from './i18n/validation-i18n'
+} from '../i18n/validation-i18n.js'
 
 // ============================================================================
 // Feature Flag 控制

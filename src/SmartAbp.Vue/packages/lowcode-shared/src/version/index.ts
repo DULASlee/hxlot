@@ -25,5 +25,5 @@ export {
   parseVersion,
   type SemanticVersion,
   type VersionComparison,
-} from '@smartabp/metadata-core/schema'
+} from '@smartabp/metadata-core'
 

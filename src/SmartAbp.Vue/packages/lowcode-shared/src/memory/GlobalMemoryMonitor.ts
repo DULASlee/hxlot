@@ -10,7 +10,7 @@
  * - 垃圾回收优化建议
  */
 
-import { getGlobalComponentManager } from './components/BaseComponent';
+import { getGlobalComponentManager } from '../components/BaseComponent.js';
 
 export type MemoryPressureLevel = 'low' | 'medium' | 'high' | 'critical';
 export type MemoryLeakType = 'component' | 'event-listener' | 'timer' | 'observer' | 'cache' | 'unknown';

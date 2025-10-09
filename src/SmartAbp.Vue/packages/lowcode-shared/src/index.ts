@@ -52,19 +52,19 @@ export {
 export {
   compareVersions, CURRENT_SCHEMA_VERSION, findUpgradePath as getUpgradePath, isCompatibleVersion as isCompatible, parseVersion, type SemanticVersion,
   type VersionComparison
-} from '@smartabp/metadata-core/schema'
+} from '@smartabp/metadata-core'
 
 export {
   checkEntityCompatibility,
   checkModuleCompatibility, type BreakingChange, type CompatibilityResult, type CompatibilityWarning as CompatibilityWarningType
-} from '@smartabp/metadata-core/schema'
+} from '@smartabp/metadata-core'
 
 // 🔥 阶段3：Schema差异对比与变更日志 (Schema Diff & Changelog) - v1.0.0
 export {
   diffEntitySchema, filterDiffByPath, generateChangelog,
   generateDiffSummary, type DiffOperation, type DiffSummary, type FieldDiff,
   type SchemaDiff
-} from '@smartabp/metadata-core/schema'
+} from '@smartabp/metadata-core'
 
 // 🔥 阶段4：国际化错误信息 (Validation I18n) - v1.0.0
 export {
@@ -246,7 +246,7 @@ export * from './performance'
 // 🧩 插件系统（微AI 2.0 - 阶段4）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export * from './plugins'
+export * from './plugins/index.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🛠️ 开发者工具（微AI 2.0 - 阶段4）

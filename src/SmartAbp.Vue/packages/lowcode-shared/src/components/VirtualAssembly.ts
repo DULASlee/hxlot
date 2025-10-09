@@ -22,9 +22,9 @@
  * @since 2.0.0
  */
 
-import { defineAsyncComponent, type Component, type AsyncComponentLoader } from 'vue'
-import type { ComponentRegistry, ComponentMetadata } from './ComponentRegistry'
-import { globalPluginManager } from '../plugins/PluginManager'
+import { defineAsyncComponent, type AsyncComponentLoader, type Component } from 'vue'
+import { globalPluginManager } from '../plugins/PluginManager.js'
+import type { ComponentMetadata, ComponentRegistry } from './ComponentRegistry'
 
 /**
  * LRU缓存实现
@@ -34,7 +34,7 @@ class LRUCache<K, V> {
   private cache = new Map<K, V>()
   private order: K[] = []
 
-  constructor(private capacity: number = 100) {}
+  constructor(private capacity: number = 100) { }
 
   get(key: K): V | undefined {
     if (!this.cache.has(key)) {
@@ -187,11 +187,11 @@ export class VirtualAssembly {
         // 1. 缓存检查
         if (this.cache.has(componentName)) {
           this.stats.cacheHits++
-          
+
           if (this.options.debug) {
             console.log(`[VirtualAssembly] 从缓存加载: ${componentName}`)
           }
-          
+
           return this.cache.get(componentName)
         }
 
@@ -207,7 +207,7 @@ export class VirtualAssembly {
 
         if (this.options.debug) {
           console.log(`[VirtualAssembly] 动态加载: ${componentName}`, {
-            path: metadata.path,
+            path: (metadata as any).path,
             bundle: metadata.bundle
           })
         }
@@ -292,10 +292,10 @@ export class VirtualAssembly {
         return module.default || module[name]
       } catch (error) {
         console.error(`[VirtualAssembly] 加载失败: ${name}`, error)
-        
+
         // 触发错误钩子
         await globalPluginManager.triggerHook('onError', { error }, name)
-        
+
         throw error
       }
     }
@@ -304,14 +304,14 @@ export class VirtualAssembly {
       loader,
       delay: this.options.loadingDelay,
       timeout: this.options.loadingTimeout,
-      
+
       // 可选：自定义加载和错误组件
       // loadingComponent: () => import('./LoadingPlaceholder.vue'),
       // errorComponent: () => import('./ErrorPlaceholder.vue'),
-      
+
       onError(error, retry, fail, attempts) {
         console.error(`[VirtualAssembly] 异步组件错误 (尝试 ${attempts}次):`, error)
-        
+
         // 最多重试3次
         if (attempts <= 3) {
           retry()
@@ -327,14 +327,14 @@ export class VirtualAssembly {
    */
   private recordLoadTime(time: number): void {
     this.stats.loadTimes.push(time)
-    
+
     // 只保留最近100次
     if (this.stats.loadTimes.length > 100) {
       this.stats.loadTimes.shift()
     }
 
     // 计算平均加载时间
-    this.stats.avgLoadTime = 
+    this.stats.avgLoadTime =
       this.stats.loadTimes.reduce((a, b) => a + b, 0) / this.stats.loadTimes.length
   }
 
@@ -369,7 +369,7 @@ export class VirtualAssembly {
    */
   clearCache(): void {
     this.cache.clear()
-    
+
     if (this.options.debug) {
       console.log('[VirtualAssembly] 缓存已清除')
     }
@@ -381,8 +381,8 @@ export class VirtualAssembly {
   getStats(): PerformanceStats {
     return {
       ...this.stats,
-      cacheHitRate: this.stats.totalLoads > 0 
-        ? (this.stats.cacheHits / (this.stats.cacheHits + this.stats.cacheMisses)) * 100 
+      cacheHitRate: this.stats.totalLoads > 0
+        ? (this.stats.cacheHits / (this.stats.cacheHits + this.stats.cacheMisses)) * 100
         : 0
     } as PerformanceStats & { cacheHitRate: number }
   }
@@ -392,7 +392,7 @@ export class VirtualAssembly {
    */
   printPerformanceReport(): void {
     const stats = this.getStats()
-    
+
     console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     console.log('📊 虚拟程序集性能报告')
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')

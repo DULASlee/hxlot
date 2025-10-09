@@ -4,13 +4,13 @@
  */
 
 import { computed, defineComponent, h, ref, watch, type Component } from 'vue';
-import type { BaseComponentProps } from './../types';
+import type { BaseComponentProps } from '../../types/index.js';
 import {
   isEmail,
   isRequired,
   isUrl,
   pattern
-} from './../validators';
+} from '../../validators/index.js';
 
 /**
  * 本地验证规则接口（与WithValidation组件内部逻辑匹配）
@@ -233,7 +233,7 @@ export function WithValidation(
             case 'custom':
               if (rule.validator) {
                 const result = await Promise.resolve(rule.validator(value));
-                isRuleValid = typeof result === 'boolean' ? result : (result && typeof result === 'object' && 'valid' in result ? result.valid : false);
+                isRuleValid = typeof result === 'boolean' ? result : (result && typeof result === 'object' && 'valid' in result ? (result as any).valid : false);
               }
               break;
           }

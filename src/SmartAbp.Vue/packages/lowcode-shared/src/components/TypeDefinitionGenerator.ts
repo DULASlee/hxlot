@@ -19,9 +19,9 @@
  * @since 2.0.0
  */
 
-import type { ComponentRegistry, ComponentMetadata } from './ComponentRegistry'
 import { promises as fs } from 'fs'
 import * as path from 'path'
+import type { ComponentMetadata, ComponentRegistry } from './ComponentRegistry'
 
 /**
  * 类型生成器选项
@@ -131,7 +131,7 @@ export class TypeDefinitionGenerator {
       parts.push(this.generateExamples())
     }
 
-    return this.prettify ? this.formatCode(parts.join('\n\n')) : parts.join('\n\n')
+    return (this as any).prettify ? (this as any).prettify(parts.join('\n\n')) : this.formatCode(parts.join('\n\n'))
   }
 
   /**
@@ -161,7 +161,7 @@ export class TypeDefinitionGenerator {
    */
   private generateFileHeader(componentCount: number): string {
     const now = new Date().toISOString()
-    
+
     return `/**
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  * 🌟 虚拟程序集 - TypeScript类型声明（自动生成）
@@ -203,13 +203,13 @@ declare module '${this.options.moduleName}' {
    */
   private generateComponentTypes(components: ComponentMetadata[]): string {
     const declarations = components.map(component => {
-      const importPath = this.resolveImportPath(component.path)
+      const importPath = this.resolveImportPath((component as any).path)
       const componentType = this.getComponentTypeName(component.name)
-      
+
       if (this.options.includeComments && component.description) {
         return `  /** ${component.description} */\n  ${component.name}: ${componentType}`
       }
-      
+
       return `  ${component.name}: ${componentType}`
     })
 
@@ -367,12 +367,12 @@ ${componentList}
     // 定期检查更新（简单实现，生产环境应使用文件监听）
     setInterval(async () => {
       const newComponents = this.registry.getAvailableComponents()
-      
+
       // 检查是否有变化
       if (newComponents.length !== result.componentCount) {
         result = await this.generateFile()
         callback?.(result)
-        
+
         console.log(`[TypeDefinitionGenerator] 类型声明已更新 (${result.componentCount}个组件)`)
       }
     }, 5000)  // 每5秒检查一次

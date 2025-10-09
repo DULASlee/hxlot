@@ -4,7 +4,7 @@
  */
 
 import { defineComponent, h, ref, type Component } from 'vue';
-import type { BaseComponentProps } from './../types';
+import type { BaseComponentProps } from '../../types/index.js';
 
 /**
  * WithLoading Props扩展

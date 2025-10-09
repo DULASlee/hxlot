@@ -10,5 +10,5 @@ export { ErrorLogIntegration } from './ErrorLogIntegration'
 export { LogPolicyManager } from './LogPolicyManager'
 
 // 从types导出logger相关函数（用于向后兼容）
-export { createComponentLogger, getGlobalLogger } from '@smartabp/lowcode-shared/types/logger'
+export { createComponentLogger, getGlobalLogger } from '../types/logger.js'
 

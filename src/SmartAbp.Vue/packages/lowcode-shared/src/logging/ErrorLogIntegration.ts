@@ -3,7 +3,7 @@
  * 将GlobalErrorHandler与现有日志系统无缝集成，提供统一的错误日志记录
  */
 
-import { GlobalErrorHandler, type ErrorCategory, type ErrorSeverity, type StandardError } from './error/GlobalErrorHandler';
+import { GlobalErrorHandler, type ErrorCategory, type ErrorSeverity, type StandardError } from '../error/GlobalErrorHandler.js';
 
 // 集成接口定义
 export interface ErrorLogEntry {

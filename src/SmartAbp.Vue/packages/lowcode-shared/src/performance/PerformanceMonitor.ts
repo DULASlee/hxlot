@@ -243,7 +243,7 @@ export class PerformanceMonitor {
    * 启动内存监控
    */
   private startMemoryMonitoring(): void {
-    if (!performance.memory) {
+    if (!(performance as any).memory) {
       return
     }
 
@@ -252,9 +252,9 @@ export class PerformanceMonitor {
         type: 'memory',
         duration: 0,
         metadata: {
-          used: performance.memory.usedJSHeapSize,
-          total: performance.memory.totalJSHeapSize,
-          limit: performance.memory.jsHeapSizeLimit
+          used: (performance as any).memory.usedJSHeapSize,
+          total: (performance as any).memory.totalJSHeapSize,
+          limit: (performance as any).memory.jsHeapSizeLimit
         }
       })
     }, this.options.memorySampleInterval)

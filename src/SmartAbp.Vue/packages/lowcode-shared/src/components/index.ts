@@ -2,7 +2,7 @@
 
 // 从 ComponentRegistry 导出（排除与types重复的类型）
 export {
-  ComponentRegistry, getComponentMetadata, globalComponentRegistry, loadComponent, registerComponent, type ComponentBundle, type ComponentCategory, type ComponentMetadata, type ComponentPriority
+  ComponentRegistry, getComponentMetadata, globalComponentRegistry, loadComponent, registerComponent, type ComponentCategory, type ComponentMetadata
 } from './ComponentRegistry.js'
 export type {
   ComponentInstance,
@@ -10,7 +10,7 @@ export type {
 } from './ComponentRegistry.js'
 
 // 从 BaseComponent 导出（排除与types重复的类型）
-export { default as BaseComponent } from './BaseComponent.js'
+export { BaseComponent } from './BaseComponent.js'
 
 // 从 hocs 导出（排除与validators重复的类型）
 export * from './hocs/index.js'
@@ -26,12 +26,10 @@ export type {
 
 // 🎯 TypeScript类型生成器导出（微AI 2.0 - 阶段2）
 export {
-  TypeDefinitionGenerator,
   createTypeGenerator,
-  generateTypes
+  generateTypes, TypeDefinitionGenerator
 } from './TypeDefinitionGenerator'
 export type {
-  TypeGeneratorOptions,
-  GeneratedTypeDefinition
+  GeneratedTypeDefinition, TypeGeneratorOptions
 } from './TypeDefinitionGenerator'
 

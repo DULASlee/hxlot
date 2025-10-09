@@ -32,7 +32,7 @@ export {
   type DiffOperation, type DiffSummary, type FieldDiff,
   type SchemaDiff, type SemanticVersion,
   type VersionComparison
-} from '@smartabp/metadata-core/schema'
+} from '@smartabp/metadata-core'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔧 元数据适配器

@@ -10,8 +10,8 @@
  * - 🎯 零人工干预
  */
 
-import { turboEngine } from './TurboAnalysisEngine'
-import { globalComponentRegistry } from './components/ComponentRegistry'
+import { globalComponentRegistry } from '../components/ComponentRegistry.js'
+import { turboEngine } from './TurboAnalysisEngine.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎯 核心类型定义
@@ -154,7 +154,7 @@ export class AutoComponentDiscoveryEngine {
                 '/src/components/**/*.vue',
                 '/src/SmartAbp.Vue/packages/*/src/components/**/*.vue',
                 '/src/views/**/*.vue'
-            ], { 
+            ], {
                 as: 'raw',    // 获取原始文件内容
                 eager: false  // 懒加载
             })
@@ -171,7 +171,7 @@ export class AutoComponentDiscoveryEngine {
             })
 
             const results = await Promise.all(loadPromises)
-            
+
             // 过滤掉加载失败的文件
             for (const result of results) {
                 if (result && this.isValidComponentFile(result)) {
@@ -253,7 +253,7 @@ export class AutoComponentDiscoveryEngine {
         files: Array<{ path: string, content: string }>,
         analysisResult: any
     ): Promise<boolean> {
-        
+
         // 查找对应的文件内容
         const file = files.find(f => f.path === filePath)
         if (!file) {
@@ -269,7 +269,7 @@ export class AutoComponentDiscoveryEngine {
         }
 
         // 🔍 检查是否已注册（避免重复注册）
-        if (globalComponentRegistry.isRegistered(componentName)) {
+        if ((globalComponentRegistry as any).components?.has(componentName)) {
             // console.log(`⏭️ 组件已注册，跳过: ${componentName}`)
             return false
         }
@@ -285,9 +285,9 @@ export class AutoComponentDiscoveryEngine {
 
             // 📦 自动注册到ComponentRegistry
             await globalComponentRegistry.register(metadata)
-            
+
             console.log(`✅ 自动注册成功: ${componentName}`)
-            
+
             // 记录到发现列表
             this.discoveredComponents.set(filePath, {
                 path: filePath,
@@ -346,7 +346,7 @@ export class AutoComponentDiscoveryEngine {
             preload: false,
             version: '1.0.0',
             tags: this.generateAutoTags(name, sourceCode),
-            
+
             // 🧠 AI增强信息
             sourceCode,
             aiAnalysis: analysisResult,
@@ -414,7 +414,7 @@ export class AutoComponentDiscoveryEngine {
      */
     private extractDependencies(sourceCode: string): string[] {
         const dependencies: string[] = []
-        
+
         // 提取import的组件
         const importMatches = sourceCode.match(/import\s+.*?from\s+['"]([^'"]+)['"]/g) || []
         importMatches.forEach(match => {
@@ -432,11 +432,11 @@ export class AutoComponentDiscoveryEngine {
      */
     private generateAutoTags(name: string, sourceCode: string): string[] {
         const tags: string[] = []
-        
+
         // 基于组件名称生成标签
         const nameWords = name.replace(/([A-Z])/g, ' $1').toLowerCase().split(' ')
         tags.push(...nameWords.filter(word => word.length > 2))
-        
+
         // 基于代码特征生成标签
         if (sourceCode.includes('form') || sourceCode.includes('Form')) tags.push('form')
         if (sourceCode.includes('table') || sourceCode.includes('Table')) tags.push('table', 'data')
@@ -444,7 +444,7 @@ export class AutoComponentDiscoveryEngine {
         if (sourceCode.includes('modal') || sourceCode.includes('Modal')) tags.push('modal', 'dialog')
         if (sourceCode.includes('button') || sourceCode.includes('Button')) tags.push('button', 'interactive')
         if (sourceCode.includes('input') || sourceCode.includes('Input')) tags.push('input', 'form-control')
-        
+
         return [...new Set(tags)].slice(0, 5) // 去重并限制数量
     }
 
@@ -453,8 +453,8 @@ export class AutoComponentDiscoveryEngine {
      */
     private startPeriodicScan(): void {
         console.log(`⏰ 启动定时扫描：每${this.config.scanIntervalMs / 1000}秒检查一次`)
-        
-        this.scanTimer = setInterval(async () => {
+
+        this.scanTimer = (setInterval as any)(async () => {
             try {
                 await this.performIncrementalScan()
             } catch (error) {
@@ -468,11 +468,11 @@ export class AutoComponentDiscoveryEngine {
      */
     private async performIncrementalScan(): Promise<void> {
         console.log('🔍 执行增量扫描...')
-        
+
         try {
             const currentFiles = await this.scanComponentFiles()
             const newFiles: Array<{ path: string, content: string }> = []
-            
+
             // 只处理新文件或已修改的文件
             for (const file of currentFiles) {
                 const existing = this.discoveredComponents.get(file.path)
@@ -482,14 +482,14 @@ export class AutoComponentDiscoveryEngine {
                 }
                 // TODO: 可以添加文件哈希检查来检测文件修改
             }
-            
+
             if (newFiles.length > 0) {
                 console.log(`🚀 处理${newFiles.length}个新/修改的文件`)
                 await this.batchAnalyzeAndRegister(newFiles)
             } else {
                 console.log('✅ 无新文件，增量扫描完成')
             }
-            
+
         } catch (error) {
             console.error('❌ 增量扫描失败:', error)
         }
@@ -519,10 +519,10 @@ export class AutoComponentDiscoveryEngine {
      */
     async manualRescan(): Promise<void> {
         console.log('🔥 手动触发全量重扫描...')
-        
+
         // 清空已发现的组件列表
         this.discoveredComponents.clear()
-        
+
         // 执行完整扫描
         await this.performFullScan()
     }
@@ -532,9 +532,9 @@ export class AutoComponentDiscoveryEngine {
      */
     async handleFileChange(filePath: string, content?: string): Promise<void> {
         if (!this.isRunning) return
-        
+
         console.log(`📁 检测到文件变化: ${filePath}`)
-        
+
         try {
             // 如果没有提供内容，尝试通过import.meta.glob获取
             let fileContent = content
@@ -543,13 +543,13 @@ export class AutoComponentDiscoveryEngine {
                 console.warn('⚠️ 无法获取文件内容，跳过处理')
                 return
             }
-            
+
             const file = { path: filePath, content: fileContent }
-            
+
             if (this.isValidComponentFile(file)) {
                 await this.batchAnalyzeAndRegister([file])
             }
-            
+
         } catch (error) {
             console.error(`❌ 处理文件变化失败 ${filePath}:`, error)
         }
@@ -563,7 +563,7 @@ export class AutoComponentDiscoveryEngine {
 /** 全局自动发现引擎实例 */
 export const autoDiscovery = new AutoComponentDiscoveryEngine({
     hotReload: process.env.NODE_ENV === 'development', // 开发环境启用热更新
-    scanIntervalMs: process.env.NODE_ENV === 'development' ? 
+    scanIntervalMs: process.env.NODE_ENV === 'development' ?
         5 * 60 * 1000 :      // 开发环境：5分钟
         30 * 60 * 1000,      // 生产环境：30分钟
     maxMemoryMB: 200
