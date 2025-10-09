@@ -10,7 +10,7 @@
  */
 
 import type { EntityMetadata, PropertyMetadata } from '@smartabp/lowcode-shared'
-import { validateEntityMetadata } from './validators/entity-validator'
+import { validateEntityMetadata } from '../validators/entity-validator'
 
 // ========================================
 // 旧版EntityDefinition类型定义

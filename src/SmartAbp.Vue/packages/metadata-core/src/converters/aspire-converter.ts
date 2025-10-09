@@ -10,7 +10,7 @@
  */
 
 import type { AspireSolutionMetadata, MicroserviceMetadata } from '@smartabp/lowcode-shared'
-import { validateAspireSolutionMetadata } from './validators/aspire-validator'
+import { validateAspireSolutionMetadata } from '../validators/aspire-validator'
 
 // ========================================
 // 后端Aspire类型定义（简化版）

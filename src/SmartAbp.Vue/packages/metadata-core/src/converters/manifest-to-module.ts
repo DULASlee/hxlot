@@ -10,7 +10,7 @@
  */
 
 import type { ModuleMetadata, RouteMetadata, StoreMetadata } from '@smartabp/lowcode-shared'
-import { validateModuleMetadata } from './validators/module-validator'
+import { validateModuleMetadata } from '../validators/module-validator'
 
 // ========================================
 // 旧版Manifest类型定义
