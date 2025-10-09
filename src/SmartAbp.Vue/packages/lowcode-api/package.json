@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "SmartAbp LowCode API Layer",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -43,8 +43,7 @@
   "author": "SmartAbp Team",
   "license": "MIT",
   "peerDependencies": {
-    "@smartabp/metadata-core": "workspace:*",
-    "@smartabp/lowcode-shared": "file:../lowcode-shared"
+    "@smartabp/lowcode-shared": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.2.0",

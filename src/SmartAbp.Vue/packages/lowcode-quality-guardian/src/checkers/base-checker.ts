@@ -3,8 +3,8 @@
  * 提供统一的检查器接口和基础实现
  */
 
-import chalk from 'chalk';
-import execa from 'execa';
+import { Chalk } from 'chalk';
+import { execa } from 'execa';
 import glob from 'fast-glob';
 import fs from 'fs-extra';
 import path from 'path';
@@ -18,11 +18,18 @@ import type {
   ViolationLevel
 } from '../types/index.js';
 
+const chalk = new Chalk();
+
 /**
  * 抽象检查器基类
  * 所有检查器都应该继承此类
  */
 export abstract class BaseChecker implements CheckerPlugin {
+  // Static cache to hold file contents across all checker instances
+  private static fileCache = new Map<string, string>();
+  private static cacheHits = 0;
+  private static cacheMisses = 0;
+
   public abstract readonly name: string;
   public abstract readonly description: string;
   public abstract readonly version: string;
@@ -32,6 +39,13 @@ export abstract class BaseChecker implements CheckerPlugin {
   protected violations: Violation[] = [];
   protected filesChecked: number = 0;
   protected startTime: number = 0;
+
+  public static printCacheStats(): void {
+    const total = this.cacheHits + this.cacheMisses;
+    if (total === 0) return;
+    const hitRate = ((this.cacheHits / total) * 100).toFixed(2);
+    console.log(chalk.blue(`  File Cache Stats: Hit Rate ${hitRate}% (${this.cacheHits} hits, ${this.cacheMisses} misses)`));
+  }
 
   constructor(config: Partial<CheckerPlugin> = {}) {
     this.enabled = config.enabled ?? true;
@@ -108,6 +122,14 @@ export abstract class BaseChecker implements CheckerPlugin {
     return undefined;
   }
 
+  /**
+   * Optional cleanup method for checkers that spawn child processes or hold resources.
+   * This will be called by the executor in a finally block to ensure cleanup.
+   */
+  public async cleanup(): Promise<void> {
+    // Subclasses should override this method to perform cleanup.
+  }
+
   // ========== 实用工具方法 ==========
 
   /**
@@ -136,13 +158,18 @@ export abstract class BaseChecker implements CheckerPlugin {
     absolute?: boolean;
   } = {}): Promise<string[]> {
     const cwd = options.cwd || this.config.projectRoot;
-    const ignore = options.ignore || [
+    const defaultIgnore = [
       '**/node_modules/**',
       '**/dist/**',
       '**/build/**',
       '**/.git/**',
-      '**/coverage/**'
+      '**/coverage/**',
+      '**/.cache/**',
     ];
+
+    const ignore = options.ignore
+      ? [...defaultIgnore, ...options.ignore]
+      : defaultIgnore;
 
     const files = await glob(patterns, {
       cwd,
@@ -180,8 +207,17 @@ export abstract class BaseChecker implements CheckerPlugin {
       ? filePath
       : path.join(this.config.projectRoot, filePath);
 
+    if (BaseChecker.fileCache.has(fullPath)) {
+      BaseChecker.cacheHits++;
+      return BaseChecker.fileCache.get(fullPath)!;
+    }
+
+    BaseChecker.cacheMisses++;
+
     try {
-      return await fs.readFile(fullPath, 'utf8');
+      const content = await fs.readFile(fullPath, 'utf8');
+      BaseChecker.fileCache.set(fullPath, content);
+      return content;
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
 
@@ -198,7 +234,7 @@ export abstract class BaseChecker implements CheckerPlugin {
       }
 
       // 其他错误也返回空字符串，继续执行
-      this.logProgress(`读取文件失败，跳过: ${filePath} (${err.message})`, 'warning');
+      this.logProgress(`读取文件失败，跳过: ${filePath} (${err.message})`, 'error');
       return '';
     }
   }

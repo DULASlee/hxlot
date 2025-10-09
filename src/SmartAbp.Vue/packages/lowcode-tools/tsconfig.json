@@ -1,33 +1,11 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ES2016",
-    "module": "esnext",
-    "composite": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "declaration": true,
-    "declarationMap": true,
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
-    "paths": {
-      "@smartabp/metadata-core": ["../metadata-core/src/index.ts"],
-      "@smartabp/metadata-core/*": ["../metadata-core/src/*"],
-      "@smartabp/lowcode-shared": ["../lowcode-shared/src/index.ts"],
-      "@smartabp/lowcode-shared/*": ["../lowcode-shared/src/*"],
-      "@smartabp/lowcode-tools": ["./src/index.ts"],
-      "@smartabp/lowcode-tools/*": ["./src/*"]
-    }
+    "outDir": "dist",
+    "rootDir": "src"
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "src/**/*.test.ts",
-    "src/**/*.spec.ts",
-    "dist"
-  ],
+  "include": ["src/**/*"],
   "references": [
-    { "path": "../metadata-core" },
     { "path": "../lowcode-shared" }
   ]
 }

@@ -54,9 +54,9 @@ export class ScoreCalculator {
         P2: number;
         total: number;
     } {
-        const p0Deduction = violations.P0.length * 10; // 每个P0扣10分
+        const p0Deduction = violations.P0.length * 20; // 每个P0扣20分
         const p1Deduction = violations.P1.length * 5;  // 每个P1扣5分
-        const p2Deduction = violations.P2.length * 1;  // 每个P2扣1分
+        const p2Deduction = violations.P2.length * 0.1;  // 每个P2扣0.1分
 
         return {
             P0: p0Deduction,
@@ -95,6 +95,7 @@ export class ScoreCalculator {
                 'smartabp.no-hardcoded-secrets'
             ]),
             maintainability: this.filterViolationsByDimension(allViolations, [
+                'code-smell',
                 'smartabp.no-duplicate',
                 'smartabp.no-magic-numbers',
                 'complexity'

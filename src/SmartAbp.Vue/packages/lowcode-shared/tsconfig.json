@@ -1,25 +1,11 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "declaration": true,
-    "declarationMap": true,
-    "declarationDir": "./dist",
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
-    "paths": {
-      "@smartabp/lowcode-shared": ["./src/index.ts"],
-      "@smartabp/lowcode-shared/*": ["./src/*"]
-    }
+    "outDir": "dist",
+    "rootDir": "src"
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.vue"
-  ],
-  "exclude": [
-    "src/**/*.test.ts",
-    "src/**/*.spec.ts",
-    "dist"
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../metadata-core" }
   ]
 }

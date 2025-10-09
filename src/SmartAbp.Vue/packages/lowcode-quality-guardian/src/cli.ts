@@ -29,7 +29,16 @@ program
   .option('--no-report', '不生成报告文件')
   .option('-r, --report-dir <dir>', '报告输出目录', 'reports/quality')
   .option('-c, --checkers <checkers>', '指定要执行的检查器（逗号分隔）')
-  .action(async (options) => {
+  .action(async (options: {
+    projectRoot: string;
+    configFile?: string;
+    mode: 'strict' | 'moderate' | 'lenient';
+    ciMode: boolean;
+    failFast: boolean;
+    report: boolean;
+    reportDir: string;
+    checkers?: string;
+  }) => {
     try {
       printBanner();
 
@@ -43,7 +52,7 @@ program
       };
 
       if (options.checkers) {
-        config.checkers = options.checkers.split(',').map((c: string) => c.trim());
+        config.checkers = options.checkers.split(',').map((c: string) => c.trim()) as any;
       }
 
       const guardian = new QualityGuardian(config);
@@ -73,7 +82,7 @@ program
   .command('report')
   .description('查看最新的质量报告')
   .option('-f, --format <format>', '报告格式: json|html|markdown', 'html')
-  .action(async (_options) => {
+  .action(async (_options: { format: string }) => {
     console.log(chalk.blue('\n📊 打开质量报告...\n'));
     console.log(chalk.yellow('此功能即将推出！'));
     console.log('');
@@ -83,7 +92,7 @@ program
   .command('fix')
   .description('自动修复可修复的问题')
   .option('-d, --dry-run', '只检查不修改')
-  .action(async (_options) => {
+  .action(async (_options: { dryRun: boolean }) => {
     console.log(chalk.blue('\n🔧 自动修复质量问题...\n'));
     console.log(chalk.yellow('此功能即将推出！'));
     console.log('');
