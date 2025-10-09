@@ -17,6 +17,9 @@
     },
     {
       "path": "../metadata-core"
+    },
+    {
+      "path": "../lowcode-api"
     }
   ]
 }
