@@ -290,7 +290,7 @@ export class SchemaVersionManager {
      * @returns 是否支持
      */
     isSupportedVersion(version: string): boolean {
-        return SUPPORTED_SCHEMA_VERSIONS.includes(version as any)
+        return (SUPPORTED_SCHEMA_VERSIONS as readonly string[]).includes(version)
     }
 
     /**

@@ -1,7 +1,8 @@
 import { defineStore } from "pinia"
 import { computed, ref } from "vue"
-// @ts-ignore - logger will be injected by main app via lowcode-tools bridge
-const logger = (globalThis as any).__SMARTABP_LOGGER__ || console
+// Logger类型定义
+type GlobalLogger = typeof console
+const logger: GlobalLogger = (globalThis as { __SMARTABP_LOGGER__?: GlobalLogger }).__SMARTABP_LOGGER__ || console
 // Day01新增: 引入规则执行引擎
 import { RuleExecutionEngine } from './engines/ruleExecutionEngine'
 

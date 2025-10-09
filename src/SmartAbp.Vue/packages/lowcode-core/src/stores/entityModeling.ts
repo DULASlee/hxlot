@@ -529,7 +529,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         tableName: e.tableName,
         displayName: e.displayName,
         description: e.description || '',
-        category: e.entityType as any,
+        category: (e.entityType || 'Entity') as string,
         module: e.namespace,
         fields: e.fields || [],
         validationRules: e.validationRules || [],
@@ -545,7 +545,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         id: r.id,
         fromEntity: r.fromEntity,
         toEntity: r.toEntity,
-        type: r.relationType as any,
+        type: (r.relationType || 'OneToMany') as string,
         foreignKey: r.foreignKey,
         navigationProperty: r.navigationProperty
       }))

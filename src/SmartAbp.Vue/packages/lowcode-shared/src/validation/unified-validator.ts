@@ -567,8 +567,8 @@ export class UnifiedSchemaValidator {
         if (this.featureFlags.enableSchemaDiffComparison) {
             try {
                 // 转换为metadata-core格式
-                const oldMetadata = convertEntityToMetadataCore(oldEntity) as any
-                const newMetadata = convertEntityToMetadataCore(newEntity) as any
+                const oldMetadata = convertEntityToMetadataCore(oldEntity)
+                const newMetadata = convertEntityToMetadataCore(newEntity)
 
                 // 执行差异对比
                 diff = diffEntitySchema(oldMetadata, newMetadata)
@@ -692,8 +692,8 @@ export class UnifiedSchemaValidator {
         }
 
         try {
-            const oldMetadata = convertEntityToMetadataCore(oldEntity) as any
-            const newMetadata = convertEntityToMetadataCore(newEntity) as any
+            const oldMetadata = convertEntityToMetadataCore(oldEntity)
+            const newMetadata = convertEntityToMetadataCore(newEntity)
             const diff = diffEntitySchema(oldMetadata, newMetadata)
 
             const changelogVersion = version || newEntity.schemaVersion || newEntity.version || '1.0.0'
@@ -720,8 +720,8 @@ export class UnifiedSchemaValidator {
         }
 
         try {
-            const oldMetadata = convertEntityToMetadataCore(oldEntity) as any
-            const newMetadata = convertEntityToMetadataCore(newEntity) as any
+            const oldMetadata = convertEntityToMetadataCore(oldEntity)
+            const newMetadata = convertEntityToMetadataCore(newEntity)
             const diff = diffEntitySchema(oldMetadata, newMetadata)
 
             return generateDiffSummary(diff)
