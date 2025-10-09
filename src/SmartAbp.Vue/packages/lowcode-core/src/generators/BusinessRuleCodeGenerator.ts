@@ -11,7 +11,7 @@
  * @version 1.0.0
  */
 
-import type { BusinessRule } from './stores/enhancedStateMachine'
+import type { BusinessRule } from '../stores/enhancedStateMachine'
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
 
 const logger = getGlobalLogger()

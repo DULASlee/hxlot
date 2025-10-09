@@ -55,7 +55,7 @@ export { default as LcWorkspaceContainer } from './WorkspaceContainer.vue'
 export * from './SmartFormBuilder/index.js'
 
 // Types exports
-export * from './BusinessRuleDesigner/types/index.js'
+export * from './BusinessRuleDesigner/types.js'
 
 /**
  * Auto-register all components for global usage
