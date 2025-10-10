@@ -20,7 +20,7 @@
  */
 
 import type { UnifiedValidationRule } from '@smartabp/lowcode-shared'
-import type { FormCreateConfig, FormCreateRule } from '@smartabp/lowcode-shared/types/form-create-types'
+import type { FormCreateConfig, FormCreateRule } from '../../../types/form'
 
 /**
  * @interface FormSchema
@@ -153,14 +153,14 @@ export class FormSchemaAdapter {
     private static convertFormItemToRule(item: FormItem): FormCreateRule | null {
         try {
             const rule: FormCreateRule = {
-                type: this.mapFieldType(item.type),
+                type: this.mapFieldType(item.type || 'input'),
                 field: item.field,
                 title: item.label,
                 value: item.defaultValue,
                 props: {
-                    placeholder: item.placeholder || '',
-                    disabled: item.disabled || false,
-                    readonly: item.readonly || false,
+                    placeholder: String(item.placeholder ?? ''),
+                    disabled: Boolean(item.disabled ?? false),
+                    readonly: Boolean(item.readonly ?? false),
                     clearable: true,
                     ...item.props
                 }
@@ -187,7 +187,7 @@ export class FormSchemaAdapter {
 
             // 处理动态显示条件
             if (item.vIf) {
-                rule.hidden = !this.evaluateExpression(item.vIf, {})
+                (rule as any).hidden = !this.evaluateExpression(item.vIf, {})
             }
 
             // 处理自定义类名和样式
@@ -195,19 +195,22 @@ export class FormSchemaAdapter {
                 rule.class = item.className
             }
             if (item.style) {
-                rule.style = item.style
+                // form-create 预期 style: Record<string, string>
+                const styleEntries = Object.entries(item.style)
+                    .map(([k, v]) => [k, String(v)]) as [string, string][]
+                rule.style = Object.fromEntries(styleEntries) as Record<string, string>
             }
 
             // 处理事件
             if (item.onChange) {
-                rule.on = {
-                    ...rule.on,
+                (rule as any).on = {
+                    ...(rule as any).on,
                     change: this.createEventHandler(item.onChange)
                 }
             }
             if (item.onInput) {
-                rule.on = {
-                    ...rule.on,
+                (rule as any).on = {
+                    ...(rule as any).on,
                     input: this.createEventHandler(item.onInput)
                 }
             }
@@ -347,7 +350,7 @@ export class FormSchemaAdapter {
         try {
             // 简单的表达式求值，实际生产环境应使用更安全的沙箱
             // TODO: 集成安全的表达式求值引擎（如safe-eval或vm2）
-            const func = new Function(...Object.keys(context), `return ${expression}`)
+            const func = new Function(...Object.keys(context), `return (${expression})`)
             return func(...Object.values(context))
         } catch (error) {
             console.error('Expression evaluation failed:', expression, error)
@@ -365,8 +368,8 @@ export class FormSchemaAdapter {
         return function (value: any) {
             try {
                 // 如果handler是函数名，从全局查找
-                if (typeof window !== 'undefined' && window[handler]) {
-                    return window[handler](value)
+                if (typeof window !== 'undefined' && (window as unknown as Record<string, any>)[handler]) {
+                    return (window as unknown as Record<string, any>)[handler](value)
                 }
                 // 否则尝试作为表达式执行
                 const func = new Function('value', handler)
@@ -434,8 +437,8 @@ export class FormSchemaAdapter {
                     children: formItems
                 },
                 labelPosition: config.form?.labelPosition || 'right',
-                labelWidth: (typeof config.form?.labelWidth === 'number' ? `${config.form.labelWidth}px` : config.form?.labelWidth) || '100px',
-                size: (config.form?.size || 'default') as import('../../types/form').ElementSize,
+                labelWidth: (typeof config.form?.labelWidth === 'number' ? `${config.form.labelWidth}px` : (config.form?.labelWidth || '100px')),
+                size: (config.form?.size || 'default') as import('../../../types/form').ElementSize,
                 showSubmitButton: config.submitBtn !== false,
                 showResetButton: config.resetBtn !== false,
                 submitButtonText: typeof config.submitBtn === 'object' ? config.submitBtn.innerText : '提交',
@@ -455,17 +458,23 @@ export class FormSchemaAdapter {
     private static convertRuleToFormItem(rule: FormCreateRule): FormItem {
         const item: FormItem = {
             id: this.generateId(),
-            type: this.reverseMapFieldType(rule.type),
+            type: this.reverseMapFieldType(rule.type || 'input'),
             label: rule.title || '',
-            field: rule.field,
+            field: String(rule.field),
             defaultValue: rule.value,
-            placeholder: rule.props?.placeholder || '',
-            span: rule.col?.span || 24,
-            disabled: rule.props?.disabled || false,
-            readonly: rule.props?.readonly || false,
+            placeholder: String(rule.props?.placeholder ?? ''),
+            span: Number(rule.col?.span ?? 24),
+            disabled: Boolean(rule.props?.disabled ?? false),
+            readonly: Boolean(rule.props?.readonly ?? false),
             hidden: rule.hidden || false,
-            className: (Array.isArray(rule.class) ? rule.class.join(' ') : rule.class) as string | undefined,
-            style: rule.style as import('../../types/form').CSSStyleObject | undefined
+            className: (Array.isArray(rule.class) ? rule.class.join(' ') : (rule.class as string | undefined)),
+            style: ((): Record<string, string> | undefined => {
+                if (!rule.style) return undefined
+                const obj = rule.style as Record<string, unknown>
+                const out: Record<string, string> = {}
+                Object.entries(obj).forEach(([k, v]) => { out[k] = String(v as any) })
+                return out
+            })()
         }
 
         // 转换选项

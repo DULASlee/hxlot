@@ -36,3 +36,30 @@ export interface FormValidateRule {
  */
 export type CSSStyleObject = Partial<CSSStyleDeclaration> | Record<string, string | number>
 
+/** form-create 配置（最小化定义，适配内部使用） */
+export interface FormCreateConfig {
+    form?: {
+        labelPosition?: 'left' | 'right' | 'top'
+        labelWidth?: string | number
+        size?: ElementSize
+    }
+    submitBtn?: boolean | { show?: boolean; innerText?: string }
+    resetBtn?: boolean | { show?: boolean; innerText?: string }
+}
+
+/** form-create 规则（最小化定义，适配内部使用） */
+export interface FormCreateRule {
+    field: string
+    type?: string
+    title?: string
+    value?: unknown
+    props?: Record<string, unknown>
+    col?: { span?: number }
+    class?: string | string[]
+    style?: CSSStyleObject
+    options?: Array<{ label: string; value: unknown; disabled?: boolean }>
+    validate?: unknown[]
+    hidden?: boolean
+    on?: Record<string, (...args: unknown[]) => unknown>
+}
+

@@ -9,7 +9,7 @@
 export type {
     ConsulServiceDiscoveryConfig,
     EurekaServiceDiscoveryConfig,
-    LoadBalancer, ServiceDiscoveryConfig, ServiceDiscoveryProvider, ServiceFilter, ServiceInstance
+    LoadBalancer, ServiceDiscoveryConfig, ServiceFilter, ServiceInstance
 } from './types'
 
 // 负载均衡器

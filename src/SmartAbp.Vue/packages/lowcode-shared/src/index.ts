@@ -145,7 +145,7 @@ export * from './events/index.js'
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export {
   analyzeBatch, analyzeComponent, ComponentGenie, componentGenie, getAIStatistics, predictCategory, type ComponentAnalysis,
-  type ComponentCategory, type ComponentDNA, type OptimizationSuggestion
+  type ComponentDNA, type OptimizationSuggestion
 } from './ai/ComponentGenie.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

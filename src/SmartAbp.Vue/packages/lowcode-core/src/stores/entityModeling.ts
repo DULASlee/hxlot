@@ -3,7 +3,13 @@ import { defineStore } from "pinia"
 import { ref } from "vue"
 
 // 🔥 v10.0修复：通过桥接层导入API，避免循环依赖
-import type { EntityModelingApiBridge } from '@smartabp/lowcode-api'
+type EntityModelingApiBridge = {
+  createEntity: (...args: any[]) => Promise<any>
+  deleteEntity: (...args: any[]) => Promise<any>
+  updateEntity: (...args: any[]) => Promise<any>
+  getAllEntities: (...args: any[]) => Promise<any[]>
+  getAllRelations: (...args: any[]) => Promise<any[]>
+}
 
 // API桥接实例（运行时注入）
 let apiBridge: EntityModelingApiBridge | null = null
@@ -537,7 +543,7 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         tableName: e.tableName,
         displayName: e.displayName,
         description: e.description || '',
-        category: (e.entityType || 'Entity') as string,
+        category: ((e.entityType || 'core') === 'relation' || (e.entityType || 'core') === 'config' || (e.entityType || 'core') === 'log') ? (e.entityType as 'relation' | 'config' | 'log') : 'core',
         module: e.namespace,
         fields: e.fields || [],
         validationRules: e.validationRules || [],
@@ -553,7 +559,12 @@ export const useEntityModelingStore = defineStore("entityModeling", () => {
         id: r.id,
         fromEntity: r.fromEntity,
         toEntity: r.toEntity,
-        type: (r.relationType || 'OneToMany') as string,
+        type: ((): 'one-to-one' | 'one-to-many' | 'many-to-many' => {
+          const t = String(r.relationType || '').toLowerCase()
+          if (t === 'one-to-one') return 'one-to-one'
+          if (t === 'many-to-many') return 'many-to-many'
+          return 'one-to-many'
+        })(),
         foreignKey: r.foreignKey,
         navigationProperty: r.navigationProperty
       }))

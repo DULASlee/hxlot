@@ -82,13 +82,25 @@ export interface ApiCallState<T> {
  * )
  * ```
  */
-export function useApiCall<T = any>() {
+export function useApiCall<T = unknown>(): {
+  isLoading: Ref<boolean>
+  data: Ref<T | null>
+  error: Ref<ApiError | null>
+  isSuccess: Ref<boolean>
+  isError: Ref<boolean>
+  globalIsLoading: Ref<boolean>
+  execute: (apiFn: () => Promise<T>, options?: ApiCallOptions) => Promise<T | null>
+  executeAll: <R = unknown>(apiFns: Array<() => Promise<R>>, options?: ApiCallOptions) => Promise<Array<R | null>>
+  executeAllSettled: <R = unknown>(apiFns: Array<() => Promise<R>>, options?: ApiCallOptions) => Promise<Array<{ data: R | null; status: 'fulfilled' | 'rejected'; error?: unknown }>>
+  executeSequential: <R = unknown>(apiFns: Array<() => Promise<R>>, options?: ApiCallOptions) => Promise<Array<R | null>>
+  resetState: () => void
+} {
   const { handleApiError } = useApiError()
   const { withLoading, isLoading: globalIsLoading } = useApiLoading()
 
   // API调用状态
   const isLoading = ref(false)
-  const data = ref<T | null>(null)
+  const data = ref(null) as Ref<T | null>
   const error = ref<ApiError | null>(null)
   const isSuccess = ref(false)
   const isError = ref(false)
@@ -192,7 +204,7 @@ export function useApiCall<T = any>() {
     // 处理每个请求的结果，失败时返回null作为降级值
     return results.map(result => {
       if (result.status === 'fulfilled') {
-        return result.value
+        return result.value as R
       } else {
         // 记录错误但不阻塞其他请求
         console.warn('API调用失败:', result.reason)
@@ -220,7 +232,7 @@ export function useApiCall<T = any>() {
       } catch (error) {
         console.warn('API调用失败:', error)
         results.push(null)
-        
+
         // 如果有错误且需要停止，则中断执行
         if (options.error?.showMessage) {
           break
@@ -250,7 +262,7 @@ export function useApiCall<T = any>() {
     return results.map(result => {
       if (result.status === 'fulfilled') {
         return {
-          data: result.value,
+          data: result.value as R,
           status: 'fulfilled'
         }
       } else {
@@ -309,7 +321,7 @@ export function createApiCall(defaultOptions: ApiCallOptions = {}) {
     apiFn: () => Promise<T>,
     options?: ApiCallOptions
   ): Promise<T | null> => {
-    return execute(apiFn, { ...defaultOptions, ...options })
+    return execute(apiFn, { ...defaultOptions, ...options }) as Promise<T | null>
   }
 }
 

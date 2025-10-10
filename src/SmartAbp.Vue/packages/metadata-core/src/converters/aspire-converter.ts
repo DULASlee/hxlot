@@ -9,8 +9,8 @@
  * - 验证转换结果
  */
 
-import type { AspireSolutionMetadata, MicroserviceMetadata } from '@smartabp/lowcode-shared'
-import { validateAspireSolutionMetadata } from '../validators/aspire-validator'
+import type { AspireSolutionMetadata, MicroserviceMetadata } from '../types/index.js'
+import { validateAspireSolutionMetadata } from '../validators/aspire-validator.js'
 
 // ========================================
 // 后端Aspire类型定义（简化版）
@@ -319,7 +319,7 @@ export function convertMetadataToBackendAspire(
         rootNamespace: metadata.solutionName.replace(/[^a-zA-Z0-9]/g, ''),
         description: metadata.description,
         microservices: convertMicroservicesReverse(metadata.microservices),
-        includeApiGateway: metadata.microservices.some(s => s.name.toLowerCase().includes('gateway')),
+        includeApiGateway: metadata.microservices.some((s: MicroserviceMetadata) => s.name.toLowerCase().includes('gateway')),
         databaseName: 'AppDatabase',
 
         // Infrastructure
@@ -407,7 +407,7 @@ export function extractMicroservicesByType(
     metadata: AspireSolutionMetadata,
     type: MicroserviceMetadata['type']
 ): MicroserviceMetadata[] {
-    return metadata.microservices.filter(service => service.type === type)
+    return metadata.microservices.filter((service: MicroserviceMetadata) => service.type === type)
 }
 
 /**

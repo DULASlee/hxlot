@@ -1,7 +1,10 @@
 import type { RuleContext } from '../stores/enhancedStateMachine'
 
+// Ensure globalThis is indexable for runtime-injected globals
+declare global { interface GlobalThis { [key: string]: any } }
+
 // Logger will be injected by main app via lowcode-tools bridge
-const logger = globalThis.__SMARTABP_LOGGER__ || console
+const logger: Console = ((globalThis as unknown as Record<string, unknown>).__SMARTABP_LOGGER__ as Console) || console
 
 /**
  * 🔥 表达式解析器 - 安全沙箱执行
@@ -18,7 +21,7 @@ const logger = globalThis.__SMARTABP_LOGGER__ || console
  */
 export class ExpressionParser {
   private readonly TIMEOUT_MS = 1000 // 1秒超时
-  
+
   /**
    * 解析并执行表达式
    * 
@@ -30,13 +33,13 @@ export class ExpressionParser {
     try {
       // 1. 安全检查
       this.validateExpression(expression)
-      
+
       // 2. 构建安全的执行环境
       const safeContext = this.createSafeContext(context)
-      
+
       // 3. 执行表达式（带超时控制）
       const result = await this.executeWithTimeout(expression, safeContext)
-      
+
       return result
     } catch (error) {
       logger.error('❌ 表达式执行失败', { expression, error })
@@ -46,7 +49,7 @@ export class ExpressionParser {
       )
     }
   }
-  
+
   /**
    * 验证表达式安全性
    */
@@ -65,7 +68,7 @@ export class ExpressionParser {
       /window\./,
       /document\./
     ]
-    
+
     for (const pattern of dangerousPatterns) {
       if (pattern.test(expression)) {
         throw new ExpressionSecurityError(
@@ -75,7 +78,7 @@ export class ExpressionParser {
       }
     }
   }
-  
+
   /**
    * 创建安全的执行上下文
    */
@@ -83,10 +86,10 @@ export class ExpressionParser {
     // 深度克隆，避免污染原始上下文
     const entity = JSON.parse(JSON.stringify(context.entity || {}))
     const user = context.user ? JSON.parse(JSON.stringify(context.user)) : null
-    const previousResult = context.previousResult !== undefined 
-      ? JSON.parse(JSON.stringify(context.previousResult)) 
+    const previousResult = context.previousResult !== undefined
+      ? JSON.parse(JSON.stringify(context.previousResult))
       : null
-    
+
     return {
       entity,
       user,
@@ -109,12 +112,12 @@ export class ExpressionParser {
       parseFloat
     }
   }
-  
+
   /**
    * 带超时控制的表达式执行
    */
   private async executeWithTimeout(
-    expression: string, 
+    expression: string,
     context: Record<string, any>
   ): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -125,17 +128,17 @@ export class ExpressionParser {
           expression
         ))
       }, this.TIMEOUT_MS)
-      
+
       try {
         // 使用Function构造器创建安全的执行环境
         // 注意：这里虽然使用了Function，但我们严格控制了输入
         const params = Object.keys(context)
         const values = Object.values(context)
-        
+
         // 创建函数并执行
         const fn = new Function(...params, `"use strict"; return (${expression})`)
         const result = fn(...values)
-        
+
         clearTimeout(timeoutId)
         resolve(result)
       } catch (error) {

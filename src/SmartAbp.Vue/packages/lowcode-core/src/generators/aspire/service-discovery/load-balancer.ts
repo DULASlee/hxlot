@@ -94,7 +94,7 @@ export class WeightedRoundRobinLoadBalancer implements LoadBalancer {
 
         // 计算每个实例的当前权重
         for (const instance of availableInstances) {
-            const weight = this.instanceWeights.get(instance.instanceId) || instance.weight
+            const weight = this.instanceWeights.get(instance.instanceId) ?? instance.weight ?? 1
             const currentWeight = this.currentWeights.get(instance.instanceId) || 0
             const newCurrentWeight = currentWeight + weight
 
@@ -109,7 +109,7 @@ export class WeightedRoundRobinLoadBalancer implements LoadBalancer {
         // 调整选中实例的当前权重
         if (selectedInstance) {
             const totalWeight = availableInstances.reduce(
-                (sum, instance) => sum + (this.instanceWeights.get(instance.instanceId) || instance.weight),
+                (sum, inst) => sum + (this.instanceWeights.get(inst.instanceId) ?? inst.weight ?? 1),
                 0
             )
             this.currentWeights.set(

@@ -117,7 +117,10 @@ export function createHttpClient(config?: HttpClientConfig): HttpClient {
             if (data && typeof data === 'object') {
               const errorData = data as AbpErrorData
               apiError.message = errorData.message || apiError.message
-              apiError.validationErrors = errorData.validationErrors
+              apiError.validationErrors = errorData.validationErrors?.map(v => ({
+                field: (v as any).members && (v as any).members.length > 0 ? (v as any).members[0] : '',
+                message: v.message
+              }))
             }
             break
 

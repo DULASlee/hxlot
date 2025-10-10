@@ -134,7 +134,7 @@ export class ComponentGenie {
         const similarPatterns = this.findSimilarPatterns(tempDNA, 0.7)
 
         if (similarPatterns.length === 0) {
-            return { category: 'UNKNOWN', confidence: 0.1 }
+            return { category: 'utility', confidence: 0.1 }
         }
 
         // 基于相似模式投票
@@ -147,7 +147,7 @@ export class ComponentGenie {
             .sort(([, aVotes], [, bVotes]) => bVotes - aVotes)[0]
 
         if (!bestMatch) {
-            return { category: 'UNKNOWN', confidence: 0.1 }
+            return { category: 'utility', confidence: 0.1 }
         }
 
         return {
@@ -213,30 +213,30 @@ export class ComponentGenie {
     private classifyComponent(code: string, dna: ComponentDNA): ComponentCategory {
         // 基于规则的简单分类（生产版本将用机器学习）
         if (code.includes('form') || code.includes('Form') || code.includes('defineProps')) {
-            if (code.includes('validate') || code.includes('submit')) return 'FORM_COMPONENT'
+            if (code.includes('validate') || code.includes('submit')) return 'form'
         }
 
         if (code.includes('table') || code.includes('Table') || code.includes('list') || code.includes('List')) {
-            return 'DATA_DISPLAY'
+            return 'data'
         }
 
         if (code.includes('layout') || code.includes('Layout') || code.includes('container')) {
-            return 'LAYOUT_COMPONENT'
+            return 'layout'
         }
 
         if (code.includes('onClick') || code.includes('onInput') || code.includes('@click')) {
-            return 'INTERACTIVE_COMPONENT'
+            return 'basic'
         }
 
         if (code.includes('utils') || code.includes('helper') || !code.includes('<template>')) {
-            return 'UTILITY_COMPONENT'
+            return 'utility'
         }
 
         if (dna.behaviorPattern.reduce((a, b) => a + b, 0) > 4) {
-            return 'BUSINESS_COMPONENT'
+            return 'business'
         }
 
-        return 'UNKNOWN'
+        return 'utility'
     }
 
     private generateSuggestions(code: string, dna: ComponentDNA, category: ComponentCategory): OptimizationSuggestion[] {
@@ -263,7 +263,7 @@ export class ComponentGenie {
         }
 
         // 复用性建议
-        if (category === 'BUSINESS_COMPONENT' && !code.includes('props')) {
+        if (category === 'business' && !code.includes('props')) {
             suggestions.push({
                 type: 'reusability',
                 message: '建议添加Props接口提高组件复用性',
@@ -276,7 +276,7 @@ export class ComponentGenie {
     }
 
     private calculateConfidence(dna: ComponentDNA, category: ComponentCategory): number {
-        if (category === 'UNKNOWN') return 0.1
+        if (category === 'utility') return 0.1
 
         // 基于DNA特征和历史模式计算置信度
         const similarPatterns = this.findSimilarPatterns(dna, 0.5)

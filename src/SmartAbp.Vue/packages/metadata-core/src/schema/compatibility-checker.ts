@@ -9,12 +9,12 @@
  * - 迁移计划生成
  */
 
-import type { 
-  EntityMetadata, 
-  ModuleMetadata, 
+import type {
   AspireSolutionMetadata,
+  EntityMetadata,
+  ModuleMetadata,
   PropertyMetadata
-} from '@smartabp/lowcode-shared'
+} from '../types/index.js'
 import { isBreakingChange } from './version-manager'
 
 // ========================================
@@ -67,11 +67,11 @@ export function checkEntityCompatibility(
   const breakingChanges: BreakingChange[] = []
   const warnings: CompatibilityWarning[] = []
   const suggestions: string[] = []
-  
+
   // 检查版本
   const oldVersion = oldSchema.schemaVersion || '1.0.0'
   const newVersion = newSchema.schemaVersion || '1.0.0'
-  
+
   if (isBreakingChange(oldVersion, newVersion)) {
     breakingChanges.push({
       type: 'FIELD_TYPE_CHANGED',
@@ -82,7 +82,7 @@ export function checkEntityCompatibility(
       impact: 'HIGH'
     })
   }
-  
+
   // 检查基础字段变更
   if (oldSchema.name !== newSchema.name) {
     breakingChanges.push({
@@ -94,7 +94,7 @@ export function checkEntityCompatibility(
       impact: 'HIGH'
     })
   }
-  
+
   if (oldSchema.module !== newSchema.module) {
     breakingChanges.push({
       type: 'FIELD_TYPE_CHANGED',
@@ -105,7 +105,7 @@ export function checkEntityCompatibility(
       impact: 'HIGH'
     })
   }
-  
+
   if (oldSchema.keyType !== newSchema.keyType) {
     breakingChanges.push({
       type: 'FIELD_TYPE_CHANGED',
@@ -116,26 +116,26 @@ export function checkEntityCompatibility(
       impact: 'HIGH'
     })
   }
-  
+
   // 检查属性变更
   const propertyChanges = checkPropertyCompatibility(
     oldSchema.properties,
     newSchema.properties
   )
-  
+
   breakingChanges.push(...propertyChanges.breakingChanges)
   warnings.push(...propertyChanges.warnings)
-  
+
   // 生成建议
   if (breakingChanges.length > 0) {
     suggestions.push('建议创建数据迁移脚本处理破坏性变更')
     suggestions.push('建议更新API文档说明变更内容')
   }
-  
+
   if (warnings.length > 0) {
     suggestions.push('建议通知使用方即将废弃的字段')
   }
-  
+
   return {
     isCompatible: breakingChanges.length === 0,
     breakingChanges,
@@ -153,10 +153,10 @@ function checkPropertyCompatibility(
 ): { breakingChanges: BreakingChange[], warnings: CompatibilityWarning[] } {
   const breakingChanges: BreakingChange[] = []
   const warnings: CompatibilityWarning[] = []
-  
+
   const oldPropMap = new Map(oldProperties.map(p => [p.name, p]))
   const newPropMap = new Map(newProperties.map(p => [p.name, p]))
-  
+
   // 检查删除的属性
   for (const [name, oldProp] of oldPropMap) {
     if (!newPropMap.has(name)) {
@@ -169,7 +169,7 @@ function checkPropertyCompatibility(
       })
     }
   }
-  
+
   // 检查新增的必需属性
   for (const [name, newProp] of newPropMap) {
     if (!oldPropMap.has(name) && newProp.isRequired) {
@@ -182,12 +182,12 @@ function checkPropertyCompatibility(
       })
     }
   }
-  
+
   // 检查属性类型变更
   for (const [name, oldProp] of oldPropMap) {
     const newProp = newPropMap.get(name)
     if (!newProp) continue
-    
+
     // 类型变更
     if (oldProp.type !== newProp.type) {
       breakingChanges.push({
@@ -199,7 +199,7 @@ function checkPropertyCompatibility(
         impact: 'HIGH'
       })
     }
-    
+
     // 必需性变更（可选→必需）
     if (!oldProp.isRequired && newProp.isRequired) {
       breakingChanges.push({
@@ -211,7 +211,7 @@ function checkPropertyCompatibility(
         impact: 'HIGH'
       })
     }
-    
+
     // 最大长度变更（变小）
     if (oldProp.maxLength && newProp.maxLength && newProp.maxLength < oldProp.maxLength) {
       breakingChanges.push({
@@ -223,7 +223,7 @@ function checkPropertyCompatibility(
         impact: 'MEDIUM'
       })
     }
-    
+
     // 默认值变更（警告）
     if (oldProp.defaultValue !== newProp.defaultValue) {
       warnings.push({
@@ -234,7 +234,7 @@ function checkPropertyCompatibility(
       })
     }
   }
-  
+
   return { breakingChanges, warnings }
 }
 
@@ -252,11 +252,11 @@ export function checkModuleCompatibility(
   const breakingChanges: BreakingChange[] = []
   const warnings: CompatibilityWarning[] = []
   const suggestions: string[] = []
-  
+
   // 检查版本
   const oldVersion = oldSchema.version
   const newVersion = newSchema.version
-  
+
   if (isBreakingChange(oldVersion, newVersion)) {
     breakingChanges.push({
       type: 'FIELD_TYPE_CHANGED',
@@ -267,14 +267,14 @@ export function checkModuleCompatibility(
       impact: 'HIGH'
     })
   }
-  
+
   // 检查路由变更
   const routeChanges = checkRouteCompatibility(oldSchema.routes, newSchema.routes)
   breakingChanges.push(...routeChanges.breakingChanges)
   warnings.push(...routeChanges.warnings)
-  
+
   // 检查依赖变更
-  const newDeps = newSchema.dependsOn.filter(d => !oldSchema.dependsOn.includes(d))
+  const newDeps = newSchema.dependsOn.filter((d: string) => !oldSchema.dependsOn.includes(d))
   if (newDeps.length > 0) {
     warnings.push({
       type: 'DEFAULT_VALUE_CHANGED',
@@ -283,13 +283,13 @@ export function checkModuleCompatibility(
       suggestion: '确保新依赖已安装'
     })
   }
-  
+
   // 生成建议
   if (breakingChanges.length > 0) {
     suggestions.push('建议发布为新的major版本')
     suggestions.push('建议更新模块使用文档')
   }
-  
+
   return {
     isCompatible: breakingChanges.length === 0,
     breakingChanges,
@@ -307,10 +307,10 @@ function checkRouteCompatibility(
 ): { breakingChanges: BreakingChange[], warnings: CompatibilityWarning[] } {
   const breakingChanges: BreakingChange[] = []
   const warnings: CompatibilityWarning[] = []
-  
+
   const oldRoutePaths = new Set(oldRoutes.map(r => r.path))
   const newRoutePaths = new Set(newRoutes.map(r => r.path))
-  
+
   // 检查删除的路由
   for (const path of oldRoutePaths) {
     if (!newRoutePaths.has(path)) {
@@ -322,7 +322,7 @@ function checkRouteCompatibility(
       })
     }
   }
-  
+
   // 检查新增路由（仅警告）
   for (const path of newRoutePaths) {
     if (!oldRoutePaths.has(path)) {
@@ -334,7 +334,7 @@ function checkRouteCompatibility(
       })
     }
   }
-  
+
   return { breakingChanges, warnings }
 }
 
@@ -352,7 +352,7 @@ export function checkAspireCompatibility(
   const breakingChanges: BreakingChange[] = []
   const warnings: CompatibilityWarning[] = []
   const suggestions: string[] = []
-  
+
   // 检查方案名称
   if (oldSchema.solutionName !== newSchema.solutionName) {
     breakingChanges.push({
@@ -364,7 +364,7 @@ export function checkAspireCompatibility(
       impact: 'HIGH'
     })
   }
-  
+
   // 检查命名空间
   if (oldSchema.rootNamespace !== newSchema.rootNamespace) {
     breakingChanges.push({
@@ -376,23 +376,23 @@ export function checkAspireCompatibility(
       impact: 'HIGH'
     })
   }
-  
+
   // 检查微服务变更
   const serviceChanges = checkMicroserviceCompatibility(
     oldSchema.microservices,
     newSchema.microservices
   )
-  
+
   breakingChanges.push(...serviceChanges.breakingChanges)
   warnings.push(...serviceChanges.warnings)
-  
+
   // 生成建议
   if (breakingChanges.length > 0) {
     suggestions.push('建议创建新的Aspire方案而非升级')
     suggestions.push('建议更新部署文档')
     suggestions.push('建议通知运维团队')
   }
-  
+
   return {
     isCompatible: breakingChanges.length === 0,
     breakingChanges,
@@ -410,10 +410,10 @@ function checkMicroserviceCompatibility(
 ): { breakingChanges: BreakingChange[], warnings: CompatibilityWarning[] } {
   const breakingChanges: BreakingChange[] = []
   const warnings: CompatibilityWarning[] = []
-  
+
   const oldServiceMap = new Map(oldServices.map(s => [s.name, s]))
   const newServiceMap = new Map(newServices.map(s => [s.name, s]))
-  
+
   // 检查删除的微服务
   for (const [name, oldService] of oldServiceMap) {
     if (!newServiceMap.has(name)) {
@@ -426,12 +426,12 @@ function checkMicroserviceCompatibility(
       })
     }
   }
-  
+
   // 检查端口变更
   for (const [name, oldService] of oldServiceMap) {
     const newService = newServiceMap.get(name)
     if (!newService) continue
-    
+
     if (oldService.port !== newService.port) {
       breakingChanges.push({
         type: 'FIELD_TYPE_CHANGED',
@@ -442,7 +442,7 @@ function checkMicroserviceCompatibility(
         impact: 'HIGH'
       })
     }
-    
+
     if (oldService.type !== newService.type) {
       breakingChanges.push({
         type: 'FIELD_TYPE_CHANGED',
@@ -454,7 +454,7 @@ function checkMicroserviceCompatibility(
       })
     }
   }
-  
+
   return { breakingChanges, warnings }
 }
 
@@ -470,7 +470,7 @@ export function isBackwardCompatible(
   newSchema: EntityMetadata | ModuleMetadata | AspireSolutionMetadata
 ): boolean {
   let result: CompatibilityResult
-  
+
   if ('properties' in oldSchema && 'properties' in newSchema) {
     result = checkEntityCompatibility(oldSchema, newSchema)
   } else if ('routes' in oldSchema && 'routes' in newSchema) {
@@ -480,7 +480,7 @@ export function isBackwardCompatible(
   } else {
     throw new Error('Unknown schema type')
   }
-  
+
   return result.isCompatible
 }
 
@@ -489,29 +489,29 @@ export function isBackwardCompatible(
  */
 export function generateCompatibilityReport(result: CompatibilityResult): string {
   const lines: string[] = []
-  
+
   lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
   lines.push('📊 Schema兼容性检查报告')
   lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
   lines.push('')
-  
+
   // 总体结果
   if (result.isCompatible) {
     lines.push('✅ 向后兼容: 是')
   } else {
     lines.push('❌ 向后兼容: 否')
   }
-  
+
   lines.push(`🔴 破坏性变更: ${result.breakingChanges.length}个`)
   lines.push(`🟡 警告: ${result.warnings.length}个`)
   lines.push('')
-  
+
   // 破坏性变更
   if (result.breakingChanges.length > 0) {
     lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     lines.push('🔴 破坏性变更详情')
     lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-    
+
     result.breakingChanges.forEach((change, index) => {
       lines.push(`${index + 1}. [${change.impact}] ${change.description}`)
       lines.push(`   字段: ${change.field}`)
@@ -524,13 +524,13 @@ export function generateCompatibilityReport(result: CompatibilityResult): string
       lines.push('')
     })
   }
-  
+
   // 警告
   if (result.warnings.length > 0) {
     lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     lines.push('🟡 兼容性警告')
     lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-    
+
     result.warnings.forEach((warning, index) => {
       lines.push(`${index + 1}. ${warning.message}`)
       lines.push(`   字段: ${warning.field}`)
@@ -540,21 +540,21 @@ export function generateCompatibilityReport(result: CompatibilityResult): string
       lines.push('')
     })
   }
-  
+
   // 建议
   if (result.suggestions.length > 0) {
     lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     lines.push('💡 行动建议')
     lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-    
+
     result.suggestions.forEach((suggestion, index) => {
       lines.push(`${index + 1}. ${suggestion}`)
     })
     lines.push('')
   }
-  
+
   lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-  
+
   return lines.join('\n')
 }
 

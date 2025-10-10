@@ -460,7 +460,7 @@ export class AutoComponentDiscoveryEngine {
             } catch (error) {
                 console.error('⚠️ 定时扫描出错:', error)
             }
-        }, this.config.scanIntervalMs)
+        }, this.config.scanIntervalMs) as unknown as number
     }
 
     /**

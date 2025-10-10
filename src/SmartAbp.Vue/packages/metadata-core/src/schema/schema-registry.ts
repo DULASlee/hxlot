@@ -9,10 +9,10 @@
  * - Schema依赖追踪
  */
 
-import type { EntityMetadata, ModuleMetadata, AspireSolutionMetadata } from '@smartabp/lowcode-shared'
+import type { AspireSolutionMetadata, EntityMetadata, ModuleMetadata } from '../types/index.js'
+import { validateAspireSolutionMetadata } from '../validators/aspire-validator'
 import { validateEntityMetadata } from '../validators/entity-validator'
 import { validateModuleMetadata } from '../validators/module-validator'
-import { validateAspireSolutionMetadata } from '../validators/aspire-validator'
 import { getCurrentSchemaVersion } from './version-manager'
 
 // ========================================
@@ -58,14 +58,14 @@ export interface LookupOptions {
  */
 export class SchemaRegistry {
   private static instance: SchemaRegistry
-  
+
   private entitySchemas = new Map<string, EntityMetadata>()
   private moduleSchemas = new Map<string, ModuleMetadata>()
   private aspireSchemas = new Map<string, AspireSolutionMetadata>()
   private metadata = new Map<string, SchemaMetadata>()
-  
-  private constructor() {}
-  
+
+  private constructor() { }
+
   /**
    * 获取注册表实例
    */
@@ -75,35 +75,35 @@ export class SchemaRegistry {
     }
     return SchemaRegistry.instance
   }
-  
+
   // ========================================
   // 实体Schema注册
   // ========================================
-  
+
   /**
    * 注册实体Schema
    */
   registerEntity(
-    schema: EntityMetadata, 
+    schema: EntityMetadata,
     options: RegisterOptions = {}
   ): void {
     const { validate = true, overwrite = false } = options
-    
+
     // 验证Schema
     if (validate) {
       validateEntityMetadata(schema)
     }
-    
+
     const id = this.generateEntityId(schema)
-    
+
     // 检查是否已存在
     if (this.entitySchemas.has(id) && !overwrite) {
       throw new Error(`Entity schema already registered: ${id}`)
     }
-    
+
     // 注册Schema
     this.entitySchemas.set(id, schema)
-    
+
     // 记录元数据
     this.metadata.set(id, {
       id,
@@ -115,20 +115,20 @@ export class SchemaRegistry {
       dependencies: []
     })
   }
-  
+
   /**
    * 查找实体Schema
    */
   lookupEntity(
-    name: string, 
-    module: string, 
+    name: string,
+    module: string,
     options: LookupOptions = {}
   ): EntityMetadata | undefined {
     const id = `entity:${module}.${name}`
     const schema = this.entitySchemas.get(id)
-    
+
     if (!schema) return undefined
-    
+
     // 版本过滤
     if (options.version) {
       const schemaVersion = getCurrentSchemaVersion(schema)
@@ -136,21 +136,21 @@ export class SchemaRegistry {
         return undefined
       }
     }
-    
+
     return schema
   }
-  
+
   /**
    * 获取所有实体Schema
    */
   getAllEntities(): EntityMetadata[] {
     return Array.from(this.entitySchemas.values())
   }
-  
+
   // ========================================
   // 模块Schema注册
   // ========================================
-  
+
   /**
    * 注册模块Schema
    */
@@ -159,22 +159,22 @@ export class SchemaRegistry {
     options: RegisterOptions = {}
   ): void {
     const { validate = true, overwrite = false, trackDependencies = true } = options
-    
+
     // 验证Schema
     if (validate) {
       validateModuleMetadata(schema)
     }
-    
+
     const id = this.generateModuleId(schema)
-    
+
     // 检查是否已存在
     if (this.moduleSchemas.has(id) && !overwrite) {
       throw new Error(`Module schema already registered: ${id}`)
     }
-    
+
     // 注册Schema
     this.moduleSchemas.set(id, schema)
-    
+
     // 记录元数据
     this.metadata.set(id, {
       id,
@@ -186,7 +186,7 @@ export class SchemaRegistry {
       dependencies: trackDependencies ? schema.dependsOn : []
     })
   }
-  
+
   /**
    * 查找模块Schema
    */
@@ -196,30 +196,30 @@ export class SchemaRegistry {
   ): ModuleMetadata | undefined {
     const id = `module:${name}`
     const schema = this.moduleSchemas.get(id)
-    
+
     if (!schema) return undefined
-    
+
     // 版本过滤
     if (options.version) {
       if (schema.version !== options.version) {
         return undefined
       }
     }
-    
+
     return schema
   }
-  
+
   /**
    * 获取所有模块Schema
    */
   getAllModules(): ModuleMetadata[] {
     return Array.from(this.moduleSchemas.values())
   }
-  
+
   // ========================================
   // Aspire方案Schema注册
   // ========================================
-  
+
   /**
    * 注册Aspire方案Schema
    */
@@ -228,22 +228,22 @@ export class SchemaRegistry {
     options: RegisterOptions = {}
   ): void {
     const { validate = true, overwrite = false } = options
-    
+
     // 验证Schema
     if (validate) {
       validateAspireSolutionMetadata(schema)
     }
-    
+
     const id = this.generateAspireId(schema)
-    
+
     // 检查是否已存在
     if (this.aspireSchemas.has(id) && !overwrite) {
       throw new Error(`Aspire solution schema already registered: ${id}`)
     }
-    
+
     // 注册Schema
     this.aspireSchemas.set(id, schema)
-    
+
     // 记录元数据
     this.metadata.set(id, {
       id,
@@ -255,7 +255,7 @@ export class SchemaRegistry {
       dependencies: []
     })
   }
-  
+
   /**
    * 查找Aspire方案Schema
    */
@@ -265,9 +265,9 @@ export class SchemaRegistry {
   ): AspireSolutionMetadata | undefined {
     const id = `aspire:${solutionName}`
     const schema = this.aspireSchemas.get(id)
-    
+
     if (!schema) return undefined
-    
+
     // 版本过滤
     if (options.version) {
       const schemaVersion = getCurrentSchemaVersion(schema)
@@ -275,37 +275,37 @@ export class SchemaRegistry {
         return undefined
       }
     }
-    
+
     return schema
   }
-  
+
   /**
    * 获取所有Aspire方案Schema
    */
   getAllAspireSolutions(): AspireSolutionMetadata[] {
     return Array.from(this.aspireSchemas.values())
   }
-  
+
   // ========================================
   // 通用操作
   // ========================================
-  
+
   /**
    * 检查Schema是否已注册
    */
   has(id: string): boolean {
     return this.metadata.has(id)
   }
-  
+
   /**
    * 删除Schema
    */
   unregister(id: string): boolean {
     const meta = this.metadata.get(id)
     if (!meta) return false
-    
+
     this.metadata.delete(id)
-    
+
     switch (meta.type) {
       case 'entity':
         return this.entitySchemas.delete(id)
@@ -315,7 +315,7 @@ export class SchemaRegistry {
         return this.aspireSchemas.delete(id)
     }
   }
-  
+
   /**
    * 清空注册表
    */
@@ -325,7 +325,7 @@ export class SchemaRegistry {
     this.aspireSchemas.clear()
     this.metadata.clear()
   }
-  
+
   /**
    * 获取注册表统计信息
    */
@@ -337,33 +337,33 @@ export class SchemaRegistry {
       aspireSolutions: this.aspireSchemas.size
     }
   }
-  
+
   /**
    * 获取Schema元数据
    */
   getMetadata(id: string): SchemaMetadata | undefined {
     return this.metadata.get(id)
   }
-  
+
   /**
    * 获取所有Schema元数据
    */
   getAllMetadata(): SchemaMetadata[] {
     return Array.from(this.metadata.values())
   }
-  
+
   // ========================================
   // ID生成
   // ========================================
-  
+
   private generateEntityId(schema: EntityMetadata): string {
     return `entity:${schema.module}.${schema.name}`
   }
-  
+
   private generateModuleId(schema: ModuleMetadata): string {
     return `module:${schema.name}`
   }
-  
+
   private generateAspireId(schema: AspireSolutionMetadata): string {
     return `aspire:${schema.solutionName}`
   }
