@@ -9,6 +9,9 @@
  * - 自学习：基于使用模式持续优化
  */
 
+// 🔥 架构铁律一：统一类型系统
+// ComponentCategory 定义在types/component.ts中，避免循环依赖
+import type { ComponentCategory } from '../types/component'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🧬 组件DNA类型系统（简化版）
@@ -41,15 +44,6 @@ export interface ComponentAnalysis {
     /** 分析置信度 (0-1) */
     confidence: number
 }
-
-export type ComponentCategory =
-    | 'FORM_COMPONENT'        // 表单组件
-    | 'DATA_DISPLAY'          // 数据展示
-    | 'LAYOUT_COMPONENT'      // 布局组件
-    | 'INTERACTIVE_COMPONENT' // 交互组件
-    | 'UTILITY_COMPONENT'     // 工具组件
-    | 'BUSINESS_COMPONENT'    // 业务组件
-    | 'UNKNOWN'               // 未知类型
 
 export interface OptimizationSuggestion {
     /** 建议类型 */

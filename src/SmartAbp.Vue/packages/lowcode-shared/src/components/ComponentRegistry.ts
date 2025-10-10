@@ -14,16 +14,12 @@
  * - 🧠 ComponentGenie AI智能分析与建议
  */
 
-// ComponentGenie AI智能分析
-import { analyzeComponent, type ComponentAnalysis as AIAnalysis } from '../ai/ComponentGenie'
+// 🔥 架构铁律一：统一类型系统
+// 从types/component.ts导入统一类型定义，避免重复定义
+import type { ComponentCategory, LoadPriority } from '../types/component';
 
-export type ComponentCategory =
-  | 'basic' | 'layout' | 'form' | 'data' | 'chart' | 'advanced' | 'business'
-  | 'workflow' | 'utility' | 'designer' | 'inspector' | 'preview' | 'monitor'
-  | 'template' | 'codegen' | 'aspire' | 'security' | 'theme' | 'modeling'
-  | 'quality' | 'solution' | 'wizard' | 'resilience' | 'devops' | 'git' | 'cicd'
-  | 'code' | 'chaos' | 'observability' | 'view';
-export type LoadPriority = 'high' | 'medium' | 'low';
+// ComponentGenie AI智能分析
+import { analyzeComponent, type ComponentAnalysis as AIAnalysis } from '../ai/ComponentGenie';
 
 /**
  * 组件生命周期钩子
@@ -131,11 +127,11 @@ export interface ComponentMetadata {
   extensionPoints?: ComponentExtensionPoint[];
   /** 版本信息 */
   versionInfo?: ComponentVersion;
-  
+
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 🧠 ComponentGenie AI分析结果
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  
+
   /** ComponentGenie AI分析结果 */
   aiAnalysis?: AIAnalysis;
   /** AI建议分类（与手动分类比对） */
@@ -247,18 +243,18 @@ export class ComponentRegistry {
     if (metadata.sourceCode) {
       try {
         const aiAnalysis = analyzeComponent(metadata.name, metadata.sourceCode);
-        
+
         // 增强元数据
         metadata.aiAnalysis = aiAnalysis;
         metadata.aiSuggestedCategory = this.mapAICategoryToRegistry(aiAnalysis.category);
         metadata.aiConfidence = aiAnalysis.confidence;
         metadata.aiSuggestionsCount = aiAnalysis.suggestions.length;
-        
+
         // AI建议与手动分类比对
         if (metadata.aiSuggestedCategory !== metadata.category) {
           console.log(`🤔 AI建议分类: ${metadata.name} -> ${metadata.aiSuggestedCategory} (当前: ${metadata.category}, 置信度: ${(aiAnalysis.confidence * 100).toFixed(1)}%)`);
         }
-        
+
         // 输出AI优化建议
         if (aiAnalysis.suggestions.length > 0) {
           console.log(`💡 ${metadata.name} AI优化建议 (${aiAnalysis.suggestions.length}个):`);
@@ -266,7 +262,7 @@ export class ComponentRegistry {
             console.log(`   ${index + 1}. [${suggestion.type}] ${suggestion.message} (影响: ${suggestion.impact}/5, 难度: ${suggestion.difficulty}/5)`);
           });
         }
-        
+
       } catch (error) {
         console.warn(`⚠️ ComponentGenie分析失败: ${metadata.name}`, error);
       }
@@ -898,7 +894,7 @@ export class ComponentRegistry {
       'BUSINESS_COMPONENT': 'business',
       'UNKNOWN': 'basic'
     };
-    
+
     return categoryMap[aiCategory] || 'basic';
   }
 
@@ -929,26 +925,26 @@ export class ComponentRegistry {
     };
 
     let totalConfidence = 0;
-    
+
     for (const [name, metadata] of this.components) {
       if (metadata.aiAnalysis) {
         stats.totalAnalyzed++;
         totalConfidence += metadata.aiConfidence || 0;
         stats.totalSuggestions += metadata.aiSuggestionsCount || 0;
-        
+
         // 高置信度组件（置信度 > 80%）
         if ((metadata.aiConfidence || 0) > 0.8) {
           stats.highConfidenceComponents.push(name);
         }
-        
+
         // 分类分布
         const category = metadata.aiAnalysis.category;
         stats.categoryDistribution[category] = (stats.categoryDistribution[category] || 0) + 1;
       }
     }
-    
+
     stats.averageConfidence = stats.totalAnalyzed > 0 ? totalConfidence / stats.totalAnalyzed : 0;
-    
+
     return stats;
   }
 
@@ -957,28 +953,28 @@ export class ComponentRegistry {
    */
   async reanalyzeAllComponents(): Promise<void> {
     console.log('🧠 开始批量重新分析所有组件...');
-    
+
     let analyzed = 0;
     for (const [name, metadata] of this.components) {
       if (metadata.sourceCode) {
         try {
           const aiAnalysis = analyzeComponent(name, metadata.sourceCode);
-          
+
           // 更新AI分析结果
           metadata.aiAnalysis = aiAnalysis;
           metadata.aiSuggestedCategory = this.mapAICategoryToRegistry(aiAnalysis.category);
           metadata.aiConfidence = aiAnalysis.confidence;
           metadata.aiSuggestionsCount = aiAnalysis.suggestions.length;
-          
+
           analyzed++;
         } catch (error) {
           console.warn(`⚠️ 重新分析失败: ${name}`, error);
         }
       }
     }
-    
+
     console.log(`✅ 批量重新分析完成: ${analyzed}个组件`);
-    
+
     // 输出整体AI统计
     const stats = this.getAIStatistics();
     console.log('📊 AI分析统计:', stats);
@@ -999,7 +995,7 @@ export class ComponentRegistry {
       confidence: number;
       category: string;
     }> = [];
-    
+
     for (const [name, metadata] of this.components) {
       if (metadata.aiAnalysis && (metadata.aiSuggestionsCount || 0) >= minSuggestions) {
         results.push({
@@ -1010,7 +1006,7 @@ export class ComponentRegistry {
         });
       }
     }
-    
+
     return results.sort((a, b) => b.suggestions - a.suggestions);
   }
 }

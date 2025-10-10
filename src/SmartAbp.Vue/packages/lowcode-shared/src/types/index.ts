@@ -31,6 +31,11 @@ export type {
 } from './component-base.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🧩 组件统一类型系统 (v1.0.0) - 统一 ComponentCategory 定义
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export type { ComponentBaseMetadata, ComponentCategory, ComponentStatus, LoadPriority, LoadStrategy } from './component.js'
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📋 日志类型
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export { createComponentLogger, getGlobalLogger } from './logger.js'
