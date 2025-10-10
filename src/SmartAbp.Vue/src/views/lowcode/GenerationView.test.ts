@@ -96,8 +96,8 @@ describe("GenerationView E2E", () => {
 
     // Step 7: Verify project was updated with generated page
     expect(projectStore.currentProject?.pages).toHaveLength(1)
-    expect(projectStore.currentProject?.pages[0].name).toBe("Product")
-    expect(projectStore.currentProject?.pages[0].template).toBe("crud")
+    expect(projectStore.currentProject?.pages?.[0]?.name).toBe("Product")
+    expect(projectStore.currentProject?.pages?.[0]?.template).toBe("crud")
   })
 
   it("should handle generation errors gracefully", async () => {

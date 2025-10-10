@@ -554,7 +554,7 @@ const calculatedFieldConfigs: CalculatedFieldConfig[] = [
   {
     targetField: 'totalPrice',
     dependFields: ['quantity', 'unitPrice'],
-    calculate: (values) => {
+    calculate: (values: Record<string, any>) => {
       const quantity = Number(values.quantity) || 0
       const unitPrice = Number(values.unitPrice) || 0
       return Number((quantity * unitPrice).toFixed(2))

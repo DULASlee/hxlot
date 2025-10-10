@@ -22,7 +22,7 @@ export class FrontendCodeGenerator {
   constructor(
     private rootDir: string,
     private options: GeneratorOptions = {}
-  ) {}
+  ) { }
 
   /**
    * 生成所有前端代码
@@ -35,7 +35,7 @@ export class FrontendCodeGenerator {
       // 确定输出目录
       const modulePath = metadata.module.toLowerCase()
       const entityPath = metadata.name.toLowerCase()
-      const outputDir = this.options.outputDir || 
+      const outputDir = this.options.outputDir ||
         path.join(this.rootDir, 'src', 'views', modulePath, entityPath)
 
       // 生成各类文件
@@ -754,7 +754,7 @@ export const use${entityName}Store = defineStore('${entityNameLower}', () => {
   }
 
   private generateDtoProperties(metadata: EntityMetadata): string {
-    const props = metadata.properties.map(prop => {
+    const props = metadata.properties.map((prop: PropertyMetadata) => {
       const tsType = this.mapTypeToTypeScript(prop.type)
       const optional = !prop.isRequired ? '?' : ''
       const comment = prop.description ? `  /** ${prop.description} */\n` : ''
@@ -774,8 +774,8 @@ export const use${entityName}Store = defineStore('${entityNameLower}', () => {
 
   private generateCreateDtoProperties(metadata: EntityMetadata): string {
     return metadata.properties
-      .filter(prop => !prop.isReadOnly)
-      .map(prop => {
+      .filter((prop: PropertyMetadata) => !prop.isReadOnly)
+      .map((prop: PropertyMetadata) => {
         const tsType = this.mapTypeToTypeScript(prop.type)
         const optional = !prop.isRequired ? '?' : ''
         const comment = prop.description ? `  /** ${prop.description} */\n` : ''
@@ -787,15 +787,15 @@ export const use${entityName}Store = defineStore('${entityNameLower}', () => {
   private generateSearchProperties(metadata: EntityMetadata): string {
     const searchFields = metadata.xUiConfig?.searchFields || []
     return searchFields
-      .map(fieldName => `${fieldName}?: string`)
+      .map((fieldName: string) => `${fieldName}?: string`)
       .join('\n  ')
   }
 
   private generateSearchFormItems(metadata: EntityMetadata): string {
     const searchFields = metadata.xUiConfig?.searchFields || []
     return searchFields
-      .map(fieldName => {
-        const prop = metadata.properties.find(p => p.name === fieldName)
+      .map((fieldName: string) => {
+        const prop = metadata.properties.find((p: PropertyMetadata) => p.name === fieldName)
         const label = prop?.displayName || fieldName
         return `        <el-form-item label="${label}">
           <el-input v-model="searchForm.${fieldName}" placeholder="请输入${label}" clearable />
@@ -805,12 +805,12 @@ export const use${entityName}Store = defineStore('${entityNameLower}', () => {
   }
 
   private generateTableColumns(metadata: EntityMetadata): string {
-    const columns = metadata.xUiConfig?.listColumns || 
-      metadata.properties.slice(0, 5).map(p => p.name)
-    
+    const columns = metadata.xUiConfig?.listColumns ||
+      metadata.properties.slice(0, 5).map((p: PropertyMetadata) => p.name)
+
     return columns
-      .map(colName => {
-        const prop = metadata.properties.find(p => p.name === colName)
+      .map((colName: string) => {
+        const prop = metadata.properties.find((p: PropertyMetadata) => p.name === colName)
         const label = prop?.displayName || colName
         return `        <el-table-column prop="${colName}" label="${label}" />`
       })
@@ -818,17 +818,17 @@ export const use${entityName}Store = defineStore('${entityNameLower}', () => {
   }
 
   private generateFormItems(metadata: EntityMetadata): string {
-    const formFields = metadata.xUiConfig?.formFields || 
-      metadata.properties.filter(p => !p.isReadOnly).map(p => p.name)
-    
+    const formFields = metadata.xUiConfig?.formFields ||
+      metadata.properties.filter((p: PropertyMetadata) => !p.isReadOnly).map((p: PropertyMetadata) => p.name)
+
     return formFields
-      .map(fieldName => {
-        const prop = metadata.properties.find(p => p.name === fieldName)
+      .map((fieldName: string) => {
+        const prop = metadata.properties.find((p: PropertyMetadata) => p.name === fieldName)
         if (!prop) return ''
-        
+
         const label = prop.displayName || fieldName
         const required = prop.isRequired ? ' required' : ''
-        
+
         return `      <el-form-item label="${label}" prop="${fieldName}"${required}>
         ${this.generateFormControl(prop)}
       </el-form-item>`
@@ -843,18 +843,18 @@ export const use${entityName}Store = defineStore('${entityNameLower}', () => {
           return `<el-input v-model="formData.${prop.name}" type="textarea" :rows="4" placeholder="请输入${prop.displayName || prop.name}" />`
         }
         return `<el-input v-model="formData.${prop.name}" placeholder="请输入${prop.displayName || prop.name}" />`
-      
+
       case 'int':
       case 'long':
       case 'decimal':
         return `<el-input-number v-model="formData.${prop.name}" :controls="false" style="width: 100%" />`
-      
+
       case 'bool':
         return `<el-switch v-model="formData.${prop.name}" />`
-      
+
       case 'DateTime':
         return `<el-date-picker v-model="formData.${prop.name}" type="datetime" placeholder="选择日期时间" style="width: 100%" />`
-      
+
       default:
         return `<el-input v-model="formData.${prop.name}" placeholder="请输入${prop.displayName || prop.name}" />`
     }
@@ -862,8 +862,8 @@ export const use${entityName}Store = defineStore('${entityNameLower}', () => {
 
   private generateFormDataDefaults(metadata: EntityMetadata): string {
     return metadata.properties
-      .filter(p => !p.isReadOnly)
-      .map(prop => {
+      .filter((p: PropertyMetadata) => !p.isReadOnly)
+      .map((prop: PropertyMetadata) => {
         const defaultValue = prop.defaultValue || this.getDefaultValue(prop.type)
         return `    ${prop.name}: ${defaultValue}`
       })
@@ -872,8 +872,8 @@ export const use${entityName}Store = defineStore('${entityNameLower}', () => {
 
   private generateFormRules(metadata: EntityMetadata): string {
     return metadata.properties
-      .filter(p => p.isRequired && !p.isReadOnly)
-      .map(prop => {
+      .filter((p: PropertyMetadata) => p.isRequired && !p.isReadOnly)
+      .map((prop: PropertyMetadata) => {
         return `  ${prop.name}: [
     { required: true, message: '请输入${prop.displayName || prop.name}', trigger: 'blur' }
   ]`
@@ -883,7 +883,7 @@ export const use${entityName}Store = defineStore('${entityNameLower}', () => {
 
   private generateDescriptionItems(metadata: EntityMetadata): string {
     return metadata.properties
-      .map(prop => {
+      .map((prop: PropertyMetadata) => {
         const label = prop.displayName || prop.name
         return `      <el-descriptions-item label="${label}">
         {{ data?.${prop.name} }}
@@ -920,7 +920,7 @@ export const use${entityName}Store = defineStore('${entityNameLower}', () => {
 
   private async writeFile(dir: string, filename: string, content: string): Promise<string> {
     const filePath = path.join(dir, filename)
-    
+
     if (this.options.dryRun) {
       if (this.options.verbose) {
         console.log(`[Dry-run] Would write: ${filePath}`)
@@ -930,11 +930,11 @@ export const use${entityName}Store = defineStore('${entityNameLower}', () => {
 
     await fs.mkdir(dir, { recursive: true })
     await fs.writeFile(filePath, content, 'utf-8')
-    
+
     if (this.options.verbose) {
       console.log(`Generated: ${filePath}`)
     }
-    
+
     return filePath
   }
 }

@@ -322,7 +322,7 @@ class DangerousPatternDetector {
       if (!grouped[issue.type]) {
         grouped[issue.type] = []
       }
-      grouped[issue.type].push(issue)
+      grouped[issue.type]!.push(issue)
     })
 
     return grouped

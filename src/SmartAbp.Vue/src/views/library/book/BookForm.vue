@@ -4,7 +4,7 @@
     :title="title"
     width="600px"
     @close="handleClose"
-    @update:model-value="(val) => emit('update:visible', val)"
+    @update:model-value="(val: boolean) => emit('update:visible', val)"
   >
     <el-form
       ref="formRef"

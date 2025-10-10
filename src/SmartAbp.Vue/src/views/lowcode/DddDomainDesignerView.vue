@@ -308,12 +308,12 @@ const fileTree = computed(() => {
   const tree: any[] = []
   const map = new Map()
 
-  generationResult.value.files.forEach((file) => {
+  generationResult.value.files.forEach((file: any) => {
     const parts = file.relativePath.split('/')
     let current = tree
     let path = ''
 
-    parts.forEach((part, index) => {
+    parts.forEach((part: string, index: number) => {
       path = path ? `${path}/${part}` : part
 
       if (!map.has(path)) {
@@ -453,7 +453,7 @@ const downloadCode = async () => {
     const zip = new JSZip()
 
     // 按目录结构添加所有生成的文件
-    generationResult.value.files.forEach(file => {
+    generationResult.value.files.forEach((file: any) => {
       zip.file(file.relativePath, file.content)
     })
 
@@ -470,7 +470,7 @@ const downloadCode = async () => {
 - 总代码行数: ${generationResult.value.totalLinesOfCode}
 
 ## 文件列表
-${generationResult.value.files.map(f => `- ${f.relativePath}`).join('\n')}
+${generationResult.value.files.map((f: any) => `- ${f.relativePath}`).join('\n')}
 
 ## 使用说明
 1. 解压此ZIP包到你的项目目录

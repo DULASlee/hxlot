@@ -366,7 +366,7 @@ const calculateMostUsed = () => {
   // 基于最近项目统计使用次数
   const modeCounts: Record<string, number> = {}
 
-  recentProjects.value.forEach(p => {
+  recentProjects.value.forEach((p: { mode: string }) => {
     modeCounts[p.mode] = (modeCounts[p.mode] || 0) + 1
   })
 

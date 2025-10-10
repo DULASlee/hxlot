@@ -624,7 +624,7 @@ async function handleValidate() {
     if (result.isValid) {
       ElMessage.success('CQRS definition is valid!')
     } else {
-      const errorMessages = result.errors.map(e => e.message).join('\n')
+      const errorMessages = result.errors.map((e: { message: string }) => e.message).join('\n')
       ElNotification({
         title: 'Validation Failed',
         message: errorMessages,

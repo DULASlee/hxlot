@@ -363,7 +363,7 @@ const generateCode = async () => {
     
     if (result.success && result.generatedFiles && result.generatedFiles.length > 0) {
       // 提取第一个Vue组件文件
-      const vueFile = result.generatedFiles.find(f => f.path.endsWith('.vue'))
+      const vueFile = result.generatedFiles.find((f: { path: string }) => f.path.endsWith('.vue'))
       generatedCode.value = vueFile?.content || '// No Vue component generated'
       
       generationInfo.value = {

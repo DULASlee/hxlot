@@ -210,8 +210,8 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
       })
       
       const executionOrder = store.getBusinessRuleExecutionOrder("field1")
-      expect(executionOrder[0].priority).toBe(10) // 高优先级在前
-      expect(executionOrder[1].priority).toBe(1)
+      expect(executionOrder?.[0]?.priority).toBe(10) // 高优先级在前
+      expect(executionOrder?.[1]?.priority).toBe(1)
     })
   })
 
@@ -430,7 +430,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
       
       const errors = store.getExecutionErrors()
       expect(errors).toHaveLength(1)
-      expect(errors[0].ruleId).toBe("error-rule")
+      expect(errors?.[0]?.ruleId).toBe("error-rule")
     })
   })
 })
