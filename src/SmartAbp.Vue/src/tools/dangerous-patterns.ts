@@ -6,7 +6,7 @@
  */
 
 import { readFileSync, readdirSync, statSync } from "fs"
-import { join, extname } from "path"
+import { extname, join } from "path"
 
 interface DangerousPattern {
   pattern: RegExp

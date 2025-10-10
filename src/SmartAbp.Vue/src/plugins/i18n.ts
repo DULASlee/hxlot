@@ -47,7 +47,7 @@ export const i18n = createI18n<{ 'zh-CN': MessageSchema; 'en-US': MessageSchema 
  * 设置语言
  */
 export const setLocale = (locale: SupportedLocale): void => {
-  ;(i18n.global.locale as any).value = locale
+  (i18n.global.locale as any).value = locale
   localStorage.setItem(STORAGE_KEY, locale)
 }
 

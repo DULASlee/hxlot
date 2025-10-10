@@ -163,7 +163,7 @@ if (storesFactory && typeof storesFactory === "object") {
 }
 
 // 运行生命周期占位（忽略错误）
-; (async () => {
+ (async () => {
   try {
     await runPreInit?.({ app: null })
     await runInit?.({ app: null })

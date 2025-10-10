@@ -443,7 +443,7 @@ export async function runAllLoggingExamples() {
 
 // 浏览器环境下的便捷访问
 if (typeof window !== "undefined") {
-  ;(window as any).runLoggingExamples = runAllLoggingExamples
+  (window as any).runLoggingExamples = runAllLoggingExamples
   ;(window as any).loggingExamples = {
     basic: basicLoggingExample,
     childLogger: childLoggerExample,

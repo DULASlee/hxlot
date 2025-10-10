@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from "vitest"
 import { mount } from "@vue/test-utils"
 import { createPinia, setActivePinia } from "pinia"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
 // Mock logger
 vi.mock("@/utils/logging", () => ({
@@ -12,8 +12,8 @@ vi.mock("@/utils/logging", () => ({
   }
 }))
 
-import EnhancedStateMachine from "./EnhancedStateMachine.vue"
 import { useEnhancedStateMachineStore } from "../../stores/lowcode/enhancedStateMachine"
+import EnhancedStateMachine from "./EnhancedStateMachine.vue"
 
 describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
   beforeEach(() => {
@@ -60,12 +60,12 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should support start, intermediate, and end states", () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       // 测试添加不同类型的状态
       store.addState({ id: "start1", type: "start", label: "开始", position: { x: 0, y: 0 } })
       store.addState({ id: "process1", type: "intermediate", label: "处理中", position: { x: 100, y: 0 } })
       store.addState({ id: "end1", type: "end", label: "结束", position: { x: 200, y: 0 } })
-      
+
       expect(store.states).toHaveLength(3)
       expect(store.states.find(s => s.type === "start")).toBeTruthy()
       expect(store.states.find(s => s.type === "intermediate")).toBeTruthy()
@@ -75,12 +75,12 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should enforce transition rules with conditions and actions", () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       // 添加状态
       store.addState({ id: "draft", type: "start", label: "草稿", position: { x: 0, y: 0 } })
       store.addState({ id: "review", type: "intermediate", label: "审核中", position: { x: 100, y: 0 } })
       store.addState({ id: "approved", type: "end", label: "已批准", position: { x: 200, y: 0 } })
-      
+
       // 添加带条件和动作的转换
       store.addTransition({
         id: "draft-to-review",
@@ -89,7 +89,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
         condition: "user.role === 'author'",
         action: "sendNotification('review-requested')"
       })
-      
+
       const transition = store.transitions.find(t => t.id === "draft-to-review")
       expect(transition).toBeTruthy()
       expect(transition?.condition).toBe("user.role === 'author'")
@@ -99,10 +99,10 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should block illegal transitions", () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       store.addState({ id: "end1", type: "end", label: "结束", position: { x: 0, y: 0 } })
       store.addState({ id: "start1", type: "start", label: "开始", position: { x: 100, y: 0 } })
-      
+
       // 尝试从结束状态到开始状态的非法转换
       expect(() => {
         store.addTransition({
@@ -116,18 +116,18 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should validate state machine completeness", () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       // 完整的状态机应有开始和结束状态
       store.addState({ id: "start", type: "start", label: "开始", position: { x: 0, y: 0 } })
-      
+
       const validation = store.validateStateMachine()
       expect(validation.isValid).toBe(false)
       expect(validation.errors).toContain("缺少结束状态")
-      
+
       // 添加结束状态后应该验证通过
       store.addState({ id: "end", type: "end", label: "结束", position: { x: 100, y: 0 } })
       store.addTransition({ id: "start-end", source: "start", target: "end" })
-      
+
       const validationAfter = store.validateStateMachine()
       expect(validationAfter.isValid).toBe(true)
     })
@@ -137,7 +137,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should support field linkage rules", () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       // 添加字段联动规则
       store.addBusinessRule({
         id: "price-discount-rule",
@@ -146,7 +146,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
         condition: "price > 1000",
         action: "setField('discount', price * 0.1)"
       })
-      
+
       const rule = store.businessRules.find(r => r.id === "price-discount-rule")
       expect(rule).toBeTruthy()
       expect(rule?.type).toBe("field-linkage")
@@ -155,7 +155,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should support permission constraint rules", () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       // 添加权限约束规则
       store.addBusinessRule({
         id: "admin-only-approve",
@@ -164,7 +164,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
         condition: "user.role !== 'admin'",
         action: "hideButton('approve-button')"
       })
-      
+
       const rule = store.businessRules.find(r => r.id === "admin-only-approve")
       expect(rule).toBeTruthy()
       expect(rule?.type).toBe("permission-constraint")
@@ -173,7 +173,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should support async validation rules", async () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       // 添加异步验证规则
       store.addBusinessRule({
         id: "unique-email-check",
@@ -182,7 +182,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
         condition: "email.length > 0",
         action: "validateEmailUnique(email)"
       })
-      
+
       const rule = store.businessRules.find(r => r.id === "unique-email-check")
       expect(rule).toBeTruthy()
       expect(rule?.type).toBe("async-validation")
@@ -191,7 +191,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should execute business rules in correct order", async () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       // 添加多个规则，设置优先级
       store.addBusinessRule({
         id: "rule1",
@@ -200,15 +200,15 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
         trigger: "field1",
         action: "action1()"
       })
-      
+
       store.addBusinessRule({
-        id: "rule2", 
+        id: "rule2",
         type: "field-linkage",
         priority: 10,
         trigger: "field1",
         action: "action2()"
       })
-      
+
       const executionOrder = store.getBusinessRuleExecutionOrder("field1")
       expect(executionOrder?.[0]?.priority).toBe(10) // 高优先级在前
       expect(executionOrder?.[1]?.priority).toBe(1)
@@ -219,7 +219,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should generate frontend hooks for state machine", () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       // 配置一个完整的状态机
       store.addState({ id: "draft", type: "start", label: "草稿", position: { x: 0, y: 0 } })
       store.addState({ id: "published", type: "end", label: "已发布", position: { x: 100, y: 0 } })
@@ -230,7 +230,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
         condition: "user.canPublish",
         action: "updateStatus('published')"
       })
-      
+
       // 添加权限约束规则
       store.addBusinessRule({
         id: "publish-permission",
@@ -240,9 +240,9 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
         action: "allowTransition()",
         description: "只有管理员可以发布"
       })
-      
+
       const frontendCode = store.generateFrontendHooks("ArticleWorkflow")
-      
+
       expect(frontendCode).toContain("useArticleWorkflow")
       expect(frontendCode).toContain("draft")
       expect(frontendCode).toContain("published")
@@ -252,7 +252,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should generate backend handlers for state transitions", () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       store.addState({ id: "pending", type: "start", label: "待处理", position: { x: 0, y: 0 } })
       store.addState({ id: "completed", type: "end", label: "已完成", position: { x: 100, y: 0 } })
       store.addTransition({
@@ -261,9 +261,9 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
         target: "completed",
         action: "processOrder(orderId)"
       })
-      
+
       const backendCode = store.generateBackendHandlers("OrderWorkflow")
-      
+
       expect(backendCode).toContain("OrderWorkflowHandler")
       expect(backendCode).toContain("CompleteTransition")
       expect(backendCode).toContain("processOrder")
@@ -272,7 +272,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should generate policies for business rules", () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       store.addBusinessRule({
         id: "approval-policy",
         type: "permission-constraint",
@@ -280,9 +280,9 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
         condition: "user.role === 'manager' || user.role === 'admin'",
         action: "allowTransition('approve')"
       })
-      
+
       const policyCode = store.generatePolicies("ApprovalWorkflow")
-      
+
       expect(policyCode).toContain("ApprovalWorkflowPolicy")
       expect(policyCode).toContain("user.role === 'manager'")
       expect(policyCode).toContain("allowTransition")
@@ -291,21 +291,21 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should generate complete code package with templates", () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       // 配置完整的工作流
       store.setWorkflowMetadata({
         name: "DocumentApproval",
         description: "文档审批工作流",
         entity: "Document"
       })
-      
+
       const codePackage = store.generateCompleteCodePackage()
-      
+
       expect(codePackage.frontend).toBeTruthy()
       expect(codePackage.backend).toBeTruthy()
       expect(codePackage.policies).toBeTruthy()
       expect(codePackage.tests).toBeTruthy()
-      
+
       // 验证生成的代码包含必要的模板结构
       expect(codePackage.frontend).toContain("// AUTO-GENERATED FILE")
       expect(codePackage.backend).toContain("using SmartAbp.Application")
@@ -315,7 +315,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
   describe("工作流程编辑器UI", () => {
     it("should display state machine canvas with nodes and edges", () => {
       const wrapper = mountComponent()
-      
+
       expect(wrapper.find(".enhanced-state-machine").exists()).toBe(true)
       expect(wrapper.find(".flow-container").exists()).toBe(true)
       expect(wrapper.find(".toolbar").exists()).toBe(true)
@@ -323,7 +323,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
 
     it("should show business rules editor panel", () => {
       const wrapper = mountComponent()
-      
+
       expect(wrapper.find(".enhanced-state-machine").exists()).toBe(true)
       expect(wrapper.find(".toolbar").exists()).toBe(true)
       expect(wrapper.find(".state-list").exists()).toBe(true)
@@ -331,7 +331,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
 
     it("should provide code generation preview", () => {
       const wrapper = mountComponent()
-      
+
       expect(wrapper.find(".enhanced-state-machine").exists()).toBe(true)
       expect(wrapper.find("el-button").exists()).toBe(true)
       expect(wrapper.find("el-button-group").exists()).toBe(true)
@@ -340,12 +340,12 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should validate workflow completeness and show warnings", async () => {
       const wrapper = mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       // 添加不完整的状态机
       store.addState({ id: "start", type: "start", label: "开始", position: { x: 0, y: 0 } })
-      
+
       await wrapper.vm.$nextTick()
-      
+
       expect(store.states).toHaveLength(1)
       expect(store.transitions).toHaveLength(0)
       // 检查警告面板
@@ -360,7 +360,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should use workflow templates for code generation", () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       // 验证模板搜索和匹配
       const templates = store.findWorkflowTemplates("state-machine")
       expect(Array.isArray(templates)).toBe(true)
@@ -369,7 +369,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should support custom workflow templates", () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       // 添加自定义模板
       store.addWorkflowTemplate({
         id: "custom-approval",
@@ -378,7 +378,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
         states: ["draft", "review", "approved", "rejected"],
         rules: ["admin-only-approve", "auto-notify"]
       })
-      
+
       const template = store.workflowTemplates.find(t => t.id === "custom-approval")
       expect(template).toBeTruthy()
     })
@@ -388,7 +388,7 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should provide execution logging for business rules", async () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       // 添加规则
       store.addBusinessRule({
         id: "test-rule",
@@ -396,15 +396,15 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
         trigger: "field1",
         action: "setValue('field2', 'test')"
       })
-      
+
       // 清除之前的mock调用
       vi.clearAllMocks()
-      
+
       const result = await store.executeBusinessRules("field1", { field1: "value" })
-      
+
       // 验证结果：规则被正确执行
       expect(result).toHaveProperty("field2", "test")
-      
+
       // 验证logger.debug被调用（logRuleExecution内部调用）
       const { logger } = await import("@/utils/logging")
       expect(logger.debug).toHaveBeenCalledWith(
@@ -416,18 +416,18 @@ describe("EnhancedStateMachine.vue - Phase 3 TDD Tests", () => {
     it("should handle business rule execution errors gracefully", async () => {
       mountComponent()
       const store = useEnhancedStateMachineStore()
-      
+
       store.addBusinessRule({
         id: "error-rule",
         type: "field-linkage",
         trigger: "field1",
         action: "invalidFunction()" // 这会导致错误
       })
-      
+
       await expect(async () => {
         await store.executeBusinessRules("field1", { field1: "value" })
       }).not.toThrow() // 错误应该被优雅处理
-      
+
       const errors = store.getExecutionErrors()
       expect(errors).toHaveLength(1)
       expect(errors?.[0]?.ruleId).toBe("error-rule")

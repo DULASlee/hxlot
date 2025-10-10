@@ -250,7 +250,7 @@ async function handleBatchDelete() {
     await ElMessageBox.confirm(`确认删除选中的 ${selectedRows.value.length} 条记录吗？`, '提示', {
       type: 'warning'
     })
-    await deleteBookBatch(selectedRows.value.map(r => r.id))
+    await deleteBookBatch(selectedRows.value.map((r: { id: string }) => r.id))
     ElMessage.success('删除成功')
     loadData()
   } catch (error) {

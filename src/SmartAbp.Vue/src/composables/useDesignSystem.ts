@@ -285,7 +285,7 @@ export function useDesignSystem(): UseDesignSystemReturn {
   
   const preloadAllThemes = (): void => {
     if ('requestIdleCallback' in window) {
-      ;(window as any).requestIdleCallback(() => {
+      (window as any).requestIdleCallback(() => {
         THEMES.forEach(themeConfig => {
           if (themeConfig.value !== theme.value) {
             preloadTheme(themeConfig.value)
