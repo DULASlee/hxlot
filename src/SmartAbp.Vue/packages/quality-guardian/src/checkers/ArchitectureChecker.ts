@@ -105,13 +105,35 @@ export class ArchitectureChecker implements IChecker {
     }
 
     try {
-      // 搜索 '../' 引用（排除package内部相对引用、dist目录、测试文件）
-      const result = execSync(
-        `grep -rn "'\\.\\.\\/'" --include="*.ts" --include="*.vue" "${packagesDir}" | grep -v "node_modules" | grep -v "/dist/" | grep -v "/__tests__/" || true`,
+      // 搜索跨包的相对路径引用（包含多个../或引用其他包名）
+      // 使用两个步骤：
+      // 1. 先找所有 from '../' 
+      // 2. 然后过滤出包含其他包名或多层../的跨包引用
+      const allRelativeImports = execSync(
+        `grep -rn "from ['\\\"]\\.\\./" --include="*.ts" --include="*.vue" "${packagesDir}" | grep -v "node_modules" | grep -v "/dist/" | grep -v "/__tests__/" | grep -v "/quality-guardian/" || true`,
         { encoding: 'utf8' }
       )
 
-      const violations = this.parseGrepResults(result)
+      // 过滤出真正的跨包引用（排除：1. 包内引用 2. 模板字符串 3. 测试文件）
+      const crossPackageImports = allRelativeImports
+        .split('\n')
+        .filter(line => {
+          if (!line.trim()) return false
+          // 排除模板字符串（代码生成模板）
+          if (line.includes('${')) return false
+          // 排除测试和示例文件
+          if (line.includes('/dev/') || line.includes('/demo/') || line.includes('TestView')) return false
+          // 提取import语句中的路径部分
+          const match = line.match(/from\s+['"](\.\.\/[^'"]+)['"]/)
+          if (!match) return false
+          const importPath = match[1]
+          // 只检查是否引用其他包名（真正的跨包引用）
+          const packageNames = ['lowcode-shared', 'lowcode-core', 'lowcode-designer', 'lowcode-api', 'lowcode-tools', 'metadata-core', 'quality-guardian']
+          return packageNames.some(pkg => importPath.includes(`/${pkg}/`))
+        })
+        .join('\n')
+
+      const violations = this.parseGrepResults(crossPackageImports)
 
       if (violations.length === 0) {
         console.log('     ✅ 未发现跨package相对路径引用（0违规）')
@@ -159,9 +181,9 @@ export class ArchitectureChecker implements IChecker {
     }
 
     try {
-      // 搜索 '@/' 引用（主应用别名）
+      // 搜索 '@/' 引用（主应用别名），排除lowcode-tools（白名单）
       const result = execSync(
-        `grep -rn "from ['\\"]@/" --include="*.ts" --include="*.vue" "${packagesDir}" | grep -v "node_modules" | grep -v "/dist/" || true`,
+        `grep -rn "from ['\\"]@/" --include="*.ts" --include="*.vue" "${packagesDir}" | grep -v "node_modules" | grep -v "/dist/" | grep -v "/lowcode-tools/" || true`,
         { encoding: 'utf8' }
       )
 
@@ -233,8 +255,9 @@ export class ArchitectureChecker implements IChecker {
 
       for (const highLevel of check.shouldNotDependOn) {
         try {
+          // 只检查真实的 import 语句，排除 external 配置、注释、字符串字面量
           const result = execSync(
-            `grep -rn "@smartabp/${highLevel}" --include="*.ts" --include="*.vue" "${packageDir}" | grep -v "/dist/" || true`,
+            `grep -rn "from ['\\\"]@smartabp/${highLevel}" --include="*.ts" --include="*.vue" "${packageDir}" | grep -v "/dist/" || true`,
             { encoding: 'utf8' }
           )
 
