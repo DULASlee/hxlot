@@ -7,7 +7,7 @@
  */
 
 export {
-  unifiedEventBus,
-  type UnifiedEventDataMap,
-  type EventSubscriptionToken,
-} from './UnifiedEventBus'
+  UnifiedEventBus as EventBus, UnifiedEventBus, unifiedEventBus, type EventSubscriptionToken, // 别名，方便使用
+  type UnifiedEventDataMap
+} from './UnifiedEventBus';
+

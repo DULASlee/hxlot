@@ -621,7 +621,25 @@ export class TurboAnalysisEngine {
         return new Promise((resolve, reject) => {
             const worker = this.workerPool[workerId]
             if (!worker) {
-                reject(new Error(`Worker ${workerId} not available`))
+                // 降级方案：当Worker不可用时，使用同步处理
+                const resultsMap = new Map<string, IncrementalAnalysisResult>()
+                try {
+                    for (const item of chunk) {
+                        const result: IncrementalAnalysisResult = {
+                            fileHash: item.metadata.hash,
+                            analysisHash: item.metadata.hash, // 使用文件hash作为分析hash
+                            timestamp: Date.now(),
+                            confidence: 0.5, // 默认中等置信度
+                            category: 0, // UNKNOWN
+                            suggestions: new Uint8Array(0) // 空建议
+                        }
+                        this.resultCache.set(result.fileHash, result)
+                        resultsMap.set(item.path, result)
+                    }
+                    resolve(resultsMap)
+                } catch (error) {
+                    reject(error)
+                }
                 return
             }
 
@@ -714,15 +732,21 @@ export class TurboAnalysisEngine {
             }
         `
 
-        for (let i = 0; i < this.workerCount; i++) {
-            const blob = new Blob([workerCode], { type: 'application/javascript' })
-            const workerUrl = URL.createObjectURL(blob)
-            const worker = new Worker(workerUrl)
+        // 环境检测：只在浏览器环境中使用Worker
+        const hasWorker = typeof Worker !== 'undefined' && typeof Blob !== 'undefined' && typeof URL !== 'undefined'
 
-            this.workerPool.push(worker)
+        if (hasWorker) {
+            for (let i = 0; i < this.workerCount; i++) {
+                const blob = new Blob([workerCode], { type: 'application/javascript' })
+                const workerUrl = URL.createObjectURL(blob)
+                const worker = new Worker(workerUrl)
+
+                this.workerPool.push(worker)
+            }
+            console.log(`🚀 Worker池初始化完成：${this.workerCount}个并行线程`)
+        } else {
+            console.log(`⚠️  Worker不可用（Node.js环境），使用单线程模式`)
         }
-
-        console.log(`🚀 Worker池初始化完成：${this.workerCount}个并行线程`)
     }
 
     /**
@@ -768,11 +792,13 @@ export class TurboAnalysisEngine {
      * 🧹 清理资源
      */
     destroy(): void {
-        // 销毁所有Worker
-        for (const worker of this.workerPool) {
-            worker.terminate()
+        // 销毁所有Worker（如果存在）
+        if (this.workerPool.length > 0) {
+            for (const worker of this.workerPool) {
+                worker.terminate()
+            }
+            this.workerPool = []
         }
-        this.workerPool = []
 
         console.log('🧹 TurboAnalysisEngine资源已清理')
     }

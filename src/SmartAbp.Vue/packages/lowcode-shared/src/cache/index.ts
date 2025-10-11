@@ -7,11 +7,10 @@
  */
 
 export {
-  UnifiedCacheManager,
-  type CacheConfig,
-  type CacheItem,
+  UnifiedCacheManager as Cache, UnifiedCacheManager, // 别名，方便使用
+  type CacheConfig, type CacheEvents, type CacheItem,
   type CacheStats,
   type CacheStrategy,
-  type SerializationMethod,
-  type CacheEvents,
-} from './UnifiedCacheManager'
+  type SerializationMethod
+} from './UnifiedCacheManager';
+

@@ -38,7 +38,7 @@
   "author": "SmartAbp Team",
   "license": "MIT",
   "scripts": {
-    "build": "tsc && tsc --project tsconfig.cjs.json",
+    "build": "tsc && tsc --project tsconfig.cjs.json && node scripts/copy-vue-files.mjs",
     "build:tsup": "tsup",
     "dev": "tsc --watch",
     "type-check": "tsc --noEmit",

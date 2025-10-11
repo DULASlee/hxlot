@@ -56,6 +56,14 @@ export function getSchemaVersion(): SchemaVersion {
 // ============================================================================
 
 /**
+ * 统一Schema - 主要Schema类型
+ * 
+ * 这是低代码引擎的核心数据结构，包含模块的完整定义
+ * @alias UnifiedModuleMetadata
+ */
+export type UnifiedSchema = UnifiedModuleMetadata
+
+/**
  * 统一模块元数据
  * 
  * 对应后端: ModuleMetadataDto (Dtos.cs)

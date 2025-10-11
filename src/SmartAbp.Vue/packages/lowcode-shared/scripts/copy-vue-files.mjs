@@ -1,49 +1,68 @@
-#!/usr/bin/env node
-
 /**
- * 复制.vue文件到dist目录
- * 因为tsc不处理.vue文件，需要手动复制
+ * 复制Vue文件到dist目录
+ * 
+ * 为什么需要这个脚本？
+ * - tsc不会复制非.ts文件
+ * - Vue组件文件需要在运行时可用
+ * - ESM和CJS都需要Vue文件
  */
 
-import { copyFileSync, mkdirSync, readdirSync, statSync } from 'fs'
+import { copyFileSync, existsSync, mkdirSync, readdirSync, statSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const projectRoot = join(__dirname, '..')
-const srcDir = join(projectRoot, 'src')
-const distEsmDir = join(projectRoot, 'dist/esm')
-const distCjsDir = join(projectRoot, 'dist/cjs')
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+const srcDir = join(__dirname, '../src')
+const esmDir = join(__dirname, '../dist/esm')
+const cjsDir = join(__dirname, '../dist/cjs')
 
 /**
- * 递归复制.vue文件
+ * 递归复制Vue文件
  */
-function copyVueFiles(srcPath, esmPath, cjsPath) {
-    const entries = readdirSync(srcPath)
+function copyVueFiles(sourceDir, targetDir) {
+    if (!existsSync(sourceDir)) {
+        return
+    }
+
+    const entries = readdirSync(sourceDir)
 
     for (const entry of entries) {
-        const srcFilePath = join(srcPath, entry)
-        const esmFilePath = join(esmPath, entry)
-        const cjsFilePath = join(cjsPath, entry)
-        const stat = statSync(srcFilePath)
+        const sourcePath = join(sourceDir, entry)
+        const targetPath = join(targetDir, entry)
+
+        const stat = statSync(sourcePath)
 
         if (stat.isDirectory()) {
-            // 创建目录
-            mkdirSync(esmFilePath, { recursive: true })
-            mkdirSync(cjsFilePath, { recursive: true })
             // 递归处理子目录
-            copyVueFiles(srcFilePath, esmFilePath, cjsFilePath)
+            if (!existsSync(targetPath)) {
+                mkdirSync(targetPath, { recursive: true })
+            }
+            copyVueFiles(sourcePath, targetPath)
         } else if (entry.endsWith('.vue')) {
-            // 复制.vue文件
-            copyFileSync(srcFilePath, esmFilePath)
-            copyFileSync(srcFilePath, cjsFilePath)
-            console.log(`✅ Copied: ${entry}`)
+            // 复制Vue文件
+            if (!existsSync(dirname(targetPath))) {
+                mkdirSync(dirname(targetPath), { recursive: true })
+            }
+            copyFileSync(sourcePath, targetPath)
+            console.log(`✅ 复制: ${sourcePath} -> ${targetPath}`)
         }
     }
 }
 
-// 执行复制
-console.log('🚀 Copying Vue files...')
-copyVueFiles(srcDir, distEsmDir, distCjsDir)
-console.log('✅ Vue files copied successfully!')
+console.log('📦 开始复制Vue文件...')
 
+// 复制到ESM目录
+if (existsSync(esmDir)) {
+    copyVueFiles(srcDir, esmDir)
+    console.log('✅ ESM目录Vue文件复制完成')
+}
+
+// 复制到CJS目录
+if (existsSync(cjsDir)) {
+    copyVueFiles(srcDir, cjsDir)
+    console.log('✅ CJS目录Vue文件复制完成')
+}
+
+console.log('🎉 Vue文件复制完成！')

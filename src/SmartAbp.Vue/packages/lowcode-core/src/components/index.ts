@@ -18,8 +18,8 @@ export { default as LcRuleToolbox } from './BusinessRuleDesigner/RuleToolbox.vue
 export { default as LcActionNode } from './BusinessRuleDesigner/nodes/ActionNode.vue'
 export { default as LcConditionNode } from './BusinessRuleDesigner/nodes/ConditionNode.vue'
 export { default as LcDecisionNode } from './BusinessRuleDesigner/nodes/DecisionNode.vue'
-export { default as LcEndNode } from './BusinessRuleDesigner/nodes/EndNode.vue'
-export { default as LcStartNode } from './BusinessRuleDesigner/nodes/StartNode.vue'
+export { default as LcEndNode } from './BusinessRuleDesigner/nodes/RuleEndNode.vue'
+export { default as LcStartNode } from './BusinessRuleDesigner/nodes/RuleStartNode.vue'
 
 // Page Builder Components
 export { default as LcPageBuilder } from './PageBuilder/PageBuilder.vue'
@@ -41,10 +41,10 @@ export { FormLinkageEngine as LcFormLinkageEngine } from './SmartFormBuilder/eng
 export { default as LcWorkflowDesigner } from './WorkflowDesigner/WorkflowDesigner.vue'
 
 // Workflow Nodes
-export { default as LcWorkflowEndNode } from './WorkflowDesigner/nodes/EndNode.vue'
 export { default as LcWorkflowGatewayNode } from './WorkflowDesigner/nodes/GatewayNode.vue'
-export { default as LcWorkflowStartNode } from './WorkflowDesigner/nodes/StartNode.vue'
 export { default as LcWorkflowTaskNode } from './WorkflowDesigner/nodes/TaskNode.vue'
+export { default as LcWorkflowEndNode } from './WorkflowDesigner/nodes/WorkflowEndNode.vue'
+export { default as LcWorkflowStartNode } from './WorkflowDesigner/nodes/WorkflowStartNode.vue'
 
 // Utility Components
 export { default as LcErrorBoundary } from './ErrorBoundary.vue'

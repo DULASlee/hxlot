@@ -15,12 +15,12 @@ export type {
 } from '@smartabp/metadata-core'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🔄 向后兼容：统一Schema类型系统 (逐步弃用)
+// 🔄 统一Schema类型系统
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export type {
   UnifiedApiResponse, UnifiedCodeGenerationConfig, UnifiedEntityDefinition,
   UnifiedEntityField,
-  UnifiedEntityRelationship, UnifiedEntityUIConfig, UnifiedFrontendConfig, UnifiedMenuConfig, UnifiedModuleMetadata, UnifiedPermissionConfig, UnifiedValidationRule, UnifiedValidationRuleType
+  UnifiedEntityRelationship, UnifiedEntityUIConfig, UnifiedFrontendConfig, UnifiedMenuConfig, UnifiedModuleMetadata, UnifiedPermissionConfig, UnifiedSchema, UnifiedValidationRule, UnifiedValidationRuleType
 } from './unified-schema.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -882,6 +882,12 @@ export function ValidateSchema(options?: {
 const globalValidator = new UnifiedSchemaValidator()
 
 /**
+ * 统一验证器实例（公开导出）
+ * @alias globalValidator
+ */
+export const unifiedValidator = globalValidator
+
+/**
  * 验证实体（便捷函数）
  */
 export const validateUnifiedEntity = (entity: UnifiedEntityDefinition) =>

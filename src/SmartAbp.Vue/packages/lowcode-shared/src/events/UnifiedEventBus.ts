@@ -349,6 +349,11 @@ class UnifiedEventBus {
 export const unifiedEventBus = UnifiedEventBus.getInstance()
 
 /**
+ * 导出类本身（方便测试和高级用法）
+ */
+export { UnifiedEventBus }
+
+/**
  * 便捷导出函数
  */
 export const { on, off, emit, clear, getStats } = unifiedEventBus

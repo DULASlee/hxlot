@@ -10,7 +10,7 @@
 // 🔥 核心验证器
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export {
-  SchemaValidationError, UnifiedSchemaValidator, ValidateSchema, getUnifiedEntityErrors, getValidationFeatureFlags, setValidationFeatureFlags, validateUnifiedEntities, validateUnifiedEntity,
+  SchemaValidationError, UnifiedSchemaValidator, ValidateSchema, getUnifiedEntityErrors, getValidationFeatureFlags, setValidationFeatureFlags, unifiedValidator, validateUnifiedEntities, validateUnifiedEntity,
   validateUnifiedModule, type ValidationError as UnifiedValidationError, type UnifiedValidationFeatureFlags, type ValidationPerformance as UnifiedValidationPerformance,
   // 🔥 阶段2：版本管理和兼容性检查
   // Note: checkEntityCompatibility and checkModuleCompatibility 在 unified-validator.ts 中导入但未重新导出
