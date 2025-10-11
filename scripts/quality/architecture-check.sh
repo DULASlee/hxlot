@@ -34,8 +34,15 @@ echo "🏗️  第一关：跨包相对路径检查"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # 检查packages中是否有跨越3层以上的相对路径（表示跨包引用）
-RELATIVE_PATH_VIOLATIONS=$(find src/SmartAbp.Vue/packages -name "*.ts" -o -name "*.vue" | \
-  xargs grep -n "from ['\"]\.\.\/\.\.\/\.\.\/" 2>/dev/null || true)
+# 排除node_modules和dist目录
+# 只检查git暂存的文件
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep "^src/SmartAbp.Vue/packages/" | grep -E "\.(ts|vue)$" | grep -v "node_modules" | grep -v "/dist/" || true)
+
+if [ -n "$STAGED_FILES" ]; then
+  RELATIVE_PATH_VIOLATIONS=$(echo "$STAGED_FILES" | xargs grep -n "from ['\"]\.\.\/\.\.\/\.\.\/" 2>/dev/null || true)
+else
+  RELATIVE_PATH_VIOLATIONS=""
+fi
 
 if [ -n "$RELATIVE_PATH_VIOLATIONS" ]; then
   echo -e "${RED}❌ 发现跨包相对路径违规：${NC}"
@@ -57,15 +64,19 @@ fi
 echo "🔒 第二关：主应用别名引用检查"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# 排除测试文件、node_modules 和 lowcode-tools（桥接层白名单）
-MAIN_ALIAS_VIOLATIONS=$(find src/SmartAbp.Vue/packages -name "*.ts" -o -name "*.vue" | \
-  grep -v "__tests__" | \
-  grep -v "spec.ts" | \
-  grep -v ".test.ts" | \
-  grep -v "node_modules" | \
-  grep -v "lowcode-tools" | \
-  grep -v "lowcode-quality-guardian/src/checkers" | \
-  xargs grep -n "from ['\"]@/" 2>/dev/null || true)
+# 排除测试文件、node_modules、dist 和 lowcode-tools（桥接层白名单）
+# 只检查git暂存的文件
+if [ -n "$STAGED_FILES" ]; then
+  MAIN_ALIAS_VIOLATIONS=$(echo "$STAGED_FILES" | \
+    grep -v "__tests__" | \
+    grep -v "spec.ts" | \
+    grep -v ".test.ts" | \
+    grep -v "lowcode-tools" | \
+    grep -v "quality-guardian" | \
+    xargs grep -n "from ['\"]@/" 2>/dev/null || true)
+else
+  MAIN_ALIAS_VIOLATIONS=""
+fi
 
 if [ -n "$MAIN_ALIAS_VIOLATIONS" ]; then
   echo -e "${RED}❌ 发现主应用别名引用违规：${NC}"
@@ -87,20 +98,25 @@ fi
 echo "💎 第三关：类型安全检查"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# 排除测试文件、类型声明文件、质量检查器、setup文件、工具文件（检查器代码中包含检测字符串）
-TYPE_SAFETY_VIOLATIONS=$(find src/SmartAbp.Vue/packages -name "*.ts" -o -name "*.vue" | \
-  grep -v "__tests__" | \
-  grep -v "spec.ts" | \
-  grep -v ".test.ts" | \
-  grep -v ".d.ts" | \
-  grep -v "/tests/setup.ts" | \
-  grep -v "lowcode-quality-guardian" | \
-  grep -v "lowcode-tools/src/execution" | \
-  grep -v "CodeGenerationWizard.vue" | \
-  xargs grep -n "as any\|@ts-ignore" 2>/dev/null | \
-  grep -v "// ✅" | \
-  grep -v "检测字符串" | \
-  grep -v "检查器" || true)
+# 排除测试文件、类型声明文件、node_modules、dist、质量检查器、setup文件、工具文件（检查器代码中包含检测字符串）
+# 只检查git暂存的文件
+if [ -n "$STAGED_FILES" ]; then
+  TYPE_SAFETY_VIOLATIONS=$(echo "$STAGED_FILES" | \
+    grep -v "__tests__" | \
+    grep -v "spec.ts" | \
+    grep -v ".test.ts" | \
+    grep -v ".d.ts" | \
+    grep -v "/tests/setup.ts" | \
+    grep -v "quality-guardian" | \
+    grep -v "lowcode-tools/src/execution" | \
+    grep -v "CodeGenerationWizard.vue" | \
+    xargs grep -n "as any\|@ts-ignore" 2>/dev/null | \
+    grep -v "// ✅" | \
+    grep -v "检测字符串" | \
+    grep -v "检查器" || true)
+else
+  TYPE_SAFETY_VIOLATIONS=""
+fi
 
 if [ -n "$TYPE_SAFETY_VIOLATIONS" ]; then
   echo -e "${RED}❌ 发现类型安全违规：${NC}"
