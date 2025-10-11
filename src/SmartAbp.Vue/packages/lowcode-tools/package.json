@@ -1,6 +1,6 @@
 {
   "name": "@smartabp/lowcode-tools",
-  "version": "7.0.0-alpha.1",
+  "version": "1.0.0",
   "description": "SmartAbp LowCode Development Tools",
   "type": "module",
   "main": "dist/index.js",
