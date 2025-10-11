@@ -3,8 +3,8 @@
     <div class="dashboard-header">
       <div class="header-content">
         <div class="header-text">
-          <h1><i class="fas fa-tachometer-alt header-icon" />{{ $t('dashboard.title') }}</h1>
-          <p>{{ $t('dashboard.welcome') }}</p>
+          <h1><i class="fas fa-tachometer-alt header-icon" />{{ t('dashboard.title') }}</h1>
+          <p>{{ t('dashboard.welcome') }}</p>
         </div>
         <div class="header-actions">
           <button
@@ -12,14 +12,14 @@
             @click="refreshDashboard"
           >
             <i class="fas fa-sync-alt" />
-            <span>{{ $t('dashboard.actions.refresh') }}</span>
+            <span>{{ t('dashboard.actions.refresh') }}</span>
           </button>
           <button
             class="header-btn"
             @click="exportReport"
           >
             <i class="fas fa-download" />
-            <span>{{ $t('dashboard.actions.export') }}</span>
+            <span>{{ t('dashboard.actions.export') }}</span>
           </button>
         </div>
       </div>
@@ -37,11 +37,11 @@
               1,234
             </div>
             <div class="stat-label">
-              {{ $t('dashboard.stats.totalUsers') }}
+              {{ t('dashboard.stats.totalUsers') }}
             </div>
             <div class="stat-trend">
               <i class="fas fa-arrow-up trend-up" />
-              <span>+12% {{ $t('dashboard.trends.thisMonth') }}</span>
+              <span>+12% {{ t('dashboard.trends.thisMonth') }}</span>
             </div>
           </div>
         </div>
@@ -55,11 +55,11 @@
               56
             </div>
             <div class="stat-label">
-              {{ $t('dashboard.stats.totalProjects') }}
+              {{ t('dashboard.stats.totalProjects') }}
             </div>
             <div class="stat-trend">
               <i class="fas fa-arrow-up trend-up" />
-              <span>+3 {{ $t('dashboard.trends.thisWeek') }}</span>
+              <span>+3 {{ t('dashboard.trends.thisWeek') }}</span>
             </div>
           </div>
         </div>
@@ -73,11 +73,11 @@
               89%
             </div>
             <div class="stat-label">
-              {{ $t('dashboard.stats.systemHealth') }}
+              {{ t('dashboard.stats.systemHealth') }}
             </div>
             <div class="stat-trend">
               <i class="fas fa-arrow-down trend-down" />
-              <span>-2% {{ $t('dashboard.trends.today') }}</span>
+              <span>-2% {{ t('dashboard.trends.today') }}</span>
             </div>
           </div>
         </div>
@@ -91,11 +91,11 @@
               2,456
             </div>
             <div class="stat-label">
-              {{ $t('dashboard.stats.todayLogs') }}
+              {{ t('dashboard.stats.todayLogs') }}
             </div>
             <div class="stat-trend">
               <i class="fas fa-arrow-up trend-up" />
-              <span>+156 {{ $t('dashboard.trends.today') }}</span>
+              <span>+156 {{ t('dashboard.trends.today') }}</span>
             </div>
           </div>
         </div>
@@ -103,38 +103,38 @@
 
       <!-- 快速操作 -->
       <div class="quick-actions">
-        <h2><i class="fas fa-bolt" />{{ $t('dashboard.quickActions.title') }}</h2>
+        <h2><i class="fas fa-bolt" />{{ t('dashboard.quickActions.title') }}</h2>
         <div class="action-grid">
           <button
             class="action-btn"
-            @click="$router.push('/Admin/users')"
+            @click="router.push('/Admin/users')"
           >
             <i class="fas fa-users" />
             <div class="action-content">
-              <span class="action-title">{{ $t('dashboard.quickActions.userManagement') }}</span>
-              <span class="action-desc">{{ $t('dashboard.quickActions.userManagementDesc') }}</span>
+              <span class="action-title">{{ t('dashboard.quickActions.userManagement') }}</span>
+              <span class="action-desc">{{ t('dashboard.quickActions.userManagementDesc') }}</span>
             </div>
           </button>
 
           <button
             class="action-btn"
-            @click="$router.push('/Project')"
+            @click="router.push('/Project')"
           >
             <i class="fas fa-project-diagram" />
             <div class="action-content">
-              <span class="action-title">{{ $t('dashboard.quickActions.projectManagement') }}</span>
-              <span class="action-desc">{{ $t('dashboard.quickActions.projectManagementDesc') }}</span>
+              <span class="action-title">{{ t('dashboard.quickActions.projectManagement') }}</span>
+              <span class="action-desc">{{ t('dashboard.quickActions.projectManagementDesc') }}</span>
             </div>
           </button>
 
           <button
             class="action-btn"
-            @click="$router.push('/Log')"
+            @click="router.push('/Log')"
           >
             <i class="fas fa-file-alt" />
             <div class="action-content">
-              <span class="action-title">{{ $t('dashboard.quickActions.systemLogs') }}</span>
-              <span class="action-desc">{{ $t('dashboard.quickActions.systemLogsDesc') }}</span>
+              <span class="action-title">{{ t('dashboard.quickActions.systemLogs') }}</span>
+              <span class="action-desc">{{ t('dashboard.quickActions.systemLogsDesc') }}</span>
             </div>
           </button>
 
@@ -144,30 +144,30 @@
           >
             <i class="fas fa-palette" />
             <div class="action-content">
-              <span class="action-title">{{ $t('dashboard.quickActions.themeTest') }}</span>
-              <span class="action-desc">{{ $t('dashboard.quickActions.themeTestDesc') }}</span>
+              <span class="action-title">{{ t('dashboard.quickActions.themeTest') }}</span>
+              <span class="action-desc">{{ t('dashboard.quickActions.themeTestDesc') }}</span>
             </div>
           </button>
 
           <button
             class="action-btn"
-            @click="$router.push('/Admin/settings')"
+            @click="router.push('/Admin/settings')"
           >
             <i class="fas fa-cog" />
             <div class="action-content">
-              <span class="action-title">{{ $t('dashboard.quickActions.systemSettings') }}</span>
-              <span class="action-desc">{{ $t('dashboard.quickActions.systemSettingsDesc') }}</span>
+              <span class="action-title">{{ t('dashboard.quickActions.systemSettings') }}</span>
+              <span class="action-desc">{{ t('dashboard.quickActions.systemSettingsDesc') }}</span>
             </div>
           </button>
 
           <button
             class="action-btn"
-            @click="$router.push('/Admin/permissions')"
+            @click="router.push('/Admin/permissions')"
           >
             <i class="fas fa-shield-alt" />
             <div class="action-content">
-              <span class="action-title">{{ $t('dashboard.quickActions.permissionManagement') }}</span>
-              <span class="action-desc">{{ $t('dashboard.quickActions.permissionManagementDesc') }}</span>
+              <span class="action-title">{{ t('dashboard.quickActions.permissionManagement') }}</span>
+              <span class="action-desc">{{ t('dashboard.quickActions.permissionManagementDesc') }}</span>
             </div>
           </button>
         </div>
@@ -175,34 +175,34 @@
 
       <!-- 系统状态 -->
       <div class="system-status">
-        <h2><i class="fas fa-server" />{{ $t('dashboard.systemStatus.title') }}</h2>
+        <h2><i class="fas fa-server" />{{ t('dashboard.systemStatus.title') }}</h2>
         <div class="status-list">
           <div class="status-item">
             <div class="status-icon">
               <i class="fas fa-database" />
             </div>
             <div class="status-info">
-              <span class="status-name">{{ $t('dashboard.systemStatus.databaseConnection') }}</span>
+              <span class="status-name">{{ t('dashboard.systemStatus.databaseConnection') }}</span>
               <div class="status-indicator success" />
             </div>
-            <span class="status-value success">{{ $t('dashboard.systemStatus.statusNormal') }}</span>
+            <span class="status-value success">{{ t('dashboard.systemStatus.statusNormal') }}</span>
           </div>
           <div class="status-item">
             <div class="status-icon">
               <i class="fas fa-memory" />
             </div>
             <div class="status-info">
-              <span class="status-name">{{ $t('dashboard.systemStatus.cacheService') }}</span>
+              <span class="status-name">{{ t('dashboard.systemStatus.cacheService') }}</span>
               <div class="status-indicator success" />
             </div>
-            <span class="status-value success">{{ $t('dashboard.systemStatus.statusNormal') }}</span>
+            <span class="status-value success">{{ t('dashboard.systemStatus.statusNormal') }}</span>
           </div>
           <div class="status-item">
             <div class="status-icon">
               <i class="fas fa-hdd" />
             </div>
             <div class="status-info">
-              <span class="status-name">{{ $t('dashboard.systemStatus.diskSpace') }}</span>
+              <span class="status-name">{{ t('dashboard.systemStatus.diskSpace') }}</span>
               <div class="status-indicator warning" />
             </div>
             <span class="status-value warning">75%</span>
@@ -212,7 +212,7 @@
               <i class="fas fa-microchip" />
             </div>
             <div class="status-info">
-              <span class="status-name">{{ $t('dashboard.systemStatus.memoryUsage') }}</span>
+              <span class="status-name">{{ t('dashboard.systemStatus.memoryUsage') }}</span>
               <div class="status-indicator success" />
             </div>
             <span class="status-value success">45%</span>
@@ -226,9 +226,11 @@
 <script setup lang="ts">
 import { useThemeStore } from "@/stores"
 import { useI18n } from "vue-i18n"
+import { useRouter } from "vue-router"
 
 const themeStore = useThemeStore()
 const { t } = useI18n()
+const router = useRouter()
 
 const testTheme = () => {
   console.log(t('dashboard.messages.currentTheme'), themeStore.currentTheme)

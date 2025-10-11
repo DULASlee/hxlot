@@ -4,7 +4,7 @@
     <div class="page-header">
       <h1>
         <i class="fas fa-tachometer-alt" />
-        {{ $t('menu.performanceMonitor') }}
+        {{ t('menu.performanceMonitor') }}
       </h1>
       <p class="page-description">
         实时监控系统性能指标，分析Core Web Vitals和路由性能
@@ -142,11 +142,14 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 import { performanceMonitor } from '@/utils/performance/monitor'
 import CoreWebVitalsPanel from './performance/CoreWebVitalsPanel.vue'
 import NavigationTimingPanel from './performance/NavigationTimingPanel.vue'
 import RoutePerformancePanel from './performance/RoutePerformancePanel.vue'
 import RealTimeMonitorPanel from './performance/RealTimeMonitorPanel.vue'
+
+const { t } = useI18n()
 
 // 响应式数据
 const activeTab = ref('cwv')
