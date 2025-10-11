@@ -229,6 +229,8 @@ DocProject/Help/html
 
 # Click-Once directory
 publish/
+# 但保留发布脚本目录
+!scripts/publish/
 
 # Publish Web Output
 *.[Pp]ublish.xml
