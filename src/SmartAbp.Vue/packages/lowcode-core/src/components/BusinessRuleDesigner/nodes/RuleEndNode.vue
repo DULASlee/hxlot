@@ -38,7 +38,7 @@ import { VideoPause } from '@element-plus/icons-vue'
 import { Handle, Position } from '@vue-flow/core'
 import { ElIcon, ElTag } from 'element-plus'
 import { computed } from 'vue'
-import type { RuleNodeData } from './types'
+import type { RuleNodeData } from '../../../types/business-rule'
 import { isRuleEndNodeData as isEndNodeData } from '../../../types/business-rule'
 
 interface Props {

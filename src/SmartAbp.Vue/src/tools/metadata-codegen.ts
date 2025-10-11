@@ -12,8 +12,8 @@ import { fileURLToPath } from 'node:url'
 import chalk from 'chalk'
 // ✅ 从TypeScript源码导入（相对路径，不带后缀）
 // 为确保 CLI 运行稳定，这里直接引用已构建的 dist 产物
-import type { EntityMetadata, ModuleMetadata } from '../../packages/metadata-core/dist/index.js'
-import { validateEntityMetadataAsync, validateModuleMetadataAsync } from '../../packages/metadata-core/dist/index.js'
+import type { EntityMetadata, ModuleMetadata } from '@smartabp/metadata-core'
+import { validateEntityMetadataAsync, validateModuleMetadataAsync } from '@smartabp/metadata-core'
 import { FrontendCodeGenerator } from './generators/frontend-generator'
 import { BackendCodeGenerator } from './generators/backend-generator'
 
