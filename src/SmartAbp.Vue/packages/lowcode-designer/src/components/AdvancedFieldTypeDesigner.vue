@@ -520,10 +520,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import { type EntityField } from '@smartabp/lowcode-core'
 import { logger } from '@smartabp/lowcode-tools'
+import { ElMessage } from 'element-plus'
+import { computed, onMounted, ref } from 'vue'
+type EntityField = import('@smartabp/lowcode-core').EntityField
 
 // Props
 interface Props {

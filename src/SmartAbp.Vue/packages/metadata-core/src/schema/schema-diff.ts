@@ -9,7 +9,7 @@
  * - 生成补丁(Patch)
  */
 
-import type { EntityMetadata } from '@smartabp/lowcode-shared'
+import type { EntityMetadata } from '../types/index.js'
 
 // ========================================
 // 差异类型定义
@@ -69,51 +69,51 @@ export function diffEntitySchema(
   const removals: FieldDiff[] = []
   const modifications: FieldDiff[] = []
   let unchangedCount = 0
-  
+
   // 对比基础字段
   const baseFields: Array<keyof EntityMetadata> = [
     'name', 'module', 'keyType', 'description', 'aggregate',
     'isAggregateRoot', 'isMultiTenant', 'isSoftDelete', 'hasExtraProperties'
   ]
-  
+
   for (const field of baseFields) {
     const oldValue = oldSchema[field]
     const newValue = newSchema[field]
-    
+
     if (oldValue === undefined && newValue !== undefined) {
       additions.push({
         operation: 'ADD',
-        path: field,
+        path: String(field),
         newValue,
-        description: `新增字段 '${field}'`
+        description: `新增字段 '${String(field)}'`
       })
     } else if (oldValue !== undefined && newValue === undefined) {
       removals.push({
         operation: 'REMOVE',
-        path: field,
+        path: String(field),
         oldValue,
-        description: `删除字段 '${field}'`
+        description: `删除字段 '${String(field)}'`
       })
     } else if (oldValue !== newValue) {
       modifications.push({
         operation: 'MODIFY',
-        path: field,
+        path: String(field),
         oldValue,
         newValue,
-        description: `修改字段 '${field}'`
+        description: `修改字段 '${String(field)}'`
       })
     } else if (oldValue !== undefined) {
       unchangedCount++
     }
   }
-  
+
   // 对比属性列表
   const propertyDiffs = diffPropertyList(oldSchema.properties, newSchema.properties)
   additions.push(...propertyDiffs.additions)
   removals.push(...propertyDiffs.removals)
   modifications.push(...propertyDiffs.modifications)
   unchangedCount += propertyDiffs.unchangedCount
-  
+
   return {
     hasChanges: additions.length > 0 || removals.length > 0 || modifications.length > 0,
     additions,
@@ -136,20 +136,20 @@ export function diffEntitySchema(
 function diffPropertyList(
   oldProperties: any[],
   newProperties: any[]
-): { 
-  additions: FieldDiff[], 
-  removals: FieldDiff[], 
+): {
+  additions: FieldDiff[],
+  removals: FieldDiff[],
   modifications: FieldDiff[],
-  unchangedCount: number 
+  unchangedCount: number
 } {
   const additions: FieldDiff[] = []
   const removals: FieldDiff[] = []
   const modifications: FieldDiff[] = []
   let unchangedCount = 0
-  
+
   const oldPropMap = new Map(oldProperties.map(p => [p.name, p]))
   const newPropMap = new Map(newProperties.map(p => [p.name, p]))
-  
+
   // 检查删除的属性
   for (const [name, oldProp] of oldPropMap) {
     if (!newPropMap.has(name)) {
@@ -161,7 +161,7 @@ function diffPropertyList(
       })
     }
   }
-  
+
   // 检查新增的属性
   for (const [name, newProp] of newPropMap) {
     if (!oldPropMap.has(name)) {
@@ -173,17 +173,17 @@ function diffPropertyList(
       })
     }
   }
-  
+
   // 检查修改的属性
   for (const [name, oldProp] of oldPropMap) {
     const newProp = newPropMap.get(name)
     if (!newProp) continue
-    
+
     const propDiffs = diffObject(oldProp, newProp, `properties.${name}`)
     modifications.push(...propDiffs.modifications)
     unchangedCount += propDiffs.unchangedCount
   }
-  
+
   return { additions, removals, modifications, unchangedCount }
 }
 
@@ -197,14 +197,14 @@ function diffObject(
 ): { modifications: FieldDiff[], unchangedCount: number } {
   const modifications: FieldDiff[] = []
   let unchangedCount = 0
-  
+
   const allKeys = new Set([...Object.keys(oldObj), ...Object.keys(newObj)])
-  
+
   for (const key of allKeys) {
     const oldValue = oldObj[key]
     const newValue = newObj[key]
     const path = `${basePath}.${key}`
-    
+
     if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
       modifications.push({
         operation: 'MODIFY',
@@ -217,7 +217,7 @@ function diffObject(
       unchangedCount++
     }
   }
-  
+
   return { modifications, unchangedCount }
 }
 
@@ -230,10 +230,10 @@ function diffObject(
  */
 export function generateChangelog(diff: SchemaDiff, version: string): string {
   const lines: string[] = []
-  
+
   lines.push(`## [${version}] - ${new Date().toISOString().split('T')[0]}`)
   lines.push('')
-  
+
   if (diff.additions.length > 0) {
     lines.push('### 新增 (Added)')
     lines.push('')
@@ -242,7 +242,7 @@ export function generateChangelog(diff: SchemaDiff, version: string): string {
     })
     lines.push('')
   }
-  
+
   if (diff.modifications.length > 0) {
     lines.push('### 变更 (Changed)')
     lines.push('')
@@ -251,7 +251,7 @@ export function generateChangelog(diff: SchemaDiff, version: string): string {
     })
     lines.push('')
   }
-  
+
   if (diff.removals.length > 0) {
     lines.push('### 删除 (Removed)')
     lines.push('')
@@ -260,7 +260,7 @@ export function generateChangelog(diff: SchemaDiff, version: string): string {
     })
     lines.push('')
   }
-  
+
   return lines.join('\n')
 }
 
@@ -285,27 +285,27 @@ export function mergeSchemas<T extends Record<string, any>>(
   options: MergeOptions = { strategy: 'merge' }
 ): T {
   const result = { ...base }
-  
+
   for (const key in incoming) {
     const baseValue = base[key]
     const incomingValue = incoming[key]
-    
+
     // 如果base没有该字段，直接添加
     if (baseValue === undefined) {
       result[key] = incomingValue
       continue
     }
-    
+
     // 如果incoming没有该字段，保留base
     if (incomingValue === undefined) {
       continue
     }
-    
+
     // 如果值相同，无需合并
     if (JSON.stringify(baseValue) === JSON.stringify(incomingValue)) {
       continue
     }
-    
+
     // 根据策略合并
     switch (options.strategy) {
       case 'ours':
@@ -326,7 +326,7 @@ export function mergeSchemas<T extends Record<string, any>>(
         break
     }
   }
-  
+
   return result
 }
 
@@ -341,9 +341,9 @@ export function generateDiffSummary(diff: SchemaDiff): string {
   if (!diff.hasChanges) {
     return '✅ 无变更'
   }
-  
+
   const parts: string[] = []
-  
+
   if (diff.additions.length > 0) {
     parts.push(`+${diff.additions.length}新增`)
   }
@@ -353,7 +353,7 @@ export function generateDiffSummary(diff: SchemaDiff): string {
   if (diff.removals.length > 0) {
     parts.push(`-${diff.removals.length}删除`)
   }
-  
+
   return parts.join(', ')
 }
 
@@ -362,7 +362,7 @@ export function generateDiffSummary(diff: SchemaDiff): string {
  */
 export function filterDiffByPath(diff: SchemaDiff, pathPrefix: string): SchemaDiff {
   const filterFn = (d: FieldDiff) => d.path.startsWith(pathPrefix)
-  
+
   return {
     hasChanges: diff.hasChanges,
     additions: diff.additions.filter(filterFn),

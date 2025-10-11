@@ -21,7 +21,40 @@ const logger = getGlobalLogger()
  * 业务规则引擎Store
  * 企业级状态管理，支持持久化、缓存、实时更新
  */
-export const useBusinessRuleStore = defineStore('businessRule', () => {
+export const useBusinessRuleStore = defineStore('businessRule', (): {
+    businessRules: typeof businessRules,
+    selectedRules: typeof selectedRules,
+    stats: typeof stats,
+    availableEntities: typeof availableEntities,
+    entityFieldsMap: typeof entityFieldsMap,
+    executionLog: typeof executionLog,
+    loading: typeof loading,
+    queryInput: typeof queryInput,
+    pagination: typeof pagination,
+    activeRules: typeof activeRules,
+    errorRules: typeof errorRules,
+    ruleTypeStats: typeof ruleTypeStats,
+    hasSelectedRules: typeof hasSelectedRules,
+    todayStats: typeof todayStats,
+    fetchRuleList: (refresh?: boolean) => Promise<any>,
+    createRule: typeof createRule,
+    updateRule: typeof updateRule,
+    deleteRule: typeof deleteRule,
+    executeRules: typeof executeRules,
+    validateRule: typeof validateRule,
+    validateAllRules: typeof validateAllRules,
+    fetchStats: () => Promise<any>,
+    fetchAvailableEntities: () => Promise<any>,
+    fetchEntityFields: (entityName: string) => Promise<any>,
+    duplicateRule: typeof duplicateRule,
+    setSelectedRules: typeof setSelectedRules,
+    clearSelectedRules: typeof clearSelectedRules,
+    setQueryInput: typeof setQueryInput,
+    resetQueryInput: typeof resetQueryInput,
+    clearExecutionLog: typeof clearExecutionLog,
+    refresh: typeof refresh,
+    initialize: typeof initialize
+} => {
     // ============================================================================
     // 状态定义
     // ============================================================================

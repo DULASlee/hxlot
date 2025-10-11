@@ -268,8 +268,12 @@ export class VirtualAssembly {
 
         // 动态import加载组件
         // 使用动态导入函数（TypeScript限制：import()必须是字面量，这里使用Function构造器）
-        const dynamicImport = new Function('path', 'return import(path)') as import('../types/global').DynamicImport
-        const module = await dynamicImport(/* @vite-ignore */ metadata.path)
+        type DynamicImport = (path: string) => Promise<Record<string, unknown>>
+        const dynamicImport = new Function('path', 'return import(path)') as DynamicImport
+        
+        // 根据bundle和组件名生成路径
+        const componentPath = `${metadata.bundle}/components/${name}.vue`
+        const module = await dynamicImport(/* @vite-ignore */ componentPath)
 
         // 性能统计
         if (this.options.enablePerformanceMonitoring) {

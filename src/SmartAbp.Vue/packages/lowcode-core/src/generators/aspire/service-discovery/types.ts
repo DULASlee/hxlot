@@ -66,5 +66,32 @@ export interface ServiceInstance {
   port: number
   secure: boolean
   metadata?: Record<string, string>
-  health?: 'healthy' | 'unhealthy' | 'unknown'
+  health?: 'healthy' | 'unhealthy' | 'unknown' | 'UP' | 'DOWN'
+  weight?: number
+  version?: string
 }
+
+export interface ConsulServiceDiscoveryConfig {
+  provider: 'consul'
+  consul: { host: string; port: number; tags?: string[] }
+  loadBalancingStrategy?: 'round_robin' | 'weighted_round_robin'
+  healthCheckInterval?: number
+}
+
+export interface EurekaServiceDiscoveryConfig {
+  provider: 'eureka'
+  eureka: { serviceUrl: string }
+  loadBalancingStrategy?: 'round_robin' | 'weighted_round_robin'
+  healthCheckInterval?: number
+}
+
+export type LoadBalancer = any
+
+export interface ServiceDiscoveryConfig {
+  provider: 'consul' | 'eureka'
+  loadBalancingStrategy?: 'round_robin' | 'weighted_round_robin'
+  healthCheckInterval?: number
+}
+
+export type ServiceFilter = { type: string; conditions: Record<string, any> }
+

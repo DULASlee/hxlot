@@ -74,8 +74,8 @@ export abstract class BaseComponent {
   private observers = new Set<{ disconnect: () => void }>();
   /** 性能指标 */
   private performanceMetrics: ComponentPerformanceMetrics;
-  /** WeakRef引用映射 */
-  private weakRefs = new Set<WeakRef<any>>();
+  /** WeakRef引用映射（在不支持WeakRef环境下以轻量包装对象代替） */
+  private weakRefs = new Set<any>();
 
   constructor(name: string, id?: string) {
     this.name = name;
@@ -90,7 +90,7 @@ export abstract class BaseComponent {
 
     // 注册到全局组件管理器
     GlobalComponentManager.getInstance().register(this);
-    
+
     console.log(`🏗️ 组件创建: ${this.name} (${this.id})`);
     this.emitLifecycleEvent('lifecycle:created');
   }
@@ -108,7 +108,7 @@ export abstract class BaseComponent {
   get metrics(): ComponentPerformanceMetrics {
     return {
       ...this.performanceMetrics,
-      totalLifetime: this.performanceMetrics.destroyedAt 
+      totalLifetime: this.performanceMetrics.destroyedAt
         ? this.performanceMetrics.destroyedAt - this.performanceMetrics.createdAt
         : Date.now() - this.performanceMetrics.createdAt
     };
@@ -203,9 +203,9 @@ export abstract class BaseComponent {
 
     const cleanupTime = Date.now() - startTime;
     console.log(`✅ 组件销毁完成: ${this.name} (清理耗时: ${cleanupTime}ms)`);
-    
-    this.emitLifecycleEvent('lifecycle:destroyed', { 
-      cleanupCount: this.performanceMetrics.cleanupTaskCount 
+
+    this.emitLifecycleEvent('lifecycle:destroyed', {
+      cleanupCount: this.performanceMetrics.cleanupTaskCount
     });
   }
 
@@ -233,7 +233,7 @@ export abstract class BaseComponent {
       // DOM事件监听
       const boundListener = listener.bind(this);
       element.addEventListener(event as string, boundListener as (event: Event) => void, options);
-      
+
       // 添加清理任务
       this.addCleanupTask(() => {
         element.removeEventListener(event as string, boundListener as (event: Event) => void, options);
@@ -251,7 +251,7 @@ export abstract class BaseComponent {
    * 安全创建定时器
    */
   protected createTimer(callback: () => void, delay: number, repeat = false): number | ReturnType<typeof setInterval> {
-    const timer = repeat 
+    const timer = repeat
       ? setInterval(callback, delay)
       : setTimeout(callback, delay);
 
@@ -286,10 +286,11 @@ export abstract class BaseComponent {
   }
 
   /**
-   * 创建WeakRef引用
+   * 创建WeakRef引用（在不支持WeakRef的环境下使用轻量包装对象）
    */
-  protected createWeakRef<T extends object>(target: T): WeakRef<T> {
-    const weakRef = new WeakRef(target);
+  protected createWeakRef<T extends object>(target: T): any {
+    const WeakRefCtor: any = (globalThis as any).WeakRef
+    const weakRef: any = WeakRefCtor ? new WeakRefCtor(target) : { deref: () => target }
     this.weakRefs.add(weakRef);
 
     // 添加清理任务
@@ -462,7 +463,7 @@ export abstract class BaseComponent {
  */
 class GlobalComponentManager {
   private static instance: GlobalComponentManager;
-  private components = new Map<string, WeakRef<BaseComponent>>();
+  private components = new Map<string, any>();
   private eventListeners = new Map<string, Set<Function>>();
   private performanceStats = {
     totalCreated: 0,
@@ -489,7 +490,9 @@ class GlobalComponentManager {
    * 注册组件
    */
   register(component: BaseComponent): void {
-    this.components.set(component.id, new WeakRef(component));
+    const WeakRefCtor: any = (globalThis as any).WeakRef
+    const weakRef: any = WeakRefCtor ? new WeakRefCtor(component) : { deref: () => component }
+    this.components.set(component.id, weakRef);
     this.performanceStats.totalCreated++;
     this.updatePeakConcurrentComponents();
   }
@@ -508,7 +511,7 @@ class GlobalComponentManager {
   getActiveComponentCount(): number {
     let count = 0;
     this.components.forEach(weakRef => {
-      const component = weakRef.deref();
+      const component = weakRef && typeof weakRef.deref === 'function' ? weakRef.deref() : undefined;
       if (component && component.state !== 'destroyed') {
         count++;
       }
@@ -531,7 +534,7 @@ class GlobalComponentManager {
     const cleanupPromises: Promise<void>[] = [];
 
     this.components.forEach(weakRef => {
-      const component = weakRef.deref();
+      const component = weakRef && typeof weakRef.deref === 'function' ? weakRef.deref() : undefined;
       if (component && component.state !== 'destroyed') {
         cleanupPromises.push(component.destroy());
       }
@@ -574,7 +577,7 @@ class GlobalComponentManager {
   private cleanupWeakRefs(): void {
     const toDelete: string[] = [];
     this.components.forEach((weakRef, id) => {
-      if (!weakRef.deref()) {
+      if (!(weakRef && typeof weakRef.deref === 'function' && weakRef.deref())) {
         toDelete.push(id);
       }
     });
@@ -612,12 +615,12 @@ export function getGlobalComponentManager(): GlobalComponentManager {
  */
 export function createComponentPerformanceMonitor() {
   const manager = getGlobalComponentManager();
-  
+
   // 监听生命周期事件
   manager.on('lifecycle:created', (data: ComponentLifecycleEvents['lifecycle:created']) => {
     console.log(`📊 组件创建: ${data.component.name}`);
   });
-  
+
   manager.on('lifecycle:destroyed', (data: ComponentLifecycleEvents['lifecycle:destroyed']) => {
     const metrics = data.component.metrics;
     console.log(`📊 组件销毁: ${data.component.name}, 生命周期: ${metrics.totalLifetime}ms, 清理任务: ${data.cleanupCount}`);

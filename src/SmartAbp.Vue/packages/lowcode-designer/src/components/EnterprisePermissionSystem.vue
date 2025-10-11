@@ -877,13 +877,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-  Lock, Plus, Key, Upload, Search, Edit, Delete, Check, RefreshLeft,
-  UserFilled, View, Document, Refresh, Download, Close
+    Check,
+    Close,
+    Delete,
+    Document,
+    Download,
+    Edit,
+    Key,
+    Lock, Plus,
+    Refresh,
+    RefreshLeft,
+    Search,
+    Upload,
+    UserFilled, View
 } from '@element-plus/icons-vue'
 import { eventBus } from '@smartabp/lowcode-tools'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { computed, onMounted, ref } from 'vue'
 
 // 🛡️ 权限系统接口定义
 export interface Role {
@@ -1493,7 +1504,9 @@ const importPermissions = () => {
 onMounted(() => {
   // 初始化第一个角色
   if (allRoles.value.length > 0) {
-    selectedRole.value = allRoles.value[0]
+    selectedRole.value = allRoles.value[0] || null
+  } else {
+    selectedRole.value = null
   }
 })
 </script>

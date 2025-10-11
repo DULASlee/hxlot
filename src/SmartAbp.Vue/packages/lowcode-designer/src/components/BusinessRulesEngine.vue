@@ -452,14 +452,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { ref } from 'vue';
 import type {
-  BusinessRulesEngineProps,
-  BusinessRule,
-  RuleCondition,
-  RuleAction
-} from '@smartabp/lowcode-designer/types'
+    BusinessRule,
+    BusinessRulesEngineProps,
+    RuleAction,
+    RuleCondition
+} from '../types/designer';
 
 // Props
 const props = withDefaults(defineProps<BusinessRulesEngineProps>(), {

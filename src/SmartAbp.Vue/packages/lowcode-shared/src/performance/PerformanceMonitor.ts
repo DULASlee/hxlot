@@ -248,15 +248,18 @@ export class PerformanceMonitor {
     }
 
     this.memoryTimer = setInterval(() => {
-      this.record({
-        type: 'memory',
-        duration: 0,
-        metadata: {
-          used: performance.memory.usedJSHeapSize,
-          total: performance.memory.totalJSHeapSize,
-          limit: performance.memory.jsHeapSizeLimit
-        }
-      })
+      // performance.memory在某些浏览器中可能不可用
+      if (performance.memory) {
+        this.record({
+          type: 'memory',
+          duration: 0,
+          metadata: {
+            used: performance.memory.usedJSHeapSize,
+            total: performance.memory.totalJSHeapSize,
+            limit: performance.memory.jsHeapSizeLimit
+          }
+        })
+      }
     }, this.options.memorySampleInterval)
   }
 

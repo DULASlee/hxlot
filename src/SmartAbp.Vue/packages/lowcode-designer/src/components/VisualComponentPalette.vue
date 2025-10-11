@@ -156,13 +156,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus';
+import { computed, ref } from 'vue';
 import type {
-  VisualComponentPaletteProps,
-  PaletteComponent,
-  ComponentPaletteCategory
-} from '@smartabp/lowcode-designer/types'
+    ComponentPaletteCategory,
+    PaletteComponent,
+    VisualComponentPaletteProps
+} from '../types/designer';
 
 // Props
 const props = withDefaults(defineProps<VisualComponentPaletteProps>(), {

@@ -303,14 +303,14 @@
               width="80"
             >
               <template #default="scope">
-                <el-input-number
-                  v-if="needsLength(scope.row.type)"
-                  v-model="scope.row.length"
-                  size="small"
-                  :min="1"
-                  :max="5000"
-                  @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
-                />
+                  <el-input-number
+                    v-if="needsLength(scope.row.type)"
+                    v-model="scope.row.length"
+                    size="small"
+                    :min="1"
+                    :max="5000"
+                    @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
+                  />
               </template>
             </el-table-column>
             <el-table-column
@@ -481,7 +481,7 @@
                 <el-select
                   v-model="scope.row.fieldName"
                   size="small"
-                  @change="() => autoSaveEntity(selectedEntity)"
+                  @change="() => { if (selectedEntity) autoSaveEntity(selectedEntity) }"
                 >
                   <el-option
                     v-for="field in selectedEntity.fields"
@@ -501,7 +501,7 @@
                 <el-select
                   v-model="scope.row.ruleType"
                   size="small"
-                  @change="() => autoSaveEntity(selectedEntity)"
+                  @change="() => { if (selectedEntity) autoSaveEntity(selectedEntity) }"
                 >
                   <el-option
                     label="长度限制"
@@ -535,7 +535,7 @@
                 <el-input
                   v-model="scope.row.ruleValue"
                   size="small"
-                  @blur="() => autoSaveEntity(selectedEntity)"
+                  @blur="() => { if (selectedEntity) autoSaveEntity(selectedEntity) }"
                 />
               </template>
             </el-table-column>
@@ -547,7 +547,7 @@
                 <el-input
                   v-model="scope.row.errorMessage"
                   size="small"
-                  @blur="() => autoSaveEntity(selectedEntity)"
+                  @blur="() => { if (selectedEntity) autoSaveEntity(selectedEntity) }"
                 />
               </template>
             </el-table-column>
@@ -632,19 +632,19 @@
           <el-form-item label="实体名">
             <el-input 
               v-model="selectedEntity.name" 
-              @blur="() => autoSaveEntity(selectedEntity)"
+              @blur="() => selectedEntity && autoSaveEntity(selectedEntity)"
             />
           </el-form-item>
           <el-form-item label="表名">
             <el-input 
               v-model="selectedEntity.tableName" 
-              @blur="() => autoSaveEntity(selectedEntity)"
+              @blur="() => selectedEntity && autoSaveEntity(selectedEntity)"
             />
           </el-form-item>
           <el-form-item label="显示名">
             <el-input 
               v-model="selectedEntity.displayName" 
-              @blur="() => autoSaveEntity(selectedEntity)"
+              @blur="() => selectedEntity && autoSaveEntity(selectedEntity)"
             />
           </el-form-item>
           <el-form-item label="描述">
@@ -652,13 +652,13 @@
               v-model="selectedEntity.description"
               type="textarea"
               :rows="3"
-              @blur="() => autoSaveEntity(selectedEntity)"
+              @blur="() => selectedEntity && autoSaveEntity(selectedEntity)"
             />
           </el-form-item>
           <el-form-item label="分类">
             <el-select 
               v-model="selectedEntity.category"
-              @change="() => autoSaveEntity(selectedEntity)"
+              @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
             >
               <el-option
                 label="核心实体"
@@ -681,19 +681,19 @@
           <el-form-item label="启用软删除">
             <el-checkbox 
               v-model="selectedEntity.enableSoftDelete" 
-              @change="() => autoSaveEntity(selectedEntity)"
+              @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
             />
           </el-form-item>
           <el-form-item label="启用审计">
             <el-checkbox 
               v-model="selectedEntity.enableAudit" 
-              @change="() => autoSaveEntity(selectedEntity)"
+              @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
             />
           </el-form-item>
           <el-form-item label="启用多租户">
             <el-checkbox 
               v-model="selectedEntity.enableMultiTenant" 
-              @change="() => autoSaveEntity(selectedEntity)"
+              @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
             />
           </el-form-item>
         </el-form>
@@ -1199,17 +1199,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue"
-import { ElMessage, ElMessageBox } from "element-plus"
 import { useEntityModelingStore, type EntityDefinition, type EntityField } from "@smartabp/lowcode-core"
 import { getGlobalLogger } from "@smartabp/lowcode-shared"
-
-const logger = getGlobalLogger()
+import { ElMessage, ElMessageBox } from "element-plus"
+import { computed, onMounted, ref } from "vue"
 import AdvancedEntityRelationshipDesigner from './components/AdvancedEntityRelationshipDesigner.vue'
 import AdvancedFieldTypeDesigner from './components/AdvancedFieldTypeDesigner.vue'
 import BusinessRulesEngine from './components/BusinessRulesEngine.vue'
 import DataDictionaryManager from './components/DataDictionaryManager.vue'
 import EnterpriseModelingAssistant from './components/EnterpriseModelingAssistant.vue'
+
+const logger = getGlobalLogger()
 
 // Store
 const store = useEntityModelingStore()
@@ -1548,7 +1548,8 @@ const deleteEntity = async (entityId: string) => {
 
     // 重置选中状态
     if (selectedEntityId.value === entityId) {
-      selectedEntityId.value = entities.value.length > 0 ? entities.value[0].id : ""
+      const first = entities.value[0]
+      selectedEntityId.value = first ? first.id : ""
     }
 
     ElMessage.success(`实体 "${entity.displayName || entity.name}" 删除成功`)
@@ -2034,14 +2035,16 @@ onMounted(() => {
       }
     ).then(() => {
       presetEntities.forEach(preset => addPresetEntity(preset))
-      if (entities.value.length > 0) {
-        selectedEntityId.value = entities.value[0].id
+      const first = entities.value[0]
+      if (first) {
+        selectedEntityId.value = first.id
       }
     }).catch(() => {
       // 用户选择手动创建
     })
   } else if (entities.value.length > 0) {
-    selectedEntityId.value = entities.value[0].id
+    const first = entities.value[0]
+    if (first) selectedEntityId.value = first.id
   }
 })
 </script>

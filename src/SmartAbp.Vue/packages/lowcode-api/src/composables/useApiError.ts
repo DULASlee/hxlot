@@ -247,7 +247,7 @@ export function useApiError() {
   /**
    * 清理错误历史
    */
-  const clearErrorHistory = (olderThan?: number) => {
+  const clearErrorHistory = (olderThan?: Date) => {
     if (errorHandler?.clearErrors) {
       errorHandler.clearErrors(olderThan)
     }

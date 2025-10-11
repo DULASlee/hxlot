@@ -4,8 +4,8 @@
  */
 
 import { z } from 'zod'
-import type { ModuleMetadata } from '@smartabp/lowcode-shared'
-import { moduleErrorMap, formatErrorMessage } from './error-map'
+import type { ModuleMetadata } from '../types/index.js'
+import { formatErrorMessage, moduleErrorMap } from './error-map'
 
 // ========================================
 // Zod Schema定义
@@ -123,7 +123,7 @@ export const ModuleMetadataSchema = z.object({
     }
 
     const routeNames = collectRouteNames(data.routes)
-    const duplicateRoutes = routeNames.filter((name, index) => 
+    const duplicateRoutes = routeNames.filter((name, index) =>
         routeNames.indexOf(name) !== index
     )
     if (duplicateRoutes.length > 0) {
@@ -136,7 +136,7 @@ export const ModuleMetadataSchema = z.object({
 
     // 3. 检查顶层路由路径重复（嵌套路由的相对路径在不同父路由下可以相同）
     const topLevelPaths = data.routes.map(r => r.path)
-    const duplicateTopPaths = topLevelPaths.filter((path, index) => 
+    const duplicateTopPaths = topLevelPaths.filter((path, index) =>
         topLevelPaths.indexOf(path) !== index
     )
     if (duplicateTopPaths.length > 0) {
@@ -150,7 +150,7 @@ export const ModuleMetadataSchema = z.object({
 
     // 4. 检查Store名称重复
     const storeNames = data.stores.map(s => s.name)
-    const duplicateStores = storeNames.filter((name, index) => 
+    const duplicateStores = storeNames.filter((name, index) =>
         storeNames.indexOf(name) !== index
     )
     if (duplicateStores.length > 0) {

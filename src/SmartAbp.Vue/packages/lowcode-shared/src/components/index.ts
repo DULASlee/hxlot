@@ -2,11 +2,11 @@
 
 // 从 ComponentRegistry 导出（排除与types重复的类型）
 export {
-  ComponentRegistry, getComponentMetadata, globalComponentRegistry, loadComponent, registerComponent, type ComponentCategory, type ComponentMetadata
+  ComponentRegistry, getComponentMetadata, globalComponentRegistry, loadComponent, registerComponent, type ComponentMetadata
 } from './ComponentRegistry.js'
 export type {
   ComponentInstance,
-  ComponentLoadStats, LoadPriority
+  ComponentLoadStats
 } from './ComponentRegistry.js'
 
 // 从 BaseComponent 导出（排除与types重复的类型）

@@ -293,7 +293,7 @@ export class AutoComponentDiscoveryEngine {
                 path: filePath,
                 name: componentName,
                 sourceCode: file.content,
-                fileHash: analysisResult.fileHash?.toString() || '',
+                fileHash: String((analysisResult && analysisResult.fileHash) ?? ''),
                 discoveredAt: Date.now()
             })
 
@@ -310,7 +310,7 @@ export class AutoComponentDiscoveryEngine {
      */
     private extractComponentName(filePath: string): string | null {
         // 获取文件名（不含扩展名）
-        const fileName = filePath.split('/').pop()?.replace(/\.vue$/, '')
+        const fileName = (filePath && filePath.split('/').pop() || '').replace(/\.vue$/, '')
         if (!fileName) return null
 
         // 转换为PascalCase
@@ -362,7 +362,7 @@ export class AutoComponentDiscoveryEngine {
     private generateDisplayName(name: string, sourceCode: string): string {
         // 从注释中提取显示名称
         const commentMatch = sourceCode.match(/\/\*\*[\s\S]*?@name\s+([^\n\r]+)/i)
-        if (commentMatch) {
+        if (commentMatch && commentMatch[1]) {
             return commentMatch[1].trim()
         }
 
@@ -419,8 +419,9 @@ export class AutoComponentDiscoveryEngine {
         const importMatches = sourceCode.match(/import\s+.*?from\s+['"]([^'"]+)['"]/g) || []
         importMatches.forEach(match => {
             const moduleMatch = match.match(/from\s+['"]([^'"]+)['"]/)
-            if (moduleMatch && moduleMatch[1].startsWith('@smartabp/')) {
-                dependencies.push(moduleMatch[1])
+            const mod = moduleMatch ? moduleMatch[1] : ''
+            if (mod && mod.startsWith('@smartabp/')) {
+                dependencies.push(mod)
             }
         })
 
@@ -460,7 +461,7 @@ export class AutoComponentDiscoveryEngine {
             } catch (error) {
                 console.error('⚠️ 定时扫描出错:', error)
             }
-        }, this.config.scanIntervalMs)
+        }, this.config.scanIntervalMs) as unknown as number
     }
 
     /**
@@ -544,7 +545,7 @@ export class AutoComponentDiscoveryEngine {
                 return
             }
 
-            const file = { path: filePath, content: fileContent }
+            const file = { path: String(filePath), content: String(fileContent) }
 
             if (this.isValidComponentFile(file)) {
                 await this.batchAnalyzeAndRegister([file])

@@ -4,7 +4,7 @@
  */
 
 import { z } from 'zod'
-import type { AspireSolutionMetadata } from '@smartabp/lowcode-shared'
+import type { AspireSolutionMetadata } from '../types/index.js'
 import { aspireErrorMap, formatErrorMessage } from './error-map'
 
 // ========================================
@@ -114,7 +114,7 @@ export const AspireSolutionMetadataSchema = z.object({
     // 1. 检查微服务名称重复
     if (data.microservices.length > 0) {
         const serviceNames = data.microservices.map(s => s.name)
-        const duplicateServices = serviceNames.filter((name, index) => 
+        const duplicateServices = serviceNames.filter((name, index) =>
             serviceNames.indexOf(name) !== index
         )
         if (duplicateServices.length > 0) {
@@ -127,7 +127,7 @@ export const AspireSolutionMetadataSchema = z.object({
 
         // 2. 检查端口号重复
         const ports = data.microservices.map(s => s.port)
-        const duplicatePorts = ports.filter((port, index) => 
+        const duplicatePorts = ports.filter((port, index) =>
             ports.indexOf(port) !== index
         )
         if (duplicatePorts.length > 0) {

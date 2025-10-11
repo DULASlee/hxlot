@@ -1,6 +1,6 @@
 // 🚀 企业级模板引擎 - 基于21个模板文件构建完整的代码生成系统
 import { computed, ref } from 'vue';
-import type { TemplateFile } from '@smartabp/lowcode-shared/types/designer'
+import type { TemplateFile } from '../types/designer';
 
 // 模板参数接口
 export interface TemplateParameter {
@@ -626,9 +626,9 @@ export class TemplateEngine {
     }
 
     // 检查注释率
-    const commentLines = lines.filter(line => 
-      line.trim().startsWith('//') || 
-      line.trim().startsWith('/*') || 
+    const commentLines = lines.filter(line =>
+      line.trim().startsWith('//') ||
+      line.trim().startsWith('/*') ||
       line.trim().startsWith('*') ||
       line.trim().startsWith('<!--')
     ).length;
@@ -659,7 +659,7 @@ export class TemplateEngine {
         const whileCount = (content.match(/\bwhile\b/g) || []).length;
         const switchCount = (content.match(/\bswitch\b/g) || []).length;
         const complexity = ifCount + forCount + whileCount + switchCount;
-        
+
         if (complexity > 10) {
           issues.push({
             severity: 'warning',
@@ -707,7 +707,7 @@ export class TemplateEngine {
     }
 
     // 计算总分
-    const score = Math.max(0, Math.min(100, 
+    const score = Math.max(0, Math.min(100,
       (complexityScore + maintainabilityScore + testabilityScore) / 3
     ));
 
@@ -739,34 +739,34 @@ export class TemplateEngine {
     // Vue3 → React 转换示例
     if (fromFramework === 'vue3' && toFramework === 'react') {
       let converted = content;
-      
+
       // 转换ref
-      converted = converted.replace(/const\s+(\w+)\s*=\s*ref\((.*?)\)/g, 
+      converted = converted.replace(/const\s+(\w+)\s*=\s*ref\((.*?)\)/g,
         'const [$1, set$1] = useState($2)');
-      
+
       // 转换computed
       converted = converted.replace(/const\s+(\w+)\s*=\s*computed\(\(\)\s*=>\s*{/g,
         'const $1 = useMemo(() => {');
-      
+
       // 转换watch
       converted = converted.replace(/watch\(\(\)\s*=>\s*(\w+)\.value,\s*\(/g,
         'useEffect(() => {');
-      
+
       return converted;
     }
 
     // React → Vue3 转换示例
     if (fromFramework === 'react' && toFramework === 'vue3') {
       let converted = content;
-      
+
       // 转换useState
       converted = converted.replace(/const\s*\[(\w+),\s*set\w+\]\s*=\s*useState\((.*?)\)/g,
         'const $1 = ref($2)');
-      
+
       // 转换useMemo
       converted = converted.replace(/const\s+(\w+)\s*=\s*useMemo\(\(\)\s*=>\s*{/g,
         'const $1 = computed(() => {');
-      
+
       return converted;
     }
 

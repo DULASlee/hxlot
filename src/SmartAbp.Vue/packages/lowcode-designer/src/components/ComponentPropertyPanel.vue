@@ -242,9 +242,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import type { CanvasComponent, ComponentProperty } from '@smartabp/lowcode-designer/types'
+import { ref, watch } from 'vue'
+import type { CanvasComponent, ComponentProperty } from '../types/designer'
 
 // Props
 interface Props {
@@ -329,14 +329,14 @@ const initComponentProperties = (component: CanvasComponent) => {
     ]
   }
 
-  componentProperties.value = propertiesByType[component.type] || propertiesByType['default']
+  componentProperties.value = propertiesByType[component.type] || propertiesByType['default'] || []
 }
 
 // 处理属性变化
 const handlePropertyChange = (propName: string, propValue: any) => {
   if (!props.selectedComponent) return
   
-  const updatedComponent = {
+  const updatedComponent: import('../types/designer').CanvasComponent = {
     ...props.selectedComponent,
     props: {
       ...props.selectedComponent.props,
@@ -351,11 +351,23 @@ const handlePropertyChange = (propName: string, propValue: any) => {
 const handleStyleChange = () => {
   if (!props.selectedComponent) return
   
-  const updatedComponent = {
+  const base = props.selectedComponent.style
+  const allowedPositions = new Set(['fixed', 'absolute', 'relative'])
+  const desired = String((componentStyle.value as any).position || base.position)
+  const pos = (allowedPositions.has(desired) ? desired : base.position) as 'fixed' | 'absolute' | 'relative'
+  const next: import('../types/designer').CanvasComponentStyle = {
+    position: pos,
+    left: String(componentStyle.value.left ?? base.left ?? '0px'),
+    top: String(componentStyle.value.top ?? base.top ?? '0px'),
+    width: String(componentStyle.value.width ?? base.width ?? '100px'),
+    height: String(componentStyle.value.height ?? base.height ?? '100px')
+  }
+  
+  const updatedComponent: import('../types/designer').CanvasComponent = {
     ...props.selectedComponent,
     style: {
-      ...props.selectedComponent.style,
-      ...componentStyle.value
+      ...base,
+      ...next
     }
   }
   

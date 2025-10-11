@@ -435,12 +435,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue"
-import { ElMessage, ElMessageBox } from "element-plus"
 import { useEnhancedThemeStore } from '@smartabp/lowcode-core'
 import { logger } from '@smartabp/lowcode-tools'
+import { ElMessage, ElMessageBox } from "element-plus"
+import { computed, onMounted, ref } from "vue"
 
 const themeStore = useEnhancedThemeStore()
+// Ensure stricter value typing when updating theme variables under strict TS
+type UpdateVar = (k: string, v: string) => void
+const updateVar: UpdateVar = (themeStore.debouncedUpdate as unknown as UpdateVar)
 
 // === 响应式状态 ===
 const activeTab = ref("colors")
@@ -449,28 +452,28 @@ const fileInput = ref<HTMLInputElement>()
 // 颜色绑定
 const primaryColor = computed({
   get: () => themeStore.themeVariables["--theme-brand-primary"],
-  set: (value) => themeStore.debouncedUpdate("--theme-brand-primary", value)
+  set: (value) => updateVar("--theme-brand-primary", String(value ?? ""))
 })
 
 const successColor = computed({
   get: () => themeStore.themeVariables["--theme-brand-success"],
-  set: (value) => themeStore.debouncedUpdate("--theme-brand-success", value)
+  set: (value) => updateVar("--theme-brand-success", String(value ?? ""))
 })
 
 const warningColor = computed({
   get: () => themeStore.themeVariables["--theme-brand-warning"],
-  set: (value) => themeStore.debouncedUpdate("--theme-brand-warning", value)
+  set: (value) => updateVar("--theme-brand-warning", String(value ?? ""))
 })
 
 const dangerColor = computed({
   get: () => themeStore.themeVariables["--theme-brand-danger"],
-  set: (value) => themeStore.debouncedUpdate("--theme-brand-danger", value)
+  set: (value) => updateVar("--theme-brand-danger", String(value ?? ""))
 })
 
 // 字体绑定
 const baseFontSize = computed(() => {
-  const fontSize = themeStore.themeVariables["--font-size-base"]
-  return parseInt(fontSize.replace('rem', '')) * 16 // 转换为px显示
+  const fontSize = themeStore.themeVariables["--font-size-base"] || "1rem"
+  return parseInt(String(fontSize).replace('rem', '')) * 16 // 转换为px显示
 })
 
 const fontWeight = computed(() => {
@@ -482,56 +485,56 @@ const fontWeight = computed(() => {
 // 颜色变化处理
 const onColorChange = (variable: string, color: string) => {
   if (color) {
-    themeStore.debouncedUpdate(variable, color)
-    logger.debug(`Color changed: ${variable} = ${color}`)
+    updateVar(variable, String(color))
+    logger.debug(`Color changed: ${variable} = ${String(color)}`)
   }
 }
 
 // 间距变化处理
 const onSpacingChange = (level: number, value: number) => {
   const remValue = `${value / 16}rem`
-  themeStore.debouncedUpdate(`--spacing-${level}`, remValue)
+  updateVar(`--spacing-${level}`, remValue)
 }
 
 const getSpacingValue = (level: number): number => {
-  const remValue = themeStore.themeVariables[`--spacing-${level}`]
-  return parseFloat(remValue.replace('rem', '')) * 16
+  const remValue = themeStore.themeVariables[`--spacing-${level}`] || '0rem'
+  return parseFloat(String(remValue).replace('rem', '')) * 16
 }
 
 const getSpacingDisplay = (level: number): string => {
-  return themeStore.themeVariables[`--spacing-${level}`]
+  return themeStore.themeVariables[`--spacing-${level}`] || ''
 }
 
 // 字体变化处理
 const onFontSizeChange = (size: number) => {
   const remValue = `${size / 16}rem`
-  themeStore.debouncedUpdate("--font-size-base", remValue)
+  updateVar("--font-size-base", remValue)
 }
 
 const onFontWeightChange = (weight: string) => {
-  themeStore.debouncedUpdate("--font-weight-normal", weight)
+  updateVar("--font-weight-normal", String(weight ?? ""))
 }
 
 // 圆角变化处理
 const onRadiusChange = (level: string, value: number) => {
   const remValue = `${value / 16}rem`
-  themeStore.debouncedUpdate(`--radius-${level}`, remValue)
+  updateVar(`--radius-${level}`, remValue)
 }
 
 const getRadiusValue = (level: string): number => {
-  const remValue = themeStore.themeVariables[`--radius-${level}`]
-  return parseFloat(remValue.replace('rem', '')) * 16
+  const remValue = themeStore.themeVariables[`--radius-${level}`] || '0rem'
+  return parseFloat(String(remValue).replace('rem', '')) * 16
 }
 
 const getRadiusDisplay = (level: string): string => {
-  return themeStore.themeVariables[`--radius-${level}`]
+  return themeStore.themeVariables[`--radius-${level}`] || ''
 }
 
 // 阴影处理
 const onShadowOpacityChange = (level: string, opacity: number) => {
   // 这里简化处理，实际需要解析和修改阴影字符串中的透明度
   const shadowVar = `--shadow-${level}`
-  const currentShadow = themeStore.themeVariables[shadowVar]
+  const currentShadow = String(themeStore.themeVariables[shadowVar] || '')
 
   // 简单的透明度替换（实际应该用正则表达式）
   const newShadow = currentShadow.replace(
@@ -539,13 +542,13 @@ const onShadowOpacityChange = (level: string, opacity: number) => {
     `rgba(0, 0, 0, ${opacity / 100})`
   )
 
-  themeStore.debouncedUpdate(shadowVar, newShadow)
+  updateVar(shadowVar, String(newShadow ?? ''))
 }
 
 const getShadowOpacity = (level: string): number => {
-  const shadow = themeStore.themeVariables[`--shadow-${level}`]
-  const match = shadow.match(/rgba\(0, 0, 0, ([\d.]+)\)/)
-  return match ? parseFloat(match[1]) * 100 : 10
+  const shadow = themeStore.themeVariables[`--shadow-${level}`] || ''
+  const match = String(shadow).match(/rgba\(0, 0, 0, ([\d.]+)\)/)
+  return match ? parseFloat(match[1] ?? '0') * 100 : 10
 }
 
 const getShadowPreviewStyle = (level: string) => {
@@ -584,7 +587,7 @@ const getThemePreviewStyle = (themeId: string, colorType: string) => {
   }
 
   return {
-    backgroundColor: colorMap[themeId]?.[colorType] || '#ccc'
+    backgroundColor: (colorMap[String(themeId)] || {})[String(colorType)] || '#ccc'
   }
 }
 

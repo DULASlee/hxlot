@@ -15,7 +15,7 @@ export interface RuleCondition {
   operator: 'AND' | 'OR' | 'NOT'
   operands?: RuleCondition[]
 }
-import { ExpressionParser } from '@smartabp/lowcode-shared/utils/ruleExpressionParser'
+import { ExpressionParser } from '../utils/ruleExpressionParser'
 import { ActionExecutor } from './actionExecutor'
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
 

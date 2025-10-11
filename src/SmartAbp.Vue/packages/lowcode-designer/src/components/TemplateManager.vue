@@ -524,14 +524,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus';
+import { computed, ref, watch } from 'vue';
 import type {
-  TemplateManagerProps,
-  TemplateDefinition,
-  TemplateType,
-  TemplateCategory
-} from '@smartabp/lowcode-designer/types'
+    TemplateCategory,
+    TemplateDefinition,
+    TemplateManagerProps,
+    TemplateType
+} from '../types/designer';
 
 // Props
 const props = withDefaults(defineProps<TemplateManagerProps>(), {
@@ -596,9 +596,14 @@ const templates = ref<TemplateDefinition[]>([
     files: [
       {
         id: 'file_1',
+        name: 'Entity',
+        description: '实体类',
+        category: 'backend',
+        filePath: 'Entity.cs',
         path: 'Entity.cs',
         content: 'public class {{entityName}} : Entity<Guid> { }',
-        language: 'csharp'
+        language: 'csharp',
+        tags: []
       }
     ],
     icon: 'el-icon-document',
@@ -690,7 +695,7 @@ const handleSelectTemplate = (template: TemplateDefinition) => {
 const handlePreviewTemplate = (template: TemplateDefinition) => {
   currentTemplate.value = template
   if (template.files.length > 0) {
-    activeFileTab.value = template.files[0].id
+    activeFileTab.value = template.files[0]?.id || ''
   }
   previewDialogVisible.value = true
 }

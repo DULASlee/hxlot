@@ -498,14 +498,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-  Share, Plus, Upload, Download, Search, Edit, Delete, CircleCheck,
-  VideoPlay, Promotion, ZoomOut, ZoomIn, FullScreen, Grid,
-  // CircleClose - 未使用
+    CircleCheck,
+    Delete,
+    Download,
+    Edit,
+    FullScreen, Grid,
+    Plus,
+    Promotion,
+    Search,
+    Share,
+    Upload,
+    VideoPlay,
+    ZoomIn,
+    ZoomOut,
 } from '@element-plus/icons-vue'
 import { eventBus } from '@smartabp/lowcode-tools'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 // 🔄 工作流状态机接口
 export interface WorkflowNode {
@@ -1103,7 +1113,9 @@ const exportWorkflow = () => {
 onMounted(() => {
   // 初始化第一个工作流
   if (allWorkflows.value.length > 0) {
-    selectedWorkflow.value = allWorkflows.value[0]
+    selectedWorkflow.value = allWorkflows.value[0] || null
+  } else {
+    selectedWorkflow.value = null
   }
 })
 

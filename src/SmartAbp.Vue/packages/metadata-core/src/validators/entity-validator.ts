@@ -4,7 +4,7 @@
  */
 
 import { z } from 'zod'
-import type { EntityMetadata } from '@smartabp/lowcode-shared'
+import type { EntityMetadata } from '../types/index.js'
 import { entityErrorMap, formatErrorMessage } from './error-map'
 
 // ========================================
@@ -132,7 +132,7 @@ export const EntityMetadataSchema = z.object({
 
     // 1. 检查属性名重复
     const propertyNames = data.properties.map(p => p.name)
-    const duplicateProps = propertyNames.filter((name, index) => 
+    const duplicateProps = propertyNames.filter((name, index) =>
         propertyNames.indexOf(name) !== index
     )
     if (duplicateProps.length > 0) {
@@ -146,7 +146,7 @@ export const EntityMetadataSchema = z.object({
     // 2. 检查导航属性名重复
     if (data.navigationProperties && data.navigationProperties.length > 0) {
         const navPropNames = data.navigationProperties.map(p => p.name)
-        const duplicateNavProps = navPropNames.filter((name, index) => 
+        const duplicateNavProps = navPropNames.filter((name, index) =>
             navPropNames.indexOf(name) !== index
         )
         if (duplicateNavProps.length > 0) {
@@ -172,7 +172,7 @@ export const EntityMetadataSchema = z.object({
         // 特殊情况：只有当properties列表只包含单个'id'属性时，才强制检查foreignKey
         // 这是为了捕获明显的错误配置，同时允许ORM框架隐式管理外键的情况
         const isSingleIdProperty = data.properties.length === 1 && data.properties[0]?.name === 'id'
-        
+
         if (isSingleIdProperty) {
             data.navigationProperties.forEach((navProp, index) => {
                 if (navProp.foreignKey && !propNameSet.has(navProp.foreignKey)) {

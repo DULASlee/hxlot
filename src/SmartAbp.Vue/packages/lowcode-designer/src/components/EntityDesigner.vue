@@ -647,15 +647,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import type { 
-  EntityDesignerProps,
-  EntityDefinition,
-  EntityField,
-  EntityRelation,
-  FieldValidationRule
-} from '@smartabp/lowcode-designer/types'
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { reactive, ref, watch } from 'vue';
+import type {
+    EntityDefinition,
+    EntityDesignerProps,
+    EntityField,
+    EntityRelation,
+    FieldValidationRule
+} from '../types/designer';
 
 // Props
 const props = withDefaults(defineProps<EntityDesignerProps>(), {

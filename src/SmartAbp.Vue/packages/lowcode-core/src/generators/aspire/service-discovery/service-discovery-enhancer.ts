@@ -230,7 +230,7 @@ export class ServiceDiscoveryEnhancer {
             // 元数据过滤
             if (filter.type === 'metadata' && filter.conditions) {
                 for (const [key, value] of Object.entries(filter.conditions)) {
-                    if (instance.metadata[key] !== value) {
+                    if (!instance.metadata || instance.metadata[key] !== value) {
                         return false
                     }
                 }
@@ -273,7 +273,7 @@ export class ServiceDiscoveryEnhancer {
                 port: item.Service.Port,
                 secure: false,
                 metadata: item.Service.Meta || {},
-                health: item.Checks.every((c: any) => c.Status === 'passing') ? 'UP' : 'DOWN' as 'UP' | 'DOWN',
+                health: (item.Checks && item.Checks.every((c: any) => c.Status === 'passing')) ? 'UP' : 'DOWN' as 'UP' | 'DOWN',
                 weight: 1,
                 version: item.Service.Meta?.version || '1.0.0',
                 registrationTime: new Date(),
@@ -300,19 +300,21 @@ export class ServiceDiscoveryEnhancer {
 
             const instances = data.application?.instance || []
 
-            return instances.map(instance => ({
-                instanceId: instance.instanceId,
-                serviceName: instance.app,
-                host: instance.ipAddr,
-                port: instance.port['$'],
-                secure: instance.securePort?.['@enabled'] === 'true',
-                metadata: instance.metadata || {},
-                health: instance.status === 'UP' ? 'UP' : 'DOWN' as 'UP' | 'DOWN',
-                weight: 1,
-                version: instance.metadata?.version || '1.0.0',
-                registrationTime: new Date(),
-                lastHeartbeat: new Date()
-            }))
+            return instances
+                .filter(i => i.app && i.ipAddr && (i.port?.['$'] ?? 0) > 0)
+                .map(instance => ({
+                    instanceId: instance.instanceId,
+                    serviceName: instance.app as string,
+                    host: instance.ipAddr as string,
+                    port: instance.port?.['$'] ?? 0,
+                    secure: instance.securePort?.['@enabled'] === 'true',
+                    metadata: instance.metadata || {},
+                    health: instance.status === 'UP' ? 'UP' : 'DOWN' as 'UP' | 'DOWN',
+                    weight: 1,
+                    version: instance.metadata?.version || '1.0.0',
+                    registrationTime: new Date(),
+                    lastHeartbeat: new Date()
+                }))
         } catch (error) {
             console.error(`Failed to fetch from Eureka: ${error}`)
             return []

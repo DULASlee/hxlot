@@ -14,8 +14,9 @@ import type {
     NavigationPropertyMetadata,
     PropertyMetadata,
     RouteMetadata,
-    StoreMetadata
-} from '@smartabp/lowcode-shared'
+    StoreMetadata,
+    ValidationRule
+} from '../types/index.js'
 
 // ========================================
 // 后端DTO接口定义
@@ -290,8 +291,8 @@ export function toEntityMetadataDto(
         isMultiTenant: entity.isMultiTenant,
         isSoftDelete: entity.isSoftDelete,
         hasExtraProperties: entity.hasExtraProperties,
-        properties: entity.properties.map(prop => toPropertyMetadataDto(prop)),
-        navigationProperties: entity.navigationProperties?.map(nav => toNavigationPropertyMetadataDto(nav))
+        properties: entity.properties.map((prop: PropertyMetadata) => toPropertyMetadataDto(prop)),
+        navigationProperties: entity.navigationProperties?.map((nav: NavigationPropertyMetadata) => toNavigationPropertyMetadataDto(nav))
     }
 
     // 生成命名空间
@@ -347,7 +348,7 @@ export function toPropertyMetadataDto(property: PropertyMetadata): PropertyMetad
         defaultValue: property.defaultValue,
         description: property.description,
         columnName: property.name,
-        validationRules: property.validationRules?.map(rule => ({
+        validationRules: property.validationRules?.map((rule: ValidationRule) => ({
             name: rule.name,
             ruleType: rule.name,
             condition: rule.condition,
@@ -418,8 +419,8 @@ export function toModuleMetadataDto(
         abpStyle: module.abpStyle,
         order: module.order,
         dependsOn: module.dependsOn,
-        routes: module.routes?.map(route => toRouteMetadataDto(route)),
-        stores: module.stores?.map(store => toStoreMetadataDto(store)),
+        routes: module.routes?.map((route: RouteMetadata) => toRouteMetadataDto(route)),
+        stores: module.stores?.map((store: StoreMetadata) => toStoreMetadataDto(store)),
         policies: module.policies || []
     }
 
@@ -468,7 +469,7 @@ export function toRouteMetadataDto(route: RouteMetadata): RouteMetadataDto {
         httpMethod: 'GET',
         policies: route.meta?.requiresAuth ? [`${route.name}.Read`] : undefined,
         meta: route.meta,
-        children: route.children?.map(child => toRouteMetadataDto(child))
+        children: route.children?.map((child: RouteMetadata) => toRouteMetadataDto(child))
     }
 }
 
@@ -626,7 +627,7 @@ function generateIndexes(entity: EntityMetadata): IndexDto[] {
     const indexes: IndexDto[] = []
 
     // 为唯一属性创建索引
-    entity.properties.forEach(prop => {
+    entity.properties.forEach((prop: PropertyMetadata) => {
         if (prop.isUnique) {
             indexes.push({
                 name: `IX_${entity.name}_${prop.name}`,
@@ -662,7 +663,7 @@ function generateConstraints(entity: EntityMetadata): ConstraintDto[] {
     })
 
     // 外键约束（基于导航属性）
-    entity.navigationProperties?.forEach(nav => {
+    entity.navigationProperties?.forEach((nav: NavigationPropertyMetadata) => {
         if (nav.foreignKey && (nav.relationType === 'ManyToOne' || nav.relationType === 'OneToOne')) {
             constraints.push({
                 name: `FK_${entity.name}_${nav.targetEntity}_${nav.foreignKey}`,

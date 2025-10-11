@@ -10,10 +10,23 @@
 import { globalComponentRegistry } from '../components/ComponentRegistry'
 
 /**
+ * 架构违规记录
+ */
+export interface ArchitectureViolation {
+  type: string
+  message: string
+  componentName?: string
+  file?: string
+  line?: number
+  timestamp?: number
+  stack?: string
+}
+
+/**
  * 组件注册守护者
  */
 export class ComponentRegistryGuard {
-  
+
   /**
    * 增强VirtualAssembly以强制执行铁律2
    * 
@@ -25,37 +38,37 @@ export class ComponentRegistryGuard {
   enhanceVirtualAssembly() {
     // 注意：这个方法会在VirtualAssembly创建时调用
     // 实际的拦截逻辑已经在VirtualAssembly.ts中实现
-    
+
     // 这里我们添加额外的监控和统计
     this.setupMonitoring()
   }
-  
+
   /**
    * 设置监控
    */
   private setupMonitoring() {
     // 监控组件访问
     const originalGet = globalComponentRegistry.getMetadata.bind(globalComponentRegistry)
-    
+
     globalComponentRegistry.getMetadata = (name: string) => {
       const metadata = originalGet(name)
-      
+
       if (!metadata) {
         // 记录未注册组件的访问尝试
         this.logUnregisteredAccess(name)
       }
-      
+
       return metadata
     }
   }
-  
+
   /**
    * 记录未注册组件的访问
    */
   private logUnregisteredAccess(componentName: string) {
     const timestamp = new Date().toISOString()
     const stack = new Error().stack
-    
+
     console.error(`
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🚨 铁律2违规：未注册组件访问
@@ -97,7 +110,7 @@ export class ComponentRegistryGuard {
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     `)
-    
+
     // 统计未注册组件（用于后续分析）
     this.recordViolation({
       componentName,
@@ -105,7 +118,7 @@ export class ComponentRegistryGuard {
       stack
     })
   }
-  
+
   /**
    * 记录违规数据
    */
@@ -114,15 +127,27 @@ export class ComponentRegistryGuard {
     timestamp: string
     stack?: string
   }) {
+    // 构建完整的违规记录
+    const violation: ArchitectureViolation = {
+      type: 'UNREGISTERED_COMPONENT',
+      message: `组件 ${data.componentName} 未注册`,
+      componentName: data.componentName,
+      timestamp: Date.parse(data.timestamp),
+      stack: data.stack
+    }
+
     // 这里可以将数据发送到统计系统
     // 暂时只记录到console
-    if (typeof window !== 'undefined' && window.__ARCH_VIOLATIONS__) {
-      window.__ARCH_VIOLATIONS__.push(data)
-    } else if (typeof window !== 'undefined') {
-      window.__ARCH_VIOLATIONS__ = [data]
+    if (typeof window !== 'undefined') {
+      const w = window as unknown as { __ARCH_VIOLATIONS__?: any[] }
+      if (Array.isArray(w.__ARCH_VIOLATIONS__)) {
+        w.__ARCH_VIOLATIONS__!.push(violation)
+      } else {
+        w.__ARCH_VIOLATIONS__ = [violation]
+      }
     }
   }
-  
+
   /**
    * 生成注册代码
    */

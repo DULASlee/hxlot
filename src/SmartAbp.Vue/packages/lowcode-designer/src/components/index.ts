@@ -76,49 +76,24 @@
 
 // ✅ 已实现的核心组件
 export { default as LdBusinessRulesEngine } from './BusinessRulesEngine.vue'
-export { default as LdCodeGenerationWizard } from './CodeGenerationWizard.vue'
-export { default as LdCodePreviewPanel } from './CodePreviewPanel.vue'
+// export { default as LdCodeGenerationWizard } from './CodeGenerationWizard.vue'
+// export { default as LdCodePreviewPanel } from './CodePreviewPanel.vue'
 export { default as LdComponentPropertyPanel } from './ComponentPropertyPanel.vue'
 export { default as LdEntityDesigner } from './EntityDesigner.vue'
 export { default as LdTemplateManager } from './TemplateManager.vue'
 export { default as LdVisualComponentPalette } from './VisualComponentPalette.vue'
 export { default as LdVisualDesignCanvas } from './VisualDesignCanvas.vue'
 
-// ✅ Development Environment Components - 已注册到ComponentRegistry
-// export { default as LdDevEnvironmentSetup } from './devenv/DevEnvironmentSetup.vue'
-
-// ✅ Git Components - 已注册到ComponentRegistry
-// export { default as LdGitWorkflowPanel } from './git/GitWorkflowPanel.vue'
-
-// ✅ Resilience Components - 已注册到ComponentRegistry
-// export { default as LdBulkheadConfig } from './resilience/BulkheadConfig.vue'
-// export { default as LdCircuitBreakerConfig } from './resilience/CircuitBreakerConfig.vue'
-// export { default as LdFallbackConfig } from './resilience/FallbackConfig.vue'
-// export { default as LdRateLimitConfig } from './resilience/RateLimitConfig.vue'
-// export { default as LdResiliencePolicyDesigner } from './resilience/ResiliencePolicyDesigner.vue'
-// export { default as LdRetryPolicyConfig } from './resilience/RetryPolicyConfig.vue'
-
-// ✅ Security Dashboard Components - 已注册到ComponentRegistry
-// export { default as LdAbnormalUserBehaviorTable } from './SecurityDashboard/AbnormalUserBehaviorTable.vue'
-// export { default as LdComplianceStatusMonitor } from './SecurityDashboard/ComplianceStatusMonitor.vue'
-// export { default as LdPermissionAccessTrendChart } from './SecurityDashboard/PermissionAccessTrendChart.vue'
-// export { default as LdRiskLevelDistributionChart } from './SecurityDashboard/RiskLevelDistributionChart.vue'
-// export { default as LdSecurityDashboard } from './SecurityDashboard/SecurityDashboard.vue'
-// export { default as LdSecurityMetricCard } from './SecurityDashboard/SecurityMetricCard.vue'
-
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🚧 Utility exports - 待实现
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-// TODO: 实现拖拽引擎
-// export { default as dragDropEngine } from './dragDropEngine'
 
 /**
  * Auto-register all designer components for global usage
  */
 export function autoRegisterDesignerComponents(app: any): void {
   // Vite Glob Import 自动注册组件
-  const components = import.meta.glob?.('./**/*.vue', { eager: true }) || {}
+  const components = (import.meta as unknown as { glob?: <T = any>(p: string, o?: any) => Record<string, T> }).glob?.('./**/*.vue', { eager: true }) || {}
 
   Object.entries(components).forEach(([path, module]: [string, any]) => {
     const componentName = path

@@ -641,7 +641,7 @@
             <el-result
               icon="success"
               title="代码生成成功！"
-              :sub-title="`已生成 ${generatedFiles.length} 个文件`"
+              :sub-title="'已生成 ' + generatedFiles.length + ' 个文件'"
             >
               <template #extra>
                 <el-button 
@@ -1255,7 +1255,7 @@ ${entity.properties?.slice(0, 3).map((p: any) => `        <el-table-column prop=
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { ${entity.name}Api } from '@/api/${entity.name.toLowerCase()}'
+import { ${entity.name}Api } from '@' + '/api/${entity.name.toLowerCase()}'
 
 const list = ref([])
 
@@ -1300,6 +1300,11 @@ const finish = () => {
 const saveProgress = () => {
   ElMessage.success('进度已保存')
 }
+</script>
+
+<script lang="ts">
+// 供 TS 模块系统识别默认导出（SFC 默认已导出）
+export default {}
 </script>
 
 <style scoped lang="scss">

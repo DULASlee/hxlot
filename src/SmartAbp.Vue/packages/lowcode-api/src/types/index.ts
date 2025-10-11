@@ -344,14 +344,11 @@ export interface LowCodeEngineApi extends
 // ABP错误响应类型
 // ============================================================================
 export type {
-  AbpValidationError,
-  AbpErrorResponse,
-  AbpErrorData
+  AbpErrorData, AbpErrorResponse, AbpValidationError
 } from './error'
 
 export {
-  isAbpErrorResponse,
-  isAbpErrorData
+  isAbpErrorData, isAbpErrorResponse
 } from './error'
 
 // 注意：此文件仅包含类型和接口定义，不包含具体实现
