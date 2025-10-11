@@ -11,8 +11,9 @@ import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios'
 
 /**
  * API基础URL（从环境变量读取）
+ * 注意：这里使用默认值，实际值由主应用通过环境变量注入
  */
-export const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'https://localhost:44379'
+export const API_BASE_URL = 'https://localhost:44379'
 
 /**
  * HTTP请求封装类

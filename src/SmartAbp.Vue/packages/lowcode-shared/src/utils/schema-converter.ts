@@ -15,7 +15,7 @@ import type {
     UnifiedModuleMetadata,
     UnifiedValidationRule,
     UnifiedValidationRuleType,
-} from '@smartabp/lowcode-shared'
+} from '../types/unified-schema.js'
 
 /**
  * 后端DTO类型定义
@@ -409,7 +409,7 @@ export class SchemaConverter {
                 isEnabled: schema.featureManagement.isEnabled,
                 defaultPolicy: schema.featureManagement.defaultPolicy,
             },
-            entities: schema.entities.map(e => SchemaConverter.toBackendEntityDto(e)),
+            entities: schema.entities.map((e: UnifiedEntityDefinition) => SchemaConverter.toBackendEntityDto(e)),
             menuConfig: schema.menuConfig,
             permissionConfig: schema.permissionConfig,
             dependencies: schema.dependencies,
@@ -436,7 +436,7 @@ export class SchemaConverter {
             isMultiTenant: schema.isMultiTenant,
             baseClass: schema.baseClass,
             interfaces: schema.interfaces,
-            properties: schema.fields.map(f => SchemaConverter.toBackendPropertyDto(f)),
+            properties: schema.fields.map((f: UnifiedEntityField) => SchemaConverter.toBackendPropertyDto(f)),
             relationships: schema.relationships,
             tableName: schema.tableName,
             schema: schema.schema,
@@ -478,7 +478,7 @@ export class SchemaConverter {
             minValue: field.minValue,
             maxValue: field.maxValue,
             enumValues: field.enumValues,
-            validationRules: field.validationRules.map(r =>
+            validationRules: field.validationRules.map((r: UnifiedValidationRule) =>
                 SchemaConverter.toBackendValidationRuleDto(r)
             ),
             displayOrder: field.displayOrder,

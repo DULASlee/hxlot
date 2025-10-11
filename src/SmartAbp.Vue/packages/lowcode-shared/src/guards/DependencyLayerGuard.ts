@@ -9,7 +9,7 @@
  */
 
 import * as fs from 'fs'
-import { glob } from 'glob'
+import { glob as globSync } from 'glob'
 import * as path from 'path'
 
 export interface LayerConfig {
@@ -82,13 +82,13 @@ export class DependencyLayerGuard {
       if (!fs.existsSync(packagePath)) continue
 
       // 扫描package中的所有源文件
-      const files = await glob('src/**/*.{ts,vue}', {
-        cwd: packagePath,
+      const pattern = path.join(packagePath, 'src/**/*.{ts,vue}')
+      const files = globSync(pattern, {
         ignore: ['**/node_modules/**', '**/dist/**']
       })
 
       for (const file of files) {
-        const fullPath = path.join(packagePath, file)
+        const fullPath = file
         const content = fs.readFileSync(fullPath, 'utf-8')
         const imports = this.extractImports(content)
 

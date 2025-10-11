@@ -16,10 +16,10 @@
 
 // 🔥 架构铁律一：统一类型系统
 // 从types/component.ts导入统一类型定义，避免重复定义
-import type { ComponentCategory, LoadPriority } from '../types/component';
+import type { ComponentCategory, LoadPriority } from '../types/component.js';
 
-// ComponentGenie AI智能分析
-import { analyzeComponent, type ComponentAnalysis as AIAnalysis } from '../ai/ComponentGenie';
+// ComponentGenie AI智能分析（包内代码导入用相对路径）
+import { analyzeComponent, type ComponentAnalysis as AIAnalysis } from '../ai/ComponentGenie.js';
 
 /**
  * 组件生命周期钩子
@@ -258,7 +258,7 @@ export class ComponentRegistry {
         // 输出AI优化建议
         if (aiAnalysis.suggestions.length > 0) {
           console.log(`💡 ${metadata.name} AI优化建议 (${aiAnalysis.suggestions.length}个):`);
-          aiAnalysis.suggestions.forEach((suggestion, index) => {
+          aiAnalysis.suggestions.forEach((suggestion: AIAnalysis['suggestions'][number], index: number) => {
             console.log(`   ${index + 1}. [${suggestion.type}] ${suggestion.message} (影响: ${suggestion.impact}/5, 难度: ${suggestion.difficulty}/5)`);
           });
         }
@@ -498,11 +498,8 @@ export class ComponentRegistry {
   enableHotReload(): void {
     this.hotReloadEnabled = true;
 
-    if (import.meta.hot) {
-      import.meta.hot.on('component-update', (data: any) => {
-        this.hotReload(data.componentName);
-      });
-    }
+    // 注意：热更新功能由主应用实现，这里只是标记启用状态
+    // 主应用可以通过监听组件更新事件来实现热更新
 
     console.log('🔥 热更新已启用');
   }

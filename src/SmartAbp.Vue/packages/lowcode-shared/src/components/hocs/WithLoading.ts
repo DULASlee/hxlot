@@ -3,8 +3,8 @@
  * 为任何组件添加加载状态管理功能
  */
 
-import { defineComponent, h, ref, type Component } from 'vue';
 import type { BaseComponentProps } from '../../types/index.js';
+import { defineComponent, h, ref, type Component } from 'vue';
 
 /**
  * WithLoading Props扩展

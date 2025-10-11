@@ -2,34 +2,34 @@
   "name": "@smartabp/lowcode-core",
   "version": "1.0.0",
   "description": "SmartAbp LowCode Core Engine - State Management and Core Logic",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
     },
     "./generators": {
-      "types": "./dist/generators/index.d.ts",
-      "import": "./dist/generators/index.mjs",
-      "require": "./dist/generators/index.js"
+      "types": "./dist/esm/generators/index.d.ts",
+      "import": "./dist/esm/generators/index.js",
+      "require": "./dist/cjs/generators/index.js"
     },
     "./engines": {
-      "types": "./dist/engines/index.d.ts",
-      "import": "./dist/engines/index.mjs",
-      "require": "./dist/engines/index.js"
+      "types": "./dist/esm/engines/index.d.ts",
+      "import": "./dist/esm/engines/index.js",
+      "require": "./dist/cjs/engines/index.js"
     },
     "./security": {
-      "types": "./dist/security/index.d.ts",
-      "import": "./dist/security/index.mjs",
-      "require": "./dist/security/index.js"
+      "types": "./dist/esm/security/index.d.ts",
+      "import": "./dist/esm/security/index.js",
+      "require": "./dist/cjs/security/index.js"
     },
     "./testing": {
-      "types": "./dist/testing/index.d.ts",
-      "import": "./dist/testing/index.mjs",
-      "require": "./dist/testing/index.js"
+      "types": "./dist/esm/testing/index.d.ts",
+      "import": "./dist/esm/testing/index.js",
+      "require": "./dist/cjs/testing/index.js"
     }
   },
   "files": [
@@ -38,8 +38,9 @@
   "author": "SmartAbp Team",
   "license": "MIT",
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "tsc && tsc --project tsconfig.cjs.json",
+    "build:tsup": "tsup",
+    "dev": "tsc --watch",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist"
   },

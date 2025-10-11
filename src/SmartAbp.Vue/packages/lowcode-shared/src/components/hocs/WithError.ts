@@ -3,8 +3,8 @@
  * 为任何组件添加错误边界和错误处理功能
  */
 
-import { defineComponent, h, onErrorCaptured, ref, type Component } from 'vue';
 import type { BaseComponentProps } from '../../types/index.js';
+import { defineComponent, h, onErrorCaptured, ref, type Component } from 'vue';
 
 /**
  * WithError Props扩展

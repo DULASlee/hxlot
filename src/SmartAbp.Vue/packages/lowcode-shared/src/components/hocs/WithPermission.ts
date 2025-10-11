@@ -3,8 +3,8 @@
  * 为任何组件添加权限控制功能
  */
 
-import { computed, defineComponent, h, type Component } from 'vue';
 import type { BaseComponentProps } from '../../types/index.js';
+import { computed, defineComponent, h, type Component } from 'vue';
 
 /**
  * WithPermission Props扩展

@@ -16,29 +16,29 @@
   "author": "SmartAbp Team <team@smartabp.io>",
   "homepage": "https://github.com/smartabp/smartabp",
   "license": "MIT",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/esm/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "types": "./dist/esm/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/cjs/index.js"
     },
     "./validators": {
-      "types": "./dist/validators/index.d.ts",
-      "import": "./dist/validators/index.mjs",
-      "require": "./dist/validators/index.js"
+      "types": "./dist/esm/validators/index.d.ts",
+      "import": "./dist/esm/validators/index.js",
+      "require": "./dist/cjs/validators/index.js"
     },
     "./types": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/types/index.mjs",
-      "require": "./dist/types/index.js"
+      "types": "./dist/esm/types/index.d.ts",
+      "import": "./dist/esm/types/index.js",
+      "require": "./dist/cjs/types/index.js"
     },
     "./schema": {
-      "types": "./dist/schema/index.d.ts",
-      "import": "./dist/schema/index.mjs",
-      "require": "./dist/schema/index.js"
+      "types": "./dist/esm/schema/index.d.ts",
+      "import": "./dist/esm/schema/index.js",
+      "require": "./dist/cjs/schema/index.js"
     }
   },
   "files": [
@@ -60,9 +60,10 @@
     "url": "https://github.com/smartabp/smartabp/issues"
   },
   "scripts": {
-    "build": "tsup",
-    "build:watch": "tsup --watch",
-    "dev": "tsup --watch",
+    "build": "tsc && tsc --project tsconfig.cjs.json",
+    "build:tsup": "tsup",
+    "build:watch": "tsc --watch",
+    "dev": "tsc --watch",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

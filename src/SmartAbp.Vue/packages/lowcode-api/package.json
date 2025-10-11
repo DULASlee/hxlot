@@ -3,35 +3,36 @@
   "version": "1.0.0",
   "description": "SmartAbp LowCode API Layer",
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
     },
     "./http-client": {
       "types": "./dist/http-client/index.d.ts",
-      "import": "./dist/http-client/index.mjs",
-      "require": "./dist/http-client/index.js"
+      "import": "./dist/esm/http-client/index.js",
+      "require": "./dist/cjs/http-client/index.js"
     },
     "./generators": {
       "types": "./dist/generators/index.d.ts",
-      "import": "./dist/generators/index.mjs",
-      "require": "./dist/generators/index.js"
+      "import": "./dist/esm/generators/index.js",
+      "require": "./dist/cjs/generators/index.js"
     },
     "./composables": {
       "types": "./dist/composables/index.d.ts",
-      "import": "./dist/composables/index.mjs",
-      "require": "./dist/composables/index.js"
+      "import": "./dist/esm/composables/index.js",
+      "require": "./dist/cjs/composables/index.js"
     }
   },
   "sideEffects": false,
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "tsc && tsc --project tsconfig.cjs.json",
+    "build:tsup": "tsup",
+    "dev": "tsc --watch",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist"
   },

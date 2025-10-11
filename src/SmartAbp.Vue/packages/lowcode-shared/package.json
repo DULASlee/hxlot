@@ -3,92 +3,128 @@
   "version": "1.0.0",
   "description": "SmartAbp LowCode Engine Shared Library - Unified Schema v1.0.0 + Memory Safe Utilities",
   "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
     },
     "./validation": {
-      "types": "./dist/validation/index.d.ts",
-      "import": "./dist/validation/index.mjs",
-      "require": "./dist/validation/index.js"
+      "types": "./dist/esm/validation/index.d.ts",
+      "import": "./dist/esm/validation/index.js",
+      "require": "./dist/cjs/validation/index.js"
     },
     "./validation/adapter": {
-      "types": "./dist/validation/adapter.d.ts",
-      "import": "./dist/validation/adapter.mjs",
-      "require": "./dist/validation/adapter.js"
+      "types": "./dist/esm/validation/adapter.d.ts",
+      "import": "./dist/esm/validation/adapter.js",
+      "require": "./dist/cjs/validation/adapter.js"
     },
     "./version": {
-      "types": "./dist/version/index.d.ts",
-      "import": "./dist/version/index.mjs",
-      "require": "./dist/version/index.js"
+      "types": "./dist/esm/version/index.d.ts",
+      "import": "./dist/esm/version/index.js",
+      "require": "./dist/cjs/version/index.js"
     },
     "./cache": {
-      "types": "./dist/cache/index.d.ts",
-      "import": "./dist/cache/index.mjs",
-      "require": "./dist/cache/index.js"
+      "types": "./dist/esm/cache/index.d.ts",
+      "import": "./dist/esm/cache/index.js",
+      "require": "./dist/cjs/cache/index.js"
     },
     "./memory": {
-      "types": "./dist/memory/index.d.ts",
-      "import": "./dist/memory/index.mjs",
-      "require": "./dist/memory/index.js"
+      "types": "./dist/esm/memory/index.d.ts",
+      "import": "./dist/esm/memory/index.js",
+      "require": "./dist/cjs/memory/index.js"
     },
     "./events": {
-      "types": "./dist/events/index.d.ts",
-      "import": "./dist/events/index.mjs",
-      "require": "./dist/events/index.js"
+      "types": "./dist/esm/events/index.d.ts",
+      "import": "./dist/esm/events/index.js",
+      "require": "./dist/cjs/events/index.js"
     },
     "./logging": {
-      "types": "./dist/logging/index.d.ts",
-      "import": "./dist/logging/index.mjs",
-      "require": "./dist/logging/index.js"
+      "types": "./dist/esm/logging/index.d.ts",
+      "import": "./dist/esm/logging/index.js",
+      "require": "./dist/cjs/logging/index.js"
     },
     "./error": {
-      "types": "./dist/error/index.d.ts",
-      "import": "./dist/error/index.mjs",
-      "require": "./dist/error/index.js"
+      "types": "./dist/esm/error/index.d.ts",
+      "import": "./dist/esm/error/index.js",
+      "require": "./dist/cjs/error/index.js"
     },
     "./theme": {
-      "types": "./dist/theme/index.d.ts",
-      "import": "./dist/theme/index.mjs",
-      "require": "./dist/theme/index.js"
+      "types": "./dist/esm/theme/index.d.ts",
+      "import": "./dist/esm/theme/index.js",
+      "require": "./dist/cjs/theme/index.js"
     },
     "./components": {
-      "types": "./dist/components/index.d.ts",
-      "import": "./dist/components/index.mjs",
-      "require": "./dist/components/index.js"
+      "types": "./dist/esm/components/index.d.ts",
+      "import": "./dist/esm/components/index.js",
+      "require": "./dist/cjs/components/index.js"
+    },
+    "./components/*": {
+      "types": "./dist/esm/components/*.d.ts",
+      "import": "./dist/esm/components/*.js",
+      "require": "./dist/cjs/components/*.js"
     },
     "./composables": {
-      "types": "./dist/composables/index.d.ts",
-      "import": "./dist/composables/index.mjs",
-      "require": "./dist/composables/index.js"
+      "types": "./dist/esm/composables/index.d.ts",
+      "import": "./dist/esm/composables/index.js",
+      "require": "./dist/cjs/composables/index.js"
+    },
+    "./validators": {
+      "types": "./dist/esm/validators/index.d.ts",
+      "import": "./dist/esm/validators/index.js",
+      "require": "./dist/cjs/validators/index.js"
+    },
+    "./constants": {
+      "types": "./dist/esm/constants/index.d.ts",
+      "import": "./dist/esm/constants/index.js",
+      "require": "./dist/cjs/constants/index.js"
+    },
+    "./plugins": {
+      "types": "./dist/esm/plugins/index.d.ts",
+      "import": "./dist/esm/plugins/index.js",
+      "require": "./dist/cjs/plugins/index.js"
+    },
+    "./ai": {
+      "types": "./dist/esm/ai/index.d.ts",
+      "import": "./dist/esm/ai/index.js",
+      "require": "./dist/cjs/ai/index.js"
+    },
+    "./performance": {
+      "types": "./dist/esm/performance/index.d.ts",
+      "import": "./dist/esm/performance/index.js",
+      "require": "./dist/cjs/performance/index.js"
     },
     "./utils": {
-      "types": "./dist/utils/index.d.ts",
-      "import": "./dist/utils/index.mjs",
-      "require": "./dist/utils/index.js"
+      "types": "./dist/esm/utils/index.d.ts",
+      "import": "./dist/esm/utils/index.js",
+      "require": "./dist/cjs/utils/index.js"
     },
     "./types": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/types/index.mjs",
-      "require": "./dist/types/index.js"
+      "types": "./dist/esm/types/index.d.ts",
+      "import": "./dist/esm/types/index.js",
+      "require": "./dist/cjs/types/index.js"
+    },
+    "./types/*": {
+      "types": "./dist/esm/types/*.d.ts",
+      "import": "./dist/esm/types/*.js",
+      "require": "./dist/cjs/types/*.js"
     },
     "./i18n": {
-      "types": "./dist/i18n/index.d.ts",
-      "import": "./dist/i18n/index.mjs",
-      "require": "./dist/i18n/index.js"
+      "types": "./dist/esm/i18n/index.d.ts",
+      "import": "./dist/esm/i18n/index.js",
+      "require": "./dist/cjs/i18n/index.js"
     }
   },
   "sideEffects": false,
   "author": "SmartAbp Team",
   "license": "MIT",
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "tsc && tsc --project tsconfig.cjs.json && node scripts/copy-vue-files.mjs",
+    "build:tsup": "tsup",
+    "dev": "tsc --watch",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist"
   },

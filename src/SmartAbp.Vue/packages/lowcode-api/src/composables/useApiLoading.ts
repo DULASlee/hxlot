@@ -57,7 +57,7 @@ interface LoadingTracker {
  * 
  * @example
  * ```typescript
- * import { useApiLoading } from '@smartabp/lowcode-api'
+ * import { useApiLoading } from '../http-client.js'
  * 
  * const { isLoading, withLoading, startLoading, stopLoading } = useApiLoading()
  * 
@@ -280,7 +280,7 @@ export function useApiLoading() {
  * 
  * @example
  * ```typescript
- * import { createLoadingWrapper } from '@smartabp/lowcode-api'
+ * import { createLoadingWrapper } from '../http-client.js'
  * 
  * const callApiWithLoading = createLoadingWrapper({
  *   text: '正在处理...',

@@ -1,4 +1,4 @@
-import type { ModuleGenerationConfig, ModuleMetadata } from '@smartabp/lowcode-api'
+import type { ModuleGenerationConfig, ModuleMetadata } from '../index.js'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 /**

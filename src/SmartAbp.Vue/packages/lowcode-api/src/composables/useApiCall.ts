@@ -3,7 +3,7 @@
  * 整合错误处理和Loading管理，提供一站式API调用解决方案
  */
 
-import type { ApiError } from '@smartabp/lowcode-api'
+import type { ApiError } from '../http-client.js'
 import { ref, type Ref } from 'vue'
 import { useApiError, type ApiErrorDisplayOptions } from './useApiError'
 import { useApiLoading, type LoadingOptions } from './useApiLoading'
@@ -67,7 +67,7 @@ export interface ApiCallState<T> {
  * 
  * @example
  * ```typescript
- * import { useApiCall } from '@smartabp/lowcode-api'
+ * import { useApiCall } from '../http-client.js'
  * 
  * const { execute, isLoading, data, error } = useApiCall()
  * 
@@ -300,7 +300,7 @@ export function useApiCall<T = unknown>(): {
  * 
  * @example
  * ```typescript
- * import { createApiCall } from '@smartabp/lowcode-api'
+ * import { createApiCall } from '../http-client.js'
  * 
  * // 创建带默认Loading的API调用
  * const callWithLoading = createApiCall({
@@ -330,7 +330,7 @@ export function createApiCall(defaultOptions: ApiCallOptions = {}) {
  * 
  * @example
  * ```typescript
- * import { createCodeGenApiCall } from '@smartabp/lowcode-api'
+ * import { createCodeGenApiCall } from '../http-client.js'
  * 
  * const callCodeGenApi = createCodeGenApiCall()
  * 

@@ -64,7 +64,9 @@ export * from './BusinessRuleDesigner/types.js'
  * This enables components to be used without explicit import in templates
  */
 export function autoRegisterComponents(app: any): void {
-  const components = import.meta.glob('./**/*.vue', { eager: true })
+  // 注意：import.meta.glob是Vite特性，在库编译时不可用
+  // 主应用需要自行实现组件扫描
+  const components: Record<string, any> = {}
 
   Object.entries(components).forEach(([path, module]: [string, any]) => {
     const componentName = path

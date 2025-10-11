@@ -9,7 +9,7 @@ import { computed, reactive, readonly } from 'vue'
 import type {
     UnifiedEntityDefinition,
     UnifiedModuleMetadata
-} from '@smartabp/lowcode-shared'
+} from '../types/unified-schema.js'
 import {
     UnifiedSchemaValidator,
     type UnifiedValidationFeatureFlags,
@@ -333,8 +333,8 @@ export function useValidation(options: ValidationOptions = {}) {
                         duration,
                         startTime: startTime,
                         endTime: Date.now(),
-                        fieldCount: module.entities?.reduce((sum, entity) => sum + (entity.fields?.length || 0), 0) || 0,
-                        ruleCount: module.entities?.reduce((sum, entity) => sum + (entity.validationRules?.length || 0), 0) || 0
+                        fieldCount: module.entities?.reduce((sum: number, entity: UnifiedEntityDefinition) => sum + (entity.fields?.length || 0), 0) || 0,
+                        ruleCount: module.entities?.reduce((sum: number, entity: UnifiedEntityDefinition) => sum + (entity.validationRules?.length || 0), 0) || 0
                     }
 
                     // 缓存结果

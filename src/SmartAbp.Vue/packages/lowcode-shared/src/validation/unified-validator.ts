@@ -43,7 +43,7 @@ import {
 import type {
     UnifiedEntityDefinition,
     UnifiedModuleMetadata
-} from '@smartabp/lowcode-shared'
+} from '../types/unified-schema.js'
 
 import {
     convertEntityToMetadataCore,
@@ -302,7 +302,7 @@ export class UnifiedSchemaValidator {
             // 验证成功
             return this.createSuccessResult(entity, startTime, {
                 fieldCount: entity.fields.length,
-                ruleCount: entity.fields.reduce((sum, field) => sum + (field.validationRules?.length || 0), 0)
+                ruleCount: entity.fields.reduce((sum: number, field) => sum + (field.validationRules?.length || 0), 0)
             }, warnings)
 
         } catch (error) {
@@ -356,9 +356,9 @@ export class UnifiedSchemaValidator {
 
             // 验证成功
             return this.createSuccessResult(module, startTime, {
-                fieldCount: module.entities.reduce((sum, entity) => sum + entity.fields.length, 0),
-                ruleCount: module.entities.reduce((sum, entity) =>
-                    sum + entity.fields.reduce((fieldSum, field) => fieldSum + (field.validationRules?.length || 0), 0), 0)
+                fieldCount: module.entities.reduce((sum: number, entity) => sum + entity.fields.length, 0),
+                ruleCount: module.entities.reduce((sum: number, entity) =>
+                    sum + entity.fields.reduce((fieldSum: number, field) => fieldSum + (field.validationRules?.length || 0), 0), 0)
             })
 
         } catch (error) {
@@ -402,9 +402,9 @@ export class UnifiedSchemaValidator {
         }
 
         return this.createSuccessResult(validEntities, startTime, {
-            fieldCount: validEntities.reduce((sum, entity) => sum + entity.fields.length, 0),
-            ruleCount: validEntities.reduce((sum, entity) =>
-                sum + entity.fields.reduce((fieldSum, field) => fieldSum + (field.validationRules?.length || 0), 0), 0)
+            fieldCount: validEntities.reduce((sum: number, entity) => sum + entity.fields.length, 0),
+            ruleCount: validEntities.reduce((sum: number, entity) =>
+                sum + entity.fields.reduce((fieldSum: number, field) => fieldSum + (field.validationRules?.length || 0), 0), 0)
         }, warnings)
     }
 
@@ -519,7 +519,7 @@ export class UnifiedSchemaValidator {
                     const upgradePath = getUpgradePath(version, CURRENT_SCHEMA_VERSION)
                     if (upgradePath && upgradePath.length > 0) {
                         suggestions.push(
-                            `Suggested upgrade path: ${upgradePath.map(p => `${p.from} -> ${p.to}`).join(', ')}`
+                            `Suggested upgrade path: ${upgradePath.map((p: any) => `${p.from} -> ${p.to}`).join(', ')}`
                         )
                     }
                 }
@@ -574,7 +574,7 @@ export class UnifiedSchemaValidator {
                 diff = diffEntitySchema(oldMetadata, newMetadata)
 
                 // 分析差异，识别破坏性变更
-                diff.removals.forEach(removal => {
+                diff.removals.forEach((removal: any) => {
                     // 删除必填字段是破坏性变更
                     if (removal.path.includes('properties.') && removal.oldValue?.isRequired) {
                         breakingChanges.push({
@@ -587,7 +587,7 @@ export class UnifiedSchemaValidator {
                     }
                 })
 
-                diff.modifications.forEach(modification => {
+                diff.modifications.forEach((modification: any) => {
                     // 类型变更是破坏性变更
                     if (modification.path.includes('.type')) {
                         breakingChanges.push({

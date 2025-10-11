@@ -722,11 +722,11 @@ watch(() => props.modelValue, (newValue) => {
    */
   private generateTypeDefinitions(entity1: EntityMetadata, entity2: EntityMetadata): string {
     return `export interface ${entity1.name} {
-${entity1.properties.map(p => `  ${p.name}: ${this.mapToTypeScriptType(p.type)}`).join('\n')}
+${entity1.properties.map((p: any) => `  ${p.name}: ${this.mapToTypeScriptType(p.type)}`).join('\n')}
 }
 
 export interface ${entity2.name} {
-${entity2.properties.map(p => `  ${p.name}: ${this.mapToTypeScriptType(p.type)}`).join('\n')}
+${entity2.properties.map((p: any) => `  ${p.name}: ${this.mapToTypeScriptType(p.type)}`).join('\n')}
 }`
   }
 

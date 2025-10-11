@@ -527,7 +527,7 @@ export class GlobalMemoryMonitor {
     const oldest = recentHistory[0]
     const newest = recentHistory[recentHistory.length - 1]
     if (!oldest || !newest) return
-    
+
     const oldestUsage = oldest.totalUsage
     const newestUsage = newest.totalUsage
     const timeSpan = newest.timestamp - oldest.timestamp

@@ -109,7 +109,8 @@ export class GlobalErrorHandler {
       retryDelay: 1000,
       enableReporting: true,
       reportingDelay: 5000,
-      showDetailedErrors: ((import.meta as unknown as ImportMeta).env?.['MODE'] || 'development') === 'development',
+      // 默认开发模式显示详细错误，生产环境由主应用配置
+      showDetailedErrors: true,
       ...options
     };
 

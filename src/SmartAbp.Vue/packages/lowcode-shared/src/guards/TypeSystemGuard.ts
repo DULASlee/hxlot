@@ -9,7 +9,7 @@
  */
 
 import * as fs from 'fs'
-import { glob } from 'glob'
+import { glob as globSync } from 'glob'
 import * as path from 'path'
 
 export interface TypeViolation {
@@ -53,13 +53,14 @@ export class TypeSystemGuard {
     const violations: TypeViolation[] = []
 
     // 扫描主应用中的类型文件（排除合法的types目录）
-    const typeFiles = await glob('src/**/*types.{ts,d.ts}', {
-      cwd: path.resolve(process.cwd(), 'src/SmartAbp.Vue'),
+    const baseDir = path.resolve(process.cwd(), 'src/SmartAbp.Vue')
+    const pattern = path.join(baseDir, 'src/**/*types.{ts,d.ts}')
+    const typeFiles = globSync(pattern, {
       ignore: ['**/types/**', '**/node_modules/**', '**/dist/**']
     })
 
     for (const file of typeFiles) {
-      const fullPath = path.resolve(process.cwd(), 'src/SmartAbp.Vue', file)
+      const fullPath = file
       const content = fs.readFileSync(fullPath, 'utf-8')
       const lines = content.split('\n')
 
@@ -103,13 +104,14 @@ export class TypeSystemGuard {
     const violations: TypeViolation[] = []
 
     // 扫描所有TS/Vue文件
-    const files = await glob('src/**/*.{ts,vue}', {
-      cwd: path.resolve(process.cwd(), 'src/SmartAbp.Vue'),
+    const baseDir = path.resolve(process.cwd(), 'src/SmartAbp.Vue')
+    const pattern = path.join(baseDir, 'src/**/*.{ts,vue}')
+    const files = globSync(pattern, {
       ignore: ['**/node_modules/**', '**/dist/**']
     })
 
     for (const file of files) {
-      const fullPath = path.resolve(process.cwd(), 'src/SmartAbp.Vue', file)
+      const fullPath = file
       const content = fs.readFileSync(fullPath, 'utf-8')
       const lines = content.split('\n')
 

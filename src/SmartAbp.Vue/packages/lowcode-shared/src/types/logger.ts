@@ -5,6 +5,7 @@
  */
 
 export interface ILogger {
+  log(message: string, ...args: unknown[]): void
   debug(message: string, ...args: unknown[]): void
   info(message: string, ...args: unknown[]): void
   warn(message: string, ...args: unknown[]): void
@@ -21,22 +22,23 @@ export function getGlobalLogger(): ILogger {
   const globalWithLogger = globalThis as typeof globalThis & {
     __SMARTABP_LOGGER__?: ILogger
   }
-  
+
   // 如果有注入的logger，直接返回
   if (globalWithLogger.__SMARTABP_LOGGER__) {
     return globalWithLogger.__SMARTABP_LOGGER__
   }
-  
+
   // 否则返回兼容console的适配器
   return {
+    log: (message: string, ...args: unknown[]) => console.log(message, ...args),
     debug: (message: string, ...args: unknown[]) => console.debug(message, ...args),
     info: (message: string, ...args: unknown[]) => console.info(message, ...args),
     warn: (message: string, ...args: unknown[]) => console.warn(message, ...args),
-    error: (message: string, error?: Error | unknown, ...args: unknown[]) => 
+    error: (message: string, error?: Error | unknown, ...args: unknown[]) =>
       console.error(message, error, ...args),
-    fatal: (message: string, error?: Error | unknown, ...args: unknown[]) => 
+    fatal: (message: string, error?: Error | unknown, ...args: unknown[]) =>
       console.error('[FATAL]', message, error, ...args),
-    success: (message: string, ...args: unknown[]) => 
+    success: (message: string, ...args: unknown[]) =>
       console.log('[SUCCESS]', message, ...args)
   }
 }
@@ -46,20 +48,22 @@ export function getGlobalLogger(): ILogger {
  */
 export function createComponentLogger(componentName: string): ILogger {
   const baseLogger = getGlobalLogger()
-  
+
   return {
-    debug: (message: string, ...args: unknown[]) => 
+    log: (message: string, ...args: unknown[]) =>
+      baseLogger.log(`[${componentName}] ${message}`, ...args),
+    debug: (message: string, ...args: unknown[]) =>
       baseLogger.debug(`[${componentName}] ${message}`, ...args),
-    info: (message: string, ...args: unknown[]) => 
+    info: (message: string, ...args: unknown[]) =>
       baseLogger.info(`[${componentName}] ${message}`, ...args),
-    warn: (message: string, ...args: unknown[]) => 
+    warn: (message: string, ...args: unknown[]) =>
       baseLogger.warn(`[${componentName}] ${message}`, ...args),
-    error: (message: string, error?: Error | unknown, ...args: unknown[]) => 
+    error: (message: string, error?: Error | unknown, ...args: unknown[]) =>
       baseLogger.error(`[${componentName}] ${message}`, error, ...args),
-    fatal: (message: string, error?: Error | unknown, ...args: unknown[]) => 
+    fatal: (message: string, error?: Error | unknown, ...args: unknown[]) =>
       baseLogger.fatal(`[${componentName}] ${message}`, error, ...args),
-    success: (message: string, ...args: unknown[]) => 
-      baseLogger.success?.(`[${componentName}] ${message}`, ...args) || 
+    success: (message: string, ...args: unknown[]) =>
+      baseLogger.success?.(`[${componentName}] ${message}`, ...args) ||
       baseLogger.info(`[${componentName}] ✅ ${message}`, ...args)
   }
 }

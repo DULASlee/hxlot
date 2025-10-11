@@ -19,7 +19,7 @@
  */
 
 import type { Component } from 'vue'
-import type { ComponentMetadata } from '../components/ComponentRegistry'
+import type { ComponentMetadata } from '../components/ComponentRegistry.js'
 
 /**
  * 组件使用统计

@@ -48,6 +48,21 @@ export default defineConfig({
     'composables/index': 'src/composables/index.ts',
     'composables/validation': 'src/composables/useValidation.ts',
 
+    // 验证器
+    'validators/index': 'src/validators/index.ts',
+
+    // 常量
+    'constants/index': 'src/constants/index.ts',
+
+    // 插件系统
+    'plugins/index': 'src/plugins/PluginManager.ts',
+
+    // AI系统
+    'ai/index': 'src/ai/ComponentGenie.ts',
+
+    // 性能监控
+    'performance/index': 'src/performance/PerformanceMonitor.ts',
+
     // 工具函数
     'utils/index': 'src/utils/index.ts',
     'utils/array': 'src/utils/array.ts',
@@ -72,8 +87,9 @@ export default defineConfig({
   // 生成TypeScript类型声明文件
   dts: true,
 
-  // 代码分割（优化包体积，提升加载性能）
-  splitting: true,
+  // 代码分割（库模式下禁用，保留模块结构）
+  // 🔥 关键修复：库不需要splitting，会破坏相对路径
+  splitting: false,
 
   // Source Map（便于调试）
   sourcemap: true,
@@ -106,6 +122,10 @@ export default defineConfig({
     '@smartabp/metadata-core',
     '@smartabp/metadata-core/schema',
     '@smartabp/lowcode-api',
+    // 🔥 Level 31最优解：包自己标记为external
+    // 这样包内部可以使用别名导入，符合架构铁律
+    '@smartabp/lowcode-shared',
+    /^@smartabp\/lowcode-shared\//,  // 匹配所有子路径
     'element-plus',
     '@vue-flow/core',
     // Node.js built-ins（用于开发工具，不打包到浏览器端）

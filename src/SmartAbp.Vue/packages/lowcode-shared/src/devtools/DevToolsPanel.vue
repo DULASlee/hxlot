@@ -237,9 +237,9 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { globalComponentRegistry } from '../components/ComponentRegistry'
-import { globalPerformanceMonitor } from '../performance/PerformanceMonitor'
-import { globalPluginManager } from '../plugins/PluginManager'
+import { globalComponentRegistry } from '../components/ComponentRegistry.js'
+import { globalPerformanceMonitor } from '../performance/PerformanceMonitor.js'
+import { globalPluginManager } from '../plugins/PluginManager.js'
 
 // Tabs
 const tabs = [

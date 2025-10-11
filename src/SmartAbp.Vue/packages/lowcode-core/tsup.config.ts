@@ -3,7 +3,7 @@ import { defineConfig } from 'tsup'
 export default defineConfig({
     // 入口文件
     entry: {
-        index: 'index.ts',
+        index: 'src/index.ts',
         // 代码生成器独立入口（支持按需加载）
         'generators/index': 'src/generators/index.ts',
         // 引擎独立入口

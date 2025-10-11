@@ -1,4 +1,4 @@
-import { http as httpClient } from '@smartabp/lowcode-api'
+import { http as httpClient } from '../http-client.js'
 import { ref } from 'vue'
 
 /**

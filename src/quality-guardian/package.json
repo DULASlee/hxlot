@@ -1,12 +1,12 @@
 {
-  "name": "@smartabp/lowcode-quality-guardian",
+  "name": "@smartabp/quality-guardian",
   "version": "2.0.0",
-  "description": "SmartAbp Quality Guardian - 企业级全栈代码质量保障引擎",
+  "description": "SmartAbp Quality Guardian - 独立的企业级全栈代码质量检测工具",
   "private": false,
   "type": "module",
   "bin": {
-    "quality-guardian": "./dist/cli.js",
-    "smart-quality": "./dist/cli.js"
+    "quality-guardian": "./bin/quality-guardian",
+    "smart-quality": "./bin/quality-guardian"
   },
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",

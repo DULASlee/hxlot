@@ -150,19 +150,14 @@ export class AutoComponentDiscoveryEngine {
 
         try {
             // 🔥 使用Vite的动态导入获取所有Vue组件
-            const modules = import.meta.glob([
-                '/src/components/**/*.vue',
-                '/src/SmartAbp.Vue/packages/*/src/components/**/*.vue',
-                '/src/views/**/*.vue'
-            ], {
-                as: 'raw',    // 获取原始文件内容
-                eager: false  // 懒加载
-            })
+            // 注意：import.meta.glob 是 Vite 特有功能，在库编译时不可用
+            // 主应用需要通过配置传入文件扫描器
+            const modules: Record<string, () => Promise<string>> = {}
 
             // 📥 批量加载文件内容
             const loadPromises = Object.entries(modules).map(async ([path, loader]) => {
                 try {
-                    const content = await loader() as string
+                    const content = await (loader as () => Promise<string>)()
                     return { path, content }
                 } catch (error) {
                     console.warn(`⚠️ 无法加载文件 ${path}:`, error)

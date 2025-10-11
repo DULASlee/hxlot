@@ -16,11 +16,12 @@ const __dirname = path.dirname(__filename);
 console.log('🚀 开始构建SmartAbp LowCode Packages...\n');
 
 const packages = [
-  'lowcode-shared',
-  'lowcode-core',
-  'lowcode-api',
-  'lowcode-tools',
-  'lowcode-designer'
+  'metadata-core',      // Layer -1: 底层Schema
+  'lowcode-shared',     // Layer 0: 共享基础
+  'lowcode-api',        // Layer 1: API层
+  'lowcode-tools',      // Layer 1: 工具集
+  'lowcode-core',       // Layer 1: 核心引擎
+  'lowcode-designer'    // Layer 2: 顶层设计器
 ];
 
 let allPassed = true;

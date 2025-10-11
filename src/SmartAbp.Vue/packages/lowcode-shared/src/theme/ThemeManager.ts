@@ -3,10 +3,10 @@
  * Theme Manager - 动态主题切换和CSS变量管理
  */
 
-import { ref, computed } from 'vue'
-import type { DesignTokens, ThemeMode } from './tokens'
-import { lightTokens, darkTokens } from './tokens'
+import { computed, ref } from 'vue'
 import { SESSION_STORAGE_KEYS } from '../constants/common.js'
+import type { DesignTokens, ThemeMode } from './tokens'
+import { darkTokens, lightTokens } from './tokens'
 
 /**
  * 主题管理器类
@@ -18,7 +18,7 @@ export class ThemeManager {
   constructor() {
     // 从存储中恢复主题
     this.restoreTheme()
-    
+
     // 监听系统主题变化
     this.watchSystemTheme()
   }
@@ -42,7 +42,7 @@ export class ThemeManager {
    */
   setTheme(mode: ThemeMode) {
     this.currentMode.value = mode
-    
+
     // 根据模式选择令牌
     if (mode === 'auto') {
       // 自动模式，根据系统主题选择
@@ -54,7 +54,7 @@ export class ThemeManager {
 
     // 应用CSS变量
     this.applyCSSVariables()
-    
+
     // 保存到存储
     this.saveTheme()
   }
@@ -87,15 +87,15 @@ export class ThemeManager {
     // 应用字体变量
     root.style.setProperty('--font-family-base', tokens.typography.fontFamily.base)
     root.style.setProperty('--font-family-mono', tokens.typography.fontFamily.mono)
-    
+
     Object.entries(tokens.typography.fontSize).forEach(([key, value]) => {
       root.style.setProperty(`--font-size-${key}`, value)
     })
-    
+
     Object.entries(tokens.typography.fontWeight).forEach(([key, value]) => {
       root.style.setProperty(`--font-weight-${key}`, value.toString())
     })
-    
+
     Object.entries(tokens.typography.lineHeight).forEach(([key, value]) => {
       root.style.setProperty(`--line-height-${key}`, value.toString())
     })
@@ -114,7 +114,7 @@ export class ThemeManager {
     Object.entries(tokens.transitions.duration).forEach(([key, value]) => {
       root.style.setProperty(`--duration-${key}`, value)
     })
-    
+
     Object.entries(tokens.transitions.timing).forEach(([key, value]) => {
       root.style.setProperty(`--timing-${key}`, value)
     })
@@ -150,7 +150,7 @@ export class ThemeManager {
    */
   private watchSystemTheme() {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    
+
     mediaQuery.addEventListener('change', (e) => {
       if (this.currentMode.value === 'auto') {
         this.currentTokens.value = e.matches ? darkTokens : lightTokens

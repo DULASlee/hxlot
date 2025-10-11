@@ -92,8 +92,9 @@ export { default as LdVisualDesignCanvas } from './VisualDesignCanvas.vue'
  * Auto-register all designer components for global usage
  */
 export function autoRegisterDesignerComponents(app: any): void {
-  // Vite Glob Import 自动注册组件
-  const components = (import.meta as unknown as { glob?: <T = any>(p: string, o?: any) => Record<string, T> }).glob?.('./**/*.vue', { eager: true }) || {}
+  // 注意：import.meta.glob是Vite特性，在库编译时不可用
+  // 主应用需要自行实现组件扫描
+  const components: Record<string, any> = {}
 
   Object.entries(components).forEach(([path, module]: [string, any]) => {
     const componentName = path

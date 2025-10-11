@@ -7,7 +7,7 @@
  * 3. 自动发现并建议注册
  */
 
-import { globalComponentRegistry } from '../components/ComponentRegistry'
+import { globalComponentRegistry } from '../components/ComponentRegistry.js'
 
 /**
  * 架构违规记录

@@ -10,7 +10,7 @@ import { createHttpClient } from './http-client'
 // 🔥 使用lowcode-api的HTTP客户端
 // 注意: baseURL应该由外部配置,这里提供默认值
 const httpClient = createHttpClient({
-    baseURL: (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_BASE_URL) || 'http://localhost:44375'
+    baseURL: 'http://localhost:44375'
 })
 
 /**

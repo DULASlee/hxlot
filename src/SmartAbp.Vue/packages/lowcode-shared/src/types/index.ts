@@ -18,7 +18,7 @@ export type {
 // 🔄 向后兼容：统一Schema类型系统 (逐步弃用)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export type {
-  UnifiedCodeGenerationConfig, UnifiedEntityDefinition,
+  UnifiedApiResponse, UnifiedCodeGenerationConfig, UnifiedEntityDefinition,
   UnifiedEntityField,
   UnifiedEntityRelationship, UnifiedEntityUIConfig, UnifiedFrontendConfig, UnifiedMenuConfig, UnifiedModuleMetadata, UnifiedPermissionConfig, UnifiedValidationRule, UnifiedValidationRuleType
 } from './unified-schema.js'

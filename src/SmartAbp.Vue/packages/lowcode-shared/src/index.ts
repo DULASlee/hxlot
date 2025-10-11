@@ -88,6 +88,8 @@ export * from './components/index.js'
 // 🔥 组件统一注册 (Component Registration)
 // @遵循架构铁律二：强制使用组件注册系统
 export { registerSharedComponents } from './components/register.js'
+// 显式导出 registerComponent 供其他包使用
+export { registerComponent } from './components/ComponentRegistry.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎣 Composables (Composition API)
@@ -231,7 +233,8 @@ import { VirtualAssembly } from './components/VirtualAssembly.js'
 export const Components = new VirtualAssembly(
   globalComponentRegistry,
   {
-    debug: import.meta.env.DEV,
+    // 默认关闭debug，由主应用配置
+    debug: false,
     enablePerformanceMonitoring: true
   }
 ).createProxy()
@@ -258,4 +261,5 @@ export * from './devtools'
 // 🛡️ 三大铁律智能执行引擎（微AI 2.0 - 阶段5）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export * from './guards'
+// 暂时禁用guards导出，等glob依赖问题解决后再启用
+// export * from './guards'

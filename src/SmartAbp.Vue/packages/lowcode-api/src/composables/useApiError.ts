@@ -5,7 +5,7 @@
 
 import { ElMessage, ElNotification } from 'element-plus';
 // import { getGlobalErrorHandler, type StandardError, type ErrorContext } from '@smartabp/lowcode-shared'
-import type { ApiError } from '@smartabp/lowcode-api';
+import type { ApiError } from '../http-client.js';
 
 // 临时本地类型定义（待lowcode-shared完善后移除）
 type StandardError = Error & { code?: string; statusCode?: number }
@@ -55,7 +55,7 @@ const DEFAULT_DISPLAY_OPTIONS: ApiErrorDisplayOptions = {
  * 
  * @example
  * ```typescript
- * import { useApiError } from '@smartabp/lowcode-api'
+ * import { useApiError } from '../http-client.js'
  * 
  * const { handleApiError, registerCustomHandler } = useApiError()
  * 

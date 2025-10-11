@@ -1,0 +1,45 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist/cjs",
+    "rootDir": "./src",
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "node10",
+    "declaration": false,
+    "declarationMap": false,
+    "composite": false,
+    "emitDeclarationOnly": false,
+    "skipLibCheck": true,
+    "types": [
+      "vitest/globals"
+    ]
+  },
+  "include": [
+    "src/**/*",
+    "src/**/*.vue",
+    "types/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "src/generators/RelationshipUIGenerator.ts",
+    "src/stores/codeGeneration.ts",
+    "src/types/unified-metadata.ts",
+    "src/utils/manifestWriter.ts"
+  ],
+  "references": [
+    {
+      "path": "../lowcode-shared"
+    },
+    {
+      "path": "../metadata-core"
+    },
+    {
+      "path": "../lowcode-api"
+    }
+  ]
+}
+

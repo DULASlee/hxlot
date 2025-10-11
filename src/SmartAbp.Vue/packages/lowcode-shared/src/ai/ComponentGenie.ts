@@ -11,7 +11,7 @@
 
 // 🔥 架构铁律一：统一类型系统
 // ComponentCategory 定义在types/component.ts中，避免循环依赖
-import type { ComponentCategory } from '../types/component'
+import type { ComponentCategory } from '../types/component.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🧬 组件DNA类型系统（简化版）

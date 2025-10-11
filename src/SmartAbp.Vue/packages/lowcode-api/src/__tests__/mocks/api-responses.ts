@@ -7,7 +7,7 @@
 
 import type {
   Template
-} from '@smartabp/lowcode-api'
+} from '../../index.js'
 
 /**
  * Mock: generateModule API响应

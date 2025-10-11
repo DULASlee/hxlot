@@ -3,32 +3,33 @@
   "version": "1.0.0",
   "description": "SmartAbp LowCode Designer - Visual Design Tools",
   "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
     },
     "./components": {
-      "types": "./dist/components/index.d.ts",
-      "import": "./dist/components/index.mjs",
-      "require": "./dist/components/index.js"
+      "types": "./dist/esm/components/index.d.ts",
+      "import": "./dist/esm/components/index.js",
+      "require": "./dist/cjs/components/index.js"
     },
     "./views": {
-      "types": "./dist/views/index.d.ts",
-      "import": "./dist/views/index.mjs",
-      "require": "./dist/views/index.js"
+      "types": "./dist/esm/views/index.d.ts",
+      "import": "./dist/esm/views/index.js",
+      "require": "./dist/cjs/views/index.js"
     }
   },
   "sideEffects": false,
   "author": "SmartAbp Team",
   "license": "MIT",
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "tsc && tsc --project tsconfig.cjs.json",
+    "build:tsup": "tsup",
+    "dev": "tsc --watch",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
