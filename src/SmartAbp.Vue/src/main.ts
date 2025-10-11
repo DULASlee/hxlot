@@ -106,7 +106,7 @@ import { logger } from "./utils/logger";
 import { registerCoreComponents } from '@smartabp/lowcode-core';
 import { registerDesignerComponents } from '@smartabp/lowcode-designer';
 import { registerSharedComponents } from '@smartabp/lowcode-shared';
-import ComponentRegistryBridge from './plugins/component-registry-bridge';
+// import ComponentRegistryBridge from './plugins/component-registry-bridge'; // TODO: 文件不存在，暂时注释
 // import { createEnterpriseIconSystem } from "./plugins/enterpriseIcons" // TODO: enterpriseIcons.ts 文件不存在，暂时注释
 // Element Plus message在此文件不强依赖，避免类型噪声
 // 低代码设计器 store 暂未对外导出，先移除硬依赖
@@ -236,7 +236,7 @@ registerCoreComponents()     // 2. 核心组件（依赖shared）
 registerDesignerComponents(app) // 3. 设计器组件（依赖core+shared）
 console.log('✅ 所有组件已注册到ComponentRegistry')
 
-app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin).use(ComponentRegistryBridge)
+app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin) // .use(ComponentRegistryBridge) // TODO: 文件不存在，暂时注释
 // .use(enterpriseIconSystem) // TODO: 暂时注释
 
 async function bootstrap() {
