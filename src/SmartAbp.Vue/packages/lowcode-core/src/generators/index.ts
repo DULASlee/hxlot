@@ -21,6 +21,6 @@ export type {
 } from './AspireGenerator'
 
 export { BusinessRuleCodeGenerator } from './BusinessRuleCodeGenerator'
-// export { RelationshipUIGenerator } from './RelationshipUIGenerator' // TODO: 修复metadata-core类型问题后恢复
+export { RelationshipUIGenerator } from './RelationshipUIGenerator'
 export { WorkflowCodeGenerator } from './WorkflowCodeGenerator'
 

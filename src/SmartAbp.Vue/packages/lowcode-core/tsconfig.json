@@ -24,11 +24,7 @@
     "node_modules",
     "dist",
     "**/*.spec.ts",
-    "**/*.test.ts",
-    "src/generators/RelationshipUIGenerator.ts",
-    "src/stores/codeGeneration.ts",
-    "src/types/unified-metadata.ts",
-    "src/utils/manifestWriter.ts"
+    "**/*.test.ts"
   ],
   "references": [
     {
