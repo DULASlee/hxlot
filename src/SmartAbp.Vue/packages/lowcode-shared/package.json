@@ -129,7 +129,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "glob": "^10.3.10"
   },
   "peerDependencies": {
     "vue": "^3.3.0",

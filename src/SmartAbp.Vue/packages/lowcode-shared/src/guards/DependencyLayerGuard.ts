@@ -9,7 +9,7 @@
  */
 
 import * as fs from 'fs'
-import { glob as globSync } from 'glob'
+import { globSync } from 'glob'
 import * as path from 'path'
 
 export interface LayerConfig {
