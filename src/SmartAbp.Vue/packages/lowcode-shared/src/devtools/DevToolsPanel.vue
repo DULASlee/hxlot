@@ -46,7 +46,7 @@
               </div>
               <div class="detail-item">
                 <span class="label">Path:</span>
-                <code>{{ comp.path }}</code>
+                <code>{{ (comp as any).path || '-' }}</code>
               </div>
               <div class="detail-item">
                 <span class="label">Priority:</span>
@@ -236,10 +236,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { globalComponentRegistry } from '../components/ComponentRegistry'
-import { globalPluginManager } from '../plugins/PluginManager'
 import { globalPerformanceMonitor } from '../performance/PerformanceMonitor'
+import { globalPluginManager } from '../plugins/PluginManager'
 
 // Tabs
 const tabs = [
@@ -264,16 +264,22 @@ const toggleNode = (name: string) => {
 }
 
 // 插件管理
-const pluginList = ref(globalPluginManager.getAllPlugins())
+const pluginList = ref((globalPluginManager as any).getAllPlugins?.() || [])
 
 const enablePlugin = async (id: string) => {
-  await globalPluginManager.enable(id)
-  pluginList.value = globalPluginManager.getAllPlugins()
+  const mgr: any = globalPluginManager as any
+  if (typeof mgr.enable === 'function') {
+    await mgr.enable(id)
+  }
+  pluginList.value = mgr.getAllPlugins?.() || []
 }
 
 const disablePlugin = async (id: string) => {
-  await globalPluginManager.disable(id)
-  pluginList.value = globalPluginManager.getAllPlugins()
+  const mgr: any = globalPluginManager as any
+  if (typeof mgr.disable === 'function') {
+    await mgr.disable(id)
+  }
+  pluginList.value = mgr.getAllPlugins?.() || []
 }
 
 // 性能监控
@@ -339,7 +345,7 @@ let refreshTimer: ReturnType<typeof setInterval> | null = null
 onMounted(() => {
   refreshTimer = setInterval(() => {
     componentRegistry.value = globalComponentRegistry.getAvailableComponents()
-    pluginList.value = globalPluginManager.getAllPlugins()
+    pluginList.value = (globalPluginManager as any).getAllPlugins?.() || []
     performanceReport.value = globalPerformanceMonitor.generateReport(60)
     recentMetrics.value = globalPerformanceMonitor.getRealtimeMetrics(20).filter(m => m.type === 'load')
   }, 3000)

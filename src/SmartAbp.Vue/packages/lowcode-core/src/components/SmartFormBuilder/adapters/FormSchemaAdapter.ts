@@ -20,7 +20,7 @@
  */
 
 import type { UnifiedValidationRule } from '@smartabp/lowcode-shared'
-import type { FormCreateConfig, FormCreateRule } from '../../../types/form'
+import type { FormCreateConfig, FormCreateRule } from '../types/form-create-types'
 
 /**
  * @interface FormSchema
@@ -187,7 +187,8 @@ export class FormSchemaAdapter {
 
             // 处理动态显示条件
             if (item.vIf) {
-                (rule as any).hidden = !this.evaluateExpression(item.vIf, {})
+                const hidden = !this.evaluateExpression(item.vIf, {})
+                    ; (rule as unknown as { hidden?: boolean }).hidden = hidden
             }
 
             // 处理自定义类名和样式
@@ -203,16 +204,18 @@ export class FormSchemaAdapter {
 
             // 处理事件
             if (item.onChange) {
-                (rule as any).on = {
-                    ...(rule as any).on,
-                    change: this.createEventHandler(item.onChange)
-                }
+                const existing = (rule as { on?: Record<string, Function> }).on || {}
+                    ; (rule as { on?: Record<string, Function> }).on = {
+                        ...existing,
+                        change: this.createEventHandler(item.onChange)
+                    }
             }
             if (item.onInput) {
-                (rule as any).on = {
-                    ...(rule as any).on,
-                    input: this.createEventHandler(item.onInput)
-                }
+                const existing = (rule as { on?: Record<string, Function> }).on || {}
+                    ; (rule as { on?: Record<string, Function> }).on = {
+                        ...existing,
+                        input: this.createEventHandler(item.onInput)
+                    }
             }
 
             return rule

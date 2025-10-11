@@ -531,6 +531,7 @@ src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/nodes
 src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/nodes/RuleEndNode.vue
 src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/nodes/RuleStartNode.vue
 src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/nodes/index.ts
+src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/nodes/types.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/types.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/components/ErrorBoundary.vue
 src/SmartAbp.Vue/packages/lowcode-core/src/components/GlobalLoadingOverlay.vue
@@ -548,6 +549,7 @@ src/SmartAbp.Vue/packages/lowcode-core/src/components/SmartFormBuilder/types/For
 src/SmartAbp.Vue/packages/lowcode-core/src/components/SmartFormBuilder/types/FormSchema.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/components/SmartFormBuilder/types/form-create-types.js
 src/SmartAbp.Vue/packages/lowcode-core/src/components/SmartFormBuilder/types/form-create-types.ts
+src/SmartAbp.Vue/packages/lowcode-core/src/components/SmartFormBuilder/types/index.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/components/SmartFormBuilder/types/linkage-types.js
 src/SmartAbp.Vue/packages/lowcode-core/src/components/SmartFormBuilder/types/linkage-types.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/components/SmartFormBuilder/types/smart-form-types.js
@@ -655,7 +657,9 @@ src/SmartAbp.Vue/packages/lowcode-core/src/types/business-rule.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/types/entity-designer.d.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/types/entity-designer.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/types/entity.ts
+src/SmartAbp.Vue/packages/lowcode-core/src/types/form.d.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/types/form.ts
+src/SmartAbp.Vue/packages/lowcode-core/src/types/import-meta.d.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/types/index.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/types/manifest.d.ts
 src/SmartAbp.Vue/packages/lowcode-core/src/types/manifest.ts
@@ -1012,6 +1016,7 @@ src/SmartAbp.Vue/packages/lowcode-shared/src/theme/tokens.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/theme/tokens.js
 src/SmartAbp.Vue/packages/lowcode-shared/src/theme/tokens.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/README.md
+src/SmartAbp.Vue/packages/lowcode-shared/src/types/ambient.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/assembly.js
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/assembly.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/business.js
@@ -1022,6 +1027,7 @@ src/SmartAbp.Vue/packages/lowcode-shared/src/types/component-base.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/component.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/dtos.js
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/dtos.ts
+src/SmartAbp.Vue/packages/lowcode-shared/src/types/form-create-types.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/index.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/index.js
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/index.ts

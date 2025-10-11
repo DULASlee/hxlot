@@ -318,10 +318,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch } from "vue"
-import { ElMessage } from "element-plus"
-import { Plus, Delete, Refresh, Box } from "@element-plus/icons-vue"
+import { Box, Delete, Plus, Refresh } from "@element-plus/icons-vue"
 import type { DesignerComponent } from "@smartabp/lowcode-designer"
+import { ElMessage } from "element-plus"
+import { computed, reactive, ref, watch } from "vue"
 
 // 类型定义
 interface PropertyConfig {
@@ -640,14 +640,14 @@ const initializeProperties = () => {
 }
 
 const handlePropertyChange = (key: string, value: any) => {
-  if (props.selectedComponent) {
-    emit("propertyChange", props.selectedComponent.id, { [key]: value })
-  }
+  if (!props.selectedComponent?.id) return
+  emit("propertyChange", props.selectedComponent.id, { [key]: value })
 }
 
 const handleStyleChange = (key: string, value: any) => {
-  if (props.selectedComponent) {
-    const styleUpdate: Record<string, any> = {}
+  const id = props.selectedComponent?.id
+  if (!id) return
+  const styleUpdate: Record<string, any> = {}
 
     if (key === "width" || key === "height") {
       styleUpdate[key] = typeof value === "number" ? `${value}px` : value
@@ -655,8 +655,7 @@ const handleStyleChange = (key: string, value: any) => {
       styleUpdate[key] = value
     }
 
-    emit("styleChange", props.selectedComponent.id, styleUpdate)
-  }
+    emit("styleChange", id, styleUpdate)
 }
 
 const addEventBinding = () => {
@@ -667,24 +666,31 @@ const addEventBinding = () => {
 }
 
 const removeEventBinding = (index: number) => {
+  if (index < 0 || index >= eventBindings.value.length) return
   eventBindings.value.splice(index, 1)
-  if (props.selectedComponent) {
-    emit("eventChange", props.selectedComponent.id, eventBindings.value)
-  }
+  const id = props.selectedComponent?.id
+  if (!id) return
+  emit("eventChange", id, eventBindings.value)
 }
 
 const handleEventTypeChange = (index: number, type: string) => {
-  eventBindings.value[index].type = type
-  if (props.selectedComponent) {
-    emit("eventChange", props.selectedComponent.id, eventBindings.value)
-  }
+  if (index < 0 || index >= eventBindings.value.length) return
+  const item = eventBindings.value[index]
+  if (!item) return
+  item.type = type
+  const id = props.selectedComponent?.id
+  if (!id) return
+  emit("eventChange", id, eventBindings.value)
 }
 
 const handleEventHandlerChange = (index: number, handler: string) => {
-  eventBindings.value[index].handler = handler
-  if (props.selectedComponent) {
-    emit("eventChange", props.selectedComponent.id, eventBindings.value)
-  }
+  if (index < 0 || index >= eventBindings.value.length) return
+  const item = eventBindings.value[index]
+  if (!item) return
+  item.handler = handler
+  const id = props.selectedComponent?.id
+  if (!id) return
+  emit("eventChange", id, eventBindings.value)
 }
 
 const resetProperties = () => {

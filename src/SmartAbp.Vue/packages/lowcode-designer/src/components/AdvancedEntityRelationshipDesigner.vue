@@ -307,10 +307,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import { useEntityModelingStore, type EntityDefinition, type EntityRelation } from '@smartabp/lowcode-core'
 import { logger } from '@smartabp/lowcode-tools'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { computed, onMounted, ref } from 'vue'
 
 // Props
 interface Props {
@@ -577,12 +577,12 @@ const confirmAddEntity = async () => {
       isCompleted: false
     }
 
-    const entity = entityStore.addEntity(newEntity)
-
-    // 设置实体位置
-    entityPositions.value[entity.id] = { x: 100, y: 100 }
-
-    emit('entity-added', entity)
+  const entity = await entityStore.addEntity(newEntity)
+  
+  // 设置实体位置
+  entityPositions.value[entity.id] = { x: 100, y: 100 }
+  
+  emit('entity-added', entity)
     showEntityDialog.value = false
 
     ElMessage.success('实体添加成功')

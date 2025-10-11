@@ -75,6 +75,18 @@ export interface FormCreateRule {
     [key: string]: any
 }
 
+// 补充校验规则类型，供设计器内部使用（不强制绑定到 validate 字段）
+export interface FormValidateRule {
+    required?: boolean
+    message?: string
+    trigger?: 'blur' | 'change' | string | string[]
+    min?: number
+    max?: number
+    pattern?: RegExp
+    validator?: (rule: unknown, value: unknown, callback: (error?: Error) => void) => void
+    [key: string]: unknown
+}
+
 /**
  * @interface FormCreateConfig
  * @description form-create配置对象

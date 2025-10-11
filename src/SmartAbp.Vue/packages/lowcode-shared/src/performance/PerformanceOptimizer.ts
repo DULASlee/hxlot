@@ -155,7 +155,7 @@ class CacheNode<T> {
     public value: T,
     public frequency: number = 1,
     public lastAccess: number = Date.now()
-  ) {}
+  ) { }
 }
 
 /**
@@ -165,7 +165,7 @@ class HybridCache<T> {
   private cache = new Map<string, CacheNode<T>>()
   private accessHistory: string[] = []
 
-  constructor(private capacity: number) {}
+  constructor(private capacity: number) { }
 
   get(key: string): T | undefined {
     const node = this.cache.get(key)
@@ -426,10 +426,10 @@ export class PerformanceOptimizer {
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)
       .filter(([, score]) => score > 0.3) // 置信度阈值
-      .map(([name]) => name)
+      .map(([name]) => String(name ?? ''))
 
-    const confidence = recommendations.length > 0
-      ? scores.get(recommendations[0])! / 1.0
+    const confidence = recommendations.length > 0 && recommendations[0]
+      ? (scores.get(recommendations[0]) ?? 0) / 1.0
       : 0
 
     return {

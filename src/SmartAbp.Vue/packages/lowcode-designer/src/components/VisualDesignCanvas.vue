@@ -305,18 +305,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { ElMessage } from 'element-plus'
-import type { 
-  CanvasComponent,
-  GuideLine,
-  CanvasHistory,
-  DeviceType,
-  CanvasMode,
-  MoveDirection,
-  ResizeDirection,
-  VisualDesignCanvasProps
-} from '@smartabp/lowcode-designer/types'
+import { ElMessage } from 'element-plus';
+import { computed, ref } from 'vue';
+import type {
+    CanvasComponent,
+    CanvasHistory,
+    CanvasMode,
+    DeviceType,
+    GuideLine,
+    MoveDirection,
+    ResizeDirection,
+    VisualDesignCanvasProps
+} from '../types/designer';
 
 // Props定义
 defineProps<VisualDesignCanvasProps>()
@@ -487,15 +487,17 @@ const moveComponent = (index: number, direction: MoveDirection) => {
   const newIndex = direction === 'up' ? index - 1 : index + 1
   if (newIndex >= 0 && newIndex < components.value.length) {
     const temp = components.value[index]
-    components.value[index] = components.value[newIndex]
-    components.value[newIndex] = temp
+    const target = components.value[newIndex]
+    if (!temp || !target) return
+    components.value[index] = target as CanvasComponent
+    components.value[newIndex] = temp as CanvasComponent
 
     saveToHistory()
   }
 }
 
 const duplicateComponent = (component: CanvasComponent) => {
-  const duplicated = {
+  const duplicated: CanvasComponent = {
     ...component,
     id: `component-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
     style: {
@@ -726,8 +728,10 @@ const undo = () => {
   if (canUndo.value) {
     historyIndex.value--
     const state = history.value[historyIndex.value]
-    components.value = JSON.parse(JSON.stringify(state.components))
-    selectedComponent.value = null
+    if (state) {
+      components.value = JSON.parse(JSON.stringify(state.components))
+      selectedComponent.value = null
+    }
   }
 }
 
@@ -735,8 +739,10 @@ const redo = () => {
   if (canRedo.value) {
     historyIndex.value++
     const state = history.value[historyIndex.value]
-    components.value = JSON.parse(JSON.stringify(state.components))
-    selectedComponent.value = null
+    if (state) {
+      components.value = JSON.parse(JSON.stringify(state.components))
+      selectedComponent.value = null
+    }
   }
 }
 

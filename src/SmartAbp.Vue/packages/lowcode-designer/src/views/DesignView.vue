@@ -867,7 +867,7 @@
 </template>
 
 <script setup lang="ts">
-import { useEntityModelingStore, usePageDesignStore, type MDIWindowConfig, type TabConfig } from '@smartabp/lowcode-core'
+import { useEntityModelingStore, usePageDesignStore, type TabConfig } from '@smartabp/lowcode-core'
 import ComponentPropertyPanel from '@smartabp/lowcode-designer/components/ComponentPropertyPanel.vue'
 import VisualComponentPalette from '@smartabp/lowcode-designer/components/VisualComponentPalette.vue'
 import VisualDesignCanvas from '@smartabp/lowcode-designer/components/VisualDesignCanvas.vue'
@@ -1040,7 +1040,7 @@ const getCategoryLabel = (category: string) => {
 const updateBatchGeneration = () => {
   // 更新批量生成预览
   if (selectedEntities.value.length > 0 && !previewTab.value) {
-    previewTab.value = selectedEntities.value[0]
+    previewTab.value = String(selectedEntities.value[0] ?? '')
   }
 }
 
@@ -1449,7 +1449,7 @@ const initializeMDIWindows = () => {
 
 const addMDIWindow = () => {
   const newId = `window-${Date.now()}`
-  const newWindow: MDIWindowConfig = {
+  const newWindow: any = {
     id: newId,
     title: "新窗口",
     icon: "el-icon-document",
@@ -1684,10 +1684,11 @@ const handleTabMoved = (fromIndex: number, toIndex: number) => {
 // 初始化
 onMounted(() => {
   entityStore.loadFromLocalStorage()
-  if (availableEntities.value.length > 0) {
-    selectedEntities.value = [availableEntities.value[0].id]
-    previewTab.value = availableEntities.value[0].id
-    selectedEntity.value = availableEntities.value[0]
+  const first = availableEntities.value[0]
+  if (first) {
+    selectedEntities.value = [first.id]
+    previewTab.value = String(first.id ?? '')
+    selectedEntity.value = first
   }
 })
 </script>

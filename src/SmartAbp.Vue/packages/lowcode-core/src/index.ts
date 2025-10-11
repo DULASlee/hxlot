@@ -26,6 +26,13 @@ export type {
 // Export runtime
 export * from './runtime/index.js'
 
+// Stores re-exports for designer consumption (Layer 2 -> 1)
+export { useEnhancedStateMachineStore } from './stores/enhancedStateMachine.js'
+export { useEnhancedThemeStore } from './stores/enhancedTheme.js'
+export { useEntityModelingStore } from './stores/entityModeling.js'
+export type { EntityDefinition, EntityField, EntityRelation } from './stores/entityModeling.js'
+export { usePageDesignStore } from './stores/pageDesign.js'
+
 /**
  * 注册所有核心组件到 ComponentRegistry
  * @遵循架构铁律二：强制使用组件注册系统
@@ -206,8 +213,6 @@ export function registerCoreComponents(): void {
       tags: ['workflow', 'node']
     })
   })
-
-  console.log('[SmartAbp] ✅ lowcode-core 核心组件已全部注册')
 }
 
 /**

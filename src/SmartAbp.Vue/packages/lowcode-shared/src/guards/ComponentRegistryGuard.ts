@@ -138,10 +138,13 @@ export class ComponentRegistryGuard {
 
     // 这里可以将数据发送到统计系统
     // 暂时只记录到console
-    if (typeof window !== 'undefined' && window.__ARCH_VIOLATIONS__) {
-      window.__ARCH_VIOLATIONS__.push(violation)
-    } else if (typeof window !== 'undefined') {
-      window.__ARCH_VIOLATIONS__ = [violation]
+    if (typeof window !== 'undefined') {
+      const w = window as unknown as { __ARCH_VIOLATIONS__?: any[] }
+      if (Array.isArray(w.__ARCH_VIOLATIONS__)) {
+        w.__ARCH_VIOLATIONS__!.push(violation)
+      } else {
+        w.__ARCH_VIOLATIONS__ = [violation]
+      }
     }
   }
 

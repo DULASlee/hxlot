@@ -117,10 +117,15 @@ export function createHttpClient(config?: HttpClientConfig): HttpClient {
             if (data && typeof data === 'object') {
               const errorData = data as AbpErrorData
               apiError.message = errorData.message || apiError.message
-              apiError.validationErrors = errorData.validationErrors?.map(v => ({
-                field: (v as any).members && (v as any).members.length > 0 ? (v as any).members[0] : '',
-                message: v.message
-              }))
+              const normalized: Array<{ field: string; message: string }> = []
+              if (Array.isArray(errorData.validationErrors)) {
+                for (const ve of errorData.validationErrors) {
+                  const members = (ve as { members?: string[] }).members
+                  const field = Array.isArray(members) && members.length > 0 ? members[0] : ''
+                  normalized.push({ field: field || '', message: ve.message })
+                }
+              }
+              apiError.validationErrors = normalized
             }
             break
 

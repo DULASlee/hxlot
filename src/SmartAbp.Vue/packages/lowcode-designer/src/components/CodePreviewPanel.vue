@@ -57,7 +57,7 @@
           </el-radio-group>
         </div>
 
-        <div :class="['preview-frame', `device-${previewDevice}`]">
+        <div :class="['preview-frame', 'device-' + previewDevice]">
           <iframe
             ref="previewIframe"
             :srcdoc="previewHtml"
@@ -81,7 +81,7 @@
             :name="file.path"
           >
             <div class="code-editor">
-              <pre><code :class="`language-${file.type}`">{{ file.content }}</code></pre>
+              <pre><code :class="'language-' + file.type">{{ file.content }}</code></pre>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -161,7 +161,7 @@ import {
   View, Document, DataAnalysis, Refresh, CopyDocument, Download,
   Monitor, Iphone, Cellphone
 } from '@element-plus/icons-vue'
-import type { CodeQualityReport } from './core/TemplateEngine'
+import type { CodeQualityReport } from '../core/TemplateEngine'
 
 interface GeneratedFile {
   path: string

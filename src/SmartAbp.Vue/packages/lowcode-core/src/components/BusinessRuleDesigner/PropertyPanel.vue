@@ -44,7 +44,7 @@
             />
           </el-form-item>
           <el-form-item label="节点类型">
-            <el-tag :type="(getNodeTypeTagType(selectedNode.type) as import('../../types/business-rule').ElementTagType)">
+            <el-tag :type="(getNodeTypeTagType(selectedNode.type) as 'success' | 'info' | 'warning' | 'primary' | 'danger')">
               {{ getNodeTypeLabel(selectedNode.type) }}
             </el-tag>
           </el-form-item>
@@ -292,18 +292,18 @@
 import { Check, RefreshLeft, Setting } from '@element-plus/icons-vue'
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
 import {
-  ElButton,
-  ElCheckbox,
-  ElCheckboxGroup,
-  ElEmpty,
-  ElForm,
-  ElFormItem,
-  ElIcon,
-  ElInput,
-  ElMessage,
-  ElOption,
-  ElSelect,
-  ElTag
+    ElButton,
+    ElCheckbox,
+    ElCheckboxGroup,
+    ElEmpty,
+    ElForm,
+    ElFormItem,
+    ElIcon,
+    ElInput,
+    ElMessage,
+    ElOption,
+    ElSelect,
+    ElTag
 } from 'element-plus'
 import { ref, watch } from 'vue'
 import type { ActionParams, RuleNode, RuleNodeType } from './types'

@@ -59,9 +59,9 @@ class XXHash64 {
      * 比MD5快10倍，比SHA1快20倍
      */
     static hash(data: string | Uint8Array, seed: bigint = 0n): bigint {
-        const bytes = typeof data === 'string' ? 
+        const bytes = typeof data === 'string' ?
             new TextEncoder().encode(data) : data
-        
+
         const len = bytes.length
         let h64: bigint
         let i = 0
@@ -82,11 +82,11 @@ class XXHash64 {
                 i += 32
             }
 
-            h64 = this.rotateLeft(v1, 1n) + 
-                  this.rotateLeft(v2, 7n) + 
-                  this.rotateLeft(v3, 12n) + 
-                  this.rotateLeft(v4, 18n)
-            
+            h64 = this.rotateLeft(v1, 1n) +
+                this.rotateLeft(v2, 7n) +
+                this.rotateLeft(v3, 12n) +
+                this.rotateLeft(v4, 18n)
+
             h64 = this.mergeRound(h64, v1)
             h64 = this.mergeRound(h64, v2)
             h64 = this.mergeRound(h64, v3)
@@ -115,7 +115,9 @@ class XXHash64 {
 
         // 🎯 尾部处理：剩余字节
         while (i < len) {
-            const k1 = BigInt(bytes[i])
+            const byteValue = bytes[i]
+            if (byteValue === undefined) break
+            const k1 = BigInt(byteValue)
             h64 ^= k1 * this.PRIME5
             h64 = this.rotateLeft(h64, 11n) * this.PRIME1
             i++
@@ -177,7 +179,7 @@ class TurboBloomFilter {
         // 🧮 最优参数计算
         this.size = Math.ceil((-expectedItems * Math.log(falsePositiveRate)) / (Math.log(2) ** 2))
         this.hashFunctions = Math.ceil((this.size / expectedItems) * Math.log(2))
-        
+
         // 🚀 32位对齐优化
         const arraySize = Math.ceil(this.size / 32)
         this.bitArray = new Uint32Array(arraySize)
@@ -188,19 +190,22 @@ class TurboBloomFilter {
      */
     add(item: string | bigint): void {
         const hash = typeof item === 'string' ? XXHash64.hash(item) : item
-        
+
         // 🎯 双哈希技巧：h1 + i*h2 
         const h1 = Number(hash & 0xFFFFFFFFn)
         const h2 = Number((hash >> 32n) & 0xFFFFFFFFn) | 1 // 确保奇数
-        
+
         for (let i = 0; i < this.hashFunctions; i++) {
             const bitIndex = Math.abs((h1 + i * h2) % this.size)
             const arrayIndex = Math.floor(bitIndex / 32)
             const bitPosition = bitIndex % 32
-            
-            this.bitArray[arrayIndex] |= (1 << bitPosition)
+
+            const arrayItem = this.bitArray[arrayIndex]
+            if (arrayItem !== undefined) {
+                this.bitArray[arrayIndex] = arrayItem | (1 << bitPosition)
+            }
         }
-        
+
         this.items++
     }
 
@@ -209,20 +214,21 @@ class TurboBloomFilter {
      */
     contains(item: string | bigint): boolean {
         const hash = typeof item === 'string' ? XXHash64.hash(item) : item
-        
+
         const h1 = Number(hash & 0xFFFFFFFFn)
         const h2 = Number((hash >> 32n) & 0xFFFFFFFFn) | 1
-        
+
         for (let i = 0; i < this.hashFunctions; i++) {
             const bitIndex = Math.abs((h1 + i * h2) % this.size)
             const arrayIndex = Math.floor(bitIndex / 32)
             const bitPosition = bitIndex % 32
-            
-            if ((this.bitArray[arrayIndex] & (1 << bitPosition)) === 0) {
+
+            const arrayItem = this.bitArray[arrayIndex]
+            if (arrayItem !== undefined && (arrayItem & (1 << bitPosition)) === 0) {
                 return false // 绝对不存在
             }
         }
-        
+
         return true // 可能存在
     }
 
@@ -232,12 +238,15 @@ class TurboBloomFilter {
     getStats(): { items: number, size: number, fillRatio: number, estimatedFPR: number } {
         let setBits = 0
         for (let i = 0; i < this.bitArray.length; i++) {
-            setBits += this.popcount(this.bitArray[i])
+            const arrayItem = this.bitArray[i]
+            if (arrayItem !== undefined) {
+                setBits += this.popcount(arrayItem)
+            }
         }
-        
+
         const fillRatio = setBits / this.size
         const estimatedFPR = Math.pow(fillRatio, this.hashFunctions)
-        
+
         return { items: this.items, size: this.size, fillRatio, estimatedFPR }
     }
 
@@ -279,7 +288,7 @@ class HybridCache<K, V> {
         // 📈 更新访问频率和时间
         const oldFreq = node.freq
         const newFreq = oldFreq + 1
-        
+
         node.freq = newFreq
         node.time = Date.now()
 
@@ -315,14 +324,14 @@ class HybridCache<K, V> {
             this.currentMemory += itemSize
 
             // 🧠 内存压力检查
-            while ((this.lruCache.size >= this.maxSize || this.currentMemory > this.maxMemory) 
-                   && this.lruCache.size > 0) {
+            while ((this.lruCache.size >= this.maxSize || this.currentMemory > this.maxMemory)
+                && this.lruCache.size > 0) {
                 this.evictLeastValuable()
             }
 
             // 添加新项
             this.lruCache.set(key, { value, freq: 1, time: Date.now() })
-            
+
             if (!this.freqGroups.has(1)) {
                 this.freqGroups.set(1, new Set())
             }
@@ -357,10 +366,10 @@ class HybridCache<K, V> {
         if (lruKey) {
             const node = this.lruCache.get(lruKey)!
             this.currentMemory -= this.estimateSize(node.value)
-            
+
             this.lruCache.delete(lruKey)
             minFreqGroup.delete(lruKey)
-            
+
             if (minFreqGroup.size === 0) {
                 this.freqGroups.delete(this.minFreq)
             }
@@ -372,7 +381,7 @@ class HybridCache<K, V> {
      */
     private estimateSize(value: V): number {
         if (value === null || value === undefined) return 0
-        
+
         const type = typeof value
         switch (type) {
             case 'number': return 8
@@ -400,7 +409,7 @@ class HybridCache<K, V> {
     } {
         const totalFreq = Array.from(this.lruCache.values())
             .reduce((sum, node) => sum + node.freq, 0)
-        
+
         return {
             size: this.lruCache.size,
             maxSize: this.maxSize,
@@ -423,7 +432,7 @@ export class TurboAnalysisEngine {
     private bloomFilter: TurboBloomFilter
     private workerCount: number
     private maxMemoryMB: number
-    
+
     // 📊 性能监控
     private stats = {
         totalFiles: 0,
@@ -438,21 +447,21 @@ export class TurboAnalysisEngine {
         maxMemoryMB?: number
         expectedFiles?: number
     } = {}) {
-        this.workerCount = options.workerCount ?? navigator.hardwareConcurrency ?? 4
+        this.workerCount = options.workerCount ?? (((typeof navigator !== 'undefined' && navigator.hardwareConcurrency) ? navigator.hardwareConcurrency : 4))
         this.maxMemoryMB = options.maxMemoryMB ?? 800
-        
+
         // 🧠 初始化缓存系统（分配200MB给缓存）
         this.resultCache = new HybridCache<bigint, IncrementalAnalysisResult>(
             50000, // 最多5万条记录
             200    // 200MB内存限制
         )
-        
+
         // 🌸 初始化布隆过滤器
         this.bloomFilter = new TurboBloomFilter(
             options.expectedFiles ?? 100000, // 预期10万文件
             0.001 // 0.1%误报率
         )
-        
+
         this.initWorkerPool()
     }
 
@@ -464,40 +473,40 @@ export class TurboAnalysisEngine {
         content: string
     }>): Promise<Map<string, IncrementalAnalysisResult>> {
         const startTime = performance.now()
-        
+
         console.log(`🚀 TurboEngine启动：分析${files.length}个文件...`)
-        
+
         // 1️⃣ 快速预处理和去重
         const processableFiles = await this.preprocess(files)
         console.log(`⚡ 预处理完成：${processableFiles.length}/${files.length}个文件需要分析`)
-        
+
         // 2️⃣ 并行分析处理
         const results = await this.parallelProcess(processableFiles)
-        
+
         // 3️⃣ 性能统计
         const totalTime = performance.now() - startTime
-        const avgTime = totalTime / files.length
-        
+        const avgTime = files.length > 0 ? totalTime / files.length : 0
+
         this.stats.avgProcessingTime = avgTime
         console.log(`✅ 分析完成：${totalTime.toFixed(2)}ms (avg: ${avgTime.toFixed(2)}ms/file)`)
         console.log(`📊 缓存命中率：${(this.stats.cacheHits / files.length * 100).toFixed(1)}%`)
-        
+
         return results
     }
 
     /**
      * ⚡ 预处理：哈希计算+布隆过滤器去重
      */
-    private async preprocess(files: Array<{ path: string, content: string }>): 
+    private async preprocess(files: Array<{ path: string, content: string }>):
         Promise<Array<{ path: string, content: string, metadata: TurboFileMetadata }>> {
-        
+
         const processableFiles: Array<{ path: string, content: string, metadata: TurboFileMetadata }> = []
-        
+
         // 🔥 并行哈希计算（使用Web Workers卸载主线程）
         const hashPromises = files.map(async file => {
             const hash = XXHash64.hash(file.content)
             const signature = this.generateSignature(file.content)
-            
+
             const metadata: TurboFileMetadata = {
                 path: file.path,
                 size: file.content.length,
@@ -505,7 +514,7 @@ export class TurboAnalysisEngine {
                 hash,
                 signature
             }
-            
+
             // 🌸 布隆过滤器快速去重检查
             if (this.bloomFilter.contains(hash)) {
                 // 💎 缓存精确查找
@@ -515,22 +524,22 @@ export class TurboAnalysisEngine {
                     return null // 跳过已分析的文件
                 }
             }
-            
+
             // 添加到布隆过滤器
             this.bloomFilter.add(hash)
-            
+
             return { path: file.path, content: file.content, metadata }
         })
-        
+
         const results = await Promise.all(hashPromises)
-        
+
         // 过滤掉null值（已缓存的文件）
         for (const result of results) {
             if (result) {
                 processableFiles.push(result)
             }
         }
-        
+
         return processableFiles
     }
 
@@ -539,7 +548,7 @@ export class TurboAnalysisEngine {
      */
     private generateSignature(content: string): Uint32Array {
         const signature = new Uint32Array(8) // 256位签名
-        
+
         // 🔥 关键特征提取
         const features = [
             content.includes('defineProps') ? 1 : 0,
@@ -551,50 +560,53 @@ export class TurboAnalysisEngine {
             content.includes('computed(') ? 1 : 0,
             content.includes('watch(') ? 1 : 0,
         ]
-        
+
         // 🧮 特征向量哈希
         for (let i = 0; i < features.length && i < signature.length; i++) {
-            signature[i] = features[i]
+            const feature = features[i]
+            if (feature !== undefined) {
+                signature[i] = feature
+            }
         }
-        
+
         return signature
     }
 
     /**
      * 🚀 并行处理主控制器
      */
-    private async parallelProcess(files: Array<{ 
-        path: string, 
-        content: string, 
-        metadata: TurboFileMetadata 
+    private async parallelProcess(files: Array<{
+        path: string,
+        content: string,
+        metadata: TurboFileMetadata
     }>): Promise<Map<string, IncrementalAnalysisResult>> {
-        
+
         const results = new Map<string, IncrementalAnalysisResult>()
         const chunkSize = Math.ceil(files.length / this.workerCount)
-        
+
         // 📊 分片并行处理
         const workerPromises: Promise<void>[] = []
-        
+
         for (let i = 0; i < this.workerCount; i++) {
             const startIdx = i * chunkSize
             const endIdx = Math.min(startIdx + chunkSize, files.length)
             const chunk = files.slice(startIdx, endIdx)
-            
+
             if (chunk.length === 0) continue
-            
+
             const workerPromise = this.processChunk(chunk, i).then(chunkResults => {
                 // 合并结果
                 chunkResults.forEach((result, path) => {
                     results.set(path, result)
                 })
             })
-            
+
             workerPromises.push(workerPromise)
         }
-        
+
         // 等待所有Worker完成
         await Promise.all(workerPromises)
-        
+
         return results
     }
 
@@ -605,39 +617,43 @@ export class TurboAnalysisEngine {
         chunk: Array<{ path: string, content: string, metadata: TurboFileMetadata }>,
         workerId: number
     ): Promise<Map<string, IncrementalAnalysisResult>> {
-        
+
         return new Promise((resolve, reject) => {
             const worker = this.workerPool[workerId]
-            
+            if (!worker) {
+                reject(new Error(`Worker ${workerId} not available`))
+                return
+            }
+
             const timeout = setTimeout(() => {
                 reject(new Error(`Worker ${workerId} timeout`))
             }, 30000) // 30秒超时
-            
+
             worker.onmessage = (event) => {
                 clearTimeout(timeout)
                 const { type, results, error } = event.data
-                
+
                 if (type === 'analysis_complete') {
                     // 🎯 结果反序列化
                     const resultsMap = new Map<string, IncrementalAnalysisResult>()
-                    
+
                     for (const [path, result] of results) {
                         // 💾 缓存结果
                         this.resultCache.set(result.fileHash, result)
                         resultsMap.set(path, result)
                     }
-                    
+
                     resolve(resultsMap)
                 } else if (type === 'error') {
                     reject(new Error(error))
                 }
             }
-            
+
             worker.onerror = (error) => {
                 clearTimeout(timeout)
                 reject(error)
             }
-            
+
             // 🚀 发送任务到Worker
             worker.postMessage({
                 type: 'analyze_batch',
@@ -697,15 +713,15 @@ export class TurboAnalysisEngine {
                 return 0 // UNKNOWN
             }
         `
-        
+
         for (let i = 0; i < this.workerCount; i++) {
             const blob = new Blob([workerCode], { type: 'application/javascript' })
             const workerUrl = URL.createObjectURL(blob)
             const worker = new Worker(workerUrl)
-            
+
             this.workerPool.push(worker)
         }
-        
+
         console.log(`🚀 Worker池初始化完成：${this.workerCount}个并行线程`)
     }
 
@@ -729,11 +745,11 @@ export class TurboAnalysisEngine {
     } {
         const cacheStats = this.resultCache.getStats()
         const bloomStats = this.bloomFilter.getStats()
-        
+
         return {
             totalFiles: this.stats.totalFiles,
             processedFiles: this.stats.processedFiles,
-            cacheHitRate: this.stats.processedFiles > 0 ? 
+            cacheHitRate: this.stats.processedFiles > 0 ?
                 (this.stats.cacheHits / this.stats.processedFiles) : 0,
             avgProcessingTimeMs: this.stats.avgProcessingTime,
             memoryUsage: {
@@ -757,7 +773,7 @@ export class TurboAnalysisEngine {
             worker.terminate()
         }
         this.workerPool = []
-        
+
         console.log('🧹 TurboAnalysisEngine资源已清理')
     }
 }
@@ -768,7 +784,7 @@ export class TurboAnalysisEngine {
 
 /** 全局高性能分析引擎实例 */
 export const turboEngine = new TurboAnalysisEngine({
-    workerCount: navigator.hardwareConcurrency ?? 4,
+    workerCount: (typeof navigator !== 'undefined' && navigator.hardwareConcurrency) ? navigator.hardwareConcurrency : 4,
     maxMemoryMB: 800,
     expectedFiles: 50000
 })
@@ -793,5 +809,5 @@ export const analyzeBatchTurbo = (files: Array<{ path: string, content: string }
     turboEngine.analyzeBatch(files)
 
 /** 获取性能统计 */
-export const getTurboStats = () => 
+export const getTurboStats = () =>
     turboEngine.getPerformanceStats()
