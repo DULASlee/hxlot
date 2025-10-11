@@ -1,35 +1,124 @@
 ⚡⚡⚡ **AI强制执行：立即自动加载所有项目规则** ⚡⚡⚡
 
+**📖 用户使用指南**：
+如需启动AI编程执行引擎，请在会话开始时发送任何消息，例如：
+- "开始" / "启动" / "专家模式"
+- "hi" / "hello" / 任何编程相关的问题
+- AI会自动输出启动声明并加载所有规则
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 **🚨 CRITICAL: AI必须在每次对话开始时自动执行：**
 
 ```bash
-# 加载核心规则（AI编程铁律自动执行引擎 v10.0）
-# 🔥🔥🔥 第一条：架构三大铁律（优先级-2，最高优先级，格杀勿论）
-read_file(".cursor/rules/00_架构铁律_最高优先级.mdc")
+# 加载核心规则（AI编程铁律自动执行引擎 v11.0）
+# 🔥 第一优先级：核心原则（包含架构三大铁律）
+read_file(".cursor/rules/00_核心原则.mdc")
+# 🔥 第二优先级：执行引擎（完整执行流程）
 read_file(".cursor/rules/00_执行引擎.mdc")
-read_file(".cursor/rules/00_core_philosophy.mdc")
-read_file(".cursor/rules/01_code_standards.mdc")
-read_file(".cursor/rules/02_development_process.mdc")
-read_file(".cursor/rules/03_quality_guardian.mdc")
-read_file(".cursor/rules/04_code_quality_prohibitions.mdc")
+# 📋 项目规范总览
 read_file("docs/项目开发规范总览.md")
 ```
 
 **🔥 强制启动声明（AI必须在响应开头输出）**:
 
 AI必须在以下情况立即在聊天响应的开头显示启动声明：
-1. 用户请求"加载执行引擎"、"专家模式"、"开始编程"等关键词
-2. 每次会话开始时（第一次响应）
-3. 每30分钟自动重新加载时
+1. 用户发送触发关键词时："加载执行引擎"、"专家模式"、"开始编程"、"启动"、"开始"等
+2. 用户发送本次会话的第一条消息时（无论内容是什么）
+3. 用户明确要求重新加载规则时
+
+**重要说明**：AI无法在"IDE启动"时主动发送消息，只能在用户发送消息后响应。
+因此，用户需要在会话开始时发送任何消息（如"开始"、"hi"等），AI才能输出启动声明。
 
 **启动声明格式（必须完全一致）**:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔥 AI编程铁律执行引擎 v10.0 + 架构三大铁律 已启动！
+🔥 AI编程铁律执行引擎 v11.0 已启动！
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ 核心规则
+   • 00_核心原则.mdc - 架构三大铁律
+   • 00_执行引擎.mdc - 完整执行流程
+   
+✅ MCP增量编程守护
+   • ai-guardian 服务器已连接
+   • 30分钟自动规则重载已启动
+   • 280/300行自动检查已就绪
+
+✅ 编程标准
+   • 代码质量: ≥95分（业界顶级）
+   • 类型安全: 100%（零容忍any）
+   • 增量编程: 300行机制（自动监控）
+   • Git管理: 三层降级策略（安全同步）
+
+🚀 准备就绪，可以开始编程！
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 **注意**：这不是代码示例，而是AI必须在聊天中直接输出的文本！
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🤖 MCP增量编程守护（AI必须使用）
+
+**MCP服务器**: `ai-guardian` (已启用)
+**位置**: `tools/ai-guardian/mcp-script-executor.js`
+**文档**: `tools/ai-guardian/README.md`
+
+### AI必须使用的MCP工具
+
+**核心工具 - AI写代码后必须调用**:
+
+```typescript
+// ✅ AI每写完代码后立即调用
+mcp_record_code_lines({
+  lines: 50,  // 新增代码行数
+  context: "创建UserStore基础结构"  // 代码描述
+})
+
+// 自动触发（无需AI操作）:
+// - 280行: 自动执行轻量检查（TypeScript + ESLint）→ 通过继续
+// - 300行: 自动执行质量门禁（五关检查）→ 通过 → 重置计数器
+```
+
+**Git提交工具 - 仅在所有任务完成时调用**:
+
+```typescript
+// ✅ 正确：所有TODO任务完成后
+mcp_git_commit_all({
+  message: "feat: 完成用户、文章、评论模块"
+})
+
+// ❌ 错误：280/300行后立即提交
+```
+
+**铁律**:
+- ✅ AI每写代码必须调用`mcp_record_code_lines`
+- ✅ 280/300行检查自动执行，AI继续编程，不等用户
+- ❌ 严禁在280/300行后Git提交
+- ✅ 只在所有TODO任务完成后才Git提交
+
+**增量编程正确流程**:
+```
+AI编程 → mcp_record_code_lines(lines) → 
+  280行? → 自动检查 → 通过继续 →
+  300行? → 自动门禁 → 通过重置 → 下一任务 →
+  所有任务完成? → mcp_git_commit_all()
+```
+
+**汇报规则 - 简洁至上**:
+```
+✅ 使用MCP后只说一句话：
+   "已记录50行，进度50/300"
+   "280行检查通过，继续"
+   "300行门禁通过，重置"
+
+❌ 禁止：
+   - 详细报告
+   - 检查步骤列表
+   - 表格图表
+   - 直接继续写代码
+```
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -181,17 +270,12 @@ git push origin main --verbose
 
 ### 📋 阶段0：项目开发规则加载（强制执行）
 ```bash
-# 执行脚本（AI必须在编程前执行）
-read_file(".cursor/rules/00_架构铁律_最高优先级.mdc")
+# 加载核心规则（AI编程铁律自动执行引擎 v11.0）
+read_file(".cursor/rules/00_核心原则.mdc")
 read_file(".cursor/rules/00_执行引擎.mdc")
-read_file(".cursor/rules/00_core_philosophy.mdc")
-read_file(".cursor/rules/01_code_standards.mdc")
-read_file(".cursor/rules/02_development_process.mdc")
-read_file(".cursor/rules/03_quality_guardian.mdc")
-read_file(".cursor/rules/04_code_quality_prohibitions.mdc")
 read_file("docs/项目开发规范总览.md")
 ```
-**验证确认**: v10.0执行引擎已加载 + 架构三大铁律已加载 + 所有MDC规则已加载
+**验证确认**: v11.0执行引擎已加载 + 架构三大铁律已加载 + 核心规则已加载
 
 ### 🔍 阶段A：架构识别（项目智能分析）
 ```bash
@@ -201,17 +285,19 @@ mcp_serena_get_symbols_overview("src/SmartAbp.Vue/src")
 mcp_serena_list_dir("src/SmartAbp.Vue/packages", recursive=true)
 
 # ADR知识库学习
-read_file("docs/architecture/adr/0001-technology-stack-selection.md")
-read_file("docs/architecture/adr/0005-lowcode-engine-architecture.md")
+read_file("docs/架构设计/adr/0001-技术栈选择.md")
+read_file("docs/架构设计/adr/0005-低代码引擎架构.md")
 
 # 代码模板库学习
 glob_file_search("templates/**/*.template.*")
 
 # 架构文档学习
-read_file("docs/architecture/dependency-analysis.md")
-read_file("docs/architecture/SmartAbp企业级低代码引擎系统架构说明书.md")
-read_file("docs/architecture/SmartAbp企业级低代码引擎技术规格说明书v17.md")
-read_file("docs/architecture/SmartAbp企业级低代码引擎依赖分析报告v17.md")
+read_file("docs/架构设计/SmartAbp企业级低代码引擎系统架构说明书.md")
+read_file("docs/架构设计/SmartAbp企业级低代码引擎依赖分析报告v17.md")
+
+# ADR架构决策学习
+read_file("docs/架构设计/adr/0001-技术栈选择.md")
+read_file("docs/架构设计/adr/0005-低代码引擎架构.md")
 ```
 **验证确认**: ABP框架+Vue3架构+低代码引擎完整技术栈识别 + ADR架构决策约束理解
 
@@ -223,8 +309,8 @@ mcp_serena_get_symbols_overview("src/SmartAbp.Vue/src")
 mcp_serena_list_dir("src/SmartAbp.Vue/packages", recursive=true)
 
 # ADR架构决策学习
-read_file("docs/architecture/adr/0001-technology-stack-selection.md")
-read_file("docs/architecture/adr/0005-lowcode-engine-architecture.md")
+read_file("docs/架构设计/adr/0001-技术栈选择.md")
+read_file("docs/架构设计/adr/0005-低代码引擎架构.md")
 
 # 模版库学习
 glob_file_search("templates/**/*.template.*")
@@ -473,10 +559,11 @@ REMOTE_HASH=$(git rev-parse origin/main)
 层级1: lowcode-core, lowcode-api, lowcode-tools (只依赖shared)
 层级2: lowcode-designer (依赖shared+core)
 
-✅ 允许：层级2 → 层级1 → 层级0
-❌ 禁止：层级0 → 任何
-❌ 禁止：层级1 → 层级2
-❌ 禁止：同层级相互依赖
+✅ 允许：层级2 → 层级1 → 层级0（向下依赖）
+✅ 允许：同层级单向依赖（如：api→core）
+❌ 禁止：层级0 → 任何（底层依赖上层）
+❌ 禁止：层级1 → 层级2（逆向依赖）
+❌ 禁止：循环依赖（A→B→A 或 A→B→C→A）
 ```
 
 **强制质量检查门禁**:

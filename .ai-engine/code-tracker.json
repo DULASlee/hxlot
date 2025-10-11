@@ -1,59 +1,86 @@
 {
   "version": "1.0.0",
   "sessions": {
-    "session_1759820416484": {
-      "sessionId": "session_1759820416484",
-      "startTime": "2025-10-07T07:00:16.484Z",
-      "totalLines": 2879,
+    "session_1760171187326": {
+      "sessionId": "session_1760171187326",
+      "startTime": "2025-10-11T08:26:27.327Z",
+      "totalLines": 3,
       "files": [
         {
-          "path": "src/SmartAbp.Vue/src/views/lowcode/DddDomainDesignerView.vue",
-          "lines": 610,
-          "timestamp": "2025-10-07T07:00:16.526Z"
-        },
-        {
-          "path": "src/SmartAbp.Vue/src/views/lowcode/FormBuilderDemo.vue",
-          "lines": 635,
-          "timestamp": "2025-10-07T07:00:16.526Z"
-        },
-        {
-          "path": "src/SmartAbp.Vue/src/views/lowcode/FormLinkageDemo.vue",
-          "lines": 713,
-          "timestamp": "2025-10-07T07:00:16.526Z"
-        },
-        {
-          "path": "src/SmartAbp.Vue/src/views/lowcode/components/AggregateEditor.vue",
-          "lines": 353,
-          "timestamp": "2025-10-07T07:00:16.526Z"
-        },
-        {
-          "path": "src/SmartAbp.Vue/src/views/lowcode/components/ValueObjectEditor.vue",
-          "lines": 285,
-          "timestamp": "2025-10-07T07:00:16.526Z"
-        },
-        {
-          "path": "tools/ai-guardian/README.md",
-          "lines": 283,
-          "timestamp": "2025-10-07T07:00:16.526Z"
+          "fileName": "test",
+          "lines": 3,
+          "timestamp": "2025-10-11T08:26:27.327Z"
         }
       ],
-      "checkpoints": [
+      "checkpoints": [],
+      "violations": []
+    },
+    "session_1760171235644": {
+      "sessionId": "session_1760171235644",
+      "startTime": "2025-10-11T08:27:15.644Z",
+      "totalLines": 1,
+      "files": [
         {
-          "id": "300lines",
-          "type": "FORCED_STOP",
-          "description": "强制停止",
-          "lines": 2879,
-          "timestamp": "2025-10-07T07:00:16.526Z"
+          "fileName": "创建用户管理Store",
+          "lines": 1,
+          "timestamp": "2025-10-11T08:27:15.645Z"
         }
       ],
-      "violations": [
+      "checkpoints": [],
+      "violations": []
+    },
+    "session_1760171235669": {
+      "sessionId": "session_1760171235669",
+      "startTime": "2025-10-11T08:27:15.669Z",
+      "totalLines": 0,
+      "files": [],
+      "checkpoints": [],
+      "violations": []
+    },
+    "session_1760173691593": {
+      "sessionId": "session_1760173691593",
+      "startTime": "2025-10-11T09:08:11.593Z",
+      "totalLines": 1,
+      "files": [
         {
-          "type": "超出300行限制",
-          "lines": 2879,
-          "timestamp": "2025-10-07T07:00:16.526Z"
+          "fileName": "创建用户管理Store",
+          "lines": 1,
+          "timestamp": "2025-10-11T09:08:11.594Z"
         }
-      ]
+      ],
+      "checkpoints": [],
+      "violations": []
+    },
+    "session_1760173691612": {
+      "sessionId": "session_1760173691612",
+      "startTime": "2025-10-11T09:08:11.612Z",
+      "totalLines": 0,
+      "files": [],
+      "checkpoints": [],
+      "violations": []
+    },
+    "session_1760173834210": {
+      "sessionId": "session_1760173834210",
+      "startTime": "2025-10-11T09:10:34.210Z",
+      "totalLines": 1,
+      "files": [
+        {
+          "fileName": "测试功能",
+          "lines": 1,
+          "timestamp": "2025-10-11T09:10:34.211Z"
+        }
+      ],
+      "checkpoints": [],
+      "violations": []
+    },
+    "session_1760173834237": {
+      "sessionId": "session_1760173834237",
+      "startTime": "2025-10-11T09:10:34.237Z",
+      "totalLines": 0,
+      "files": [],
+      "checkpoints": [],
+      "violations": []
     }
   },
-  "lastSessionId": "session_1759820416484"
+  "lastSessionId": "session_1760173834237"
 }

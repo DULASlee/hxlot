@@ -16,29 +16,41 @@ const { promisify } = require('util');
 
 const execAsync = promisify(exec);
 
+// 导入现有功能模块
+const CodeLineTracker = require('./CodeLineTracker.js');
+const AIEngineGuardian = require('./AIEngineGuardian.js');
+
 class AIGuardianMCP {
   constructor() {
     this.projectRoot = process.env.AI_GUARDIAN_PROJECT_ROOT || process.cwd();
     this.checkpointDir = path.join(this.projectRoot, '.ai-engine');
     this.logDir = path.join(this.checkpointDir, 'logs');
     this.stateFile = path.join(this.checkpointDir, 'ai-state.json');
-    
+
     // AI状态追踪
     this.lastActivity = Date.now();
     this.activityHistory = [];
     this.offlineDetectionThreshold = 90000; // 90秒无活动判断为离线
     this.heartbeatInterval = 30000; // 30秒心跳间隔
-    
+
     // 恢复机制
     this.recoveryAttempts = 0;
     this.maxRecoveryAttempts = 3;
     this.lastCheckpoint = null;
-    
+
+    // 初始化代码行数追踪器
+    this.codeTracker = new CodeLineTracker();
+
+    // 初始化规则守护（但不启动守护进程，只使用加载功能）
+    this.ruleGuardian = new AIEngineGuardian();
+
     this.ensureDirs();
     this.loadState();
     this.startHeartbeat();
-    
+
     console.log('[AI Guardian] 🛡️ AI断线守护服务已启动');
+    console.log('[AI Guardian] 📊 代码行数追踪器已就绪');
+    console.log('[AI Guardian] 📚 规则守护已就绪');
   }
 
   ensureDirs() {
@@ -86,10 +98,10 @@ class AIGuardianMCP {
       activity,
       timestamp: new Date().toISOString()
     });
-    
+
     // 重置恢复尝试计数
     this.recoveryAttempts = 0;
-    
+
     this.saveState();
     console.log(`[AI Guardian] 📝 记录活动: ${activity}`);
   }
@@ -111,7 +123,7 @@ class AIGuardianMCP {
       timestamp: new Date().toISOString()
     };
     this.saveState();
-    
+
     // 保存详细检查点文件
     const checkpointFile = path.join(
       this.checkpointDir,
@@ -122,7 +134,7 @@ class AIGuardianMCP {
       JSON.stringify(this.lastCheckpoint, null, 2),
       'utf8'
     );
-    
+
     console.log(`[AI Guardian] 💾 检查点已创建: ${checkpoint.stage}`);
   }
 
@@ -138,7 +150,7 @@ class AIGuardianMCP {
     }
 
     const { stage, task, progress, completedTasks, pendingTasks } = this.lastCheckpoint;
-    
+
     const recoveryPrompt = `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔄 AI大模型断线恢复指令
@@ -184,23 +196,23 @@ ${pendingTasks?.map(t => `  - ${t}`).join('\n') || '  无'}
     }
 
     this.recoveryAttempts++;
-    
+
     console.log(`[AI Guardian] 🔄 尝试自动恢复 (${this.recoveryAttempts}/${this.maxRecoveryAttempts})`);
-    
+
     // 生成恢复指令
     const recovery = this.generateRecoveryCommand();
-    
+
     // 保存恢复指令到文件
     const recoveryFile = path.join(
       this.logDir,
       `recovery-${Date.now()}.txt`
     );
     fs.writeFileSync(recoveryFile, recovery.command, 'utf8');
-    
+
     console.log(`[AI Guardian] 📝 恢复指令已保存: ${recoveryFile}`);
     console.log('[AI Guardian] 💡 请复制以下内容到Cursor聊天框：');
     console.log(recovery.command);
-    
+
     return {
       success: true,
       recoveryFile,
@@ -233,7 +245,7 @@ ${pendingTasks?.map(t => `  - ${t}`).join('\n') || '  无'}
 
     this.recoveryAttempts++;
     console.log(`[AI Guardian] 🔄 自动恢复 (${this.recoveryAttempts}/${this.maxRecoveryAttempts})`);
-    
+
     // 通过MCP协议主动发送消息
     const notification = {
       jsonrpc: '2.0',
@@ -243,7 +255,7 @@ ${pendingTasks?.map(t => `  - ${t}`).join('\n') || '  无'}
         message: '请继续执行上一个任务'
       }
     };
-    
+
     // 发送通知到Cursor
     process.stdout.write(JSON.stringify(notification) + '\n');
     console.log('[AI Guardian] ✅ 已自动发送"请继续"到聊天框');
@@ -254,6 +266,7 @@ ${pendingTasks?.map(t => `  - ${t}`).join('\n') || '  无'}
    */
   getTools() {
     return [
+      // 原有工具
       {
         name: 'ai_guardian_ping',
         description: 'AI活动心跳检测，记录AI工作状态',
@@ -297,6 +310,56 @@ ${pendingTasks?.map(t => `  - ${t}`).join('\n') || '  无'}
           type: 'object',
           properties: {}
         }
+      },
+      // 新增：增量编程工具
+      {
+        name: 'mcp_record_code_lines',
+        description: '记录AI编写的代码行数，自动触发280/300行检查',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            lines: { type: 'number', description: '本次编写的代码行数' },
+            context: { type: 'string', description: '代码上下文描述' }
+          },
+          required: ['lines', 'context']
+        }
+      },
+      {
+        name: 'mcp_get_session_state',
+        description: '查询当前编程会话状态和进度',
+        inputSchema: {
+          type: 'object',
+          properties: {}
+        }
+      },
+      {
+        name: 'mcp_reset_counter',
+        description: '重置代码行数计数器（质量门禁通过后）',
+        inputSchema: {
+          type: 'object',
+          properties: {}
+        }
+      },
+      {
+        name: 'mcp_reload_rules',
+        description: '重新加载项目规则文件',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            immediate: { type: 'boolean', description: '是否立即重载' }
+          }
+        }
+      },
+      {
+        name: 'mcp_git_commit_all',
+        description: 'Git提交所有更改（仅在任务完成时）',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            message: { type: 'string', description: '提交信息' }
+          },
+          required: ['message']
+        }
       }
     ];
   }
@@ -334,6 +397,68 @@ ${pendingTasks?.map(t => `  - ${t}`).join('\n') || '  无'}
       case 'ai_guardian_recover':
         const recovery = await this.attemptAutoRecovery();
         return recovery;
+
+      // 新增：增量编程功能
+      case 'mcp_record_code_lines':
+        this.codeTracker.addCode(args.context || 'unknown', 'x'.repeat(args.lines || 0));
+        const session = this.codeTracker.currentSession;
+        return {
+          success: true,
+          currentLines: session.totalLines,
+          progress: `${session.totalLines}/300`,
+          checkpoints: session.checkpoints.map(cp => cp.id),
+          message: `已记录${args.lines}行代码，当前进度: ${session.totalLines}/300行`
+        };
+
+      case 'mcp_get_session_state':
+        const currentSession = this.codeTracker.currentSession;
+        return {
+          sessionId: currentSession.sessionId,
+          startTime: currentSession.startTime,
+          currentLines: currentSession.totalLines,
+          progress: `${currentSession.totalLines}/300`,
+          status: currentSession.totalLines >= 300 ? 'NEEDS_QUALITY_GATE' :
+            currentSession.totalLines >= 280 ? 'WARNING' : 'CODING',
+          checkpointHistory: currentSession.checkpoints,
+          violations: currentSession.violations
+        };
+
+      case 'mcp_reset_counter':
+        this.codeTracker.reset();
+        return {
+          success: true,
+          newCount: 0,
+          message: '代码行数计数器已重置，准备开始下一轮开发'
+        };
+
+      case 'mcp_reload_rules':
+        const loadResult = this.ruleGuardian.loadAllRules();
+        return {
+          success: loadResult.success,
+          loaded: loadResult.loaded,
+          missing: loadResult.missing,
+          errors: loadResult.errors,
+          message: `规则重载完成：成功${loadResult.loaded}个，缺失${loadResult.missing}个`
+        };
+
+      case 'mcp_git_commit_all':
+        try {
+          // 执行Git提交
+          await execAsync('git add .');
+          await execAsync(`git commit -m "${args.message}"`);
+          await execAsync('git pull --rebase');
+          await execAsync('git push');
+          return {
+            success: true,
+            message: 'Git提交成功'
+          };
+        } catch (error) {
+          return {
+            success: false,
+            error: error.message,
+            message: 'Git提交失败，请检查错误信息'
+          };
+        }
 
       default:
         return { error: `未知工具: ${name}` };
@@ -391,13 +516,13 @@ process.stdin.on('data', async (chunk) => {
     try {
       const message = JSON.parse(line);
       const response = await server.handleMessage(message);
-      
+
       const responseMessage = {
         jsonrpc: '2.0',
         id: message.id,
         result: response
       };
-      
+
       process.stdout.write(JSON.stringify(responseMessage) + '\n');
     } catch (error) {
       const errorMessage = {
@@ -408,7 +533,7 @@ process.stdin.on('data', async (chunk) => {
           message: error.message
         }
       };
-      
+
       process.stdout.write(JSON.stringify(errorMessage) + '\n');
     }
   }
@@ -429,4 +554,7 @@ process.on('SIGTERM', () => {
   server.saveState();
   process.exit(0);
 });
+
+// 导出类以便测试
+module.exports = AIGuardianMCP;
 

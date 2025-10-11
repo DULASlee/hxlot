@@ -2,7 +2,7 @@
   "name": "ai-guardian",
   "displayName": "AI Guardian - 断线守护 + 300行监控",
   "description": "AI大模型断线检测与自动恢复插件 + 增量编程300行监控（v2.0新增：实时行数追踪、100/200/300检查点、质量门禁自动触发）",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "publisher": "smartabp",
   "engines": {
     "vscode": "^1.74.0"
@@ -80,6 +80,11 @@
         "command": "aiGuardian.testChatboxOpen",
         "title": "🧪 测试打开聊天框",
         "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.showLineReport",
+        "title": "📊 查看代码行数报告",
+        "category": "AI Guardian"
       }
     ],
     "configuration": {
@@ -120,6 +125,21 @@
             "质量门禁检查"
           ],
           "description": "用于验证AI执行引擎是否加载的响应关键词"
+        },
+        "aiGuardian.enableIDERestart": {
+          "type": "boolean",
+          "default": false,
+          "description": "启用断线后自动重启IDE功能（默认禁用）"
+        },
+        "aiGuardian.enableCodeLineMonitor": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用300行增量编程监控（100/200/300检查点）"
+        },
+        "aiGuardian.enableRuleAutoLoad": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用规则自动加载守护（每30分钟自动重载规则）"
         }
       }
     },

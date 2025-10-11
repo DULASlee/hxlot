@@ -1,26 +1,14 @@
 {
   "version": "1.0.0",
-  "sessionId": "guardian_1759820408451",
-  "startTime": "2025-10-07T07:00:08.452Z",
-  "lastReloadTime": "2025-10-07T07:02:28.285Z",
-  "reloadCount": 2,
+  "sessionId": "guardian_1760171187329",
+  "startTime": "2025-10-11T08:26:27.329Z",
+  "lastReloadTime": "2025-10-11T09:10:34.234Z",
+  "reloadCount": 4,
   "rulesLoaded": [
-    ".cursor/rules/00_编程完整性铁律.mdc",
+    ".cursor/rules/00_核心原则.mdc",
     ".cursor/rules/00_执行引擎.mdc",
-    ".cursor/rules/00_core_philosophy.mdc",
-    ".cursor/rules/01_code_standards.mdc",
-    ".cursor/rules/02_development_process.mdc",
-    ".cursor/rules/03_quality_guardian.mdc",
-    ".cursor/rules/04_code_quality_prohibitions.mdc",
-    ".cursor/rules/05_deep_testing_tenet.mdc"
-  ],
-  "rulesMissing": [
     "docs/项目开发规范总览.md"
   ],
-  "errors": [
-    {
-      "file": "docs/项目开发规范总览.md",
-      "error": "文件不存在"
-    }
-  ]
+  "rulesMissing": [],
+  "errors": []
 }

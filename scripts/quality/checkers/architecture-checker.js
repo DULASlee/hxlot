@@ -34,7 +34,7 @@ class ArchitectureChecker {
 
   async check() {
     console.log(chalk.blue.bold('\n🏗️  架构合规性检查\n'));
-    console.log(chalk.gray('=' .repeat(60)));
+    console.log(chalk.gray('='.repeat(60)));
     console.log('');
 
     // 检查1: packages相对路径引用（P0）
@@ -60,9 +60,9 @@ class ArchitectureChecker {
 
   async checkRelativeImportsInPackages() {
     console.log(chalk.blue('  📋 检查1: packages相对路径引用'));
-    
+
     const packagesDir = path.join(this.projectRoot, 'src/SmartAbp.Vue/packages');
-    
+
     if (!fs.existsSync(packagesDir)) {
       console.log(chalk.yellow('     ⚠️ packages目录不存在，跳过'));
       return;
@@ -76,12 +76,12 @@ class ArchitectureChecker {
       );
 
       const violations = this.parseGrepResults(result);
-      
+
       if (violations.length === 0) {
         console.log(chalk.green('     ✅ 未发现跨package相对路径引用（0违规）'));
       } else {
         console.log(chalk.red(`     ❌ 发现 ${violations.length} 处相对路径违规`));
-        
+
         violations.forEach(v => {
           this.violations.P0.push({
             rule: 'architecture.no-relative-imports-in-packages',
@@ -106,7 +106,7 @@ class ArchitectureChecker {
         });
         console.log('');
       }
-      
+
     } catch (error) {
       console.log(chalk.yellow('     ⚠️ 检查过程出错'));
     }
@@ -114,9 +114,9 @@ class ArchitectureChecker {
 
   async checkMainAppImportsInPackages() {
     console.log(chalk.blue('  📋 检查2: packages引用主应用'));
-    
+
     const packagesDir = path.join(this.projectRoot, 'src/SmartAbp.Vue/packages');
-    
+
     if (!fs.existsSync(packagesDir)) {
       console.log(chalk.yellow('     ⚠️ packages目录不存在，跳过'));
       return;
@@ -130,12 +130,12 @@ class ArchitectureChecker {
       );
 
       const violations = this.parseGrepResults(result);
-      
+
       if (violations.length === 0) {
         console.log(chalk.green('     ✅ 未发现主应用引用（0违规）'));
       } else {
         console.log(chalk.red(`     ❌ 发现 ${violations.length} 处主应用引用违规`));
-        
+
         violations.forEach(v => {
           this.violations.P0.push({
             rule: 'architecture.no-main-app-imports-in-packages',
@@ -156,7 +156,7 @@ class ArchitectureChecker {
         });
         console.log('');
       }
-      
+
     } catch (error) {
       console.log(chalk.yellow('     ⚠️ 检查过程出错'));
     }
@@ -164,9 +164,9 @@ class ArchitectureChecker {
 
   async checkReverseDependencies() {
     console.log(chalk.blue('  📋 检查3: packages逆向依赖'));
-    
+
     const packagesDir = path.join(this.projectRoot, 'src/SmartAbp.Vue/packages');
-    
+
     if (!fs.existsSync(packagesDir)) {
       console.log(chalk.yellow('     ⚠️ packages目录不存在，跳过'));
       return;
@@ -204,11 +204,11 @@ class ArchitectureChecker {
           );
 
           const violations = this.parseGrepResults(result);
-          
+
           if (violations.length > 0) {
             totalViolations += violations.length;
             console.log(chalk.red(`     ❌ ${check.lowLevel} 非法依赖 ${highLevel}（${violations.length}处）`));
-            
+
             violations.forEach(v => {
               this.violations.P0.push({
                 rule: 'architecture.no-reverse-dependencies',
@@ -220,7 +220,7 @@ class ArchitectureChecker {
               });
             });
           }
-          
+
         } catch (error) {
           // 正常，表示没找到违规
         }
@@ -234,18 +234,18 @@ class ArchitectureChecker {
 
   async checkCircularDependencies() {
     console.log(chalk.blue('  📋 检查4: 循环依赖'));
-    
+
     // 这是一个简化版检查，完整版需要依赖分析工具
     console.log(chalk.yellow('     ⏳ 循环依赖检查（简化版）'));
-    
+
     const packagesDir = path.join(this.projectRoot, 'src/SmartAbp.Vue/packages');
-    
+
     if (!fs.existsSync(packagesDir)) {
       console.log(chalk.yellow('     ⚠️ packages目录不存在，跳过'));
       return;
     }
 
-    // 检查同层级相互依赖
+    // 检查循环依赖（A→B→A）
     const sameLevelChecks = [
       { pkg1: 'lowcode-core', pkg2: 'lowcode-api' },
       { pkg1: 'lowcode-core', pkg2: 'lowcode-tools' },
@@ -257,7 +257,7 @@ class ArchitectureChecker {
     for (const check of sameLevelChecks) {
       const pkg1Dir = path.join(packagesDir, check.pkg1);
       const pkg2Dir = path.join(packagesDir, check.pkg2);
-      
+
       if (!fs.existsSync(pkg1Dir) || !fs.existsSync(pkg2Dir)) continue;
 
       try {
@@ -269,22 +269,22 @@ class ArchitectureChecker {
 
         // 检查 pkg2 是否引用 pkg1
         const result2 = execSync(
-          `grep -rn "@smartabp/${check.pkg2}" --include="*.ts" --include="*.vue" "${pkg2Dir}" | grep -v "/dist/" || true`,
+          `grep -rn "@smartabp/${check.pkg1}" --include="*.ts" --include="*.vue" "${pkg2Dir}" | grep -v "/dist/" || true`,
           { encoding: 'utf8' }
         );
 
         if (result1.trim() && result2.trim()) {
           circularFound = true;
           console.log(chalk.red(`     ❌ 发现循环依赖: ${check.pkg1} ⇄ ${check.pkg2}`));
-          
+
           this.violations.P1.push({
             rule: 'architecture.no-circular-dependencies',
             level: 'P1',
             message: `发现循环依赖: ${check.pkg1} ⇄ ${check.pkg2}`,
-            details: '同层级packages不应相互依赖'
+            details: '严禁循环依赖（A→B→A），允许单向依赖（如api→core）'
           });
         }
-        
+
       } catch (error) {
         // 正常
       }
@@ -297,10 +297,10 @@ class ArchitectureChecker {
 
   parseGrepResults(output) {
     if (!output || !output.trim()) return [];
-    
+
     const violations = [];
     const lines = output.split('\n').filter(line => line.trim());
-    
+
     for (const line of lines) {
       const match = line.match(/^(.+):(\d+):(.+)$/);
       if (match) {
@@ -311,7 +311,7 @@ class ArchitectureChecker {
         });
       }
     }
-    
+
     return violations;
   }
 
@@ -328,12 +328,12 @@ class ArchitectureChecker {
 
   printSummary() {
     console.log('');
-    console.log(chalk.gray('=' .repeat(60)));
+    console.log(chalk.gray('='.repeat(60)));
     console.log(chalk.blue.bold('\n📊 架构合规检查结果:\n'));
 
-    const totalViolations = 
-      this.violations.P0.length + 
-      this.violations.P1.length + 
+    const totalViolations =
+      this.violations.P0.length +
+      this.violations.P1.length +
       this.violations.P2.length;
 
     if (this.violations.P0.length === 0) {
@@ -382,7 +382,7 @@ if (require.main === module) {
   checker.check().then(result => {
     const outputPath = 'reports/quality/architecture-check-results.json';
     checker.exportResults(outputPath);
-    
+
     if (!result.passed) {
       process.exit(1);
     }

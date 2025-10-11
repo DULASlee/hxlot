@@ -30,27 +30,22 @@ const { execSync } = require('child_process');
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const CONFIG = {
-  // 核心规则文件列表（必须按顺序加载）
+  // 核心规则文件列表（必须按顺序加载）- v11.0精简版
   coreRules: [
-    '.cursor/rules/00_编程完整性铁律.mdc',
-    '.cursor/rules/00_执行引擎.mdc',
-    '.cursor/rules/00_core_philosophy.mdc',
-    '.cursor/rules/01_code_standards.mdc',
-    '.cursor/rules/02_development_process.mdc',
-    '.cursor/rules/03_quality_guardian.mdc',
-    '.cursor/rules/04_code_quality_prohibitions.mdc',
-    '.cursor/rules/05_deep_testing_tenet.mdc',
+    '.cursor/rules/00_核心原则.mdc',      // 架构三大铁律 + AI编程禁令
+    '.cursor/rules/00_执行引擎.mdc',      // 完整执行流程
+    'docs/项目开发规范总览.md',           // 项目规范
   ],
-  
+
   // 重新加载间隔（毫秒）
   reloadInterval: 30 * 60 * 1000, // 30分钟
-  
+
   // 状态文件
   statusFile: '.ai-engine/guardian-status.json',
-  
+
   // 报告文件
   reportFile: '.ai-engine/guardian-report.md',
-  
+
   // PID文件
   pidFile: '.ai-engine/guardian.pid',
 };
@@ -79,7 +74,7 @@ class AIEngineGuardian {
    */
   loadStatus() {
     const statusPath = path.join(process.cwd(), CONFIG.statusFile);
-    
+
     if (fs.existsSync(statusPath)) {
       try {
         return JSON.parse(fs.readFileSync(statusPath, 'utf-8'));
@@ -106,7 +101,7 @@ class AIEngineGuardian {
   saveStatus() {
     const statusPath = path.join(process.cwd(), CONFIG.statusFile);
     const dir = path.dirname(statusPath);
-    
+
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
@@ -136,7 +131,7 @@ class AIEngineGuardian {
         if (fs.existsSync(fullPath)) {
           const content = fs.readFileSync(fullPath, 'utf-8');
           const stats = fs.statSync(fullPath);
-          
+
           this.rulesCache.set(rulePath, {
             content,
             size: stats.size,
@@ -173,16 +168,16 @@ class AIEngineGuardian {
     console.log('📊 加载摘要');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log(`✅ 成功加载: ${loadedRules.length}/${CONFIG.coreRules.length}个规则文件`);
-    
+
     if (missingRules.length > 0) {
       console.error(`❌ 缺失文件: ${missingRules.length}个`);
       missingRules.forEach(file => console.error(`   - ${file}`));
     }
-    
+
     if (errors.length > 0) {
       console.error(`⚠️ 错误: ${errors.length}个`);
     }
-    
+
     console.log(`🔄 重载次数: ${this.status.reloadCount}`);
     console.log(`🕐 本次重载时间: ${new Date().toLocaleString()}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
@@ -203,10 +198,10 @@ class AIEngineGuardian {
 
     this.rulesCache.forEach((cache, rulePath) => {
       const fullPath = path.join(process.cwd(), rulePath);
-      
+
       if (fs.existsSync(fullPath)) {
         const stats = fs.statSync(fullPath);
-        
+
         if (stats.mtime.toISOString() !== cache.modifiedTime) {
           changedRules.push(rulePath);
           console.log(`🔄 检测到规则文件变更: ${rulePath}`);
@@ -290,14 +285,14 @@ class AIEngineGuardian {
    */
   stopDaemon() {
     const pidPath = path.join(process.cwd(), CONFIG.pidFile);
-    
+
     if (!fs.existsSync(pidPath)) {
       console.log('⚠️ 没有检测到运行中的守护进程\n');
       return;
     }
 
     const pid = fs.readFileSync(pidPath, 'utf-8').trim();
-    
+
     try {
       process.kill(parseInt(pid), 'SIGTERM');
       if (fs.existsSync(pidPath)) {
@@ -322,7 +317,7 @@ class AIEngineGuardian {
     const isRunning = fs.existsSync(pidPath);
 
     console.log(`🔄 守护进程状态: ${isRunning ? '✅ 运行中' : '❌ 未运行'}`);
-    
+
     if (isRunning) {
       const pid = fs.readFileSync(pidPath, 'utf-8').trim();
       console.log(`🆔 进程ID: ${pid}`);
@@ -334,12 +329,12 @@ class AIEngineGuardian {
     console.log(`  • 最后重载: ${this.status.lastReloadTime ? new Date(this.status.lastReloadTime).toLocaleString() : '未加载'}`);
     console.log(`  • 重载次数: ${this.status.reloadCount}次`);
     console.log(`  • 已加载规则: ${this.status.rulesLoaded.length}/${CONFIG.coreRules.length}个`);
-    
+
     if (this.status.rulesMissing.length > 0) {
       console.log(`  • 缺失规则: ${this.status.rulesMissing.length}个`);
       this.status.rulesMissing.forEach(file => console.log(`    - ${file}`));
     }
-    
+
     if (this.status.errors.length > 0) {
       console.log(`  • 错误: ${this.status.errors.length}个`);
       this.status.errors.forEach(err => console.log(`    - ${err.file}: ${err.error}`));
@@ -353,7 +348,7 @@ class AIEngineGuardian {
    */
   generateReport() {
     const report = [];
-    
+
     report.push('# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     report.push('# 🛡️ AI执行引擎守护报告');
     report.push('# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -363,7 +358,7 @@ class AIEngineGuardian {
     report.push(`**最后重载时间**: ${this.status.lastReloadTime || '未加载'}`);
     report.push(`**重载次数**: ${this.status.reloadCount}次`);
     report.push('');
-    
+
     report.push('## 📚 已加载规则文件');
     report.push('');
     this.status.rulesLoaded.forEach((file, index) => {
@@ -375,7 +370,7 @@ class AIEngineGuardian {
       }
     });
     report.push('');
-    
+
     if (this.status.rulesMissing.length > 0) {
       report.push('## ❌ 缺失规则文件');
       report.push('');
@@ -384,7 +379,7 @@ class AIEngineGuardian {
       });
       report.push('');
     }
-    
+
     if (this.status.errors.length > 0) {
       report.push('## ⚠️ 错误记录');
       report.push('');
@@ -393,14 +388,14 @@ class AIEngineGuardian {
       });
       report.push('');
     }
-    
+
     const reportPath = path.join(process.cwd(), CONFIG.reportFile);
     const dir = path.dirname(reportPath);
-    
+
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    
+
     fs.writeFileSync(reportPath, report.join('\n'), 'utf-8');
     console.log(`\n📄 报告已生成: ${CONFIG.reportFile}\n`);
   }

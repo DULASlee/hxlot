@@ -166,8 +166,13 @@ export class AIGuardianExtension {
     // 监听编辑器活动
     this.setupActivityListeners();
 
-    // v2.0新增：监听代码编辑，追踪行数
-    this.setupCodeLineTracking();
+    // v2.0新增：监听代码编辑，追踪行数（检查配置）
+    if (this.config.get('enableCodeLineMonitor', true)) {
+      this.setupCodeLineTracking();
+      this.log('✅ 300行增量编程监控已启用');
+    } else {
+      this.log('⚠️ 300行增量编程监控已禁用');
+    }
 
     // 启动自我监控
     this.startSelfMonitoring();
@@ -240,6 +245,12 @@ export class AIGuardianExtension {
   }
 
   private startEngineCheck() {
+    // 检查是否启用规则自动加载守护
+    if (!this.config.get('enableRuleAutoLoad', true)) {
+      this.log('⚠️ 规则自动加载守护已禁用');
+      return;
+    }
+
     const engineCheckInterval = this.config.get('engineCheckInterval', 30) * 60 * 1000;
 
     // 立即执行一次检查
@@ -251,7 +262,7 @@ export class AIGuardianExtension {
     }, engineCheckInterval);
 
     this.context.subscriptions.push({ dispose: () => clearInterval(this.engineCheckTimer) });
-    this.log(`🔧 开始执行引擎检查 (间隔: ${engineCheckInterval / 60000}分钟)`);
+    this.log(`✅ 规则自动加载守护已启用 (间隔: ${engineCheckInterval / 60000}分钟)`);
   }
 
   public async checkExecutionEngine() {
@@ -573,9 +584,16 @@ export class AIGuardianExtension {
 
     this.log('🔴 AI connection lost.');
 
-    if (this.config.get('autoRecover', true)) {
-      this.log('🚀 Starting silent auto-recovery sequence...');
-      // 核心逻辑变更：不再使用轮询，而是尝试直接调用内部命令
+    // 🚨 核心修改：检查是否启用IDE重启功能
+    const enableIDERestart = this.config.get('enableIDERestart', false);
+
+    if (this.config.get('autoRecover', true) && !enableIDERestart) {
+      this.log('🚀 Starting silent auto-recovery sequence (IDE restart disabled)...');
+      // 只尝试发送消息，不重启IDE
+      this.attemptDirectReconnectWithoutIDERestart();
+    } else if (this.config.get('autoRecover', true) && enableIDERestart) {
+      this.log('🚀 Starting full auto-recovery sequence (with IDE restart)...');
+      // 完整恢复流程，包括重启IDE
       this.attemptDirectReconnect();
     } else {
       this.log('ℹ️ Auto-recovery disabled. Manual intervention required.');
@@ -584,13 +602,83 @@ export class AIGuardianExtension {
     }
   }
 
+  /**
+   * 🚨 新增：不重启IDE的轻量恢复（默认模式）
+   */
+  private async attemptDirectReconnectWithoutIDERestart() {
+    this.updateStatusBar(); // 更新为恢复中状态
+
+    this.log('⚡️ [Lightweight Recovery] Starting recovery without IDE restart...');
+
+    // 只执行Phase 1和Phase 2，不执行IDE重启
+    // Phase 1: 在当前会话尝试3次
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      this.log(`🔄 [Phase 1] Recovery attempt ${attempt}/3`);
+
+      await this.closeDialogsAndModals();
+
+      if (await this.smartSendRecoveryMessage(1)) {
+        if (await this.waitForConnection(15)) {
+          this.log('✅ [Phase 1] AI connection recovered successfully');
+          return;
+        }
+      }
+
+      if (attempt < 3) {
+        await new Promise(resolve => setTimeout(resolve, 5000));
+      }
+    }
+
+    // Phase 2: 开启新会话尝试3次
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      this.log(`🔄 [Phase 2] Recovery attempt ${attempt}/3 - New session`);
+
+      if (await this.openNewChatSession()) {
+        await this.closeDialogsAndModals();
+
+        if (await this.smartSendRecoveryMessage(2)) {
+          if (await this.waitForConnection(15)) {
+            this.log('✅ [Phase 2] AI connection recovered successfully (new session)');
+            return;
+          }
+        }
+      }
+
+      if (attempt < 3) {
+        await new Promise(resolve => setTimeout(resolve, 5000));
+      }
+    }
+
+    // 所有轻量恢复尝试失败，显示手动恢复提示
+    this.log('⚠️ [Lightweight Recovery] All lightweight recovery attempts failed');
+    this.log('💡 [Lightweight Recovery] IDE restart is disabled, showing manual recovery guide');
+
+    vscode.window.showWarningMessage(
+      '⚠️ AI自动恢复失败\n\n' +
+      '已尝试：\n' +
+      '• 当前会话恢复（3次）\n' +
+      '• 新会话恢复（3次）\n\n' +
+      '请手动检查聊天框或重启IDE。\n\n' +
+      '提示：如需启用自动重启IDE功能，请在设置中开启 aiGuardian.enableIDERestart',
+      '手动恢复',
+      '重启IDE',
+      '忽略'
+    ).then(async action => {
+      if (action === '手动恢复') {
+        await this.manualRecover();
+      } else if (action === '重启IDE') {
+        await this.forceRestartIDE();
+      }
+    });
+  }
+
   private async attemptDirectReconnect() {
     this.updateStatusBar(); // 更新为恢复中状态
 
     // ==================================================
     // Level 1: 智能三级恢复策略（集成Python脚本功能）
     // ==================================================
-    this.log('⚡️ [Level 1] Starting intelligent three-phase recovery strategy...');
+    this.log('⚡️ [Level 1] Starting intelligent three-phase recovery strategy (with IDE restart enabled)...');
 
     // 第一阶段：在当前会话中尝试3次
     for (let phase1Attempt = 1; phase1Attempt <= 3; phase1Attempt++) {
@@ -1039,15 +1127,21 @@ ${results.join('\n')}
   }
 
   /**
-   * Windows平台智能重试重启策略
+   * Windows平台智能重试重启策略（跨平台安全）
    */
   private async restartCursorIDEWithRetry(): Promise<void> {
+    // 只在Windows平台执行
+    if (process.platform !== 'win32') {
+      this.log('⚠️ [Restart] 智能重试仅支持Windows平台');
+      return;
+    }
+
     const cursorExePath = process.execPath;
     const autoInputScript = path.join(__dirname, '..', '..', '..', 'tools', 'ai-guardian', 'restart-auto-input.ps1');
 
     try {
       // 步骤1: 重启IDE
-      this.log('🔄 [Restart] 正在重启Cursor IDE...');
+      this.log('🔄 [Restart] 正在重启Cursor IDE (Windows)...');
       const restartCommand = `taskkill /F /IM Cursor.exe && timeout /t 2 && start "" "${cursorExePath}"`;
 
       exec(restartCommand, (error) => {
@@ -1070,14 +1164,22 @@ ${results.join('\n')}
   }
 
   /**
-   * 智能重试策略：交替向两个聊天框发送消息
+   * 智能重试策略：交替向两个聊天框发送消息（仅Windows）
    */
   private async startIntelligentRetry(autoInputScript: string): Promise<void> {
+    // 只在Windows平台执行PowerShell脚本
+    if (process.platform !== 'win32') {
+      this.log('⚠️ [Smart Retry] PowerShell脚本仅支持Windows平台');
+      this.aiState.isRestarting = false;
+      await this.saveState();
+      return;
+    }
+
     const maxRetries = 5; // 最多重试5次
     let retryCount = 0;
     let useNormalChatbox = true; // 交替使用：true=正常聊天框，false=新会话对话框
 
-    this.log('🧠 [Smart Retry] 开始智能重试策略...');
+    this.log('🧠 [Smart Retry] 开始智能重试策略 (Windows)...');
 
     const retryLoop = async (): Promise<void> => {
       if (retryCount >= maxRetries) {
@@ -1094,7 +1196,7 @@ ${results.join('\n')}
       this.log(`🔄 [Smart Retry] 第${retryCount}次尝试 - 向${modeName}发送消息`);
 
       try {
-        // 执行PowerShell脚本
+        // 执行PowerShell脚本（仅Windows）
         const command = `pwsh -NoProfile -ExecutionPolicy Bypass -File "${autoInputScript}" -Mode ${mode} -DelaySeconds 2`;
 
         exec(command, (error, stdout, stderr) => {
@@ -1587,7 +1689,7 @@ ${results.join('\n')}
   public recoverAI() {
     this.log('⚙️ Executing AI recovery command...');
     vscode.commands.executeCommand('cursor.continue');
-    // 立即将状态更新为“恢复中”，提供即时反馈
+    // 立即将状态更新为"恢复中"，提供即时反馈
     this.aiState.isOnline = true; // 假设恢复会成功
     this.aiState.lastActivity = Date.now();
     this.updateStatusBar();
@@ -1765,6 +1867,10 @@ ${engineInfo}
     // 5. 清理UI元素
     if (this.statusBarItem) {
       this.statusBarItem.dispose();
+    }
+
+    if (this.lineCountStatusBar) {
+      this.lineCountStatusBar.dispose();
     }
 
     if (this.outputChannel) {
@@ -2087,7 +2193,7 @@ ${engineInfo}
   }
 
   /**
-   * TypeScript编译检查
+   * TypeScript编译检查（跨平台）
    */
   private async runTypeScriptCheck(): Promise<boolean> {
     try {
@@ -2097,10 +2203,17 @@ ${engineInfo}
         return false;
       }
 
-      const { stdout, stderr } = await execAsync(
-        'cd src/SmartAbp.Vue && npm run type-check',
-        { cwd: workspaceRoot, timeout: 60000 }
-      );
+      const vueProjectPath = path.join(workspaceRoot, 'src', 'SmartAbp.Vue');
+
+      // 跨平台命令
+      const command = process.platform === 'win32'
+        ? 'npm.cmd run type-check'
+        : 'npm run type-check';
+
+      const { stdout, stderr } = await execAsync(command, {
+        cwd: vueProjectPath,
+        timeout: 60000
+      });
 
       this.log('✅ TypeScript检查通过');
       return true;
@@ -2112,7 +2225,7 @@ ${engineInfo}
   }
 
   /**
-   * ESLint检查
+   * ESLint检查（跨平台）
    */
   private async runESLintCheck(): Promise<boolean> {
     try {
@@ -2121,10 +2234,17 @@ ${engineInfo}
         return false;
       }
 
-      const { stdout, stderr } = await execAsync(
-        'cd src/SmartAbp.Vue && npm run lint',
-        { cwd: workspaceRoot, timeout: 60000 }
-      );
+      const vueProjectPath = path.join(workspaceRoot, 'src', 'SmartAbp.Vue');
+
+      // 跨平台命令
+      const command = process.platform === 'win32'
+        ? 'npm.cmd run lint'
+        : 'npm run lint';
+
+      const { stdout, stderr } = await execAsync(command, {
+        cwd: vueProjectPath,
+        timeout: 60000
+      });
 
       this.log('✅ ESLint检查通过');
       return true;
@@ -2136,7 +2256,7 @@ ${engineInfo}
   }
 
   /**
-   * 架构合规检查
+   * 架构合规检查（跨平台 - 使用VSCode API）
    */
   private async runArchitectureCheck(): Promise<boolean> {
     try {
@@ -2145,19 +2265,31 @@ ${engineInfo}
         return false;
       }
 
-      // 检查相对路径违规
-      const { stdout: relativePathCheck } = await execAsync(
-        'grep -r "\'\\.\\./\'" src/SmartAbp.Vue/packages/ | wc -l',
-        { cwd: workspaceRoot }
-      );
+      const packagesPath = path.join(workspaceRoot, 'src', 'SmartAbp.Vue', 'packages');
 
-      // 检查主应用引用违规
-      const { stdout: mainAppCheck } = await execAsync(
-        'grep -r "@/" src/SmartAbp.Vue/packages/ | grep -v node_modules | wc -l',
-        { cwd: workspaceRoot }
-      );
+      // 使用VSCode API跨平台搜索文件
+      let violations = 0;
 
-      const violations = parseInt(relativePathCheck.trim()) + parseInt(mainAppCheck.trim());
+      // 检查相对路径违规：'../'
+      const relativePathPattern = new vscode.RelativePattern(packagesPath, '**/*.{ts,tsx,js,jsx,vue}');
+      const relativePathFiles = await vscode.workspace.findFiles(relativePathPattern, '**/node_modules/**');
+
+      for (const file of relativePathFiles) {
+        const content = await vscode.workspace.fs.readFile(file);
+        const text = Buffer.from(content).toString('utf8');
+
+        // 检查是否包含 '../' 引用
+        if (text.match(/from\s+['"]\.\.\//g) || text.match(/import\s+['"]\.\.\//g)) {
+          violations++;
+          this.log(`⚠️ 发现相对路径违规: ${file.fsPath}`);
+        }
+
+        // 检查是否包含 @/ 主应用引用
+        if (text.match(/from\s+['"]@\//g) || text.match(/import\s+['"]@\//g)) {
+          violations++;
+          this.log(`⚠️ 发现主应用引用违规: ${file.fsPath}`);
+        }
+      }
 
       if (violations === 0) {
         this.log('✅ 架构合规检查通过');
@@ -2169,6 +2301,7 @@ ${engineInfo}
       }
     } catch (error: any) {
       this.log(`❌ 架构合规检查失败: ${error.message}`);
+      this.outputChannel.appendLine(`\n架构合规检查错误:\n${error.message}`);
       return false;
     }
   }

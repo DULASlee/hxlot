@@ -173,7 +173,7 @@
 
 #### ✅ 3. ADR学习
 ```bash
-执行: read_file("docs/architecture/adr/0001-technology-stack-selection.md")
+执行: read_file("docs/架构设计/adr/0001-技术栈选择.md")
 输出: 📖 技术栈、📖 架构原则、📖 约束条件
 ```
 

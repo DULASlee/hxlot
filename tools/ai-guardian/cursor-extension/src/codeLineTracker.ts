@@ -5,7 +5,7 @@
 
 export interface Checkpoint {
   id: string;
-  type: 'USER_REVIEW' | 'FORCED_STOP' | 'MANUAL';
+  type: 'USER_REVIEW' | 'LIGHT_CHECK' | 'QUALITY_GATE' | 'FORCED_STOP' | 'MANUAL';
   lines: number;
   files: FileInfo[];
   timestamp: Date;
@@ -18,7 +18,7 @@ export interface FileInfo {
   timestamp: Date;
 }
 
-export type CheckpointType = 'USER_REVIEW' | 'FORCED_STOP' | 'MANUAL';
+export type CheckpointType = 'USER_REVIEW' | 'LIGHT_CHECK' | 'QUALITY_GATE' | 'FORCED_STOP' | 'MANUAL';
 
 export interface CodeLineTrackerCallbacks {
   on100LinesReached?: () => void;
@@ -115,17 +115,18 @@ export class EnhancedCodeLineTracker {
       }
     }
 
-    // 280行警告
+    // 280行轻量检查 ✅
     if (current >= 280 && current < 300 && !this.has280Triggered) {
       this.has280Triggered = true;
+      this.createCheckpoint('280lines', 'LIGHT_CHECK');
       if (this.callbacks.on280LinesWarning) {
         this.callbacks.on280LinesWarning();
       }
     }
 
-    // 300行强制停止
+    // 300行完整质量门禁 ✅
     if (current >= 300) {
-      this.createCheckpoint('300lines', 'FORCED_STOP');
+      this.createCheckpoint('300lines', 'QUALITY_GATE');
       if (this.callbacks.on300LinesForceStop) {
         this.callbacks.on300LinesForceStop();
       }

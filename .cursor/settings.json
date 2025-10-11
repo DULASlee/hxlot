@@ -270,29 +270,23 @@
   "security.workspace.trust.enabled": false,
   "security.promptForLocalFileProtocolHandling": false,
 
-  // ===== MCP 配置优化 =====
+  // ===== MCP 配置启用 =====
+  // Cursor MCP 支持（实验性功能）
+  "cursor.experimental.mcpServers": true,
+  "cursor.mcpServers.enabled": true,
+  
+  // MCP 服务器配置
   "mcp.servers": {
-    "serena": {
-      "command": "node",
-      "args": [
-        "${workspaceFolder}/.serena/mcp-server.js"
-      ],
-      "env": {
-        "SERENA_PROJECT_ROOT": "${workspaceFolder}",
-        "SERENA_CONFIG_PATH": "${workspaceFolder}/.serena/project.yml",
-        "SERENA_CACHE_DIR": "${workspaceFolder}/.serena",
-        "NODE_ENV": "production"
-      }
-    },
     "ai-guardian": {
       "command": "node",
       "args": [
-        "${workspaceFolder}/tools/ai-guardian/mcp-ai-guardian-server.js"
+        "${workspaceFolder}/tools/ai-guardian/mcp-script-executor.js"
       ],
       "env": {
-        "AI_GUARDIAN_PROJECT_ROOT": "${workspaceFolder}",
+        "MCP_PROJECT_ROOT": "${workspaceFolder}",
         "NODE_ENV": "production"
-      }
+      },
+      "disabled": false
     }
   },
 
