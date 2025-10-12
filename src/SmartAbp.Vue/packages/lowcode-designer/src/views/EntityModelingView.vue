@@ -1203,11 +1203,11 @@ import { useEntityModelingStore, type EntityDefinition, type EntityField } from 
 import { getGlobalLogger } from "@smartabp/lowcode-shared"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { computed, onMounted, ref } from "vue"
-import AdvancedEntityRelationshipDesigner from './components/AdvancedEntityRelationshipDesigner.vue'
-import AdvancedFieldTypeDesigner from './components/AdvancedFieldTypeDesigner.vue'
-import BusinessRulesEngine from './components/BusinessRulesEngine.vue'
-import DataDictionaryManager from './components/DataDictionaryManager.vue'
-import EnterpriseModelingAssistant from './components/EnterpriseModelingAssistant.vue'
+import AdvancedEntityRelationshipDesigner from '../components/AdvancedEntityRelationshipDesigner.vue'
+import AdvancedFieldTypeDesigner from '../components/AdvancedFieldTypeDesigner.vue'
+import BusinessRulesEngine from '../components/BusinessRulesEngine.vue'
+import DataDictionaryManager from '../components/DataDictionaryManager.vue'
+import EnterpriseModelingAssistant from '../components/EnterpriseModelingAssistant.vue'
 
 const logger = getGlobalLogger()
 
