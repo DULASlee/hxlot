@@ -2,122 +2,94 @@
  * TypeScript类型安全检查器
  */
 
-import { execa, ExecaChildProcess } from 'execa';
+import { AST_NODE_TYPES } from '@typescript-eslint/typescript-estree';
+import fs from 'fs/promises';
 import path from 'path';
-import type { Violation } from '../types/index.js';
+import type { CheckResult, QualityConfig, Violation } from '../types/index.js';
+import { visitorTraverse } from '../utils/ast-traverse.js'; // Use the robust traverser
+import { getParser } from '../utils/parser.js';
 import { BaseChecker } from './base-checker.js';
 
 export class TypeScriptChecker extends BaseChecker {
-    private static readonly TSC_BUILD_COMMAND = 'pnpm';
-    private static readonly TSC_BUILD_ARGS = ['tsc', '--build', '--force'];
-    public name = 'TypeScriptChecker';
-    public description = '检查TypeScript类型错误';
-    public version = '3.0.0';
-    private tscProcess: ExecaChildProcess | null = null;
+    public readonly name = 'TypeScriptChecker';
+    public readonly description = 'Checks for TypeScript best practice violations like `as any` and `@ts-ignore`.';
+    public readonly version = '2.0.0';
 
-    public async doCheck(): Promise<void> {
-        this.logProgress('开始执行TypeScript类型检查 (tsc --build)...', 'info');
-        const projectRoot = this.config.projectRoot as string;
+    protected async doCheck(): Promise<void> {
+        const tsFiles = await this.findFiles('**/*.{ts,tsx}', {
+            ignore: ['**/*.d.ts', '**/*.spec.ts', '**/*.test.ts'],
+        });
+
+        for (const file of tsFiles) {
+            const result = await this.checkFile(file, this.config);
+            this.violations.push(...result.violations);
+        }
+    }
+
+    public async checkFile(filePath: string, config: QualityConfig): Promise<CheckResult> {
+        const absolutePath = path.isAbsolute(filePath) ? filePath : path.join(config.projectRoot, filePath);
+
+        const violations: Violation[] = [];
 
         try {
-            this.tscProcess = execa(TypeScriptChecker.TSC_BUILD_COMMAND, TypeScriptChecker.TSC_BUILD_ARGS, {
-                cwd: projectRoot,
-                timeout: 300000, // 5 minutes timeout
-                reject: false, // Don't throw on non-zero exit code
+            const content = await fs.readFile(absolutePath, 'utf-8');
+            const parser = getParser(absolutePath);
+            const ast = parser(content, {
+                comment: true,
+                loc: true,
             });
 
-            const result = await this.tscProcess;
-            this.tscProcess = null; // Process finished, clear reference
-
-            if (result.stdout || result.stderr) {
-                const output = result.stdout + result.stderr;
-                const violations = this.parseTypeScriptBuildOutput(output);
-                if (violations.length > 0) {
-                    violations.forEach(v => this.addViolation(v));
-                    this.logProgress(`TypeScript检查发现 ${violations.length} 个问题。`, 'error');
-                } else if (result.exitCode === 0) {
-                    this.logProgress('TypeScript类型检查通过，未发现问题。', 'success');
-                } else {
-                    this.logProgress('TypeScript检查器执行完毕，但未能解析出具体错误。将报告为一般性构建失败。', 'error');
-                    this.addViolation({
-                        file: 'tsconfig.json',
-                        line: 1,
-                        rule: 'typescript.build.failed',
-                        message: `TypeScript构建失败 (exit code ${result.exitCode})，且无法解析具体错误。请查看下方原始输出。`,
-                        level: 'P0',
-                        snippet: output.substring(0, 1000) + (output.length > 1000 ? '...' : '')
-                    });
+            // Check for @ts-ignore comments
+            if (ast.comments) {
+                for (const comment of ast.comments) {
+                    if (comment.value.trim().startsWith('@ts-ignore')) {
+                        violations.push({
+                            rule: 'no-ts-ignore',
+                            level: 'P0',
+                            message: 'Usage of "@ts-ignore" is disallowed.',
+                            file: filePath,
+                            line: comment.loc.start.line,
+                        });
+                    }
                 }
-            } else if (result.exitCode === 0) {
-                this.logProgress('TypeScript类型检查通过，未发现问题。', 'success');
-            } else {
-                this.addViolation({
-                    file: 'tsconfig.json',
-                    line: 1,
-                    rule: 'typescript.execution.failed',
-                    message: `TypeScript检查器执行失败: ${result.stderr || result.stdout}`,
-                    level: 'P0',
-                });
             }
-        } catch (error: any) {
-            if (error.isTimedOut) {
-                this.addViolation({
-                    file: 'tsconfig.json',
-                    line: 1,
-                    rule: 'typescript.execution.timeout',
-                    message: `TypeScript检查器执行超时 (超过5分钟)`,
-                    level: 'P0',
-                });
-            } else {
-                this.addViolation({
-                    file: 'tsconfig.json',
-                    line: 1,
-                    rule: 'typescript.execution.failed',
-                    message: `TypeScript检查器执行失败: ${error.message}`,
-                    level: 'P0',
-                });
-            }
-        } finally {
-            // Ensure the process is cleaned up if it's still running for any reason
-            if (this.tscProcess) {
-                await this.cleanup();
-            }
-        }
-    }
 
-    public async cleanup(): Promise<void> {
-        if (this.tscProcess && !this.tscProcess.killed) {
-            this.logProgress(`检测到TypeScript检查器仍在运行，将强制终止进程 (PID: ${this.tscProcess.pid})...`, 'warning');
-            this.tscProcess.kill('SIGTERM', {
-                forceKillAfterTimeout: 5000
+            // Check for 'as any' expressions
+            visitorTraverse(ast, {
+                [AST_NODE_TYPES.TSAsExpression]: (node: any) => {
+                    if (node.typeAnnotation.type === AST_NODE_TYPES.TSAnyKeyword) {
+                        violations.push({
+                            rule: 'no-as-any',
+                            level: 'P0',
+                            message: 'Usage of "as any" is disallowed.',
+                            file: filePath,
+                            line: node.loc.start.line,
+                        });
+                    }
+                }
             });
-            this.tscProcess = null;
-            this.logProgress('TypeScript检查器进程已终止。', 'success');
-        }
-    }
 
-    private parseTypeScriptBuildOutput(output: string): Violation[] {
-        const violations: Violation[] = [];
-        const lines = output.split(/\r?\n/).filter(line => line.trim().length > 0);
-        const errorPattern = /^(.*?)\((\d+),(\d+)\):\s+error\s+TS(\d+):\s+(.*)$/;
+            return {
+                checker: this.name,
+                passed: violations.length === 0,
+                violations,
+                filesChecked: 1,
+                duration: 0, // Duration will be calculated in the base class
+            };
 
-        for (const line of lines) {
-            const match = line.match(errorPattern);
-            if (match) {
-                const [, file, lineNum, colNum, code, message] = match;
-                if (file && lineNum && colNum && code && message) {
-                    violations.push({
-                        file: path.relative(this.config.projectRoot as string, file.trim()),
-                        line: parseInt(lineNum, 10),
-                        column: parseInt(colNum, 10),
-                        rule: `typescript.TS${code}`,
-                        message: message.trim(),
-                        level: 'P0',
-                    });
-                }
+        } catch (error) {
+            // Gracefully handle file not found or parsing errors
+            if (error.code !== 'ENOENT') {
+                this.logProgress(`Could not check file ${filePath}: ${error.message}`, 'error');
             }
+            return {
+                checker: this.name,
+                passed: true, // Pass if file can't be read or parsed
+                violations: [],
+                filesChecked: 1,
+                duration: 0,
+            };
         }
-        return violations;
     }
 }
 

@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-10-12T00:31:31Z",
+  "project": "quality-guardian",
+  "qualityGate": {
+    "p0Passed": false,
+    "p1Passed": false,
+    "p2Passed": true,
+    "overallPassed": false
+  },
+  "checks": {
+    "frontend": false,
+    "backend": true,
+    "security": false,
+    "performance": true
+  },
+  "metrics": {
+    "totalFiles":       50,
+    "totalLines": 8968,
+    "todoCount":       23
+  }
+}
