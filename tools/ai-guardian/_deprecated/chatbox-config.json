@@ -1,0 +1,62 @@
+{
+  "chatboxInput": {
+    "description": "聊天框输入框位置（正常聊天使用）",
+    "centerPosition": {
+      "X": 1175,
+      "Y": 824
+    },
+    "region": {
+      "TopLeft": {
+        "X": 1019,
+        "Y": 807
+      },
+      "TopRight": {
+        "X": 1331,
+        "Y": 807
+      },
+      "BottomLeft": {
+        "X": 1019,
+        "Y": 840
+      },
+      "BottomRight": {
+        "X": 1331,
+        "Y": 840
+      },
+      "Width": 312,
+      "Height": 33
+    }
+  },
+  "newSessionDialog": {
+    "description": "IDE重启后新会话对话框位置",
+    "centerPosition": {
+      "X": 1108,
+      "Y": 94
+    },
+    "region": {
+      "TopLeft": {
+        "X": 1020,
+        "Y": 82
+      },
+      "TopRight": {
+        "X": 1196,
+        "Y": 82
+      },
+      "BottomLeft": {
+        "X": 1020,
+        "Y": 107
+      },
+      "BottomRight": {
+        "X": 1196,
+        "Y": 107
+      },
+      "Width": 176,
+      "Height": 25
+    }
+  },
+  "screenResolution": {
+    "Width": 1440,
+    "Height": 960
+  },
+  "capturedAt": "2025-10-05 18:45:00",
+  "notes": "两个坐标已确认：chatboxInput(聊天框) 和 newSessionDialog(重启后新会话对话框)"
+}

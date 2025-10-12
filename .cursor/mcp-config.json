@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "AIGuardian": {
+      "command": "node",
+      "args": ["tools/ai-guardian/mcp-script-executor.js"],
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}
+

@@ -1,0 +1,28 @@
+{
+    "name": "ai-guardian",
+    "displayName": "AI Guardian MCP",
+    "description": "MCP / Incremental programming guardian integration",
+    "version": "3.0.2",
+    "publisher": "codesoft",
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onStartupFinished",
+        "workspaceContains:.cursor/mcp-config.json",
+        "workspaceContains:tools/ai-guardian/mcp-script-executor.js",
+        "onCommand:ai-guardian.start"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "ai-guardian.start",
+                "title": "Start AI Guardian"
+            }
+        ]
+    }
+}

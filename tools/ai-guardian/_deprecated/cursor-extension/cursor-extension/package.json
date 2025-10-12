@@ -1,0 +1,176 @@
+{
+  "name": "ai-guardian",
+  "displayName": "AI Guardian - 断线守护 + 300行监控",
+  "description": "AI大模型断线检测与自动恢复插件 + 增量编程300行监控（v2.0新增：实时行数追踪、100/200/300检查点、质量门禁自动触发）",
+  "version": "2.1.0",
+  "publisher": "smartabp",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "ai",
+    "guardian",
+    "recovery",
+    "cursor",
+    "断线恢复"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "enabledApiProposals": [
+    "languageModels"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "aiGuardian.start",
+        "title": "启动AI守护",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.stop",
+        "title": "停止AI守护",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.status",
+        "title": "查看AI状态",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.recover",
+        "title": "手动恢复AI",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.checkEngine",
+        "title": "检查执行引擎",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.loadEngine",
+        "title": "加载执行引擎",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.resetState",
+        "title": "重置守护状态",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.forceRestart",
+        "title": "强制重启IDE",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.selfCheck",
+        "title": "自我检查",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.listChatCommands",
+        "title": "🔍 列出所有聊天相关命令",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.testChatboxOpen",
+        "title": "🧪 测试打开聊天框",
+        "category": "AI Guardian"
+      },
+      {
+        "command": "aiGuardian.showLineReport",
+        "title": "📊 查看代码行数报告",
+        "category": "AI Guardian"
+      }
+    ],
+    "configuration": {
+      "title": "AI Guardian",
+      "properties": {
+        "aiGuardian.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用AI断线检测"
+        },
+        "aiGuardian.checkInterval": {
+          "type": "number",
+          "default": 30,
+          "description": "检测间隔（秒）"
+        },
+        "aiGuardian.offlineThreshold": {
+          "type": "number",
+          "default": 90,
+          "description": "离线判断阈值（秒）"
+        },
+        "aiGuardian.autoRecover": {
+          "type": "boolean",
+          "default": true,
+          "description": "自动恢复AI连接"
+        },
+        "aiGuardian.engineCheckInterval": {
+          "type": "number",
+          "default": 30,
+          "description": "执行引擎检查间隔（分钟）"
+        },
+        "aiGuardian.engineResponseKeywords": {
+          "type": "array",
+          "default": [
+            "AI编程铁律自动执行引擎已启动",
+            "专家模式已激活",
+            "九重爆雷",
+            "编程前强制学习",
+            "质量门禁检查"
+          ],
+          "description": "用于验证AI执行引擎是否加载的响应关键词"
+        },
+        "aiGuardian.enableIDERestart": {
+          "type": "boolean",
+          "default": false,
+          "description": "启用断线后自动重启IDE功能（默认禁用）"
+        },
+        "aiGuardian.enableCodeLineMonitor": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用300行增量编程监控（100/200/300检查点）"
+        },
+        "aiGuardian.enableRuleAutoLoad": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用规则自动加载守护（每30分钟自动重载规则）"
+        }
+      }
+    },
+    "statusBarItems": [
+      {
+        "id": "aiGuardian.status",
+        "alignment": "right",
+        "priority": 100
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js",
+    "test-compile": "tsc -p ./src/test/",
+    "test-unit": "mocha out/test/**/*.test.js"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.0",
+    "@types/node": "16.x",
+    "@types/sinon": "^17.0.4",
+    "@types/vscode": "^1.74.0",
+    "mocha": "^10.0.0",
+    "sinon": "^21.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^4.9.4"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

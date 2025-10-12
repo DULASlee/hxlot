@@ -1,0 +1,13 @@
+{
+    "mcpServers": {
+        "script-executor": {
+            "command": "node",
+            "args": [
+                "tools/ai-guardian/mcp-script-executor.js"
+            ],
+            "env": {
+                "AI_GUARDIAN_PROJECT_ROOT": "${workspaceFolder}"
+            }
+        }
+    }
+}
