@@ -92,7 +92,7 @@ export const useDesignerStore = defineStore('lowcode-designer', () => {
                 console.warn(`Component with id ${componentId} not found at index ${index}`)
                 return
             }
-            
+
             // 构建完整的组件对象，确保所有必需字段都存在
             const updatedComponent: CanvasComponent = {
                 ...existing,
@@ -104,7 +104,7 @@ export const useDesignerStore = defineStore('lowcode-designer', () => {
                 props: updates.props ?? existing.props,
                 children: updates.children ?? existing.children
             }
-            
+
             canvasComponents.value[index] = updatedComponent
             saveHistory()
             isDirty.value = true

@@ -236,6 +236,41 @@ registerCoreComponents()     // 2. 核心组件（依赖shared）
 registerDesignerComponents() // 3. 设计器组件（依赖core+shared）- 企业级ComponentRegistry
 console.log('✅ 所有组件已注册到ComponentRegistry')
 
+// 🤖 【微AI 2.0】自动组件发现与注册（仅开发模式）
+if (import.meta.env.DEV) {
+  import('@smartabp/lowcode-shared').then(({ AutoComponentDiscoveryEngine }) => {
+    const autoDiscovery = new AutoComponentDiscoveryEngine({
+      patterns: [
+        'src/SmartAbp.Vue/packages/*/src/components/**/*.vue',
+        'src/components/**/*.vue',
+        'src/views/**/*.vue'
+      ],
+      excludes: [
+        'node_modules',
+        'dist',
+        '.git',
+        'coverage',
+        'tests',
+        '__tests__'
+      ],
+      hotReload: true,
+      scanIntervalMs: 5 * 60 * 1000, // 5分钟扫描一次
+      maxMemoryMB: 200
+    })
+    
+    autoDiscovery.start().then(() => {
+      console.log('🤖 微AI 2.0自动组件发现已启动')
+      console.log('   - 扫描间隔: 5分钟')
+      console.log('   - 热更新: 已启用')
+      console.log('   - 内存限制: 200MB')
+    }).catch((error) => {
+      console.warn('⚠️ 微AI 2.0自动组件发现启动失败:', error)
+    })
+  }).catch((error) => {
+    console.warn('⚠️ 无法加载AutoComponentDiscoveryEngine:', error)
+  })
+}
+
 app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin).use(ComponentRegistryBridge)
 // .use(enterpriseIconSystem) // TODO: 暂时注释
 

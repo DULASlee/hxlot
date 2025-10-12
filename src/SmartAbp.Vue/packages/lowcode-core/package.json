@@ -45,16 +45,16 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "vue": "^3.3.0",
-    "typescript": "^5.0.0"
+    "vue": "^3.3.0"
   },
   "peerDependencies": {
-    "@smartabp/metadata-core": "workspace:*",
+    "@smartabp/lowcode-api": "workspace:*",
     "@smartabp/lowcode-shared": "workspace:*",
-    "@smartabp/lowcode-api": "workspace:*"
+    "@smartabp/metadata-core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "tsup": "^8.0.0"
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.3"
   }
 }
