@@ -560,23 +560,32 @@ namespace SmartAbp.Application.BusinessRules
                         new() { 
                             Id = Guid.NewGuid(), 
                             Name = "User", 
+                            TableName = "Users",
                             DisplayName = "用户", 
                             Description = "系统用户实体（默认）",
-                            EntityType = "SystemEntity"
+                            EntityType = "SystemEntity",
+                            BaseType = "Entity",
+                            Namespace = "SmartAbp.Domain.Entities"
                         },
                         new() { 
                             Id = Guid.NewGuid(), 
                             Name = "Order", 
+                            TableName = "Orders",
                             DisplayName = "订单", 
                             Description = "业务订单实体（默认）",
-                            EntityType = "BusinessEntity"
+                            EntityType = "BusinessEntity",
+                            BaseType = "Entity",
+                            Namespace = "SmartAbp.Domain.Entities"
                         },
                         new() { 
                             Id = Guid.NewGuid(), 
                             Name = "Product", 
+                            TableName = "Products",
                             DisplayName = "产品", 
                             Description = "产品信息实体（默认）",
-                            EntityType = "BusinessEntity"
+                            EntityType = "BusinessEntity",
+                            BaseType = "Entity",
+                            Namespace = "SmartAbp.Domain.Entities"
                         }
                     };
                 }

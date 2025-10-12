@@ -18,27 +18,27 @@ namespace SmartAbp.Application.Contracts.LowCode.Dtos
         /// <summary>
         /// 字段名称
         /// </summary>
-        public string FieldName { get; set; }
+        public required string FieldName { get; set; }
 
         /// <summary>
         /// 规则类型：length, range, regex, unique, custom
         /// </summary>
-        public string RuleType { get; set; }
+        public required string RuleType { get; set; }
 
         /// <summary>
         /// 规则值（如：长度范围、正则表达式、自定义表达式）
         /// </summary>
-        public string RuleValue { get; set; }
+        public required string RuleValue { get; set; }
 
         /// <summary>
         /// 错误消息
         /// </summary>
-        public string ErrorMessage { get; set; }
+        public required string ErrorMessage { get; set; }
 
         /// <summary>
         /// 规则描述
         /// </summary>
-        public string Description { get; set; }
+        public required string Description { get; set; }
 
         /// <summary>
         /// 是否启用

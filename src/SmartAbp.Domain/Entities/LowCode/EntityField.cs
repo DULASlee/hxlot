@@ -63,7 +63,7 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// <summary>
         /// 字段注释（数据库注释）
         /// </summary>
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         /// <summary>
         /// 字段描述（业务描述）
@@ -85,6 +85,13 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// </summary>
         public EntityField()
         {
+            Name = string.Empty;
+            DisplayName = string.Empty;
+            Type = string.Empty;
+            DefaultValue = string.Empty;
+            Comment = string.Empty;
+            Description = string.Empty;
+            EntityDefinition = null!;
         }
 
         /// <summary>

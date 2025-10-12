@@ -94,6 +94,17 @@ namespace SmartAbp.Domain.Entities.LowCode
         protected SchemaVersionHistory()
         {
             // EF Core需要无参构造函数
+            Version = string.Empty;
+            SchemaName = string.Empty;
+            Description = string.Empty;
+            ChangeType = string.Empty;
+            ChangeContent = string.Empty;
+            MinCompatibleVersion = string.Empty;
+            MaxCompatibleVersion = string.Empty;
+            MigrationScriptPath = string.Empty;
+            RollbackScriptPath = string.Empty;
+            ReleasedBy = string.Empty;
+            ReleaseNotes = string.Empty;
         }
 
         public SchemaVersionHistory(

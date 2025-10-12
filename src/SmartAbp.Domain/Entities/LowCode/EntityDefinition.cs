@@ -35,17 +35,17 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// <summary>
         /// 实体类型：aggregate-root, entity, value-object
         /// </summary>
-        public string EntityType { get; set; }
+        public string? EntityType { get; set; }
 
         /// <summary>
         /// 基类：Entity, AuditedEntity, FullAuditedEntity
         /// </summary>
-        public string BaseType { get; set; }
+        public string? BaseType { get; set; }
 
         /// <summary>
         /// 命名空间（用于代码生成）
         /// </summary>
-        public string Namespace { get; set; }
+        public string? Namespace { get; set; }
 
         /// <summary>
         /// 实体类别：core, relation, config, log（保留用于分类）
@@ -97,6 +97,15 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// </summary>
         public EntityDefinition()
         {
+            Name = string.Empty;
+            TableName = string.Empty;
+            DisplayName = string.Empty;
+            Description = string.Empty;
+            EntityType = string.Empty;
+            BaseType = string.Empty;
+            Namespace = string.Empty;
+            Category = string.Empty;
+            Module = string.Empty;
             Fields = new List<EntityField>();
             ValidationRules = new List<ValidationRule>();
         }

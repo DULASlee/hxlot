@@ -9,10 +9,10 @@ namespace SmartAbp.CodeGenerator.Dtos
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
-        public string Industry { get; set; }
-        public string CompanyName { get; set; }
-        public string CompanySize { get; set; }
-        public string LastUsedMode { get; set; }
+        public required string Industry { get; set; }
+        public required string CompanyName { get; set; }
+        public required string CompanySize { get; set; }
+        public required string LastUsedMode { get; set; }
         public bool IsFirstVisit { get; set; }
     }
     
@@ -21,10 +21,10 @@ namespace SmartAbp.CodeGenerator.Dtos
     /// </summary>
     public class UpdateUserProfileDto
     {
-        public string Industry { get; set; }
-        public string CompanyName { get; set; }
-        public string CompanySize { get; set; }
-        public string LastUsedMode { get; set; }
+        public required string Industry { get; set; }
+        public required string CompanyName { get; set; }
+        public required string CompanySize { get; set; }
+        public required string LastUsedMode { get; set; }
     }
     
     /// <summary>
@@ -32,10 +32,10 @@ namespace SmartAbp.CodeGenerator.Dtos
     /// </summary>
     public class IndustryRecommendationDto
     {
-        public string Template { get; set; }
-        public string Name { get; set; }
-        public string Reason { get; set; }
-        public string Benefits { get; set; }
+        public required string Template { get; set; }
+        public required string Name { get; set; }
+        public required string Reason { get; set; }
+        public required string Benefits { get; set; }
     }
 }
 

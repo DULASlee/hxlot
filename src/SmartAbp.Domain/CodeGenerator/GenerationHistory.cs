@@ -58,7 +58,15 @@ namespace SmartAbp.CodeGenerator
         /// </summary>
         public virtual string Metadata { get; set; }
         
-        protected GenerationHistory() { }
+        protected GenerationHistory() 
+        {
+            Mode = string.Empty;
+            TemplateName = string.Empty;
+            ProjectName = string.Empty;
+            Status = string.Empty;
+            ErrorMessage = string.Empty;
+            Metadata = string.Empty;
+        }
         
         public GenerationHistory(
             Guid id,

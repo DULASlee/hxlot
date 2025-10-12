@@ -43,7 +43,14 @@ namespace SmartAbp.CodeGenerator
         /// </summary>
         public virtual string Preferences { get; set; }
         
-        protected UserProfile() { }
+        protected UserProfile() 
+        {
+            Industry = string.Empty;
+            CompanyName = string.Empty;
+            CompanySize = string.Empty;
+            LastUsedMode = string.Empty;
+            Preferences = string.Empty;
+        }
         
         public UserProfile(
             Guid id,

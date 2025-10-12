@@ -61,6 +61,13 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// </summary>
         public EntityRelation()
         {
+            FromEntity = string.Empty;
+            ToEntity = string.Empty;
+            RelationType = string.Empty;
+            ForeignKey = string.Empty;
+            NavigationProperty = string.Empty;
+            JoinTable = string.Empty;
+            Description = string.Empty;
         }
 
         /// <summary>

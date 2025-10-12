@@ -10,8 +10,8 @@ namespace SmartAbp.Application.Contracts.CodeGenerator
 
     public class ValidationErrorDto
     {
-        public string Field { get; set; }
-        public string Message { get; set; }
+        public required string Field { get; set; }
+        public required string Message { get; set; }
         public string Severity { get; set; } = "Error"; // "Error" or "Warning"
     }
 }

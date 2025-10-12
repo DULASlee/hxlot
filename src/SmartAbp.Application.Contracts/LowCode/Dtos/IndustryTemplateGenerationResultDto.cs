@@ -11,7 +11,7 @@ namespace SmartAbp.Application.Contracts.LowCode.Dtos
 
     public class GeneratedFileDto
     {
-        public string Path { get; set; }
-        public string Content { get; set; }
+        public required string Path { get; set; }
+        public required string Content { get; set; }
     }
 }

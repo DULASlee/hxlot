@@ -60,6 +60,12 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// </summary>
         public ValidationRule()
         {
+            FieldName = string.Empty;
+            RuleType = string.Empty;
+            RuleValue = string.Empty;
+            ErrorMessage = string.Empty;
+            Description = string.Empty;
+            EntityDefinition = null!;
         }
 
         /// <summary>
