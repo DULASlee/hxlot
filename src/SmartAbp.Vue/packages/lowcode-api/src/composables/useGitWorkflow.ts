@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { createSimpleApiComposable } from '@smartabp/lowcode-shared'
 import { http } from '../http-client.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -58,89 +58,32 @@ export interface GeneratedGitConfig {
 // Git工作流Composable - Git Workflow Composable
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+/**
+ * Git工作流 Composable
+ * 使用工厂函数自动生成，消除样板代码
+ */
 export function useGitWorkflow() {
-  const loading = ref(false)
-  const error = ref<string | null>(null)
-
-  /**
-   * 初始化Git仓库
-   */
-  async function initializeRepository(config: GitRepositoryInitConfig): Promise<GitWorkflowResult> {
-    loading.value = true
-    error.value = null
-
-    try {
-      const response = await http.post<GitWorkflowResult>('/api/git-workflow/initialize', config)
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Git仓库初始化失败'
-      throw err
-    } finally {
-      loading.value = false
+  return createSimpleApiComposable({
+    initializeRepository: {
+      endpoint: '/api/git-workflow/initialize',
+      method: 'POST',
+      errorMessage: 'Git仓库初始化失败'
+    },
+    createBranch: {
+      endpoint: '/api/git-workflow/create-branch',
+      method: 'POST',
+      errorMessage: '创建分支失败'
+    },
+    generateCommitMessage: {
+      endpoint: '/api/git-workflow/generate-commit-message',
+      method: 'POST',
+      errorMessage: '生成提交信息失败'
+    },
+    generateAllGitConfigs: {
+      endpoint: '/api/git-workflow/generate-all-configs',
+      method: 'POST',
+      errorMessage: '生成Git配置失败'
     }
-  }
-
-  /**
-   * 创建分支
-   */
-  async function createBranch(config: GitBranchConfig): Promise<GitWorkflowResult> {
-    loading.value = true
-    error.value = null
-
-    try {
-      const response = await http.post<GitWorkflowResult>('/api/git-workflow/create-branch', config)
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '创建分支失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  /**
-   * 生成提交信息
-   */
-  async function generateCommitMessage(config: GitCommitConfig): Promise<GitWorkflowResult> {
-    loading.value = true
-    error.value = null
-
-    try {
-      const response = await http.post<GitWorkflowResult>('/api/git-workflow/generate-commit-message', config)
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '生成提交信息失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  /**
-   * 生成所有Git配置文件
-   */
-  async function generateAllGitConfigs(config: GitRepositoryInitConfig): Promise<GeneratedGitConfig> {
-    loading.value = true
-    error.value = null
-
-    try {
-      const response = await http.post<GeneratedGitConfig>('/api/git-workflow/generate-all-configs', config)
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '生成Git配置失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  return {
-    loading,
-    error,
-    initializeRepository,
-    createBranch,
-    generateCommitMessage,
-    generateAllGitConfigs
-  }
+  }, http)
 }
 

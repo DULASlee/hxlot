@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { createSimpleApiComposable } from '@smartabp/lowcode-shared'
 import { http as httpClient } from '../http-client.js'
 
 /**
@@ -118,97 +118,25 @@ export interface SecurityValidationResult {
 
 /**
  * 安全策略管理Composable - Day 13
+ * 使用工厂函数自动生成，消除样板代码
  */
 export function useSecurityPolicy() {
-  const loading = ref(false)
-  const error = ref<string | null>(null)
-
-  /**
-   * 验证安全策略
-   */
-  const validateSecurityPolicy = async (
-    policy: SecurityPolicy
-  ): Promise<SecurityValidationResult> => {
-    try {
-      loading.value = true
-      error.value = null
-
-      const response = await httpClient.post<SecurityValidationResult>(
-        '/api/code-generation/security/validate',
-        policy
-      )
-
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '安全策略验证失败'
-      throw err
-    } finally {
-      loading.value = false
+  return createSimpleApiComposable({
+    validateSecurityPolicy: {
+      endpoint: '/api/code-generation/security/validate',
+      method: 'POST',
+      errorMessage: '安全策略验证失败'
+    },
+    generateNetworkPolicy: {
+      endpoint: '/api/code-generation/security/network-policy',
+      method: 'POST',
+      errorMessage: '生成NetworkPolicy失败'
+    },
+    generateRBACManifest: {
+      endpoint: '/api/code-generation/security/rbac',
+      method: 'POST',
+      errorMessage: '生成RBAC配置失败'
     }
-  }
-
-  /**
-   * 生成NetworkPolicy
-   */
-  const generateNetworkPolicy = async (
-    serviceName: string,
-    networkPolicy: NetworkPolicy
-  ): Promise<GeneratedNetworkPolicy> => {
-    try {
-      loading.value = true
-      error.value = null
-
-      const response = await httpClient.post<GeneratedNetworkPolicy>(
-        '/api/code-generation/security/network-policy',
-        {
-          serviceName,
-          networkPolicy
-        }
-      )
-
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '生成NetworkPolicy失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  /**
-   * 生成RBAC配置
-   */
-  const generateRBACManifest = async (
-    serviceName: string,
-    authorization: Authorization
-  ): Promise<GeneratedRBACManifest> => {
-    try {
-      loading.value = true
-      error.value = null
-
-      const response = await httpClient.post<GeneratedRBACManifest>(
-        '/api/code-generation/security/rbac',
-        {
-          serviceName,
-          authorization
-        }
-      )
-
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '生成RBAC配置失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  return {
-    loading,
-    error,
-    validateSecurityPolicy,
-    generateNetworkPolicy,
-    generateRBACManifest
-  }
+  }, httpClient)
 }
 

@@ -1,16 +1,19 @@
 /**
- * 🎣 Composables Module Entry
+ * 🎨 Composables Module Entry
  * 
- * Vue组合式API入口
+ * 可复用的 Vue Composables 集合
  * 
  * @module @smartabp/lowcode-shared/composables
  */
 
-export { useSafeEventListener } from './useSafeEventListener'
-
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🏭 API Composable 工厂
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export {
-  useValidation,
-  DEFAULT_VALIDATION_OPTIONS,
-  type ValidationState,
-  type ValidationOptions,
-} from './useValidation'
+  createApiComposable,
+  createSimpleApiComposable,
+  createBatchApiComposable,
+  type ApiMethodConfig,
+  type ApiMethodsConfig,
+  type ApiComposable
+} from './create-api-composable.js'
