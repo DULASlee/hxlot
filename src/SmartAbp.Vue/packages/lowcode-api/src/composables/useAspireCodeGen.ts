@@ -1,5 +1,6 @@
 import { http as httpClient } from '../http-client.js'
 import { ref } from 'vue'
+import { createSimpleApiComposable } from '@smartabp/lowcode-shared'
 
 /**
  * Aspire解决方案生成定义
@@ -48,33 +49,25 @@ export interface GeneratedAspireSolution {
  * Day 9: .NET Aspire微服务编排
  */
 export function useAspireCodeGen() {
-  const loading = ref(false)
-  const error = ref<Error | null>(null)
   const result = ref<GeneratedAspireSolution | null>(null)
 
-  /**
-   * 生成Aspire解决方案
-   */
-  const generateAspireSolution = async (
-    definition: AspireSolutionDefinition
-  ): Promise<GeneratedAspireSolution> => {
-    loading.value = true
-    error.value = null
-
-    try {
-      const response = await httpClient.post<GeneratedAspireSolution>(
-        '/api/code-generation/aspire-solution',
-        definition
-      )
-
-      result.value = response
-      return response
-    } catch (err: any) {
-      error.value = err
-      throw err
-    } finally {
-      loading.value = false
+  // API 方法通过工厂函数生成
+  const apiComposable: any = createSimpleApiComposable({
+    generateAspireSolution: {
+      endpoint: '/api/code-generation/aspire-solution',
+      method: 'POST',
+      errorMessage: '生成Aspire解决方案失败'
     }
+  }, httpClient)
+
+  const loading = apiComposable.loading
+  const error = apiComposable.error
+  
+  // 包装原始方法以支持 result ref
+  const generateAspireSolution = async (definition: AspireSolutionDefinition): Promise<GeneratedAspireSolution> => {
+    const response = await apiComposable.generateAspireSolution(definition)
+    result.value = response
+    return response
   }
 
   /**

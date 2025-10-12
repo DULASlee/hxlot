@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { createSimpleApiComposable } from '@smartabp/lowcode-shared'
 import { http as httpClient } from '../http-client.js'
 
 /**
@@ -99,173 +99,40 @@ export interface GeneratedHelmChart {
 
 /**
  * 环境配置管理Composable - Day 11
+ * 使用工厂函数自动生成，消除样板代码
  */
 export function useEnvironmentConfig() {
-  const loading = ref(false)
-  const error = ref<string | null>(null)
-
-  /**
-   * 获取环境列表
-   */
-  const getEnvironments = async (): Promise<string[]> => {
-    try {
-      loading.value = true
-      error.value = null
-
-      const response = await httpClient.get<string[]>(
-        '/api/code-generation/environments'
-      )
-
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '获取环境列表失败'
-      throw err
-    } finally {
-      loading.value = false
+  return createSimpleApiComposable({
+    getEnvironments: {
+      endpoint: '/api/code-generation/environments',
+      method: 'GET',
+      errorMessage: '获取环境列表失败'
+    },
+    getEnvironmentConfig: {
+      endpoint: '/api/code-generation/environments',
+      method: 'GET',
+      errorMessage: '获取环境配置失败'
+    },
+    saveEnvironmentConfig: {
+      endpoint: '/api/code-generation/environments',
+      method: 'POST',
+      errorMessage: '保存环境配置失败'
+    },
+    compareEnvironments: {
+      endpoint: '/api/code-generation/environments/compare',
+      method: 'GET',
+      errorMessage: '环境对比失败'
+    },
+    generateKubernetesManifest: {
+      endpoint: '/api/code-generation/kubernetes/manifest',
+      method: 'POST',
+      errorMessage: '生成K8s Manifest失败'
+    },
+    generateHelmChart: {
+      endpoint: '/api/code-generation/helm/chart',
+      method: 'POST',
+      errorMessage: '生成Helm Chart失败'
     }
-  }
-
-  /**
-   * 获取环境配置
-   */
-  const getEnvironmentConfig = async (
-    environment: string
-  ): Promise<EnvironmentConfig> => {
-    try {
-      loading.value = true
-      error.value = null
-
-      const response = await httpClient.get<EnvironmentConfig>(
-        `/api/code-generation/environments/${environment}/config`
-      )
-
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '获取环境配置失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  /**
-   * 保存环境配置
-   */
-  const saveEnvironmentConfig = async (
-    environment: string,
-    config: EnvironmentConfig
-  ): Promise<EnvironmentConfig> => {
-    try {
-      loading.value = true
-      error.value = null
-
-      const response = await httpClient.post<EnvironmentConfig>(
-        `/api/code-generation/environments/${environment}/config`,
-        config
-      )
-
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '保存环境配置失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  /**
-   * 对比两个环境
-   */
-  const compareEnvironments = async (
-    env1: string,
-    env2: string
-  ): Promise<EnvironmentComparison> => {
-    try {
-      loading.value = true
-      error.value = null
-
-      const response = await httpClient.get<EnvironmentComparison>(
-        `/api/code-generation/environments/compare?env1=${env1}&env2=${env2}`
-      )
-
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '环境对比失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  /**
-   * 生成Kubernetes Manifest
-   */
-  const generateKubernetesManifest = async (
-    serviceName: string,
-    environment: string,
-    config: EnvironmentConfig
-  ): Promise<GeneratedKubernetesManifest> => {
-    try {
-      loading.value = true
-      error.value = null
-
-      const response = await httpClient.post<GeneratedKubernetesManifest>(
-        '/api/code-generation/kubernetes/manifest',
-        {
-          serviceName,
-          environment,
-          config
-        }
-      )
-
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '生成K8s Manifest失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  /**
-   * 生成Helm Chart
-   */
-  const generateHelmChart = async (
-    chartName: string,
-    services: string[],
-    environments: Record<string, EnvironmentConfig>
-  ): Promise<GeneratedHelmChart> => {
-    try {
-      loading.value = true
-      error.value = null
-
-      const response = await httpClient.post<GeneratedHelmChart>(
-        '/api/code-generation/helm/chart',
-        {
-          chartName,
-          services,
-          environments
-        }
-      )
-
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '生成Helm Chart失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  return {
-    loading,
-    error,
-    getEnvironments,
-    getEnvironmentConfig,
-    saveEnvironmentConfig,
-    compareEnvironments,
-    generateKubernetesManifest,
-    generateHelmChart
-  }
+  }, httpClient)
 }
 

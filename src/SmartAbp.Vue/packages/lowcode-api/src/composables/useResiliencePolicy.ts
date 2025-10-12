@@ -127,33 +127,23 @@ export function useResiliencePolicy() {
   }
 
   /**
-   * 生成弹性策略代码
+   * 生成弹性策略代码（保留验证逻辑）
    */
   const generateCode = async (config: ResiliencePolicyConfig): Promise<GeneratedCode> => {
-    try {
-      loading.value = true
-      error.value = null
+    // 验证配置
+    const validation = validatePolicy(config)
+    if (!validation.valid) {
+      throw new Error(`配置验证失败：${validation.errors.join(', ')}`)
+    }
 
-      // 验证配置
-      const validation = validatePolicy(config)
-      if (!validation.valid) {
-        throw new Error(`配置验证失败：${validation.errors.join(', ')}`)
-      }
+    // TODO: 调用后端API生成代码
+    // const response = await httpClient.post('/api/code-generation/resilience/generate', config)
+    // return response
 
-      // TODO: 调用后端API生成代码
-      // const response = await httpClient.post('/api/code-generation/resilience/generate', config)
-      // return response.data
-
-      // 临时返回模拟数据
-      return {
-        pollyCode: `// Polly弹性策略 - ${config.serviceName}\n// 生成的完整代码...`,
-        istioYaml: `# Istio弹性配置 - ${config.serviceName}\n# 生成的完整YAML...`
-      }
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '代码生成失败'
-      throw err
-    } finally {
-      loading.value = false
+    // 临时返回模拟数据
+    return {
+      pollyCode: `// Polly弹性策略 - ${config.serviceName}\n// 生成的完整代码...`,
+      istioYaml: `# Istio弹性配置 - ${config.serviceName}\n// 生成的完整YAML...`
     }
   }
 

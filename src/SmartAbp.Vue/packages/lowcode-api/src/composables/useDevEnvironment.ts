@@ -7,6 +7,7 @@
  */
 
 import { ref } from 'vue'
+import { createSimpleApiComposable } from '@smartabp/lowcode-shared'
 import { http } from '../http-client.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -73,91 +74,37 @@ export interface ValidationResult {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 export function useDevEnvironment() {
-  const loading = ref(false)
   const error = ref<string | null>(null)
 
-  /**
-   * 生成Docker Compose配置
-   */
-  async function generateDockerCompose(config: DevEnvironmentConfig): Promise<GeneratedDockerCompose> {
-    loading.value = true
-    error.value = null
-    try {
-      const response = await http.post<GeneratedDockerCompose>(
-        '/api/code-generator/dev-environment/docker-compose',
-        config
-      )
-      return response
-    } catch (err: any) {
-      error.value = err.message || '生成Docker Compose配置失败'
-      throw err
-    } finally {
-      loading.value = false
+  // API 方法通过工厂函数生成
+  const apiComposable: any = createSimpleApiComposable({
+    generateDockerCompose: {
+      endpoint: '/api/code-generator/dev-environment/docker-compose',
+      method: 'POST',
+      errorMessage: '生成Docker Compose配置失败'
+    },
+    generateStartupScript: {
+      endpoint: '/api/code-generator/dev-environment/startup-script',
+      method: 'POST',
+      errorMessage: '生成启动脚本失败'
+    },
+    generateEnvFile: {
+      endpoint: '/api/code-generator/dev-environment/env-file',
+      method: 'POST',
+      errorMessage: '生成环境变量文件失败'
+    },
+    validateConfig: {
+      endpoint: '/api/code-generator/dev-environment/validate',
+      method: 'POST',
+      errorMessage: '验证配置失败'
     }
-  }
+  }, http)
 
-  /**
-   * 生成启动脚本
-   */
-  async function generateStartupScript(config: StartupScriptConfig): Promise<GeneratedStartupScript> {
-    loading.value = true
-    error.value = null
-    try {
-      const response = await http.post<GeneratedStartupScript>(
-        '/api/code-generator/dev-environment/startup-script',
-        config
-      )
-      return response
-    } catch (err: any) {
-      error.value = err.message || '生成启动脚本失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  /**
-   * 生成环境变量文件
-   */
-  async function generateEnvFile(
-    environment: string,
-    envVars: EnvironmentVariables
-  ): Promise<GeneratedEnvFile> {
-    loading.value = true
-    error.value = null
-    try {
-      const response = await http.post<GeneratedEnvFile>(
-        `/api/code-generator/dev-environment/env-file/${environment}`,
-        envVars
-      )
-      return response
-    } catch (err: any) {
-      error.value = err.message || '生成环境变量文件失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  /**
-   * 验证配置
-   */
-  async function validateConfig(config: DevEnvironmentConfig): Promise<ValidationResult> {
-    loading.value = true
-    error.value = null
-    try {
-      const response = await http.post<ValidationResult>(
-        '/api/code-generator/dev-environment/validate',
-        config
-      )
-      return response
-    } catch (err: any) {
-      error.value = err.message || '验证配置失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
+  const loading = apiComposable.loading
+  const generateDockerCompose = apiComposable.generateDockerCompose as (config: DevEnvironmentConfig) => Promise<GeneratedDockerCompose>
+  const generateStartupScript = apiComposable.generateStartupScript as (config: StartupScriptConfig) => Promise<GeneratedStartupScript>
+  const generateEnvFile = apiComposable.generateEnvFile as (environment: string, envVars: EnvironmentVariables) => Promise<GeneratedEnvFile>
+  const validateConfig = apiComposable.validateConfig as (config: DevEnvironmentConfig) => Promise<ValidationResult>
 
   /**
    * 下载文件（前端工具函数）
