@@ -2,12 +2,11 @@
  * TypeScript类型安全检查器
  */
 
-import { AST_NODE_TYPES } from '@typescript-eslint/typescript-estree';
-import fs from 'fs/promises';
+import { AST_NODE_TYPES, TSESTree } from '@typescript-eslint/typescript-estree';
 import path from 'path';
 import type { CheckResult, QualityConfig, Violation } from '../types/index.js';
-import { visitorTraverse } from '../utils/ast-traverse.js'; // Use the robust traverser
-import { getParser } from '../utils/parser.js';
+import { visitorTraverse } from '../utils/ast-traverse.js';
+import { ASTManager } from '../utils/ast-manager.js';
 import { BaseChecker } from './base-checker.js';
 
 export class TypeScriptChecker extends BaseChecker {
@@ -20,10 +19,12 @@ export class TypeScriptChecker extends BaseChecker {
             ignore: ['**/*.d.ts', '**/*.spec.ts', '**/*.test.ts'],
         });
 
-        for (const file of tsFiles) {
+        const processFile = async (file: string) => {
             const result = await this.checkFile(file, this.config);
             this.violations.push(...result.violations);
-        }
+        };
+
+        await this.runInChunks(tsFiles, processFile);
     }
 
     public async checkFile(filePath: string, config: QualityConfig): Promise<CheckResult> {
@@ -32,12 +33,7 @@ export class TypeScriptChecker extends BaseChecker {
         const violations: Violation[] = [];
 
         try {
-            const content = await fs.readFile(absolutePath, 'utf-8');
-            const parser = getParser(absolutePath);
-            const ast = parser(content, {
-                comment: true,
-                loc: true,
-            });
+            const { ast } = await ASTManager.getInstance().getAST(absolutePath);
 
             // Check for @ts-ignore comments
             if (ast.comments) {

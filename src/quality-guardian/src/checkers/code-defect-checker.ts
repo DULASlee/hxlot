@@ -1,9 +1,8 @@
 import { AST_NODE_TYPES, TSESTree, parse } from '@typescript-eslint/typescript-estree';
-import fs from 'fs/promises';
 import path from 'path';
 import type { CheckResult, QualityConfig, Violation } from '../types/index.js';
 import { TraversalContext, visitorTraverse } from '../utils/ast-traverse.js';
-import { getParser } from '../utils/parser.js';
+import { ASTManager } from '../utils/ast-manager.js';
 import { BaseChecker } from './base-checker.js';
 
 export class CodeDefectChecker extends BaseChecker {
@@ -13,10 +12,13 @@ export class CodeDefectChecker extends BaseChecker {
 
     protected override async doCheck(): Promise<void> {
         const sourceFiles = await this.findFiles(['**/*.ts', '**/*.js', '**/*.vue']);
-        for (const file of sourceFiles) {
+        
+        const processFile = async (file: string) => {
             const result = await this.checkFile(file, this.config);
             this.violations.push(...result.violations);
-        }
+        };
+        
+        await this.runInChunks(sourceFiles, processFile);
     }
 
     public async checkFile(filePath: string, config: QualityConfig): Promise<CheckResult> {
@@ -25,9 +27,7 @@ export class CodeDefectChecker extends BaseChecker {
 
         try {
             const absolutePath = path.isAbsolute(filePath) ? filePath : path.join(config.projectRoot, filePath);
-            const content = await fs.readFile(absolutePath, 'utf8');
-            
-            const ast = parse(content, { loc: true, comment: true, errorOnUnknownASTType: false, useJSXTextNode: true });
+            const { ast } = await ASTManager.getInstance().getAST(absolutePath);
 
             visitorTraverse(ast, {
                 [AST_NODE_TYPES.Literal]: (node, context) => {

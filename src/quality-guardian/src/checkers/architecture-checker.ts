@@ -6,11 +6,12 @@ import { AST_NODE_TYPES } from '@typescript-eslint/typescript-estree';
 import fs from 'fs/promises';
 import path from 'path';
 import type { CheckResult, QualityConfig, Violation } from '../types/index.js';
-import { simpleTraverse } from '../utils/ast-traverse';
-import { getParser } from '../utils/parser';
+import { visitorTraverse } from '../utils/ast-traverse.js';
+import { ASTManager } from '../utils/ast-manager.js';
+import { isVueFile, extractScriptContent } from '../utils/vue-parser.js';
 import { BaseChecker } from './base-checker.js';
 
-const ARCHITECTURE_LAYERS = {
+const ARCHITECTURE_LAYERS: Record<string, number> = {
     'lowcode-designer': 2,
     'lowcode-core': 1,
     'lowcode-api': 1,
@@ -24,52 +25,35 @@ type PackageName = keyof typeof ARCHITECTURE_LAYERS;
 export class ArchitectureChecker extends BaseChecker {
     public readonly name = 'ArchitectureChecker';
     public readonly description = 'Checks for architectural violations like invalid imports.';
-    public readonly version = '2.0.0';
+    public override readonly version = '2.0.0';
 
-    private getPackagesPath(config: QualityConfig): string {
-        return config.checks?.architecture?.options?.packagesPath || 'src/SmartAbp.Vue/packages';
-    }
-
-    protected async doCheck(): Promise<void> {
-        const packagesPath = this.getPackagesPath(this.config);
-
-        const tsFiles = await this.findFiles(`${packagesPath}/**/*.{ts,tsx,vue}`);
-
-        for (const file of tsFiles) {
+    protected override async doCheck(): Promise<void> {
+        const sourceFiles = await this.findFiles('**/*.{ts,vue}');
+        
+        const processFile = async (file: string) => {
             const result = await this.checkFile(file, this.config);
             this.violations.push(...result.violations);
-        }
+        };
+
+        await this.runInChunks(sourceFiles, processFile);
     }
 
-    public async checkFile(filePath: string, config: QualityConfig): Promise<CheckResult> {
-        const packagesPath = this.getPackagesPath(config);
-        const absolutePath = path.isAbsolute(filePath) ? filePath : path.join(config.projectRoot, filePath);
-        const relativePath = path.relative(config.projectRoot, absolutePath);
+    public async checkFile(filePath: string, config: any): Promise<CheckResult> {
+        const violations: Violation[] = [];
+        const packagesPath = config.checks?.architecture?.options?.packagesPath || 'src/SmartAbp.Vue/packages';
+        const absolutePackagesPath = path.join(config.projectRoot, packagesPath);
 
-        // Ignore files outside of the packages directory
-        if (!relativePath.startsWith(packagesPath)) {
+        if (!absolutePath.startsWith(absolutePackagesPath)) {
             return { checker: this.name, passed: true, violations: [], filesChecked: 1, duration: 0 };
         }
 
-        const violations: Violation[] = [];
-
         try {
-            const content = await fs.readFile(absolutePath, 'utf-8');
+            const { content, ast } = await ASTManager.getInstance().getAST(absolutePath);
 
-            // For Vue files, only parse the script content
-            const scriptContent = this.isVueFile(filePath) ? this.extractScriptContent(content) : content;
-            if (!scriptContent) {
-                return { checker: this.name, passed: true, violations: [], filesChecked: 1, duration: 0 };
-            }
-
-            const parser = getParser(filePath);
-            const ast = parser(scriptContent, { loc: true });
-
-            const currentPackage = this.getCurrentPackage(relativePath, packagesPath);
-
-            simpleTraverse(ast, (node: any) => {
-                if (node.type === AST_NODE_TYPES.ImportDeclaration && node.source) {
-                    const importPath = node.source.value as string;
+            visitorTraverse(ast, {
+                [AST_NODE_TYPES.ImportDeclaration]: (node: any) => {
+                    const importDecl = node as any;
+                    const importPath = importDecl.source.value as string;
 
                     // Rule: No relative imports crossing package boundaries
                     if (importPath.startsWith('../')) {
@@ -78,7 +62,7 @@ export class ArchitectureChecker extends BaseChecker {
                             level: 'P0',
                             message: `A prohibited relative path ('../') import was found. Inter-package imports must use '@smartabp/*' aliases.`,
                             file: relativePath,
-                            line: node.loc.start.line,
+                            line: importDecl.loc.start.line,
                         });
                     }
 
@@ -89,7 +73,7 @@ export class ArchitectureChecker extends BaseChecker {
                             level: 'P0',
                             message: `A prohibited main app alias ('@/') import was found. Packages must not depend on the main application.`,
                             file: relativePath,
-                            line: node.loc.start.line,
+                            line: importDecl.loc.start.line,
                         });
                     }
 
@@ -106,7 +90,7 @@ export class ArchitectureChecker extends BaseChecker {
                                     level: 'P0',
                                     message: `A prohibited reverse dependency was found. A lower-layer package '${currentPackage}' cannot import from a higher-layer package '${importedPackage}'.`,
                                     file: relativePath,
-                                    line: node.loc.start.line,
+                                    line: importDecl.loc.start.line,
                                 });
                             }
                         }
@@ -114,38 +98,16 @@ export class ArchitectureChecker extends BaseChecker {
                 }
             });
 
-            return {
-                checker: this.name,
-                passed: violations.length === 0,
-                violations,
-                filesChecked: 1,
-                duration: 0,
-            };
-
+            return { checker: this.name, passed: violations.length === 0, violations, filesChecked: 1, duration: 0 };
         } catch (error) {
             if (error.code !== 'ENOENT') {
-                console.warn(`Could not check file ${filePath}: ${error.message}`);
+                this.logProgress(`Could not check file ${filePath}: ${error.message}`, 'error');
             }
-            return {
-                checker: this.name,
-                passed: true,
-                violations: [],
-                filesChecked: 1,
-                duration: 0,
-            };
+            return { checker: this.name, passed: true, violations: [], filesChecked: 1, duration: 0 };
         }
     }
 
-    private isVueFile(filePath: string): boolean {
-        return filePath.endsWith('.vue');
-    }
-
-    private extractScriptContent(content: string): string | null {
-        const scriptMatch = content.match(/<script\s+lang="ts"\s*(?:setup)?.*?>([\s\S]*)<\/script>/);
-        return scriptMatch ? scriptMatch[1] : null;
-    }
-
-    private getCurrentPackage(filePath: string, packagesPath: string): PackageName | null {
+    private getCurrentPackage(filePath: string, packagesPath: string): string | null {
         const match = filePath.match(new RegExp(`${packagesPath.replace('/', '\\/')}\\/([^\\/]+)`));
         const pkg = match ? match[1] : null;
         return pkg in ARCHITECTURE_LAYERS ? pkg as PackageName : null;
@@ -157,4 +119,5 @@ export class ArchitectureChecker extends BaseChecker {
         return pkg in ARCHITECTURE_LAYERS ? pkg as PackageName : null;
     }
 }
+
 

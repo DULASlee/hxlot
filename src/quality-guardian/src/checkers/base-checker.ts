@@ -9,6 +9,7 @@ import glob from 'fast-glob';
 import fs from 'fs-extra';
 import path from 'path';
 import { performance } from 'perf_hooks';
+import os from 'os';
 
 import type {
   CheckerPlugin,
@@ -19,6 +20,7 @@ import type {
 } from '../types/index.js';
 
 const chalk = new Chalk();
+const CONCURRENCY = os.cpus().length;
 
 /**
  * 抽象检查器基类
@@ -399,10 +401,7 @@ export abstract class RuleBasedChecker extends BaseChecker {
 
   protected async doCheck(): Promise<void> {
     const enabledRules = this.rules.filter(rule => rule.enabled !== false);
-
-    for (const rule of enabledRules) {
-      await this.checkRule(rule);
-    }
+    await Promise.all(enabledRules.map(rule => this.checkRule(rule)));
   }
 
   protected async checkRule(rule: CheckRule): Promise<void> {
@@ -415,12 +414,12 @@ export abstract class RuleBasedChecker extends BaseChecker {
         ? allFiles.filter(file => rule.filePattern!.match(file))
         : allFiles;
 
-      let ruleViolations = 0;
-
-      for (const file of targetFiles) {
-        const violations = await this.checkFileAgainstRule(file, rule);
-        ruleViolations += violations;
-      }
+      const processFile = async (file: string) => {
+        return await this.checkFileAgainstRule(file, rule);
+      };
+      
+      const violationsCounts = await this.runInChunks(targetFiles, processFile);
+      const ruleViolations = violationsCounts.reduce((sum, count) => sum + count, 0);
 
       if (ruleViolations === 0) {
         this.logProgress(`规则 ${rule.name}: 0违规`, 'success');
@@ -474,5 +473,22 @@ export abstract class RuleBasedChecker extends BaseChecker {
     } else {
       return pattern.test(text);
     }
+  }
+
+  /**
+   * Helper to run promises in chunks to avoid overwhelming the system
+   */
+  protected async runInChunks<T, R>(
+    items: T[],
+    processor: (item: T) => Promise<R>,
+    chunkSize: number = CONCURRENCY
+  ): Promise<R[]> {
+    const results: R[] = [];
+    for (let i = 0; i < items.length; i += chunkSize) {
+      const chunk = items.slice(i, i + chunkSize);
+      const chunkResults = await Promise.all(chunk.map(processor));
+      results.push(...chunkResults);
+    }
+    return results;
   }
 }
