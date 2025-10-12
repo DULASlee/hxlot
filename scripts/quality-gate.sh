@@ -16,7 +16,7 @@ echo "📏  Project Root: $PROJECT_ROOT"
 echo "🔎  Checking for illegal cross-package imports..."
 # We search for relative paths ('../') or absolute main app paths ('@/') within the packages directory.
 # `grep ... || true` ensures that the script doesn't exit if grep finds no matches (which is the success case).
-VIOLATIONS=$(grep -r -E "'\.\./|'@/" src/SmartAbp.Vue/packages/ --include="*.{ts,vue,js}" || true)
+VIOLATIONS=$(grep -r -E "'\.\./|'@/" src/SmartAbp.Vue/packages/ --include="*.{ts,vue,js}" --exclude-dir=node_modules || true)
 
 if [ -n "$VIOLATIONS" ]; then
   echo "❌ CRITICAL ERROR: Architectural violation detected! Illegal cross-package imports found:"
