@@ -1,5 +1,8 @@
 /**
  * 基础组件统一导出
+ * 
+ * ⚠️ 说明：这是主应用内部基础组件，使用app.component注册
+ * 📦 低代码引擎组件必须使用ComponentRegistry注册（遵循铁律二）
  */
 
 import type { App } from 'vue'

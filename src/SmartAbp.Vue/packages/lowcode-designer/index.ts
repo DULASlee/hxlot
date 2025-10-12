@@ -64,7 +64,7 @@ export * from './src/types/designer'
 export * from './src/types/security'
 
 // ===== 工具函数导出 =====
-export { autoRegisterDesignerComponents as registerDesignerComponents } from './src/components/index'
+export { registerDesignerComponents } from './src/index'
 export { CrashRecovery, useErrorRecovery } from './src/utils/error-recovery'
 export { usePerformanceMonitor } from './src/utils/performance-optimizer'
 export { useResponsive } from './src/utils/responsive-design'

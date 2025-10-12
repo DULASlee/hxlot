@@ -58,30 +58,9 @@ export * from './SmartFormBuilder/index.js'
 export * from './BusinessRuleDesigner/types.js'
 
 /**
- * Auto-register all components for global usage
+ * ❌ 已废弃：app.component注册方式
+ * ✅ 请使用：registerCoreComponents() - 企业级ComponentRegistry
  * 
- * @description
- * This enables components to be used without explicit import in templates
+ * @deprecated 违反架构铁律二，已在v1.0中移除
+ * @see registerCoreComponents in src/index.ts
  */
-export function autoRegisterComponents(app: any): void {
-  // 注意：import.meta.glob是Vite特性，在库编译时不可用
-  // 主应用需要自行实现组件扫描
-  const components: Record<string, any> = {}
-
-  Object.entries(components).forEach(([path, module]: [string, any]) => {
-    const componentName = path
-      .split('/')
-      .pop()
-      ?.replace('.vue', '')
-      .replace(/([a-z])([A-Z])/g, '$1-$2')
-      .toLowerCase()
-
-    if (componentName && module.default) {
-      app.component(`Lc${componentName}`, module.default)
-    }
-  })
-}
-
-export default {
-  autoRegisterComponents
-}

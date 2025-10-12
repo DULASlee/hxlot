@@ -5,13 +5,13 @@
  */
 
 import { describe, expect, it } from 'vitest'
+import type { EntityMetadata, ModuleMetadata } from '../types/index.js'
 import {
     getBackendConversionStats,
     toEntityMetadataDto,
     toModuleMetadataDto,
     toPropertyMetadataDto
 } from './converters/backend-dto-converter'
-import type { EntityMetadata, ModuleMetadata } from '@smartabp/lowcode-shared'
 
 describe('后端DTO转换器', () => {
 

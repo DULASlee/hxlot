@@ -2,7 +2,11 @@
  * VueAutoComponentBridge - Vue组件自动注册桥梁
  * 🎯 解决关键Gap：从ComponentRegistry → Vue App全局组件
  * 
- * 这是真正让组件"可用"的关键环节！
+ * ✅ 这是企业级ComponentRegistry的配套工具
+ * ⚠️ 注意：组件必须先通过registerComponent()注册到ComponentRegistry
+ * 📦 此工具负责将已注册组件同步到Vue应用（app.component）
+ * 
+ * @遵循架构铁律二：统一组件注册系统
  */
 
 import type { App } from 'vue'

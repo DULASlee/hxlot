@@ -86,10 +86,26 @@ export const useDesignerStore = defineStore('lowcode-designer', () => {
     const updateComponent = (componentId: string, updates: Partial<CanvasComponent>) => {
         const index = canvasComponents.value.findIndex(c => c.id === componentId)
         if (index >= 0) {
-            canvasComponents.value[index] = {
-                ...canvasComponents.value[index],
-                ...updates
+            const existing = canvasComponents.value[index]
+            // TypeScript类型守卫：确保existing不为undefined
+            if (!existing) {
+                console.warn(`Component with id ${componentId} not found at index ${index}`)
+                return
             }
+            
+            // 构建完整的组件对象，确保所有必需字段都存在
+            const updatedComponent: CanvasComponent = {
+                ...existing,
+                ...updates,
+                // 明确保证必需字段不被undefined覆盖
+                id: updates.id ?? existing.id,
+                type: updates.type ?? existing.type,
+                name: updates.name ?? existing.name,
+                props: updates.props ?? existing.props,
+                children: updates.children ?? existing.children
+            }
+            
+            canvasComponents.value[index] = updatedComponent
             saveHistory()
             isDirty.value = true
         }
@@ -143,10 +159,13 @@ export const useDesignerStore = defineStore('lowcode-designer', () => {
     const undo = () => {
         if (canUndo.value) {
             historyIndex.value--
-            canvasComponents.value = JSON.parse(
-                JSON.stringify(history.value[historyIndex.value].components)
-            )
-            isDirty.value = true
+            const historyItem = history.value[historyIndex.value]
+            if (historyItem) {
+                canvasComponents.value = JSON.parse(
+                    JSON.stringify(historyItem.components)
+                )
+                isDirty.value = true
+            }
         }
     }
 
@@ -154,10 +173,13 @@ export const useDesignerStore = defineStore('lowcode-designer', () => {
     const redo = () => {
         if (canRedo.value) {
             historyIndex.value++
-            canvasComponents.value = JSON.parse(
-                JSON.stringify(history.value[historyIndex.value].components)
-            )
-            isDirty.value = true
+            const historyItem = history.value[historyIndex.value]
+            if (historyItem) {
+                canvasComponents.value = JSON.parse(
+                    JSON.stringify(historyItem.components)
+                )
+                isDirty.value = true
+            }
         }
     }
 

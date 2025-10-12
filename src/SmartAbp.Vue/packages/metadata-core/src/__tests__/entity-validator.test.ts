@@ -13,7 +13,7 @@
  */
 
 import { describe, expect, it } from 'vitest'
-import type { EntityMetadata } from '@smartabp/lowcode-shared'
+import type { EntityMetadata } from '../types/index.js'
 import {
     EntityMetadataSchema,
     getEntityMetadataErrors,
