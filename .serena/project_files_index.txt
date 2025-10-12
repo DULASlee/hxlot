@@ -884,6 +884,7 @@ src/SmartAbp.Vue/packages/lowcode-shared/src/components/index.js
 src/SmartAbp.Vue/packages/lowcode-shared/src/components/index.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/components/register.js
 src/SmartAbp.Vue/packages/lowcode-shared/src/components/register.ts
+src/SmartAbp.Vue/packages/lowcode-shared/src/composables/create-api-composable.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/composables/index.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/composables/index.js
 src/SmartAbp.Vue/packages/lowcode-shared/src/composables/index.ts
@@ -987,6 +988,7 @@ src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/array.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/array.js
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/array.ts
+src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/index.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/index.js
 src/SmartAbp.Vue/packages/lowcode-shared/src/utils/index.ts

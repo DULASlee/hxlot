@@ -633,7 +633,7 @@ const generateCode = async () => {
           id: `page-${Date.now()}`,
           name: generationParams.value.entityName,
           template: selectedTemplate.value.id,
-          code: result.generatedFiles, // ✅ 修复: 直接存储文件数组，不转JSON字符串
+          code: JSON.stringify(result.generatedFiles), // ✅ 正确：存储到localStorage需要序列化
           createdAt: Date.now(),
         })
         projectStore.saveProject()

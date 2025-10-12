@@ -12,11 +12,11 @@ import path from 'path';
 import { performance } from 'perf_hooks';
 
 import type {
-  CheckerPlugin,
-  CheckResult,
-  QualityConfig,
-  Violation,
-  ViolationLevel
+    CheckerPlugin,
+    CheckResult,
+    QualityConfig,
+    Violation,
+    ViolationLevel
 } from '../types/index.js';
 
 const chalk = new Chalk();

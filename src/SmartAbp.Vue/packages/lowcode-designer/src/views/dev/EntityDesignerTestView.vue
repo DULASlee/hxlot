@@ -1,14 +1,14 @@
 <template>
   <div class="test-view-container">
-    <h1>Entity Designer PoC Test View</h1>
-    <p>This view is for testing the EntityDesigner.vue component in isolation.</p>
+    <h1>CodeGen Entity Designer PoC Test View</h1>
+    <p>This view is for testing the CodeGenEntityDesigner.vue component in isolation.</p>
     <hr />
-    <EntityDesigner />
+    <CodeGenEntityDesigner />
   </div>
 </template>
 
 <script setup lang="ts">
-import EntityDesigner from "../../components/CodeGenerator/EntityDesigner.vue"
+import CodeGenEntityDesigner from "../../components/CodeGenerator/CodeGenEntityDesigner.vue"
 </script>
 
 <style scoped>

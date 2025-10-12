@@ -264,7 +264,7 @@ const createFirstEntity = () => {
       id: sampleEntity.id,
       name: sampleEntity.name,
       template: 'entity',
-      code: [sampleEntity], // ✅ 修复: 直接存储实体数组，不转JSON字符串
+      code: JSON.stringify([sampleEntity]), // ✅ 正确：存储到localStorage需要序列化
       createdAt: Date.now()
     })
     projectStore.saveProject()

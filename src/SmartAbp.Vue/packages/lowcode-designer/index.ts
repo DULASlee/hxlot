@@ -31,7 +31,7 @@ export { default as AdvancedBusinessRulesEngine } from './src/components/Advance
 export { default as AdvancedEntityRelationshipDesigner } from './src/components/AdvancedEntityRelationshipDesigner.vue'
 export { default as AdvancedFieldTypeDesigner } from './src/components/AdvancedFieldTypeDesigner.vue'
 export { default as BusinessRulesEngine } from './src/components/BusinessRulesEngine.vue'
-export { default as EntityDesigner } from './src/components/CodeGenerator/EntityDesigner.vue'
+export { default as CodeGenEntityDesigner } from './src/components/CodeGenerator/CodeGenEntityDesigner.vue'
 export { default as ComponentPropertyPanel } from './src/components/ComponentPropertyPanel.vue'
 export { default as DataDictionaryManager } from './src/components/DataDictionaryManager.vue'
 export { default as EnhancedStateMachine } from './src/components/EnhancedStateMachine.vue'

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-12T02:34:40.342Z",
+  "timestamp": "2025-10-12T06:28:29.881Z",
   "project": "Baobab.SmartAbp",
   "language": "typescript",
   "files": [
@@ -7,8 +7,8 @@
       "name": "BusinessRuleAppService.cs",
       "path": "src/SmartAbp.Application/BusinessRules/BusinessRuleAppService.cs",
       "type": "file",
-      "size": 33114,
-      "modified": "2025-10-07T06:04:14.979Z"
+      "size": 33616,
+      "modified": "2025-10-12T04:52:42.949Z"
     },
     {
       "name": "IScriptExecutionService.cs",
@@ -413,15 +413,15 @@
       "name": "GenerationHistory.cs",
       "path": "src/SmartAbp.Domain/CodeGenerator/GenerationHistory.cs",
       "type": "file",
-      "size": 2186,
-      "modified": "2025-10-06T17:14:24.922Z"
+      "size": 2430,
+      "modified": "2025-10-12T04:52:42.949Z"
     },
     {
       "name": "UserProfile.cs",
       "path": "src/SmartAbp.Domain/CodeGenerator/UserProfile.cs",
       "type": "file",
-      "size": 1948,
-      "modified": "2025-10-06T17:14:24.922Z"
+      "size": 2163,
+      "modified": "2025-10-12T04:52:42.950Z"
     },
     {
       "name": "ISmartAbpDbSchemaMigrator.cs",
@@ -448,36 +448,36 @@
       "name": "EntityDefinition.cs",
       "path": "src/SmartAbp.Domain/Entities/LowCode/EntityDefinition.cs",
       "type": "file",
-      "size": 5164,
-      "modified": "2025-10-06T02:43:56.002Z"
+      "size": 5504,
+      "modified": "2025-10-12T04:52:42.951Z"
     },
     {
       "name": "EntityField.cs",
       "path": "src/SmartAbp.Domain/Entities/LowCode/EntityField.cs",
       "type": "file",
-      "size": 3165,
-      "modified": "2025-10-06T03:19:45.235Z"
+      "size": 3427,
+      "modified": "2025-10-12T04:52:42.951Z"
     },
     {
       "name": "EntityRelation.cs",
       "path": "src/SmartAbp.Domain/Entities/LowCode/EntityRelation.cs",
       "type": "file",
-      "size": 2404,
-      "modified": "2025-10-06T02:43:56.002Z"
+      "size": 2685,
+      "modified": "2025-10-12T04:52:42.952Z"
     },
     {
       "name": "SchemaVersionHistory.cs",
       "path": "src/SmartAbp.Domain/Entities/LowCode/SchemaVersionHistory.cs",
       "type": "file",
-      "size": 3692,
-      "modified": "2025-10-06T07:49:30.262Z"
+      "size": 4161,
+      "modified": "2025-10-12T04:52:42.952Z"
     },
     {
       "name": "ValidationRule.cs",
       "path": "src/SmartAbp.Domain/Entities/LowCode/ValidationRule.cs",
       "type": "file",
-      "size": 2427,
-      "modified": "2025-10-06T02:43:56.004Z"
+      "size": 2659,
+      "modified": "2025-10-12T04:52:42.953Z"
     },
     {
       "name": "ChangeIdentityPasswordPolicySettingDefinitionProvider.cs",
@@ -2800,15 +2800,15 @@
       "name": "CodeGenEntrance.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/CodeGenEntrance.vue",
       "type": "file",
-      "size": 26217,
-      "modified": "2025-10-08T01:26:00.033Z"
+      "size": 25397,
+      "modified": "2025-10-12T04:52:43.105Z"
     },
     {
       "name": "CqrsDesignerView.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/CqrsDesignerView.vue",
       "type": "file",
-      "size": 25707,
-      "modified": "2025-10-10T07:33:27.479Z"
+      "size": 25680,
+      "modified": "2025-10-12T04:52:43.106Z"
     },
     {
       "name": "DddDomainDesignerView.vue",
@@ -2821,15 +2821,15 @@
       "name": "FormBuilderDemo.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/FormBuilderDemo.vue",
       "type": "file",
-      "size": 14512,
-      "modified": "2025-10-07T09:47:49.733Z"
+      "size": 14438,
+      "modified": "2025-10-12T04:52:43.106Z"
     },
     {
       "name": "FormLinkageDemo.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/FormLinkageDemo.vue",
       "type": "file",
-      "size": 17896,
-      "modified": "2025-10-10T07:33:27.480Z"
+      "size": 17821,
+      "modified": "2025-10-12T04:52:43.107Z"
     },
     {
       "name": "GenerationView.test.ts",
@@ -2842,8 +2842,8 @@
       "name": "GenerationView.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/GenerationView.vue",
       "type": "file",
-      "size": 24121,
-      "modified": "2025-10-07T06:04:15.024Z"
+      "size": 24033,
+      "modified": "2025-10-12T04:52:43.108Z"
     },
     {
       "name": "IndustryTemplateConfig.vue",
@@ -2884,15 +2884,15 @@
       "name": "LowCodeStudioView.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioView.vue",
       "type": "file",
-      "size": 5900,
-      "modified": "2025-10-07T06:04:15.027Z"
+      "size": 6533,
+      "modified": "2025-10-12T04:52:43.108Z"
     },
     {
       "name": "LowCodeStudioWelcome.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioWelcome.vue",
       "type": "file",
-      "size": 12461,
-      "modified": "2025-10-07T07:37:46.485Z"
+      "size": 12507,
+      "modified": "2025-10-12T04:52:43.108Z"
     },
     {
       "name": "QuickStart.vue",
@@ -2933,22 +2933,22 @@
       "name": "TemplateConfiguration.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/templates/TemplateConfiguration.vue",
       "type": "file",
-      "size": 4164,
-      "modified": "2025-09-29T06:08:08.351Z"
+      "size": 4150,
+      "modified": "2025-10-12T04:52:43.109Z"
     },
     {
       "name": "TemplateManager.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/templates/TemplateManager.vue",
       "type": "file",
-      "size": 5445,
-      "modified": "2025-10-08T13:55:33.167Z"
+      "size": 5422,
+      "modified": "2025-10-12T04:52:43.109Z"
     },
     {
       "name": "TemplateMarketplace.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/templates/TemplateMarketplace.vue",
       "type": "file",
-      "size": 4290,
-      "modified": "2025-09-30T03:23:58.910Z"
+      "size": 4266,
+      "modified": "2025-10-12T04:52:43.109Z"
     },
     {
       "name": "AlertDashboard.vue",
@@ -3213,8 +3213,8 @@
       "name": "useApiCall.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useApiCall.ts",
       "type": "file",
-      "size": 8846,
-      "modified": "2025-10-11T15:16:18.094Z"
+      "size": 8914,
+      "modified": "2025-10-12T02:40:16.630Z"
     },
     {
       "name": "useApiError.js",
@@ -3227,8 +3227,8 @@
       "name": "useApiError.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useApiError.ts",
       "type": "file",
-      "size": 7337,
-      "modified": "2025-10-11T15:16:18.095Z"
+      "size": 6532,
+      "modified": "2025-10-12T02:37:30.329Z"
     },
     {
       "name": "useApiLoading.js",
@@ -3255,8 +3255,8 @@
       "name": "useAspireCodeGen.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useAspireCodeGen.ts",
       "type": "file",
-      "size": 3619,
-      "modified": "2025-10-11T15:16:18.096Z"
+      "size": 3725,
+      "modified": "2025-10-12T03:49:56.503Z"
     },
     {
       "name": "useCICDTemplate.js",
@@ -3269,8 +3269,8 @@
       "name": "useCICDTemplate.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useCICDTemplate.ts",
       "type": "file",
-      "size": 3681,
-      "modified": "2025-10-11T15:16:18.097Z"
+      "size": 3425,
+      "modified": "2025-10-12T03:37:59.015Z"
     },
     {
       "name": "useDevEnvironment.js",
@@ -3283,8 +3283,8 @@
       "name": "useDevEnvironment.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useDevEnvironment.ts",
       "type": "file",
-      "size": 5548,
-      "modified": "2025-10-11T15:16:18.097Z"
+      "size": 4827,
+      "modified": "2025-10-12T03:49:01.986Z"
     },
     {
       "name": "useEnvironmentConfig.js",
@@ -3297,8 +3297,8 @@
       "name": "useEnvironmentConfig.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useEnvironmentConfig.ts",
       "type": "file",
-      "size": 5844,
-      "modified": "2025-10-11T15:16:18.098Z"
+      "size": 3172,
+      "modified": "2025-10-12T03:48:34.680Z"
     },
     {
       "name": "useGitWorkflow.js",
@@ -3311,8 +3311,8 @@
       "name": "useGitWorkflow.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useGitWorkflow.ts",
       "type": "file",
-      "size": 4203,
-      "modified": "2025-10-11T15:16:18.098Z"
+      "size": 2831,
+      "modified": "2025-10-12T03:02:29.539Z"
     },
     {
       "name": "useObservability.js",
@@ -3325,8 +3325,8 @@
       "name": "useObservability.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useObservability.ts",
       "type": "file",
-      "size": 3956,
-      "modified": "2025-10-11T15:16:18.098Z"
+      "size": 2604,
+      "modified": "2025-10-12T03:37:59.015Z"
     },
     {
       "name": "useResiliencePolicy.js",
@@ -3339,8 +3339,8 @@
       "name": "useResiliencePolicy.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useResiliencePolicy.ts",
       "type": "file",
-      "size": 4237,
-      "modified": "2025-10-11T15:16:18.099Z"
+      "size": 4073,
+      "modified": "2025-10-12T03:51:13.066Z"
     },
     {
       "name": "useSecurityPolicy.js",
@@ -3353,8 +3353,8 @@
       "name": "useSecurityPolicy.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useSecurityPolicy.ts",
       "type": "file",
-      "size": 4344,
-      "modified": "2025-10-11T15:16:18.099Z"
+      "size": 2980,
+      "modified": "2025-10-12T03:03:08.780Z"
     },
     {
       "name": "cqrs-generator.js",
@@ -6206,6 +6206,13 @@
       "modified": "2025-10-09T19:08:21.343Z"
     },
     {
+      "name": "create-api-composable.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/create-api-composable.ts",
+      "type": "file",
+      "size": 5818,
+      "modified": "2025-10-12T03:06:19.127Z"
+    },
+    {
       "name": "index.d.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/index.d.ts",
       "type": "file",
@@ -6223,8 +6230,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/index.ts",
       "type": "file",
-      "size": 317,
-      "modified": "2025-10-09T19:08:21.350Z"
+      "size": 682,
+      "modified": "2025-10-12T03:01:54.169Z"
     },
     {
       "name": "useSafeEventListener.d.ts",
@@ -6927,6 +6934,13 @@
       "modified": "2025-10-09T19:08:21.600Z"
     },
     {
+      "name": "code-patterns.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts",
+      "type": "file",
+      "size": 7392,
+      "modified": "2025-10-12T02:36:27.827Z"
+    },
+    {
       "name": "index.d.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/index.d.ts",
       "type": "file",
@@ -6944,8 +6958,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/index.ts",
       "type": "file",
-      "size": 2024,
-      "modified": "2025-10-09T19:08:21.608Z"
+      "size": 2769,
+      "modified": "2025-10-12T02:36:43.726Z"
     },
     {
       "name": "object.d.ts",
@@ -13518,35 +13532,35 @@
     {
       "name": "ApiCallOptions",
       "type": "interface",
-      "line": 14,
+      "line": 15,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useApiCall.ts"
     },
     {
       "name": "ApiCallState",
       "type": "interface",
-      "line": 52,
+      "line": 53,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useApiCall.ts"
     },
     {
       "name": "useApiCall",
       "type": "function",
-      "line": 85,
+      "line": 86,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useApiCall.ts"
     },
     {
       "name": "createApiCall",
       "type": "function",
-      "line": 317,
+      "line": 318,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useApiCall.ts"
     },
     {
       "name": "createCodeGenApiCall",
       "type": "function",
-      "line": 343,
+      "line": 344,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useApiCall.ts"
     },
@@ -13616,28 +13630,28 @@
     {
       "name": "AspireSolutionDefinition",
       "type": "interface",
-      "line": 7,
+      "line": 8,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useAspireCodeGen.ts"
     },
     {
       "name": "MicroserviceDefinition",
       "type": "interface",
-      "line": 24,
+      "line": 25,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useAspireCodeGen.ts"
     },
     {
       "name": "GeneratedAspireSolution",
       "type": "interface",
-      "line": 39,
+      "line": 40,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useAspireCodeGen.ts"
     },
     {
       "name": "useAspireCodeGen",
       "type": "function",
-      "line": 50,
+      "line": 51,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useAspireCodeGen.ts"
     },
@@ -13651,35 +13665,35 @@
     {
       "name": "CICDPlatformConfig",
       "type": "interface",
-      "line": 8,
+      "line": 9,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useCICDTemplate.ts"
     },
     {
       "name": "BuildStageConfig",
       "type": "interface",
-      "line": 21,
+      "line": 22,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useCICDTemplate.ts"
     },
     {
       "name": "GeneratedCICDConfig",
       "type": "interface",
-      "line": 31,
+      "line": 32,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useCICDTemplate.ts"
     },
     {
       "name": "CICDTemplateValidationResult",
       "type": "interface",
-      "line": 40,
+      "line": 41,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useCICDTemplate.ts"
     },
     {
       "name": "useCICDTemplate",
       "type": "function",
-      "line": 51,
+      "line": 52,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useCICDTemplate.ts"
     },
@@ -13693,56 +13707,56 @@
     {
       "name": "DevEnvironmentConfig",
       "type": "interface",
-      "line": 16,
+      "line": 17,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useDevEnvironment.ts"
     },
     {
       "name": "GeneratedDockerCompose",
       "type": "interface",
-      "line": 26,
+      "line": 27,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useDevEnvironment.ts"
     },
     {
       "name": "StartupScriptConfig",
       "type": "interface",
-      "line": 33,
+      "line": 34,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useDevEnvironment.ts"
     },
     {
       "name": "GeneratedStartupScript",
       "type": "interface",
-      "line": 41,
+      "line": 42,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useDevEnvironment.ts"
     },
     {
       "name": "EnvironmentVariables",
       "type": "interface",
-      "line": 49,
+      "line": 50,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useDevEnvironment.ts"
     },
     {
       "name": "GeneratedEnvFile",
       "type": "interface",
-      "line": 56,
+      "line": 57,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useDevEnvironment.ts"
     },
     {
       "name": "ValidationResult",
       "type": "interface",
-      "line": 64,
+      "line": 65,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useDevEnvironment.ts"
     },
     {
       "name": "useDevEnvironment",
       "type": "function",
-      "line": 75,
+      "line": 76,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useDevEnvironment.ts"
     },
@@ -13826,7 +13840,7 @@
     {
       "name": "useEnvironmentConfig",
       "type": "function",
-      "line": 103,
+      "line": 104,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useEnvironmentConfig.ts"
     },
@@ -13875,7 +13889,7 @@
     {
       "name": "useGitWorkflow",
       "type": "function",
-      "line": 61,
+      "line": 65,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useGitWorkflow.ts"
     },
@@ -13973,7 +13987,7 @@
     {
       "name": "useObservability",
       "type": "function",
-      "line": 106,
+      "line": 107,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useObservability.ts"
     },
@@ -13987,21 +14001,21 @@
     {
       "name": "ResiliencePolicyConfig",
       "type": "interface",
-      "line": 4,
+      "line": 5,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useResiliencePolicy.ts"
     },
     {
       "name": "GeneratedCode",
       "type": "interface",
-      "line": 47,
+      "line": 48,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useResiliencePolicy.ts"
     },
     {
       "name": "useResiliencePolicy",
       "type": "function",
-      "line": 56,
+      "line": 57,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useResiliencePolicy.ts"
     },
@@ -14113,7 +14127,7 @@
     {
       "name": "useSecurityPolicy",
       "type": "function",
-      "line": 122,
+      "line": 123,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/composables/useSecurityPolicy.ts"
     },
@@ -19774,6 +19788,62 @@
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/components/register.ts"
     },
     {
+      "name": "ApiMethodConfig",
+      "type": "interface",
+      "line": 11,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/create-api-composable.ts"
+    },
+    {
+      "name": "ApiMethodsConfig",
+      "type": "interface",
+      "line": 27,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/create-api-composable.ts"
+    },
+    {
+      "name": "ApiComposable",
+      "type": "interface",
+      "line": 34,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/create-api-composable.ts"
+    },
+    {
+      "name": "useGitWorkflow",
+      "type": "function",
+      "line": 60,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/create-api-composable.ts"
+    },
+    {
+      "name": "createApiComposable",
+      "type": "function",
+      "line": 69,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/create-api-composable.ts"
+    },
+    {
+      "name": "useSimpleApi",
+      "type": "function",
+      "line": 131,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/create-api-composable.ts"
+    },
+    {
+      "name": "createSimpleApiComposable",
+      "type": "function",
+      "line": 139,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/create-api-composable.ts"
+    },
+    {
+      "name": "createBatchApiComposable",
+      "type": "function",
+      "line": 174,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/create-api-composable.ts"
+    },
+    {
       "name": "useSafeEventListener",
       "type": "function",
       "line": 35,
@@ -21543,6 +21613,125 @@
       "line": 234,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/array.ts"
+    },
+    {
+      "name": "ErrorCodeMapping",
+      "type": "interface",
+      "line": 12,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "createErrorCodeMap",
+      "type": "function",
+      "line": 21,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "getMessageFromErrorCode",
+      "type": "function",
+      "line": 45,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "getTitleFromErrorCode",
+      "type": "function",
+      "line": 57,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "StateRefs",
+      "type": "interface",
+      "line": 69,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "createStateRefs",
+      "type": "function",
+      "line": 80,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "resetStateRefs",
+      "type": "function",
+      "line": 93,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "setSuccessState",
+      "type": "function",
+      "line": 104,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "setErrorState",
+      "type": "function",
+      "line": 114,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "AsyncExecutorOptions",
+      "type": "interface",
+      "line": 124,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "executeAsync",
+      "type": "function",
+      "line": 136,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "executeParallel",
+      "type": "function",
+      "line": 200,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "executeSequential",
+      "type": "function",
+      "line": 221,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "executeWithRetry",
+      "type": "function",
+      "line": 247,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "mergeOptions",
+      "type": "function",
+      "line": 282,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "debounce",
+      "type": "function",
+      "line": 292,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
+    },
+    {
+      "name": "throttle",
+      "type": "function",
+      "line": 311,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/utils/code-patterns.ts"
     },
     {
       "name": "deepClone",

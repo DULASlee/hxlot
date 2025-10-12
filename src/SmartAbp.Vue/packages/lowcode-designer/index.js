@@ -25,7 +25,7 @@ export { default as EntityModelingView } from './src/views/EntityModelingView.vu
 export { default as ThemeCustomizationView } from './src/views/ThemeCustomizationView.vue';
 export { default as UltraSimpleStudio } from './src/views/UltraSimpleStudio.vue';
 // ===== 设计器组件导出 =====
-export { default as EntityDesigner } from './src/components/CodeGenerator/EntityDesigner.vue';
+export { default as CodeGenEntityDesigner } from './src/components/CodeGenerator/CodeGenEntityDesigner.vue';
 export { default as PropertyInspector } from './src/components/PropertyInspector.vue';
 export { default as AdvancedEntityRelationshipDesigner } from './src/components/AdvancedEntityRelationshipDesigner.vue';
 export { default as AdvancedFieldTypeDesigner } from './src/components/AdvancedFieldTypeDesigner.vue';

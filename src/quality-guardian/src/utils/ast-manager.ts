@@ -1,6 +1,5 @@
-import { TSESTree } from '@typescript-eslint/typescript-estree';
+import { parse, TSESTree } from '@typescript-eslint/typescript-estree';
 import fs from 'fs/promises';
-import { parse } from '@typescript-eslint/typescript-estree';
 
 interface CacheEntry {
     content: string;
