@@ -7,6 +7,7 @@
     "skipLibCheck": true,
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo",
+    "assumeChangesOnlyAffectDirectDependencies": true,
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -60,7 +61,6 @@
     "src/icon-types.d.ts",
     "src/**/*.vue",
     "src/**/*.tsx",
-    "src/**/*.js",
     "types/**/*.d.ts"
   ],
   "exclude": [

@@ -120,6 +120,11 @@ $RECYCLE.BIN/
 *.d.ts.map
 *.js.map
 
+# 源码目录中的编译产物（严格忽略）
+src/**/*.js
+!src/**/*.config.js
+!src/**/*.setup.js
+
 # 但保留重要的类型声明文件
 !src/vite-env.d.ts
 !src/env.d.ts
