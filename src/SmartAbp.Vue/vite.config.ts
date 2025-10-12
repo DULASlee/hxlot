@@ -213,8 +213,11 @@ export default defineConfig({
     },
     watch: {
       ignored: [
+        "**/packages/**/node_modules/**",
+        "**/packages/**/dist/**",
         "**/packages/**/__tests__/**",
         "**/packages/**/examples/**",
+        "**/packages/**/*.tsbuildinfo",
         "**/node_modules/**",
         "**/dist/**",
         "**/build/**",

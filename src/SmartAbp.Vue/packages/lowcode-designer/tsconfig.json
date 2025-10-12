@@ -13,14 +13,16 @@
     "skipLibCheck": true
   },
   "include": [
-    "src/**/*",
-    "src/**/*.vue"
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "**/*.spec.ts",
-    "**/*.test.ts"
+    "**/*.test.ts",
+    "**/__tests__/**",
+    "**/*.vue"
   ],
   "references": [
     {

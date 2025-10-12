@@ -31,5 +31,8 @@ export type {
 } from './PerformanceMonitor'
 
 // 性能监控Dashboard
-export { default as PerformanceDashboard } from './PerformanceDashboard.vue'
+// export { default as PerformanceDashboard } from './PerformanceDashboard.vue'
+
+// 导出空对象以保持模块有效
+export const __performance_placeholder__ = true
 

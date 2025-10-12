@@ -18,8 +18,8 @@
     }
   },
   "include": [
-    "src/**/*",
-    "src/**/*.vue",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     "types/**/*.d.ts"
   ],
   "exclude": [

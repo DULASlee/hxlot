@@ -27,8 +27,8 @@
 // 核心组件导出
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export { default as SmartFormBuilder } from './SmartFormBuilder.vue'
-export { default as SmartFormDesigner } from './SmartFormDesigner.vue'
+// export { default as SmartFormBuilder } from './SmartFormBuilder.vue'
+// export { default as SmartFormDesigner } from './SmartFormDesigner.vue'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 适配器导出

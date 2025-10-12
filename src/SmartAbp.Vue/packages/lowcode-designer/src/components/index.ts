@@ -75,14 +75,14 @@
 // export { default as LdEntityDesigner } from './CodeGenerator/EntityDesigner.vue'
 
 // ✅ 已实现的核心组件
-export { default as LdBusinessRulesEngine } from './BusinessRulesEngine.vue'
+// export { default as LdBusinessRulesEngine } from './BusinessRulesEngine.vue'
 // export { default as LdCodeGenerationWizard } from './CodeGenerationWizard.vue'
 // export { default as LdCodePreviewPanel } from './CodePreviewPanel.vue'
-export { default as LdComponentPropertyPanel } from './ComponentPropertyPanel.vue'
-export { default as LdEntityDesigner } from './EntityDesigner.vue'
-export { default as LdTemplateManager } from './TemplateManager.vue'
-export { default as LdVisualComponentPalette } from './VisualComponentPalette.vue'
-export { default as LdVisualDesignCanvas } from './VisualDesignCanvas.vue'
+// export { default as LdComponentPropertyPanel } from './ComponentPropertyPanel.vue'
+// export { default as LdEntityDesigner } from './EntityDesigner.vue'
+// export { default as LdTemplateManager } from './TemplateManager.vue'
+// export { default as LdVisualComponentPalette } from './VisualComponentPalette.vue'
+// export { default as LdVisualDesignCanvas } from './VisualDesignCanvas.vue'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🚧 Utility exports - 待实现
@@ -94,4 +94,6 @@ export { default as LdVisualDesignCanvas } from './VisualDesignCanvas.vue'
  * 
  * @deprecated 违反架构铁律二，已在v1.0中移除
  * @see registerDesignerComponents in src/index.ts
- */
+ */// 导出空对象以保持模块有效
+export const __designer_components_placeholder__ = true
+

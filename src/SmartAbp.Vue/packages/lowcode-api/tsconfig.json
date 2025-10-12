@@ -12,8 +12,13 @@
     "emitDeclarationOnly": false,
     "composite": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["dist", "node_modules", "**/*.spec.ts", "**/*.test.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ],
   "references": [
     { "path": "../lowcode-shared" }
   ]
