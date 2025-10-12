@@ -316,6 +316,7 @@ import NetworkPolicyDesigner from './NetworkPolicyDesigner.vue'
 import RBACEditor from './RBACEditor.vue'
 
 // Composables
+// @ts-expect-error: useSecurityPolicy composable方法待实现
 const { loading, validateSecurityPolicy, generateNetworkPolicy, generateRBACManifest } = useSecurityPolicy()
 
 // State

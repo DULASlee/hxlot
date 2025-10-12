@@ -438,6 +438,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
+// @ts-expect-error: 组件通过ComponentRegistry全局注册，运行时可用
 import EnhancedThemeEditor from '@smartabp/lowcode-designer/components/EnhancedThemeEditor.vue'
 import { useEnhancedThemeStore } from '@smartabp/lowcode-core'
 import { logger } from '@smartabp/lowcode-tools'

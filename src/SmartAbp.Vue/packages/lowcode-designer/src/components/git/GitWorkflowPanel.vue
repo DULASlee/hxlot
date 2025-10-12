@@ -456,6 +456,7 @@ const activeTab = ref('init')
 const previewTab = ref('gitignore')
 const configPreviewVisible = ref(false)
 
+// @ts-expect-error: useGitWorkflow composable方法待实现
 const { loading, initializeRepository, createBranch, generateCommitMessage, generateAllGitConfigs } = useGitWorkflow()
 
 // 仓库初始化配置

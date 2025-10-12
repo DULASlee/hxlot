@@ -6,7 +6,7 @@ import { writeFileSync, mkdirSync } from 'fs'
 import { join, dirname } from 'path'
 import type { QualityReport, ReportFormat } from '../types'
 
-export { ReportFormat } from '../types'
+export type { ReportFormat } from '../types'
 
 export class ReportGenerator {
   generate(report: QualityReport, format: ReportFormat = 'console'): void {

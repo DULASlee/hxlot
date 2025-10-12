@@ -495,38 +495,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { ElMessage } from 'element-plus'
 import {
-  Setting,
-  Tools,
-  Folder,
-  DocumentCopy,
-  FolderOpened,
-  Cpu,
-  Star,
-  Promotion,
-  View,
-  Document,
-  Download,
-  CopyDocument,
-  CircleCheck,
-  Monitor,
-  Platform,
-  Grid,
-  InfoFilled,
-  Cloudy,
-  Connection,
-  Warning
+    CircleCheck,
+    Cloudy,
+    Connection,
+    CopyDocument,
+    Cpu,
+    Document,
+    DocumentCopy,
+    Download,
+    Folder,
+    FolderOpened,
+    Grid,
+    InfoFilled,
+    Monitor,
+    Platform,
+    Promotion,
+    Setting,
+    Star,
+    Tools,
+    View,
+    Warning
 } from '@element-plus/icons-vue'
 import {
-  useDevEnvironment,
-  type DevEnvironmentConfig,
-  type GeneratedDockerCompose,
-  type GeneratedStartupScript,
-  type GeneratedEnvFile,
-  type EnvironmentVariables
+    useDevEnvironment,
+    type DevEnvironmentConfig,
+    type EnvironmentVariables,
+    type GeneratedDockerCompose,
+    type GeneratedEnvFile,
+    type GeneratedStartupScript
 } from '@smartabp/lowcode-api'
+import { ElMessage } from 'element-plus'
+import { reactive, ref } from 'vue'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 状态管理 - State Management

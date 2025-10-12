@@ -46,9 +46,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from "vue"
-import { useSafeEventListener, useSafeTimer } from '@smartabp/lowcode-shared'
 import { Plus } from "@element-plus/icons-vue"
+import { useSafeEventListener, useSafeTimer } from '@smartabp/lowcode-shared'
+import { computed, ref, watch } from "vue"
 
 interface DragPreviewProps {
   isDragging?: boolean

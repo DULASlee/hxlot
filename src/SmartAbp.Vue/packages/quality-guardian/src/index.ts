@@ -23,7 +23,8 @@ export {
 } from './checkers'
 
 // 报告生成器导出
-export { ReportFormat, ReportGenerator } from './reporters/ReportGenerator'
+export type { ReportFormat } from './reporters/ReportGenerator'
+export { ReportGenerator } from './reporters/ReportGenerator'
 
 /**
  * 快速启动质量检查

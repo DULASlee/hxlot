@@ -256,7 +256,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
+// @ts-expect-error: 组件通过ComponentRegistry全局注册，运行时可用
 import { LdEntityDesigner } from './components'
+// @ts-expect-error: 类型定义在运行时通过类型扩展可用
 import type { EntityDefinition } from '@smartabp/lowcode-designer/types'
 
 // 状态

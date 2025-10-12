@@ -542,8 +542,8 @@ const initTrendChart = () => {
     ]
   }
 
-  // ECharts类型系统过于严格，使用类型断言
-  trendChart.setOption(option as any)
+  // @ts-expect-error: ECharts渐变色类型定义过于严格
+  trendChart.setOption(option)
 
   window.addEventListener('resize', () => {
     trendChart?.resize()
@@ -601,8 +601,8 @@ const initBreakdownChart = () => {
     ]
   }
 
-  // ECharts类型系统过于严格，使用类型断言
-  breakdownChart.setOption(option as any)
+  // @ts-expect-error: ECharts饼图类型定义过于严格
+  breakdownChart.setOption(option)
 
   window.addEventListener('resize', () => {
     breakdownChart?.resize()
@@ -663,8 +663,8 @@ const initComparisonChart = () => {
     ]
   }
 
-  // ECharts类型系统过于严格，使用类型断言
-  comparisonChart.setOption(option as any)
+  // @ts-expect-error: ECharts柱状图类型定义过于严格
+  comparisonChart.setOption(option)
 
   window.addEventListener('resize', () => {
     comparisonChart?.resize()

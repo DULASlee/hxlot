@@ -206,23 +206,23 @@
             <template v-if="configs[env].enableAutoScaling">
               <el-form-item label="最小副本数">
                 <el-input-number
-                  v-model="configs[env].autoScaling.minReplicas"
+                  v-model="configs[env].autoScaling!.minReplicas"
                   :min="1"
-                  :max="configs[env].autoScaling.maxReplicas"
+                  :max="configs[env].autoScaling!.maxReplicas"
                 />
               </el-form-item>
               
               <el-form-item label="最大副本数">
                 <el-input-number
-                  v-model="configs[env].autoScaling.maxReplicas"
-                  :min="configs[env].autoScaling.minReplicas"
+                  v-model="configs[env].autoScaling!.maxReplicas"
+                  :min="configs[env].autoScaling!.minReplicas"
                   :max="100"
                 />
               </el-form-item>
               
               <el-form-item label="CPU目标利用率">
                 <el-slider
-                  v-model="configs[env].autoScaling.targetCPUUtilization"
+                  v-model="configs[env].autoScaling!.targetCPUUtilization"
                   :min="10"
                   :max="100"
                   show-input
@@ -231,7 +231,7 @@
               
               <el-form-item label="内存目标利用率">
                 <el-slider
-                  v-model="configs[env].autoScaling.targetMemoryUtilization"
+                  v-model="configs[env].autoScaling!.targetMemoryUtilization"
                   :min="10"
                   :max="100"
                   show-input

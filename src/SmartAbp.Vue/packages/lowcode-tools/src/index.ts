@@ -35,6 +35,23 @@ export const logger = {
   success: (message: string, ...args: any[]) => console.log(`[SUCCESS] ✅ ${message}`, ...args)
 };
 
+/**
+ * 创建组件专用日志记录器
+ * @param componentName 组件名称
+ * @returns 带有组件前缀的日志记录器
+ */
+export const createComponentLogger = (componentName: string) => {
+  const prefix = `[${componentName}]`;
+  return {
+    info: (message: string, ...args: any[]) => console.log(`${prefix} [INFO] ${message}`, ...args),
+    warn: (message: string, ...args: any[]) => console.warn(`${prefix} [WARN] ${message}`, ...args),
+    error: (message: string, ...args: any[]) => console.error(`${prefix} [ERROR] ${message}`, ...args),
+    debug: (message: string, ...args: any[]) => console.debug(`${prefix} [DEBUG] ${message}`, ...args),
+    fatal: (message: string, ...args: any[]) => console.error(`${prefix} [FATAL] ${message}`, ...args),
+    success: (message: string, ...args: any[]) => console.log(`${prefix} [SUCCESS] ✅ ${message}`, ...args)
+  };
+};
+
 // ===== 事件总线导出 =====
 /**
  * 📡 简化版事件总线（独立实现）
