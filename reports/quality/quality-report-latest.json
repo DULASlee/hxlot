@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "timestamp": "2025-10-12T03:38:16.067Z",
+  "timestamp": "2025-10-12T03:51:39.834Z",
   "project": {
     "name": "SmartAbp",
     "path": "/Users/huanyuan/SmartAbp/hxlot",
@@ -14,7 +14,10 @@
     "generateReport": true,
     "reportDir": "/Users/huanyuan/SmartAbp/hxlot/reports/quality",
     "checkers": [
-      "codeSmell"
+      "typescript",
+      "architecture",
+      "codeDefect",
+      "lowcode"
     ],
     "checkerConfigs": {},
     "performance": {
@@ -52,7 +55,50 @@
       "deductionDetails": []
     }
   },
-  "checkers": {},
+  "checkers": {
+    "typescript": {
+      "checker": "TypeScriptChecker",
+      "passed": false,
+      "duration": 77,
+      "filesChecked": 482,
+      "violations": [],
+      "error": "this.runInChunks is not a function"
+    },
+    "architecture": {
+      "checker": "ArchitectureChecker",
+      "passed": false,
+      "duration": 77,
+      "filesChecked": 815,
+      "violations": [],
+      "error": "this.runInChunks is not a function"
+    },
+    "lowcode": {
+      "checker": "低代码引擎质量检查器",
+      "passed": true,
+      "duration": 363,
+      "filesChecked": 80,
+      "violations": [],
+      "details": {
+        "packagesChecked": 6,
+        "architectureLayers": {
+          "metadata-core": -1,
+          "lowcode-shared": 0,
+          "lowcode-core": 1,
+          "lowcode-api": 1,
+          "lowcode-tools": 1,
+          "lowcode-designer": 2
+        },
+        "checksPerformed": [
+          "架构层级依赖检查",
+          "组件注册完整性检查",
+          "类型系统统一性检查",
+          "包导出完整性检查",
+          "代码生成质量检查",
+          "TypeScript项目引用检查"
+        ]
+      }
+    }
+  },
   "violations": {
     "P0": [],
     "P1": [],
@@ -60,7 +106,7 @@
   },
   "statistics": {
     "totalFiles": 0,
-    "filesChecked": 0,
+    "filesChecked": 1377,
     "totalLines": 0,
     "totalDuration": 0
   },
