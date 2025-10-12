@@ -18,6 +18,8 @@
     "gen:api": "openapi --input %VITE_API_BASE_URL%/swagger/v1/swagger.json --output src/core/api --client axios",
     "gen:api:ci": "openapi --input $VITE_API_BASE_URL/swagger/v1/swagger.json --output src/core/api --client axios",
     "gen:api:check": "git diff --exit-code src/core/api || (echo API client drift detected && exit 1)",
+    "clean": "pwsh -File scripts/clean-build-artifacts.ps1",
+    "clean:cache": "rimraf node_modules/.cache node_modules/.vite",
     "dev": "vite",
     "dev:fast": "cross-env NODE_OPTIONS='--max-old-space-size=8192' vite --force",
     "build": "run-s type-check build-only",
