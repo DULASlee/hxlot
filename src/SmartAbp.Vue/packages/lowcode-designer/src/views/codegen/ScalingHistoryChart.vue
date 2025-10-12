@@ -168,7 +168,8 @@ const initChart = () => {
     ]
   }
 
-  chartInstance.setOption(option)
+  // ECharts类型系统过于严格，使用类型断言
+  chartInstance.setOption(option as any)
 
   // 响应式调整
   window.addEventListener('resize', () => {
@@ -180,6 +181,7 @@ const updateChart = () => {
   if (!chartInstance) {
     initChart()
   } else {
+    // ECharts类型系统过于严格，使用类型断言
     chartInstance.setOption({
       xAxis: {
         data: props.history.events.map(e => formatTime(e.timestamp))
@@ -199,7 +201,7 @@ const updateChart = () => {
             .filter(Boolean)
         }
       ]
-    })
+    } as any)
   }
 }
 

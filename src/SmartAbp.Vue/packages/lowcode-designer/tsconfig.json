@@ -26,6 +26,9 @@
   ],
   "references": [
     {
+      "path": "../lowcode-api"
+    },
+    {
       "path": "../lowcode-core"
     },
     {

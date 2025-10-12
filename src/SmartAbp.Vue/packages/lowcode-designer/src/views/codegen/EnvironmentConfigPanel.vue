@@ -299,7 +299,7 @@ import {
   Connection,
   Check,
   InfoFilled,
-  CpuFilled,
+  Cpu,
   Switch,
   TrendCharts,
   Expand,

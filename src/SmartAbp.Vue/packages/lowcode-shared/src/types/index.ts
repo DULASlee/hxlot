@@ -47,6 +47,9 @@ export type { MDIWindowConfig, TabConfig } from './ui.js'
 // 通用DTO类型（供API层重用）
 export type { AuditedEntityDto, EntityDto, ListResultDto, PagedResultDto } from './dtos.js'
 
+// Performance API 类型扩展（通过全局声明扩展，不需要显式导出）
+import './performance.js'
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔧 装配件系统类型（Assembly System Types）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

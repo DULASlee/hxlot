@@ -542,7 +542,8 @@ const initTrendChart = () => {
     ]
   }
 
-  trendChart.setOption(option)
+  // ECharts类型系统过于严格，使用类型断言
+  trendChart.setOption(option as any)
 
   window.addEventListener('resize', () => {
     trendChart?.resize()
@@ -600,7 +601,8 @@ const initBreakdownChart = () => {
     ]
   }
 
-  breakdownChart.setOption(option)
+  // ECharts类型系统过于严格，使用类型断言
+  breakdownChart.setOption(option as any)
 
   window.addEventListener('resize', () => {
     breakdownChart?.resize()
@@ -661,7 +663,8 @@ const initComparisonChart = () => {
     ]
   }
 
-  comparisonChart.setOption(option)
+  // ECharts类型系统过于严格，使用类型断言
+  comparisonChart.setOption(option as any)
 
   window.addEventListener('resize', () => {
     comparisonChart?.resize()

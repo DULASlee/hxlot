@@ -36,6 +36,7 @@
     "clean": "rm -rf dist"
   },
   "peerDependencies": {
+    "@smartabp/lowcode-api": "workspace:*",
     "@smartabp/lowcode-core": "workspace:*",
     "@smartabp/lowcode-shared": "workspace:*"
   },

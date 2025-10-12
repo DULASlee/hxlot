@@ -17,3 +17,11 @@ export {
   type ApiMethodsConfig,
   type ApiComposable
 } from './create-api-composable.js'
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🛡️ 安全工具 Composables
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export {
+  useSafeEventListener,
+  useSafeTimer
+} from './useSafeEventListener.js'

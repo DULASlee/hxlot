@@ -229,7 +229,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   MagicStick, Edit, View, Document, RefreshLeft, RefreshRight,
   Grid, ZoomIn, ZoomOut, DocumentChecked, More, Plus,
-  FolderOpened, Download, Setting, Component, Box, Position, Clock
+  FolderOpened, Download, Setting, Operation, Box, Position, Clock
 } from '@element-plus/icons-vue'
 import { useDesignerStore } from './stores/useDesignerStore'
 import {
@@ -263,7 +263,7 @@ const pageData = computed(() => ({
 
 // 组件树数据
 const componentTreeData = computed(() => {
-  return designerStore.canvasComponents.map(c => ({
+  return designerStore.canvasComponents.map((c: any) => ({
     id: c.id,
     name: c.name || c.type,
     children: []
@@ -284,7 +284,7 @@ const generatedTemplate = computed(() => {
   }
   
   let template = '<template>\n  <div class="page">\n'
-  designerStore.canvasComponents.forEach(comp => {
+  designerStore.canvasComponents.forEach((comp: any) => {
     template += `    <${comp.type} :style="{ left: '${comp.style?.left}', top: '${comp.style?.top}' }">\n`
     template += `      ${comp.props.text || comp.name}\n`
     template += `    </${comp.type}>\n`

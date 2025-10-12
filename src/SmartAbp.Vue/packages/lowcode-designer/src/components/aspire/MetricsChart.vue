@@ -86,7 +86,8 @@ const initChart = () => {
     ]
   }
 
-  chart.setOption(option)
+  // ECharts类型系统过于严格，使用类型断言以避免复杂的渐变色类型定义问题
+  chart.setOption(option as any)
 }
 
 const updateChart = () => {

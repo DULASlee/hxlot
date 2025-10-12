@@ -515,7 +515,6 @@ import {
   Platform,
   Grid,
   InfoFilled,
-  Laptop,
   Cloudy,
   Connection,
   Warning

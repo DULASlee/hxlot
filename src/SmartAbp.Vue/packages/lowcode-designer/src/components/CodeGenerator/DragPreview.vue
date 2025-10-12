@@ -156,10 +156,11 @@ const showDropIndicator = computed(() => {
 })
 
 // Methods
-const updateMousePosition = (event: MouseEvent) => {
+const updateMousePosition = (event: Event) => {
+  const mouseEvent = event as MouseEvent
   mousePosition.value = {
-    x: event.clientX,
-    y: event.clientY,
+    x: mouseEvent.clientX,
+    y: mouseEvent.clientY,
   }
 }
 
