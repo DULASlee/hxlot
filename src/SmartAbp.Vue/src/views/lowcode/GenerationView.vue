@@ -575,12 +575,8 @@ const generateCode = async () => {
       generateDocs: false
     }
 
-    console.log('🚀 Calling real code generator API...', generationConfig)
-
     // 🔥 调用真实的后端API
     const result: GenerationResult = await codeGeneratorApi.generateModule(generationConfig)
-
-    console.log('✅ Code generation result:', result)
 
     if (result.success) {
       // 处理真实的生成结果
@@ -637,7 +633,7 @@ const generateCode = async () => {
           id: `page-${Date.now()}`,
           name: generationParams.value.entityName,
           template: selectedTemplate.value.id,
-          code: JSON.stringify(result.generatedFiles),
+          code: result.generatedFiles, // ✅ 修复: 直接存储文件数组，不转JSON字符串
           createdAt: Date.now(),
         })
         projectStore.saveProject()

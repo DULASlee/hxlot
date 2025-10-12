@@ -72,9 +72,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, reactive } from 'vue';
-import { ElCard, ElForm, ElFormItem, ElInput, ElButton, ElEmpty } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
+import { ElButton, ElCard, ElEmpty, ElForm, ElFormItem, ElInput } from 'element-plus';
+import { reactive, ref, watch } from 'vue';
 
 // --- Interfaces & Props ---
 interface Placeholder {
@@ -141,7 +141,7 @@ const generateCode = async () => {
         placeholders: placeholders,
       });
     } else {
-      console.log('Form validation failed!');
+      // Form validation failed
     }
   });
 };

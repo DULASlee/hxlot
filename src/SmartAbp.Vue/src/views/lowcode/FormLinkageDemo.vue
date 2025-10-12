@@ -327,7 +327,7 @@ const conditionalLinkageRules: LinkageRule[] = [
 
 const handleConditionalSubmit = (data: any) => {
   ElMessage.success('提交成功！')
-  console.log('Conditional Form Data:', data)
+  // Form data submitted
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -434,7 +434,7 @@ const cascadeConfigs: CascadeConfig[] = [
 
 const handleCascadeSubmit = (data: any) => {
   ElMessage.success('提交成功！')
-  console.log('Cascade Form Data:', data)
+  // Form data submitted
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -506,7 +506,7 @@ const dynamicFieldConfigs: DynamicFieldConfig[] = [
 
 const handleDynamicSubmit = (data: any) => {
   ElMessage.success('提交成功！')
-  console.log('Dynamic Form Data:', data)
+  // Form data submitted
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -565,7 +565,7 @@ const calculatedFieldConfigs: CalculatedFieldConfig[] = [
 
 const handleCalculatedSubmit = (data: any) => {
   ElMessage.success('提交成功！')
-  console.log('Calculated Form Data:', data)
+  // Form data submitted
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

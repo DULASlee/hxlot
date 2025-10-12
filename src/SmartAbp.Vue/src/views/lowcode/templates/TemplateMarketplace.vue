@@ -59,8 +59,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import { ElCard, ElRow, ElCol, ElTag, ElEmpty } from 'element-plus';
+import { ElCard, ElCol, ElEmpty, ElRow, ElTag } from 'element-plus';
+import { computed, onMounted, ref } from 'vue';
 
 // Define the structure of a template based on index.json
 interface Template {
@@ -100,7 +100,7 @@ onMounted(async () => {
 });
 
 const selectTemplate = (template: Template) => {
-  console.log("Selected template:", template);
+  // Template selected
   // Here we would typically emit an event or use a router to navigate
   // to the template configuration view, passing the selected template's data.
   // For now, we just log it to the console.

@@ -755,7 +755,7 @@ watch(
   (newValue) => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newValue))
-      console.log('✅ CQRS定义已自动保存到localStorage')
+      // CQRS definition auto-saved to localStorage
     } catch (error) {
       console.warn('⚠️ 保存到localStorage失败:', error)
     }
@@ -771,7 +771,7 @@ function loadFromStorage() {
       const loaded = JSON.parse(stored)
       cqrsDefinition.value = loaded
       ElMessage.success('已恢复上次编辑的CQRS定义')
-      console.log('✅ 从localStorage加载CQRS定义成功')
+      // CQRS definition loaded from localStorage
     }
   } catch (error) {
     console.warn('⚠️ 从localStorage加载失败:', error)

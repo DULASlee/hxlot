@@ -502,7 +502,7 @@ const formConfig = {
 }
 
 const handleSubmit = (data) => {
-  console.log('提交数据:', data)
+  // Form data submitted
 }
 <` + `/script>`
 
@@ -554,18 +554,18 @@ const dynamicRules = computed(() => {
 })
 
 const handleFieldChange = (field, value) => {
-  console.log(\`字段 \${field} 变化为 \${value}\`)
+  // Field value changed
 }
 <` + `/script>`
 
 // 事件处理
 const handleFormSubmit = (data: Record<string, any>) => {
-    console.log('表单提交:', data)
+    // Form submitted
     ElMessage.success('表单提交成功！')
 }
 
 const handleFormReset = () => {
-    console.log('表单重置')
+    // Form reset
     ElMessage.info('表单已重置')
 }
 

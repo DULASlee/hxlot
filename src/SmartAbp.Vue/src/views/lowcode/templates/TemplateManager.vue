@@ -95,7 +95,7 @@ const switchToMarketplace = () => {
 
 // --- Generation Logic ---
 const handleGenerationRequest = async (payload: GenerationPayload) => {
-  console.log('Generation request received:', payload);
+  // Generation request received
   isGenerating.value = true;
 
   // 1. Construct the non-interactive CLI command

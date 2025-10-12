@@ -584,9 +584,7 @@ onMounted(async () => {
 const loadStats = async () => {
   statsLoading.value = true
   try {
-    console.log('🔄 正在加载统计数据...')
     const data = await codeGenStatsApi.getMyStats()
-    console.log('✅ 统计数据加载成功:', data)
     stats.value = {
       totalProjects: data.totalProjects,
       monthlyGenerations: data.monthlyGenerations,
@@ -615,9 +613,7 @@ const loadStats = async () => {
  */
 const loadUserProfile = async () => {
   try {
-    console.log('🔄 正在加载用户配置...')
     const profile = await userProfileApi.getMyProfile()
-    console.log('✅ 用户配置加载成功:', profile)
     userIndustry.value = profile.industry || ''
     isFirstVisit.value = profile.isFirstVisit
     lastUsedMode.value = profile.lastUsedMode as LastUsedMode
@@ -636,9 +632,7 @@ const loadUserProfile = async () => {
  */
 const loadRecommendation = async () => {
   try {
-    console.log('🔄 正在加载行业推荐...')
     const recommendation = await userProfileApi.getRecommendation()
-    console.log('✅ 行业推荐加载成功:', recommendation)
     industryRecommendation.value = recommendation
   } catch (error) {
     console.warn('⚠️ 行业推荐加载失败:', error)
@@ -652,9 +646,7 @@ const loadRecommendation = async () => {
  */
 const goToSimpleMode = async () => {
   try {
-    console.log('🔄 更新用户偏好为极简模式...')
     await userProfileApi.updateMyProfile({ lastUsedMode: 'simple' })
-    console.log('✅ 用户偏好更新成功')
   } catch (error) {
     console.warn('⚠️ 用户偏好更新失败，使用本地存储:', error)
     // 降级到localStorage
@@ -663,7 +655,6 @@ const goToSimpleMode = async () => {
   
   // 确保导航不受API失败影响
   try {
-    console.log('🚀 导航到极简模式...')
     await router.push({ name: 'UltraSimpleStudio' })
   } catch (navError) {
     console.error('❌ 导航失败:', navError)
@@ -676,9 +667,7 @@ const goToSimpleMode = async () => {
  */
 const goToProMode = async () => {
   try {
-    console.log('🔄 更新用户偏好为专业模式...')
     await userProfileApi.updateMyProfile({ lastUsedMode: 'pro' })
-    console.log('✅ 用户偏好更新成功')
   } catch (error) {
     console.warn('⚠️ 用户偏好更新失败，使用本地存储:', error)
     // 降级到localStorage
@@ -687,7 +676,6 @@ const goToProMode = async () => {
   
   // 确保导航不受API失败影响
   try {
-    console.log('🚀 导航到专业模式...')
     await router.push('/lowcode')
   } catch (navError) {
     console.error('❌ 导航失败:', navError)
@@ -705,9 +693,7 @@ const selectIndustryTemplate = async (template: string) => {
   }
   
   try {
-    console.log('🔄 更新用户偏好为行业模板模式...')
     await userProfileApi.updateMyProfile({ lastUsedMode: 'industry' })
-    console.log('✅ 用户偏好更新成功')
   } catch (error) {
     console.warn('⚠️ 用户偏好更新失败，使用本地存储:', error)
     // 降级到localStorage
@@ -724,7 +710,6 @@ const selectIndustryTemplate = async (template: string) => {
   
   // 确保导航不受API失败影响
   try {
-    console.log('🚀 导航到行业模板配置...')
     await router.push({
       path: '/lowcode/industry-template-config',
       query: { template }

@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "timestamp": "2025-10-12T03:51:39.834Z",
+  "timestamp": "2025-10-12T04:07:20.247Z",
   "project": {
     "name": "SmartAbp",
     "path": "/Users/huanyuan/SmartAbp/hxlot",
@@ -16,8 +16,11 @@
     "checkers": [
       "typescript",
       "architecture",
-      "codeDefect",
-      "lowcode"
+      "smartabp",
+      "lowcode",
+      "codegen",
+      "performance",
+      "security"
     ],
     "checkerConfigs": {},
     "performance": {
@@ -59,7 +62,7 @@
     "typescript": {
       "checker": "TypeScriptChecker",
       "passed": false,
-      "duration": 77,
+      "duration": 281,
       "filesChecked": 482,
       "violations": [],
       "error": "this.runInChunks is not a function"
@@ -67,15 +70,25 @@
     "architecture": {
       "checker": "ArchitectureChecker",
       "passed": false,
-      "duration": 77,
+      "duration": 281,
       "filesChecked": 815,
       "violations": [],
       "error": "this.runInChunks is not a function"
     },
+    "smartabp": {
+      "checker": "SmartAbp专用规则检查器",
+      "passed": true,
+      "duration": 245,
+      "filesChecked": 0,
+      "violations": [],
+      "details": {
+        "totalViolationsFound": 0
+      }
+    },
     "lowcode": {
       "checker": "低代码引擎质量检查器",
       "passed": true,
-      "duration": 363,
+      "duration": 394,
       "filesChecked": 80,
       "violations": [],
       "details": {
@@ -97,6 +110,27 @@
           "TypeScript项目引用检查"
         ]
       }
+    },
+    "codegen": {
+      "checker": "代码生成质量检查器",
+      "passed": true,
+      "duration": 10,
+      "filesChecked": 0,
+      "violations": []
+    },
+    "performance": {
+      "checker": "性能质量检查器",
+      "passed": true,
+      "duration": 279,
+      "filesChecked": 1170,
+      "violations": []
+    },
+    "security": {
+      "checker": "安全质量检查器",
+      "passed": true,
+      "duration": 16812,
+      "filesChecked": 0,
+      "violations": []
     }
   },
   "violations": {
@@ -106,7 +140,7 @@
   },
   "statistics": {
     "totalFiles": 0,
-    "filesChecked": 1377,
+    "filesChecked": 2547,
     "totalLines": 0,
     "totalDuration": 0
   },
