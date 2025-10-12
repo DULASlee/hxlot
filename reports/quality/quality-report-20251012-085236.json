@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-10-12T00:52:36Z",
+  "project": "hxlot",
+  "qualityGate": {
+    "p0Passed": false,
+    "p1Passed": false,
+    "p2Passed": true,
+    "overallPassed": false
+  },
+  "checks": {
+    "frontend": false,
+    "backend": true,
+    "security": false,
+    "performance": true
+  },
+  "metrics": {
+    "totalFiles":    44257,
+    "totalLines": 991278,
+    "todoCount":    16530
+  }
+}

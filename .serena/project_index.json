@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-11T17:08:53.717Z",
+  "timestamp": "2025-10-12T02:34:40.342Z",
   "project": "Baobab.SmartAbp",
   "language": "typescript",
   "files": [
@@ -1988,8 +1988,8 @@
       "name": "metadata-codegen.ts",
       "path": "src/SmartAbp.Vue/src/tools/metadata-codegen.ts",
       "type": "file",
-      "size": 9099,
-      "modified": "2025-10-06T09:40:44.281Z"
+      "size": 9061,
+      "modified": "2025-10-11T18:07:30.221Z"
     },
     {
       "name": "resolvers.ts",
@@ -3070,6 +3070,13 @@
       "modified": "2025-09-30T04:34:00.671Z"
     },
     {
+      "name": "packages-integration.test.ts",
+      "path": "src/SmartAbp.Vue/packages/__tests__/packages-integration.test.ts",
+      "type": "file",
+      "size": 16231,
+      "modified": "2025-10-11T17:59:57.565Z"
+    },
+    {
       "name": "README.md",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/README.md",
       "type": "file",
@@ -3612,8 +3619,8 @@
       "name": "package.json",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/package.json",
       "type": "file",
-      "size": 1673,
-      "modified": "2025-10-11T15:30:47.076Z"
+      "size": 1708,
+      "modified": "2025-10-11T17:39:17.580Z"
     },
     {
       "name": "logger-adapter.test.ts",
@@ -3731,8 +3738,8 @@
       "name": "RuleEndNode.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/src/components/BusinessRuleDesigner/nodes/RuleEndNode.vue",
       "type": "file",
-      "size": 2277,
-      "modified": "2025-10-10T07:26:19.707Z"
+      "size": 2298,
+      "modified": "2025-10-11T18:08:08.022Z"
     },
     {
       "name": "RuleStartNode.vue",
@@ -3962,8 +3969,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/src/components/index.ts",
       "type": "file",
-      "size": 3341,
-      "modified": "2025-10-11T15:30:47.242Z"
+      "size": 3365,
+      "modified": "2025-10-11T17:59:57.514Z"
     },
     {
       "name": "useCodeGenerationProgress.d.ts",
@@ -4816,8 +4823,8 @@
       "name": "package.json",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/package.json",
       "type": "file",
-      "size": 1295,
-      "modified": "2025-10-11T15:43:54.065Z"
+      "size": 1330,
+      "modified": "2025-10-11T17:39:17.580Z"
     },
     {
       "name": "CodeGenerationWizard.e2e.test.ts",
@@ -5908,8 +5915,8 @@
       "name": "TurboAnalysisEngine.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/ai/TurboAnalysisEngine.ts",
       "type": "file",
-      "size": 28372,
-      "modified": "2025-10-11T06:22:16.547Z"
+      "size": 29740,
+      "modified": "2025-10-11T17:39:17.711Z"
     },
     {
       "name": "ViteAutoDiscoveryPlugin.js",
@@ -5985,8 +5992,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/cache/index.ts",
       "type": "file",
-      "size": 321,
-      "modified": "2025-10-09T19:08:21.280Z"
+      "size": 373,
+      "modified": "2025-10-11T17:39:17.785Z"
     },
     {
       "name": "BaseComponent.d.ts",
@@ -6398,8 +6405,8 @@
       "name": "UnifiedEventBus.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/events/UnifiedEventBus.ts",
       "type": "file",
-      "size": 12124,
-      "modified": "2025-10-11T14:29:44.769Z"
+      "size": 12212,
+      "modified": "2025-10-11T17:39:17.786Z"
     },
     {
       "name": "index.js",
@@ -6412,8 +6419,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/events/index.ts",
       "type": "file",
-      "size": 242,
-      "modified": "2025-10-09T19:08:21.458Z"
+      "size": 312,
+      "modified": "2025-10-11T17:39:17.789Z"
     },
     {
       "name": "ArchitectureGuardian.ts",
@@ -6846,8 +6853,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/index.ts",
       "type": "file",
-      "size": 4361,
-      "modified": "2025-10-11T12:18:19.908Z"
+      "size": 4346,
+      "modified": "2025-10-11T17:39:17.739Z"
     },
     {
       "name": "logger.js",
@@ -6895,8 +6902,8 @@
       "name": "unified-schema.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts",
       "type": "file",
-      "size": 21304,
-      "modified": "2025-10-09T19:08:21.592Z"
+      "size": 21512,
+      "modified": "2025-10-11T17:39:17.738Z"
     },
     {
       "name": "array.d.ts",
@@ -7007,8 +7014,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/index.ts",
       "type": "file",
-      "size": 2737,
-      "modified": "2025-10-09T19:39:10.093Z"
+      "size": 2755,
+      "modified": "2025-10-11T17:39:17.785Z"
     },
     {
       "name": "metadata-adapter.js",
@@ -7035,8 +7042,8 @@
       "name": "unified-validator.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts",
       "type": "file",
-      "size": 31731,
-      "modified": "2025-10-11T16:12:04.308Z"
+      "size": 31857,
+      "modified": "2025-10-11T17:39:17.739Z"
     },
     {
       "name": "common.d.ts",
@@ -7183,7 +7190,7 @@
       "path": "src/SmartAbp.Vue/packages/lowcode-tools/package.json",
       "type": "file",
       "size": 1806,
-      "modified": "2025-10-11T10:51:19.686Z"
+      "modified": "2025-10-11T17:59:57.421Z"
     },
     {
       "name": "README.md",
@@ -7735,15 +7742,120 @@
       "name": "package.json",
       "path": "src/SmartAbp.Vue/packages/quality-guardian/package.json",
       "type": "file",
-      "size": 1437,
-      "modified": "2025-10-09T05:10:10.232Z"
+      "size": 1402,
+      "modified": "2025-10-11T19:12:25.265Z"
+    },
+    {
+      "name": "ArchitectureChecker.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/ArchitectureChecker.ts",
+      "type": "file",
+      "size": 14138,
+      "modified": "2025-10-11T20:02:51.855Z"
+    },
+    {
+      "name": "CodeGenChecker.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/CodeGenChecker.ts",
+      "type": "file",
+      "size": 11373,
+      "modified": "2025-10-11T19:05:46.992Z"
+    },
+    {
+      "name": "CodeSmellChecker.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/CodeSmellChecker.ts",
+      "type": "file",
+      "size": 1675,
+      "modified": "2025-10-11T18:58:49.747Z"
+    },
+    {
+      "name": "ComplexityChecker.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/ComplexityChecker.ts",
+      "type": "file",
+      "size": 540,
+      "modified": "2025-10-11T18:43:08.967Z"
+    },
+    {
+      "name": "DuplicationChecker.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/DuplicationChecker.ts",
+      "type": "file",
+      "size": 1578,
+      "modified": "2025-10-11T18:58:49.747Z"
+    },
+    {
+      "name": "LowCodeChecker.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/LowCodeChecker.ts",
+      "type": "file",
+      "size": 13538,
+      "modified": "2025-10-11T19:06:40.454Z"
+    },
+    {
+      "name": "PerformanceChecker.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/PerformanceChecker.ts",
+      "type": "file",
+      "size": 12024,
+      "modified": "2025-10-11T19:10:25.886Z"
+    },
+    {
+      "name": "SecurityChecker.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/SecurityChecker.ts",
+      "type": "file",
+      "size": 13480,
+      "modified": "2025-10-11T19:16:07.854Z"
+    },
+    {
+      "name": "SmartAbpChecker.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/SmartAbpChecker.ts",
+      "type": "file",
+      "size": 10750,
+      "modified": "2025-10-11T19:07:26.703Z"
+    },
+    {
+      "name": "TypeScriptChecker.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/TypeScriptChecker.ts",
+      "type": "file",
+      "size": 7568,
+      "modified": "2025-10-11T19:11:00.772Z"
+    },
+    {
+      "name": "index.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/index.ts",
+      "type": "file",
+      "size": 581,
+      "modified": "2025-10-11T19:07:38.595Z"
+    },
+    {
+      "name": "QualityEngine.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/core/QualityEngine.ts",
+      "type": "file",
+      "size": 5404,
+      "modified": "2025-10-11T19:07:44.786Z"
+    },
+    {
+      "name": "index.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/index.ts",
+      "type": "file",
+      "size": 2598,
+      "modified": "2025-10-11T19:20:56.633Z"
+    },
+    {
+      "name": "ReportGenerator.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/reporters/ReportGenerator.ts",
+      "type": "file",
+      "size": 5009,
+      "modified": "2025-10-11T18:44:04.551Z"
+    },
+    {
+      "name": "types.ts",
+      "path": "src/SmartAbp.Vue/packages/quality-guardian/src/types.ts",
+      "type": "file",
+      "size": 3230,
+      "modified": "2025-10-11T19:08:17.454Z"
     },
     {
       "name": "tsconfig.json",
       "path": "src/SmartAbp.Vue/packages/quality-guardian/tsconfig.json",
       "type": "file",
-      "size": 387,
-      "modified": "2025-10-09T05:10:10.232Z"
+      "size": 552,
+      "modified": "2025-10-11T19:12:28.460Z"
     },
     {
       "name": "quality-report-2025-10-09.json",
@@ -7765,6 +7877,13 @@
       "type": "file",
       "size": 2344156,
       "modified": "2025-10-09T18:46:17.196Z"
+    },
+    {
+      "name": "vitest.config.ts",
+      "path": "src/SmartAbp.Vue/packages/vitest.config.ts",
+      "type": "file",
+      "size": 1172,
+      "modified": "2025-10-11T17:49:12.200Z"
     }
   ],
   "symbols": [
@@ -20959,161 +21078,161 @@
     {
       "name": "UnifiedModuleMetadata",
       "type": "interface",
-      "line": 64,
+      "line": 72,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedEntityDefinition",
       "type": "interface",
-      "line": 160,
+      "line": 168,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedEntityField",
       "type": "interface",
-      "line": 282,
+      "line": 290,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedValidationRule",
       "type": "interface",
-      "line": 456,
+      "line": 464,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedEntityRelationship",
       "type": "interface",
-      "line": 492,
+      "line": 500,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedBusinessRule",
       "type": "interface",
-      "line": 510,
+      "line": 518,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedEnumValue",
       "type": "interface",
-      "line": 525,
+      "line": 533,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedEntityIndex",
       "type": "interface",
-      "line": 535,
+      "line": 543,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedEntityConstraint",
       "type": "interface",
-      "line": 546,
+      "line": 554,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedEntityPermission",
       "type": "interface",
-      "line": 556,
+      "line": 564,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedEntityUIConfig",
       "type": "interface",
-      "line": 567,
+      "line": 575,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedCodeGenerationConfig",
       "type": "interface",
-      "line": 593,
+      "line": 601,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedDatabaseConfig",
       "type": "interface",
-      "line": 606,
+      "line": 614,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedFrontendConfig",
       "type": "interface",
-      "line": 620,
+      "line": 628,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedFeatureManagement",
       "type": "interface",
-      "line": 631,
+      "line": 639,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedMenuConfig",
       "type": "interface",
-      "line": 642,
+      "line": 650,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedPermissionConfig",
       "type": "interface",
-      "line": 653,
+      "line": 661,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedApiResponse",
       "type": "interface",
-      "line": 670,
+      "line": 678,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedPagedRequest",
       "type": "interface",
-      "line": 680,
+      "line": 688,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "UnifiedPagedResponse",
       "type": "interface",
-      "line": 690,
+      "line": 698,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "isUnifiedModuleMetadata",
       "type": "function",
-      "line": 702,
+      "line": 710,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "isUnifiedEntityDefinition",
       "type": "function",
-      "line": 720,
+      "line": 728,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
     {
       "name": "isSchemaVersionCompatible",
       "type": "function",
-      "line": 737,
+      "line": 745,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts"
     },
@@ -21974,7 +22093,7 @@
     {
       "name": "getUnifiedEntityErrors",
       "type": "function",
-      "line": 905,
+      "line": 911,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts"
     },
@@ -24126,6 +24245,153 @@
       "line": 205,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/metadata-core/src/validators/module-validator.ts"
+    },
+    {
+      "name": "ArchitectureChecker",
+      "type": "class",
+      "line": 33,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/ArchitectureChecker.ts"
+    },
+    {
+      "name": "CodeGenChecker",
+      "type": "class",
+      "line": 17,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/CodeGenChecker.ts"
+    },
+    {
+      "name": "CodeSmellChecker",
+      "type": "class",
+      "line": 11,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/CodeSmellChecker.ts"
+    },
+    {
+      "name": "ComplexityChecker",
+      "type": "class",
+      "line": 7,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/ComplexityChecker.ts"
+    },
+    {
+      "name": "DuplicationChecker",
+      "type": "class",
+      "line": 9,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/DuplicationChecker.ts"
+    },
+    {
+      "name": "LowCodeChecker",
+      "type": "class",
+      "line": 18,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/LowCodeChecker.ts"
+    },
+    {
+      "name": "PerformanceChecker",
+      "type": "class",
+      "line": 18,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/PerformanceChecker.ts"
+    },
+    {
+      "name": "SecurityChecker",
+      "type": "class",
+      "line": 17,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/SecurityChecker.ts"
+    },
+    {
+      "name": "SmartAbpChecker",
+      "type": "class",
+      "line": 18,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/SmartAbpChecker.ts"
+    },
+    {
+      "name": "TypeScriptChecker",
+      "type": "class",
+      "line": 23,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/checkers/TypeScriptChecker.ts"
+    },
+    {
+      "name": "QualityEngine",
+      "type": "class",
+      "line": 20,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/core/QualityEngine.ts"
+    },
+    {
+      "name": "runQualityCheck",
+      "type": "function",
+      "line": 53,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/index.ts"
+    },
+    {
+      "name": "checkGeneratedCode",
+      "type": "function",
+      "line": 76,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/index.ts"
+    },
+    {
+      "name": "ReportGenerator",
+      "type": "class",
+      "line": 11,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/reporters/ReportGenerator.ts"
+    },
+    {
+      "name": "Violation",
+      "type": "interface",
+      "line": 23,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/types.ts"
+    },
+    {
+      "name": "CheckResult",
+      "type": "interface",
+      "line": 59,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/types.ts"
+    },
+    {
+      "name": "QualityThresholds",
+      "type": "interface",
+      "line": 75,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/types.ts"
+    },
+    {
+      "name": "QualityConfig",
+      "type": "interface",
+      "line": 93,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/types.ts"
+    },
+    {
+      "name": "QualityScore",
+      "type": "interface",
+      "line": 117,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/types.ts"
+    },
+    {
+      "name": "QualityReport",
+      "type": "interface",
+      "line": 134,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/types.ts"
+    },
+    {
+      "name": "IChecker",
+      "type": "interface",
+      "line": 162,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/quality-guardian/src/types.ts"
     }
   ]
 }

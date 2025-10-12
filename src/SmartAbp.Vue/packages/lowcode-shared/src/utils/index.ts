@@ -61,3 +61,27 @@ export {
 // 🔄 Schema转换工具
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export { SchemaConverter } from './schema-converter.js'
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🎨 代码模式工具
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export {
+  createErrorCodeMap,
+  getMessageFromErrorCode,
+  getTitleFromErrorCode,
+  DEFAULT_ERROR_CODE_MAP,
+  createStateRefs,
+  resetStateRefs,
+  setSuccessState,
+  setErrorState,
+  executeAsync,
+  executeParallel,
+  executeSequential,
+  executeWithRetry,
+  mergeOptions,
+  debounce,
+  throttle,
+  type ErrorCodeMapping,
+  type StateRefs,
+  type AsyncExecutorOptions
+} from './code-patterns.js'

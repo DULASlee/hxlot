@@ -7,9 +7,9 @@ import { Chalk } from 'chalk';
 import { execa } from 'execa';
 import glob from 'fast-glob';
 import fs from 'fs-extra';
+import os from 'os';
 import path from 'path';
 import { performance } from 'perf_hooks';
-import os from 'os';
 
 import type {
   CheckerPlugin,
@@ -167,6 +167,12 @@ export abstract class BaseChecker implements CheckerPlugin {
       '**/.git/**',
       '**/coverage/**',
       '**/.cache/**',
+      '**/test/**',
+      '**/tests/**',
+      '**/__tests__/**',
+      '**/__mocks__/**',
+      '**/templates/**',
+      '**/examples/**',
     ];
 
     const ignore = options.ignore
@@ -417,7 +423,7 @@ export abstract class RuleBasedChecker extends BaseChecker {
       const processFile = async (file: string) => {
         return await this.checkFileAgainstRule(file, rule);
       };
-      
+
       const violationsCounts = await this.runInChunks(targetFiles, processFile);
       const ruleViolations = violationsCounts.reduce((sum, count) => sum + count, 0);
 

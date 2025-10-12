@@ -4,7 +4,7 @@
  */
 
 import { ElMessage, ElNotification } from 'element-plus';
-// import { getGlobalErrorHandler, type StandardError, type ErrorContext } from '@smartabp/lowcode-shared'
+import { getMessageFromErrorCode, getTitleFromErrorCode, mergeOptions } from '@smartabp/lowcode-shared';
 import type { ApiError } from '../http-client.js';
 
 // 临时本地类型定义（待lowcode-shared完善后移除）
@@ -83,7 +83,7 @@ export function useApiError() {
     options: ApiErrorDisplayOptions = {},
     context: Partial<ErrorContext> = {}
   ): Promise<StandardError> => {
-    const displayOptions = { ...DEFAULT_DISPLAY_OPTIONS, ...options }
+    const displayOptions = mergeOptions(DEFAULT_DISPLAY_OPTIONS, options)
 
     // 转换为标准错误
     const error = new Error(apiError.message)
@@ -157,51 +157,21 @@ export function useApiError() {
       return apiError.message
     }
 
-    // 根据错误代码返回友好消息
-    switch (apiError.code) {
-      case 'UNAUTHORIZED':
-        return '您的登录已过期，请重新登录'
-      case 'FORBIDDEN':
-        return '您没有权限执行此操作'
-      case 'NOT_FOUND':
-        return '请求的资源不存在'
-      case 'BAD_REQUEST':
-        if (apiError.validationErrors && apiError.validationErrors.length > 0) {
-          const firstError = apiError.validationErrors[0]
-          return `参数验证失败：${firstError?.message || '未知错误'}`
-        }
-        return '请求参数错误，请检查输入'
-      case 'INTERNAL_ERROR':
-        return '服务器内部错误，请稍后重试'
-      case 'NETWORK_ERROR':
-        return '网络连接失败，请检查网络'
-      case 'TIMEOUT':
-        return '请求超时，请稍后重试'
-      default:
-        return apiError.message || '操作失败，请稍后重试'
+    // BAD_REQUEST 特殊处理：显示验证错误
+    if (apiError.code === 'BAD_REQUEST' && apiError.validationErrors && apiError.validationErrors.length > 0) {
+      const firstError = apiError.validationErrors[0]
+      return `参数验证失败：${firstError?.message || '未知错误'}`
     }
+
+    // 使用统一的错误代码映射
+    return getMessageFromErrorCode(apiError.code || '', undefined, apiError.message || '操作失败，请稍后重试')
   }
 
   /**
    * 获取错误标题
    */
   const getErrorTitle = (apiError: ApiError): string => {
-    switch (apiError.code) {
-      case 'UNAUTHORIZED':
-        return '未授权'
-      case 'FORBIDDEN':
-        return '权限不足'
-      case 'NOT_FOUND':
-        return '资源不存在'
-      case 'BAD_REQUEST':
-        return '请求错误'
-      case 'INTERNAL_ERROR':
-        return '服务器错误'
-      case 'NETWORK_ERROR':
-        return '网络错误'
-      default:
-        return '操作失败'
-    }
+    return getTitleFromErrorCode(apiError.code || '', undefined, '操作失败')
   }
 
   /**

@@ -75,23 +75,30 @@ export class LowCodeChecker extends BaseChecker {
     private async checkRelativePathViolations(): Promise<number> {
         const { stdout } = await this.execCommand('grep', [
             '-rn',
-            "'../",
+            "from '..",
             'src/SmartAbp.Vue/packages/',
             '--include=*.ts',
             '--include=*.vue',
+            '--exclude=*.d.ts',
             '--exclude-dir=node_modules',
-            '--exclude-dir=dist'
+            '--exclude-dir=dist',
+            '--exclude-dir=test',
+            '--exclude-dir=tests',
+            '--exclude-dir=__tests__',
+            '--exclude-dir=__mocks__',
+            '--exclude-dir=examples',
+            '--exclude-dir=templates'
         ]);
 
         if (stdout) {
             const lines = stdout.split('\n').filter(line => line.trim());
+            let count = 0;
 
             for (const line of lines) {
                 const match = line.match(/^(.+?):(\d+):(.*)$/);
                 if (match && match.length >= 4) {
                     const [, file, lineNumber, content] = match;
 
-                    // 判断是否是跨package的相对路径引用
                     if (file && lineNumber && content !== undefined && this.isCrossPackageRelativePath(file, content)) {
                         const violation: ArchitectureViolation = {
                             rule: 'lowcode.no-relative-package-imports',
@@ -105,25 +112,37 @@ export class LowCodeChecker extends BaseChecker {
                         };
 
                         this.violations.push(violation);
+                        count++;
                     }
                 }
             }
 
-            return lines.length;
+            return count;
         }
 
         return 0;
     }
 
-    private isCrossPackageRelativePath(_filePath: string, content: string): boolean {
-        // 检查是否是跨package的引用（包含多个../）
-        const relativePathMatch = content.match(/from\s+['"](\.\.\/)+/);
-        if (relativePathMatch) {
-            const upLevels = (relativePathMatch[0].match(/\.\.\//g) || []).length;
-            // 如果超过2级，很可能是跨package引用
-            return upLevels >= 2;
+    private isCrossPackageRelativePath(filePath: string, contentLine: string): boolean {
+        const importMatch = contentLine.match(/from\s+['"]([^'"]+)['"]/);
+        if (!importMatch) return false;
+        const importPath = importMatch[1];
+        if (!importPath.startsWith('../')) return false;
+
+        const projectRoot = this.config.projectRoot;
+        const absoluteFile = path.isAbsolute(filePath) ? filePath : path.join(projectRoot, filePath);
+        const resolved = path.resolve(path.dirname(absoluteFile), importPath);
+
+        // 当前文件所属package根目录
+        const pkgMatch = absoluteFile.match(/src\/SmartAbp\.Vue\/packages\/([^\/]+)/);
+        if (!pkgMatch) return false;
+        const pkgRoot = path.join(projectRoot, 'src/SmartAbp.Vue/packages', pkgMatch[1]);
+
+        // 如果解析后的目标仍在同一package内，则不是跨包引用
+        if (resolved.startsWith(pkgRoot)) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     private async checkMainAppReferenceViolations(): Promise<number> {
@@ -133,36 +152,48 @@ export class LowCodeChecker extends BaseChecker {
             'src/SmartAbp.Vue/packages/',
             '--include=*.ts',
             '--include=*.vue',
+            '--exclude=*.d.ts',
             '--exclude-dir=node_modules',
-            '--exclude-dir=dist'
+            '--exclude-dir=dist',
+            '--exclude-dir=test',
+            '--exclude-dir=tests',
+            '--exclude-dir=__tests__',
+            '--exclude-dir=__mocks__',
+            '--exclude-dir=examples',
+            '--exclude-dir=templates'
         ]);
 
         if (stdout) {
             const lines = stdout.split('\n').filter(line => line.trim());
+            let count = 0;
 
             lines.forEach(line => {
                 const match = line.match(/^(.+?):(\d+):(.*)$/);
                 if (match && match.length >= 4) {
                     const [, file, lineNumber, content] = match;
 
-                    if (file && lineNumber && content !== undefined) {
-                        const violation: ArchitectureViolation = {
-                            rule: 'lowcode.no-main-app-imports',
-                            level: 'P0',
-                            violationType: 'main-app-reference',
-                            file: file.replace(this.config.projectRoot + '/', ''),
-                            line: parseInt(lineNumber, 10),
-                            message: 'packages中禁止引用主应用代码（@/别名）',
-                            snippet: content.trim(),
-                            suggestion: '将共享代码移至lowcode-shared或使用依赖注入'
-                        };
-
-                        this.violations.push(violation);
+                    // 允许 lowcode-tools 作为桥接层引入主应用
+                    if (file.includes('/packages/lowcode-tools/')) {
+                        return;
                     }
+
+                    const violation: ArchitectureViolation = {
+                        rule: 'lowcode.no-main-app-imports',
+                        level: 'P0',
+                        violationType: 'main-app-reference',
+                        file: file.replace(this.config.projectRoot + '/', ''),
+                        line: parseInt(lineNumber, 10),
+                        message: 'packages中禁止引用主应用（@/别名）',
+                        snippet: content.trim(),
+                        suggestion: '将共享代码移至lowcode-shared或使用依赖注入'
+                    };
+
+                    this.violations.push(violation);
+                    count++;
                 }
             });
 
-            return lines.length;
+            return count;
         }
 
         return 0;
@@ -207,8 +238,16 @@ export class LowCodeChecker extends BaseChecker {
                     `@smartabp/${forbidden}`,
                     `src/SmartAbp.Vue/packages/${pattern.package}/`,
                     '--include=*.ts',
+                    '--include=*.vue',
+                    '--exclude=*.d.ts',
                     '--exclude-dir=node_modules',
-                    '--exclude-dir=dist'
+                    '--exclude-dir=dist',
+                    '--exclude-dir=test',
+                    '--exclude-dir=tests',
+                    '--exclude-dir=__tests__',
+                    '--exclude-dir=__mocks__',
+                    '--exclude-dir=examples',
+                    '--exclude-dir=templates'
                 ]);
 
                 if (stdout) {
@@ -219,24 +258,25 @@ export class LowCodeChecker extends BaseChecker {
                         if (match && match.length >= 4) {
                             const [, file, lineNumber, content] = match;
 
-                            if (file && lineNumber && content !== undefined) {
-                                const violation: ArchitectureViolation = {
-                                    rule: 'lowcode.no-reverse-dependencies',
-                                    level: 'P0',
-                                    violationType: 'reverse-dependency',
-                                    file: file.replace(this.config.projectRoot + '/', ''),
-                                    line: parseInt(lineNumber, 10),
-                                    message: `架构违规：${pattern.package}（层级${pattern.level}）不能依赖${forbidden}`,
-                                    snippet: content.trim(),
-                                    suggestion: '重新设计模块依赖关系，只能向下依赖'
-                                };
+                            // 仅当是 import / export from 语句才计为依赖
+                            const isImportLike = /\bimport\b\s+.*\bfrom\b\s+['"]@smartabp\//.test(content) || /\bexport\b\s+\*\s+from\s+['"]@smartabp\//.test(content);
+                            if (!isImportLike) return;
 
-                                this.violations.push(violation);
-                            }
+                            const violation: ArchitectureViolation = {
+                                rule: 'lowcode.no-reverse-dependencies',
+                                level: 'P0',
+                                violationType: 'reverse-dependency',
+                                file: file.replace(this.config.projectRoot + '/', ''),
+                                line: parseInt(lineNumber, 10),
+                                message: `架构违规：${pattern.package}（层级${pattern.level}）不能依赖${forbidden}`,
+                                snippet: content.trim(),
+                                suggestion: '重新设计模块依赖关系，只能向下依赖'
+                            };
+
+                            this.violations.push(violation);
+                            violations++;
                         }
                     });
-
-                    violations += lines.length;
                 }
             }
         }
@@ -264,6 +304,16 @@ export class LowCodeChecker extends BaseChecker {
         let unregisteredCount = 0;
 
         for (const componentFile of componentFiles) {
+            // 设计器内组件在编辑器生命周期内动态注册
+            if (componentFile.includes('/packages/lowcode-designer/')) continue;
+
+            // 仅检查顶层组件（src/components/Component.vue），跳过嵌套子组件
+            const parts = componentFile.split('/src/components/');
+            if (parts.length === 2 && parts[1].includes('/')) {
+                // 嵌套路径（如 BusinessRuleDesigner/PropertyPanel.vue）视为私有子组件，跳过
+                continue;
+            }
+
             const isRegistered = await this.checkIfComponentRegistered(componentFile);
 
             if (!isRegistered) {

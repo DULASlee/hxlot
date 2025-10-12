@@ -5,6 +5,7 @@
 
 import type { ApiError } from '../http-client.js'
 import { ref, type Ref } from 'vue'
+import { mergeOptions } from '@smartabp/lowcode-shared'
 import { useApiError, type ApiErrorDisplayOptions } from './useApiError'
 import { useApiLoading, type LoadingOptions } from './useApiLoading'
 
@@ -55,7 +56,7 @@ export interface ApiCallState<T> {
   /** 请求数据 */
   data: Ref<T | null>
   /** 错误信息 */
-  error: Ref<ApiError | null>
+  error: Ref<Error | ApiError | null>
   /** 是否成功 */
   isSuccess: Ref<boolean>
   /** 是否失败 */
@@ -126,7 +127,7 @@ export function useApiCall<T = unknown>(): {
     apiFn: () => Promise<T>,
     options: ApiCallOptions = {}
   ): Promise<T | null> => {
-    const opts = { ...DEFAULT_API_CALL_OPTIONS, ...options }
+    const opts = mergeOptions(DEFAULT_API_CALL_OPTIONS, options)
 
     // 重置状态
     resetState()

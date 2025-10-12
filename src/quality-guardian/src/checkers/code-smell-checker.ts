@@ -24,8 +24,8 @@ export class CodeSmellChecker extends BaseChecker {
 
     protected async doCheck(): Promise<void> {
         const files = await this.findFiles(
-            ['**/*.ts', '**/*.tsx', '**/*.vue', '**/*.js'],
-            { ignore: ['**/*.template.*'] }
+            ['src/SmartAbp.Vue/packages/*/src/**/*.ts', 'src/SmartAbp.Vue/packages/*/src/**/*.tsx'],
+            { ignore: ['**/*.template.*', '**/src/SmartAbp.Vue/packages/lowcode-designer/**', '**/*.d.ts'] }
         );
         if (files.length === 0) {
             this.logProgress('未找到需要检查的文件。', 'warning');

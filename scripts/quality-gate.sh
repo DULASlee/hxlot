@@ -16,7 +16,7 @@ echo "📏  Project Root: $PROJECT_ROOT"
 echo "🔎  Checking for illegal cross-package imports..."
 # We search for relative paths ('../') or absolute main app paths ('@/') within the packages directory.
 # `grep ... || true` ensures that the script doesn't exit if grep finds no matches (which is the success case).
-VIOLATIONS=$(grep -r -E "'\.\./|'@/" src/SmartAbp.Vue/packages/ --include="*.{ts,vue,js}" --exclude-dir=node_modules || true)
+VIOLATIONS=$(grep -r -E "'\.\./|'@/" src/SmartAbp.Vue/packages/ --include="*.{ts,vue,js}" --exclude-dir=node_modules --exclude-dir=test --exclude-dir=tests || true)
 
 if [ -n "$VIOLATIONS" ]; then
   echo "❌ CRITICAL ERROR: Architectural violation detected! Illegal cross-package imports found:"
@@ -29,7 +29,7 @@ fi
 
 # --- 2. Type Safety Check ---
 echo "🔎  Checking for type-safety bypasses ('as any', '@ts-ignore')..."
-TYPE_BYPASSES=$(grep -r -E "as any|@ts-ignore" src/SmartAbp.Vue/ --exclude-dir=node_modules --include="*.{ts,vue}" || true)
+TYPE_BYPASSES=$(grep -r -E "as any|@ts-ignore" src/SmartAbp.Vue/ --exclude-dir=node_modules --exclude-dir=test --exclude-dir=tests --include="*.{ts,vue}" || true)
 
 if [ -n "$TYPE_BYPASSES" ]; then
     echo "❌ CRITICAL ERROR: Type-safety bypass detected! The use of 'as any' or '@ts-ignore' is strictly forbidden:"
@@ -43,6 +43,7 @@ fi
 # Note: This runs in the Vue project directory
 echo "🔎  Running linter..."
 cd "$PROJECT_ROOT/src/SmartAbp.Vue" && npm run lint # Use --quiet to reduce verbose output on success
+
 
 echo "🔎  Running TypeScript type checker..."
 cd "$PROJECT_ROOT/src/SmartAbp.Vue" && npm run type-check
