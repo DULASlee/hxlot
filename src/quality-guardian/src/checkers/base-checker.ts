@@ -26,12 +26,13 @@ const CONCURRENCY = os.cpus().length;
  * 抽象检查器基类
  * 所有检查器都应该继承此类
  */
+/**
+ * ⚠️ 内存优化说明：
+ * - 已移除静态fileCache，避免与ASTManager重复缓存
+ * - 所有文件读取统一由ASTManager管理（包含content + AST）
+ * - 使用LRU缓存策略，限制最大内存占用
+ */
 export abstract class BaseChecker implements CheckerPlugin {
-  // Static cache to hold file contents across all checker instances
-  private static fileCache = new Map<string, string>();
-  private static cacheHits = 0;
-  private static cacheMisses = 0;
-
   public abstract readonly name: string;
   public abstract readonly description: string;
   public abstract readonly version: string;
@@ -42,12 +43,6 @@ export abstract class BaseChecker implements CheckerPlugin {
   protected filesChecked: number = 0;
   protected startTime: number = 0;
 
-  public static printCacheStats(): void {
-    const total = this.cacheHits + this.cacheMisses;
-    if (total === 0) return;
-    const hitRate = ((this.cacheHits / total) * 100).toFixed(2);
-    console.log(chalk.blue(`  File Cache Stats: Hit Rate ${hitRate}% (${this.cacheHits} hits, ${this.cacheMisses} misses)`));
-  }
 
   constructor(config: Partial<CheckerPlugin> = {}) {
     this.enabled = config.enabled ?? true;
@@ -209,22 +204,16 @@ export abstract class BaseChecker implements CheckerPlugin {
 
   /**
    * 读取文件内容
+   * ⚠️ 内存优化：不再使用静态缓存，直接读取文件
+   * AST相关的缓存由ASTManager统一管理
    */
   protected async readFile(filePath: string): Promise<string> {
     const fullPath = path.isAbsolute(filePath)
       ? filePath
       : path.join(this.config.projectRoot, filePath);
 
-    if (BaseChecker.fileCache.has(fullPath)) {
-      BaseChecker.cacheHits++;
-      return BaseChecker.fileCache.get(fullPath)!;
-    }
-
-    BaseChecker.cacheMisses++;
-
     try {
       const content = await fs.readFile(fullPath, 'utf8');
-      BaseChecker.fileCache.set(fullPath, content);
       return content;
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
