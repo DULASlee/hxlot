@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { createSimpleApiComposable } from '@smartabp/lowcode-shared'
 
 // 弹性策略配置接口
 export interface ResiliencePolicyConfig {

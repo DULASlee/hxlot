@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { createSimpleApiComposable } from '@smartabp/lowcode-shared'
 import { http } from '../http-client.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -49,44 +50,25 @@ export interface CICDTemplateValidationResult {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 export function useCICDTemplate() {
-  const loading = ref(false)
   const error = ref<string | null>(null)
 
-  /**
-   * 生成CI/CD配置
-   */
-  async function generateConfig(config: CICDPlatformConfig): Promise<GeneratedCICDConfig> {
-    loading.value = true
-    error.value = null
-
-    try {
-      const response = await http.post<GeneratedCICDConfig>('/api/cicd-template/generate', config)
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'CI/CD配置生成失败'
-      throw err
-    } finally {
-      loading.value = false
+  // API 方法通过工厂函数生成
+  const apiComposable: any = createSimpleApiComposable({
+    generateConfig: {
+      endpoint: '/api/cicd-template/generate',
+      method: 'POST',
+      errorMessage: 'CI/CD配置生成失败'
+    },
+    validateConfig: {
+      endpoint: '/api/cicd-template/validate',
+      method: 'POST',
+      errorMessage: '配置验证失败'
     }
-  }
-
-  /**
-   * 验证CI/CD配置
-   */
-  async function validateConfig(config: CICDPlatformConfig): Promise<CICDTemplateValidationResult> {
-    loading.value = true
-    error.value = null
-
-    try {
-      const response = await http.post<CICDTemplateValidationResult>('/api/cicd-template/validate', config)
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '配置验证失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
+  }, http)
+  
+  const loading = apiComposable.loading
+  const generateConfig = apiComposable.generateConfig as (config: CICDPlatformConfig) => Promise<GeneratedCICDConfig>
+  const validateConfig = apiComposable.validateConfig as (config: CICDPlatformConfig) => Promise<CICDTemplateValidationResult>
 
   /**
    * 导出YAML文件

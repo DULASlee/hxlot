@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { createSimpleApiComposable } from '@smartabp/lowcode-shared'
 import { http as httpClient } from '../http-client.js'
 
 /**
@@ -102,96 +102,25 @@ export interface GeneratedGrafanaDashboard {
 
 /**
  * 可观测性管理Composable - Day 15
+ * 使用工厂函数自动生成，消除样板代码
  */
 export function useObservability() {
-  const loading = ref(false)
-  const error = ref<string | null>(null)
-
-  /**
-   * 生成Prometheus配置
-   */
-  const generatePrometheusConfig = async (
-    serviceName: string,
-    config: PrometheusConfig
-  ): Promise<GeneratedPrometheusConfig> => {
-    try {
-      loading.value = true
-      error.value = null
-
-      const response = await httpClient.post<GeneratedPrometheusConfig>(
-        '/api/code-generation/observability/prometheus',
-        {
-          serviceName,
-          config
-        }
-      )
-
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '生成Prometheus配置失败'
-      throw err
-    } finally {
-      loading.value = false
+  return createSimpleApiComposable({
+    generatePrometheusConfig: {
+      endpoint: '/api/code-generation/observability/prometheus',
+      method: 'POST',
+      errorMessage: '生成Prometheus配置失败'
+    },
+    generateGrafanaDashboard: {
+      endpoint: '/api/code-generation/observability/grafana',
+      method: 'POST',
+      errorMessage: '生成Grafana仪表板失败'
+    },
+    getGoldenSignals: {
+      endpoint: '/api/code-generation/observability/golden-signals',
+      method: 'GET',
+      errorMessage: '获取黄金指标失败'
     }
-  }
-
-  /**
-   * 生成Grafana仪表板
-   */
-  const generateGrafanaDashboard = async (
-    serviceName: string,
-    dashboard: GrafanaDashboard
-  ): Promise<GeneratedGrafanaDashboard> => {
-    try {
-      loading.value = true
-      error.value = null
-
-      const response = await httpClient.post<GeneratedGrafanaDashboard>(
-        '/api/code-generation/observability/grafana',
-        {
-          serviceName,
-          dashboard
-        }
-      )
-
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '生成Grafana仪表板失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  /**
-   * 获取黄金指标定义
-   */
-  const getGoldenSignals = async (
-    serviceName: string
-  ): Promise<GoldenSignals> => {
-    try {
-      loading.value = true
-      error.value = null
-
-      const response = await httpClient.get<GoldenSignals>(
-        `/api/code-generation/observability/golden-signals/${serviceName}`
-      )
-
-      return response
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : '获取黄金指标失败'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
-
-  return {
-    loading,
-    error,
-    generatePrometheusConfig,
-    generateGrafanaDashboard,
-    getGoldenSignals
-  }
+  }, httpClient)
 }
 
