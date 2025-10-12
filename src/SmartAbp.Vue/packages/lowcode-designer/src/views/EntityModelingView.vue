@@ -1376,22 +1376,22 @@ const entityFeatures = computed({
   get: () => {
     if (!editingEntity.value) return []
     const features: string[] = []
-    if ((editingEntity.value as any).isAggregateRoot) features.push('isAggregateRoot')
+    if (editingEntity.value.isAggregateRoot) features.push('isAggregateRoot')
     if (editingEntity.value.enableSoftDelete) features.push('enableSoftDelete')
     if (editingEntity.value.enableAudit) features.push('enableAudit')
     if (editingEntity.value.enableMultiTenant) features.push('enableMultiTenant')
-    if ((editingEntity.value as any).hasExtraProperties) features.push('hasExtraProperties')
-    if ((editingEntity.value as any).enableCaching) features.push('enableCaching')
+    if (editingEntity.value.hasExtraProperties) features.push('hasExtraProperties')
+    if (editingEntity.value.enableCaching) features.push('enableCaching')
     return features
   },
   set: (values: string[]) => {
     if (!editingEntity.value) return
-    (editingEntity.value as any).isAggregateRoot = values.includes('isAggregateRoot')
+    editingEntity.value.isAggregateRoot = values.includes('isAggregateRoot')
     editingEntity.value.enableSoftDelete = values.includes('enableSoftDelete')
     editingEntity.value.enableAudit = values.includes('enableAudit')
     editingEntity.value.enableMultiTenant = values.includes('enableMultiTenant')
-    ;(editingEntity.value as any).hasExtraProperties = values.includes('hasExtraProperties')
-    ;(editingEntity.value as any).enableCaching = values.includes('enableCaching')
+    editingEntity.value.hasExtraProperties = values.includes('hasExtraProperties')
+    editingEntity.value.enableCaching = values.includes('enableCaching')
   }
 })
 

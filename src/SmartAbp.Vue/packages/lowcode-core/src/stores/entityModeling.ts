@@ -72,6 +72,10 @@ export interface EntityDefinition {
   enableAudit: boolean
   enableMultiTenant: boolean
   isCompleted: boolean
+  // DDD扩展属性
+  isAggregateRoot?: boolean
+  hasExtraProperties?: boolean
+  enableCaching?: boolean
 }
 
 /**
