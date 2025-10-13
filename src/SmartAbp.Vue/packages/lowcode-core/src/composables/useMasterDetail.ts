@@ -191,7 +191,7 @@ export function useMasterDetail<
         // 否则标记为删除，稍后批量删除
         // 注意：使用类型安全的复制而非any
         const toDelete = detailList.value[index] as TDetail
-          ; (deletedDetails.value as unknown as TDetail[]).push({ ...(toDelete as TDetail) })
+        ; (deletedDetails.value as unknown as TDetail[]).push({ ...(toDelete as TDetail) })
         detailList.value.splice(index, 1)
       }
 
@@ -234,7 +234,7 @@ export function useMasterDetail<
           if (!detail._isNew) {
             // 使用类型安全的复制而非any
             const toDelete = detailList.value[index] as TDetail
-              ; (deletedDetails.value as unknown as TDetail[]).push({ ...(toDelete as TDetail) })
+            ; (deletedDetails.value as unknown as TDetail[]).push({ ...(toDelete as TDetail) })
           }
           detailList.value.splice(index, 1)
         }

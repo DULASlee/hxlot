@@ -243,20 +243,21 @@ export class PerformanceMonitor {
    * 启动内存监控
    */
   private startMemoryMonitoring(): void {
-    if (!performance.memory) {
+    const perf = performance as unknown as { memory?: { usedJSHeapSize: number; totalJSHeapSize: number; jsHeapSizeLimit?: number } }
+    if (!perf.memory) {
       return
     }
 
     this.memoryTimer = setInterval(() => {
       // performance.memory在某些浏览器中可能不可用
-      if (performance.memory) {
+      if (perf.memory) {
         this.record({
           type: 'memory',
           duration: 0,
           metadata: {
-            used: performance.memory.usedJSHeapSize,
-            total: performance.memory.totalJSHeapSize,
-            limit: performance.memory.jsHeapSizeLimit
+            used: perf.memory.usedJSHeapSize,
+            total: perf.memory.totalJSHeapSize,
+            limit: perf.memory.jsHeapSizeLimit
           }
         })
       }

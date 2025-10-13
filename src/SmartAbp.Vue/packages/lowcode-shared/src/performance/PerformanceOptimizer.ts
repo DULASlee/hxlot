@@ -532,7 +532,8 @@ export class PerformanceOptimizer {
    * 获取内存使用情况
    */
   getMemoryInfo(): MemoryInfo {
-    if (!performance.memory) {
+    const perf = performance as unknown as { memory?: { usedJSHeapSize?: number; totalJSHeapSize?: number } }
+    if (!perf.memory) {
       return {
         used: 0,
         total: 0,
@@ -541,8 +542,9 @@ export class PerformanceOptimizer {
       }
     }
 
-    const used = performance.memory.usedJSHeapSize
-    const total = performance.memory.totalJSHeapSize
+    const mem = perf.memory
+    const used = mem?.usedJSHeapSize || 0
+    const total = mem?.totalJSHeapSize || 0
     const usage = used / total
     const thresholdBytes = this.options.memoryThreshold * 1024 * 1024
 

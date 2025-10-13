@@ -39,11 +39,11 @@ export interface EurekaInstance {
     $: number
     '@enabled'?: string
   }
-  securePort?: { '$'?: number; '@enabled'?: string }
-  metadata?: Record<string, string>
+  securePort?: { $?: number; '@enabled'?: string }
   dataCenterInfo?: {
     name?: string
   }
+  metadata?: Record<string, string>
 }
 
 /**

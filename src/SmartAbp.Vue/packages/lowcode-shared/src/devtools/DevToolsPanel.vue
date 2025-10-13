@@ -84,27 +84,27 @@
         <div class="plugin-list">
           <div
             v-for="p in pluginList"
-            :key="p.plugin.metadata.id"
+            :key="p.plugin?.metadata?.id || p.plugin?.metadata?.name || 'plugin'"
             class="plugin-card"
           >
             <div class="plugin-header">
               <div class="plugin-info">
-                <h4>{{ p.plugin.metadata.name }}</h4>
-                <span class="plugin-id">{{ p.plugin.metadata.id }}</span>
+                <h4>{{ p.plugin?.metadata?.name || p.plugin?.metadata?.id || '未知插件' }}</h4>
+                <span class="plugin-id">{{ p.plugin?.metadata?.id || '-' }}</span>
               </div>
               <div class="plugin-controls">
-                <span :class="['status-badge', getStatus(p.plugin.metadata.id)]">{{ getStatus(p.plugin.metadata.id) }}</span>
+                <span :class="['status-badge', getStatus(p.plugin?.metadata?.id || '')]">{{ getStatus(p.plugin?.metadata?.id || '') }}</span>
                 <button
-                  v-if="getStatus(p.plugin.metadata.id) === PluginStatus.ENABLED"
+                  v-if="getStatus(p.plugin?.metadata?.id || '') === PluginStatus.ENABLED"
                   class="control-btn"
-                  @click="disablePlugin(p.plugin.metadata.id)"
+                  @click="disablePlugin(p.plugin?.metadata?.id || '')"
                 >
                   禁用
                 </button>
                 <button
                   v-else
                   class="control-btn primary"
-                  @click="enablePlugin(p.plugin.metadata.id)"
+                  @click="enablePlugin(p.plugin?.metadata?.id || '')"
                 >
                   启用
                 </button>

@@ -10,6 +10,11 @@ function walk(dir, filter) {
     const list = fs.readdirSync(dir);
     for (const file of list) {
         const full = path.join(dir, file);
+        // 跳过深层依赖与构建产物，避免路径过长/重复递归
+        const normalized = full.replace(/\\/g, '/');
+        if (normalized.includes('/node_modules/') || normalized.includes('/dist/')) {
+            continue;
+        }
         const stat = fs.statSync(full);
         if (stat && stat.isDirectory()) {
             results.push(...walk(full, filter));
