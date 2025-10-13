@@ -6,7 +6,11 @@
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
     "src/**/examples/**",
-    "packages/*/dist"
+    "packages/**",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.test.tsx",
+    "**/*.spec.tsx"
   ],
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",

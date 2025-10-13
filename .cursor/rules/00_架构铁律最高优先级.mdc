@@ -6,9 +6,9 @@ priority: -2
 
 # 🔥 架构三大铁律 - P0最高优先级（生死线）
 
-**优先级**: -2（最高，覆盖所有规则）  
-**执行级别**: 格杀勿论，零容忍  
-**适用范围**: 全项目所有代码  
+**优先级**: -2（最高，覆盖所有规则）
+**执行级别**: 格杀勿论，零容忍
+**适用范围**: 全项目所有代码
 
 ---
 
@@ -102,6 +102,73 @@ grep -r "from '\.\./.*\.d\.ts" src/
 # 结果必须为空，否则全部删除重写
 ```
 
+### 路径别名规范（强制）
+
+- 别名一律使用 `@smartabp/*`，调用端不写 `/src/`。
+- `tsconfig.json` 中 `compilerOptions.paths` 必须与包结构严格一致（示例）：
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@smartabp/metadata-core": ["packages/metadata-core/src/index.ts"],
+      "@smartabp/metadata-core/*": ["packages/metadata-core/src/*"],
+      "@smartabp/lowcode-shared": ["packages/lowcode-shared/src/index.ts"],
+      "@smartabp/lowcode-shared/*": ["packages/lowcode-shared/src/*"],
+      "@smartabp/lowcode-core": ["packages/lowcode-core/src/index.ts"],
+      "@smartabp/lowcode-core/*": ["packages/lowcode-core/src/*"],
+      "@smartabp/lowcode-designer": ["packages/lowcode-designer/index.ts"],
+      "@smartabp/lowcode-designer/*": ["packages/lowcode-designer/*"],
+      "@smartabp/lowcode-codegen": ["packages/lowcode-codegen/index.ts"],
+      "@smartabp/lowcode-codegen/*": ["packages/lowcode-codegen/*"],
+      "@smartabp/lowcode-api": ["packages/lowcode-api/src/index.ts"],
+      "@smartabp/lowcode-api/*": ["packages/lowcode-api/src/*"],
+      "@smartabp/lowcode-tools": ["packages/lowcode-tools/src/index.ts"],
+      "@smartabp/lowcode-tools/*": ["packages/lowcode-tools/src/*"]
+    }
+  }
+}
+```
+
+- Vite 别名（示例）：
+
+```ts
+resolve: {
+  alias: {
+    "@": fileURLToPath(new URL("./src", import.meta.url)),
+    "@smartabp/metadata-core": fileURLToPath(new URL("./packages/metadata-core/src", import.meta.url)),
+    "@smartabp/lowcode-shared": fileURLToPath(new URL("./packages/lowcode-shared/src", import.meta.url)),
+    "@smartabp/lowcode-core": fileURLToPath(new URL("./packages/lowcode-core/src", import.meta.url)),
+    "@smartabp/lowcode-designer": fileURLToPath(new URL("./packages/lowcode-designer", import.meta.url)),
+    "@smartabp/lowcode-codegen": fileURLToPath(new URL("./packages/lowcode-codegen", import.meta.url)),
+    "@smartabp/lowcode-api": fileURLToPath(new URL("./packages/lowcode-api/src", import.meta.url)),
+    "@smartabp/lowcode-tools": fileURLToPath(new URL("./packages/lowcode-tools/src", import.meta.url))
+  }
+}
+```
+
+- ESLint 禁止规则（示例）：
+
+```js
+"no-restricted-imports": [
+  "error",
+  {
+    patterns: [
+      {
+        group: ["@smartabp/*/src/*"],
+        message: "请使用包别名顶层入口，禁止 @smartabp/*/src/*"
+      },
+      {
+        group: ["**/packages/**"],
+        message: "禁止相对路径引用 packages/**，请使用 @smartabp/* 别名"
+      }
+    ]
+  }
+]
+```
+
 ---
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -113,13 +180,15 @@ grep -r "from '\.\./.*\.d\.ts" src/
 ```yaml
 所有低代码组件必须通过 ComponentRegistry 注册:
   位置: @smartabp/lowcode-shared/components/ComponentRegistry
-  
+
 强制要求:
   1. ✅ 组件创建后立即注册
   2. ✅ 提供完整的 ComponentMetadata
   3. ✅ 声明所有依赖关系
   4. ✅ 指定正确的 category 和 bundle
-  
+  5. ✅ 采用集中注册函数：registerSharedComponents / registerCoreComponents / registerDesignerComponents
+  6. ✅ 主应用启动按顺序调用：Shared → Core → Designer
+
 严禁:
   ❌ 创建组件不注册
   ❌ 直接 import 组件路径使用
@@ -160,8 +229,14 @@ export function registerCoreComponents() {
   })
 }
 
-// 在应用启动时调用
+// 在应用启动时调用（主应用 main.ts 示例）
+import { registerSharedComponents } from '@smartabp/lowcode-shared'
+import { registerCoreComponents } from '@smartabp/lowcode-core'
+import { registerDesignerComponents } from '@smartabp/lowcode-designer'
+
+registerSharedComponents()
 registerCoreComponents()
+registerDesignerComponents()
 
 // ✅ 步骤4: 使用组件（通过注册系统）
 import { loadComponent } from '@smartabp/lowcode-shared'
@@ -205,6 +280,11 @@ find packages/*/src/components -name "*.vue"
 grep -r "registerComponent" packages/*/src/index.ts
 
 # 3. 数量必须匹配，否则格杀勿论
+
+# 4. 运行集中检查器（严格）
+npm run check:config
+npm run check:components
+npm run check:all
 ```
 
 ---
@@ -261,10 +341,10 @@ import type { DependencyGraph } from '@smartabp/lowcode-shared'
 
 // ✅ 正确：主应用只使用，不定义
 // src/core/assembly/plugins/index.ts
-import type { 
-  DependencyGraph, 
+import type {
+  DependencyGraph,
   DependencyNode,
-  AssemblyPlugin 
+  AssemblyPlugin
 } from '@smartabp/lowcode-shared'
 
 // ✅ 正确：主应用只定义业务 DTO
@@ -329,17 +409,17 @@ grep -r "'\.\./" packages/*/src/ | grep -v "node_modules"
 步骤2: AI 报告违规位置和类型
 步骤3: 提供正确的修复方案
 步骤4: 用户确认后，AI 执行以下操作：
-  
+
   对于铁律一违规:
     → 删除主应用中的类型文件
     → 在 lowcode-shared/types 中创建正确的类型
     → 更新所有引用为 @smartabp/lowcode-shared
-  
+
   对于铁律二违规:
     → 立即在 ComponentRegistry 注册组件
     → 补充完整的 ComponentMetadata
     → 更新使用方式为通过注册系统加载
-  
+
   对于铁律三违规:
     → 删除主应用中的底层类型定义
     → 将类型移至正确的 package
@@ -474,9 +554,9 @@ grep -r "@/" packages/ | grep -v node_modules
 
 **🔥 三大铁律 - 违反者格杀勿论！麻辣戈壁！**
 
-**执行时间**: 立即  
-**容忍度**: 零  
-**例外**: 无  
+**执行时间**: 立即
+**容忍度**: 零
+**例外**: 无
 
 ---
 
