@@ -2,7 +2,22 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "baseUrl": "../..",
+    "paths": {
+      "@smartabp/metadata-core": ["packages/metadata-core/src/index.ts"],
+      "@smartabp/metadata-core/*": ["packages/metadata-core/src/*"],
+      "@smartabp/lowcode-api": ["packages/lowcode-api/src/index.ts"],
+      "@smartabp/lowcode-api/*": ["packages/lowcode-api/src/*"],
+      "@smartabp/lowcode-core": ["packages/lowcode-core/src/index.ts"],
+      "@smartabp/lowcode-core/*": ["packages/lowcode-core/src/*"],
+      "@smartabp/lowcode-designer": ["packages/lowcode-designer/index.ts"],
+      "@smartabp/lowcode-designer/*": ["packages/lowcode-designer/*"],
+      "@smartabp/lowcode-tools": ["packages/lowcode-tools/src/index.ts"],
+      "@smartabp/lowcode-tools/*": ["packages/lowcode-tools/src/*"],
+      "@smartabp/lowcode-shared": ["packages/lowcode-shared/src/index.ts"],
+      "@smartabp/lowcode-shared/*": ["packages/lowcode-shared/src/*"]
+    }
   },
   "include": [
     "src/**/*",
@@ -14,6 +29,12 @@
     },
     {
       "path": "../lowcode-shared"
+    },
+    {
+      "path": "../lowcode-api"
+    },
+    {
+      "path": "../metadata-core"
     }
   ]
 }

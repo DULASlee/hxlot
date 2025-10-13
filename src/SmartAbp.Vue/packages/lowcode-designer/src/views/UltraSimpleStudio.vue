@@ -664,12 +664,7 @@ const startGeneration = async () => {
     console.error('Code generation error:', error)
     
     // 用户友好提示
-    ElMessage({
-      message: t('ultraSimple.messages.error'),
-      type: 'error',
-      duration: 5000,
-      showClose: true
-    })
+    ElMessage.error(t('ultraSimple.messages.error'))
     
     // 重置状态以便重试
     generationComplete.value = false
@@ -827,12 +822,7 @@ const downloadGeneratedCode = async () => {
     }
     
     console.error('Download error:', error)
-    ElMessage({
-      message: t('ultraSimple.messages.downloadError'),
-      type: 'error',
-      duration: 5000,
-      showClose: true
-    })
+    ElMessage.error(t('ultraSimple.messages.downloadError'))
   }
 }
 

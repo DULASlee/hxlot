@@ -1,7 +1,7 @@
-import { defineConfig } from "vitest/config"
 import vue from "@vitejs/plugin-vue"
 import vueJsx from "@vitejs/plugin-vue-jsx"
 import { resolve } from "path"
+import { defineConfig } from "vitest/config"
 
 export default defineConfig({
   plugins: [vue(), vueJsx()],
@@ -43,6 +43,7 @@ export default defineConfig({
       "@smartabp/lowcode-api": resolve(__dirname, "packages/lowcode-api/src"),
       "@smartabp/lowcode-tools": resolve(__dirname, "packages/lowcode-tools/src"),
       "@smartabp/lowcode-designer": resolve(__dirname, "packages/lowcode-designer/src"),
+      "@smartabp/metadata-core": resolve(__dirname, "packages/metadata-core/src"),
     },
   },
 })
