@@ -233,7 +233,7 @@ export function WithValidation(
             case 'custom':
               if (rule.validator) {
                 const result = await Promise.resolve(rule.validator(value));
-                isRuleValid = typeof result === 'boolean' ? result : (result && typeof result === 'object' && 'valid' in result ? (result as any).valid : false);
+                isRuleValid = typeof result === 'boolean' ? result : (result && typeof result === 'object' && 'valid' in result ? (result as { valid: boolean }).valid : false);
               }
               break;
           }
@@ -417,7 +417,7 @@ export function useValidation() {
         case 'custom':
           if (rule.validator) {
             const result = await Promise.resolve(rule.validator(value));
-            isRuleValid = typeof result === 'boolean' ? result : (result as any).valid;
+            isRuleValid = typeof result === 'boolean' ? result : (result as { valid: boolean }).valid;
           }
           break;
       }

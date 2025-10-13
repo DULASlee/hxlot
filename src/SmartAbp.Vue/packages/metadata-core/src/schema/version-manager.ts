@@ -236,7 +236,7 @@ export function setSchemaVersion<T extends { schemaVersion?: string }>(
  * 检查Schema版本是否支持
  */
 export function isSupportedSchemaVersion(version: string): boolean {
-  return SUPPORTED_SCHEMA_VERSIONS.includes(version as any)
+  return (SUPPORTED_SCHEMA_VERSIONS as readonly string[]).includes(version)
 }
 
 /**

@@ -288,17 +288,17 @@ export abstract class BaseComponent {
   /**
    * 创建WeakRef引用（在不支持WeakRef的环境下使用轻量包装对象）
    */
-  protected createWeakRef<T extends object>(target: T): any {
-    const WeakRefCtor: any = (globalThis as any).WeakRef
-    const weakRef: any = WeakRefCtor ? new WeakRefCtor(target) : { deref: () => target }
-    this.weakRefs.add(weakRef);
+  protected createWeakRef<T extends object>(target: T): { deref: () => T | undefined } {
+    const WeakRefCtor = (globalThis as unknown as { WeakRef?: new (t: T) => { deref: () => T | undefined } }).WeakRef
+    const weakRef = WeakRefCtor ? new WeakRefCtor(target) : { deref: () => target }
+    this.weakRefs.add(weakRef as unknown as WeakRef<object>);
 
     // 添加清理任务
     this.addCleanupTask(() => {
-      this.weakRefs.delete(weakRef);
+      this.weakRefs.delete(weakRef as unknown as WeakRef<object>);
     });
 
-    return weakRef;
+    return weakRef
   }
 
   /**
@@ -490,9 +490,9 @@ class GlobalComponentManager {
    * 注册组件
    */
   register(component: BaseComponent): void {
-    const WeakRefCtor: any = (globalThis as any).WeakRef
-    const weakRef: any = WeakRefCtor ? new WeakRefCtor(component) : { deref: () => component }
-    this.components.set(component.id, weakRef);
+    const WeakRefCtor = (globalThis as unknown as { WeakRef?: new (t: BaseComponent) => { deref: () => BaseComponent | undefined } }).WeakRef
+    const weakRef = WeakRefCtor ? new WeakRefCtor(component) : { deref: () => component }
+    this.components.set(component.id, weakRef as unknown as WeakRef<BaseComponent>);
     this.performanceStats.totalCreated++;
     this.updatePeakConcurrentComponents();
   }
@@ -632,3 +632,6 @@ export function createComponentPerformanceMonitor() {
     forceCleanup: () => manager.forceCleanupAll()
   };
 }
+
+// 兼容环境：在某些TS配置下可能未包含WeakRef类型定义
+interface WeakRef<T extends object> { deref: () => T | undefined }

@@ -1,7 +1,7 @@
 /**
  * ABP框架错误响应类型定义
  * 
- * 用于消除http-client.ts中的as any使用
+ * 目的：提供 http-client.ts 使用的强类型定义，避免类型绕过
  */
 
 /**
@@ -39,13 +39,13 @@ export interface AbpErrorData {
   /** 错误码 */
   code?: string
   /** 错误消息 */
-  message?: string
+  message: string
   /** 错误详情 */
   details?: string
   /** 验证错误列表 */
   validationErrors?: AbpValidationError[]
   /** 其他数据 */
-  [key: string]: unknown
+  data?: Record<string, unknown>
 }
 
 /**

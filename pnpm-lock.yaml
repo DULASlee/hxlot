@@ -13,8 +13,8 @@ importers:
         version: 3.10.1
     devDependencies:
       '@modelcontextprotocol/sdk':
-        specifier: ^1.18.2
-        version: 1.19.1
+        specifier: ^1.20.0
+        version: 1.20.0
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
@@ -98,7 +98,7 @@ importers:
     devDependencies:
       '@smartabp/metadata-core':
         specifier: file:../metadata-core
-        version: link:../metadata-core
+        version: file:src/SmartAbp.Vue/packages/metadata-core(@smartabp/lowcode-shared@src+SmartAbp.Vue+packages+lowcode-shared)
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.19
@@ -225,6 +225,9 @@ importers:
 
   src/SmartAbp.Vue/packages/metadata-core:
     dependencies:
+      '@smartabp/lowcode-shared':
+        specifier: workspace:*
+        version: link:../lowcode-shared
       semver:
         specifier: ^7.5.4
         version: 7.7.3
@@ -1118,8 +1121,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@modelcontextprotocol/sdk@1.19.1':
-    resolution: {integrity: sha512-3Y2h3MZKjec1eAqSTBclATlX+AbC6n1LgfVzRMJLt3v6w0RCYgwLrjbxPDbhsYHt6Wdqc/aCceNJYgj448ELQQ==}
+  '@modelcontextprotocol/sdk@1.20.0':
+    resolution: {integrity: sha512-kOQ4+fHuT4KbR2iq2IjeV32HiihueuOf1vJkq18z08CLZ1UQrTc8BXJpVfxZkq45+inLLD+D4xx4nBjUelJa4Q==}
     engines: {node: '>=18'}
 
   '@napi-rs/wasm-runtime@0.2.12':
@@ -1283,6 +1286,12 @@ packages:
 
   '@sinonjs/fake-timers@13.0.5':
     resolution: {integrity: sha512-36/hTbH2uaWuGVERyC6da9YwGWnzUZXuPro/F2LfsdOsLnCojz/iSH8MxUt/FD2S5XBSVPhmArFUXcpCQ2Hkiw==}
+
+  '@smartabp/metadata-core@file:src/SmartAbp.Vue/packages/metadata-core':
+    resolution: {directory: src/SmartAbp.Vue/packages/metadata-core, type: directory}
+    engines: {node: '>=18.0.0', npm: '>=9.0.0'}
+    peerDependencies:
+      '@smartabp/lowcode-shared': workspace:*
 
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
@@ -4659,7 +4668,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@modelcontextprotocol/sdk@1.19.1':
+  '@modelcontextprotocol/sdk@1.20.0':
     dependencies:
       ajv: 6.12.6
       content-type: 1.0.5
@@ -4783,6 +4792,12 @@ snapshots:
   '@sinonjs/fake-timers@13.0.5':
     dependencies:
       '@sinonjs/commons': 3.0.1
+
+  '@smartabp/metadata-core@file:src/SmartAbp.Vue/packages/metadata-core(@smartabp/lowcode-shared@src+SmartAbp.Vue+packages+lowcode-shared)':
+    dependencies:
+      '@smartabp/lowcode-shared': link:src/SmartAbp.Vue/packages/lowcode-shared
+      semver: 7.7.3
+      zod: 3.25.76
 
   '@tybys/wasm-util@0.10.1':
     dependencies:

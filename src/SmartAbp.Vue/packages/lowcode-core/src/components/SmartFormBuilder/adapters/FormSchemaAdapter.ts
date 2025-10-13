@@ -475,7 +475,7 @@ export class FormSchemaAdapter {
                 if (!rule.style) return undefined
                 const obj = rule.style as Record<string, unknown>
                 const out: Record<string, string> = {}
-                Object.entries(obj).forEach(([k, v]) => { out[k] = String(v as any) })
+                Object.entries(obj).forEach(([k, v]) => { out[k] = typeof v === 'string' ? v : JSON.stringify(v) })
                 return out
             })()
         }

@@ -353,7 +353,8 @@ const handleStyleChange = () => {
   
   const base = props.selectedComponent.style
   const allowedPositions = new Set(['fixed', 'absolute', 'relative'])
-  const desired = String((componentStyle.value as any).position || base.position)
+  const currentPos = (componentStyle.value as { position?: string }).position ?? base.position
+  const desired = String(currentPos)
   const pos = (allowedPositions.has(desired) ? desired : base.position) as 'fixed' | 'absolute' | 'relative'
   const next: import('../types/designer').CanvasComponentStyle = {
     position: pos,

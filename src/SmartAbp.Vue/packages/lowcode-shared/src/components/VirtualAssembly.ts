@@ -23,7 +23,7 @@
  */
 
 import { defineAsyncComponent, type AsyncComponentLoader, type Component } from 'vue'
-import { globalPluginManager } from '../plugins/PluginManager.js'
+import { globalPluginManager } from '../plugins/PluginManager'
 import type { ComponentMetadata, ComponentRegistry } from './ComponentRegistry'
 
 /**
@@ -207,7 +207,6 @@ export class VirtualAssembly {
 
         if (this.options.debug) {
           console.log(`[VirtualAssembly] 动态加载: ${componentName}`, {
-            path: (metadata as any).path,
             bundle: metadata.bundle
           })
         }
@@ -270,7 +269,7 @@ export class VirtualAssembly {
         // 使用动态导入函数（TypeScript限制：import()必须是字面量，这里使用Function构造器）
         type DynamicImport = (path: string) => Promise<Record<string, unknown>>
         const dynamicImport = new Function('path', 'return import(path)') as DynamicImport
-        
+
         // 根据bundle和组件名生成路径
         const componentPath = `${metadata.bundle}/components/${name}.vue`
         const module = await dynamicImport(/* @vite-ignore */ componentPath)
@@ -383,13 +382,13 @@ export class VirtualAssembly {
   /**
    * 获取性能统计
    */
-  getStats(): PerformanceStats {
+  getStats(): PerformanceStats & { cacheHitRate: number } {
     return {
       ...this.stats,
       cacheHitRate: this.stats.totalLoads > 0
         ? (this.stats.cacheHits / (this.stats.cacheHits + this.stats.cacheMisses)) * 100
         : 0
-    } as PerformanceStats & { cacheHitRate: number }
+    }
   }
 
   /**
@@ -402,7 +401,7 @@ export class VirtualAssembly {
     console.log('📊 虚拟程序集性能报告')
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     console.log(`总加载次数: ${stats.totalLoads}`)
-    console.log(`缓存命中: ${stats.cacheHits} (${(stats as any).cacheHitRate.toFixed(2)}%)`)
+    console.log(`缓存命中: ${stats.cacheHits} (${stats.cacheHitRate.toFixed(2)}%)`)
     console.log(`缓存未命中: ${stats.cacheMisses}`)
     console.log(`平均加载时间: ${stats.avgLoadTime.toFixed(2)}ms`)
     console.log(`当前缓存大小: ${this.cache.size}/${this.options.cacheCapacity}`)

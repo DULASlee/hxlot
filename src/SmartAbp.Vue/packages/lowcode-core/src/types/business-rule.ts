@@ -1,7 +1,7 @@
 /**
  * 业务规则设计器类型定义
  * 
- * 用于消除RuleEndNode和PropertyPanel中的as any使用
+ * 目的：为 RuleEndNode 和 PropertyPanel 提供强类型
  */
 
 /**
@@ -18,12 +18,9 @@ export type ElementTagType = 'success' | 'info' | 'warning' | 'danger' | ''
  * 规则节点数据基础接口
  */
 export interface RuleNodeDataBase {
-  /** 节点标签 */
+  id: string
   label?: string
-  /** 节点描述 */
   description?: string
-  /** 其他属性 */
-  [key: string]: unknown
 }
 
 /**

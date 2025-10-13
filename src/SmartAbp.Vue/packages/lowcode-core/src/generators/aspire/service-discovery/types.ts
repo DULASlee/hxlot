@@ -1,7 +1,7 @@
 /**
  * 服务发现相关类型定义
  * 
- * 用于消除service-discovery-enhancer.ts中的as any使用
+ * 目的：为 service-discovery-enhancer.ts 提供强类型
  */
 
 /**
@@ -39,11 +39,9 @@ export interface EurekaInstance {
     $: number
     '@enabled'?: string
   }
-  securePort?: {
-    $: number
-    '@enabled'?: string
+  dataCenterInfo?: {
+    name?: string
   }
-  metadata?: Record<string, string>
 }
 
 /**

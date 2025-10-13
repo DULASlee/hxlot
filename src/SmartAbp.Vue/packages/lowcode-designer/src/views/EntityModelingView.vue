@@ -1375,23 +1375,33 @@ const entityEditFormRef = ref()
 const entityFeatures = computed({
   get: () => {
     if (!editingEntity.value) return []
+    const e = editingEntity.value as EntityDefinition & {
+      isAggregateRoot?: boolean
+      hasExtraProperties?: boolean
+      enableCaching?: boolean
+    }
     const features: string[] = []
-    if ((editingEntity.value as any).isAggregateRoot) features.push('isAggregateRoot')
-    if (editingEntity.value.enableSoftDelete) features.push('enableSoftDelete')
-    if (editingEntity.value.enableAudit) features.push('enableAudit')
-    if (editingEntity.value.enableMultiTenant) features.push('enableMultiTenant')
-    if ((editingEntity.value as any).hasExtraProperties) features.push('hasExtraProperties')
-    if ((editingEntity.value as any).enableCaching) features.push('enableCaching')
+    if (e.isAggregateRoot) features.push('isAggregateRoot')
+    if (e.enableSoftDelete) features.push('enableSoftDelete')
+    if (e.enableAudit) features.push('enableAudit')
+    if (e.enableMultiTenant) features.push('enableMultiTenant')
+    if (e.hasExtraProperties) features.push('hasExtraProperties')
+    if (e.enableCaching) features.push('enableCaching')
     return features
   },
   set: (values: string[]) => {
     if (!editingEntity.value) return
-    (editingEntity.value as any).isAggregateRoot = values.includes('isAggregateRoot')
-    editingEntity.value.enableSoftDelete = values.includes('enableSoftDelete')
-    editingEntity.value.enableAudit = values.includes('enableAudit')
-    editingEntity.value.enableMultiTenant = values.includes('enableMultiTenant')
-    ;(editingEntity.value as any).hasExtraProperties = values.includes('hasExtraProperties')
-    ;(editingEntity.value as any).enableCaching = values.includes('enableCaching')
+    const e = editingEntity.value as EntityDefinition & {
+      isAggregateRoot?: boolean
+      hasExtraProperties?: boolean
+      enableCaching?: boolean
+    }
+    e.isAggregateRoot = values.includes('isAggregateRoot')
+    e.enableSoftDelete = values.includes('enableSoftDelete')
+    e.enableAudit = values.includes('enableAudit')
+    e.enableMultiTenant = values.includes('enableMultiTenant')
+    e.hasExtraProperties = values.includes('hasExtraProperties')
+    e.enableCaching = values.includes('enableCaching')
   }
 })
 
