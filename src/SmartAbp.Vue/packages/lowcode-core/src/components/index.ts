@@ -64,7 +64,7 @@ export * from './BusinessRuleDesigner/types.js'
  * This enables components to be used without explicit import in templates
  */
 export function autoRegisterComponents(app: any): void {
-  const components = import.meta.glob('./**/*.vue', { eager: true })
+  const components = (import.meta as unknown as { glob: any }).glob('./**/*.vue', { eager: true })
 
   Object.entries(components).forEach(([path, module]: [string, any]) => {
     const componentName = path

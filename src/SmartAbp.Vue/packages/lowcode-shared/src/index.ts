@@ -1,10 +1,10 @@
 /**
  * 🏗️ SmartAbp LowCode Shared Library - Barrel Export
- * 
+ *
  * 📦 包含所有低代码引擎包共享的工具函数、类型定义、常量等
  * 🎯 遵循packages黑盒原则，提供统一的API导出
  * 🛡️ 专注于内存安全和性能优化
- * 
+ *
  * @packageDocumentation
  * @module @smartabp/lowcode-shared
  */
@@ -258,4 +258,7 @@ export * from './devtools'
 // 🛡️ 三大铁律智能执行引擎（微AI 2.0 - 阶段5）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export * from './guards'
+// Guards rely on Node APIs (fs/path/glob) and are meant for CLI/dev-time usage.
+// Exporting them from the browser-facing entry would force bundlers to include Node polyfills.
+// To comply with the architecture iron rules and avoid browser build failures, we do not re-export here.
+// If needed in tooling, import from '@smartabp/lowcode-shared/src/guards' in Node-only scripts.

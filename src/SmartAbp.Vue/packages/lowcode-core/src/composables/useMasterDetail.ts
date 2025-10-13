@@ -1,6 +1,6 @@
 /**
  * 主从表Composable - 企业级一对多关系管理
- * 
+ *
  * 功能特性：
  * - 主从表数据联动
  * - 级联操作（增删改查）
@@ -8,7 +8,7 @@
  * - 批量操作支持
  * - 乐观锁并发控制
  * - 性能优化（防抖、节流、虚拟滚动）
- * 
+ *
  * @example
  * ```typescript
  * const { masterForm, detailList, addDetail, saveAll } = useMasterDetail({
@@ -21,7 +21,7 @@
 
 import { useDebounceFn } from '@vueuse/core'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { computed, ref, watch, type Ref } from 'vue'
+import { computed, ref, shallowRef, watch, type Ref } from 'vue'
 import type { DetailEntity, MasterEntity } from '../types/entity'
 
 export interface MasterDetailConfig<
@@ -96,17 +96,14 @@ export function useMasterDetail<
 
   // ==================== 状态管理 ====================
 
-  const masterForm = ref<TMaster>(config.initialMaster || {} as TMaster) as Ref<TMaster>
-  const detailList = ref<TDetail[]>([]) as Ref<TDetail[]>
-  const selectedDetails = ref<TDetail[]>([]) as Ref<TDetail[]>
+  const masterForm = ref<TMaster>(config.initialMaster || {} as TMaster)
+  const detailList = ref<TDetail[]>([])
+  const selectedDetails = ref<TDetail[]>([])
   const loading = ref(false)
   const hasUnsavedChanges = ref(false)
 
   // 历史记录（用于撤销）
-  const history = ref<{
-    master: TMaster
-    details: TDetail[]
-  }[]>([])
+  const history = shallowRef<Array<{ master: TMaster; details: TDetail[] }>>([])
 
   // 删除队列（批量删除优化）
   const deletedDetails = ref<TDetail[]>([])
@@ -147,11 +144,11 @@ export function useMasterDetail<
       _editMode: true
     } as TDetail
 
-    detailList.value.push(newDetail)
+      ; (detailList.value as unknown as TDetail[]).push(newDetail as TDetail)
     hasUnsavedChanges.value = true
 
     // 触发回调
-    await config.onDetailChange?.(detailList.value)
+    await config.onDetailChange?.(detailList.value as unknown as TDetail[])
 
     return newDetail
   }
@@ -194,12 +191,12 @@ export function useMasterDetail<
         // 否则标记为删除，稍后批量删除
         // 注意：使用类型安全的复制而非any
         const toDelete = detailList.value[index] as TDetail
-        deletedDetails.value.push({ ...toDelete })
+          ; (deletedDetails.value as unknown as TDetail[]).push({ ...(toDelete as TDetail) })
         detailList.value.splice(index, 1)
       }
 
       hasUnsavedChanges.value = true
-      await config.onDetailChange?.(detailList.value)
+      await config.onDetailChange?.(detailList.value as unknown as TDetail[])
 
       ElMessage.success('删除成功')
     } catch {
@@ -237,7 +234,7 @@ export function useMasterDetail<
           if (!detail._isNew) {
             // 使用类型安全的复制而非any
             const toDelete = detailList.value[index] as TDetail
-            deletedDetails.value.push({ ...toDelete })
+              ; (deletedDetails.value as unknown as TDetail[]).push({ ...(toDelete as TDetail) })
           }
           detailList.value.splice(index, 1)
         }
@@ -245,7 +242,7 @@ export function useMasterDetail<
 
       selectedDetails.value = []
       hasUnsavedChanges.value = true
-      await config.onDetailChange?.(detailList.value)
+      await config.onDetailChange?.(detailList.value as unknown as TDetail[])
 
       ElMessage.success(`成功删除 ${details.length} 条记录`)
     } catch {
@@ -268,7 +265,7 @@ export function useMasterDetail<
       // 暂时使用模拟数据
       detailList.value = []
 
-      await config.onDetailChange?.(detailList.value)
+      await config.onDetailChange?.(detailList.value as unknown as TDetail[])
     } catch (error) {
       ElMessage.error('加载明细数据失败')
       console.error('Load details error:', error)
@@ -320,8 +317,8 @@ export function useMasterDetail<
     try {
       // 保存历史记录（用于撤销）
       history.value.push({
-        master: JSON.parse(JSON.stringify(masterForm.value)),
-        details: JSON.parse(JSON.stringify(detailList.value))
+        master: masterForm.value as TMaster,
+        details: detailList.value as TDetail[]
       })
 
       // 1. 保存主表
@@ -410,9 +407,9 @@ export function useMasterDetail<
   // ==================== 返回接口 ====================
 
   return {
-    masterForm,
-    detailList,
-    selectedDetails,
+    masterForm: masterForm as unknown as Ref<TMaster>,
+    detailList: detailList as unknown as Ref<TDetail[]>,
+    selectedDetails: selectedDetails as unknown as Ref<TDetail[]>,
     loading,
     hasUnsavedChanges,
     addDetail,

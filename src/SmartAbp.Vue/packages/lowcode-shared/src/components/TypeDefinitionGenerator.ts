@@ -1,26 +1,28 @@
 /**
  * TypeScript类型定义自动生成器
- * 
+ *
  * 核心功能：从ComponentRegistry自动生成TypeScript类型声明文件
- * 
+ *
  * 工作原理：
  * 1. 遍历ComponentRegistry中的所有组件
  * 2. 为每个组件生成正确的类型导入
  * 3. 生成全局Components接口
  * 4. 输出.d.ts文件
- * 
+ *
  * 使用场景：
  * - 构建时自动生成类型
  * - 开发时实时更新类型
  * - VSCode智能提示支持
- * 
+ *
  * @module TypeDefinitionGenerator
  * @author AI首席架构师
  * @since 2.0.0
  */
 
-import { promises as fs } from 'fs'
-import * as path from 'path'
+// Node-only modules must not be statically imported in browser bundles.
+// We will resolve them lazily inside async methods to keep browser builds clean.
+type FsPromises = typeof import('fs')['promises']
+type PathModule = typeof import('path')
 import type { ComponentMetadata, ComponentRegistry } from './ComponentRegistry'
 
 /**
@@ -88,6 +90,9 @@ export interface GeneratedTypeDefinition {
  */
 export class TypeDefinitionGenerator {
   private options: Required<TypeGeneratorOptions>
+  // Lazy Node modules (resolved only when running in a Node environment)
+  private _fs?: FsPromises
+  private _path?: PathModule
 
   constructor(
     private registry: ComponentRegistry,
@@ -139,6 +144,8 @@ export class TypeDefinitionGenerator {
    * 生成文件并保存到磁盘
    */
   async generateFile(): Promise<GeneratedTypeDefinition> {
+    const fs = await this.ensureFs()
+    const path = await this.ensurePath()
     const content = this.generate()
     const components = this.registry.getAvailableComponents()
 
@@ -167,20 +174,20 @@ export class TypeDefinitionGenerator {
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  * 🌟 虚拟程序集 - TypeScript类型声明（自动生成）
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- * 
+ *
  * ⚠️  警告：此文件自动生成，请勿手动修改！
- * 
+ *
  * 生成时间: ${now}
  * 组件数量: ${componentCount}
  * 生成器版本: 2.0.0
- * 
+ *
  * 使用方式：
  * \`\`\`typescript
  * import { Components } from '${this.options.moduleName}'
- * 
+ *
  * const SmartForm = Components.SmartForm  // ✅ 自动类型提示
  * \`\`\`
- * 
+ *
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  */`
   }
@@ -194,7 +201,7 @@ export class TypeDefinitionGenerator {
  */
 declare module '${this.options.moduleName}' {
   export interface GlobalComponents {}
-  
+
   export const Components: GlobalComponents
 }`
   }
@@ -219,7 +226,7 @@ declare module '${this.options.moduleName}' {
 
   /**
    * 全局组件接口
-   * 
+   *
    * 通过虚拟程序集访问所有组件：
    * \`\`\`typescript
    * import { Components } from '${this.options.moduleName}'
@@ -232,7 +239,7 @@ ${declarations.join('\n')}
 
   /**
    * 虚拟程序集 - 全局组件代理对象
-   * 
+   *
    * 特性：
    * - ✅ 零配置自动加载
    * - ✅ LRU缓存优化
@@ -257,7 +264,7 @@ ${declarations.join('\n')}
 
     return `/**
  * Vue全局组件类型增强
- * 
+ *
  * 使Vue模板中可以直接使用组件名
  */
 declare module '@vue/runtime-core' {
@@ -275,51 +282,51 @@ ${componentList}
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  * 📖 使用示例
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- * 
+ *
  * 示例1：基础使用
  * \`\`\`vue
  * <script setup lang="ts">
  * import { Components } from '${this.options.moduleName}'
- * 
+ *
  * const SmartForm = Components.SmartForm
  * const DataTable = Components.DataTable
  * </script>
- * 
+ *
  * <template>
  *   <SmartForm />
  *   <DataTable />
  * </template>
  * \`\`\`
- * 
+ *
  * 示例2：动态组件
  * \`\`\`vue
  * <script setup lang="ts">
  * import { ref, computed } from 'vue'
  * import { Components } from '${this.options.moduleName}'
- * 
+ *
  * const componentName = ref('SmartForm')
  * const DynamicComponent = computed(() => Components[componentName.value])
  * </script>
- * 
+ *
  * <template>
  *   <component :is="DynamicComponent" />
  * </template>
  * \`\`\`
- * 
+ *
  * 示例3：条件渲染
  * \`\`\`vue
  * <script setup lang="ts">
  * import { ref } from 'vue'
  * import { Components } from '${this.options.moduleName}'
- * 
+ *
  * const showForm = ref(false)
  * </script>
- * 
+ *
  * <template>
  *   <component v-if="showForm" :is="Components.SmartForm" />
  * </template>
  * \`\`\`
- * 
+ *
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  */`
   }
@@ -361,6 +368,8 @@ ${componentList}
    * 监听Registry变化，自动更新类型
    */
   async watch(callback?: (result: GeneratedTypeDefinition) => void): Promise<void> {
+    // This function is intended for Node dev tooling only
+    // Ensure Node modules are available if used in this process
     // 初始生成
     let result = await this.generateFile()
     callback?.(result)
@@ -377,6 +386,22 @@ ${componentList}
         console.log(`[TypeDefinitionGenerator] 类型声明已更新 (${result.componentCount}个组件)`)
       }
     }, 5000)  // 每5秒检查一次
+  }
+
+  // Lazy loaders for Node core modules
+  private async ensureFs(): Promise<FsPromises> {
+    if (this._fs) return this._fs
+    // Dynamic import to keep browser bundle free of Node polyfills
+    const mod = await import('fs')
+    this._fs = mod.promises
+    return this._fs!
+  }
+
+  private async ensurePath(): Promise<PathModule> {
+    if (this._path) return this._path
+    const mod = await import('path')
+    this._path = mod
+    return this._path!
   }
 }
 
