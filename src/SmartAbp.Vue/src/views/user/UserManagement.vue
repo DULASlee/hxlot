@@ -6,42 +6,115 @@
       </template>
 
       <el-tabs v-model="activeTab">
-        <el-tab-pane label="用户列表" name="list">
-          <el-table :data="users" style="width: 100%" v-loading="loading">
-            <el-table-column prop="id" label="ID" width="80" />
-            <el-table-column prop="userName" label="用户名" />
-            <el-table-column prop="email" label="邮箱" />
-            <el-table-column prop="roles" label="角色">
+        <el-tab-pane
+          label="用户列表"
+          name="list"
+        >
+          <el-table
+            v-loading="loading"
+            :data="users"
+            style="width: 100%"
+          >
+            <el-table-column
+              prop="id"
+              label="ID"
+              width="80"
+            />
+            <el-table-column
+              prop="userName"
+              label="用户名"
+            />
+            <el-table-column
+              prop="email"
+              label="邮箱"
+            />
+            <el-table-column
+              prop="roles"
+              label="角色"
+            >
               <template #default="scope">
-                <el-tag v-for="role in scope.row.roles" :key="role" size="small" style="margin-right: 4px">
+                <el-tag
+                  v-for="role in scope.row.roles"
+                  :key="role"
+                  size="small"
+                  style="margin-right: 4px"
+                >
                   {{ role }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="200">
+            <el-table-column
+              label="操作"
+              width="200"
+            >
               <template #default="scope">
-                <el-button size="small" @click="handleEditRoles(scope.row)">分配角色</el-button>
-                <el-button size="small" type="primary" @click="handleEditPermissions(scope.row)">权限</el-button>
+                <el-button
+                  size="small"
+                  @click="handleEditRoles(scope.row)"
+                >
+                  分配角色
+                </el-button>
+                <el-button
+                  size="small"
+                  type="primary"
+                  @click="handleEditPermissions(scope.row)"
+                >
+                  权限
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
 
-        <el-tab-pane label="角色管理" name="roles">
-          <el-button type="primary" @click="handleAddRole">新增角色</el-button>
-          <el-table :data="roles" style="width: 100%; margin-top: 20px">
-            <el-table-column prop="name" label="角色名称" />
-            <el-table-column prop="description" label="描述" />
-            <el-table-column label="操作" width="180">
+        <el-tab-pane
+          label="角色管理"
+          name="roles"
+        >
+          <el-button
+            type="primary"
+            @click="handleAddRole"
+          >
+            新增角色
+          </el-button>
+          <el-table
+            :data="roles"
+            style="width: 100%; margin-top: 20px"
+          >
+            <el-table-column
+              prop="name"
+              label="角色名称"
+            />
+            <el-table-column
+              prop="description"
+              label="描述"
+            />
+            <el-table-column
+              label="操作"
+              width="180"
+            >
               <template #default="scope">
-                <el-button size="small" @click="handleEditRole(scope.row)">编辑</el-button>
-                <el-button size="small" type="danger" @click="handleDeleteRole(scope.row)">删除</el-button>
+                <el-button
+                  size="small"
+                  @click="handleEditRole(scope.row)"
+                >
+                  编辑
+                </el-button>
+                <el-button
+                  size="small"
+                  type="danger"
+                  @click="handleDeleteRole(scope.row)"
+                >
+                  删除
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-tab-pane>
 
-        <el-tab-pane label="权限管理" name="permissions">
+        <el-tab-pane
+          label="权限管理"
+          name="permissions"
+        >
           <el-tree
             :data="permissionTree"
             show-checkbox

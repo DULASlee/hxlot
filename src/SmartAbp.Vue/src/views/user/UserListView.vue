@@ -4,22 +4,56 @@
       <template #header>
         <div class="card-header">
           <span>用户列表</span>
-          <el-button type="primary" @click="handleAdd">
+          <el-button
+            type="primary"
+            @click="handleAdd"
+          >
             <el-icon><Plus /></el-icon>
             新增用户
           </el-button>
         </div>
       </template>
 
-      <el-table :data="users" style="width: 100%" v-loading="loading">
-        <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="userName" label="用户名" />
-        <el-table-column prop="email" label="邮箱" />
-        <el-table-column prop="phoneNumber" label="电话" />
-        <el-table-column label="操作" width="180">
+      <el-table
+        v-loading="loading"
+        :data="users"
+        style="width: 100%"
+      >
+        <el-table-column
+          prop="id"
+          label="ID"
+          width="80"
+        />
+        <el-table-column
+          prop="userName"
+          label="用户名"
+        />
+        <el-table-column
+          prop="email"
+          label="邮箱"
+        />
+        <el-table-column
+          prop="phoneNumber"
+          label="电话"
+        />
+        <el-table-column
+          label="操作"
+          width="180"
+        >
           <template #default="scope">
-            <el-button size="small" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button
+              size="small"
+              @click="handleEdit(scope.row)"
+            >
+              编辑
+            </el-button>
+            <el-button
+              size="small"
+              type="danger"
+              @click="handleDelete(scope.row)"
+            >
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
