@@ -364,8 +364,8 @@ export function convertModuleToManifest(
         stores: convertStoresReverse(moduleMetadata.stores),
         policies: moduleMetadata.policies,
         lifecycle: convertLifecycleReverse(moduleMetadata.lifecycle),
-        features: moduleMetadata.features as any,
-        menuConfig: moduleMetadata.menuConfig as any
+        features: moduleMetadata.features as unknown as Record<string, unknown>,
+        menuConfig: moduleMetadata.menuConfig as unknown as Record<string, unknown>
     }
 }
 

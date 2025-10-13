@@ -131,7 +131,8 @@ export class TypeDefinitionGenerator {
       parts.push(this.generateExamples())
     }
 
-    return (this as any).prettify ? (this as any).prettify(parts.join('\n\n')) : this.formatCode(parts.join('\n\n'))
+    const content = parts.join('\n\n')
+    return this.options.prettify ? this.formatCode(content) : content
   }
 
   /**
@@ -203,7 +204,7 @@ declare module '${this.options.moduleName}' {
    */
   private generateComponentTypes(components: ComponentMetadata[]): string {
     const declarations = components.map(component => {
-      const importPath = this.resolveImportPath((component as any).path)
+      const importPath = this.resolveImportPath((component as unknown as { path?: string }).path ?? '')
       const componentType = this.getComponentTypeName(component.name)
 
       if (this.options.includeComments && component.description) {

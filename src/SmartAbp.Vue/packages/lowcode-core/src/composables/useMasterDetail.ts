@@ -192,8 +192,9 @@ export function useMasterDetail<
         detailList.value.splice(index, 1)
       } else {
         // 否则标记为删除，稍后批量删除
-        // 注意：使用类型断言处理ref的UnwrapRefSimple类型（Vue ref类型推断限制）
-        deletedDetails.value.push(detailList.value[index] as any)
+        // 注意：使用类型安全的复制而非any
+        const toDelete = detailList.value[index] as TDetail
+        deletedDetails.value.push({ ...toDelete })
         detailList.value.splice(index, 1)
       }
       
@@ -234,8 +235,9 @@ export function useMasterDetail<
         
         if (index !== -1) {
           if (!detail._isNew) {
-            // 注意：使用类型断言处理ref的UnwrapRefSimple类型（Vue ref类型推断限制）
-            deletedDetails.value.push(detailList.value[index] as any)
+            // 使用类型安全的复制而非any
+            const toDelete = detailList.value[index] as TDetail
+            deletedDetails.value.push({ ...toDelete })
           }
           detailList.value.splice(index, 1)
         }

@@ -1,8 +1,7 @@
 /**
  * 主从表单系统基础实体类型定义
  * 
- * 用于消除useMasterDetail中的as any使用
- * 提供完整的类型安全保障
+ * 目的：为 useMasterDetail 提供完整的强类型约束
  */
 
 /**
@@ -20,14 +19,20 @@ export interface BaseEntity {
   /** 创建人ID（可选） */
   creatorId?: string | number
   
-  /** 最后修改时间（可选） */
+  /** 修改时间（可选） */
   lastModificationTime?: string | Date
   
-  /** 最后修改人ID（可选） */
+  /** 修改人ID（可选） */
   lastModifierId?: string | number
-  
-  /** 并发控制标记（可选） */
-  concurrencyStamp?: string
+}
+
+/**
+ * 具有软删除功能的实体
+ */
+export interface SoftDeleteEntity extends BaseEntity {
+  isDeleted?: boolean
+  deletionTime?: string | Date
+  deleterId?: string | number
 }
 
 /**

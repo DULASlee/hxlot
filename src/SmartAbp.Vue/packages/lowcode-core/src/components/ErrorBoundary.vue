@@ -159,11 +159,13 @@ onErrorCaptured((err, instance, info) => {
   componentInfo.value = info
 
   // 记录错误到全局状态
-  if (typeof (workspaceStore as any).captureError === 'function') {
-    ;(workspaceStore as any).captureError(new Error(err.message), {
-    level: props.level,
-    component: instance?.$options?.name || instance?.$?.type?.name || 'Unknown',
-    stack: err.stack
+  type WorkspaceCapable = { captureError?: (e: Error, meta?: Record<string, unknown>) => void }
+  const ws = workspaceStore as unknown as WorkspaceCapable
+  if (typeof ws.captureError === 'function') {
+    ws.captureError(new Error(err.message), {
+      level: props.level,
+      component: instance?.$options?.name || instance?.$?.type?.name || 'Unknown',
+      stack: err.stack
     })
   }
 

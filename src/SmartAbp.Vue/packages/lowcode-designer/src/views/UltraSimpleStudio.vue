@@ -481,8 +481,8 @@ const convertToModuleMetadata = (): Partial<ModuleMetadata> => {
     entities: [],
     database: {
       connectionStringName: 'default',
-      schema: selectedTableData?.schema ? (selectedTableData.schema as any)?.schema || 'dbo' : 'dbo',
-      provider: config.value.databaseProvider as any
+      schema: selectedTableData?.schema ? String((selectedTableData.schema as unknown as { schema?: string })?.schema || 'dbo') : 'dbo',
+      provider: String(config.value.databaseProvider)
     },
     frontend: {
       parentId: config.value.parentMenuId,
@@ -604,7 +604,7 @@ const startGeneration = async () => {
 
     addLog(t('ultraSimple.logs.callingService'), 'info')
     const result = await codeGeneratorApi.generateModule({
-      moduleMetadata: metadata as any,
+      moduleMetadata: metadata,
       targetPath: '',
       overwriteExisting: true,
       generateTests: false,

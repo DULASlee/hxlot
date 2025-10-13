@@ -46,7 +46,7 @@
               </div>
               <div class="detail-item">
                 <span class="label">Path:</span>
-                <code>{{ (comp as any).path || '-' }}</code>
+                <code>-</code>
               </div>
               <div class="detail-item">
                 <span class="label">Priority:</span>
@@ -84,61 +84,40 @@
         <div class="plugin-list">
           <div
             v-for="plugin in pluginList"
-            :key="plugin.plugin.metadata.id"
+            :key="plugin.name"
             class="plugin-card"
           >
             <div class="plugin-header">
               <div class="plugin-info">
-                <h4>{{ plugin.plugin.metadata.name }}</h4>
-                <span class="plugin-id">{{ plugin.plugin.metadata.id }}</span>
+                <h4>{{ plugin.name }}</h4>
+                <span class="plugin-id">{{ plugin.name }}</span>
               </div>
               <div class="plugin-controls">
-                <span :class="['status-badge', plugin.status]">{{ plugin.status }}</span>
+                <span :class="['status-badge', getStatus(plugin.name)]">{{ getStatus(plugin.name) }}</span>
                 <button 
-                  v-if="plugin.status === 'enabled'"
+                  v-if="getStatus(plugin.name) === 'enabled'"
                   class="control-btn"
-                  @click="disablePlugin(plugin.plugin.metadata.id)"
+                  @click="disablePlugin(plugin.name)"
                 >
                   禁用
                 </button>
                 <button 
-                  v-else-if="plugin.status === 'disabled'"
+                  v-else
                   class="control-btn primary"
-                  @click="enablePlugin(plugin.plugin.metadata.id)"
+                  @click="enablePlugin(plugin.name)"
                 >
                   启用
                 </button>
               </div>
             </div>
             <p class="plugin-description">
-              {{ plugin.plugin.metadata.description }}
+              -
             </p>
             <div class="plugin-meta">
-              <span>版本: {{ plugin.plugin.metadata.version }}</span>
-              <span v-if="plugin.plugin.metadata.author">作者: {{ plugin.plugin.metadata.author }}</span>
-              <span v-if="plugin.installedAt">
-                安装时间: {{ formatDate(plugin.installedAt) }}
-              </span>
-            </div>
-            <div
-              v-if="plugin.plugin.metadata.tags"
-              class="plugin-tags"
-            >
-              <span
-                v-for="tag in plugin.plugin.metadata.tags"
-                :key="tag"
-                class="tag"
-              >
-                {{ tag }}
-              </span>
+              <span>版本: -</span>
             </div>
           </div>
-          <div
-            v-if="pluginList.length === 0"
-            class="empty-message"
-          >
-            暂无插件
-          </div>
+          <div v-if="pluginList.length === 0" class="empty-message">暂无插件</div>
         </div>
       </div>
 
@@ -148,59 +127,36 @@
         class="tab-panel"
       >
         <h3>性能监控</h3>
-        <div class="performance-stats">
-          <div class="stat-card">
-            <div class="stat-label">
-              缓存命中率
-            </div>
-            <div class="stat-value">
-              {{ formatPercent(cacheHitRate) }}
-            </div>
+        <div class="perf-grid">
+          <div class="perf-card">
+            <span class="label">缓存命中率</span>
+            <strong>{{ formatPercent(cacheHitRate) }}</strong>
           </div>
-          <div class="stat-card">
-            <div class="stat-label">
-              平均加载时间
-            </div>
-            <div class="stat-value">
-              {{ avgLoadTime.toFixed(1) }}ms
-            </div>
+          <div class="perf-card">
+            <span class="label">平均加载时间</span>
+            <strong>{{ Math.round(avgLoadTime) }} ms</strong>
           </div>
-          <div class="stat-card">
-            <div class="stat-label">
-              总加载次数
-            </div>
-            <div class="stat-value">
-              {{ totalLoads }}
-            </div>
+          <div class="perf-card">
+            <span class="label">总加载次数</span>
+            <strong>{{ totalLoads }}</strong>
           </div>
-          <div class="stat-card">
-            <div class="stat-label">
-              错误率
-            </div>
-            <div
-              class="stat-value"
-              :class="{ 'error-high': errorRate > 0.05 }"
-            >
-              {{ formatPercent(errorRate) }}
-            </div>
+          <div class="perf-card">
+            <span class="label">错误率</span>
+            <strong>{{ formatPercent(errorRate) }}</strong>
           </div>
         </div>
-        <div class="performance-chart">
-          <h4>最近加载时间</h4>
-          <div class="timeline">
-            <div 
-              v-for="(metric, index) in recentMetrics" 
-              :key="index"
-              class="timeline-item"
-              :title="`${metric.componentName}: ${metric.duration.toFixed(1)}ms`"
+
+        <div class="recent-metrics">
+          <h4>最近加载</h4>
+          <div class="metrics-list">
+            <div
+              v-for="m in recentMetrics"
+              :key="m.timestamp"
+              class="metric-item"
             >
-              <div 
-                class="timeline-bar"
-                :style="{ 
-                  height: `${(metric.duration / maxDuration) * 100}%`,
-                  background: getBarColor(metric.duration)
-                }"
-              />
+              <span class="time">{{ formatTime(m.timestamp) }}</span>
+              <div class="bar" :style="{ width: `${(m.duration / maxDuration) * 100}%`, background: getBarColor(m.duration) }"></div>
+              <span class="ms">{{ Math.round(m.duration) }} ms</span>
             </div>
           </div>
         </div>
@@ -212,21 +168,14 @@
         class="tab-panel"
       >
         <h3>事件日志</h3>
-        <div class="event-log">
-          <div 
-            v-for="(event, index) in eventLog" 
-            :key="index"
-            :class="['event-item', event.type]"
-          >
-            <span class="event-time">{{ formatTime(event.timestamp) }}</span>
-            <span :class="['event-type', event.type]">{{ event.type }}</span>
-            <span class="event-target">{{ event.target || '-' }}</span>
-            <span class="event-data">{{ formatEventData(event.data) }}</span>
+        <div class="event-list">
+          <div v-for="e in eventLog" :key="e.timestamp" class="event-item">
+            <span class="event-type">{{ e.type }}</span>
+            <span class="event-target">{{ e.target || '-' }}</span>
+            <span class="event-data">{{ formatEventData(e.data) }}</span>
+            <span class="event-time">{{ formatTime(e.timestamp) }}</span>
           </div>
-          <div
-            v-if="eventLog.length === 0"
-            class="empty-message"
-          >
+          <div v-if="eventLog.length === 0" class="empty-message">
             暂无事件
           </div>
         </div>
@@ -239,7 +188,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { globalComponentRegistry } from '../components/ComponentRegistry'
 import { globalPerformanceMonitor } from '../performance/PerformanceMonitor'
-import { globalPluginManager } from '../plugins/PluginManager'
+import { globalPluginManager, type LowCodePlugin } from '../plugins/PluginManager'
 
 // Tabs
 const tabs = [
@@ -264,23 +213,10 @@ const toggleNode = (name: string) => {
 }
 
 // 插件管理
-const pluginList = ref((globalPluginManager as any).getAllPlugins?.() || [])
-
-const enablePlugin = async (id: string) => {
-  const mgr: any = globalPluginManager as any
-  if (typeof mgr.enable === 'function') {
-    await mgr.enable(id)
-  }
-  pluginList.value = mgr.getAllPlugins?.() || []
-}
-
-const disablePlugin = async (id: string) => {
-  const mgr: any = globalPluginManager as any
-  if (typeof mgr.disable === 'function') {
-    await mgr.disable(id)
-  }
-  pluginList.value = mgr.getAllPlugins?.() || []
-}
+const pluginList = ref<ReadonlyArray<LowCodePlugin>>(globalPluginManager.getAllPlugins())
+const getStatus = (name: string) => globalPluginManager.getStatus(name)
+const enablePlugin = async (id: string) => { globalPluginManager.enable(id); pluginList.value = globalPluginManager.getAllPlugins() }
+const disablePlugin = async (id: string) => { globalPluginManager.disable(id); pluginList.value = globalPluginManager.getAllPlugins() }
 
 // 性能监控
 const performanceReport = ref(globalPerformanceMonitor.generateReport(60))
@@ -345,7 +281,7 @@ let refreshTimer: ReturnType<typeof setInterval> | null = null
 onMounted(() => {
   refreshTimer = setInterval(() => {
     componentRegistry.value = globalComponentRegistry.getAvailableComponents()
-    pluginList.value = (globalPluginManager as any).getAllPlugins?.() || []
+    pluginList.value = globalPluginManager.getAllPlugins()
     performanceReport.value = globalPerformanceMonitor.generateReport(60)
     recentMetrics.value = globalPerformanceMonitor.getRealtimeMetrics(20).filter(m => m.type === 'load')
   }, 3000)
@@ -607,68 +543,73 @@ onUnmounted(() => {
 }
 
 /* 性能监控 */
-.performance-stats {
+.perf-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
   margin-bottom: 2rem;
 }
 
-.stat-card {
+.perf-card {
   background: #252526;
   border-radius: 4px;
   padding: 1rem;
   text-align: center;
 }
 
-.stat-label {
+.perf-card .label {
   font-size: 0.875rem;
   color: #858585;
   margin-bottom: 0.5rem;
 }
 
-.stat-value {
+.perf-card strong {
   font-size: 2rem;
   font-weight: 600;
   color: #007acc;
 }
 
-.stat-value.error-high {
-  color: #e74c3c;
-}
-
-.performance-chart {
+.recent-metrics {
   background: #252526;
   border-radius: 4px;
   padding: 1rem;
 }
 
-.performance-chart h4 {
+.recent-metrics h4 {
   margin: 0 0 1rem 0;
   color: #ffffff;
 }
 
-.timeline {
+.metrics-list {
   display: flex;
-  align-items: flex-end;
-  gap: 4px;
-  height: 150px;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.timeline-item {
+.metric-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.metric-item .time {
+  color: #858585;
+}
+
+.metric-item .bar {
   flex: 1;
-  height: 100%;
-  display: flex;
-  align-items: flex-end;
+  height: 10px;
+  border-radius: 5px;
+  background: #3e3e42;
 }
 
-.timeline-bar {
-  width: 100%;
-  transition: height 0.3s;
+.metric-item .ms {
+  color: #858585;
 }
 
 /* 事件日志 */
-.event-log {
+.event-list {
   background: #252526;
   border-radius: 4px;
   padding: 0.5rem;
@@ -680,14 +621,10 @@ onUnmounted(() => {
 
 .event-item {
   display: grid;
-  grid-template-columns: auto auto 1fr 2fr;
+  grid-template-columns: auto auto 1fr auto;
   gap: 1rem;
   padding: 0.5rem;
   border-bottom: 1px solid #3e3e42;
-}
-
-.event-time {
-  color: #858585;
 }
 
 .event-type {
@@ -714,6 +651,10 @@ onUnmounted(() => {
 
 .event-data {
   color: #cccccc;
+}
+
+.event-time {
+  color: #858585;
 }
 
 .empty-message {

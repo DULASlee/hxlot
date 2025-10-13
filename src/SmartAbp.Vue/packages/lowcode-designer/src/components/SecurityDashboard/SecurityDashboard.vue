@@ -40,7 +40,7 @@
               <el-icon><Warning /></el-icon>
               <span>实时风险警报</span>
               <el-badge
-                :value="activeAlerts.length"
+                :value="activeAlertsList.length"
                 class="alert-badge"
                 type="danger"
               />
@@ -48,7 +48,7 @@
           </template>
           <div class="alerts-list">
             <div
-              v-for="alert in activeAlerts"
+              v-for="alert in activeAlertsList"
               :key="alert.id"
               class="alert-item"
               :class="`alert-${(alert.severity || 'info').toLowerCase()}`"
@@ -71,13 +71,13 @@
                 <el-button
                   size="small"
                   type="primary"
-                  @click.stop="acknowledgeAlert(alert)"
+                  @click.stop="acknowledgeAlert(alert.id)"
                 >
                   确认
                 </el-button>
                 <el-button
                   size="small"
-                  @click.stop="investigateAlert(alert)"
+                  @click.stop="investigateAlert(alert.id)"
                 >
                   调查
                 </el-button>
@@ -116,7 +116,7 @@
           <template #header>
             <span>权限访问趋势</span>
           </template>
-          <PermissionAccessTrendChart :data="[...permissionTrendData]" />
+          <PermissionAccessTrendChart :data="[...permissionTrendList]" />
         </el-card>
       </el-col>
       <el-col :span="12">
@@ -124,7 +124,7 @@
           <template #header>
             <span>风险等级分布</span>
           </template>
-          <RiskLevelDistributionChart :data="[...riskDistributionData]" />
+          <RiskLevelDistributionChart :data="[...riskDistributionList]" />
         </el-card>
       </el-col>
     </el-row>
@@ -138,7 +138,7 @@
         <span>异常用户行为分析</span>
       </template>
       <AbnormalUserBehaviorTable
-        :data="[...abnormalBehaviors]"
+        :data="[...abnormalBehaviorsList]"
         @user-click="handleUserClick"
         @behavior-click="handleBehaviorClick"
       />
@@ -181,25 +181,66 @@ import PermissionAccessTrendChart from './PermissionAccessTrendChart.vue'
 import RiskLevelDistributionChart from './RiskLevelDistributionChart.vue'
 import SecurityMetricCard from './SecurityMetricCard.vue'
 
-// Fallback placeholders if not exported (avoid TS2614)
-const useSecurityDashboard = (core as any).useSecurityDashboard || ((): any => ({
-  securityMetrics: ref([]),
-  permissionTrendData: ref([]),
-  riskDistributionData: ref([]),
-  abnormalBehaviors: ref([]),
-  complianceData: ref([]),
-  loadDashboardData: async () => {},
-  refreshMetrics: async () => {},
-  error: ref(null)
-}))
+// 本地类型定义，匹配子组件期望的输入结构
+interface TrendData { date: string; permissions: number; risks: number }
+interface DistributionData { level: string; count: number; percentage: number }
+interface AbnormalBehaviorRow { id: string; userId: string; userName: string; behaviorType: string; description: string; timestamp: Date; riskLevel: string }
 
-const useRealTimeAlerts = (core as any).useRealTimeAlerts || ((): any => ({
-  activeAlerts: ref([]),
-  connectAlertStream: () => {},
-  disconnectAlertStream: () => {},
-  acknowledgeAlert: () => {},
-  investigateAlert: () => {}
-}))
+// Fallback placeholders if not exported (avoid TS2614) - 提供最小可用类型
+interface SecurityMetrics {
+  todayRiskEvents?: number
+  riskEventsTrend?: number
+  permissionChanges?: number
+  permissionChangesTrend?: number
+  abnormalLogins?: number
+  abnormalLoginsTrend?: number
+  complianceScore?: number
+  complianceScoreTrend?: number
+}
+
+type SecurityDashboardApi = {
+  securityMetrics: import('vue').Ref<SecurityMetrics>
+  permissionTrendData: import('vue').Ref<any[]>
+  riskDistributionData: import('vue').Ref<any[]>
+  abnormalBehaviors: import('vue').Ref<any[]>
+  complianceData: import('vue').Ref<any[]>
+  loadDashboardData: () => Promise<void>
+  refreshMetrics: () => Promise<void>
+  error: import('vue').Ref<string | { message?: string } | null>
+}
+
+const useSecurityDashboard: () => SecurityDashboardApi =
+  // @ts-expect-error: runtime feature detection for optional exports
+  (core.useSecurityDashboard as typeof core.useSecurityDashboard) ||
+  (() => ({
+    securityMetrics: ref<SecurityMetrics>({}),
+    permissionTrendData: ref<any[]>([]),
+    riskDistributionData: ref<any[]>([]),
+    abnormalBehaviors: ref<any[]>([]),
+    complianceData: ref<any[]>([]),
+    loadDashboardData: async () => {},
+    refreshMetrics: async () => {},
+    error: ref<string | { message?: string } | null>(null)
+  }))
+
+type RealTimeAlertsApi = {
+  activeAlerts: ReturnType<typeof ref>
+  connectAlertStream: () => void
+  disconnectAlertStream: () => void
+  acknowledgeAlert: (id: string | number) => void
+  investigateAlert: (id: string | number) => void
+}
+
+const useRealTimeAlerts: () => RealTimeAlertsApi =
+  // @ts-expect-error: runtime feature detection for optional exports
+  (core.useRealTimeAlerts as typeof core.useRealTimeAlerts) ||
+  (() => ({
+    activeAlerts: ref([]),
+    connectAlertStream: () => {},
+    disconnectAlertStream: () => {},
+    acknowledgeAlert: (id: string | number) => {},
+    investigateAlert: (id: string | number) => {}
+  }))
 
 const {
   securityMetrics,
@@ -211,6 +252,27 @@ const {
   refreshMetrics,
   error
 } = useSecurityDashboard()
+
+// 明确告警类型
+interface AlertItem { id: string | number; severity?: string; description?: string; message?: string; timestamp: number }
+const { activeAlerts, connectAlertStream, disconnectAlertStream, acknowledgeAlert, investigateAlert } = ((): RealTimeAlertsApi => useRealTimeAlerts())()
+
+// 适配为可迭代与具名字段
+const activeAlertsList = computed<AlertItem[]>(() => Array.isArray(activeAlerts.value) ? (activeAlerts.value as AlertItem[]) : [])
+const permissionTrendList = computed<TrendData[]>(() => Array.isArray(permissionTrendData.value) ? (permissionTrendData.value as unknown as TrendData[]) : [])
+const riskDistributionList = computed<DistributionData[]>(() => Array.isArray(riskDistributionData.value) ? (riskDistributionData.value as unknown as DistributionData[]) : [])
+const abnormalBehaviorsList = computed<AbnormalBehaviorRow[]>(() => {
+  if (!Array.isArray(abnormalBehaviors.value)) return []
+  return (abnormalBehaviors.value as unknown[]).map((it: any) => ({
+    id: String(it?.id ?? ''),
+    userId: String(it?.userId ?? ''),
+    userName: String(it?.userName ?? ''),
+    behaviorType: String(it?.behaviorType ?? ''),
+    description: String(it?.description ?? ''),
+    timestamp: it?.timestamp instanceof Date ? it.timestamp : new Date(it?.timestamp ?? Date.now()),
+    riskLevel: String(it?.riskLevel ?? '')
+  }))
+})
 
 // 🔧 类型适配器：将ComplianceData转换为ComplianceIssue
 const complianceIssues = computed(() => {
@@ -224,14 +286,6 @@ const complianceIssues = computed(() => {
     status: data?.status
   }))
 })
-
-const {
-  activeAlerts,
-  connectAlertStream,
-  disconnectAlertStream,
-  acknowledgeAlert: _acknowledgeAlert,
-  investigateAlert: _investigateAlert
-} = useRealTimeAlerts()
 
 // const { isMobile, isTablet, isDesktop } = useBreakpoints()
 
@@ -297,7 +351,7 @@ const getSeverityType = (severity: string): 'success' | 'warning' | 'danger' | '
   return types[severity] || 'info'
 }
 
-const handleAlertClick = (alert: any) => {
+const handleAlertClick = (alert: AlertItem) => {
   investigateAlert(alert.id)
 }
 
@@ -314,16 +368,6 @@ const handleBehaviorClick = (behavior: any) => {
 const handleComplianceIssue = (issue: any) => {
   // Handle compliance issue
   console.log('Handle compliance issue:', issue)
-}
-
-const acknowledgeAlert = (alert: any) => {
-  // Acknowledge the alert
-  console.log('Acknowledge alert:', alert)
-}
-
-const investigateAlert = (alert: any) => {
-  // Investigate the alert
-  console.log('Investigate alert:', alert)
 }
 
 // Lifecycle
@@ -345,7 +389,7 @@ onUnmounted(() => {
 })
 
 // Watch for new alerts
-watch(activeAlerts, (newAlerts, oldAlerts) => {
+watch(activeAlertsList, (newAlerts, oldAlerts) => {
   if (newAlerts && oldAlerts && newAlerts.length > oldAlerts.length) {
     // New alerts arrived
     // const diff = newAlerts.length - oldAlerts.length
