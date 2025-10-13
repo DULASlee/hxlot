@@ -26,6 +26,7 @@ import {
   RegressionDetector,
   type RegressionReport
 } from './RegressionDetector'
+/// <reference types="vite/client" />
 
 const logger = getGlobalLogger()
 
@@ -316,8 +317,9 @@ export class BenchmarkEngine {
 
     // 内存使用（如果可用）
     let memoryUsage: number | undefined
-    if (typeof performance !== 'undefined' && performance.memory) {
-      memoryUsage = performance.memory.usedJSHeapSize / 1048576 // 转换为MB
+    const memOpt = (performance as unknown as { memory?: { usedJSHeapSize?: number } }).memory
+    if (memOpt && typeof memOpt.usedJSHeapSize === 'number') {
+      memoryUsage = memOpt.usedJSHeapSize / 1048576
     }
 
     return {

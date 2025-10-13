@@ -1,4 +1,5 @@
-export { default as DevToolsPanel } from './DevToolsPanel.vue'
+// 使用类型导入保持一致
+export { default as DevToolsPanel } from './DevToolsPanel.vue';
 
 /**
  * 开发者工具导出

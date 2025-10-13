@@ -308,10 +308,10 @@ export class ServiceDiscoveryEnhancer {
                     host: instance.ipAddr as string,
                     port: instance.port?.['$'] ?? 0,
                     secure: instance.securePort?.['@enabled'] === 'true',
-                    metadata: instance.metadata || {},
+                    metadata: Object.fromEntries(Object.entries(((instance as unknown as { metadata?: Record<string, unknown> }).metadata || {})).map(([k, v]) => [k, String(v)])) as Record<string, string>,
                     health: instance.status === 'UP' ? 'UP' : 'DOWN' as 'UP' | 'DOWN',
                     weight: 1,
-                    version: instance.metadata?.version || '1.0.0',
+                    version: String((instance as unknown as { metadata?: Record<string, unknown> }).metadata?.version || '1.0.0'),
                     registrationTime: new Date(),
                     lastHeartbeat: new Date()
                 }))

@@ -3,7 +3,7 @@
  * 提供性能指标收集和监控功能
  */
 
-import { ref, onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 export interface PerformanceMetrics {
   fps: number // 帧率
@@ -33,7 +33,7 @@ export function usePerformanceMonitor(options: {
 } = {}) {
   const enabled = options.enabled !== false
   const thresholds = options.thresholds || {}
-  
+
   const metrics = ref<PerformanceMetrics>({
     fps: 60,
     memory: null,
@@ -53,20 +53,20 @@ export function usePerformanceMonitor(options: {
   const measureFPS = () => {
     frameCount++
     const currentTime = performance.now()
-    
+
     if (currentTime >= lastTime + 1000) {
       const fps = Math.round((frameCount * 1000) / (currentTime - lastTime))
       metrics.value.fps = fps
-      
+
       // 检查阈值
       if (thresholds.minFPS && fps < thresholds.minFPS) {
         addWarning('fps', fps, thresholds.minFPS)
       }
-      
+
       frameCount = 0
       lastTime = currentTime
     }
-    
+
     if (enabled) {
       animationId = requestAnimationFrame(measureFPS)
     }
@@ -76,14 +76,17 @@ export function usePerformanceMonitor(options: {
    * 测量内存使用
    */
   const measureMemory = () => {
-    if (performance.memory) {
-      const memory = performance.memory
+    const pm = (performance as unknown as { memory?: { usedJSHeapSize?: number; totalJSHeapSize?: number; jsHeapSizeLimit?: number } }).memory
+    if (pm) {
+      const used = pm.usedJSHeapSize || 0
+      const total = pm.totalJSHeapSize || 0
+      const limit = pm.jsHeapSizeLimit || 0
       metrics.value.memory = {
-        used: Math.round(memory.usedJSHeapSize / 1048576), // MB
-        total: Math.round(memory.totalJSHeapSize / 1048576), // MB
-        limit: Math.round(memory.jsHeapSizeLimit / 1048576) // MB
+        used: Math.round(used / 1048576), // MB
+        total: Math.round(total / 1048576), // MB
+        limit: Math.round(limit / 1048576) // MB
       }
-      
+
       // 检查阈值
       if (thresholds.maxMemoryUsage && metrics.value.memory.used > thresholds.maxMemoryUsage) {
         addWarning('memory', metrics.value.memory.used, thresholds.maxMemoryUsage)
@@ -96,19 +99,19 @@ export function usePerformanceMonitor(options: {
    */
   const measureRenderTime = (callback: () => void) => {
     const startTime = performance.now()
-    
+
     callback()
-    
+
     const endTime = performance.now()
     const renderTime = endTime - startTime
-    
+
     metrics.value.renderTime = renderTime
-    
+
     // 检查阈值
     if (thresholds.maxRenderTime && renderTime > thresholds.maxRenderTime) {
       addWarning('renderTime', renderTime, thresholds.maxRenderTime)
     }
-    
+
     return renderTime
   }
 
@@ -119,25 +122,25 @@ export function usePerformanceMonitor(options: {
     apiCall: () => Promise<T>
   ): Promise<{ data: T; latency: number }> => {
     const startTime = performance.now()
-    
+
     const data = await apiCall()
-    
+
     const endTime = performance.now()
     const latency = endTime - startTime
-    
+
     // 记录延迟
     metrics.value.apiLatency.push(latency)
-    
+
     // 只保留最近100个记录
     if (metrics.value.apiLatency.length > 100) {
       metrics.value.apiLatency.shift()
     }
-    
+
     // 检查阈值
     if (thresholds.maxAPILatency && latency > thresholds.maxAPILatency) {
       addWarning('apiLatency', latency, thresholds.maxAPILatency)
     }
-    
+
     return { data, latency }
   }
 
@@ -151,14 +154,14 @@ export function usePerformanceMonitor(options: {
       threshold,
       timestamp: Date.now()
     }
-    
+
     warnings.value.push(warning)
-    
+
     // 只保留最近50个警告
     if (warnings.value.length > 50) {
       warnings.value.shift()
     }
-    
+
     // 触发回调
     if (options.onWarning) {
       options.onWarning(metric, value, threshold)
@@ -209,10 +212,10 @@ export function usePerformanceMonitor(options: {
   onMounted(() => {
     if (enabled) {
       measureFPS()
-      
+
       // 定期测量内存
       const memoryInterval = setInterval(measureMemory, 5000)
-      
+
       onUnmounted(() => {
         if (animationId !== null) {
           cancelAnimationFrame(animationId)

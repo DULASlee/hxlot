@@ -12,6 +12,7 @@
  */
 
 import { getGlobalLogger } from '@smartabp/lowcode-shared'
+/// <reference types="vite/client" />
 
 const logger = getGlobalLogger()
 
@@ -137,7 +138,7 @@ export class LocalStorageBaselineStorage implements BaselineStorage {
     try {
       const baselines = await this.loadAll()
       const index = baselines.findIndex(b => b.id === baseline.id)
-      
+
       if (index >= 0) {
         baselines[index] = baseline
       } else {
@@ -155,19 +156,19 @@ export class LocalStorageBaselineStorage implements BaselineStorage {
   async load(id: string): Promise<PerformanceBaseline | null> {
     const baselines = await this.loadAll()
     const baseline = baselines.find(b => b.id === id)
-    
+
     if (baseline) {
       // 转换日期字符串为Date对象
       baseline.createdAt = new Date(baseline.createdAt)
       baseline.updatedAt = new Date(baseline.updatedAt)
     }
-    
+
     return baseline || null
   }
 
   async list(): Promise<PerformanceBaseline[]> {
     const baselines = await this.loadAll()
-    
+
     // 转换日期字符串为Date对象
     return baselines.map(baseline => ({
       ...baseline,
@@ -179,7 +180,7 @@ export class LocalStorageBaselineStorage implements BaselineStorage {
   async delete(id: string): Promise<void> {
     const baselines = await this.loadAll()
     const filtered = baselines.filter(b => b.id !== id)
-    
+
     localStorage.setItem(this.storageKey, JSON.stringify(filtered))
     logger.info('✅ 基线已从LocalStorage删除', { id })
   }
@@ -227,7 +228,7 @@ export class PerformanceBaselineManager {
     }
 
     await this.storage.save(baseline)
-    
+
     logger.info('✅ 性能基线已创建', {
       id: baseline.id,
       version: baseline.version,
@@ -247,7 +248,7 @@ export class PerformanceBaselineManager {
     metadata?: Record<string, any>
   }): Promise<PerformanceBaseline | null> {
     const baseline = await this.storage.load(id)
-    
+
     if (!baseline) {
       logger.warn('⚠️ 基线不存在', { id })
       return null
@@ -263,7 +264,7 @@ export class PerformanceBaselineManager {
     }
 
     await this.storage.save(updated)
-    
+
     logger.info('✅ 性能基线已更新', { id, version: updated.version })
 
     return updated
@@ -296,14 +297,14 @@ export class PerformanceBaselineManager {
   async findLatestBaseline(name: string): Promise<PerformanceBaseline | null> {
     const baselines = await this.storage.list()
     const filtered = baselines.filter(b => b.name === name)
-    
+
     if (filtered.length === 0) {
       return null
     }
 
     // 按更新时间排序，返回最新的
     filtered.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
-    
+
     return filtered[0] || null // 转换undefined为null
   }
 
@@ -319,15 +320,15 @@ export class PerformanceBaselineManager {
    */
   async importBaseline(json: string): Promise<PerformanceBaseline> {
     const baseline: PerformanceBaseline = JSON.parse(json)
-    
+
     // 转换日期字符串
     baseline.createdAt = new Date(baseline.createdAt)
     baseline.updatedAt = new Date(baseline.updatedAt)
-    
+
     await this.storage.save(baseline)
-    
+
     logger.info('✅ 基线已导入', { id: baseline.id, version: baseline.version })
-    
+
     return baseline
   }
 
@@ -335,13 +336,13 @@ export class PerformanceBaselineManager {
    * 获取环境信息
    */
   private getEnvironmentInfo(): PerformanceBaseline['environment'] {
+    const nav = (typeof navigator !== 'undefined') ? navigator : ({} as any)
+    const perfMem = (performance as unknown as { memory?: { jsHeapSizeLimit?: number } }).memory
     return {
-      os: typeof navigator !== 'undefined' ? navigator.platform : 'Unknown',
+      os: nav.platform || 'Unknown',
       nodeVersion: typeof process !== 'undefined' ? process.version : 'Unknown',
-      cpuModel: typeof navigator !== 'undefined' ? navigator.hardwareConcurrency?.toString() : undefined,
-      memory: typeof performance !== 'undefined' && performance.memory 
-        ? `${Math.round(performance.memory.jsHeapSizeLimit / 1048576)}MB`
-        : undefined
+      cpuModel: nav.hardwareConcurrency ? String(nav.hardwareConcurrency) : undefined,
+      memory: perfMem && perfMem.jsHeapSizeLimit ? `${Math.round(perfMem.jsHeapSizeLimit / 1048576)}MB` : undefined
     }
   }
 }
