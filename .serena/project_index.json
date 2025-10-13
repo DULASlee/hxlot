@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-13T15:07:40.605Z",
+  "timestamp": "2025-10-13T16:18:48.014Z",
   "project": "Baobab.SmartAbp",
   "language": "typescript",
   "files": [
@@ -2772,8 +2772,8 @@
       "name": "GenerationView.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/GenerationView.vue",
       "type": "file",
-      "size": 24121,
-      "modified": "2025-10-12T17:17:08.264Z"
+      "size": 25113,
+      "modified": "2025-10-13T15:54:16.834Z"
     },
     {
       "name": "IndustryTemplateConfig.vue",
@@ -4977,8 +4977,8 @@
       "name": "UltraSimpleStudio.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/UltraSimpleStudio.vue",
       "type": "file",
-      "size": 41122,
-      "modified": "2025-10-13T02:54:40.210Z"
+      "size": 40956,
+      "modified": "2025-10-13T15:13:03.347Z"
     },
     {
       "name": "VisualDesignerView.vue",
@@ -5215,8 +5215,8 @@
       "name": "tsconfig.json",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/tsconfig.json",
       "type": "file",
-      "size": 283,
-      "modified": "2025-10-12T17:17:08.195Z"
+      "size": 1272,
+      "modified": "2025-10-13T15:18:47.300Z"
     },
     {
       "name": "tsup.config.js",
@@ -5852,8 +5852,8 @@
       "name": "DevToolsPanel.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/devtools/DevToolsPanel.vue",
       "type": "file",
-      "size": 15245,
-      "modified": "2025-10-13T14:16:15.988Z"
+      "size": 14994,
+      "modified": "2025-10-13T15:22:38.449Z"
     },
     {
       "name": "index.ts",
@@ -6729,6 +6729,13 @@
       "type": "file",
       "size": 2344156,
       "modified": "2025-10-12T17:17:08.220Z"
+    },
+    {
+      "name": "vitest.config.ts",
+      "path": "src/SmartAbp.Vue/packages/vitest.config.ts",
+      "type": "file",
+      "size": 1388,
+      "modified": "2025-10-13T15:33:22.723Z"
     }
   ],
   "symbols": [

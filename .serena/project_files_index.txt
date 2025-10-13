@@ -959,3 +959,4 @@ src/SmartAbp.Vue/packages/quality-guardian/tsconfig.json
 src/SmartAbp.Vue/packages/reports/quality/quality-report-2025-10-09.json
 src/SmartAbp.Vue/packages/reports/quality/quality-report-2025-10-09.md
 src/SmartAbp.Vue/packages/reports/quality/quality-report-latest.json
+src/SmartAbp.Vue/packages/vitest.config.ts
