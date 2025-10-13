@@ -16,7 +16,7 @@
           Day 9: 企业级云原生架构
         </el-tag>
       </div>
-      
+
       <div class="toolbar-right">
         <el-button-group>
           <el-button
@@ -34,7 +34,7 @@
             预览模式
           </el-button>
         </el-button-group>
-        
+
         <el-button
           type="success"
           :icon="Check"
@@ -43,7 +43,7 @@
         >
           生成Aspire解决方案
         </el-button>
-        
+
         <el-button
           :icon="Setting"
           circle
@@ -72,7 +72,7 @@
               </el-button>
             </div>
           </template>
-          
+
           <el-form
             :model="solutionConfig"
             label-width="120px"
@@ -87,7 +87,7 @@
                 placeholder="例如: SmartAbp.Microservices"
               />
             </el-form-item>
-            
+
             <el-form-item
               label="根命名空间"
               required
@@ -97,7 +97,7 @@
                 placeholder="例如: SmartAbp"
               />
             </el-form-item>
-            
+
             <el-form-item label="描述">
               <el-input
                 v-model="solutionConfig.description"
@@ -106,42 +106,42 @@
                 placeholder="解决方案描述..."
               />
             </el-form-item>
-            
+
             <el-form-item label="数据库名称">
               <el-input
                 v-model="solutionConfig.databaseName"
                 placeholder="AppDatabase"
               />
             </el-form-item>
-            
+
             <el-divider>基础设施服务</el-divider>
-            
+
             <el-form-item label="PostgreSQL">
               <el-switch v-model="solutionConfig.usePostgreSQL" />
             </el-form-item>
-            
+
             <el-form-item label="Redis缓存">
               <el-switch v-model="solutionConfig.useRedis" />
             </el-form-item>
-            
+
             <el-form-item label="RabbitMQ">
               <el-switch v-model="solutionConfig.useRabbitMQ" />
             </el-form-item>
-            
+
             <el-form-item label="Elasticsearch">
               <el-switch v-model="solutionConfig.useElasticsearch" />
             </el-form-item>
-            
+
             <el-form-item label="Seq日志">
               <el-switch v-model="solutionConfig.useSeq" />
             </el-form-item>
-            
+
             <el-form-item label="API网关">
               <el-switch v-model="solutionConfig.includeApiGateway" />
             </el-form-item>
           </el-form>
         </el-card>
-        
+
         <!-- 微服务列表 -->
         <el-card
           class="panel-card mt-4"
@@ -160,7 +160,7 @@
               </el-button>
             </div>
           </template>
-          
+
           <el-empty
             v-if="microservices.length === 0"
             description="暂无微服务，点击上方按钮添加"
@@ -173,7 +173,7 @@
               添加第一个微服务
             </el-button>
           </el-empty>
-          
+
           <div
             v-else
             class="microservice-list"
@@ -198,7 +198,7 @@
                   </div>
                 </div>
               </div>
-              
+
               <div class="service-actions">
                 <el-button
                   text
@@ -242,7 +242,7 @@
           @close="selectedService = null"
         />
       </div>
-      
+
       <div
         v-else
         class="right-panel-empty"
@@ -263,7 +263,7 @@
         :existing-services="microservices"
         @update:model-value="currentServiceForm = $event"
       />
-      
+
       <template #footer>
         <el-button @click="showServiceDialog = false">
           取消
@@ -292,16 +292,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { 
-  Connection, Edit, View, Check, Setting, Plus, Box, Delete 
+import {
+    Box,
+    Check,
+    Connection,
+    Delete,
+    Edit,
+    Plus,
+    Setting,
+    View
 } from '@element-plus/icons-vue'
-import ServiceTopologyCanvas from './../components/aspire/ServiceTopologyCanvas.vue'
-import ServiceConfigPanel from './../components/aspire/ServiceConfigPanel.vue'
-import MicroserviceForm from './../components/aspire/MicroserviceForm.vue'
-import AdvancedSettingsPanel from './../components/aspire/AdvancedSettingsPanel.vue'
 import { useAspireCodeGen } from '@smartabp/lowcode-api'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { reactive, ref } from 'vue'
+import AdvancedSettingsPanel from '../../components/aspire/AdvancedSettingsPanel.vue'
+import MicroserviceForm from '../../components/aspire/MicroserviceForm.vue'
+import ServiceConfigPanel from '../../components/aspire/ServiceConfigPanel.vue'
+import ServiceTopologyCanvas from '../../components/aspire/ServiceTopologyCanvas.vue'
 
 // 类型定义
 interface MicroserviceConfig {
@@ -400,7 +407,7 @@ const handleSaveService = () => {
     ElMessage.warning('请填写必填字段')
     return
   }
-  
+
   if (editingService.value) {
     // 更新现有服务
     const index = microservices.value.findIndex(s => s.name === editingService.value!.name)
@@ -411,7 +418,7 @@ const handleSaveService = () => {
     // 添加新服务
     microservices.value.push(currentServiceForm.value as MicroserviceConfig)
   }
-  
+
   showServiceDialog.value = false
   ElMessage.success(editingService.value ? '微服务已更新' : '微服务已添加')
 }
@@ -422,7 +429,7 @@ const handleDeleteService = async (service: MicroserviceConfig) => {
     await ElMessageBox.confirm(`确定要删除微服务 "${service.displayName}" 吗？`, '删除确认', {
       type: 'warning'
     })
-    
+
     const index = microservices.value.findIndex(s => s.name === service.name)
     if (index !== -1) {
       microservices.value.splice(index, 1)
@@ -462,14 +469,14 @@ const handleGenerate = async () => {
     ElMessage.warning('请填写解决方案名称和根命名空间')
     return
   }
-  
+
   if (microservices.value.length === 0) {
     ElMessage.warning('请至少添加一个微服务')
     return
   }
-  
+
   generating.value = true
-  
+
   try {
     const result = await generateAspireSolution({
       solutionName: solutionConfig.solutionName,
@@ -494,9 +501,9 @@ const handleGenerate = async () => {
       useElasticsearch: solutionConfig.useElasticsearch,
       useSeq: solutionConfig.useSeq
     })
-    
+
     ElMessage.success(`生成成功！共生成 ${Object.keys(result.files).length} 个文件`)
-    
+
     // 显示生成结果
     await ElMessageBox.alert(
       `解决方案名称: ${result.solutionName}\n` +
@@ -521,7 +528,7 @@ const handleGenerate = async () => {
   flex-direction: column;
   height: 100%;
   background: #f5f7fa;
-  
+
   .designer-toolbar {
     display: flex;
     justify-content: space-between;
@@ -530,17 +537,17 @@ const handleGenerate = async () => {
     background: white;
     border-bottom: 1px solid #e4e7ed;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    
+
     .toolbar-left {
       display: flex;
       align-items: center;
       gap: 12px;
-      
+
       .title-icon {
         font-size: 24px;
         color: #409eff;
       }
-      
+
       .view-title {
         margin: 0;
         font-size: 18px;
@@ -548,30 +555,30 @@ const handleGenerate = async () => {
         color: #303133;
       }
     }
-    
+
     .toolbar-right {
       display: flex;
       gap: 12px;
     }
   }
-  
+
   .designer-content {
     display: flex;
     flex: 1;
     gap: 16px;
     padding: 16px;
     overflow: hidden;
-    
+
     .left-panel {
       width: 320px;
       display: flex;
       flex-direction: column;
       gap: 16px;
       overflow-y: auto;
-      
+
       .panel-card {
         border: none;
-        
+
         .card-header {
           display: flex;
           justify-content: space-between;
@@ -579,12 +586,12 @@ const handleGenerate = async () => {
           font-weight: 600;
         }
       }
-      
+
       .microservice-list {
         display: flex;
         flex-direction: column;
         gap: 8px;
-        
+
         .microservice-item {
           display: flex;
           justify-content: space-between;
@@ -595,42 +602,42 @@ const handleGenerate = async () => {
           border-radius: 4px;
           cursor: pointer;
           transition: all 0.2s;
-          
+
           &:hover {
             background: #ecf5ff;
             border-color: #409eff;
           }
-          
+
           &.active {
             background: #ecf5ff;
             border-color: #409eff;
           }
-          
+
           .service-info {
             display: flex;
             align-items: center;
             gap: 12px;
             flex: 1;
-            
+
             .service-icon {
               font-size: 20px;
               color: #409eff;
             }
-            
+
             .service-details {
               .service-name {
                 font-weight: 600;
                 color: #303133;
                 margin-bottom: 4px;
               }
-              
+
               .service-meta {
                 font-size: 12px;
                 color: #909399;
               }
             }
           }
-          
+
           .service-actions {
             display: flex;
             gap: 4px;
@@ -638,7 +645,7 @@ const handleGenerate = async () => {
         }
       }
     }
-    
+
     .center-panel {
       flex: 1;
       background: white;
@@ -646,7 +653,7 @@ const handleGenerate = async () => {
       border: 1px solid #e4e7ed;
       overflow: hidden;
     }
-    
+
     .right-panel {
       width: 360px;
       background: white;
@@ -654,7 +661,7 @@ const handleGenerate = async () => {
       border: 1px solid #e4e7ed;
       overflow-y: auto;
     }
-    
+
     .right-panel-empty {
       width: 360px;
       background: white;

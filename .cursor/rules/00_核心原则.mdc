@@ -55,6 +55,7 @@ Git提交必须由用户主动触发或明确授权
 必须使用 @smartabp/* 别名（别名已包含src/，不再写/src/）
   ✅ 正确：@smartabp/lowcode-core/types/...
   ❌ 错误：@smartabp/lowcode-core/src/types/...
+补充（已实施）：核心业务规则类型（RuleNodeData 等）统一由 `@smartabp/lowcode-core` 根导出，设计器节点等禁止跨包使用 `/src` 路径。
 ```
 
 ### 第六条 组件注册系统
@@ -74,6 +75,7 @@ Git提交必须由用户主动触发或明确授权
   ✅ 正确：import { xxx } from '@smartabp/lowcode-core/components/...'
   ❌ 错误：import { xxx } from '@smartabp/lowcode-core/src/components/...'
   ❌ 错误：import { xxx } from '../../packages/lowcode-core/src/...'
+补充（已实施）：`@smartabp/lowcode-designer`、`@smartabp/lowcode-core` 在 tsconfig 与 Vite 中统一指向包根与 src 目录的顶层别名；禁止任何 `packages/**` 相对路径跨包导入。
 ```
 
 ---

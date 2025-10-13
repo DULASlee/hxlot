@@ -3,8 +3,8 @@
     <div class="panel-header">
       <h2>🛠️ 微AI 2.0 开发者工具</h2>
       <div class="header-tabs">
-        <button 
-          v-for="tab in tabs" 
+        <button
+          v-for="tab in tabs"
           :key="tab.id"
           :class="['tab-button', { active: activeTab === tab.id }]"
           @click="activeTab = tab.id"
@@ -83,28 +83,28 @@
         <h3>插件管理</h3>
         <div class="plugin-list">
           <div
-            v-for="plugin in pluginList"
-            :key="plugin.name"
+            v-for="p in pluginList"
+            :key="p.plugin.metadata.id"
             class="plugin-card"
           >
             <div class="plugin-header">
               <div class="plugin-info">
-                <h4>{{ plugin.name }}</h4>
-                <span class="plugin-id">{{ plugin.name }}</span>
+                <h4>{{ p.plugin.metadata.name }}</h4>
+                <span class="plugin-id">{{ p.plugin.metadata.id }}</span>
               </div>
               <div class="plugin-controls">
-                <span :class="['status-badge', getStatus(plugin.name)]">{{ getStatus(plugin.name) }}</span>
-                <button 
-                  v-if="getStatus(plugin.name) === 'enabled'"
+                <span :class="['status-badge', getStatus(p.plugin.metadata.id)]">{{ getStatus(p.plugin.metadata.id) }}</span>
+                <button
+                  v-if="getStatus(p.plugin.metadata.id) === PluginStatus.ENABLED"
                   class="control-btn"
-                  @click="disablePlugin(plugin.name)"
+                  @click="disablePlugin(p.plugin.metadata.id)"
                 >
                   禁用
                 </button>
-                <button 
+                <button
                   v-else
                   class="control-btn primary"
-                  @click="enablePlugin(plugin.name)"
+                  @click="enablePlugin(p.plugin.metadata.id)"
                 >
                   启用
                 </button>
@@ -188,7 +188,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { globalComponentRegistry } from '../components/ComponentRegistry'
 import { globalPerformanceMonitor } from '../performance/PerformanceMonitor'
-import { globalPluginManager, type LowCodePlugin } from '../plugins/PluginManager'
+import { globalPluginManager, PluginStatus } from '../plugins/PluginManager'
 
 // Tabs
 const tabs = [
@@ -213,10 +213,10 @@ const toggleNode = (name: string) => {
 }
 
 // 插件管理
-const pluginList = ref<ReadonlyArray<LowCodePlugin>>(globalPluginManager.getAllPlugins())
-const getStatus = (name: string) => globalPluginManager.getStatus(name)
-const enablePlugin = async (id: string) => { globalPluginManager.enable(id); pluginList.value = globalPluginManager.getAllPlugins() }
-const disablePlugin = async (id: string) => { globalPluginManager.disable(id); pluginList.value = globalPluginManager.getAllPlugins() }
+const pluginList = ref(globalPluginManager.getAllPlugins())
+const getStatus = (id: string) => globalPluginManager.getStatus(id)
+const enablePlugin = async (id: string) => { await globalPluginManager.enable(id); pluginList.value = globalPluginManager.getAllPlugins() }
+const disablePlugin = async (id: string) => { await globalPluginManager.disable(id); pluginList.value = globalPluginManager.getAllPlugins() }
 
 // 性能监控
 const performanceReport = ref(globalPerformanceMonitor.generateReport(60))

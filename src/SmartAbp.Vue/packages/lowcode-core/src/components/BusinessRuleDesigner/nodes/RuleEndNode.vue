@@ -35,11 +35,11 @@
 
 <script setup lang="ts">
 import { VideoPause } from '@element-plus/icons-vue'
+import type { RuleNodeData } from '@smartabp/lowcode-core'
+import { isRuleEndNodeData as isEndNodeData } from '@smartabp/lowcode-core'
 import { Handle, Position } from '@vue-flow/core'
 import { ElIcon, ElTag } from 'element-plus'
 import { computed } from 'vue'
-import type { RuleNodeData } from './types'
-import { isRuleEndNodeData as isEndNodeData } from '@smartabp/lowcode-core/src/types/business-rule'
 
 interface Props {
   data: RuleNodeData

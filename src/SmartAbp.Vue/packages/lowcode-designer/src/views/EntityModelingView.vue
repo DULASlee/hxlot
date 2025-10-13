@@ -16,24 +16,24 @@
           />
           <!-- 🔥 新增：自动保存状态提示 -->
           <div class="save-status">
-            <el-tag 
-              v-if="saveStatus === 'saved'" 
-              type="success" 
+            <el-tag
+              v-if="saveStatus === 'saved'"
+              type="success"
               size="small"
               effect="plain"
             >
               <i class="el-icon-check" /> 已保存
             </el-tag>
-            <el-tag 
-              v-else-if="saveStatus === 'saving'" 
-              type="info" 
+            <el-tag
+              v-else-if="saveStatus === 'saving'"
+              type="info"
               size="small"
             >
               <i class="el-icon-loading" /> 保存中...
             </el-tag>
-            <el-tag 
-              v-else 
-              type="warning" 
+            <el-tag
+              v-else
+              type="warning"
               size="small"
             >
               <i class="el-icon-warning" /> 未保存
@@ -319,8 +319,8 @@
               width="80"
             >
               <template #default="scope">
-                <el-checkbox 
-                  v-model="scope.row.isRequired" 
+                <el-checkbox
+                  v-model="scope.row.isRequired"
                   @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
                 />
               </template>
@@ -630,20 +630,20 @@
           label-width="80px"
         >
           <el-form-item label="实体名">
-            <el-input 
-              v-model="selectedEntity.name" 
+            <el-input
+              v-model="selectedEntity.name"
               @blur="() => selectedEntity && autoSaveEntity(selectedEntity)"
             />
           </el-form-item>
           <el-form-item label="表名">
-            <el-input 
-              v-model="selectedEntity.tableName" 
+            <el-input
+              v-model="selectedEntity.tableName"
               @blur="() => selectedEntity && autoSaveEntity(selectedEntity)"
             />
           </el-form-item>
           <el-form-item label="显示名">
-            <el-input 
-              v-model="selectedEntity.displayName" 
+            <el-input
+              v-model="selectedEntity.displayName"
               @blur="() => selectedEntity && autoSaveEntity(selectedEntity)"
             />
           </el-form-item>
@@ -656,7 +656,7 @@
             />
           </el-form-item>
           <el-form-item label="分类">
-            <el-select 
+            <el-select
               v-model="selectedEntity.category"
               @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
             >
@@ -679,20 +679,20 @@
             </el-select>
           </el-form-item>
           <el-form-item label="启用软删除">
-            <el-checkbox 
-              v-model="selectedEntity.enableSoftDelete" 
+            <el-checkbox
+              v-model="selectedEntity.enableSoftDelete"
               @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
             />
           </el-form-item>
           <el-form-item label="启用审计">
-            <el-checkbox 
-              v-model="selectedEntity.enableAudit" 
+            <el-checkbox
+              v-model="selectedEntity.enableAudit"
               @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
             />
           </el-form-item>
           <el-form-item label="启用多租户">
-            <el-checkbox 
-              v-model="selectedEntity.enableMultiTenant" 
+            <el-checkbox
+              v-model="selectedEntity.enableMultiTenant"
               @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
             />
           </el-form-item>
@@ -1203,11 +1203,11 @@ import { useEntityModelingStore, type EntityDefinition, type EntityField } from 
 import { getGlobalLogger } from "@smartabp/lowcode-shared"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { computed, onMounted, ref } from "vue"
-import AdvancedEntityRelationshipDesigner from './components/AdvancedEntityRelationshipDesigner.vue'
-import AdvancedFieldTypeDesigner from './components/AdvancedFieldTypeDesigner.vue'
-import BusinessRulesEngine from './components/BusinessRulesEngine.vue'
-import DataDictionaryManager from './components/DataDictionaryManager.vue'
-import EnterpriseModelingAssistant from './components/EnterpriseModelingAssistant.vue'
+import AdvancedEntityRelationshipDesigner from '../components/AdvancedEntityRelationshipDesigner.vue'
+import AdvancedFieldTypeDesigner from '../components/AdvancedFieldTypeDesigner.vue'
+import BusinessRulesEngine from '../components/BusinessRulesEngine.vue'
+import DataDictionaryManager from '../components/DataDictionaryManager.vue'
+import EnterpriseModelingAssistant from '../components/EnterpriseModelingAssistant.vue'
 
 const logger = getGlobalLogger()
 
@@ -1437,15 +1437,15 @@ const handleEntityEditCancel = () => {
 const autoSaveEntity = (entity: EntityDefinition) => {
   try {
     saveStatus.value = 'saving'
-    
+
     // 静默保存到store和localStorage
     store.updateEntity(entity.id, entity)
     store.saveToLocalStorage()
-    
+
     // 更新保存时间和状态
     lastSaveTime.value = new Date()
     saveStatus.value = 'saved'
-    
+
     logger?.info('自动保存成功', { entityId: entity.id, entityName: entity.name })
     return true
   } catch (error: any) {

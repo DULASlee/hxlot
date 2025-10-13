@@ -27,10 +27,10 @@
 
 <script setup lang="ts">
 import { VideoPlay } from '@element-plus/icons-vue'
+import type { RuleNodeData } from '@smartabp/lowcode-core'
 import { Handle, Position } from '@vue-flow/core'
 import { ElIcon } from 'element-plus'
 import { computed } from 'vue'
-import type { RuleNodeData } from './types'
 
 interface Props {
   data: RuleNodeData

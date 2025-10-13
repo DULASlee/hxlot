@@ -16,7 +16,7 @@
           Day 11: 生产就绪配置
         </el-tag>
       </div>
-      
+
       <div class="header-right">
         <el-button-group>
           <el-button
@@ -67,14 +67,14 @@
               <el-icon><InfoFilled /></el-icon>
               基本配置
             </el-divider>
-            
+
             <el-form-item label="环境名称">
               <el-input
                 :value="env"
                 disabled
               />
             </el-form-item>
-            
+
             <el-form-item label="默认副本数">
               <el-input-number
                 v-model="configs[env].defaultReplicas"
@@ -86,10 +86,10 @@
 
             <!-- 资源配置 -->
             <el-divider content-position="left">
-              <el-icon><CpuFilled /></el-icon>
+              <el-icon><Cpu /></el-icon>
               资源限制
             </el-divider>
-            
+
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="CPU请求">
@@ -133,23 +133,23 @@
               <el-icon><Switch /></el-icon>
               特性开关
             </el-divider>
-            
+
             <el-form-item label="遥测追踪">
               <el-switch v-model="configs[env].features.enableTelemetry" />
             </el-form-item>
-            
+
             <el-form-item label="指标采集">
               <el-switch v-model="configs[env].features.enableMetrics" />
             </el-form-item>
-            
+
             <el-form-item label="链路追踪">
               <el-switch v-model="configs[env].features.enableTracing" />
             </el-form-item>
-            
+
             <el-form-item label="健康检查">
               <el-switch v-model="configs[env].features.enableHealthChecks" />
             </el-form-item>
-            
+
             <el-form-item label="Swagger文档">
               <el-switch v-model="configs[env].features.enableSwagger" />
               <span class="form-tip">生产环境建议关闭</span>
@@ -160,7 +160,7 @@
               <el-icon><TrendCharts /></el-icon>
               部署策略
             </el-divider>
-            
+
             <el-form-item label="策略类型">
               <el-select v-model="configs[env].deploymentStrategy.type">
                 <el-option
@@ -177,7 +177,7 @@
                 />
               </el-select>
             </el-form-item>
-            
+
             <el-form-item label="最大增量">
               <el-input
                 v-model="configs[env].deploymentStrategy.maxSurge"
@@ -185,7 +185,7 @@
               />
               <span class="form-tip">可以是数字或百分比</span>
             </el-form-item>
-            
+
             <el-form-item label="最大不可用">
               <el-input
                 v-model="configs[env].deploymentStrategy.maxUnavailable"
@@ -198,11 +198,11 @@
               <el-icon><Expand /></el-icon>
               自动扩缩容
             </el-divider>
-            
+
             <el-form-item label="启用自动扩缩容">
               <el-switch v-model="configs[env].enableAutoScaling" />
             </el-form-item>
-            
+
             <template v-if="configs[env].enableAutoScaling">
               <el-form-item label="最小副本数">
                 <el-input-number
@@ -211,7 +211,7 @@
                   :max="configs[env].autoScaling.maxReplicas"
                 />
               </el-form-item>
-              
+
               <el-form-item label="最大副本数">
                 <el-input-number
                   v-model="configs[env].autoScaling.maxReplicas"
@@ -219,7 +219,7 @@
                   :max="100"
                 />
               </el-form-item>
-              
+
               <el-form-item label="CPU目标利用率">
                 <el-slider
                   v-model="configs[env].autoScaling.targetCPUUtilization"
@@ -228,7 +228,7 @@
                   show-input
                 />
               </el-form-item>
-              
+
               <el-form-item label="内存目标利用率">
                 <el-slider
                   v-model="configs[env].autoScaling.targetMemoryUtilization"
@@ -244,7 +244,7 @@
               <el-icon><Key /></el-icon>
               环境变量
             </el-divider>
-            
+
             <el-form-item>
               <el-button
                 :icon="Plus"
@@ -253,7 +253,7 @@
                 添加环境变量
               </el-button>
             </el-form-item>
-            
+
             <el-form-item
               v-for="(value, key) in configs[env].environmentVariables"
               :key="key"
@@ -291,23 +291,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-  Setting,
-  Refresh,
-  Connection,
-  Check,
-  InfoFilled,
-  CpuFilled,
-  Switch,
-  TrendCharts,
-  Expand,
-  Key,
-  Plus,
-  Delete
+    Check,
+    Connection,
+    Cpu,
+    Delete,
+    Expand,
+    InfoFilled,
+    Key,
+    Plus,
+    Refresh,
+    Setting,
+    Switch,
+    TrendCharts
 } from '@element-plus/icons-vue'
 import { useEnvironmentConfig, type EnvironmentConfig } from '@smartabp/lowcode-api'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { onMounted, reactive, ref } from 'vue'
 import EnvironmentComparisonView from './EnvironmentComparisonView.vue'
 
 // Composables
@@ -377,13 +377,13 @@ const loadEnvironments = async () => {
   try {
     environments.value = await getEnvironments()
     initializeConfigs()
-    
+
     // 加载每个环境的配置
     for (const env of environments.value) {
       const config = await getEnvironmentConfig(env)
       configs[env] = config
     }
-    
+
     ElMessage.success('环境配置加载成功')
   } catch (err) {
     ElMessage.error('加载环境配置失败')
@@ -398,9 +398,9 @@ const handleRefresh = () => {
 const handleSave = async () => {
   try {
     saving.value = true
-    
+
     await saveEnvironmentConfig(activeEnv.value, configs[activeEnv.value])
-    
+
     ElMessage.success(`${activeEnv.value} 环境配置保存成功`)
   } catch (err) {
     ElMessage.error('保存配置失败')
@@ -428,7 +428,7 @@ const addEnvVar = async (env: string) => {
     confirmButtonText: '确定',
     cancelButtonText: '取消'
   })
-  
+
   if (value) {
     configs[env].environmentVariables[value] = ''
   }

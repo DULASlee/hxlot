@@ -162,7 +162,7 @@ export default defineConfig(async ({ mode }) => {
           new URL("./packages/lowcode-core/src", import.meta.url),
         ),
         "@smartabp/lowcode-designer": fileURLToPath(
-          new URL("./packages/lowcode-designer", import.meta.url),
+          new URL("./packages/lowcode-designer/src", import.meta.url),
         ),
         "@smartabp/lowcode-codegen": fileURLToPath(
           new URL("./packages/lowcode-codegen", import.meta.url),

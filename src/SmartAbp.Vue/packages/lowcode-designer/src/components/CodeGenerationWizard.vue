@@ -866,41 +866,49 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import {
-  ElMessage,
-  ElCard,
-  ElIcon,
-  ElTag,
-  ElButton,
-  ElSteps,
-  ElStep,
-  ElForm,
-  ElFormItem,
-  ElRow,
-  ElCol,
-  ElInput,
-  ElSelect,
-  ElOption,
-  ElCheckboxGroup,
-  ElCheckbox,
-  ElAlert,
-  ElTable,
-  ElTableColumn,
-  ElDialog,
-  ElRadioGroup,
-  ElRadio,
-  ElColorPicker,
-  ElResult,
-  ElProgress,
-  ElTree,
-  ElTabs,
-  ElTabPane
-} from 'element-plus'
+    Brush,
+    Connection,
+    Document,
+    DocumentCopy, Download,
+    Folder,
+    MagicStick,
+    Plus,
+    Setting,
+    Upload,
+    View
+} from '@element-plus/icons-vue';
 import {
-  MagicStick, Setting, Document, Connection, Brush, Plus,
-  Upload, DocumentCopy, Download, View, Folder
-} from '@element-plus/icons-vue'
+    ElAlert,
+    ElButton,
+    ElCard,
+    ElCheckbox,
+    ElCheckboxGroup,
+    ElCol,
+    ElColorPicker,
+    ElDialog,
+    ElForm,
+    ElFormItem,
+    ElIcon,
+    ElInput,
+    ElMessage,
+    ElOption,
+    ElProgress,
+    ElRadio,
+    ElRadioGroup,
+    ElResult,
+    ElRow,
+    ElSelect,
+    ElStep,
+    ElSteps,
+    ElTable,
+    ElTableColumn,
+    ElTabPane,
+    ElTabs,
+    ElTag,
+    ElTree
+} from 'element-plus';
+import { computed, ref } from 'vue';
 
 // Props
 interface Props {
@@ -1256,47 +1264,9 @@ namespace ${projectConfig.value.namespace}.Controllers
 
 const vueTemplate = computed(() => {
   const entity = entities.value[0]
-  if (!entity) return '<!-- 请先添加实体 -->'
-
-  return `<!-- ${entity.name}List.vue -->
-<template>
-  <div class="${entity.name.toLowerCase()}-list">
-    <el-card>
-      <template #header>
-        <div class="card-header">
-          <span>${entity.description || entity.name}管理</span>
-          <el-button type="primary" @click="handleAdd">新增</el-button>
-        </div>
-      </template>
-
-      <el-table :data="list" border>
-${entity.properties?.slice(0, 3).map((p: any) => `        <el-table-column prop="${p.name}" label="${p.description || p.name}" />`).join('\n')}
-        <el-table-column label="操作" width="180">
-          <template #default="{ row }">
-            <el-button size="small" @click="handleEdit(row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="handleDelete(row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-card>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { ${entity.name}Api } from '@' + '/api/${entity.name.toLowerCase()}'
-
-const list = ref([])
-
-const fetchList = async () => {
-  const result = await ${entity.name}Api.getList({ skipCount: 0, maxResultCount: 10 })
-  list.value = result.items
-}
-
-onMounted(() => {
-  fetchList()
-})
-</script>`
+  if (!entity) return '// 请先添加实体，再生成模板'
+  // 为避免SFC解析冲突，这里仅返回占位符示例，实际模板在导出器中拼装
+  return `// ${entity.name}List.vue 模板占位符\n// 使用“复制模板”按钮获取完整SFC代码`
 })
 
 // 复制模板

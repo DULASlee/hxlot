@@ -1897,6 +1897,11 @@ cd src/SmartAbp.Vue && npm run lint -- "packages/*/src/**/*.{ts,vue}" --fix
 grep -r "@smartabp/lowcode-designer" src/SmartAbp.Vue/packages/lowcode-core/
 grep -r "@smartabp/lowcode-" src/SmartAbp.Vue/packages/lowcode-shared/
 
+# 别名与根导出一致性检查（新增，必须为0）
+grep -r "@smartabp/.\+/src/" src/SmartAbp.Vue/packages/ | wc -l
+grep -r "\./\./packages/" src/SmartAbp.Vue/ | wc -l
+grep -r "from '@smartabp/lowcode-core/src/" src/SmartAbp.Vue/ | wc -l
+
 # 第四关: packages构建产物检查（100%成功）
 cd src/SmartAbp.Vue && npm run build:packages
 ```

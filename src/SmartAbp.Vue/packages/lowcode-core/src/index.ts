@@ -32,6 +32,9 @@ export { useEnhancedThemeStore } from './stores/enhancedTheme.js'
 export { useEntityModelingStore } from './stores/entityModeling.js'
 export type { EntityDefinition, EntityField, EntityRelation } from './stores/entityModeling.js'
 export { usePageDesignStore } from './stores/pageDesign.js'
+// Types for business-rule (expose for designer nodes to avoid /src path)
+export { isRuleEndNodeData } from './types/business-rule.js'
+export type { ActionType, CallAPIParams, RuleActionParams, RuleEndNodeData, RuleNodeData, SetFieldValueParams, ShowMessageParams, ValidateFieldParams } from './types/business-rule.js'
 
 /**
  * 注册所有核心组件到 ComponentRegistry

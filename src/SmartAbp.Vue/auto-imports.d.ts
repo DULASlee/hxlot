@@ -6,25 +6,5 @@
 // biome-ignore lint: disable
 export {}
 declare global {
-  const ElButton: typeof import('element-plus/es')['ElButton']
-  const ElCard: typeof import('element-plus/es')['ElCard']
-  const ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
-  const ElCheckboxGroup: typeof import('element-plus/es')['ElCheckboxGroup']
-  const ElCollapseTransition: typeof import('element-plus/es')['ElCollapseTransition']
-  const ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
-  const ElDivider: typeof import('element-plus/es')['ElDivider']
-  const ElDrawer: typeof import('element-plus/es')['ElDrawer']
-  const ElDropdown: typeof import('element-plus/es')['ElDropdown']
-  const ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
-  const ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
-  const ElEmpty: typeof import('element-plus/es')['ElEmpty']
-  const ElIcon: typeof import('element-plus/es')['ElIcon']
-  const ElInput: typeof import('element-plus/es')['ElInput']
-  const ElOption: typeof import('element-plus/es')['ElOption']
-  const ElPopover: typeof import('element-plus/es')['ElPopover']
-  const ElResult: typeof import('element-plus/es')['ElResult']
-  const ElSelect: typeof import('element-plus/es')['ElSelect']
-  const ElSwitch: typeof import('element-plus/es')['ElSwitch']
-  const ElTag: typeof import('element-plus/es')['ElTag']
-  const ElText: typeof import('element-plus/es')['ElText']
+
 }
