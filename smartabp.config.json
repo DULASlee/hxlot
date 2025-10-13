@@ -1,0 +1,33 @@
+{
+    "version": "1.0.0",
+    "packages": {
+        "metadata-core": {
+            "hasSrcDir": true,
+            "entry": "src/index.ts"
+        },
+        "lowcode-shared": {
+            "hasSrcDir": true,
+            "entry": "src/index.ts"
+        },
+        "lowcode-core": {
+            "hasSrcDir": true,
+            "entry": "src/index.ts"
+        },
+        "lowcode-designer": {
+            "hasSrcDir": false,
+            "entry": "index.ts"
+        },
+        "lowcode-codegen": {
+            "hasSrcDir": false,
+            "entry": "index.ts"
+        },
+        "lowcode-api": {
+            "hasSrcDir": true,
+            "entry": "src/index.ts"
+        },
+        "lowcode-tools": {
+            "hasSrcDir": true,
+            "entry": "src/index.ts"
+        }
+    }
+}

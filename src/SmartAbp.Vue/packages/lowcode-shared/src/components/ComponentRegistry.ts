@@ -111,6 +111,8 @@ export interface ComponentMetadata {
   version: string;
   /** 组件标签 */
   tags: string[];
+  /** 动态加载器（可选）。若提供，将用于按需加载组件 */
+  loader?: () => Promise<any>;
   /** 组件图标 */
   icon?: string;
   /** 组件大小估算 (KB) */
@@ -819,21 +821,21 @@ export class ComponentRegistry {
   private async loadComponent(metadata: ComponentMetadata): Promise<any> {
     console.log(`⏳ 正在加载组件: ${metadata.name}`);
 
-    // 模拟动态导入组件
-    // 实际实现中，这里应该根据metadata.bundle进行动态导入
-    try {
-      // ✅ 简化实现：直接抛出错误，由上层处理
-      throw new Error(`Dynamic component loading not implemented for: ${metadata.name}`);
-    } catch (error) {
-      // 降级处理：尝试其他路径
-      console.warn(`⚠️ 主路径加载失败，尝试备用路径: ${metadata.name}`);
-
-      // 返回占位组件
-      return {
-        name: metadata.name,
-        render: () => `<div>组件加载中: ${metadata.displayName}</div>`
-      };
+    // 优先使用元数据提供的动态加载器
+    if (typeof metadata.loader === 'function') {
+      try {
+        const mod = await metadata.loader();
+        return (mod && (mod.default || mod)) as any;
+      } catch (error) {
+        console.warn(`⚠️ 组件加载器失败，将使用占位组件: ${metadata.name}`, error);
+      }
     }
+
+    // 降级：返回占位组件
+    return {
+      name: metadata.name,
+      render: () => `<div>组件加载中: ${metadata.displayName}</div>`
+    };
   }
 
   /**

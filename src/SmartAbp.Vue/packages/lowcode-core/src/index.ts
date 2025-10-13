@@ -1,8 +1,8 @@
 /**
  * SmartAbp Low-Code Core - Main Export
- * 
+ *
  * Centralized export for all core low-code functionality
- * 
+ *
  * @author SmartAbp Team
  * @version 1.0.0
  * @license MIT
@@ -37,7 +37,7 @@ export { usePageDesignStore } from './stores/pageDesign.js'
  * 注册所有核心组件到 ComponentRegistry
  * @遵循架构铁律二：强制使用组件注册系统
  */
-import { registerComponent } from '@smartabp/lowcode-shared'
+import { globalComponentRegistry, registerComponent } from '@smartabp/lowcode-shared'
 
 export function registerCoreComponents(): void {
   // 1. 智能表单构建器（高优先级）
@@ -211,6 +211,37 @@ export function registerCoreComponents(): void {
       preload: false,
       version: '1.0.0',
       tags: ['workflow', 'node']
+    })
+  })
+
+  // 20+. 自动补全注册：扫描 ./components 下所有 .vue 组件，未注册则集中注册
+  const modules = (import.meta as unknown as { glob: (p: string, o?: any) => Record<string, () => Promise<any>> }).glob('./components/**/*.vue')
+  const inferCategory = (p: string): 'form' | 'business' | 'workflow' | 'layout' | 'data' | 'utility' | 'basic' => {
+    if (p.includes('SmartFormBuilder')) return 'form'
+    if (p.includes('BusinessRuleDesigner')) return 'business'
+    if (p.includes('WorkflowDesigner')) return 'workflow'
+    if (p.includes('PageBuilder')) return 'layout'
+    if (p.includes('SmartDataTable')) return 'data'
+    return 'utility'
+  }
+  Object.entries(modules).forEach(([p, loader]) => {
+    const base = p.split('/').pop()!.replace('.vue', '')
+    const name = base
+      .replace(/[^A-Za-z0-9]/g, '')
+    if (globalComponentRegistry.has(name)) return
+    const category = inferCategory(p)
+    registerComponent({
+      name,
+      displayName: base,
+      category,
+      priority: 'medium',
+      dependencies: [],
+      bundle: '@smartabp/lowcode-core',
+      lazy: true,
+      preload: false,
+      version: '1.0.0',
+      tags: [category, 'auto'],
+      loader: loader as unknown as () => Promise<any>
     })
   })
 }

@@ -1,6 +1,6 @@
 <!--
   代码生成向导组件
-  
+
   功能特性：
   - 5步向导流程（项目配置 → 实体设计 → 关系配置 → UI定制 → 代码生成）
   - 实时进度反馈
@@ -27,9 +27,9 @@
             >
               企业级
             </el-tag>
-            <el-button 
-              v-if="currentStep > 0" 
-              size="small" 
+            <el-button
+              v-if="currentStep > 0"
+              size="small"
               @click="saveProgress"
             >
               保存进度
@@ -39,8 +39,8 @@
       </template>
 
       <!-- 进度步骤条 -->
-      <el-steps 
-        :active="currentStep" 
+      <el-steps
+        :active="currentStep"
         finish-status="success"
         process-status="process"
         class="wizard-steps"
@@ -78,10 +78,10 @@
             <el-icon><Setting /></el-icon>
             项目基础配置
           </h3>
-          
-          <el-form 
+
+          <el-form
             ref="projectFormRef"
-            :model="projectConfig" 
+            :model="projectConfig"
             :rules="projectRules"
             label-width="140px"
             class="wizard-form"
@@ -92,20 +92,20 @@
                   label="项目名称"
                   prop="projectName"
                 >
-                  <el-input 
+                  <el-input
                     v-model="projectConfig.projectName"
                     placeholder="例如：智慧工地管理系统"
                     clearable
                   />
                 </el-form-item>
               </el-col>
-              
+
               <el-col :span="12">
                 <el-form-item
                   label="项目代码"
                   prop="projectCode"
                 >
-                  <el-input 
+                  <el-input
                     v-model="projectConfig.projectCode"
                     placeholder="例如：SmartConstruction"
                     clearable
@@ -120,20 +120,20 @@
                   label="命名空间"
                   prop="namespace"
                 >
-                  <el-input 
+                  <el-input
                     v-model="projectConfig.namespace"
                     placeholder="例如：SmartConstruction"
                     clearable
                   />
                 </el-form-item>
               </el-col>
-              
+
               <el-col :span="12">
                 <el-form-item
                   label="数据库类型"
                   prop="databaseType"
                 >
-                  <el-select 
+                  <el-select
                     v-model="projectConfig.databaseType"
                     placeholder="选择数据库"
                     style="width: 100%"
@@ -163,7 +163,7 @@
               label="项目描述"
               prop="description"
             >
-              <el-input 
+              <el-input
                 v-model="projectConfig.description"
                 type="textarea"
                 :rows="3"
@@ -248,9 +248,9 @@
               </el-button>
             </div>
 
-            <el-table 
-              :data="entities" 
-              border 
+            <el-table
+              :data="entities"
+              border
               stripe
               max-height="400"
             >
@@ -265,8 +265,8 @@
                 min-width="150"
               >
                 <template #default="{ row }">
-                  <el-input 
-                    v-model="row.name" 
+                  <el-input
+                    v-model="row.name"
                     placeholder="例如：Project"
                     @blur="validateEntityName(row)"
                   />
@@ -278,8 +278,8 @@
                 min-width="150"
               >
                 <template #default="{ row }">
-                  <el-input 
-                    v-model="row.displayName" 
+                  <el-input
+                    v-model="row.displayName"
                     placeholder="例如：项目"
                   />
                 </template>
@@ -300,16 +300,16 @@
                 fixed="right"
               >
                 <template #default="{ row, $index }">
-                  <el-button 
-                    size="small" 
+                  <el-button
+                    size="small"
                     type="primary"
                     link
                     @click="editEntityProperties(row)"
                   >
                     编辑属性
                   </el-button>
-                  <el-button 
-                    size="small" 
+                  <el-button
+                    size="small"
                     type="danger"
                     link
                     @click="deleteEntity($index)"
@@ -363,9 +363,9 @@
               </el-button>
             </div>
 
-            <el-table 
-              :data="relationships" 
-              border 
+            <el-table
+              :data="relationships"
+              border
               stripe
               max-height="400"
             >
@@ -407,8 +407,8 @@
                     v-model="row.sourceEntity"
                     placeholder="选择"
                   >
-                    <el-option 
-                      v-for="entity in entities" 
+                    <el-option
+                      v-for="entity in entities"
                       :key="entity.name"
                       :label="entity.displayName"
                       :value="entity.name"
@@ -425,8 +425,8 @@
                     v-model="row.targetEntity"
                     placeholder="选择"
                   >
-                    <el-option 
-                      v-for="entity in entities" 
+                    <el-option
+                      v-for="entity in entities"
                       :key="entity.name"
                       :label="entity.displayName"
                       :value="entity.name"
@@ -452,8 +452,8 @@
                 fixed="right"
               >
                 <template #default="{ $index }">
-                  <el-button 
-                    size="small" 
+                  <el-button
+                    size="small"
                     type="danger"
                     link
                     @click="deleteRelationship($index)"
@@ -492,8 +492,8 @@
             UI界面定制
           </h3>
 
-          <el-form 
-            :model="uiConfig" 
+          <el-form
+            :model="uiConfig"
             label-width="140px"
             class="wizard-form"
           >
@@ -587,15 +587,15 @@
               sub-title="所有配置已完成，点击下方按钮开始生成代码"
             >
               <template #extra>
-                <el-button 
-                  type="primary" 
+                <el-button
+                  type="primary"
                   size="large"
                   @click="startGeneration"
                 >
                   <el-icon><MagicStick /></el-icon>
                   开始生成代码
                 </el-button>
-                <el-button 
+                <el-button
                   size="large"
                   @click="showTemplatePreview"
                 >
@@ -610,19 +610,19 @@
             v-if="isGenerating"
             class="generation-progress"
           >
-            <el-progress 
+            <el-progress
               :percentage="generationProgress"
               :status="generationProgress === 100 ? 'success' : undefined"
             />
             <p class="current-task">
               {{ currentTask }}
             </p>
-            
+
             <div class="generation-logs">
               <h4>生成日志</h4>
               <div class="log-list">
-                <div 
-                  v-for="(log, index) in generationLogs" 
+                <div
+                  v-for="(log, index) in generationLogs"
                   :key="index"
                   class="log-item"
                   :class="log.level"
@@ -644,8 +644,8 @@
               :sub-title="'已生成 ' + generatedFiles.length + ' 个文件'"
             >
               <template #extra>
-                <el-button 
-                  type="primary" 
+                <el-button
+                  type="primary"
                   @click="downloadCode"
                 >
                   <el-icon><Download /></el-icon>
@@ -664,7 +664,7 @@
 
             <div class="file-tree">
               <h4>生成的文件列表</h4>
-              <el-tree 
+              <el-tree
                 :data="fileTreeData"
                 :props="{ label: 'name', children: 'children' }"
                 default-expand-all
@@ -684,21 +684,21 @@
 
       <!-- 步骤导航按钮 -->
       <div class="step-actions">
-        <el-button 
-          v-if="currentStep > 0" 
+        <el-button
+          v-if="currentStep > 0"
           @click="prevStep"
         >
           上一步
         </el-button>
-        <el-button 
-          v-if="currentStep < 4" 
+        <el-button
+          v-if="currentStep < 4"
           type="primary"
           @click="nextStep"
         >
           下一步
         </el-button>
-        <el-button 
-          v-if="currentStep === 4 && generationComplete" 
+        <el-button
+          v-if="currentStep === 4 && generationComplete"
           type="success"
           @click="finish"
         >
@@ -718,17 +718,17 @@
         v-if="currentEditEntity"
         class="property-editor"
       >
-        <el-button 
-          type="primary" 
+        <el-button
+          type="primary"
           size="small"
           @click="addProperty"
         >
           添加属性
         </el-button>
 
-        <el-table 
-          :data="currentEditEntity.properties" 
-          border 
+        <el-table
+          :data="currentEditEntity.properties"
+          border
           style="margin-top: 12px"
         >
           <el-table-column
@@ -795,8 +795,8 @@
             width="100"
           >
             <template #default="{ $index }">
-              <el-button 
-                size="small" 
+              <el-button
+                size="small"
                 type="danger"
                 link
                 @click="deleteProperty($index)"
@@ -867,8 +867,37 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { ElMessage } from 'element-plus'
-import { 
+import {
+  ElMessage,
+  ElCard,
+  ElIcon,
+  ElTag,
+  ElButton,
+  ElSteps,
+  ElStep,
+  ElForm,
+  ElFormItem,
+  ElRow,
+  ElCol,
+  ElInput,
+  ElSelect,
+  ElOption,
+  ElCheckboxGroup,
+  ElCheckbox,
+  ElAlert,
+  ElTable,
+  ElTableColumn,
+  ElDialog,
+  ElRadioGroup,
+  ElRadio,
+  ElColorPicker,
+  ElResult,
+  ElProgress,
+  ElTree,
+  ElTabs,
+  ElTabPane
+} from 'element-plus'
+import {
   MagicStick, Setting, Document, Connection, Brush, Plus,
   Upload, DocumentCopy, Download, View, Folder
 } from '@element-plus/icons-vue'
@@ -959,7 +988,7 @@ const nextStep = async () => {
     ElMessage.warning('请至少添加一个实体')
     return
   }
-  
+
   currentStep.value++
 }
 
@@ -1046,7 +1075,7 @@ const startGeneration = async () => {
   isGenerating.value = true
   generationProgress.value = 0
   generationLogs.value = []
-  
+
   // 模拟生成过程
   const tasks = [
     { message: '正在生成后端实体...', progress: 20 },
@@ -1056,23 +1085,23 @@ const startGeneration = async () => {
     { message: '正在生成API接口...', progress: 90 },
     { message: '生成完成！', progress: 100 }
   ]
-  
+
   for (const task of tasks) {
     currentTask.value = task.message
     generationProgress.value = task.progress
-    
+
     generationLogs.value.push({
       time: new Date().toLocaleTimeString(),
       message: task.message,
       level: 'info'
     })
-    
+
     await new Promise(resolve => setTimeout(resolve, 1000))
   }
-  
+
   isGenerating.value = false
   generationComplete.value = true
-  
+
   // 模拟生成的文件
   generatedFiles.value = [
     'Backend/Entities/Project.cs',
@@ -1080,7 +1109,7 @@ const startGeneration = async () => {
     'Frontend/views/ProjectList.vue',
     'Frontend/views/ProjectDetail.vue'
   ]
-  
+
   fileTreeData.value = [
     {
       name: 'Backend',
@@ -1101,7 +1130,7 @@ const startGeneration = async () => {
       ]
     }
   ]
-  
+
   ElMessage.success('代码生成完成！')
 }
 
@@ -1126,7 +1155,7 @@ const showTemplatePreview = () => {
 const entityTemplate = computed(() => {
   const entity = entities.value[0]
   if (!entity) return '// 请先添加实体'
-  
+
   return `// ${entity.name}.cs
 using System;
 using Volo.Abp.Domain.Entities.Auditing;
@@ -1149,7 +1178,7 @@ ${entity.properties?.map((p: any) => `        /// <summary>
 const dtoTemplate = computed(() => {
   const entity = entities.value[0]
   if (!entity) return '// 请先添加实体'
-  
+
   return `// ${entity.name}Dto.cs
 using System;
 
@@ -1170,7 +1199,7 @@ ${entity.properties?.map((p: any) => `        public ${p.type} ${p.name} { get; 
 const serviceTemplate = computed(() => {
   const entity = entities.value[0]
   if (!entity) return '// 请先添加实体'
-  
+
   return `// ${entity.name}AppService.cs
 using System;
 using System.Threading.Tasks;
@@ -1198,7 +1227,7 @@ namespace ${projectConfig.value.namespace}.Services
 const controllerTemplate = computed(() => {
   const entity = entities.value[0]
   if (!entity) return '// 请先添加实体'
-  
+
   return `// ${entity.name}Controller.cs
 using System;
 using Microsoft.AspNetCore.Mvc;
@@ -1228,7 +1257,7 @@ namespace ${projectConfig.value.namespace}.Controllers
 const vueTemplate = computed(() => {
   const entity = entities.value[0]
   if (!entity) return '<!-- 请先添加实体 -->'
-  
+
   return `<!-- ${entity.name}List.vue -->
 <template>
   <div class="${entity.name.toLowerCase()}-list">
@@ -1279,7 +1308,7 @@ const copyTemplate = async () => {
     controller: controllerTemplate.value,
     vue: vueTemplate.value
   }
-  
+
   try {
     await navigator.clipboard.writeText(templates[activeTemplateTab.value])
     ElMessage.success('模板已复制到剪贴板')
@@ -1314,34 +1343,34 @@ export default {}
       display: flex;
       justify-content: space-between;
       align-items: center;
-      
+
       .header-left {
         display: flex;
         align-items: center;
         gap: 12px;
-        
+
         .wizard-title {
           font-size: 18px;
           font-weight: 600;
         }
       }
-      
+
       .header-right {
         display: flex;
         gap: 12px;
       }
     }
   }
-  
+
   .wizard-steps {
     margin: 24px 0;
   }
-  
+
   .step-content {
     min-height: 400px;
     padding: 24px 0;
   }
-  
+
   .step-panel {
     .step-title {
       display: flex;
@@ -1352,39 +1381,39 @@ export default {}
       margin-bottom: 24px;
     }
   }
-  
+
   .wizard-form {
     :deep(.el-form-item__label) {
       font-weight: 500;
     }
   }
-  
+
   .step-tips {
     margin-top: 24px;
-    
+
     ul {
       margin: 8px 0 0 20px;
-      
+
       li {
         margin: 4px 0;
         color: var(--el-text-color-secondary);
       }
     }
   }
-  
+
   .designer-toolbar {
     margin-bottom: 16px;
     display: flex;
     gap: 12px;
   }
-  
+
   .ui-preview {
     margin-top: 24px;
-    
+
     h4 {
       margin-bottom: 12px;
     }
-    
+
     .preview-box {
       border: 1px dashed var(--el-border-color);
       border-radius: 4px;
@@ -1393,7 +1422,7 @@ export default {}
       color: var(--el-text-color-placeholder);
     }
   }
-  
+
   .color-preview {
     display: inline-block;
     margin-left: 12px;
@@ -1402,43 +1431,43 @@ export default {}
     color: white;
     font-size: 12px;
   }
-  
+
   .generation-progress {
     .current-task {
       text-align: center;
       margin: 16px 0;
       font-weight: 500;
     }
-    
+
     .generation-logs {
       margin-top: 24px;
-      
+
       h4 {
         margin-bottom: 12px;
       }
-      
+
       .log-list {
         max-height: 300px;
         overflow-y: auto;
         border: 1px solid var(--el-border-color);
         border-radius: 4px;
         padding: 12px;
-        
+
         .log-item {
           display: flex;
           gap: 12px;
           padding: 4px 0;
           font-size: 14px;
-          
+
           .log-time {
             color: var(--el-text-color-secondary);
             min-width: 100px;
           }
-          
+
           &.info {
             color: var(--el-color-info);
           }
-          
+
           &.success {
             color: var(--el-color-success);
           }
@@ -1446,21 +1475,21 @@ export default {}
       }
     }
   }
-  
+
   .file-tree {
     margin-top: 24px;
-    
+
     h4 {
       margin-bottom: 12px;
     }
-    
+
     .tree-node {
       display: flex;
       align-items: center;
       gap: 6px;
     }
   }
-  
+
   .step-actions {
     margin-top: 24px;
     padding-top: 24px;

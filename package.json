@@ -28,6 +28,10 @@
     "expert:auto": "node tools/quality-assurance/expert-auto.js",
     "expert:finalize": "node tools/quality-assurance/expert-finalize.js",
     "expert:verify": "npm run lint && npm run type-check && npm run test:coverage && npm run build",
+    "check:config": "node src/SmartAbp.Vue/packages/quality-guardian/checkers/check-config-consistency.js",
+    "check:components": "node src/SmartAbp.Vue/packages/quality-guardian/checkers/check-component-registration.js",
+    "check:all": "node src/SmartAbp.Vue/packages/quality-guardian/checkers/check-all.js",
+    "pre-commit": "npm run check:config && npm run check:components",
     "prepare": "husky"
   },
   "devDependencies": {

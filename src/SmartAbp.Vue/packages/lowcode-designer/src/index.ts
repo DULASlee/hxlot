@@ -1,8 +1,8 @@
 /**
  * SmartAbp Low-Code Designer - Main Export
- * 
+ *
  * Centralized export for all designer functionality
- * 
+ *
  * @author SmartAbp Team
  * @version 1.0.0
  * @license MIT
@@ -36,7 +36,7 @@ export * from './stores'
  * 注册所有设计器组件到 ComponentRegistry
  * @遵循架构铁律二：强制使用组件注册系统
  */
-import { registerComponent, type ComponentCategory } from '@smartabp/lowcode-shared'
+import { globalComponentRegistry, registerComponent, type ComponentCategory } from '@smartabp/lowcode-shared'
 
 export function registerDesignerComponents(): void {
   // 核心设计器组件批量注册
@@ -229,6 +229,41 @@ export function registerDesignerComponents(): void {
       preload: false,
       version: '1.0.0',
       tags: [comp.category, 'utility']
+    })
+  })
+
+  // 自动补全注册：扫描 ./components 与 ./views 下所有 .vue 组件，未注册则集中注册
+  const glob = (import.meta as unknown as { glob: (p: string, o?: any) => Record<string, () => Promise<any>> }).glob
+  const modules = {
+    ...glob('./components/**/*.vue'),
+    ...glob('./views/**/*.vue'),
+    ...glob('./runtime/**/*.vue')
+  }
+  const inferCategory = (p: string): ComponentCategory => {
+    if (p.includes('/views/')) return 'view' as any
+    if (p.includes('security')) return 'security' as any
+    if (p.includes('aspire')) return 'aspire' as any
+    if (p.includes('code')) return 'code' as any
+    if (p.includes('designer')) return 'designer' as any
+    return 'basic' as any
+  }
+  Object.entries(modules).forEach(([p, loader]) => {
+    const base = p.split('/').pop()!.replace('.vue', '')
+    const name = base.replace(/[^A-Za-z0-9]/g, '')
+    if (globalComponentRegistry.has(name)) return
+    const category = inferCategory(p)
+    registerComponent({
+      name,
+      displayName: base,
+      category,
+      priority: 'medium',
+      dependencies: [],
+      bundle: '@smartabp/lowcode-designer',
+      lazy: true,
+      preload: false,
+      version: '1.0.0',
+      tags: [category, 'auto', 'designer'],
+      loader: loader as unknown as () => Promise<any>
     })
   })
 

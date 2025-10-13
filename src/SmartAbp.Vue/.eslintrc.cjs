@@ -54,6 +54,22 @@ module.exports = {
     ],
   },
   rules: {
+    // 🔥 架构三大铁律：禁止错误的路径别名使用（ADR-0031）
+    "no-restricted-imports": [
+      "error",
+      {
+        patterns: [
+          {
+            group: ["@smartabp/*/src/*"],
+            message: "❌ 错误：@smartabp别名已包含src/，不要再写 /src/。\n正确写法：@smartabp/lowcode-core/components/...\n错误写法：@smartabp/lowcode-core/src/components/...\n详见 ADR-0031",
+          },
+          {
+            group: ["**/packages/**"],
+            message: "❌ 错误：禁止使用相对路径引用packages。\n请使用 @smartabp/* 别名。\n详见 ADR-0031",
+          },
+        ],
+      },
+    ],
     // 生产代码禁止 console.*，开发期降级为警告
     "no-console": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",

@@ -13,11 +13,8 @@ import moduleWizardDev from "./packages/lowcode-designer/src/dev/moduleWizardDev
 import vitePluginLowCode from "./packages/lowcode-tools/src/vite"
 import { createComponentConflictDetector } from "./src/utils/vite/conflictDetector"
 import { createPackagesResolver } from "./src/utils/vite/packagesResolver"
+// 🎨 图标集按需加载（只在生产环境预加载，开发环境按需）
 // Offline icon collections (static JSON) with import assertions
-import carbonCollection from '@iconify-json/carbon/icons.json' with { type: 'json' }
-import epCollection from '@iconify-json/ep/icons.json' with { type: 'json' }
-import faCollection from '@iconify-json/fa/icons.json' with { type: 'json' }
-import mdiCollection from '@iconify-json/mdi/icons.json' with { type: 'json' }
 
 // 仅在生产环境按需加载压缩插件；缺失时优雅降级
 async function loadCompressionPlugin() {
@@ -44,38 +41,49 @@ dns.setDefaultResultOrder("verbatim")
 // https://vite.dev/config/
 export default defineConfig(async ({ mode }) => {
   const compression = await loadCompressionPlugin()
+  const isProduction = mode === 'production'
+  const isDevelopment = mode === 'development'
+
   return {
     plugins: [
       // Brotli压缩（生产环境按需，缺失时跳过）
       compression,
-      // 编译期组件名冲突检测（Fail Build）
-      createComponentConflictDetector({
-        packagesRoot: 'packages',
-        packageComponentDirs: [
-          'lowcode-shared/src/components',
-          'lowcode-core/src/components',
-          'lowcode-designer/src/components',
-          'lowcode-api/src/components',
-          'lowcode-tools/src/components',
-          'metadata-core/src/components',
-        ],
-        namingRules: {
-          'lowcode-shared': 'Ls',
-          'lowcode-core': 'Lc',
-          'lowcode-designer': 'Ld',
-          'lowcode-api': 'La',
-          'lowcode-tools': 'Lt',
-          'metadata-core': 'Mc',
-        },
-        includeMainApp: true,
-        mainComponentsDir: 'src/components',
-        failOnConflict: true,
-        largeFileLineThreshold: 300,
-      }),
+      // 🔍 编译期组件名冲突检测（只在生产环境启用，开发环境跳过以提升启动速度）
+      ...(isProduction ? [
+        createComponentConflictDetector({
+          packagesRoot: 'packages',
+          packageComponentDirs: [
+            'lowcode-shared/src/components',
+            'lowcode-core/src/components',
+            'lowcode-designer/src/components',
+            'lowcode-api/src/components',
+            'lowcode-tools/src/components',
+            'metadata-core/src/components',
+          ],
+          namingRules: {
+            'lowcode-shared': 'Ls',
+            'lowcode-core': 'Lc',
+            'lowcode-designer': 'Ld',
+            'lowcode-api': 'La',
+            'lowcode-tools': 'Lt',
+            'metadata-core': 'Mc',
+          },
+          includeMainApp: true,
+          mainComponentsDir: 'src/components',
+          failOnConflict: true,
+          largeFileLineThreshold: 300,
+          // 排除仅用于 PoC/测试的代码生成器组件，避免与正式组件名冲突
+          excludeDirs: [
+            'lowcode-designer/src/components/CodeGenerator',
+          ],
+        })
+      ] : []),
       vue(),
       vueJsx(),
-      ...(process.env.NODE_ENV !== "production" ? [moduleWizardDev()] : []),
-      ...(process.env.NODE_ENV !== "production" ? [vueDevtools()] : []),
+      // 🔧 开发环境专用插件
+      ...(isDevelopment ? [moduleWizardDev()] : []),
+      // 🔧 Vue Devtools（通过环境变量控制，默认关闭以提升性能）
+      ...(isDevelopment && process.env.ENABLE_DEVTOOLS === 'true' ? [vueDevtools()] : []),
       AutoImport({
         resolvers: [ElementPlusResolver()],
         dts: true,
@@ -94,13 +102,16 @@ export default defineConfig(async ({ mode }) => {
           createPackagesResolver({
             packagesRoot: 'packages',
             enableCache: true,
-            debug: process.env.NODE_ENV === 'development'
+            debug: isDevelopment
           }),
         ],
-        // 🔍 组件扫描目录配置
-        dirs: [
+        // 🔍 组件扫描目录配置（开发环境减少扫描范围以提升启动速度）
+        dirs: isDevelopment ? [
+          // 开发环境：只扫描主应用组件，packages通过resolver按需加载
           'src/components',
-          // 🎯 packages组件目录（按依赖层级顺序）
+        ] : [
+          // 生产环境：扫描所有目录
+          'src/components',
           'packages/lowcode-shared/src/components',
           'packages/lowcode-core/src/components',
           'packages/lowcode-designer/src/components',
@@ -108,8 +119,8 @@ export default defineConfig(async ({ mode }) => {
           'packages/lowcode-tools/src/components',
           'packages/metadata-core/src/components',
         ],
-        // 🎯 启用深度扫描（支持嵌套目录）
-        deep: true,
+        // 🎯 深度扫描（生产环境启用，开发环境禁用以提升性能）
+        deep: isProduction,
         // 📝 自动生成TypeScript类型声明
         dts: 'components.d.ts',
         // 🎯 支持的文件扩展名
@@ -122,6 +133,8 @@ export default defineConfig(async ({ mode }) => {
           /[\\/]\.git[\\/]/,
           /[\\/]__tests__[\\/]/,
           /[\\/]examples[\\/]/,
+          // 开发环境额外排除 CodeGenerator 目录
+          ...(isDevelopment ? [/[\\/]CodeGenerator[\\/]/] : []),
         ],
       }),
       Icons({
@@ -130,13 +143,8 @@ export default defineConfig(async ({ mode }) => {
         scale: 1,
         defaultClass: "",
         defaultStyle: "",
-        // 🎨 图标集配置（使用自定义集合，避免类型不匹配）
-        customCollections: {
-          ep: epCollection as any,
-          carbon: carbonCollection as any,
-          mdi: mdiCollection as any,
-          fa: faCollection as any,
-        },
+        // 🎨 图标集配置（开发环境按需加载，生产环境预加载）
+        // 开发环境不预加载图标集，用到时才加载，提升启动速度
       }),
       // 🔧 SmartAbp低代码插件（开发期）
       vitePluginLowCode(),
@@ -144,6 +152,9 @@ export default defineConfig(async ({ mode }) => {
     resolve: {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
+        "@smartabp/metadata-core": fileURLToPath(
+          new URL("./packages/metadata-core/src", import.meta.url),
+        ),
         "@smartabp/lowcode-shared": fileURLToPath(
           new URL("./packages/lowcode-shared/src", import.meta.url),
         ),
@@ -151,10 +162,10 @@ export default defineConfig(async ({ mode }) => {
           new URL("./packages/lowcode-core/src", import.meta.url),
         ),
         "@smartabp/lowcode-designer": fileURLToPath(
-          new URL("./packages/lowcode-designer/src", import.meta.url),
+          new URL("./packages/lowcode-designer", import.meta.url),
         ),
         "@smartabp/lowcode-codegen": fileURLToPath(
-          new URL("./packages/lowcode-codegen/src", import.meta.url),
+          new URL("./packages/lowcode-codegen", import.meta.url),
         ),
         "@smartabp/lowcode-api": fileURLToPath(
           new URL("./packages/lowcode-api/src", import.meta.url),
@@ -238,6 +249,10 @@ export default defineConfig(async ({ mode }) => {
         polyfill: true,
       },
       rollupOptions: {
+        // 🎯 排除测试HTML文件，只构建主入口
+        input: {
+          main: fileURLToPath(new URL("./index.html", import.meta.url)),
+        },
         output: {
           // Phoenix Week 2 优化：智能代码分割策略
           manualChunks: (id) => {

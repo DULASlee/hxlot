@@ -363,7 +363,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: "form-designer",
             name: "FormDesigner",
-            component: () => import("@smartabp/lowcode-core/src/components/SmartFormBuilder/SmartFormDesigner.vue"),
+            component: () => import("@smartabp/lowcode-core/components/SmartFormBuilder/SmartFormDesigner.vue"),
             meta: {
               title: "表单设计器",
               menuKey: "form-designer",

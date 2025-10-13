@@ -10,6 +10,8 @@ export interface ConflictDetectorOptions {
     mainComponentsDir?: string
     failOnConflict?: boolean
     largeFileLineThreshold?: number
+    /** 可选：排除的目录（相对于 packagesRoot），这些目录下的 .vue 文件将被忽略 */
+    excludeDirs?: readonly string[]
 }
 
 interface ScannedComponentInfo {
@@ -29,6 +31,7 @@ export function createComponentConflictDetector(options: ConflictDetectorOptions
         mainComponentsDir = 'src/components',
         failOnConflict = true,
         largeFileLineThreshold = 300,
+        excludeDirs = [],
     } = options
 
     return {
@@ -36,6 +39,7 @@ export function createComponentConflictDetector(options: ConflictDetectorOptions
         enforce: 'pre',
         async buildStart() {
             const components: ScannedComponentInfo[] = []
+            const absExcludeDirs = excludeDirs.map(rel => join(process.cwd(), packagesRoot, rel))
 
             // 扫描packages内组件
             for (const relDir of packageComponentDirs) {
@@ -53,6 +57,10 @@ export function createComponentConflictDetector(options: ConflictDetectorOptions
                     continue
                 }
                 scanVueFiles(absDir).forEach(filePath => {
+                    // 排除在 excludeDirs 下的文件
+                    if (absExcludeDirs.some(ex => filePath.startsWith(ex))) {
+                        return
+                    }
                     const compName = inferComponentName(filePath)
                     const fullName = `${prefix}${compName}`
                     components.push({
