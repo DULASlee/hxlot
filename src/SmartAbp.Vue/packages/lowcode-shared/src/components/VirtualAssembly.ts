@@ -23,7 +23,7 @@
  */
 
 import { defineAsyncComponent, type AsyncComponentLoader, type Component } from 'vue'
-import { globalPluginManager } from '../plugins/PluginManager.js'
+import { globalPluginManager } from '../plugins/PluginManager'
 import type { ComponentMetadata, ComponentRegistry } from './ComponentRegistry'
 
 /**

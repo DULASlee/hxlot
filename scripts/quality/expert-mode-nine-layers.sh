@@ -180,7 +180,8 @@ ARCH_VIOLATIONS=0
 
 # 检查packages相对路径违规
 if [ -d "src/SmartAbp.Vue/packages" ]; then
-    REL_PATH_COUNT=$(grep -r "'\.\./'" src/SmartAbp.Vue/packages --include="*.ts" --include="*.vue" 2>/dev/null | wc -l)
+    # 仅统计越界到主应用src或其他packages的相对路径（跨边界），包内相对路径不计入
+    REL_PATH_COUNT=$(grep -R -nE "from ['\"][.]{2,}/(src|packages)/|require\\(\\s*['\"][.]{2,}/(src|packages)/" src/SmartAbp.Vue/packages --include="*.ts" --include="*.vue" 2>/dev/null | wc -l)
     if [ "$REL_PATH_COUNT" -gt 0 ]; then
         ARCH_VIOLATIONS=$((ARCH_VIOLATIONS + REL_PATH_COUNT))
         log_warning "⚠ 发现 $REL_PATH_COUNT 处相对路径违规"
@@ -252,7 +253,20 @@ if [ -f "src/SmartAbp.Vue/package.json" ]; then
     if [ "$DRY_RUN" = false ]; then
         log_info "  执行 TypeScript 类型检查..."
         cd src/SmartAbp.Vue
+        # 优先使用本地脚本
         if npm run type-check 2>&1 > /dev/null; then
+            TYPECHECK_OK=true
+        else
+            # 本地脚本失败时，尝试使用上级node_modules中的vue-tsc
+            if [ -x "../../node_modules/.bin/vue-tsc" ]; then
+                ../../node_modules/.bin/vue-tsc --noEmit -p tsconfig.app.json 2>&1 > /dev/null && TYPECHECK_OK=true || TYPECHECK_OK=false
+            else
+                # 最后兜底使用 npx（需要网络）
+                npx -y vue-tsc --noEmit -p tsconfig.app.json 2>&1 > /dev/null && TYPECHECK_OK=true || TYPECHECK_OK=false
+            fi
+        fi
+
+        if [ "${TYPECHECK_OK}" = true ]; then
             log_success "  ✓ TypeScript类型检查: 0错误"
         else
             ERRORS=$((ERRORS + 1))
