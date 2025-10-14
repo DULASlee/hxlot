@@ -304,11 +304,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue"
-import { ElMessage, ElMessageBox } from "element-plus"
-import dayjs from "dayjs"
 import { logManager } from "@/utils/logManager"
 import { logger } from "@/utils/logger"
+import dayjs from "dayjs"
+import { ElMessage, ElMessageBox } from "element-plus"
+import { computed, onMounted, ref, watch } from "vue"
 import LogViewer from "./LogViewer.vue"
 
 // Props
@@ -330,7 +330,8 @@ const searchQuery = ref("")
 const contentHeight = computed(() => {
   const toolbarHeight = 60
   const totalHeight = parseInt(String(props.height).replace("px", ""))
-  return totalHeight - toolbarHeight
+  const h = totalHeight - toolbarHeight
+  return `${h}px`
 })
 
 const logStats = computed(() => logger.getStats())
