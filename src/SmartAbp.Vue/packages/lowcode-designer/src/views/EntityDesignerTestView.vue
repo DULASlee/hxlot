@@ -254,10 +254,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { ElMessage } from 'element-plus'
-import { LdEntityDesigner } from './components'
 import type { EntityDefinition } from '@smartabp/lowcode-designer/types'
+import { ElMessage } from 'element-plus'
+import { computed, ref } from 'vue'
+import { LdEntityDesigner } from '../components'
 
 // 状态
 const entityData = ref<EntityDefinition>({

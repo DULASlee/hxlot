@@ -121,3 +121,26 @@ export default [
         }
     }
 ]
+
+// SmartAbp Architecture Guards (packages)
+const archGuard = {
+  files: ['packages/*/src/**/*.{ts,tsx,vue,js}'],
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          { group: ['@smartabp/*/src/*'], message: '禁止从 @smartabp/*/src 导入，请使用包根导出' },
+          { group: ['**/packages/**'], message: '禁止跨包相对路径导入，请使用 @smartabp/* 别名' },
+          { group: ['@/*'], message: 'packages 内禁止使用 @/ 别名（lowcode-tools 例外）' }
+        ]
+      }
+    ]
+  }
+};
+
+if(!Array.isArray(module.exports)) {
+  module.exports = [module.exports, archGuard];
+} else {
+  module.exports.push(archGuard);
+}

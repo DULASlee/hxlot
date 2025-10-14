@@ -139,7 +139,7 @@
               >
                 <template #default="{ node, data }">
                   <span class="tree-node">
-                    <el-icon><Component /></el-icon>
+                    <el-icon><Box /></el-icon>
                     {{ node.label }}
                   </span>
                 </template>
@@ -224,20 +224,32 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-  MagicStick, Edit, View, Document, RefreshLeft, RefreshRight,
-  Grid, ZoomIn, ZoomOut, DocumentChecked, More, Plus,
-  FolderOpened, Download, Setting, Component, Box, Position, Clock
+    Box,
+    Clock,
+    Document,
+    DocumentChecked,
+    Download,
+    Edit,
+    FolderOpened,
+    Grid,
+    MagicStick,
+    More, Plus,
+    Position,
+    RefreshLeft, RefreshRight,
+    Setting,
+    View,
+    ZoomIn, ZoomOut
 } from '@element-plus/icons-vue'
-import { useDesignerStore } from './stores/useDesignerStore'
-import {
-  LdVisualComponentPalette,
-  LdVisualDesignCanvas,
-  LdComponentPropertyPanel
-} from './components'
 import type { CanvasComponent } from '@smartabp/lowcode-designer/types'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import {
+    LdComponentPropertyPanel,
+    LdVisualComponentPalette,
+    LdVisualDesignCanvas
+} from '../components'
+import { useDesignerStore } from '../stores/useDesignerStore'
 
 // ==================== 状态管理 ====================
 
@@ -295,12 +307,10 @@ const generatedTemplate = computed(() => {
 
 // 生成的脚本代码
 const generatedScript = computed(() => {
-  return `<script setup lang="ts">
-import { ref } from 'vue'
+  return `import { ref } from 'vue'
 
 // 组件逻辑
-const data = ref({})
-</script>`
+const data = ref({})`
 })
 
 // 生成的样式代码

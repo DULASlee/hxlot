@@ -155,12 +155,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
-import { ElMessage } from 'element-plus'
 import {
-  View, Document, DataAnalysis, Refresh, CopyDocument, Download,
-  Monitor, Iphone, Cellphone
+    Cellphone,
+    CopyDocument,
+    DataAnalysis,
+    Document,
+    Download,
+    Iphone,
+    Monitor,
+    Refresh,
+    View
 } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+import { computed, nextTick, ref, watch } from 'vue'
 import type { CodeQualityReport } from '../core/TemplateEngine'
 
 interface GeneratedFile {
@@ -201,37 +208,37 @@ const previewHtml = computed(() => {
   }
 
   // 简化的Vue组件预览（实际需要完整的Vue运行时）
-  return `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>组件预览</title>
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
-  <script src="https://unpkg.com/element-plus"></script>
-  <style>
-    body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
-    * { box-sizing: border-box; }
-  </style>
-</head>
-<body>
-  <div id="app"></div>
-  <script>
-    const { createApp } = Vue;
-    const app = createApp({
-      template: \`${extractTemplate(vueFile.content)}\`,
-      setup() {
-        ${extractScript(vueFile.content)}
-      }
-    });
-    app.use(ElementPlus);
-    app.mount('#app');
-  </script>
-</body>
-</html>
-  `
+  const tpl = JSON.stringify(extractTemplate(vueFile.content))
+  const htmlParts = [
+    '<!DOCTYPE html>',
+    '<html>',
+    '<head>',
+    '  <meta charset="UTF-8">',
+    '  <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+    '  <title>组件预览</title>',
+    '  <script src="https://unpkg.com/vue@3/dist/vue.global.js"><\\/script>',
+    '  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">',
+    '  <script src="https://unpkg.com/element-plus"><\\/script>',
+    '  <style>',
+    '    body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }',
+    '    * { box-sizing: border-box; }',
+    '  </style>',
+    '</head>',
+    '<body>',
+    '  <div id="app"></div>',
+    '  <script>',
+    '    const { createApp } = Vue;',
+    '    const app = createApp({',
+    `      template: ${tpl},`,
+    '      setup() { return {}; }',
+    '    });',
+    '    app.use(ElementPlus);',
+    '    app.mount("#app");',
+    '  <\\/script>',
+    '</body>',
+    '</html>'
+  ]
+  return htmlParts.join('\n')
 })
 
 // 提取Vue模板

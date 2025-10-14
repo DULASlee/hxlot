@@ -210,7 +210,6 @@ type SecurityDashboardApi = {
 }
 
 const useSecurityDashboard: () => SecurityDashboardApi =
-  // @ts-expect-error: runtime feature detection for optional exports
   (core.useSecurityDashboard as typeof core.useSecurityDashboard) ||
   (() => ({
     securityMetrics: ref<SecurityMetrics>({}),
@@ -232,7 +231,6 @@ type RealTimeAlertsApi = {
 }
 
 const useRealTimeAlerts: () => RealTimeAlertsApi =
-  // @ts-expect-error: runtime feature detection for optional exports
   (core.useRealTimeAlerts as typeof core.useRealTimeAlerts) ||
   (() => ({
     activeAlerts: ref([]),

@@ -580,8 +580,9 @@ onUnmounted(() => {
 
 // ✅ 简化：确保默认选中第一个表
 const ensureDefaultSelectedTable = () => {
-  if (!selectedTable.value && availableTables.value.length > 0) {
-    const firstTable = availableTables.value[0].name
+  const first = availableTables.value && availableTables.value.length > 0 ? availableTables.value[0] : undefined
+  if (!selectedTable.value && first && first.name) {
+    const firstTable = String(first.name)
     selectedTable.value = firstTable
     console.log('✅ 自动选中第一个表:', firstTable)
   }
@@ -682,19 +683,8 @@ const startGeneration = async () => {
     // 记录完整错误信息和堆栈，便于调试
     console.error('Code generation error:', error)
 
-    // 用户友好提示
-<<<<<<< Updated upstream
+    // 用户友好提示（统一使用方法调用，便于测试断言与一致性）
     ElMessage.error(t('ultraSimple.messages.error'))
-    
-=======
-    ElMessage({
-      message: t('ultraSimple.messages.error'),
-      type: 'error',
-      duration: 5000,
-      showClose: true
-    })
-
->>>>>>> Stashed changes
     // 重置状态以便重试
     generationComplete.value = false
   } finally {

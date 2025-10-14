@@ -35,20 +35,36 @@ export const logger = {
   success: (message: string, ...args: any[]) => console.log(`[SUCCESS] ✅ ${message}`, ...args)
 };
 
+/**
+ * 创建组件专用日志器
+ * 为日志统一添加组件名前缀，便于排查
+ */
+export function createComponentLogger(componentName: string) {
+  const prefix = `[${componentName}]`;
+  return {
+    info: (message: string, ...args: any[]) => logger.info(`${prefix} ${message}`, ...args),
+    warn: (message: string, ...args: any[]) => logger.warn(`${prefix} ${message}`, ...args),
+    error: (message: string, ...args: any[]) => logger.error(`${prefix} ${message}`, ...args),
+    debug: (message: string, ...args: any[]) => logger.debug(`${prefix} ${message}`, ...args),
+    fatal: (message: string, ...args: any[]) => logger.fatal(`${prefix} ${message}`, ...args),
+    success: (message: string, ...args: any[]) => logger.success(`${prefix} ${message}`, ...args)
+  };
+}
+
 // ===== 事件总线导出 =====
 /**
  * 📡 简化版事件总线（独立实现）
  */
 export const eventBus = {
   events: new Map<string, Function[]>(),
-  
+
   on(event: string, callback: Function) {
     if (!this.events.has(event)) {
       this.events.set(event, []);
     }
     this.events.get(event)!.push(callback);
   },
-  
+
   off(event: string, callback: Function) {
     const callbacks = this.events.get(event);
     if (callbacks) {
@@ -58,7 +74,7 @@ export const eventBus = {
       }
     }
   },
-  
+
   emit(event: string, ...args: any[]) {
     const callbacks = this.events.get(event);
     if (callbacks) {
