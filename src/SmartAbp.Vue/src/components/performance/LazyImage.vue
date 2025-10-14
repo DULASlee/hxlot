@@ -21,7 +21,7 @@ SmartAbp Enterprise Lazy Loading Image Component
       :style="imageStyle"
       @load="handleLoad"
       @error="handleError"
-    />
+    >
 
     <!-- 加载状态 -->
     <div

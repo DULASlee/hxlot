@@ -193,8 +193,8 @@ export default defineConfig(async ({ mode }) => {
     },
     server: {
       host: "0.0.0.0", // 绑定所有网络接口，确保IPv4可访问
-      port: 11369,
-      strictPort: false, // 允许端口自动切换，避免冲突
+      port: 9001,
+      strictPort: true, // 固定端口9001，避免自动切换
       open: false, // 禁用自动打开浏览器
       cors: true,
       // ✅ 添加 SPA 历史回退支持，确保所有路由都能正确访问
@@ -218,10 +218,11 @@ export default defineConfig(async ({ mode }) => {
         Expires: "0",
       },
       proxy: {
-        "^/(connect|api|swagger|health-status|Account)(/.*)?": {
-          target: "https://localhost:44379", // ✅ 修正：指向后端API服务器正确端口（44379），使用https协议
+        "^/(connect|api|abp|swagger|health-status|Account|codegen|metadata|database|db|hubs|signalr)(/.*)?": {
+          target: "https://localhost:9002", // 指向后端（9002）
           changeOrigin: true,
           secure: false,
+          ws: true,
           timeout: 10000, // 增加超时时间
           configure: (proxy, _options) => {
             proxy.on("error", (err, _req, _res) => {

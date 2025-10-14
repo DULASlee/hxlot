@@ -233,11 +233,10 @@ export function registerDesignerComponents(): void {
   })
 
   // 自动补全注册：扫描 ./components 与 ./views 下所有 .vue 组件，未注册则集中注册
-  const glob = (import.meta as unknown as { glob: (p: string, o?: any) => Record<string, () => Promise<any>> }).glob
   const modules = {
-    ...glob('./components/**/*.vue'),
-    ...glob('./views/**/*.vue'),
-    ...glob('./runtime/**/*.vue')
+    ...import.meta.glob('./components/**/*.vue'),
+    ...import.meta.glob('./views/**/*.vue'),
+    ...import.meta.glob('./runtime/**/*.vue'),
   }
   const inferCategory = (p: string): ComponentCategory => {
     if (p.includes('/views/')) return 'view' as any

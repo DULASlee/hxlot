@@ -7,7 +7,7 @@
         type="color"
         :value="primaryColor"
         @input="onColorChange"
-      />
+      >
     </div>
   </div>
 </template>

@@ -132,7 +132,6 @@ if (storesFactory && typeof storesFactory === "object") {
     // 占位
 }
 // 运行生命周期占位（忽略错误）
-;
 (async () => {
     try {
         await runPreInit?.({ app: null });
@@ -197,7 +196,7 @@ if (import.meta.env.DEV) {
 console.log('🚀 开始统一组件注册系统初始化...');
 registerSharedComponents(); // 1. 基础组件（无依赖）
 registerCoreComponents(); // 2. 核心组件（依赖shared）
-registerDesignerComponents(); // 3. 设计器组件（依赖core+shared）
+registerDesignerComponents(app); // 3. 设计器组件（依赖core+shared）
 console.log('✅ 所有组件已注册到ComponentRegistry');
 app.use(pinia).use(router).use(i18n).use(ElementPlus).use(hljsVuePlugin).use(ComponentRegistryBridge);
 // .use(enterpriseIconSystem) // TODO: 暂时注释

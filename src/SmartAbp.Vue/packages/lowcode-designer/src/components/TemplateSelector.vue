@@ -57,7 +57,7 @@
               <img
                 :src="template.preview"
                 :alt="template.name"
-              />
+              >
               <div class="template-overlay">
                 <el-button
                   type="primary"

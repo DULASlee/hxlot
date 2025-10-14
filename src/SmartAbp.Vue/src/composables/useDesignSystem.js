@@ -204,7 +204,6 @@ export function useDesignSystem() {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     const preloadAllThemes = () => {
         if ('requestIdleCallback' in window) {
-            ;
             window.requestIdleCallback(() => {
                 THEMES.forEach(themeConfig => {
                     if (themeConfig.value !== theme.value) {

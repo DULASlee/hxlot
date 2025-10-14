@@ -117,7 +117,12 @@
               <span>版本: -</span>
             </div>
           </div>
-          <div v-if="pluginList.length === 0" class="empty-message">暂无插件</div>
+          <div
+            v-if="pluginList.length === 0"
+            class="empty-message"
+          >
+            暂无插件
+          </div>
         </div>
       </div>
 
@@ -155,7 +160,10 @@
               class="metric-item"
             >
               <span class="time">{{ formatTime(m.timestamp) }}</span>
-              <div class="bar" :style="{ width: `${(m.duration / maxDuration) * 100}%`, background: getBarColor(m.duration) }"></div>
+              <div
+                class="bar"
+                :style="{ width: `${(m.duration / maxDuration) * 100}%`, background: getBarColor(m.duration) }"
+              />
               <span class="ms">{{ Math.round(m.duration) }} ms</span>
             </div>
           </div>
@@ -169,13 +177,20 @@
       >
         <h3>事件日志</h3>
         <div class="event-list">
-          <div v-for="e in eventLog" :key="e.timestamp" class="event-item">
+          <div
+            v-for="e in eventLog"
+            :key="e.timestamp"
+            class="event-item"
+          >
             <span class="event-type">{{ e.type }}</span>
             <span class="event-target">{{ e.target || '-' }}</span>
             <span class="event-data">{{ formatEventData(e.data) }}</span>
             <span class="event-time">{{ formatTime(e.timestamp) }}</span>
           </div>
-          <div v-if="eventLog.length === 0" class="empty-message">
+          <div
+            v-if="eventLog.length === 0"
+            class="empty-message"
+          >
             暂无事件
           </div>
         </div>

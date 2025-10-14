@@ -303,14 +303,14 @@
               width="80"
             >
               <template #default="scope">
-                  <el-input-number
-                    v-if="needsLength(scope.row.type)"
-                    v-model="scope.row.length"
-                    size="small"
-                    :min="1"
-                    :max="5000"
-                    @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
-                  />
+                <el-input-number
+                  v-if="needsLength(scope.row.type)"
+                  v-model="scope.row.length"
+                  size="small"
+                  :min="1"
+                  :max="5000"
+                  @change="() => selectedEntity && autoSaveEntity(selectedEntity)"
+                />
               </template>
             </el-table-column>
             <el-table-column

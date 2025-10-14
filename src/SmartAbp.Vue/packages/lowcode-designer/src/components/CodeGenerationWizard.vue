@@ -840,26 +840,48 @@
       </template>
 
       <el-tabs v-model="activeTemplateTab">
-        <el-tab-pane label="实体类模板" name="entity">
+        <el-tab-pane
+          label="实体类模板"
+          name="entity"
+        >
           <pre class="code-preview"><code>{{ entityTemplate }}</code></pre>
         </el-tab-pane>
-        <el-tab-pane label="DTO模板" name="dto">
+        <el-tab-pane
+          label="DTO模板"
+          name="dto"
+        >
           <pre class="code-preview"><code>{{ dtoTemplate }}</code></pre>
         </el-tab-pane>
-        <el-tab-pane label="AppService模板" name="service">
+        <el-tab-pane
+          label="AppService模板"
+          name="service"
+        >
           <pre class="code-preview"><code>{{ serviceTemplate }}</code></pre>
         </el-tab-pane>
-        <el-tab-pane label="Controller模板" name="controller">
+        <el-tab-pane
+          label="Controller模板"
+          name="controller"
+        >
           <pre class="code-preview"><code>{{ controllerTemplate }}</code></pre>
         </el-tab-pane>
-        <el-tab-pane label="Vue组件模板" name="vue">
+        <el-tab-pane
+          label="Vue组件模板"
+          name="vue"
+        >
           <pre class="code-preview"><code>{{ vueTemplate }}</code></pre>
         </el-tab-pane>
       </el-tabs>
 
       <template #footer>
-        <el-button @click="templatePreviewVisible = false">关闭</el-button>
-        <el-button type="primary" @click="copyTemplate">复制当前模板</el-button>
+        <el-button @click="templatePreviewVisible = false">
+          关闭
+        </el-button>
+        <el-button
+          type="primary"
+          @click="copyTemplate"
+        >
+          复制当前模板
+        </el-button>
       </template>
     </el-dialog>
   </div>

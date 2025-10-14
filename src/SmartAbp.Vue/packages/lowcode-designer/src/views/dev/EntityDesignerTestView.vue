@@ -2,7 +2,7 @@
   <div class="test-view-container">
     <h1>Entity Designer PoC Test View</h1>
     <p>This view is for testing the EntityDesigner.vue component in isolation.</p>
-    <hr />
+    <hr>
     <EntityDesigner />
   </div>
 </template>

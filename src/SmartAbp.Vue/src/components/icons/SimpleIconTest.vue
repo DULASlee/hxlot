@@ -5,7 +5,7 @@
 <template>
   <div class="simple-icon-test">
     <h2>🎨 图标系统快速测试</h2>
-    
+
     <div class="test-section">
       <h3>Carbon 图标测试</h3>
       <div class="icon-row">
@@ -84,23 +84,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
 // 手动导入图标组件
-import CarbonUser from '~icons/carbon/user'
 import CarbonDashboard from '~icons/carbon/dashboard'
-import CarbonSettings from '~icons/carbon/settings'
 import CarbonFolder from '~icons/carbon/folder'
+import CarbonSettings from '~icons/carbon/settings'
+import CarbonUser from '~icons/carbon/user'
 
 import MdiAccount from '~icons/mdi/account'
-import MdiViewDashboard from '~icons/mdi/view-dashboard'
 import MdiCog from '~icons/mdi/cog'
 import MdiFolder from '~icons/mdi/folder'
+import MdiViewDashboard from '~icons/mdi/view-dashboard'
 
-import EpUser from '~icons/ep/user'
-import EpSetting from '~icons/ep/setting'
 import EpDocument from '~icons/ep/document'
 import EpFolder from '~icons/ep/folder'
+import EpSetting from '~icons/ep/setting'
+import EpUser from '~icons/ep/user'
 
 const allIconsLoaded = ref(false)
 const testResult = ref('正在检测图标加载状态...')
@@ -110,7 +110,7 @@ onMounted(() => {
   setTimeout(() => {
     const iconElements = document.querySelectorAll('.simple-icon-test svg')
     const loadedCount = iconElements.length
-    
+
     if (loadedCount >= 12) {
       allIconsLoaded.value = true
       testResult.value = `✅ 图标系统正常！成功加载 ${loadedCount} 个图标`
@@ -183,4 +183,3 @@ onMounted(() => {
   margin-top: 32px;
 }
 </style>
-</template>

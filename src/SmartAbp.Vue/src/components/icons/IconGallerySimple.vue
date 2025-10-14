@@ -11,9 +11,19 @@
     <div class="gallery-header">
       <h2>🎨 企业级图标系统</h2>
       <div class="header-stats">
-        <el-statistic title="总图标数" :value="iconStats.totalIcons" />
-        <el-statistic title="已加载" :value="iconStats.loadedIcons" />
-        <el-statistic title="缓存命中率" :value="iconStats.cacheHitRate" suffix="%" />
+        <el-statistic
+          title="总图标数"
+          :value="iconStats.totalIcons"
+        />
+        <el-statistic
+          title="已加载"
+          :value="iconStats.loadedIcons"
+        />
+        <el-statistic
+          title="缓存命中率"
+          :value="iconStats.cacheHitRate"
+          suffix="%"
+        />
       </div>
     </div>
 
@@ -47,7 +57,9 @@
           />
         </el-select>
 
-        <el-button @click="clearFilters">清空筛选</el-button>
+        <el-button @click="clearFilters">
+          清空筛选
+        </el-button>
       </div>
     </el-card>
 
@@ -57,23 +69,49 @@
         <div class="section-header">
           <span>图标展示</span>
           <div class="view-controls">
-            <el-radio-group v-model="viewMode" size="small">
-              <el-radio-button label="grid">网格</el-radio-button>
-              <el-radio-button label="list">列表</el-radio-button>
+            <el-radio-group
+              v-model="viewMode"
+              size="small"
+            >
+              <el-radio-button label="grid">
+                网格
+              </el-radio-button>
+              <el-radio-button label="list">
+                列表
+              </el-radio-button>
             </el-radio-group>
             
-            <el-select v-model="iconSize" size="small" style="width: 80px">
-              <el-option label="小" value="sm" />
-              <el-option label="中" value="md" />
-              <el-option label="大" value="lg" />
-              <el-option label="超大" value="xl" />
+            <el-select
+              v-model="iconSize"
+              size="small"
+              style="width: 80px"
+            >
+              <el-option
+                label="小"
+                value="sm"
+              />
+              <el-option
+                label="中"
+                value="md"
+              />
+              <el-option
+                label="大"
+                value="lg"
+              />
+              <el-option
+                label="超大"
+                value="xl"
+              />
             </el-select>
           </div>
         </div>
       </template>
 
       <!-- Icons Grid/List -->
-      <div v-if="displayIcons.length > 0" :class="['icons-container', `view-${viewMode}`]">
+      <div
+        v-if="displayIcons.length > 0"
+        :class="['icons-container', `view-${viewMode}`]"
+      >
         <div
           v-for="icon in displayIcons"
           :key="icon.name"
@@ -83,25 +121,43 @@
         >
           <div class="icon-display">
             <el-icon :size="iconSizeMap[iconSize]">
-              <component :is="icon.component" v-if="icon.component" />
+              <component
+                :is="icon.component"
+                v-if="icon.component"
+              />
             </el-icon>
           </div>
           <div class="icon-info">
-            <div class="icon-name">{{ icon.name }}</div>
-            <div class="icon-desc">{{ icon.description }}</div>
+            <div class="icon-name">
+              {{ icon.name }}
+            </div>
+            <div class="icon-desc">
+              {{ icon.description }}
+            </div>
           </div>
           <div class="icon-actions">
-            <el-button size="small" text @click.stop="copyIconCode(icon)">
+            <el-button
+              size="small"
+              text
+              @click.stop="copyIconCode(icon)"
+            >
               <el-icon><CopyDocument /></el-icon>
             </el-button>
-            <el-button size="small" text @click.stop="previewIcon(icon)">
+            <el-button
+              size="small"
+              text
+              @click.stop="previewIcon(icon)"
+            >
               <el-icon><View /></el-icon>
             </el-button>
           </div>
         </div>
       </div>
 
-      <el-empty v-else description="暂无图标数据" />
+      <el-empty
+        v-else
+        description="暂无图标数据"
+      />
     </el-card>
 
     <!-- Preview Dialog -->
@@ -110,9 +166,15 @@
       :title="`预览图标: ${selectedIcon?.name || ''}`"
       width="500px"
     >
-      <div v-if="selectedIcon" class="preview-content">
+      <div
+        v-if="selectedIcon"
+        class="preview-content"
+      >
         <div class="preview-display">
-          <el-icon :size="previewSizeMap[previewSize]" :color="previewColor">
+          <el-icon
+            :size="previewSizeMap[previewSize]"
+            :color="previewColor"
+          >
             <component :is="selectedIcon.component" />
           </el-icon>
         </div>
@@ -121,10 +183,18 @@
           <el-form label-width="80px">
             <el-form-item label="大小">
               <el-radio-group v-model="previewSize">
-                <el-radio-button label="sm">小</el-radio-button>
-                <el-radio-button label="md">中</el-radio-button>
-                <el-radio-button label="lg">大</el-radio-button>
-                <el-radio-button label="xl">超大</el-radio-button>
+                <el-radio-button label="sm">
+                  小
+                </el-radio-button>
+                <el-radio-button label="md">
+                  中
+                </el-radio-button>
+                <el-radio-button label="lg">
+                  大
+                </el-radio-button>
+                <el-radio-button label="xl">
+                  超大
+                </el-radio-button>
               </el-radio-group>
             </el-form-item>
             
@@ -279,7 +349,7 @@ const clearFilters = () => {
 const getVueCode = () => {
   if (!selectedIcon.value) return ''
   
-  return `<el-icon :size="${previewSizeMap[previewSize.value]}" color="${previewColor}">
+  return `<el-icon :size="${previewSizeMap[previewSize.value]}" color="${previewColor.value}">
   <${selectedIcon.value.name} />
 </el-icon>`
 }

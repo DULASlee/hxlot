@@ -5,7 +5,7 @@
 <template>
   <div class="icon-demo">
     <h2>🎨 SmartAbp 图标系统演示</h2>
-    
+
     <!-- Element Plus 图标 -->
     <div class="icon-section">
       <h3>Element Plus 图标</h3>
@@ -97,13 +97,13 @@
   &lt;IconMdiAccount /&gt;  &lt;!-- Material Design图标 --&gt;
   &lt;IconEpUser /&gt;      &lt;!-- Element Plus图标 --&gt;
 &lt;/template&gt;</code></pre>
-        
+
         <h4>2. 手动导入方式</h4>
         <pre><code>&lt;script setup&gt;
 import IconCarbonUser from '~icons/carbon/user'
 import IconMdiAccount from '~icons/mdi/account'
 &lt;/script&gt;</code></pre>
-        
+
         <h4>3. 图标命名规则</h4>
         <ul>
           <li><strong>Carbon:</strong> IconCarbon + PascalCase图标名</li>
@@ -214,4 +214,3 @@ import IconMdiAccount from '~icons/mdi/account'
   color: var(--el-text-color-regular);
 }
 </style>
-</template>

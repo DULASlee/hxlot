@@ -13,7 +13,7 @@
           src="/logo.svg"
           alt="SmartAbp"
           class="logo"
-        />
+        >
         <span class="brand-name">SmartAbp</span>
       </div>
 
@@ -65,7 +65,7 @@
               src="/logo.svg"
               alt="用户头像"
               class="user-avatar"
-            />
+            >
             <span class="username">{{ displayUserName }}</span>
             <i class="fas fa-chevron-down dropdown-icon" />
           </div>

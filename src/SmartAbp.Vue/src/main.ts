@@ -150,7 +150,9 @@ if (Array.isArray(generatedRoutes) && generatedRoutes.length > 0) {
 if (Array.isArray(generatedMenus) && generatedMenus.length > 0) {
   try {
     menuConfig.menus.push(...(generatedMenus as MenuItem[]))
-  } catch (_) { }
+  } catch (_) {
+    // Ignore menu merge errors
+  }
 }
 
 // 🗄️ 配置Pinia持久化插件
@@ -168,7 +170,9 @@ if (storesFactory && typeof storesFactory === "object") {
     await runPreInit?.({ app: null })
     await runInit?.({ app: null })
     await runPostInit?.({ app: null })
-  } catch (_e) { }
+  } catch (_e) {
+    // Ignore lifecycle errors
+  }
 })()
 
 const app = createApp(App)
@@ -221,7 +225,7 @@ if (import.meta.env.DEV) {
 //     }
 //   },
 //   preloadIcons: [
-//     'dashboard', 'user', 'users', 'settings', 'business', 
+//     'dashboard', 'user', 'users', 'settings', 'business',
 //     'project', 'order', 'customer', 'lowcode', 'code',
 //     'add', 'edit', 'delete', 'search', 'refresh'
 //   ],

@@ -222,7 +222,7 @@
         <strong>🚧 开发中</strong>
       </template>
       本页面为行业模板配置向导占位页面，完整功能将在Phase 2（Week 5-10）实现。
-      <br />
+      <br>
       预计完成时间：2025年12月中旬
     </el-alert>
   </div>

@@ -15,14 +15,14 @@
             <input
               type="text"
               placeholder="auto"
-            />
+            >
           </div>
           <div class="style-item">
             <label>高度:</label>
             <input
               type="text"
               placeholder="auto"
-            />
+            >
           </div>
         </div>
       </div>

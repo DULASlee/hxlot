@@ -22,10 +22,15 @@
       fill="none"
       class="canvas-frame"
     />
-    
+
     <!-- 🎯 画布网格 -->
     <defs>
-      <pattern id="grid" width="2" height="2" patternUnits="userSpaceOnUse">
+      <pattern
+        id="grid"
+        width="2"
+        height="2"
+        patternUnits="userSpaceOnUse"
+      >
         <path
           d="M 2 0 L 0 0 0 2"
           fill="none"
@@ -35,7 +40,7 @@
         />
       </pattern>
     </defs>
-    
+
     <rect
       x="3"
       y="5"
@@ -44,7 +49,7 @@
       fill="url(#grid)"
       class="canvas-grid"
     />
-    
+
     <!-- 🧩 拖拽组件块 -->
     <g class="component-blocks">
       <!-- 📋 表单组件 -->
@@ -57,7 +62,7 @@
         fill="var(--enterprise-icon-color-primary, #409EFF)"
         class="component-block form-component"
       />
-      
+
       <!-- 📊 图表组件 -->
       <rect
         x="10"
@@ -68,7 +73,7 @@
         fill="var(--enterprise-icon-color-success, #67C23A)"
         class="component-block chart-component"
       />
-      
+
       <!-- 📄 表格组件 -->
       <rect
         x="15"
@@ -79,7 +84,7 @@
         fill="var(--enterprise-icon-color-warning, #E6A23C)"
         class="component-block table-component"
       />
-      
+
       <!-- 🔲 布局组件 -->
       <rect
         x="5"
@@ -93,7 +98,7 @@
         stroke-dasharray="2,1"
         class="component-block layout-component"
       />
-      
+
       <!-- 💡 逻辑组件 -->
       <circle
         cx="16"
@@ -103,7 +108,7 @@
         class="component-block logic-component"
       />
     </g>
-    
+
     <!-- ⚡ 组件连接线 -->
     <g class="component-connections">
       <path
@@ -114,7 +119,7 @@
         stroke-linecap="round"
         class="connection-line"
       />
-      
+
       <path
         d="M14 8 Q 15 9 16 11"
         stroke="var(--enterprise-icon-color-success, #67C23A)"
@@ -124,7 +129,7 @@
         class="connection-line"
       />
     </g>
-    
+
     <!-- 🎯 选择器工具 -->
     <g class="selector-tool">
       <circle
@@ -146,7 +151,7 @@
         class="selector-arrow"
       />
     </g>
-    
+
     <!-- 🛠️ 工具栏 -->
     <g class="toolbar">
       <rect
@@ -159,20 +164,38 @@
         opacity="0.8"
         class="toolbar-bg"
       />
-      
+
       <!-- 🔧 工具按钮 -->
-      <circle cx="4" cy="2.75" r="0.3" fill="currentColor" class="toolbar-btn" />
-      <circle cx="6" cy="2.75" r="0.3" fill="currentColor" class="toolbar-btn" />
-      <circle cx="8" cy="2.75" r="0.3" fill="currentColor" class="toolbar-btn" />
-      
-      <!-- 🏃 运行按钮 */
+      <circle
+        cx="4"
+        cy="2.75"
+        r="0.3"
+        fill="currentColor"
+        class="toolbar-btn"
+      />
+      <circle
+        cx="6"
+        cy="2.75"
+        r="0.3"
+        fill="currentColor"
+        class="toolbar-btn"
+      />
+      <circle
+        cx="8"
+        cy="2.75"
+        r="0.3"
+        fill="currentColor"
+        class="toolbar-btn"
+      />
+
+      <!-- 🏃 运行按钮 -->
       <polygon
         points="19,2.25 21,2.75 19,3.25"
         fill="var(--enterprise-icon-color-success, #67C23A)"
         class="run-button"
       />
     </g>
-    
+
     <!-- ✨ 魔法效果粒子 -->
     <g class="magic-particles">
       <circle
@@ -200,7 +223,7 @@
         class="particle particle-3"
       />
     </g>
-    
+
     <!-- 🔮 代码生成指示器 -->
     <g class="code-generation-indicator">
       <rect
@@ -215,7 +238,7 @@
         stroke-dasharray="2,1"
         class="progress-bar"
       />
-      
+
       <rect
         x="4"
         y="17"
@@ -488,11 +511,11 @@ withDefaults(defineProps<LowCodeIconProps>(), {
   .enterprise-lowcode-icon {
     /* 移动端优化 */
   }
-  
+
   .component-blocks {
     transform: scale(0.9);
   }
-  
+
   .toolbar {
     transform: scale(0.95);
   }
@@ -510,12 +533,12 @@ withDefaults(defineProps<LowCodeIconProps>(), {
   .canvas-frame {
     stroke-width: 3;
   }
-  
+
   .component-block {
     stroke: currentColor;
     stroke-width: 1;
   }
-  
+
   .connection-line {
     stroke-width: 2;
   }

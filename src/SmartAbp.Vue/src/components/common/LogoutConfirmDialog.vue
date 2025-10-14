@@ -25,7 +25,7 @@
             :src="userAvatar"
             alt="用户头像"
             class="user-avatar"
-          />
+          >
           <div class="user-details">
             <div class="username">
               {{ userName }}

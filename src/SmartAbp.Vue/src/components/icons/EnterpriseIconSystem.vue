@@ -15,8 +15,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue'
 import type { Component } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 
 // 🎯 图标系统接口定义
 export interface IconProps {
@@ -47,7 +47,7 @@ const ENTERPRISE_ICONS = {
   'workspace': { component: 'WorkspaceIcon', fallback: 'fas fa-desktop' },
   'overview': { component: 'OverviewIcon', fallback: 'fas fa-chart-line' },
   'quickstart': { component: 'QuickstartIcon', fallback: 'fas fa-rocket' },
-  
+
   // 💼 业务管理
   'business': { component: 'BusinessIcon', fallback: 'fas fa-briefcase' },
   'project': { component: 'ProjectIcon', fallback: 'fas fa-project-diagram' },
@@ -55,35 +55,35 @@ const ENTERPRISE_ICONS = {
   'customer': { component: 'CustomerIcon', fallback: 'fas fa-users' },
   'contract': { component: 'ContractIcon', fallback: 'fas fa-file-contract' },
   'invoice': { component: 'InvoiceIcon', fallback: 'fas fa-file-invoice' },
-  
+
   // 📊 数据管理
   'database': { component: 'DatabaseIcon', fallback: 'fas fa-database' },
   'table': { component: 'TableIcon', fallback: 'fas fa-table' },
   'chart': { component: 'ChartIcon', fallback: 'fas fa-chart-bar' },
   'analytics': { component: 'AnalyticsIcon', fallback: 'fas fa-analytics' },
   'report': { component: 'ReportIcon', fallback: 'fas fa-file-alt' },
-  
+
   // 👥 用户权限
   'user': { component: 'UserIcon', fallback: 'fas fa-user' },
   'users': { component: 'UsersIcon', fallback: 'fas fa-users' },
   'role': { component: 'RoleIcon', fallback: 'fas fa-user-tag' },
   'permission': { component: 'PermissionIcon', fallback: 'fas fa-shield-alt' },
   'security': { component: 'SecurityIcon', fallback: 'fas fa-lock' },
-  
+
   // ⚙️ 系统设置
   'settings': { component: 'SettingsIcon', fallback: 'fas fa-cogs' },
   'config': { component: 'ConfigIcon', fallback: 'fas fa-sliders-h' },
   'logs': { component: 'LogsIcon', fallback: 'fas fa-history' },
   'monitor': { component: 'MonitorIcon', fallback: 'fas fa-desktop' },
   'backup': { component: 'BackupIcon', fallback: 'fas fa-hdd' },
-  
+
   // 🛠️ 开发工具
   'code': { component: 'CodeIcon', fallback: 'fas fa-code' },
   'lowcode': { component: 'LowCodeIcon', fallback: 'fas fa-magic' },
   'generator': { component: 'GeneratorIcon', fallback: 'fas fa-cog' },
   'template': { component: 'TemplateIcon', fallback: 'fas fa-file-code' },
   'api': { component: 'ApiIcon', fallback: 'fas fa-plug' },
-  
+
   // 📋 操作动作
   'add': { component: 'AddIcon', fallback: 'fas fa-plus' },
   'edit': { component: 'EditIcon', fallback: 'fas fa-edit' },
@@ -98,7 +98,7 @@ const ENTERPRISE_ICONS = {
   'download': { component: 'DownloadIcon', fallback: 'fas fa-download' },
   'export': { component: 'ExportIcon', fallback: 'fas fa-file-export' },
   'import': { component: 'ImportIcon', fallback: 'fas fa-file-import' },
-  
+
   // 📁 导航控制
   'expand': { component: 'ExpandIcon', fallback: 'fas fa-chevron-down' },
   'collapse': { component: 'CollapseIcon', fallback: 'fas fa-chevron-up' },
@@ -106,14 +106,14 @@ const ENTERPRISE_ICONS = {
   'prev': { component: 'PrevIcon', fallback: 'fas fa-chevron-left' },
   'close': { component: 'CloseIcon', fallback: 'fas fa-times' },
   'menu': { component: 'MenuIcon', fallback: 'fas fa-bars' },
-  
+
   // 🔔 状态提示
   'success': { component: 'SuccessIcon', fallback: 'fas fa-check-circle' },
   'warning': { component: 'WarningIcon', fallback: 'fas fa-exclamation-triangle' },
   'error': { component: 'ErrorIcon', fallback: 'fas fa-times-circle' },
   'info': { component: 'InfoIcon', fallback: 'fas fa-info-circle' },
   'loading': { component: 'LoadingIcon', fallback: 'fas fa-spinner' },
-  
+
   // 📱 通用图标
   'home': { component: 'HomeIcon', fallback: 'fas fa-home' },
   'folder': { component: 'FolderIcon', fallback: 'fas fa-folder' },
@@ -130,7 +130,7 @@ const ENTERPRISE_ICONS = {
 // 🎨 图标样式主题
 const ICON_THEMES = {
   primary: 'var(--el-color-primary)',
-  success: 'var(--el-color-success)', 
+  success: 'var(--el-color-success)',
   warning: 'var(--el-color-warning)',
   danger: 'var(--el-color-danger)',
   info: 'var(--el-color-info)',
@@ -153,7 +153,9 @@ const props = withDefaults(defineProps<IconProps>(), {
   variant: 'filled',
   disabled: false,
   clickable: false,
-  animation: 'none'
+  animation: 'none',
+  class: '',
+  tooltip: ''
 })
 
 // Emits 定义
@@ -164,15 +166,15 @@ const emit = defineEmits<{
 // 🔍 图标组件解析
 const iconComponent = computed<Component | string>(() => {
   const iconConfig = ENTERPRISE_ICONS[props.name as keyof typeof ENTERPRISE_ICONS]
-  
+
   if (!iconConfig) {
     console.warn(`🚨 未找到图标: ${props.name}`)
     return 'i' // 返回空的 i 标签
   }
-  
+
   // 尝试加载自定义图标组件，如果不存在则使用FontAwesome回退
   try {
-    return defineAsyncComponent(() => 
+    return defineAsyncComponent(() =>
       import(`./enterprise/${iconConfig.component}.vue`).catch(() => {
         // 如果自定义图标不存在，使用 FontAwesome 回退
         console.info(`📦 使用FontAwesome回退: ${iconConfig.fallback} for ${props.name}`)
@@ -190,52 +192,52 @@ const iconComponent = computed<Component | string>(() => {
 // 🎨 动态样式计算
 const iconClasses = computed(() => {
   const classes = ['enterprise-icon']
-  
+
   // 添加自定义类名
   if (props.class) {
     classes.push(props.class)
   }
-  
+
   // 添加状态类名
   if (props.disabled) {
     classes.push('enterprise-icon--disabled')
   }
-  
+
   if (props.clickable) {
     classes.push('enterprise-icon--clickable')
   }
-  
+
   // 添加动画类名
   if (props.animation !== 'none') {
     classes.push(`enterprise-icon--${props.animation}`)
   }
-  
+
   // 添加变体类名
   classes.push(`enterprise-icon--${props.variant}`)
-  
+
   return classes
 })
 
 // 📐 动态样式对象
 const iconStyles = computed(() => {
   const styles: Record<string, string> = {}
-  
+
   // 设置尺寸
-  const size = typeof props.size === 'number' 
-    ? props.size 
-    : ICON_SIZES[props.size]
-  
+  const size = typeof props.size === 'number'
+    ? props.size
+    : ICON_SIZES[props.size as keyof typeof ICON_SIZES]
+
   styles.width = `${size}px`
   styles.height = `${size}px`
   styles.fontSize = `${size}px`
-  
+
   // 设置颜色
   if (props.color in ICON_THEMES) {
     styles.color = ICON_THEMES[props.color as keyof typeof ICON_THEMES]
   } else {
     styles.color = props.color
   }
-  
+
   return styles
 })
 

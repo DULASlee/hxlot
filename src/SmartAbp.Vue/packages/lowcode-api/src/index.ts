@@ -7,9 +7,9 @@ export type { TableSchema } from "./types/index.js"
 // ============================================================================
 // HTTP客户端导出
 // ============================================================================
-export * from "./http-client.js"
-export { createHttpClient, http } from "./http-client.js"
-export type { ApiError, ApiResponse, HttpClient, HttpClientConfig } from "./http-client.js"
+export * from "./http-client"
+export { createHttpClient, http } from "./http-client"
+export type { ApiError, ApiResponse, HttpClient, HttpClientConfig } from "./http-client"
 
 // ============================================================================
 // 代码生成器API导出
