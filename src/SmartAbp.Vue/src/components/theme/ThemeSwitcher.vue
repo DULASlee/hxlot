@@ -28,7 +28,7 @@
               type="checkbox"
               :checked="isDarkMode"
               @change="toggleDarkMode"
-            />
+            >
             <span class="toggle-slider" />
           </label>
         </div>

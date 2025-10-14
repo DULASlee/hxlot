@@ -113,9 +113,30 @@
     
     <!-- 📊 微型柱状图 -->
     <g class="dashboard-mini-bars">
-      <line x1="15" y1="11" x2="15" y2="9" stroke="currentColor" stroke-width="1"/>
-      <line x1="17" y1="11" x2="17" y2="8" stroke="currentColor" stroke-width="1"/>
-      <line x1="19" y1="11" x2="19" y2="10" stroke="currentColor" stroke-width="1"/>
+      <line
+        x1="15"
+        y1="11"
+        x2="15"
+        y2="9"
+        stroke="currentColor"
+        stroke-width="1"
+      />
+      <line
+        x1="17"
+        y1="11"
+        x2="17"
+        y2="8"
+        stroke="currentColor"
+        stroke-width="1"
+      />
+      <line
+        x1="19"
+        y1="11"
+        x2="19"
+        y2="10"
+        stroke="currentColor"
+        stroke-width="1"
+      />
     </g>
     
     <!-- 🔔 通知指示器 -->

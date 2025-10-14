@@ -1,12 +1,13 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { basename, dirname, extname, join } from 'node:path';
 export function createComponentConflictDetector(options) {
-    const { packagesRoot, packageComponentDirs, namingRules, includeMainApp = false, mainComponentsDir = 'src/components', failOnConflict = true, largeFileLineThreshold = 300, } = options;
+    const { packagesRoot, packageComponentDirs, namingRules, includeMainApp = false, mainComponentsDir = 'src/components', failOnConflict = true, largeFileLineThreshold = 300, excludeDirs = [], } = options;
     return {
         name: 'smartabp-component-conflict-detector',
         enforce: 'pre',
         async buildStart() {
             const components = [];
+            const absExcludeDirs = excludeDirs.map(rel => join(process.cwd(), packagesRoot, rel));
             // 扫描packages内组件
             for (const relDir of packageComponentDirs) {
                 const packageName = relDir.split('/')[0];
@@ -23,6 +24,10 @@ export function createComponentConflictDetector(options) {
                     continue;
                 }
                 scanVueFiles(absDir).forEach(filePath => {
+                    // 排除在 excludeDirs 下的文件
+                    if (absExcludeDirs.some(ex => filePath.startsWith(ex))) {
+                        return;
+                    }
                     const compName = inferComponentName(filePath);
                     const fullName = `${prefix}${compName}`;
                     components.push({

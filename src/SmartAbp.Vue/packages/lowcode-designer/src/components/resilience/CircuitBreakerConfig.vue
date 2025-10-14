@@ -62,19 +62,19 @@
       </template>
       <div class="state-flow">
         <div class="state closed">
-          关闭状态<br />(Closed)
+          关闭状态<br>(Closed)
         </div>
         <div class="arrow">
           →
         </div>
         <div class="state open">
-          打开状态<br />(Open)
+          打开状态<br>(Open)
         </div>
         <div class="arrow">
           →
         </div>
         <div class="state half-open">
-          半开状态<br />(Half-Open)
+          半开状态<br>(Half-Open)
         </div>
       </div>
       <div class="state-desc">

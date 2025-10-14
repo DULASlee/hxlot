@@ -1,6 +1,6 @@
 <!--
   🍎 UltraSimpleStudio - 极简单页面代码生成
-  
+
   设计理念：一个页面完成所有操作
   - 单页面：选表 + 配置 + 生成
   - 8个元数据：充分必要
@@ -21,7 +21,7 @@
             </p>
           </div>
           <div class="header-actions">
-            <el-tooltip 
+            <el-tooltip
               :content="mode === 'dark' ? t('common.switchToLight') : t('common.switchToDark')"
               placement="bottom"
             >
@@ -50,35 +50,21 @@
               :label="t('ultraSimple.form.selectTable') + ' *'"
               required
             >
-              <template v-if="isLargeTableList">
-                <el-select-v2
-                  v-model="selectedTable"
-                  :options="tableOptions"
-                  :placeholder="t('ultraSimple.form.tablePlaceholder')"
-                  size="large"
-                  filterable
-                  clearable
-                  style="width: 100%"
+              <!-- ✅ 修复：移除 clearable 属性，与能正常工作的下拉框保持一致 -->
+              <el-select
+                v-model="selectedTable"
+                :placeholder="t('ultraSimple.form.tablePlaceholder')"
+                size="large"
+                filterable
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="table in availableTables"
+                  :key="table.name"
+                  :label="table.name"
+                  :value="table.name"
                 />
-              </template>
-              <template v-else>
-                <el-select
-                  v-model="selectedTable"
-                  :placeholder="t('ultraSimple.form.tablePlaceholder')"
-                  size="large"
-                  filterable
-                  clearable
-                  style="width: 100%"
-                  @change="handleTableSelected"
-                >
-                  <el-option
-                    v-for="table in availableTables"
-                    :key="table.name"
-                    :label="`${table.displayName} (${table.name})`"
-                    :value="table.name"
-                  />
-                </el-select>
-              </template>
+              </el-select>
             </el-form-item>
 
             <el-divider />
@@ -93,13 +79,12 @@
                   :label="t('ultraSimple.form.systemName') + ' *'"
                   required
                 >
+                  <!-- ✅ 修复：移除 allow-create 和 default-first-option -->
                   <el-select
                     v-model="config.systemName"
                     :placeholder="t('ultraSimple.form.systemNamePlaceholder')"
                     size="large"
                     filterable
-                    allow-create
-                    default-first-option
                     style="width: 100%"
                   >
                     <el-option
@@ -312,7 +297,7 @@
           <div class="panel-header">
             <span>{{ t('ultraSimple.logs.title') }}</span>
           </div>
-          
+
           <!-- 进度条 -->
           <el-progress
             v-if="generating || generationComplete"
@@ -406,15 +391,13 @@ interface GenerationLog {
   type: 'info' | 'success' | 'warning' | 'error'
 }
 
-// 响应式状态
+// ✅ 简化：响应式状态（移除不必要的计算属性）
 const selectedTable = ref<string>('')
 const availableTables = ref<DatabaseTable[]>([])
 const loadingTables = ref(false)
-const isLargeTableList = computed(() => availableTables.value.length >= 30)
-const tableOptions = computed(() => availableTables.value.map(t => ({ label: `${t.displayName} (${t.name})`, value: t.name })))
 
 const config = ref<MetadataConfig>({
-  systemName: 'SmartAbp',  // ✅ 设置默认值
+  systemName: '',  // 🔥 修复：移除默认值，让用户手动选择
   moduleName: '',
   displayName: '',
   architecturePattern: 'Crud',
@@ -422,6 +405,22 @@ const config = ref<MetadataConfig>({
   parentMenuId: 'business',
   menuIcon: 'database'
 })
+
+// 🔥 调试：监听所有变化
+if (import.meta.env.DEV) {
+  watch(() => selectedTable.value, (val) => {
+    console.log('🔍 selectedTable changed:', val)
+  })
+  watch(() => config.value.systemName, (val) => {
+    console.log('🔍 config.systemName changed:', val)
+  })
+  watch(() => config.value.architecturePattern, (val) => {
+    console.log('🔍 config.architecturePattern changed:', val)
+  })
+  watch(() => config.value.databaseProvider, (val) => {
+    console.log('🔍 config.databaseProvider changed:', val)
+  })
+}
 
 const generating = ref(false)
 const generationComplete = ref(false)
@@ -453,6 +452,7 @@ const derivedApiEndpoint = computed(() => {
   return `/api/app/${config.value.moduleName.toLowerCase()}`
 })
 
+// 🔥 简化：移除验证状态依赖，只检查必填字段
 const isConfigValid = computed(() => {
   return !!(
     selectedTable.value &&
@@ -461,15 +461,16 @@ const isConfigValid = computed(() => {
     config.value.displayName &&
     config.value.architecturePattern &&
     config.value.databaseProvider &&
-    config.value.parentMenuId &&
-    validationState.isValid // ✅ B方案优化：依赖验证状态
+    config.value.parentMenuId
+    // ❌ 临时移除验证依赖，避免干扰选择
+    // validationState.isValid
   )
 })
 
 // ✅ B方案优化：将config转换为ModuleMetadata进行验证
 const convertToModuleMetadata = (): Partial<ModuleMetadata> => {
   const selectedTableData = availableTables.value.find(t => t.name === selectedTable.value)
-  
+
   return {
     // 使用UnifiedModuleMetadata最小必要字段以通过类型检查
     id: crypto.randomUUID(),
@@ -496,13 +497,13 @@ const convertToModuleMetadata = (): Partial<ModuleMetadata> => {
 const performValidation = () => {
   try {
     validationState.isValidating = true
-    
+
     // 转换为ModuleMetadata
     const metadata = convertToModuleMetadata()
-    
+
     // 使用safeValidate避免异常
     const result = safeValidateModuleMetadata(metadata)
-    
+
     if (result.success) {
       validationState.errors = []
       validationState.isValid = true
@@ -528,43 +529,61 @@ const performValidation = () => {
 // ✅ B方案优化：使用@vueuse/core的防抖函数（自动管理资源）
 const debouncedValidate = useDebounceFn(performValidation, 300)
 
-// ✅ B方案优化：精确监听关键字段（避免deep: true的性能问题）
-const watchedFields = computed(() => [
-  selectedTable.value,
-  config.value.systemName,
-  config.value.moduleName,
-  config.value.displayName,
-  config.value.architecturePattern,
-  config.value.databaseProvider,
-  config.value.parentMenuId
-])
+// 🔥 临时禁用：移除所有可能干扰的 watch 监听器
+// 问题：多个 watch 互相干扰导致下拉框无法选择
+// 解决方案：先让基础功能工作，后续再逐步添加
 
-// 监听关键字段变化，触发防抖验证
-watch(watchedFields, () => {
-  validationState.isDirty = true
-  debouncedValidate()
-}, { immediate: true })
+// ❌ 临时禁用验证 watch
+// const watchedFields = computed(() => [
+//   selectedTable.value,
+//   config.value.systemName,
+//   config.value.moduleName,
+//   config.value.displayName,
+//   config.value.architecturePattern,
+//   config.value.databaseProvider,
+//   config.value.parentMenuId
+// ])
 
-// 确保任意选择器变更都能联动填充模块名/显示名
-watch(selectedTable, (val) => {
-  if (val) {
-    handleTableSelected(val)
-  }
-})
+// watch(watchedFields, () => {
+//   validationState.isDirty = true
+//   debouncedValidate()
+// }, { immediate: true })
+
+// ❌ 临时禁用自动选中
+// watch(availableTables, (tables) => {
+//   if (tables.length > 0 && !selectedTable.value) {
+//     ensureDefaultSelectedTable()
+//   }
+// }, { immediate: true })
+
+// ❌ 临时禁用自动填充
+// watch(selectedTable, (tableName) => {
+//   if (!tableName) return
+//
+//   console.log('✅ 表已选择:', tableName)
+//
+//   const table = availableTables.value.find(t => t.name === tableName)
+//   if (table) {
+//     if (!config.value.moduleName) {
+//       config.value.moduleName = tableName.replace(/^[A-Z]+_/, '').replace(/_/g, '')
+//     }
+//     if (!config.value.displayName) {
+//       config.value.displayName = table.displayName || tableName
+//     }
+//   }
+// })
 
 // ✅ B方案优化：组件销毁时自动清理（防止内存泄漏）
 onUnmounted(() => {
   // useDebounceFn会自动处理清理，无需手动调用cancel
 })
 
-// 事件处理
-const handleTableSelected = (tableName: string) => {
-  if (!tableName) return
-  const table = availableTables.value.find(t => t.name === tableName)
-  if (table) {
-    config.value.moduleName = tableName
-    config.value.displayName = table.displayName
-    ElMessage.success(t('ultraSimple.messages.tableSelected', { tableName: table.displayName }))
+// ✅ 简化：确保默认选中第一个表
+const ensureDefaultSelectedTable = () => {
+  if (!selectedTable.value && availableTables.value.length > 0) {
+    const firstTable = availableTables.value[0].name
+    selectedTable.value = firstTable
+    console.log('✅ 自动选中第一个表:', firstTable)
   }
 }
 
@@ -589,11 +608,11 @@ const startGeneration = async () => {
 
     addLog(t('ultraSimple.logs.parsingSchema'), 'info')
     const selectedTableData = availableTables.value.find(t => t.name === selectedTable.value)
-    
+
     if (!selectedTableData?.schema) {
       addLog(t('ultraSimple.logs.schemaNotLoaded'), 'warning')
     }
-    
+
     generationProgress.value = 15
 
     // ✅ B方案优化：复用转换函数，避免重复代码
@@ -610,7 +629,7 @@ const startGeneration = async () => {
       generateTests: false,
       generateDocs: false
     })
-    
+
     if (!result.success) {
       throw new Error(result.message || t('ultraSimple.messages.error'))
     }
@@ -622,13 +641,13 @@ const startGeneration = async () => {
 
     addLog(t('ultraSimple.logs.generatingBackend'), 'info')
     await pollGenerationProgress(generationSessionId.value || 'latest')
-    
+
     generationProgress.value = 100
     addLog(t('ultraSimple.logs.generationComplete'), 'success')
     if (generationSessionId.value) {
       addLog(t('ultraSimple.messages.viewCode', { sessionId: generationSessionId.value }), 'info')
     }
-    
+
     if (result.generatedFiles) {
       addLog(t('ultraSimple.logs.filesGenerated', { count: result.generatedFiles.length }), 'success')
     }
@@ -637,7 +656,7 @@ const startGeneration = async () => {
     ElMessage.success(t('ultraSimple.messages.success'))
   } catch (error) {
     const errorMsg = (error as Error).message || t('ultraSimple.validation.unknownError')
-    
+
     // 增强错误处理 - 分类错误类型
     if (errorMsg.includes('404') || errorMsg.includes('not found')) {
       // API端点不存在
@@ -659,13 +678,23 @@ const startGeneration = async () => {
       // 其他错误
       addLog(t('ultraSimple.logs.generationFailed', { error: errorMsg }), 'error')
     }
-    
+
     // 记录完整错误信息和堆栈，便于调试
     console.error('Code generation error:', error)
-    
+
     // 用户友好提示
+<<<<<<< Updated upstream
     ElMessage.error(t('ultraSimple.messages.error'))
     
+=======
+    ElMessage({
+      message: t('ultraSimple.messages.error'),
+      type: 'error',
+      duration: 5000,
+      showClose: true
+    })
+
+>>>>>>> Stashed changes
     // 重置状态以便重试
     generationComplete.value = false
   } finally {
@@ -677,23 +706,23 @@ const pollGenerationProgress = async (sessionId: string) => {
   const maxAttempts = 60
   let attempts = 0
   let backoffDelay = 1000 // 初始延迟1秒
-  
+
   while (attempts < maxAttempts) {
     try {
       // 获取生成状态
       const progress = await codeGeneratorApi.getGenerationStatus(sessionId)
-      
+
       // 有进度更新，重置退避延迟
       if (progress.percentage > generationProgress.value) {
         backoffDelay = 1000 // 重置为初始值
         generationProgress.value = Math.min(progress.percentage, 95)
-        
+
         // 添加进度日志
         if (progress.currentStep) {
           addLog(`📊 ${progress.currentStep}`, 'info')
         }
       }
-      
+
       // 处理不同状态
       if (progress.status === 'completed') {
         addLog('✅ 代码生成已完成', 'success')
@@ -704,7 +733,7 @@ const pollGenerationProgress = async (sessionId: string) => {
         // 处理中
         addLog(`⏳ 生成中: ${progress.percentage}%`, 'info')
       }
-      
+
       // 指数退避策略：每次重试延迟增加，但不超过10秒
       await sleep(backoffDelay)
       backoffDelay = Math.min(backoffDelay * 1.5, 10000)
@@ -713,19 +742,19 @@ const pollGenerationProgress = async (sessionId: string) => {
       const errorMsg = (error as Error).message || 'Unknown error'
       addLog(`⚠️ 轮询状态错误: ${errorMsg}`, 'warning')
       console.warn('Status polling error:', error)
-      
+
       // 指数退避策略，但错误情况下增长更快
       await sleep(backoffDelay)
       backoffDelay = Math.min(backoffDelay * 2, 10000)
       attempts++
-      
+
       // 到达一定尝试次数后如果还有错误，提供建议
       if (attempts >= 5 && attempts % 5 === 0) {
         addLog('💡 提示: 如果长时间无响应，请检查网络连接或后端服务状态', 'info')
       }
     }
   }
-  
+
   // 超过最大尝试次数
   addLog(t('ultraSimple.logs.queryTimeout'), 'warning')
   addLog('生成可能仍在继续，请稍后查看结果', 'info')
@@ -736,11 +765,11 @@ const viewGeneratedCode = async () => {
     ElMessage.warning(t('ultraSimple.validation.noCodeToView'))
     return
   }
-  
+
   try {
     addLog(t('ultraSimple.logs.fetchingPreview'), 'info')
     const preview = await codeGeneratorApi.getGenerationStatus(generationSessionId.value)
-    
+
     if (preview.completedFiles && preview.completedFiles.length > 0) {
       ElMessage.success(t('ultraSimple.logs.filesGenerated', { count: preview.completedFiles.length }))
       addLog(t('ultraSimple.logs.fileList', { files: preview.completedFiles.join(', ') }), 'info')
@@ -757,22 +786,22 @@ const downloadGeneratedCode = async () => {
     ElMessage.warning(t('ultraSimple.validation.noCodeToDownload'))
     return
   }
-  
+
   try {
     addLog(t('ultraSimple.logs.packagingCode'), 'info')
-    
+
     // 添加下载进度指示
     const downloadStartTime = Date.now()
     generationProgress.value = 75
-    
+
     // 发起导出请求
     const blob = await codeGeneratorApi.exportGeneratedCode(generationSessionId.value)
-    
+
     // 检查返回的是否是有效的Blob
     if (!(blob instanceof Blob)) {
       throw new Error('服务器未返回有效的ZIP文件')
     }
-    
+
     // 检查blob大小
     if (blob.size < 100) { // 小于100字节可能是错误
       const text = await new Response(blob).text()
@@ -786,10 +815,10 @@ const downloadGeneratedCode = async () => {
         }
       }
     }
-    
+
     // 计算下载耗时
     const downloadDuration = Date.now() - downloadStartTime
-    
+
     // 创建下载链接
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -798,18 +827,18 @@ const downloadGeneratedCode = async () => {
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
-    
+
     // 延迟释放URL对象，以确保下载开始
     setTimeout(() => {
       window.URL.revokeObjectURL(url)
     }, 1000)
-    
+
     generationProgress.value = 100
     addLog(`✅ 下载完成 (${(blob.size / 1024).toFixed(1)} KB, ${downloadDuration}ms)`, 'success')
     ElMessage.success(t('ultraSimple.messages.downloadSuccess'))
   } catch (error) {
     const errorMsg = (error as Error).message || '未知错误'
-    
+
     // 错误分类处理
     if (errorMsg.includes('404') || errorMsg.includes('not found')) {
       addLog('⚠️ 导出API不存在，请检查API路径', 'error')
@@ -820,7 +849,7 @@ const downloadGeneratedCode = async () => {
     } else {
       addLog(`⚠️ ${t('ultraSimple.logs.downloadFailed')}: ${errorMsg}`, 'error')
     }
-    
+
     console.error('Download error:', error)
     ElMessage.error(t('ultraSimple.messages.downloadError'))
   }
@@ -847,20 +876,20 @@ const resetToStart = () => {
 // 初始化
 onMounted(async () => {
   let connectionTest: any = null
-  
+
   try {
     loadingTables.value = true
     addLog(t('ultraSimple.logs.connectingDatabase'), 'info')
-    
+
     connectionTest = await codeGeneratorApi.testDatabaseConnection({
       provider: 'SqlServer',
       connectionString: 'Default'
     })
-    
+
     if (connectionTest.success) {
       addLog(t('ultraSimple.logs.databaseConnected', { dbName: connectionTest.databaseName }), 'success')
       addLog(t('ultraSimple.logs.tablesFound', { count: connectionTest.tableCount || 0 }), 'info')
-      
+
       // 🔥 优先级1：检查 connectionTest 是否直接包含表名列表
       if (connectionTest.tables && Array.isArray(connectionTest.tables) && connectionTest.tables.length > 0) {
         // ✅ 最佳方案：直接使用 connectionTest 返回的表名列表
@@ -870,6 +899,7 @@ onMounted(async () => {
           columnCount: 0,
           schema: null
         }))
+        ensureDefaultSelectedTable()
         addLog(`✅ 成功加载 ${availableTables.value.length} 个真实表名`, 'success')
         console.log('✅ 数据库表加载成功（真实表名）:', availableTables.value)
       } else {
@@ -879,7 +909,7 @@ onMounted(async () => {
             connectionStringName: 'Default',
             provider: 'SqlServer'
           })
-          
+
           if (schema.tables && schema.tables.length > 0) {
             // ✅ 成功获取完整架构
             availableTables.value = schema.tables.map((table: TableSchema) => ({
@@ -888,7 +918,7 @@ onMounted(async () => {
               columnCount: (table.columns && Array.isArray(table.columns)) ? table.columns.length : 0,
               schema: table
             }))
-            
+            ensureDefaultSelectedTable()
             addLog(t('ultraSimple.logs.tablesLoaded', { count: schema.tables.length }), 'success')
             console.log('✅ 数据库表加载成功（完整架构）:', availableTables.value.length, '个表')
           } else {
@@ -898,7 +928,7 @@ onMounted(async () => {
           // 🔥 优先级3（最后降级）：使用表占位符
           console.warn('⚠️ introspectDatabase 失败，使用最终降级方案:', schemaError)
           addLog('⚠️ 无法获取详细表架构，使用表占位符', 'warning')
-          
+
           if (connectionTest.tableCount && connectionTest.tableCount > 0) {
             availableTables.value = Array.from({ length: connectionTest.tableCount }, (_, i) => ({
               name: `Table${i + 1}`,
@@ -906,7 +936,7 @@ onMounted(async () => {
               columnCount: 0,
               schema: undefined
             }))
-            
+            ensureDefaultSelectedTable()
             addLog(`⚠️ 已生成 ${availableTables.value.length} 个表占位符（最终降级）`, 'warning')
             addLog('❌ 无法获取真实表名，请检查后端API配置', 'error')
             console.log('⚠️ 降级到表占位符:', availableTables.value.length, '个表')
@@ -921,7 +951,7 @@ onMounted(async () => {
   } catch (error) {
     console.error('❌ 数据库连接完全失败:', error)
     addLog(t('ultraSimple.logs.usingMockData'), 'warning')
-    
+
     // 🔥 最终降级：优先尝试使用 connectionTest 中的表名
     if (connectionTest?.tables && Array.isArray(connectionTest.tables) && connectionTest.tables.length > 0) {
       // 最佳：使用真实表名
@@ -946,7 +976,7 @@ onMounted(async () => {
     }
   } finally {
     loadingTables.value = false
-    
+
     // 🔥 最终检查
     if (availableTables.value.length === 0) {
       addLog('❌ 未能加载数据库表列表，请检查数据库连接或联系管理员', 'error')
@@ -954,6 +984,9 @@ onMounted(async () => {
       console.error('❌ availableTables 最终为空，connectionTest:', connectionTest)
     } else {
       console.log('✅ 最终成功加载:', availableTables.value.length, '个表')
+      console.log('📋 表列表:', availableTables.value.map(t => t.name).slice(0, 5))
+      console.log('🔍 selectedTable 当前值:', selectedTable.value)
+      console.log('🔍 config.systemName 当前值:', config.value.systemName)
     }
   }
 })
@@ -981,7 +1014,7 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 .studio-header {
   text-align: center;
   margin-bottom: var(--spacing-xl);
-  
+
   .header-content {
     display: flex;
     justify-content: space-between;
@@ -989,24 +1022,24 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
     max-width: 800px;
     margin: 0 auto;
   }
-  
+
   .header-text {
     text-align: left;
     flex: 1;
   }
-  
+
   .header-actions {
     .theme-toggle {
       width: 40px;
       height: 40px;
       font-size: 18px;
-      
+
       &:hover {
         background: var(--color-bg-secondary);
       }
     }
   }
-  
+
   .title {
     font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-semibold);
@@ -1014,7 +1047,7 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
     margin: 0 0 var(--spacing-sm) 0;
     letter-spacing: -0.5px;
   }
-  
+
   .subtitle {
     font-size: var(--font-size-base);
     color: var(--color-text-secondary);
@@ -1038,30 +1071,30 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
     padding-bottom: var(--spacing-sm);
     border-bottom: 2px solid var(--color-border-primary);
   }
-  
+
   .derived-info {
     margin-top: var(--spacing-xl);
     border-radius: var(--radius-base);
-    
+
     div {
       margin: var(--spacing-sm) 0;
       font-size: var(--font-size-sm);
     }
   }
-  
+
   // ✅ B方案优化：验证错误样式
   .validation-errors {
     margin-top: var(--spacing-xl);
     border-radius: var(--radius-base);
-    
+
     .error-list {
       margin: 0;
       padding-left: var(--spacing-lg);
-      
+
       li {
         margin: var(--spacing-sm) 0;
         font-size: var(--font-size-sm);
-        
+
         strong {
           color: var(--color-danger);
           margin-right: var(--spacing-xs);
@@ -1069,7 +1102,7 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
       }
     }
   }
-  
+
   .generate-btn {
     width: 100%;
     margin-top: var(--spacing-2xl);
@@ -1077,7 +1110,7 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-semibold);
     border-radius: var(--radius-lg);
-    
+
     &:disabled {
       opacity: 0.6;
       cursor: not-allowed;
@@ -1088,19 +1121,19 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 .config-form {
   :deep(.el-form-item) {
     margin-bottom: var(--spacing-xl);
-    
+
     .el-form-item__label {
       font-weight: var(--font-weight-semibold);
       color: var(--color-text-primary);
       margin-bottom: var(--spacing-xs);
     }
-    
+
     .el-input,
     .el-select {
       .el-input__inner {
         border-radius: var(--radius-base);
         border: 0.5px solid var(--color-border-primary);
-        
+
         &:focus {
           border-color: var(--color-primary);
           box-shadow: 0 0 0 2px var(--color-primary-light);
@@ -1108,7 +1141,7 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
       }
     }
   }
-  
+
   .el-divider {
     margin: var(--spacing-xl) 0;
   }
@@ -1121,7 +1154,7 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
   flex-direction: column;
   height: fit-content;
   max-height: 800px;
-  
+
   .panel-header {
     padding: var(--spacing-lg) var(--spacing-xl);
     border-bottom: 0.5px solid var(--color-border-primary);
@@ -1130,7 +1163,7 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     color: var(--color-text-primary);
   }
-  
+
   .progress-bar {
     padding: 0 var(--spacing-xl);
     margin-top: var(--spacing-xl);
@@ -1141,7 +1174,7 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
   padding: var(--spacing-md) var(--spacing-lg);
   border-radius: var(--radius-base);
   font-size: var(--font-size-sm);
-  
+
   .log-time {
     color: var(--color-text-secondary);
     margin-right: var(--spacing-md);
@@ -1155,51 +1188,51 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
     padding: var(--spacing-xl);
     min-height: 300px;
     max-height: 600px;
-    
+
     .log-entry {
       margin-bottom: var(--spacing-md);
       padding: var(--spacing-md) var(--spacing-lg);
       border-radius: var(--radius-base);
       font-size: var(--font-size-sm);
       transition: all 0.2s var(--ease-out);
-      
+
       &:hover {
         transform: translateX(2px);
         box-shadow: var(--shadow-sm);
       }
-      
+
       .log-time {
         color: var(--color-text-secondary);
         margin-right: var(--spacing-md);
         font-weight: var(--font-weight-medium);
         transition: color 0.2s var(--ease-out);
       }
-      
+
       &.info {
         background: var(--color-info-light);
         color: var(--color-info);
         border-left: 3px solid var(--color-info);
       }
-      
+
       &.success {
         background: var(--color-success-light);
         color: var(--color-success);
         border-left: 3px solid var(--color-success);
       }
-      
+
       &.warning {
         background: var(--color-warning-light);
         color: var(--color-warning);
         border-left: 3px solid var(--color-warning);
       }
-      
+
       &.error {
         background: var(--color-danger-light);
         color: var(--color-danger);
         border-left: 3px solid var(--color-danger);
       }
     }
-    
+
     .log-empty {
       text-align: center;
       color: var(--color-text-placeholder);
@@ -1207,7 +1240,7 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
       font-style: italic;
     }
   }
-  
+
   .action-buttons {
     padding: var(--spacing-xl);
     border-top: 0.5px solid var(--color-border-primary);
@@ -1215,15 +1248,15 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
     gap: var(--spacing-md);
     background: var(--color-bg-secondary);
     border-radius: 0 0 var(--radius-xl) var(--radius-xl);
-    
+
     .el-button {
       flex: 1;
       transition: all 0.2s var(--ease-out);
-      
+
       &:hover {
         transform: translateY(-1px);
       }
-      
+
       &:active {
         transform: translateY(0);
       }
@@ -1236,19 +1269,19 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
     grid-template-columns: 1fr;
     gap: var(--spacing-xl);
   }
-  
+
   .studio-container {
     padding: var(--spacing-lg);
     margin: var(--spacing-md);
   }
-  
+
   .studio-header {
     margin-bottom: var(--spacing-lg);
-    
+
     .title {
       font-size: var(--font-size-2xl);
     }
-    
+
     .subtitle {
       font-size: var(--font-size-sm);
     }
@@ -1260,27 +1293,27 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
     padding: var(--spacing-md);
     background: var(--color-bg-primary);
   }
-  
+
   .studio-container {
     padding: var(--spacing-md);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
   }
-  
+
   .config-panel,
   .log-panel {
     padding: var(--spacing-md);
   }
-  
+
   .action-buttons {
     flex-direction: column;
     gap: var(--spacing-sm);
-    
+
     .el-button {
       width: 100%;
     }
   }
-  
+
   .generate-btn {
     height: 44px;
     font-size: var(--font-size-base);

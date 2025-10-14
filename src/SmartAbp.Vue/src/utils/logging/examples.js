@@ -338,7 +338,6 @@ export async function runAllLoggingExamples() {
 }
 // 浏览器环境下的便捷访问
 if (typeof window !== "undefined") {
-    ;
     window.runLoggingExamples = runAllLoggingExamples;
     window.loggingExamples = {
         basic: basicLoggingExample,

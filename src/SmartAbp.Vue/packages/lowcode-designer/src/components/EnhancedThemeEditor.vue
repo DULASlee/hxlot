@@ -428,7 +428,7 @@
           accept=".json"
           style="display: none;"
           @change="importTheme"
-        />
+        >
       </div>
     </el-card>
   </div>

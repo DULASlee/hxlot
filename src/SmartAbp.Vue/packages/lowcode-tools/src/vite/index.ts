@@ -11,15 +11,16 @@ export function vitePluginLowCode(): Plugin {
         apply: 'serve',
         configureServer(server) {
             server.ws.on('smartabp:clear-cache', () => {
-                // runtime hook; packagesResolver has an exported clear method
+                // runtime hook; avoid cross-package imports per architecture rules
                 try {
-                    // dynamic import to avoid hard dep
-
-                    const mod = require('@/utils/vite/packagesResolver')
-                    mod?.clearComponentPathCache?.()
-
-                    console.log('[vitePluginLowCode] cleared component path cache')
-                } catch { }
+                    const clear = (globalThis as any)?.__smartabp_clearComponentPathCache
+                    if (typeof clear === 'function') {
+                        clear()
+                    }
+                    console.log('[vitePluginLowCode] clear-cache signal processed')
+                } catch (e) {
+                    // no-op
+                }
             })
         }
     }

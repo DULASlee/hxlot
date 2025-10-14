@@ -12,7 +12,7 @@ import { createHttpClient } from './http-client'
 const __env = (import.meta as unknown as { env?: Record<string, string> }).env || {}
 const BASE = __env['VITE_API_BASE_URL'] || '/api'
 const httpClient = createHttpClient({
-    baseURL: BASE || 'http://localhost:44375'
+    baseURL: BASE
 })
 
 /**

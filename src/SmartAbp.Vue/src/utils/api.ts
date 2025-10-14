@@ -1,4 +1,4 @@
- 
+
 import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from "axios"
 import { appConfig } from "@/config"
 import { useAuthStore } from "@/stores"
@@ -49,7 +49,9 @@ export class ApiService {
             url,
             headers,
           })
-        } catch {}
+        } catch {
+          // Ignore logging errors
+        }
         return config
       },
       (error) => {
@@ -58,7 +60,9 @@ export class ApiService {
             .getEnhancedLogger()
             .child({ type: "api-request-error" })
             .error("API Request Error", error)
-        } catch {}
+        } catch {
+          // Ignore logging errors
+        }
         return Promise.reject(error)
       },
     )
@@ -76,7 +80,9 @@ export class ApiService {
             status: response.status,
             duration,
           })
-        } catch {}
+        } catch {
+          // Ignore logging errors
+        }
         return response
       },
       async (error) => {
@@ -114,7 +120,9 @@ export class ApiService {
             url,
             status: error.response?.status,
           })
-        } catch {}
+        } catch {
+          // Ignore logging errors
+        }
         return Promise.reject(error)
       },
     )

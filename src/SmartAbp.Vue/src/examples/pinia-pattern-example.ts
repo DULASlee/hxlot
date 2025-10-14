@@ -24,14 +24,18 @@ export const useExampleStore = defineStore("example", () => {
   try {
     const raw = localStorage.getItem(KEY)
     if (raw) Object.assign(state, JSON.parse(raw))
-  } catch {}
+  } catch {
+    // Ignore localStorage errors
+  }
 
   watch(
     state,
     () => {
       try {
         localStorage.setItem(KEY, JSON.stringify(state))
-      } catch {}
+      } catch {
+        // Ignore localStorage errors
+      }
     },
     { deep: true },
   )
