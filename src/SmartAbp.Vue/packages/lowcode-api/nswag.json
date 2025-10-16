@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/RicoSuter/NSwag/master/src/NSwag.Commands/configuration.schema.json",
+  "runtime": "Net90",
+  "documentGenerator": {
+    "fromSwagger": {
+      "url": "http://localhost:5000/swagger/v1/swagger.json"
+    }
+  },
+  "codeGenerators": {
+    "openApiToTypeScriptClient": {
+      "template": "Axios",
+      "httpClass": "Fetch",
+      "typeScriptVersion": 5.4,
+      "useAbortSignal": true,
+      "stringEnums": false,
+      "generateClientInterfaces": true,
+      "generateOptionalParameters": true,
+      "wrapDtoExceptions": true,
+      "className": "SmartAbpApiClient",
+      "clientBaseClass": "ApiClientBase",
+      "output": "src/SmartAbp.Vue/packages/lowcode-api/src/client.generated.ts"
+    }
+  }
+}
+
+

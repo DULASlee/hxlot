@@ -33,7 +33,8 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "type-check": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "generate:api": "npx nswag run nswag.json"
   },
   "keywords": [
     "smartabp",
