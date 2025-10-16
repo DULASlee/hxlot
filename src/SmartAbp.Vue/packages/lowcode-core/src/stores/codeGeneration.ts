@@ -1,10 +1,11 @@
 
-import { getGlobalLogger, type ILogger } from "@smartabp/lowcode-shared";
 import {
   getEntityMetadataErrors,
+  getGlobalLogger,
   validateEntityMetadata,
-  type EntityMetadata
-} from "@smartabp/metadata-core";
+  type EntityMetadata,
+  type ILogger
+} from "@smartabp/lowcode-shared";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 

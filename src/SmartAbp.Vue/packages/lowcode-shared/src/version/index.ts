@@ -1,29 +1,25 @@
 /**
  * 📦 Version Management Module Entry
- * 
+ *
  * Schema版本管理系统入口
- * 
+ *
  * @module @smartabp/lowcode-shared/version
  */
 
 export {
-  SchemaVersionManager,
-  type VersionInfo,
-  type CompatibilityResult as VersionCompatibilityResult,
+  SchemaVersionManager, type CompatibilityResult as VersionCompatibilityResult, type VersionInfo
 } from './SchemaVersionManager'
 
 export {
-  useSchemaVersion,
+  useSchemaVersion
 } from './useSchemaVersion'
 
-// 导出metadata-core的版本管理工具
+// 导出版本管理工具（已从metadata-core迁移）
 export {
-  compareVersions,
-  CURRENT_SCHEMA_VERSION,
-  findUpgradePath as getUpgradePath,
+  CURRENT_SCHEMA_VERSION, compareVersions, findUpgradePath as getUpgradePath,
   isCompatibleVersion as isCompatible,
   parseVersion,
   type SemanticVersion,
-  type VersionComparison,
-} from '@smartabp/metadata-core'
+  type VersionComparison
+} from './version-manager'
 

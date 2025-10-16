@@ -1,18 +1,10 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "types": ["vite/client"]
+    "outDir": "dist",
+    "rootDir": "src",
+    "skipLibCheck": true
   },
-  "include": [
-    "src/**/*",
-    "src/**/*.vue",
-    "types/**/*.d.ts"
-  ],
-  "references": [
-    {
-      "path": "../metadata-core"
-    }
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules", "**/*.spec.ts", "**/*.test.ts"]
 }

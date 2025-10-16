@@ -1,9 +1,9 @@
-// 🚀 从metadata-core导入统一类型定义
+// 🚀 从lowcode-shared导入统一类型定义（已从metadata-core迁移）
 import type {
   EntityMetadata as CoreEntityMetadata,
   ModuleMetadata as CoreModuleMetadata,
   PropertyMetadata as CorePropertyMetadata
-} from '@smartabp/metadata-core'
+} from '@smartabp/lowcode-shared'
 
 // 🔄 向后兼容性别名（逐步弃用）
 /** @deprecated 请使用 @smartabp/metadata-core 中的 ModuleMetadata */

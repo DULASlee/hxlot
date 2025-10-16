@@ -1,15 +1,15 @@
 /**
  * 🔥 SmartAbp Metadata Validation Adapter
- * 
+ *
  * 将unified-schema转换为metadata-core格式进行验证
  * 这是一个适配器模式的实现，确保类型转换的安全性
- * 
+ *
  * @version 1.0.0
  * @author SmartAbp架构团队
  * @date 2025-10-06
  */
 
-// 🚀 从metadata-core导入统一类型定义
+// 🚀 导入统一类型定义（已从metadata-core迁移到lowcode-shared）
 import type {
     BackendConfig,
     EntityMetadata,
@@ -18,7 +18,7 @@ import type {
     NavigationPropertyMetadata,
     PropertyMetadata,
     UIConfig
-} from '@smartabp/metadata-core'
+} from '../types/unified-schema'
 
 import type {
     UnifiedCodeGenerationConfig,

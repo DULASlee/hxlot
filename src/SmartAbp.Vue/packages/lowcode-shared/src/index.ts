@@ -30,14 +30,58 @@ export * from './version/useSchemaVersion';
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export * from './types/assembly';
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🔍 验证系统 (Validation System) - v1.0.0
+// 🔍 验证系统 (Validation System) - v2.0.0
+// 📦 从 @smartabp/metadata-core 迁移，适配 UnifiedEntityDefinition
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export * from './validation/metadata-adapter';
 export { getUnifiedEntityErrors, getValidationFeatureFlags, SchemaValidationError, setValidationFeatureFlags, UnifiedSchemaValidator, ValidateSchema, validateUnifiedEntities, validateUnifiedEntity, validateUnifiedModule } from './validation/unified-validator';
-// 🔥 阶段2：版本管理和兼容性检查 (Version Management & Compatibility Check) - v1.0.0
-export { checkEntityCompatibility, checkModuleCompatibility, compareVersions, CURRENT_SCHEMA_VERSION, findUpgradePath as getUpgradePath, isCompatibleVersion as isCompatible, parseVersion } from '@smartabp/metadata-core';
-// 🔥 阶段3：Schema差异对比与变更日志 (Schema Diff & Changelog) - v1.0.0
-export { diffEntitySchema, filterDiffByPath, generateChangelog, generateDiffSummary } from '@smartabp/metadata-core';
+
+// 🔥 阶段1：元数据验证功能 (Metadata Validation) - v2.0.0
+export {
+  getEntityMetadataErrors, safeValidateEntityMetadata, UnifiedEntityDefinitionSchema,
+  // Entity验证
+  validateEntityMetadata, validateEntityMetadataAsync
+} from './validation/entity-validator';
+export {
+  // 错误映射
+  entityErrorMap, formatErrorMessage, moduleErrorMap
+} from './validation/error-map';
+export {
+  getModuleMetadataErrors, safeValidateModuleMetadata, UnifiedModuleMetadataSchema,
+  // Module验证
+  validateModuleMetadata, validateModuleMetadataAsync
+} from './validation/module-validator';
+
+// 🔥 阶段2：版本管理和兼容性检查 (Version Management & Compatibility Check) - v2.0.0
+export {
+  // 版本比较
+  compareVersions,
+  // 常量
+  CURRENT_SCHEMA_VERSION,
+  // 升级路径
+  findUpgradePath, formatVersion,
+  // Schema版本管理
+  getCurrentSchemaVersion, getLatestVersion,
+  getOldestVersion,
+  // 工具函数
+  getVersionInfo, getVersionsInRange, hasBreakingChanges, isBreakingChange, isCompatibleVersion, isSupportedSchemaVersion, isValidVersion,
+  // 版本解析
+  parseVersion, requiresMigration, setSchemaVersion, sortVersions, SUPPORTED_SCHEMA_VERSIONS,
+  UPGRADE_PATHS, validateSchemaVersion, type SchemaType,
+  // 类型
+  type SemanticVersion, type UpgradePath, type VersionComparison
+} from './version/version-manager';
+
+// 🔥 阶段3：Schema差异对比与变更日志 (Schema Diff & Changelog) - v2.0.0
+export {
+  // 差异对比
+  diffEntitySchema, filterDiffByPath, generateChangelog,
+  // 工具函数
+  generateDiffSummary, mergeSchemas,
+  // 类型
+  type DiffOperation, type DiffSummary, type FieldDiff, type MergeOptions, type SchemaDiff
+} from './version/schema-diff';
+
 // 🔥 阶段4：国际化错误信息 (Validation I18n) - v1.0.0
 export { extractZodErrorParams, getMessageKeyFromZodError, getValidationI18nConfig, setValidationI18nConfig, translateValidationMessage, ValidationMessageKey, ZOD_ERROR_TO_MESSAGE_KEY, ZOD_STRING_VALIDATION_TO_KEY } from './i18n/index';
 
@@ -46,10 +90,7 @@ export { extractZodErrorParams, getMessageKeyFromZodError, getValidationI18nConf
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export { useSafeEventListener, useSafeTimer } from './composables/useSafeEventListener';
 export {
-  useValidation,
-  DEFAULT_VALIDATION_OPTIONS,
-  type ValidationState,
-  type ValidationOptions,
+  DEFAULT_VALIDATION_OPTIONS, useValidation, type ValidationOptions, type ValidationState
 } from './composables/useValidation';
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

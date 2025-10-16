@@ -1,44 +1,46 @@
 /**
  * 🔥 SmartAbp Unified Schema Validator
- * 
+ *
  * 基于metadata-core的统一Schema验证器
  * 采用装饰器模式 + 适配器模式 + Feature Flag
- * 
+ *
  * @version 1.0.0
  * @author SmartAbp架构团队
  * @date 2025-10-06
  */
 
-// 🔥 启用真实的metadata-core验证
+// 🔥 启用真实的统一Schema验证（已从metadata-core迁移）
+// Entity验证函数
 import {
     getEntityMetadataErrors,
-    getModuleMetadataErrors,
     safeValidateEntityMetadata,
-    safeValidateModuleMetadata,
-    validateEntityMetadata,
-    validateModuleMetadata
-} from '@smartabp/metadata-core'
+    validateEntityMetadata
+} from './entity-validator'
 
-// 🔥 阶段2：版本管理和兼容性检查
+// Module验证函数
+import {
+    getModuleMetadataErrors,
+    safeValidateModuleMetadata,
+    validateModuleMetadata
+} from './module-validator'
+
+// 🔥 阶段2：版本管理和兼容性检查（已从metadata-core迁移）
 import {
     compareVersions,
     CURRENT_SCHEMA_VERSION,
     findUpgradePath as getUpgradePath,
     isCompatibleVersion as isCompatible,
-    parseVersion
-} from '@smartabp/metadata-core'
-
-import {
+    parseVersion,
     type CompatibilityResult
-} from '@smartabp/metadata-core'
+} from '../version/version-manager'
 
-// 🔥 阶段3：Schema差异对比
+// 🔥 阶段3：Schema差异对比（已从metadata-core迁移）
 import {
     diffEntitySchema,
     generateChangelog,
     generateDiffSummary,
     type SchemaDiff
-} from '@smartabp/metadata-core'
+} from '../version/schema-diff'
 
 import type {
     UnifiedEntityDefinition,
@@ -281,7 +283,7 @@ export class UnifiedSchemaValidator {
                 const validationResult = safeValidateEntityMetadata(metadataEntity)
 
                 if (!validationResult.success) {
-                    const errors = this.convertZodErrors(validationResult.error?.errors || [])
+                    const errors = this.convertZodErrors(validationResult.error?.issues || [])
                     return this.createErrorResult(errors, startTime, entity)
                 }
             }
@@ -349,7 +351,7 @@ export class UnifiedSchemaValidator {
                 const validationResult = safeValidateModuleMetadata(metadataModule)
 
                 if (!validationResult.success) {
-                    const errors = this.convertZodErrors(validationResult.error?.errors || [])
+                    const errors = this.convertZodErrors(validationResult.error?.issues || [])
                     return this.createErrorResult(errors, startTime, module)
                 }
             }
@@ -549,7 +551,7 @@ export class UnifiedSchemaValidator {
 
     /**
      * 检查实体兼容性（用于更新场景）
-     * 
+     *
      * 🔥 阶段3增强：集成Schema差异对比
      */
     checkEntityCompatibility(
@@ -570,8 +572,11 @@ export class UnifiedSchemaValidator {
                 const oldMetadata = convertEntityToMetadataCore(oldEntity)
                 const newMetadata = convertEntityToMetadataCore(newEntity)
 
-                // 执行差异对比
-                diff = diffEntitySchema(oldMetadata, newMetadata)
+                // 执行差异对比（类型兼容：EntityMetadata是UnifiedEntityDefinition的子集）
+                diff = diffEntitySchema(
+                    oldMetadata as unknown as import('../types/unified-schema').UnifiedEntityDefinition,
+                    newMetadata as unknown as import('../types/unified-schema').UnifiedEntityDefinition
+                )
 
                 // 分析差异，识别破坏性变更
                 diff.removals.forEach(removal => {
@@ -646,7 +651,7 @@ export class UnifiedSchemaValidator {
 
     /**
      * 检查模块兼容性（用于更新场景）
-     * 
+     *
      * 注意：由于类型系统的复杂性，此方法暂时不使用metadata-core的兼容性检查
      * 而是基于版本号进行简单的兼容性判断
      */
@@ -676,7 +681,7 @@ export class UnifiedSchemaValidator {
 
     /**
      * 生成实体变更日志
-     * 
+     *
      * @param oldEntity 旧实体定义
      * @param newEntity 新实体定义
      * @param version 版本号
@@ -694,7 +699,7 @@ export class UnifiedSchemaValidator {
         try {
             const oldMetadata = convertEntityToMetadataCore(oldEntity)
             const newMetadata = convertEntityToMetadataCore(newEntity)
-            const diff = diffEntitySchema(oldMetadata, newMetadata)
+            const diff = diffEntitySchema(oldMetadata as any, newMetadata as any)
 
             const changelogVersion = version || newEntity.schemaVersion || newEntity.version || '1.0.0'
             return generateChangelog(diff, changelogVersion)
@@ -706,7 +711,7 @@ export class UnifiedSchemaValidator {
 
     /**
      * 获取Schema差异摘要
-     * 
+     *
      * @param oldEntity 旧实体定义
      * @param newEntity 新实体定义
      * @returns 差异摘要文本
@@ -722,7 +727,10 @@ export class UnifiedSchemaValidator {
         try {
             const oldMetadata = convertEntityToMetadataCore(oldEntity)
             const newMetadata = convertEntityToMetadataCore(newEntity)
-            const diff = diffEntitySchema(oldMetadata, newMetadata)
+            const diff = diffEntitySchema(
+                oldMetadata as unknown as import('../types/unified-schema').UnifiedEntityDefinition,
+                newMetadata as unknown as import('../types/unified-schema').UnifiedEntityDefinition
+            )
 
             return generateDiffSummary(diff)
         } catch (error) {
@@ -733,7 +741,7 @@ export class UnifiedSchemaValidator {
 
     /**
      * 检测破坏性变更
-     * 
+     *
      * @param oldEntity 旧实体定义
      * @param newEntity 新实体定义
      * @returns 破坏性变更列表

@@ -1,18 +1,18 @@
 /**
  * 📋 Types Module Entry
- * 
+ *
  * 类型定义集合入口
- * 
+ *
  * @module @smartabp/lowcode-shared/types
  */
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🚀 统一元数据类型系统 (从metadata-core导入)
+// 🚀 统一元数据类型系统 (从metadata-core迁移至unified-schema)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export type {
   AspireSolutionMetadata, BackendConfig, EndpointMetadata, EntityMetadata, FeatureConfig, LifecycleMetadata, MenuConfig, MicroserviceMetadata, ModuleMetadata, NavigationPropertyMetadata, PropertyMetadata, RouteMetadata,
   StoreMetadata, UIConfig, ValidationRule
-} from '@smartabp/metadata-core'
+} from './unified-schema.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔄 向后兼容：统一Schema类型系统 (逐步弃用)

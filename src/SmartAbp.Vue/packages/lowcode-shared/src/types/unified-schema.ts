@@ -52,6 +52,193 @@ export function getSchemaVersion(): SchemaVersion {
 }
 
 // ============================================================================
+// metadata-core兼容类型（从metadata-core迁移）
+// ============================================================================
+
+/**
+ * 实体元数据（metadata-core兼容）
+ */
+export interface EntityMetadata {
+    schemaVersion?: string
+    name: string
+    displayName?: string
+    apiPath?: string
+    module: string
+    aggregate?: string
+    keyType: 'Guid' | 'int' | 'long' | 'string'
+    description?: string
+    isAggregateRoot: boolean
+    isMultiTenant: boolean
+    isSoftDelete: boolean
+    hasExtraProperties: boolean
+    properties: PropertyMetadata[]
+    navigationProperties?: NavigationPropertyMetadata[]
+    xUiConfig?: UIConfig
+    xBackendConfig?: BackendConfig
+}
+
+/**
+ * 属性元数据
+ */
+export interface PropertyMetadata {
+    name: string
+    type: string
+    isRequired?: boolean
+    isReadOnly?: boolean
+    isUnique?: boolean
+    maxLength?: number
+    minLength?: number
+    minValue?: number
+    maxValue?: number
+    defaultValue?: string
+    description?: string
+    displayName?: string
+    validationRules?: ValidationRule[]
+}
+
+/**
+ * 导航属性元数据
+ */
+export interface NavigationPropertyMetadata {
+    name: string
+    targetEntity: string
+    relationType: 'OneToOne' | 'OneToMany' | 'ManyToOne' | 'ManyToMany'
+    foreignKey?: string
+    inverseName?: string
+}
+
+/**
+ * 验证规则
+ */
+export interface ValidationRule {
+    name: string
+    condition: string
+    errorMessage: string
+}
+
+/**
+ * UI配置
+ */
+export interface UIConfig {
+    listColumns?: string[]
+    formFields?: string[]
+    searchFields?: string[]
+    defaultSort?: string
+    pageSize?: number
+}
+
+/**
+ * 后端配置
+ */
+export interface BackendConfig {
+    generateRepository?: boolean
+    generateAppService?: boolean
+    generateController?: boolean
+    generateDto?: boolean
+}
+
+/**
+ * 模块元数据（metadata-core兼容）
+ */
+export interface ModuleMetadata {
+    schemaVersion?: string
+    name: string
+    displayName?: string
+    version: string
+    description?: string
+    author?: string
+    abpStyle: boolean
+    order: number
+    dependsOn: string[]
+    routes: RouteMetadata[]
+    stores: StoreMetadata[]
+    policies: string[]
+    lifecycle?: LifecycleMetadata
+    features?: FeatureConfig
+    menuConfig?: MenuConfig
+}
+
+/**
+ * 路由元数据
+ */
+export interface RouteMetadata {
+    path: string
+    name: string
+    component?: string
+    meta?: Record<string, unknown>
+    children?: RouteMetadata[]
+}
+
+/**
+ * Store元数据
+ */
+export interface StoreMetadata {
+    name: string
+    type: 'entity' | 'ui' | 'global'
+    entityName?: string
+}
+
+/**
+ * 生命周期元数据
+ */
+export interface LifecycleMetadata {
+    onBeforeMount?: string
+    onMounted?: string
+    onBeforeUnmount?: string
+}
+
+/**
+ * 功能配置
+ */
+export interface FeatureConfig {
+    [featureName: string]: boolean | string | number
+}
+
+/**
+ * 菜单配置
+ */
+export interface MenuConfig {
+    title: string
+    icon?: string
+    order?: number
+    children?: MenuConfig[]
+}
+
+/**
+ * Aspire解决方案元数据
+ */
+export interface AspireSolutionMetadata {
+    solutionName: string
+    version: string
+    description?: string
+    services: MicroserviceMetadata[]
+    sharedLibraries?: string[]
+}
+
+/**
+ * 微服务元数据
+ */
+export interface MicroserviceMetadata {
+    name: string
+    displayName?: string
+    description?: string
+    type: 'api' | 'gateway' | 'service'
+    port: number
+    endpoints: EndpointMetadata[]
+}
+
+/**
+ * 端点元数据
+ */
+export interface EndpointMetadata {
+    path: string
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
+    summary?: string
+    requestType?: string
+    responseType?: string
+}
+
+// ============================================================================
 // 核心元数据类型
 // ============================================================================
 
@@ -652,12 +839,27 @@ export interface UnifiedMenuConfig {
  * 🔥 这是前端的唯一真理源，后端 PermissionConfigDto 必须与此保持一致
  */
 export interface UnifiedPermissionConfig {
-    groupName: string
-    permissions: Array<{
+    groupName?: string
+    groups?: Array<{
+        name: string
+        displayName: string
+        permissions: Array<{
+            name: string
+            displayName: string
+            description: string
+            isGrantedByDefault: boolean
+        }>
+    }>
+    permissions?: Array<{
         name: string
         displayName: string
         description: string
         isGrantedByDefault: boolean
+    }>
+    customActions?: Array<{
+        name: string
+        displayName: string
+        description: string
     }>
 }
 

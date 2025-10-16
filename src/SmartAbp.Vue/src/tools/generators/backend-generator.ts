@@ -1,11 +1,11 @@
 /**
  * 后端代码生成器
  * 基于元数据生成 C# 实体、DTO、AppService、Controller等
- * 
+ *
  * 注意：此为占位符实现，实际生成逻辑需要调用后端 CodeGenerationAppService API
  */
 
-import type { EntityMetadata } from '@smartabp/metadata-core'
+import type { EntityMetadata } from '@smartabp/lowcode-shared'
 
 export interface GeneratorOptions {
   dryRun?: boolean
@@ -19,11 +19,11 @@ export interface GenerationResult {
 }
 
 export class BackendCodeGenerator {
-  constructor(private options: GeneratorOptions = {}) {}
+  constructor(private options: GeneratorOptions = {}) { }
 
   /**
    * 生成后端代码
-   * 
+   *
    * 实现方式：
    * 1. 将元数据转换为后端API需要的格式
    * 2. 调用 /api/code-generation/generate-module API
@@ -31,7 +31,7 @@ export class BackendCodeGenerator {
    */
   async generate(metadata: EntityMetadata): Promise<GenerationResult> {
     const files: string[] = []
-    const errors: string[]= []
+    const errors: string[] = []
 
     try {
       if (this.options.dryRun) {
@@ -46,7 +46,7 @@ export class BackendCodeGenerator {
           `src/SmartAbp.HttpApi/${metadata.module}/${metadata.name}Controller.cs`,
           `src/SmartAbp.EntityFrameworkCore/${metadata.module}/${metadata.name}Configuration.cs`
         )
-        
+
         if (this.options.verbose) {
           console.log('[Dry-run] 后端代码生成计划:')
           files.forEach(file => console.log(`  - ${file}`))
@@ -56,7 +56,7 @@ export class BackendCodeGenerator {
         // TODO: 实现实际的API调用逻辑
         // const result = await callBackendCodeGenAPI(metadata)
         // files.push(...result.generatedFiles)
-        
+
         errors.push('后端代码生成功能尚未实现，需要集成后端 CodeGenerationAppService API')
         errors.push('当前可以使用 dry-run 模式预览将要生成的文件')
       }
@@ -77,7 +77,7 @@ async function callBackendCodeGenAPI(metadata: EntityMetadata): Promise<{ genera
   // 2. POST /api/code-generation/generate-module
   // 3. 等待生成完成
   // 4. 返回生成的文件列表
-  
+
   throw new Error('Not implemented yet')
 }
 

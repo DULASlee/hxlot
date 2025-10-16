@@ -1,13 +1,13 @@
 /**
  * 实体关联关系UI生成器
- * 
+ *
  * 功能：
  * - 根据RelationType生成不同的UI组件
  * - OneToMany: 主从表UI
  * - ManyToMany: 穿梭框/多选UI
  * - OneToOne: 关联选择器UI
  * - 支持企业级功能（批量操作、搜索、验证）
- * 
+ *
  * @example
  * ```typescript
  * const generator = new RelationshipUIGenerator()
@@ -15,12 +15,12 @@
  * ```
  */
 
-// 🚀 从metadata-core导入统一类型定义
+// 🚀 从lowcode-shared导入统一类型定义（已从metadata-core迁移）
 import type {
   NavigationPropertyMetadata as CoreNavigationPropertyMetadata,
   EntityMetadata,
   PropertyMetadata
-} from '@smartabp/metadata-core'
+} from '@smartabp/lowcode-shared'
 
 // 🔄 扩展NavigationPropertyMetadata以支持UI特定属性
 export interface NavigationPropertyMetadata extends CoreNavigationPropertyMetadata {
@@ -99,7 +99,7 @@ export class RelationshipUIGenerator {
           </div>
         </div>
       </template>
-      
+
       <el-form
         ref="masterFormRef"
         :model="masterForm"
@@ -110,23 +110,23 @@ export class RelationshipUIGenerator {
 ${masterFormFields}
       </el-form>
     </el-card>
-    
+
     <!-- 从表区域 -->
     <el-card class="detail-section" shadow="never">
       <template #header>
         <div class="card-header">
           <span class="title">${detailEntity.displayName}明细（{{ detailCount }}）</span>
           <div class="actions">
-            <el-button 
-              type="primary" 
+            <el-button
+              type="primary"
               @click="handleAddDetail"
               :disabled="isMaxDetailReached"
             >
               <el-icon><Plus /></el-icon>
               添加明细
             </el-button>
-            <el-button 
-              type="danger" 
+            <el-button
+              type="danger"
               @click="handleBatchDelete"
               :disabled="selectedDetails.length === 0"
             >
@@ -140,7 +140,7 @@ ${masterFormFields}
           </div>
         </div>
       </template>
-      
+
       <el-table
         :data="detailList"
         v-loading="loading"
@@ -154,17 +154,17 @@ ${masterFormFields}
 ${detailTableColumns}
         <el-table-column label="操作" width="200" fixed="right">
           <template #default="{ row }">
-            <el-button 
-              size="small" 
-              type="primary" 
+            <el-button
+              size="small"
+              type="primary"
               link
               @click="handleEditDetail(row)"
             >
               编辑
             </el-button>
-            <el-button 
-              size="small" 
-              type="danger" 
+            <el-button
+              size="small"
+              type="danger"
               link
               @click="handleDeleteDetail(row)"
             >
@@ -174,7 +174,7 @@ ${detailTableColumns}
         </el-table-column>
       </el-table>
     </el-card>
-    
+
     <!-- 明细编辑对话框 -->
     <el-dialog
       v-model="detailDialogVisible"
@@ -190,7 +190,7 @@ ${detailTableColumns}
       >
 ${detailFormFields}
       </el-form>
-      
+
       <template #footer>
         <el-button @click="detailDialogVisible = false">取消</el-button>
         <el-button type="primary" @click="handleSaveDetail">确定</el-button>
@@ -285,13 +285,13 @@ const handleEditDetail = (row: ${detailEntity.name}) => {
 
 const handleSaveDetail = async () => {
   await detailFormRef.value.validate()
-  
+
   if (isDetailEditMode.value) {
     await editDetail(currentDetail.value as ${detailEntity.name})
   } else {
     await addDetail(currentDetail.value)
   }
-  
+
   detailDialogVisible.value = false
 }
 
@@ -325,27 +325,27 @@ if (props.masterId) {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  
+
   .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
+
     .title {
       font-size: 16px;
       font-weight: 600;
     }
-    
+
     .actions {
       display: flex;
       gap: 8px;
     }
   }
-  
+
   .master-section {
     flex-shrink: 0;
   }
-  
+
   .detail-section {
     flex: 1;
     min-height: 400px;
@@ -382,7 +382,7 @@ if (props.masterId) {
           </div>
         </div>
       </template>
-      
+
       <!-- 搜索框 -->
       <div class="search-box" v-if="enableSearch">
         <el-input
@@ -396,7 +396,7 @@ if (props.masterId) {
           </template>
         </el-input>
       </div>
-      
+
       <!-- 穿梭框 -->
       <el-transfer
         v-model="selectedIds"
@@ -413,11 +413,11 @@ if (props.masterId) {
           </span>
         </template>
       </el-transfer>
-      
+
       <!-- 批量操作 -->
       <div class="batch-actions">
-        <el-button 
-          type="primary" 
+        <el-button
+          type="primary"
           @click="handleSave"
           :loading="loading"
         >
@@ -521,33 +521,33 @@ const handleRefresh = async () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
+
     .title {
       font-size: 16px;
       font-weight: 600;
     }
-    
+
     .info {
       color: var(--el-text-color-secondary);
       font-size: 14px;
     }
   }
-  
+
   .search-box {
     margin-bottom: 16px;
   }
-  
+
   :deep(.el-transfer) {
     .el-transfer-panel {
       width: 45%;
     }
   }
-  
+
   .transfer-item {
     display: block;
     padding: 4px 0;
   }
-  
+
   .batch-actions {
     margin-top: 16px;
     display: flex;
@@ -575,8 +575,8 @@ const handleRefresh = async () => {
     const valueField = navigation.valueField || 'id'
 
     const vueCode = `<template>
-  <el-form-item 
-    :label="label" 
+  <el-form-item
+    :label="label"
     :prop="prop"
     :rules="rules"
   >
@@ -680,8 +680,8 @@ watch(() => props.modelValue, (newValue) => {
     return properties.map(prop => {
       const inputType = this.getInputType(prop.type)
       return `        <el-form-item label="${prop.displayName}" prop="${prop.name}">
-          <el-${inputType} 
-            v-model="masterForm.${prop.name}" 
+          <el-${inputType}
+            v-model="masterForm.${prop.name}"
             placeholder="请输入${prop.displayName}"
             ${prop.maxLength ? `maxlength="${prop.maxLength}"` : ''}
             clearable
@@ -695,9 +695,9 @@ watch(() => props.modelValue, (newValue) => {
    */
   private generateTableColumns(properties: PropertyMetadata[]): string {
     return properties.map(prop => {
-      return `        <el-table-column 
-          prop="${prop.name}" 
-          label="${prop.displayName}" 
+      return `        <el-table-column
+          prop="${prop.name}"
+          label="${prop.displayName}"
           min-width="120"
           show-overflow-tooltip
         />`

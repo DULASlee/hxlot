@@ -228,8 +228,8 @@
 import * as EpIcons from '@element-plus/icons-vue'
 import type { ModuleMetadata, TableSchema } from '@smartabp/lowcode-api'
 import { codeGeneratorApi } from '@smartabp/lowcode-api'
+import { safeValidateModuleMetadata } from '@smartabp/lowcode-shared'
 import { useTheme } from '@smartabp/lowcode-shared/theme'
-import { safeValidateModuleMetadata } from '@smartabp/metadata-core'
 import { useDebounceFn } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
@@ -527,7 +527,7 @@ const performValidation = () => {
       validationState.errors = []
       validationState.isValid = true
     } else {
-      validationState.errors = result.error.errors?.map((err: any) => ({
+      validationState.errors = result.error.issues?.map((err: any) => ({
         field: err.path?.join?.('.') ?? 'unknown',
         message: err.message ?? '验证失败'
       })) ?? []

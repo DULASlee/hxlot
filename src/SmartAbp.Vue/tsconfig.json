@@ -84,6 +84,7 @@
     "*.config.ts",
     "*.config.js",
     "src/tools/**",
-    "src/views/library/**"
+    "src/views/library/**",
+    "packages/**"
   ]
 }

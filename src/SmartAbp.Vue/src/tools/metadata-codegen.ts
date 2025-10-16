@@ -1,20 +1,20 @@
 /**
  * 元数据驱动的代码生成CLI工具
  * 基于 @smartabp/metadata-core 实现 Schema First 开发模式
- * 
+ *
  * @author SmartAbp Team
  * @version 1.0.0
  */
 
+import chalk from 'chalk'
 import { promises as fs } from 'fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import chalk from 'chalk'
-// 优先从源码导入（遵循packages黑盒与路径映射）
-import type { EntityMetadata, ModuleMetadata } from '@smartabp/metadata-core'
-import { validateEntityMetadataAsync, validateModuleMetadataAsync } from '@smartabp/metadata-core'
-import { FrontendCodeGenerator } from './generators/frontend-generator'
+// 从lowcode-shared导入统一类型定义（已从metadata-core迁移）
+import type { EntityMetadata, ModuleMetadata } from '@smartabp/lowcode-shared'
+import { validateEntityMetadataAsync } from '@smartabp/lowcode-shared'
 import { BackendCodeGenerator } from './generators/backend-generator'
+import { FrontendCodeGenerator } from './generators/frontend-generator'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -44,12 +44,12 @@ function parseArgs(): CliOptions {
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i]
-    
+
     if (arg === 'frontend' || arg === 'backend' || arg === 'all') {
       options.type = arg
       continue
     }
-    
+
     if (arg === '--entity' || arg === '-e') {
       options.entity = args[++i]
     } else if (arg === '--module' || arg === '-m') {
@@ -91,7 +91,7 @@ async function loadEntityMetadata(entityName: string): Promise<EntityMetadata> {
       const fileUrl = `file://${metadataPath.replace(/\\/g, '/')}`
       const module = await import(fileUrl)
       const metadata = module[`${entityName}Metadata`] || module.default
-      
+
       if (metadata) {
         return metadata as EntityMetadata
       }
@@ -113,25 +113,25 @@ async function loadEntityMetadata(entityName: string): Promise<EntityMetadata> {
  */
 async function findMetadataFiles(dir: string, entityName: string): Promise<string[]> {
   const files: string[] = []
-  
+
   try {
     const entries = await fs.readdir(dir, { withFileTypes: true })
-    
+
     for (const entry of entries) {
       const fullPath = path.join(dir, entry.name)
-      
+
       if (entry.isDirectory()) {
         const subFiles = await findMetadataFiles(fullPath, entityName)
         files.push(...subFiles)
-      } else if (entry.name.toLowerCase().includes(entityName.toLowerCase()) && 
-                 entry.name.endsWith('.metadata.ts')) {
+      } else if (entry.name.toLowerCase().includes(entityName.toLowerCase()) &&
+        entry.name.endsWith('.metadata.ts')) {
         files.push(fullPath)
       }
     }
   } catch (err) {
     // 忽略访问错误
   }
-  
+
   return files
 }
 
@@ -148,7 +148,7 @@ async function loadModuleMetadata(moduleName: string): Promise<ModuleMetadata> {
     try {
       const module = await import(metadataPath)
       const metadata = module[`${moduleName}ModuleMetadata`] || module.default
-      
+
       if (metadata) {
         return metadata as ModuleMetadata
       }
@@ -177,13 +177,13 @@ async function generateFrontend(
 
   try {
     const result = await generator.generate(metadata)
-    
+
     console.log(chalk.green('\n✅ 前端代码生成完成:\n'))
     result.files.forEach(file => {
       const icon = options.dryRun ? '🔍' : '✓'
       console.log(chalk.gray(`  ${icon} ${file}`))
     })
-    
+
     if (options.dryRun) {
       console.log(chalk.yellow('\n⚠️  Dry-run模式，未实际写入文件'))
     }
@@ -210,13 +210,13 @@ async function generateBackend(
 
   try {
     const result = await generator.generate(metadata)
-    
+
     console.log(chalk.green('\n✅ 后端代码生成完成:\n'))
     result.files.forEach(file => {
       const icon = options.dryRun ? '🔍' : '✓'
       console.log(chalk.gray(`  ${icon} ${file}`))
     })
-    
+
     if (options.dryRun) {
       console.log(chalk.yellow('\n⚠️  Dry-run模式，未实际写入文件'))
     }
@@ -249,22 +249,22 @@ async function main() {
   try {
     // 加载元数据
     let entityMetadata: EntityMetadata | null = null
-    
+
     if (options.entity) {
       console.log(chalk.gray(`📂 加载实体元数据: ${options.entity}...`))
       entityMetadata = await loadEntityMetadata(options.entity)
       console.log(chalk.green(`✓ 元数据加载成功`))
-      
+
       // 验证元数据
       console.log(chalk.gray(`🔍 验证元数据...`))
       const isValid = await validateEntityMetadataAsync(entityMetadata)
-      
+
       if (!isValid) {
         throw new Error('元数据验证失败')
       }
-      
+
       console.log(chalk.green(`✓ 元数据验证通过`))
-      
+
       if (options.verbose) {
         console.log(chalk.gray(`\n元数据详情:`))
         console.log(chalk.gray(`  名称: ${entityMetadata.name}`))
@@ -279,14 +279,14 @@ async function main() {
       if (options.type === 'frontend' || options.type === 'all') {
         await generateFrontend(entityMetadata, options)
       }
-      
+
       if (options.type === 'backend' || options.type === 'all') {
         await generateBackend(entityMetadata, options)
       }
     }
 
     console.log(chalk.bold.green('\n🎉 代码生成完成！\n'))
-    
+
     if (!options.dryRun) {
       console.log(chalk.gray('💡 提示: 运行以下命令进行测试:'))
       console.log(chalk.gray('  npm run type-check'))

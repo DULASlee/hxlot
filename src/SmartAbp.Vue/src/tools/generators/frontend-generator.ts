@@ -3,7 +3,7 @@
  * 基于元数据生成 TypeScript 类型、API、表单、列表、Store等
  */
 
-import type { EntityMetadata, PropertyMetadata } from '@smartabp/metadata-core'
+import type { EntityMetadata, PropertyMetadata } from '@smartabp/lowcode-shared'
 import { promises as fs } from 'fs'
 import path from 'node:path'
 
@@ -517,7 +517,7 @@ ${this.generateFormDataDefaults(metadata)}
 async function handleSubmit() {
   try {
     await formRef.value?.validate()
-    
+
     submitting.value = true
     if (props.${entityNameLower}Id) {
       await update${entityName}(props.${entityNameLower}Id, formData.value)
@@ -526,7 +526,7 @@ async function handleSubmit() {
       await create${entityName}(formData.value)
       ElMessage.success('创建成功')
     }
-    
+
     emit('success')
     handleClose()
   } catch (error) {
