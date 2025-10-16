@@ -93,12 +93,31 @@ namespace SmartAbp.Domain.Entities.LowCode
         public virtual ICollection<ValidationRule> ValidationRules { get; set; }
 
         /// <summary>
+        /// 导航属性：关系列表
+        /// </summary>
+        public virtual ICollection<EntityRelation> Relationships { get; set; }
+
+        // ══════════════════════════════════════════════════════
+        // 统一Schema补充字段（与DTO对齐）
+        // ══════════════════════════════════════════════════════
+        
+        public string Schema { get; set; }
+        public bool IsAggregateRoot { get; set; }
+        public string BaseClass { get; set; }
+        public bool IsAudited { get; set; }
+        public bool IsSoftDelete { get; set; }
+        public bool IsMultiTenant { get; set; }
+        public string SchemaVersion { get; set; }
+        public string Version { get; set; }
+
+        /// <summary>
         /// 构造函数（EF Core需要）
         /// </summary>
         public EntityDefinition()
         {
             Fields = new List<EntityField>();
             ValidationRules = new List<ValidationRule>();
+            Relationships = new List<EntityRelation>();
         }
 
         /// <summary>

@@ -51,6 +51,11 @@ namespace SmartAbp.Domain.Entities.LowCode
         public int Priority { get; set; }
 
         /// <summary>
+        /// 触发时机（前端UI需要）
+        /// </summary>
+        public string Trigger { get; set; }
+
+        /// <summary>
         /// 导航属性：所属实体
         /// </summary>
         public virtual EntityDefinition EntityDefinition { get; set; }

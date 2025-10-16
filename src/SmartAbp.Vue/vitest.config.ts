@@ -43,7 +43,6 @@ export default defineConfig({
       "@smartabp/lowcode-api": resolve(__dirname, "packages/lowcode-api/src"),
       "@smartabp/lowcode-tools": resolve(__dirname, "packages/lowcode-tools/src"),
       "@smartabp/lowcode-designer": resolve(__dirname, "packages/lowcode-designer/src"),
-      "@smartabp/metadata-core": resolve(__dirname, "packages/metadata-core/src"),
     },
   },
 })

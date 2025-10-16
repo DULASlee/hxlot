@@ -30,6 +30,8 @@ namespace SmartAbp.Application.LowCode.Mapping
             // Domain → DTO (查询场景)
             CreateMap<EntityDefinition, EntityDefinitionDto>()
                 .ForMember(dest => dest.Fields, opt => opt.MapFrom(src => src.Fields ?? new System.Collections.Generic.List<EntityField>()))
+                .ForMember(dest => dest.Relationships, opt => opt.MapFrom(src => src.Relationships ?? new System.Collections.Generic.List<EntityRelation>()))
+                .ForMember(dest => dest.ValidationRules, opt => opt.MapFrom(src => src.ValidationRules ?? new System.Collections.Generic.List<ValidationRule>()))
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.CreationTime, opt => opt.MapFrom(src => src.CreationTime))
                 .ForMember(dest => dest.CreatorId, opt => opt.MapFrom(src => src.CreatorId))
@@ -50,7 +52,9 @@ namespace SmartAbp.Application.LowCode.Mapping
                 .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
                 .ForMember(dest => dest.DeleterId, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletionTime, opt => opt.Ignore())
-                .ForMember(dest => dest.Fields, opt => opt.Ignore()); // Fields单独处理
+                .ForMember(dest => dest.Fields, opt => opt.Ignore()) // Fields单独处理
+                .ForMember(dest => dest.Relationships, opt => opt.Ignore())
+                .ForMember(dest => dest.ValidationRules, opt => opt.Ignore());
 
             // ═══════════════════════════════════════════════════════════════════════
             // EntityField 映射配置
@@ -89,7 +93,7 @@ namespace SmartAbp.Application.LowCode.Mapping
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.FromEntity, opt => opt.MapFrom(src => src.FromEntity))
                 .ForMember(dest => dest.ToEntity, opt => opt.MapFrom(src => src.ToEntity))
-                .ForMember(dest => dest.RelationType, opt => opt.MapFrom(src => src.RelationType))
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.RelationType))
                 .ForMember(dest => dest.ForeignKey, opt => opt.MapFrom(src => src.ForeignKey))
                 .ForMember(dest => dest.NavigationProperty, opt => opt.MapFrom(src => src.NavigationProperty))
                 .ForMember(dest => dest.JoinTable, opt => opt.MapFrom(src => src.JoinTable))

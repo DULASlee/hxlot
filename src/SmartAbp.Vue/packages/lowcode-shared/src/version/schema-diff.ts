@@ -13,8 +13,7 @@
  * @adapted-for UnifiedEntityDefinition
  */
 
-import type { UnifiedEntityDefinition, EntityMetadata } from '../types/unified-schema'
-import { isEntityMetadata, convertMetadataCoreToUnified } from '../validation/metadata-adapter'
+import type { UnifiedEntityDefinition } from '../types/unified-schema'
 
 // ========================================
 // 差异类型定义
@@ -64,47 +63,13 @@ export interface DiffSummary {
 // ========================================
 
 /**
- * 对比两个实体Schema - 重载1：UnifiedEntityDefinition
+ * 对比两个实体Schema（统一Schema）
  */
 export function diffEntitySchema(
     oldSchema: UnifiedEntityDefinition,
     newSchema: UnifiedEntityDefinition
-): SchemaDiff
-
-/**
- * 对比两个实体Schema - 重载2：EntityMetadata
- */
-export function diffEntitySchema(
-    oldSchema: EntityMetadata,
-    newSchema: EntityMetadata
-): SchemaDiff
-
-/**
- * 对比两个实体Schema - 重载3：混合类型
- */
-export function diffEntitySchema(
-    oldSchema: UnifiedEntityDefinition | EntityMetadata,
-    newSchema: UnifiedEntityDefinition | EntityMetadata
-): SchemaDiff
-
-/**
- * 对比两个实体Schema - 实现（D2优化：自动归一化）
- */
-export function diffEntitySchema(
-    oldSchema: UnifiedEntityDefinition | EntityMetadata,
-    newSchema: UnifiedEntityDefinition | EntityMetadata
 ): SchemaDiff {
-    // D2优化：自动归一化为 UnifiedEntityDefinition
-    const normalizedOld = isEntityMetadata(oldSchema)
-        ? convertMetadataCoreToUnified(oldSchema)
-        : oldSchema
-
-    const normalizedNew = isEntityMetadata(newSchema)
-        ? convertMetadataCoreToUnified(newSchema)
-        : newSchema
-
-    // 使用归一化后的数据进行比较
-    return diffEntitySchemaInternal(normalizedOld, normalizedNew)
+    return diffEntitySchemaInternal(oldSchema, newSchema)
 }
 
 /**

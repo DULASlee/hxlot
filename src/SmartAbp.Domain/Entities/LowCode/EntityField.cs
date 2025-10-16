@@ -75,6 +75,33 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// </summary>
         public int Order { get; set; }
 
+        // ══════════════════════════════════════════════════════
+        // 统一Schema补充字段（与DTO对齐）
+        // ══════════════════════════════════════════════════════
+        
+        public int? MinLength { get; set; }
+        public int? Precision { get; set; }
+        public int? Scale { get; set; }
+        public decimal? MinValue { get; set; }
+        public decimal? MaxValue { get; set; }
+        public string Pattern { get; set; }
+        public int DisplayOrder { get; set; }
+        public string GroupName { get; set; }
+        public bool IsVisible { get; set; } = true;
+        public bool IsReadonly { get; set; }
+        public bool ListVisible { get; set; } = true;
+        public bool DetailVisible { get; set; } = true;
+        public bool FormVisible { get; set; } = true;
+        public bool Searchable { get; set; }
+        public bool Sortable { get; set; }
+        public bool Filterable { get; set; }
+        public bool Disabled { get; set; }
+        public string ColumnName { get; set; }
+        public string ColumnType { get; set; }
+        public bool IsAuditField { get; set; }
+        public bool IsSoftDeleteField { get; set; }
+        public bool IsTenantField { get; set; }
+
         /// <summary>
         /// 导航属性：所属实体
         /// </summary>

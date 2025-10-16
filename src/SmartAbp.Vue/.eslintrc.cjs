@@ -67,6 +67,10 @@ module.exports = {
             group: ["**/packages/**"],
             message: "❌ 错误：禁止使用相对路径引用packages。\n请使用 @smartabp/* 别名。\n详见 ADR-0031",
           },
+          {
+            group: ["@smartabp/metadata-core", "@smartabp/metadata-core/*"],
+            message: "❌ 错误：metadata-core已废弃，所有类型已迁移至@smartabp/lowcode-shared。\n请使用 @smartabp/lowcode-shared 替代。",
+          },
         ],
       },
     ],

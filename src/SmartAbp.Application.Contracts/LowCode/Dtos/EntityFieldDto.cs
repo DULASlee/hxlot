@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Volo.Abp.Application.Dtos;
 
 namespace SmartAbp.Application.Contracts.LowCode.Dtos
@@ -64,6 +65,77 @@ namespace SmartAbp.Application.Contracts.LowCode.Dtos
         /// 排序
         /// </summary>
         public int Order { get; set; }
+
+        // ══════════════════════════════════════════════════════
+        // 统一Schema补充字段（向后兼容，全部为可选/扩展）
+        // ══════════════════════════════════════════════════════
+
+        /// <summary>
+        /// 是否主键
+        /// </summary>
+        public bool IsPrimaryKey { get; set; }
+
+        /// <summary>
+        /// 最小长度
+        /// </summary>
+        public int? MinLength { get; set; }
+
+        /// <summary>
+        /// 精度（decimal）
+        /// </summary>
+        public int? Precision { get; set; }
+
+        /// <summary>
+        /// 小数位数（decimal）
+        /// </summary>
+        public int? Scale { get; set; }
+
+        /// <summary>
+        /// 最小值（数值）
+        /// </summary>
+        public decimal? MinValue { get; set; }
+
+        /// <summary>
+        /// 最大值（数值）
+        /// </summary>
+        public decimal? MaxValue { get; set; }
+
+        /// <summary>
+        /// 正则表达式
+        /// </summary>
+        public string Pattern { get; set; }
+
+        /// <summary>
+        /// 枚举配置
+        /// </summary>
+        public List<EnumValueDto> EnumValues { get; set; } = new();
+
+        /// <summary>
+        /// 验证规则
+        /// </summary>
+        public List<ValidationRuleDto> ValidationRules { get; set; } = new();
+
+        // ───────── UI配置（前端呈现需求） ─────────
+
+        public int DisplayOrder { get; set; }
+        public string GroupName { get; set; }
+        public bool IsVisible { get; set; } = true;
+        public bool IsReadonly { get; set; }
+        public bool ListVisible { get; set; } = true;
+        public bool DetailVisible { get; set; } = true;
+        public bool FormVisible { get; set; } = true;
+        public bool Searchable { get; set; }
+        public bool Sortable { get; set; }
+        public bool Filterable { get; set; }
+        public bool Disabled { get; set; }
+
+        // ───────── 数据库映射（持久化需求） ─────────
+
+        public string ColumnName { get; set; }
+        public string ColumnType { get; set; }
+        public bool IsAuditField { get; set; }
+        public bool IsSoftDeleteField { get; set; }
+        public bool IsTenantField { get; set; }
     }
 
     /// <summary>
