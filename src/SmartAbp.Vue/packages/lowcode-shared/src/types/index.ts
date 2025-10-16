@@ -59,3 +59,21 @@ export type {
   BaseEntityDto, BasePagedRequestDto, BasePagedResultDto, BookDto, BookPagedRequestDto, BookPagedResultDto, CreateBookDto, UpdateBookDto
 } from './business.js'
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 📝 模板管理系统类型（Template Management System Types）- v1.0.0
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export { TemplateEngine, TemplateType } from './template.js'
+export type {
+  Template,
+  TemplateCategory,
+  TemplateCompileOptions,
+  TemplateExecutionResult,
+  TemplateExportData,
+  TemplateMarketFilter,
+  TemplatePreviewConfig,
+  TemplateTestCase,
+  TemplateUsage,
+  TemplateVariable,
+  TemplateVersion
+} from './template.js'
+

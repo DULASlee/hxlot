@@ -191,21 +191,46 @@ export enum UILibrary {
 /**
  * 代码生成模板类型
  */
+/**
+ * 模板类型枚举（Phase 3 扩展）
+ */
 export enum TemplateType {
     /** 实体模板 */
     Entity = 'Entity',
+    /** 服务模板 */
+    Service = 'Service',
+    /** 控制器模板 */
+    Controller = 'Controller',
     /** DTO模板 */
     DTO = 'DTO',
-    /** AppService模板 */
-    AppService = 'AppService',
-    /** Controller模板 */
-    Controller = 'Controller',
-    /** Repository模板 */
-    Repository = 'Repository',
-    /** 前端页面模板 */
-    Frontend = 'Frontend',
-    /** 测试模板 */
-    Test = 'Test'
+    /** Vue组件模板 */
+    VueComponent = 'VueComponent',
+    /** Pinia Store模板 */
+    PiniaStore = 'PiniaStore',
+    /** Router配置模板 */
+    RouterConfig = 'RouterConfig',
+    /** API Client模板 */
+    ApiClient = 'ApiClient',
+    /** 单元测试模板 */
+    UnitTest = 'UnitTest',
+    /** 集成测试模板 */
+    IntegrationTest = 'IntegrationTest',
+    /** 自定义模板 */
+    Custom = 'Custom'
+}
+
+/**
+ * 模板引擎类型（Phase 3 新增）
+ */
+export enum TemplateEngine {
+    /** Handlebars（推荐）*/
+    Handlebars = 'Handlebars',
+    /** Mustache（兼容）*/
+    Mustache = 'Mustache',
+    /** EJS */
+    EJS = 'EJS',
+    /** 纯JavaScript */
+    JavaScript = 'JavaScript'
 }
 
 // ============================================================================
