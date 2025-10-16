@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 export interface Alert {
   id: string
@@ -29,7 +29,7 @@ export function useRealTimeAlerts() {
     unreadCount.value++
   }
 
-  const markAsRead = (alertId: string) => {
+  const markAsRead = (alertId: string | number) => {
     const alert = alerts.value.find(a => a.id === alertId)
     if (alert && !alert.read) {
       alert.read = true
@@ -79,7 +79,7 @@ export function useRealTimeAlerts() {
   const connectAlertStream = connect
   const disconnectAlertStream = disconnect
   const acknowledgeAlert = markAsRead
-  const investigateAlert = (alertId: string) => {
+  const investigateAlert = (alertId: string | number) => {
     console.log(`Investigating alert: ${alertId}`)
     markAsRead(alertId)
   }

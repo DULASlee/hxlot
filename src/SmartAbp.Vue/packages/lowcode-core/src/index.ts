@@ -22,6 +22,9 @@ export type {
 } from './components/SmartFormBuilder/index.js'
 
 // Note: utilities/composables/services are internal; re-exports removed to avoid path index issues
+// Minimal exports required by designer security dashboard
+export { useRealTimeAlerts } from './composables/useRealTimeAlerts.js'
+export { useSecurityDashboard } from './composables/useSecurityDashboard.js'
 
 // Export runtime
 export * from './runtime/index.js'

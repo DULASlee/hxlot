@@ -9,8 +9,6 @@
 export { useSafeEventListener, useSafeTimer } from './useSafeEventListener'
 
 export {
-  useValidation,
-  DEFAULT_VALIDATION_OPTIONS,
-  type ValidationState,
-  type ValidationOptions,
+  DEFAULT_VALIDATION_OPTIONS, useValidation, type ValidationOptions, type ValidationState
 } from './useValidation'
+
