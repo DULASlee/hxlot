@@ -88,7 +88,7 @@ export { default as LdVisualDesignCanvas } from './VisualDesignCanvas.vue'
 export { CodePreviewPanel, CodeDiffViewer } from './CodePreview'
 
 // ✅ Template Management Components v1.0 (Phase 3 - Task 3.1)
-export { TemplateEditor } from './Template'
+export { TemplateEditor, TemplateMarket } from './Template'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🚧 Utility exports - 待实现
