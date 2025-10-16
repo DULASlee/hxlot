@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-13T16:18:48.014Z",
+  "timestamp": "2025-10-15T10:27:43.531Z",
   "project": "Baobab.SmartAbp",
   "language": "typescript",
   "files": [
@@ -588,8 +588,8 @@
       "name": "lifecycle.generated.ts",
       "path": "src/SmartAbp.Vue/src/appshell/lifecycle.generated.ts",
       "type": "file",
-      "size": 953,
-      "modified": "2025-10-12T17:17:08.231Z"
+      "size": 1140,
+      "modified": "2025-10-14T03:23:47.386Z"
     },
     {
       "name": "menu.generated.js",
@@ -672,15 +672,15 @@
       "name": "AuthExample.vue",
       "path": "src/SmartAbp.Vue/src/components/auth/AuthExample.vue",
       "type": "file",
-      "size": 7662,
-      "modified": "2025-10-12T17:17:08.233Z"
+      "size": 7657,
+      "modified": "2025-10-14T03:23:47.386Z"
     },
     {
       "name": "LoginForm.vue",
       "path": "src/SmartAbp.Vue/src/components/auth/LoginForm.vue",
       "type": "file",
-      "size": 21979,
-      "modified": "2025-10-12T17:17:08.233Z"
+      "size": 21975,
+      "modified": "2025-10-14T03:23:47.387Z"
     },
     {
       "name": "BaseButton.vue",
@@ -735,8 +735,8 @@
       "name": "LogoutConfirmDialog.vue",
       "path": "src/SmartAbp.Vue/src/components/common/LogoutConfirmDialog.vue",
       "type": "file",
-      "size": 5463,
-      "modified": "2025-10-12T17:17:08.233Z"
+      "size": 5462,
+      "modified": "2025-10-14T03:23:47.387Z"
     },
     {
       "name": "ModuleLoadingState.vue",
@@ -756,43 +756,43 @@
       "name": "EnterpriseIconSystem.vue",
       "path": "src/SmartAbp.Vue/src/components/icons/EnterpriseIconSystem.vue",
       "type": "file",
-      "size": 11328,
-      "modified": "2025-10-12T17:17:08.234Z"
+      "size": 11337,
+      "modified": "2025-10-14T03:23:47.387Z"
     },
     {
       "name": "IconCommunity.vue",
       "path": "src/SmartAbp.Vue/src/components/icons/IconCommunity.vue",
       "type": "file",
-      "size": 1054,
-      "modified": "2025-10-12T17:17:08.234Z"
+      "size": 1073,
+      "modified": "2025-10-14T03:23:47.387Z"
     },
     {
       "name": "IconDemo.vue",
       "path": "src/SmartAbp.Vue/src/components/icons/IconDemo.vue",
       "type": "file",
-      "size": 5122,
-      "modified": "2025-10-12T17:17:08.234Z"
+      "size": 5090,
+      "modified": "2025-10-14T03:23:47.387Z"
     },
     {
       "name": "IconDocumentation.vue",
       "path": "src/SmartAbp.Vue/src/components/icons/IconDocumentation.vue",
       "type": "file",
-      "size": 1254,
-      "modified": "2025-10-12T17:17:08.234Z"
+      "size": 1273,
+      "modified": "2025-10-14T03:23:47.387Z"
     },
     {
       "name": "IconEcosystem.vue",
       "path": "src/SmartAbp.Vue/src/components/icons/IconEcosystem.vue",
       "type": "file",
-      "size": 1977,
-      "modified": "2025-10-12T17:17:08.234Z"
+      "size": 1996,
+      "modified": "2025-10-14T03:23:47.388Z"
     },
     {
       "name": "IconGallerySimple.vue",
       "path": "src/SmartAbp.Vue/src/components/icons/IconGallerySimple.vue",
       "type": "file",
-      "size": 10620,
-      "modified": "2025-10-12T17:17:08.234Z"
+      "size": 11543,
+      "modified": "2025-10-14T03:23:47.388Z"
     },
     {
       "name": "IconManager.ts",
@@ -805,8 +805,8 @@
       "name": "IconSupport.vue",
       "path": "src/SmartAbp.Vue/src/components/icons/IconSupport.vue",
       "type": "file",
-      "size": 288,
-      "modified": "2025-10-12T17:17:08.234Z"
+      "size": 307,
+      "modified": "2025-10-14T03:23:47.388Z"
     },
     {
       "name": "IconTooling.vue",
@@ -826,22 +826,22 @@
       "name": "SimpleIconTest.vue",
       "path": "src/SmartAbp.Vue/src/components/icons/SimpleIconTest.vue",
       "type": "file",
-      "size": 4457,
-      "modified": "2025-10-12T17:17:08.234Z"
+      "size": 4437,
+      "modified": "2025-10-14T03:23:47.388Z"
     },
     {
       "name": "DashboardIcon.vue",
       "path": "src/SmartAbp.Vue/src/components/icons/enterprise/DashboardIcon.vue",
       "type": "file",
-      "size": 5881,
-      "modified": "2025-10-12T17:17:08.234Z"
+      "size": 6046,
+      "modified": "2025-10-14T03:23:47.388Z"
     },
     {
       "name": "LowCodeIcon.vue",
       "path": "src/SmartAbp.Vue/src/components/icons/enterprise/LowCodeIcon.vue",
       "type": "file",
-      "size": 11463,
-      "modified": "2025-10-12T17:17:08.234Z"
+      "size": 11553,
+      "modified": "2025-10-14T03:23:47.388Z"
     },
     {
       "name": "UserIcon.vue",
@@ -854,8 +854,8 @@
       "name": "SmartAbpLayout.vue",
       "path": "src/SmartAbp.Vue/src/components/layout/SmartAbpLayout.vue",
       "type": "file",
-      "size": 36816,
-      "modified": "2025-10-12T17:17:08.235Z"
+      "size": 36814,
+      "modified": "2025-10-14T03:23:47.389Z"
     },
     {
       "name": "StudioFooter.vue",
@@ -924,8 +924,8 @@
       "name": "LazyImage.vue",
       "path": "src/SmartAbp.Vue/src/components/performance/LazyImage.vue",
       "type": "file",
-      "size": 6667,
-      "modified": "2025-10-12T17:17:08.236Z"
+      "size": 6666,
+      "modified": "2025-10-14T03:23:47.389Z"
     },
     {
       "name": "OptimizedDataTable.vue",
@@ -952,8 +952,8 @@
       "name": "ThemeSwitcher.vue",
       "path": "src/SmartAbp.Vue/src/components/theme/ThemeSwitcher.vue",
       "type": "file",
-      "size": 11366,
-      "modified": "2025-10-12T17:17:08.236Z"
+      "size": 11365,
+      "modified": "2025-10-14T03:23:47.389Z"
     },
     {
       "name": "MDIContainer.vue",
@@ -1036,8 +1036,8 @@
       "name": "useDesignSystem.js",
       "path": "src/SmartAbp.Vue/src/composables/useDesignSystem.js",
       "type": "file",
-      "size": 11507,
-      "modified": "2025-10-12T17:17:08.238Z"
+      "size": 11493,
+      "modified": "2025-10-14T03:23:47.389Z"
     },
     {
       "name": "useDesignSystem.ts",
@@ -1309,8 +1309,8 @@
       "name": "pinia-pattern-example.ts",
       "path": "src/SmartAbp.Vue/src/examples/pinia-pattern-example.ts",
       "type": "file",
-      "size": 786,
-      "modified": "2025-10-12T17:17:08.242Z"
+      "size": 868,
+      "modified": "2025-10-14T03:23:47.389Z"
     },
     {
       "name": "router-guard-example.js",
@@ -1379,15 +1379,15 @@
       "name": "main.js",
       "path": "src/SmartAbp.Vue/src/main.js",
       "type": "file",
-      "size": 10558,
-      "modified": "2025-10-12T17:17:08.243Z"
+      "size": 10559,
+      "modified": "2025-10-14T03:23:47.390Z"
     },
     {
       "name": "main.ts",
       "path": "src/SmartAbp.Vue/src/main.ts",
       "type": "file",
-      "size": 11037,
-      "modified": "2025-10-12T17:17:08.243Z"
+      "size": 11103,
+      "modified": "2025-10-14T03:23:47.390Z"
     },
     {
       "name": "optimization.js",
@@ -1456,8 +1456,8 @@
       "name": "index.js",
       "path": "src/SmartAbp.Vue/src/router/index.js",
       "type": "file",
-      "size": 17649,
-      "modified": "2025-10-13T11:43:47.983Z"
+      "size": 21243,
+      "modified": "2025-10-14T03:23:47.390Z"
     },
     {
       "name": "index.ts",
@@ -2107,8 +2107,8 @@
       "name": "api.ts",
       "path": "src/SmartAbp.Vue/src/utils/api.ts",
       "type": "file",
-      "size": 6537,
-      "modified": "2025-10-12T17:17:08.254Z"
+      "size": 6712,
+      "modified": "2025-10-14T03:23:47.390Z"
     },
     {
       "name": "auth.js",
@@ -2282,8 +2282,8 @@
       "name": "examples.js",
       "path": "src/SmartAbp.Vue/src/utils/logging/examples.js",
       "type": "file",
-      "size": 13630,
-      "modified": "2025-10-12T17:17:08.257Z"
+      "size": 13624,
+      "modified": "2025-10-14T03:23:47.390Z"
     },
     {
       "name": "examples.ts",
@@ -2541,8 +2541,8 @@
       "name": "conflictDetector.js",
       "path": "src/SmartAbp.Vue/src/utils/vite/conflictDetector.js",
       "type": "file",
-      "size": 5442,
-      "modified": "2025-10-12T17:17:08.260Z"
+      "size": 5749,
+      "modified": "2025-10-14T03:23:47.391Z"
     },
     {
       "name": "conflictDetector.ts",
@@ -2569,8 +2569,8 @@
       "name": "Login.vue",
       "path": "src/SmartAbp.Vue/src/views/auth/Login.vue",
       "type": "file",
-      "size": 1866,
-      "modified": "2025-10-12T17:17:08.261Z"
+      "size": 1865,
+      "modified": "2025-10-14T03:23:47.391Z"
     },
     {
       "name": "LoginTest.vue",
@@ -2625,15 +2625,15 @@
       "name": "ProfileView.vue",
       "path": "src/SmartAbp.Vue/src/views/common/ProfileView.vue",
       "type": "file",
-      "size": 10411,
-      "modified": "2025-10-12T17:17:08.262Z"
+      "size": 10404,
+      "modified": "2025-10-14T03:23:47.391Z"
     },
     {
       "name": "SettingsView.vue",
       "path": "src/SmartAbp.Vue/src/views/common/SettingsView.vue",
       "type": "file",
-      "size": 14169,
-      "modified": "2025-10-12T17:17:08.262Z"
+      "size": 14162,
+      "modified": "2025-10-14T03:23:47.391Z"
     },
     {
       "name": "Forbidden.vue",
@@ -2695,8 +2695,8 @@
       "name": "AdvancedLogViewer.vue",
       "path": "src/SmartAbp.Vue/src/views/log/AdvancedLogViewer.vue",
       "type": "file",
-      "size": 15854,
-      "modified": "2025-10-12T17:17:08.262Z"
+      "size": 15875,
+      "modified": "2025-10-14T01:05:40.535Z"
     },
     {
       "name": "LogDashboard.vue",
@@ -2716,8 +2716,15 @@
       "name": "LogManagement.vue",
       "path": "src/SmartAbp.Vue/src/views/log/LogManagement.vue",
       "type": "file",
-      "size": 16587,
-      "modified": "2025-10-12T17:17:08.263Z"
+      "size": 16585,
+      "modified": "2025-10-14T03:23:47.391Z"
+    },
+    {
+      "name": "LogSearchFilter.vue",
+      "path": "src/SmartAbp.Vue/src/views/log/LogSearchFilter.vue",
+      "type": "file",
+      "size": 2913,
+      "modified": "2025-10-14T01:05:40.535Z"
     },
     {
       "name": "LogSystemDemo.vue",
@@ -2727,11 +2734,25 @@
       "modified": "2025-10-12T17:17:08.263Z"
     },
     {
+      "name": "LogViewer.vue",
+      "path": "src/SmartAbp.Vue/src/views/log/LogViewer.vue",
+      "type": "file",
+      "size": 5454,
+      "modified": "2025-10-14T01:05:40.514Z"
+    },
+    {
+      "name": "CodeGenEntrance.test.ts",
+      "path": "src/SmartAbp.Vue/src/views/lowcode/CodeGenEntrance.test.ts",
+      "type": "file",
+      "size": 2199,
+      "modified": "2025-10-14T16:35:53.869Z"
+    },
+    {
       "name": "CodeGenEntrance.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/CodeGenEntrance.vue",
       "type": "file",
-      "size": 26217,
-      "modified": "2025-10-12T17:17:08.263Z"
+      "size": 25066,
+      "modified": "2025-10-14T18:10:19.781Z"
     },
     {
       "name": "CqrsDesignerView.vue",
@@ -2779,8 +2800,8 @@
       "name": "IndustryTemplateConfig.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/IndustryTemplateConfig.vue",
       "type": "file",
-      "size": 17468,
-      "modified": "2025-10-12T17:17:08.264Z"
+      "size": 17466,
+      "modified": "2025-10-14T03:23:47.392Z"
     },
     {
       "name": "LowCodeStudioContent.vue",
@@ -2793,8 +2814,8 @@
       "name": "LowCodeStudioHome.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioHome.vue",
       "type": "file",
-      "size": 17302,
-      "modified": "2025-10-12T17:17:08.264Z"
+      "size": 16861,
+      "modified": "2025-10-14T18:10:19.785Z"
     },
     {
       "name": "LowCodeStudioView.enhanced.vue",
@@ -2821,8 +2842,8 @@
       "name": "LowCodeStudioWelcome.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioWelcome.vue",
       "type": "file",
-      "size": 12461,
-      "modified": "2025-10-12T17:17:08.264Z"
+      "size": 11908,
+      "modified": "2025-10-14T17:58:18.583Z"
     },
     {
       "name": "QuickStart.vue",
@@ -2926,8 +2947,8 @@
       "name": "ProjectListView.vue",
       "path": "src/SmartAbp.Vue/src/views/project/ProjectListView.vue",
       "type": "file",
-      "size": 14547,
-      "modified": "2025-10-12T17:17:08.266Z"
+      "size": 14545,
+      "modified": "2025-10-14T03:23:47.392Z"
     },
     {
       "name": "PerformanceMonitorView.vue",
@@ -2968,22 +2989,22 @@
       "name": "TestView.vue",
       "path": "src/SmartAbp.Vue/src/views/test/TestView.vue",
       "type": "file",
-      "size": 15363,
-      "modified": "2025-10-12T17:17:08.266Z"
+      "size": 15362,
+      "modified": "2025-10-14T03:23:47.392Z"
     },
     {
       "name": "UserListView.vue",
       "path": "src/SmartAbp.Vue/src/views/user/UserListView.vue",
       "type": "file",
-      "size": 3210,
-      "modified": "2025-10-13T11:43:47.984Z"
+      "size": 3579,
+      "modified": "2025-10-13T16:34:55.831Z"
     },
     {
       "name": "UserManagement.vue",
       "path": "src/SmartAbp.Vue/src/views/user/UserManagement.vue",
       "type": "file",
-      "size": 4130,
-      "modified": "2025-10-13T11:43:47.984Z"
+      "size": 5176,
+      "modified": "2025-10-13T16:34:55.831Z"
     },
     {
       "name": "data-processing.worker.js",
@@ -3192,8 +3213,8 @@
       "name": "entity-modeling.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/entity-modeling.ts",
       "type": "file",
-      "size": 6691,
-      "modified": "2025-10-13T13:23:44.564Z"
+      "size": 6663,
+      "modified": "2025-10-14T03:23:47.381Z"
     },
     {
       "name": "generation-history.ts",
@@ -3213,15 +3234,15 @@
       "name": "http-client.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/http-client.ts",
       "type": "file",
-      "size": 6198,
-      "modified": "2025-10-13T13:19:49.729Z"
+      "size": 6175,
+      "modified": "2025-10-14T03:23:47.381Z"
     },
     {
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/index.ts",
       "type": "file",
-      "size": 5102,
-      "modified": "2025-10-12T17:17:08.164Z"
+      "size": 5093,
+      "modified": "2025-10-14T03:23:47.382Z"
     },
     {
       "name": "industryTemplate.ts",
@@ -3682,8 +3703,8 @@
       "name": "useRealTimeAlerts.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/src/composables/useRealTimeAlerts.ts",
       "type": "file",
-      "size": 2210,
-      "modified": "2025-10-12T17:17:08.171Z"
+      "size": 2228,
+      "modified": "2025-10-14T05:59:22.349Z"
     },
     {
       "name": "useSecurityDashboard.ts",
@@ -3878,8 +3899,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/src/index.ts",
       "type": "file",
-      "size": 8389,
-      "modified": "2025-10-13T12:51:13.156Z"
+      "size": 8596,
+      "modified": "2025-10-14T05:52:57.461Z"
     },
     {
       "name": "ComponentSandbox.ts",
@@ -4277,8 +4298,8 @@
       "name": "index.js",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/index.js",
       "type": "file",
-      "size": 4495,
-      "modified": "2025-10-12T17:17:08.180Z"
+      "size": 4699,
+      "modified": "2025-10-14T03:23:47.382Z"
     },
     {
       "name": "index.ts",
@@ -4333,8 +4354,8 @@
       "name": "CodeGenerationWizard.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/components/CodeGenerationWizard.vue",
       "type": "file",
-      "size": 39923,
-      "modified": "2025-10-13T12:51:13.157Z"
+      "size": 40137,
+      "modified": "2025-10-14T03:23:47.382Z"
     },
     {
       "name": "CodePreview.vue",
@@ -4361,8 +4382,8 @@
       "name": "CodePreviewPanel.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/components/CodePreviewPanel.vue",
       "type": "file",
-      "size": 12407,
-      "modified": "2025-10-12T17:17:08.182Z"
+      "size": 12667,
+      "modified": "2025-10-14T04:13:36.128Z"
     },
     {
       "name": "ComponentPropertyPanel.vue",
@@ -4403,8 +4424,8 @@
       "name": "EnhancedThemeEditor.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/components/EnhancedThemeEditor.vue",
       "type": "file",
-      "size": 24378,
-      "modified": "2025-10-12T17:17:08.182Z"
+      "size": 24377,
+      "modified": "2025-10-14T03:23:47.383Z"
     },
     {
       "name": "EnterpriseCodeGenerationEngine.vue",
@@ -4550,8 +4571,8 @@
       "name": "SecurityDashboard.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/components/SecurityDashboard/SecurityDashboard.vue",
       "type": "file",
-      "size": 14577,
-      "modified": "2025-10-13T03:15:41.888Z"
+      "size": 14437,
+      "modified": "2025-10-14T05:59:22.410Z"
     },
     {
       "name": "SecurityMetricCard.vue",
@@ -4585,15 +4606,15 @@
       "name": "TemplateSelector.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/components/TemplateSelector.vue",
       "type": "file",
-      "size": 9436,
-      "modified": "2025-10-12T17:17:08.185Z"
+      "size": 9435,
+      "modified": "2025-10-14T03:23:47.383Z"
     },
     {
       "name": "ThemeEditor.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/components/ThemeEditor.vue",
       "type": "file",
-      "size": 960,
-      "modified": "2025-10-12T17:17:08.185Z"
+      "size": 959,
+      "modified": "2025-10-14T03:23:47.383Z"
     },
     {
       "name": "VisualComponentPalette.vue",
@@ -4676,8 +4697,8 @@
       "name": "DevEnvironmentSetup.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/components/devenv/DevEnvironmentSetup.vue",
       "type": "file",
-      "size": 22986,
-      "modified": "2025-10-12T17:17:08.186Z"
+      "size": 23029,
+      "modified": "2025-10-14T04:47:34.240Z"
     },
     {
       "name": "dragDropEngine.ts",
@@ -4711,8 +4732,8 @@
       "name": "CircuitBreakerConfig.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/components/resilience/CircuitBreakerConfig.vue",
       "type": "file",
-      "size": 3996,
-      "modified": "2025-10-12T17:17:08.187Z"
+      "size": 3990,
+      "modified": "2025-10-14T03:23:47.384Z"
     },
     {
       "name": "FallbackConfig.vue",
@@ -4795,8 +4816,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts",
       "type": "file",
-      "size": 17086,
-      "modified": "2025-10-13T11:43:47.981Z"
+      "size": 17006,
+      "modified": "2025-10-14T03:23:47.384Z"
     },
     {
       "name": "MetadataDrivenPageRenderer.vue",
@@ -4942,22 +4963,22 @@
       "name": "EntityDesignerTestView.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/EntityDesignerTestView.vue",
       "type": "file",
-      "size": 10144,
-      "modified": "2025-10-12T17:17:08.191Z"
+      "size": 10145,
+      "modified": "2025-10-14T04:13:36.190Z"
     },
     {
       "name": "EntityModelingView.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/EntityModelingView.vue",
       "type": "file",
-      "size": 68834,
-      "modified": "2025-10-13T12:51:13.158Z"
+      "size": 68818,
+      "modified": "2025-10-14T03:23:47.384Z"
     },
     {
       "name": "LowCodeStudioView.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/LowCodeStudioView.vue",
       "type": "file",
-      "size": 15853,
-      "modified": "2025-10-12T17:17:08.191Z"
+      "size": 15863,
+      "modified": "2025-10-14T04:47:34.046Z"
     },
     {
       "name": "ThemeCustomizationView.vue",
@@ -4977,8 +4998,8 @@
       "name": "UltraSimpleStudio.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/UltraSimpleStudio.vue",
       "type": "file",
-      "size": 40956,
-      "modified": "2025-10-13T15:13:03.347Z"
+      "size": 41728,
+      "modified": "2025-10-14T04:13:36.123Z"
     },
     {
       "name": "VisualDesignerView.vue",
@@ -5026,8 +5047,8 @@
       "name": "DragDropFormView.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/DragDropFormView.vue",
       "type": "file",
-      "size": 46683,
-      "modified": "2025-10-12T17:17:08.193Z"
+      "size": 46670,
+      "modified": "2025-10-14T03:23:47.385Z"
     },
     {
       "name": "EnvironmentComparisonView.vue",
@@ -5103,8 +5124,8 @@
       "name": "SfcCompilerView.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/codegen/SfcCompilerView.vue",
       "type": "file",
-      "size": 33407,
-      "modified": "2025-10-12T17:17:08.194Z"
+      "size": 33403,
+      "modified": "2025-10-14T03:23:47.385Z"
     },
     {
       "name": "TemplateMarketplace.vue",
@@ -5187,8 +5208,8 @@
       "name": "StyleEditor.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/designer/StyleEditor.vue",
       "type": "file",
-      "size": 1677,
-      "modified": "2025-10-12T17:17:08.195Z"
+      "size": 1675,
+      "modified": "2025-10-14T03:23:47.385Z"
     },
     {
       "name": "VersionHistory.vue",
@@ -5201,8 +5222,8 @@
       "name": "EntityDesignerTestView.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/dev/EntityDesignerTestView.vue",
       "type": "file",
-      "size": 462,
-      "modified": "2025-10-12T17:17:08.195Z"
+      "size": 460,
+      "modified": "2025-10-14T03:23:47.385Z"
     },
     {
       "name": "index.ts",
@@ -5712,8 +5733,8 @@
       "name": "api.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/api.ts",
       "type": "file",
-      "size": 3977,
-      "modified": "2025-10-12T17:17:08.202Z"
+      "size": 3958,
+      "modified": "2025-10-14T03:23:47.385Z"
     },
     {
       "name": "UnifiedCacheManager.ts",
@@ -5810,8 +5831,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/index.ts",
       "type": "file",
-      "size": 317,
-      "modified": "2025-10-12T17:17:08.203Z"
+      "size": 325,
+      "modified": "2025-10-14T04:47:34.151Z"
     },
     {
       "name": "useSafeEventListener.ts",
@@ -5852,8 +5873,8 @@
       "name": "DevToolsPanel.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/devtools/DevToolsPanel.vue",
       "type": "file",
-      "size": 14994,
-      "modified": "2025-10-13T15:22:38.449Z"
+      "size": 15177,
+      "modified": "2025-10-14T03:23:47.386Z"
     },
     {
       "name": "index.ts",
@@ -6384,8 +6405,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-tools/src/index.ts",
       "type": "file",
-      "size": 2639,
-      "modified": "2025-10-12T17:17:08.211Z"
+      "size": 3417,
+      "modified": "2025-10-14T04:47:34.763Z"
     },
     {
       "name": "build-template-index.js",
@@ -6405,8 +6426,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-tools/src/vite/index.ts",
       "type": "file",
-      "size": 865,
-      "modified": "2025-10-12T18:13:15.641Z"
+      "size": 934,
+      "modified": "2025-10-14T03:23:47.386Z"
     },
     {
       "name": "tsconfig.json",
@@ -8674,28 +8695,28 @@
     {
       "name": "runInit",
       "type": "function",
-      "line": 16,
+      "line": 17,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/appshell/lifecycle.generated.ts"
     },
     {
       "name": "runPostInit",
       "type": "function",
-      "line": 26,
+      "line": 28,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/appshell/lifecycle.generated.ts"
     },
     {
       "name": "runBeforeMount",
       "type": "function",
-      "line": 36,
+      "line": 39,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/appshell/lifecycle.generated.ts"
     },
     {
       "name": "runMounted",
       "type": "function",
-      "line": 46,
+      "line": 50,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/appshell/lifecycle.generated.ts"
     },
@@ -14764,14 +14785,14 @@
     {
       "name": "registerCoreComponents",
       "type": "function",
-      "line": 45,
+      "line": 48,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-core/src/index.ts"
     },
     {
       "name": "initializeLowCodeCore",
       "type": "function",
-      "line": 255,
+      "line": 258,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-core/src/index.ts"
     },
@@ -16199,7 +16220,7 @@
     {
       "name": "initializeDesigner",
       "type": "function",
-      "line": 278,
+      "line": 277,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-designer/src/index.ts"
     },
@@ -19646,6 +19667,13 @@
       "line": 198,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-tools/src/execution/types.ts"
+    },
+    {
+      "name": "createComponentLogger",
+      "type": "function",
+      "line": 42,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-tools/src/index.ts"
     },
     {
       "name": "vitePluginLowCode",

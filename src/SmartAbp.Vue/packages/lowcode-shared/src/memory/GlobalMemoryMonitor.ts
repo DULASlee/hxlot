@@ -122,6 +122,7 @@ export class GlobalMemoryMonitor {
   private isMonitoring = false;
   private monitorTimer?: ReturnType<typeof setInterval>;
   private leakDetectionTimer?: ReturnType<typeof setInterval>;
+  private cleanupHistoryTimer?: ReturnType<typeof setInterval>;
 
   // 数据存储
   private memoryHistory: MemoryUsageStats[] = [];
@@ -192,7 +193,7 @@ export class GlobalMemoryMonitor {
     }, this.config.leakDetectionInterval);
 
     // 启动历史数据清理
-    setInterval(() => {
+    this.cleanupHistoryTimer = setInterval(() => {
       this.cleanupHistoryData();
     }, 60000); // 每分钟清理一次
   }
@@ -214,6 +215,9 @@ export class GlobalMemoryMonitor {
     }
     if (this.leakDetectionTimer) {
       clearInterval(this.leakDetectionTimer);
+    }
+    if (this.cleanupHistoryTimer) {
+      clearInterval(this.cleanupHistoryTimer);
     }
   }
 
@@ -527,7 +531,7 @@ export class GlobalMemoryMonitor {
     const oldest = recentHistory[0]
     const newest = recentHistory[recentHistory.length - 1]
     if (!oldest || !newest) return
-    
+
     const oldestUsage = oldest.totalUsage
     const newestUsage = newest.totalUsage
     const timeSpan = newest.timestamp - oldest.timestamp

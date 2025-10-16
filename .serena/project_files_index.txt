@@ -386,7 +386,10 @@ src/SmartAbp.Vue/src/views/log/AdvancedLogViewer.vue
 src/SmartAbp.Vue/src/views/log/LogDashboard.vue
 src/SmartAbp.Vue/src/views/log/LogExample.vue
 src/SmartAbp.Vue/src/views/log/LogManagement.vue
+src/SmartAbp.Vue/src/views/log/LogSearchFilter.vue
 src/SmartAbp.Vue/src/views/log/LogSystemDemo.vue
+src/SmartAbp.Vue/src/views/log/LogViewer.vue
+src/SmartAbp.Vue/src/views/lowcode/CodeGenEntrance.test.ts
 src/SmartAbp.Vue/src/views/lowcode/CodeGenEntrance.vue
 src/SmartAbp.Vue/src/views/lowcode/CqrsDesignerView.vue
 src/SmartAbp.Vue/src/views/lowcode/DddDomainDesignerView.vue

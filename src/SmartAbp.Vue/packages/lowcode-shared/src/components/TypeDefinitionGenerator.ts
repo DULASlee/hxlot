@@ -93,6 +93,7 @@ export class TypeDefinitionGenerator {
   // Lazy Node modules (resolved only when running in a Node environment)
   private _fs?: FsPromises
   private _path?: PathModule
+  private _watchIntervalId?: ReturnType<typeof setInterval>
 
   constructor(
     private registry: ComponentRegistry,
@@ -375,7 +376,7 @@ ${componentList}
     callback?.(result)
 
     // 定期检查更新（简单实现，生产环境应使用文件监听）
-    setInterval(async () => {
+    this._watchIntervalId = setInterval(async () => {
       const newComponents = this.registry.getAvailableComponents()
 
       // 检查是否有变化
@@ -386,6 +387,16 @@ ${componentList}
         console.log(`[TypeDefinitionGenerator] 类型声明已更新 (${result.componentCount}个组件)`)
       }
     }, 5000)  // 每5秒检查一次
+  }
+
+  /**
+   * 停止 watch，清理定时器
+   */
+  stopWatch(): void {
+    if (this._watchIntervalId) {
+      clearInterval(this._watchIntervalId)
+      this._watchIntervalId = undefined
+    }
   }
 
   // Lazy loaders for Node core modules
