@@ -17,10 +17,7 @@
       <!-- 快速开始流程 -->
       <div class="quick-start-steps">
         <div class="step-cards">
-          <div
-            class="step-card"
-            @click="goToModeling"
-          >
+          <div class="step-card" @click="goToModeling">
             <div class="step-icon">
               <el-icon size="32">
                 <Folder />
@@ -29,25 +26,16 @@
             <h3>1. 实体建模</h3>
             <p>定义业务实体、字段和关系</p>
             <div class="step-status">
-              <el-tag
-                v-if="hasEntities"
-                type="success"
-              >
+              <el-tag v-if="hasEntities" type="success">
                 已完成
               </el-tag>
-              <el-tag
-                v-else
-                type="warning"
-              >
+              <el-tag v-else type="warning">
                 待开始
               </el-tag>
             </div>
           </div>
 
-          <div
-            class="step-card"
-            @click="goToDesign"
-          >
+          <div class="step-card" @click="goToDesign">
             <div class="step-icon">
               <el-icon size="32">
                 <Brush />
@@ -56,25 +44,16 @@
             <h3>2. 页面设计</h3>
             <p>设计用户界面和交互流程</p>
             <div class="step-status">
-              <el-tag
-                v-if="hasPages"
-                type="success"
-              >
+              <el-tag v-if="hasPages" type="success">
                 已完成
               </el-tag>
-              <el-tag
-                v-else
-                type="warning"
-              >
+              <el-tag v-else type="warning">
                 待开始
               </el-tag>
             </div>
           </div>
 
-          <div
-            class="step-card"
-            @click="goToGeneration"
-          >
+          <div class="step-card" @click="goToGeneration">
             <div class="step-icon">
               <el-icon size="32">
                 <Cpu />
@@ -83,16 +62,10 @@
             <h3>3. 代码生成</h3>
             <p>自动生成前后端代码</p>
             <div class="step-status">
-              <el-tag
-                v-if="hasGeneratedCode"
-                type="success"
-              >
+              <el-tag v-if="hasGeneratedCode" type="success">
                 已完成
               </el-tag>
-              <el-tag
-                v-else
-                type="warning"
-              >
+              <el-tag v-else type="warning">
                 待开始
               </el-tag>
             </div>
@@ -102,53 +75,41 @@
 
       <!-- 快速操作 -->
       <div class="quick-actions">
-        <el-button
-          type="primary"
-          size="large"
-          @click="startQuickDemo"
-        >
-          <el-icon><VideoPlay /></el-icon>
+        <el-button type="primary" size="large" @click="startQuickDemo">
+          <el-icon>
+            <VideoPlay />
+          </el-icon>
           观看演示
         </el-button>
 
-        <el-button
-          type="success"
-          size="large"
-          @click="createFirstEntity"
-        >
-          <el-icon><Plus /></el-icon>
+        <el-button type="success" size="large" @click="createFirstEntity">
+          <el-icon>
+            <Plus />
+          </el-icon>
           创建第一个实体
         </el-button>
 
-        <el-button
-          size="large"
-          @click="importTemplate"
-        >
-          <el-icon><Upload /></el-icon>
+        <el-button size="large" @click="importTemplate">
+          <el-icon>
+            <Upload />
+          </el-icon>
           导入模板项目
         </el-button>
       </div>
 
       <!-- 最近项目 -->
-      <div
-        v-if="recentProjects.length > 0"
-        class="recent-projects"
-      >
+      <div v-if="recentProjects.length > 0" class="recent-projects">
         <h3>最近项目</h3>
         <div class="project-cards">
-          <div
-            v-for="project in recentProjects"
-            :key="project.id"
-            class="project-card"
-            @click="openProject(project)"
-          >
+          <div v-for="project in recentProjects" :key="project.id" class="project-card" @click="openProject(project)">
             <div class="project-info">
               <h4>{{ project.name }}</h4>
               <p>{{ project.description }}</p>
               <span class="project-date">{{ formatDate(project.updatedAt) }}</span>
             </div>
             <div class="project-status">
-              <el-tag :type="getProjectStatusType(project.status) as 'success' | 'info' | 'warning' | 'primary' | 'danger'">
+              <el-tag
+                :type="getProjectStatusType(project.status) as 'success' | 'info' | 'warning' | 'primary' | 'danger'">
                 {{ getProjectStatusLabel(project.status) }}
               </el-tag>
             </div>
@@ -182,14 +143,15 @@
 import { useProjectStore } from '@/stores/lowcode/projectStore'
 import { logger } from '@/utils/logger'
 import {
-    Brush,
-    Cpu,
-    Folder,
-    Platform,
-    Plus,
-    Upload,
-    VideoPlay
+  Brush,
+  Cpu,
+  Folder,
+  Platform,
+  Plus,
+  Upload,
+  VideoPlay
 } from '@element-plus/icons-vue'
+import { generationHistoryApi } from '@smartabp/lowcode-api'
 import { ElMessage } from 'element-plus'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -208,7 +170,7 @@ const loading = ref(false)
 const hasEntities = computed(() => {
   // ✅ 真实检查：从Store获取实体数据
   const currentProject = projectStore.currentProject
-  return currentProject?.pages?.some(page => 
+  return currentProject?.pages?.some(page =>
     page.code && JSON.parse(page.code || '[]').length > 0
   ) || false
 })
@@ -238,7 +200,7 @@ const goToGeneration = () => {
 }
 
 const startQuickDemo = () => {
-  ElMessage.info('演示功能开发中...')
+  router.push('/codegen-entrance')
 }
 
 const createFirstEntity = () => {
@@ -279,7 +241,7 @@ const createFirstEntity = () => {
 }
 
 const importTemplate = () => {
-  ElMessage.info('模板导入功能开发中...')
+  router.push('/lowcode/design')
 }
 
 const openProject = (project: any) => {
@@ -338,17 +300,13 @@ const contactSupport = () => {
 // ✅ 生命周期：加载真实数据
 onMounted(async () => {
   logger?.info('LowCode Studio欢迎页面加载')
-  
-  // 加载最近项目
   loading.value = true
   try {
-    // 从localStorage加载最近项目（后续接入API）
-    const stored = localStorage.getItem('smartabp_recent_projects')
-    if (stored) {
-      recentProjects.value = JSON.parse(stored)
-    }
+    // 改为真实API加载最近项目
+    recentProjects.value = await generationHistoryApi.getRecentProjects(5)
   } catch (error) {
     console.error('加载最近项目失败:', error)
+    recentProjects.value = []
   } finally {
     loading.value = false
   }

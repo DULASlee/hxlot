@@ -3,10 +3,7 @@
     <!-- 欢迎区域 -->
     <div class="welcome-section">
       <div class="welcome-header">
-        <el-icon
-          class="welcome-icon"
-          :size="48"
-        >
+        <el-icon class="welcome-icon" :size="48">
           <MagicStick />
         </el-icon>
         <h1>{{ greetingMessage }}，{{ userName }}</h1>
@@ -17,10 +14,7 @@
       </div>
 
       <!-- 统计卡片 -->
-      <div
-        v-loading="statsLoading"
-        class="stats-cards"
-      >
+      <div v-loading="statsLoading" class="stats-cards">
         <div class="stat-card">
           <div class="stat-value">
             {{ stats.totalProjects }}
@@ -64,13 +58,8 @@
       </div>
 
       <div class="nav-cards">
-        <div
-          v-for="nav in quickNavItems"
-          :key="nav.path"
-          class="nav-card"
-          :class="{ 'most-used': nav.isMostUsed }"
-          @click="navigateTo(nav.path)"
-        >
+        <div v-for="nav in quickNavItems" :key="nav.path" class="nav-card" :class="{ 'most-used': nav.isMostUsed }"
+          @click="navigateTo(nav.path)">
           <div class="card-icon">
             <el-icon :size="32">
               <component :is="nav.icon" />
@@ -79,30 +68,17 @@
           <div class="card-content">
             <h3>{{ nav.title }}</h3>
             <p>{{ nav.description }}</p>
-            <div
-              v-if="nav.usageCount > 0"
-              class="usage-info"
-            >
-              <el-tag
-                type="info"
-                size="small"
-              >
+            <div v-if="nav.usageCount > 0" class="usage-info">
+              <el-tag type="info" size="small">
                 使用{{ nav.usageCount }}次
               </el-tag>
-              <el-tag
-                v-if="nav.isMostUsed"
-                type="success"
-                size="small"
-              >
+              <el-tag v-if="nav.isMostUsed" type="success" size="small">
                 最常用
               </el-tag>
             </div>
           </div>
           <div class="card-action">
-            <el-button
-              type="primary"
-              text
-            >
+            <el-button type="primary" text>
               开始使用
               <el-icon class="ml-1">
                 <ArrowRight />
@@ -117,37 +93,19 @@
     <div class="recent-section">
       <div class="section-title">
         <h2>最近生成的项目</h2>
-        <el-button
-          v-if="recentProjects.length > 0"
-          type="primary"
-          text
-          @click="viewAllProjects"
-        >
+        <el-button v-if="recentProjects.length > 0" type="primary" text @click="viewAllProjects">
           查看全部
         </el-button>
       </div>
 
-      <div
-        v-loading="projectsLoading"
-        class="recent-projects"
-      >
+      <div v-loading="projectsLoading" class="recent-projects">
         <!-- 有数据时显示项目卡片 -->
-        <div
-          v-if="recentProjects.length > 0"
-          class="projects-grid"
-        >
-          <div
-            v-for="project in recentProjects"
-            :key="project.id"
-            class="project-card"
-          >
+        <div v-if="recentProjects.length > 0" class="projects-grid">
+          <div v-for="project in recentProjects" :key="project.id" class="project-card">
             <div class="project-header">
               <div class="project-info">
                 <h3>{{ project.projectName }}</h3>
-                <el-tag
-                  :type="project.status === 'success' ? 'success' : 'danger'"
-                  size="small"
-                >
+                <el-tag :type="project.status === 'success' ? 'success' : 'danger'" size="small">
                   {{ project.status === 'success' ? '生成成功' : '生成失败' }}
                 </el-tag>
               </div>
@@ -161,10 +119,7 @@
                 <span class="label">模式：</span>
                 <span class="value">{{ getModeLabel(project.mode) }}</span>
               </div>
-              <div
-                v-if="project.templateName"
-                class="stat-item"
-              >
+              <div v-if="project.templateName" class="stat-item">
                 <span class="label">模板：</span>
                 <span class="value">{{ project.templateName }}</span>
               </div>
@@ -183,18 +138,10 @@
             </div>
 
             <div class="project-actions">
-              <el-button
-                size="small"
-                @click="continueEdit(project)"
-              >
+              <el-button size="small" @click="continueEdit(project)">
                 继续编辑
               </el-button>
-              <el-button
-                size="small"
-                type="danger"
-                text
-                @click="deleteProject(project)"
-              >
+              <el-button size="small" type="danger" text @click="deleteProject(project)">
                 删除
               </el-button>
             </div>
@@ -202,18 +149,9 @@
         </div>
 
         <!-- 无数据时显示Empty -->
-        <div
-          v-else
-          class="project-placeholder"
-        >
-          <el-empty
-            description="暂无生成记录"
-            :image-size="80"
-          >
-            <el-button
-              type="primary"
-              @click="startNewProject"
-            >
+        <div v-else class="project-placeholder">
+          <el-empty description="暂无生成记录" :image-size="80">
+            <el-button type="primary" @click="startNewProject">
               开始第一个项目
             </el-button>
           </el-empty>
@@ -257,8 +195,20 @@ const greetingMessage = computed(() => {
   return '晚上好'
 })
 
+// 使用与 Element Plus 图标相同的组件类型，避免对 `vue` 的全局 Component 依赖
+type IconComp = typeof Opportunity
+
+interface QuickNavItem {
+  path: string
+  title: string
+  description: string
+  icon: IconComp
+  usageCount: number
+  isMostUsed: boolean
+}
+
 // 快速导航项目
-const quickNavItems = ref([
+const quickNavItems = ref<QuickNavItem[]>([
   {
     path: '/CodeGen/ultra-simple',
     title: '极简生成',
@@ -373,12 +323,12 @@ const calculateMostUsed = () => {
   // 映射mode到导航项
   const modeToPath: Record<string, string> = {
     'simple': '/CodeGen/ultra-simple',
-    'industry': '/lowcode/industry-template',
+    'industry': '/lowcode/industry-template-config',
     'pro': '/lowcode/entity-modeling'
   }
 
   // 更新使用次数
-  quickNavItems.value.forEach(item => {
+  quickNavItems.value.forEach((item: QuickNavItem) => {
     const mode = Object.keys(modeToPath).find(k => modeToPath[k] === item.path)
     if (mode) {
       item.usageCount = modeCounts[mode] || 0
@@ -386,9 +336,9 @@ const calculateMostUsed = () => {
   })
 
   // 标记最常用
-  const maxCount = Math.max(...quickNavItems.value.map(item => item.usageCount))
+  const maxCount = Math.max(...quickNavItems.value.map((item: QuickNavItem) => item.usageCount))
   if (maxCount > 0) {
-    quickNavItems.value.forEach(item => {
+    quickNavItems.value.forEach((item: QuickNavItem) => {
       item.isMostUsed = item.usageCount === maxCount
     })
   }
@@ -437,14 +387,14 @@ const navigateTo = (path: string) => {
  * 查看所有项目
  */
 const viewAllProjects = () => {
-  router.push('/lowcode/generation-history')
+  router.push('/lowcode/generation')
 }
 
 /**
  * 开始新项目
  */
 const startNewProject = () => {
-  router.push('/lowcode/codegen-entrance')
+  router.push('/codegen-entrance')
 }
 
 /**
@@ -453,7 +403,7 @@ const startNewProject = () => {
 const continueEdit = (project: GenerationHistoryDto) => {
   // 根据模式跳转到对应页面
   if (project.mode === 'simple') {
-    router.push('/lowcode/ultra-simple')
+    router.push('/CodeGen/ultra-simple')
   } else if (project.mode === 'industry') {
     router.push({
       path: '/lowcode/industry-template-config',

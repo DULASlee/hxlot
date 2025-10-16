@@ -84,7 +84,10 @@ class ErrorMonitor {
   private config: Required<ErrorMonitorConfig>
   private errorCache: ErrorInfo[] = []
   private isInitialized = false
-  
+  // cache bound handlers to ensure removeEventListener works correctly
+  private handleRuntimeErrorBound?: (event: ErrorEvent) => void
+  private handlePromiseErrorBound?: (event: PromiseRejectionEvent) => void
+
   constructor(config: ErrorMonitorConfig = {}) {
     this.config = {
       enabled: true,
@@ -93,11 +96,11 @@ class ErrorMonitor {
       capturePromiseRejection: true,
       captureResourceError: true,
       maxErrorCache: 50,
-      onError: () => {},
+      onError: () => { },
       ...config
     }
   }
-  
+
   /**
    * 初始化错误监控
    */
@@ -105,33 +108,35 @@ class ErrorMonitor {
     if (this.isInitialized || !this.config.enabled) {
       return
     }
-    
+
     // 1. 监听JavaScript运行时错误
-    window.addEventListener('error', this.handleRuntimeError.bind(this), true)
-    
+    this.handleRuntimeErrorBound = this.handleRuntimeErrorBound || this.handleRuntimeError.bind(this)
+    window.addEventListener('error', this.handleRuntimeErrorBound, true)
+
     // 2. 监听Promise未捕获错误
     if (this.config.capturePromiseRejection) {
-      window.addEventListener('unhandledrejection', this.handlePromiseError.bind(this))
+      this.handlePromiseErrorBound = this.handlePromiseErrorBound || this.handlePromiseError.bind(this)
+      window.addEventListener('unhandledrejection', this.handlePromiseErrorBound)
     }
-    
+
     // 3. 监听Vue错误（需要在Vue应用中配置）
     // app.config.errorHandler = this.handleVueError.bind(this)
-    
+
     this.isInitialized = true
     console.log('[ErrorMonitor] Initialized')
   }
-  
+
   /**
    * 处理运行时错误
    */
   private handleRuntimeError(event: ErrorEvent): void {
     // 区分JavaScript错误和资源加载错误
     const target = event.target as HTMLElement
-    
+
     if (target && (target.tagName === 'IMG' || target.tagName === 'SCRIPT' || target.tagName === 'LINK')) {
       // 资源加载错误
       if (!this.config.captureResourceError) return
-      
+
       this.captureError({
         type: ErrorType.RESOURCE,
         level: ErrorLevel.WARNING,
@@ -162,7 +167,7 @@ class ErrorMonitor {
       })
     }
   }
-  
+
   /**
    * 处理Promise错误
    */
@@ -177,13 +182,13 @@ class ErrorMonitor {
       userAgent: navigator.userAgent
     })
   }
-  
+
   /**
    * 处理Vue错误
    */
   handleVueError(err: unknown, _instance: unknown, info: string): void {
     const error = err as Error
-    
+
     this.captureError({
       type: ErrorType.VUE,
       level: ErrorLevel.ERROR,
@@ -197,7 +202,7 @@ class ErrorMonitor {
       }
     })
   }
-  
+
   /**
    * 捕获错误
    */
@@ -206,29 +211,29 @@ class ErrorMonitor {
     if (Math.random() > this.config.sampleRate) {
       return
     }
-    
+
     // 缓存错误
     this.errorCache.push(error)
     if (this.errorCache.length > this.config.maxErrorCache) {
       this.errorCache.shift()
     }
-    
+
     // 触发回调
     this.config.onError(error)
-    
+
     // 上报错误
     this.reportError(error)
-    
+
     // 控制台输出
     console.error('[ErrorMonitor] Captured error:', error)
   }
-  
+
   /**
    * 上报错误
    */
   private async reportError(error: ErrorInfo): Promise<void> {
     if (!this.config.reportUrl) return
-    
+
     try {
       await fetch(this.config.reportUrl, {
         method: 'POST',
@@ -241,7 +246,7 @@ class ErrorMonitor {
       console.error('[ErrorMonitor] Report failed:', e)
     }
   }
-  
+
   /**
    * 手动捕获业务错误
    */
@@ -256,7 +261,7 @@ class ErrorMonitor {
       extra
     })
   }
-  
+
   /**
    * 捕获网络错误
    */
@@ -275,30 +280,34 @@ class ErrorMonitor {
       }
     })
   }
-  
+
   /**
    * 获取错误缓存
    */
   getErrorCache(): ErrorInfo[] {
     return [...this.errorCache]
   }
-  
+
   /**
    * 清空错误缓存
    */
   clearErrorCache(): void {
     this.errorCache = []
   }
-  
+
   /**
    * 销毁监控
    */
   destroy(): void {
     if (!this.isInitialized) return
-    
-    window.removeEventListener('error', this.handleRuntimeError.bind(this), true)
-    window.removeEventListener('unhandledrejection', this.handlePromiseError.bind(this))
-    
+
+    if (this.handleRuntimeErrorBound) {
+      window.removeEventListener('error', this.handleRuntimeErrorBound, true)
+    }
+    if (this.handlePromiseErrorBound) {
+      window.removeEventListener('unhandledrejection', this.handlePromiseErrorBound)
+    }
+
     this.isInitialized = false
     console.log('[ErrorMonitor] Destroyed')
   }
@@ -312,11 +321,11 @@ export default {
   install(app: { config: { errorHandler: (err: unknown, instance: unknown, info: string) => void } }, options: ErrorMonitorConfig = {}) {
     const monitor = new ErrorMonitor(options)
     monitor.init()
-    
+
     // 设置Vue错误处理器
     app.config.errorHandler = monitor.handleVueError.bind(monitor)
-    
-    // 挂载到全局
-    ;(window as unknown as { $errorMonitor: ErrorMonitor }).$errorMonitor = monitor
+
+      // 挂载到全局
+      ; (window as unknown as { $errorMonitor: ErrorMonitor }).$errorMonitor = monitor
   }
 }
