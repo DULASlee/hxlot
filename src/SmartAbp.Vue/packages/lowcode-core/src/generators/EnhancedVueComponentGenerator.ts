@@ -67,7 +67,7 @@ const TypeScriptTypeMap: Record<string, string> = {
     'Enum': 'number',
     'json': 'string',
     'xml': 'string',
-    'array': 'any[]',
+    'array': 'unknown[]',
     'dictionary': 'Record<string, any>'
 }
 

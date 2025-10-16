@@ -37,6 +37,7 @@ export interface EntityGenerationConfig {
     generateValidation: boolean
     generateNavigationProperties: boolean
     generateEntityConfiguration: boolean
+    generateEnums: boolean
 }
 
 export interface GeneratedEntityCode {
@@ -282,7 +283,7 @@ export class EnhancedEntityGenerator {
         allEntities: UnifiedEntityDefinition[]
     ): string {
         // 1. 生成普通字段
-        const fields = this.generateFields(entity.fields)
+        const fields = this.generateFields(entity.fields, entity.name)
 
         // 2. 生成外键属性
         const foreignKeys = this.config.generateNavigationProperties
@@ -312,6 +313,7 @@ using Volo.Abp.Domain.Entities.Auditing;
 
 namespace ${this.config.namespace}.${entity.name}s
 {
+${this.config.generateEnums ? this.generateEnumDeclarations(entity) : ''}
     /// <summary>
     /// ${entity.displayName || entity.name} 实体
     /// ${entity.description ? `\n    /// ${entity.description}` : ''}
@@ -331,9 +333,9 @@ ${constructors}
     /**
      * 生成字段
      */
-    private generateFields(fields: UnifiedEntityField[]): string {
+    private generateFields(fields: UnifiedEntityField[], entityName: string): string {
         return fields.map(field => {
-            const type = mapCSharpType(field)
+            const type = this.resolveCSharpType(field, entityName)
             const nullable = !field.isRequired && !isValueType(type) ? '?' : ''
             const annotations = this.config.generateComments ? generateDataAnnotations(field) : ''
 
@@ -360,7 +362,7 @@ ${this.generateCollectionInitializers(entity)}
         // 有参构造函数（包含必填字段）
         if (requiredFields.length > 0) {
             const params = requiredFields.map(f => {
-                const type = mapCSharpType(f)
+                const type = this.resolveCSharpType(f, entity.name)
                 const nullable = !isValueType(type) ? '?' : ''
                 return `${type}${nullable} ${this.toLowerCamelCase(f.name)}`
             }).join(', ')
@@ -394,7 +396,7 @@ ${this.generateCollectionInitializers(entity)}
      * 生成字段验证
      */
     private generateFieldValidation(field: UnifiedEntityField, paramName: string): string {
-        const type = mapCSharpType(field)
+        const type = this.resolveCSharpType(field, '')
 
         if (type === 'string') {
             if (field.maxLength && field.maxLength > 0) {
@@ -440,6 +442,20 @@ ${this.generateCollectionInitializers(entity)}
      */
     private toLowerCamelCase(str: string): string {
         return str.charAt(0).toLowerCase() + str.slice(1)
+    }
+
+    /**
+     * 解析最终C#类型（包含枚举开关回退）
+     */
+    private resolveCSharpType(field: UnifiedEntityField, entityName: string): string {
+        // 若字段为枚举且未开启生成枚举，则回退为 string，避免编译错误
+        if ((field.type.includes('enum') || field.enumValues) && !this.config.generateEnums) {
+            return 'string'
+        }
+        if (field.type.includes('enum') || field.enumValues) {
+            return `${entityName || ''}${field.name}Enum`.replace(/^Enum/, 'Enum')
+        }
+        return mapCSharpType(field)
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -606,6 +622,52 @@ ${relationshipConfigs}
                     return ''
             }
         }).filter(c => c).join('\n\n')
+    }
+
+    /**
+     * 生成枚举声明（位于命名空间内，类外）
+     */
+    private generateEnumDeclarations(entity: UnifiedEntityDefinition): string {
+        if (!entity.fields || entity.fields.length === 0) {
+            return ''
+        }
+
+        const enums = entity.fields
+            .filter(f => Array.isArray((f as any).enumValues) && (f as any).enumValues.length > 0)
+            .map(f => {
+                const rawValues = (f as any).enumValues as string[]
+                const members = rawValues
+                    .map((v, idx) => {
+                        const name = this.sanitizeEnumMemberName(v)
+                        return `        ${name} = ${idx}`
+                    })
+                    .join(',\n')
+
+                return `    /// <summary>
+    /// ${f.displayName || f.name} 枚举
+    /// </summary>
+    public enum ${entity.name}${f.name}Enum
+    {
+${members}
+    }`
+            })
+
+        return enums.length > 0 ? enums.join('\n\n') + '\n' : ''
+    }
+
+    /**
+     * 枚举成员名清理
+     */
+    private sanitizeEnumMemberName(value: string): string {
+        // 去除非字母数字，下划线；首字符非字母则前缀_；空则回退为 Value
+        let name = value.replace(/[^a-zA-Z0-9_]/g, '_')
+        if (!/^[A-Za-z_]/.test(name)) {
+            name = '_' + name
+        }
+        if (name.length === 0) {
+            name = 'Value'
+        }
+        return name
     }
 }
 

@@ -29,6 +29,8 @@ export interface AppServiceGenerationConfig {
     generateCaching: boolean
     generateDomainEvents: boolean
     generateAdvancedQueries: boolean
+    generateEnums: boolean
+    generateRelationshipHelpers: boolean
 }
 
 /**
@@ -442,6 +444,10 @@ ${searchConditions};
         entity: UnifiedEntityDefinition,
         allEntities: UnifiedEntityDefinition[]
     ): string {
+        if (!this.config.generateRelationshipHelpers) {
+            return '\n        // 无自定义方法'
+        }
+
         if (!entity.relationships || entity.relationships.length === 0) {
             return '\n        // 无自定义方法'
         }
@@ -629,7 +635,7 @@ ${updateDtoFields}
      */
     private generateDtoFields(fields: UnifiedEntityField[]): string {
         return fields.map(field => {
-            const type = this.mapCSharpType(field)
+            const type = this.mapCSharpType(field, '')
             const nullable = !field.isRequired && !type.endsWith('?') ? '?' : ''
             const comment = field.description || field.displayName || field.name
 
@@ -645,7 +651,7 @@ ${updateDtoFields}
      */
     private generateCreateDtoFields(fields: UnifiedEntityField[]): string {
         return fields.map(field => {
-            const type = this.mapCSharpType(field)
+            const type = this.mapCSharpType(field, '')
             const nullable = !field.isRequired && !type.endsWith('?') ? '?' : ''
             const comment = field.description || field.displayName || field.name
 
@@ -685,10 +691,14 @@ ${validationStr}        public ${type}${nullable} ${field.name} { get; set; }`
     /**
      * 映射C#类型
      */
-    private mapCSharpType(field: UnifiedEntityField): string {
-        // 处理枚举
+    private mapCSharpType(field: UnifiedEntityField, entityName: string): string {
+        // 处理枚举（若未开启生成则回退string，避免编译失败）
         if (field.type.includes('enum') || field.enumValues) {
-            return field.name + 'Enum'
+            if (!this.config.generateEnums) {
+                return 'string'
+            }
+            const prefix = entityName || ''
+            return `${prefix}${field.name}Enum`
         }
 
         // 处理数组类型

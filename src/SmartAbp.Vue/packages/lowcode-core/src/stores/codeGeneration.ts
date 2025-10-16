@@ -503,7 +503,8 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
         generateComments: config.advanced.generateComments,
         generateValidation: true,
         generateNavigationProperties: true,
-        generateEntityConfiguration: true
+        generateEntityConfiguration: true,
+        generateEnums: true
       };
 
       enhancedEntityGenerator = new EnhancedEntityGenerator(generatorConfig);
@@ -522,7 +523,9 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
         generateBatchOperations: true,
         generateCaching: false, // 可配置
         generateDomainEvents: false, // 可配置
-        generateAdvancedQueries: true
+        generateAdvancedQueries: true,
+        generateEnums: true,
+        generateRelationshipHelpers: false
       };
 
       enhancedAppServiceGenerator = new EnhancedAppServiceGenerator(generatorConfig);
