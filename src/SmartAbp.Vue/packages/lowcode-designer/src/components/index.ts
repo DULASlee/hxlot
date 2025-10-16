@@ -84,6 +84,9 @@ export { default as LdTemplateManager } from './TemplateManager.vue'
 export { default as LdVisualComponentPalette } from './VisualComponentPalette.vue'
 export { default as LdVisualDesignCanvas } from './VisualDesignCanvas.vue'
 
+// ✅ Code Preview Components v2.0
+export { CodePreviewPanel, CodeDiffViewer } from './CodePreview'
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🚧 Utility exports - 待实现
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
