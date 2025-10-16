@@ -47,11 +47,7 @@ import type {
     UnifiedModuleMetadata
 } from '@smartabp/lowcode-shared'
 
-import {
-    convertEntityToMetadataCore,
-    convertModuleToMetadataCore,
-    validateConversion
-} from './metadata-adapter'
+// 已移除对 metadata-adapter 的依赖，直接对统一Schema进行校验
 
 // 🔥 阶段4：国际化错误信息
 import {
@@ -255,33 +251,17 @@ export class UnifiedSchemaValidator {
                 return this.createSuccessResult(entity, startTime)
             }
 
-            // 转换为metadata-core格式
-            const metadataEntity = convertEntityToMetadataCore(entity)
-
-            // 验证转换是否成功
-            if (!validateConversion(entity, metadataEntity)) {
-                return this.createErrorResult(
-                    [{ code: 'CONVERSION_FAILED', message: 'Failed to convert entity to metadata-core format' }],
-                    startTime,
-                    entity
-                )
-            }
-
-            // 🔥 执行metadata-core真实验证
+            // 🔥 直接对统一Schema进行校验（不再进行适配器转换）
             if (this.featureFlags.enableStrictValidation) {
-                // 严格模式：抛出异常
                 try {
-                    validateEntityMetadata(metadataEntity)
+                    validateEntityMetadata(entity)
                 } catch (error) {
-                    // 验证失败，获取详细错误
-                    const zodErrors = getEntityMetadataErrors(metadataEntity)
+                    const zodErrors = getEntityMetadataErrors(entity)
                     const errors = this.convertZodErrors(zodErrors)
                     return this.createErrorResult(errors, startTime, entity)
                 }
             } else {
-                // 安全模式：返回结果
-                const validationResult = safeValidateEntityMetadata(metadataEntity)
-
+                const validationResult = safeValidateEntityMetadata(entity)
                 if (!validationResult.success) {
                     const errors = this.convertZodErrors(validationResult.error?.issues || [])
                     return this.createErrorResult(errors, startTime, entity)
@@ -332,24 +312,17 @@ export class UnifiedSchemaValidator {
                 return this.createSuccessResult(module, startTime)
             }
 
-            // 转换为metadata-core格式
-            const metadataModule = convertModuleToMetadataCore(module)
-
-            // 🔥 执行metadata-core真实验证
+            // 🔥 直接对统一Schema进行校验（不再进行适配器转换）
             if (this.featureFlags.enableStrictValidation) {
-                // 严格模式：抛出异常
                 try {
-                    validateModuleMetadata(metadataModule)
+                    validateModuleMetadata(module)
                 } catch (error) {
-                    // 验证失败，获取详细错误
-                    const zodErrors = getModuleMetadataErrors(metadataModule)
+                    const zodErrors = getModuleMetadataErrors(module)
                     const errors = this.convertZodErrors(zodErrors)
                     return this.createErrorResult(errors, startTime, module)
                 }
             } else {
-                // 安全模式：返回结果
-                const validationResult = safeValidateModuleMetadata(metadataModule)
-
+                const validationResult = safeValidateModuleMetadata(module)
                 if (!validationResult.success) {
                     const errors = this.convertZodErrors(validationResult.error?.issues || [])
                     return this.createErrorResult(errors, startTime, module)
@@ -568,14 +541,10 @@ export class UnifiedSchemaValidator {
 
         if (this.featureFlags.enableSchemaDiffComparison) {
             try {
-                // 转换为metadata-core格式
-                const oldMetadata = convertEntityToMetadataCore(oldEntity)
-                const newMetadata = convertEntityToMetadataCore(newEntity)
-
-                // 执行差异对比（类型兼容：EntityMetadata是UnifiedEntityDefinition的子集）
+                // 直接对统一Schema进行差异对比
                 diff = diffEntitySchema(
-                    oldMetadata as unknown as import('../types/unified-schema').UnifiedEntityDefinition,
-                    newMetadata as unknown as import('../types/unified-schema').UnifiedEntityDefinition
+                    oldEntity,
+                    newEntity
                 )
 
                 // 分析差异，识别破坏性变更
@@ -697,9 +666,7 @@ export class UnifiedSchemaValidator {
         }
 
         try {
-            const oldMetadata = convertEntityToMetadataCore(oldEntity)
-            const newMetadata = convertEntityToMetadataCore(newEntity)
-            const diff = diffEntitySchema(oldMetadata as any, newMetadata as any)
+            const diff = diffEntitySchema(oldEntity as any, newEntity as any)
 
             const changelogVersion = version || newEntity.schemaVersion || newEntity.version || '1.0.0'
             return generateChangelog(diff, changelogVersion)
@@ -725,11 +692,9 @@ export class UnifiedSchemaValidator {
         }
 
         try {
-            const oldMetadata = convertEntityToMetadataCore(oldEntity)
-            const newMetadata = convertEntityToMetadataCore(newEntity)
             const diff = diffEntitySchema(
-                oldMetadata as unknown as import('../types/unified-schema').UnifiedEntityDefinition,
-                newMetadata as unknown as import('../types/unified-schema').UnifiedEntityDefinition
+                oldEntity,
+                newEntity
             )
 
             return generateDiffSummary(diff)

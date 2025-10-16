@@ -43,10 +43,7 @@ export {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔧 元数据适配器（已从metadata-core迁移至lowcode-shared）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export {
-  convertEntityToMetadataCore, convertMetadataCoreToUnified,
-  convertModuleToMetadataCore, isEntityMetadata, isUnifiedEntityDefinition
-} from './metadata-adapter'
+// 适配器已弃用：不再导出转换相关API，统一直接使用统一Schema
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🌐 国际化错误消息（阶段三新增）

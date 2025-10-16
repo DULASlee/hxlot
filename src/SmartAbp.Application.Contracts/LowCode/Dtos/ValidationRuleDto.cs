@@ -36,6 +36,11 @@ namespace SmartAbp.Application.Contracts.LowCode.Dtos
         public string ErrorMessage { get; set; }
 
         /// <summary>
+        /// 触发时机（前端UI需要）：blur | change | submit
+        /// </summary>
+        public string Trigger { get; set; }
+
+        /// <summary>
         /// 规则描述
         /// </summary>
         public string Description { get; set; }

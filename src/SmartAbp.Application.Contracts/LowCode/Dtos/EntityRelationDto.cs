@@ -4,6 +4,17 @@ using Volo.Abp.Application.Dtos;
 namespace SmartAbp.Application.Contracts.LowCode.Dtos
 {
     /// <summary>
+    /// 关系类型（与前端统一Schema一致）
+    /// </summary>
+    public enum RelationType
+    {
+        OneToOne,
+        OneToMany,
+        ManyToOne,
+        ManyToMany
+    }
+
+    /// <summary>
     /// 🔥 实体关系DTO
     /// 对应前端: EntityRelation (entityModeling.ts)
     /// 对应后端: EntityRelation (Domain)
@@ -21,9 +32,9 @@ namespace SmartAbp.Application.Contracts.LowCode.Dtos
         public string ToEntity { get; set; }
 
         /// <summary>
-        /// 关系类型：one-to-one, one-to-many, many-to-many
+        /// 关系类型（强枚举）
         /// </summary>
-        public string RelationType { get; set; }
+        public RelationType Type { get; set; }
 
         /// <summary>
         /// 外键字段名
