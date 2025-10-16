@@ -2,7 +2,6 @@
   "files": [],
   "include": [],
   "references": [
-    { "path": "./packages/metadata-core" },
     { "path": "./packages/lowcode-shared" },
     { "path": "./packages/lowcode-core" },
     { "path": "./packages/lowcode-api" },

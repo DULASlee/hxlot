@@ -1,8 +1,8 @@
 /**
  * 🔍 Validation Module Entry
- * 
+ *
  * 统一验证系统入口，支持按需加载
- * 
+ *
  * @module @smartabp/lowcode-shared/validation
  */
 
@@ -24,10 +24,9 @@ export {
 // 🔥 版本管理功能（已从metadata-core迁移至lowcode-shared）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export {
-  CURRENT_SCHEMA_VERSION, checkEntityCompatibility,
-  checkModuleCompatibility, compareVersions, findUpgradePath as getUpgradePath,
+  CURRENT_SCHEMA_VERSION, compareVersions, findUpgradePath as getUpgradePath,
   isCompatibleVersion as isCompatible,
-  parseVersion, type BreakingChange, type CompatibilityResult, type CompatibilityWarning as CompatibilityWarningType,
+  parseVersion, type CompatibilityResult,
   type SemanticVersion,
   type VersionComparison
 } from '../version/version-manager'
@@ -42,10 +41,10 @@ export {
 } from '../version/schema-diff'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🔧 元数据适配器
+// 🔧 元数据适配器（已从metadata-core迁移至lowcode-shared）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export {
-  convertEntityFromMetadataCore, convertEntityToMetadataCore,
-  convertModuleToMetadataCore
+  convertEntityToMetadataCore, convertMetadataCoreToUnified,
+  convertModuleToMetadataCore, isEntityMetadata, isUnifiedEntityDefinition
 } from './metadata-adapter'
 

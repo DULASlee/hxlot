@@ -1,10 +1,6 @@
 {
     "version": "1.0.0",
     "packages": {
-        "metadata-core": {
-            "hasSrcDir": true,
-            "entry": "src/index.ts"
-        },
         "lowcode-shared": {
             "hasSrcDir": true,
             "entry": "src/index.ts"

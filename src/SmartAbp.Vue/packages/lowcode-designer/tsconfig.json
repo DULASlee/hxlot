@@ -5,8 +5,6 @@
     "rootDir": "src",
     "baseUrl": "../..",
     "paths": {
-      "@smartabp/metadata-core": ["packages/metadata-core/src/index.ts"],
-      "@smartabp/metadata-core/*": ["packages/metadata-core/src/*"],
       "@smartabp/lowcode-api": ["packages/lowcode-api/src/index.ts"],
       "@smartabp/lowcode-api/*": ["packages/lowcode-api/src/*"],
       "@smartabp/lowcode-core": ["packages/lowcode-core/src/index.ts"],
@@ -32,9 +30,6 @@
     },
     {
       "path": "../lowcode-api"
-    },
-    {
-      "path": "../metadata-core"
     }
   ]
 }

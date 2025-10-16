@@ -58,7 +58,6 @@ export default defineConfig(async ({ mode }) => {
             'lowcode-designer/src/components',
             'lowcode-api/src/components',
             'lowcode-tools/src/components',
-            'metadata-core/src/components',
           ],
           namingRules: {
             'lowcode-shared': 'Ls',
@@ -66,7 +65,6 @@ export default defineConfig(async ({ mode }) => {
             'lowcode-designer': 'Ld',
             'lowcode-api': 'La',
             'lowcode-tools': 'Lt',
-            'metadata-core': 'Mc',
           },
           includeMainApp: true,
           mainComponentsDir: 'src/components',
@@ -117,7 +115,6 @@ export default defineConfig(async ({ mode }) => {
           'packages/lowcode-designer/src/components',
           'packages/lowcode-api/src/components',
           'packages/lowcode-tools/src/components',
-          'packages/metadata-core/src/components',
         ],
         // 🎯 深度扫描（生产环境启用，开发环境禁用以提升性能）
         deep: isProduction,
@@ -152,9 +149,6 @@ export default defineConfig(async ({ mode }) => {
     resolve: {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
-        "@smartabp/metadata-core": fileURLToPath(
-          new URL("./packages/metadata-core/src", import.meta.url),
-        ),
         "@smartabp/lowcode-shared": fileURLToPath(
           new URL("./packages/lowcode-shared/src", import.meta.url),
         ),
