@@ -33,7 +33,11 @@ export * from './types/assembly';
 // 🔍 验证系统 (Validation System) - v2.0.0
 // 📦 从 @smartabp/metadata-core 迁移，适配 UnifiedEntityDefinition
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export * from './validation/metadata-adapter';
+export {
+  convertEntityToMetadataCore, convertMetadataCoreToUnified, convertModuleToMetadataCore, // D2新增
+  getConversionStats, // D2新增
+  isEntityMetadata, validateConversion
+} from './validation/metadata-adapter';
 export { getUnifiedEntityErrors, getValidationFeatureFlags, SchemaValidationError, setValidationFeatureFlags, UnifiedSchemaValidator, ValidateSchema, validateUnifiedEntities, validateUnifiedEntity, validateUnifiedModule } from './validation/unified-validator';
 
 // 🔥 阶段1：元数据验证功能 (Metadata Validation) - v2.0.0
@@ -43,8 +47,10 @@ export {
   validateEntityMetadata, validateEntityMetadataAsync
 } from './validation/entity-validator';
 export {
-  // 错误映射
-  entityErrorMap, formatErrorMessage, moduleErrorMap
+  // 错误映射（传统接口）
+  entityErrorMap,
+  // D4优化：统一错误映射接口
+  ErrorMaps, formatErrorMessage, moduleErrorMap, type ErrorMapConfig, type ErrorMapContext
 } from './validation/error-map';
 export {
   getModuleMetadataErrors, safeValidateModuleMetadata, UnifiedModuleMetadataSchema,

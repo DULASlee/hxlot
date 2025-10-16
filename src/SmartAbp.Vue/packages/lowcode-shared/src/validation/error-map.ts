@@ -75,6 +75,67 @@ export const moduleErrorMap = makeZodErrorMap((issue, ctx) => {
  */
 export const customErrorMap = entityErrorMap
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// D4优化：统一错误映射接口
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * 错误映射上下文类型
+ */
+export type ErrorMapContext = 'entity' | 'module' | 'custom'
+
+/**
+ * 错误映射配置接口
+ */
+export interface ErrorMapConfig {
+    /** 上下文类型 */
+    context: ErrorMapContext
+    /** 自定义字段消息映射（可选） */
+    customMessages?: Record<string, string>
+}
+
+/**
+ * 统一的错误映射集合（D4优化）
+ */
+export const ErrorMaps = {
+    /** 实体上下文错误映射 */
+    entity: entityErrorMap,
+    
+    /** 模块上下文错误映射 */
+    module: moduleErrorMap,
+    
+    /** 自定义/通用错误映射 */
+    custom: customErrorMap,
+    
+    /**
+     * 根据上下文获取错误映射（D4统一接口）
+     * @param context - 上下文类型
+     * @returns 对应的错误映射函数
+     */
+    getForContext: (context: ErrorMapContext) => {
+        switch (context) {
+            case 'entity':
+                return entityErrorMap
+            case 'module':
+                return moduleErrorMap
+            case 'custom':
+            default:
+                return customErrorMap
+        }
+    },
+    
+    /**
+     * 创建带配置的错误映射（D4扩展接口）
+     * @param config - 错误映射配置
+     * @returns 配置后的错误映射函数
+     */
+    create: (config: ErrorMapConfig) => {
+        // 当前版本：简单返回对应上下文的错误映射
+        // 未来可扩展：支持 customMessages 覆盖默认消息
+        return ErrorMaps.getForContext(config.context)
+    }
+}
+
 /**
  * 格式化错误消息
  * 如果错误消息已经是完整的中文消息，则不添加路径前缀

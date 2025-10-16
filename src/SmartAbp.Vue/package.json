@@ -24,6 +24,8 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json",
+    "type-check:packages": "tsc -b tsconfig.references.json",
+    "type-check:all": "npm-run-all -p type-check type-check:packages",
     "type-gen": "tsx scripts/generate-types.ts",
     "lint": "eslint \"src/**/*.{ts,tsx,vue}\" --fix",
     "format": "prettier --write .",
