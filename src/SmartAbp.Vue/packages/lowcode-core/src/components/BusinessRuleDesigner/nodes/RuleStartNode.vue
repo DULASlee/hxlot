@@ -1,13 +1,7 @@
 <template>
-  <div
-    class="start-node rule-node"
-    :class="{ selected: data.selected }"
-  >
+  <div class="start-node rule-node" :class="{ selected: data.selected }">
     <div class="node-header">
-      <el-icon
-        class="node-icon"
-        :style="{ color: '#909399' }"
-      >
+      <el-icon class="node-icon" :style="{ color: '#909399' }">
         <VideoPlay />
       </el-icon>
       <span class="node-title">{{ data.label || '开始' }}</span>
@@ -17,20 +11,16 @@
         {{ data.description || '工作流起始节点' }}
       </div>
     </div>
-    <Handle
-      type="source"
-      :position="Position.Right"
-      :style="handleStyle"
-    />
+    <Handle type="source" :position="Position.Right" :style="handleStyle" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { VideoPlay } from '@element-plus/icons-vue'
-import type { RuleNodeData } from '@smartabp/lowcode-core'
 import { Handle, Position } from '@vue-flow/core'
 import { ElIcon } from 'element-plus'
 import { computed } from 'vue'
+import type { RuleNodeData } from '../../../types/business-rule'
 
 interface Props {
   data: RuleNodeData

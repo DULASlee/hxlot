@@ -119,28 +119,125 @@ export default [
             'no-undef': 'off',
             'no-unused-vars': 'off'
         }
+    },
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 🔥 SmartAbp Architecture Guards (packages)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    // Global package rules: no /src/* suffix, no cross-package relative paths, no @/ alias
+    {
+        files: ['packages/*/src/**/*.{ts,tsx,vue,js}'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['@smartabp/*/src/*'],
+                            message: '❌ 禁止从 @smartabp/*/src 导入，请使用包根导出'
+                        },
+                        {
+                            group: ['**/packages/**'],
+                            message: '❌ 禁止跨包相对路径导入，请使用 @smartabp/* 别名'
+                        },
+                        {
+                            group: ['@/*'],
+                            message: '❌ packages 内禁止使用 @/ 别名（主应用别名）'
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+
+    // lowcode-api: 包内禁止自引用别名
+    {
+        files: ['packages/lowcode-api/src/**/*.{ts,tsx,vue,js}'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['@smartabp/lowcode-api', '@smartabp/lowcode-api/*'],
+                            message: '❌ lowcode-api 包内禁止使用 @smartabp/lowcode-api 自引用，请使用相对路径'
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+
+    // lowcode-shared: 包内禁止自引用别名
+    {
+        files: ['packages/lowcode-shared/src/**/*.{ts,tsx,vue,js}'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['@smartabp/lowcode-shared', '@smartabp/lowcode-shared/*'],
+                            message: '❌ lowcode-shared 包内禁止使用 @smartabp/lowcode-shared 自引用，请使用相对路径'
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+
+    // lowcode-core: 包内禁止自引用别名
+    {
+        files: ['packages/lowcode-core/src/**/*.{ts,tsx,vue,js}'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['@smartabp/lowcode-core', '@smartabp/lowcode-core/*'],
+                            message: '❌ lowcode-core 包内禁止使用 @smartabp/lowcode-core 自引用，请使用相对路径'
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+
+    // lowcode-designer: 包内禁止自引用别名
+    {
+        files: ['packages/lowcode-designer/src/**/*.{ts,tsx,vue,js}'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['@smartabp/lowcode-designer', '@smartabp/lowcode-designer/*'],
+                            message: '❌ lowcode-designer 包内禁止使用 @smartabp/lowcode-designer 自引用，请使用相对路径'
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+
+    // lowcode-tools: 包内禁止自引用别名
+    {
+        files: ['packages/lowcode-tools/src/**/*.{ts,tsx,vue,js}'],
+        rules: {
+            'no-restricted-imports': [
+                'error',
+                {
+                    patterns: [
+                        {
+                            group: ['@smartabp/lowcode-tools', '@smartabp/lowcode-tools/*'],
+                            message: '❌ lowcode-tools 包内禁止使用 @smartabp/lowcode-tools 自引用，请使用相对路径'
+                        }
+                    ]
+                }
+            ]
+        }
     }
 ]
-
-// SmartAbp Architecture Guards (packages)
-const archGuard = {
-  files: ['packages/*/src/**/*.{ts,tsx,vue,js}'],
-  rules: {
-    'no-restricted-imports': [
-      'error',
-      {
-        patterns: [
-          { group: ['@smartabp/*/src/*'], message: '禁止从 @smartabp/*/src 导入，请使用包根导出' },
-          { group: ['**/packages/**'], message: '禁止跨包相对路径导入，请使用 @smartabp/* 别名' },
-          { group: ['@/*'], message: 'packages 内禁止使用 @/ 别名（lowcode-tools 例外）' }
-        ]
-      }
-    ]
-  }
-};
-
-if(!Array.isArray(module.exports)) {
-  module.exports = [module.exports, archGuard];
-} else {
-  module.exports.push(archGuard);
-}

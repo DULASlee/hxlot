@@ -152,7 +152,7 @@
 </template>
 
 <script setup lang="ts">
-import type { EntityDefinition } from '@smartabp/lowcode-designer/types'
+import type { EntityDefinition } from '../types'
 import { ElMessage } from 'element-plus'
 import { computed, ref } from 'vue'
 import { LdEntityDesigner } from '../components'

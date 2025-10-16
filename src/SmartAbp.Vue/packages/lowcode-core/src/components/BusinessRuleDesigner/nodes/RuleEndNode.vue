@@ -1,13 +1,7 @@
 <template>
-  <div
-    class="end-node rule-node"
-    :class="{ selected: data.selected }"
-  >
+  <div class="end-node rule-node" :class="{ selected: data.selected }">
     <div class="node-header">
-      <el-icon
-        class="node-icon"
-        :style="{ color: '#f56c6c' }"
-      >
+      <el-icon class="node-icon" :style="{ color: '#f56c6c' }">
         <VideoPause />
       </el-icon>
       <span class="node-title">{{ data.label || '结束' }}</span>
@@ -16,30 +10,23 @@
       <div class="node-description">
         {{ data.description || '工作流结束节点' }}
       </div>
-      <div
-        v-if="isEndNodeData(data)"
-        class="node-info"
-      >
+      <div v-if="isEndNodeData(data)" class="node-info">
         <el-tag type="danger">
           返回: {{ data.returnValue }}
         </el-tag>
       </div>
     </div>
-    <Handle
-      type="target"
-      :position="Position.Left"
-      :style="handleStyle"
-    />
+    <Handle type="target" :position="Position.Left" :style="handleStyle" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { VideoPause } from '@element-plus/icons-vue'
-import type { RuleNodeData } from '@smartabp/lowcode-core'
-import { isRuleEndNodeData as isEndNodeData } from '@smartabp/lowcode-core'
 import { Handle, Position } from '@vue-flow/core'
 import { ElIcon, ElTag } from 'element-plus'
 import { computed } from 'vue'
+import type { RuleNodeData } from '../../../types/business-rule'
+import { isRuleEndNodeData as isEndNodeData } from '../../../types/business-rule'
 
 interface Props {
   data: RuleNodeData

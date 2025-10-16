@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { http as httpClient } from '@smartabp/lowcode-api'
+import { http as httpClient } from '../http-client'
 
 /**
  * 环境配置DTO

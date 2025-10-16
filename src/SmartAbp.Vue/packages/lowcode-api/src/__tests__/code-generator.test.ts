@@ -1,5 +1,5 @@
-import type { ModuleGenerationConfig, ModuleMetadata } from '@smartabp/lowcode-api'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { ModuleGenerationConfig, ModuleMetadata } from '../index'
 
 /**
  * 代码生成器API契约测试

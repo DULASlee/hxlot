@@ -1,5 +1,5 @@
-import { http as httpClient } from '@smartabp/lowcode-api'
 import { ref } from 'vue'
+import { http as httpClient } from '../http-client'
 
 /**
  * Aspire解决方案生成定义

@@ -4,15 +4,27 @@
     <div class="toolbar">
       <div class="toolbar-left">
         <el-button-group>
-          <el-button :type="viewMode === 'logs' ? 'primary' : ''" size="small" @click="viewMode = 'logs'">
+          <el-button
+            :type="viewMode === 'logs' ? 'primary' : ''"
+            size="small"
+            @click="viewMode = 'logs'"
+          >
             <IconEpDocument />
             日志 ({{ logStats.total }})
           </el-button>
-          <el-button :type="viewMode === 'performance' ? 'primary' : ''" size="small" @click="viewMode = 'performance'">
+          <el-button
+            :type="viewMode === 'performance' ? 'primary' : ''"
+            size="small"
+            @click="viewMode = 'performance'"
+          >
             <IconEpTimer />
             性能 ({{ performanceStats.total }})
           </el-button>
-          <el-button :type="viewMode === 'errors' ? 'primary' : ''" size="small" @click="viewMode = 'errors'">
+          <el-button
+            :type="viewMode === 'errors' ? 'primary' : ''"
+            size="small"
+            @click="viewMode = 'errors'"
+          >
             <IconEpWarningFilled />
             错误 ({{ errorStats.total }})
           </el-button>
@@ -21,15 +33,31 @@
         <el-divider direction="vertical" />
 
         <!-- 实时开关 -->
-        <el-switch v-model="realTimeMode" active-text="实时" inactive-text="暂停" size="small" />
+        <el-switch
+          v-model="realTimeMode"
+          active-text="实时"
+          inactive-text="暂停"
+          size="small"
+        />
 
         <!-- 自动滚动 -->
-        <el-switch v-model="autoScroll" active-text="自动滚动" inactive-text="" size="small" />
+        <el-switch
+          v-model="autoScroll"
+          active-text="自动滚动"
+          inactive-text=""
+          size="small"
+        />
       </div>
 
       <div class="toolbar-right">
         <!-- 搜索 -->
-        <el-input v-model="searchQuery" placeholder="搜索..." size="small" style="width: 200px" clearable>
+        <el-input
+          v-model="searchQuery"
+          placeholder="搜索..."
+          size="small"
+          style="width: 200px"
+          clearable
+        >
           <template #prefix>
             <IconEpSearch />
           </template>
@@ -48,7 +76,10 @@
               <el-dropdown-item command="diagnostic">
                 诊断报告
               </el-dropdown-item>
-              <el-dropdown-item command="clear" divided>
+              <el-dropdown-item
+                command="clear"
+                divided
+              >
                 清空数据
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -58,54 +89,116 @@
     </div>
 
     <!-- 内容区域 -->
-    <div class="content-area" :style="{ height: contentHeight }">
+    <div
+      class="content-area"
+      :style="{ height: contentHeight }"
+    >
       <!-- 日志视图 -->
-      <div v-show="viewMode === 'logs'" class="view-panel">
-        <LogViewer :height="contentHeightNumber" :auto-scroll="autoScroll" :show-controls="false" />
+      <div
+        v-show="viewMode === 'logs'"
+        class="view-panel"
+      >
+        <LogViewer
+          :height="contentHeight"
+          :auto-scroll="autoScroll"
+          :show-controls="false"
+        />
       </div>
 
       <!-- 性能视图 -->
-      <div v-show="viewMode === 'performance'" class="view-panel">
+      <div
+        v-show="viewMode === 'performance'"
+        class="view-panel"
+      >
         <div class="performance-panel">
           <!-- 性能统计 -->
-          <el-card class="stats-card" shadow="never">
+          <el-card
+            class="stats-card"
+            shadow="never"
+          >
             <template #header>
               <span>性能统计</span>
             </template>
             <el-row :gutter="16">
               <el-col :span="6">
-                <el-statistic title="总计" :value="performanceStats.total" />
+                <el-statistic
+                  title="总计"
+                  :value="performanceStats.total"
+                />
               </el-col>
               <el-col :span="6">
-                <el-statistic title="平均耗时" :value="performanceStats.average" suffix="ms" :precision="2" />
+                <el-statistic
+                  title="平均耗时"
+                  :value="performanceStats.average"
+                  suffix="ms"
+                  :precision="2"
+                />
               </el-col>
               <el-col :span="6">
-                <el-statistic title="最小耗时" :value="performanceStats.min" suffix="ms" :precision="2" />
+                <el-statistic
+                  title="最小耗时"
+                  :value="performanceStats.min"
+                  suffix="ms"
+                  :precision="2"
+                />
               </el-col>
               <el-col :span="6">
-                <el-statistic title="最大耗时" :value="performanceStats.max" suffix="ms" :precision="2" />
+                <el-statistic
+                  title="最大耗时"
+                  :value="performanceStats.max"
+                  suffix="ms"
+                  :precision="2"
+                />
               </el-col>
             </el-row>
           </el-card>
 
           <!-- 性能条目列表 -->
-          <el-card class="entries-card" shadow="never">
+          <el-card
+            class="entries-card"
+            shadow="never"
+          >
             <template #header>
               <span>性能条目</span>
             </template>
-            <el-table :data="filteredPerformanceEntries" height="300" size="small">
-              <el-table-column prop="name" label="名称" min-width="150" />
-              <el-table-column prop="category" label="分类" width="100" />
-              <el-table-column prop="duration" label="耗时" width="100" sortable>
+            <el-table
+              :data="filteredPerformanceEntries"
+              height="300"
+              size="small"
+            >
+              <el-table-column
+                prop="name"
+                label="名称"
+                min-width="150"
+              />
+              <el-table-column
+                prop="category"
+                label="分类"
+                width="100"
+              />
+              <el-table-column
+                prop="duration"
+                label="耗时"
+                width="100"
+                sortable
+              >
                 <template #default="{ row }">
-                  <el-tag v-if="row && row.duration !== undefined" :type="row.duration > 1000 ? 'danger' : row.duration > 500 ? 'warning' : 'success'
-                    " size="small">
+                  <el-tag
+                    v-if="row && row.duration !== undefined"
+                    :type="row.duration > 1000 ? 'danger' : row.duration > 500 ? 'warning' : 'success'
+                    "
+                    size="small"
+                  >
                     {{ row.duration?.toFixed(2) }}ms
                   </el-tag>
                   <span v-else>-</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="startTime" label="开始时间" width="120">
+              <el-table-column
+                prop="startTime"
+                label="开始时间"
+                width="120"
+              >
                 <template #default="{ row }">
                   {{ row && row.startTime ? formatTime(row.startTime) : "-" }}
                 </template>
@@ -116,22 +209,35 @@
       </div>
 
       <!-- 错误视图 -->
-      <div v-show="viewMode === 'errors'" class="view-panel">
+      <div
+        v-show="viewMode === 'errors'"
+        class="view-panel"
+      >
         <div class="error-panel">
           <!-- 错误统计 -->
-          <el-card class="stats-card" shadow="never">
+          <el-card
+            class="stats-card"
+            shadow="never"
+          >
             <template #header>
               <span>错误统计</span>
             </template>
             <el-row :gutter="16">
               <el-col :span="8">
-                <el-statistic title="错误总数" :value="errorStats.total" />
+                <el-statistic
+                  title="错误总数"
+                  :value="errorStats.total"
+                />
               </el-col>
               <el-col :span="16">
                 <div class="context-stats">
                   <span class="stats-label">错误分布:</span>
-                  <el-tag v-for="contextEntry in Object.entries(errorStats.contexts)" :key="contextEntry[0]"
-                    size="small" style="margin-left: 8px">
+                  <el-tag
+                    v-for="contextEntry in Object.entries(errorStats.contexts)"
+                    :key="contextEntry[0]"
+                    size="small"
+                    style="margin-left: 8px"
+                  >
                     {{ contextEntry[0] }}: {{ contextEntry[1] }}
                   </el-tag>
                 </div>
@@ -140,29 +246,49 @@
           </el-card>
 
           <!-- 错误列表 -->
-          <el-card class="entries-card" shadow="never">
+          <el-card
+            class="entries-card"
+            shadow="never"
+          >
             <template #header>
               <span>错误报告</span>
             </template>
             <div class="error-list">
-              <div v-for="error in filteredErrorReports" :key="error.id" class="error-item">
+              <div
+                v-for="error in filteredErrorReports"
+                :key="error.id"
+                class="error-item"
+              >
                 <div class="error-header">
-                  <el-tag type="danger" size="small">
+                  <el-tag
+                    type="danger"
+                    size="small"
+                  >
                     错误
                   </el-tag>
                   <span class="error-time">{{
                     error.timestamp ? formatDateTime(error.timestamp) : "-"
                   }}</span>
-                  <el-tag v-if="error.context" size="small" plain>
+                  <el-tag
+                    v-if="error.context"
+                    size="small"
+                    plain
+                  >
                     {{ error.context }}
                   </el-tag>
                 </div>
                 <div class="error-message">
                   {{ error.error?.message || "未知错误" }}
                 </div>
-                <div v-if="error.stackTrace" class="error-stack">
+                <div
+                  v-if="error.stackTrace"
+                  class="error-stack"
+                >
                   <el-collapse>
-                    <el-collapse-item title="堆栈跟踪" name="stack">
+                    <el-collapse-item
+                      title="堆栈跟踪"
+                      name="stack"
+                    >
                       <pre class="stack-trace">{{ error.stackTrace }}</pre>
                     </el-collapse-item>
                   </el-collapse>

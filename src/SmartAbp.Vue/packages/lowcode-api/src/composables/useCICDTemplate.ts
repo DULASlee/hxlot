@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { http } from '@smartabp/lowcode-api'
+import { http } from '../http-client'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // CI/CD模板类型定义 - CI/CD Template Type Definitions

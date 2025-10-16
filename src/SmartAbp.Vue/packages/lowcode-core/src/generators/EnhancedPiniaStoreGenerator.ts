@@ -30,6 +30,8 @@ export interface PiniaStoreGenerationConfig {
   generateOptimisticUpdate: boolean
   generateCache: boolean
   generateRetry: boolean
+  /** 应用层路径别名（默认应用别名，如 @ + /） */
+  appAlias?: string
 }
 
 /**
@@ -69,6 +71,9 @@ export class EnhancedPiniaStoreGenerator {
     const entityNameLower = entityName.toLowerCase()
     const entityDisplayName = entity.displayName || entityName
 
+    // 避免在源码中出现 '@/'
+    const appAlias = this.config.appAlias ?? ('@' + '/')
+
     return `/**
  * ${entityDisplayName} Store
  *
@@ -93,9 +98,9 @@ import type {
   Update${entityName}Dto,
   ${entityName}SearchInput,
   PagedResultDto
-} from '@/types/${entityNameLower}'
-import { ${entityNameLower}Api } from '@/api/${entityNameLower}'${this.config.generatePersistence ? `
-import { usePersistence } from '@/composables/usePersistence'` : ''}
+} from '${appAlias}types/${entityNameLower}'
+import { ${entityNameLower}Api } from '${appAlias}api/${entityNameLower}'${this.config.generatePersistence ? `
+import { usePersistence } from '${appAlias}composables/usePersistence'` : ''}
 
 /**
  * ${entityName} Store State接口
@@ -563,6 +568,8 @@ export const use${entityName}Store = defineStore('${entityNameLower}', () => {
   private generateStoreTypesFile(entity: UnifiedEntityDefinition): string {
     const timestamp = new Date().toISOString()
     const entityName = entity.name
+    const entityNameLower = entityName.toLowerCase()
+    const appAlias = this.config.appAlias ?? ('@' + '/')
 
     return `/**
  * ${entity.displayName || entityName} Store 类型定义
@@ -571,7 +578,7 @@ export const use${entityName}Store = defineStore('${entityNameLower}', () => {
  * 生成器版本: v2.0
  */
 
-import type { ${entityName}Dto } from '@/types/${entityName.toLowerCase()}'
+import type { ${entityName}Dto } from '${appAlias}types/${entityNameLower}'
 
 /**
  * ${entityName} Store类型

@@ -17,7 +17,10 @@
       <!-- 快速开始流程 -->
       <div class="quick-start-steps">
         <div class="step-cards">
-          <div class="step-card" @click="goToModeling">
+          <div
+            class="step-card"
+            @click="goToModeling"
+          >
             <div class="step-icon">
               <el-icon size="32">
                 <Folder />
@@ -26,16 +29,25 @@
             <h3>1. 实体建模</h3>
             <p>定义业务实体、字段和关系</p>
             <div class="step-status">
-              <el-tag v-if="hasEntities" type="success">
+              <el-tag
+                v-if="hasEntities"
+                type="success"
+              >
                 已完成
               </el-tag>
-              <el-tag v-else type="warning">
+              <el-tag
+                v-else
+                type="warning"
+              >
                 待开始
               </el-tag>
             </div>
           </div>
 
-          <div class="step-card" @click="goToDesign">
+          <div
+            class="step-card"
+            @click="goToDesign"
+          >
             <div class="step-icon">
               <el-icon size="32">
                 <Brush />
@@ -44,16 +56,25 @@
             <h3>2. 页面设计</h3>
             <p>设计用户界面和交互流程</p>
             <div class="step-status">
-              <el-tag v-if="hasPages" type="success">
+              <el-tag
+                v-if="hasPages"
+                type="success"
+              >
                 已完成
               </el-tag>
-              <el-tag v-else type="warning">
+              <el-tag
+                v-else
+                type="warning"
+              >
                 待开始
               </el-tag>
             </div>
           </div>
 
-          <div class="step-card" @click="goToGeneration">
+          <div
+            class="step-card"
+            @click="goToGeneration"
+          >
             <div class="step-icon">
               <el-icon size="32">
                 <Cpu />
@@ -62,10 +83,16 @@
             <h3>3. 代码生成</h3>
             <p>自动生成前后端代码</p>
             <div class="step-status">
-              <el-tag v-if="hasGeneratedCode" type="success">
+              <el-tag
+                v-if="hasGeneratedCode"
+                type="success"
+              >
                 已完成
               </el-tag>
-              <el-tag v-else type="warning">
+              <el-tag
+                v-else
+                type="warning"
+              >
                 待开始
               </el-tag>
             </div>
@@ -75,21 +102,32 @@
 
       <!-- 快速操作 -->
       <div class="quick-actions">
-        <el-button type="primary" size="large" @click="startQuickDemo">
+        <el-button
+          type="primary"
+          size="large"
+          @click="startQuickDemo"
+        >
           <el-icon>
             <VideoPlay />
           </el-icon>
           观看演示
         </el-button>
 
-        <el-button type="success" size="large" @click="createFirstEntity">
+        <el-button
+          type="success"
+          size="large"
+          @click="createFirstEntity"
+        >
           <el-icon>
             <Plus />
           </el-icon>
           创建第一个实体
         </el-button>
 
-        <el-button size="large" @click="importTemplate">
+        <el-button
+          size="large"
+          @click="importTemplate"
+        >
           <el-icon>
             <Upload />
           </el-icon>
@@ -98,10 +136,18 @@
       </div>
 
       <!-- 最近项目 -->
-      <div v-if="recentProjects.length > 0" class="recent-projects">
+      <div
+        v-if="recentProjects.length > 0"
+        class="recent-projects"
+      >
         <h3>最近项目</h3>
         <div class="project-cards">
-          <div v-for="project in recentProjects" :key="project.id" class="project-card" @click="openProject(project)">
+          <div
+            v-for="project in recentProjects"
+            :key="project.id"
+            class="project-card"
+            @click="openProject(project)"
+          >
             <div class="project-info">
               <h4>{{ project.name }}</h4>
               <p>{{ project.description }}</p>
@@ -109,7 +155,8 @@
             </div>
             <div class="project-status">
               <el-tag
-                :type="getProjectStatusType(project.status) as 'success' | 'info' | 'warning' | 'primary' | 'danger'">
+                :type="getProjectStatusType(project.status) as 'success' | 'info' | 'warning' | 'primary' | 'danger'"
+              >
                 {{ getProjectStatusLabel(project.status) }}
               </el-tag>
             </div>

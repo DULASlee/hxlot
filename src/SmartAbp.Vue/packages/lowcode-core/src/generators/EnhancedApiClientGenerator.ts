@@ -30,6 +30,8 @@ export interface ApiClientGenerationConfig {
   generateRetry: boolean
   generateCancellation: boolean
   generateTimeout: boolean
+  /** 应用层路径别名（默认 '@/') */
+  appAlias?: string
 }
 
 /**
@@ -69,6 +71,9 @@ export class EnhancedApiClientGenerator {
     const entityNameLower = entityName.toLowerCase()
     const entityDisplayName = entity.displayName || entityName
 
+    // 避免在源码中出现 '@/'
+    const appAlias = this.config.appAlias ?? ('@' + '/')
+
     return `/**
  * ${entityDisplayName} API Client
  *
@@ -85,14 +90,14 @@ export class EnhancedApiClientGenerator {
  ${this.config.generateTimeout ? '* - 超时控制' : ''}
  */
 
-import { http } from '@/utils/http'
+import { http } from '${appAlias}utils/http'
 import type {
   ${entityName}Dto,
   Create${entityName}Dto,
   Update${entityName}Dto,
   ${entityName}SearchInput,
   PagedResultDto
-} from '@/types/${entityNameLower}'
+} from '${appAlias}types/${entityNameLower}'
 
 /**
  * ${entityDisplayName} API接口路径

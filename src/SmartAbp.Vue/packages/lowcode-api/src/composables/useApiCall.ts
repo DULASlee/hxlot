@@ -3,8 +3,8 @@
  * 整合错误处理和Loading管理，提供一站式API调用解决方案
  */
 
-import type { ApiError } from '@smartabp/lowcode-api'
 import { ref, type Ref } from 'vue'
+import type { ApiError } from '../http-client'
 import { useApiError, type ApiErrorDisplayOptions } from './useApiError'
 import { useApiLoading, type LoadingOptions } from './useApiLoading'
 

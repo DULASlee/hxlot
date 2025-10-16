@@ -868,15 +868,15 @@
 
 <script setup lang="ts">
 import { useEntityModelingStore, usePageDesignStore, type TabConfig } from '@smartabp/lowcode-core'
-import ComponentPropertyPanel from '@smartabp/lowcode-designer/components/ComponentPropertyPanel.vue'
-import VisualComponentPalette from '@smartabp/lowcode-designer/components/VisualComponentPalette.vue'
-import VisualDesignCanvas from '@smartabp/lowcode-designer/components/VisualDesignCanvas.vue'
+import ComponentPropertyPanel from '../components/ComponentPropertyPanel.vue'
+import VisualComponentPalette from '../components/VisualComponentPalette.vue'
+import VisualDesignCanvas from '../components/VisualDesignCanvas.vue'
 import { logger } from '@smartabp/lowcode-tools'
 import { ElMessage, ElMessageBox } from "element-plus"
 import { computed, onMounted, ref } from "vue"
 // 🔥 修复：使用临时占位组件替代缺失的@smartabp/lowcode-ui-vue
-import MDIContainer from '@smartabp/lowcode-designer/components/MDIContainer.vue'
-import TabsContainer from '@smartabp/lowcode-designer/components/TabsContainer.vue'
+import MDIContainer from '../components/MDIContainer.vue'
+import TabsContainer from '../components/TabsContainer.vue'
 
 // Stores
 // Stores
