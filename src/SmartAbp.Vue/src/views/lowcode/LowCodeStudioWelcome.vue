@@ -151,7 +151,7 @@ import {
   Upload,
   VideoPlay
 } from '@element-plus/icons-vue'
-import { generationHistoryApi } from '@smartabp/lowcode-api'
+import { legacyGenerationHistoryApi } from '@smartabp/lowcode-api'
 import { ElMessage } from 'element-plus'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -303,7 +303,7 @@ onMounted(async () => {
   loading.value = true
   try {
     // 改为真实API加载最近项目
-    recentProjects.value = await generationHistoryApi.getRecentProjects(5)
+    recentProjects.value = await legacyGenerationHistoryApi.getRecentProjects(5)
   } catch (error) {
     console.error('加载最近项目失败:', error)
     recentProjects.value = []

@@ -21,9 +21,8 @@ export { codeGeneratorApi } from "./code-generator.js"
 export * from "./code-gen-stats.js"
 export { codeGenStatsApi, userProfileApi } from "./code-gen-stats.js"
 
-// 生成历史
-export * from "./generation-history.js"
-export { generationHistoryApi } from "./generation-history.js"
+// 生成历史（旧版，保留向后兼容）
+export { generationHistoryApi as legacyGenerationHistoryApi } from "./generation-history.js"
 
 // 业务规则引擎API
 export { businessRuleApi } from "./business-rule.js"
@@ -99,6 +98,12 @@ export {
 // ============================================================================
 export * from "./template-api.js"
 export { TemplateApi, templateApi } from "./template-api.js"
+
+// ============================================================================
+// 代码生成历史API导出（Phase 3 - Task 3.2.1 新增）
+// ============================================================================
+export * from "./generation-history-api.js"
+export { GenerationHistoryApi, generationHistoryApi } from "./generation-history-api.js"
 
 // ============================================================================
 // 兼容性接口（向后兼容）

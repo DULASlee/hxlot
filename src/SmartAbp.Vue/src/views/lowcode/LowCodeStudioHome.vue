@@ -163,8 +163,21 @@
 
 <script setup lang="ts">
 import { ArrowRight, Brush, DataBoard, MagicStick, Opportunity } from '@element-plus/icons-vue'
-import type { CodeGenStatsDto, GenerationHistoryDto } from '@smartabp/lowcode-api'
-import { codeGenStatsApi, generationHistoryApi, userProfileApi } from '@smartabp/lowcode-api'
+import type { CodeGenStatsDto } from '@smartabp/lowcode-api'
+import { codeGenStatsApi, legacyGenerationHistoryApi, userProfileApi } from '@smartabp/lowcode-api'
+
+// 向后兼容：旧的GenerationHistoryDto类型
+interface GenerationHistoryDto {
+  id: string
+  projectName: string
+  status: 'success' | 'failed' | 'warning'
+  creationTime: string
+  mode?: string
+  templateName?: string
+  entityCount?: number
+  generatedFileCount?: number
+  generationDuration?: number
+}
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -285,7 +298,7 @@ const loadStats = async () => {
 const loadRecentProjects = async () => {
   projectsLoading.value = true
   try {
-    const projects = await generationHistoryApi.getRecentProjects(5)
+    const projects = await legacyGenerationHistoryApi.getRecentProjects(5) as GenerationHistoryDto[]
     recentProjects.value = projects
   } catch (error) {
     console.error('加载最近项目失败:', error)
@@ -316,8 +329,10 @@ const calculateMostUsed = () => {
   // 基于最近项目统计使用次数
   const modeCounts: Record<string, number> = {}
 
-  recentProjects.value.forEach((p: { mode: string }) => {
-    modeCounts[p.mode] = (modeCounts[p.mode] || 0) + 1
+  recentProjects.value.forEach((p: GenerationHistoryDto) => {
+    if (p.mode) {
+      modeCounts[p.mode] = (modeCounts[p.mode] || 0) + 1
+    }
   })
 
   // 映射mode到导航项
@@ -367,7 +382,8 @@ const formatTime = (time: string): string => {
 /**
  * 获取模式标签
  */
-const getModeLabel = (mode: string): string => {
+const getModeLabel = (mode?: string): string => {
+  if (!mode) return '未知模式'
   const labels: Record<string, string> = {
     'simple': '极简模式',
     'industry': '行业模板',
@@ -429,7 +445,7 @@ const deleteProject = async (project: GenerationHistoryDto) => {
       }
     )
 
-    await generationHistoryApi.deleteProject(project.id)
+    await legacyGenerationHistoryApi.deleteProject(project.id)
 
     ElMessage.success('删除成功')
 

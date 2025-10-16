@@ -90,6 +90,9 @@ export { CodeDiffViewer, CodePreviewPanel } from './CodePreview'
 // ✅ Template Management Components v1.0 (Phase 3 - Task 3.1)
 export { TemplateEditor, TemplateMarket, TemplateTestRunner } from './Template'
 
+// ✅ History Management Components v1.0 (Phase 3 - Task 3.2)
+export { GenerationHistoryPanel, HistoryDiffViewer } from './History'
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🚧 Utility exports - 待实现
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

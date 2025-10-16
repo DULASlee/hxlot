@@ -77,3 +77,20 @@ export type {
   TemplateVersion
 } from './template.js'
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 📚 代码生成历史类型（Generation History Types）- v1.0.0
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export { GenerationType, GenerationStatus } from './generation-history.js'
+export type {
+  GenerationHistory,
+  GenerationHistoryFilter,
+  GenerationHistoryStatistics,
+  GeneratedFileRecord,
+  MetadataSnapshot,
+  CodeChangeRecord,
+  QualityMetrics,
+  HistoryComparisonResult,
+  RevertOptions,
+  RevertResult
+} from './generation-history.js'
+
