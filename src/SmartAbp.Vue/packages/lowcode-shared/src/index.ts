@@ -16,6 +16,7 @@ export { API_BASE_URL, request } from './api';
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔥 统一Schema系统 (Unified Schema System) - v1.0.0
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export * from './types/enums';
 export * from './types/unified-schema';
 export * from './utils/schema-converter';
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

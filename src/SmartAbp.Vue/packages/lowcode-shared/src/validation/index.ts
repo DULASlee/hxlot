@@ -48,3 +48,24 @@ export {
   convertModuleToMetadataCore, isEntityMetadata, isUnifiedEntityDefinition
 } from './metadata-adapter'
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🌐 国际化错误消息（阶段三新增）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export {
+  ErrorMessageContext,
+  defaultFieldNameMap,
+  en_US,
+  formatValidationError,
+  getCurrentLocale,
+  getErrorMessage,
+  getErrorMessages,
+  getFieldDisplayName,
+  setCurrentLocale,
+  zh_CN,
+  type ErrorMessageKey,
+  type ErrorMessageTemplate,
+  type FieldNameMap,
+  type LocaleMessages,
+  type SupportedLocale
+} from './error-messages'
+
