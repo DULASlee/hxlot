@@ -21,16 +21,9 @@
             </p>
           </div>
           <div class="header-actions">
-            <el-tooltip
-              :content="mode === 'dark' ? t('common.switchToLight') : t('common.switchToDark')"
-              placement="bottom"
-            >
-              <el-button
-                :icon="mode === 'dark' ? 'Sunny' : 'Moon'"
-                circle
-                class="theme-toggle"
-                @click="toggleTheme"
-              />
+            <el-tooltip :content="mode === 'dark' ? t('common.switchToLight') : t('common.switchToDark')"
+              placement="bottom">
+              <el-button :icon="mode === 'dark' ? 'Sunny' : 'Moon'" circle class="theme-toggle" @click="toggleTheme" />
             </el-tooltip>
           </div>
         </div>
@@ -40,30 +33,15 @@
       <div class="studio-content">
         <!-- 左侧：配置表单 -->
         <div class="config-panel">
-          <el-form
-            :model="config"
-            label-position="top"
-            class="config-form"
-          >
+          <el-form :model="config" label-position="top" class="config-form">
             <!-- 1. 数据库表选择 -->
-            <el-form-item
-              :label="t('ultraSimple.form.selectTable') + ' *'"
-              required
-            >
+            <el-form-item :label="t('ultraSimple.form.selectTable') + ' *'" required>
               <!-- ✅ 修复：移除 clearable 属性，与能正常工作的下拉框保持一致 -->
-              <el-select
-                v-model="selectedTable"
-                :placeholder="t('ultraSimple.form.tablePlaceholder')"
-                size="large"
-                filterable
-                style="width: 100%"
-              >
-                <el-option
-                  v-for="table in availableTables"
-                  :key="table.name"
-                  :label="table.name"
-                  :value="table.name"
-                />
+              <el-select v-model="selectedTable" :placeholder="t('ultraSimple.form.tablePlaceholder')" size="large"
+                style="width: 100%" ref="tableSelectRef"
+                @visible-change="(open: boolean) => { if (open) console.log('🔎 打开表下拉：当前selectedTable=', selectedTable, '可选项=', availableTables.map(t => t.name)) }"
+                @change="async (val: string) => { console.log('🟢 el-select change(table):', val); const has = availableTables.some(t => t.name === val); if (!has) console.warn('⚠️ 选中值未在可选项中找到', val); await nextTick(); const el = tableSelectRef?.value?.$el as HTMLElement | undefined; const txt = el?.querySelector('.el-select__selected-item, .el-input__inner') as HTMLElement | null; console.log('🧪 DOM选中文本(table)=', txt?.textContent, 'input.value=', (el?.querySelector('input') as HTMLInputElement | null)?.value); }">
+                <el-option v-for="table in availableTables" :key="table.name" :label="table.name" :value="table.name" />
               </el-select>
             </el-form-item>
 
@@ -75,65 +53,30 @@
             </h3>
             <el-row :gutter="16">
               <el-col :span="8">
-                <el-form-item
-                  :label="t('ultraSimple.form.systemName') + ' *'"
-                  required
-                >
+                <el-form-item :label="t('ultraSimple.form.systemName') + ' *'" required>
                   <!-- ✅ 修复：移除 allow-create 和 default-first-option -->
-                  <el-select
-                    v-model="config.systemName"
-                    :placeholder="t('ultraSimple.form.systemNamePlaceholder')"
-                    size="large"
-                    filterable
-                    style="width: 100%"
-                  >
-                    <el-option
-                      label="智慧建造 (SmartConstruction)"
-                      value="SmartConstruction"
-                    />
-                    <el-option
-                      label="生产执行系统 (MES)"
-                      value="MES"
-                    />
-                    <el-option
-                      label="人力资源 (HRM)"
-                      value="HRM"
-                    />
-                    <el-option
-                      label="客户关系 (CRM)"
-                      value="CRM"
-                    />
-                    <el-option
-                      label="SmartAbp"
-                      value="SmartAbp"
-                    />
+                  <el-select v-model="config.systemName" :placeholder="t('ultraSimple.form.systemNamePlaceholder')"
+                    size="large" style="width: 100%" ref="systemSelectRef"
+                    @visible-change="(open: boolean) => { if (open) console.log('🔎 打开系统名称下拉：当前systemName=', config.systemName) }"
+                    @change="async (val: string) => { console.log('🟢 el-select change(systemName):', val); await nextTick(); const el = systemSelectRef?.value?.$el as HTMLElement | undefined; const txt = el?.querySelector('.el-select__selected-item, .el-input__inner') as HTMLElement | null; console.log('🧪 DOM选中文本(system)=', txt?.textContent, 'input.value=', (el?.querySelector('input') as HTMLInputElement | null)?.value); }">
+                    <el-option label="智慧建造 (SmartConstruction)" value="SmartConstruction" />
+                    <el-option label="生产执行系统 (MES)" value="MES" />
+                    <el-option label="人力资源 (HRM)" value="HRM" />
+                    <el-option label="客户关系 (CRM)" value="CRM" />
+                    <el-option label="SmartAbp" value="SmartAbp" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item
-                  :label="t('ultraSimple.form.moduleName') + ' *'"
-                  required
-                >
-                  <el-input
-                    v-model="config.moduleName"
-                    :placeholder="t('ultraSimple.form.moduleNamePlaceholder')"
-                    size="large"
-                    clearable
-                  />
+                <el-form-item :label="t('ultraSimple.form.moduleName') + ' *'" required>
+                  <el-input v-model="config.moduleName" :placeholder="t('ultraSimple.form.moduleNamePlaceholder')"
+                    size="large" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item
-                  :label="t('ultraSimple.form.displayName') + ' *'"
-                  required
-                >
-                  <el-input
-                    v-model="config.displayName"
-                    :placeholder="t('ultraSimple.form.displayNamePlaceholder')"
-                    size="large"
-                    clearable
-                  />
+                <el-form-item :label="t('ultraSimple.form.displayName') + ' *'" required>
+                  <el-input v-model="config.displayName" :placeholder="t('ultraSimple.form.displayNamePlaceholder')"
+                    size="large" clearable />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -144,54 +87,23 @@
             </h3>
             <el-row :gutter="16">
               <el-col :span="12">
-                <el-form-item
-                  :label="t('ultraSimple.form.architecturePattern') + ' *'"
-                  required
-                >
-                  <el-select
-                    v-model="config.architecturePattern"
-                    :placeholder="t('ultraSimple.form.architecturePatternPlaceholder')"
-                    size="large"
-                    style="width: 100%"
-                  >
-                    <el-option
-                      label="基础 CRUD"
-                      value="Crud"
-                    />
-                    <el-option
-                      label="领域驱动设计 (DDD)"
-                      value="DDD"
-                    />
-                    <el-option
-                      label="命令查询分离 (CQRS)"
-                      value="CQRS"
-                    />
+                <el-form-item :label="t('ultraSimple.form.architecturePattern') + ' *'" required>
+                  <el-select v-model="config.architecturePattern"
+                    :placeholder="t('ultraSimple.form.architecturePatternPlaceholder')" size="large"
+                    style="width: 100%">
+                    <el-option label="基础 CRUD" value="Crud" />
+                    <el-option label="领域驱动设计 (DDD)" value="DDD" />
+                    <el-option label="命令查询分离 (CQRS)" value="CQRS" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item
-                  :label="t('ultraSimple.form.databaseProvider') + ' *'"
-                  required
-                >
-                  <el-select
-                    v-model="config.databaseProvider"
-                    :placeholder="t('ultraSimple.form.databaseProviderPlaceholder')"
-                    size="large"
-                    style="width: 100%"
-                  >
-                    <el-option
-                      label="SQL Server"
-                      value="SqlServer"
-                    />
-                    <el-option
-                      label="MySQL"
-                      value="MySql"
-                    />
-                    <el-option
-                      label="PostgreSQL"
-                      value="PostgreSql"
-                    />
+                <el-form-item :label="t('ultraSimple.form.databaseProvider') + ' *'" required>
+                  <el-select v-model="config.databaseProvider"
+                    :placeholder="t('ultraSimple.form.databaseProviderPlaceholder')" size="large" style="width: 100%">
+                    <el-option label="SQL Server" value="SqlServer" />
+                    <el-option label="MySQL" value="MySql" />
+                    <el-option label="PostgreSQL" value="PostgreSql" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -203,90 +115,71 @@
             </h3>
             <el-row :gutter="16">
               <el-col :span="12">
-                <el-form-item
-                  :label="t('ultraSimple.form.parentMenu') + ' *'"
-                  required
-                >
-                  <el-select
-                    v-model="config.parentMenuId"
-                    :placeholder="t('ultraSimple.form.parentMenuPlaceholder')"
-                    size="large"
-                    style="width: 100%"
-                  >
-                    <el-option
-                      label="工作台"
-                      value="workstation"
-                    />
-                    <el-option
-                      label="业务管理"
-                      value="business"
-                    />
-                    <el-option
-                      label="基础数据"
-                      value="master-data"
-                    />
-                    <el-option
-                      label="报表中心"
-                      value="reports"
-                    />
-                    <el-option
-                      label="系统管理"
-                      value="system"
-                    />
+                <el-form-item :label="t('ultraSimple.form.parentMenu') + ' *'" required>
+                  <el-select v-model="config.parentMenuId" :placeholder="t('ultraSimple.form.parentMenuPlaceholder')"
+                    size="large" style="width: 100%">
+                    <el-option label="工作台" value="workstation" />
+                    <el-option label="业务管理" value="business" />
+                    <el-option label="基础数据" value="master-data" />
+                    <el-option label="报表中心" value="reports" />
+                    <el-option label="系统管理" value="system" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item :label="t('ultraSimple.form.menuIcon')">
-                  <el-input
-                    v-model="config.menuIcon"
-                    :placeholder="t('ultraSimple.form.menuIconPlaceholder')"
-                    size="large"
-                    clearable
-                  />
+                  <div class="icon-picker">
+                    <el-input v-model="config.menuIcon" :placeholder="t('ultraSimple.form.menuIconPlaceholder')"
+                      size="large" readonly>
+                      <template #prefix>
+                        <el-icon v-if="config.menuIcon">
+                          <component :is="(EpIcons as any)[config.menuIcon]" />
+                        </el-icon>
+                      </template>
+                      <template #append>
+                        <el-button @click="iconPickerVisible = true">{{ t('common.select') || '选择' }}</el-button>
+                      </template>
+                    </el-input>
+
+                    <el-dialog v-model="iconPickerVisible" :title="t('ultraSimple.form.menuIcon')" width="720px">
+                      <el-input v-model="iconSearch" :placeholder="t('common.search') || '搜索图标'" clearable />
+                      <div class="icon-grid">
+                        <div v-for="name in epIconNames" :key="name" class="icon-item" @click="selectMenuIcon(name)">
+                          <el-icon>
+                            <component :is="(EpIcons as any)[name]" />
+                          </el-icon>
+                          <span>{{ name }}</span>
+                        </div>
+                      </div>
+                      <template #footer>
+                        <el-button @click="iconPickerVisible = false">{{ t('common.close') || '关闭' }}</el-button>
+                      </template>
+                    </el-dialog>
+                  </div>
                 </el-form-item>
               </el-col>
             </el-row>
 
             <!-- 自动推导信息 -->
-            <el-alert
-              :title="t('ultraSimple.derived.title')"
-              type="info"
-              :closable="false"
-              class="derived-info"
-            >
+            <el-alert :title="t('ultraSimple.derived.title')" type="info" :closable="false" class="derived-info">
               <div><strong>{{ t('ultraSimple.derived.namespace') }}:</strong> {{ derivedNamespace }}</div>
               <div><strong>{{ t('ultraSimple.derived.routePrefix') }}:</strong> {{ derivedRoutePrefix }}</div>
               <div><strong>{{ t('ultraSimple.derived.apiEndpoint') }}:</strong> {{ derivedApiEndpoint }}</div>
             </el-alert>
 
             <!-- ✅ B方案优化：验证错误显示 -->
-            <el-alert
-              v-if="validationState.errors.length > 0 && validationState.isDirty"
-              title="配置验证失败"
-              type="error"
-              :closable="false"
-              class="validation-errors"
-            >
+            <el-alert v-if="validationState.errors.length > 0 && validationState.isDirty" title="配置验证失败" type="error"
+              :closable="false" class="validation-errors">
               <ul class="error-list">
-                <li
-                  v-for="(error, index) in validationState.errors"
-                  :key="index"
-                >
+                <li v-for="(error, index) in validationState.errors" :key="index">
                   <strong>{{ error.field }}:</strong> {{ error.message }}
                 </li>
               </ul>
             </el-alert>
 
             <!-- 生成按钮 -->
-            <el-button
-              type="primary"
-              size="large"
-              :loading="generating"
-              :disabled="!isConfigValid || generationComplete"
-              class="generate-btn"
-              @click="startGeneration"
-            >
+            <el-button type="primary" size="large" :loading="generating"
+              :disabled="!isConfigValid || generationComplete" class="generate-btn" @click="startGeneration">
               {{ generating ? t('ultraSimple.actions.generating') : t('ultraSimple.actions.oneClickGenerate') }}
             </el-button>
           </el-form>
@@ -299,52 +192,29 @@
           </div>
 
           <!-- 进度条 -->
-          <el-progress
-            v-if="generating || generationComplete"
-            :percentage="generationProgress"
-            :status="generationComplete ? 'success' : undefined"
-            class="progress-bar"
-          />
+          <el-progress v-if="generating || generationComplete" :percentage="generationProgress"
+            :status="generationComplete ? 'success' : undefined" class="progress-bar" />
 
           <!-- 日志列表 -->
           <div class="log-list">
-            <div
-              v-for="(log, index) in generationLogs"
-              :key="index"
-              class="log-entry"
-              :class="log.type"
-            >
+            <div v-for="(log, index) in generationLogs" :key="index" class="log-entry" :class="log.type">
               <span class="log-time">{{ log.time }}</span>
               <span class="log-message">{{ log.message }}</span>
             </div>
-            <div
-              v-if="generationLogs.length === 0"
-              class="log-empty"
-            >
+            <div v-if="generationLogs.length === 0" class="log-empty">
               {{ t('ultraSimple.hints.waitingForGeneration') || '等待生成...' }}
             </div>
           </div>
 
           <!-- 完成后的操作按钮 -->
-          <div
-            v-if="generationComplete"
-            class="action-buttons"
-          >
-            <el-button
-              type="primary"
-              @click="viewGeneratedCode"
-            >
+          <div v-if="generationComplete" class="action-buttons">
+            <el-button type="primary" @click="viewGeneratedCode">
               📄 {{ t('ultraSimple.actions.viewCode') }}
             </el-button>
-            <el-button
-              type="success"
-              @click="downloadGeneratedCode"
-            >
+            <el-button type="success" @click="downloadGeneratedCode">
               📦 {{ t('ultraSimple.actions.downloadZip') }}
             </el-button>
-            <el-button
-              @click="resetToStart"
-            >
+            <el-button @click="resetToStart">
               🔄 {{ t('ultraSimple.actions.generateAgain') }}
             </el-button>
           </div>
@@ -355,13 +225,14 @@
 </template>
 
 <script setup lang="ts">
+import * as EpIcons from '@element-plus/icons-vue'
 import type { ModuleMetadata, TableSchema } from '@smartabp/lowcode-api'
 import { codeGeneratorApi } from '@smartabp/lowcode-api'
 import { useTheme } from '@smartabp/lowcode-shared/theme'
 import { safeValidateModuleMetadata } from '@smartabp/metadata-core'
 import { useDebounceFn } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
-import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -395,8 +266,10 @@ interface GenerationLog {
 const selectedTable = ref<string>('')
 const availableTables = ref<DatabaseTable[]>([])
 const loadingTables = ref(false)
+const tableSelectRef = ref()
+const systemSelectRef = ref()
 
-const config = ref<MetadataConfig>({
+const config = reactive<MetadataConfig>({
   systemName: '',  // 🔥 修复：移除默认值，让用户手动选择
   moduleName: '',
   displayName: '',
@@ -411,13 +284,13 @@ if (import.meta.env.DEV) {
   watch(() => selectedTable.value, (val) => {
     console.log('🔍 selectedTable changed:', val)
   })
-  watch(() => config.value.systemName, (val) => {
+  watch(() => config.systemName, (val) => {
     console.log('🔍 config.systemName changed:', val)
   })
-  watch(() => config.value.architecturePattern, (val) => {
+  watch(() => config.architecturePattern, (val) => {
     console.log('🔍 config.architecturePattern changed:', val)
   })
-  watch(() => config.value.databaseProvider, (val) => {
+  watch(() => config.databaseProvider, (val) => {
     console.log('🔍 config.databaseProvider changed:', val)
   })
 }
@@ -438,59 +311,205 @@ const validationState = reactive({
 
 // 计算属性
 const derivedNamespace = computed(() => {
-  if (!config.value.systemName || !config.value.moduleName) return ''
-  return `${config.value.systemName}.${config.value.moduleName}`
+  if (!config.systemName || !config.moduleName) return ''
+  return `${config.systemName}.${config.moduleName}`
 })
 
 const derivedRoutePrefix = computed(() => {
-  if (!config.value.moduleName) return ''
-  return `/${config.value.moduleName.toLowerCase()}`
+  if (!config.moduleName) return ''
+  return `/${config.moduleName.toLowerCase()}`
 })
 
 const derivedApiEndpoint = computed(() => {
-  if (!config.value.moduleName) return ''
-  return `/api/app/${config.value.moduleName.toLowerCase()}`
+  if (!config.moduleName) return ''
+  return `/api/app/${config.moduleName.toLowerCase()}`
 })
 
 // 🔥 简化：移除验证状态依赖，只检查必填字段
 const isConfigValid = computed(() => {
   return !!(
     selectedTable.value &&
-    config.value.systemName &&
-    config.value.moduleName &&
-    config.value.displayName &&
-    config.value.architecturePattern &&
-    config.value.databaseProvider &&
-    config.value.parentMenuId
-    // ❌ 临时移除验证依赖，避免干扰选择
-    // validationState.isValid
+    config.systemName &&
+    config.moduleName &&
+    config.displayName &&
+    config.architecturePattern &&
+    config.databaseProvider &&
+    config.parentMenuId
   )
 })
 
-// ✅ B方案优化：将config转换为ModuleMetadata进行验证
-const convertToModuleMetadata = (): Partial<ModuleMetadata> => {
+// 显式校验，返回缺失字段列表
+const getMissingFields = (): string[] => {
+  const missing: string[] = []
+  if (!selectedTable.value) missing.push(t('ultraSimple.form.table'))
+  if (!config.systemName) missing.push(t('ultraSimple.form.systemName'))
+  if (!config.moduleName) missing.push(t('ultraSimple.form.moduleName'))
+  if (!config.displayName) missing.push(t('ultraSimple.form.displayName'))
+  if (!config.architecturePattern) missing.push(t('ultraSimple.form.architecturePattern'))
+  if (!config.databaseProvider) missing.push(t('ultraSimple.form.databaseProvider'))
+  if (!config.parentMenuId) missing.push(t('ultraSimple.form.parentMenu'))
+  return missing
+}
+
+// 将config转换为ModuleMetadata（不再为核心必填提供兜底默认）
+const convertToModuleMetadata = (): ModuleMetadata => {
   const selectedTableData = availableTables.value.find(t => t.name === selectedTable.value)
 
+  const c = (config && (config as any).value) ? (config as any).value as MetadataConfig : {
+    systemName: '',
+    moduleName: '',
+    displayName: '',
+    architecturePattern: 'Crud',
+    databaseProvider: 'SqlServer',
+    parentMenuId: 'business',
+    menuIcon: 'database'
+  } as MetadataConfig
+
+  const ns = (derivedNamespace?.value && derivedNamespace.value.trim()) || ''
+  const route = (derivedRoutePrefix?.value && derivedRoutePrefix.value.trim()) || ''
+  const schema = selectedTableData?.schema
+    ? String((selectedTableData.schema as unknown as { schema?: string })?.schema || 'dbo')
+    : 'dbo'
+
+  // 🔥 关键修复：将选中的表转换为 Entity
+  const entities: any[] = []
+  if (selectedTableData) {
+    const entityName = selectedTable.value || 'Entity'
+    const entity = {
+      id: crypto.randomUUID(),
+      name: entityName,
+      displayName: entityName,
+      description: `${entityName} 实体`,
+      module: c.moduleName,
+      namespace: ns,
+      tableName: selectedTable.value,
+      schema: schema,
+      isAggregateRoot: true,
+      isAudited: true,
+      isSoftDelete: true,
+      isMultiTenant: false,
+      baseClass: 'AuditedAggregateRoot',
+      interfaces: [],
+      properties: (selectedTableData.schema?.columns || []).map((col: any) => ({
+        id: crypto.randomUUID(),
+        name: col.name || col.Name,
+        displayName: col.name || col.Name,
+        type: col.dataType || col.DataType || 'string',
+        isRequired: !col.isNullable && !(col.IsNullable ?? true),
+        isKey: col.isPrimaryKey || col.IsPrimaryKey || false,
+        isUnique: false,
+        isIndexed: false,
+        defaultValue: null,
+        description: '',
+        helpText: '',
+        maxLength: col.maxLength || col.MaxLength || null,
+        minLength: null,
+        pattern: '',
+        precision: null,
+        scale: null,
+        minValue: null,
+        maxValue: null,
+        enumValues: [],
+        validationRules: [],
+        displayOrder: 0,
+        groupName: '',
+        isVisible: true,
+        isReadonly: false,
+        columnName: col.name || col.Name,
+        columnType: col.dataType || col.DataType || 'string',
+        isAuditField: false,
+        isSoftDeleteField: false,
+        searchable: true,
+        disabled: false,
+        listVisible: true,
+        detailVisible: true,
+        formVisible: true,
+        sortable: true,
+        filterable: true,
+        isTenantField: false
+      })),
+      relationships: [],
+      indexes: [],
+      constraints: [],
+      businessRules: [],
+      permissions: [],
+      codeGeneration: {
+        generateEntity: true,
+        generateRepository: true,
+        generateService: true,        // 🔥 修复：后端是 GenerateService 不是 GenerateAppService
+        generateController: true,
+        generateDto: true,
+        generateTests: false,
+        customTemplates: {},
+        options: {
+          useAutoMapper: true,
+          generateValidation: true,
+          generateSwaggerDoc: true,
+          generatePermissions: true,
+          generateAuditLog: true
+        }
+      },
+      uiConfig: {
+        listConfig: {                 // 🔥 修复：后端是 ListConfig 不是 listPageConfig
+          defaultPageSize: 10,
+          sortableColumns: [],
+          filterableColumns: [],
+          searchableColumns: [],
+          displayColumns: [],
+          actions: []
+        },
+        formConfig: {
+          layout: 'vertical',
+          columnCount: 1,
+          fieldGroups: [],
+          validationStrategy: 'immediate'
+        },
+        detailConfig: {               // 🔥 修复：后端是 DetailConfig 不是 detailPageConfig
+          layout: 'vertical',
+          sections: [],
+          actions: []
+        }
+      },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      version: '1.0.0',
+      tags: []
+    }
+    entities.push(entity)
+  }
+
   return {
-    // 使用UnifiedModuleMetadata最小必要字段以通过类型检查
     id: crypto.randomUUID(),
-    systemName: config.value.systemName,
-    name: config.value.moduleName,
-    displayName: config.value.displayName,
-    namespace: derivedNamespace.value,
-    schemaVersion: '1.0.0',
-    entities: [],
-    database: {
-      connectionStringName: 'default',
-      schema: selectedTableData?.schema ? String((selectedTableData.schema as unknown as { schema?: string })?.schema || 'dbo') : 'dbo',
-      provider: String(config.value.databaseProvider)
+    systemName: c.systemName,
+    name: c.moduleName,
+    displayName: c.displayName,
+    description: `${c.displayName || c.moduleName} 模块`,
+    version: '1.0.0',
+    schemaVersion: '1.0.0',  // 🔥 补充必填字段
+    architecturePattern: (c.architecturePattern as 'Crud' | 'DDD' | 'CQRS') || 'Crud',
+    namespace: ns,
+    entities: entities,  // 🔥 修复：传入真实的实体数组
+    databaseInfo: {
+      connectionStringName: 'Default',
+      schema,
+      provider: (c.databaseProvider || 'SqlServer') as 'SqlServer' | 'PostgreSql' | 'MySql' | 'Oracle' | 'SQLite'
     },
     frontend: {
-      parentId: config.value.parentMenuId,
-      routePrefix: derivedRoutePrefix.value
+      parentId: c.parentMenuId || 'business',
+      routePrefix: route
     },
-    // 其余字段按UnifiedSchema默认规则省略
-  } as unknown as ModuleMetadata
+    author: 'SmartAbp Generator',
+    featureManagement: { isEnabled: false, defaultPolicy: '' },
+    generateMobilePages: false,
+    dependencies: [],
+    menuConfig: [],
+    permissionConfig: {
+      groups: [],              // 🔥 修复：后端期望 Groups 数组
+      customActions: []        // 🔥 修复：后端期望 CustomActions 数组
+    },
+    createdAt: new Date(),  // 🔥 补充必填字段
+    updatedAt: new Date()   // 🔥 补充必填字段
+  }
 }
 
 // ✅ B方案优化：使用metadata-core验证
@@ -578,10 +597,30 @@ onUnmounted(() => {
   // useDebounceFn会自动处理清理，无需手动调用cancel
 })
 
+// 🔒 极简页面持久化（本地缓存）
+const PERSIST_KEY = 'ultraSimple:state:v1'
+const persistState = () => {
+  try {
+    const snapshot = {
+      selectedTable: selectedTable.value,
+      config: config  // 🔥 修复：reactive 对象不需要 .value
+    }
+    localStorage.setItem(PERSIST_KEY, JSON.stringify(snapshot))
+  } catch (e) {
+    console.warn('⚠️ 本地缓存失败:', e)
+  }
+}
+const persistStateDebounced = useDebounceFn(persistState, 300)
+
+watch(() => selectedTable.value, () => persistStateDebounced())
+watch(() => config, () => persistStateDebounced(), { deep: true })  // 🔥 修复：reactive 对象不需要 .value
+
 // ✅ 简化：确保默认选中第一个表
 const ensureDefaultSelectedTable = () => {
-  if (!selectedTable.value && availableTables.value.length > 0) {
-    const firstTable = availableTables.value[0].name
+  if (selectedTable.value) return
+  const first = availableTables.value?.[0]
+  const firstTable = first?.name
+  if (firstTable) {
     selectedTable.value = firstTable
     console.log('✅ 自动选中第一个表:', firstTable)
   }
@@ -598,6 +637,19 @@ const addLog = (message: string, type: GenerationLog['type'] = 'info') => {
 
 // 代码生成
 const startGeneration = async () => {
+  // 显式前置校验，缺失则阻止提交
+  const missing = getMissingFields()
+  if (missing.length > 0) {
+    ElMessage({
+      message: t('ultraSimple.validation.missingRequired', { fields: missing.join('、') }),
+      type: 'error',
+      duration: 4000,
+      showClose: true
+    })
+    addLog(t('ultraSimple.logs.validationFailed', { fields: missing.join(', ') }), 'error')
+    return
+  }
+
   generating.value = true
   generationProgress.value = 0
   generationLogs.value = []
@@ -616,19 +668,13 @@ const startGeneration = async () => {
     generationProgress.value = 15
 
     // ✅ B方案优化：复用转换函数，避免重复代码
-    const metadata = convertToModuleMetadata() as ModuleMetadata
+    const metadata = convertToModuleMetadata()
 
     addLog(t('ultraSimple.logs.metadataComplete'), 'success')
     generationProgress.value = 25
 
     addLog(t('ultraSimple.logs.callingService'), 'info')
-    const result = await codeGeneratorApi.generateModule({
-      moduleMetadata: metadata,
-      targetPath: '',
-      overwriteExisting: true,
-      generateTests: false,
-      generateDocs: false
-    })
+    const result = await codeGeneratorApi.generateModule(metadata)
 
     if (!result.success) {
       throw new Error(result.message || t('ultraSimple.messages.error'))
@@ -655,7 +701,16 @@ const startGeneration = async () => {
     generationComplete.value = true
     ElMessage.success(t('ultraSimple.messages.success'))
   } catch (error) {
-    const errorMsg = (error as Error).message || t('ultraSimple.validation.unknownError')
+    const err: any = error
+    const errorMsg = (err?.message as string) || t('ultraSimple.validation.unknownError')
+
+    // 增强：输出后端校验错误明细
+    const valErrors = Array.isArray(err?.validationErrors) ? err.validationErrors as Array<{ field: string; message: string }> : []
+    if (valErrors.length > 0) {
+      const detail = valErrors.map(e => `${e.field || '-'}: ${e.message}`).join('; ')
+      addLog(`参数校验失败: ${detail}`, 'error')
+      console.error('Backend validation errors:', valErrors)
+    }
 
     // 增强错误处理 - 分类错误类型
     if (errorMsg.includes('404') || errorMsg.includes('not found')) {
@@ -683,18 +738,12 @@ const startGeneration = async () => {
     console.error('Code generation error:', error)
 
     // 用户友好提示
-<<<<<<< Updated upstream
-    ElMessage.error(t('ultraSimple.messages.error'))
-    
-=======
     ElMessage({
       message: t('ultraSimple.messages.error'),
       type: 'error',
       duration: 5000,
       showClose: true
     })
-
->>>>>>> Stashed changes
     // 重置状态以便重试
     generationComplete.value = false
   } finally {
@@ -823,7 +872,7 @@ const downloadGeneratedCode = async () => {
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `${config.value.moduleName}_${Date.now()}.zip`
+    a.download = `${config.moduleName}_${Date.now()}.zip`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -862,19 +911,44 @@ const resetToStart = () => {
   generationProgress.value = 0
   generationLogs.value = []
   generationSessionId.value = ''
-  config.value = {
-    systemName: '',
-    moduleName: '',
-    displayName: '',
-    architecturePattern: 'Crud',
-    databaseProvider: 'SqlServer',
-    parentMenuId: 'business',
-    menuIcon: 'database'
-  }
+  // 🔥 修复：reactive 对象不能直接赋值，需要逐个属性赋值
+  config.systemName = ''
+  config.moduleName = ''
+  config.displayName = ''
+  config.architecturePattern = 'Crud'
+  config.databaseProvider = 'SqlServer'
+  config.parentMenuId = 'business'
+  config.menuIcon = 'database'
+  clearPersist()
 }
 
 // 初始化
 onMounted(async () => {
+  // 恢复本地缓存
+  try {
+    const raw = localStorage.getItem(PERSIST_KEY)
+    if (raw) {
+      const saved = JSON.parse(raw)
+      if (saved && typeof saved === 'object') {
+        if (typeof saved.selectedTable === 'string') {
+          selectedTable.value = saved.selectedTable
+        }
+        if (saved.config && typeof saved.config === 'object') {
+          // 仅合并已知字段，避免污染
+          config.systemName = saved.config.systemName ?? config.systemName
+          config.moduleName = saved.config.moduleName ?? config.moduleName
+          config.displayName = saved.config.displayName ?? config.displayName
+          config.architecturePattern = saved.config.architecturePattern ?? config.architecturePattern
+          config.databaseProvider = saved.config.databaseProvider ?? config.databaseProvider
+          config.parentMenuId = saved.config.parentMenuId ?? config.parentMenuId
+          config.menuIcon = saved.config.menuIcon ?? config.menuIcon
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('⚠️ 恢复本地缓存失败:', e)
+  }
+
   let connectionTest: any = null
 
   try {
@@ -986,12 +1060,24 @@ onMounted(async () => {
       console.log('✅ 最终成功加载:', availableTables.value.length, '个表')
       console.log('📋 表列表:', availableTables.value.map(t => t.name).slice(0, 5))
       console.log('🔍 selectedTable 当前值:', selectedTable.value)
-      console.log('🔍 config.systemName 当前值:', config.value.systemName)
+      console.log('🔍 config.systemName 当前值:', config.systemName)
     }
   }
 })
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+const clearPersist = () => {
+  try { localStorage.removeItem(PERSIST_KEY) } catch { }
+}
+
+const iconPickerVisible = ref(false)
+const iconSearch = ref('')
+const epIconNames = computed(() => Object.keys(EpIcons).filter(n => n.toLowerCase().includes(iconSearch.value.toLowerCase())))
+const selectMenuIcon = (name: string) => {
+  config.menuIcon = name
+  iconPickerVisible.value = false
+}
 </script>
 
 <style scoped lang="scss">
@@ -1142,6 +1228,34 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
     }
   }
 
+  // 修复：在可搜索(el-select filterable)模式下，确保已选文本可见
+  :deep(.el-select) {
+
+    .el-select__selected-item,
+    .el-select__selection,
+    .el-select__wrapper,
+    .el-select__input {
+      color: var(--color-text-primary, var(--el-text-color-regular)) !important;
+    }
+
+    // 兼容新旧样式类名
+    .el-select__selected-item .el-select__selected-item-text {
+      color: var(--color-text-primary, var(--el-text-color-regular)) !important;
+    }
+
+    // 关键：filterable模式使用输入框渲染选中值
+    .el-input__inner {
+      color: var(--color-text-primary, var(--el-text-color-regular)) !important;
+      -webkit-text-fill-color: var(--color-text-primary, var(--el-text-color-regular)) !important;
+      caret-color: var(--color-text-primary, var(--el-text-color-regular)) !important;
+    }
+
+    .el-select__placeholder,
+    .el-input__inner::placeholder {
+      color: var(--color-text-secondary, #909399) !important;
+    }
+  }
+
   .el-divider {
     margin: var(--spacing-xl) 0;
   }
@@ -1169,18 +1283,18 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
     margin-top: var(--spacing-xl);
   }
 
-.log-entry {
-  margin-bottom: var(--spacing-md);
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-radius: var(--radius-base);
-  font-size: var(--font-size-sm);
+  .log-entry {
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-base);
+    font-size: var(--font-size-sm);
 
-  .log-time {
-    color: var(--color-text-secondary);
-    margin-right: var(--spacing-md);
-    font-weight: var(--font-weight-medium);
+    .log-time {
+      color: var(--color-text-secondary);
+      margin-right: var(--spacing-md);
+      font-weight: var(--font-weight-medium);
+    }
   }
-}
 
   .log-list {
     flex: 1;
@@ -1260,6 +1374,40 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
       &:active {
         transform: translateY(0);
       }
+    }
+  }
+}
+
+.icon-picker {
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+    max-height: 360px;
+    overflow: auto;
+  }
+
+  .icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border: 1px solid var(--color-border-primary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .15s ease;
+    font-size: 12px;
+
+    :deep(.el-icon) {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    &:hover {
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-1px);
     }
   }
 }

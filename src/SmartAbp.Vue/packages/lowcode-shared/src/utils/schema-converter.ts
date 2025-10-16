@@ -1,8 +1,8 @@
 /**
  * Schema类型转换工具
- * 
+ *
  * 用于前后端类型的双向转换
- * 
+ *
  * @author SmartAbp架构团队
  * @date 2025-10-05
  */
@@ -46,7 +46,7 @@ interface BackendModuleDto {
     }
     entities?: BackendEntityDto[]
     menuConfig?: any[]
-    permissionConfig?: { groupName?: string; permissions?: any[] }
+    permissionConfig?: { groups?: any[]; customActions?: any[] }
     dependencies?: any[]
     createdAt?: string
     updatedAt?: string
@@ -168,7 +168,7 @@ export class SchemaConverter {
 
     /**
      * 转换ModuleMetadataDto → UnifiedModuleMetadata
-     * 
+     *
      * @param dto 后端DTO
      * @returns 前端统一Schema
      */
@@ -202,9 +202,9 @@ export class SchemaConverter {
             ),
             menuConfig: dto.menuConfig || [],
             permissionConfig: dto.permissionConfig ? {
-                groupName: dto.permissionConfig.groupName || '',
-                permissions: dto.permissionConfig.permissions || []
-            } : { groupName: '', permissions: [] },
+                groups: dto.permissionConfig.groups || [],
+                customActions: dto.permissionConfig.customActions || []
+            } : { groups: [], customActions: [] },
             dependencies: dto.dependencies || [],
             schemaVersion: '1.0.0',
             createdAt: dto.createdAt ? new Date(dto.createdAt) : new Date(),
@@ -214,7 +214,7 @@ export class SchemaConverter {
 
     /**
      * 转换EnhancedEntityModelDto → UnifiedEntityDefinition
-     * 
+     *
      * @param dto 后端DTO
      * @returns 前端统一Schema
      */
@@ -286,7 +286,7 @@ export class SchemaConverter {
 
     /**
      * 转换EntityPropertyDto → UnifiedEntityField
-     * 
+     *
      * @param dto 后端DTO
      * @returns 前端统一Schema
      */
@@ -335,7 +335,7 @@ export class SchemaConverter {
 
     /**
      * 转换ValidationRuleDto → UnifiedValidationRule
-     * 
+     *
      * @param dto 后端DTO
      * @param fieldName 字段名称
      * @returns 前端统一Schema
@@ -353,7 +353,7 @@ export class SchemaConverter {
 
     /**
      * 转换RelationshipDto → UnifiedEntityRelationship
-     * 
+     *
      * @param dto 后端DTO
      * @returns 前端统一Schema
      */
@@ -380,7 +380,7 @@ export class SchemaConverter {
 
     /**
      * 转换UnifiedModuleMetadata → ModuleMetadataDto
-     * 
+     *
      * @param schema 前端统一Schema
      * @returns 后端DTO
      */
@@ -418,7 +418,7 @@ export class SchemaConverter {
 
     /**
      * 转换UnifiedEntityDefinition → EnhancedEntityModelDto
-     * 
+     *
      * @param schema 前端统一Schema
      * @returns 后端DTO
      */
@@ -453,7 +453,7 @@ export class SchemaConverter {
 
     /**
      * 转换UnifiedEntityField → EntityPropertyDto
-     * 
+     *
      * @param field 前端统一Schema
      * @returns 后端DTO
      */
@@ -502,7 +502,7 @@ export class SchemaConverter {
 
     /**
      * 转换UnifiedValidationRule → ValidationRuleDto
-     * 
+     *
      * @param rule 前端统一Schema
      * @returns 后端DTO
      */
@@ -521,7 +521,7 @@ export class SchemaConverter {
 
     /**
      * 批量转换实体数组
-     * 
+     *
      * @param dtos 后端DTO数组
      * @returns 前端统一Schema数组
      */
@@ -531,7 +531,7 @@ export class SchemaConverter {
 
     /**
      * 批量转换字段数组
-     * 
+     *
      * @param dtos 后端DTO数组
      * @returns 前端统一Schema数组
      */

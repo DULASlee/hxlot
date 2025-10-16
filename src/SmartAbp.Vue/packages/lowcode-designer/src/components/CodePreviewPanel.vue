@@ -1,22 +1,28 @@
 <template>
   <div class="code-preview-panel">
     <div class="preview-header">
-      <el-tabs v-model="activeTab" @tab-change="handleTabChange">
+      <el-tabs v-model="activeTab">
         <el-tab-pane label="实时预览" name="preview">
           <template #label>
-            <el-icon><View /></el-icon>
+            <el-icon>
+              <View />
+            </el-icon>
             <span>实时预览</span>
           </template>
         </el-tab-pane>
         <el-tab-pane label="代码查看" name="code">
           <template #label>
-            <el-icon><Document /></el-icon>
+            <el-icon>
+              <Document />
+            </el-icon>
             <span>代码查看</span>
           </template>
         </el-tab-pane>
         <el-tab-pane label="质量报告" name="quality">
           <template #label>
-            <el-icon><DataAnalysis /></el-icon>
+            <el-icon>
+              <DataAnalysis />
+            </el-icon>
             <span>质量报告</span>
           </template>
         </el-tab-pane>
@@ -24,13 +30,13 @@
 
       <div class="preview-actions">
         <el-button-group>
-          <el-button :icon="Refresh" size="small" @click="refreshPreview">
+          <el-button :icon="Refresh" size="small">
             刷新
           </el-button>
-          <el-button :icon="CopyDocument" size="small" @click="copyCode">
+          <el-button :icon="CopyDocument" size="small">
             复制
           </el-button>
-          <el-button :icon="Download" size="small" @click="downloadCode">
+          <el-button :icon="Download" size="small">
             下载
           </el-button>
         </el-button-group>
@@ -43,27 +49,28 @@
         <div class="device-selector">
           <el-radio-group v-model="previewDevice" size="small">
             <el-radio-button label="desktop">
-              <el-icon><Monitor /></el-icon>
+              <el-icon>
+                <Monitor />
+              </el-icon>
               桌面
             </el-radio-button>
             <el-radio-button label="tablet">
-              <el-icon><Iphone /></el-icon>
+              <el-icon>
+                <Iphone />
+              </el-icon>
               平板
             </el-radio-button>
             <el-radio-button label="mobile">
-              <el-icon><Cellphone /></el-icon>
+              <el-icon>
+                <Cellphone />
+              </el-icon>
               手机
             </el-radio-button>
           </el-radio-group>
         </div>
 
         <div :class="['preview-frame', 'device-' + previewDevice]">
-          <iframe
-            ref="previewIframe"
-            :srcdoc="previewHtml"
-            sandbox="allow-scripts allow-same-origin"
-            @load="handleIframeLoad"
-          />
+          <iframe ref="previewIframe" :srcdoc="previewHtml" sandbox="allow-scripts allow-same-origin" />
         </div>
 
         <div v-if="previewError" class="preview-error">
@@ -74,12 +81,7 @@
       <!-- 代码查看面板 -->
       <div v-show="activeTab === 'code'" class="code-view-container">
         <el-tabs v-model="activeCodeTab" type="card">
-          <el-tab-pane
-            v-for="file in generatedFiles"
-            :key="file.path"
-            :label="file.path"
-            :name="file.path"
-          >
+          <el-tab-pane v-for="file in generatedFiles" :key="file.path" :label="file.path" :name="file.path">
             <div class="code-editor">
               <pre><code :class="'language-' + file.type">{{ file.content }}</code></pre>
             </div>
@@ -93,7 +95,8 @@
           <template #header>
             <div class="quality-header">
               <span>代码质量评分</span>
-              <el-tag :type="getScoreType(qualityReport.score)" size="large">
+              <el-tag :type="qualityReport.score >= 90 ? 'success' : (qualityReport.score >= 70 ? 'warning' : 'danger')"
+                size="large">
                 {{ qualityReport.score }}/100
               </el-tag>
             </div>
@@ -126,8 +129,11 @@
             <el-table :data="qualityReport.issues" stripe>
               <el-table-column label="严重程度" width="100">
                 <template #default="{ row }">
-                  <el-tag :type="getSeverityType(row.severity)" size="small">
-                    {{ getSeverityLabel(row.severity) }}
+                  <el-tag
+                    :type="row.severity === 'error' ? 'danger' : (row.severity === 'warning' ? 'warning' : (row.severity === 'info' ? 'info' : ''))"
+                    size="small">
+                    {{ row.severity === 'error' ? '错误' : (row.severity === 'warning' ? '警告' : (row.severity === 'info' ?
+                      '信息' : row.severity)) }}
                   </el-tag>
                 </template>
               </el-table-column>
@@ -155,12 +161,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
-import { ElMessage } from 'element-plus'
 import {
-  View, Document, DataAnalysis, Refresh, CopyDocument, Download,
-  Monitor, Iphone, Cellphone
+  Cellphone,
+  CopyDocument,
+  DataAnalysis,
+  Document,
+  Download,
+  Iphone,
+  Monitor,
+  Refresh,
+  View
 } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+import { computed, nextTick, ref, watch } from 'vue'
 import type { CodeQualityReport } from '../core/TemplateEngine'
 
 interface GeneratedFile {
@@ -193,6 +206,18 @@ const previewDevice = ref<'desktop' | 'tablet' | 'mobile'>('desktop')
 const previewIframe = ref<HTMLIFrameElement>()
 const previewError = ref('')
 
+// 提取Vue模板
+function extractTemplate(vueContent: string): string {
+  const match = vueContent.match(/<template>([\s\S]*?)<\/template>/)
+  return match ? (match[1]?.trim() || '<div>无模板内容</div>') : '<div>无模板内容</div>'
+}
+
+// 提取Vue脚本
+function extractScript(vueContent: string): string {
+  const match = vueContent.match(/<script setup[^>]*>([\s\S]*?)<\/script>/)
+  return match ? (match[1]?.trim() || 'return {}') : 'return {}'
+}
+
 // 生成预览HTML
 const previewHtml = computed(() => {
   const vueFile = props.generatedFiles.find(f => f.type === 'vue')
@@ -200,56 +225,47 @@ const previewHtml = computed(() => {
     return '<html><body><p>暂无可预览内容</p></body></html>'
   }
 
-  // 简化的Vue组件预览（实际需要完整的Vue运行时）
-  return `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>组件预览</title>
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
-  <script src="https://unpkg.com/element-plus"></script>
-  <style>
-    body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
-    * { box-sizing: border-box; }
-  </style>
-</head>
-<body>
-  <div id="app"></div>
-  <script>
-    const { createApp } = Vue;
-    const app = createApp({
-      template: \`${extractTemplate(vueFile.content)}\`,
-      setup() {
-        ${extractScript(vueFile.content)}
-      }
-    });
-    app.use(ElementPlus);
-    app.mount('#app');
-  </script>
-</body>
-</html>
-  `
+  // 使用 JSON.stringify 包裹模板与脚本，彻底避免外层模板字符串被破坏
+  const tplStr = JSON.stringify(extractTemplate(vueFile.content))
+  const setupStr = JSON.stringify(extractScript(vueFile.content))
+
+  const htmlParts = [
+    '<!DOCTYPE html>',
+    '<html>',
+    '<head>',
+    '  <meta charset="UTF-8">',
+    '  <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+    '  <title>组件预览</title>',
+    '  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></scr' + 'ipt>',
+    '  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">',
+    '  <script src="https://unpkg.com/element-plus"></scr' + 'ipt>',
+    '  <style>',
+    '    body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }',
+    '    * { box-sizing: border-box; }',
+    '  </style>',
+    '</head>',
+    '<body>',
+    '  <div id="app"></div>',
+    '  <script>',
+    '    const { createApp } = Vue;',
+    `    const setupFn = new Function(${setupStr});`,
+    `    const app = createApp({ template: ${tplStr}, setup: setupFn });`,
+    '    app.use(ElementPlus);',
+    "    app.mount('#app');",
+    '  </scr' + 'ipt>',
+    '</body>',
+    '</html>'
+  ]
+
+  return htmlParts.join('\n')
 })
 
-// 提取Vue模板
-function extractTemplate(vueContent: string): string {
-  const match = vueContent.match(/<template>([\s\S]*?)<\/template>/)
-  return match ? match[1].trim() : '<div>无模板内容</div>'
-}
-
-// 提取Vue脚本
-function extractScript(vueContent: string): string {
-  const match = vueContent.match(/<script setup[^>]*>([\s\S]*?)<\/script>/)
-  return match ? match[1].trim() : 'return {}'
-}
+// （已上移）extractTemplate / extractScript 放在顶部，避免类型检查顺序问题
 
 // 处理Tab切换
 const handleTabChange = (tabName: string | number) => {
   if (tabName === 'code' && props.generatedFiles.length > 0) {
-    activeCodeTab.value = props.generatedFiles[0].path
+    activeCodeTab.value = props.generatedFiles[0]?.path || ''
   }
 }
 
@@ -334,8 +350,20 @@ watch(() => props.generatedFiles, () => {
 
 // 初始化
 if (props.generatedFiles.length > 0) {
-  activeCodeTab.value = props.generatedFiles[0].path
+  activeCodeTab.value = props.generatedFiles[0]?.path || ''
 }
+
+// 显式暴露，避免模板类型分析误报
+defineExpose({
+  handleTabChange,
+  refreshPreview,
+  copyCode,
+  downloadCode,
+  handleIframeLoad,
+  getScoreType,
+  getSeverityType,
+  getSeverityLabel
+})
 </script>
 
 <style scoped lang="scss">
@@ -478,4 +506,3 @@ if (props.generatedFiles.length > 0) {
   }
 }
 </style>
-

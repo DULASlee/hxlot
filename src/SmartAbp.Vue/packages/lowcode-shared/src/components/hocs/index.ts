@@ -12,7 +12,7 @@ export { WithError, useErrorHandler } from './WithError.js'
 export type { WithErrorProps } from './WithError.js'
 
 // WithValidation
-export { WithValidation, useValidation } from './WithValidation.js'
+export { WithValidation, useValidation as useHocValidation } from './WithValidation.js'
 export type { WithValidationProps } from './WithValidation.js'
 // ValidationResult 从 validators/common 导出，避免重复
 
@@ -22,12 +22,12 @@ export type { WithPermissionProps } from './WithPermission.js'
 
 /**
  * 组合多个HOCs
- * 
+ *
  * @example
  * ```typescript
  * import { compose } from '@smartabp/lowcode-shared/components/hocs'
  * import { WithLoading, WithError, WithValidation } from '@smartabp/lowcode-shared/components/hocs'
- * 
+ *
  * const EnhancedComponent = compose(
  *   WithLoading,
  *   WithError,

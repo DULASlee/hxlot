@@ -9,34 +9,16 @@
       <!-- 控制面板 -->
       <el-col :span="8">
         <el-card title="控制面板">
-          <el-form
-            :model="form"
-            label-width="120px"
-          >
+          <el-form :model="form" label-width="120px">
             <el-form-item label="组件名称">
-              <el-input
-                v-model="form.componentName"
-                placeholder="请输入组件名称"
-              />
+              <el-input v-model="form.componentName" placeholder="请输入组件名称" />
             </el-form-item>
 
             <el-form-item label="组件类型">
-              <el-select
-                v-model="form.componentType"
-                placeholder="选择组件类型"
-              >
-                <el-option
-                  label="基础组件"
-                  value="component"
-                />
-                <el-option
-                  label="页面组件"
-                  value="page"
-                />
-                <el-option
-                  label="布局组件"
-                  value="layout"
-                />
+              <el-select v-model="form.componentType" placeholder="选择组件类型">
+                <el-option label="基础组件" value="component" />
+                <el-option label="页面组件" value="page" />
+                <el-option label="布局组件" value="layout" />
               </el-select>
             </el-form-item>
 
@@ -64,12 +46,7 @@
             </el-form-item>
 
             <el-form-item>
-              <el-button
-                type="primary"
-                :loading="generating"
-                :disabled="!form.componentName"
-                @click="generateCode"
-              >
+              <el-button type="primary" :loading="generating" :disabled="!form.componentName" @click="generateCode">
                 <i class="el-icon-magic-stick" />
                 生成代码
               </el-button>
@@ -83,10 +60,7 @@
 
           <!-- 状态信息 -->
           <el-divider>系统状态</el-divider>
-          <el-descriptions
-            :column="1"
-            size="small"
-          >
+          <el-descriptions :column="1" size="small">
             <el-descriptions-item label="内核状态">
               <el-tag :type="kernelStatus.type">
                 {{ kernelStatus.text }}
@@ -109,19 +83,11 @@
             <div class="card-header">
               <span>生成的Vue组件代码</span>
               <el-button-group>
-                <el-button
-                  size="small"
-                  :disabled="!generatedCode"
-                  @click="copyCode"
-                >
+                <el-button size="small" :disabled="!generatedCode" @click="copyCode">
                   <i class="el-icon-copy-document" />
                   复制
                 </el-button>
-                <el-button
-                  size="small"
-                  :disabled="!generatedCode"
-                  @click="downloadCode"
-                >
+                <el-button size="small" :disabled="!generatedCode" @click="downloadCode">
                   <i class="el-icon-download" />
                   下载
                 </el-button>
@@ -129,37 +95,21 @@
             </div>
           </template>
 
-          <div
-            v-if="generating"
-            class="loading-container"
-          >
-            <el-skeleton
-              :rows="10"
-              animated
-            />
+          <div v-if="generating" class="loading-container">
+            <el-skeleton :rows="10" animated />
           </div>
 
-          <div
-            v-else-if="generatedCode"
-            class="code-container"
-          >
+          <div v-else-if="generatedCode" class="code-container">
             <pre><code class="language-vue">{{ generatedCode }}</code></pre>
           </div>
 
-          <el-empty
-            v-else
-            description="点击生成代码按钮开始"
-          />
+          <el-empty v-else description="点击生成代码按钮开始" />
 
           <!-- 生成信息 -->
           <el-divider v-if="generationInfo">
             生成信息
           </el-divider>
-          <el-descriptions
-            v-if="generationInfo"
-            :column="3"
-            size="small"
-          >
+          <el-descriptions v-if="generationInfo" :column="3" size="small">
             <el-descriptions-item label="生成时间">
               {{ generationInfo.duration }}ms
             </el-descriptions-item>
@@ -180,10 +130,7 @@
         <span>💡 示例Schema配置</span>
       </template>
       <el-collapse>
-        <el-collapse-item
-          title="查看当前Schema配置"
-          name="schema"
-        >
+        <el-collapse-item title="查看当前Schema配置" name="schema">
           <pre><code class="language-json">{{ JSON.stringify(currentSchema, null, 2) }}</code></pre>
         </el-collapse-item>
       </el-collapse>
@@ -240,65 +187,65 @@ const currentSchema = computed(() => {
     },
     props: form.features.includes("props")
       ? [
-          {
-            name: "title",
-            type: "string",
-            required: false,
-            default: "Default Title",
-          },
-        ]
+        {
+          name: "title",
+          type: "string",
+          required: false,
+          default: "Default Title",
+        },
+      ]
       : undefined,
     emits: form.features.includes("emits")
       ? [
-          {
-            name: "click",
-            payload: "MouseEvent",
-          },
-        ]
+        {
+          name: "click",
+          payload: "MouseEvent",
+        },
+      ]
       : undefined,
     script: {
       lang: "ts",
       setup: true,
       computed: form.features.includes("computed")
         ? [
-            {
-              name: "displayTitle",
-              get: 'title || "No Title"',
-              type: "string",
-            },
-          ]
+          {
+            name: "displayTitle",
+            get: 'title || "No Title"',
+            type: "string",
+          },
+        ]
         : undefined,
       methods: form.features.includes("methods")
         ? [
-            {
-              name: "handleClick",
-              params: [{ name: "event", type: "MouseEvent" }],
-              returnType: "void",
-              body: 'emit("click", event);',
-            },
-          ]
+          {
+            name: "handleClick",
+            params: [{ name: "event", type: "MouseEvent" }],
+            returnType: "void",
+            body: 'emit("click", event);',
+          },
+        ]
         : undefined,
       lifecycle: form.features.includes("lifecycle")
         ? [
-            {
-              hook: "onMounted",
-              body: 'console.log("Component mounted");',
-            },
-          ]
+          {
+            hook: "onMounted",
+            body: 'console.log("Component mounted");',
+          },
+        ]
         : undefined,
     },
     style: form.features.includes("style")
       ? {
-          lang: "css",
-          scoped: true,
-          content: {
-            [`.${form.componentName.toLowerCase()}`]: {
-              padding: "16px",
-              "border-radius": "8px",
-              background: "#f5f5f5",
-            },
+        lang: "css",
+        scoped: true,
+        content: {
+          [`.${form.componentName.toLowerCase()}`]: {
+            padding: "16px",
+            "border-radius": "8px",
+            background: "#f5f5f5",
           },
-        }
+        },
+      }
       : undefined,
   }
 })
@@ -310,7 +257,7 @@ const generateCode = async () => {
 
   try {
     const startTime = Date.now()
-    
+
     // ✅ 构建模块元数据
     const moduleMetadata: ModuleMetadataDto = {
       id: crypto.randomUUID(),
@@ -339,15 +286,15 @@ const generateCode = async () => {
       dependencies: [],
       entities: [],
       permissionConfig: {
-        groupName: form.componentName,
-        permissions: []
+        groups: [],
+        customActions: []
       },
       menuConfig: [],
       schemaVersion: '1.0.0',
       createdAt: new Date(),
       updatedAt: new Date()
     }
-    
+
     // ✅ 调用真实API
     const config: ModuleGenerationConfig = {
       moduleMetadata,
@@ -356,16 +303,16 @@ const generateCode = async () => {
       generateTests: false,
       generateDocs: false
     }
-    
+
     const result = await codeGeneratorApi.generateModule(config)
-    
+
     const endTime = Date.now()
-    
+
     if (result.success && result.generatedFiles && result.generatedFiles.length > 0) {
       // 提取第一个Vue组件文件
       const vueFile = result.generatedFiles.find((f: { path: string }) => f.path.endsWith('.vue'))
       generatedCode.value = vueFile?.content || '// No Vue component generated'
-      
+
       generationInfo.value = {
         duration: endTime - startTime,
         size: generatedCode.value.length,
@@ -373,7 +320,7 @@ const generateCode = async () => {
         filesGenerated: result.generatedFiles.length,
         totalLines: result.statistics?.totalLines || 0
       }
-      
+
       generationCount.value++
       ElMessage.success(`代码生成成功！生成了${result.generatedFiles.length}个文件`)
     } else {

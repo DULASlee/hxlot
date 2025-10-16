@@ -8,11 +8,14 @@ import type { CodeGeneratorApi, GenerationResult, ModuleGenerationConfig, Module
 export const codeGeneratorApi: CodeGeneratorApi = {
   /**
    * 生成模块代码
-   * @param config 模块生成配置
-   * @returns 生成结果，包含生成的文件和状态
+   * - 后端端点期望 ModuleMetadataDto 作为根对象
+   * - 兼容历史入参 { moduleMetadata, ... }：自动提取并仅提交 moduleMetadata
    */
-  async generateModule(config: ModuleGenerationConfig): Promise<GenerationResult> {
-    return await http.post<GenerationResult>('/api/code-generator/generate-module', config)
+  async generateModule(config: ModuleGenerationConfig | ModuleMetadata): Promise<GenerationResult> {
+    const body: ModuleMetadata = (config && (config as any).moduleMetadata)
+      ? (config as any).moduleMetadata
+      : (config as ModuleMetadata);
+    return await http.post<GenerationResult>('/api/code-generator/generate-module', body)
   },
 
   /**
@@ -41,7 +44,7 @@ export const codeGeneratorApi: CodeGeneratorApi = {
    * @returns 数据库结构信息
    */
   async introspectDatabase(req: any): Promise<any> {
-    return await http.post<any>('/api/code-generator/introspect-database', req)
+    return await http.post<any>('/api/code-generator/introspect-db', req)
   },
 
   /**

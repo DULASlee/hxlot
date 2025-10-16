@@ -1,14 +1,14 @@
 /**
  * 🔥 SmartAbp LowCode Engine - 统一元数据Schema v1.0.0
- * 
+ *
  * 这是前后端统一的单一事实来源（Single Source of Truth）
- * 
+ *
  * 规则:
  * 1. 所有前端packages必须使用此Schema
  * 2. 后端DTO通过AutoMapper映射此Schema
  * 3. 严禁在其他地方重复定义相同类型
  * 4. 新增字段必须同步更新前后端
- * 
+ *
  * @version 1.0.0
  * @author SmartAbp架构团队
  * @date 2025-10-05
@@ -57,7 +57,7 @@ export function getSchemaVersion(): SchemaVersion {
 
 /**
  * 统一模块元数据
- * 
+ *
  * 对应后端: ModuleMetadataDto (Dtos.cs)
  * 用途: 描述一个完整的业务模块（如ProjectManagement, Device）
  */
@@ -153,7 +153,7 @@ export interface UnifiedModuleMetadata {
 
 /**
  * 统一实体定义
- * 
+ *
  * 对应后端: EnhancedEntityModelDto (Dtos.cs)
  * 用途: 描述一个业务实体（如Project, Device）
  */
@@ -276,7 +276,7 @@ export interface UnifiedEntityDefinition {
 
 /**
  * 统一实体字段
- * 
+ *
  * 对应后端: EntityPropertyDto (Dtos.cs)
  */
 export interface UnifiedEntityField {
@@ -411,7 +411,7 @@ export interface UnifiedEntityField {
 
 /**
  * 统一字段类型
- * 
+ *
  * 跨平台类型映射:
  * - C#: string → TypeScript: string → PostgreSQL: varchar
  * - C#: int → TypeScript: number → PostgreSQL: integer
@@ -450,7 +450,7 @@ export type UnifiedFieldType =
 
 /**
  * 统一验证规则
- * 
+ *
  * 对应后端: ValidationRuleDto (Dtos.cs)
  */
 export interface UnifiedValidationRule {
@@ -649,6 +649,7 @@ export interface UnifiedMenuConfig {
 
 /**
  * 统一权限配置
+ * 🔥 这是前端的唯一真理源，后端 PermissionConfigDto 必须与此保持一致
  */
 export interface UnifiedPermissionConfig {
     groupName: string

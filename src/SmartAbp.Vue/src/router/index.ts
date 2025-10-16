@@ -233,6 +233,17 @@ const routes: RouteRecordRaw[] = [
           menuKey: "ultra-simple-studio"
         },
       },
+      {
+        path: "new-ultra-simple",
+        name: "NewUltraSimpleStudio",
+        component: () => import("@smartabp/lowcode-designer/views/newUltraSimpleStudio.vue"),
+        meta: {
+          title: "极简代码生成（稳定版）",
+          icon: "⚡",
+          menuKey: "new-ultra-simple-studio",
+          showInMenu: true
+        },
+      },
       // 🏗️ 模块向导 - 专业通道
       {
         path: "wizard",
@@ -292,6 +303,17 @@ const routes: RouteRecordRaw[] = [
             name: "CodeGeneration",
             component: () => import("@/views/lowcode/GenerationView.vue"),
             meta: { title: "代码生成", menuKey: "code-generation" },
+          },
+          {
+            path: "new-ultra-simple",
+            name: "LowCodeNewUltraSimple",
+            redirect: { path: "/CodeGen/new-ultra-simple" },
+            meta: {
+              title: "极简代码生成（稳定版）",
+              menuKey: "new-ultra-simple-studio",
+              icon: "⚡",
+              showInMenu: true
+            }
           },
           {
             path: "ddd-designer",

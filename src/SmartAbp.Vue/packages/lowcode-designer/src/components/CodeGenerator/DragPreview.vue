@@ -2,13 +2,8 @@
   <div class="drag-preview-container">
     <!-- Global Drag Preview Portal -->
     <teleport to="body">
-      <div
-        v-if="isDragging"
-        ref="dragPreview"
-        class="drag-preview"
-        :class="[previewType, dragState]"
-        :style="previewStyle"
-      >
+      <div v-if="isDragging" ref="dragPreview" class="drag-preview" :class="[previewType, dragState]"
+        :style="previewStyle">
         <div class="preview-content">
           <div class="preview-icon">
             <el-icon :color="iconColor">
@@ -22,10 +17,7 @@
         </div>
 
         <!-- Drop zone indicator -->
-        <div
-          v-if="showDropIndicator"
-          class="drop-indicator"
-        >
+        <div v-if="showDropIndicator" class="drop-indicator">
           <el-icon class="drop-icon">
             <Plus />
           </el-icon>
@@ -35,20 +27,15 @@
     </teleport>
 
     <!-- Drop zones highlighting -->
-    <div
-      v-for="zone in activeDropZones"
-      :key="zone.id"
-      class="drop-zone-highlight"
-      :class="getDropZoneClass(zone)"
-      :style="getDropZoneStyle(zone)"
-    />
+    <div v-for="zone in activeDropZones" :key="zone.id" class="drop-zone-highlight" :class="getDropZoneClass(zone)"
+      :style="getDropZoneStyle(zone)" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from "vue"
-import { useSafeEventListener, useSafeTimer } from '@smartabp/lowcode-shared'
 import { Plus } from "@element-plus/icons-vue"
+import { useSafeEventListener, useSafeTimer } from '@smartabp/lowcode-shared'
+import { computed, ref, watch } from "vue"
 
 interface DragPreviewProps {
   isDragging?: boolean

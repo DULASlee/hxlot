@@ -1,91 +1,72 @@
 <template>
   <div class="dev-environment-setup">
-    <el-card
-      class="setup-header"
-      shadow="never"
-    >
+    <el-card class="setup-header" shadow="never">
       <template #header>
         <div class="card-header">
           <span class="title">
-            <el-icon><Setting /></el-icon>
+            <el-icon>
+              <Setting />
+            </el-icon>
             本地开发环境配置
           </span>
           <span class="subtitle">一键生成Docker Compose + 启动脚本 + 环境变量</span>
         </div>
       </template>
 
-      <el-alert
-        title="快速上手"
-        type="info"
+      <el-alert title="快速上手" type="info"
         description="选择所需的基础服务，配置项目信息，即可生成完整的本地开发环境配置文件。支持PostgreSQL、Redis、RabbitMQ、Elasticsearch、Seq等5大基础服务。"
-        :closable="false"
-        show-icon
-      />
+        :closable="false" show-icon />
     </el-card>
 
-    <el-row
-      :gutter="20"
-      class="content-row"
-    >
+    <el-row :gutter="20" class="content-row">
       <!-- 左侧配置面板 -->
       <el-col :span="12">
         <el-card shadow="hover">
           <template #header>
-            <span><el-icon><Tools /></el-icon> 配置面板</span>
+            <span><el-icon>
+                <Tools />
+              </el-icon> 配置面板</span>
           </template>
 
-          <el-form
-            :model="config"
-            label-width="120px"
-            label-position="right"
-          >
+          <el-form :model="config" label-width="120px" label-position="right">
             <!-- 项目信息 -->
             <el-divider content-position="left">
-              <el-icon><Folder /></el-icon> 项目信息
+              <el-icon>
+                <Folder />
+              </el-icon> 项目信息
             </el-divider>
-            
-            <el-form-item
-              label="项目名称"
-              required
-            >
-              <el-input
-                v-model="config.projectName"
-                placeholder="例如: SmartAbp"
-                clearable
-              >
+
+            <el-form-item label="项目名称" required>
+              <el-input v-model="config.projectName" placeholder="例如: SmartAbp" clearable>
                 <template #prefix>
-                  <el-icon><DocumentCopy /></el-icon>
+                  <el-icon>
+                    <DocumentCopy />
+                  </el-icon>
                 </template>
               </el-input>
             </el-form-item>
 
-            <el-form-item
-              label="项目路径"
-              required
-            >
-              <el-input
-                v-model="config.projectPath"
-                placeholder="例如: /Users/xxx/Projects/SmartAbp"
-                clearable
-              >
+            <el-form-item label="项目路径" required>
+              <el-input v-model="config.projectPath" placeholder="例如: /Users/xxx/Projects/SmartAbp" clearable>
                 <template #prefix>
-                  <el-icon><FolderOpened /></el-icon>
+                  <el-icon>
+                    <FolderOpened />
+                  </el-icon>
                 </template>
               </el-input>
             </el-form-item>
 
             <!-- 服务选择 -->
             <el-divider content-position="left">
-              <el-icon><Cpu /></el-icon> 基础服务选择
+              <el-icon>
+                <Cpu />
+              </el-icon> 基础服务选择
             </el-divider>
 
             <el-form-item label="数据库">
               <el-checkbox-group v-model="config.services">
                 <el-checkbox label="postgresql">
-                  <el-tag
-                    type="primary"
-                    size="small"
-                  >
+                  <el-tag type="primary" size="small">
                     PostgreSQL
                   </el-tag>
                   <span class="service-desc">关系型数据库</span>
@@ -96,10 +77,7 @@
             <el-form-item label="缓存">
               <el-checkbox-group v-model="config.services">
                 <el-checkbox label="redis">
-                  <el-tag
-                    type="danger"
-                    size="small"
-                  >
+                  <el-tag type="danger" size="small">
                     Redis
                   </el-tag>
                   <span class="service-desc">分布式缓存</span>
@@ -110,10 +88,7 @@
             <el-form-item label="消息队列">
               <el-checkbox-group v-model="config.services">
                 <el-checkbox label="rabbitmq">
-                  <el-tag
-                    type="warning"
-                    size="small"
-                  >
+                  <el-tag type="warning" size="small">
                     RabbitMQ
                   </el-tag>
                   <span class="service-desc">消息中间件</span>
@@ -124,10 +99,7 @@
             <el-form-item label="搜索引擎">
               <el-checkbox-group v-model="config.services">
                 <el-checkbox label="elasticsearch">
-                  <el-tag
-                    type="success"
-                    size="small"
-                  >
+                  <el-tag type="success" size="small">
                     Elasticsearch
                   </el-tag>
                   <span class="service-desc">全文搜索</span>
@@ -138,10 +110,7 @@
             <el-form-item label="日志服务">
               <el-checkbox-group v-model="config.services">
                 <el-checkbox label="seq">
-                  <el-tag
-                    type="info"
-                    size="small"
-                  >
+                  <el-tag type="info" size="small">
                     Seq
                   </el-tag>
                   <span class="service-desc">结构化日志</span>
@@ -151,7 +120,9 @@
 
             <!-- 高级选项 -->
             <el-divider content-position="left">
-              <el-icon><Star /></el-icon> 高级选项
+              <el-icon>
+                <Star />
+              </el-icon> 高级选项
             </el-divider>
 
             <el-form-item label="热重载">
@@ -171,18 +142,10 @@
 
             <!-- 操作按钮 -->
             <el-form-item>
-              <el-button
-                type="primary"
-                :icon="Promotion"
-                :loading="loading"
-                @click="generateAllConfigs"
-              >
+              <el-button type="primary" :icon="Promotion" :loading="loading" @click="generateAllConfigs">
                 生成所有配置
               </el-button>
-              <el-button
-                :icon="View"
-                @click="previewDialogVisible = true"
-              >
+              <el-button :icon="View" @click="previewDialogVisible = true">
                 预览配置
               </el-button>
             </el-form-item>
@@ -192,235 +155,153 @@
 
       <!-- 右侧预览和下载 -->
       <el-col :span="12">
-        <el-card
-          shadow="hover"
-          class="preview-card"
-        >
+        <el-card shadow="hover" class="preview-card">
           <template #header>
-            <span><el-icon><Document /></el-icon> 生成结果</span>
+            <span><el-icon>
+                <Document />
+              </el-icon> 生成结果</span>
           </template>
 
-          <el-tabs
-            v-model="activeTab"
-            class="result-tabs"
-          >
+          <el-tabs v-model="activeTab" class="result-tabs">
             <!-- Docker Compose -->
-            <el-tab-pane
-              label="Docker Compose"
-              name="docker"
-            >
-              <div
-                v-if="dockerCompose"
-                class="result-content"
-              >
+            <el-tab-pane label="Docker Compose" name="docker">
+              <div v-if="dockerCompose" class="result-content">
                 <div class="result-actions">
-                  <el-button
-                    size="small"
-                    :icon="Download"
-                    type="primary"
-                    @click="downloadDockerCompose"
-                  >
+                  <el-button size="small" :icon="Download" type="primary" @click="downloadDockerCompose">
                     下载 docker-compose.dev.yml
                   </el-button>
-                  <el-button
-                    size="small"
-                    :icon="CopyDocument"
-                    @click="copyDockerCompose"
-                  >
+                  <el-button size="small" :icon="CopyDocument" @click="copyDockerCompose">
                     复制
                   </el-button>
                 </div>
-                
+
                 <div class="instructions">
-                  <el-alert
-                    type="success"
-                    :closable="false"
-                  >
+                  <el-alert type="success" :closable="false">
                     <template #title>
-                      <el-icon><CircleCheck /></el-icon>
+                      <el-icon>
+                        <CircleCheck />
+                      </el-icon>
                       使用说明
                     </template>
                     <ul>
-                      <li
-                        v-for="(instruction, index) in dockerCompose.instructions"
-                        :key="index"
-                      >
+                      <li v-for="(instruction, index) in dockerCompose.instructions" :key="index">
                         {{ instruction }}
                       </li>
                     </ul>
                   </el-alert>
                 </div>
 
-                <el-input
-                  v-model="dockerCompose.yamlContent"
-                  type="textarea"
-                  :rows="15"
-                  readonly
-                  class="code-preview"
-                />
+                <el-input v-model="dockerCompose.yamlContent" type="textarea" :rows="15" readonly
+                  class="code-preview" />
               </div>
-              <el-empty
-                v-else
-                description="请先生成配置"
-              />
+              <el-empty v-else description="请先生成配置" />
             </el-tab-pane>
 
             <!-- 启动脚本 -->
-            <el-tab-pane
-              label="启动脚本"
-              name="script"
-            >
-              <div
-                v-if="startupScript"
-                class="result-content"
-              >
+            <el-tab-pane label="启动脚本" name="script">
+              <div v-if="startupScript" class="result-content">
                 <div class="script-type-selector">
-                  <el-radio-group
-                    v-model="scriptType"
-                    size="small"
-                    @change="generateScript"
-                  >
+                  <el-radio-group v-model="scriptType" size="small" @change="generateScript">
                     <el-radio-button label="bash">
-                      <el-icon><Monitor /></el-icon> Linux/Mac
+                      <el-icon>
+                        <Monitor />
+                      </el-icon> Linux/Mac
                     </el-radio-button>
                     <el-radio-button label="powershell">
-                      <el-icon><Platform /></el-icon> PowerShell
+                      <el-icon>
+                        <Platform />
+                      </el-icon> PowerShell
                     </el-radio-button>
                     <el-radio-button label="batch">
-                      <el-icon><Grid /></el-icon> Batch
+                      <el-icon>
+                        <Grid />
+                      </el-icon> Batch
                     </el-radio-button>
                   </el-radio-group>
                 </div>
 
                 <div class="result-actions">
-                  <el-button
-                    size="small"
-                    :icon="Download"
-                    type="primary"
-                    @click="downloadStartupScript"
-                  >
+                  <el-button size="small" :icon="Download" type="primary" @click="downloadStartupScript">
                     下载 {{ startupScript.fileName }}
                   </el-button>
-                  <el-button
-                    size="small"
-                    :icon="CopyDocument"
-                    @click="copyStartupScript"
-                  >
+                  <el-button size="small" :icon="CopyDocument" @click="copyStartupScript">
                     复制
                   </el-button>
                 </div>
 
                 <div class="instructions">
-                  <el-alert
-                    type="info"
-                    :closable="false"
-                  >
+                  <el-alert type="info" :closable="false">
                     <template #title>
-                      <el-icon><InfoFilled /></el-icon>
+                      <el-icon>
+                        <InfoFilled />
+                      </el-icon>
                       使用说明
                     </template>
                     <ul>
-                      <li
-                        v-for="(instruction, index) in startupScript.instructions"
-                        :key="index"
-                      >
+                      <li v-for="(instruction, index) in startupScript.instructions" :key="index">
                         {{ instruction }}
                       </li>
                     </ul>
                   </el-alert>
                 </div>
 
-                <el-input
-                  v-model="startupScript.scriptContent"
-                  type="textarea"
-                  :rows="12"
-                  readonly
-                  class="code-preview"
-                />
+                <el-input v-model="startupScript.scriptContent" type="textarea" :rows="12" readonly
+                  class="code-preview" />
               </div>
-              <el-empty
-                v-else
-                description="请先生成配置"
-              />
+              <el-empty v-else description="请先生成配置" />
             </el-tab-pane>
 
             <!-- 环境变量 -->
-            <el-tab-pane
-              label="环境变量"
-              name="env"
-            >
-              <div
-                v-if="envFile"
-                class="result-content"
-              >
+            <el-tab-pane label="环境变量" name="env">
+              <div v-if="envFile" class="result-content">
                 <div class="env-selector">
-                  <el-radio-group
-                    v-model="envType"
-                    size="small"
-                    @change="generateEnv"
-                  >
+                  <el-radio-group v-model="envType" size="small" @change="generateEnv">
                     <el-radio-button label="development">
-                      <el-icon><Laptop /></el-icon> Development
+                      <el-icon>
+                        <Monitor />
+                      </el-icon> Development
                     </el-radio-button>
                     <el-radio-button label="staging">
-                      <el-icon><Cloudy /></el-icon> Staging
+                      <el-icon>
+                        <Cloudy />
+                      </el-icon> Staging
                     </el-radio-button>
                     <el-radio-button label="production">
-                      <el-icon><Connection /></el-icon> Production
+                      <el-icon>
+                        <Connection />
+                      </el-icon> Production
                     </el-radio-button>
                   </el-radio-group>
                 </div>
 
                 <div class="result-actions">
-                  <el-button
-                    size="small"
-                    :icon="Download"
-                    type="primary"
-                    @click="downloadEnvFile"
-                  >
+                  <el-button size="small" :icon="Download" type="primary" @click="downloadEnvFile">
                     下载 {{ envFile.fileName }}
                   </el-button>
-                  <el-button
-                    size="small"
-                    :icon="CopyDocument"
-                    @click="copyEnvFile"
-                  >
+                  <el-button size="small" :icon="CopyDocument" @click="copyEnvFile">
                     复制
                   </el-button>
                 </div>
 
                 <div class="instructions">
-                  <el-alert
-                    type="warning"
-                    :closable="false"
-                  >
+                  <el-alert type="warning" :closable="false">
                     <template #title>
-                      <el-icon><Warning /></el-icon>
+                      <el-icon>
+                        <Warning />
+                      </el-icon>
                       安全提示
                     </template>
                     <ul>
-                      <li
-                        v-for="(instruction, index) in envFile.instructions"
-                        :key="index"
-                      >
+                      <li v-for="(instruction, index) in envFile.instructions" :key="index">
                         {{ instruction }}
                       </li>
                     </ul>
                   </el-alert>
                 </div>
 
-                <el-input
-                  v-model="envFile.content"
-                  type="textarea"
-                  :rows="12"
-                  readonly
-                  class="code-preview"
-                />
+                <el-input v-model="envFile.content" type="textarea" :rows="12" readonly class="code-preview" />
               </div>
-              <el-empty
-                v-else
-                description="请先生成配置"
-              />
+              <el-empty v-else description="请先生成配置" />
             </el-tab-pane>
           </el-tabs>
         </el-card>
@@ -428,58 +309,33 @@
     </el-row>
 
     <!-- 预览对话框 -->
-    <el-dialog
-      v-model="previewDialogVisible"
-      title="配置预览"
-      width="60%"
-      :close-on-click-modal="false"
-    >
-      <el-descriptions
-        :column="2"
-        border
-      >
+    <el-dialog v-model="previewDialogVisible" title="配置预览" width="60%" :close-on-click-modal="false">
+      <el-descriptions :column="2" border>
         <el-descriptions-item label="项目名称">
           {{ config.projectName || '-' }}
         </el-descriptions-item>
         <el-descriptions-item label="项目路径">
           {{ config.projectPath || '-' }}
         </el-descriptions-item>
-        <el-descriptions-item
-          label="选择服务"
-          :span="2"
-        >
-          <el-tag
-            v-for="service in config.services"
-            :key="service"
-            type="primary"
-            size="small"
-            style="margin-right: 8px"
-          >
+        <el-descriptions-item label="选择服务" :span="2">
+          <el-tag v-for="service in config.services" :key="service" type="primary" size="small"
+            style="margin-right: 8px">
             {{ service }}
           </el-tag>
           <span v-if="config.services.length === 0">未选择</span>
         </el-descriptions-item>
         <el-descriptions-item label="热重载">
-          <el-tag
-            :type="config.enableHotReload ? 'success' : 'info'"
-            size="small"
-          >
+          <el-tag :type="config.enableHotReload ? 'success' : 'info'" size="small">
             {{ config.enableHotReload ? '启用' : '禁用' }}
           </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="调试模式">
-          <el-tag
-            :type="config.enableDebugMode ? 'success' : 'info'"
-            size="small"
-          >
+          <el-tag :type="config.enableDebugMode ? 'success' : 'info'" size="small">
             {{ config.enableDebugMode ? '启用' : '禁用' }}
           </el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="健康检查">
-          <el-tag
-            :type="config.enableHealthCheck ? 'success' : 'info'"
-            size="small"
-          >
+          <el-tag :type="config.enableHealthCheck ? 'success' : 'info'" size="small">
             {{ config.enableHealthCheck ? '启用' : '禁用' }}
           </el-tag>
         </el-descriptions-item>
@@ -495,39 +351,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { ElMessage } from 'element-plus'
 import {
-  Setting,
-  Tools,
-  Folder,
-  DocumentCopy,
-  FolderOpened,
-  Cpu,
-  Star,
-  Promotion,
-  View,
-  Document,
-  Download,
-  CopyDocument,
   CircleCheck,
-  Monitor,
-  Platform,
-  Grid,
-  InfoFilled,
-  Laptop,
   Cloudy,
   Connection,
+  CopyDocument,
+  Cpu,
+  Document,
+  DocumentCopy,
+  Download,
+  Folder,
+  FolderOpened,
+  Grid,
+  InfoFilled,
+  Monitor,
+  Platform,
+  Promotion,
+  Setting,
+  Star,
+  Tools,
+  View,
   Warning
 } from '@element-plus/icons-vue'
 import {
   useDevEnvironment,
   type DevEnvironmentConfig,
+  type EnvironmentVariables,
   type GeneratedDockerCompose,
-  type GeneratedStartupScript,
   type GeneratedEnvFile,
-  type EnvironmentVariables
+  type GeneratedStartupScript
 } from '@smartabp/lowcode-api'
+import { ElMessage } from 'element-plus'
+import { reactive, ref } from 'vue'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 状态管理 - State Management
@@ -587,7 +442,7 @@ async function generateAllConfigs(): Promise<void> {
 
     // 生成启动脚本
     await generateScript()
-    
+
     // 生成环境变量
     await generateEnv()
 
@@ -798,4 +653,3 @@ async function copyEnvFile(): Promise<void> {
   }
 }
 </style>
-

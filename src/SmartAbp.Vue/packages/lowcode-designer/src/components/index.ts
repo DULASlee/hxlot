@@ -1,9 +1,9 @@
 /**
  * SmartAbp Low-Code Designer - Components Export
- * 
+ *
  * Centralized export for all designer components
  * Follows naming convention: Ld{ComponentName}
- * 
+ *
  * @author SmartAbp Team
  * @version 1.0.0
  * @license MIT
@@ -77,7 +77,7 @@
 // ✅ 已实现的核心组件
 export { default as LdBusinessRulesEngine } from './BusinessRulesEngine.vue'
 // export { default as LdCodeGenerationWizard } from './CodeGenerationWizard.vue'
-// export { default as LdCodePreviewPanel } from './CodePreviewPanel.vue'
+export { default as LdCodePreviewPanel } from './CodePreviewPanel.vue'
 export { default as LdComponentPropertyPanel } from './ComponentPropertyPanel.vue'
 export { default as LdEntityDesigner } from './EntityDesigner.vue'
 export { default as LdTemplateManager } from './TemplateManager.vue'

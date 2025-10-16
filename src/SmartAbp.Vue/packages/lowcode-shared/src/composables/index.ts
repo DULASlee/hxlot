@@ -1,12 +1,12 @@
 /**
  * 🎣 Composables Module Entry
- * 
+ *
  * Vue组合式API入口
- * 
+ *
  * @module @smartabp/lowcode-shared/composables
  */
 
-export { useSafeEventListener } from './useSafeEventListener'
+export { useSafeEventListener, useSafeTimer } from './useSafeEventListener'
 
 export {
   useValidation,

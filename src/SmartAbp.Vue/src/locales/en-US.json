@@ -2,6 +2,11 @@
   "common": {
     "switchLanguage": "Switch Language",
     "languageChanged": "Language Changed",
+    "switchToDark": "Switch to dark",
+    "switchToLight": "Switch to light",
+    "search": "Search",
+    "select": "Select",
+    "close": "Close",
     "languageName": {
       "zh-CN": "简体中文",
       "en-US": "English"
@@ -9,16 +14,30 @@
   },
   "wizard": {
     "title": "Module Wizard",
-    "steps": ["New", "Architecture", "Model", "Features", "Generate"],
+    "steps": [
+      "New",
+      "Architecture",
+      "Model",
+      "Features",
+      "Generate"
+    ],
     "intro": "Step 1: Create module (fill the basics then continue)",
-    "step1": { "title": "Step 1: Create Module" },
-    "step2": { "title": "Step 2: Architecture" },
+    "step1": {
+      "title": "Step 1: Create Module"
+    },
+    "step2": {
+      "title": "Step 2: Architecture"
+    },
     "step3": {
       "title": "Step 3: Domain Modeling",
       "alert": "Please complete entity modeling first, then configure permissions and generate code."
     },
-    "step4": { "title": "Step 4: Enterprise Features" },
-    "step5": { "title": "Step 5: Preview & Generate" },
+    "step4": {
+      "title": "Step 4: Enterprise Features"
+    },
+    "step5": {
+      "title": "Step 5: Preview & Generate"
+    },
     "form": {
       "systemName": "System Name",
       "systemNamePh": "e.g., SmartConstruction",

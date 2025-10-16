@@ -2,6 +2,11 @@
   "common": {
     "switchLanguage": "切换语言",
     "languageChanged": "语言已切换",
+    "switchToDark": "切换到深色",
+    "switchToLight": "切换到浅色",
+    "search": "搜索",
+    "select": "选择",
+    "close": "关闭",
     "languageName": {
       "zh-CN": "简体中文",
       "en-US": "English"
@@ -9,16 +14,30 @@
   },
   "wizard": {
     "title": "模块向导",
-    "steps": ["新建", "架构", "建模", "特性", "生成"],
+    "steps": [
+      "新建",
+      "架构",
+      "建模",
+      "特性",
+      "生成"
+    ],
     "intro": "第一步：新建模块（填写基础信息后继续）",
-    "step1": { "title": "第一步：新建模块" },
-    "step2": { "title": "第二步：架构选型" },
+    "step1": {
+      "title": "第一步：新建模块"
+    },
+    "step2": {
+      "title": "第二步：架构选型"
+    },
     "step3": {
       "title": "第三步：领域建模",
       "alert": "请先完成实体建模，后续才能配置权限和生成代码。"
     },
-    "step4": { "title": "第四步：企业级特性" },
-    "step5": { "title": "第五步：预览与生成" },
+    "step4": {
+      "title": "第四步：企业级特性"
+    },
+    "step5": {
+      "title": "第五步：预览与生成"
+    },
     "form": {
       "systemName": "系统名称",
       "systemNamePh": "如: SmartConstruction",
@@ -130,7 +149,11 @@
     "namespace": "命名空间",
     "table": "表名",
     "schema": "Schema",
-    "features": { "aggregate": "聚合根", "tenant": "多租户", "softDelete": "软删除" },
+    "features": {
+      "aggregate": "聚合根",
+      "tenant": "多租户",
+      "softDelete": "软删除"
+    },
     "propertiesTab": "属性",
     "relationshipsTab": "关系",
     "propertyTypes": "属性类型",
@@ -182,7 +205,10 @@
       "propSaved": "属性保存成功"
     },
     "confirm": {
-      "clear": { "title": "确认清空", "message": "确定要清空设计器吗？" }
+      "clear": {
+        "title": "确认清空",
+        "message": "确定要清空设计器吗？"
+      }
     }
   },
   "theme": {

@@ -122,7 +122,7 @@ export interface Template {
 }
 
 export interface CodeGeneratorApi {
-  generateModule: (config: ModuleGenerationConfig) => Promise<GenerationResult>
+  generateModule: (config: ModuleGenerationConfig | ModuleMetadata) => Promise<GenerationResult>
   getTemplates: () => Promise<Template[]>
   getUiConfig: (moduleName: string, entityName: string) => Promise<any>
   introspectDatabase: (req: any) => Promise<any>

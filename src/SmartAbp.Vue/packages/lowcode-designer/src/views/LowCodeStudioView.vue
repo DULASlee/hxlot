@@ -4,112 +4,104 @@
     <div class="studio-header">
       <div class="header-left">
         <div class="logo">
-          <el-icon><MagicStick /></el-icon>
+          <el-icon>
+            <MagicStick />
+          </el-icon>
           <span class="logo-text">SmartAbp LowCode Studio</span>
         </div>
-        
+
         <el-divider direction="vertical" />
-        
+
         <div class="project-info">
           <span class="project-name">{{ designerStore.currentProject.name }}</span>
           <el-tag v-if="designerStore.isDirty" type="warning" size="small">未保存</el-tag>
         </div>
       </div>
-      
+
       <div class="header-center">
         <!-- 模式切换 -->
         <el-radio-group v-model="designerStore.designerMode" size="small">
           <el-radio-button value="design">
-            <el-icon><Edit /></el-icon>
+            <el-icon>
+              <Edit />
+            </el-icon>
             设计
           </el-radio-button>
           <el-radio-button value="preview">
-            <el-icon><View /></el-icon>
+            <el-icon>
+              <View />
+            </el-icon>
             预览
           </el-radio-button>
           <el-radio-button value="code">
-            <el-icon><Document /></el-icon>
+            <el-icon>
+              <Document />
+            </el-icon>
             代码
           </el-radio-button>
         </el-radio-group>
       </div>
-      
+
       <div class="header-right">
         <!-- 操作按钮 -->
         <el-button-group size="small">
-          <el-button
-            :disabled="!designerStore.canUndo"
-            :icon="RefreshLeft"
-            title="撤销 (Ctrl+Z)"
-            @click="designerStore.undo()"
-          />
-          <el-button
-            :disabled="!designerStore.canRedo"
-            :icon="RefreshRight"
-            title="重做 (Ctrl+Y)"
-            @click="designerStore.redo()"
-          />
+          <el-button :disabled="!designerStore.canUndo" :icon="RefreshLeft" title="撤销 (Ctrl+Z)"
+            @click="designerStore.undo()" />
+          <el-button :disabled="!designerStore.canRedo" :icon="RefreshRight" title="重做 (Ctrl+Y)"
+            @click="designerStore.redo()" />
         </el-button-group>
-        
+
         <el-divider direction="vertical" />
-        
+
         <el-button-group size="small">
-          <el-button
-            :icon="Grid"
-            :type="designerStore.gridSettings.enabled ? 'primary' : 'default'"
-            title="网格对齐"
-            @click="designerStore.toggleGrid()"
-          />
-          <el-button
-            :icon="ZoomIn"
-            title="放大"
-            @click="handleZoomIn"
-          />
-          <el-button
-            :icon="ZoomOut"
-            title="缩小"
-            @click="handleZoomOut"
-          />
-          <el-button
-            title="重置缩放"
-            @click="designerStore.resetZoom()"
-          >
+          <el-button :icon="Grid" :type="designerStore.gridSettings.enabled ? 'primary' : 'default'" title="网格对齐"
+            @click="designerStore.toggleGrid()" />
+          <el-button :icon="ZoomIn" title="放大" @click="handleZoomIn" />
+          <el-button :icon="ZoomOut" title="缩小" @click="handleZoomOut" />
+          <el-button title="重置缩放" @click="designerStore.resetZoom()">
             {{ designerStore.zoomLevel }}%
           </el-button>
         </el-button-group>
-        
+
         <el-divider direction="vertical" />
-        
-        <el-button
-          :loading="isSaving"
-          size="small"
-          type="primary"
-          @click="handleSave"
-        >
-          <el-icon><DocumentChecked /></el-icon>
+
+        <el-button :loading="isSaving" size="small" type="primary" @click="handleSave">
+          <el-icon>
+            <DocumentChecked />
+          </el-icon>
           保存
         </el-button>
-        
+
         <el-dropdown @command="handleMenuCommand">
           <el-button size="small">
-            <el-icon><More /></el-icon>
+            <el-icon>
+              <More />
+            </el-icon>
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item command="new">
-                <el-icon><Plus /></el-icon>
+                <el-icon>
+                  <Plus />
+                </el-icon>
                 新建项目
               </el-dropdown-item>
               <el-dropdown-item command="open">
-                <el-icon><FolderOpened /></el-icon>
+                <el-icon>
+                  <FolderOpened />
+                </el-icon>
                 打开项目
               </el-dropdown-item>
               <el-dropdown-item command="export">
-                <el-icon><Download /></el-icon>
+                <el-icon>
+                  <Download />
+                </el-icon>
                 导出
               </el-dropdown-item>
               <el-dropdown-item command="settings">
-                <el-icon><Setting /></el-icon>
+                <el-icon>
+                  <Setting />
+                </el-icon>
                 设置
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -117,29 +109,25 @@
         </el-dropdown>
       </div>
     </div>
-    
+
     <!-- 主工作区 -->
     <div class="studio-workspace">
       <!-- 左侧：组件面板 -->
       <div class="workspace-left">
         <el-tabs v-model="leftTabActive" class="sidebar-tabs">
           <el-tab-pane label="组件" name="components">
-            <LdVisualComponentPalette
-              @component-drag-start="handleComponentDragStart"
-              @component-drag-end="handleComponentDragEnd"
-            />
+            <LdVisualComponentPalette @component-drag-start="handleComponentDragStart"
+              @component-drag-end="handleComponentDragEnd" />
           </el-tab-pane>
           <el-tab-pane label="大纲" name="outline">
             <div class="outline-panel">
-              <el-tree
-                :data="componentTreeData"
-                :props="{ label: 'name', children: 'children' }"
-                node-key="id"
-                @node-click="handleTreeNodeClick"
-              >
+              <el-tree :data="componentTreeData" :props="{ label: 'name', children: 'children' }" node-key="id"
+                @node-click="handleTreeNodeClick">
                 <template #default="{ node, data }">
                   <span class="tree-node">
-                    <el-icon><Component /></el-icon>
+                    <el-icon>
+                      <Component />
+                    </el-icon>
                     {{ node.label }}
                   </span>
                 </template>
@@ -148,22 +136,18 @@
           </el-tab-pane>
         </el-tabs>
       </div>
-      
+
       <!-- 中间：设计画布 -->
       <div class="workspace-center">
         <div class="canvas-container">
-          <LdVisualDesignCanvas
-            v-if="designerStore.designerMode === 'design'"
-            :page-data="pageData"
-            @component-select="handleComponentSelect"
-            @component-update="handleComponentUpdate"
-            @component-delete="handleComponentDelete"
-          />
-          
+          <LdVisualDesignCanvas v-if="designerStore.designerMode === 'design'" :page-data="pageData"
+            @component-select="handleComponentSelect" @component-update="handleComponentUpdate"
+            @component-delete="handleComponentDelete" />
+
           <div v-else-if="designerStore.designerMode === 'preview'" class="preview-mode">
             <el-empty description="预览模式开发中..." />
           </div>
-          
+
           <div v-else class="code-mode">
             <el-tabs v-model="codeTabActive">
               <el-tab-pane label="Template" name="template">
@@ -178,34 +162,37 @@
             </el-tabs>
           </div>
         </div>
-        
+
         <!-- 状态栏 -->
         <div class="canvas-statusbar">
           <span class="status-item">
-            <el-icon><Box /></el-icon>
+            <el-icon>
+              <Box />
+            </el-icon>
             {{ designerStore.componentCount }} 个组件
           </span>
           <span class="status-item">
-            <el-icon><Position /></el-icon>
+            <el-icon>
+              <Position />
+            </el-icon>
             {{ selectedComponentPosition }}
           </span>
           <span class="status-item">
-            <el-icon><Clock /></el-icon>
+            <el-icon>
+              <Clock />
+            </el-icon>
             {{ currentTime }}
           </span>
         </div>
       </div>
-      
+
       <!-- 右侧：属性面板 -->
       <div class="workspace-right">
         <el-tabs v-model="rightTabActive" class="sidebar-tabs">
           <el-tab-pane label="属性" name="properties">
-            <LdComponentPropertyPanel
-              :selected-component="designerStore.selectedComponent"
-              @update:component="handlePropertyUpdate"
-              @delete:component="handlePropertyDelete"
-              @close="designerStore.clearSelection()"
-            />
+            <LdComponentPropertyPanel :selected-component="designerStore.selectedComponent"
+              @update:component="handlePropertyUpdate" @delete:component="handlePropertyDelete"
+              @close="designerStore.clearSelection()" />
           </el-tab-pane>
           <el-tab-pane label="样式" name="styles">
             <div class="styles-panel">
@@ -224,20 +211,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-  MagicStick, Edit, View, Document, RefreshLeft, RefreshRight,
-  Grid, ZoomIn, ZoomOut, DocumentChecked, More, Plus,
-  FolderOpened, Download, Setting, Component, Box, Position, Clock
+  Box,
+  Clock,
+  Grid as Component,
+  Document,
+  DocumentChecked,
+  Download,
+  Edit,
+  FolderOpened,
+  Grid,
+  MagicStick,
+  More, Plus,
+  Position,
+  RefreshLeft, RefreshRight,
+  Setting,
+  View,
+  ZoomIn, ZoomOut
 } from '@element-plus/icons-vue'
-import { useDesignerStore } from './stores/useDesignerStore'
-import {
-  LdVisualComponentPalette,
-  LdVisualDesignCanvas,
-  LdComponentPropertyPanel
-} from './components'
 import type { CanvasComponent } from '@smartabp/lowcode-designer/types'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import {
+  LdComponentPropertyPanel,
+  LdVisualComponentPalette,
+  LdVisualDesignCanvas
+} from '../components'
+import { useDesignerStore } from '../stores/useDesignerStore'
 
 // ==================== 状态管理 ====================
 
@@ -282,7 +282,7 @@ const generatedTemplate = computed(() => {
   if (designerStore.canvasComponents.length === 0) {
     return '<template>\n  <div class="page">\n    <!-- 暂无组件 -->\n  </div>\n</template>'
   }
-  
+
   let template = '<template>\n  <div class="page">\n'
   designerStore.canvasComponents.forEach(comp => {
     template += `    <${comp.type} :style="{ left: '${comp.style?.left}', top: '${comp.style?.top}' }">\n`
@@ -295,24 +295,30 @@ const generatedTemplate = computed(() => {
 
 // 生成的脚本代码
 const generatedScript = computed(() => {
-  return `<script setup lang="ts">
-import { ref } from 'vue'
-
-// 组件逻辑
-const data = ref({})
-</script>`
+  const lines = [
+    '<scr' + 'ipt setup lang="ts">',
+    "import { ref } from 'vue'",
+    '',
+    '// 组件逻辑',
+    'const data = ref({})',
+    '</scr' + 'ipt>'
+  ]
+  return lines.join('\n')
 })
 
 // 生成的样式代码
 const generatedStyle = computed(() => {
-  return `<style scoped lang="scss">
-.page {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-  background: #f5f5f5;
-}
-</style>`
+  const lines = [
+    '<style scoped lang="scss">',
+    '.page {',
+    '  position: relative;',
+    '  width: 100%;',
+    '  min-height: 100vh;',
+    '  background: #f5f5f5;',
+    '}',
+    '</style>'
+  ]
+  return lines.join('\n')
 })
 
 // ==================== 事件处理 ====================
@@ -416,19 +422,19 @@ const handleKeyDown = (e: KeyboardEvent) => {
     e.preventDefault()
     handleSave()
   }
-  
+
   // Ctrl+Z 撤销
   if (e.ctrlKey && e.key === 'z') {
     e.preventDefault()
     designerStore.undo()
   }
-  
+
   // Ctrl+Y 重做
   if (e.ctrlKey && e.key === 'y') {
     e.preventDefault()
     designerStore.redo()
   }
-  
+
   // Delete 删除选中组件
   if (e.key === 'Delete' && designerStore.selectedComponentId) {
     designerStore.deleteComponent(designerStore.selectedComponentId)
@@ -440,15 +446,15 @@ const handleKeyDown = (e: KeyboardEvent) => {
 onMounted(() => {
   // 初始化设计器
   designerStore.initialize()
-  
+
   // 监听快捷键
   window.addEventListener('keydown', handleKeyDown)
-  
+
   // 更新时间
   const timer = setInterval(() => {
     currentTime.value = new Date().toLocaleTimeString()
   }, 1000)
-  
+
   onUnmounted(() => {
     window.removeEventListener('keydown', handleKeyDown)
     clearInterval(timer)
@@ -474,7 +480,7 @@ onMounted(() => {
   background: #fff;
   border-bottom: 1px solid #e8e8e8;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  
+
   .header-left,
   .header-center,
   .header-right {
@@ -482,7 +488,7 @@ onMounted(() => {
     align-items: center;
     gap: 12px;
   }
-  
+
   .logo {
     display: flex;
     align-items: center;
@@ -490,19 +496,19 @@ onMounted(() => {
     font-size: 18px;
     font-weight: 600;
     color: #1890ff;
-    
+
     .logo-text {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
   }
-  
+
   .project-info {
     display: flex;
     align-items: center;
     gap: 8px;
-    
+
     .project-name {
       font-size: 14px;
       font-weight: 500;
@@ -524,12 +530,12 @@ onMounted(() => {
   border-right: 1px solid #e8e8e8;
   display: flex;
   flex-direction: column;
-  
+
   .sidebar-tabs {
     flex: 1;
     display: flex;
     flex-direction: column;
-    
+
     :deep(.el-tabs__content) {
       flex: 1;
       overflow: auto;
@@ -547,13 +553,13 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  
+
   .canvas-container {
     flex: 1;
     overflow: auto;
     background: #fafafa;
   }
-  
+
   .canvas-statusbar {
     display: flex;
     align-items: center;
@@ -564,7 +570,7 @@ onMounted(() => {
     border-top: 1px solid #e8e8e8;
     font-size: 12px;
     color: #666;
-    
+
     .status-item {
       display: flex;
       align-items: center;
@@ -600,7 +606,7 @@ onMounted(() => {
   font-size: 14px;
   line-height: 1.6;
   overflow: auto;
-  
+
   code {
     display: block;
     white-space: pre-wrap;
@@ -608,4 +614,3 @@ onMounted(() => {
   }
 }
 </style>
-
