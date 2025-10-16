@@ -61,7 +61,7 @@
     <div class="content-area" :style="{ height: contentHeight }">
       <!-- 日志视图 -->
       <div v-show="viewMode === 'logs'" class="view-panel">
-        <LogViewer :height="contentHeight" :auto-scroll="autoScroll" :show-controls="false" />
+        <LogViewer :height="contentHeightNumber" :auto-scroll="autoScroll" :show-controls="false" />
       </div>
 
       <!-- 性能视图 -->
@@ -205,6 +205,12 @@ const contentHeight = computed((): string => {
   const totalHeight = parseInt(String(props.height).replace("px", ""))
   const h = totalHeight - toolbarHeight
   return `${h}px`
+})
+
+const contentHeightNumber = computed((): number => {
+  const toolbarHeight = 60
+  const totalHeight = parseInt(String(props.height).replace("px", ""))
+  return totalHeight - toolbarHeight
 })
 
 const logStats = computed(() => logger.getStats())

@@ -3,39 +3,17 @@
     <!-- 顶部搜索栏 -->
     <div class="market-header">
       <div class="search-bar">
-        <el-input
-          v-model="searchKeyword"
-          :placeholder="t('template.searchPlaceholder')"
-          :prefix-icon="Search"
-          size="large"
-          clearable
-          @input="handleSearch"
-        />
+        <el-input v-model="searchKeyword" :placeholder="t('template.searchPlaceholder')" :prefix-icon="Search"
+          size="large" clearable @input="handleSearch" />
       </div>
 
       <div class="header-actions">
-        <el-select
-          v-model="selectedCategory"
-          :placeholder="t('template.allCategories')"
-          size="default"
-          clearable
-          style="width: 200px"
-          @change="handleCategoryChange"
-        >
-          <el-option
-            v-for="category in categories"
-            :key="category.id"
-            :label="category.name"
-            :value="category.id"
-          />
+        <el-select v-model="selectedCategory" :placeholder="t('template.allCategories')" size="default" clearable
+          style="width: 200px" @change="handleCategoryChange">
+          <el-option v-for="category in categories" :key="category.id" :label="category.name" :value="category.id" />
         </el-select>
 
-        <el-select
-          v-model="sortBy"
-          size="default"
-          style="width: 150px"
-          @change="handleSortChange"
-        >
+        <el-select v-model="sortBy" size="default" style="width: 150px" @change="handleSortChange">
           <el-option :label="t('template.sortByCreated')" value="createdAt" />
           <el-option :label="t('template.sortByUpdated')" value="updatedAt" />
           <el-option :label="t('template.sortByRating')" value="rating" />
@@ -44,19 +22,18 @@
 
         <el-radio-group v-model="sortOrder" size="default" @change="handleSortChange">
           <el-radio-button label="desc">
-            <el-icon><SortDown /></el-icon>
+            <el-icon>
+              <SortDown />
+            </el-icon>
           </el-radio-button>
           <el-radio-button label="asc">
-            <el-icon><SortUp /></el-icon>
+            <el-icon>
+              <SortUp />
+            </el-icon>
           </el-radio-button>
         </el-radio-group>
 
-        <el-button
-          type="primary"
-          :icon="Plus"
-          size="default"
-          @click="handleCreateTemplate"
-        >
+        <el-button type="primary" :icon="Plus" size="default" @click="handleCreateTemplate">
           {{ t('template.createTemplate') }}
         </el-button>
       </div>
@@ -64,36 +41,25 @@
 
     <!-- 标签筛选 -->
     <div v-if="allTags.length > 0" class="tag-filters">
-      <el-tag
-        v-for="tag in allTags"
-        :key="tag"
-        :type="selectedTags.includes(tag) ? 'primary' : 'info'"
-        :effect="selectedTags.includes(tag) ? 'dark' : 'plain'"
-        size="default"
-        style="margin-right: 8px; margin-bottom: 8px; cursor: pointer"
-        @click="toggleTag(tag)"
-      >
+      <el-tag v-for="tag in allTags" :key="tag" :type="selectedTags.includes(tag) ? 'primary' : 'info'"
+        :effect="selectedTags.includes(tag) ? 'dark' : 'plain'" size="default"
+        style="margin-right: 8px; margin-bottom: 8px; cursor: pointer" @click="toggleTag(tag)">
         {{ tag }}
       </el-tag>
     </div>
 
     <!-- 模板列表 -->
     <div v-loading="loading" class="template-grid">
-      <el-empty
-        v-if="!loading && filteredTemplates.length === 0"
-        :description="t('template.noTemplatesFound')"
-      />
+      <el-empty v-if="!loading && filteredTemplates.length === 0" :description="t('template.noTemplatesFound')" />
 
-      <div
-        v-for="template in filteredTemplates"
-        :key="template.id"
-        class="template-card"
-        @click="handleViewTemplate(template)"
-      >
+      <div v-for="template in filteredTemplates" :key="template.id" class="template-card"
+        @click="handleViewTemplate(template)">
         <!-- 模板头部 -->
         <div class="card-header">
           <div class="template-icon">
-            <el-icon size="32"><Document /></el-icon>
+            <el-icon size="32">
+              <Document />
+            </el-icon>
           </div>
           <div class="template-badges">
             <el-tag v-if="template.isBuiltIn" type="success" size="small">
@@ -113,29 +79,29 @@
           <!-- 元数据 -->
           <div class="template-meta">
             <div class="meta-item">
-              <el-icon><Star /></el-icon>
+              <el-icon>
+                <Star />
+              </el-icon>
               <span>{{ template.rating?.toFixed(1) || '0.0' }}</span>
               <span class="meta-count">({{ template.reviewCount || 0 }})</span>
             </div>
             <div class="meta-item">
-              <el-icon><Download /></el-icon>
+              <el-icon>
+                <Download />
+              </el-icon>
               <span>{{ formatNumber(template.usageCount || 0) }}</span>
             </div>
             <div class="meta-item">
-              <el-icon><Clock /></el-icon>
+              <el-icon>
+                <Clock />
+              </el-icon>
               <span>{{ formatDate(template.updatedAt) }}</span>
             </div>
           </div>
 
           <!-- 标签 -->
           <div v-if="template.tags && template.tags.length > 0" class="template-tags">
-            <el-tag
-              v-for="tag in template.tags.slice(0, 3)"
-              :key="tag"
-              type="info"
-              size="small"
-              effect="plain"
-            >
+            <el-tag v-for="tag in template.tags.slice(0, 3)" :key="tag" type="info" size="small" effect="plain">
               {{ tag }}
             </el-tag>
             <el-tag v-if="template.tags.length > 3" type="info" size="small" effect="plain">
@@ -146,20 +112,10 @@
 
         <!-- 操作按钮 -->
         <div class="card-footer">
-          <el-button
-            type="primary"
-            size="small"
-            :icon="View"
-            @click.stop="handlePreviewTemplate(template)"
-          >
+          <el-button type="primary" size="small" :icon="View" @click.stop="handlePreviewTemplate(template)">
             {{ t('template.preview') }}
           </el-button>
-          <el-button
-            type="success"
-            size="small"
-            :icon="Download"
-            @click.stop="handleInstallTemplate(template)"
-          >
+          <el-button type="success" size="small" :icon="Download" @click.stop="handleInstallTemplate(template)">
             {{ t('template.install') }}
           </el-button>
           <el-dropdown trigger="click" @command="(cmd: string) => handleCommand(cmd, template)">
@@ -175,26 +131,13 @@
                 <el-dropdown-item command="export" :icon="Upload">
                   {{ t('template.export') }}
                 </el-dropdown-item>
-                <el-dropdown-item
-                  v-if="!template.isPublic"
-                  command="publish"
-                  :icon="Share"
-                >
+                <el-dropdown-item v-if="!template.isPublic" command="publish" :icon="Share">
                   {{ t('template.publish') }}
                 </el-dropdown-item>
-                <el-dropdown-item
-                  v-if="template.isPublic"
-                  command="unpublish"
-                  :icon="Hide"
-                >
+                <el-dropdown-item v-if="template.isPublic" command="unpublish" :icon="Hide">
                   {{ t('template.unpublish') }}
                 </el-dropdown-item>
-                <el-dropdown-item
-                  command="delete"
-                  :icon="Delete"
-                  divided
-                  style="color: var(--el-color-danger)"
-                >
+                <el-dropdown-item command="delete" :icon="Delete" divided style="color: var(--el-color-danger)">
                   {{ t('template.delete') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -206,24 +149,13 @@
 
     <!-- 分页 -->
     <div v-if="filteredTemplates.length > 0" class="pagination">
-      <el-pagination
-        v-model:current-page="currentPage"
-        v-model:page-size="pageSize"
-        :page-sizes="[12, 24, 48, 96]"
-        :total="totalCount"
-        layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handlePageSizeChange"
-        @current-change="handleCurrentPageChange"
-      />
+      <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="[12, 24, 48, 96]"
+        :total="totalCount" layout="total, sizes, prev, pager, next, jumper" @size-change="handlePageSizeChange"
+        @current-change="handleCurrentPageChange" />
     </div>
 
     <!-- 预览对话框 -->
-    <el-dialog
-      v-model="previewDialogVisible"
-      :title="previewTemplate?.name"
-      width="80%"
-      :close-on-click-modal="false"
-    >
+    <el-dialog v-model="previewDialogVisible" :title="previewTemplate?.name" width="80%" :close-on-click-modal="false">
       <div v-if="previewTemplate" class="template-preview">
         <div class="preview-info">
           <el-descriptions :column="2" border>
@@ -237,12 +169,7 @@
               {{ previewTemplate.version }}
             </el-descriptions-item>
             <el-descriptions-item :label="t('template.rating')">
-              <el-rate
-                v-model="previewTemplate.rating"
-                disabled
-                show-score
-                text-color="#ff9900"
-              />
+              <el-rate v-model="previewTemplate.rating" disabled show-score text-color="#ff9900" />
             </el-descriptions-item>
             <el-descriptions-item :label="t('template.downloads')">
               {{ formatNumber(previewTemplate.usageCount || 0) }}
@@ -280,33 +207,21 @@
         <el-button @click="previewDialogVisible = false">
           {{ t('common.close') }}
         </el-button>
-        <el-button
-          type="success"
-          :icon="Download"
-          @click="handleInstallTemplate(previewTemplate!)"
-        >
+        <el-button type="success" :icon="Download" @click="handleInstallTemplate(previewTemplate!)">
           {{ t('template.install') }}
         </el-button>
       </template>
     </el-dialog>
 
     <!-- 评分对话框 -->
-    <el-dialog
-      v-model="ratingDialogVisible"
-      :title="t('template.rateTemplate')"
-      width="500px"
-    >
+    <el-dialog v-model="ratingDialogVisible" :title="t('template.rateTemplate')" width="500px">
       <el-form :model="ratingForm" label-width="80px">
         <el-form-item :label="t('template.rating')">
           <el-rate v-model="ratingForm.rating" show-text />
         </el-form-item>
         <el-form-item :label="t('template.review')">
-          <el-input
-            v-model="ratingForm.review"
-            type="textarea"
-            :rows="4"
-            :placeholder="t('template.reviewPlaceholder')"
-          />
+          <el-input v-model="ratingForm.review" type="textarea" :rows="4"
+            :placeholder="t('template.reviewPlaceholder')" />
         </el-form-item>
       </el-form>
 
@@ -314,11 +229,7 @@
         <el-button @click="ratingDialogVisible = false">
           {{ t('common.cancel') }}
         </el-button>
-        <el-button
-          type="primary"
-          :loading="rating"
-          @click="handleSubmitRating"
-        >
+        <el-button type="primary" :loading="rating" @click="handleSubmitRating">
           {{ t('common.submit') }}
         </el-button>
       </template>
@@ -327,31 +238,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import {
-  Search,
-  Plus,
-  View,
+  Clock,
+  CopyDocument,
+  Delete,
+  Document,
   Download,
   Edit,
-  Delete,
-  CopyDocument,
-  Upload,
-  Share,
   Hide,
   More,
-  Document,
-  Star,
-  Clock,
+  Plus,
+  Search,
+  Share,
+  SortDown,
   SortUp,
-  SortDown
+  Star,
+  Upload,
+  View
 } from '@element-plus/icons-vue'
-import { useI18n } from 'vue-i18n'
-import type { Template, TemplateCategory, TemplateMarketFilter } from '@smartabp/lowcode-shared'
-import { useTemplateStore } from '../../stores/template'
 import { templateApi } from '@smartabp/lowcode-api'
+import type { Template, TemplateMarketFilter } from '@smartabp/lowcode-shared'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { computed, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { useTemplateStore } from '../../stores/template'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Composables
@@ -867,4 +778,3 @@ onMounted(async () => {
   }
 }
 </style>
-
