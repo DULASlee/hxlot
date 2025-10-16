@@ -1,13 +1,13 @@
 <!--
   实体关系可视化设计器 v2.0
-  
+
   功能特性：
   - 实体关系可视化（基于VueFlow）
   - 拖拽创建关系
   - 关系类型配置（OneToOne、OneToMany、ManyToMany）
   - 自动布局
   - 导出关系配置
-  
+
   @author SmartAbp架构师团队
   @version 2.0.0
   @date 2025-10-16
@@ -21,13 +21,13 @@
         <el-button :icon="Connection" @click="handleAddRelationship">添加关系</el-button>
         <el-button :icon="Refresh" @click="handleAutoLayout">自动布局</el-button>
       </el-button-group>
-      
+
       <el-button-group>
         <el-button :icon="Download" @click="handleExport">导出配置</el-button>
         <el-button :icon="View" @click="handlePreview">预览代码</el-button>
       </el-button-group>
     </div>
-    
+
     <div class="designer-canvas">
       <div v-if="entities.length === 0" class="empty-state">
         <el-icon><Box /></el-icon>
@@ -36,7 +36,7 @@
           <el-icon><Plus /></el-icon> 添加实体
         </el-button>
       </div>
-      
+
       <div v-else class="canvas-content">
         <!-- 简化的关系图显示 -->
         <div v-for="entity in entities" :key="entity.id" class="entity-node">
@@ -127,12 +127,12 @@ const handlePreview = () => {
   justify-content: center;
   height: 100%;
   gap: 16px;
-  
+
   .el-icon {
     font-size: 64px;
     color: var(--el-text-color-placeholder);
   }
-  
+
   p {
     font-size: 16px;
     color: var(--el-text-color-secondary);

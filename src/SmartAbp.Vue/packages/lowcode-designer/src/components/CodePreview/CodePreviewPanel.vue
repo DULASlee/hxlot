@@ -1,6 +1,6 @@
 <!--
   代码预览面板组件 v2.0
-  
+
   功能特性：
   - 实时代码预览
   - Monaco Editor语法高亮
@@ -8,7 +8,7 @@
   - 复制和下载功能
   - 全屏模式
   - 主题切换（明暗主题）
-  
+
   @author SmartAbp架构师团队
   @version 2.0.0
   @date 2025-10-16
@@ -23,7 +23,7 @@
         <el-tag :type="languageTagType" size="small">{{ language.toUpperCase() }}</el-tag>
         <el-tag v-if="fileSize" type="info" size="small">{{ formatFileSize(fileSize) }}</el-tag>
       </div>
-      
+
       <div class="toolbar-right">
         <!-- 主题切换 -->
         <el-tooltip content="切换主题">
@@ -34,7 +34,7 @@
             @click="toggleTheme"
           />
         </el-tooltip>
-        
+
         <!-- 复制代码 -->
         <el-tooltip content="复制代码">
           <el-button
@@ -45,7 +45,7 @@
             @click="handleCopy"
           />
         </el-tooltip>
-        
+
         <!-- 下载代码 -->
         <el-tooltip content="下载文件">
           <el-button
@@ -55,7 +55,7 @@
             @click="handleDownload"
           />
         </el-tooltip>
-        
+
         <!-- 全屏 -->
         <el-tooltip :content="isFullscreen ? '退出全屏' : '全屏'">
           <el-button
@@ -67,14 +67,14 @@
         </el-tooltip>
       </div>
     </div>
-    
+
     <!-- Monaco Editor -->
     <div
       ref="editorContainer"
       class="editor-container"
       :class="{ 'fullscreen': isFullscreen }"
     />
-    
+
     <!-- 加载状态 -->
     <div v-if="loading" class="loading-overlay">
       <el-icon class="is-loading">
@@ -108,32 +108,32 @@ interface Props {
    * 代码内容
    */
   code: string
-  
+
   /**
    * 编程语言
    */
   language?: string
-  
+
   /**
    * 文件名
    */
   fileName?: string
-  
+
   /**
    * 是否只读
    */
   readonly?: boolean
-  
+
   /**
    * 是否显示行号
    */
   lineNumbers?: boolean
-  
+
   /**
    * 是否自动换行
    */
   wordWrap?: boolean
-  
+
   /**
    * 加载状态
    */
@@ -276,7 +276,7 @@ const handleDownload = () => {
     link.download = props.fileName
     link.click()
     window.URL.revokeObjectURL(url)
-    
+
     ElMessage.success('文件下载成功')
     emit('download-success', props.fileName)
   } catch (error) {
@@ -289,7 +289,7 @@ const handleDownload = () => {
  */
 const toggleFullscreen = () => {
   isFullscreen.value = !isFullscreen.value
-  
+
   if (isFullscreen.value) {
     document.body.style.overflow = 'hidden'
   } else {
@@ -345,7 +345,7 @@ onBeforeUnmount(() => {
     editorInstance.dispose()
     editorInstance = null
   }
-  
+
   // 恢复body样式
   if (isFullscreen.value) {
     document.body.style.overflow = ''
@@ -395,7 +395,7 @@ onBeforeUnmount(() => {
   flex: 1;
   min-height: 300px;
   position: relative;
-  
+
   &.fullscreen {
     position: fixed;
     top: 0;
@@ -420,12 +420,12 @@ onBeforeUnmount(() => {
   gap: 12px;
   background: rgba(255, 255, 255, 0.9);
   z-index: 10;
-  
+
   .el-icon {
     font-size: 32px;
     color: var(--el-color-primary);
   }
-  
+
   span {
     font-size: 14px;
     color: var(--el-text-color-secondary);

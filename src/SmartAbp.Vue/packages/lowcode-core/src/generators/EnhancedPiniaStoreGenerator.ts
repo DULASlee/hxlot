@@ -17,7 +17,7 @@
  * @date 2025-10-16
  */
 
-import type { UnifiedEntityDefinition, UnifiedEntityField } from '@smartabp/lowcode-shared'
+import type { UnifiedEntityDefinition } from '@smartabp/lowcode-shared'
 
 /**
  * Pinia Store生成器配置
@@ -290,20 +290,20 @@ export const use${entityName}Store = defineStore('${entityNameLower}', () => {
 
       const result = await ${entityNameLower}Api.create(input)${this.config.generateOptimisticUpdate ? `
       tempResult = result
-      
+
       // 乐观更新：立即添加到列表
       items.value = [result, ...items.value]
       totalCount.value += 1` : ''}
-      
+
       updateCache(result.id, result)${this.config.generatePersistence ? `
-      
+
       // 持久化
       savePersistence({ items: items.value, totalCount: totalCount.value })` : ''}
-      
+
       return result
     } catch (err) {
       error.value = err instanceof Error ? err.message : '创建失败'${this.config.generateOptimisticUpdate ? `
-      
+
       // 回滚乐观更新
       if (tempResult) {
         items.value = items.value.filter(item => item.id !== tempResult!.id)

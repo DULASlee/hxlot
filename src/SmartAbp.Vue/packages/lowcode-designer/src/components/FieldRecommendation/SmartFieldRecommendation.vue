@@ -1,12 +1,12 @@
 <!--
   智能字段推荐组件 v2.0
-  
+
   功能特性：
   - 基于实体名称推荐常用字段
   - 基于行业模板推荐
   - 字段类型智能匹配
   - 一键批量添加
-  
+
   @author SmartAbp架构师团队
   @version 2.0.0
   @date 2025-10-16
@@ -20,12 +20,12 @@
         <el-icon><Refresh /></el-icon> 刷新推荐
       </el-button>
     </div>
-    
+
     <div v-if="recommendations.length === 0" class="empty-state">
       <el-icon><MagicStick /></el-icon>
       <p>暂无推荐字段</p>
     </div>
-    
+
     <div v-else class="recommendations-list">
       <el-checkbox-group v-model="selectedFields">
         <div v-for="field in recommendations" :key="field.name" class="recommendation-item">
@@ -43,7 +43,7 @@
         </div>
       </el-checkbox-group>
     </div>
-    
+
     <div v-if="recommendations.length > 0" class="recommendation-footer">
       <el-button type="primary" :disabled="selectedFields.length === 0" @click="handleAddSelected">
         添加选中字段 ({{ selectedFields.length }})
@@ -112,14 +112,14 @@ const fieldDatabase: Record<string, FieldRecommendation[]> = {
 
 const recommendations = computed(() => {
   const entityNameLower = props.entityName.toLowerCase()
-  
+
   // 匹配实体名称
   for (const [key, fields] of Object.entries(fieldDatabase)) {
     if (entityNameLower.includes(key)) {
       return fields
     }
   }
-  
+
   // 返回通用字段
   return [
     { name: 'name', type: 'string', description: '名称', required: true },
@@ -177,7 +177,7 @@ watch(() => props.entityName, () => {
   align-items: center;
   padding: 12px 16px;
   border-bottom: 1px solid var(--el-border-color);
-  
+
   h4 {
     margin: 0;
     font-size: 14px;
@@ -192,12 +192,12 @@ watch(() => props.entityName, () => {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  
+
   .el-icon {
     font-size: 48px;
     color: var(--el-text-color-placeholder);
   }
-  
+
   p {
     color: var(--el-text-color-secondary);
   }
@@ -212,7 +212,7 @@ watch(() => props.entityName, () => {
 .recommendation-item {
   padding: 8px 0;
   border-bottom: 1px solid var(--el-border-color-lighter);
-  
+
   &:last-child {
     border-bottom: none;
   }

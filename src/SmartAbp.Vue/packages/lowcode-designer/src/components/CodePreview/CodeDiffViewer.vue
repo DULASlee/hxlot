@@ -1,6 +1,6 @@
 <!--
   代码对比查看器组件 v2.0
-  
+
   功能特性：
   - Monaco Editor双栏对比
   - 语法高亮
@@ -8,7 +8,7 @@
   - 内联差异和并排差异
   - 滚动同步
   - 导航到差异
-  
+
   @author SmartAbp架构师团队
   @version 2.0.0
   @date 2025-10-16
@@ -25,14 +25,14 @@
           <el-tag type="success" size="small">当前版本</el-tag>
         </span>
       </div>
-      
+
       <div class="toolbar-right">
         <!-- 视图模式切换 -->
         <el-radio-group v-model="viewMode" size="small" @change="updateViewMode">
           <el-radio-button value="inline">内联</el-radio-button>
           <el-radio-button value="sidebyside">并排</el-radio-button>
         </el-radio-group>
-        
+
         <!-- 差异导航 -->
         <el-button
           :icon="ArrowUp"
@@ -43,11 +43,11 @@
         >
           上一个
         </el-button>
-        
+
         <span class="diff-counter">
           {{ currentDiffIndex + 1 }} / {{ diffCount }}
         </span>
-        
+
         <el-button
           :icon="ArrowDown"
           size="small"
@@ -57,7 +57,7 @@
         >
           下一个
         </el-button>
-        
+
         <!-- 主题切换 -->
         <el-tooltip content="切换主题">
           <el-button
@@ -69,10 +69,10 @@
         </el-tooltip>
       </div>
     </div>
-    
+
     <!-- Monaco Diff Editor -->
     <div ref="diffEditorContainer" class="diff-editor-container" />
-    
+
     <!-- 加载状态 -->
     <div v-if="loading" class="loading-overlay">
       <el-icon class="is-loading">
@@ -80,7 +80,7 @@
       </el-icon>
       <span>正在对比代码...</span>
     </div>
-    
+
     <!-- 无差异提示 -->
     <div v-if="!loading && diffCount === 0" class="no-diff-message">
       <el-icon><CircleCheck /></el-icon>
@@ -111,22 +111,22 @@ interface Props {
    * 原始代码
    */
   originalCode: string
-  
+
   /**
    * 修改后的代码
    */
   modifiedCode: string
-  
+
   /**
    * 编程语言
    */
   language?: string
-  
+
   /**
    * 是否只读
    */
   readonly?: boolean
-  
+
   /**
    * 加载状态
    */
@@ -273,12 +273,12 @@ const revealDiff = (index: number) => {
 
   const change = changes[index]
   if (!change) return
-  
+
   const modifiedEditor = diffEditorInstance.getModifiedEditor()
-  
+
   // 滚动到差异位置
   modifiedEditor.revealLineInCenter(change.modifiedStartLineNumber || 1)
-  
+
   // 设置选区
   modifiedEditor.setSelection({
     startLineNumber: change.modifiedStartLineNumber || 1,
@@ -299,12 +299,12 @@ watch([() => props.originalCode, () => props.modifiedCode], () => {
   if (diffEditorInstance) {
     const originalModel = monaco.editor.createModel(props.originalCode, props.language)
     const modifiedModel = monaco.editor.createModel(props.modifiedCode, props.language)
-    
+
     diffEditorInstance.setModel({
       original: originalModel,
       modified: modifiedModel
     })
-    
+
     updateDiffCount()
     currentDiffIndex.value = 0
   }
@@ -402,12 +402,12 @@ onBeforeUnmount(() => {
   gap: 12px;
   background: rgba(255, 255, 255, 0.9);
   z-index: 10;
-  
+
   .el-icon {
     font-size: 32px;
     color: var(--el-color-primary);
   }
-  
+
   span {
     font-size: 14px;
     color: var(--el-text-color-secondary);
@@ -423,12 +423,12 @@ onBeforeUnmount(() => {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  
+
   .el-icon {
     font-size: 48px;
     color: var(--el-color-success);
   }
-  
+
   span {
     font-size: 16px;
     color: var(--el-text-color-secondary);
