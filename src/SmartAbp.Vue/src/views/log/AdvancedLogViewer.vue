@@ -200,11 +200,11 @@ const autoScroll = ref(true)
 const searchQuery = ref("")
 
 // 计算属性
-const contentHeight = computed((): number => {
+const contentHeight = computed((): string => {
   const toolbarHeight = 60
   const totalHeight = parseInt(String(props.height).replace("px", ""))
   const h = totalHeight - toolbarHeight
-  return h
+  return `${h}px`
 })
 
 const logStats = computed(() => logger.getStats())
