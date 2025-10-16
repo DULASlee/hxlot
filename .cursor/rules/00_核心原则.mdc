@@ -48,13 +48,26 @@ Git提交必须由用户主动触发或明确授权
 
 ## 🏛️ 架构三大铁律（优先级-2，格杀勿论）
 
-### 第五条 统一类型系统
+### 第五条 统一类型系统（SSOT）
 
 ```yaml
-所有类型在 @smartabp/lowcode-shared/types 或 @smartabp/metadata-core 定义
-必须使用 @smartabp/* 别名（别名已包含src/，不再写/src/）
-  ✅ 正确：@smartabp/lowcode-core/types/...
-  ❌ 错误：@smartabp/lowcode-core/src/types/...
+⭐ v20.0更新（2025-10-16）：
+  - metadata-core已废弃 ❌
+  - lowcode-shared为唯一真实来源（SSOT）✅
+
+所有类型必须在 @smartabp/lowcode-shared 定义：
+  - 统一Schema: unified-schema.ts
+  - 枚举定义: enums.ts（25个枚举）⭐NEW⭐
+  - 验证系统: validation/
+  - 版本管理: version/
+  - 国际化错误消息: error-messages.ts ⭐NEW⭐
+
+必须使用 @smartabp/* 别名（别名已包含src/，不再写/src/）:
+  ✅ 正确：import { DatabaseType } from '@smartabp/lowcode-shared'
+  ✅ 正确：import { UnifiedEntityDefinition } from '@smartabp/lowcode-shared'
+  ❌ 错误：import { ... } from '@smartabp/lowcode-shared/src/types/...'
+  ❌ 错误：import { ... } from '@smartabp/metadata-core'（已废弃）
+
 补充（已实施）：核心业务规则类型（RuleNodeData 等）统一由 `@smartabp/lowcode-core` 根导出，设计器节点等禁止跨包使用 `/src` 路径。
 ```
 
@@ -69,12 +82,28 @@ Git提交必须由用户主动触发或明确授权
 ### 第七条 架构层级依赖
 
 ```yaml
-只能向下依赖（Designer→Core→Shared→Metadata）
-严禁逆向依赖、循环依赖
-必须使用 @smartabp/* 别名进行包间通信
+⭐ v20.0更新（2025-10-16）：
+  - metadata-core已从依赖链中移除 ❌
+  - lowcode-shared为Layer 0（最底层）✅
+
+依赖层级（只能向下依赖）:
+  Layer 2: lowcode-designer（设计器）
+  Layer 1: lowcode-core, lowcode-api, lowcode-tools（核心/API/工具）
+  Layer 0: lowcode-shared（共享层，SSOT）✅
+
+严禁:
+  ❌ 逆向依赖（shared依赖core）
+  ❌ 循环依赖（A→B→A）
+  ❌ 相对路径跨包引用（'../'）
+  ❌ @别名在packages中使用（@/）
+  ❌ 引用metadata-core（已废弃）
+
+必须使用 @smartabp/* 别名进行包间通信:
+  ✅ 正确：import { DatabaseType } from '@smartabp/lowcode-shared'
   ✅ 正确：import { xxx } from '@smartabp/lowcode-core/components/...'
   ❌ 错误：import { xxx } from '@smartabp/lowcode-core/src/components/...'
   ❌ 错误：import { xxx } from '../../packages/lowcode-core/src/...'
+  
 补充（已实施）：`@smartabp/lowcode-designer`、`@smartabp/lowcode-core` 在 tsconfig 与 Vite 中统一指向包根与 src 目录的顶层别名；禁止任何 `packages/**` 相对路径跨包导入。
 ```
 
