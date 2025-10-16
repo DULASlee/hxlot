@@ -17,10 +17,44 @@ export { AspireGenerator } from './AspireGenerator'
 export type {
   AspireConfiguration,
   AspireGenerationResult,
-  AspireServiceDefinition,
+  AspireServiceDefinition
 } from './AspireGenerator'
 
 export { BusinessRuleCodeGenerator } from './BusinessRuleCodeGenerator'
 export { RelationshipUIGenerator } from './RelationshipUIGenerator'
 export { WorkflowCodeGenerator } from './WorkflowCodeGenerator'
+
+// 🚀 增强型Entity生成器 v2.0
+export { EnhancedEntityGenerator } from './EnhancedEntityGenerator'
+export type {
+  EntityGenerationConfig,
+  GeneratedEntityCode
+} from './EnhancedEntityGenerator'
+
+// 🚀 增强型AppService生成器 v2.0
+export { EnhancedAppServiceGenerator } from './EnhancedAppServiceGenerator'
+export type {
+  AppServiceGenerationConfig,
+  GeneratedAppServiceCode
+} from './EnhancedAppServiceGenerator'
+
+// 🚀 增强型Vue组件生成器 v2.0
+export { EnhancedVueComponentGenerator } from './EnhancedVueComponentGenerator'
+export type {
+  GeneratedVueComponentCode, VueComponentGenerationConfig
+} from './EnhancedVueComponentGenerator'
+
+// 🚀 增强型Pinia Store生成器 v2.0
+export { EnhancedPiniaStoreGenerator } from './EnhancedPiniaStoreGenerator'
+export type {
+  GeneratedPiniaStoreCode,
+  PiniaStoreGenerationConfig
+} from './EnhancedPiniaStoreGenerator'
+
+// 🚀 增强型API Client生成器 v2.0
+export { EnhancedApiClientGenerator } from './EnhancedApiClientGenerator'
+export type {
+  ApiClientGenerationConfig,
+  GeneratedApiClientCode
+} from './EnhancedApiClientGenerator'
 

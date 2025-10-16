@@ -4,10 +4,17 @@ import {
   getGlobalLogger,
   validateEntityMetadata,
   type EntityMetadata,
-  type ILogger
+  type ILogger,
+  type UnifiedEntityDefinition
 } from "@smartabp/lowcode-shared";
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import {
+  EnhancedAppServiceGenerator,
+  EnhancedEntityGenerator,
+  type AppServiceGenerationConfig,
+  type EntityGenerationConfig
+} from '../generators';
 
 const logger: ILogger = getGlobalLogger();
 
@@ -82,6 +89,12 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
   const error = ref<string | null>(null);
   const generatedFiles = ref<Array<{ path: string; content: string; type: string; size: number; }>>([]);
   const lastGenerationStatus = ref<'pending' | 'success' | 'error'>('pending');
+
+  // 🚀 Enhanced Entity Generator Instance
+  let enhancedEntityGenerator: EnhancedEntityGenerator | null = null;
+
+  // 🚀 Enhanced AppService Generator Instance
+  let enhancedAppServiceGenerator: EnhancedAppServiceGenerator | null = null;
 
   // 代码生成主方法
   const generateCode = async (
@@ -481,18 +494,72 @@ export const useCodeGenerationStore = defineStore("codeGeneration", () => {
     }
   };
 
-  // 代码模板生成函数
-  const generateEntityClass = (entity: any, config: CodeGenerationConfig): string => {
-    const fields = entity.fields.map((field: any) => {
-      const type = field.type === "Guid" ? "Guid" :
-        field.type === "bool" ? "bool" :
-          field.type === "DateTime" ? "DateTime" :
-            field.type === "int" ? "int" : "string";
-      const nullable = !field.isRequired && type !== "Guid" ? "?" : "";
-      return `        public ${type}${nullable} ${field.name} { get; set; }`;
-    }).join('\n');
+  // 🚀 初始化增强型Entity生成器
+  const initializeEntityGenerator = (config: CodeGenerationConfig): EnhancedEntityGenerator => {
+    if (!enhancedEntityGenerator) {
+      const generatorConfig: EntityGenerationConfig = {
+        projectName: config.config.projectName,
+        namespace: config.config.namespace,
+        generateComments: config.advanced.generateComments,
+        generateValidation: true,
+        generateNavigationProperties: true,
+        generateEntityConfiguration: true
+      };
 
-    return `using System;
+      enhancedEntityGenerator = new EnhancedEntityGenerator(generatorConfig);
+      logger.info('🚀 增强型Entity生成器已初始化', generatorConfig);
+    }
+    return enhancedEntityGenerator;
+  };
+
+  // 🚀 初始化增强型AppService生成器
+  const initializeAppServiceGenerator = (config: CodeGenerationConfig): EnhancedAppServiceGenerator => {
+    if (!enhancedAppServiceGenerator) {
+      const generatorConfig: AppServiceGenerationConfig = {
+        projectName: config.config.projectName,
+        namespace: config.config.namespace,
+        generateComments: config.advanced.generateComments,
+        generateBatchOperations: true,
+        generateCaching: false, // 可配置
+        generateDomainEvents: false, // 可配置
+        generateAdvancedQueries: true
+      };
+
+      enhancedAppServiceGenerator = new EnhancedAppServiceGenerator(generatorConfig);
+      logger.info('🚀 增强型AppService生成器已初始化', generatorConfig);
+    }
+    return enhancedAppServiceGenerator;
+  };
+
+  // 代码模板生成函数 - 使用增强型生成器
+  const generateEntityClass = (entity: any, config: CodeGenerationConfig): string => {
+    try {
+      // 初始化生成器
+      const generator = initializeEntityGenerator(config);
+
+      // 转换entity为UnifiedEntityDefinition
+      // 注意：这里假设entity已经是UnifiedEntityDefinition或兼容格式
+      const entityDef = entity as UnifiedEntityDefinition;
+
+      // 使用增强型生成器
+      const result = generator.generateEntity(entityDef, [entityDef]);
+
+      // 返回生成的Entity代码
+      return result.entityCode;
+    } catch (err) {
+      // 回退到原始实现（向后兼容）
+      logger.warn('🟡 增强型生成器失败，回退到原始实现', { error: err });
+
+      const fields = entity.fields.map((field: any) => {
+        const type = field.type === "Guid" ? "Guid" :
+          field.type === "bool" ? "bool" :
+            field.type === "DateTime" ? "DateTime" :
+              field.type === "int" ? "int" : "string";
+        const nullable = !field.isRequired && type !== "Guid" ? "?" : "";
+        return `        public ${type}${nullable} ${field.name} { get; set; }`;
+      }).join('\n');
+
+      return `using System;
 using Volo.Abp.Domain.Entities.Auditing;
 
 namespace ${config.config.namespace}.${entity.name}s
@@ -510,6 +577,7 @@ ${fields}
         }
     }
 }`;
+    }
   };
 
   const generateDtoClass = (entity: any, config: CodeGenerationConfig): string => {
@@ -535,7 +603,23 @@ ${fields}
   };
 
   const generateAppService = (entity: any, config: CodeGenerationConfig): string => {
-    return `using System;
+    try {
+      // 初始化生成器
+      const generator = initializeAppServiceGenerator(config);
+
+      // 转换entity为UnifiedEntityDefinition
+      const entityDef = entity as UnifiedEntityDefinition;
+
+      // 使用增强型生成器
+      const result = generator.generateAppService(entityDef, [entityDef]);
+
+      // 返回生成的AppService代码
+      return result.appServiceCode;
+    } catch (err) {
+      // 回退到原始实现（向后兼容）
+      logger.warn('🟡 增强型AppService生成器失败，回退到原始实现', { error: err });
+
+      return `using System;
 using ${config.config.namespace}.Permissions;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
@@ -555,6 +639,7 @@ namespace ${config.config.namespace}.${entity.name}s
         }
     }
 }`;
+    }
   };
 
   const generateController = (entity: any, config: CodeGenerationConfig): string => {

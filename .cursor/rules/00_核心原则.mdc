@@ -103,7 +103,7 @@ Git提交必须由用户主动触发或明确授权
   ✅ 正确：import { xxx } from '@smartabp/lowcode-core/components/...'
   ❌ 错误：import { xxx } from '@smartabp/lowcode-core/src/components/...'
   ❌ 错误：import { xxx } from '../../packages/lowcode-core/src/...'
-  
+
 补充（已实施）：`@smartabp/lowcode-designer`、`@smartabp/lowcode-core` 在 tsconfig 与 Vite 中统一指向包根与 src 目录的顶层别名；禁止任何 `packages/**` 相对路径跨包导入。
 ```
 
