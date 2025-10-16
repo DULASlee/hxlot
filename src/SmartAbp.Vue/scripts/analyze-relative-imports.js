@@ -176,8 +176,8 @@ function provideFixGuidance() {
     },
     {
       wrong: "import type { EntityMetadata } from '../metadata-core/types'",
-      right: "import type { EntityMetadata } from '@smartabp/metadata-core'",
-      note: '✅ 跨package使用别名'
+      right: "import type { EntityMetadata } from '@smartabp/lowcode-shared'",
+      note: '✅ 跨package使用别名（metadata-core已废弃，使用lowcode-shared）'
     },
     {
       wrong: "import { validator } from '../../utils/validator'",

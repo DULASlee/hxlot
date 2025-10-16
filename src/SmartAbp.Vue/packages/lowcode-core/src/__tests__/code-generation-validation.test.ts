@@ -1,10 +1,10 @@
 /**
  * 代码生成验证集成测试
  * 
- * 验证metadata-core集成到lowcode-core代码生成流程的功能
+ * 验证lowcode-shared集成到lowcode-core代码生成流程的功能
  */
 
-import type { EntityMetadata } from '@smartabp/metadata-core'
+import type { EntityMetadata } from '@smartabp/lowcode-shared'
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useCodeGenerationStore } from './stores/codeGeneration'

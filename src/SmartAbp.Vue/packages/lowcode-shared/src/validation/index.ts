@@ -21,18 +21,25 @@ export {
 } from './unified-validator'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🔥 直接从 @smartabp/metadata-core 导出版本管理和差异对比功能
+// 🔥 版本管理功能（已从metadata-core迁移至lowcode-shared）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export {
   CURRENT_SCHEMA_VERSION, checkEntityCompatibility,
-  checkModuleCompatibility, compareVersions, diffEntitySchema, filterDiffByPath, generateChangelog,
-  generateDiffSummary, findUpgradePath as getUpgradePath,
+  checkModuleCompatibility, compareVersions, findUpgradePath as getUpgradePath,
   isCompatibleVersion as isCompatible,
   parseVersion, type BreakingChange, type CompatibilityResult, type CompatibilityWarning as CompatibilityWarningType,
-  type DiffOperation, type DiffSummary, type FieldDiff,
-  type SchemaDiff, type SemanticVersion,
+  type SemanticVersion,
   type VersionComparison
-} from '@smartabp/metadata-core'
+} from '../version/version-manager'
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🔥 Schema差异对比功能（已从metadata-core迁移至lowcode-shared）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export {
+  diffEntitySchema, filterDiffByPath, generateChangelog,
+  generateDiffSummary, type DiffOperation, type DiffSummary, type FieldDiff,
+  type SchemaDiff
+} from '../version/schema-diff'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔧 元数据适配器

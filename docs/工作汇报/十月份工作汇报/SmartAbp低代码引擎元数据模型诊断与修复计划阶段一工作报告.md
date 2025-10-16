@@ -1,9 +1,9 @@
 # SmartAbp低代码引擎元数据模型诊断与修复计划阶段一工作报告
 
-**报告日期**: 2025年10月16日  
-**项目名称**: SmartAbp企业级低代码引擎  
-**报告类型**: 阶段一完成报告  
-**负责人**: AI架构师团队  
+**报告日期**: 2025年10月16日
+**项目名称**: SmartAbp企业级低代码引擎
+**报告类型**: 阶段一完成报告
+**负责人**: AI架构师团队
 
 ---
 
@@ -42,7 +42,7 @@
   - 22个TypeScript编译错误
   - Zod v4类型系统与strict模式不兼容
   - 6个错误集中在error-map.ts
-  
+
 问题3: 架构违规
   - 主应用定义了底层类型（违反分层原则）
   - packages间存在相对路径引用
@@ -59,7 +59,7 @@
   ✗ lowcode-designer/views (类型混乱)
   ✗ 主应用工具类 (16个TS错误)
   ✗ 全栈代码生成器 (元数据不一致)
-  
+
 业务影响:
   ✗ 代码生成器无法可靠工作
   ✗ 类型推断失败，IDE体验差
@@ -78,7 +78,7 @@
   1. 初期：metadata-core作为元数据定义核心
   2. 中期：引入lowcode-shared统一类型
   3. 当前：两套系统并存，未完成迁移
-  
+
 导致后果:
   - 新旧类型系统冲突
   - 依赖关系混乱
@@ -92,7 +92,7 @@ Zod v4变更:
   - ErrorMap签名变更（双参数→单参数）
   - ZodIssueCode不再导出
   - 与TypeScript strict模式兼容性问题
-  
+
 项目配置:
   - tsconfig.json: noImplicitAny: true
   - metadata-core: skipLibCheck: true (能通过)
@@ -166,11 +166,11 @@ export class SemanticVersion {
     public minor: number,
     public patch: number
   ) {}
-  
+
   toString(): string {
     return `${this.major}.${this.minor}.${this.patch}`
   }
-  
+
   isCompatibleWith(other: SemanticVersion): boolean {
     return this.major === other.major
   }
@@ -220,7 +220,7 @@ export function isUnifiedEntityDefinition(value: unknown): value is UnifiedEntit
   ✅ 验证逻辑与metadata-core完全一致
   ✅ 类型适配器双向转换无损
   ✅ 16个文件成功更新引用
-  
+
 统计数据:
   - 新增文件: 6个
   - 修改文件: 16个
@@ -257,7 +257,7 @@ type ZodErrorMap = (
   - ErrorMapCtx类型签名变更
   - noImplicitAny: true 要求显式类型
   - 直接使用Zod类型会触发编译错误
-  
+
 错误表现:
   error TS7006: Parameter 'issue' implicitly has an 'any' type
   error TS7006: Parameter 'ctx' implicitly has an 'any' type
@@ -315,19 +315,19 @@ export function makeZodErrorMap(
       path: (issue as Record<string, unknown>).path as PropertyKey[] | undefined,
       message: (issue as Record<string, unknown>).message as string | undefined
     }
-    
+
     const extractedCtx: MinimalCtx = {
       defaultError: String((issue as Record<string, unknown>).message ?? 'Validation error')
     }
-    
+
     // 使用类型守卫保证安全
     if (isMinimalIssue(extractedIssue) && isMinimalCtx(extractedCtx)) {
       return safeMap(extractedIssue, extractedCtx)
     }
-    
+
     return { message: extractedCtx.defaultError }
   }
-  
+
   return compat
 }
 ```
@@ -342,7 +342,7 @@ export const entityErrorMap = makeZodErrorMap((issue, ctx) => {
   // 完全类型安全的错误映射逻辑
   if (issue.code === 'invalid_type' && issue.received === 'undefined') {
     const last = issue.path?.[issue.path.length - 1]
-    
+
     const fieldMessages: Record<string, string> = {
       name: '实体名称不能为空',
       module: '模块名称不能为空',
@@ -350,15 +350,15 @@ export const entityErrorMap = makeZodErrorMap((issue, ctx) => {
       tableName: '表名不能为空',
       namespace: '命名空间不能为空'
     }
-    
+
     if (typeof last === 'string' && last in fieldMessages) {
       const msg = fieldMessages[last]
       return { message: msg !== undefined ? msg : `${last}不能为空` }
     }
-    
+
     return { message: `${String(last ?? 'field')}不能为空` }
   }
-  
+
   return { message: ctx.defaultError }
 })
 ```
@@ -370,17 +370,17 @@ export const entityErrorMap = makeZodErrorMap((issue, ctx) => {
   - 不依赖Zod的不稳定导出
   - 只定义运行时真正需要的字段
   - 使用string代替ZodIssueCode枚举
-  
+
 创新2: 类型守卫保护
   - 运行时类型检查
   - 避免any类型污染
   - 提供类型窄化能力
-  
+
 创新3: 结构兼容性
   - 不使用类型断言（as any）
   - 不使用双重断言（unknown as T）
   - 完全通过结构类型兼容
-  
+
 创新4: 适配器模式
   - 将复杂的Zod v4适配封装
   - 暴露简单易用的API
@@ -395,7 +395,7 @@ export const entityErrorMap = makeZodErrorMap((issue, ctx) => {
   ✅ 第八条铁律: 100%符合（无any、无unknown as、无@ts-ignore）
   ✅ Zod v4兼容性: 完美适配
   ✅ 类型安全: 100%
-  
+
 架构合规性:
   ✅ grep -r "as any" packages/lowcode-shared/ → 0结果
   ✅ grep -r "@ts-ignore" packages/lowcode-shared/ → 0结果
@@ -445,11 +445,11 @@ export function diffEntitySchema(
   const normalizedOld = isEntityMetadata(oldSchema)
     ? convertMetadataCoreToUnified(oldSchema)
     : oldSchema
-  
+
   const normalizedNew = isEntityMetadata(newSchema)
     ? convertMetadataCoreToUnified(newSchema)
     : newSchema
-  
+
   return diffEntitySchemaInternal(normalizedOld, normalizedNew)
 }
 ```
@@ -462,9 +462,9 @@ export function diffEntitySchema(
 export function convertMetadataCoreToUnified(
   entity: EntityMetadata
 ): UnifiedEntityDefinition {
-  const generateId = (prefix: string, name: string) => 
+  const generateId = (prefix: string, name: string) =>
     `${prefix}_${name}_${Date.now()}`
-  
+
   // 完整的类型映射（使用务实方案确保兼容）
   const result: Partial<UnifiedEntityDefinition> = {
     name: entity.name,
@@ -473,7 +473,7 @@ export function convertMetadataCoreToUnified(
     namespace: `${entity.module}.Entities`,
     displayName: entity.name,
     description: entity.description || '',
-    
+
     // 字段转换（补充所有必需字段）
     fields: entity.properties.map((prop, index) => ({
       id: generateId('field', prop.name),
@@ -489,10 +489,10 @@ export function convertMetadataCoreToUnified(
       formVisible: true,
       searchable: !prop.isReadOnly
     })) as any,
-    
+
     // UI配置、关系、代码生成配置...
   }
-  
+
   return result as UnifiedEntityDefinition
 }
 
@@ -659,13 +659,13 @@ export interface ErrorMapConfig {
 export const ErrorMaps = {
   /** 实体上下文错误映射 */
   entity: entityErrorMap,
-  
+
   /** 模块上下文错误映射 */
   module: moduleErrorMap,
-  
+
   /** 自定义/通用错误映射 */
   custom: customErrorMap,
-  
+
   /**
    * 根据上下文获取错误映射
    */
@@ -677,7 +677,7 @@ export const ErrorMaps = {
       default: return customErrorMap
     }
   },
-  
+
   /**
    * 创建带配置的错误映射（扩展接口）
    */
@@ -704,7 +704,7 @@ const errorMap = ErrorMaps.entity
 const errorMap = ErrorMaps.getForContext('entity')
 
 // 方式3：配置创建（未来可扩展）
-const errorMap = ErrorMaps.create({ 
+const errorMap = ErrorMaps.create({
   context: 'entity',
   customMessages: { name: '自定义消息' }
 })
@@ -865,7 +865,7 @@ API提升:
   ✓ 定义最小必要类型
   ✓ 类型守卫提供运行时保护
   ✓ 结构兼容性优于类型断言
-  
+
 避免陷阱:
   ✗ 直接使用Zod内部类型（可能不稳定）
   ✗ 依赖不导出的类型（如ZodIssueCode）
@@ -931,17 +931,17 @@ export function makeAdapter<TTarget>(
     - 扫描所有import语句
     - 替换为lowcode-shared引用
     - 验证功能无损
-  
+
   📋 Task 2: 删除metadata-core包
     - 备份最终版本
     - 从package.json移除依赖
     - 删除packages/metadata-core目录
-  
+
   📋 Task 3: 清理遗留引用
     - 清理tsconfig.json中的路径别名
     - 清理Vite配置中的别名
     - 更新文档和注释
-  
+
   📋 Task 4: 验证测试
     - 全量TypeScript编译
     - 运行所有单元测试
@@ -960,12 +960,12 @@ export function makeAdapter<TTarget>(
     - 补充missing字段
     - 完善枚举定义
     - 添加JSDoc注释
-  
+
   📋 Task 2: 验证增强
     - Zod schema细化
     - 错误消息国际化
     - 自定义验证规则
-  
+
   📋 Task 3: 类型导出优化
     - 导出结构重组
     - 类型别名优化
@@ -1075,9 +1075,9 @@ src/SmartAbp.Vue/packages/lowcode-shared/src/validation/error-map.ts
 
 ---
 
-**报告编制**: AI架构师团队  
-**审核批准**: SmartAbp项目组  
-**报告日期**: 2025年10月16日  
+**报告编制**: AI架构师团队
+**审核批准**: SmartAbp项目组
+**报告日期**: 2025年10月16日
 **版本号**: v1.0
 
 ---
@@ -1088,8 +1088,8 @@ src/SmartAbp.Vue/packages/lowcode-shared/src/validation/error-map.ts
 - 质量检查报告：TypeScript 0错误 / ESLint 0警告
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-**文档状态**: ✅ 正式发布  
-**保密级别**: 内部公开  
-**归档位置**: docs/工作汇报/十月份工作汇报/  
+**文档状态**: ✅ 正式发布
+**保密级别**: 内部公开
+**归档位置**: docs/工作汇报/十月份工作汇报/
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
