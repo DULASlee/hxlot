@@ -1,8 +1,8 @@
 # ModuleDto 和 NavigationPropertyDto 深度分析报告
 
-**日期**: 2025-10-17  
-**阶段**: Phase 2A - 后端SSOT架构验证  
-**目标**: 确保ModuleDto和NavigationPropertyDto的正确性和完整性  
+**日期**: 2025-10-17
+**阶段**: Phase 2A - 后端SSOT架构验证
+**目标**: 确保ModuleDto和NavigationPropertyDto的正确性和完整性
 
 ---
 
@@ -175,7 +175,7 @@ SmartAbpDomainEntitiesLowCodeModuleCodeGenOptions {
 | `Comment` | `string?` | 备注说明 | ✅ `comment?: string \| null` |
 | `Order` | `int` | 显示顺序 | ✅ `order?: number` (@format int32) |
 
-**结论**: 
+**结论**:
 - ✅ **11/11字段生成完整**
 - ⚠️ **枚举类型生成为数字字面量联合类型**（而非命名枚举）
 
@@ -479,7 +479,7 @@ export enum CascadeDeleteBehavior {
 
 ---
 
-**报告人**: AI编程助手  
-**版本**: v1.0  
+**报告人**: AI编程助手
+**版本**: v1.0
 **最后更新**: 2025-10-17
 

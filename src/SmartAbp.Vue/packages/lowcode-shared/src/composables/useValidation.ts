@@ -6,12 +6,11 @@
  */
 
 import { computed, reactive, readonly } from 'vue'
-// Phase 1D: 使用metadata.ts的类型
+// Phase 2B: 使用后端SSOT类型别名
 import type {
-    UnifiedModuleMetadata
-} from '../types/metadata'
-// UnifiedEntityDefinition从metadata导出（如果需要）
-import type { EntityMetadata as UnifiedEntityDefinition } from '../types/metadata'
+    ModuleDto as UnifiedModuleMetadata,
+    EntityDefinitionDto as UnifiedEntityDefinition
+} from '@/api/generated/type-aliases'
 import {
     UnifiedSchemaValidator,
     type UnifiedValidationFeatureFlags,
@@ -335,8 +334,8 @@ export function useValidation(options: ValidationOptions = {}) {
                         duration,
                         startTime: startTime,
                         endTime: Date.now(),
-                        fieldCount: module.entities?.reduce((sum, entity) => sum + (entity.fields?.length || 0), 0) || 0,
-                        ruleCount: module.entities?.reduce((sum, entity) => sum + (entity.validationRules?.length || 0), 0) || 0
+                        fieldCount: module.entities?.reduce((sum: number, entity: any) => sum + (entity.fields?.length || 0), 0) || 0,
+                        ruleCount: module.entities?.reduce((sum: number, entity: any) => sum + (entity.validationRules?.length || 0), 0) || 0
                     }
 
                     // 缓存结果

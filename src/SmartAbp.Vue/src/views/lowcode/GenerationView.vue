@@ -240,7 +240,8 @@ import { codeGeneratorApi, type GenerationResult, type ModuleGenerationConfig, t
 // 🔥 新增：导入验证功能
 import { useValidation, type ValidationOptions } from "@smartabp/lowcode-shared/composables/useValidation"
 // Phase 1D: 使用UnifiedModuleMetadata（宽松版，向后兼容）
-import type { UnifiedModuleMetadata } from "@smartabp/lowcode-shared/types"
+// Phase 2B: 使用后端SSOT类型
+import type { UnifiedModuleMetadata } from "@/api/generated/type-aliases"
 
 const projectStore = useProjectStore()
 const selectedTemplate = ref<Template | null>(null)
