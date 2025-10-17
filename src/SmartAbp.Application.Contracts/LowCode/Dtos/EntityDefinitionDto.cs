@@ -117,6 +117,22 @@ namespace SmartAbp.Application.Contracts.LowCode.Dtos
         /// </summary>
         public Guid? TenantId { get; set; }
 
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // Phase 2A新增字段：完整元数据支持
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        /// <summary>
+        /// 导航属性列表（Phase 2A）
+        /// 描述实体间的关系（一对一、一对多、多对多）
+        /// </summary>
+        public List<NavigationPropertyDto>? NavigationProperties { get; set; }
+
+        /// <summary>
+        /// 所属模块ID（Phase 2A）
+        /// 关联到LowCodeModule
+        /// </summary>
+        public Guid? ModuleId { get; set; }
+
         /// <summary>
         /// 状态与版本
         /// </summary>

@@ -8,13 +8,13 @@ namespace SmartAbp.Application.LowCode.Mapping
 {
     /// <summary>
     /// 🔥 LowCode统一Schema AutoMapper配置
-    /// 
+    ///
     /// 功能:
     /// 1. EntityDefinitionDto ↔ EntityDefinition (Domain Entity)
     /// 2. EntityFieldDto ↔ EntityField (Domain Entity)
     /// 3. EntityRelationDto ↔ EntityRelation (Domain Entity)
     /// 4. ValidationRuleDto ↔ ValidationRule (Domain Entity)
-    /// 
+    ///
     /// 版本: v1.0.0
     /// 作者: SmartAbp架构团队
     /// 日期: 2025-10-06
@@ -23,6 +23,11 @@ namespace SmartAbp.Application.LowCode.Mapping
     {
         public LowCodeAutoMapperProfile()
         {
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // Phase 2A: 模块映射
+            // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            CreateMap<LowCodeModule, ModuleDto>();
+            CreateMap<CreateOrUpdateModuleDto, LowCodeModule>();
             // ═══════════════════════════════════════════════════════════════════════
             // EntityDefinition 映射配置
             // ═══════════════════════════════════════════════════════════════════════

@@ -274,3 +274,6 @@ wp-config.php
 # 此 .gitignore 文件基于 SmartAbp 企业级项目的最佳实践
 # 确保代码安全、构建产物隔离和开发环境一致性
 # 任何修改请参考项目架构决策记录 (ADR)
+
+# 前端生成的 API 客户端（忽略）
+src/api/generated/

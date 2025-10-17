@@ -513,3 +513,6 @@ App_Data/
 
 # Cursor会话历史文件
 .specstory/history/*.md
+
+# 前端生成的 API 客户端（忽略）
+src/SmartAbp.Vue/src/api/generated/

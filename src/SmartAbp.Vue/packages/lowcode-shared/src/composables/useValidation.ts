@@ -80,25 +80,25 @@ interface ValidationCacheItem {
 
 /**
  * useValidation - 企业级验证组合式API
- * 
+ *
  * @description 提供完整的验证功能，包括：
  * - 实时验证与防抖
  * - 验证结果缓存
  * - 性能监控
  * - 错误恢复
  * - Feature flag支持
- * 
+ *
  * @param options 验证选项
  * @returns 验证状态和方法
- * 
+ *
  * @example
  * ```typescript
- * const { 
- *   validationState, 
- *   validateEntity, 
+ * const {
+ *   validationState,
+ *   validateEntity,
  *   validateModule,
  *   clearErrors,
- *   resetValidation 
+ *   resetValidation
  * } = useValidation({
  *   debounceMs: 300,
  *   enableCache: true,
@@ -200,7 +200,7 @@ export function useValidation(options: ValidationOptions = {}) {
 
     /**
      * 验证实体定义
-     * 
+     *
      * @param entity 实体定义
      * @param immediate 是否立即验证（跳过防抖）
      * @returns Promise<UnifiedValidationResult>
@@ -296,7 +296,7 @@ export function useValidation(options: ValidationOptions = {}) {
 
     /**
      * 验证模块定义
-     * 
+     *
      * @param module 模块定义
      * @param immediate 是否立即验证（跳过防抖）
      * @returns Promise<UnifiedValidationResult>
