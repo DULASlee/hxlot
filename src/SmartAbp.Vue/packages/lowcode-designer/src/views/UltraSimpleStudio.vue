@@ -502,7 +502,8 @@ const convertToModuleMetadata = (): ModuleMetadata => {
     featureManagement: { isEnabled: false, defaultPolicy: '' },
     generateMobilePages: false,
     dependencies: [],
-    menuConfig: [],
+    // Phase 1D: menuConfig类型修正
+    menuConfig: undefined,
     permissionConfig: {
       groups: [],              // 🔥 修复：后端期望 Groups 数组
       customActions: []        // 🔥 修复：后端期望 CustomActions 数组

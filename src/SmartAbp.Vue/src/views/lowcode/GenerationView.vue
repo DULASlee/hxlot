@@ -239,6 +239,7 @@ import { codeGeneratorApi, type GenerationResult, type ModuleGenerationConfig, t
 
 // 🔥 新增：导入验证功能
 import { useValidation, type ValidationOptions } from "@smartabp/lowcode-shared/composables/useValidation"
+// Phase 1D: 使用UnifiedModuleMetadata（宽松版，向后兼容）
 import type { UnifiedModuleMetadata } from "@smartabp/lowcode-shared/types"
 
 const projectStore = useProjectStore()
@@ -295,7 +296,7 @@ const onTemplateSelect = (template: Template) => {
   clearErrors()
 }
 
-// 🔥 新增：创建UnifiedModuleMetadata用于验证
+// 🔥 新增：创建UnifiedModuleMetadata用于验证（Phase 1D）
 const createUnifiedModuleMetadata = (): UnifiedModuleMetadata => {
   return {
     id: crypto.randomUUID(),
@@ -426,7 +427,8 @@ const createUnifiedModuleMetadata = (): UnifiedModuleMetadata => {
       groups: [],
       customActions: []
     },
-    menuConfig: []
+    // Phase 1D: menuConfig类型修正，MenuConfig要求title字段
+    menuConfig: undefined
   }
 }
 
@@ -572,9 +574,9 @@ const generateCode = async () => {
       id: crypto.randomUUID(),
       author: 'SmartAbp Team',
       generateMobilePages: false,
-      menuConfig: [{
-        id: crypto.randomUUID(),
-        label: generationParams.value.displayName || generationParams.value.entityName,
+      // Phase 1D: menuConfig类型修正（MenuConfig需要title字段）
+      menuConfig: {
+        title: generationParams.value.displayName || generationParams.value.entityName,
         icon: 'el-icon-document',
         route: `/${generationParams.value.moduleName.toLowerCase()}`,
         children: []

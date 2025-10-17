@@ -1,33 +1,51 @@
 // ============================================================================
-// 导入统一Schema（Single Source of Truth）
+// Phase 1D: 使用后端SSOT类型（api-client.ts）
 // ============================================================================
+// 前端元数据类型从 @smartabp/lowcode-shared/types (metadata.ts)
+// API DTO类型从 @/api/generated/api-client
+// ============================================================================
+
+// 前端元数据类型（metadata.ts）
 import type {
-  UnifiedApiResponse,
-  UnifiedEntityDefinition,
-  UnifiedModuleMetadata,
-} from '@smartabp/lowcode-shared'
+  EntityMetadata as FrontendEntityMetadata,
+  ModuleMetadata as FrontendModuleMetadata
+} from '@smartabp/lowcode-shared/types'
 
 // ============================================================================
 // 类型别名（向后兼容 + 语义化）
 // ============================================================================
 
-/** API响应统一类型 */
-export type ApiResponse<T = unknown> = UnifiedApiResponse<T>
+/**
+ * API响应统一类型
+ * Phase 1D: 简化定义，api-client.ts中有完整的ApiResponse类型
+ */
+export interface ApiResponse<T = unknown> {
+  success: boolean
+  data: T
+  message?: string
+  errors?: string[]
+}
 
 /** 查询参数类型 */
 export type QueryParams = Record<string, unknown>
 
-/** 实体元数据类型 */
-export type EntityMetadata = UnifiedEntityDefinition
+/**
+ * 实体元数据类型（前端元数据建模）
+ * 注意：这与EntityDefinitionDto（API DTO）不同
+ */
+export type EntityMetadata = FrontendEntityMetadata
 
 /** 页面元数据类型（TODO: 待定义PageMetadata统一Schema） */
 export type PageMetadata = any
 
-/** 模块元数据类型 */
-export type ModuleMetadata = UnifiedModuleMetadata
+/**
+ * 模块元数据类型（前端元数据建模）
+ * 注意：这与ModuleDto（API DTO）不同
+ */
+export type ModuleMetadata = FrontendModuleMetadata
 
 /** 模块元数据DTO类型 */
-export type ModuleMetadataDto = UnifiedModuleMetadata
+export type ModuleMetadataDto = FrontendModuleMetadata
 
 // ============================================================================
 // 代码生成相关类型
@@ -98,8 +116,12 @@ export type ApplicationMetadata = any
 /** UI组件元数据类型（TODO: 待定义UIComponentMetadata统一Schema） */
 export type UIComponentMetadata = any
 
-// 导出统一类型
-export type { UnifiedEntityDefinition, UnifiedModuleMetadata }
+// Phase 1D: 向后兼容导出（前端元数据类型）
+// 注意：Unified*类型已废弃，请使用metadata.ts的类型或api-client.ts的DTO
+export type {
+  FrontendEntityMetadata as UnifiedEntityDefinition,
+  FrontendModuleMetadata as UnifiedModuleMetadata
+}
 
 // 兼容旧版接口
 export interface GenerationResult extends CodeGenerationResult { }

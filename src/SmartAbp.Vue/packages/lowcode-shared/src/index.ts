@@ -15,9 +15,12 @@ export * from './types/index';
 export { API_BASE_URL, request } from './api';
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔥 统一Schema系统 (Unified Schema System) - v1.0.0
+// Phase 1D: unified-schema已废弃，类型从metadata导出
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export * from './types/enums';
-export * from './types/unified-schema';
+// Phase 1D: 前端元数据类型（从unified-schema迁移至metadata）
+// export * from './types/metadata'; // 已在 types/index.ts 导出
+// API DTO类型请使用: import { EntityDefinitionDto } from '@/api/generated/api-client'
 export * from './utils/schema-converter';
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📦 版本管理系统 (Version Management System) - v1.0.0

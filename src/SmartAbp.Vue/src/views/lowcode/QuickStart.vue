@@ -193,6 +193,8 @@
 
 <script setup lang="ts">
 import { codeGeneratorApi, type ModuleGenerationConfig, type ModuleMetadataDto } from "@smartabp/lowcode-api"
+// Phase 1D: 导入UnifiedModuleMetadata
+import type { UnifiedModuleMetadata } from "@smartabp/lowcode-shared/types"
 import { ElMessage } from "element-plus"
 import { computed, onMounted, reactive, ref } from "vue"
 
@@ -312,7 +314,8 @@ const generateCode = async () => {
     const startTime = Date.now()
 
     // ✅ 构建模块元数据
-    const moduleMetadata: ModuleMetadataDto = {
+    // Phase 1D: 使用UnifiedModuleMetadata（宽松版）
+    const moduleMetadata: ModuleMetadataDto | UnifiedModuleMetadata = {
       id: crypto.randomUUID(),
       systemName: 'SmartAbp',
       name: form.componentName,
@@ -342,7 +345,8 @@ const generateCode = async () => {
         groups: [],
         customActions: []
       },
-      menuConfig: [],
+      // Phase 1D: menuConfig类型修正
+      menuConfig: undefined,
       schemaVersion: '1.0.0',
       createdAt: new Date(),
       updatedAt: new Date()

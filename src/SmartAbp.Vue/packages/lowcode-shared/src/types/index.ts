@@ -7,21 +7,42 @@
  */
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🚀 统一元数据类型系统 (从metadata-core迁移至unified-schema)
+// 🚀 前端元数据类型系统 (Phase 1D: 从unified-schema分离至metadata)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export type {
-  AspireSolutionMetadata, BackendConfig, EndpointMetadata, EntityMetadata, FeatureConfig, LifecycleMetadata, MenuConfig, MicroserviceMetadata, ModuleMetadata, NavigationPropertyMetadata, PropertyMetadata, RouteMetadata,
-  StoreMetadata, UIConfig, ValidationRule
-} from './unified-schema.js'
+  AspireSolutionMetadata,
+  BackendConfig,
+  EndpointMetadata,
+  EntityMetadata,
+  FeatureConfig,
+  LifecycleMetadata,
+  MenuConfig,
+  MicroserviceMetadata,
+  ModuleMetadata, NavigationPropertyMetadata,
+  PropertyMetadata,
+  RouteMetadata, SchemaVersion, StoreMetadata,
+  UIConfig, UnifiedCodeGenerationConfig, UnifiedDatabaseConfig, UnifiedEntityConstraint, UnifiedEntityIndex, UnifiedEntityPermission, UnifiedEntityUIConfig, UnifiedFeatureManagement, UnifiedFrontendConfig, UnifiedMenuConfig, UnifiedModuleMetadata, UnifiedPermissionConfig, UnifiedValidationRule, ValidationRule
+} from './metadata.js'
+
+export {
+  METADATA_SCHEMA_VERSION,
+  SUPPORTED_METADATA_VERSIONS, SUPPORTED_SCHEMA_VERSIONS,
+  // 向后兼容导出
+  UNIFIED_SCHEMA_VERSION, getSchemaVersion, isEntityMetadata,
+  isModuleMetadata, isSchemaVersionCompatible
+} from './metadata.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🔄 向后兼容：统一Schema类型系统 (逐步弃用)
+// ⚠️ 已废弃：统一Schema类型 (Phase 1D: 请使用api-client.ts)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export type {
-  UnifiedCodeGenerationConfig, UnifiedEntityDefinition,
-  UnifiedEntityField,
-  UnifiedEntityRelationship, UnifiedEntityUIConfig, UnifiedFrontendConfig, UnifiedMenuConfig, UnifiedModuleMetadata, UnifiedPermissionConfig, UnifiedValidationRule, UnifiedValidationRuleType
-} from './unified-schema.js'
+// API DTO类型请使用: import { EntityDefinitionDto } from '@/api/generated/api-client'
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// export type {
+//   UnifiedEntityDefinition,    // 替换为: EntityDefinitionDto
+//   UnifiedEntityField,          // 替换为: EntityFieldDto
+//   UnifiedEntityRelationship,   // 替换为: EntityRelationDto
+//   UnifiedValidationRuleType,   // 替换为: ValidationType(enum)
+// } from './unified-schema.js' ← 已废弃
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🏗️ 组件基础类型
@@ -80,17 +101,11 @@ export type {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📚 代码生成历史类型（Generation History Types）- v1.0.0
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export { GenerationType, GenerationStatus } from './generation-history.js'
+export { GenerationStatus, GenerationType } from './generation-history.js'
 export type {
-  GenerationHistory,
+  CodeChangeRecord, GeneratedFileRecord, GenerationHistory,
   GenerationHistoryFilter,
-  GenerationHistoryStatistics,
-  GeneratedFileRecord,
-  MetadataSnapshot,
-  CodeChangeRecord,
-  QualityMetrics,
-  HistoryComparisonResult,
-  RevertOptions,
+  GenerationHistoryStatistics, HistoryComparisonResult, MetadataSnapshot, QualityMetrics, RevertOptions,
   RevertResult
 } from './generation-history.js'
 

@@ -6,10 +6,12 @@
  */
 
 import { computed, reactive, readonly } from 'vue'
+// Phase 1D: 使用metadata.ts的类型
 import type {
-    UnifiedEntityDefinition,
     UnifiedModuleMetadata
-} from '../types/unified-schema'
+} from '../types/metadata'
+// UnifiedEntityDefinition从metadata导出（如果需要）
+import type { EntityMetadata as UnifiedEntityDefinition } from '../types/metadata'
 import {
     UnifiedSchemaValidator,
     type UnifiedValidationFeatureFlags,
