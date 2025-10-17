@@ -99,7 +99,7 @@
         class="view-panel"
       >
         <LogViewer
-          :height="contentHeight"
+          :height="contentHeightNumber"
           :auto-scroll="autoScroll"
           :show-controls="false"
         />

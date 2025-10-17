@@ -223,7 +223,7 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// <summary>
         /// 验证规则
         /// </summary>
-        public List<ValidationRuleDto>? Validate { get; set; }
+        public List<SmartAbp.Domain.Entities.LowCode.ValidationRuleConfig>? Validate { get; set; }
 
         /// <summary>
         /// 栅格配置

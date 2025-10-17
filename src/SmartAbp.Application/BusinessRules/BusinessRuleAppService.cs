@@ -144,9 +144,9 @@ namespace SmartAbp.Application.BusinessRules
             };
 
             var createdRule = await Repository.InsertAsync(rule, autoSave: true);
-            
+
             _logger.LogInformation("Business rule created successfully: {Id}", createdRule.Id);
-            
+
             return await MapToGetOutputDtoAsync(createdRule);
         }
 
@@ -169,9 +169,9 @@ namespace SmartAbp.Application.BusinessRules
             rule.Version++;
 
             var updatedRule = await Repository.UpdateAsync(rule, autoSave: true);
-            
+
             _logger.LogInformation("Business rule updated successfully: {Id}", id);
-            
+
             return await MapToGetOutputDtoAsync(updatedRule);
         }
 
@@ -197,7 +197,7 @@ namespace SmartAbp.Application.BusinessRules
 
             await CurrentUnitOfWork.SaveChangesAsync();
 
-            _logger.LogInformation("Executed {Count} rules, {SuccessCount} successful", 
+            _logger.LogInformation("Executed {Count} rules, {SuccessCount} successful",
                 results.Count, results.Count(r => r.Success));
 
             return results;
@@ -209,7 +209,7 @@ namespace SmartAbp.Application.BusinessRules
         private async Task<BusinessRuleExecutionResultDto> ExecuteRuleAsync(BusinessRule rule, Dictionary<string, object> context)
         {
             var startTime = DateTime.UtcNow;
-            
+
             try
             {
                 _logger.LogDebug("Executing rule: {RuleName} (ID: {RuleId})", rule.Name, rule.Id);
@@ -350,7 +350,7 @@ namespace SmartAbp.Application.BusinessRules
         {
             // 这里可以集成邮件、短信、系统通知等服务
             _logger.LogInformation("Sending notification: {Type}", action.Parameters.GetValueOrDefault("notificationType"));
-            
+
             return Task.FromResult<object>(new { sent = true, type = action.Parameters.GetValueOrDefault("notificationType") });
         }
 
@@ -391,11 +391,11 @@ namespace SmartAbp.Application.BusinessRules
                         return new { executed = false, error = $"不支持的脚本类型: {scriptType}" };
                 }
 
-                _logger.LogInformation("脚本执行完成: 成功={Success}, 耗时={ExecutionTime}ms", 
+                _logger.LogInformation("脚本执行完成: 成功={Success}, 耗时={ExecutionTime}ms",
                     result.Success, result.ExecutionTime);
 
-                return new 
-                { 
+                return new
+                {
                     executed = result.Success,
                     result = result.Result,
                     error = result.Error,
@@ -419,7 +419,7 @@ namespace SmartAbp.Application.BusinessRules
         {
             // 这里可以集成工作流引擎
             _logger.LogInformation("Triggering workflow: {WorkflowId}", action.Target);
-            
+
             return Task.FromResult<object>(new { triggered = true, workflowId = action.Target });
         }
 
@@ -429,7 +429,7 @@ namespace SmartAbp.Application.BusinessRules
         private BusinessRuleExecutionResultDto CreateExecutionResult(bool success, DateTime startTime, string? error = null)
         {
             var executionTime = (int)(DateTime.UtcNow - startTime).TotalMilliseconds;
-            
+
             return new BusinessRuleExecutionResultDto
             {
                 Success = success,
@@ -445,7 +445,7 @@ namespace SmartAbp.Application.BusinessRules
         public async Task<BusinessRuleValidationResultDto> ValidateRuleAsync(Guid ruleId)
         {
             var rule = await Repository.GetAsync(ruleId);
-            
+
             var result = new BusinessRuleValidationResultDto { IsValid = true };
 
             if (!rule.IsValid())
@@ -508,17 +508,17 @@ namespace SmartAbp.Application.BusinessRules
         public async Task<BusinessRuleStatsDto> GetStatsAsync()
         {
             var queryable = await Repository.GetQueryableAsync();
-            
+
             var totalRules = await AsyncExecuter.CountAsync(queryable);
             var activeRules = await AsyncExecuter.CountAsync(queryable.Where(r => r.IsActive));
             var errorRules = await AsyncExecuter.CountAsync(queryable.Where(r => r.HasError));
-            
+
             var rules = await AsyncExecuter.ToListAsync(queryable.Where(r => r.ExecutionCount > 0));
-            
+
             var totalExecutions = rules.Sum(r => r.ExecutionCount);
             var totalSuccesses = rules.Sum(r => r.SuccessCount);
             var avgExecutionTime = rules.Any() ? rules.Average(r => r.AverageExecutionTime) : 0;
-            
+
             var today = DateTime.Today;
             var todayExecutions = await AsyncExecuter.CountAsync(
                 queryable.Where(r => r.LastExecutionTime.HasValue && r.LastExecutionTime.Value.Date == today));
@@ -542,58 +542,58 @@ namespace SmartAbp.Application.BusinessRules
         public async Task<List<EntityDefinitionDto>> GetAvailableEntitiesAsync()
         {
             _logger.LogInformation("获取可用实体列表 - 从实体建模系统获取真实数据");
-            
+
             try
             {
                 // 从实体建模服务获取真实实体数据
                 var entities = await _entityModelingService.GetAllEntitiesAsync();
-                
+
                 _logger.LogInformation("成功获取 {Count} 个实体定义", entities.Count);
-                
+
                 // 如果没有实体，返回默认的系统实体作为示例
                 if (!entities.Any())
                 {
                     _logger.LogWarning("实体建模系统中暂无实体定义，返回默认系统实体");
-                    
+
                     return new List<EntityDefinitionDto>
                     {
-                        new() { 
-                            Id = Guid.NewGuid(), 
-                            Name = "User", 
-                            DisplayName = "用户", 
+                        new() {
+                            Id = Guid.NewGuid(),
+                            Name = "User",
+                            DisplayName = "用户",
                             Description = "系统用户实体（默认）",
                             EntityType = "SystemEntity"
                         },
-                        new() { 
-                            Id = Guid.NewGuid(), 
-                            Name = "Order", 
-                            DisplayName = "订单", 
+                        new() {
+                            Id = Guid.NewGuid(),
+                            Name = "Order",
+                            DisplayName = "订单",
                             Description = "业务订单实体（默认）",
                             EntityType = "BusinessEntity"
                         },
-                        new() { 
-                            Id = Guid.NewGuid(), 
-                            Name = "Product", 
-                            DisplayName = "产品", 
+                        new() {
+                            Id = Guid.NewGuid(),
+                            Name = "Product",
+                            DisplayName = "产品",
                             Description = "产品信息实体（默认）",
                             EntityType = "BusinessEntity"
                         }
                     };
                 }
-                
+
                 return entities;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "获取实体列表失败，返回默认实体");
-                
+
                 // 异常情况下返回基础实体，确保系统可用性
                 return new List<EntityDefinitionDto>
                 {
-                    new() { 
-                        Id = Guid.NewGuid(), 
-                        Name = "User", 
-                        DisplayName = "用户", 
+                    new() {
+                        Id = Guid.NewGuid(),
+                        Name = "User",
+                        DisplayName = "用户",
                         Description = "系统用户实体（异常回退）",
                         EntityType = "SystemEntity"
                     }
@@ -608,32 +608,32 @@ namespace SmartAbp.Application.BusinessRules
         public async Task<List<EntityFieldDto>> GetEntityFieldsAsync(string entityName)
         {
             _logger.LogInformation("获取实体字段列表 - 实体: {EntityName}", entityName);
-            
+
             try
             {
                 // 从实体建模服务获取真实实体定义
                 var entity = await _entityModelingService.GetEntityByNameAsync(entityName);
-                
+
                 if (entity?.Fields != null && entity.Fields.Any())
                 {
                     _logger.LogInformation("成功获取实体 {EntityName} 的 {Count} 个字段", entityName, entity.Fields.Count);
                     return entity.Fields.ToList();
                 }
-                
+
                 _logger.LogWarning("实体 {EntityName} 没有字段定义，返回默认字段", entityName);
-                
+
                 // 如果实体存在但没有字段，返回基础字段模板
                 return GetDefaultFieldsForEntity(entityName);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "获取实体 {EntityName} 字段失败，返回默认字段", entityName);
-                
+
                 // 异常情况下返回默认字段，确保系统可用性
                 return GetDefaultFieldsForEntity(entityName);
             }
         }
-        
+
         /// <summary>
         /// 获取实体的默认字段模板
         /// </summary>
@@ -682,14 +682,14 @@ namespace SmartAbp.Application.BusinessRules
         public async Task BatchUpdateStatusAsync(List<Guid> ruleIds, bool isActive)
         {
             var rules = await Repository.GetListAsync(r => ruleIds.Contains(r.Id));
-            
+
             foreach (var rule in rules)
             {
                 rule.IsActive = isActive;
             }
 
             await Repository.UpdateManyAsync(rules, autoSave: true);
-            
+
             _logger.LogInformation("Batch updated {Count} rules status to {Status}", rules.Count, isActive);
         }
 
@@ -699,7 +699,7 @@ namespace SmartAbp.Application.BusinessRules
         public async Task<BusinessRuleDto> DuplicateRuleAsync(Guid ruleId)
         {
             var originalRule = await Repository.GetAsync(ruleId);
-            
+
             var newRule = new BusinessRule(
                 GuidGenerator.Create(),
                 $"{originalRule.Name}_副本",
@@ -715,9 +715,9 @@ namespace SmartAbp.Application.BusinessRules
             };
 
             var createdRule = await Repository.InsertAsync(newRule, autoSave: true);
-            
+
             _logger.LogInformation("Duplicated rule: {OriginalId} -> {NewId}", ruleId, createdRule.Id);
-            
+
             return await MapToGetOutputDtoAsync(createdRule);
         }
 
@@ -727,14 +727,14 @@ namespace SmartAbp.Application.BusinessRules
         protected override async Task<BusinessRuleDto> MapToGetOutputDtoAsync(BusinessRule entity)
         {
             var dto = await base.MapToGetOutputDtoAsync(entity);
-            
+
             // 反序列化JSON字段
             try
             {
                 dto.Conditions = JsonConvert.DeserializeObject<List<BusinessRuleConditionDto>>(entity.Conditions) ?? new List<BusinessRuleConditionDto>();
                 dto.Actions = JsonConvert.DeserializeObject<List<BusinessRuleActionDto>>(entity.Actions) ?? new List<BusinessRuleActionDto>();
                 dto.ExecutionTiming = JsonConvert.DeserializeObject<List<string>>(entity.ExecutionTiming) ?? new List<string>();
-                
+
                 if (!string.IsNullOrEmpty(entity.LastExecutionResult))
                 {
                     dto.LastExecutionResult = JsonConvert.DeserializeObject<BusinessRuleExecutionResultDto>(entity.LastExecutionResult);
@@ -747,7 +747,7 @@ namespace SmartAbp.Application.BusinessRules
 
             // 计算成功率
             dto.SuccessRate = entity.GetSuccessRate();
-            
+
             return dto;
         }
 
@@ -769,8 +769,8 @@ namespace SmartAbp.Application.BusinessRules
                 };
 
                 var result = await _scriptExecutionService.ValidateScriptAsync(script, type);
-                
-                _logger.LogInformation("脚本验证完成: 有效={IsValid}, 错误数={ErrorCount}", 
+
+                _logger.LogInformation("脚本验证完成: 有效={IsValid}, 错误数={ErrorCount}",
                     result.IsValid, result.Errors.Count);
 
                 return result;

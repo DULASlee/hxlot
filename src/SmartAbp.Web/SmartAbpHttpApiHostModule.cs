@@ -1,9 +1,11 @@
 using System;
+using System.IO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SmartAbp.Web.Swagger;
 using Volo.Abp;
 using Volo.Abp.Autofac;
 using Volo.Abp.AspNetCore.Authentication.JwtBearer;
@@ -68,9 +70,38 @@ public class SmartAbpHttpApiHostModule : AbpModule
 
         context.Services.AddAbpSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "SmartAbp API", Version = "v1" });
+            options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            {
+                Title = "SmartAbp API",
+                Version = "v1",
+                Description = "SmartAbp 低代码平台 REST API - 后端SSOT架构"
+            });
+
             options.DocInclusionPredicate((docName, description) => true);
             options.CustomSchemaIds(type => type.FullName);
+
+            // Phase 1B: 配置Swagger扫描Domain层类型（用于NSwag生成前端类型）
+            // 让 PropertyUIConfig, PageConfigDto, ValidationRuleConfig 等Domain层DTO被NSwag识别
+            var domainXmlPath = Path.Combine(AppContext.BaseDirectory, "SmartAbp.Domain.xml");
+            if (File.Exists(domainXmlPath))
+            {
+                options.IncludeXmlComments(domainXmlPath, includeControllerXmlComments: true);
+            }
+
+            // 扫描Application.Contracts层的XML注释
+            var contractsXmlPath = Path.Combine(AppContext.BaseDirectory, "SmartAbp.Application.Contracts.xml");
+            if (File.Exists(contractsXmlPath))
+            {
+                options.IncludeXmlComments(contractsXmlPath, includeControllerXmlComments: true);
+            }
+
+            // 确保所有Domain层的嵌套类型都被扫描到
+            options.UseAllOfToExtendReferenceSchemas();
+            options.UseOneOfForPolymorphism();
+            options.UseInlineDefinitionsForEnums();
+
+            // 配置序列化选项，确保所有属性都被包含
+            options.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
         });
 
         // Configure JWT Bearer authentication
@@ -97,11 +128,22 @@ public class SmartAbpHttpApiHostModule : AbpModule
         app.UseCors();
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseSwagger();
+
+        // Phase 1B: 配置Swagger为默认页面，增强健壮性
+        app.UseSwagger(options =>
+        {
+            options.SerializeAsV2 = false; // 使用OpenAPI 3.0
+        });
+
         app.UseAbpSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "SmartAbp API");
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "SmartAbp API v1");
+            options.RoutePrefix = string.Empty; // 设置Swagger UI为根路径（访问 / 即打开Swagger）
+            options.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);
+            options.DefaultModelsExpandDepth(2);
+            options.DisplayRequestDuration();
         });
+
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();

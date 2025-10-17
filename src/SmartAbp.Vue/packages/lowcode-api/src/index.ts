@@ -1,5 +1,6 @@
 // re-export generated client when available
-export * from './client.generated'
+// Phase 1C: 暂时注释，等NSwag配置到此package后再启用
+// export * from './client.generated'
 
 // ============================================================================
 // 类型定义导出

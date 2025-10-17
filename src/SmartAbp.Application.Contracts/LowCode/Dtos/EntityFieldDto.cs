@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SmartAbp.Domain.Entities.LowCode;
 using Volo.Abp.Application.Dtos;
 
 namespace SmartAbp.Application.Contracts.LowCode.Dtos
@@ -115,19 +116,15 @@ namespace SmartAbp.Application.Contracts.LowCode.Dtos
         /// </summary>
         public List<ValidationRuleDto> ValidationRules { get; set; } = new();
 
-        // ───────── UI配置（前端呈现需求） ─────────
+        // ═════════════════════════════════════════════════════════════
+        // Phase 1B架构修正：引用Domain层完整UI配置类型（后端SSOT）
+        // ═════════════════════════════════════════════════════════════
 
-        public int DisplayOrder { get; set; }
-        public string GroupName { get; set; }
-        public bool IsVisible { get; set; } = true;
-        public bool IsReadonly { get; set; }
-        public bool ListVisible { get; set; } = true;
-        public bool DetailVisible { get; set; } = true;
-        public bool FormVisible { get; set; } = true;
-        public bool Searchable { get; set; }
-        public bool Sortable { get; set; }
-        public bool Filterable { get; set; }
-        public bool Disabled { get; set; }
+        /// <summary>
+        /// 完整的UI配置（引用Domain层PropertyUIConfig）
+        /// 包含：显示控制、控件类型、数据源配置、验证规则、列表/表单字段配置等
+        /// </summary>
+        public PropertyUIConfig? UIConfig { get; set; }
 
         // ───────── 数据库映射（持久化需求） ─────────
 

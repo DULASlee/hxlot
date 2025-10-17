@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartAbp.Domain.Entities.LowCode;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Text.Json;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 
@@ -37,7 +38,15 @@ namespace SmartAbp.EntityFrameworkCore.Configurations
             builder.Property(e => e.ValidationRules)
                 .HasConversion(
                     v => v == null || v.Count == 0 ? null : JsonSerializer.Serialize(v, jsonOptions),
-                    v => string.IsNullOrEmpty(v) ? new List<ValidationRuleDto>() : JsonSerializer.Deserialize<List<ValidationRuleDto>>(v, jsonOptions));
+                    v => string.IsNullOrEmpty(v) ? new List<ValidationRuleConfig>() : JsonSerializer.Deserialize<List<ValidationRuleConfig>>(v, jsonOptions))
+                .Metadata.SetValueComparer(new ValueComparer<List<ValidationRuleConfig>>(
+                    (c1, c2) => JsonSerializer.Serialize(c1 ?? new(), jsonOptions) == JsonSerializer.Serialize(c2 ?? new(), jsonOptions),
+                    c => JsonSerializer.Serialize(c ?? new(), jsonOptions).GetHashCode(),
+                    c => c == null ? new List<ValidationRuleConfig>() : new List<ValidationRuleConfig>(c)));
+
+            // 数值精度（与迁移一致，避免SQL Server截断警告）
+            builder.Property(e => e.MinValue).HasPrecision(18, 4);
+            builder.Property(e => e.MaxValue).HasPrecision(18, 4);
 
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             // 索引

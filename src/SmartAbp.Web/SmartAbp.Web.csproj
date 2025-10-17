@@ -39,6 +39,14 @@
     </Content>
   </ItemGroup>
 
+  <!-- Phase 1B: 确保Domain的XML文档被复制到输出目录（供Swagger使用） -->
+  <Target Name="CopyDomainXmlDocumentation" AfterTargets="Build">
+    <ItemGroup>
+      <DomainXmlDoc Include="..\SmartAbp.Domain\bin\$(Configuration)\net9.0\SmartAbp.Domain.xml" />
+    </ItemGroup>
+    <Copy SourceFiles="@(DomainXmlDoc)" DestinationFolder="$(OutputPath)" Condition="Exists('@(DomainXmlDoc)')" />
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="9.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />

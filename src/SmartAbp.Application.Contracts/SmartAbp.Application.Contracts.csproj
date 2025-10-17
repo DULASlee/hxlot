@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartAbp.Domain.Shared\SmartAbp.Domain.Shared.csproj" />
+    <!-- Phase 1B架构修正：Application.Contracts引用Domain层完整配置类型 -->
+    <ProjectReference Include="..\SmartAbp.Domain\SmartAbp.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

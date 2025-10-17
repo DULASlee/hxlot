@@ -152,7 +152,7 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// 验证规则列表（JSON存储）
         /// </summary>
         [Column(TypeName = "nvarchar(max)")]
-        public List<ValidationRuleDto>? ValidationRules { get; set; }
+        public List<ValidationRuleConfig>? ValidationRules { get; set; }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // 显示顺序和状态
@@ -210,6 +210,7 @@ namespace SmartAbp.Domain.Entities.LowCode
 
     /// <summary>
     /// 属性UI配置（JSON存储）
+    /// Phase 1A 调整：保留在 Domain 层，通过 NSwag 配置扫描
     /// </summary>
     public class PropertyUIConfig
     {
@@ -394,9 +395,10 @@ namespace SmartAbp.Domain.Entities.LowCode
     }
 
     /// <summary>
-    /// 验证规则DTO
+    /// 验证规则配置（UI控件验证规则，非DTO）
+    /// Phase 1A: 重命名避免与 ValidationRuleDto 冲突
     /// </summary>
-    public class ValidationRuleDto
+    public class ValidationRuleConfig
     {
         /// <summary>
         /// 验证类型（required | pattern | min | max | email | phone | async）

@@ -11,12 +11,12 @@ namespace SmartAbp.Application.LowCode
 {
     /// <summary>
     /// 🔥 Schema版本历史应用服务
-    /// 
+    ///
     /// 功能:
     /// 1. 版本历史查询
     /// 2. 版本发布管理
     /// 3. 版本弃用管理
-    /// 
+    ///
     /// 版本: v1.0.0
     /// </summary>
     public class SchemaVersionHistoryAppService : ApplicationService
@@ -31,6 +31,7 @@ namespace SmartAbp.Application.LowCode
 
         /// <summary>
         /// 获取所有版本历史
+        /// Phase 1B: 遵循ABP标准模式 - 返回DTO（API契约）
         /// </summary>
         /// <param name="schemaName">Schema名称(可选)</param>
         /// <param name="includeDeprecated">是否包含已弃用版本</param>

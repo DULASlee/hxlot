@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SmartAbp.Domain.Entities.LowCode;
 using Volo.Abp.Application.Dtos;
 
 namespace SmartAbp.Application.Contracts.LowCode.Dtos
@@ -95,7 +96,7 @@ namespace SmartAbp.Application.Contracts.LowCode.Dtos
         /// 验证/业务规则、索引、约束
         /// </summary>
         public List<ValidationRuleDto> ValidationRules { get; set; } = new();
-        public List<BusinessRuleDto> BusinessRules { get; set; } = new();
+        public List<SmartAbp.Application.Contracts.BusinessRules.Dtos.BusinessRuleDto> BusinessRules { get; set; } = new();
         public List<EntityIndexDto> Indexes { get; set; } = new();
         public List<EntityConstraintDto> Constraints { get; set; } = new();
 
@@ -103,7 +104,12 @@ namespace SmartAbp.Application.Contracts.LowCode.Dtos
         /// 权限与UI、代码生成配置
         /// </summary>
         public List<EntityPermissionDto> Permissions { get; set; } = new();
-        public EntityUIConfigDto UIConfig { get; set; }
+
+        /// <summary>
+        /// 页面配置（引用Domain层完整类型）- Phase 1B架构修正
+        /// </summary>
+        public PageConfigDto? PageConfig { get; set; }
+
         public CodeGenerationConfigDto CodeGeneration { get; set; }
 
         /// <summary>

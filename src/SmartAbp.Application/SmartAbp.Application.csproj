@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SmartAbp.Domain\SmartAbp.Domain.csproj" />
     <ProjectReference Include="..\SmartAbp.Application.Contracts\SmartAbp.Application.Contracts.csproj" />
+    <ProjectReference Include="..\SmartAbp.CodeGenerator\SmartAbp.CodeGenerator.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,7 +34,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Elasticsearch.Net" Version="7.17.5" />
     <PackageReference Include="NEST" Version="7.17.5" />
-    
+
     <!-- 🔥 脚本执行引擎依赖 -->
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.14.0" />
     <PackageReference Include="Jint" Version="3.0.0" />
