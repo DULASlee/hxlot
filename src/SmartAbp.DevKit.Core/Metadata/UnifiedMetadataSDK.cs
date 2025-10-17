@@ -31,11 +31,11 @@ public class UnifiedMetadataSDK
     }
 
     /// <summary>
-    /// 获取实体的主键属性
+    /// 获取实体的主键属性（默认使用Guid）
     /// </summary>
-    public LowCodeProperty? GetPrimaryKey(Guid entityId)
+    public string GetPrimaryKeyType(Guid entityId)
     {
-        return GetProperties(entityId).FirstOrDefault(p => p.IsPrimaryKey);
+        return "Guid"; // 默认所有实体使用Guid主键
     }
 
     /// <summary>

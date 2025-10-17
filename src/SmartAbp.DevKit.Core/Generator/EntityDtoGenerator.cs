@@ -49,17 +49,16 @@ namespace {{Namespace}}
             throw new InvalidOperationException($"Entity {entityId} not found");
 
         var properties = _metadataSDK.GetProperties(entityId);
-        var primaryKey = _metadataSDK.GetPrimaryKey(entityId) ?? 
-                        properties.FirstOrDefault();
+        var primaryKeyType = _metadataSDK.GetPrimaryKeyType(entityId);
 
         var data = new
         {
             Namespace = "SmartAbp.Application.Dtos",
             EntityName = entity.Name,
-            PrimaryKeyType = primaryKey?.DataType ?? "Guid",
+            PrimaryKeyType = primaryKeyType,
             Properties = properties.Select(p => new
             {
-                Type = p.DataType,
+                Type = p.Type,
                 Name = p.Name
             }).ToList()
         };
