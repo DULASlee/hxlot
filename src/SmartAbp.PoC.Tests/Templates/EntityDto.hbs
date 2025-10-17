@@ -1,0 +1,21 @@
+using System;
+using Volo.Abp.Application.Dtos;
+
+namespace {{Namespace}}
+{
+    /// <summary>
+    /// {{EntityName}} DTO
+    /// 自动生成时间: {{GeneratedAt}}
+    /// </summary>
+    public class {{EntityName}}Dto : EntityDto<{{PrimaryKeyType}}>
+    {
+{{#each Properties}}
+        /// <summary>
+        /// {{Description}}
+        /// </summary>
+        public {{Type}} {{Name}} { get; set; }{{#if DefaultValue}} = {{DefaultValue}};{{/if}}
+
+{{/each}}
+    }
+}
+

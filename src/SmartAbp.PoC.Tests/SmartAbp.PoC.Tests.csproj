@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- ⭐ Phase 1.5: Handlebars.Net模板引擎 -->
+    <PackageReference Include="Handlebars.Net" Version="2.1.6" />
+  </ItemGroup>
+
+</Project>
