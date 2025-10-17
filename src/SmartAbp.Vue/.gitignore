@@ -155,11 +155,15 @@ packages/*/yarn.lock
 # ==================== 低代码生成器产物 ====================
 # 自动生成的代码（重要：防止提交生成的代码）
 .generated/
-generated/
 __generated__/
 .lowcode-generated/
 **/auto-generated/
 **/codegen-output/
+
+# 🔥 重要例外：后端SSOT生成的前端API客户端必须纳入版本管理
+# src/api/generated/api-client.ts 是后端唯一真实源(SSOT)的核心
+!src/api/generated/
+!src/api/generated/*.ts
 
 # 模板缓存
 .template-cache/

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SmartAbp.Application.Contracts.LowCode;
 using SmartAbp.Application.Contracts.LowCode.Dtos;
 using SmartAbp.Domain.Entities.LowCode;
 using Volo.Abp.Application.Dtos;
@@ -12,20 +13,27 @@ using Volo.Abp.Linq;
 namespace SmartAbp.Application.LowCode
 {
     /// <summary>
-    /// 🔥 低代码模块应用服务（Phase 2A）
+    /// 🔥 低代码模块应用服务（Phase 2A - 后端SSOT）
+    /// 实现接口: IModuleAppService
     /// 对应Controller: ModuleController
     /// 用途: 提供模块CRUD操作，支持完整元数据管理
     /// </summary>
-    public class ModuleAppService : ApplicationService
+    public class ModuleAppService :
+        CrudAppService<
+            LowCodeModule,
+            ModuleDto,
+            Guid,
+            GetModulesInput,
+            CreateOrUpdateModuleDto,
+            CreateOrUpdateModuleDto>,
+        IModuleAppService
     {
-        private readonly IRepository<LowCodeModule, Guid> _moduleRepository;
         private readonly IRepository<LowCodeEntity, Guid> _entityRepository;
 
         public ModuleAppService(
             IRepository<LowCodeModule, Guid> moduleRepository,
-            IRepository<LowCodeEntity, Guid> entityRepository)
+            IRepository<LowCodeEntity, Guid> entityRepository) : base(moduleRepository)
         {
-            _moduleRepository = moduleRepository;
             _entityRepository = entityRepository;
         }
 
@@ -36,9 +44,9 @@ namespace SmartAbp.Application.LowCode
         /// <summary>
         /// 获取模块列表（分页）
         /// </summary>
-        public async Task<PagedResultDto<ModuleDto>> GetListAsync(GetModulesInput input)
+        public override async Task<PagedResultDto<ModuleDto>> GetListAsync(GetModulesInput input)
         {
-            var query = (await _moduleRepository.GetQueryableAsync())
+            var query = (await Repository.GetQueryableAsync())
                 .WhereIf(!string.IsNullOrWhiteSpace(input.Filter),
                     x => x.SystemName.Contains(input.Filter!) ||
                          x.DisplayName.Contains(input.Filter!) ||
@@ -64,9 +72,9 @@ namespace SmartAbp.Application.LowCode
         /// <summary>
         /// 根据ID获取模块（包含完整实体列表）
         /// </summary>
-        public async Task<ModuleDto> GetAsync(Guid id)
+        public override async Task<ModuleDto> GetAsync(Guid id)
         {
-            var module = await _moduleRepository.GetAsync(id);
+            var module = await Repository.GetAsync(id);
             var dto = ObjectMapper.Map<LowCodeModule, ModuleDto>(module);
 
             // Phase 2A: 加载模块下的所有实体
@@ -81,7 +89,7 @@ namespace SmartAbp.Application.LowCode
         /// </summary>
         public async Task<ModuleDto> GetBySystemNameAsync(string systemName)
         {
-            var query = await _moduleRepository.GetQueryableAsync();
+            var query = await Repository.GetQueryableAsync();
             var module = await AsyncExecuter.FirstOrDefaultAsync(
                 query.Where(x => x.SystemName == systemName)
             );
@@ -101,68 +109,11 @@ namespace SmartAbp.Application.LowCode
         }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 增删改操作
+        // CrudAppService基类已提供CRUD方法，无需重复实现：
+        // - CreateAsync(CreateOrUpdateModuleDto input)
+        // - UpdateAsync(Guid id, CreateOrUpdateModuleDto input)
+        // - DeleteAsync(Guid id)
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-        /// <summary>
-        /// 创建模块
-        /// </summary>
-        public async Task<ModuleDto> CreateAsync(CreateOrUpdateModuleDto input)
-        {
-            var module = new LowCodeModule(
-                GuidGenerator.Create(),
-                input.SystemName,
-                input.ModuleName,
-                input.DisplayName,
-                input.Namespace)
-            {
-                Description = input.Description,
-                Version = input.Version,
-                ArchitectureConfig = input.ArchitectureConfig,
-                FrontendConfig = input.FrontendConfig,
-                CodeGenOptions = input.CodeGenOptions,
-                Status = input.Status,
-                IsActive = input.IsActive
-            };
-
-            await _moduleRepository.InsertAsync(module);
-            await CurrentUnitOfWork!.SaveChangesAsync();
-
-            return ObjectMapper.Map<LowCodeModule, ModuleDto>(module);
-        }
-
-        /// <summary>
-        /// 更新模块
-        /// </summary>
-        public async Task<ModuleDto> UpdateAsync(Guid id, CreateOrUpdateModuleDto input)
-        {
-            var module = await _moduleRepository.GetAsync(id);
-
-            module.SystemName = input.SystemName;
-            module.ModuleName = input.ModuleName;
-            module.DisplayName = input.DisplayName;
-            module.Description = input.Description;
-            module.Namespace = input.Namespace;
-            module.Version = input.Version;
-            module.ArchitectureConfig = input.ArchitectureConfig;
-            module.FrontendConfig = input.FrontendConfig;
-            module.CodeGenOptions = input.CodeGenOptions;
-            module.Status = input.Status;
-            module.IsActive = input.IsActive;
-
-            await _moduleRepository.UpdateAsync(module);
-            await CurrentUnitOfWork!.SaveChangesAsync();
-
-            return ObjectMapper.Map<LowCodeModule, ModuleDto>(module);
-        }
-
-        /// <summary>
-        /// 删除模块
-        /// </summary>
-        public async Task DeleteAsync(Guid id)
-        {
-            await _moduleRepository.DeleteAsync(id);
-        }
     }
 }
 
