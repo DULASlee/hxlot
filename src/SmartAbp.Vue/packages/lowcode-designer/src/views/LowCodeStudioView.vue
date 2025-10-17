@@ -229,7 +229,7 @@ import {
   View,
   ZoomIn, ZoomOut
 } from '@element-plus/icons-vue'
-import type { CanvasComponent } from '@smartabp/lowcode-designer/types'
+import type { CanvasComponent } from '../types'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import {

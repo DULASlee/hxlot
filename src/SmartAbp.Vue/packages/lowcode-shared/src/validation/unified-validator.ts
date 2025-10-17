@@ -45,7 +45,7 @@ import {
 import type {
     UnifiedEntityDefinition,
     UnifiedModuleMetadata
-} from '@smartabp/lowcode-shared'
+} from '../types/unified-schema'
 
 // 已移除对 metadata-adapter 的依赖，直接对统一Schema进行校验
 

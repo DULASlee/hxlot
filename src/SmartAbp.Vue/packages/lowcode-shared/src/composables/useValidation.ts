@@ -9,7 +9,7 @@ import { computed, reactive, readonly } from 'vue'
 import type {
     UnifiedEntityDefinition,
     UnifiedModuleMetadata
-} from '@smartabp/lowcode-shared'
+} from '../types/unified-schema'
 import {
     UnifiedSchemaValidator,
     type UnifiedValidationFeatureFlags,

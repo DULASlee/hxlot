@@ -10,30 +10,50 @@
       </p>
 
       <!-- 统计横幅 -->
-      <div v-if="stats.totalProjects > 0" class="stats-banner">
+      <div
+        v-if="stats.totalProjects > 0"
+        class="stats-banner"
+      >
         <div class="stat-item">
-          <el-statistic title="累计生成" :value="stats.totalProjects" :loading="statsLoading">
+          <el-statistic
+            title="累计生成"
+            :value="stats.totalProjects"
+            :loading="statsLoading"
+          >
             <template #suffix>
               个项目
             </template>
           </el-statistic>
         </div>
         <div class="stat-item">
-          <el-statistic title="本月生成" :value="stats.monthlyGenerations" :loading="statsLoading">
+          <el-statistic
+            title="本月生成"
+            :value="stats.monthlyGenerations"
+            :loading="statsLoading"
+          >
             <template #suffix>
               次
             </template>
           </el-statistic>
         </div>
         <div class="stat-item">
-          <el-statistic title="节省时间" :value="stats.savedHours" :loading="statsLoading">
+          <el-statistic
+            title="节省时间"
+            :value="stats.savedHours"
+            :loading="statsLoading"
+          >
             <template #suffix>
               小时
             </template>
           </el-statistic>
         </div>
         <div class="stat-item">
-          <el-statistic title="代码质量" :value="stats.qualityScore" :precision="1" :loading="statsLoading">
+          <el-statistic
+            title="代码质量"
+            :value="stats.qualityScore"
+            :precision="1"
+            :loading="statsLoading"
+          >
             <template #suffix>
               分
             </template>
@@ -60,10 +80,20 @@
             <li>✅ 适合80%场景</li>
             <li>✅ 零学习成本</li>
           </ul>
-          <el-tag v-if="recommendedMode === 'simple'" type="success" effect="dark" class="recommend-badge">
+          <el-tag
+            v-if="recommendedMode === 'simple'"
+            type="success"
+            effect="dark"
+            class="recommend-badge"
+          >
             ⭐ 推荐
           </el-tag>
-          <el-button type="primary" size="large" class="mode-btn" @click.stop="goToSimpleMode">
+          <el-button
+            type="primary"
+            size="large"
+            class="mode-btn"
+            @click.stop="goToSimpleMode"
+          >
             立即开始
           </el-button>
         </div>
@@ -85,11 +115,24 @@
             <li>✅ 开箱即用</li>
             <li>✅ 95%功能完整</li>
           </ul>
-          <el-tag v-if="recommendedMode === 'industry'" type="warning" effect="dark" class="recommend-badge">
+          <el-tag
+            v-if="recommendedMode === 'industry'"
+            type="warning"
+            effect="dark"
+            class="recommend-badge"
+          >
             ⭐ 推荐
           </el-tag>
-          <el-dropdown trigger="click" size="large" @command="selectIndustryTemplate">
-            <el-button type="warning" size="large" class="mode-btn">
+          <el-dropdown
+            trigger="click"
+            size="large"
+            @command="selectIndustryTemplate"
+          >
+            <el-button
+              type="warning"
+              size="large"
+              class="mode-btn"
+            >
               选择行业 <el-icon class="el-icon--right">
                 <ArrowDown />
               </el-icon>
@@ -126,7 +169,10 @@
                     </div>
                   </div>
                 </el-dropdown-item>
-                <el-dropdown-item command="coming-soon" disabled>
+                <el-dropdown-item
+                  command="coming-soon"
+                  disabled
+                >
                   <div class="template-item">
                     <el-icon size="20">
                       <MoreFilled />
@@ -163,10 +209,20 @@
             <li>✅ 工作流编排</li>
             <li>✅ 完全自定义</li>
           </ul>
-          <el-tag v-if="recommendedMode === 'pro'" type="primary" effect="dark" class="recommend-badge">
+          <el-tag
+            v-if="recommendedMode === 'pro'"
+            type="primary"
+            effect="dark"
+            class="recommend-badge"
+          >
             ⭐ 推荐
           </el-tag>
-          <el-button type="success" size="large" class="mode-btn" @click.stop="goToProMode">
+          <el-button
+            type="success"
+            size="large"
+            class="mode-btn"
+            @click.stop="goToProMode"
+          >
             进入工作台
           </el-button>
         </div>
@@ -180,33 +236,67 @@
           </el-icon>
           详细对比
         </h3>
-        <el-table :data="comparisonData" border stripe style="width: 100%"
-          :header-cell-style="{ background: '#f5f7fa' }">
-          <el-table-column prop="feature" label="特性" width="180" fixed>
+        <el-table
+          :data="comparisonData"
+          border
+          stripe
+          style="width: 100%"
+          :header-cell-style="{ background: '#f5f7fa' }"
+        >
+          <el-table-column
+            prop="feature"
+            label="特性"
+            width="180"
+            fixed
+          >
             <template #default="{ row }">
-              <span v-if="row.icon" class="feature-icon">{{ row.icon }}</span>
+              <span
+                v-if="row.icon"
+                class="feature-icon"
+              >{{ row.icon }}</span>
               {{ row.feature }}
             </template>
           </el-table-column>
-          <el-table-column prop="simple" label="极简模式" align="center">
+          <el-table-column
+            prop="simple"
+            label="极简模式"
+            align="center"
+          >
             <template #default="{ row }">
-              <el-tag v-if="row.highlight === 'simple'" type="success">
+              <el-tag
+                v-if="row.highlight === 'simple'"
+                type="success"
+              >
                 {{ row.simple }}
               </el-tag>
               <span v-else>{{ row.simple }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="industry" label="行业模板" align="center">
+          <el-table-column
+            prop="industry"
+            label="行业模板"
+            align="center"
+          >
             <template #default="{ row }">
-              <el-tag v-if="row.highlight === 'industry'" type="warning">
+              <el-tag
+                v-if="row.highlight === 'industry'"
+                type="warning"
+              >
                 {{ row.industry }}
               </el-tag>
               <span v-else>{{ row.industry }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="pro" label="专业模式" align="center">
+          <el-table-column
+            prop="pro"
+            label="专业模式"
+            align="center"
+          >
             <template #default="{ row }">
-              <el-tag v-if="row.highlight === 'pro'" type="primary">
+              <el-tag
+                v-if="row.highlight === 'pro'"
+                type="primary"
+              >
                 {{ row.pro }}
               </el-tag>
               <span v-else>{{ row.pro }}</span>
@@ -216,8 +306,15 @@
       </div>
 
       <!-- 行业推荐提示 -->
-      <div v-if="industryRecommendation" class="industry-recommendation">
-        <el-alert type="success" :closable="false" show-icon>
+      <div
+        v-if="industryRecommendation"
+        class="industry-recommendation"
+      >
+        <el-alert
+          type="success"
+          :closable="false"
+          show-icon
+        >
           <template #title>
             <span style="font-size: 16px; font-weight: 600;">
               💡 {{ industryRecommendation.reason }}
@@ -227,8 +324,12 @@
             推荐使用 <strong>{{ industryRecommendation.name }}</strong> 模板，
             {{ industryRecommendation.benefits }}
           </div>
-          <el-button type="success" size="small" style="margin-top: 12px;"
-            @click="selectIndustryTemplate(industryRecommendation.template)">
+          <el-button
+            type="success"
+            size="small"
+            style="margin-top: 12px;"
+            @click="selectIndustryTemplate(industryRecommendation.template)"
+          >
             立即使用推荐模板
           </el-button>
         </el-alert>
@@ -236,12 +337,29 @@
     </div>
 
     <!-- 新手引导Dialog -->
-    <el-dialog v-model="showWelcomeGuide" title="欢迎使用SmartAbp代码生成器" width="600px" :close-on-click-modal="false">
+    <el-dialog
+      v-model="showWelcomeGuide"
+      title="欢迎使用SmartAbp代码生成器"
+      width="600px"
+      :close-on-click-modal="false"
+    >
       <div class="welcome-guide-content">
-        <el-steps :active="1" align-center>
-          <el-step title="选择模式" description="根据需求选择" />
-          <el-step title="配置参数" description="简单配置" />
-          <el-step title="生成代码" description="一键生成" />
+        <el-steps
+          :active="1"
+          align-center
+        >
+          <el-step
+            title="选择模式"
+            description="根据需求选择"
+          />
+          <el-step
+            title="配置参数"
+            description="简单配置"
+          />
+          <el-step
+            title="生成代码"
+            description="一键生成"
+          />
         </el-steps>
 
         <div class="guide-tips">
@@ -252,7 +370,10 @@
             <li><strong>专业模式</strong>：完整工作台，支持复杂业务和深度定制</li>
           </ul>
 
-          <div v-if="industryRecommendation" class="guide-recommendation">
+          <div
+            v-if="industryRecommendation"
+            class="guide-recommendation"
+          >
             <el-divider />
             <p style="margin-bottom: 12px;">
               <el-icon color="#67c23a">
@@ -274,10 +395,18 @@
         <el-button @click="showWelcomeGuide = false">
           我再看看
         </el-button>
-        <el-button v-if="industryRecommendation" type="success" @click="useRecommendedTemplate">
+        <el-button
+          v-if="industryRecommendation"
+          type="success"
+          @click="useRecommendedTemplate"
+        >
           使用推荐模板
         </el-button>
-        <el-button v-else type="primary" @click="showWelcomeGuide = false">
+        <el-button
+          v-else
+          type="primary"
+          @click="showWelcomeGuide = false"
+        >
           开始使用
         </el-button>
       </template>

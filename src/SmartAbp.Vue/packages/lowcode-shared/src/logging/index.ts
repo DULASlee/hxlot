@@ -9,6 +9,7 @@
 export { ErrorLogIntegration } from './ErrorLogIntegration'
 export { LogPolicyManager } from './LogPolicyManager'
 
-// 从types导出logger相关函数（用于向后兼容）
+// 从types导出logger相关类型和函数（用于向后兼容）
 export { createComponentLogger, getGlobalLogger } from '../types/logger.js'
+export type { ILogger } from '../types/logger.js'
 

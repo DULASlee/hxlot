@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { http } from '@smartabp/lowcode-api'
+import { http } from '../http-client'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Git工作流类型定义 - Git Workflow Type Definitions

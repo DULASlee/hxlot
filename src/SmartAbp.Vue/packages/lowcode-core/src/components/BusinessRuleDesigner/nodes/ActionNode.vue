@@ -128,7 +128,7 @@
 
 <script setup lang="ts">
 import { InfoFilled, Setting } from '@element-plus/icons-vue'
-import type { ActionType, CallAPIParams, RuleNodeData, SetFieldValueParams, ShowMessageParams, ValidateFieldParams } from '@smartabp/lowcode-core'
+import type { ActionType, CallAPIParams, RuleNodeData, SetFieldValueParams, ShowMessageParams, ValidateFieldParams } from './types'
 import { Handle, Position } from '@vue-flow/core'
 import { ElIcon, ElTag } from 'element-plus'
 import { computed } from 'vue'

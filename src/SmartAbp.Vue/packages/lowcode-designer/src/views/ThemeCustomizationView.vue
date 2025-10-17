@@ -438,7 +438,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
-import EnhancedThemeEditor from '@smartabp/lowcode-designer/components/EnhancedThemeEditor.vue'
+import EnhancedThemeEditor from '../components/EnhancedThemeEditor.vue'
 import { useEnhancedThemeStore } from '@smartabp/lowcode-core'
 import { logger } from '@smartabp/lowcode-tools'
 

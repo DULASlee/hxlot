@@ -72,7 +72,7 @@
 
 <script setup lang="ts">
 import { InfoFilled, Share, Warning } from '@element-plus/icons-vue'
-import type { RuleNodeData } from '@smartabp/lowcode-core'
+import type { RuleNodeData } from './types'
 import { Handle, Position } from '@vue-flow/core'
 import { ElIcon } from 'element-plus'
 import { computed } from 'vue'
