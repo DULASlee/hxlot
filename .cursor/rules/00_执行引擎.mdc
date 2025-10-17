@@ -1,4 +1,9 @@
 ---
+description: 
+globs:
+alwaysApply: true
+---
+---
 title: AI编程执行引擎 v12.0（极简版）
 alwaysApply: true
 priority: 1
