@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Phase 2: DevKit核心依赖 -->
+    <PackageReference Include="Handlebars.Net" Version="2.1.6" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- 引用现有项目 -->
+    <ProjectReference Include="..\SmartAbp.Domain\SmartAbp.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
+
