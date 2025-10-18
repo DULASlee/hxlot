@@ -1,9 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using HandlebarsDotNet;
 using SmartAbp.DevKit.Core.Metadata;
-using SmartAbp.Domain.Entities.LowCode;
 
 namespace SmartAbp.DevKit.Core.Generator;
 
@@ -11,18 +10,18 @@ namespace SmartAbp.DevKit.Core.Generator;
 /// EntityDto生成器
 /// Phase 2第一个迁移的生成器
 /// </summary>
-public class EntityDtoGenerator : CodeGeneratorFramework
+public class EntityDtoGenerator : CodeGeneratorFramework<Guid, string>
 {
     private readonly UnifiedMetadataSDK _metadataSDK;
+    private readonly HandlebarsTemplate<object, object> _template;
 
-    public EntityDtoGenerator(UnifiedMetadataSDK metadataSDK, ILogger<EntityDtoGenerator> logger) 
-        : base(logger)
+    public EntityDtoGenerator(UnifiedMetadataSDK metadataSDK)
     {
         _metadataSDK = metadataSDK;
-        InitializeTemplate();
+        _template = InitializeTemplate();
     }
 
-    private void InitializeTemplate()
+    private HandlebarsTemplate<object, object> InitializeTemplate()
     {
         var templateSource = @"using System;
 using Volo.Abp.Application.Dtos;
@@ -36,14 +35,11 @@ namespace {{Namespace}}
 {{/each}}
     }
 }";
-        CompileTemplate(templateSource);
+        return Handlebars.Compile(templateSource);
     }
 
-    public override async Task<string> GenerateAsync(object metadata)
+    public override Task<string> GenerateAsync(Guid entityId)
     {
-        if (metadata is not Guid entityId)
-            throw new ArgumentException("metadata must be Guid (entityId)");
-
         var entity = _metadataSDK.GetEntity(entityId);
         if (entity == null)
             throw new InvalidOperationException($"Entity {entityId} not found");
@@ -63,14 +59,18 @@ namespace {{Namespace}}
             }).ToList()
         };
 
-        var code = Template!(data);
+        var code = _template(data);
         
-        if (!Validate(code))
-            throw new InvalidOperationException("Generated code validation failed");
+        return Task.FromResult(code);
+    }
 
-        Logger.LogInformation("EntityDto generated for {EntityName}", entity.Name);
-        
-        return await Task.FromResult(code);
+    public override Task<ValidationResult> ValidateInputAsync(Guid entityId)
+    {
+        if (_metadataSDK.GetEntity(entityId) == null)
+        {
+            return Task.FromResult(ValidationResult.Fail($"Entity with ID {entityId} not found."));
+        }
+        return Task.FromResult(ValidationResult.Success());
     }
 }
 

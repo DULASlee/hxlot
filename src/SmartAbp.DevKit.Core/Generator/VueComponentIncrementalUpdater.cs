@@ -1,8 +1,9 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace SmartAbp.DevKit.Core.Generator;
 
@@ -12,20 +13,16 @@ namespace SmartAbp.DevKit.Core.Generator;
 /// </summary>
 public class VueComponentIncrementalUpdater : CodeGeneratorFramework<VueComponentUpdateInput, string>
 {
-    private readonly ILogger<VueComponentIncrementalUpdater> _logger;
     private readonly string _tsMorphScriptPath;
 
-    public VueComponentIncrementalUpdater(ILogger<VueComponentIncrementalUpdater> logger)
+    public VueComponentIncrementalUpdater()
     {
-        _logger = logger;
         // ts-morph脚本路径（Node.js脚本）
         _tsMorphScriptPath = Path.Combine(AppContext.BaseDirectory, "Scripts", "vue-updater.js");
     }
 
     public override async Task<string> GenerateAsync(VueComponentUpdateInput input)
     {
-        _logger.LogInformation("开始增量更新Vue组件: {FilePath}", input.FilePath);
-
         // 验证输入
         var validation = await ValidateInputAsync(input);
         if (!validation.IsValid)
@@ -36,7 +33,6 @@ public class VueComponentIncrementalUpdater : CodeGeneratorFramework<VueComponen
         // 调用Node.js脚本执行ts-morph更新
         var result = await ExecuteTsMorphUpdateAsync(input);
 
-        _logger.LogInformation("Vue组件增量更新完成");
         return result;
     }
 
@@ -60,20 +56,20 @@ public class VueComponentIncrementalUpdater : CodeGeneratorFramework<VueComponen
     private async Task<string> ExecuteTsMorphUpdateAsync(VueComponentUpdateInput input)
     {
         // 构建Node.js脚本参数
-        var args = BuildScriptArguments(input);
+        var propsJson = JsonSerializer.Serialize(input.Properties);
 
         // 执行Node.js脚本
-        var processInfo = new System.Diagnostics.ProcessStartInfo
+        var processInfo = new ProcessStartInfo
         {
             FileName = "node",
-            Arguments = $"\"{_tsMorphScriptPath}\" {args}",
+            Arguments = $"\"{_tsMorphScriptPath}\" \"{input.FilePath}\" '{propsJson}' \"{input.UpdateMode}\"",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
             CreateNoWindow = true
         };
 
-        using var process = System.Diagnostics.Process.Start(processInfo);
+        using var process = Process.Start(processInfo);
         if (process == null)
             throw new InvalidOperationException("无法启动Node.js进程");
 
@@ -84,26 +80,10 @@ public class VueComponentIncrementalUpdater : CodeGeneratorFramework<VueComponen
 
         if (process.ExitCode != 0)
         {
-            _logger.LogError("ts-morph更新失败: {Error}", error);
             throw new InvalidOperationException($"ts-morph更新失败: {error}");
         }
 
-        _logger.LogInformation("ts-morph更新成功: {Output}", output);
         return output;
-    }
-
-    private string BuildScriptArguments(VueComponentUpdateInput input)
-    {
-        var sb = new StringBuilder();
-        sb.Append($"--file \"{input.FilePath}\" ");
-        sb.Append($"--component \"{input.ComponentName}\" ");
-        sb.Append($"--mode {input.UpdateMode} ");
-
-        // 属性列表（JSON格式）
-        var propsJson = System.Text.Json.JsonSerializer.Serialize(input.Properties);
-        sb.Append($"--props '{propsJson}' ");
-
-        return sb.ToString();
     }
 }
 

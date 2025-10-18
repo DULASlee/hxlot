@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-17T08:14:58.668Z",
+  "timestamp": "2025-10-18T00:06:17.216Z",
   "project": "Baobab.SmartAbp",
   "language": "typescript",
   "files": [
@@ -7,8 +7,8 @@
       "name": "BusinessRuleAppService.cs",
       "path": "src/SmartAbp.Application/BusinessRules/BusinessRuleAppService.cs",
       "type": "file",
-      "size": 33114,
-      "modified": "2025-10-16T12:38:36.855Z"
+      "size": 32641,
+      "modified": "2025-10-17T17:21:47.160Z"
     },
     {
       "name": "IScriptExecutionService.cs",
@@ -46,6 +46,13 @@
       "modified": "2025-10-12T17:17:08.113Z"
     },
     {
+      "name": "CodeGenerationService.cs",
+      "path": "src/SmartAbp.Application/LowCode/CodeGenerationService.cs",
+      "type": "file",
+      "size": 3318,
+      "modified": "2025-10-17T17:21:47.161Z"
+    },
+    {
       "name": "EntityModelingAppService.cs",
       "path": "src/SmartAbp.Application/LowCode/EntityModelingAppService.cs",
       "type": "file",
@@ -70,8 +77,8 @@
       "name": "SchemaVersionHistoryAppService.cs",
       "path": "src/SmartAbp.Application/LowCode/SchemaVersionHistoryAppService.cs",
       "type": "file",
-      "size": 7972,
-      "modified": "2025-10-12T17:17:08.113Z"
+      "size": 8041,
+      "modified": "2025-10-17T17:21:47.161Z"
     },
     {
       "name": "SchemaVersionService.cs",
@@ -79,6 +86,13 @@
       "type": "file",
       "size": 5594,
       "modified": "2025-10-12T17:17:08.114Z"
+    },
+    {
+      "name": "PageConfigValidator.cs",
+      "path": "src/SmartAbp.Application/LowCode/Validation/PageConfigValidator.cs",
+      "type": "file",
+      "size": 4618,
+      "modified": "2025-10-17T17:21:47.161Z"
     },
     {
       "name": "EnterpriseAlertingService.cs",
@@ -464,6 +478,34 @@
       "type": "file",
       "size": 2404,
       "modified": "2025-10-12T17:17:08.139Z"
+    },
+    {
+      "name": "LowCodeEntity.cs",
+      "path": "src/SmartAbp.Domain/Entities/LowCode/LowCodeEntity.cs",
+      "type": "file",
+      "size": 8521,
+      "modified": "2025-10-17T08:16:40.523Z"
+    },
+    {
+      "name": "LowCodeModule.cs",
+      "path": "src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs",
+      "type": "file",
+      "size": 7737,
+      "modified": "2025-10-17T08:16:40.523Z"
+    },
+    {
+      "name": "LowCodePageConfig.cs",
+      "path": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs",
+      "type": "file",
+      "size": 16118,
+      "modified": "2025-10-17T17:21:47.163Z"
+    },
+    {
+      "name": "LowCodeProperty.cs",
+      "path": "src/SmartAbp.Domain/Entities/LowCode/LowCodeProperty.cs",
+      "type": "file",
+      "size": 15091,
+      "modified": "2025-10-17T17:21:47.164Z"
     },
     {
       "name": "SchemaVersionHistory.cs",
@@ -2696,7 +2738,7 @@
       "path": "src/SmartAbp.Vue/src/views/log/AdvancedLogViewer.vue",
       "type": "file",
       "size": 16051,
-      "modified": "2025-10-16T17:11:51.223Z"
+      "modified": "2025-10-17T17:44:41.759Z"
     },
     {
       "name": "LogDashboard.vue",
@@ -3262,8 +3304,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/index.ts",
       "type": "file",
-      "size": 5867,
-      "modified": "2025-10-16T12:38:50.732Z"
+      "size": 5938,
+      "modified": "2025-10-17T17:21:47.166Z"
     },
     {
       "name": "industryTemplate.ts",
@@ -6859,6 +6901,13 @@
       "file": "src/SmartAbp.Application/CodeGenerator/UserProfileAppService.cs"
     },
     {
+      "name": "CodeGenerationService",
+      "type": "class",
+      "line": 16,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/CodeGenerationService.cs"
+    },
+    {
       "name": "EntityModelingAppService",
       "type": "class",
       "line": 19,
@@ -6892,6 +6941,20 @@
       "line": 20,
       "exported": true,
       "file": "src/SmartAbp.Application/LowCode/Services/SchemaVersionService.cs"
+    },
+    {
+      "name": "PageConfigValidator",
+      "type": "class",
+      "line": 12,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/Validation/PageConfigValidator.cs"
+    },
+    {
+      "name": "PageConfigValidationResult",
+      "type": "class",
+      "line": 117,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/Validation/PageConfigValidator.cs"
     },
     {
       "name": "EnterpriseAlertingOptions",
@@ -8397,6 +8460,195 @@
       "line": 12,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/EntityRelation.cs"
+    },
+    {
+      "name": "LowCodeEntity",
+      "type": "class",
+      "line": 17,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeEntity.cs"
+    },
+    {
+      "name": "EntityConfig",
+      "type": "class",
+      "line": 170,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeEntity.cs"
+    },
+    {
+      "name": "EntityUIConfig",
+      "type": "class",
+      "line": 211,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeEntity.cs"
+    },
+    {
+      "name": "LowCodeModule",
+      "type": "class",
+      "line": 17,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs"
+    },
+    {
+      "name": "ModuleArchitectureConfig",
+      "type": "class",
+      "line": 146,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs"
+    },
+    {
+      "name": "ModuleFrontendConfig",
+      "type": "class",
+      "line": 172,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs"
+    },
+    {
+      "name": "ModuleCodeGenOptions",
+      "type": "class",
+      "line": 198,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs"
+    },
+    {
+      "name": "LowCodePageConfig",
+      "type": "class",
+      "line": 18,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
+    },
+    {
+      "name": "PageConfigDto",
+      "type": "class",
+      "line": 141,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
+    },
+    {
+      "name": "FormConfig",
+      "type": "class",
+      "line": 172,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
+    },
+    {
+      "name": "FormCreateRule",
+      "type": "class",
+      "line": 193,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
+    },
+    {
+      "name": "FormGlobalConfig",
+      "type": "class",
+      "line": 237,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
+    },
+    {
+      "name": "FieldEffect",
+      "type": "class",
+      "line": 283,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
+    },
+    {
+      "name": "ListConfig",
+      "type": "class",
+      "line": 323,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
+    },
+    {
+      "name": "ColumnDefinition",
+      "type": "class",
+      "line": 344,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
+    },
+    {
+      "name": "PaginationConfig",
+      "type": "class",
+      "line": 387,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
+    },
+    {
+      "name": "ActionConfig",
+      "type": "class",
+      "line": 403,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
+    },
+    {
+      "name": "DetailConfig",
+      "type": "class",
+      "line": 441,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
+    },
+    {
+      "name": "DetailSection",
+      "type": "class",
+      "line": 457,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
+    },
+    {
+      "name": "EventConfig",
+      "type": "class",
+      "line": 484,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
+    },
+    {
+      "name": "LayoutConfig",
+      "type": "class",
+      "line": 526,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs"
+    },
+    {
+      "name": "LowCodeProperty",
+      "type": "class",
+      "line": 18,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeProperty.cs"
+    },
+    {
+      "name": "PropertyUIConfig",
+      "type": "class",
+      "line": 215,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeProperty.cs"
+    },
+    {
+      "name": "DataSourceConfig",
+      "type": "class",
+      "line": 312,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeProperty.cs"
+    },
+    {
+      "name": "ListFieldConfig",
+      "type": "class",
+      "line": 343,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeProperty.cs"
+    },
+    {
+      "name": "FormFieldConfig",
+      "type": "class",
+      "line": 369,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeProperty.cs"
+    },
+    {
+      "name": "ValidationRuleConfig",
+      "type": "class",
+      "line": 401,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/LowCode/LowCodeProperty.cs"
     },
     {
       "name": "SchemaVersionHistory",

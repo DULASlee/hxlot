@@ -4,11 +4,13 @@ src/SmartAbp.Application/BusinessRules/Services/ScriptExecutionService.cs
 src/SmartAbp.Application/CodeGenerator/CodeGenStatsAppService.cs
 src/SmartAbp.Application/CodeGenerator/GenerationHistoryAppService.cs
 src/SmartAbp.Application/CodeGenerator/UserProfileAppService.cs
+src/SmartAbp.Application/LowCode/CodeGenerationService.cs
 src/SmartAbp.Application/LowCode/EntityModelingAppService.cs
 src/SmartAbp.Application/LowCode/EntityModelingAutoMapperProfile.cs
 src/SmartAbp.Application/LowCode/Mapping/LowCodeAutoMapperProfile.cs
 src/SmartAbp.Application/LowCode/SchemaVersionHistoryAppService.cs
 src/SmartAbp.Application/LowCode/Services/SchemaVersionService.cs
+src/SmartAbp.Application/LowCode/Validation/PageConfigValidator.cs
 src/SmartAbp.Application/Permissions/Alerting/EnterpriseAlertingService.cs
 src/SmartAbp.Application/Permissions/Alerting/PermissionAlertingService.cs
 src/SmartAbp.Application/Permissions/Analytics/EnterpriseAnalyticsService.cs
@@ -64,6 +66,10 @@ src/SmartAbp.Domain/Data/SmartAbpDbMigrationService.cs
 src/SmartAbp.Domain/Entities/LowCode/EntityDefinition.cs
 src/SmartAbp.Domain/Entities/LowCode/EntityField.cs
 src/SmartAbp.Domain/Entities/LowCode/EntityRelation.cs
+src/SmartAbp.Domain/Entities/LowCode/LowCodeEntity.cs
+src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs
+src/SmartAbp.Domain/Entities/LowCode/LowCodePageConfig.cs
+src/SmartAbp.Domain/Entities/LowCode/LowCodeProperty.cs
 src/SmartAbp.Domain/Entities/LowCode/SchemaVersionHistory.cs
 src/SmartAbp.Domain/Entities/LowCode/ValidationRule.cs
 src/SmartAbp.Domain/Identity/ChangeIdentityPasswordPolicySettingDefinitionProvider.cs
