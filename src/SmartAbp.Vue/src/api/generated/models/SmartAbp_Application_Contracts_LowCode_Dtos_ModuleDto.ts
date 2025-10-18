@@ -11,7 +11,7 @@ import type { SmartAbp_Domain_Entities_LowCode_ModulePermissionConfig } from './
 export type SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto = {
     id?: string;
     systemName?: string | null;
-    name?: string | null;
+    moduleName?: string | null;
     displayName?: string | null;
     description?: string | null;
     namespace?: string | null;

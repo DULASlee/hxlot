@@ -18503,7 +18503,7 @@
             "type": "string",
             "nullable": true
           },
-          "name": {
+          "moduleName": {
             "type": "string",
             "nullable": true
           },

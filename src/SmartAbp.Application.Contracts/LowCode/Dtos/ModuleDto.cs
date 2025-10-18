@@ -27,9 +27,8 @@ namespace SmartAbp.Application.Contracts.LowCode.Dtos
         /// <summary>
         /// 模块名称（如：ProjectManagement, Device）
         /// 对应前端: name
-        /// Phase 3: 重命名ModuleName为Name，与前端完全一致
         /// </summary>
-        public string Name { get; set; } = default!;
+        public string ModuleName { get; set; } = default!;
 
         /// <summary>
         /// 显示名称（中文，如：项目管理，设备管理）
