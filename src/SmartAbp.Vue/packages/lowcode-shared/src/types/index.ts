@@ -10,15 +10,10 @@
 // 🚀 前端元数据类型系统 (Phase 2B瘦身版)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export type {
-  EntityMetadata,
-  PropertyMetadata,
-  NavigationPropertyMetadata,
-  ValidationRule,
-  UnifiedValidationRule, // 向后兼容
-  ModuleMetadata,
-  RouteMetadata,
+  EntityMetadata, // 向后兼容
+  ModuleMetadata, NavigationPropertyMetadata, PropertyMetadata, RouteMetadata,
   SchemaVersion,
-  StoreMetadata
+  StoreMetadata, UnifiedValidationRule, ValidationRule
 } from './metadata.js'
 
 export {

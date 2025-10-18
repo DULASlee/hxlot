@@ -100,6 +100,13 @@ namespace SmartAbp.Domain.Entities.LowCode
         public bool IsActive { get; set; } = true;
 
         /// <summary>
+        /// 模块依赖（前端依赖的其他模块）
+        /// Phase 3新增：后端SSOT完整性
+        /// </summary>
+        [MaxLength(500)]
+        public string? Dependencies { get; set; }
+
+        /// <summary>
         /// 租户ID（多租户支持）
         /// </summary>
         public Guid? TenantId { get; set; }
@@ -164,6 +171,36 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// 数据库Schema名称
         /// </summary>
         public string Schema { get; set; } = "dbo";
+
+        /// <summary>
+        /// 数据库表前缀
+        /// Phase 3新增：后端SSOT完整性
+        /// </summary>
+        public string? TablePrefix { get; set; }
+
+        /// <summary>
+        /// 代码生成作者
+        /// Phase 3新增：后端SSOT完整性
+        /// </summary>
+        public string? Author { get; set; }
+
+        /// <summary>
+        /// 是否使用多租户
+        /// Phase 3新增：后端SSOT完整性
+        /// </summary>
+        public bool IsMultiTenant { get; set; } = false;
+
+        /// <summary>
+        /// 是否使用软删除
+        /// Phase 3新增：后端SSOT完整性
+        /// </summary>
+        public bool UseSoftDelete { get; set; } = true;
+
+        /// <summary>
+        /// 是否启用审计日志
+        /// Phase 3新增：后端SSOT完整性
+        /// </summary>
+        public bool EnableAuditLog { get; set; } = true;
     }
 
     /// <summary>
@@ -190,6 +227,49 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// 菜单排序
         /// </summary>
         public int MenuOrder { get; set; }
+
+        /// <summary>
+        /// 完整菜单配置（支持多层级菜单树）
+        /// Phase 3新增：支持前端完整菜单结构
+        /// </summary>
+        public List<MenuConfigItem>? MenuConfig { get; set; }
+    }
+
+    /// <summary>
+    /// 菜单配置项（支持递归树结构）
+    /// Phase 3新增：后端SSOT完整性
+    /// </summary>
+    public class MenuConfigItem
+    {
+        /// <summary>
+        /// 菜单ID
+        /// </summary>
+        public string Id { get; set; } = default!;
+
+        /// <summary>
+        /// 菜单标题
+        /// </summary>
+        public string Label { get; set; } = default!;
+
+        /// <summary>
+        /// 菜单图标
+        /// </summary>
+        public string? Icon { get; set; }
+
+        /// <summary>
+        /// 路由地址
+        /// </summary>
+        public string? Route { get; set; }
+
+        /// <summary>
+        /// 排序号
+        /// </summary>
+        public int Order { get; set; }
+
+        /// <summary>
+        /// 子菜单（支持递归）
+        /// </summary>
+        public List<MenuConfigItem>? Children { get; set; }
     }
 
     /// <summary>
@@ -216,6 +296,12 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// 是否生成测试代码
         /// </summary>
         public bool GenerateTests { get; set; } = false;
+
+        /// <summary>
+        /// 是否生成移动端页面
+        /// Phase 3新增：后端SSOT完整性
+        /// </summary>
+        public bool GenerateMobilePages { get; set; } = false;
 
         /// <summary>
         /// 是否使用AutoMapper

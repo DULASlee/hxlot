@@ -1,7 +1,7 @@
 # Phase 3 迁移清单 - unified-schema.ts完全替换
 
-**创建日期**: 2025-10-18  
-**扫描结果**: 12个源文件引用unified-schema.ts  
+**创建日期**: 2025-10-18
+**扫描结果**: 12个源文件引用unified-schema.ts
 **迁移目标**: 将所有引用替换为后端SSOT类型（type-aliases.ts）
 
 ---
@@ -51,49 +51,49 @@
 
 #### 3. packages/lowcode-shared/src/validation/module-validator.ts
 - **当前状态**: 待迁移
-- **引用内容**: 
+- **引用内容**:
   - `UnifiedModuleMetadata`
   - `UnifiedEntityDefinition`
   - `UnifiedEntityField`
-- **迁移目标**: 
+- **迁移目标**:
   - `ModuleDto`（from type-aliases.ts）
   - `EntityDefinitionDto`（from type-aliases.ts）
   - `EntityFieldDto`（from type-aliases.ts）
 - **优先级**: P1（高）
 - **预计时间**: 30分钟
-- **影响评估**: 
+- **影响评估**:
   - 影响模块验证功能
   - 需要更新验证逻辑
   - 需要测试验证规则
 
 #### 4. packages/lowcode-shared/src/validation/metadata-adapter.ts
 - **当前状态**: 待迁移
-- **引用内容**: 
+- **引用内容**:
   - `UnifiedModuleMetadata`
   - `UnifiedEntityDefinition`
-- **迁移目标**: 
+- **迁移目标**:
   - `ModuleDto`（from type-aliases.ts）
   - `EntityDefinitionDto`（from type-aliases.ts）
 - **优先级**: P1（高）
 - **预计时间**: 20分钟
-- **影响评估**: 
+- **影响评估**:
   - 影响元数据适配功能
   - 需要更新适配器逻辑
   - 需要测试适配结果
 
 #### 5. packages/lowcode-shared/src/validation/entity-validator.ts
 - **当前状态**: 待迁移
-- **引用内容**: 
+- **引用内容**:
   - `UnifiedEntityDefinition`
   - `UnifiedEntityField`
   - `UnifiedValidationRule`
-- **迁移目标**: 
+- **迁移目标**:
   - `EntityDefinitionDto`（from type-aliases.ts）
   - `EntityFieldDto`（from type-aliases.ts）
   - `ValidationRule`（from metadata.ts）
 - **优先级**: P1（高）
 - **预计时间**: 30分钟
-- **影响评估**: 
+- **影响评估**:
   - 影响实体验证功能
   - 需要更新验证规则
   - 需要测试边界条件
@@ -106,17 +106,17 @@
 
 #### 6. packages/lowcode-shared/src/utils/schema-converter.ts
 - **当前状态**: 待迁移
-- **引用内容**: 
+- **引用内容**:
   - `UnifiedModuleMetadata`
   - `UnifiedEntityDefinition`
   - `UnifiedEntityField`
-- **迁移目标**: 
+- **迁移目标**:
   - `ModuleDto`（from type-aliases.ts）
   - `EntityDefinitionDto`（from type-aliases.ts）
   - `EntityFieldDto`（from type-aliases.ts）
 - **优先级**: P1（高）
 - **预计时间**: 40分钟
-- **影响评估**: 
+- **影响评估**:
   - 影响Schema转换功能
   - 需要更新转换逻辑
   - 需要测试转换结果
@@ -137,29 +137,29 @@
 
 #### 8. packages/lowcode-shared/src/types/template.ts
 - **当前状态**: 待迁移
-- **引用内容**: 
+- **引用内容**:
   - `UnifiedModuleMetadata`
   - `UnifiedEntityDefinition`
-- **迁移目标**: 
+- **迁移目标**:
   - `ModuleDto`（from type-aliases.ts）
   - `EntityDefinitionDto`（from type-aliases.ts）
 - **优先级**: P2（中）
 - **预计时间**: 15分钟
-- **影响评估**: 
+- **影响评估**:
   - 影响模板类型定义
   - 需要更新模板接口
 
 #### 9. packages/lowcode-shared/src/types/generation-history.ts
 - **当前状态**: 待迁移
-- **引用内容**: 
+- **引用内容**:
   - `UnifiedModuleMetadata`
   - `UnifiedEntityDefinition`
-- **迁移目标**: 
+- **迁移目标**:
   - `ModuleDto`（from type-aliases.ts）
   - `EntityDefinitionDto`（from type-aliases.ts）
 - **优先级**: P2（中）
 - **预计时间**: 15分钟
-- **影响评估**: 
+- **影响评估**:
   - 影响代码生成历史
   - 需要更新历史记录类型
 
@@ -171,15 +171,15 @@
 
 #### 10. packages/lowcode-shared/src/events/UnifiedEventBus.ts
 - **当前状态**: 待迁移
-- **引用内容**: 
+- **引用内容**:
   - `UnifiedModuleMetadata`
   - `UnifiedEntityDefinition`
-- **迁移目标**: 
+- **迁移目标**:
   - `ModuleDto`（from type-aliases.ts）
   - `EntityDefinitionDto`（from type-aliases.ts）
 - **优先级**: P2（中）
 - **预计时间**: 20分钟
-- **影响评估**: 
+- **影响评估**:
   - 影响事件传递
   - 需要更新事件类型
 
@@ -191,15 +191,15 @@
 
 #### 11. packages/lowcode-shared/src/version/SchemaVersionManager.ts
 - **当前状态**: 待迁移
-- **引用内容**: 
+- **引用内容**:
   - `UnifiedModuleMetadata`
   - `UnifiedEntityDefinition`
-- **迁移目标**: 
+- **迁移目标**:
   - `ModuleDto`（from type-aliases.ts）
   - `EntityDefinitionDto`（from type-aliases.ts）
 - **优先级**: P2（中）
 - **预计时间**: 20分钟
-- **影响评估**: 
+- **影响评估**:
   - 影响版本管理
   - 需要更新版本检查逻辑
 
@@ -211,17 +211,17 @@
 
 #### 12. packages/lowcode-shared/src/validation/__tests__/unified-validator.spec.ts
 - **当前状态**: 待迁移
-- **引用内容**: 
+- **引用内容**:
   - `UnifiedModuleMetadata`
   - `UnifiedEntityDefinition`
   - `UnifiedEntityField`
-- **迁移目标**: 
+- **迁移目标**:
   - `ModuleDto`（from type-aliases.ts）
   - `EntityDefinitionDto`（from type-aliases.ts）
   - `EntityFieldDto`（from type-aliases.ts）
 - **优先级**: P3（低）
 - **预计时间**: 30分钟
-- **影响评估**: 
+- **影响评估**:
   - 影响单元测试
   - 需要更新测试用例
 
@@ -394,9 +394,9 @@
 
 ---
 
-**创建人**: AI编程助手  
-**版本**: v1.0  
-**最后更新**: 2025-10-18  
+**创建人**: AI编程助手
+**版本**: v1.0
+**最后更新**: 2025-10-18
 
 🚀 **Phase 3迁移清单完成！立即开始迁移！** 🚀
 

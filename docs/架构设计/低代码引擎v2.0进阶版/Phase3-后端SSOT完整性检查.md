@@ -1,6 +1,6 @@
 # Phase 3 - 后端SSOT完整性检查报告
 
-**检查日期**: 2025-10-18  
+**检查日期**: 2025-10-18
 **检查目的**: 确保所有需要持久化的字段都在后端SSOT实现
 
 ---
@@ -43,7 +43,7 @@
 
 ### 1. menuConfig缺失（严重）
 
-**问题**: 
+**问题**:
 - 前端UnifiedModuleMetadata有完整的菜单树结构
 - 后端ModuleDto只有ParentMenuId和MenuIcon
 
@@ -60,7 +60,7 @@ public class ModuleFrontendConfig
     public string? ParentMenuId { get; set; }
     public string? MenuIcon { get; set; }
     public int MenuOrder { get; set; }
-    
+
     // 新增：完整菜单配置
     public List<MenuConfigItem>? MenuConfig { get; set; }
 }
@@ -90,7 +90,7 @@ public class ModuleCodeGenOptions
     public bool GenerateFrontend { get; set; } = true;
     public bool GenerateDatabase { get; set; } = true;
     public bool GenerateTests { get; set; } = false;
-    
+
     // 新增：是否生成移动端页面
     public bool GenerateMobilePages { get; set; } = false;
 }
@@ -107,7 +107,7 @@ public class ModuleCodeGenOptions
 public class ModuleDto : EntityDto<Guid>
 {
     // ... 现有字段 ...
-    
+
     /// <summary>
     /// 模块依赖列表（其他模块的SystemName）
     /// </summary>
@@ -118,18 +118,18 @@ public class ModuleDto : EntityDto<Guid>
 public class LowCodeModule : FullAuditedAggregateRoot<Guid>, IMultiTenant
 {
     // ... 现有字段 ...
-    
+
     /// <summary>
     /// 模块依赖（JSON存储）
     /// </summary>
     [Column(TypeName = "nvarchar(max)")]
     public string? DependenciesJson { get; set; }
-    
+
     // 辅助属性
     public List<string> Dependencies
     {
-        get => string.IsNullOrEmpty(DependenciesJson) 
-            ? new List<string>() 
+        get => string.IsNullOrEmpty(DependenciesJson)
+            ? new List<string>()
             : JsonSerializer.Deserialize<List<string>>(DependenciesJson) ?? new List<string>();
         set => DependenciesJson = JsonSerializer.Serialize(value);
     }
@@ -256,9 +256,9 @@ public class LowCodeModule : FullAuditedAggregateRoot<Guid>, IMultiTenant
 
 ---
 
-**创建人**: AI编程助手  
-**版本**: v1.0  
-**日期**: 2025-10-18  
+**创建人**: AI编程助手
+**版本**: v1.0
+**日期**: 2025-10-18
 
 🚀 **等待用户决策，然后执行完整的后端SSOT方案！** 🚀
 
