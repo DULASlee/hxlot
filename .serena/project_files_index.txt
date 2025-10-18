@@ -8,6 +8,7 @@ src/SmartAbp.Application/LowCode/CodeGenerationService.cs
 src/SmartAbp.Application/LowCode/EntityModelingAppService.cs
 src/SmartAbp.Application/LowCode/EntityModelingAutoMapperProfile.cs
 src/SmartAbp.Application/LowCode/Mapping/LowCodeAutoMapperProfile.cs
+src/SmartAbp.Application/LowCode/ModuleAppService.cs
 src/SmartAbp.Application/LowCode/SchemaVersionHistoryAppService.cs
 src/SmartAbp.Application/LowCode/Services/SchemaVersionService.cs
 src/SmartAbp.Application/LowCode/Validation/PageConfigValidator.cs
@@ -83,6 +84,8 @@ src/SmartAbp.Domain/SmartAbp.Domain.abppkg.analyze.json
 src/SmartAbp.Domain/SmartAbpConsts.cs
 src/SmartAbp.Domain/SmartAbpDomainModule.cs
 src/SmartAbp.Vue/src/App.vue
+src/SmartAbp.Vue/src/api/generated/api-client.ts
+src/SmartAbp.Vue/src/api/generated/type-aliases.ts
 src/SmartAbp.Vue/src/api/lowcode/entity-modeling.js
 src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts
 src/SmartAbp.Vue/src/appshell/generation-report.md
@@ -909,6 +912,7 @@ src/SmartAbp.Vue/packages/lowcode-shared/src/types/env.d.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/generation-history.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/index.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/logger.ts
+src/SmartAbp.Vue/packages/lowcode-shared/src/types/metadata.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/template.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/ui.ts
 src/SmartAbp.Vue/packages/lowcode-shared/src/types/unified-schema.ts

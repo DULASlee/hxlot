@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-18T00:06:17.216Z",
+  "timestamp": "2025-10-18T01:56:21.914Z",
   "project": "Baobab.SmartAbp",
   "language": "typescript",
   "files": [
@@ -70,8 +70,15 @@
       "name": "LowCodeAutoMapperProfile.cs",
       "path": "src/SmartAbp.Application/LowCode/Mapping/LowCodeAutoMapperProfile.cs",
       "type": "file",
-      "size": 12185,
-      "modified": "2025-10-16T07:20:37.661Z"
+      "size": 12627,
+      "modified": "2025-10-18T00:10:05.081Z"
+    },
+    {
+      "name": "ModuleAppService.cs",
+      "path": "src/SmartAbp.Application/LowCode/ModuleAppService.cs",
+      "type": "file",
+      "size": 4797,
+      "modified": "2025-10-18T00:10:05.081Z"
     },
     {
       "name": "SchemaVersionHistoryAppService.cs",
@@ -597,6 +604,20 @@
       "type": "file",
       "size": 757,
       "modified": "2025-10-12T17:17:08.231Z"
+    },
+    {
+      "name": "api-client.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/api-client.ts",
+      "type": "file",
+      "size": 148333,
+      "modified": "2025-10-18T00:10:05.086Z"
+    },
+    {
+      "name": "type-aliases.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/type-aliases.ts",
+      "type": "file",
+      "size": 4469,
+      "modified": "2025-10-18T00:10:05.087Z"
     },
     {
       "name": "entity-modeling.js",
@@ -2738,7 +2759,7 @@
       "path": "src/SmartAbp.Vue/src/views/log/AdvancedLogViewer.vue",
       "type": "file",
       "size": 16051,
-      "modified": "2025-10-17T17:44:41.759Z"
+      "modified": "2025-10-18T00:10:05.130Z"
     },
     {
       "name": "LogDashboard.vue",
@@ -2835,8 +2856,8 @@
       "name": "GenerationView.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/GenerationView.vue",
       "type": "file",
-      "size": 24704,
-      "modified": "2025-10-16T17:11:51.224Z"
+      "size": 25968,
+      "modified": "2025-10-18T00:10:05.087Z"
     },
     {
       "name": "IndustryTemplateConfig.vue",
@@ -2891,8 +2912,8 @@
       "name": "QuickStart.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/QuickStart.vue",
       "type": "file",
-      "size": 12945,
-      "modified": "2025-10-16T17:11:51.225Z"
+      "size": 13233,
+      "modified": "2025-10-18T00:10:05.088Z"
     },
     {
       "name": "UltraSimpleStudio.vue",
@@ -3346,8 +3367,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts",
       "type": "file",
-      "size": 12122,
-      "modified": "2025-10-16T01:25:44.643Z"
+      "size": 13080,
+      "modified": "2025-10-18T00:10:05.082Z"
     },
     {
       "name": "paged.ts",
@@ -5222,8 +5243,8 @@
       "name": "UltraSimpleStudio.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/UltraSimpleStudio.vue",
       "type": "file",
-      "size": 51155,
-      "modified": "2025-10-16T04:20:40.111Z"
+      "size": 51647,
+      "modified": "2025-10-18T00:10:05.083Z"
     },
     {
       "name": "VisualDesignerView.vue",
@@ -6076,8 +6097,8 @@
       "name": "useValidation.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/useValidation.ts",
       "type": "file",
-      "size": 18498,
-      "modified": "2025-10-16T17:11:51.221Z"
+      "size": 18598,
+      "modified": "2025-10-18T00:10:05.083Z"
     },
     {
       "name": "common.ts",
@@ -6202,8 +6223,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/index.ts",
       "type": "file",
-      "size": 16127,
-      "modified": "2025-10-16T07:20:37.558Z"
+      "size": 16386,
+      "modified": "2025-10-18T00:10:05.084Z"
     },
     {
       "name": "ErrorLogIntegration.ts",
@@ -6370,8 +6391,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/index.ts",
       "type": "file",
-      "size": 5814,
-      "modified": "2025-10-16T12:38:50.684Z"
+      "size": 6222,
+      "modified": "2025-10-18T00:10:05.084Z"
     },
     {
       "name": "logger.ts",
@@ -6379,6 +6400,13 @@
       "type": "file",
       "size": 2642,
       "modified": "2025-10-12T17:17:08.207Z"
+    },
+    {
+      "name": "metadata.ts",
+      "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/metadata.ts",
+      "type": "file",
+      "size": 5003,
+      "modified": "2025-10-18T00:10:05.085Z"
     },
     {
       "name": "template.ts",
@@ -6489,8 +6517,8 @@
       "name": "unified-validator.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts",
       "type": "file",
-      "size": 30500,
-      "modified": "2025-10-16T17:11:51.222Z"
+      "size": 30716,
+      "modified": "2025-10-18T00:10:05.085Z"
     },
     {
       "name": "zod-error-map-compat.ts",
@@ -6538,8 +6566,8 @@
       "name": "schema-diff.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/version/schema-diff.ts",
       "type": "file",
-      "size": 13005,
-      "modified": "2025-10-16T07:20:37.664Z"
+      "size": 13146,
+      "modified": "2025-10-18T00:10:05.086Z"
     },
     {
       "name": "useSchemaVersion.ts",
@@ -6927,6 +6955,13 @@
       "line": 22,
       "exported": true,
       "file": "src/SmartAbp.Application/LowCode/Mapping/LowCodeAutoMapperProfile.cs"
+    },
+    {
+      "name": "ModuleAppService",
+      "type": "class",
+      "line": 21,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/ModuleAppService.cs"
     },
     {
       "name": "SchemaVersionHistoryAppService",
@@ -8705,6 +8740,1560 @@
       "line": 40,
       "exported": true,
       "file": "src/SmartAbp.Domain/SmartAbpDomainModule.cs"
+    },
+    {
+      "name": "SmartAbpApplicationBusinessRulesServicesScriptValidationResult",
+      "type": "interface",
+      "line": 13,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsBusinessRulesDtosBusinessRuleActionDto",
+      "type": "interface",
+      "line": 20,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsBusinessRulesDtosBusinessRuleConditionDto",
+      "type": "interface",
+      "line": 29,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsBusinessRulesDtosBusinessRuleDto",
+      "type": "interface",
+      "line": 38,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsBusinessRulesDtosBusinessRuleExecutionResultDto",
+      "type": "interface",
+      "line": 86,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsBusinessRulesDtosBusinessRuleStatsDto",
+      "type": "interface",
+      "line": 96,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsBusinessRulesDtosBusinessRuleValidationResultDto",
+      "type": "interface",
+      "line": 113,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsBusinessRulesDtosCreateBusinessRuleDto",
+      "type": "interface",
+      "line": 119,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsBusinessRulesDtosExecuteBusinessRuleDto",
+      "type": "interface",
+      "line": 149,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsBusinessRulesDtosUpdateBusinessRuleDto",
+      "type": "interface",
+      "line": 154,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsBusinessRulesDtosValidateScriptInput",
+      "type": "interface",
+      "line": 178,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsCodeGeneratorCqrsValidationResultDto",
+      "type": "interface",
+      "line": 191,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsCodeGeneratorValidationErrorDto",
+      "type": "interface",
+      "line": 196,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosCodeGenerationConfigDto",
+      "type": "interface",
+      "line": 202,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosCreateOrUpdateEntityDefinitionDto",
+      "type": "interface",
+      "line": 212,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosCreateOrUpdateEntityFieldDto",
+      "type": "interface",
+      "line": 223,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosCreateOrUpdateEntityRelationDto",
+      "type": "interface",
+      "line": 240,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosCreateOrUpdateModuleDto",
+      "type": "interface",
+      "line": 250,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosEntityConstraintDto",
+      "type": "interface",
+      "line": 267,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosEntityDefinitionDto",
+      "type": "interface",
+      "line": 277,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosEntityFieldDto",
+      "type": "interface",
+      "line": 340,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosEntityIndexDto",
+      "type": "interface",
+      "line": 385,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosEntityPermissionDto",
+      "type": "interface",
+      "line": 396,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosEntityRelationDto",
+      "type": "interface",
+      "line": 407,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosEnumValueDto",
+      "type": "interface",
+      "line": 435,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosGeneratedFileDto",
+      "type": "interface",
+      "line": 446,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosIndustryTemplateConfigDto",
+      "type": "interface",
+      "line": 451,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosIndustryTemplateGenerationResultDto",
+      "type": "interface",
+      "line": 460,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosModuleDto",
+      "type": "interface",
+      "line": 468,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosNavigationPropertyDto",
+      "type": "interface",
+      "line": 500,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeDtosValidationRuleDto",
+      "type": "interface",
+      "line": 518,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpApplicationContractsLowCodeSchemaValidationResult",
+      "type": "interface",
+      "line": 534,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorDtosCodeGenStatsDto",
+      "type": "interface",
+      "line": 540,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorDtosCreateGenerationHistoryDto",
+      "type": "interface",
+      "line": 553,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorDtosGenerationHistoryDto",
+      "type": "interface",
+      "line": 568,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorDtosIndustryRecommendationDto",
+      "type": "interface",
+      "line": 588,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorDtosUpdateUserProfileDto",
+      "type": "interface",
+      "line": 595,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorDtosUserProfileDto",
+      "type": "interface",
+      "line": 602,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesCommandDefinitionDto",
+      "type": "interface",
+      "line": 614,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesCqrsDefinitionDto",
+      "type": "interface",
+      "line": 623,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesEventDefinitionDto",
+      "type": "interface",
+      "line": 631,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesGeneratedCqrsSolutionDto",
+      "type": "interface",
+      "line": 638,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesParameterDefinitionDto",
+      "type": "interface",
+      "line": 652,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesPropertyDefinitionDto",
+      "type": "interface",
+      "line": 659,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesQueryDefinitionDto",
+      "type": "interface",
+      "line": 674,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9BusinessRuleDto",
+      "type": "interface",
+      "line": 683,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9CodeGenerationConfigDto",
+      "type": "interface",
+      "line": 696,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9CodeGenerationOptionsDto",
+      "type": "interface",
+      "line": 707,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9ColumnSchemaDto",
+      "type": "interface",
+      "line": 715,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9CustomPermissionActionDto",
+      "type": "interface",
+      "line": 724,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9DatabaseConfigDto",
+      "type": "interface",
+      "line": 730,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9DatabaseConnectionRequestDto",
+      "type": "interface",
+      "line": 736,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9DatabaseConnectionTestResultDto",
+      "type": "interface",
+      "line": 742,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9DatabaseIntrospectionRequestDto",
+      "type": "interface",
+      "line": 754,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9DatabaseSchemaDto",
+      "type": "interface",
+      "line": 761,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9DetailConfigDto",
+      "type": "interface",
+      "line": 765,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9DetailSectionDto",
+      "type": "interface",
+      "line": 771,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9EnhancedEntityModelDto",
+      "type": "interface",
+      "line": 782,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9EntityConstraintDto",
+      "type": "interface",
+      "line": 813,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9EntityIndexDto",
+      "type": "interface",
+      "line": 825,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9EntityPermissionDto",
+      "type": "interface",
+      "line": 836,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9EntityPropertyDto",
+      "type": "interface",
+      "line": 846,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9EntityRelationshipDto",
+      "type": "interface",
+      "line": 892,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9EntityUIConfigDto",
+      "type": "interface",
+      "line": 915,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9EnumValueDto",
+      "type": "interface",
+      "line": 921,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9FeatureManagementDto",
+      "type": "interface",
+      "line": 930,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9FieldGroupDto",
+      "type": "interface",
+      "line": 935,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9FieldPermissionDto",
+      "type": "interface",
+      "line": 947,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9ForeignKeySchemaDto",
+      "type": "interface",
+      "line": 954,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9FormConfigDto",
+      "type": "interface",
+      "line": 961,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9FrontendConfigDto",
+      "type": "interface",
+      "line": 969,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9GeneratedModuleDto",
+      "type": "interface",
+      "line": 974,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9GenerationDryRunResultDto",
+      "type": "interface",
+      "line": 983,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9GenerationStatusDto",
+      "type": "interface",
+      "line": 996,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9ListConfigDto",
+      "type": "interface",
+      "line": 1011,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9MenuConfigDto",
+      "type": "interface",
+      "line": 1021,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9MenuItemDto",
+      "type": "interface",
+      "line": 1031,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9ModuleMetadataDto",
+      "type": "interface",
+      "line": 1037,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9PermissionConfigDto",
+      "type": "interface",
+      "line": 1057,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9PermissionDefinitionDto",
+      "type": "interface",
+      "line": 1064,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9PermissionGroupDefinitionDto",
+      "type": "interface",
+      "line": 1072,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9SchemaVersionManifestDto",
+      "type": "interface",
+      "line": 1079,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9TableSchemaDto",
+      "type": "interface",
+      "line": 1089,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9UIActionDto",
+      "type": "interface",
+      "line": 1096,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9UnifiedCustomPermissionActionDto",
+      "type": "interface",
+      "line": 1109,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9UnifiedDatabaseConfigDto",
+      "type": "interface",
+      "line": 1115,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9UnifiedEntitySchemaDto",
+      "type": "interface",
+      "line": 1121,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9UnifiedFeatureManagementDto",
+      "type": "interface",
+      "line": 1140,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9UnifiedFrontendConfigDto",
+      "type": "interface",
+      "line": 1145,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9UnifiedModuleSchemaDto",
+      "type": "interface",
+      "line": 1150,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9UnifiedPermissionConfigDto",
+      "type": "interface",
+      "line": 1167,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9UnifiedPropertySchemaDto",
+      "type": "interface",
+      "line": 1175,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9UnifiedRelationshipSchemaDto",
+      "type": "interface",
+      "line": 1190,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9ValidationIssueDto",
+      "type": "interface",
+      "line": 1202,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9ValidationReportDto",
+      "type": "interface",
+      "line": 1208,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpCodeGeneratorServicesV9ValidationRuleDto",
+      "type": "interface",
+      "line": 1217,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeActionConfig",
+      "type": "interface",
+      "line": 1226,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeColumnDefinition",
+      "type": "interface",
+      "line": 1248,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeDataSourceConfig",
+      "type": "interface",
+      "line": 1275,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeDetailConfig",
+      "type": "interface",
+      "line": 1289,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeDetailSection",
+      "type": "interface",
+      "line": 1297,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeEventConfig",
+      "type": "interface",
+      "line": 1312,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeFieldEffect",
+      "type": "interface",
+      "line": 1333,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeFormConfig",
+      "type": "interface",
+      "line": 1361,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeFormCreateRule",
+      "type": "interface",
+      "line": 1371,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeFormFieldConfig",
+      "type": "interface",
+      "line": 1398,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeFormGlobalConfig",
+      "type": "interface",
+      "line": 1418,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeLayoutConfig",
+      "type": "interface",
+      "line": 1441,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeListConfig",
+      "type": "interface",
+      "line": 1457,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeListFieldConfig",
+      "type": "interface",
+      "line": 1467,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeModuleArchitectureConfig",
+      "type": "interface",
+      "line": 1482,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeModuleCodeGenOptions",
+      "type": "interface",
+      "line": 1494,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeModuleFrontendConfig",
+      "type": "interface",
+      "line": 1510,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodePageConfigDto",
+      "type": "interface",
+      "line": 1525,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodePaginationConfig",
+      "type": "interface",
+      "line": 1539,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodePropertyUIConfig",
+      "type": "interface",
+      "line": 1553,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpDomainEntitiesLowCodeValidationRuleConfig",
+      "type": "interface",
+      "line": 1591,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpHttpApiControllersBatchDeleteInput",
+      "type": "interface",
+      "line": 1608,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpHttpApiControllersBatchUpdateStatusInput",
+      "type": "interface",
+      "line": 1612,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpHttpApiControllersImportRuleData",
+      "type": "interface",
+      "line": 1617,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpHttpApiControllersImportRulesInput",
+      "type": "interface",
+      "line": 1633,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "SmartAbpHttpApiControllersImportRulesResultDto",
+      "type": "interface",
+      "line": 1637,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAccountChangePasswordInput",
+      "type": "interface",
+      "line": 1647,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAccountProfileDto",
+      "type": "interface",
+      "line": 1660,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAccountRegisterDto",
+      "type": "interface",
+      "line": 1672,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAccountResetPasswordDto",
+      "type": "interface",
+      "line": 1695,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAccountSendPasswordResetCodeDto",
+      "type": "interface",
+      "line": 1704,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAccountUpdateProfileDto",
+      "type": "interface",
+      "line": 1717,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAccountVerifyPasswordResetTokenInput",
+      "type": "interface",
+      "line": 1747,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAccountWebAreasAccountControllersModelsAbpLoginResult",
+      "type": "interface",
+      "line": 1754,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAccountWebAreasAccountControllersModelsUserLoginInfo",
+      "type": "interface",
+      "line": 1760,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpApplicationDtosListResultDto1VoloAbpIdentityIdentityRoleDtoVoloAbpIdentityApplicationContractsVersion9110CultureNeutralPublicKeyTokenNull",
+      "type": "interface",
+      "line": 1775,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpApplicationDtosListResultDto1VoloAbpUsersUserDataVoloAbpUsersAbstractionsVersion9110CultureNeutralPublicKeyTokenNull",
+      "type": "interface",
+      "line": 1779,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpApplicationDtosPagedResultDto1SmartAbpApplicationContractsBusinessRulesDtosBusinessRuleDtoSmartAbpApplicationContractsVersion1000CultureNeutralPublicKeyTokenNull",
+      "type": "interface",
+      "line": 1783,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpApplicationDtosPagedResultDto1SmartAbpApplicationContractsLowCodeDtosModuleDtoSmartAbpApplicationContractsVersion1000CultureNeutralPublicKeyTokenNull",
+      "type": "interface",
+      "line": 1789,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpApplicationDtosPagedResultDto1VoloAbpIdentityIdentityRoleDtoVoloAbpIdentityApplicationContractsVersion9110CultureNeutralPublicKeyTokenNull",
+      "type": "interface",
+      "line": 1795,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpApplicationDtosPagedResultDto1VoloAbpIdentityIdentityUserDtoVoloAbpIdentityApplicationContractsVersion9110CultureNeutralPublicKeyTokenNull",
+      "type": "interface",
+      "line": 1801,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpApplicationDtosPagedResultDto1VoloAbpTenantManagementTenantDtoVoloAbpTenantManagementApplicationContractsVersion9110CultureNeutralPublicKeyTokenNull",
+      "type": "interface",
+      "line": 1807,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsApplicationAuthConfigurationDto",
+      "type": "interface",
+      "line": 1813,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsApplicationConfigurationDto",
+      "type": "interface",
+      "line": 1817,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsApplicationFeatureConfigurationDto",
+      "type": "interface",
+      "line": 1832,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsApplicationGlobalFeatureConfigurationDto",
+      "type": "interface",
+      "line": 1836,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsApplicationLocalizationConfigurationDto",
+      "type": "interface",
+      "line": 1841,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsApplicationLocalizationDto",
+      "type": "interface",
+      "line": 1854,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsApplicationLocalizationResourceDto",
+      "type": "interface",
+      "line": 1862,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsApplicationSettingConfigurationDto",
+      "type": "interface",
+      "line": 1867,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsClockDto",
+      "type": "interface",
+      "line": 1871,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsCurrentCultureDto",
+      "type": "interface",
+      "line": 1875,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsCurrentUserDto",
+      "type": "interface",
+      "line": 1887,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsDateTimeFormatDto",
+      "type": "interface",
+      "line": 1910,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsIanaTimeZone",
+      "type": "interface",
+      "line": 1920,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingEntityExtensionDto",
+      "type": "interface",
+      "line": 1924,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionEnumDto",
+      "type": "interface",
+      "line": 1932,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionEnumFieldDto",
+      "type": "interface",
+      "line": 1939,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionPropertyApiCreateDto",
+      "type": "interface",
+      "line": 1944,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionPropertyApiDto",
+      "type": "interface",
+      "line": 1948,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionPropertyApiGetDto",
+      "type": "interface",
+      "line": 1954,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionPropertyApiUpdateDto",
+      "type": "interface",
+      "line": 1958,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionPropertyAttributeDto",
+      "type": "interface",
+      "line": 1962,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionPropertyDto",
+      "type": "interface",
+      "line": 1967,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionPropertyFeaturePolicyDto",
+      "type": "interface",
+      "line": 1981,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionPropertyGlobalFeaturePolicyDto",
+      "type": "interface",
+      "line": 1986,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionPropertyPermissionPolicyDto",
+      "type": "interface",
+      "line": 1991,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionPropertyPolicyDto",
+      "type": "interface",
+      "line": 1996,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionPropertyUiDto",
+      "type": "interface",
+      "line": 2002,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionPropertyUiFormDto",
+      "type": "interface",
+      "line": 2009,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionPropertyUiLookupDto",
+      "type": "interface",
+      "line": 2013,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingExtensionPropertyUiTableDto",
+      "type": "interface",
+      "line": 2021,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingLocalizableStringDto",
+      "type": "interface",
+      "line": 2025,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingModuleExtensionDto",
+      "type": "interface",
+      "line": 2030,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsObjectExtendingObjectExtensionsDto",
+      "type": "interface",
+      "line": 2038,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsTimeZone",
+      "type": "interface",
+      "line": 2049,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsTimingDto",
+      "type": "interface",
+      "line": 2054,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcApplicationConfigurationsWindowsTimeZone",
+      "type": "interface",
+      "line": 2058,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcMultiTenancyCurrentTenantDto",
+      "type": "interface",
+      "line": 2062,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcMultiTenancyFindTenantResultDto",
+      "type": "interface",
+      "line": 2069,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpAspNetCoreMvcMultiTenancyMultiTenancyInfoDto",
+      "type": "interface",
+      "line": 2078,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpFeatureManagementFeatureDto",
+      "type": "interface",
+      "line": 2082,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpFeatureManagementFeatureGroupDto",
+      "type": "interface",
+      "line": 2094,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpFeatureManagementFeatureProviderDto",
+      "type": "interface",
+      "line": 2100,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpFeatureManagementGetFeatureListResultDto",
+      "type": "interface",
+      "line": 2105,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpFeatureManagementUpdateFeatureDto",
+      "type": "interface",
+      "line": 2109,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpFeatureManagementUpdateFeaturesDto",
+      "type": "interface",
+      "line": 2114,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpHttpModelingActionApiDescriptionModel",
+      "type": "interface",
+      "line": 2118,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpHttpModelingApplicationApiDescriptionModel",
+      "type": "interface",
+      "line": 2133,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpHttpModelingControllerApiDescriptionModel",
+      "type": "interface",
+      "line": 2138,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpHttpModelingControllerInterfaceApiDescriptionModel",
+      "type": "interface",
+      "line": 2151,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpHttpModelingInterfaceMethodApiDescriptionModel",
+      "type": "interface",
+      "line": 2157,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpHttpModelingMethodParameterApiDescriptionModel",
+      "type": "interface",
+      "line": 2165,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpHttpModelingModuleApiDescriptionModel",
+      "type": "interface",
+      "line": 2174,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpHttpModelingParameterApiDescriptionModel",
+      "type": "interface",
+      "line": 2183,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpHttpModelingPropertyApiDescriptionModel",
+      "type": "interface",
+      "line": 2196,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpHttpModelingReturnValueApiDescriptionModel",
+      "type": "interface",
+      "line": 2211,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpHttpModelingTypeApiDescriptionModel",
+      "type": "interface",
+      "line": 2216,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpHttpRemoteServiceErrorInfo",
+      "type": "interface",
+      "line": 2225,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpHttpRemoteServiceErrorResponse",
+      "type": "interface",
+      "line": 2233,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpHttpRemoteServiceValidationErrorInfo",
+      "type": "interface",
+      "line": 2237,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpIdentityIdentityRoleCreateOrUpdateDtoBase",
+      "type": "interface",
+      "line": 2245,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpIdentityIdentityRoleDto",
+      "type": "interface",
+      "line": 2256,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpIdentityIdentityUserCreateOrUpdateDtoBase",
+      "type": "interface",
+      "line": 2283,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpIdentityIdentityUserDto",
+      "type": "interface",
+      "line": 2316,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpIdentityIdentityUserUpdateRolesDto",
+      "type": "interface",
+      "line": 2365,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpLocalizationLanguageInfo",
+      "type": "interface",
+      "line": 2369,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpNameValue1SystemStringSystemPrivateCoreLibVersion9000CultureNeutralPublicKeyToken7Cec85D7Bea7798E",
+      "type": "interface",
+      "line": 2379,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpPermissionManagementGetPermissionListResultDto",
+      "type": "interface",
+      "line": 2384,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpPermissionManagementPermissionGrantInfoDto",
+      "type": "interface",
+      "line": 2389,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpPermissionManagementPermissionGroupDto",
+      "type": "interface",
+      "line": 2398,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpPermissionManagementProviderInfoDto",
+      "type": "interface",
+      "line": 2406,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpPermissionManagementUpdatePermissionDto",
+      "type": "interface",
+      "line": 2411,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpPermissionManagementUpdatePermissionsDto",
+      "type": "interface",
+      "line": 2416,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpSettingManagementEmailSettingsDto",
+      "type": "interface",
+      "line": 2420,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpSettingManagementSendTestEmailInput",
+      "type": "interface",
+      "line": 2433,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpSettingManagementUpdateEmailSettingsDto",
+      "type": "interface",
+      "line": 2443,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpTenantManagementTenantCreateOrUpdateDtoBase",
+      "type": "interface",
+      "line": 2490,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpTenantManagementTenantDto",
+      "type": "interface",
+      "line": 2499,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpUsersUserData",
+      "type": "interface",
+      "line": 2512,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpValidationStringValuesIStringValueType",
+      "type": "interface",
+      "line": 2528,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "VoloAbpValidationStringValuesIValueValidator",
+      "type": "interface",
+      "line": 2534,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "FullRequestParams",
+      "type": "interface",
+      "line": 2550,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "ApiConfig",
+      "type": "interface",
+      "line": 2571,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "HttpClient",
+      "type": "class",
+      "line": 2588,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
+    },
+    {
+      "name": "Api",
+      "type": "class",
+      "line": 2720,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/api-client.ts"
     },
     {
       "name": "getAllEntities",
@@ -13656,121 +15245,128 @@
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/error.ts"
     },
     {
+      "name": "ApiResponse",
+      "type": "interface",
+      "line": 27,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
+    },
+    {
       "name": "CodeGenerationConfig",
       "type": "interface",
-      "line": 37,
+      "line": 60,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "CodeGenerationResult",
       "type": "interface",
-      "line": 47,
+      "line": 70,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "ColumnSchema",
       "type": "interface",
-      "line": 65,
+      "line": 88,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "ForeignKeySchema",
       "type": "interface",
-      "line": 73,
+      "line": 96,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "TableSchema",
       "type": "interface",
-      "line": 80,
+      "line": 103,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "GenerationResult",
       "type": "interface",
-      "line": 105,
+      "line": 132,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "ModuleGenerationConfig",
       "type": "interface",
-      "line": 106,
+      "line": 133,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "Template",
       "type": "interface",
-      "line": 107,
+      "line": 134,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "CodeGeneratorApi",
       "type": "interface",
-      "line": 124,
+      "line": 151,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "EntityApi",
       "type": "interface",
-      "line": 155,
+      "line": 182,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "PageApi",
       "type": "interface",
-      "line": 177,
+      "line": 204,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "UIComponentApi",
       "type": "interface",
-      "line": 199,
+      "line": 226,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "ModuleApi",
       "type": "interface",
-      "line": 219,
+      "line": 246,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "CodeGenerationApi",
       "type": "interface",
-      "line": 241,
+      "line": 268,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "ApplicationApi",
       "type": "interface",
-      "line": 264,
+      "line": 291,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "MDIApi",
       "type": "interface",
-      "line": 289,
+      "line": 316,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
     {
       "name": "LowCodeEngineApi",
       "type": "interface",
-      "line": 309,
+      "line": 336,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-api/src/types/index.ts"
     },
@@ -18313,21 +19909,21 @@
     {
       "name": "ValidationState",
       "type": "interface",
-      "line": 27,
+      "line": 28,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/useValidation.ts"
     },
     {
       "name": "ValidationOptions",
       "type": "interface",
-      "line": 51,
+      "line": 52,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/useValidation.ts"
     },
     {
       "name": "useValidation",
       "type": "function",
-      "line": 107,
+      "line": 108,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/composables/useValidation.ts"
     },
@@ -19191,6 +20787,90 @@
       "line": 47,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/logger.ts"
+    },
+    {
+      "name": "SchemaVersion",
+      "type": "interface",
+      "line": 29,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/metadata.ts"
+    },
+    {
+      "name": "getSchemaVersion",
+      "type": "function",
+      "line": 36,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/metadata.ts"
+    },
+    {
+      "name": "isSchemaVersionCompatible",
+      "type": "function",
+      "line": 45,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/metadata.ts"
+    },
+    {
+      "name": "EntityMetadata",
+      "type": "interface",
+      "line": 57,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/metadata.ts"
+    },
+    {
+      "name": "PropertyMetadata",
+      "type": "interface",
+      "line": 75,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/metadata.ts"
+    },
+    {
+      "name": "NavigationPropertyMetadata",
+      "type": "interface",
+      "line": 86,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/metadata.ts"
+    },
+    {
+      "name": "ValidationRule",
+      "type": "interface",
+      "line": 93,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/metadata.ts"
+    },
+    {
+      "name": "ModuleMetadata",
+      "type": "interface",
+      "line": 106,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/metadata.ts"
+    },
+    {
+      "name": "RouteMetadata",
+      "type": "interface",
+      "line": 121,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/metadata.ts"
+    },
+    {
+      "name": "StoreMetadata",
+      "type": "interface",
+      "line": 129,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/metadata.ts"
+    },
+    {
+      "name": "isEntityMetadata",
+      "type": "function",
+      "line": 139,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/metadata.ts"
+    },
+    {
+      "name": "isModuleMetadata",
+      "type": "function",
+      "line": 145,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/metadata.ts"
     },
     {
       "name": "TemplateVariable",
@@ -20084,77 +21764,77 @@
     {
       "name": "UnifiedValidationFeatureFlags",
       "type": "interface",
-      "line": 66,
+      "line": 67,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts"
     },
     {
       "name": "setValidationFeatureFlags",
       "type": "function",
-      "line": 115,
+      "line": 116,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts"
     },
     {
       "name": "getValidationFeatureFlags",
       "type": "function",
-      "line": 122,
+      "line": 123,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts"
     },
     {
       "name": "UnifiedValidationResult",
       "type": "interface",
-      "line": 133,
+      "line": 134,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts"
     },
     {
       "name": "ValidationError",
       "type": "interface",
-      "line": 151,
+      "line": 152,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts"
     },
     {
       "name": "ValidationWarning",
       "type": "interface",
-      "line": 167,
+      "line": 168,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts"
     },
     {
       "name": "ValidationPerformance",
       "type": "interface",
-      "line": 181,
+      "line": 182,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts"
     },
     {
       "name": "SchemaValidationError",
       "type": "class",
-      "line": 201,
+      "line": 202,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts"
     },
     {
       "name": "UnifiedSchemaValidator",
       "type": "class",
-      "line": 235,
+      "line": 236,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts"
     },
     {
       "name": "ValidateSchema",
       "type": "function",
-      "line": 792,
+      "line": 794,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts"
     },
     {
       "name": "getUnifiedEntityErrors",
       "type": "function",
-      "line": 878,
+      "line": 880,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/validation/unified-validator.ts"
     },
@@ -20315,63 +21995,63 @@
     {
       "name": "FieldDiff",
       "type": "interface",
-      "line": 30,
+      "line": 31,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/version/schema-diff.ts"
     },
     {
       "name": "SchemaDiff",
       "type": "interface",
-      "line": 41,
+      "line": 42,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/version/schema-diff.ts"
     },
     {
       "name": "DiffSummary",
       "type": "interface",
-      "line": 53,
+      "line": 54,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/version/schema-diff.ts"
     },
     {
       "name": "diffEntitySchema",
       "type": "function",
-      "line": 68,
+      "line": 69,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/version/schema-diff.ts"
     },
     {
       "name": "generateChangelog",
       "type": "function",
-      "line": 310,
+      "line": 311,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/version/schema-diff.ts"
     },
     {
       "name": "MergeOptions",
       "type": "interface",
-      "line": 353,
+      "line": 354,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/version/schema-diff.ts"
     },
     {
       "name": "mergeSchemas",
       "type": "function",
-      "line": 361,
+      "line": 362,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/version/schema-diff.ts"
     },
     {
       "name": "generateDiffSummary",
       "type": "function",
-      "line": 419,
+      "line": 420,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/version/schema-diff.ts"
     },
     {
       "name": "filterDiffByPath",
       "type": "function",
-      "line": 442,
+      "line": 443,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/version/schema-diff.ts"
     },
