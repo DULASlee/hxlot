@@ -6,7 +6,7 @@
  * @since Phase 3 - Task 3.2.1
  */
 
-import type { UnifiedEntityDefinition } from './unified-schema'
+import type { UnifiedEntityDefinition } from '@/api/generated/type-aliases'
 import type { TemplateType } from './enums'
 
 /**

@@ -12,7 +12,7 @@ import {
   setValidationFeatureFlags,
   getValidationFeatureFlags
 } from './unified-validator'
-import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from './../types/unified-schema'
+import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from '@/api/generated/type-aliases'
 
 describe('UnifiedSchemaValidator - 真实验证器集成测试', () => {
   

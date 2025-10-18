@@ -4,7 +4,7 @@
  * @version 1.0.0
  */
 
-import type { UnifiedEntityDefinition } from './unified-schema'
+import type { UnifiedEntityDefinition } from '@/api/generated/type-aliases'
 import { TemplateType, TemplateEngine } from './enums'
 
 // 重新导出枚举，方便使用

@@ -15,7 +15,7 @@
  */
 
 import { getGlobalLogger, type ILogger } from '../logging'
-import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from '../types/unified-schema'
+import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from '@/api/generated/type-aliases'
 
 const logger: ILogger = getGlobalLogger()
 

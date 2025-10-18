@@ -9,11 +9,8 @@
  * @adapted-for UnifiedModuleMetadata (40+ fields)
  */
 
+import type { UnifiedModuleMetadata } from '@/api/generated/type-aliases'
 import { z } from 'zod'
-// Phase 3: 迁移到后端SSOT类型（保留unified-schema用于验证）
-// 验证器需要完整的元数据结构，因此暂时保留对unified-schema的引用
-// TODO Phase 3后续：将UnifiedModuleMetadata移至metadata.ts
-import type { UnifiedModuleMetadata } from '../types/unified-schema'
 import { formatErrorMessage } from './error-map'
 
 // ========================================

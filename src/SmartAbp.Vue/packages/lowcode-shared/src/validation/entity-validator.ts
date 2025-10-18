@@ -10,7 +10,7 @@
  */
 
 import { z } from 'zod'
-import type { UnifiedEntityDefinition } from '../types/unified-schema'
+import type { UnifiedEntityDefinition } from '@/api/generated/type-aliases'
 import { formatErrorMessage } from './error-map'
 
 // ========================================

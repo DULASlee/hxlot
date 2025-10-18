@@ -193,8 +193,7 @@
 
 <script setup lang="ts">
 import { codeGeneratorApi, type ModuleGenerationConfig, type ModuleMetadataDto } from "@smartabp/lowcode-api"
-// Phase 2B: 导入UnifiedModuleMetadata（从unified-schema）
-import type { UnifiedModuleMetadata } from "@smartabp/lowcode-shared/types/unified-schema"
+import type { UnifiedModuleMetadata } from "@/api/generated/type-aliases"
 import { ElMessage } from "element-plus"
 import { computed, onMounted, reactive, ref } from "vue"
 

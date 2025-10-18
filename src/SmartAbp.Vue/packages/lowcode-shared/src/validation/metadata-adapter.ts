@@ -12,15 +12,7 @@
 // 🚀 导入统一类型定义（已从metadata-core迁移到lowcode-shared）
 import type {
   BackendConfig,
-  EntityMetadata,
-  ValidationRule as MetadataCoreValidationRule,
-  ModuleMetadata,
-  NavigationPropertyMetadata,
-  PropertyMetadata,
-  UIConfig
-} from '../types/unified-schema'
-
-import type {
+  UIConfig,
   UnifiedCodeGenerationConfig,
   UnifiedEntityDefinition,
   UnifiedEntityField,
@@ -28,7 +20,15 @@ import type {
   UnifiedEntityUIConfig,
   UnifiedModuleMetadata,
   UnifiedValidationRule
-} from '../types/unified-schema'
+} from '@/api/generated/type-aliases'
+
+import type {
+  EntityMetadata,
+  ValidationRule as MetadataCoreValidationRule,
+  ModuleMetadata,
+  NavigationPropertyMetadata,
+  PropertyMetadata
+} from '../types/metadata'
 
 // ============================================================================
 // 实体转换器
