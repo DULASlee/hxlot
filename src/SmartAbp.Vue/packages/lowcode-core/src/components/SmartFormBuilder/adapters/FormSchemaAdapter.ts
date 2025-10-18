@@ -19,8 +19,8 @@
  * - ✅ 零数据丢失保证
  */
 
-import type { UnifiedValidationRule } from '@smartabp/lowcode-shared'
 import type { FormCreateConfig, FormCreateRule } from '../types/form-create-types'
+import type { ValidationRule } from '../../../stores/entityModeling'
 
 /**
  * @interface FormSchema
@@ -84,7 +84,7 @@ interface FormItem {
     disabled?: boolean
     readonly?: boolean
     hidden?: boolean
-    rules?: UnifiedValidationRule[]
+    rules?: ValidationRule[]
     options?: Array<{ label: string; value: any; disabled?: boolean }>
     props?: Record<string, any>
     children?: FormItem[]
@@ -283,7 +283,7 @@ export class FormSchemaAdapter {
      * @param rules SmartAbp验证规则数组
      * @returns form-create验证规则数组
      */
-    private static convertValidationRules(rules: UnifiedValidationRule[]): any[] {
+    private static convertValidationRules(rules: ValidationRule[]): any[] {
         return rules.map(rule => {
             const formCreateRule: any = {
                 message: rule.errorMessage || '验证失败',
@@ -532,9 +532,9 @@ export class FormSchemaAdapter {
      * @param rules form-create验证规则
      * @returns SmartAbp验证规则
      */
-    private static reverseConvertValidationRules(rules: any[]): UnifiedValidationRule[] {
+    private static reverseConvertValidationRules(rules: any[]): ValidationRule[] {
         return rules.map(rule => {
-            const unifiedRule: UnifiedValidationRule = {
+            const unifiedRule: ValidationRule = {
                 fieldName: '', // 将在调用方设置
                 ruleType: 'custom',
                 ruleValue: '',

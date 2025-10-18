@@ -4,7 +4,6 @@
 /* eslint-disable */
 import type { Volo_Abp_Application_Dtos_ListResultDto_1 } from '../models/Volo_Abp_Application_Dtos_ListResultDto_1';
 import type { Volo_Abp_Users_UserData } from '../models/Volo_Abp_Users_UserData';
-import type { Volo_Abp_Users_UserData_Volo_Abp_Users_Abstractions_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_ } from '../models/Volo_Abp_Users_UserData_Volo_Abp_Users_Abstractions_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
