@@ -1,0 +1,13 @@
+/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+import type { Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyFeaturePolicyDto } from './Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyFeaturePolicyDto';
+import type { Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyGlobalFeaturePolicyDto } from './Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyGlobalFeaturePolicyDto';
+import type { Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyPermissionPolicyDto } from './Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyPermissionPolicyDto';
+export type Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyPolicyDto = {
+    globalFeatures?: Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyGlobalFeaturePolicyDto | null;
+    features?: Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyFeaturePolicyDto | null;
+    permissions?: Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyPermissionPolicyDto | null;
+};
+

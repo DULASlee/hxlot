@@ -1,8 +1,87 @@
 /**
- * 🔥 后端SSOT类型别名（Phase 2B）
+ * 🔥 后端SSOT类型别名（Phase 2B + Phase 3扩展）
  * 用途：简化api-client.ts生成的冗长类型名
  * 架构决策：100%映射后端类型，不创建新定义
  */
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Phase 3: 后端SSOT完整性补强（手动类型扩展）
+// 临时方案：等SmartAbp.Web编译成功后，重新生成swagger并删除此部分
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+import type { SmartAbp_Domain_Entities_LowCode_ModuleFrontendConfig } from './models/SmartAbp_Domain_Entities_LowCode_ModuleFrontendConfig'
+import type { SmartAbp_Domain_Entities_LowCode_ModuleCodeGenOptions } from './models/SmartAbp_Domain_Entities_LowCode_ModuleCodeGenOptions'
+import type { SmartAbp_Domain_Entities_LowCode_ModuleArchitectureConfig } from './models/SmartAbp_Domain_Entities_LowCode_ModuleArchitectureConfig'
+import type { SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto } from './models/SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto'
+
+/**
+ * 菜单配置项（支持递归树结构）
+ * Phase 3新增：后端SSOT完整性
+ */
+export interface MenuConfigItem {
+  /** 菜单ID */
+  id: string
+  /** 菜单标题 */
+  label: string
+  /** 菜单图标 */
+  icon?: string | null
+  /** 路由地址 */
+  route?: string | null
+  /** 排序号 */
+  order: number
+  /** 子菜单（支持递归） */
+  children?: MenuConfigItem[] | null
+}
+
+/**
+ * 模块前端配置（Phase 3扩展版本）
+ * 扩展了原生类型，添加了MenuConfig字段
+ */
+export interface ModuleFrontendConfigExtended extends SmartAbp_Domain_Entities_LowCode_ModuleFrontendConfig {
+  /** 完整菜单配置（支持多层级菜单树）- Phase 3新增 */
+  menuConfig?: MenuConfigItem[] | null
+}
+
+/**
+ * 模块代码生成选项（Phase 3扩展版本）
+ * 扩展了原生类型，添加了GenerateMobilePages字段
+ */
+export interface ModuleCodeGenOptionsExtended extends SmartAbp_Domain_Entities_LowCode_ModuleCodeGenOptions {
+  /** 是否生成移动端页面 - Phase 3新增 */
+  generateMobilePages?: boolean
+}
+
+/**
+ * 模块架构配置（Phase 3扩展版本）
+ * 扩展了原生类型，添加了多个配置字段
+ */
+export interface ModuleArchitectureConfigExtended extends SmartAbp_Domain_Entities_LowCode_ModuleArchitectureConfig {
+  /** 数据库表前缀 - Phase 3新增 */
+  tablePrefix?: string | null
+  /** 代码生成作者 - Phase 3新增 */
+  author?: string | null
+  /** 是否使用多租户 - Phase 3新增 */
+  isMultiTenant?: boolean
+  /** 是否使用软删除 - Phase 3新增 */
+  useSoftDelete?: boolean
+  /** 是否启用审计日志 - Phase 3新增 */
+  enableAuditLog?: boolean
+}
+
+/**
+ * 模块DTO（Phase 3扩展版本）
+ * 扩展了原生类型，添加了Dependencies字段和扩展配置
+ */
+export interface ModuleDtoExtended extends Omit<SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto, 'frontendConfig' | 'codeGenOptions' | 'architectureConfig'> {
+  /** 模块依赖（前端依赖的其他模块）- Phase 3新增 */
+  dependencies?: string | null
+  /** 前端配置（扩展版本） */
+  frontendConfig?: ModuleFrontendConfigExtended | null
+  /** 代码生成选项（扩展版本） */
+  codeGenOptions?: ModuleCodeGenOptionsExtended | null
+  /** 架构配置（扩展版本） */
+  architectureConfig?: ModuleArchitectureConfigExtended | null
+}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 模块元数据类型别名
