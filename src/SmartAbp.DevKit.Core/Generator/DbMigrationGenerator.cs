@@ -79,7 +79,7 @@ public class DbMigrationGenerator : CodeGeneratorFramework<Guid, DbMigrationGene
         var tableName = $"App{StringHelper.Pluralize(entityName)}";
 
         // 分析属性映射
-        var propertyMappings = properties.Select(p => new
+        var propertyMappings = ((IEnumerable<dynamic>)properties).Select(p => new
         {
             Name = p.Name,
             Type = p.Type,

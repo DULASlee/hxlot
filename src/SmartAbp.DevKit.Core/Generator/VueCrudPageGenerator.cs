@@ -84,7 +84,7 @@ public class VueCrudPageGenerator : CodeGeneratorFramework<Guid, VueCrudPageGene
         var entityNameKebab = StringHelper.ToKebabCase(entityName);
 
         // 转换属性到前端格式
-        var vueProp = properties.Select(p => new
+        var vueProp = ((IEnumerable<dynamic>)properties).Select(p => new
         {
             Name = p.Name,
             NameCamel = StringHelper.ToCamelCase(p.Name),
@@ -117,7 +117,7 @@ public class VueCrudPageGenerator : CodeGeneratorFramework<Guid, VueCrudPageGene
             PrimaryKeyTypeScript = TypeMapper.CSharpToTypeScript(primaryKeyType),
             
             // 属性列表
-            Properties = vueProps,
+            Properties = vueProp,
             
             // API路由
             ApiPath = $"/api/app/{StringHelper.ToKebabCase(entityNamePlural)}",

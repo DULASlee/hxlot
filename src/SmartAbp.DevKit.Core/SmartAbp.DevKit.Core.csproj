@@ -5,6 +5,22 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- NuGet包元数据 -->
+    <PackageId>SmartAbp.DevKit.Core</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>SmartAbp Team</Authors>
+    <Company>SmartAbp</Company>
+    <Description>SmartAbp DevKit核心工具包 - 为SmartAbp项目提供全栈代码自动生成能力</Description>
+    <PackageTags>smartabp;devkit;codegen;code-generator;abp;dotnet</PackageTags>
+    <PackageProjectUrl>https://github.com/SmartAbp/hxlot</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SmartAbp/hxlot</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +33,12 @@
   <ItemGroup>
     <!-- 引用现有项目 -->
     <ProjectReference Include="..\SmartAbp.Domain\SmartAbp.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- NuGet包内容 -->
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\devkit.config.json" Pack="true" PackagePath="content\" />
   </ItemGroup>
 
 </Project>

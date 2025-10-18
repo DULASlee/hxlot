@@ -69,7 +69,7 @@ public class AutoMapperGenerator : CodeGeneratorFramework<Guid, string>
         var entityName = entity.Name;
 
         // 分析需要自定义映射的属性
-        var customMappings = properties
+        var customMappings = ((IEnumerable<dynamic>)properties)
             .Where(p => p.Type == "DateTime" || p.Type == "DateTimeOffset" || p.Type.Contains("[]"))
             .Select(p => new
             {

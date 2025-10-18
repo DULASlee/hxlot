@@ -1,0 +1,38 @@
+{
+    "namespacePrefix": "SmartAbp",
+    "backend": {
+        "applicationNamespace": "Application",
+        "contractsNamespace": "Application.Contracts",
+        "domainNamespace": "Domain.Entities",
+        "httpApiNamespace": "HttpApi.Controllers",
+        "testsNamespace": "Application.Tests",
+        "outputPaths": {
+            "Application": "src/{NamespacePrefix}.Application",
+            "Contracts": "src/{NamespacePrefix}.Application.Contracts",
+            "HttpApi": "src/{NamespacePrefix}.HttpApi",
+            "Tests": "src/{NamespacePrefix}.Application.Tests"
+        }
+    },
+    "frontend": {
+        "rootPath": "src/{NamespacePrefix}.Vue",
+        "viewsPath": "src/views",
+        "apiPath": "src/api",
+        "typesPath": "src/types",
+        "apiBaseUrl": "/api/app"
+    },
+    "templates": {
+        "rootPath": "Templates",
+        "backendPath": "Templates/Backend",
+        "frontendPath": "Templates/Frontend",
+        "useCustomTemplates": false,
+        "customTemplatePath": null
+    },
+    "output": {
+        "overwriteExistingFiles": false,
+        "createBackups": true,
+        "backupPath": ".backup",
+        "formatGeneratedCode": true,
+        "copyrightHeader": null,
+        "logLevel": "Information"
+    }
+}

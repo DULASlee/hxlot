@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using System.Threading.Task;
+using System.Threading.Tasks;
 using HandlebarsDotNet;
 using SmartAbp.DevKit.Core.Metadata;
 using SmartAbp.DevKit.Core.Templates;
@@ -79,7 +79,7 @@ public class UnitTestGenerator : CodeGeneratorFramework<Guid, UnitTestGeneratorO
         var entityNameCamel = StringHelper.ToCamelCase(entityName);
 
         // 获取第一个字符串属性作为测试示例
-        var sampleProperty = properties.FirstOrDefault(p => TypeMapper.IsStringType(p.Type));
+        var sampleProperty = ((IEnumerable<dynamic>)properties).FirstOrDefault(p => TypeMapper.IsStringType(p.Type));
         var samplePropertyName = sampleProperty?.Name ?? "Name";
         var samplePropertyCamel = StringHelper.ToCamelCase(samplePropertyName);
 
