@@ -137,9 +137,11 @@ export interface EntityFieldDto {
 
 export interface EntityIndexDto {
     id?: string;
+    entityDefinitionId?: string;
     name?: string | null;
-    fields?: Array<string> | null;
+    columns?: Array<string> | null;  // 修正：后端C#使用Columns，不是fields
     isUnique?: boolean;
+    isClustered?: boolean;  // 补充缺失字段
 }
 
 export interface EntityConstraintDto {

@@ -67,9 +67,9 @@ export class EnhancedApiClientGenerator {
    */
   private generateApiFile(entity: UnifiedEntityDefinition): string {
     const timestamp = new Date().toISOString()
-    const entityName = entity.name
+    const entityName = entity.name ?? 'Entity'
     const entityNameLower = entityName.toLowerCase()
-    const entityDisplayName = entity.displayName || entityName
+    const entityDisplayName = entity.displayName ?? entityName
 
     // 避免在源码中出现 '@/'
     const appAlias = this.config.appAlias ?? ('@' + '/')

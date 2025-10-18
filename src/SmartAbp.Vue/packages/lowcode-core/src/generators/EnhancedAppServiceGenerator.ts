@@ -16,7 +16,7 @@
  * @date 2025-10-16
  */
 
-import type { UnifiedEntityDefinition, UnifiedEntityField } from '@smartabp/lowcode-shared'
+import type { UnifiedEntityDefinition, UnifiedEntityField, EntityFieldDto } from '@smartabp/lowcode-shared'
 
 /**
  * AppService生成器配置
@@ -382,9 +382,9 @@ using ${this.config.namespace}.Permissions;`
      * 生成高级查询方法
      */
     private generateAdvancedQueryMethods(entity: UnifiedEntityDefinition): string {
-        const entityName = entity.name
+        const entityName = entity.name ?? 'Entity'
         const dtoName = `${entityName}Dto`
-        const searchableFields = entity.fields.filter(f => f.searchable)
+        const searchableFields = (entity.fields ?? []).filter((f: EntityFieldDto) => f.uiConfig?.searchable)
 
         const searchConditions = searchableFields.length > 0
             ? searchableFields.map(f => `                    .WhereIf(!string.IsNullOrWhiteSpace(input.Filter), x => x.${f.name}.Contains(input.Filter))`).join('\n')
@@ -459,17 +459,18 @@ ${searchConditions};
             if (!targetEntity) continue
 
             // 为OneToMany关系生成获取子项方法
-            if (rel.type === 'OneToMany') {
+            if (rel.type === 1) { // OneToMany
+                const entityNameLower = (entity.name ?? 'Entity').toLowerCase()
                 methods.push(`
         /// <summary>
-        /// 获取${entity.displayName || entity.name}的所有${targetEntity.displayName || targetEntity.name}
+        /// 获取${entity.displayName ?? entity.name ?? 'Entity'}的所有${targetEntity.displayName ?? targetEntity.name ?? 'Entity'}
         /// </summary>
-        public virtual async Task<List<${targetEntity.name}Dto>> Get${rel.targetNavigationProperty || targetEntity.name + 's'}Async(Guid ${entity.name.toLowerCase()}Id)
+        public virtual async Task<List<${targetEntity.name ?? 'Entity'}Dto>> Get${rel.navigationProperty ?? ((targetEntity.name ?? 'Entity') + 's')}Async(Guid ${entityNameLower}Id)
         {
             // 注意：这里需要注入相关的Repository或AppService
-            // var items = await Repository.GetListAsync(x => x.${entity.name}Id == ${entity.name.toLowerCase()}Id);
-            // return ObjectMapper.Map<List<${targetEntity.name}>, List<${targetEntity.name}Dto>>(items);
-            throw new NotImplementedException("需要注入${targetEntity.name}Repository");
+            // var items = await Repository.GetListAsync(x => x.${entity.name ?? 'Entity'}Id == ${entityNameLower}Id);
+            // return ObjectMapper.Map<List<${targetEntity.name ?? 'Entity'}>, List<${targetEntity.name ?? 'Entity'}Dto>>(items);
+            throw new NotImplementedException("需要注入${targetEntity.name ?? 'Entity'}Repository");
         }`)
             }
         }
@@ -565,10 +566,10 @@ namespace ${this.config.namespace}.${entityName}s
      */
     private generateDtoClasses(entity: UnifiedEntityDefinition): string {
         const timestamp = new Date().toISOString()
-        const entityName = entity.name
-        const dtoFields = this.generateDtoFields(entity.fields)
-        const createDtoFields = this.generateCreateDtoFields(entity.fields)
-        const updateDtoFields = this.generateUpdateDtoFields(entity.fields)
+        const entityName = entity.name ?? 'Entity'
+        const dtoFields = this.generateDtoFields(entity.fields ?? [])
+        const createDtoFields = this.generateCreateDtoFields(entity.fields ?? [])
+        const updateDtoFields = this.generateUpdateDtoFields(entity.fields ?? [])
 
         const searchInputDto = this.config.generateAdvancedQueries ? `
     /// <summary>
@@ -692,8 +693,9 @@ ${validationStr}        public ${type}${nullable} ${field.name} { get; set; }`
      * 映射C#类型
      */
     private mapCSharpType(field: UnifiedEntityField, entityName: string): string {
+        const fieldType = field.type ?? 'string'
         // 处理枚举（若未开启生成则回退string，避免编译失败）
-        if (field.type.includes('enum') || field.enumValues) {
+        if (fieldType.includes('enum') || field.enumValues) {
             if (!this.config.generateEnums) {
                 return 'string'
             }
@@ -702,14 +704,14 @@ ${validationStr}        public ${type}${nullable} ${field.name} { get; set; }`
         }
 
         // 处理数组类型
-        if (field.type.includes('[]')) {
-            const baseType = field.type.replace('[]', '')
+        if ((field.type ?? '').includes('[]')) {
+            const baseType = (field.type ?? '').replace('[]', '')
             const elementType = CSharpTypeMap[baseType] || 'object'
             return `List<${elementType}>`
         }
 
         // 处理基本类型
-        return CSharpTypeMap[field.type] || 'string'
+        return CSharpTypeMap[fieldType] || 'string'
     }
 }
 

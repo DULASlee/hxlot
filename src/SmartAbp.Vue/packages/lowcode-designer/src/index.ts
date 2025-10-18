@@ -8,35 +8,42 @@
  * @license MIT
  */
 
+// 扩展ImportMeta类型以支持Vite的glob功能
+declare global {
+  interface ImportMeta {
+    glob: (pattern: string) => Record<string, () => Promise<any>>;
+  }
+}
+
 // Export components
-export * from './components'
+export * from './components';
 
 // Export core functionality
-export * from './core'
+export * from './core';
 
 // Export designer functionality
-export * from './designer'
+export * from './designer';
 
 // Export runtime
-export * from './runtime'
+export * from './runtime';
 
 // Export types
-export * from './types'
+export * from './types';
 
 // Export utils
-export * from './utils'
+export * from './utils';
 
 // Export views
-export * from './views'
+export * from './views';
 
 // Export stores
-export * from './stores'
+export * from './stores';
 
 /**
  * 注册所有设计器组件到 ComponentRegistry
  * @遵循架构铁律二：强制使用组件注册系统
  */
-import { globalComponentRegistry, registerComponent, type ComponentCategory } from '@smartabp/lowcode-shared'
+import { globalComponentRegistry, registerComponent, type ComponentCategory } from '@smartabp/lowcode-shared';
 
 export function registerDesignerComponents(): void {
   // 核心设计器组件批量注册

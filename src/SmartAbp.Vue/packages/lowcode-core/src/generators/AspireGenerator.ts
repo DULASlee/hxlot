@@ -205,7 +205,7 @@ export class AspireGenerator {
     moduleMetadata: UnifiedModuleMetadata,
     entities: UnifiedEntityDefinition[]
   ): AspireConfiguration {
-    const solutionName = moduleMetadata.name
+    const solutionName = moduleMetadata.name ?? 'SmartAbp'
     const appHostProjectName = `${solutionName}.AppHost`
 
     // 生成服务列表
@@ -267,7 +267,7 @@ export class AspireGenerator {
     })
 
     // 4. 如果有后台作业，添加Worker服务
-    if (entities.some(e => e.name.includes('Job') || e.name.includes('Task'))) {
+    if (entities.some((e: UnifiedEntityDefinition) => (e.name ?? '').includes('Job') || (e.name ?? '').includes('Task'))) {
       services.push({
         name: `${solutionName}.Worker`,
         type: 'worker',

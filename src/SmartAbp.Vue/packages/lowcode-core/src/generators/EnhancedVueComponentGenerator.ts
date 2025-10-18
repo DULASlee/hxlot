@@ -17,101 +17,101 @@
  * @date 2025-10-16
  */
 
-import type { UnifiedEntityDefinition, UnifiedEntityField } from '@smartabp/lowcode-shared'
+import type { EntityDefinitionDto, EntityFieldDto } from '@smartabp/lowcode-shared'
 
 /**
  * Vue组件生成器配置
  */
 export interface VueComponentGenerationConfig {
-    projectName: string
-    namespace: string
-    generateComments: boolean
-    generateI18n: boolean
-    generateValidation: boolean
-    generateLoadingStates: boolean
-    generateErrorHandling: boolean
-    useTailwindCSS: boolean
+  projectName: string
+  namespace: string
+  generateComments: boolean
+  generateI18n: boolean
+  generateValidation: boolean
+  generateLoadingStates: boolean
+  generateErrorHandling: boolean
+  useTailwindCSS: boolean
 }
 
 /**
  * 生成的Vue组件代码
  */
 export interface GeneratedVueComponentCode {
-    listPageCode: string
-    formPageCode: string
-    detailPageCode: string
-    typesCode: string
+  listPageCode: string
+  formPageCode: string
+  detailPageCode: string
+  typesCode: string
 }
 
 /**
  * TypeScript类型映射表
  */
 const TypeScriptTypeMap: Record<string, string> = {
-    'string': 'string',
-    'int': 'number',
-    'long': 'number',
-    'decimal': 'number',
-    'double': 'number',
-    'float': 'number',
-    'bool': 'boolean',
-    'DateTime': 'string', // ISO string
-    'Guid': 'string',
-    'byte[]': 'string', // Base64 string
-    'short': 'number',
-    'byte': 'number',
-    'char': 'string',
-    'object': 'Record<string, any>',
-    'DateTimeOffset': 'string',
-    'TimeSpan': 'string',
-    'Uri': 'string',
-    'Enum': 'number',
-    'json': 'string',
-    'xml': 'string',
-    'array': 'unknown[]',
-    'dictionary': 'Record<string, any>'
+  'string': 'string',
+  'int': 'number',
+  'long': 'number',
+  'decimal': 'number',
+  'double': 'number',
+  'float': 'number',
+  'bool': 'boolean',
+  'DateTime': 'string', // ISO string
+  'Guid': 'string',
+  'byte[]': 'string', // Base64 string
+  'short': 'number',
+  'byte': 'number',
+  'char': 'string',
+  'object': 'Record<string, any>',
+  'DateTimeOffset': 'string',
+  'TimeSpan': 'string',
+  'Uri': 'string',
+  'Enum': 'number',
+  'json': 'string',
+  'xml': 'string',
+  'array': 'unknown[]',
+  'dictionary': 'Record<string, any>'
 }
 
 /**
  * 增强型Vue组件生成器
  */
 export class EnhancedVueComponentGenerator {
-    private config: VueComponentGenerationConfig
+  private config: VueComponentGenerationConfig
 
-    constructor(config: VueComponentGenerationConfig) {
-        this.config = config
+  constructor(config: VueComponentGenerationConfig) {
+    this.config = config
+  }
+
+  /**
+   * 生成完整的Vue组件代码（列表+表单+详情+类型）
+   */
+  public generateVueComponents(
+    entity: EntityDefinitionDto
+  ): GeneratedVueComponentCode {
+    return {
+      listPageCode: this.generateListPage(entity),
+      formPageCode: this.generateFormPage(entity),
+      detailPageCode: this.generateDetailPage(entity),
+      typesCode: this.generateTypesFile(entity)
     }
+  }
 
-    /**
-     * 生成完整的Vue组件代码（列表+表单+详情+类型）
-     */
-    public generateVueComponents(
-        entity: UnifiedEntityDefinition
-    ): GeneratedVueComponentCode {
-        return {
-            listPageCode: this.generateListPage(entity),
-            formPageCode: this.generateFormPage(entity),
-            detailPageCode: this.generateDetailPage(entity),
-            typesCode: this.generateTypesFile(entity)
-        }
-    }
+  /**
+   * 生成列表页面组件
+   */
+  private generateListPage(entity: EntityDefinitionDto): string {
+    const timestamp = new Date().toISOString()
+    const entityName = entity.name ?? 'Entity'
+    const entityNameLower = entityName.toLowerCase()
+    const entityDisplayName = entity.displayName ?? entityName
 
-    /**
-     * 生成列表页面组件
-     */
-    private generateListPage(entity: UnifiedEntityDefinition): string {
-        const timestamp = new Date().toISOString()
-        const entityName = entity.name
-        const entityNameLower = entityName.toLowerCase()
-        const entityDisplayName = entity.displayName || entityName
+    const searchableFields = (entity.fields ?? []).filter(f => f.uiConfig?.searchable)
+    const listVisibleFields = (entity.fields ?? []).filter(f => f.uiConfig?.listVisible).slice(0, 8)
 
-        const searchableFields = entity.fields.filter(f => f.searchable)
-        const listVisibleFields = entity.fields.filter(f => f.listVisible).slice(0, 8)
+    const searchFormInterface = this.generateSearchFormInterface(entity, searchableFields)
+    const tableColumnsCode = this.generateTableColumns(listVisibleFields)
+    const searchFormItemsCode = this.generateSearchFormItems(searchableFields)
 
-        const searchFormInterface = this.generateSearchFormInterface(entity, searchableFields)
-        const tableColumnsCode = this.generateTableColumns(listVisibleFields)
-        const searchFormItemsCode = this.generateSearchFormItems(searchableFields)
-
-        return `<template>
+    return `<template>
   <div class="${entityNameLower}-list-container">
     <!-- 页面标题 -->
     <div class="page-header">
@@ -592,43 +592,44 @@ onBeforeUnmount(() => {
 }
 </style>
 `
-    }
+  }
 
-    /**
-     * 生成表单页面组件
-     */
-    private generateFormPage(entity: UnifiedEntityDefinition): string {
-        // 实现省略，类似listPage但包含表单编辑功能
-        return `// Form Page implementation for ${entity.name}`
-    }
+  /**
+   * 生成表单页面组件
+   */
+  private generateFormPage(entity: EntityDefinitionDto): string {
+    // 实现省略，类似listPage但包含表单编辑功能
+    return `// Form Page implementation for ${entity.name}`
+  }
 
-    /**
-     * 生成详情页面组件
-     */
-    private generateDetailPage(entity: UnifiedEntityDefinition): string {
-        // 实现省略
-        return `// Detail Page implementation for ${entity.name}`
-    }
+  /**
+   * 生成详情页面组件
+   */
+  private generateDetailPage(entity: EntityDefinitionDto): string {
+    // 实现省略
+    return `// Detail Page implementation for ${entity.name}`
+  }
 
-    /**
-     * 生成TypeScript类型文件
-     */
-    private generateTypesFile(entity: UnifiedEntityDefinition): string {
-        const timestamp = new Date().toISOString()
-        const entityName = entity.name
+  /**
+   * 生成TypeScript类型文件
+   */
+  private generateTypesFile(entity: EntityDefinitionDto): string {
+    const timestamp = new Date().toISOString()
+    const entityName = entity.name ?? 'Entity'
 
-        const fieldTypes = entity.fields.map(field => {
-            const tsType = this.mapTypeScriptType(field)
-            const comment = field.description || field.displayName || field.name
-            const optional = !field.isRequired ? '?' : ''
+    const fieldTypes = (entity.fields ?? []).map(field => {
+      const tsType = this.mapTypeScriptType(field)
+      const fieldName = field.name ?? 'field'
+      const comment = field.comment ?? field.displayName ?? fieldName
+      const optional = !field.isRequired ? '?' : ''
 
-            return `  /**
+      return `  /**
    * ${comment}
    */
-  ${field.name.charAt(0).toLowerCase() + field.name.slice(1)}${optional}: ${tsType}`
-        }).join('\n\n')
+  ${fieldName.charAt(0).toLowerCase() + fieldName.slice(1)}${optional}: ${tsType}`
+    }).join('\n\n')
 
-        return `/**
+    return `/**
  * ${entity.displayName || entityName} 类型定义
  *
  * 生成时间: ${timestamp}
@@ -723,79 +724,86 @@ export interface PagedResultDto<T> {
   totalCount: number
 }
 `
+  }
+
+  /**
+   * 映射TypeScript类型
+   */
+  private mapTypeScriptType(field: EntityFieldDto): string {
+    const fieldType = field.type ?? 'string'
+    const fieldName = field.name ?? 'field'
+
+    // 处理枚举
+    if (fieldType.includes('enum') || field.enumValues) {
+      return fieldName + 'Enum'
     }
 
-    /**
-     * 映射TypeScript类型
-     */
-    private mapTypeScriptType(field: UnifiedEntityField): string {
-        // 处理枚举
-        if (field.type.includes('enum') || field.enumValues) {
-            return field.name + 'Enum'
-        }
-
-        // 处理数组类型
-        if (field.type.includes('[]')) {
-            const baseType = field.type.replace('[]', '')
-            const elementType = TypeScriptTypeMap[baseType] || 'any'
-            return `${elementType}[]`
-        }
-
-        // 处理基本类型
-        return TypeScriptTypeMap[field.type] || 'string'
+    // 处理数组类型
+    if (fieldType.includes('[]')) {
+      const baseType = fieldType.replace('[]', '')
+      const elementType = TypeScriptTypeMap[baseType] || 'any'
+      return `${elementType}[]`
     }
 
-    /**
-     * 生成搜索表单接口
-     */
-    private generateSearchFormInterface(
-        entity: UnifiedEntityDefinition,
-        searchableFields: UnifiedEntityField[]
-    ): string {
-        const fields = searchableFields.map(field => {
-            const tsType = this.mapTypeScriptType(field)
-            const defaultValue = tsType === 'string' ? "''" :
-                tsType === 'number' ? 'undefined' :
-                    'undefined'
-            return `  ${field.name.charAt(0).toLowerCase() + field.name.slice(1)}: ${defaultValue}`
-        })
+    // 处理基本类型
+    return TypeScriptTypeMap[fieldType] || 'string'
+  }
 
-        return `{
+  /**
+   * 生成搜索表单接口
+   */
+  private generateSearchFormInterface(
+    entity: EntityDefinitionDto,
+    searchableFields: EntityFieldDto[]
+  ): string {
+    const fields = searchableFields.map(field => {
+      const tsType = this.mapTypeScriptType(field)
+      const fieldName = field.name ?? 'field'
+      const defaultValue = tsType === 'string' ? "''" :
+        tsType === 'number' ? 'undefined' :
+          'undefined'
+      return `  ${fieldName.charAt(0).toLowerCase() + fieldName.slice(1)}: ${defaultValue}`
+    })
+
+    return `{
 ${fields.join(',\n')}
 }`
-    }
+  }
 
-    /**
-     * 生成表格列
-     */
-    private generateTableColumns(fields: UnifiedEntityField[]): string {
-        return fields.map(field => {
-            const prop = field.name.charAt(0).toLowerCase() + field.name.slice(1)
-            const label = field.displayName || field.name
-            const width = field.type === 'DateTime' ? 180 :
-                field.type === 'bool' ? 100 :
-                    undefined
+  /**
+   * 生成表格列
+   */
+  private generateTableColumns(fields: EntityFieldDto[]): string {
+    return fields.map(field => {
+      const fieldName = field.name ?? 'field'
+      const fieldType = field.type ?? 'string'
+      const prop = fieldName.charAt(0).toLowerCase() + fieldName.slice(1)
+      const label = field.displayName ?? fieldName
+      const width = fieldType === 'DateTime' ? 180 :
+        fieldType === 'bool' ? 100 :
+          undefined
 
-            const widthAttr = width ? ` width="${width}"` : ''
-            const sortable = field.isIndexed ? ' sortable="custom"' : ''
+      const widthAttr = width ? ` width="${width}"` : ''
+      const sortable = field.isIndexed ? ' sortable="custom"' : ''
 
-            return `        <el-table-column
+      return `        <el-table-column
           prop="${prop}"
           label="{{ t('fields.${prop}', '${label}') }}"${widthAttr}${sortable}
         />`
-        }).join('\n')
-    }
+    }).join('\n')
+  }
 
-    /**
-     * 生成搜索表单项
-     */
-    private generateSearchFormItems(fields: UnifiedEntityField[]): string {
-        return fields.map(field => {
-            const prop = field.name.charAt(0).toLowerCase() + field.name.slice(1)
-            const label = field.displayName || field.name
-            const placeholder = `请输入${label}`
+  /**
+   * 生成搜索表单项
+   */
+  private generateSearchFormItems(fields: EntityFieldDto[]): string {
+    return fields.map(field => {
+      const fieldName = field.name ?? 'field'
+      const prop = fieldName.charAt(0).toLowerCase() + fieldName.slice(1)
+      const label = field.displayName ?? fieldName
+      const placeholder = `请输入${label}`
 
-            return `          <el-form-item
+      return `          <el-form-item
             :label="t('${prop}', '${label}')"
             prop="${prop}"
           >
@@ -805,7 +813,7 @@ ${fields.join(',\n')}
               clearable
             />
           </el-form-item>`
-        }).join('\n')
-    }
+    }).join('\n')
+  }
 }
 
