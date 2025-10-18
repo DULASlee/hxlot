@@ -1,12 +1,12 @@
 /**
  * 🚀 统一事件总线系统 v1.0.0
- * 
+ *
  * 🎯 核心功能：
  * - 类型安全的事件发布/订阅
  * - 自动内存泄漏防护
  * - 事件追踪和调试
  * - 与UnifiedSchema深度集成
- * 
+ *
  * 🏛️ 架构原则：
  * - Single Source of Truth（事件系统唯一入口）
  * - Type Safety 100%（完整类型定义）
@@ -21,12 +21,12 @@ const logger: ILogger = getGlobalLogger()
 
 /**
  * 事件命名规范枚举
- * 
+ *
  * 🎯 命名规则：
  * - 使用kebab-case（小写-连字符）
  * - 前缀表示事件域（entity/module/ui/system）
  * - 动词表示操作（created/updated/deleted/selected）
- * 
+ *
  * ✅ 正确示例：entity:created, module:updated, ui:component-selected
  * ❌ 错误示例：EntityCreated, entity_created, ENTITY_CREATED
  */
@@ -76,7 +76,7 @@ export enum UnifiedEventName {
 
 /**
  * 事件数据类型映射
- * 
+ *
  * 🎯 类型安全保证：
  * - 每个事件都有明确的数据类型
  * - 编译时类型检查
@@ -152,12 +152,12 @@ interface EventStats {
 
 /**
  * 🚀 统一事件总线（单例）
- * 
+ *
  * 🎯 设计模式：
  * - Singleton（单例模式）
  * - Observer（观察者模式）
  * - Type-Safe（类型安全）
- * 
+ *
  * 🛡️ 安全特性：
  * - 自动内存泄漏检测
  * - 事件追踪和日志
@@ -193,17 +193,17 @@ class UnifiedEventBus {
 
     /**
      * 订阅事件（类型安全）
-     * 
+     *
      * @param event 事件名称
      * @param listener 事件监听器
      * @returns 订阅Token（用于取消订阅）
-     * 
+     *
      * @example
      * ```typescript
      * const token = eventBus.on(UnifiedEventName.ENTITY_CREATED, (data) => {
      *   console.log('Entity created:', data.entity.name)
      * })
-     * 
+     *
      * // 取消订阅
      * token.unsubscribe()
      * ```
@@ -235,7 +235,7 @@ class UnifiedEventBus {
 
     /**
      * 取消订阅事件
-     * 
+     *
      * @param event 事件名称
      * @param listener 事件监听器
      */
@@ -259,10 +259,10 @@ class UnifiedEventBus {
 
     /**
      * 发布事件（类型安全）
-     * 
+     *
      * @param event 事件名称
      * @param data 事件数据
-     * 
+     *
      * @example
      * ```typescript
      * eventBus.emit(UnifiedEventName.ENTITY_CREATED, {

@@ -6,65 +6,93 @@ using Volo.Abp.Application.Dtos;
 namespace SmartAbp.Application.Contracts.LowCode.Dtos
 {
     /// <summary>
-    /// 🔥 低代码模块DTO（Phase 2A - 后端SSOT）
+    /// 🔥 低代码模块DTO（Phase 3 - 后端SSOT完整版）
     /// 对应Domain实体: LowCodeModule
+    /// 对应前端类型: UnifiedModuleMetadata (unified-schema.ts)
     /// 用途: 前端TypeScript类型生成的唯一来源
-    /// 架构决策: 100%映射Domain实体，通过NSwag生成api-client.ts
+    /// 架构决策: 100%字段对齐前端UnifiedModuleMetadata
     /// </summary>
     public class ModuleDto : EntityDto<Guid>
     {
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 基础信息（直接映射Domain）
+        // 核心标识（必填）- 完全对齐UnifiedModuleMetadata
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
         /// <summary>
-        /// 系统名称（唯一标识，如：ProjectManagement）
+        /// 系统名称（唯一标识，如：SmartConstruction, MES）
+        /// 对应前端: systemName
         /// </summary>
         public string SystemName { get; set; } = default!;
 
         /// <summary>
-        /// 模块名称（代码生成用，如：Project）
+        /// 模块名称（如：ProjectManagement, Device）
+        /// 对应前端: name
+        /// Phase 3: 重命名ModuleName为Name，与前端完全一致
         /// </summary>
-        public string ModuleName { get; set; } = default!;
+        public string Name { get; set; } = default!;
 
         /// <summary>
-        /// 显示名称（中文，如：项目管理）
+        /// 显示名称（中文，如：项目管理，设备管理）
+        /// 对应前端: displayName
         /// </summary>
         public string DisplayName { get; set; } = default!;
 
         /// <summary>
         /// 模块描述
+        /// 对应前端: description
         /// </summary>
-        public string? Description { get; set; }
+        public string Description { get; set; } = default!;
 
         /// <summary>
         /// 命名空间（如：SmartAbp.ProjectManagement）
+        /// 对应前端: namespace
         /// </summary>
         public string Namespace { get; set; } = default!;
 
         /// <summary>
         /// 版本号（如：1.0.0）
+        /// 对应前端: version
         /// </summary>
         public string Version { get; set; } = "1.0.0";
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // JSON配置（直接引用Domain配置类型 - Phase 1B标准模式）
+        // JSON配置（直接引用Domain配置类型）
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
         /// <summary>
         /// 架构配置（直接引用Domain类型）
+        /// 对应前端: ArchitectureConfig包含所有架构相关字段
+        /// Phase 3: 通过这个对象暴露Pattern, Author, DatabaseProvider等
         /// </summary>
         public ModuleArchitectureConfig? ArchitectureConfig { get; set; }
 
         /// <summary>
         /// 前端配置（直接引用Domain类型）
+        /// 对应前端: FrontendConfig包含RoutePrefix, MenuConfig等
+        /// Phase 3: 通过这个对象暴露所有前端配置
         /// </summary>
         public ModuleFrontendConfig? FrontendConfig { get; set; }
 
         /// <summary>
         /// 代码生成选项（直接引用Domain类型）
+        /// 对应前端: CodeGenOptions包含GenerateMobilePages等
+        /// Phase 3: 通过这个对象暴露所有代码生成选项
         /// </summary>
         public ModuleCodeGenOptions? CodeGenOptions { get; set; }
+
+        /// <summary>
+        /// 权限配置（直接引用Domain类型）
+        /// 对应前端: PermissionConfig (UnifiedPermissionConfig)
+        /// Phase 3新增: 与前端UnifiedModuleMetadata完全对齐
+        /// </summary>
+        public ModulePermissionConfig? PermissionConfig { get; set; }
+
+        /// <summary>
+        /// 特性管理配置（直接引用Domain类型）
+        /// 对应前端: FeatureManagement (UnifiedFeatureManagement)
+        /// Phase 3新增: 与前端UnifiedModuleMetadata完全对齐
+        /// </summary>
+        public ModuleFeatureManagement? FeatureManagement { get; set; }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // 状态管理
@@ -94,6 +122,20 @@ namespace SmartAbp.Application.Contracts.LowCode.Dtos
         /// Phase 2A: 支持前端获取模块完整结构
         /// </summary>
         public List<EntityDefinitionDto>? Entities { get; set; }
+
+        /// <summary>
+        /// 模块依赖列表
+        /// 对应前端: dependencies (string[])
+        /// Phase 3新增: 与前端UnifiedModuleMetadata完全对齐
+        /// </summary>
+        public List<string> Dependencies { get; set; } = new();
+
+        /// <summary>
+        /// Schema版本号
+        /// 对应前端: schemaVersion
+        /// Phase 3新增: 与前端UnifiedModuleMetadata完全对齐
+        /// </summary>
+        public string SchemaVersion { get; set; } = "1.0.0";
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // 审计字段（从EntityDto<Guid>继承）

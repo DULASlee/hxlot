@@ -83,6 +83,20 @@ namespace SmartAbp.Domain.Entities.LowCode
         [Column(TypeName = "nvarchar(max)")]
         public ModuleCodeGenOptions? CodeGenOptions { get; set; }
 
+        /// <summary>
+        /// 权限配置（JSON存储）
+        /// Phase 3新增：后端SSOT完整性
+        /// </summary>
+        [Column(TypeName = "nvarchar(max)")]
+        public ModulePermissionConfig? PermissionConfig { get; set; }
+
+        /// <summary>
+        /// 特性管理配置（JSON存储）
+        /// Phase 3新增：后端SSOT完整性
+        /// </summary>
+        [Column(TypeName = "nvarchar(max)")]
+        public ModuleFeatureManagement? FeatureManagement { get; set; }
+
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // 状态管理
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -100,10 +114,21 @@ namespace SmartAbp.Domain.Entities.LowCode
         public bool IsActive { get; set; } = true;
 
         /// <summary>
-        /// 模块依赖（前端依赖的其他模块）
+        /// Schema版本号（如：1.0.0）
         /// Phase 3新增：后端SSOT完整性
+        /// 对应前端: schemaVersion
         /// </summary>
-        [MaxLength(500)]
+        [MaxLength(20)]
+        public string SchemaVersion { get; set; } = "1.0.0";
+
+        /// <summary>
+        /// 模块依赖（JSON数组，存储依赖的其他模块名称）
+        /// Phase 3新增：后端SSOT完整性
+        /// 对应前端: dependencies (string[])
+        /// 示例: ["SmartAbp.IdentityManagement", "SmartAbp.TenantManagement"]
+        /// </summary>
+        [MaxLength(2000)]
+        [Column(TypeName = "nvarchar(2000)")]
         public string? Dependencies { get; set; }
 
         /// <summary>
@@ -312,6 +337,64 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// 是否生成Swagger文档
         /// </summary>
         public bool GenerateSwagger { get; set; } = true;
+    }
+
+    /// <summary>
+    /// 模块权限配置
+    /// Phase 3新增：后端SSOT完整性
+    /// 对应前端: UnifiedPermissionConfig (unified-schema.ts)
+    /// </summary>
+    public class ModulePermissionConfig
+    {
+        /// <summary>
+        /// 权限组列表
+        /// </summary>
+        public List<PermissionGroupConfig> Groups { get; set; } = new();
+
+        /// <summary>
+        /// 自定义操作列表
+        /// </summary>
+        public List<string> CustomActions { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 权限组配置
+    /// Phase 3新增：后端SSOT完整性
+    /// </summary>
+    public class PermissionGroupConfig
+    {
+        /// <summary>
+        /// 权限组名称
+        /// </summary>
+        public string Name { get; set; } = default!;
+
+        /// <summary>
+        /// 权限组显示名称
+        /// </summary>
+        public string DisplayName { get; set; } = default!;
+
+        /// <summary>
+        /// 权限列表
+        /// </summary>
+        public List<string> Permissions { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 模块特性管理配置
+    /// Phase 3新增：后端SSOT完整性
+    /// 对应前端: UnifiedFeatureManagement (unified-schema.ts)
+    /// </summary>
+    public class ModuleFeatureManagement
+    {
+        /// <summary>
+        /// 是否启用特性管理
+        /// </summary>
+        public bool IsEnabled { get; set; } = false;
+
+        /// <summary>
+        /// 默认策略
+        /// </summary>
+        public string DefaultPolicy { get; set; } = string.Empty;
     }
 }
 

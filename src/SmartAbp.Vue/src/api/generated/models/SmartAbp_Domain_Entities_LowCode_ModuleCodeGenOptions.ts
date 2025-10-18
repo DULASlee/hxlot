@@ -23,6 +23,11 @@ export type SmartAbp_Domain_Entities_LowCode_ModuleCodeGenOptions = {
      */
     generateTests?: boolean;
     /**
+     * 是否生成移动端页面
+     * Phase 3新增：后端SSOT完整性
+     */
+    generateMobilePages?: boolean;
+    /**
      * 是否使用AutoMapper
      */
     useAutoMapper?: boolean;
