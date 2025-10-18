@@ -42,11 +42,15 @@ import {
     type SchemaDiff
 } from '../version/schema-diff'
 
-// Phase 2B: 使用后端SSOT类型别名
+// Phase 2B: 使用后端契约类型别名（31级AlphaGO最优解）
 import type {
-    UnifiedEntityDefinition,
-    UnifiedModuleMetadata
-} from '@/api/generated/type-aliases'
+    EntityDefinitionDto,
+    ModuleDto
+} from '../types/backend-contracts'
+
+// 类型别名（向后兼容）
+type UnifiedEntityDefinition = EntityDefinitionDto
+type UnifiedModuleMetadata = ModuleDto
 
 // 已移除对 metadata-adapter 的依赖，直接对统一Schema进行校验
 

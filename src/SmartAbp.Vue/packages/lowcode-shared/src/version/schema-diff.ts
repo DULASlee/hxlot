@@ -14,7 +14,10 @@
  */
 
 // Phase 2B: 使用后端SSOT类型别名
-import type { UnifiedEntityDefinition } from '@/api/generated/type-aliases'
+import type { EntityDefinitionDto } from '../types/backend-contracts'
+
+// 类型别名（向后兼容）
+type UnifiedEntityDefinition = EntityDefinitionDto
 
 // ========================================
 // 差异类型定义

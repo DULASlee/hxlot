@@ -45,14 +45,21 @@
  */
 
 import type {
-  UnifiedEntityDefinition,
-  UnifiedEntityField,
-  UnifiedEntityRelationship,
-  UnifiedFieldType,
-  UnifiedModuleMetadata,
-  UnifiedValidationRule,
-  UnifiedValidationRuleType,
-} from '@/api/generated/type-aliases'
+  EntityDefinitionDto,
+  EntityFieldDto,
+  EntityRelationDto,
+  ModuleDto,
+  ValidationRuleDto,
+} from '../types/backend-contracts'
+
+// 类型别名（向后兼容）
+type UnifiedEntityDefinition = EntityDefinitionDto
+type UnifiedEntityField = EntityFieldDto
+type UnifiedEntityRelationship = EntityRelationDto
+type UnifiedModuleMetadata = ModuleDto
+type UnifiedValidationRule = ValidationRuleDto
+type UnifiedFieldType = string
+type UnifiedValidationRuleType = string
 
 /**
  * 后端DTO类型定义（完全匹配真实backend DTO结构）

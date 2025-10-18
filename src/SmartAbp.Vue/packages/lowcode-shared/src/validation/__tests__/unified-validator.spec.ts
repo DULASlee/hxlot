@@ -56,7 +56,11 @@ import {
   setValidationFeatureFlags,
   getValidationFeatureFlags
 } from './unified-validator'
-import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from '@/api/generated/type-aliases'
+import type { EntityDefinitionDto, ModuleDto } from '../../types/backend-contracts'
+
+// 类型别名（向后兼容）
+type UnifiedEntityDefinition = EntityDefinitionDto
+type UnifiedModuleMetadata = ModuleDto
 
 describe('UnifiedSchemaValidator - 真实验证器集成测试', () => {
 

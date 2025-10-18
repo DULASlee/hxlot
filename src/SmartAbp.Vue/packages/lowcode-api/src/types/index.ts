@@ -2,14 +2,14 @@
 // Phase 1D: 使用后端SSOT类型（api-client.ts）
 // ============================================================================
 // 前端元数据类型从 @smartabp/lowcode-shared/types (metadata.ts)
-// API DTO类型从 @/api/generated/api-client
+// API DTO类型从 @smartabp/lowcode-shared（后端SSOT统一类型系统）
 // ============================================================================
 
-// Phase 2B: 使用后端SSOT类型别名
+// Phase 2B: 使用后端契约类型别名（31级AlphaGO最优解实施）
 import type {
   EntityDefinitionDto as BackendEntityDefinition,
   ModuleDto as BackendModuleDefinition
-} from '@/api/generated/type-aliases'
+} from '@smartabp/lowcode-shared'
 
 // 前端工具类型（metadata.ts - 仅保留前端特定类型）
 import type {

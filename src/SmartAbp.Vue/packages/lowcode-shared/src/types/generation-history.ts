@@ -6,8 +6,10 @@
  * @since Phase 3 - Task 3.2.1
  */
 
-import type { UnifiedEntityDefinition } from '@/api/generated/type-aliases'
-import type { TemplateType } from './enums'
+import type { EntityDefinitionDto } from './backend-contracts'
+
+// 类型别名（向后兼容）
+type UnifiedEntityDefinition = EntityDefinitionDto
 
 /**
  * 代码生成类型

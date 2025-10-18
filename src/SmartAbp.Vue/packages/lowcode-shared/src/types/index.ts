@@ -17,14 +17,13 @@ export type {
 } from './metadata.js'
 
 export {
-  METADATA_SCHEMA_VERSION,
-  SUPPORTED_METADATA_VERSIONS,
-  SUPPORTED_SCHEMA_VERSIONS,
-  UNIFIED_SCHEMA_VERSION,
   getSchemaVersion,
   isEntityMetadata,
   isModuleMetadata,
-  isSchemaVersionCompatible
+  isSchemaVersionCompatible, METADATA_SCHEMA_VERSION,
+  SUPPORTED_METADATA_VERSIONS,
+  SUPPORTED_SCHEMA_VERSIONS,
+  UNIFIED_SCHEMA_VERSION
 } from './metadata.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -33,7 +32,7 @@ export {
 //
 // 废弃日期: 2025-10-18
 // 废弃原因: 已完成后端SSOT（Single Source of Truth）迁移
-// 替代方案: 直接使用 @/api/generated/api-client.ts 中的NSwag生成类型
+// 替代方案: 直接使用统一类型系统 core-types.ts 中的后端SSOT类型
 //
 // 📋 迁移映射表（完整）:
 //   UnifiedModuleMetadata      → ModuleDto
@@ -50,7 +49,7 @@ export {
 //   UnifiedPermissionConfig    → PermissionConfig
 //
 // ✅ 正确用法:
-//   import { ModuleDto, EntityDefinitionDto } from '@/api/generated/api-client'
+//   import { ModuleDto, EntityDefinitionDto } from '../types/core-types'
 //   const module: ModuleDto = await moduleApi.getModule(id)
 //
 // ❌ 错误用法（已废弃）:

@@ -4,11 +4,14 @@
  * @version 1.0.0
  */
 
-import type { UnifiedEntityDefinition } from '@/api/generated/type-aliases'
-import { TemplateType, TemplateEngine } from './enums'
+import type { EntityDefinitionDto } from './backend-contracts'
+import { TemplateEngine, TemplateType } from './enums'
+
+// 类型别名（向后兼容）
+type UnifiedEntityDefinition = EntityDefinitionDto
 
 // 重新导出枚举，方便使用
-export { TemplateType, TemplateEngine }
+export { TemplateEngine, TemplateType }
 
 /**
  * 模板变量类型

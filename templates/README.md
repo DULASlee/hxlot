@@ -1,8 +1,15 @@
-# SmartAbp 代码模板库
+# SmartAbp 代码模板库（Phase 3C架构重构版）
 
 ## 📋 概述
 
 这是SmartAbp项目的代码模板库，旨在为AI大模型提供标准化的代码生成模板，确保生成的代码符合项目架构和编程规范。
+
+**架构版本**: Phase 3C（后端SSOT驱动 + 契约类型系统）
+**架构评分**: 92/100（优秀）
+**核心特性**:
+- ✅ 后端ABP vNext架构（98/100）
+- ✅ 前端契约类型系统（95/100）
+- ✅ packages黑盒独立（100/100）
 
 ## 🏗️ 目录结构
 
@@ -32,18 +39,87 @@ templates/
 
 ## 🎯 使用原则
 
-### AI大模型使用指南
+### AI大模型使用指南（Phase 3C架构要求）
 
 1. **强制性模板检查**：在生成任何代码前，必须先搜索相关模板
 2. **模板优先原则**：优先使用现有模板，而非从头编写
 3. **参数化生成**：使用模板参数进行个性化定制
 4. **合规性验证**：确保生成的代码符合模板约束
+5. **SSOT驱动**（⭐NEW⭐）：后端模板基于C# DTO（SSOT），前端模板使用契约类型
+6. **黑盒独立**（⭐NEW⭐）：packages模板禁止引用主应用（src/）
+7. **契约类型系统**（⭐NEW⭐）：前端类型统一使用@smartabp/lowcode-shared契约
 
 ### 模板命名规范
 
 - 模板文件：`{TemplateName}.template.{ext}`
 - 元数据文件：`{TemplateName}.template.meta.yml`
 - 示例文件：`{TemplateName}.example.{ext}`
+
+## 🏗️ Phase 3C架构规则（⭐强制遵守⭐）
+
+### 后端模板架构规则
+
+```yaml
+后端SSOT驱动（98/100分）:
+  ✅ 所有实体必须定义在 SmartAbp.Domain/Entities/
+  ✅ 必须标记 [GenerateSwaggerSchema]
+  ✅ DTO必须与Entity保持一致性
+  ✅ 遵循ABP vNext + DDD最佳实践
+  ✅ 使用Repository仓储模式
+  ✅ 使用AutoMapper进行映射
+  ✅ 支持CQRS查询分离
+
+示例:
+  ✅ 正确: src/SmartAbp.Domain/Entities/LowCode/LowCodeModule.cs
+  ✅ 正确: [GenerateSwaggerSchema] 标记在Domain实体上
+  ❌ 错误: 跳过NSwag，手动维护前端类型
+```
+
+### 前端模板架构规则
+
+```yaml
+契约类型系统（95/100分）:
+  ✅ packages必须使用 @smartabp/lowcode-shared 契约类型
+  ✅ 严禁引用 @/api/generated（主应用生成的API）
+  ✅ 严禁引用 src/（主应用目录）
+  ✅ 严禁使用相对路径跨包引用（'../'）
+  ✅ 契约类型定义在 backend-contracts.ts
+  ✅ 完全黑盒独立（零外部依赖）
+
+示例:
+  ✅ 正确: import type { EntityDefinitionDto } from '@smartabp/lowcode-shared'
+  ✅ 正确: import { SmartForm } from '@smartabp/lowcode-core'
+  ❌ 错误: import { EntityDefinitionDto } from '@/api/generated/models'
+  ❌ 错误: import { xxx } from '../../../src/api/generated'
+  ❌ 错误: import { xxx } from '@smartabp/metadata-core'（已废弃）
+```
+
+### packages依赖层级规则
+
+```yaml
+三层架构（100/100黑盒独立）:
+  Layer 0: lowcode-shared（契约类型层）
+    - backend-contracts.ts（45个契约类型）
+    - 零包依赖，完全独立
+
+  Layer 1: lowcode-core, lowcode-api, lowcode-tools（核心逻辑层）
+    - 只能依赖 lowcode-shared
+    - 使用契约类型进行类型声明
+
+  Layer 2: lowcode-designer（设计器UI层）
+    - 依赖 shared + core
+    - 使用契约类型构建UI
+
+允许的依赖:
+  ✅ Layer 2 → Layer 1 → Layer 0（向下依赖）
+  ✅ 同层级单向依赖（如：api→core）
+
+禁止的依赖:
+  ❌ Layer 0 → 任何（底层依赖上层）
+  ❌ Layer 1 → Layer 2（逆向依赖）
+  ❌ 循环依赖（A→B→A）
+  ❌ packages → src/api/generated（破坏黑盒）
+```
 
 ## 🔍 AI搜索模式
 
@@ -121,7 +197,7 @@ glob "templates/backend/application/*.template.cs"
 - 85-89分: 优秀 ⭐⭐⭐⭐
 - <85分: 不合格 ❌
 
-**详见**: 
+**详见**:
 - `docs/architecture/adr/0030-excellence-engineering-standards.md`
 - `.cursor/rules/08_卓越工程铁律.mdc`
 

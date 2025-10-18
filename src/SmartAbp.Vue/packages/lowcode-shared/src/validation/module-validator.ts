@@ -9,7 +9,10 @@
  * @adapted-for UnifiedModuleMetadata (40+ fields)
  */
 
-import type { UnifiedModuleMetadata } from '@/api/generated/type-aliases'
+import type { ModuleDto } from '../types/backend-contracts'
+
+// 类型别名（向后兼容）
+type UnifiedModuleMetadata = ModuleDto
 import { z } from 'zod'
 import { formatErrorMessage } from './error-map'
 

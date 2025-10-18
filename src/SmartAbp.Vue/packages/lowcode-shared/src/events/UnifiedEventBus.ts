@@ -15,7 +15,11 @@
  */
 
 import { getGlobalLogger, type ILogger } from '../logging'
-import type { UnifiedEntityDefinition, UnifiedModuleMetadata } from '@/api/generated/type-aliases'
+import type { EntityDefinitionDto, ModuleDto } from '../types/backend-contracts'
+
+// 类型别名（向后兼容）
+type UnifiedEntityDefinition = EntityDefinitionDto
+type UnifiedModuleMetadata = ModuleDto
 
 const logger: ILogger = getGlobalLogger()
 
@@ -88,7 +92,7 @@ export interface UnifiedEventDataMap {
     [UnifiedEventName.ENTITY_UPDATED]: { entity: UnifiedEntityDefinition; changes: Partial<UnifiedEntityDefinition> }
     [UnifiedEventName.ENTITY_DELETED]: { entityId: string; entityName: string }
     [UnifiedEventName.ENTITY_SELECTED]: { entityId: string; entity: UnifiedEntityDefinition }
-    [UnifiedEventName.ENTITY_FIELD_ADDED]: { entityId: string; field: UnifiedEntityDefinition['fields'][0] }
+    [UnifiedEventName.ENTITY_FIELD_ADDED]: { entityId: string; field: NonNullable<UnifiedEntityDefinition['fields']>[0] }
     [UnifiedEventName.ENTITY_FIELD_UPDATED]: { entityId: string; fieldId: string; changes: any }
     [UnifiedEventName.ENTITY_FIELD_DELETED]: { entityId: string; fieldId: string }
 

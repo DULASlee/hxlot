@@ -8,6 +8,11 @@
  * @packageDocumentation
  * @module @smartabp/lowcode-shared
  */
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🔥 后端契约类型系统 - 31级AlphaGO分析最优解实施
+// 架构三大铁律完全合规：packages独立契约类型，零外部依赖
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+export * from './types/backend-contracts';
 export * from './types/index';
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🚀 HTTP客户端 (HTTP Client)
@@ -20,7 +25,7 @@ export { API_BASE_URL, request } from './api';
 export * from './types/enums';
 // Phase 1D: 前端元数据类型（从unified-schema迁移至metadata）
 // export * from './types/metadata'; // 已在 types/index.ts 导出
-// API DTO类型请使用: import { EntityDefinitionDto } from '@/api/generated/api-client'
+// API DTO类型请使用: import { EntityDefinitionDto, ModuleDto } from '@smartabp/lowcode-shared'
 // 🟡 Phase 3B: schema-converter已废弃，不再导出
 // export * from './utils/schema-converter';
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

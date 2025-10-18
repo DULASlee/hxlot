@@ -10,7 +10,10 @@
  */
 
 import { z } from 'zod'
-import type { UnifiedEntityDefinition } from '@/api/generated/type-aliases'
+import type { EntityDefinitionDto } from '../types/backend-contracts'
+
+// 类型别名（向后兼容）
+type UnifiedEntityDefinition = EntityDefinitionDto
 import { formatErrorMessage } from './error-map'
 
 // ========================================

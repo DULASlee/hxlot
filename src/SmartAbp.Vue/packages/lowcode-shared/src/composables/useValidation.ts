@@ -10,7 +10,7 @@ import { computed, reactive, readonly } from 'vue'
 import type {
     ModuleDto as UnifiedModuleMetadata,
     EntityDefinitionDto as UnifiedEntityDefinition
-} from '@/api/generated/type-aliases'
+} from '../types/backend-contracts'
 import {
     UnifiedSchemaValidator,
     type UnifiedValidationFeatureFlags,
