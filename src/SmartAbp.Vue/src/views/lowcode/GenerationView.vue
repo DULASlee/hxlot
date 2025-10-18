@@ -326,14 +326,12 @@ const createUnifiedModuleMetadata = (): import('@smartabp/lowcode-shared/types/u
     },
     dependencies: [],
     schemaVersion: '1.0.0',
-    createdAt: new Date(),
-    updatedAt: new Date(),
     entities: [{
       id: crypto.randomUUID(),
       name: generationParams.value.entityName,
       displayName: generationParams.value.displayName || generationParams.value.entityName,
       tableName: generationParams.value.entityName,
-      // module: generationParams.value.moduleName, // Phase 2B: 后端EntityDefinitionDto使用moduleId (Guid)
+      module: generationParams.value.moduleName, // Phase 3: UnifiedEntityDefinition必填字段
       namespace: `SmartAbp.${generationParams.value.moduleName}.Entities`,
       description: `${generationParams.value.displayName || generationParams.value.entityName}实体`,
       schema: 'dbo',
@@ -343,43 +341,46 @@ const createUnifiedModuleMetadata = (): import('@smartabp/lowcode-shared/types/u
       isAudited: true,
       isSoftDelete: true,
       isMultiTenant: false,
+      uiConfig: { listPage: {}, formPage: {}, detailPage: {} } as any, // Phase 3: UnifiedEntityDefinition必填字段
+      createdAt: new Date(), // Phase 3: UnifiedEntityDefinition必填字段
+      updatedAt: new Date(), // Phase 3: UnifiedEntityDefinition必填字段
       fields: [
         {
           id: crypto.randomUUID(),
           name: 'Id',
           displayName: 'ID',
           type: 'Guid',
+          description: '主键ID', // Phase 3: UnifiedEntityField必填字段
+          helpText: '', // Phase 3: UnifiedEntityField必填字段
           isRequired: true,
           isPrimaryKey: true,
-          // isReadonly: true, // Phase 2B: 后端EntityFieldDto无此字段
-          // description: '主键ID', // Phase 2B: 后端EntityFieldDto无此字段
-          // helpText: '', // Phase 2B: 后端EntityFieldDto无此字段
           isUnique: true,
           isIndexed: true,
           enumValues: [],
           defaultValue: undefined,
           minLength: undefined,
-          length: undefined, // Phase 2B: 后端使用length而非maxLength
+          maxLength: undefined,
           minValue: undefined,
           maxValue: undefined,
           pattern: undefined,
           validationRules: [],
-          // Phase 2B: 以下UI配置字段后端EntityFieldDto无，应使用UIConfig属性
-          // groupName: 'Basic',
-          // isVisible: true,
-          // listVisible: true,
-          // detailVisible: true,
-          // formVisible: false,
-          // searchable: false,
-          // sortable: true,
-          // filterable: false,
-          // disabled: false,
+          displayOrder: 0, // Phase 3: UnifiedEntityField必填字段
+          groupName: 'Basic', // Phase 3: UnifiedEntityField必填字段
+          isVisible: true, // Phase 3: UnifiedEntityField必填字段
+          listVisible: true, // Phase 3: UnifiedEntityField必填字段
+          detailVisible: true, // Phase 3: UnifiedEntityField必填字段
+          formVisible: false, // Phase 3: UnifiedEntityField必填字段
+          searchable: false, // Phase 3: UnifiedEntityField必填字段
+          sortable: true, // Phase 3: UnifiedEntityField必填字段
+          filterable: false, // Phase 3: UnifiedEntityField必填字段
+          disabled: false, // Phase 3: UnifiedEntityField必填字段
           columnName: 'Id',
           columnType: 'uniqueidentifier',
           isAuditField: false,
           isSoftDeleteField: false,
-          isTenantField: false
-        }
+          isTenantField: false,
+          isNullable: false // Phase 3: UnifiedEntityField必填字段
+        } as any // Phase 3临时方案：类型断言，等swagger重新生成后删除
       ],
       relationships: [],
       validationRules: [],
@@ -428,14 +429,11 @@ const createUnifiedModuleMetadata = (): import('@smartabp/lowcode-shared/types/u
       // lastModificationTime: new Date()
     }],
     // Phase 2B: 后端ModuleDto无permissionConfig和menuConfig字段（已删除）
-    // permissionConfig: {
-    //   groups: [],
-    //   customActions: []
-    // },
-    // menuConfig: undefined
-    // Phase 2B: 使用后端SSOT审计字段命名（ISO 8601格式）
-    creationTime: new Date().toISOString(),
-    lastModificationTime: new Date().toISOString()
+    permissionConfig: { groups: [], customActions: [] } as any, // Phase 3: UnifiedModuleMetadata必填字段
+    menuConfig: [] as any, // Phase 3: UnifiedModuleMetadata必填字段
+    // Phase 3: UnifiedModuleMetadata使用createdAt/updatedAt
+    createdAt: new Date(),
+    updatedAt: new Date()
   }
 }
 
@@ -445,7 +443,8 @@ watch(
   async () => {
     if (generationParams.value.entityName && generationParams.value.moduleName) {
       const moduleMetadata = createUnifiedModuleMetadata()
-      await validateModule(moduleMetadata)
+      // Phase 3临时方案：类型断言，等swagger重新生成后删除
+      await validateModule(moduleMetadata as any)
     }
   },
   { deep: true }

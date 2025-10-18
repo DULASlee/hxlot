@@ -354,7 +354,7 @@ const generateCode = async () => {
 
     // ✅ 调用真实API
     const config: ModuleGenerationConfig = {
-      moduleMetadata,
+      moduleMetadata: moduleMetadata as any, // Phase 3临时方案：类型断言，等swagger重新生成后删除
       targetPath: './generated',
       overwriteExisting: true,
       generateTests: false,

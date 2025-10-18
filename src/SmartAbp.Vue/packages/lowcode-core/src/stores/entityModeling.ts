@@ -47,10 +47,11 @@ export interface EntityField {
 
 /**
  * 验证规则类型（保持原有接口）
+ * Phase 3扩展：添加required、email、url类型以支持FormSchemaAdapter
  */
 export interface ValidationRule {
   fieldName: string
-  ruleType: "length" | "range" | "regex" | "unique" | "custom"
+  ruleType: "length" | "range" | "regex" | "unique" | "custom" | "required" | "email" | "url"
   ruleValue: string
   errorMessage: string
 }
