@@ -298,11 +298,12 @@ const onTemplateSelect = (template: Template) => {
 }
 
 // 🔥 新增：创建UnifiedModuleMetadata用于验证（Phase 1D）
-const createUnifiedModuleMetadata = (): UnifiedModuleMetadata => {
+// Phase 2B: 使用unified-schema的完整类型（前端内部使用）
+const createUnifiedModuleMetadata = (): import('@smartabp/lowcode-shared/types/unified-schema').UnifiedModuleMetadata => {
   return {
     id: crypto.randomUUID(),
     systemName: 'SmartAbp',
-    name: generationParams.value.moduleName,
+    name: generationParams.value.moduleName, // Phase 2B: unified-schema使用name字段
     displayName: generationParams.value.displayName || generationParams.value.entityName,
     description: `${generationParams.value.displayName || generationParams.value.entityName}模块`,
     version: '1.0.0',
@@ -332,7 +333,7 @@ const createUnifiedModuleMetadata = (): UnifiedModuleMetadata => {
       name: generationParams.value.entityName,
       displayName: generationParams.value.displayName || generationParams.value.entityName,
       tableName: generationParams.value.entityName,
-      module: generationParams.value.moduleName,
+      // module: generationParams.value.moduleName, // Phase 2B: 后端EntityDefinitionDto使用moduleId (Guid)
       namespace: `SmartAbp.${generationParams.value.moduleName}.Entities`,
       description: `${generationParams.value.displayName || generationParams.value.entityName}实体`,
       schema: 'dbo',
@@ -350,29 +351,29 @@ const createUnifiedModuleMetadata = (): UnifiedModuleMetadata => {
           type: 'Guid',
           isRequired: true,
           isPrimaryKey: true,
-          isReadonly: true,
-          description: '主键ID',
-          helpText: '',
+          // isReadonly: true, // Phase 2B: 后端EntityFieldDto无此字段
+          // description: '主键ID', // Phase 2B: 后端EntityFieldDto无此字段
+          // helpText: '', // Phase 2B: 后端EntityFieldDto无此字段
           isUnique: true,
           isIndexed: true,
           enumValues: [],
           defaultValue: undefined,
           minLength: undefined,
-          maxLength: undefined,
+          length: undefined, // Phase 2B: 后端使用length而非maxLength
           minValue: undefined,
           maxValue: undefined,
           pattern: undefined,
           validationRules: [],
-          displayOrder: 1,
-          groupName: 'Basic',
-          isVisible: true,
-          listVisible: true,
-          detailVisible: true,
-          formVisible: false,
-          searchable: false,
-          sortable: true,
-          filterable: false,
-          disabled: false,
+          // Phase 2B: 以下UI配置字段后端EntityFieldDto无，应使用UIConfig属性
+          // groupName: 'Basic',
+          // isVisible: true,
+          // listVisible: true,
+          // detailVisible: true,
+          // formVisible: false,
+          // searchable: false,
+          // sortable: true,
+          // filterable: false,
+          // disabled: false,
           columnName: 'Id',
           columnType: 'uniqueidentifier',
           isAuditField: false,
@@ -386,28 +387,29 @@ const createUnifiedModuleMetadata = (): UnifiedModuleMetadata => {
       indexes: [],
       constraints: [],
       permissions: [],
-      uiConfig: {
-        listPage: {
-          pageSize: 20,
-          sortField: 'Id',
-          sortOrder: 'desc' as const,
-          searchFields: ['Name'],
-          displayFields: ['Id', 'Name']
-        },
-        formPage: {
-          layout: 'vertical' as const,
-          labelWidth: 120,
-          fieldGroups: [{
-            name: 'basic',
-            displayName: 'Basic Information',
-            fields: ['Name']
-          }]
-        },
-        detailPage: {
-          layout: 'card' as const,
-          displayFields: ['Id', 'Name']
-        }
-      },
+      // Phase 2B: 后端EntityDefinitionDto使用pageConfig而非uiConfig
+      // uiConfig: {
+      //   listPage: {
+      //     pageSize: 20,
+      //     sortField: 'Id',
+      //     sortOrder: 'desc' as const,
+      //     searchFields: ['Name'],
+      //     displayFields: ['Id', 'Name']
+      //   },
+      //   formPage: {
+      //     layout: 'vertical' as const,
+      //     labelWidth: 120,
+      //     fieldGroups: [{
+      //       name: 'basic',
+      //       displayName: 'Basic Information',
+      //       fields: ['Name']
+      //     }]
+      //   },
+      //   detailPage: {
+      //     layout: 'card' as const,
+      //     displayFields: ['Id', 'Name']
+      //   }
+      // },
       codeGeneration: {
         generateEntity: true,
         generateDto: true,
@@ -420,16 +422,20 @@ const createUnifiedModuleMetadata = (): UnifiedModuleMetadata => {
       isCompleted: false,
       tags: [],
       schemaVersion: '1.0.0',
-      version: '1.0.0',
-      createdAt: new Date(),
-      updatedAt: new Date()
+      version: '1.0.0'
+      // Phase 2B: 审计字段由后端自动设置，前端不需要传递
+      // creationTime: new Date(),
+      // lastModificationTime: new Date()
     }],
-    permissionConfig: {
-      groups: [],
-      customActions: []
-    },
-    // Phase 1D: menuConfig类型修正，MenuConfig要求title字段
-    menuConfig: undefined
+    // Phase 2B: 后端ModuleDto无permissionConfig和menuConfig字段（已删除）
+    // permissionConfig: {
+    //   groups: [],
+    //   customActions: []
+    // },
+    // menuConfig: undefined
+    // Phase 2B: 使用后端SSOT审计字段命名（ISO 8601格式）
+    creationTime: new Date().toISOString(),
+    lastModificationTime: new Date().toISOString()
   }
 }
 
@@ -555,21 +561,22 @@ const generateCode = async () => {
             displayFields: ['name', 'description']
           }
         },
-        codeGeneration: {
-          generateEntity: true,
-          generateDto: true,
-          generateAppService: true,
-          generateController: true,
-          generateRepository: true,
-          generateFrontend: true,
-          generateTests: true
-        },
-        isCompleted: false,
-        tags: [],
-        schemaVersion: '1.0.0',
-        version: '1.0.0',
-        createdAt: new Date(),
-        updatedAt: new Date()
+      codeGeneration: {
+        generateEntity: true,
+        generateDto: true,
+        generateAppService: true,
+        generateController: true,
+        generateRepository: true,
+        generateFrontend: true,
+        generateTests: true
+      },
+      isCompleted: false,
+      tags: []
+      // Phase 2B: 以下字段后端EntityDefinitionDto无
+      // schemaVersion: '1.0.0',
+      // version: '1.0.0',
+      // createdAt: new Date(),
+      // updatedAt: new Date()
       }],
       // ✅ 添加缺少的必需字段
       id: crypto.randomUUID(),
@@ -589,7 +596,7 @@ const generateCode = async () => {
       schemaVersion: '1.0.0',
       createdAt: new Date(),
       updatedAt: new Date()
-    } as UnifiedModuleMetadata // Phase 1D: 使用UnifiedModuleMetadata（宽松版）
+    } as unknown as UnifiedModuleMetadata // Phase 2B: 双重类型断言兼容后端SSOT
 
     // ✅ 修复: 构建符合ModuleGenerationConfig接口的完整配置
     const generationConfig: ModuleGenerationConfig = {

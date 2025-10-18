@@ -13,7 +13,8 @@
  * @adapted-for UnifiedEntityDefinition
  */
 
-import type { UnifiedEntityDefinition } from '../types/unified-schema'
+// Phase 2B: 使用后端SSOT类型别名
+import type { UnifiedEntityDefinition } from '@/api/generated/type-aliases'
 
 // ========================================
 // 差异类型定义
@@ -84,11 +85,11 @@ function diffEntitySchemaInternal(
     const modifications: FieldDiff[] = []
     let unchangedCount = 0
 
-    // 对比基础字段
+    // 对比基础字段 (Phase 2B: 适配后端EntityDefinitionDto字段)
     const baseFields: Array<keyof UnifiedEntityDefinition> = [
-        'name', 'module', 'displayName', 'tableName', 'namespace', 'description',
+        'name', 'displayName', 'tableName', 'namespace',
         'schema', 'isAggregateRoot', 'baseClass', 'isAudited', 'isSoftDelete',
-        'isMultiTenant', 'isCompleted'
+        'isMultiTenant'
     ]
 
     for (const field of baseFields) {
@@ -122,15 +123,15 @@ function diffEntitySchemaInternal(
         }
     }
 
-    // 对比字段列表（fields）
-    const fieldDiffs = diffFieldList(oldSchema.fields, newSchema.fields)
+    // 对比字段列表（fields）- Phase 2B: 添加空值检查
+    const fieldDiffs = diffFieldList(oldSchema.fields || [], newSchema.fields || [])
     additions.push(...fieldDiffs.additions)
     removals.push(...fieldDiffs.removals)
     modifications.push(...fieldDiffs.modifications)
     unchangedCount += fieldDiffs.unchangedCount
 
-    // 对比关系列表（relationships）
-    const relationshipDiffs = diffRelationshipList(oldSchema.relationships, newSchema.relationships)
+    // 对比关系列表（relationships）- Phase 2B: 添加空值检查
+    const relationshipDiffs = diffRelationshipList(oldSchema.relationships || [], newSchema.relationships || [])
     additions.push(...relationshipDiffs.additions)
     removals.push(...relationshipDiffs.removals)
     modifications.push(...relationshipDiffs.modifications)

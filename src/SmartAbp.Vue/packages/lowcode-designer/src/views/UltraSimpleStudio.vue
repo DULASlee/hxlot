@@ -481,35 +481,35 @@ const convertToModuleMetadata = (): ModuleMetadata => {
   return {
     id: crypto.randomUUID(),
     systemName: c.systemName,
-    name: c.moduleName,
+    moduleName: c.moduleName, // Phase 2B: 后端ModuleDto使用moduleName而非name
     displayName: c.displayName,
     description: `${c.displayName || c.moduleName} 模块`,
     version: '1.0.0',
-    schemaVersion: '1.0.0',  // 🔥 补充必填字段
-    architecturePattern: (c.architecturePattern as 'Crud' | 'DDD' | 'CQRS') || 'Crud',
+    // schemaVersion: '1.0.0',  // Phase 2B: 后端ModuleDto无此字段
+    // architecturePattern: (c.architecturePattern as 'Crud' | 'DDD' | 'CQRS') || 'Crud', // Phase 2B: 后端ModuleDto无此字段
     namespace: ns,
     entities: entities,  // 🔥 修复：传入真实的实体数组
-    databaseInfo: {
-      connectionStringName: 'Default',
-      schema,
-      provider: (c.databaseProvider || 'SqlServer') as 'SqlServer' | 'PostgreSql' | 'MySql' | 'Oracle' | 'SQLite'
-    },
-    frontend: {
-      parentId: c.parentMenuId || 'business',
-      routePrefix: route
-    },
-    author: 'SmartAbp Generator',
-    featureManagement: { isEnabled: false, defaultPolicy: '' },
-    generateMobilePages: false,
-    dependencies: [],
-    // Phase 1D: menuConfig类型修正
-    menuConfig: undefined,
-    permissionConfig: {
-      groups: [],              // 🔥 修复：后端期望 Groups 数组
-      customActions: []        // 🔥 修复：后端期望 CustomActions 数组
-    },
-    createdAt: new Date(),  // 🔥 补充必填字段
-    updatedAt: new Date()   // 🔥 补充必填字段
+    // databaseInfo: { // Phase 2B: 后端ModuleDto无此字段
+    //   connectionStringName: 'Default',
+    //   schema,
+    //   provider: (c.databaseProvider || 'SqlServer') as 'SqlServer' | 'PostgreSql' | 'MySql' | 'Oracle' | 'SQLite'
+    // },
+    // frontend: { // Phase 2B: 后端ModuleDto无此字段，使用FrontendConfig
+    //   parentId: c.parentMenuId || 'business',
+    //   routePrefix: route
+    // },
+    // author: 'SmartAbp Generator', // Phase 2B: 后端ModuleDto无此字段
+    // featureManagement: { isEnabled: false, defaultPolicy: '' }, // Phase 2B: 后端ModuleDto无此字段
+    // generateMobilePages: false, // Phase 2B: 后端ModuleDto无此字段
+    // dependencies: [],
+    // Phase 2B: 后端ModuleDto无menuConfig字段（已删除）
+    // permissionConfig: {
+    //   groups: [],              // Phase 2B: 后端ModuleDto无此字段
+    //   customActions: []        // Phase 2B: 后端ModuleDto无此字段
+    // },
+    // Phase 2B: 使用后端SSOT审计字段命名（ISO 8601格式）
+    creationTime: new Date().toISOString(),
+    lastModificationTime: new Date().toISOString()
   }
 }
 

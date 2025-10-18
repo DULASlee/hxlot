@@ -42,10 +42,11 @@ import {
     type SchemaDiff
 } from '../version/schema-diff'
 
+// Phase 2B: 使用后端SSOT类型别名
 import type {
     UnifiedEntityDefinition,
     UnifiedModuleMetadata
-} from '../types/unified-schema'
+} from '@/api/generated/type-aliases'
 
 // 已移除对 metadata-adapter 的依赖，直接对统一Schema进行校验
 
@@ -283,8 +284,8 @@ export class UnifiedSchemaValidator {
 
             // 验证成功
             return this.createSuccessResult(entity, startTime, {
-                fieldCount: entity.fields.length,
-                ruleCount: entity.fields.reduce((sum, field) => sum + (field.validationRules?.length || 0), 0)
+                fieldCount: entity.fields?.length || 0,
+                ruleCount: entity.fields?.reduce((sum, field) => sum + (field.validationRules?.length || 0), 0) || 0
             }, warnings)
 
         } catch (error) {
@@ -331,9 +332,9 @@ export class UnifiedSchemaValidator {
 
             // 验证成功
             return this.createSuccessResult(module, startTime, {
-                fieldCount: module.entities.reduce((sum, entity) => sum + entity.fields.length, 0),
-                ruleCount: module.entities.reduce((sum, entity) =>
-                    sum + entity.fields.reduce((fieldSum, field) => fieldSum + (field.validationRules?.length || 0), 0), 0)
+                fieldCount: module.entities?.reduce((sum, entity) => sum + (entity.fields?.length || 0), 0) || 0,
+                ruleCount: module.entities?.reduce((sum, entity) =>
+                    sum + (entity.fields?.reduce((fieldSum, field) => fieldSum + (field.validationRules?.length || 0), 0) || 0), 0) || 0
             })
 
         } catch (error) {
@@ -377,9 +378,9 @@ export class UnifiedSchemaValidator {
         }
 
         return this.createSuccessResult(validEntities, startTime, {
-            fieldCount: validEntities.reduce((sum, entity) => sum + entity.fields.length, 0),
+            fieldCount: validEntities.reduce((sum, entity) => sum + (entity.fields?.length || 0), 0),
             ruleCount: validEntities.reduce((sum, entity) =>
-                sum + entity.fields.reduce((fieldSum, field) => fieldSum + (field.validationRules?.length || 0), 0), 0)
+                sum + (entity.fields?.reduce((fieldSum, field) => fieldSum + (field.validationRules?.length || 0), 0) || 0), 0)
         }, warnings)
     }
 
@@ -629,7 +630,8 @@ export class UnifiedSchemaValidator {
         newModule: UnifiedModuleMetadata
     ): CompatibilityResult {
         // 简化实现：基于版本号的兼容性检查
-        const isCompatible = this.checkSchemaVersion(newModule.schemaVersion || '1.0.0')
+        // Phase 2B: 后端ModuleDto无schemaVersion，使用版本号或默认值
+        const isCompatible = this.checkSchemaVersion((newModule as any).schemaVersion || newModule.version || '1.0.0')
 
         return {
             isCompatible: isCompatible.isValid,

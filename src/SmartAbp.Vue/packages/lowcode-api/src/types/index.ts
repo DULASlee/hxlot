@@ -5,10 +5,15 @@
 // API DTO类型从 @/api/generated/api-client
 // ============================================================================
 
-// 前端元数据类型（metadata.ts）
+// Phase 2B: 使用后端SSOT类型别名
 import type {
-  EntityMetadata as FrontendEntityMetadata,
-  ModuleMetadata as FrontendModuleMetadata
+  EntityDefinitionDto as BackendEntityDefinition,
+  ModuleDto as BackendModuleDefinition
+} from '@/api/generated/type-aliases'
+
+// 前端工具类型（metadata.ts - 仅保留前端特定类型）
+import type {
+  EntityMetadata as FrontendEntityMetadata
 } from '@smartabp/lowcode-shared/types'
 
 // ============================================================================
@@ -39,13 +44,13 @@ export type EntityMetadata = FrontendEntityMetadata
 export type PageMetadata = any
 
 /**
- * 模块元数据类型（前端元数据建模）
- * 注意：这与ModuleDto（API DTO）不同
+ * 模块元数据类型（Phase 2B: 使用后端SSOT）
+ * 注意：现在直接使用后端ModuleDto，确保前后端类型100%一致
  */
-export type ModuleMetadata = FrontendModuleMetadata
+export type ModuleMetadata = BackendModuleDefinition
 
-/** 模块元数据DTO类型 */
-export type ModuleMetadataDto = FrontendModuleMetadata
+/** 模块元数据DTO类型（向后兼容） */
+export type ModuleMetadataDto = BackendModuleDefinition
 
 // ============================================================================
 // 代码生成相关类型
@@ -116,11 +121,11 @@ export type ApplicationMetadata = any
 /** UI组件元数据类型（TODO: 待定义UIComponentMetadata统一Schema） */
 export type UIComponentMetadata = any
 
-// Phase 1D: 向后兼容导出（前端元数据类型）
-// 注意：Unified*类型已废弃，请使用metadata.ts的类型或api-client.ts的DTO
+// Phase 2B: 向后兼容导出（使用后端SSOT类型）
+// 注意：Unified*类型已废弃，请使用type-aliases.ts的类型
 export type {
-  FrontendEntityMetadata as UnifiedEntityDefinition,
-  FrontendModuleMetadata as UnifiedModuleMetadata
+  BackendEntityDefinition as UnifiedEntityDefinition,
+  BackendModuleDefinition as UnifiedModuleMetadata
 }
 
 // 兼容旧版接口

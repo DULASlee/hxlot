@@ -7,29 +7,29 @@
  */
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🚀 前端元数据类型系统 (Phase 1D: 从unified-schema分离至metadata)
+// 🚀 前端元数据类型系统 (Phase 2B瘦身版)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export type {
-  AspireSolutionMetadata,
-  BackendConfig,
-  EndpointMetadata,
   EntityMetadata,
-  FeatureConfig,
-  LifecycleMetadata,
-  MenuConfig,
-  MicroserviceMetadata,
-  ModuleMetadata, NavigationPropertyMetadata,
   PropertyMetadata,
-  RouteMetadata, SchemaVersion, StoreMetadata,
-  UIConfig, UnifiedCodeGenerationConfig, UnifiedDatabaseConfig, UnifiedEntityConstraint, UnifiedEntityIndex, UnifiedEntityPermission, UnifiedEntityUIConfig, UnifiedFeatureManagement, UnifiedFrontendConfig, UnifiedMenuConfig, UnifiedModuleMetadata, UnifiedPermissionConfig, UnifiedValidationRule, ValidationRule
+  NavigationPropertyMetadata,
+  ValidationRule,
+  UnifiedValidationRule, // 向后兼容
+  ModuleMetadata,
+  RouteMetadata,
+  SchemaVersion,
+  StoreMetadata
 } from './metadata.js'
 
 export {
   METADATA_SCHEMA_VERSION,
-  SUPPORTED_METADATA_VERSIONS, SUPPORTED_SCHEMA_VERSIONS,
-  // 向后兼容导出
-  UNIFIED_SCHEMA_VERSION, getSchemaVersion, isEntityMetadata,
-  isModuleMetadata, isSchemaVersionCompatible
+  SUPPORTED_METADATA_VERSIONS,
+  SUPPORTED_SCHEMA_VERSIONS,
+  UNIFIED_SCHEMA_VERSION,
+  getSchemaVersion,
+  isEntityMetadata,
+  isModuleMetadata,
+  isSchemaVersionCompatible
 } from './metadata.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
