@@ -1,201 +1,66 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Volo.Abp.Domain.Entities.Auditing;
-using Volo.Abp.MultiTenancy;
-using SmartAbp.Domain.Shared.LowCode;
 
-namespace SmartAbp.Domain.Entities.LowCode
+namespace SmartAbp.Domain.Shared.LowCode
 {
     /// <summary>
-    /// 🔥🔥🔥 低代码页面配置聚合根（Phase 1 核心表 - 最核心）
-    /// 对应表名: LC_PageConfigs
-    /// 用途: 存储完整的页面配置（form-create规则 + 列表配置 + 详情配置）
-    /// 核心特性: PageConfig JSON字段存储完整页面配置，与form-create完全对齐
-    /// 架构决策: 后端SSOT，通过NSwag生成前端TypeScript类型
-    /// </summary>
-    [Table("LC_PageConfigs")]
-    public class LowCodePageConfig : AuditedAggregateRoot<Guid>, IMultiTenant
-    {
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 外键关系
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-        /// <summary>
-        /// 所属实体ID
-        /// </summary>
-        public Guid EntityId { get; set; }
-
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 基础信息
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-        /// <summary>
-        /// 页面配置名称（如：UserFormConfig, UserListConfig）
-        /// </summary>
-        [Required]
-        [MaxLength(100)]
-        public string Name { get; set; } = default!;
-
-        /// <summary>
-        /// 显示名称（如：用户表单配置）
-        /// </summary>
-        [Required]
-        [MaxLength(200)]
-        public string DisplayName { get; set; } = default!;
-
-        /// <summary>
-        /// 页面类型（list | form | detail | custom）
-        /// </summary>
-        [Required]
-        [MaxLength(50)]
-        public string PageType { get; set; } = default!;
-
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 🔥🔥🔥 完整的页面配置（JSON）⭐⭐⭐
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-        /// <summary>
-        /// 页面配置（JSON存储，包含form-create规则、列表配置、详情配置等）
-        /// </summary>
-        [Required]
-        [Column(TypeName = "nvarchar(max)")]
-        public PageConfigDto PageConfig { get; set; } = default!;
-
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 版本管理
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-        /// <summary>
-        /// 版本号
-        /// </summary>
-        public int Version { get; set; } = 1;
-
-        /// <summary>
-        /// 是否已发布
-        /// </summary>
-        public bool IsPublished { get; set; }
-
-        /// <summary>
-        /// 发布时间
-        /// </summary>
-        public DateTime? PublishedAt { get; set; }
-
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 状态管理
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-        /// <summary>
-        /// 状态（Draft | Published | Archived）
-        /// </summary>
-        [Required]
-        [MaxLength(20)]
-        public string Status { get; set; } = "Draft";
-
-        /// <summary>
-        /// 租户ID（多租户支持）
-        /// </summary>
-        public Guid? TenantId { get; set; }
-
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 导航属性
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-        /// <summary>
-        /// 所属实体
-        /// </summary>
-        public virtual LowCodeEntity Entity { get; set; } = default!;
-
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 构造函数
-        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-        protected LowCodePageConfig()
-        {
-            // EF Core需要无参构造函数
-        }
-
-        public LowCodePageConfig(
-            Guid id,
-            Guid entityId,
-            string name,
-            string displayName,
-            string pageType,
-            PageConfigDto pageConfig) : base(id)
-        {
-            EntityId = entityId;
-            Name = name;
-            DisplayName = displayName;
-            PageType = pageType;
-            PageConfig = pageConfig;
-        }
-    }
-
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // 强类型DTO（JSON配置）⭐⭐⭐ 核心
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-    // ✅ PageConfigDto及相关配置类已迁移到 SmartAbp.Application.Contracts.LowCode.Dtos
-    // ✅ 符合ABP最佳实践：DTO定义在Application.Contracts层，Domain层只保留Entity
-
-    /* 🟡 旧实现（已迁移到Application.Contracts层）
-    /// <summary>
-    /// 页面配置DTO（JSON存储）
+    /// 页面配置DTO（JSON存储）- 后端SSOT
+    /// 架构决策: 定义在Domain.Shared层，所有层都可引用，符合ABP最佳实践
     /// </summary>
     public class PageConfigDto
     {
         /// <summary>
         /// 表单配置（form-create完整规则）
         /// </summary>
-        public FormConfig? Form { get; set; }
+        public FormConfigDto? Form { get; set; }
 
         /// <summary>
         /// 列表配置
         /// </summary>
-        public ListConfig? List { get; set; }
+        public ListConfigDto? List { get; set; }
 
         /// <summary>
         /// 详情配置
         /// </summary>
-        public DetailConfig? Detail { get; set; }
+        public DetailConfigDto? Detail { get; set; }
 
         /// <summary>
         /// 页面事件配置
         /// </summary>
-        public Dictionary<string, EventConfig>? Events { get; set; }
+        public Dictionary<string, EventConfigDto>? Events { get; set; }
 
         /// <summary>
         /// 布局配置
         /// </summary>
-        public LayoutConfig? Layout { get; set; }
+        public LayoutConfigDto? Layout { get; set; }
     }
 
     /// <summary>
     /// 表单配置（form-create完整规则）
     /// </summary>
-    public class FormConfig
+    public class FormConfigDto
     {
         /// <summary>
         /// form-create rules数组
         /// </summary>
-        public List<FormCreateRule> Rules { get; set; } = new List<FormCreateRule>();
+        public List<FormCreateRuleDto> Rules { get; set; } = new List<FormCreateRuleDto>();
 
         /// <summary>
         /// 全局配置
         /// </summary>
-        public FormGlobalConfig Config { get; set; } = new FormGlobalConfig();
+        public FormGlobalConfigDto Config { get; set; } = new FormGlobalConfigDto();
 
         /// <summary>
         /// 字段联动规则
         /// </summary>
-        public List<FieldEffect> Effects { get; set; } = new List<FieldEffect>();
+        public List<FieldEffectDto> Effects { get; set; } = new List<FieldEffectDto>();
     }
 
     /// <summary>
     /// form-create规则（与form-create完全对齐）
     /// </summary>
-    public class FormCreateRule
+    public class FormCreateRuleDto
     {
         /// <summary>
         /// 控件类型（input | select | date | ...）
@@ -228,7 +93,7 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// <summary>
         /// 验证规则
         /// </summary>
-        public List<SmartAbp.Domain.Entities.LowCode.ValidationRuleConfig>? Validate { get; set; }
+        public List<ValidationRuleConfigDto>? Validate { get; set; }
 
         /// <summary>
         /// 栅格配置
@@ -239,7 +104,7 @@ namespace SmartAbp.Domain.Entities.LowCode
     /// <summary>
     /// 表单全局配置
     /// </summary>
-    public class FormGlobalConfig
+    public class FormGlobalConfigDto
     {
         /// <summary>
         /// 表单尺寸（default | small | large）
@@ -285,7 +150,7 @@ namespace SmartAbp.Domain.Entities.LowCode
     /// <summary>
     /// 字段联动效果
     /// </summary>
-    public class FieldEffect
+    public class FieldEffectDto
     {
         /// <summary>
         /// 源字段（触发联动的字段）
@@ -325,28 +190,28 @@ namespace SmartAbp.Domain.Entities.LowCode
     /// <summary>
     /// 列表配置
     /// </summary>
-    public class ListConfig
+    public class ListConfigDto
     {
         /// <summary>
         /// 列定义
         /// </summary>
-        public List<ColumnDefinition> Columns { get; set; } = new List<ColumnDefinition>();
+        public List<ColumnDefinitionDto> Columns { get; set; } = new List<ColumnDefinitionDto>();
 
         /// <summary>
         /// 分页配置
         /// </summary>
-        public PaginationConfig Pagination { get; set; } = new PaginationConfig();
+        public PaginationConfigDto Pagination { get; set; } = new PaginationConfigDto();
 
         /// <summary>
         /// 操作按钮配置
         /// </summary>
-        public List<ActionConfig> Actions { get; set; } = new List<ActionConfig>();
+        public List<ActionConfigDto> Actions { get; set; } = new List<ActionConfigDto>();
     }
 
     /// <summary>
     /// 列定义
     /// </summary>
-    public class ColumnDefinition
+    public class ColumnDefinitionDto
     {
         /// <summary>
         /// 列属性名
@@ -389,7 +254,7 @@ namespace SmartAbp.Domain.Entities.LowCode
     /// <summary>
     /// 分页配置
     /// </summary>
-    public class PaginationConfig
+    public class PaginationConfigDto
     {
         /// <summary>
         /// 每页显示数量
@@ -405,7 +270,7 @@ namespace SmartAbp.Domain.Entities.LowCode
     /// <summary>
     /// 操作按钮配置
     /// </summary>
-    public class ActionConfig
+    public class ActionConfigDto
     {
         /// <summary>
         /// 按钮类型（create | edit | delete | custom）
@@ -443,7 +308,7 @@ namespace SmartAbp.Domain.Entities.LowCode
     /// <summary>
     /// 详情配置
     /// </summary>
-    public class DetailConfig
+    public class DetailConfigDto
     {
         /// <summary>
         /// 布局方式（vertical | horizontal）
@@ -453,13 +318,13 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// <summary>
         /// 详情区段
         /// </summary>
-        public List<DetailSection> Sections { get; set; } = new List<DetailSection>();
+        public List<DetailSectionDto> Sections { get; set; } = new List<DetailSectionDto>();
     }
 
     /// <summary>
     /// 详情区段
     /// </summary>
-    public class DetailSection
+    public class DetailSectionDto
     {
         /// <summary>
         /// 区段标题
@@ -486,7 +351,7 @@ namespace SmartAbp.Domain.Entities.LowCode
     /// <summary>
     /// 事件配置
     /// </summary>
-    public class EventConfig
+    public class EventConfigDto
     {
         /// <summary>
         /// 事件类型（api | navigate | dialog | validate）
@@ -517,18 +382,18 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// <summary>
         /// 后续事件（链式调用）
         /// </summary>
-        public EventConfig? Then { get; set; }
+        public EventConfigDto? Then { get; set; }
 
         /// <summary>
         /// 成功后的事件
         /// </summary>
-        public EventConfig? AfterSuccess { get; set; }
+        public EventConfigDto? AfterSuccess { get; set; }
     }
 
     /// <summary>
     /// 布局配置
     /// </summary>
-    public class LayoutConfig
+    public class LayoutConfigDto
     {
         /// <summary>
         /// 布局类型（grid | flex）
@@ -538,13 +403,39 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// <summary>
         /// 栅格列数（24栅格系统）
         /// </summary>
-        public int Columns { get; set; } = 24;
+        public int Cols { get; set; } = 24;
 
         /// <summary>
-        /// 栅格间距（px）
+        /// 间距（px）
         /// </summary>
-        public int Gutter { get; set; } = 20;
+        public int Gutter { get; set; } = 16;
     }
-    */ // 🟡 旧实现结束（已迁移到Application.Contracts.LowCode.Dtos层）
+
+    /// <summary>
+    /// 验证规则配置
+    /// </summary>
+    public class ValidationRuleConfigDto
+    {
+        /// <summary>
+        /// 规则类型（required | min | max | pattern | email | ...）
+        /// </summary>
+        [Required]
+        public string Type { get; set; } = default!;
+
+        /// <summary>
+        /// 错误提示信息
+        /// </summary>
+        public string? Message { get; set; }
+
+        /// <summary>
+        /// 规则值（如min规则的最小值）
+        /// </summary>
+        public object? Value { get; set; }
+
+        /// <summary>
+        /// 触发时机（change | blur）
+        /// </summary>
+        public string Trigger { get; set; } = "blur";
+    }
 }
 

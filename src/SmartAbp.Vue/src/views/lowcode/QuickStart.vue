@@ -192,8 +192,7 @@
 </template>
 
 <script setup lang="ts">
-import { codeGeneratorApi, type ModuleGenerationConfig, type ModuleMetadataDto } from "@smartabp/lowcode-api"
-import type { UnifiedModuleMetadata } from "@/api/generated/type-aliases"
+import { codeGeneratorApi, type ModuleGenerationConfig } from "@smartabp/lowcode-api"
 import { ElMessage } from "element-plus"
 import { computed, onMounted, reactive, ref } from "vue"
 
@@ -313,42 +312,49 @@ const generateCode = async () => {
     const startTime = Date.now()
 
     // ✅ 构建模块元数据
-    // Phase 1D: 使用UnifiedModuleMetadata（宽松版）
-    const moduleMetadata: ModuleMetadataDto | UnifiedModuleMetadata = {
+    // Phase 3B: 使用后端SSOT - ModuleDto（删除废弃的UnifiedModuleMetadata联合类型）
+    const moduleMetadata: import('@/api/generated').SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto = {
       id: crypto.randomUUID(),
       systemName: 'SmartAbp',
-      name: form.componentName,
+      moduleName: form.componentName, // 🔥 后端DTO使用moduleName
       displayName: form.componentName,
       description: `Auto-generated ${form.componentName} component`,
       version: '1.0.0',
-      author: 'SmartAbp QuickStart',
+      // 🔥 author不存在于后端DTO，已删除
       namespace: `SmartAbp.${form.componentName}`,
-      architecturePattern: 'Crud',
-      databaseInfo: {
-        connectionStringName: 'Default',
-        schema: 'dbo',
-        provider: 'SqlServer'
+      // 🔥 架构配置（JSON序列化对象）- 对齐后端Domain实体
+      architectureConfig: {
+        pattern: 'Crud', // 🔥 属性名：architecturePattern → pattern
+        databaseProvider: 'SqlServer', // 🔥 属性名：provider → databaseProvider
+        connectionString: 'Default', // 🔥 属性名：connectionStringName → connectionString
+        schema: 'dbo'
       },
-      frontend: {
-        parentId: '',
-        routePrefix: form.componentName.toLowerCase()
+      // 🔥 前端配置（JSON序列化对象）- 对齐后端Domain实体
+      frontendConfig: {
+        routePrefix: form.componentName.toLowerCase(),
+        parentMenuId: '', // 🔥 属性名：parentId → parentMenuId
+        menuIcon: 'folder',
+        menuOrder: 0,
+        menuConfig: [] // 🔥 修复：menuConfig应该在frontendConfig内部，不是顶层
       },
-      generateMobilePages: false,
+      // 🔥 代码生成选项（JSON序列化对象）- 对齐后端Domain实体
+      codeGenOptions: {
+        generateMobilePages: false,
+        generateBackend: true,
+        generateFrontend: true,
+        generateDatabase: true
+      },
+      // 🔥 特性管理（独立DTO）
       featureManagement: {
         isEnabled: true,
         defaultPolicy: 'RequiresAuthentication'
       },
-      dependencies: [],
+      dependencies: [], // 🔥 Array<string>
       entities: [],
-      permissionConfig: {
-        groups: [],
-        customActions: []
-      },
-      // Phase 1D: menuConfig类型修正
-      menuConfig: undefined,
-      schemaVersion: '1.0.0',
-      createdAt: new Date(),
-      updatedAt: new Date()
+      schemaVersion: '1.0.0'
+      // 🔥 Phase 3B: permissionConfig和menuConfig已删除（不是ModuleDto的顶层属性）
+      // 🔥 Phase 3B: menuConfig已移到frontendConfig内部（第339行）
+      // 🔥 Phase 3B: createdAt/updatedAt已删除，后端DTO使用ABP审计字段（creationTime等）
     }
 
     // ✅ 调用真实API

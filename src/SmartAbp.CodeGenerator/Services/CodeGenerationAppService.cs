@@ -28,6 +28,7 @@ using SmartAbp.CodeGenerator.Aspire; // 🔥 Aspire集成：引用Aspire生成�
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using SmartAbp.Application.Contracts.CodeGenerator;
+using SSOTDtos = SmartAbp.Application.Contracts.LowCode.Dtos; // SSOT DTO definitions (aliased to avoid conflicts)
 
 namespace SmartAbp.CodeGenerator.Services
 {
@@ -55,7 +56,7 @@ namespace SmartAbp.CodeGenerator.Services
         private readonly StableGenerationPipeline _stableGenerationPipeline; // 🔥 稳定生成流水线 - 异常恢复和进度监控
         private readonly AdvancedMemoryManager _memoryManager; // 🔥 内存管理器 - Day 7业务规则引擎支持
         private readonly ILoggerFactory _loggerFactory; // 🔥 日志工厂 - 创建特定类型logger
-        
+
         // ✅ 异步等待机制：用于追踪生成任务的完成状态
         private static readonly Dictionary<string, TaskCompletionSource<GeneratedModuleDto>> _generationTasks = new();
         private static readonly object _taskLock = new();
@@ -107,13 +108,13 @@ namespace SmartAbp.CodeGenerator.Services
 
             // Generate default UI configuration based on metadata before any codegen
             _defaultUiConfigGenerator.ApplyDefaults(input);
-            
+
             // 创建会话ID用于前端状态跟踪
             var sessionId = CodeGenerationExtensions.CreateGenerationSession(input.Name);
 
             // 🔥 ABP事件驱动架构：发布模块生成请求事件
             var generationRequestEvent = new ModuleGenerationRequestedEvent(
-                input, 
+                input,
                 CurrentUser.UserName ?? "System");
 
             // 发布事件，触发事件驱动的代码生成流程
@@ -133,15 +134,15 @@ namespace SmartAbp.CodeGenerator.Services
             {
                 // 更新会话状态为处理中
                 CodeGenerationExtensions.UpdateGenerationStatus(
-                    sessionId, 
-                    20, 
+                    sessionId,
+                    20,
                     $"开始生成模块: {input.Name}"
                 );
 
                 // ✅ 使用稳定生成流水线执行实际的代码生成
                 // 这样可以保持API兼容性，同时演示异步等待机制
                 var result = await GenerateModuleStableAsync(input);
-                
+
                 // 记录生成结果并更新会话状态
                 if (result.GeneratedFiles != null && result.GeneratedFiles.Count > 0)
                 {
@@ -151,7 +152,7 @@ namespace SmartAbp.CodeGenerator.Services
                         // 注意：实际情况应读取文件内容，这里简化处理
                         CodeGenerationExtensions.AddGeneratedFile(sessionId, file, "// Generated file content");
                     }
-                    
+
                     // 更新会话状态为已完成
                     CodeGenerationExtensions.CompleteGenerationSession(sessionId, result.GeneratedFiles);
                 }
@@ -160,13 +161,13 @@ namespace SmartAbp.CodeGenerator.Services
                     // 如果没有生成文件，更新为失败状态
                     CodeGenerationExtensions.FailGenerationSession(sessionId, "No files were generated");
                 }
-                
+
                 // 在结果中添加会话ID
                 result.SessionId = sessionId;
-                
+
                 // 标记任务完成
                 tcs.TrySetResult(result);
-                
+
                 // 发布完成事件
                 await _eventBus.PublishAsync(new ModuleGenerationCompletedEvent(
                     generationRequestEvent.GenerationId,
@@ -179,10 +180,10 @@ namespace SmartAbp.CodeGenerator.Services
             {
                 // 更新会话状态为失败
                 CodeGenerationExtensions.FailGenerationSession(sessionId, ex.Message);
-                
+
                 // 标记任务失败
                 tcs.TrySetException(ex);
-                
+
                 // 发布失败事件
                 await _eventBus.PublishAsync(new CodeGenerationFailedEvent(
                     generationRequestEvent.GenerationId,
@@ -190,7 +191,7 @@ namespace SmartAbp.CodeGenerator.Services
                     "Module Generation",
                     ex
                 ));
-                
+
                 throw;
             }
             finally
@@ -269,7 +270,7 @@ namespace SmartAbp.CodeGenerator.Services
 
             // 🔥 增强模型处理：集成类型映射和循环引用检测
             var modelProcessingResult = await _enhancedModelProcessor.ProcessModuleMetadataAsync(input);
-            
+
             if (!modelProcessingResult.IsSuccess)
             {
                 var errorDetails = modelProcessingResult.GetMessagesForLevel(MessageLevel.Error);
@@ -515,13 +516,13 @@ namespace SmartAbp.CodeGenerator.Services
             try
             {
                 Check.NotNullOrWhiteSpace(request.ConnectionString, nameof(request.ConnectionString));
-                
+
                 // 如果是配置名称（不包含分号），从配置中读取
-                var connectionString = request.ConnectionString.Contains(";") 
-                    ? request.ConnectionString 
-                    : _configuration.GetConnectionString(request.ConnectionString) 
+                var connectionString = request.ConnectionString.Contains(";")
+                    ? request.ConnectionString
+                    : _configuration.GetConnectionString(request.ConnectionString)
                       ?? GetConnectionStringIgnoreCase(request.ConnectionString);
-                    
+
                 if (string.IsNullOrWhiteSpace(connectionString))
                 {
                     return new DatabaseConnectionTestResultDto
@@ -530,14 +531,14 @@ namespace SmartAbp.CodeGenerator.Services
                         Message = $"连接字符串 '{request.ConnectionString}' 未找到"
                     };
                 }
-                
+
                 var provider = (request.Provider ?? "SqlServer").Trim();
 
                 if (provider.Equals("SqlServer", StringComparison.OrdinalIgnoreCase))
                 {
                     using var conn = new Microsoft.Data.SqlClient.SqlConnection(connectionString);
                     await conn.OpenAsync();
-                    
+
                     var result = new DatabaseConnectionTestResultDto
                     {
                         Success = true,
@@ -550,7 +551,7 @@ namespace SmartAbp.CodeGenerator.Services
                     using var cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'";
                     result.TableCount = Convert.ToInt32(await cmd.ExecuteScalarAsync());
-                    
+
                     // Get table names
                     cmd.CommandText = "SELECT TOP 100 TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' ORDER BY TABLE_NAME";
                     using var reader = await cmd.ExecuteReaderAsync();
@@ -593,7 +594,7 @@ namespace SmartAbp.CodeGenerator.Services
             try
             {
                 Check.NotNullOrWhiteSpace(request.ConnectionStringName, nameof(request.ConnectionStringName));
-                var cs = _configuration.GetConnectionString(request.ConnectionStringName) 
+                var cs = _configuration.GetConnectionString(request.ConnectionStringName)
                          ?? GetConnectionStringIgnoreCase(request.ConnectionStringName);
                 if (string.IsNullOrWhiteSpace(cs))
                 {
@@ -663,13 +664,13 @@ WHERE tc.TABLE_SCHEMA=@s AND tc.TABLE_NAME=@t AND tc.CONSTRAINT_TYPE='PRIMARY KE
                                 using var r = await pkCmd.ExecuteReaderAsync();
                                 var pkCols = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                                 while (await r.ReadAsync())
-                            {
-                                pkCols.Add(r.GetString(0));
-                            }
+                                {
+                                    pkCols.Add(r.GetString(0));
+                                }
                                 foreach (var c in table.Columns)
-                            {
-                                c.IsPrimaryKey = pkCols.Contains(c.Name);
-                            }
+                                {
+                                    c.IsPrimaryKey = pkCols.Contains(c.Name);
+                                }
                             }
 
                             // FKs
@@ -710,240 +711,240 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
                         throw new AbpException($"SQL Server database introspection failed: {ex.Message}", ex);
                     }
                 }
-            else if (provider.Equals("PostgreSql", StringComparison.OrdinalIgnoreCase))
-            {
-                try
+                else if (provider.Equals("PostgreSql", StringComparison.OrdinalIgnoreCase))
                 {
-                    await using var conn = new Npgsql.NpgsqlConnection(cs);
-                    await conn.OpenAsync();
-                    var tableList = new List<(string Schema, string Name)>();
-                    await using (var cmd = new Npgsql.NpgsqlCommand(@"SELECT table_schema, table_name FROM information_schema.tables WHERE table_type='BASE TABLE' AND table_schema NOT IN ('pg_catalog','information_schema')" + (string.IsNullOrWhiteSpace(request.Schema) ? "" : " AND table_schema=@s"), conn))
+                    try
                     {
-                        if (!string.IsNullOrWhiteSpace(request.Schema)) cmd.Parameters.AddWithValue("@s", request.Schema);
-                        await using var reader = await cmd.ExecuteReaderAsync();
-                        while (await reader.ReadAsync())
+                        await using var conn = new Npgsql.NpgsqlConnection(cs);
+                        await conn.OpenAsync();
+                        var tableList = new List<(string Schema, string Name)>();
+                        await using (var cmd = new Npgsql.NpgsqlCommand(@"SELECT table_schema, table_name FROM information_schema.tables WHERE table_type='BASE TABLE' AND table_schema NOT IN ('pg_catalog','information_schema')" + (string.IsNullOrWhiteSpace(request.Schema) ? "" : " AND table_schema=@s"), conn))
                         {
-                            tableList.Add((reader.GetString(0), reader.GetString(1)));
-                        }
-                    }
-                    foreach (var (sch, name) in tableList)
-                    {
-                        if (request.Tables != null && request.Tables.Count > 0 && !request.Tables.Contains(name)) continue;
-                        var table = new TableSchemaDto { Schema = sch, Name = name };
-                        await using (var col = new Npgsql.NpgsqlCommand(@"SELECT column_name, data_type, is_nullable, character_maximum_length FROM information_schema.columns WHERE table_schema=@s AND table_name=@t", conn))
-                        {
-                            col.Parameters.AddWithValue("@s", sch); col.Parameters.AddWithValue("@t", name);
-                            await using var r = await col.ExecuteReaderAsync();
-                            while (await r.ReadAsync())
+                            if (!string.IsNullOrWhiteSpace(request.Schema)) cmd.Parameters.AddWithValue("@s", request.Schema);
+                            await using var reader = await cmd.ExecuteReaderAsync();
+                            while (await reader.ReadAsync())
                             {
-                                table.Columns.Add(new ColumnSchemaDto
-                                {
-                                    Name = r.GetString(0),
-                                    DataType = r.GetString(1),
-                                    IsNullable = string.Equals(r.GetString(2), "YES", StringComparison.OrdinalIgnoreCase),
-                                    MaxLength = r.IsDBNull(3) ? null : r.GetInt32(3),
-                                });
+                                tableList.Add((reader.GetString(0), reader.GetString(1)));
                             }
                         }
-                        await using (var pk = new Npgsql.NpgsqlCommand(@"SELECT a.attname FROM pg_index i JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey) WHERE i.indrelid = to_regclass(@tbl) AND i.indisprimary", conn))
+                        foreach (var (sch, name) in tableList)
                         {
-                            pk.Parameters.AddWithValue("@tbl", $"\"{sch}\".\"{name}\"");
-                            await using var r = await pk.ExecuteReaderAsync();
-                            var pkCols = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                            while (await r.ReadAsync()) pkCols.Add(r.GetString(0));
-                            foreach (var c in table.Columns) c.IsPrimaryKey = pkCols.Contains(c.Name);
-                        }
-                        await using (var fk = new Npgsql.NpgsqlCommand(@"SELECT kcu.column_name, ccu.table_schema AS ref_schema, ccu.table_name AS ref_table, ccu.column_name AS ref_column FROM information_schema.table_constraints tc JOIN information_schema.key_column_usage kcu ON tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema JOIN information_schema.constraint_column_usage ccu ON ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_schema=@s AND tc.table_name=@t", conn))
-                        {
-                            fk.Parameters.AddWithValue("@s", sch); fk.Parameters.AddWithValue("@t", name);
-                            await using var r = await fk.ExecuteReaderAsync();
-                            while (await r.ReadAsync())
+                            if (request.Tables != null && request.Tables.Count > 0 && !request.Tables.Contains(name)) continue;
+                            var table = new TableSchemaDto { Schema = sch, Name = name };
+                            await using (var col = new Npgsql.NpgsqlCommand(@"SELECT column_name, data_type, is_nullable, character_maximum_length FROM information_schema.columns WHERE table_schema=@s AND table_name=@t", conn))
                             {
-                                table.ForeignKeys.Add(new ForeignKeySchemaDto
+                                col.Parameters.AddWithValue("@s", sch); col.Parameters.AddWithValue("@t", name);
+                                await using var r = await col.ExecuteReaderAsync();
+                                while (await r.ReadAsync())
                                 {
-                                    Column = r.GetString(0),
-                                    ReferencedSchema = r.GetString(1),
-                                    ReferencedTable = r.GetString(2),
-                                    ReferencedColumn = r.GetString(3),
-                                });
+                                    table.Columns.Add(new ColumnSchemaDto
+                                    {
+                                        Name = r.GetString(0),
+                                        DataType = r.GetString(1),
+                                        IsNullable = string.Equals(r.GetString(2), "YES", StringComparison.OrdinalIgnoreCase),
+                                        MaxLength = r.IsDBNull(3) ? null : r.GetInt32(3),
+                                    });
+                                }
                             }
+                            await using (var pk = new Npgsql.NpgsqlCommand(@"SELECT a.attname FROM pg_index i JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey) WHERE i.indrelid = to_regclass(@tbl) AND i.indisprimary", conn))
+                            {
+                                pk.Parameters.AddWithValue("@tbl", $"\"{sch}\".\"{name}\"");
+                                await using var r = await pk.ExecuteReaderAsync();
+                                var pkCols = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                                while (await r.ReadAsync()) pkCols.Add(r.GetString(0));
+                                foreach (var c in table.Columns) c.IsPrimaryKey = pkCols.Contains(c.Name);
+                            }
+                            await using (var fk = new Npgsql.NpgsqlCommand(@"SELECT kcu.column_name, ccu.table_schema AS ref_schema, ccu.table_name AS ref_table, ccu.column_name AS ref_column FROM information_schema.table_constraints tc JOIN information_schema.key_column_usage kcu ON tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema JOIN information_schema.constraint_column_usage ccu ON ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_schema=@s AND tc.table_name=@t", conn))
+                            {
+                                fk.Parameters.AddWithValue("@s", sch); fk.Parameters.AddWithValue("@t", name);
+                                await using var r = await fk.ExecuteReaderAsync();
+                                while (await r.ReadAsync())
+                                {
+                                    table.ForeignKeys.Add(new ForeignKeySchemaDto
+                                    {
+                                        Column = r.GetString(0),
+                                        ReferencedSchema = r.GetString(1),
+                                        ReferencedTable = r.GetString(2),
+                                        ReferencedColumn = r.GetString(3),
+                                    });
+                                }
+                            }
+                            schema.Tables.Add(table);
                         }
-                        schema.Tables.Add(table);
                     }
-                }
-                catch (Npgsql.NpgsqlException ex)
-                {
-                    _logger.LogError(ex, "PostgreSQL database introspection failed for connection string '{ConnectionStringName}'", request.ConnectionStringName);
-                    throw new AbpException($"PostgreSQL database introspection failed: {ex.Message}", ex);
-                }
-            }
-            else if (provider.Equals("MySql", StringComparison.OrdinalIgnoreCase))
-            {
-                try
-                {
-                    await using var conn = new MySqlConnector.MySqlConnection(cs);
-                    await conn.OpenAsync();
-                    var tableList = new List<(string Schema, string Name)>();
-                    var dbName = conn.Database;
-                    await using (var cmd = new MySqlConnector.MySqlCommand(@"SELECT table_schema, table_name FROM information_schema.tables WHERE table_type='BASE TABLE' AND table_schema=@db" + (string.IsNullOrWhiteSpace(request.Schema) ? "" : " AND table_schema=@s"), conn))
+                    catch (Npgsql.NpgsqlException ex)
                     {
-                        cmd.Parameters.AddWithValue("@db", dbName);
-                        if (!string.IsNullOrWhiteSpace(request.Schema)) cmd.Parameters.AddWithValue("@s", request.Schema);
-                        await using var reader = await cmd.ExecuteReaderAsync();
-                        while (await reader.ReadAsync()) tableList.Add((reader.GetString(0), reader.GetString(1)));
-                    }
-                    foreach (var (sch, name) in tableList)
-                    {
-                        if (request.Tables != null && request.Tables.Count > 0 && !request.Tables.Contains(name)) continue;
-                        var table = new TableSchemaDto { Schema = sch, Name = name };
-                        await using (var col = new MySqlConnector.MySqlCommand(@"SELECT column_name, data_type, is_nullable, character_maximum_length FROM information_schema.columns WHERE table_schema=@s AND table_name=@t", conn))
-                        {
-                            col.Parameters.AddWithValue("@s", sch); col.Parameters.AddWithValue("@t", name);
-                            await using var r = await col.ExecuteReaderAsync();
-                            while (await r.ReadAsync())
-                            {
-                                table.Columns.Add(new ColumnSchemaDto
-                                {
-                                    Name = r.GetString(0),
-                                    DataType = r.GetString(1),
-                                    IsNullable = string.Equals(r.GetString(2), "YES", StringComparison.OrdinalIgnoreCase),
-                                    MaxLength = r.IsDBNull(3) ? null : r.GetInt32(3),
-                                });
-                            }
-                        }
-                        await using (var pk = new MySqlConnector.MySqlCommand(@"SELECT k.COLUMN_NAME FROM information_schema.table_constraints t JOIN information_schema.key_column_usage k ON k.table_name = t.table_name AND k.table_schema = t.table_schema AND k.constraint_name = t.constraint_name WHERE t.constraint_type = 'PRIMARY KEY' AND t.table_schema=@s AND t.table_name=@t", conn))
-                        {
-                            pk.Parameters.AddWithValue("@s", sch); pk.Parameters.AddWithValue("@t", name);
-                            await using var r = await pk.ExecuteReaderAsync();
-                            var pkCols = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                            while (await r.ReadAsync()) pkCols.Add(r.GetString(0));
-                            foreach (var c in table.Columns) c.IsPrimaryKey = pkCols.Contains(c.Name);
-                        }
-                        await using (var fk = new MySqlConnector.MySqlCommand(@"SELECT k.COLUMN_NAME, k.REFERENCED_TABLE_SCHEMA, k.REFERENCED_TABLE_NAME, k.REFERENCED_COLUMN_NAME FROM information_schema.key_column_usage k WHERE k.TABLE_SCHEMA=@s AND k.TABLE_NAME=@t AND k.REFERENCED_TABLE_NAME IS NOT NULL", conn))
-                        {
-                            fk.Parameters.AddWithValue("@s", sch); fk.Parameters.AddWithValue("@t", name);
-                            await using var r = await fk.ExecuteReaderAsync();
-                            while (await r.ReadAsync())
-                            {
-                                table.ForeignKeys.Add(new ForeignKeySchemaDto
-                                {
-                                    Column = r.GetString(0),
-                                    ReferencedSchema = r.IsDBNull(1) ? sch : r.GetString(1),
-                                    ReferencedTable = r.GetString(2),
-                                    ReferencedColumn = r.GetString(3),
-                                });
-                            }
-                        }
-                        schema.Tables.Add(table);
+                        _logger.LogError(ex, "PostgreSQL database introspection failed for connection string '{ConnectionStringName}'", request.ConnectionStringName);
+                        throw new AbpException($"PostgreSQL database introspection failed: {ex.Message}", ex);
                     }
                 }
-                catch (MySqlConnector.MySqlException ex)
+                else if (provider.Equals("MySql", StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.LogError(ex, "MySQL database introspection failed for connection string '{ConnectionStringName}'", request.ConnectionStringName);
-                    throw new AbpException($"MySQL database introspection failed: {ex.Message}", ex);
-                }
-            }
-            else if (provider.Equals("Oracle", StringComparison.OrdinalIgnoreCase))
-            {
-                try
-                {
-                    await using var conn = new Oracle.ManagedDataAccess.Client.OracleConnection(cs);
-                    await conn.OpenAsync();
-                    var tableList = new List<(string Schema, string Name)>();
-                    string? owner = request.Schema;
-                    await using (var cmd = new Oracle.ManagedDataAccess.Client.OracleCommand(@"SELECT OWNER, TABLE_NAME FROM ALL_TABLES WHERE (:owner IS NULL OR OWNER = :owner)", conn))
+                    try
                     {
-                        cmd.Parameters.Add(new Oracle.ManagedDataAccess.Client.OracleParameter(":owner", (object?)owner ?? DBNull.Value));
-                        await using var reader = await cmd.ExecuteReaderAsync();
-                        while (await reader.ReadAsync()) tableList.Add((reader.GetString(0), reader.GetString(1)));
+                        await using var conn = new MySqlConnector.MySqlConnection(cs);
+                        await conn.OpenAsync();
+                        var tableList = new List<(string Schema, string Name)>();
+                        var dbName = conn.Database;
+                        await using (var cmd = new MySqlConnector.MySqlCommand(@"SELECT table_schema, table_name FROM information_schema.tables WHERE table_type='BASE TABLE' AND table_schema=@db" + (string.IsNullOrWhiteSpace(request.Schema) ? "" : " AND table_schema=@s"), conn))
+                        {
+                            cmd.Parameters.AddWithValue("@db", dbName);
+                            if (!string.IsNullOrWhiteSpace(request.Schema)) cmd.Parameters.AddWithValue("@s", request.Schema);
+                            await using var reader = await cmd.ExecuteReaderAsync();
+                            while (await reader.ReadAsync()) tableList.Add((reader.GetString(0), reader.GetString(1)));
+                        }
+                        foreach (var (sch, name) in tableList)
+                        {
+                            if (request.Tables != null && request.Tables.Count > 0 && !request.Tables.Contains(name)) continue;
+                            var table = new TableSchemaDto { Schema = sch, Name = name };
+                            await using (var col = new MySqlConnector.MySqlCommand(@"SELECT column_name, data_type, is_nullable, character_maximum_length FROM information_schema.columns WHERE table_schema=@s AND table_name=@t", conn))
+                            {
+                                col.Parameters.AddWithValue("@s", sch); col.Parameters.AddWithValue("@t", name);
+                                await using var r = await col.ExecuteReaderAsync();
+                                while (await r.ReadAsync())
+                                {
+                                    table.Columns.Add(new ColumnSchemaDto
+                                    {
+                                        Name = r.GetString(0),
+                                        DataType = r.GetString(1),
+                                        IsNullable = string.Equals(r.GetString(2), "YES", StringComparison.OrdinalIgnoreCase),
+                                        MaxLength = r.IsDBNull(3) ? null : r.GetInt32(3),
+                                    });
+                                }
+                            }
+                            await using (var pk = new MySqlConnector.MySqlCommand(@"SELECT k.COLUMN_NAME FROM information_schema.table_constraints t JOIN information_schema.key_column_usage k ON k.table_name = t.table_name AND k.table_schema = t.table_schema AND k.constraint_name = t.constraint_name WHERE t.constraint_type = 'PRIMARY KEY' AND t.table_schema=@s AND t.table_name=@t", conn))
+                            {
+                                pk.Parameters.AddWithValue("@s", sch); pk.Parameters.AddWithValue("@t", name);
+                                await using var r = await pk.ExecuteReaderAsync();
+                                var pkCols = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                                while (await r.ReadAsync()) pkCols.Add(r.GetString(0));
+                                foreach (var c in table.Columns) c.IsPrimaryKey = pkCols.Contains(c.Name);
+                            }
+                            await using (var fk = new MySqlConnector.MySqlCommand(@"SELECT k.COLUMN_NAME, k.REFERENCED_TABLE_SCHEMA, k.REFERENCED_TABLE_NAME, k.REFERENCED_COLUMN_NAME FROM information_schema.key_column_usage k WHERE k.TABLE_SCHEMA=@s AND k.TABLE_NAME=@t AND k.REFERENCED_TABLE_NAME IS NOT NULL", conn))
+                            {
+                                fk.Parameters.AddWithValue("@s", sch); fk.Parameters.AddWithValue("@t", name);
+                                await using var r = await fk.ExecuteReaderAsync();
+                                while (await r.ReadAsync())
+                                {
+                                    table.ForeignKeys.Add(new ForeignKeySchemaDto
+                                    {
+                                        Column = r.GetString(0),
+                                        ReferencedSchema = r.IsDBNull(1) ? sch : r.GetString(1),
+                                        ReferencedTable = r.GetString(2),
+                                        ReferencedColumn = r.GetString(3),
+                                    });
+                                }
+                            }
+                            schema.Tables.Add(table);
+                        }
                     }
-                    foreach (var (sch, name) in tableList)
+                    catch (MySqlConnector.MySqlException ex)
                     {
-                        if (request.Tables != null && request.Tables.Count > 0 && !request.Tables.Contains(name)) continue;
-                        var table = new TableSchemaDto { Schema = sch, Name = name };
-                        await using (var col = new Oracle.ManagedDataAccess.Client.OracleCommand(@"SELECT COLUMN_NAME, DATA_TYPE, NULLABLE, DATA_LENGTH FROM ALL_TAB_COLUMNS WHERE OWNER=:s AND TABLE_NAME=:t", conn))
-                        {
-                            col.Parameters.Add(new Oracle.ManagedDataAccess.Client.OracleParameter(":s", sch));
-                            col.Parameters.Add(new Oracle.ManagedDataAccess.Client.OracleParameter(":t", name));
-                            await using var r = await col.ExecuteReaderAsync();
-                            while (await r.ReadAsync())
-                            {
-                                table.Columns.Add(new ColumnSchemaDto
-                                {
-                                    Name = r.GetString(0),
-                                    DataType = r.GetString(1),
-                                    IsNullable = r.GetString(2) == "Y",
-                                    MaxLength = r.IsDBNull(3) ? null : Convert.ToInt32(r.GetDecimal(3)),
-                                });
-                            }
-                        }
-                        await using (var pk = new Oracle.ManagedDataAccess.Client.OracleCommand(@"SELECT cols.COLUMN_NAME FROM ALL_CONSTRAINTS cons, ALL_CONS_COLUMNS cols WHERE cons.CONSTRAINT_TYPE = 'P' AND cons.CONSTRAINT_NAME = cols.CONSTRAINT_NAME AND cols.OWNER = :s AND cols.TABLE_NAME = :t", conn))
-                        {
-                            pk.Parameters.Add(new Oracle.ManagedDataAccess.Client.OracleParameter(":s", sch));
-                            pk.Parameters.Add(new Oracle.ManagedDataAccess.Client.OracleParameter(":t", name));
-                            await using var r = await pk.ExecuteReaderAsync();
-                            var pkCols = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                            while (await r.ReadAsync()) pkCols.Add(r.GetString(0));
-                            foreach (var c in table.Columns) c.IsPrimaryKey = pkCols.Contains(c.Name);
-                        }
-                        await using (var fk = new Oracle.ManagedDataAccess.Client.OracleCommand(@"SELECT a.COLUMN_NAME, c_owner.R_OWNER AS REF_OWNER, c_owner.PKTABLE_NAME AS REF_TABLE, c_owner.PKCOLUMN_NAME AS REF_COLUMN FROM ALL_CONSTRAINTS c JOIN ALL_CONS_COLUMNS a ON c.CONSTRAINT_NAME = a.CONSTRAINT_NAME JOIN (SELECT a.OWNER, a.CONSTRAINT_NAME, b.OWNER R_OWNER, b.TABLE_NAME PKTABLE_NAME, b.COLUMN_NAME PKCOLUMN_NAME FROM ALL_CONS_COLUMNS a JOIN ALL_CONS_COLUMNS b ON a.POSITION = b.POSITION WHERE a.CONSTRAINT_NAME IN (SELECT CONSTRAINT_NAME FROM ALL_CONSTRAINTS WHERE CONSTRAINT_TYPE = 'R')) c_owner ON c.CONSTRAINT_NAME = c_owner.CONSTRAINT_NAME WHERE c.CONSTRAINT_TYPE = 'R' AND c.OWNER = :s AND c.TABLE_NAME = :t", conn))
-                        {
-                            fk.Parameters.Add(new Oracle.ManagedDataAccess.Client.OracleParameter(":s", sch));
-                            fk.Parameters.Add(new Oracle.ManagedDataAccess.Client.OracleParameter(":t", name));
-                            await using var r = await fk.ExecuteReaderAsync();
-                            while (await r.ReadAsync())
-                            {
-                                table.ForeignKeys.Add(new ForeignKeySchemaDto
-                                {
-                                    Column = r.GetString(0),
-                                    ReferencedSchema = r.GetString(1),
-                                    ReferencedTable = r.GetString(2),
-                                    ReferencedColumn = r.GetString(3),
-                                });
-                            }
-                        }
-                        schema.Tables.Add(table);
+                        _logger.LogError(ex, "MySQL database introspection failed for connection string '{ConnectionStringName}'", request.ConnectionStringName);
+                        throw new AbpException($"MySQL database introspection failed: {ex.Message}", ex);
                     }
                 }
-                catch (Oracle.ManagedDataAccess.Client.OracleException ex)
+                else if (provider.Equals("Oracle", StringComparison.OrdinalIgnoreCase))
                 {
-                    _logger.LogError(ex, "Oracle database introspection failed for connection string '{ConnectionStringName}'", request.ConnectionStringName);
-                    throw new AbpException($"Oracle database introspection failed: {ex.Message}", ex);
+                    try
+                    {
+                        await using var conn = new Oracle.ManagedDataAccess.Client.OracleConnection(cs);
+                        await conn.OpenAsync();
+                        var tableList = new List<(string Schema, string Name)>();
+                        string? owner = request.Schema;
+                        await using (var cmd = new Oracle.ManagedDataAccess.Client.OracleCommand(@"SELECT OWNER, TABLE_NAME FROM ALL_TABLES WHERE (:owner IS NULL OR OWNER = :owner)", conn))
+                        {
+                            cmd.Parameters.Add(new Oracle.ManagedDataAccess.Client.OracleParameter(":owner", (object?)owner ?? DBNull.Value));
+                            await using var reader = await cmd.ExecuteReaderAsync();
+                            while (await reader.ReadAsync()) tableList.Add((reader.GetString(0), reader.GetString(1)));
+                        }
+                        foreach (var (sch, name) in tableList)
+                        {
+                            if (request.Tables != null && request.Tables.Count > 0 && !request.Tables.Contains(name)) continue;
+                            var table = new TableSchemaDto { Schema = sch, Name = name };
+                            await using (var col = new Oracle.ManagedDataAccess.Client.OracleCommand(@"SELECT COLUMN_NAME, DATA_TYPE, NULLABLE, DATA_LENGTH FROM ALL_TAB_COLUMNS WHERE OWNER=:s AND TABLE_NAME=:t", conn))
+                            {
+                                col.Parameters.Add(new Oracle.ManagedDataAccess.Client.OracleParameter(":s", sch));
+                                col.Parameters.Add(new Oracle.ManagedDataAccess.Client.OracleParameter(":t", name));
+                                await using var r = await col.ExecuteReaderAsync();
+                                while (await r.ReadAsync())
+                                {
+                                    table.Columns.Add(new ColumnSchemaDto
+                                    {
+                                        Name = r.GetString(0),
+                                        DataType = r.GetString(1),
+                                        IsNullable = r.GetString(2) == "Y",
+                                        MaxLength = r.IsDBNull(3) ? null : Convert.ToInt32(r.GetDecimal(3)),
+                                    });
+                                }
+                            }
+                            await using (var pk = new Oracle.ManagedDataAccess.Client.OracleCommand(@"SELECT cols.COLUMN_NAME FROM ALL_CONSTRAINTS cons, ALL_CONS_COLUMNS cols WHERE cons.CONSTRAINT_TYPE = 'P' AND cons.CONSTRAINT_NAME = cols.CONSTRAINT_NAME AND cols.OWNER = :s AND cols.TABLE_NAME = :t", conn))
+                            {
+                                pk.Parameters.Add(new Oracle.ManagedDataAccess.Client.OracleParameter(":s", sch));
+                                pk.Parameters.Add(new Oracle.ManagedDataAccess.Client.OracleParameter(":t", name));
+                                await using var r = await pk.ExecuteReaderAsync();
+                                var pkCols = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                                while (await r.ReadAsync()) pkCols.Add(r.GetString(0));
+                                foreach (var c in table.Columns) c.IsPrimaryKey = pkCols.Contains(c.Name);
+                            }
+                            await using (var fk = new Oracle.ManagedDataAccess.Client.OracleCommand(@"SELECT a.COLUMN_NAME, c_owner.R_OWNER AS REF_OWNER, c_owner.PKTABLE_NAME AS REF_TABLE, c_owner.PKCOLUMN_NAME AS REF_COLUMN FROM ALL_CONSTRAINTS c JOIN ALL_CONS_COLUMNS a ON c.CONSTRAINT_NAME = a.CONSTRAINT_NAME JOIN (SELECT a.OWNER, a.CONSTRAINT_NAME, b.OWNER R_OWNER, b.TABLE_NAME PKTABLE_NAME, b.COLUMN_NAME PKCOLUMN_NAME FROM ALL_CONS_COLUMNS a JOIN ALL_CONS_COLUMNS b ON a.POSITION = b.POSITION WHERE a.CONSTRAINT_NAME IN (SELECT CONSTRAINT_NAME FROM ALL_CONSTRAINTS WHERE CONSTRAINT_TYPE = 'R')) c_owner ON c.CONSTRAINT_NAME = c_owner.CONSTRAINT_NAME WHERE c.CONSTRAINT_TYPE = 'R' AND c.OWNER = :s AND c.TABLE_NAME = :t", conn))
+                            {
+                                fk.Parameters.Add(new Oracle.ManagedDataAccess.Client.OracleParameter(":s", sch));
+                                fk.Parameters.Add(new Oracle.ManagedDataAccess.Client.OracleParameter(":t", name));
+                                await using var r = await fk.ExecuteReaderAsync();
+                                while (await r.ReadAsync())
+                                {
+                                    table.ForeignKeys.Add(new ForeignKeySchemaDto
+                                    {
+                                        Column = r.GetString(0),
+                                        ReferencedSchema = r.GetString(1),
+                                        ReferencedTable = r.GetString(2),
+                                        ReferencedColumn = r.GetString(3),
+                                    });
+                                }
+                            }
+                            schema.Tables.Add(table);
+                        }
+                    }
+                    catch (Oracle.ManagedDataAccess.Client.OracleException ex)
+                    {
+                        _logger.LogError(ex, "Oracle database introspection failed for connection string '{ConnectionStringName}'", request.ConnectionStringName);
+                        throw new AbpException($"Oracle database introspection failed: {ex.Message}", ex);
+                    }
                 }
-            }
-            else
-            {
-                throw new AbpException($"Provider '{provider}' not supported");
-            }
+                else
+                {
+                    throw new AbpException($"Provider '{provider}' not supported");
+                }
 
-            _logger.LogInformation("Database introspection completed successfully for connection string '{ConnectionStringName}' with provider '{Provider}'. Found {TableCount} tables.",
-                request.ConnectionStringName, provider, schema.Tables.Count);
-            return schema;
-        }
-        catch (AbpException)
-        {
-            throw;
-        }
-        catch (ArgumentException ex)
-        {
-            _logger.LogError(ex, "Invalid argument provided for database introspection with connection string '{ConnectionStringName}'", request.ConnectionStringName);
-            throw new AbpException($"Invalid argument provided for database introspection: {ex.Message}", ex);
-        }
-        catch (InvalidOperationException ex)
-        {
-            _logger.LogError(ex, "Invalid operation during database introspection for connection string '{ConnectionStringName}' - possible configuration issues", request.ConnectionStringName);
-            throw new AbpException($"Invalid operation during database introspection: {ex.Message}", ex);
-        }
-        catch (OutOfMemoryException ex)
-        {
-            _logger.LogCritical(ex, "Memory exhausted during database introspection for connection string '{ConnectionStringName}'", request.ConnectionStringName);
-            throw new AbpException($"Memory exhausted during database introspection. Consider reducing the number of tables or increasing available memory.");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unexpected error during database introspection for connection string '{ConnectionStringName}'", request.ConnectionStringName);
-            throw new AbpException($"Unexpected error during database introspection: {ex.Message}", ex);
-        }
+                _logger.LogInformation("Database introspection completed successfully for connection string '{ConnectionStringName}' with provider '{Provider}'. Found {TableCount} tables.",
+                    request.ConnectionStringName, provider, schema.Tables.Count);
+                return schema;
+            }
+            catch (AbpException)
+            {
+                throw;
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, "Invalid argument provided for database introspection with connection string '{ConnectionStringName}'", request.ConnectionStringName);
+                throw new AbpException($"Invalid argument provided for database introspection: {ex.Message}", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "Invalid operation during database introspection for connection string '{ConnectionStringName}' - possible configuration issues", request.ConnectionStringName);
+                throw new AbpException($"Invalid operation during database introspection: {ex.Message}", ex);
+            }
+            catch (OutOfMemoryException ex)
+            {
+                _logger.LogCritical(ex, "Memory exhausted during database introspection for connection string '{ConnectionStringName}'", request.ConnectionStringName);
+                throw new AbpException($"Memory exhausted during database introspection. Consider reducing the number of tables or increasing available memory.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during database introspection for connection string '{ConnectionStringName}'", request.ConnectionStringName);
+                throw new AbpException($"Unexpected error during database introspection: {ex.Message}", ex);
+            }
         }
 
         public Task<ValidationReportDto> ValidateModuleAsync(ModuleMetadataDto input)
@@ -1301,7 +1302,7 @@ WHERE fk_tab.TABLE_SCHEMA=@s AND fk_tab.TABLE_NAME=@t";
         private async Task GenerateFrontendAsync(ModuleMetadataDto metadata, string solutionRoot, List<string> generatedFiles)
         {
             _logger.LogInformation("🚀 启动增强Vue3前端代码生成: {ModuleName}...", metadata.Name);
-            
+
             // 🔥 Vue3前端生成器升级：使用增强模板驱动生成器
             var filesToGenerate = await _enhancedFrontendGenerator.GenerateAsync(metadata, solutionRoot);
 
@@ -1617,7 +1618,7 @@ import Generated from './__COMPONENT__.generated.vue'
             while (currentDir != null)
             {
                 if (currentDir.GetFiles("*.sln").Any())
-            {
+                {
                     return currentDir.FullName;
                 }
                 currentDir = currentDir.Parent;
@@ -1689,7 +1690,7 @@ import Generated from './__COMPONENT__.generated.vue'
 
         #region Unimplemented Interface Methods
 
-        public async Task<GeneratedCodeDto> GenerateEntityAsync(EntityDefinitionDto input)
+        public async Task<GeneratedCodeDto> GenerateEntityAsync(SSOTDtos.EntityDefinitionDto input)
         {
             // 🔥 实现实体生成功能 - 企业级标准
             Check.NotNull(input, nameof(input));
@@ -1718,13 +1719,13 @@ import Generated from './__COMPONENT__.generated.vue'
                             Name = input.Name,
                             DisplayName = input.DisplayName ?? input.Name,
                             Description = input.Description ?? "",
-                            Properties = input.Properties?.Select(p => new EntityPropertyDto
+                            Properties = input.Fields?.Select(p => new EntityPropertyDto
                             {
                                 Name = p.Name,
                                 Type = p.Type,
                                 IsRequired = p.IsRequired,
-                                MaxLength = p.MaxLength,
-                                Description = p.Description ?? ""
+                                MaxLength = p.Length ?? 0,
+                                Description = p.Comment ?? ""
                             }).ToList() ?? new List<EntityPropertyDto>()
                         }
                     }
@@ -1762,28 +1763,28 @@ import Generated from './__COMPONENT__.generated.vue'
         public async Task<GeneratedDddSolutionDto> GenerateDddDomainAsync(DddDefinitionDto input)
         {
             Logger.LogInformation("🔥 Starting DDD domain generation for module: {ModuleName}", input.ModuleName);
-            
+
             try
             {
                 // Convert DTO to domain definition
                 var definition = MapToDddDefinition(input);
-                
+
                 // Generate DDD domain layer using DomainDrivenDesignGenerator
                 var dddLogger = _loggerFactory.CreateLogger<DDD.DomainDrivenDesignGenerator>();
                 var dddGenerator = new DDD.DomainDrivenDesignGenerator(
                     dddLogger,
                     _memoryManager
                 );
-                
+
                 var result = await dddGenerator.GenerateCompleteDomainAsync(definition);
-                
+
                 // Convert to DTO
                 var dto = new GeneratedDddSolutionDto
                 {
                     ModuleName = result.ModuleName,
-                    Files = result.Files.Select(kvp => new GeneratedFileDto 
-                    { 
-                        RelativePath = kvp.Key, 
+                    Files = result.Files.Select(kvp => new GeneratedFileDto
+                    {
+                        RelativePath = kvp.Key,
                         Content = kvp.Value,
                         Language = "CSharp"
                     }).ToList(),
@@ -1800,10 +1801,10 @@ import Generated from './__COMPONENT__.generated.vue'
                     Success = true,
                     Message = $"Successfully generated DDD domain layer with {result.AggregateCount} aggregates, {result.ValueObjectCount} value objects"
                 };
-                
-                Logger.LogInformation("✅ DDD domain generation completed: {FileCount} files, {LinesOfCode} lines of code", 
+
+                Logger.LogInformation("✅ DDD domain generation completed: {FileCount} files, {LinesOfCode} lines of code",
                     dto.Files.Count, dto.TotalLinesOfCode);
-                
+
                 return dto;
             }
             catch (Exception ex)
@@ -1817,7 +1818,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 };
             }
         }
-        
+
         private DDD.DddDefinition MapToDddDefinition(DddDefinitionDto dto)
         {
             return new DDD.DddDefinition
@@ -1837,7 +1838,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 DefaultKeyType = dto.DefaultKeyType ?? "Guid"
             };
         }
-        
+
         private DDD.AggregateDefinition MapToAggregateDefinition(AggregateDefinitionDto dto)
         {
             return new DDD.AggregateDefinition
@@ -1854,7 +1855,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 DomainEvents = dto.DomainEvents?.Select(MapToDomainEventDefinition).ToList() ?? new List<DDD.DomainEventDefinition>()
             };
         }
-        
+
         private DDD.ValueObjectDefinition MapToValueObjectDefinition(ValueObjectDefinitionDto dto)
         {
             return new DDD.ValueObjectDefinition
@@ -1866,7 +1867,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 ImplementsEquality = dto.ImplementsEquality
             };
         }
-        
+
         private DDD.DomainEventDefinition MapToDomainEventDefinition(DomainEventDefinitionDto dto)
         {
             return new DDD.DomainEventDefinition
@@ -1877,7 +1878,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 Properties = dto.Properties?.Select(MapToPropertyDefinition).ToList() ?? new List<DDD.PropertyDefinition>()
             };
         }
-        
+
         private DDD.DomainServiceDefinition MapToDomainServiceDefinition(DomainServiceDefinitionDto dto)
         {
             return new DDD.DomainServiceDefinition
@@ -1889,7 +1890,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 IsStateless = dto.IsStateless
             };
         }
-        
+
         private DDD.RepositoryDefinition MapToRepositoryDefinition(RepositoryDefinitionDto dto)
         {
             return new DDD.RepositoryDefinition
@@ -1901,8 +1902,8 @@ import Generated from './__COMPONENT__.generated.vue'
                 SupportsSpecifications = dto.SupportsSpecifications
             };
         }
-        
-        private DDD.PropertyDefinition MapToPropertyDefinition(PropertyDefinitionDto dto)
+
+        private DDD.PropertyDefinition MapToPropertyDefinition(CodeGenPropertyDefinitionDto dto)
         {
             return new DDD.PropertyDefinition
             {
@@ -1917,8 +1918,8 @@ import Generated from './__COMPONENT__.generated.vue'
                 IsPrivateSetter = dto.IsPrivateSetter
             };
         }
-        
-        private DDD.DomainMethodDefinition MapToDomainMethodDefinition(DomainMethodDefinitionDto dto)
+
+        private DDD.DomainMethodDefinition MapToDomainMethodDefinition(CodeGenDomainMethodDefinitionDto dto)
         {
             return new DDD.DomainMethodDefinition
             {
@@ -1929,7 +1930,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 IsVirtual = dto.IsVirtual
             };
         }
-        
+
         private DDD.BusinessRuleDefinition MapToBusinessRuleDefinition(BusinessRuleDefinitionDto dto)
         {
             return new DDD.BusinessRuleDefinition
@@ -1948,7 +1949,7 @@ import Generated from './__COMPONENT__.generated.vue'
         public async Task<GeneratedCqrsSolutionDto> GenerateCqrsAsync(CqrsDefinitionDto input)
         {
             Logger.LogInformation("🔥 Starting CQRS pattern generation for module: {ModuleName}", input.ModuleName);
-            
+
             try
             {
                 // 1. 验证输入
@@ -1961,19 +1962,19 @@ import Generated from './__COMPONENT__.generated.vue'
                 {
                     throw new AbpException("Namespace is required for CQRS generation.");
                 }
-                
+
                 // 2. 转换DTO到CQRS定义
                 var definition = MapToCqrsDefinition(input);
-                
+
                 // 3. 使用CqrsPatternGenerator生成代码
                 var cqrsLogger = _loggerFactory.CreateLogger<CQRS.CqrsPatternGenerator>();
                 var cqrsGenerator = new CQRS.CqrsPatternGenerator(
                     cqrsLogger,
                     _memoryManager
                 );
-                
+
                 var result = await cqrsGenerator.GenerateCompleteCqrsAsync(definition);
-                
+
                 // 4. 转换结果到DTO
                 var dto = new GeneratedCqrsSolutionDto
                 {
@@ -1985,10 +1986,10 @@ import Generated from './__COMPONENT__.generated.vue'
                     GeneratedAt = result.GeneratedAt,
                     SessionId = Guid.NewGuid().ToString()
                 };
-                
-                Logger.LogInformation("✅ CQRS pattern generation completed: {FileCount} files, {CommandCount} commands, {QueryCount} queries", 
+
+                Logger.LogInformation("✅ CQRS pattern generation completed: {FileCount} files, {CommandCount} commands, {QueryCount} queries",
                     dto.Files.Count, dto.CommandCount, dto.QueryCount);
-                
+
                 return dto;
             }
             catch (ArgumentException ex)
@@ -2002,7 +2003,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 throw new AbpException($"Failed to generate CQRS pattern: {ex.Message}", ex);
             }
         }
-        
+
         /// <summary>
         /// 映射CqrsDefinitionDto到CqrsDefinition
         /// </summary>
@@ -2022,10 +2023,10 @@ import Generated from './__COMPONENT__.generated.vue'
                 UsePerformanceLogging = true,
                 DatabaseProvider = "EntityFramework"
             };
-            
+
             return definition;
         }
-        
+
         /// <summary>
         /// 映射CommandDefinitionDto到CommandDefinition (CQRS)
         /// </summary>
@@ -2052,7 +2053,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 Type = CQRS.CommandType.Custom
             };
         }
-        
+
         /// <summary>
         /// 映射QueryDefinitionDto到QueryDefinition (CQRS)
         /// </summary>
@@ -2103,29 +2104,29 @@ import Generated from './__COMPONENT__.generated.vue'
             Check.NotNullOrWhiteSpace(input.SolutionName, nameof(input.SolutionName));
             Check.NotNullOrWhiteSpace(input.RootNamespace, nameof(input.RootNamespace));
             Check.NotNull(input.Microservices, nameof(input.Microservices));
-            
-            _logger.LogInformation("🚀 开始生成Aspire解决方案: {SolutionName}, 微服务数量: {Count}", 
+
+            _logger.LogInformation("🚀 开始生成Aspire解决方案: {SolutionName}, 微服务数量: {Count}",
                 input.SolutionName, input.Microservices.Count);
-            
+
             try
             {
                 // 1. DTO转换为内部定义
                 var definition = MapToAspireSolutionDefinition(input);
-                
+
                 // 2. 使用AspireMicroservicesGenerator生成代码
                 var aspireMicroservicesGenerator = new AspireMicroservicesGenerator(
                     _loggerFactory.CreateLogger<AspireMicroservicesGenerator>(),
                     _memoryManager
                 );
-                
+
                 var generatedSolution = await aspireMicroservicesGenerator.GenerateAspireSolutionAsync(definition);
-                
+
                 // 3. 写入文件到磁盘
-                var outputPath = Path.Combine(FindSolutionRoot() ?? throw new AbpException("Solution root not found"), 
+                var outputPath = Path.Combine(FindSolutionRoot() ?? throw new AbpException("Solution root not found"),
                     ".generated", "aspire", input.SolutionName);
-                
+
                 _logger.LogInformation("📁 写入Aspire代码到目录: {OutputPath}", outputPath);
-                
+
                 foreach (var file in generatedSolution.Files)
                 {
                     var filePath = Path.Combine(outputPath, file.Key);
@@ -2134,11 +2135,11 @@ import Generated from './__COMPONENT__.generated.vue'
                     {
                         Directory.CreateDirectory(directory);
                     }
-                    
+
                     await File.WriteAllTextAsync(filePath, file.Value);
                     _logger.LogDebug("✅ 生成文件: {FilePath}", file.Key);
                 }
-                
+
                 // 4. 发布生成完成事件
                 await _eventBus.PublishAsync(new AspireGenerationCompletedEvent
                 {
@@ -2147,9 +2148,9 @@ import Generated from './__COMPONENT__.generated.vue'
                     GeneratedAt = DateTime.UtcNow,
                     OutputPath = outputPath
                 });
-                
+
                 _logger.LogInformation("✅ Aspire解决方案生成完成: {FileCount}个文件", generatedSolution.Files.Count);
-                
+
                 // 5. 转换返回DTO
                 return new GeneratedAspireSolutionDto
                 {
@@ -2165,7 +2166,7 @@ import Generated from './__COMPONENT__.generated.vue'
                 throw new UserFriendlyException($"生成Aspire解决方案失败: {ex.Message}");
             }
         }
-        
+
         /// <summary>
         /// DTO映射: AspireSolutionDefinitionDto -> AspireSolutionDefinition
         /// </summary>
@@ -2541,7 +2542,7 @@ public class {entityName}AppService_Tests : SmartAbpApplicationTestBase<SmartAbp
                     }
                 }
             }
-            
+
             for (var i = 0; i < input.Queries.Count; i++)
             {
                 var query = input.Queries[i];
@@ -2553,7 +2554,7 @@ public class {entityName}AppService_Tests : SmartAbpApplicationTestBase<SmartAbp
                 {
                     errors.Add(new ValidationErrorDto { Field = $"queries[{i}].name", Message = $"Query Name '{query.Name}' is not a valid C# identifier." });
                 }
-                
+
                 if (string.IsNullOrWhiteSpace(query.ReturnType))
                 {
                     errors.Add(new ValidationErrorDto { Field = $"queries[{i}].returnType", Message = "Query Return Type is required." });

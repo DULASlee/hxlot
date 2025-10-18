@@ -297,41 +297,53 @@ const onTemplateSelect = (template: Template) => {
   clearErrors()
 }
 
-// 🔥 新增：创建UnifiedModuleMetadata用于验证（Phase 1D）
-// Phase 2B: 使用unified-schema的完整类型（前端内部使用）
-const createUnifiedModuleMetadata = (): import('@smartabp/lowcode-shared/types/unified-schema').UnifiedModuleMetadata => {
+// 🔥 Phase 3B: 使用后端SSOT - ModuleDto（后端生成的类型）
+// 替代前端unified-schema，直接使用后端DTO类型
+const createModuleMetadata = (): import('@/api/generated').SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto => {
   return {
     id: crypto.randomUUID(),
     systemName: 'SmartAbp',
-    name: generationParams.value.moduleName, // Phase 2B: unified-schema使用name字段
+    moduleName: generationParams.value.moduleName, // 🔥 后端DTO使用moduleName
     displayName: generationParams.value.displayName || generationParams.value.entityName,
     description: `${generationParams.value.displayName || generationParams.value.entityName}模块`,
     version: '1.0.0',
-    author: 'SmartAbp',
+    // 🔥 author不存在于后端DTO，已删除
     namespace: `SmartAbp.${generationParams.value.moduleName}`,
-    architecturePattern: 'Crud' as const,
-    databaseInfo: {
-      connectionStringName: 'Default',
-      schema: 'dbo',
-      provider: 'SqlServer' as const
+    // 🔥 架构配置（JSON序列化对象）- 对齐后端Domain实体
+    architectureConfig: {
+      pattern: 'Crud', // 🔥 属性名：architecturePattern → pattern
+      databaseProvider: 'SqlServer', // 🔥 属性名：provider → databaseProvider
+      connectionString: 'Default', // 🔥 属性名：connectionStringName → connectionString
+      schema: 'dbo'
     },
-    frontend: {
-      parentId: '',
-      routePrefix: generationParams.value.moduleName.toLowerCase()
+    // 🔥 前端配置（JSON序列化对象）- 对齐后端Domain实体
+    frontendConfig: {
+      routePrefix: generationParams.value.moduleName.toLowerCase(),
+      parentMenuId: '', // 🔥 属性名：parentId → parentMenuId
+      menuIcon: 'folder',
+      menuOrder: 0,
+      menuConfig: [] // 🔥 修复：menuConfig应该在frontendConfig内部，不是顶层
     },
-    generateMobilePages: false,
+    // 🔥 代码生成选项（JSON序列化对象）- 对齐后端Domain实体
+    codeGenOptions: {
+      generateMobilePages: false,
+      generateBackend: true,
+      generateFrontend: true,
+      generateDatabase: true
+    },
+    // 🔥 特性管理（独立DTO）
     featureManagement: {
       isEnabled: true,
       defaultPolicy: 'RequiresAuthentication'
     },
-    dependencies: [],
+    dependencies: [], // 🔥 Array<string>
     schemaVersion: '1.0.0',
     entities: [{
       id: crypto.randomUUID(),
       name: generationParams.value.entityName,
       displayName: generationParams.value.displayName || generationParams.value.entityName,
       tableName: generationParams.value.entityName,
-      module: generationParams.value.moduleName, // Phase 3: UnifiedEntityDefinition必填字段
+      moduleId: generationParams.value.moduleName, // 🔥 Phase 3B: module → moduleId（后端DTO）
       namespace: `SmartAbp.${generationParams.value.moduleName}.Entities`,
       description: `${generationParams.value.displayName || generationParams.value.entityName}实体`,
       schema: 'dbo',
@@ -341,9 +353,8 @@ const createUnifiedModuleMetadata = (): import('@smartabp/lowcode-shared/types/u
       isAudited: true,
       isSoftDelete: true,
       isMultiTenant: false,
-      uiConfig: { listPage: {}, formPage: {}, detailPage: {} } as any, // Phase 3: UnifiedEntityDefinition必填字段
-      createdAt: new Date(), // Phase 3: UnifiedEntityDefinition必填字段
-      updatedAt: new Date(), // Phase 3: UnifiedEntityDefinition必填字段
+      pageConfig: { listPage: {}, formPage: {}, detailPage: {} } as any, // 🔥 Phase 3B: uiConfig → pageConfig（后端DTO）
+      // 🔥 createdAt/updatedAt已废弃，后端DTO使用ABP审计字段（creationTime等）
       fields: [
         {
           id: crypto.randomUUID(),
@@ -427,13 +438,10 @@ const createUnifiedModuleMetadata = (): import('@smartabp/lowcode-shared/types/u
       // Phase 2B: 审计字段由后端自动设置，前端不需要传递
       // creationTime: new Date(),
       // lastModificationTime: new Date()
-    }],
-    // Phase 2B: 后端ModuleDto无permissionConfig和menuConfig字段（已删除）
-    permissionConfig: { groups: [], customActions: [] } as any, // Phase 3: UnifiedModuleMetadata必填字段
-    menuConfig: [] as any, // Phase 3: UnifiedModuleMetadata必填字段
-    // Phase 3: UnifiedModuleMetadata使用createdAt/updatedAt
-    createdAt: new Date(),
-    updatedAt: new Date()
+    }]
+    // 🔥 Phase 3B: permissionConfig和menuConfig已删除（不是ModuleDto的顶层属性）
+    // 🔥 Phase 3B: menuConfig已移到frontendConfig内部（第325行）
+    // 🔥 Phase 3B: createdAt/updatedAt已删除，后端DTO使用ABP审计字段（creationTime等）
   }
 }
 
@@ -442,7 +450,7 @@ watch(
   [() => generationParams.value.entityName, () => generationParams.value.moduleName, () => generationParams.value.displayName],
   async () => {
     if (generationParams.value.entityName && generationParams.value.moduleName) {
-      const moduleMetadata = createUnifiedModuleMetadata()
+      const moduleMetadata = createModuleMetadata()
       // Phase 3临时方案：类型断言，等swagger重新生成后删除
       await validateModule(moduleMetadata as any)
     }

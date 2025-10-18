@@ -14,7 +14,7 @@ export default defineConfig({
 
     // 验证系统
     'validation/index': 'src/validation/unified-validator.ts',
-    'validation/adapter': 'src/validation/metadata-adapter.ts',
+    // 🟡 Phase 3B: validation/adapter已删除（metadata-adapter.ts已废弃）
 
     // 版本管理
     'version/index': 'src/version/SchemaVersionManager.ts',

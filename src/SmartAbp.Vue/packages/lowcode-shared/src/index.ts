@@ -21,7 +21,8 @@ export * from './types/enums';
 // Phase 1D: 前端元数据类型（从unified-schema迁移至metadata）
 // export * from './types/metadata'; // 已在 types/index.ts 导出
 // API DTO类型请使用: import { EntityDefinitionDto } from '@/api/generated/api-client'
-export * from './utils/schema-converter';
+// 🟡 Phase 3B: schema-converter已废弃，不再导出
+// export * from './utils/schema-converter';
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 📦 版本管理系统 (Version Management System) - v1.0.0
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -37,11 +38,7 @@ export * from './types/assembly';
 // 🔍 验证系统 (Validation System) - v2.0.0
 // 📦 从 @smartabp/metadata-core 迁移，适配 UnifiedEntityDefinition
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export {
-  convertEntityToMetadataCore, convertMetadataCoreToUnified, convertModuleToMetadataCore, // D2新增
-  getConversionStats, // D2新增
-  isEntityMetadata, validateConversion
-} from './validation/metadata-adapter';
+// 🟡 Phase 3B: metadata-adapter已删除（使用后端SSOT类型，无需适配器）
 export { getUnifiedEntityErrors, getValidationFeatureFlags, SchemaValidationError, setValidationFeatureFlags, UnifiedSchemaValidator, ValidateSchema, validateUnifiedEntities, validateUnifiedEntity, validateUnifiedModule } from './validation/unified-validator';
 
 // 🔥 阶段1：元数据验证功能 (Metadata Validation) - v2.0.0

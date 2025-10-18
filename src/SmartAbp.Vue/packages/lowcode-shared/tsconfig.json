@@ -6,5 +6,13 @@
     "skipLibCheck": true
   },
   "include": ["src/**/*"],
-  "exclude": ["dist", "node_modules", "**/*.spec.ts", "**/*.test.ts"]
+  "exclude": [
+    "dist",
+    "node_modules",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "src/types/unified-schema.ts",
+    "src/utils/schema-converter.ts",
+    "src/validation/__tests__/unified-validator.spec.ts"
+  ]
 }

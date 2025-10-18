@@ -636,5 +636,5 @@ export class SchemaConverter {
  */
 export const schemaConverter = SchemaConverter
 
-  */
+*/
 // End of archived code

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using SmartAbp.Domain.Entities.LowCode;
+using SmartAbp.Domain.Shared.LowCode; // PageConfigDto定义
 
 namespace SmartAbp.Application.LowCode.Validation
 {

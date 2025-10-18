@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SmartAbp.Domain.Entities.LowCode;
+using SmartAbp.Domain.Shared.LowCode;
 using Volo.Abp.Application.Dtos;
 
 namespace SmartAbp.Application.Contracts.LowCode.Dtos

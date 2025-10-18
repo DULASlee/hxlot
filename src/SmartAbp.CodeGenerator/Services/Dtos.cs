@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SmartAbp.Application.Contracts.LowCode.Dtos;
 
 namespace SmartAbp.CodeGenerator.Services
 {
@@ -108,11 +109,11 @@ namespace SmartAbp.CodeGenerator.Services
             public string Description { get; set; } = default!; // 模块用途描述
             public string Version { get; set; } = "1.0.0";
             public string ArchitecturePattern { get; set; } = "Crud"; // "Crud", "DDD", "CQRS"
-            
+
             // 🔥 企业级扩展：添加模板系统所需属性（遵循BUG修复铁律 - 完善类型定义）
             public string Namespace { get; set; } = default!; // 命名空间，如 "SmartAbp.ProjectManagement"
             public string Author { get; set; } = "SmartAbp Generator"; // 代码生成作者信息
-            
+
             public DatabaseConfigDto DatabaseInfo { get; set; } = new();
             public FeatureManagementDto FeatureManagement { get; set; } = new();
             public FrontendConfigDto Frontend { get; set; } = new(); // 新增前端配置
@@ -615,10 +616,14 @@ namespace SmartAbp.CodeGenerator.Services
 
 
     // =================================================================
-    // == Existing DTOs (for backward compatibility)
+    // == Legacy DTOs (for backward compatibility - CodeGenerator internal use only)
     // =================================================================
-    // Entity Generation DTOs
-    public class EntityDefinitionDto
+    // ⚠️ 警告：这些DTO仅供CodeGenerator项目内部使用
+    // ⚠️ 外部API请使用 SmartAbp.Application.Contracts.LowCode.Dtos.* (SSOT)
+    // ⚠️ CodeGenerator内部实体定义（遗留API用）
+    // ⚠️ 外部API请使用 SmartAbp.Application.Contracts.LowCode.Dtos.EntityDefinitionDto
+    // ⚠️ 注意：此类与Application.Contracts的EntityDefinitionDto字段不同，保留用于遗留代码生成器
+    public class CodeGenEntityDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string? DisplayName { get; set; }
@@ -630,13 +635,17 @@ namespace SmartAbp.CodeGenerator.Services
         public bool IsMultiTenant { get; set; } = true;
         public bool IsSoftDelete { get; set; } = true;
         public bool HasExtraProperties { get; set; } = true;
-        public List<PropertyDefinitionDto> Properties { get; set; } = new();
-        public List<NavigationPropertyDefinitionDto> NavigationProperties { get; set; } = new();
-        public List<CollectionDefinitionDto> Collections { get; set; } = new();
-        public List<DomainMethodDefinitionDto> DomainMethods { get; set; } = new();
+        public List<CodeGenPropertyDefinitionDto> Properties { get; set; } = new();
+        public List<CodeGenNavigationPropertyDefinitionDto> NavigationProperties { get; set; } = new();
+        public List<CodeGenCollectionDefinitionDto> Collections { get; set; } = new();
+        public List<CodeGenDomainMethodDefinitionDto> DomainMethods { get; set; } = new();
     }
 
-    public class PropertyDefinitionDto
+    /// <summary>
+    /// 属性定义DTO - CodeGenerator内部使用（仅用于遗留API）
+    /// ⚠️ 外部API请使用 SmartAbp.Application.Contracts.LowCode.Dtos.*
+    /// </summary>
+    public class CodeGenPropertyDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;
@@ -650,7 +659,11 @@ namespace SmartAbp.CodeGenerator.Services
         public string? Description { get; set; }
     }
 
-    public class NavigationPropertyDefinitionDto
+    /// <summary>
+    /// 导航属性定义DTO - CodeGenerator内部使用（仅用于遗留API）
+    /// ⚠️ 外部API请使用 SmartAbp.Application.Contracts.LowCode.Dtos.*
+    /// </summary>
+    public class CodeGenNavigationPropertyDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;
@@ -660,7 +673,11 @@ namespace SmartAbp.CodeGenerator.Services
         public string? InverseProperty { get; set; }
     }
 
-    public class CollectionDefinitionDto
+    /// <summary>
+    /// 集合定义DTO - CodeGenerator内部使用（仅用于遗留API）
+    /// ⚠️ 外部API请使用 SmartAbp.Application.Contracts.LowCode.Dtos.*
+    /// </summary>
+    public class CodeGenCollectionDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string ItemType { get; set; } = string.Empty;
@@ -668,18 +685,26 @@ namespace SmartAbp.CodeGenerator.Services
         public string? Description { get; set; }
     }
 
-    public class DomainMethodDefinitionDto
+    /// <summary>
+    /// 领域方法定义DTO - CodeGenerator内部使用（仅用于遗留API）
+    /// ⚠️ 外部API请使用 SmartAbp.Application.Contracts.LowCode.Dtos.*
+    /// </summary>
+    public class CodeGenDomainMethodDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string ReturnType { get; set; } = "void";
         public bool IsAsync { get; set; }
         public bool IsVirtual { get; set; }
         public string? Description { get; set; }
-        public List<ParameterDefinitionDto> Parameters { get; set; } = new();
+        public List<CodeGenParameterDefinitionDto> Parameters { get; set; } = new();
         public string? MethodBody { get; set; }
     }
 
-    public class ParameterDefinitionDto
+    /// <summary>
+    /// 参数定义DTO - CodeGenerator内部使用（仅用于遗留API）
+    /// ⚠️ 外部API请使用 SmartAbp.Application.Contracts.LowCode.Dtos.*
+    /// </summary>
+    public class CodeGenParameterDefinitionDto
     {
         public string Name { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;
@@ -748,8 +773,8 @@ namespace SmartAbp.CodeGenerator.Services
         public bool IsMultiTenant { get; set; }
         public bool IsSoftDelete { get; set; }
         public bool HasExtraProperties { get; set; }
-        public List<PropertyDefinitionDto> Properties { get; set; } = new();
-        public List<DomainMethodDefinitionDto> DomainMethods { get; set; } = new();
+        public List<CodeGenPropertyDefinitionDto> Properties { get; set; } = new();
+        public List<CodeGenDomainMethodDefinitionDto> DomainMethods { get; set; } = new();
         public List<BusinessRuleDefinitionDto> BusinessRules { get; set; } = new();
         public List<DomainEventDefinitionDto> DomainEvents { get; set; } = new();
     }
@@ -758,7 +783,7 @@ namespace SmartAbp.CodeGenerator.Services
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public List<PropertyDefinitionDto> Properties { get; set; } = new();
+        public List<CodeGenPropertyDefinitionDto> Properties { get; set; } = new();
         public bool IsImmutable { get; set; } = true;
         public bool ImplementsEquality { get; set; } = true;
     }
@@ -768,7 +793,7 @@ namespace SmartAbp.CodeGenerator.Services
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string AggregateType { get; set; } = string.Empty;
-        public List<PropertyDefinitionDto> Properties { get; set; } = new();
+        public List<CodeGenPropertyDefinitionDto> Properties { get; set; } = new();
     }
 
     public class SpecificationDefinitionDto
@@ -783,7 +808,7 @@ namespace SmartAbp.CodeGenerator.Services
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public List<DomainMethodDefinitionDto> Methods { get; set; } = new();
+        public List<CodeGenDomainMethodDefinitionDto> Methods { get; set; } = new();
         public List<string> Dependencies { get; set; } = new();
         public bool IsStateless { get; set; } = true;
     }
@@ -832,7 +857,7 @@ namespace SmartAbp.CodeGenerator.Services
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string ReturnType { get; set; } = "void";
-        public List<PropertyDefinitionDto> Properties { get; set; } = new();
+        public List<CodeGenPropertyDefinitionDto> Properties { get; set; } = new();
         public bool RequiresTransaction { get; set; } = true;
         public bool RequiresAuthorization { get; set; } = true;
     }
@@ -842,7 +867,7 @@ namespace SmartAbp.CodeGenerator.Services
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string ReturnType { get; set; } = string.Empty;
-        public List<ParameterDefinitionDto> Parameters { get; set; } = new();
+        public List<CodeGenParameterDefinitionDto> Parameters { get; set; } = new();
         public bool IsPaged { get; set; } = false;
         public bool IsCacheable { get; set; } = true;
     }
@@ -851,7 +876,7 @@ namespace SmartAbp.CodeGenerator.Services
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public List<PropertyDefinitionDto> Properties { get; set; } = new();
+        public List<CodeGenPropertyDefinitionDto> Properties { get; set; } = new();
         public bool IsIntegrationEvent { get; set; } = false;
     }
 
@@ -917,7 +942,7 @@ namespace SmartAbp.CodeGenerator.Services
     {
         public string Name { get; set; } = string.Empty;
         public string ReturnType { get; set; } = string.Empty;
-        public List<ParameterDefinitionDto> Parameters { get; set; } = new();
+        public List<CodeGenParameterDefinitionDto> Parameters { get; set; } = new();
     }
 
     public class GeneratedInfrastructureLayerDto
@@ -1003,7 +1028,7 @@ namespace SmartAbp.CodeGenerator.Services
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string Type { get; set; } = "Command";
-        public List<PropertyDefinitionDto> Properties { get; set; } = new();
+        public List<CodeGenPropertyDefinitionDto> Properties { get; set; } = new();
     }
 
     public class GeneratedMessagingSolutionDto
@@ -1028,7 +1053,7 @@ namespace SmartAbp.CodeGenerator.Services
     {
         public string Name { get; set; } = string.Empty;
         public string Module { get; set; } = string.Empty;
-        public List<PropertyDefinitionDto> Properties { get; set; } = new();
+        public List<CodeGenPropertyDefinitionDto> Properties { get; set; } = new();
         public List<BusinessMethodDefinitionDto> BusinessMethods { get; set; } = new();
     }
 
@@ -1044,7 +1069,7 @@ namespace SmartAbp.CodeGenerator.Services
     {
         public string Name { get; set; } = string.Empty;
         public string ReturnType { get; set; } = "void";
-        public List<ParameterDefinitionDto> Parameters { get; set; } = new();
+        public List<CodeGenParameterDefinitionDto> Parameters { get; set; } = new();
     }
 
     public class GeneratedTestSuiteDto

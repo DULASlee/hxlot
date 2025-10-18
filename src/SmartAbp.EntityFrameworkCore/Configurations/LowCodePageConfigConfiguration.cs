@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartAbp.Domain.Entities.LowCode;
+using SmartAbp.Domain.Shared.LowCode; // PageConfigDto定义
 using System.Text.Json;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 

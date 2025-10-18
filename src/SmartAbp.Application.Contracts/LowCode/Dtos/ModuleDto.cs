@@ -80,18 +80,18 @@ namespace SmartAbp.Application.Contracts.LowCode.Dtos
         public ModuleCodeGenOptions? CodeGenOptions { get; set; }
 
         /// <summary>
-        /// 权限配置（直接引用Domain类型）
+        /// 权限配置
         /// 对应前端: PermissionConfig (UnifiedPermissionConfig)
         /// Phase 3新增: 与前端UnifiedModuleMetadata完全对齐
         /// </summary>
-        public ModulePermissionConfig? PermissionConfig { get; set; }
+        public ModulePermissionConfigDto? PermissionConfig { get; set; }
 
         /// <summary>
-        /// 特性管理配置（直接引用Domain类型）
+        /// 特性管理配置
         /// 对应前端: FeatureManagement (UnifiedFeatureManagement)
         /// Phase 3新增: 与前端UnifiedModuleMetadata完全对齐
         /// </summary>
-        public ModuleFeatureManagement? FeatureManagement { get; set; }
+        public ModuleFeatureManagementDto? FeatureManagement { get; set; }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // 状态管理
@@ -198,6 +198,65 @@ namespace SmartAbp.Application.Contracts.LowCode.Dtos
         /// 是否只显示激活的模块
         /// </summary>
         public bool? IsActive { get; set; }
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 📦 Phase 3B：配置DTO类型（对应Domain配置类）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 模块权限配置DTO
+    /// 对应Domain: ModulePermissionConfig
+    /// </summary>
+    public class ModulePermissionConfigDto
+    {
+        /// <summary>
+        /// 权限组列表
+        /// </summary>
+        public List<PermissionGroupConfigDto> Groups { get; set; } = new();
+
+        /// <summary>
+        /// 自定义操作列表
+        /// </summary>
+        public List<string> CustomActions { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 权限组配置DTO
+    /// </summary>
+    public class PermissionGroupConfigDto
+    {
+        /// <summary>
+        /// 权限组名称
+        /// </summary>
+        public string Name { get; set; } = default!;
+
+        /// <summary>
+        /// 显示名称
+        /// </summary>
+        public string DisplayName { get; set; } = default!;
+
+        /// <summary>
+        /// 权限列表
+        /// </summary>
+        public List<string> Permissions { get; set; } = new();
+    }
+
+    /// <summary>
+    /// 模块特性管理配置DTO
+    /// 对应Domain: ModuleFeatureManagement
+    /// </summary>
+    public class ModuleFeatureManagementDto
+    {
+        /// <summary>
+        /// 是否启用特性管理
+        /// </summary>
+        public bool IsEnabled { get; set; } = false;
+
+        /// <summary>
+        /// 默认策略
+        /// </summary>
+        public string DefaultPolicy { get; set; } = string.Empty;
     }
 }
 

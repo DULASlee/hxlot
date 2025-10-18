@@ -10,7 +10,10 @@
     "**/*.test.ts",
     "**/*.spec.ts",
     "**/*.test.tsx",
-    "**/*.spec.tsx"
+    "**/*.spec.tsx",
+    "packages/lowcode-shared/src/types/unified-schema.ts",
+    "packages/lowcode-shared/src/utils/schema-converter.ts",
+    "packages/lowcode-shared/src/validation/__tests__/unified-validator.spec.ts"
   ],
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",

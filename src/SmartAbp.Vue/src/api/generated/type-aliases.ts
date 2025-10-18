@@ -9,10 +9,10 @@
 // 临时方案：等SmartAbp.Web编译成功后，重新生成swagger并删除此部分
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-import type { SmartAbp_Domain_Entities_LowCode_ModuleFrontendConfig } from './models/SmartAbp_Domain_Entities_LowCode_ModuleFrontendConfig'
-import type { SmartAbp_Domain_Entities_LowCode_ModuleCodeGenOptions } from './models/SmartAbp_Domain_Entities_LowCode_ModuleCodeGenOptions'
-import type { SmartAbp_Domain_Entities_LowCode_ModuleArchitectureConfig } from './models/SmartAbp_Domain_Entities_LowCode_ModuleArchitectureConfig'
 import type { SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto } from './models/SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto'
+import type { SmartAbp_Domain_Entities_LowCode_ModuleArchitectureConfig } from './models/SmartAbp_Domain_Entities_LowCode_ModuleArchitectureConfig'
+import type { SmartAbp_Domain_Entities_LowCode_ModuleCodeGenOptions } from './models/SmartAbp_Domain_Entities_LowCode_ModuleCodeGenOptions'
+import type { SmartAbp_Domain_Entities_LowCode_ModuleFrontendConfig } from './models/SmartAbp_Domain_Entities_LowCode_ModuleFrontendConfig'
 
 /**
  * 菜单配置项（支持递归树结构）
@@ -73,8 +73,8 @@ export interface ModuleArchitectureConfigExtended extends SmartAbp_Domain_Entiti
  * 扩展了原生类型，添加了Dependencies字段和扩展配置
  */
 export interface ModuleDtoExtended extends Omit<SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto, 'frontendConfig' | 'codeGenOptions' | 'architectureConfig'> {
-  /** 模块依赖（前端依赖的其他模块）- Phase 3新增 */
-  dependencies?: string | null
+  /** 模块依赖（前端依赖的其他模块）- Phase 3新增 🔥 修复：string → string[] */
+  dependencies?: string[] | null
   /** 前端配置（扩展版本） */
   frontendConfig?: ModuleFrontendConfigExtended | null
   /** 代码生成选项（扩展版本） */
@@ -88,8 +88,7 @@ export interface ModuleDtoExtended extends Omit<SmartAbp_Application_Contracts_L
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 export type {
-    SmartAbpApplicationContractsLowCodeDtosModuleDto as ModuleDto,
-    SmartAbpApplicationContractsLowCodeDtosCreateOrUpdateModuleDto as CreateOrUpdateModuleDto
+  SmartAbpApplicationContractsLowCodeDtosCreateOrUpdateModuleDto as CreateOrUpdateModuleDto, SmartAbpApplicationContractsLowCodeDtosModuleDto as ModuleDto
 } from './api-client'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -97,10 +96,9 @@ export type {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 export type {
-    SmartAbpApplicationContractsLowCodeDtosEntityDefinitionDto as EntityDefinitionDto,
-    SmartAbpApplicationContractsLowCodeDtosEntityFieldDto as EntityFieldDto,
-    SmartAbpApplicationContractsLowCodeDtosCreateOrUpdateEntityDefinitionDto as CreateOrUpdateEntityDefinitionDto,
-    SmartAbpApplicationContractsLowCodeDtosCreateOrUpdateEntityFieldDto as CreateOrUpdateEntityFieldDto
+  SmartAbpApplicationContractsLowCodeDtosCreateOrUpdateEntityDefinitionDto as CreateOrUpdateEntityDefinitionDto,
+  SmartAbpApplicationContractsLowCodeDtosCreateOrUpdateEntityFieldDto as CreateOrUpdateEntityFieldDto, SmartAbpApplicationContractsLowCodeDtosEntityDefinitionDto as EntityDefinitionDto,
+  SmartAbpApplicationContractsLowCodeDtosEntityFieldDto as EntityFieldDto
 } from './api-client'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -108,7 +106,7 @@ export type {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 export type {
-    SmartAbpApplicationContractsLowCodeDtosNavigationPropertyDto as NavigationPropertyDto
+  SmartAbpApplicationContractsLowCodeDtosNavigationPropertyDto as NavigationPropertyDto
 } from './api-client'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -116,9 +114,7 @@ export type {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 export type {
-    SmartAbpDomainEntitiesLowCodeModuleArchitectureConfig as ModuleArchitectureConfig,
-    SmartAbpDomainEntitiesLowCodeModuleFrontendConfig as ModuleFrontendConfig,
-    SmartAbpDomainEntitiesLowCodeModuleCodeGenOptions as ModuleCodeGenOptions
+  SmartAbpDomainEntitiesLowCodeModuleArchitectureConfig as ModuleArchitectureConfig, SmartAbpDomainEntitiesLowCodeModuleCodeGenOptions as ModuleCodeGenOptions, SmartAbpDomainEntitiesLowCodeModuleFrontendConfig as ModuleFrontendConfig
 } from './api-client'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -129,28 +125,28 @@ export type {
  * 导航关系类型枚举
  */
 export enum NavigationRelationType {
-    /** 一对一（如：User ←→ UserProfile） */
-    OneToOne = 0,
-    /** 一对多（如：Customer → Orders） */
-    OneToMany = 1,
-    /** 多对一（如：Order → Customer） */
-    ManyToOne = 2,
-    /** 多对多（如：Product ←→ Category） */
-    ManyToMany = 3
+  /** 一对一（如：User ←→ UserProfile） */
+  OneToOne = 0,
+  /** 一对多（如：Customer → Orders） */
+  OneToMany = 1,
+  /** 多对一（如：Order → Customer） */
+  ManyToOne = 2,
+  /** 多对多（如：Product ←→ Category） */
+  ManyToMany = 3
 }
 
 /**
  * 级联删除行为枚举
  */
 export enum CascadeDeleteBehavior {
-    /** 无操作 */
-    None = 0,
-    /** 级联删除（删除主实体时自动删除关联实体） */
-    Cascade = 1,
-    /** 设置为NULL（删除主实体时将外键设为NULL） */
-    SetNull = 2,
-    /** 限制删除（存在关联时禁止删除主实体） */
-    Restrict = 3
+  /** 无操作 */
+  None = 0,
+  /** 级联删除（删除主实体时自动删除关联实体） */
+  Cascade = 1,
+  /** 设置为NULL（删除主实体时将外键设为NULL） */
+  SetNull = 2,
+  /** 限制删除（存在关联时禁止删除主实体） */
+  Restrict = 3
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -166,4 +162,30 @@ export type UnifiedModuleMetadata = import('./api-client').SmartAbpApplicationCo
  * @deprecated 使用 EntityDefinitionDto 替代（Phase 2B）
  */
 export type UnifiedEntityDefinition = import('./api-client').SmartAbpApplicationContractsLowCodeDtosEntityDefinitionDto
+
+/**
+ * @deprecated 使用 EntityFieldDto 替代（Phase 2B）
+ */
+export type UnifiedEntityField = import('./api-client').SmartAbpApplicationContractsLowCodeDtosEntityFieldDto
+
+/**
+ * @deprecated 使用 NavigationPropertyDto 替代（Phase 2B）
+ */
+export type UnifiedEntityRelationship = import('./api-client').SmartAbpApplicationContractsLowCodeDtosNavigationPropertyDto
+
+/**
+ * @deprecated 使用字符串类型替代（Phase 2B）
+ */
+export type UnifiedFieldType = string
+
+/**
+ * @deprecated 使用ValidationRule（来自lowcode-shared/types/metadata）替代（Phase 2B）
+ */
+export type UnifiedValidationRule = import('@smartabp/lowcode-shared').ValidationRule
+
+/**
+ * @deprecated 已废弃（Phase 3B后端SSOT迁移）
+ * 无对应替代类型，ValidationRule不再需要ruleType枚举
+ */
+// export type UnifiedValidationRuleType = import('@smartabp/lowcode-shared').ValidationRuleType
 

@@ -78,16 +78,24 @@ export interface PropertyMetadata {
     isRequired?: boolean
     isReadOnly?: boolean
     maxLength?: number
+    minLength?: number // 🔥 Phase 3B: 对齐后端SSOT
+    minValue?: number // 🔥 Phase 3B: 对齐后端SSOT
+    maxValue?: number // 🔥 Phase 3B: 对齐后端SSOT
     defaultValue?: string
     description?: string
     displayName?: string
+    validationRules?: ValidationRule[] // 🔥 Phase 3B: 添加验证规则支持
 }
 
 export interface NavigationPropertyMetadata {
     name: string
     targetEntity: string
+    targetEntityName?: string | null // 🔥 Phase 3B: 对齐后端SSOT（NavigationPropertyDto）
     relationType: 'OneToOne' | 'OneToMany' | 'ManyToOne' | 'ManyToMany'
     foreignKey?: string
+    foreignKeyName?: string | null // 🔥 Phase 3B: 对齐后端SSOT（NavigationPropertyDto）
+    inverseName?: string // 🔥 旧字段（已废弃）
+    inversePropertyName?: string | null // 🔥 Phase 3B: 对齐后端SSOT（NavigationPropertyDto）
 }
 
 export interface ValidationRule {

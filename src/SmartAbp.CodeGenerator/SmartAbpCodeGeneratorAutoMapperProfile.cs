@@ -5,6 +5,7 @@ using SmartAbp.CodeGenerator.CQRS;
 using SmartAbp.CodeGenerator.DDD;
 using SmartAbp.CodeGenerator.Core;
 using SmartAbp.CodeGenerator.Services;
+using SmartAbp.Application.Contracts.LowCode.Dtos; // SSOT DTO definitions
 
 namespace SmartAbp.CodeGenerator
 {
@@ -24,17 +25,19 @@ namespace SmartAbp.CodeGenerator
 
         private void CreateEntityMappings()
         {
+            // Map from SSOT EntityDefinitionDto (Application.Contracts) to internal Core.EntityDefinition
             CreateMap<EntityDefinitionDto, Core.EntityDefinition>()
-                .ForMember(dest => dest.Properties, opt => opt.MapFrom(src => src.Properties))
-                .ForMember(dest => dest.NavigationProperties, opt => opt.MapFrom(src => src.NavigationProperties))
-                .ForMember(dest => dest.Collections, opt => opt.MapFrom(src => src.Collections))
-                .ForMember(dest => dest.DomainMethods, opt => opt.MapFrom(src => src.DomainMethods));
+                .ForMember(dest => dest.Properties, opt => opt.Ignore()) // Manual mapping needed
+                .ForMember(dest => dest.NavigationProperties, opt => opt.Ignore()) // Manual mapping needed
+                .ForMember(dest => dest.Collections, opt => opt.Ignore()) // Manual mapping needed
+                .ForMember(dest => dest.DomainMethods, opt => opt.Ignore()); // Manual mapping needed
 
-            CreateMap<PropertyDefinitionDto, Core.PropertyDefinition>().ReverseMap();
-            CreateMap<NavigationPropertyDefinitionDto, Core.NavigationPropertyDefinition>().ReverseMap();
-            CreateMap<CollectionDefinitionDto, Core.CollectionDefinition>().ReverseMap();
-            CreateMap<DomainMethodDefinitionDto, Core.DomainMethodDefinition>().ReverseMap();
-            CreateMap<ParameterDefinitionDto, Core.ParameterDefinition>().ReverseMap();
+            // Legacy CodeGen internal DTOs (for backward compatibility)
+            CreateMap<Services.CodeGenPropertyDefinitionDto, Core.PropertyDefinition>().ReverseMap();
+            CreateMap<Services.CodeGenNavigationPropertyDefinitionDto, Core.NavigationPropertyDefinition>().ReverseMap();
+            CreateMap<Services.CodeGenCollectionDefinitionDto, Core.CollectionDefinition>().ReverseMap();
+            CreateMap<Services.CodeGenDomainMethodDefinitionDto, Core.DomainMethodDefinition>().ReverseMap();
+            CreateMap<Services.CodeGenParameterDefinitionDto, Core.ParameterDefinition>().ReverseMap();
         }
 
         private void CreateDddMappings()

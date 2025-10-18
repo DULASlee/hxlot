@@ -28,16 +28,50 @@ export {
 } from './metadata.js'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// ⚠️ 已废弃：统一Schema类型 (Phase 1D: 请使用api-client.ts)
+// 🟡 已废弃：统一Schema类型（Phase 1D → Phase 3B完成后端SSOT迁移）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// API DTO类型请使用: import { EntityDefinitionDto } from '@/api/generated/api-client'
+//
+// 废弃日期: 2025-10-18
+// 废弃原因: 已完成后端SSOT（Single Source of Truth）迁移
+// 替代方案: 直接使用 @/api/generated/api-client.ts 中的NSwag生成类型
+//
+// 📋 迁移映射表（完整）:
+//   UnifiedModuleMetadata      → ModuleDto
+//   UnifiedEntityDefinition    → EntityDefinitionDto
+//   UnifiedEntityField         → EntityFieldDto
+//   UnifiedEntityRelationship  → EntityRelationDto
+//   UnifiedValidationRule      → ValidationRuleDto
+//   UnifiedValidationRuleType  → ValidationType (enum)
+//   UnifiedFieldType           → FieldType (enum)
+//   UnifiedDatabaseConfig      → DatabaseConfig
+//   UnifiedFrontendConfig      → FrontendConfig
+//   UnifiedFeatureManagement   → FeatureManagement
+//   UnifiedMenuConfig          → MenuConfig
+//   UnifiedPermissionConfig    → PermissionConfig
+//
+// ✅ 正确用法:
+//   import { ModuleDto, EntityDefinitionDto } from '@/api/generated/api-client'
+//   const module: ModuleDto = await moduleApi.getModule(id)
+//
+// ❌ 错误用法（已废弃）:
+//   import { UnifiedModuleMetadata } from '@smartabp/lowcode-shared'
+//   import { SchemaConverter } from '@smartabp/lowcode-shared'
+//
+// 📖 参考文档:
+//   - docs/架构设计/低代码引擎v2.0进阶版/Phase1-快速止血方案v1.1-后端SSOT修正版.md
+//   - docs/架构设计/低代码引擎v2.0进阶版/Phase3-后端SSOT完整性补强报告.md
+//
+// ⚠️ 重要: unified-schema.ts 和 schema-converter.ts 已原地注释存档，
+//          请勿删除文件（保留历史），但禁止使用！
+//
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 // export type {
 //   UnifiedEntityDefinition,    // 替换为: EntityDefinitionDto
 //   UnifiedEntityField,          // 替换为: EntityFieldDto
 //   UnifiedEntityRelationship,   // 替换为: EntityRelationDto
 //   UnifiedValidationRuleType,   // 替换为: ValidationType(enum)
-// } from './unified-schema.js' ← 已废弃
+// } from './unified-schema.js' ← 已废弃，文件已存档
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🏗️ 组件基础类型
