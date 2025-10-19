@@ -11,6 +11,39 @@
 
 ---
 
+
+---
+
+## 📖 无缝集成方案说明（⭐ v1.1新增）
+
+本文档为ERP/OA对接微服务的详细技术设计文档。关于客户端SDK的无缝集成方案（6大核心组件 + 3种集成方式），请参阅：
+
+**👉 [06-ErpOaIntegration微服务无缝集成方案.md](./06-ErpOaIntegration微服务无缝集成方案.md)**
+
+**核心亮点**：
+- ✅ **零侵入式集成**：一行代码完成ERP/OA系统对接
+- ✅ **官方SDK封装**：金蝶云星空 + 用友官方SDK
+- ✅ **Saga分布式事务**：保证数据一致性
+- ✅ **幂等性保证**：防止重复提交
+- ✅ **数据同步**：定时同步订单、审批流程
+- ✅ **财务对接**：自动同步财务数据和审批流程
+
+**客户端SDK组件（SmartAbp.ErpOa.Client）**：
+1. **KingdeeSdk**：金蝶云星空SDK（官方SDK封装）
+2. **YongyouSdk**：用友SDK（官方SDK封装）
+3. **SagaOrchestrator**：Saga事务编排器（分布式事务）
+4. **IdempotencyHandler**：幂等性处理器（防重复提交）
+5. **DataSyncScheduler**：数据同步调度器（定时同步）
+6. **ErpOaClient**：HTTP客户端（RESTful API封装）
+
+**3种集成方式**：
+- **方式1（推荐）**：`builder.Services.AddErpOaIntegrationClient(serviceUrl, serviceName)` - 零侵入式
+- **方式2（企业级）**：`options` 精细化配置
+- **方式3（手动）**：直接使用 `ErpOaIntegrationClient` API
+
+详细的集成代码示例、API文档、架构图，请参阅无缝集成方案文档。
+
+---
 ## 🎯 1. 系统概述
 
 ### 1.1 业务定位

@@ -11,6 +11,39 @@
 
 ---
 
+
+---
+
+## 📖 无缝集成方案说明（⭐ v1.1新增）
+
+本文档为实时通信微服务的详细技术设计文档。关于客户端SDK的无缝集成方案（6大核心组件 + 3种集成方式），请参阅：
+
+**👉 [04-RealtimeCommunication微服务无缝集成方案.md](./04-RealtimeCommunication微服务无缝集成方案.md)**
+
+**核心亮点**：
+- ✅ **零侵入式集成**：一行代码完成实时通信系统集成
+- ✅ **SignalR + WebSocket**：自动建立实时连接
+- ✅ **高性能消息推送**：>10,000 msg/sec
+- ✅ **消息可靠性保证**：离线消息缓存和自动重发
+- ✅ **连接池管理**：多路复用，支持高并发
+- ✅ **在线状态追踪**：实时用户在线状态
+
+**客户端SDK组件（SmartAbp.RealtimeComm.Client）**：
+1. **SignalRHubManager**：SignalR Hub管理器（自动连接管理）
+2. **MessageBatchSender**：消息批量发送器（性能优化）
+3. **ConnectionPool**：连接池管理（高并发支持）
+4. **MessageReliability**：消息可靠性保证（离线缓存）
+5. **PresenceTracker**：在线状态追踪器（实时状态）
+6. **RealtimeCommClient**：HTTP客户端（RESTful API封装）
+
+**3种集成方式**：
+- **方式1（推荐）**：`builder.Services.AddRealtimeCommunicationClient(serviceUrl, serviceName)` - 零侵入式
+- **方式2（企业级）**：`options` 精细化配置
+- **方式3（手动）**：直接使用 `RealtimeCommunicationClient` API
+
+详细的集成代码示例、API文档、架构图，请参阅无缝集成方案文档。
+
+---
 ## 🎯 1. 系统概述
 
 ### 1.1 业务定位

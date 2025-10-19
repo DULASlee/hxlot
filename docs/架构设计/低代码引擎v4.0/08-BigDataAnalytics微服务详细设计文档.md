@@ -11,6 +11,39 @@
 
 ---
 
+
+---
+
+## 📖 无缝集成方案说明（⭐ v1.1新增）
+
+本文档为大数据分析微服务的详细技术设计文档。关于客户端SDK的无缝集成方案（6大核心组件 + 3种集成方式），请参阅：
+
+**👉 [08-BigDataAnalytics微服务无缝集成方案.md](./08-BigDataAnalytics微服务无缝集成方案.md)**
+
+**核心亮点**：
+- ✅ **零侵入式集成**：一行代码完成大数据分析系统集成
+- ✅ **自动数据采集**：业务数据、用户行为、性能指标自动采集
+- ✅ **批量处理**：>10,000 事件/秒批量上报
+- ✅ **数据清洗**：多阶段数据清洗和脱敏
+- ✅ **Hadoop + Spark**：大数据存储和计算
+- ✅ **Hive SQL查询**：支持SQL方式查询大数据
+
+**客户端SDK组件（SmartAbp.BigDataAnalytics.Client）**：
+1. **AnalyticsDataCollector**：分析数据采集器（业务数据/用户行为/性能指标）
+2. **AnalyticsBatchProcessor**：分析批量处理器（批量上报）
+3. **UserBehaviorInterceptor**：用户行为拦截器（自动追踪）
+4. **DataCleaningPipeline**：数据清洗管道（多阶段清洗）
+5. **BigDataAnalyticsMiddleware**：大数据分析中间件（HTTP拦截）
+6. **BigDataAnalyticsClient**：HTTP客户端（RESTful API封装）
+
+**3种集成方式**：
+- **方式1（推荐）**：`builder.Services.AddBigDataAnalyticsClient(serviceUrl, serviceName)` - 零侵入式
+- **方式2（企业级）**：`options` 精细化配置
+- **方式3（手动）**：直接使用 `BigDataAnalyticsClient` API
+
+详细的集成代码示例、API文档、架构图，请参阅无缝集成方案文档。
+
+---
 ## 🎯 1. 系统概述
 
 ### 1.1 业务定位

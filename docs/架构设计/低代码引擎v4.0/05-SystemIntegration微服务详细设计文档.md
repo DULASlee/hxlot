@@ -11,6 +11,39 @@
 
 ---
 
+
+---
+
+## 📖 无缝集成方案说明（⭐ v1.1新增）
+
+本文档为第三方系统集成微服务的详细技术设计文档。关于客户端SDK的无缝集成方案（6大核心组件 + 3种集成方式），请参阅：
+
+**👉 [05-ThirdPartyIntegration微服务无缝集成方案.md](./05-ThirdPartyIntegration微服务无缝集成方案.md)**
+
+**核心亮点**：
+- ✅ **零侵入式集成**：一行代码完成第三方系统集成
+- ✅ **适配器模式**：自动适配多种协议（REST/SOAP/RPC）
+- ✅ **数据转换器**：自动数据格式转换（JSON/XML/Protobuf）
+- ✅ **统一API网关**：YARP反向代理，统一访问入口
+- ✅ **消息队列**：异步解耦，提升可靠性
+- ✅ **自动重试**：指数退避，失败自动重试
+
+**客户端SDK组件（SmartAbp.ThirdParty.Client）**：
+1. **AdapterManager**：适配器管理器（多协议适配）
+2. **DataTransformer**：数据转换器（格式转换）
+3. **ApiGatewayClient**：API网关客户端（统一入口）
+4. **MessageQueueHandler**：消息队列处理器（异步通信）
+5. **RetryPolicy**：重试策略（可靠性保证）
+6. **ThirdPartyClient**：HTTP客户端（RESTful API封装）
+
+**3种集成方式**：
+- **方式1（推荐）**：`builder.Services.AddThirdPartyIntegrationClient(serviceUrl, serviceName)` - 零侵入式
+- **方式2（企业级）**：`options` 精细化配置
+- **方式3（手动）**：直接使用 `ThirdPartyIntegrationClient` API
+
+详细的集成代码示例、API文档、架构图，请参阅无缝集成方案文档。
+
+---
 ## 🎯 1. 系统概述
 
 ### 1.1 业务定位

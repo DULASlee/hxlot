@@ -11,6 +11,39 @@
 
 ---
 
+
+---
+
+## 📖 无缝集成方案说明（⭐ v1.1新增）
+
+本文档为实时数据总线微服务的详细技术设计文档。关于客户端SDK的无缝集成方案（6大核心组件 + 3种集成方式），请参阅：
+
+**👉 [09-RealtimeDataBus微服务无缝集成方案.md](./09-RealtimeDataBus微服务无缝集成方案.md)**
+
+**核心亮点**：
+- ✅ **零侵入式集成**：一行代码完成实时数据总线集成
+- ✅ **多协议支持**：Redis Stream + Kafka + RabbitMQ
+- ✅ **高性能消息**：>50,000 msg/sec吞吐量
+- ✅ **智能路由**：基于规则的消息路由
+- ✅ **数据转换**：自动格式转换（JSON/Protobuf/Avro）
+- ✅ **QoS保证**：消息可靠性和顺序性保证
+
+**客户端SDK组件（SmartAbp.DataBus.Client）**：
+1. **DataBusPublisher**：数据总线发布器（多协议发布）
+2. **DataBusSubscriber**：数据总线订阅器（多协议订阅）
+3. **MessageRouter**：消息路由器（智能路由）
+4. **DataFormatConverter**：数据格式转换器（格式转换）
+5. **QosManager**：QoS管理器（服务质量保证）
+6. **DataBusClient**：HTTP客户端（RESTful API封装）
+
+**3种集成方式**：
+- **方式1（推荐）**：`builder.Services.AddRealtimeDataBusClient(serviceUrl, serviceName)` - 零侵入式
+- **方式2（企业级）**：`options` 精细化配置
+- **方式3（手动）**：直接使用 `RealtimeDataBusClient` API
+
+详细的集成代码示例、API文档、架构图，请参阅无缝集成方案文档。
+
+---
 ## 🎯 1. 系统概述
 
 ### 1.1 业务定位

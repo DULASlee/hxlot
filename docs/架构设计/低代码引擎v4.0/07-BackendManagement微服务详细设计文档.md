@@ -11,6 +11,39 @@
 
 ---
 
+
+---
+
+## 📖 无缝集成方案说明（⭐ v1.1新增）
+
+本文档为后台管理微服务的详细技术设计文档。关于客户端SDK的无缝集成方案（6大核心组件 + 3种集成方式），请参阅：
+
+**👉 [07-BackendManagement微服务无缝集成方案.md](./07-BackendManagement微服务无缝集成方案.md)**
+
+**核心亮点**：
+- ✅ **零侵入式集成**：一行代码完成后台管理系统集成
+- ✅ **CRUD自动生成**：基于实体自动生成CRUD服务
+- ✅ **审计日志**：自动记录所有操作日志
+- ✅ **RBAC权限**：细粒度权限控制（到按钮级别）
+- ✅ **后台任务**：定时任务调度和执行
+- ✅ **状态管理**：Dapr状态管理，跨服务共享状态
+
+**客户端SDK组件（SmartAbp.BackendManagement.Client）**：
+1. **CrudServiceGenerator**：CRUD服务生成器（代码生成）
+2. **AuditLogCollector**：审计日志采集器（自动记录）
+3. **RbacValidator**：RBAC权限验证器（细粒度权限）
+4. **StateManagement**：状态管理（Dapr状态管理）
+5. **BackgroundJobScheduler**：后台任务调度器（定时任务）
+6. **BackendClient**：HTTP客户端（RESTful API封装）
+
+**3种集成方式**：
+- **方式1（推荐）**：`builder.Services.AddBackendManagementClient(serviceUrl, serviceName)` - 零侵入式
+- **方式2（企业级）**：`options` 精细化配置
+- **方式3（手动）**：直接使用 `BackendManagementClient` API
+
+详细的集成代码示例、API文档、架构图，请参阅无缝集成方案文档。
+
+---
 ## 🎯 1. 系统概述
 
 ### 1.1 业务定位
