@@ -17,7 +17,7 @@
 //   前端直接使用NSwag生成的TypeScript类型，无需任何转换器：
 //
 //   ✅ 正确做法:
-//   import { ModuleDto, EntityDefinitionDto } from '@/api/generated/api-client'
+//   import { ModuleDto, EntityDefinitionDto } from 'src/api/generated/api-client'
 //   const module: ModuleDto = await moduleApi.getModule(id)
 //
 //   ❌ 错误做法（已废弃）:

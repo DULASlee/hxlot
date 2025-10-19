@@ -35,7 +35,7 @@
 //
 // ⚠️ 重要警告:
 //   如发现任何代码仍在引用此文件，请立即迁移到新的后端生成类型！
-//   import { ModuleDto } from '@/api/generated/api-client'
+//   import { ModuleDto } from 'src/api/generated/api-client'
 //
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
