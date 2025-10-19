@@ -4,11 +4,13 @@
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.0 |
+| 文档版本 | v1.1（新增客户端SDK架构）|
 | 创建日期 | 2025-10-19 |
+| 最新更新 | 2025-10-19（添加SmartAbp.Permission.Client架构）|
 | 负责人 | SmartABP架构团队 |
 | 状态 | 设计阶段 |
-| 架构模式 | ABP模块化 + Aspire + Dapr + Redis |
+| 架构模式 | ABP模块化 + Aspire + Dapr + Redis + 客户端SDK |
+| 核心升级 | 新增6大核心集成组件 + 3种无缝集成方式 |
 | 参考文档 | SmartAbp分布式权限总体设计说明书v1.0 |
 
 ---
@@ -34,6 +36,14 @@ PermissionManagement微服务是SmartABP低代码引擎平台的分布式权限�
   维护成本: 减少50%（统一技术栈维护）
   用户体验: 提升200%（可视化权限管理界面）
   系统稳定性: 提升150%（基于成熟ABP框架）
+  
+⭐ v1.1新增客户端SDK核心价值:
+  零侵入式集成: 一行代码完成权限系统集成
+  高性能验证: 双层缓存（Redis + 内存），响应时间<5ms
+  实时权限同步: SignalR推送，权限变更实时生效
+  100%可靠性: 离线降级，权限数据永不丢失
+  自动拦截器: AppService级别自动权限验证
+  细粒度控制: 支持到按钮级别的权限控制
 ```
 
 ### 1.3 系统定位
@@ -230,6 +240,90 @@ PermissionManagement微服务是SmartABP低代码引擎平台的分布式权限�
       - Configuration: 配置管理
 ```
 
+### 2.3 客户端SDK架构（⭐ v1.1新增）
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                SmartAbp.Permission.Client SDK                     │
+│                    （零侵入式集成权限系统）                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  ┌────────────────────────────────────────────────────────┐     │
+│  │  组件1: PermissionCacheManager（权限缓存管理器）       │     │
+│  │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━    │     │
+│  │  • 双层缓存：Redis（一级）+ 内存（二级）                │     │
+│  │  • 响应时间：<5ms（内存缓存）<20ms（Redis缓存）          │     │
+│  │  • 缓存命中率：≥95%                                      │     │
+│  │  • 自动过期：内存5分钟，Redis30分钟                      │     │
+│  └────────────────────────────────────────────────────────┘     │
+│                                                                   │
+│  ┌────────────────────────────────────────────────────────┐     │
+│  │  组件2: PermissionSyncProcessor（权限同步处理器）       │     │
+│  │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━    │     │
+│  │  • SignalR实时推送（权限变更<200ms通知）                │     │
+│  │  • 自动重连机制（指数退避）                              │     │
+│  │  • 批量更新优化（减少通知次数）                          │     │
+│  └────────────────────────────────────────────────────────┘     │
+│                                                                   │
+│  ┌────────────────────────────────────────────────────────┐     │
+│  │  组件3: PermissionLocalCache（本地权限缓存）            │     │
+│  │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━    │     │
+│  │  • 7天本地持久化（LiteDB）                                │     │
+│  │  • 离线降级策略（网络故障时使用本地缓存）                 │     │
+│  │  • 权限数据不丢失保证                                     │     │
+│  └────────────────────────────────────────────────────────┘     │
+│                                                                   │
+│  ┌────────────────────────────────────────────────────────┐     │
+│  │  组件4: PermissionInterceptor（权限拦截器）             │     │
+│  │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━    │     │
+│  │  • 自动拦截AppService方法调用                            │     │
+│  │  • 读取[Authorize]特性自动验证权限                       │     │
+│  │  • 统一权限日志记录                                       │     │
+│  └────────────────────────────────────────────────────────┘     │
+│                                                                   │
+│  ┌────────────────────────────────────────────────────────┐     │
+│  │  组件5: PermissionMiddleware（权限中间件）              │     │
+│  │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━    │     │
+│  │  • 自动拦截HTTP请求                                       │     │
+│  │  • API级别权限验证                                        │     │
+│  │  • 统一权限异常处理（401/403）                            │     │
+│  └────────────────────────────────────────────────────────┘     │
+│                                                                   │
+│  ┌────────────────────────────────────────────────────────┐     │
+│  │  组件6: PermissionManagementClient（HTTP客户端）        │     │
+│  │  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━    │     │
+│  │  • RESTful API封装                                        │     │
+│  │  • 自动重试 + 熔断                                        │     │
+│  │  • 批量权限查询优化                                       │     │
+│  └────────────────────────────────────────────────────────┘     │
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘
+       │
+       │ (HTTP + SignalR)
+       ↓
+┌─────────────────────────────────────────────────────────────────┐
+│          PermissionManagement微服务（服务端）                     │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**客户端SDK技术栈**：
+
+```yaml
+核心依赖:
+  - Microsoft.Extensions.DependencyInjection: 依赖注入
+  - Microsoft.Extensions.Caching.Memory: 内存缓存
+  - Microsoft.Extensions.Caching.StackExchangeRedis: Redis缓存
+  - Microsoft.AspNetCore.SignalR.Client: 实时通信
+  - Castle.Core: ABP拦截器
+  - LiteDB: 本地持久化
+  
+NuGet包信息:
+  包名: SmartAbp.Permission.Client
+  版本: 1.0.0
+  目标框架: .NET 8.0
+  依赖: Volo.Abp.Authorization ≥8.0.0
+```
+
 ---
 
 ## 💻 3. 技术栈
@@ -287,7 +381,235 @@ HTTP客户端:
 
 ---
 
-## 🔧 4. 核心功能
+## 🔌 4. 客户端SDK集成方式（⭐ v1.1新增）
+
+### 4.1 方式1：零侵入式集成（推荐）
+
+**一行代码完成权限系统集成**：
+
+```csharp
+// Program.cs（主应用启动文件）
+using SmartAbp.Permission.Client;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// ✅ 一行代码集成权限系统
+builder.Services.AddPermissionManagementClient(
+    serviceUrl: "http://permission-api:5200",
+    serviceName: "SmartAbp.LowCode"
+);
+
+var app = builder.Build();
+
+// ✅ 启用权限中间件
+app.UsePermissionManagement();
+
+app.Run();
+
+// 🎉 完成！所有AppService方法自动拦截权限验证
+// 🎉 所有HTTP请求自动权限验证
+// 🎉 权限变更实时同步（SignalR推送）
+// 🎉 双层缓存自动管理（Redis + 内存）
+```
+
+**自动启用的功能**：
+- ✅ AppService级别自动权限验证（读取`[Authorize]`特性）
+- ✅ HTTP请求级别自动权限验证
+- ✅ 权限缓存自动管理（双层缓存）
+- ✅ 权限实时同步（SignalR推送）
+- ✅ 离线降级（网络故障时使用本地缓存）
+- ✅ 统一权限日志记录
+
+### 4.2 方式2：ABP Module集成（企业级）
+
+**精细化配置权限系统**：
+
+```csharp
+// Program.cs
+builder.Services.AddPermissionManagementClient(options =>
+{
+    // 基础配置
+    options.ServiceUrl = "http://permission-api:5200";
+    options.ServiceName = "SmartAbp.LowCode";
+    
+    // 缓存配置
+    options.MemoryCacheExpirationMinutes = 5;  // 内存缓存5分钟
+    options.RedisCacheExpirationMinutes = 30;  // Redis缓存30分钟
+    options.EnableLocalCache = true;            // 启用本地持久化缓存
+    options.LocalCacheRetentionDays = 7;       // 本地缓存保留7天
+    
+    // 同步配置
+    options.EnableRealtimeSync = true;          // 启用实时同步
+    options.SignalRReconnectIntervals = new[]   // SignalR重连间隔
+    {
+        TimeSpan.FromSeconds(0),
+        TimeSpan.FromSeconds(2),
+        TimeSpan.FromSeconds(10),
+        TimeSpan.FromSeconds(30)
+    };
+    
+    // 性能配置
+    options.EnableBatchLoading = true;          // 启用批量加载
+    options.BatchSize = 100;                    // 批量大小
+    options.EnableCachePreWarming = true;       // 启用缓存预热
+    
+    // 降级策略
+    options.EnableOfflineFallback = true;       // 启用离线降级
+    options.FallbackCacheDuration = TimeSpan.FromDays(7);  // 降级缓存7天
+    
+    // 日志配置
+    options.EnablePermissionAuditLog = true;    // 启用权限审计日志
+    options.AuditLogLevel = LogLevel.Information;
+});
+
+app.UsePermissionManagement();
+```
+
+### 4.3 方式3：手动权限验证（通用）
+
+**适用于特殊业务逻辑场景**：
+
+```csharp
+// 在AppService中手动验证权限
+public class OrderAppService : ApplicationService
+{
+    private readonly IPermissionChecker _permissionChecker;
+    
+    public OrderAppService(IPermissionChecker permissionChecker)
+    {
+        _permissionChecker = permissionChecker;
+    }
+    
+    public async Task<Order> CreateOrderAsync(CreateOrderInput input)
+    {
+        // 手动验证权限
+        if (!await _permissionChecker.IsGrantedAsync("Orders.Create"))
+        {
+            throw new AbpAuthorizationException("没有创建订单的权限");
+        }
+        
+        // 复杂业务逻辑：根据订单金额判断是否需要审批权限
+        if (input.TotalAmount > 10000)
+        {
+            if (!await _permissionChecker.IsGrantedAsync("Orders.Approve"))
+            {
+                throw new AbpAuthorizationException("订单金额超过10000，需要审批权限");
+            }
+        }
+        
+        // 创建订单
+        var order = await CreateAsync(input);
+        return order;
+    }
+    
+    // 批量权限验证
+    public async Task<bool> CanAccessDashboardAsync()
+    {
+        var permissions = new[]
+        {
+            "Dashboard.View",
+            "Reports.View",
+            "Analytics.View"
+        };
+        
+        // 批量验证权限（一次网络请求，性能优化）
+        var results = await _permissionChecker.IsGrantedAsync(permissions);
+        
+        return results.All(r => r);
+    }
+}
+```
+
+### 4.4 前端Vue集成（⭐ 完整示例）
+
+```typescript
+// src/utils/permission.ts
+import type { Directive, DirectiveBinding } from 'vue'
+import { useUserStore } from '@/stores/user'
+
+/**
+ * v-permission 指令：按钮级别权限控制
+ * 用法：<el-button v-permission="['Orders.Create']">创建订单</el-button>
+ */
+export const permission: Directive = {
+  mounted(el: HTMLElement, binding: DirectiveBinding) {
+    const userStore = useUserStore()
+    const { value } = binding
+    
+    if (Array.isArray(value) && value.length > 0) {
+      const hasPermission = value.some(permission => 
+        userStore.permissions.includes(permission)
+      )
+      
+      if (!hasPermission) {
+        el.remove() // 无权限时移除按钮
+      }
+    } else {
+      throw new Error('权限指令需要数组参数，例如: v-permission="[\'Orders.Create\']"')
+    }
+  }
+}
+
+// 注册全局指令（main.ts）
+import { permission } from '@/utils/permission'
+app.directive('permission', permission)
+
+// 使用示例（订单管理页面）
+<template>
+  <div>
+    <!-- 按钮级别权限控制 -->
+    <el-button 
+      v-permission="['Orders.Create']" 
+      type="primary"
+      @click="handleCreate">
+      创建订单
+    </el-button>
+    
+    <el-button 
+      v-permission="['Orders.Export']" 
+      @click="handleExport">
+      导出
+    </el-button>
+    
+    <el-button 
+      v-permission="['Orders.Delete']" 
+      type="danger"
+      @click="handleDelete">
+      批量删除
+    </el-button>
+    
+    <!-- 区域级别权限控制 -->
+    <div v-permission="['Reports.View']">
+      <h3>数据报表</h3>
+      <el-table :data="reports">...</el-table>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
+
+// 编程式权限检查
+const canCreate = computed(() => 
+  userStore.hasPermission('Orders.Create')
+)
+
+const canApprove = computed(() => 
+  userStore.hasPermission('Orders.Approve')
+)
+
+// 多权限检查
+const canAccessDashboard = computed(() => 
+  userStore.hasAllPermissions(['Dashboard.View', 'Reports.View'])
+)
+</script>
+```
+
+---
+
+## 🔧 5. 核心功能
 
 ### 4.1 权限定义管理
 
@@ -1678,10 +2000,26 @@ public class PermissionManagementPermissionDefinitionProvider : PermissionDefini
   ✅ 多租户数据隔离有效
   ✅ 权限验证准确性 100%
   ✅ 审计日志完整无遗漏
+  
+⭐ 客户端SDK验收（v1.1新增）:
+  ✅ NuGet包发布成功（SmartAbp.Permission.Client v1.0.0）
+  ✅ 零侵入集成验证（一行代码完成集成，无需修改现有代码）
+  ✅ 双层缓存性能（内存缓存<5ms，Redis缓存<20ms）
+  ✅ 缓存命中率（≥95%）
+  ✅ 实时同步延迟（权限变更<200ms通知到客户端）
+  ✅ SignalR自动重连（断线后自动重连成功）
+  ✅ 离线降级功能（网络故障时使用本地缓存，权限数据不丢失）
+  ✅ 本地缓存持久化（7天本地缓存，重启应用不丢失）
+  ✅ 自动权限拦截器（AppService方法自动权限验证）
+  ✅ HTTP中间件拦截（API请求自动权限验证）
+  ✅ 前端Vue集成（v-permission指令正常工作）
+  ✅ 批量权限验证（一次网络请求验证多个权限）
+  ✅ 权限审计日志（所有权限操作自动记录）
+  ✅ 文档完整性（API文档、集成文档、示例代码100%完整）
 ```
 
 ---
 
-**文档状态**：✅ 已完成
-**下一步**：开始实现开发
+**文档状态**：✅ v1.1已完成（新增客户端SDK架构设计）
+**下一步**：开始实现开发计划（参考 02-PermissionManagement微服务详细开发计划.md）
 
