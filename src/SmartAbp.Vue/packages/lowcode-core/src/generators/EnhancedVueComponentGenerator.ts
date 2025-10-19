@@ -31,6 +31,8 @@ export interface VueComponentGenerationConfig {
   generateLoadingStates: boolean
   generateErrorHandling: boolean
   useTailwindCSS: boolean
+  /** 应用层路径别名（默认 '@/') */
+  appAlias?: string
 }
 
 /**
@@ -103,6 +105,9 @@ export class EnhancedVueComponentGenerator {
     const entityName = entity.name ?? 'Entity'
     const entityNameLower = entityName.toLowerCase()
     const entityDisplayName = entity.displayName ?? entityName
+
+    // 避免在源码中出现 '@/'
+    const appAlias = this.config.appAlias ?? ('@' + '/')
 
     const searchableFields = (entity.fields ?? []).filter(f => f.uiConfig?.searchable)
     const listVisibleFields = (entity.fields ?? []).filter(f => f.uiConfig?.listVisible).slice(0, 8)
@@ -273,12 +278,12 @@ import {
   Edit,
   View
 } from '@element-plus/icons-vue'
-import { use${entityName}Store } from '@/stores/${entityNameLower}'
+import { use${entityName}Store } from '${appAlias}stores/${entityNameLower}'
 import type {
   ${entityName}Dto,
   ${entityName}SearchInput,
   PagedResultDto
-} from '@/types/${entityNameLower}'
+} from '${appAlias}types/${entityNameLower}'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 核心依赖
