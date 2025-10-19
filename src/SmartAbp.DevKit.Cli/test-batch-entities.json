@@ -1,0 +1,91 @@
+[
+    {
+        "entitySchema": {
+            "id": "00000000-0000-0000-0000-000000000101",
+            "name": "Customer",
+            "displayName": "客户",
+            "properties": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000102",
+                    "name": "Id",
+                    "displayName": "ID",
+                    "type": "Guid",
+                    "isKey": true,
+                    "isRequired": true
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000103",
+                    "name": "Name",
+                    "displayName": "客户名称",
+                    "type": "string",
+                    "isRequired": true
+                }
+            ],
+            "relationships": []
+        }
+    },
+    {
+        "entitySchema": {
+            "id": "00000000-0000-0000-0000-000000000201",
+            "name": "Invoice",
+            "displayName": "发票",
+            "properties": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000202",
+                    "name": "Id",
+                    "displayName": "ID",
+                    "type": "Guid",
+                    "isKey": true,
+                    "isRequired": true
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000203",
+                    "name": "InvoiceNumber",
+                    "displayName": "发票号",
+                    "type": "string",
+                    "isRequired": true
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000204",
+                    "name": "Amount",
+                    "displayName": "金额",
+                    "type": "decimal",
+                    "isRequired": true
+                }
+            ],
+            "relationships": []
+        }
+    },
+    {
+        "entitySchema": {
+            "id": "00000000-0000-0000-0000-000000000301",
+            "name": "Payment",
+            "displayName": "支付",
+            "properties": [
+                {
+                    "id": "00000000-0000-0000-0000-000000000302",
+                    "name": "Id",
+                    "displayName": "ID",
+                    "type": "Guid",
+                    "isKey": true,
+                    "isRequired": true
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000303",
+                    "name": "PaymentDate",
+                    "displayName": "支付日期",
+                    "type": "DateTime",
+                    "isRequired": true
+                },
+                {
+                    "id": "00000000-0000-0000-0000-000000000304",
+                    "name": "Amount",
+                    "displayName": "金额",
+                    "type": "decimal",
+                    "isRequired": true
+                }
+            ],
+            "relationships": []
+        }
+    }
+]

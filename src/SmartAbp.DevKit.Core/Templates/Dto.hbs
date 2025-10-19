@@ -1,0 +1,90 @@
+using System;
+using Volo.Abp.Application.Dtos;
+
+namespace SmartAbp.Application.Contracts.LowCode.{{pluralize Name}}
+{
+    /// <summary>
+    /// {{DisplayName}} DTO
+    /// {{#if Description}}
+    /// {{Description}}
+    /// {{/if}}
+    /// </summary>
+    public class {{pascalCase Name}}Dto : EntityDto<Guid>
+    {
+        {{#each Properties}}
+        {{#unless IsKey}}
+        /// <summary>
+        /// {{DisplayName}}
+        /// {{#if Description}}
+        /// {{Description}}
+        /// {{/if}}
+        /// </summary>
+        {{#if IsRequired}}
+        public {{Type}} {{pascalCase Name}} { get; set; }
+        {{else}}
+        public {{Type}}? {{pascalCase Name}} { get; set; }
+        {{/if}}
+
+        {{/unless}}
+        {{/each}}
+    }
+
+    /// <summary>
+    /// 创建{{DisplayName}} DTO
+    /// </summary>
+    public class Create{{pascalCase Name}}Dto
+    {
+        {{#each Properties}}
+        {{#unless IsKey}}
+        /// <summary>
+        /// {{DisplayName}}
+        /// {{#if Description}}
+        /// {{Description}}
+        /// {{/if}}
+        /// </summary>
+        {{#if IsRequired}}
+        public {{Type}} {{pascalCase Name}} { get; set; }
+        {{else}}
+        public {{Type}}? {{pascalCase Name}} { get; set; }
+        {{/if}}
+
+        {{/unless}}
+        {{/each}}
+    }
+
+    /// <summary>
+    /// 更新{{DisplayName}} DTO
+    /// </summary>
+    public class Update{{pascalCase Name}}Dto
+    {
+        {{#each Properties}}
+        {{#unless IsKey}}
+        /// <summary>
+        /// {{DisplayName}}
+        /// {{#if Description}}
+        /// {{Description}}
+        /// {{/if}}
+        /// </summary>
+        {{#if IsRequired}}
+        public {{Type}} {{pascalCase Name}} { get; set; }
+        {{else}}
+        public {{Type}}? {{pascalCase Name}} { get; set; }
+        {{/if}}
+
+        {{/unless}}
+        {{/each}}
+    }
+
+    /// <summary>
+    /// {{DisplayName}}应用服务接口
+    /// </summary>
+    public interface I{{pascalCase Name}}AppService : ICrudAppService<
+        {{pascalCase Name}}Dto,
+        Guid,
+        PagedAndSortedResultRequestDto,
+        Create{{pascalCase Name}}Dto,
+        Update{{pascalCase Name}}Dto>
+    {
+    }
+}
+

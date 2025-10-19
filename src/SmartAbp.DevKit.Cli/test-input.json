@@ -1,0 +1,41 @@
+{
+    "entitySchema": {
+        "id": "00000000-0000-0000-0000-000000000001",
+        "name": "Product",
+        "displayName": "产品",
+        "properties": [
+            {
+                "id": "00000000-0000-0000-0000-000000000002",
+                "name": "Id",
+                "displayName": "ID",
+                "type": "Guid",
+                "isKey": true,
+                "isRequired": true
+            },
+            {
+                "id": "00000000-0000-0000-0000-000000000003",
+                "name": "Name",
+                "displayName": "产品名称",
+                "type": "string",
+                "isRequired": true
+            },
+            {
+                "id": "00000000-0000-0000-0000-000000000004",
+                "name": "Price",
+                "displayName": "价格",
+                "type": "decimal",
+                "isRequired": true
+            },
+            {
+                "id": "00000000-0000-0000-0000-000000000005",
+                "name": "Description",
+                "displayName": "描述",
+                "type": "string",
+                "isRequired": false
+            }
+        ],
+        "relationships": []
+    },
+    "targetFramework": "fullstack",
+    "templateEngine": "handlebars"
+}

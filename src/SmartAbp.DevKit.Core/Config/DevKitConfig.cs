@@ -42,6 +42,26 @@ public class DevKitConfig
     public OutputConfig Output { get; set; } = new();
 
     /// <summary>
+    /// AI流水线配置 ⭐ D爷建议：统一配置管理
+    /// </summary>
+    public AIFlowConfigSection AIFlow { get; set; } = new();
+
+    /// <summary>
+    /// 模板引擎配置 ⭐ D爷建议：统一配置管理
+    /// </summary>
+    public TemplateEngineConfigSection TemplateEngine { get; set; } = new();
+
+    /// <summary>
+    /// 质量门禁配置 ⭐ D爷建议：统一配置管理
+    /// </summary>
+    public QualityGateConfigSection QualityGate { get; set; } = new();
+
+    /// <summary>
+    /// 性能监控配置 ⭐ D爷建议：统一配置管理
+    /// </summary>
+    public PerformanceConfigSection Performance { get; set; } = new();
+
+    /// <summary>
     /// 从JSON文件加载配置
     /// </summary>
     public static DevKitConfig Load(string configPath = DefaultConfigPath)
@@ -231,5 +251,159 @@ public enum LogLevel
     Information,
     Warning,
     Error
+}
+
+/// <summary>
+/// AI流水线配置节 ⭐ D爷建议
+/// </summary>
+public class AIFlowConfigSection
+{
+    /// <summary>
+    /// 工位执行超时时间（秒）
+    /// </summary>
+    public int TimeoutSeconds { get; set; } = 30;
+
+    /// <summary>
+    /// 最大重试次数
+    /// </summary>
+    public int MaxRetries { get; set; } = 3;
+
+    /// <summary>
+    /// 断路器失败阈值
+    /// </summary>
+    public int CircuitBreakerFailureThreshold { get; set; } = 5;
+
+    /// <summary>
+    /// 断路器重置超时时间（秒）
+    /// </summary>
+    public int CircuitBreakerResetTimeoutSeconds { get; set; } = 30;
+
+    /// <summary>
+    /// 启用中间件管道
+    /// </summary>
+    public bool EnableMiddlewarePipeline { get; set; } = true;
+
+    /// <summary>
+    /// 启用日志中间件
+    /// </summary>
+    public bool EnableLoggingMiddleware { get; set; } = true;
+
+    /// <summary>
+    /// 启用性能监控中间件
+    /// </summary>
+    public bool EnablePerformanceMiddleware { get; set; } = true;
+
+    /// <summary>
+    /// 启用错误处理中间件
+    /// </summary>
+    public bool EnableErrorHandlingMiddleware { get; set; } = true;
+
+    /// <summary>
+    /// 启用验证中间件
+    /// </summary>
+    public bool EnableValidationMiddleware { get; set; } = true;
+
+    /// <summary>
+    /// 启用缓存中间件
+    /// </summary>
+    public bool EnableCachingMiddleware { get; set; } = false;
+}
+
+/// <summary>
+/// 模板引擎配置节 ⭐ D爷建议
+/// </summary>
+public class TemplateEngineConfigSection
+{
+    /// <summary>
+    /// 模板缓存大小（LRU）
+    /// </summary>
+    public int CacheSize { get; set; } = 1000;
+
+    /// <summary>
+    /// 模板缓存TTL（分钟）
+    /// </summary>
+    public int CacheTTLMinutes { get; set; } = 60;
+
+    /// <summary>
+    /// 启用模板预编译
+    /// </summary>
+    public bool EnablePrecompilation { get; set; } = true;
+
+    /// <summary>
+    /// 模板根目录
+    /// </summary>
+    public string TemplateRootDirectory { get; set; } = "./Templates";
+}
+
+/// <summary>
+/// 质量门禁配置节 ⭐ D爷建议
+/// </summary>
+public class QualityGateConfigSection
+{
+    /// <summary>
+    /// 是否启用质量门禁
+    /// </summary>
+    public bool Enabled { get; set; } = true;
+
+    /// <summary>
+    /// 是否启用严格模式（任何警告都会失败）
+    /// </summary>
+    public bool StrictMode { get; set; } = false;
+
+    /// <summary>
+    /// 元数据一致性检查
+    /// </summary>
+    public bool EnableMetadataConsistencyCheck { get; set; } = true;
+
+    /// <summary>
+    /// 类型一致性检查
+    /// </summary>
+    public bool EnableTypeConsistencyCheck { get; set; } = true;
+
+    /// <summary>
+    /// 模板输出检查
+    /// </summary>
+    public bool EnableTemplateOutputCheck { get; set; } = true;
+
+    /// <summary>
+    /// 编译检查
+    /// </summary>
+    public bool EnableCompilationCheck { get; set; } = true;
+
+    /// <summary>
+    /// 架构约束检查
+    /// </summary>
+    public bool EnableArchitectureConstraintsCheck { get; set; } = true;
+}
+
+/// <summary>
+/// 性能监控配置节 ⭐ D爷建议
+/// </summary>
+public class PerformanceConfigSection
+{
+    /// <summary>
+    /// 是否启用性能指标收集
+    /// </summary>
+    public bool EnableMetrics { get; set; } = true;
+
+    /// <summary>
+    /// 性能警告阈值（毫秒）
+    /// </summary>
+    public int WarningThresholdMs { get; set; } = 5000;
+
+    /// <summary>
+    /// 性能错误阈值（毫秒）
+    /// </summary>
+    public int ErrorThresholdMs { get; set; } = 10000;
+
+    /// <summary>
+    /// 启用OpenTelemetry集成
+    /// </summary>
+    public bool EnableOpenTelemetry { get; set; } = false;
+
+    /// <summary>
+    /// OpenTelemetry端点
+    /// </summary>
+    public string OpenTelemetryEndpoint { get; set; } = "http://localhost:4317";
 }
 

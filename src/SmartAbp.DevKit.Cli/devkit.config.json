@@ -1,0 +1,51 @@
+{
+    "$schema": "./devkit.config.schema.json",
+    "DevKit": {
+        "AIFlow": {
+            "TimeoutSeconds": 300,
+            "MaxRetries": 3,
+            "CircuitBreakerFailureThreshold": 5,
+            "CircuitBreakerResetTimeoutSeconds": 60,
+            "EnableMiddlewarePipeline": true,
+            "EnableLoggingMiddleware": true,
+            "EnablePerformanceMiddleware": true,
+            "EnableErrorHandlingMiddleware": true,
+            "EnableValidationMiddleware": true,
+            "EnableCachingMiddleware": true
+        },
+        "TemplateEngine": {
+            "TemplateCacheTTLMinutes": 30,
+            "MaxCacheSize": 100,
+            "EnableCaching": true,
+            "TemplateDirectory": "./templates"
+        },
+        "QualityGate": {
+            "Enabled": true,
+            "StrictMode": true,
+            "EnableMetadataConsistencyCheck": true,
+            "EnableTypeConsistencyCheck": true,
+            "EnableTemplateOutputCheck": true,
+            "EnableCompilationCheck": true,
+            "EnableArchitectureConstraintsCheck": true
+        },
+        "Performance": {
+            "MaxWorkstationExecutionTimeSeconds": 120,
+            "MaxTotalFlowTimeSeconds": 600,
+            "EnablePerformanceMonitoring": true,
+            "EnableMetricsCollection": true
+        },
+        "Output": {
+            "DefaultOutputDirectory": "./output",
+            "OverwriteExistingFiles": false,
+            "CreateBackup": true,
+            "BackupDirectory": "./backup"
+        }
+    },
+    "Logging": {
+        "LogLevel": {
+            "Default": "Information",
+            "SmartAbp.DevKit": "Debug",
+            "Microsoft": "Warning"
+        }
+    }
+}

@@ -1,0 +1,78 @@
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Volo.Abp;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.AspNetCore.Mvc;
+using SmartAbp.Application.Contracts.LowCode.{{pluralize Name}};
+
+namespace SmartAbp.HttpApi.Controllers.LowCode
+{
+    /// <summary>
+    /// {{DisplayName}}控制器
+    /// {{#if Description}}
+    /// {{Description}}
+    /// {{/if}}
+    /// </summary>
+    [Area("lowcode")]
+    [RemoteService(Name = "LowCode")]
+    [Route("api/lowcode/{{kebabCase (pluralize Name)}}")]
+    public class {{pascalCase Name}}Controller : AbpControllerBase, I{{pascalCase Name}}AppService
+    {
+        private readonly I{{pascalCase Name}}AppService _{{camelCase Name}}AppService;
+
+        public {{pascalCase Name}}Controller(I{{pascalCase Name}}AppService {{camelCase Name}}AppService)
+        {
+            _{{camelCase Name}}AppService = {{camelCase Name}}AppService;
+        }
+
+        /// <summary>
+        /// 获取{{DisplayName}}列表
+        /// </summary>
+        [HttpGet]
+        public virtual Task<PagedResultDto<{{pascalCase Name}}Dto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        {
+            return _{{camelCase Name}}AppService.GetListAsync(input);
+        }
+
+        /// <summary>
+        /// 获取{{DisplayName}}详情
+        /// </summary>
+        [HttpGet]
+        [Route("{id}")]
+        public virtual Task<{{pascalCase Name}}Dto> GetAsync(Guid id)
+        {
+            return _{{camelCase Name}}AppService.GetAsync(id);
+        }
+
+        /// <summary>
+        /// 创建{{DisplayName}}
+        /// </summary>
+        [HttpPost]
+        public virtual Task<{{pascalCase Name}}Dto> CreateAsync(Create{{pascalCase Name}}Dto input)
+        {
+            return _{{camelCase Name}}AppService.CreateAsync(input);
+        }
+
+        /// <summary>
+        /// 更新{{DisplayName}}
+        /// </summary>
+        [HttpPut]
+        [Route("{id}")]
+        public virtual Task<{{pascalCase Name}}Dto> UpdateAsync(Guid id, Update{{pascalCase Name}}Dto input)
+        {
+            return _{{camelCase Name}}AppService.UpdateAsync(id, input);
+        }
+
+        /// <summary>
+        /// 删除{{DisplayName}}
+        /// </summary>
+        [HttpDelete]
+        [Route("{id}")]
+        public virtual Task DeleteAsync(Guid id)
+        {
+            return _{{camelCase Name}}AppService.DeleteAsync(id);
+        }
+    }
+}
+

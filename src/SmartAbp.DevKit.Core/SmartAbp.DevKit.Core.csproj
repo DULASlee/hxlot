@@ -28,6 +28,14 @@
     <PackageReference Include="Handlebars.Net" Version="2.1.6" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+    <!-- ⭐ D爷建议：硬伤2修复 - 内存缓存 -->
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.0" />
+    
+    <!-- ABP Framework依赖（Week 4-5集成） -->
+    <PackageReference Include="Volo.Abp.Core" Version="9.1.1" />
+    <PackageReference Include="Volo.Abp.Autofac" Version="9.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +47,11 @@
     <!-- NuGet包内容 -->
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="..\..\devkit.config.json" Pack="true" PackagePath="content\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- 前端生成器脚本 -->
+    <None Include="Scripts\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

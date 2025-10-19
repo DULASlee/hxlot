@@ -1,0 +1,21 @@
+{
+  "name": "devkit-frontend-generator",
+  "version": "1.0.0",
+  "description": "DevKit前端代码生成器（基于ts-morph）",
+  "main": "tsMorphGenerator.js",
+  "scripts": {
+    "test": "node tsMorphGenerator.js '{\"Name\":\"Product\",\"DisplayName\":\"产品\",\"Properties\":[{\"Name\":\"Id\",\"Type\":\"Guid\",\"IsKey\":true,\"IsRequired\":true,\"DisplayName\":\"ID\"},{\"Name\":\"Name\",\"Type\":\"string\",\"IsRequired\":true,\"DisplayName\":\"名称\"}]}'"
+  },
+  "keywords": [
+    "code-generator",
+    "typescript",
+    "vue",
+    "ts-morph"
+  ],
+  "author": "SmartAbp DevKit",
+  "license": "MIT",
+  "dependencies": {
+    "ts-morph": "^21.0.1"
+  }
+}
+

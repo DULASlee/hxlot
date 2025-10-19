@@ -1,0 +1,64 @@
+using System;
+using Volo.Abp.Domain.Entities.Auditing;
+
+namespace SmartAbp.Domain.Entities.LowCode
+{
+    /// <summary>
+    /// {{DisplayName}}
+    /// {{#if Description}}
+    /// {{Description}}
+    /// {{/if}}
+    /// </summary>
+    public class {{pascalCase Name}} : FullAuditedAggregateRoot<Guid>
+    {
+        {{#each Properties}}
+        {{#unless IsKey}}
+        /// <summary>
+        /// {{DisplayName}}
+        /// {{#if Description}}
+        /// {{Description}}
+        /// {{/if}}
+        /// </summary>
+        {{#if IsRequired}}
+        public {{Type}} {{pascalCase Name}} { get; set; }{{#if DefaultValue}} = {{DefaultValue}};{{/if}}
+        {{else}}
+        public {{Type}}? {{pascalCase Name}} { get; set; }
+        {{/if}}
+
+        {{/unless}}
+        {{/each}}
+        {{#if Relationships}}
+        // ==================== 导航属性 ====================
+        {{#each Relationships}}
+        {{#if (eq Type "OneToOne")}}
+        /// <summary>
+        /// {{Name}}（一对一关系）
+        /// </summary>
+        public virtual {{pascalCase Name}}? {{pascalCase Name}} { get; set; }
+        public Guid? {{pascalCase Name}}Id { get; set; }
+        {{/if}}
+        {{#if (eq Type "OneToMany")}}
+        /// <summary>
+        /// {{pluralize Name}}（一对多关系）
+        /// </summary>
+        public virtual ICollection<{{pascalCase Name}}>? {{pluralize (pascalCase Name)}} { get; set; }
+        {{/if}}
+        {{#if (eq Type "ManyToOne")}}
+        /// <summary>
+        /// {{Name}}（多对一关系）
+        /// </summary>
+        public virtual {{pascalCase Name}}? {{pascalCase Name}} { get; set; }
+        public Guid? {{pascalCase Name}}Id { get; set; }
+        {{/if}}
+        {{#if (eq Type "ManyToMany")}}
+        /// <summary>
+        /// {{pluralize Name}}（多对多关系）
+        /// </summary>
+        public virtual ICollection<{{pascalCase Name}}>? {{pluralize (pascalCase Name)}} { get; set; }
+        {{/if}}
+
+        {{/each}}
+        {{/if}}
+    }
+}
+

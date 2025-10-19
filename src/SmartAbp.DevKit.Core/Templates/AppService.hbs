@@ -1,0 +1,105 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.Application.Services;
+using Volo.Abp.Domain.Repositories;
+using SmartAbp.Domain.Entities.LowCode;
+using SmartAbp.Application.Contracts.LowCode.{{pluralize Name}};
+
+namespace SmartAbp.Application.LowCode.{{pluralize Name}}
+{
+    /// <summary>
+    /// {{DisplayName}}应用服务
+    /// {{#if Description}}
+    /// {{Description}}
+    /// {{/if}}
+    /// </summary>
+    public class {{pascalCase Name}}AppService : CrudAppService<
+        {{pascalCase Name}},
+        {{pascalCase Name}}Dto,
+        Guid,
+        PagedAndSortedResultRequestDto,
+        Create{{pascalCase Name}}Dto,
+        Update{{pascalCase Name}}Dto>, I{{pascalCase Name}}AppService
+    {
+        public {{pascalCase Name}}AppService(
+            IRepository<{{pascalCase Name}}, Guid> repository)
+            : base(repository)
+        {
+        }
+
+        /// <summary>
+        /// 获取列表（支持筛选、排序、分页）
+        /// </summary>
+        public override async Task<PagedResultDto<{{pascalCase Name}}Dto>> GetListAsync(PagedAndSortedResultRequestDto input)
+        {
+            var query = await Repository.GetQueryableAsync();
+
+            // TODO: 添加筛选逻辑
+            // Example: query = query.WhereIf(!string.IsNullOrEmpty(input.Filter), x => x.Name.Contains(input.Filter));
+
+            var totalCount = await AsyncExecuter.CountAsync(query);
+
+            // 排序
+            query = ApplySorting(query, input);
+
+            // 分页
+            query = ApplyPaging(query, input);
+
+            var entities = await AsyncExecuter.ToListAsync(query);
+
+            return new PagedResultDto<{{pascalCase Name}}Dto>(
+                totalCount,
+                ObjectMapper.Map<System.Collections.Generic.List<{{pascalCase Name}}>, System.Collections.Generic.List<{{pascalCase Name}}Dto>>(entities)
+            );
+        }
+
+        /// <summary>
+        /// 获取单个实体
+        /// </summary>
+        public override async Task<{{pascalCase Name}}Dto> GetAsync(Guid id)
+        {
+            var entity = await Repository.GetAsync(id);
+            return ObjectMapper.Map<{{pascalCase Name}}, {{pascalCase Name}}Dto>(entity);
+        }
+
+        /// <summary>
+        /// 创建实体
+        /// </summary>
+        public override async Task<{{pascalCase Name}}Dto> CreateAsync(Create{{pascalCase Name}}Dto input)
+        {
+            var entity = ObjectMapper.Map<Create{{pascalCase Name}}Dto, {{pascalCase Name}}>(input);
+            
+            await Repository.InsertAsync(entity);
+            await CurrentUnitOfWork.SaveChangesAsync();
+
+            return ObjectMapper.Map<{{pascalCase Name}}, {{pascalCase Name}}Dto>(entity);
+        }
+
+        /// <summary>
+        /// 更新实体
+        /// </summary>
+        public override async Task<{{pascalCase Name}}Dto> UpdateAsync(Guid id, Update{{pascalCase Name}}Dto input)
+        {
+            var entity = await Repository.GetAsync(id);
+
+            ObjectMapper.Map(input, entity);
+
+            await Repository.UpdateAsync(entity);
+            await CurrentUnitOfWork.SaveChangesAsync();
+
+            return ObjectMapper.Map<{{pascalCase Name}}, {{pascalCase Name}}Dto>(entity);
+        }
+
+        /// <summary>
+        /// 删除实体
+        /// </summary>
+        public override async Task DeleteAsync(Guid id)
+        {
+            await Repository.DeleteAsync(id);
+            await CurrentUnitOfWork.SaveChangesAsync();
+        }
+    }
+}
+

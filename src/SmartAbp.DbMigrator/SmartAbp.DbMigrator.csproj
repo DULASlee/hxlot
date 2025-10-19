@@ -12,6 +12,8 @@
   <ItemGroup>
     <ProjectReference Include="..\SmartAbp.Application.Contracts\SmartAbp.Application.Contracts.csproj" />
     <ProjectReference Include="..\SmartAbp.EntityFrameworkCore\SmartAbp.EntityFrameworkCore.csproj" />
+    <!-- Week 4-5: DevKit集成 -->
+    <ProjectReference Include="..\SmartAbp.DevKit.Core\SmartAbp.DevKit.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

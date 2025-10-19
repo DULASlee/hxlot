@@ -1,0 +1,56 @@
+[
+  {
+    "entitySchema": {
+      "id": "00000000-0000-0000-0000-000000001001",
+      "name": "Book",
+      "displayName": "图书",
+      "properties": [
+        {
+          "id": "00000000-0000-0000-0000-000000001002",
+          "name": "Id",
+          "displayName": "ID",
+          "type": "Guid",
+          "isKey": true,
+          "isRequired": true
+        },
+        {
+          "id": "00000000-0000-0000-0000-000000001003",
+          "name": "Title",
+          "displayName": "书名",
+          "type": "string",
+          "isRequired": true
+        },
+        {
+          "id": "00000000-0000-0000-0000-000000001004",
+          "name": "Author",
+          "displayName": "作者",
+          "type": "string",
+          "isRequired": true
+        },
+        {
+          "id": "00000000-0000-0000-0000-000000001005",
+          "name": "PublishDate",
+          "displayName": "出版日期",
+          "type": "DateTime",
+          "isRequired": false
+        },
+        {
+          "id": "00000000-0000-0000-0000-000000001006",
+          "name": "Price",
+          "displayName": "价格",
+          "type": "decimal",
+          "isRequired": true
+        },
+        {
+          "id": "00000000-0000-0000-0000-000000001007",
+          "name": "ISBN",
+          "displayName": "ISBN",
+          "type": "string",
+          "isRequired": false
+        }
+      ],
+      "relationships": []
+    }
+  }
+]
+

@@ -2,7 +2,10 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using HandlebarsDotNet;
+using Microsoft.Extensions.Caching.Memory;
 using Volo.Abp.DependencyInjection;
 
 namespace SmartAbp.DevKit.Core.Templates;
@@ -10,16 +13,31 @@ namespace SmartAbp.DevKit.Core.Templates;
 /// <summary>
 /// 模板管理器
 /// 统一管理、加载和缓存Handlebars模板
+/// ⭐ D爷建议：硬伤2修复 - 使用MemoryCache替代无限缓存
 /// </summary>
 public class TemplateManager : ISingletonDependency
 {
-    private readonly ConcurrentDictionary<string, HandlebarsTemplate<object, object>> _templateCache = new();
+    private readonly IMemoryCache _templateCache;
     private readonly string _templateDirectory;
+    private readonly MemoryCacheEntryOptions _cacheOptions;
 
-    public TemplateManager()
+    public TemplateManager(IMemoryCache? memoryCache = null)
     {
         // 默认模板目录
         _templateDirectory = Path.Combine(AppContext.BaseDirectory, "Templates");
+        
+        // ⭐ D爷建议：硬伤2修复 - 使用LRU缓存机制
+        _templateCache = memoryCache ?? new MemoryCache(new MemoryCacheOptions
+        {
+            SizeLimit = 1000 // 最多缓存1000个模板
+        });
+        
+        _cacheOptions = new MemoryCacheEntryOptions
+        {
+            Size = 1, // 每个条目占用1个单位
+            SlidingExpiration = TimeSpan.FromHours(1), // 1小时滑动过期
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24) // 24小时绝对过期
+        };
     }
 
     /// <summary>
@@ -141,12 +159,14 @@ public class TemplateManager : ISingletonDependency
 
     /// <summary>
     /// 加载模板（优先从缓存获取）
+    /// ⭐ D爷建议：硬伤2修复 - 使用MemoryCache
     /// </summary>
     public HandlebarsTemplate<object, object> LoadTemplate(string templateName)
     {
-        if (_templateCache.TryGetValue(templateName, out var cachedTemplate))
+        // 尝试从缓存获取
+        if (_templateCache.TryGetValue(templateName, out HandlebarsTemplate<object, object>? cachedTemplate))
         {
-            return cachedTemplate;
+            return cachedTemplate!;
         }
 
         var templatePath = Path.Combine(_templateDirectory, $"{templateName}.hbs");
@@ -158,13 +178,15 @@ public class TemplateManager : ISingletonDependency
         var templateSource = File.ReadAllText(templatePath);
         var compiledTemplate = HandlebarsDotNet.Handlebars.Compile(templateSource);
 
-        _templateCache.TryAdd(templateName, compiledTemplate);
+        // 添加到缓存（带过期时间）
+        _templateCache.Set(templateName, compiledTemplate, _cacheOptions);
 
         return compiledTemplate;
     }
 
     /// <summary>
     /// 编译内嵌模板
+    /// ⭐ D爷建议：硬伤2修复 - 使用SHA256哈希作为缓存键
     /// </summary>
     public HandlebarsTemplate<object, object> CompileTemplate(string templateSource)
     {
@@ -173,17 +195,46 @@ public class TemplateManager : ISingletonDependency
             throw new ArgumentException("Template source cannot be empty", nameof(templateSource));
         }
 
-        return HandlebarsDotNet.Handlebars.Compile(templateSource);
+        // 生成缓存键（使用SHA256哈希）
+        var cacheKey = GenerateCacheKey(templateSource);
+
+        // 尝试从缓存获取
+        if (_templateCache.TryGetValue(cacheKey, out HandlebarsTemplate<object, object>? cachedTemplate))
+        {
+            return cachedTemplate!;
+        }
+
+        // 编译模板
+        var compiledTemplate = HandlebarsDotNet.Handlebars.Compile(templateSource);
+
+        // 添加到缓存
+        _templateCache.Set(cacheKey, compiledTemplate, _cacheOptions);
+
+        return compiledTemplate;
+    }
+
+    /// <summary>
+    /// 生成缓存键（使用SHA256哈希，避免哈希冲突）
+    /// ⭐ D爷建议：硬伤2修复 - 使用可靠的哈希算法
+    /// </summary>
+    private static string GenerateCacheKey(string source)
+    {
+        using var sha256 = SHA256.Create();
+        var bytes = Encoding.UTF8.GetBytes(source);
+        var hash = sha256.ComputeHash(bytes);
+        return Convert.ToBase64String(hash);
     }
 
     /// <summary>
     /// 从嵌入资源加载模板
+    /// ⭐ D爷建议：硬伤2修复 - 使用MemoryCache
     /// </summary>
     public HandlebarsTemplate<object, object> LoadEmbeddedTemplate(string resourceName)
     {
-        if (_templateCache.TryGetValue(resourceName, out var cachedTemplate))
+        // 尝试从缓存获取
+        if (_templateCache.TryGetValue(resourceName, out HandlebarsTemplate<object, object>? cachedTemplate))
         {
-            return cachedTemplate;
+            return cachedTemplate!;
         }
 
         var assembly = Assembly.GetExecutingAssembly();
@@ -198,17 +249,21 @@ public class TemplateManager : ISingletonDependency
         var templateSource = reader.ReadToEnd();
         var compiledTemplate = HandlebarsDotNet.Handlebars.Compile(templateSource);
 
-        _templateCache.TryAdd(resourceName, compiledTemplate);
+        // 添加到缓存
+        _templateCache.Set(resourceName, compiledTemplate, _cacheOptions);
 
         return compiledTemplate;
     }
 
     /// <summary>
-    /// 清除缓存
+    /// 清除所有缓存（慎用）
     /// </summary>
     public void ClearCache()
     {
-        _templateCache.Clear();
+        if (_templateCache is MemoryCache memCache)
+        {
+            memCache.Compact(1.0); // 压缩100%（清空）
+        }
     }
 
     /// <summary>
@@ -216,36 +271,7 @@ public class TemplateManager : ISingletonDependency
     /// </summary>
     public void RemoveTemplate(string templateName)
     {
-        _templateCache.TryRemove(templateName, out _);
+        _templateCache.Remove(templateName);
     }
-
-    /// <summary>
-    /// 获取所有已缓存的模板名称
-    /// </summary>
-    public string[] GetCachedTemplateNames()
-    {
-        return _templateCache.Keys.ToArray();
-    }
-
-    /// <summary>
-    /// 获取缓存统计信息
-    /// </summary>
-    public TemplateCacheStats GetCacheStats()
-    {
-        return new TemplateCacheStats
-        {
-            TotalCachedTemplates = _templateCache.Count,
-            CachedTemplateNames = _templateCache.Keys.ToList()
-        };
-    }
-}
-
-/// <summary>
-/// 模板缓存统计信息
-/// </summary>
-public class TemplateCacheStats
-{
-    public int TotalCachedTemplates { get; set; }
-    public List<string> CachedTemplateNames { get; set; } = new();
 }
 

@@ -1,0 +1,89 @@
+{
+  "entitySchema": {
+    "id": "00000000-0000-0000-0000-000000000011",
+    "name": "Order",
+    "displayName": "订单",
+    "properties": [
+      {
+        "id": "00000000-0000-0000-0000-000000000012",
+        "name": "Id",
+        "displayName": "ID",
+        "type": "Guid",
+        "isKey": true,
+        "isRequired": true
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000013",
+        "name": "OrderNumber",
+        "displayName": "订单号",
+        "type": "string",
+        "isRequired": true,
+        "maxLength": 50
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000014",
+        "name": "CustomerId",
+        "displayName": "客户ID",
+        "type": "Guid",
+        "isRequired": true
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000015",
+        "name": "TotalAmount",
+        "displayName": "总金额",
+        "type": "decimal",
+        "isRequired": true
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000016",
+        "name": "Status",
+        "displayName": "状态",
+        "type": "int",
+        "isRequired": true
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000017",
+        "name": "OrderDate",
+        "displayName": "下单日期",
+        "type": "DateTime",
+        "isRequired": true
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000018",
+        "name": "DeliveryDate",
+        "displayName": "送达日期",
+        "type": "DateTime",
+        "isRequired": false
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000019",
+        "name": "Notes",
+        "displayName": "备注",
+        "type": "string",
+        "isRequired": false,
+        "maxLength": 500
+      }
+    ],
+    "relationships": [
+      {
+        "id": "00000000-0000-0000-0000-00000000001a",
+        "name": "Customer",
+        "displayName": "客户",
+        "targetEntityId": "00000000-0000-0000-0000-000000000020",
+        "targetEntityName": "Customer",
+        "type": 2,
+        "isRequired": true,
+        "foreignKey": "CustomerId"
+      },
+      {
+        "id": "00000000-0000-0000-0000-00000000001b",
+        "name": "OrderItems",
+        "displayName": "订单项",
+        "targetEntityId": "00000000-0000-0000-0000-000000000030",
+        "targetEntityName": "OrderItem",
+        "type": 1,
+        "isRequired": false
+      }
+    ]
+  }
+}
