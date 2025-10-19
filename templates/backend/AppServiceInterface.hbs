@@ -1,0 +1,56 @@
+{{!-- AppService Interface Template --}}
+{{!-- 生成ABP Application层IAppService接口（支持单体/微服务双模式） --}}
+
+using System;
+using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.Application.Services;
+using {{ContractsNamespace}}.{{EntityName}}.Dtos;
+
+namespace {{ContractsNamespace}}.{{EntityName}};
+
+/// <summary>
+/// {{EntityName}}应用服务接口
+/// </summary>
+{{#if IsMicroservice}}
+/// <remarks>
+/// 微服务: {{ServiceName}}
+/// 生成时间: {{GeneratedTime}}
+/// </remarks>
+{{else}}
+/// <remarks>
+/// 生成时间: {{GeneratedTime}}
+/// </remarks>
+{{/if}}
+public interface I{{EntityName}}AppService : ICrudAppService<
+    {{DtoName}},
+    {{PrimaryKeyType}},
+    {{GetListInputName}},
+    {{CreateDtoName}},
+    {{UpdateDtoName}}>
+{
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 基础CRUD操作（由ICrudAppService提供）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    // 以下方法已由ICrudAppService接口提供，无需重复定义：
+    // - Task<{{DtoName}}> GetAsync({{PrimaryKeyType}} id);
+    // - Task<PagedResultDto<{{DtoName}}>> GetListAsync({{GetListInputName}} input);
+    // - Task<{{DtoName}}> CreateAsync({{CreateDtoName}} input);
+    // - Task<{{DtoName}}> UpdateAsync({{PrimaryKeyType}} id, {{UpdateDtoName}} input);
+    // - Task DeleteAsync({{PrimaryKeyType}} id);
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 自定义业务方法（根据需要添加）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    // 示例：根据名称查询
+    // Task<{{DtoName}}> GetByNameAsync(string name);
+
+    // 示例：批量删除
+    // Task BatchDeleteAsync(List<{{PrimaryKeyType}}> ids);
+
+    // 示例：导出数据
+    // Task<byte[]> ExportToExcelAsync({{GetListInputName}} input);
+}
+

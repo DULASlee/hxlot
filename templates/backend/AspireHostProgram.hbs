@@ -1,0 +1,165 @@
+using Aspire.Hosting;
+
+var builder = DistributedApplication.CreateBuilder(args);
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 1. Aspire资源配置（基础设施服务）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{{#if EnableRedis}}
+// Redis缓存
+var redis = builder.AddRedis("redis")
+    .WithRedisCommander()
+    .WithLifetime(ContainerLifetime.Persistent);
+{{/if}}
+
+{{#if EnableRabbitMQ}}
+// RabbitMQ消息队列
+var rabbitmq = builder.AddRabbitMQ("rabbitmq")
+    .WithManagementPlugin()
+    .WithLifetime(ContainerLifetime.Persistent);
+{{/if}}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 数据库Provider配置（可切换：SQL Server / PostgreSQL）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{{#if EnablePostgreSQL}}
+// PostgreSQL数据库（开源首选）
+var postgres = builder.AddPostgres("postgres")
+    .WithPgAdmin()
+    .WithLifetime(ContainerLifetime.Persistent);
+
+var database = postgres.AddDatabase("{{lowerCase ServiceName}}db");
+{{/if}}
+
+{{#if EnableSqlServer}}
+// SQL Server数据库（企业级首选）
+var sqlserver = builder.AddSqlServer("sqlserver")
+    .WithLifetime(ContainerLifetime.Persistent);
+
+var database = sqlserver.AddDatabase("{{pascalCase ServiceName}}Db");
+{{/if}}
+
+// 💡 数据库Provider由配置文件控制（appsettings.json）
+// 微服务通过IRepository<T>访问数据，完全不关心底层数据库类型
+
+{{#if EnableSeq}}
+// Seq日志聚合
+var seq = builder.AddSeq("seq")
+    .WithLifetime(ContainerLifetime.Persistent);
+{{/if}}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 2. 主服务配置
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+var {{camelCase ServiceName}} = builder.AddProject<Projects.{{ServiceName}}>("{{kebabCase ServiceName}}")
+    .WithHttpEndpoint(port: {{HttpPort}}, name: "http")
+    .WithHttpsEndpoint(port: {{add HttpPort 1}}, name: "https")
+{{#if GrpcPort}}
+    .WithGrpcEndpoint(port: {{GrpcPort}}, name: "grpc")
+{{/if}}
+{{#if EnableRedis}}
+    .WithReference(redis)
+{{/if}}
+{{#if EnableRabbitMQ}}
+    .WithReference(rabbitmq)
+{{/if}}
+{{#if EnablePostgreSQL}}
+    .WithReference(database) // PostgreSQL数据库
+{{/if}}
+{{#if EnableSqlServer}}
+    .WithReference(database) // SQL Server数据库
+{{/if}}
+{{#if EnableSeq}}
+    .WithReference(seq)
+{{/if}}
+{{#if HasDependentServices}}
+    // 依赖服务
+{{#each DependentServices}}
+    .WithReference({{camelCase this}})
+{{/each}}
+{{/if}}
+{{#if Replicas}}
+    .WithReplicas({{Replicas}})
+{{/if}}
+{{#if HasCpuLimit}}
+    .WithResourceLimit(cpu: {{CpuLimit}})
+{{/if}}
+{{#if HasMemoryLimit}}
+    .WithResourceLimit(memory: {{MemoryLimit}})
+{{/if}}
+    ;
+
+{{#if EnableServiceDiscovery}}
+// 服务发现配置
+{{camelCase ServiceName}}.WithEnvironment("ServiceDiscovery__Enabled", "true");
+{{/if}}
+
+{{#if EnableDistributedTracing}}
+// 分布式追踪配置
+{{camelCase ServiceName}}.WithEnvironment("OpenTelemetry__ServiceName", "{{ServiceName}}");
+{{/if}}
+
+{{#if EnableHealthChecks}}
+// 健康检查配置
+{{camelCase ServiceName}}.WithHealthCheck("{{ServiceName}}-health", "/health");
+{{/if}}
+
+{{#if HasDependentServices}}
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 3. 依赖服务配置
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{{#each DependentServices}}
+var {{camelCase this}} = builder.AddProject<Projects.{{this}}>("{{kebabCase this}}")
+    .WithHttpEndpoint(port: {{add @index 1 ../HttpPort 1000}}, name: "http")
+{{#if ../EnableRedis}}
+    .WithReference(redis)
+{{/if}}
+{{#if ../EnableRabbitMQ}}
+    .WithReference(rabbitmq)
+{{/if}}
+{{#if ../EnablePostgreSQL}}
+    .WithReference(database) // PostgreSQL数据库（共享）
+{{/if}}
+{{#if ../EnableSqlServer}}
+    .WithReference(database) // SQL Server数据库（共享）
+{{/if}}
+{{#if ../EnableSeq}}
+    .WithReference(seq)
+{{/if}}
+    ;
+
+{{/each}}
+{{/if}}
+
+{{#if IsApiGateway}}
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 4. API Gateway配置（Yarp反向代理）
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+var apiGateway = builder.AddProject<Projects.SmartAbp_ApiGateway>("api-gateway")
+    .WithHttpEndpoint(port: 8080, name: "http")
+    .WithHttpsEndpoint(port: 8081, name: "https")
+    .WithReference({{camelCase ServiceName}})
+{{#if HasDependentServices}}
+{{#each DependentServices}}
+    .WithReference({{camelCase this}})
+{{/each}}
+{{/if}}
+{{#if EnableSeq}}
+    .WithReference(seq)
+{{/if}}
+    ;
+{{/if}}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 5. 构建并运行Aspire编排
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+var app = builder.Build();
+
+await app.RunAsync();
+

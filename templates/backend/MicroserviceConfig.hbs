@@ -1,0 +1,107 @@
+{{!-- Microservice Configuration Template --}}
+{{!-- 生成微服务配置代码（Aspire编排模式） --}}
+
+using System;
+using System.Collections.Generic;
+
+namespace {{Namespace}};
+
+/// <summary>
+/// 微服务配置：{{ServiceName}}
+/// </summary>
+/// <remarks>
+/// 此配置用于Aspire微服务编排模式
+/// </remarks>
+public static class ServiceConfiguration
+{
+    /// <summary>
+    /// 服务名称
+    /// </summary>
+    public const string ServiceName = "{{ServiceName}}";
+
+    /// <summary>
+    /// HTTP端口
+    /// </summary>
+    public const int HttpPort = {{HttpPort}};
+
+    /// <summary>
+    /// gRPC端口
+    /// </summary>
+    public const int GrpcPort = {{GrpcPort}};
+
+    /// <summary>
+    /// 是否启用服务发现
+    /// </summary>
+    public const bool EnableServiceDiscovery = {{EnableServiceDiscovery}};
+
+    /// <summary>
+    /// 是否启用分布式追踪
+    /// </summary>
+    public const bool EnableDistributedTracing = {{EnableDistributedTracing}};
+
+    /// <summary>
+    /// 是否启用健康检查
+    /// </summary>
+    public const bool EnableHealthChecks = {{EnableHealthChecks}};
+
+    /// <summary>
+    /// 依赖的其他服务
+    /// </summary>
+    public static readonly List<string> DependentServices = new()
+    {
+        {{#each DependentServices}}
+        "{{this}}"{{#unless @last}},{{/unless}}
+        {{/each}}
+    };
+
+    /// <summary>
+    /// Aspire资源配置
+    /// </summary>
+    public static class AspireResources
+    {
+        /// <summary>
+        /// 是否启用Redis缓存
+        /// </summary>
+        public const bool EnableRedis = {{AspireConfig.EnableRedis}};
+
+        /// <summary>
+        /// 是否启用RabbitMQ消息队列
+        /// </summary>
+        public const bool EnableRabbitMQ = {{AspireConfig.EnableRabbitMQ}};
+
+        /// <summary>
+        /// 是否启用PostgreSQL数据库
+        /// </summary>
+        public const bool EnablePostgreSQL = {{AspireConfig.EnablePostgreSQL}};
+
+        /// <summary>
+        /// 是否启用SQL Server数据库
+        /// </summary>
+        public const bool EnableSqlServer = {{AspireConfig.EnableSqlServer}};
+
+        /// <summary>
+        /// 是否启用Seq日志
+        /// </summary>
+        public const bool EnableSeq = {{AspireConfig.EnableSeq}};
+
+        /// <summary>
+        /// 副本数量（容器编排）
+        /// </summary>
+        public const int Replicas = {{AspireConfig.Replicas}};
+
+        {{#if AspireConfig.CpuLimit}}
+        /// <summary>
+        /// CPU限制（单位：核心数）
+        /// </summary>
+        public const double CpuLimit = {{AspireConfig.CpuLimit}};
+        {{/if}}
+
+        {{#if AspireConfig.MemoryLimit}}
+        /// <summary>
+        /// 内存限制（单位：MB）
+        /// </summary>
+        public const int MemoryLimit = {{AspireConfig.MemoryLimit}};
+        {{/if}}
+    }
+}
+

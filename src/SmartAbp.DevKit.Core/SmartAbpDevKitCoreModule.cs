@@ -7,6 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using SmartAbp.DevKit.Core.Abstractions;
 using SmartAbp.DevKit.Core.Config;
 using SmartAbp.DevKit.Core.Flow;
 using SmartAbp.DevKit.Core.Metadata;
@@ -75,10 +76,11 @@ public class SmartAbpDevKitCoreModule : AbpModule
         // 3. 模板管理器（单例）
         services.TryAddSingleton<TemplateManager>(sp =>
         {
-            var cache = sp.GetRequiredService<IMemoryCache>();
-            var templateManager = new TemplateManager(cache);
+            var logger = sp.GetRequiredService<ILogger<TemplateManager>>();
+            var templateEngine = sp.GetRequiredService<ITemplateEngine>();
+            var templateManager = new Templates.TemplateManager(logger, templateEngine, "templates");
 
-            // 注册Handlebars Helpers
+            // 注册Handlebars Helpers（默认helpers已在HandlebarsTemplateEngine中注册）
             templateManager.RegisterHelpers();
 
             Console.WriteLine("✅ [DevKit] TemplateManager已注册并初始化Helpers");
@@ -87,6 +89,11 @@ public class SmartAbpDevKitCoreModule : AbpModule
 
         // 4. 统一元数据SDK（单例）
         services.TryAddSingleton<UnifiedMetadataSDK>();
+
+        // 4.5 代码生成器（瞬态）- ⭐ NEW
+        services.AddTransient<Generator.DomainGenerator>();
+        services.AddTransient<Generator.ApplicationGenerator>();
+        services.AddTransient<Generator.AspireHostGenerator>();
 
         // 5. 性能监控收集器（单例）
         services.TryAddSingleton<MetricsCollector>();

@@ -1,0 +1,219 @@
+{{!-- AppService Implementation Template --}}
+{{!-- 生成ABP Application层AppService实现类（支持单体/微服务双模式） --}}
+
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.Application.Services;
+using Volo.Abp.Domain.Repositories;
+using {{ContractsNamespace}}.{{EntityName}};
+using {{ContractsNamespace}}.{{EntityName}}.Dtos;
+using {{DomainNamespace}}.Entities;
+
+namespace {{Namespace}}.{{EntityName}};
+
+/// <summary>
+/// {{EntityName}}应用服务实现
+/// </summary>
+{{#if IsMicroservice}}
+/// <remarks>
+/// 微服务: {{ServiceName}}
+/// 生成时间: {{GeneratedTime}}
+/// </remarks>
+{{else}}
+/// <remarks>
+/// 生成时间: {{GeneratedTime}}
+/// </remarks>
+{{/if}}
+public class {{EntityName}}AppService : CrudAppService<
+    {{EntityName}},
+    {{DtoName}},
+    {{PrimaryKeyType}},
+    {{GetListInputName}},
+    {{CreateDtoName}},
+    {{UpdateDtoName}}>, I{{EntityName}}AppService
+{
+    private readonly ILogger<{{EntityName}}AppService> _logger;
+
+    /// <summary>
+    /// 构造函数
+    /// </summary>
+    /// <param name="repository">{{EntityName}}仓储</param>
+    /// <param name="logger">日志记录器</param>
+    public {{EntityName}}AppService(
+        IRepository<{{EntityName}}, {{PrimaryKeyType}}> repository,
+        ILogger<{{EntityName}}AppService> logger) : base(repository)
+    {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 查询过滤器（重写以添加自定义过滤逻辑）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 创建查询过滤器
+    /// </summary>
+    /// <param name="input">查询输入</param>
+    /// <returns>过滤后的查询</returns>
+    protected override async Task<IQueryable<{{EntityName}}>> CreateFilteredQueryAsync({{GetListInputName}} input)
+    {
+        var queryable = await Repository.GetQueryableAsync();
+
+        // 根据Filter属性进行过滤（假设实体有{{FirstProperty}}属性）
+        return queryable
+            .WhereIf(
+                !string.IsNullOrWhiteSpace(input.Filter),
+                x => x.{{FirstProperty}}.Contains(input.Filter!));
+
+        // 可以添加更多过滤条件，例如：
+        // .WhereIf(input.StartDate.HasValue, x => x.CreatedTime >= input.StartDate.Value)
+        // .WhereIf(input.EndDate.HasValue, x => x.CreatedTime <= input.EndDate.Value)
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // CRUD操作（可重写以添加自定义业务逻辑）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 创建实体
+    /// </summary>
+    /// <param name="input">创建输入DTO</param>
+    /// <returns>创建后的实体DTO</returns>
+    public override async Task<{{DtoName}}> CreateAsync({{CreateDtoName}} input)
+    {
+        _logger.LogInformation("正在创建{{EntityName}}...");
+
+        try
+        {
+            // 在这里可以添加创建前的业务验证
+            // 例如：检查是否重复、验证业务规则等
+
+            // 调用基类方法执行创建
+            var result = await base.CreateAsync(input);
+
+            _logger.LogInformation(
+                "{{EntityName}}创建成功, ID: {Id}",
+                result.Id);
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "创建{{EntityName}}失败");
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// 更新实体
+    /// </summary>
+    /// <param name="id">实体ID</param>
+    /// <param name="input">更新输入DTO</param>
+    /// <returns>更新后的实体DTO</returns>
+    public override async Task<{{DtoName}}> UpdateAsync({{PrimaryKeyType}} id, {{UpdateDtoName}} input)
+    {
+        _logger.LogInformation(
+            "正在更新{{EntityName}}, ID: {Id}",
+            id);
+
+        try
+        {
+            // 在这里可以添加更新前的业务验证
+            // 例如：检查权限、验证业务规则等
+
+            // 调用基类方法执行更新
+            var result = await base.UpdateAsync(id, input);
+
+            _logger.LogInformation(
+                "{{EntityName}}更新成功, ID: {Id}",
+                id);
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "更新{{EntityName}}失败, ID: {Id}",
+                id);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// 删除实体
+    /// </summary>
+    /// <param name="id">实体ID</param>
+    public override async Task DeleteAsync({{PrimaryKeyType}} id)
+    {
+        _logger.LogInformation(
+            "正在删除{{EntityName}}, ID: {Id}",
+            id);
+
+        try
+        {
+            // 在这里可以添加删除前的业务验证
+            // 例如：检查是否有关联数据、验证权限等
+
+            // 调用基类方法执行删除
+            await base.DeleteAsync(id);
+
+            _logger.LogInformation(
+                "{{EntityName}}删除成功, ID: {Id}",
+                id);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "删除{{EntityName}}失败, ID: {Id}",
+                id);
+            throw;
+        }
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 自定义业务方法（根据需要添加）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    // 示例：根据名称查询
+    // public async Task<{{DtoName}}> GetByNameAsync(string name)
+    // {
+    //     var query = await Repository.GetQueryableAsync();
+    //     var entity = await AsyncExecuter.FirstOrDefaultAsync(
+    //         query.Where(x => x.{{FirstProperty}} == name)
+    //     );
+    //
+    //     if (entity == null)
+    //     {
+    //         throw new Volo.Abp.BusinessException(
+    //             "{{EntityName}}:NotFound",
+    //             $"找不到名称为 '{name}' 的{{EntityName}}。");
+    //     }
+    //
+    //     return await MapToGetOutputDtoAsync(entity);
+    // }
+
+    // 示例：批量删除
+    // public async Task BatchDeleteAsync(List<{{PrimaryKeyType}}> ids)
+    // {
+    //     _logger.LogInformation(
+    //         "正在批量删除{{EntityName}}, 数量: {Count}",
+    //         ids.Count);
+    //
+    //     foreach (var id in ids)
+    //     {
+    //         await DeleteAsync(id);
+    //     }
+    //
+    //     _logger.LogInformation(
+    //         "批量删除{{EntityName}}完成, 数量: {Count}",
+    //         ids.Count);
+    // }
+}
+

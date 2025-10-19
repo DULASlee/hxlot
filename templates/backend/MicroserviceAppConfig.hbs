@@ -1,0 +1,75 @@
+{{!-- Microservice Application Configuration Template --}}
+{{!-- 生成微服务Application层配置代码（Aspire编排模式） --}}
+
+using System;
+
+namespace {{Namespace}};
+
+/// <summary>
+/// 微服务Application层配置：{{ServiceName}}
+/// </summary>
+/// <remarks>
+/// 此配置用于Aspire微服务编排模式的Application层
+/// 生成时间: {{GeneratedTime}}
+/// </remarks>
+public static class ApplicationServiceConfiguration
+{
+    /// <summary>
+    /// 服务名称
+    /// </summary>
+    public const string ServiceName = "{{ServiceName}}";
+
+    /// <summary>
+    /// Application层命名空间
+    /// </summary>
+    public const string NamespaceRoot = "{{Namespace}}";
+
+    /// <summary>
+    /// Application.Contracts层命名空间
+    /// </summary>
+    public const string ContractsNamespaceRoot = "{{Namespace}}.Contracts";
+
+    /// <summary>
+    /// 是否启用自动API控制器
+    /// </summary>
+    /// <remarks>
+    /// ABP会根据此设置自动将Application服务暴露为HTTP API
+    /// </remarks>
+    public const bool EnableAutoApiControllers = true;
+
+    /// <summary>
+    /// API路由前缀
+    /// </summary>
+    public const string ApiRoutePrefix = "api/app";
+
+    /// <summary>
+    /// 是否启用审计日志
+    /// </summary>
+    public const bool EnableAuditing = true;
+
+    /// <summary>
+    /// 是否启用授权
+    /// </summary>
+    public const bool EnableAuthorization = true;
+
+    /// <summary>
+    /// 是否启用验证
+    /// </summary>
+    public const bool EnableValidation = true;
+
+    /// <summary>
+    /// 是否启用工作单元
+    /// </summary>
+    public const bool EnableUnitOfWork = true;
+
+    /// <summary>
+    /// 是否启用分布式事件总线
+    /// </summary>
+    public const bool EnableDistributedEventBus = true;
+
+    /// <summary>
+    /// 是否启用本地事件总线
+    /// </summary>
+    public const bool EnableLocalEventBus = true;
+}
+

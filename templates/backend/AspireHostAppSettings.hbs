@@ -1,0 +1,88 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "{{LogLevel.Default}}",
+      "Microsoft": "{{LogLevel.Microsoft}}",
+      "Microsoft.Hosting.Lifetime": "{{LogLevel.MicrosoftHostingLifetime}}",
+      "Aspire.Hosting": "{{LogLevel.AspireHosting}}"
+    }
+  },
+  "Aspire": {
+    "Dashboard": {
+      "Port": 18888,
+      "ResourceService": {
+        "Url": "http://localhost:18889"
+      }
+    },
+    "Database": {
+      "Provider": "{{#if Aspire.Resources.SqlServer}}SqlServer{{else}}{{#if Aspire.Resources.PostgreSQL}}PostgreSQL{{else}}None{{/if}}{{/if}}",
+      "Comment": "数据库Provider可切换: SqlServer | PostgreSQL | MySQL | SQLite",
+      "Architecture": "微服务通过IRepository<T>访问数据，完全不关心底层数据库类型",
+      "MigrationNote": "不同Provider需要生成不同的Migration文件"
+    },
+    "Resources": {
+{{#if Aspire.Resources.Redis}}
+      "Redis": {
+        "Enabled": true,
+        "Port": 6379,
+        "ConnectionString": "localhost:6379"
+      }{{#if Aspire.Resources.RabbitMQ}},{{/if}}
+{{/if}}
+{{#if Aspire.Resources.RabbitMQ}}
+      "RabbitMQ": {
+        "Enabled": true,
+        "Port": 5672,
+        "ManagementPort": 15672,
+        "ConnectionString": "amqp://guest:guest@localhost:5672"
+      }{{#if Aspire.Resources.PostgreSQL}},{{/if}}
+{{/if}}
+{{#if Aspire.Resources.PostgreSQL}}
+      "PostgreSQL": {
+        "Enabled": true,
+        "Port": 5432,
+        "ConnectionString": "Host=localhost;Port=5432;Database={{lowerCase ServiceName}}db;Username=postgres;Password=postgres"
+      }{{#if Aspire.Resources.SqlServer}},{{/if}}
+{{/if}}
+{{#if Aspire.Resources.SqlServer}}
+      "SqlServer": {
+        "Enabled": true,
+        "Port": 1433,
+        "ConnectionString": "Server=localhost,1433;Database={{pascalCase ServiceName}}Db;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True"
+      }{{#if Aspire.Resources.Seq}},{{/if}}
+{{/if}}
+{{#if Aspire.Resources.Seq}}
+      "Seq": {
+        "Enabled": true,
+        "Port": 5341,
+        "Url": "http://localhost:5341"
+      }
+{{/if}}
+    },
+    "Container": {
+      "Replicas": {{Aspire.Container.Replicas}}{{#if Aspire.Container.CpuLimit}},
+      "CpuLimit": {{Aspire.Container.CpuLimit}}{{/if}}{{#if Aspire.Container.MemoryLimit}},
+      "MemoryLimit": {{Aspire.Container.MemoryLimit}}{{/if}}
+    }
+  },
+{{#if ServiceDiscovery}}
+  "ServiceDiscovery": {
+    "Enabled": {{ServiceDiscovery.Enabled}},
+    "Consul": {
+      "Host": "{{ServiceDiscovery.Consul.Host}}",
+      "Port": {{ServiceDiscovery.Consul.Port}}
+    }
+  },
+{{/if}}
+{{#if DistributedTracing}}
+  "DistributedTracing": {
+    "Enabled": {{DistributedTracing.Enabled}},
+    "OpenTelemetry": {
+      "ServiceName": "{{DistributedTracing.OpenTelemetry.ServiceName}}",
+      "Endpoint": "{{DistributedTracing.OpenTelemetry.Endpoint}}",
+      "Protocol": "Grpc"
+    }
+  },
+{{/if}}
+  "AllowedHosts": "*"
+}
+

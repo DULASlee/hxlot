@@ -1,0 +1,70 @@
+{{!-- Domain Entity Template --}}
+{{!-- 生成ABP Domain层实体代码（支持单体/微服务双模式） --}}
+
+{{#each Usings}}
+using {{this}};
+{{/each}}
+
+namespace {{Namespace}}.Entities;
+
+/// <summary>
+/// {{Comment}}
+/// </summary>
+{{#if IsMicroservice}}
+/// <remarks>
+/// 微服务: {{ServiceName}}
+/// </remarks>
+{{/if}}
+public class {{EntityName}} : {{BaseClass}}
+{
+    {{#each Properties}}
+    /// <summary>
+    /// {{#if HasComment}}{{Comment}}{{else}}{{Name}}{{/if}}
+    /// </summary>
+    {{#if IsRequired}}
+    [Required]
+    {{/if}}
+    {{#if MaxLength}}
+    [MaxLength({{MaxLength}})]
+    {{/if}}
+    public {{Type}}{{#if IsNullable}}?{{/if}} {{Name}} { get; set; }{{#if IsRequired}}{{#unless IsNullable}} = default!;{{/unless}}{{/if}}
+
+    {{/each}}
+    {{#if HasRelations}}
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 导航属性（关系映射）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    {{#each Relations}}
+    {{#if IsOneToMany}}
+    /// <summary>
+    /// 一对多关系: {{PropertyName}}
+    /// </summary>
+    public virtual ICollection<{{RelatedEntityName}}> {{PropertyName}} { get; set; } = new List<{{RelatedEntityName}}>();
+    {{/if}}
+    {{#if IsOneToOne}}
+    /// <summary>
+    /// 一对一关系: {{PropertyName}}
+    /// </summary>
+    public virtual {{RelatedEntityName}}? {{PropertyName}} { get; set; }
+    {{/if}}
+    {{#if IsManyToOne}}
+    /// <summary>
+    /// 多对一关系: {{PropertyName}}
+    /// </summary>
+    {{#if ForeignKeyName}}
+    [ForeignKey("{{ForeignKeyName}}")]
+    {{/if}}
+    public virtual {{RelatedEntityName}}? {{PropertyName}} { get; set; }
+    {{/if}}
+    {{#if IsManyToMany}}
+    /// <summary>
+    /// 多对多关系: {{PropertyName}}
+    /// </summary>
+    public virtual ICollection<{{RelatedEntityName}}> {{PropertyName}} { get; set; } = new List<{{RelatedEntityName}}>();
+    {{/if}}
+
+    {{/each}}
+    {{/if}}
+}
+
