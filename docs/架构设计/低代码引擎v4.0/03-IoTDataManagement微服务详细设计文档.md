@@ -4,11 +4,45 @@
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.0 |
+| 文档版本 | v1.1（新增客户端SDK架构）|
 | 创建日期 | 2025-10-19 |
+| 最新更新 | 2025-10-19（添加SmartAbp.IoTData.Client架构）|
 | 负责人 | SmartABP架构团队 |
 | 状态 | 设计阶段 |
-| 架构模式 | ABP模块化 + Aspire + Dapr + Lambda架构 |
+| 架构模式 | ABP模块化 + Aspire + Dapr + Lambda架构 + 客户端SDK |
+| 客户端SDK | SmartAbp.IoTData.Client |
+| 无缝集成方案 | 参考 03-IoTDataManagement微服务无缝集成方案.md |
+
+---
+
+## 📖 无缝集成方案说明（⭐ v1.1新增）
+
+本文档为IoT数据管理微服务的详细技术设计文档。关于客户端SDK的无缝集成方案（6大核心组件 + 3种集成方式），请参阅：
+
+**👉 [03-IoTDataManagement微服务无缝集成方案.md](./03-IoTDataManagement微服务无缝集成方案.md)**
+
+**核心亮点**：
+- ✅ **零侵入式集成**：一行代码完成IoT数据采集系统集成
+- ✅ **MQTT + Kafka双协议**：自动采集设备数据并推送到Kafka
+- ✅ **边缘计算支持**：边缘网关数据预处理
+- ✅ **高性能时序存储**：TimescaleDB + InfluxDB双存储
+- ✅ **实时流式处理**：Apache Flink实时数据清洗和转换
+- ✅ **大数据批量分析**：Spark批量数据挖掘
+
+**客户端SDK组件（SmartAbp.IoTData.Client）**：
+1. **IoTDataCollector**：设备数据采集器（MQTT/HTTP/Modbus）
+2. **TimeSeriesWriter**：时序数据写入器（批量优化）
+3. **EdgeComputing**：边缘计算处理器（数据预处理）
+4. **DataStreamProcessor**：流式数据处理器（Flink集成）
+5. **AlertEngine**：告警引擎（实时告警推送）
+6. **IoTDataClient**：HTTP客户端（RESTful API封装）
+
+**3种集成方式**：
+- **方式1（推荐）**：`builder.Services.AddIoTDataClient(serviceUrl, serviceName)` - 零侵入式
+- **方式2（企业级）**：`options` 精细化配置（采集频率、批量大小、告警规则）
+- **方式3（手动）**：直接使用 `IoTDataClient` API进行数据采集和查询
+
+详细的集成代码示例、API文档、架构图，请参阅无缝集成方案文档。
 
 ---
 
