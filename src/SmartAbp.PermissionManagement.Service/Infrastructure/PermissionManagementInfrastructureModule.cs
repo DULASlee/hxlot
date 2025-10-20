@@ -8,6 +8,7 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using SmartAbp.PermissionManagement.Domain;
 using SmartAbp.PermissionManagement.Infrastructure.EntityFrameworkCore;
+using SmartAbp.PermissionManagement.Infrastructure.MultiTenancy;
 
 namespace SmartAbp.PermissionManagement.Infrastructure;
 
@@ -37,11 +38,28 @@ public class PermissionManagementInfrastructureModule : AbpModule
             options.AddDefaultRepositories(includeAllEntities: true);
         });
 
-        // 配置PostgreSQL
+        // 配置PostgreSQL + 多租户Schema拦截器
         Configure<AbpDbContextOptions>(options =>
         {
-            options.UseNpgsql();
+            options.Configure<EntityFrameworkCore.PermissionManagementDbContext>(dbContextOptions =>
+            {
+                dbContextOptions.UseNpgsql(npgsqlOptions =>
+                {
+                    // PostgreSQL特定配置
+                });
+
+                // 注册EF Core拦截器
+                dbContextOptions.DbContextOptions.AddInterceptors(
+                    context.Services.BuildServiceProvider()
+                        .GetRequiredService<TenantSchemaConnectionInterceptor>()
+                );
+            });
         });
+
+        // 注册租户Schema解析器、拦截器和管理器
+        context.Services.AddTransient<ITenantSchemaResolver, TenantSchemaResolver>();
+        context.Services.AddTransient<TenantSchemaConnectionInterceptor>();
+        context.Services.AddTransient<ITenantSchemaManager, TenantSchemaManager>();
 
         // 配置Redis分布式缓存
         Configure<AbpDistributedCacheOptions>(options =>

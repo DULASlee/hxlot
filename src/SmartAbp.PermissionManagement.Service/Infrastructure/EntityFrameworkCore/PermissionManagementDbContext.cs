@@ -7,6 +7,8 @@ using Volo.Abp.PermissionManagement;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using Volo.Abp.MultiTenancy;
+using SmartAbp.PermissionManagement.Infrastructure.MultiTenancy;
 
 namespace SmartAbp.PermissionManagement.Infrastructure.EntityFrameworkCore;
 
@@ -40,9 +42,22 @@ public class PermissionManagementDbContext : AbpDbContext<PermissionManagementDb
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
 
-    public PermissionManagementDbContext(DbContextOptions<PermissionManagementDbContext> options)
+    private readonly ITenantSchemaResolver _schemaResolver;
+
+    public PermissionManagementDbContext(
+        DbContextOptions<PermissionManagementDbContext> options,
+        ITenantSchemaResolver schemaResolver)
         : base(options)
     {
+        _schemaResolver = schemaResolver;
+    }
+
+    /// <summary>
+    /// 获取当前租户的Schema名称
+    /// </summary>
+    protected virtual string GetCurrentSchema()
+    {
+        return _schemaResolver.GetSchemaName();
     }
 
     protected override void OnModelCreating(ModelBuilder builder)

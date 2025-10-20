@@ -1,6 +1,11 @@
+using System;
+using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.Abstractions;
+using Volo.Abp.MultiTenancy;
+using SmartAbp.PermissionManagement.Infrastructure.MultiTenancy;
 
 namespace SmartAbp.PermissionManagement.Infrastructure.EntityFrameworkCore;
 
@@ -22,7 +27,10 @@ public class PermissionManagementDbContextFactory : IDesignTimeDbContextFactory<
                 b => b.MigrationsHistoryTable("__EFMigrationsHistory", "public")
             );
 
-        return new PermissionManagementDbContext(builder.Options);
+        // 创建设计时Schema解析器（用于迁移）
+        var designTimeSchemaResolver = new DesignTimeTenantSchemaResolver();
+
+        return new PermissionManagementDbContext(builder.Options, designTimeSchemaResolver);
     }
 
     private static IConfigurationRoot BuildConfiguration()
@@ -33,6 +41,17 @@ public class PermissionManagementDbContextFactory : IDesignTimeDbContextFactory<
             .AddJsonFile("appsettings.Development.json", optional: true);
 
         return builder.Build();
+    }
+
+    /// <summary>
+    /// 设计时Schema解析器（用于EF Core迁移）
+    /// 迁移时使用默认的public schema
+    /// </summary>
+    private class DesignTimeTenantSchemaResolver : ITenantSchemaResolver
+    {
+        public string GetSchemaName() => "public";
+        public string GetSchemaName(Guid tenantId) => $"tenant_{tenantId:N}";
+        public bool IsValidSchemaName(string schemaName) => true;
     }
 }
 
