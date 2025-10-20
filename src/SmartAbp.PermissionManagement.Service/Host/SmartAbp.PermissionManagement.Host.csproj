@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>SmartAbp.PermissionManagement</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="8.3.1" />
+    <PackageReference Include="Volo.Abp.Autofac" Version="8.3.1" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="8.3.1" />
+    <PackageReference Include="Volo.Abp.Swashbuckle" Version="8.3.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Application\SmartAbp.PermissionManagement.Application.csproj" />
+    <ProjectReference Include="..\HttpApi\SmartAbp.PermissionManagement.HttpApi.csproj" />
+    <ProjectReference Include="..\Infrastructure\SmartAbp.PermissionManagement.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
+
