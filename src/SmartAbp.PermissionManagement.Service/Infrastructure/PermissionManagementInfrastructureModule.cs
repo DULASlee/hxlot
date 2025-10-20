@@ -5,6 +5,7 @@ using Volo.Abp.EntityFrameworkCore.PostgreSql;
 using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
+using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using SmartAbp.PermissionManagement.Domain;
 using SmartAbp.PermissionManagement.Infrastructure.EntityFrameworkCore;
 
@@ -13,13 +14,14 @@ namespace SmartAbp.PermissionManagement.Infrastructure;
 /// <summary>
 /// 权限管理基础设施层模块
 /// 实现数据访问、仓储、外部服务集成等
-/// 集成PostgreSQL + Redis + ABP Identity + ABP PermissionManagement
+/// 集成PostgreSQL + Redis + ABP Identity + ABP PermissionManagement + TenantManagement（多租户）
 /// </summary>
 [DependsOn(
     typeof(AbpEntityFrameworkCoreModule),
     typeof(AbpEntityFrameworkCorePostgreSqlModule),
     typeof(AbpIdentityEntityFrameworkCoreModule),
     typeof(AbpPermissionManagementEntityFrameworkCoreModule),
+    typeof(AbpTenantManagementEntityFrameworkCoreModule),
     typeof(AbpCachingModule),
     typeof(PermissionManagementDomainModule)
 )]

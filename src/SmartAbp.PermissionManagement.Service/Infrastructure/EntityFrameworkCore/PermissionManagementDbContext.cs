@@ -5,17 +5,21 @@ using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
+using Volo.Abp.TenantManagement;
+using Volo.Abp.TenantManagement.EntityFrameworkCore;
 
 namespace SmartAbp.PermissionManagement.Infrastructure.EntityFrameworkCore;
 
 /// <summary>
 /// 权限管理数据库上下文
-/// 集成ABP Identity和PermissionManagement模块
+/// 集成ABP Identity + PermissionManagement + TenantManagement（多租户）
+/// 支持多租户数据隔离（Shared Database, Separate Schema策略）
 /// </summary>
 [ConnectionStringName("PermissionManagement")]
 public class PermissionManagementDbContext : AbpDbContext<PermissionManagementDbContext>,
     IIdentityDbContext,
-    IPermissionManagementDbContext
+    IPermissionManagementDbContext,
+    ITenantManagementDbContext
 {
     // ABP Identity实体集
     public DbSet<IdentityUser> Users { get; set; }
@@ -32,6 +36,10 @@ public class PermissionManagementDbContext : AbpDbContext<PermissionManagementDb
     public DbSet<PermissionGroupDefinitionRecord> PermissionGroups { get; set; }
     public DbSet<PermissionDefinitionRecord> Permissions { get; set; }
 
+    // ABP TenantManagement实体集（多租户）
+    public DbSet<Tenant> Tenants { get; set; }
+    public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
+
     public PermissionManagementDbContext(DbContextOptions<PermissionManagementDbContext> options)
         : base(options)
     {
@@ -46,6 +54,9 @@ public class PermissionManagementDbContext : AbpDbContext<PermissionManagementDb
 
         // 配置ABP PermissionManagement模块
         builder.ConfigurePermissionManagement();
+
+        // 配置ABP TenantManagement模块（多租户）
+        builder.ConfigureTenantManagement();
 
         // 配置自定义实体
         builder.ConfigurePermissionManagementService();
