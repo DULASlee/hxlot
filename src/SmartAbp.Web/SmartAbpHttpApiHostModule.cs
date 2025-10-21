@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartAbp.Web.Swagger;
+using SmartAbp.Web.Hubs;
+using SmartAbp.Web.BackgroundWorkers;
+using SmartAbp.Application.RealtimeData;
 using Volo.Abp;
 using Volo.Abp.Autofac;
 using Volo.Abp.AspNetCore.Authentication.JwtBearer;
@@ -56,6 +59,10 @@ public class SmartAbpHttpApiHostModule : AbpModule
             options.Languages.Add(new LanguageInfo("zh-Hans", "zh-Hans", "简体中文"));
         });
 
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // CORS配置（支持SignalR）
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        
         context.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(builder =>
@@ -68,7 +75,7 @@ public class SmartAbpHttpApiHostModule : AbpModule
                     builder.SetIsOriginAllowed(origin => true)
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowCredentials();
+                        .AllowCredentials(); // SignalR必须开启Credentials
                 }
                 else
                 {
@@ -77,10 +84,39 @@ public class SmartAbpHttpApiHostModule : AbpModule
                     builder.WithOrigins(origins.Split(',', StringSplitOptions.RemoveEmptyEntries))
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowCredentials();
+                        .AllowCredentials(); // SignalR必须开启Credentials
                 }
             });
         });
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // SignalR配置（用于数字大屏实时数据推送）
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        
+        context.Services.AddSignalR(options =>
+        {
+            // 客户端超时时间（30秒）
+            options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
+            
+            // 心跳间隔（15秒）
+            options.KeepAliveInterval = TimeSpan.FromSeconds(15);
+            
+            // 最大消息大小（1MB）
+            options.MaximumReceiveMessageSize = 1024 * 1024;
+            
+            // 启用详细错误（仅开发环境）
+            options.EnableDetailedErrors = context.Services.GetRequiredService<IHostEnvironment>().IsDevelopment();
+        });
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 注册应用服务
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        
+        // 实时数据聚合服务
+        context.Services.AddTransient<RealtimeDataAggregatorService>();
+
+        // 后台推送任务
+        context.Services.AddHostedService<RealtimeDataPushBackgroundWorker>();
 
         context.Services.AddAbpSwaggerGen(options =>
         {
@@ -160,6 +196,15 @@ public class SmartAbpHttpApiHostModule : AbpModule
 
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
-        app.UseConfiguredEndpoints();
+        
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 配置端点路由（包括SignalR Hub）
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        
+        app.UseConfiguredEndpoints(endpoints =>
+        {
+            // 映射SignalR Hub（数字大屏实时数据推送）
+            endpoints.MapHub<ProductionLineHub>("/hubs/production-line");
+        });
     }
 }
