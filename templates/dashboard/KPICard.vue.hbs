@@ -1,0 +1,401 @@
+<template>
+  <div class="kpi-card" :class="`trend-${trend}`">
+    <div class="kpi-header">
+      <span class="kpi-label">{{ label }}</span>
+      <el-icon class="trend-icon" :class="`trend-${trend}`">
+        <component :is="trendIcon" />
+      </el-icon>
+    </div>
+    
+    <div class="kpi-body">
+      <div class="kpi-value">
+        <span class="value">{{ formattedValue }}</span>
+        <span class="unit" v-if="unit">{{ unit }}</span>
+      </div>
+      
+      <div class="kpi-change" v-if="change !== undefined && change !== 0">
+        <span class="change-label">较上次</span>
+        <span class="change-value" :class="changeClass">
+          {{ changePrefix }}{{ Math.abs(change).toFixed(2) }}%
+        </span>
+      </div>
+    </div>
+
+    <div class="kpi-footer">
+      <div class="sparkline" ref="sparklineRef"></div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted, watch } from 'vue'
+import { ArrowUp, ArrowDown, Minus } from '@element-plus/icons-vue'
+import * as echarts from 'echarts'
+import type { EChartsOption } from 'echarts'
+
+/**
+ * KPI指标卡片组件
+ * 
+ * 【功能】
+ * - 显示单个KPI指标值
+ * - 显示趋势方向（上升/下降/持平）
+ * - 显示变化百分比
+ * - 显示迷你折线图（Sparkline）
+ * 
+ * 【数据来源】
+ * - 从RealtimeStore获取实时数据
+ * - WebSocket推送触发更新
+ * 
+ * @author SmartAbp DevKit Low-Code Engine
+ * @since {{GeneratedTime}}
+ */
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Props
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+interface Props {
+  /** KPI标签 */
+  label: string
+  /** KPI值 */
+  value: number
+  /** 单位 */
+  unit?: string
+  /** 趋势（up/down/flat） */
+  trend?: 'up' | 'down' | 'flat'
+  /** 变化百分比 */
+  change?: number
+  /** 历史数据（用于Sparkline） */
+  historyData?: number[]
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  unit: '',
+  trend: 'flat',
+  change: 0,
+  historyData: () => []
+})
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 计算属性
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/** 格式化数值 */
+const formattedValue = computed(() => {
+  return formatNumber(props.value)
+})
+
+/** 趋势图标 */
+const trendIcon = computed(() => {
+  switch (props.trend) {
+    case 'up':
+      return ArrowUp
+    case 'down':
+      return ArrowDown
+    default:
+      return Minus
+  }
+})
+
+/** 变化百分比符号 */
+const changePrefix = computed(() => {
+  if (!props.change) return ''
+  return props.change > 0 ? '+' : ''
+})
+
+/** 变化百分比样式类 */
+const changeClass = computed(() => {
+  if (!props.change) return ''
+  return props.change > 0 ? 'positive' : 'negative'
+})
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ECharts Sparkline
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const sparklineRef = ref<HTMLDivElement>()
+let sparklineChart: echarts.ECharts | null = null
+
+/**
+ * 初始化Sparkline图表
+ */
+function initSparkline() {
+  if (!sparklineRef.value) return
+
+  sparklineChart = echarts.init(sparklineRef.value)
+
+  const option: EChartsOption = {
+    grid: {
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0
+    },
+    xAxis: {
+      type: 'category',
+      show: false,
+      data: props.historyData.map((_, i) => i)
+    },
+    yAxis: {
+      type: 'value',
+      show: false
+    },
+    series: [
+      {
+        type: 'line',
+        data: props.historyData,
+        smooth: true,
+        symbol: 'none',
+        lineStyle: {
+          width: 1,
+          color: getSparklineColor()
+        },
+        areaStyle: {
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              { offset: 0, color: getSparklineColor(0.3) },
+              { offset: 1, color: getSparklineColor(0.05) }
+            ]
+          }
+        }
+      }
+    ]
+  }
+
+  sparklineChart.setOption(option)
+}
+
+/**
+ * 更新Sparkline图表
+ */
+function updateSparkline() {
+  if (!sparklineChart) return
+
+  sparklineChart.setOption({
+    xAxis: {
+      data: props.historyData.map((_, i) => i)
+    },
+    series: [
+      {
+        data: props.historyData,
+        lineStyle: {
+          color: getSparklineColor()
+        },
+        areaStyle: {
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              { offset: 0, color: getSparklineColor(0.3) },
+              { offset: 1, color: getSparklineColor(0.05) }
+            ]
+          }
+        }
+      }
+    ]
+  })
+}
+
+/**
+ * 获取Sparkline颜色（根据趋势）
+ */
+function getSparklineColor(opacity = 1): string {
+  const colors = {
+    up: `rgba(67, 207, 124, ${opacity})`,     // 绿色
+    down: `rgba(245, 108, 108, ${opacity})`,  // 红色
+    flat: `rgba(144, 147, 153, ${opacity})`   // 灰色
+  }
+  return colors[props.trend || 'flat']
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 辅助函数
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * 格式化数字（添加千分位分隔符）
+ */
+function formatNumber(value: number): string {
+  if (value === null || value === undefined) return '0'
+
+  // 判断是否为小数
+  const isDecimal = value % 1 !== 0
+
+  if (isDecimal) {
+    return value.toLocaleString('zh-CN', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
+  } else {
+    return value.toLocaleString('zh-CN')
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 生命周期钩子
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+onMounted(() => {
+  // 初始化Sparkline图表
+  if (props.historyData && props.historyData.length > 0) {
+    initSparkline()
+  }
+
+  // 监听窗口大小变化
+  window.addEventListener('resize', handleResize)
+})
+
+/**
+ * 监听历史数据变化
+ */
+watch(() => props.historyData, (newData) => {
+  if (newData && newData.length > 0) {
+    if (!sparklineChart) {
+      initSparkline()
+    } else {
+      updateSparkline()
+    }
+  }
+}, { deep: true })
+
+/**
+ * 窗口大小变化处理
+ */
+function handleResize() {
+  if (sparklineChart) {
+    sparklineChart.resize()
+  }
+}
+</script>
+
+<style scoped lang="scss">
+.kpi-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-radius: 12px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    transition: background 0.3s ease;
+  }
+
+  &.trend-up::before {
+    background: linear-gradient(180deg, #43cf7c 0%, #43cf7c 100%);
+  }
+
+  &.trend-down::before {
+    background: linear-gradient(180deg, #f56c6c 0%, #f56c6c 100%);
+  }
+
+  &.trend-flat::before {
+    background: linear-gradient(180deg, #909399 0%, #909399 100%);
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.kpi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+
+  .kpi-label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+  }
+
+  .trend-icon {
+    font-size: 18px;
+
+    &.trend-up {
+      color: #43cf7c;
+    }
+
+    &.trend-down {
+      color: #f56c6c;
+    }
+
+    &.trend-flat {
+      color: #909399;
+    }
+  }
+}
+
+.kpi-body {
+  margin-bottom: 12px;
+
+  .kpi-value {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 8px;
+
+    .value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .unit {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+  }
+
+  .kpi-change {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+
+    .change-label {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .change-value {
+      font-weight: 600;
+
+      &.positive {
+        color: #43cf7c;
+      }
+
+      &.negative {
+        color: #f56c6c;
+      }
+    }
+  }
+}
+
+.kpi-footer {
+  .sparkline {
+    width: 100%;
+    height: 40px;
+  }
+}
+</style>
+

@@ -1,0 +1,298 @@
+/**
+ * WebSocket客户端
+ * 
+ * 【功能】
+ * - 建立与后端WebSocket Hub的连接
+ * - 接收实时数据推送
+ * - 处理连接状态（连接、断开、重连）
+ * - 事件订阅和分发
+ * 
+ * 【技术实现】
+ * - SignalR客户端（或原生WebSocket）
+ * - 自动重连机制
+ * - 心跳检测
+ * - 事件总线模式
+ * 
+ * @author SmartAbp DevKit Low-Code Engine
+ * @since {{GeneratedTime}}
+ */
+
+import * as signalR from '@microsoft/signalr'
+import type { HubConnection, HubConnectionState } from '@microsoft/signalr'
+import { ElMessage } from 'element-plus'
+
+/**
+ * WebSocket客户端类
+ */
+export class WebSocketClient {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 私有属性
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /** SignalR连接实例 */
+  private connection: HubConnection | null = null
+
+  /** WebSocket端点URL */
+  private readonly hubUrl: string
+
+  /** 事件处理器映射 */
+  private readonly eventHandlers: Map<string, Array<(...args: any[]) => void>> = new Map()
+
+  /** 重连计数器 */
+  private reconnectCount = 0
+
+  /** 最大重连次数 */
+  private readonly maxReconnectAttempts = 10
+
+  /** 重连延迟（毫秒） */
+  private readonly reconnectDelay = 3000
+
+  /** 连接状态变化回调 */
+  private onConnectionStateChanged?: (state: HubConnectionState) => void
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 构造函数
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  constructor(endpoint: string, baseUrl?: string) {
+    // 构建完整的Hub URL
+    const base = baseUrl || import.meta.env.VITE_API_BASE_URL || window.location.origin
+    this.hubUrl = `${base}${endpoint}`
+
+    console.log('[WebSocket] WebSocket client initialized:', this.hubUrl)
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 公共方法
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * 连接到WebSocket Hub
+   */
+  async connect(): Promise<void> {
+    try {
+      // 创建SignalR连接
+      this.connection = new signalR.HubConnectionBuilder()
+        .withUrl(this.hubUrl, {
+          // 传递访问令牌（如需要）
+          accessTokenFactory: () => this.getAccessToken(),
+          // 跳过协商（针对某些特定场景）
+          skipNegotiation: false,
+          // 传输方式（WebSocket优先）
+          transport: signalR.HttpTransportType.WebSockets
+        })
+        .withAutomaticReconnect({
+          // 自定义重连延迟策略
+          nextRetryDelayInMilliseconds: (retryContext) => {
+            if (retryContext.previousRetryCount >= this.maxReconnectAttempts) {
+              return null // 停止重连
+            }
+            return this.reconnectDelay * Math.pow(2, retryContext.previousRetryCount) // 指数退避
+          }
+        })
+        .configureLogging(signalR.LogLevel.Information)
+        .build()
+
+      // 注册连接状态回调
+      this.connection.onreconnecting(() => {
+        console.warn('[WebSocket] Reconnecting...')
+        this.notifyConnectionStateChanged(signalR.HubConnectionState.Reconnecting)
+      })
+
+      this.connection.onreconnected((connectionId) => {
+        console.log('[WebSocket] Reconnected successfully:', connectionId)
+        this.reconnectCount = 0
+        this.notifyConnectionStateChanged(signalR.HubConnectionState.Connected)
+        ElMessage.success('WebSocket连接已恢复')
+      })
+
+      this.connection.onclose((error) => {
+        console.error('[WebSocket] Connection closed:', error)
+        this.notifyConnectionStateChanged(signalR.HubConnectionState.Disconnected)
+        
+        if (error) {
+          ElMessage.error(`WebSocket连接已断开: ${error.message}`)
+        }
+      })
+
+      // 启动连接
+      await this.connection.start()
+      
+      console.log('[WebSocket] Connected successfully')
+      this.notifyConnectionStateChanged(signalR.HubConnectionState.Connected)
+      ElMessage.success('WebSocket连接成功')
+
+    } catch (error) {
+      console.error('[WebSocket] Connection failed:', error)
+      this.notifyConnectionStateChanged(signalR.HubConnectionState.Disconnected)
+      
+      ElMessage.error('WebSocket连接失败，将尝试重新连接...')
+      
+      // 延迟后重试
+      setTimeout(() => {
+        if (this.reconnectCount < this.maxReconnectAttempts) {
+          this.reconnectCount++
+          this.connect()
+        } else {
+          ElMessage.error('WebSocket连接失败，已达到最大重试次数')
+        }
+      }, this.reconnectDelay)
+    }
+  }
+
+  /**
+   * 断开WebSocket连接
+   */
+  async disconnect(): Promise<void> {
+    try {
+      if (this.connection) {
+        await this.connection.stop()
+        this.connection = null
+        console.log('[WebSocket] Disconnected')
+        ElMessage.info('WebSocket连接已断开')
+      }
+    } catch (error) {
+      console.error('[WebSocket] Disconnect error:', error)
+    }
+  }
+
+  /**
+   * 订阅事件
+   * 
+   * @param eventName 事件名称
+   * @param handler 事件处理器
+   */
+  on(eventName: string, handler: (...args: any[]) => void): void {
+    // 添加到事件处理器映射
+    if (!this.eventHandlers.has(eventName)) {
+      this.eventHandlers.set(eventName, [])
+    }
+    this.eventHandlers.get(eventName)!.push(handler)
+
+    // 注册到SignalR连接
+    if (this.connection) {
+      this.connection.on(eventName, handler)
+    }
+
+    console.log(`[WebSocket] Event subscribed: ${eventName}`)
+  }
+
+  /**
+   * 取消订阅事件
+   * 
+   * @param eventName 事件名称
+   * @param handler 事件处理器（可选，不传则取消所有）
+   */
+  off(eventName: string, handler?: (...args: any[]) => void): void {
+    if (!handler) {
+      // 取消所有处理器
+      this.eventHandlers.delete(eventName)
+      if (this.connection) {
+        this.connection.off(eventName)
+      }
+    } else {
+      // 取消指定处理器
+      const handlers = this.eventHandlers.get(eventName)
+      if (handlers) {
+        const index = handlers.indexOf(handler)
+        if (index > -1) {
+          handlers.splice(index, 1)
+        }
+      }
+      if (this.connection) {
+        this.connection.off(eventName, handler)
+      }
+    }
+
+    console.log(`[WebSocket] Event unsubscribed: ${eventName}`)
+  }
+
+  /**
+   * 发送消息到服务器
+   * 
+   * @param methodName 方法名称
+   * @param args 参数
+   */
+  async invoke(methodName: string, ...args: any[]): Promise<any> {
+    if (!this.connection || this.connection.state !== signalR.HubConnectionState.Connected) {
+      throw new Error('WebSocket connection is not established')
+    }
+
+    try {
+      const result = await this.connection.invoke(methodName, ...args)
+      console.log(`[WebSocket] Method invoked: ${methodName}`, result)
+      return result
+    } catch (error) {
+      console.error(`[WebSocket] Method invocation failed: ${methodName}`, error)
+      throw error
+    }
+  }
+
+  /**
+   * 获取连接状态
+   */
+  getConnectionState(): HubConnectionState | null {
+    return this.connection?.state ?? null
+  }
+
+  /**
+   * 判断是否已连接
+   */
+  isConnected(): boolean {
+    return this.connection?.state === signalR.HubConnectionState.Connected
+  }
+
+  /**
+   * 设置连接状态变化回调
+   */
+  setConnectionStateCallback(callback: (state: HubConnectionState) => void): void {
+    this.onConnectionStateChanged = callback
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 私有方法
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * 获取访问令牌
+   */
+  private getAccessToken(): string {
+    // TODO: 从localStorage或sessionStorage获取访问令牌
+    return localStorage.getItem('access_token') || ''
+  }
+
+  /**
+   * 通知连接状态变化
+   */
+  private notifyConnectionStateChanged(state: HubConnectionState): void {
+    if (this.onConnectionStateChanged) {
+      this.onConnectionStateChanged(state)
+    }
+  }
+}
+
+/**
+ * 创建WebSocket客户端单例
+ */
+let wsClientInstance: WebSocketClient | null = null
+
+/**
+ * 获取WebSocket客户端实例
+ */
+export function getWebSocketClient(endpoint = '{{WebSocketEndpoint}}'): WebSocketClient {
+  if (!wsClientInstance) {
+    wsClientInstance = new WebSocketClient(endpoint)
+  }
+  return wsClientInstance
+}
+
+/**
+ * 销毁WebSocket客户端实例
+ */
+export async function destroyWebSocketClient(): Promise<void> {
+  if (wsClientInstance) {
+    await wsClientInstance.disconnect()
+    wsClientInstance = null
+  }
+}
+

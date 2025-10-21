@@ -1,0 +1,381 @@
+/**
+ * 数据聚合器
+ * 
+ * 【功能】
+ * - 对实时数据进行聚合计算
+ * - 提供统计指标（平均值、最大值、最小值、总和等）
+ * - 提供数据分组和筛选
+ * - 提供时间窗口聚合（按分钟/小时/天）
+ * 
+ * 【使用场景】
+ * - KPI计算
+ * - 趋势分析
+ * - 数据对比
+ * - 报警阈值判断
+ * 
+ * @author SmartAbp DevKit Low-Code Engine
+ * @since {{GeneratedTime}}
+ */
+
+import type { {{EntityName}}Dto } from '@/api/generated'
+
+/**
+ * 聚合结果接口
+ */
+export interface AggregationResult {
+  /** 数据条数 */
+  count: number
+  /** 总和 */
+  sum: number
+  /** 平均值 */
+  avg: number
+  /** 最小值 */
+  min: number
+  /** 最大值 */
+  max: number
+  /** 中位数 */
+  median: number
+  /** 标准差 */
+  standardDeviation: number
+}
+
+/**
+ * 时间窗口聚合结果接口
+ */
+export interface TimeWindowAggregation {
+  /** 时间戳 */
+  timestamp: Date
+  /** 窗口内的数据 */
+  data: {{EntityName}}Dto[]
+  /** 聚合结果 */
+  aggregation: Record<string, AggregationResult>
+}
+
+/**
+ * 数据聚合器类
+ */
+export class DataAggregator {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 基础统计方法
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * 计算字段的聚合统计
+   * 
+   * @param data 数据列表
+   * @param fieldName 字段名称
+   * @returns 聚合结果
+   */
+  static aggregate(data: {{EntityName}}Dto[], fieldName: string): AggregationResult {
+    const values = data
+      .map((item: any) => item[fieldName])
+      .filter((v: any) => typeof v === 'number' && !isNaN(v))
+
+    if (values.length === 0) {
+      return {
+        count: 0,
+        sum: 0,
+        avg: 0,
+        min: 0,
+        max: 0,
+        median: 0,
+        standardDeviation: 0
+      }
+    }
+
+    const sum = values.reduce((a: number, b: number) => a + b, 0)
+    const avg = sum / values.length
+    const min = Math.min(...values)
+    const max = Math.max(...values)
+    const median = this.calculateMedian(values)
+    const standardDeviation = this.calculateStandardDeviation(values, avg)
+
+    return {
+      count: values.length,
+      sum,
+      avg,
+      min,
+      max,
+      median,
+      standardDeviation
+    }
+  }
+
+  /**
+   * 批量聚合多个字段
+   * 
+   * @param data 数据列表
+   * @param fieldNames 字段名称列表
+   * @returns 字段聚合结果映射
+   */
+  static aggregateMultiple(
+    data: {{EntityName}}Dto[],
+    fieldNames: string[]
+  ): Record<string, AggregationResult> {
+    const result: Record<string, AggregationResult> = {}
+
+    for (const fieldName of fieldNames) {
+      result[fieldName] = this.aggregate(data, fieldName)
+    }
+
+    return result
+  }
+
+  /**
+   * 计算中位数
+   */
+  private static calculateMedian(values: number[]): number {
+    if (values.length === 0) return 0
+
+    const sorted = [...values].sort((a, b) => a - b)
+    const mid = Math.floor(sorted.length / 2)
+
+    if (sorted.length % 2 === 0) {
+      return (sorted[mid - 1] + sorted[mid]) / 2
+    } else {
+      return sorted[mid]
+    }
+  }
+
+  /**
+   * 计算标准差
+   */
+  private static calculateStandardDeviation(values: number[], avg: number): number {
+    if (values.length === 0) return 0
+
+    const squaredDiffs = values.map(value => Math.pow(value - avg, 2))
+    const avgSquaredDiff = squaredDiffs.reduce((a, b) => a + b, 0) / values.length
+
+    return Math.sqrt(avgSquaredDiff)
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 时间窗口聚合
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * 按时间窗口聚合数据
+   * 
+   * @param data 数据列表
+   * @param windowSize 窗口大小（毫秒）
+   * @param fieldNames 要聚合的字段列表
+   * @returns 时间窗口聚合结果列表
+   */
+  static aggregateByTimeWindow(
+    data: {{EntityName}}Dto[],
+    windowSize: number,
+    fieldNames: string[]
+  ): TimeWindowAggregation[] {
+    if (data.length === 0) return []
+
+    // 按时间排序
+    const sortedData = [...data].sort((a: any, b: any) => {
+      const timeA = new Date(a.creationTime || a.timestamp).getTime()
+      const timeB = new Date(b.creationTime || b.timestamp).getTime()
+      return timeA - timeB
+    })
+
+    // 确定起始时间
+    const startTime = new Date((sortedData[0] as any).creationTime || (sortedData[0] as any).timestamp).getTime()
+    const endTime = new Date((sortedData[sortedData.length - 1] as any).creationTime || (sortedData[sortedData.length - 1] as any).timestamp).getTime()
+
+    const windows: TimeWindowAggregation[] = []
+    let currentWindowStart = startTime
+
+    while (currentWindowStart <= endTime) {
+      const currentWindowEnd = currentWindowStart + windowSize
+
+      // 筛选当前时间窗口内的数据
+      const windowData = sortedData.filter((item: any) => {
+        const itemTime = new Date(item.creationTime || item.timestamp).getTime()
+        return itemTime >= currentWindowStart && itemTime < currentWindowEnd
+      })
+
+      if (windowData.length > 0) {
+        windows.push({
+          timestamp: new Date(currentWindowStart),
+          data: windowData,
+          aggregation: this.aggregateMultiple(windowData, fieldNames)
+        })
+      }
+
+      currentWindowStart = currentWindowEnd
+    }
+
+    return windows
+  }
+
+  /**
+   * 按分钟聚合
+   */
+  static aggregateByMinute(data: {{EntityName}}Dto[], fieldNames: string[]): TimeWindowAggregation[] {
+    return this.aggregateByTimeWindow(data, 60 * 1000, fieldNames) // 60秒 = 1分钟
+  }
+
+  /**
+   * 按小时聚合
+   */
+  static aggregateByHour(data: {{EntityName}}Dto[], fieldNames: string[]): TimeWindowAggregation[] {
+    return this.aggregateByTimeWindow(data, 60 * 60 * 1000, fieldNames) // 3600秒 = 1小时
+  }
+
+  /**
+   * 按天聚合
+   */
+  static aggregateByDay(data: {{EntityName}}Dto[], fieldNames: string[]): TimeWindowAggregation[] {
+    return this.aggregateByTimeWindow(data, 24 * 60 * 60 * 1000, fieldNames) // 86400秒 = 1天
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 数据筛选和分组
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * 筛选数据（简单条件）
+   * 
+   * @param data 数据列表
+   * @param condition 筛选条件
+   * @returns 筛选后的数据
+   */
+  static filter(
+    data: {{EntityName}}Dto[],
+    condition: (item: {{EntityName}}Dto) => boolean
+  ): {{EntityName}}Dto[] {
+    return data.filter(condition)
+  }
+
+  /**
+   * 按字段分组
+   * 
+   * @param data 数据列表
+   * @param fieldName 分组字段名称
+   * @returns 分组结果
+   */
+  static groupBy(
+    data: {{EntityName}}Dto[],
+    fieldName: string
+  ): Record<string, {{EntityName}}Dto[]> {
+    const groups: Record<string, {{EntityName}}Dto[]> = {}
+
+    for (const item of data) {
+      const key = (item as any)[fieldName]?.toString() || 'undefined'
+      
+      if (!groups[key]) {
+        groups[key] = []
+      }
+      
+      groups[key].push(item)
+    }
+
+    return groups
+  }
+
+  /**
+   * 分组并聚合
+   * 
+   * @param data 数据列表
+   * @param groupByField 分组字段
+   * @param aggregateFields 聚合字段列表
+   * @returns 分组聚合结果
+   */
+  static groupByAndAggregate(
+    data: {{EntityName}}Dto[],
+    groupByField: string,
+    aggregateFields: string[]
+  ): Record<string, Record<string, AggregationResult>> {
+    const groups = this.groupBy(data, groupByField)
+    const result: Record<string, Record<string, AggregationResult>> = {}
+
+    for (const [key, groupData] of Object.entries(groups)) {
+      result[key] = this.aggregateMultiple(groupData, aggregateFields)
+    }
+
+    return result
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 趋势分析
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * 计算变化率（百分比）
+   * 
+   * @param oldValue 旧值
+   * @param newValue 新值
+   * @returns 变化率（%）
+   */
+  static calculateChangeRate(oldValue: number, newValue: number): number {
+    if (oldValue === 0) return 0
+    return ((newValue - oldValue) / oldValue) * 100
+  }
+
+  /**
+   * 判断趋势方向
+   * 
+   * @param data 数据列表
+   * @param fieldName 字段名称
+   * @returns 'up' | 'down' | 'flat'
+   */
+  static detectTrend(data: {{EntityName}}Dto[], fieldName: string): 'up' | 'down' | 'flat' {
+    if (data.length < 2) return 'flat'
+
+    const values = data
+      .map((item: any) => item[fieldName])
+      .filter((v: any) => typeof v === 'number' && !isNaN(v))
+
+    if (values.length < 2) return 'flat'
+
+    // 简单线性回归判断趋势
+    const n = values.length
+    let sumX = 0
+    let sumY = 0
+    let sumXY = 0
+    let sumX2 = 0
+
+    for (let i = 0; i < n; i++) {
+      sumX += i
+      sumY += values[i]
+      sumXY += i * values[i]
+      sumX2 += i * i
+    }
+
+    const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX)
+
+    if (slope > 0.01) return 'up'
+    if (slope < -0.01) return 'down'
+    return 'flat'
+  }
+
+  /**
+   * 检测异常值（基于标准差）
+   * 
+   * @param data 数据列表
+   * @param fieldName 字段名称
+   * @param threshold 阈值（倍数，默认3倍标准差）
+   * @returns 异常值列表
+   */
+  static detectOutliers(
+    data: {{EntityName}}Dto[],
+    fieldName: string,
+    threshold = 3
+  ): {{EntityName}}Dto[] {
+    const aggregation = this.aggregate(data, fieldName)
+    const { avg, standardDeviation } = aggregation
+
+    return data.filter((item: any) => {
+      const value = item[fieldName]
+      if (typeof value !== 'number' || isNaN(value)) return false
+      
+      const deviation = Math.abs(value - avg)
+      return deviation > threshold * standardDeviation
+    })
+  }
+}
+
+/**
+ * 导出工厂函数（可选）
+ */
+export function createDataAggregator(): typeof DataAggregator {
+  return DataAggregator
+}
+

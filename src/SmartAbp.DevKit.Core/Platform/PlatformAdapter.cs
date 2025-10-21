@@ -102,11 +102,16 @@ public class PlatformAdapter
                 BasePath = Path.Combine(_templateRootPath, "dashboard"),
                 Templates = new Dictionary<string, string>
                 {
-                    ["DashboardLayout"] = "layout.hbs",
-                    ["KPICard"] = "kpi-card.hbs",
-                    ["RealtimeChart"] = "realtime-chart.hbs",
-                    ["WebSocketClient"] = "websocket-client.hbs",
-                    ["Store"] = "realtime-store.hbs",
+                    // 核心Dashboard模板（Vue组件）
+                    ["DashboardLayout"] = "DashboardLayout.vue.hbs",
+                    ["KPICard"] = "KPICard.vue.hbs",
+                    ["RealtimeChart"] = "RealtimeChart.vue.hbs",
+                    
+                    // TypeScript工具类
+                    ["WebSocketClient"] = "WebSocketClient.ts.hbs",
+                    ["Store"] = "Store.ts.hbs",
+                    ["DataAggregator"] = "DataAggregator.ts.hbs",
+                    
                     ["Types"] = "types.hbs",
                     
                     // MES行业模板

@@ -1,0 +1,264 @@
+/**
+ * 实时数据Store（Pinia）
+ * 
+ * 【功能】
+ * - 管理实时数据状态
+ * - 存储历史数据（用于图表）
+ * - 提供数据聚合和计算
+ * - WebSocket连接状态管理
+ * 
+ * 【数据流】
+ * WebSocket Client → addData() → State Update → Dashboard Components
+ * 
+ * @author SmartAbp DevKit Low-Code Engine
+ * @since {{GeneratedTime}}
+ */
+
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import type { {{EntityName}}Dto } from '@/api/generated'
+import type { HubConnectionState } from '@microsoft/signalr'
+
+/**
+ * 实时数据Store
+ */
+export const useRealtimeStore = defineStore('{{EntityNameCamel}}Realtime', () => {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 状态（State）
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /** 最新数据 */
+  const latestData = ref<{{EntityName}}Dto | null>(null)
+
+  /** 历史数据（用于图表渲染） */
+  const historicalData = ref<{{EntityName}}Dto[]>([])
+
+  /** 最大历史数据条数 */
+  const maxHistorySize = ref(100)
+
+  /** WebSocket连接状态 */
+  const connectionStatus = ref<string>('Disconnected')
+
+  /** 上次更新时间 */
+  const lastUpdateTime = ref<Date | null>(null)
+
+  /** 数据更新计数器 */
+  const updateCount = ref(0)
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 计算属性（Getters）
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /** 是否已连接 */
+  const isConnected = computed(() => connectionStatus.value === 'Connected')
+
+  /** 历史数据条数 */
+  const historyCount = computed(() => historicalData.value.length)
+
+  /**
+   * 获取指定字段的历史数据
+   */
+  const getFieldHistory = computed(() => {
+    return (fieldName: string) => {
+      return historicalData.value.map((item: any) => ({
+        timestamp: item.creationTime || item.timestamp,
+        value: item[fieldName] ?? 0
+      }))
+    }
+  })
+
+  /**
+   * 获取指定字段的统计信息
+   */
+  const getFieldStatistics = computed(() => {
+    return (fieldName: string) => {
+      const values = historicalData.value
+        .map((item: any) => item[fieldName] ?? 0)
+        .filter((v: number) => !isNaN(v))
+
+      if (values.length === 0) {
+        return {
+          count: 0,
+          sum: 0,
+          avg: 0,
+          min: 0,
+          max: 0
+        }
+      }
+
+      const sum = values.reduce((a: number, b: number) => a + b, 0)
+      const avg = sum / values.length
+      const min = Math.min(...values)
+      const max = Math.max(...values)
+
+      return {
+        count: values.length,
+        sum,
+        avg,
+        min,
+        max
+      }
+    }
+  })
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 操作方法（Actions）
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * 添加实时数据
+   * 
+   * @param data 新数据
+   */
+  function addData(data: {{EntityName}}Dto): void {
+    // 更新最新数据
+    latestData.value = data
+
+    // 添加到历史数据
+    historicalData.value.push(data)
+
+    // 限制历史数据大小（保持最新的N条）
+    if (historicalData.value.length > maxHistorySize.value) {
+      historicalData.value.shift() // 移除最旧的数据
+    }
+
+    // 更新时间戳和计数器
+    lastUpdateTime.value = new Date()
+    updateCount.value++
+
+    console.log('[RealtimeStore] Data added:', {
+      latestData: latestData.value,
+      historyCount: historicalData.value.length,
+      updateCount: updateCount.value
+    })
+  }
+
+  /**
+   * 批量添加历史数据
+   * 
+   * @param dataList 数据列表
+   */
+  function addBatchData(dataList: {{EntityName}}Dto[]): void {
+    if (!dataList || dataList.length === 0) return
+
+    // 添加所有数据
+    historicalData.value.push(...dataList)
+
+    // 限制历史数据大小
+    if (historicalData.value.length > maxHistorySize.value) {
+      historicalData.value = historicalData.value.slice(-maxHistorySize.value)
+    }
+
+    // 更新最新数据为列表中的最后一条
+    latestData.value = dataList[dataList.length - 1]
+
+    // 更新时间戳和计数器
+    lastUpdateTime.value = new Date()
+    updateCount.value += dataList.length
+
+    console.log('[RealtimeStore] Batch data added:', {
+      count: dataList.length,
+      historyCount: historicalData.value.length,
+      updateCount: updateCount.value
+    })
+  }
+
+  /**
+   * 清空历史数据
+   */
+  function clearHistory(): void {
+    historicalData.value = []
+    latestData.value = null
+    lastUpdateTime.value = null
+    updateCount.value = 0
+
+    console.log('[RealtimeStore] History cleared')
+  }
+
+  /**
+   * 设置最大历史数据条数
+   * 
+   * @param size 最大条数
+   */
+  function setMaxHistorySize(size: number): void {
+    maxHistorySize.value = size
+
+    // 如果当前历史数据超过新的最大值，进行裁剪
+    if (historicalData.value.length > size) {
+      historicalData.value = historicalData.value.slice(-size)
+    }
+
+    console.log('[RealtimeStore] Max history size set to:', size)
+  }
+
+  /**
+   * 更新WebSocket连接状态
+   * 
+   * @param state 连接状态
+   */
+  function updateConnectionStatus(state: HubConnectionState | string): void {
+    connectionStatus.value = typeof state === 'string' ? state : getConnectionStatusText(state as any)
+    console.log('[RealtimeStore] Connection status updated:', connectionStatus.value)
+  }
+
+  /**
+   * 重置Store状态
+   */
+  function reset(): void {
+    latestData.value = null
+    historicalData.value = []
+    connectionStatus.value = 'Disconnected'
+    lastUpdateTime.value = null
+    updateCount.value = 0
+
+    console.log('[RealtimeStore] Store reset')
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 辅助函数
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * 获取连接状态文本
+   */
+  function getConnectionStatusText(state: number): string {
+    // HubConnectionState enum values
+    const states: Record<number, string> = {
+      0: 'Disconnected',
+      1: 'Connecting',
+      2: 'Connected',
+      3: 'Disconnecting',
+      4: 'Reconnecting'
+    }
+    return states[state] || 'Unknown'
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 返回Store API
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  return {
+    // State
+    latestData,
+    historicalData,
+    maxHistorySize,
+    connectionStatus,
+    lastUpdateTime,
+    updateCount,
+
+    // Getters
+    isConnected,
+    historyCount,
+    getFieldHistory,
+    getFieldStatistics,
+
+    // Actions
+    addData,
+    addBatchData,
+    clearHistory,
+    setMaxHistorySize,
+    updateConnectionStatus,
+    reset
+  }
+})
+

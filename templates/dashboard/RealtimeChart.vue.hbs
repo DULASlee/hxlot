@@ -1,0 +1,489 @@
+<template>
+  <div class="realtime-chart-container">
+    <div class="chart-header">
+      <h3 class="chart-title">{{ title }}</h3>
+      <div class="chart-controls">
+        <el-button
+          size="small"
+          :icon="isPaused ? 'VideoPlay' : 'VideoPause'"
+          @click="togglePause"
+          circle
+        />
+        <el-button
+          size="small"
+          icon="Refresh"
+          @click="refreshChart"
+          circle
+        />
+      </div>
+    </div>
+    
+    <div class="chart-body" ref="chartRef"></div>
+
+    <div class="chart-footer" v-if="lastUpdateTime">
+      <span class="last-update">最后更新: {{ lastUpdateTime }}</span>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
+import * as echarts from 'echarts'
+import type { EChartsOption } from 'echarts'
+import { useRealtimeStore } from './realtime-store'
+
+/**
+ * 实时图表组件
+ * 
+ * 【功能】
+ * - 显示实时更新的图表
+ * - 支持多种图表类型（折线图、柱状图、饼图等）
+ * - 自动滚动时间轴（保持最新数据可见）
+ * - 暂停/继续更新
+ * - 手动刷新
+ * 
+ * 【数据来源】
+ * - 从RealtimeStore获取历史数据
+ * - WebSocket推送触发实时更新
+ * 
+ * @author SmartAbp DevKit Low-Code Engine
+ * @since {{GeneratedTime}}
+ */
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Props
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+interface Props {
+  /** 图表ID */
+  chartId: string
+  /** 图表类型 */
+  chartType: 'line' | 'bar' | 'pie' | 'gauge'
+  /** 图表标题 */
+  title: string
+  /** 数据字段（单个字段） */
+  dataField?: string
+  /** 数据字段列表（多个字段） */
+  dataFields?: string[]
+  /** 是否实时更新 */
+  isRealtime?: boolean
+  /** 最大数据点数 */
+  maxDataPoints?: number
+  /** 更新间隔（毫秒） */
+  updateInterval?: number
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  chartType: 'line',
+  dataField: '',
+  dataFields: () => [],
+  isRealtime: true,
+  maxDataPoints: 50,
+  updateInterval: 1000
+})
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 状态管理
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const realtimeStore = useRealtimeStore()
+const chartRef = ref<HTMLDivElement>()
+let chart: echarts.ECharts | null = null
+
+const isPaused = ref(false)
+const lastUpdateTime = ref('')
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 计算属性
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/** 图表数据 */
+const chartData = computed(() => {
+  const historicalData = realtimeStore.historicalData
+  
+  if (!historicalData || historicalData.length === 0) {
+    return {
+      xAxisData: [],
+      seriesData: []
+    }
+  }
+
+  // 限制数据点数量
+  const limitedData = historicalData.slice(-props.maxDataPoints)
+
+  // 提取X轴数据（时间戳）
+  const xAxisData = limitedData.map((item: any) => {
+    const timestamp = item.creationTime || item.timestamp || new Date()
+    return new Date(timestamp).toLocaleTimeString('zh-CN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    })
+  })
+
+  // 提取Y轴数据
+  let seriesData: any[] = []
+
+  if (props.dataField) {
+    // 单个数据字段
+    seriesData = [
+      {
+        name: props.dataField,
+        type: props.chartType,
+        data: limitedData.map((item: any) => item[props.dataField] ?? 0),
+        smooth: true,
+        areaStyle: props.chartType === 'line' ? {} : undefined
+      }
+    ]
+  } else if (props.dataFields && props.dataFields.length > 0) {
+    // 多个数据字段
+    seriesData = props.dataFields.map(field => ({
+      name: field,
+      type: props.chartType,
+      data: limitedData.map((item: any) => item[field] ?? 0),
+      smooth: true,
+      areaStyle: props.chartType === 'line' ? {} : undefined
+    }))
+  }
+
+  return {
+    xAxisData,
+    seriesData
+  }
+})
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ECharts图表
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * 初始化图表
+ */
+function initChart() {
+  if (!chartRef.value) return
+
+  chart = echarts.init(chartRef.value, '{{DashboardConfig.Theme}}')
+
+  const option = getChartOption()
+  chart.setOption(option)
+
+  // 监听窗口大小变化
+  window.addEventListener('resize', handleResize)
+}
+
+/**
+ * 获取图表配置
+ */
+function getChartOption(): EChartsOption {
+  const baseOption: EChartsOption = {
+    backgroundColor: 'transparent',
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '10%',
+      top: '15%',
+      containLabel: true
+    },
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      borderColor: 'rgba(255, 255, 255, 0.2)',
+      textStyle: {
+        color: '#fff'
+      }
+    },
+    legend: {
+      data: chartData.value.seriesData.map((s: any) => s.name),
+      textStyle: {
+        color: 'rgba(255, 255, 255, 0.8)'
+      },
+      top: 0
+    }
+  }
+
+  // 根据图表类型返回不同配置
+  if (props.chartType === 'line' || props.chartType === 'bar') {
+    return {
+      ...baseOption,
+      xAxis: {
+        type: 'category',
+        data: chartData.value.xAxisData,
+        axisLine: {
+          lineStyle: {
+            color: 'rgba(255, 255, 255, 0.2)'
+          }
+        },
+        axisLabel: {
+          color: 'rgba(255, 255, 255, 0.6)',
+          rotate: 45
+        }
+      },
+      yAxis: {
+        type: 'value',
+        axisLine: {
+          lineStyle: {
+            color: 'rgba(255, 255, 255, 0.2)'
+          }
+        },
+        axisLabel: {
+          color: 'rgba(255, 255, 255, 0.6)'
+        },
+        splitLine: {
+          lineStyle: {
+            color: 'rgba(255, 255, 255, 0.1)'
+          }
+        }
+      },
+      series: chartData.value.seriesData
+    }
+  } else if (props.chartType === 'pie') {
+    // 饼图配置
+    const latestData = realtimeStore.latestData
+    const pieData = props.dataFields?.map(field => ({
+      name: field,
+      value: (latestData as any)?.[field] ?? 0
+    })) ?? []
+
+    return {
+      ...baseOption,
+      series: [
+        {
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: false,
+          label: {
+            show: true,
+            color: 'rgba(255, 255, 255, 0.8)'
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: 16,
+              fontWeight: 'bold'
+            }
+          },
+          data: pieData
+        }
+      ]
+    }
+  } else if (props.chartType === 'gauge') {
+    // 仪表盘配置
+    const latestValue = props.dataField 
+      ? (realtimeStore.latestData as any)?.[props.dataField] ?? 0
+      : 0
+
+    return {
+      ...baseOption,
+      series: [
+        {
+          type: 'gauge',
+          progress: {
+            show: true,
+            width: 18
+          },
+          axisLine: {
+            lineStyle: {
+              width: 18
+            }
+          },
+          axisTick: {
+            show: false
+          },
+          splitLine: {
+            length: 15,
+            lineStyle: {
+              width: 2,
+              color: '#999'
+            }
+          },
+          axisLabel: {
+            distance: 25,
+            color: 'rgba(255, 255, 255, 0.8)',
+            fontSize: 12
+          },
+          detail: {
+            valueAnimation: true,
+            formatter: '{value}',
+            color: '#fff',
+            fontSize: 24,
+            offsetCenter: [0, '60%']
+          },
+          data: [
+            {
+              value: latestValue,
+              name: props.dataField
+            }
+          ]
+        }
+      ]
+    }
+  }
+
+  return baseOption
+}
+
+/**
+ * 更新图表数据
+ */
+function updateChart() {
+  if (!chart || isPaused.value) return
+
+  const option = getChartOption()
+  chart.setOption(option, { notMerge: false })
+
+  updateLastUpdateTime()
+}
+
+/**
+ * 暂停/继续更新
+ */
+function togglePause() {
+  isPaused.value = !isPaused.value
+}
+
+/**
+ * 刷新图表
+ */
+function refreshChart() {
+  updateChart()
+}
+
+/**
+ * 更新最后更新时间
+ */
+function updateLastUpdateTime() {
+  const now = new Date()
+  lastUpdateTime.value = now.toLocaleTimeString('zh-CN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  })
+}
+
+/**
+ * 窗口大小变化处理
+ */
+function handleResize() {
+  if (chart) {
+    chart.resize()
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 生命周期钩子
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+onMounted(() => {
+  initChart()
+
+  // 启动定时更新
+  if (props.isRealtime) {
+    startAutoUpdate()
+  }
+})
+
+onUnmounted(() => {
+  stopAutoUpdate()
+  
+  if (chart) {
+    chart.dispose()
+    chart = null
+  }
+
+  window.removeEventListener('resize', handleResize)
+})
+
+/**
+ * 监听数据变化
+ */
+watch(() => realtimeStore.historicalData, () => {
+  if (!isPaused.value) {
+    updateChart()
+  }
+}, { deep: true })
+
+/**
+ * 监听图表类型变化
+ */
+watch(() => props.chartType, () => {
+  if (chart) {
+    chart.dispose()
+    chart = null
+  }
+  initChart()
+})
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 自动更新
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+let updateTimer: NodeJS.Timeout | null = null
+
+/**
+ * 启动自动更新
+ */
+function startAutoUpdate() {
+  updateTimer = setInterval(() => {
+    if (!isPaused.value) {
+      updateChart()
+    }
+  }, props.updateInterval)
+}
+
+/**
+ * 停止自动更新
+ */
+function stopAutoUpdate() {
+  if (updateTimer) {
+    clearInterval(updateTimer)
+    updateTimer = null
+  }
+}
+</script>
+
+<style scoped lang="scss">
+.realtime-chart-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 16px;
+
+  .chart-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+  }
+
+  .chart-controls {
+    display: flex;
+    gap: 8px;
+  }
+}
+
+.chart-body {
+  flex: 1;
+  min-height: 300px;
+}
+
+.chart-footer {
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 12px;
+
+  .last-update {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+</style>
+
