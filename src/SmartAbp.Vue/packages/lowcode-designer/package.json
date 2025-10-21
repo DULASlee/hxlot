@@ -37,7 +37,6 @@
     "@smartabp/lowcode-shared": "workspace:*"
   },
   "devDependencies": {
-    "@smartabp/metadata-core": "file:../metadata-core",
     "@types/node": "^20.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0"

@@ -27,7 +27,7 @@
     "check:arch": "ts-node src/execution/run-architecture-check.ts"
   },
   "peerDependencies": {
-    "@smartabp/metadata-core": "workspace:*"
+    "@smartabp/lowcode-shared": "workspace:*"
   },
   "dependencies": {
     "glob": "^11.0.3",

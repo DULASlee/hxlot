@@ -261,6 +261,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/lowcode",
     component: SmartAbpLayout,
+    redirect: "/lowcode/welcome", // ✅ 修复：默认重定向到工作台首页
     meta: {
       title: "LowCode Studio",
       icon: "🧩",
@@ -272,6 +273,7 @@ const routes: RouteRecordRaw[] = [
         path: "",
         name: "LowCodeStudio",
         component: () => import("@/views/lowcode/LowCodeStudioView.vue"),
+        redirect: "welcome", // ✅ 修复：空路径重定向到welcome
         meta: { title: "LowCode Studio", menuKey: "lowcode-studio" },
         children: [
           {

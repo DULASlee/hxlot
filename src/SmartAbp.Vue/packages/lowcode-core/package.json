@@ -48,7 +48,6 @@
     "typescript": "^5.0.0"
   },
   "peerDependencies": {
-    "@smartabp/metadata-core": "workspace:*",
     "@smartabp/lowcode-shared": "workspace:*",
     "@smartabp/lowcode-api": "workspace:*"
   },
