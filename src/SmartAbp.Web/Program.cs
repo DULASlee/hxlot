@@ -111,7 +111,8 @@ public class Program
 
             // ✅ 固定端口配置：前端9001，后端9002
             // 监听所有网络接口，支持localhost、127.0.0.1、局域网IP等多种访问方式
-            builder.WebHost.UseUrls("http://0.0.0.0:9002", "https://0.0.0.0:9003");
+            // 通过环境变量设置端口（优先级最高）
+            Environment.SetEnvironmentVariable("ASPNETCORE_URLS", "http://0.0.0.0:9002;https://0.0.0.0:9003");
 
             await builder.AddApplicationAsync<SmartAbpHttpApiHostModule>();
             var app = builder.Build();

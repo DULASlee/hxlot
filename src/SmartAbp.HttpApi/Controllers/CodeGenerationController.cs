@@ -224,16 +224,16 @@ namespace SmartAbp.Controllers
         /// <param name="taskId">任务ID</param>
         /// <returns>取消结果</returns>
         [HttpPost("async/cancel/{taskId}")]
-        public async Task<IActionResult> CancelAsyncTaskAsync(string taskId)
+        public Task<IActionResult> CancelAsyncTaskAsync(string taskId)
         {
             // TODO: 实现任务取消逻辑
             // 这里需要与BackgroundJob框架集成来取消任务
 
-            return Ok(new
+            return Task.FromResult<IActionResult>(Ok(new
             {
                 Success = false,
                 Message = "任务取消功能正在开发中"
-            });
+            }));
         }
     }
 }
