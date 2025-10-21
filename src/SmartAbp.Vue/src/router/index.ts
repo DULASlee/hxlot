@@ -269,191 +269,188 @@ const routes: RouteRecordRaw[] = [
       requiredRoles: ["user"],
     },
     children: [
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // ✅ Portal工作台首页
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       {
-        path: "",
-        name: "LowCodeStudio",
-        component: () => import("@/views/lowcode/LowCodeStudioView.vue"),
-        redirect: "welcome", // ✅ 修复：空路径重定向到welcome
-        meta: { title: "LowCode Studio", menuKey: "lowcode-studio" },
-        children: [
-          {
-            path: "welcome",
-            name: "LowCodeStudioWelcome",
-            component: () => import("@/views/lowcode/LowCodeStudioWelcome.vue"),
-            meta: { title: "欢迎页", menuKey: "welcome" }
-          },
-          // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          // 三大用户入口（Layer1/Layer2/Layer3）
-          // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          {
-            path: "layer1",
-            name: "Layer1UltraSimpleStudio",
-            component: () => import("@/views/lowcode/UltraSimpleStudio.vue"),
-            meta: {
-              title: "Layer1 - 极简模式",
-              menuKey: "layer1-ultra-simple",
-              icon: "⚡",
-              description: "选表即生成，零配置快速开发"
-            }
-          },
-          {
-            path: "layer2",
-            name: "Layer2SmartStudioLite",
-            component: () => import("@/views/lowcode/SmartStudioLite.vue"),
-            meta: {
-              title: "Layer2 - 智能配置",
-              menuKey: "layer2-smart-studio-lite",
-              icon: "🎯",
-              description: "可视化字段配置，渐进式开发体验"
-            }
-          },
-          {
-            path: "layer3",
-            name: "Layer3StudioPro",
-            component: () => import("@smartabp/lowcode-designer/views/EntityModelingView.vue"),
-            meta: {
-              title: "Layer3 - 专业版",
-              menuKey: "layer3-studio-pro",
-              icon: "🚀",
-              description: "完整建模能力，企业级代码生成"
-            }
-          },
-          {
-            path: "industry-template-config",
-            name: "IndustryTemplateConfig",
-            component: () => import("@/views/lowcode/IndustryTemplateConfig.vue"),
-            meta: { title: "行业模板配置", menuKey: "industry-template-config" },
-          },
-          {
-            path: "entity-modeling",
-            name: "EntityModeling",
-            component: () => import("@smartabp/lowcode-designer/views/EntityModelingView.vue"),
-            meta: { title: "数据建模", menuKey: "entity-modeling" },
-          },
-          {
-            path: "design",
-            name: "PageDesign",
-            component: () => import("@smartabp/lowcode-designer/views/DesignView.vue"),
-            meta: { title: "页面设计", menuKey: "page-design" },
-          },
-          {
-            path: "generation",
-            name: "CodeGeneration",
-            component: () => import("@/views/lowcode/GenerationView.vue"),
-            meta: { title: "代码生成", menuKey: "code-generation" },
-          },
-          {
-            path: "new-ultra-simple",
-            name: "LowCodeNewUltraSimple",
-            redirect: { path: "/CodeGen/new-ultra-simple" },
-            meta: {
-              title: "极简代码生成（稳定版）",
-              menuKey: "new-ultra-simple-studio",
-              icon: "⚡",
-              showInMenu: true
-            }
-          },
-          {
-            path: "ddd-designer",
-            name: "DddDomainDesigner",
-            component: () => import("@/views/lowcode/DddDomainDesignerView.vue"),
-            meta: {
-              title: "DDD领域设计器",
-              menuKey: "ddd-designer",
-              icon: "🏛️",
-              description: "领域驱动设计代码生成器"
-            },
-          },
-          {
-            path: "cqrs-designer",
-            name: "CqrsDesigner",
-            component: () => import("@/views/lowcode/CqrsDesignerView.vue"),
-            meta: {
-              title: "CQRS模式设计器",
-              menuKey: "cqrs-designer",
-              icon: "⚡",
-              description: "CQRS模式代码生成器"
-            },
-          },
-          {
-            path: "workflows",
-            name: "WorkflowsManagement",
-            component: () => import("@/views/lowcode/WorkflowsView.vue"),
-            meta: { title: "工作流", menuKey: "workflows" },
-          },
-          {
-            path: "aspire-designer",
-            name: "AspireDesigner",
-            component: () => import("@smartabp/lowcode-designer/views/codegen/AspireDesignerView.vue"),
-            meta: {
-              title: ".NET Aspire设计器",
-              menuKey: "aspire-designer",
-              icon: "🌐",
-              description: "微服务编排与云原生架构设计"
-            },
-          },
-          {
-            path: "observability-dashboard",
-            name: "ObservabilityDashboard",
-            component: () => import("@smartabp/lowcode-designer/views/codegen/ObservabilityDashboard.vue"),
-            meta: {
-              title: "可观测性仪表板",
-              menuKey: "observability-dashboard",
-              icon: "📊",
-              description: "黄金指标与RED指标实时监控"
-            },
-          },
-          {
-            path: "observability-config",
-            name: "ObservabilityConfig",
-            component: () => import("@smartabp/lowcode-designer/views/codegen/ObservabilityConfigPanel.vue"),
-            meta: {
-              title: "可观测性配置",
-              menuKey: "observability-config",
-              icon: "⚙️",
-              description: "Prometheus、Grafana和告警规则配置"
-            },
-          },
-          {
-            path: "theme",
-            name: "ThemeCustomization",
-            component: () => import("@smartabp/lowcode-designer/views/ThemeCustomizationView.vue"),
-            meta: { title: "主题定制", menuKey: "theme-customization" },
-          },
-          {
-            path: "form-designer",
-            name: "FormDesigner",
-            component: () => import("@smartabp/lowcode-core/components/SmartFormBuilder/SmartFormDesigner.vue"),
-            meta: {
-              title: "表单设计器",
-              menuKey: "form-designer",
-              icon: "📝",
-              description: "可视化表单设计器 2.0 - 拖拽式设计，40种字段类型"
-            },
-          },
-          {
-            path: "form-builder-demo",
-            name: "FormBuilderDemo",
-            component: () => import("@/views/lowcode/FormBuilderDemo.vue"),
-            meta: {
-              title: "表单构建器演示",
-              menuKey: "form-builder-demo",
-              icon: "🎯",
-              description: "SmartFormBuilder 2.0 使用示例和API文档"
-            },
-          },
-          {
-            path: "form-linkage-demo",
-            name: "FormLinkageDemo",
-            component: () => import("@/views/lowcode/FormLinkageDemo.vue"),
-            meta: {
-              title: "表单联动演示",
-              menuKey: "form-linkage-demo",
-              icon: "🔗",
-              description: "动态表单与字段联动完整演示"
-            },
-          },
-        ],
+        path: "welcome",
+        name: "LowCodeStudioWelcome",
+        component: () => import("@/views/lowcode/LowCodeStudioWelcome.vue"),
+        meta: { title: "工作台首页", menuKey: "welcome" }
+      },
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // ✅ 三大用户入口（Layer1/Layer2/Layer3）- 直接作为 /lowcode 的子路由
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      {
+        path: "layer1",
+        name: "Layer1UltraSimpleStudio",
+        component: () => import("@/views/lowcode/UltraSimpleStudio.vue"),
+        meta: {
+          title: "Layer1 - 极简模式",
+          menuKey: "layer1-ultra-simple",
+          icon: "⚡",
+          description: "选表即生成，零配置快速开发"
+        }
+      },
+      {
+        path: "layer2",
+        name: "Layer2SmartStudioLite",
+        component: () => import("@/views/lowcode/SmartStudioLite.vue"),
+        meta: {
+          title: "Layer2 - 智能配置",
+          menuKey: "layer2-smart-studio-lite",
+          icon: "🎯",
+          description: "可视化字段配置，渐进式开发体验"
+        }
+      },
+      {
+        path: "layer3",
+        name: "Layer3StudioPro",
+        component: () => import("@smartabp/lowcode-designer/views/EntityModelingView.vue"),
+        meta: {
+          title: "Layer3 - 专业版",
+          menuKey: "layer3-studio-pro",
+          icon: "🚀",
+          description: "完整建模能力，企业级代码生成"
+        }
+      },
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // 其他低代码功能页面
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      {
+        path: "industry-template-config",
+        name: "IndustryTemplateConfig",
+        component: () => import("@/views/lowcode/IndustryTemplateConfig.vue"),
+        meta: { title: "行业模板配置", menuKey: "industry-template-config" },
+      },
+      {
+        path: "entity-modeling",
+        name: "EntityModeling",
+        component: () => import("@smartabp/lowcode-designer/views/EntityModelingView.vue"),
+        meta: { title: "数据建模", menuKey: "entity-modeling" },
+      },
+      {
+        path: "design",
+        name: "PageDesign",
+        component: () => import("@smartabp/lowcode-designer/views/DesignView.vue"),
+        meta: { title: "页面设计", menuKey: "page-design" },
+      },
+      {
+        path: "generation",
+        name: "CodeGeneration",
+        component: () => import("@/views/lowcode/GenerationView.vue"),
+        meta: { title: "代码生成", menuKey: "code-generation" },
+      },
+      {
+        path: "new-ultra-simple",
+        name: "LowCodeNewUltraSimple",
+        redirect: { path: "/CodeGen/new-ultra-simple" },
+        meta: {
+          title: "极简代码生成（稳定版）",
+          menuKey: "new-ultra-simple-studio",
+          icon: "⚡",
+          showInMenu: true
+        }
+      },
+      {
+        path: "ddd-designer",
+        name: "DddDomainDesigner",
+        component: () => import("@/views/lowcode/DddDomainDesignerView.vue"),
+        meta: {
+          title: "DDD领域设计器",
+          menuKey: "ddd-designer",
+          icon: "🏛️",
+          description: "领域驱动设计代码生成器"
+        },
+      },
+      {
+        path: "cqrs-designer",
+        name: "CqrsDesigner",
+        component: () => import("@/views/lowcode/CqrsDesignerView.vue"),
+        meta: {
+          title: "CQRS模式设计器",
+          menuKey: "cqrs-designer",
+          icon: "⚡",
+          description: "CQRS模式代码生成器"
+        },
+      },
+      {
+        path: "workflows",
+        name: "WorkflowsManagement",
+        component: () => import("@/views/lowcode/WorkflowsView.vue"),
+        meta: { title: "工作流", menuKey: "workflows" },
+      },
+      {
+        path: "aspire-designer",
+        name: "AspireDesigner",
+        component: () => import("@smartabp/lowcode-designer/views/codegen/AspireDesignerView.vue"),
+        meta: {
+          title: ".NET Aspire设计器",
+          menuKey: "aspire-designer",
+          icon: "🌐",
+          description: "微服务编排与云原生架构设计"
+        },
+      },
+      {
+        path: "observability-dashboard",
+        name: "ObservabilityDashboard",
+        component: () => import("@smartabp/lowcode-designer/views/codegen/ObservabilityDashboard.vue"),
+        meta: {
+          title: "可观测性仪表板",
+          menuKey: "observability-dashboard",
+          icon: "📊",
+          description: "黄金指标与RED指标实时监控"
+        },
+      },
+      {
+        path: "observability-config",
+        name: "ObservabilityConfig",
+        component: () => import("@smartabp/lowcode-designer/views/codegen/ObservabilityConfigPanel.vue"),
+        meta: {
+          title: "可观测性配置",
+          menuKey: "observability-config",
+          icon: "⚙️",
+          description: "Prometheus、Grafana和告警规则配置"
+        },
+      },
+      {
+        path: "theme",
+        name: "ThemeCustomization",
+        component: () => import("@smartabp/lowcode-designer/views/ThemeCustomizationView.vue"),
+        meta: { title: "主题定制", menuKey: "theme-customization" },
+      },
+      {
+        path: "form-designer",
+        name: "FormDesigner",
+        component: () => import("@smartabp/lowcode-core/components/SmartFormBuilder/SmartFormDesigner.vue"),
+        meta: {
+          title: "表单设计器",
+          menuKey: "form-designer",
+          icon: "📝",
+          description: "可视化表单设计器 2.0 - 拖拽式设计，40种字段类型"
+        },
+      },
+      {
+        path: "form-builder-demo",
+        name: "FormBuilderDemo",
+        component: () => import("@/views/lowcode/FormBuilderDemo.vue"),
+        meta: {
+          title: "表单构建器演示",
+          menuKey: "form-builder-demo",
+          icon: "🎯",
+          description: "SmartFormBuilder 2.0 使用示例和API文档"
+        },
+      },
+      {
+        path: "form-linkage-demo",
+        name: "FormLinkageDemo",
+        component: () => import("@/views/lowcode/FormLinkageDemo.vue"),
+        meta: {
+          title: "表单联动演示",
+          menuKey: "form-linkage-demo",
+          icon: "🔗",
+          description: "动态表单与字段联动完整演示"
+        },
       },
     ],
   },
