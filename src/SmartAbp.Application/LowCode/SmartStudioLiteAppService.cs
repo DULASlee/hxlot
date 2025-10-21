@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using SmartAbp.Application.Contracts.LowCode;
 using SmartAbp.Application.Contracts.LowCode.Dtos;
 using SmartAbp.Domain.Entities.LowCode;
-using SmartAbp.Domain.Repositories.LowCode;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -20,16 +19,16 @@ namespace SmartAbp.Application.LowCode
     /// </summary>
     public class SmartStudioLiteAppService : ApplicationService, ISmartStudioLiteAppService
     {
-        private readonly IModuleRepository _moduleRepository;
-        private readonly IEntityDefinitionRepository _entityDefinitionRepository;
+        private readonly IRepository<LowCodeModule, Guid> _moduleRepository;
+        private readonly IRepository<EntityDefinition, Guid> _entityDefinitionRepository;
         private readonly IRepository<EntityField, Guid> _entityFieldRepository;
-        private readonly ICodeGenerationService _codeGenerationService;
+        private readonly CodeGenerationService _codeGenerationService;
 
         public SmartStudioLiteAppService(
-            IModuleRepository moduleRepository,
-            IEntityDefinitionRepository entityDefinitionRepository,
+            IRepository<LowCodeModule, Guid> moduleRepository,
+            IRepository<EntityDefinition, Guid> entityDefinitionRepository,
             IRepository<EntityField, Guid> entityFieldRepository,
-            ICodeGenerationService codeGenerationService)
+            CodeGenerationService codeGenerationService)
         {
             _moduleRepository = moduleRepository;
             _entityDefinitionRepository = entityDefinitionRepository;
@@ -56,16 +55,16 @@ namespace SmartAbp.Application.LowCode
                 }
 
                 // 2. 创建模块
-                var module = new Module
+                var module = new LowCodeModule(
+                    GuidGenerator.Create(),
+                    input.SystemName,
+                    input.ModuleName,
+                    input.DisplayName,
+                    $"{input.SystemName}.{input.ModuleName}"
+                )
                 {
-                    ModuleName = input.ModuleName,
-                    DisplayName = input.DisplayName,
                     Description = input.Description,
-                    SystemName = input.SystemName,
-                    Namespace = $"{input.SystemName}.{input.ModuleName}",
-                    Version = "1.0.0",
-                    CreationTime = DateTime.UtcNow,
-                    LastModificationTime = DateTime.UtcNow
+                    Version = "1.0.0"
                 };
 
                 await _moduleRepository.InsertAsync(module, autoSave: true);
@@ -75,15 +74,14 @@ namespace SmartAbp.Application.LowCode
                 {
                     Name = input.EntityName,
                     DisplayName = input.EntityDisplayName,
-                    ModuleId = module.Id,
+                    Module = input.ModuleName, // 使用 Module 字符串字段而不是 ModuleId
                     TableName = $"App{input.EntityName}s", // 默认表名规则
-                    Schema = "dbo",
-                    IsAggregateRoot = true,
-                    IsAudited = true,
-                    IsSoftDelete = true,
-                    BaseClass = "AuditedAggregateRoot",
-                    CreationTime = DateTime.UtcNow,
-                    LastModificationTime = DateTime.UtcNow
+                    EntityType = "aggregate-root",
+                    BaseType = "AuditedAggregateRoot",
+                    Namespace = $"{input.SystemName}.{input.ModuleName}",
+                    EnableSoftDelete = true,
+                    EnableAudit = true,
+                    EnableMultiTenant = false
                 };
 
                 await _entityDefinitionRepository.InsertAsync(entity, autoSave: true);
@@ -105,7 +103,7 @@ namespace SmartAbp.Application.LowCode
                         IsIndexed = false,
                         DefaultValue = fieldConfig.DefaultValue,
                         Comment = fieldConfig.Comment,
-                        Order = fieldOrder++,
+                        Order = fieldOrder,
                         Precision = fieldConfig.Precision,
                         Scale = fieldConfig.Scale,
                         MinValue = fieldConfig.MinValue,
@@ -115,22 +113,20 @@ namespace SmartAbp.Application.LowCode
                         ColumnType = fieldConfig.Type,
                         IsAuditField = false,
                         IsSoftDeleteField = false,
-                        IsTenantField = false
-                    };
-
-                    // 设置UI配置
-                    field.UIConfig = new PropertyUIConfig
-                    {
-                        ControlType = fieldConfig.UIControl,
+                        IsTenantField = false,
+                        // UI 配置属性（直接在 EntityField 上）
                         IsVisible = true,
                         IsReadonly = false,
-                        IsSearchable = true,
-                        IsSortable = true,
-                        IsFilterable = true,
+                        Searchable = true,
+                        Sortable = true,
+                        Filterable = true,
                         DisplayOrder = fieldOrder,
-                        ListColumnWidth = 150
+                        ListVisible = true,
+                        DetailVisible = true,
+                        FormVisible = true
                     };
 
+                    fieldOrder++;
                     await _entityFieldRepository.InsertAsync(field, autoSave: true);
                 }
 
@@ -145,7 +141,9 @@ namespace SmartAbp.Application.LowCode
                 );
 
                 // 6. 调用代码生成服务
-                await _codeGenerationService.GenerateCodeForModuleAsync(module.Id, sessionId);
+                // 注意：CodeGenerationService.GenerateAsync 需要 LowCodeEntity，这里暂时跳过代码生成
+                // TODO: 需要将 EntityDefinition 转换为 LowCodeEntity 或调整代码生成服务
+                // await _codeGenerationService.GenerateAsync(entity.Id);
 
                 // 7. 返回结果
                 return new SimplifiedModuleCreationResultDto
@@ -186,7 +184,7 @@ namespace SmartAbp.Application.LowCode
             var errors = new List<ValidationErrorDto>();
 
             // 1. 检查模块名称是否已存在
-            var existingModule = await _moduleRepository.FindByNameAsync(input.ModuleName);
+            var existingModule = await _moduleRepository.FirstOrDefaultAsync(m => m.ModuleName == input.ModuleName);
             if (existingModule != null)
             {
                 errors.Add(new ValidationErrorDto
