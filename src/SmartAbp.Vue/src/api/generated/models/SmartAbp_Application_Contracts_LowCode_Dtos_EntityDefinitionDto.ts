@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleDto } from './SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleDto';
 import type { SmartAbp_Application_Contracts_LowCode_Dtos_CodeGenerationConfigDto } from './SmartAbp_Application_Contracts_LowCode_Dtos_CodeGenerationConfigDto';
 import type { SmartAbp_Application_Contracts_LowCode_Dtos_EntityConstraintDto } from './SmartAbp_Application_Contracts_LowCode_Dtos_EntityConstraintDto';
@@ -11,7 +11,7 @@ import type { SmartAbp_Application_Contracts_LowCode_Dtos_EntityPermissionDto } 
 import type { SmartAbp_Application_Contracts_LowCode_Dtos_EntityRelationDto } from './SmartAbp_Application_Contracts_LowCode_Dtos_EntityRelationDto';
 import type { SmartAbp_Application_Contracts_LowCode_Dtos_NavigationPropertyDto } from './SmartAbp_Application_Contracts_LowCode_Dtos_NavigationPropertyDto';
 import type { SmartAbp_Application_Contracts_LowCode_Dtos_ValidationRuleDto } from './SmartAbp_Application_Contracts_LowCode_Dtos_ValidationRuleDto';
-import type { SmartAbp_Domain_Entities_LowCode_PageConfigDto } from './SmartAbp_Domain_Entities_LowCode_PageConfigDto';
+import type { SmartAbp_Domain_Shared_LowCode_PageConfigDto } from './SmartAbp_Domain_Shared_LowCode_PageConfigDto';
 export type SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto = {
     id?: string;
     creationTime?: string;
@@ -42,10 +42,7 @@ export type SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto = {
     indexes?: Array<SmartAbp_Application_Contracts_LowCode_Dtos_EntityIndexDto> | null;
     constraints?: Array<SmartAbp_Application_Contracts_LowCode_Dtos_EntityConstraintDto> | null;
     permissions?: Array<SmartAbp_Application_Contracts_LowCode_Dtos_EntityPermissionDto> | null;
-    /**
-     * 页面配置DTO（JSON存储）
-     */
-    pageConfig?: SmartAbp_Domain_Entities_LowCode_PageConfigDto | null;
+    pageConfig?: SmartAbp_Domain_Shared_LowCode_PageConfigDto | null;
     codeGeneration?: SmartAbp_Application_Contracts_LowCode_Dtos_CodeGenerationConfigDto | null;
     tenantId?: string | null;
     navigationProperties?: Array<SmartAbp_Application_Contracts_LowCode_Dtos_NavigationPropertyDto> | null;

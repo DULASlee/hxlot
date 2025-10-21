@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Volo_Abp_Http_Modeling_InterfaceMethodApiDescriptionModel } from './Volo_Abp_Http_Modeling_InterfaceMethodApiDescriptionModel';
 export type Volo_Abp_Http_Modeling_ControllerInterfaceApiDescriptionModel = {
     type?: string | null;

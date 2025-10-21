@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { SmartAbp_CodeGenerator_Services_V9_UnifiedDatabaseConfigDto } from './SmartAbp_CodeGenerator_Services_V9_UnifiedDatabaseConfigDto';
 import type { SmartAbp_CodeGenerator_Services_V9_UnifiedEntitySchemaDto } from './SmartAbp_CodeGenerator_Services_V9_UnifiedEntitySchemaDto';
 import type { SmartAbp_CodeGenerator_Services_V9_UnifiedFeatureManagementDto } from './SmartAbp_CodeGenerator_Services_V9_UnifiedFeatureManagementDto';

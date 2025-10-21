@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Volo_Abp_Account_Web_Areas_Account_Controllers_Models_AbpLoginResult } from '../models/Volo_Abp_Account_Web_Areas_Account_Controllers_Models_AbpLoginResult';
 import type { Volo_Abp_Account_Web_Areas_Account_Controllers_Models_UserLoginInfo } from '../models/Volo_Abp_Account_Web_Areas_Account_Controllers_Models_UserLoginInfo';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -9,13 +9,14 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class LoginService {
     /**
-     * @param requestBody
      * @returns Volo_Abp_Account_Web_Areas_Account_Controllers_Models_AbpLoginResult OK
      * @throws ApiError
      */
-    public static postApiAccountLogin(
+    public static postApiAccountLogin({
+        requestBody,
+    }: {
         requestBody?: Volo_Abp_Account_Web_Areas_Account_Controllers_Models_UserLoginInfo,
-    ): CancelablePromise<Volo_Abp_Account_Web_Areas_Account_Controllers_Models_AbpLoginResult> {
+    }): CancelablePromise<Volo_Abp_Account_Web_Areas_Account_Controllers_Models_AbpLoginResult> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/account/login',
@@ -50,13 +51,14 @@ export class LoginService {
         });
     }
     /**
-     * @param requestBody
      * @returns Volo_Abp_Account_Web_Areas_Account_Controllers_Models_AbpLoginResult OK
      * @throws ApiError
      */
-    public static postApiAccountCheckPassword(
+    public static postApiAccountCheckPassword({
+        requestBody,
+    }: {
         requestBody?: Volo_Abp_Account_Web_Areas_Account_Controllers_Models_UserLoginInfo,
-    ): CancelablePromise<Volo_Abp_Account_Web_Areas_Account_Controllers_Models_AbpLoginResult> {
+    }): CancelablePromise<Volo_Abp_Account_Web_Areas_Account_Controllers_Models_AbpLoginResult> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/account/check-password',

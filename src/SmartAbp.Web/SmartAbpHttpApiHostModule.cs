@@ -61,7 +61,7 @@ public class SmartAbpHttpApiHostModule : AbpModule
             options.AddDefaultPolicy(builder =>
             {
                 var hostEnvironment = context.Services.GetRequiredService<IHostEnvironment>();
-                
+
                 if (hostEnvironment.IsDevelopment())
                 {
                     // 开发环境：允许任何来源（支持localhost、127.0.0.1、局域网IP等）

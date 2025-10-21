@@ -1,8 +1,10 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { SmartAbp_Application_Contracts_CodeGenerator_CqrsValidationResultDto } from '../models/SmartAbp_Application_Contracts_CodeGenerator_CqrsValidationResultDto';
+import type { SmartAbp_Application_LowCode_CodeGenerationTaskResponse } from '../models/SmartAbp_Application_LowCode_CodeGenerationTaskResponse';
+import type { SmartAbp_Application_LowCode_CodeGenerationTaskStatus } from '../models/SmartAbp_Application_LowCode_CodeGenerationTaskStatus';
 import type { SmartAbp_CodeGenerator_Services_CqrsDefinitionDto } from '../models/SmartAbp_CodeGenerator_Services_CqrsDefinitionDto';
 import type { SmartAbp_CodeGenerator_Services_GeneratedCqrsSolutionDto } from '../models/SmartAbp_CodeGenerator_Services_GeneratedCqrsSolutionDto';
 import type { SmartAbp_CodeGenerator_Services_V9_DatabaseConnectionRequestDto } from '../models/SmartAbp_CodeGenerator_Services_V9_DatabaseConnectionRequestDto';
@@ -59,13 +61,14 @@ export class CodeGenerationService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_CodeGenerator_Services_V9_GeneratedModuleDto OK
      * @throws ApiError
      */
-    public static postApiCodeGeneratorGenerateModule(
+    public static postApiCodeGeneratorGenerateModule({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_GeneratedModuleDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_GeneratedModuleDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/code-generator/generate-module',
@@ -82,13 +85,14 @@ export class CodeGenerationService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_CodeGenerator_Services_V9_GeneratedModuleDto OK
      * @throws ApiError
      */
-    public static postApiCodeGeneratorUnifiedGenerateModule(
+    public static postApiCodeGeneratorUnifiedGenerateModule({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Services_V9_UnifiedModuleSchemaDto,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_GeneratedModuleDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_GeneratedModuleDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/code-generator/unified/generate-module',
@@ -105,13 +109,14 @@ export class CodeGenerationService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_Application_Contracts_CodeGenerator_CqrsValidationResultDto OK
      * @throws ApiError
      */
-    public static postApiCodeGeneratorValidateCqrsDefinition(
+    public static postApiCodeGeneratorValidateCqrsDefinition({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Services_CqrsDefinitionDto,
-    ): CancelablePromise<SmartAbp_Application_Contracts_CodeGenerator_CqrsValidationResultDto> {
+    }): CancelablePromise<SmartAbp_Application_Contracts_CodeGenerator_CqrsValidationResultDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/code-generator/validate-cqrs-definition',
@@ -128,13 +133,14 @@ export class CodeGenerationService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_CodeGenerator_Services_V9_ValidationReportDto OK
      * @throws ApiError
      */
-    public static postApiCodeGeneratorValidate(
+    public static postApiCodeGeneratorValidate({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_ValidationReportDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_ValidationReportDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/code-generator/validate',
@@ -151,13 +157,14 @@ export class CodeGenerationService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_CodeGenerator_Services_V9_GenerationDryRunResultDto OK
      * @throws ApiError
      */
-    public static postApiCodeGeneratorDryRun(
+    public static postApiCodeGeneratorDryRun({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_GenerationDryRunResultDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_GenerationDryRunResultDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/code-generator/dry-run',
@@ -174,13 +181,14 @@ export class CodeGenerationService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_CodeGenerator_Services_V9_ValidationReportDto OK
      * @throws ApiError
      */
-    public static postApiCodeGeneratorUnifiedValidate(
+    public static postApiCodeGeneratorUnifiedValidate({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Services_V9_UnifiedModuleSchemaDto,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_ValidationReportDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_ValidationReportDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/code-generator/unified/validate',
@@ -197,13 +205,14 @@ export class CodeGenerationService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_CodeGenerator_Services_V9_GenerationDryRunResultDto OK
      * @throws ApiError
      */
-    public static postApiCodeGeneratorUnifiedDryRun(
+    public static postApiCodeGeneratorUnifiedDryRun({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Services_V9_UnifiedModuleSchemaDto,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_GenerationDryRunResultDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_GenerationDryRunResultDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/code-generator/unified/dry-run',
@@ -238,13 +247,14 @@ export class CodeGenerationService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_CodeGenerator_Services_V9_DatabaseConnectionTestResultDto OK
      * @throws ApiError
      */
-    public static postApiCodeGeneratorTestConnection(
+    public static postApiCodeGeneratorTestConnection({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Services_V9_DatabaseConnectionRequestDto,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_DatabaseConnectionTestResultDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_DatabaseConnectionTestResultDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/code-generator/test-connection',
@@ -261,13 +271,14 @@ export class CodeGenerationService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_CodeGenerator_Services_V9_DatabaseSchemaDto OK
      * @throws ApiError
      */
-    public static postApiCodeGeneratorIntrospectDb(
+    public static postApiCodeGeneratorIntrospectDb({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Services_V9_DatabaseIntrospectionRequestDto,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_DatabaseSchemaDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_DatabaseSchemaDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/code-generator/introspect-db',
@@ -284,15 +295,16 @@ export class CodeGenerationService {
         });
     }
     /**
-     * @param module
-     * @param entity
      * @returns SmartAbp_CodeGenerator_Services_V9_EntityUIConfigDto OK
      * @throws ApiError
      */
-    public static getApiCodeGeneratorUiConfig(
+    public static getApiCodeGeneratorUiConfig({
+        module,
+        entity,
+    }: {
         module?: string,
         entity?: string,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_EntityUIConfigDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_EntityUIConfigDto> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/code-generator/ui-config',
@@ -311,17 +323,18 @@ export class CodeGenerationService {
         });
     }
     /**
-     * @param module
-     * @param entity
-     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
-    public static postApiCodeGeneratorUiConfig(
+    public static postApiCodeGeneratorUiConfig({
+        module,
+        entity,
+        requestBody,
+    }: {
         module?: string,
         entity?: string,
         requestBody?: SmartAbp_CodeGenerator_Services_V9_EntityUIConfigDto,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/code-generator/ui-config',
@@ -342,13 +355,14 @@ export class CodeGenerationService {
         });
     }
     /**
-     * @param sessionId
      * @returns SmartAbp_CodeGenerator_Services_V9_GenerationStatusDto OK
      * @throws ApiError
      */
-    public static getApiCodeGeneratorStatus(
+    public static getApiCodeGeneratorStatus({
+        sessionId,
+    }: {
         sessionId: string,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_GenerationStatusDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_GenerationStatusDto> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/code-generator/status/{sessionId}',
@@ -366,13 +380,14 @@ export class CodeGenerationService {
         });
     }
     /**
-     * @param sessionId
      * @returns void
      * @throws ApiError
      */
-    public static getApiCodeGeneratorExport(
+    public static getApiCodeGeneratorExport({
+        sessionId,
+    }: {
         sessionId: string,
-    ): CancelablePromise<void> {
+    }): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/code-generator/export/{sessionId}',
@@ -390,18 +405,112 @@ export class CodeGenerationService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_CodeGenerator_Services_GeneratedCqrsSolutionDto OK
      * @throws ApiError
      */
-    public static postApiCodeGeneratorGenerateCqrs(
+    public static postApiCodeGeneratorGenerateCqrs({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Services_CqrsDefinitionDto,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_GeneratedCqrsSolutionDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_GeneratedCqrsSolutionDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/code-generator/generate-cqrs',
             body: requestBody,
             mediaType: 'application/json',
+            errors: {
+                400: `Bad Request`,
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
+                501: `Not Implemented`,
+            },
+        });
+    }
+    /**
+     * @returns SmartAbp_Application_LowCode_CodeGenerationTaskResponse OK
+     * @throws ApiError
+     */
+    public static postApiCodeGeneratorAsyncGenerateEntity({
+        entityId,
+    }: {
+        entityId: string,
+    }): CancelablePromise<SmartAbp_Application_LowCode_CodeGenerationTaskResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/code-generator/async/generate-entity/{entityId}',
+            path: {
+                'entityId': entityId,
+            },
+            errors: {
+                400: `Bad Request`,
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
+                501: `Not Implemented`,
+            },
+        });
+    }
+    /**
+     * @returns SmartAbp_Application_LowCode_CodeGenerationTaskStatus OK
+     * @throws ApiError
+     */
+    public static getApiCodeGeneratorAsyncStatus({
+        taskId,
+    }: {
+        taskId: string,
+    }): CancelablePromise<SmartAbp_Application_LowCode_CodeGenerationTaskStatus> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/code-generator/async/status/{taskId}',
+            path: {
+                'taskId': taskId,
+            },
+            errors: {
+                400: `Bad Request`,
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
+                501: `Not Implemented`,
+            },
+        });
+    }
+    /**
+     * @returns SmartAbp_Application_LowCode_CodeGenerationTaskStatus OK
+     * @throws ApiError
+     */
+    public static getApiCodeGeneratorAsyncAllTasks(): CancelablePromise<Array<SmartAbp_Application_LowCode_CodeGenerationTaskStatus>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/code-generator/async/all-tasks',
+            errors: {
+                400: `Bad Request`,
+                401: `Unauthorized`,
+                403: `Forbidden`,
+                404: `Not Found`,
+                500: `Internal Server Error`,
+                501: `Not Implemented`,
+            },
+        });
+    }
+    /**
+     * @returns void
+     * @throws ApiError
+     */
+    public static postApiCodeGeneratorAsyncCancel({
+        taskId,
+    }: {
+        taskId: string,
+    }): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/code-generator/async/cancel/{taskId}',
+            path: {
+                'taskId': taskId,
+            },
             errors: {
                 400: `Bad Request`,
                 401: `Unauthorized`,

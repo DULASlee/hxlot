@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 /**
  * 菜单配置项（支持递归树结构）
  * Phase 3新增：后端SSOT完整性

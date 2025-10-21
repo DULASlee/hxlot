@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Volo_Abp_Application_Dtos_ListResultDto_1 } from '../models/Volo_Abp_Application_Dtos_ListResultDto_1';
 import type { Volo_Abp_Application_Dtos_PagedResultDto_1 } from '../models/Volo_Abp_Application_Dtos_PagedResultDto_1';
 import type { Volo_Abp_Identity_IdentityRoleCreateDto } from '../models/Volo_Abp_Identity_IdentityRoleCreateDto';
@@ -31,21 +31,22 @@ export class RoleService {
         });
     }
     /**
-     * @param filter
-     * @param sorting
-     * @param skipCount
-     * @param maxResultCount
-     * @param extraProperties
      * @returns Volo_Abp_Application_Dtos_PagedResultDto_1<Volo_Abp_Identity_IdentityRoleDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_> OK
      * @throws ApiError
      */
-    public static getApiIdentityRoles(
+    public static getApiIdentityRoles({
+        filter,
+        sorting,
+        skipCount,
+        maxResultCount,
+        extraProperties,
+    }: {
         filter?: string,
         sorting?: string,
         skipCount?: number,
         maxResultCount?: number,
         extraProperties?: Record<string, any>,
-    ): CancelablePromise<Volo_Abp_Application_Dtos_PagedResultDto_1> {
+    }): CancelablePromise<Volo_Abp_Application_Dtos_PagedResultDto_1> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/identity/roles',
@@ -67,13 +68,14 @@ export class RoleService {
         });
     }
     /**
-     * @param requestBody
      * @returns Volo_Abp_Identity_IdentityRoleDto OK
      * @throws ApiError
      */
-    public static postApiIdentityRoles(
+    public static postApiIdentityRoles({
+        requestBody,
+    }: {
         requestBody?: Volo_Abp_Identity_IdentityRoleCreateDto,
-    ): CancelablePromise<Volo_Abp_Identity_IdentityRoleDto> {
+    }): CancelablePromise<Volo_Abp_Identity_IdentityRoleDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/identity/roles',
@@ -90,13 +92,14 @@ export class RoleService {
         });
     }
     /**
-     * @param id
      * @returns Volo_Abp_Identity_IdentityRoleDto OK
      * @throws ApiError
      */
-    public static getApiIdentityRoles1(
+    public static getApiIdentityRoles1({
+        id,
+    }: {
         id: string,
-    ): CancelablePromise<Volo_Abp_Identity_IdentityRoleDto> {
+    }): CancelablePromise<Volo_Abp_Identity_IdentityRoleDto> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/identity/roles/{id}',
@@ -114,15 +117,16 @@ export class RoleService {
         });
     }
     /**
-     * @param id
-     * @param requestBody
      * @returns Volo_Abp_Identity_IdentityRoleDto OK
      * @throws ApiError
      */
-    public static putApiIdentityRoles(
+    public static putApiIdentityRoles({
+        id,
+        requestBody,
+    }: {
         id: string,
         requestBody?: Volo_Abp_Identity_IdentityRoleUpdateDto,
-    ): CancelablePromise<Volo_Abp_Identity_IdentityRoleDto> {
+    }): CancelablePromise<Volo_Abp_Identity_IdentityRoleDto> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/identity/roles/{id}',
@@ -142,13 +146,14 @@ export class RoleService {
         });
     }
     /**
-     * @param id
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteApiIdentityRoles(
+    public static deleteApiIdentityRoles({
+        id,
+    }: {
         id: string,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/identity/roles/{id}',

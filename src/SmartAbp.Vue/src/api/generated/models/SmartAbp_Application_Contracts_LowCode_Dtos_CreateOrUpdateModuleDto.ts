@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { SmartAbp_Domain_Entities_LowCode_ModuleArchitectureConfig } from './SmartAbp_Domain_Entities_LowCode_ModuleArchitectureConfig';
 import type { SmartAbp_Domain_Entities_LowCode_ModuleCodeGenOptions } from './SmartAbp_Domain_Entities_LowCode_ModuleCodeGenOptions';
 import type { SmartAbp_Domain_Entities_LowCode_ModuleFrontendConfig } from './SmartAbp_Domain_Entities_LowCode_ModuleFrontendConfig';

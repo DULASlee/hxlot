@@ -14,6 +14,8 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 export * from './types/backend-contracts';
 export * from './types/index';
+// 显式导出常量（确保Vite HMR正确识别）
+export { UNIFIED_SCHEMA_VERSION, METADATA_SCHEMA_VERSION } from './types/metadata';
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🚀 HTTP客户端 (HTTP Client)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

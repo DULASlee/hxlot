@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { SmartAbp_CodeGenerator_Dtos_CreateGenerationHistoryDto } from '../models/SmartAbp_CodeGenerator_Dtos_CreateGenerationHistoryDto';
 import type { SmartAbp_CodeGenerator_Dtos_GenerationHistoryDto } from '../models/SmartAbp_CodeGenerator_Dtos_GenerationHistoryDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -9,13 +9,14 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class GenerationHistoryService {
     /**
-     * @param limit
      * @returns SmartAbp_CodeGenerator_Dtos_GenerationHistoryDto OK
      * @throws ApiError
      */
-    public static getApiCodeGenGenerationHistoryRecent(
-        limit: number = 5,
-    ): CancelablePromise<Array<SmartAbp_CodeGenerator_Dtos_GenerationHistoryDto>> {
+    public static getApiCodeGenGenerationHistoryRecent({
+        limit = 5,
+    }: {
+        limit?: number,
+    }): CancelablePromise<Array<SmartAbp_CodeGenerator_Dtos_GenerationHistoryDto>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/code-gen/generation-history/recent',
@@ -25,15 +26,16 @@ export class GenerationHistoryService {
         });
     }
     /**
-     * @param skipCount
-     * @param maxResultCount
      * @returns SmartAbp_CodeGenerator_Dtos_GenerationHistoryDto OK
      * @throws ApiError
      */
-    public static getApiCodeGenGenerationHistoryAll(
+    public static getApiCodeGenGenerationHistoryAll({
+        skipCount,
+        maxResultCount = 20,
+    }: {
         skipCount?: number,
-        maxResultCount: number = 20,
-    ): CancelablePromise<Array<SmartAbp_CodeGenerator_Dtos_GenerationHistoryDto>> {
+        maxResultCount?: number,
+    }): CancelablePromise<Array<SmartAbp_CodeGenerator_Dtos_GenerationHistoryDto>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/code-gen/generation-history/all',
@@ -44,13 +46,14 @@ export class GenerationHistoryService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_CodeGenerator_Dtos_GenerationHistoryDto OK
      * @throws ApiError
      */
-    public static postApiCodeGenGenerationHistory(
+    public static postApiCodeGenGenerationHistory({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Dtos_CreateGenerationHistoryDto,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Dtos_GenerationHistoryDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Dtos_GenerationHistoryDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/code-gen/generation-history',
@@ -59,13 +62,14 @@ export class GenerationHistoryService {
         });
     }
     /**
-     * @param id
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteApiCodeGenGenerationHistory(
+    public static deleteApiCodeGenGenerationHistory({
+        id,
+    }: {
         id: string,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/code-gen/generation-history/{id}',

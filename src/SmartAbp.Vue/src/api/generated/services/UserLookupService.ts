@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Volo_Abp_Application_Dtos_ListResultDto_1 } from '../models/Volo_Abp_Application_Dtos_ListResultDto_1';
 import type { Volo_Abp_Users_UserData } from '../models/Volo_Abp_Users_UserData';
 import type { Volo_Abp_Users_UserData_Volo_Abp_Users_Abstractions_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_ } from '../models/Volo_Abp_Users_UserData_Volo_Abp_Users_Abstractions_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_';
@@ -10,13 +10,14 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class UserLookupService {
     /**
-     * @param id
      * @returns Volo_Abp_Users_UserData OK
      * @throws ApiError
      */
-    public static getApiIdentityUsersLookup(
+    public static getApiIdentityUsersLookup({
+        id,
+    }: {
         id: string,
-    ): CancelablePromise<Volo_Abp_Users_UserData> {
+    }): CancelablePromise<Volo_Abp_Users_UserData> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/identity/users/lookup/{id}',
@@ -34,13 +35,14 @@ export class UserLookupService {
         });
     }
     /**
-     * @param userName
      * @returns Volo_Abp_Users_UserData OK
      * @throws ApiError
      */
-    public static getApiIdentityUsersLookupByUsername(
+    public static getApiIdentityUsersLookupByUsername({
+        userName,
+    }: {
         userName: string,
-    ): CancelablePromise<Volo_Abp_Users_UserData> {
+    }): CancelablePromise<Volo_Abp_Users_UserData> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/identity/users/lookup/by-username/{userName}',
@@ -58,21 +60,22 @@ export class UserLookupService {
         });
     }
     /**
-     * @param filter
-     * @param sorting
-     * @param skipCount
-     * @param maxResultCount
-     * @param extraProperties
      * @returns Volo_Abp_Application_Dtos_ListResultDto_1<Volo_Abp_Users_UserData_Volo_Abp_Users_Abstractions_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_> OK
      * @throws ApiError
      */
-    public static getApiIdentityUsersLookupSearch(
+    public static getApiIdentityUsersLookupSearch({
+        filter,
+        sorting,
+        skipCount,
+        maxResultCount,
+        extraProperties,
+    }: {
         filter?: string,
         sorting?: string,
         skipCount?: number,
         maxResultCount?: number,
         extraProperties?: Record<string, any>,
-    ): CancelablePromise<Volo_Abp_Application_Dtos_ListResultDto_1> {
+    }): CancelablePromise<Volo_Abp_Application_Dtos_ListResultDto_1> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/identity/users/lookup/search',
@@ -94,13 +97,14 @@ export class UserLookupService {
         });
     }
     /**
-     * @param filter
      * @returns number OK
      * @throws ApiError
      */
-    public static getApiIdentityUsersLookupCount(
+    public static getApiIdentityUsersLookupCount({
+        filter,
+    }: {
         filter?: string,
-    ): CancelablePromise<number> {
+    }): CancelablePromise<number> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/identity/users/lookup/count',

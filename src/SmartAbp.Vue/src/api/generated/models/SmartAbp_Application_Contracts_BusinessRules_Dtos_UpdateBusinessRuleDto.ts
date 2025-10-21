@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleActionDto } from './SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleActionDto';
 import type { SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleConditionDto } from './SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleConditionDto';
 export type SmartAbp_Application_Contracts_BusinessRules_Dtos_UpdateBusinessRuleDto = {

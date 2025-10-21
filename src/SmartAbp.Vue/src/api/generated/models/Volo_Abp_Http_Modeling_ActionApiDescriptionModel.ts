@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Volo_Abp_Http_Modeling_MethodParameterApiDescriptionModel } from './Volo_Abp_Http_Modeling_MethodParameterApiDescriptionModel';
 import type { Volo_Abp_Http_Modeling_ParameterApiDescriptionModel } from './Volo_Abp_Http_Modeling_ParameterApiDescriptionModel';
 import type { Volo_Abp_Http_Modeling_ReturnValueApiDescriptionModel } from './Volo_Abp_Http_Modeling_ReturnValueApiDescriptionModel';

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { SmartAbp_Domain_Entities_LowCode_DataSourceConfig } from './SmartAbp_Domain_Entities_LowCode_DataSourceConfig';
 import type { SmartAbp_Domain_Entities_LowCode_FormFieldConfig } from './SmartAbp_Domain_Entities_LowCode_FormFieldConfig';
 import type { SmartAbp_Domain_Entities_LowCode_ListFieldConfig } from './SmartAbp_Domain_Entities_LowCode_ListFieldConfig';

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Volo_Abp_SettingManagement_EmailSettingsDto } from '../models/Volo_Abp_SettingManagement_EmailSettingsDto';
 import type { Volo_Abp_SettingManagement_SendTestEmailInput } from '../models/Volo_Abp_SettingManagement_SendTestEmailInput';
 import type { Volo_Abp_SettingManagement_UpdateEmailSettingsDto } from '../models/Volo_Abp_SettingManagement_UpdateEmailSettingsDto';
@@ -28,13 +28,14 @@ export class EmailSettingsService {
         });
     }
     /**
-     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
-    public static postApiSettingManagementEmailing(
+    public static postApiSettingManagementEmailing({
+        requestBody,
+    }: {
         requestBody?: Volo_Abp_SettingManagement_UpdateEmailSettingsDto,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/setting-management/emailing',
@@ -51,13 +52,14 @@ export class EmailSettingsService {
         });
     }
     /**
-     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
-    public static postApiSettingManagementEmailingSendTestEmail(
+    public static postApiSettingManagementEmailingSendTestEmail({
+        requestBody,
+    }: {
         requestBody?: Volo_Abp_SettingManagement_SendTestEmailInput,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/setting-management/emailing/send-test-email',

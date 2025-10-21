@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 export type SmartAbp_CodeGenerator_Dtos_CreateGenerationHistoryDto = {
     mode?: string | null;
     templateName?: string | null;

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Volo_Abp_FeatureManagement_GetFeatureListResultDto } from '../models/Volo_Abp_FeatureManagement_GetFeatureListResultDto';
 import type { Volo_Abp_FeatureManagement_UpdateFeaturesDto } from '../models/Volo_Abp_FeatureManagement_UpdateFeaturesDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -9,15 +9,16 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class FeaturesService {
     /**
-     * @param providerName
-     * @param providerKey
      * @returns Volo_Abp_FeatureManagement_GetFeatureListResultDto OK
      * @throws ApiError
      */
-    public static getApiFeatureManagementFeatures(
+    public static getApiFeatureManagementFeatures({
+        providerName,
+        providerKey,
+    }: {
         providerName?: string,
         providerKey?: string,
-    ): CancelablePromise<Volo_Abp_FeatureManagement_GetFeatureListResultDto> {
+    }): CancelablePromise<Volo_Abp_FeatureManagement_GetFeatureListResultDto> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/feature-management/features',
@@ -36,17 +37,18 @@ export class FeaturesService {
         });
     }
     /**
-     * @param providerName
-     * @param providerKey
-     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
-    public static putApiFeatureManagementFeatures(
+    public static putApiFeatureManagementFeatures({
+        providerName,
+        providerKey,
+        requestBody,
+    }: {
         providerName?: string,
         providerKey?: string,
         requestBody?: Volo_Abp_FeatureManagement_UpdateFeaturesDto,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/feature-management/features',
@@ -67,15 +69,16 @@ export class FeaturesService {
         });
     }
     /**
-     * @param providerName
-     * @param providerKey
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteApiFeatureManagementFeatures(
+    public static deleteApiFeatureManagementFeatures({
+        providerName,
+        providerKey,
+    }: {
         providerName?: string,
         providerKey?: string,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/feature-management/features',

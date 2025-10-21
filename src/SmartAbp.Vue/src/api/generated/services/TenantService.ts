@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Volo_Abp_Application_Dtos_PagedResultDto_1 } from '../models/Volo_Abp_Application_Dtos_PagedResultDto_1';
 import type { Volo_Abp_TenantManagement_TenantCreateDto } from '../models/Volo_Abp_TenantManagement_TenantCreateDto';
 import type { Volo_Abp_TenantManagement_TenantDto } from '../models/Volo_Abp_TenantManagement_TenantDto';
@@ -12,13 +12,14 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class TenantService {
     /**
-     * @param id
      * @returns Volo_Abp_TenantManagement_TenantDto OK
      * @throws ApiError
      */
-    public static getApiMultiTenancyTenants(
+    public static getApiMultiTenancyTenants({
+        id,
+    }: {
         id: string,
-    ): CancelablePromise<Volo_Abp_TenantManagement_TenantDto> {
+    }): CancelablePromise<Volo_Abp_TenantManagement_TenantDto> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/multi-tenancy/tenants/{id}',
@@ -36,15 +37,16 @@ export class TenantService {
         });
     }
     /**
-     * @param id
-     * @param requestBody
      * @returns Volo_Abp_TenantManagement_TenantDto OK
      * @throws ApiError
      */
-    public static putApiMultiTenancyTenants(
+    public static putApiMultiTenancyTenants({
+        id,
+        requestBody,
+    }: {
         id: string,
         requestBody?: Volo_Abp_TenantManagement_TenantUpdateDto,
-    ): CancelablePromise<Volo_Abp_TenantManagement_TenantDto> {
+    }): CancelablePromise<Volo_Abp_TenantManagement_TenantDto> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/multi-tenancy/tenants/{id}',
@@ -64,13 +66,14 @@ export class TenantService {
         });
     }
     /**
-     * @param id
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteApiMultiTenancyTenants(
+    public static deleteApiMultiTenancyTenants({
+        id,
+    }: {
         id: string,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/multi-tenancy/tenants/{id}',
@@ -88,19 +91,20 @@ export class TenantService {
         });
     }
     /**
-     * @param filter
-     * @param sorting
-     * @param skipCount
-     * @param maxResultCount
      * @returns Volo_Abp_Application_Dtos_PagedResultDto_1<Volo_Abp_TenantManagement_TenantDto_Volo_Abp_TenantManagement_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_> OK
      * @throws ApiError
      */
-    public static getApiMultiTenancyTenants1(
+    public static getApiMultiTenancyTenants1({
+        filter,
+        sorting,
+        skipCount,
+        maxResultCount,
+    }: {
         filter?: string,
         sorting?: string,
         skipCount?: number,
         maxResultCount?: number,
-    ): CancelablePromise<Volo_Abp_Application_Dtos_PagedResultDto_1> {
+    }): CancelablePromise<Volo_Abp_Application_Dtos_PagedResultDto_1> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/multi-tenancy/tenants',
@@ -121,13 +125,14 @@ export class TenantService {
         });
     }
     /**
-     * @param requestBody
      * @returns Volo_Abp_TenantManagement_TenantDto OK
      * @throws ApiError
      */
-    public static postApiMultiTenancyTenants(
+    public static postApiMultiTenancyTenants({
+        requestBody,
+    }: {
         requestBody?: Volo_Abp_TenantManagement_TenantCreateDto,
-    ): CancelablePromise<Volo_Abp_TenantManagement_TenantDto> {
+    }): CancelablePromise<Volo_Abp_TenantManagement_TenantDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/multi-tenancy/tenants',
@@ -144,13 +149,14 @@ export class TenantService {
         });
     }
     /**
-     * @param id
      * @returns string OK
      * @throws ApiError
      */
-    public static getApiMultiTenancyTenantsDefaultConnectionString(
+    public static getApiMultiTenancyTenantsDefaultConnectionString({
+        id,
+    }: {
         id: string,
-    ): CancelablePromise<string> {
+    }): CancelablePromise<string> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/multi-tenancy/tenants/{id}/default-connection-string',
@@ -168,15 +174,16 @@ export class TenantService {
         });
     }
     /**
-     * @param id
-     * @param defaultConnectionString
      * @returns any OK
      * @throws ApiError
      */
-    public static putApiMultiTenancyTenantsDefaultConnectionString(
+    public static putApiMultiTenancyTenantsDefaultConnectionString({
+        id,
+        defaultConnectionString,
+    }: {
         id: string,
         defaultConnectionString?: string,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/multi-tenancy/tenants/{id}/default-connection-string',
@@ -197,13 +204,14 @@ export class TenantService {
         });
     }
     /**
-     * @param id
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteApiMultiTenancyTenantsDefaultConnectionString(
+    public static deleteApiMultiTenancyTenantsDefaultConnectionString({
+        id,
+    }: {
         id: string,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/multi-tenancy/tenants/{id}/default-connection-string',

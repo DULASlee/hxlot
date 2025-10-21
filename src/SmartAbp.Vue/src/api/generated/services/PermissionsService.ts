@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Volo_Abp_PermissionManagement_GetPermissionListResultDto } from '../models/Volo_Abp_PermissionManagement_GetPermissionListResultDto';
 import type { Volo_Abp_PermissionManagement_UpdatePermissionsDto } from '../models/Volo_Abp_PermissionManagement_UpdatePermissionsDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -9,15 +9,16 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class PermissionsService {
     /**
-     * @param providerName
-     * @param providerKey
      * @returns Volo_Abp_PermissionManagement_GetPermissionListResultDto OK
      * @throws ApiError
      */
-    public static getApiPermissionManagementPermissions(
+    public static getApiPermissionManagementPermissions({
+        providerName,
+        providerKey,
+    }: {
         providerName?: string,
         providerKey?: string,
-    ): CancelablePromise<Volo_Abp_PermissionManagement_GetPermissionListResultDto> {
+    }): CancelablePromise<Volo_Abp_PermissionManagement_GetPermissionListResultDto> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/permission-management/permissions',
@@ -36,17 +37,18 @@ export class PermissionsService {
         });
     }
     /**
-     * @param providerName
-     * @param providerKey
-     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
-    public static putApiPermissionManagementPermissions(
+    public static putApiPermissionManagementPermissions({
+        providerName,
+        providerKey,
+        requestBody,
+    }: {
         providerName?: string,
         providerKey?: string,
         requestBody?: Volo_Abp_PermissionManagement_UpdatePermissionsDto,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/permission-management/permissions',

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { SmartAbp_CodeGenerator_Dtos_IndustryRecommendationDto } from '../models/SmartAbp_CodeGenerator_Dtos_IndustryRecommendationDto';
 import type { SmartAbp_CodeGenerator_Dtos_UpdateUserProfileDto } from '../models/SmartAbp_CodeGenerator_Dtos_UpdateUserProfileDto';
 import type { SmartAbp_CodeGenerator_Dtos_UserProfileDto } from '../models/SmartAbp_CodeGenerator_Dtos_UserProfileDto';
@@ -20,13 +20,14 @@ export class UserProfileService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_CodeGenerator_Dtos_UserProfileDto OK
      * @throws ApiError
      */
-    public static putApiCodeGenUserProfileMy(
+    public static putApiCodeGenUserProfileMy({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Dtos_UpdateUserProfileDto,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Dtos_UserProfileDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Dtos_UserProfileDto> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/code-gen/user-profile/my',

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Volo_Abp_Account_ChangePasswordInput } from '../models/Volo_Abp_Account_ChangePasswordInput';
 import type { Volo_Abp_Account_ProfileDto } from '../models/Volo_Abp_Account_ProfileDto';
 import type { Volo_Abp_Account_UpdateProfileDto } from '../models/Volo_Abp_Account_UpdateProfileDto';
@@ -28,13 +28,14 @@ export class ProfileService {
         });
     }
     /**
-     * @param requestBody
      * @returns Volo_Abp_Account_ProfileDto OK
      * @throws ApiError
      */
-    public static putApiAccountMyProfile(
+    public static putApiAccountMyProfile({
+        requestBody,
+    }: {
         requestBody?: Volo_Abp_Account_UpdateProfileDto,
-    ): CancelablePromise<Volo_Abp_Account_ProfileDto> {
+    }): CancelablePromise<Volo_Abp_Account_ProfileDto> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/account/my-profile',
@@ -51,13 +52,14 @@ export class ProfileService {
         });
     }
     /**
-     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
-    public static postApiAccountMyProfileChangePassword(
+    public static postApiAccountMyProfileChangePassword({
+        requestBody,
+    }: {
         requestBody?: Volo_Abp_Account_ChangePasswordInput,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/account/my-profile/change-password',

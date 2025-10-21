@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { SmartAbp_Domain_Entities_LowCode_MenuConfigItem } from './SmartAbp_Domain_Entities_LowCode_MenuConfigItem';
 /**
  * 模块前端配置

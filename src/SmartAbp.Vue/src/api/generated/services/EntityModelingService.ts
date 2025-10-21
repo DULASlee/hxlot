@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityDefinitionDto } from '../models/SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityDefinitionDto';
 import type { SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityFieldDto } from '../models/SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityFieldDto';
 import type { SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityRelationDto } from '../models/SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityRelationDto';
@@ -32,13 +32,14 @@ export class EntityModelingService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto OK
      * @throws ApiError
      */
-    public static postApiLowcodeEntityModelingEntities(
+    public static postApiLowcodeEntityModelingEntities({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityDefinitionDto,
-    ): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto> {
+    }): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/lowcode/entity-modeling/entities',
@@ -55,13 +56,14 @@ export class EntityModelingService {
         });
     }
     /**
-     * @param id
      * @returns SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto OK
      * @throws ApiError
      */
-    public static getApiLowcodeEntityModelingEntities1(
+    public static getApiLowcodeEntityModelingEntities1({
+        id,
+    }: {
         id: string,
-    ): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto> {
+    }): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/lowcode/entity-modeling/entities/{id}',
@@ -79,15 +81,16 @@ export class EntityModelingService {
         });
     }
     /**
-     * @param id
-     * @param requestBody
      * @returns SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto OK
      * @throws ApiError
      */
-    public static putApiLowcodeEntityModelingEntities(
+    public static putApiLowcodeEntityModelingEntities({
+        id,
+        requestBody,
+    }: {
         id: string,
         requestBody?: SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityDefinitionDto,
-    ): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto> {
+    }): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/lowcode/entity-modeling/entities/{id}',
@@ -107,13 +110,14 @@ export class EntityModelingService {
         });
     }
     /**
-     * @param id
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteApiLowcodeEntityModelingEntities(
+    public static deleteApiLowcodeEntityModelingEntities({
+        id,
+    }: {
         id: string,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/lowcode/entity-modeling/entities/{id}',
@@ -131,13 +135,14 @@ export class EntityModelingService {
         });
     }
     /**
-     * @param name
      * @returns SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto OK
      * @throws ApiError
      */
-    public static getApiLowcodeEntityModelingEntitiesByName(
+    public static getApiLowcodeEntityModelingEntitiesByName({
+        name,
+    }: {
         name: string,
-    ): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto> {
+    }): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/lowcode/entity-modeling/entities/by-name/{name}',
@@ -155,13 +160,14 @@ export class EntityModelingService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_Application_Contracts_LowCode_Dtos_EntityFieldDto OK
      * @throws ApiError
      */
-    public static postApiLowcodeEntityModelingFields(
+    public static postApiLowcodeEntityModelingFields({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityFieldDto,
-    ): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityFieldDto> {
+    }): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityFieldDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/lowcode/entity-modeling/fields',
@@ -178,15 +184,16 @@ export class EntityModelingService {
         });
     }
     /**
-     * @param id
-     * @param requestBody
      * @returns SmartAbp_Application_Contracts_LowCode_Dtos_EntityFieldDto OK
      * @throws ApiError
      */
-    public static putApiLowcodeEntityModelingFields(
+    public static putApiLowcodeEntityModelingFields({
+        id,
+        requestBody,
+    }: {
         id: string,
         requestBody?: SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityFieldDto,
-    ): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityFieldDto> {
+    }): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityFieldDto> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/lowcode/entity-modeling/fields/{id}',
@@ -206,13 +213,14 @@ export class EntityModelingService {
         });
     }
     /**
-     * @param id
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteApiLowcodeEntityModelingFields(
+    public static deleteApiLowcodeEntityModelingFields({
+        id,
+    }: {
         id: string,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/lowcode/entity-modeling/fields/{id}',
@@ -248,13 +256,14 @@ export class EntityModelingService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_Application_Contracts_LowCode_Dtos_EntityRelationDto OK
      * @throws ApiError
      */
-    public static postApiLowcodeEntityModelingRelations(
+    public static postApiLowcodeEntityModelingRelations({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityRelationDto,
-    ): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityRelationDto> {
+    }): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityRelationDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/lowcode/entity-modeling/relations',
@@ -271,15 +280,16 @@ export class EntityModelingService {
         });
     }
     /**
-     * @param id
-     * @param requestBody
      * @returns SmartAbp_Application_Contracts_LowCode_Dtos_EntityRelationDto OK
      * @throws ApiError
      */
-    public static putApiLowcodeEntityModelingRelations(
+    public static putApiLowcodeEntityModelingRelations({
+        id,
+        requestBody,
+    }: {
         id: string,
         requestBody?: SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityRelationDto,
-    ): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityRelationDto> {
+    }): CancelablePromise<SmartAbp_Application_Contracts_LowCode_Dtos_EntityRelationDto> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/lowcode/entity-modeling/relations/{id}',
@@ -299,13 +309,14 @@ export class EntityModelingService {
         });
     }
     /**
-     * @param id
      * @returns any OK
      * @throws ApiError
      */
-    public static deleteApiLowcodeEntityModelingRelations(
+    public static deleteApiLowcodeEntityModelingRelations({
+        id,
+    }: {
         id: string,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/lowcode/entity-modeling/relations/{id}',

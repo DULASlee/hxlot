@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { SmartAbp_CodeGenerator_Services_V9_CodeGenerationOptionsDto } from './SmartAbp_CodeGenerator_Services_V9_CodeGenerationOptionsDto';
 export type SmartAbp_CodeGenerator_Services_V9_CodeGenerationConfigDto = {
     generateEntity?: boolean;

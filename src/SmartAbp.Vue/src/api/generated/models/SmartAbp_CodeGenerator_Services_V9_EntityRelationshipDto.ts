@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { SmartAbp_CodeGenerator_Services_V9_EnhancedEntityModelDto } from './SmartAbp_CodeGenerator_Services_V9_EnhancedEntityModelDto';
 export type SmartAbp_CodeGenerator_Services_V9_EntityRelationshipDto = {
     id?: string | null;
@@ -21,15 +21,7 @@ export type SmartAbp_CodeGenerator_Services_V9_EntityRelationshipDto = {
     joinTableName?: string | null;
     onDeleteAction?: string | null;
     isForeignKeyRequired?: boolean;
-    onDeleteBehavior?: SmartAbp_CodeGenerator_Services_V9_EntityRelationshipDto.onDeleteBehavior;
+    onDeleteBehavior?: 0 | 1 | 2 | 3;
     joinEntity?: SmartAbp_CodeGenerator_Services_V9_EnhancedEntityModelDto | null;
 };
-export namespace SmartAbp_CodeGenerator_Services_V9_EntityRelationshipDto {
-    export enum onDeleteBehavior {
-        '_0' = 0,
-        '_1' = 1,
-        '_2' = 2,
-        '_3' = 3,
-    }
-}
 

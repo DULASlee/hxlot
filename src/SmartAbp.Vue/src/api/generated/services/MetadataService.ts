@@ -1,20 +1,21 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto } from '../models/SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class MetadataService {
     /**
-     * @param requestBody
      * @returns SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto OK
      * @throws ApiError
      */
-    public static postApiMetadataRegisterModule(
+    public static postApiMetadataRegisterModule({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/metadata/register-module',
@@ -31,13 +32,14 @@ export class MetadataService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto OK
      * @throws ApiError
      */
-    public static postApiMetadata(
+    public static postApiMetadata({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/metadata',
@@ -54,13 +56,14 @@ export class MetadataService {
         });
     }
     /**
-     * @param requestBody
      * @returns SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto OK
      * @throws ApiError
      */
-    public static putApiMetadata(
+    public static putApiMetadata({
+        requestBody,
+    }: {
         requestBody?: SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/api/metadata',
@@ -77,13 +80,14 @@ export class MetadataService {
         });
     }
     /**
-     * @param moduleName
      * @returns SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto OK
      * @throws ApiError
      */
-    public static getApiMetadata(
+    public static getApiMetadata({
+        moduleName,
+    }: {
         moduleName: string,
-    ): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto> {
+    }): CancelablePromise<SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/metadata/{moduleName}',

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Volo_Abp_Http_RemoteServiceValidationErrorInfo } from './Volo_Abp_Http_RemoteServiceValidationErrorInfo';
 export type Volo_Abp_Http_RemoteServiceErrorInfo = {
     code?: string | null;

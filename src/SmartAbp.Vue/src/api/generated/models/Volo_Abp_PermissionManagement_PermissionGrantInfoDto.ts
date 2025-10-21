@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Volo_Abp_PermissionManagement_ProviderInfoDto } from './Volo_Abp_PermissionManagement_ProviderInfoDto';
 export type Volo_Abp_PermissionManagement_PermissionGrantInfoDto = {
     name?: string | null;

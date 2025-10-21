@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Volo_Abp_NameValue } from '../models/Volo_Abp_NameValue';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -26,13 +26,14 @@ export class TimeZoneSettingsService {
         });
     }
     /**
-     * @param timezone
      * @returns any OK
      * @throws ApiError
      */
-    public static postApiSettingManagementTimezone(
+    public static postApiSettingManagementTimezone({
+        timezone,
+    }: {
         timezone?: string,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/setting-management/timezone',

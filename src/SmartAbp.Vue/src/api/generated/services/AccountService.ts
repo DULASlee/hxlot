@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Volo_Abp_Account_RegisterDto } from '../models/Volo_Abp_Account_RegisterDto';
 import type { Volo_Abp_Account_ResetPasswordDto } from '../models/Volo_Abp_Account_ResetPasswordDto';
 import type { Volo_Abp_Account_SendPasswordResetCodeDto } from '../models/Volo_Abp_Account_SendPasswordResetCodeDto';
@@ -12,13 +12,14 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class AccountService {
     /**
-     * @param requestBody
      * @returns Volo_Abp_Identity_IdentityUserDto OK
      * @throws ApiError
      */
-    public static postApiAccountRegister(
+    public static postApiAccountRegister({
+        requestBody,
+    }: {
         requestBody?: Volo_Abp_Account_RegisterDto,
-    ): CancelablePromise<Volo_Abp_Identity_IdentityUserDto> {
+    }): CancelablePromise<Volo_Abp_Identity_IdentityUserDto> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/account/register',
@@ -35,13 +36,14 @@ export class AccountService {
         });
     }
     /**
-     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
-    public static postApiAccountSendPasswordResetCode(
+    public static postApiAccountSendPasswordResetCode({
+        requestBody,
+    }: {
         requestBody?: Volo_Abp_Account_SendPasswordResetCodeDto,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/account/send-password-reset-code',
@@ -58,13 +60,14 @@ export class AccountService {
         });
     }
     /**
-     * @param requestBody
      * @returns boolean OK
      * @throws ApiError
      */
-    public static postApiAccountVerifyPasswordResetToken(
+    public static postApiAccountVerifyPasswordResetToken({
+        requestBody,
+    }: {
         requestBody?: Volo_Abp_Account_VerifyPasswordResetTokenInput,
-    ): CancelablePromise<boolean> {
+    }): CancelablePromise<boolean> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/account/verify-password-reset-token',
@@ -81,13 +84,14 @@ export class AccountService {
         });
     }
     /**
-     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
-    public static postApiAccountResetPassword(
+    public static postApiAccountResetPassword({
+        requestBody,
+    }: {
         requestBody?: Volo_Abp_Account_ResetPasswordDto,
-    ): CancelablePromise<any> {
+    }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/account/reset-password',

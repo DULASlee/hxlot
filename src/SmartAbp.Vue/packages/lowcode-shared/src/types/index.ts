@@ -14,7 +14,7 @@ export type {
   ModuleMetadata, NavigationPropertyMetadata, PropertyMetadata, RouteMetadata,
   SchemaVersion,
   StoreMetadata, UnifiedValidationRule, ValidationRule
-} from './metadata.js'
+} from './metadata'
 
 export {
   getSchemaVersion,
@@ -24,7 +24,7 @@ export {
   SUPPORTED_METADATA_VERSIONS,
   SUPPORTED_SCHEMA_VERSIONS,
   UNIFIED_SCHEMA_VERSION
-} from './metadata.js'
+} from './metadata'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🟡 已废弃：统一Schema类型（Phase 1D → Phase 3B完成后端SSOT迁移）
