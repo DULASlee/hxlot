@@ -26,11 +26,11 @@ Write-Host ""
 if (-not $SkipServiceCheck) {
     Write-Host "📋 步骤1: 检查后端服务状态..." -ForegroundColor Yellow
     Write-Host ""
-    
+
     try {
         $swaggerUrl = "$BackendUrl/swagger/v1/swagger.json"
         $response = Invoke-WebRequest -Uri $swaggerUrl -Method GET -TimeoutSec 5 -UseBasicParsing -ErrorAction Stop
-        
+
         if ($response.StatusCode -eq 200) {
             Write-Host "  ✅ 后端服务已启动" -ForegroundColor Green
             Write-Host "  ✅ Swagger文档可访问: $swaggerUrl" -ForegroundColor Green
@@ -62,7 +62,7 @@ Push-Location "src/SmartAbp.Vue"
 try {
     Write-Host "  🔧 使用openapi-typescript-codegen生成..." -ForegroundColor White
     Write-Host ""
-    
+
     # 生成API Client
     npx openapi-typescript-codegen `
         --input "$BackendUrl/swagger/v1/swagger.json" `
@@ -70,7 +70,7 @@ try {
         --client axios `
         --useOptions `
         --useUnionTypes
-    
+
     if ($LASTEXITCODE -eq 0) {
         Write-Host ""
         Write-Host "  ✅ API Client生成成功" -ForegroundColor Green
@@ -103,7 +103,7 @@ $generatedDir = "src/SmartAbp.Vue/src/api/generated"
 if (Test-Path $generatedDir) {
     $models = Get-ChildItem "$generatedDir/models" -Filter "*.ts" -ErrorAction SilentlyContinue | Measure-Object
     $services = Get-ChildItem "$generatedDir/services" -Filter "*.ts" -ErrorAction SilentlyContinue | Measure-Object
-    
+
     Write-Host "  📊 生成统计:" -ForegroundColor Cyan
     Write-Host "     • Models: $($models.Count) 个" -ForegroundColor White
     Write-Host "     • Services: $($services.Count) 个" -ForegroundColor White
