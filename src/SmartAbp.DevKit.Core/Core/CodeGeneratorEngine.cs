@@ -77,12 +77,32 @@ public class CodeGeneratorEngine
         GenerationOptions? options = null,
         CancellationToken cancellationToken = default)
     {
+        return await GenerateAsync(module, outputPath, targetPlatform: null, options, cancellationToken);
+    }
+
+    /// <summary>
+    /// 生成代码（支持多平台选择）
+    /// </summary>
+    /// <param name="module">低代码模块配置</param>
+    /// <param name="outputPath">输出路径</param>
+    /// <param name="targetPlatform">目标平台（可选，null表示所有平台）</param>
+    /// <param name="options">生成选项</param>
+    /// <param name="cancellationToken">取消令牌</param>
+    /// <returns>生成报告</returns>
+    public async Task<Result<GenerationReport>> GenerateAsync(
+        LowCodeConfig module,
+        string outputPath,
+        Platform.TargetPlatform? targetPlatform,
+        GenerationOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
         var stopwatch = Stopwatch.StartNew();
         var report = new GenerationReport
         {
             StartTime = DateTime.UtcNow,
             ModuleName = module.ModuleName,
-            TargetLayer = module.CurrentLayer
+            TargetLayer = module.CurrentLayer,
+            TargetPlatform = targetPlatform
         };
 
         try
@@ -114,12 +134,13 @@ public class CodeGeneratorEngine
                 Options = options ?? new GenerationOptions()
             };
 
-            // 步骤3: 选择并排序生成器
-            var selectedGenerators = SelectAndSortGenerators(module.CurrentLayer);
+            // 步骤3: 选择并排序生成器（支持平台过滤）
+            var selectedGenerators = SelectAndSortGenerators(module.CurrentLayer, targetPlatform);
             _logger.LogInformation(
-                "Selected {Count} generators for Layer {Layer}",
+                "Selected {Count} generators for Layer {Layer}, Platform: {Platform}",
                 selectedGenerators.Count,
-                module.CurrentLayer);
+                module.CurrentLayer,
+                targetPlatform?.ToString() ?? "All");
 
             // 步骤4: 验证所有生成器
             foreach (var generator in selectedGenerators)
@@ -173,14 +194,38 @@ public class CodeGeneratorEngine
     }
 
     /// <summary>
-    /// 选择并排序生成器（根据目标层级和依赖关系）
+    /// 选择并排序生成器（根据目标层级、平台和依赖关系）
     /// </summary>
-    private List<ICodeGenerator> SelectAndSortGenerators(TargetLayer targetLayer)
+    /// <param name="targetLayer">目标层级</param>
+    /// <param name="targetPlatform">目标平台（可选，null表示所有平台）</param>
+    /// <returns>排序后的生成器列表</returns>
+    private List<ICodeGenerator> SelectAndSortGenerators(
+        TargetLayer targetLayer,
+        Platform.TargetPlatform? targetPlatform = null)
     {
         // 选择支持目标层级的生成器
         var selectedGenerators = _generators
             .Where(g => g.IsEnabled && g.SupportedLayer == targetLayer)
             .ToList();
+
+        // 如果指定了目标平台，进一步过滤前端生成器
+        if (targetPlatform.HasValue && targetLayer == TargetLayer.Layer2)
+        {
+            // 只保留符合目标平台的前端生成器
+            selectedGenerators = selectedGenerators
+                .Where(g =>
+                {
+                    // 判断生成器是否为前端生成器（BaseFrontendGenerator的子类）
+                    if (g is Platform.BaseFrontendGenerator frontendGen)
+                    {
+                        // 通过生成器名称判断平台（简单实现）
+                        return g.Name.StartsWith(targetPlatform.Value.ToString(), StringComparison.OrdinalIgnoreCase);
+                    }
+                    // 非前端生成器保留（如后端生成器）
+                    return true;
+                })
+                .ToList();
+        }
 
         // 按优先级排序（优先级高的先执行）
         selectedGenerators.Sort((a, b) => b.Priority.CompareTo(a.Priority));
@@ -323,6 +368,11 @@ public class GenerationReport
     /// 目标层级
     /// </summary>
     public TargetLayer TargetLayer { get; set; }
+
+    /// <summary>
+    /// 目标平台（可选，null表示所有平台）
+    /// </summary>
+    public Platform.TargetPlatform? TargetPlatform { get; set; }
 
     /// <summary>
     /// 开始时间

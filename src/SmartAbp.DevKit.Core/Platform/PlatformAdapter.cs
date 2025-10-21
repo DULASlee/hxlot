@@ -180,7 +180,11 @@ public class PlatformAdapter
         // 3. 使用模板引擎渲染代码
         try
         {
-            var content = await _templateEngine.RenderAsync(templatePath, metadata);
+            // 先加载模板
+            var template = await _templateEngine.LoadTemplateAsync(templatePath);
+            
+            // 再渲染模板
+            var content = await _templateEngine.RenderAsync(template, metadata);
             
             _logger.LogDebug(
                 "Successfully generated frontend code: Platform={Platform}, TemplateType={TemplateType}, ContentLength={Length}",
@@ -324,14 +328,14 @@ public class PlatformAdapter
     /// <summary>
     /// 获取平台特定的文件类型
     /// </summary>
-    private FileType GetFileTypeByPlatform(TargetPlatform platform)
+    private Abstractions.FileType GetFileTypeByPlatform(TargetPlatform platform)
     {
         return platform switch
         {
-            TargetPlatform.Web => FileType.Vue,
-            TargetPlatform.Dashboard => FileType.DashboardVue,
-            TargetPlatform.UniApp => FileType.UniAppVue,
-            _ => FileType.Other
+            TargetPlatform.Web => Abstractions.FileType.Vue,
+            TargetPlatform.Dashboard => Abstractions.FileType.Vue, // Dashboard也是Vue文件
+            TargetPlatform.UniApp => Abstractions.FileType.Vue, // UniApp也是Vue文件
+            _ => Abstractions.FileType.Other
         };
     }
 
