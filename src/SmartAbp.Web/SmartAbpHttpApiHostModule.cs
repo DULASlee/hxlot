@@ -60,11 +60,25 @@ public class SmartAbpHttpApiHostModule : AbpModule
         {
             options.AddDefaultPolicy(builder =>
             {
-                var origins = configuration["App:CorsOrigins"] ?? "http://localhost:11369";
-                builder.WithOrigins(origins.Split(',', StringSplitOptions.RemoveEmptyEntries))
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
+                var hostEnvironment = context.Services.GetRequiredService<IHostEnvironment>();
+                
+                if (hostEnvironment.IsDevelopment())
+                {
+                    // 开发环境：允许任何来源（支持localhost、127.0.0.1、局域网IP等）
+                    builder.SetIsOriginAllowed(origin => true)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                }
+                else
+                {
+                    // 生产环境：严格的CORS策略
+                    var origins = configuration["App:CorsOrigins"] ?? "http://localhost:11369";
+                    builder.WithOrigins(origins.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                }
             });
         });
 
