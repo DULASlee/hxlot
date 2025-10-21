@@ -220,40 +220,55 @@ public class UniAppGenerator : BaseFrontendGenerator
 
         var templates = new List<(string TemplateType, object Metadata, string OutputPath)>();
 
-        // 1. 列表页面（ListPage.vue）
+        // 🎯 根据组件库类型选择模板后缀
+        var templateSuffix = _componentLibrary.Type switch
+        {
+            ComponentLibraryType.UView => "-uView",
+            ComponentLibraryType.WotDesign => "-WotDesign",
+            ComponentLibraryType.UniUI => "-UniUI",
+            _ => "-uView" // 默认使用uView
+        };
+
+        _logger.LogDebug(
+            "Using {ComponentLibrary} templates with suffix: {Suffix}",
+            _componentLibrary.Name,
+            templateSuffix);
+
+        // 1. 列表页面（ListPage-uView.vue）
         var listPagePath = BuildModuleOutputPath(context, $"pages/{uniappMetadata.EntityNameKebab}/list.vue");
-        templates.Add(("ListPage", metadata, listPagePath));
-        LogGeneratedFile(listPagePath, "ListPage");
+        templates.Add(($"ListPage{templateSuffix}", metadata, listPagePath));
+        LogGeneratedFile(listPagePath, $"ListPage{templateSuffix}");
 
-        // 2. 详情页面（DetailPage.vue）
+        // 2. 详情页面（DetailPage-uView.vue）
         var detailPagePath = BuildModuleOutputPath(context, $"pages/{uniappMetadata.EntityNameKebab}/detail.vue");
-        templates.Add(("DetailPage", metadata, detailPagePath));
-        LogGeneratedFile(detailPagePath, "DetailPage");
+        templates.Add(($"DetailPage{templateSuffix}", metadata, detailPagePath));
+        LogGeneratedFile(detailPagePath, $"DetailPage{templateSuffix}");
 
-        // 3. 表单页面（FormPage.vue）
+        // 3. 表单页面（FormPage-uView.vue）
         var formPagePath = BuildModuleOutputPath(context, $"pages/{uniappMetadata.EntityNameKebab}/form.vue");
-        templates.Add(("FormPage", metadata, formPagePath));
-        LogGeneratedFile(formPagePath, "FormPage");
+        templates.Add(($"FormPage{templateSuffix}", metadata, formPagePath));
+        LogGeneratedFile(formPagePath, $"FormPage{templateSuffix}");
 
-        // 4. API客户端（api-client.ts）
+        // 4. API客户端（api-client.ts）- 组件库无关
         var apiClientPath = BuildModuleOutputPath(context, $"api/{uniappMetadata.EntityNameKebab}-api.ts");
         templates.Add(("ApiClient", metadata, apiClientPath));
         LogGeneratedFile(apiClientPath, "ApiClient");
 
-        // 5. Pinia Store（store.ts）
+        // 5. Pinia Store（store.ts）- 组件库无关
         var storePath = BuildModuleOutputPath(context, $"stores/{uniappMetadata.EntityNameKebab}-store.ts");
         templates.Add(("Store", metadata, storePath));
         LogGeneratedFile(storePath, "Store");
 
-        // 6. TypeScript类型定义（types.ts）
+        // 6. TypeScript类型定义（types.ts）- 组件库无关
         var typesPath = BuildModuleOutputPath(context, $"types/{uniappMetadata.EntityNameKebab}.types.ts");
-        templates.Add(("Types", metadata, typesPath));
-        LogGeneratedFile(typesPath, "Types");
+        templates.Add(("types", metadata, typesPath));
+        LogGeneratedFile(typesPath, "types");
 
         _logger.LogInformation(
-            "Prepared {Count} UniApp templates for entity: {EntityName}",
+            "Prepared {Count} UniApp templates for entity: {EntityName} using {ComponentLibrary}",
             templates.Count,
-            uniappMetadata.EntityName);
+            uniappMetadata.EntityName,
+            _componentLibrary.Name);
 
         return templates;
     }

@@ -1,0 +1,460 @@
+<!-- pages/{{EntityNameKebab}}/list.vue -->
+<!-- 
+  🎯 UniApp列表页面（基于{{ComponentLibrary}} {{ComponentLibraryVersion}}）
+  @author SmartAbp DevKit Low-Code Engine
+  @since {{GeneratedTime}}
+  @description 使用{{ComponentLibrary}}组件库的企业级列表页面
+-->
+
+<template>
+  <view class="list-page">
+    <!-- 搜索栏 -->
+    <view class="search-bar">
+      <u-search
+        v-model="searchKeyword"
+        @search="handleSearch"
+        @clear="handleClear"
+        placeholder="搜索{{EntityName}}..."
+        :show-action="true"
+        action-text="搜索"
+        :clearabled="true"
+        shape="round"
+      />
+    </view>
+
+    {{#if OfflineConfig.EnableOfflineCache}}
+    <!-- 离线同步提示 -->
+    <view v-if="hasOfflineData" class="offline-tip">
+      <u-notice-bar
+        :text="`有 ${offlineCount} 条待同步数据`"
+        mode="link"
+        @click="handleSync"
+      />
+    </view>
+    {{/if}}
+
+    <!-- 列表内容 -->
+    <u-list
+      @scrolltolower="handleLoadMore"
+      :show-scrollbar="false"
+    >
+      <!-- 下拉刷新 -->
+      <u-list-item>
+        <u-loadmore
+          v-if="refreshing"
+          status="loading"
+          loading-text="正在刷新..."
+        />
+      </u-list-item>
+
+      <!-- 数据列表 -->
+      <u-list-item
+        v-for="item in list"
+        :key="item.id"
+        @click="handleItemClick(item)"
+      >
+        <u-swipe-action>
+          <u-swipe-action-item
+            :options="swipeOptions"
+            @click="handleSwipeClick($event, item)"
+          >
+            <view class="list-item">
+              <!-- 列表项内容 -->
+              <view class="item-content">
+                {{#each ListFields}}
+                <view class="item-field">
+                  <text class="field-label">{{Label}}:</text>
+                  <text class="field-value">\{{ item.{{Name}} }}</text>
+                </view>
+                {{/each}}
+              </view>
+
+              <!-- 右侧操作图标 -->
+              <view class="item-actions">
+                <u-icon name="arrow-right" color="#c8c9cc" />
+              </view>
+            </view>
+          </u-swipe-action-item>
+        </u-swipe-action>
+      </u-list-item>
+
+      <!-- 加载更多 -->
+      <u-list-item>
+        <u-loadmore
+          :status="loadMoreStatus"
+          :load-more-text="loadMoreText"
+        />
+      </u-list-item>
+
+      <!-- 空状态 -->
+      <u-list-item v-if="list.length === 0 && !loading">
+        <u-empty
+          mode="data"
+          :text="searchKeyword ? '暂无搜索结果' : '暂无数据'"
+        />
+      </u-list-item>
+    </u-list>
+
+    <!-- 新增按钮（悬浮） -->
+    <u-fab
+      @click="handleAdd"
+      icon="plus"
+      :top="600"
+      :right="30"
+    />
+  </view>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue'
+import { onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app'
+import { use{{EntityName}}Store } from '@/stores/{{EntityNameKebab}}-store'
+import type { {{EntityName}}Dto, Get{{EntityName}}ListInput } from '@/types/{{EntityNameKebab}}.types'
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 状态管理
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const {{EntityNameCamel}}Store = use{{EntityName}}Store()
+
+// 列表数据
+const list = ref<{{EntityName}}Dto[]>([])
+
+// 搜索关键词
+const searchKeyword = ref('')
+
+// 加载状态
+const loading = ref(false)
+const refreshing = ref(false)
+
+// 分页参数
+const pageSize = 20
+let currentPage = 1
+let hasMore = true
+
+// 加载更多状态
+const loadMoreStatus = ref<'more' | 'loading' | 'noMore'>('more')
+const loadMoreText = computed(() => {
+  return {
+    more: '上拉加载更多',
+    loading: '加载中...',
+    noMore: '没有更多数据了'
+  }[loadMoreStatus.value]
+})
+
+{{#if OfflineConfig.EnableOfflineCache}}
+// 离线数据
+const hasOfflineData = ref(false)
+const offlineCount = ref(0)
+
+// 检查离线数据
+async function checkOfflineData() {
+  try {
+    const offlineData = await {{EntityNameCamel}}Store.getOfflineData()
+    hasOfflineData.value = offlineData.length > 0
+    offlineCount.value = offlineData.length
+  } catch (error) {
+    console.error('检查离线数据失败:', error)
+  }
+}
+{{/if}}
+
+// 滑动操作选项
+const swipeOptions = [
+  {
+    text: '编辑',
+    style: {
+      backgroundColor: '#3c9cff'
+    }
+  },
+  {
+    text: '删除',
+    style: {
+      backgroundColor: '#f56c6c'
+    }
+  }
+]
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 数据加载
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// 加载数据
+async function loadData(isRefresh = false) {
+  if (loading.value && !isRefresh) return
+  if (!hasMore && !isRefresh) return
+
+  try {
+    loading.value = true
+
+    if (isRefresh) {
+      currentPage = 1
+      hasMore = true
+      loadMoreStatus.value = 'more'
+    }
+
+    const params: Get{{EntityName}}ListInput = {
+      skipCount: (currentPage - 1) * pageSize,
+      maxResultCount: pageSize,
+      filter: searchKeyword.value || undefined
+    }
+
+    const result = await {{EntityNameCamel}}Store.getList(params)
+
+    if (isRefresh) {
+      list.value = result.items
+    } else {
+      list.value = [...list.value, ...result.items]
+    }
+
+    // 判断是否还有更多数据
+    hasMore = result.items.length >= pageSize
+    loadMoreStatus.value = hasMore ? 'more' : 'noMore'
+
+    // 增加页码
+    if (hasMore) {
+      currentPage++
+    }
+  } catch (error) {
+    console.error('加载数据失败:', error)
+    
+    uni.showToast({
+      title: '加载失败',
+      icon: 'error'
+    })
+  } finally {
+    loading.value = false
+    refreshing.value = false
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 事件处理
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// 搜索
+function handleSearch() {
+  loadData(true)
+}
+
+// 清空搜索
+function handleClear() {
+  searchKeyword.value = ''
+  loadData(true)
+}
+
+// 下拉刷新
+function handleRefresh() {
+  refreshing.value = true
+  loadData(true)
+}
+
+// 上拉加载更多
+function handleLoadMore() {
+  if (loadMoreStatus.value === 'more' && !loading.value) {
+    loadMoreStatus.value = 'loading'
+    loadData(false)
+  }
+}
+
+// 点击列表项
+function handleItemClick(item: {{EntityName}}Dto) {
+  uni.navigateTo({
+    url: `{{PageRoutes.DetailPage}}?id=${item.id}`
+  })
+}
+
+// 滑动操作
+function handleSwipeClick(event: any, item: {{EntityName}}Dto) {
+  const index = event.index
+  
+  if (index === 0) {
+    // 编辑
+    handleEdit(item)
+  } else if (index === 1) {
+    // 删除
+    handleDelete(item)
+  }
+}
+
+// 编辑
+function handleEdit(item: {{EntityName}}Dto) {
+  uni.navigateTo({
+    url: `{{PageRoutes.FormPage}}?id=${item.id}&mode=edit`
+  })
+}
+
+// 删除
+function handleDelete(item: {{EntityName}}Dto) {
+  uni.showModal({
+    title: '确认删除',
+    content: '确定要删除这条数据吗？',
+    success: async (res) => {
+      if (res.confirm) {
+        try {
+          await {{EntityNameCamel}}Store.delete(item.id)
+          
+          uni.showToast({
+            title: '删除成功',
+            icon: 'success'
+          })
+          
+          // 刷新列表
+          loadData(true)
+        } catch (error) {
+          console.error('删除失败:', error)
+          
+          uni.showToast({
+            title: '删除失败',
+            icon: 'error'
+          })
+        }
+      }
+    }
+  })
+}
+
+// 新增
+function handleAdd() {
+  uni.navigateTo({
+    url: '{{PageRoutes.FormPage}}?mode=create'
+  })
+}
+
+{{#if OfflineConfig.EnableOfflineCache}}
+// 同步离线数据
+async function handleSync() {
+  try {
+    uni.showLoading({ title: '同步中...' })
+    
+    await {{EntityNameCamel}}Store.syncOfflineData()
+    
+    uni.hideLoading()
+    uni.showToast({
+      title: '同步成功',
+      icon: 'success'
+    })
+    
+    // 刷新列表
+    loadData(true)
+    
+    // 重新检查离线数据
+    await checkOfflineData()
+  } catch (error) {
+    uni.hideLoading()
+    uni.showToast({
+      title: '同步失败',
+      icon: 'error'
+    })
+    console.error('同步失败:', error)
+  }
+}
+{{/if}}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 生命周期
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+onMounted(() => {
+  loadData(true)
+  {{#if OfflineConfig.EnableOfflineCache}}
+  checkOfflineData()
+  {{/if}}
+})
+
+// UniApp生命周期 - 下拉刷新
+onPullDownRefresh(() => {
+  handleRefresh()
+  setTimeout(() => {
+    uni.stopPullDownRefresh()
+  }, 1000)
+})
+
+// UniApp生命周期 - 触底加载
+onReachBottom(() => {
+  handleLoadMore()
+})
+</script>
+
+<style scoped lang="scss">
+.list-page {
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+
+.search-bar {
+  padding: 20rpx 30rpx;
+  background-color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.offline-tip {
+  margin: 20rpx 30rpx 0;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30rpx;
+  background-color: #ffffff;
+  margin: 20rpx 30rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.item-field {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+}
+
+.field-label {
+  color: #909399;
+  margin-right: 16rpx;
+  min-width: 120rpx;
+}
+
+.field-value {
+  color: #303133;
+  font-weight: 500;
+  flex: 1;
+  word-break: break-all;
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  margin-left: 20rpx;
+}
+
+/* uView组件自定义样式 */
+:deep(.u-list) {
+  padding-bottom: 120rpx;
+}
+
+:deep(.u-loadmore) {
+  padding: 30rpx 0;
+}
+
+:deep(.u-empty) {
+  padding: 100rpx 0;
+}
+
+:deep(.u-fab) {
+  position: fixed;
+  bottom: 100rpx;
+  right: 30rpx;
+  z-index: 999;
+}
+</style>
+

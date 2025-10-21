@@ -1,0 +1,331 @@
+<!-- pages/{{EntityNameKebab}}/detail.vue -->
+<!-- 
+  🎯 UniApp详情页面（基于{{ComponentLibrary}} {{ComponentLibraryVersion}}）
+  @author SmartAbp DevKit Low-Code Engine
+  @since {{GeneratedTime}}
+  @description 使用{{ComponentLibrary}}组件库的企业级详情页面
+-->
+
+<template>
+  <view class="detail-page">
+    <!-- 加载状态 -->
+    <u-loading-page
+      :loading="loading"
+      loading-text="加载中..."
+    />
+
+    <!-- 详情内容 -->
+    <view v-if="!loading && detail" class="detail-content">
+      <!-- 基本信息卡片 -->
+      <u-card
+        :title="'{{EntityName}}详情'"
+        :show-foot="false"
+        margin="30rpx"
+      >
+        <view class="detail-fields">
+          {{#each Fields}}
+          {{#unless (or (eq Name "id") (eq Name "Id"))}}
+          <u-cell-group :border="false">
+            <u-cell
+              :title="{{Label}}"
+              :value="formatFieldValue('{{Name}}', detail.{{Name}})"
+              :title-style="{ fontWeight: '500', color: '#606266' }"
+              :value-style="{ color: '#303133' }"
+            />
+          </u-cell-group>
+          {{/unless}}
+          {{/each}}
+        </view>
+      </u-card>
+
+      <!-- 时间信息卡片 -->
+      <u-card
+        title="时间信息"
+        :show-foot="false"
+        margin="30rpx"
+      >
+        <u-cell-group :border="false">
+          <u-cell
+            title="创建时间"
+            :value="formatDateTime(detail.creationTime)"
+            :title-style="{ fontWeight: '500', color: '#606266' }"
+            :value-style="{ color: '#303133' }"
+          />
+          
+          <u-cell
+            v-if="detail.lastModificationTime"
+            title="最后修改时间"
+            :value="formatDateTime(detail.lastModificationTime)"
+            :title-style="{ fontWeight: '500', color: '#606266' }"
+            :value-style="{ color: '#303133' }"
+          />
+        </u-cell-group>
+      </u-card>
+
+      <!-- 操作按钮 -->
+      <view class="action-buttons">
+        <u-button
+          type="primary"
+          @click="handleEdit"
+          :custom-style="{ width: '45%' }"
+        >
+          <u-icon name="edit-pen-fill" />
+          编辑
+        </u-button>
+        
+        <u-button
+          type="error"
+          @click="handleDelete"
+          :custom-style="{ width: '45%' }"
+        >
+          <u-icon name="trash-fill" />
+          删除
+        </u-button>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <u-empty
+      v-if="!loading && !detail"
+      mode="data"
+      text="数据不存在或已被删除"
+    />
+  </view>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { use{{EntityName}}Store } from '@/stores/{{EntityNameKebab}}-store'
+import type { {{EntityName}}Dto } from '@/types/{{EntityNameKebab}}.types'
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 路由参数
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const pageParams = ref<{ id: string }>({
+  id: ''
+})
+
+onLoad((options) => {
+  if (options?.id) {
+    pageParams.value.id = options.id as string
+    loadData(options.id as string)
+  } else {
+    uni.showToast({
+      title: '参数错误',
+      icon: 'error'
+    })
+    setTimeout(() => {
+      uni.navigateBack()
+    }, 1500)
+  }
+})
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 状态管理
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const {{EntityNameCamel}}Store = use{{EntityName}}Store()
+
+// 详情数据
+const detail = ref<{{EntityName}}Dto | null>(null)
+
+// 加载状态
+const loading = ref(false)
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 数据加载
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+async function loadData(id: string) {
+  try {
+    loading.value = true
+    
+    detail.value = await {{EntityNameCamel}}Store.getById(id)
+  } catch (error) {
+    console.error('加载详情失败:', error)
+    
+    uni.showToast({
+      title: '加载失败',
+      icon: 'error'
+    })
+    
+    setTimeout(() => {
+      uni.navigateBack()
+    }, 1500)
+  } finally {
+    loading.value = false
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 事件处理
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// 编辑
+function handleEdit() {
+  uni.navigateTo({
+    url: `{{PageRoutes.FormPage}}?id=${pageParams.value.id}&mode=edit`
+  })
+}
+
+// 删除
+function handleDelete() {
+  uni.showModal({
+    title: '确认删除',
+    content: '确定要删除这条数据吗？删除后无法恢复。',
+    confirmColor: '#f56c6c',
+    success: async (res) => {
+      if (res.confirm) {
+        try {
+          uni.showLoading({ title: '删除中...' })
+          
+          await {{EntityNameCamel}}Store.delete(pageParams.value.id)
+          
+          uni.hideLoading()
+          
+          uni.showToast({
+            title: '删除成功',
+            icon: 'success'
+          })
+          
+          setTimeout(() => {
+            uni.navigateBack()
+          }, 1500)
+        } catch (error) {
+          uni.hideLoading()
+          
+          console.error('删除失败:', error)
+          
+          uni.showToast({
+            title: '删除失败',
+            icon: 'error'
+          })
+        }
+      }
+    }
+  })
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 工具方法
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// 格式化字段值
+function formatFieldValue(fieldName: string, value: any): string {
+  if (value === null || value === undefined) {
+    return '-'
+  }
+  
+  // 布尔值
+  if (typeof value === 'boolean') {
+    return value ? '是' : '否'
+  }
+  
+  // 日期时间
+  if (fieldName.toLowerCase().includes('time') || fieldName.toLowerCase().includes('date')) {
+    return formatDateTime(value)
+  }
+  
+  // 数字
+  if (typeof value === 'number') {
+    return value.toString()
+  }
+  
+  // 字符串
+  return value.toString()
+}
+
+// 格式化日期时间
+function formatDateTime(date: any): string {
+  if (!date) return '-'
+  
+  const d = new Date(date)
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  const hour = String(d.getHours()).padStart(2, '0')
+  const minute = String(d.getMinutes()).padStart(2, '0')
+  const second = String(d.getSeconds()).padStart(2, '0')
+  
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`
+}
+</script>
+
+<style scoped lang="scss">
+.detail-page {
+  min-height: 100vh;
+  background-color: #f8f8f8;
+  padding-bottom: 30rpx;
+}
+
+.detail-content {
+  padding-top: 30rpx;
+}
+
+.detail-fields {
+  padding: 0;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  padding: 30rpx;
+  gap: 30rpx;
+}
+
+/* uView组件自定义样式 */
+:deep(.u-card) {
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+:deep(.u-card__head) {
+  padding: 30rpx;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+:deep(.u-card__head__title) {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #303133;
+}
+
+:deep(.u-card__body) {
+  padding: 0;
+}
+
+:deep(.u-cell-group) {
+  background-color: #ffffff;
+}
+
+:deep(.u-cell) {
+  padding: 30rpx;
+  border-bottom: 1px solid #f0f0f0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+:deep(.u-cell__title) {
+  flex: 0 0 200rpx;
+  font-size: 28rpx;
+}
+
+:deep(.u-cell__value) {
+  flex: 1;
+  font-size: 28rpx;
+  text-align: right;
+}
+
+:deep(.u-loading-page) {
+  background-color: #f8f8f8;
+}
+
+:deep(.u-empty) {
+  padding: 200rpx 0;
+}
+</style>
+
