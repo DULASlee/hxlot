@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartAbp MES 告警系统测试</title>
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@7.0.0/dist/browser/signalr.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .status.connected {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.connecting {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .controls {
+            margin-bottom: 30px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .log-container {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .log-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .log-item.info {
+            background: #d1ecf1;
+            border-left-color: #17a2b8;
+        }
+        .log-item.warning {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        .log-item.error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+        .log-item.critical {
+            background: #f5c6cb;
+            border-left-color: #721c24;
+            font-weight: bold;
+        }
+        .timestamp {
+            color: #6c757d;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        .alarm-card {
+            background: white;
+            border: 2px solid #dc3545;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(220,53,69,0.2);
+        }
+        .alarm-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+        .alarm-details {
+            color: #333;
+            line-height: 1.6;
+        }
+        .alarm-action {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 3px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚨 SmartAbp MES 智能告警系统实时测试</h1>
+        
+        <div id="status" class="status disconnected">
+            ⚠️ 未连接到服务器
+        </div>
+
+        <div class="controls">
+            <button id="connectBtn" onclick="connect()">🔌 连接SignalR</button>
+            <button id="disconnectBtn" onclick="disconnect()" disabled>❌ 断开连接</button>
+            <button id="clearBtn" onclick="clearLogs()">🗑️ 清空日志</button>
+        </div>
+
+        <h2>📊 实时数据流</h2>
+        <div class="log-container" id="dataLog">
+            <div class="log-item info">
+                <span class="timestamp">等待连接...</span>
+                <span>点击"连接SignalR"按钮开始接收实时数据</span>
+            </div>
+        </div>
+
+        <h2>🚨 告警记录</h2>
+        <div id="alarmContainer">
+            <div class="log-item info">
+                <span class="timestamp">等待告警...</span>
+                <span>系统将在检测到异常时推送告警信息</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let connection = null;
+        const hubUrl = 'http://localhost:5000/hubs/production-line';
+        const productionLineId = 'production-line-001';
+
+        async function connect() {
+            if (connection) {
+                addLog('警告：已有连接存在', 'warning');
+                return;
+            }
+
+            updateStatus('connecting', '🔄 正在连接到服务器...');
+            document.getElementById('connectBtn').disabled = true;
+
+            connection = new signalR.HubConnectionBuilder()
+                .withUrl(hubUrl)
+                .withAutomaticReconnect()
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
+
+            // 监听生产线实时数据
+            connection.on('ReceiveProductionLineData', (data) => {
+                console.log('收到生产线数据:', data);
+                addLog(`📊 生产线数据更新: ${JSON.stringify(data).substring(0, 100)}...`, 'info');
+            });
+
+            // 监听告警 ⭐ 核心功能
+            connection.on('ReceiveAlert', (alert) => {
+                console.log('🚨 收到告警:', alert);
+                addLog(`🚨 收到${alert.Level}级别告警: ${alert.Message}`, alert.Level.toLowerCase());
+                showAlarmCard(alert);
+            });
+
+            // 监听连接状态
+            connection.on('ReceiveConnectionStatus', (status) => {
+                console.log('连接状态:', status);
+                addLog(`📡 连接状态: ${status}`, 'info');
+            });
+
+            // 监听错误
+            connection.on('ReceiveError', (error) => {
+                console.error('错误:', error);
+                addLog(`❌ 错误: ${error}`, 'error');
+            });
+
+            connection.onreconnecting(() => {
+                updateStatus('connecting', '🔄 正在重新连接...');
+                addLog('🔄 连接断开，正在重新连接...', 'warning');
+            });
+
+            connection.onreconnected(() => {
+                updateStatus('connected', '✅ 已连接到服务器');
+                addLog('✅ 重新连接成功！', 'info');
+                subscribeProductionLine();
+            });
+
+            connection.onclose(() => {
+                updateStatus('disconnected', '⚠️ 连接已关闭');
+                addLog('⚠️ SignalR连接已关闭', 'warning');
+                document.getElementById('connectBtn').disabled = false;
+                document.getElementById('disconnectBtn').disabled = true;
+                connection = null;
+            });
+
+            try {
+                await connection.start();
+                updateStatus('connected', '✅ 已成功连接到服务器');
+                addLog('✅ SignalR连接成功！', 'info');
+                document.getElementById('connectBtn').disabled = true;
+                document.getElementById('disconnectBtn').disabled = false;
+
+                // 订阅生产线
+                await subscribeProductionLine();
+            } catch (err) {
+                updateStatus('disconnected', '❌ 连接失败: ' + err.message);
+                addLog(`❌ 连接失败: ${err.message}`, 'error');
+                document.getElementById('connectBtn').disabled = false;
+                connection = null;
+            }
+        }
+
+        async function subscribeProductionLine() {
+            if (!connection) return;
+            try {
+                await connection.invoke('SubscribeProductionLine', productionLineId);
+                addLog(`✅ 已订阅生产线: ${productionLineId}`, 'info');
+            } catch (err) {
+                addLog(`❌ 订阅失败: ${err.message}`, 'error');
+            }
+        }
+
+        async function disconnect() {
+            if (!connection) return;
+            try {
+                await connection.stop();
+                updateStatus('disconnected', '⚠️ 已断开连接');
+                addLog('✅ 已主动断开连接', 'info');
+            } catch (err) {
+                addLog(`❌ 断开连接时出错: ${err.message}`, 'error');
+            }
+        }
+
+        function updateStatus(type, message) {
+            const statusEl = document.getElementById('status');
+            statusEl.className = `status ${type}`;
+            statusEl.textContent = message;
+        }
+
+        function addLog(message, type = 'info') {
+            const logContainer = document.getElementById('dataLog');
+            const logItem = document.createElement('div');
+            logItem.className = `log-item ${type}`;
+            
+            const timestamp = new Date().toLocaleTimeString('zh-CN', { 
+                hour12: false, 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            });
+            
+            logItem.innerHTML = `
+                <span class="timestamp">${timestamp}</span>
+                <span>${message}</span>
+            `;
+            
+            logContainer.insertBefore(logItem, logContainer.firstChild);
+            
+            // 限制日志数量
+            while (logContainer.children.length > 50) {
+                logContainer.removeChild(logContainer.lastChild);
+            }
+        }
+
+        function showAlarmCard(alert) {
+            const alarmContainer = document.getElementById('alarmContainer');
+            const alarmCard = document.createElement('div');
+            alarmCard.className = 'alarm-card';
+            
+            const timestamp = new Date(alert.Timestamp).toLocaleString('zh-CN');
+            
+            alarmCard.innerHTML = `
+                <div class="alarm-header">
+                    🚨 ${alert.Level}级别告警 [优先级: ${alert.Priority}]
+                </div>
+                <div class="alarm-details">
+                    <strong>告警消息：</strong>${alert.Message}<br>
+                    <strong>触发值：</strong>${alert.TriggerValue}<br>
+                    <strong>阈值：</strong>${alert.ThresholdValue || 'N/A'}<br>
+                    <strong>时间：</strong>${timestamp}
+                </div>
+                ${alert.SuggestedAction ? `
+                <div class="alarm-action">
+                    <strong>💡 建议操作：</strong>${alert.SuggestedAction}
+                </div>
+                ` : ''}
+            `;
+            
+            alarmContainer.insertBefore(alarmCard, alarmContainer.firstChild);
+            
+            // 限制告警卡片数量
+            while (alarmContainer.children.length > 10) {
+                alarmContainer.removeChild(alarmContainer.lastChild);
+            }
+        }
+
+        function clearLogs() {
+            const dataLog = document.getElementById('dataLog');
+            const alarmContainer = document.getElementById('alarmContainer');
+            dataLog.innerHTML = '<div class="log-item info"><span class="timestamp">已清空</span><span>日志已清空</span></div>';
+            alarmContainer.innerHTML = '<div class="log-item info"><span class="timestamp">已清空</span><span>告警记录已清空</span></div>';
+        }
+
+        // 页面加载时自动连接
+        window.addEventListener('load', () => {
+            addLog('📄 页面已加载，准备就绪', 'info');
+            addLog('📡 SignalR Hub URL: ' + hubUrl, 'info');
+            addLog('🏭 订阅生产线ID: ' + productionLineId, 'info');
+        });
+    </script>
+</body>
+</html>
+

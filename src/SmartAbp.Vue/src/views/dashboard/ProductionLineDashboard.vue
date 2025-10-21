@@ -1,327 +1,451 @@
-<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-<!-- MES产线实时监控大屏 -->
-<!-- 固定分辨率：1920×1080，自动缩放适配 -->
-<!-- 创建日期: 2025-10-21 -->
-<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-
 <template>
   <div class="dashboard-container" :style="containerStyle">
-    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-    <!-- 标题栏 -->
-    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         页面头部
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
     <div class="dashboard-header">
-      <h1 class="dashboard-title">MES产线实时监控大屏</h1>
-      <div class="dashboard-time">{{ currentTime }}</div>
+      <h1 class="dashboard-title">
+        <Monitor class="title-icon" />
+        {{ store.realtimeData.productionLineName }} - 实时监控大屏
+      </h1>
       <div class="dashboard-status">
-        <el-tag :type="isConnected ? 'success' : 'danger'" size="large">
-          <el-icon><Connection /></el-icon>
-          {{ isConnected ? '已连接' : '未连接' }}
+        <el-tag :type="isConnected ? 'success' : 'danger'" effect="dark" size="large">
+          <template #icon>
+            <component :is="isConnected ? CircleCheck : CircleClose" />
+          </template>
+          {{ isConnected ? '实时连接' : '未连接' }}
         </el-tag>
+        <div class="update-time">
+          更新时间: {{ lastUpdateTime }}
+        </div>
       </div>
     </div>
 
-    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-    <!-- KPI指标区 -->
-    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         KPI指标卡片区
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
     <div class="kpi-section">
       <el-row :gutter="20">
-        <el-col :span="6">
+        <el-col :xs="24" :sm="12" :md="6">
           <KPICard
             title="总产量"
-            :value="productionLineData?.totalProduction || 0"
+            :value="store.realtimeData.totalProduction"
             unit="件"
-            :trend="calculateTrend('totalProduction')"
+            :trend="kpiTrends.production"
             :icon="DataAnalysis"
-            type="primary"
-          >
-            <template #footer>
-              目标: {{ productionLineData?.targetProduction || 0 }} 件
-            </template>
-          </KPICard>
-        </el-col>
-        <el-col :span="6">
-          <KPICard
-            title="当前效率"
-            :value="productionLineData?.currentEfficiency || 0"
-            unit="%"
-            :trend="calculateTrend('currentEfficiency')"
-            :icon="TrendCharts"
-            type="success"
-            :formatter="(v) => v.toFixed(1)"
+            theme="primary"
           />
         </el-col>
-        <el-col :span="6">
+        <el-col :xs="24" :sm="12" :md="6">
+          <KPICard
+            title="生产效率"
+            :value="store.realtimeData.currentEfficiency"
+            unit="%"
+            :trend="kpiTrends.efficiency"
+            :icon="TrendCharts"
+            :precision="1"
+            theme="success"
+          />
+        </el-col>
+        <el-col :xs="24" :sm="12" :md="6">
           <KPICard
             title="设备利用率"
-            :value="productionLineData?.equipmentUtilization || 0"
+            :value="store.realtimeData.equipmentUtilization"
             unit="%"
-            :trend="calculateTrend('equipmentUtilization')"
+            :trend="kpiTrends.utilization"
             :icon="Monitor"
-            type="warning"
-            :formatter="(v) => v.toFixed(1)"
+            :precision="1"
+            theme="warning"
           />
         </el-col>
-        <el-col :span="6">
+        <el-col :xs="24" :sm="12" :md="6">
           <KPICard
             title="合格率"
-            :value="productionLineData?.qualifiedRate || 0"
+            :value="store.realtimeData.qualifiedRate"
             unit="%"
-            :trend="calculateTrend('qualifiedRate')"
+            :trend="kpiTrends.qualified"
             :icon="CircleCheck"
-            type="success"
-            :formatter="(v) => v.toFixed(1)"
-          >
-            <template #footer>
-              合格: {{ productionLineData?.qualifiedCount || 0 }} / 
-              不合格: {{ productionLineData?.unqualifiedCount || 0 }}
+            :precision="1"
+            theme="info"
+          />
+        </el-col>
+      </el-row>
+    </div>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         实时数据曲线图区
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <div class="charts-section">
+      <el-row :gutter="20">
+        <el-col :xs="24" :md="8">
+          <el-card shadow="hover" class="chart-card">
+            <template #header>
+              <div class="chart-header">
+                <Temperature class="chart-icon" />
+                <span>温度趋势</span>
+              </div>
             </template>
-          </KPICard>
+            <RealtimeChart
+              chartId="temperature-chart"
+              :chartData="store.temperatureTrendData"
+              xAxisName="时间"
+              yAxisName="温度 (°C)"
+              color="#ff6b6b"
+              title=""
+            />
+          </el-card>
+        </el-col>
+        <el-col :xs="24" :md="8">
+          <el-card shadow="hover" class="chart-card">
+            <template #header>
+              <div class="chart-header">
+                <Odometer class="chart-icon" />
+                <span>压力趋势</span>
+              </div>
+            </template>
+            <RealtimeChart
+              chartId="pressure-chart"
+              :chartData="store.pressureTrendData"
+              xAxisName="时间"
+              yAxisName="压力 (MPa)"
+              color="#4facfe"
+              title=""
+            />
+          </el-card>
+        </el-col>
+        <el-col :xs="24" :md="8">
+          <el-card shadow="hover" class="chart-card">
+            <template #header>
+              <div class="chart-header">
+                <VideoPlay class="chart-icon" />
+                <span>振动趋势</span>
+              </div>
+            </template>
+            <RealtimeChart
+              chartId="vibration-chart"
+              :chartData="store.vibrationTrendData"
+              xAxisName="时间"
+              yAxisName="振动 (mm/s)"
+              color="#ffd89b"
+              title=""
+            />
+          </el-card>
         </el-col>
       </el-row>
     </div>
 
-    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-    <!-- 图表区 -->
-    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-    <div class="chart-section">
-      <el-row :gutter="20">
-        <!-- 生产趋势 -->
-        <el-col :span="12">
-          <RealtimeChart
-            title="生产趋势"
-            height="350px"
-            :series="productionTrendSeries"
-            yAxisUnit="件"
-          />
-        </el-col>
-
-        <!-- 效率趋势 -->
-        <el-col :span="12">
-          <RealtimeChart
-            title="效率趋势"
-            height="350px"
-            :series="efficiencyTrendSeries"
-            yAxisUnit="%"
-            :yAxisMin="0"
-            :yAxisMax="100"
-          />
-        </el-col>
-      </el-row>
-
-      <el-row :gutter="20" style="margin-top: 20px;">
-        <!-- 能耗趋势 -->
-        <el-col :span="12">
-          <RealtimeChart
-            title="能耗趋势"
-            height="350px"
-            :series="energyTrendSeries"
-            yAxisUnit="kWh"
-          />
-        </el-col>
-
-        <!-- 设备状态分布 -->
-        <el-col :span="12">
-          <div class="equipment-status-panel">
-            <h3 class="panel-title">设备状态分布</h3>
-            <div class="equipment-status-grid">
-              <div class="status-item status-item--running">
-                <div class="status-count">{{ productionLineData?.runningEquipmentCount || 0 }}</div>
-                <div class="status-label">运行中</div>
-              </div>
-              <div class="status-item status-item--idle">
-                <div class="status-count">{{ productionLineData?.idleEquipmentCount || 0 }}</div>
-                <div class="status-label">待机</div>
-              </div>
-              <div class="status-item status-item--fault">
-                <div class="status-count">{{ productionLineData?.faultEquipmentCount || 0 }}</div>
-                <div class="status-label">故障</div>
-              </div>
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         设备状态列表区
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <div class="equipment-section">
+      <el-card shadow="hover">
+        <template #header>
+          <div class="section-header">
+            <OfficeBuilding class="section-icon" />
+            <span>设备状态</span>
+            <div class="equipment-summary">
+              <el-tag type="success" size="small">运行: {{ store.equipmentStatusSummary.running }}</el-tag>
+              <el-tag type="info" size="small">停止: {{ store.equipmentStatusSummary.stopped }}</el-tag>
+              <el-tag type="danger" size="small">故障: {{ store.equipmentStatusSummary.fault }}</el-tag>
             </div>
           </div>
-        </el-col>
-      </el-row>
+        </template>
+        <el-table
+          :data="store.realtimeData.equipmentStatuses"
+          stripe
+          style="width: 100%"
+        >
+          <el-table-column prop="equipmentName" label="设备名称" width="200" />
+          <el-table-column label="状态" width="100">
+            <template #default="{ row }">
+              <el-tag
+                :type="getStatusType(row.status)"
+                effect="dark"
+                size="small"
+              >
+                {{ getStatusText(row.status) }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="温度 (°C)" width="120">
+            <template #default="{ row }">
+              <span :class="{'danger-value': row.temperature > 85}">
+                {{ row.temperature.toFixed(1) }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="压力 (MPa)" width="120">
+            <template #default="{ row }">
+              <span :class="{'danger-value': row.pressure > 7.5}">
+                {{ row.pressure.toFixed(1) }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="振动 (mm/s)" width="120">
+            <template #default="{ row }">
+              <span :class="{'danger-value': row.vibration > 6.0}">
+                {{ row.vibration.toFixed(1) }}
+              </span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-card>
     </div>
 
-    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-    <!-- 当前生产信息 -->
-    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-    <div class="production-info-section">
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <div class="info-card">
-            <div class="info-label">当前批次</div>
-            <div class="info-value">{{ productionLineData?.currentBatchNo || '-' }}</div>
-          </div>
-        </el-col>
-        <el-col :span="8">
-          <div class="info-card">
-            <div class="info-label">产品型号</div>
-            <div class="info-value">{{ productionLineData?.currentProductModel || '-' }}</div>
-          </div>
-        </el-col>
-        <el-col :span="8">
-          <div class="info-card">
-            <div class="info-label">当前产量</div>
-            <div class="info-value">
-              {{ productionLineData?.currentProduction || 0 }} / 
-              {{ productionLineData?.targetProduction || 0 }}
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         告警通知（Dialog）
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <el-dialog
+      v-model="alarmDialogVisible"
+      :title="`🚨 ${currentAlarm?.Level || ''}级别告警`"
+      width="600px"
+      :close-on-click-modal="false"
+    >
+      <div v-if="currentAlarm" class="alarm-detail">
+        <el-descriptions :column="1" border>
+          <el-descriptions-item label="告警消息">
+            <span class="alarm-message">{{ currentAlarm.Message }}</span>
+          </el-descriptions-item>
+          <el-descriptions-item label="告警级别">
+            <el-tag :type="getAlarmLevelType(currentAlarm.Level)" effect="dark">
+              {{ currentAlarm.Level }}
+            </el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="优先级">
+            <el-tag :type="getAlarmPriorityType(currentAlarm.Priority)">
+              {{ currentAlarm.Priority }}
+            </el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item label="触发值">
+            {{ currentAlarm.TriggerValue }}
+          </el-descriptions-item>
+          <el-descriptions-item label="阈值">
+            {{ currentAlarm.ThresholdValue || 'N/A' }}
+          </el-descriptions-item>
+          <el-descriptions-item label="时间">
+            {{ formatDateTime(currentAlarm.Timestamp) }}
+          </el-descriptions-item>
+        </el-descriptions>
+        <el-alert
+          v-if="currentAlarm.SuggestedAction"
+          type="warning"
+          :closable="false"
+          style="margin-top: 16px"
+        >
+          <template #title>
+            <strong>💡 建议操作</strong>
+          </template>
+          {{ currentAlarm.SuggestedAction }}
+        </el-alert>
+      </div>
+      <template #footer>
+        <el-button @click="alarmDialogVisible = false">关闭</el-button>
+        <el-button type="primary" @click="handleAlarmAction">
+          执行建议操作
+        </el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ElMessage, ElNotification } from 'element-plus'
+import {
+  Monitor,
+  DataAnalysis,
+  TrendCharts,
+  CircleCheck,
+  CircleClose,
+  Temperature,
+  Odometer,
+  VideoPlay,
+  OfficeBuilding
+} from '@element-plus/icons-vue'
+import { useWebSocket } from '@/composables/useWebSocket'
 import { useProductionLineRealtimeStore } from '@/stores/productionLineRealtimeStore'
 import KPICard from '@/components/dashboard/KPICard.vue'
 import RealtimeChart from '@/components/dashboard/RealtimeChart.vue'
-import type { ChartSeries } from '@/components/dashboard/RealtimeChart.vue'
-import { DataAnalysis, TrendCharts, Monitor, CircleCheck, Connection } from '@element-plus/icons-vue'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 状态管理
+// State
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-/** 实时数据Store */
 const store = useProductionLineRealtimeStore()
+const isConnected = ref(false)
+const lastUpdateTime = ref('--:--:--')
+const alarmDialogVisible = ref(false)
+const currentAlarm = ref<any>(null)
 
-/** 产线ID（可配置） */
-const productionLineId = ref('production-line-001')
-
-/** 当前时间 */
-const currentTime = ref('')
-
-/** 时间更新定时器 */
-let timeTimer: number | null = null
-
-/** 上一次数据快照（用于计算趋势） */
-const previousData = ref<any>(null)
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 计算属性
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/** 产线实时数据 */
-const productionLineData = computed(() => 
-  store.getProductionLineData(productionLineId.value)
-)
-
-/** 趋势数据 */
-const trendData = computed(() => 
-  store.getTrendData(productionLineId.value)
-)
-
-/** WebSocket连接状态 */
-const isConnected = computed(() => store.isWebSocketConnected)
-
-/**
- * 生产趋势图表数据
- */
-const productionTrendSeries = computed<ChartSeries[]>(() => {
-  if (!trendData.value) return []
-
-  return [{
-    name: '产量',
-    data: trendData.value.productionTrend,
-    color: '#409eff',
-    smooth: true,
-    areaStyle: true
-  }]
+// KPI趋势（模拟，实际应从后端计算）
+const kpiTrends = ref({
+  production: 2.5,
+  efficiency: 1.2,
+  utilization: -0.8,
+  qualified: 0.5
 })
 
-/**
- * 效率趋势图表数据
- */
-const efficiencyTrendSeries = computed<ChartSeries[]>(() => {
-  if (!trendData.value) return []
+// SignalR Hub URL
+const SIGNALR_HUB_URL = 'http://localhost:5000/hubs/production-line'
+const PRODUCTION_LINE_ID = 'production-line-001'
 
-  return [{
-    name: '效率',
-    data: trendData.value.efficiencyTrend,
-    color: '#67c23a',
-    smooth: true,
-    areaStyle: true
-  }]
-})
-
-/**
- * 能耗趋势图表数据
- */
-const energyTrendSeries = computed<ChartSeries[]>(() => {
-  if (!trendData.value) return []
-
-  return [{
-    name: '能耗',
-    data: trendData.value.energyTrend,
-    color: '#e6a23c',
-    smooth: true,
-    areaStyle: true
-  }]
-})
-
-/**
- * 容器样式（固定1920×1080，自动缩放）
- */
-const containerStyle = computed(() => {
-  const scaleX = window.innerWidth / 1920
-  const scaleY = window.innerHeight / 1080
-  const scale = Math.min(scaleX, scaleY)
-
-  return {
-    width: '1920px',
-    height: '1080px',
-    transform: `scale(${scale})`,
-    transformOrigin: 'top left'
+// WebSocket连接
+const { connect, disconnect, on, invoke } = useWebSocket({
+  url: SIGNALR_HUB_URL,
+  onConnected: () => {
+    isConnected.value = true
+    subscribeProductionLine()
+  },
+  onDisconnected: () => {
+    isConnected.value = false
+  },
+  onReconnected: () => {
+    subscribeProductionLine()
   }
 })
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 方法
+// Computed
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const containerStyle = computed(() => ({
+  minHeight: '100vh',
+  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  padding: '20px'
+}))
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Methods
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 /**
- * 更新当前时间
+ * 订阅生产线
  */
-const updateTime = () => {
-  currentTime.value = new Date().toLocaleString('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
+const subscribeProductionLine = async () => {
+  try {
+    await invoke('SubscribeProductionLine', PRODUCTION_LINE_ID)
+    console.log(`[Dashboard] ✅ 已订阅生产线: ${PRODUCTION_LINE_ID}`)
+  } catch (err) {
+    console.error('[Dashboard] ❌ 订阅生产线失败:', err)
+  }
+}
+
+/**
+ * 处理接收到的生产线数据
+ */
+const handleProductionLineData = (data: any) => {
+  console.log('[Dashboard] 收到生产线数据:', data)
+  store.updateRealtimeData(data)
+  lastUpdateTime.value = new Date().toLocaleTimeString('zh-CN', { hour12: false })
+}
+
+/**
+ * 处理接收到的告警
+ */
+const handleAlertReceived = (alert: any) => {
+  console.log('[Dashboard] 🚨 收到告警:', alert)
+  
+  // 存储到Store
+  store.addAlarm(alert)
+  
+  // 显示通知
+  ElNotification({
+    title: `🚨 ${alert.Level}级别告警`,
+    message: alert.Message,
+    type: getAlarmLevelType(alert.Level) as any,
+    duration: 0, // 不自动关闭
+    position: 'top-right',
+    onClick: () => {
+      showAlarmDetail(alert)
+    }
   })
+  
+  // 播放告警音效（可选）
+  playAlarmSound(alert.Level)
 }
 
 /**
- * 计算趋势值（与上一次数据对比）
- * 
- * @param field 字段名
- * @returns 趋势百分比，正数表示上升，负数表示下降
+ * 显示告警详情
  */
-const calculateTrend = (field: string): number | null => {
-  if (!productionLineData.value || !previousData.value) return null
-
-  const currentValue = productionLineData.value[field as keyof typeof productionLineData.value] as number
-  const previousValue = previousData.value[field]
-
-  if (previousValue === 0 || previousValue === undefined) return null
-
-  const trend = ((currentValue - previousValue) / previousValue) * 100
-  return trend
+const showAlarmDetail = (alarm: any) => {
+  currentAlarm.value = alarm
+  alarmDialogVisible.value = true
 }
 
 /**
- * 更新数据快照
+ * 处理告警建议操作
  */
-const updateDataSnapshot = () => {
-  if (productionLineData.value) {
-    previousData.value = { ...productionLineData.value }
+const handleAlarmAction = () => {
+  ElMessage.success('已记录操作指令，正在通知相关人员...')
+  alarmDialogVisible.value = false
+}
+
+/**
+ * 播放告警音效
+ */
+const playAlarmSound = (level: string) => {
+  // 根据告警级别播放不同音效
+  // 这里可以集成Web Audio API或使用HTML5 Audio
+  console.log(`[Dashboard] 播放${level}级别告警音效`)
+}
+
+/**
+ * 获取设备状态类型
+ */
+const getStatusType = (status: string) => {
+  const statusMap: Record<string, any> = {
+    running: 'success',
+    stopped: 'info',
+    fault: 'danger',
+    maintenance: 'warning'
   }
+  return statusMap[status] || 'info'
+}
+
+/**
+ * 获取设备状态文本
+ */
+const getStatusText = (status: string) => {
+  const textMap: Record<string, string> = {
+    running: '运行',
+    stopped: '停止',
+    fault: '故障',
+    maintenance: '维护'
+  }
+  return textMap[status] || status
+}
+
+/**
+ * 获取告警级别类型
+ */
+const getAlarmLevelType = (level: string) => {
+  const levelMap: Record<string, string> = {
+    Info: 'info',
+    Warning: 'warning',
+    Error: 'danger',
+    Critical: 'danger'
+  }
+  return levelMap[level] || 'info'
+}
+
+/**
+ * 获取告警优先级类型
+ */
+const getAlarmPriorityType = (priority: string) => {
+  const priorityMap: Record<string, string> = {
+    Low: 'info',
+    Medium: 'warning',
+    High: 'danger',
+    Urgent: 'danger'
+  }
+  return priorityMap[priority] || 'info'
+}
+
+/**
+ * 格式化日期时间
+ */
+const formatDateTime = (dateTime: any) => {
+  return new Date(dateTime).toLocaleString('zh-CN', { hour12: false })
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -329,209 +453,184 @@ const updateDataSnapshot = () => {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 onMounted(async () => {
-  console.log('[ProductionLineDashboard] 组件已挂载')
-
-  // 1. 启动时间更新定时器
-  updateTime()
-  timeTimer = window.setInterval(updateTime, 1000)
-
-  // 2. 连接并订阅产线数据
-  try {
-    await store.connectAndSubscribe(productionLineId.value)
-    console.log('[ProductionLineDashboard] 已连接并订阅产线数据')
-  } catch (error) {
-    console.error('[ProductionLineDashboard] 连接失败', error)
-  }
-
-  // 3. 每10秒更新数据快照（用于计算趋势）
-  setInterval(updateDataSnapshot, 10000)
+  console.log('[Dashboard] 页面已挂载，开始连接SignalR...')
+  
+  // 连接SignalR
+  await connect()
+  
+  // 监听生产线数据
+  on('ReceiveProductionLineData', handleProductionLineData)
+  
+  // 监听告警
+  on('ReceiveAlert', handleAlertReceived)
+  
+  // 监听连接状态
+  on('ReceiveConnectionStatus', (status: string) => {
+    console.log('[Dashboard] 连接状态:', status)
+  })
+  
+  // 监听错误
+  on('ReceiveError', (error: string) => {
+    console.error('[Dashboard] 错误:', error)
+    ElMessage.error(`错误: ${error}`)
+  })
 })
 
-onUnmounted(async () => {
-  console.log('[ProductionLineDashboard] 组件即将卸载')
-
-  // 1. 清除时间定时器
-  if (timeTimer) {
-    clearInterval(timeTimer)
-    timeTimer = null
-  }
-
-  // 2. 断开并取消订阅
-  try {
-    await store.disconnectAndUnsubscribe(productionLineId.value)
-    console.log('[ProductionLineDashboard] 已断开连接')
-  } catch (error) {
-    console.error('[ProductionLineDashboard] 断开连接失败', error)
-  }
+onUnmounted(() => {
+  console.log('[Dashboard] 页面卸载，断开连接...')
+  disconnect()
+  store.reset()
 })
 </script>
 
 <style scoped lang="scss">
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 大屏容器样式
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 .dashboard-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-  overflow: hidden;
-  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  min-height: 100vh;
+  padding: 20px;
+}
 
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 标题栏
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 页面头部
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.dashboard-title {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+
+  .title-icon {
+    font-size: 32px;
+    margin-right: 12px;
+    color: #667eea;
+  }
+}
+
+.dashboard-status {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.update-time {
+  font-size: 14px;
+  color: #999;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// KPI区域
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.kpi-section {
+  margin-bottom: 20px;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 图表区域
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.charts-section {
+  margin-bottom: 20px;
+}
+
+.chart-card {
+  border-radius: 12px;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+
+  .chart-icon {
+    font-size: 20px;
+    margin-right: 8px;
+    color: #667eea;
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 设备区域
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.equipment-section {
+  margin-bottom: 20px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+
+  .section-icon {
+    font-size: 20px;
+    margin-right: 8px;
+    color: #667eea;
+  }
+}
+
+.equipment-summary {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.danger-value {
+  color: #f56c6c;
+  font-weight: 600;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 告警对话框
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.alarm-detail {
+  .alarm-message {
+    font-weight: 600;
+    color: #f56c6c;
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 响应式设计
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@media (max-width: 768px) {
   .dashboard-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 40px;
-    background: linear-gradient(90deg, rgba(23, 25, 35, 0.95), rgba(31, 34, 46, 0.85));
-    border-bottom: 2px solid rgba(64, 158, 255, 0.3);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 
   .dashboard-title {
-    font-size: 36px;
-    font-weight: 700;
-    color: #fff;
-    margin: 0;
-    text-shadow: 0 2px 10px rgba(64, 158, 255, 0.5);
-    letter-spacing: 2px;
-  }
-
-  .dashboard-time {
     font-size: 20px;
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 500;
+
+    .title-icon {
+      font-size: 24px;
+    }
   }
 
   .dashboard-status {
-    font-size: 16px;
-  }
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // KPI区域
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  .kpi-section {
-    padding: 30px 40px 20px;
-  }
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 图表区域
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  .chart-section {
-    padding: 10px 40px 20px;
-  }
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 设备状态面板
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  .equipment-status-panel {
-    background: linear-gradient(135deg, rgba(23, 25, 35, 0.95) 0%, rgba(31, 34, 46, 0.95) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 24px;
-    height: 350px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  }
-
-  .panel-title {
-    font-size: 16px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0 0 24px 0;
-    text-align: center;
-  }
-
-  .equipment-status-grid {
-    display: flex;
-    gap: 20px;
-    justify-content: space-around;
-    margin-top: 60px;
-  }
-
-  .status-item {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 40px 20px;
-    text-align: center;
-    border: 2px solid transparent;
-    transition: all 0.3s ease;
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-    }
-
-    &--running {
-      border-color: rgba(103, 194, 58, 0.5);
-    }
-
-    &--idle {
-      border-color: rgba(230, 162, 60, 0.5);
-    }
-
-    &--fault {
-      border-color: rgba(245, 108, 108, 0.5);
-    }
-  }
-
-  .status-count {
-    font-size: 48px;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 12px;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .status-label {
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: 500;
-  }
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 生产信息区域
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  .production-info-section {
-    padding: 10px 40px 20px;
-  }
-
-  .info-card {
-    background: linear-gradient(135deg, rgba(23, 25, 35, 0.95) 0%, rgba(31, 34, 46, 0.95) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-  }
-
-  .info-label {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 12px;
-  }
-
-  .info-value {
-    font-size: 24px;
-    font-weight: 700;
-    color: #fff;
-    font-variant-numeric: tabular-nums;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }
 </style>
-

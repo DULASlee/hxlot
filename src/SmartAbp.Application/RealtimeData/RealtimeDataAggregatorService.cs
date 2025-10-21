@@ -12,6 +12,8 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Volo.Abp.Application.Services;
+using Volo.Abp.Domain.Repositories;
+using SmartAbp.Domain.Entities.MES;
 
 namespace SmartAbp.Application.RealtimeData
 {
@@ -31,6 +33,9 @@ namespace SmartAbp.Application.RealtimeData
 
         private readonly IDistributedCache _cache;
         private readonly ILogger<RealtimeDataAggregatorService> _logger;
+        private readonly IRepository<ProductionLine, Guid> _productionLineRepository;
+        private readonly IRepository<Equipment, Guid> _equipmentRepository;
+        private readonly IRepository<SensorData, Guid> _sensorDataRepository;
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // 构造函数
@@ -38,10 +43,16 @@ namespace SmartAbp.Application.RealtimeData
 
         public RealtimeDataAggregatorService(
             IDistributedCache cache,
-            ILogger<RealtimeDataAggregatorService> logger)
+            ILogger<RealtimeDataAggregatorService> logger,
+            IRepository<ProductionLine, Guid> productionLineRepository,
+            IRepository<Equipment, Guid> equipmentRepository,
+            IRepository<SensorData, Guid> sensorDataRepository)
         {
             _cache = cache;
             _logger = logger;
+            _productionLineRepository = productionLineRepository;
+            _equipmentRepository = equipmentRepository;
+            _sensorDataRepository = sensorDataRepository;
         }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -139,41 +150,77 @@ namespace SmartAbp.Application.RealtimeData
         /// </summary>
         private async Task<ProductionLineRealtimeData?> AggregateDataFromDatabaseAsync(string productionLineId)
         {
-            // TODO: 实现真实的数据库聚合逻辑
-            // 目前返回模拟数据用于演示
+            // 转换为Guid
+            if (!Guid.TryParse(productionLineId, out var productionLineGuid))
+            {
+                _logger.LogWarning(
+                    "[RealtimeDataAggregatorService] 无效的产线ID: {ProductionLineId}",
+                    productionLineId
+                );
+                return null;
+            }
 
-            await Task.Delay(10); // 模拟数据库查询延迟
+            // 查询生产线
+            var productionLine = await _productionLineRepository.FirstOrDefaultAsync(x => x.Id == productionLineGuid);
+            if (productionLine == null)
+            {
+                _logger.LogWarning(
+                    "[RealtimeDataAggregatorService] 未找到产线: {ProductionLineId}",
+                    productionLineId
+                );
+                return null;
+            }
 
+            // 查询设备列表
+            var equipments = await _equipmentRepository.GetListAsync(x => x.ProductionLineId == productionLineGuid);
+
+            // 统计设备状态
+            var runningCount = equipments.Count(e => e.Status == "running");
+            var idleCount = equipments.Count(e => e.Status == "stopped");
+            var faultCount = equipments.Count(e => e.Status == "fault");
+
+            // 查询最近的传感器数据（用于趋势计算）
+            var recentSensorData = await _sensorDataRepository.GetListAsync(
+                x => x.ProductionLineId == productionLineGuid &&
+                     x.Timestamp >= DateTime.UtcNow.AddMinutes(-10)
+            );
+
+            // 聚合KPI数据
             return new ProductionLineRealtimeData
             {
-                ProductionLineId = productionLineId,
-                ProductionLineName = $"产线 {productionLineId}",
+                ProductionLineId = productionLine.Id.ToString(),
+                ProductionLineName = productionLine.Name,
                 Timestamp = DateTime.UtcNow,
 
-                // KPI指标
-                TotalProduction = Random.Shared.Next(8000, 12000),
-                CurrentEfficiency = Random.Shared.Next(75, 95),
-                EquipmentUtilization = Random.Shared.Next(70, 90),
-                QualifiedRate = Random.Shared.Next(95, 100),
+                // KPI指标（从生产线实体读取）
+                TotalProduction = productionLine.TotalProduction,
+                CurrentEfficiency = (int)productionLine.CurrentEfficiency,
+                EquipmentUtilization = (int)productionLine.EquipmentUtilization,
+                QualifiedRate = (int)productionLine.QualifiedRate,
 
                 // 设备状态
-                RunningEquipmentCount = Random.Shared.Next(8, 12),
-                IdleEquipmentCount = Random.Shared.Next(0, 3),
-                FaultEquipmentCount = Random.Shared.Next(0, 2),
+                RunningEquipmentCount = runningCount,
+                IdleEquipmentCount = idleCount,
+                FaultEquipmentCount = faultCount,
 
                 // 生产数据
-                CurrentBatchNo = $"BATCH-{DateTime.UtcNow:yyyyMMdd}-{Random.Shared.Next(100, 999)}",
+                CurrentBatchNo = $"BATCH-{DateTime.UtcNow:yyyyMMdd}-001",
                 CurrentProductModel = "MODEL-A",
-                CurrentProduction = Random.Shared.Next(500, 1000),
-                TargetProduction = 1000,
+                CurrentProduction = productionLine.DailyProduction,
+                TargetProduction = productionLine.DailyTarget,
 
-                // 质量数据
-                QualifiedCount = Random.Shared.Next(950, 990),
-                UnqualifiedCount = Random.Shared.Next(10, 50),
+                // 质量数据（根据合格率计算）
+                QualifiedCount = (int)(productionLine.DailyProduction * productionLine.QualifiedRate / 100.0),
+                UnqualifiedCount = (int)(productionLine.DailyProduction * (100 - productionLine.QualifiedRate) / 100.0),
 
-                // 能耗数据
-                CurrentPower = Random.Shared.Next(100, 200),
-                TotalEnergy = Random.Shared.Next(5000, 10000)
+                // 能耗数据（从传感器数据计算）
+                CurrentPower = (int)(recentSensorData
+                    .Where(s => s.SensorType == "power")
+                    .OrderByDescending(s => s.Timestamp)
+                    .FirstOrDefault()?.Value ?? 0.0),
+                TotalEnergy = (int)(recentSensorData
+                    .Where(s => s.SensorType == "energy")
+                    .Sum(s => s.Value))
             };
         }
 

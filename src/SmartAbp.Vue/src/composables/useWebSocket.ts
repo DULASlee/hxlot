@@ -1,225 +1,172 @@
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// WebSocket客户端封装（基于SignalR）
-// 用于数字大屏实时数据推送
-// 创建日期: 2025-10-21
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
+/**
+ * WebSocket客户端 Composable (基于SignalR)
+ * 用于MES实时监控大屏的数据推送
+ */
 import { ref, onUnmounted } from 'vue'
 import { HubConnectionBuilder, HubConnection, LogLevel } from '@microsoft/signalr'
 import { ElMessage } from 'element-plus'
 
-/**
- * WebSocket连接选项
- */
-export interface UseWebSocketOptions {
-  /** SignalR Hub的URL */
+interface UseWebSocketOptions {
   url: string
-  /** 连接成功回调 */
   onConnected?: () => void
-  /** 连接断开回调 */
   onDisconnected?: (error?: Error) => void
-  /** 正在重连回调 */
   onReconnecting?: () => void
-  /** 重连成功回调 */
   onReconnected?: () => void
 }
 
-/**
- * WebSocket客户端Composable
- * 
- * @example
- * ```typescript
- * const { connect, disconnect, on, invoke, isConnected } = useWebSocket({
- *   url: 'http://localhost:5000/hubs/production-line',
- *   onConnected: () => console.log('Connected'),
- *   onDisconnected: () => console.log('Disconnected')
- * })
- * 
- * // 连接
- * await connect()
- * 
- * // 订阅事件
- * on('ProductionLineDataUpdated', (data) => {
- *   console.log('收到实时数据', data)
- * })
- * 
- * // 调用服务端方法
- * await invoke('SubscribeProductionLine', 'line-001')
- * ```
- */
 export function useWebSocket(options: UseWebSocketOptions) {
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 状态管理
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  
-  /** SignalR连接实例 */
   const connection = ref<HubConnection | null>(null)
-  
-  /** 是否已连接 */
   const isConnected = ref(false)
-  
-  /** 连接错误信息 */
   const error = ref<string | null>(null)
-  
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 连接管理
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   
   /**
    * 连接到SignalR Hub
-   * 
-   * ✅ 自动重连机制（指数退避：1s, 2s, 4s, 8s, 16s）
-   * ✅ 完整的生命周期回调
-   * ✅ 友好的错误提示
    */
   const connect = async () => {
+    if (connection.value) {
+      console.warn('[useWebSocket] 连接已存在，跳过重复连接')
+      return
+    }
+
     try {
-      // 1. 创建SignalR连接
+      console.log(`[useWebSocket] 正在连接到 ${options.url}...`)
+      
       connection.value = new HubConnectionBuilder()
         .withUrl(options.url)
         .withAutomaticReconnect({
           nextRetryDelayInMilliseconds: (retryContext) => {
-            // 指数退避：1s, 2s, 4s, 8s, 16s
-            return Math.min(1000 * Math.pow(2, retryContext.previousRetryCount), 16000)
+            // 指数退避重试策略: 1s, 2s, 4s, 8s, 最大30s
+            const delay = Math.min(1000 * Math.pow(2, retryContext.previousRetryCount), 30000)
+            console.log(`[useWebSocket] 重试第${retryContext.previousRetryCount + 1}次，延迟${delay}ms`)
+            return delay
           }
         })
         .configureLogging(LogLevel.Information)
         .build()
-      
-      // 2. 注册生命周期事件
-      
-      // 连接关闭
-      connection.value.onclose((error) => {
-        isConnected.value = false
-        console.error('[WebSocket] 连接关闭', error)
-        ElMessage.error('WebSocket连接已断开')
-        options.onDisconnected?.(error)
-      })
-      
-      // 正在重连
+
+      // 监听重连事件
       connection.value.onreconnecting((error) => {
-        console.warn('[WebSocket] 正在重连...', error)
-        ElMessage.warning('WebSocket正在重连...')
+        isConnected.value = false
+        console.warn('[useWebSocket] 连接断开，正在重新连接...', error)
+        ElMessage.warning('连接断开，正在重新连接...')
         options.onReconnecting?.()
       })
-      
-      // 重连成功
+
       connection.value.onreconnected((connectionId) => {
-        console.log('[WebSocket] 重连成功', connectionId)
-        ElMessage.success('WebSocket重连成功')
+        isConnected.value = true
+        error.value = null
+        console.log(`[useWebSocket] 重新连接成功！连接ID: ${connectionId}`)
+        ElMessage.success('重新连接成功！')
         options.onReconnected?.()
       })
-      
-      // 3. 启动连接
+
+      connection.value.onclose((err) => {
+        isConnected.value = false
+        error.value = err?.message || '连接已关闭'
+        console.error('[useWebSocket] 连接关闭', err)
+        options.onDisconnected?.(err)
+      })
+
       await connection.value.start()
       isConnected.value = true
-      
-      console.log('[WebSocket] 连接成功')
-      ElMessage.success('WebSocket连接成功')
+      error.value = null
+      console.log('[useWebSocket] ✅ SignalR连接成功！')
+      ElMessage.success('实时数据连接成功！')
       options.onConnected?.()
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : String(err)
-      console.error('[WebSocket] 连接失败', err)
-      ElMessage.error(`WebSocket连接失败: ${error.value}`)
+      
+    } catch (err: any) {
+      isConnected.value = false
+      error.value = err.message
+      console.error('[useWebSocket] ❌ 连接失败:', err)
+      ElMessage.error(`连接失败: ${err.message}`)
+      connection.value = null
     }
   }
-  
+
   /**
-   * 断开WebSocket连接
+   * 断开连接
    */
   const disconnect = async () => {
-    if (connection.value) {
+    if (!connection.value) {
+      return
+    }
+
+    try {
       await connection.value.stop()
+      console.log('[useWebSocket] 连接已断开')
+    } catch (err: any) {
+      console.error('[useWebSocket] 断开连接时出错:', err)
+    } finally {
+      connection.value = null
       isConnected.value = false
-      console.log('[WebSocket] 连接已断开')
+      error.value = null
     }
   }
-  
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 事件订阅
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  
+
   /**
-   * 订阅Hub事件
-   * 
+   * 监听服务端推送的事件
    * @param eventName 事件名称
-   * @param callback 事件回调函数
-   * 
-   * @example
-   * ```typescript
-   * on('ProductionLineDataUpdated', (data) => {
-   *   console.log('收到实时数据', data)
-   * })
-   * ```
+   * @param callback 回调函数
    */
-  const on = (eventName: string, callback: (...args: any[]) => void) => {
-    connection.value?.on(eventName, callback)
+  const on = <T = any>(eventName: string, callback: (data: T) => void) => {
+    if (!connection.value) {
+      console.warn(`[useWebSocket] 无法监听事件 ${eventName}：连接未建立`)
+      return
+    }
+    
+    connection.value.on(eventName, callback)
+    console.log(`[useWebSocket] 已监听事件: ${eventName}`)
   }
-  
+
   /**
-   * 取消订阅Hub事件
-   * 
+   * 取消监听事件
    * @param eventName 事件名称
    */
   const off = (eventName: string) => {
-    connection.value?.off(eventName)
-  }
-  
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 方法调用
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  
-  /**
-   * 调用Hub服务端方法
-   * 
-   * @param methodName 方法名称
-   * @param args 方法参数
-   * @returns 服务端返回值
-   * 
-   * @example
-   * ```typescript
-   * // 订阅产线数据
-   * await invoke('SubscribeProductionLine', 'line-001')
-   * 
-   * // 获取当前数据
-   * const data = await invoke('GetCurrentData', 'line-001')
-   * ```
-   */
-  const invoke = async (methodName: string, ...args: any[]) => {
-    if (!connection.value || !isConnected.value) {
-      throw new Error('WebSocket未连接')
+    if (!connection.value) {
+      return
     }
-    return await connection.value.invoke(methodName, ...args)
+    
+    connection.value.off(eventName)
+    console.log(`[useWebSocket] 已取消监听事件: ${eventName}`)
   }
-  
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 生命周期
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  
+
+  /**
+   * 调用服务端方法
+   * @param methodName 方法名
+   * @param args 参数
+   */
+  const invoke = async <T = any>(methodName: string, ...args: any[]): Promise<T | void> => {
+    if (!connection.value || !isConnected.value) {
+      console.error(`[useWebSocket] 无法调用方法 ${methodName}：连接未建立`)
+      ElMessage.error('连接未建立，请先连接服务器')
+      return
+    }
+
+    try {
+      const result = await connection.value.invoke<T>(methodName, ...args)
+      console.log(`[useWebSocket] ✅ 调用方法 ${methodName} 成功`, result)
+      return result
+    } catch (err: any) {
+      console.error(`[useWebSocket] ❌ 调用方法 ${methodName} 失败:`, err)
+      ElMessage.error(`调用失败: ${err.message}`)
+      throw err
+    }
+  }
+
   // 组件卸载时自动断开连接
   onUnmounted(() => {
     disconnect()
   })
-  
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 返回API
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  
+
   return {
-    /** 连接到WebSocket */
-    connect,
-    /** 断开WebSocket连接 */
-    disconnect,
-    /** 订阅Hub事件 */
-    on,
-    /** 取消订阅Hub事件 */
-    off,
-    /** 调用Hub服务端方法 */
-    invoke,
-    /** 是否已连接 */
+    connection,
     isConnected,
-    /** 连接错误信息 */
-    error
+    error,
+    connect,
+    disconnect,
+    on,
+    off,
+    invoke
   }
 }
-

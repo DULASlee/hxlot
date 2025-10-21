@@ -17,6 +17,7 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using SmartAbp.CodeGenerator.Domain;
 using SmartAbp.Domain.Entities.LowCode;
 using SmartAbp.Domain.BusinessRules;
+using SmartAbp.Domain.Entities.MES;
 
 namespace SmartAbp.EntityFrameworkCore;
 
@@ -52,6 +53,11 @@ public class SmartAbpDbContext :
     public DbSet<SmartAbp.CodeGenerator.CodeGenStat> CodeGenStats { get; set; }
     public DbSet<SmartAbp.CodeGenerator.UserProfile> UserProfiles { get; set; }
     public DbSet<SmartAbp.CodeGenerator.GenerationHistory> GenerationHistories { get; set; }
+
+    // 🔥 MES生产线监控（Phase A）
+    public DbSet<ProductionLine> ProductionLines { get; set; }
+    public DbSet<Equipment> Equipments { get; set; }
+    public DbSet<SensorData> SensorDataList { get; set; }
 
 
     #region Entities from the modules
@@ -319,6 +325,112 @@ public class SmartAbpDbContext :
             b.HasIndex(x => x.Mode);
             b.HasIndex(x => new { x.UserId, x.Status });
             b.HasIndex(x => new { x.UserId, x.CreationTime });
+        });
+
+        // 🔥 MES生产线监控实体配置（Phase A）
+        
+        // ProductionLine实体配置
+        builder.Entity<ProductionLine>(b =>
+        {
+            b.ToTable(SmartAbpConsts.DbTablePrefix + "ProductionLines", SmartAbpConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            // 属性配置
+            b.Property(x => x.Name).IsRequired().HasMaxLength(256);
+            b.Property(x => x.Code).IsRequired().HasMaxLength(64);
+            b.Property(x => x.Description).HasMaxLength(1000);
+            b.Property(x => x.Location).HasMaxLength(256);
+            b.Property(x => x.Status).IsRequired().HasMaxLength(32);
+            b.Property(x => x.Type).HasMaxLength(64);
+            b.Property(x => x.Shift).HasMaxLength(64);
+            b.Property(x => x.Supervisor).HasMaxLength(128);
+            b.Property(x => x.WorkMode).HasMaxLength(64);
+
+            // 索引
+            b.HasIndex(x => x.Code).IsUnique();
+            b.HasIndex(x => x.Name);
+            b.HasIndex(x => x.Status);
+            b.HasIndex(x => x.IsEnabled);
+            b.HasIndex(x => x.TenantId);
+            b.HasIndex(x => new { x.Status, x.IsEnabled });
+        });
+
+        // Equipment实体配置
+        builder.Entity<Equipment>(b =>
+        {
+            b.ToTable(SmartAbpConsts.DbTablePrefix + "Equipments", SmartAbpConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            // 属性配置
+            b.Property(x => x.Name).IsRequired().HasMaxLength(256);
+            b.Property(x => x.Code).IsRequired().HasMaxLength(64);
+            b.Property(x => x.Description).HasMaxLength(1000);
+            b.Property(x => x.Type).HasMaxLength(64);
+            b.Property(x => x.Manufacturer).HasMaxLength(128);
+            b.Property(x => x.Model).HasMaxLength(128);
+            b.Property(x => x.SerialNumber).HasMaxLength(128);
+            b.Property(x => x.Location).HasMaxLength(256);
+            b.Property(x => x.Status).IsRequired().HasMaxLength(32);
+            b.Property(x => x.HealthStatus).IsRequired().HasMaxLength(32);
+            b.Property(x => x.PLCAddress).HasMaxLength(128);
+            b.Property(x => x.MaintenanceResponsible).HasMaxLength(128);
+
+            // 外键关系
+            b.HasOne(x => x.ProductionLine)
+             .WithMany(x => x.Equipments)
+             .HasForeignKey(x => x.ProductionLineId)
+             .OnDelete(DeleteBehavior.Cascade);
+
+            // 索引
+            b.HasIndex(x => x.Code).IsUnique();
+            b.HasIndex(x => x.ProductionLineId);
+            b.HasIndex(x => x.Status);
+            b.HasIndex(x => x.HealthStatus);
+            b.HasIndex(x => x.IsEnabled);
+            b.HasIndex(x => x.TenantId);
+            b.HasIndex(x => new { x.ProductionLineId, x.Status });
+            b.HasIndex(x => new { x.Status, x.IsEnabled });
+        });
+
+        // SensorData实体配置
+        builder.Entity<SensorData>(b =>
+        {
+            b.ToTable(SmartAbpConsts.DbTablePrefix + "SensorData", SmartAbpConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            // 属性配置
+            b.Property(x => x.SensorType).IsRequired().HasMaxLength(64);
+            b.Property(x => x.SensorName).HasMaxLength(256);
+            b.Property(x => x.SensorCode).HasMaxLength(64);
+            b.Property(x => x.Value).IsRequired();
+            b.Property(x => x.Unit).HasMaxLength(32);
+            b.Property(x => x.Quality).IsRequired().HasMaxLength(32);
+            b.Property(x => x.AlarmLevel).HasMaxLength(32);
+            b.Property(x => x.AlarmMessage).HasMaxLength(1000);
+            b.Property(x => x.DataSource).HasMaxLength(32);
+            b.Property(x => x.RawData).HasMaxLength(4000);
+
+            // 外键关系
+            b.HasOne(x => x.ProductionLine)
+             .WithMany(x => x.SensorDataList)
+             .HasForeignKey(x => x.ProductionLineId)
+             .OnDelete(DeleteBehavior.Cascade);
+
+            b.HasOne(x => x.Equipment)
+             .WithMany()
+             .HasForeignKey(x => x.EquipmentId)
+             .OnDelete(DeleteBehavior.SetNull);
+
+            // 索引
+            b.HasIndex(x => x.ProductionLineId);
+            b.HasIndex(x => x.EquipmentId);
+            b.HasIndex(x => x.SensorType);
+            b.HasIndex(x => x.Timestamp);
+            b.HasIndex(x => x.IsAlarm);
+            b.HasIndex(x => x.TenantId);
+            b.HasIndex(x => new { x.ProductionLineId, x.Timestamp });
+            b.HasIndex(x => new { x.SensorType, x.Timestamp });
+            b.HasIndex(x => new { x.ProductionLineId, x.SensorType, x.Timestamp });
         });
     }
 }

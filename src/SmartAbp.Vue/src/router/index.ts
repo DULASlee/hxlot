@@ -19,6 +19,9 @@ const SettingsView = () => import("@/views/common/SettingsView.vue")
 const ProjectListView = () => import("@/views/project/ProjectListView.vue")
 const ProjectAnalysisView = () => import("@/views/project/ProjectAnalysisView.vue")
 
+// MES监控大屏组件
+const ProductionLineDashboard = () => import("@/views/dashboard/ProductionLineDashboard.vue")
+
 const routes: RouteRecordRaw[] = [
   // 登录页面
   {
@@ -72,6 +75,16 @@ const routes: RouteRecordRaw[] = [
         name: "DashboardHome",
         component: DashboardView,
         meta: { title: "工作台" },
+      },
+      {
+        path: "production-line",
+        name: "ProductionLineDashboard",
+        component: ProductionLineDashboard,
+        meta: { 
+          title: "MES生产线监控",
+          icon: "🏭",
+          requiresAuth: true
+        },
       },
     ],
   },

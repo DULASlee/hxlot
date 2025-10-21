@@ -12,7 +12,7 @@
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     <ImplicitUsings>enable</ImplicitUsings>
-    <NoWarn>$(NoWarn);1591</NoWarn>
+    <NoWarn>$(NoWarn);1591;NU1903;NU1902</NoWarn>
     
     <!-- 🏢 企业版特性：禁用默认嵌入资源，手动控制模板嵌入 -->
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>

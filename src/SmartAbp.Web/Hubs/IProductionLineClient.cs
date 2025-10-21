@@ -20,14 +20,14 @@ namespace SmartAbp.Web.Hubs
         /// <summary>
         /// 接收产线实时数据
         /// </summary>
-        /// <param name="data">实时数据（泛型，支持任意数据类型）</param>
-        Task ReceiveProductionLineData<T>(T data);
+        /// <param name="data">实时数据（object类型，支持任意数据）</param>
+        Task ReceiveProductionLineData(object data);
 
         /// <summary>
         /// 接收告警信息
         /// </summary>
-        /// <param name="alert">告警数据（泛型，支持任意告警类型）</param>
-        Task ReceiveAlert<T>(T alert);
+        /// <param name="alert">告警数据</param>
+        Task ReceiveAlert(object alert);
 
         /// <summary>
         /// 接收连接状态变更

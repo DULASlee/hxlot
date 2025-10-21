@@ -187,8 +187,8 @@ export default defineConfig(async ({ mode }) => {
     },
     server: {
       host: "0.0.0.0", // 绑定所有网络接口，确保IPv4可访问
-      port: 9001,
-      strictPort: true, // 固定端口9001，避免自动切换
+      port: 5173, // 使用Vite默认端口5173
+      strictPort: false, // 如果端口被占用，自动切换到下一个可用端口
       open: false, // 禁用自动打开浏览器
       cors: true,
       // ✅ 添加 SPA 历史回退支持，确保所有路由都能正确访问
