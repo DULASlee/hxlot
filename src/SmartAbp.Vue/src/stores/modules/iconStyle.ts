@@ -439,6 +439,78 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-renew',
     material: 'mdi-refresh'
   },
+  
+  // ⚡ 快速/性能相关
+  bolt: {
+    emoji: '⚡',
+    fontawesome: 'fa-solid fa-bolt',
+    elementPlus: 'ep-lightning',
+    carbon: 'carbon-flash',
+    material: 'mdi-lightning-bolt'
+  },
+  
+  // 🚀 发布/部署相关
+  rocket: {
+    emoji: '🚀',
+    fontawesome: 'fa-solid fa-rocket',
+    elementPlus: 'ep-promotion',
+    carbon: 'carbon-rocket',
+    material: 'mdi-rocket'
+  },
+  
+  // 🔧 工具相关
+  tools: {
+    emoji: '🔧',
+    fontawesome: 'fa-solid fa-tools',
+    elementPlus: 'ep-tools',
+    carbon: 'carbon-tools',
+    material: 'mdi-tools'
+  },
+  
+  // 🎚️ 滑块/配置相关
+  'sliders-h': {
+    emoji: '🎚️',
+    fontawesome: 'fa-solid fa-sliders-h',
+    elementPlus: 'ep-operation',
+    carbon: 'carbon-settings-adjust',
+    material: 'mdi-tune'
+  },
+  
+  // 🌐 网络相关
+  'network-wired': {
+    emoji: '🌐',
+    fontawesome: 'fa-solid fa-network-wired',
+    elementPlus: 'ep-connection',
+    carbon: 'carbon-network-3',
+    material: 'mdi-network'
+  },
+  
+  // 🖥️ 服务器相关
+  server: {
+    emoji: '🖥️',
+    fontawesome: 'fa-solid fa-server',
+    elementPlus: 'ep-monitor',
+    carbon: 'carbon-server',
+    material: 'mdi-server'
+  },
+  
+  // 🔔 通知相关
+  bell: {
+    emoji: '🔔',
+    fontawesome: 'fa-solid fa-bell',
+    elementPlus: 'ep-bell',
+    carbon: 'carbon-notification',
+    material: 'mdi-bell'
+  },
+  
+  // 📁 文件夹相关
+  folder: {
+    emoji: '📁',
+    fontawesome: 'fa-solid fa-folder',
+    elementPlus: 'ep-folder',
+    carbon: 'carbon-folder',
+    material: 'mdi-folder'
+  },
 }
 
 // ⚠️ 以下为新增的图标映射（2025-10-01 图标系统迁移）
