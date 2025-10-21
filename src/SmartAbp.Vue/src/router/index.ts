@@ -46,10 +46,10 @@ const routes: RouteRecordRaw[] = [
       requiresAuth: false
     },
   },
-  // 根路径重定向到工作台
+  // 根路径重定向到低代码工作台
   {
     path: "/",
-    redirect: "/dashboard",
+    redirect: "/lowcode/welcome",
     meta: {
       title: "首页",
       requiresAuth: false
