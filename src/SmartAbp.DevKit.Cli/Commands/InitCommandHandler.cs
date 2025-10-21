@@ -26,6 +26,14 @@ public class InitCommandHandler : ICommandHandler
     }
 
     /// <summary>
+    /// 实现ICommandHandler接口
+    /// </summary>
+    public Task<int> ExecuteAsync()
+    {
+        return ExecuteAsync("SampleModule", Directory.GetCurrentDirectory(), false, false);
+    }
+
+    /// <summary>
     /// 注册命令
     /// </summary>
     public Command GetCommand()

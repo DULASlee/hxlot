@@ -29,24 +29,29 @@ class Program
             aliases: new[] { "-o", "--output" },
             description: "输出目录路径",
             getDefaultValue: () => "./output");
+        var platformOption = new Option<string?>(
+            aliases: new[] { "-p", "--platform" },
+            description: "目标平台：web（默认）| dashboard | uniapp",
+            getDefaultValue: () => "web");
         var verboseOption = new Option<bool>(
             aliases: new[] { "-v", "--verbose" },
             description: "显示详细信息");
 
         generateCommand.AddOption(inputOption);
         generateCommand.AddOption(outputOption);
+        generateCommand.AddOption(platformOption);
         generateCommand.AddOption(verboseOption);
 
-        generateCommand.SetHandler(async (inputFile, outputDir, verbose) =>
+        generateCommand.SetHandler(async (inputFile, outputDir, platform, verbose) =>
         {
             await RunWithHostAsync(async (host, exitCode) =>
             {
                 var logger = host.Services.GetRequiredService<ILogger<GenerateCommandHandler>>();
                 var commandService = host.Services.GetRequiredService<DevKitCommandService>();
-                var handler = new GenerateCommandHandler(logger, commandService, inputFile, outputDir, verbose);
+                var handler = new GenerateCommandHandler(logger, commandService, inputFile, outputDir, platform, verbose);
                 exitCode.Value = await handler.ExecuteAsync();
             });
-        }, inputOption, outputOption, verboseOption);
+        }, inputOption, outputOption, platformOption, verboseOption);
 
         rootCommand.AddCommand(generateCommand);
 

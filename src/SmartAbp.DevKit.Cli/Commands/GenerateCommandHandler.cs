@@ -19,6 +19,7 @@ public class GenerateCommandHandler : ICommandHandler
     private readonly DevKitCommandService _commandService;
     private readonly string? _inputFile;
     private readonly string? _outputDir;
+    private readonly string? _platform;
     private readonly bool _verbose;
 
     public GenerateCommandHandler(
@@ -26,12 +27,14 @@ public class GenerateCommandHandler : ICommandHandler
         DevKitCommandService commandService,
         string? inputFile,
         string? outputDir,
+        string? platform,
         bool verbose)
     {
         _logger = logger;
         _commandService = commandService;
         _inputFile = inputFile;
         _outputDir = outputDir ?? "./output";
+        _platform = platform ?? "web";
         _verbose = verbose;
     }
 
@@ -40,6 +43,16 @@ public class GenerateCommandHandler : ICommandHandler
         try
         {
             _logger.LogInformation("🚀 DevKit代码生成启动...");
+            _logger.LogInformation($"🎯 目标平台: {_platform}");
+
+            // 验证平台参数
+            var validPlatforms = new[] { "web", "dashboard", "uniapp", "backend" };
+            if (!validPlatforms.Contains(_platform?.ToLower()))
+            {
+                _logger.LogError($"❌ 错误：无效的平台参数: {_platform}");
+                _logger.LogError($"   支持的平台: {string.Join(", ", validPlatforms)}");
+                return 1;
+            }
 
             // 验证输入文件
             if (string.IsNullOrWhiteSpace(_inputFile))
@@ -110,7 +123,11 @@ public class GenerateCommandHandler : ICommandHandler
             await File.WriteAllTextAsync(outputPath, result.Code);
 
             _logger.LogInformation($"✅ 代码生成成功: {outputPath}");
+            _logger.LogInformation($"🎯 目标平台: {_platform}");
             _logger.LogInformation($"📊 代码行数: {result.Code.Split('\n').Length}");
+
+            // 显示平台特定提示
+            DisplayPlatformSpecificHints(_platform);
 
             // 显示性能指标
             if (result.Performance != null && _verbose)
@@ -139,6 +156,43 @@ public class GenerateCommandHandler : ICommandHandler
         {
             _logger.LogError(ex, "❌ 代码生成失败");
             return 1;
+        }
+    }
+
+    /// <summary>
+    /// 显示平台特定的提示信息
+    /// </summary>
+    private void DisplayPlatformSpecificHints(string? platform)
+    {
+        switch (platform?.ToLower())
+        {
+            case "web":
+                _logger.LogInformation("💡 Web平台提示:");
+                _logger.LogInformation("   - 生成的代码包含：Vue3页面、API客户端、Pinia Store");
+                _logger.LogInformation("   - 依赖：Element Plus组件库");
+                _logger.LogInformation("   - 部署到：src/SmartAbp.Vue/src/");
+                break;
+
+            case "dashboard":
+                _logger.LogInformation("💡 Dashboard平台提示:");
+                _logger.LogInformation("   - 生成的代码包含：实时数据大屏、ECharts图表、WebSocket连接");
+                _logger.LogInformation("   - 依赖：ECharts、WebSocket");
+                _logger.LogInformation("   - 适用场景：MES生产监控、智慧工地可视化");
+                break;
+
+            case "uniapp":
+                _logger.LogInformation("💡 UniApp平台提示:");
+                _logger.LogInformation("   - 生成的代码包含：移动端页面、离线缓存、API客户端");
+                _logger.LogInformation("   - 依赖：uni-ui组件库");
+                _logger.LogInformation("   - 支持平台：iOS、Android、H5、小程序");
+                break;
+
+            case "backend":
+                _logger.LogInformation("💡 Backend平台提示:");
+                _logger.LogInformation("   - 生成的代码包含：ABP模块、AppService、Controller、Entity");
+                _logger.LogInformation("   - 框架：ABP vNext + DDD架构");
+                _logger.LogInformation("   - 部署到：src/SmartAbp.Application/");
+                break;
         }
     }
 }
