@@ -1,0 +1,195 @@
+<template>
+  <view class="list-page">
+    <!-- 搜索栏 -->
+    <view class="search-bar">
+      <uni-search-bar v-model="searchKeyword" @confirm="handleSearch" placeholder="搜索..." />
+    </view>
+
+    <!-- 列表内容 -->
+    <scroll-view
+      scroll-y
+      class="scroll-view"
+      @scrolltolower="handleLoadMore"
+      :refresher-enabled="true"
+      :refresher-triggered="refreshing"
+      @refresherrefresh="handleRefresh"
+    >
+      <view v-if="list.length > 0" class="list-container">
+        <view
+          v-for="item in list"
+          :key="item.id"
+          class="list-item"
+          @click="handleItemClick(item)"
+        >
+          {{#each ListFields}}
+          <view class="item-field">
+            <text class="field-label">{{Label}}:</text>
+            <text class="field-value">\{{ item.{{Name}} }}</text>
+          </view>
+          {{/each}}
+        </view>
+      </view>
+
+      <uni-load-more v-if="list.length > 0" :status="loadMoreStatus" />
+      
+      <view v-if="list.length === 0 && !loading" class="empty-view">
+        <text>暂无数据</text>
+      </view>
+    </scroll-view>
+
+    <!-- 新增按钮 -->
+    <view class="fab-btn" @click="handleAdd">
+      <uni-icons type="plus" size="30" color="#fff" />
+    </view>
+  </view>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { use{{EntityName}}Store } from '@/stores/{{EntityNameKebab}}-store'
+import type { {{EntityName}}Dto } from '@/types/{{EntityNameKebab}}.types'
+
+const {{EntityNameCamel}}Store = use{{EntityName}}Store()
+const list = ref<{{EntityName}}Dto[]>([])
+const searchKeyword = ref('')
+const loading = ref(false)
+const refreshing = ref(false)
+const loadMoreStatus = ref<'more' | 'loading' | 'noMore'>('more')
+
+const pageSize = 20
+let currentPage = 1
+let hasMore = true
+
+onMounted(() => {
+  loadData()
+})
+
+async function loadData(isRefresh = false) {
+  if (isRefresh) {
+    currentPage = 1
+    hasMore = true
+    list.value = []
+  }
+
+  if (!hasMore) return
+
+  loading.value = true
+  loadMoreStatus.value = 'loading'
+
+  try {
+    const result = await {{EntityNameCamel}}Store.getList({
+      skipCount: (currentPage - 1) * pageSize,
+      maxResultCount: pageSize,
+      filter: searchKeyword.value
+    })
+
+    if (isRefresh) {
+      list.value = result.items
+    } else {
+      list.value.push(...result.items)
+    }
+
+    hasMore = result.totalCount > list.value.length
+    loadMoreStatus.value = hasMore ? 'more' : 'noMore'
+    currentPage++
+  } catch (error) {
+    uni.showToast({ title: '加载失败', icon: 'none' })
+    loadMoreStatus.value = 'more'
+  } finally {
+    loading.value = false
+    refreshing.value = false
+  }
+}
+
+function handleSearch() {
+  loadData(true)
+}
+
+function handleRefresh() {
+  refreshing.value = true
+  loadData(true)
+}
+
+function handleLoadMore() {
+  if (!loading.value && hasMore) {
+    loadData(false)
+  }
+}
+
+function handleItemClick(item: {{EntityName}}Dto) {
+  uni.navigateTo({
+    url: `/pages/{{EntityNameKebab}}/detail?id=${item.id}`
+  })
+}
+
+function handleAdd() {
+  uni.navigateTo({
+    url: '/pages/{{EntityNameKebab}}/form'
+  })
+}
+</script>
+
+<style scoped lang="scss">
+.list-page {
+  height: 100vh;
+  background-color: #f8f8f8;
+}
+
+.search-bar {
+  padding: 10rpx;
+  background-color: #fff;
+}
+
+.scroll-view {
+  height: calc(100vh - 100rpx);
+}
+
+.list-container {
+  padding: 20rpx;
+}
+
+.list-item {
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+}
+
+.item-field {
+  display: flex;
+  margin-bottom: 12rpx;
+}
+
+.field-label {
+  color: #999;
+  font-size: 28rpx;
+  min-width: 120rpx;
+}
+
+.field-value {
+  flex: 1;
+  color: #333;
+  font-size: 28rpx;
+}
+
+.empty-view {
+  text-align: center;
+  padding-top: 200rpx;
+  color: #999;
+}
+
+.fab-btn {
+  position: fixed;
+  right: 40rpx;
+  bottom: 100rpx;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background-color: #007aff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 122, 255, 0.4);
+}
+</style>
+

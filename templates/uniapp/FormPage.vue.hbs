@@ -1,0 +1,132 @@
+<template>
+  <view class="form-page">
+    <uni-forms ref="formRef" :model="formData" :rules="rules">
+      {{#each FormFields}}
+      <uni-forms-item label="{{Label}}" name="{{Name}}" required="{{IsRequired}}">
+        {{#if (eq Type "string")}}
+        <uni-easyinput v-model="formData.{{Name}}" placeholder="请输入{{Label}}" />
+        {{else if (eq Type "number")}}
+        <uni-easyinput v-model.number="formData.{{Name}}" type="number" placeholder="请输入{{Label}}" />
+        {{else if (eq Type "boolean")}}
+        <switch :checked="formData.{{Name}}" @change="formData.{{Name}} = $event.detail.value" />
+        {{else if (eq Type "Date")}}
+        <uni-datetime-picker v-model="formData.{{Name}}" />
+        {{else}}
+        <uni-easyinput v-model="formData.{{Name}}" placeholder="请输入{{Label}}" />
+        {{/if}}
+      </uni-forms-item>
+      {{/each}}
+    </uni-forms>
+
+    <view class="action-bar">
+      <button class="btn-cancel" @click="handleCancel">取消</button>
+      <button class="btn-submit" @click="handleSubmit">提交</button>
+    </view>
+  </view>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive, onLoad } from '@dcloudio/uni-app'
+import { use{{EntityName}}Store } from '@/stores/{{EntityNameKebab}}-store'
+import type { {{EntityName}}Dto, Create{{EntityName}}Dto, Update{{EntityName}}Dto } from '@/types/{{EntityNameKebab}}.types'
+
+const {{EntityNameCamel}}Store = use{{EntityName}}Store()
+const formRef = ref(null)
+const id = ref('')
+const isEdit = ref(false)
+
+const formData = reactive<Create{{EntityName}}Dto | Update{{EntityName}}Dto>({
+  {{#each FormFields}}
+  {{Name}}: {{#if DefaultValue}}{{DefaultValue}}{{else}}{{#if (eq Type "string")}}''{{else if (eq Type "number")}}0{{else if (eq Type "boolean")}}false{{else}}null{{/if}}{{/if}},
+  {{/each}}
+})
+
+const rules = {
+  {{#each FormFields}}
+  {{#if IsRequired}}
+  {{Name}}: { rules: [{ required: true, errorMessage: '请输入{{Label}}' }] },
+  {{/if}}
+  {{/each}}
+}
+
+onLoad((options: any) => {
+  if (options.id) {
+    id.value = options.id
+    isEdit.value = true
+    loadDetail()
+  }
+})
+
+async function loadDetail() {
+  try {
+    const detail = await {{EntityNameCamel}}Store.getById(id.value)
+    Object.assign(formData, detail)
+  } catch (error) {
+    uni.showToast({ title: '加载失败', icon: 'none' })
+  }
+}
+
+async function handleSubmit() {
+  try {
+    await (formRef.value as any).validate()
+    
+    if (isEdit.value) {
+      await {{EntityNameCamel}}Store.update(id.value, formData as Update{{EntityName}}Dto)
+    } else {
+      await {{EntityNameCamel}}Store.create(formData as Create{{EntityName}}Dto)
+    }
+    
+    uni.showToast({ title: isEdit.value ? '修改成功' : '创建成功', icon: 'success' })
+    setTimeout(() => {
+      uni.navigateBack()
+    }, 1000)
+  } catch (error: any) {
+    uni.showToast({ title: error.message || '提交失败', icon: 'none' })
+  }
+}
+
+function handleCancel() {
+  uni.navigateBack()
+}
+</script>
+
+<style scoped lang="scss">
+.form-page {
+  min-height: 100vh;
+  background-color: #f8f8f8;
+  padding: 20rpx;
+  padding-bottom: 140rpx;
+}
+
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  padding: 20rpx;
+  display: flex;
+  gap: 20rpx;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.btn-cancel, .btn-submit {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 8rpx;
+  font-size: 30rpx;
+}
+
+.btn-cancel {
+  background-color: #fff;
+  color: #333;
+  border: 1rpx solid #ddd;
+}
+
+.btn-submit {
+  background-color: #007aff;
+  color: #fff;
+}
+</style>
+

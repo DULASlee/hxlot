@@ -1,0 +1,68 @@
+/**
+ * {{EntityName}} API客户端（UniApp版本）
+ * 
+ * @author SmartAbp DevKit Low-Code Engine
+ * @since {{GeneratedTime}}
+ */
+
+import { request } from '@/utils/request'
+import type { {{EntityName}}Dto, Create{{EntityName}}Dto, Update{{EntityName}}Dto, Get{{EntityName}}ListInput } from '@/types/{{EntityNameKebab}}.types'
+import type { PagedResultDto } from '@/types/common.types'
+
+const API_BASE = '{{ApiPath}}'
+
+export const {{EntityNameCamel}}Api = {
+  /**
+   * 获取列表
+   */
+  async getList(params: Get{{EntityName}}ListInput): Promise<PagedResultDto<{{EntityName}}Dto>> {
+    return request({
+      url: API_BASE,
+      method: 'GET',
+      data: params
+    })
+  },
+
+  /**
+   * 获取详情
+   */
+  async getById(id: string): Promise<{{EntityName}}Dto> {
+    return request({
+      url: `${API_BASE}/${id}`,
+      method: 'GET'
+    })
+  },
+
+  /**
+   * 创建
+   */
+  async create(data: Create{{EntityName}}Dto): Promise<{{EntityName}}Dto> {
+    return request({
+      url: API_BASE,
+      method: 'POST',
+      data
+    })
+  },
+
+  /**
+   * 更新
+   */
+  async update(id: string, data: Update{{EntityName}}Dto): Promise<{{EntityName}}Dto> {
+    return request({
+      url: `${API_BASE}/${id}`,
+      method: 'PUT',
+      data
+    })
+  },
+
+  /**
+   * 删除
+   */
+  async delete(id: string): Promise<void> {
+    return request({
+      url: `${API_BASE}/${id}`,
+      method: 'DELETE'
+    })
+  }
+}
+

@@ -1,0 +1,144 @@
+<template>
+  <view class="detail-page">
+    <view v-if="!loading && detail" class="detail-container">
+      {{#each Fields}}
+      <view class="detail-item">
+        <text class="item-label">{{Label}}</text>
+        <text class="item-value">\{{ detail.{{Name}} }}</text>
+      </view>
+      {{/each}}
+    </view>
+
+    <view v-if="loading" class="loading-view">
+      <uni-load-more status="loading" />
+    </view>
+
+    <view class="action-bar">
+      <button class="btn-edit" @click="handleEdit">编辑</button>
+      <button class="btn-delete" @click="handleDelete">删除</button>
+    </view>
+  </view>
+</template>
+
+<script setup lang="ts">
+import { ref, onLoad } from '@dcloudio/uni-app'
+import { use{{EntityName}}Store } from '@/stores/{{EntityNameKebab}}-store'
+import type { {{EntityName}}Dto } from '@/types/{{EntityNameKebab}}.types'
+
+const {{EntityNameCamel}}Store = use{{EntityName}}Store()
+const detail = ref<{{EntityName}}Dto | null>(null)
+const loading = ref(false)
+const id = ref('')
+
+onLoad((options: any) => {
+  if (options.id) {
+    id.value = options.id
+    loadDetail()
+  }
+})
+
+async function loadDetail() {
+  loading.value = true
+  try {
+    detail.value = await {{EntityNameCamel}}Store.getById(id.value)
+  } catch (error) {
+    uni.showToast({ title: '加载失败', icon: 'none' })
+  } finally {
+    loading.value = false
+  }
+}
+
+function handleEdit() {
+  uni.navigateTo({
+    url: `/pages/{{EntityNameKebab}}/form?id=${id.value}`
+  })
+}
+
+async function handleDelete() {
+  uni.showModal({
+    title: '确认删除',
+    content: '确定要删除吗？',
+    async success(res) {
+      if (res.confirm) {
+        try {
+          await {{EntityNameCamel}}Store.delete(id.value)
+          uni.showToast({ title: '删除成功', icon: 'success' })
+          setTimeout(() => {
+            uni.navigateBack()
+          }, 1000)
+        } catch (error) {
+          uni.showToast({ title: '删除失败', icon: 'none' })
+        }
+      }
+    }
+  })
+}
+</script>
+
+<style scoped lang="scss">
+.detail-page {
+  min-height: 100vh;
+  background-color: #f8f8f8;
+}
+
+.detail-container {
+  margin: 20rpx;
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 30rpx;
+}
+
+.detail-item {
+  margin-bottom: 30rpx;
+}
+
+.item-label {
+  display: block;
+  color: #999;
+  font-size: 24rpx;
+  margin-bottom: 10rpx;
+}
+
+.item-value {
+  display: block;
+  color: #333;
+  font-size: 30rpx;
+}
+
+.loading-view {
+  padding-top: 200rpx;
+  text-align: center;
+}
+
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  padding: 20rpx;
+  display: flex;
+  gap: 20rpx;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.btn-edit, .btn-delete {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 8rpx;
+  font-size: 30rpx;
+}
+
+.btn-edit {
+  background-color: #007aff;
+  color: #fff;
+}
+
+.btn-delete {
+  background-color: #fff;
+  color: #ff3b30;
+  border: 1rpx solid #ff3b30;
+}
+</style>
+

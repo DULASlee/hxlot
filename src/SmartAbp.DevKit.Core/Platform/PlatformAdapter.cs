@@ -136,14 +136,18 @@ public class PlatformAdapter
                 BasePath = Path.Combine(_templateRootPath, "uniapp"),
                 Templates = new Dictionary<string, string>
                 {
-                    ["ListPage"] = "list-page.hbs",
-                    ["DetailPage"] = "detail-page.hbs",
-                    ["FormPage"] = "form-page.hbs",
-                    ["ApiClient"] = "api-client.hbs",
-                    ["Store"] = "pinia-store.hbs",
+                    // 核心UniApp页面模板
+                    ["ListPage"] = "ListPage.vue.hbs",
+                    ["DetailPage"] = "DetailPage.vue.hbs",
+                    ["FormPage"] = "FormPage.vue.hbs",
+                    
+                    // TypeScript工具类
+                    ["ApiClient"] = "ApiClient.ts.hbs",
+                    ["Store"] = "Store.ts.hbs",
+                    
+                    ["Types"] = "types.hbs",
                     ["PagesJson"] = "pages.json.hbs",
                     ["ManifestJson"] = "manifest.json.hbs",
-                    ["Types"] = "types.hbs",
                     
                     // UniApp专用组件
                     ["EmptyView"] = "components/empty-view.hbs",
