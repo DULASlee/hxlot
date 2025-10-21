@@ -1,0 +1,310 @@
+/**
+ * {{EntityName}} TypeScript类型定义
+ * 
+ * @author SmartAbp DevKit Low-Code Engine
+ * @since {{GeneratedTime}}
+ * @description 完整的类型安全定义，100%与后端DTO一致
+ */
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 基础类型定义
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * {{EntityName}}DTO
+ */
+export interface {{EntityName}}Dto {
+  /**
+   * 主键ID
+   */
+  id: {{PrimaryKeyTypeScript}}
+
+  {{#each Fields}}
+  /**
+   * {{Label}}
+   */
+  {{Name}}{{#unless Required}}?{{/unless}}: {{#if (eq Type "string")}}string{{/if}}{{#if (eq Type "int")}}number{{/if}}{{#if (eq Type "long")}}number{{/if}}{{#if (eq Type "decimal")}}number{{/if}}{{#if (eq Type "double")}}number{{/if}}{{#if (eq Type "bool")}}boolean{{/if}}{{#if (eq Type "DateTime")}}Date | string{{/if}}{{#if (eq Type "Guid")}}string{{/if}}
+
+  {{/each}}
+  /**
+   * 创建时间
+   */
+  creationTime?: Date | string
+
+  /**
+   * 最后修改时间
+   */
+  lastModificationTime?: Date | string
+}
+
+/**
+ * 创建{{EntityName}}DTO
+ */
+export interface Create{{EntityName}}Dto {
+  {{#each Fields}}
+  {{#unless (or (eq Name "id") (eq Name "Id") (eq Name "creationTime") (eq Name "lastModificationTime"))}}
+  /**
+   * {{Label}}
+   */
+  {{Name}}{{#unless Required}}?{{/unless}}: {{#if (eq Type "string")}}string{{/if}}{{#if (eq Type "int")}}number{{/if}}{{#if (eq Type "long")}}number{{/if}}{{#if (eq Type "decimal")}}number{{/if}}{{#if (eq Type "double")}}number{{/if}}{{#if (eq Type "bool")}}boolean{{/if}}{{#if (eq Type "DateTime")}}Date | string{{/if}}{{#if (eq Type "Guid")}}string{{/if}}
+
+  {{/unless}}
+  {{/each}}
+}
+
+/**
+ * 更新{{EntityName}}DTO
+ */
+export interface Update{{EntityName}}Dto {
+  {{#each Fields}}
+  {{#unless (or (eq Name "id") (eq Name "Id") (eq Name "creationTime") (eq Name "lastModificationTime"))}}
+  /**
+   * {{Label}}
+   */
+  {{Name}}{{#unless Required}}?{{/unless}}: {{#if (eq Type "string")}}string{{/if}}{{#if (eq Type "int")}}number{{/if}}{{#if (eq Type "long")}}number{{/if}}{{#if (eq Type "decimal")}}number{{/if}}{{#if (eq Type "double")}}number{{/if}}{{#if (eq Type "bool")}}boolean{{/if}}{{#if (eq Type "DateTime")}}Date | string{{/if}}{{#if (eq Type "Guid")}}string{{/if}}
+
+  {{/unless}}
+  {{/each}}
+}
+
+/**
+ * 获取{{EntityName}}列表输入参数
+ */
+export interface Get{{EntityName}}ListInput {
+  /**
+   * 跳过条数（分页）
+   */
+  skipCount?: number
+
+  /**
+   * 最大结果数（分页）
+   */
+  maxResultCount?: number
+
+  /**
+   * 排序字段
+   */
+  sorting?: string
+
+  /**
+   * 过滤条件
+   */
+  filter?: string
+
+  {{#each SearchFields}}
+  /**
+   * {{Label}}（搜索条件）
+   */
+  {{Name}}?: {{#if (eq Type "string")}}string{{/if}}{{#if (eq Type "int")}}number{{/if}}{{#if (eq Type "long")}}number{{/if}}{{#if (eq Type "decimal")}}number{{/if}}{{#if (eq Type "double")}}number{{/if}}{{#if (eq Type "bool")}}boolean{{/if}}{{#if (eq Type "DateTime")}}Date | string{{/if}}{{#if (eq Type "Guid")}}string{{/if}}
+
+  {{/each}}
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ABP vNext标准响应类型
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * 分页结果DTO
+ */
+export interface PagedResultDto<T> {
+  /**
+   * 数据项
+   */
+  items: T[]
+
+  /**
+   * 总数量
+   */
+  totalCount: number
+}
+
+/**
+ * 列表结果DTO
+ */
+export interface ListResultDto<T> {
+  /**
+   * 数据项
+   */
+  items: T[]
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// UniApp离线数据同步类型
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * 离线数据项
+ */
+export interface OfflineData<T> {
+  /**
+   * 本地ID（临时ID）
+   */
+  localId: string
+
+  /**
+   * 服务器ID（同步后更新）
+   */
+  serverId?: string
+
+  /**
+   * 数据内容
+   */
+  data: T
+
+  /**
+   * 同步状态
+   */
+  syncStatus: SyncStatus
+
+  /**
+   * 操作类型
+   */
+  operation: 'create' | 'update' | 'delete'
+
+  /**
+   * 创建时间
+   */
+  createdAt: number
+
+  /**
+   * 最后修改时间
+   */
+  updatedAt: number
+
+  /**
+   * 尝试次数
+   */
+  retryCount: number
+
+  /**
+   * 错误信息
+   */
+  error?: string
+}
+
+/**
+ * 同步状态
+ */
+export enum SyncStatus {
+  /**
+   * 待同步
+   */
+  Pending = 'pending',
+
+  /**
+   * 同步中
+   */
+  Syncing = 'syncing',
+
+  /**
+   * 已同步
+   */
+  Synced = 'synced',
+
+  /**
+   * 同步失败
+   */
+  Failed = 'failed',
+
+  /**
+   * 冲突
+   */
+  Conflict = 'conflict'
+}
+
+/**
+ * 冲突解决策略
+ */
+export enum ConflictResolution {
+  /**
+   * 使用本地数据
+   */
+  UseLocal = 'use_local',
+
+  /**
+   * 使用服务器数据
+   */
+  UseServer = 'use_server',
+
+  /**
+   * 手动解决
+   */
+  Manual = 'manual'
+}
+
+/**
+ * 同步结果
+ */
+export interface SyncResult {
+  /**
+   * 成功数量
+   */
+  successCount: number
+
+  /**
+   * 失败数量
+   */
+  failedCount: number
+
+  /**
+   * 冲突数量
+   */
+  conflictCount: number
+
+  /**
+   * 失败详情
+   */
+  failures: Array<{
+    localId: string
+    error: string
+  }>
+
+  /**
+   * 冲突详情
+   */
+  conflicts: Array<{
+    localId: string
+    localData: any
+    serverData: any
+  }>
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 通用类型
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * API响应结果
+ */
+export interface ApiResponse<T = any> {
+  /**
+   * 成功标志
+   */
+  success: boolean
+
+  /**
+   * 响应数据
+   */
+  result?: T
+
+  /**
+   * 错误信息
+   */
+  error?: {
+    code: string
+    message: string
+    details?: string
+  }
+}
+
+/**
+ * 加载状态
+ */
+export type LoadingStatus = 'idle' | 'loading' | 'success' | 'error'
+
+/**
+ * 加载更多状态
+ */
+export type LoadMoreStatus = 'more' | 'loading' | 'noMore'
+

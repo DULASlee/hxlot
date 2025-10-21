@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SmartAbp.DevKit.Core.Abstractions;
 using SmartAbp.DevKit.Core.Models;
+using SmartAbp.DevKit.Abstractions.Models;
 
 namespace SmartAbp.DevKit.Core.Platform;
 
@@ -47,6 +48,7 @@ namespace SmartAbp.DevKit.Core.Platform;
 public class UniAppGenerator : BaseFrontendGenerator
 {
     private readonly ILogger<UniAppGenerator> _logger;
+    private readonly ComponentLibraryConfig _componentLibrary;
 
     /// <summary>
     /// 目标平台：UniApp
@@ -61,7 +63,7 @@ public class UniAppGenerator : BaseFrontendGenerator
     /// <summary>
     /// 生成器描述
     /// </summary>
-    public override string Description => "Generate UniApp mobile APP code (Pages/API/Store/Config)";
+    public override string Description => "Generate UniApp mobile APP code based on uView UI/Wot Design (Pages/API/Store/Config)";
 
     /// <summary>
     /// 优先级：UniApp生成器优先级为60（低于Dashboard，高于Web）
@@ -74,10 +76,17 @@ public class UniAppGenerator : BaseFrontendGenerator
     public UniAppGenerator(
         ILogger<UniAppGenerator> logger,
         ITemplateEngine templateEngine,
-        PlatformAdapter platformAdapter)
+        PlatformAdapter platformAdapter,
+        ComponentLibraryConfig? componentLibrary = null)
         : base(logger, templateEngine, platformAdapter)
     {
         _logger = logger;
+        _componentLibrary = componentLibrary ?? ComponentLibraryConfig.GetDefaultUViewConfig();
+        
+        _logger.LogInformation(
+            "UniAppGenerator initialized with {ComponentLibrary} {Version}", 
+            _componentLibrary.Name, 
+            _componentLibrary.Version);
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -106,9 +115,24 @@ public class UniAppGenerator : BaseFrontendGenerator
             .Take(5)
             .ToList();
 
-        // 识别表单字段（排除系统字段）
+        // 识别表单字段（排除系统字段）并映射到uView组件
         var formFields = fields
             .Where(f => !IsSystemField(f.Name))
+            .Select(f => new FrontendFieldConfigWithComponent
+            {
+                Name = f.Name,
+                Label = f.Label,
+                Type = f.Type,
+                Required = f.Required,
+                MaxLength = f.MaxLength,
+                DisplayOrder = f.DisplayOrder,
+                
+                // 🎯 核心：映射字段类型到uView组件
+                Component = MapToComponentLibrary(f.Type),
+                
+                // 映射验证规则到uView格式
+                ValidationRules = MapValidationRules(f.Required, f.MaxLength, f.Type)
+            })
             .ToList();
 
         // 识别搜索字段（字符串类型字段）
@@ -129,13 +153,18 @@ public class UniAppGenerator : BaseFrontendGenerator
             PrimaryKeyType = mainEntity.PrimaryKeyType ?? "Guid",
             PrimaryKeyTypeScript = MapCSharpTypeToTypeScript(mainEntity.PrimaryKeyType ?? "Guid"),
 
+            // 🎯 组件库信息（新增）
+            ComponentLibrary = _componentLibrary.Name,
+            ComponentLibraryVersion = _componentLibrary.Version,
+            ComponentLibraryPackage = _componentLibrary.PackageName,
+
             // 所有字段
             Fields = fields,
 
             // 列表页面显示字段
             ListFields = listFields,
 
-            // 表单字段
+            // 表单字段（带组件映射）
             FormFields = formFields,
 
             // 搜索字段
@@ -266,6 +295,111 @@ public class UniAppGenerator : BaseFrontendGenerator
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     /// <summary>
+    /// 映射字段类型到组件库组件
+    /// </summary>
+    /// <param name="fieldType">字段类型（string/int/DateTime等）</param>
+    /// <returns>组件库组件名称（u-input/u-number-box等）</returns>
+    private string MapToComponentLibrary(string fieldType)
+    {
+        // 优先从配置中查找映射
+        if (_componentLibrary.FieldTypeMapping.TryGetValue(fieldType, out var component))
+        {
+            return component;
+        }
+
+        // 降级到默认映射
+        return fieldType.ToLowerInvariant() switch
+        {
+            "string" => _componentLibrary.Type == ComponentLibraryType.UView ? "u-input" : "wd-input",
+            "int" or "long" or "decimal" or "double" => 
+                _componentLibrary.Type == ComponentLibraryType.UView ? "u-number-box" : "wd-input-number",
+            "datetime" => 
+                _componentLibrary.Type == ComponentLibraryType.UView ? "u-datetime-picker" : "wd-datetime-picker",
+            "bool" => 
+                _componentLibrary.Type == ComponentLibraryType.UView ? "u-switch" : "wd-switch",
+            "enum" => 
+                _componentLibrary.Type == ComponentLibraryType.UView ? "u-select" : "wd-select",
+            _ => _componentLibrary.Type == ComponentLibraryType.UView ? "u-input" : "wd-input"
+        };
+    }
+
+    /// <summary>
+    /// 映射验证规则到uView/Wot Design格式
+    /// </summary>
+    private List<string> MapValidationRules(bool required, int? maxLength, string fieldType)
+    {
+        var rules = new List<string>();
+
+        // Required规则
+        if (required)
+        {
+            if (_componentLibrary.ValidationMapping.TryGetValue("required", out var requiredRule))
+            {
+                var rule = _componentLibrary.Type == ComponentLibraryType.UView 
+                    ? requiredRule.UViewRule 
+                    : requiredRule.WotDesignRule;
+                    
+                if (!string.IsNullOrEmpty(rule))
+                {
+                    rules.Add(rule.Replace("{message}", "此字段为必填项"));
+                }
+            }
+        }
+
+        // MaxLength规则
+        if (maxLength.HasValue && maxLength.Value > 0)
+        {
+            if (_componentLibrary.ValidationMapping.TryGetValue("maxLength", out var maxLengthRule))
+            {
+                var rule = _componentLibrary.Type == ComponentLibraryType.UView 
+                    ? maxLengthRule.UViewRule 
+                    : maxLengthRule.WotDesignRule;
+                    
+                if (!string.IsNullOrEmpty(rule))
+                {
+                    rules.Add(rule
+                        .Replace("{value}", maxLength.Value.ToString())
+                        .Replace("{message}", $"最大长度为{maxLength.Value}"));
+                }
+            }
+        }
+
+        // Email规则
+        if (fieldType.Equals("email", StringComparison.OrdinalIgnoreCase))
+        {
+            if (_componentLibrary.ValidationMapping.TryGetValue("email", out var emailRule))
+            {
+                var rule = _componentLibrary.Type == ComponentLibraryType.UView 
+                    ? emailRule.UViewRule 
+                    : emailRule.WotDesignRule;
+                    
+                if (!string.IsNullOrEmpty(rule))
+                {
+                    rules.Add(rule.Replace("{message}", "请输入有效的邮箱地址"));
+                }
+            }
+        }
+
+        // Phone规则
+        if (fieldType.Equals("phone", StringComparison.OrdinalIgnoreCase))
+        {
+            if (_componentLibrary.ValidationMapping.TryGetValue("phone", out var phoneRule))
+            {
+                var rule = _componentLibrary.Type == ComponentLibraryType.UView 
+                    ? phoneRule.UViewRule 
+                    : phoneRule.WotDesignRule;
+                    
+                if (!string.IsNullOrEmpty(rule))
+                {
+                    rules.Add(rule.Replace("{message}", "请输入有效的手机号"));
+                }
+            }
+        }
+
+        return rules;
+    }
+
+    /// <summary>
     /// 判断是否为系统字段（不需要在移动端显示）
     /// </summary>
     private bool IsSystemField(string fieldName)
@@ -392,6 +526,29 @@ public class UniAppViewMetadata
     /// </summary>
     public string PrimaryKeyTypeScript { get; set; } = "string";
 
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 🎯 组件库信息（新增）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 组件库名称（uView/WotDesign）
+    /// </summary>
+    public string ComponentLibrary { get; set; } = "uView";
+
+    /// <summary>
+    /// 组件库版本
+    /// </summary>
+    public string ComponentLibraryVersion { get; set; } = "2.0.0";
+
+    /// <summary>
+    /// 组件库NPM包名
+    /// </summary>
+    public string ComponentLibraryPackage { get; set; } = "uview-ui";
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 字段配置
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
     /// <summary>
     /// 所有字段配置
     /// </summary>
@@ -403,9 +560,9 @@ public class UniAppViewMetadata
     public List<FrontendFieldConfig> ListFields { get; set; } = new();
 
     /// <summary>
-    /// 表单字段
+    /// 表单字段（带组件映射）
     /// </summary>
-    public List<FrontendFieldConfig> FormFields { get; set; } = new();
+    public List<FrontendFieldConfigWithComponent> FormFields { get; set; } = new();
 
     /// <summary>
     /// 搜索字段
@@ -524,5 +681,55 @@ public class OfflineConfig
     /// 最大缓存数量
     /// </summary>
     public int MaxCacheSize { get; set; } = 100;
+}
+
+/// <summary>
+/// 前端字段配置（带组件映射）
+/// </summary>
+public class FrontendFieldConfigWithComponent
+{
+    /// <summary>
+    /// 字段名称
+    /// </summary>
+    public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 字段标签
+    /// </summary>
+    public string Label { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 字段类型
+    /// </summary>
+    public string Type { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 是否必填
+    /// </summary>
+    public bool Required { get; set; }
+
+    /// <summary>
+    /// 最大长度
+    /// </summary>
+    public int? MaxLength { get; set; }
+
+    /// <summary>
+    /// 显示顺序
+    /// </summary>
+    public int DisplayOrder { get; set; }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 🎯 组件映射（新增）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 映射的组件名称（u-input/u-number-box/wd-input等）
+    /// </summary>
+    public string Component { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 验证规则列表（uView/Wot Design格式）
+    /// </summary>
+    public List<string> ValidationRules { get; set; } = new();
 }
 

@@ -1,0 +1,353 @@
+<!-- pages/{{EntityNameKebab}}/form.vue -->
+<!-- 
+  🎯 UniApp表单页面（基于{{ComponentLibrary}} {{ComponentLibraryVersion}}）
+  @author SmartAbp DevKit Low-Code Engine
+  @since {{GeneratedTime}}
+  @description 使用{{ComponentLibrary}}组件库的企业级表单页面
+-->
+
+<template>
+  <view class="form-page">
+    <!-- uView表单 -->
+    <u-form
+      :model="form"
+      :rules="rules"
+      ref="formRef"
+      label-position="top"
+      label-width="auto"
+    >
+      {{#each FormFields}}
+      {{#if (eq Component "u-input")}}
+      <!-- 文本输入框 -->
+      <u-form-item label="{{Label}}" prop="{{Name}}">
+        <u-input
+          v-model="form.{{Name}}"
+          placeholder="请输入{{Label}}"
+          clearable
+          border="surround"
+          :maxlength="{{#if MaxLength}}{{MaxLength}}{{else}}200{{/if}}"
+        />
+      </u-form-item>
+      {{/if}}
+      
+      {{#if (eq Component "u-number-box")}}
+      <!-- 数字输入框 -->
+      <u-form-item label="{{Label}}" prop="{{Name}}">
+        <u-number-box
+          v-model="form.{{Name}}"
+          :min="0"
+          :step="1"
+        />
+      </u-form-item>
+      {{/if}}
+      
+      {{#if (eq Component "u-datetime-picker")}}
+      <!-- 日期时间选择器 -->
+      <u-form-item label="{{Label}}" prop="{{Name}}">
+        <u-datetime-picker
+          v-model="form.{{Name}}"
+          mode="datetime"
+          :format="YYYY-MM-DD HH:mm:ss"
+        >
+          <u-input
+            :value="form.{{Name}} ? formatDateTime(form.{{Name}}) : ''"
+            placeholder="请选择{{Label}}"
+            readonly
+            border="surround"
+            suffix-icon="calendar"
+          />
+        </u-datetime-picker>
+      </u-form-item>
+      {{/if}}
+      
+      {{#if (eq Component "u-switch")}}
+      <!-- 开关 -->
+      <u-form-item label="{{Label}}" prop="{{Name}}">
+        <u-switch
+          v-model="form.{{Name}}"
+          active-color="#2979ff"
+          inactive-color="#c0c4cc"
+        />
+      </u-form-item>
+      {{/if}}
+      
+      {{#if (eq Component "u-select")}}
+      <!-- 下拉选择器 -->
+      <u-form-item label="{{Label}}" prop="{{Name}}">
+        <u-select
+          v-model="form.{{Name}}"
+          :list="{{Name}}Options"
+          placeholder="请选择{{Label}}"
+        />
+      </u-form-item>
+      {{/if}}
+      
+      {{#if (eq Component "u-upload")}}
+      <!-- 文件上传 -->
+      <u-form-item label="{{Label}}" prop="{{Name}}">
+        <u-upload
+          :fileList="{{Name}}FileList"
+          @afterRead="afterRead{{Name}}"
+          @delete="delete{{Name}}"
+          :maxCount="9"
+          :previewFullImage="true"
+        />
+      </u-form-item>
+      {{/if}}
+      {{/each}}
+      
+      <!-- 操作按钮 -->
+      <view class="form-actions">
+        <u-button
+          type="primary"
+          @click="handleSubmit"
+          :loading="submitting"
+          :disabled="submitting"
+        >
+          <u-icon name="checkmark" />
+          提交
+        </u-button>
+        
+        <u-button
+          @click="handleCancel"
+          :disabled="submitting"
+        >
+          <u-icon name="close" />
+          取消
+        </u-button>
+      </view>
+    </u-form>
+  </view>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import { use{{EntityName}}Store } from '@/stores/{{EntityNameKebab}}-store'
+import type { {{EntityName}}Dto, Create{{EntityName}}Dto, Update{{EntityName}}Dto } from '@/types/{{EntityNameKebab}}.types'
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 路由参数
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const pageParams = ref<{ id?: string; mode?: 'create' | 'edit' }>({
+  mode: 'create'
+})
+
+onLoad((options) => {
+  if (options?.id) {
+    pageParams.value = {
+      id: options.id as string,
+      mode: 'edit'
+    }
+    loadData(options.id as string)
+  }
+})
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 表单数据
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const {{EntityNameCamel}}Store = use{{EntityName}}Store()
+const formRef = ref()
+const submitting = ref(false)
+
+// 表单模型
+const form = reactive<Create{{EntityName}}Dto | Update{{EntityName}}Dto>({
+  {{#each FormFields}}
+  {{Name}}: {{#if (eq Type "string")}}''{{/if}}{{#if (eq Type "int")}}0{{/if}}{{#if (eq Type "long")}}0{{/if}}{{#if (eq Type "decimal")}}0{{/if}}{{#if (eq Type "double")}}0{{/if}}{{#if (eq Type "bool")}}false{{/if}}{{#if (eq Type "DateTime")}}null{{/if}},
+  {{/each}}
+})
+
+// uView表单验证规则
+const rules = {
+  {{#each FormFields}}
+  {{Name}}: [
+    {{#each ValidationRules}}
+    {{{this}}},
+    {{/each}}
+  ],
+  {{/each}}
+}
+
+{{#each FormFields}}
+{{#if (eq Component "u-select")}}
+// {{Label}}下拉选项
+const {{Name}}Options = ref<Array<{ value: any; label: string }>>([])
+
+// 加载{{Label}}选项
+async function load{{Name}}Options() {
+  try {
+    // TODO: 从API加载选项
+    {{Name}}Options.value = [
+      { value: 1, label: '选项1' },
+      { value: 2, label: '选项2' },
+      { value: 3, label: '选项3' }
+    ]
+  } catch (error) {
+    console.error('加载{{Label}}选项失败:', error)
+  }
+}
+{{/if}}
+
+{{#if (eq Component "u-upload")}}
+// {{Label}}文件列表
+const {{Name}}FileList = ref<Array<any>>([])
+
+// {{Label}}文件上传后
+function afterRead{{Name}}(event: any) {
+  const { file } = event
+  {{Name}}FileList.value.push({
+    url: file.url,
+    status: 'uploading',
+    message: '上传中...'
+  })
+  
+  // TODO: 调用上传API
+  setTimeout(() => {
+    {{Name}}FileList.value[{{Name}}FileList.value.length - 1].status = 'success'
+    {{Name}}FileList.value[{{Name}}FileList.value.length - 1].message = ''
+  }, 1000)
+}
+
+// {{Label}}文件删除
+function delete{{Name}}(event: any) {
+  {{Name}}FileList.value.splice(event.index, 1)
+}
+{{/if}}
+{{/each}}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 数据加载
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+async function loadData(id: string) {
+  try {
+    uni.showLoading({ title: '加载中...' })
+    
+    const data = await {{EntityNameCamel}}Store.getById(id)
+    
+    // 回填表单数据
+    {{#each FormFields}}
+    form.{{Name}} = data.{{Name}}
+    {{/each}}
+    
+    uni.hideLoading()
+  } catch (error) {
+    uni.hideLoading()
+    uni.showToast({
+      title: '加载失败',
+      icon: 'error'
+    })
+    console.error('加载数据失败:', error)
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 表单操作
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// 提交表单
+async function handleSubmit() {
+  try {
+    // uView表单验证
+    await formRef.value.validate()
+    
+    submitting.value = true
+    
+    if (pageParams.value.mode === 'edit' && pageParams.value.id) {
+      // 编辑模式
+      await {{EntityNameCamel}}Store.update(pageParams.value.id, form as Update{{EntityName}}Dto)
+      
+      uni.showToast({
+        title: '更新成功',
+        icon: 'success'
+      })
+    } else {
+      // 创建模式
+      await {{EntityNameCamel}}Store.create(form as Create{{EntityName}}Dto)
+      
+      uni.showToast({
+        title: '创建成功',
+        icon: 'success'
+      })
+    }
+    
+    // 延迟返回，让用户看到成功提示
+    setTimeout(() => {
+      uni.navigateBack()
+    }, 1500)
+  } catch (error) {
+    console.error('提交失败:', error)
+    
+    uni.showToast({
+      title: '提交失败',
+      icon: 'error'
+    })
+  } finally {
+    submitting.value = false
+  }
+}
+
+// 取消
+function handleCancel() {
+  uni.navigateBack()
+}
+
+// 格式化日期时间
+function formatDateTime(date: any): string {
+  if (!date) return ''
+  
+  const d = new Date(date)
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  const hour = String(d.getHours()).padStart(2, '0')
+  const minute = String(d.getMinutes()).padStart(2, '0')
+  const second = String(d.getSeconds()).padStart(2, '0')
+  
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 生命周期
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+onMounted(() => {
+  {{#each FormFields}}
+  {{#if (eq Component "u-select")}}
+  load{{Name}}Options()
+  {{/if}}
+  {{/each}}
+})
+</script>
+
+<style scoped lang="scss">
+.form-page {
+  padding: 30rpx;
+  background-color: #f8f8f8;
+  min-height: 100vh;
+}
+
+.form-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 40rpx;
+  padding: 20rpx 0;
+  
+  button {
+    flex: 1;
+  }
+}
+
+/* uView组件自定义样式 */
+:deep(.u-form-item) {
+  margin-bottom: 30rpx;
+}
+
+:deep(.u-form-item__label) {
+  font-weight: 500;
+  margin-bottom: 10rpx;
+}
+</style>
+
