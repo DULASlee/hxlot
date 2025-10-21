@@ -84,8 +84,8 @@ public class LogsAppService : ApplicationService, ILogsAppService
                 StartTime = startTime,
                 EndTime = endTime,
                 ServiceName = serviceName,
-                Skip = 0,
-                Take = 0 // 只获取统计，不获取具体日志
+                SkipCount = 0,
+                MaxResultCount = 0 // 只获取统计，不获取具体日志
             };
 
             var (total, _) = await _elasticsearchService.SearchLogsAsync(searchRequest);
@@ -100,8 +100,8 @@ public class LogsAppService : ApplicationService, ILogsAppService
                     EndTime = endTime,
                     ServiceName = serviceName,
                     Level = level,
-                    Skip = 0,
-                    Take = 0
+                    SkipCount = 0,
+                    MaxResultCount = 0
                 };
                 var (count, _) = await _elasticsearchService.SearchLogsAsync(levelRequest);
                 levelCounts[level] = count;

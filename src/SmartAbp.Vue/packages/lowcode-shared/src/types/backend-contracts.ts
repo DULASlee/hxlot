@@ -437,6 +437,82 @@ export interface ValidationRuleConfig {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🎯 Layer2 (SmartStudio Lite) 契约类型
+// 对应后端: SmartAbp.Application.Contracts.LowCode.Dtos.SimplifiedModuleCreationDto
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Layer2 简化的模块创建DTO
+ * 提供渐进式用户体验，相比Layer1增加字段配置能力
+ */
+export interface SimplifiedModuleCreationDto {
+    systemName: string;
+    moduleName: string;
+    displayName: string;
+    description?: string | null;
+    entityName: string;
+    entityDisplayName: string;
+    fields: SimplifiedFieldConfigDto[];
+    architecturePattern?: string | null;
+    databaseProvider?: string | null;
+    parentMenuId?: string | null;
+    menuIcon?: string | null;
+}
+
+/**
+ * Layer2 简化的字段配置DTO
+ * 提供10种常用字段类型和UI控件选择
+ */
+export interface SimplifiedFieldConfigDto {
+    name: string;
+    displayName: string;
+    type: string;
+    isRequired?: boolean;
+    isNullable?: boolean;
+    maxLength?: number | null;
+    minLength?: number | null;
+    precision?: number | null;
+    scale?: number | null;
+    minValue?: number | null;
+    maxValue?: number | null;
+    defaultValue?: string | null;
+    pattern?: string | null;
+    uiControl?: string | null;
+    enumValues?: EnumValueDto[] | null;
+    validationRules?: ValidationRuleDto[] | null;
+    order?: number;
+    comment?: string | null;
+}
+
+/**
+ * Layer2 模块创建结果DTO
+ */
+export interface SimplifiedModuleCreationResultDto {
+    success: boolean;
+    moduleId?: string | null;
+    entityId?: string | null;
+    message?: string | null;
+    generatedFiles?: string[] | null;
+    sessionId?: string | null;
+}
+
+/**
+ * 验证结果DTO
+ */
+export interface ValidationResultDto {
+    isValid: boolean;
+    errors?: ValidationErrorDto[] | null;
+}
+
+/**
+ * 验证错误DTO
+ */
+export interface ValidationErrorDto {
+    field?: string | null;
+    message?: string | null;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔗 向后兼容性类型别名（渐进式迁移支持）
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

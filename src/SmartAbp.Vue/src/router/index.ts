@@ -280,6 +280,42 @@ const routes: RouteRecordRaw[] = [
             component: () => import("@/views/lowcode/LowCodeStudioWelcome.vue"),
             meta: { title: "欢迎页", menuKey: "welcome" }
           },
+          // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          // 三大用户入口（Layer1/Layer2/Layer3）
+          // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          {
+            path: "layer1",
+            name: "Layer1UltraSimpleStudio",
+            component: () => import("@/views/lowcode/UltraSimpleStudio.vue"),
+            meta: {
+              title: "Layer1 - 极简模式",
+              menuKey: "layer1-ultra-simple",
+              icon: "⚡",
+              description: "选表即生成，零配置快速开发"
+            }
+          },
+          {
+            path: "layer2",
+            name: "Layer2SmartStudioLite",
+            component: () => import("@/views/lowcode/SmartStudioLite.vue"),
+            meta: {
+              title: "Layer2 - 智能配置",
+              menuKey: "layer2-smart-studio-lite",
+              icon: "🎯",
+              description: "可视化字段配置，渐进式开发体验"
+            }
+          },
+          {
+            path: "layer3",
+            name: "Layer3StudioPro",
+            component: () => import("@smartabp/lowcode-designer/views/EntityModelingView.vue"),
+            meta: {
+              title: "Layer3 - 专业版",
+              menuKey: "layer3-studio-pro",
+              icon: "🚀",
+              description: "完整建模能力，企业级代码生成"
+            }
+          },
           {
             path: "industry-template-config",
             name: "IndustryTemplateConfig",

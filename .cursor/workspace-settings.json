@@ -1,0 +1,16 @@
+{
+  // Cursor工作区设置
+  "cursor.chat.persistHistory": true,
+  "cursor.chat.saveConversations": true,
+  "cursor.workspace.enablePersistence": true,
+  // 聊天相关设置
+  "cursor.chat.contextWindow": "long",
+  "cursor.chat.includeWorkspaceContext": true,
+  // 会话持久化
+  "workbench.session.restore": true,
+  "window.restoreWindows": "all",
+  // 自动保存
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 500,
+  "files.hotExit": "onExitAndWindowClose"
+}

@@ -90,10 +90,26 @@ public class SmartAbpDevKitCoreModule : AbpModule
         // 4. 统一元数据SDK（单例）
         services.TryAddSingleton<UnifiedMetadataSDK>();
 
-        // 4.5 代码生成器（瞬态）- ⭐ NEW (重构中，暂时注释)
-        // services.AddTransient<Generator.DomainGenerator>();
-        // services.AddTransient<Generator.ApplicationGenerator>();
+        // ==================== 新架构代码生成器注册（v3.0） ====================
+
+        // 4.5.1 生成器工厂（单例 - 依赖倒置原则核心）
+        services.AddSingleton<SmartAbp.DevKit.Abstractions.Generation.IGeneratorFactory, Generator.DefaultGeneratorFactory>();
+        Console.WriteLine("✅ [DevKit] IGeneratorFactory已注册（DefaultGeneratorFactory）");
+
+        // 4.5.2 超级编排器（瞬态 - 只依赖工厂接口）
+        services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ICodeGenerator, Generator.GeneratorOrchestratorV2>();
+        Console.WriteLine("✅ [DevKit] ICodeGenerator已注册（GeneratorOrchestratorV2）");
+
+        // 4.5.3 分层代码生成器（瞬态 - 实现ILayerGenerator接口）
+        services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.Implementations.AppServiceLayerGenerator>();
+        services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.Implementations.ControllerLayerGenerator>();
+        services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.Implementations.EntityDtoLayerGenerator>();
+        services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.Implementations.VueCrudPageLayerGenerator>();
+        Console.WriteLine("✅ [DevKit] 4个LayerGenerator已注册（AppService, Controller, EntityDto, VueCrudPage）");
+
+        // 4.5.4 旧版生成器（保留用于兼容性）
         services.AddTransient<Generator.AspireHostGenerator>();
+        Console.WriteLine("✅ [DevKit] AspireHostGenerator已注册（兼容旧版）");
 
         // 5. 性能监控收集器（单例）
         services.TryAddSingleton<MetricsCollector>();
@@ -152,17 +168,27 @@ public class SmartAbpDevKitCoreModule : AbpModule
         // 8. 命令服务（Transient - 每次调用创建新实例）
         services.AddTransient<DevKitCommandService>();
 
-        Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        Console.WriteLine("✅ [DevKit] 核心模块配置完成！");
-        Console.WriteLine("   • AIFlowController - 已注册");
-        Console.WriteLine("   • TemplateManager - 已注册");
-        Console.WriteLine("   • QualityGateEnforcer - 已注册");
-        Console.WriteLine("   • BackendWorkstation - 已注册");
-        Console.WriteLine("   • FrontendWorkstation - 已注册");
-        Console.WriteLine("   • MetricsCollector - 已注册");
-        Console.WriteLine("   • UnifiedMetadataSDK - 已注册");
-        Console.WriteLine("   • DevKitCommandService - 已注册");
-        Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        Console.WriteLine("✅ [DevKit] 核心模块配置完成！（v3.0架构）");
+        Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        Console.WriteLine("   🏗️  新架构代码生成器（v3.0 - 符合SOLID原则）:");
+        Console.WriteLine("      • IGeneratorFactory - 工厂接口");
+        Console.WriteLine("      • DefaultGeneratorFactory - 工厂实现");
+        Console.WriteLine("      • GeneratorOrchestratorV2 - 超级编排器");
+        Console.WriteLine("      • AppServiceLayerGenerator - 应用服务生成器");
+        Console.WriteLine("      • ControllerLayerGenerator - 控制器生成器");
+        Console.WriteLine("      • EntityDtoLayerGenerator - DTO生成器");
+        Console.WriteLine("      • VueCrudPageLayerGenerator - Vue页面生成器");
+        Console.WriteLine("   📋 核心服务:");
+        Console.WriteLine("      • AIFlowController - AI流水线");
+        Console.WriteLine("      • TemplateManager - 模板管理");
+        Console.WriteLine("      • QualityGateEnforcer - 质量门禁");
+        Console.WriteLine("      • BackendWorkstation - 后端工位");
+        Console.WriteLine("      • FrontendWorkstation - 前端工位");
+        Console.WriteLine("      • MetricsCollector - 性能监控");
+        Console.WriteLine("      • UnifiedMetadataSDK - 元数据SDK");
+        Console.WriteLine("      • DevKitCommandService - 命令服务");
+        Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
     }
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)

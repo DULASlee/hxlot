@@ -14,7 +14,7 @@ namespace SmartAbp.DevKit.Integration;
 /// 负责将DevKit抽象层与SmartAbp业务层进行适配集成
 /// </summary>
 [DependsOn(
-    // DevKit.Core模块将在这里自动依赖
+// DevKit.Core模块将在这里自动依赖
 )]
 public class SmartAbpDevKitModule : AbpModule
 {
@@ -22,12 +22,15 @@ public class SmartAbpDevKitModule : AbpModule
     {
         var services = context.Services;
 
-        // 注册SmartAbp适配器
+        // 注册SmartAbp适配器（将SmartAbp业务实体适配到DevKit抽象层）
         services.AddTransient<IMetadataProvider, SmartAbpMetadataProvider>();
         services.AddTransient<IConfigurationProvider, SmartAbpConfigurationProvider>();
 
-        // 注册DevKit核心实现
-        services.AddTransient<ICodeGenerator, GeneratorOrchestratorV2>();
+        // ❌ 删除重复注册（DevKit.Core模块已注册ICodeGenerator）
+        // services.AddTransient<ICodeGenerator, GeneratorOrchestratorV2>();
+        // ✅ 说明：ICodeGenerator已在SmartAbp.DevKit.Core模块中注册
+        //    Line 100: services.AddTransient<ICodeGenerator, GeneratorOrchestratorV2>();
+        //    此处无需重复注册，保持单一注册点原则
 
         // 可选：如果需要特定的模板引擎实现
         // services.AddTransient<ITemplateEngine, HandlebarsTemplateEngine>();

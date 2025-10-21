@@ -274,7 +274,7 @@
   // Cursor MCP 支持（实验性功能）
   "cursor.experimental.mcpServers": true,
   "cursor.mcpServers.enabled": true,
-  
+
   // MCP 服务器配置
   "mcp.servers": {
     "ai-guardian": {
@@ -357,5 +357,18 @@
   "cursor.cpp.autocomplete": true,
   "cursor.python.enableIntelliSense": true,
   "cursor.javascript.enableIntelliSense": true,
-  "cursor.typescript.enableIntelliSense": true
+  "cursor.typescript.enableIntelliSense": true,
+
+  // ===== Cursor 聊天记录持久化设置 =====
+  "cursor.chat.persistHistory": true,
+  "cursor.chat.saveConversations": true,
+  "cursor.chat.maxHistoryLength": 1000,
+  "cursor.workspace.enablePersistence": true,
+  "cursor.chat.contextWindow": "long",
+  "cursor.chat.includeWorkspaceContext": true,
+
+  // ===== 工作区和会话持久化 =====
+  "workbench.session.restore": true,
+  "window.restoreWindows": "all",
+  "window.restoreFullscreen": false
 }

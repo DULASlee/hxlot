@@ -28,7 +28,7 @@ public interface IMetadataProvider
 }
 
 /// <summary>
-/// 实体元数据
+/// 实体元数据（增强扩展数据支持）
 /// </summary>
 public class EntityMetadata
 {
@@ -36,10 +36,15 @@ public class EntityMetadata
     public string Name { get; set; } = string.Empty;
     public string DisplayName { get; set; } = string.Empty;
     public List<PropertyMetadata> Properties { get; set; } = new();
+
+    /// <summary>
+    /// 扩展数据，用于存储业务特定的完整信息
+    /// </summary>
+    public Dictionary<string, object> ExtensionData { get; set; } = new();
 }
 
 /// <summary>
-/// 属性元数据
+/// 属性元数据（增强扩展数据支持）
 /// </summary>
 public class PropertyMetadata
 {
@@ -47,10 +52,15 @@ public class PropertyMetadata
     public string Type { get; set; } = string.Empty;
     public bool IsRequired { get; set; }
     public bool IsNullable { get; set; }
+
+    /// <summary>
+    /// 扩展数据，用于存储业务特定的完整属性信息
+    /// </summary>
+    public Dictionary<string, object> ExtensionData { get; set; } = new();
 }
 
 /// <summary>
-/// 模块元数据
+/// 模块元数据（增强扩展数据支持）
 /// </summary>
 public class ModuleMetadata
 {
@@ -58,4 +68,9 @@ public class ModuleMetadata
     public string Name { get; set; } = string.Empty;
     public string Namespace { get; set; } = string.Empty;
     public string OutputPath { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 扩展数据，用于存储业务特定的完整模块信息
+    /// </summary>
+    public Dictionary<string, object> ExtensionData { get; set; } = new();
 }

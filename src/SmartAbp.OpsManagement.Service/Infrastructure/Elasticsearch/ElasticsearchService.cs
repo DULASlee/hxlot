@@ -107,8 +107,8 @@ public class ElasticsearchService : IElasticsearchService, ITransientDependency
         {
             var searchResponse = await _client.SearchAsync<LogEntryDocument>(s => s
                 .Index($"{_indexPrefix}-*")
-                .From(request.Skip)
-                .Size(request.Take)
+                .From(request.SkipCount)
+                .Size(request.MaxResultCount)
                 .Query(q => BuildSearchQuery(q, request))
                 .Sort(sort => sort.Descending(log => log.Timestamp))
             );
