@@ -6,7 +6,8 @@ import { defineConfig } from "vitest/config"
 export default defineConfig({
   plugins: [vue(), vueJsx()],
   test: {
-    globals: true,
+    // ⚠️  禁用全局变量，避免与Playwright的expect冲突
+    globals: false,
     environment: "jsdom",
     setupFiles: ["./tests/setup.ts"],
     coverage: {

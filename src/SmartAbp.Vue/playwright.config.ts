@@ -3,10 +3,15 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * SmartAbp低代码引擎 - Playwright测试配置
  * 用于前后端集成测试和UI自动化测试
+ *
+ * ⚠️  注意：此配置完全独立于Vitest配置，避免expect库冲突
  */
 export default defineConfig({
-    // 测试目录
+    // 测试目录（只匹配e2e测试）
     testDir: './tests/e2e',
+
+    // 测试匹配模式（避免加载Vitest测试文件）
+    testMatch: /.*\.spec\.ts$/,
 
     // 测试超时时间（30秒）
     timeout: 30 * 1000,

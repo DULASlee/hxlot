@@ -42,8 +42,8 @@ test.describe('SmartAbp低代码引擎 - 完整集成测试', () => {
         // 等待欢迎页加载
         await page.waitForTimeout(2000);
 
-        // 点击"企业登录"
-        const loginButton = page.locator('text=企业登录').or(page.locator('button:has-text("登录")'));
+        // 点击"企业登录" 按钮（精确选择器，避免选中span）
+        const loginButton = page.locator('button:has-text("企业登录")').first();
         await loginButton.click();
 
         // 等待跳转到Dashboard或Portal
@@ -67,7 +67,7 @@ test.describe('SmartAbp低代码引擎 - 完整集成测试', () => {
         // 登录
         await page.goto('/');
         await page.waitForTimeout(2000);
-        const loginButton = page.locator('text=企业登录').or(page.locator('button:has-text("登录")'));
+        const loginButton = page.locator('button:has-text("企业登录")').first();
         await loginButton.click();
         await page.waitForTimeout(2000);
 
@@ -105,7 +105,7 @@ test.describe('SmartAbp低代码引擎 - 完整集成测试', () => {
         // 登录
         await page.goto('/');
         await page.waitForTimeout(2000);
-        const loginButton = page.locator('text=企业登录').or(page.locator('button:has-text("登录")'));
+        const loginButton = page.locator('button:has-text("企业登录")').first();
         await loginButton.click();
         await page.waitForTimeout(2000);
 
@@ -141,7 +141,7 @@ test.describe('SmartAbp低代码引擎 - 完整集成测试', () => {
         // 登录
         await page.goto('/');
         await page.waitForTimeout(2000);
-        const loginButton = page.locator('text=企业登录').or(page.locator('button:has-text("登录")'));
+        const loginButton = page.locator('button:has-text("企业登录")').first();
         await loginButton.click();
         await page.waitForTimeout(2000);
 
@@ -181,7 +181,7 @@ test.describe('SmartAbp低代码引擎 - 完整集成测试', () => {
         // 登录
         await page.goto('/');
         await page.waitForTimeout(2000);
-        const loginButton = page.locator('text=企业登录').or(page.locator('button:has-text("登录")'));
+        const loginButton = page.locator('button:has-text("企业登录")').first();
         await loginButton.click();
         await page.waitForTimeout(2000);
 
@@ -217,7 +217,7 @@ test.describe('SmartAbp低代码引擎 - 完整集成测试', () => {
         // 登录
         await page.goto('/');
         await page.waitForTimeout(2000);
-        const loginButton = page.locator('text=企业登录').or(page.locator('button:has-text("登录")'));
+        const loginButton = page.locator('button:has-text("企业登录")').first();
         await loginButton.click();
         await page.waitForTimeout(2000);
 
@@ -274,7 +274,7 @@ test.describe('SmartAbp低代码引擎 - 完整集成测试', () => {
         // 登录
         await page.goto('/');
         await page.waitForTimeout(2000);
-        const loginButton = page.locator('text=企业登录').or(page.locator('button:has-text("登录")'));
+        const loginButton = page.locator('button:has-text("企业登录")').first();
         await loginButton.click();
         await page.waitForTimeout(2000);
 
