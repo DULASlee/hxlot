@@ -24,7 +24,10 @@ public class LowCodeDirectoryManager
     public LowCodeDirectoryManager(ILogger<LowCodeDirectoryManager> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _defaultConfigProvider = new DefaultConfigProvider();
+        // 创建DefaultConfigProvider专用的logger
+        var loggerFactory = Microsoft.Extensions.Logging.Abstractions.NullLoggerFactory.Instance;
+        var configProviderLogger = loggerFactory.CreateLogger<DefaultConfigProvider>();
+        _defaultConfigProvider = new DefaultConfigProvider(configProviderLogger);
     }
 
     /// <summary>
@@ -103,8 +106,8 @@ public class LowCodeDirectoryManager
         _logger.LogInformation("创建配置文件: {ConfigPath}", configPath);
 
         var config = createSampleConfig
-            ? DefaultConfigProvider.CreateSampleConfig()
-            : DefaultConfigProvider.GetDefaultConfig(moduleName);
+            ? _defaultConfigProvider.CreateSampleConfig(moduleName)
+            : _defaultConfigProvider.GetDefaultConfig();
 
         var json = JsonSerializer.Serialize(config, new JsonSerializerOptions
         {

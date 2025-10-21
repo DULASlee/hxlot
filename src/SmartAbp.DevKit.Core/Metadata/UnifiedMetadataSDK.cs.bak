@@ -1,0 +1,175 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using SmartAbp.DevKit.Abstractions.Metadata;
+using SmartAbp.DevKit.Abstractions.Models;
+using Microsoft.Extensions.Logging;
+
+namespace SmartAbp.DevKit.Core.Metadata;
+
+/// <summary>
+/// 统一元数据SDK（解耦重构版）
+/// DevKit解耦架构 - 基于IMetadataProvider接口的元数据访问包装器
+/// 
+/// 功能清单:
+/// - 实体查询（CRUD）
+/// - 属性查询（完整支持）
+/// - 模块管理（完整支持）
+/// </summary>
+public class UnifiedMetadataSDK
+{
+    private readonly IMetadataProvider _metadataProvider;
+    private readonly ILogger<UnifiedMetadataSDK>? _logger;
+
+    public UnifiedMetadataSDK(IMetadataProvider metadataProvider, ILogger<UnifiedMetadataSDK>? logger = null)
+    {
+        _metadataProvider = metadataProvider;
+        _logger = logger;
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 实体查询方法
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 获取实体元数据（按ID）
+    /// </summary>
+    public async Task<GeneralEntityDefinition?> GetEntityAsync(Guid entityId)
+    {
+        return await _metadataProvider.GetEntityAsync(entityId);
+    }
+
+    /// <summary>
+    /// 获取实体元数据（按名称）
+    /// </summary>
+    public async Task<GeneralEntityDefinition?> GetEntityByNameAsync(string name)
+    {
+        var entities = await _metadataProvider.GetAllEntitiesAsync();
+        return entities.FirstOrDefault(e => 
+            e.Name?.Equals(name, StringComparison.OrdinalIgnoreCase) == true);
+    }
+
+    /// <summary>
+    /// 获取所有实体
+    /// </summary>
+    public async Task<List<GeneralEntityDefinition>> GetAllEntitiesAsync()
+    {
+        return await _metadataProvider.GetAllEntitiesAsync();
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 属性查询方法（基于IMetadataProvider）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 获取实体的所有属性
+    /// </summary>
+    public async Task<List<GeneralEntityField>> GetPropertiesAsync(Guid entityId)
+    {
+        var entity = await _metadataProvider.GetEntityAsync(entityId);
+        return entity?.Fields ?? new List<GeneralEntityField>();
+    }
+
+    /// <summary>
+    /// 获取实体的属性（按名称）
+    /// </summary>
+    public async Task<GeneralEntityField?> GetPropertyAsync(Guid entityId, string propertyName)
+    {
+        var properties = await GetPropertiesAsync(entityId);
+        return properties.FirstOrDefault(p => 
+            p.Name?.Equals(propertyName, StringComparison.OrdinalIgnoreCase) == true);
+    }
+
+    /// <summary>
+    /// 获取实体的必填属性
+    /// </summary>
+    public async Task<List<GeneralEntityField>> GetRequiredPropertiesAsync(Guid entityId)
+    {
+        var properties = await GetPropertiesAsync(entityId);
+        return properties.Where(p => p.IsRequired).ToList();
+    }
+
+    /// <summary>
+    /// 获取实体的索引属性
+    /// </summary>
+    public async Task<List<GeneralEntityField>> GetIndexedPropertiesAsync(Guid entityId)
+    {
+        var properties = await GetPropertiesAsync(entityId);
+        return properties.Where(p => p.IsIndexed).ToList();
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 模块查询方法（基于IMetadataProvider）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 获取模块元数据（按ID）
+    /// </summary>
+    public async Task<GeneralModuleDefinition?> GetModuleAsync(Guid moduleId)
+    {
+        var modules = await _metadataProvider.GetAllModulesAsync();
+        return modules.FirstOrDefault(m => m.Id == moduleId);
+    }
+
+    /// <summary>
+    /// 获取模块元数据（按名称）
+    /// </summary>
+    public async Task<GeneralModuleDefinition?> GetModuleByNameAsync(string name)
+    {
+        var modules = await _metadataProvider.GetAllModulesAsync();
+        return modules.FirstOrDefault(m => 
+            m.Name?.Equals(name, StringComparison.OrdinalIgnoreCase) == true);
+    }
+
+    /// <summary>
+    /// 获取所有模块
+    /// </summary>
+    public async Task<List<GeneralModuleDefinition>> GetAllModulesAsync()
+    {
+        return await _metadataProvider.GetAllModulesAsync();
+    }
+
+    /// <summary>
+    /// 获取活跃模块
+    /// </summary>
+    public async Task<List<GeneralModuleDefinition>> GetActiveModulesAsync()
+    {
+        var modules = await _metadataProvider.GetAllModulesAsync();
+        return modules.Where(m => m.IsActive).ToList();
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 统计信息
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 统计信息
+    /// </summary>
+    public async Task<MetadataStatistics> GetStatisticsAsync()
+    {
+        var entities = await _metadataProvider.GetAllEntitiesAsync();
+        var modules = await _metadataProvider.GetAllModulesAsync();
+        
+        return new MetadataStatistics
+        {
+            EntityCount = entities.Count,
+            ModuleCount = modules.Count,
+            PropertyCount = entities.Sum(e => e.Fields?.Count ?? 0),
+            ActiveEntityCount = entities.Count(e => e.IsActive),
+            ActiveModuleCount = modules.Count(m => m.IsActive)
+        };
+    }
+}
+
+/// <summary>
+/// 元数据统计信息
+/// </summary>
+public class MetadataStatistics
+{
+    public int EntityCount { get; set; }
+    public int ModuleCount { get; set; }
+    public int PropertyCount { get; set; }
+    public int ActiveEntityCount { get; set; }
+    public int ActiveModuleCount { get; set; }
+}

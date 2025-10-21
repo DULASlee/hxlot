@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using SmartAbp.Application.Contracts.LowCode.Dtos;
+using SmartAbp.DevKit.Abstractions.Models;
 using SmartAbp.DevKit.Core.Abstractions;
 using SmartAbp.DevKit.Core.Models;
 
@@ -29,10 +29,10 @@ public class DefaultConfigProvider
         {
             ModuleName = "SampleModule",
             Namespace = "SmartAbp",
-            CurrentLayer = TargetLayer.All,
+            CurrentLayer = TargetLayer.Layer1,
             OutputPaths = GetDefaultOutputPaths(),
             TemplateConfig = GetDefaultTemplateConfig(),
-            Entities = new List<EntityDefinitionDto>()
+            Entities = new List<GeneralEntityDefinition>()
         };
     }
 
@@ -110,9 +110,9 @@ public class DefaultConfigProvider
     /// <summary>
     /// 获取默认模板配置
     /// </summary>
-    private TemplateConfig GetDefaultTemplateConfig()
+    private Models.TemplateConfig GetDefaultTemplateConfig()
     {
-        return new TemplateConfig
+        return new Models.TemplateConfig
         {
             BackendTemplatePath = "templates/backend",
             FrontendTemplatePath = "templates/frontend"
@@ -173,7 +173,7 @@ public class DefaultConfigProvider
     /// <summary>
     /// 合并实体默认配置（⭐ SSOT: 使用后端DTO）
     /// </summary>
-    private void MergeEntityDefaults(EntityDefinitionDto entity)
+    private void MergeEntityDefaults(GeneralEntityDefinition entity)
     {
         // TableName默认值
         if (string.IsNullOrWhiteSpace(entity.TableName))
@@ -201,7 +201,7 @@ public class DefaultConfigProvider
     /// <summary>
     /// 合并字段默认配置（⭐ SSOT: 使用后端DTO）
     /// </summary>
-    private void MergeFieldDefaults(EntityFieldDto field)
+    private void MergeFieldDefaults(GeneralEntityField field)
     {
         // DisplayName默认值
         if (string.IsNullOrWhiteSpace(field.DisplayName))
@@ -209,8 +209,8 @@ public class DefaultConfigProvider
             field.DisplayName = field.Name;
         }
 
-        // 根据Type设置默认Length（EntityFieldDto使用Length）
-        if (field.Type?.ToLowerInvariant() == "string" && !field.Length.HasValue)
+        // 根据DataType设置默认Length（GeneralEntityField使用Length）
+        if (field.DataType?.ToLowerInvariant() == "string" && field.Length <= 0)
         {
             field.Length = 200; // 默认字符串长度200
         }
@@ -227,53 +227,53 @@ public class DefaultConfigProvider
         {
             ModuleName = moduleName,
             Namespace = "SmartAbp",
-            CurrentLayer = TargetLayer.All,
+            CurrentLayer = TargetLayer.Layer1,
             OutputPaths = GetDefaultOutputPaths(),
             TemplateConfig = GetDefaultTemplateConfig(),
-            Entities = new List<EntityDefinitionDto>
+            Entities = new List<GeneralEntityDefinition>
             {
-                new EntityDefinitionDto
+                new GeneralEntityDefinition
                 {
                     Name = moduleName,
                     DisplayName = $"{moduleName}（产品）",
                     TableName = $"{moduleName}s",
-                    Fields = new List<EntityFieldDto>
+                    Fields = new List<GeneralEntityField>
                     {
-                        new EntityFieldDto
+                        new GeneralEntityField
                         {
                             Name = "Name",
                             DisplayName = $"{moduleName}名称",
-                            Type = "string",
+                            DataType = "string",
                             IsRequired = true,
                             Length = 100
                         },
-                        new EntityFieldDto
+                        new GeneralEntityField
                         {
                             Name = "Description",
                             DisplayName = "描述",
-                            Type = "string",
+                            DataType = "string",
                             IsRequired = false,
                             Length = 500
                         },
-                        new EntityFieldDto
+                        new GeneralEntityField
                         {
                             Name = "Price",
                             DisplayName = "价格",
-                            Type = "decimal",
+                            DataType = "decimal",
                             IsRequired = true
                         },
-                        new EntityFieldDto
+                        new GeneralEntityField
                         {
                             Name = "Stock",
                             DisplayName = "库存",
-                            Type = "int",
+                            DataType = "int",
                             IsRequired = true
                         },
-                        new EntityFieldDto
+                        new GeneralEntityField
                         {
                             Name = "IsActive",
                             DisplayName = "是否启用",
-                            Type = "bool",
+                            DataType = "bool",
                             IsRequired = true
                         }
                     }

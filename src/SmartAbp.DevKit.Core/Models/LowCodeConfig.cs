@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using SmartAbp.Application.Contracts.LowCode.Dtos;
+using SmartAbp.DevKit.Abstractions.Models;
 using SmartAbp.DevKit.Core.Abstractions;
 
 namespace SmartAbp.DevKit.Core.Models;
@@ -57,7 +57,7 @@ public class LowCodeConfig
     /// <summary>
     /// ⭐ SSOT: 实体定义列表（使用后端DTO）
     /// </summary>
-    public List<EntityDefinitionDto> Entities { get; set; } = new();
+    public List<GeneralEntityDefinition> Entities { get; set; } = new();
 
     /// <summary>
     /// 模板配置
@@ -83,7 +83,7 @@ public class LowCodeConfig
 // ⭐ SSOT架构说明：
 // EntityDefinition, EntityProperty等类型已移除
 // 统一使用后端DTO：
-// - SmartAbp.Application.Contracts.LowCode.Dtos.EntityDefinitionDto
+// - SmartAbp.DevKit.Abstractions.Models.GeneralEntityDefinition
 // - SmartAbp.Application.Contracts.LowCode.Dtos.EntityFieldDto
 // - SmartAbp.Application.Contracts.LowCode.Dtos.EntityRelationDto
 
@@ -101,6 +101,16 @@ public class TemplateConfig
     /// 前端模板路径
     /// </summary>
     public string FrontendTemplatePath { get; set; } = "templates/frontend";
+
+    /// <summary>
+    /// 模板目录
+    /// </summary>
+    public string TemplateDirectory { get; set; } = "templates";
+
+    /// <summary>
+    /// 模板扩展名
+    /// </summary>
+    public string TemplateExtension { get; set; } = ".template";
 
     /// <summary>
     /// 自定义模板变量
@@ -132,6 +142,11 @@ public class OutputPathConfig
     /// 前端输出路径
     /// </summary>
     public string FrontendPath { get; set; } = "src/SmartAbp.Vue/src/views";
+
+    /// <summary>
+    /// 测试项目输出路径
+    /// </summary>
+    public string TestsPath { get; set; } = "tests";
 
     /// <summary>
     /// Aspire编排项目输出路径

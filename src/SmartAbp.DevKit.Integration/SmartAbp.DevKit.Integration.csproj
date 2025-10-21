@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>SmartAbp.DevKit.Integration</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartAbp.DevKit.Abstractions\SmartAbp.DevKit.Abstractions.csproj" />
+    <ProjectReference Include="..\SmartAbp.DevKit.Core\SmartAbp.DevKit.Core.csproj" />
+    <ProjectReference Include="..\SmartAbp.Domain\SmartAbp.Domain.csproj" />
+    <ProjectReference Include="..\SmartAbp.Application.Contracts\SmartAbp.Application.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.Core" Version="9.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+  </ItemGroup>
+</Project>

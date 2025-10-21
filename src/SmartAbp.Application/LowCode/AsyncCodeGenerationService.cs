@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SmartAbp.CodeGenerator.Services;
-using SmartAbp.CodeGenerator.Hubs;
+using SmartAbp.DevKit.Integration.Services;
 using Volo.Abp.Application.Services;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.DependencyInjection;
@@ -17,7 +18,7 @@ namespace SmartAbp.Application.LowCode
     public class AsyncCodeGenerationService : ApplicationService, ITransientDependency
     {
         private readonly IBackgroundJobManager _backgroundJobManager;
-        private readonly CodeGenerationProgressService _progressService;
+        private readonly SmartAbpProgressService _progressService; // 恢复进度服务
         private readonly ILogger<AsyncCodeGenerationService> _logger;
 
         // 任务状态存储 (生产环境应使用Redis或数据库)
@@ -25,7 +26,7 @@ namespace SmartAbp.Application.LowCode
 
         public AsyncCodeGenerationService(
             IBackgroundJobManager backgroundJobManager,
-            CodeGenerationProgressService progressService,
+            SmartAbpProgressService progressService, // 恢复进度服务注入
             ILogger<AsyncCodeGenerationService> logger)
         {
             _backgroundJobManager = backgroundJobManager;
@@ -54,7 +55,7 @@ namespace SmartAbp.Application.LowCode
 
             _taskStatuses[taskId] = taskStatus;
 
-            // 创建进度跟踪器
+            // 恢复完整的进度追踪功能
             var tracker = _progressService.CreateTracker(taskId, "EntityCodeGeneration");
 
             try
@@ -66,6 +67,7 @@ namespace SmartAbp.Application.LowCode
                     EntityId = entityId
                 });
 
+                // 恢复进度报告功能
                 await tracker.ReportProgress("Queued", 0, "任务已提交到队列");
 
                 _logger.LogInformation("✅ 代码生成任务已提交 | TaskId: {TaskId} | EntityId: {EntityId}", taskId, entityId);
@@ -84,6 +86,7 @@ namespace SmartAbp.Application.LowCode
                 taskStatus.Status = "Failed";
                 taskStatus.ErrorMessage = ex.Message;
 
+                // 恢复错误报告功能
                 await tracker.ReportError($"任务提交失败: {ex.Message}");
 
                 throw;
@@ -155,7 +158,7 @@ namespace SmartAbp.Application.LowCode
     }
 
     /// <summary>
-    /// 代码生成任务状态
+    /// 代码生成任务状态 - 恢复完整属性
     /// </summary>
     public class CodeGenerationTaskStatus
     {
@@ -169,6 +172,11 @@ namespace SmartAbp.Application.LowCode
         public DateTime? CompletedAt { get; set; }
         public object? Result { get; set; }
         public string? ErrorMessage { get; set; }
+
+        // 恢复被删除的属性
+        public Dictionary<string, string> GeneratedFiles { get; set; } = new();
+        public List<string> Errors { get; set; } = new();
+        public long ElapsedMilliseconds { get; set; }
     }
 
     /// <summary>

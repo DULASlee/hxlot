@@ -12,7 +12,13 @@
   <ItemGroup>
     <ProjectReference Include="..\SmartAbp.Domain\SmartAbp.Domain.csproj" />
     <ProjectReference Include="..\SmartAbp.Application.Contracts\SmartAbp.Application.Contracts.csproj" />
+    <!-- 删除DevKit.Core直接引用 -->
+    <!--
     <ProjectReference Include="..\SmartAbp.CodeGenerator\SmartAbp.CodeGenerator.csproj" />
+    -->
+
+    <!-- 添加Integration层引用 -->
+    <ProjectReference Include="..\SmartAbp.DevKit.Integration\SmartAbp.DevKit.Integration.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SmartAbp.Application.Contracts.LowCode.Dtos;
+using SmartAbp.DevKit.Abstractions.Models;
 using SmartAbp.DevKit.Core.Models;
 
 namespace SmartAbp.DevKit.Core.Config;
@@ -160,7 +160,7 @@ public class ConfigValidator
     /// <summary>
     /// 验证单个实体（⭐ SSOT: 使用后端DTO）
     /// </summary>
-    private void ValidateEntity(EntityDefinitionDto entity, int index, List<ValidationError> errors)
+    private void ValidateEntity(GeneralEntityDefinition entity, int index, List<ValidationError> errors)
     {
         var prefix = $"Entities[{index}]";
 
@@ -211,7 +211,7 @@ public class ConfigValidator
     /// <summary>
     /// 验证字段（⭐ SSOT: 使用后端DTO）
     /// </summary>
-    private void ValidateField(EntityFieldDto field, string entityName, int index, List<ValidationError> errors)
+    private void ValidateField(GeneralEntityField field, string entityName, int index, List<ValidationError> errors)
     {
         var prefix = $"Entity[{entityName}].Fields[{index}]";
 
@@ -246,7 +246,7 @@ public class ConfigValidator
             }
         }
 
-        // 验证Length（对于string类型）- EntityFieldDto使用Length而不是MaxLength
+        // 验证Length（对于string类型）- GeneralEntityField使用Length进行长度验证
         if (field.Type?.ToLowerInvariant() == "string" && field.Length.HasValue)
         {
             if (field.Length.Value <= 0)

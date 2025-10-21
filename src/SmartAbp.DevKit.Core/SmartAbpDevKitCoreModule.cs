@@ -90,9 +90,9 @@ public class SmartAbpDevKitCoreModule : AbpModule
         // 4. 统一元数据SDK（单例）
         services.TryAddSingleton<UnifiedMetadataSDK>();
 
-        // 4.5 代码生成器（瞬态）- ⭐ NEW
-        services.AddTransient<Generator.DomainGenerator>();
-        services.AddTransient<Generator.ApplicationGenerator>();
+        // 4.5 代码生成器（瞬态）- ⭐ NEW (重构中，暂时注释)
+        // services.AddTransient<Generator.DomainGenerator>();
+        // services.AddTransient<Generator.ApplicationGenerator>();
         services.AddTransient<Generator.AspireHostGenerator>();
 
         // 5. 性能监控收集器（单例）

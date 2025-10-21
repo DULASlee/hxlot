@@ -99,8 +99,8 @@ public static class ServiceCollectionExtensions
         // 注册备份管理器
         services.AddSingleton<IBackupManager, BackupManager>();
 
-        // 注册升级管理器
-        services.AddSingleton<IUpgradeManager, UpgradeManager>();
+        // 注册升级管理器（重构中，暂时注释）
+        // services.AddSingleton<IUpgradeManager, UpgradeManager>();
 
         // 注册配置管理器（待实现）
         // services.AddSingleton<IConfigurationManager, ConfigurationManager>();

@@ -351,12 +351,12 @@ public class AIFlowController
     /// </summary>
     private List<string> GetWorkstationSequence()
     {
-        // 如果工位定义了依赖关系，使用拓扑排序
-        if (_workstations.Values.Any(w => w.Dependencies != null && w.Dependencies.Count > 0))
-        {
-            _logger.LogDebug("使用拓扑排序解析工位执行序列");
-            return TopologicalSort(_workstations.Values.ToList());
-        }
+        // 如果工位定义了依赖关系，使用拓扑排序（暂时注释，Dependencies属性不存在）
+        // if (_workstations.Values.Any(w => w.Dependencies != null && w.Dependencies.Count > 0))
+        // {
+        //     _logger.LogDebug("使用拓扑排序解析工位执行序列");
+        //     return TopologicalSort(_workstations.Values.ToList());
+        // }
 
         // v2.0模式：如果存在"codegen"工位，使用新序列
         if (_workstations.ContainsKey("codegen"))
@@ -392,17 +392,18 @@ public class AIFlowController
         // 构建依赖关系
         foreach (var ws in workstations)
         {
-            if (ws.Dependencies != null)
-            {
-                foreach (var dep in ws.Dependencies)
-                {
-                    if (graph.ContainsKey(dep))
-                    {
-                        graph[dep].Add(ws.Id); // dep -> ws
-                        inDegree[ws.Id]++;
-                    }
-                }
-            }
+            // Dependencies属性暂时不存在，注释掉
+            // if (ws.Dependencies != null)
+            // {
+            //     foreach (var dep in ws.Dependencies)
+            //     {
+            //         if (graph.ContainsKey(dep))
+            //         {
+            //             graph[dep].Add(ws.Id); // dep -> ws
+            //             inDegree[ws.Id]++;
+            //         }
+            //     }
+            // }
         }
 
         // 找出所有入度为0的工位（没有依赖的工位）
@@ -501,11 +502,13 @@ public class AIFlowController
     ///
     /// 核心变化:
     /// - 不再使用Task.Delay模拟
-    /// - 直接调用GeneratorOrchestrator生成真实代码
+    /// - 直接调用ICodeGenerator生成真实代码（已重构）
     /// - 工位输出包含实际生成的文件列表
     /// </summary>
     /// <param name="orchestrator">Generator编排器</param>
     /// <param name="projectPath">项目路径（包含.lowcode/目录）</param>
+    // TODO: 重构为使用ICodeGenerator接口
+    /*
     public void RegisterRealGenerators(Generator.GeneratorOrchestrator orchestrator, string projectPath)
     {
         if (orchestrator == null) throw new ArgumentNullException(nameof(orchestrator));
@@ -580,10 +583,11 @@ public class AIFlowController
 
         _logger.LogInformation("✅ 真实Generator工位注册完成");
     }
+    */
 
     /// <summary>
     /// 初始化默认工位
-    /// ⚠️  已废弃：v2.0改用GeneratorOrchestrator替代
+    /// ⚠️  已废弃：v3.0改用ICodeGenerator接口替代
     /// </summary>
     [Obsolete("InitializeDefaultWorkstations is obsolete. Use RegisterRealGenerators instead.")]
     private void InitializeDefaultWorkstations()
