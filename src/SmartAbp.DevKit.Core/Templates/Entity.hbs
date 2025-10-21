@@ -9,7 +9,7 @@ namespace SmartAbp.Domain.Entities.LowCode
     /// {{Description}}
     /// {{/if}}
     /// </summary>
-    public class {{pascalCase Name}} : FullAuditedAggregateRoot<Guid>
+    public partial class {{pascalCase Name}} : FullAuditedAggregateRoot<Guid>
     {
         {{#each Properties}}
         {{#unless IsKey}}

@@ -17,7 +17,7 @@ namespace SmartAbp.HttpApi.Controllers.LowCode
     [Area("lowcode")]
     [RemoteService(Name = "LowCode")]
     [Route("api/lowcode/{{kebabCase (pluralize Name)}}")]
-    public class {{pascalCase Name}}Controller : AbpControllerBase, I{{pascalCase Name}}AppService
+    public partial class {{pascalCase Name}}Controller : AbpControllerBase, I{{pascalCase Name}}AppService
     {
         private readonly I{{pascalCase Name}}AppService _{{camelCase Name}}AppService;
 

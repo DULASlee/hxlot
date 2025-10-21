@@ -46,11 +46,15 @@
     <PackageReference Include="System.Threading.Channels" Version="9.0.0" />
     <!-- 对象池（性能优化） -->
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="9.0.0" />
+    <!-- xxHash3哈希算法（增量生成） -->
+    <PackageReference Include="System.IO.Hashing" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- 引用现有项目 -->
     <ProjectReference Include="..\SmartAbp.Domain\SmartAbp.Domain.csproj" />
+    <!-- ⭐ SSOT: 使用后端C# DTO作为唯一真实源 -->
+    <ProjectReference Include="..\SmartAbp.Application.Contracts\SmartAbp.Application.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

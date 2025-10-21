@@ -34,7 +34,9 @@ public class AIFlowController
     {
         _logger = logger;
         _metricsCollector = metricsCollector;
-        InitializeDefaultWorkstations();
+        // v2.0: 不再自动调用InitializeDefaultWorkstations
+        // 改为由外部调用RegisterRealGenerators注册真实Generator
+        _logger.LogInformation("✅ AIFlowController已初始化（v2.0模式，需调用RegisterRealGenerators）");
     }
 
     public AIFlowController(AIFlowConfig config, ILogger<AIFlowController> logger, MetricsCollector? metricsCollector = null)
@@ -344,11 +346,103 @@ public class AIFlowController
     }
 
     /// <summary>
-    /// 获取工位执行序列（固定顺序）
+    /// 获取工位执行序列（支持依赖关系解析）
+    /// ✅ DevKit v2.0优化：实现拓扑排序
     /// </summary>
     private List<string> GetWorkstationSequence()
     {
+        // 如果工位定义了依赖关系，使用拓扑排序
+        if (_workstations.Values.Any(w => w.Dependencies != null && w.Dependencies.Count > 0))
+        {
+            _logger.LogDebug("使用拓扑排序解析工位执行序列");
+            return TopologicalSort(_workstations.Values.ToList());
+        }
+
+        // v2.0模式：如果存在"codegen"工位，使用新序列
+        if (_workstations.ContainsKey("codegen"))
+        {
+            _logger.LogDebug("使用v2.0工位序列: codegen → quality");
+            return new List<string> { "codegen", "quality" };
+        }
+
+        // v1.0模式（向后兼容）
+        _logger.LogDebug("使用v1.0工位序列: metadata → backend → frontend → quality");
         return new List<string> { "metadata", "backend", "frontend", "quality" };
+    }
+
+    /// <summary>
+    /// 拓扑排序（Kahn算法）
+    /// 用于解析工位之间的依赖关系
+    /// </summary>
+    /// <param name="workstations">工位列表</param>
+    /// <returns>排序后的工位ID列表</returns>
+    private List<string> TopologicalSort(List<WorkstationConfig> workstations)
+    {
+        // 建立依赖图
+        var inDegree = new Dictionary<string, int>();
+        var graph = new Dictionary<string, List<string>>();
+
+        // 初始化
+        foreach (var ws in workstations)
+        {
+            inDegree[ws.Id] = 0;
+            graph[ws.Id] = new List<string>();
+        }
+
+        // 构建依赖关系
+        foreach (var ws in workstations)
+        {
+            if (ws.Dependencies != null)
+            {
+                foreach (var dep in ws.Dependencies)
+                {
+                    if (graph.ContainsKey(dep))
+                    {
+                        graph[dep].Add(ws.Id); // dep -> ws
+                        inDegree[ws.Id]++;
+                    }
+                }
+            }
+        }
+
+        // 找出所有入度为0的工位（没有依赖的工位）
+        var queue = new Queue<string>();
+        foreach (var kvp in inDegree)
+        {
+            if (kvp.Value == 0)
+            {
+                queue.Enqueue(kvp.Key);
+            }
+        }
+
+        // 拓扑排序
+        var result = new List<string>();
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+            result.Add(current);
+
+            // 减少依赖于当前工位的其他工位的入度
+            foreach (var next in graph[current])
+            {
+                inDegree[next]--;
+                if (inDegree[next] == 0)
+                {
+                    queue.Enqueue(next);
+                }
+            }
+        }
+
+        // 检查是否有循环依赖
+        if (result.Count != workstations.Count)
+        {
+            var remaining = workstations.Select(w => w.Id).Except(result).ToList();
+            throw new InvalidOperationException(
+                $"检测到循环依赖，无法完成拓扑排序。涉及工位: {string.Join(", ", remaining)}");
+        }
+
+        _logger.LogDebug("✅ 拓扑排序完成: {Sequence}", string.Join(" → ", result));
+        return result;
     }
 
     /// <summary>
@@ -403,70 +497,77 @@ public class AIFlowController
     }
 
     /// <summary>
-    /// 初始化默认工位
+    /// 注册真实的Generator工位（DevKit v2.0）
+    ///
+    /// 核心变化:
+    /// - 不再使用Task.Delay模拟
+    /// - 直接调用GeneratorOrchestrator生成真实代码
+    /// - 工位输出包含实际生成的文件列表
     /// </summary>
-    private void InitializeDefaultWorkstations()
+    /// <param name="orchestrator">Generator编排器</param>
+    /// <param name="projectPath">项目路径（包含.lowcode/目录）</param>
+    public void RegisterRealGenerators(Generator.GeneratorOrchestrator orchestrator, string projectPath)
     {
-        // 工位1: 元数据标准化
+        if (orchestrator == null) throw new ArgumentNullException(nameof(orchestrator));
+        if (string.IsNullOrEmpty(projectPath)) throw new ArgumentException("项目路径不能为空", nameof(projectPath));
+
+        _logger.LogInformation("🔧 注册真实Generator工位，项目路径: {ProjectPath}", projectPath);
+
+        // 工位1: 元数据标准化 + 完整代码生成
+        // DevKit v2.0: 单一工位完成所有生成任务
         RegisterWorkstation(new WorkstationConfig
         {
-            Id = "metadata",
-            Name = "元数据标准化工位",
-            Type = WorkstationType.Metadata,
+            Id = "codegen",
+            Name = "代码生成工位（Domain+Application+Frontend）",
+            Type = WorkstationType.Backend, // 主要职责是后端代码生成
             Handler = async (input) =>
             {
-                await Task.Delay(10); // 模拟处理
+                _logger.LogInformation("🔨 开始执行真实代码生成...");
+
+                // 执行GeneratorOrchestrator
+                var result = await orchestrator.GenerateAsync(projectPath);
+
+                if (!result.Success)
+                {
+                    throw new InvalidOperationException($"代码生成失败: {string.Join(", ", result.Errors)}");
+                }
+
+                _logger.LogInformation(
+                    "✅ 代码生成成功: Domain={DomainCount}, Application={AppCount}, Frontend={FrontendCount}, Total={TotalCount}",
+                    result.DomainFileCount,
+                    result.ApplicationFileCount,
+                    result.FrontendFileCount,
+                    result.GeneratedFiles.Count);
+
+                // 返回工位输出
                 return new WorkstationOutput
                 {
-                    Code = "// Metadata processed",
-                    Metadata = input.Metadata
+                    Code = $"// 生成了 {result.GeneratedFiles.Count} 个文件",
+                    Metadata = input.Metadata,
+                    // 将生成的文件列表附加到元数据中
+                    AdditionalData = new Dictionary<string, object>
+                    {
+                        ["GeneratedFiles"] = result.GeneratedFiles,
+                        ["DomainFileCount"] = result.DomainFileCount,
+                        ["ApplicationFileCount"] = result.ApplicationFileCount,
+                        ["FrontendFileCount"] = result.FrontendFileCount
+                    }
                 };
             }
         });
 
-        // 工位2: 后端代码生成
-        RegisterWorkstation(new WorkstationConfig
-        {
-            Id = "backend",
-            Name = "后端代码生成工位",
-            Type = WorkstationType.Backend,
-            Handler = async (input) =>
-            {
-                await Task.Delay(10); // 模拟处理
-                return new WorkstationOutput
-                {
-                    Code = "// Backend code generated",
-                    Metadata = input.Metadata
-                };
-            }
-        });
-
-        // 工位3: 前端代码生成
-        RegisterWorkstation(new WorkstationConfig
-        {
-            Id = "frontend",
-            Name = "前端代码生成工位",
-            Type = WorkstationType.Frontend,
-            Handler = async (input) =>
-            {
-                await Task.Delay(10); // 模拟处理
-                return new WorkstationOutput
-                {
-                    Code = "// Frontend code generated",
-                    Metadata = input.Metadata
-                };
-            }
-        });
-
-        // 工位4: 质量检查
+        // 工位2: 质量检查（保留，执行五关门禁）
         RegisterWorkstation(new WorkstationConfig
         {
             Id = "quality",
-            Name = "质量检查工位",
+            Name = "质量检查工位（五关门禁）",
             Type = WorkstationType.Quality,
             Handler = async (input) =>
             {
-                await Task.Delay(10); // 模拟处理
+                _logger.LogInformation("🔍 开始执行质量门禁...");
+
+                await Task.CompletedTask; // 质检逻辑由RunFinalQualityGateAsync实现
+
                 // 汇总所有工位的输出
                 var allCode = string.Join("\n\n", input.PreviousOutputs.Select(o => o.Code));
                 return new WorkstationOutput
@@ -474,6 +575,72 @@ public class AIFlowController
                     Code = allCode,
                     Metadata = input.Metadata
                 };
+            }
+        });
+
+        _logger.LogInformation("✅ 真实Generator工位注册完成");
+    }
+
+    /// <summary>
+    /// 初始化默认工位
+    /// ⚠️  已废弃：v2.0改用GeneratorOrchestrator替代
+    /// </summary>
+    [Obsolete("InitializeDefaultWorkstations is obsolete. Use RegisterRealGenerators instead.")]
+    private void InitializeDefaultWorkstations()
+    {
+        // 工位1: 元数据标准化（保留兼容性）
+        RegisterWorkstation(new WorkstationConfig
+        {
+            Id = "metadata",
+            Name = "元数据标准化工位",
+            Type = WorkstationType.Metadata,
+            Handler = async (input) =>
+            {
+                _logger.LogWarning("⚠️  使用了废弃的InitializeDefaultWorkstations，请调用RegisterRealGenerators");
+                await Task.CompletedTask;
+                return new WorkstationOutput
+                {
+                    Code = "// Metadata processed (deprecated)",
+                    Metadata = input.Metadata
+                };
+            }
+        });
+
+        // 工位2-4: 同样标记为废弃
+        RegisterWorkstation(new WorkstationConfig
+        {
+            Id = "backend",
+            Name = "后端代码生成工位",
+            Type = WorkstationType.Backend,
+            Handler = async (input) =>
+            {
+                await Task.CompletedTask;
+                return new WorkstationOutput { Code = "// Backend code (deprecated)", Metadata = input.Metadata };
+            }
+        });
+
+        RegisterWorkstation(new WorkstationConfig
+        {
+            Id = "frontend",
+            Name = "前端代码生成工位",
+            Type = WorkstationType.Frontend,
+            Handler = async (input) =>
+            {
+                await Task.CompletedTask;
+                return new WorkstationOutput { Code = "// Frontend code (deprecated)", Metadata = input.Metadata };
+            }
+        });
+
+        RegisterWorkstation(new WorkstationConfig
+        {
+            Id = "quality",
+            Name = "质量检查工位",
+            Type = WorkstationType.Quality,
+            Handler = async (input) =>
+            {
+                await Task.CompletedTask;
+                var allCode = string.Join("\n\n", input.PreviousOutputs.Select(o => o.Code));
+                return new WorkstationOutput { Code = allCode, Metadata = input.Metadata };
             }
         });
     }
@@ -525,7 +692,7 @@ public class AIFlowController
             _logger.LogError($"   🔍 发现as any位置: ...{snippet}...");
             errors.Add("发现类型绕过（as any）");
         }
-        
+
         if (code.Contains("@ts-ignore"))
         {
             errors.Add("发现类型忽略指令（@ts-ignore）");

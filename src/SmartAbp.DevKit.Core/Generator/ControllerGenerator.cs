@@ -22,7 +22,7 @@ public class ControllerGenerator : CodeGeneratorFramework<Guid, string>
     {
         _metadataSDK = metadataSDK;
         _templateManager = templateManager;
-        
+
         // 注册自定义Helpers
         _templateManager.RegisterHelpers();
     }
@@ -77,23 +77,23 @@ public class ControllerGenerator : CodeGeneratorFramework<Guid, string>
             EntityNameCamel = entityNameCamel,
             EntityNameKebab = entityNameKebab,
             PrimaryKeyType = primaryKeyType,
-            
+
             // 命名空间
             Namespace = $"SmartAbp.HttpApi.Controllers.{entityName}",
             ContractsNamespace = $"SmartAbp.Application.Contracts.{entityName}",
-            
+
             // DTO命名
             DtoName = $"{entityName}Dto",
             CreateDtoName = $"Create{entityName}Dto",
             UpdateDtoName = $"Update{entityName}Dto",
             GetListInputName = $"Get{entityNamePlural}Input",
-            
+
             // 路由配置
             RoutePrefix = $"api/app/{StringHelper.ToKebabCase(entityNamePlural)}",
-            
+
             // 描述
             Description = entity.Description ?? $"{entityName} RESTful API",
-            
+
             // 时间戳
             GeneratedTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
             Year = DateTime.Now.Year
@@ -123,7 +123,7 @@ namespace {{Namespace}}
     [Area(""app"")]
     [RemoteService(Name = ""SmartAbp"")]
     [Route(""{{RoutePrefix}}"")]
-    public class {{EntityName}}Controller : AbpControllerBase, I{{EntityName}}AppService
+    public partial class {{EntityName}}Controller : AbpControllerBase, I{{EntityName}}AppService
     {
         private readonly I{{EntityName}}AppService _{{EntityNameCamel}}AppService;
 

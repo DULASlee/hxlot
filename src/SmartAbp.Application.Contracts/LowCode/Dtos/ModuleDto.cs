@@ -258,5 +258,46 @@ namespace SmartAbp.Application.Contracts.LowCode.Dtos
         /// </summary>
         public string DefaultPolicy { get; set; } = string.Empty;
     }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 🚀 Portal入口页面统计DTO（Task 4: 增量添加）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 用户入口选择统计DTO（Portal页面展示）
+    /// 复用现有数据，不新增数据库表
+    /// </summary>
+    public class UserChoiceStatsDto
+    {
+        /// <summary>
+        /// Layer1使用百分比
+        /// </summary>
+        public double Layer1Percentage { get; set; }
+
+        /// <summary>
+        /// Layer2使用百分比
+        /// </summary>
+        public double Layer2Percentage { get; set; }
+
+        /// <summary>
+        /// Layer3使用百分比
+        /// </summary>
+        public double Layer3Percentage { get; set; }
+
+        /// <summary>
+        /// 总模块数
+        /// </summary>
+        public int TotalModules { get; set; }
+
+        /// <summary>
+        /// 活跃模块数（最近7天有访问）
+        /// </summary>
+        public int ActiveModules { get; set; }
+
+        /// <summary>
+        /// 今日新增模块数
+        /// </summary>
+        public int TodayNewModules { get; set; }
+    }
 }
 

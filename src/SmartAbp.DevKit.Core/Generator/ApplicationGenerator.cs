@@ -68,10 +68,30 @@ public class ApplicationGenerator : CodeGeneratorFramework<ApplicationGeneratorI
             var interfacePath = GetInterfaceFilePath(entity, input.Config);
             generatedFiles[interfacePath] = interfaceCode;
 
-            // 生成AppService实现类
-            var implementationCode = await GenerateImplementationAsync(templateData);
-            var implementationPath = GetImplementationFilePath(entity, input.Config);
-            generatedFiles[implementationPath] = implementationCode;
+            // 🔥 Task 2: 物理文件分离 - 生成多个partial类文件
+
+            // Layer 1: 基础CRUD实现（可重新生成）
+            var layer1Code = await GenerateLayer1ImplementationAsync(templateData);
+            var layer1Path = GetLayer1ImplementationFilePath(entity, input.Config);
+            generatedFiles[layer1Path] = layer1Code;
+
+            // Layer 2: 扩展功能实现（升级时生成，可重新生成）
+            var layer2Code = await GenerateLayer2ImplementationAsync(templateData);
+            var layer2Path = GetLayer2ImplementationFilePath(entity, input.Config);
+            generatedFiles[layer2Path] = layer2Code;
+
+            // Custom: 用户自定义实现（永不覆盖，仅创建模板）
+            var customPath = GetCustomImplementationFilePath(entity, input.Config);
+            if (!System.IO.File.Exists(customPath))
+            {
+                var customTemplate = GenerateCustomTemplate(entity, input.Config);
+                generatedFiles[customPath] = customTemplate;
+                _logger.LogDebug("📝 创建用户自定义代码模板: {Path}", customPath);
+            }
+            else
+            {
+                _logger.LogDebug("⚠️ 用户自定义文件已存在，跳过创建: {Path}", customPath);
+            }
 
             _logger.LogDebug(
                 "实体 {EntityName} 的AppService生成完成，接口: {InterfacePath}, 实现: {ImplPath}",
@@ -440,6 +460,209 @@ public class ApplicationGenerator : CodeGeneratorFramework<ApplicationGeneratorI
     private bool IsVowel(char c)
     {
         return "aeiouAEIOU".Contains(c);
+    }
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 🔥 Task 2: 物理文件分离 - Partial Class架构实现
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /// <summary>
+    /// 生成Layer 1基础CRUD实现（可重新生成）
+    /// </summary>
+    private async Task<string> GenerateLayer1ImplementationAsync(object templateData)
+    {
+        try
+        {
+            return await _templateManager.RenderTemplateAsync("AppServiceLayer1", templateData);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "生成Layer 1 AppService实现代码失败");
+            // 回退到原有模板
+            return await _templateManager.RenderTemplateAsync("AppServiceImplementation", templateData);
+        }
+    }
+
+    /// <summary>
+    /// 生成Layer 2扩展功能实现（升级时生成，可重新生成）
+    /// </summary>
+    private async Task<string> GenerateLayer2ImplementationAsync(object templateData)
+    {
+        try
+        {
+            return await _templateManager.RenderTemplateAsync("AppServiceLayer2", templateData);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "生成Layer 2 AppService扩展代码失败");
+            // 如果没有Layer 2模板，生成空的partial类
+            return GenerateEmptyLayer2Template(templateData);
+        }
+    }
+
+    /// <summary>
+    /// 生成用户自定义代码模板（永不覆盖）
+    /// </summary>
+    private string GenerateCustomTemplate(EntityDefinition entity, LowCodeConfig config)
+    {
+        var now = DateTime.Now;
+        var namespaceName = GetApplicationNamespace(config);
+
+        return $@"// =============================================================
+// 👤 此文件用于编写用户自定义代码
+// 👤 此文件不会被DevKit覆盖，您的代码100%安全
+// 👤 创建时间: {now:yyyy-MM-dd HH:mm:ss}
+// =============================================================
+
+using System;
+using System.Threading.Tasks;
+using Volo.Abp.Application.Services;
+
+namespace {namespaceName}.{entity.EntityName};
+
+/// <summary>
+/// {entity.EntityName}AppService - 用户自定义代码部分
+/// </summary>
+public partial class {entity.EntityName}AppService
+{{
+    // 👤 在此编写您的自定义方法、属性和逻辑
+    // 👤 此部分代码不会被DevKit覆盖
+
+    // 示例: 自定义方法
+    // public async Task<string> GetCustomInfoAsync()
+    // {{
+    //     return ""Custom logic here"";
+    // }}
+
+    // 示例: 自定义业务验证
+    // private async Task ValidateCustomBusinessRulesAsync({entity.EntityName}Dto input)
+    // {{
+    //     // 您的业务验证逻辑
+    // }}
+}}";
+    }
+
+    /// <summary>
+    /// 生成空的Layer 2模板（当没有专门的Layer2模板时）
+    /// </summary>
+    private string GenerateEmptyLayer2Template(dynamic templateData)
+    {
+        var now = DateTime.Now;
+        var entityName = templateData.EntityName;
+        var namespaceName = templateData.Namespace;
+
+        return $@"// =============================================================
+// 🔧 DevKit Generated - Layer 2 Extensions
+// 🔄 Regenerate Safe: 可以被DevKit重新生成
+// 📅 Generated: {now:yyyy-MM-dd HH:mm:ss}
+// 📋 Config: .lowcode/configs/{entityName}-config.json
+// =============================================================
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Volo.Abp.Application.Dtos;
+using Volo.Abp.Domain.Repositories;
+
+namespace {namespaceName}.{entityName};
+
+/// <summary>
+/// {entityName}AppService扩展（Layer 2升级）
+/// </summary>
+public partial class {entityName}AppService
+{{
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Layer 2扩展功能将在此处生成
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    // 示例：高级查询方法
+    // public virtual async Task<List<{entityName}Dto>> GetByAdvancedFilterAsync(
+    //     AdvancedFilterInput input)
+    // {{
+    //     var query = await Repository.GetQueryableAsync();
+    //     // 高级筛选逻辑...
+    //     var items = await AsyncExecuter.ToListAsync(query);
+    //     return ObjectMapper.Map<List<{entityName}>, List<{entityName}Dto>>(items);
+    // }}
+
+    // 示例：批量操作方法
+    // public virtual async Task BatchDeleteAsync(List<Guid> ids)
+    // {{
+    //     await Repository.DeleteManyAsync(ids);
+    // }}
+}}";
+    }
+
+    /// <summary>
+    /// 获取Layer 1实现文件路径
+    /// </summary>
+    private string GetLayer1ImplementationFilePath(EntityDefinition entity, LowCodeConfig config)
+    {
+        if (config.IsMicroservice)
+        {
+            var serviceName = config.MicroserviceConfig!.ServiceName;
+            return System.IO.Path.Combine(
+                config.OutputPaths.MicroserviceRootPath,
+                serviceName,
+                $"{serviceName}.Application",
+                entity.EntityName,
+                $"{entity.EntityName}AppService.cs");
+        }
+        else
+        {
+            return System.IO.Path.Combine(
+                config.OutputPaths.ApplicationPath,
+                entity.EntityName,
+                $"{entity.EntityName}AppService.cs");
+        }
+    }
+
+    /// <summary>
+    /// 获取Layer 2实现文件路径
+    /// </summary>
+    private string GetLayer2ImplementationFilePath(EntityDefinition entity, LowCodeConfig config)
+    {
+        if (config.IsMicroservice)
+        {
+            var serviceName = config.MicroserviceConfig!.ServiceName;
+            return System.IO.Path.Combine(
+                config.OutputPaths.MicroserviceRootPath,
+                serviceName,
+                $"{serviceName}.Application",
+                entity.EntityName,
+                $"{entity.EntityName}AppService.Layer2.cs");
+        }
+        else
+        {
+            return System.IO.Path.Combine(
+                config.OutputPaths.ApplicationPath,
+                entity.EntityName,
+                $"{entity.EntityName}AppService.Layer2.cs");
+        }
+    }
+
+    /// <summary>
+    /// 获取用户自定义实现文件路径
+    /// </summary>
+    private string GetCustomImplementationFilePath(EntityDefinition entity, LowCodeConfig config)
+    {
+        if (config.IsMicroservice)
+        {
+            var serviceName = config.MicroserviceConfig!.ServiceName;
+            return System.IO.Path.Combine(
+                config.OutputPaths.MicroserviceRootPath,
+                serviceName,
+                $"{serviceName}.Application",
+                entity.EntityName,
+                $"{entity.EntityName}AppService.Custom.cs");
+        }
+        else
+        {
+            return System.IO.Path.Combine(
+                config.OutputPaths.ApplicationPath,
+                entity.EntityName,
+                $"{entity.EntityName}AppService.Custom.cs");
+        }
     }
 }
 

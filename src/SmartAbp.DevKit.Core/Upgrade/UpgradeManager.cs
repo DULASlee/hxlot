@@ -522,10 +522,59 @@ public class UpgradeManager : IUpgradeManager
 
     /// <summary>
     /// 重新生成代码
+    /// ✅ DevKit v2.0修复：实现真正的增量升级逻辑
     /// </summary>
     private async Task RegenerateCodeAsync(LowCodeConfig config, UpgradeChange change)
     {
-        _logger.LogInformation("Regenerating code for change: {ChangeDescription}", change.ChangeDescription);
+        _logger.LogInformation("🔧 开始升级代码生成: {ChangeDescription}", change.ChangeDescription);
+
+        try
+        {
+            // ✅ 根据变更类型执行不同的升级策略
+            switch (change.ChangeType)
+            {
+                case UpgradeChangeType.EntityAdded:
+                    await HandleEntityAddedAsync(config, change);
+                    break;
+
+                case UpgradeChangeType.EntityRemoved:
+                    await HandleEntityRemovedAsync(config, change);
+                    break;
+
+                case UpgradeChangeType.PropertyAdded:
+                case UpgradeChangeType.PropertyRemoved:
+                case UpgradeChangeType.PropertyTypeChanged:
+                    await HandlePropertyChangedAsync(config, change);
+                    break;
+
+                case UpgradeChangeType.TemplateUpdated:
+                    await HandleTemplateUpdatedAsync(config, change);
+                    break;
+
+                case UpgradeChangeType.LayerChanged:
+                    await HandleLayerChangedAsync(config, change);
+                    break;
+
+                default:
+                    _logger.LogWarning("⚠️ 未处理的变更类型: {ChangeType}", change.ChangeType);
+                    break;
+            }
+
+            _logger.LogInformation("✅ 代码升级成功: {ChangeDescription}", change.ChangeDescription);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "❌ 代码升级失败: {ChangeDescription}", change.ChangeDescription);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// 处理实体新增：生成新实体的所有代码
+    /// </summary>
+    private async Task HandleEntityAddedAsync(LowCodeConfig config, UpgradeChange change)
+    {
+        _logger.LogInformation("📦 处理实体新增: {AffectedEntity}", change.AffectedEntity);
 
         // 创建生成上下文
         var context = new GenerationContext
@@ -535,7 +584,9 @@ public class UpgradeManager : IUpgradeManager
             GenerationMode = GenerationMode.Upgrade,
             Metadata = new Dictionary<string, object>
             {
-                { "UpgradeChange", change }
+                { "UpgradeChange", change },
+                { "IncrementalMode", true },
+                { "AffectedEntity", change.AffectedEntity ?? string.Empty }
             }
         };
 
@@ -544,10 +595,119 @@ public class UpgradeManager : IUpgradeManager
 
         if (!result.IsSuccess)
         {
-            throw new InvalidOperationException($"Code generation failed: {result.ErrorMessage}");
+            throw new InvalidOperationException($"实体新增失败: {result.ErrorMessage}");
         }
 
-        _logger.LogInformation("Code regenerated successfully for change: {ChangeDescription}", change.ChangeDescription);
+        _logger.LogInformation("✅ 实体 {AffectedEntity} 代码生成完成", change.AffectedEntity);
+    }
+
+    /// <summary>
+    /// 处理实体删除：标记为废弃而不是直接删除
+    /// </summary>
+    private async Task HandleEntityRemovedAsync(LowCodeConfig config, UpgradeChange change)
+    {
+        _logger.LogWarning("⚠️ 实体删除需要手动处理: {AffectedEntity}", change.AffectedEntity);
+        _logger.LogWarning("   建议：在代码中标记为 [Obsolete]，而不是直接删除文件");
+
+        // 不自动删除代码，需要开发者手动确认
+        await Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// 处理属性变更：重新生成受影响的实体
+    /// </summary>
+    private async Task HandlePropertyChangedAsync(LowCodeConfig config, UpgradeChange change)
+    {
+        _logger.LogInformation("🔄 处理属性变更: {AffectedEntity}", change.AffectedEntity);
+
+        // 找到受影响的实体
+        var entity = config.Entities.FirstOrDefault(e => e.Name == change.AffectedEntity);
+        if (entity == null)
+        {
+            _logger.LogWarning("⚠️ 未找到实体: {AffectedEntity}", change.AffectedEntity);
+            return;
+        }
+
+        // 重新生成该实体的代码
+        var context = new GenerationContext
+        {
+            Config = config,
+            TargetLayer = config.CurrentLayer,
+            GenerationMode = GenerationMode.Upgrade,
+            Metadata = new Dictionary<string, object>
+            {
+                { "UpgradeChange", change },
+                { "IncrementalMode", true },
+                { "AffectedEntity", change.AffectedEntity ?? string.Empty }
+            }
+        };
+
+        var result = await _codeGenerator.GenerateAsync(context);
+
+        if (!result.IsSuccess)
+        {
+            throw new InvalidOperationException($"属性变更升级失败: {result.ErrorMessage}");
+        }
+
+        _logger.LogInformation("✅ 实体 {AffectedEntity} 属性变更处理完成", change.AffectedEntity);
+    }
+
+    /// <summary>
+    /// 处理模板更新：重新生成所有实体
+    /// </summary>
+    private async Task HandleTemplateUpdatedAsync(LowCodeConfig config, UpgradeChange change)
+    {
+        _logger.LogInformation("🔄 处理模板更新，重新生成所有实体");
+
+        var context = new GenerationContext
+        {
+            Config = config,
+            TargetLayer = config.CurrentLayer,
+            GenerationMode = GenerationMode.Upgrade,
+            Metadata = new Dictionary<string, object>
+            {
+                { "UpgradeChange", change },
+                { "FullRegeneration", true }
+            }
+        };
+
+        var result = await _codeGenerator.GenerateAsync(context);
+
+        if (!result.IsSuccess)
+        {
+            throw new InvalidOperationException($"模板更新失败: {result.ErrorMessage}");
+        }
+
+        _logger.LogInformation("✅ 模板更新处理完成");
+    }
+
+    /// <summary>
+    /// 处理层级变更：生成新层级的代码
+    /// </summary>
+    private async Task HandleLayerChangedAsync(LowCodeConfig config, UpgradeChange change)
+    {
+        _logger.LogInformation("🔄 处理层级变更: {ChangeDescription}", change.ChangeDescription);
+
+        var context = new GenerationContext
+        {
+            Config = config,
+            TargetLayer = config.CurrentLayer,
+            GenerationMode = GenerationMode.Upgrade,
+            Metadata = new Dictionary<string, object>
+            {
+                { "UpgradeChange", change },
+                { "LayerUpgrade", true }
+            }
+        };
+
+        var result = await _codeGenerator.GenerateAsync(context);
+
+        if (!result.IsSuccess)
+        {
+            throw new InvalidOperationException($"层级变更失败: {result.ErrorMessage}");
+        }
+
+        _logger.LogInformation("✅ 层级变更处理完成");
     }
 
     /// <summary>

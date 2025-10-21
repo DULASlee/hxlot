@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SmartAbp.Application.Contracts.CodeGenerator;
+using SmartAbp.Application.LowCode;
 using SmartAbp.CodeGenerator.Services;
 using SmartAbp.CodeGenerator.Services.V9;
 using Volo.Abp;
@@ -11,14 +13,18 @@ namespace SmartAbp.Controllers
 {
     [RemoteService]
     [Area("app")]
-    [Route("api/code-generator")] 
+    [Route("api/code-generator")]
     public class CodeGenerationController : AbpController
     {
         private readonly ICodeGenerationAppService _service;
+        private readonly AsyncCodeGenerationService _asyncCodeGenService;
 
-        public CodeGenerationController(ICodeGenerationAppService service)
+        public CodeGenerationController(
+            ICodeGenerationAppService service,
+            AsyncCodeGenerationService asyncCodeGenService)
         {
             _service = service;
+            _asyncCodeGenService = asyncCodeGenService;
         }
 
         [HttpGet("connection-strings")]
@@ -119,7 +125,7 @@ namespace SmartAbp.Controllers
         public async Task<IActionResult> ExportGeneratedCodeAsync(string sessionId)
         {
             var zipPackage = await _service.ExportGeneratedCodeAsync(sessionId);
-            
+
             // 返回文件下载
             return File(
                 zipPackage.Content,
@@ -175,6 +181,60 @@ namespace SmartAbp.Controllers
         // {
         //     return _service.ValidateDddDefinitionAsync(input);
         // }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 🚀 异步代码生成API (Task 1: 异步模式重构)
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        /// <summary>
+        /// 异步生成代码 - 立即返回taskId，通过SignalR推送进度
+        /// </summary>
+        /// <param name="entityId">实体ID</param>
+        /// <returns>任务ID和状态</returns>
+        [HttpPost("async/generate-entity/{entityId}")]
+        public Task<CodeGenerationTaskResponse> GenerateEntityAsync(Guid entityId)
+        {
+            return _asyncCodeGenService.GenerateAsync(entityId);
+        }
+
+        /// <summary>
+        /// 查询异步生成任务状态
+        /// </summary>
+        /// <param name="taskId">任务ID</param>
+        /// <returns>任务状态详情</returns>
+        [HttpGet("async/status/{taskId}")]
+        public Task<CodeGenerationTaskStatus> GetAsyncTaskStatusAsync(string taskId)
+        {
+            return _asyncCodeGenService.GetTaskStatusAsync(taskId);
+        }
+
+        /// <summary>
+        /// 获取所有异步任务状态（管理员接口）
+        /// </summary>
+        /// <returns>所有任务状态列表</returns>
+        [HttpGet("async/all-tasks")]
+        public Task<CodeGenerationTaskStatus[]> GetAllAsyncTasksAsync()
+        {
+            return _asyncCodeGenService.GetAllTaskStatusesAsync();
+        }
+
+        /// <summary>
+        /// 取消异步生成任务
+        /// </summary>
+        /// <param name="taskId">任务ID</param>
+        /// <returns>取消结果</returns>
+        [HttpPost("async/cancel/{taskId}")]
+        public async Task<IActionResult> CancelAsyncTaskAsync(string taskId)
+        {
+            // TODO: 实现任务取消逻辑
+            // 这里需要与BackgroundJob框架集成来取消任务
+
+            return Ok(new
+            {
+                Success = false,
+                Message = "任务取消功能正在开发中"
+            });
+        }
     }
 }
 

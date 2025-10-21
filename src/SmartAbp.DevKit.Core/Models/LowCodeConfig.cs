@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using SmartAbp.Application.Contracts.LowCode.Dtos;
 using SmartAbp.DevKit.Core.Abstractions;
 
 namespace SmartAbp.DevKit.Core.Models;
 
 /// <summary>
 /// 低代码配置模型
+/// ⭐ SSOT: 使用后端C# DTO作为唯一真实源
 /// </summary>
 public class LowCodeConfig
 {
@@ -18,6 +20,11 @@ public class LowCodeConfig
     /// 模块名称（如：UserManagement）
     /// </summary>
     public string ModuleName { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 命名空间
+    /// </summary>
+    public string Namespace { get; set; } = string.Empty;
 
     /// <summary>
     /// 当前目标层级
@@ -48,9 +55,9 @@ public class LowCodeConfig
     public MicroserviceConfig? MicroserviceConfig { get; set; }
 
     /// <summary>
-    /// 实体定义列表
+    /// ⭐ SSOT: 实体定义列表（使用后端DTO）
     /// </summary>
-    public List<EntityDefinition> Entities { get; set; } = new();
+    public List<EntityDefinitionDto> Entities { get; set; } = new();
 
     /// <summary>
     /// 模板配置
@@ -73,99 +80,12 @@ public class LowCodeConfig
     public DateTime LastModifiedAt { get; set; } = DateTime.UtcNow;
 }
 
-/// <summary>
-/// 实体定义
-/// </summary>
-public class EntityDefinition
-{
-    /// <summary>
-    /// 实体名称（如：User）
-    /// </summary>
-    public string EntityName { get; set; } = string.Empty;
-
-    /// <summary>
-    /// 实体属性列表
-    /// </summary>
-    public List<EntityProperty> Properties { get; set; } = new();
-
-    /// <summary>
-    /// 实体关系列表
-    /// </summary>
-    public List<EntityRelation> Relations { get; set; } = new();
-
-    /// <summary>
-    /// 是否生成CRUD操作
-    /// </summary>
-    public bool GenerateCrud { get; set; } = true;
-}
-
-/// <summary>
-/// 实体属性
-/// </summary>
-public class EntityProperty
-{
-    /// <summary>
-    /// 属性名称
-    /// </summary>
-    public string Name { get; set; } = string.Empty;
-
-    /// <summary>
-    /// 属性类型（如：string, int, DateTime）
-    /// </summary>
-    public string Type { get; set; } = string.Empty;
-
-    /// <summary>
-    /// 是否必填
-    /// </summary>
-    public bool IsRequired { get; set; }
-
-    /// <summary>
-    /// 最大长度（仅用于string类型）
-    /// </summary>
-    public int? MaxLength { get; set; }
-
-    /// <summary>
-    /// 默认值
-    /// </summary>
-    public string? DefaultValue { get; set; }
-}
-
-/// <summary>
-/// 实体关系
-/// </summary>
-public class EntityRelation
-{
-    /// <summary>
-    /// 关系类型
-    /// </summary>
-    public RelationType Type { get; set; }
-
-    /// <summary>
-    /// 目标实体名称
-    /// </summary>
-    public string TargetEntity { get; set; } = string.Empty;
-
-    /// <summary>
-    /// 导航属性名称
-    /// </summary>
-    public string NavigationProperty { get; set; } = string.Empty;
-
-    /// <summary>
-    /// 外键属性名称
-    /// </summary>
-    public string? ForeignKey { get; set; }
-}
-
-/// <summary>
-/// 关系类型枚举
-/// </summary>
-public enum RelationType
-{
-    OneToMany,
-    ManyToOne,
-    OneToOne,
-    ManyToMany
-}
+// ⭐ SSOT架构说明：
+// EntityDefinition, EntityProperty等类型已移除
+// 统一使用后端DTO：
+// - SmartAbp.Application.Contracts.LowCode.Dtos.EntityDefinitionDto
+// - SmartAbp.Application.Contracts.LowCode.Dtos.EntityFieldDto
+// - SmartAbp.Application.Contracts.LowCode.Dtos.EntityRelationDto
 
 /// <summary>
 /// 模板配置

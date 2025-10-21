@@ -22,7 +22,7 @@ public class AppServiceGenerator : CodeGeneratorFramework<Guid, AppServiceGenera
     {
         _metadataSDK = metadataSDK;
         _templateManager = templateManager;
-        
+
         // 注册自定义Helpers
         _templateManager.RegisterHelpers();
     }
@@ -91,16 +91,16 @@ public class AppServiceGenerator : CodeGeneratorFramework<Guid, AppServiceGenera
             DomainNamespace = $"SmartAbp.Domain.Entities.{entityName}",
             HasDescription = !string.IsNullOrEmpty(entity.Description),
             Description = entity.Description ?? $"{entityName}应用服务",
-            
+
             // DTO命名
             DtoName = $"{entityName}Dto",
             CreateDtoName = $"Create{entityName}Dto",
             UpdateDtoName = $"Update{entityName}Dto",
             GetListInputName = $"Get{entityNamePlural}Input",
-            
+
             // 属性列表
             Properties = properties,
-            
+
             // 时间戳
             GeneratedTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
             Year = DateTime.Now.Year
@@ -172,7 +172,7 @@ namespace {{Namespace}}
     /// {{EntityName}}应用服务实现
     /// 生成时间: {{GeneratedTime}}
     /// </summary>
-    public class {{EntityName}}AppService : CrudAppService<
+    public partial class {{EntityName}}AppService : CrudAppService<
         {{EntityName}},
         {{DtoName}},
         {{PrimaryKeyType}},
@@ -251,12 +251,12 @@ namespace {{Namespace}}
         //     var entity = await AsyncExecuter.FirstOrDefaultAsync(
         //         query.Where(x => x.Name == name)
         //     );
-        //     
+        //
         //     if (entity == null)
         //     {
         //         throw new Volo.Abp.BusinessException($""{{EntityName}} with name '{name}' not found."");
         //     }
-        //     
+        //
         //     return await MapToGetOutputDtoAsync(entity);
         // }
     }

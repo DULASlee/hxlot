@@ -79,6 +79,45 @@ class Program
 
         rootCommand.AddCommand(configCommand);
 
+        // 创建init命令（初始化项目）
+        var initCommand = new Command("init", "初始化DevKit项目（创建.lowcode/目录）");
+        var moduleNameOption = new Option<string>(
+            aliases: new[] { "-m", "--module-name" },
+            description: "模块名称",
+            getDefaultValue: () => "SampleModule");
+        var pathOption = new Option<string>(
+            aliases: new[] { "-p", "--path" },
+            description: "项目路径",
+            getDefaultValue: () => Directory.GetCurrentDirectory());
+        var sampleOption = new Option<bool>(
+            aliases: new[] { "-s", "--sample" },
+            description: "创建示例配置",
+            getDefaultValue: () => false);
+        var forceOption = new Option<bool>(
+            aliases: new[] { "-f", "--force" },
+            description: "强制覆盖",
+            getDefaultValue: () => false);
+
+        initCommand.AddOption(moduleNameOption);
+        initCommand.AddOption(pathOption);
+        initCommand.AddOption(sampleOption);
+        initCommand.AddOption(forceOption);
+
+        initCommand.SetHandler(async (moduleName, path, sample, force) =>
+        {
+            await RunWithHostAsync(async (host, exitCode) =>
+            {
+                var logger = host.Services.GetRequiredService<ILogger<InitCommandHandler>>();
+                var directoryManager = host.Services.GetRequiredService<Core.Config.LowCodeDirectoryManager>();
+                var handler = new InitCommandHandler(logger, directoryManager);
+                var command = handler.GetCommand();
+                // 直接执行
+                exitCode.Value = await handler.ExecuteAsync(moduleName, path, sample, force);
+            });
+        }, moduleNameOption, pathOption, sampleOption, forceOption);
+
+        rootCommand.AddCommand(initCommand);
+
         // 创建interactive命令（交互式模式）
         var interactiveCommand = new Command("interactive", "交互式代码生成");
         interactiveCommand.SetHandler(async () =>
@@ -183,6 +222,41 @@ class Program
 
         rootCommand.AddCommand(pluginCommand);
 
+        // 创建partial命令（Partial类管理，DevKit v2.0 Day 15）
+        var partialCommand = new Command("partial", "Partial类管理（用户代码保护机制）");
+        partialCommand.SetHandler(async () =>
+        {
+            await RunWithHostAsync(async (host, exitCode) =>
+            {
+                var logger = host.Services.GetRequiredService<ILogger<PartialClassCommandHandler>>();
+                var partialClassManager = host.Services.GetRequiredService<Core.CodeMerge.PartialClassManager>();
+                var handler = new PartialClassCommandHandler(logger, partialClassManager);
+
+                // 获取完整命令并执行
+                var command = handler.GetCommand();
+                Console.WriteLine("使用 'devkit partial --help' 查看详细帮助");
+                exitCode.Value = 0;
+            });
+        });
+
+        rootCommand.AddCommand(partialCommand);
+
+        // 创建quality命令（质量门禁，DevKit v2.0 Day 16）
+        var qualityCommand = new Command("quality", "质量门禁检查（五关强制门禁）");
+        qualityCommand.SetHandler(async () =>
+        {
+            await RunWithHostAsync(async (host, exitCode) =>
+            {
+                var logger = host.Services.GetRequiredService<ILogger<QualityCommandHandler>>();
+                var handler = new QualityCommandHandler(logger);
+                var command = handler.GetCommand();
+                Console.WriteLine("使用 'devkit quality --help' 查看详细帮助");
+                exitCode.Value = 0;
+            });
+        });
+
+        rootCommand.AddCommand(qualityCommand);
+
         // 创建version命令
         var versionCommand = new Command("version", "显示版本信息");
         versionCommand.SetHandler(() =>
@@ -222,6 +296,16 @@ class Program
                 // 手动注册DevKit核心服务
                 services.Configure<Core.Config.DevKitConfig>(context.Configuration.GetSection("DevKit"));
                 services.AddSingleton<Microsoft.Extensions.Caching.Memory.IMemoryCache, Microsoft.Extensions.Caching.Memory.MemoryCache>();
+
+                // 注册Config相关服务（DevKit v2.0核心组件）
+                services.AddSingleton<Core.Config.ConfigLoader>();
+                services.AddSingleton<Core.Config.ConfigValidator>();
+                services.AddSingleton<Core.Config.DefaultConfigProvider>();
+                services.AddSingleton<Core.Config.LowCodeDirectoryManager>();
+
+                // 注册CodeMerge相关服务（DevKit v2.0 Day 15: Partial类机制）
+                services.AddSingleton<Core.CodeMerge.PartialClassManager>();
+
                 services.AddSingleton<Core.Templates.TemplateManager>();
                 services.AddSingleton<Core.Quality.QualityGateEnforcer>();
                 services.AddSingleton<Core.Monitoring.MetricsCollector>();
@@ -229,7 +313,10 @@ class Program
                 services.AddSingleton<Core.Workstations.BackendWorkstation>();
                 services.AddSingleton<Core.Workstations.FrontendWorkstation>();
 
-                // 注册AIFlowController
+                // 注册GeneratorOrchestrator（DevKit v2.0核心组件）
+                services.AddSingleton<Core.Generator.GeneratorOrchestrator>();
+
+                // 注册AIFlowController（DevKit v2.0：不再预注册工位）
                 services.AddSingleton<Core.Flow.AIFlowController>(sp =>
                 {
                     var logger = sp.GetRequiredService<ILogger<Core.Flow.AIFlowController>>();
@@ -240,24 +327,8 @@ class Program
                         metricsCollector
                     );
 
-                    // 注册工位
-                    var backendWorkstation = sp.GetRequiredService<Core.Workstations.BackendWorkstation>();
-                    flowController.RegisterWorkstation(new Core.Types.WorkstationConfig
-                    {
-                        Id = "backend",
-                        Name = "后端代码生成工位",
-                        Type = Core.Types.WorkstationType.Backend,
-                        Handler = async (input) => await backendWorkstation.ExecuteAsync(input, System.Threading.CancellationToken.None)
-                    });
-
-                    var frontendWorkstation = sp.GetRequiredService<Core.Workstations.FrontendWorkstation>();
-                    flowController.RegisterWorkstation(new Core.Types.WorkstationConfig
-                    {
-                        Id = "frontend",
-                        Name = "前端代码生成工位",
-                        Type = Core.Types.WorkstationType.Frontend,
-                        Handler = async (input) => await frontendWorkstation.ExecuteAsync(input, System.Threading.CancellationToken.None)
-                    });
+                    // v2.0: 工位注册延迟到实际执行时（需要projectPath参数）
+                    // 由GenerateCommandHandler调用flowController.RegisterRealGenerators()
 
                     return flowController;
                 });

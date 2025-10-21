@@ -15,7 +15,7 @@ namespace SmartAbp.Application.LowCode.{{pluralize Name}}
     /// {{Description}}
     /// {{/if}}
     /// </summary>
-    public class {{pascalCase Name}}AppService : CrudAppService<
+    public partial class {{pascalCase Name}}AppService : CrudAppService<
         {{pascalCase Name}},
         {{pascalCase Name}}Dto,
         Guid,
@@ -70,7 +70,7 @@ namespace SmartAbp.Application.LowCode.{{pluralize Name}}
         public override async Task<{{pascalCase Name}}Dto> CreateAsync(Create{{pascalCase Name}}Dto input)
         {
             var entity = ObjectMapper.Map<Create{{pascalCase Name}}Dto, {{pascalCase Name}}>(input);
-            
+
             await Repository.InsertAsync(entity);
             await CurrentUnitOfWork.SaveChangesAsync();
 
