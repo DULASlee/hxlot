@@ -60,11 +60,11 @@ public class Program
                     System.IO.Directory.CreateDirectory(effectiveWebLogDir);
 
                     loggerConfiguration
-                    #if DEBUG
+#if DEBUG
                         .MinimumLevel.Debug()
-                    #else
+#else
                         .MinimumLevel.Information()
-                    #endif
+#endif
                         .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                         .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
                         .Enrich.FromLogContext()
@@ -108,6 +108,10 @@ public class Program
                         .WriteTo.Async(c => c.Console())
                         .WriteTo.Async(c => c.AbpStudio(services));
                 });
+
+            // ✅ 固定端口配置：前端9001，后端9002
+            builder.WebHost.UseUrls("http://localhost:9002", "https://localhost:9003");
+
             await builder.AddApplicationAsync<SmartAbpHttpApiHostModule>();
             var app = builder.Build();
             // CorrelationId + Request logging + ProblemDetails

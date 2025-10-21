@@ -61,9 +61,9 @@ var webApp = builder.AddProject<Projects.SmartAbp_Web>("web-app")
     .WithReference(rabbitmq)
     .WithReference(opsMonitoring) // 依赖运维监控微服务
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
-    .WithEnvironment("ASPNETCORE_URLS", "http://+:5000")
-    .WithHttpEndpoint(port: 5000, targetPort: 5000, name: "http")
-    .WithHttpsEndpoint(port: 5001, targetPort: 5001, name: "https");
+    .WithEnvironment("ASPNETCORE_URLS", "http://+:9002;https://+:9003")
+    .WithHttpEndpoint(port: 9002, targetPort: 9002, name: "http")
+    .WithHttpsEndpoint(port: 9003, targetPort: 9003, name: "https");
 
 // 代码生成器微服务
 var codeGenerator = builder.AddProject<Projects.SmartAbp_CodeGenerator>("code-generator")
@@ -79,8 +79,8 @@ var codeGenerator = builder.AddProject<Projects.SmartAbp_CodeGenerator>("code-ge
 // ======================================
 
 var vueApp = builder.AddNpmApp("vue-frontend", "../SmartAbp.Vue", "dev")
-    .WithHttpEndpoint(port: 3000, targetPort: 3000, name: "http")
-    .WithEnvironment("VITE_API_BASE_URL", "http://localhost:5000")
+    .WithHttpEndpoint(port: 9001, targetPort: 9001, name: "http")
+    .WithEnvironment("VITE_API_BASE_URL", "http://localhost:9002")
     .WithEnvironment("VITE_OPS_API_BASE_URL", "http://localhost:8080")
     .WithReference(webApp)
     .WithReference(opsMonitoring);
@@ -106,7 +106,7 @@ if (builder.Environment.IsDevelopment())
     webApp.WithDaprSidecar(new DaprSidecarOptions
     {
         AppId = "smartabp-web",
-        AppPort = 5000,
+        AppPort = 9002,
         DaprHttpPort = 3501,
         DaprGrpcPort = 50002,
         EnableApiLogging = true,
@@ -132,7 +132,7 @@ if (builder.Environment.IsDevelopment())
 // 配置健康检查端点
 builder.Services.AddHealthChecks()
     .AddUrlGroup(new Uri("http://localhost:8080/health"), "OpsMonitoring")
-    .AddUrlGroup(new Uri("http://localhost:5000/health"), "WebApp")
+    .AddUrlGroup(new Uri("http://localhost:9002/health"), "WebApp")
     .AddUrlGroup(new Uri("http://localhost:6000/health"), "CodeGenerator");
 
 // 构建并运行
