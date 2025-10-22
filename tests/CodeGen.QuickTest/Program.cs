@@ -22,11 +22,22 @@ namespace CodeGen.QuickTest
             {
                 // 第1步：加载配置
                 Console.WriteLine("📋 步骤1：加载MES实体配置...");
-                var configPath = "../../config/mes-entities-config.json";
+                
+                // 查找项目根目录（通过向上查找.git目录）
+                var currentDir = Directory.GetCurrentDirectory();
+                var projectRoot = currentDir;
+                while (!Directory.Exists(Path.Combine(projectRoot, ".git")) && Directory.GetParent(projectRoot) != null)
+                {
+                    projectRoot = Directory.GetParent(projectRoot)!.FullName;
+                }
+                
+                var configPath = Path.Combine(projectRoot, "config", "mes-entities-config.json");
                 
                 if (!File.Exists(configPath))
                 {
                     Console.WriteLine($"❌ 配置文件不存在: {configPath}");
+                    Console.WriteLine($"   当前目录: {currentDir}");
+                    Console.WriteLine($"   项目根目录: {projectRoot}");
                     return;
                 }
 
@@ -101,7 +112,7 @@ namespace CodeGen.QuickTest
                 Console.WriteLine($"   - 实体数量: {config.Entities.Count}");
                 Console.WriteLine($"   - 生成文件: {totalFiles}个");
                 Console.WriteLine($"   - 输出目录: {Path.GetFullPath(outputPath)}");
-                Console.WriteLine($"   - 组件库: {config.ComponentLibrary} (uView UI 2.0.0)");
+                Console.WriteLine($"   - 组件库: {config.ComponentLibrary} (uView UI 3.2.7)");
                 Console.WriteLine();
                 Console.WriteLine($"🎯 文件结构:");
                 Console.WriteLine($"   {outputPath}/");
@@ -279,7 +290,7 @@ loadData()
 <!-- 
   生成时间: {DateTime.Now:yyyy-MM-dd HH:mm:ss}
   生成器: SmartAbp DevKit Low-Code Engine
-  组件库: uView UI 2.0.0
+  组件库: uView UI 3.2.7
   类型安全: 100% TypeScript
 -->
 ";
@@ -287,12 +298,291 @@ loadData()
 
         static string GenerateDetailPage(EntityConfig entity)
         {
-            return $@"<!-- Generated Detail Page for {entity.Name} -->";
+            var kebabName = ToKebabCase(entity.Name);
+            var camelName = ToCamelCase(entity.Name);
+            
+            return $@"<!-- pages/{kebabName}/detail.vue -->
+<template>
+  <view class=""detail-page"">
+    <!-- 加载状态 -->
+    <u-loading-icon v-if=""loading"" text=""加载中..."" mode=""circle"" size=""36"" />
+    
+    <!-- 数据展示 -->
+    <view v-else-if=""entity.id"" class=""detail-content"">
+      <!-- 基本信息卡片 (uView UI) -->
+      <u-card :title=""entity.{entity.Fields[0].Name.ToLower()}"" :sub-title=""'ID: ' + entity.id"" :border=""false"">
+        <template #body>
+          <u-cell-group :border=""false"">
+{string.Join("\n", entity.Fields.Select(f => $@"            <u-cell title=""{f.Label}"" :value=""entity.{ToCamelCase(f.Name)}"" :border=""false"" />"))}
+          </u-cell-group>
+        </template>
+        <template #foot>
+          <view class=""card-footer"">
+            <u-button type=""primary"" size=""small"" @click=""handleEdit"">
+              <u-icon name=""edit-pen"" /> 编辑
+            </u-button>
+            <u-button type=""error"" size=""small"" @click=""handleDelete"">
+              <u-icon name=""trash"" /> 删除
+            </u-button>
+            <u-button type=""info"" size=""small"" @click=""handleBack"">
+              <u-icon name=""arrow-left"" /> 返回
+            </u-button>
+          </view>
+        </template>
+      </u-card>
+    </view>
+
+    <!-- 空状态 -->
+    <u-empty v-else mode=""data"" text=""数据加载失败或不存在"" icon=""http://cdn.uviewui.com/uview/empty/data.png"" />
+  </view>
+</template>
+
+<script setup lang=""ts"">
+import {{ ref, onMounted }} from 'vue'
+import {{ onLoad }} from '@dcloudio/uni-app'
+import {{ use{entity.Name}Store }} from '@/stores/{kebabName}-store'
+import type {{ {entity.Name}Dto }} from '@/types/{kebabName}.types'
+import {{ uniToast, uniConfirm }} from '@/utils/uni-tools'
+
+const {camelName}Store = use{entity.Name}Store()
+const entity = ref<{entity.Name}Dto>({{}} as {entity.Name}Dto)
+const loading = ref(false)
+const entityId = ref<string | null>(null)
+
+onLoad((options) => {{
+  if (options?.id) {{
+    entityId.value = options.id
+    loadEntityData(options.id)
+  }}
+}})
+
+async function loadEntityData(id: string) {{
+  loading.value = true
+  try {{
+    entity.value = await {camelName}Store.getById(id)
+  }} catch (error) {{
+    uniToast('加载失败', 'error')
+    console.error('Load entity error:', error)
+  }} finally {{
+    loading.value = false
+  }}
+}}
+
+function handleEdit() {{
+  if (!entityId.value) return
+  uni.navigateTo({{
+    url: `/pages/{kebabName}/form?id=${{entityId.value}}`
+  }})
+}}
+
+async function handleDelete() {{
+  const confirmed = await uniConfirm('确认删除', '删除后无法恢复，确认删除吗？')
+  if (!confirmed) return
+
+  try {{
+    await {camelName}Store.delete(entityId.value!)
+    uniToast('删除成功', 'success')
+    setTimeout(() => {{
+      uni.navigateBack()
+    }}, 1000)
+  }} catch (error) {{
+    uniToast('删除失败', 'error')
+    console.error('Delete entity error:', error)
+  }}
+}}
+
+function handleBack() {{
+  uni.navigateBack()
+}}
+</script>
+
+<style scoped lang=""scss"">
+.detail-page {{
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 20rpx;
+}}
+
+.detail-content {{
+  animation: fadeIn 0.3s ease-in;
+}}
+
+.card-footer {{
+  display: flex;
+  gap: 20rpx;
+  justify-content: space-between;
+}}
+
+@keyframes fadeIn {{
+  from {{ opacity: 0; transform: translateY(20rpx); }}
+  to {{ opacity: 1; transform: translateY(0); }}
+}}
+</style>
+
+<!-- 
+  生成时间: {DateTime.Now:yyyy-MM-dd HH:mm:ss}
+  生成器: SmartAbp DevKit Low-Code Engine
+  组件库: uView UI 3.2.7
+  类型安全: 100% TypeScript
+-->
+";
         }
 
         static string GenerateFormPage(EntityConfig entity)
         {
-            return $@"<!-- Generated Form Page for {entity.Name} -->";
+            var kebabName = ToKebabCase(entity.Name);
+            var camelName = ToCamelCase(entity.Name);
+            
+            return $@"<!-- pages/{kebabName}/form.vue -->
+<template>
+  <view class=""form-page"">
+    <u-form :model=""form"" :rules=""rules"" ref=""formRef"" label-width=""160"">
+{string.Join("\n", entity.Fields.Select(f => GenerateFormField(f)))}
+    </u-form>
+
+    <view class=""form-actions"">
+      <u-button type=""primary"" @click=""handleSubmit"" :loading=""submitting"">
+        <u-icon name=""checkmark"" /> {{{{ isEdit ? '保存' : '创建' }}}}
+      </u-button>
+      <u-button type=""info"" @click=""handleCancel"" :disabled=""submitting"">
+        <u-icon name=""close"" /> 取消
+      </u-button>
+    </view>
+  </view>
+</template>
+
+<script setup lang=""ts"">
+import {{ ref, reactive, onMounted }} from 'vue'
+import {{ onLoad }} from '@dcloudio/uni-app'
+import {{ use{entity.Name}Store }} from '@/stores/{kebabName}-store'
+import type {{ Create{entity.Name}Dto, Update{entity.Name}Dto, {entity.Name}Dto }} from '@/types/{kebabName}.types'
+import {{ uniToast }} from '@/utils/uni-tools'
+
+const {camelName}Store = use{entity.Name}Store()
+const formRef = ref<any>(null)
+const isEdit = ref(false)
+const entityId = ref<string | null>(null)
+const submitting = ref(false)
+
+const form = reactive<Create{entity.Name}Dto | Update{entity.Name}Dto>({{
+{string.Join(",\n", entity.Fields.Select(f => $"  {ToCamelCase(f.Name)}: {GetDefaultValue(f.Type)}"))}
+}})
+
+const rules = reactive<any>({{
+{string.Join(",\n", entity.Fields.Where(f => f.Required).Select(f => $@"  {ToCamelCase(f.Name)}: [
+    {{ required: true, message: '请输入{f.Label}', trigger: ['blur', 'change'] }}
+  ]"))}
+}})
+
+onLoad((options) => {{
+  if (options?.id) {{
+    entityId.value = options.id
+    isEdit.value = true
+    loadEntityData(options.id)
+  }}
+}})
+
+async function loadEntityData(id: string) {{
+  try {{
+    const data = await {camelName}Store.getById(id)
+    Object.assign(form, data)
+  }} catch (error) {{
+    uniToast('加载失败', 'error')
+    console.error('Load entity error:', error)
+  }}
+}}
+
+async function handleSubmit() {{
+  const valid = await formRef.value?.validate()
+  if (!valid) return
+
+  submitting.value = true
+  try {{
+    if (isEdit.value) {{
+      await {camelName}Store.update(entityId.value!, form as Update{entity.Name}Dto)
+      uniToast('保存成功', 'success')
+    }} else {{
+      await {camelName}Store.create(form as Create{entity.Name}Dto)
+      uniToast('创建成功', 'success')
+    }}
+    setTimeout(() => {{
+      uni.navigateBack()
+    }}, 1000)
+  }} catch (error) {{
+    uniToast(isEdit.value ? '保存失败' : '创建失败', 'error')
+    console.error('Submit error:', error)
+  }} finally {{
+    submitting.value = false
+  }}
+}}
+
+function handleCancel() {{
+  uni.navigateBack()
+}}
+</script>
+
+<style scoped lang=""scss"">
+.form-page {{
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 20rpx;
+}}
+
+.form-actions {{
+  display: flex;
+  gap: 20rpx;
+  padding: 40rpx 20rpx;
+}}
+</style>
+
+<!-- 
+  生成时间: {DateTime.Now:yyyy-MM-dd HH:mm:ss}
+  生成器: SmartAbp DevKit Low-Code Engine
+  组件库: uView UI 3.2.7
+  类型安全: 100% TypeScript
+  表单验证: 完整实现
+-->
+";
+        }
+
+        static string GenerateFormField(FieldConfig field)
+        {
+            var camelName = ToCamelCase(field.Name);
+            var component = MapFieldTypeToComponent(field.Type, field.Name, field.Label);
+            
+            return $@"      <u-form-item label=""{field.Label}"" prop=""{camelName}"" {(field.Required ? "required" : "")}>
+        {component}
+      </u-form-item>";
+        }
+
+        static string MapFieldTypeToComponent(string type, string fieldName, string label)
+        {
+            var camelName = ToCamelCase(fieldName);
+            
+            return type switch
+            {
+                "string" => $"<u-input v-model=\"form.{camelName}\" placeholder=\"请输入{label}\" clearable />",
+                "int" or "long" or "decimal" or "double" or "float" => $"<u-number-box v-model=\"form.{camelName}\" :min=\"0\" :step=\"1\" />",
+                "bool" => $"<u-switch v-model=\"form.{camelName}\" />",
+                "DateTime" => $"<u-datetime-picker v-model=\"form.{camelName}\" mode=\"datetime\" />",
+                "Guid" => $"<u-input v-model=\"form.{camelName}\" placeholder=\"请输入{label}\" clearable />",
+                "enum" => $"<u-select v-model=\"form.{camelName}\" :list=\"enumOptions.{camelName}\" />",
+                _ => $"<u-input v-model=\"form.{camelName}\" placeholder=\"请输入{label}\" clearable />"
+            };
+        }
+
+        static string GetDefaultValue(string type)
+        {
+            return type switch
+            {
+                "string" => "''",
+                "int" or "long" or "decimal" or "double" or "float" => "0",
+                "bool" => "false",
+                "DateTime" => "new Date()",
+                "Guid" => "''",
+                "enum" => "''",
+                _ => "''"
+            };
         }
 
         static string GenerateApiClient(EntityConfig entity)
@@ -361,7 +651,177 @@ export const {ToCamelCase(entity.Name)}Api = {{
 
         static string GenerateStore(EntityConfig entity)
         {
-            return $@"// Generated Pinia Store for {entity.Name}";
+            var kebabName = ToKebabCase(entity.Name);
+            var camelName = ToCamelCase(entity.Name);
+            
+            return $@"// stores/{kebabName}-store.ts
+/**
+ * {entity.Label} Pinia Store
+ * @author SmartAbp DevKit Low-Code Engine
+ * @since {DateTime.Now:yyyy-MM-dd}
+ */
+
+import {{ defineStore }} from 'pinia'
+import {{ ref }} from 'vue'
+import {{ {camelName}Api }} from '@/api/{kebabName}-api'
+import type {{ 
+  {entity.Name}Dto, 
+  Create{entity.Name}Dto, 
+  Update{entity.Name}Dto,
+  Get{entity.Name}ListInput,
+  PagedResultDto
+}} from '@/types/{kebabName}.types'
+
+export const use{entity.Name}Store = defineStore('{camelName}', () => {{
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 状态
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  const list = ref<{entity.Name}Dto[]>([])
+  const total = ref(0)
+  const loading = ref(false)
+  const currentEntity = ref<{entity.Name}Dto | null>(null)
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 操作
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * 获取列表
+   */
+  async function getList(params?: Get{entity.Name}ListInput) {{
+    loading.value = true
+    try {{
+      const result = await {camelName}Api.getList(params || {{}})
+      list.value = result.items
+      total.value = result.totalCount
+      return result
+    }} catch (error) {{
+      console.error('获取{entity.Label}列表失败:', error)
+      throw error
+    }} finally {{
+      loading.value = false
+    }}
+  }}
+
+  /**
+   * 根据ID获取详情
+   */
+  async function getById(id: string) {{
+    loading.value = true
+    try {{
+      const entity = await {camelName}Api.get(id)
+      currentEntity.value = entity
+      return entity
+    }} catch (error) {{
+      console.error('获取{entity.Label}详情失败:', error)
+      throw error
+    }} finally {{
+      loading.value = false
+    }}
+  }}
+
+  /**
+   * 创建
+   */
+  async function create(data: Create{entity.Name}Dto) {{
+    loading.value = true
+    try {{
+      const entity = await {camelName}Api.create(data)
+      // 添加到列表
+      list.value.unshift(entity)
+      total.value++
+      return entity
+    }} catch (error) {{
+      console.error('创建{entity.Label}失败:', error)
+      throw error
+    }} finally {{
+      loading.value = false
+    }}
+  }}
+
+  /**
+   * 更新
+   */
+  async function update(id: string, data: Update{entity.Name}Dto) {{
+    loading.value = true
+    try {{
+      const entity = await {camelName}Api.update(id, data)
+      // 更新列表中的数据
+      const index = list.value.findIndex(item => item.id === id)
+      if (index !== -1) {{
+        list.value[index] = entity
+      }}
+      // 更新当前实体
+      if (currentEntity.value?.id === id) {{
+        currentEntity.value = entity
+      }}
+      return entity
+    }} catch (error) {{
+      console.error('更新{entity.Label}失败:', error)
+      throw error
+    }} finally {{
+      loading.value = false
+    }}
+  }}
+
+  /**
+   * 删除
+   */
+  async function deleteEntity(id: string) {{
+    loading.value = true
+    try {{
+      await {camelName}Api.delete(id)
+      // 从列表中移除
+      const index = list.value.findIndex(item => item.id === id)
+      if (index !== -1) {{
+        list.value.splice(index, 1)
+        total.value--
+      }}
+      // 清除当前实体
+      if (currentEntity.value?.id === id) {{
+        currentEntity.value = null
+      }}
+    }} catch (error) {{
+      console.error('删除{entity.Label}失败:', error)
+      throw error
+    }} finally {{
+      loading.value = false
+    }}
+  }}
+
+  /**
+   * 清空状态
+   */
+  function reset() {{
+    list.value = []
+    total.value = 0
+    loading.value = false
+    currentEntity.value = null
+  }}
+
+  return {{
+    // 状态
+    list,
+    total,
+    loading,
+    currentEntity,
+    // 操作
+    getList,
+    getById,
+    create,
+    update,
+    delete: deleteEntity,
+    reset
+  }}
+}})
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 导出类型
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export type {entity.Name}StoreType = ReturnType<typeof use{entity.Name}Store>
+";
         }
 
         static string GenerateTypes(EntityConfig entity)
@@ -429,7 +889,7 @@ export interface ListResultDto<T> {{
   ""dependencies"": {
     ""@dcloudio/uni-app"": ""^3.0.0"",
     ""pinia"": ""^2.1.7"",
-    ""uview-ui"": ""^2.0.0""
+    ""uview-plus"": ""^3.2.7""
   }
 }";
             await File.WriteAllTextAsync(Path.Combine(outputPath, "package.json"), packageJson);
@@ -438,7 +898,7 @@ export interface ListResultDto<T> {{
             // main.js
             var mainJs = @"import { createSSRApp } from 'vue'
 import App from './App.vue'
-import uView from 'uview-ui'
+import uView from 'uview-plus'
 
 export function createApp() {
   const app = createSSRApp(App)

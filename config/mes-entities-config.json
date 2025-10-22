@@ -1,196 +1,208 @@
 {
-  "moduleName": "MES",
-  "description": "MES制造执行系统实体配置",
-  "entities": [
-    {
-      "name": "ProductionLine",
-      "label": "生产线",
-      "description": "工厂生产线管理",
-      "primaryKeyType": "Guid",
-      "fields": [
+    "moduleName": "MES",
+    "description": "MES制造执行系统实体配置",
+    "entities": [
         {
-          "name": "Name",
-          "label": "生产线名称",
-          "type": "string",
-          "required": true,
-          "maxLength": 100,
-          "displayOrder": 1
+            "name": "ProductionLine",
+            "label": "生产线",
+            "description": "工厂生产线管理",
+            "primaryKeyType": "Guid",
+            "fields": [
+                {
+                    "name": "Name",
+                    "label": "生产线名称",
+                    "type": "string",
+                    "required": true,
+                    "maxLength": 100,
+                    "displayOrder": 1
+                },
+                {
+                    "name": "Code",
+                    "label": "生产线编码",
+                    "type": "string",
+                    "required": true,
+                    "maxLength": 50,
+                    "displayOrder": 2
+                },
+                {
+                    "name": "Status",
+                    "label": "运行状态",
+                    "type": "enum",
+                    "required": true,
+                    "displayOrder": 3,
+                    "enumValues": [
+                        "运行中",
+                        "停机",
+                        "维护中",
+                        "故障"
+                    ]
+                },
+                {
+                    "name": "Location",
+                    "label": "位置",
+                    "type": "string",
+                    "required": false,
+                    "maxLength": 200,
+                    "displayOrder": 4
+                },
+                {
+                    "name": "Capacity",
+                    "label": "产能",
+                    "type": "int",
+                    "required": false,
+                    "displayOrder": 5
+                },
+                {
+                    "name": "CurrentOutput",
+                    "label": "当前产量",
+                    "type": "int",
+                    "required": false,
+                    "displayOrder": 6
+                }
+            ]
         },
         {
-          "name": "Code",
-          "label": "生产线编码",
-          "type": "string",
-          "required": true,
-          "maxLength": 50,
-          "displayOrder": 2
+            "name": "Equipment",
+            "label": "设备",
+            "description": "生产线设备管理",
+            "primaryKeyType": "Guid",
+            "fields": [
+                {
+                    "name": "Name",
+                    "label": "设备名称",
+                    "type": "string",
+                    "required": true,
+                    "maxLength": 100,
+                    "displayOrder": 1
+                },
+                {
+                    "name": "Code",
+                    "label": "设备编码",
+                    "type": "string",
+                    "required": true,
+                    "maxLength": 50,
+                    "displayOrder": 2
+                },
+                {
+                    "name": "Type",
+                    "label": "设备类型",
+                    "type": "enum",
+                    "required": true,
+                    "displayOrder": 3,
+                    "enumValues": [
+                        "机床",
+                        "传送带",
+                        "机械臂",
+                        "检测设备",
+                        "包装设备"
+                    ]
+                },
+                {
+                    "name": "ProductionLineId",
+                    "label": "所属生产线",
+                    "type": "Guid",
+                    "required": true,
+                    "displayOrder": 4
+                },
+                {
+                    "name": "IsOnline",
+                    "label": "是否在线",
+                    "type": "bool",
+                    "required": false,
+                    "displayOrder": 5
+                },
+                {
+                    "name": "OperatingHours",
+                    "label": "运行时长(小时)",
+                    "type": "decimal",
+                    "required": false,
+                    "displayOrder": 6
+                },
+                {
+                    "name": "LastMaintenanceDate",
+                    "label": "最后维护日期",
+                    "type": "DateTime",
+                    "required": false,
+                    "displayOrder": 7
+                }
+            ]
         },
         {
-          "name": "Status",
-          "label": "运行状态",
-          "type": "enum",
-          "required": true,
-          "displayOrder": 3,
-          "enumValues": ["运行中", "停机", "维护中", "故障"]
-        },
-        {
-          "name": "Location",
-          "label": "位置",
-          "type": "string",
-          "required": false,
-          "maxLength": 200,
-          "displayOrder": 4
-        },
-        {
-          "name": "Capacity",
-          "label": "产能",
-          "type": "int",
-          "required": false,
-          "displayOrder": 5
-        },
-        {
-          "name": "CurrentOutput",
-          "label": "当前产量",
-          "type": "int",
-          "required": false,
-          "displayOrder": 6
+            "name": "SensorData",
+            "label": "传感器数据",
+            "description": "设备传感器实时数据",
+            "primaryKeyType": "Guid",
+            "fields": [
+                {
+                    "name": "EquipmentId",
+                    "label": "所属设备",
+                    "type": "Guid",
+                    "required": true,
+                    "displayOrder": 1
+                },
+                {
+                    "name": "SensorType",
+                    "label": "传感器类型",
+                    "type": "string",
+                    "required": true,
+                    "maxLength": 50,
+                    "displayOrder": 2
+                },
+                {
+                    "name": "Temperature",
+                    "label": "温度(℃)",
+                    "type": "decimal",
+                    "required": false,
+                    "displayOrder": 3
+                },
+                {
+                    "name": "Pressure",
+                    "label": "压力(MPa)",
+                    "type": "decimal",
+                    "required": false,
+                    "displayOrder": 4
+                },
+                {
+                    "name": "Humidity",
+                    "label": "湿度(%)",
+                    "type": "decimal",
+                    "required": false,
+                    "displayOrder": 5
+                },
+                {
+                    "name": "Vibration",
+                    "label": "振动(mm/s)",
+                    "type": "decimal",
+                    "required": false,
+                    "displayOrder": 6
+                },
+                {
+                    "name": "Power",
+                    "label": "功率(kW)",
+                    "type": "decimal",
+                    "required": false,
+                    "displayOrder": 7
+                },
+                {
+                    "name": "Timestamp",
+                    "label": "采集时间",
+                    "type": "DateTime",
+                    "required": true,
+                    "displayOrder": 8
+                },
+                {
+                    "name": "IsAlarm",
+                    "label": "是否告警",
+                    "type": "bool",
+                    "required": false,
+                    "displayOrder": 9
+                }
+            ]
         }
-      ]
-    },
-    {
-      "name": "Equipment",
-      "label": "设备",
-      "description": "生产线设备管理",
-      "primaryKeyType": "Guid",
-      "fields": [
-        {
-          "name": "Name",
-          "label": "设备名称",
-          "type": "string",
-          "required": true,
-          "maxLength": 100,
-          "displayOrder": 1
-        },
-        {
-          "name": "Code",
-          "label": "设备编码",
-          "type": "string",
-          "required": true,
-          "maxLength": 50,
-          "displayOrder": 2
-        },
-        {
-          "name": "Type",
-          "label": "设备类型",
-          "type": "enum",
-          "required": true,
-          "displayOrder": 3,
-          "enumValues": ["机床", "传送带", "机械臂", "检测设备", "包装设备"]
-        },
-        {
-          "name": "ProductionLineId",
-          "label": "所属生产线",
-          "type": "Guid",
-          "required": true,
-          "displayOrder": 4
-        },
-        {
-          "name": "IsOnline",
-          "label": "是否在线",
-          "type": "bool",
-          "required": false,
-          "displayOrder": 5
-        },
-        {
-          "name": "OperatingHours",
-          "label": "运行时长(小时)",
-          "type": "decimal",
-          "required": false,
-          "displayOrder": 6
-        },
-        {
-          "name": "LastMaintenanceDate",
-          "label": "最后维护日期",
-          "type": "DateTime",
-          "required": false,
-          "displayOrder": 7
-        }
-      ]
-    },
-    {
-      "name": "SensorData",
-      "label": "传感器数据",
-      "description": "设备传感器实时数据",
-      "primaryKeyType": "Guid",
-      "fields": [
-        {
-          "name": "EquipmentId",
-          "label": "所属设备",
-          "type": "Guid",
-          "required": true,
-          "displayOrder": 1
-        },
-        {
-          "name": "SensorType",
-          "label": "传感器类型",
-          "type": "string",
-          "required": true,
-          "maxLength": 50,
-          "displayOrder": 2
-        },
-        {
-          "name": "Temperature",
-          "label": "温度(℃)",
-          "type": "decimal",
-          "required": false,
-          "displayOrder": 3
-        },
-        {
-          "name": "Pressure",
-          "label": "压力(MPa)",
-          "type": "decimal",
-          "required": false,
-          "displayOrder": 4
-        },
-        {
-          "name": "Humidity",
-          "label": "湿度(%)",
-          "type": "decimal",
-          "required": false,
-          "displayOrder": 5
-        },
-        {
-          "name": "Vibration",
-          "label": "振动(mm/s)",
-          "type": "decimal",
-          "required": false,
-          "displayOrder": 6
-        },
-        {
-          "name": "Power",
-          "label": "功率(kW)",
-          "type": "decimal",
-          "required": false,
-          "displayOrder": 7
-        },
-        {
-          "name": "Timestamp",
-          "label": "采集时间",
-          "type": "DateTime",
-          "required": true,
-          "displayOrder": 8
-        },
-        {
-          "name": "IsAlarm",
-          "label": "是否告警",
-          "type": "bool",
-          "required": false,
-          "displayOrder": 9
-        }
-      ]
-    }
-  ],
-  "targetPlatforms": ["UniApp"],
-  "componentLibrary": "uView",
-  "outputPath": "./output/mes-uniapp"
+    ],
+    "targetPlatforms": [
+        "UniApp"
+    ],
+    "componentLibrary": "uView",
+    "outputPath": "./output/mes-uniapp"
 }
-

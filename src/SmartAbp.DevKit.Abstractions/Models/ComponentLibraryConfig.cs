@@ -26,17 +26,17 @@ public class ComponentLibraryConfig
     /// <summary>
     /// 组件库版本
     /// </summary>
-    public string Version { get; set; } = "2.0.0";
+    public string Version { get; set; } = "3.2.7";
 
     /// <summary>
     /// NPM包名
     /// </summary>
     public string PackageName => Type switch
     {
-        ComponentLibraryType.UView => "uview-ui",
+        ComponentLibraryType.UView => "uview-plus",
         ComponentLibraryType.WotDesign => "wot-design-uni",
         ComponentLibraryType.UniUI => "@dcloudio/uni-ui",
-        _ => "uview-ui"
+        _ => "uview-plus"
     };
 
     /// <summary>
@@ -67,7 +67,7 @@ public class ComponentLibraryConfig
         return new ComponentLibraryConfig
         {
             Type = ComponentLibraryType.UView,
-            Version = "2.0.0",
+            Version = "3.2.7",
             FieldTypeMapping = new Dictionary<string, string>
             {
                 { "string", "u-input" },

@@ -1,0 +1,539 @@
+{
+  "projectName": "SmartAbp.MES",
+  "moduleName": "MES",
+  "description": "MES制造执行系统 - 全栈代码生成配置",
+  "version": "1.0.0",
+  "author": "SmartAbp DevKit Low-Code Engine",
+  
+  "targetPlatforms": {
+    "frontend": ["UniApp", "Web", "Dashboard"],
+    "backend": ["ABP vNext"],
+    "realtime": ["SignalR", "PLC", "Alarm"]
+  },
+
+  "frontend": {
+    "uniapp": {
+      "enabled": true,
+      "componentLibrary": "uView",
+      "componentLibraryVersion": "2.0.0",
+      "features": ["list", "detail", "form", "search", "offline-sync"],
+      "outputPath": "./output/frontend/uniapp"
+    },
+    "web": {
+      "enabled": true,
+      "framework": "Vue3",
+      "uiLibrary": "Element Plus",
+      "features": ["crud", "search", "export", "import", "bulk-operations"],
+      "outputPath": "./output/frontend/web"
+    },
+    "dashboard": {
+      "enabled": true,
+      "framework": "Vue3",
+      "chartLibrary": "ECharts",
+      "features": ["realtime-chart", "kpi-card", "data-table", "map"],
+      "outputPath": "./output/frontend/dashboard"
+    }
+  },
+
+  "backend": {
+    "framework": "ABP vNext",
+    "architecture": "DDD",
+    "database": "SqlServer",
+    "layers": {
+      "domain": {
+        "enabled": true,
+        "features": ["entity", "repository-interface", "domain-service", "event"]
+      },
+      "application": {
+        "enabled": true,
+        "features": ["app-service", "dto", "automapper", "validator"]
+      },
+      "httpApi": {
+        "enabled": true,
+        "features": ["controller", "swagger", "versioning"]
+      },
+      "infrastructure": {
+        "enabled": true,
+        "features": ["repository-impl", "db-context", "migration", "seed-data"]
+      }
+    },
+    "outputPath": "./output/backend"
+  },
+
+  "realtime": {
+    "signalr": {
+      "enabled": true,
+      "hubs": ["ProductionLineHub", "AlarmHub"],
+      "features": ["broadcast", "group", "user-specific"]
+    },
+    "plc": {
+      "enabled": true,
+      "protocols": ["OPC-UA", "Modbus-TCP", "Simulated"],
+      "features": ["data-collection", "command-send", "health-check"]
+    },
+    "alarm": {
+      "enabled": true,
+      "rules": ["threshold", "trend", "complex-condition"],
+      "features": ["rule-engine", "notification", "history"]
+    },
+    "outputPath": "./output/realtime"
+  },
+
+  "entities": [
+    {
+      "name": "ProductionLine",
+      "label": "生产线",
+      "description": "工厂生产线管理",
+      "tableName": "MES_ProductionLines",
+      "primaryKeyType": "Guid",
+      "auditFields": true,
+      "softDelete": true,
+      "multiTenant": false,
+      "fields": [
+        {
+          "name": "Name",
+          "label": "生产线名称",
+          "type": "string",
+          "required": true,
+          "maxLength": 100,
+          "displayOrder": 1,
+          "searchable": true,
+          "sortable": true,
+          "showInList": true,
+          "showInDetail": true,
+          "showInForm": true
+        },
+        {
+          "name": "Code",
+          "label": "生产线编码",
+          "type": "string",
+          "required": true,
+          "maxLength": 50,
+          "unique": true,
+          "displayOrder": 2,
+          "searchable": true,
+          "sortable": true,
+          "showInList": true,
+          "showInDetail": true,
+          "showInForm": true
+        },
+        {
+          "name": "Status",
+          "label": "运行状态",
+          "type": "enum",
+          "enumType": "ProductionLineStatus",
+          "required": true,
+          "displayOrder": 3,
+          "enumValues": [
+            {"value": 0, "label": "停机", "color": "gray"},
+            {"value": 1, "label": "运行中", "color": "green"},
+            {"value": 2, "label": "维护中", "color": "orange"},
+            {"value": 3, "label": "故障", "color": "red"}
+          ],
+          "searchable": true,
+          "sortable": true,
+          "showInList": true,
+          "showInDetail": true,
+          "showInForm": true
+        },
+        {
+          "name": "Location",
+          "label": "位置",
+          "type": "string",
+          "required": false,
+          "maxLength": 200,
+          "displayOrder": 4,
+          "searchable": true,
+          "showInDetail": true,
+          "showInForm": true
+        },
+        {
+          "name": "Capacity",
+          "label": "设计产能",
+          "type": "int",
+          "required": false,
+          "defaultValue": 0,
+          "min": 0,
+          "displayOrder": 5,
+          "showInList": true,
+          "showInDetail": true,
+          "showInForm": true
+        },
+        {
+          "name": "CurrentOutput",
+          "label": "当前产量",
+          "type": "int",
+          "required": false,
+          "defaultValue": 0,
+          "min": 0,
+          "displayOrder": 6,
+          "showInList": true,
+          "showInDetail": true,
+          "showInForm": true,
+          "realtime": true
+        },
+        {
+          "name": "UtilizationRate",
+          "label": "利用率(%)",
+          "type": "decimal",
+          "required": false,
+          "defaultValue": 0,
+          "min": 0,
+          "max": 100,
+          "precision": 2,
+          "displayOrder": 7,
+          "showInList": true,
+          "showInDetail": true,
+          "realtime": true,
+          "computed": "CurrentOutput / Capacity * 100"
+        },
+        {
+          "name": "IsOnline",
+          "label": "是否在线",
+          "type": "bool",
+          "required": false,
+          "defaultValue": false,
+          "displayOrder": 8,
+          "showInList": true,
+          "showInDetail": true,
+          "realtime": true
+        }
+      ],
+      "realtimeFields": ["CurrentOutput", "UtilizationRate", "IsOnline"],
+      "alarmRules": [
+        {
+          "name": "利用率过低告警",
+          "field": "UtilizationRate",
+          "condition": "< 60",
+          "level": "Warning",
+          "message": "生产线 {Name} 利用率过低：{UtilizationRate}%"
+        },
+        {
+          "name": "生产线离线告警",
+          "field": "IsOnline",
+          "condition": "== false",
+          "level": "Error",
+          "message": "生产线 {Name} 已离线"
+        }
+      ]
+    },
+    {
+      "name": "Equipment",
+      "label": "设备",
+      "description": "生产线设备管理",
+      "tableName": "MES_Equipment",
+      "primaryKeyType": "Guid",
+      "auditFields": true,
+      "softDelete": true,
+      "multiTenant": false,
+      "fields": [
+        {
+          "name": "Name",
+          "label": "设备名称",
+          "type": "string",
+          "required": true,
+          "maxLength": 100,
+          "displayOrder": 1,
+          "searchable": true,
+          "sortable": true,
+          "showInList": true,
+          "showInDetail": true,
+          "showInForm": true
+        },
+        {
+          "name": "Code",
+          "label": "设备编码",
+          "type": "string",
+          "required": true,
+          "maxLength": 50,
+          "unique": true,
+          "displayOrder": 2,
+          "searchable": true,
+          "sortable": true,
+          "showInList": true,
+          "showInDetail": true,
+          "showInForm": true
+        },
+        {
+          "name": "Type",
+          "label": "设备类型",
+          "type": "enum",
+          "enumType": "EquipmentType",
+          "required": true,
+          "displayOrder": 3,
+          "enumValues": [
+            {"value": 0, "label": "机床"},
+            {"value": 1, "label": "传送带"},
+            {"value": 2, "label": "机械臂"},
+            {"value": 3, "label": "检测设备"},
+            {"value": 4, "label": "包装设备"}
+          ],
+          "searchable": true,
+          "sortable": true,
+          "showInList": true,
+          "showInDetail": true,
+          "showInForm": true
+        },
+        {
+          "name": "ProductionLineId",
+          "label": "所属生产线",
+          "type": "Guid",
+          "required": true,
+          "displayOrder": 4,
+          "foreignKey": {
+            "entity": "ProductionLine",
+            "displayField": "Name"
+          },
+          "searchable": true,
+          "showInList": true,
+          "showInDetail": true,
+          "showInForm": true
+        },
+        {
+          "name": "IsOnline",
+          "label": "是否在线",
+          "type": "bool",
+          "required": false,
+          "defaultValue": false,
+          "displayOrder": 5,
+          "showInList": true,
+          "showInDetail": true,
+          "realtime": true
+        },
+        {
+          "name": "OperatingHours",
+          "label": "运行时长(小时)",
+          "type": "decimal",
+          "required": false,
+          "defaultValue": 0,
+          "min": 0,
+          "precision": 2,
+          "displayOrder": 6,
+          "showInDetail": true,
+          "realtime": true
+        },
+        {
+          "name": "LastMaintenanceDate",
+          "label": "最后维护日期",
+          "type": "DateTime",
+          "required": false,
+          "displayOrder": 7,
+          "showInDetail": true,
+          "showInForm": true
+        },
+        {
+          "name": "NextMaintenanceDate",
+          "label": "下次维护日期",
+          "type": "DateTime",
+          "required": false,
+          "displayOrder": 8,
+          "showInDetail": true,
+          "showInForm": true
+        }
+      ],
+      "relations": [
+        {
+          "type": "ManyToOne",
+          "targetEntity": "ProductionLine",
+          "foreignKey": "ProductionLineId",
+          "navigationProperty": "ProductionLine"
+        }
+      ],
+      "realtimeFields": ["IsOnline", "OperatingHours"],
+      "alarmRules": [
+        {
+          "name": "设备离线告警",
+          "field": "IsOnline",
+          "condition": "== false",
+          "level": "Warning",
+          "message": "设备 {Name} 已离线"
+        },
+        {
+          "name": "维护超期告警",
+          "field": "NextMaintenanceDate",
+          "condition": "< DateTime.Now",
+          "level": "Warning",
+          "message": "设备 {Name} 维护已超期"
+        }
+      ]
+    },
+    {
+      "name": "SensorData",
+      "label": "传感器数据",
+      "description": "设备传感器实时数据",
+      "tableName": "MES_SensorData",
+      "primaryKeyType": "Guid",
+      "auditFields": false,
+      "softDelete": false,
+      "multiTenant": false,
+      "timeSeriesData": true,
+      "fields": [
+        {
+          "name": "EquipmentId",
+          "label": "所属设备",
+          "type": "Guid",
+          "required": true,
+          "displayOrder": 1,
+          "foreignKey": {
+            "entity": "Equipment",
+            "displayField": "Name"
+          },
+          "searchable": true,
+          "showInList": true,
+          "showInDetail": true
+        },
+        {
+          "name": "SensorType",
+          "label": "传感器类型",
+          "type": "string",
+          "required": true,
+          "maxLength": 50,
+          "displayOrder": 2,
+          "searchable": true,
+          "showInList": true,
+          "showInDetail": true
+        },
+        {
+          "name": "Temperature",
+          "label": "温度(℃)",
+          "type": "decimal",
+          "required": false,
+          "precision": 2,
+          "displayOrder": 3,
+          "showInList": true,
+          "showInDetail": true,
+          "realtime": true
+        },
+        {
+          "name": "Pressure",
+          "label": "压力(MPa)",
+          "type": "decimal",
+          "required": false,
+          "precision": 2,
+          "displayOrder": 4,
+          "showInList": true,
+          "showInDetail": true,
+          "realtime": true
+        },
+        {
+          "name": "Humidity",
+          "label": "湿度(%)",
+          "type": "decimal",
+          "required": false,
+          "precision": 2,
+          "displayOrder": 5,
+          "showInList": true,
+          "showInDetail": true,
+          "realtime": true
+        },
+        {
+          "name": "Vibration",
+          "label": "振动(mm/s)",
+          "type": "decimal",
+          "required": false,
+          "precision": 2,
+          "displayOrder": 6,
+          "showInList": true,
+          "showInDetail": true,
+          "realtime": true
+        },
+        {
+          "name": "Power",
+          "label": "功率(kW)",
+          "type": "decimal",
+          "required": false,
+          "precision": 2,
+          "displayOrder": 7,
+          "showInList": true,
+          "showInDetail": true,
+          "realtime": true
+        },
+        {
+          "name": "Timestamp",
+          "label": "采集时间",
+          "type": "DateTime",
+          "required": true,
+          "displayOrder": 8,
+          "sortable": true,
+          "showInList": true,
+          "showInDetail": true
+        },
+        {
+          "name": "IsAlarm",
+          "label": "是否告警",
+          "type": "bool",
+          "required": false,
+          "defaultValue": false,
+          "displayOrder": 9,
+          "showInList": true,
+          "showInDetail": true,
+          "realtime": true
+        }
+      ],
+      "relations": [
+        {
+          "type": "ManyToOne",
+          "targetEntity": "Equipment",
+          "foreignKey": "EquipmentId",
+          "navigationProperty": "Equipment"
+        }
+      ],
+      "realtimeFields": ["Temperature", "Pressure", "Humidity", "Vibration", "Power", "IsAlarm"],
+      "alarmRules": [
+        {
+          "name": "温度过高告警",
+          "field": "Temperature",
+          "condition": "> 80",
+          "level": "Error",
+          "message": "设备传感器温度过高：{Temperature}℃"
+        },
+        {
+          "name": "压力异常告警",
+          "field": "Pressure",
+          "condition": "> 5 OR < 0.5",
+          "level": "Warning",
+          "message": "设备传感器压力异常：{Pressure} MPa"
+        },
+        {
+          "name": "振动过大告警",
+          "field": "Vibration",
+          "condition": "> 10",
+          "level": "Warning",
+          "message": "设备传感器振动过大：{Vibration} mm/s"
+        }
+      ]
+    }
+  ],
+
+  "codeGeneration": {
+    "backend": {
+      "namespace": "SmartAbp.MES",
+      "baseNamespace": "SmartAbp",
+      "templateEngine": "Handlebars",
+      "codeStyle": "ABP vNext",
+      "features": {
+        "audit": true,
+        "softDelete": true,
+        "multiTenant": false,
+        "localization": true,
+        "permission": true,
+        "validation": true,
+        "caching": true
+      }
+    },
+    "frontend": {
+      "typescript": true,
+      "eslint": true,
+      "prettier": true,
+      "i18n": true,
+      "responsiveDesign": true
+    }
+  },
+
+  "deployment": {
+    "docker": true,
+    "kubernetes": false,
+    "aspire": true
+  }
+}
+
