@@ -296,35 +296,32 @@ const routes: RouteRecordRaw[] = [
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       {
         path: "layer1",
-        name: "Layer1UltraSimpleStudio",
+        name: "UltraSimpleMode",
         component: () => import("@/views/lowcode/UltraSimpleStudio.vue"),
         meta: {
-          title: "Layer1 - 极简模式",
-          menuKey: "layer1-ultra-simple",
-          icon: "⚡",
-          description: "选表即生成，零配置快速开发"
+          title: "极简模式",
+          menuKey: "ultra-simple-mode",
+          description: "选择数据表，一键生成代码"
         }
       },
       {
         path: "layer2",
-        name: "Layer2SmartStudioLite",
+        name: "SmartConfigMode",
         component: () => import("@/views/lowcode/SmartStudioLite.vue"),
         meta: {
-          title: "Layer2 - 智能配置",
-          menuKey: "layer2-smart-studio-lite",
-          icon: "🎯",
-          description: "可视化字段配置，渐进式开发体验"
+          title: "智能配置模式",
+          menuKey: "smart-config-mode",
+          description: "可视化配置字段和关系"
         }
       },
       {
         path: "layer3",
-        name: "Layer3StudioPro",
+        name: "ProfessionalMode",
         component: () => import("@smartabp/lowcode-designer/views/EntityModelingView.vue"),
         meta: {
-          title: "Layer3 - 专业版",
-          menuKey: "layer3-studio-pro",
-          icon: "🚀",
-          description: "完整建模能力，企业级代码生成"
+          title: "专业模式",
+          menuKey: "professional-mode",
+          description: "完整的实体建模和代码生成"
         }
       },
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
