@@ -1,0 +1,250 @@
+{
+  "ModuleName": "MES",
+  "Description": "MES制造执行系统 - 业务场景",
+  "Scenarios": [
+    {
+      "Name": "ProductionLineInspection",
+      "Label": "产线巡检",
+      "Description": "产线设备巡检和数据采集",
+      "Icon": "clipboard-list",
+      "Features": [
+        "useAuth",
+        "useOfflineSync",
+        "useFileUpload"
+      ],
+      "Fields": [
+        {
+          "Name": "ProductionLineId",
+          "Label": "产线",
+          "Type": "select",
+          "Required": true,
+          "DataSource": "ProductionLine"
+        },
+        {
+          "Name": "InspectionTime",
+          "Label": "巡检时间",
+          "Type": "datetime",
+          "Required": true,
+          "DefaultValue": "now"
+        },
+        {
+          "Name": "InspectorName",
+          "Label": "巡检人",
+          "Type": "string",
+          "Required": true,
+          "DefaultValue": "currentUser"
+        },
+        {
+          "Name": "EquipmentStatus",
+          "Label": "设备状态",
+          "Type": "select",
+          "Required": true,
+          "Options": [
+            { "Value": "normal", "Label": "正常" },
+            { "Value": "warning", "Label": "警告" },
+            { "Value": "fault", "Label": "故障" }
+          ]
+        },
+        {
+          "Name": "Temperature",
+          "Label": "温度(°C)",
+          "Type": "number",
+          "Required": false
+        },
+        {
+          "Name": "Pressure",
+          "Label": "压力(MPa)",
+          "Type": "number",
+          "Required": false
+        },
+        {
+          "Name": "Vibration",
+          "Label": "振动(mm/s)",
+          "Type": "number",
+          "Required": false
+        },
+        {
+          "Name": "Notes",
+          "Label": "巡检备注",
+          "Type": "textarea",
+          "Required": false
+        },
+        {
+          "Name": "Photos",
+          "Label": "现场照片",
+          "Type": "image-upload",
+          "Required": false,
+          "MaxCount": 9
+        }
+      ]
+    },
+    {
+      "Name": "EquipmentRepair",
+      "Label": "设备报修",
+      "Description": "设备故障报修和工单创建",
+      "Icon": "tools",
+      "Features": [
+        "useAuth",
+        "useOfflineSync",
+        "useFileUpload"
+      ],
+      "Fields": [
+        {
+          "Name": "EquipmentId",
+          "Label": "设备",
+          "Type": "select",
+          "Required": true,
+          "DataSource": "Equipment"
+        },
+        {
+          "Name": "FaultType",
+          "Label": "故障类型",
+          "Type": "select",
+          "Required": true,
+          "Options": [
+            { "Value": "mechanical", "Label": "机械故障" },
+            { "Value": "electrical", "Label": "电气故障" },
+            { "Value": "hydraulic", "Label": "液压故障" },
+            { "Value": "pneumatic", "Label": "气动故障" },
+            { "Value": "other", "Label": "其他" }
+          ]
+        },
+        {
+          "Name": "FaultLevel",
+          "Label": "故障等级",
+          "Type": "select",
+          "Required": true,
+          "Options": [
+            { "Value": "critical", "Label": "紧急" },
+            { "Value": "high", "Label": "高" },
+            { "Value": "medium", "Label": "中" },
+            { "Value": "low", "Label": "低" }
+          ]
+        },
+        {
+          "Name": "FaultDescription",
+          "Label": "故障描述",
+          "Type": "textarea",
+          "Required": true
+        },
+        {
+          "Name": "ReportTime",
+          "Label": "报修时间",
+          "Type": "datetime",
+          "Required": true,
+          "DefaultValue": "now"
+        },
+        {
+          "Name": "ReporterName",
+          "Label": "报修人",
+          "Type": "string",
+          "Required": true,
+          "DefaultValue": "currentUser"
+        },
+        {
+          "Name": "FaultPhotos",
+          "Label": "故障照片",
+          "Type": "image-upload",
+          "Required": false,
+          "MaxCount": 9
+        },
+        {
+          "Name": "FaultVideo",
+          "Label": "故障视频",
+          "Type": "video-upload",
+          "Required": false,
+          "MaxCount": 1
+        }
+      ]
+    },
+    {
+      "Name": "MaintenanceOrder",
+      "Label": "维修工单",
+      "Description": "维修工单处理和进度跟踪",
+      "Icon": "wrench",
+      "Features": [
+        "useAuth",
+        "useOfflineSync"
+      ],
+      "Fields": [
+        {
+          "Name": "OrderNumber",
+          "Label": "工单号",
+          "Type": "string",
+          "Required": true,
+          "ReadOnly": true
+        },
+        {
+          "Name": "EquipmentId",
+          "Label": "设备",
+          "Type": "select",
+          "Required": true,
+          "DataSource": "Equipment",
+          "ReadOnly": true
+        },
+        {
+          "Name": "FaultDescription",
+          "Label": "故障描述",
+          "Type": "textarea",
+          "Required": true,
+          "ReadOnly": true
+        },
+        {
+          "Name": "MaintenanceType",
+          "Label": "维修类型",
+          "Type": "select",
+          "Required": true,
+          "Options": [
+            { "Value": "emergency", "Label": "应急维修" },
+            { "Value": "preventive", "Label": "预防性维修" },
+            { "Value": "corrective", "Label": "纠正性维修" },
+            { "Value": "routine", "Label": "例行维修" }
+          ]
+        },
+        {
+          "Name": "AssignedTo",
+          "Label": "指派给",
+          "Type": "string",
+          "Required": true
+        },
+        {
+          "Name": "Status",
+          "Label": "状态",
+          "Type": "select",
+          "Required": true,
+          "Options": [
+            { "Value": "pending", "Label": "待处理" },
+            { "Value": "inProgress", "Label": "进行中" },
+            { "Value": "completed", "Label": "已完成" },
+            { "Value": "cancelled", "Label": "已取消" }
+          ]
+        },
+        {
+          "Name": "StartTime",
+          "Label": "开始时间",
+          "Type": "datetime",
+          "Required": false
+        },
+        {
+          "Name": "CompleteTime",
+          "Label": "完成时间",
+          "Type": "datetime",
+          "Required": false
+        },
+        {
+          "Name": "MaintenanceNotes",
+          "Label": "维修记录",
+          "Type": "textarea",
+          "Required": false
+        },
+        {
+          "Name": "SparePartsUsed",
+          "Label": "使用备件",
+          "Type": "textarea",
+          "Required": false
+        }
+      ]
+    }
+  ]
+}
+
