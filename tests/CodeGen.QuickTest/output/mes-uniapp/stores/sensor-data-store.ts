@@ -1,0 +1,1 @@
+// Generated Pinia Store for SensorData

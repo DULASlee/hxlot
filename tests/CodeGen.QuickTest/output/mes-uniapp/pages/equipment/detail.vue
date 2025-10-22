@@ -1,0 +1,1 @@
+<!-- Generated Detail Page for Equipment -->
