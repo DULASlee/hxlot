@@ -264,8 +264,47 @@ public class UniAppGenerator : BaseFrontendGenerator
         templates.Add(("types", metadata, typesPath));
         LogGeneratedFile(typesPath, "types");
 
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 🎯 Phase 3B核心功能：JWT认证、离线同步、文件上传
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        // 7. JWT认证Composable（useAuth.ts）
+        var useAuthPath = BuildModuleOutputPath(context, "composables/useAuth.ts");
+        templates.Add(("useAuth", metadata, useAuthPath));
+        LogGeneratedFile(useAuthPath, "useAuth");
+
+        // 8. 离线数据同步Composable（useOfflineSync.ts）
+        var useOfflineSyncPath = BuildModuleOutputPath(context, "composables/useOfflineSync.ts");
+        templates.Add(("useOfflineSync", metadata, useOfflineSyncPath));
+        LogGeneratedFile(useOfflineSyncPath, "useOfflineSync");
+
+        // 9. 文件上传Composable（useFileUpload.ts）
+        var useFileUploadPath = BuildModuleOutputPath(context, "composables/useFileUpload.ts");
+        templates.Add(("useFileUpload", metadata, useFileUploadPath));
+        LogGeneratedFile(useFileUploadPath, "useFileUpload");
+
+        // 10. Request工具（request.ts with JWT拦截器）
+        var requestPath = BuildModuleOutputPath(context, "utils/request.ts");
+        templates.Add(("request", metadata, requestPath));
+        LogGeneratedFile(requestPath, "request");
+
+        // 11. Storage工具（storage.ts）
+        var storagePath = BuildModuleOutputPath(context, "utils/storage.ts");
+        templates.Add(("storage", metadata, storagePath));
+        LogGeneratedFile(storagePath, "storage");
+
+        // 12. Upload工具（upload.ts 分片上传）
+        var uploadPath = BuildModuleOutputPath(context, "utils/upload.ts");
+        templates.Add(("upload", metadata, uploadPath));
+        LogGeneratedFile(uploadPath, "upload");
+
+        // 13. UniApp工具函数（uni-tools.ts）
+        var uniToolsPath = BuildModuleOutputPath(context, "utils/uni-tools.ts");
+        templates.Add(("uni-tools", metadata, uniToolsPath));
+        LogGeneratedFile(uniToolsPath, "uni-tools");
+
         _logger.LogInformation(
-            "Prepared {Count} UniApp templates for entity: {EntityName} using {ComponentLibrary}",
+            "Prepared {Count} UniApp templates for entity: {EntityName} using {ComponentLibrary} (including JWT/Offline/Upload)",
             templates.Count,
             uniappMetadata.EntityName,
             _componentLibrary.Name);
