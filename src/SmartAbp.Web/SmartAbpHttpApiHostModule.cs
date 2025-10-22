@@ -115,8 +115,13 @@ public class SmartAbpHttpApiHostModule : AbpModule
         // 实时数据聚合服务
         context.Services.AddTransient<RealtimeDataAggregatorService>();
 
-        // 后台推送任务
-        context.Services.AddHostedService<RealtimeDataPushBackgroundWorker>();
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 🔴 临时禁用: 此后台任务会高频轮询并刷屏日志，导致性能问题
+        // 禁用原因: 避免在开发和UI测试期间造成干扰和性能下降
+        // 禁用日期: 2025-10-22
+        // 计划: 在需要真实数据推送功能时再重新启用
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // context.Services.AddHostedService<RealtimeDataPushBackgroundWorker>();
 
         context.Services.AddAbpSwaggerGen(options =>
         {
