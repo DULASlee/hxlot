@@ -37,8 +37,11 @@
 import { ref, reactive, onMounted } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useProductionLineStore } from '@/stores/production-line-store'
+import { useAuthGuard } from '@/middleware/auth'
 import type { CreateProductionLineDto, UpdateProductionLineDto, ProductionLineDto } from '@/types/production-line.types'
-import { uniToast } from '@/utils/uni-tools'
+
+// ✅ 认证守卫（符合铁律2：控件完整性）
+const { checkLogin, isAuthenticated } = useAuthGuard()
 
 const productionLineStore = useProductionLineStore()
 const formRef = ref<any>(null)
@@ -55,19 +58,34 @@ const form = reactive<CreateProductionLineDto | UpdateProductionLineDto>({
   currentOutput: 0
 })
 
+// ✅ 完善表单验证规则（符合铁律2：控件完整性）
 const rules = reactive<any>({
   name: [
-    { required: true, message: '请输入生产线名称', trigger: ['blur', 'change'] }
+    { required: true, message: '请输入生产线名称', trigger: ['blur', 'change'] },
+    { min: 2, max: 50, message: '名称长度为2-50个字符', trigger: ['blur', 'change'] }
   ],
   code: [
-    { required: true, message: '请输入生产线编码', trigger: ['blur', 'change'] }
+    { required: true, message: '请输入生产线编码', trigger: ['blur', 'change'] },
+    { pattern: /^[A-Z]{2,4}-\d{3,6}$/, message: '编码格式：2-4个大写字母-3-6位数字（如PL-001）', trigger: ['blur', 'change'] }
   ],
   status: [
-    { required: true, message: '请输入运行状态', trigger: ['blur', 'change'] }
+    { required: true, message: '请选择运行状态', trigger: ['blur', 'change'] }
+  ],
+  location: [
+    { max: 100, message: '位置长度不超过100个字符', trigger: ['blur', 'change'] }
+  ],
+  capacity: [
+    { type: 'number', min: 0, max: 100000, message: '产能范围：0-100000', trigger: ['blur', 'change'] }
+  ],
+  currentOutput: [
+    { type: 'number', min: 0, max: 100000, message: '当前产量范围：0-100000', trigger: ['blur', 'change'] }
   ]
 })
 
 onLoad((options) => {
+  // ✅ 检查登录状态
+  checkLogin()
+  
   if (options?.id) {
     entityId.value = options.id
     isEdit.value = true
@@ -76,33 +94,83 @@ onLoad((options) => {
 })
 
 async function loadEntityData(id: string) {
+  // ✅ 检查登录状态
+  if (!isAuthenticated) {
+    checkLogin()
+    return
+  }
+  
   try {
     const data = await productionLineStore.getById(id)
     Object.assign(form, data)
-  } catch (error) {
-    uniToast('加载失败', 'error')
+  } catch (error: any) {
+    // ✅ 完善错误处理（符合铁律2：控件完整性）
+    const errorMessage = error?.response?.data?.error?.message || error?.message || '加载失败'
+    uni.showToast({
+      title: errorMessage,
+      icon: 'none',
+      duration: 2000
+    })
     console.error('Load entity error:', error)
   }
 }
 
 async function handleSubmit() {
-  const valid = await formRef.value?.validate()
-  if (!valid) return
+  // ✅ 检查登录状态
+  if (!isAuthenticated) {
+    checkLogin()
+    return
+  }
+  
+  // ✅ 表单验证（符合铁律2：控件完整性）
+  try {
+    const valid = await formRef.value?.validate()
+    if (!valid) {
+      uni.showToast({
+        title: '请检查表单输入',
+        icon: 'none',
+        duration: 2000
+      })
+      return
+    }
+  } catch (error) {
+    uni.showToast({
+      title: '表单验证失败',
+      icon: 'none',
+      duration: 2000
+    })
+    return
+  }
 
   submitting.value = true
   try {
     if (isEdit.value) {
       await productionLineStore.update(entityId.value!, form as UpdateProductionLineDto)
-      uniToast('保存成功', 'success')
+      uni.showToast({
+        title: '保存成功',
+        icon: 'success',
+        duration: 1500
+      })
     } else {
       await productionLineStore.create(form as CreateProductionLineDto)
-      uniToast('创建成功', 'success')
+      uni.showToast({
+        title: '创建成功',
+        icon: 'success',
+        duration: 1500
+      })
     }
     setTimeout(() => {
       uni.navigateBack()
-    }, 1000)
-  } catch (error) {
-    uniToast(isEdit.value ? '保存失败' : '创建失败', 'error')
+    }, 1500)
+  } catch (error: any) {
+    // ✅ 完善错误处理（符合铁律2：控件完整性）
+    const errorMessage = error?.response?.data?.error?.message || error?.message || (isEdit.value ? '保存失败' : '创建失败')
+    uni.showModal({
+      title: '操作失败',
+      content: errorMessage,
+      showCancel: false,
+      confirmText: '知道了'
+    })
     console.error('Submit error:', error)
   } finally {
     submitting.value = false

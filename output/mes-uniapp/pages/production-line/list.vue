@@ -58,9 +58,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useProductionLineStore } from '@/stores/production-line-store'
+import { useAuthGuard } from '@/middleware/auth'
 import type { ProductionLineDto } from '@/types/production-line.types'
+
+// ✅ 认证守卫（符合铁律2：控件完整性）
+const { checkLogin, isAuthenticated } = useAuthGuard()
 
 const productionLineStore = useProductionLineStore()
 const list = ref<ProductionLineDto[]>([])
@@ -69,10 +73,23 @@ const loading = ref(false)
 const hasMore = ref(true)
 
 async function loadData() {
+  // ✅ 检查登录状态
+  if (!isAuthenticated) {
+    checkLogin()
+    return
+  }
+  
   loading.value = true
   try {
     const result = await productionLineStore.getList({ filter: searchKeyword.value })
     list.value = result.items
+  } catch (error: any) {
+    // ✅ 错误处理
+    uni.showToast({
+      title: error.message || '加载失败',
+      icon: 'none',
+      duration: 2000
+    })
   } finally {
     loading.value = false
   }
@@ -81,13 +98,17 @@ async function loadData() {
 function handleSearch() { loadData() }
 function handleLoadMore() { /* 加载更多 */ }
 function handleItemClick(item: ProductionLineDto) {
-  uni.navigateTo({ url: `/pages/production-line/detail?id=$${item.id}` })
+  uni.navigateTo({ url: `/pages/production-line/detail?id=${item.id}` })
 }
 function handleAdd() {
   uni.navigateTo({ url: `/pages/production-line/form` })
 }
 
-loadData()
+// ✅ 页面加载时检查登录并加载数据
+onMounted(() => {
+  checkLogin()
+  loadData()
+})
 </script>
 
 <style scoped lang="scss">

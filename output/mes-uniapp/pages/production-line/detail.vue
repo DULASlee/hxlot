@@ -43,8 +43,11 @@
 import { ref, onMounted } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useProductionLineStore } from '@/stores/production-line-store'
+import { useAuthGuard } from '@/middleware/auth'
 import type { ProductionLineDto } from '@/types/production-line.types'
-import { uniToast, uniConfirm } from '@/utils/uni-tools'
+
+// ✅ 认证守卫（符合铁律2：控件完整性）
+const { checkLogin, isAuthenticated } = useAuthGuard()
 
 const productionLineStore = useProductionLineStore()
 const entity = ref<ProductionLineDto>({} as ProductionLineDto)
@@ -52,6 +55,9 @@ const loading = ref(false)
 const entityId = ref<string | null>(null)
 
 onLoad((options) => {
+  // ✅ 检查登录状态
+  checkLogin()
+  
   if (options?.id) {
     entityId.value = options.id
     loadEntityData(options.id)
@@ -59,11 +65,24 @@ onLoad((options) => {
 })
 
 async function loadEntityData(id: string) {
+  // ✅ 检查登录状态
+  if (!isAuthenticated) {
+    checkLogin()
+    return
+  }
+  
   loading.value = true
   try {
     entity.value = await productionLineStore.getById(id)
-  } catch (error) {
-    uniToast('加载失败', 'error')
+  } catch (error: any) {
+    // ✅ 完善错误处理（符合铁律2：控件完整性）
+    const errorMessage = error?.response?.data?.error?.message || error?.message || '加载失败'
+    uni.showModal({
+      title: '加载失败',
+      content: errorMessage,
+      showCancel: false,
+      confirmText: '知道了'
+    })
     console.error('Load entity error:', error)
   } finally {
     loading.value = false
@@ -78,17 +97,46 @@ function handleEdit() {
 }
 
 async function handleDelete() {
-  const confirmed = await uniConfirm('确认删除', '删除后无法恢复，确认删除吗？')
+  // ✅ 检查登录状态
+  if (!isAuthenticated) {
+    checkLogin()
+    return
+  }
+  
+  // ✅ 二次确认（符合铁律2：控件完整性）
+  const confirmed = await new Promise<boolean>((resolve) => {
+    uni.showModal({
+      title: '确认删除',
+      content: '删除后无法恢复，确认删除吗？',
+      confirmText: '确认删除',
+      cancelText: '取消',
+      success: (res) => {
+        resolve(res.confirm)
+      }
+    })
+  })
+  
   if (!confirmed) return
 
   try {
     await productionLineStore.delete(entityId.value!)
-    uniToast('删除成功', 'success')
+    uni.showToast({
+      title: '删除成功',
+      icon: 'success',
+      duration: 1500
+    })
     setTimeout(() => {
       uni.navigateBack()
-    }, 1000)
-  } catch (error) {
-    uniToast('删除失败', 'error')
+    }, 1500)
+  } catch (error: any) {
+    // ✅ 完善错误处理（符合铁律2：控件完整性）
+    const errorMessage = error?.response?.data?.error?.message || error?.message || '删除失败'
+    uni.showModal({
+      title: '删除失败',
+      content: errorMessage,
+      showCancel: false,
+      confirmText: '知道了'
+    })
     console.error('Delete entity error:', error)
   }
 }
