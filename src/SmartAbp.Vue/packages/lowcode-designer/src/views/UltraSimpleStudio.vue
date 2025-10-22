@@ -478,36 +478,69 @@ const convertToModuleMetadata = (): ModuleMetadata => {
     entities.push(entity)
   }
 
+  // 🔥 核心修复：前端DTO字段与后端ModuleDto完全一致（使用backend-contracts.ts类型）
   return {
     id: crypto.randomUUID(),
     systemName: c.systemName,
-    moduleName: c.moduleName, // Phase 2B: 后端ModuleDto使用moduleName而非name
+    moduleName: c.moduleName, // ✅ 修复：使用moduleName（backend-contracts.ts第71行）
+    name: c.moduleName, // ✅ 向后兼容：别名到moduleName（backend-contracts.ts第72行）
     displayName: c.displayName,
     description: `${c.displayName || c.moduleName} 模块`,
     version: '1.0.0',
-    // schemaVersion: '1.0.0',  // Phase 2B: 后端ModuleDto无此字段
-    // architecturePattern: (c.architecturePattern as 'Crud' | 'DDD' | 'CQRS') || 'Crud', // Phase 2B: 后端ModuleDto无此字段
     namespace: ns,
-    entities: entities,  // 🔥 修复：传入真实的实体数组
-    // databaseInfo: { // Phase 2B: 后端ModuleDto无此字段
-    //   connectionStringName: 'Default',
-    //   schema,
-    //   provider: (c.databaseProvider || 'SqlServer') as 'SqlServer' | 'PostgreSql' | 'MySql' | 'Oracle' | 'SQLite'
-    // },
-    // frontend: { // Phase 2B: 后端ModuleDto无此字段，使用FrontendConfig
-    //   parentId: c.parentMenuId || 'business',
-    //   routePrefix: route
-    // },
-    // author: 'SmartAbp Generator', // Phase 2B: 后端ModuleDto无此字段
-    // featureManagement: { isEnabled: false, defaultPolicy: '' }, // Phase 2B: 后端ModuleDto无此字段
-    // generateMobilePages: false, // Phase 2B: 后端ModuleDto无此字段
-    // dependencies: [],
-    // Phase 2B: 后端ModuleDto无menuConfig字段（已删除）
-    // permissionConfig: {
-    //   groups: [],              // Phase 2B: 后端ModuleDto无此字段
-    //   customActions: []        // Phase 2B: 后端ModuleDto无此字段
-    // },
-    // Phase 2B: 使用后端SSOT审计字段命名（ISO 8601格式）
+    
+    // ✅ 架构配置（使用ModuleArchitectureConfig）
+    architectureConfig: {
+      databaseProvider: c.databaseProvider || 'SqlServer',
+      useMultiTenancy: false,
+      enableAuditing: true,
+      enableSoftDelete: true
+    },
+    
+    // ✅ 前端配置（使用ModuleFrontendConfig）
+    frontendConfig: {
+      framework: 'Vue3',
+      uiLibrary: 'Element Plus',
+      routePrefix: route
+    },
+    
+    // ✅ 代码生成选项（使用ModuleCodeGenOptions）
+    codeGenOptions: {
+      generateFrontend: true,
+      generateBackend: true,
+      generateMobilePages: false,
+      frontendFramework: 'Vue3',
+      backendTemplate: 'ABP vNext'
+    },
+    
+    // ✅ 权限配置（使用ModulePermissionConfig）
+    permissionConfig: {
+      permissionGroups: [],
+      defaultPermissions: []
+    },
+    
+    // ✅ 功能管理（使用ModuleFeatureManagement）
+    featureManagement: { 
+      enableAdvancedQuery: true,
+      enableBatchOperations: true,
+      enableImportExport: true,
+      enableVersioning: false
+    },
+    
+    // ✅ 状态和基本信息
+    status: 'Active',
+    isActive: true,
+    
+    // ✅ 传入真实的实体数组
+    entities: entities,
+    
+    // ✅ 依赖关系
+    dependencies: [],
+    
+    // ✅ Schema版本
+    schemaVersion: '1.0.0',
+    
+    // ✅ 审计字段
     creationTime: new Date().toISOString(),
     lastModificationTime: new Date().toISOString()
   }
