@@ -312,11 +312,11 @@ export const menuConfig: MenuConfig = {
       description: "企业级代码生成引擎 - 三大入口满足不同需求",
       children: [
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 🎯 Portal 入口（新增）
+        // 工作台入口
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         {
           key: "lowcode-portal",
-          title: "📋 工作台",
+          title: "工作台",
           icon: "home",
           type: "page",
           path: "/lowcode/welcome",
@@ -329,16 +329,16 @@ export const menuConfig: MenuConfig = {
             title: "低代码工作台",
             menuKey: "lowcode-portal",
             keepAlive: true,
-            description: "三大入口 + 最近项目 + 使用统计",
+            description: "代码生成入口 + 最近项目 + 使用统计",
           },
         },
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // 三大用户入口（Layer1/Layer2/Layer3）
+        // 三种代码生成模式
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         {
-          key: "layer1-ultra-simple",
-          title: "⚡ Layer1 - 极简模式",
+          key: "ultra-simple-mode",
+          title: "极简模式",
           icon: "bolt",
           type: "page",
           path: "/lowcode/layer1",
@@ -348,15 +348,15 @@ export const menuConfig: MenuConfig = {
           requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
           closable: true,
           meta: {
-            title: "Layer1 - 极简模式",
-            menuKey: "layer1-ultra-simple",
+            title: "极简模式",
+            menuKey: "ultra-simple-mode",
             keepAlive: true,
-            description: "选表即生成，零配置快速开发（3-5分钟）",
+            description: "选择数据表，一键生成代码（3-5分钟）",
           },
         },
         {
-          key: "layer2-smart-studio-lite",
-          title: "🎯 Layer2 - 智能配置",
+          key: "smart-config-mode",
+          title: "智能配置模式",
           icon: "cog",
           type: "page",
           path: "/lowcode/layer2",
@@ -366,15 +366,15 @@ export const menuConfig: MenuConfig = {
           requiredRoles: [ROLES.ADMIN, ROLES.USER, ROLES.GUEST],
           closable: true,
           meta: {
-            title: "Layer2 - 智能配置",
-            menuKey: "layer2-smart-studio-lite",
+            title: "智能配置模式",
+            menuKey: "smart-config-mode",
             keepAlive: true,
-            description: "可视化字段配置，渐进式开发（10-20分钟）",
+            description: "可视化配置字段和关系（10-20分钟）",
           },
         },
         {
-          key: "layer3-studio-pro",
-          title: "🚀 Layer3 - 专业版",
+          key: "professional-mode",
+          title: "专业模式",
           icon: "rocket",
           type: "page",
           path: "/lowcode/layer3",
@@ -384,10 +384,10 @@ export const menuConfig: MenuConfig = {
           requiredRoles: [ROLES.ADMIN, ROLES.USER],
           closable: true,
           meta: {
-            title: "Layer3 - 专业版",
-            menuKey: "layer3-studio-pro",
+            title: "专业模式",
+            menuKey: "professional-mode",
             keepAlive: true,
-            description: "完整建模能力，企业级代码生成（30-60分钟）",
+            description: "完整的实体建模和代码生成（30-60分钟）",
           },
         },
 
