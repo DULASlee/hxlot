@@ -54,11 +54,11 @@ $backendProcess = $null
 if (-not $backendRunning -and -not $SkipBackendStart) {
     Write-Host "🚀 步骤2: 启动后端服务..." -ForegroundColor Yellow
     Write-Host ""
-    
+
     Write-Host "   📋 启动命令: dotnet run --project src/SmartAbp.Web" -ForegroundColor White
     Write-Host "   ⏱️  超时时间: $Timeout 秒" -ForegroundColor White
     Write-Host ""
-    
+
     # 启动后端服务（后台进程）
     $backendProcess = Start-Process -FilePath "dotnet" `
         -ArgumentList "run --project src/SmartAbp.Web --verbosity quiet" `
@@ -66,13 +66,13 @@ if (-not $backendRunning -and -not $SkipBackendStart) {
         -PassThru `
         -RedirectStandardOutput "logs/backend-test.log" `
         -RedirectStandardError "logs/backend-test-error.log"
-    
+
     Write-Host "   ⏱️  等待后端服务就绪..." -ForegroundColor Cyan
-    
+
     # 等待后端服务就绪（最多等待Timeout秒）
     $startTime = Get-Date
     $ready = $false
-    
+
     while (-not $ready -and ((Get-Date) - $startTime).TotalSeconds -lt $Timeout) {
         Start-Sleep -Seconds 2
         try {
@@ -87,7 +87,7 @@ if (-not $backendRunning -and -not $SkipBackendStart) {
             Write-Host "`r" -NoNewline
         }
     }
-    
+
     if (-not $ready) {
         Write-Host ""
         Write-Host "   ❌ 后端服务启动超时（$Timeout 秒）" -ForegroundColor Red
@@ -101,7 +101,7 @@ if (-not $backendRunning -and -not $SkipBackendStart) {
         }
         exit 1
     }
-    
+
     Write-Host ""
 } elseif ($SkipBackendStart) {
     Write-Host "⏭️  步骤2: 跳过后端启动（--SkipBackendStart）" -ForegroundColor Yellow
@@ -178,14 +178,14 @@ if (Test-Path "src/SmartAbp.Vue/playwright-report") {
 if ($backendProcess) {
     Write-Host "🧹 步骤5: 清理后端服务..." -ForegroundColor Yellow
     Write-Host ""
-    
+
     try {
         Stop-Process -Id $backendProcess.Id -Force -ErrorAction SilentlyContinue
         Write-Host "   ✅ 后端服务已停止" -ForegroundColor Green
     } catch {
         Write-Host "   ⚠️  后端服务停止失败（可能已停止）" -ForegroundColor Yellow
     }
-    
+
     Write-Host ""
 }
 

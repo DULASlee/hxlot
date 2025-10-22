@@ -1,12 +1,12 @@
 /**
  * 🎨 SmartAbp 图标风格管理 Store
- * 
+ *
  * 功能：
  * - 统一管理系统图标风格（表情符号 / FontAwesome / Element Plus / Carbon / Material Design）
  * - 一键切换全局图标风格
  * - 持久化用户偏好设置
  * - 动态更新所有图标显示
- * 
+ *
  * 配置驱动设计：
  * - 默认值和存储键名从配置中心读取
  * - 遵循开闭原则，消除硬编码
@@ -439,7 +439,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-renew',
     material: 'mdi-refresh'
   },
-  
+
   // ⚡ 快速/性能相关
   bolt: {
     emoji: '⚡',
@@ -448,7 +448,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-flash',
     material: 'mdi-lightning-bolt'
   },
-  
+
   // 🚀 发布/部署相关
   rocket: {
     emoji: '🚀',
@@ -457,7 +457,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-rocket',
     material: 'mdi-rocket'
   },
-  
+
   // 🔧 工具相关
   tools: {
     emoji: '🔧',
@@ -466,7 +466,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-tools',
     material: 'mdi-tools'
   },
-  
+
   // 🎚️ 滑块/配置相关
   'sliders-h': {
     emoji: '🎚️',
@@ -475,7 +475,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-settings-adjust',
     material: 'mdi-tune'
   },
-  
+
   // 🌐 网络相关
   'network-wired': {
     emoji: '🌐',
@@ -484,7 +484,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-network-3',
     material: 'mdi-network'
   },
-  
+
   // 🖥️ 服务器相关
   server: {
     emoji: '🖥️',
@@ -493,7 +493,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-server',
     material: 'mdi-server'
   },
-  
+
   // 🔔 通知相关
   bell: {
     emoji: '🔔',
@@ -502,7 +502,7 @@ const ICON_MAPPINGS: Record<string, IconMapping> = {
     carbon: 'carbon-notification',
     material: 'mdi-bell'
   },
-  
+
   // 📁 文件夹相关
   folder: {
     emoji: '📁',
