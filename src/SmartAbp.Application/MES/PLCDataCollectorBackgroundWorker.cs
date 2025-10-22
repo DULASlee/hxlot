@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,9 @@ using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Uow;
 using SmartAbp.Domain.Entities.MES;
 using SmartAbp.Application.MES.Alarm;
+using SmartAbp.Application.Realtime;
+using SmartAbp.Application.RealtimeData;
+using SmartAbp.Web.Hubs;
 
 namespace SmartAbp.Application.MES
 {
@@ -104,6 +108,8 @@ namespace SmartAbp.Application.MES
                         var equipmentRepository = scope.ServiceProvider.GetRequiredService<IRepository<Equipment, Guid>>();
                         var sensorDataRepository = scope.ServiceProvider.GetRequiredService<IRepository<SensorData, Guid>>();
                         var alarmNotificationService = scope.ServiceProvider.GetRequiredService<AlarmNotificationService>();
+                        var aggregatorService = scope.ServiceProvider.GetRequiredService<RealtimeDataAggregatorService>();
+                        var hubContext = scope.ServiceProvider.GetRequiredService<IHubContext<ProductionLineHub, IProductionLineClient>>();
 
                         // 查询所有运行中的生产线
                         var productionLines = await productionLineRepository.GetListAsync(x => x.Status == "running");
@@ -123,6 +129,33 @@ namespace SmartAbp.Application.MES
 
                                 // 记录传感器数据并评估告警
                                 await RecordSensorDataAndEvaluateAlarms(equipment, productionLine.Id, sensorDataRepository, alarmNotificationService);
+                            }
+
+                            // ✅ 推送实时数据到SignalR（让Dashboard实时更新）
+                            try
+                            {
+                                var realtimeData = await aggregatorService.GetCurrentDataAsync(productionLine.Code);
+                                if (realtimeData != null)
+                                {
+                                    await ProductionLineHub.PushDataToSubscribers(
+                                        hubContext,
+                                        productionLine.Code,
+                                        realtimeData
+                                    );
+                                    
+                                    _logger.LogDebug(
+                                        "[PLCDataCollectorBackgroundWorker] 已推送产线 {ProductionLine} 实时数据到SignalR订阅者",
+                                        productionLine.Code
+                                    );
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(
+                                    ex,
+                                    "[PLCDataCollectorBackgroundWorker] 推送产线 {ProductionLine} 实时数据到SignalR失败",
+                                    productionLine.Code
+                                );
                             }
                         }
 

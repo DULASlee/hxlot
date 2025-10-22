@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using SmartAbp.Application.RealtimeData;
+using SmartAbp.Application.Realtime;
 
 namespace SmartAbp.Web.Hubs
 {
@@ -30,6 +31,7 @@ namespace SmartAbp.Web.Hubs
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
         private readonly ILogger<ProductionLineHub> _logger;
+        private readonly RealtimeDataAggregatorService _aggregatorService;
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // 静态连接管理（线程安全）
@@ -56,9 +58,12 @@ namespace SmartAbp.Web.Hubs
         // 构造函数
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-        public ProductionLineHub(ILogger<ProductionLineHub> logger)
+        public ProductionLineHub(
+            ILogger<ProductionLineHub> logger,
+            RealtimeDataAggregatorService aggregatorService)
         {
             _logger = logger;
+            _aggregatorService = aggregatorService;
         }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -168,11 +173,35 @@ namespace SmartAbp.Web.Hubs
                 productionLineId
             );
 
-            // TODO: 立即推送当前数据
-            // var currentData = await _aggregatorService.GetCurrentDataAsync(productionLineId);
-            // await Clients.Caller.ReceiveProductionLineData(currentData);
-            
-            await Task.CompletedTask;
+            // ✅ 立即推送当前数据（订阅后立即获得当前状态）
+            try
+            {
+                var currentData = await _aggregatorService.GetCurrentDataAsync(productionLineId);
+                if (currentData != null)
+                {
+                    await Clients.Caller.ReceiveProductionLineData(currentData);
+                    _logger.LogInformation(
+                        "[ProductionLineHub] 已向连接 {ConnectionId} 推送产线 {ProductionLineId} 的当前数据",
+                        connectionId,
+                        productionLineId
+                    );
+                }
+                else
+                {
+                    _logger.LogWarning(
+                        "[ProductionLineHub] 产线 {ProductionLineId} 当前数据为空",
+                        productionLineId
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "[ProductionLineHub] 推送产线 {ProductionLineId} 当前数据失败",
+                    productionLineId
+                );
+            }
         }
 
         /// <summary>
