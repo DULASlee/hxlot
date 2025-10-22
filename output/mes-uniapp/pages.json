@@ -1,0 +1,29 @@
+{
+  "pages": [
+    {
+      "path": "pages/production-line/list",
+      "style": {
+        "navigationBarTitleText": "\u751F\u4EA7\u7EBF"
+      }
+    },
+    {
+      "path": "pages/equipment/list",
+      "style": {
+        "navigationBarTitleText": "\u8BBE\u5907"
+      }
+    },
+    {
+      "path": "pages/sensor-data/list",
+      "style": {
+        "navigationBarTitleText": "\u4F20\u611F\u5668\u6570\u636E"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "MES\u7CFB\u7EDF",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "uniIdRouter": {}
+}

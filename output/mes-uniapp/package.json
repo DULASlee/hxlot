@@ -1,0 +1,15 @@
+{
+  "name": "mes-uniapp",
+  "version": "1.0.0",
+  "description": "MES制造执行系统 - UniApp移动端",
+  "main": "main.js",
+  "scripts": {
+    "dev:mp-weixin": "uni -p mp-weixin",
+    "build:mp-weixin": "uni build -p mp-weixin"
+  },
+  "dependencies": {
+    "@dcloudio/uni-app": "^3.0.0",
+    "pinia": "^2.1.7",
+    "uview-plus": "^3.2.7"
+  }
+}
