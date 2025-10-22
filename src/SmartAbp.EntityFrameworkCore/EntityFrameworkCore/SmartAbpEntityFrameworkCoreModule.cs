@@ -55,8 +55,8 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
 
         context.Services.AddAbpDbContext<SmartAbpDbContext>(options =>
         {
-                /* Remove "includeAllEntities: true" to create
-                 * default repositories only for aggregate roots */
+            /* Remove "includeAllEntities: true" to create
+             * default repositories only for aggregate roots */
             options.AddDefaultRepositories(includeAllEntities: true);
         });
 
@@ -94,16 +94,21 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
                         sqliteOptions.UseRelationalNulls();
                     });
                     break;
-                    
+
                 case DatabaseType.SqlServer:
                     options.UseSqlServer(sqlServerOptions =>
                     {
                         sqlServerOptions.MigrationsHistoryTable("__EFMigrationsHistory_SqlServer");
                         sqlServerOptions.MigrationsAssembly(migrationsAssembly);
+                        // ✅ 修复：启用瞬态错误重试机制
+                        sqlServerOptions.EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay: TimeSpan.FromSeconds(30),
+                            errorNumbersToAdd: null);
                         // SQL Server使用默认的SqlServer文件夹
                     });
                     break;
-                    
+
                 case DatabaseType.PostgreSQL:
                     options.UseNpgsql(npgsqlOptions =>
                     {
@@ -112,7 +117,7 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
                         // PostgreSQL使用专用的迁移文件夹
                     });
                     break;
-                    
+
                 default:
                     // 默认使用SQLite（轻量级，无需安装服务器）
                     options.UseSqlite(sqliteOptions =>
@@ -124,6 +129,6 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
                     break;
             }
         });
-        
+
     }
 }
