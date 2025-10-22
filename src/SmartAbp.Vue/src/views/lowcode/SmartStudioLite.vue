@@ -252,13 +252,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import type {
-  SimplifiedModuleCreationDto,
-  SimplifiedFieldConfigDto
+    SimplifiedFieldConfigDto,
+    SimplifiedModuleCreationDto
 } from '@smartabp/lowcode-shared'
+import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
+import { computed, onMounted, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import FieldConfigTable from './components/FieldConfigTable.vue'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -517,7 +517,9 @@ function simulateProgress() {
  */
 function handleViewResult() {
   progressDialogVisible.value = false
-  router.push('/lowcode/modules')
+  // ✅ 临时修复：跳转到欢迎页而非不存在的modules页面
+  router.push('/lowcode/welcome')
+  ElMessage.success('代码生成完成！')
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

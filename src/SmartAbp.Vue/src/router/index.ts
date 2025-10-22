@@ -80,7 +80,7 @@ const routes: RouteRecordRaw[] = [
         path: "production-line",
         name: "ProductionLineDashboard",
         component: ProductionLineDashboard,
-        meta: { 
+        meta: {
           title: "MES生产线监控",
           icon: "🏭",
           requiresAuth: true
@@ -324,6 +324,19 @@ const routes: RouteRecordRaw[] = [
           description: "完整的实体建模和代码生成"
         }
       },
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // 🔴 待实现：Studio Pro（文件不存在，暂时注释）
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // {
+      //   path: "studio-pro",
+      //   name: "StudioPro",
+      //   component: () => import("@/views/lowcode/StudioPro.vue"),
+      //   meta: {
+      //     title: "Studio Pro",
+      //     menuKey: "studio-pro",
+      //     description: "企业级专业开发环境"
+      //   }
+      // },
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // 其他低代码功能页面
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

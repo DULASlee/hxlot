@@ -67,9 +67,10 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { Document } from '@element-plus/icons-vue'
 import type { SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto } from '@/api/generated'
+import { Document } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
 
 interface Props {
   projects: SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto[]
@@ -124,21 +125,26 @@ const handleRowClick = (row: SmartAbp_Application_Contracts_LowCode_Dtos_ModuleD
  */
 const openProject = (module: SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto) => {
   if (!module.id) return
-  router.push(`/lowcode/modules/${module.id}`)
+  // ✅ 临时修复：跳转到Layer2配置模式
+  router.push('/lowcode/layer2')
+  ElMessage.info(`正在打开模块：${module.moduleName}`)
 }
 
 /**
  * 查看全部项目
  */
 const viewAll = () => {
-  router.push('/lowcode/modules')
+  // ✅ 临时修复：跳转到代码生成页面
+  router.push('/lowcode/generation')
 }
 
 /**
  * 创建新项目
  */
 const createNewProject = () => {
-  router.push('/lowcode/modules/create')
+  // ✅ 临时修复：跳转到Layer2智能配置模式
+  router.push('/lowcode/layer2')
+  ElMessage.success('开始创建新项目')
 }
 </script>
 

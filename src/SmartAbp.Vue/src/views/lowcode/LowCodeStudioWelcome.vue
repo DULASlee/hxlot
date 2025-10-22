@@ -3,11 +3,11 @@
     <div class="welcome-container">
       <!-- 欢迎头部 -->
       <div class="welcome-header">
-        <div class="welcome-logo">
-          <el-icon size="48">
-            <Platform />
-          </el-icon>
-        </div>
+      <div class="welcome-logo">
+        <el-icon size="48" color="#409EFF">
+          <Platform />
+        </el-icon>
+      </div>
         <h1>SmartAbp 企业级低代码开发平台</h1>
         <p class="welcome-subtitle">
           选择入口，开始您的低代码之旅
@@ -72,17 +72,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import type { SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto } from '@/api/generated'
+import type { UserChoiceStatsDto } from '@/api/lowcode/moduleApi'
+import { getRecentModules, getUserChoiceStats } from '@/api/lowcode/moduleApi'
+import { logger } from '@/utils/logger'
 import { Platform } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { logger } from '@/utils/logger'
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import EntryCard from './components/EntryCard.vue'
 import RecentProjects from './components/RecentProjects.vue'
 import UsageStatistics from './components/UsageStatistics.vue'
-import { getRecentModules, getUserChoiceStats } from '@/api/lowcode/moduleApi'
-import type { SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto } from '@/api/generated'
-import type { UserChoiceStatsDto } from '@/api/lowcode/moduleApi'
 
 // 路由
 const router = useRouter()
@@ -97,7 +97,7 @@ const usageStats = ref<UserChoiceStatsDto | null>(null)
  */
 const goToLayer1 = () => {
   logger?.info('进入Layer1快速起步')
-  router.push('/lowcode/layer1')
+  router.push('/lowcode/layer1')  // ✅ 修复：正确的路由路径
 }
 
 /**
@@ -105,7 +105,7 @@ const goToLayer1 = () => {
  */
 const goToLayer2 = () => {
   logger?.info('进入Layer2进阶定制')
-  router.push('/lowcode/layer2')
+  router.push('/lowcode/layer2')  // ✅ 修复：正确的路由路径
 }
 
 /**
@@ -113,7 +113,7 @@ const goToLayer2 = () => {
  */
 const goToLayer3 = () => {
   logger?.info('进入Layer3专业开发')
-  router.push('/lowcode/modules')
+  router.push('/lowcode/layer3')  // ✅ 修复：正确的路由路径（专业模式）
 }
 
 /**
@@ -155,7 +155,8 @@ onMounted(() => {
 .lowcode-studio-welcome {
   height: 100%;
   overflow-y: auto;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* ✅ 企业级专业风格：简洁的浅灰背景 */
+  background: #f5f7fa;
   padding: 40px 20px;
 
   .welcome-container {
@@ -166,7 +167,12 @@ onMounted(() => {
   .welcome-header {
     text-align: center;
     margin-bottom: 48px;
-    color: white;
+    /* ✅ 企业级：深色文字，专业简洁 */
+    color: #303133;
+    background: white;
+    padding: 60px 40px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 
     .welcome-logo {
       margin-bottom: 20px;
@@ -180,9 +186,10 @@ onMounted(() => {
 
     .welcome-subtitle {
       margin: 0;
-      font-size: 18px;
-      opacity: 0.9;
-      font-weight: 300;
+      font-size: 16px;
+      /* ✅ 企业级：灰色副标题 */
+      color: #909399;
+      font-weight: 400;
     }
   }
 
