@@ -1,8 +1,9 @@
 
-import "./plugins/dayjs";
-import "./styles/design-system/index.css"; // 统一设计系统
-import "./styles/enterprise-icons.css"; // 企业级图标系统样式
-import "./styles/main.css"; // 基础样式和工具类
+import './plugins/dayjs'
+import './styles/main-theme.css' // 设计令牌系统（必须最先导入）
+import './styles/design-system/index.css' // 统一设计系统
+import './styles/enterprise-icons.css' // 企业级图标系统样式
+import './styles/main.css' // 基础样式和工具类
 
 /**
  * 全局Promise rejection处理器

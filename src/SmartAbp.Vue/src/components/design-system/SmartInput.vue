@@ -3,7 +3,10 @@
     <!-- 标签 -->
     <label v-if="label" :for="inputId" class="smart-input-label">
       {{ label }}
-      <span v-if="required" class="required-mark">*</span>
+      <span v-if="required && (error || modelValue)" class="required-mark" :class="{
+        'required-mark--error': error,
+        'required-mark--success': !error && modelValue
+      }">*</span>
     </label>
 
     <!-- 输入框容器 -->
@@ -14,22 +17,9 @@
       </div>
 
       <!-- 输入框 -->
-      <input
-        :id="inputId"
-        ref="inputRef"
-        :type="type"
-        :value="modelValue"
-        :placeholder="placeholder"
-        :disabled="disabled"
-        :readonly="readonly"
-        :maxlength="maxlength"
-        :autocomplete="autocomplete"
-        class="input-element"
-        @input="handleInput"
-        @focus="handleFocus"
-        @blur="handleBlur"
-        @keyup.enter="handleEnter"
-      />
+      <input :id="inputId" ref="inputRef" :type="type" :value="modelValue" :placeholder="placeholder"
+        :disabled="disabled" :readonly="readonly" :maxlength="maxlength" :autocomplete="autocomplete"
+        class="input-element" @input="handleInput" @focus="handleFocus" @blur="handleBlur" @keyup.enter="handleEnter" />
 
       <!-- 右侧图标 -->
       <div v-if="$slots.iconRight" class="input-icon-right">
@@ -37,13 +27,10 @@
       </div>
 
       <!-- 清空按钮 -->
-      <div
-        v-if="clearable && modelValue && !disabled && !readonly"
-        class="input-clear"
-        @click="handleClear"
-      >
+      <div v-if="clearable && modelValue && !disabled && !readonly" class="input-clear" @click="handleClear">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-          <path d="M7 0C3.13 0 0 3.13 0 7s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm3.5 9.09L9.09 10.5 7 8.41 4.91 10.5 3.5 9.09 5.59 7 3.5 4.91 4.91 3.5 7 5.59 9.09 3.5l1.41 1.41L8.41 7l2.09 2.09z"/>
+          <path
+            d="M7 0C3.13 0 0 3.13 0 7s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm3.5 9.09L9.09 10.5 7 8.41 4.91 10.5 3.5 9.09 5.59 7 3.5 4.91 4.91 3.5 7 5.59 9.09 3.5l1.41 1.41L8.41 7l2.09 2.09z" />
         </svg>
       </div>
 
@@ -51,22 +38,25 @@
       <div v-if="loading" class="input-loading">
         <svg class="spinner" width="14" height="14" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round">
-            <animate attributeName="stroke-dasharray" values="1,200;89,200;89,200" dur="1.5s" repeatCount="indefinite"/>
-            <animate attributeName="stroke-dashoffset" values="0;-35;-124" dur="1.5s" repeatCount="indefinite"/>
+            <animate attributeName="stroke-dasharray" values="1,200;89,200;89,200" dur="1.5s"
+              repeatCount="indefinite" />
+            <animate attributeName="stroke-dashoffset" values="0;-35;-124" dur="1.5s" repeatCount="indefinite" />
           </circle>
         </svg>
       </div>
     </div>
 
-    <!-- 帮助文本/错误提示 -->
-    <transition name="slide-down">
-      <div v-if="showMessage" class="input-message" :class="messageClass">
-        <svg v-if="error" class="message-icon" width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-          <path d="M7 0C3.13 0 0 3.13 0 7s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm1 10H6V6h2v4zm0-5H6V3h2v2z"/>
-        </svg>
-        <span class="message-text">{{ currentMessage }}</span>
-      </div>
-    </transition>
+    <!-- 帮助文本/错误提示 - 固定区域防止抖动 -->
+    <div class="input-message-container">
+      <transition name="fade">
+        <div v-if="showMessage" class="input-message" :class="messageClass">
+          <svg v-if="error" class="message-icon" width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+            <path d="M7 0C3.13 0 0 3.13 0 7s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm1 10H6V6h2v4zm0-5H6V3h2v2z" />
+          </svg>
+          <span class="message-text">{{ currentMessage }}</span>
+        </div>
+      </transition>
+    </div>
   </div>
 </template>
 
@@ -282,7 +272,7 @@ watch(() => props.error, (newError) => {
 .smart-input-wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-1);
+  gap: 0;
 }
 
 /* 标签 */
@@ -291,11 +281,21 @@ watch(() => props.error, (newError) => {
   font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   line-height: var(--line-height-tight);
+  margin-bottom: 6px;
 }
 
 .required-mark {
-  color: var(--color-error);
   margin-left: var(--spacing-1);
+  font-weight: normal;
+  transition: color var(--duration-base) var(--ease);
+}
+
+.required-mark--error {
+  color: var(--color-error-500);
+}
+
+.required-mark--success {
+  color: var(--color-success-500);
 }
 
 /* 输入框容器 */
@@ -327,11 +327,17 @@ watch(() => props.error, (newError) => {
   border-color: var(--color-border-hover);
 }
 
-/* 聚焦状态 */
+/* 聚焦状态 - 增强版 */
 .smart-input.is-focused {
-  border-width: var(--border-width-thick);
-  border-color: var(--color-border-focus);
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+  border-width: 2px;
+  border-color: transparent;
+  background: linear-gradient(white, white) padding-box,
+    linear-gradient(135deg, #0066ff, #0052cc) border-box;
+  box-shadow:
+    0 0 0 3px rgba(0, 102, 255, 0.15),
+    0 4px 12px rgba(0, 102, 255, 0.1);
+  transform: translateY(-1px);
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* 错误状态 */
@@ -430,14 +436,19 @@ watch(() => props.error, (newError) => {
   color: var(--color-primary-500);
 }
 
-/* 消息文本 */
+/* 消息容器 - 固定高度防止抖动 */
+.input-message-container {
+  min-height: 22px;
+  margin-top: 2px;
+}
+
 .input-message {
   display: flex;
   align-items: flex-start;
   gap: var(--spacing-1);
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-tight);
-  padding-top: var(--spacing-1);
+  font-size: 12px;
+  line-height: 1.4;
+  padding-top: 2px;
 }
 
 .input-message.is-error {
@@ -457,26 +468,22 @@ watch(() => props.error, (newError) => {
   flex: 1;
 }
 
-/* 动画 */
-.slide-down-enter-active,
-.slide-down-leave-active {
-  transition: all var(--duration-fast) var(--ease-out);
+/* 动画 - 仅透明度变化，避免抖动 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 150ms var(--ease-out);
 }
 
-.slide-down-enter-from {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
-  transform: translateY(-4px);
-}
-
-.slide-down-leave-to {
-  opacity: 0;
-  transform: translateY(-4px);
 }
 
 @keyframes spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

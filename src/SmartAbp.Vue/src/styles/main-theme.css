@@ -1,370 +1,236 @@
-/**
- * 🎨 SmartAbp主题系统
- * 
- * 基于设计令牌的统一主题
- * 支持亮色/暗色模式切换
- */
-
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   设计令牌定义（亮色模式）
+   SmartAbp 设计令牌系统
+   基于设计令牌的统一主题系统（亮色/暗色模式）
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 :root {
-  /* 品牌主色 */
-  --color-primary-50: #E6F4FF;
-  --color-primary-100: #BAE0FF;
-  --color-primary-200: #91CAFF;
-  --color-primary-300: #69B1FF;
-  --color-primary-400: #4096FF;
-  --color-primary-500: #1890FF;
-  --color-primary-600: #0958D9;
-  --color-primary-700: #003EB3;
-  --color-primary-800: #002C8C;
-  --color-primary-900: #001D66;
-  
-  /* 功能色 */
-  --color-success: #52C41A;
-  --color-warning: #FAAD14;
-  --color-error: #FF4D4F;
-  --color-info: #1890FF;
-  
-  /* 中性色 */
-  --color-gray-50: #FAFAFA;
-  --color-gray-100: #F5F5F5;
-  --color-gray-200: #E8E8E8;
-  --color-gray-300: #D9D9D9;
-  --color-gray-400: #BFBFBF;
-  --color-gray-500: #8C8C8C;
-  --color-gray-600: #595959;
-  --color-gray-700: #434343;
-  --color-gray-800: #262626;
-  --color-gray-900: #141414;
-  
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     品牌主色（基于1890FF - Ant Design蓝）
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  --color-primary-50: #e6f4ff;
+  --color-primary-100: #bae0ff;
+  --color-primary-200: #91caff;
+  --color-primary-300: #69b1ff;
+  --color-primary-400: #4096ff;
+  --color-primary-500: #1890ff;
+  --color-primary-600: #0958d9;
+  --color-primary-700: #003eb3;
+  --color-primary-800: #002c8c;
+  --color-primary-900: #001d66;
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     功能色彩
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  /* 成功色（绿色） */
+  --color-success-50: #f0fdf4;
+  --color-success-100: #dcfce7;
+  --color-success-200: #bbf7d0;
+  --color-success-300: #86efac;
+  --color-success-400: #4ade80;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  --color-success-700: #15803d;
+  --color-success-800: #166534;
+  --color-success-900: #14532d;
+
+  /* 警告色（黄色） */
+  --color-warning-50: #fffbeb;
+  --color-warning-100: #fef3c7;
+  --color-warning-200: #fde68a;
+  --color-warning-300: #fcd34d;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+  --color-warning-900: #78350f;
+
+  /* 错误色（红色） */
+  --color-error-50: #fef2f2;
+  --color-error-100: #fee2e2;
+  --color-error-200: #fecaca;
+  --color-error-300: #fca5a5;
+  --color-error-400: #f87171;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+  --color-error-700: #b91c1c;
+  --color-error-800: #991b1b;
+  --color-error-900: #7f1d1d;
+
+  /* 信息色（蓝色） */
+  --color-info-50: #eff6ff;
+  --color-info-100: #dbeafe;
+  --color-info-200: #bfdbfe;
+  --color-info-300: #93c5fd;
+  --color-info-400: #60a5fa;
+  --color-info-500: #3b82f6;
+  --color-info-600: #2563eb;
+  --color-info-700: #1d4ed8;
+  --color-info-800: #1e40af;
+  --color-info-900: #1e3a8a;
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     中性灰阶
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     语义化颜色（基于中性灰）
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
   /* 背景色 */
-  --color-bg-primary: #FAFAFA;
-  --color-bg-secondary: #F5F5F5;
-  --color-bg-elevated: #FFFFFF;
-  --color-bg-overlay: rgba(0, 0, 0, 0.45);
-  
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f9fafb;
+  --color-bg-tertiary: #f3f4f6;
+
   /* 边框色 */
-  --color-border-base: #D9D9D9;
-  --color-border-light: #E8E8E8;
-  --color-border-hover: #4096FF;
-  --color-border-focus: #1890FF;
-  
-  /* 文字颜色 */
-  --color-text-primary: #141414;
-  --color-text-secondary: #595959;
-  --color-text-tertiary: #8C8C8C;
-  --color-text-disabled: #BFBFBF;
-  --color-text-inverse: #FFFFFF;
-  
-  /* 阴影 */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
-  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.18);
-  
-  /* 间距 */
+  --color-border-primary: #d1d5db;
+  --color-border-secondary: #e5e7eb;
+  --color-border-tertiary: #f3f4f6;
+
+  /* 文本色 */
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-text-tertiary: #9ca3af;
+  --color-text-disabled: #d1d5db;
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     间距系统（基于8px栅格）
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   --spacing-0: 0;
-  --spacing-1: 4px;
-  --spacing-2: 8px;
-  --spacing-3: 12px;
-  --spacing-4: 16px;
-  --spacing-5: 20px;
-  --spacing-6: 24px;
-  --spacing-8: 32px;
-  --spacing-10: 40px;
-  --spacing-12: 48px;
-  --spacing-16: 64px;
-  --spacing-20: 80px;
-  --spacing-24: 96px;
-  
-  /* 圆角 */
-  --border-radius-none: 0;
-  --border-radius-sm: 4px;
-  --border-radius-md: 8px;
-  --border-radius-lg: 12px;
-  --border-radius-xl: 16px;
-  --border-radius-full: 9999px;
-  
-  /* 边框宽度 */
-  --border-width-none: 0;
-  --border-width-thin: 1px;
-  --border-width-base: 1px;
-  --border-width-thick: 2px;
-  
-  /* 字体大小 */
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-base: 16px;
-  --font-size-lg: 18px;
-  --font-size-xl: 20px;
-  --font-size-2xl: 24px;
-  --font-size-3xl: 30px;
-  --font-size-4xl: 36px;
-  --font-size-5xl: 48px;
-  
-  /* 字重 */
-  --font-weight-light: 300;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  
-  /* 行高 */
-  --line-height-tight: 1.25;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.75;
-  --line-height-loose: 2;
-  
-  /* 动画时长 */
-  --duration-instant: 50ms;
-  --duration-fast: 150ms;
-  --duration-base: 250ms;
-  --duration-slow: 350ms;
-  --duration-slower: 500ms;
-  
+  --spacing-1: 4px; /* 0.5x */
+  --spacing-2: 8px; /* 1x (基础) */
+  --spacing-3: 12px; /* 1.5x */
+  --spacing-4: 16px; /* 2x */
+  --spacing-5: 20px; /* 2.5x */
+  --spacing-6: 24px; /* 3x */
+  --spacing-7: 28px; /* 3.5x */
+  --spacing-8: 32px; /* 4x */
+  --spacing-10: 40px; /* 5x */
+  --spacing-12: 48px; /* 6x */
+  --spacing-14: 56px; /* 7x */
+  --spacing-16: 64px; /* 8x */
+  --spacing-20: 80px; /* 10x */
+  --spacing-24: 96px; /* 12x */
+  --spacing-28: 112px; /* 14x */
+  --spacing-32: 128px; /* 16x */
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     动效系统
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  /* 持续时间 */
+  --duration-fast: 100ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
+
   /* 缓动函数 */
-  --ease: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-in-quad: cubic-bezier(0.55, 0.085, 0.68, 0.53);
-  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
-  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-in-back: cubic-bezier(0.36, 0, 0.66, -0.56);
-  
-  /* Z轴层级 */
-  --z-index-hide: -1;
-  --z-index-base: 0;
-  --z-index-dropdown: 1000;
-  --z-index-sticky: 1020;
-  --z-index-fixed: 1030;
-  --z-index-modal-backdrop: 1040;
-  --z-index-modal: 1050;
-  --z-index-popover: 1060;
-  --z-index-tooltip: 1070;
-  --z-index-notification: 1080;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1); /* Default ease */
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     边框系统
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  --border-width-base: 1px;
+  --border-width-thick: 2px;
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+
+  --color-border-base: var(--color-border-secondary);
+  --color-border-hover: var(--color-border-primary);
+  --color-border-focus: var(--color-primary-500);
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     组件颜色
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  --color-bg-elevated: var(--color-bg-primary);
+  --color-error: var(--color-error-500);
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     字体系统
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+  --font-size-sm: 14px;
+  --font-weight-medium: 500;
+  --line-height-tight: 1.25;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   暗黑模式
+   暗色模式
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+[data-theme='dark'] {
+  /* 品牌主色（暗色模式下调整亮度） */
+  --color-primary-50: #001d66;
+  --color-primary-100: #002c8c;
+  --color-primary-200: #003eb3;
+  --color-primary-300: #0958d9;
+  --color-primary-400: #1890ff;
+  --color-primary-500: #4096ff;
+  --color-primary-600: #69b1ff;
+  --color-primary-700: #91caff;
+  --color-primary-800: #bae0ff;
+  --color-primary-900: #e6f4ff;
 
-[data-theme="dark"] {
-  /* 背景色 */
-  --color-bg-primary: #141414;
-  --color-bg-secondary: #262626;
-  --color-bg-elevated: #262626;
-  --color-bg-overlay: rgba(0, 0, 0, 0.65);
-  
-  /* 边框色 */
-  --color-border-base: #434343;
-  --color-border-light: #262626;
-  
-  /* 文字颜色 */
-  --color-text-primary: #FAFAFA;
-  --color-text-secondary: #BFBFBF;
-  --color-text-tertiary: #8C8C8C;
-  --color-text-disabled: #595959;
-  --color-text-inverse: #141414;
-  
-  /* 阴影 */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.24);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.32);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.40);
-  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.48);
+  /* 语义化颜色（暗色模式） */
+  --color-bg-primary: #1f2937;
+  --color-bg-secondary: #111827;
+  --color-bg-tertiary: #374151;
+
+  --color-border-primary: #4b5563;
+  --color-border-secondary: #374151;
+  --color-border-tertiary: #1f2937;
+
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #d1d5db;
+  --color-text-tertiary: #9ca3af;
+  --color-text-disabled: #6b7280;
+
+  /* 边框颜色（暗色模式） */
+  --color-border-base: var(--color-border-secondary);
+  --color-border-hover: var(--color-border-primary);
+
+  /* 组件颜色（暗色模式） */
+  --color-bg-elevated: var(--color-bg-primary);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   全局样式重置
+   全局样式（使用设计令牌）
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 html,
 body {
-  width: 100%;
+  margin: 0;
+  padding: 0;
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-    'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-normal);
+  overflow: hidden;
+}
+
+body {
+  background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
-  background: var(--color-bg-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  transition:
+    background-color var(--duration-base) var(--ease),
+    color var(--duration-base) var(--ease);
 }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   通用工具类
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-/* 文本截断 */
-.text-ellipsis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.text-ellipsis-2 {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-}
-
-/* Flex布局 */
-.flex {
-  display: flex;
-}
-
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* 滚动条样式 */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-bg-secondary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-gray-400);
-  border-radius: var(--border-radius-full);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-500);
-}
-
-/* 选中文本样式 */
-::selection {
-  background: var(--color-primary-100);
-  color: var(--color-primary-900);
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   动画定义
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes slideDown {
-  from {
-    transform: translateY(-8px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(-8px);
-    opacity: 0;
-  }
-}
-
-@keyframes zoomIn {
-  from {
-    transform: scale(0.95);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes zoomOut {
-  from {
-    transform: scale(1);
-    opacity: 1;
-  }
-  to {
-    transform: scale(0.95);
-    opacity: 0;
-  }
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   Vue过渡类
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-
-/* 淡入淡出 */
-.fade-enter-active {
-  animation: fadeIn var(--duration-base) var(--ease-out);
-}
-
-.fade-leave-active {
-  animation: fadeOut var(--duration-base) var(--ease-in);
-}
-
-/* 滑动 */
-.slide-down-enter-active {
-  animation: slideDown var(--duration-base) var(--ease-out);
-}
-
-.slide-down-leave-active {
-  animation: slideUp var(--duration-base) var(--ease-in);
-}
-
-/* 缩放 */
-.zoom-enter-active {
-  animation: zoomIn var(--duration-base) var(--ease-out);
-}
-
-.zoom-leave-active {
-  animation: zoomOut var(--duration-base) var(--ease-in);
+/* 确保所有元素的box-sizing为border-box */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }

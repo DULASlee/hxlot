@@ -1,17 +1,12 @@
 <template>
-  <button
-    :type="nativeType"
-    :disabled="disabled || loading"
-    :class="buttonClasses"
-    class="smart-button"
-    @click="handleClick"
-  >
+  <button :type="nativeType" :disabled="disabled || loading" :class="buttonClasses" class="smart-button"
+    @click="handleClick">
     <!-- Loading图标 -->
     <span v-if="loading" class="button-loading">
       <svg class="spinner" width="14" height="14" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round">
-          <animate attributeName="stroke-dasharray" values="1,200;89,200;89,200" dur="1.5s" repeatCount="indefinite"/>
-          <animate attributeName="stroke-dashoffset" values="0;-35;-124" dur="1.5s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-dasharray" values="1,200;89,200;89,200" dur="1.5s" repeatCount="indefinite" />
+          <animate attributeName="stroke-dashoffset" values="0;-35;-124" dur="1.5s" repeatCount="indefinite" />
         </circle>
       </svg>
     </span>
@@ -155,27 +150,32 @@ function handleClick(event: MouseEvent) {
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   Primary变体（主要按钮）
+   Primary变体（主要按钮）- 渐变增强版
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .smart-button--primary {
-  background: var(--color-primary-500);
-  border-color: var(--color-primary-500);
-  color: var(--color-text-inverse);
+  background: #1890ff;
+  border: none;
+  color: #ffffff;
+  font-weight: 500;
+  box-shadow: 0 1px 4px rgba(24, 144, 255, 0.15);
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .smart-button--primary:hover:not(.is-disabled):not(.is-loading) {
-  background: var(--color-primary-600);
-  border-color: var(--color-primary-600);
+  background: #0066ff;
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
 }
 
 .smart-button--primary:active:not(.is-disabled):not(.is-loading) {
-  background: var(--color-primary-700);
-  border-color: var(--color-primary-700);
+  background: #0052cc;
+  box-shadow: 0 1px 2px rgba(24, 144, 255, 0.15);
 }
 
 .smart-button--primary:focus-visible {
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow:
+    0 1px 4px rgba(24, 144, 255, 0.15),
+    0 0 0 3px rgba(24, 144, 255, 0.1);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -382,6 +382,7 @@ function handleClick(event: MouseEvent) {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
