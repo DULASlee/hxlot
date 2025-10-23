@@ -98,7 +98,7 @@ public class TemplateManager
     /// <summary>
     /// 从目录注册模板
     /// </summary>
-    private async Task<int> RegisterTemplatesFromDirectoryAsync(string category, string directory)
+    private Task<int> RegisterTemplatesFromDirectoryAsync(string category, string directory)
     {
         var count = 0;
 
@@ -146,7 +146,7 @@ public class TemplateManager
                 directory);
         }
 
-        return count;
+        return Task.FromResult(count);
     }
 
     /// <summary>

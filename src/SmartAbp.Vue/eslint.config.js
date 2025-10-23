@@ -8,6 +8,7 @@ import tsPlugin from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import vuePlugin from 'eslint-plugin-vue'
 import vueParser from 'vue-eslint-parser'
+import smartabpDesignPlugin from './eslint-plugin-smartabp-design/index.js'
 
 export default [
     // Ignores (stage-1)
@@ -238,6 +239,23 @@ export default [
                     ]
                 }
             ]
+        }
+    },
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 🎨 SmartAbp Design System Rules (设计系统规则)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    {
+        files: ['src/views/**/*.{ts,tsx,vue,js}', 'src/components/**/*.{ts,tsx,vue,js}'],
+        plugins: {
+            'smartabp-design': smartabpDesignPlugin
+        },
+        rules: {
+            // 🚨 设计系统铁律（警告模式，便于逐步修复）
+            'smartabp-design/no-hardcoded-colors': 'warn',
+            'smartabp-design/no-hardcoded-spacing': 'warn',
+            'smartabp-design/use-smart-components': 'warn',
+            'smartabp-design/use-carbon-icons': 'warn'
         }
     }
 ]

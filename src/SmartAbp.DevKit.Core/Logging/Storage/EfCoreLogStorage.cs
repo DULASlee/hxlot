@@ -39,28 +39,33 @@ public class EfCoreLogStorage : ILogStorage
         {
             await using var context = await _contextFactory.CreateDbContextAsync();
 
-            // 使用事务批量插入
-            await using var transaction = await context.Database.BeginTransactionAsync();
-
-            try
+            // ✅ 修复：使用ExecutionStrategy包装事务，支持重试策略
+            var strategy = context.Database.CreateExecutionStrategy();
+            await strategy.ExecuteAsync(async () =>
             {
-                // AddRange是EF Core优化过的批量插入
-                await context.Logs.AddRangeAsync(entries);
+                // 使用事务批量插入
+                await using var transaction = await context.Database.BeginTransactionAsync();
 
-                // SaveChanges会自动批量执行INSERT
-                await context.SaveChangesAsync();
+                try
+                {
+                    // AddRange是EF Core优化过的批量插入
+                    await context.Logs.AddRangeAsync(entries);
 
-                await transaction.CommitAsync();
+                    // SaveChanges会自动批量执行INSERT
+                    await context.SaveChangesAsync();
 
-                _logger.LogDebug(
-                    "Successfully wrote {Count} log entries to database",
-                    entries.Count);
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                throw;
-            }
+                    await transaction.CommitAsync();
+
+                    _logger.LogDebug(
+                        "Successfully wrote {Count} log entries to database",
+                        entries.Count);
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            });
         }
         catch (Exception ex)
         {

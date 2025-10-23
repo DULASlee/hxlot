@@ -20,20 +20,20 @@ namespace SmartAbp.DevKit.Core.Platform;
 /// - 模板加载与渲染（统一使用Handlebars模板引擎）
 /// - 文件生成与写入（统一的文件管理）
 /// - 错误处理与日志记录（统一的异常处理）
-/// 
+///
 /// 【继承关系】
 /// BaseFrontendGenerator (抽象基类)
 ///   ├─ WebGenerator (Web平台：Vue3 + Element Plus)
 ///   ├─ DashboardGenerator (Dashboard平台：数字大屏)
 ///   └─ UniAppGenerator (UniApp平台：移动端APP)
-/// 
+///
 /// 【职责划分】
 /// 基类职责：
 /// - 提供通用的生成流程框架
 /// - 管理平台适配器（模板路径、文件类型）
 /// - 提供模板渲染的通用方法
 /// - 处理文件写入和路径管理
-/// 
+///
 /// 子类职责：
 /// - 实现平台特定的生成逻辑
 /// - 定义平台特定的模板列表
@@ -270,7 +270,7 @@ public abstract class BaseFrontendGenerator : ICodeGenerator
     {
         var platformPath = GetPlatformOutputPath(context);
         var modulePath = Path.Combine(platformPath, context.Config.ModuleName.ToLowerInvariant());
-        
+
         // 确保目录存在
         if (!Directory.Exists(modulePath))
         {
@@ -324,7 +324,7 @@ public abstract class BaseFrontendGenerator : ICodeGenerator
             propertyName,
             "([A-Z])",
             " $1").Trim();
-        
+
         return char.ToUpper(result[0]) + result.Substring(1);
     }
 
@@ -364,6 +364,20 @@ public class FrontendFieldConfig
     /// 是否必填
     /// </summary>
     public bool IsRequired { get; set; }
+
+    /// <summary>
+    /// 是否必填（别名，用于兼容性）
+    /// </summary>
+    public bool Required
+    {
+        get => IsRequired;
+        set => IsRequired = value;
+    }
+
+    /// <summary>
+    /// 显示顺序
+    /// </summary>
+    public int DisplayOrder { get; set; }
 
     /// <summary>
     /// 最大长度（用于string类型）

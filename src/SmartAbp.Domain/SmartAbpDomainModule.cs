@@ -7,6 +7,8 @@ using SmartAbp.MultiTenancy;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.MultiTenancy;
+using Volo.Abp.FeatureManagement;
+using Volo.Abp.PermissionManagement;
 using Volo.Abp.PermissionManagement.Identity;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.BlobStoring.Database;
@@ -19,6 +21,7 @@ using Volo.Abp.Emailing;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.TenantManagement;
+using Volo.Abp.Settings;
 
 namespace SmartAbp;
 
@@ -77,6 +80,24 @@ public class SmartAbpDomainModule : AbpModule
         Configure<AbpMultiTenancyOptions>(options =>
         {
             options.IsEnabled = MultiTenancyConsts.IsEnabled;
+        });
+
+        // ✅ 修复ABP设置管理模块事务冲突：禁用静态设置数据库保存
+        Configure<SettingManagementOptions>(options =>
+        {
+            options.SaveStaticSettingsToDatabase = false;
+        });
+
+        // ✅ 修复ABP权限管理模块事务冲突：禁用静态权限数据库保存
+        Configure<PermissionManagementOptions>(options =>
+        {
+            options.SaveStaticPermissionsToDatabase = false;
+        });
+
+        // ✅ 修复ABP功能管理模块事务冲突：禁用静态功能数据库保存
+        Configure<FeatureManagementOptions>(options =>
+        {
+            options.SaveStaticFeaturesToDatabase = false;
         });
 
         Configure<AbpLocalizationOptions>(options =>

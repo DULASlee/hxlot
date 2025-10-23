@@ -446,9 +446,9 @@ public class QualityGateExecutor
         return count;
     }
 
-    private async Task<Dictionary<string, int>> FindDuplicateFileNamesAsync(string directory, string pattern)
+    private Task<Dictionary<string, int>> FindDuplicateFileNamesAsync(string directory, string pattern)
     {
-        if (!Directory.Exists(directory)) return new Dictionary<string, int>();
+        if (!Directory.Exists(directory)) return Task.FromResult(new Dictionary<string, int>());
 
         var fileNames = new Dictionary<string, int>();
         var files = Directory.GetFiles(directory, pattern, SearchOption.AllDirectories);
@@ -462,7 +462,8 @@ public class QualityGateExecutor
                 fileNames[fileName] = 1;
         }
 
-        return fileNames.Where(kv => kv.Value > 1).ToDictionary(kv => kv.Key, kv => kv.Value);
+        var result = fileNames.Where(kv => kv.Value > 1).ToDictionary(kv => kv.Key, kv => kv.Value);
+        return Task.FromResult(result);
     }
 
     private async Task<List<string>> FindDuplicatePatternsAsync(string directory, string pattern, string filePattern)
