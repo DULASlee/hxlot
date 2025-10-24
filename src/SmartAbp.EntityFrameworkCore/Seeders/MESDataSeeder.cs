@@ -294,7 +294,7 @@ namespace SmartAbp.Seeders
                 _logger.LogInformation("[MESDataSeeder] ✅ 创建{Count}条传感器数据记录。", sensorDataList.Count);
 
                 // 保存所有更改
-                await _productionLineRepository.GetDbContext().SaveChangesAsync();
+                await (await _productionLineRepository.GetDbContextAsync()).SaveChangesAsync();
 
                 _logger.LogInformation("[MESDataSeeder] ✅ MES测试数据创建完成！");
             }

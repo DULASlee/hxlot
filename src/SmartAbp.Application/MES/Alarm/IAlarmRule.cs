@@ -6,13 +6,13 @@
 
 using System;
 using System.Threading.Tasks;
-using SmartAbp.Domain.Entities.MES;
+using MesSensorData = SmartAbp.Domain.Entities.MES.SensorData;
 
 namespace SmartAbp.Application.MES.Alarm
 {
     /// <summary>
     /// 告警规则接口
-    /// 
+    ///
     /// ✅ 策略模式：支持多种告警规则
     /// ✅ 扩展性：新增规则类型只需实现此接口
     /// </summary>
@@ -43,7 +43,7 @@ namespace SmartAbp.Application.MES.Alarm
         /// </summary>
         /// <param name="sensorData">传感器数据</param>
         /// <returns>告警结果</returns>
-        Task<AlarmResult> EvaluateAsync(SensorData sensorData);
+        Task<AlarmResult> EvaluateAsync(MesSensorData sensorData);
     }
 
     /// <summary>

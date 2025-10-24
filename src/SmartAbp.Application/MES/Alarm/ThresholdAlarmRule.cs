@@ -6,13 +6,13 @@
 
 using System;
 using System.Threading.Tasks;
-using SmartAbp.Domain.Entities.MES;
+using MesSensorData = SmartAbp.Domain.Entities.MES.SensorData;
 
 namespace SmartAbp.Application.MES.Alarm
 {
     /// <summary>
     /// 阈值告警规则
-    /// 
+    ///
     /// ✅ 支持上限和下限阈值
     /// ✅ 支持多级告警（警告、错误、严重）
     /// ✅ 可配置建议操作
@@ -71,7 +71,7 @@ namespace SmartAbp.Application.MES.Alarm
             IsEnabled = true;
         }
 
-        public Task<AlarmResult> EvaluateAsync(SensorData sensorData)
+        public Task<AlarmResult> EvaluateAsync(MesSensorData sensorData)
         {
             if (!IsEnabled)
             {

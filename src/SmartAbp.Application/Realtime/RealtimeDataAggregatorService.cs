@@ -5,7 +5,9 @@ using Microsoft.Extensions.Logging;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using SmartAbp.Application.Contracts.Realtime;
-using SmartAbp.Domain.Entities.MES;
+using MesProductionLine = SmartAbp.Domain.Entities.MES.ProductionLine;
+using MesEquipment = SmartAbp.Domain.Entities.MES.Equipment;
+using MesSensorData = SmartAbp.Domain.Entities.MES.SensorData;
 
 namespace SmartAbp.Application.Realtime
 {
@@ -16,15 +18,15 @@ namespace SmartAbp.Application.Realtime
     /// </summary>
     public class RealtimeDataAggregatorService : ApplicationService
     {
-        private readonly IRepository<ProductionLine, Guid> _productionLineRepository;
-        private readonly IRepository<Equipment, Guid> _equipmentRepository;
-        private readonly IRepository<SensorData, Guid> _sensorDataRepository;
+        private readonly IRepository<MesProductionLine, Guid> _productionLineRepository;
+        private readonly IRepository<MesEquipment, Guid> _equipmentRepository;
+        private readonly IRepository<MesSensorData, Guid> _sensorDataRepository;
         private readonly ILogger<RealtimeDataAggregatorService> _logger;
 
         public RealtimeDataAggregatorService(
-            IRepository<ProductionLine, Guid> productionLineRepository,
-            IRepository<Equipment, Guid> equipmentRepository,
-            IRepository<SensorData, Guid> sensorDataRepository,
+            IRepository<MesProductionLine, Guid> productionLineRepository,
+            IRepository<MesEquipment, Guid> equipmentRepository,
+            IRepository<MesSensorData, Guid> sensorDataRepository,
             ILogger<RealtimeDataAggregatorService> logger)
         {
             _productionLineRepository = productionLineRepository;
@@ -127,7 +129,7 @@ namespace SmartAbp.Application.Realtime
         // 趋势数据构建方法
         // ══════════════════════════════════════════════════════
 
-        private TrendData BuildTemperatureTrend(System.Collections.Generic.List<SensorData> sensorData)
+        private TrendData BuildTemperatureTrend(System.Collections.Generic.List<MesSensorData> sensorData)
         {
             var temperatureData = sensorData
                 .Where(x => x.SensorType == "temperature")
@@ -141,7 +143,7 @@ namespace SmartAbp.Application.Realtime
             };
         }
 
-        private TrendData BuildPressureTrend(System.Collections.Generic.List<SensorData> sensorData)
+        private TrendData BuildPressureTrend(System.Collections.Generic.List<MesSensorData> sensorData)
         {
             var pressureData = sensorData
                 .Where(x => x.SensorType == "pressure")
@@ -155,7 +157,7 @@ namespace SmartAbp.Application.Realtime
             };
         }
 
-        private TrendData BuildVibrationTrend(System.Collections.Generic.List<SensorData> sensorData)
+        private TrendData BuildVibrationTrend(System.Collections.Generic.List<MesSensorData> sensorData)
         {
             var vibrationData = sensorData
                 .Where(x => x.SensorType == "vibration")
@@ -169,7 +171,7 @@ namespace SmartAbp.Application.Realtime
             };
         }
 
-        private TrendData BuildPowerTrend(System.Collections.Generic.List<SensorData> sensorData)
+        private TrendData BuildPowerTrend(System.Collections.Generic.List<MesSensorData> sensorData)
         {
             var powerData = sensorData
                 .Where(x => x.SensorType == "power")
@@ -183,7 +185,7 @@ namespace SmartAbp.Application.Realtime
             };
         }
 
-        private TrendData BuildEnergyTrend(System.Collections.Generic.List<SensorData> sensorData)
+        private TrendData BuildEnergyTrend(System.Collections.Generic.List<MesSensorData> sensorData)
         {
             var energyData = sensorData
                 .Where(x => x.SensorType == "energy")

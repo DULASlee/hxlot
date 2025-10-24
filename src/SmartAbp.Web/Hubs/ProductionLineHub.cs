@@ -11,14 +11,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using SmartAbp.Application.RealtimeData;
-using SmartAbp.Application.Realtime;
 
 namespace SmartAbp.Web.Hubs
 {
     /// <summary>
     /// 产线实时数据推送Hub
-    /// 
+    ///
     /// ✅ 支持多产线订阅
     /// ✅ 自动管理连接生命周期
     /// ✅ 线程安全的订阅管理
@@ -31,7 +29,7 @@ namespace SmartAbp.Web.Hubs
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
         private readonly ILogger<ProductionLineHub> _logger;
-        private readonly RealtimeDataAggregatorService _aggregatorService;
+        private readonly SmartAbp.Application.Realtime.RealtimeDataAggregatorService _aggregatorService;
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // 静态连接管理（线程安全）
@@ -60,7 +58,7 @@ namespace SmartAbp.Web.Hubs
 
         public ProductionLineHub(
             ILogger<ProductionLineHub> logger,
-            RealtimeDataAggregatorService aggregatorService)
+            SmartAbp.Application.Realtime.RealtimeDataAggregatorService aggregatorService)
         {
             _logger = logger;
             _aggregatorService = aggregatorService;

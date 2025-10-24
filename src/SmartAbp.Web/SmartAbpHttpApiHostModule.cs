@@ -8,7 +8,8 @@ using Microsoft.Extensions.Hosting;
 using SmartAbp.Web.Swagger;
 using SmartAbp.Web.Hubs;
 using SmartAbp.Web.BackgroundWorkers;
-using SmartAbp.Application.RealtimeData;
+using SmartAbp.Web.Realtime;
+using SmartAbp.Application.Contracts.Realtime;
 using Volo.Abp;
 using Volo.Abp.Autofac;
 using Volo.Abp.AspNetCore.Authentication.JwtBearer;
@@ -62,7 +63,7 @@ public class SmartAbpHttpApiHostModule : AbpModule
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // CORS配置（支持SignalR）
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        
+
         context.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(builder =>
@@ -92,18 +93,18 @@ public class SmartAbpHttpApiHostModule : AbpModule
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // SignalR配置（用于数字大屏实时数据推送）
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        
+
         context.Services.AddSignalR(options =>
         {
             // 客户端超时时间（30秒）
             options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
-            
+
             // 心跳间隔（15秒）
             options.KeepAliveInterval = TimeSpan.FromSeconds(15);
-            
+
             // 最大消息大小（1MB）
             options.MaximumReceiveMessageSize = 1024 * 1024;
-            
+
             // 启用详细错误（仅开发环境）
             options.EnableDetailedErrors = context.Services.GetRequiredService<IHostEnvironment>().IsDevelopment();
         });
@@ -111,9 +112,12 @@ public class SmartAbpHttpApiHostModule : AbpModule
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // 注册应用服务
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        
+
         // 实时数据聚合服务
-        context.Services.AddTransient<RealtimeDataAggregatorService>();
+        context.Services.AddTransient<SmartAbp.Application.Realtime.RealtimeDataAggregatorService>();
+
+        // 注册实时数据通知服务
+        context.Services.AddTransient<IRealtimeDataNotifier, SignalRRealtimeDataNotifier>();
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // 🔴 临时禁用: 此后台任务会高频轮询并刷屏日志，导致性能问题
@@ -201,11 +205,11 @@ public class SmartAbpHttpApiHostModule : AbpModule
 
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
-        
+
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // 配置端点路由（包括SignalR Hub）
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        
+
         app.UseConfiguredEndpoints(endpoints =>
         {
             // 映射SignalR Hub（数字大屏实时数据推送）

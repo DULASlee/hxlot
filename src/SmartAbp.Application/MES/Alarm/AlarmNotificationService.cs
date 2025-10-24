@@ -12,20 +12,22 @@ using Microsoft.Extensions.Logging;
 using Volo.Abp.Application.Services;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Local;
-using SmartAbp.Domain.Entities.MES;
+using MesSensorData = SmartAbp.Domain.Entities.MES.SensorData;
+using MesProductionLine = SmartAbp.Domain.Entities.MES.ProductionLine;
+using MesEquipment = SmartAbp.Domain.Entities.MES.Equipment;
 
 namespace SmartAbp.Application.MES.Alarm
 {
     /// <summary>
     /// 告警通知服务
-    /// 
+    ///
     /// ✅ 评估传感器数据是否触发告警
     /// ✅ 管理多个告警规则
     /// ✅ 通过事件总线发布告警事件（由Web层订阅并推送）
     /// ✅ 支持告警历史记录
     /// ✅ 单例模式：整个应用共享一套告警规则
-    /// 
-    /// 📝 架构说明: 
+    ///
+    /// 📝 架构说明:
     ///   - Application层不直接依赖Web层（遵循DDD）
     ///   - 通过ABP事件总线解耦（告警事件由Web层订阅）
     /// </summary>
@@ -68,7 +70,7 @@ namespace SmartAbp.Application.MES.Alarm
         /// 评估传感器数据并触发告警
         /// </summary>
         /// <param name="sensorData">传感器数据</param>
-        public async Task EvaluateAndNotifyAsync(SensorData sensorData)
+        public async Task EvaluateAndNotifyAsync(MesSensorData sensorData)
         {
             try
             {
@@ -185,7 +187,7 @@ namespace SmartAbp.Application.MES.Alarm
 
     /// <summary>
     /// 告警触发事件（ABP事件总线）
-    /// 
+    ///
     /// ✅ Web层订阅此事件
     /// ✅ Web层通过SignalR推送到前端
     /// </summary>

@@ -9,23 +9,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
+using SmartAbp.Application.Contracts.Realtime;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Uow;
-using SmartAbp.Domain.Entities.MES;
+using MesProductionLine = SmartAbp.Domain.Entities.MES.ProductionLine;
+using MesEquipment = SmartAbp.Domain.Entities.MES.Equipment;
+using MesSensorData = SmartAbp.Domain.Entities.MES.SensorData;
 using SmartAbp.Application.MES.Alarm;
-using SmartAbp.Application.Realtime;
-using SmartAbp.Application.RealtimeData;
-using SmartAbp.Web.Hubs;
+
 
 namespace SmartAbp.Application.MES
 {
     /// <summary>
     /// PLC数据采集后台工作者
-    /// 
+    ///
     /// ✅ 定时从PLC采集数据（模拟）
     /// ✅ 更新生产线KPI指标
     /// ✅ 更新设备实时状态
@@ -67,7 +67,7 @@ namespace SmartAbp.Application.MES
                     await CollectPLCDataAsync();
 
                     var elapsed = (DateTime.UtcNow - startTime).TotalMilliseconds;
-                    
+
                     // 等待下一次采集
                     var delay = Math.Max(0, CollectionIntervalMs - (int)elapsed);
                     await Task.Delay(delay, stoppingToken);
@@ -104,12 +104,12 @@ namespace SmartAbp.Application.MES
                     // 使用工作单元确保事务一致性
                     using (var uow = unitOfWorkManager.Begin(requiresNew: true, isTransactional: true))
                     {
-                        var productionLineRepository = scope.ServiceProvider.GetRequiredService<IRepository<ProductionLine, Guid>>();
-                        var equipmentRepository = scope.ServiceProvider.GetRequiredService<IRepository<Equipment, Guid>>();
-                        var sensorDataRepository = scope.ServiceProvider.GetRequiredService<IRepository<SensorData, Guid>>();
+                        var productionLineRepository = scope.ServiceProvider.GetRequiredService<IRepository<MesProductionLine, Guid>>();
+                        var equipmentRepository = scope.ServiceProvider.GetRequiredService<IRepository<MesEquipment, Guid>>();
+                        var sensorDataRepository = scope.ServiceProvider.GetRequiredService<IRepository<MesSensorData, Guid>>();
                         var alarmNotificationService = scope.ServiceProvider.GetRequiredService<AlarmNotificationService>();
-                        var aggregatorService = scope.ServiceProvider.GetRequiredService<RealtimeDataAggregatorService>();
-                        var hubContext = scope.ServiceProvider.GetRequiredService<IHubContext<ProductionLineHub, IProductionLineClient>>();
+                        var aggregatorService = scope.ServiceProvider.GetRequiredService<SmartAbp.Application.Realtime.RealtimeDataAggregatorService>();
+                        var notifier = scope.ServiceProvider.GetRequiredService<IRealtimeDataNotifier>();
 
                         // 查询所有运行中的生产线
                         var productionLines = await productionLineRepository.GetListAsync(x => x.Status == "running");
@@ -131,20 +131,16 @@ namespace SmartAbp.Application.MES
                                 await RecordSensorDataAndEvaluateAlarms(equipment, productionLine.Id, sensorDataRepository, alarmNotificationService);
                             }
 
-                            // ✅ 推送实时数据到SignalR（让Dashboard实时更新）
+                            // ✅ 推送实时数据（通过接口解耦）
                             try
                             {
                                 var realtimeData = await aggregatorService.GetCurrentDataAsync(productionLine.Code);
                                 if (realtimeData != null)
                                 {
-                                    await ProductionLineHub.PushDataToSubscribers(
-                                        hubContext,
-                                        productionLine.Code,
-                                        realtimeData
-                                    );
-                                    
+                                    await notifier.PushDataAsync(productionLine.Code, realtimeData);
+
                                     _logger.LogDebug(
-                                        "[PLCDataCollectorBackgroundWorker] 已推送产线 {ProductionLine} 实时数据到SignalR订阅者",
+                                        "[PLCDataCollectorBackgroundWorker] 已通过通知器推送产线 {ProductionLine} 的实时数据",
                                         productionLine.Code
                                     );
                                 }
@@ -153,7 +149,7 @@ namespace SmartAbp.Application.MES
                             {
                                 _logger.LogError(
                                     ex,
-                                    "[PLCDataCollectorBackgroundWorker] 推送产线 {ProductionLine} 实时数据到SignalR失败",
+                                    "[PLCDataCollectorBackgroundWorker] 推送产线 {ProductionLine} 的实时数据失败",
                                     productionLine.Code
                                 );
                             }
@@ -174,25 +170,25 @@ namespace SmartAbp.Application.MES
         /// 更新生产线KPI指标
         /// </summary>
         private async Task UpdateProductionLineKPI(
-            ProductionLine productionLine,
-            IRepository<ProductionLine, Guid> repository)
+            MesProductionLine productionLine,
+            IRepository<MesProductionLine, Guid> repository)
         {
             // 模拟PLC数据采集
             var productionIncrement = _random.Next(1, 10);
             productionLine.TotalProduction += productionIncrement;
             productionLine.DailyProduction += productionIncrement;
-            
+
             // 计算效率（随机波动）
             productionLine.CurrentEfficiency = Math.Min(100, Math.Max(70, productionLine.CurrentEfficiency + _random.Next(-2, 3)));
-            
+
             // 计算设备利用率（随机波动）
             productionLine.EquipmentUtilization = Math.Min(100, Math.Max(60, productionLine.EquipmentUtilization + _random.Next(-2, 3)));
-            
+
             // 计算合格率（随机波动，保持在高位）
             productionLine.QualifiedRate = Math.Min(100, Math.Max(95, productionLine.QualifiedRate + _random.Next(-1, 2)));
 
             await repository.UpdateAsync(productionLine);
-            
+
             _logger.LogDebug(
                 "[PLCDataCollectorBackgroundWorker] 更新产线 {ProductionLine} KPI: 总产量={TotalProduction}, 效率={Efficiency}%",
                 productionLine.Name,
@@ -205,8 +201,8 @@ namespace SmartAbp.Application.MES
         /// 更新设备实时数据
         /// </summary>
         private async Task UpdateEquipmentRealtimeData(
-            Equipment equipment,
-            IRepository<Equipment, Guid> repository)
+            MesEquipment equipment,
+            IRepository<MesEquipment, Guid> repository)
         {
             // 模拟PLC传感器数据采集（更新设备的传感器字段）
             // 注意：Equipment实体可能没有这些字段，这里只是示例
@@ -224,18 +220,18 @@ namespace SmartAbp.Application.MES
         /// 记录传感器数据并评估告警
         /// </summary>
         private async Task RecordSensorDataAndEvaluateAlarms(
-            Equipment equipment,
+            MesEquipment equipment,
             Guid productionLineId,
-            IRepository<SensorData, Guid> repository,
+            IRepository<MesSensorData, Guid> repository,
             AlarmNotificationService alarmNotificationService)
         {
             var timestamp = DateTime.UtcNow;
 
             // 记录多种传感器数据（模拟PLC数据采集）
-            var sensorDataList = new List<SensorData>
+            var sensorDataList = new List<MesSensorData>
             {
                 // 温度传感器
-                new SensorData(
+                new MesSensorData(
                     Guid.NewGuid(),
                     "temperature",
                     $"{equipment.Name}-温度",
@@ -248,7 +244,7 @@ namespace SmartAbp.Application.MES
                     Timestamp = timestamp
                 },
                 // 压力传感器
-                new SensorData(
+                new MesSensorData(
                     Guid.NewGuid(),
                     "pressure",
                     $"{equipment.Name}-压力",
@@ -261,7 +257,7 @@ namespace SmartAbp.Application.MES
                     Timestamp = timestamp
                 },
                 // 振动传感器
-                new SensorData(
+                new MesSensorData(
                     Guid.NewGuid(),
                     "vibration",
                     $"{equipment.Name}-振动",
@@ -274,7 +270,7 @@ namespace SmartAbp.Application.MES
                     Timestamp = timestamp
                 },
                 // 功率传感器
-                new SensorData(
+                new MesSensorData(
                     Guid.NewGuid(),
                     "power",
                     $"{equipment.Name}-功率",
@@ -287,7 +283,7 @@ namespace SmartAbp.Application.MES
                     Timestamp = timestamp
                 },
                 // 能耗传感器
-                new SensorData(
+                new MesSensorData(
                     Guid.NewGuid(),
                     "energy",
                     $"{equipment.Name}-能耗",
@@ -318,4 +314,3 @@ namespace SmartAbp.Application.MES
         }
     }
 }
-

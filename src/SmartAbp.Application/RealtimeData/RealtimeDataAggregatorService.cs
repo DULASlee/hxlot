@@ -13,13 +13,15 @@ using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
-using SmartAbp.Domain.Entities.MES;
+using MesProductionLine = SmartAbp.Domain.Entities.MES.ProductionLine;
+using MesEquipment = SmartAbp.Domain.Entities.MES.Equipment;
+using MesSensorData = SmartAbp.Domain.Entities.MES.SensorData;
 
 namespace SmartAbp.Application.RealtimeData
 {
     /// <summary>
     /// 实时数据聚合服务
-    /// 
+    ///
     /// ✅ 从多个数据源聚合实时数据
     /// ✅ 使用Redis缓存提高性能
     /// ✅ 计算KPI指标和趋势
@@ -33,9 +35,9 @@ namespace SmartAbp.Application.RealtimeData
 
         private readonly IDistributedCache _cache;
         private readonly ILogger<RealtimeDataAggregatorService> _logger;
-        private readonly IRepository<ProductionLine, Guid> _productionLineRepository;
-        private readonly IRepository<Equipment, Guid> _equipmentRepository;
-        private readonly IRepository<SensorData, Guid> _sensorDataRepository;
+        private readonly IRepository<MesProductionLine, Guid> _productionLineRepository;
+        private readonly IRepository<MesEquipment, Guid> _equipmentRepository;
+        private readonly IRepository<MesSensorData, Guid> _sensorDataRepository;
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // 构造函数
@@ -44,9 +46,9 @@ namespace SmartAbp.Application.RealtimeData
         public RealtimeDataAggregatorService(
             IDistributedCache cache,
             ILogger<RealtimeDataAggregatorService> logger,
-            IRepository<ProductionLine, Guid> productionLineRepository,
-            IRepository<Equipment, Guid> equipmentRepository,
-            IRepository<SensorData, Guid> sensorDataRepository)
+            IRepository<MesProductionLine, Guid> productionLineRepository,
+            IRepository<MesEquipment, Guid> equipmentRepository,
+            IRepository<MesSensorData, Guid> sensorDataRepository)
         {
             _cache = cache;
             _logger = logger;
