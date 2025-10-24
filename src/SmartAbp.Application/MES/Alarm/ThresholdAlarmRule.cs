@@ -7,6 +7,7 @@
 using System;
 using System.Threading.Tasks;
 using SmartAbp.Domain.Entities.MES;
+using MESEntities = SmartAbp.Domain.Entities.MES;
 
 namespace SmartAbp.Application.MES.Alarm
 {
@@ -71,7 +72,7 @@ namespace SmartAbp.Application.MES.Alarm
             IsEnabled = true;
         }
 
-        public Task<AlarmResult> EvaluateAsync(SensorData sensorData)
+        public Task<AlarmResult> EvaluateAsync(MESEntities.SensorData sensorData)
         {
             if (!IsEnabled)
             {

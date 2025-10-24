@@ -392,6 +392,46 @@ export const menuConfig: MenuConfig = {
         },
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // 专项生成器（新增：数字大屏、移动APP）
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        {
+          key: "mes-generator",
+          title: "数字大屏生成器",
+          icon: "chart-bar",
+          type: "page",
+          path: "/lowcode/mes-generator",
+          component: "@/views/lowcode/MESGeneratorView.vue",
+          order: 4,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN, ROLES.USER],
+          closable: true,
+          meta: {
+            title: "MES数字大屏生成器",
+            menuKey: "mes-generator",
+            keepAlive: true,
+            description: "生成MES生产监控数字大屏",
+          },
+        },
+        {
+          key: "uniapp-generator",
+          title: "移动APP生成器",
+          icon: "mobile-alt",
+          type: "page",
+          path: "/lowcode/uniapp-generator",
+          component: "@/views/lowcode/UniAppGeneratorView.vue",
+          order: 5,
+          visible: true,
+          requiredRoles: [ROLES.ADMIN, ROLES.USER],
+          closable: true,
+          meta: {
+            title: "UniApp移动应用生成器",
+            menuKey: "uniapp-generator",
+            keepAlive: true,
+            description: "生成跨平台移动应用（iOS/Android/小程序）",
+          },
+        },
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // 辅助工具（折叠）
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         {

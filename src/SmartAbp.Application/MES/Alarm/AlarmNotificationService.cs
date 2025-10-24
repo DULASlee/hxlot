@@ -13,6 +13,7 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Local;
 using SmartAbp.Domain.Entities.MES;
+using MESEntities = SmartAbp.Domain.Entities.MES;
 
 namespace SmartAbp.Application.MES.Alarm
 {
@@ -68,7 +69,7 @@ namespace SmartAbp.Application.MES.Alarm
         /// 评估传感器数据并触发告警
         /// </summary>
         /// <param name="sensorData">传感器数据</param>
-        public async Task EvaluateAndNotifyAsync(SensorData sensorData)
+        public async Task EvaluateAndNotifyAsync(MESEntities.SensorData sensorData)
         {
             try
             {

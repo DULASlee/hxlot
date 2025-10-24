@@ -68,33 +68,28 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// <summary>
         /// 架构配置（JSON存储）
         /// </summary>
-        [Column(TypeName = "nvarchar(max)")]
         public ModuleArchitectureConfig? ArchitectureConfig { get; set; }
 
         /// <summary>
         /// 前端配置（JSON存储）
         /// </summary>
-        [Column(TypeName = "nvarchar(max)")]
         public ModuleFrontendConfig? FrontendConfig { get; set; }
 
         /// <summary>
         /// 代码生成选项（JSON存储）
         /// </summary>
-        [Column(TypeName = "nvarchar(max)")]
         public ModuleCodeGenOptions? CodeGenOptions { get; set; }
 
         /// <summary>
         /// 权限配置（JSON存储）
         /// Phase 3新增：后端SSOT完整性
         /// </summary>
-        [Column(TypeName = "nvarchar(max)")]
         public ModulePermissionConfig? PermissionConfig { get; set; }
 
         /// <summary>
         /// 特性管理配置（JSON存储）
         /// Phase 3新增：后端SSOT完整性
         /// </summary>
-        [Column(TypeName = "nvarchar(max)")]
         public ModuleFeatureManagement? FeatureManagement { get; set; }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -128,7 +123,6 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// 示例: ["SmartAbp.IdentityManagement", "SmartAbp.TenantManagement"]
         /// </summary>
         [MaxLength(2000)]
-        [Column(TypeName = "nvarchar(2000)")]
         public string? Dependencies { get; set; }
 
         /// <summary>

@@ -7,6 +7,7 @@
 using System;
 using System.Threading.Tasks;
 using SmartAbp.Domain.Entities.MES;
+using MESEntities = SmartAbp.Domain.Entities.MES;
 
 namespace SmartAbp.Application.MES.Alarm
 {
@@ -43,7 +44,7 @@ namespace SmartAbp.Application.MES.Alarm
         /// </summary>
         /// <param name="sensorData">传感器数据</param>
         /// <returns>告警结果</returns>
-        Task<AlarmResult> EvaluateAsync(SensorData sensorData);
+        Task<AlarmResult> EvaluateAsync(MESEntities.SensorData sensorData);
     }
 
     /// <summary>

@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using SmartAbp.Application.Contracts.LowCode;
 using SmartAbp.Application.Contracts.LowCode.Dtos;
 using SmartAbp.Domain.Entities.LowCode;
+using Microsoft.Extensions.Configuration;
+using SmartAbp.Application.Contracts.DatabaseInfo;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -20,20 +22,23 @@ namespace SmartAbp.Application.LowCode
     public class SmartStudioLiteAppService : ApplicationService, ISmartStudioLiteAppService
     {
         private readonly IRepository<LowCodeModule, Guid> _moduleRepository;
-        private readonly IRepository<EntityDefinition, Guid> _entityDefinitionRepository;
-        private readonly IRepository<EntityField, Guid> _entityFieldRepository;
+        private readonly IRepository<LowCodeEntity, Guid> _entityRepository;
+        private readonly IRepository<LowCodeProperty, Guid> _propertyRepository;
         private readonly CodeGenerationService _codeGenerationService;
+        private readonly IDatabaseInfoAppService _databaseInfoAppService;
 
         public SmartStudioLiteAppService(
             IRepository<LowCodeModule, Guid> moduleRepository,
-            IRepository<EntityDefinition, Guid> entityDefinitionRepository,
-            IRepository<EntityField, Guid> entityFieldRepository,
-            CodeGenerationService codeGenerationService)
+            IRepository<LowCodeEntity, Guid> entityRepository,
+            IRepository<LowCodeProperty, Guid> propertyRepository,
+            CodeGenerationService codeGenerationService,
+            IDatabaseInfoAppService databaseInfoAppService)
         {
             _moduleRepository = moduleRepository;
-            _entityDefinitionRepository = entityDefinitionRepository;
-            _entityFieldRepository = entityFieldRepository;
+            _entityRepository = entityRepository;
+            _propertyRepository = propertyRepository;
             _codeGenerationService = codeGenerationService;
+            _databaseInfoAppService = databaseInfoAppService;
         }
 
         /// <summary>
@@ -69,65 +74,114 @@ namespace SmartAbp.Application.LowCode
 
                 await _moduleRepository.InsertAsync(module, autoSave: true);
 
-                // 3. 创建实体定义
-                var entity = new EntityDefinition
+                // 3. 创建实体定义（使用LowCodeEntity构造函数）
+                var entityId = Guid.NewGuid();
+                var entity = new LowCodeEntity(
+                    id: entityId,
+                    moduleId: module.Id,
+                    name: input.EntityName,
+                    displayName: input.EntityDisplayName,
+                    tableName: $"App{input.EntityName}s"
+                )
                 {
-                    Name = input.EntityName,
-                    DisplayName = input.EntityDisplayName,
-                    Module = input.ModuleName, // 使用 Module 字符串字段而不是 ModuleId
-                    TableName = $"App{input.EntityName}s", // 默认表名规则
-                    EntityType = "aggregate-root",
-                    BaseType = "AuditedAggregateRoot",
-                    Namespace = $"{input.SystemName}.{input.ModuleName}",
-                    EnableSoftDelete = true,
-                    EnableAudit = true,
-                    EnableMultiTenant = false
+                    Description = input.Description ?? $"{input.EntityDisplayName}实体",
+                    PluralName = $"{input.EntityName}s",
+                    Schema = "dbo",
+                    DisplayOrder = 0,
+                    IsActive = true,
+                    TenantId = CurrentTenant.Id,
+                    // 实体配置（JSON）
+                    EntityConfig = new EntityConfig
+                    {
+                        IsAggregateRoot = true,
+                        BaseClass = "AuditedAggregateRoot",
+                        Interfaces = new List<string> { "IMultiTenant" },
+                        IsAudited = true,
+                        IsSoftDelete = false,
+                        IsMultiTenant = false
+                    },
+                    // UI配置（JSON）
+                    UIConfig = new EntityUIConfig
+                    {
+                        Icon = "el-icon-document",
+                        Color = "#409EFF",
+                        ListPageSize = 20,
+                        EnableExport = true,
+                        EnableImport = true,
+                        EnableBatchDelete = true
+                    }
                 };
 
-                await _entityDefinitionRepository.InsertAsync(entity, autoSave: true);
+                await _entityRepository.InsertAsync(entity, autoSave: true);
 
-                // 4. 创建字段
+                // 4. 创建字段（使用LowCodeProperty构造函数）
                 var fieldOrder = 0;
                 foreach (var fieldConfig in input.Fields.OrderBy(f => f.Order))
                 {
-                    var field = new EntityField
+                    var propertyId = Guid.NewGuid();
+                    var property = new LowCodeProperty(
+                        id: propertyId,
+                        entityId: entity.Id,
+                        name: fieldConfig.Name,
+                        displayName: fieldConfig.DisplayName,
+                        type: fieldConfig.Type,
+                        columnName: fieldConfig.Name,
+                        columnType: fieldConfig.Type
+                    )
                     {
-                        EntityDefinitionId = entity.Id,
-                        Name = fieldConfig.Name,
-                        DisplayName = fieldConfig.DisplayName,
-                        Type = fieldConfig.Type,
-                        Length = fieldConfig.MaxLength,
-                        MinLength = fieldConfig.MinLength,
+                        Description = fieldConfig.Comment ?? "",
                         IsRequired = fieldConfig.IsRequired,
-                        IsUnique = false,
-                        IsIndexed = false,
+                        IsNullable = !fieldConfig.IsRequired,
                         DefaultValue = fieldConfig.DefaultValue,
-                        Comment = fieldConfig.Comment,
-                        Order = fieldOrder,
-                        Precision = fieldConfig.Precision,
-                        Scale = fieldConfig.Scale,
+                        MaxLength = fieldConfig.MaxLength,
+                        MinLength = fieldConfig.MinLength,
                         MinValue = fieldConfig.MinValue,
                         MaxValue = fieldConfig.MaxValue,
-                        Pattern = fieldConfig.Pattern,
-                        ColumnName = fieldConfig.Name,
-                        ColumnType = fieldConfig.Type,
-                        IsAuditField = false,
-                        IsSoftDeleteField = false,
-                        IsTenantField = false,
-                        // UI 配置属性（直接在 EntityField 上）
-                        IsVisible = true,
-                        IsReadonly = false,
-                        Searchable = true,
-                        Sortable = true,
-                        Filterable = true,
                         DisplayOrder = fieldOrder,
-                        ListVisible = true,
-                        DetailVisible = true,
-                        FormVisible = true
+                        IsKey = false,
+                        IsUnique = false,
+                        IsForeignKey = false,
+                        TenantId = CurrentTenant.Id,
+                        // UI配置（JSON）
+                        UIConfig = new PropertyUIConfig
+                        {
+                            ControlType = "input",
+                            ControlProps = new Dictionary<string, object>
+                            {
+                                ["placeholder"] = $"请输入{fieldConfig.DisplayName}"
+                            },
+                            ListVisible = true,
+                            DetailVisible = true,
+                            FormVisible = true,
+                            Searchable = true,
+                            Sortable = true,
+                            Filterable = true
+                        },
+                        // 验证规则（JSON）
+                        ValidationRules = new List<ValidationRuleConfig>()
                     };
 
+                    if (fieldConfig.IsRequired)
+                    {
+                        property.ValidationRules.Add(new ValidationRuleConfig
+                        {
+                            Type = "required",
+                            Message = $"{fieldConfig.DisplayName}不能为空"
+                        });
+                    }
+
+                    if (fieldConfig.MaxLength.HasValue)
+                    {
+                        property.ValidationRules.Add(new ValidationRuleConfig
+                        {
+                            Type = "maxLength",
+                            Value = fieldConfig.MaxLength.Value.ToString(),
+                            Message = $"{fieldConfig.DisplayName}长度不能超过{fieldConfig.MaxLength.Value}个字符"
+                        });
+                    }
+
                     fieldOrder++;
-                    await _entityFieldRepository.InsertAsync(field, autoSave: true);
+                    await _propertyRepository.InsertAsync(property, autoSave: true);
                 }
 
                 // 5. 触发代码生成（异步）
@@ -140,21 +194,49 @@ namespace SmartAbp.Application.LowCode
                     input.Fields.Count
                 );
 
-                // 6. 调用代码生成服务
-                // 注意：CodeGenerationService.GenerateAsync 需要 LowCodeEntity，这里暂时跳过代码生成
-                // TODO: 需要将 EntityDefinition 转换为 LowCodeEntity 或调整代码生成服务
-                // await _codeGenerationService.GenerateAsync(entity.Id);
+                // 6. 调用代码生成服务（真正的代码生成！）
+                Logger.LogInformation("开始代码生成: EntityId={EntityId}", entity.Id);
+                
+                var generationResult = await _codeGenerationService.GenerateAsync(entity.Id);
 
                 // 7. 返回结果
-                return new SimplifiedModuleCreationResultDto
+                if (generationResult.Success)
                 {
-                    Success = true,
-                    ModuleId = module.Id,
-                    EntityId = entity.Id,
-                    SessionId = sessionId,
-                    Message = "模块创建成功，代码生成已启动",
-                    GeneratedFiles = await PreviewGeneratedFiles(input)
-                };
+                    Logger.LogInformation(
+                        "代码生成成功: EntityId={EntityId}, FileCount={FileCount}",
+                        entity.Id,
+                        generationResult.GeneratedFiles.Count
+                    );
+
+                    return new SimplifiedModuleCreationResultDto
+                    {
+                        Success = true,
+                        ModuleId = module.Id,
+                        EntityId = entity.Id,
+                        SessionId = sessionId,
+                        Message = $"模块创建成功，已生成{generationResult.GeneratedFiles.Count}个文件",
+                        GeneratedFiles = generationResult.GeneratedFiles.Values.ToList()
+                    };
+                }
+                else
+                {
+                    var errorMessage = generationResult.Errors?.Any() == true 
+                        ? string.Join("; ", generationResult.Errors)
+                        : "未知错误";
+                    
+                    Logger.LogError("代码生成失败: EntityId={EntityId}, Error={Error}", 
+                        entity.Id, errorMessage);
+
+                    return new SimplifiedModuleCreationResultDto
+                    {
+                        Success = false,
+                        ModuleId = module.Id,
+                        EntityId = entity.Id,
+                        SessionId = sessionId,
+                        Message = $"模块创建成功，但代码生成失败：{errorMessage}",
+                        GeneratedFiles = new List<string>()
+                    };
+                }
             }
             catch (Exception ex)
             {
@@ -276,12 +358,17 @@ namespace SmartAbp.Application.LowCode
 
         /// <summary>
         /// 预览生成文件列表（私有方法）
+        /// ✅ ABP平台底层增强：通过数据库信息服务获取数据库适配信息
         /// </summary>
         private async Task<List<string>> PreviewGeneratedFiles(SimplifiedModuleCreationDto input)
         {
+            // ✅ ABP平台底层增强：通过标准服务层获取数据库信息（完全解耦）
+            var databaseInfo = await _databaseInfoAppService.GetCurrentDatabaseInfoAsync();
+            var timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+            
             var files = new List<string>
             {
-                // 后端文件
+                // 🎯 后端文件（ABP vNext DDD标准）
                 $"Domain/{input.EntityName}.cs",
                 $"Application/{input.EntityName}AppService.cs",
                 $"Application.Contracts/Dtos/{input.EntityName}Dto.cs",
@@ -289,18 +376,38 @@ namespace SmartAbp.Application.LowCode
                 $"Application.Contracts/Dtos/Update{input.EntityName}Dto.cs",
                 $"Application.Contracts/I{input.EntityName}AppService.cs",
                 $"HttpApi/Controllers/{input.EntityName}Controller.cs",
-                $"EntityFrameworkCore/Migrations/xxx_Add{input.EntityName}Table.cs",
+                
+                // 🗄️ 数据库特定迁移文件
+                $"EntityFrameworkCore/Migrations/{timestamp}_Add{input.EntityName}Table_{databaseInfo.DatabaseName}.cs",
+                $"EntityFrameworkCore/Configurations/{input.EntityName}Configuration_{databaseInfo.DatabaseName}.cs",
 
-                // 前端文件
+                // 🎨 前端文件（Vue3 + TypeScript）
                 $"Vue/views/{input.EntityName.ToLower()}/{input.EntityName}List.vue",
                 $"Vue/views/{input.EntityName.ToLower()}/{input.EntityName}Form.vue",
                 $"Vue/stores/{input.EntityName.ToLower()}/use{input.EntityName}Store.ts",
                 $"Vue/api/{input.EntityName.ToLower()}/{input.EntityName.ToLower()}-api.ts",
-                $"Vue/types/{input.EntityName.ToLower()}/{input.EntityName.ToLower()}.types.ts"
+                $"Vue/types/{input.EntityName.ToLower()}/{input.EntityName.ToLower()}.types.ts",
+                
+                // 📱 UniApp文件（跨平台移动端）
+                $"UniApp/pages/{input.EntityName.ToLower()}/{input.EntityName}List.vue",
+                $"UniApp/pages/{input.EntityName.ToLower()}/{input.EntityName}Detail.vue",
+                $"UniApp/pages/{input.EntityName.ToLower()}/{input.EntityName}Form.vue",
+                
+                // 📊 Dashboard文件（数字大屏）
+                $"Dashboard/components/{input.EntityName}KPICard.vue",
+                $"Dashboard/components/{input.EntityName}Chart.vue"
             };
+
+            Logger.LogInformation(
+                "预览文件生成完成: Entity={EntityName}, Database={DatabaseName}, FileCount={FileCount}",
+                input.EntityName,
+                databaseInfo.DatabaseName,
+                files.Count
+            );
 
             return await Task.FromResult(files);
         }
+
     }
 }
 

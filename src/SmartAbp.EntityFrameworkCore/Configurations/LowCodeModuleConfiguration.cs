@@ -42,6 +42,16 @@ namespace SmartAbp.EntityFrameworkCore.Configurations
                     v => v == null ? null : JsonSerializer.Serialize(v, jsonOptions),
                     v => string.IsNullOrEmpty(v) ? null : JsonSerializer.Deserialize<ModuleCodeGenOptions>(v, jsonOptions));
 
+            builder.Property(e => e.PermissionConfig)
+                .HasConversion(
+                    v => v == null ? null : JsonSerializer.Serialize(v, jsonOptions),
+                    v => string.IsNullOrEmpty(v) ? null : JsonSerializer.Deserialize<ModulePermissionConfig>(v, jsonOptions));
+
+            builder.Property(e => e.FeatureManagement)
+                .HasConversion(
+                    v => v == null ? null : JsonSerializer.Serialize(v, jsonOptions),
+                    v => string.IsNullOrEmpty(v) ? null : JsonSerializer.Deserialize<ModuleFeatureManagement>(v, jsonOptions));
+
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             // 索引
             // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

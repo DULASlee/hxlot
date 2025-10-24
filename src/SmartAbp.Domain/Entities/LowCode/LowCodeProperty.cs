@@ -145,13 +145,11 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// <summary>
         /// UI配置（JSON存储，包含控件类型、显示配置、数据源等）
         /// </summary>
-        [Column(TypeName = "nvarchar(max)")]
         public PropertyUIConfig? UIConfig { get; set; }
 
         /// <summary>
         /// 验证规则列表（JSON存储）
         /// </summary>
-        [Column(TypeName = "nvarchar(max)")]
         public List<ValidationRuleConfig>? ValidationRules { get; set; }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

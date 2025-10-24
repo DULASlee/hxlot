@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using SmartAbp.Application.RealtimeData;
-using SmartAbp.Application.Realtime;
 
 namespace SmartAbp.Web.Hubs
 {

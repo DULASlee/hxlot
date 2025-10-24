@@ -325,6 +325,29 @@ const routes: RouteRecordRaw[] = [
         }
       },
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // 专项生成器（新增：数字大屏、移动APP）
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      {
+        path: "mes-generator",
+        name: "MESGenerator",
+        component: () => import("@/views/lowcode/MESGeneratorView.vue"),
+        meta: {
+          title: "MES数字大屏生成器",
+          menuKey: "mes-generator",
+          description: "生成MES生产监控数字大屏"
+        }
+      },
+      {
+        path: "uniapp-generator",
+        name: "UniAppGenerator",
+        component: () => import("@/views/lowcode/UniAppGeneratorView.vue"),
+        meta: {
+          title: "UniApp移动应用生成器",
+          menuKey: "uniapp-generator",
+          description: "生成跨平台移动应用（iOS/Android/小程序）"
+        }
+      },
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // 🔴 待实现：Studio Pro（文件不存在，暂时注释）
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // {

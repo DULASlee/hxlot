@@ -292,7 +292,8 @@ public abstract class BaseFrontendGenerator : ICodeGenerator
             Label = ConvertToLabel(prop.Name),
             IsRequired = prop.IsRequired,
             MaxLength = prop.MaxLength,
-            DefaultValue = prop.DefaultValue
+            DefaultValue = prop.DefaultValue,
+            DisplayOrder = prop.DisplayOrder
         }).ToList();
     }
 
@@ -413,5 +414,10 @@ public class FrontendFieldConfig
     /// 是否可排序
     /// </summary>
     public bool IsSortable { get; set; } = true;
+
+    /// <summary>
+    /// 显示顺序
+    /// </summary>
+    public int DisplayOrder { get; set; }
 }
 

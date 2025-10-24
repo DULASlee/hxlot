@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-21T03:38:09.635Z",
+  "timestamp": "2025-10-23T15:08:22.880Z",
   "project": "Baobab.SmartAbp",
   "language": "typescript",
   "files": [
@@ -46,11 +46,46 @@
       "modified": "2025-10-12T17:17:08.113Z"
     },
     {
+      "name": "DatabaseInfoAppService.cs",
+      "path": "src/SmartAbp.Application/DatabaseInfo/DatabaseInfoAppService.cs",
+      "type": "file",
+      "size": 7516,
+      "modified": "2025-10-23T08:26:01.560Z"
+    },
+    {
+      "name": "EquipmentAppService.cs",
+      "path": "src/SmartAbp.Application/Equipment/EquipmentAppService.cs",
+      "type": "file",
+      "size": 3277,
+      "modified": "2025-10-22T11:29:00.783Z"
+    },
+    {
+      "name": "EquipmentAutoMapperProfile.cs",
+      "path": "src/SmartAbp.Application/Equipment/EquipmentAutoMapperProfile.cs",
+      "type": "file",
+      "size": 2493,
+      "modified": "2025-10-22T11:28:48.405Z"
+    },
+    {
+      "name": "AsyncCodeGenerationService.cs",
+      "path": "src/SmartAbp.Application/LowCode/AsyncCodeGenerationService.cs",
+      "type": "file",
+      "size": 6802,
+      "modified": "2025-10-21T20:22:28.091Z"
+    },
+    {
+      "name": "CodeGenerationBackgroundJob.cs",
+      "path": "src/SmartAbp.Application/LowCode/CodeGenerationBackgroundJob.cs",
+      "type": "file",
+      "size": 8398,
+      "modified": "2025-10-21T20:22:28.092Z"
+    },
+    {
       "name": "CodeGenerationService.cs",
       "path": "src/SmartAbp.Application/LowCode/CodeGenerationService.cs",
       "type": "file",
-      "size": 3318,
-      "modified": "2025-10-17T17:21:47.161Z"
+      "size": 3054,
+      "modified": "2025-10-21T20:22:28.092Z"
     },
     {
       "name": "EntityModelingAppService.cs",
@@ -77,8 +112,15 @@
       "name": "ModuleAppService.cs",
       "path": "src/SmartAbp.Application/LowCode/ModuleAppService.cs",
       "type": "file",
-      "size": 4797,
-      "modified": "2025-10-18T00:10:05.081Z"
+      "size": 9443,
+      "modified": "2025-10-21T20:22:28.093Z"
+    },
+    {
+      "name": "PermissionSystemGenerator.cs",
+      "path": "src/SmartAbp.Application/LowCode/PermissionSystemGenerator.cs",
+      "type": "file",
+      "size": 9203,
+      "modified": "2025-10-23T14:36:27.618Z"
     },
     {
       "name": "SchemaVersionHistoryAppService.cs",
@@ -95,11 +137,74 @@
       "modified": "2025-10-12T17:17:08.114Z"
     },
     {
+      "name": "SmartStudioLiteAppService.cs",
+      "path": "src/SmartAbp.Application/LowCode/SmartStudioLiteAppService.cs",
+      "type": "file",
+      "size": 18019,
+      "modified": "2025-10-23T14:52:35.563Z"
+    },
+    {
       "name": "PageConfigValidator.cs",
       "path": "src/SmartAbp.Application/LowCode/Validation/PageConfigValidator.cs",
       "type": "file",
       "size": 4679,
       "modified": "2025-10-18T06:40:39.527Z"
+    },
+    {
+      "name": "AlarmNotificationService.cs",
+      "path": "src/SmartAbp.Application/MES/Alarm/AlarmNotificationService.cs",
+      "type": "file",
+      "size": 8204,
+      "modified": "2025-10-23T04:08:15.638Z"
+    },
+    {
+      "name": "IAlarmRule.cs",
+      "path": "src/SmartAbp.Application/MES/Alarm/IAlarmRule.cs",
+      "type": "file",
+      "size": 3568,
+      "modified": "2025-10-23T04:08:15.630Z"
+    },
+    {
+      "name": "ThresholdAlarmRule.cs",
+      "path": "src/SmartAbp.Application/MES/Alarm/ThresholdAlarmRule.cs",
+      "type": "file",
+      "size": 8695,
+      "modified": "2025-10-23T04:08:15.628Z"
+    },
+    {
+      "name": "IPLCAdapter.cs",
+      "path": "src/SmartAbp.Application/MES/PLC/IPLCAdapter.cs",
+      "type": "file",
+      "size": 5664,
+      "modified": "2025-10-21T20:22:36.327Z"
+    },
+    {
+      "name": "ModbusTCPAdapter.cs",
+      "path": "src/SmartAbp.Application/MES/PLC/ModbusTCPAdapter.cs",
+      "type": "file",
+      "size": 16057,
+      "modified": "2025-10-21T20:22:36.328Z"
+    },
+    {
+      "name": "OPCUAAdapter.cs",
+      "path": "src/SmartAbp.Application/MES/PLC/OPCUAAdapter.cs",
+      "type": "file",
+      "size": 6654,
+      "modified": "2025-10-21T20:22:36.328Z"
+    },
+    {
+      "name": "PLCAdapterFactory.cs",
+      "path": "src/SmartAbp.Application/MES/PLC/PLCAdapterFactory.cs",
+      "type": "file",
+      "size": 6852,
+      "modified": "2025-10-21T20:22:36.329Z"
+    },
+    {
+      "name": "PLCDataCollectorBackgroundWorker.cs",
+      "path": "src/SmartAbp.Application/MES/PLCDataCollectorBackgroundWorker.cs",
+      "type": "file",
+      "size": 13775,
+      "modified": "2025-10-23T04:32:38.900Z"
     },
     {
       "name": "EnterpriseAlertingService.cs",
@@ -375,11 +480,46 @@
       "modified": "2025-10-12T17:17:08.119Z"
     },
     {
+      "name": "ProductionLineAppService.cs",
+      "path": "src/SmartAbp.Application/ProductionLine/ProductionLineAppService.cs",
+      "type": "file",
+      "size": 7753,
+      "modified": "2025-10-22T09:47:05.543Z"
+    },
+    {
+      "name": "ProductionLineAutoMapperProfile.cs",
+      "path": "src/SmartAbp.Application/ProductionLine/ProductionLineAutoMapperProfile.cs",
+      "type": "file",
+      "size": 4652,
+      "modified": "2025-10-22T09:47:05.543Z"
+    },
+    {
       "name": "AssemblyInfo.cs",
       "path": "src/SmartAbp.Application/Properties/AssemblyInfo.cs",
       "type": "file",
       "size": 111,
       "modified": "2025-10-12T17:17:08.119Z"
+    },
+    {
+      "name": "RealtimeDataAggregatorService.cs",
+      "path": "src/SmartAbp.Application/RealtimeData/RealtimeDataAggregatorService.cs",
+      "type": "file",
+      "size": 15811,
+      "modified": "2025-10-23T04:08:15.628Z"
+    },
+    {
+      "name": "SensorDataAppService.cs",
+      "path": "src/SmartAbp.Application/SensorData/SensorDataAppService.cs",
+      "type": "file",
+      "size": 3473,
+      "modified": "2025-10-22T11:29:55.640Z"
+    },
+    {
+      "name": "SensorDataAutoMapperProfile.cs",
+      "path": "src/SmartAbp.Application/SensorData/SensorDataAutoMapperProfile.cs",
+      "type": "file",
+      "size": 1760,
+      "modified": "2025-10-23T04:08:15.639Z"
     },
     {
       "name": "SmartAbp.Application.abppkg.analyze.json",
@@ -406,8 +546,8 @@
       "name": "SmartAbpApplicationModule.cs",
       "path": "src/SmartAbp.Application/SmartAbpApplicationModule.cs",
       "type": "file",
-      "size": 959,
-      "modified": "2025-10-12T17:17:08.119Z"
+      "size": 1196,
+      "modified": "2025-10-23T08:57:54.316Z"
     },
     {
       "name": "BusinessRule.cs",
@@ -529,6 +669,27 @@
       "modified": "2025-10-16T07:20:37.663Z"
     },
     {
+      "name": "Equipment.cs",
+      "path": "src/SmartAbp.Domain/Entities/MES/Equipment.cs",
+      "type": "file",
+      "size": 13150,
+      "modified": "2025-10-21T20:22:36.339Z"
+    },
+    {
+      "name": "ProductionLine.cs",
+      "path": "src/SmartAbp.Domain/Entities/MES/ProductionLine.cs",
+      "type": "file",
+      "size": 8101,
+      "modified": "2025-10-21T20:22:36.347Z"
+    },
+    {
+      "name": "SensorData.cs",
+      "path": "src/SmartAbp.Domain/Entities/MES/SensorData.cs",
+      "type": "file",
+      "size": 9171,
+      "modified": "2025-10-21T20:22:36.347Z"
+    },
+    {
       "name": "ChangeIdentityPasswordPolicySettingDefinitionProvider.cs",
       "path": "src/SmartAbp.Domain/Identity/ChangeIdentityPasswordPolicySettingDefinitionProvider.cs",
       "type": "file",
@@ -630,2115 +791,1849 @@
       "name": "ApiError.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/core/ApiError.ts",
       "type": "file",
-      "size": 785,
-      "modified": "2025-10-18T09:19:06.904Z"
+      "size": 804,
+      "modified": "2025-10-21T20:22:31.652Z"
     },
     {
       "name": "ApiRequestOptions.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/core/ApiRequestOptions.ts",
       "type": "file",
-      "size": 622,
-      "modified": "2025-10-18T09:19:06.904Z"
+      "size": 641,
+      "modified": "2025-10-21T20:22:31.653Z"
     },
     {
       "name": "ApiResult.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/core/ApiResult.ts",
       "type": "file",
-      "size": 281,
-      "modified": "2025-10-18T09:19:06.904Z"
+      "size": 300,
+      "modified": "2025-10-21T20:22:31.653Z"
     },
     {
       "name": "CancelablePromise.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/core/CancelablePromise.ts",
       "type": "file",
-      "size": 4051,
-      "modified": "2025-10-18T09:19:06.904Z"
+      "size": 4070,
+      "modified": "2025-10-21T20:22:31.653Z"
     },
     {
       "name": "OpenAPI.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/core/OpenAPI.ts",
       "type": "file",
-      "size": 965,
-      "modified": "2025-10-18T09:19:06.904Z"
+      "size": 984,
+      "modified": "2025-10-21T20:22:31.654Z"
+    },
+    {
+      "name": "request.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/core/request.ts",
+      "type": "file",
+      "size": 10209,
+      "modified": "2025-10-21T20:22:31.655Z"
     },
     {
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/index.ts",
       "type": "file",
-      "size": 35474,
-      "modified": "2025-10-18T09:19:06.904Z"
+      "size": 37673,
+      "modified": "2025-10-21T20:22:31.673Z"
     },
     {
       "name": "SmartAbp_Application_BusinessRules_Services_ScriptValidationResult.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_BusinessRules_Services_ScriptValidationResult.ts",
       "type": "file",
-      "size": 341,
-      "modified": "2025-10-18T09:19:06.905Z"
-    },
-    {
-      "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleActionDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleActionDto.js",
-      "type": "file",
-      "size": 222,
-      "modified": "2025-10-18T09:19:06.905Z"
+      "size": 360,
+      "modified": "2025-10-21T20:22:31.674Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleActionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleActionDto.ts",
       "type": "file",
-      "size": 349,
-      "modified": "2025-10-18T09:19:06.905Z"
-    },
-    {
-      "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleConditionDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleConditionDto.js",
-      "type": "file",
-      "size": 225,
-      "modified": "2025-10-18T09:19:06.905Z"
+      "size": 368,
+      "modified": "2025-10-21T20:22:31.674Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleConditionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleConditionDto.ts",
       "type": "file",
-      "size": 347,
-      "modified": "2025-10-18T09:19:06.905Z"
-    },
-    {
-      "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleDto.js",
-      "type": "file",
-      "size": 216,
-      "modified": "2025-10-18T09:19:06.905Z"
+      "size": 366,
+      "modified": "2025-10-21T20:22:31.675Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleDto.ts",
       "type": "file",
-      "size": 1737,
-      "modified": "2025-10-18T09:19:06.905Z"
-    },
-    {
-      "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleDto_SmartAbp_Application_Contracts_Version_1_0_0_0_Culture_neutral_PublicKeyToken_null_.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleDto_SmartAbp_Application_Contracts_Version_1_0_0_0_Culture_neutral_PublicKeyToken_null_.ts",
-      "type": "file",
-      "size": 588,
-      "modified": "2025-10-18T09:19:06.905Z"
-    },
-    {
-      "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleExecutionResultDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleExecutionResultDto.js",
-      "type": "file",
-      "size": 231,
-      "modified": "2025-10-18T09:19:06.905Z"
+      "size": 1756,
+      "modified": "2025-10-21T20:22:31.677Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleExecutionResultDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleExecutionResultDto.ts",
       "type": "file",
-      "size": 359,
-      "modified": "2025-10-18T09:19:06.905Z"
+      "size": 378,
+      "modified": "2025-10-21T20:22:31.677Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleStatsDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleStatsDto.ts",
       "type": "file",
-      "size": 405,
-      "modified": "2025-10-18T09:19:06.905Z"
+      "size": 424,
+      "modified": "2025-10-21T20:22:31.679Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleValidationResultDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_BusinessRuleValidationResultDto.ts",
       "type": "file",
-      "size": 311,
-      "modified": "2025-10-18T09:19:06.906Z"
+      "size": 330,
+      "modified": "2025-10-21T20:22:31.679Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_CreateBusinessRuleDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_CreateBusinessRuleDto.ts",
       "type": "file",
-      "size": 920,
-      "modified": "2025-10-18T09:19:06.906Z"
+      "size": 939,
+      "modified": "2025-10-21T20:22:31.679Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_ExecuteBusinessRuleDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_ExecuteBusinessRuleDto.ts",
       "type": "file",
-      "size": 285,
-      "modified": "2025-10-18T09:19:06.906Z"
+      "size": 304,
+      "modified": "2025-10-21T20:22:31.679Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_UpdateBusinessRuleDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_UpdateBusinessRuleDto.ts",
       "type": "file",
-      "size": 902,
-      "modified": "2025-10-18T09:19:06.906Z"
+      "size": 921,
+      "modified": "2025-10-21T20:22:31.680Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_BusinessRules_Dtos_ValidateScriptInput.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_BusinessRules_Dtos_ValidateScriptInput.ts",
       "type": "file",
-      "size": 248,
-      "modified": "2025-10-18T09:19:06.906Z"
+      "size": 267,
+      "modified": "2025-10-21T20:22:31.695Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_CodeGenerator_CqrsValidationResultDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_CodeGenerator_CqrsValidationResultDto.ts",
       "type": "file",
-      "size": 472,
-      "modified": "2025-10-18T09:19:06.906Z"
+      "size": 491,
+      "modified": "2025-10-21T20:22:31.696Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_CodeGenerator_ValidationErrorDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_CodeGenerator_ValidationErrorDto.ts",
       "type": "file",
-      "size": 284,
-      "modified": "2025-10-18T09:19:06.906Z"
-    },
-    {
-      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_CodeGenerationConfigDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_CodeGenerationConfigDto.js",
-      "type": "file",
-      "size": 218,
-      "modified": "2025-10-18T09:19:06.906Z"
+      "size": 303,
+      "modified": "2025-10-21T20:22:31.696Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_CodeGenerationConfigDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_CodeGenerationConfigDto.ts",
       "type": "file",
-      "size": 422,
-      "modified": "2025-10-18T09:19:06.906Z"
+      "size": 441,
+      "modified": "2025-10-21T20:22:31.696Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityDefinitionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityDefinitionDto.ts",
       "type": "file",
-      "size": 659,
-      "modified": "2025-10-18T09:19:06.906Z"
+      "size": 678,
+      "modified": "2025-10-21T20:22:31.697Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityFieldDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityFieldDto.ts",
       "type": "file",
-      "size": 511,
-      "modified": "2025-10-18T09:19:06.906Z"
+      "size": 530,
+      "modified": "2025-10-21T20:22:31.697Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityRelationDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateEntityRelationDto.ts",
       "type": "file",
-      "size": 438,
-      "modified": "2025-10-18T09:19:06.906Z"
+      "size": 457,
+      "modified": "2025-10-21T20:22:31.697Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateModuleDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_CreateOrUpdateModuleDto.ts",
       "type": "file",
-      "size": 1243,
-      "modified": "2025-10-18T09:19:06.907Z"
-    },
-    {
-      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_EntityConstraintDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_EntityConstraintDto.js",
-      "type": "file",
-      "size": 214,
-      "modified": "2025-10-18T09:19:06.907Z"
+      "size": 1262,
+      "modified": "2025-10-21T20:22:31.698Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_EntityConstraintDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_EntityConstraintDto.ts",
       "type": "file",
-      "size": 332,
-      "modified": "2025-10-18T09:19:06.907Z"
-    },
-    {
-      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto.js",
-      "type": "file",
-      "size": 214,
-      "modified": "2025-10-18T09:19:06.907Z"
+      "size": 351,
+      "modified": "2025-10-21T20:22:31.698Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_EntityDefinitionDto.ts",
       "type": "file",
-      "size": 3544,
-      "modified": "2025-10-18T09:19:06.907Z"
-    },
-    {
-      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_EntityFieldDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_EntityFieldDto.js",
-      "type": "file",
-      "size": 209,
-      "modified": "2025-10-18T09:19:06.907Z"
+      "size": 3502,
+      "modified": "2025-10-21T20:22:31.698Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_EntityFieldDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_EntityFieldDto.ts",
       "type": "file",
-      "size": 1679,
-      "modified": "2025-10-18T09:19:06.907Z"
-    },
-    {
-      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_EntityIndexDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_EntityIndexDto.js",
-      "type": "file",
-      "size": 209,
-      "modified": "2025-10-18T09:19:06.907Z"
+      "size": 1698,
+      "modified": "2025-10-21T20:22:31.698Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_EntityIndexDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_EntityIndexDto.ts",
       "type": "file",
-      "size": 356,
-      "modified": "2025-10-18T09:19:06.907Z"
-    },
-    {
-      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_EntityPermissionDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_EntityPermissionDto.js",
-      "type": "file",
-      "size": 214,
-      "modified": "2025-10-18T09:19:06.907Z"
+      "size": 375,
+      "modified": "2025-10-21T20:22:31.699Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_EntityPermissionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_EntityPermissionDto.ts",
       "type": "file",
-      "size": 365,
-      "modified": "2025-10-18T09:19:06.907Z"
-    },
-    {
-      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_EntityRelationDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_EntityRelationDto.js",
-      "type": "file",
-      "size": 835,
-      "modified": "2025-10-18T09:19:06.907Z"
+      "size": 384,
+      "modified": "2025-10-21T20:22:31.699Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_EntityRelationDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_EntityRelationDto.ts",
       "type": "file",
-      "size": 926,
-      "modified": "2025-10-18T09:19:06.908Z"
-    },
-    {
-      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_EnumValueDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_EnumValueDto.js",
-      "type": "file",
-      "size": 207,
-      "modified": "2025-10-18T09:19:06.908Z"
+      "size": 708,
+      "modified": "2025-10-21T20:22:31.699Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_EnumValueDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_EnumValueDto.ts",
       "type": "file",
-      "size": 363,
-      "modified": "2025-10-18T09:19:06.908Z"
+      "size": 382,
+      "modified": "2025-10-21T20:22:31.699Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_GeneratedFileDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_GeneratedFileDto.ts",
       "type": "file",
-      "size": 250,
-      "modified": "2025-10-18T09:19:06.908Z"
+      "size": 269,
+      "modified": "2025-10-21T20:22:31.699Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_IndustryTemplateConfigDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_IndustryTemplateConfigDto.ts",
       "type": "file",
-      "size": 423,
-      "modified": "2025-10-18T09:19:06.908Z"
+      "size": 442,
+      "modified": "2025-10-21T20:22:31.700Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_IndustryTemplateGenerationResultDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_IndustryTemplateGenerationResultDto.ts",
       "type": "file",
-      "size": 517,
-      "modified": "2025-10-18T09:19:06.908Z"
-    },
-    {
-      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto.js",
-      "type": "file",
-      "size": 204,
-      "modified": "2025-10-18T09:19:06.908Z"
+      "size": 536,
+      "modified": "2025-10-21T20:22:31.700Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto.ts",
       "type": "file",
-      "size": 2497,
-      "modified": "2025-10-18T09:19:06.908Z"
+      "size": 2293,
+      "modified": "2025-10-21T20:22:31.700Z"
     },
     {
-      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto_SmartAbp_Application_Contracts_Version_1_0_0_0_Culture_neutral_PublicKeyToken_null_.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_ModuleDto_SmartAbp_Application_Contracts_Version_1_0_0_0_Culture_neutral_PublicKeyToken_null_.ts",
+      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_ModuleFeatureManagementDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_ModuleFeatureManagementDto.ts",
       "type": "file",
-      "size": 527,
-      "modified": "2025-10-18T09:19:06.908Z"
+      "size": 284,
+      "modified": "2025-10-21T20:22:31.700Z"
     },
     {
-      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_NavigationPropertyDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_NavigationPropertyDto.js",
+      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_ModulePermissionConfigDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_ModulePermissionConfigDto.ts",
       "type": "file",
-      "size": 1437,
-      "modified": "2025-10-18T09:19:06.908Z"
+      "size": 526,
+      "modified": "2025-10-21T20:22:31.701Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_NavigationPropertyDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_NavigationPropertyDto.ts",
       "type": "file",
-      "size": 993,
-      "modified": "2025-10-18T09:19:06.908Z"
+      "size": 575,
+      "modified": "2025-10-21T20:22:31.701Z"
     },
     {
-      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_ValidationRuleDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_ValidationRuleDto.js",
+      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_PermissionGroupConfigDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_PermissionGroupConfigDto.ts",
       "type": "file",
-      "size": 212,
-      "modified": "2025-10-18T09:19:06.909Z"
+      "size": 321,
+      "modified": "2025-10-21T20:22:31.701Z"
+    },
+    {
+      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_SimplifiedFieldConfigDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_SimplifiedFieldConfigDto.ts",
+      "type": "file",
+      "size": 1136,
+      "modified": "2025-10-21T20:22:31.701Z"
+    },
+    {
+      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_SimplifiedModuleCreationDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_SimplifiedModuleCreationDto.ts",
+      "type": "file",
+      "size": 790,
+      "modified": "2025-10-21T20:22:31.701Z"
+    },
+    {
+      "name": "SmartAbp_Application_Contracts_LowCode_Dtos_SimplifiedModuleCreationResultDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_SimplifiedModuleCreationResultDto.ts",
+      "type": "file",
+      "size": 417,
+      "modified": "2025-10-21T20:22:31.702Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_Dtos_ValidationRuleDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_ValidationRuleDto.ts",
       "type": "file",
-      "size": 482,
-      "modified": "2025-10-18T09:19:06.909Z"
+      "size": 501,
+      "modified": "2025-10-21T20:22:31.702Z"
     },
     {
       "name": "SmartAbp_Application_Contracts_LowCode_SchemaValidationResult.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_SchemaValidationResult.ts",
       "type": "file",
-      "size": 291,
-      "modified": "2025-10-18T09:19:06.909Z"
+      "size": 310,
+      "modified": "2025-10-21T20:22:31.703Z"
+    },
+    {
+      "name": "SmartAbp_Application_Contracts_LowCode_ValidationErrorDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_ValidationErrorDto.ts",
+      "type": "file",
+      "size": 267,
+      "modified": "2025-10-21T20:22:31.703Z"
+    },
+    {
+      "name": "SmartAbp_Application_Contracts_LowCode_ValidationResultDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_Contracts_LowCode_ValidationResultDto.ts",
+      "type": "file",
+      "size": 718,
+      "modified": "2025-10-21T20:22:31.703Z"
+    },
+    {
+      "name": "SmartAbp_Application_LowCode_CodeGenerationTaskResponse.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_LowCode_CodeGenerationTaskResponse.ts",
+      "type": "file",
+      "size": 294,
+      "modified": "2025-10-21T20:22:31.703Z"
+    },
+    {
+      "name": "SmartAbp_Application_LowCode_CodeGenerationTaskStatus.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Application_LowCode_CodeGenerationTaskStatus.ts",
+      "type": "file",
+      "size": 626,
+      "modified": "2025-10-21T20:22:31.703Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Dtos_CodeGenStatsDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Dtos_CodeGenStatsDto.ts",
       "type": "file",
-      "size": 317,
-      "modified": "2025-10-18T09:19:06.909Z"
+      "size": 336,
+      "modified": "2025-10-21T20:22:31.710Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Dtos_CreateGenerationHistoryDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Dtos_CreateGenerationHistoryDto.ts",
       "type": "file",
-      "size": 466,
-      "modified": "2025-10-18T09:19:06.909Z"
+      "size": 485,
+      "modified": "2025-10-21T20:22:31.719Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Dtos_GenerationHistoryDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Dtos_GenerationHistoryDto.ts",
       "type": "file",
-      "size": 495,
-      "modified": "2025-10-18T09:19:06.909Z"
+      "size": 514,
+      "modified": "2025-10-21T20:22:31.720Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Dtos_IndustryRecommendationDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Dtos_IndustryRecommendationDto.ts",
       "type": "file",
-      "size": 302,
-      "modified": "2025-10-18T09:19:06.909Z"
+      "size": 321,
+      "modified": "2025-10-21T20:22:31.720Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Dtos_UpdateUserProfileDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Dtos_UpdateUserProfileDto.ts",
       "type": "file",
-      "size": 313,
-      "modified": "2025-10-18T09:19:06.909Z"
+      "size": 332,
+      "modified": "2025-10-21T20:22:31.721Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Dtos_UserProfileDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Dtos_UserProfileDto.ts",
       "type": "file",
-      "size": 373,
-      "modified": "2025-10-18T09:19:06.909Z"
+      "size": 392,
+      "modified": "2025-10-21T20:22:31.722Z"
+    },
+    {
+      "name": "SmartAbp_CodeGenerator_Services_CodeGenParameterDefinitionDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_CodeGenParameterDefinitionDto.ts",
+      "type": "file",
+      "size": 327,
+      "modified": "2025-10-21T20:22:31.722Z"
+    },
+    {
+      "name": "SmartAbp_CodeGenerator_Services_CodeGenPropertyDefinitionDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_CodeGenPropertyDefinitionDto.ts",
+      "type": "file",
+      "size": 502,
+      "modified": "2025-10-21T20:22:31.723Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_CommandDefinitionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_CommandDefinitionDto.ts",
       "type": "file",
-      "size": 570,
-      "modified": "2025-10-18T09:19:06.909Z"
+      "size": 610,
+      "modified": "2025-10-21T20:22:31.723Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_CqrsDefinitionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_CqrsDefinitionDto.ts",
       "type": "file",
-      "size": 877,
-      "modified": "2025-10-18T09:19:06.909Z"
+      "size": 896,
+      "modified": "2025-10-21T20:22:31.723Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_EventDefinitionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_EventDefinitionDto.ts",
       "type": "file",
-      "size": 498,
-      "modified": "2025-10-18T09:19:06.909Z"
+      "size": 538,
+      "modified": "2025-10-21T20:22:31.724Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_GeneratedCqrsSolutionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_GeneratedCqrsSolutionDto.ts",
       "type": "file",
-      "size": 400,
-      "modified": "2025-10-18T09:19:06.909Z"
-    },
-    {
-      "name": "SmartAbp_CodeGenerator_Services_ParameterDefinitionDto.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_ParameterDefinitionDto.ts",
-      "type": "file",
-      "size": 301,
-      "modified": "2025-10-18T09:19:06.910Z"
-    },
-    {
-      "name": "SmartAbp_CodeGenerator_Services_PropertyDefinitionDto.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_PropertyDefinitionDto.ts",
-      "type": "file",
-      "size": 476,
-      "modified": "2025-10-18T09:19:06.910Z"
+      "size": 419,
+      "modified": "2025-10-21T20:22:31.735Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_QueryDefinitionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_QueryDefinitionDto.ts",
       "type": "file",
-      "size": 549,
-      "modified": "2025-10-18T09:19:06.910Z"
+      "size": 589,
+      "modified": "2025-10-21T20:22:31.744Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_BusinessRuleDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_BusinessRuleDto.ts",
       "type": "file",
-      "size": 434,
-      "modified": "2025-10-18T09:19:06.910Z"
+      "size": 453,
+      "modified": "2025-10-21T20:22:31.745Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_CodeGenerationConfigDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_CodeGenerationConfigDto.ts",
       "type": "file",
-      "size": 659,
-      "modified": "2025-10-18T09:19:06.910Z"
+      "size": 678,
+      "modified": "2025-10-21T20:22:31.746Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_CodeGenerationOptionsDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_CodeGenerationOptionsDto.ts",
       "type": "file",
-      "size": 358,
-      "modified": "2025-10-18T09:19:06.910Z"
+      "size": 377,
+      "modified": "2025-10-21T20:22:31.746Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_ColumnSchemaDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_ColumnSchemaDto.ts",
       "type": "file",
-      "size": 326,
-      "modified": "2025-10-18T09:19:06.910Z"
+      "size": 345,
+      "modified": "2025-10-21T20:22:31.749Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_CustomPermissionActionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_CustomPermissionActionDto.ts",
       "type": "file",
-      "size": 291,
-      "modified": "2025-10-18T09:19:06.910Z"
+      "size": 310,
+      "modified": "2025-10-21T20:22:31.773Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_DatabaseConfigDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_DatabaseConfigDto.ts",
       "type": "file",
-      "size": 287,
-      "modified": "2025-10-18T09:19:06.910Z"
+      "size": 306,
+      "modified": "2025-10-21T20:22:31.775Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_DatabaseConnectionRequestDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_DatabaseConnectionRequestDto.ts",
       "type": "file",
-      "size": 294,
-      "modified": "2025-10-18T09:19:06.910Z"
+      "size": 313,
+      "modified": "2025-10-21T20:22:31.775Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_DatabaseConnectionTestResultDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_DatabaseConnectionTestResultDto.ts",
       "type": "file",
-      "size": 422,
-      "modified": "2025-10-18T09:19:06.910Z"
+      "size": 441,
+      "modified": "2025-10-21T20:22:31.776Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_DatabaseIntrospectionRequestDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_DatabaseIntrospectionRequestDto.ts",
       "type": "file",
-      "size": 336,
-      "modified": "2025-10-18T09:19:06.910Z"
+      "size": 355,
+      "modified": "2025-10-21T20:22:31.779Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_DatabaseSchemaDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_DatabaseSchemaDto.ts",
       "type": "file",
-      "size": 391,
-      "modified": "2025-10-18T09:19:06.910Z"
+      "size": 410,
+      "modified": "2025-10-21T20:22:31.780Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_DetailConfigDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_DetailConfigDto.ts",
       "type": "file",
-      "size": 621,
-      "modified": "2025-10-18T09:19:06.911Z"
+      "size": 640,
+      "modified": "2025-10-21T20:22:31.780Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_DetailSectionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_DetailSectionDto.ts",
       "type": "file",
-      "size": 433,
-      "modified": "2025-10-18T09:19:06.911Z"
+      "size": 452,
+      "modified": "2025-10-21T20:22:31.781Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_EnhancedEntityModelDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_EnhancedEntityModelDto.ts",
       "type": "file",
-      "size": 2475,
-      "modified": "2025-10-18T09:19:06.911Z"
+      "size": 2494,
+      "modified": "2025-10-21T20:22:31.781Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_EntityConstraintDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_EntityConstraintDto.ts",
       "type": "file",
-      "size": 476,
-      "modified": "2025-10-18T09:19:06.911Z"
+      "size": 495,
+      "modified": "2025-10-21T20:22:31.781Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_EntityIndexDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_EntityIndexDto.ts",
       "type": "file",
-      "size": 434,
-      "modified": "2025-10-18T09:19:06.911Z"
+      "size": 453,
+      "modified": "2025-10-21T20:22:31.782Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_EntityPermissionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_EntityPermissionDto.ts",
       "type": "file",
-      "size": 540,
-      "modified": "2025-10-18T09:19:06.911Z"
+      "size": 559,
+      "modified": "2025-10-21T20:22:31.782Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_EntityPropertyDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_EntityPropertyDto.ts",
       "type": "file",
-      "size": 1581,
-      "modified": "2025-10-18T09:19:06.911Z"
+      "size": 1600,
+      "modified": "2025-10-21T20:22:31.782Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_EntityRelationshipDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_EntityRelationshipDto.ts",
       "type": "file",
-      "size": 1286,
-      "modified": "2025-10-18T09:19:06.911Z"
+      "size": 1054,
+      "modified": "2025-10-21T20:22:31.782Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_EntityUIConfigDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_EntityUIConfigDto.ts",
       "type": "file",
-      "size": 789,
-      "modified": "2025-10-18T09:19:06.911Z"
+      "size": 808,
+      "modified": "2025-10-21T20:22:31.783Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_EnumValueDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_EnumValueDto.ts",
       "type": "file",
-      "size": 363,
-      "modified": "2025-10-18T09:19:06.911Z"
+      "size": 382,
+      "modified": "2025-10-21T20:22:31.784Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_FeatureManagementDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_FeatureManagementDto.ts",
       "type": "file",
-      "size": 250,
-      "modified": "2025-10-18T09:19:06.911Z"
+      "size": 269,
+      "modified": "2025-10-21T20:22:31.784Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_FieldGroupDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_FieldGroupDto.ts",
       "type": "file",
-      "size": 402,
-      "modified": "2025-10-18T09:19:06.911Z"
+      "size": 421,
+      "modified": "2025-10-21T20:22:31.784Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_FieldPermissionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_FieldPermissionDto.ts",
       "type": "file",
-      "size": 318,
-      "modified": "2025-10-18T09:19:06.911Z"
+      "size": 337,
+      "modified": "2025-10-21T20:22:31.784Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_ForeignKeySchemaDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_ForeignKeySchemaDto.ts",
       "type": "file",
-      "size": 330,
-      "modified": "2025-10-18T09:19:06.911Z"
+      "size": 349,
+      "modified": "2025-10-21T20:22:31.785Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_FormConfigDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_FormConfigDto.ts",
       "type": "file",
-      "size": 483,
-      "modified": "2025-10-18T09:19:06.912Z"
+      "size": 502,
+      "modified": "2025-10-21T20:22:31.785Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_FrontendConfigDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_FrontendConfigDto.ts",
       "type": "file",
-      "size": 250,
-      "modified": "2025-10-18T09:19:06.912Z"
+      "size": 269,
+      "modified": "2025-10-21T20:22:31.785Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_GeneratedModuleDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_GeneratedModuleDto.ts",
       "type": "file",
-      "size": 384,
-      "modified": "2025-10-18T09:19:06.912Z"
+      "size": 403,
+      "modified": "2025-10-21T20:22:31.786Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_GenerationDryRunResultDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_GenerationDryRunResultDto.ts",
       "type": "file",
-      "size": 398,
-      "modified": "2025-10-18T09:19:06.912Z"
+      "size": 417,
+      "modified": "2025-10-21T20:22:31.799Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_GenerationStatusDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_GenerationStatusDto.ts",
       "type": "file",
-      "size": 465,
-      "modified": "2025-10-18T09:19:06.912Z"
+      "size": 484,
+      "modified": "2025-10-21T20:22:31.800Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_ListConfigDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_ListConfigDto.ts",
       "type": "file",
-      "size": 588,
-      "modified": "2025-10-18T09:19:06.912Z"
+      "size": 607,
+      "modified": "2025-10-21T20:22:31.800Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_MenuConfigDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_MenuConfigDto.ts",
       "type": "file",
-      "size": 440,
-      "modified": "2025-10-18T09:19:06.912Z"
+      "size": 459,
+      "modified": "2025-10-21T20:22:31.800Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_MenuItemDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_MenuItemDto.ts",
       "type": "file",
-      "size": 309,
-      "modified": "2025-10-18T09:19:06.912Z"
+      "size": 328,
+      "modified": "2025-10-21T20:22:31.801Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto.ts",
       "type": "file",
-      "size": 1843,
-      "modified": "2025-10-18T09:19:06.912Z"
+      "size": 1862,
+      "modified": "2025-10-21T20:22:31.801Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_PermissionConfigDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_PermissionConfigDto.ts",
       "type": "file",
-      "size": 679,
-      "modified": "2025-10-18T09:19:06.913Z"
+      "size": 698,
+      "modified": "2025-10-21T20:22:31.802Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_PermissionDefinitionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_PermissionDefinitionDto.ts",
       "type": "file",
-      "size": 341,
-      "modified": "2025-10-18T09:19:06.913Z"
+      "size": 360,
+      "modified": "2025-10-21T20:22:31.802Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_PermissionGroupDefinitionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_PermissionGroupDefinitionDto.ts",
       "type": "file",
-      "size": 517,
-      "modified": "2025-10-18T09:19:06.913Z"
+      "size": 536,
+      "modified": "2025-10-21T20:22:31.803Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_SchemaVersionManifestDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_SchemaVersionManifestDto.ts",
       "type": "file",
-      "size": 321,
-      "modified": "2025-10-18T09:19:06.913Z"
+      "size": 340,
+      "modified": "2025-10-21T20:22:31.803Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_TableSchemaDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_TableSchemaDto.ts",
       "type": "file",
-      "size": 670,
-      "modified": "2025-10-18T09:19:06.913Z"
+      "size": 689,
+      "modified": "2025-10-21T20:22:31.803Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_UIActionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_UIActionDto.ts",
       "type": "file",
-      "size": 465,
-      "modified": "2025-10-18T09:19:06.913Z"
+      "size": 484,
+      "modified": "2025-10-21T20:22:31.804Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_UnifiedCustomPermissionActionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_UnifiedCustomPermissionActionDto.ts",
       "type": "file",
-      "size": 298,
-      "modified": "2025-10-18T09:19:06.913Z"
+      "size": 317,
+      "modified": "2025-10-21T20:22:31.804Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_UnifiedDatabaseConfigDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_UnifiedDatabaseConfigDto.ts",
       "type": "file",
-      "size": 294,
-      "modified": "2025-10-18T09:19:06.913Z"
+      "size": 313,
+      "modified": "2025-10-21T20:22:31.805Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_UnifiedEntitySchemaDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_UnifiedEntitySchemaDto.ts",
       "type": "file",
-      "size": 1036,
-      "modified": "2025-10-18T09:19:06.913Z"
+      "size": 1055,
+      "modified": "2025-10-21T20:22:31.805Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_UnifiedFeatureManagementDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_UnifiedFeatureManagementDto.ts",
       "type": "file",
-      "size": 257,
-      "modified": "2025-10-18T09:19:06.913Z"
+      "size": 276,
+      "modified": "2025-10-21T20:22:31.805Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_UnifiedFrontendConfigDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_UnifiedFrontendConfigDto.ts",
       "type": "file",
-      "size": 257,
-      "modified": "2025-10-18T09:19:06.913Z"
+      "size": 276,
+      "modified": "2025-10-21T20:22:31.819Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_UnifiedModuleSchemaDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_UnifiedModuleSchemaDto.ts",
       "type": "file",
-      "size": 1668,
-      "modified": "2025-10-18T09:19:06.914Z"
+      "size": 1687,
+      "modified": "2025-10-21T20:22:31.821Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_UnifiedPermissionConfigDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_UnifiedPermissionConfigDto.ts",
       "type": "file",
-      "size": 570,
-      "modified": "2025-10-18T09:19:06.914Z"
+      "size": 589,
+      "modified": "2025-10-21T20:22:31.822Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_UnifiedPropertySchemaDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_UnifiedPropertySchemaDto.ts",
       "type": "file",
-      "size": 490,
-      "modified": "2025-10-18T09:19:06.914Z"
+      "size": 509,
+      "modified": "2025-10-21T20:22:31.828Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_UnifiedRelationshipSchemaDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_UnifiedRelationshipSchemaDto.ts",
       "type": "file",
-      "size": 481,
-      "modified": "2025-10-18T09:19:06.914Z"
+      "size": 500,
+      "modified": "2025-10-21T20:22:31.829Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_ValidationIssueDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_ValidationIssueDto.ts",
       "type": "file",
-      "size": 273,
-      "modified": "2025-10-18T09:19:06.914Z"
+      "size": 292,
+      "modified": "2025-10-21T20:22:31.830Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_ValidationReportDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_ValidationReportDto.ts",
       "type": "file",
-      "size": 486,
-      "modified": "2025-10-18T09:19:06.914Z"
+      "size": 505,
+      "modified": "2025-10-21T20:22:31.830Z"
     },
     {
       "name": "SmartAbp_CodeGenerator_Services_V9_ValidationRuleDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_CodeGenerator_Services_V9_ValidationRuleDto.ts",
       "type": "file",
-      "size": 337,
-      "modified": "2025-10-18T09:19:06.914Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_ActionConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ActionConfig.js",
-      "type": "file",
-      "size": 196,
-      "modified": "2025-10-18T09:19:06.914Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_ActionConfig.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ActionConfig.ts",
-      "type": "file",
-      "size": 674,
-      "modified": "2025-10-18T09:19:06.914Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_ColumnDefinition.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ColumnDefinition.js",
-      "type": "file",
-      "size": 200,
-      "modified": "2025-10-18T09:19:06.914Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_ColumnDefinition.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ColumnDefinition.ts",
-      "type": "file",
-      "size": 657,
-      "modified": "2025-10-18T09:19:06.914Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_DataSourceConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_DataSourceConfig.js",
-      "type": "file",
-      "size": 200,
-      "modified": "2025-10-18T09:19:06.914Z"
+      "size": 356,
+      "modified": "2025-10-21T20:22:31.831Z"
     },
     {
       "name": "SmartAbp_Domain_Entities_LowCode_DataSourceConfig.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_DataSourceConfig.ts",
       "type": "file",
-      "size": 634,
-      "modified": "2025-10-18T09:19:06.915Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_DetailConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_DetailConfig.js",
-      "type": "file",
-      "size": 196,
-      "modified": "2025-10-18T09:19:06.915Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_DetailConfig.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_DetailConfig.ts",
-      "type": "file",
-      "size": 528,
-      "modified": "2025-10-18T09:19:06.915Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_DetailSection.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_DetailSection.js",
-      "type": "file",
-      "size": 197,
-      "modified": "2025-10-18T09:19:06.915Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_DetailSection.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_DetailSection.ts",
-      "type": "file",
-      "size": 506,
-      "modified": "2025-10-18T09:19:06.915Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_EventConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_EventConfig.js",
-      "type": "file",
-      "size": 195,
-      "modified": "2025-10-18T09:19:06.915Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_EventConfig.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_EventConfig.ts",
-      "type": "file",
-      "size": 850,
-      "modified": "2025-10-18T09:19:06.915Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_FieldEffect.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_FieldEffect.js",
-      "type": "file",
-      "size": 195,
-      "modified": "2025-10-18T09:19:06.915Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_FieldEffect.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_FieldEffect.ts",
-      "type": "file",
-      "size": 740,
-      "modified": "2025-10-18T09:19:06.915Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_FormConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_FormConfig.js",
-      "type": "file",
-      "size": 194,
-      "modified": "2025-10-18T09:19:06.915Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_FormConfig.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_FormConfig.ts",
-      "type": "file",
-      "size": 940,
-      "modified": "2025-10-18T09:19:06.915Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_FormCreateRule.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_FormCreateRule.js",
-      "type": "file",
-      "size": 198,
-      "modified": "2025-10-18T09:19:06.915Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_FormCreateRule.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_FormCreateRule.ts",
-      "type": "file",
-      "size": 917,
-      "modified": "2025-10-18T09:19:06.915Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_FormFieldConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_FormFieldConfig.js",
-      "type": "file",
-      "size": 199,
-      "modified": "2025-10-18T09:19:06.915Z"
+      "size": 653,
+      "modified": "2025-10-21T20:22:31.831Z"
     },
     {
       "name": "SmartAbp_Domain_Entities_LowCode_FormFieldConfig.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_FormFieldConfig.ts",
       "type": "file",
-      "size": 534,
-      "modified": "2025-10-18T09:19:06.916Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_FormGlobalConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_FormGlobalConfig.js",
-      "type": "file",
-      "size": 200,
-      "modified": "2025-10-18T09:19:06.916Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_FormGlobalConfig.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_FormGlobalConfig.ts",
-      "type": "file",
-      "size": 851,
-      "modified": "2025-10-18T09:19:06.916Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_LayoutConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_LayoutConfig.js",
-      "type": "file",
-      "size": 196,
-      "modified": "2025-10-18T09:19:06.916Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_LayoutConfig.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_LayoutConfig.ts",
-      "type": "file",
-      "size": 426,
-      "modified": "2025-10-18T09:19:06.916Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_ListConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ListConfig.js",
-      "type": "file",
-      "size": 194,
-      "modified": "2025-10-18T09:19:06.916Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_ListConfig.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ListConfig.ts",
-      "type": "file",
-      "size": 912,
-      "modified": "2025-10-18T09:19:06.916Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_ListFieldConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ListFieldConfig.js",
-      "type": "file",
-      "size": 199,
-      "modified": "2025-10-18T09:19:06.916Z"
+      "size": 553,
+      "modified": "2025-10-21T20:22:31.831Z"
     },
     {
       "name": "SmartAbp_Domain_Entities_LowCode_ListFieldConfig.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ListFieldConfig.ts",
       "type": "file",
-      "size": 531,
-      "modified": "2025-10-18T09:19:06.916Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_MenuConfigItem.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_MenuConfigItem.js",
-      "type": "file",
-      "size": 198,
-      "modified": "2025-10-18T09:19:06.916Z"
+      "size": 550,
+      "modified": "2025-10-21T20:22:31.831Z"
     },
     {
       "name": "SmartAbp_Domain_Entities_LowCode_MenuConfigItem.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_MenuConfigItem.ts",
       "type": "file",
-      "size": 701,
-      "modified": "2025-10-18T09:19:06.916Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_ModuleArchitectureConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ModuleArchitectureConfig.js",
-      "type": "file",
-      "size": 208,
-      "modified": "2025-10-18T09:19:06.916Z"
+      "size": 720,
+      "modified": "2025-10-21T20:22:31.833Z"
     },
     {
       "name": "SmartAbp_Domain_Entities_LowCode_ModuleArchitectureConfig.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ModuleArchitectureConfig.ts",
       "type": "file",
-      "size": 1165,
-      "modified": "2025-10-18T09:19:06.916Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_ModuleCodeGenOptions.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ModuleCodeGenOptions.js",
-      "type": "file",
-      "size": 204,
-      "modified": "2025-10-18T09:19:06.916Z"
+      "size": 1184,
+      "modified": "2025-10-21T20:22:31.833Z"
     },
     {
       "name": "SmartAbp_Domain_Entities_LowCode_ModuleCodeGenOptions.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ModuleCodeGenOptions.ts",
       "type": "file",
-      "size": 827,
-      "modified": "2025-10-18T09:19:06.917Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_ModuleFeatureManagement.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ModuleFeatureManagement.js",
-      "type": "file",
-      "size": 207,
-      "modified": "2025-10-18T09:19:06.917Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_ModuleFeatureManagement.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ModuleFeatureManagement.ts",
-      "type": "file",
-      "size": 472,
-      "modified": "2025-10-18T09:19:06.917Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_ModuleFrontendConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ModuleFrontendConfig.js",
-      "type": "file",
-      "size": 204,
-      "modified": "2025-10-18T09:19:06.917Z"
+      "size": 846,
+      "modified": "2025-10-21T20:22:31.833Z"
     },
     {
       "name": "SmartAbp_Domain_Entities_LowCode_ModuleFrontendConfig.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ModuleFrontendConfig.ts",
       "type": "file",
-      "size": 844,
-      "modified": "2025-10-18T09:19:06.917Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_ModulePermissionConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ModulePermissionConfig.js",
-      "type": "file",
-      "size": 206,
-      "modified": "2025-10-18T09:19:06.917Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_ModulePermissionConfig.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ModulePermissionConfig.ts",
-      "type": "file",
-      "size": 665,
-      "modified": "2025-10-18T09:19:06.917Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_PageConfigDto.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_PageConfigDto.js",
-      "type": "file",
-      "size": 197,
-      "modified": "2025-10-18T09:19:06.917Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_PageConfigDto.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_PageConfigDto.ts",
-      "type": "file",
-      "size": 1361,
-      "modified": "2025-10-18T09:19:06.917Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_PaginationConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_PaginationConfig.js",
-      "type": "file",
-      "size": 200,
-      "modified": "2025-10-18T09:19:06.917Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_PaginationConfig.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_PaginationConfig.ts",
-      "type": "file",
-      "size": 359,
-      "modified": "2025-10-18T09:19:06.917Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_PermissionGroupConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_PermissionGroupConfig.js",
-      "type": "file",
-      "size": 205,
-      "modified": "2025-10-18T09:19:06.917Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_PermissionGroupConfig.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_PermissionGroupConfig.ts",
-      "type": "file",
-      "size": 474,
-      "modified": "2025-10-18T09:19:06.917Z"
-    },
-    {
-      "name": "SmartAbp_Domain_Entities_LowCode_PropertyUIConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_PropertyUIConfig.js",
-      "type": "file",
-      "size": 200,
-      "modified": "2025-10-18T09:19:06.917Z"
+      "size": 863,
+      "modified": "2025-10-21T20:22:31.833Z"
     },
     {
       "name": "SmartAbp_Domain_Entities_LowCode_PropertyUIConfig.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_PropertyUIConfig.ts",
       "type": "file",
-      "size": 2003,
-      "modified": "2025-10-18T09:19:06.918Z"
+      "size": 2022,
+      "modified": "2025-10-21T20:22:31.834Z"
     },
     {
-      "name": "SmartAbp_Domain_Entities_LowCode_ValidationRuleConfig.js",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ValidationRuleConfig.js",
+      "name": "SmartAbp_Domain_Shared_LowCode_ActionConfigDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Shared_LowCode_ActionConfigDto.ts",
       "type": "file",
-      "size": 204,
-      "modified": "2025-10-18T09:19:06.918Z"
+      "size": 363,
+      "modified": "2025-10-21T20:22:31.834Z"
     },
     {
-      "name": "SmartAbp_Domain_Entities_LowCode_ValidationRuleConfig.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Entities_LowCode_ValidationRuleConfig.ts",
+      "name": "SmartAbp_Domain_Shared_LowCode_ColumnDefinitionDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Shared_LowCode_ColumnDefinitionDto.ts",
       "type": "file",
-      "size": 700,
-      "modified": "2025-10-18T09:19:06.918Z"
+      "size": 375,
+      "modified": "2025-10-21T20:22:31.834Z"
+    },
+    {
+      "name": "SmartAbp_Domain_Shared_LowCode_DetailConfigDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Shared_LowCode_DetailConfigDto.ts",
+      "type": "file",
+      "size": 428,
+      "modified": "2025-10-21T20:22:31.835Z"
+    },
+    {
+      "name": "SmartAbp_Domain_Shared_LowCode_DetailSectionDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Shared_LowCode_DetailSectionDto.ts",
+      "type": "file",
+      "size": 307,
+      "modified": "2025-10-21T20:22:31.835Z"
+    },
+    {
+      "name": "SmartAbp_Domain_Shared_LowCode_EventConfigDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Shared_LowCode_EventConfigDto.ts",
+      "type": "file",
+      "size": 485,
+      "modified": "2025-10-21T20:22:31.835Z"
+    },
+    {
+      "name": "SmartAbp_Domain_Shared_LowCode_FieldEffectDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Shared_LowCode_FieldEffectDto.ts",
+      "type": "file",
+      "size": 350,
+      "modified": "2025-10-21T20:22:31.835Z"
+    },
+    {
+      "name": "SmartAbp_Domain_Shared_LowCode_FormConfigDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Shared_LowCode_FormConfigDto.ts",
+      "type": "file",
+      "size": 791,
+      "modified": "2025-10-21T20:22:31.835Z"
+    },
+    {
+      "name": "SmartAbp_Domain_Shared_LowCode_FormCreateRuleDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Shared_LowCode_FormCreateRuleDto.ts",
+      "type": "file",
+      "size": 597,
+      "modified": "2025-10-21T20:22:31.881Z"
+    },
+    {
+      "name": "SmartAbp_Domain_Shared_LowCode_FormGlobalConfigDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Shared_LowCode_FormGlobalConfigDto.ts",
+      "type": "file",
+      "size": 450,
+      "modified": "2025-10-21T20:22:31.882Z"
+    },
+    {
+      "name": "SmartAbp_Domain_Shared_LowCode_LayoutConfigDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Shared_LowCode_LayoutConfigDto.ts",
+      "type": "file",
+      "size": 266,
+      "modified": "2025-10-21T20:22:31.882Z"
+    },
+    {
+      "name": "SmartAbp_Domain_Shared_LowCode_ListConfigDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Shared_LowCode_ListConfigDto.ts",
+      "type": "file",
+      "size": 806,
+      "modified": "2025-10-21T20:22:31.882Z"
+    },
+    {
+      "name": "SmartAbp_Domain_Shared_LowCode_PageConfigDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Shared_LowCode_PageConfigDto.ts",
+      "type": "file",
+      "size": 1135,
+      "modified": "2025-10-21T20:22:31.883Z"
+    },
+    {
+      "name": "SmartAbp_Domain_Shared_LowCode_PaginationConfigDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Shared_LowCode_PaginationConfigDto.ts",
+      "type": "file",
+      "size": 265,
+      "modified": "2025-10-21T20:22:31.883Z"
+    },
+    {
+      "name": "SmartAbp_Domain_Shared_LowCode_ValidationRuleConfigDto.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_Domain_Shared_LowCode_ValidationRuleConfigDto.ts",
+      "type": "file",
+      "size": 324,
+      "modified": "2025-10-21T20:22:31.883Z"
     },
     {
       "name": "SmartAbp_HttpApi_Controllers_BatchDeleteInput.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_HttpApi_Controllers_BatchDeleteInput.ts",
       "type": "file",
-      "size": 216,
-      "modified": "2025-10-18T09:19:06.918Z"
+      "size": 235,
+      "modified": "2025-10-21T20:22:31.884Z"
     },
     {
       "name": "SmartAbp_HttpApi_Controllers_BatchUpdateStatusInput.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_HttpApi_Controllers_BatchUpdateStatusInput.ts",
       "type": "file",
-      "size": 246,
-      "modified": "2025-10-18T09:19:06.918Z"
+      "size": 265,
+      "modified": "2025-10-21T20:22:31.885Z"
     },
     {
       "name": "SmartAbp_HttpApi_Controllers_ImportRuleData.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_HttpApi_Controllers_ImportRuleData.ts",
       "type": "file",
-      "size": 916,
-      "modified": "2025-10-18T09:19:06.918Z"
+      "size": 935,
+      "modified": "2025-10-21T20:22:31.893Z"
     },
     {
       "name": "SmartAbp_HttpApi_Controllers_ImportRulesInput.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_HttpApi_Controllers_ImportRulesInput.ts",
       "type": "file",
-      "size": 365,
-      "modified": "2025-10-18T09:19:06.918Z"
+      "size": 384,
+      "modified": "2025-10-21T20:22:31.896Z"
     },
     {
       "name": "SmartAbp_HttpApi_Controllers_ImportRulesResultDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/SmartAbp_HttpApi_Controllers_ImportRulesResultDto.ts",
       "type": "file",
-      "size": 298,
-      "modified": "2025-10-18T09:19:06.918Z"
-    },
-    {
-      "name": "System_String_System_Private_CoreLib_Version_9_0_0_0_Culture_neutral_PublicKeyToken_7cec85d7bea7798e_.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/System_String_System_Private_CoreLib_Version_9_0_0_0_Culture_neutral_PublicKeyToken_7cec85d7bea7798e_.ts",
-      "type": "file",
-      "size": 292,
-      "modified": "2025-10-18T09:19:06.918Z"
+      "size": 317,
+      "modified": "2025-10-21T20:22:31.899Z"
     },
     {
       "name": "Volo_Abp_Account_ChangePasswordInput.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Account_ChangePasswordInput.ts",
       "type": "file",
-      "size": 233,
-      "modified": "2025-10-18T09:19:06.918Z"
+      "size": 252,
+      "modified": "2025-10-21T20:22:31.900Z"
     },
     {
       "name": "Volo_Abp_Account_ProfileDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Account_ProfileDto.ts",
       "type": "file",
-      "size": 457,
-      "modified": "2025-10-18T09:19:06.918Z"
+      "size": 476,
+      "modified": "2025-10-21T20:22:31.900Z"
     },
     {
       "name": "Volo_Abp_Account_RegisterDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Account_RegisterDto.ts",
       "type": "file",
-      "size": 313,
-      "modified": "2025-10-18T09:19:06.918Z"
+      "size": 332,
+      "modified": "2025-10-21T20:22:31.901Z"
     },
     {
       "name": "Volo_Abp_Account_ResetPasswordDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Account_ResetPasswordDto.ts",
       "type": "file",
-      "size": 235,
-      "modified": "2025-10-18T09:19:06.918Z"
+      "size": 254,
+      "modified": "2025-10-21T20:22:31.904Z"
     },
     {
       "name": "Volo_Abp_Account_SendPasswordResetCodeDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Account_SendPasswordResetCodeDto.ts",
       "type": "file",
-      "size": 282,
-      "modified": "2025-10-18T09:19:06.918Z"
+      "size": 301,
+      "modified": "2025-10-21T20:22:31.905Z"
     },
     {
       "name": "Volo_Abp_Account_UpdateProfileDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Account_UpdateProfileDto.ts",
       "type": "file",
-      "size": 410,
-      "modified": "2025-10-18T09:19:06.919Z"
+      "size": 429,
+      "modified": "2025-10-21T20:22:31.905Z"
     },
     {
       "name": "Volo_Abp_Account_VerifyPasswordResetTokenInput.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Account_VerifyPasswordResetTokenInput.ts",
       "type": "file",
-      "size": 226,
-      "modified": "2025-10-18T09:19:06.919Z"
+      "size": 245,
+      "modified": "2025-10-21T20:22:31.908Z"
     },
     {
       "name": "Volo_Abp_Account_Web_Areas_Account_Controllers_Models_AbpLoginResult.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Account_Web_Areas_Account_Controllers_Models_AbpLoginResult.ts",
       "type": "file",
-      "size": 546,
-      "modified": "2025-10-18T09:19:06.919Z"
+      "size": 296,
+      "modified": "2025-10-21T20:22:31.910Z"
     },
     {
       "name": "Volo_Abp_Account_Web_Areas_Account_Controllers_Models_UserLoginInfo.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Account_Web_Areas_Account_Controllers_Models_UserLoginInfo.ts",
       "type": "file",
-      "size": 286,
-      "modified": "2025-10-18T09:19:06.919Z"
+      "size": 305,
+      "modified": "2025-10-21T20:22:31.911Z"
     },
     {
       "name": "Volo_Abp_Application_Dtos_ListResultDto_1.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Application_Dtos_ListResultDto_1.ts",
       "type": "file",
-      "size": 301,
-      "modified": "2025-10-18T09:19:06.919Z"
+      "size": 320,
+      "modified": "2025-10-21T20:22:31.914Z"
     },
     {
       "name": "Volo_Abp_Application_Dtos_PagedResultDto_1.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Application_Dtos_PagedResultDto_1.ts",
       "type": "file",
-      "size": 363,
-      "modified": "2025-10-18T09:19:06.919Z"
+      "size": 382,
+      "modified": "2025-10-21T20:22:31.914Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationAuthConfigurationDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationAuthConfigurationDto.ts",
       "type": "file",
-      "size": 270,
-      "modified": "2025-10-18T09:19:06.919Z"
+      "size": 289,
+      "modified": "2025-10-21T20:22:31.914Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationConfigurationDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationConfigurationDto.ts",
       "type": "file",
-      "size": 3263,
-      "modified": "2025-10-18T09:19:06.919Z"
+      "size": 3282,
+      "modified": "2025-10-21T20:22:31.915Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationFeatureConfigurationDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationFeatureConfigurationDto.ts",
       "type": "file",
-      "size": 270,
-      "modified": "2025-10-18T09:19:06.919Z"
+      "size": 289,
+      "modified": "2025-10-21T20:22:31.915Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationGlobalFeatureConfigurationDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationGlobalFeatureConfigurationDto.ts",
       "type": "file",
-      "size": 269,
-      "modified": "2025-10-18T09:19:06.920Z"
+      "size": 288,
+      "modified": "2025-10-21T20:22:31.915Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationLocalizationConfigurationDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationLocalizationConfigurationDto.ts",
       "type": "file",
-      "size": 1273,
-      "modified": "2025-10-18T09:19:06.920Z"
+      "size": 1292,
+      "modified": "2025-10-21T20:22:31.916Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationLocalizationDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationLocalizationDto.ts",
       "type": "file",
-      "size": 791,
-      "modified": "2025-10-18T09:19:06.920Z"
+      "size": 810,
+      "modified": "2025-10-21T20:22:31.916Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationLocalizationResourceDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationLocalizationResourceDto.ts",
       "type": "file",
-      "size": 304,
-      "modified": "2025-10-18T09:19:06.920Z"
+      "size": 323,
+      "modified": "2025-10-21T20:22:31.916Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationSettingConfigurationDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ApplicationSettingConfigurationDto.ts",
       "type": "file",
-      "size": 270,
-      "modified": "2025-10-18T09:19:06.920Z"
+      "size": 289,
+      "modified": "2025-10-21T20:22:31.916Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ClockDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ClockDto.ts",
       "type": "file",
-      "size": 219,
-      "modified": "2025-10-18T09:19:06.920Z"
+      "size": 238,
+      "modified": "2025-10-21T20:22:31.917Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_CurrentCultureDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_CurrentCultureDto.ts",
       "type": "file",
-      "size": 741,
-      "modified": "2025-10-18T09:19:06.920Z"
+      "size": 760,
+      "modified": "2025-10-21T20:22:31.917Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_CurrentUserDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_CurrentUserDto.ts",
       "type": "file",
-      "size": 726,
-      "modified": "2025-10-18T09:19:06.920Z"
+      "size": 745,
+      "modified": "2025-10-21T20:22:31.917Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_DateTimeFormatDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_DateTimeFormatDto.ts",
       "type": "file",
-      "size": 474,
-      "modified": "2025-10-18T09:19:06.920Z"
+      "size": 493,
+      "modified": "2025-10-21T20:22:31.918Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_IanaTimeZone.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_IanaTimeZone.ts",
       "type": "file",
-      "size": 231,
-      "modified": "2025-10-18T09:19:06.920Z"
+      "size": 250,
+      "modified": "2025-10-21T20:22:31.918Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_EntityExtensionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_EntityExtensionDto.ts",
       "type": "file",
-      "size": 595,
-      "modified": "2025-10-18T09:19:06.920Z"
+      "size": 614,
+      "modified": "2025-10-21T20:22:31.920Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionEnumDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionEnumDto.ts",
       "type": "file",
-      "size": 577,
-      "modified": "2025-10-18T09:19:06.920Z"
+      "size": 596,
+      "modified": "2025-10-21T20:22:31.921Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionEnumFieldDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionEnumFieldDto.ts",
       "type": "file",
-      "size": 288,
-      "modified": "2025-10-18T09:19:06.921Z"
+      "size": 307,
+      "modified": "2025-10-21T20:22:31.925Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyApiCreateDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyApiCreateDto.ts",
       "type": "file",
-      "size": 257,
-      "modified": "2025-10-18T09:19:06.921Z"
+      "size": 276,
+      "modified": "2025-10-21T20:22:31.928Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyApiDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyApiDto.ts",
       "type": "file",
-      "size": 1223,
-      "modified": "2025-10-18T09:19:06.921Z"
+      "size": 1242,
+      "modified": "2025-10-21T20:22:31.929Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyApiGetDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyApiGetDto.ts",
       "type": "file",
-      "size": 254,
-      "modified": "2025-10-18T09:19:06.921Z"
+      "size": 273,
+      "modified": "2025-10-21T20:22:31.929Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyApiUpdateDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyApiUpdateDto.ts",
       "type": "file",
-      "size": 257,
-      "modified": "2025-10-18T09:19:06.921Z"
+      "size": 276,
+      "modified": "2025-10-21T20:22:31.936Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyAttributeDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyAttributeDto.ts",
       "type": "file",
-      "size": 303,
-      "modified": "2025-10-18T09:19:06.921Z"
+      "size": 322,
+      "modified": "2025-10-21T20:22:31.950Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyDto.ts",
       "type": "file",
-      "size": 1983,
-      "modified": "2025-10-18T09:19:06.921Z"
+      "size": 2002,
+      "modified": "2025-10-21T20:22:31.950Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyFeaturePolicyDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyFeaturePolicyDto.ts",
       "type": "file",
-      "size": 298,
-      "modified": "2025-10-18T09:19:06.921Z"
+      "size": 317,
+      "modified": "2025-10-21T20:22:31.950Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyGlobalFeaturePolicyDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyGlobalFeaturePolicyDto.ts",
       "type": "file",
-      "size": 304,
-      "modified": "2025-10-18T09:19:06.921Z"
+      "size": 323,
+      "modified": "2025-10-21T20:22:31.951Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyPermissionPolicyDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyPermissionPolicyDto.ts",
       "type": "file",
-      "size": 308,
-      "modified": "2025-10-18T09:19:06.921Z"
+      "size": 327,
+      "modified": "2025-10-21T20:22:31.951Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyPolicyDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyPolicyDto.ts",
       "type": "file",
-      "size": 1310,
-      "modified": "2025-10-18T09:19:06.921Z"
+      "size": 1329,
+      "modified": "2025-10-21T20:22:31.952Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyUiDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyUiDto.ts",
       "type": "file",
-      "size": 1335,
-      "modified": "2025-10-18T09:19:06.921Z"
+      "size": 1354,
+      "modified": "2025-10-21T20:22:31.953Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyUiFormDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyUiFormDto.ts",
       "type": "file",
-      "size": 252,
-      "modified": "2025-10-18T09:19:06.922Z"
+      "size": 271,
+      "modified": "2025-10-21T20:22:31.954Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyUiLookupDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyUiLookupDto.ts",
       "type": "file",
-      "size": 415,
-      "modified": "2025-10-18T09:19:06.922Z"
+      "size": 434,
+      "modified": "2025-10-21T20:22:31.954Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyUiTableDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ExtensionPropertyUiTableDto.ts",
       "type": "file",
-      "size": 253,
-      "modified": "2025-10-18T09:19:06.922Z"
+      "size": 272,
+      "modified": "2025-10-21T20:22:31.955Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_LocalizableStringDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_LocalizableStringDto.ts",
       "type": "file",
-      "size": 277,
-      "modified": "2025-10-18T09:19:06.922Z"
+      "size": 296,
+      "modified": "2025-10-21T20:22:31.955Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ModuleExtensionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ModuleExtensionDto.ts",
       "type": "file",
-      "size": 587,
-      "modified": "2025-10-18T09:19:06.922Z"
+      "size": 606,
+      "modified": "2025-10-21T20:22:31.956Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ObjectExtensionsDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_ObjectExtending_ObjectExtensionsDto.ts",
       "type": "file",
-      "size": 850,
-      "modified": "2025-10-18T09:19:06.922Z"
+      "size": 869,
+      "modified": "2025-10-21T20:22:31.960Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_TimeZone.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_TimeZone.ts",
       "type": "file",
-      "size": 673,
-      "modified": "2025-10-18T09:19:06.922Z"
+      "size": 692,
+      "modified": "2025-10-21T20:22:31.960Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_TimingDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_TimingDto.ts",
       "type": "file",
-      "size": 420,
-      "modified": "2025-10-18T09:19:06.922Z"
+      "size": 439,
+      "modified": "2025-10-21T20:22:31.962Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_WindowsTimeZone.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_ApplicationConfigurations_WindowsTimeZone.ts",
       "type": "file",
-      "size": 232,
-      "modified": "2025-10-18T09:19:06.922Z"
+      "size": 251,
+      "modified": "2025-10-21T20:22:31.962Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_MultiTenancy_CurrentTenantDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_MultiTenancy_CurrentTenantDto.ts",
       "type": "file",
-      "size": 265,
-      "modified": "2025-10-18T09:19:06.922Z"
+      "size": 284,
+      "modified": "2025-10-21T20:22:31.962Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_MultiTenancy_FindTenantResultDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_MultiTenancy_FindTenantResultDto.ts",
       "type": "file",
-      "size": 330,
-      "modified": "2025-10-18T09:19:06.922Z"
+      "size": 349,
+      "modified": "2025-10-21T20:22:31.963Z"
     },
     {
       "name": "Volo_Abp_AspNetCore_Mvc_MultiTenancy_MultiTenancyInfoDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_AspNetCore_Mvc_MultiTenancy_MultiTenancyInfoDto.ts",
       "type": "file",
-      "size": 216,
-      "modified": "2025-10-18T09:19:06.922Z"
+      "size": 235,
+      "modified": "2025-10-21T20:22:31.963Z"
     },
     {
       "name": "Volo_Abp_FeatureManagement_FeatureDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_FeatureManagement_FeatureDto.ts",
       "type": "file",
-      "size": 730,
-      "modified": "2025-10-18T09:19:06.923Z"
+      "size": 749,
+      "modified": "2025-10-21T20:22:31.967Z"
     },
     {
       "name": "Volo_Abp_FeatureManagement_FeatureGroupDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_FeatureManagement_FeatureGroupDto.ts",
       "type": "file",
-      "size": 406,
-      "modified": "2025-10-18T09:19:06.923Z"
+      "size": 425,
+      "modified": "2025-10-21T20:22:31.971Z"
     },
     {
       "name": "Volo_Abp_FeatureManagement_FeatureProviderDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_FeatureManagement_FeatureProviderDto.ts",
       "type": "file",
-      "size": 231,
-      "modified": "2025-10-18T09:19:06.923Z"
+      "size": 250,
+      "modified": "2025-10-21T20:22:31.971Z"
     },
     {
       "name": "Volo_Abp_FeatureManagement_GetFeatureListResultDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_FeatureManagement_GetFeatureListResultDto.ts",
       "type": "file",
-      "size": 368,
-      "modified": "2025-10-18T09:19:06.923Z"
+      "size": 387,
+      "modified": "2025-10-21T20:22:31.972Z"
     },
     {
       "name": "Volo_Abp_FeatureManagement_UpdateFeatureDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_FeatureManagement_UpdateFeatureDto.ts",
       "type": "file",
-      "size": 231,
-      "modified": "2025-10-18T09:19:06.923Z"
+      "size": 250,
+      "modified": "2025-10-21T20:22:31.976Z"
     },
     {
       "name": "Volo_Abp_FeatureManagement_UpdateFeaturesDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_FeatureManagement_UpdateFeaturesDto.ts",
       "type": "file",
-      "size": 367,
-      "modified": "2025-10-18T09:19:06.923Z"
+      "size": 386,
+      "modified": "2025-10-21T20:22:31.977Z"
     },
     {
       "name": "Volo_Abp_Http_Modeling_ActionApiDescriptionModel.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Http_Modeling_ActionApiDescriptionModel.ts",
       "type": "file",
-      "size": 1084,
-      "modified": "2025-10-18T09:19:06.923Z"
+      "size": 1103,
+      "modified": "2025-10-21T20:22:31.977Z"
     },
     {
       "name": "Volo_Abp_Http_Modeling_ApplicationApiDescriptionModel.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Http_Modeling_ApplicationApiDescriptionModel.ts",
       "type": "file",
-      "size": 602,
-      "modified": "2025-10-18T09:19:06.923Z"
+      "size": 621,
+      "modified": "2025-10-21T20:22:31.977Z"
     },
     {
       "name": "Volo_Abp_Http_Modeling_ControllerApiDescriptionModel.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Http_Modeling_ControllerApiDescriptionModel.ts",
       "type": "file",
-      "size": 844,
-      "modified": "2025-10-18T09:19:06.923Z"
+      "size": 863,
+      "modified": "2025-10-21T20:22:31.978Z"
     },
     {
       "name": "Volo_Abp_Http_Modeling_ControllerInterfaceApiDescriptionModel.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Http_Modeling_ControllerInterfaceApiDescriptionModel.ts",
       "type": "file",
-      "size": 477,
-      "modified": "2025-10-18T09:19:06.923Z"
+      "size": 496,
+      "modified": "2025-10-21T20:22:31.979Z"
     },
     {
       "name": "Volo_Abp_Http_Modeling_InterfaceMethodApiDescriptionModel.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Http_Modeling_InterfaceMethodApiDescriptionModel.ts",
       "type": "file",
-      "size": 672,
-      "modified": "2025-10-18T09:19:06.923Z"
+      "size": 691,
+      "modified": "2025-10-21T20:22:31.979Z"
     },
     {
       "name": "Volo_Abp_Http_Modeling_MethodParameterApiDescriptionModel.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Http_Modeling_MethodParameterApiDescriptionModel.ts",
       "type": "file",
-      "size": 383,
-      "modified": "2025-10-18T09:19:06.923Z"
+      "size": 402,
+      "modified": "2025-10-21T20:22:31.980Z"
     },
     {
       "name": "Volo_Abp_Http_Modeling_ModuleApiDescriptionModel.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Http_Modeling_ModuleApiDescriptionModel.ts",
       "type": "file",
-      "size": 479,
-      "modified": "2025-10-18T09:19:06.923Z"
+      "size": 498,
+      "modified": "2025-10-21T20:22:31.980Z"
     },
     {
       "name": "Volo_Abp_Http_Modeling_ParameterApiDescriptionModel.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Http_Modeling_ParameterApiDescriptionModel.ts",
       "type": "file",
-      "size": 524,
-      "modified": "2025-10-18T09:19:06.924Z"
+      "size": 543,
+      "modified": "2025-10-21T20:22:31.981Z"
     },
     {
       "name": "Volo_Abp_Http_Modeling_PropertyApiDescriptionModel.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Http_Modeling_PropertyApiDescriptionModel.ts",
       "type": "file",
-      "size": 472,
-      "modified": "2025-10-18T09:19:06.924Z"
+      "size": 491,
+      "modified": "2025-10-21T20:22:31.981Z"
     },
     {
       "name": "Volo_Abp_Http_Modeling_ReturnValueApiDescriptionModel.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Http_Modeling_ReturnValueApiDescriptionModel.ts",
       "type": "file",
-      "size": 246,
-      "modified": "2025-10-18T09:19:06.924Z"
+      "size": 265,
+      "modified": "2025-10-21T20:22:31.982Z"
     },
     {
       "name": "Volo_Abp_Http_Modeling_TypeApiDescriptionModel.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Http_Modeling_TypeApiDescriptionModel.ts",
       "type": "file",
-      "size": 563,
-      "modified": "2025-10-18T09:19:06.924Z"
+      "size": 582,
+      "modified": "2025-10-21T20:22:31.983Z"
     },
     {
       "name": "Volo_Abp_Http_RemoteServiceErrorInfo.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Http_RemoteServiceErrorInfo.ts",
       "type": "file",
-      "size": 499,
-      "modified": "2025-10-18T09:19:06.924Z"
+      "size": 518,
+      "modified": "2025-10-21T20:22:31.985Z"
     },
     {
       "name": "Volo_Abp_Http_RemoteServiceErrorResponse.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Http_RemoteServiceErrorResponse.ts",
       "type": "file",
-      "size": 332,
-      "modified": "2025-10-18T09:19:06.924Z"
+      "size": 351,
+      "modified": "2025-10-21T20:22:31.985Z"
     },
     {
       "name": "Volo_Abp_Http_RemoteServiceValidationErrorInfo.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Http_RemoteServiceValidationErrorInfo.ts",
       "type": "file",
-      "size": 246,
-      "modified": "2025-10-18T09:19:06.924Z"
+      "size": 265,
+      "modified": "2025-10-21T20:22:31.985Z"
     },
     {
       "name": "Volo_Abp_Identity_IdentityRoleCreateDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Identity_IdentityRoleCreateDto.ts",
       "type": "file",
-      "size": 352,
-      "modified": "2025-10-18T09:19:06.924Z"
+      "size": 371,
+      "modified": "2025-10-21T20:22:31.986Z"
     },
     {
       "name": "Volo_Abp_Identity_IdentityRoleCreateOrUpdateDtoBase.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Identity_IdentityRoleCreateOrUpdateDtoBase.ts",
       "type": "file",
-      "size": 312,
-      "modified": "2025-10-18T09:19:06.924Z"
+      "size": 331,
+      "modified": "2025-10-21T20:22:31.987Z"
     },
     {
       "name": "Volo_Abp_Identity_IdentityRoleDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Identity_IdentityRoleDto.ts",
       "type": "file",
-      "size": 408,
-      "modified": "2025-10-18T09:19:06.924Z"
-    },
-    {
-      "name": "Volo_Abp_Identity_IdentityRoleDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Identity_IdentityRoleDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_.ts",
-      "type": "file",
-      "size": 469,
-      "modified": "2025-10-18T09:19:06.924Z"
+      "size": 427,
+      "modified": "2025-10-21T20:22:31.987Z"
     },
     {
       "name": "Volo_Abp_Identity_IdentityRoleUpdateDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Identity_IdentityRoleUpdateDto.ts",
       "type": "file",
-      "size": 398,
-      "modified": "2025-10-18T09:19:06.924Z"
+      "size": 417,
+      "modified": "2025-10-21T20:22:31.988Z"
     },
     {
       "name": "Volo_Abp_Identity_IdentityUserCreateDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Identity_IdentityUserCreateDto.ts",
       "type": "file",
-      "size": 382,
-      "modified": "2025-10-18T09:19:06.924Z"
+      "size": 401,
+      "modified": "2025-10-21T20:22:31.988Z"
     },
     {
       "name": "Volo_Abp_Identity_IdentityUserCreateOrUpdateDtoBase.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Identity_IdentityUserCreateOrUpdateDtoBase.ts",
       "type": "file",
-      "size": 466,
-      "modified": "2025-10-18T09:19:06.925Z"
+      "size": 485,
+      "modified": "2025-10-21T20:22:31.988Z"
     },
     {
       "name": "Volo_Abp_Identity_IdentityUserDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Identity_IdentityUserDto.ts",
       "type": "file",
-      "size": 939,
-      "modified": "2025-10-18T09:19:06.925Z"
-    },
-    {
-      "name": "Volo_Abp_Identity_IdentityUserDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Identity_IdentityUserDto_Volo_Abp_Identity_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_.ts",
-      "type": "file",
-      "size": 469,
-      "modified": "2025-10-18T09:19:06.925Z"
+      "size": 958,
+      "modified": "2025-10-21T20:22:31.989Z"
     },
     {
       "name": "Volo_Abp_Identity_IdentityUserUpdateDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Identity_IdentityUserUpdateDto.ts",
       "type": "file",
-      "size": 428,
-      "modified": "2025-10-18T09:19:06.925Z"
+      "size": 447,
+      "modified": "2025-10-21T20:22:31.989Z"
     },
     {
       "name": "Volo_Abp_Identity_IdentityUserUpdateRolesDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Identity_IdentityUserUpdateRolesDto.ts",
       "type": "file",
-      "size": 209,
-      "modified": "2025-10-18T09:19:06.925Z"
+      "size": 228,
+      "modified": "2025-10-21T20:22:31.991Z"
     },
     {
       "name": "Volo_Abp_Localization_LanguageInfo.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Localization_LanguageInfo.ts",
       "type": "file",
-      "size": 325,
-      "modified": "2025-10-18T09:19:06.925Z"
+      "size": 344,
+      "modified": "2025-10-21T20:22:31.993Z"
     },
     {
       "name": "Volo_Abp_NameValue.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_NameValue.ts",
       "type": "file",
-      "size": 468,
-      "modified": "2025-10-18T09:19:06.925Z"
+      "size": 487,
+      "modified": "2025-10-21T20:22:31.996Z"
     },
     {
       "name": "Volo_Abp_NameValue_1.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_NameValue_1.ts",
       "type": "file",
-      "size": 208,
-      "modified": "2025-10-18T09:19:06.925Z"
+      "size": 227,
+      "modified": "2025-10-21T20:22:31.997Z"
     },
     {
       "name": "Volo_Abp_PermissionManagement_GetPermissionListResultDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_PermissionManagement_GetPermissionListResultDto.ts",
       "type": "file",
-      "size": 431,
-      "modified": "2025-10-18T09:19:06.925Z"
+      "size": 450,
+      "modified": "2025-10-21T20:22:31.998Z"
     },
     {
       "name": "Volo_Abp_PermissionManagement_PermissionGrantInfoDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_PermissionManagement_PermissionGrantInfoDto.ts",
       "type": "file",
-      "size": 550,
-      "modified": "2025-10-18T09:19:06.925Z"
+      "size": 569,
+      "modified": "2025-10-21T20:22:31.998Z"
     },
     {
       "name": "Volo_Abp_PermissionManagement_PermissionGroupDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_PermissionManagement_PermissionGroupDto.ts",
       "type": "file",
-      "size": 537,
-      "modified": "2025-10-18T09:19:06.925Z"
+      "size": 556,
+      "modified": "2025-10-21T20:22:31.998Z"
     },
     {
       "name": "Volo_Abp_PermissionManagement_ProviderInfoDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_PermissionManagement_ProviderInfoDto.ts",
       "type": "file",
-      "size": 247,
-      "modified": "2025-10-18T09:19:06.925Z"
+      "size": 266,
+      "modified": "2025-10-21T20:22:31.999Z"
     },
     {
       "name": "Volo_Abp_PermissionManagement_UpdatePermissionDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_PermissionManagement_UpdatePermissionDto.ts",
       "type": "file",
-      "size": 235,
-      "modified": "2025-10-18T09:19:06.925Z"
+      "size": 254,
+      "modified": "2025-10-21T20:22:32.001Z"
     },
     {
       "name": "Volo_Abp_PermissionManagement_UpdatePermissionsDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_PermissionManagement_UpdatePermissionsDto.ts",
       "type": "file",
-      "size": 394,
-      "modified": "2025-10-18T09:19:06.925Z"
+      "size": 413,
+      "modified": "2025-10-21T20:22:32.002Z"
     },
     {
       "name": "Volo_Abp_SettingManagement_EmailSettingsDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_SettingManagement_EmailSettingsDto.ts",
       "type": "file",
-      "size": 485,
-      "modified": "2025-10-18T09:19:06.926Z"
+      "size": 504,
+      "modified": "2025-10-21T20:22:32.003Z"
     },
     {
       "name": "Volo_Abp_SettingManagement_SendTestEmailInput.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_SettingManagement_SendTestEmailInput.ts",
       "type": "file",
-      "size": 291,
-      "modified": "2025-10-18T09:19:06.926Z"
+      "size": 310,
+      "modified": "2025-10-21T20:22:32.003Z"
     },
     {
       "name": "Volo_Abp_SettingManagement_UpdateEmailSettingsDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_SettingManagement_UpdateEmailSettingsDto.ts",
       "type": "file",
-      "size": 475,
-      "modified": "2025-10-18T09:19:06.926Z"
+      "size": 494,
+      "modified": "2025-10-21T20:22:32.003Z"
     },
     {
       "name": "Volo_Abp_TenantManagement_TenantCreateDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_TenantManagement_TenantCreateDto.ts",
       "type": "file",
-      "size": 426,
-      "modified": "2025-10-18T09:19:06.926Z"
+      "size": 445,
+      "modified": "2025-10-21T20:22:32.010Z"
     },
     {
       "name": "Volo_Abp_TenantManagement_TenantCreateOrUpdateDtoBase.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_TenantManagement_TenantCreateOrUpdateDtoBase.ts",
       "type": "file",
-      "size": 265,
-      "modified": "2025-10-18T09:19:06.926Z"
+      "size": 284,
+      "modified": "2025-10-21T20:22:32.014Z"
     },
     {
       "name": "Volo_Abp_TenantManagement_TenantDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_TenantManagement_TenantDto.ts",
       "type": "file",
-      "size": 310,
-      "modified": "2025-10-18T09:19:06.926Z"
-    },
-    {
-      "name": "Volo_Abp_TenantManagement_TenantDto_Volo_Abp_TenantManagement_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_TenantManagement_TenantDto_Volo_Abp_TenantManagement_Application_Contracts_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_.ts",
-      "type": "file",
-      "size": 472,
-      "modified": "2025-10-18T09:19:06.926Z"
+      "size": 329,
+      "modified": "2025-10-21T20:22:32.014Z"
     },
     {
       "name": "Volo_Abp_TenantManagement_TenantUpdateDto.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_TenantManagement_TenantUpdateDto.ts",
       "type": "file",
-      "size": 406,
-      "modified": "2025-10-18T09:19:06.926Z"
+      "size": 425,
+      "modified": "2025-10-21T20:22:32.015Z"
     },
     {
       "name": "Volo_Abp_Users_UserData.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Users_UserData.ts",
       "type": "file",
-      "size": 499,
-      "modified": "2025-10-18T09:19:06.926Z"
-    },
-    {
-      "name": "Volo_Abp_Users_UserData_Volo_Abp_Users_Abstractions_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_.ts",
-      "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Users_UserData_Volo_Abp_Users_Abstractions_Version_9_1_1_0_Culture_neutral_PublicKeyToken_null_.ts",
-      "type": "file",
-      "size": 402,
-      "modified": "2025-10-18T09:19:06.926Z"
+      "size": 518,
+      "modified": "2025-10-21T20:22:32.015Z"
     },
     {
       "name": "Volo_Abp_Validation_StringValues_IStringValueType.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Validation_StringValues_IStringValueType.ts",
       "type": "file",
-      "size": 470,
-      "modified": "2025-10-18T09:19:06.926Z"
+      "size": 489,
+      "modified": "2025-10-21T20:22:32.015Z"
     },
     {
       "name": "Volo_Abp_Validation_StringValues_IValueValidator.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/models/Volo_Abp_Validation_StringValues_IValueValidator.ts",
       "type": "file",
-      "size": 272,
-      "modified": "2025-10-18T09:19:06.926Z"
+      "size": 291,
+      "modified": "2025-10-21T20:22:32.016Z"
     },
     {
       "name": "AbpApiDefinitionService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/AbpApiDefinitionService.ts",
       "type": "file",
-      "size": 1231,
-      "modified": "2025-10-18T09:19:06.927Z"
+      "size": 1256,
+      "modified": "2025-10-21T20:22:32.018Z"
     },
     {
       "name": "AbpApplicationConfigurationService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/AbpApplicationConfigurationService.ts",
       "type": "file",
-      "size": 1424,
-      "modified": "2025-10-18T09:19:06.927Z"
+      "size": 1449,
+      "modified": "2025-10-21T20:22:32.019Z"
     },
     {
       "name": "AbpApplicationLocalizationService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/AbpApplicationLocalizationService.ts",
       "type": "file",
-      "size": 1452,
-      "modified": "2025-10-18T09:19:06.927Z"
+      "size": 1472,
+      "modified": "2025-10-21T20:22:32.022Z"
     },
     {
       "name": "AbpTenantService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/AbpTenantService.ts",
       "type": "file",
-      "size": 1993,
-      "modified": "2025-10-18T09:19:06.927Z"
+      "size": 2024,
+      "modified": "2025-10-21T20:22:32.033Z"
     },
     {
       "name": "AccountService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/AccountService.ts",
       "type": "file",
-      "size": 3742,
-      "modified": "2025-10-18T09:19:06.927Z"
+      "size": 3785,
+      "modified": "2025-10-21T20:22:32.033Z"
     },
     {
       "name": "BusinessRuleService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/BusinessRuleService.ts",
       "type": "file",
-      "size": 12750,
-      "modified": "2025-10-18T09:19:06.927Z"
+      "size": 12813,
+      "modified": "2025-10-21T20:22:32.033Z"
     },
     {
       "name": "CodeGenStatsService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/CodeGenStatsService.ts",
       "type": "file",
-      "size": 774,
-      "modified": "2025-10-18T09:19:06.927Z"
+      "size": 793,
+      "modified": "2025-10-21T20:22:32.034Z"
     },
     {
       "name": "CodeGenerationService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/CodeGenerationService.ts",
       "type": "file",
-      "size": 16137,
-      "modified": "2025-10-18T09:19:06.927Z"
+      "size": 19413,
+      "modified": "2025-10-21T20:22:32.034Z"
     },
     {
       "name": "DynamicClaimsService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/DynamicClaimsService.ts",
       "type": "file",
-      "size": 865,
-      "modified": "2025-10-18T09:19:06.927Z"
+      "size": 884,
+      "modified": "2025-10-21T20:22:32.034Z"
     },
     {
       "name": "EmailSettingsService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/EmailSettingsService.ts",
       "type": "file",
-      "size": 2783,
-      "modified": "2025-10-18T09:19:06.927Z"
+      "size": 2814,
+      "modified": "2025-10-21T20:22:32.035Z"
     },
     {
       "name": "EntityModelingService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/EntityModelingService.ts",
       "type": "file",
-      "size": 12607,
-      "modified": "2025-10-18T09:19:06.927Z"
+      "size": 12677,
+      "modified": "2025-10-21T20:22:32.035Z"
     },
     {
       "name": "FeaturesService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/FeaturesService.ts",
       "type": "file",
-      "size": 3194,
-      "modified": "2025-10-18T09:19:06.927Z"
+      "size": 3211,
+      "modified": "2025-10-21T20:22:32.035Z"
     },
     {
       "name": "GenerationHistoryService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/GenerationHistoryService.ts",
       "type": "file",
-      "size": 2667,
-      "modified": "2025-10-18T09:19:06.928Z"
+      "size": 2707,
+      "modified": "2025-10-21T20:22:32.035Z"
     },
     {
       "name": "IndustryTemplateService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/IndustryTemplateService.ts",
       "type": "file",
-      "size": 1332,
-      "modified": "2025-10-18T09:19:06.928Z"
+      "size": 1357,
+      "modified": "2025-10-21T20:22:32.036Z"
     },
     {
       "name": "LoginService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/LoginService.ts",
       "type": "file",
-      "size": 2864,
-      "modified": "2025-10-18T09:19:06.928Z"
+      "size": 2895,
+      "modified": "2025-10-21T20:22:32.036Z"
     },
     {
       "name": "MetadataService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/MetadataService.ts",
       "type": "file",
-      "size": 3583,
-      "modified": "2025-10-18T09:19:06.928Z"
+      "size": 3626,
+      "modified": "2025-10-21T20:22:32.036Z"
     },
     {
       "name": "ModuleService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/ModuleService.ts",
       "type": "file",
-      "size": 6240,
-      "modified": "2025-10-18T09:19:06.928Z"
+      "size": 6265,
+      "modified": "2025-10-21T20:22:32.036Z"
     },
     {
       "name": "PermissionsService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/PermissionsService.ts",
       "type": "file",
-      "size": 2473,
-      "modified": "2025-10-18T09:19:06.928Z"
+      "size": 2489,
+      "modified": "2025-10-21T20:22:32.037Z"
     },
     {
       "name": "ProfileService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/ProfileService.ts",
       "type": "file",
-      "size": 2631,
-      "modified": "2025-10-18T09:19:06.928Z"
+      "size": 2662,
+      "modified": "2025-10-21T20:22:32.037Z"
     },
     {
       "name": "RoleService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/RoleService.ts",
       "type": "file",
-      "size": 6049,
-      "modified": "2025-10-18T09:19:06.928Z"
+      "size": 6073,
+      "modified": "2025-10-21T20:22:32.037Z"
+    },
+    {
+      "name": "SmartStudioLiteService.ts",
+      "path": "src/SmartAbp.Vue/src/api/generated/services/SmartStudioLiteService.ts",
+      "type": "file",
+      "size": 3948,
+      "modified": "2025-10-21T20:22:32.037Z"
     },
     {
       "name": "TenantService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/TenantService.ts",
       "type": "file",
-      "size": 7450,
-      "modified": "2025-10-18T09:19:06.928Z"
+      "size": 7492,
+      "modified": "2025-10-21T20:22:32.038Z"
     },
     {
       "name": "TimeZoneSettingsService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/TimeZoneSettingsService.ts",
       "type": "file",
-      "size": 2204,
-      "modified": "2025-10-18T09:19:06.928Z"
+      "size": 2229,
+      "modified": "2025-10-21T20:22:32.038Z"
     },
     {
       "name": "UserLookupService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/UserLookupService.ts",
       "type": "file",
-      "size": 4087,
-      "modified": "2025-10-18T09:19:06.928Z"
+      "size": 4110,
+      "modified": "2025-10-21T20:22:32.038Z"
     },
     {
       "name": "UserProfileService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/UserProfileService.ts",
       "type": "file",
-      "size": 1969,
-      "modified": "2025-10-18T09:19:06.928Z"
+      "size": 1994,
+      "modified": "2025-10-21T20:22:32.038Z"
     },
     {
       "name": "UserService.ts",
       "path": "src/SmartAbp.Vue/src/api/generated/services/UserService.ts",
       "type": "file",
-      "size": 9571,
-      "modified": "2025-10-18T09:19:06.928Z"
+      "size": 9614,
+      "modified": "2025-10-21T20:22:32.040Z"
     },
     {
       "name": "type-aliases.d.ts",
@@ -2767,6 +2662,13 @@
       "type": "file",
       "size": 5404,
       "modified": "2025-10-12T17:17:08.231Z"
+    },
+    {
+      "name": "moduleApi.ts",
+      "path": "src/SmartAbp.Vue/src/api/lowcode/moduleApi.ts",
+      "type": "file",
+      "size": 2120,
+      "modified": "2025-10-22T09:47:05.433Z"
     },
     {
       "name": "generation-report.md",
@@ -2949,6 +2851,20 @@
       "type": "file",
       "size": 0,
       "modified": "2025-10-12T17:17:08.233Z"
+    },
+    {
+      "name": "KPICard.vue",
+      "path": "src/SmartAbp.Vue/src/components/dashboard/KPICard.vue",
+      "type": "file",
+      "size": 6358,
+      "modified": "2025-10-21T20:22:36.355Z"
+    },
+    {
+      "name": "RealtimeChart.vue",
+      "path": "src/SmartAbp.Vue/src/components/dashboard/RealtimeChart.vue",
+      "type": "file",
+      "size": 6495,
+      "modified": "2025-10-21T20:22:36.358Z"
     },
     {
       "name": "EnterpriseIconSystem.vue",
@@ -3413,6 +3329,13 @@
       "modified": "2025-10-12T17:17:08.240Z"
     },
     {
+      "name": "useWebSocket.ts",
+      "path": "src/SmartAbp.Vue/src/composables/useWebSocket.ts",
+      "type": "file",
+      "size": 4943,
+      "modified": "2025-10-21T20:22:36.359Z"
+    },
+    {
       "name": "index.d.ts",
       "path": "src/SmartAbp.Vue/src/config/index.d.ts",
       "type": "file",
@@ -3441,18 +3364,11 @@
       "modified": "2025-10-12T17:17:08.240Z"
     },
     {
-      "name": "menus.js",
-      "path": "src/SmartAbp.Vue/src/config/menus.js",
-      "type": "file",
-      "size": 25847,
-      "modified": "2025-10-12T17:17:08.241Z"
-    },
-    {
       "name": "menus.ts",
       "path": "src/SmartAbp.Vue/src/config/menus.ts",
       "type": "file",
-      "size": 20202,
-      "modified": "2025-10-12T17:17:08.241Z"
+      "size": 21297,
+      "modified": "2025-10-22T09:03:05.146Z"
     },
     {
       "name": "theme-icon.config.js",
@@ -5478,18 +5394,11 @@
       "modified": "2025-10-12T17:17:08.244Z"
     },
     {
-      "name": "index.js",
-      "path": "src/SmartAbp.Vue/src/router/index.js",
-      "type": "file",
-      "size": 21243,
-      "modified": "2025-10-14T03:23:47.390Z"
-    },
-    {
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/src/router/index.ts",
       "type": "file",
-      "size": 18431,
-      "modified": "2025-10-16T01:25:44.656Z"
+      "size": 20951,
+      "modified": "2025-10-22T09:47:05.433Z"
     },
     {
       "name": "lazyLoad.js",
@@ -5712,8 +5621,8 @@
       "name": "iconStyle.ts",
       "path": "src/SmartAbp.Vue/src/stores/modules/iconStyle.ts",
       "type": "file",
-      "size": 19982,
-      "modified": "2025-10-12T17:17:08.247Z"
+      "size": 21542,
+      "modified": "2025-10-22T09:03:05.147Z"
     },
     {
       "name": "log.d.ts",
@@ -5854,6 +5763,13 @@
       "type": "file",
       "size": 5508,
       "modified": "2025-10-12T17:17:08.248Z"
+    },
+    {
+      "name": "productionLineRealtimeStore.ts",
+      "path": "src/SmartAbp.Vue/src/stores/productionLineRealtimeStore.ts",
+      "type": "file",
+      "size": 8962,
+      "modified": "2025-10-21T20:22:36.361Z"
     },
     {
       "name": "colorPalette.js",
@@ -6661,6 +6577,13 @@
       "modified": "2025-10-14T03:23:47.391Z"
     },
     {
+      "name": "ProductionLineDashboard.vue",
+      "path": "src/SmartAbp.Vue/src/views/dashboard/ProductionLineDashboard.vue",
+      "type": "file",
+      "size": 20231,
+      "modified": "2025-10-21T20:22:36.362Z"
+    },
+    {
       "name": "Forbidden.vue",
       "path": "src/SmartAbp.Vue/src/views/error/Forbidden.vue",
       "type": "file",
@@ -6867,8 +6790,8 @@
       "name": "LowCodeStudioWelcome.vue",
       "path": "src/SmartAbp.Vue/src/views/lowcode/LowCodeStudioWelcome.vue",
       "type": "file",
-      "size": 12511,
-      "modified": "2025-10-16T17:11:51.225Z"
+      "size": 5665,
+      "modified": "2025-10-22T09:47:05.434Z"
     },
     {
       "name": "QuickStart.vue",
@@ -6876,6 +6799,13 @@
       "type": "file",
       "size": 14158,
       "modified": "2025-10-18T06:40:39.556Z"
+    },
+    {
+      "name": "SmartStudioLite.vue",
+      "path": "src/SmartAbp.Vue/src/views/lowcode/SmartStudioLite.vue",
+      "type": "file",
+      "size": 20166,
+      "modified": "2025-10-23T05:08:46.066Z"
     },
     {
       "name": "UltraSimpleStudio.vue",
@@ -6897,6 +6827,34 @@
       "type": "file",
       "size": 9843,
       "modified": "2025-10-12T17:17:08.265Z"
+    },
+    {
+      "name": "EntryCard.vue",
+      "path": "src/SmartAbp.Vue/src/views/lowcode/components/EntryCard.vue",
+      "type": "file",
+      "size": 2625,
+      "modified": "2025-10-21T20:22:28.293Z"
+    },
+    {
+      "name": "FieldConfigTable.vue",
+      "path": "src/SmartAbp.Vue/src/views/lowcode/components/FieldConfigTable.vue",
+      "type": "file",
+      "size": 15182,
+      "modified": "2025-10-21T20:22:28.294Z"
+    },
+    {
+      "name": "RecentProjects.vue",
+      "path": "src/SmartAbp.Vue/src/views/lowcode/components/RecentProjects.vue",
+      "type": "file",
+      "size": 4815,
+      "modified": "2025-10-22T09:47:05.435Z"
+    },
+    {
+      "name": "UsageStatistics.vue",
+      "path": "src/SmartAbp.Vue/src/views/lowcode/components/UsageStatistics.vue",
+      "type": "file",
+      "size": 5481,
+      "modified": "2025-10-21T20:22:28.294Z"
     },
     {
       "name": "ValueObjectEditor.vue",
@@ -7413,8 +7371,8 @@
       "name": "package.json",
       "path": "src/SmartAbp.Vue/packages/lowcode-core/package.json",
       "type": "file",
-      "size": 1542,
-      "modified": "2025-10-12T17:17:08.166Z"
+      "size": 1497,
+      "modified": "2025-10-21T20:22:33.532Z"
     },
     {
       "name": "logger-adapter.test.ts",
@@ -8407,8 +8365,8 @@
       "name": "package.json",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/package.json",
       "type": "file",
-      "size": 1186,
-      "modified": "2025-10-12T17:17:08.180Z"
+      "size": 1131,
+      "modified": "2025-10-21T20:22:33.536Z"
     },
     {
       "name": "CodeGenerationWizard.e2e.test.ts",
@@ -9205,8 +9163,8 @@
       "name": "UltraSimpleStudio.vue",
       "path": "src/SmartAbp.Vue/packages/lowcode-designer/src/views/UltraSimpleStudio.vue",
       "type": "file",
-      "size": 51647,
-      "modified": "2025-10-18T00:10:05.083Z"
+      "size": 56532,
+      "modified": "2025-10-23T03:11:52.176Z"
     },
     {
       "name": "VisualDesignerView.vue",
@@ -10185,8 +10143,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/index.ts",
       "type": "file",
-      "size": 16836,
-      "modified": "2025-10-18T09:19:06.902Z"
+      "size": 16974,
+      "modified": "2025-10-21T20:22:31.652Z"
     },
     {
       "name": "ErrorLogIntegration.ts",
@@ -10304,8 +10262,8 @@
       "name": "backend-contracts.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/backend-contracts.ts",
       "type": "file",
-      "size": 15488,
-      "modified": "2025-10-19T00:45:09.349Z"
+      "size": 17651,
+      "modified": "2025-10-21T20:22:28.291Z"
     },
     {
       "name": "business.ts",
@@ -10360,8 +10318,8 @@
       "name": "index.ts",
       "path": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/index.ts",
       "type": "file",
-      "size": 7725,
-      "modified": "2025-10-18T09:19:06.902Z"
+      "size": 7719,
+      "modified": "2025-10-21T20:22:31.652Z"
     },
     {
       "name": "logger.ts",
@@ -10591,8 +10549,8 @@
       "name": "package.json",
       "path": "src/SmartAbp.Vue/packages/lowcode-tools/package.json",
       "type": "file",
-      "size": 1814,
-      "modified": "2025-10-12T17:17:08.210Z"
+      "size": 1816,
+      "modified": "2025-10-21T20:22:33.537Z"
     },
     {
       "name": "codegen.ts",
@@ -10891,9 +10849,65 @@
       "file": "src/SmartAbp.Application/CodeGenerator/UserProfileAppService.cs"
     },
     {
-      "name": "CodeGenerationService",
+      "name": "DatabaseInfoAppService",
       "type": "class",
       "line": 16,
+      "exported": true,
+      "file": "src/SmartAbp.Application/DatabaseInfo/DatabaseInfoAppService.cs"
+    },
+    {
+      "name": "EquipmentAppService",
+      "type": "class",
+      "line": 13,
+      "exported": true,
+      "file": "src/SmartAbp.Application/Equipment/EquipmentAppService.cs"
+    },
+    {
+      "name": "EquipmentAutoMapperProfile",
+      "type": "class",
+      "line": 7,
+      "exported": true,
+      "file": "src/SmartAbp.Application/Equipment/EquipmentAutoMapperProfile.cs"
+    },
+    {
+      "name": "AsyncCodeGenerationService",
+      "type": "class",
+      "line": 18,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/AsyncCodeGenerationService.cs"
+    },
+    {
+      "name": "CodeGenerationTaskResponse",
+      "type": "class",
+      "line": 153,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/AsyncCodeGenerationService.cs"
+    },
+    {
+      "name": "CodeGenerationTaskStatus",
+      "type": "class",
+      "line": 163,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/AsyncCodeGenerationService.cs"
+    },
+    {
+      "name": "CodeGenerationBackgroundJobArgs",
+      "type": "class",
+      "line": 185,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/AsyncCodeGenerationService.cs"
+    },
+    {
+      "name": "CodeGenerationBackgroundJob",
+      "type": "class",
+      "line": 18,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/CodeGenerationBackgroundJob.cs"
+    },
+    {
+      "name": "CodeGenerationService",
+      "type": "class",
+      "line": 18,
       "exported": true,
       "file": "src/SmartAbp.Application/LowCode/CodeGenerationService.cs"
     },
@@ -10921,9 +10935,51 @@
     {
       "name": "ModuleAppService",
       "type": "class",
-      "line": 21,
+      "line": 22,
       "exported": true,
       "file": "src/SmartAbp.Application/LowCode/ModuleAppService.cs"
+    },
+    {
+      "name": "PermissionSystemGenerator",
+      "type": "class",
+      "line": 18,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/PermissionSystemGenerator.cs"
+    },
+    {
+      "name": "ModuleConfiguration",
+      "type": "class",
+      "line": 172,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/PermissionSystemGenerator.cs"
+    },
+    {
+      "name": "EntityConfiguration",
+      "type": "class",
+      "line": 182,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/PermissionSystemGenerator.cs"
+    },
+    {
+      "name": "FieldConfiguration",
+      "type": "class",
+      "line": 194,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/PermissionSystemGenerator.cs"
+    },
+    {
+      "name": "PermissionSystemGenerationResult",
+      "type": "class",
+      "line": 216,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/PermissionSystemGenerator.cs"
+    },
+    {
+      "name": "EntityGenerationResult",
+      "type": "class",
+      "line": 227,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/PermissionSystemGenerator.cs"
     },
     {
       "name": "SchemaVersionHistoryAppService",
@@ -10940,6 +10996,13 @@
       "file": "src/SmartAbp.Application/LowCode/Services/SchemaVersionService.cs"
     },
     {
+      "name": "SmartStudioLiteAppService",
+      "type": "class",
+      "line": 22,
+      "exported": true,
+      "file": "src/SmartAbp.Application/LowCode/SmartStudioLiteAppService.cs"
+    },
+    {
       "name": "PageConfigValidator",
       "type": "class",
       "line": 13,
@@ -10952,6 +11015,97 @@
       "line": 118,
       "exported": true,
       "file": "src/SmartAbp.Application/LowCode/Validation/PageConfigValidator.cs"
+    },
+    {
+      "name": "AlarmNotificationService",
+      "type": "class",
+      "line": 33,
+      "exported": true,
+      "file": "src/SmartAbp.Application/MES/Alarm/AlarmNotificationService.cs"
+    },
+    {
+      "name": "AlarmTriggeredEvent",
+      "type": "class",
+      "line": 193,
+      "exported": true,
+      "file": "src/SmartAbp.Application/MES/Alarm/AlarmNotificationService.cs"
+    },
+    {
+      "name": "IAlarmRule",
+      "type": "interface",
+      "line": 20,
+      "exported": true,
+      "file": "src/SmartAbp.Application/MES/Alarm/IAlarmRule.cs"
+    },
+    {
+      "name": "AlarmResult",
+      "type": "class",
+      "line": 79,
+      "exported": true,
+      "file": "src/SmartAbp.Application/MES/Alarm/IAlarmRule.cs"
+    },
+    {
+      "name": "ThresholdAlarmRule",
+      "type": "class",
+      "line": 21,
+      "exported": true,
+      "file": "src/SmartAbp.Application/MES/Alarm/ThresholdAlarmRule.cs"
+    },
+    {
+      "name": "IPLCAdapter",
+      "type": "interface",
+      "line": 21,
+      "exported": true,
+      "file": "src/SmartAbp.Application/MES/PLC/IPLCAdapter.cs"
+    },
+    {
+      "name": "PLCHealthStatus",
+      "type": "class",
+      "line": 130,
+      "exported": true,
+      "file": "src/SmartAbp.Application/MES/PLC/IPLCAdapter.cs"
+    },
+    {
+      "name": "PLCDataPoint",
+      "type": "class",
+      "line": 161,
+      "exported": true,
+      "file": "src/SmartAbp.Application/MES/PLC/IPLCAdapter.cs"
+    },
+    {
+      "name": "ModbusTCPAdapter",
+      "type": "class",
+      "line": 36,
+      "exported": true,
+      "file": "src/SmartAbp.Application/MES/PLC/ModbusTCPAdapter.cs"
+    },
+    {
+      "name": "OPCUAAdapter",
+      "type": "class",
+      "line": 31,
+      "exported": true,
+      "file": "src/SmartAbp.Application/MES/PLC/OPCUAAdapter.cs"
+    },
+    {
+      "name": "PLCAdapterFactory",
+      "type": "class",
+      "line": 22,
+      "exported": true,
+      "file": "src/SmartAbp.Application/MES/PLC/PLCAdapterFactory.cs"
+    },
+    {
+      "name": "SimulatedPLCAdapter",
+      "type": "class",
+      "line": 119,
+      "exported": true,
+      "file": "src/SmartAbp.Application/MES/PLC/PLCAdapterFactory.cs"
+    },
+    {
+      "name": "PLCDataCollectorBackgroundWorker",
+      "type": "class",
+      "line": 35,
+      "exported": true,
+      "file": "src/SmartAbp.Application/MES/PLCDataCollectorBackgroundWorker.cs"
     },
     {
       "name": "EnterpriseAlertingOptions",
@@ -12361,6 +12515,48 @@
       "file": "src/SmartAbp.Application/Permissions/Testing/EnterpriseTestingFramework.cs"
     },
     {
+      "name": "ProductionLineAppService",
+      "type": "class",
+      "line": 18,
+      "exported": true,
+      "file": "src/SmartAbp.Application/ProductionLine/ProductionLineAppService.cs"
+    },
+    {
+      "name": "ProductionLineAutoMapperProfile",
+      "type": "class",
+      "line": 12,
+      "exported": true,
+      "file": "src/SmartAbp.Application/ProductionLine/ProductionLineAutoMapperProfile.cs"
+    },
+    {
+      "name": "RealtimeDataAggregatorService",
+      "type": "class",
+      "line": 29,
+      "exported": true,
+      "file": "src/SmartAbp.Application/RealtimeData/RealtimeDataAggregatorService.cs"
+    },
+    {
+      "name": "ProductionLineRealtimeData",
+      "type": "class",
+      "line": 271,
+      "exported": true,
+      "file": "src/SmartAbp.Application/RealtimeData/RealtimeDataAggregatorService.cs"
+    },
+    {
+      "name": "SensorDataAppService",
+      "type": "class",
+      "line": 13,
+      "exported": true,
+      "file": "src/SmartAbp.Application/SensorData/SensorDataAppService.cs"
+    },
+    {
+      "name": "SensorDataAutoMapperProfile",
+      "type": "class",
+      "line": 7,
+      "exported": true,
+      "file": "src/SmartAbp.Application/SensorData/SensorDataAutoMapperProfile.cs"
+    },
+    {
       "name": "SmartAbpAppService",
       "type": "class",
       "line": 7,
@@ -12377,7 +12573,7 @@
     {
       "name": "SmartAbpApplicationModule",
       "type": "class",
-      "line": 23,
+      "line": 27,
       "exported": true,
       "file": "src/SmartAbp.Application/SmartAbpApplicationModule.cs"
     },
@@ -12688,6 +12884,27 @@
       "line": 11,
       "exported": true,
       "file": "src/SmartAbp.Domain/Entities/LowCode/ValidationRule.cs"
+    },
+    {
+      "name": "Equipment",
+      "type": "class",
+      "line": 11,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/MES/Equipment.cs"
+    },
+    {
+      "name": "ProductionLine",
+      "type": "class",
+      "line": 12,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/MES/ProductionLine.cs"
+    },
+    {
+      "name": "SensorData",
+      "type": "class",
+      "line": 11,
+      "exported": true,
+      "file": "src/SmartAbp.Domain/Entities/MES/SensorData.cs"
     },
     {
       "name": "ChangeIdentityPasswordPolicySettingDefinitionProvider",
@@ -15919,7 +16136,7 @@
     {
       "name": "CodeGenerationService",
       "type": "class",
-      "line": 24,
+      "line": 26,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/generated/services/CodeGenerationService.ts"
     },
@@ -16006,6 +16223,13 @@
       "line": 14,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/generated/services/RoleService.ts"
+    },
+    {
+      "name": "SmartStudioLiteService",
+      "type": "class",
+      "line": 13,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/generated/services/SmartStudioLiteService.ts"
     },
     {
       "name": "TenantService",
@@ -16300,6 +16524,13 @@
       "line": 195,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/api/lowcode/entity-modeling.ts"
+    },
+    {
+      "name": "UserChoiceStatsDto",
+      "type": "interface",
+      "line": 8,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/api/lowcode/moduleApi.ts"
     },
     {
       "name": "runPreInit",
@@ -16965,6 +17196,13 @@
       "line": 184,
       "exported": true,
       "file": "src/SmartAbp.Vue/src/composables/useTheme.ts"
+    },
+    {
+      "name": "useWebSocket",
+      "type": "function",
+      "line": 17,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/src/composables/useWebSocket.ts"
     },
     {
       "name": "AppConfig",
@@ -26760,9 +26998,44 @@
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/backend-contracts.ts"
     },
     {
+      "name": "SimplifiedModuleCreationDto",
+      "type": "interface",
+      "line": 448,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/backend-contracts.ts"
+    },
+    {
+      "name": "SimplifiedFieldConfigDto",
+      "type": "interface",
+      "line": 466,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/backend-contracts.ts"
+    },
+    {
+      "name": "SimplifiedModuleCreationResultDto",
+      "type": "interface",
+      "line": 490,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/backend-contracts.ts"
+    },
+    {
+      "name": "ValidationResultDto",
+      "type": "interface",
+      "line": 502,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/backend-contracts.ts"
+    },
+    {
+      "name": "ValidationErrorDto",
+      "type": "interface",
+      "line": 510,
+      "exported": true,
+      "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/backend-contracts.ts"
+    },
+    {
       "name": "TypeSyncStatus",
       "type": "interface",
-      "line": 489,
+      "line": 565,
       "exported": true,
       "file": "src/SmartAbp.Vue/packages/lowcode-shared/src/types/backend-contracts.ts"
     },

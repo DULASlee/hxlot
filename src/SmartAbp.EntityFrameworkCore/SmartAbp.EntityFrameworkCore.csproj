@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SmartAbp.CodeGenerator\SmartAbp.CodeGenerator.csproj" />
+    <ProjectReference Include="..\SmartAbp.Database.Abstraction\SmartAbp.Database.Abstraction.csproj" />
   </ItemGroup>
 
   <ItemGroup>

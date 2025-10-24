@@ -1,0 +1,1080 @@
+{
+    "systemName": "SmartAbp",
+    "moduleName": "PermissionManagement",
+    "displayName": "权限管理系统",
+    "description": "企业级权限管理系统 - 通过低代码引擎生成（吃自己的狗粮）",
+    "databaseProvider": "SqlServer",
+    "entities": [
+        {
+            "name": "Menu",
+            "displayName": "菜单管理",
+            "description": "系统菜单和路由管理",
+            "tableName": "AppMenus",
+            "primaryKey": "Id",
+            "hasAuditFields": true,
+            "hasMultiTenant": true,
+            "hasSoftDelete": false,
+            "fields": [
+                {
+                    "name": "Name",
+                    "displayName": "菜单名称",
+                    "type": "String",
+                    "maxLength": 100,
+                    "required": true,
+                    "description": "菜单名称（英文，如：user-management）",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:100"
+                    ]
+                },
+                {
+                    "name": "Code",
+                    "displayName": "菜单编码",
+                    "type": "String",
+                    "maxLength": 50,
+                    "required": true,
+                    "description": "菜单编码（全局唯一，如：SYSTEM_USER_MGMT）",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:50",
+                        "Unique"
+                    ]
+                },
+                {
+                    "name": "Title",
+                    "displayName": "菜单标题",
+                    "type": "String",
+                    "maxLength": 200,
+                    "required": true,
+                    "description": "菜单标题（显示名称，支持多语言key）",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:200"
+                    ]
+                },
+                {
+                    "name": "ParentId",
+                    "displayName": "父菜单",
+                    "type": "Guid",
+                    "nullable": true,
+                    "description": "父菜单ID",
+                    "uiComponent": "TreeSelect",
+                    "relationEntity": "Menu",
+                    "relationDisplayField": "Title"
+                },
+                {
+                    "name": "Type",
+                    "displayName": "菜单类型",
+                    "type": "Enum",
+                    "enumType": "MenuType",
+                    "required": true,
+                    "description": "菜单类型：目录/菜单/按钮",
+                    "uiComponent": "Select",
+                    "enumOptions": [
+                        {
+                            "value": 1,
+                            "label": "目录",
+                            "description": "父节点，不对应具体页面"
+                        },
+                        {
+                            "value": 2,
+                            "label": "菜单",
+                            "description": "对应具体页面"
+                        },
+                        {
+                            "value": 3,
+                            "label": "按钮",
+                            "description": "页面内操作按钮"
+                        },
+                        {
+                            "value": 4,
+                            "label": "外部链接",
+                            "description": "外部链接"
+                        },
+                        {
+                            "value": 5,
+                            "label": "内嵌页面",
+                            "description": "内嵌iframe页面"
+                        }
+                    ]
+                },
+                {
+                    "name": "Icon",
+                    "displayName": "图标",
+                    "type": "String",
+                    "maxLength": 100,
+                    "description": "图标（支持多种图标库）",
+                    "uiComponent": "IconPicker"
+                },
+                {
+                    "name": "RoutePath",
+                    "displayName": "路由路径",
+                    "type": "String",
+                    "maxLength": 300,
+                    "description": "Vue路由路径（如：/system/users）",
+                    "uiComponent": "Input"
+                },
+                {
+                    "name": "ComponentPath",
+                    "displayName": "组件路径",
+                    "type": "String",
+                    "maxLength": 300,
+                    "description": "组件路径（如：@/views/system/UserManagement.vue）",
+                    "uiComponent": "Input"
+                },
+                {
+                    "name": "PermissionCode",
+                    "displayName": "权限编码",
+                    "type": "String",
+                    "maxLength": 200,
+                    "description": "权限编码（如：System.Users.View）",
+                    "uiComponent": "Input"
+                },
+                {
+                    "name": "IsVisible",
+                    "displayName": "是否显示",
+                    "type": "Boolean",
+                    "defaultValue": true,
+                    "description": "是否在菜单中显示",
+                    "uiComponent": "Switch"
+                },
+                {
+                    "name": "IsEnabled",
+                    "displayName": "是否启用",
+                    "type": "Boolean",
+                    "defaultValue": true,
+                    "description": "是否启用（禁用后无法访问）",
+                    "uiComponent": "Switch"
+                },
+                {
+                    "name": "Sort",
+                    "displayName": "排序号",
+                    "type": "Integer",
+                    "defaultValue": 0,
+                    "description": "排序号（同级菜单内排序）",
+                    "uiComponent": "InputNumber"
+                },
+                {
+                    "name": "IsExternal",
+                    "displayName": "外部链接",
+                    "type": "Boolean",
+                    "defaultValue": false,
+                    "description": "是否外部链接",
+                    "uiComponent": "Switch"
+                },
+                {
+                    "name": "ExternalUrl",
+                    "displayName": "外部链接地址",
+                    "type": "String",
+                    "maxLength": 500,
+                    "description": "外部链接地址",
+                    "uiComponent": "Input"
+                }
+            ],
+            "relations": [
+                {
+                    "type": "SelfReference",
+                    "relationField": "ParentId",
+                    "navigationProperty": "Parent",
+                    "collectionProperty": "Children"
+                }
+            ],
+            "indexes": [
+                {
+                    "fields": [
+                        "Code"
+                    ],
+                    "unique": true
+                },
+                {
+                    "fields": [
+                        "ParentId",
+                        "Sort"
+                    ]
+                },
+                {
+                    "fields": [
+                        "Type",
+                        "IsVisible"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Permission",
+            "displayName": "权限管理",
+            "description": "系统权限定义",
+            "tableName": "AppPermissions",
+            "primaryKey": "Id",
+            "hasAuditFields": true,
+            "hasMultiTenant": true,
+            "fields": [
+                {
+                    "name": "Name",
+                    "displayName": "权限编码",
+                    "type": "String",
+                    "maxLength": 100,
+                    "required": true,
+                    "description": "权限编码（如: System.User.Create）",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:100",
+                        "Unique"
+                    ]
+                },
+                {
+                    "name": "DisplayName",
+                    "displayName": "显示名称",
+                    "type": "String",
+                    "maxLength": 100,
+                    "required": true,
+                    "description": "权限显示名称",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:100"
+                    ]
+                },
+                {
+                    "name": "Description",
+                    "displayName": "权限描述",
+                    "type": "String",
+                    "maxLength": 500,
+                    "description": "权限描述",
+                    "uiComponent": "Textarea"
+                },
+                {
+                    "name": "GroupName",
+                    "displayName": "权限组名称",
+                    "type": "String",
+                    "maxLength": 50,
+                    "required": true,
+                    "description": "权限组名称",
+                    "uiComponent": "Select",
+                    "dictionaryCode": "PermissionGroup"
+                },
+                {
+                    "name": "ParentId",
+                    "displayName": "父权限",
+                    "type": "Guid",
+                    "nullable": true,
+                    "description": "父权限ID",
+                    "uiComponent": "TreeSelect",
+                    "relationEntity": "Permission",
+                    "relationDisplayField": "DisplayName"
+                },
+                {
+                    "name": "Type",
+                    "displayName": "权限类型",
+                    "type": "Enum",
+                    "enumType": "PermissionType",
+                    "required": true,
+                    "description": "权限类型",
+                    "uiComponent": "Select",
+                    "enumOptions": [
+                        {
+                            "value": 1,
+                            "label": "功能权限"
+                        },
+                        {
+                            "value": 2,
+                            "label": "数据权限"
+                        },
+                        {
+                            "value": 3,
+                            "label": "操作权限"
+                        }
+                    ]
+                },
+                {
+                    "name": "IsEnabled",
+                    "displayName": "是否启用",
+                    "type": "Boolean",
+                    "defaultValue": true,
+                    "description": "是否启用",
+                    "uiComponent": "Switch"
+                }
+            ]
+        },
+        {
+            "name": "Role",
+            "displayName": "角色管理",
+            "description": "系统角色定义",
+            "tableName": "AppRoles",
+            "primaryKey": "Id",
+            "hasAuditFields": true,
+            "hasMultiTenant": true,
+            "fields": [
+                {
+                    "name": "Name",
+                    "displayName": "角色名称",
+                    "type": "String",
+                    "maxLength": 50,
+                    "required": true,
+                    "description": "角色名称",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:50",
+                        "Unique"
+                    ]
+                },
+                {
+                    "name": "DisplayName",
+                    "displayName": "显示名称",
+                    "type": "String",
+                    "maxLength": 100,
+                    "required": true,
+                    "description": "角色显示名称",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:100"
+                    ]
+                },
+                {
+                    "name": "Description",
+                    "displayName": "角色描述",
+                    "type": "String",
+                    "maxLength": 500,
+                    "description": "角色描述",
+                    "uiComponent": "Textarea"
+                },
+                {
+                    "name": "Type",
+                    "displayName": "角色类型",
+                    "type": "Enum",
+                    "enumType": "RoleType",
+                    "required": true,
+                    "description": "角色类型",
+                    "uiComponent": "Select",
+                    "enumOptions": [
+                        {
+                            "value": 1,
+                            "label": "系统角色"
+                        },
+                        {
+                            "value": 2,
+                            "label": "业务角色"
+                        },
+                        {
+                            "value": 3,
+                            "label": "临时角色"
+                        }
+                    ]
+                },
+                {
+                    "name": "ParentId",
+                    "displayName": "父角色",
+                    "type": "Guid",
+                    "nullable": true,
+                    "description": "父角色ID（用于权限继承）",
+                    "uiComponent": "TreeSelect",
+                    "relationEntity": "Role",
+                    "relationDisplayField": "DisplayName"
+                },
+                {
+                    "name": "IsSystem",
+                    "displayName": "系统角色",
+                    "type": "Boolean",
+                    "defaultValue": false,
+                    "description": "是否系统角色（系统角色不可删除）",
+                    "uiComponent": "Switch"
+                },
+                {
+                    "name": "IsEnabled",
+                    "displayName": "是否启用",
+                    "type": "Boolean",
+                    "defaultValue": true,
+                    "description": "是否启用",
+                    "uiComponent": "Switch"
+                },
+                {
+                    "name": "Sort",
+                    "displayName": "排序",
+                    "type": "Integer",
+                    "defaultValue": 0,
+                    "description": "排序号",
+                    "uiComponent": "InputNumber"
+                }
+            ]
+        },
+        {
+            "name": "DictionaryType",
+            "displayName": "字典类型",
+            "description": "统一字典类型管理",
+            "tableName": "DictionaryTypes",
+            "primaryKey": "Id",
+            "hasAuditFields": true,
+            "hasMultiTenant": true,
+            "fields": [
+                {
+                    "name": "Code",
+                    "displayName": "字典编码",
+                    "type": "String",
+                    "maxLength": 50,
+                    "required": true,
+                    "description": "字典类型编码（唯一）",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:50",
+                        "Unique"
+                    ]
+                },
+                {
+                    "name": "Name",
+                    "displayName": "字典名称",
+                    "type": "String",
+                    "maxLength": 100,
+                    "required": true,
+                    "description": "字典类型名称",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:100"
+                    ]
+                },
+                {
+                    "name": "Description",
+                    "displayName": "描述",
+                    "type": "String",
+                    "maxLength": 500,
+                    "description": "字典类型描述",
+                    "uiComponent": "Textarea"
+                },
+                {
+                    "name": "Category",
+                    "displayName": "分类",
+                    "type": "String",
+                    "maxLength": 50,
+                    "description": "字典分类",
+                    "uiComponent": "Select",
+                    "dictionaryCode": "DictionaryCategory"
+                },
+                {
+                    "name": "IsSystem",
+                    "displayName": "系统字典",
+                    "type": "Boolean",
+                    "defaultValue": false,
+                    "description": "是否系统字典（系统字典不可删除）",
+                    "uiComponent": "Switch"
+                },
+                {
+                    "name": "IsActive",
+                    "displayName": "是否启用",
+                    "type": "Boolean",
+                    "defaultValue": true,
+                    "description": "是否启用",
+                    "uiComponent": "Switch"
+                },
+                {
+                    "name": "Sort",
+                    "displayName": "排序",
+                    "type": "Integer",
+                    "defaultValue": 0,
+                    "description": "排序号",
+                    "uiComponent": "InputNumber"
+                }
+            ]
+        },
+        {
+            "name": "DictionaryItem",
+            "displayName": "字典项",
+            "description": "字典类型下的具体选项值",
+            "tableName": "DictionaryItems",
+            "primaryKey": "Id",
+            "hasAuditFields": true,
+            "hasMultiTenant": true,
+            "fields": [
+                {
+                    "name": "TypeId",
+                    "displayName": "字典类型",
+                    "type": "Guid",
+                    "required": true,
+                    "description": "字典类型ID",
+                    "uiComponent": "Select",
+                    "relationEntity": "DictionaryType",
+                    "relationDisplayField": "Name",
+                    "validationRules": [
+                        "Required"
+                    ]
+                },
+                {
+                    "name": "Code",
+                    "displayName": "字典项编码",
+                    "type": "String",
+                    "maxLength": 50,
+                    "required": true,
+                    "description": "字典项编码（类型内唯一）",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:50"
+                    ]
+                },
+                {
+                    "name": "Name",
+                    "displayName": "字典项名称",
+                    "type": "String",
+                    "maxLength": 100,
+                    "required": true,
+                    "description": "字典项名称（默认语言）",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:100"
+                    ]
+                },
+                {
+                    "name": "Value",
+                    "displayName": "字典项值",
+                    "type": "String",
+                    "maxLength": 200,
+                    "description": "字典项值",
+                    "uiComponent": "Input"
+                },
+                {
+                    "name": "Description",
+                    "displayName": "描述",
+                    "type": "String",
+                    "maxLength": 200,
+                    "description": "字典项描述",
+                    "uiComponent": "Textarea"
+                },
+                {
+                    "name": "ParentId",
+                    "displayName": "父项",
+                    "type": "Guid",
+                    "nullable": true,
+                    "description": "父项ID（支持层级结构）",
+                    "uiComponent": "TreeSelect",
+                    "relationEntity": "DictionaryItem",
+                    "relationDisplayField": "Name"
+                },
+                {
+                    "name": "Color",
+                    "displayName": "颜色",
+                    "type": "String",
+                    "maxLength": 20,
+                    "description": "颜色标识",
+                    "uiComponent": "ColorPicker"
+                },
+                {
+                    "name": "IsDefault",
+                    "displayName": "默认项",
+                    "type": "Boolean",
+                    "defaultValue": false,
+                    "description": "是否默认项",
+                    "uiComponent": "Switch"
+                },
+                {
+                    "name": "IsActive",
+                    "displayName": "是否启用",
+                    "type": "Boolean",
+                    "defaultValue": true,
+                    "description": "是否启用",
+                    "uiComponent": "Switch"
+                },
+                {
+                    "name": "Sort",
+                    "displayName": "排序",
+                    "type": "Integer",
+                    "defaultValue": 0,
+                    "description": "排序号",
+                    "uiComponent": "InputNumber"
+                }
+            ],
+            "relations": [
+                {
+                    "type": "ManyToOne",
+                    "relationField": "TypeId",
+                    "targetEntity": "DictionaryType",
+                    "navigationProperty": "Type"
+                }
+            ]
+        },
+        {
+            "name": "Organization",
+            "displayName": "组织管理",
+            "description": "企业组织架构管理",
+            "tableName": "AppOrganizations",
+            "primaryKey": "Id",
+            "hasAuditFields": true,
+            "hasMultiTenant": true,
+            "hasSoftDelete": true,
+            "fields": [
+                {
+                    "name": "Name",
+                    "displayName": "组织名称",
+                    "type": "String",
+                    "maxLength": 100,
+                    "required": true,
+                    "description": "组织名称",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:100"
+                    ]
+                },
+                {
+                    "name": "Code",
+                    "displayName": "组织编码",
+                    "type": "String",
+                    "maxLength": 50,
+                    "required": true,
+                    "description": "组织编码（全局唯一）",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:50",
+                        "Unique"
+                    ]
+                },
+                {
+                    "name": "DisplayName",
+                    "displayName": "显示名称",
+                    "type": "String",
+                    "maxLength": 200,
+                    "required": true,
+                    "description": "组织显示名称",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:200"
+                    ]
+                },
+                {
+                    "name": "Description",
+                    "displayName": "组织描述",
+                    "type": "String",
+                    "maxLength": 500,
+                    "description": "组织描述",
+                    "uiComponent": "Textarea"
+                },
+                {
+                    "name": "ParentId",
+                    "displayName": "上级组织",
+                    "type": "Guid",
+                    "nullable": true,
+                    "description": "上级组织ID",
+                    "uiComponent": "TreeSelect",
+                    "relationEntity": "Organization",
+                    "relationDisplayField": "DisplayName"
+                },
+                {
+                    "name": "Type",
+                    "displayName": "组织类型",
+                    "type": "Enum",
+                    "enumType": "OrganizationType",
+                    "required": true,
+                    "description": "组织类型",
+                    "uiComponent": "Select",
+                    "enumOptions": [
+                        {
+                            "value": 1,
+                            "label": "集团公司"
+                        },
+                        {
+                            "value": 2,
+                            "label": "子公司"
+                        },
+                        {
+                            "value": 3,
+                            "label": "分公司"
+                        },
+                        {
+                            "value": 4,
+                            "label": "部门"
+                        },
+                        {
+                            "value": 5,
+                            "label": "小组"
+                        }
+                    ]
+                },
+                {
+                    "name": "Level",
+                    "displayName": "组织层级",
+                    "type": "Integer",
+                    "defaultValue": 1,
+                    "description": "组织层级（1-根组织）",
+                    "uiComponent": "InputNumber"
+                },
+                {
+                    "name": "Sort",
+                    "displayName": "排序号",
+                    "type": "Integer",
+                    "defaultValue": 0,
+                    "description": "排序号",
+                    "uiComponent": "InputNumber"
+                },
+                {
+                    "name": "Leader",
+                    "displayName": "负责人",
+                    "type": "String",
+                    "maxLength": 50,
+                    "description": "组织负责人",
+                    "uiComponent": "Input"
+                },
+                {
+                    "name": "Phone",
+                    "displayName": "联系电话",
+                    "type": "String",
+                    "maxLength": 20,
+                    "description": "组织联系电话",
+                    "uiComponent": "Input"
+                },
+                {
+                    "name": "Email",
+                    "displayName": "邮箱",
+                    "type": "String",
+                    "maxLength": 100,
+                    "description": "组织邮箱",
+                    "uiComponent": "Input"
+                },
+                {
+                    "name": "Address",
+                    "displayName": "地址",
+                    "type": "String",
+                    "maxLength": 200,
+                    "description": "组织地址",
+                    "uiComponent": "Input"
+                },
+                {
+                    "name": "IsEnabled",
+                    "displayName": "是否启用",
+                    "type": "Boolean",
+                    "defaultValue": true,
+                    "description": "是否启用",
+                    "uiComponent": "Switch"
+                }
+            ],
+            "relations": [
+                {
+                    "type": "SelfReference",
+                    "relationField": "ParentId",
+                    "navigationProperty": "Parent",
+                    "collectionProperty": "Children"
+                }
+            ],
+            "indexes": [
+                {
+                    "fields": [
+                        "Code"
+                    ],
+                    "unique": true
+                },
+                {
+                    "fields": [
+                        "ParentId",
+                        "Sort"
+                    ]
+                },
+                {
+                    "fields": [
+                        "Type",
+                        "IsEnabled"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "User",
+            "displayName": "用户管理",
+            "description": "系统用户管理",
+            "tableName": "AppUsers",
+            "primaryKey": "Id",
+            "hasAuditFields": true,
+            "hasMultiTenant": true,
+            "hasSoftDelete": true,
+            "fields": [
+                {
+                    "name": "UserName",
+                    "displayName": "用户名",
+                    "type": "String",
+                    "maxLength": 50,
+                    "required": true,
+                    "description": "用户登录名",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:50",
+                        "Unique"
+                    ]
+                },
+                {
+                    "name": "Email",
+                    "displayName": "邮箱",
+                    "type": "String",
+                    "maxLength": 100,
+                    "required": true,
+                    "description": "用户邮箱",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "Email",
+                        "MaxLength:100"
+                    ]
+                },
+                {
+                    "name": "PhoneNumber",
+                    "displayName": "手机号",
+                    "type": "String",
+                    "maxLength": 20,
+                    "description": "用户手机号",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Phone",
+                        "MaxLength:20"
+                    ]
+                },
+                {
+                    "name": "Name",
+                    "displayName": "姓名",
+                    "type": "String",
+                    "maxLength": 50,
+                    "required": true,
+                    "description": "用户真实姓名",
+                    "uiComponent": "Input",
+                    "validationRules": [
+                        "Required",
+                        "MaxLength:50"
+                    ]
+                },
+                {
+                    "name": "Surname",
+                    "displayName": "姓氏",
+                    "type": "String",
+                    "maxLength": 50,
+                    "description": "用户姓氏",
+                    "uiComponent": "Input"
+                },
+                {
+                    "name": "OrganizationId",
+                    "displayName": "所属组织",
+                    "type": "Guid",
+                    "nullable": true,
+                    "description": "用户所属组织",
+                    "uiComponent": "TreeSelect",
+                    "relationEntity": "Organization",
+                    "relationDisplayField": "DisplayName"
+                },
+                {
+                    "name": "IsActive",
+                    "displayName": "是否激活",
+                    "type": "Boolean",
+                    "defaultValue": true,
+                    "description": "用户是否激活",
+                    "uiComponent": "Switch"
+                },
+                {
+                    "name": "IsLockoutEnabled",
+                    "displayName": "启用锁定",
+                    "type": "Boolean",
+                    "defaultValue": true,
+                    "description": "是否启用账户锁定",
+                    "uiComponent": "Switch"
+                },
+                {
+                    "name": "LockoutEnd",
+                    "displayName": "锁定结束时间",
+                    "type": "DateTime",
+                    "nullable": true,
+                    "description": "账户锁定结束时间",
+                    "uiComponent": "DateTimePicker"
+                },
+                {
+                    "name": "AccessFailedCount",
+                    "displayName": "失败次数",
+                    "type": "Integer",
+                    "defaultValue": 0,
+                    "description": "登录失败次数",
+                    "uiComponent": "InputNumber"
+                },
+                {
+                    "name": "LastLoginTime",
+                    "displayName": "最后登录时间",
+                    "type": "DateTime",
+                    "nullable": true,
+                    "description": "最后登录时间",
+                    "uiComponent": "DateTimePicker"
+                },
+                {
+                    "name": "IsEmailConfirmed",
+                    "displayName": "邮箱已确认",
+                    "type": "Boolean",
+                    "defaultValue": false,
+                    "description": "邮箱是否已确认",
+                    "uiComponent": "Switch"
+                },
+                {
+                    "name": "IsPhoneNumberConfirmed",
+                    "displayName": "手机已确认",
+                    "type": "Boolean",
+                    "defaultValue": false,
+                    "description": "手机号是否已确认",
+                    "uiComponent": "Switch"
+                },
+                {
+                    "name": "Gender",
+                    "displayName": "性别",
+                    "type": "Enum",
+                    "enumType": "Gender",
+                    "description": "用户性别",
+                    "uiComponent": "Radio",
+                    "enumOptions": [
+                        {
+                            "value": 0,
+                            "label": "未知"
+                        },
+                        {
+                            "value": 1,
+                            "label": "男"
+                        },
+                        {
+                            "value": 2,
+                            "label": "女"
+                        }
+                    ]
+                },
+                {
+                    "name": "Birthday",
+                    "displayName": "生日",
+                    "type": "DateTime",
+                    "nullable": true,
+                    "description": "用户生日",
+                    "uiComponent": "DatePicker"
+                },
+                {
+                    "name": "Avatar",
+                    "displayName": "头像",
+                    "type": "String",
+                    "maxLength": 500,
+                    "description": "用户头像URL",
+                    "uiComponent": "Upload"
+                }
+            ],
+            "relations": [
+                {
+                    "type": "ManyToOne",
+                    "relationField": "OrganizationId",
+                    "targetEntity": "Organization",
+                    "navigationProperty": "Organization"
+                }
+            ],
+            "indexes": [
+                {
+                    "fields": [
+                        "UserName"
+                    ],
+                    "unique": true
+                },
+                {
+                    "fields": [
+                        "Email"
+                    ],
+                    "unique": true
+                },
+                {
+                    "fields": [
+                        "OrganizationId",
+                        "IsActive"
+                    ]
+                },
+                {
+                    "fields": [
+                        "PhoneNumber"
+                    ]
+                }
+            ]
+        }
+    ],
+    "codeGeneration": {
+        "generateBackend": true,
+        "generateFrontend": true,
+        "generateMobilePages": false,
+        "backendTemplate": "ABP vNext",
+        "frontendFramework": "Vue3",
+        "uiLibrary": "Element Plus",
+        "generateApi": true,
+        "generateDto": true,
+        "generateService": true,
+        "generateController": true,
+        "generateRepository": true,
+        "generateDbContext": true,
+        "generateMigration": true,
+        "generatePermissions": true,
+        "generateMenu": true,
+        "generateI18n": true
+    },
+    "menuConfiguration": {
+        "parentMenu": "系统管理",
+        "menuItems": [
+            {
+                "name": "organization-management",
+                "title": "组织管理",
+                "icon": "el-icon-office-building",
+                "path": "/system/organizations",
+                "component": "@/views/system/OrganizationManagement.vue",
+                "permissions": [
+                    "System.Organization.View"
+                ]
+            },
+            {
+                "name": "user-management",
+                "title": "用户管理",
+                "icon": "el-icon-user",
+                "path": "/system/users",
+                "component": "@/views/system/UserManagement.vue",
+                "permissions": [
+                    "System.User.View"
+                ]
+            },
+            {
+                "name": "menu-management",
+                "title": "菜单管理",
+                "icon": "el-icon-menu",
+                "path": "/system/menus",
+                "component": "@/views/system/MenuManagement.vue",
+                "permissions": [
+                    "System.Menu.View"
+                ]
+            },
+            {
+                "name": "permission-management",
+                "title": "权限管理",
+                "icon": "el-icon-key",
+                "path": "/system/permissions",
+                "component": "@/views/system/PermissionManagement.vue",
+                "permissions": [
+                    "System.Permission.View"
+                ]
+            },
+            {
+                "name": "role-management",
+                "title": "角色管理",
+                "icon": "el-icon-user",
+                "path": "/system/roles",
+                "component": "@/views/system/RoleManagement.vue",
+                "permissions": [
+                    "System.Role.View"
+                ]
+            },
+            {
+                "name": "dictionary-management",
+                "title": "字典管理",
+                "icon": "el-icon-collection",
+                "path": "/system/dictionaries",
+                "component": "@/views/system/DictionaryManagement.vue",
+                "permissions": [
+                    "System.Dictionary.View"
+                ]
+            }
+        ]
+    }
+}

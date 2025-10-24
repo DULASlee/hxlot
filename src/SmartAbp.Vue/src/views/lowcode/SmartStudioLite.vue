@@ -147,10 +147,10 @@
             </div>
           </template>
 
-          <FieldConfigTable v-model="formData.fields" />
+          <FieldConfigTable v-model="formData.fields!" />
 
           <el-alert
-            v-if="formData.fields.length === 0"
+            v-if="!formData.fields || formData.fields.length === 0"
             title="提示：至少添加一个字段才能继续"
             type="warning"
             :closable="false"
@@ -175,13 +175,13 @@
             <el-descriptions-item label="架构模式">{{ formData.architecturePattern }}</el-descriptions-item>
             <el-descriptions-item label="数据库">{{ formData.databaseProvider }}</el-descriptions-item>
             <el-descriptions-item label="字段数量">
-              <el-tag type="success">{{ formData.fields.length }} 个</el-tag>
+              <el-tag type="success">{{ formData.fields?.length || 0 }} 个</el-tag>
             </el-descriptions-item>
           </el-descriptions>
 
           <el-divider content-position="left">字段列表</el-divider>
 
-          <el-table :data="formData.fields" border stripe style="width: 100%">
+          <el-table :data="formData.fields || []" border stripe style="width: 100%">
             <el-table-column type="index" width="50" label="#" />
             <el-table-column prop="name" label="字段名称" width="150" />
             <el-table-column prop="displayName" label="显示名称" width="150" />
@@ -252,14 +252,33 @@
 </template>
 
 <script setup lang="ts">
-import type {
-    SimplifiedFieldConfigDto,
-    SimplifiedModuleCreationDto
-} from '@smartabp/lowcode-shared'
+// ✅ 临时修复：直接使用生成的API类型
+import type { SmartAbp_Application_Contracts_LowCode_Dtos_SimplifiedModuleCreationDto } from '@/api/generated/models/SmartAbp_Application_Contracts_LowCode_Dtos_SimplifiedModuleCreationDto'
+import { SmartStudioLiteService } from '@/api/generated/services/SmartStudioLiteService'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import FieldConfigTable from './components/FieldConfigTable.vue'
+
+// 创建类型别名以保持代码可读性
+type SimplifiedModuleCreationDto = SmartAbp_Application_Contracts_LowCode_Dtos_SimplifiedModuleCreationDto
+type SimplifiedFieldConfigDto = {
+  name: string
+  displayName: string
+  type: string
+  isRequired: boolean
+  maxLength?: number
+  minLength?: number
+  defaultValue?: string
+  comment?: string
+  order: number
+  precision?: number
+  scale?: number
+  minValue?: string
+  maxValue?: string
+  pattern?: string
+  uiControl: string
+}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Router
@@ -345,7 +364,7 @@ async function nextStep() {
     }
   } else if (currentStep.value === 1) {
     // 验证字段配置
-    if (formData.fields.length === 0) {
+    if (!formData.fields || formData.fields.length === 0) {
       ElMessage.warning('请至少添加一个字段')
       return
     }
@@ -410,6 +429,9 @@ function addCommonFields() {
     }
   ]
 
+  if (!formData.fields) {
+    formData.fields = []
+  }
   formData.fields.push(...commonFields)
   ElMessage.success('已添加4个常用字段')
 }
@@ -422,27 +444,16 @@ async function loadPreviewFiles() {
   generationError.value = ''
 
   try {
-    // TODO: 调用NSwag生成的API
-    // const result = await smartStudioLiteApi.previewGeneratedFiles(formData)
-    // previewFiles.value = result.items || []
-
-    // 临时模拟数据
-    previewFiles.value = [
-      `Domain/${formData.entityName}.cs`,
-      `Application/${formData.entityName}AppService.cs`,
-      `Application.Contracts/Dtos/${formData.entityName}Dto.cs`,
-      `Application.Contracts/Dtos/Create${formData.entityName}Dto.cs`,
-      `Application.Contracts/Dtos/Update${formData.entityName}Dto.cs`,
-      `Application.Contracts/I${formData.entityName}AppService.cs`,
-      `HttpApi/Controllers/${formData.entityName}Controller.cs`,
-      `EntityFrameworkCore/Migrations/xxx_Add${formData.entityName}Table.cs`,
-      `Vue/views/${formData.entityName.toLowerCase()}/${formData.entityName}List.vue`,
-      `Vue/views/${formData.entityName.toLowerCase()}/${formData.entityName}Form.vue`,
-      `Vue/stores/${formData.entityName.toLowerCase()}/use${formData.entityName}Store.ts`,
-      `Vue/api/${formData.entityName.toLowerCase()}/${formData.entityName.toLowerCase()}-api.ts`,
-      `Vue/types/${formData.entityName.toLowerCase()}/${formData.entityName.toLowerCase()}.types.ts`
-    ]
+    // ✅ 调用真实的后端API
+    const result = await SmartStudioLiteService.postApiLowcodeSmartStudioLitePreviewFiles({
+      requestBody: formData as any  // 临时类型修复
+    })
+    
+    previewFiles.value = result.items || []
+    
+    ElMessage.success(`预览 ${previewFiles.value.length} 个文件`)
   } catch (error: any) {
+    console.error('❌ 加载文件预览失败:', error)
     generationError.value = error.message || '加载文件预览失败'
     ElMessage.error(generationError.value)
   } finally {
@@ -472,45 +483,42 @@ async function handleGenerate() {
     progressStatus.value = ''
     generationComplete.value = false
 
-    // TODO: 调用NSwag生成的API
-    // const result = await smartStudioLiteApi.createModule(formData)
-
-    // 模拟进度
-    simulateProgress()
+    try {
+      // ✅ 调用真实的后端API
+      progressMessage.value = '正在验证配置...'
+      generationProgress.value = 20
+      
+      const result = await SmartStudioLiteService.postApiLowcodeSmartStudioLiteCreateModule({
+        requestBody: formData as any  // 临时类型修复
+      })
+      
+      progressMessage.value = '代码生成完成！'
+      generationProgress.value = 100
+      progressStatus.value = 'success'
+      generationComplete.value = true
+      
+      ElMessage.success(`✅ ${result.message}`)
+      
+      // 显示生成的文件信息
+      if (result.generatedFiles && result.generatedFiles.length > 0) {
+        console.log('🎉 生成的文件:', result.generatedFiles)
+      }
+      
+    } catch (error: any) {
+      console.error('❌ 代码生成失败:', error)
+      progressStatus.value = 'exception'
+      progressMessage.value = `生成失败: ${error.message}`
+      ElMessage.error(`代码生成失败: ${error.message}`)
+      generationComplete.value = true
+    }
   } catch {
     // 用户取消
     generating.value = false
+    progressDialogVisible.value = false
   }
 }
 
-/**
- * 模拟进度（临时）
- */
-function simulateProgress() {
-  const steps = [
-    { progress: 20, message: '正在创建模块...' },
-    { progress: 40, message: '正在创建实体定义...' },
-    { progress: 60, message: '正在配置字段...' },
-    { progress: 80, message: '正在生成代码...' },
-    { progress: 100, message: '生成完成！' }
-  ]
-
-  let currentIndex = 0
-
-  const interval = setInterval(() => {
-    if (currentIndex < steps.length) {
-      generationProgress.value = steps[currentIndex].progress
-      progressMessage.value = steps[currentIndex].message
-      currentIndex++
-    } else {
-      clearInterval(interval)
-      generating.value = false
-      progressStatus.value = 'success'
-      generationComplete.value = true
-      ElMessage.success('代码生成成功！')
-    }
-  }, 800)
-}
+// ✅ simulateProgress函数已删除 - 现在使用真实的后端API
 
 /**
  * 查看结果

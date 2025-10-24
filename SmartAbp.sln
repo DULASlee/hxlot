@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartAbp.Web", "src\SmartAb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartAbp.CodeGenerator", "src\SmartAbp.CodeGenerator\SmartAbp.CodeGenerator.csproj", "{2F8B5A3C-8E4D-4F9B-A1C7-3D6E8F5C2B9A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartAbp.Database.Abstraction", "src\SmartAbp.Database.Abstraction\SmartAbp.Database.Abstraction.csproj", "{4FC4268A-C75B-4DD4-8246-E3E3B6A43B8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,18 @@ Global
 		{2F8B5A3C-8E4D-4F9B-A1C7-3D6E8F5C2B9A}.Release|x64.Build.0 = Release|Any CPU
 		{2F8B5A3C-8E4D-4F9B-A1C7-3D6E8F5C2B9A}.Release|x86.ActiveCfg = Release|Any CPU
 		{2F8B5A3C-8E4D-4F9B-A1C7-3D6E8F5C2B9A}.Release|x86.Build.0 = Release|Any CPU
+		{4FC4268A-C75B-4DD4-8246-E3E3B6A43B8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FC4268A-C75B-4DD4-8246-E3E3B6A43B8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FC4268A-C75B-4DD4-8246-E3E3B6A43B8F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4FC4268A-C75B-4DD4-8246-E3E3B6A43B8F}.Debug|x64.Build.0 = Debug|Any CPU
+		{4FC4268A-C75B-4DD4-8246-E3E3B6A43B8F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4FC4268A-C75B-4DD4-8246-E3E3B6A43B8F}.Debug|x86.Build.0 = Debug|Any CPU
+		{4FC4268A-C75B-4DD4-8246-E3E3B6A43B8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FC4268A-C75B-4DD4-8246-E3E3B6A43B8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FC4268A-C75B-4DD4-8246-E3E3B6A43B8F}.Release|x64.ActiveCfg = Release|Any CPU
+		{4FC4268A-C75B-4DD4-8246-E3E3B6A43B8F}.Release|x64.Build.0 = Release|Any CPU
+		{4FC4268A-C75B-4DD4-8246-E3E3B6A43B8F}.Release|x86.ActiveCfg = Release|Any CPU
+		{4FC4268A-C75B-4DD4-8246-E3E3B6A43B8F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -155,6 +169,7 @@ Global
 		{70680696-BB1E-4383-BCB2-42C3767171FB} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{100C3349-655C-1463-60C0-1CC4EA7D6734} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 		{2F8B5A3C-8E4D-4F9B-A1C7-3D6E8F5C2B9A} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
+		{4FC4268A-C75B-4DD4-8246-E3E3B6A43B8F} = {CA9AC87F-097E-4F15-8393-4BC07735A5B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28315BFD-90E7-4E14-A2EA-F3D23AF4126F}

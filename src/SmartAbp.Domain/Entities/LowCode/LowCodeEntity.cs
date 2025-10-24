@@ -80,13 +80,11 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// <summary>
         /// 实体配置（JSON存储）
         /// </summary>
-        [Column(TypeName = "nvarchar(max)")]
         public EntityConfig? EntityConfig { get; set; }
 
         /// <summary>
         /// UI配置（JSON存储）
         /// </summary>
-        [Column(TypeName = "nvarchar(max)")]
         public EntityUIConfig? UIConfig { get; set; }
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

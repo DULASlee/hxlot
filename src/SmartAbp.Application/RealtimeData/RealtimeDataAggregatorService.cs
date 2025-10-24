@@ -14,6 +14,7 @@ using System.Text.Json;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using SmartAbp.Domain.Entities.MES;
+using MESEntities = SmartAbp.Domain.Entities.MES;
 
 namespace SmartAbp.Application.RealtimeData
 {
@@ -33,9 +34,9 @@ namespace SmartAbp.Application.RealtimeData
 
         private readonly IDistributedCache _cache;
         private readonly ILogger<RealtimeDataAggregatorService> _logger;
-        private readonly IRepository<ProductionLine, Guid> _productionLineRepository;
-        private readonly IRepository<Equipment, Guid> _equipmentRepository;
-        private readonly IRepository<SensorData, Guid> _sensorDataRepository;
+        private readonly IRepository<MESEntities.ProductionLine, Guid> _productionLineRepository;
+        private readonly IRepository<MESEntities.Equipment, Guid> _equipmentRepository;
+        private readonly IRepository<MESEntities.SensorData, Guid> _sensorDataRepository;
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // 构造函数
@@ -44,9 +45,9 @@ namespace SmartAbp.Application.RealtimeData
         public RealtimeDataAggregatorService(
             IDistributedCache cache,
             ILogger<RealtimeDataAggregatorService> logger,
-            IRepository<ProductionLine, Guid> productionLineRepository,
-            IRepository<Equipment, Guid> equipmentRepository,
-            IRepository<SensorData, Guid> sensorDataRepository)
+            IRepository<MESEntities.ProductionLine, Guid> productionLineRepository,
+            IRepository<MESEntities.Equipment, Guid> equipmentRepository,
+            IRepository<MESEntities.SensorData, Guid> sensorDataRepository)
         {
             _cache = cache;
             _logger = logger;
