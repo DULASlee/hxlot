@@ -116,6 +116,10 @@ public class Program
 
             await builder.AddApplicationAsync<SmartAbpHttpApiHostModule>();
             var app = builder.Build();
+            
+            // 🔥 初始化数据库（应用迁移）
+            await DatabaseInitializer.InitializeDatabaseAsync(app.Services);
+            
             // CorrelationId + Request logging + ProblemDetails
             app.UseMiddleware<Middleware.CorrelationIdMiddleware>();
             app.UseSerilogRequestLogging();

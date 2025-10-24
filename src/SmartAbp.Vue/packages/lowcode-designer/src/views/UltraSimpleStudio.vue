@@ -21,6 +21,27 @@
             </p>
           </div>
           <div class="header-actions">
+            <!-- ✅ 新增：批量模式开关 -->
+            <el-switch 
+              v-model="batchMode" 
+              active-text="批量生成模式"
+              inactive-text="单实体模式"
+              class="batch-mode-switch"
+              @change="onBatchModeChange"
+            />
+            
+            <!-- 🚀 吃自己的狗粮：导入权限管理系统 -->
+            <el-tooltip content="导入权限管理系统配置（吃自己的狗粮）" placement="bottom">
+              <el-button 
+                type="primary" 
+                :icon="'Management'" 
+                size="small"
+                @click="importPermissionSystem"
+                class="permission-import-btn">
+                权限系统
+              </el-button>
+            </el-tooltip>
+            
             <el-tooltip :content="mode === 'dark' ? t('common.switchToLight') : t('common.switchToDark')"
               placement="bottom">
               <el-button :icon="mode === 'dark' ? 'Sunny' : 'Moon'" circle class="theme-toggle" @click="toggleTheme" />
@@ -29,8 +50,43 @@
         </div>
       </div>
 
+      <!-- ✅ 新增：批量实体列表 -->
+      <div v-if="batchMode" class="batch-entity-list">
+        <el-card 
+          v-for="(entity, index) in batchEntities" 
+          :key="index"
+          class="entity-card"
+          :class="{ generated: entity.generated }">
+          <template #header>
+            <div class="card-header">
+              <el-icon :size="24"><component :is="(EpIcons as any)[entity.icon]" /></el-icon>
+              <span class="entity-name">{{ entity.displayName }}</span>
+              <el-tag v-if="entity.generated" type="success">已生成</el-tag>
+              <el-tag v-else type="info">待生成</el-tag>
+            </div>
+          </template>
+          
+          <div class="entity-info">
+            <p><strong>实体名称：</strong>{{ entity.name }}</p>
+            <p><strong>字段数量：</strong>{{ entity.fields.length }}</p>
+            <p><strong>生成文件：</strong>{{ entity.fileCount || '-' }}</p>
+          </div>
+          
+          <div class="entity-logs" v-if="entity.logs && entity.logs.length > 0">
+            <el-timeline>
+              <el-timeline-item 
+                v-for="(log, idx) in entity.logs" 
+                :key="idx"
+                :type="log.type === 'success' ? 'success' : log.type === 'error' ? 'danger' : 'primary'">
+                {{ log.message }}
+              </el-timeline-item>
+            </el-timeline>
+          </div>
+        </el-card>
+      </div>
+
       <!-- 主内容区 - 左右布局 -->
-      <div class="studio-content">
+      <div class="studio-content" v-if="!batchMode">
         <!-- 左侧：配置表单 -->
         <div class="config-panel">
           <el-form :model="config" label-position="top" class="config-form">
@@ -220,6 +276,24 @@
           </div>
         </div>
       </div>
+      
+      <!-- ✅ 新增：批量生成区域 -->
+      <div v-if="batchMode" class="batch-generate-section">
+        <el-button 
+          type="primary" 
+          size="large"
+          :loading="batchGenerating"
+          :disabled="batchEntities.length === 0"
+          class="batch-generate-btn" 
+          @click="startBatchGeneration">
+          <el-icon class="mr-2"><Promotion /></el-icon>
+          {{ batchGenerating ? `正在生成 (${batchProgress}/${batchEntities.length})` : `批量生成全部（${batchEntities.length}个模块）` }}
+        </el-button>
+        
+        <div class="batch-progress" v-if="batchGenerating">
+          <el-progress :percentage="Math.round((batchProgress / batchEntities.length) * 100)" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -262,12 +336,45 @@ interface GenerationLog {
   type: 'info' | 'success' | 'warning' | 'error'
 }
 
+// ✅ 新增：批量生成实体配置接口
+interface FieldDefinition {
+  name: string
+  displayName: string
+  type: string
+  maxLength?: number
+  isRequired: boolean
+  defaultValue?: string
+  minLength?: number
+  minValue?: number
+  maxValue?: number
+  precision?: number
+  scale?: number
+  comment?: string
+  order?: number
+}
+
+interface BatchEntityConfig {
+  name: string
+  displayName: string
+  icon: string
+  fields: FieldDefinition[]
+  generated: boolean
+  logs: { message: string; type: 'info' | 'success' | 'error' }[]
+  fileCount?: number
+}
+
 // ✅ 简化：响应式状态（移除不必要的计算属性）
 const selectedTable = ref<string>('')
 const availableTables = ref<DatabaseTable[]>([])
 const loadingTables = ref(false)
 const tableSelectRef = ref()
 const systemSelectRef = ref()
+
+// ✅ 新增：批量生成状态
+const batchMode = ref(false)
+const batchGenerating = ref(false)
+const batchProgress = ref(0)
+const batchEntities = ref<BatchEntityConfig[]>([])
 
 const config = reactive<MetadataConfig>({
   systemName: '',  // 🔥 修复：移除默认值，让用户手动选择
@@ -1112,6 +1219,264 @@ const selectMenuIcon = (name: string) => {
   config.menuIcon = name
   iconPickerVisible.value = false
 }
+
+// 🚀 吃自己的狗粮：导入权限管理系统配置
+// ✅ 新增：批量模式切换处理
+const onBatchModeChange = (value: boolean) => {
+  console.log('🔄 批量模式切换:', value)
+  if (value) {
+    addLog('✅ 已切换到批量生成模式', 'info')
+    ElMessage.info('提示：批量模式下可一次生成多个实体模块')
+  } else {
+    addLog('✅ 已切换到单实体模式', 'info')
+    // 清空批量实体列表
+    batchEntities.value = []
+    batchProgress.value = 0
+  }
+}
+
+// ✅ 新增：批量生成逻辑
+const startBatchGeneration = async () => {
+  if (batchEntities.value.length === 0) {
+    ElMessage.warning('请先导入权限系统配置')
+    return
+  }
+  
+  batchGenerating.value = true
+  batchProgress.value = 0
+  addLog('🚀 开始批量生成 ' + batchEntities.value.length + ' 个模块', 'info')
+  
+  for (let i = 0; i < batchEntities.value.length; i++) {
+    const entity = batchEntities.value[i]
+    try {
+      addLog(`正在生成 ${entity.displayName} (${i + 1}/${batchEntities.value.length})...`, 'info')
+      entity.logs.push({ message: '开始生成...', type: 'info' })
+      
+      // 构建元数据
+      const metadata: ModuleMetadata = {
+        systemName: config.systemName,
+        moduleName: entity.name,
+        displayName: entity.displayName,
+        description: `${entity.displayName}模块`,
+        architecturePattern: config.architecturePattern,
+        databaseProvider: config.databaseProvider,
+        parentMenuId: config.parentMenuId,
+        menuIcon: entity.icon || config.menuIcon,
+        fields: entity.fields.map(f => ({
+          name: f.name,
+          displayName: f.displayName,
+          type: f.type,
+          isRequired: f.isRequired,
+          maxLength: f.maxLength,
+          defaultValue: f.defaultValue,
+          minLength: f.minLength,
+          minValue: f.minValue,
+          maxValue: f.maxValue,
+          precision: f.precision,
+          scale: f.scale,
+          comment: f.comment,
+          order: f.order
+        }))
+      }
+      
+      // 调用生成API
+      const result = await codeGeneratorApi.generateModule(metadata)
+      
+      entity.generated = true
+      entity.fileCount = result.generatedFiles?.length || 0
+      entity.logs.push({ message: `✅ 生成成功！生成了 ${entity.fileCount} 个文件`, type: 'success' })
+      addLog(`✅ ${entity.displayName} 生成成功！`, 'success')
+      
+      batchProgress.value = i + 1
+    } catch (error: any) {
+      entity.logs.push({ message: `❌ 生成失败：${error.message}`, type: 'error' })
+      addLog(`❌ ${entity.displayName} 生成失败：${error.message}`, 'error')
+    }
+  }
+  
+  batchGenerating.value = false
+  const successCount = batchEntities.value.filter(e => e.generated).length
+  addLog(`🎉 批量生成完成！成功 ${successCount}/${batchEntities.value.length} 个模块`, successCount === batchEntities.value.length ? 'success' : 'warning')
+  ElMessage.success(`批量生成完成！成功生成 ${successCount} 个模块`)
+}
+
+const importPermissionSystem = async () => {
+  console.log('🔥 开始导入权限管理系统配置 - "吃自己的狗粮"')
+  
+  try {
+    // 显示加载状态
+    const loadingMessage = ElMessage({
+      message: '🔄 正在导入完整的6模块权限管理系统配置...',
+      type: 'info',
+      duration: 0,
+      showClose: false
+    })
+    
+    // ✅ 完整的权限管理系统配置（含字段定义）
+    const permissionSystemConfig = {
+      systemName: 'SmartAbp',
+      moduleName: 'PermissionManagement', 
+      displayName: '权限管理系统',
+      description: '企业级权限管理系统 - 通过低代码引擎生成（吃自己的狗粮）',
+      architecturePattern: 'DDD' as const,
+      databaseProvider: 'SqlServer' as const,
+      parentMenuId: 'system',
+      menuIcon: 'Key',
+      
+      // ✅ 6个核心实体配置（含完整字段定义）
+      entities: [
+        {
+          name: 'Organization',
+          displayName: '组织管理',
+          description: '企业组织架构管理',
+          icon: 'OfficeBuilding',
+          fields: [
+            { name: 'name', displayName: '组织名称', type: 'string', maxLength: 100, isRequired: true, order: 1 },
+            { name: 'code', displayName: '组织编码', type: 'string', maxLength: 50, isRequired: true, order: 2 },
+            { name: 'parentId', displayName: '父组织ID', type: 'Guid', isRequired: false, order: 3 },
+            { name: 'level', displayName: '组织层级', type: 'int', isRequired: true, order: 4 },
+            { name: 'sort', displayName: '排序', type: 'int', isRequired: true, defaultValue: '0', order: 5 },
+            { name: 'isEnabled', displayName: '是否启用', type: 'bool', isRequired: true, defaultValue: 'true', order: 6 }
+          ]
+        },
+        {
+          name: 'User', 
+          displayName: '用户管理',
+          description: '系统用户管理',
+          icon: 'User',
+          fields: [
+            { name: 'userName', displayName: '用户名', type: 'string', maxLength: 50, isRequired: true, order: 1 },
+            { name: 'realName', displayName: '真实姓名', type: 'string', maxLength: 100, isRequired: true, order: 2 },
+            { name: 'email', displayName: '电子邮箱', type: 'string', maxLength: 200, isRequired: true, order: 3 },
+            { name: 'phoneNumber', displayName: '手机号码', type: 'string', maxLength: 20, isRequired: false, order: 4 },
+            { name: 'organizationId', displayName: '所属组织', type: 'Guid', isRequired: true, order: 5 },
+            { name: 'isActive', displayName: '是否激活', type: 'bool', isRequired: true, defaultValue: 'true', order: 6 }
+          ]
+        },
+        {
+          name: 'Menu',
+          displayName: '菜单管理', 
+          description: '系统菜单和路由管理',
+          icon: 'Menu',
+          fields: [
+            { name: 'name', displayName: '菜单名称', type: 'string', maxLength: 100, isRequired: true, order: 1 },
+            { name: 'code', displayName: '菜单编码', type: 'string', maxLength: 50, isRequired: true, order: 2 },
+            { name: 'route', displayName: '路由路径', type: 'string', maxLength: 200, isRequired: false, order: 3 },
+            { name: 'icon', displayName: '图标', type: 'string', maxLength: 50, isRequired: false, order: 4 },
+            { name: 'parentId', displayName: '父菜单ID', type: 'Guid', isRequired: false, order: 5 },
+            { name: 'sort', displayName: '排序', type: 'int', isRequired: true, defaultValue: '0', order: 6 },
+            { name: 'isVisible', displayName: '是否可见', type: 'bool', isRequired: true, defaultValue: 'true', order: 7 }
+          ]
+        },
+        {
+          name: 'Role',
+          displayName: '角色管理',
+          description: '系统角色定义',
+          icon: 'UserFilled',
+          fields: [
+            { name: 'name', displayName: '角色名称', type: 'string', maxLength: 100, isRequired: true, order: 1 },
+            { name: 'code', displayName: '角色编码', type: 'string', maxLength: 50, isRequired: true, order: 2 },
+            { name: 'description', displayName: '角色描述', type: 'string', maxLength: 500, isRequired: false, order: 3 },
+            { name: 'isDefault', displayName: '是否默认角色', type: 'bool', isRequired: true, defaultValue: 'false', order: 4 },
+            { name: 'isEnabled', displayName: '是否启用', type: 'bool', isRequired: true, defaultValue: 'true', order: 5 }
+          ]
+        },
+        {
+          name: 'Permission',
+          displayName: '权限管理',
+          description: '系统权限定义', 
+          icon: 'Key',
+          fields: [
+            { name: 'name', displayName: '权限名称', type: 'string', maxLength: 100, isRequired: true, order: 1 },
+            { name: 'code', displayName: '权限编码', type: 'string', maxLength: 100, isRequired: true, order: 2 },
+            { name: 'category', displayName: '权限类别', type: 'string', maxLength: 50, isRequired: false, order: 3 },
+            { name: 'parentId', displayName: '父权限ID', type: 'Guid', isRequired: false, order: 4 },
+            { name: 'sort', displayName: '排序', type: 'int', isRequired: true, defaultValue: '0', order: 5 }
+          ]
+        },
+        {
+          name: 'DictionaryType',
+          displayName: '字典管理',
+          description: '统一字典类型管理',
+          icon: 'Collection',
+          fields: [
+            { name: 'code', displayName: '字典编码', type: 'string', maxLength: 50, isRequired: true, order: 1 },
+            { name: 'name', displayName: '字典名称', type: 'string', maxLength: 100, isRequired: true, order: 2 },
+            { name: 'description', displayName: '字典描述', type: 'string', maxLength: 500, isRequired: false, order: 3 },
+            { name: 'sort', displayName: '排序', type: 'int', isRequired: true, defaultValue: '0', order: 4 },
+            { name: 'isEnabled', displayName: '是否启用', type: 'bool', isRequired: true, defaultValue: 'true', order: 5 }
+          ]
+        }
+      ]
+    }
+    
+    // ✅ 更新基础配置
+    config.systemName = permissionSystemConfig.systemName
+    config.moduleName = permissionSystemConfig.moduleName
+    config.displayName = permissionSystemConfig.displayName
+    config.architecturePattern = permissionSystemConfig.architecturePattern
+    config.databaseProvider = permissionSystemConfig.databaseProvider
+    config.parentMenuId = permissionSystemConfig.parentMenuId
+    config.menuIcon = permissionSystemConfig.menuIcon
+    
+    // ✅ 自动切换到批量模式
+    batchMode.value = true
+    
+    // ✅ 填充批量实体列表
+    batchEntities.value = permissionSystemConfig.entities.map(entity => ({
+      name: entity.name,
+      displayName: entity.displayName,
+      icon: entity.icon,
+      fields: entity.fields,
+      generated: false,
+      logs: []
+    }))
+    
+    // 关闭加载消息
+    loadingMessage.close()
+    
+    // 添加详细日志
+    addLog('🎉 权限管理系统配置导入成功 - 6个核心实体', 'success')
+    addLog('📋 系统名称: SmartAbp', 'info')
+    addLog('📋 模块名称: PermissionManagement', 'info') 
+    addLog('📋 显示名称: 权限管理系统', 'info')
+    addLog('🏗️ 架构模式: DDD (领域驱动设计)', 'info')
+    addLog('💾 数据库: SQL Server', 'info')
+    addLog('✅ 已自动切换到批量生成模式', 'info')
+    
+    // 详细实体列表
+    permissionSystemConfig.entities.forEach((entity, index) => {
+      addLog(`📦 实体${index + 1}: ${entity.displayName} (${entity.name}) - ${entity.fields.length}个字段`, 'info')
+    })
+    
+    addLog('🚀 6模块权限管理系统配置完成，准备"吃自己的狗粮"！', 'success')
+    
+    // 成功消息
+    ElMessage({
+      message: '🎉 完整权限管理系统配置导入成功！包含6个核心实体：组织、用户、菜单、角色、权限、字典\n✅ 已自动切换到批量生成模式，点击"批量生成全部"即可一键生成',
+      type: 'success',
+      duration: 8000,
+      showClose: true,
+      dangerouslyUseHTMLString: false
+    })
+    
+    // 保存状态
+    persistState()
+    
+    console.log('✅ 权限管理系统配置导入完成', config)
+    console.log('📊 包含实体数量:', permissionSystemConfig.entities.length)
+    console.log('📦 批量实体列表:', batchEntities.value)
+    
+  } catch (error) {
+    console.error('❌ 导入权限管理系统配置失败:', error)
+    addLog('❌ 导入权限管理系统配置失败', 'error')
+    ElMessage({
+      message: '导入权限管理系统配置失败，请检查控制台日志',
+      type: 'error',
+      duration: 3000
+    })
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -1149,6 +1514,26 @@ const selectMenuIcon = (name: string) => {
   }
 
   .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .permission-import-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      box-shadow: 0 4px 15px 0 rgba(102, 126, 234, 0.3);
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px 0 rgba(102, 126, 234, 0.4);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
+
     .theme-toggle {
       width: 40px;
       height: 40px;

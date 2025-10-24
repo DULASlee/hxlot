@@ -8,12 +8,8 @@
  * @license MIT
  */
 
-// 扩展ImportMeta类型以支持Vite的glob功能
-declare global {
-  interface ImportMeta {
-    glob: (pattern: string) => Record<string, () => Promise<any>>;
-  }
-}
+// ✅ 移除重复的ImportMeta.glob类型声明
+// Vite已经在client.d.ts中定义了这个类型，无需重复声明
 
 // Export components
 export * from './components';

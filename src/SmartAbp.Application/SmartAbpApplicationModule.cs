@@ -7,6 +7,7 @@ using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.TenantManagement;
 using SmartAbp.DevKit.Integration;
+using SmartAbp.Database.Abstraction;
 
 namespace SmartAbp;
 
@@ -14,6 +15,7 @@ namespace SmartAbp;
     typeof(SmartAbpDomainModule),
     typeof(SmartAbpApplicationContractsModule),
     typeof(SmartAbpDevKitModule), // 添加DevKit模块依赖
+    typeof(SmartAbpDatabaseAbstractionModule), // ✅ ABP平台底层增强：多数据库适配支持
     typeof(AbpAutoMapperModule),
     typeof(AbpFeatureManagementApplicationModule),
     typeof(AbpSettingManagementApplicationModule),

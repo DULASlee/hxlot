@@ -60,7 +60,6 @@ namespace SmartAbp.Domain.Entities.LowCode
         /// 页面配置（JSON存储，包含form-create规则、列表配置、详情配置等）
         /// </summary>
         [Required]
-        [Column(TypeName = "nvarchar(max)")]
         public PageConfigDto PageConfig { get; set; } = default!;
 
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

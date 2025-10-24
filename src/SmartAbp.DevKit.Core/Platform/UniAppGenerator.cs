@@ -123,7 +123,7 @@ public class UniAppGenerator : BaseFrontendGenerator
                 Name = f.Name,
                 Label = f.Label,
                 Type = f.Type,
-                Required = f.Required,
+                Required = f.IsRequired,
                 MaxLength = f.MaxLength,
                 DisplayOrder = f.DisplayOrder,
                 
@@ -131,7 +131,7 @@ public class UniAppGenerator : BaseFrontendGenerator
                 Component = MapToComponentLibrary(f.Type),
                 
                 // 映射验证规则到uView格式
-                ValidationRules = MapValidationRules(f.Required, f.MaxLength, f.Type)
+                ValidationRules = MapValidationRules(f.IsRequired, f.MaxLength, f.Type)
             })
             .ToList();
 

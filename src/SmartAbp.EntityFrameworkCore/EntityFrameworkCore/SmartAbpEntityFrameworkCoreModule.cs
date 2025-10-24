@@ -19,6 +19,7 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Volo.Abp.Studio;
 using Volo.Abp.Timing;
 using Microsoft.EntityFrameworkCore;
+using SmartAbp.Database.Abstraction;
 
 namespace SmartAbp.EntityFrameworkCore;
 
@@ -35,7 +36,8 @@ namespace SmartAbp.EntityFrameworkCore;
     typeof(AbpIdentityEntityFrameworkCoreModule),
     typeof(AbpOpenIddictEntityFrameworkCoreModule),
     typeof(AbpTenantManagementEntityFrameworkCoreModule),
-    typeof(BlobStoringDatabaseEntityFrameworkCoreModule)
+    typeof(BlobStoringDatabaseEntityFrameworkCoreModule),
+    typeof(SmartAbpDatabaseAbstractionModule) // ✅ ABP平台底层增强：多数据库适配支持
     )]
 public class SmartAbpEntityFrameworkCoreModule : AbpModule
 {

@@ -19,6 +19,9 @@
 
     <!-- 添加Integration层引用 -->
     <ProjectReference Include="..\SmartAbp.DevKit.Integration\SmartAbp.DevKit.Integration.csproj" />
+    
+    <!-- ✅ 添加数据库抽象层引用 -->
+    <ProjectReference Include="..\SmartAbp.Database.Abstraction\SmartAbp.Database.Abstraction.csproj" />
   </ItemGroup>
 
   <ItemGroup>
