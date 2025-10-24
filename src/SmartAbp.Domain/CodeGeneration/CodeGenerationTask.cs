@@ -78,6 +78,8 @@ namespace SmartAbp.Domain.CodeGeneration
             ConfigurationJson = configurationJson;
             OutputDirectory = outputDirectory ?? $"output/{taskName}_{DateTime.Now:yyyyMMddHHmmss}";
             Status = TaskStatus.Pending;
+            ResultJson = "{}"; // 初始化为空JSON对象
+            ErrorMessage = ""; // 初始化为空字符串（SQLite不允许NULL）
         }
 
         /// <summary>
@@ -87,6 +89,8 @@ namespace SmartAbp.Domain.CodeGeneration
         {
             Status = TaskStatus.Running;
             StartTime = DateTime.Now;
+            ErrorMessage = ""; // 清空错误信息
+            ResultJson = "{}"; // 重置结果JSON
         }
 
         /// <summary>

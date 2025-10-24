@@ -13,7 +13,7 @@ namespace SmartAbp.HttpApi.Controllers.CodeGeneration
     /// 代码生成控制器
     /// </summary>
     [Area("app")]
-    [Route("api/code-generation")]
+    [Route("api/app/code-generation")]
     [RemoteService(Name = "Default")]
     public class CodeGenerationController : AbpControllerBase
     {
