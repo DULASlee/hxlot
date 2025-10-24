@@ -5,7 +5,7 @@ import type {
     UniAppGeneratorConfigDto
 } from '@/types/code-generation.types'
 import type { PagedAndSortedResultRequestDto, PagedResultDto } from '@/types/common.types'
-import { http } from '@/utils/http'
+import http from '@/utils/http'
 
 /**
  * 代码生成API

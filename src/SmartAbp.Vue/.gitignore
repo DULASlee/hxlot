@@ -280,3 +280,4 @@ wp-config.php
 # 任何修改请参考项目架构决策记录 (ADR)
 
 
+output/
