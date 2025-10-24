@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using SmartAbp.CodeGeneration.Dtos;
+using SmartAbp.Application.Contracts.CodeGeneration.Dtos;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
-namespace SmartAbp.CodeGeneration
+namespace SmartAbp.Application.Contracts.CodeGeneration
 {
     /// <summary>
     /// 代码生成应用服务接口

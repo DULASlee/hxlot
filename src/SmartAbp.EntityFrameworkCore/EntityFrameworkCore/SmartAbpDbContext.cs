@@ -18,6 +18,7 @@ using SmartAbp.CodeGenerator.Domain;
 using SmartAbp.Domain.Entities.LowCode;
 using SmartAbp.Domain.BusinessRules;
 using SmartAbp.Domain.Entities.MES;
+using SmartAbp.Domain.CodeGeneration;
 
 namespace SmartAbp.EntityFrameworkCore;
 
@@ -58,6 +59,9 @@ public class SmartAbpDbContext :
     public DbSet<ProductionLine> ProductionLines { get; set; }
     public DbSet<Equipment> Equipments { get; set; }
     public DbSet<SensorData> SensorDataList { get; set; }
+
+    // 🔥 代码生成任务管理（新增）
+    public DbSet<CodeGenerationTask> CodeGenerationTasks { get; set; }
 
 
     #region Entities from the modules
@@ -325,6 +329,27 @@ public class SmartAbpDbContext :
             b.HasIndex(x => x.Mode);
             b.HasIndex(x => new { x.UserId, x.Status });
             b.HasIndex(x => new { x.UserId, x.CreationTime });
+        });
+
+        // 🔥 配置CodeGenerationTask实体（代码生成任务管理）
+        builder.Entity<CodeGenerationTask>(b =>
+        {
+            b.ToTable(SmartAbpConsts.DbTablePrefix + "CodeGenerationTasks", SmartAbpConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.Property(x => x.TaskName).IsRequired().HasMaxLength(256);
+            b.Property(x => x.GeneratorType).IsRequired().HasMaxLength(64).HasConversion<string>();
+            b.Property(x => x.ConfigurationJson).IsRequired();
+            b.Property(x => x.Status).IsRequired().HasConversion<string>();
+            b.Property(x => x.OutputDirectory).HasMaxLength(1000);
+            b.Property(x => x.ErrorMessage).HasMaxLength(4000);
+            b.Property(x => x.ResultJson).HasMaxLength(8000);
+
+            b.HasIndex(x => x.GeneratorType);
+            b.HasIndex(x => x.Status);
+            b.HasIndex(x => x.TenantId);
+            b.HasIndex(x => new { x.GeneratorType, x.Status });
+            b.HasIndex(x => x.CreationTime);
         });
 
         // 🔥 MES生产线监控实体配置（Phase A）

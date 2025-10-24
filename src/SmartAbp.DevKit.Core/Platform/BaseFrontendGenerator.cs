@@ -415,9 +415,14 @@ public class FrontendFieldConfig
     /// </summary>
     public bool IsSortable { get; set; } = true;
 
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 🟡 重复定义已移除（DisplayOrder在381行已定义）
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    /*
     /// <summary>
     /// 显示顺序
     /// </summary>
     public int DisplayOrder { get; set; }
+    */
 }
 

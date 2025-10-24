@@ -1,12 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using SmartAbp.CodeGeneration.Dtos;
+using SmartAbp.Application.Contracts.CodeGeneration;
+using SmartAbp.Application.Contracts.CodeGeneration.Dtos;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.AspNetCore.Mvc;
 
-namespace SmartAbp.Controllers.CodeGeneration
+namespace SmartAbp.HttpApi.Controllers.CodeGeneration
 {
     /// <summary>
     /// 代码生成控制器

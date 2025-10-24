@@ -1,7 +1,8 @@
 using System;
+using SmartAbp.Domain.CodeGeneration;
 using Volo.Abp.Application.Dtos;
 
-namespace SmartAbp.CodeGeneration.Dtos
+namespace SmartAbp.Application.Contracts.CodeGeneration.Dtos
 {
     /// <summary>
     /// 代码生成任务DTO
@@ -78,6 +79,42 @@ namespace SmartAbp.CodeGeneration.Dtos
         /// 输出目录（可选）
         /// </summary>
         public string OutputDirectory { get; set; }
+    }
+
+    /// <summary>
+    /// 更新代码生成任务输入
+    /// </summary>
+    public class UpdateCodeGenerationTaskDto
+    {
+        /// <summary>
+        /// 任务名称
+        /// </summary>
+        public string TaskName { get; set; }
+
+        /// <summary>
+        /// 配置JSON
+        /// </summary>
+        public string ConfigurationJson { get; set; }
+
+        /// <summary>
+        /// 输出目录
+        /// </summary>
+        public string OutputDirectory { get; set; }
+
+        /// <summary>
+        /// 任务状态
+        /// </summary>
+        public TaskStatus? Status { get; set; }
+
+        /// <summary>
+        /// 结果JSON
+        /// </summary>
+        public string ResultJson { get; set; }
+
+        /// <summary>
+        /// 错误信息
+        /// </summary>
+        public string ErrorMessage { get; set; }
     }
 
     /// <summary>
@@ -232,5 +269,35 @@ namespace SmartAbp.CodeGeneration.Dtos
         /// </summary>
         public double Duration { get; set; }
     }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // 🟡 枚举定义已移至Domain层（避免重复定义）
+    // 使用: SmartAbp.Domain.CodeGeneration.CodeGeneratorType
+    // 使用: SmartAbp.Domain.CodeGeneration.TaskStatus
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    /*
+    /// <summary>
+    /// 代码生成器类型（已移至Domain层）
+    /// </summary>
+    public enum CodeGeneratorType
+    {
+        MESDashboard = 1,
+        UniAppMobile = 2,
+        WebAdmin = 3,
+        MicroserviceAPI = 4
+    }
+
+    /// <summary>
+    /// 任务状态（已移至Domain层）
+    /// </summary>
+    public enum TaskStatus
+    {
+        Pending = 0,
+        Running = 1,
+        Succeeded = 2,
+        Failed = 3,
+        Cancelled = 4
+    }
+    */
 }
 

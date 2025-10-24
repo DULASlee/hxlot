@@ -4,12 +4,16 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SmartAbp.CodeGeneration.Dtos;
+using SmartAbp.Application.CodeGeneration.Generators.MES;
+using SmartAbp.Application.CodeGeneration.Generators.UniApp;
+using SmartAbp.Application.Contracts.CodeGeneration;
+using SmartAbp.Application.Contracts.CodeGeneration.Dtos;
+using SmartAbp.Domain.CodeGeneration;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
-namespace SmartAbp.CodeGeneration
+namespace SmartAbp.Application.CodeGeneration
 {
     /// <summary>
     /// 代码生成应用服务
@@ -17,10 +21,17 @@ namespace SmartAbp.CodeGeneration
     public class CodeGenerationAppService : ApplicationService, ICodeGenerationAppService
     {
         private readonly IRepository<CodeGenerationTask, Guid> _repository;
+        private readonly MesDashboardGenerator _mesDashboardGenerator;
+        private readonly UniAppGenerator _uniAppGenerator;
 
-        public CodeGenerationAppService(IRepository<CodeGenerationTask, Guid> repository)
+        public CodeGenerationAppService(
+            IRepository<CodeGenerationTask, Guid> repository,
+            ILogger<MesDashboardGenerator> mesLogger,
+            ILogger<UniAppGenerator> uniAppLogger)
         {
             _repository = repository;
+            _mesDashboardGenerator = new MesDashboardGenerator(mesLogger);
+            _uniAppGenerator = new UniAppGenerator(uniAppLogger);
         }
 
         /// <summary>
@@ -163,33 +174,15 @@ namespace SmartAbp.CodeGeneration
         /// </summary>
         private async Task<List<string>> GenerateMESDashboardFilesAsync(MESGeneratorConfigDto config, string outputDir)
         {
-            var files = new List<string>();
-
-            // 确保输出目录存在
-            Directory.CreateDirectory(outputDir);
-
-            // 生成大屏组件文件
-            foreach (var dashboardType in config.SelectedDashboards)
+            // 使用真实的MES大屏生成器
+            var result = await _mesDashboardGenerator.GenerateAsync(config, outputDir);
+            
+            if (!result.Success)
             {
-                var componentPath = Path.Combine(outputDir, "dashboards", $"{dashboardType}.vue");
-                Directory.CreateDirectory(Path.GetDirectoryName(componentPath));
-
-                var content = GenerateDashboardComponent(dashboardType, config);
-                await File.WriteAllTextAsync(componentPath, content);
-                files.Add(componentPath);
+                throw new Exception(result.ErrorMessage);
             }
 
-            // 生成配置文件
-            var configPath = Path.Combine(outputDir, "dashboard-config.json");
-            await File.WriteAllTextAsync(configPath, JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true }));
-            files.Add(configPath);
-
-            // 生成README
-            var readmePath = Path.Combine(outputDir, "README.md");
-            await File.WriteAllTextAsync(readmePath, GenerateMESReadme(config));
-            files.Add(readmePath);
-
-            return files;
+            return new List<string>(result.GeneratedFiles);
         }
 
         /// <summary>
@@ -197,37 +190,15 @@ namespace SmartAbp.CodeGeneration
         /// </summary>
         private async Task<List<string>> GenerateUniAppFilesAsync(UniAppGeneratorConfigDto config, string outputDir)
         {
-            var files = new List<string>();
-
-            // 确保输出目录存在
-            Directory.CreateDirectory(outputDir);
-
-            // 生成pages目录和页面文件
-            foreach (var module in config.SelectedModules)
+            // 使用真实的UniApp生成器
+            var result = await _uniAppGenerator.GenerateAsync(config, outputDir);
+            
+            if (!result.Success)
             {
-                var pagePath = Path.Combine(outputDir, "pages", module, "list.vue");
-                Directory.CreateDirectory(Path.GetDirectoryName(pagePath));
-
-                var content = GenerateUniAppPage(module, config);
-                await File.WriteAllTextAsync(pagePath, content);
-                files.Add(pagePath);
+                throw new Exception(result.ErrorMessage);
             }
 
-            // 生成配置文件
-            var manifestPath = Path.Combine(outputDir, "manifest.json");
-            await File.WriteAllTextAsync(manifestPath, GenerateManifestJson(config));
-            files.Add(manifestPath);
-
-            var pagesPath = Path.Combine(outputDir, "pages.json");
-            await File.WriteAllTextAsync(pagesPath, GeneratePagesJson(config));
-            files.Add(pagesPath);
-
-            // 生成README
-            var readmePath = Path.Combine(outputDir, "README.md");
-            await File.WriteAllTextAsync(readmePath, GenerateUniAppReadme(config));
-            files.Add(readmePath);
-
-            return files;
+            return new List<string>(result.GeneratedFiles);
         }
 
         private string GenerateDashboardComponent(string dashboardType, MESGeneratorConfigDto config)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
-namespace SmartAbp.CodeGeneration
+namespace SmartAbp.Domain.CodeGeneration
 {
     /// <summary>
     /// 代码生成任务实体
