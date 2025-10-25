@@ -274,8 +274,8 @@ type SimplifiedFieldConfigDto = {
   order: number
   precision?: number
   scale?: number
-  minValue?: string
-  maxValue?: string
+  minValue?: number | null
+  maxValue?: number | null
   pattern?: string
   uiControl: string
 }
@@ -422,7 +422,7 @@ function addCommonFields() {
       displayName: '状态',
       type: 'int',
       isRequired: true,
-      defaultValue: '0',
+      defaultValue: 0,
       uiControl: 'select',
       order: 3,
       comment: '状态（0:草稿 1:启用 2:停用）'
@@ -449,7 +449,7 @@ async function loadPreviewFiles() {
       requestBody: formData as any  // 临时类型修复
     })
     
-    previewFiles.value = result.items || []
+    previewFiles.value = (result.items || []).map(item => item.userName || item.name || 'unknown')
     
     ElMessage.success(`预览 ${previewFiles.value.length} 个文件`)
   } catch (error: any) {

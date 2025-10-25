@@ -90,7 +90,7 @@ export class EnhancedApiClientGenerator {
  ${this.config.generateTimeout ? '* - 超时控制' : ''}
  */
 
-import { http } from '${appAlias}utils/http'
+import http from '${appAlias}utils/http'
 import type {
   ${entityName}Dto,
   Create${entityName}Dto,

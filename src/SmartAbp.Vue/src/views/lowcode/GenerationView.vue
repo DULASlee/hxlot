@@ -235,7 +235,8 @@ import { ElAlert, ElButton, ElCard, ElForm, ElFormItem, ElInput, ElMessage, ElOp
 import { computed, ref, watch } from "vue"
 
 // ✅ 使用真实的代码生成器API
-import { codeGeneratorApi, type GenerationResult, type ModuleGenerationConfig, type Template } from "@smartabp/lowcode-api"
+import { codeGeneratorApi, type GenerationResult, type Template } from "@smartabp/lowcode-api"
+import type { ModuleDto } from '@/api/generated'
 
 // 🔥 新增：导入验证功能
 import { useValidation, type ValidationOptions } from "@smartabp/lowcode-shared/composables/useValidation"
@@ -607,7 +608,7 @@ const generateCode = async () => {
 
     // ✅ 修复: 构建符合ModuleGenerationConfig接口的完整配置
     const generationConfig: ModuleGenerationConfig = {
-      moduleMetadata: config,
+      moduleMetadata: config as ModuleDto,
       targetPath: './generated', // 默认生成路径
       overwriteExisting: true,
       generateTests: false,

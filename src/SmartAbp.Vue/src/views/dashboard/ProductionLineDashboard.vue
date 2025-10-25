@@ -257,7 +257,7 @@ import {
   TrendCharts,
   CircleCheck,
   CircleClose,
-  Temperature,
+  Warning,
   Odometer,
   VideoPlay,
   OfficeBuilding

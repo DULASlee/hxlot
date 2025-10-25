@@ -354,10 +354,12 @@ function moveField(index: number, direction: 'up' | 'down') {
   }
 
   // 交换位置
-  ;[updatedFields[index], updatedFields[targetIndex]] = [
-    updatedFields[targetIndex],
-    updatedFields[index]
-  ]
+  const field1 = updatedFields[index]
+  const field2 = updatedFields[targetIndex]
+
+  if (field1 && field2) {
+    ;[updatedFields[index], updatedFields[targetIndex]] = [field2, field1]
+  }
 
   // 更新order
   updatedFields.forEach((field, i) => {

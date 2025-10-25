@@ -44,7 +44,17 @@ export const codeGeneratorApi: CodeGeneratorApi = {
    * @returns 数据库结构信息
    */
   async introspectDatabase(req: any): Promise<any> {
-    return await http.post<any>('/api/code-generator/introspect-db', req)
+    console.log('🌐 [API] introspectDatabase 调用，URL: /api/code-generator/introspect-db')
+    console.log('🌐 [API] 请求参数:', req)
+    try {
+      const result = await http.post<any>('/api/code-generator/introspect-db', req)
+      console.log('🌐 [API] introspectDatabase 成功，返回表数量:', result?.tables?.length)
+      return result
+    } catch (error: any) {
+      console.error('🌐 [API] introspectDatabase 失败!')
+      console.error('🌐 [API] 错误:', error)
+      throw error
+    }
   },
 
   /**

@@ -274,7 +274,7 @@ async function bootstrap() {
   // 🔐 初始化认证状态 - 从localStorage恢复登录信息
   const { useAuthStore } = await import("./stores/modules/auth")
   const authStore = useAuthStore()
-  authStore.initialize()
+  await authStore.initialize()
   logger.info("[Auth] 认证状态已初始化", {
     isAuthenticated: authStore.isAuthenticated,
     hasUser: !!authStore.userInfo

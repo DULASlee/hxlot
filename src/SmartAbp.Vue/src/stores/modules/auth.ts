@@ -1,5 +1,7 @@
+import type { Volo_Abp_Account_Web_Areas_Account_Controllers_Models_AbpLoginResult, Volo_Abp_Account_Web_Areas_Account_Controllers_Models_UserLoginInfo } from '@/api/generated'
+import { LoginService } from '@/api/generated'
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 
 /**
  * 用户信息接口
@@ -41,47 +43,96 @@ export const useAuthStore = defineStore('auth', () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 状态定义
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  
+
   const token = ref<string | null>(
     localStorage.getItem('access_token') || localStorage.getItem('smartabp_token')
   )
-  
+
   const refreshToken = ref<string | null>(
     localStorage.getItem('refresh_token') || localStorage.getItem('smartabp_refresh_token')
   )
-  
+
   const userInfo = ref<UserInfo | null>(null)
-  
+
   const isLoading = ref<boolean>(false)
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 私有方法
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  
+
   /**
    * 从本地存储初始化用户信息
    */
   const initializeFromStorage = (): void => {
-    const storedUser = localStorage.getItem('smartabp_user')
-    if (storedUser) {
-      try {
-        const user = JSON.parse(storedUser)
-        userInfo.value = {
-          id: user.id,
-          userName: user.userName || user.username,
-          email: user.email,
-          roles: user.roles || ['user'] // 默认角色
+    // 优先从ABP认证系统获取用户信息
+    const abpToken = localStorage.getItem('_abp_auth_token') ||
+      localStorage.getItem('Abp.AuthToken') ||
+      localStorage.getItem('access_token')
+
+    if (abpToken) {
+      console.log('🔐 [Auth] 检测到ABP认证token，尝试获取应用配置...')
+
+      // 如果有ABP token，尝试获取应用配置
+      syncFromABPConfig()
+    } else {
+      // 后备：从旧的SmartAbp存储获取
+      const storedUser = localStorage.getItem('smartabp_user')
+      if (storedUser) {
+        try {
+          const user = JSON.parse(storedUser)
+          userInfo.value = {
+            id: user.id,
+            userName: user.userName || user.username,
+            email: user.email,
+            roles: user.roles || ['user'] // 默认角色
+          }
+          console.log('🔐 [Auth] 从本地存储恢复用户信息:', userInfo.value)
+        } catch (error) {
+          console.error('解析存储用户信息失败:', error)
         }
-      } catch (error) {
-        console.error('解析存储用户信息失败:', error)
       }
+    }
+  }
+
+  /**
+   * 从ABP应用配置同步用户信息
+   */
+  const syncFromABPConfig = async (): Promise<void> => {
+    try {
+      const { AbpApplicationConfigurationService } = await import('@/api/generated')
+      const appConfig = await AbpApplicationConfigurationService.getApiAbpApplicationConfiguration({
+        includeLocalizationResources: false
+      })
+
+      if (appConfig.currentUser && appConfig.currentUser.id) {
+        userInfo.value = {
+          id: appConfig.currentUser.id,
+          userName: appConfig.currentUser.userName || 'unknown',
+          email: appConfig.currentUser.email || `${appConfig.currentUser.userName}@example.com`,
+          roles: appConfig.currentUser.roles || ['user']
+        }
+
+        // 获取ABP token
+        const abpToken = localStorage.getItem('_abp_auth_token') ||
+          localStorage.getItem('Abp.AuthToken') ||
+          localStorage.getItem('access_token')
+
+        if (abpToken) {
+          token.value = abpToken
+          console.log('🔐 [Auth] 从ABP配置同步用户信息成功:', userInfo.value)
+        }
+      }
+    } catch (error: any) {
+      console.warn('🔐 [Auth] 从ABP配置同步用户信息失败:', error.message)
+      // 如果ABP同步失败，尝试从旧存储恢复
+      initializeFromStorage()
     }
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 计算属性
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  
+
   /**
    * 是否已认证
    */
@@ -104,14 +155,14 @@ export const useAuthStore = defineStore('auth', () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 公共方法
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  
+
   /**
    * 设置Token
    */
   const setToken = (accessToken: string, refreshTokenValue?: string): void => {
     token.value = accessToken
     localStorage.setItem('access_token', accessToken)
-    
+
     if (refreshTokenValue) {
       refreshToken.value = refreshTokenValue
       localStorage.setItem('refresh_token', refreshTokenValue)
@@ -150,31 +201,101 @@ export const useAuthStore = defineStore('auth', () => {
    */
   const login = async (credentials: LoginCredentials): Promise<LoginResponse> => {
     isLoading.value = true
-    
+
     try {
-      // TODO: 替换为真实API调用
-      // 模拟API调用
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      if (credentials.username === 'admin' && credentials.password === '1q2w3E*') {
-        const mockToken = 'mock-jwt-token-' + Date.now()
-        const mockUser: UserInfo = {
-          id: '1',
-          userName: credentials.username,
-          email: 'admin@example.com',
-          roles: ['admin']
-        }
-        
-        setToken(mockToken)
-        setUserInfo(mockUser)
-        
-        return {
-          success: true,
-          user: mockUser,
-          token: mockToken
+      console.log('🔐 [Auth] 开始登录:', credentials.username)
+
+      // 构建ABP认证API请求参数
+      const loginRequest: Volo_Abp_Account_Web_Areas_Account_Controllers_Models_UserLoginInfo = {
+        userNameOrEmailAddress: credentials.username,
+        password: credentials.password,
+        rememberMe: credentials.rememberMe || false
+      }
+
+      // 调用后端认证API
+      const loginResult: Volo_Abp_Account_Web_Areas_Account_Controllers_Models_AbpLoginResult =
+        await LoginService.postApiAccountLogin({ requestBody: loginRequest })
+
+      console.log('🔐 [Auth] 登录API响应:', loginResult)
+
+      // 根据ABP登录结果处理
+      if (loginResult.result === 1) { // Success
+        // 登录成功，ABP会自动设置Cookie和认证状态
+        console.log('🔐 [Auth] 登录成功，ABP认证完成')
+
+        // 等待ABP认证状态完全设置
+        await new Promise(resolve => setTimeout(resolve, 500))
+
+        // 获取应用配置（包含当前用户信息）
+        const { AbpApplicationConfigurationService } = await import('@/api/generated')
+        const appConfig = await AbpApplicationConfigurationService.getApiAbpApplicationConfiguration({
+          includeLocalizationResources: false
+        })
+
+        if (appConfig.currentUser && appConfig.currentUser.id) {
+          const user: UserInfo = {
+            id: appConfig.currentUser.id,
+            userName: appConfig.currentUser.userName || credentials.username,
+            email: appConfig.currentUser.email || `${credentials.username}@example.com`,
+            roles: appConfig.currentUser.roles || ['user']
+          }
+
+          // ABP通常会设置Cookie而不是token，这里尝试获取各种可能的认证标识
+          const authToken = localStorage.getItem('_abp_auth_token') ||
+            localStorage.getItem('Abp.AuthToken') ||
+            localStorage.getItem('access_token') ||
+            document.cookie.match(/\.AspNetCore\.Auth=([^;]+)/)?.[1]
+
+          if (authToken) {
+            setToken(authToken)
+            console.log('🔐 [Auth] 认证token获取成功')
+          } else {
+            console.log('🔐 [Auth] 未找到token，使用Cookie认证')
+          }
+
+          setUserInfo(user)
+
+          console.log('🔐 [Auth] 用户信息设置完成:', user)
+
+          return {
+            success: true,
+            user: user,
+            token: authToken || ''
+          }
+        } else {
+          throw new Error('登录成功但未获取到用户信息')
         }
       } else {
-        throw new Error('用户名或密码错误')
+        // 登录失败，根据result值给出不同错误信息
+        let errorMessage = '用户名或密码错误'
+        switch (loginResult.result) {
+          case 2: // InvalidUserNameOrEmailAddress
+            errorMessage = '用户名或邮箱不存在'
+            break
+          case 3: // InvalidPassword
+            errorMessage = '密码错误'
+            break
+          case 4: // UserIsNotActive
+            errorMessage = '用户已被禁用，请联系管理员'
+            break
+          case 5: // EmailAddressNotConfirmed
+            errorMessage = '邮箱地址未确认，请检查邮箱'
+            break
+          default:
+            errorMessage = loginResult.description || '登录失败'
+        }
+        throw new Error(errorMessage)
+      }
+    } catch (error: any) {
+      console.error('🔐 [Auth] 登录失败:', error)
+
+      // 如果是API错误，提取ABP错误信息
+      if (error.response?.data?.error?.message) {
+        throw new Error(error.response.data.error.message)
+      } else if (error.message) {
+        throw error
+      } else {
+        throw new Error('网络连接失败，请检查网络设置')
       }
     } finally {
       isLoading.value = false
@@ -184,45 +305,51 @@ export const useAuthStore = defineStore('auth', () => {
   /**
    * 登出
    */
-  const logout = (): void => {
-    clearAuth()
-    
-    // 同时清理smartabp认证系统的存储
-    localStorage.removeItem('smartabp_token')
-    localStorage.removeItem('smartabp_user')
-    localStorage.removeItem('smartabp_refresh_token')
+  const logout = async (): Promise<void> => {
+    try {
+      console.log('🔐 [Auth] 开始登出...')
+
+      // 调用后端登出API
+      await LoginService.getApiAccountLogout()
+      console.log('🔐 [Auth] 后端登出API调用成功')
+    } catch (error: any) {
+      console.warn('🔐 [Auth] 后端登出API失败，但继续执行本地清理:', error.message)
+    } finally {
+      // 无论后端API是否成功，都要清理本地认证状态
+      clearAuth()
+
+      // 清理ABP相关的认证存储
+      localStorage.removeItem('_abp_auth_token')
+      localStorage.removeItem('Abp.AuthToken')
+      localStorage.removeItem('Abp.AuthRefreshToken')
+      localStorage.removeItem('smartabp_token')
+      localStorage.removeItem('smartabp_user')
+      localStorage.removeItem('smartabp_refresh_token')
+
+      console.log('🔐 [Auth] 本地认证状态清理完成')
+    }
   }
 
   /**
    * 初始化认证状态
    */
-  const initialize = (): void => {
-    initializeFromStorage()
-    
+  const initialize = async (): Promise<void> => {
+    await initializeFromStorage()
+
     // 监听localStorage变化，实现多标签页同步
-    window.addEventListener('storage', (event: StorageEvent) => {
-      if (event.key === 'smartabp_token' || event.key === 'access_token') {
+    window.addEventListener('storage', async (event: StorageEvent) => {
+      if (event.key === '_abp_auth_token' || event.key === 'Abp.AuthToken' || event.key === 'access_token') {
         if (event.newValue) {
           token.value = event.newValue
+          // 重新同步用户信息
+          await syncFromABPConfig()
         } else {
-          logout()
-        }
-      } else if (event.key === 'smartabp_user') {
-        if (event.newValue) {
-          try {
-            const user = JSON.parse(event.newValue)
-            userInfo.value = {
-              id: user.id,
-              userName: user.userName || user.username,
-              email: user.email,
-              roles: user.roles || ['user']
-            }
-          } catch (error) {
-            console.error('解析用户信息失败:', error)
-          }
+          await logout()
         }
       }
     })
+
+    console.log('🔐 [Auth] 认证系统初始化完成')
   }
 
   /**
@@ -231,10 +358,10 @@ export const useAuthStore = defineStore('auth', () => {
   const syncFromSmartAbp = (): void => {
     const smartabpToken = localStorage.getItem('smartabp_token')
     const smartabpUser = localStorage.getItem('smartabp_user')
-    
+
     if (smartabpToken && smartabpUser) {
       token.value = smartabpToken
-      
+
       try {
         const user = JSON.parse(smartabpUser)
         userInfo.value = {
@@ -277,18 +404,18 @@ export const useAuthStore = defineStore('auth', () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // 返回Store接口
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  
+
   return {
     // 状态
     token,
     refreshToken,
     userInfo,
     isLoading,
-    
+
     // 计算属性
     isAuthenticated,
     hasRole,
-    
+
     // 方法
     setToken,
     setUserInfo,
@@ -298,7 +425,7 @@ export const useAuthStore = defineStore('auth', () => {
     logout,
     initialize,
     syncFromSmartAbp,
-    
+
     // 兼容方法
     fetchUserInfo,
     refreshTokenMethod

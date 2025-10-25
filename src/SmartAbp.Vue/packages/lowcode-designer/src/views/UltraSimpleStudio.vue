@@ -22,26 +22,17 @@
           </div>
           <div class="header-actions">
             <!-- ✅ 新增：批量模式开关 -->
-            <el-switch 
-              v-model="batchMode" 
-              active-text="批量生成模式"
-              inactive-text="单实体模式"
-              class="batch-mode-switch"
-              @change="onBatchModeChange"
-            />
-            
+            <el-switch v-model="batchMode" active-text="批量生成模式" inactive-text="单实体模式" class="batch-mode-switch"
+              @change="onBatchModeChange" />
+
             <!-- 🚀 吃自己的狗粮：导入权限管理系统 -->
             <el-tooltip content="导入权限管理系统配置（吃自己的狗粮）" placement="bottom">
-              <el-button 
-                type="primary" 
-                :icon="'Management'" 
-                size="small"
-                @click="importPermissionSystem"
+              <el-button type="primary" :icon="'Management'" size="small" @click="importPermissionSystem"
                 class="permission-import-btn">
                 权限系统
               </el-button>
             </el-tooltip>
-            
+
             <el-tooltip :content="mode === 'dark' ? t('common.switchToLight') : t('common.switchToDark')"
               placement="bottom">
               <el-button :icon="mode === 'dark' ? 'Sunny' : 'Moon'" circle class="theme-toggle" @click="toggleTheme" />
@@ -52,31 +43,28 @@
 
       <!-- ✅ 新增：批量实体列表 -->
       <div v-if="batchMode" class="batch-entity-list">
-        <el-card 
-          v-for="(entity, index) in batchEntities" 
-          :key="index"
-          class="entity-card"
+        <el-card v-for="(entity, index) in batchEntities" :key="index" class="entity-card"
           :class="{ generated: entity.generated }">
           <template #header>
             <div class="card-header">
-              <el-icon :size="24"><component :is="(EpIcons as any)[entity.icon]" /></el-icon>
+              <el-icon :size="24">
+                <component :is="(EpIcons as any)[entity.icon]" />
+              </el-icon>
               <span class="entity-name">{{ entity.displayName }}</span>
               <el-tag v-if="entity.generated" type="success">已生成</el-tag>
               <el-tag v-else type="info">待生成</el-tag>
             </div>
           </template>
-          
+
           <div class="entity-info">
             <p><strong>实体名称：</strong>{{ entity.name }}</p>
             <p><strong>字段数量：</strong>{{ entity.fields.length }}</p>
             <p><strong>生成文件：</strong>{{ entity.fileCount || '-' }}</p>
           </div>
-          
+
           <div class="entity-logs" v-if="entity.logs && entity.logs.length > 0">
             <el-timeline>
-              <el-timeline-item 
-                v-for="(log, idx) in entity.logs" 
-                :key="idx"
+              <el-timeline-item v-for="(log, idx) in entity.logs" :key="idx"
                 :type="log.type === 'success' ? 'success' : log.type === 'error' ? 'danger' : 'primary'">
                 {{ log.message }}
               </el-timeline-item>
@@ -112,9 +100,11 @@
                 <el-form-item :label="t('ultraSimple.form.systemName') + ' *'" required>
                   <!-- ✅ 修复：移除 allow-create 和 default-first-option -->
                   <el-select v-model="config.systemName" :placeholder="t('ultraSimple.form.systemNamePlaceholder')"
-                    size="large" style="width: 100%" ref="systemSelectRef"
+                    size="large" style="width: 100%" ref="systemSelectRef" allow-create
                     @visible-change="(open: boolean) => { if (open) console.log('🔎 打开系统名称下拉：当前systemName=', config.systemName) }"
                     @change="async (val: string) => { console.log('🟢 el-select change(systemName):', val); await nextTick(); const el = systemSelectRef?.value?.$el as HTMLElement | undefined; const txt = el?.querySelector('.el-select__selected-item, .el-input__inner') as HTMLElement | null; console.log('🧪 DOM选中文本(system)=', txt?.textContent, 'input.value=', (el?.querySelector('input') as HTMLInputElement | null)?.value); }">
+                    <el-option label="租户管理 (TenantManagement)" value="TenantManagement" />
+                    <el-option label="权限管理 (PermissionManagement)" value="PermissionManagement" />
                     <el-option label="智慧建造 (SmartConstruction)" value="SmartConstruction" />
                     <el-option label="生产执行系统 (MES)" value="MES" />
                     <el-option label="人力资源 (HRM)" value="HRM" />
@@ -276,20 +266,18 @@
           </div>
         </div>
       </div>
-      
+
       <!-- ✅ 新增：批量生成区域 -->
       <div v-if="batchMode" class="batch-generate-section">
-        <el-button 
-          type="primary" 
-          size="large"
-          :loading="batchGenerating"
-          :disabled="batchEntities.length === 0"
-          class="batch-generate-btn" 
-          @click="startBatchGeneration">
-          <el-icon class="mr-2"><Promotion /></el-icon>
-          {{ batchGenerating ? `正在生成 (${batchProgress}/${batchEntities.length})` : `批量生成全部（${batchEntities.length}个模块）` }}
+        <el-button type="primary" size="large" :loading="batchGenerating" :disabled="batchEntities.length === 0"
+          class="batch-generate-btn" @click="startBatchGeneration">
+          <el-icon class="mr-2">
+            <Promotion />
+          </el-icon>
+          {{ batchGenerating ? `正在生成 (${batchProgress}/${batchEntities.length})` : `批量生成全部（${batchEntities.length}个模块）`
+          }}
         </el-button>
-        
+
         <div class="batch-progress" v-if="batchGenerating">
           <el-progress :percentage="Math.round((batchProgress / batchEntities.length) * 100)" />
         </div>
@@ -300,7 +288,7 @@
 
 <script setup lang="ts">
 import * as EpIcons from '@element-plus/icons-vue'
-import type { ModuleMetadata, TableSchema } from '@smartabp/lowcode-api'
+import type { TableSchema } from '@smartabp/lowcode-api'
 import { codeGeneratorApi } from '@smartabp/lowcode-api'
 import { safeValidateModuleMetadata } from '@smartabp/lowcode-shared'
 import { useTheme } from '@smartabp/lowcode-shared/theme'
@@ -388,8 +376,32 @@ const config = reactive<MetadataConfig>({
 
 // 🔥 调试：监听所有变化
 if (import.meta.env.DEV) {
-  watch(() => selectedTable.value, (val) => {
-    console.log('🔍 selectedTable changed:', val)
+  watch(() => selectedTable.value, async (tableName) => {
+    console.log('🔍 selectedTable changed:', tableName)
+
+    // ✅ 关键修复：当选择表后，如果没有列信息，立即加载
+    if (tableName) {
+      const table = availableTables.value.find(t => t.name === tableName)
+      if (table && !table.schema) {
+        console.log('🔄 检测到表缺少列信息，正在加载...', tableName)
+        try {
+          const schemaResult = await codeGeneratorApi.introspectDatabase({
+            connectionStringName: 'Default',
+            provider: 'SqlServer',
+            tableName: tableName  // 只获取这一个表的信息
+          })
+
+          if (schemaResult.tables && schemaResult.tables.length > 0) {
+            const tableSchema = schemaResult.tables[0]
+            table.schema = tableSchema
+            table.columnCount = tableSchema.columns?.length || 0
+            console.log('✅ 表列信息加载成功:', tableName, '列数:', table.columnCount)
+          }
+        } catch (error) {
+          console.error('❌ 加载表列信息失败:', error)
+        }
+      }
+    }
   })
   watch(() => config.systemName, (val) => {
     console.log('🔍 config.systemName changed:', val)
@@ -416,20 +428,32 @@ const validationState = reactive({
   isValidating: false
 })
 
-// 计算属性
+// ✅ 参数清洗：提取括号中的英文部分
+const extractEnglishValue = (value: string): string => {
+  if (!value) return ''
+  // 匹配括号中的内容：如 "租户管理 (TenantManagement)" -> "TenantManagement"
+  const match = value.match(/\(([^)]+)\)/)
+  return match && match[1] ? match[1] : value
+}
+
+// 计算属性（使用清洗后的值）
 const derivedNamespace = computed(() => {
   if (!config.systemName || !config.moduleName) return ''
-  return `${config.systemName}.${config.moduleName}`
+  const cleanSystemName = extractEnglishValue(config.systemName)
+  const cleanModuleName = extractEnglishValue(config.moduleName)
+  return `${cleanSystemName}.${cleanModuleName}`
 })
 
 const derivedRoutePrefix = computed(() => {
   if (!config.moduleName) return ''
-  return `/${config.moduleName.toLowerCase()}`
+  const cleanModuleName = extractEnglishValue(config.moduleName)
+  return `/${cleanModuleName.toLowerCase()}`
 })
 
 const derivedApiEndpoint = computed(() => {
   if (!config.moduleName) return ''
-  return `/api/app/${config.moduleName.toLowerCase()}`
+  const cleanModuleName = extractEnglishValue(config.moduleName)
+  return `/api/app/${cleanModuleName.toLowerCase()}`
 })
 
 // 🔥 简化：移除验证状态依赖，只检查必填字段
@@ -459,18 +483,11 @@ const getMissingFields = (): string[] => {
 }
 
 // 将config转换为ModuleMetadata（不再为核心必填提供兜底默认）
-const convertToModuleMetadata = (): ModuleMetadata => {
+const convertToModuleMetadata = (): any => {
   const selectedTableData = availableTables.value.find(t => t.name === selectedTable.value)
 
-  const c = (config && (config as any).value) ? (config as any).value as MetadataConfig : {
-    systemName: '',
-    moduleName: '',
-    displayName: '',
-    architecturePattern: 'Crud',
-    databaseProvider: 'SqlServer',
-    parentMenuId: 'business',
-    menuIcon: 'database'
-  } as MetadataConfig
+  // ✅ 修复：config 是 reactive 对象，直接使用，不要用 .value
+  const c = config
 
   const ns = (derivedNamespace?.value && derivedNamespace.value.trim()) || ''
   const route = (derivedRoutePrefix?.value && derivedRoutePrefix.value.trim()) || ''
@@ -481,6 +498,11 @@ const convertToModuleMetadata = (): ModuleMetadata => {
   // 🔥 关键修复：将选中的表转换为 Entity
   const entities: any[] = []
   if (selectedTableData) {
+    // 🔍 调试：查看表结构数据
+    console.log('🔍 [调试] selectedTableData:', selectedTableData)
+    console.log('🔍 [调试] selectedTableData.schema:', selectedTableData.schema)
+    console.log('🔍 [调试] selectedTableData.schema?.columns:', selectedTableData.schema?.columns)
+
     const entityName = selectedTable.value || 'Entity'
     const entity = {
       id: crypto.randomUUID(),
@@ -585,71 +607,69 @@ const convertToModuleMetadata = (): ModuleMetadata => {
     entities.push(entity)
   }
 
-  // 🔥 核心修复：前端DTO字段与后端ModuleDto完全一致（使用backend-contracts.ts类型）
+  // 🔥 核心修复：完全匹配后端ModuleMetadataDto结构
+  // ✅ 参数清洗：提取纯英文值，避免中文标签被提交到后端
+  const cleanSystemName = extractEnglishValue(c.systemName)
+  const cleanModuleName = extractEnglishValue(c.moduleName)
+
   return {
+    // ✅ 后端ModuleMetadataDto必需字段（使用camelCase命名）
     id: crypto.randomUUID(),
-    systemName: c.systemName,
-    moduleName: c.moduleName, // ✅ 修复：使用moduleName（backend-contracts.ts第71行）
-    name: c.moduleName, // ✅ 向后兼容：别名到moduleName（backend-contracts.ts第72行）
+    systemName: cleanSystemName, // ✅ 必需：系统名称
+    moduleName: cleanModuleName, // ✅ 必需：模块名称（后端用这个字段）
     displayName: c.displayName,
-    description: `${c.displayName || c.moduleName} 模块`,
+    description: `${c.displayName || cleanModuleName} 模块`,
     version: '1.0.0',
+    architecturePattern: (c.architecturePattern || 'Crud') as any, // ✅ 临时绕过类型检查
     namespace: ns,
-    
-    // ✅ 架构配置（使用ModuleArchitectureConfig）
-    architectureConfig: {
-      databaseProvider: c.databaseProvider || 'SqlServer',
-      useMultiTenancy: false,
-      enableAuditing: true,
-      enableSoftDelete: true
+    author: 'SmartAbp Generator',
+
+    // ✅ 必需：DatabaseInfo (DatabaseConfigDto)
+    databaseInfo: {
+      connectionStringName: 'Default',
+      schema: schema,
+      provider: c.databaseProvider || 'SqlServer'
     },
-    
-    // ✅ 前端配置（使用ModuleFrontendConfig）
-    frontendConfig: {
-      framework: 'Vue3',
-      uiLibrary: 'Element Plus',
-      routePrefix: route
-    },
-    
-    // ✅ 代码生成选项（使用ModuleCodeGenOptions）
-    codeGenOptions: {
-      generateFrontend: true,
-      generateBackend: true,
-      generateMobilePages: false,
-      frontendFramework: 'Vue3',
-      backendTemplate: 'ABP vNext'
-    },
-    
-    // ✅ 权限配置（使用ModulePermissionConfig）
-    permissionConfig: {
-      permissionGroups: [],
-      defaultPermissions: []
-    },
-    
-    // ✅ 功能管理（使用ModuleFeatureManagement）
-    featureManagement: { 
+
+    // ✅ 必需：FeatureManagement (ModuleFeatureManagement)
+    featureManagement: {
       enableAdvancedQuery: true,
       enableBatchOperations: true,
       enableImportExport: true,
       enableVersioning: false
     },
-    
-    // ✅ 状态和基本信息
-    status: 'Active',
-    isActive: true,
-    
-    // ✅ 传入真实的实体数组
-    entities: entities,
-    
-    // ✅ 依赖关系
+
+    // ✅ 必需：Frontend (FrontendConfigDto)
+    frontend: {
+      parentId: c.parentMenuId || 'business',
+      routePrefix: route
+    },
+
+    // ✅ 必需：GenerateMobilePages
+    generateMobilePages: false,
+
+    // ✅ 必需：Dependencies
     dependencies: [],
-    
-    // ✅ Schema版本
-    schemaVersion: '1.0.0',
-    
-    // ✅ 审计字段
-    creationTime: new Date().toISOString(),
-    lastModificationTime: new Date().toISOString()
+
+    // ✅ 必需：Entities (List<EnhancedEntityModelDto>)
+    entities: entities,
+
+    // ✅ 必需：MenuConfig (List<MenuConfigDto>)
+    menuConfig: [{
+      id: crypto.randomUUID(),
+      name: c.displayName,
+      path: route,
+      icon: c.menuIcon || 'database',
+      parentId: c.parentMenuId || 'business',
+      sort: 100,
+      permissions: []
+    }],
+
+    // ✅ 必需：PermissionConfig (ModulePermissionConfig)
+    permissionConfig: {
+      permissionGroups: [],
+      defaultPermissions: []
+    }
   }
 }
 
@@ -800,7 +820,50 @@ const startGeneration = async () => {
     generationProgress.value = 5
 
     addLog(t('ultraSimple.logs.parsingSchema'), 'info')
-    const selectedTableData = availableTables.value.find(t => t.name === selectedTable.value)
+    let selectedTableData = availableTables.value.find(t => t.name === selectedTable.value)
+
+    // ✅ 关键修复：如果表没有列信息，立即加载
+    if (selectedTableData && !selectedTableData.schema) {
+      addLog('🔄 正在加载表结构信息...', 'info')
+      console.log('🔍 [DEBUG] 即将调用 introspectDatabase，参数:', {
+        connectionStringName: 'Default',
+        provider: 'SqlServer',
+        tableName: selectedTable.value
+      })
+
+      try {
+        const schemaResult = await codeGeneratorApi.introspectDatabase({
+          connectionStringName: 'Default',
+          provider: 'SqlServer'
+        })
+
+        console.log('🔍 [DEBUG] introspectDatabase 返回结果:', schemaResult)
+        console.log('🔍 [DEBUG] 返回表数量:', schemaResult?.tables?.length)
+
+        if (schemaResult.tables && schemaResult.tables.length > 0) {
+          const tableSchema = schemaResult.tables.find((t: any) => t.name === selectedTable.value)
+          console.log('🔍 [DEBUG] 找到目标表:', tableSchema?.name, '列数:', tableSchema?.columns?.length)
+
+          if (tableSchema) {
+            selectedTableData.schema = tableSchema
+            selectedTableData.columnCount = tableSchema.columns?.length || 0
+            addLog(`✅ 表结构加载成功，共${selectedTableData.columnCount}列`, 'success')
+          } else {
+            addLog(`⚠️ 未找到表 ${selectedTable.value}`, 'warning')
+          }
+        }
+      } catch (error: any) {
+        console.error('❌ [DEBUG] introspectDatabase 失败:', error)
+        console.error('❌ [DEBUG] 错误详情:', {
+          message: error.message,
+          code: error.code,
+          response: error.response,
+          request: error.request
+        })
+        addLog(`❌ 表结构加载失败: ${error.message}`, 'error')
+        throw new Error('无法加载表结构，请重试')
+      }
+    }
 
     if (!selectedTableData?.schema) {
       addLog(t('ultraSimple.logs.schemaNotLoaded'), 'warning')
@@ -811,11 +874,33 @@ const startGeneration = async () => {
     // ✅ B方案优化：复用转换函数，避免重复代码
     const metadata = convertToModuleMetadata()
 
+    // 🔍 调试：输出实际发送的参数
+    console.log('🚀 [调试] 发送给后端的完整参数:', JSON.stringify(metadata, null, 2))
+    console.log('🔍 [调试] 关键参数检查:')
+    console.log('  - systemName:', metadata.systemName)
+    console.log('  - moduleName:', metadata.moduleName)
+    console.log('  - entities数量:', metadata.entities?.length)
+    console.log('  - entities[0]:', metadata.entities?.[0])
+
     addLog(t('ultraSimple.logs.metadataComplete'), 'success')
     generationProgress.value = 25
 
     addLog(t('ultraSimple.logs.callingService'), 'info')
-    const result = await codeGeneratorApi.generateModule(metadata)
+
+    let result: any
+    try {
+      result = await codeGeneratorApi.generateModule(metadata)
+    } catch (apiError: any) {
+      // 🔍 捕获详细的API错误信息
+      console.error('❌ [后端错误] 完整错误对象:', apiError)
+      console.error('❌ [后端错误] 错误响应:', apiError.response)
+      console.error('❌ [后端错误] 错误数据:', apiError.response?.data)
+      console.error('❌ [后端错误] 错误消息:', apiError.message)
+
+      const errorMsg = apiError.response?.data?.error?.message || apiError.message || '请求参数错误'
+      addLog(`❌ 后端错误: ${errorMsg}`, 'error')
+      throw new Error(errorMsg)
+    }
 
     if (!result.success) {
       throw new Error(result.message || t('ultraSimple.messages.error'))
@@ -1241,19 +1326,21 @@ const startBatchGeneration = async () => {
     ElMessage.warning('请先导入权限系统配置')
     return
   }
-  
+
   batchGenerating.value = true
   batchProgress.value = 0
   addLog('🚀 开始批量生成 ' + batchEntities.value.length + ' 个模块', 'info')
-  
+
   for (let i = 0; i < batchEntities.value.length; i++) {
     const entity = batchEntities.value[i]
+    if (!entity) continue // ✅ 类型守卫：跳过空值
+
     try {
       addLog(`正在生成 ${entity.displayName} (${i + 1}/${batchEntities.value.length})...`, 'info')
       entity.logs.push({ message: '开始生成...', type: 'info' })
-      
+
       // 构建元数据
-      const metadata: ModuleMetadata = {
+      const metadata: any = {
         systemName: config.systemName,
         moduleName: entity.name,
         displayName: entity.displayName,
@@ -1278,22 +1365,22 @@ const startBatchGeneration = async () => {
           order: f.order
         }))
       }
-      
+
       // 调用生成API
       const result = await codeGeneratorApi.generateModule(metadata)
-      
+
       entity.generated = true
       entity.fileCount = result.generatedFiles?.length || 0
       entity.logs.push({ message: `✅ 生成成功！生成了 ${entity.fileCount} 个文件`, type: 'success' })
       addLog(`✅ ${entity.displayName} 生成成功！`, 'success')
-      
+
       batchProgress.value = i + 1
     } catch (error: any) {
       entity.logs.push({ message: `❌ 生成失败：${error.message}`, type: 'error' })
       addLog(`❌ ${entity.displayName} 生成失败：${error.message}`, 'error')
     }
   }
-  
+
   batchGenerating.value = false
   const successCount = batchEntities.value.filter(e => e.generated).length
   addLog(`🎉 批量生成完成！成功 ${successCount}/${batchEntities.value.length} 个模块`, successCount === batchEntities.value.length ? 'success' : 'warning')
@@ -1302,7 +1389,7 @@ const startBatchGeneration = async () => {
 
 const importPermissionSystem = async () => {
   console.log('🔥 开始导入权限管理系统配置 - "吃自己的狗粮"')
-  
+
   try {
     // 显示加载状态
     const loadingMessage = ElMessage({
@@ -1311,18 +1398,18 @@ const importPermissionSystem = async () => {
       duration: 0,
       showClose: false
     })
-    
+
     // ✅ 完整的权限管理系统配置（含字段定义）
     const permissionSystemConfig = {
       systemName: 'SmartAbp',
-      moduleName: 'PermissionManagement', 
+      moduleName: 'PermissionManagement',
       displayName: '权限管理系统',
       description: '企业级权限管理系统 - 通过低代码引擎生成（吃自己的狗粮）',
       architecturePattern: 'DDD' as const,
       databaseProvider: 'SqlServer' as const,
       parentMenuId: 'system',
       menuIcon: 'Key',
-      
+
       // ✅ 6个核心实体配置（含完整字段定义）
       entities: [
         {
@@ -1340,7 +1427,7 @@ const importPermissionSystem = async () => {
           ]
         },
         {
-          name: 'User', 
+          name: 'User',
           displayName: '用户管理',
           description: '系统用户管理',
           icon: 'User',
@@ -1355,7 +1442,7 @@ const importPermissionSystem = async () => {
         },
         {
           name: 'Menu',
-          displayName: '菜单管理', 
+          displayName: '菜单管理',
           description: '系统菜单和路由管理',
           icon: 'Menu',
           fields: [
@@ -1384,7 +1471,7 @@ const importPermissionSystem = async () => {
         {
           name: 'Permission',
           displayName: '权限管理',
-          description: '系统权限定义', 
+          description: '系统权限定义',
           icon: 'Key',
           fields: [
             { name: 'name', displayName: '权限名称', type: 'string', maxLength: 100, isRequired: true, order: 1 },
@@ -1409,7 +1496,7 @@ const importPermissionSystem = async () => {
         }
       ]
     }
-    
+
     // ✅ 更新基础配置
     config.systemName = permissionSystemConfig.systemName
     config.moduleName = permissionSystemConfig.moduleName
@@ -1418,10 +1505,10 @@ const importPermissionSystem = async () => {
     config.databaseProvider = permissionSystemConfig.databaseProvider
     config.parentMenuId = permissionSystemConfig.parentMenuId
     config.menuIcon = permissionSystemConfig.menuIcon
-    
+
     // ✅ 自动切换到批量模式
     batchMode.value = true
-    
+
     // ✅ 填充批量实体列表
     batchEntities.value = permissionSystemConfig.entities.map(entity => ({
       name: entity.name,
@@ -1431,26 +1518,26 @@ const importPermissionSystem = async () => {
       generated: false,
       logs: []
     }))
-    
+
     // 关闭加载消息
     loadingMessage.close()
-    
+
     // 添加详细日志
     addLog('🎉 权限管理系统配置导入成功 - 6个核心实体', 'success')
     addLog('📋 系统名称: SmartAbp', 'info')
-    addLog('📋 模块名称: PermissionManagement', 'info') 
+    addLog('📋 模块名称: PermissionManagement', 'info')
     addLog('📋 显示名称: 权限管理系统', 'info')
     addLog('🏗️ 架构模式: DDD (领域驱动设计)', 'info')
     addLog('💾 数据库: SQL Server', 'info')
     addLog('✅ 已自动切换到批量生成模式', 'info')
-    
+
     // 详细实体列表
     permissionSystemConfig.entities.forEach((entity, index) => {
       addLog(`📦 实体${index + 1}: ${entity.displayName} (${entity.name}) - ${entity.fields.length}个字段`, 'info')
     })
-    
+
     addLog('🚀 6模块权限管理系统配置完成，准备"吃自己的狗粮"！', 'success')
-    
+
     // 成功消息
     ElMessage({
       message: '🎉 完整权限管理系统配置导入成功！包含6个核心实体：组织、用户、菜单、角色、权限、字典\n✅ 已自动切换到批量生成模式，点击"批量生成全部"即可一键生成',
@@ -1459,14 +1546,14 @@ const importPermissionSystem = async () => {
       showClose: true,
       dangerouslyUseHTMLString: false
     })
-    
+
     // 保存状态
     persistState()
-    
+
     console.log('✅ 权限管理系统配置导入完成', config)
     console.log('📊 包含实体数量:', permissionSystemConfig.entities.length)
     console.log('📦 批量实体列表:', batchEntities.value)
-    
+
   } catch (error) {
     console.error('❌ 导入权限管理系统配置失败:', error)
     addLog('❌ 导入权限管理系统配置失败', 'error')
@@ -1523,12 +1610,12 @@ const importPermissionSystem = async () => {
       border: none;
       box-shadow: 0 4px 15px 0 rgba(102, 126, 234, 0.3);
       transition: all 0.3s ease;
-      
+
       &:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px 0 rgba(102, 126, 234, 0.4);
       }
-      
+
       &:active {
         transform: translateY(0);
       }

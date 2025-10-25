@@ -286,9 +286,9 @@ export function setupMockInterceptor(axiosInstance: any) {
     async (error: any) => {
       const { config } = error
 
-      // 如果是网络错误，尝试使用mock数据
-      if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        console.warn('[Mock Server] Network error detected, using mock data:', config.url)
+      // 如果是网络错误或空响应错误，尝试使用mock数据
+      if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED' || error.code === 'ERR_EMPTY_RESPONSE') {
+        console.warn('[Mock Server] Network error detected (including empty response), using mock data:', config.url)
 
         // 根据URL路由到对应的mock处理器
         const mockResponse = await routeToMockHandler(config)
@@ -333,6 +333,11 @@ async function routeToMockHandler(config: any) {
 
     // POST /api/code-generator/introspect-database
     if (method === 'post' && url?.includes('/code-generator/introspect-database')) {
+      return await mockApiHandlers.introspectDatabase(data)
+    }
+
+    // POST /api/code-generator/introspect-db
+    if (method === 'post' && url?.includes('/code-generator/introspect-db')) {
       return await mockApiHandlers.introspectDatabase(data)
     }
 

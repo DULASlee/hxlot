@@ -213,7 +213,7 @@ export default defineConfig(async ({ mode }) => {
       },
       proxy: {
         "^/(connect|api|abp|swagger|health-status|Account|codegen|metadata|database|db|hubs|signalr)(/.*)?": {
-          target: "https://localhost:9002", // 指向后端（9002）
+          target: "http://localhost:9002", // ✅ 正确端口（HTTP协议）
           changeOrigin: true,
           secure: false,
           ws: true,

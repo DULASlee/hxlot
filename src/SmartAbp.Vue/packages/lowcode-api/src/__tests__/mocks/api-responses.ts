@@ -248,22 +248,195 @@ export const mockUiConfigResponse = {
 export const mockIntrospectDatabaseResponse = {
   success: true,
   connectionInfo: {
-    provider: 'PostgreSQL',
-    serverVersion: '15.3',
-    databaseName: 'SmartAbp',
-    schemaCount: 2,
-    tableCount: 25
+    provider: 'SqlServer',
+    serverVersion: '16.00.1145',
+    databaseName: 'SmartAbp_Main',
+    schemaCount: 1,
+    tableCount: 55
   },
   tables: [
     {
+      name: 'SM_SmartTenants',
+      schema: 'dbo',
+      comment: '智能租户扩展表',
+      rowCount: 5,
+      columns: [
+        {
+          name: 'Id',
+          dataType: 'uniqueidentifier',
+          isPrimaryKey: true,
+          isNullable: false,
+          comment: '主键ID'
+        },
+        {
+          name: 'TenantId',
+          dataType: 'uniqueidentifier',
+          isNullable: false,
+          comment: '租户ID'
+        },
+        {
+          name: 'Code',
+          dataType: 'nvarchar',
+          maxLength: 50,
+          isNullable: false,
+          comment: '租户编码'
+        },
+        {
+          name: 'Type',
+          dataType: 'int',
+          isNullable: false,
+          comment: '租户类型'
+        },
+        {
+          name: 'Status',
+          dataType: 'int',
+          isNullable: false,
+          comment: '租户状态'
+        },
+        {
+          name: 'ParentId',
+          dataType: 'uniqueidentifier',
+          isNullable: true,
+          comment: '父租户ID'
+        },
+        {
+          name: 'IsActive',
+          dataType: 'bit',
+          isNullable: false,
+          comment: '是否激活'
+        },
+        {
+          name: 'Description',
+          dataType: 'nvarchar',
+          maxLength: 500,
+          isNullable: true,
+          comment: '描述'
+        },
+        {
+          name: 'SubscriptionPlanId',
+          dataType: 'uniqueidentifier',
+          isNullable: true,
+          comment: '订阅方案ID'
+        },
+        {
+          name: 'StartTime',
+          dataType: 'datetime2',
+          isNullable: true,
+          comment: '开始时间'
+        },
+        {
+          name: 'EndTime',
+          dataType: 'datetime2',
+          isNullable: true,
+          comment: '结束时间'
+        },
+        {
+          name: 'MaxUserCount',
+          dataType: 'int',
+          isNullable: false,
+          comment: '最大用户数'
+        },
+        {
+          name: 'MaxStorageSize',
+          dataType: 'bigint',
+          isNullable: false,
+          comment: '最大存储大小'
+        },
+        {
+          name: 'MaxApiCallsPerDay',
+          dataType: 'int',
+          isNullable: true,
+          comment: '每日最大API调用数'
+        },
+        {
+          name: 'ConnectionString',
+          dataType: 'nvarchar',
+          maxLength: 1000,
+          isNullable: true,
+          comment: '连接字符串'
+        },
+        {
+          name: 'IsIsolatedDatabase',
+          dataType: 'bit',
+          isNullable: false,
+          comment: '是否隔离数据库'
+        },
+        {
+          name: 'FeatureConfig',
+          dataType: 'nvarchar',
+          maxLength: -1,
+          isNullable: true,
+          comment: '功能配置'
+        },
+        {
+          name: 'CustomSettings',
+          dataType: 'nvarchar',
+          maxLength: -1,
+          isNullable: true,
+          comment: '自定义设置'
+        },
+        {
+          name: 'ExtraProperties',
+          dataType: 'nvarchar',
+          maxLength: -1,
+          isNullable: true,
+          comment: '扩展属性'
+        },
+        {
+          name: 'ConcurrencyStamp',
+          dataType: 'nvarchar',
+          maxLength: 40,
+          isNullable: true,
+          comment: '并发戳'
+        },
+        {
+          name: 'CreationTime',
+          dataType: 'datetime2',
+          isNullable: false,
+          comment: '创建时间'
+        },
+        {
+          name: 'CreatorId',
+          dataType: 'uniqueidentifier',
+          isNullable: true,
+          comment: '创建者ID'
+        },
+        {
+          name: 'LastModificationTime',
+          dataType: 'datetime2',
+          isNullable: true,
+          comment: '最后修改时间'
+        },
+        {
+          name: 'LastModifierId',
+          dataType: 'uniqueidentifier',
+          isNullable: true,
+          comment: '最后修改者ID'
+        },
+        {
+          name: 'IsDeleted',
+          dataType: 'bit',
+          isNullable: false,
+          comment: '是否删除'
+        },
+        {
+          name: 'DeletionTime',
+          dataType: 'datetime2',
+          isNullable: true,
+          comment: '删除时间'
+        }
+      ],
+      foreignKeys: []
+    },
+    {
       name: 'Users',
-      schema: 'public',
+      schema: 'dbo',
       comment: '系统用户表',
       rowCount: 1250,
       columns: [
         {
           name: 'Id',
-          type: 'uuid',
+          dataType: 'uniqueidentifier',
           isPrimaryKey: true,
           isNullable: false,
           defaultValue: 'gen_random_uuid()',
@@ -271,7 +444,7 @@ export const mockIntrospectDatabaseResponse = {
         },
         {
           name: 'UserName',
-          type: 'varchar',
+          dataType: 'nvarchar',
           maxLength: 256,
           isNullable: false,
           isUnique: true,
@@ -279,21 +452,21 @@ export const mockIntrospectDatabaseResponse = {
         },
         {
           name: 'Email',
-          type: 'varchar',
+          dataType: 'nvarchar',
           maxLength: 256,
           isNullable: true,
           comment: '邮箱地址'
         },
         {
           name: 'PhoneNumber',
-          type: 'varchar',
+          dataType: 'nvarchar',
           maxLength: 20,
           isNullable: true,
           comment: '手机号'
         },
         {
           name: 'IsActive',
-          type: 'boolean',
+          dataType: 'bit',
           isNullable: false,
           defaultValue: 'true',
           comment: '是否激活'
@@ -327,14 +500,14 @@ export const mockIntrospectDatabaseResponse = {
     },
     {
       name: 'Roles',
-      schema: 'public',
+      schema: 'dbo',
       comment: '系统角色表',
       rowCount: 15,
       columns: [
-        { name: 'Id', type: 'uuid', isPrimaryKey: true, isNullable: false, isRequired: true, description: 'ID' },
-        { name: 'Name', type: 'varchar', maxLength: 256, isNullable: false, isUnique: true, isRequired: true, description: '角色名称' },
-        { name: 'DisplayName', type: 'varchar', maxLength: 256, isNullable: true, isRequired: false, description: '显示名称' },
-        { name: 'IsDefault', type: 'boolean', isNullable: false, defaultValue: 'false' }
+        { name: 'Id', dataType: 'uniqueidentifier', isPrimaryKey: true, isNullable: false, isRequired: true, description: 'ID' },
+        { name: 'Name', dataType: 'nvarchar', maxLength: 256, isNullable: false, isUnique: true, isRequired: true, description: '角色名称' },
+        { name: 'DisplayName', dataType: 'nvarchar', maxLength: 256, isNullable: true, isRequired: false, description: '显示名称' },
+        { name: 'IsDefault', dataType: 'bit', isNullable: false, defaultValue: 'false' }
       ],
       relationships: [
         { type: 'OneToMany', targetTable: 'UserRoles', foreignKey: 'RoleId' }
@@ -347,14 +520,14 @@ export const mockIntrospectDatabaseResponse = {
   views: [
     {
       name: 'vw_UserRoleSummary',
-      schema: 'public',
+      schema: 'dbo',
       definition: 'SELECT u.UserName, r.Name as RoleName FROM Users u JOIN UserRoles ur ON u.Id = ur.UserId JOIN Roles r ON ur.RoleId = r.Id'
     }
   ],
   procedures: [
     {
       name: 'sp_GetActiveUsers',
-      schema: 'public',
+      schema: 'dbo',
       parameters: [
         { name: 'startDate', type: 'timestamp', mode: 'IN' },
         { name: 'endDate', type: 'timestamp', mode: 'IN' }
@@ -481,12 +654,12 @@ export const mockRegisterModuleResponse = {
       isSoftDelete: true,
       isMultiTenant: false,
       fields: [
-        { name: 'Id', type: 'Guid', isRequired: true, description: '主键ID' },
-        { name: 'Name', type: 'string', maxLength: 200, isRequired: true, description: '产品名称' },
-        { name: 'Description', type: 'string', maxLength: 1000, isRequired: false, description: '产品描述' },
-        { name: 'Price', type: 'decimal', isRequired: true, description: '产品价格' },
-        { name: 'Stock', type: 'int', defaultValue: '0', isRequired: false, description: '库存' },
-        { name: 'IsActive', type: 'bool', defaultValue: 'true', isRequired: false, description: '是否激活' }
+        { name: 'Id', dataType: 'uniqueidentifier', isRequired: true, description: '主键ID' },
+        { name: 'Name', dataType: 'nvarchar', maxLength: 200, isRequired: true, description: '产品名称' },
+        { name: 'Description', dataType: 'nvarchar', maxLength: 1000, isRequired: false, description: '产品描述' },
+        { name: 'Price', dataType: 'decimal', isRequired: true, description: '产品价格' },
+        { name: 'Stock', dataType: 'int', defaultValue: '0', isRequired: false, description: '库存' },
+        { name: 'IsActive', dataType: 'bit', defaultValue: 'true', isRequired: false, description: '是否激活' }
       ],
       relationships: [],
       indexes: [],

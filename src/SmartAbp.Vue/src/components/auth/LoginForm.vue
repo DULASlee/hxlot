@@ -281,14 +281,26 @@ const handleLogin = debounce(async (e: Event) => {
     if (error.name === 'NetworkError') {
       errorMessage.value = '网络连接失败，请检查网络设置'
     }
-    else if (error.status === 401) {
-      errorMessage.value = '用户名或密码错误'
+    else if (error.message?.includes('用户名或邮箱不存在')) {
+      errorMessage.value = '用户名或邮箱不存在'
     }
-    else if (error.status === 403) {
-      errorMessage.value = '账户已被锁定，请联系管理员'
+    else if (error.message?.includes('密码错误')) {
+      errorMessage.value = '密码错误'
     }
-    else if (error.message?.includes('tenant')) {
-      errorMessage.value = '租户信息无效'
+    else if (error.message?.includes('用户已被禁用')) {
+      errorMessage.value = '用户已被禁用，请联系管理员'
+    }
+    else if (error.message?.includes('邮箱地址未确认')) {
+      errorMessage.value = '邮箱地址未确认，请检查邮箱'
+    }
+    else if (error.message?.includes('未获取到认证token')) {
+      errorMessage.value = '登录成功但系统异常，请稍后重试'
+    }
+    else if (error.message?.includes('网络连接失败')) {
+      errorMessage.value = '网络连接失败，请检查网络设置'
+    }
+    else if (error.message) {
+      errorMessage.value = error.message
     }
     else {
       errorMessage.value = '登录失败，请稍后重试'

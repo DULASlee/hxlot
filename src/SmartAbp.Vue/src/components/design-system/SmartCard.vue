@@ -146,6 +146,7 @@ const emit = defineEmits<SmartCardEmits>()
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 */
 
+// 卡片CSS类名
 const cardClasses = computed(() => {
   return [
     'smart-card',
@@ -167,6 +168,7 @@ const cardClasses = computed(() => {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 */
 
+// 点击事件处理
 const handleClick = (event: MouseEvent) => {
   if (props.disabled || props.loading || !props.clickable) {
     return
