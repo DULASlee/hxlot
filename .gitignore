@@ -513,3 +513,4 @@ App_Data/
 
 # Cursor会话历史文件
 .specstory/history/*.md
+src/SmartAbp.Web/output/
