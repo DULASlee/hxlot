@@ -9,24 +9,13 @@
       </el-text>
     </div>
 
-    <el-table
-      :data="fields"
-      border
-      stripe
-      :max-height="500"
-      class="field-table"
-      @row-click="handleRowClick"
-    >
+    <el-table :data="fields" border stripe :max-height="500" class="field-table" @row-click="handleRowClick">
       <el-table-column type="index" width="50" label="#" />
 
       <el-table-column prop="name" label="字段名称" width="150">
         <template #default="{ row, $index }">
-          <el-input
-            v-model="row.name"
-            placeholder="PascalCase"
-            @blur="validateFieldName(row, $index)"
-            :class="{ 'is-error': row._nameError }"
-          />
+          <el-input v-model="row.name" placeholder="PascalCase" @blur="validateFieldName(row, $index)"
+            :class="{ 'is-error': row._nameError }" />
           <span v-if="row._nameError" class="error-tip">{{ row._nameError }}</span>
         </template>
       </el-table-column>
@@ -63,52 +52,23 @@
       <el-table-column label="约束" width="150">
         <template #default="{ row }">
           <!-- 字符串长度 -->
-          <el-input
-            v-if="row.type === 'string'"
-            v-model.number="row.maxLength"
-            placeholder="最大长度"
-            type="number"
-            size="small"
-          >
+          <el-input v-if="row.type === 'string'" v-model.number="row.maxLength" placeholder="最大长度" type="number"
+            size="small">
             <template #prepend>Max</template>
           </el-input>
 
           <!-- decimal精度 -->
           <div v-else-if="row.type === 'decimal'" class="decimal-config">
-            <el-input
-              v-model.number="row.precision"
-              placeholder="精度"
-              type="number"
-              size="small"
-              style="width: 70px"
-            />
+            <el-input v-model.number="row.precision" placeholder="精度" type="number" size="small" style="width: 70px" />
             <span>,</span>
-            <el-input
-              v-model.number="row.scale"
-              placeholder="小数位"
-              type="number"
-              size="small"
-              style="width: 70px"
-            />
+            <el-input v-model.number="row.scale" placeholder="小数位" type="number" size="small" style="width: 70px" />
           </div>
 
           <!-- 数值范围 -->
           <div v-else-if="row.type === 'int'" class="range-config">
-            <el-input
-              v-model.number="row.minValue"
-              placeholder="最小值"
-              type="number"
-              size="small"
-              style="width: 70px"
-            />
+            <el-input v-model.number="row.minValue" placeholder="最小值" type="number" size="small" style="width: 70px" />
             <span>-</span>
-            <el-input
-              v-model.number="row.maxValue"
-              placeholder="最大值"
-              type="number"
-              size="small"
-              style="width: 70px"
-            />
+            <el-input v-model.number="row.maxValue" placeholder="最大值" type="number" size="small" style="width: 70px" />
           </div>
 
           <span v-else class="no-constraint">—</span>
@@ -143,30 +103,14 @@
 
       <el-table-column label="操作" width="150" fixed="right">
         <template #default="{ $index }">
-          <el-button
-            type="primary"
-            link
-            :icon="ArrowUp"
-            :disabled="$index === 0"
-            @click.stop="moveField($index, 'up')"
-          >
+          <el-button type="primary" link :icon="ArrowUp" :disabled="$index === 0" @click.stop="moveField($index, 'up')">
             上移
           </el-button>
-          <el-button
-            type="primary"
-            link
-            :icon="ArrowDown"
-            :disabled="$index === fields.length - 1"
-            @click.stop="moveField($index, 'down')"
-          >
+          <el-button type="primary" link :icon="ArrowDown" :disabled="$index === fields.length - 1"
+            @click.stop="moveField($index, 'down')">
             下移
           </el-button>
-          <el-button
-            type="danger"
-            link
-            :icon="Delete"
-            @click.stop="handleDeleteField($index)"
-          >
+          <el-button type="danger" link :icon="Delete" @click.stop="handleDeleteField($index)">
             删除
           </el-button>
         </template>
@@ -174,18 +118,8 @@
     </el-table>
 
     <!-- 字段详情抽屉 -->
-    <el-drawer
-      v-model="drawerVisible"
-      title="字段详细配置"
-      :size="500"
-      @close="handleDrawerClose"
-    >
-      <el-form
-        v-if="currentField"
-        :model="currentField"
-        label-width="100px"
-        label-position="left"
-      >
+    <el-drawer v-model="drawerVisible" title="字段详细配置" :size="500" @close="handleDrawerClose">
+      <el-form v-if="currentField" :model="currentField" label-width="100px" label-position="left">
         <el-form-item label="字段名称">
           <el-input v-model="currentField.name" placeholder="PascalCase" />
         </el-form-item>
@@ -258,10 +192,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { Plus, Delete, ArrowUp, ArrowDown } from '@element-plus/icons-vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ArrowDown, ArrowUp, Delete, Plus } from '@element-plus/icons-vue'
 import type { SimplifiedFieldConfigDto } from '@smartabp/lowcode-shared'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { computed, ref } from 'vue'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Props & Emits
@@ -487,4 +421,3 @@ function validateFieldName(field: any, index: number) {
   }
 }
 </style>
-

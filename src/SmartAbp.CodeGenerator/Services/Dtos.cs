@@ -60,7 +60,7 @@ namespace SmartAbp.CodeGenerator.Services
         /// </summary>
         public class PermissionGroupDefinitionDto
         {
-            public string Id { get; set; } = default!;
+            public string? Id { get; set; }
             public string Name { get; set; } = default!; // e.g., 'SmartAbp.Construction'
             public string DisplayName { get; set; } = default!;
             public List<PermissionDefinitionDto> Permissions { get; set; } = new();
@@ -205,6 +205,8 @@ namespace SmartAbp.CodeGenerator.Services
             public bool IsNullable { get; set; }
             public int? MaxLength { get; set; }
             public bool IsPrimaryKey { get; set; }
+            public string? DefaultValue { get; set; }
+            public string? Comment { get; set; }
         }
 
         public class ForeignKeySchemaDto
@@ -255,12 +257,12 @@ namespace SmartAbp.CodeGenerator.Services
             public bool IsKey { get; set; }
             public bool IsUnique { get; set; }
             public bool IsIndexed { get; set; }
-            public object DefaultValue { get; set; } = default!;
-            public string Description { get; set; } = default!;
-            public string HelpText { get; set; } = default!;
+            public object? DefaultValue { get; set; } = default!;
+            public string? Description { get; set; } = default!;
+            public string? HelpText { get; set; } = default!;
             public int? MaxLength { get; set; }
             public int? MinLength { get; set; }
-            public string Pattern { get; set; } = default!;
+            public string? Pattern { get; set; } = default!;
             public int? Precision { get; set; }
             public int? Scale { get; set; }
             public double? MinValue { get; set; }
@@ -268,7 +270,7 @@ namespace SmartAbp.CodeGenerator.Services
             public List<EnumValueDto> EnumValues { get; set; } = new();
             public List<ValidationRuleDto> ValidationRules { get; set; } = new();
             public int DisplayOrder { get; set; }
-            public string GroupName { get; set; } = default!;
+            public string? GroupName { get; set; } = default!;
             public bool IsVisible { get; set; }
             public bool IsReadonly { get; set; }
             public string ColumnName { get; set; } = default!;

@@ -68,7 +68,7 @@ public class SimpleVariableReplacer
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "变量替换失败，模板前100字符: {TemplatePreview}", 
+            _logger.LogError(ex, "变量替换失败，模板前100字符: {TemplatePreview}",
                 template.Length > 100 ? template.Substring(0, 100) + "..." : template);
             throw new TemplateException($"模板变量替换失败: {ex.Message}", ex);
         }
@@ -81,6 +81,7 @@ public class SimpleVariableReplacer
     {
         var replacements = new Dictionary<string, string>
         {
+            // PascalCase variants (for C# templates)
             ["{{ModuleName}}"] = metadata.Name ?? "DefaultModule",
             ["{{ModuleNameLower}}"] = (metadata.Name ?? "DefaultModule").ToLowerInvariant(),
             ["{{ModuleNameCamel}}"] = ToCamelCase(metadata.Name ?? "DefaultModule"),
@@ -91,6 +92,9 @@ public class SimpleVariableReplacer
             ["{{CreateDate}}"] = DateTime.Now.ToString("yyyy-MM-dd"),
             ["{{CreateDateTime}}"] = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
             ["{{Year}}"] = DateTime.Now.Year.ToString(),
+
+            // 🔥 Phase 3C: camelCase variants (for TypeScript/Vue templates)
+            ["{{moduleName}}"] = ToCamelCase(metadata.Name ?? "DefaultModule"),
         };
 
         return ApplyReplacements(template, replacements);
@@ -103,6 +107,7 @@ public class SimpleVariableReplacer
     {
         var replacements = new Dictionary<string, string>
         {
+            // PascalCase variants (for C# templates)
             ["{{EntityName}}"] = entity.Name,
             ["{{EntityNameLower}}"] = entity.Name.ToLowerInvariant(),
             ["{{EntityNameCamel}}"] = ToCamelCase(entity.Name),
@@ -114,6 +119,12 @@ public class SimpleVariableReplacer
             ["{{EntityTableName}}"] = entity.TableName ?? entity.Name,
             ["{{EntityPrimaryKey}}"] = GetPrimaryKeyProperty(entity.Properties)?.Name ?? "Id",
             ["{{EntityPrimaryKeyType}}"] = GetCSharpType(GetPrimaryKeyProperty(entity.Properties)?.Type ?? "Guid"),
+
+            // 🔥 Phase 3C: camelCase variants (for TypeScript/Vue templates)
+            ["{{entityName}}"] = entity.Name, // Same as EntityName for now
+            ["{{entityStoreName}}"] = $"use{entity.Name}Store",
+            ["{{storeId}}"] = ToCamelCase(entity.Name),
+            ["{{apiService}}"] = $"{ToCamelCase(entity.Name)}Service",
         };
 
         return ApplyReplacements(template, replacements);
@@ -158,11 +169,11 @@ public class SimpleVariableReplacer
     /// </summary>
     private string GeneratePropertyDeclarations(List<EntityPropertyDto> properties)
     {
-        var declarations = properties.Select(p => 
+        var declarations = properties.Select(p =>
         {
             var dataAnnotations = GenerateDataAnnotations(p);
             var propertyType = GetCSharpType(p.Type);
-            
+
             return $"{dataAnnotations}    public {propertyType} {p.Name} {{ get; set; }}";
         });
 
@@ -208,13 +219,13 @@ public class SimpleVariableReplacer
     private string GenerateConstructorParameters(List<EntityPropertyDto> properties)
     {
         var requiredProps = properties.Where(p => p.IsRequired && !IsKeyProperty(p)).ToList();
-        
+
         if (!requiredProps.Any())
         {
             return "";
         }
 
-        var parameters = requiredProps.Select(p => 
+        var parameters = requiredProps.Select(p =>
             $"{GetCSharpType(p.Type)} {ToCamelCase(p.Name)}");
 
         return string.Join(", ", parameters);
@@ -226,13 +237,13 @@ public class SimpleVariableReplacer
     private string GenerateConstructorAssignments(List<EntityPropertyDto> properties)
     {
         var requiredProps = properties.Where(p => p.IsRequired && !IsKeyProperty(p)).ToList();
-        
+
         if (!requiredProps.Any())
         {
             return "";
         }
 
-        var assignments = requiredProps.Select(p => 
+        var assignments = requiredProps.Select(p =>
             $"        {p.Name} = {ToCamelCase(p.Name)};");
 
         return string.Join("\n", assignments);
@@ -243,7 +254,7 @@ public class SimpleVariableReplacer
     /// </summary>
     private string GenerateDtoProperties(List<EntityPropertyDto> properties)
     {
-        var dtoProps = properties.Select(p => 
+        var dtoProps = properties.Select(p =>
             $"    public {GetCSharpType(p.Type)} {p.Name} {{ get; set; }}");
 
         return string.Join("\n", dtoProps);
@@ -256,7 +267,7 @@ public class SimpleVariableReplacer
     {
         var createProps = properties
             .Where(p => !IsKeyProperty(p) && !IsAuditProperty(p.Name))
-            .Select(p => 
+            .Select(p =>
             {
                 var dataAnnotations = GenerateDataAnnotations(p);
                 return $"{dataAnnotations}    public {GetCSharpType(p.Type)} {p.Name} {{ get; set; }}";
@@ -272,7 +283,7 @@ public class SimpleVariableReplacer
     {
         var updateProps = properties
             .Where(p => !IsKeyProperty(p) && !IsCreationAuditProperty(p.Name))
-            .Select(p => 
+            .Select(p =>
             {
                 var dataAnnotations = GenerateDataAnnotations(p);
                 return $"{dataAnnotations}    public {GetCSharpType(p.Type)} {p.Name} {{ get; set; }}";
@@ -290,7 +301,7 @@ public class SimpleVariableReplacer
         template = template.Replace("{{NewGuid}}", "Guid.NewGuid()");
         template = template.Replace("{{UtcNow}}", "DateTime.UtcNow");
         template = template.Replace("{{Now}}", "DateTime.Now");
-        
+
         return template;
     }
 
@@ -315,7 +326,7 @@ public class SimpleVariableReplacer
     private void ValidateNoUnresolvedVariables(string result)
     {
         var unresolvedMatches = Regex.Matches(result, @"\{\{([^}]+)\}\}");
-        
+
         if (unresolvedMatches.Count > 0)
         {
             var unresolvedList = unresolvedMatches.Cast<Match>()
@@ -378,7 +389,7 @@ public class SimpleVariableReplacer
     /// </summary>
     private EntityPropertyDto? GetPrimaryKeyProperty(List<EntityPropertyDto> properties)
     {
-        return properties?.FirstOrDefault(p => p.IsKey) ?? 
+        return properties?.FirstOrDefault(p => p.IsKey) ??
                properties?.FirstOrDefault(p => p.Name.Equals("Id", StringComparison.OrdinalIgnoreCase));
     }
 
@@ -390,17 +401,17 @@ public class SimpleVariableReplacer
         try
         {
             var mappingResult = _typeMapper.GetCSharpTypeMapping(inputType);
-            
+
             if (mappingResult.HasWarning)
             {
                 _logger.LogWarning("类型映射警告: {Warning}", mappingResult.WarningMessage);
             }
-            
+
             if (!mappingResult.IsSuccess)
             {
                 _logger.LogError("类型映射失败: {Error}", mappingResult.ErrorMessage);
             }
-            
+
             return mappingResult.TypeInfo.CSharpType;
         }
         catch (Exception ex)

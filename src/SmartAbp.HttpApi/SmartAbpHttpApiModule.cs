@@ -8,18 +8,20 @@ using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement.HttpApi;
 using Volo.Abp.Localization;
 using Volo.Abp.TenantManagement;
+using Volo.Abp.AspNetCore.Mvc;
 
 namespace SmartAbp;
 
- [DependsOn(
-    typeof(SmartAbpApplicationContractsModule),
-    typeof(AbpPermissionManagementHttpApiModule),
-    typeof(AbpSettingManagementHttpApiModule),
-    typeof(AbpAccountHttpApiModule),
-    typeof(AbpIdentityHttpApiModule),
-    typeof(AbpTenantManagementHttpApiModule),
-    typeof(AbpFeatureManagementHttpApiModule)
-    )]
+[DependsOn(
+   typeof(SmartAbpApplicationContractsModule),
+   typeof(AbpAspNetCoreMvcModule),
+   typeof(AbpPermissionManagementHttpApiModule),
+   typeof(AbpSettingManagementHttpApiModule),
+   typeof(AbpAccountHttpApiModule),
+   typeof(AbpIdentityHttpApiModule),
+   typeof(AbpTenantManagementHttpApiModule),
+   typeof(AbpFeatureManagementHttpApiModule)
+   )]
 public class SmartAbpHttpApiModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)

@@ -27,47 +27,20 @@
     <div class="kpi-section">
       <el-row :gutter="20">
         <el-col :xs="24" :sm="12" :md="6">
-          <KPICard
-            title="总产量"
-            :value="store.realtimeData.totalProduction"
-            unit="件"
-            :trend="kpiTrends.production"
-            :icon="DataAnalysis"
-            theme="primary"
-          />
+          <KPICard title="总产量" :value="store.realtimeData.totalProduction" unit="件" :trend="kpiTrends.production"
+            :icon="DataAnalysis" theme="primary" />
         </el-col>
         <el-col :xs="24" :sm="12" :md="6">
-          <KPICard
-            title="生产效率"
-            :value="store.realtimeData.currentEfficiency"
-            unit="%"
-            :trend="kpiTrends.efficiency"
-            :icon="TrendCharts"
-            :precision="1"
-            theme="success"
-          />
+          <KPICard title="生产效率" :value="store.realtimeData.currentEfficiency" unit="%" :trend="kpiTrends.efficiency"
+            :icon="TrendCharts" :precision="1" theme="success" />
         </el-col>
         <el-col :xs="24" :sm="12" :md="6">
-          <KPICard
-            title="设备利用率"
-            :value="store.realtimeData.equipmentUtilization"
-            unit="%"
-            :trend="kpiTrends.utilization"
-            :icon="Monitor"
-            :precision="1"
-            theme="warning"
-          />
+          <KPICard title="设备利用率" :value="store.realtimeData.equipmentUtilization" unit="%"
+            :trend="kpiTrends.utilization" :icon="Monitor" :precision="1" theme="warning" />
         </el-col>
         <el-col :xs="24" :sm="12" :md="6">
-          <KPICard
-            title="合格率"
-            :value="store.realtimeData.qualifiedRate"
-            unit="%"
-            :trend="kpiTrends.qualified"
-            :icon="CircleCheck"
-            :precision="1"
-            theme="info"
-          />
+          <KPICard title="合格率" :value="store.realtimeData.qualifiedRate" unit="%" :trend="kpiTrends.qualified"
+            :icon="CircleCheck" :precision="1" theme="info" />
         </el-col>
       </el-row>
     </div>
@@ -85,14 +58,8 @@
                 <span>温度趋势</span>
               </div>
             </template>
-            <RealtimeChart
-              chartId="temperature-chart"
-              :chartData="store.temperatureTrendData"
-              xAxisName="时间"
-              yAxisName="温度 (°C)"
-              color="#ff6b6b"
-              title=""
-            />
+            <RealtimeChart chartId="temperature-chart" :chartData="store.temperatureTrendData" xAxisName="时间"
+              yAxisName="温度 (°C)" color="#ff6b6b" title="" />
           </el-card>
         </el-col>
         <el-col :xs="24" :md="8">
@@ -103,14 +70,8 @@
                 <span>压力趋势</span>
               </div>
             </template>
-            <RealtimeChart
-              chartId="pressure-chart"
-              :chartData="store.pressureTrendData"
-              xAxisName="时间"
-              yAxisName="压力 (MPa)"
-              color="#4facfe"
-              title=""
-            />
+            <RealtimeChart chartId="pressure-chart" :chartData="store.pressureTrendData" xAxisName="时间"
+              yAxisName="压力 (MPa)" color="#4facfe" title="" />
           </el-card>
         </el-col>
         <el-col :xs="24" :md="8">
@@ -121,14 +82,8 @@
                 <span>振动趋势</span>
               </div>
             </template>
-            <RealtimeChart
-              chartId="vibration-chart"
-              :chartData="store.vibrationTrendData"
-              xAxisName="时间"
-              yAxisName="振动 (mm/s)"
-              color="#ffd89b"
-              title=""
-            />
+            <RealtimeChart chartId="vibration-chart" :chartData="store.vibrationTrendData" xAxisName="时间"
+              yAxisName="振动 (mm/s)" color="#ffd89b" title="" />
           </el-card>
         </el-col>
       </el-row>
@@ -150,40 +105,32 @@
             </div>
           </div>
         </template>
-        <el-table
-          :data="store.realtimeData.equipmentStatuses"
-          stripe
-          style="width: 100%"
-        >
+        <el-table :data="store.realtimeData.equipmentStatuses" stripe style="width: 100%">
           <el-table-column prop="equipmentName" label="设备名称" width="200" />
           <el-table-column label="状态" width="100">
             <template #default="{ row }">
-              <el-tag
-                :type="getStatusType(row.status)"
-                effect="dark"
-                size="small"
-              >
+              <el-tag :type="getStatusType(row.status)" effect="dark" size="small">
                 {{ getStatusText(row.status) }}
               </el-tag>
             </template>
           </el-table-column>
           <el-table-column label="温度 (°C)" width="120">
             <template #default="{ row }">
-              <span :class="{'danger-value': row.temperature > 85}">
+              <span :class="{ 'danger-value': row.temperature > 85 }">
                 {{ row.temperature.toFixed(1) }}
               </span>
             </template>
           </el-table-column>
           <el-table-column label="压力 (MPa)" width="120">
             <template #default="{ row }">
-              <span :class="{'danger-value': row.pressure > 7.5}">
+              <span :class="{ 'danger-value': row.pressure > 7.5 }">
                 {{ row.pressure.toFixed(1) }}
               </span>
             </template>
           </el-table-column>
           <el-table-column label="振动 (mm/s)" width="120">
             <template #default="{ row }">
-              <span :class="{'danger-value': row.vibration > 6.0}">
+              <span :class="{ 'danger-value': row.vibration > 6.0 }">
                 {{ row.vibration.toFixed(1) }}
               </span>
             </template>
@@ -195,12 +142,8 @@
     <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
          告警通知（Dialog）
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-    <el-dialog
-      v-model="alarmDialogVisible"
-      :title="`🚨 ${currentAlarm?.Level || ''}级别告警`"
-      width="600px"
-      :close-on-click-modal="false"
-    >
+    <el-dialog v-model="alarmDialogVisible" :title="`🚨 ${currentAlarm?.Level || ''}级别告警`" width="600px"
+      :close-on-click-modal="false">
       <div v-if="currentAlarm" class="alarm-detail">
         <el-descriptions :column="1" border>
           <el-descriptions-item label="告警消息">
@@ -226,12 +169,7 @@
             {{ formatDateTime(currentAlarm.Timestamp) }}
           </el-descriptions-item>
         </el-descriptions>
-        <el-alert
-          v-if="currentAlarm.SuggestedAction"
-          type="warning"
-          :closable="false"
-          style="margin-top: 16px"
-        >
+        <el-alert v-if="currentAlarm.SuggestedAction" type="warning" :closable="false" style="margin-top: 16px">
           <template #title>
             <strong>💡 建议操作</strong>
           </template>
@@ -249,23 +187,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { ElMessage, ElNotification } from 'element-plus'
-import {
-  Monitor,
-  DataAnalysis,
-  TrendCharts,
-  CircleCheck,
-  CircleClose,
-  Warning,
-  Odometer,
-  VideoPlay,
-  OfficeBuilding
-} from '@element-plus/icons-vue'
-import { useWebSocket } from '@/composables/useWebSocket'
-import { useProductionLineRealtimeStore } from '@/stores/productionLineRealtimeStore'
 import KPICard from '@/components/dashboard/KPICard.vue'
 import RealtimeChart from '@/components/dashboard/RealtimeChart.vue'
+import { useWebSocket } from '@/composables/useWebSocket'
+import { useProductionLineRealtimeStore } from '@/stores/productionLineRealtimeStore'
+import {
+  CircleCheck,
+  CircleClose,
+  DataAnalysis,
+  Monitor,
+  Odometer,
+  OfficeBuilding,
+  TrendCharts,
+  VideoPlay
+} from '@element-plus/icons-vue'
+import { ElMessage, ElNotification } from 'element-plus'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // State
@@ -344,10 +281,10 @@ const handleProductionLineData = (data: any) => {
  */
 const handleAlertReceived = (alert: any) => {
   console.log('[Dashboard] 🚨 收到告警:', alert)
-  
+
   // 存储到Store
   store.addAlarm(alert)
-  
+
   // 显示通知
   ElNotification({
     title: `🚨 ${alert.Level}级别告警`,
@@ -359,7 +296,7 @@ const handleAlertReceived = (alert: any) => {
       showAlarmDetail(alert)
     }
   })
-  
+
   // 播放告警音效（可选）
   playAlarmSound(alert.Level)
 }
@@ -454,21 +391,21 @@ const formatDateTime = (dateTime: any) => {
 
 onMounted(async () => {
   console.log('[Dashboard] 页面已挂载，开始连接SignalR...')
-  
+
   // 连接SignalR
   await connect()
-  
+
   // 监听生产线数据
   on('ReceiveProductionLineData', handleProductionLineData)
-  
+
   // 监听告警
   on('ReceiveAlert', handleAlertReceived)
-  
+
   // 监听连接状态
   on('ReceiveConnectionStatus', (status: string) => {
     console.log('[Dashboard] 连接状态:', status)
   })
-  
+
   // 监听错误
   on('ReceiveError', (error: string) => {
     console.error('[Dashboard] 错误:', error)

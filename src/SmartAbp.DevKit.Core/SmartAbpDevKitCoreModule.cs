@@ -107,6 +107,23 @@ public class SmartAbpDevKitCoreModule : AbpModule
         services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.Implementations.VueCrudPageLayerGenerator>();
         Console.WriteLine("✅ [DevKit] 4个LayerGenerator已注册（AppService, Controller, EntityDto, VueCrudPage）");
 
+        // 4.5.4 增强生成器（P0阶段 - 租户管理代码生成通道）
+        services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.EnhancedGenerators.EnumGenerator>();
+        services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.EnhancedGenerators.TypeScriptTypeGenerator>();
+        services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.EnhancedGenerators.ApiClientGenerator>();
+        services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.EnhancedGenerators.PiniaStoreGenerator>();
+        Console.WriteLine("✅ [DevKit] 4个EnhancedGenerator已注册（Enum, TypeScript, ApiClient, PiniaStore）");
+
+        // 4.5.5 P1阶段生成器（核心功能增强）
+        services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.EnhancedGenerators.VueFormComponentGenerator>();
+        services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.EnhancedGenerators.TreeStructureGenerator>();
+        Console.WriteLine("✅ [DevKit] 2个P1Generator已注册（VueForm, TreeStructure）");
+
+        // 4.5.6 P2阶段生成器（高级功能）
+        services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.EnhancedGenerators.BatchOperationGenerator>();
+        services.AddTransient<SmartAbp.DevKit.Abstractions.Generation.ILayerGenerator, Generator.EnhancedGenerators.ImportExportGenerator>();
+        Console.WriteLine("✅ [DevKit] 2个P2Generator已注册（Batch, ImportExport）");
+
         // 4.5.4 旧版生成器（保留用于兼容性）
         services.AddTransient<Generator.AspireHostGenerator>();
         Console.WriteLine("✅ [DevKit] AspireHostGenerator已注册（兼容旧版）");
@@ -169,16 +186,28 @@ public class SmartAbpDevKitCoreModule : AbpModule
         services.AddTransient<DevKitCommandService>();
 
         Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        Console.WriteLine("✅ [DevKit] 核心模块配置完成！（v3.0架构）");
+        Console.WriteLine("✅ [DevKit] 核心模块配置完成！（v4.0架构 - P0/P1/P2生成器全集成）");
         Console.WriteLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        Console.WriteLine("   🏗️  新架构代码生成器（v3.0 - 符合SOLID原则）:");
+        Console.WriteLine("   🏗️  新架构代码生成器（v3.1 - 符合SOLID原则）:");
         Console.WriteLine("      • IGeneratorFactory - 工厂接口");
         Console.WriteLine("      • DefaultGeneratorFactory - 工厂实现");
         Console.WriteLine("      • GeneratorOrchestratorV2 - 超级编排器");
+        Console.WriteLine("      【基础生成器】");
         Console.WriteLine("      • AppServiceLayerGenerator - 应用服务生成器");
         Console.WriteLine("      • ControllerLayerGenerator - 控制器生成器");
         Console.WriteLine("      • EntityDtoLayerGenerator - DTO生成器");
         Console.WriteLine("      • VueCrudPageLayerGenerator - Vue页面生成器");
+        Console.WriteLine("      【🔥增强生成器 - P0阶段】");
+        Console.WriteLine("      • EnumGenerator - 枚举类型生成器（C# + TypeScript）");
+        Console.WriteLine("      • TypeScriptTypeGenerator - TS类型定义生成器");
+        Console.WriteLine("      • ApiClientGenerator - 前端API服务生成器");
+        Console.WriteLine("      • PiniaStoreGenerator - Pinia状态管理生成器");
+        Console.WriteLine("      【⭐P1阶段生成器 - 核心功能增强】");
+        Console.WriteLine("      • VueFormComponentGenerator - Vue表单生成器（支持字段分组）");
+        Console.WriteLine("      • TreeStructureGenerator - 树形结构生成器（递归查询 + el-tree）");
+        Console.WriteLine("      【🚀P2阶段生成器 - 高级功能】");
+        Console.WriteLine("      • BatchOperationGenerator - 批量操作生成器（删除/启用/禁用）");
+        Console.WriteLine("      • ImportExportGenerator - 导入导出生成器（Excel）");
         Console.WriteLine("   📋 核心服务:");
         Console.WriteLine("      • AIFlowController - AI流水线");
         Console.WriteLine("      • TemplateManager - 模板管理");

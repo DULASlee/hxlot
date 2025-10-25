@@ -5,34 +5,34 @@
 -->
 
 <template>
-    <div :class="cardClasses" @click="handleClick">
-        <!-- 卡片头部 -->
-        <header v-if="$slots.header || title" class="smart-card__header">
-            <slot name="header">
-                <div class="smart-card__title-wrapper">
-                    <!-- 图标 -->
-                    <component v-if="icon" :is="icon" class="smart-card__icon" />
+  <div :class="cardClasses" @click="handleClick">
+    <!-- 卡片头部 -->
+    <header v-if="$slots.header || title" class="smart-card__header">
+      <slot name="header">
+        <div class="smart-card__title-wrapper">
+          <!-- 图标 -->
+          <component v-if="icon" :is="icon" class="smart-card__icon" />
 
-                    <!-- 标题 -->
-                    <h3 v-if="title" class="smart-card__title">{{ title }}</h3>
+          <!-- 标题 -->
+          <h3 v-if="title" class="smart-card__title">{{ title }}</h3>
 
-                    <!-- 子标题 -->
-                    <p v-if="subtitle" class="smart-card__subtitle">{{ subtitle }}</p>
-                </div>
+          <!-- 子标题 -->
+          <p v-if="subtitle" class="smart-card__subtitle">{{ subtitle }}</p>
+        </div>
 
-                <!-- 操作区域 -->
-                <div v-if="$slots.actions" class="smart-card__actions">
-                    <slot name="actions" />
-                </div>
-            </slot>
-        </header>
+        <!-- 操作区域 -->
+        <div v-if="$slots.actions" class="smart-card__actions">
+          <slot name="actions" />
+        </div>
+      </slot>
+    </header>
 
-        <!-- 卡片内容 -->
-        <main v-if="$slots.default" class="smart-card__content">
-            <slot />
-        </main>
+    <!-- 卡片内容 -->
+    <main v-if="$slots.default" class="smart-card__content">
+      <slot />
+    </main>
 
-        <!-- 卡片底部 */
+    <!-- 卡片底部 */
     <footer v-if="$slots.footer" class="smart-card__footer">
       <slot name="footer" />
     </footer>

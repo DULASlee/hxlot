@@ -353,7 +353,7 @@ public class SmartAbpDbContext :
         });
 
         // 🔥 MES生产线监控实体配置（Phase A）
-        
+
         // ProductionLine实体配置
         builder.Entity<ProductionLine>(b =>
         {
@@ -404,7 +404,7 @@ public class SmartAbpDbContext :
             b.HasOne(x => x.ProductionLine)
              .WithMany(x => x.Equipments)
              .HasForeignKey(x => x.ProductionLineId)
-             .OnDelete(DeleteBehavior.Cascade);
+             .OnDelete(DeleteBehavior.Restrict); // 避免级联删除循环
 
             // 索引
             b.HasIndex(x => x.Code).IsUnique();
@@ -439,7 +439,7 @@ public class SmartAbpDbContext :
             b.HasOne(x => x.ProductionLine)
              .WithMany(x => x.SensorDataList)
              .HasForeignKey(x => x.ProductionLineId)
-             .OnDelete(DeleteBehavior.Cascade);
+             .OnDelete(DeleteBehavior.Restrict); // 避免级联删除循环
 
             b.HasOne(x => x.Equipment)
              .WithMany()

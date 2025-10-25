@@ -30,20 +30,11 @@
             <span class="panel-title">📝 基本信息配置</span>
           </template>
 
-          <el-form
-            ref="basicFormRef"
-            :model="formData"
-            :rules="basicRules"
-            label-width="120px"
-            label-position="left"
-          >
+          <el-form ref="basicFormRef" :model="formData" :rules="basicRules" label-width="120px" label-position="left">
             <el-row :gutter="20">
               <el-col :span="12">
                 <el-form-item label="系统名称" prop="systemName">
-                  <el-input
-                    v-model="formData.systemName"
-                    placeholder="例如：SmartConstruction"
-                  >
+                  <el-input v-model="formData.systemName" placeholder="例如：SmartConstruction">
                     <template #prepend>System</template>
                   </el-input>
                   <el-text class="form-tip">系统的根命名空间</el-text>
@@ -68,12 +59,7 @@
             </el-form-item>
 
             <el-form-item label="描述" prop="description">
-              <el-input
-                v-model="formData.description"
-                type="textarea"
-                :rows="3"
-                placeholder="简要描述模块的功能和用途"
-              />
+              <el-input v-model="formData.description" type="textarea" :rows="3" placeholder="简要描述模块的功能和用途" />
             </el-form-item>
 
             <el-divider content-position="left">实体配置</el-divider>
@@ -149,14 +135,8 @@
 
           <FieldConfigTable v-model="formData.fields!" />
 
-          <el-alert
-            v-if="!formData.fields || formData.fields.length === 0"
-            title="提示：至少添加一个字段才能继续"
-            type="warning"
-            :closable="false"
-            show-icon
-            style="margin-top: 16px"
-          />
+          <el-alert v-if="!formData.fields || formData.fields.length === 0" title="提示：至少添加一个字段才能继续" type="warning"
+            :closable="false" show-icon style="margin-top: 16px" />
         </el-card>
       </div>
 
@@ -200,25 +180,13 @@
 
           <el-skeleton v-if="generatingPreview" :rows="5" animated />
           <div v-else>
-            <el-tag
-              v-for="(file, index) in previewFiles"
-              :key="index"
-              type="success"
-              size="small"
-              style="margin: 4px"
-            >
+            <el-tag v-for="(file, index) in previewFiles" :key="index" type="success" size="small" style="margin: 4px">
               {{ file }}
             </el-tag>
           </div>
 
-          <el-alert
-            v-if="generationError"
-            :title="generationError"
-            type="error"
-            :closable="false"
-            show-icon
-            style="margin-top: 16px"
-          />
+          <el-alert v-if="generationError" :title="generationError" type="error" :closable="false" show-icon
+            style="margin-top: 16px" />
         </el-card>
       </div>
     </div>
@@ -227,12 +195,7 @@
     <div class="studio-footer">
       <el-button v-if="currentStep > 0" @click="prevStep">上一步</el-button>
       <el-button v-if="currentStep < 2" type="primary" @click="nextStep">下一步</el-button>
-      <el-button
-        v-if="currentStep === 2"
-        type="success"
-        :loading="generating"
-        @click="handleGenerate"
-      >
+      <el-button v-if="currentStep === 2" type="success" :loading="generating" @click="handleGenerate">
         开始生成
       </el-button>
     </div>
@@ -448,9 +411,9 @@ async function loadPreviewFiles() {
     const result = await SmartStudioLiteService.postApiLowcodeSmartStudioLitePreviewFiles({
       requestBody: formData as any  // 临时类型修复
     })
-    
+
     previewFiles.value = (result.items || []).map(item => item.userName || item.name || 'unknown')
-    
+
     ElMessage.success(`预览 ${previewFiles.value.length} 个文件`)
   } catch (error: any) {
     console.error('❌ 加载文件预览失败:', error)
@@ -487,23 +450,23 @@ async function handleGenerate() {
       // ✅ 调用真实的后端API
       progressMessage.value = '正在验证配置...'
       generationProgress.value = 20
-      
+
       const result = await SmartStudioLiteService.postApiLowcodeSmartStudioLiteCreateModule({
         requestBody: formData as any  // 临时类型修复
       })
-      
+
       progressMessage.value = '代码生成完成！'
       generationProgress.value = 100
       progressStatus.value = 'success'
       generationComplete.value = true
-      
+
       ElMessage.success(`✅ ${result.message}`)
-      
+
       // 显示生成的文件信息
       if (result.generatedFiles && result.generatedFiles.length > 0) {
         console.log('🎉 生成的文件:', result.generatedFiles)
       }
-      
+
     } catch (error: any) {
       console.error('❌ 代码生成失败:', error)
       progressStatus.value = 'exception'
@@ -608,4 +571,3 @@ onMounted(() => {
   }
 }
 </style>
-

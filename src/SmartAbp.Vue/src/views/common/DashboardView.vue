@@ -3,21 +3,17 @@
     <div class="dashboard-header">
       <div class="header-content">
         <div class="header-text">
-          <h1><SmartIcon icon="carbon:dashboard" size="lg" class="header-icon" />{{ t('dashboard.title') }}</h1>
+          <h1>
+            <SmartIcon icon="carbon:dashboard" size="lg" class="header-icon" />{{ t('dashboard.title') }}
+          </h1>
           <p>{{ t('dashboard.welcome') }}</p>
         </div>
         <div class="header-actions">
-          <button
-            class="header-btn"
-            @click="refreshDashboard"
-          >
+          <button class="header-btn" @click="refreshDashboard">
             <SmartIcon icon="carbon:renew" />
             <span>{{ t('dashboard.actions.refresh') }}</span>
           </button>
-          <button
-            class="header-btn"
-            @click="exportReport"
-          >
+          <button class="header-btn" @click="exportReport">
             <SmartIcon icon="carbon:download" />
             <span>{{ t('dashboard.actions.export') }}</span>
           </button>
@@ -103,12 +99,11 @@
 
       <!-- 快速操作 -->
       <div class="quick-actions">
-        <h2><SmartIcon icon="carbon:lightning" />{{ t('dashboard.quickActions.title') }}</h2>
+        <h2>
+          <SmartIcon icon="carbon:lightning" />{{ t('dashboard.quickActions.title') }}
+        </h2>
         <div class="action-grid">
-          <button
-            class="action-btn"
-            @click="router.push('/Admin/users')"
-          >
+          <button class="action-btn" @click="router.push('/Admin/users')">
             <SmartIcon icon="carbon:user" />
             <div class="action-content">
               <span class="action-title">{{ t('dashboard.quickActions.userManagement') }}</span>
@@ -116,10 +111,7 @@
             </div>
           </button>
 
-          <button
-            class="action-btn"
-            @click="router.push('/Project')"
-          >
+          <button class="action-btn" @click="router.push('/Project')">
             <SmartIcon icon="carbon:flow-data" />
             <div class="action-content">
               <span class="action-title">{{ t('dashboard.quickActions.projectManagement') }}</span>
@@ -127,10 +119,7 @@
             </div>
           </button>
 
-          <button
-            class="action-btn"
-            @click="router.push('/Log')"
-          >
+          <button class="action-btn" @click="router.push('/Log')">
             <SmartIcon icon="carbon:document" />
             <div class="action-content">
               <span class="action-title">{{ t('dashboard.quickActions.systemLogs') }}</span>
@@ -138,10 +127,7 @@
             </div>
           </button>
 
-          <button
-            class="action-btn"
-            @click="testTheme"
-          >
+          <button class="action-btn" @click="testTheme">
             <SmartIcon icon="carbon:color-palette" />
             <div class="action-content">
               <span class="action-title">{{ t('dashboard.quickActions.themeTest') }}</span>
@@ -149,10 +135,7 @@
             </div>
           </button>
 
-          <button
-            class="action-btn"
-            @click="router.push('/Admin/settings')"
-          >
+          <button class="action-btn" @click="router.push('/Admin/settings')">
             <SmartIcon icon="carbon:settings" />
             <div class="action-content">
               <span class="action-title">{{ t('dashboard.quickActions.systemSettings') }}</span>
@@ -160,10 +143,7 @@
             </div>
           </button>
 
-          <button
-            class="action-btn"
-            @click="router.push('/Admin/permissions')"
-          >
+          <button class="action-btn" @click="router.push('/Admin/permissions')">
             <SmartIcon icon="carbon:security" />
             <div class="action-content">
               <span class="action-title">{{ t('dashboard.quickActions.permissionManagement') }}</span>
@@ -175,7 +155,9 @@
 
       <!-- 系统状态 -->
       <div class="system-status">
-        <h2><SmartIcon icon="carbon:server" />{{ t('dashboard.systemStatus.title') }}</h2>
+        <h2>
+          <SmartIcon icon="carbon:server" />{{ t('dashboard.systemStatus.title') }}
+        </h2>
         <div class="status-list">
           <div class="status-item">
             <div class="status-icon">
@@ -224,10 +206,10 @@
 </template>
 
 <script setup lang="ts">
+import { SmartIcon } from "@/components/design-system"
 import { useThemeStore } from "@/stores"
 import { useI18n } from "vue-i18n"
 import { useRouter } from "vue-router"
-import { SmartIcon } from "@/components/design-system"
 
 const themeStore = useThemeStore()
 const { t } = useI18n()
@@ -374,12 +356,15 @@ const exportReport = () => {
 .stat-card.users::before {
   background: var(--theme-brand-primary);
 }
+
 .stat-card.projects::before {
   background: var(--theme-success);
 }
+
 .stat-card.health::before {
   background: var(--theme-warning);
 }
+
 .stat-card.logs::before {
   background: var(--theme-info);
 }
@@ -649,7 +634,7 @@ const exportReport = () => {
 }
 
 /* 响应式设计 */
-@media (width <= 768px) {
+@media (width <=768px) {
   .header-content {
     flex-direction: column;
     align-items: flex-start;

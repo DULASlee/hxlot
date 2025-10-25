@@ -22,7 +22,7 @@ namespace SmartAbp.Application.Contracts.SensorData
 
         [Required]
         [MaxLength(20)]
-        public string Unit { get; set; }
+        public string Unit { get; set; } = string.Empty;
 
         public Guid ProductionLineId { get; set; }
         public Guid EquipmentId { get; set; }
@@ -33,10 +33,10 @@ namespace SmartAbp.Application.Contracts.SensorData
         public bool IsAlarm { get; set; }
 
         [MaxLength(50)]
-        public string AlarmLevel { get; set; }
+        public string AlarmLevel { get; set; } = string.Empty;
 
         [MaxLength(500)]
-        public string AlarmMessage { get; set; }
+        public string AlarmMessage { get; set; } = string.Empty;
 
         [MaxLength(50)]
         public string Status { get; set; }

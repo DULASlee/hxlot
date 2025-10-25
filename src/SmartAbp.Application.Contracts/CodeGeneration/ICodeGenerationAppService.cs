@@ -35,6 +35,26 @@ namespace SmartAbp.Application.Contracts.CodeGeneration
         /// 删除任务
         /// </summary>
         Task DeleteAsync(Guid id);
+
+        /// <summary>
+        /// 测试数据库连接
+        /// </summary>
+        Task<DatabaseConnectionTestResultDto> TestDatabaseConnectionAsync(DatabaseConnectionRequestDto request);
+
+        /// <summary>
+        /// 数据库内省（获取表结构）
+        /// </summary>
+        Task<DatabaseSchemaDto> IntrospectDatabaseAsync(DatabaseIntrospectionRequestDto request);
+
+        /// <summary>
+        /// 获取UI配置
+        /// </summary>
+        Task<EntityUIConfigDto> GetUiConfigAsync(string module, string entity);
+
+        /// <summary>
+        /// 保存UI配置
+        /// </summary>
+        Task SaveUiConfigAsync(string module, string entity, EntityUIConfigDto config);
     }
 }
 

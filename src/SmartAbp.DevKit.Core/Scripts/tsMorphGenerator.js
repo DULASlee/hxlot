@@ -2,7 +2,7 @@
 /**
  * ts-morph Vue组件生成器
  * 由FrontendWorkstation调用，负责生成Vue组件和TypeScript类型
- * 
+ *
  * 使用方式: node tsMorphGenerator.js '{"Name":"User","DisplayName":"用户",...}'
  */
 
@@ -12,37 +12,37 @@ const path = require('path');
 // 从命令行参数读取实体元数据JSON
 const args = process.argv.slice(2);
 if (args.length === 0) {
-    console.error('❌ 错误：缺少实体元数据JSON参数');
-    console.error('使用方式: node tsMorphGenerator.js \'{"Name":"User",...}\'');
-    process.exit(1);
+  console.error('❌ 错误：缺少实体元数据JSON参数');
+  console.error('使用方式: node tsMorphGenerator.js \'{"Name":"User",...}\'');
+  process.exit(1);
 }
 
 let entitySchema;
 try {
-    entitySchema = JSON.parse(args[0]);
+  entitySchema = JSON.parse(args[0]);
 } catch (error) {
-    console.error('❌ 错误：无法解析JSON参数:', error.message);
-    process.exit(1);
+  console.error('❌ 错误：无法解析JSON参数:', error.message);
+  process.exit(1);
 }
 
 // 验证必需字段
 if (!entitySchema.Name || !entitySchema.DisplayName) {
-    console.error('❌ 错误：实体元数据缺少必需字段（Name, DisplayName）');
-    process.exit(1);
+  console.error('❌ 错误：实体元数据缺少必需字段（Name, DisplayName）');
+  process.exit(1);
 }
 
 console.log(`🚀 开始生成Vue组件: ${entitySchema.Name} (${entitySchema.DisplayName})`);
 
 // 创建ts-morph项目（内存模式，不实际写入文件）
 const project = new Project({
-    useInMemoryFileSystem: true,
-    compilerOptions: {
-        target: 99, // ESNext
-        module: 99, // ESNext
-        strict: true,
-        esModuleInterop: true,
-        skipLibCheck: true
-    }
+  useInMemoryFileSystem: true,
+  compilerOptions: {
+    target: 99, // ESNext
+    module: 99, // ESNext
+    strict: true,
+    esModuleInterop: true,
+    skipLibCheck: true
+  }
 });
 
 // ==================== 生成TypeScript接口 ====================
@@ -63,10 +63,10 @@ console.log('✅ Vue组件已生成');
 
 // ==================== 输出所有生成的代码 ====================
 const output = {
-    types: typeScriptCode,
-    apiClient: apiClientCode,
-    store: storeCode,
-    component: vueComponentCode
+  types: typeScriptCode,
+  apiClient: apiClientCode,
+  store: storeCode,
+  component: vueComponentCode
 };
 
 console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -80,61 +80,61 @@ console.log(JSON.stringify(output, null, 2));
  * 生成TypeScript接口
  */
 function generateTypeScriptInterface(schema) {
-    const interfaceFile = project.createSourceFile('types.ts', '', { overwrite: true });
+  const interfaceFile = project.createSourceFile('types.ts', '', { overwrite: true });
 
-    // 主DTO接口
-    interfaceFile.addInterface({
-        name: `${schema.Name}Dto`,
-        isExported: true,
-        properties: [
-            { name: 'id', type: 'string', hasQuestionToken: true },
-            ...schema.Properties.map(prop => ({
-                name: toCamelCase(prop.Name),
-                type: mapToTypeScript(prop.Type),
-                hasQuestionToken: !prop.IsRequired
-            }))
-        ]
-    });
+  // 主DTO接口
+  interfaceFile.addInterface({
+    name: `${schema.Name}Dto`,
+    isExported: true,
+    properties: [
+      { name: 'id', type: 'string', hasQuestionToken: true },
+      ...schema.Properties.map(prop => ({
+        name: toCamelCase(prop.Name),
+        type: mapToTypeScript(prop.Type),
+        hasQuestionToken: !prop.IsRequired
+      }))
+    ]
+  });
 
-    // Create DTO接口
-    interfaceFile.addInterface({
-        name: `Create${schema.Name}Input`,
-        isExported: true,
-        properties: schema.Properties
-            .filter(p => !p.IsKey)
-            .map(prop => ({
-                name: toCamelCase(prop.Name),
-                type: mapToTypeScript(prop.Type),
-                hasQuestionToken: !prop.IsRequired
-            }))
-    });
+  // Create DTO接口
+  interfaceFile.addInterface({
+    name: `Create${schema.Name}Input`,
+    isExported: true,
+    properties: schema.Properties
+      .filter(p => !p.IsKey)
+      .map(prop => ({
+        name: toCamelCase(prop.Name),
+        type: mapToTypeScript(prop.Type),
+        hasQuestionToken: !prop.IsRequired
+      }))
+  });
 
-    // Update DTO接口
-    interfaceFile.addInterface({
-        name: `Update${schema.Name}Input`,
-        isExported: true,
-        properties: schema.Properties
-            .filter(p => !p.IsKey)
-            .map(prop => ({
-                name: toCamelCase(prop.Name),
-                type: mapToTypeScript(prop.Type),
-                hasQuestionToken: !prop.IsRequired
-            }))
-    });
+  // Update DTO接口
+  interfaceFile.addInterface({
+    name: `Update${schema.Name}Input`,
+    isExported: true,
+    properties: schema.Properties
+      .filter(p => !p.IsKey)
+      .map(prop => ({
+        name: toCamelCase(prop.Name),
+        type: mapToTypeScript(prop.Type),
+        hasQuestionToken: !prop.IsRequired
+      }))
+  });
 
-    return interfaceFile.getFullText();
+  return interfaceFile.getFullText();
 }
 
 /**
  * 生成API Client
  */
 function generateApiClient(schema) {
-    const entityName = schema.Name;
-    const camelName = toCamelCase(entityName);
-    const kebabName = toKebabCase(pluralize(entityName));
+  const entityName = schema.Name;
+  const camelName = toCamelCase(entityName);
+  const kebabName = toKebabCase(pluralize(entityName));
 
-    return `
-import { http } from '@/utils/http'
+  return `
+import http from '@/utils/http'
 import type { ${entityName}Dto, Create${entityName}Input, Update${entityName}Input } from './types'
 import type { PagedResultDto } from '@/types'
 
@@ -192,10 +192,10 @@ export const ${camelName}Api = new ${entityName}ApiClient()
  * 生成Pinia Store
  */
 function generatePiniaStore(schema) {
-    const entityName = schema.Name;
-    const camelName = toCamelCase(entityName);
+  const entityName = schema.Name;
+  const camelName = toCamelCase(entityName);
 
-    return `
+  return `
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { ${camelName}Api } from './api'
@@ -296,29 +296,29 @@ export const use${entityName}Store = defineStore('${camelName}', () => {
  * 生成Vue组件
  */
 function generateVueComponent(schema) {
-    const entityName = schema.Name;
-    const camelName = toCamelCase(entityName);
-    const kebabName = toKebabCase(entityName);
-    const displayName = schema.DisplayName;
+  const entityName = schema.Name;
+  const camelName = toCamelCase(entityName);
+  const kebabName = toKebabCase(entityName);
+  const displayName = schema.DisplayName;
 
-    // 生成表格列
-    const tableColumns = schema.Properties
-        .slice(0, 5) // 只显示前5个属性
-        .map(prop => `        <el-table-column prop="${toCamelCase(prop.Name)}" label="${prop.DisplayName}" />`)
-        .join('\n');
+  // 生成表格列
+  const tableColumns = schema.Properties
+    .slice(0, 5) // 只显示前5个属性
+    .map(prop => `        <el-table-column prop="${toCamelCase(prop.Name)}" label="${prop.DisplayName}" />`)
+    .join('\n');
 
-    // 生成表单项
-    const formItems = schema.Properties
-        .filter(p => !p.IsKey)
-        .map(prop => {
-            const camelPropName = toCamelCase(prop.Name);
-            return `        <el-form-item label="${prop.DisplayName}" prop="${camelPropName}">
+  // 生成表单项
+  const formItems = schema.Properties
+    .filter(p => !p.IsKey)
+    .map(prop => {
+      const camelPropName = toCamelCase(prop.Name);
+      return `        <el-form-item label="${prop.DisplayName}" prop="${camelPropName}">
           <el-input v-model="form.${camelPropName}" />
         </el-form-item>`;
-        })
-        .join('\n');
+    })
+    .join('\n');
 
-    return `
+  return `
 <template>
   <div class="${kebabName}-page">
     <el-card>
@@ -490,45 +490,45 @@ onMounted(() => {
 // ==================== 辅助函数 ====================
 
 function toCamelCase(str) {
-    if (!str) return '';
-    return str.charAt(0).toLowerCase() + str.slice(1);
+  if (!str) return '';
+  return str.charAt(0).toLowerCase() + str.slice(1);
 }
 
 function toKebabCase(str) {
-    if (!str) return '';
-    return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  if (!str) return '';
+  return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
 function pluralize(str) {
-    if (!str) return '';
-    if (str.endsWith('y')) {
-        return str.slice(0, -1) + 'ies';
-    }
-    if (str.endsWith('s')) {
-        return str + 'es';
-    }
-    return str + 's';
+  if (!str) return '';
+  if (str.endsWith('y')) {
+    return str.slice(0, -1) + 'ies';
+  }
+  if (str.endsWith('s')) {
+    return str + 'es';
+  }
+  return str + 's';
 }
 
 function mapToTypeScript(csharpType) {
-    const typeMap = {
-        'string': 'string',
-        'int': 'number',
-        'long': 'number',
-        'decimal': 'number',
-        'double': 'number',
-        'float': 'number',
-        'bool': 'boolean',
-        'boolean': 'boolean',
-        'datetime': 'Date',
-        'guid': 'string',
-        'Guid': 'string',
-        'DateTime': 'Date'
-    };
+  const typeMap = {
+    'string': 'string',
+    'int': 'number',
+    'long': 'number',
+    'decimal': 'number',
+    'double': 'number',
+    'float': 'number',
+    'bool': 'boolean',
+    'boolean': 'boolean',
+    'datetime': 'Date',
+    'guid': 'string',
+    'Guid': 'string',
+    'DateTime': 'Date'
+  };
 
-    // 移除可空标记（?）
-    const baseType = csharpType?.replace('?', '');
-    return typeMap[baseType] || 'any';
+  // 移除可空标记（?）
+  const baseType = csharpType?.replace('?', '');
+  return typeMap[baseType] || 'any';
 }
 
 console.log('\n✅ ts-morph生成器执行成功！');

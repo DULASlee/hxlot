@@ -288,14 +288,19 @@
 
 <script setup lang="ts">
 import * as EpIcons from '@element-plus/icons-vue'
+import { Promotion } from '@element-plus/icons-vue'
 import type { TableSchema } from '@smartabp/lowcode-api'
 import { codeGeneratorApi } from '@smartabp/lowcode-api'
-import { safeValidateModuleMetadata } from '@smartabp/lowcode-shared'
+import { mapDbTypeToEntityType, safeValidateModuleMetadata } from '@smartabp/lowcode-shared'
 import { useTheme } from '@smartabp/lowcode-shared/theme'
 import { useDebounceFn } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+
+// 🔥 Phase 3C重大修复：强制使用NSwagger生成的类型系统，根除手动JSON构造导致的参数缺失BUG
+import type { SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto } from '@/api/generated/models/SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto'
+import { CodeGenerationService } from '@/api/generated/services/CodeGenerationService'
 
 const { t } = useI18n()
 const { mode, toggleTheme } = useTheme()
@@ -482,8 +487,23 @@ const getMissingFields = (): string[] => {
   return missing
 }
 
-// 将config转换为ModuleMetadata（不再为核心必填提供兜底默认）
-const convertToModuleMetadata = (): any => {
+// 🚀 核心修复：添加数据库类型到实体类型的映射函数
+const mapDbTypeToEntityType = (dbType: string | undefined): string => {
+  if (!dbType) return 'string'
+  const type = dbType.toLowerCase()
+  if (type.includes('char') || type.includes('text') || type.includes('xml')) return 'string'
+  if (type.includes('int')) return 'int'
+  if (type.includes('uniqueidentifier')) return 'Guid'
+  if (type.includes('datetime') || type.includes('date') || type.includes('time')) return 'DateTime'
+  if (type.includes('bit')) return 'bool'
+  if (type.includes('decimal') || type.includes('money') || type.includes('numeric')) return 'decimal'
+  if (type.includes('float') || type.includes('real')) return 'double'
+  if (type.includes('binary') || type.includes('image') || type.includes('rowversion')) return 'byte[]'
+  return 'string' // 默认回退到 string
+}
+
+// 🔥 Phase 3C重大修复：强制使用NSwagger生成的ModuleMetadataDto类型，确保100%后端DTO一致性
+const convertToModuleMetadata = (): SmartAbp_CodeGenerator_Services_V9_ModuleMetadataDto => {
   const selectedTableData = availableTables.value.find(t => t.name === selectedTable.value)
 
   // ✅ 修复：config 是 reactive 对象，直接使用，不要用 .value
@@ -503,12 +523,13 @@ const convertToModuleMetadata = (): any => {
     console.log('🔍 [调试] selectedTableData.schema:', selectedTableData.schema)
     console.log('🔍 [调试] selectedTableData.schema?.columns:', selectedTableData.schema?.columns)
 
-    const entityName = selectedTable.value || 'Entity'
+    // 🚀 核心修复：实体名称应使用模块名，而不是表名
+    const entityName = c.moduleName || selectedTable.value.replace(/^[A-Z]+_/, '') || 'Entity'
     const entity = {
       id: crypto.randomUUID(),
       name: entityName,
-      displayName: entityName,
-      description: `${entityName} 实体`,
+      displayName: c.displayName || entityName,
+      description: `${c.displayName || entityName} 实体`,
       module: c.moduleName,
       namespace: ns,
       tableName: selectedTable.value,
@@ -523,7 +544,8 @@ const convertToModuleMetadata = (): any => {
         id: crypto.randomUUID(),
         name: col.name || col.Name,
         displayName: col.name || col.Name,
-        type: col.dataType || col.DataType || 'string',
+        // 🚀 核心修复：使用类型映射函数转换数据类型
+        type: mapDbTypeToEntityType(col.dataType || col.DataType),
         isRequired: !col.isNullable && !(col.IsNullable ?? true),
         isKey: col.isPrimaryKey || col.IsPrimaryKey || false,
         isUnique: false,
@@ -615,6 +637,7 @@ const convertToModuleMetadata = (): any => {
   return {
     // ✅ 后端ModuleMetadataDto必需字段（使用camelCase命名）
     id: crypto.randomUUID(),
+    name: cleanModuleName, // 🔥 修复：后端要求根级别的 name 字段
     systemName: cleanSystemName, // ✅ 必需：系统名称
     moduleName: cleanModuleName, // ✅ 必需：模块名称（后端用这个字段）
     displayName: c.displayName,
@@ -636,7 +659,8 @@ const convertToModuleMetadata = (): any => {
       enableAdvancedQuery: true,
       enableBatchOperations: true,
       enableImportExport: true,
-      enableVersioning: false
+      enableVersioning: false,
+      defaultPolicy: '' // 🔥 修复：添加必需的 defaultPolicy 字段
     },
 
     // ✅ 必需：Frontend (FrontendConfigDto)
@@ -658,11 +682,14 @@ const convertToModuleMetadata = (): any => {
     menuConfig: [{
       id: crypto.randomUUID(),
       name: c.displayName,
+      title: c.displayName, // 🔥 修复：添加必需的 title 字段
       path: route,
+      componentPath: route, // 🔥 修复：添加必需的 componentPath 字段
       icon: c.menuIcon || 'database',
       parentId: c.parentMenuId || 'business',
       sort: 100,
-      permissions: []
+      permissions: [],
+      requiredPermission: '' // 🔥 修复：添加必需的 requiredPermission 字段
     }],
 
     // ✅ 必需：PermissionConfig (ModulePermissionConfig)
@@ -801,6 +828,8 @@ const startGeneration = async () => {
   // 显式前置校验，缺失则阻止提交
   const missing = getMissingFields()
   if (missing.length > 0) {
+    // 🔴 关键调试：在控制台打印出缺失的字段
+    console.error('❌ 前置校验失败，以下字段缺失:', missing)
     ElMessage({
       message: t('ultraSimple.validation.missingRequired', { fields: missing.join('、') }),
       type: 'error',
@@ -889,7 +918,10 @@ const startGeneration = async () => {
 
     let result: any
     try {
-      result = await codeGeneratorApi.generateModule(metadata)
+      // 🔥 Phase 3C重大修复：使用NSwagger生成的CodeGenerationService，确保API参数类型100%准确
+      result = await CodeGenerationService.postApiCodeGeneratorGenerateModule({
+        requestBody: metadata
+      })
     } catch (apiError: any) {
       // 🔍 捕获详细的API错误信息
       console.error('❌ [后端错误] 完整错误对象:', apiError)
@@ -1366,8 +1398,10 @@ const startBatchGeneration = async () => {
         }))
       }
 
-      // 调用生成API
-      const result = await codeGeneratorApi.generateModule(metadata)
+      // 🔥 Phase 3C重大修复：使用NSwagger生成的CodeGenerationService
+      const result = await CodeGenerationService.postApiCodeGeneratorGenerateModule({
+        requestBody: metadata
+      })
 
       entity.generated = true
       entity.fileCount = result.generatedFiles?.length || 0

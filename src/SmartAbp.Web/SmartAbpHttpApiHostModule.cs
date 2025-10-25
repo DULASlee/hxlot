@@ -10,6 +10,7 @@ using SmartAbp.Web.Hubs;
 using SmartAbp.Web.BackgroundWorkers;
 using SmartAbp.Web.Realtime;
 using SmartAbp.Application.Contracts.Realtime;
+using SmartAbp.Application.RealtimeData;
 using Volo.Abp;
 using Volo.Abp.Autofac;
 using Volo.Abp.AspNetCore.Authentication.JwtBearer;
@@ -72,11 +73,16 @@ public class SmartAbpHttpApiHostModule : AbpModule
 
                 if (hostEnvironment.IsDevelopment())
                 {
-                    // 开发环境：允许任何来源（支持localhost、127.0.0.1、局域网IP等）
-                    builder.SetIsOriginAllowed(origin => true)
+                    // 开发环境：明确允许前端开发服务器和Swagger UI的地址
+                    builder.WithOrigins(
+                            "http://localhost:9001", // 前端Vue开发服务器
+                            "http://localhost:9002", // 后端Swagger UI
+                            "http://127.0.0.1:9001", // 前端备用地址
+                            "http://127.0.0.1:9002"  // 后端备用地址
+                        )
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowCredentials(); // SignalR必须开启Credentials
+                        .AllowCredentials();
                 }
                 else
                 {
@@ -114,7 +120,7 @@ public class SmartAbpHttpApiHostModule : AbpModule
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
         // 实时数据聚合服务
-        context.Services.AddTransient<SmartAbp.Application.Realtime.RealtimeDataAggregatorService>();
+        context.Services.AddTransient<RealtimeDataAggregatorService>();
 
         // 注册实时数据通知服务
         context.Services.AddTransient<IRealtimeDataNotifier, SignalRRealtimeDataNotifier>();

@@ -4,7 +4,7 @@
  */
 
 import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
-import { setupMockInterceptor } from './__tests__/mocks/mock-server'
+// import { setupMockInterceptor } from './__tests__/mocks/mock-server' // ⚠️ 已禁用Mock服务器
 import type { AbpErrorData } from './types/error'
 
 /**
@@ -74,8 +74,8 @@ export function createHttpClient(config?: HttpClientConfig): HttpClient {
     }
   })
 
-  // 🔥 启用Mock拦截器（当后端不可用时自动降级到Mock数据）
-  setupMockInterceptor(instance)
+  // ✅ Mock服务器已彻底禁用，所有请求必须连接真实后端
+  // setupMockInterceptor(instance) // 已移除，生产环境严禁使用Mock数据
 
   // 请求拦截器 - 添加认证token
   instance.interceptors.request.use(

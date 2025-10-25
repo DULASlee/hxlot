@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using SmartAbp.Application.Contracts.Realtime;
+using SmartAbp.Application.RealtimeData;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -108,7 +109,7 @@ namespace SmartAbp.Application.MES
                         var equipmentRepository = scope.ServiceProvider.GetRequiredService<IRepository<MesEquipment, Guid>>();
                         var sensorDataRepository = scope.ServiceProvider.GetRequiredService<IRepository<MesSensorData, Guid>>();
                         var alarmNotificationService = scope.ServiceProvider.GetRequiredService<AlarmNotificationService>();
-                        var aggregatorService = scope.ServiceProvider.GetRequiredService<SmartAbp.Application.Realtime.RealtimeDataAggregatorService>();
+                        var aggregatorService = scope.ServiceProvider.GetRequiredService<RealtimeDataAggregatorService>();
                         var notifier = scope.ServiceProvider.GetRequiredService<IRealtimeDataNotifier>();
 
                         // 查询所有运行中的生产线

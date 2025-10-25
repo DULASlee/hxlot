@@ -31,14 +31,14 @@ public class Vue3ComponentCustomizer : ITransientDependency
     /// <param name="customizationOptions">订制选项</param>
     /// <returns>增强的Vue组件代码</returns>
     public string GenerateCustomizableManagementComponent(
-        EnhancedEntityModelDto entity, 
+        EnhancedEntityModelDto entity,
         ModuleMetadataDto metadata,
         ComponentCustomizationOptions? customizationOptions = null)
     {
         _logger.LogInformation("🎨 生成可订制Vue管理组件: {EntityName}", entity.Name);
 
         var options = customizationOptions ?? new ComponentCustomizationOptions();
-        
+
         // ✅ 性能优化：使用StringBuilder对象池
         return StringBuilderPool.Build(sb =>
         {
@@ -54,7 +54,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
             // 🎨 生成可订制的Style部分
             GenerateStyle(sb, entity, metadata, options);
 
-            _logger.LogDebug("✅ Vue管理组件生成完成: {EntityName}, 长度: {Length}", 
+            _logger.LogDebug("✅ Vue管理组件生成完成: {EntityName}, 长度: {Length}",
                 entity.Name, sb.Length);
         });
     }
@@ -98,7 +98,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
 
         sb.AppendLine("<template>");
         sb.AppendLine($"  <div class=\"{entityLower}-management\" :class=\"customClasses\">");
-        
+
         // 🎯 扩展点1：自定义页面头部
         sb.AppendLine("    <!-- 🔧 扩展点1：自定义页面头部 -->");
         sb.AppendLine("    <slot name=\"page-header\">");
@@ -147,7 +147,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
         sb.AppendLine("        @submit.prevent=\"onSearch\"");
         sb.AppendLine("      >");
         sb.AppendLine("        <el-row :gutter=\"16\">");
-        
+
         // 为每个可搜索字段生成搜索表单项
         if (entity.Properties != null)
         {
@@ -156,7 +156,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
             {
                 sb.AppendLine($"          <el-col :xs=\"24\" :sm=\"12\" :md=\"6\">");
                 sb.AppendLine($"            <el-form-item label=\"{prop.DisplayName ?? prop.Name}\">");
-                
+
                 if (prop.Type == "string")
                 {
                     sb.AppendLine($"              <el-input");
@@ -176,7 +176,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
                     sb.AppendLine($"                value-format=\"YYYY-MM-DD\"");
                     sb.AppendLine($"              />");
                 }
-                
+
                 sb.AppendLine($"            </el-form-item>");
                 sb.AppendLine($"          </el-col>");
             }
@@ -210,7 +210,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
         sb.AppendLine("      <div class=\"table-toolbar\">");
         sb.AppendLine("        <div class=\"toolbar-left\">");
         sb.AppendLine($"          <el-button");
-        sb.AppendLine($"            v-permission=\"'SmartAbp.{entity.Name}.Create'\"");
+        sb.AppendLine($"            v-if=\"hasPermission('SmartAbp.{entity.Name}.Create')\"");
         sb.AppendLine($"            type=\"primary\"");
         sb.AppendLine($"            @click=\"onAdd\"");
         sb.AppendLine($"          >");
@@ -221,7 +221,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
         if (options.EnableBatchOperations)
         {
             sb.AppendLine($"          <el-button");
-            sb.AppendLine($"            v-permission=\"'SmartAbp.{entity.Name}.Delete'\"");
+            sb.AppendLine($"            v-if=\"hasPermission('SmartAbp.{entity.Name}.Delete')\"");
             sb.AppendLine($"            type=\"danger\"");
             sb.AppendLine($"            :disabled=\"selectedRows.length === 0\"");
             sb.AppendLine($"            @click=\"onBatchDelete\"");
@@ -249,7 +249,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
 
         sb.AppendLine("        </div>");
         sb.AppendLine();
-        
+
         // 🎯 扩展点3：自定义工具栏按钮
         sb.AppendLine("        <!-- 🔧 扩展点3：自定义工具栏按钮 -->");
         sb.AppendLine("        <div class=\"toolbar-right\">");
@@ -297,7 +297,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
                 sb.AppendLine($"        <el-table-column");
                 sb.AppendLine($"          prop=\"{prop.Name.ToCamelCase()}\"");
                 sb.AppendLine($"          label=\"{prop.DisplayName ?? prop.Name}\"");
-                
+
                 if (prop.Type == "DateTime")
                 {
                     sb.AppendLine($"          width=\"180\"");
@@ -342,7 +342,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
         sb.AppendLine("          <template #default=\"{ row }\">");
         sb.AppendLine("            <div class=\"action-buttons\">");
         sb.AppendLine($"              <el-button");
-        sb.AppendLine($"                v-permission=\"'SmartAbp.{entity.Name}.Edit'\"");
+        sb.AppendLine($"                v-if=\"hasPermission('SmartAbp.{entity.Name}.Edit')\"");
         sb.AppendLine($"                link");
         sb.AppendLine($"                type=\"primary\"");
         sb.AppendLine($"                size=\"small\"");
@@ -351,7 +351,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
         sb.AppendLine($"                <el-icon><Edit /></el-icon> 编辑");
         sb.AppendLine($"              </el-button>");
         sb.AppendLine($"              <el-button");
-        sb.AppendLine($"                v-permission=\"'SmartAbp.{entity.Name}.Delete'\"");
+        sb.AppendLine($"                v-if=\"hasPermission('SmartAbp.{entity.Name}.Delete')\"");
         sb.AppendLine($"                link");
         sb.AppendLine($"                type=\"danger\"");
         sb.AppendLine($"                size=\"small\"");
@@ -359,13 +359,13 @@ public class Vue3ComponentCustomizer : ITransientDependency
         sb.AppendLine($"              >");
         sb.AppendLine($"                <el-icon><Delete /></el-icon> 删除");
         sb.AppendLine($"              </el-button>");
-        
+
         // 🎯 扩展点5：自定义操作按钮
         sb.AppendLine("              <!-- 🔧 扩展点5：自定义操作按钮 -->");
         sb.AppendLine("              <slot name=\"row-actions\" :row=\"row\">");
         sb.AppendLine("                <!-- 可在此添加自定义行操作 -->");
         sb.AppendLine("              </slot>");
-        
+
         sb.AppendLine("            </div>");
         sb.AppendLine("          </template>");
         sb.AppendLine("        </el-table-column>");
@@ -555,7 +555,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
 
         sb.AppendLine("<script setup lang=\"ts\">");
         sb.AppendLine("// Vue 3 Composition API");
-        sb.AppendLine("import { ref, reactive, computed, onMounted, nextTick } from 'vue'");
+        sb.AppendLine("import { ref, reactive, computed, onMounted, nextTick, readonly, watch } from 'vue'");
         sb.AppendLine("// Element Plus组件和图标");
         sb.AppendLine("import { ElMessage, ElMessageBox } from 'element-plus'");
         sb.AppendLine("import { Search, Refresh, Plus, Edit, Delete, Download, Upload } from '@element-plus/icons-vue'");
@@ -567,13 +567,13 @@ public class Vue3ComponentCustomizer : ITransientDependency
         sb.AppendLine("import { usePermission } from '@/composables/usePermission'");
         sb.AppendLine("// 响应式设计");
         sb.AppendLine("import { useBreakpoints } from '@/composables/useBreakpoints'");
-        
+
         if (options.EnableThemeCustomization)
         {
             sb.AppendLine("// 主题定制");
             sb.AppendLine("import { useTheme } from '@/composables/useTheme'");
         }
-        
+
         sb.AppendLine();
         sb.AppendLine("// 🔧 类型定义");
         sb.AppendLine($"interface {entity.Name}FormData {{");
@@ -606,7 +606,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
     {
         // 🔥 变量定义修复：在方法开始处定义entityCamel（遵循BUG修复铁律）
         var entityCamel = entity.Name.ToCamelCase();
-        
+
         sb.AppendLine("// 🔧 扩展点8：自定义组合式函数和状态");
         sb.AppendLine("// 可在此区域添加自定义的组合式函数");
         sb.AppendLine();
@@ -616,12 +616,12 @@ public class Vue3ComponentCustomizer : ITransientDependency
         sb.AppendLine($"const {entityCamel}Store = use{entity.Name}Store()");
         sb.AppendLine("const { hasPermission } = usePermission()");
         sb.AppendLine("const { isMobile, isTablet } = useBreakpoints()");
-        
+
         if (options.EnableThemeCustomization)
         {
             sb.AppendLine("const { currentTheme, setThemeVariable } = useTheme()");
         }
-        
+
         sb.AppendLine();
         sb.AppendLine("// 🎨 UI状态管理");
         sb.AppendLine("const loading = ref(false)");
@@ -660,7 +660,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
         {
             sb.AppendLine("const searchForm = reactive({ keyword: '' })");
         }
-        
+
         sb.AppendLine();
         sb.AppendLine("// 📄 分页状态");
         sb.AppendLine("const pagination = reactive({");
@@ -678,7 +678,7 @@ public class Vue3ComponentCustomizer : ITransientDependency
     {
         // 🔥 变量定义修复：在方法开始处定义entityCamel（遵循BUG修复铁律）
         var entityCamel = entity.Name.ToCamelCase();
-        
+
         sb.AppendLine("// 🔧 业务逻辑扩展点定义");
         sb.AppendLine("const businessLogicHooks = {");
         sb.AppendLine("  // 🎯 扩展点9：数据加载前钩子");
@@ -936,25 +936,25 @@ public class ComponentCustomizationOptions
 {
     /// <summary>启用主题定制</summary>
     public bool EnableThemeCustomization { get; set; } = true;
-    
+
     /// <summary>启用响应式布局</summary>
     public bool EnableResponsiveLayout { get; set; } = true;
-    
+
     /// <summary>启用高级搜索</summary>
     public bool EnableAdvancedSearch { get; set; } = true;
-    
+
     /// <summary>启用批量操作</summary>
     public bool EnableBatchOperations { get; set; } = true;
-    
+
     /// <summary>启用导入导出</summary>
     public bool EnableImportExport { get; set; } = true;
-    
+
     /// <summary>自定义CSS类名</summary>
     public List<string> CustomCssClasses { get; set; } = new();
-    
+
     /// <summary>自定义字段显示</summary>
     public Dictionary<string, bool> FieldVisibility { get; set; } = new();
-    
+
     /// <summary>自定义表单验证规则</summary>
     public Dictionary<string, string> CustomValidationRules { get; set; } = new();
 }

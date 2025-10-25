@@ -116,10 +116,17 @@ public class Program
 
             await builder.AddApplicationAsync<SmartAbpHttpApiHostModule>();
             var app = builder.Build();
-            
-            // 🔥 初始化数据库（应用迁移）
-            await DatabaseInitializer.InitializeDatabaseAsync(app.Services);
-            
+
+            // ✅ 数据库初始化已禁用
+            // 如需初始化数据库，请设置环境变量 FORCE_DB_INIT=true
+            // await DatabaseInitializer.InitializeDatabaseAsync(app.Services);
+
+            var forceDbInit = Environment.GetEnvironmentVariable("FORCE_DB_INIT");
+            if (forceDbInit?.ToLower() == "true")
+            {
+                await DatabaseInitializer.InitializeDatabaseAsync(app.Services);
+            }
+
             // CorrelationId + Request logging + ProblemDetails
             app.UseMiddleware<Middleware.CorrelationIdMiddleware>();
             app.UseSerilogRequestLogging();

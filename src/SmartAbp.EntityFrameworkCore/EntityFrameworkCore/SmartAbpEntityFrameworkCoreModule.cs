@@ -102,11 +102,7 @@ public class SmartAbpEntityFrameworkCoreModule : AbpModule
                     {
                         sqlServerOptions.MigrationsHistoryTable("__EFMigrationsHistory_SqlServer");
                         sqlServerOptions.MigrationsAssembly(migrationsAssembly);
-                        // ✅ 修复：启用瞬态错误重试机制
-                        sqlServerOptions.EnableRetryOnFailure(
-                            maxRetryCount: 5,
-                            maxRetryDelay: TimeSpan.FromSeconds(30),
-                            errorNumbersToAdd: null);
+                        // ✅ 修复：移除EnableRetryOnFailure，避免事务策略冲突
                         // SQL Server使用默认的SqlServer文件夹
                     });
                     break;

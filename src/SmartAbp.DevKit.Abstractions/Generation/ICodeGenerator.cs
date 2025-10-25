@@ -1,3 +1,5 @@
+using SmartAbp.DevKit.Abstractions.Metadata;
+
 namespace SmartAbp.DevKit.Abstractions.Generation;
 
 /// <summary>
@@ -20,6 +22,7 @@ public class GenerationInput
 {
     public Guid EntityId { get; set; }
     public GenerationOptions Options { get; set; } = new();
+    public EntityMetadata? EntityMetadata { get; set; }
 }
 
 /// <summary>

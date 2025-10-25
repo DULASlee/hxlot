@@ -2,33 +2,17 @@
   <div class="generation-view">
     <div class="generation-header">
       <h2>Code Generation</h2>
-      <div
-        v-if="projectStore.currentProject"
-        class="project-info"
-      >
+      <div v-if="projectStore.currentProject" class="project-info">
         <el-tag type="info">
           Project: {{ projectStore.currentProject.name }}
         </el-tag>
       </div>
       <!-- 🔥 新增：无项目提示 -->
-      <div
-        v-else
-        class="no-project-warning"
-      >
-        <el-alert
-          title="没有活跃项目"
-          type="warning"
-          :closable="false"
-          show-icon
-        >
+      <div v-else class="no-project-warning">
+        <el-alert title="没有活跃项目" type="warning" :closable="false" show-icon>
           <template #default>
             请先创建或选择一个项目才能生成代码
-            <el-button
-              type="primary"
-              size="small"
-              style="margin-left: 12px;"
-              @click="createDefaultProject"
-            >
+            <el-button type="primary" size="small" style="margin-left: 12px;" @click="createDefaultProject">
               创建默认项目
             </el-button>
           </template>
@@ -45,41 +29,22 @@
           <TemplateSelector @select="(template: any) => onTemplateSelect(template)" />
         </el-card>
 
-        <el-card
-          v-if="selectedTemplate"
-          class="parameters-section"
-        >
+        <el-card v-if="selectedTemplate" class="parameters-section">
           <template #header>
             <div class="parameters-header">
               <span>2. Configure Parameters</span>
               <!-- 🔥 新增：验证状态显示 -->
               <div class="validation-status">
-                <el-tag
-                  v-if="validationState.isValidating"
-                  type="info"
-                  size="small"
-                >
+                <el-tag v-if="validationState.isValidating" type="info" size="small">
                   <i class="el-icon-loading" /> Validating...
                 </el-tag>
-                <el-tag
-                  v-else-if="isValid"
-                  type="success"
-                  size="small"
-                >
+                <el-tag v-else-if="isValid" type="success" size="small">
                   <i class="el-icon-check" /> Valid
                 </el-tag>
-                <el-tag
-                  v-else-if="errorCount > 0"
-                  type="danger"
-                  size="small"
-                >
+                <el-tag v-else-if="errorCount > 0" type="danger" size="small">
                   <i class="el-icon-close" /> {{ errorCount }} Error{{ errorCount > 1 ? 's' : '' }}
                 </el-tag>
-                <el-tag
-                  v-if="warningCount > 0"
-                  type="warning"
-                  size="small"
-                >
+                <el-tag v-if="warningCount > 0" type="warning" size="small">
                   <i class="el-icon-warning" /> {{ warningCount }} Warning{{ warningCount > 1 ? 's' : '' }}
                 </el-tag>
               </div>
@@ -87,134 +52,64 @@
           </template>
 
           <!-- 🔥 新增：验证错误显示 -->
-          <div
-            v-if="errorCount > 0"
-            class="validation-errors"
-          >
-            <el-alert
-              v-for="error in validationState.errors"
-              :key="error.path"
-              :title="error.message"
-              type="error"
-              size="small"
-              :closable="false"
-              show-icon
-            />
+          <div v-if="errorCount > 0" class="validation-errors">
+            <el-alert v-for="error in validationState.errors" :key="error.path" :title="error.message" type="error"
+              size="small" :closable="false" show-icon />
           </div>
 
           <!-- 🔥 新增：验证警告显示 -->
-          <div
-            v-if="warningCount > 0"
-            class="validation-warnings"
-          >
-            <el-alert
-              v-for="warning in validationState.warnings"
-              :key="warning.path"
-              :title="warning.message"
-              type="warning"
-              size="small"
-              :closable="false"
-              show-icon
-            />
+          <div v-if="warningCount > 0" class="validation-warnings">
+            <el-alert v-for="warning in validationState.warnings" :key="warning.path" :title="warning.message"
+              type="warning" size="small" :closable="false" show-icon />
           </div>
 
-          <el-form
-            :model="generationParams"
-            label-width="120px"
-          >
-            <el-form-item
-              label="Entity Name"
-              required
-            >
-              <el-input
-                v-model="generationParams.entityName"
-                placeholder="User"
-              />
+          <el-form :model="generationParams" label-width="120px">
+            <el-form-item label="Entity Name" required>
+              <el-input v-model="generationParams.entityName" placeholder="User" />
             </el-form-item>
-            <el-form-item
-              label="Module Name"
-              required
-            >
-              <el-input
-                v-model="generationParams.moduleName"
-                placeholder="Identity"
-              />
+            <el-form-item label="Module Name" required>
+              <el-input v-model="generationParams.moduleName" placeholder="Identity" />
             </el-form-item>
             <el-form-item label="Display Name">
-              <el-input
-                v-model="generationParams.displayName"
-                placeholder="用户管理"
-              />
+              <el-input v-model="generationParams.displayName" placeholder="用户管理" />
             </el-form-item>
             <el-form-item label="Framework">
               <el-select v-model="generationParams.framework">
-                <el-option
-                  label="Vue 3"
-                  value="vue"
-                />
-                <el-option
-                  label="React"
-                  value="react"
-                />
-                <el-option
-                  label="Angular"
-                  value="angular"
-                />
+                <el-option label="Vue 3" value="vue" />
+                <el-option label="React" value="react" />
+                <el-option label="Angular" value="angular" />
               </el-select>
             </el-form-item>
             <el-form-item label="Language">
               <el-select v-model="generationParams.language">
-                <el-option
-                  label="TypeScript"
-                  value="typescript"
-                />
-                <el-option
-                  label="JavaScript"
-                  value="javascript"
-                />
+                <el-option label="TypeScript" value="typescript" />
+                <el-option label="JavaScript" value="javascript" />
               </el-select>
             </el-form-item>
           </el-form>
         </el-card>
 
-        <el-card
-          v-if="selectedTemplate"
-          class="generation-actions"
-        >
+        <el-card v-if="selectedTemplate" class="generation-actions">
           <template #header>
             <span>3. Generate Code</span>
           </template>
           <div class="action-buttons">
-            <el-button
-              type="primary"
-              :loading="generating"
-              :disabled="!canGenerate"
-              @click="generateCode"
-            >
+            <el-button type="primary" :loading="generating" :disabled="!canGenerate" @click="generateCode">
               Generate Code
             </el-button>
-            <el-button
-              :disabled="!generatedCode"
-              @click="previewCode"
-            >
+            <el-button :disabled="!generatedCode" @click="previewCode">
               Preview
             </el-button>
           </div>
         </el-card>
       </div>
 
-      <div
-        v-if="showPreview && generatedCode"
-        class="right-panel"
-      >
+      <div v-if="showPreview && generatedCode" class="right-panel">
         <el-card class="preview-section">
           <template #header>
             <div class="preview-header">
               <span>Code Preview</span>
-              <el-button
-                size="small"
-                @click="copyCode"
-              >
+              <el-button size="small" @click="copyCode">
                 Copy
               </el-button>
             </div>
@@ -235,8 +130,8 @@ import { ElAlert, ElButton, ElCard, ElForm, ElFormItem, ElInput, ElMessage, ElOp
 import { computed, ref, watch } from "vue"
 
 // ✅ 使用真实的代码生成器API
-import { codeGeneratorApi, type GenerationResult, type Template } from "@smartabp/lowcode-api"
 import type { ModuleDto } from '@/api/generated'
+import { codeGeneratorApi, type GenerationResult, type Template } from "@smartabp/lowcode-api"
 
 // 🔥 新增：导入验证功能
 import { useValidation, type ValidationOptions } from "@smartabp/lowcode-shared/composables/useValidation"
@@ -569,22 +464,22 @@ const generateCode = async () => {
             displayFields: ['name', 'description']
           }
         },
-      codeGeneration: {
-        generateEntity: true,
-        generateDto: true,
-        generateAppService: true,
-        generateController: true,
-        generateRepository: true,
-        generateFrontend: true,
-        generateTests: true
-      },
-      isCompleted: false,
-      tags: []
-      // Phase 2B: 以下字段后端EntityDefinitionDto无
-      // schemaVersion: '1.0.0',
-      // version: '1.0.0',
-      // createdAt: new Date(),
-      // updatedAt: new Date()
+        codeGeneration: {
+          generateEntity: true,
+          generateDto: true,
+          generateAppService: true,
+          generateController: true,
+          generateRepository: true,
+          generateFrontend: true,
+          generateTests: true
+        },
+        isCompleted: false,
+        tags: []
+        // Phase 2B: 以下字段后端EntityDefinitionDto无
+        // schemaVersion: '1.0.0',
+        // version: '1.0.0',
+        // createdAt: new Date(),
+        // updatedAt: new Date()
       }],
       // ✅ 添加缺少的必需字段
       id: crypto.randomUUID(),

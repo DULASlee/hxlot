@@ -10,18 +10,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting" Version="9.0.0" />
-    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.0.0" />
-    <PackageReference Include="Aspire.Hosting.Redis" Version="9.0.0" />
-    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.0.0" />
-    <PackageReference Include="Aspire.Hosting.Elasticsearch" Version="9.0.0" />
-    <PackageReference Include="Aspire.Hosting.Dapr" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0-preview.1" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.0.0-preview.1" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="9.0.0-preview.1" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.0.0-preview.1" />
+    <PackageReference Include="Aspire.Hosting.Elasticsearch" Version="9.0.0-preview.1" />
+    <PackageReference Include="Aspire.Hosting.Dapr" Version="9.0.0-preview.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SmartAbp.OpsManagement.Service\Host\SmartAbp.OpsManagement.Host.csproj" />
     <ProjectReference Include="..\SmartAbp.Web\SmartAbp.Web.csproj" />
-    <ProjectReference Include="..\SmartAbp.CodeGenerator\SmartAbp.CodeGenerator.csproj" />
+    <ProjectReference Include="..\SmartAbp.OpsManagement.Service\Host\SmartAbp.OpsManagement.Host.csproj" />
   </ItemGroup>
 
   <ItemGroup>

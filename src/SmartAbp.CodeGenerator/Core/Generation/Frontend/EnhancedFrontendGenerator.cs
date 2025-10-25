@@ -117,7 +117,7 @@ public class EnhancedFrontendGenerator : ITransientDependency
     /// 🎨 生成Vue管理组件（增强版 - 协助请求3实现）
     /// </summary>
     private async Task<TemplateRenderResult> GenerateManagementComponentAsync(
-        EnhancedEntityModelDto entity, 
+        EnhancedEntityModelDto entity,
         ModuleMetadataDto metadata)
     {
         _logger.LogDebug("🎨 生成增强Vue管理组件: {EntityName}", entity.Name);
@@ -138,13 +138,13 @@ public class EnhancedFrontendGenerator : ITransientDependency
                 entity, metadata, customizationOptions);
 
             _logger.LogDebug("✅ 增强Vue组件生成成功: {EntityName}, 包含15个扩展点", entity.Name);
-            
+
             return TemplateRenderResult.Success(customizedContent, "vue3-component-customizer");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "❌ 增强Vue组件生成失败: {EntityName}", entity.Name);
-            
+
             // 🔄 兜底策略：使用原有模板
             _logger.LogInformation("🔄 使用标准模板作为兜底方案: {EntityName}", entity.Name);
             return await _templateService.RenderTemplateAsync(
@@ -159,7 +159,7 @@ public class EnhancedFrontendGenerator : ITransientDependency
     /// 📊 生成Pinia状态管理（基于EntityStore模板）
     /// </summary>
     private async Task<TemplateRenderResult> GenerateStoreFileAsync(
-        EnhancedEntityModelDto entity, 
+        EnhancedEntityModelDto entity,
         ModuleMetadataDto metadata)
     {
         _logger.LogDebug("生成状态管理: {EntityName}", entity.Name);
@@ -176,7 +176,7 @@ public class EnhancedFrontendGenerator : ITransientDependency
     /// 🔌 生成API服务文件（基于内置模板）
     /// </summary>
     private async Task<TemplateRenderResult> GenerateApiServiceAsync(
-        EnhancedEntityModelDto entity, 
+        EnhancedEntityModelDto entity,
         ModuleMetadataDto metadata)
     {
         _logger.LogDebug("生成API服务: {EntityName}", entity.Name);
@@ -190,7 +190,7 @@ public class EnhancedFrontendGenerator : ITransientDependency
     /// 📋 生成TypeScript类型定义
     /// </summary>
     private async Task<TemplateRenderResult> GenerateTypesFileAsync(
-        EnhancedEntityModelDto entity, 
+        EnhancedEntityModelDto entity,
         ModuleMetadataDto metadata)
     {
         _logger.LogDebug("生成类型定义: {EntityName}", entity.Name);
@@ -203,8 +203,8 @@ public class EnhancedFrontendGenerator : ITransientDependency
     /// 🚀 生成模块级文件（路由、菜单、配置）
     /// </summary>
     private async Task GenerateModuleLevelFilesAsync(
-        ModuleMetadataDto metadata, 
-        string vueRoot, 
+        ModuleMetadataDto metadata,
+        string vueRoot,
         Dictionary<string, string> generatedFiles)
     {
         _logger.LogDebug("生成模块级文件: {ModuleName}", metadata.Name);
@@ -219,25 +219,82 @@ public class EnhancedFrontendGenerator : ITransientDependency
             );
         }
 
-        // 📜 生成菜单配置
+        // 📜 生成菜单配置（独立文件）
         var menuContent = GenerateMenuConfiguration(metadata);
         generatedFiles.Add(
             Path.Combine(vueRoot, "src", "config", "menus", $"{metadata.Name.ToLowerInvariant()}.ts"),
             menuContent
         );
+
+        // 🔥 关键修复：自动注册菜单到主配置文件
+        await IntegrateMenuToMainConfigAsync(metadata, vueRoot, generatedFiles);
     }
 
     /// <summary>
-    /// 🛣️ 生成模块路由配置（使用ModuleRoutes模板）
+    /// 🛣️ 生成模块路由配置（完整实现）
     /// </summary>
     private async Task<TemplateRenderResult> GenerateModuleRoutesAsync(ModuleMetadataDto metadata)
     {
-        // 🔥 模板强制匹配：使用标准ModuleRoutes模板
-        return await _templateService.RenderTemplateAsync(
-            "frontend/router/ModuleRoutes.template.ts",
-            metadata,
-            null
-        );
+        try
+        {
+            // 尝试使用模板
+            return await _templateService.RenderTemplateAsync(
+                "frontend/router/ModuleRoutes.template.ts",
+                metadata,
+                null
+            );
+        }
+        catch
+        {
+            // 模板不存在时，使用代码生成
+            _logger.LogWarning("路由模板不存在，使用内置生成器");
+            return TemplateRenderResult.Success(GenerateRouteConfigurationContent(metadata), "built-in");
+        }
+    }
+
+    /// <summary>
+    /// 📜 生成路由配置内容（内置实现）
+    /// </summary>
+    private string GenerateRouteConfigurationContent(ModuleMetadataDto metadata)
+    {
+        var sb = new StringBuilder();
+
+        sb.AppendLine("import type { RouteRecordRaw } from 'vue-router'");
+        sb.AppendLine("import SmartAbpLayout from '@/components/layout/SmartAbpLayout.vue'");
+        sb.AppendLine();
+        sb.AppendLine("const routes: RouteRecordRaw[] = [");
+        sb.AppendLine("  {");
+        sb.AppendLine($"    path: '/{metadata.Name.ToLowerInvariant()}',");
+        sb.AppendLine("    component: SmartAbpLayout,");
+        sb.AppendLine($"    name: '{metadata.Name}Module',");
+        sb.AppendLine("    meta: {");
+        sb.AppendLine($"      title: '{metadata.DisplayName}',");
+        sb.AppendLine("      icon: 'el-icon-s-data',");
+        sb.AppendLine("      requiresAuth: true,");
+        sb.AppendLine("    },");
+        sb.AppendLine("    children: [");
+
+        foreach (var entity in metadata.Entities)
+        {
+            sb.AppendLine("      {");
+            sb.AppendLine($"        path: '{entity.Name.ToLowerInvariant()}',");
+            sb.AppendLine($"        name: '{entity.Name}Management',");
+            sb.AppendLine($"        component: () => import('@/views/{metadata.Name.ToLowerInvariant()}/{entity.Name}Management.vue'),");
+            sb.AppendLine("        meta: {");
+            sb.AppendLine($"          title: '{entity.DisplayName}管理',");
+            sb.AppendLine("          icon: 'el-icon-menu',");
+            sb.AppendLine("          requiresAuth: true,");
+            sb.AppendLine("        },");
+            sb.AppendLine("      },");
+        }
+
+        sb.AppendLine("    ],");
+        sb.AppendLine("  },");
+        sb.AppendLine("]");
+        sb.AppendLine();
+        sb.AppendLine("export default routes");
+
+        return sb.ToString();
     }
 
     /// <summary>
@@ -246,7 +303,7 @@ public class EnhancedFrontendGenerator : ITransientDependency
     private string GenerateApiServiceContent(EnhancedEntityModelDto entity, ModuleMetadataDto metadata)
     {
         var sb = new StringBuilder();
-        
+
         sb.AppendLine("// 🔥 自动生成的API服务 - Vue3 + TypeScript + Axios");
         sb.AppendLine("// 支持完整的CRUD操作和业务逻辑扩展");
         sb.AppendLine();
@@ -255,7 +312,7 @@ public class EnhancedFrontendGenerator : ITransientDependency
         sb.AppendLine();
         sb.AppendLine($"const API_BASE = '/api/{metadata.Name.ToLowerInvariant()}/{entity.Name.ToLowerInvariant()}'");
         sb.AppendLine();
-        
+
         // 生成CRUD API方法
         sb.AppendLine($"export const {entity.Name.ToLowerInvariant()}Api = {{");
         sb.AppendLine($"  // 📋 获取列表");
@@ -296,11 +353,11 @@ public class EnhancedFrontendGenerator : ITransientDependency
     private string GenerateTypesContent(EnhancedEntityModelDto entity, ModuleMetadataDto metadata)
     {
         var sb = new StringBuilder();
-        
+
         sb.AppendLine("// 🔥 自动生成的TypeScript类型定义 - Vue3强类型支持");
         sb.AppendLine("// 与后端DTO保持完全一致，确保类型安全");
         sb.AppendLine();
-        
+
         // 生成基础DTO接口
         sb.AppendLine($"/// <summary>");
         sb.AppendLine($"/// {entity.DisplayName}数据传输对象");
@@ -318,7 +375,7 @@ public class EnhancedFrontendGenerator : ITransientDependency
         }
         sb.AppendLine($"}}");
         sb.AppendLine();
-        
+
         // 生成创建DTO
         sb.AppendLine($"/// <summary>");
         sb.AppendLine($"/// 创建{entity.DisplayName}数据传输对象");
@@ -336,7 +393,7 @@ public class EnhancedFrontendGenerator : ITransientDependency
         }
         sb.AppendLine($"}}");
         sb.AppendLine();
-        
+
         // 生成更新DTO
         sb.AppendLine($"/// <summary>");
         sb.AppendLine($"/// 更新{entity.DisplayName}数据传输对象");
@@ -354,7 +411,7 @@ public class EnhancedFrontendGenerator : ITransientDependency
         }
         sb.AppendLine($"}}");
         sb.AppendLine();
-        
+
         // 生成查询DTO
         sb.AppendLine($"/// <summary>");
         sb.AppendLine($"/// 获取{entity.DisplayName}列表查询对象");
@@ -376,12 +433,80 @@ public class EnhancedFrontendGenerator : ITransientDependency
     }
 
     /// <summary>
+    /// 🔥 自动注册菜单到主配置文件
+    /// </summary>
+    private async Task IntegrateMenuToMainConfigAsync(
+        ModuleMetadataDto metadata,
+        string vueRoot,
+        Dictionary<string, string> generatedFiles)
+    {
+        var mainMenuPath = Path.Combine(vueRoot, "src", "config", "menus.ts");
+        var moduleName = metadata.Name.ToLowerInvariant(); // 🔧 提升作用域，在catch块中也可访问
+
+        try
+        {
+            if (!File.Exists(mainMenuPath))
+            {
+                _logger.LogWarning("⚠️ 主菜单配置文件不存在: {Path}", mainMenuPath);
+                return;
+            }
+
+            var mainMenuContent = await File.ReadAllTextAsync(mainMenuPath);
+            var importStatement = $"import {{ {moduleName}MenuConfig }} from './menus/{moduleName}'";
+            var menuChildStatement = $"    ...{moduleName}MenuConfig.children || []";
+
+            // 检查是否已经导入
+            if (mainMenuContent.Contains(importStatement))
+            {
+                _logger.LogInformation("✅ 菜单已存在，跳过自动注册: {ModuleName}", metadata.Name);
+                return;
+            }
+
+            // 在 import type 之后添加导入语句
+            var importTypeIndex = mainMenuContent.IndexOf("import type");
+            if (importTypeIndex > -0)
+            {
+                var afterImportType = mainMenuContent.IndexOf("\n", importTypeIndex);
+                mainMenuContent = mainMenuContent.Insert(afterImportType + 1, importStatement + "\n");
+            }
+            else
+            {
+                // 找不到 import type，在开头添加
+                mainMenuContent = importStatement + "\n\n" + mainMenuContent;
+            }
+
+            // 在 children 数组中添加菜单项（在最后一个 ] 之前）
+            var childrenMatch = System.Text.RegularExpressions.Regex.Match(
+                mainMenuContent,
+                @"children:\s*\[(.*?)\]",
+                System.Text.RegularExpressions.RegexOptions.Singleline
+            );
+
+            if (childrenMatch.Success)
+            {
+                var closingBracketIndex = childrenMatch.Groups[0].Value.LastIndexOf(']');
+                var insertPosition = mainMenuContent.IndexOf(childrenMatch.Value) + childrenMatch.Value.LastIndexOf(']');
+                mainMenuContent = mainMenuContent.Insert(insertPosition, ",\n" + menuChildStatement + "\n  ");
+            }
+
+            // 更新主菜单配置文件
+            generatedFiles[mainMenuPath] = mainMenuContent;
+            _logger.LogInformation("✅ 菜单已自动注册到主配置: {ModuleName}", metadata.Name);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "❌ 菜单自动注册失败: {ModuleName}", metadata.Name);
+            _logger.LogWarning($"⚠️ 请手动添加菜单导入: import {{ {moduleName}MenuConfig }} from './menus/{moduleName}'");
+        }
+    }
+
+    /// <summary>
     /// 📜 生成菜单配置（Vue3路由集成）
     /// </summary>
     private string GenerateMenuConfiguration(ModuleMetadataDto metadata)
     {
         var sb = new StringBuilder();
-        
+
         sb.AppendLine("// 🔥 自动生成的菜单配置 - Vue3路由集成");
         sb.AppendLine("// 支持权限控制和国际化");
         sb.AppendLine();
@@ -393,7 +518,7 @@ public class EnhancedFrontendGenerator : ITransientDependency
         sb.AppendLine($"  icon: 'el-icon-s-data',");
         sb.AppendLine($"  order: 100,");
         sb.AppendLine($"  children: [");
-        
+
         foreach (var entity in metadata.Entities)
         {
             sb.AppendLine($"    {{");
@@ -405,7 +530,7 @@ public class EnhancedFrontendGenerator : ITransientDependency
             sb.AppendLine($"      icon: 'el-icon-menu'");
             sb.AppendLine($"    }},");
         }
-        
+
         sb.AppendLine($"  ]");
         sb.AppendLine($"}}");
         sb.AppendLine();

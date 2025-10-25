@@ -27,22 +27,26 @@ namespace SmartAbp.Web
                 var dbType = SmartAbp.EntityFrameworkCore.MultiDatabaseMigrationManager.GetDatabaseType(configuration, logger);
                 logger.LogInformation("📊 数据库类型: {DatabaseType}", dbType);
 
-                // 🔥 统一行为：所有数据库类型都先删除再创建（确保表结构最新）
-                logger.LogInformation("💡 删除旧数据库（如存在）...");
-                await dbContext.Database.EnsureDeletedAsync();
-                logger.LogInformation("✅ 旧数据库已删除");
+                // ✅ 安全模式：检查数据库是否存在，如果存在则不删除
+                if (await dbContext.Database.CanConnectAsync())
+                {
+                    logger.LogInformation("✅ 数据库已存在且可连接，跳过初始化");
+                    logger.LogInformation("💡 如需重新初始化，请手动删除数据库或设置环境变量 FORCE_DB_RESET=true");
+                    return;
+                }
 
-                // 使用EnsureCreated创建所有表（基于当前DbContext配置）
-                logger.LogInformation("💡 创建新数据库结构...");
+                logger.LogInformation("💡 数据库不存在或不可连接，创建新数据库结构...");
+
+                // 只有在数据库不存在时才创建
                 var created = await dbContext.Database.EnsureCreatedAsync();
-                
+
                 if (created)
                 {
                     logger.LogInformation("✅ 数据库结构创建成功！");
                 }
                 else
                 {
-                    logger.LogWarning("⚠️ 数据库创建失败（不应该发生）");
+                    logger.LogInformation("⚠️ 数据库已存在或创建失败");
                 }
             }
             catch (Exception ex)

@@ -19,7 +19,7 @@
 
     <!-- 添加Integration层引用 -->
     <ProjectReference Include="..\SmartAbp.DevKit.Integration\SmartAbp.DevKit.Integration.csproj" />
-    
+
     <!-- ✅ 添加数据库抽象层引用 -->
     <ProjectReference Include="..\SmartAbp.Database.Abstraction\SmartAbp.Database.Abstraction.csproj" />
   </ItemGroup>
@@ -40,7 +40,7 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="9.0.0" />
-    <PackageReference Include="StackExchange.Redis" Version="2.8.16" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.33" />
     <PackageReference Include="System.Text.Json" Version="9.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Elasticsearch.Net" Version="7.17.5" />
@@ -48,6 +48,7 @@
 
     <!-- 🔥 脚本执行引擎依赖 -->
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.14.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
     <PackageReference Include="Jint" Version="3.0.0" />
   </ItemGroup>
 

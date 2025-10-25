@@ -29,8 +29,8 @@ public class AtomicFileWriter
     /// <param name="encoding">文件编码，默认UTF-8</param>
     /// <returns>写入结果</returns>
     public async Task<AtomicWriteResult> WriteFileAtomicAsync(
-        string filePath, 
-        string content, 
+        string filePath,
+        string content,
         Encoding? encoding = null)
     {
         encoding ??= Encoding.UTF8;
@@ -90,7 +90,7 @@ public class AtomicFileWriter
 
             // 写入临时文件
             await File.WriteAllTextAsync(tempFilePath, content, encoding);
-            
+
             // 验证写入完整性
             var verificationResult = await VerifyFileIntegrity(tempFilePath, content, encoding);
             if (!verificationResult.IsValid)
@@ -131,7 +131,7 @@ public class AtomicFileWriter
             _logger.LogError(ex, "IO操作失败: {FilePath}", filePath);
             result.IsSuccess = false;
             result.ErrorMessage = $"IO操作失败: {ex.Message}";
-            
+
             // 清理临时文件
             if (!string.IsNullOrEmpty(result.TempPath) && File.Exists(result.TempPath))
             {
@@ -144,7 +144,7 @@ public class AtomicFileWriter
                     // 忽略清理错误
                 }
             }
-            
+
             return result;
         }
         catch (Exception ex)
@@ -152,7 +152,7 @@ public class AtomicFileWriter
             _logger.LogError(ex, "原子写入未知错误: {FilePath}", filePath);
             result.IsSuccess = false;
             result.ErrorMessage = $"未知错误: {ex.Message}";
-            
+
             // 清理临时文件
             if (!string.IsNullOrEmpty(result.TempPath) && File.Exists(result.TempPath))
             {
@@ -165,7 +165,7 @@ public class AtomicFileWriter
                     // 忽略清理错误
                 }
             }
-            
+
             return result;
         }
     }
@@ -177,7 +177,7 @@ public class AtomicFileWriter
     /// <param name="encoding">文件编码</param>
     /// <returns>批量写入结果</returns>
     public async Task<BatchAtomicWriteResult> WriteBatchAtomicAsync(
-        Dictionary<string, string> files, 
+        Dictionary<string, string> files,
         Encoding? encoding = null)
     {
         var batchResult = new BatchAtomicWriteResult();
@@ -198,7 +198,7 @@ public class AtomicFileWriter
             foreach (var item in results)
             {
                 batchResult.FileResults[item.Path] = item.Result;
-                
+
                 if (item.Result.IsSuccess)
                 {
                     if (item.Result.WasSkipped)
@@ -346,8 +346,8 @@ public class AtomicFileWriter
     /// 验证文件完整性
     /// </summary>
     private async Task<FileIntegrityResult> VerifyFileIntegrity(
-        string filePath, 
-        string expectedContent, 
+        string filePath,
+        string expectedContent,
         Encoding encoding)
     {
         try
@@ -358,21 +358,19 @@ public class AtomicFileWriter
             }
 
             var actualContent = await File.ReadAllTextAsync(filePath, encoding);
-            
-            if (actualContent != expectedContent)
+
+            // 🔥 Phase 3C: 规范化换行符后再比较，避免Windows CRLF转换导致的字节差异
+            var normalizedExpected = expectedContent.Replace("\r\n", "\n").Replace("\r", "\n");
+            var normalizedActual = actualContent.Replace("\r\n", "\n").Replace("\r", "\n");
+
+            if (normalizedActual != normalizedExpected)
             {
                 return FileIntegrityResult.Failed(
-                    $"文件内容不匹配。期望长度: {expectedContent.Length}, 实际长度: {actualContent.Length}");
+                    $"文件内容不匹配。期望长度: {normalizedExpected.Length}, 实际长度: {normalizedActual.Length}");
             }
 
-            var fileInfo = new FileInfo(filePath);
-            var expectedBytes = encoding.GetByteCount(expectedContent);
-            
-            if (fileInfo.Length != expectedBytes)
-            {
-                return FileIntegrityResult.Failed(
-                    $"文件大小不匹配。期望: {expectedBytes} 字节, 实际: {fileInfo.Length} 字节");
-            }
+            // 🔥 Phase 3C: 移除字节大小验证，因为Windows换行符转换会导致误报
+            // 内容一致性验证已足够保证文件完整性
 
             return FileIntegrityResult.Success();
         }
@@ -391,15 +389,15 @@ public class AtomicFileWriter
         var directory = Path.GetDirectoryName(filePath) ?? Directory.GetCurrentDirectory();
         var fileName = Path.GetFileNameWithoutExtension(filePath);
         var extension = Path.GetExtension(filePath);
-        
+
         var backupFileName = $"{fileName}.backup.{timestamp}{extension}";
         var backupPath = Path.Combine(directory, backupFileName);
 
         // 🔥 API兼容性修复：使用File.Copy代替File.CopyAsync（遵循BUG修复铁律）
         await Task.Run(() => File.Copy(filePath, backupPath, overwrite: true));
-        
+
         _logger.LogDebug("创建文件备份: {OriginalPath} -> {BackupPath}", filePath, backupPath);
-        
+
         return backupPath;
     }
 

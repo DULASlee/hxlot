@@ -53,7 +53,7 @@ public class StableGenerationPipeline
 
         try
         {
-            _logger.LogInformation("🚀 启动稳定生成流水线: {GenerationId}, 模块: {ModuleName}", 
+            _logger.LogInformation("🚀 启动稳定生成流水线: {GenerationId}, 模块: {ModuleName}",
                 generationId, request.ModuleMetadata.Name);
 
             // 1. 初始化进度跟踪
@@ -78,7 +78,7 @@ public class StableGenerationPipeline
             result.EndTime = DateTime.UtcNow;
             result.TotalDuration = result.EndTime - result.StartTime;
 
-            _logger.LogInformation("✅ 稳定生成流水线完成: {GenerationId}, 耗时: {Duration}ms", 
+            _logger.LogInformation("✅ 稳定生成流水线完成: {GenerationId}, 耗时: {Duration}ms",
                 generationId, result.TotalDuration.TotalMilliseconds);
 
             return result;
@@ -86,7 +86,7 @@ public class StableGenerationPipeline
         catch (Exception ex)
         {
             _logger.LogError(ex, "❌ 稳定生成流水线失败: {GenerationId}", generationId);
-            
+
             result.IsSuccess = false;
             result.FinalError = ex.Message;
             result.EndTime = DateTime.UtcNow;
@@ -107,8 +107,8 @@ public class StableGenerationPipeline
     /// 预处理阶段
     /// </summary>
     private async Task ExecutePreProcessingStageAsync(
-        string generationId, 
-        StableGenerationRequest request, 
+        string generationId,
+        StableGenerationRequest request,
         StableGenerationResult result)
     {
         var stage = GenerationStage.PreProcessing;
@@ -201,7 +201,7 @@ public class StableGenerationPipeline
             result.GeneratedFiles = generatedFiles;
             await _progressTracker.UpdateStageAsync(generationId, stage, 100);
 
-            _logger.LogDebug("代码生成阶段完成: {GenerationId}, 文件数: {FileCount}", 
+            _logger.LogDebug("代码生成阶段完成: {GenerationId}, 文件数: {FileCount}",
                 generationId, generatedFiles.Count);
         }
         catch (Exception ex)
@@ -231,20 +231,31 @@ public class StableGenerationPipeline
 
             // 使用原子文件写入器批量写入
             var writeResult = await _atomicFileWriter.WriteBatchAtomicAsync(
-                result.GeneratedFiles, 
+                result.GeneratedFiles,
                 System.Text.Encoding.UTF8);
 
             result.FileWriteResult = writeResult;
 
             if (!writeResult.IsSuccess)
             {
+                // 🔥 Phase 3C: 详细记录每个文件的写入失败原因
+                _logger.LogError("文件写入阶段失败，失败文件数: {FailedCount}", writeResult.FailedCount);
+                foreach (var failedFile in writeResult.FailedFiles)
+                {
+                    if (writeResult.FileResults.TryGetValue(failedFile, out var fileResult))
+                    {
+                        _logger.LogError("文件写入失败: {FilePath}, 原因: {ErrorMessage}",
+                            failedFile, fileResult.ErrorMessage ?? "未知错误");
+                    }
+                }
+
                 var errorDetails = string.Join(", ", writeResult.FailedFiles);
                 throw new GenerationException($"文件写入失败: {errorDetails}");
             }
 
             await _progressTracker.UpdateStageAsync(generationId, stage, 100);
 
-            _logger.LogDebug("文件写入阶段完成: {GenerationId}, 成功: {Success}, 跳过: {Skipped}", 
+            _logger.LogDebug("文件写入阶段完成: {GenerationId}, 成功: {Success}, 跳过: {Skipped}",
                 generationId, writeResult.SuccessCount, writeResult.SkippedCount);
         }
         catch (Exception ex)
@@ -287,19 +298,19 @@ public class StableGenerationPipeline
 
             await _progressTracker.UpdateStageAsync(generationId, stage, 100);
 
-            _logger.LogDebug("质量检查阶段完成: {GenerationId}, 质量分数: {QualityScore}", 
+            _logger.LogDebug("质量检查阶段完成: {GenerationId}, 质量分数: {QualityScore}",
                 generationId, qualityResult?.OverallScore ?? 0);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "质量检查阶段失败: {GenerationId}", generationId);
             result.StageResults[stage] = StageResult.Failed(ex.Message);
-            
+
             // 质量检查失败不应该影响整个流水线（警告级别）
             _logger.LogWarning("质量检查失败，但流水线继续执行: {GenerationId}", generationId);
         }
 
-        result.StageResults[stage] = result.QualityCheckResult?.OverallScore >= 80 
+        result.StageResults[stage] = result.QualityCheckResult?.OverallScore >= 80
             ? StageResult.Success($"质量分数: {result.QualityCheckResult?.OverallScore}")
             : StageResult.Warning($"质量分数偏低: {result.QualityCheckResult?.OverallScore}");
     }
@@ -335,7 +346,7 @@ public class StableGenerationPipeline
         {
             _logger.LogError(ex, "后处理阶段失败: {GenerationId}", generationId);
             result.StageResults[stage] = StageResult.Failed(ex.Message);
-            
+
             // 后处理失败不影响主要结果
             _logger.LogWarning("后处理失败，但主要生成任务已完成: {GenerationId}", generationId);
         }
@@ -410,17 +421,27 @@ public class StableGenerationPipeline
         // 暂时返回示例代码
         var files = new Dictionary<string, string>();
 
+        // 获取模块名称（用于Service分组）
+        // 🔥 Phase 3C: Name字段就是ModuleName（见Dtos.cs第107行注释）
+        var moduleName = request.ProcessedMetadata!.Name;
+
         foreach (var entity in request.ProcessedMetadata!.Entities!)
         {
+            // 🔥 Phase 3C: 修复路径生成逻辑，使用正确的项目子目录和模块分组
             // 生成 Controller
-            var controllerPath = Path.Combine(request.OutputPath, "Controllers", $"{entity.Name}Controller.cs");
+            var controllerPath = Path.Combine(request.OutputPath, "src", "SmartAbp.HttpApi", "Controllers", $"{entity.Name}Controller.cs");
             var controllerContent = GenerateControllerCode(entity, request.ProcessedMetadata);
             files[controllerPath] = controllerContent;
 
-            // 生成 Service
-            var servicePath = Path.Combine(request.OutputPath, "Services", $"{entity.Name}AppService.cs");
+            // 生成 Service（按模块分组）
+            var servicePath = Path.Combine(request.OutputPath, "src", "SmartAbp.Application", moduleName, $"{entity.Name}AppService.cs");
             var serviceContent = GenerateServiceCode(entity, request.ProcessedMetadata);
             files[servicePath] = serviceContent;
+
+            // 🔥 Phase 3C: 生成DTO（Application.Contracts层，按模块分组）
+            var dtoPath = Path.Combine(request.OutputPath, "src", "SmartAbp.Application.Contracts", moduleName, $"{entity.Name}Dto.cs");
+            var dtoContent = GenerateDtoCode(entity, request.ProcessedMetadata);
+            files[dtoPath] = dtoContent;
         }
 
         await Task.CompletedTask;
@@ -434,16 +455,16 @@ public class StableGenerationPipeline
     private async Task<Dictionary<string, string>> GenerateFrontendCodeAsync(StableGenerationRequest request)
     {
         _logger.LogInformation("🎨 使用增强前端生成器生成Vue3代码: {ModuleName}", request.ProcessedMetadata!.Name);
-        
+
         // ✅ 企业级低代码平台标准：只生成完整可用的代码，不接受降级方案
         // 这将生成完整的Vue3组件、API服务、Store、类型定义、路由和菜单配置
         var generatedFiles = await _frontendGenerator.GenerateAsync(
-            request.ProcessedMetadata!, 
+            request.ProcessedMetadata!,
             request.OutputPath
         );
-        
+
         _logger.LogInformation("✅ 前端代码生成成功: {FileCount}个文件", generatedFiles.Count);
-        
+
         // 验证生成结果的完整性
         if (generatedFiles.Count == 0)
         {
@@ -452,7 +473,7 @@ public class StableGenerationPipeline
                 $"模块名称：{request.ProcessedMetadata!.Name}"
             );
         }
-        
+
         return generatedFiles;
     }
 
@@ -557,6 +578,7 @@ public class StableGenerationPipeline
     private string GenerateControllerCode(EnhancedEntityModelDto entity, ModuleMetadataDto module)
     {
         return $@"// <auto-generated />
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using {module.Namespace}.Services;
 
@@ -586,7 +608,10 @@ namespace {module.Namespace}.Controllers
     private string GenerateServiceCode(EnhancedEntityModelDto entity, ModuleMetadataDto module)
     {
         return $@"// <auto-generated />
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
+using {module.Namespace}.Dtos;
 
 namespace {module.Namespace}.Services
 {{
@@ -604,6 +629,55 @@ namespace {module.Namespace}.Services
         }}
     }}
 }}";
+    }
+
+    /// <summary>
+    /// 🔥 Phase 3C: 生成DTO代码（修复编译错误）
+    /// </summary>
+    private string GenerateDtoCode(EnhancedEntityModelDto entity, ModuleMetadataDto module)
+    {
+        // 生成属性列表
+        var properties = new System.Text.StringBuilder();
+        foreach (var prop in entity.Properties)
+        {
+            var propertyType = MapPropertyType(prop.Type);
+            var nullable = !prop.IsRequired ? "?" : "";
+            properties.AppendLine($"        public {propertyType}{nullable} {prop.Name} {{ get; set; }}");
+        }
+
+        return $@"// <auto-generated />
+using System;
+using Volo.Abp.Application.Dtos;
+
+namespace {module.Namespace}.Dtos
+{{
+    /// <summary>
+    /// {entity.DisplayName} DTO
+    /// </summary>
+    public class {entity.Name}Dto : EntityDto<Guid>
+    {{
+{properties}    }}
+}}";
+    }
+
+    /// <summary>
+    /// 映射属性类型到C#类型
+    /// </summary>
+    private string MapPropertyType(string propertyType)
+    {
+        return propertyType.ToLowerInvariant() switch
+        {
+            "string" => "string",
+            "int" or "integer" => "int",
+            "long" => "long",
+            "decimal" => "decimal",
+            "double" => "double",
+            "float" => "float",
+            "bool" or "boolean" => "bool",
+            "datetime" => "DateTime",
+            "guid" => "Guid",
+            _ => "string" // 默认为string
+        };
     }
 
 
@@ -645,38 +719,38 @@ public class StableGenerationRequest
     public bool EnableCompilationCheck { get; set; } = false;
     // 🔥 明确命名空间引用：解决重复枚举冲突（遵循第十三重爆雷规则）
     public SmartAbp.CodeGenerator.Core.FileOperations.ConflictResolutionStrategy ConflictStrategy { get; set; } = SmartAbp.CodeGenerator.Core.FileOperations.ConflictResolutionStrategy.Auto;
-    
+
     // 🚀 增量生成支持 (任务4.1新增)
     /// <summary>
     /// 是否启用增量模式
     /// </summary>
     public bool IncrementalMode { get; set; } = false;
-    
+
     /// <summary>
     /// 模板路径（增量模式需要）
     /// </summary>
     public string? TemplatesPath { get; set; }
-    
+
     /// <summary>
     /// 元数据JSON（增量模式需要）
     /// </summary>
     public string? MetadataJson { get; set; }
-    
+
     /// <summary>
     /// 配置文件路径（增量模式需要）
     /// </summary>
     public string? ConfigurationPath { get; set; }
-    
+
     /// <summary>
     /// 变更的输入键列表（增量模式内部使用）
     /// </summary>
     public List<string> ChangedInputKeys { get; set; } = new();
-    
+
     /// <summary>
     /// 启用验证（增量模式需要）
     /// </summary>
     public bool EnableValidation { get; set; } = true;
-    
+
     /// <summary>
     /// 启用优化（增量模式需要）
     /// </summary>
