@@ -26,10 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="9.0.10" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.10" />
     <EmbeddedResource Include="Localization\SmartAbp\*.json" />
     <Content Remove="Localization\SmartAbp\*.json" />
   </ItemGroup>
